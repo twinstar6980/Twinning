@@ -1,0 +1,88 @@
+{
+	"pack_buffer_size": "1g",
+	"resource_extract_option": {
+		"json": "?input",
+		"json_crypt": "?input",
+		"json_crypt_key": "?input",
+		"image": "?input",
+		"image_texture_format_map_list": {
+			"pvz2_ios": [
+				{
+					"index": 0,
+					"format": "argb_8888",
+				},
+				{
+					"index": 30,
+					"format": "rgba_pvrtc4",
+				},
+				{
+					"index": 148,
+					"format": "rgb_pvrtc4_a_8",
+				},
+			],
+			"pvz2_android": [
+				{
+					"index": 0,
+					"format": "argb_8888",
+				},
+				{
+					"index": 147,
+					"format": "rgb_etc1_a_8",
+				},
+			],
+			"pvz2_chs_android": [
+				{
+					"index": 0,
+					"format": "argb_8888",
+				},
+				{
+					"index": 147,
+					"format": "rgb_etc1_a_8_index",
+				},
+			],
+			"pvz1_ios": [
+				{
+					"index": 0,
+					"format": "argb_8888",
+				},
+				{
+					"index": 1,
+					"format": "rgba_4444",
+				},
+				{
+					"index": 2,
+					"format": "rgb_565",
+				},
+				{
+					"index": 3,
+					"format": "rgba_5551",
+				},
+				{
+					"index": 21,
+					"format": "rgba_4444_block",
+				},
+				{
+					"index": 22,
+					"format": "rgb_565_block",
+				},
+				{
+					"index": 23,
+					"format": "rgba_5551_block",
+				},
+			],
+		},
+		"image_texture_format_map_name": "?input",
+		"image_atlas": "?input",
+		"image_atlas_resize": "?input",
+		"image_sprite": "?input",
+		"animation": "?input",
+		"animation_json": "?input",
+		"animation_flash": "?input",
+		"audio": "?input",
+		"audio_tool": {
+			"ffmpeg": "<home>/extern/ffmpeg/ffmpeg",
+			"ww2ogg": "<home>/extern/ww2ogg/ww2ogg",
+			"ww2ogg_pcb": "<home>/extern/ww2ogg/packed_codebooks_aoTuV_603.bin",
+		},
+	},
+}

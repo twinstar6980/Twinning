@@ -1,0 +1,455 @@
+#pragma once
+
+#include "core/utility/string/format.hpp"
+#include "core/utility/null.hpp"
+#include "core/utility/misc/enum.hpp"
+#include "core/utility/misc/fourcc.hpp"
+
+namespace TwinKleS::Core {
+
+	#pragma region string
+
+	template <>
+	struct BasicStringAdapter<Character, String> {
+
+		using This = BasicString<Character>;
+
+		using That = String;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix = that;
+			return;
+		}
+
+		static auto from (
+			This &  thix,
+			That && that
+		) -> Void {
+			thix = as_moveable(that);
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			that = thix;
+			return;
+		}
+
+	};
+
+	#pragma endregion
+
+	#pragma region character
+
+	template <>
+	struct BasicStringAdapter<Character, Character> {
+
+		using This = BasicString<Character>;
+
+		using That = Character;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.allocate_full(1_sz);
+			thix.first() = that;
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			assert_condition(thix.size() == 1_sz);
+			that = thix.first();
+			return;
+		}
+
+	};
+
+	#pragma endregion
+
+	#pragma region null
+
+	template <>
+	struct BasicStringAdapter<Character, Null> {
+
+		using This = BasicString<Character>;
+
+		using That = Null;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix = "null"_sv;
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			assert_condition(thix == "null"_sv);
+			return;
+		}
+
+	};
+
+	#pragma endregion
+
+	#pragma region boolean
+
+	template <>
+	struct BasicStringAdapter<Character, Boolean> {
+
+		using This = BasicString<Character>;
+
+		using That = Boolean;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix = that ? "true"_sv : "false"_sv;
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			if (thix == "true"_sv) {
+				that = k_true;
+			} else if (thix == "false"_sv) {
+				that = k_false;
+			} else {
+				assert_failed(R"(thix == "true"_sv || thix == "false"_sv)");
+			}
+			return;
+		}
+
+	};
+
+	#pragma endregion
+
+	#pragma region number
+
+	template <>
+	struct BasicStringAdapter<Character, Integer> {
+
+		using This = BasicString<Character>;
+
+		using That = Integer;
+
+		// ----------------
+
+		static auto from (
+			This &          thix,
+			That const &    that,
+			Boolean const & disable_sign_when_positive = k_false
+		) -> Void {
+			thix.allocate_full(20_sz);
+			auto stream = OCharacterStreamView{thix};
+			stream.write(that, disable_sign_when_positive);
+			thix.set_size(stream.position());
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			auto stream = ICharacterStreamView{thix};
+			stream.read(that);
+			assert_condition(stream.full());
+			return;
+		}
+
+	};
+
+	template <>
+	struct BasicStringAdapter<Character, Floating> {
+
+		using This = BasicString<Character>;
+
+		using That = Floating;
+
+		// ----------------
+
+		static auto from (
+			This &          thix,
+			That const &    that,
+			Boolean const & disable_sign_when_positive = k_false
+		) -> Void {
+			// TODO : max size ?
+			thix.allocate_full(32_sz);
+			auto stream = OCharacterStreamView{thix};
+			stream.write(that, disable_sign_when_positive);
+			thix.set_size(stream.position());
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			auto stream = ICharacterStreamView{thix};
+			stream.read(that);
+			assert_condition(stream.full());
+			return;
+		}
+
+	};
+
+	// ----------------
+
+	template <>
+	struct BasicStringAdapter<Character, NumberVariant> {
+
+		using This = BasicString<Character>;
+
+		using That = NumberVariant;
+
+		// ----------------
+
+		static auto from (
+			This &          thix,
+			That const &    that,
+			Boolean const & disable_sign_when_positive = k_false
+		) -> Void {
+			// TODO : max size ?
+			thix.allocate_full(32_sz);
+			auto stream = OCharacterStreamView{thix};
+			stream.write(that, disable_sign_when_positive);
+			thix.set_size(stream.position());
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			auto stream = ICharacterStreamView{thix};
+			stream.read(that);
+			assert_condition(stream.full());
+			return;
+		}
+
+	};
+
+	#pragma endregion
+
+	#pragma region byte
+
+	template <>
+	struct BasicStringAdapter<Character, Byte> {
+
+		using This = BasicString<Character>;
+
+		using That = Byte;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.allocate_full(2_sz);
+			auto stream = OCharacterStreamView{thix};
+			stream.write(that);
+			thix.set_size(stream.position());
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			auto stream = ICharacterStreamView{thix};
+			stream.read(that);
+			assert_condition(stream.full());
+			return;
+		}
+
+	};
+
+	#pragma endregion
+
+	#pragma region byte list
+
+	template <>
+	struct BasicStringAdapter<Character, ByteList> {
+
+		using This = BasicString<Character>;
+
+		using That = ByteList;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.allocate_full(that.size() * 2_sz + max(that.size(), 1_sz) - 1_sz);
+			auto stream = OCharacterStreamView{thix};
+			stream.write(that.view());
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			assert_condition(thix.size() == 0_sz || thix.size() % 3_sz == 2_sz);
+			that.allocate_full((thix.size() + 1_sz) / 3_sz);
+			auto stream = ICharacterStreamView{thix};
+			stream.read(that.view());
+			return;
+		}
+
+	};
+
+	#pragma endregion
+
+	#pragma region misc
+
+	template <typename TType> requires
+		AutoConstraint
+	struct BasicStringAdapter<Character, AsEnum<TType>> {
+
+		using This = BasicString<Character>;
+
+		using That = AsEnum<TType>;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			auto has_case = k_false;
+			Reflection::iterate_enum_value<TType>(
+				[&] <typename Field> (Field) -> auto {
+					if (!has_case) {
+						if (Field::value == that) {
+							thix = make_string(Field::name.view());
+							has_case = k_true;
+						}
+					}
+					return;
+				}
+			);
+			if (!has_case) {
+				assert_failed(R"(/* enum value is invalid */)");
+			}
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			auto has_case = k_false;
+			auto string_hash = thix.hash().value;
+			Reflection::iterate_enum_value<TType>(
+				[&] <typename Field> (Field) -> auto {
+					if (!has_case) {
+						constexpr auto name_hash = hash_std_string_view(Field::name.view());
+						if (string_hash == name_hash) {
+							that = Field::value;
+							has_case = k_true;
+						}
+					}
+					return;
+				}
+			);
+			if (!has_case) {
+				assert_failed(R"(/* enum name is invalid */)");
+			}
+			return;
+		}
+
+	};
+
+	// ----------------
+
+	template <>
+	struct BasicStringAdapter<Character, FourCC> {
+
+		using This = BasicString<Character>;
+
+		using That = FourCC;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix = CStringView{cast_pointer<Character>(make_pointer(&that)), k_type_size<FourCC>};
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			assert_condition(thix.size() == k_type_size<FourCC>);
+			that = make_fourcc(
+				thix[1_ix],
+				thix[2_ix],
+				thix[3_ix],
+				thix[4_ix]
+			);
+			return;
+		}
+
+	};
+
+	// ----------------
+
+	template <>
+	struct BasicStringAdapter<Character, Path> {
+
+		using This = BasicString<Character>;
+
+		using That = Path;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix = that.to_string();
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			that.from_string(thix);
+			return;
+		}
+
+	};
+
+	#pragma endregion
+
+}

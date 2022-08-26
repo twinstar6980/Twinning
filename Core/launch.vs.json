@@ -1,0 +1,15 @@
+{
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "debugger.exe (debugger\\debugger.exe)",
+      "name": "debugger.exe (debugger\\debugger.exe)",
+      "args": [
+        "\"@C:\\Program Files\\TwinKleS\\ToolKit\\script\\main.js\""
+      ]
+    }
+  ]
+}
