@@ -1759,56 +1759,92 @@ declare namespace TwinKleS.Core {
 
 				}
 
-				// /** Rijndael */
-				// namespace Rijndael {
+				/** Rijndael */
+				namespace Rijndael {
 
-				// 	/** 加密 */
-				// 	namespace Encrypt {
+					type JS_Mode = 'ecb' | 'cbc' | 'cfb';
 
-				// 		/**
-				// 		 * 加密
-				// 		 * @param plain 明文数据
-				// 		 * @param cipher 密文数据
-				// 		 * @param block_size 只允许4、6、8
-				// 		 * @param key_size 只允许4、6、8
-				// 		 * @param key 密钥
-				// 		 * @param iv 初始向量
-				// 		 */
-				// 		function process(
-				// 			plain: IIntegerU32StreamView,
-				// 			cipher: OIntegerU32StreamView,
-				// 			block_size: Size,
-				// 			key_size: Size,
-				// 			key: String,
-				// 			iv: String,
-				// 		): None;
+					/**
+					 * 模式枚举
+					 * + ecb
+					 * + cbc
+					 * + cfb
+					 */
+					class Mode {
 
-				// 	}
+						// ------------------------------------------------
 
-				// 	/** 解密 */
-				// 	namespace Decrypt {
+						private _Tool_Data_Encrypt_Rijndeal_Mode;
 
-				// 		/**
-				// 		 * 解密
-				// 		 * @param cipher 密文数据
-				// 		 * @param plain 明文数据
-				// 		 * @param block_size 只允许4、6、8
-				// 		 * @param key_size 只允许4、6、8
-				// 		 * @param key 密钥
-				// 		 * @param iv 初始向量
-				// 		 */
-				// 		function process(
-				// 			cipher: IIntegerU32StreamView,
-				// 			plain: OIntegerU32StreamView,
-				// 			block_size: Size,
-				// 			key_size: Size,
-				// 			key: String,
-				// 			iv: String,
-				// 		): None;
+						// ------------------------------------------------
 
-				// 	}
+						static default(): Mode;
 
-				// }
+						static copy(t: Mode): Mode;
+
+						// ------------------------------------------------
+
+						static value(t: JS_Mode): Mode;
+
+						get value(): JS_Mode;
+
+						set value(t: JS_Mode);
+
+						// ------------------------------------------------
+
+					}
+
+					/** 加密 */
+					namespace Encrypt {
+
+						/**
+						 * 加密
+						 * @param plain 明文数据
+						 * @param cipher 密文数据
+						 * @param mode 模式
+						 * @param block_size 块大小，允许16、24、32
+						 * @param key_size 密钥大小，允许16、24、32
+						 * @param key 密钥，大小必须与key_size一致
+						 * @param iv 初始向量，当模式为cbc或cfb时有效，此时大小必须与block_size一致
+						 */
+						function process(
+							plain: IByteStreamView,
+							cipher: OByteStreamView,
+							mode: Mode,
+							block_size: Size,
+							key_size: Size,
+							key: String,
+							iv: String,
+						): None;
+
+					}
+
+					/** 解密 */
+					namespace Decrypt {
+
+						/**
+						 * 解密
+						 * @param cipher 密文数据
+						 * @param plain 明文数据
+						 * @param mode 模式
+						 * @param block_size 块大小，允许16、24、32
+						 * @param key_size 密钥大小，允许16、24、32
+						 * @param key 密钥，大小必须与key_size一致
+						 * @param iv 初始向量，当模式为cbc或cfb时有效，此时大小必须与block_size一致
+						 */
+						function process(
+							cipher: IByteStreamView,
+							plain: OByteStreamView,
+							mode: Mode,
+							block_size: Size,
+							key_size: Size,
+							key: String,
+							iv: String,
+						): None;
+
+					}
+
+				}
 
 			}
 

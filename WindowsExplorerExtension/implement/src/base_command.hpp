@@ -92,7 +92,7 @@ namespace TwinKleS::WindowsExplorerExtension {
 			return E_NOTIMPL;
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
 		virtual IFACEMETHODIMP SetSite (
 			_In_ IUnknown * pUnkSite

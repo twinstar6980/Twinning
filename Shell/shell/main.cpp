@@ -8,12 +8,6 @@
 #include "Windows.h"
 #endif
 
-#pragma region version
-
-inline constexpr auto k_version = std::size_t{11};
-
-#pragma endregion
-
 #pragma region config
 
 #if defined M_system_windows
@@ -56,7 +50,7 @@ auto main (
 	SetConsoleCP(CP_UTF8);
 	SetConsoleOutputCP(CP_UTF8);
 	#endif
-	std::cout << "TwinKleS.ToolKit.Shell " << k_version << std::endl;
+	std::cout << "TwinKleS.ToolKit.Shell " << std::size_t{M_version} << std::endl;
 	auto argument = [&] {
 		auto it = std::vector<std::string>{};
 		it.reserve(args.size());

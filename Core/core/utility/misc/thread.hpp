@@ -59,6 +59,7 @@ namespace TwinKleS::Core {
 		#pragma endregion
 
 	};
+
 	#pragma endregion
 
 }

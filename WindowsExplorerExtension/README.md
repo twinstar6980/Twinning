@@ -12,7 +12,7 @@ Windows 11 / 10 系统。
 
 本项目为 VS 2022 项目。
 
-需要注意的是：项目中的 ./package/Assets/Library/implement.dll 实际上是一个指向 /.build/x64-Release/implement/implement.dll 的符号链接，在每次构建 implement 子项目后，都应运行 /package/Assets/Library/link.bat 文件以创建这一符号链接，以使 VS 将真正的 implement.dll 打包进 msix 。
+需要注意的是：项目中的 ./package/Assets/Library/implement.dll 实际上是一个指向 /.build/x64-Release/implement/implement.dll 的符号链接，在首次构建时，应运行 /package/Assets/Library/link.bat 文件以创建这一符号链接，并在每次更新 implement 子项目后重新构建（而非直接构建） package 子项目，从而使 VS 可将新的 implement.dll 打包进 msix 。
 
 ## 程序安装
 

@@ -182,7 +182,7 @@ namespace TwinKleS.Entry.method.popcap.pak {
 							if_exist: a.fs_if_exist,
 						});
 					}
-					CoreX.Tool.Data.Encrypt.XOR.Crypt.crypt_fs(plain_file, cipher_file, 0xF7n);
+					CoreX.Tool.Data.Encrypt.XOR.crypt_fs(plain_file, cipher_file, 0xF7n);
 					Output.i(`输出路径：${cipher_file}`);
 				},
 				default_argument: {

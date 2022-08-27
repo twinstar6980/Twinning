@@ -17,6 +17,7 @@ endif()
 add_executable(
 	${PROJECT_NAME}
 	./interface.hpp
+	./version.hpp
 	./base.hpp
 	./loader.hpp
 	./callback.hpp

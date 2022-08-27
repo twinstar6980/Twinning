@@ -520,22 +520,58 @@ namespace TwinKleS.CoreX {
 
 				export namespace XOR {
 
-					export namespace Crypt {
+					export function crypt_fs(
+						plain_file: string,
+						cipher_file: string,
+						key: bigint,
+					): void {
+						let plain_data = FileSystem.read_file(plain_file);
+						let cipher_data = Core.ByteArray.allocate(plain_data.size());
+						let plain_stream = Core.ByteStreamView.look(plain_data.view());
+						let cipher_stream = Core.ByteStreamView.look(cipher_data.view());
+						Core.Tool.Data.Encrypt.XOR.Crypt.process(plain_stream, cipher_stream, Core.Byte.value(key));
+						FileSystem.write_file(cipher_file, cipher_stream.stream_view());
+						return;
+					}
 
-						export function crypt_fs(
-							plain_file: string,
-							cipher_file: string,
-							key: bigint,
-						): void {
-							let plain_data = FileSystem.read_file(plain_file);
-							let cipher_data = Core.ByteArray.allocate(plain_data.size());
-							let plain_stream = Core.ByteStreamView.look(plain_data.view());
-							let cipher_stream = Core.ByteStreamView.look(cipher_data.view());
-							Core.Tool.Data.Encrypt.XOR.Crypt.process(plain_stream, cipher_stream, Core.Byte.value(key));
-							FileSystem.write_file(cipher_file, cipher_stream.stream_view());
-							return;
-						}
+				}
 
+				export namespace Rijndael {
+
+					export function encrypt_fs(
+						plain_file: string,
+						cipher_file: string,
+						mode: Core.Tool.Data.Encrypt.Rijndael.JS_Mode,
+						block_size: bigint,
+						key_size: bigint,
+						key: string,
+						iv: string,
+					): void {
+						let plain_data = FileSystem.read_file(plain_file);
+						let cipher_data = Core.ByteArray.allocate(plain_data.size());
+						let plain_stream = Core.ByteStreamView.look(plain_data.view());
+						let cipher_stream = Core.ByteStreamView.look(cipher_data.view());
+						Core.Tool.Data.Encrypt.Rijndael.Encrypt.process(plain_stream, cipher_stream, Core.Tool.Data.Encrypt.Rijndael.Mode.value(mode), Core.Size.value(block_size), Core.Size.value(key_size), Core.String.value(key), Core.String.value(iv));
+						FileSystem.write_file(cipher_file, cipher_stream.stream_view());
+						return;
+					}
+
+					export function decrypt_fs(
+						cipher_file: string,
+						plain_file: string,
+						mode: Core.Tool.Data.Encrypt.Rijndael.JS_Mode,
+						block_size: bigint,
+						key_size: bigint,
+						key: string,
+						iv: string,
+					): void {
+						let cipher_data = FileSystem.read_file(cipher_file);
+						let plain_data = Core.ByteArray.allocate(cipher_data.size());
+						let cipher_stream = Core.ByteStreamView.look(cipher_data.view());
+						let plain_stream = Core.ByteStreamView.look(plain_data.view());
+						Core.Tool.Data.Encrypt.Rijndael.Decrypt.process(cipher_stream, plain_stream, Core.Tool.Data.Encrypt.Rijndael.Mode.value(mode), Core.Size.value(block_size), Core.Size.value(key_size), Core.String.value(key), Core.String.value(iv));
+						FileSystem.write_file(plain_file, plain_stream.stream_view());
+						return;
 					}
 
 				}

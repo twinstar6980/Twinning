@@ -604,9 +604,9 @@ namespace TwinKleS::Core::Executor::API {
 								.add_function_proxy<&stp<&Tool::Data::Encrypt::XOR::Crypt::process>>("process"_s);
 						}
 					}
-					// todo
-					/*{
+					{
 						auto n_Rijndael = n_Encrypt.add_namespace("Rijndael"_s);
+						define_generic_class<Tool::Data::Encrypt::Rijndael::Mode>(n_Rijndael, "Mode"_s);
 						{
 							auto n_Encrypt = n_Rijndael.add_namespace("Encrypt"_s);
 							n_Encrypt
@@ -617,7 +617,7 @@ namespace TwinKleS::Core::Executor::API {
 							n_Decrypt
 								.add_function_proxy<&stp<&Tool::Data::Encrypt::Rijndael::Decrypt::process>>("process"_s);
 						}
-					}*/
+					}
 				}
 				{
 					auto n_Compress = n_Data.add_namespace("Compress"_s);

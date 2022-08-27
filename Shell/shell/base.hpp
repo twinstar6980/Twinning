@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "./interface.hpp"
+#include "./version.hpp"
 #include <span>
 #include <vector>
 #include <string>

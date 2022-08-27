@@ -14,6 +14,7 @@ add_library(
 	./third_party/tinyxml2.hpp
 	./third_party/quickjs.hpp
 	./third_party/md5.hpp
+	./third_party/Rijndael.hpp
 	./third_party/zlib.hpp
 	./third_party/bzip2.hpp
 	./third_party/lzma.hpp
@@ -247,6 +248,7 @@ target_link_libraries(
 	tinyxml2
 	quickjs
 	md5
+	Rijndael
 	zlib
 	bzip2
 	lzma

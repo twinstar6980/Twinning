@@ -26,9 +26,9 @@ namespace TwinKleS::Core {
 
 	M_simple_derived_class(Byte, Byte8, Byte8);
 
-	#pragma region
+	#pragma endregion
 
-	#pragma endregion literal
+	#pragma region literal
 
 	inline constexpr auto operator ""_b8 (
 		ZLiteralInteger value

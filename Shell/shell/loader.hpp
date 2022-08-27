@@ -167,14 +167,14 @@ namespace TwinKleS::Shell::Loader {
 
 		auto execute (
 			std::string const &              script,
-			bool const &                     script_is_file,
+			bool const &                     script_is_path,
 			std::vector<std::string> const & argument,
 			Core::ShellCallback const &      shell_callback
 		) const -> std::optional<std::string> {
 			auto script_s = to_string_structure(script);
-			auto script_is_file_s = to_boolean_structure(script_is_file);
+			auto script_is_path_s = to_boolean_structure(script_is_path);
 			auto argument_s = alloc_string_list_structure(argument);
-			auto result_s = thiz.m_symbol.execute(script_s, script_is_file_s, argument_s, shell_callback);
+			auto result_s = thiz.m_symbol.execute(script_s, script_is_path_s, argument_s, shell_callback);
 			free_string_list_structure(argument_s);
 			return result_s ? std::make_optional<std::string>(from_string_structure(*result_s)) : std::nullopt;
 		}

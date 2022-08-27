@@ -5,10 +5,6 @@
 
 namespace TwinKleS::WindowsExplorerExtension {
 
-	inline constexpr auto k_shell_file = std::wstring_view{L"C:\\Program Files\\TwinKleS\\ToolKit\\shell.exe"};
-
-	// ------------------------------------------------
-
 	#pragma region config
 
 	struct MethodInvokeCommandConfig {
@@ -25,7 +21,7 @@ namespace TwinKleS::WindowsExplorerExtension {
 		std::vector<std::size_t>               separator;
 	};
 
-	// ------------------------------------------------
+	// ----------------
 
 	inline auto test_single_path (
 		MethodInvokeCommandConfig const & config,
@@ -55,6 +51,10 @@ namespace TwinKleS::WindowsExplorerExtension {
 			return std::format(LR"("{}" -method "{}" -argument "{}")", path, config.method.value(), config.argument);
 		}
 	}
+
+	// ----------------
+
+	inline constexpr auto k_shell_file = std::wstring_view{L"C:\\Program Files\\TwinKleS\\ToolKit\\shell.exe"};
 
 	#pragma endregion
 
@@ -112,7 +112,7 @@ namespace TwinKleS::WindowsExplorerExtension {
 			CATCH_RETURN()
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
 		virtual auto title (
 		) -> LPCWSTR override {
@@ -162,13 +162,13 @@ namespace TwinKleS::WindowsExplorerExtension {
 			auto separator_index = std::size_t{0};
 			auto current_separator_section_count = std::size_t{0};
 			thiz.m_commands.reserve(config.child.size() + config.separator.size());
-			for (auto & e : config.child) {
+			for (auto & element : config.child) {
 				if (separator_index < config.separator.size() && current_separator_section_count == config.separator[separator_index]) {
 					current_separator_section_count = 0;
 					thiz.m_commands.emplace_back(Make<SeparatorCommand>());
 					++separator_index;
 				}
-				thiz.m_commands.emplace_back(Make<MethodInvokeCommand>(e, false));
+				thiz.m_commands.emplace_back(Make<MethodInvokeCommand>(element, false));
 				++current_separator_section_count;
 			}
 			thiz.m_current = thiz.m_commands.cbegin();
@@ -226,8 +226,6 @@ namespace TwinKleS::WindowsExplorerExtension {
 
 	public: //
 
-		// ------------------------------------------------
-
 		#pragma region structor
 
 		explicit MethodInvokeGroupCommand (
@@ -248,7 +246,7 @@ namespace TwinKleS::WindowsExplorerExtension {
 			return e->QueryInterface(IID_PPV_ARGS(ppEnum));
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
 		virtual auto title (
 		) -> LPCWSTR override {

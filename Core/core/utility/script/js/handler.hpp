@@ -60,8 +60,6 @@ namespace TwinKleS::Core::JS {
 			Handler && that
 		) = default;
 
-		// ----------------
-
 		#pragma endregion
 
 		#pragma region operator

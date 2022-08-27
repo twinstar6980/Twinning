@@ -72,11 +72,11 @@ auto main (
 	auto script_is_file = !raw_script.empty() && raw_script[0] == '@';
 	auto script = !script_is_file ? raw_script : raw_script.substr(1);
 	auto script_s = Shell::to_string_structure(script);
-	auto script_is_file_s = Shell::to_boolean_structure(script_is_file);
+	auto script_is_path_s = Shell::to_boolean_structure(script_is_file);
 	auto argument_s = Shell::alloc_string_list_structure(argument);
 	auto result_s = Core::execute(
 		script_s,
-		script_is_file_s,
+		script_is_path_s,
 		argument_s,
 		&Shell::Callback::CLI::shell_callback
 	);

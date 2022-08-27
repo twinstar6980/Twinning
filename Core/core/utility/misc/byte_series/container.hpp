@@ -233,7 +233,7 @@ namespace TwinKleS::Core {
 
 		#pragma endregion
 
-		#pragma region
+		#pragma region sub
 
 		auto sub (
 			Size const & begin,

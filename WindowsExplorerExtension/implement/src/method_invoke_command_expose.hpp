@@ -96,6 +96,20 @@ namespace TwinKleS::WindowsExplorerExtension {
 					.argument = LR"({})",
 				},
 				{
+					.name = L"Rijndael 加密",
+					.type = false,
+					.rule = std::nullopt,
+					.method = L"data.encrypt.rijndael.encrypt",
+					.argument = LR"({})",
+				},
+				{
+					.name = L"Rijndael 解密",
+					.type = false,
+					.rule = std::nullopt,
+					.method = L"data.encrypt.rijndael.decrypt",
+					.argument = LR"({})",
+				},
+				{
 					.name = L"Deflate 压缩",
 					.type = false,
 					.rule = std::nullopt,
@@ -156,6 +170,7 @@ namespace TwinKleS::WindowsExplorerExtension {
 				1,
 				2,
 				1,
+				2,
 				2,
 				2,
 				2,

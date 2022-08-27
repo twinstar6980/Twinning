@@ -123,8 +123,6 @@ namespace TwinKleS::Core {
 			return;
 		}
 
-		// ----------------
-
 		#pragma endregion
 
 		#pragma region utility
