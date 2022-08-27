@@ -28,21 +28,22 @@
 
 ## 第三方库使用
 
-| 库                  | 用途           |
-|:------------------:|:--------------:|
-| fmt                | 字符串格式化     |
-| tinyxml            | XML读写         |
-| quickjs            | JS脚本引擎       |
-| quickjs (c-smile)  | JS脚本引擎(MSVC) |
-| md5                | MD5哈希计算      |
-| zlib               | ZLib压缩与解压   |
-| bzip2              | BZip2压缩与解压  |
-| lzma               | Lzma压缩与解压   |
-| libpng             | PNG读写         |
-| ETCPACK            | ETC1解压        |
-| rg_ect1            | ETC1压缩        |
-| PVRTCCompressor    | PVRTC4压缩与解压 |
-| VLD                | 内存泄漏检测     |
+| 库                                                             | 用途              |
+|:--------------------------------------------------------------:|:-----------------:|
+| [fmt 9.0.0](https://github.com/fmtlib/fmt)                     | 字符串格式化        |
+| [tinyxml2 9.0.0](https://github.com/leethomason/tinyxml2)      | XML读写           |
+| [quickjs](https://github.com/bellard/quickjs)                  | JS脚本引擎         |
+| [quickjs (c-smile)](https://github.com/c-smile/quickjspp)      | JS脚本引擎(MSVC)   |
+| [md5](https://github.com/JieweiWei/md5)                        | MD5哈希计算        |
+| [Rijndael](_)                                                  | Rijndael加密与解密 |
+| [zlib 1.2.12](https://www.zlib.net/)                           | ZLib压缩与解压     |
+| [bzip2 1.0.8](https://sourceware.org/bzip2/)                   | BZip2压缩与解压    |
+| [lzma 22.01](https://www.7-zip.org/sdk.html)                   | Lzma压缩与解压     |
+| [libpng 1.6.37](http://www.libpng.org/pub/png/libpng.html)     | PNG读写           |
+| [ETCPACK 2.74](https://github.com/Ericsson/ETCPACK)            | ETC1解压          |
+| [rg_ect1](https://github.com/richgel999/rg-etc1)               | ETC1压缩          |
+| [PVRTCCompressor](https://github.com/brenwill/PVRTCCompressor) | PVRTC4压缩与解压   |
+| [vld](https://github.com/KindDragon/vld)                       | 内存泄漏检测       |
 
 ## API说明
 
