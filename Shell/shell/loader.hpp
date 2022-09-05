@@ -44,7 +44,8 @@ namespace TwinKleS::Shell::Loader {
 			std::string_view const & path
 		) -> LibraryHandle {
 			#if defined M_system_windows
-			auto path_w = utf8_to_utf16(reinterpret_cast<std::u8string_view const &>(path));
+			auto path_absolute = std::string{path} + std::string{"."};
+			auto path_w = utf8_to_utf16(reinterpret_cast<std::u8string const &>(path_absolute));
 			auto result = LoadLibraryW(reinterpret_cast<LPCWSTR>(path_w.c_str()));
 			#endif
 			#if defined M_system_linux || defined M_system_macos || defined M_system_android

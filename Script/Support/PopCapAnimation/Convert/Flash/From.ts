@@ -237,16 +237,19 @@ namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.From {
 					command_node.push(XML.create_element_node('DOMFrame', {
 						index: `${prev_end.command + 1}`,
 						duration: `${frame_index - (prev_end.command + 1)}`,
-					}, []));
+					}, [
+						XML.create_element_node('elements', {}, []),
+					]));
 				}
 				command_node.push(XML.create_element_node('DOMFrame', {
 					index: `${frame_index}`,
 				}, [
 					XML.create_element_node('Actionscript', {}, [
 						XML.create_element_node('script', {}, [
-							XML.create_text_node(frame.command.map((e) => (`fscommand("${e.command}", "${e.argument}");`)).join('\n'), true),
+							XML.create_text_node(frame.command.map((e) => (`fscommand("${e[0]}", "${e[1]}");`)).join('\n'), true),
 						]),
 					]),
+					XML.create_element_node('elements', {}, []),
 				]));
 				prev_end.command = frame_index;
 			}

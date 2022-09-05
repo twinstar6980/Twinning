@@ -12,7 +12,7 @@
 
 * 编译器要求
 
-	MSVC 19.33+ 或 Clang 15+ ，不支持 GCC 。
+	MSVC 19.33+ 或 Clang 16+(dev) ，不支持 GCC 。
 
 * 构建脚本
 

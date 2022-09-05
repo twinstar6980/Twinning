@@ -54,7 +54,7 @@ namespace TwinKleS::WindowsExplorerExtension {
 
 	// ----------------
 
-	inline constexpr auto k_shell_file = std::wstring_view{L"C:\\Program Files\\TwinKleS\\ToolKit\\shell.exe"};
+	inline constexpr auto k_shell_file = std::wstring_view{L"C:\\Program Files\\TwinKleS\\ToolKit\\shell"};
 
 	#pragma endregion
 

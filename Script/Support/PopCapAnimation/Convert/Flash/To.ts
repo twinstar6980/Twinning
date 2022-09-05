@@ -288,7 +288,7 @@ namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.To {
 					index: model.index,
 					transform,
 					color: color_is_changed ? color : null,
-					sprite_frame_number: 0n,
+					sprite_frame_number: null,
 					source_rectangle: null,
 				});
 			});
@@ -440,10 +440,10 @@ namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.To {
 						if (regex_result === null) {
 							throw new MyError('invalid command string');
 						}
-						main_sprite_frame[frame_index].command.push({
-							command: regex_result[1],
-							argument: regex_result[2],
-						});
+						main_sprite_frame[frame_index].command.push([
+							regex_result[1],
+							regex_result[2],
+						]);
 					}
 				});
 			}

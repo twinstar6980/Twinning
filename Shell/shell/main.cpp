@@ -11,19 +11,19 @@
 #pragma region config
 
 #if defined M_system_windows
-inline constexpr auto k_library_file = std::string_view{"C:\\Program Files\\TwinKleS\\ToolKit\\core.dll"};
+inline constexpr auto k_library_file = std::string_view{"C:\\Program Files\\TwinKleS\\ToolKit\\core"};
 inline constexpr auto k_script_file = std::string_view{"C:\\Program Files\\TwinKleS\\ToolKit\\script\\main.js"};
 #endif
 #if defined M_system_linux
-inline constexpr auto k_library_file = std::string_view{"/opt/TwinKleS/ToolKit/core.so"};
+inline constexpr auto k_library_file = std::string_view{"/opt/TwinKleS/ToolKit/core"};
 inline constexpr auto k_script_file = std::string_view{"/opt/TwinKleS/ToolKit/script/main.js"};
 #endif
 #if defined M_system_macos
-inline constexpr auto k_library_file = std::string_view{"/opt/TwinKleS/ToolKit/core.dylib"};
+inline constexpr auto k_library_file = std::string_view{"/opt/TwinKleS/ToolKit/core"};
 inline constexpr auto k_script_file = std::string_view{"/opt/TwinKleS/ToolKit/script/main.js"};
 #endif
 #if defined M_system_android
-inline constexpr auto k_library_file = std::string_view{"/opt/TwinKleS/ToolKit/core.so"};
+inline constexpr auto k_library_file = std::string_view{"/opt/TwinKleS/ToolKit/core"};
 inline constexpr auto k_script_file = std::string_view{"/opt/TwinKleS/ToolKit/script/main.js"};
 #endif
 

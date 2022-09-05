@@ -9,7 +9,7 @@
 	xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
 	IgnorableNamespaces="uap desktop4 desktop5 com rescap"
 >
-	<Identity Name="TwinKleS.ToolKit.WindowsExplorerExtension" Publisher="CN=TwinKleS, O=TwinKleS, C=CN" Version="3.0.0.0" />
+	<Identity Name="TwinKleS.ToolKit.WindowsExplorerExtension" Publisher="CN=TwinKleS, O=TwinKleS, C=CN" Version="4.0.0.0" />
 	<Properties>
 		<DisplayName>TwinKleS ToolKit - Windows Explorer Extension</DisplayName>
 		<PublisherDisplayName>TwinKleS</PublisherDisplayName>

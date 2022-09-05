@@ -88,13 +88,14 @@ namespace TwinKleS::Core::XML {
 				auto   buffer_size = mbw<Size>(printer_imitator._buffer._size);
 				auto   buffer_capacity = mbw<Size>(printer_imitator._buffer._allocated);
 				auto   result = String{};
+				assert_condition(buffer_size > 0_sz);
 				if (printer_imitator._buffer._mem == printer_imitator._buffer._pool) {
-					result.assign(CStringView{buffer_data, buffer_size});
+					result.assign(CStringView{buffer_data, buffer_size - 1_sz});
 				} else {
 					printer_imitator._buffer._mem = printer_imitator._buffer._pool;
 					printer_imitator._buffer._size = 0;
 					printer_imitator._buffer._allocated = 20;
-					result.bind(buffer_data, buffer_size, buffer_capacity);
+					result.bind(buffer_data, buffer_size - 1_sz, buffer_capacity);
 				}
 				return result;
 			}

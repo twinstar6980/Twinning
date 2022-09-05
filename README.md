@@ -26,7 +26,7 @@ by TwinKleS-China
 |:--------:|:-----:|
 |  Windows |  OK   |
 | Linux    |  OK   |
-| MacOS    |  OK   |
+| MacOS    |  TODO |
 | Android  |  TODO |
 | iOS      |  TODO |
 

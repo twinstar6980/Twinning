@@ -2910,12 +2910,12 @@ declare namespace TwinKleS.Core {
 						type Color = [number, number, number, number];
 
 						/** 命令 */
-						type Command = {
+						type Command = [
 							/** 命令 */
-							command: string;
+							string,
 							/** 参数 */
-							argument: string;
-						};
+							string,
+						];
 
 						/** 矩形 */
 						type Rectangle = {
