@@ -40,23 +40,26 @@ namespace TwinKleS.Entry.method.popcap.reanim {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.version_platform === '?input') {
-							version_platform = (['desktop', 'phone'] as const)[Number(Input.integer([`请选择版本平台`, [`1. desktop 适用于桌面端（windows）`, `2. phone 适用于移动端（android、ios）`]], Check.enum_checkerx([1n, 2n]))! - 1n)];
+							Console.notify('i', `请选择版本平台`, [`1. desktop 适用于桌面端（windows）`, `2. phone 适用于移动端（android、ios）`]);
+							version_platform = (['desktop', 'phone'] as const)[Number(Console.integer(Check.enum_checkerx([1n, 2n]))! - 1n)];
 						} else {
 							version_platform = a.version_platform;
 						}
 						if (a.version_variant_64 === '?input') {
-							version_variant_64 = Input.yon(`平台是否为64位？（仅适用于移动端）`)!;
+							Console.notify('i', `平台是否为64位？（仅适用于移动端）`, []);
+							version_variant_64 = Console.yon()!;
 						} else {
 							version_variant_64 = a.version_variant_64;
 						}
 						if (a.data_buffer_size === '?input') {
-							data_buffer_size = Input.size(`请输入用于保存Reanim数据的内存空间大小`)!;
+							Console.notify('i', `请输入用于保存Reanim数据的内存空间大小`, []);
+							data_buffer_size = Console.size()!;
 						} else {
 							data_buffer_size = parse_size_string(a.data_buffer_size);
 						}
 					}
 					CoreX.Tool.PopCap.Reanim.encode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 }, data_buffer_size);
-					Output.i(`输出路径：${data_file}`);
+					Console.notify('s', `输出路径：${data_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -91,18 +94,20 @@ namespace TwinKleS.Entry.method.popcap.reanim {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.version_platform === '?input') {
-							version_platform = (['desktop', 'phone'] as const)[Number(Input.integer([`请选择版本平台`, [`1. desktop 适用于桌面端（windows）`, `2. phone 适用于移动端（android、ios）`]], Check.enum_checkerx([1n, 2n]))! - 1n)];
+							Console.notify('i', `请选择版本平台`, [`1. desktop 适用于桌面端（windows）`, `2. phone 适用于移动端（android、ios）`]);
+							version_platform = (['desktop', 'phone'] as const)[Number(Console.integer(Check.enum_checkerx([1n, 2n]))! - 1n)];
 						} else {
 							version_platform = a.version_platform;
 						}
 						if (a.version_variant_64 === '?input') {
-							version_variant_64 = Input.yon(`平台是否为64位？（仅适用于移动端）`)!;
+							Console.notify('i', `平台是否为64位？（仅适用于移动端）`, []);
+							version_variant_64 = Console.yon()!;
 						} else {
 							version_variant_64 = a.version_variant_64;
 						}
 					}
 					CoreX.Tool.PopCap.Reanim.decode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 });
-					Output.i(`输出路径：${manifest_file}`);
+					Console.notify('s', `输出路径：${manifest_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -140,17 +145,20 @@ namespace TwinKleS.Entry.method.popcap.reanim {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.version_platform === '?input') {
-							version_platform = (['desktop', 'phone'] as const)[Number(Input.integer([`请选择版本平台`, [`1. desktop 适用于桌面端（windows）`, `2. phone 适用于移动端（android、ios）`]], Check.enum_checkerx([1n, 2n]))! - 1n)];
+							Console.notify('i', `请选择版本平台`, [`1. desktop 适用于桌面端（windows）`, `2. phone 适用于移动端（android、ios）`]);
+							version_platform = (['desktop', 'phone'] as const)[Number(Console.integer(Check.enum_checkerx([1n, 2n]))! - 1n)];
 						} else {
 							version_platform = a.version_platform;
 						}
 						if (a.version_variant_64 === '?input') {
-							version_variant_64 = Input.yon(`平台是否为64位？（仅适用于移动端）`)!;
+							Console.notify('i', `平台是否为64位？（仅适用于移动端）`, []);
+							version_variant_64 = Console.yon()!;
 						} else {
 							version_variant_64 = a.version_variant_64;
 						}
 						if (a.data_buffer_size === '?input') {
-							data_buffer_size = Input.size(`请输入用于保存Reanim数据的内存空间大小`)!;
+							Console.notify('i', `请输入用于保存Reanim数据的内存空间大小`, []);
+							data_buffer_size = Console.size()!;
 						} else {
 							data_buffer_size = parse_size_string(a.data_buffer_size);
 						}
@@ -165,7 +173,7 @@ namespace TwinKleS.Entry.method.popcap.reanim {
 							CoreX.Tool.PopCap.Reanim.encode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 }, data_buffer.view());
 						},
 					);
-					Output.i(`输出路径：${data_file_directory}`);
+					Console.notify('s', `输出路径：${data_file_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -200,12 +208,14 @@ namespace TwinKleS.Entry.method.popcap.reanim {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.version_platform === '?input') {
-							version_platform = (['desktop', 'phone'] as const)[Number(Input.integer([`请选择版本平台`, [`1. desktop 适用于桌面端（windows）`, `2. phone 适用于移动端（android、ios）`]], Check.enum_checkerx([1n, 2n]))! - 1n)];
+							Console.notify('i', `请选择版本平台`, [`1. desktop 适用于桌面端（windows）`, `2. phone 适用于移动端（android、ios）`]);
+							version_platform = (['desktop', 'phone'] as const)[Number(Console.integer(Check.enum_checkerx([1n, 2n]))! - 1n)];
 						} else {
 							version_platform = a.version_platform;
 						}
 						if (a.version_variant_64 === '?input') {
-							version_variant_64 = Input.yon(`平台是否为64位？（仅适用于移动端）`)!;
+							Console.notify('i', `平台是否为64位？（仅适用于移动端）`, []);
+							version_variant_64 = Console.yon()!;
 						} else {
 							version_variant_64 = a.version_variant_64;
 						}
@@ -219,7 +229,7 @@ namespace TwinKleS.Entry.method.popcap.reanim {
 							CoreX.Tool.PopCap.Reanim.decode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 });
 						},
 					);
-					Output.i(`输出路径：${manifest_file_directory}`);
+					Console.notify('s', `输出路径：${manifest_file_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

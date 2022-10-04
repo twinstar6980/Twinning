@@ -59,11 +59,11 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 			subgroup: [string, ResourceManifest.Subgroup, Core.Tool.PopCap.RSB.Manifest.JS_N.Subgroup],
 			resource: [string, ResourceManifest.Resource, Core.Tool.PopCap.RSB.Manifest.JS_N.Resource],
 		) => void): void => {
-			let group_progress_text = new TextGenerator.Progress('fraction', 40, Object.keys(package_manifest.group).length);
+			let group_progress = new TextGenerator.Progress('fraction', 40, Object.keys(package_manifest.group).length);
 			for (let group_id in package_manifest.group) {
-				group_progress_text.increase();
+				group_progress.increase();
 				if (show_group_progress) {
-					Output.i(`${group_progress_text} ${group_id}`);
+					Console.notify('i', `${group_progress} - ${group_id}`, []);
 				}
 				if (group_id.startsWith('__MANIFESTGROUP__')) {
 					continue;
@@ -108,7 +108,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 			return;
 		};
 		{
-			Output.v(`恢复文件路径大小写...`);
+			Console.notify('i', `恢复文件路径大小写...`, []);
 			let resource_path_list: Array<string> = [];
 			iterate_manifest(false)((group, subgroup, resource) => {
 				resource_path_list.push(`${resource[1].path}${(resource[1].expand[0] === 'atlas' ? '.ptx' : '')}`);
@@ -127,11 +127,11 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 			let resource_path_tree = PathUtility.to_tree(resource_path_list);
 			rename_tree(resource_directory, resource_path_tree);
 		}
-		Output.v(`提取资源...`);
+		Console.notify('i', `提取资源...`, []);
 		iterate_manifest(true)((group, subgroup, resource) => {
 			let path = resource[1].path;
 			if (option.json !== null && path.endsWith('.rton')) {
-				Output.v(`${path}`, +1);
+				Console.notify('v', `  ${path}`, []);
 				try {
 					if (option.json.crypt !== null) {
 						CoreX.Tool.PopCap.RTON.decrypt_then_decode_fs(
@@ -146,55 +146,53 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 						);
 					}
 				} catch (e: any) {
-					Output.e(`解码失败`);
-					Output.e(`${e}`);
+					Console.notify('e', `解码失败`, []);
+					Console.notify('e', `${e}`, []);
 				}
 			}
 			if (option.image !== null && resource[1].expand[0] === 'atlas') {
-				g_thread_manager.join(() => {
-					Output.v(`${path}`, +1);
-					try {
-						if (!(option.image !== null && resource[1].expand[0] === 'atlas')) {
-							throw new MyError(`NEVER`);
-						}
-						if (resource[2].additional.type !== 'texture') {
-							throw new MyError(`invalid image resource`);
-						}
-						let atlas_image_information = resource[1].expand[1];
-						let texture_information_source = resource[2].additional.value;
-						let size = atlas_image_information.size;
-						let actual_size = texture_information_source.size;
-						let texture_format = option.image.texture_format_map.find((e) => (e.index === texture_information_source.format));
-						if (texture_format === undefined) {
-							throw new MyError(`unknown texture format : ${texture_information_source.format}`);
-						}
-						Output.v(`size : [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] , actual_size : [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ] , format : ${texture_format.format}`, +2);
-						let data = CoreX.FileSystem.read_file(`${resource_directory}/${path}.ptx`);
-						let stream = Core.ByteStreamView.look(data.view());
-						let image = Core.Image.Bitmap.allocate(Core.Image.ImageSize.value(actual_size));
-						let image_view = image.view();
-						Support.PopCapTexture.Encode.decode(stream, image_view, texture_format.format);
-						if (option.image.atlas !== null) {
-							let atlas_view = image_view;
-							if (option.image.atlas.resize) {
-								atlas_view = atlas_view.sub(Core.Image.ImagePosition.value([0n, 0n]), Core.Image.ImageSize.value(size));
-							}
-							CoreX.Image.File.png_write_file(`${option.image.directory}/${path}.png`, atlas_view);
-						}
-						if (option.image.sprite !== null) {
-							Support.Atlas.Pack.unpack_fsh({
-								size: atlas_image_information.size,
-								sprite: record_transform(atlas_image_information.sprite, (k, v) => ([v.path, { position: v.position, size: v.size }])),
-							}, image_view, option.image.directory);
-						}
-					} catch (e: any) {
-						Output.e(`解码失败`);
-						Output.e(`${e}`);
+				Console.notify('v', `  ${path}`, []);
+				try {
+					if (!(option.image !== null && resource[1].expand[0] === 'atlas')) {
+						throw new MyError(`NEVER`);
 					}
-				});
+					if (resource[2].additional.type !== 'texture') {
+						throw new MyError(`invalid image resource`);
+					}
+					let atlas_image_information = resource[1].expand[1];
+					let texture_information_source = resource[2].additional.value;
+					let size = atlas_image_information.size;
+					let actual_size = texture_information_source.size;
+					let texture_format = option.image.texture_format_map.find((e) => (e.index === texture_information_source.format));
+					if (texture_format === undefined) {
+						throw new MyError(`unknown texture format : ${texture_information_source.format}`);
+					}
+					Console.notify('v', `    size : [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] , actual_size : [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ] , format : ${texture_format.format}`, [], false);
+					let data = CoreX.FileSystem.read_file(`${resource_directory}/${path}.ptx`);
+					let stream = Core.ByteStreamView.look(data.view());
+					let image = Core.Image.Bitmap.allocate(Core.Image.ImageSize.value(actual_size));
+					let image_view = image.view();
+					Support.PopCapTexture.Encode.decode(stream, image_view, texture_format.format);
+					if (option.image.atlas !== null) {
+						let atlas_view = image_view;
+						if (option.image.atlas.resize) {
+							atlas_view = atlas_view.sub(Core.Image.ImagePosition.value([0n, 0n]), Core.Image.ImageSize.value(size));
+						}
+						CoreX.Image.File.png_write_file(`${option.image.directory}/${path}.png`, atlas_view);
+					}
+					if (option.image.sprite !== null) {
+						Support.Atlas.Pack.unpack_fsh({
+							size: atlas_image_information.size,
+							sprite: record_transform(atlas_image_information.sprite, (k, v) => ([v.path, { position: v.position, size: v.size }])),
+						}, image_view, option.image.directory);
+					}
+				} catch (e: any) {
+					Console.notify('e', `解码失败`, []);
+					Console.notify('e', `${e}`, []);
+				}
 			}
 			if (option.animation !== null && path.endsWith('.pam')) {
-				Output.v(`${path}`, +1);
+				Console.notify('v', `  ${path}`, []);
 				try {
 					let raw_file = `${path}.json`;
 					let flash_directory = `${path}.xfl`;
@@ -215,12 +213,12 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 						Support.PopCapAnimation.Convert.Flash.create_xfl_content_file(`${option.animation.directory}/${flash_directory}`);
 					}
 				} catch (e: any) {
-					Output.e(`解码失败`);
-					Output.e(`${e}`);
+					Console.notify('e', `解码失败`, []);
+					Console.notify('e', `${e}`, []);
 				}
 			}
 			if (option.audio !== null && path.endsWith('.wem')) {
-				Output.v(`${path}`, +1);
+				Console.notify('v', `  ${path}`, []);
 				try {
 					CoreX.Tool.Wwise.EncodedMedia.decode_fs(
 						`${resource_directory}/${path}`,
@@ -231,12 +229,11 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 						option.audio.temp_directory,
 					);
 				} catch (e: any) {
-					Output.e(`解码失败`);
-					Output.e(`${e}`);
+					Console.notify('e', `解码失败`, []);
+					Console.notify('e', `${e}`, []);
 				}
 			}
 		});
-		g_thread_manager.wait();
 		return;
 	}
 
@@ -257,7 +254,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 		version_number: bigint,
 		version_additional_texture_information_for_pvz_2_chinese_android: bigint,
 	): void {
-		Output.v(`解包...`);
+		Console.notify('i', `解包...`, []);
 		let package_manifest: Core.Tool.PopCap.RSB.Manifest.JS_N.Package;
 		{
 			let version_c = Core.Tool.PopCap.RSB.Version.json(Core.JSON.Value.value({ number: version_number as any, additional_texture_information_for_pvz_2_chinese_android: version_additional_texture_information_for_pvz_2_chinese_android as any }));
@@ -278,7 +275,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 			package_manifest = manifest_json.value as any;
 			CoreX.JSON.write_fs(manifest_file, manifest_json);
 		}
-		Output.v(`提取资源清单文件...`);
+		Console.notify('i', `提取资源清单文件...`, []);
 		let official_resource_manifest: OfficialResourceManifest.Package;
 		{
 			let group_id = Object.keys(package_manifest.group).filter((e) => (/__MANIFESTGROUP__(.+)?/.test(e)));
@@ -319,7 +316,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 			);
 			official_resource_manifest = json.value;
 		}
-		Output.v(`解析资源清单...`);
+		Console.notify('i', `解析资源清单...`, []);
 		let resource_manifest = ResourceManifest.Convert.from_official(official_resource_manifest);
 		CoreX.JSON.write_fs(resource_manifest_file, Core.JSON.Value.value(resource_manifest));
 		extract(

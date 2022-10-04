@@ -10,6 +10,7 @@ add_library(
 	./macro.hpp
 	./base_type.hpp
 	
+	./third_party/mscharconv.hpp
 	./third_party/fmt.hpp
 	./third_party/tinyxml2.hpp
 	./third_party/quickjs.hpp
@@ -241,9 +242,13 @@ add_library(
 
 include(${M_root_project_directory}/cmake/condition_definition.cmake)
 include(${M_root_project_directory}/cmake/compile_option.cmake)
+include(${M_root_project_directory}/cmake/compile_warning.cmake)
+include(${M_root_project_directory}/cmake/import_root.cmake)
+include(${M_root_project_directory}/cmake/import_vld.cmake)
 
 target_link_libraries(
 	${PROJECT_NAME} PRIVATE
+	mscharconv
 	fmt
 	tinyxml2
 	quickjs

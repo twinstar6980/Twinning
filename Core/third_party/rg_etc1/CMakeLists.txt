@@ -10,3 +10,5 @@ add_library(
 	./rg_etc1.h
 	./rg_etc1.cpp
 )
+
+include(${M_root_project_directory}/cmake/compile_warning_disable.cmake)

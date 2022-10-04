@@ -12,3 +12,5 @@ add_library(
 	./etcpack.cxx
 	./image.cxx
 )
+
+include(${M_root_project_directory}/cmake/compile_warning_disable.cmake)

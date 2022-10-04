@@ -40,17 +40,20 @@ namespace TwinKleS.Entry.method.popcap.pak {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.version_number === '?input') {
-							version_number = Input.integer(`请输入版本编号（0）`, Check.enum_checkerx([0n]))!;
+							Console.notify('i', `请输入版本编号（0）`, []);
+							version_number = Console.integer(Check.enum_checkerx([0n]))!;
 						} else {
 							version_number = BigInt(a.version_number);
 						}
 						if (a.version_compress_resource_data === '?input') {
-							version_compress_resource_data = Input.yon(`是否启用资源数据压缩`)!;
+							Console.notify('i', `是否启用资源数据压缩`, []);
+							version_compress_resource_data = Console.yon()!;
 						} else {
 							version_compress_resource_data = a.version_compress_resource_data;
 						}
 						if (a.data_buffer_size === '?input') {
-							data_buffer_size = Input.size(`请输入用于保存包数据输出的内存空间大小`)!;
+							Console.notify('i', `请输入用于保存包数据输出的内存空间大小`, []);
+							data_buffer_size = Console.size()!;
 						} else {
 							data_buffer_size = parse_size_string(a.data_buffer_size);
 						}
@@ -58,7 +61,7 @@ namespace TwinKleS.Entry.method.popcap.pak {
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.PopCap.PAK.pack_fs(data_file, manifest_file, resource_directory, { number: version_number as any, compress_resource_data: version_compress_resource_data }, data_buffer_size);
-					Output.i(`输出路径：${data_file}`);
+					Console.notify('s', `输出路径：${data_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -93,12 +96,14 @@ namespace TwinKleS.Entry.method.popcap.pak {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.version_number === '?input') {
-							version_number = Input.integer(`请输入版本编号（0）`, Check.enum_checkerx([0n]))!;
+							Console.notify('i', `请输入版本编号（0）`, []);
+							version_number = Console.integer(Check.enum_checkerx([0n]))!;
 						} else {
 							version_number = BigInt(a.version_number);
 						}
 						if (a.version_compress_resource_data === '?input') {
-							version_compress_resource_data = Input.yon(`是否启用资源数据压缩`)!;
+							Console.notify('i', `是否启用资源数据压缩`, []);
+							version_compress_resource_data = Console.yon()!;
 						} else {
 							version_compress_resource_data = a.version_compress_resource_data;
 						}
@@ -106,7 +111,7 @@ namespace TwinKleS.Entry.method.popcap.pak {
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.PopCap.PAK.unpack_fs(data_file, manifest_file, resource_directory, { number: version_number as any, compress_resource_data: version_compress_resource_data });
-					Output.i(`输出路径：${bundle_directory}`);
+					Console.notify('s', `输出路径：${bundle_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -140,19 +145,21 @@ namespace TwinKleS.Entry.method.popcap.pak {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.version_number === '?input') {
-							version_number = Input.integer(`请输入版本编号（0）`, Check.enum_checkerx([0n]))!;
+							Console.notify('i', `请输入版本编号（0）`, []);
+							version_number = Console.integer(Check.enum_checkerx([0n]))!;
 						} else {
 							version_number = BigInt(a.version_number);
 						}
 						if (a.version_compress_resource_data === '?input') {
-							version_compress_resource_data = Input.yon(`是否启用资源数据压缩`)!;
+							Console.notify('i', `是否启用资源数据压缩`, []);
+							version_compress_resource_data = Console.yon()!;
 						} else {
 							version_compress_resource_data = a.version_compress_resource_data;
 						}
 					}
 					let data = Support.PopCapPAK.ResourcePack.pack(resource_directory, version_number, version_compress_resource_data);
 					CoreX.FileSystem.write_file(data_file, data[0].view().sub(Core.Size.value(0n), data[1]));
-					Output.i(`输出路径：${data_file}`);
+					Console.notify('s', `输出路径：${data_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -183,7 +190,7 @@ namespace TwinKleS.Entry.method.popcap.pak {
 						});
 					}
 					CoreX.Tool.Data.Encrypt.XOR.crypt_fs(plain_file, cipher_file, 0xF7n);
-					Output.i(`输出路径：${cipher_file}`);
+					Console.notify('s', `输出路径：${cipher_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

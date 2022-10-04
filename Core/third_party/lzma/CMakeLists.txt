@@ -91,3 +91,5 @@ add_library(
 	./XzEnc.c
 	./XzIn.c
 )
+
+include(${M_root_project_directory}/cmake/compile_warning_disable.cmake)

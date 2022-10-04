@@ -116,41 +116,49 @@ namespace TwinKleS.Entry.method.popcap.rsb {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.mode === '?input') {
+							Console.notify(
+								'i',
+								`请选择数据导入模式`,
+								[
+									`1. 群组：按群+子群树形结构导入，资源与子包均导入自group/<群名>/<子群名>目录`,
+									`2. 子群：按子群树形结构导入，资源与子包均导入自subgroup/<子群名>目录`,
+									`3. 资源：所有资源导入自resource目录，所有子包导入自packet目录`,
+								],
+							);
 							mode = RSBPackAndUnpackModeE[
-								Input.number([
-									`请选择数据导入模式`, [
-										`1. 群组：按群+子群树形结构导入，资源与子包均导入自group/<群名>/<子群名>目录`,
-										`2. 子群：按子群树形结构导入，资源与子包均导入自subgroup/<子群名>目录`,
-										`3. 资源：所有资源导入自resource目录，所有子包导入自packet目录`,
-									]
-								], Check.enum_checkerx([1, 2, 3]))! as 1 | 2 | 3
+								Console.number(Check.enum_checkerx([1, 2, 3]))! as 1 | 2 | 3
 								- 1
 							];
 						} else {
 							mode = a.mode;
 						}
 						if (a.version_number === '?input') {
-							version_number = Input.integer(`请输入版本编号（3~4）`, Check.enum_checkerx([3n, 4n]))!;
+							Console.notify('i', `请输入版本编号（3~4）`, []);
+							version_number = Console.integer(Check.enum_checkerx([3n, 4n]))!;
 						} else {
 							version_number = BigInt(a.version_number);
 						}
 						if (a.version_additional_texture_information_for_pvz_2_chinese_android === '?input') {
-							version_additional_texture_information_for_pvz_2_chinese_android = Input.integer(`请输入用于PvZ2中文安卓版RSB的纹理拓展数据编号（0~2）`, Check.enum_checkerx([0n, 1n, 2n]))!;
+							Console.notify('i', `请输入用于PvZ2中文安卓版RSB的纹理拓展数据编号（0~2）`, []);
+							version_additional_texture_information_for_pvz_2_chinese_android = Console.integer(Check.enum_checkerx([0n, 1n, 2n]))!;
 						} else {
 							version_additional_texture_information_for_pvz_2_chinese_android = BigInt(a.version_additional_texture_information_for_pvz_2_chinese_android);
 						}
 						if (a.data_buffer_size === '?input') {
-							data_buffer_size = Input.size(`请输入用于保存包数据输出的内存空间大小`)!;
+							Console.notify('i', `请输入用于保存包数据输出的内存空间大小`, []);
+							data_buffer_size = Console.size()!;
 						} else {
 							data_buffer_size = parse_size_string(a.data_buffer_size);
 						}
 						if (a.input_packet === '?input') {
-							input_packet = Input.yon(`是否使用已有子包`)!;
+							Console.notify('i', `是否使用已有子包`, []);
+							input_packet = Console.yon()!;
 						} else {
 							input_packet = a.input_packet;
 						}
 						if (a.output_new_packet === '?input') {
-							output_new_packet = Input.yon(`是否导出新打包的子包（导出至对应模式下的子包文件路径，会覆盖原有子包文件）`)!;
+							Console.notify('i', `是否导出新打包的子包（导出至对应模式下的子包文件路径，会覆盖原有子包文件）`, []);
+							output_new_packet = Console.yon()!;
 						} else {
 							output_new_packet = a.output_new_packet;
 						}
@@ -162,7 +170,7 @@ namespace TwinKleS.Entry.method.popcap.rsb {
 					let packet_file = !input_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
 					let new_packet_file = !output_new_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
 					CoreX.Tool.PopCap.RSB.pack_fs(data_file, manifest_file, description_file, resource_directory, packet_file, new_packet_file, { number: version_number as any, additional_texture_information_for_pvz_2_chinese_android: version_additional_texture_information_for_pvz_2_chinese_android as any }, data_buffer_size);
-					Output.i(`输出路径：${data_file}`);
+					Console.notify('s', `输出路径：${data_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -206,36 +214,43 @@ namespace TwinKleS.Entry.method.popcap.rsb {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.mode === '?input') {
+							Console.notify(
+								'i',
+								`请选择数据导出模式`,
+								[
+									`1. 群组：按群+子群树形结构导出，资源与子包均导出至group/<群名>/<子群名>目录`,
+									`2. 子群：按子群树形结构导出，资源与子包均导出至subgroup/<子群名>目录`,
+									`3. 资源：所有资源导出至resource目录，所有子包导出至packet目录`,
+								],
+							);
 							mode = RSBPackAndUnpackModeE[
-								Input.number([
-									`请选择数据导出模式`, [
-										`1. 群组：按群+子群树形结构导出，资源与子包均导出至group/<群名>/<子群名>目录`,
-										`2. 子群：按子群树形结构导出，资源与子包均导出至subgroup/<子群名>目录`,
-										`3. 资源：所有资源导出至resource目录，所有子包导出至packet目录`,
-									]
-								], Check.enum_checkerx([1, 2, 3]))! as 1 | 2 | 3
+								Console.number(Check.enum_checkerx([1, 2, 3]))! as 1 | 2 | 3
 								- 1
 							];
 						} else {
 							mode = a.mode;
 						}
 						if (a.version_number === '?input') {
-							version_number = Input.integer(`请输入版本编号（3~4）`, Check.enum_checkerx([3n, 4n]))!;
+							Console.notify('i', `请输入版本编号（3~4）`, []);
+							version_number = Console.integer(Check.enum_checkerx([3n, 4n]))!;
 						} else {
 							version_number = BigInt(a.version_number);
 						}
 						if (a.version_additional_texture_information_for_pvz_2_chinese_android === '?input') {
-							version_additional_texture_information_for_pvz_2_chinese_android = Input.integer(`请输入用于PvZ2中文安卓版RSB的纹理拓展数据编号（0~2）`, Check.enum_checkerx([0n, 1n, 2n]))!;
+							Console.notify('i', `请输入用于PvZ2中文安卓版RSB的纹理拓展数据编号（0~2）`, []);
+							version_additional_texture_information_for_pvz_2_chinese_android = Console.integer(Check.enum_checkerx([0n, 1n, 2n]))!;
 						} else {
 							version_additional_texture_information_for_pvz_2_chinese_android = BigInt(a.version_additional_texture_information_for_pvz_2_chinese_android);
 						}
 						if (a.output_resource === '?input') {
-							output_resource = Input.yon(`是否导出资源`)!;
+							Console.notify('i', `是否导出资源`, []);
+							output_resource = Console.yon()!;
 						} else {
 							output_resource = a.output_resource;
 						}
 						if (a.output_packet === '?input') {
-							output_packet = Input.yon(`是否导出子包`)!;
+							Console.notify('i', `是否导出子包`, []);
+							output_packet = Console.yon()!;
 						} else {
 							output_packet = a.output_packet;
 						}
@@ -246,7 +261,7 @@ namespace TwinKleS.Entry.method.popcap.rsb {
 					let resource_directory = !output_resource ? null : `${bundle_directory}/${relative_path.resource_directory}`;
 					let packet_file = !output_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
 					CoreX.Tool.PopCap.RSB.unpack_fs(data_file, manifest_file, description_file, resource_directory, packet_file, { number: version_number as any, additional_texture_information_for_pvz_2_chinese_android: version_additional_texture_information_for_pvz_2_chinese_android as any });
-					Output.i(`输出路径：${bundle_directory}`);
+					Console.notify('s', `输出路径：${bundle_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -290,12 +305,14 @@ namespace TwinKleS.Entry.method.popcap.rsb {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.version_number === '?input') {
-							version_number = Input.integer(`请输入版本编号（3~4）`, Check.enum_checkerx([3n, 4n]))!;
+							Console.notify('i', `请输入版本编号（3~4）`, []);
+							version_number = Console.integer(Check.enum_checkerx([3n, 4n]))!;
 						} else {
 							version_number = BigInt(a.version_number);
 						}
 						if (a.version_additional_texture_information_for_pvz_2_chinese_android === '?input') {
-							version_additional_texture_information_for_pvz_2_chinese_android = Input.integer(`请输入用于PvZ2中文安卓版RSB的纹理拓展数据编号（0~2）`, Check.enum_checkerx([0n, 1n, 2n]))!;
+							Console.notify('i', `请输入用于PvZ2中文安卓版RSB的纹理拓展数据编号（0~2）`, []);
+							version_additional_texture_information_for_pvz_2_chinese_android = Console.integer(Check.enum_checkerx([0n, 1n, 2n]))!;
 						} else {
 							version_additional_texture_information_for_pvz_2_chinese_android = BigInt(a.version_additional_texture_information_for_pvz_2_chinese_android);
 						}
@@ -303,7 +320,8 @@ namespace TwinKleS.Entry.method.popcap.rsb {
 						{
 							let json: boolean;
 							if (a.option.json === '?input') {
-								json = Input.yon(`是否提取JSON`)!;
+								Console.notify('i', `是否提取JSON`, []);
+								json = Console.yon()!;
 							} else {
 								json = a.option.json;
 							}
@@ -314,14 +332,16 @@ namespace TwinKleS.Entry.method.popcap.rsb {
 								};
 								let crypt: boolean;
 								if (a.option.json_crypt === '?input') {
-									crypt = Input.yon(`RTON是否已被加密`)!;
+									Console.notify('i', `RTON是否已被加密`, []);
+									crypt = Console.yon()!;
 								} else {
 									crypt = a.option.json_crypt;
 								}
 								if (crypt) {
 									let key: string;
 									if (a.option.json_crypt_key === '?input') {
-										key = Input.string(`请输入RTON密钥`)!;
+										Console.notify('i', `请输入RTON密钥`, []);
+										key = Console.string()!;
 									} else {
 										key = a.option.json_crypt_key;
 									}
@@ -334,7 +354,8 @@ namespace TwinKleS.Entry.method.popcap.rsb {
 						{
 							let image: boolean;
 							if (a.option.image === '?input') {
-								image = Input.yon(`是否提取图像`)!;
+								Console.notify('i', `是否提取图像`, []);
+								image = Console.yon()!;
 							} else {
 								image = a.option.image;
 							}
@@ -351,9 +372,8 @@ namespace TwinKleS.Entry.method.popcap.rsb {
 										throw new MyError(`texture format map list is empty`);
 									}
 									if (a.option.image_texture_format_map_name === '?input') {
-										let map_name_index = Input.number([
-											`请选择所应用的纹理格式`, map_name_list.map((e, i) => (`${i + 1}. ${e}`))
-										], Check.enum_checkerx(map_name_list.map((e, i) => (i + 1))))!;
+										Console.notify('i', `请选择所应用的纹理格式`, map_name_list.map((e, i) => (`${i + 1}. ${e}`)));
+										let map_name_index = Console.number(Check.enum_checkerx(map_name_list.map((e, i) => (i + 1))))!;
 										option.image.texture_format_map = a.option.image_texture_format_map_list[map_name_list[map_name_index - 1]];
 									} else {
 										if (a.option.image_texture_format_map_list[a.option.image_texture_format_map_name] === undefined) {
@@ -364,20 +384,23 @@ namespace TwinKleS.Entry.method.popcap.rsb {
 								}
 								let atlas: boolean;
 								if (a.option.image_atlas === '?input') {
-									atlas = Input.yon(`是否提取图像Atlas`)!;
+									Console.notify('i', `是否提取图像Atlas`, []);
+									atlas = Console.yon()!;
 								} else {
 									atlas = a.option.image_atlas;
 								}
 								let sprite: boolean;
 								if (a.option.image_sprite === '?input') {
-									sprite = Input.yon(`是否提取图像Sprite（分解Atlas）`)!;
+									Console.notify('i', `是否提取图像Sprite（分解Atlas）`, []);
+									sprite = Console.yon()!;
 								} else {
 									sprite = a.option.image_sprite;
 								}
 								if (atlas) {
 									let resize: boolean;
 									if (a.option.image_atlas_resize === '?input') {
-										resize = Input.yon(`是否调整Atlas尺寸（以资源清单内的定义为准）`)!;
+										Console.notify('i', `是否调整Atlas尺寸（以资源清单内的定义为准）`, []);
+										resize = Console.yon()!;
 									} else {
 										resize = a.option.image_atlas_resize;
 									}
@@ -393,7 +416,8 @@ namespace TwinKleS.Entry.method.popcap.rsb {
 						{
 							let animation: boolean;
 							if (a.option.animation === '?input') {
-								animation = Input.yon(`是否提取动画`)!;
+								Console.notify('i', `是否提取动画`, []);
+								animation = Console.yon()!;
 							} else {
 								animation = a.option.animation;
 							}
@@ -405,13 +429,15 @@ namespace TwinKleS.Entry.method.popcap.rsb {
 								};
 								let json: boolean;
 								if (a.option.animation_json === '?input') {
-									json = Input.yon(`是否提取动画为JSON`)!;
+									Console.notify('i', `是否提取动画为JSON`, []);
+									json = Console.yon()!;
 								} else {
 									json = a.option.animation_json;
 								}
 								let flash: boolean;
 								if (a.option.animation_flash === '?input') {
-									flash = Input.yon(`是否提取动画为Flash`)!;
+									Console.notify('i', `是否提取动画为Flash`, []);
+									flash = Console.yon()!;
 								} else {
 									flash = a.option.animation_flash;
 								}
@@ -426,7 +452,8 @@ namespace TwinKleS.Entry.method.popcap.rsb {
 						{
 							let audio: boolean;
 							if (a.option.audio === '?input') {
-								audio = Input.yon(`是否提取音频`)!;
+								Console.notify('i', `是否提取音频`, []);
+								audio = Console.yon()!;
 							} else {
 								audio = a.option.audio;
 							}
@@ -453,7 +480,7 @@ namespace TwinKleS.Entry.method.popcap.rsb {
 						version_additional_texture_information_for_pvz_2_chinese_android,
 					);
 					CoreX.FileSystem.remove(`${bundle_directory}/audio_temp`);
-					Output.i(`输出路径：${bundle_directory}`);
+					Console.notify('s', `输出路径：${bundle_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

@@ -31,3 +31,5 @@ target_compile_definitions(
 	CONFIG_BIGNUM
 	CONFIG_VERSION="2021-03-27"
 )
+
+include(${M_root_project_directory}/cmake/compile_warning_disable.cmake)

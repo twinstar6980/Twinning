@@ -1,4 +1,4 @@
-﻿project(
+project(
 	shell
 	LANGUAGES CXX
 )
@@ -16,17 +16,23 @@ endif()
 
 add_executable(
 	${PROJECT_NAME}
-	./interface.hpp
+	./core_interface.hpp
 	./version.hpp
 	./base.hpp
-	./loader.hpp
-	./callback.hpp
+	./library/library.hpp
+	./library/static_library.hpp
+	./library/dynamic_library.hpp
+	./host/host.hpp
+	./host/cli_host.hpp
 	./main.cpp
 	${M_this_special_file}
 )
 
 include(${M_root_project_directory}/cmake/condition_definition.cmake)
 include(${M_root_project_directory}/cmake/compile_option.cmake)
+include(${M_root_project_directory}/cmake/compile_warning.cmake)
+include(${M_root_project_directory}/cmake/import_root.cmake)
+include(${M_root_project_directory}/cmake/import_vld.cmake)
 
 target_compile_definitions(
 	${PROJECT_NAME} PRIVATE

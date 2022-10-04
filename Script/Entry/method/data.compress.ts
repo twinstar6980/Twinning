@@ -41,7 +41,7 @@ namespace TwinKleS.Entry.method.data.compress {
 						level = a.level;
 					}
 					CoreX.Tool.Data.Compress.Deflate.compress_fs(raw_file, ripe_file, level, 15n, 9n, 'default_mode', 'none');
-					Output.i(`输出路径：${ripe_file}`);
+					Console.notify('s', `输出路径：${ripe_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -72,13 +72,14 @@ namespace TwinKleS.Entry.method.data.compress {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.raw_data_buffer_size === '?input') {
-							raw_data_buffer_size = Input.size(`请输入用于保存原始数据的内存空间大小`)!;
+							Console.notify('i', `请输入用于保存原始数据的内存空间大小`, []);
+							raw_data_buffer_size = Console.size()!;
 						} else {
 							raw_data_buffer_size = parse_size_string(a.raw_data_buffer_size);
 						}
 					}
 					CoreX.Tool.Data.Compress.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'none', raw_data_buffer_size);
-					Output.i(`输出路径：${raw_file}`);
+					Console.notify('s', `输出路径：${raw_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -111,7 +112,7 @@ namespace TwinKleS.Entry.method.data.compress {
 						level = a.level;
 					}
 					CoreX.Tool.Data.Compress.Deflate.compress_fs(raw_file, ripe_file, level, 15n, 9n, 'default_mode', 'zlib');
-					Output.i(`输出路径：${ripe_file}`);
+					Console.notify('s', `输出路径：${ripe_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -142,13 +143,14 @@ namespace TwinKleS.Entry.method.data.compress {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.raw_data_buffer_size === '?input') {
-							raw_data_buffer_size = Input.size(`请输入用于保存原始数据的内存空间大小`)!;
+							Console.notify('i', `请输入用于保存原始数据的内存空间大小`, []);
+							raw_data_buffer_size = Console.size()!;
 						} else {
 							raw_data_buffer_size = parse_size_string(a.raw_data_buffer_size);
 						}
 					}
 					CoreX.Tool.Data.Compress.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'zlib', raw_data_buffer_size);
-					Output.i(`输出路径：${raw_file}`);
+					Console.notify('s', `输出路径：${raw_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -181,7 +183,7 @@ namespace TwinKleS.Entry.method.data.compress {
 						level = a.level;
 					}
 					CoreX.Tool.Data.Compress.Deflate.compress_fs(raw_file, ripe_file, level, 15n, 9n, 'default_mode', 'gzip');
-					Output.i(`输出路径：${ripe_file}`);
+					Console.notify('s', `输出路径：${ripe_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -212,13 +214,14 @@ namespace TwinKleS.Entry.method.data.compress {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.raw_data_buffer_size === '?input') {
-							raw_data_buffer_size = Input.size(`请输入用于保存原始数据的内存空间大小`)!;
+							Console.notify('i', `请输入用于保存原始数据的内存空间大小`, []);
+							raw_data_buffer_size = Console.size()!;
 						} else {
 							raw_data_buffer_size = parse_size_string(a.raw_data_buffer_size);
 						}
 					}
 					CoreX.Tool.Data.Compress.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'gzip', raw_data_buffer_size);
-					Output.i(`输出路径：${raw_file}`);
+					Console.notify('s', `输出路径：${raw_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -248,7 +251,7 @@ namespace TwinKleS.Entry.method.data.compress {
 						});
 					}
 					CoreX.Tool.Data.Compress.BZip2.compress_fs(raw_file, ripe_file, 9n);
-					Output.i(`输出路径：${ripe_file}`);
+					Console.notify('s', `输出路径：${ripe_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -278,13 +281,14 @@ namespace TwinKleS.Entry.method.data.compress {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.raw_data_buffer_size === '?input') {
-							raw_data_buffer_size = Input.size(`请输入用于保存原始数据的内存空间大小`)!;
+							Console.notify('i', `请输入用于保存原始数据的内存空间大小`, []);
+							raw_data_buffer_size = Console.size()!;
 						} else {
 							raw_data_buffer_size = parse_size_string(a.raw_data_buffer_size);
 						}
 					}
 					CoreX.Tool.Data.Compress.BZip2.uncompress_fs(ripe_file, raw_file, raw_data_buffer_size);
-					Output.i(`输出路径：${raw_file}`);
+					Console.notify('s', `输出路径：${raw_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

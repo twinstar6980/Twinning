@@ -23,7 +23,7 @@ namespace TwinKleS.Entry.method.js {
 						script_file = a.script_file;
 					}
 					CoreX.Misc.evaluate_fs(script_file);
-					Output.i(`运行完毕`);
+					Console.notify('s', `运行完毕`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

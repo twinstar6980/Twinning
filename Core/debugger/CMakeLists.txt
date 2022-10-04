@@ -9,7 +9,7 @@ set(
 if(M_system_windows AND M_compiler_msvc)
 	set(
 		M_this_special_file
-		./debugger.manifest
+		${M_root_project_directory}/../Shell/shell/windows/application.manifest
 	)
 endif()
 
@@ -21,10 +21,13 @@ add_executable(
 
 include(${M_root_project_directory}/cmake/condition_definition.cmake)
 include(${M_root_project_directory}/cmake/compile_option.cmake)
+include(${M_root_project_directory}/cmake/compile_warning.cmake)
+include(${M_root_project_directory}/cmake/import_root.cmake)
+include(${M_root_project_directory}/cmake/import_vld.cmake)
 
 target_include_directories(
 	${PROJECT_NAME} PRIVATE
-	${M_root_project_directory}/core
+	${M_root_project_directory}/../Shell
 )
 
 target_link_libraries(
@@ -43,31 +46,16 @@ if(M_system_windows)
 		COMMAND cmd /C mklink "\"${CMAKE_CURRENT_BINARY_DIR}/core.dll\"" "\"${CMAKE_CURRENT_BINARY_DIR}/../core/core.dll\"" | exit
 	)
 endif()
-if(M_system_linux OR M_system_macos OR M_system_android)
+if(M_system_linux)
 	add_custom_command(
 		TARGET ${PROJECT_NAME} POST_BUILD
 		COMMAND ln -s "\"${CMAKE_CURRENT_BINARY_DIR}/../core/libcore.so\"" "\"${CMAKE_CURRENT_BINARY_DIR}/libcore.so\""
 	)
 endif()
-
-if(M_system_windows AND M_compiler_msvc AND M_build_debug)
-	target_compile_definitions(
-		${PROJECT_NAME} PRIVATE
-		M_vld
-		VLD_FORCE_ENABLE
-	)
-	target_include_directories(
-		${PROJECT_NAME} PRIVATE
-		${M_root_project_directory}/third_party/vld/include
-	)
-	target_link_directories(
-		${PROJECT_NAME} PRIVATE
-		${M_root_project_directory}/third_party/vld/lib/Win64
-	)
-	file(
-		COPY
-		${M_root_project_directory}/third_party/vld/bin/Win64/
-		DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
+if(M_system_macos)
+	add_custom_command(
+		TARGET ${PROJECT_NAME} POST_BUILD
+		COMMAND ln -s "\"${CMAKE_CURRENT_BINARY_DIR}/../core/libcore.dylib\"" "\"${CMAKE_CURRENT_BINARY_DIR}/libcore.dylib\""
 	)
 endif()
 

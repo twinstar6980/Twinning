@@ -35,14 +35,16 @@ namespace TwinKleS.Entry.method.json {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.disable_trailing_comma === '?input') {
-							disable_trailing_comma = nonnull_or(Input.yon([``, [`跳过输入以使用默认设置`]], true), undefined);
+							Console.notify('i', `是否禁用尾随逗号`, [`跳过输入以使用默认设置`]);
+							disable_trailing_comma = nonnull_or(Console.yon(true), undefined);
 						} else if (a.disable_trailing_comma === '?default') {
 							disable_trailing_comma = undefined;
 						} else {
 							disable_trailing_comma = a.disable_trailing_comma;
 						}
 						if (a.disable_array_wrap_line === '?input') {
-							disable_array_wrap_line = nonnull_or(Input.yon([`是否禁用数组元素换行`, [`跳过输入以使用默认设置`]], true), undefined);
+							Console.notify('i', `是否禁用数组元素换行`, [`跳过输入以使用默认设置`]);
+							disable_array_wrap_line = nonnull_or(Console.yon(true), undefined);
 						} else if (a.disable_array_wrap_line === '?default') {
 							disable_array_wrap_line = undefined;
 						} else {
@@ -51,7 +53,7 @@ namespace TwinKleS.Entry.method.json {
 					}
 					let json = CoreX.JSON.read_fs(source_file);
 					CoreX.JSON.write_fs(dest_file, json, disable_trailing_comma, disable_array_wrap_line);
-					Output.i(`输出路径：${dest_file}`);
+					Console.notify('s', `输出路径：${dest_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -87,14 +89,16 @@ namespace TwinKleS.Entry.method.json {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.disable_trailing_comma === '?input') {
-							disable_trailing_comma = nonnull_or(Input.yon([`是否禁用尾随逗号`, [`跳过输入以使用默认设置`]], true), undefined);
+							Console.notify('i', `是否禁用尾随逗号`, [`跳过输入以使用默认设置`]);
+							disable_trailing_comma = nonnull_or(Console.yon(true), undefined);
 						} else if (a.disable_trailing_comma === '?default') {
 							disable_trailing_comma = undefined;
 						} else {
 							disable_trailing_comma = a.disable_trailing_comma;
 						}
 						if (a.disable_array_wrap_line === '?input') {
-							disable_array_wrap_line = nonnull_or(Input.yon([`是否禁用数组元素换行`, [`跳过输入以使用默认设置`]], true), undefined);
+							Console.notify('i', `是否禁用数组元素换行`, [`跳过输入以使用默认设置`]);
+							disable_array_wrap_line = nonnull_or(Console.yon(true), undefined);
 						} else if (a.disable_array_wrap_line === '?default') {
 							disable_array_wrap_line = undefined;
 						} else {
@@ -111,7 +115,7 @@ namespace TwinKleS.Entry.method.json {
 							CoreX.JSON.write_fs(dest_file, json, disable_trailing_comma, disable_array_wrap_line);
 						},
 					);
-					Output.i(`输出路径：${dest_file_directory}`);
+					Console.notify('s', `输出路径：${dest_file_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

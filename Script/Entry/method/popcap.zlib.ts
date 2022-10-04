@@ -35,13 +35,14 @@ namespace TwinKleS.Entry.method.popcap.zlib {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.variant_64 === '?input') {
-							variant_64 = Input.yon(`是否为64位变体？`)!;
+							Console.notify('i', `是否为64位变体？`, []);
+							variant_64 = Console.yon()!;
 						} else {
 							variant_64 = a.variant_64;
 						}
 					}
 					CoreX.Tool.PopCap.ZLib.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', variant_64);
-					Output.i(`输出路径：${ripe_file}`);
+					Console.notify('s', `输出路径：${ripe_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -72,13 +73,14 @@ namespace TwinKleS.Entry.method.popcap.zlib {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.variant_64 === '?input') {
-							variant_64 = Input.yon(`是否为64位变体？`)!;
+							Console.notify('i', `是否为64位变体？`, []);
+							variant_64 = Console.yon()!;
 						} else {
 							variant_64 = a.variant_64;
 						}
 					}
 					CoreX.Tool.PopCap.ZLib.uncompress_fs(ripe_file, raw_file, 15n, variant_64);
-					Output.i(`输出路径：${raw_file}`);
+					Console.notify('s', `输出路径：${raw_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -111,7 +113,8 @@ namespace TwinKleS.Entry.method.popcap.zlib {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.variant_64 === '?input') {
-							variant_64 = Input.yon(`平台是否为64位？`)!;
+							Console.notify('i', `平台是否为64位？`, []);
+							variant_64 = Console.yon()!;
 						} else {
 							variant_64 = a.variant_64;
 						}
@@ -125,7 +128,7 @@ namespace TwinKleS.Entry.method.popcap.zlib {
 							CoreX.Tool.PopCap.ZLib.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', variant_64);
 						},
 					);
-					Output.i(`输出路径：${ripe_file_directory}`);
+					Console.notify('s', `输出路径：${ripe_file_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -156,7 +159,8 @@ namespace TwinKleS.Entry.method.popcap.zlib {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.variant_64 === '?input') {
-							variant_64 = Input.yon(`平台是否为64位？`)!;
+							Console.notify('i', `平台是否为64位？`, []);
+							variant_64 = Console.yon()!;
 						} else {
 							variant_64 = a.variant_64;
 						}
@@ -170,7 +174,7 @@ namespace TwinKleS.Entry.method.popcap.zlib {
 							CoreX.Tool.PopCap.ZLib.uncompress_fs(ripe_file, raw_file, 15n, variant_64);
 						},
 					);
-					Output.i(`输出路径：${raw_file_directory}`);
+					Console.notify('s', `输出路径：${raw_file_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

@@ -10,3 +10,5 @@ add_library(
 	./Rijndael.h
 	./Rijndael.cpp
 )
+
+include(${M_root_project_directory}/cmake/compile_warning_disable.cmake)

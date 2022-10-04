@@ -37,12 +37,14 @@ namespace TwinKleS.Entry.method.marmalade.dzip {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.version_number === '?input') {
-							version_number = Input.integer(`请输入版本编号（0）`, Check.enum_checkerx([0n]))!;
+							Console.notify('i', `请输入版本编号（0）`, []);
+							version_number = Console.integer(Check.enum_checkerx([0n]))!;
 						} else {
 							version_number = BigInt(a.version_number);
 						}
 						if (a.data_buffer_size === '?input') {
-							data_buffer_size = Input.size(`请输入用于保存包数据输出的内存空间大小`)!;
+							Console.notify('i', `请输入用于保存包数据输出的内存空间大小`, []);
+							data_buffer_size = Console.size()!;
 						} else {
 							data_buffer_size = parse_size_string(a.data_buffer_size);
 						}
@@ -50,7 +52,7 @@ namespace TwinKleS.Entry.method.marmalade.dzip {
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.Marmalade.DZip.pack_fs(data_file, manifest_file, resource_directory, { number: version_number as any }, data_buffer_size);
-					Output.i(`输出路径：${data_file}`);
+					Console.notify('s', `输出路径：${data_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -82,7 +84,8 @@ namespace TwinKleS.Entry.method.marmalade.dzip {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.version_number === '?input') {
-							version_number = Input.integer(`请输入版本编号（0）`, Check.enum_checkerx([0n]))!;
+							Console.notify('i', `请输入版本编号（0）`, []);
+							version_number = Console.integer(Check.enum_checkerx([0n]))!;
 						} else {
 							version_number = BigInt(a.version_number);
 						}
@@ -90,7 +93,7 @@ namespace TwinKleS.Entry.method.marmalade.dzip {
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.Marmalade.DZip.unpack_fs(data_file, manifest_file, resource_directory, { number: version_number as any });
-					Output.i(`输出路径：${bundle_directory}`);
+					Console.notify('s', `输出路径：${bundle_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -121,14 +124,15 @@ namespace TwinKleS.Entry.method.marmalade.dzip {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.version_number === '?input') {
-							version_number = Input.integer(`请输入版本编号（0）`, Check.enum_checkerx([0n]))!;
+							Console.notify('i', `请输入版本编号（0）`, []);
+							version_number = Console.integer(Check.enum_checkerx([0n]))!;
 						} else {
 							version_number = BigInt(a.version_number);
 						}
 					}
 					let data = Support.MarmaladeDZip.ResourcePack.pack(resource_directory, version_number);
 					CoreX.FileSystem.write_file(data_file, data[0].view().sub(Core.Size.value(0n), data[1]));
-					Output.i(`输出路径：${data_file}`);
+					Console.notify('s', `输出路径：${data_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

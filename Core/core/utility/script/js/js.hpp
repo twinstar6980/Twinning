@@ -1101,10 +1101,10 @@ namespace TwinKleS::Core::JS {
 					return result._release_value();
 				}
 				#if defined M_build_release
-			} catch (Exception & error) {
-				return throw_js_exception(context, make_string_view(error.what()));
-			} catch (std::exception & error) {
-				return throw_js_exception(context, make_string_view(error.what()));
+			} catch (Exception & exception) {
+				return throw_js_exception(context, make_string_view(exception.what()));
+			} catch (std::exception & exception) {
+				return throw_js_exception(context, make_string_view(exception.what()));
 			} catch (...) {
 				return throw_js_exception(context, "unknown exception"_sv);
 			}

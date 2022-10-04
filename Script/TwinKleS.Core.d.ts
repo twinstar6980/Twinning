@@ -3680,6 +3680,45 @@ declare namespace TwinKleS.Core {
 
 			// ------------------------------------------------
 
+			/**
+			 * 判断线程是否可合并
+			 * @returns 线程是否可合并
+			 */
+			joinable(
+			): Boolean;
+
+			// ------------------------------------------------
+
+			/**
+			 * 合并线程
+			 */
+			join(
+			): Void;
+
+			/**
+			 * 分离线程
+			 */
+			detach(
+			): Void;
+
+			// ------------------------------------------------
+
+			/**
+			 * 当前线程放弃目前的执行，以允许其他线程执行
+			 */
+			static yield(
+			): Void;
+
+			/**
+			 * 当前线程休眠
+			 * @param duration 休眠时间
+			 */
+			static sleep(
+				duration: Size,
+			): Void;
+
+			// ------------------------------------------------
+
 		}
 
 		/** 上下文 */
@@ -3704,7 +3743,7 @@ declare namespace TwinKleS.Core {
 			/**
 			 * 调用外壳程序提供的回调函数
 			 * @param argument 参数
-			 * @returns 结果，只能对之取值，不可修改
+			 * @returns 结果
 			 */
 			shell_callback(
 				argument: StringList,
@@ -3713,17 +3752,20 @@ declare namespace TwinKleS.Core {
 			// ------------------------------------------------
 
 			/**
-			 * 产生新的子上下文
-			 * @returns 子上下文
+			 * 产生新的上下文，与当前上下文是兄弟关系
+			 * @returns 新的上下文
 			 */
 			spawn(
 			): Context;
 
+			// ------------------------------------------------
+
 			/**
-			 * 出让一次CPU时间给其他线程
+			 * 判断当前上下文是否繁忙，即是否通过execute函数在另一线程中执行着任务
+			 * @returns 是否繁忙
 			 */
-			yield(
-			): Void;
+			busy(
+			): Boolean;
 
 			/**
 			 * 在新线程中执行函数
@@ -3734,20 +3776,6 @@ declare namespace TwinKleS.Core {
 				executor: () => any,
 				thread: Thread,
 			): Void;
-
-			/**
-			 * 获取execute的执行状态。调用execute函数后，若对应线程上函数未执行完毕，则繁忙，返回true，否则空闲，返回false
-			 * @returns 执行状态
-			 */
-			state(
-			): Boolean;
-
-			/**
-			 * 获取execute的执行结果。仅当state返回true时才可调用
-			 * @returns 执行结果
-			 */
-			result(
-			): any;
 
 			// ------------------------------------------------
 

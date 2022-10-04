@@ -1,7 +1,5 @@
 #pragma once
 
-// TODO : use std::jthread ?
-
 #include "core/utility/trait/trait.hpp"
 #include <thread>
 
@@ -13,11 +11,16 @@ namespace TwinKleS::Core {
 
 	private: //
 
-		std::jthread m_thread{};
+		std::thread m_thread{};
 
 	public: //
 
 		#pragma region structor
+
+		~Thread (
+		) = default;
+
+		// ----------------
 
 		Thread (
 		) = default;
@@ -44,7 +47,7 @@ namespace TwinKleS::Core {
 
 		#pragma endregion
 
-		#pragma region function
+		#pragma region control
 
 		template <typename Executor> requires
 			CategoryConstraint<IsPureInstance<Executor>>
@@ -52,7 +55,44 @@ namespace TwinKleS::Core {
 		auto run (
 			Executor const & executor
 		) -> void {
-			thiz.m_thread = std::jthread{executor};
+			assert_condition(!thiz.joinable());
+			thiz.m_thread = std::thread{executor};
+			return;
+		}
+
+		// ----------------
+
+		auto joinable (
+		) -> Boolean {
+			return thiz.m_thread.joinable();
+		}
+
+		// ----------------
+
+		auto join (
+		) -> Void {
+			assert_condition(thiz.joinable());
+			return thiz.m_thread.join();
+		}
+
+		auto detach (
+		) -> Void {
+			assert_condition(thiz.joinable());
+			return thiz.m_thread.detach();
+		}
+
+		// ----------------
+
+		static auto yield (
+		) -> Void {
+			std::this_thread::yield();
+			return;
+		}
+
+		static auto sleep (
+			Size const & duration
+		) -> Void {
+			std::this_thread::sleep_for(std::chrono::milliseconds{duration.value});
 			return;
 		}
 

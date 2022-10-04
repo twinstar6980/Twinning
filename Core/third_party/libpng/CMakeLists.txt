@@ -40,3 +40,5 @@ target_link_libraries(
 	${PROJECT_NAME} PRIVATE
 	zlib
 )
+
+include(${M_root_project_directory}/cmake/compile_warning_disable.cmake)

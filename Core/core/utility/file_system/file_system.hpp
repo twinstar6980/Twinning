@@ -8,7 +8,6 @@
 #include "core/utility/exception/base_exception/base_exception.hpp"
 #include "core/utility/exception/base_exception/utility.hpp"
 #include <filesystem>
-#include <cstdio>
 
 namespace TwinKleS::Core::FileSystem {
 
@@ -36,8 +35,11 @@ namespace TwinKleS::Core::FileSystem {
 		) -> Path& {
 			for (auto & element : as_variable(original.sub_path())) {
 				if (!element.empty()) {
-					if (element.last() == ' '_c || element.last() == '.'_c) {
+					if (element.last() == ' '_c) {
 						element.append_list("#"_sv);
+					}
+					if (element.last() == '.'_c && !((element.size() == 1_sz) || (element.size() == 2_sz && element.first() == '.'_c))) {
+						element.append_list("@"_sv);
 					}
 				}
 			}

@@ -23,7 +23,7 @@
 			"pvz2_android": [
 				{
 					"index": 0,
-					"format": "argb_8888",
+					"format": "rgba_8888",
 				},
 				{
 					"index": 147,
@@ -33,7 +33,7 @@
 			"pvz2_chs_android": [
 				{
 					"index": 0,
-					"format": "argb_8888",
+					"format": "rgba_8888",
 				},
 				{
 					"index": 147,

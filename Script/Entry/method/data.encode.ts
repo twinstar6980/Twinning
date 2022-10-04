@@ -32,7 +32,7 @@ namespace TwinKleS.Entry.method.data.encode {
 						});
 					}
 					CoreX.Tool.Data.Encode.Base64.encode_fs(raw_file, ripe_file);
-					Output.i(`输出路径：${ripe_file}`);
+					Console.notify('s', `输出路径：${ripe_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -61,7 +61,7 @@ namespace TwinKleS.Entry.method.data.encode {
 						});
 					}
 					CoreX.Tool.Data.Encode.Base64.decode_fs(ripe_file, raw_file);
-					Output.i(`输出路径：${raw_file}`);
+					Console.notify('s', `输出路径：${raw_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

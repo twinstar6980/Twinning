@@ -9,6 +9,7 @@ auto APIENTRY DllMain (
 	DWORD   ul_reason_for_call,
 	LPVOID  lpReserved
 ) -> BOOL {
+	TwinKleS::WindowsExplorerExtension::g_dll_handle = hModule;
 	switch (ul_reason_for_call) {
 		case DLL_PROCESS_ATTACH :
 		case DLL_THREAD_ATTACH :

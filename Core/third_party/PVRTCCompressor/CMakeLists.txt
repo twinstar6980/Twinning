@@ -26,3 +26,5 @@ add_library(
 	./PvrTcEncoder.cpp
 	./PvrTcPacket.cpp
 )
+
+include(${M_root_project_directory}/cmake/compile_warning_disable.cmake)

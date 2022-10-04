@@ -380,12 +380,12 @@ namespace TwinKleS::Core::JSON {
 						break;
 					}
 					return;
-				} catch (ExceptionMessage & em) {
+				} catch (ExceptionMessage & exception_message) {
 					throw BaseException{
 						{
 							"$ stream.position() : {:X}h"_sf(stream.position()),
 						},
-						as_moveable(em)
+						as_moveable(exception_message)
 					};
 				}
 			}

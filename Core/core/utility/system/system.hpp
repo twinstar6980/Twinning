@@ -12,7 +12,7 @@ namespace TwinKleS::Core::System {
 	#if defined M_system_windows
 	namespace Current = Windows;
 	#endif
-	#if defined M_system_linux || defined M_system_macos || defined M_system_android
+	#if defined M_system_linux || defined M_system_macos || defined M_system_android || defined M_system_ios
 	namespace Current = POSIX;
 	#endif
 

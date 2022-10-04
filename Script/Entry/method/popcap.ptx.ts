@@ -9,18 +9,17 @@ namespace TwinKleS.Entry.method.popcap.ptx {
 	function input_popcap_texture_format(
 		message: string,
 	): Support.PopCapTexture.Encode.Format {
-		let index = Input.number([
-			message,
-			Support.PopCapTexture.Encode.FormatE.map((e, i) => (`${make_prefix_padded_string(i + 1, ' ', 2)}. ${e}`)),
-		], Check.enum_checkerx(Support.PopCapTexture.Encode.FormatE.map((e, i) => (i + 1))))!;
+		Console.notify('i', message, Support.PopCapTexture.Encode.FormatE.map((e, i) => (`${make_prefix_padded_string(i + 1, ' ', 2)}. ${e}`)));
+		let index = Console.number(Check.enum_checkerx(Support.PopCapTexture.Encode.FormatE.map((e, i) => (i + 1))))!;
 		return Support.PopCapTexture.Encode.FormatE[index - 1];
 	}
 
 	function input_image_size(
 		message: string,
 	): CoreX.Image.ImageSize {
-		let width = Input.integer(message, (value) => (value > 0n ? null : `尺寸不可为0`))!;
-		let height = Input.integer(null, (value) => (value > 0n ? null : `尺寸不可为0`))!;
+		Console.notify('i', message, []);
+		let width = Console.integer((value) => (value > 0n ? null : `尺寸不可为0`))!;
+		let height = Console.integer((value) => (value > 0n ? null : `尺寸不可为0`))!;
 		return [width, height];
 	}
 
@@ -59,7 +58,7 @@ namespace TwinKleS.Entry.method.popcap.ptx {
 						}
 					}
 					Support.PopCapTexture.Encode.encode_fs(image_file, data_file, format);
-					Output.i(`输出路径：${data_file}`);
+					Console.notify('s', `输出路径：${data_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -103,7 +102,7 @@ namespace TwinKleS.Entry.method.popcap.ptx {
 						}
 					}
 					Support.PopCapTexture.Encode.decode_fs(data_file, image_file, image_size, format);
-					Output.i(`输出路径：${image_file}`);
+					Console.notify('s', `输出路径：${image_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

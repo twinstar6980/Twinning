@@ -1,6 +1,6 @@
 #pragma once
 
-#if defined M_system_linux || defined M_system_macos || defined M_system_android
+#if defined M_system_linux || defined M_system_macos || defined M_system_android || defined M_system_ios
 
 #if defined M_compiler_msvc
 #pragma warning(push)

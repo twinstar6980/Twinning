@@ -6,6 +6,8 @@
 #endif
 #if defined M_compiler_clang
 #pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wreserved-macro-identifier"
+#pragma clang diagnostic ignored "-Wsign-conversion"
 #endif
 
 #include "third_party/Rijndael/Rijndael.h"

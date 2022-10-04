@@ -46,15 +46,15 @@ namespace TwinKleS::WindowsExplorerExtension {
 		std::wstring const &              path
 	) -> std::wstring {
 		if (!config.method) {
-			return std::format(LR"("{}" -argument "{}")", path, config.argument);
+			return std::format(LR"("{}" "-argument" "{}")", path, config.argument);
 		} else {
-			return std::format(LR"("{}" -method "{}" -argument "{}")", path, config.method.value(), config.argument);
+			return std::format(LR"("{}" "-method" "{}" "-argument" "{}")", path, config.method.value(), config.argument);
 		}
 	}
 
 	// ----------------
 
-	inline constexpr auto k_shell_file = std::wstring_view{L"C:\\Program Files\\TwinKleS\\ToolKit\\shell"};
+	inline constexpr auto k_launch_file = std::wstring_view{L"C:\\Program Files\\TwinKleS\\ToolKit\\launch.bat"};
 
 	#pragma endregion
 
@@ -92,21 +92,24 @@ namespace TwinKleS::WindowsExplorerExtension {
 				auto parameter = std::wstring{};
 				if (selection) {
 					auto path_list = get_selection_path(selection);
-					parameter.reserve(k_shell_file.size() + 2 + path_list.size() * 256);
+					parameter.reserve(2 + 1 + 2 + k_launch_file.size() + 2 + path_list.size() * 256);
+					parameter.append(L"/K ");
 					parameter.append(1, L'"');
-					parameter.append(k_shell_file);
+					parameter.append(1, L'"');
+					parameter.append(k_launch_file);
 					parameter.append(1, L'"');
 					for (auto & path : path_list) {
 						parameter.append(1, L' ');
 						parameter.append(make_single_code(thiz.m_config, path));
 					}
+					parameter.append(1, L'"');
 				}
 				parameter.append(1, L'\0');
 				auto startup_info = STARTUPINFOW{};
 				auto process_information = PROCESS_INFORMATION{};
 				ZeroMemory(&startup_info, sizeof(startup_info));
 				ZeroMemory(&process_information, sizeof(process_information));
-				CreateProcessW(k_shell_file.data(), parameter.data(), nullptr, nullptr, FALSE, CREATE_NEW_CONSOLE, nullptr, nullptr, &startup_info, &process_information);
+				CreateProcessW(L"C:\\Windows\\System32\\cmd.exe", parameter.data(), nullptr, nullptr, FALSE, CREATE_NEW_CONSOLE, nullptr, nullptr, &startup_info, &process_information);
 				return S_OK;
 			}
 			CATCH_RETURN()
@@ -121,8 +124,10 @@ namespace TwinKleS::WindowsExplorerExtension {
 
 		virtual auto icon (
 		) -> LPCWSTR override {
+			static auto dll_path = std::wstring{};
 			if (thiz.m_has_icon) {
-				return k_shell_file.data();
+				dll_path = get_dll_path(g_dll_handle);
+				return dll_path.data();
 			} else {
 				return nullptr;
 			}
@@ -255,7 +260,9 @@ namespace TwinKleS::WindowsExplorerExtension {
 
 		virtual auto icon (
 		) -> LPCWSTR override {
-			return k_shell_file.data();
+			static auto dll_path = std::wstring{};
+			dll_path = get_dll_path(g_dll_handle);
+			return dll_path.data();
 		}
 
 		virtual auto state (

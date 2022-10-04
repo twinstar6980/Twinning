@@ -7,7 +7,15 @@
 #include "core/utility/null.hpp"
 #include "core/utility/misc/number_variant.hpp"
 #include "core/utility/range/algorithm.hpp"
+
+#if defined M_system_windows
 #include <charconv>
+namespace mscharconv = std;
+#endif
+#if defined M_system_linux || defined M_system_macos || defined M_system_android || defined M_system_ios
+#include "core/third_party/mscharconv.hpp"
+namespace mscharconv = TwinKleS::Core::ThirdParty::mscharconv;
+#endif
 
 namespace TwinKleS::Core::StringParser {
 
@@ -542,7 +550,7 @@ namespace TwinKleS::Core::StringParser {
 		}
 		auto valid_end = stream.current_pointer();
 		assert_condition(valid_begin != valid_end);
-		auto parse_result = std::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, 10);
+		auto parse_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, 10);
 		assert_condition(parse_result.ec == std::errc{});
 		return;
 	}
@@ -620,7 +628,7 @@ namespace TwinKleS::Core::StringParser {
 		assert_condition(is_floating);
 		auto valid_end = stream.current_pointer();
 		assert_condition(valid_begin != valid_end);
-		auto parse_result = std::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, is_scientific ? std::chars_format::scientific : std::chars_format::fixed);
+		auto parse_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, is_scientific ? mscharconv::chars_format::scientific : mscharconv::chars_format::fixed);
 		assert_condition(parse_result.ec == std::errc{});
 		return;
 	}
@@ -702,11 +710,11 @@ namespace TwinKleS::Core::StringParser {
 		}
 		auto valid_end = stream.current_pointer();
 		assert_condition(valid_begin != valid_end);
-		auto parse_result = std::from_chars_result{};
+		auto parse_result = mscharconv::from_chars_result{};
 		if (!is_floating) {
-			parse_result = std::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_integer().value, 10);
+			parse_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_integer().value, 10);
 		} else {
-			parse_result = std::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_floating().value, is_scientific ? std::chars_format::scientific : std::chars_format::fixed);
+			parse_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_floating().value, is_scientific ? mscharconv::chars_format::scientific : mscharconv::chars_format::fixed);
 		}
 		assert_condition(parse_result.ec == std::errc{});
 		return;

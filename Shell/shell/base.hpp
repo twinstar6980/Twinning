@@ -1,14 +1,24 @@
-﻿#pragma once
+#pragma once
 
-#include "./interface.hpp"
-#include "./version.hpp"
+#include "shell/core_interface.hpp"
+#include "shell/version.hpp"
+#include <cstring>
+#include <optional>
 #include <span>
+#include <array>
 #include <vector>
+#include <unordered_map>
 #include <string>
 #include <string_view>
+#include <charconv>
 #include <codecvt>
 #include <locale>
-#include <cstring>
+#include <thread>
+
+#if defined M_system_windows
+#include "Windows.h"
+#include "ShlObj_core.h"
+#endif
 
 #define thiz (*this)
 
@@ -23,6 +33,14 @@ namespace TwinKleS::Shell {
 	#pragma region namespace alias
 
 	namespace Core = Core::Interface;
+
+	#pragma endregion
+
+	#pragma region using
+
+	using namespace std::literals::string_literals;
+
+	using namespace std::literals::string_view_literals;
 
 	#pragma endregion
 
@@ -45,6 +63,31 @@ namespace TwinKleS::Shell {
 			result *= prime;
 			result ^= static_cast<unsigned char>(element);
 		}
+		return result;
+	}
+
+	// ----------------
+
+	inline auto string_to_boolean (
+		std::string const & string
+	) -> bool {
+		auto result = bool{};
+		if (string == "false") {
+			result = false;
+		} else if (string == "true") {
+			result = true;
+		} else {
+			throw std::runtime_error{"invalid string of boolean"};
+		}
+		return result;
+	}
+
+	inline auto string_to_integer (
+		std::string const & string
+	) -> std::int64_t {
+		auto result = std::int64_t{};
+		auto parse_result = std::from_chars(string.data(), string.data() + string.size(), result);
+		assert_condition(parse_result.ec == std::errc{} && parse_result.ptr == string.data() + string.size());
 		return result;
 	}
 
@@ -112,12 +155,12 @@ namespace TwinKleS::Shell {
 
 	inline auto from_string_structure (
 		Core::String const & structure
-	) -> std::string_view {
-		return std::string_view{reinterpret_cast<char const *>(structure.data), from_size_structure(structure.size)};
+	) -> std::string {
+		return std::string{reinterpret_cast<char const *>(structure.data), from_size_structure(structure.size)};
 	}
 
 	inline auto to_string_structure (
-		std::string_view const & value
+		std::string const & value
 	) -> Core::String {
 		return Core::String{
 			.data = const_cast<Core::Character *>(reinterpret_cast<Core::Character const *>(value.data())),
@@ -130,16 +173,16 @@ namespace TwinKleS::Shell {
 
 	inline auto from_string_list_structure (
 		Core::StringList const & structure
-	) -> std::vector<std::string_view> {
-		auto value = std::vector<std::string_view>{};
+	) -> std::vector<std::string> {
+		auto value = std::vector<std::string>{};
 		value.reserve(from_size_structure(structure.size));
-		for (auto & e : std::span{structure.data, from_size_structure(structure.size)}) {
-			value.emplace_back(reinterpret_cast<char const *>(e.data), from_size_structure(e.size));
+		for (auto & element : std::span{structure.data, from_size_structure(structure.size)}) {
+			value.emplace_back(reinterpret_cast<char const *>(element.data), from_size_structure(element.size));
 		}
 		return value;
 	}
 
-	inline auto alloc_string_list_structure (
+	inline auto allocate_string_list_structure (
 		std::vector<std::string> const & value
 	) -> Core::StringList {
 		auto structure = Core::StringList{
@@ -147,14 +190,14 @@ namespace TwinKleS::Shell {
 			.size = to_size_structure(value.size()),
 			.capacity = to_size_structure(value.size()),
 		};
-		for (auto i = std::size_t{0}; i < value.size(); ++i) {
-			auto & e = value[i];
-			structure.data[i] = Core::String{
-				.data = new Core::Character[e.size()]{},
-				.size = to_size_structure(e.size()),
-				.capacity = to_size_structure(e.size()),
+		for (auto index = std::size_t{0}; index < value.size(); ++index) {
+			auto & element = value[index];
+			structure.data[index] = Core::String{
+				.data = new Core::Character[element.size()]{},
+				.size = to_size_structure(element.size()),
+				.capacity = to_size_structure(element.size()),
 			};
-			std::memcpy(structure.data[i].data, e.data(), e.size());
+			std::memcpy(structure.data[index].data, element.data(), element.size());
 		}
 		return structure;
 	}
@@ -163,8 +206,8 @@ namespace TwinKleS::Shell {
 		Core::StringList & structure
 	) -> void {
 		if (structure.data != nullptr) {
-			for (auto & item : std::span{structure.data, from_size_structure(structure.capacity)}) {
-				delete[] item.data;
+			for (auto & element : std::span{structure.data, from_size_structure(structure.capacity)}) {
+				delete[] element.data;
 			}
 			delete[] structure.data;
 			structure.data = nullptr;
@@ -238,6 +281,72 @@ namespace TwinKleS::Shell {
 		#pragma endregion
 
 	};
+
+	#pragma endregion
+
+	#pragma region windows only
+
+	#if defined M_system_windows
+
+	namespace Windows {
+
+		#pragma region open file dialog
+
+		// NOTE : if arch == arm_32 : compile failed : undefined symbol "CoInitialize"...
+		inline auto open_file_dialog (
+			bool const & pick_folder,
+			bool const & multiple
+		) -> std::vector<std::string> {
+			auto result = std::vector<std::string>{};
+			CoInitialize(nullptr);
+			auto dialog = X<IFileOpenDialog *>{nullptr};
+			auto h_result = CoCreateInstance(__uuidof(FileOpenDialog), nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&dialog));
+			assert_condition(SUCCEEDED(h_result));
+			auto option = FILEOPENDIALOGOPTIONS{};
+			h_result = dialog->GetOptions(&option);
+			assert_condition(SUCCEEDED(h_result));
+			option |= FOS_NOCHANGEDIR | FOS_FORCEFILESYSTEM | FOS_NODEREFERENCELINKS | FOS_DONTADDTORECENT | FOS_FORCESHOWHIDDEN;
+			if (pick_folder) {
+				option |= FOS_PICKFOLDERS;
+			}
+			if (multiple) {
+				option |= FOS_ALLOWMULTISELECT;
+			}
+			h_result = dialog->SetOptions(option);
+			assert_condition(SUCCEEDED(h_result));
+			h_result = dialog->Show(nullptr);
+			if (h_result != HRESULT_FROM_WIN32(ERROR_CANCELLED)) {
+				assert_condition(SUCCEEDED(h_result));
+				auto selected_item_list = X<IShellItemArray *>{nullptr};
+				h_result = dialog->GetResults(&selected_item_list);
+				assert_condition(SUCCEEDED(h_result));
+				auto item_count = DWORD{0};
+				h_result = selected_item_list->GetCount(&item_count);
+				assert_condition(SUCCEEDED(h_result));
+				result.reserve(item_count);
+				for (auto index = DWORD{0}; index < item_count; index++) {
+					auto item = X<IShellItem *>{nullptr};
+					auto display_name = LPWSTR{nullptr};
+					h_result = selected_item_list->GetItemAt(index, &item);
+					assert_condition(SUCCEEDED(h_result));
+					h_result = item->GetDisplayName(SIGDN_FILESYSPATH, &display_name);
+					assert_condition(SUCCEEDED(h_result));
+					auto display_name_8 = utf16_to_utf8(std::u16string_view{reinterpret_cast<char16_t const *>(display_name)});
+					result.emplace_back(std::move(reinterpret_cast<std::string &>(display_name_8)));
+					CoTaskMemFree(display_name);
+					item->Release();
+				}
+				selected_item_list->Release();
+			}
+			dialog->Release();
+			return result;
+		}
+
+		#pragma endregion
+
+	}
+
+	#endif
 
 	#pragma endregion
 

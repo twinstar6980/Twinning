@@ -86,7 +86,7 @@ namespace TwinKleS::Core::Tool::Texture::Compress::ETC1 {
 				auto etc1_pack_params = ThirdParty::rg_etc1::etc1_pack_params{};
 				ThirdParty::rg_etc1::pack_etc1_block_init();
 				for (auto & block_y : SizeRange{image.size().height / k_block_width}) {
-					M_log("\r### etc1-encode : {:.1f}%"_sf((cbw<Floating>(block_y) * 4.0_f / cbw<Floating>(image.size().height)) * 100.0_f));
+					M_log_no_line("\r## etc1-encode : {:>5.1f}% "_sf((cbw<Floating>(block_y) * 4.0_f / cbw<Floating>(image.size().height)) * 100.0_f));
 					for (auto & block_x : SizeRange{image.size().width / k_block_width}) {
 						for (auto & pixel_y : SizeRange{k_block_width}) {
 							for (auto & pixel_x : SizeRange{k_block_width}) {
@@ -102,7 +102,7 @@ namespace TwinKleS::Core::Tool::Texture::Compress::ETC1 {
 						data.forward(k_block_width * k_block_width * k_bpp / k_type_bit_count<Byte>);
 					}
 				}
-				M_log("\r### etc1-encode : 100.0%"_s);
+				M_log("\r## etc1-encode : 100.0% "_s);
 				return;
 			}
 

@@ -45,13 +45,14 @@ namespace TwinKleS.Entry.method.popcap.rton {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.rton_data_buffer_size === '?input') {
-							rton_data_buffer_size = Input.size(`请输入用于保存rton输出的内存空间大小`)!;
+							Console.notify('i', `请输入用于保存rton输出的内存空间大小`, []);
+							rton_data_buffer_size = Console.size()!;
 						} else {
 							rton_data_buffer_size = parse_size_string(a.rton_data_buffer_size);
 						}
 					}
 					CoreX.Tool.PopCap.RTON.encode_fs(json_file, rton_file, true, true, rton_data_buffer_size);
-					Output.i(`输出路径：${rton_file}`);
+					Console.notify('s', `输出路径：${rton_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -81,7 +82,7 @@ namespace TwinKleS.Entry.method.popcap.rton {
 						});
 					}
 					CoreX.Tool.PopCap.RTON.decode_fs(rton_file, json_file);
-					Output.i(`输出路径：${json_file}`);
+					Console.notify('s', `输出路径：${json_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -111,13 +112,14 @@ namespace TwinKleS.Entry.method.popcap.rton {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.key === '?input') {
-							key = Input.string(`请输入密钥`)!;
+							Console.notify('i', `请输入密钥`, []);
+							key = Console.string()!;
 						} else {
 							key = a.key;
 						}
 					}
 					CoreX.Tool.PopCap.RTON.encrypt_fs(plain_file, cipher_file, key);
-					Output.i(`输出路径：${cipher_file}`);
+					Console.notify('s', `输出路径：${cipher_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -148,13 +150,14 @@ namespace TwinKleS.Entry.method.popcap.rton {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.key === '?input') {
-							key = Input.string(`请输入密钥`)!;
+							Console.notify('i', `请输入密钥`, []);
+							key = Console.string()!;
 						} else {
 							key = a.key;
 						}
 					}
 					CoreX.Tool.PopCap.RTON.decrypt_fs(cipher_file, plain_file, key);
-					Output.i(`输出路径：${plain_file}`);
+					Console.notify('s', `输出路径：${plain_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -187,18 +190,20 @@ namespace TwinKleS.Entry.method.popcap.rton {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.key === '?input') {
-							key = Input.string(`请输入密钥`)!;
+							Console.notify('i', `请输入密钥`, []);
+							key = Console.string()!;
 						} else {
 							key = a.key;
 						}
 						if (a.rton_data_buffer_size === '?input') {
-							rton_data_buffer_size = Input.size(`请输入用于保存rton输出的内存空间大小`)!;
+							Console.notify('i', `请输入用于保存rton输出的内存空间大小`, []);
+							rton_data_buffer_size = Console.size()!;
 						} else {
 							rton_data_buffer_size = parse_size_string(a.rton_data_buffer_size);
 						}
 					}
 					CoreX.Tool.PopCap.RTON.encode_then_encrypt_fs(json_file, rton_file, true, true, key, rton_data_buffer_size);
-					Output.i(`输出路径：${rton_file}`);
+					Console.notify('s', `输出路径：${rton_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -230,13 +235,14 @@ namespace TwinKleS.Entry.method.popcap.rton {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.key === '?input') {
-							key = Input.string(`请输入密钥`)!;
+							Console.notify('i', `请输入密钥`, []);
+							key = Console.string()!;
 						} else {
 							key = a.key;
 						}
 					}
 					CoreX.Tool.PopCap.RTON.decrypt_then_decode_fs(rton_file, json_file, key);
-					Output.i(`输出路径：${json_file}`);
+					Console.notify('s', `输出路径：${json_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -269,7 +275,8 @@ namespace TwinKleS.Entry.method.popcap.rton {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.rton_data_buffer_size === '?input') {
-							rton_data_buffer_size = Input.size(`请输入用于保存rton输出的内存空间大小`)!;
+							Console.notify('i', `请输入用于保存rton输出的内存空间大小`, []);
+							rton_data_buffer_size = Console.size()!;
 						} else {
 							rton_data_buffer_size = parse_size_string(a.rton_data_buffer_size);
 						}
@@ -284,7 +291,7 @@ namespace TwinKleS.Entry.method.popcap.rton {
 							CoreX.Tool.PopCap.RTON.encode_fs(json_file, rton_file, true, true, rton_data_buffer.view());
 						},
 					);
-					Output.i(`输出路径：${rton_file_directory}`);
+					Console.notify('s', `输出路径：${rton_file_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -322,7 +329,7 @@ namespace TwinKleS.Entry.method.popcap.rton {
 							CoreX.Tool.PopCap.RTON.decode_fs(rton_file, json_file);
 						},
 					);
-					Output.i(`输出路径：${json_file_directory}`);
+					Console.notify('s', `输出路径：${json_file_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -352,7 +359,8 @@ namespace TwinKleS.Entry.method.popcap.rton {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.key === '?input') {
-							key = Input.string(`请输入密钥`)!;
+							Console.notify('i', `请输入密钥`, []);
+							key = Console.string()!;
 						} else {
 							key = a.key;
 						}
@@ -366,7 +374,7 @@ namespace TwinKleS.Entry.method.popcap.rton {
 							CoreX.Tool.PopCap.RTON.encrypt_fs(plain_file, cipher_file, key);
 						},
 					);
-					Output.i(`输出路径：${cipher_file_directory}`);
+					Console.notify('s', `输出路径：${cipher_file_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -397,7 +405,8 @@ namespace TwinKleS.Entry.method.popcap.rton {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.key === '?input') {
-							key = Input.string(`请输入密钥`)!;
+							Console.notify('i', `请输入密钥`, []);
+							key = Console.string()!;
 						} else {
 							key = a.key;
 						}
@@ -411,7 +420,7 @@ namespace TwinKleS.Entry.method.popcap.rton {
 							CoreX.Tool.PopCap.RTON.decrypt_fs(cipher_file, plain_file, key);
 						},
 					);
-					Output.i(`输出路径：${plain_file_directory}`);
+					Console.notify('s', `输出路径：${plain_file_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -444,12 +453,14 @@ namespace TwinKleS.Entry.method.popcap.rton {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.key === '?input') {
-							key = Input.string(`请输入密钥`)!;
+							Console.notify('i', `请输入密钥`, []);
+							key = Console.string()!;
 						} else {
 							key = a.key;
 						}
 						if (a.rton_data_buffer_size === '?input') {
-							rton_data_buffer_size = Input.size(`请输入用于保存rton输出的内存空间大小`)!;
+							Console.notify('i', `请输入用于保存rton输出的内存空间大小`, []);
+							rton_data_buffer_size = Console.size()!;
 						} else {
 							rton_data_buffer_size = parse_size_string(a.rton_data_buffer_size);
 						}
@@ -464,7 +475,7 @@ namespace TwinKleS.Entry.method.popcap.rton {
 							CoreX.Tool.PopCap.RTON.encode_then_encrypt_fs(json_file, rton_file, true, true, key, rton_data_buffer.view());
 						},
 					);
-					Output.i(`输出路径：${rton_file_directory}`);
+					Console.notify('s', `输出路径：${rton_file_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -496,7 +507,8 @@ namespace TwinKleS.Entry.method.popcap.rton {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.key === '?input') {
-							key = Input.string(`请输入密钥`)!;
+							Console.notify('i', `请输入密钥`, []);
+							key = Console.string()!;
 						} else {
 							key = a.key;
 						}
@@ -510,7 +522,7 @@ namespace TwinKleS.Entry.method.popcap.rton {
 							CoreX.Tool.PopCap.RTON.decrypt_then_decode_fs(rton_file, json_file, key);
 						},
 					);
-					Output.i(`输出路径：${json_file_directory}`);
+					Console.notify('s', `输出路径：${json_file_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

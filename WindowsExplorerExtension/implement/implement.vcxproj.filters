@@ -4,6 +4,9 @@
     <Filter Include="src">
       <UniqueIdentifier>{5b0fdb76-3086-4020-abcd-c40181f73120}</UniqueIdentifier>
     </Filter>
+    <Filter Include="res">
+      <UniqueIdentifier>{ac28c087-c56d-49cf-afdf-36b80adb3fea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\base_command.hpp">
@@ -32,5 +35,15 @@
       <Filter>src</Filter>
     </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="res\application.rc">
+      <Filter>res</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\logo.ico">
+      <Filter>res</Filter>
+    </Image>
   </ItemGroup>
 </Project>

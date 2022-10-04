@@ -18,3 +18,5 @@ add_library(
 	./huffman.c
 	./randtable.c
 )
+
+include(${M_root_project_directory}/cmake/compile_warning_disable.cmake)

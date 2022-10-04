@@ -35,9 +35,11 @@ add_library(
 	./zutil.c
 )
 
-if (M_system_linux OR M_system_macos OR M_system_android)
+if (M_system_linux OR M_system_macos OR M_system_android OR M_system_ios)
 	target_compile_definitions(
 		${PROJECT_NAME} PRIVATE
 		Z_HAVE_UNISTD_H
 	)
 endif()
+
+include(${M_root_project_directory}/cmake/compile_warning_disable.cmake)

@@ -1,33 +1,12 @@
-﻿//
+//
 
-#include "./loader.hpp"
-#include "./callback.hpp"
-#include <optional>
+#include "shell/library/static_library.hpp"
+#include "shell/library/dynamic_library.hpp"
+#include "shell/host/cli_host.hpp"
 
-#if defined M_system_windows
-#include "Windows.h"
+#if defined M_vld
+#include "vld.h"
 #endif
-
-#pragma region config
-
-#if defined M_system_windows
-inline constexpr auto k_library_file = std::string_view{"C:\\Program Files\\TwinKleS\\ToolKit\\core"};
-inline constexpr auto k_script_file = std::string_view{"C:\\Program Files\\TwinKleS\\ToolKit\\script\\main.js"};
-#endif
-#if defined M_system_linux
-inline constexpr auto k_library_file = std::string_view{"/opt/TwinKleS/ToolKit/core"};
-inline constexpr auto k_script_file = std::string_view{"/opt/TwinKleS/ToolKit/script/main.js"};
-#endif
-#if defined M_system_macos
-inline constexpr auto k_library_file = std::string_view{"/opt/TwinKleS/ToolKit/core"};
-inline constexpr auto k_script_file = std::string_view{"/opt/TwinKleS/ToolKit/script/main.js"};
-#endif
-#if defined M_system_android
-inline constexpr auto k_library_file = std::string_view{"/opt/TwinKleS/ToolKit/core"};
-inline constexpr auto k_script_file = std::string_view{"/opt/TwinKleS/ToolKit/script/main.js"};
-#endif
-
-#pragma endregion
 
 #pragma region main
 
@@ -37,57 +16,54 @@ auto wmain (
 	wchar_t * argv[]
 ) -> int
 #endif
-#if defined M_system_linux || defined M_system_macos || defined M_system_android
+#if defined M_system_linux || defined M_system_macos || defined M_system_android || defined M_system_ios
 auto main (
 	int    argc,
 	char * argv[]
 ) -> int
 #endif
 {
-	assert_condition(argc >= (1));
-	auto args = std::span{argv + 1, static_cast<std::size_t>(argc - 1)};
-	#if defined M_system_windows
-	SetConsoleCP(CP_UTF8);
-	SetConsoleOutputCP(CP_UTF8);
-	#endif
-	std::cout << "TwinKleS.ToolKit.Shell " << std::size_t{M_version} << std::endl;
-	auto argument = [&] {
+	auto args = [&] {
 		auto it = std::vector<std::string>{};
-		it.reserve(args.size());
-		for (auto & arg : args) {
+		auto raw_args = std::span{argv, static_cast<std::size_t>(argc)};
+		it.reserve(raw_args.size());
+		for (auto & raw_arg : raw_args) {
 			#if defined M_system_windows
-			auto arg_8 = TwinKleS::Shell::utf16_to_utf8(std::u16string_view{reinterpret_cast<char16_t const *>(arg)});
-			it.emplace_back(std::move(reinterpret_cast<std::string &>(arg_8)));
+			auto raw_arg_8 = TwinKleS::Shell::utf16_to_utf8(std::u16string_view{reinterpret_cast<char16_t const *>(raw_arg)});
+			it.emplace_back(std::move(reinterpret_cast<std::string &>(raw_arg_8)));
 			#endif
-			#if defined M_system_linux || defined M_system_macos || defined M_system_android
-			it.emplace_back(arg);
+			#if defined M_system_linux || defined M_system_macos || defined M_system_android || defined M_system_ios
+			it.emplace_back(raw_arg);
 			#endif
 		}
 		return it;
 	}();
-	auto result = std::optional<std::string>{};
+	auto exception_message = std::optional<std::string>{};
 	try {
-		auto library = TwinKleS::Shell::Loader::Library{k_library_file};
-		std::cout << "TwinKleS.ToolKit.Core " << library.version() << std::endl;
-		result = library.execute(
-			std::string{k_script_file},
-			true,
-			argument,
-			&TwinKleS::Shell::Callback::CLI::shell_callback
-		);
+		std::cout << "TwinKleS.ToolKit.Shell " << std::size_t{M_version} << "\n" << std::flush;
+		assert_condition(args.size() >= 4);
+		auto library_file = args[1];
+		auto script = args[2];
+		auto script_is_path = TwinKleS::Shell::string_to_boolean(args[3]);
+		auto argument = std::vector<std::string>{args.begin() + 4, args.end()};
+		auto library = TwinKleS::Shell::DynamicLibrary{library_file};
+		std::cout << "TwinKleS.ToolKit.Core " << library.wrapped_version() << "\n" << std::flush;
+		auto host = TwinKleS::Shell::CLIHost{};
+		auto result = TwinKleS::Shell::execute_on_host(host, library, script, script_is_path, argument);
+		if (result) {
+			exception_message.emplace(result.value());
+		}
 	} catch (std::exception & exception) {
-		result.emplace(exception.what());
+		exception_message.emplace(exception.what());
 	} catch (...) {
-		result.emplace("unknown exception");
+		exception_message.emplace("unknown exception");
 	}
-	if (result) {
-		std::cout << "Exception :\n" << result.value() << std::endl;
-		#if defined M_system_windows
-		std::system("pause");
-		#endif
-		#if defined M_system_linux || defined M_system_macos || defined M_system_android
-		std::system("echo pause... && read _");
-		#endif
+	if (exception_message) {
+		std::cout << "\n" << std::flush;
+		std::cout << "Exception :\n" << exception_message.value() << "\n" << std::flush;
+		std::cout << "Press <ENTER> to exit ... " << std::flush;
+		auto pause_text = std::string{};
+		std::getline(std::cin, pause_text);
 		return 1;
 	}
 	return 0;

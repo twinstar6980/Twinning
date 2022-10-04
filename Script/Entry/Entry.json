@@ -1,5 +1,5 @@
 {
-	"force_enable_virtual_terminal_sequences": true,
+	"cli_disable_virtual_terminal_sequences": false,
 	"workspace": "<home>/workspace",
 	"byte_stream_use_big_endian": false,
 	"json_write": {

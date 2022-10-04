@@ -308,6 +308,15 @@ namespace TwinKleS::Core::JS {
 
 		template <auto function> requires
 			CategoryConstraint<>
+			&& (IsGlobalFunction<decltype(function)>)
+		auto add_static_function_proxy (
+			String const & name
+		) -> ClassBuilder& {
+			return thiz.template add_static_function<&proxy_function_by_handler<function>>(name);
+		}
+
+		template <auto function> requires
+			CategoryConstraint<>
 			&& (IsMemberFunction<decltype(function)>)
 			&& (IsDerivedFrom<Class, typename CallableTraitOf<function>::Class>)
 		auto add_member_function_proxy (

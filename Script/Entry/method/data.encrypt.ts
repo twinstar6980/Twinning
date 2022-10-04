@@ -32,13 +32,14 @@ namespace TwinKleS.Entry.method.data.encrypt {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.key === '?input') {
-							key = Input.integer(`请输入密钥（八位无符号整数）`, (value) => ((value >= 0x00n && value <= 0xFFn) ? null : `必须为八位无符号整数`))!;
+							Console.notify('i', `请输入密钥（八位无符号整数）`, []);
+							key = Console.integer((value) => ((value >= 0x00n && value <= 0xFFn) ? null : `必须为八位无符号整数`))!;
 						} else {
 							key = a.key;
 						}
 					}
 					CoreX.Tool.Data.Encrypt.XOR.crypt_fs(plain_file, cipher_file, key);
-					Output.i(`输出路径：${cipher_file}`);
+					Console.notify('s', `输出路径：${cipher_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -75,23 +76,27 @@ namespace TwinKleS.Entry.method.data.encrypt {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.mode === '?input') {
-							mode = Input.string(`请选择算法模式（ecb、cbc、cfb）`, Check.enum_checkerx(['ecb', 'cbc', 'cfb']))! as any;
+							Console.notify('i', `请选择算法模式（ecb、cbc、cfb）`, []);
+							mode = Console.string(Check.enum_checkerx(['ecb', 'cbc', 'cfb']))! as any;
 						} else {
 							mode = a.mode as any;
 						}
 						if (a.block_size === '?input') {
-							block_size = Input.integer(`请输入块大小（16、24、32）`, Check.enum_checkerx([16n, 24n, 32n]))!;
+							Console.notify('i', `请输入块大小（16、24、32）`, []);
+							block_size = Console.integer(Check.enum_checkerx([16n, 24n, 32n]))!;
 						} else {
 							block_size = a.block_size;
 						}
 						if (a.key === '?input') {
-							key = Input.string(`请输入密钥（长度为16、24、32）`, (value) => ((value.length === 16 || value.length === 24 || value.length === 32) ? null : `长度必须为16、24、32`))!;
+							Console.notify('i', `请输入密钥（长度为16、24、32）`, []);
+							key = Console.string((value) => ((value.length === 16 || value.length === 24 || value.length === 32) ? null : `长度必须为16、24、32`))!;
 						} else {
 							key = a.key;
 						}
 						if (mode === 'cbc' || mode === 'cfb') {
 							if (a.iv === '?input') {
-								iv = Input.string(`请输入初始向量（长度与块大小相同）`, (value) => ((value.length === Number(block_size)) ? null : `长度必须与块大小相同`))!;
+								Console.notify('i', `请输入初始向量（长度与块大小相同）`, []);
+								iv = Console.string((value) => ((value.length === Number(block_size)) ? null : `长度必须与块大小相同`))!;
 							} else {
 								iv = a.iv;
 							}
@@ -100,7 +105,7 @@ namespace TwinKleS.Entry.method.data.encrypt {
 						}
 					}
 					CoreX.Tool.Data.Encrypt.Rijndael.encrypt_fs(plain_file, cipher_file, mode, block_size, BigInt(key.length), key, iv);
-					Output.i(`输出路径：${cipher_file}`);
+					Console.notify('s', `输出路径：${cipher_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -140,23 +145,27 @@ namespace TwinKleS.Entry.method.data.encrypt {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.mode === '?input') {
-							mode = Input.string(`请选择算法模式（ecb、cbc、cfb）`, Check.enum_checkerx(['ecb', 'cbc', 'cfb']))! as any;
+							Console.notify('i', `请选择算法模式（ecb、cbc、cfb）`, []);
+							mode = Console.string(Check.enum_checkerx(['ecb', 'cbc', 'cfb']))! as any;
 						} else {
 							mode = a.mode as any;
 						}
 						if (a.block_size === '?input') {
-							block_size = Input.integer(`请输入块大小（16、24、32）`, Check.enum_checkerx([16n, 24n, 32n]))!;
+							Console.notify('i', `请输入块大小（16、24、32）`, []);
+							block_size = Console.integer(Check.enum_checkerx([16n, 24n, 32n]))!;
 						} else {
 							block_size = a.block_size;
 						}
 						if (a.key === '?input') {
-							key = Input.string(`请输入密钥（长度为16、24、32）`, (value) => ((value.length === 16 || value.length === 24 || value.length === 32) ? null : `长度必须为16、24、32`))!;
+							Console.notify('i', `请输入密钥（长度为16、24、32）`, []);
+							key = Console.string((value) => ((value.length === 16 || value.length === 24 || value.length === 32) ? null : `长度必须为16、24、32`))!;
 						} else {
 							key = a.key;
 						}
 						if (mode === 'cbc' || mode === 'cfb') {
 							if (a.iv === '?input') {
-								iv = Input.string(`请输入初始向量（长度与块大小相同）`, (value) => ((value.length === Number(block_size)) ? null : `长度必须与块大小相同`))!;
+								Console.notify('i', `请输入初始向量（长度与块大小相同）`, []);
+								iv = Console.string((value) => ((value.length === Number(block_size)) ? null : `长度必须与块大小相同`))!;
 							} else {
 								iv = a.iv;
 							}
@@ -165,7 +174,7 @@ namespace TwinKleS.Entry.method.data.encrypt {
 						}
 					}
 					CoreX.Tool.Data.Encrypt.Rijndael.decrypt_fs(cipher_file, plain_file, mode, block_size, BigInt(key.length), key, iv);
-					Output.i(`输出路径：${cipher_file}`);
+					Console.notify('s', `输出路径：${cipher_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

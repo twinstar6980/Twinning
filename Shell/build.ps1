@@ -1,0 +1,1 @@
+../Core/build.ps1

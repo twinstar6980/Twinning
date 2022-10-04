@@ -38,12 +38,14 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.version_number === '?input') {
-							version_number = Input.integer(`请输入版本编号（112）`, Check.enum_checkerx([112n]))!;
+							Console.notify('i', `请输入版本编号（112）`, []);
+							version_number = Console.integer(Check.enum_checkerx([112n]))!;
 						} else {
 							version_number = BigInt(a.version_number);
 						}
 						if (a.data_buffer_size === '?input') {
-							data_buffer_size = Input.size(`请输入用于保存包数据输出的内存空间大小`)!;
+							Console.notify('i', `请输入用于保存包数据输出的内存空间大小`, []);
+							data_buffer_size = Console.size()!;
 						} else {
 							data_buffer_size = parse_size_string(a.data_buffer_size);
 						}
@@ -51,7 +53,7 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let embedded_audio_directory = `${bundle_directory}/embedded_audio`;
 					CoreX.Tool.Wwise.SoundBank.pack_fs(data_file, manifest_file, embedded_audio_directory, { number: version_number as any }, data_buffer_size);
-					Output.i(`输出路径：${data_file}`);
+					Console.notify('s', `输出路径：${data_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -83,7 +85,8 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.version_number === '?input') {
-							version_number = Input.integer(`请输入版本编号（112）`, Check.enum_checkerx([112n]))!;
+							Console.notify('i', `请输入版本编号（112）`, []);
+							version_number = Console.integer(Check.enum_checkerx([112n]))!;
 						} else {
 							version_number = BigInt(a.version_number);
 						}
@@ -91,7 +94,7 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let embedded_audio_directory = `${bundle_directory}/embedded_audio`;
 					CoreX.Tool.Wwise.SoundBank.unpack_fs(data_file, manifest_file, embedded_audio_directory, { number: version_number as any });
-					Output.i(`输出路径：${bundle_directory}`);
+					Console.notify('s', `输出路径：${bundle_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -126,12 +129,14 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.version_number === '?input') {
-							version_number = Input.integer(`请输入版本编号（112）`, Check.enum_checkerx([112n]))!;
+							Console.notify('i', `请输入版本编号（112）`, []);
+							version_number = Console.integer(Check.enum_checkerx([112n]))!;
 						} else {
 							version_number = BigInt(a.version_number);
 						}
 						if (a.data_buffer_size === '?input') {
-							data_buffer_size = Input.size(`请输入用于保存包数据输出的内存空间大小`)!;
+							Console.notify('i', `请输入用于保存包数据输出的内存空间大小`, []);
+							data_buffer_size = Console.size()!;
 						} else {
 							data_buffer_size = parse_size_string(a.data_buffer_size);
 						}
@@ -148,7 +153,7 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 							CoreX.Tool.Wwise.SoundBank.pack_fs(data_file, manifest_file, embedded_audio_directory, { number: version_number as any }, data_buffer.view());
 						},
 					);
-					Output.i(`输出路径：${data_file_directory}`);
+					Console.notify('s', `输出路径：${data_file_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -180,7 +185,8 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.version_number === '?input') {
-							version_number = Input.integer(`请输入版本编号（112）`, Check.enum_checkerx([112n]))!;
+							Console.notify('i', `请输入版本编号（112）`, []);
+							version_number = Console.integer(Check.enum_checkerx([112n]))!;
 						} else {
 							version_number = BigInt(a.version_number);
 						}
@@ -196,7 +202,7 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 							CoreX.Tool.Wwise.SoundBank.unpack_fs(data_file, manifest_file, embedded_audio_directory, { number: version_number as any });
 						},
 					);
-					Output.i(`输出路径：${bundle_directory_directory}`);
+					Console.notify('s', `输出路径：${bundle_directory_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

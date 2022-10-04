@@ -129,7 +129,11 @@
 
 // log to cout
 #define M_log(...)\
-	std::cout << (__VA_ARGS__) << std::endl
+	std::cout << (__VA_ARGS__) << "\n" << std::flush
+
+// log to cout no line
+#define M_log_no_line(...)\
+	std::cout << (__VA_ARGS__) << std::flush
 
 // TODO
 

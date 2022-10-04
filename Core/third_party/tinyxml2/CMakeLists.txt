@@ -10,3 +10,5 @@ add_library(
 	./tinyxml2.h
 	./tinyxml2.cpp
 )
+
+include(${M_root_project_directory}/cmake/compile_warning_disable.cmake)

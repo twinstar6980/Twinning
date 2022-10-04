@@ -23,7 +23,7 @@ namespace TwinKleS.Entry.method.data.hash {
 						file = a.file;
 					}
 					let result = CoreX.Tool.Data.Hash.MD5.hash_fs(file);
-					Output.i(`MD5：${result}`);
+					Console.notify('s', `MD5：${result}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

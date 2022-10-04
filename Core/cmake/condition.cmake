@@ -1,4 +1,4 @@
-# common condition
+# condition
 
 # system
 set(M_system_windows 0)

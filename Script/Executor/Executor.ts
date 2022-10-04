@@ -125,12 +125,12 @@ namespace TwinKleS.Executor {
 				}
 			}
 			if (valid_method_index.length === 0) {
-				Output.w(`未筛选到可选的功能，故跳过此条命令`);
+				Console.notify('w', `未筛选到可选的功能，故跳过此条命令`, []);
 			} else {
-				let max_index_string_length = `${valid_method_index[valid_method_index.length - 1]}`.length;
-				let i = Input.number([`请输入功能序号，跳过输入则跳过此条命令`, valid_method_index.map((e) => (`${make_prefix_padded_string(e + 1, ' ', max_index_string_length)}. ${method[e].description}`))], Check.enum_checkerx(valid_method_index.map((e) => (e + 1))), true);
+				Console.notify('i', `请输入功能序号，跳过输入则跳过此条命令`, []);
+				let i = Console.option(valid_method_index.map((e) => ([BigInt(e + 1), `${method[e].description}`])), true);
 				if (i !== null) {
-					selected_method = method[i - 1];
+					selected_method = method[Number(i) - 1];
 				}
 			}
 		}

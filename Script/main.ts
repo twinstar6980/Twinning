@@ -3,15 +3,15 @@ namespace TwinKleS {
 	// ------------------------------------------------
 
 	/** 版本编号 */
-	export const k_version = 18;
+	export const k_version = 19;
 
 	// ------------------------------------------------
 
 	/** 错误类 */
 	export class MyError {
 
-		private message: string;
-		private stack: string;
+		public message: string;
+		public stack: string;
 
 		constructor(
 			message: string,
@@ -74,10 +74,16 @@ namespace TwinKleS {
 
 			// ------------------------------------------------
 
-			export function output(
+			export function notify(
 				message: string,
 			): void {
-				Core.Misc.g_context.shell_callback(Core.StringList.value(['output', `${message}\n`]));
+				var shell_name = Core.Misc.g_context.shell_callback(Core.StringList.value(['name'])).value[1];
+				if (shell_name.endsWith('.cli')) {
+					Core.Misc.g_context.shell_callback(Core.StringList.value(['output', `${message}\n`]));
+				}
+				if (shell_name.endsWith('.gui')) {
+					Core.Misc.g_context.shell_callback(Core.StringList.value(['output', 'v', `${message}`]));
+				}
 				return;
 			}
 
@@ -165,7 +171,8 @@ namespace TwinKleS {
 			script_path: null | string,
 			argument: Array<string>,
 		): null | string {
-			Detail.output(`TwinKleS.ToolKit.Script ${k_version}`);
+			let result: null | string = null;
+			Detail.notify(`TwinKleS.ToolKit.Script ${k_version}`);
 			try {
 				if (script_path === null) {
 					throw new MyError(`must run as file`);
@@ -174,22 +181,28 @@ namespace TwinKleS {
 				if (script_path_match === null) {
 					throw new MyError(`script path error`);
 				}
-				g_home_directory = script_path_match[1];
+				if (script_path_match[1].startsWith('.') || script_path_match[1].startsWith('..')) {
+					let current_directory = Core.FileSystem.get_working_directory().value;
+					g_home_directory = `${current_directory}/${script_path_match[1]}`;
+				} else {
+					g_home_directory = script_path_match[1];
+				}
 				let begin_time = Date.now();
 				let entry = load_module(g_module_manifest, `${g_home_directory}/script`);
 				let end_time = Date.now();
-				Detail.output(`all module loaded in ${end_time - begin_time}ms`);
+				Console.notify('s', `all module loaded in ${end_time - begin_time} ms`, []);
 				entry?.[0](entry[1], argument);
-				g_thread_manager.wait();
-				g_thread_manager.resize(0);
 			} catch (e: any) {
 				if (e instanceof Error) {
-					return `${e}\n${e.stack}`;
+					result = `${e}\n${e.stack}`;
+				} else if (e instanceof MyError) {
+					result = `${e.message}\n${e.stack}`;
 				} else {
-					return `${e}`;
+					result = `${e}`;
 				}
 			}
-			return null;
+			g_thread_manager.resize(0);
+			return result;
 		}
 
 		// ------------------------------------------------
@@ -209,11 +222,10 @@ TwinKleS.Main.g_module_manifest = {
 		`utility/TextGenerator`,
 		`utility/VirtualTerminalSequences`,
 		`utility/XML`,
-		`CoreX/CoreX`,
-		`Shell/Shell`,
-		`ThreadManager/ThreadManager`,
-		`io/Input`,
-		`io/Output`,
+		`utility/CoreX`,
+		`utility/Shell`,
+		`utility/ThreadManager`,
+		`utility/Console`,
 		`Language/Language`,
 		`Support/MarmaladeDZip/ResourcePack/ResourcePack`,
 		`Support/PopCapPAK/ResourcePack/ResourcePack`,

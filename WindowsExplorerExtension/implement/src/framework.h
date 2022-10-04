@@ -4,6 +4,7 @@
 #include <optional>
 #include <vector>
 #include <string>
+#include <array>
 #include <regex>
 #include <filesystem>
 #include <Windows.h>
@@ -25,5 +26,22 @@ using Microsoft::WRL::InProc;
 
 #define thiz (*this)
 
-template <typename T>
-using X = T;
+namespace TwinKleS::WindowsExplorerExtension {
+
+	template <typename T>
+	using X = T;
+
+	// ----------------
+
+	inline auto g_dll_handle = HMODULE{};
+
+	inline auto get_dll_path (
+		HMODULE const & handle
+	) -> std::wstring {
+		auto buffer = std::array<WCHAR, 1024>{};
+		auto length = GetModuleFileNameW(g_dll_handle, buffer.data(), 1024);
+		// todo : check length == 0 ?
+		return std::wstring{buffer.begin(), buffer.begin() + length};
+	}
+
+}

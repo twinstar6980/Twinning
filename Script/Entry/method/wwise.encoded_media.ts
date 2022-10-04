@@ -38,7 +38,7 @@ namespace TwinKleS.Entry.method.wwise.encoded_media {
 						});
 					}
 					CoreX.Tool.Wwise.EncodedMedia.decode_fs(ripe_file, raw_file, Main.path_at_home(config.tool.ffmpeg), Main.path_at_home(config.tool.ww2ogg), Main.path_at_home(config.tool.ww2ogg_pcb), Main.path_at_home(config.temp_directpry));
-					Output.i(`输出路径：${raw_file}`);
+					Console.notify('s', `输出路径：${raw_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -77,7 +77,7 @@ namespace TwinKleS.Entry.method.wwise.encoded_media {
 							CoreX.Tool.Wwise.EncodedMedia.decode_fs(ripe_file, raw_file, Main.path_at_home(config.tool.ffmpeg), Main.path_at_home(config.tool.ww2ogg), Main.path_at_home(config.tool.ww2ogg_pcb), Main.path_at_home(config.temp_directpry));
 						},
 					);
-					Output.i(`输出路径：${raw_file_directory}`);
+					Console.notify('s', `输出路径：${raw_file_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

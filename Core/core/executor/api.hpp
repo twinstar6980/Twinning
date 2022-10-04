@@ -297,29 +297,9 @@ namespace TwinKleS::Core::Executor::API {
 			>
 		>;
 
-		/*template <typename Type> requires
-			NoneConstraint
-		using AsPromotion = decltype([] {
-			if constexpr (IsSame<Type, CStringView, VStringView>) {
-				return String{};
-			} else if constexpr (IsSame<Type, CByteListView>) {
-				return VByteListView{};
-			} else if constexpr (IsSame<Type, IByteStreamView, OByteStreamView>) {
-				return IOByteStreamView{};
-			} else if constexpr (IsSame<Type, CCharacterListView>) {
-				return CCharacterListView{};
-			} else if constexpr (IsSame<Type, ICharacterStreamView, OCharacterStreamView>) {
-				return IOCharacterStreamView{};
-			} else if constexpr (IsSame<Type, Image::CBitmapView>) {
-				return Image::VBitmapView{};
-			} else {
-				return Type{};
-			}
-		}());*/
-
 		template <auto function, auto ...index> requires
 			NoneConstraint
-		inline constexpr auto make_proxy_function_by_some_type (
+		inline constexpr auto make_proxy_function_by_special_type_promotion (
 			ValuePackage<index...>
 		) -> auto {
 			if constexpr ((IsSame<AsPromotion<AsPure<typename CallableTraitOf<function>::Argument::template Element<index>>>, AsPure<typename CallableTraitOf<function>::Argument::template Element<index>>> && ...)) {
@@ -336,7 +316,7 @@ namespace TwinKleS::Core::Executor::API {
 	template <auto function> requires
 		CategoryConstraint<>
 		&& (IsGlobalFunction<decltype(function)>)
-	inline constexpr auto & proxy_function_by_special_type_promotion = *Detail::make_proxy_function_by_some_type<function>(AsValuePackageOfIndex<CallableTraitOf<function>::Argument::size>{});
+	inline constexpr auto & proxy_function_by_special_type_promotion = *Detail::make_proxy_function_by_special_type_promotion<function>(AsValuePackageOfIndex<CallableTraitOf<function>::Argument::size>{});
 
 	// NOTE : alias
 	template <auto function> requires
@@ -490,9 +470,9 @@ namespace TwinKleS::Core::Executor::API {
 					auto n_PNG = n_File.add_namespace("PNG"_s);
 					n_PNG
 						.add_function_proxy<&stp<&Image::File::PNG::size>>("size"_s)
-						.add_function_proxy<&stp<&Image::File::PNG::read_of>>("read"_s)
+						.add_function_proxy<&stp<&Image::File::PNG::read>>("read"_s)
 						.add_function_proxy<&stp<&Image::File::PNG::write>>("write"_s)
-						.add_function_proxy<&stp<&Image::File::PNG::read>>("read_of"_s)
+						.add_function_proxy<&stp<&Image::File::PNG::read_of>>("read_of"_s)
 						.add_function_proxy<&stp<&Image::File::PNG::size_file>>("size_file"_s)
 						.add_function_proxy<&stp<&Image::File::PNG::read_file>>("read_file"_s)
 						.add_function_proxy<&stp<&Image::File::PNG::write_file>>("write_file"_s)
@@ -1015,7 +995,12 @@ namespace TwinKleS::Core::Executor::API {
 		// Misc
 		{
 			auto n_Misc = n_Core.add_namespace("Misc"_s);
-			define_generic_class<Thread, GCDF::default_constructor>(n_Misc, "Thread"_s);
+			define_generic_class<Thread, GCDF::default_constructor>(n_Misc, "Thread"_s)
+				.add_member_function_proxy<&Thread::joinable>("joinable"_s)
+				.add_member_function_proxy<&Thread::join>("join"_s)
+				.add_member_function_proxy<&Thread::detach>("detach"_s)
+				.add_static_function_proxy<&Thread::yield>("yield"_s)
+				.add_static_function_proxy<&Thread::sleep>("sleep"_s);
 			define_generic_class<Context, GCDF::none_mask>(n_Misc, "Context"_s)
 				.add_member_function<
 					&normalized_lambda<
@@ -1034,7 +1019,7 @@ namespace TwinKleS::Core::Executor::API {
 						JS::Handler<Context> &      thix,
 						JS::Handler<List<String>> & argument
 					) -> JS::Handler<List<String>> {
-							return JS::Handler<List<String>>::new_reference(as_variable(thix.value().shell_callback(argument.value())));
+							return JS::Handler<List<String>>::new_instance_allocate(thix.value().shell_callback(argument.value()));
 						}
 					>
 				>("shell_callback"_s)
@@ -1051,11 +1036,11 @@ namespace TwinKleS::Core::Executor::API {
 					&normalized_lambda<
 						[] (
 						JS::Handler<Context> & thix
-					) -> Void {
-							return thix.value().yield();
+					) -> JS::Handler<Boolean> {
+							return JS::Handler<Boolean>::new_instance_allocate(thix.value().busy());
 						}
 					>
-				>("yield"_s)
+				>("busy"_s)
 				.add_member_function<
 					&normalized_lambda<
 						[] (
@@ -1066,25 +1051,7 @@ namespace TwinKleS::Core::Executor::API {
 							return thix.value().execute(executor, thread.value());
 						}
 					>
-				>("execute"_s)
-				.add_member_function<
-					&normalized_lambda<
-						[] (
-						JS::Handler<Context> & thix
-					) -> JS::Handler<Boolean> {
-							return JS::Handler<Boolean>::new_instance_allocate(thix.value().state());
-						}
-					>
-				>("state"_s)
-				.add_member_function<
-					&normalized_lambda<
-						[] (
-						JS::Handler<Context> & thix
-					) -> JS::Value {
-							return thix.value().result();
-						}
-					>
-				>("result"_s);
+				>("execute"_s);
 			n_Misc.add_variable("g_context"_s, context.context().new_value(JS::Handler<Context>::new_reference(context)));
 			n_Misc.add_function_proxy<
 				&normalized_lambda<

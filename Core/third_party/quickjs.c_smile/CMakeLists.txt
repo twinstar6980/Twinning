@@ -37,3 +37,5 @@ target_compile_options(
 	${PROJECT_NAME} PRIVATE
 	/Oi-
 )
+
+include(${M_root_project_directory}/cmake/compile_warning_disable.cmake)

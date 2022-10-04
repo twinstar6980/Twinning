@@ -1,4 +1,4 @@
-# common condition definition
+# condition definition
 
 # system
 if(M_system_windows)

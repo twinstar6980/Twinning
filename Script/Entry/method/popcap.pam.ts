@@ -46,18 +46,20 @@ namespace TwinKleS.Entry.method.popcap.pam {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.version_number === '?input') {
-							version_number = Input.integer(`请输入版本编号（1~6）`, Check.enum_checkerx([1n, 2n, 3n, 4n, 5n, 6n]))!;
+							Console.notify('i', `请输入版本编号（1~6）`, []);
+							version_number = Console.integer(Check.enum_checkerx([1n, 2n, 3n, 4n, 5n, 6n]))!;
 						} else {
 							version_number = BigInt(a.version_number);
 						}
 						if (a.data_buffer_size === '?input') {
-							data_buffer_size = Input.size(`请输入用于保存PAM数据的内存空间大小`)!;
+							Console.notify('i', `请输入用于保存PAM数据的内存空间大小`, []);
+							data_buffer_size = Console.size()!;
 						} else {
 							data_buffer_size = parse_size_string(a.data_buffer_size);
 						}
 					}
 					CoreX.Tool.PopCap.PAM.encode_fs(data_file, manifest_file, { number: version_number as any }, data_buffer_size);
-					Output.i(`输出路径：${data_file}`);
+					Console.notify('s', `输出路径：${data_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -89,13 +91,14 @@ namespace TwinKleS.Entry.method.popcap.pam {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.version_number === '?input') {
-							version_number = Input.integer(`请输入版本编号（1~6）`, Check.enum_checkerx([1n, 2n, 3n, 4n, 5n, 6n]))!;
+							Console.notify('i', `请输入版本编号（1~6）`, []);
+							version_number = Console.integer(Check.enum_checkerx([1n, 2n, 3n, 4n, 5n, 6n]))!;
 						} else {
 							version_number = BigInt(a.version_number);
 						}
 					}
 					CoreX.Tool.PopCap.PAM.decode_fs(data_file, manifest_file, { number: version_number as any });
-					Output.i(`输出路径：${manifest_file}`);
+					Console.notify('s', `输出路径：${manifest_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -128,7 +131,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 					Support.PopCapAnimation.Convert.Flash.From.from_fsh(raw, ripe_directory);
 					Support.PopCapAnimation.Convert.Flash.SourceManager.create_fsh(ripe_directory, raw);
 					Support.PopCapAnimation.Convert.Flash.create_xfl_content_file(ripe_directory);
-					Output.i(`输出路径：${ripe_directory}`);
+					Console.notify('s', `输出路径：${ripe_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -157,7 +160,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 						});
 					}
 					Support.PopCapAnimation.Convert.Flash.To.to_fs(raw_file, ripe_directory);
-					Output.i(`输出路径：${raw_file}`);
+					Console.notify('s', `输出路径：${raw_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -179,13 +182,14 @@ namespace TwinKleS.Entry.method.popcap.pam {
 					{
 						directory = a.directory;
 						if (a.resolution === '?input') {
-							resolution = Input.integer(`请输入图像分辨率`, (value) => (value > 0n ? null : `分辨率必须大于0`))!;
+							Console.notify('i', `请输入图像分辨率`, []);
+							resolution = Console.integer((value) => (value > 0n ? null : `分辨率必须大于0`))!;
 						} else {
 							resolution = a.resolution;
 						}
 					}
 					Support.PopCapAnimation.Convert.Flash.SourceManager.resize_fs(directory, resolution);
-					Output.i(`原位输出：${directory}`);
+					Console.notify('s', `原位输出：${directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -215,7 +219,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 						.forEach((e) => {
 							CoreX.FileSystem.create_hard_link(`${media_directory}/${e}`, `${directory}/../${e}`);
 						});
-					Output.i(`原位输出：${directory}`);
+					Console.notify('s', `原位输出：${directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -248,12 +252,14 @@ namespace TwinKleS.Entry.method.popcap.pam {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.version_number === '?input') {
-							version_number = Input.integer(`请输入版本编号（1~6）`, Check.enum_checkerx([1n, 2n, 3n, 4n, 5n, 6n]))!;
+							Console.notify('i', `请输入版本编号（1~6）`, []);
+							version_number = Console.integer(Check.enum_checkerx([1n, 2n, 3n, 4n, 5n, 6n]))!;
 						} else {
 							version_number = BigInt(a.version_number);
 						}
 						if (a.data_buffer_size === '?input') {
-							data_buffer_size = Input.size(`请输入用于保存PAM数据的内存空间大小`)!;
+							Console.notify('i', `请输入用于保存PAM数据的内存空间大小`, []);
+							data_buffer_size = Console.size()!;
 						} else {
 							data_buffer_size = parse_size_string(a.data_buffer_size);
 						}
@@ -268,7 +274,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 							CoreX.Tool.PopCap.PAM.encode_fs(data_file, manifest_file, { number: version_number as any }, data_buffer.view());
 						},
 					);
-					Output.i(`输出路径：${data_file_directory}`);
+					Console.notify('s', `输出路径：${data_file_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -300,7 +306,8 @@ namespace TwinKleS.Entry.method.popcap.pam {
 							if_exist: a.fs_if_exist,
 						});
 						if (a.version_number === '?input') {
-							version_number = Input.integer(`请输入版本编号（1~6）`, Check.enum_checkerx([1n, 2n, 3n, 4n, 5n, 6n]))!;
+							Console.notify('i', `请输入版本编号（1~6）`, []);
+							version_number = Console.integer(Check.enum_checkerx([1n, 2n, 3n, 4n, 5n, 6n]))!;
 						} else {
 							version_number = BigInt(a.version_number);
 						}
@@ -314,7 +321,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 							CoreX.Tool.PopCap.PAM.decode_fs(data_file, manifest_file, { number: version_number as any });
 						},
 					);
-					Output.i(`输出路径：${manifest_file_directory}`);
+					Console.notify('s', `输出路径：${manifest_file_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -355,7 +362,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 							Support.PopCapAnimation.Convert.Flash.create_xfl_content_file(ripe_directory);
 						},
 					);
-					Output.i(`输出路径：${ripe_directory_directory}`);
+					Console.notify('s', `输出路径：${ripe_directory_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -392,7 +399,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 							Support.PopCapAnimation.Convert.Flash.To.to_fs(raw_file, ripe_directory);
 						},
 					);
-					Output.i(`输出路径：${raw_file_directory}`);
+					Console.notify('s', `输出路径：${raw_file_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -414,7 +421,8 @@ namespace TwinKleS.Entry.method.popcap.pam {
 					{
 						directory_directory = a.directory_directory;
 						if (a.resolution === '?input') {
-							resolution = Input.integer(`请输入图像分辨率`, (value) => (value > 0n ? null : `分辨率必须大于0`))!;
+							Console.notify('i', `请输入图像分辨率`, []);
+							resolution = Console.integer((value) => (value > 0n ? null : `分辨率必须大于0`))!;
 						} else {
 							resolution = a.resolution;
 						}
@@ -427,7 +435,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 							Support.PopCapAnimation.Convert.Flash.SourceManager.resize_fs(directory, resolution);
 						},
 					);
-					Output.i(`原位输出：${directory_directory}`);
+					Console.notify('s', `原位输出：${directory_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -465,7 +473,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 								});
 						},
 					);
-					Output.i(`原位输出：${directory_directory}`);
+					Console.notify('s', `原位输出：${directory_directory}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

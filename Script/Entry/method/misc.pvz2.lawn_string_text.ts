@@ -9,10 +9,8 @@ namespace TwinKleS.Entry.method.misc.pvz2.lawn_string_text {
 		message: string,
 	): Support.PvZ2.LawnStringText.Version {
 		let format_list = Support.PvZ2.LawnStringText.VersionE;
-		let index = Input.number([
-			message,
-			format_list.map((e, i) => (`${make_prefix_padded_string(i + 1, ' ', 2)}. ${e}`)),
-		], Check.enum_checkerx(format_list.map((e, i) => (i + 1))))!;
+		Console.notify('i', message, format_list.map((e, i) => (`${make_prefix_padded_string(i + 1, ' ', 2)}. ${e}`)));
+		let index = Console.number(Check.enum_checkerx(format_list.map((e, i) => (i + 1))))!;
 		return format_list[index - 1];
 	}
 
@@ -51,7 +49,7 @@ namespace TwinKleS.Entry.method.misc.pvz2.lawn_string_text {
 						});
 					}
 					Support.PvZ2.LawnStringText.convert_fs(source_file, dest_file, 'auto', dest_version);
-					Output.i(`输出路径：${dest_file}`);
+					Console.notify('s', `输出路径：${dest_file}`, []);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

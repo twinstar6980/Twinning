@@ -40,7 +40,8 @@ namespace TwinKleS.Entry {
 		): string {
 			let result: string;
 			if (origin_value === '?input') {
-				result = Input.string(option.input_message)!;
+				Console.notify('i', option.input_message, []);
+				result = Console.string()!;
 			} else if (origin_value === '?default') {
 				result = option.default_value;
 			} else {
@@ -51,27 +52,23 @@ namespace TwinKleS.Entry {
 					if (CoreX.FileSystem.exist(result)) {
 						switch (option.if_exist) {
 							case 'trash': {
-								Output.w(`指定路径已存在，将进行回收`);
-								Output.v(`${result}`, +1);
+								Console.notify('w', `指定路径已存在，将进行回收`, [`${result}`]);
 								trash(result);
 								break;
 							}
 							case 'delete': {
-								Output.w(`指定路径已存在，将进行删除`);
-								Output.v(`${result}`, +1);
+								Console.notify('w', `指定路径已存在，将进行删除`, [`${result}`]);
 								CoreX.FileSystem.remove(result);
 								break;
 							}
 							case 'override': {
-								Output.w(`指定路径已存在，将进行覆写`);
-								Output.v(`${result}`, +1);
+								Console.notify('w', `指定路径已存在，将进行覆写`, [`${result}`]);
 								break;
 							}
 							case '?input': {
-								Output.e(`指定路径已存在，请输入不存在的路径，或输入 :t 回收之，或输入 :d 删除之，或输入 :o 覆写之`);
-								Output.v(`${result}`, +1);
+								Console.notify('e', `指定路径已存在，请输入不存在的路径，或输入 :t 回收之，或输入 :d 删除之，或输入 :o 覆写之`, [`${result}`]);
 								while (true) {
-									let input = Input.string(null)!;
+									let input = Console.string()!;
 									if (input === ':t') {
 										trash(result);
 										break;
@@ -87,7 +84,7 @@ namespace TwinKleS.Entry {
 									if (!CoreX.FileSystem.exist(input)) {
 										break;
 									}
-									Output.e(`指定路径已存在，请重新输入`);
+									Console.notify('e', `指定路径已存在，请重新输入`, []);
 								}
 								break;
 							}
@@ -114,10 +111,9 @@ namespace TwinKleS.Entry {
 						}
 					}
 					if (!test_function(result)) {
-						Output.e(`指定${type_name}不存在，请输入已存在的路径，或输入 :d 唤起选择窗口（windows）`);
-						Output.v(`${result}`, +1);
+						Console.notify('e', `指定${type_name}不存在，请输入已存在的路径，或输入 :d 唤起选择窗口（windows）`, [`${result}`]);
 						while (true) {
-							let input = Input.string(null)!;
+							let input = Console.string()!;
 							if (input === ':s') {
 								if (Shell.name !== 'windows.cli') {
 									throw new MyError(`:s only enabled on windows.cli shell`);
@@ -125,7 +121,8 @@ namespace TwinKleS.Entry {
 								let pick_folder: boolean;
 								switch (option.type) {
 									case 'any': {
-										pick_folder = Input.yon(`选择窗口是否应选择目录（否则为文件）？`)!;
+										Console.notify('i', `选择窗口是否应选择目录（否则为文件）？`, []);
+										pick_folder = Console.yon()!;
 										break;
 									}
 									case 'file': {
@@ -137,7 +134,7 @@ namespace TwinKleS.Entry {
 										break;
 									}
 								}
-								let selected = Shell.Windows.select_file_by_dialog(pick_folder, false);
+								let selected = Shell.windows_cli_open_file_dialog(pick_folder, false);
 								if (selected.length === 0) {
 									input = result;
 								} else {
@@ -148,7 +145,7 @@ namespace TwinKleS.Entry {
 							if (test_function(input)) {
 								break;
 							}
-							Output.e(`指定${type_name}不存在，请重新输入`);
+							Console.notify('e', `指定${type_name}不存在，请重新输入`, []);
 						}
 					}
 				}
@@ -227,25 +224,26 @@ namespace TwinKleS.Entry {
 			item_list = item_list.filter((e) => (filter[1]!.test(e)));
 		}
 		if (item_list.length === 0) {
-			Output.w(`无可处理项目`);
+			Console.notify('w', `无可处理项目`, []);
 		} else {
 			let progress = new TextGenerator.Progress('fraction', 40, item_list.length);
 			for (let item of item_list) {
 				progress.increase();
-				Output.i(`\r${progress} 处理中... `, 0, null, false);
+				Console.notify('i', `${progress}`, []);
 				try {
 					work(item);
 				} catch (e: any) {
-					Output.e(`失败：${item}`);
+					Console.notify('e', `项目处理失败`, [`项目路径：${item}`]);
 					if (e instanceof Error) {
-						Output.e(`${e}\n${e.stack}`);
+						Console.notify('e', `${e}`, [`${e.stack}`]);
+					} else if (e instanceof MyError) {
+						Console.notify('e', `${e.message}`, [`${e.stack}`]);
 					} else {
-						Output.e(`${e}`);
+						Console.notify('e', `${e}`, []);
 					}
-					Input.pause();
+					Console.pause();
 				}
 			}
-			Output.i(``);
 		}
 		return;
 	}
@@ -253,7 +251,7 @@ namespace TwinKleS.Entry {
 	// ------------------------------------------------
 
 	type Config = {
-		force_enable_virtual_terminal_sequences: boolean;
+		cli_disable_virtual_terminal_sequences: boolean;
 		workspace: string;
 		byte_stream_use_big_endian: boolean;
 		json_write: {
@@ -270,28 +268,8 @@ namespace TwinKleS.Entry {
 	export function _injector(
 		config: Config,
 	) {
-		// enable virtual-terminal-processing
-		switch (Shell.name) {
-			case 'windows.cli': {
-				let output_mode = Shell.Windows.CLI.get_standard_console_mode('output');
-				if ((output_mode & Shell.Windows.CLI.OutputConsoleMode.ENABLE_VIRTUAL_TERMINAL_PROCESSING) !== 0) {
-					Output.g_enable_virtual_terminal_sequences = true;
-				} else {
-					try {
-						Shell.Windows.CLI.set_standard_console_mode('output', output_mode | Shell.Windows.CLI.OutputConsoleMode.ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-						Output.g_enable_virtual_terminal_sequences = true;
-					} catch (e) {
-						Output.g_enable_virtual_terminal_sequences = config.force_enable_virtual_terminal_sequences;
-						Output.w(`can not enable virtual terminal processing`);
-					}
-				}
-				break;
-			}
-			case 'linux.cli': {
-				Output.g_enable_virtual_terminal_sequences = config.force_enable_virtual_terminal_sequences;
-				break;
-			}
-		}
+		// cli disable virtual-terminal-sequences
+		Console.cli_disable_virtual_terminal_sequences = config.cli_disable_virtual_terminal_sequences;
 		// set workspace
 		g_workspace = Main.path_at_home(config.workspace);
 		CoreX.FileSystem.set_working_directory(g_workspace);
@@ -320,9 +298,9 @@ namespace TwinKleS.Entry {
 		timer.start();
 		let raw_command = [...argument];
 		if (raw_command.length === 0) {
-			Output.i(`请依次输入命令参数，跳过输入则结束输入`);
+			Console.notify('i', `请依次输入命令参数，输入空串则结束输入`, []);
 			while (true) {
-				let input = Input.string(null, null, true);
+				let input = Console.string(null, true);
 				if (input === null) {
 					break;
 				}
@@ -331,27 +309,28 @@ namespace TwinKleS.Entry {
 		}
 		let command = Executor.parse(raw_command);
 		let method = [...g_executor_method, ...g_executor_method_of_batch];
-		Output.i(`解析得 ${command.length} 条命令`);
-		let progress_text = new TextGenerator.Progress('fraction', 40, command.length);
+		Console.notify('i', `解析得 ${command.length} 条命令`, []);
+		let progress = new TextGenerator.Progress('fraction', 40, command.length);
 		for (let e of command) {
-			progress_text.increase();
-			Output.i(`${progress_text}`);
-			Output.v(`<${e.input!.value}>${e.method === null ? '' : ` -method <${e.method}>`}`, +1);
+			progress.increase();
+			Console.notify('i', `${progress}`, [`<${e.input!.value}>${e.method === null ? '' : ` -method <${e.method}>`}`]);
 			try {
 				Executor.execute(e, method);
 			} catch (e: any) {
 				if (e instanceof Error) {
-					Output.e(`${e}\n${e.stack}`);
+					Console.notify('e', `${e}`, [`${e.stack}`]);
+				} else if (e instanceof MyError) {
+					Console.notify('e', `${e.message}`, [`${e.stack}`]);
 				} else {
-					Output.e(`${e}`);
+					Console.notify('e', `${e}`, []);
 				}
-				Input.pause();
+				Console.pause();
 			}
 		}
 		timer.stop();
-		Output.i(`完毕：${(timer.duration() / 1000).toFixed(3)}s`);
+		Console.notify('s', `所有命令执行完毕`, [`耗时 ${(timer.duration() / 1000).toFixed(3)} s`]);
 		if (config.pause_when_finish) {
-			Input.pause();
+			Console.pause();
 		}
 	}
 

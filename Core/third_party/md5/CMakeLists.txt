@@ -10,3 +10,5 @@ add_library(
 	./md5.h
 	./md5.cpp
 )
+
+include(${M_root_project_directory}/cmake/compile_warning_disable.cmake)

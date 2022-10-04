@@ -1,4 +1,4 @@
-﻿{
+{
   "configurations": [
     {
       "name": "windows.x86_64.msvc.debug",
@@ -27,7 +27,7 @@
       "generator": "Ninja",
       "configurationType": "Debug",
       "cmakeExecutable": "cmake",
-      "remoteCopySourcesExclusionList": [ ".vs", ".git", ".build", ".install" ],
+      "remoteCopySourcesExclusionList": [ ".vs", ".build", ".install" ],
       "buildRoot": "${projectDir}/.build/${name}",
       "installRoot": "${projectDir}/.install/${name}",
       "cmakeCommandArgs": "",
@@ -35,7 +35,7 @@
       "ctestCommandArgs": "",
       "inheritEnvironments": [ "linux_clang_x64" ],
       "remoteMachineName": "${defaultRemoteMachineName}",
-      "remoteCMakeListsRoot": "$HOME/.vs/${projectDirName}/src",
+      "remoteCMakeListsRoot": "$HOME/.vs/${projectDirName}",
       "remoteBuildRoot": "$HOME/.vs/${projectDirName}/.build/${name}",
       "remoteInstallRoot": "$HOME/.vs/${projectDirName}/.install/${name}",
       "remoteCopySources": true,
@@ -48,7 +48,7 @@
       "generator": "Ninja",
       "configurationType": "Release",
       "cmakeExecutable": "cmake",
-      "remoteCopySourcesExclusionList": [ ".vs", ".git", ".build", ".install" ],
+      "remoteCopySourcesExclusionList": [ ".vs", ".build", ".install" ],
       "buildRoot": "${projectDir}/.build/${name}",
       "installRoot": "${projectDir}/.install/${name}",
       "cmakeCommandArgs": "",
@@ -56,7 +56,7 @@
       "ctestCommandArgs": "",
       "inheritEnvironments": [ "linux_clang_x64" ],
       "remoteMachineName": "${defaultRemoteMachineName}",
-      "remoteCMakeListsRoot": "$HOME/.vs/${projectDirName}/src",
+      "remoteCMakeListsRoot": "$HOME/.vs/${projectDirName}",
       "remoteBuildRoot": "$HOME/.vs/${projectDirName}/.build/${name}",
       "remoteInstallRoot": "$HOME/.vs/${projectDirName}/.install/${name}",
       "remoteCopySources": true,

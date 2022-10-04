@@ -2,6 +2,7 @@
 
 #include "core/utility/base_wrapper/wrapper.hpp"
 #include "core/utility/string/string.hpp"
+#include <bit>
 
 namespace TwinKleS::Core {
 

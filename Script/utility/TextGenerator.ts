@@ -49,7 +49,7 @@ namespace TwinKleS.TextGenerator {
 				break;
 			}
 		}
-		result += `* [${'#'.repeat(current_length)}${'-'.repeat(length - current_length)}] ${number_text} *`;
+		result += `[${'#'.repeat(current_length)}${'-'.repeat(length - current_length)}] ${number_text}`;
 		return [result];
 	}
 

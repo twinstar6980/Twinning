@@ -1,6 +1,6 @@
 #pragma once
 
-#if defined M_system_linux || defined M_system_macos || defined M_system_android
+#if defined M_system_linux || defined M_system_macos || defined M_system_android || defined M_system_ios
 
 #include "core/utility/string/string.hpp"
 #include "core/utility/file_system/file_system.hpp"
@@ -22,7 +22,8 @@ namespace TwinKleS::Core::System::POSIX {
 	inline auto sleep (
 		Size const & time
 	) -> Void {
-		usleep(time.value * 1000);
+		// TODO : lose
+		usleep(static_cast<useconds_t>(time.value * 1000));
 		return;
 	}
 
@@ -33,7 +34,12 @@ namespace TwinKleS::Core::System::POSIX {
 	inline auto system (
 		String const & command
 	) -> IntegerS32 {
+		#if defined M_system_linux || defined M_system_macos || defined M_system_android
 		return mbw<IntegerS32>(std::system(cast_pointer<char>(make_null_terminated_string(command).begin()).value));
+		#endif
+		#if defined M_system_ios
+		return mbw<IntegerS32>(0);
+		#endif
 	}
 
 	inline auto process (

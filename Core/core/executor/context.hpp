@@ -11,11 +11,10 @@ namespace TwinKleS::Core::Executor {
 
 	protected: //
 
-		JS::Runtime         m_runtime;
-		JS::Context         m_context;
-		ShellCallback       m_shell_callback;
-		Optional<JS::Value> m_executor;
-		Optional<JS::Value> m_result;
+		JS::Runtime   m_runtime;
+		JS::Context   m_context;
+		ShellCallback m_shell_callback;
+		Boolean       m_busy;
 
 	public: //
 
@@ -45,8 +44,7 @@ namespace TwinKleS::Core::Executor {
 			m_runtime{JS::Runtime::new_instance()},
 			m_context{m_runtime.new_context()},
 			m_shell_callback{shell_callback},
-			m_executor{},
-			m_result{JS::Value{}} {
+			m_busy{k_false} {
 		}
 
 		Context (
@@ -56,8 +54,7 @@ namespace TwinKleS::Core::Executor {
 			m_runtime{JS::Runtime::new_reference(runtime._runtime())},
 			m_context{m_runtime.new_context()},
 			m_shell_callback{shell_callback},
-			m_executor{},
-			m_result{JS::Value{}} {
+			m_busy{k_false} {
 		}
 
 		#pragma endregion
@@ -100,14 +97,14 @@ namespace TwinKleS::Core::Executor {
 
 		auto shell_callback (
 			List<String> const & argument
-		) -> List<String> const& {
+		) -> List<String> {
 			auto guard = std::lock_guard{JS::g_mutex};
-			return as_variable(thiz.m_shell_callback(argument));
+			return thiz.m_shell_callback(argument);
 		}
 
 		#pragma endregion
 
-		#pragma region thread api
+		#pragma region extension
 
 		auto spawn (
 		) -> Context {
@@ -117,42 +114,30 @@ namespace TwinKleS::Core::Executor {
 
 		// ----------------
 
-		auto yield (
-		) -> Void {
-			std::this_thread::yield();
-			return;
+		auto busy (
+		) -> Boolean {
+			return thiz.m_busy;
 		}
-
-		// ----------------
 
 		auto execute (
 			JS::Value & executor,
 			Thread &    thread
 		) -> Void {
-			thiz.m_executor.set(executor);
-			thiz.m_result.reset();
+			assert_condition(!thiz.busy());
+			thiz.m_busy = k_true;
 			auto guard = std::lock_guard{JS::g_mutex};
 			thread.run(
-				[&] {
+				[&, executor] {
 					auto guard = std::lock_guard{JS::g_mutex};
 					//M_log("----> {}"_sf(fmt::ptr(&thiz)));
-					thiz.m_result.set(JS::Value::new_reference(thiz.m_context._context(), as_variable(thiz.m_executor.get())._value()).call(make_list<JS::Value>()));
-					thiz.m_executor.reset();
+					JS::Value::new_reference(thiz.m_context._context(), as_variable(executor)._value()).call(make_list<JS::Value>());
+					as_variable(executor).set_undefined();
 					//M_log("<---- {}"_sf(fmt::ptr(&thiz)));
+					thiz.m_busy = k_false;
 					return;
 				}
 			);
 			return;
-		}
-
-		auto state (
-		) -> Boolean {
-			return !thiz.m_result.has();
-		}
-
-		auto result (
-		) -> JS::Value {
-			return thiz.m_result.get();
 		}
 
 		#pragma endregion
