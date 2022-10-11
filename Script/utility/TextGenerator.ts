@@ -31,6 +31,7 @@ namespace TwinKleS.TextGenerator {
 	 */
 	export function progress(
 		style: ProgressStyle,
+		no_bar: boolean,
 		length: number,
 		limit: number,
 		current: number,
@@ -49,7 +50,7 @@ namespace TwinKleS.TextGenerator {
 				break;
 			}
 		}
-		result += `[${'#'.repeat(current_length)}${'-'.repeat(length - current_length)}] ${number_text}`;
+		result += `${no_bar ? '' : `[${'#'.repeat(current_length)}${'-'.repeat(length - current_length)}] `}${number_text}`;
 		return [result];
 	}
 
@@ -103,6 +104,8 @@ namespace TwinKleS.TextGenerator {
 
 		private m_style: ProgressStyle;
 
+		private m_no_bar: boolean;
+
 		private m_length: number;
 
 		private m_limit: number;
@@ -116,18 +119,21 @@ namespace TwinKleS.TextGenerator {
 		/**
 		 * @param style 数值显示样式
 		 * @param length 字符进度条长度
+		 * @param no_bar 不显示进度条
 		 * @param limit 进度上限
 		 * @param current 进度值
 		 * @param step 进度增减步长
 		 */
 		constructor(
 			style: ProgressStyle,
+			no_bar: boolean,
 			length: number,
 			limit: number,
 			current: number = 0,
 			step: number = 1,
 		) {
 			this.m_style = style;
+			this.m_no_bar = no_bar;
 			this.m_length = length;
 			this.m_limit = limit;
 			this.m_current = current;
@@ -192,7 +198,7 @@ namespace TwinKleS.TextGenerator {
 
 		/** 生成文本 */
 		make() {
-			return progress(this.m_style, this.m_length, this.m_limit, this.m_current);
+			return progress(this.m_style, this.m_no_bar, this.m_length, this.m_limit, this.m_current);
 		}
 
 		// ------------------------------------------------

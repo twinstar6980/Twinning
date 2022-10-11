@@ -202,7 +202,7 @@ namespace TwinKleS.Support.Atlas.Pack.AutoPack {
 		],
 	): [Box, Record<string, Rect>] {
 		if (item_weighter.length === 0) {
-			throw new MyError(`item_weighter list must be not empty`);
+			throw new Error(`item_weighter list must be not empty`);
 		}
 		let candidate = item_weighter.map((e) => (pack_auto(item_map, container_expander, e)));
 		let best = candidate[0];

@@ -45,7 +45,7 @@ namespace TwinKleS.Support.PopCapAnimation.Convert {
 				transform[3 - 1],
 			];
 		} else {
-			throw new MyError(`invalid transform size`);
+			throw new Error(`invalid transform size`);
 		}
 		return result;
 	}

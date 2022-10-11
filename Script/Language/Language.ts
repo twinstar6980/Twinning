@@ -44,11 +44,11 @@ namespace TwinKleS.Language {
 	): string {
 		let map = table[target];
 		if (map === undefined) {
-			throw new MyError(`locale not found : ${target}`);
+			throw new Error(`locale not found : ${target}`);
 		}
 		let format = map[key];
 		if (format === undefined) {
-			throw new MyError(`key not found : ${key}`);
+			throw new Error(`key not found : ${key}`);
 		}
 		let result = '';
 		let argument_index = 0;

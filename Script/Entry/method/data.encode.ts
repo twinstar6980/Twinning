@@ -17,22 +17,28 @@ namespace TwinKleS.Entry.method.data.encode {
 				id: 'data.encode.base64.encode',
 				description: 'Base64 编码',
 				worker(a: Entry.CFSA & {
-					raw_file: string;
-					ripe_file: string | '?default' | '?input';
+					raw_file: Argument.Require<string>;
+					ripe_file: Argument.Request<string, true>;
 				}) {
 					let raw_file: string;
 					let ripe_file: string;
 					{
-						raw_file = a.raw_file;
-						ripe_file = ArgumentParser.path(a.ripe_file, {
-							input_message: '请输入输出路径',
-							default_value: raw_file.replace(/()?$/i, '.bin'),
-							must_exist: false,
-							if_exist: a.fs_if_exist,
-						});
+						raw_file = Argument.require(
+							'原始文件', '',
+							a.raw_file,
+							(value) => (value),
+							(value) => (CoreX.FileSystem.exist_file(value)),
+						);
+						ripe_file = Argument.request(
+							'成品文件', '',
+							a.ripe_file,
+							(value) => (value),
+							() => (raw_file.replace(/()?$/i, '.bin')),
+							...Argument.requester_for_path('file', [false, a.fs_tactic_if_exist]),
+						);
 					}
 					CoreX.Tool.Data.Encode.Base64.encode_fs(raw_file, ripe_file);
-					Console.notify('s', `输出路径：${ripe_file}`, []);
+					Console.notify('s', `执行成功`, [`${ripe_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -46,22 +52,28 @@ namespace TwinKleS.Entry.method.data.encode {
 				id: 'data.encode.base64.decode',
 				description: 'Base64 解码',
 				worker(a: Entry.CFSA & {
-					ripe_file: string;
-					raw_file: string | '?default' | '?input';
+					ripe_file: Argument.Require<string>;
+					raw_file: Argument.Request<string, true>;
 				}) {
 					let ripe_file: string;
 					let raw_file: string;
 					{
-						ripe_file = a.ripe_file;
-						raw_file = ArgumentParser.path(a.raw_file, {
-							input_message: '请输入输出路径',
-							default_value: ripe_file.replace(/()?$/i, '.bin'),
-							must_exist: false,
-							if_exist: a.fs_if_exist,
-						});
+						ripe_file = Argument.require(
+							'成品文件', '',
+							a.ripe_file,
+							(value) => (value),
+							(value) => (CoreX.FileSystem.exist_file(value)),
+						);
+						raw_file = Argument.request(
+							'原始文件', '',
+							a.raw_file,
+							(value) => (value),
+							() => (ripe_file.replace(/()?$/i, '.bin')),
+							...Argument.requester_for_path('file', [false, a.fs_tactic_if_exist]),
+						);
 					}
 					CoreX.Tool.Data.Encode.Base64.decode_fs(ripe_file, raw_file);
-					Console.notify('s', `输出路径：${raw_file}`, []);
+					Console.notify('s', `执行成功`, [`${raw_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

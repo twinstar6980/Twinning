@@ -116,7 +116,7 @@ namespace TwinKleS.Support.PopCapTexture.Encode {
 				}
 				case 'rgb_etc1_a_8_index': {
 					if (option.rgb_etc1_a_8_index === null) {
-						throw new MyError(`option is null`);
+						throw new Error(`option is null`);
 					}
 					data_size = CoreX.Tool.Texture.compute_data_size(size, 'rgb_etc1') + CoreX.Tool.Misc.PvZ2CHSRSBTextureAlphaIndex.compute_data_size_with_index_list(size, option.rgb_etc1_a_8_index.index.length);
 					break;
@@ -144,7 +144,7 @@ namespace TwinKleS.Support.PopCapTexture.Encode {
 				}
 				case 'rgb_etc1_a_8_index': {
 					if (option.rgb_etc1_a_8_index === null) {
-						throw new MyError(`option is null`);
+						throw new Error(`option is null`);
 					}
 					CoreX.Tool.Texture.encode(data, image, 'rgb_etc1');
 					CoreX.Tool.Misc.PvZ2CHSRSBTextureAlphaIndex.encode_with_map(data, image, option.rgb_etc1_a_8_index.index);

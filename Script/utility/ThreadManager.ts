@@ -53,7 +53,7 @@ namespace TwinKleS {
 			index: number
 		): boolean {
 			if (index >= this.m_pool.length) {
-				throw new MyError(`#${index} : invalid thread index`);
+				throw new Error(`#${index} : invalid thread index`);
 			}
 			let item = this.m_pool[index];
 			return !item.context.busy().value;
@@ -64,11 +64,11 @@ namespace TwinKleS {
 			executor: () => any,
 		): void {
 			if (index >= this.m_pool.length) {
-				throw new MyError(`#${index} : invalid thread index`);
+				throw new Error(`#${index} : invalid thread index`);
 			}
 			let item = this.m_pool[index];
 			if (item.context.busy().value) {
-				throw new MyError(`#${index} : context is busy`);
+				throw new Error(`#${index} : context is busy`);
 			}
 			item.context.execute(this.make_executor(index, executor), item.thread);
 			item.thread.detach();
@@ -79,11 +79,11 @@ namespace TwinKleS {
 			index: number,
 		): [boolean, any] {
 			if (index >= this.m_pool.length) {
-				throw new MyError(`#${index} : invalid thread index`);
+				throw new Error(`#${index} : invalid thread index`);
 			}
 			let item = this.m_pool[index];
 			if (item.context.busy().value) {
-				throw new MyError(`#${index} : context is busy`);
+				throw new Error(`#${index} : context is busy`);
 			}
 			return item.result;
 		}
@@ -92,7 +92,7 @@ namespace TwinKleS {
 			executor: () => any,
 		): void {
 			if (this.m_pool.length === 0) {
-				throw new MyError(`thread pool is empty`);
+				throw new Error(`thread pool is empty`);
 			}
 			let index = null;
 			while (index === null) {

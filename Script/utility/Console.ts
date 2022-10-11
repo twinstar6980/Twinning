@@ -16,63 +16,57 @@ namespace TwinKleS.Console {
 
 	// ------------------------------------------------
 
+	/** 是否禁用虚拟终端序列 */
+	export let cli_disable_virtual_terminal_sequences = false;
+
 	/** 消息栏属性 */
 	const k_cli_bar_text_attribute: Record<BarType, VirtualTerminalSequences.TextAttribute> = {
 		v: {
 			background: null,
 			foreground: 'default',
 			underline: false,
+			bold: false,
 		},
 		i: {
 			background: null,
 			foreground: ['blue', false],
 			underline: null,
+			bold: false,
 		},
 		w: {
 			background: null,
 			foreground: ['yellow', false],
 			underline: null,
+			bold: false,
 		},
 		e: {
 			background: null,
 			foreground: ['red', false],
 			underline: null,
+			bold: false,
 		},
 		s: {
 			background: null,
 			foreground: ['green', false],
 			underline: null,
+			bold: false,
 		},
 		t: {
 			background: null,
 			foreground: ['magenta', false],
 			underline: false,
+			bold: true,
 		},
 	};
-
-	/** 消息栏前导图标 */
-	const k_cli_bar_icon: Record<BarType, string> = {
-		v: '⚪',
-		i: '🔵',
-		w: '🟡',
-		e: '🔴',
-		s: '🟢',
-		t: '🟣',
-	};
-
-	// ------------------------------------------------
-
-	/** 是否禁用虚拟终端序列 */
-	export let cli_disable_virtual_terminal_sequences = false;
 
 	/**
 	 * 设置分类化文本属性
 	 * 
-	 * 仅当 cli_disable_virtual_terminal_sequences == false 时输出控制序列，以避免在不支持虚拟终端序列的环境下将控制序列输出为文本
+	 * 仅当 cli_disable_virtual_terminal_sequences == false 时输出控制序列，以避免在不支持虚拟终端序列的环境下输出控制序列
 	 * 
 	 * @param type 类型名
 	 */
-	export function cli_set_bar_text_attribute(
+	function cli_set_bar_text_attribute(
 		type: BarType,
 	): void {
 		if (!cli_disable_virtual_terminal_sequences) {
@@ -83,70 +77,19 @@ namespace TwinKleS.Console {
 
 	// ------------------------------------------------
 
-	/**
-	 * 通知
-	 * @param type 类型
-	 * @param title 标题
-	 * @param description 描述
-	 */
-	export function notify(
-		type: BarType,
-		title: string,
-		description: Array<string>,
-		with_icon: boolean = true,
+	function cli_basic_output(
+		text: string,
+		leading: boolean,
+		indent: number,
+		line_feed: boolean,
 	): void {
-		if (Shell.is_cli) {
-			cli_set_bar_text_attribute(type);
-			Shell.cli_output(`${with_icon ? k_cli_bar_icon[type] : '  '} ${title}\n`);
-			cli_set_bar_text_attribute('v');
-			for (let description_element of description) {
-				Shell.cli_output(`     ${description_element}\n`);
-			}
-			cli_set_bar_text_attribute('v');
-		}
-		if (Shell.is_gui) {
-			Shell.gui_output(type, title, description);
-		}
+		Shell.cli_output(`${leading ? '●' : ' '} ${'  '.repeat(indent)}${text}${line_feed ? '\n' : ''}`);
 		return;
 	}
 
-	/**
-	 * 暂停
-	 */
-	export function pause(
-	): void {
-		if (Shell.is_cli) {
-			cli_set_bar_text_attribute('t');
-			if (Shell.is_windows) {
-				Shell.cli_output(`${k_cli_bar_icon['t']} 键入以继续 ... `);
-				CoreX.System.system(`pause > nul`);
-				Shell.cli_output('\n');
-			}
-			if (Shell.is_linux || Shell.is_macos || Shell.is_android || Shell.is_ios) {
-				if (CoreX.FileSystem.exist_file(`/bin/bash`)) {
-					Shell.cli_output(`${k_cli_bar_icon['t']} 键入以继续 ... `);
-					CoreX.System.process(`/bin/bash`, [`-c`, `read -s -n 1 _`]);
-					Shell.cli_output('\n');
-				} else {
-					Shell.cli_output(`${k_cli_bar_icon['t']} 键入回车以继续 ... `);
-					Shell.cli_input();
-				}
-			}
-			cli_set_bar_text_attribute('v');
-		}
-		if (Shell.is_gui) {
-			option([[1n, 'continue']], false);
-		}
-		return;
-	}
-
-	/**
-	 * 输入字符串
-	 * @param checker 输入值校验器
-	 * @param nullable 若为真，则当输入值为空串时返回null，不触发校验器
-	 */
-	export function string(
-		checker: null | Check.CheckerX<string> = null,
+	function cli_basic_input(
+		leading: string,
+		checker: Check.CheckerX<string> | null,
 		nullable: boolean = false,
 	): string | null {
 		let result: string | null = undefined as any;
@@ -154,12 +97,12 @@ namespace TwinKleS.Console {
 			let input: string = undefined as any;
 			if (Shell.is_cli) {
 				cli_set_bar_text_attribute('t');
-				Shell.cli_output(`${k_cli_bar_icon['t']} `);
+				cli_basic_output(`${leading} `, true, 0, false);
 				input = Shell.cli_input();
 				cli_set_bar_text_attribute('v');
 			}
 			if (Shell.is_gui) {
-				input = Shell.cli_input();
+				input = Shell.gui_input_string();
 			}
 			if (nullable && input === '') {
 				result = null;
@@ -174,129 +117,272 @@ namespace TwinKleS.Console {
 				result = input;
 				break;
 			}
-			notify('e', `输入无效`, [`${check_result}`]);
+			notify('w', `输入无效，请重新输入`, [`${check_result}`]);
 		}
 		return result;
 	}
 
-	/**
-	 * 输入布尔值
-	 * @param nullable 若为真，则当输入值为空串时返回null，不触发校验器
-	 */
-	export function boolean(
-		nullable: boolean = false,
-	): boolean | null {
-		let result: boolean | null = undefined as any;
+	// ------------------------------------------------
+
+	export function notify(
+		type: BarType,
+		title: string,
+		description: Array<string>,
+		with_icon: boolean = true, // for cli
+	): void {
 		if (Shell.is_cli) {
-			let input = string(Check.enum_checkerx(['false', 'true']), nullable);
-			result = input === null ? null : input === 'true';
+			cli_set_bar_text_attribute(type);
+			cli_basic_output(title, with_icon, 0, true);
+			cli_set_bar_text_attribute('v');
+			for (let description_element of description) {
+				cli_basic_output(description_element, false, 1, true);
+			}
+			cli_set_bar_text_attribute('v');
 		}
 		if (Shell.is_gui) {
-			let input = option([[1n, 'false'], [2n, 'true']], nullable);
-			result = input === null ? null : input === 2n;
+			Shell.gui_output(type, title, description);
 		}
-		return result;
+		return;
 	}
 
-	/**
-	 * 输入布尔值，但以y(yes)和n(no)代替true、false
-	 * @param nullable 若为真，则当输入值为空串时返回null，不触发校验器
-	 */
-	export function yon(
+	// ------------------------------------------------
+
+	export function pause(
+	): void {
+		if (Shell.is_cli) {
+			cli_set_bar_text_attribute('t');
+			if (Shell.is_windows) {
+				cli_basic_output(`P 键入以继续 ... `, true, 0, false);
+				CoreX.System.system(`pause > nul`);
+				Shell.cli_output('\n');
+			}
+			if (Shell.is_linux || Shell.is_macos || Shell.is_android || Shell.is_ios) {
+				if (CoreX.FileSystem.exist_file(`/bin/bash`)) {
+					cli_basic_output(`P 键入以继续 ... `, true, 0, false);
+					CoreX.System.process(`/bin/bash`, [`-c`, `read -s -n 1 _`]);
+					Shell.cli_output('\n');
+				} else {
+					cli_basic_output(`P 键入回车以继续 ... `, true, 0, false);
+					Shell.cli_input();
+				}
+			}
+			cli_set_bar_text_attribute('v');
+		}
+		if (Shell.is_gui) {
+		}
+		return;
+	}
+
+	// ------------------------------------------------
+
+	export function confirm(
+		checker: Check.CheckerX<boolean> | null,
+	): boolean;
+
+	export function confirm(
+		checker: Check.CheckerX<boolean> | null,
+		nullable: boolean,
+	): boolean | null;
+
+	export function confirm(
+		checker: Check.CheckerX<boolean> | null,
 		nullable: boolean = false,
 	): boolean | null {
 		let result: boolean | null = undefined as any;
 		if (Shell.is_cli) {
-			let input = string(Check.enum_checkerx(['n', 'y']), nullable);
+			let input = cli_basic_input('C', (value) => {
+				let regexp_check_result = Check.enum_checkerx(['n', 'y'])(value);
+				if (regexp_check_result !== null) {
+					return `确认值只识别 n 与 y`;
+				}
+				return checker === null ? null : checker(value === 'y');
+			}, nullable);
 			result = input === null ? null : input === 'y';
 		}
 		if (Shell.is_gui) {
-			let input = option([[1n, 'no'], [2n, 'yes']], nullable);
-			result = input === null ? null : input === 2n;
 		}
 		return result;
 	}
 
-	/**
-	 * 输入数字
-	 * @param checker 输入值校验器
-	 * @param nullable 若为真，则当输入值为空串时返回null，不触发校验器
-	 */
+	// ------------------------------------------------
+
 	export function number(
-		checker: null | Check.CheckerX<number> = null,
+		checker: Check.CheckerX<number> | null,
+	): number;
+
+	export function number(
+		checker: Check.CheckerX<number> | null,
+		nullable: boolean,
+	): number | null;
+
+	export function number(
+		checker: Check.CheckerX<number> | null,
 		nullable: boolean = false,
 	): number | null {
-		let input = string((value) => {
-			let regexp_check_result = Check.regexp_checkerx(/^[\\+\\-]?\d+(\.\d+)?$/)(value);
-			if (regexp_check_result !== null) {
-				return regexp_check_result;
-			}
-			return checker === null ? null : checker(Number.parseFloat(value));
-		}, nullable);
-		return input === null ? null : Number.parseFloat(input);
+		let result: number | null = undefined as any;
+		if (Shell.is_cli) {
+			let input = cli_basic_input('N', (value) => {
+				let regexp_check_result = Check.regexp_checkerx(/^[\\+\\-]?\d+(\.\d+)?$/)(value);
+				if (regexp_check_result !== null) {
+					return `数字格式非法，${regexp_check_result}`;
+				}
+				return checker === null ? null : checker(Number.parseFloat(value));
+			}, nullable);
+			result = input === null ? null : Number.parseFloat(input);
+		}
+		if (Shell.is_gui) {
+		}
+		return result;
 	}
 
-	/**
-	 * 输入整数
-	 * @param checker 输入值校验器
-	 * @param nullable 若为真，则当输入值为空串时返回null，不触发校验器
-	 */
+	// ------------------------------------------------
+
 	export function integer(
-		checker: null | Check.CheckerX<bigint> = null,
-		nullable: boolean = false,
-	): bigint | null {
-		let input = string((value) => {
-			let regexp_check_result = Check.regexp_checkerx(/^[\\+\\-]?\d+$/)(value);
-			if (regexp_check_result !== null) {
-				return regexp_check_result;
-			}
-			return checker === null ? null : checker(BigInt(value));
-		}, nullable);
-		return input === null ? null : BigInt(input);
-	}
+		checker: Check.CheckerX<bigint> | null,
+	): bigint;
 
-	/**
-	 * 输入表示size的字符串，并转为整数
-	 * @param checker 输入值校验器
-	 * @param nullable 若为真，则当输入值为空串时返回null，不触发校验器
-	 */
-	export function size(
-		checker: null | Check.CheckerX<bigint> = null,
-		nullable: boolean = false,
-	): bigint | null {
-		let input = string((value) => {
-			let regexp_check_result = Check.regexp_checkerx(/^\d+(\.\d+)?(b|k|m|g)$/)(value);
-			if (regexp_check_result !== null) {
-				return regexp_check_result;
-			}
-			return checker === null ? null : checker(parse_size_string(value));
-		}, nullable);
-		return input === null ? null : parse_size_string(input);
-	}
+	export function integer(
+		checker: Check.CheckerX<bigint> | null,
+		nullable: boolean,
+	): bigint | null;
 
-	/**
-	 * 输入选项
-	 * @param option 选项索引及描述信息
-	 * @param nullable 若为真，则当输入值为空串时返回null，不触发校验器
-	 */
-	export function option(
-		option: Array<[bigint, string]>,
+	export function integer(
+		checker: Check.CheckerX<bigint> | null,
 		nullable: boolean = false,
 	): bigint | null {
 		let result: bigint | null = undefined as any;
 		if (Shell.is_cli) {
-			let max_index_string_length = `${option[option.length - 1][0]}`.length;
-			for (let e of option) {
-				Shell.cli_output(`     ${make_prefix_padded_string(e[0], ' ', max_index_string_length)}. ${e[1]}\n`);
-			}
-			let input = integer(Check.enum_checkerx(option.map((e) => (e[0]))), nullable);
+			let input = cli_basic_input('I', (value) => {
+				let regexp_check_result = Check.regexp_checkerx(/^[\\+\\-]?\d+$/)(value);
+				if (regexp_check_result !== null) {
+					return `整数格式非法，${regexp_check_result}`;
+				}
+				return checker === null ? null : checker(BigInt(value));
+			}, nullable);
+			result = input === null ? null : BigInt(input);
+		}
+		if (Shell.is_gui) {
+		}
+		return result;
+	}
+
+	// ------------------------------------------------
+
+	export function binary_size(
+		checker: Check.CheckerX<bigint> | null,
+	): bigint;
+
+	export function binary_size(
+		checker: Check.CheckerX<bigint> | null,
+		nullable: boolean,
+	): bigint | null;
+
+	export function binary_size(
+		checker: Check.CheckerX<bigint> | null,
+		nullable: boolean = false,
+	): bigint | null {
+		let result: bigint | null = undefined as any;
+		if (Shell.is_cli) {
+			let input = cli_basic_input('Z', (value) => {
+				let regexp_check_result = Check.regexp_checkerx(/^\d+(\.\d+)?(b|k|m|g)$/)(value);
+				if (regexp_check_result !== null) {
+					return `二进制尺寸格式非法，${regexp_check_result}`;
+				}
+				return checker === null ? null : checker(parse_size_string(value));
+			}, nullable);
+			result = input === null ? null : parse_size_string(input);
+		}
+		if (Shell.is_gui) {
+		}
+		return result;
+	}
+
+	// ------------------------------------------------
+
+	export function option<Value>(
+		option: Array<[Value, string?] | null>,
+		checker: Check.CheckerX<Value> | null,
+	): Value;
+
+	export function option<Value>(
+		option: Array<[Value, string?] | null>,
+		checker: Check.CheckerX<Value> | null,
+		nullable: boolean,
+	): Value | null;
+
+	export function option<Value>(
+		option: Array<[Value, string?] | null>,
+		checker: Check.CheckerX<Value> | null,
+		nullable: boolean = false,
+	): Value | null {
+		let result: Value | null = undefined as any;
+		if (Shell.is_cli) {
+			let max_index_string_length = `${option.length}`.length;
+			let valid_option_index: Array<bigint> = [];
+			option.forEach((e, i) => {
+				if (e !== null) {
+					cli_basic_output(`${make_prefix_padded_string(i + 1, ' ', max_index_string_length)}. ${e[1] === undefined ? e[0] : e[1]}\n`, false, 1, false);
+					valid_option_index.push(BigInt(i) + 1n);
+				}
+			});
+			let input = cli_basic_input('O', (value) => {
+				let regexp_check_result = Check.regexp_checkerx(/^[\\+\\-]?\d+$/)(value);
+				if (regexp_check_result !== null) {
+					return `整数格式非法，${regexp_check_result}`;
+				}
+				let value_integer = BigInt(value);
+				if (!valid_option_index.includes(value_integer)) {
+					return `输入项不在可选项中`;
+				}
+				return checker === null ? null : checker(option[Number(value_integer - 1n)]![0]);
+			}, nullable);
+			result = input === null ? null : option[Number(BigInt(input) - 1n)]![0];
+		}
+		if (Shell.is_gui) {
+		}
+		return result;
+	}
+
+	// ------------------------------------------------
+
+	export function string(
+		checker: Check.CheckerX<string> | null,
+	): string;
+
+	export function string(
+		checker: Check.CheckerX<string> | null,
+		nullable: boolean,
+	): string | null;
+
+	export function string(
+		checker: Check.CheckerX<string> | null,
+		nullable: boolean = false,
+	): string | null {
+		let result: string | null = undefined as any;
+		if (Shell.is_cli) {
+			let input = cli_basic_input('S', checker, nullable);
 			result = input;
 		}
 		if (Shell.is_gui) {
-			let input = Shell.gui_input_option([...option.map((e) => (e[1])), ...(!nullable ? [] : ['null'])]);
-			result = option[Number(input)][0];
 		}
 		return result;
+	}
+
+	// ------------------------------------------------
+
+	export function notify_error(
+		error: any,
+	): void {
+		if (error instanceof Error) {
+			if (error.name === 'NativeError') {
+				Console.notify('e', `${error.name}`, [...error.message.split('\n'), ...parse_stack_string(error.stack)]);
+			} else {
+				Console.notify('e', `${error.name} : ${error.message}`, [...parse_stack_string(error.stack)]);
+			}
+		} else {
+			Console.notify('e', `${error}`, []);
+		}
+		return;
 	}
 
 	// ------------------------------------------------

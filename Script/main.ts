@@ -3,29 +3,35 @@ namespace TwinKleS {
 	// ------------------------------------------------
 
 	/** 版本编号 */
-	export const k_version = 19;
+	export const k_version = 20;
 
 	// ------------------------------------------------
 
-	/** 错误类 */
-	export class MyError {
-
-		public message: string;
-		public stack: string;
-
-		constructor(
-			message: string,
-		) {
-			let stack = new Error().stack!;
-			stack = stack.substring(stack.indexOf('\n') + 1, stack.length - 1);
-			this.message = message;
-			this.stack = stack;
+	/**
+	 * 分割错误堆栈字符串
+	 * @param stack 堆栈
+	 * @returns 分割所得的字符串数组
+	 */
+	export function parse_stack_string(
+		stack: string | undefined,
+	): Array<string> {
+		if (stack === undefined) {
+			return [];
+		} else {
+			let stack_array = stack.split('\n');
+			stack_array.pop();
+			stack_array = stack_array.map((e) => {
+				let result: string;
+				let regexp_result = /    at (.*) \((.*)\)/.exec(e);
+				if (regexp_result === null) {
+					result = '';
+				} else {
+					result = `@ ${regexp_result[2]} ${regexp_result[1]}`;
+				}
+				return result;
+			});
+			return stack_array;
 		}
-
-		toString(): string {
-			return `${this.message}\n${this.stack}`;
-		}
-
 	}
 
 	// ------------------------------------------------
@@ -116,23 +122,23 @@ namespace TwinKleS {
 			main_directory: string,
 		): [Entry, null | ModuleConfig] | null {
 			if (!Detail.exist_directory(main_directory)) {
-				throw new MyError(`main directory is not found : <${main_directory}>`);
+				throw new Error(`main directory is not found : <${main_directory}>`);
 			}
 			let entry: [Entry, null | ModuleConfig] | null = null;
 			if (manifest.entry !== null && !manifest.module.includes(manifest.entry)) {
-				throw new MyError(`entry module is invalid : <${manifest.entry}>`);
+				throw new Error(`entry module is invalid : <${manifest.entry}>`);
 			}
 			for (let module of manifest.module) {
 				let script_file = `${main_directory}/${module}.js`;
 				let config_file = `${main_directory}/${module}.json`;
 				if (!Detail.exist_file(script_file)) {
-					throw new MyError(`module script file not found : <${module}>`);
+					throw new Error(`module script file not found : <${module}>`);
 				}
 				let config: null | ModuleConfig = null;
 				if (Detail.exist_file(config_file)) {
 					let raw_module_config = Detail.read_json(config_file);
 					if (typeof raw_module_config !== 'object' || raw_module_config === null || (raw_module_config as Object).constructor.name !== 'Object') {
-						throw new MyError(`module config must be object : <${module}>`);
+						throw new Error(`module config must be object : <${module}>`);
 					}
 					config = raw_module_config as ModuleConfig;
 				}
@@ -146,7 +152,7 @@ namespace TwinKleS {
 					if (evaluate_result !== undefined && evaluate_result.entry !== undefined) {
 						entry = [evaluate_result.entry as Entry, config];
 					} else {
-						throw new MyError(`module is loaded, but entry function is not found : <${module}>`);
+						throw new Error(`module is loaded, but entry function is not found : <${module}>`);
 					}
 				}
 			}
@@ -155,7 +161,7 @@ namespace TwinKleS {
 
 		// ------------------------------------------------
 
-		export let g_home_directory: string = null!;
+		let g_home_directory: string = undefined!;
 
 		export function path_at_home(
 			format: string,
@@ -165,7 +171,7 @@ namespace TwinKleS {
 
 		// ------------------------------------------------
 
-		export let g_module_manifest: ModuleManifest = null!;
+		export let g_module_manifest: ModuleManifest = undefined!;
 
 		export function main(
 			script_path: null | string,
@@ -175,11 +181,11 @@ namespace TwinKleS {
 			Detail.notify(`TwinKleS.ToolKit.Script ${k_version}`);
 			try {
 				if (script_path === null) {
-					throw new MyError(`must run as file`);
+					throw new Error(`must run as file`);
 				}
 				let script_path_match = /^(.+)\/script\/main.js$/.exec(script_path.replaceAll('\\', '/'));
 				if (script_path_match === null) {
-					throw new MyError(`script path error`);
+					throw new Error(`script path error`);
 				}
 				if (script_path_match[1].startsWith('.') || script_path_match[1].startsWith('..')) {
 					let current_directory = Core.FileSystem.get_working_directory().value;
@@ -190,18 +196,19 @@ namespace TwinKleS {
 				let begin_time = Date.now();
 				let entry = load_module(g_module_manifest, `${g_home_directory}/script`);
 				let end_time = Date.now();
-				Console.notify('s', `all module loaded in ${end_time - begin_time} ms`, []);
+				Console.notify('s', `所有脚本模块已加载`, [`用时 ${((end_time - begin_time) / 1000).toFixed(3)} s`]);
 				entry?.[0](entry[1], argument);
-			} catch (e: any) {
-				if (e instanceof Error) {
-					result = `${e}\n${e.stack}`;
-				} else if (e instanceof MyError) {
-					result = `${e.message}\n${e.stack}`;
+			} catch (error: any) {
+				if (error instanceof Error) {
+					if (error.name === 'NativeError') {
+						result = `${error.name}\n${[...error.message.split('\n'), ...parse_stack_string(error.stack)].join('\n')}`;
+					} else {
+						result = `${error.name} : ${error.message}\n${[...parse_stack_string(error.stack)].join('\n')}`;
+					}
 				} else {
-					result = `${e}`;
+					result = `${error}`;
 				}
 			}
-			g_thread_manager.resize(0);
 			return result;
 		}
 
@@ -245,6 +252,7 @@ TwinKleS.Main.g_module_manifest = {
 		`Support/PvZ2/RSB/ResourceExtract/ResourceExtract`,
 		`Executor/Executor`,
 		`Entry/Entry`,
+		`Entry/Argument`,
 		`Entry/method/js`,
 		`Entry/method/json`,
 		`Entry/method/data.hash`,

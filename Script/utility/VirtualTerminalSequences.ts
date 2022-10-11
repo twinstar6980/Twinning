@@ -27,6 +27,8 @@ namespace TwinKleS.VirtualTerminalSequences {
 		foreground: null | 'default' | [ColorName, boolean];
 		/** 下划线 */
 		underline: null | boolean;
+		/** 强调 */
+		bold: null | boolean;
 	};
 
 	/**
@@ -53,6 +55,9 @@ namespace TwinKleS.VirtualTerminalSequences {
 		}
 		if (attribute.underline !== null) {
 			result += `${attribute.underline ? 4 : 24};`;
+		}
+		if (attribute.bold !== null) {
+			result += `${attribute.bold ? 1 : 22};`;
 		}
 		return result.length === 0 ? '' : `\u001b[${result.slice(0, -1)}m`;
 	}

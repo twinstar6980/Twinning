@@ -22,7 +22,7 @@ namespace TwinKleS.Support.PvZ2.JSONGenericGetter {
 			if (default_value !== undefined) {
 				return default_value;
 			} else {
-				throw new MyError(`type error`);
+				throw new Error(`type error`);
 			}
 		}
 		if (typeof source === 'boolean') {
@@ -37,7 +37,7 @@ namespace TwinKleS.Support.PvZ2.JSONGenericGetter {
 		if (typeof source === 'string') {
 			return source === '';
 		}
-		throw new MyError(`type error`);
+		throw new Error(`type error`);
 	}
 
 	/**
@@ -54,7 +54,7 @@ namespace TwinKleS.Support.PvZ2.JSONGenericGetter {
 			if (default_value !== undefined) {
 				return default_value;
 			} else {
-				throw new MyError(`type error`);
+				throw new Error(`type error`);
 			}
 		}
 		if (typeof source === 'number') {
@@ -69,7 +69,7 @@ namespace TwinKleS.Support.PvZ2.JSONGenericGetter {
 		if (typeof source === 'string') {
 			return Number.parseFloat(source);
 		}
-		throw new MyError(`type error`);
+		throw new Error(`type error`);
 	}
 
 	/**
@@ -86,7 +86,7 @@ namespace TwinKleS.Support.PvZ2.JSONGenericGetter {
 			if (default_value !== undefined) {
 				return default_value;
 			} else {
-				throw new MyError(`type error`);
+				throw new Error(`type error`);
 			}
 		}
 		if (typeof source === 'bigint') {
@@ -105,7 +105,7 @@ namespace TwinKleS.Support.PvZ2.JSONGenericGetter {
 		if (typeof source === 'string') {
 			return BigInt(source);
 		}
-		throw new MyError(`type error`);
+		throw new Error(`type error`);
 	}
 
 	/**
@@ -122,13 +122,13 @@ namespace TwinKleS.Support.PvZ2.JSONGenericGetter {
 			if (default_value !== undefined) {
 				return default_value;
 			} else {
-				throw new MyError(`type error`);
+				throw new Error(`type error`);
 			}
 		}
 		if (typeof source === 'string') {
 			return source;
 		}
-		throw new MyError(`type error`);
+		throw new Error(`type error`);
 	}
 
 	// ------------------------------------------------

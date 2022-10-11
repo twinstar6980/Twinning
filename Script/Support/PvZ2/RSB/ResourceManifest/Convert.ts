@@ -16,7 +16,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceManifest.Convert {
 		};
 		for (let source_group of source.groups) {
 			if (!OfficialResourceManifest.GroupTypeE.includes(source_group.type)) {
-				throw new MyError(`group type invalid`);
+				throw new Error(`group type invalid`);
 			}
 			switch (source_group.type) {
 				case 'composite': {
@@ -38,7 +38,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceManifest.Convert {
 					} else {
 						let dest_group_if = dest.group[source_subgroup.parent];
 						if (dest_group_if === undefined) {
-							throw new MyError(`subgroup's parent is not found : ${source_group.id}`);
+							throw new Error(`subgroup's parent is not found : ${source_group.id}`);
 						}
 						dest_group = dest_group_if;
 					}
@@ -66,10 +66,10 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceManifest.Convert {
 						} else if ('parent' in source_resource) {
 							let atlas = dest_subgroup.resource[(source_resource as OfficialResourceManifest.SpriteImageResourceInformation).parent];
 							if (atlas === undefined) {
-								throw new MyError(`sprite's parent is not found : ${source_resource.parent}`);
+								throw new Error(`sprite's parent is not found : ${source_resource.parent}`);
 							}
 							if (atlas.expand[0] !== 'atlas') {
-								throw new MyError(`sprite's expand type is not 'atlas' : ${source_resource.parent}`);
+								throw new Error(`sprite's expand type is not 'atlas' : ${source_resource.parent}`);
 							}
 							atlas.expand[1].sprite[source_resource.id] = {
 								path: source_resource.path.join('/'),

@@ -9,7 +9,7 @@ namespace TwinKleS.Shell {
 	): Array<string> {
 		let result = CoreX.Misc.shell_callback(argument);
 		if (result[0].length !== 0) {
-			throw new MyError(`shell callback invoke failed : ${result[0]}`);
+			throw new Error(`shell callback invoke failed : ${result[0]}`);
 		}
 		return result.slice(1);
 	}
@@ -67,10 +67,10 @@ namespace TwinKleS.Shell {
 
 	export function gui_output(
 		type: 'v' | 'i' | 'w' | 'e' | 's' | 't',
-		message: string,
-		sub_message: Array<string>,
+		title: string,
+		description: Array<string>,
 	): void {
-		let result = callback(['output', type, message, ...sub_message]);
+		let result = callback(['output', type, title, ...description]);
 		return;
 	}
 

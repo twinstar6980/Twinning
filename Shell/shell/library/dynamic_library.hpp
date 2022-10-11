@@ -89,8 +89,8 @@ namespace TwinKleS::Shell {
 
 	protected: //
 
-		Detail::LibraryHandle m_handle;
 		SymbolTable           m_symbol;
+		Detail::LibraryHandle m_handle;
 
 	public: //
 
@@ -117,10 +117,11 @@ namespace TwinKleS::Shell {
 		// ----------------
 
 		explicit DynamicLibrary (
+			std::nullptr_t           _,
 			std::string_view const & path
 		) :
-			m_handle{},
-			m_symbol{} {
+			m_symbol{},
+			m_handle{} {
 			thiz.m_handle = Detail::open_library(path);
 			thiz.m_symbol = {
 				.version = Detail::get_symbol<decltype(Core::version) *>(thiz.m_handle, k_symbol_id.version),

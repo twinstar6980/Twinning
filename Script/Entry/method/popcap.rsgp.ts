@@ -7,7 +7,7 @@ namespace TwinKleS.Entry.method.popcap.rsgp {
 	// ------------------------------------------------
 
 	type Config = {
-		pack_buffer_size: string | '?input';
+		pack_buffer_size: Argument.Request<string, false>;
 	};
 
 	export function _injector(
@@ -18,46 +18,56 @@ namespace TwinKleS.Entry.method.popcap.rsgp {
 				id: 'popcap.rsgp.pack',
 				description: 'PopCap-RSGP 打包',
 				worker(a: Entry.CFSA & {
-					bundle_directory: string;
-					data_file: string | '?default' | '?input';
-					version_number: bigint | '?input';
-					data_buffer_size: string | '?input';
+					bundle_directory: Argument.Require<string>;
+					data_file: Argument.Request<string, true>;
+					version_number: Argument.Request<bigint, false>;
+					buffer_size: Argument.Request<string, false>;
 				}) {
 					let bundle_directory: string;
 					let data_file: string;
-					let version_number: bigint;
-					let data_buffer_size: bigint;
+					let version_number: [3n, 4n][number];
+					let buffer_size: bigint;
 					{
-						bundle_directory = a.bundle_directory;
-						data_file = ArgumentParser.path(a.data_file, {
-							input_message: '请输入输出路径',
-							default_value: bundle_directory.replace(/((\.rsgp)(\.bundle))?$/i, '.rsgp'),
-							must_exist: false,
-							if_exist: a.fs_if_exist,
-						});
-						if (a.version_number === '?input') {
-							Console.notify('i', `请输入版本编号（3~4）`, []);
-							version_number = Console.integer(Check.enum_checkerx([3n, 4n]))!;
-						} else {
-							version_number = BigInt(a.version_number);
-						}
-						if (a.data_buffer_size === '?input') {
-							Console.notify('i', `请输入用于保存包数据输出的内存空间大小`, []);
-							data_buffer_size = Console.size()!;
-						} else {
-							data_buffer_size = parse_size_string(a.data_buffer_size);
-						}
+						bundle_directory = Argument.require(
+							'捆绑目录', '',
+							a.bundle_directory,
+							(value) => (value),
+							(value) => (CoreX.FileSystem.exist_directory(value)),
+						);
+						data_file = Argument.request(
+							'数据文件', '',
+							a.data_file,
+							(value) => (value),
+							() => (bundle_directory.replace(/((\.rsgp)(\.bundle))?$/i, '.rsgp')),
+							...Argument.requester_for_path('file', [false, a.fs_tactic_if_exist]),
+						);
+						version_number = Argument.request(
+							'版本编号', '',
+							a.version_number,
+							(value) => (value),
+							null,
+							() => (Console.integer(null)),
+							(value) => ([3n, 4n].includes(value) ? null : `版本不受支持`),
+						);
+						buffer_size = Argument.request(
+							'内存缓冲区大小', '',
+							a.buffer_size,
+							(value) => (parse_size_string(value)),
+							null,
+							() => (Console.binary_size(null)),
+							(value) => (null),
+						);
 					}
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					CoreX.Tool.PopCap.RSGP.pack_fs(data_file, manifest_file, resource_directory, { number: version_number as any }, data_buffer_size);
-					Console.notify('s', `输出路径：${data_file}`, []);
+					CoreX.Tool.PopCap.RSGP.pack_fs(data_file, manifest_file, resource_directory, { number: version_number }, buffer_size);
+					Console.notify('s', `执行成功`, [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
 					bundle_directory: undefined!,
 					data_file: '?default',
-					data_buffer_size: config.pack_buffer_size,
+					buffer_size: config.pack_buffer_size,
 					version_number: '?input',
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', /.+(\.rsgp)(\.bundle)$/i]]),
@@ -67,32 +77,40 @@ namespace TwinKleS.Entry.method.popcap.rsgp {
 				id: 'popcap.rsgp.unpack',
 				description: 'PopCap-RSGP 解包',
 				worker(a: Entry.CFSA & {
-					data_file: string;
-					bundle_directory: string | '?default' | '?input';
-					version_number: bigint | '?input';
+					data_file: Argument.Require<string>;
+					bundle_directory: Argument.Request<string, true>;
+					version_number: Argument.Request<bigint, false>;
 				}) {
 					let data_file: string;
 					let bundle_directory: string;
-					let version_number: bigint;
+					let version_number: [3n, 4n][number];
 					{
-						data_file = a.data_file;
-						bundle_directory = ArgumentParser.path(a.bundle_directory, {
-							input_message: '请输入输出路径',
-							default_value: data_file.replace(/((\.rsgp))?$/i, '.rsgp.bundle'),
-							must_exist: false,
-							if_exist: a.fs_if_exist,
-						});
-						if (a.version_number === '?input') {
-							Console.notify('i', `请输入版本编号（3~4）`, []);
-							version_number = Console.integer(Check.enum_checkerx([3n, 4n]))!;
-						} else {
-							version_number = BigInt(a.version_number);
-						}
+						data_file = Argument.require(
+							'数据文件', '',
+							a.data_file,
+							(value) => (value),
+							(value) => (CoreX.FileSystem.exist_file(value)),
+						);
+						bundle_directory = Argument.request(
+							'捆绑目录', '',
+							a.bundle_directory,
+							(value) => (value),
+							() => (data_file.replace(/((\.rsgp))?$/i, '.rsgp.bundle')),
+							...Argument.requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+						);
+						version_number = Argument.request(
+							'版本编号', '',
+							a.version_number,
+							(value) => (value),
+							null,
+							() => (Console.integer(null)),
+							(value) => ([3n, 4n].includes(value) ? null : `版本不受支持`),
+						);
 					}
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					CoreX.Tool.PopCap.RSGP.unpack_fs(data_file, manifest_file, resource_directory, { number: version_number as any });
-					Console.notify('s', `输出路径：${bundle_directory}`, []);
+					CoreX.Tool.PopCap.RSGP.unpack_fs(data_file, manifest_file, resource_directory, { number: version_number });
+					Console.notify('s', `执行成功`, [`${bundle_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

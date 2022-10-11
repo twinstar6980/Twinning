@@ -25,13 +25,7 @@ namespace TwinKleS::Shell {
 		// ----------------
 
 		StaticLibrary (
-		):
-			m_symbol{} {
-			thiz.m_symbol = {
-				.version = &Core::version,
-				.execute = &Core::execute,
-			};
-		}
+		) = delete;
 
 		StaticLibrary (
 			StaticLibrary const & that
@@ -40,6 +34,18 @@ namespace TwinKleS::Shell {
 		StaticLibrary (
 			StaticLibrary && that
 		) = delete;
+
+		// ----------------
+
+		explicit StaticLibrary (
+			std::nullptr_t _
+		):
+			m_symbol{} {
+			thiz.m_symbol = {
+				.version = &Core::version,
+				.execute = &Core::execute,
+			};
+		}
 
 		#pragma endregion
 

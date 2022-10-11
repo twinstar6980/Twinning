@@ -16,14 +16,19 @@ namespace TwinKleS.Entry.method.js {
 				id: 'js.evaluate',
 				description: 'JS 执行',
 				worker(a: Entry.CFSA & {
-					script_file: string;
+					script_file: Argument.Require<string>;
 				}) {
 					let script_file: string;
 					{
-						script_file = a.script_file;
+						script_file = Argument.require(
+							'脚本文件', '',
+							a.script_file,
+							(value) => (value),
+							(value) => (CoreX.FileSystem.exist_file(value)),
+						);
 					}
-					CoreX.Misc.evaluate_fs(script_file);
-					Console.notify('s', `运行完毕`, []);
+					let result = CoreX.Misc.evaluate_fs(script_file);
+					Console.notify('s', `执行成功`, [`${result}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

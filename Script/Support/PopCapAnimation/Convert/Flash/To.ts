@@ -42,81 +42,81 @@ namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.To {
 		index: number,
 	): Transform {
 		if (x_DOMSymbolItem.name !== 'DOMSymbolItem') {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		if (x_DOMSymbolItem.attribute.name !== `image/image_${index + 1}`) {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		let x_timeline_list = XML.find_child_element(x_DOMSymbolItem, 'timeline');
 		if (x_timeline_list.length !== 1) {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		let x_timeline = x_timeline_list[0];
 		let x_DOMTimeline_list = XML.find_child_element(x_timeline, 'DOMTimeline');
 		if (x_DOMTimeline_list.length !== 1) {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		let x_DOMTimeline = x_DOMTimeline_list[0];
 		if (x_DOMTimeline.attribute.name !== `image_${index + 1}`) {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		let x_layers_list = XML.find_child_element(x_DOMTimeline, 'layers');
 		if (x_layers_list.length !== 1) {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		let x_layers = x_layers_list[0];
 		let x_DOMLayer_list = XML.find_child_element(x_layers, 'DOMLayer');
 		if (x_DOMLayer_list.length !== 1) {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		let x_DOMLayer = x_DOMLayer_list[0];
 		let x_frames_list = XML.find_child_element(x_DOMLayer, 'frames');
 		if (x_frames_list.length !== 1) {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		let x_frames = x_frames_list[0];
 		let x_DOMFrame_list = XML.find_child_element(x_frames, 'DOMFrame');
 		if (x_DOMFrame_list.length !== 1) {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		let x_DOMFrame = x_DOMFrame_list[0];
 		let x_elements_list = XML.find_child_element(x_DOMFrame, 'elements');
 		if (x_elements_list.length !== 1) {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		let x_elements = x_elements_list[0];
 		let x_DOMSymbolInstance_list = XML.find_child_element(x_elements, 'DOMSymbolInstance');
 		if (x_DOMSymbolInstance_list.length !== 1) {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		let x_DOMSymbolInstance = x_DOMSymbolInstance_list[0];
 		if (x_DOMSymbolInstance.attribute.libraryItemName !== `source/source_${index + 1}`) {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		let x_matrix_list = XML.find_child_element(x_DOMSymbolInstance, 'matrix');
 		if (x_matrix_list.length !== 1) {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		let x_matrix = x_matrix_list[0];
 		let x_Matrix_list = XML.find_child_element(x_matrix, 'Matrix');
 		if (x_Matrix_list.length !== 1) {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		let x_Matrix = x_Matrix_list[0];
 		let x_transformationPoint_list = XML.find_child_element(x_DOMSymbolInstance, 'transformationPoint');
 		if (x_transformationPoint_list.length !== 1) {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		let x_transformationPoint = x_transformationPoint_list[0];
 		let x_Point_list = XML.find_child_element(x_transformationPoint, 'Point');
 		if (x_Point_list.length !== 1) {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		let x_Point = x_Point_list[0];
 		let transform = parse_transform(x_Matrix);
 		let transform_origin = parse_transform_origin(x_Point);
 		if (transform[4] !== -transform_origin[0] || transform[5] !== -transform_origin[1]) {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		return transform;
 	}
@@ -135,27 +135,27 @@ namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.To {
 		} | null = null;
 		let result: Array<Core.Tool.PopCap.PAM.Manifest.JS_N.Frame> = new Array(0);
 		if (x_DOMSymbolItem.name !== 'DOMSymbolItem') {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		if (x_DOMSymbolItem.attribute.name !== (index === 'main' ? `main_sprite` : `sprite/sprite_${index + 1}`)) {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		let x_timeline_list = XML.find_child_element(x_DOMSymbolItem, 'timeline');
 		if (x_timeline_list.length !== 1) {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		let x_timeline = x_timeline_list[0];
 		let x_DOMTimeline_list = XML.find_child_element(x_timeline, 'DOMTimeline');
 		if (x_DOMTimeline_list.length !== 1) {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		let x_DOMTimeline = x_DOMTimeline_list[0];
 		if (x_DOMTimeline.attribute.name !== (index === 'main' ? `main_sprite` : `sprite_${index + 1}`)) {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		let x_layers_list = XML.find_child_element(x_DOMTimeline, 'layers');
 		if (x_layers_list.length !== 1) {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		let x_layers = x_layers_list[0];
 		let x_DOMLayer_list = XML.find_child_element(x_layers, 'DOMLayer');
@@ -177,7 +177,7 @@ namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.To {
 		x_DOMLayer_list.forEach((x_DOMLayer) => {
 			let x_frames_list = XML.find_child_element(x_DOMLayer, 'frames');
 			if (x_frames_list.length !== 1) {
-				throw new MyError(``);
+				throw new Error(``);
 			}
 			let x_frames = x_frames_list[0];
 			let x_DOMFrame_list = XML.find_child_element(x_frames, 'DOMFrame');
@@ -201,7 +201,7 @@ namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.To {
 					return;
 				}
 				if (x_elements_list.length !== 1) {
-					throw new MyError(``);
+					throw new Error(``);
 				}
 				let x_elements = x_elements_list[0];
 				let x_DOMSymbolInstance_list = XML.find_child_element(x_elements, 'DOMSymbolInstance');
@@ -209,15 +209,15 @@ namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.To {
 					return;
 				}
 				if (x_DOMSymbolInstance_list.length !== 1) {
-					throw new MyError(``);
+					throw new Error(``);
 				}
 				let x_DOMSymbolInstance = x_DOMSymbolInstance_list[0];
 				let name_match = /(image|sprite)\/(image|sprite)_([0-9]+)/.exec(x_DOMSymbolInstance.attribute.libraryItemName);
 				if (name_match === null) {
-					throw new MyError(`invalid name`);
+					throw new Error(`invalid name`);
 				}
 				if (name_match[1] !== name_match[2]) {
-					throw new MyError(`invalid name x`);
+					throw new Error(`invalid name x`);
 				}
 				let current_instance = {
 					resource: BigInt(name_match[3]) - 1n,
@@ -231,12 +231,12 @@ namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.To {
 						let x_matrix = x_matrix_list[0];
 						let x_Matrix_list = XML.find_child_element(x_matrix, 'Matrix');
 						if (x_Matrix_list.length !== 1) {
-							throw new MyError(``);
+							throw new Error(``);
 						}
 						let x_Matrix = x_Matrix_list[0];
 						transform = comput_variant_transform_from_standard(parse_transform(x_Matrix));
 					} else {
-						throw new MyError(``);
+						throw new Error(``);
 					}
 				}
 				{
@@ -247,12 +247,12 @@ namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.To {
 						let x_color = x_color_list[0];
 						let x_Color_list = XML.find_child_element(x_color, 'Color');
 						if (x_Color_list.length !== 1) {
-							throw new MyError(``);
+							throw new Error(``);
 						}
 						let x_Color = x_Color_list[0];
 						color = parse_color(x_Color);
 					} else {
-						throw new MyError(``);
+						throw new Error(``);
 					}
 				}
 				let target_frame = get_frame_at(Number(frame_index));
@@ -275,7 +275,7 @@ namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.To {
 					++layer_count;
 				} else {
 					if (current_instance.resource !== model.resource || current_instance.sprite !== model.sprite) {
-						throw new MyError(``);
+						throw new Error(``);
 					}
 				}
 				model.frame_start = frame_index;
@@ -314,12 +314,12 @@ namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.To {
 	): Core.Tool.PopCap.PAM.Manifest.JS_N.Animation {
 		let x_DOMDocument = flash.document;
 		if (x_DOMDocument.name !== 'DOMDocument') {
-			throw new MyError(``);
+			throw new Error(``);
 		}
 		{
 			let x_media_list = XML.find_child_element(x_DOMDocument, 'media');
 			if (x_media_list.length !== 1) {
-				throw new MyError(``);
+				throw new Error(``);
 			}
 			let x_media = x_media_list[0];
 			let x_DOMBitmapItem_list = XML.find_child_element(x_media, 'DOMBitmapItem');
@@ -327,7 +327,7 @@ namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.To {
 		{
 			let x_symbols_list = XML.find_child_element(x_DOMDocument, 'symbols');
 			if (x_symbols_list.length !== 1) {
-				throw new MyError(``);
+				throw new Error(``);
 			}
 			let x_symbols = x_symbols_list[0];
 			let x_Include_list = XML.find_child_element(x_symbols, 'Include');
@@ -336,31 +336,31 @@ namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.To {
 		{
 			let x_timelines_list = XML.find_child_element(x_DOMDocument, 'timelines');
 			if (x_timelines_list.length !== 1) {
-				throw new MyError(``);
+				throw new Error(``);
 			}
 			let x_timelines = x_timelines_list[0];
 			let x_DOMTimeline_list = XML.find_child_element(x_timelines, 'DOMTimeline');
 			if (x_DOMTimeline_list.length !== 1) {
-				throw new MyError(``);
+				throw new Error(``);
 			}
 			let x_DOMTimeline = x_DOMTimeline_list[0];
 			if (x_DOMTimeline.attribute.name !== 'animation') {
-				throw new MyError(``);
+				throw new Error(``);
 			}
 			let x_layers_list = XML.find_child_element(x_DOMTimeline, 'layers');
 			if (x_layers_list.length !== 1) {
-				throw new MyError(``);
+				throw new Error(``);
 			}
 			let x_layers = x_layers_list[0];
 			let x_DOMLayer_list = XML.find_child_element(x_layers, 'DOMLayer');
 			if (x_DOMLayer_list.length !== 3) {
-				throw new MyError(``);
+				throw new Error(``);
 			}
 			{
 				let x_DOMLayer_flow = x_DOMLayer_list[0];
 				let x_frames_list = XML.find_child_element(x_DOMLayer_flow, 'frames');
 				if (x_frames_list.length !== 1) {
-					throw new MyError(``);
+					throw new Error(``);
 				}
 				let x_frames = x_frames_list[0];
 				let x_DOMFrame_list = XML.find_child_element(x_frames, 'DOMFrame');
@@ -368,7 +368,7 @@ namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.To {
 					let frame_index = Number(x_DOMFrame.attribute.index);
 					if (x_DOMFrame.attribute.name !== undefined) {
 						if (x_DOMFrame.attribute.labelType !== 'name') {
-							throw new MyError(``);
+							throw new Error(``);
 						}
 						main_sprite_frame[frame_index].label = x_DOMFrame.attribute.name;
 					}
@@ -377,26 +377,26 @@ namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.To {
 						return;
 					}
 					if (x_Actionscript_list.length !== 1) {
-						throw new MyError(``);
+						throw new Error(``);
 					}
 					let x_Actionscript = x_Actionscript_list[0];
 					if (x_Actionscript.child.length !== 1) {
-						throw new MyError(``);
+						throw new Error(``);
 					}
 					let x_script_list = XML.find_child_element(x_Actionscript, 'script');
 					if (x_script_list.length !== 1) {
-						throw new MyError(``);
+						throw new Error(``);
 					}
 					let x_script = x_script_list[0];
 					if (x_script.child.length !== 1) {
-						throw new MyError(``);
+						throw new Error(``);
 					}
 					let x_script_text = x_script.child[0];
 					if (x_script_text.type !== 'text') {
-						throw new MyError(``);
+						throw new Error(``);
 					}
 					if (x_script_text.value.value.trim() !== 'stop();') {
-						throw new MyError(``);
+						throw new Error(``);
 					}
 					main_sprite_frame[frame_index].stop = true;
 				});
@@ -405,7 +405,7 @@ namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.To {
 				let x_DOMLayer_command = x_DOMLayer_list[1];
 				let x_frames_list = XML.find_child_element(x_DOMLayer_command, 'frames');
 				if (x_frames_list.length !== 1) {
-					throw new MyError(``);
+					throw new Error(``);
 				}
 				let x_frames = x_frames_list[0];
 				let x_DOMFrame_list = XML.find_child_element(x_frames, 'DOMFrame');
@@ -416,29 +416,29 @@ namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.To {
 						return;
 					}
 					if (x_Actionscript_list.length !== 1) {
-						throw new MyError(``);
+						throw new Error(``);
 					}
 					let x_Actionscript = x_Actionscript_list[0];
 					if (x_Actionscript.child.length !== 1) {
-						throw new MyError(``);
+						throw new Error(``);
 					}
 					let x_script_list = XML.find_child_element(x_Actionscript, 'script');
 					if (x_script_list.length !== 1) {
-						throw new MyError(``);
+						throw new Error(``);
 					}
 					let x_script = x_script_list[0];
 					if (x_script.child.length !== 1) {
-						throw new MyError(``);
+						throw new Error(``);
 					}
 					let x_script_text = x_script.child[0];
 					if (x_script_text.type !== 'text') {
-						throw new MyError(``);
+						throw new Error(``);
 					}
 					let command_string = x_script_text.value.value.trim().split('\n');
 					for (let e of command_string) {
 						let regex_result = /fscommand\("(.*)", "(.*)"\);/.exec(e.trim());
 						if (regex_result === null) {
-							throw new MyError('invalid command string');
+							throw new Error('invalid command string');
 						}
 						main_sprite_frame[frame_index].command.push([
 							regex_result[1],

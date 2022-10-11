@@ -29,7 +29,7 @@ namespace TwinKleS.Support.PvZ2.LawnStringText {
 				let source = CoreX.JSON.read(source_data).value as any;
 				let source_variant = source?.objects[0]?.objdata?.LocStringValues;
 				if (typeof source_variant !== 'object') {
-					throw new MyError(`invalid source`);
+					throw new Error(`invalid source`);
 				}
 				if (source_variant instanceof Array) {
 					source_list = source_variant;
@@ -64,12 +64,12 @@ namespace TwinKleS.Support.PvZ2.LawnStringText {
 					let source = CoreX.JSON.read(source_data).value as any;
 					source_map = source?.objects[0]?.objdata?.LocStringValues as Record<string, string>;
 					if (typeof source_map !== 'object' || source_map instanceof Array) {
-						throw new MyError(`invalid source`);
+						throw new Error(`invalid source`);
 					}
 				}
 				for (let key in source_map) {
 					if (typeof source_map[key] !== 'string') {
-						throw new MyError(`invalid map element`);
+						throw new Error(`invalid map element`);
 					}
 					string_map[key] = source_map[key];
 				}
@@ -80,17 +80,17 @@ namespace TwinKleS.Support.PvZ2.LawnStringText {
 					let source = CoreX.JSON.read(source_data).value as any;
 					source_list = source?.objects[0]?.objdata?.LocStringValues as Array<string>;
 					if (typeof source_list !== 'object' || !(source_list instanceof Array)) {
-						throw new MyError(`invalid source`);
+						throw new Error(`invalid source`);
 					}
 				}
 				if (source_list.length % 2 !== 0) {
-					throw new MyError(`invalid list size`);
+					throw new Error(`invalid list size`);
 				}
 				for (let i = 0; i < source_list.length; i += 2) {
 					let key = source_list[i + 0];
 					let value = source_list[i + 1];
 					if (typeof key !== 'string' || typeof value !== 'string') {
-						throw new MyError(`invalid list element`);
+						throw new Error(`invalid list element`);
 					}
 					string_map[source_list[i]] = source_list[i + 1];
 				}

@@ -24,6 +24,7 @@ add_executable(
 	./library/dynamic_library.hpp
 	./host/host.hpp
 	./host/cli_host.hpp
+	./launch.hpp
 	./main.cpp
 	${M_this_special_file}
 )

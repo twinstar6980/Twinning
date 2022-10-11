@@ -292,7 +292,7 @@ namespace TwinKleS::WindowsExplorerExtension {
 					.name = L"自动打包",
 					.type = true,
 					.rule = std::nullopt,
-					.method = L"marmalade.dzip.auto_pack",
+					.method = L"marmalade.dzip.pack_auto",
 					.argument = LR"({})",
 				},
 			},
@@ -719,7 +719,7 @@ namespace TwinKleS::WindowsExplorerExtension {
 					.name = L"自动打包",
 					.type = true,
 					.rule = std::nullopt,
-					.method = L"popcap.pak.auto_pack",
+					.method = L"popcap.pak.pack_auto",
 					.argument = LR"({})",
 				},
 				{

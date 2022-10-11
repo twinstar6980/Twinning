@@ -11,7 +11,7 @@ namespace TwinKleS::Shell {
 	class CLIHost :
 		public Host {
 
-	private: //
+	protected: //
 
 		bool m_running;
 
@@ -26,9 +26,7 @@ namespace TwinKleS::Shell {
 		// ----------------
 
 		CLIHost (
-		):
-			m_running{false} {
-		}
+		) = delete;
 
 		CLIHost (
 			CLIHost const & that
@@ -37,6 +35,14 @@ namespace TwinKleS::Shell {
 		CLIHost (
 			CLIHost && that
 		) = delete;
+
+		// ----------------
+
+		explicit CLIHost (
+			std::nullptr_t _
+		):
+			m_running{false} {
+		}
 
 		#pragma endregion
 
@@ -54,21 +60,16 @@ namespace TwinKleS::Shell {
 
 		#pragma region life-time
 
-		virtual auto running (
-		) -> bool override {
-			return thiz.m_running;
-		}
-
 		virtual auto start (
 		) -> void override {
-			assert_condition(!thiz.running());
+			assert_condition(!thiz.m_running);
 			thiz.m_running = true;
 			return;
 		}
 
 		virtual auto finish (
 		) -> void override {
-			assert_condition(thiz.running());
+			assert_condition(thiz.m_running);
 			thiz.m_running = false;
 			return;
 		}
@@ -80,6 +81,7 @@ namespace TwinKleS::Shell {
 		virtual auto callback (
 			std::vector<std::string> const & argument
 		) -> std::vector<std::string> override {
+			assert_condition(thiz.m_running);
 			auto result = std::vector<std::string>{};
 			auto method = argument[0];
 			switch (hash_string(method)) {

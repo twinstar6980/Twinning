@@ -93,7 +93,7 @@ namespace TwinKleS::WindowsExplorerExtension {
 				if (selection) {
 					auto path_list = get_selection_path(selection);
 					parameter.reserve(2 + 1 + 2 + k_launch_file.size() + 2 + path_list.size() * 256);
-					parameter.append(L"/K ");
+					parameter.append(L"/C ");
 					parameter.append(1, L'"');
 					parameter.append(1, L'"');
 					parameter.append(k_launch_file);

@@ -18,30 +18,37 @@ namespace TwinKleS.Entry.method.image.atlas {
 				id: 'image.atlas.pack',
 				description: 'Atlas 打包',
 				worker(a: Entry.CFSA & {
-					manifest_file: string;
-					sprite_directory: string | '?default' | '?input';
-					atlas_file: string | '?default' | '?input';
+					manifest_file: Argument.Require<string>;
+					sprite_directory: Argument.Request<string, true>;
+					atlas_file: Argument.Request<string, true>;
 				}) {
 					let manifest_file: string;
 					let sprite_directory: string;
 					let atlas_file: string;
 					{
-						manifest_file = a.manifest_file;
-						sprite_directory = ArgumentParser.path(a.sprite_directory, {
-							input_message: '请输入输入路径',
-							default_value: manifest_file.replace(/((\.atlas)(\.json))?$/i, '.sprite'),
-							must_exist: true,
-							type: 'directory',
-						});
-						atlas_file = ArgumentParser.path(a.atlas_file, {
-							input_message: '请输入输出路径',
-							default_value: manifest_file.replace(/((\.atlas)(\.json))?$/i, '.png'),
-							must_exist: false,
-							if_exist: a.fs_if_exist,
-						});
+						manifest_file = Argument.require(
+							'清单文件', '',
+							a.manifest_file,
+							(value) => (value),
+							(value) => (CoreX.FileSystem.exist_file(value)),
+						);
+						sprite_directory = Argument.request(
+							'精灵目录', '',
+							a.sprite_directory,
+							(value) => (value),
+							() => (manifest_file.replace(/((\.atlas)(\.json))?$/i, '.sprite')),
+							...Argument.requester_for_path('directory', [true]),
+						);
+						atlas_file = Argument.request(
+							'图集文件', '',
+							a.atlas_file,
+							(value) => (value),
+							() => (manifest_file.replace(/((\.atlas)(\.json))?$/i, '.png')),
+							...Argument.requester_for_path('file', [false, a.fs_tactic_if_exist]),
+						);
 					}
 					Support.Atlas.Pack.pack_fs(manifest_file, atlas_file, sprite_directory);
-					Console.notify('s', `输出路径：${atlas_file}`, []);
+					Console.notify('s', `执行成功`, [`${atlas_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -56,30 +63,37 @@ namespace TwinKleS.Entry.method.image.atlas {
 				id: 'image.atlas.unpack',
 				description: 'Atlas 解包',
 				worker(a: Entry.CFSA & {
-					manifest_file: string;
-					atlas_file: string | '?default' | '?input';
-					sprite_directory: string | '?default' | '?input';
+					manifest_file: Argument.Require<string>;
+					atlas_file: Argument.Request<string, true>;
+					sprite_directory: Argument.Request<string, true>;
 				}) {
 					let manifest_file: string;
 					let atlas_file: string;
 					let sprite_directory: string;
 					{
-						manifest_file = a.manifest_file;
-						atlas_file = ArgumentParser.path(a.atlas_file, {
-							input_message: '请输入输入路径',
-							default_value: manifest_file.replace(/((\.atlas)(\.json))?$/i, '.png'),
-							must_exist: true,
-							type: 'file',
-						});
-						sprite_directory = ArgumentParser.path(a.sprite_directory, {
-							input_message: '请输入输出路径',
-							default_value: manifest_file.replace(/((\.atlas)(\.json))?$/i, '.sprite'),
-							must_exist: false,
-							if_exist: a.fs_if_exist,
-						});
+						manifest_file = Argument.require(
+							'清单文件', '',
+							a.manifest_file,
+							(value) => (value),
+							(value) => (CoreX.FileSystem.exist_file(value)),
+						);
+						atlas_file = Argument.request(
+							'图集文件', '',
+							a.atlas_file,
+							(value) => (value),
+							() => (manifest_file.replace(/((\.atlas)(\.json))?$/i, '.png')),
+							...Argument.requester_for_path('file', [true]),
+						);
+						sprite_directory = Argument.request(
+							'精灵目录', '',
+							a.sprite_directory,
+							(value) => (value),
+							() => (manifest_file.replace(/((\.atlas)(\.json))?$/i, '.sprite')),
+							...Argument.requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+						);
 					}
 					Support.Atlas.Pack.unpack_fs(manifest_file, atlas_file, sprite_directory);
-					Console.notify('s', `输出路径：${sprite_directory}`, []);
+					Console.notify('s', `执行成功`, [`${sprite_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -94,30 +108,37 @@ namespace TwinKleS.Entry.method.image.atlas {
 				id: 'image.atlas.pack_auto',
 				description: 'Atlas 自动打包',
 				worker(a: Entry.CFSA & {
-					sprite_directory: string;
-					manifest_file: string | '?default' | '?input';
-					atlas_file: string | '?default' | '?input';
+					sprite_directory: Argument.Require<string>;
+					manifest_file: Argument.Request<string, true>;
+					atlas_file: Argument.Request<string, true>;
 				}) {
 					let sprite_directory: string;
 					let manifest_file: string;
 					let atlas_file: string;
 					{
-						sprite_directory = a.sprite_directory;
-						manifest_file = ArgumentParser.path(a.manifest_file, {
-							input_message: '请输入输出路径',
-							default_value: sprite_directory.replace(/((\.sprite))?$/i, '.atlas.json'),
-							must_exist: false,
-							if_exist: a.fs_if_exist,
-						});
-						atlas_file = ArgumentParser.path(a.atlas_file, {
-							input_message: '请输入输出路径',
-							default_value: sprite_directory.replace(/((\.sprite))?$/i, '.png'),
-							must_exist: false,
-							if_exist: a.fs_if_exist,
-						});
+						sprite_directory = Argument.require(
+							'精灵目录', '',
+							a.sprite_directory,
+							(value) => (value),
+							(value) => (CoreX.FileSystem.exist_directory(value)),
+						);
+						manifest_file = Argument.request(
+							'清单文件', '',
+							a.manifest_file,
+							(value) => (value),
+							() => (sprite_directory.replace(/((\.sprite))?$/i, '.atlas.json')),
+							...Argument.requester_for_path('file', [false, a.fs_tactic_if_exist]),
+						);
+						atlas_file = Argument.request(
+							'图集文件', '',
+							a.atlas_file,
+							(value) => (value),
+							() => (sprite_directory.replace(/((\.sprite))?$/i, '.png')),
+							...Argument.requester_for_path('file', [false, a.fs_tactic_if_exist]),
+						);
 					}
 					Support.Atlas.Pack.pack_auto_fs(manifest_file, atlas_file, sprite_directory);
-					Console.notify('s', `输出路径：${atlas_file}`, []);
+					Console.notify('s', `执行成功`, [`${atlas_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

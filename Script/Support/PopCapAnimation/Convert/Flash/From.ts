@@ -8,7 +8,7 @@ namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.From {
 		image: Core.Tool.PopCap.PAM.Manifest.JS_N.Image,
 	): Core.XML.JS_Element {
 		if (image.transform.length !== 6) {
-			throw new MyError('');
+			throw new Error('');
 		}
 		return XML.create_element('DOMSymbolItem', {
 			...k_xmlns_attribute,
@@ -194,7 +194,7 @@ namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.From {
 		animation: Core.Tool.PopCap.PAM.Manifest.JS_N.Animation,
 	): Core.XML.JS_Element {
 		if (animation.main_sprite == null) {
-			throw new MyError('');
+			throw new Error('');
 		}
 		let prev_end = {
 			flow: -1,
@@ -348,7 +348,7 @@ namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.From {
 		animation: Core.Tool.PopCap.PAM.Manifest.JS_N.Animation,
 	): FlashPackage {
 		if (animation.main_sprite == null) {
-			throw new MyError('');
+			throw new Error('');
 		}
 		return {
 			extra: {

@@ -16,14 +16,19 @@ namespace TwinKleS.Entry.method.data.hash {
 				id: 'data.hash.md5',
 				description: 'MD5 哈希',
 				worker(a: Entry.CFSA & {
-					file: string;
+					file: Argument.Require<string>;
 				}) {
 					let file: string;
 					{
-						file = a.file;
+						file = Argument.require(
+							'文件', '',
+							a.file,
+							(value) => (value),
+							(value) => (CoreX.FileSystem.exist_file(value)),
+						);
 					}
 					let result = CoreX.Tool.Data.Hash.MD5.hash_fs(file);
-					Console.notify('s', `MD5：${result}`, []);
+					Console.notify('s', `执行成功`, [`${result}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

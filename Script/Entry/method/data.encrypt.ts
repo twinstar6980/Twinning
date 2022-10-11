@@ -1,5 +1,7 @@
 /**
  * + data.encrypt.xor.crypt XOR 加解密
+ * + data.encrypt.rijndael.encrypt Rijndael 加密
+ * + data.encrypt.rijndael.decrypt Rijndael 解密
  */
 namespace TwinKleS.Entry.method.data.encrypt {
 
@@ -16,30 +18,38 @@ namespace TwinKleS.Entry.method.data.encrypt {
 				id: 'data.encrypt.xor.crypt',
 				description: 'XOR 加解密',
 				worker(a: Entry.CFSA & {
-					plain_file: string;
-					cipher_file: string | '?default' | '?input';
-					key: bigint | '?input';
+					plain_file: Argument.Require<string>;
+					cipher_file: Argument.Request<string, true>;
+					key: Argument.Request<bigint, false>;
 				}) {
 					let plain_file: string;
 					let cipher_file: string;
 					let key: bigint;
 					{
-						plain_file = a.plain_file;
-						cipher_file = ArgumentParser.path(a.cipher_file, {
-							input_message: '请输入输出路径',
-							default_value: plain_file.replace(/()?$/i, '.bin'),
-							must_exist: false,
-							if_exist: a.fs_if_exist,
-						});
-						if (a.key === '?input') {
-							Console.notify('i', `请输入密钥（八位无符号整数）`, []);
-							key = Console.integer((value) => ((value >= 0x00n && value <= 0xFFn) ? null : `必须为八位无符号整数`))!;
-						} else {
-							key = a.key;
-						}
+						plain_file = Argument.require(
+							'明文文件', '',
+							a.plain_file,
+							(value) => (value),
+							(value) => (CoreX.FileSystem.exist_file(value)),
+						);
+						cipher_file = Argument.request(
+							'密文文件', '',
+							a.cipher_file,
+							(value) => (value),
+							() => (plain_file.replace(/()?$/i, '.bin')),
+							...Argument.requester_for_path('file', [false, a.fs_tactic_if_exist]),
+						);
+						key = Argument.request(
+							'密钥', '',
+							a.key,
+							(value) => (value),
+							null,
+							() => (Console.integer(null)),
+							(value) => (0x00n <= value && value <= 0xFFn ? null : `范围溢出`),
+						);
 					}
 					CoreX.Tool.Data.Encrypt.XOR.crypt_fs(plain_file, cipher_file, key);
-					Console.notify('s', `输出路径：${cipher_file}`, []);
+					Console.notify('s', `执行成功`, [`${cipher_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -54,58 +64,72 @@ namespace TwinKleS.Entry.method.data.encrypt {
 				id: 'data.encrypt.rijndael.encrypt',
 				description: 'Rijndael 加密',
 				worker(a: Entry.CFSA & {
-					plain_file: string;
-					cipher_file: string | '?default' | '?input';
-					mode: string | '?input';
-					block_size: bigint | '?input';
-					key: string | '?input';
-					iv: string | '?input';
+					plain_file: Argument.Require<string>;
+					cipher_file: Argument.Request<string, true>;
+					mode: Argument.Request<string, false>;
+					block_size: Argument.Request<bigint, false>;
+					key: Argument.Request<string, false>;
+					iv: Argument.Request<string, false>;
 				}) {
 					let plain_file: string;
 					let cipher_file: string;
-					let mode: Core.Tool.Data.Encrypt.Rijndael.JS_Mode;
-					let block_size: bigint;
+					let mode: CoreX.Tool.Data.Encrypt.Rijndael.Mode;
+					let block_size: CoreX.Tool.Data.Encrypt.Rijndael.BlockSize;
 					let key: string;
 					let iv: string;
 					{
-						plain_file = a.plain_file;
-						cipher_file = ArgumentParser.path(a.cipher_file, {
-							input_message: '请输入输出路径',
-							default_value: plain_file.replace(/()?$/i, '.bin'),
-							must_exist: false,
-							if_exist: a.fs_if_exist,
-						});
-						if (a.mode === '?input') {
-							Console.notify('i', `请选择算法模式（ecb、cbc、cfb）`, []);
-							mode = Console.string(Check.enum_checkerx(['ecb', 'cbc', 'cfb']))! as any;
-						} else {
-							mode = a.mode as any;
-						}
-						if (a.block_size === '?input') {
-							Console.notify('i', `请输入块大小（16、24、32）`, []);
-							block_size = Console.integer(Check.enum_checkerx([16n, 24n, 32n]))!;
-						} else {
-							block_size = a.block_size;
-						}
-						if (a.key === '?input') {
-							Console.notify('i', `请输入密钥（长度为16、24、32）`, []);
-							key = Console.string((value) => ((value.length === 16 || value.length === 24 || value.length === 32) ? null : `长度必须为16、24、32`))!;
-						} else {
-							key = a.key;
-						}
+						plain_file = Argument.require(
+							'明文文件', '',
+							a.plain_file,
+							(value) => (value),
+							(value) => (CoreX.FileSystem.exist_file(value)),
+						);
+						cipher_file = Argument.request(
+							'密文文件', '',
+							a.cipher_file,
+							(value) => (value),
+							() => (plain_file.replace(/()?$/i, '.bin')),
+							...Argument.requester_for_path('file', [false, a.fs_tactic_if_exist]),
+						);
+						mode = Argument.request(
+							'算法模式', '',
+							a.mode,
+							(value) => (value),
+							null,
+							() => (Console.option(CoreX.Tool.Data.Encrypt.Rijndael.ModeE.map((e) => ([e])), null)),
+							(value) => (CoreX.Tool.Data.Encrypt.Rijndael.ModeE.includes(value as any) ? null : `选项非法`),
+						);
+						block_size = Argument.request(
+							'块大小', '',
+							a.block_size,
+							(value) => (value),
+							null,
+							() => (Console.option(CoreX.Tool.Data.Encrypt.Rijndael.BlockSizeE.map((e) => ([e])), null)),
+							(value) => (CoreX.Tool.Data.Encrypt.Rijndael.BlockSizeE.includes(value as any) ? null : `选项非法`),
+						);
+						key = Argument.request(
+							'密钥', '',
+							a.key,
+							(value) => (value),
+							null,
+							() => (Console.string(null)),
+							(value) => (CoreX.Tool.Data.Encrypt.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : `密钥长度非法`),
+						);
 						if (mode === 'cbc' || mode === 'cfb') {
-							if (a.iv === '?input') {
-								Console.notify('i', `请输入初始向量（长度与块大小相同）`, []);
-								iv = Console.string((value) => ((value.length === Number(block_size)) ? null : `长度必须与块大小相同`))!;
-							} else {
-								iv = a.iv;
-							}
+							iv = Argument.request(
+								'初始向量', '',
+								a.iv,
+								(value) => (value),
+								null,
+								() => (Console.string(null)),
+								(value) => (value.length === Number(block_size) ? null : `长度不匹配`),
+							);
 						} else {
 							iv = '';
 						}
 					}
-					CoreX.Tool.Data.Encrypt.Rijndael.encrypt_fs(plain_file, cipher_file, mode, block_size, BigInt(key.length), key, iv);
-					Console.notify('s', `输出路径：${cipher_file}`, []);
+					CoreX.Tool.Data.Encrypt.Rijndael.encrypt_fs(plain_file, cipher_file, mode, block_size, BigInt(key.length) as CoreX.Tool.Data.Encrypt.Rijndael.BlockSize, key, iv);
+					Console.notify('s', `执行成功`, [`${cipher_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -123,58 +147,72 @@ namespace TwinKleS.Entry.method.data.encrypt {
 				id: 'data.encrypt.rijndael.decrypt',
 				description: 'Rijndael 解密',
 				worker(a: Entry.CFSA & {
-					cipher_file: string;
-					plain_file: string | '?default' | '?input';
-					mode: string | '?input';
-					block_size: bigint | '?input';
-					key: string | '?input';
-					iv: string | '?input';
+					cipher_file: Argument.Require<string>;
+					plain_file: Argument.Request<string, true>;
+					mode: Argument.Request<string, false>;
+					block_size: Argument.Request<bigint, false>;
+					key: Argument.Request<string, false>;
+					iv: Argument.Request<string, false>;
 				}) {
 					let cipher_file: string;
 					let plain_file: string;
-					let mode: Core.Tool.Data.Encrypt.Rijndael.JS_Mode;
-					let block_size: bigint;
+					let mode: CoreX.Tool.Data.Encrypt.Rijndael.Mode;
+					let block_size: CoreX.Tool.Data.Encrypt.Rijndael.BlockSize;
 					let key: string;
 					let iv: string;
 					{
-						cipher_file = a.cipher_file;
-						plain_file = ArgumentParser.path(a.plain_file, {
-							input_message: '请输入输出路径',
-							default_value: cipher_file.replace(/((\.rton))?$/i, '.bin'),
-							must_exist: false,
-							if_exist: a.fs_if_exist,
-						});
-						if (a.mode === '?input') {
-							Console.notify('i', `请选择算法模式（ecb、cbc、cfb）`, []);
-							mode = Console.string(Check.enum_checkerx(['ecb', 'cbc', 'cfb']))! as any;
-						} else {
-							mode = a.mode as any;
-						}
-						if (a.block_size === '?input') {
-							Console.notify('i', `请输入块大小（16、24、32）`, []);
-							block_size = Console.integer(Check.enum_checkerx([16n, 24n, 32n]))!;
-						} else {
-							block_size = a.block_size;
-						}
-						if (a.key === '?input') {
-							Console.notify('i', `请输入密钥（长度为16、24、32）`, []);
-							key = Console.string((value) => ((value.length === 16 || value.length === 24 || value.length === 32) ? null : `长度必须为16、24、32`))!;
-						} else {
-							key = a.key;
-						}
+						cipher_file = Argument.require(
+							'密文文件', '',
+							a.cipher_file,
+							(value) => (value),
+							(value) => (CoreX.FileSystem.exist_file(value)),
+						);
+						plain_file = Argument.request(
+							'明文文件', '',
+							a.plain_file,
+							(value) => (value),
+							() => (cipher_file.replace(/()?$/i, '.bin')),
+							...Argument.requester_for_path('file', [false, a.fs_tactic_if_exist]),
+						);
+						mode = Argument.request(
+							'算法模式', '',
+							a.mode,
+							(value) => (value),
+							null,
+							() => (Console.option(CoreX.Tool.Data.Encrypt.Rijndael.ModeE.map((e) => ([e])), null)),
+							(value) => (CoreX.Tool.Data.Encrypt.Rijndael.ModeE.includes(value as any) ? null : `选项非法`),
+						);
+						block_size = Argument.request(
+							'块大小', '',
+							a.block_size,
+							(value) => (value),
+							null,
+							() => (Console.option(CoreX.Tool.Data.Encrypt.Rijndael.BlockSizeE.map((e) => ([e])), null)),
+							(value) => (CoreX.Tool.Data.Encrypt.Rijndael.BlockSizeE.includes(value as any) ? null : `选项非法`),
+						);
+						key = Argument.request(
+							'密钥', '',
+							a.key,
+							(value) => (value),
+							null,
+							() => (Console.string(null)),
+							(value) => (CoreX.Tool.Data.Encrypt.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : `密钥长度非法`),
+						);
 						if (mode === 'cbc' || mode === 'cfb') {
-							if (a.iv === '?input') {
-								Console.notify('i', `请输入初始向量（长度与块大小相同）`, []);
-								iv = Console.string((value) => ((value.length === Number(block_size)) ? null : `长度必须与块大小相同`))!;
-							} else {
-								iv = a.iv;
-							}
+							iv = Argument.request(
+								'初始向量', '',
+								a.iv,
+								(value) => (value),
+								null,
+								() => (Console.string(null)),
+								(value) => (value.length === Number(block_size) ? null : `长度不匹配`),
+							);
 						} else {
 							iv = '';
 						}
 					}
-					CoreX.Tool.Data.Encrypt.Rijndael.decrypt_fs(cipher_file, plain_file, mode, block_size, BigInt(key.length), key, iv);
-					Console.notify('s', `输出路径：${cipher_file}`, []);
+					CoreX.Tool.Data.Encrypt.Rijndael.decrypt_fs(cipher_file, plain_file, mode, block_size, BigInt(key.length) as CoreX.Tool.Data.Encrypt.Rijndael.BlockSize, key, iv);
+					Console.notify('s', `执行成功`, [`${plain_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

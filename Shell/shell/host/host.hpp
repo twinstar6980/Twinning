@@ -1,7 +1,6 @@
 #pragma once
 
 #include "shell/base.hpp"
-#include "shell/library/library.hpp"
 
 namespace TwinKleS::Shell {
 
@@ -45,9 +44,6 @@ namespace TwinKleS::Shell {
 
 		#pragma region life-time
 
-		virtual auto running (
-		) -> bool = 0;
-
 		virtual auto start (
 		) -> void = 0;
 
@@ -89,57 +85,6 @@ namespace TwinKleS::Shell {
 		#pragma endregion
 
 	};
-
-	#pragma endregion
-
-	#pragma region function
-
-	inline auto execute_on_host (
-		Host &                           host,
-		Library &                        library,
-		std::string const &              script,
-		bool const &                     script_is_path,
-		std::vector<std::string> const & argument
-	) -> std::optional<std::string> {
-		static auto host_manager = std::unordered_map<std::thread::id, Host *>{};
-		// host manager
-		auto force_exit_before_execute = false;
-		auto result = std::optional<std::string>{};
-		auto work_thread = std::thread{
-			[&] {
-				while (!force_exit_before_execute && !host.running()) {
-					std::this_thread::yield();
-				}
-				if (!force_exit_before_execute) {
-					// TODO : RAII wrapper
-					auto thread_id = std::this_thread::get_id();
-					host_manager.emplace(thread_id, &host);
-					result = library.wrapped_execute(
-						script,
-						script_is_path,
-						argument,
-						[] (
-						Core::StringList const & argument
-					) -> Core::StringList const& {
-							auto & host = *host_manager[std::this_thread::get_id()];
-							return host.wrapped_callback(argument);
-						}
-					);
-					host_manager.erase(thread_id);
-					host.finish();
-				}
-			}
-		};
-		try {
-			host.start();
-		} catch (...) {
-			force_exit_before_execute = true;
-			work_thread.join();
-			throw;
-		}
-		work_thread.join();
-		return result;
-	}
 
 	#pragma endregion
 

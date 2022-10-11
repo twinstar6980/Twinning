@@ -59,7 +59,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 			subgroup: [string, ResourceManifest.Subgroup, Core.Tool.PopCap.RSB.Manifest.JS_N.Subgroup],
 			resource: [string, ResourceManifest.Resource, Core.Tool.PopCap.RSB.Manifest.JS_N.Resource],
 		) => void): void => {
-			let group_progress = new TextGenerator.Progress('fraction', 40, Object.keys(package_manifest.group).length);
+			let group_progress = new TextGenerator.Progress('fraction', false, 40, Object.keys(package_manifest.group).length);
 			for (let group_id in package_manifest.group) {
 				group_progress.increase();
 				if (show_group_progress) {
@@ -71,13 +71,13 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 				let package_group = package_manifest.group[group_id];
 				let group = resource_manifest.group[group_id];
 				if (group === undefined) {
-					throw new MyError(`group not found in resource manifest : ${group_id}`);
+					throw new Error(`group not found in resource manifest : ${group_id}`);
 				}
 				for (let subgroup_id in package_group.subgroup) {
 					let package_subgroup = package_group.subgroup[subgroup_id];
 					let subgroup = group.subgroup[subgroup_id];
 					if (subgroup === undefined) {
-						throw new MyError(`subgroup not found in resource manifest : ${subgroup_id}`);
+						throw new Error(`subgroup not found in resource manifest : ${subgroup_id}`);
 					}
 					for (let package_resource_path in package_subgroup.resource) {
 						let package_resource = package_subgroup.resource[package_resource_path];
@@ -95,7 +95,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 							}
 						}
 						if (resource === null) {
-							throw new MyError(`resource not found in resource manifest : ${package_resource_path}`);
+							throw new Error(`resource not found in resource manifest : ${package_resource_path}`);
 						}
 						work(
 							[group_id, group, package_group],
@@ -108,7 +108,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 			return;
 		};
 		{
-			Console.notify('i', `恢复文件路径大小写...`, []);
+			Console.notify('i', `恢复文件路径大小写 ...`, []);
 			let resource_path_list: Array<string> = [];
 			iterate_manifest(false)((group, subgroup, resource) => {
 				resource_path_list.push(`${resource[1].path}${(resource[1].expand[0] === 'atlas' ? '.ptx' : '')}`);
@@ -118,7 +118,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 				tree: PathUtility.Tree,
 			) => {
 				for (let name in tree) {
-					CoreX.FileSystem.rename(`${parent}/${name}`, `${parent}/${name}`);
+					CoreX.FileSystem.rename(`${parent}/${name.toUpperCase()}`, `${parent}/${name}`);
 					if (tree[name] !== null) {
 						rename_tree(`${parent}/${name}`, tree[name]!);
 					}
@@ -127,7 +127,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 			let resource_path_tree = PathUtility.to_tree(resource_path_list);
 			rename_tree(resource_directory, resource_path_tree);
 		}
-		Console.notify('i', `提取资源...`, []);
+		Console.notify('i', `提取资源 ...`, []);
 		iterate_manifest(true)((group, subgroup, resource) => {
 			let path = resource[1].path;
 			if (option.json !== null && path.endsWith('.rton')) {
@@ -146,18 +146,17 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 						);
 					}
 				} catch (e: any) {
-					Console.notify('e', `解码失败`, []);
-					Console.notify('e', `${e}`, []);
+					Console.notify_error(e);
 				}
 			}
 			if (option.image !== null && resource[1].expand[0] === 'atlas') {
 				Console.notify('v', `  ${path}`, []);
 				try {
 					if (!(option.image !== null && resource[1].expand[0] === 'atlas')) {
-						throw new MyError(`NEVER`);
+						throw new Error(`NEVER`);
 					}
 					if (resource[2].additional.type !== 'texture') {
-						throw new MyError(`invalid image resource`);
+						throw new Error(`invalid image resource`);
 					}
 					let atlas_image_information = resource[1].expand[1];
 					let texture_information_source = resource[2].additional.value;
@@ -165,7 +164,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 					let actual_size = texture_information_source.size;
 					let texture_format = option.image.texture_format_map.find((e) => (e.index === texture_information_source.format));
 					if (texture_format === undefined) {
-						throw new MyError(`unknown texture format : ${texture_information_source.format}`);
+						throw new Error(`unknown texture format : ${texture_information_source.format}`);
 					}
 					Console.notify('v', `    size : [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] , actual_size : [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ] , format : ${texture_format.format}`, [], false);
 					let data = CoreX.FileSystem.read_file(`${resource_directory}/${path}.ptx`);
@@ -187,8 +186,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 						}, image_view, option.image.directory);
 					}
 				} catch (e: any) {
-					Console.notify('e', `解码失败`, []);
-					Console.notify('e', `${e}`, []);
+					Console.notify_error(e);
 				}
 			}
 			if (option.animation !== null && path.endsWith('.pam')) {
@@ -213,8 +211,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 						Support.PopCapAnimation.Convert.Flash.create_xfl_content_file(`${option.animation.directory}/${flash_directory}`);
 					}
 				} catch (e: any) {
-					Console.notify('e', `解码失败`, []);
-					Console.notify('e', `${e}`, []);
+					Console.notify_error(e);
 				}
 			}
 			if (option.audio !== null && path.endsWith('.wem')) {
@@ -229,8 +226,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 						option.audio.temp_directory,
 					);
 				} catch (e: any) {
-					Console.notify('e', `解码失败`, []);
-					Console.notify('e', `${e}`, []);
+					Console.notify_error(e);
 				}
 			}
 		});
@@ -254,7 +250,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 		version_number: bigint,
 		version_additional_texture_information_for_pvz_2_chinese_android: bigint,
 	): void {
-		Console.notify('i', `解包...`, []);
+		Console.notify('i', `解包 ...`, []);
 		let package_manifest: Core.Tool.PopCap.RSB.Manifest.JS_N.Package;
 		{
 			let version_c = Core.Tool.PopCap.RSB.Version.json(Core.JSON.Value.value({ number: version_number as any, additional_texture_information_for_pvz_2_chinese_android: version_additional_texture_information_for_pvz_2_chinese_android as any }));
@@ -275,36 +271,36 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 			package_manifest = manifest_json.value as any;
 			CoreX.JSON.write_fs(manifest_file, manifest_json);
 		}
-		Console.notify('i', `提取资源清单文件...`, []);
+		Console.notify('i', `提取资源清单文件 ...`, []);
 		let official_resource_manifest: OfficialResourceManifest.Package;
 		{
 			let group_id = Object.keys(package_manifest.group).filter((e) => (/__MANIFESTGROUP__(.+)?/.test(e)));
 			if (group_id.length === 0) {
-				throw new MyError(`can not found manifest group`);
+				throw new Error(`can not found manifest group`);
 			}
 			if (group_id.length > 1) {
-				throw new MyError(`too many manifest group`);
+				throw new Error(`too many manifest group`);
 			}
 			let group = package_manifest.group[group_id[0]];
 			if (group.composite) {
-				throw new MyError(`manifest should not be a composite group`);
+				throw new Error(`manifest should not be a composite group`);
 			}
 			let subgroup_id = Object.keys(group.subgroup);
 			if (subgroup_id.length !== 1) {
-				throw new MyError(`manifest subgroup must has one only subgroup`);
+				throw new Error(`manifest subgroup must has one only subgroup`);
 			}
 			if (subgroup_id[0] !== group_id[0]) {
-				throw new MyError(`manifest subgroup id must equal group id`);
+				throw new Error(`manifest subgroup id must equal group id`);
 			}
 			let subgroup = group.subgroup[subgroup_id[0]];
 			let resource_path_list = Object.keys(subgroup.resource);
 			if (resource_path_list.length !== 1) {
-				throw new MyError(`manifest subgroup must has one only resource`);
+				throw new Error(`manifest subgroup must has one only resource`);
 			}
 			let resource_path = resource_path_list[0];
 			let resource = subgroup.resource[resource_path];
 			if (/properties\/resources(_.+)?\.rton/.test(resource_path)) {
-				throw new MyError(`manifest resource path invalid`);
+				throw new Error(`manifest resource path invalid`);
 			}
 			let rton = CoreX.FileSystem.read_file(resource_directory + '/' + resource_path);
 			let rton_stream = Core.ByteStreamView.look(rton.view());
@@ -316,7 +312,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 			);
 			official_resource_manifest = json.value;
 		}
-		Console.notify('i', `解析资源清单...`, []);
+		Console.notify('i', `解析资源清单 ...`, []);
 		let resource_manifest = ResourceManifest.Convert.from_official(official_resource_manifest);
 		CoreX.JSON.write_fs(resource_manifest_file, Core.JSON.Value.value(resource_manifest));
 		extract(

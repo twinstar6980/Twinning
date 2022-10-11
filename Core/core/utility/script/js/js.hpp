@@ -1077,9 +1077,11 @@ namespace TwinKleS::Core::JS {
 				context_wrapper.throw_exception(
 					context_wrapper.evaluate(
 						R"((message) => {
-							let stack = new Error().stack;
-							stack = stack.substring(stack.indexOf('\n') + 1, stack.length - 1);
-							return `${message}\n@ stack : \n${stack}`;
+							let error = new Error();
+							error.name = 'NativeError';
+							error.message = message;
+							error.stack = error.stack.substring(error.stack.indexOf('\n') + 1);
+							return error;
 						})"_sv
 					).call(
 						make_list<Value>(

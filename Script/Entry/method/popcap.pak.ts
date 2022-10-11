@@ -9,7 +9,7 @@ namespace TwinKleS.Entry.method.popcap.pak {
 	// ------------------------------------------------
 
 	type Config = {
-		pack_buffer_size: string | '?input';
+		pack_buffer_size: Argument.Request<string, false>;
 	};
 
 	export function _injector(
@@ -20,48 +20,60 @@ namespace TwinKleS.Entry.method.popcap.pak {
 				id: 'popcap.pak.pack',
 				description: 'PopCap-PAK 打包',
 				worker(a: Entry.CFSA & {
-					bundle_directory: string;
-					data_file: string | '?default' | '?input';
-					version_number: bigint | '?input';
-					version_compress_resource_data: boolean | '?input';
-					data_buffer_size: string | '?input';
+					bundle_directory: Argument.Require<string>;
+					data_file: Argument.Request<string, true>;
+					version_number: Argument.Request<bigint, false>;
+					version_compress_resource_data: Argument.Request<boolean, false>;
+					buffer_size: Argument.Request<string, false>;
 				}) {
 					let bundle_directory: string;
 					let data_file: string;
-					let version_number: bigint;
+					let version_number: [0n][number];
 					let version_compress_resource_data: boolean;
-					let data_buffer_size: bigint;
+					let buffer_size: bigint;
 					{
-						bundle_directory = a.bundle_directory;
-						data_file = ArgumentParser.path(a.data_file, {
-							input_message: '请输入输出路径',
-							default_value: bundle_directory.replace(/((\.pak)(\.bundle))?$/i, '.pak'),
-							must_exist: false,
-							if_exist: a.fs_if_exist,
-						});
-						if (a.version_number === '?input') {
-							Console.notify('i', `请输入版本编号（0）`, []);
-							version_number = Console.integer(Check.enum_checkerx([0n]))!;
-						} else {
-							version_number = BigInt(a.version_number);
-						}
-						if (a.version_compress_resource_data === '?input') {
-							Console.notify('i', `是否启用资源数据压缩`, []);
-							version_compress_resource_data = Console.yon()!;
-						} else {
-							version_compress_resource_data = a.version_compress_resource_data;
-						}
-						if (a.data_buffer_size === '?input') {
-							Console.notify('i', `请输入用于保存包数据输出的内存空间大小`, []);
-							data_buffer_size = Console.size()!;
-						} else {
-							data_buffer_size = parse_size_string(a.data_buffer_size);
-						}
+						bundle_directory = Argument.require(
+							'捆绑目录', '',
+							a.bundle_directory,
+							(value) => (value),
+							(value) => (CoreX.FileSystem.exist_directory(value)),
+						);
+						data_file = Argument.request(
+							'数据文件', '',
+							a.data_file,
+							(value) => (value),
+							() => (bundle_directory.replace(/((\.pak)(\.bundle))?$/i, '.pak')),
+							...Argument.requester_for_path('file', [false, a.fs_tactic_if_exist]),
+						);
+						version_number = Argument.request(
+							'版本编号', '',
+							a.version_number,
+							(value) => (value),
+							null,
+							() => (Console.integer(null)),
+							(value) => ([0n].includes(value) ? null : `版本不受支持`),
+						);
+						version_compress_resource_data = Argument.request(
+							'启用资源数据压缩', '',
+							a.version_compress_resource_data,
+							(value) => (value),
+							null,
+							() => (Console.confirm(null)),
+							(value) => (null),
+						);
+						buffer_size = Argument.request(
+							'内存缓冲区大小', '',
+							a.buffer_size,
+							(value) => (parse_size_string(value)),
+							null,
+							() => (Console.binary_size(null)),
+							(value) => (null),
+						);
 					}
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					CoreX.Tool.PopCap.PAK.pack_fs(data_file, manifest_file, resource_directory, { number: version_number as any, compress_resource_data: version_compress_resource_data }, data_buffer_size);
-					Console.notify('s', `输出路径：${data_file}`, []);
+					CoreX.Tool.PopCap.PAK.pack_fs(data_file, manifest_file, resource_directory, { number: version_number, compress_resource_data: version_compress_resource_data }, buffer_size);
+					Console.notify('s', `执行成功`, [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -69,7 +81,7 @@ namespace TwinKleS.Entry.method.popcap.pak {
 					data_file: '?default',
 					version_number: '?input',
 					version_compress_resource_data: '?input',
-					data_buffer_size: config.pack_buffer_size,
+					buffer_size: config.pack_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', /.+(\.pak)(\.bundle)$/i]]),
 				input_forwarder: 'bundle_directory',
@@ -78,40 +90,50 @@ namespace TwinKleS.Entry.method.popcap.pak {
 				id: 'popcap.pak.unpack',
 				description: 'PopCap-PAK 解包',
 				worker(a: Entry.CFSA & {
-					data_file: string;
-					bundle_directory: string | '?default' | '?input';
-					version_number: bigint | '?input';
-					version_compress_resource_data: boolean | '?input';
+					data_file: Argument.Require<string>;
+					bundle_directory: Argument.Request<string, true>;
+					version_number: Argument.Request<bigint, false>;
+					version_compress_resource_data: Argument.Request<boolean, false>;
 				}) {
 					let data_file: string;
 					let bundle_directory: string;
-					let version_number: bigint;
+					let version_number: [0n][number];
 					let version_compress_resource_data: boolean;
 					{
-						data_file = a.data_file;
-						bundle_directory = ArgumentParser.path(a.bundle_directory, {
-							input_message: '请输入输出路径',
-							default_value: data_file.replace(/((\.pak))?$/i, '.pak.bundle'),
-							must_exist: false,
-							if_exist: a.fs_if_exist,
-						});
-						if (a.version_number === '?input') {
-							Console.notify('i', `请输入版本编号（0）`, []);
-							version_number = Console.integer(Check.enum_checkerx([0n]))!;
-						} else {
-							version_number = BigInt(a.version_number);
-						}
-						if (a.version_compress_resource_data === '?input') {
-							Console.notify('i', `是否启用资源数据压缩`, []);
-							version_compress_resource_data = Console.yon()!;
-						} else {
-							version_compress_resource_data = a.version_compress_resource_data;
-						}
+						data_file = Argument.require(
+							'数据文件', '',
+							a.data_file,
+							(value) => (value),
+							(value) => (CoreX.FileSystem.exist_file(value)),
+						);
+						bundle_directory = Argument.request(
+							'捆绑目录', '',
+							a.bundle_directory,
+							(value) => (value),
+							() => (data_file.replace(/((\.pak))?$/i, '.pak.bundle')),
+							...Argument.requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+						);
+						version_number = Argument.request(
+							'版本编号', '',
+							a.version_number,
+							(value) => (value),
+							null,
+							() => (Console.integer(null)),
+							(value) => ([0n].includes(value) ? null : `版本不受支持`),
+						);
+						version_compress_resource_data = Argument.request(
+							'启用资源数据压缩', '',
+							a.version_compress_resource_data,
+							(value) => (value),
+							null,
+							() => (Console.confirm(null)),
+							(value) => (null),
+						);
 					}
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					CoreX.Tool.PopCap.PAK.unpack_fs(data_file, manifest_file, resource_directory, { number: version_number as any, compress_resource_data: version_compress_resource_data });
-					Console.notify('s', `输出路径：${bundle_directory}`, []);
+					CoreX.Tool.PopCap.PAK.unpack_fs(data_file, manifest_file, resource_directory, { number: version_number, compress_resource_data: version_compress_resource_data });
+					Console.notify('s', `执行成功`, [`${bundle_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -127,39 +149,49 @@ namespace TwinKleS.Entry.method.popcap.pak {
 				id: 'popcap.pak.pack_auto',
 				description: 'PopCap-PAK 自动打包',
 				worker(a: Entry.CFSA & {
-					resource_directory: string;
-					data_file: string | '?default' | '?input';
-					version_number: bigint | '?input';
-					version_compress_resource_data: boolean | '?input';
+					resource_directory: Argument.Require<string>;
+					data_file: Argument.Request<string, true>;
+					version_number: Argument.Request<bigint, false>;
+					version_compress_resource_data: Argument.Request<boolean, false>;
 				}) {
 					let resource_directory: string;
 					let data_file: string;
-					let version_number: bigint;
+					let version_number: [0n][number];
 					let version_compress_resource_data: boolean;
 					{
-						resource_directory = a.resource_directory;
-						data_file = ArgumentParser.path(a.data_file, {
-							input_message: '请输入输出路径',
-							default_value: resource_directory.replace(/((\.pak)(\.resource))?$/i, '.pak'),
-							must_exist: false,
-							if_exist: a.fs_if_exist,
-						});
-						if (a.version_number === '?input') {
-							Console.notify('i', `请输入版本编号（0）`, []);
-							version_number = Console.integer(Check.enum_checkerx([0n]))!;
-						} else {
-							version_number = BigInt(a.version_number);
-						}
-						if (a.version_compress_resource_data === '?input') {
-							Console.notify('i', `是否启用资源数据压缩`, []);
-							version_compress_resource_data = Console.yon()!;
-						} else {
-							version_compress_resource_data = a.version_compress_resource_data;
-						}
+						resource_directory = Argument.require(
+							'资源目录', '',
+							a.resource_directory,
+							(value) => (value),
+							(value) => (CoreX.FileSystem.exist_directory(value)),
+						);
+						data_file = Argument.request(
+							'数据文件', '',
+							a.data_file,
+							(value) => (value),
+							() => (resource_directory.replace(/((\.pak)(\.resource))?$/i, '.pak')),
+							...Argument.requester_for_path('file', [false, a.fs_tactic_if_exist]),
+						);
+						version_number = Argument.request(
+							'版本编号', '',
+							a.version_number,
+							(value) => (value),
+							null,
+							() => (Console.integer(null)),
+							(value) => ([0n].includes(value) ? null : `版本不受支持`),
+						);
+						version_compress_resource_data = Argument.request(
+							'启用资源数据压缩', '',
+							a.version_compress_resource_data,
+							(value) => (value),
+							null,
+							() => (Console.confirm(null)),
+							(value) => (null),
+						);
 					}
 					let data = Support.PopCapPAK.ResourcePack.pack(resource_directory, version_number, version_compress_resource_data);
 					CoreX.FileSystem.write_file(data_file, data[0].view().sub(Core.Size.value(0n), data[1]));
-					Console.notify('s', `输出路径：${data_file}`, []);
+					Console.notify('s', `执行成功`, [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -175,22 +207,28 @@ namespace TwinKleS.Entry.method.popcap.pak {
 				id: 'popcap.pak.crypt',
 				description: 'PopCap-PAK 加解密',
 				worker(a: Entry.CFSA & {
-					plain_file: string;
-					cipher_file: string | '?default' | '?input';
+					plain_file: Argument.Require<string>;
+					cipher_file: Argument.Request<string, true>;
 				}) {
 					let plain_file: string;
 					let cipher_file: string;
 					{
-						plain_file = a.plain_file;
-						cipher_file = ArgumentParser.path(a.cipher_file, {
-							input_message: '请输入输出路径',
-							default_value: plain_file.replace(/((\.pak))?$/i, '.xor.pak'),
-							must_exist: false,
-							if_exist: a.fs_if_exist,
-						});
+						plain_file = Argument.require(
+							'明文文件', '',
+							a.plain_file,
+							(value) => (value),
+							(value) => (CoreX.FileSystem.exist_file(value)),
+						);
+						cipher_file = Argument.request(
+							'密文文件', '',
+							a.cipher_file,
+							(value) => (value),
+							() => (plain_file.replace(/((\.pak))?$/i, '.xor.pak')),
+							...Argument.requester_for_path('file', [false, a.fs_tactic_if_exist]),
+						);
 					}
 					CoreX.Tool.Data.Encrypt.XOR.crypt_fs(plain_file, cipher_file, 0xF7n);
-					Console.notify('s', `输出路径：${cipher_file}`, []);
+					Console.notify('s', `执行成功`, [`${cipher_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

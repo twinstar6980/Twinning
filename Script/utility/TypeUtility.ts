@@ -291,14 +291,14 @@ namespace TwinKleS {
 		endian: 'big' | 'little' | 'parse',
 	): string {
 		if (source.byteLength < 2 || source.byteLength % 2 !== 0) {
-			throw new MyError(`invalid source size`);
+			throw new Error(`invalid source size`);
 		}
 		let position = 0;
 		let is_little_endian: boolean;
 		if (endian === 'parse') {
 			let bom = parse_utf16_bom(source);
 			if (bom === null) {
-				throw new MyError(`invalid bom`);
+				throw new Error(`invalid bom`);
 			}
 			is_little_endian = bom;
 			++position;
@@ -346,7 +346,7 @@ namespace TwinKleS {
 		date: Date,
 	): string {
 		let p = (source: number, max_length: number) => (make_prefix_padded_string(source, '0', max_length));
-		return `${p(date.getFullYear() % 100, 2)}-${p(date.getMonth(), 2)}-${p(date.getDate(), 2)}.${p(date.getHours(), 2)}-${p(date.getMinutes(), 2)}-${p(date.getSeconds(), 2)}.${p(date.getMilliseconds(), 3)}`;
+		return `${p(date.getFullYear() % 100, 2)}-${p(date.getMonth() + 1, 2)}-${p(date.getDate(), 2)}.${p(date.getHours(), 2)}-${p(date.getMinutes(), 2)}-${p(date.getSeconds(), 2)}.${p(date.getMilliseconds(), 3)}`;
 	}
 
 	// ------------------------------------------------

@@ -93,10 +93,10 @@ namespace TwinKleS.PathUtility {
 					current = current[e]!;
 				} else {
 					if (current[e] === null) {
-						throw new MyError(`file is exist : ${e}, ${path.join('/')}`);
+						throw new Error(`file is exist : ${e}, ${path.join('/')}`);
 					} else {
 						if (is_file_name) {
-							throw new MyError(`directory is exist : ${e}, ${path.join('/')}`);
+							throw new Error(`directory is exist : ${e}, ${path.join('/')}`);
 						}
 						current = current[e]!;
 					}

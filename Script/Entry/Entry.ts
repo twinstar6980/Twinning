@@ -4,7 +4,7 @@ namespace TwinKleS.Entry {
 	// ------------------------------------------------
 
 	/** 工作空间 */
-	export let g_workspace: string = '';
+	export let g_workspace: string = undefined!;
 
 	/**
 	 * 将文件回收到垃圾箱目录
@@ -21,142 +21,6 @@ namespace TwinKleS.Entry {
 
 	// ------------------------------------------------
 
-	export namespace ArgumentParser {
-
-		export function path(
-			origin_value: string | '?default' | '?input',
-			option: {
-				input_message: string;
-				default_value: string;
-			} & ({
-				must_exist: null;
-			} | {
-				must_exist: false;
-				if_exist: 'trash' | 'delete' | 'override' | '?input';
-			} | {
-				must_exist: true;
-				type: 'any' | 'file' | 'directory';
-			}),
-		): string {
-			let result: string;
-			if (origin_value === '?input') {
-				Console.notify('i', option.input_message, []);
-				result = Console.string()!;
-			} else if (origin_value === '?default') {
-				result = option.default_value;
-			} else {
-				result = origin_value;
-			}
-			if (option.must_exist !== null) {
-				if (!option.must_exist) {
-					if (CoreX.FileSystem.exist(result)) {
-						switch (option.if_exist) {
-							case 'trash': {
-								Console.notify('w', `指定路径已存在，将进行回收`, [`${result}`]);
-								trash(result);
-								break;
-							}
-							case 'delete': {
-								Console.notify('w', `指定路径已存在，将进行删除`, [`${result}`]);
-								CoreX.FileSystem.remove(result);
-								break;
-							}
-							case 'override': {
-								Console.notify('w', `指定路径已存在，将进行覆写`, [`${result}`]);
-								break;
-							}
-							case '?input': {
-								Console.notify('e', `指定路径已存在，请输入不存在的路径，或输入 :t 回收之，或输入 :d 删除之，或输入 :o 覆写之`, [`${result}`]);
-								while (true) {
-									let input = Console.string()!;
-									if (input === ':t') {
-										trash(result);
-										break;
-									}
-									if (input === ':d') {
-										CoreX.FileSystem.remove(result);
-										break;
-									}
-									if (input === ':o') {
-										break;
-									}
-									result = input;
-									if (!CoreX.FileSystem.exist(input)) {
-										break;
-									}
-									Console.notify('e', `指定路径已存在，请重新输入`, []);
-								}
-								break;
-							}
-						}
-					}
-				} else {
-					let type_name: string;
-					let test_function: (path: string) => boolean;
-					switch (option.type) {
-						case 'any': {
-							type_name = `路径`;
-							test_function = CoreX.FileSystem.exist;
-							break;
-						}
-						case 'file': {
-							type_name = `文件`;
-							test_function = CoreX.FileSystem.exist_file;
-							break;
-						}
-						case 'directory': {
-							type_name = `目录`;
-							test_function = CoreX.FileSystem.exist_directory;
-							break;
-						}
-					}
-					if (!test_function(result)) {
-						Console.notify('e', `指定${type_name}不存在，请输入已存在的路径，或输入 :d 唤起选择窗口（windows）`, [`${result}`]);
-						while (true) {
-							let input = Console.string()!;
-							if (input === ':s') {
-								if (Shell.name !== 'windows.cli') {
-									throw new MyError(`:s only enabled on windows.cli shell`);
-								}
-								let pick_folder: boolean;
-								switch (option.type) {
-									case 'any': {
-										Console.notify('i', `选择窗口是否应选择目录（否则为文件）？`, []);
-										pick_folder = Console.yon()!;
-										break;
-									}
-									case 'file': {
-										pick_folder = false;
-										break;
-									}
-									case 'directory': {
-										pick_folder = true;
-										break;
-									}
-								}
-								let selected = Shell.windows_cli_open_file_dialog(pick_folder, false);
-								if (selected.length === 0) {
-									input = result;
-								} else {
-									input = selected[0];
-								}
-							}
-							result = input;
-							if (test_function(input)) {
-								break;
-							}
-							Console.notify('e', `指定${type_name}不存在，请重新输入`, []);
-						}
-					}
-				}
-			}
-			return result;
-		}
-
-	}
-
-	// ------------------------------------------------
-
 	/** 全局执行器功能 */
 	export const g_executor_method: Array<Executor.Method> = [];
 
@@ -167,12 +31,12 @@ namespace TwinKleS.Entry {
 
 	/** 用于执行器功能的通用文件系统相关参数 */
 	export type CommonFileSystemArgument = {
-		fs_if_exist: 'trash' | 'delete' | 'override' | '?input';
+		fs_tactic_if_exist: 'trash' | 'delete' | 'override' | null;
 	};
 
 	/** 用于执行器功能的通用文件系统相关参数的默认值 */
 	export const k_common_file_system_argument: CommonFileSystemArgument = {
-		fs_if_exist: '?input',
+		fs_tactic_if_exist: null,
 	};
 
 	// ------------------------------------------------
@@ -226,21 +90,14 @@ namespace TwinKleS.Entry {
 		if (item_list.length === 0) {
 			Console.notify('w', `无可处理项目`, []);
 		} else {
-			let progress = new TextGenerator.Progress('fraction', 40, item_list.length);
+			let progress = new TextGenerator.Progress('fraction', false, 40, item_list.length);
 			for (let item of item_list) {
 				progress.increase();
 				Console.notify('i', `${progress}`, []);
 				try {
 					work(item);
 				} catch (e: any) {
-					Console.notify('e', `项目处理失败`, [`项目路径：${item}`]);
-					if (e instanceof Error) {
-						Console.notify('e', `${e}`, [`${e.stack}`]);
-					} else if (e instanceof MyError) {
-						Console.notify('e', `${e.message}`, [`${e.stack}`]);
-					} else {
-						Console.notify('e', `${e}`, []);
-					}
+					Console.notify_error(e);
 					Console.pause();
 				}
 			}
@@ -285,53 +142,51 @@ namespace TwinKleS.Entry {
 				config.json_write.format.disable_array_wrap_line,
 			);
 		}
-		// set thread limit
-		g_thread_manager.resize(Number(config.thread_limit));
-
 	}
 
 	export function _entry(
 		config: Config,
 		argument: Array<string>,
 	) {
-		let timer = new Timer();
-		timer.start();
-		let raw_command = [...argument];
-		if (raw_command.length === 0) {
-			Console.notify('i', `请依次输入命令参数，输入空串则结束输入`, []);
-			while (true) {
-				let input = Console.string(null, true);
-				if (input === null) {
-					break;
+		g_thread_manager.resize(Number(config.thread_limit));
+		try {
+			let timer = new Timer();
+			timer.start();
+			let raw_command = [...argument];
+			if (raw_command.length === 0) {
+				Console.notify('i', `请依次输入命令参数`, [`输入空串以结束输入`]);
+				while (true) {
+					let input = Console.string(null, true);
+					if (input === null) {
+						break;
+					}
+					raw_command.push(input);
 				}
-				raw_command.push(input);
 			}
-		}
-		let command = Executor.parse(raw_command);
-		let method = [...g_executor_method, ...g_executor_method_of_batch];
-		Console.notify('i', `解析得 ${command.length} 条命令`, []);
-		let progress = new TextGenerator.Progress('fraction', 40, command.length);
-		for (let e of command) {
-			progress.increase();
-			Console.notify('i', `${progress}`, [`<${e.input!.value}>${e.method === null ? '' : ` -method <${e.method}>`}`]);
-			try {
-				Executor.execute(e, method);
-			} catch (e: any) {
-				if (e instanceof Error) {
-					Console.notify('e', `${e}`, [`${e.stack}`]);
-				} else if (e instanceof MyError) {
-					Console.notify('e', `${e.message}`, [`${e.stack}`]);
-				} else {
-					Console.notify('e', `${e}`, []);
+			let command = Executor.parse(raw_command);
+			let method = [...g_executor_method, ...g_executor_method_of_batch];
+			Console.notify('i', `所有命令已解析`, [`共 ${command.length} 条`]);
+			let progress = new TextGenerator.Progress('fraction', true, 40, command.length);
+			for (let e of command) {
+				progress.increase();
+				Console.notify('i', `命令执行中：${progress}`, [`${e.input!.value}${e.method === null ? '' : ` | ${e.method}`}`]);
+				try {
+					Executor.execute(e, method);
+				} catch (e: any) {
+					Console.notify_error(e);
+					Console.pause();
 				}
+			}
+			timer.stop();
+			Console.notify('s', `所有命令已执行`, [`用时 ${(timer.duration() / 1000).toFixed(3)} s`]);
+			if (config.pause_when_finish) {
 				Console.pause();
 			}
-		}
-		timer.stop();
-		Console.notify('s', `所有命令执行完毕`, [`耗时 ${(timer.duration() / 1000).toFixed(3)} s`]);
-		if (config.pause_when_finish) {
+		} catch (e: any) {
+			Console.notify_error(e);
 			Console.pause();
 		}
+		g_thread_manager.resize(0);
 	}
 
 	// ------------------------------------------------

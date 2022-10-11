@@ -3,6 +3,7 @@
 #include "shell/library/static_library.hpp"
 #include "shell/library/dynamic_library.hpp"
 #include "shell/host/cli_host.hpp"
+#include "shell/launch.hpp"
 
 #if defined M_vld
 #include "vld.h"
@@ -46,10 +47,10 @@ auto main (
 		auto script = args[2];
 		auto script_is_path = TwinKleS::Shell::string_to_boolean(args[3]);
 		auto argument = std::vector<std::string>{args.begin() + 4, args.end()};
-		auto library = TwinKleS::Shell::DynamicLibrary{library_file};
+		auto library = TwinKleS::Shell::DynamicLibrary{nullptr, library_file};
 		std::cout << "TwinKleS.ToolKit.Core " << library.wrapped_version() << "\n" << std::flush;
-		auto host = TwinKleS::Shell::CLIHost{};
-		auto result = TwinKleS::Shell::execute_on_host(host, library, script, script_is_path, argument);
+		auto host = TwinKleS::Shell::CLIHost{nullptr};
+		auto result = TwinKleS::Shell::launch(host, library, script, script_is_path, argument);
 		if (result) {
 			exception_message.emplace(result.value());
 		}
@@ -61,6 +62,7 @@ auto main (
 	if (exception_message) {
 		std::cout << "\n" << std::flush;
 		std::cout << "Exception :\n" << exception_message.value() << "\n" << std::flush;
+		std::cout << "\n" << std::flush;
 		std::cout << "Press <ENTER> to exit ... " << std::flush;
 		auto pause_text = std::string{};
 		std::getline(std::cin, pause_text);

@@ -538,12 +538,20 @@ namespace TwinKleS.CoreX {
 
 				export namespace Rijndael {
 
+					export const ModeE = ['ecb', 'cbc', 'cfb'] as const;
+
+					export type Mode = typeof ModeE[number];
+
+					export const BlockSizeE = [16n, 24n, 32n] as const;
+
+					export type BlockSize = typeof BlockSizeE[number];
+
 					export function encrypt_fs(
 						plain_file: string,
 						cipher_file: string,
-						mode: Core.Tool.Data.Encrypt.Rijndael.JS_Mode,
-						block_size: bigint,
-						key_size: bigint,
+						mode: Mode,
+						block_size: BlockSize,
+						key_size: BlockSize,
 						key: string,
 						iv: string,
 					): void {
@@ -559,9 +567,9 @@ namespace TwinKleS.CoreX {
 					export function decrypt_fs(
 						cipher_file: string,
 						plain_file: string,
-						mode: Core.Tool.Data.Encrypt.Rijndael.JS_Mode,
-						block_size: bigint,
-						key_size: bigint,
+						mode: Mode,
+						block_size: BlockSize,
+						key_size: BlockSize,
 						key: string,
 						iv: string,
 					): void {
@@ -582,15 +590,25 @@ namespace TwinKleS.CoreX {
 
 				export namespace Deflate {
 
-					export type CompressionLevel = 0n | 1n | 2n | 3n | 4n | 5n | 6n | 7n | 8n | 9n;
+					export const CompressionLevelE = [0n, 1n, 2n, 3n, 4n, 5n, 6n, 7n, 8n, 9n] as const;
 
-					export type WindowBits = 8n | 9n | 10n | 11n | 12n | 13n | 14n | 15n;
+					export type CompressionLevel = typeof CompressionLevelE[number];
 
-					export type MemoryLevel = 1n | 2n | 3n | 4n | 5n | 6n | 7n | 8n | 9n;
+					export const WindowBitsE = [8n, 9n, 10n, 11n, 12n, 13n, 14n, 15n] as const;
 
-					export type Strategy = Core.Tool.Data.Compress.Deflate.JS_Strategy;
+					export type WindowBits = typeof WindowBitsE[number];
 
-					export type WrapperType = Core.Tool.Data.Compress.Deflate.JS_Wrapper;
+					export const MemoryLevelE = [1n, 2n, 3n, 4n, 5n, 6n, 7n, 8n, 9n] as const;
+
+					export type MemoryLevel = typeof MemoryLevelE[number];
+
+					export const StrategyE = ['default_mode', 'filtered', 'huffman_only', 'rle', 'fixed'] as const;
+
+					export type Strategy = typeof StrategyE[number];
+
+					export const WrapperTypeE = ['none', 'zlib', 'gzip'] as const;
+
+					export type WrapperType = typeof WrapperTypeE[number];
 
 					export function compress_fs(
 						raw_file: string,
@@ -606,7 +624,7 @@ namespace TwinKleS.CoreX {
 						let ripe_data = Core.ByteArray.allocate(ripe_size_bound);
 						let raw_stream = Core.ByteStreamView.look(raw_data.view());
 						let ripe_stream = Core.ByteStreamView.look(ripe_data.view());
-						Core.Tool.Data.Compress.Deflate.Compress.process(raw_stream, ripe_stream, Core.Size.value(level), Core.Size.value(window_bits), Core.Size.value(memory_level), Core.Tool.Data.Compress.Deflate.Strategy.value('default_mode'), Core.Tool.Data.Compress.Deflate.Wrapper.value(wrapper));
+						Core.Tool.Data.Compress.Deflate.Compress.process(raw_stream, ripe_stream, Core.Size.value(level), Core.Size.value(window_bits), Core.Size.value(memory_level), Core.Tool.Data.Compress.Deflate.Strategy.value(strategy), Core.Tool.Data.Compress.Deflate.Wrapper.value(wrapper));
 						FileSystem.write_file(ripe_file, ripe_stream.stream_view());
 						return;
 					}
@@ -632,7 +650,9 @@ namespace TwinKleS.CoreX {
 
 				export namespace BZip2 {
 
-					export type BlockSize = 1n | 2n | 3n | 4n | 5n | 6n | 7n | 8n | 9n;
+					export const BlockSizeE = [1n, 2n, 3n, 4n, 5n, 6n, 7n, 8n, 9n] as const;
+
+					export type BlockSize = typeof BlockSizeE[number];
 
 					export function compress_fs(
 						raw_file: string,
@@ -685,20 +705,20 @@ namespace TwinKleS.CoreX {
 				'argb_8888_l',
 			] as const;
 
+			export type Format = typeof FormatE[number];
+
 			export const CompressionE = [
 				'rgb_etc1',
 				'rgb_pvrtc4',
 				'rgba_pvrtc4',
 			] as const;
 
+			export type Compression = typeof CompressionE[number];
+
 			export const TextureFormatE = [
 				...FormatE,
 				...CompressionE,
 			] as const;
-
-			export type Format = typeof FormatE[number];
-
-			export type Compression = typeof CompressionE[number];
 
 			export type CompositeFormat = typeof TextureFormatE[number];
 
@@ -1354,7 +1374,7 @@ namespace TwinKleS.CoreX {
 					value_count: number,
 				): BitCount {
 					if (value_count <= 0b1 || value_count > 0b10000) {
-						throw new MyError(`invalue value count`);
+						throw new Error(`invalue value count`);
 					}
 					let bit_count: BitCount;
 					if (value_count <= 0b10) {

@@ -9,7 +9,7 @@ namespace TwinKleS.Entry.method.popcap.reanim {
 	// ------------------------------------------------
 
 	type Config = {
-		encode_buffer_size: string | '?input';
+		encode_buffer_size: Argument.Request<string, false>;
 	};
 
 	export function _injector(
@@ -20,46 +20,58 @@ namespace TwinKleS.Entry.method.popcap.reanim {
 				id: 'popcap.reanim.encode',
 				description: 'PopCap-Reanim 编码',
 				worker(a: Entry.CFSA & {
-					manifest_file: string;
-					data_file: string | '?default' | '?input';
-					version_platform: 'desktop' | 'phone' | '?input';
+					manifest_file: Argument.Require<string>;
+					data_file: Argument.Request<string, true>;
+					version_platform: Argument.Request<string, false>;
 					version_variant_64: boolean | '?input';
-					data_buffer_size: string | '?input';
+					buffer_size: Argument.Request<string, false>;
 				}) {
 					let manifest_file: string;
 					let data_file: string;
-					let version_platform: 'desktop' | 'phone';
+					let version_platform: ['desktop', 'phone'][number];
 					let version_variant_64: boolean;
-					let data_buffer_size: bigint;
+					let buffer_size: bigint;
 					{
-						manifest_file = a.manifest_file;
-						data_file = ArgumentParser.path(a.data_file, {
-							input_message: '请输入输出路径',
-							default_value: manifest_file.replace(/((\.reanim)(\.json))?$/i, '.reanim.compiled'),
-							must_exist: false,
-							if_exist: a.fs_if_exist,
-						});
-						if (a.version_platform === '?input') {
-							Console.notify('i', `请选择版本平台`, [`1. desktop 适用于桌面端（windows）`, `2. phone 适用于移动端（android、ios）`]);
-							version_platform = (['desktop', 'phone'] as const)[Number(Console.integer(Check.enum_checkerx([1n, 2n]))! - 1n)];
-						} else {
-							version_platform = a.version_platform;
-						}
-						if (a.version_variant_64 === '?input') {
-							Console.notify('i', `平台是否为64位？（仅适用于移动端）`, []);
-							version_variant_64 = Console.yon()!;
-						} else {
-							version_variant_64 = a.version_variant_64;
-						}
-						if (a.data_buffer_size === '?input') {
-							Console.notify('i', `请输入用于保存Reanim数据的内存空间大小`, []);
-							data_buffer_size = Console.size()!;
-						} else {
-							data_buffer_size = parse_size_string(a.data_buffer_size);
-						}
+						manifest_file = Argument.require(
+							'清单文件', '',
+							a.manifest_file,
+							(value) => (value),
+							(value) => (CoreX.FileSystem.exist_file(value)),
+						);
+						data_file = Argument.request(
+							'数据文件', '',
+							a.data_file,
+							(value) => (value),
+							() => (manifest_file.replace(/((\.reanim)(\.json))?$/i, '.reanim.compiled')),
+							...Argument.requester_for_path('file', [false, a.fs_tactic_if_exist]),
+						);
+						version_platform = Argument.request(
+							'版本平台', '',
+							a.version_platform,
+							(value) => (value),
+							null,
+							() => (Console.option([[`desktop 适用于桌面端（windows）`], [`phone 适用于移动端（android、ios）`]], null)),
+							(value) => (['desktop', 'phone'].includes(value) ? null : `版本不受支持`),
+						);
+						version_variant_64 = Argument.request(
+							'使用64位变体', '',
+							a.version_variant_64,
+							(value) => (value),
+							null,
+							() => (Console.confirm(null)),
+							(value) => (null),
+						);
+						buffer_size = Argument.request(
+							'内存缓冲区大小', '',
+							a.buffer_size,
+							(value) => (parse_size_string(value)),
+							null,
+							() => (Console.binary_size(null)),
+							(value) => (null),
+						);
 					}
-					CoreX.Tool.PopCap.Reanim.encode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 }, data_buffer_size);
-					Console.notify('s', `输出路径：${data_file}`, []);
+					CoreX.Tool.PopCap.Reanim.encode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 }, buffer_size);
+					Console.notify('s', `执行成功`, [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -67,7 +79,7 @@ namespace TwinKleS.Entry.method.popcap.reanim {
 					data_file: '?default',
 					version_platform: '?input',
 					version_variant_64: '?input',
-					data_buffer_size: config.encode_buffer_size,
+					buffer_size: config.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.reanim)(\.json)$/i]]),
 				input_forwarder: 'manifest_file',
@@ -76,38 +88,48 @@ namespace TwinKleS.Entry.method.popcap.reanim {
 				id: 'popcap.reanim.decode',
 				description: 'PopCap-Reanim 解码',
 				worker(a: Entry.CFSA & {
-					data_file: string;
-					manifest_file: string | '?default' | '?input';
-					version_platform: 'desktop' | 'phone' | '?input';
+					data_file: Argument.Require<string>;
+					manifest_file: Argument.Request<string, true>;
+					version_platform: Argument.Request<string, false>;
 					version_variant_64: boolean | '?input';
 				}) {
 					let data_file: string;
 					let manifest_file: string;
-					let version_platform: 'desktop' | 'phone';
+					let version_platform: ['desktop', 'phone'][number];
 					let version_variant_64: boolean;
 					{
-						data_file = a.data_file;
-						manifest_file = ArgumentParser.path(a.manifest_file, {
-							input_message: '请输入输出路径',
-							default_value: data_file.replace(/((\.reanim)(\.compiled))?$/i, '.reanim.json'),
-							must_exist: false,
-							if_exist: a.fs_if_exist,
-						});
-						if (a.version_platform === '?input') {
-							Console.notify('i', `请选择版本平台`, [`1. desktop 适用于桌面端（windows）`, `2. phone 适用于移动端（android、ios）`]);
-							version_platform = (['desktop', 'phone'] as const)[Number(Console.integer(Check.enum_checkerx([1n, 2n]))! - 1n)];
-						} else {
-							version_platform = a.version_platform;
-						}
-						if (a.version_variant_64 === '?input') {
-							Console.notify('i', `平台是否为64位？（仅适用于移动端）`, []);
-							version_variant_64 = Console.yon()!;
-						} else {
-							version_variant_64 = a.version_variant_64;
-						}
+						data_file = Argument.require(
+							'数据文件', '',
+							a.data_file,
+							(value) => (value),
+							(value) => (CoreX.FileSystem.exist_file(value)),
+						);
+						manifest_file = Argument.request(
+							'清单文件', '',
+							a.manifest_file,
+							(value) => (value),
+							() => (data_file.replace(/((\.reanim)(\.compiled))?$/i, '.reanim.json')),
+							...Argument.requester_for_path('file', [false, a.fs_tactic_if_exist]),
+						);
+						version_platform = Argument.request(
+							'版本平台', '',
+							a.version_platform,
+							(value) => (value),
+							null,
+							() => (Console.option([[`desktop 适用于桌面端（windows）`], [`phone 适用于移动端（android、ios）`]], null)),
+							(value) => (['desktop', 'phone'].includes(value) ? null : `版本不受支持`),
+						);
+						version_variant_64 = Argument.request(
+							'使用64位变体', '',
+							a.version_variant_64,
+							(value) => (value),
+							null,
+							() => (Console.confirm(null)),
+							(value) => (null),
+						);
 					}
 					CoreX.Tool.PopCap.Reanim.decode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 });
-					Console.notify('s', `输出路径：${manifest_file}`, []);
+					Console.notify('s', `执行成功`, [`${manifest_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -125,45 +147,57 @@ namespace TwinKleS.Entry.method.popcap.reanim {
 				id: 'popcap.reanim.encode.batch',
 				description: '[批处理] PopCap-Reanim 编码',
 				worker(a: Entry.CFSA & {
-					manifest_file_directory: string;
-					data_file_directory: string | '?default' | '?input';
-					version_platform: 'desktop' | 'phone' | '?input';
+					manifest_file_directory: Argument.Require<string>;
+					data_file_directory: Argument.Request<string, true>;
+					version_platform: Argument.Request<string, false>;
 					version_variant_64: boolean | '?input';
-					data_buffer_size: string | '?input';
+					buffer_size: Argument.Request<string, false>;
 				}) {
 					let manifest_file_directory: string;
 					let data_file_directory: string;
-					let version_platform: 'desktop' | 'phone';
+					let version_platform: ['desktop', 'phone'][number];
 					let version_variant_64: boolean;
-					let data_buffer_size: bigint;
+					let buffer_size: bigint;
 					{
-						manifest_file_directory = a.manifest_file_directory;
-						data_file_directory = ArgumentParser.path(a.data_file_directory, {
-							input_message: '请输入输出路径',
-							default_value: manifest_file_directory.replace(/$/i, '.reanim_encode'),
-							must_exist: false,
-							if_exist: a.fs_if_exist,
-						});
-						if (a.version_platform === '?input') {
-							Console.notify('i', `请选择版本平台`, [`1. desktop 适用于桌面端（windows）`, `2. phone 适用于移动端（android、ios）`]);
-							version_platform = (['desktop', 'phone'] as const)[Number(Console.integer(Check.enum_checkerx([1n, 2n]))! - 1n)];
-						} else {
-							version_platform = a.version_platform;
-						}
-						if (a.version_variant_64 === '?input') {
-							Console.notify('i', `平台是否为64位？（仅适用于移动端）`, []);
-							version_variant_64 = Console.yon()!;
-						} else {
-							version_variant_64 = a.version_variant_64;
-						}
-						if (a.data_buffer_size === '?input') {
-							Console.notify('i', `请输入用于保存Reanim数据的内存空间大小`, []);
-							data_buffer_size = Console.size()!;
-						} else {
-							data_buffer_size = parse_size_string(a.data_buffer_size);
-						}
+						manifest_file_directory = Argument.require(
+							'清单文件目录', '',
+							a.manifest_file_directory,
+							(value) => (value),
+							(value) => (CoreX.FileSystem.exist_directory(value)),
+						);
+						data_file_directory = Argument.request(
+							'数据文件目录', '',
+							a.data_file_directory,
+							(value) => (value),
+							() => (manifest_file_directory.replace(/$/i, '.reanim_encode')),
+							...Argument.requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+						);
+						version_platform = Argument.request(
+							'版本平台', '',
+							a.version_platform,
+							(value) => (value),
+							null,
+							() => (Console.option([[`desktop 适用于桌面端（windows）`], [`phone 适用于移动端（android、ios）`]], null)),
+							(value) => (['desktop', 'phone'].includes(value) ? null : `版本不受支持`),
+						);
+						version_variant_64 = Argument.request(
+							'使用64位变体', '',
+							a.version_variant_64,
+							(value) => (value),
+							null,
+							() => (Console.confirm(null)),
+							(value) => (null),
+						);
+						buffer_size = Argument.request(
+							'内存缓冲区大小', '',
+							a.buffer_size,
+							(value) => (parse_size_string(value)),
+							null,
+							() => (Console.binary_size(null)),
+							(value) => (null),
+						);
 					}
-					let data_buffer = Core.ByteArray.allocate(Core.Size.value(data_buffer_size));
+					let data_buffer = Core.ByteArray.allocate(Core.Size.value(buffer_size));
 					simple_batch_execute(
 						manifest_file_directory,
 						['file', /.+(\.reanim)(\.json)$/i],
@@ -173,7 +207,7 @@ namespace TwinKleS.Entry.method.popcap.reanim {
 							CoreX.Tool.PopCap.Reanim.encode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 }, data_buffer.view());
 						},
 					);
-					Console.notify('s', `输出路径：${data_file_directory}`, []);
+					Console.notify('s', `执行成功`, [`${data_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -181,7 +215,7 @@ namespace TwinKleS.Entry.method.popcap.reanim {
 					data_file_directory: '?default',
 					version_platform: '?input',
 					version_variant_64: '?input',
-					data_buffer_size: config.encode_buffer_size,
+					buffer_size: config.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'manifest_file_directory',
@@ -190,35 +224,45 @@ namespace TwinKleS.Entry.method.popcap.reanim {
 				id: 'popcap.reanim.decode.batch',
 				description: '[批处理] PopCap-Reanim 解码',
 				worker(a: Entry.CFSA & {
-					data_file_directory: string;
-					manifest_file_directory: string | '?default' | '?input';
-					version_platform: 'desktop' | 'phone' | '?input';
+					data_file_directory: Argument.Require<string>;
+					manifest_file_directory: Argument.Request<string, true>;
+					version_platform: Argument.Request<string, false>;
 					version_variant_64: boolean | '?input';
 				}) {
 					let data_file_directory: string;
 					let manifest_file_directory: string;
-					let version_platform: 'desktop' | 'phone';
+					let version_platform: ['desktop', 'phone'][number];
 					let version_variant_64: boolean;
 					{
-						data_file_directory = a.data_file_directory;
-						manifest_file_directory = ArgumentParser.path(a.manifest_file_directory, {
-							input_message: '请输入输出路径',
-							default_value: data_file_directory.replace(/$/i, '.reanim_decode'),
-							must_exist: false,
-							if_exist: a.fs_if_exist,
-						});
-						if (a.version_platform === '?input') {
-							Console.notify('i', `请选择版本平台`, [`1. desktop 适用于桌面端（windows）`, `2. phone 适用于移动端（android、ios）`]);
-							version_platform = (['desktop', 'phone'] as const)[Number(Console.integer(Check.enum_checkerx([1n, 2n]))! - 1n)];
-						} else {
-							version_platform = a.version_platform;
-						}
-						if (a.version_variant_64 === '?input') {
-							Console.notify('i', `平台是否为64位？（仅适用于移动端）`, []);
-							version_variant_64 = Console.yon()!;
-						} else {
-							version_variant_64 = a.version_variant_64;
-						}
+						data_file_directory = Argument.require(
+							'数据文件目录', '',
+							a.data_file_directory,
+							(value) => (value),
+							(value) => (CoreX.FileSystem.exist_directory(value)),
+						);
+						manifest_file_directory = Argument.request(
+							'清单文件目录', '',
+							a.manifest_file_directory,
+							(value) => (value),
+							() => (data_file_directory.replace(/$/i, '.reanim_decode')),
+							...Argument.requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+						);
+						version_platform = Argument.request(
+							'版本平台', '',
+							a.version_platform,
+							(value) => (value),
+							null,
+							() => (Console.option([[`desktop 适用于桌面端（windows）`], [`phone 适用于移动端（android、ios）`]], null)),
+							(value) => (['desktop', 'phone'].includes(value) ? null : `版本不受支持`),
+						);
+						version_variant_64 = Argument.request(
+							'使用64位变体', '',
+							a.version_variant_64,
+							(value) => (value),
+							null,
+							() => (Console.confirm(null)),
+							(value) => (null),
+						);
 					}
 					simple_batch_execute(
 						data_file_directory,
@@ -229,7 +273,7 @@ namespace TwinKleS.Entry.method.popcap.reanim {
 							CoreX.Tool.PopCap.Reanim.decode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 });
 						},
 					);
-					Console.notify('s', `输出路径：${manifest_file_directory}`, []);
+					Console.notify('s', `执行成功`, [`${manifest_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
