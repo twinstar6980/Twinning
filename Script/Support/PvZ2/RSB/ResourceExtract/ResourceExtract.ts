@@ -108,7 +108,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 			return;
 		};
 		{
-			Console.notify('i', `恢复文件路径大小写 ...`, []);
+			Console.notify('i', localized(`恢复文件路径大小写 ...`), []);
 			let resource_path_list: Array<string> = [];
 			iterate_manifest(false)((group, subgroup, resource) => {
 				resource_path_list.push(`${resource[1].path}${(resource[1].expand[0] === 'atlas' ? '.ptx' : '')}`);
@@ -127,7 +127,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 			let resource_path_tree = PathUtility.to_tree(resource_path_list);
 			rename_tree(resource_directory, resource_path_tree);
 		}
-		Console.notify('i', `提取资源 ...`, []);
+		Console.notify('i', localized(`提取资源 ...`), []);
 		iterate_manifest(true)((group, subgroup, resource) => {
 			let path = resource[1].path;
 			if (option.json !== null && path.endsWith('.rton')) {
@@ -166,7 +166,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 					if (texture_format === undefined) {
 						throw new Error(`unknown texture format : ${texture_information_source.format}`);
 					}
-					Console.notify('v', `    size : [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] , actual_size : [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ] , format : ${texture_format.format}`, [], false);
+					Console.notify('v', `    size : [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] , actual_size : [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ] , format : ${texture_format.format}`, []);
 					let data = CoreX.FileSystem.read_file(`${resource_directory}/${path}.ptx`);
 					let stream = Core.ByteStreamView.look(data.view());
 					let image = Core.Image.Bitmap.allocate(Core.Image.ImageSize.value(actual_size));
@@ -247,13 +247,13 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 		resource_manifest_file: string,
 		resource_directory: string,
 		option: Option,
-		version_number: bigint,
-		version_additional_texture_information_for_pvz_2_chinese_android: bigint,
+		version_number: [3n, 4n][number],
+		version_additional_texture_information_for_pvz_2_chinese_android: [0n, 1n, 2n][number],
 	): void {
-		Console.notify('i', `解包 ...`, []);
+		Console.notify('i', localized(`解包 ...`), []);
 		let package_manifest: Core.Tool.PopCap.RSB.Manifest.JS_N.Package;
 		{
-			let version_c = Core.Tool.PopCap.RSB.Version.json(Core.JSON.Value.value({ number: version_number as any, additional_texture_information_for_pvz_2_chinese_android: version_additional_texture_information_for_pvz_2_chinese_android as any }));
+			let version_c = Core.Tool.PopCap.RSB.Version.json(Core.JSON.Value.value({ number: version_number, additional_texture_information_for_pvz_2_chinese_android: version_additional_texture_information_for_pvz_2_chinese_android }));
 			let data = CoreX.FileSystem.read_file(data_file);
 			let stream = Core.ByteStreamView.look(data.view());
 			let manifest = Core.Tool.PopCap.RSB.Manifest.PackageVariant.default();
@@ -271,7 +271,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 			package_manifest = manifest_json.value as any;
 			CoreX.JSON.write_fs(manifest_file, manifest_json);
 		}
-		Console.notify('i', `提取资源清单文件 ...`, []);
+		Console.notify('i', localized(`提取资源清单文件 ...`), []);
 		let official_resource_manifest: OfficialResourceManifest.Package;
 		{
 			let group_id = Object.keys(package_manifest.group).filter((e) => (/__MANIFESTGROUP__(.+)?/.test(e)));
@@ -312,7 +312,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 			);
 			official_resource_manifest = json.value;
 		}
-		Console.notify('i', `解析资源清单 ...`, []);
+		Console.notify('i', localized(`解析资源清单 ...`), []);
 		let resource_manifest = ResourceManifest.Convert.from_official(official_resource_manifest);
 		CoreX.JSON.write_fs(resource_manifest_file, Core.JSON.Value.value(resource_manifest));
 		extract(

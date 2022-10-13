@@ -3,7 +3,7 @@ namespace TwinKleS.Script.JSShell {
 
 	export function execute(
 	): void {
-		Console.notify('i', `JS交互模式已开启`, [`空输入以完成此轮输入，输入字符 ! 以退出`])
+		Console.notify('i', localized(`JS交互模式已开启`), [localized(`空输入以完成此轮输入，输入字符 ! 以退出`)]);
 		while (true) {
 			let script = '';
 			while (true) {

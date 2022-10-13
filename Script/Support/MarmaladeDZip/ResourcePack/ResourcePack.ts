@@ -11,9 +11,9 @@ namespace TwinKleS.Support.MarmaladeDZip.ResourcePack {
 	 */
 	export function pack(
 		resource_directory: string,
-		version_number: bigint,
+		version_number: [0n][number],
 	): [Core.ByteArray, Core.Size] {
-		let version_c = Core.Tool.Marmalade.DZip.Version.json(Core.JSON.Value.value({ number: version_number as any }));
+		let version_c = Core.Tool.Marmalade.DZip.Version.json(Core.JSON.Value.value({ number: version_number }));
 		let resource_list = CoreX.FileSystem.list_file(resource_directory);
 		let manifest_js: Core.Tool.Marmalade.DZip.Manifest.JS_N.Package = {
 			resource: {},
@@ -30,12 +30,12 @@ namespace TwinKleS.Support.MarmaladeDZip.ResourcePack {
 			let resource_size = CoreX.FileSystem.size_file(`${resource_directory}/${resource}`);
 			data_size_bound += (2 + resource.length) + 6 + 16 + Number(resource_size); // path string + resource information + chunk information + resource data
 		}
-		Console.notify('i', `打包开始`, [`共 ${resource_list.length} 个资源文件`]);
+		Console.notify('i', localized(`打包开始`), [localized(`共 {} 个资源文件`, resource_list.length)]);
 		let data = Core.ByteArray.allocate(Core.Size.value(BigInt(data_size_bound)));
 		let stream = Core.ByteStreamView.look(data.view());
 		let manifest = Core.Tool.Marmalade.DZip.Manifest.PackageVariant.from_json(Core.JSON.Value.value(manifest_js), version_c);
 		Core.Tool.Marmalade.DZip.Pack.process(stream, manifest, Core.Path.value(resource_directory), version_c);
-		Console.notify('s', `打包完成`, []);
+		Console.notify('s', localized(`打包完成`), []);
 		return [data, stream.position()];
 	}
 

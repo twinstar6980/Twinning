@@ -3,7 +3,7 @@ namespace TwinKleS {
 	// ------------------------------------------------
 
 	/** 版本编号 */
-	export const k_version = 20;
+	export const k_version = 21;
 
 	// ------------------------------------------------
 
@@ -196,7 +196,7 @@ namespace TwinKleS {
 				let begin_time = Date.now();
 				let entry = load_module(g_module_manifest, `${g_home_directory}/script`);
 				let end_time = Date.now();
-				Console.notify('s', `所有脚本模块已加载`, [`用时 ${((end_time - begin_time) / 1000).toFixed(3)} s`]);
+				Console.notify('s', localized(`所有脚本模块已加载`), [localized(`用时 {} s`, ((end_time - begin_time) / 1000).toFixed(3))]);
 				entry?.[0](entry[1], argument);
 			} catch (error: any) {
 				if (error instanceof Error) {
@@ -250,9 +250,10 @@ TwinKleS.Main.g_module_manifest = {
 		`Support/PvZ2/RSB/ResourceManifest/ResourceManifest`,
 		`Support/PvZ2/RSB/ResourceManifest/OfficialResourceManifest`,
 		`Support/PvZ2/RSB/ResourceExtract/ResourceExtract`,
-		`Executor/Executor`,
+		`Executor/Method`,
+		`Executor/Argument`,
+		`Executor/Command`,
 		`Entry/Entry`,
-		`Entry/Argument`,
 		`Entry/method/js`,
 		`Entry/method/json`,
 		`Entry/method/data.hash`,

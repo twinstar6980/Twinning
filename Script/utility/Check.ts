@@ -19,7 +19,7 @@ namespace TwinKleS.Check {
 	export function enum_checkerx<T>(
 		source: Array<T>,
 	): CheckerX<T> {
-		return (value) => (source.includes(value) ? null : `须为其中之一：[ ${source.join(' , ')} ]`);
+		return (value) => (source.includes(value) ? null : localized('须为其中之一：{}', `[ ${source.join(' , ')} ]`));
 	}
 
 	/**
@@ -30,7 +30,7 @@ namespace TwinKleS.Check {
 	export function regexp_checkerx(
 		source: RegExp,
 	): CheckerX<string> {
-		return (value) => (source.test(value) ? null : `须匹配正则：${source.source}`);
+		return (value) => (source.test(value) ? null : localized('须匹配正则式：{}', `${source.source}`));
 	}
 
 	// ------------------------------------------------

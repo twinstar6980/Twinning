@@ -15,41 +15,44 @@ namespace TwinKleS.Entry.method.json {
 		g_executor_method.push(
 			Executor.method_of({
 				id: 'json.format',
-				description: 'JSON 格式化',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
 				worker(a: Entry.CFSA & {
-					source_file: Argument.Require<string>;
-					dest_file: Argument.Request<string, true>;
-					disable_trailing_comma: Argument.Request<boolean | null, true>;
-					disable_array_wrap_line: Argument.Request<boolean | null, true>;
+					source_file: Executor.RequireArgument<string>;
+					dest_file: Executor.RequestArgument<string, true>;
+					disable_trailing_comma: Executor.RequestArgument<boolean | null, true>;
+					disable_array_wrap_line: Executor.RequestArgument<boolean | null, true>;
 				}) {
 					let source_file: string;
 					let dest_file: string;
 					let disable_trailing_comma: boolean | null;
 					let disable_array_wrap_line: boolean | null;
 					{
-						source_file = Argument.require(
-							'来源文件', '',
+						source_file = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'source_file'),
 							a.source_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
-						dest_file = Argument.request(
-							'目标文件', '',
+						dest_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'dest_file'),
 							a.dest_file,
 							(value) => (value),
 							() => (source_file.replace(/((\.json))?$/i, '.formatted.json')),
-							...Argument.requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
-						disable_trailing_comma = Argument.request(
-							'是否禁用尾随逗号', '',
+						disable_trailing_comma = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'disable_trailing_comma'),
 							a.disable_trailing_comma,
 							(value) => (value),
 							() => (null),
 							() => (Console.confirm(null, true)),
 							(value) => (null),
 						);
-						disable_array_wrap_line = Argument.request(
-							'是否禁用尾随逗号', '',
+						disable_array_wrap_line = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'disable_array_wrap_line'),
 							a.disable_array_wrap_line,
 							(value) => (value),
 							() => (null),
@@ -59,7 +62,7 @@ namespace TwinKleS.Entry.method.json {
 					}
 					let json = CoreX.JSON.read_fs(source_file);
 					CoreX.JSON.write_fs(dest_file, json, disable_trailing_comma === null ? undefined : disable_trailing_comma, disable_array_wrap_line === null ? undefined : disable_array_wrap_line);
-					Console.notify('s', `执行成功`, [`${dest_file}`]);
+					Console.notify('s', localized(`执行成功`), [`${dest_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -75,41 +78,44 @@ namespace TwinKleS.Entry.method.json {
 		g_executor_method_of_batch.push(
 			Executor.method_of({
 				id: 'json.format.batch',
-				description: '[批处理] JSON 格式化',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
 				worker(a: Entry.CFSA & {
-					source_file_directory: Argument.Require<string>;
-					dest_file_directory: Argument.Request<string, true>;
-					disable_trailing_comma: Argument.Request<boolean | null, true>;
-					disable_array_wrap_line: Argument.Request<boolean | null, true>;
+					source_file_directory: Executor.RequireArgument<string>;
+					dest_file_directory: Executor.RequestArgument<string, true>;
+					disable_trailing_comma: Executor.RequestArgument<boolean | null, true>;
+					disable_array_wrap_line: Executor.RequestArgument<boolean | null, true>;
 				}) {
 					let source_file_directory: string;
 					let dest_file_directory: string;
 					let disable_trailing_comma: boolean | null;
 					let disable_array_wrap_line: boolean | null;
 					{
-						source_file_directory = Argument.require(
-							'来源文件目录', '',
+						source_file_directory = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'source_file_directory'),
 							a.source_file_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
-						dest_file_directory = Argument.request(
-							'目标文件目录', '',
+						dest_file_directory = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'dest_file_directory'),
 							a.dest_file_directory,
 							(value) => (value),
 							() => (source_file_directory.replace(/$/i, '.json_format')),
-							...Argument.requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
-						disable_trailing_comma = Argument.request(
-							'是否禁用尾随逗号', '',
+						disable_trailing_comma = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'disable_trailing_comma'),
 							a.disable_trailing_comma,
 							(value) => (value),
 							() => (null),
 							() => (Console.confirm(null, true)),
 							(value) => (null),
 						);
-						disable_array_wrap_line = Argument.request(
-							'是否禁用尾随逗号', '',
+						disable_array_wrap_line = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'disable_array_wrap_line'),
 							a.disable_array_wrap_line,
 							(value) => (value),
 							() => (null),
@@ -127,7 +133,7 @@ namespace TwinKleS.Entry.method.json {
 							CoreX.JSON.write_fs(dest_file, json, disable_trailing_comma === null ? undefined : disable_trailing_comma, disable_array_wrap_line === null ? undefined : disable_array_wrap_line);
 						},
 					);
-					Console.notify('s', `执行成功`, [`${dest_file_directory}`]);
+					Console.notify('s', localized(`执行成功`), [`${dest_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

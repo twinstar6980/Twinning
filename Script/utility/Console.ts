@@ -117,7 +117,7 @@ namespace TwinKleS.Console {
 				result = input;
 				break;
 			}
-			notify('w', `输入无效，请重新输入`, [`${check_result}`]);
+			notify('w', localized(`输入无效，请重新输入`), [`${check_result}`]);
 		}
 		return result;
 	}
@@ -128,11 +128,10 @@ namespace TwinKleS.Console {
 		type: BarType,
 		title: string,
 		description: Array<string>,
-		with_icon: boolean = true, // for cli
 	): void {
 		if (Shell.is_cli) {
 			cli_set_bar_text_attribute(type);
-			cli_basic_output(title, with_icon, 0, true);
+			cli_basic_output(title, true, 0, true);
 			cli_set_bar_text_attribute('v');
 			for (let description_element of description) {
 				cli_basic_output(description_element, false, 1, true);
@@ -152,17 +151,17 @@ namespace TwinKleS.Console {
 		if (Shell.is_cli) {
 			cli_set_bar_text_attribute('t');
 			if (Shell.is_windows) {
-				cli_basic_output(`P 键入以继续 ... `, true, 0, false);
+				cli_basic_output(`P ${localized(`键入以继续 ...`)} `, true, 0, false);
 				CoreX.System.system(`pause > nul`);
 				Shell.cli_output('\n');
 			}
 			if (Shell.is_linux || Shell.is_macos || Shell.is_android || Shell.is_ios) {
 				if (CoreX.FileSystem.exist_file(`/bin/bash`)) {
-					cli_basic_output(`P 键入以继续 ... `, true, 0, false);
+					cli_basic_output(`P ${localized(`键入以继续 ...`)} `, true, 0, false);
 					CoreX.System.process(`/bin/bash`, [`-c`, `read -s -n 1 _`]);
 					Shell.cli_output('\n');
 				} else {
-					cli_basic_output(`P 键入回车以继续 ... `, true, 0, false);
+					cli_basic_output(`P ${localized(`键入回车以继续 ...`)} `, true, 0, false);
 					Shell.cli_input();
 				}
 			}
@@ -193,7 +192,7 @@ namespace TwinKleS.Console {
 			let input = cli_basic_input('C', (value) => {
 				let regexp_check_result = Check.enum_checkerx(['n', 'y'])(value);
 				if (regexp_check_result !== null) {
-					return `确认值只识别 n 与 y`;
+					return localized(`确认值格式非法，须为 n 或 y`);
 				}
 				return checker === null ? null : checker(value === 'y');
 			}, nullable);
@@ -224,7 +223,7 @@ namespace TwinKleS.Console {
 			let input = cli_basic_input('N', (value) => {
 				let regexp_check_result = Check.regexp_checkerx(/^[\\+\\-]?\d+(\.\d+)?$/)(value);
 				if (regexp_check_result !== null) {
-					return `数字格式非法，${regexp_check_result}`;
+					return localized(`数字格式非法，{}`, regexp_check_result);
 				}
 				return checker === null ? null : checker(Number.parseFloat(value));
 			}, nullable);
@@ -255,7 +254,7 @@ namespace TwinKleS.Console {
 			let input = cli_basic_input('I', (value) => {
 				let regexp_check_result = Check.regexp_checkerx(/^[\\+\\-]?\d+$/)(value);
 				if (regexp_check_result !== null) {
-					return `整数格式非法，${regexp_check_result}`;
+					return localized(`整数格式非法，{}`, regexp_check_result);
 				}
 				return checker === null ? null : checker(BigInt(value));
 			}, nullable);
@@ -286,7 +285,7 @@ namespace TwinKleS.Console {
 			let input = cli_basic_input('Z', (value) => {
 				let regexp_check_result = Check.regexp_checkerx(/^\d+(\.\d+)?(b|k|m|g)$/)(value);
 				if (regexp_check_result !== null) {
-					return `二进制尺寸格式非法，${regexp_check_result}`;
+					return localized(`二进制尺寸格式非法，{}`, regexp_check_result);
 				}
 				return checker === null ? null : checker(parse_size_string(value));
 			}, nullable);
@@ -328,11 +327,11 @@ namespace TwinKleS.Console {
 			let input = cli_basic_input('O', (value) => {
 				let regexp_check_result = Check.regexp_checkerx(/^[\\+\\-]?\d+$/)(value);
 				if (regexp_check_result !== null) {
-					return `整数格式非法，${regexp_check_result}`;
+					return localized(`整数格式非法，{}`, regexp_check_result);
 				}
 				let value_integer = BigInt(value);
 				if (!valid_option_index.includes(value_integer)) {
-					return `输入项不在可选项中`;
+					return localized(`输入项不在可选项中`);
 				}
 				return checker === null ? null : checker(option[Number(value_integer - 1n)]![0]);
 			}, nullable);

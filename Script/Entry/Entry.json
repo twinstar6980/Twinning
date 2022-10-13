@@ -1,4 +1,5 @@
 {
+	"language": "Chinese",
 	"cli_disable_virtual_terminal_sequences": false,
 	"workspace": "<home>/workspace",
 	"byte_stream_use_big_endian": false,

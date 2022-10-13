@@ -1,23 +1,23 @@
 /**
  * + popcap.pam.encode PopCap-PAM 编码
  * + popcap.pam.decode PopCap-PAM 解码
- * + popcap.pam.convert.flash.from PopCap-PAM JSON转换至Flash
- * + popcap.pam.convert.flash.to PopCap-PAM JSON转换自Flash
- * + popcap.pam.convert.flash.resize PopCap-PAM Flash图像分辨率调整
- * + popcap.pam.convert.flash.link_media PopCap-PAM Flash创建图像文件链接
+ * + popcap.pam.convert.flash.from PopCap-PAM Flash 转换自JSON
+ * + popcap.pam.convert.flash.to PopCap-PAM Flash 转换至JSON
+ * + popcap.pam.convert.flash.resize PopCap-PAM Flash 图像分辨率调整
+ * + popcap.pam.convert.flash.link_media PopCap-PAM Flash 创建图像文件链接
  * + popcap.pam.encode.batch [批处理] PopCap-PAM 编码
  * + popcap.pam.decode.batch [批处理] PopCap-PAM 解码
- * + popcap.pam.convert.flash.from.batch [批处理] PopCap-PAM JSON转换至Flash
- * + popcap.pam.convert.flash.to.batch [批处理] PopCap-PAM JSON转换自Flash
- * + popcap.pam.convert.flash.resize.batch [批处理] PopCap-PAM Flash图像分辨率调整
- * + popcap.pam.convert.flash.link_media.batch [批处理] PopCap-PAM Flash创建图像文件链接
+ * + popcap.pam.convert.flash.from.batch [批处理] PopCap-PAM Flash 转换自JSON
+ * + popcap.pam.convert.flash.to.batch [批处理] PopCap-PAM Flash 转换至JSON
+ * + popcap.pam.convert.flash.resize.batch [批处理] PopCap-PAM Flash 图像分辨率调整
+ * + popcap.pam.convert.flash.link_media.batch [批处理] PopCap-PAM Flash 创建图像文件链接
  */
 namespace TwinKleS.Entry.method.popcap.pam {
 
 	// ------------------------------------------------
 
 	type Config = {
-		encode_buffer_size: Argument.Request<string, false>;
+		encode_buffer_size: Executor.RequestArgument<string, false>;
 	};
 
 	export function _injector(
@@ -26,41 +26,44 @@ namespace TwinKleS.Entry.method.popcap.pam {
 		g_executor_method.push(
 			Executor.method_of({
 				id: 'popcap.pam.encode',
-				description: 'PopCap-PAM 编码',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
 				worker(a: Entry.CFSA & {
-					manifest_file: Argument.Require<string>;
-					data_file: Argument.Request<string, true>;
-					version_number: Argument.Request<bigint, false>;
-					buffer_size: Argument.Request<string, false>;
+					manifest_file: Executor.RequireArgument<string>;
+					data_file: Executor.RequestArgument<string, true>;
+					version_number: Executor.RequestArgument<bigint, false>;
+					buffer_size: Executor.RequestArgument<string, false>;
 				}) {
 					let manifest_file: string;
 					let data_file: string;
 					let version_number: [1n, 2n, 3n, 4n, 5n, 6n][number];
 					let buffer_size: bigint;
 					{
-						manifest_file = Argument.require(
-							'清单文件', '',
+						manifest_file = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'manifest_file'),
 							a.manifest_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
-						data_file = Argument.request(
-							'数据文件', '',
+						data_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
 							() => (manifest_file.replace(/((\.pam)(\.json))?$/i, '.pam')),
-							...Argument.requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
-						version_number = Argument.request(
-							'版本编号', '',
+						version_number = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_number'),
 							a.version_number,
 							(value) => (value),
 							null,
 							() => (Console.integer(null)),
-							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : `版本不受支持`),
+							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : localized(`版本不受支持`)),
 						);
-						buffer_size = Argument.request(
-							'内存缓冲区大小', '',
+						buffer_size = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'buffer_size'),
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
@@ -69,7 +72,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 						);
 					}
 					CoreX.Tool.PopCap.PAM.encode_fs(data_file, manifest_file, { number: version_number }, buffer_size);
-					Console.notify('s', `执行成功`, [`${data_file}`]);
+					Console.notify('s', localized(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -83,40 +86,43 @@ namespace TwinKleS.Entry.method.popcap.pam {
 			}),
 			Executor.method_of({
 				id: 'popcap.pam.decode',
-				description: 'PopCap-PAM 解码',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
 				worker(a: Entry.CFSA & {
-					data_file: Argument.Require<string>;
-					manifest_file: Argument.Request<string, true>;
-					version_number: Argument.Request<bigint, false>;
+					data_file: Executor.RequireArgument<string>;
+					manifest_file: Executor.RequestArgument<string, true>;
+					version_number: Executor.RequestArgument<bigint, false>;
 				}) {
 					let data_file: string;
 					let manifest_file: string;
 					let version_number: [1n, 2n, 3n, 4n, 5n, 6n][number];
 					{
-						data_file = Argument.require(
-							'数据文件', '',
+						data_file = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
-						manifest_file = Argument.request(
-							'清单文件', '',
+						manifest_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'manifest_file'),
 							a.manifest_file,
 							(value) => (value),
 							() => (data_file.replace(/((\.pam))?$/i, '.pam.json')),
-							...Argument.requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
-						version_number = Argument.request(
-							'版本编号', '',
+						version_number = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_number'),
 							a.version_number,
 							(value) => (value),
 							null,
 							() => (Console.integer(null)),
-							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : `版本不受支持`),
+							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : localized(`版本不受支持`)),
 						);
 					}
 					CoreX.Tool.PopCap.PAM.decode_fs(data_file, manifest_file, { number: version_number });
-					Console.notify('s', `执行成功`, [`${manifest_file}`]);
+					Console.notify('s', localized(`执行成功`), [`${manifest_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -129,33 +135,36 @@ namespace TwinKleS.Entry.method.popcap.pam {
 			}),
 			Executor.method_of({
 				id: 'popcap.pam.convert.flash.from',
-				description: 'PopCap-PAM JSON转换至Flash',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
 				worker(a: Entry.CFSA & {
-					raw_file: Argument.Require<string>;
-					ripe_directory: Argument.Request<string, true>;
+					raw_file: Executor.RequireArgument<string>;
+					ripe_directory: Executor.RequestArgument<string, true>;
 				}) {
 					let raw_file: string;
 					let ripe_directory: string;
 					{
-						raw_file = Argument.require(
-							'原始文件', '',
+						raw_file = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'raw_file'),
 							a.raw_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
-						ripe_directory = Argument.request(
-							'成品目录', '',
+						ripe_directory = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'ripe_directory'),
 							a.ripe_directory,
 							(value) => (value),
 							() => (raw_file.replace(/((\.pam)(\.json))?$/i, '.pam.xfl')),
-							...Argument.requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
 					}
 					let raw = CoreX.JSON.read_fs_js<Core.Tool.PopCap.PAM.Manifest.JS_N.Animation>(raw_file);
 					Support.PopCapAnimation.Convert.Flash.From.from_fsh(raw, ripe_directory);
 					Support.PopCapAnimation.Convert.Flash.SourceManager.create_fsh(ripe_directory, raw);
 					Support.PopCapAnimation.Convert.Flash.create_xfl_content_file(ripe_directory);
-					Console.notify('s', `执行成功`, [`${ripe_directory}`]);
+					Console.notify('s', localized(`执行成功`), [`${ripe_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -167,30 +176,33 @@ namespace TwinKleS.Entry.method.popcap.pam {
 			}),
 			Executor.method_of({
 				id: 'popcap.pam.convert.flash.to',
-				description: 'PopCap-PAM JSON转换自Flash',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
 				worker(a: Entry.CFSA & {
-					ripe_directory: Argument.Require<string>;
-					raw_file: Argument.Request<string, true>;
+					ripe_directory: Executor.RequireArgument<string>;
+					raw_file: Executor.RequestArgument<string, true>;
 				}) {
 					let ripe_directory: string;
 					let raw_file: string;
 					{
-						ripe_directory = Argument.require(
-							'成品目录', '',
+						ripe_directory = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'ripe_directory'),
 							a.ripe_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
-						raw_file = Argument.request(
-							'原始文件', '',
+						raw_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'raw_file'),
 							a.raw_file,
 							(value) => (value),
 							() => (ripe_directory.replace(/((\.pam)(\.xfl))?$/i, '.pam.json')),
-							...Argument.requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
 					}
 					Support.PopCapAnimation.Convert.Flash.To.to_fs(raw_file, ripe_directory);
-					Console.notify('s', `执行成功`, [`${raw_file}`]);
+					Console.notify('s', localized(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -202,31 +214,34 @@ namespace TwinKleS.Entry.method.popcap.pam {
 			}),
 			Executor.method_of({
 				id: 'popcap.pam.convert.flash.resize',
-				description: 'PopCap-PAM Flash图像分辨率调整',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
 				worker(a: Entry.CFSA & {
-					directory: Argument.Require<string>;
-					resolution: Argument.Request<bigint, false>;
+					directory: Executor.RequireArgument<string>;
+					resolution: Executor.RequestArgument<bigint, false>;
 				}) {
 					let directory: string;
 					let resolution: bigint;
 					{
-						directory = Argument.require(
-							'目录', '',
+						directory = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'directory'),
 							a.directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
-						resolution = Argument.request(
-							'图像分辨率', '',
+						resolution = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'resolution'),
 							a.resolution,
 							(value) => (value),
 							null,
 							() => (Console.integer(null)),
-							(value) => (value > 0n ? null : `分辨率应大于零`),
+							(value) => (value > 0n ? null : localized(`分辨率应大于零`)),
 						);
 					}
 					Support.PopCapAnimation.Convert.Flash.SourceManager.resize_fs(directory, resolution);
-					Console.notify('s', `执行成功`, [`${directory}`]);
+					Console.notify('s', localized(`执行成功`), [`${directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -238,14 +253,17 @@ namespace TwinKleS.Entry.method.popcap.pam {
 			}),
 			Executor.method_of({
 				id: 'popcap.pam.convert.flash.link_media',
-				description: 'PopCap-PAM Flash创建图像文件链接',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
 				worker(a: Entry.CFSA & {
-					directory: Argument.Require<string>;
+					directory: Executor.RequireArgument<string>;
 				}) {
 					let directory: string;
 					{
-						directory = Argument.require(
-							'目录', '',
+						directory = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'directory'),
 							a.directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
@@ -261,7 +279,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 						.forEach((e) => {
 							CoreX.FileSystem.create_hard_link(`${media_directory}/${e}`, `${directory}/../${e}`);
 						});
-					Console.notify('s', `执行成功`, [`${directory}`]);
+					Console.notify('s', localized(`执行成功`), [`${directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -274,41 +292,44 @@ namespace TwinKleS.Entry.method.popcap.pam {
 		g_executor_method_of_batch.push(
 			Executor.method_of({
 				id: 'popcap.pam.encode.batch',
-				description: '[批处理] PopCap-PAM 编码',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
 				worker(a: Entry.CFSA & {
-					manifest_file_directory: Argument.Require<string>;
-					data_file_directory: Argument.Request<string, true>;
-					version_number: Argument.Request<bigint, false>;
-					buffer_size: Argument.Request<string, false>;
+					manifest_file_directory: Executor.RequireArgument<string>;
+					data_file_directory: Executor.RequestArgument<string, true>;
+					version_number: Executor.RequestArgument<bigint, false>;
+					buffer_size: Executor.RequestArgument<string, false>;
 				}) {
 					let manifest_file_directory: string;
 					let data_file_directory: string;
 					let version_number: [1n, 2n, 3n, 4n, 5n, 6n][number];
 					let buffer_size: bigint;
 					{
-						manifest_file_directory = Argument.require(
-							'清单文件目录', '',
+						manifest_file_directory = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'manifest_file_directory'),
 							a.manifest_file_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
-						data_file_directory = Argument.request(
-							'数据文件目录', '',
+						data_file_directory = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'data_file_directory'),
 							a.data_file_directory,
 							(value) => (value),
 							() => (manifest_file_directory.replace(/$/i, '.pam_encode')),
-							...Argument.requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
-						version_number = Argument.request(
-							'版本编号', '',
+						version_number = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_number'),
 							a.version_number,
 							(value) => (value),
 							null,
 							() => (Console.integer(null)),
-							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : `版本不受支持`),
+							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : localized(`版本不受支持`)),
 						);
-						buffer_size = Argument.request(
-							'内存缓冲区大小', '',
+						buffer_size = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'buffer_size'),
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
@@ -326,7 +347,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 							CoreX.Tool.PopCap.PAM.encode_fs(data_file, manifest_file, { number: version_number }, data_buffer.view());
 						},
 					);
-					Console.notify('s', `执行成功`, [`${data_file_directory}`]);
+					Console.notify('s', localized(`执行成功`), [`${data_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -340,36 +361,39 @@ namespace TwinKleS.Entry.method.popcap.pam {
 			}),
 			Executor.method_of({
 				id: 'popcap.pam.decode.batch',
-				description: '[批处理] PopCap-PAM 解码',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
 				worker(a: Entry.CFSA & {
-					data_file_directory: Argument.Require<string>;
-					manifest_file_directory: Argument.Request<string, true>;
-					version_number: Argument.Request<bigint, false>;
+					data_file_directory: Executor.RequireArgument<string>;
+					manifest_file_directory: Executor.RequestArgument<string, true>;
+					version_number: Executor.RequestArgument<bigint, false>;
 				}) {
 					let data_file_directory: string;
 					let manifest_file_directory: string;
 					let version_number: [1n, 2n, 3n, 4n, 5n, 6n][number];
 					{
-						data_file_directory = Argument.require(
-							'数据文件目录', '',
+						data_file_directory = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'data_file_directory'),
 							a.data_file_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
-						manifest_file_directory = Argument.request(
-							'清单文件目录', '',
+						manifest_file_directory = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'manifest_file_directory'),
 							a.manifest_file_directory,
 							(value) => (value),
 							() => (manifest_file_directory.replace(/$/i, '.pam_decode')),
-							...Argument.requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
-						version_number = Argument.request(
-							'版本编号', '',
+						version_number = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_number'),
 							a.version_number,
 							(value) => (value),
 							null,
 							() => (Console.integer(null)),
-							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : `版本不受支持`),
+							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : localized(`版本不受支持`)),
 						);
 					}
 					simple_batch_execute(
@@ -381,7 +405,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 							CoreX.Tool.PopCap.PAM.decode_fs(data_file, manifest_file, { number: version_number });
 						},
 					);
-					Console.notify('s', `执行成功`, [`${manifest_file_directory}`]);
+					Console.notify('s', localized(`执行成功`), [`${manifest_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -394,26 +418,29 @@ namespace TwinKleS.Entry.method.popcap.pam {
 			}),
 			Executor.method_of({
 				id: 'popcap.pam.convert.flash.from.batch',
-				description: '[批处理] PopCap-PAM JSON转换至Flash',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
 				worker(a: Entry.CFSA & {
-					raw_file_directory: Argument.Require<string>;
-					ripe_directory_directory: Argument.Request<string, true>;
+					raw_file_directory: Executor.RequireArgument<string>;
+					ripe_directory_directory: Executor.RequestArgument<string, true>;
 				}) {
 					let raw_file_directory: string;
 					let ripe_directory_directory: string;
 					{
-						raw_file_directory = Argument.require(
-							'原始文件目录', '',
+						raw_file_directory = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'raw_file_directory'),
 							a.raw_file_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
-						ripe_directory_directory = Argument.request(
-							'成品文件目录', '',
+						ripe_directory_directory = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'ripe_directory_directory'),
 							a.ripe_directory_directory,
 							(value) => (value),
 							() => (raw_file_directory.replace(/$/i, '.pam_xfl_from')),
-							...Argument.requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
 					}
 					simple_batch_execute(
@@ -428,7 +455,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 							Support.PopCapAnimation.Convert.Flash.create_xfl_content_file(ripe_directory);
 						},
 					);
-					Console.notify('s', `执行成功`, [`${ripe_directory_directory}`]);
+					Console.notify('s', localized(`执行成功`), [`${ripe_directory_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -440,26 +467,29 @@ namespace TwinKleS.Entry.method.popcap.pam {
 			}),
 			Executor.method_of({
 				id: 'popcap.pam.convert.flash.to.batch',
-				description: '[批处理] PopCap-PAM JSON转换自Flash',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
 				worker(a: Entry.CFSA & {
-					ripe_directory_directory: Argument.Require<string>;
-					raw_file_directory: Argument.Request<string, true>;
+					ripe_directory_directory: Executor.RequireArgument<string>;
+					raw_file_directory: Executor.RequestArgument<string, true>;
 				}) {
 					let ripe_directory_directory: string;
 					let raw_file_directory: string;
 					{
-						ripe_directory_directory = Argument.require(
-							'成品目录目录', '',
+						ripe_directory_directory = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'ripe_directory_directory'),
 							a.ripe_directory_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
-						raw_file_directory = Argument.request(
-							'原始文件目录', '',
+						raw_file_directory = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'raw_file_directory'),
 							a.raw_file_directory,
 							(value) => (value),
 							() => (ripe_directory_directory.replace(/$/i, '.pam_xfl_to')),
-							...Argument.requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
 					}
 					simple_batch_execute(
@@ -471,7 +501,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 							Support.PopCapAnimation.Convert.Flash.To.to_fs(raw_file, ripe_directory);
 						},
 					);
-					Console.notify('s', `执行成功`, [`${raw_file_directory}`]);
+					Console.notify('s', localized(`执行成功`), [`${raw_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -483,27 +513,30 @@ namespace TwinKleS.Entry.method.popcap.pam {
 			}),
 			Executor.method_of({
 				id: 'popcap.pam.convert.flash.resize.batch',
-				description: '[批处理] PopCap-PAM Flash图像分辨率调整',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
 				worker(a: Entry.CFSA & {
-					directory_directory: Argument.Require<string>;
-					resolution: Argument.Request<bigint, false>;
+					directory_directory: Executor.RequireArgument<string>;
+					resolution: Executor.RequestArgument<bigint, false>;
 				}) {
 					let directory_directory: string;
 					let resolution: bigint;
 					{
-						directory_directory = Argument.require(
-							'目录目录', '',
+						directory_directory = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'directory_directory'),
 							a.directory_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
-						resolution = Argument.request(
-							'图像分辨率', '',
+						resolution = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'resolution'),
 							a.resolution,
 							(value) => (value),
 							null,
 							() => (Console.integer(null)),
-							(value) => (value > 0n ? null : `分辨率应大于零`),
+							(value) => (value > 0n ? null : localized(`分辨率应大于零`)),
 						);
 					}
 					simple_batch_execute(
@@ -514,7 +547,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 							Support.PopCapAnimation.Convert.Flash.SourceManager.resize_fs(directory, resolution);
 						},
 					);
-					Console.notify('s', `执行成功`, [`${directory_directory}`]);
+					Console.notify('s', localized(`执行成功`), [`${directory_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -526,14 +559,17 @@ namespace TwinKleS.Entry.method.popcap.pam {
 			}),
 			Executor.method_of({
 				id: 'popcap.pam.convert.flash.link_media.batch',
-				description: '[批处理] PopCap-PAM Flash创建图像文件链接',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
 				worker(a: Entry.CFSA & {
-					directory_directory: Argument.Require<string>;
+					directory_directory: Executor.RequireArgument<string>;
 				}) {
 					let directory_directory: string;
 					{
-						directory_directory = Argument.require(
-							'目录目录', '',
+						directory_directory = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'directory_directory'),
 							a.directory_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
@@ -557,7 +593,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 								});
 						},
 					);
-					Console.notify('s', `执行成功`, [`${directory_directory}`]);
+					Console.notify('s', localized(`执行成功`), [`${directory_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

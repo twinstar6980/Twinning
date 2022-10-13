@@ -4,10 +4,10 @@ namespace TwinKleS.Language {
 	// ------------------------------------------------
 
 	/** 多语言字符串表 */
-	export type Table = Record<string, Record<string, string>>;
+	export type Table = Record<string, Record<string, string | null>>;
 
 	/** 全局字符串表 */
-	let table: Table = {};
+	let g_table: Table = {};
 
 	/**
 	 * 向全局表追加数据
@@ -17,11 +17,11 @@ namespace TwinKleS.Language {
 		another_table: Table,
 	): void {
 		for (let language in another_table) {
-			if (table[language] === undefined) {
-				table[language] = {};
+			if (g_table[language] === undefined) {
+				g_table[language] = {};
 			}
 			for (let key in another_table[language]) {
-				table[language][key] = another_table[language][key];
+				g_table[language][key] = another_table[language][key];
 			}
 		}
 		return;
@@ -30,25 +30,28 @@ namespace TwinKleS.Language {
 	// ------------------------------------------------
 
 	/** 目标语言 */
-	export let target: string = '';
+	export let g_target: string = undefined!;
 
 	/**
-	 * 从全局表中获取key对应的字符串
+	 * 从全局表中查询key对应的字符串
 	 * @param key 搜索的键
 	 * @param argumant 填充参数
 	 * @returns 经过填充的相应字符串
 	 */
-	export function of(
+	export function query(
 		key: string,
 		...argumant: any[]
 	): string {
-		let map = table[target];
+		let map = g_table[g_target];
 		if (map === undefined) {
-			throw new Error(`locale not found : ${target}`);
+			throw new Error(`locale not found : ${g_target}`);
 		}
 		let format = map[key];
 		if (format === undefined) {
 			throw new Error(`key not found : ${key}`);
+		}
+		if (format === null) {
+			format = key;
 		}
 		let result = '';
 		let argument_index = 0;
@@ -70,8 +73,8 @@ namespace TwinKleS.Language {
 }
 
 namespace TwinKleS {
-	/** @see {@link Language.of} */
-	export const langof = Language.of;
+	/** @see {@link Language.query} */
+	export const localized = Language.query;
 }
 
 ({

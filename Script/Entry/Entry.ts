@@ -88,7 +88,7 @@ namespace TwinKleS.Entry {
 			item_list = item_list.filter((e) => (filter[1]!.test(e)));
 		}
 		if (item_list.length === 0) {
-			Console.notify('w', `无可处理项目`, []);
+			Console.notify('w', localized(`无可处理项目`), []);
 		} else {
 			let progress = new TextGenerator.Progress('fraction', false, 40, item_list.length);
 			for (let item of item_list) {
@@ -108,6 +108,7 @@ namespace TwinKleS.Entry {
 	// ------------------------------------------------
 
 	type Config = {
+		language: string;
 		cli_disable_virtual_terminal_sequences: boolean;
 		workspace: string;
 		byte_stream_use_big_endian: boolean;
@@ -125,6 +126,8 @@ namespace TwinKleS.Entry {
 	export function _injector(
 		config: Config,
 	) {
+		// set language target
+		Language.g_target = config.language;
 		// cli disable virtual-terminal-sequences
 		Console.cli_disable_virtual_terminal_sequences = config.cli_disable_virtual_terminal_sequences;
 		// set workspace
@@ -154,7 +157,7 @@ namespace TwinKleS.Entry {
 			timer.start();
 			let raw_command = [...argument];
 			if (raw_command.length === 0) {
-				Console.notify('i', `请依次输入命令参数`, [`输入空串以结束输入`]);
+				Console.notify('i', localized(`请依次输入命令参数`), [localized(`输入空串以结束输入`)]);
 				while (true) {
 					let input = Console.string(null, true);
 					if (input === null) {
@@ -165,11 +168,11 @@ namespace TwinKleS.Entry {
 			}
 			let command = Executor.parse(raw_command);
 			let method = [...g_executor_method, ...g_executor_method_of_batch];
-			Console.notify('i', `所有命令已解析`, [`共 ${command.length} 条`]);
+			Console.notify('i', localized(`所有命令已解析`), [localized(`共 {} 条`, command.length)]);
 			let progress = new TextGenerator.Progress('fraction', true, 40, command.length);
 			for (let e of command) {
 				progress.increase();
-				Console.notify('i', `命令执行中：${progress}`, [`${e.input!.value}${e.method === null ? '' : ` | ${e.method}`}`]);
+				Console.notify('i', localized(`命令执行中：{}`, progress), [`${e.input!.value}${e.method === null ? '' : ` | ${e.method}`}`]);
 				try {
 					Executor.execute(e, method);
 				} catch (e: any) {
@@ -178,7 +181,7 @@ namespace TwinKleS.Entry {
 				}
 			}
 			timer.stop();
-			Console.notify('s', `所有命令已执行`, [`用时 ${(timer.duration() / 1000).toFixed(3)} s`]);
+			Console.notify('s', localized(`所有命令已执行`), [localized(`用时 {} s`, (timer.duration() / 1000).toFixed(3))]);
 			if (config.pause_when_finish) {
 				Console.pause();
 			}

@@ -14,40 +14,43 @@ namespace TwinKleS.Entry.method.misc.pvz2.lawn_string_text {
 		g_executor_method.push(
 			Executor.method_of({
 				id: 'misc.pvz2.lawn_string_text.convert',
-				description: 'PvZ-2字符串表 版本转换',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
 				worker(a: Entry.CFSA & {
-					source_file: Argument.Require<string>;
-					dest_version: Argument.Request<string, false>;
-					dest_file: Argument.Request<string, true>;
+					source_file: Executor.RequireArgument<string>;
+					dest_version: Executor.RequestArgument<string, false>;
+					dest_file: Executor.RequestArgument<string, true>;
 				}) {
 					let source_file: string;
 					let dest_version: Support.PvZ2.LawnStringText.Version;
 					let dest_file: string;
 					{
-						source_file = Argument.require(
-							'来源文件', '',
+						source_file = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'source_file'),
 							a.source_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
-						dest_version = Argument.request(
-							'目标版本', '',
+						dest_version = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'dest_version'),
 							a.dest_version,
 							(value) => (value),
 							null,
 							() => (Console.option(Support.PvZ2.LawnStringText.VersionE.map((e) => ([e])), null)),
-							(value) => (Support.PvZ2.LawnStringText.VersionE.includes(value as any) ? null : `版本不受支持`),
+							(value) => (Support.PvZ2.LawnStringText.VersionE.includes(value as any) ? null : localized(`版本不受支持`)),
 						);
-						dest_file = Argument.request(
-							'目标文件', '',
+						dest_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'dest_file'),
 							a.dest_file,
 							(value) => (value),
 							() => (source_file.replace(/((\.(txt|json)))?$/i, `.converted.${{ 'text': 'txt', 'json_map': 'map.json', 'json_list': 'list.json' }[dest_version]}`)),
-							...Argument.requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
 					}
 					Support.PvZ2.LawnStringText.convert_fs(source_file, dest_file, 'auto', dest_version);
-					Console.notify('s', `执行成功`, [`${dest_file}`]);
+					Console.notify('s', localized(`执行成功`), [`${dest_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

@@ -8,7 +8,7 @@ namespace TwinKleS.Entry.method.marmalade.dzip {
 	// ------------------------------------------------
 
 	type Config = {
-		pack_buffer_size: Argument.Request<string, false>;
+		pack_buffer_size: Executor.RequestArgument<string, false>;
 	};
 
 	export function _injector(
@@ -17,41 +17,44 @@ namespace TwinKleS.Entry.method.marmalade.dzip {
 		g_executor_method.push(
 			Executor.method_of({
 				id: 'marmalade.dzip.pack',
-				description: 'Marmalade-DZip 打包',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
 				worker(a: Entry.CFSA & {
-					bundle_directory: Argument.Require<string>;
-					data_file: Argument.Request<string, true>;
-					version_number: Argument.Request<bigint, false>;
-					buffer_size: Argument.Request<string, false>;
+					bundle_directory: Executor.RequireArgument<string>;
+					data_file: Executor.RequestArgument<string, true>;
+					version_number: Executor.RequestArgument<bigint, false>;
+					buffer_size: Executor.RequestArgument<string, false>;
 				}) {
 					let bundle_directory: string;
 					let data_file: string;
 					let version_number: [0n][number];
 					let buffer_size: bigint;
 					{
-						bundle_directory = Argument.require(
-							'捆绑目录', '',
+						bundle_directory = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'bundle_directory'),
 							a.bundle_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
-						data_file = Argument.request(
-							'数据文件', '',
+						data_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
 							() => (bundle_directory.replace(/((\.dz)(\.bundle))?$/i, '.dz')),
-							...Argument.requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
-						version_number = Argument.request(
-							'版本编号', '',
+						version_number = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_number'),
 							a.version_number,
 							(value) => (value),
 							null,
 							() => (Console.integer(null)),
-							(value) => ([0n].includes(value) ? null : `版本不受支持`),
+							(value) => ([0n].includes(value) ? null : localized(`版本不受支持`)),
 						);
-						buffer_size = Argument.request(
-							'内存缓冲区大小', '',
+						buffer_size = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'buffer_size'),
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
@@ -62,7 +65,7 @@ namespace TwinKleS.Entry.method.marmalade.dzip {
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.Marmalade.DZip.pack_fs(data_file, manifest_file, resource_directory, { number: version_number }, buffer_size);
-					Console.notify('s', `执行成功`, [`${data_file}`]);
+					Console.notify('s', localized(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -76,42 +79,45 @@ namespace TwinKleS.Entry.method.marmalade.dzip {
 			}),
 			Executor.method_of({
 				id: 'marmalade.dzip.unpack',
-				description: 'Marmalade-DZip 解包',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
 				worker(a: Entry.CFSA & {
-					data_file: Argument.Require<string>;
-					bundle_directory: Argument.Request<string, true>;
-					version_number: Argument.Request<bigint, false>;
+					data_file: Executor.RequireArgument<string>;
+					bundle_directory: Executor.RequestArgument<string, true>;
+					version_number: Executor.RequestArgument<bigint, false>;
 				}) {
 					let data_file: string;
 					let bundle_directory: string;
 					let version_number: [0n][number];
 					{
-						data_file = Argument.require(
-							'数据文件', '',
+						data_file = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
-						bundle_directory = Argument.request(
-							'捆绑目录', '',
+						bundle_directory = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'bundle_directory'),
 							a.bundle_directory,
 							(value) => (value),
 							() => (data_file.replace(/((\.dz))?$/i, '.dz.bundle')),
-							...Argument.requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
-						version_number = Argument.request(
-							'版本编号', '',
+						version_number = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_number'),
 							a.version_number,
 							(value) => (value),
 							null,
 							() => (Console.integer(null)),
-							(value) => ([0n].includes(value) ? null : `版本不受支持`),
+							(value) => ([0n].includes(value) ? null : localized(`版本不受支持`)),
 						);
 					}
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.Marmalade.DZip.unpack_fs(data_file, manifest_file, resource_directory, { number: version_number });
-					Console.notify('s', `执行成功`, [`${bundle_directory}`]);
+					Console.notify('s', localized(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -124,41 +130,44 @@ namespace TwinKleS.Entry.method.marmalade.dzip {
 			}),
 			Executor.method_of({
 				id: 'marmalade.dzip.pack_auto',
-				description: 'Marmalade-DZip 自动打包',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
 				worker(a: Entry.CFSA & {
-					resource_directory: Argument.Require<string>;
-					data_file: Argument.Request<string, true>;
-					version_number: Argument.Request<bigint, false>;
+					resource_directory: Executor.RequireArgument<string>;
+					data_file: Executor.RequestArgument<string, true>;
+					version_number: Executor.RequestArgument<bigint, false>;
 				}) {
 					let resource_directory: string;
 					let data_file: string;
 					let version_number: [0n][number];
 					{
-						resource_directory = Argument.require(
-							'资源目录', '',
+						resource_directory = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'resource_directory'),
 							a.resource_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
-						data_file = Argument.request(
-							'数据文件', '',
+						data_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
 							() => (resource_directory.replace(/((\.dz)(\.resource))?$/i, '.dz')),
-							...Argument.requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
-						version_number = Argument.request(
-							'版本编号', '',
+						version_number = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_number'),
 							a.version_number,
 							(value) => (value),
 							null,
 							() => (Console.integer(null)),
-							(value) => ([0n].includes(value) ? null : `版本不受支持`),
+							(value) => ([0n].includes(value) ? null : localized(`版本不受支持`)),
 						);
 					}
 					let data = Support.MarmaladeDZip.ResourcePack.pack(resource_directory, version_number);
 					CoreX.FileSystem.write_file(data_file, data[0].view().sub(Core.Size.value(0n), data[1]));
-					Console.notify('s', `执行成功`, [`${data_file}`]);
+					Console.notify('s', localized(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

@@ -14,21 +14,24 @@ namespace TwinKleS.Entry.method.js {
 		g_executor_method.push(
 			Executor.method_of({
 				id: 'js.evaluate',
-				description: 'JS 执行',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
 				worker(a: Entry.CFSA & {
-					script_file: Argument.Require<string>;
+					script_file: Executor.RequireArgument<string>;
 				}) {
 					let script_file: string;
 					{
-						script_file = Argument.require(
-							'脚本文件', '',
+						script_file = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'script_file'),
 							a.script_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 					}
 					let result = CoreX.Misc.evaluate_fs(script_file);
-					Console.notify('s', `执行成功`, [`${result}`]);
+					Console.notify('s', localized(`执行成功`), [`${result}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

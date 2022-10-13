@@ -1,3 +1,3 @@
 #pragma once
 
-#define M_version 6
+#define M_version 7

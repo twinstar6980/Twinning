@@ -14,21 +14,24 @@ namespace TwinKleS.Entry.method.data.hash {
 		g_executor_method.push(
 			Executor.method_of({
 				id: 'data.hash.md5',
-				description: 'MD5 哈希',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
 				worker(a: Entry.CFSA & {
-					file: Argument.Require<string>;
+					file: Executor.RequireArgument<string>;
 				}) {
 					let file: string;
 					{
-						file = Argument.require(
-							'文件', '',
+						file = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'file'),
 							a.file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 					}
 					let result = CoreX.Tool.Data.Hash.MD5.hash_fs(file);
-					Console.notify('s', `执行成功`, [`${result}`]);
+					Console.notify('s', localized(`执行成功`), [`${result}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

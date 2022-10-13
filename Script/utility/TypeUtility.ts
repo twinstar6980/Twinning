@@ -283,7 +283,7 @@ namespace TwinKleS {
 	/**
 	 * 以UTF16编码将二进制数据转换为字符串
 	 * @param source 二进制数据
-	 * @param endian 端序，若指定为`parse`，则取第一个编码单元作为BOM
+	 * @param endian 端序，若指定为 parse ，则取第一个编码单元作为BOM
 	 * @returns 字符串
 	 */
 	export function string_from_utf16_data(

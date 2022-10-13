@@ -12,7 +12,7 @@ namespace TwinKleS.Entry.method.wwise.encoded_media {
 			ww2ogg: string;
 			ww2ogg_pcb: string;
 		};
-		temp_directpry: Argument.Require<string>;
+		temp_directpry: Executor.RequireArgument<string>;
 	};
 
 	export function _injector(
@@ -21,13 +21,16 @@ namespace TwinKleS.Entry.method.wwise.encoded_media {
 		g_executor_method.push(
 			Executor.method_of({
 				id: 'wwise.encoded_media.decode',
-				description: 'Wwise-Encoded-Media 解码',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
 				worker(a: Entry.CFSA & {
-					ripe_file: Argument.Require<string>;
-					raw_file: Argument.Request<string, true>;
-					tool_ffmpeg_file: Argument.Request<string, false>;
-					tool_ww2ogg_file: Argument.Request<string, false>;
-					tool_ww2ogg_pcb_file: Argument.Request<string, false>;
+					ripe_file: Executor.RequireArgument<string>;
+					raw_file: Executor.RequestArgument<string, true>;
+					tool_ffmpeg_file: Executor.RequestArgument<string, false>;
+					tool_ww2ogg_file: Executor.RequestArgument<string, false>;
+					tool_ww2ogg_pcb_file: Executor.RequestArgument<string, false>;
 				}) {
 					let ripe_file: string;
 					let raw_file: string;
@@ -35,43 +38,43 @@ namespace TwinKleS.Entry.method.wwise.encoded_media {
 					let tool_ww2ogg_file: string;
 					let tool_ww2ogg_pcb_file: string;
 					{
-						ripe_file = Argument.require(
-							'成品文件', '',
+						ripe_file = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'ripe_file'),
 							a.ripe_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
-						raw_file = Argument.request(
-							'原始文件', '',
+						raw_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'raw_file'),
 							a.raw_file,
 							(value) => (value),
 							() => (ripe_file.replace(/((\.wem))?$/i, '.wav')),
-							...Argument.requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
-						tool_ffmpeg_file = Argument.request(
-							'FFMPEG程序文件', '',
+						tool_ffmpeg_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'tool_ffmpeg_file'),
 							a.tool_ffmpeg_file,
 							(value) => (value),
 							null,
-							...Argument.requester_for_path('file', [true]),
+							...Executor.argument_requester_for_path('file', [true]),
 						);
-						tool_ww2ogg_file = Argument.request(
-							'WW2OGG程序文件', '',
+						tool_ww2ogg_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'tool_ww2ogg_file'),
 							a.tool_ww2ogg_file,
 							(value) => (value),
 							null,
-							...Argument.requester_for_path('file', [true]),
+							...Executor.argument_requester_for_path('file', [true]),
 						);
-						tool_ww2ogg_pcb_file = Argument.request(
-							'WW2OGG-PCB文件', '',
+						tool_ww2ogg_pcb_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'tool_ww2ogg_pcb_file'),
 							a.tool_ww2ogg_pcb_file,
 							(value) => (value),
 							null,
-							...Argument.requester_for_path('file', [true]),
+							...Executor.argument_requester_for_path('file', [true]),
 						);
 					}
 					CoreX.Tool.Wwise.EncodedMedia.decode_fs(ripe_file, raw_file, tool_ffmpeg_file, tool_ww2ogg_file, tool_ww2ogg_pcb_file, Main.path_at_home(config.temp_directpry));
-					Console.notify('s', `执行成功`, [`${raw_file}`]);
+					Console.notify('s', localized(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -88,13 +91,16 @@ namespace TwinKleS.Entry.method.wwise.encoded_media {
 		g_executor_method_of_batch.push(
 			Executor.method_of({
 				id: 'wwise.encoded_media.decode.batch',
-				description: '[批处理] Wwise-Encoded-Media 解码',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
 				worker(a: Entry.CFSA & {
-					ripe_file_directory: Argument.Require<string>;
-					raw_file_directory: Argument.Request<string, true>;
-					tool_ffmpeg_file: Argument.Request<string, false>;
-					tool_ww2ogg_file: Argument.Request<string, false>;
-					tool_ww2ogg_pcb_file: Argument.Request<string, false>;
+					ripe_file_directory: Executor.RequireArgument<string>;
+					raw_file_directory: Executor.RequestArgument<string, true>;
+					tool_ffmpeg_file: Executor.RequestArgument<string, false>;
+					tool_ww2ogg_file: Executor.RequestArgument<string, false>;
+					tool_ww2ogg_pcb_file: Executor.RequestArgument<string, false>;
 				}) {
 					let ripe_file_directory: string;
 					let raw_file_directory: string;
@@ -102,39 +108,39 @@ namespace TwinKleS.Entry.method.wwise.encoded_media {
 					let tool_ww2ogg_file: string;
 					let tool_ww2ogg_pcb_file: string;
 					{
-						ripe_file_directory = Argument.require(
-							'成品文件目录', '',
+						ripe_file_directory = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'ripe_file_directory'),
 							a.ripe_file_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
-						raw_file_directory = Argument.request(
-							'原始文件目录', '',
+						raw_file_directory = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'raw_file_directory'),
 							a.raw_file_directory,
 							(value) => (value),
 							() => (ripe_file_directory.replace(/$/i, '.wem_decode')),
-							...Argument.requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
-						tool_ffmpeg_file = Argument.request(
-							'FFMPEG程序文件', '',
+						tool_ffmpeg_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'tool_ffmpeg_file'),
 							a.tool_ffmpeg_file,
 							(value) => (value),
 							null,
-							...Argument.requester_for_path('file', [true]),
+							...Executor.argument_requester_for_path('file', [true]),
 						);
-						tool_ww2ogg_file = Argument.request(
-							'WW2OGG程序文件', '',
+						tool_ww2ogg_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'tool_ww2ogg_file'),
 							a.tool_ww2ogg_file,
 							(value) => (value),
 							null,
-							...Argument.requester_for_path('file', [true]),
+							...Executor.argument_requester_for_path('file', [true]),
 						);
-						tool_ww2ogg_pcb_file = Argument.request(
-							'WW2OGG-PCB文件', '',
+						tool_ww2ogg_pcb_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'tool_ww2ogg_pcb_file'),
 							a.tool_ww2ogg_pcb_file,
 							(value) => (value),
 							null,
-							...Argument.requester_for_path('file', [true]),
+							...Executor.argument_requester_for_path('file', [true]),
 						);
 					}
 					simple_batch_execute(
@@ -146,7 +152,7 @@ namespace TwinKleS.Entry.method.wwise.encoded_media {
 							CoreX.Tool.Wwise.EncodedMedia.decode_fs(ripe_file, raw_file, tool_ffmpeg_file, tool_ww2ogg_file, tool_ww2ogg_pcb_file, Main.path_at_home(config.temp_directpry));
 						},
 					);
-					Console.notify('s', `执行成功`, [`${raw_file_directory}`]);
+					Console.notify('s', localized(`执行成功`), [`${raw_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
