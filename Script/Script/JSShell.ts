@@ -1,23 +1,23 @@
 /** 提供JS交互模式命令行 */
-namespace TwinKleS.Script.JSShell {
+namespace TwinStar.Script.JSShell {
 
 	export function execute(
 	): void {
-		Console.notify('i', localized(`JS交互模式已开启`), [localized(`空输入以完成此轮输入，输入字符 ! 以退出`)]);
+		Console.notify('i', localized(`JS交互模式已开启`), [localized(`输入为空则完成一轮输入，若一轮输入为空则结束交互`)]);
 		while (true) {
 			let script = '';
 			while (true) {
-				let sub_script = Console.string(null);
-				if (sub_script.length === 0) {
+				let sub_script = Console.string(null, true);
+				if (sub_script === null) {
 					break;
 				}
 				script += sub_script + '\n';
 			}
-			if (script === '!\n') {
+			if (script === '') {
 				break;
 			}
 			try {
-				let result = CoreX.Misc.evaluate(script);
+				let result = CoreX.Miscellaneous.evaluate(script);
 				Console.notify('s', `> ${result}`, []);
 			} catch (e: any) {
 				Console.notify_error(e);
@@ -28,4 +28,4 @@ namespace TwinKleS.Script.JSShell {
 
 }
 
-TwinKleS.Script.JSShell.execute();
+TwinStar.Script.JSShell.execute();

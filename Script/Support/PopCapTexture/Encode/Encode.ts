@@ -1,5 +1,5 @@
 /** PTX编解码 */
-namespace TwinKleS.Support.PopCapTexture.Encode {
+namespace TwinStar.Support.PopCapTexture.Encode {
 
 	// ------------------------------------------------
 
@@ -67,7 +67,7 @@ namespace TwinKleS.Support.PopCapTexture.Encode {
 
 	type EncodeOption = {
 		rgb_etc1_a_8_index: null | {
-			index: Core.Tool.Misc.PvZ2CHSRSBTextureAlphaIndex.JS_IndexList;
+			index: Core.Tool.Miscellaneous.PvZ2CHSRSBTextureAlphaIndex.JS_IndexList;
 		};
 	};
 
@@ -139,7 +139,7 @@ namespace TwinKleS.Support.PopCapTexture.Encode {
 				case 'rgba_4444_block':
 				case 'rgb_565_block':
 				case 'rgba_5551_block': {
-					Core.Tool.Misc.PvZ1RSBTexture20SeriesLayout.Encode.process(data, image, Core.Tool.Texture.Format.value(k_base_format[format.slice(0, -6) as BaseFormat][0] as Core.Tool.Texture.JS_Format));
+					Core.Tool.Miscellaneous.PvZ1RSBTexture20SeriesLayout.Encode.process_image(data, image, Core.Tool.Texture.Format.value(k_base_format[format.slice(0, -6) as BaseFormat][0] as typeof Core.Tool.Texture.Format.Value));
 					break;
 				}
 				case 'rgb_etc1_a_8_index': {
@@ -167,7 +167,7 @@ namespace TwinKleS.Support.PopCapTexture.Encode {
 				case 'rgba_4444_block':
 				case 'rgb_565_block':
 				case 'rgba_5551_block': {
-					Core.Tool.Misc.PvZ1RSBTexture20SeriesLayout.Decode.process(data, image, Core.Tool.Texture.Format.value(k_base_format[format.slice(0, -6) as BaseFormat][0] as Core.Tool.Texture.JS_Format));
+					Core.Tool.Miscellaneous.PvZ1RSBTexture20SeriesLayout.Decode.process_image(data, image, Core.Tool.Texture.Format.value(k_base_format[format.slice(0, -6) as BaseFormat][0] as typeof Core.Tool.Texture.Format.Value));
 					break;
 				}
 				case 'rgb_etc1_a_8_index': {

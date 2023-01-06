@@ -9,27 +9,27 @@ namespace fmt {
 	#pragma region string
 
 	template <auto t_constant> requires
-		TwinKleS::Core::AutoConstraint
-	struct formatter<TwinKleS::Core::StringView<t_constant>> :
+		TwinStar::Core::AutoConstraint
+	struct formatter<TwinStar::Core::StringView<t_constant>> :
 		formatter<std::string_view> {
 		template <typename Context>
 		auto format (
-			TwinKleS::Core::StringView<t_constant> const & value,
+			TwinStar::Core::StringView<t_constant> const & value,
 			Context &                                      context
 		) {
-			return formatter<std::string_view>::format(TwinKleS::Core::make_std_string_view(value), context);
+			return formatter<std::string_view>::format(TwinStar::Core::make_std_string_view(value), context);
 		}
 	};
 
 	template <>
-	struct formatter<TwinKleS::Core::String> :
+	struct formatter<TwinStar::Core::String> :
 		formatter<std::string_view> {
 		template <typename Context>
 		auto format (
-			TwinKleS::Core::String const & value,
+			TwinStar::Core::String const & value,
 			Context &                      context
 		) {
-			return formatter<std::string_view>::format(TwinKleS::Core::make_std_string_view(value), context);
+			return formatter<std::string_view>::format(TwinStar::Core::make_std_string_view(value), context);
 		}
 	};
 
@@ -38,10 +38,10 @@ namespace fmt {
 	#pragma region base wrapper
 
 	template <typename TType> requires
-		TwinKleS::Core::AutoConstraint
-		&& (TwinKleS::Core::IsBaseWrapper<TType>)
+		TwinStar::Core::AutoConstraint
+		&& (TwinStar::Core::IsBaseWrapper<TType>)
 	#if defined M_compiler_clang // NOTE : avoid clang bug
-	&& (TwinKleS::Core::IsDerivedFrom<TType, TwinKleS::Core::BaseWrapper<typename TType::Value>>)
+		&& (TwinStar::Core::IsDerivedFrom<TType, TwinStar::Core::BaseWrapper<typename TType::Value>>)
 	#endif
 	struct formatter<TType> :
 		formatter<typename TType::Value> {
@@ -56,17 +56,17 @@ namespace fmt {
 
 	#pragma endregion
 
-	#pragma region misc
+	#pragma region miscellaneous
 
 	template <>
-	struct formatter<TwinKleS::Core::Path> :
-		formatter<TwinKleS::Core::String> {
+	struct formatter<TwinStar::Core::Path> :
+		formatter<TwinStar::Core::String> {
 		template <typename Context>
 		auto format (
-			TwinKleS::Core::Path const & value,
+			TwinStar::Core::Path const & value,
 			Context &                    context
 		) {
-			return formatter<TwinKleS::Core::String>::format(value.to_string(), context);
+			return formatter<TwinStar::Core::String>::format(value.to_string(), context);
 		}
 	};
 

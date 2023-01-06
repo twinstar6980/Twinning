@@ -1,5 +1,5 @@
 /** PAM转换 */
-namespace TwinKleS.Support.PopCapAnimation.Convert {
+namespace TwinStar.Support.PopCapAnimation.Convert {
 
 	// ------------------------------------------------
 

@@ -4,7 +4,7 @@
 #include "shell/library/library.hpp"
 #include "shell/host/host.hpp"
 
-namespace TwinKleS::Shell {
+namespace TwinStar::Shell {
 
 	#pragma region launch
 
@@ -16,7 +16,6 @@ namespace TwinKleS::Shell {
 		std::vector<std::string> const & argument
 	) -> std::optional<std::string> {
 		static auto host_manager = std::unordered_map<std::thread::id, Host *>{};
-		// host manager
 		// TODO : RAII wrapper
 		auto thread_id = std::this_thread::get_id();
 		host_manager.emplace(thread_id, &host);

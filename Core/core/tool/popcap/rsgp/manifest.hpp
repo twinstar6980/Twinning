@@ -4,99 +4,76 @@
 #include "core/tool/popcap/rsgp/version.hpp"
 #include "core/tool/popcap/rsb/common.hpp"
 
-namespace TwinKleS::Core::Tool::PopCap::RSGP::Manifest {
+namespace TwinStar::Core::Tool::PopCap::RSGP {
 
-	template <auto t_version>
-	struct GenericResourceAdditional;
+	template <auto version> requires (check_version(version, {}))
+	struct Manifest {
 
-	template <auto t_version> requires
-		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}))
-	struct GenericResourceAdditional<t_version> {
+		#pragma region resource
+
+		template <typename = None>
+		struct GenericResourceAdditional_;
+
+		using GenericResourceAdditional = GenericResourceAdditional_<>;
+
+		template <typename _> requires (check_version(version, {3, 4}))
+		M_record_of_map(
+			M_wrap(GenericResourceAdditional_<_>),
+			M_wrap(
+			),
+		);
+
+		// ----------------
+
+		template <typename = None>
+		struct TextureResourceAdditional_;
+
+		using TextureResourceAdditional = TextureResourceAdditional_<>;
+
+		template <typename _> requires (check_version(version, {3, 4}))
+		M_record_of_map(
+			M_wrap(TextureResourceAdditional_<_>),
+			M_wrap(
+				(Integer) index,
+				(Size2D<Integer>) size,
+			),
+		);
+
+		// ----------------
+
+		template <typename = None>
+		struct Resource_;
+
+		using Resource = Resource_<>;
+
+		template <typename _> requires (check_version(version, {3, 4}))
+		M_record_of_map(
+			M_wrap(Resource_<_>),
+			M_wrap(
+				(EnumerableVariant<ResourceType, GenericResourceAdditional, TextureResourceAdditional>) additional,
+			),
+		);
+
+		#pragma endregion
+
+		#pragma region package
+
+		template <typename = None>
+		struct Package_;
+
+		using Package = Package_<>;
+
+		template <typename _> requires (check_version(version, {3, 4}))
+		M_record_of_map(
+			M_wrap(Package_<_>),
+			M_wrap(
+				(Map<Path, Resource>) resource,
+				(ResourceDataSectionStoreMode) resource_data_section_store_mode,
+			),
+		);
+
+		#pragma endregion
+
 	};
-
-	// ----------------
-
-	template <auto t_version>
-	struct TextureResourceAdditional;
-
-	template <auto t_version> requires
-		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}))
-	struct TextureResourceAdditional<t_version> {
-		Integer         index;
-		Size2D<Integer> size;
-	};
-
-	// ----------------
-
-	template <auto t_version>
-	struct Resource;
-
-	template <auto t_version> requires
-		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}))
-	struct Resource<t_version> {
-		EnumerableVariant<ResourceType, GenericResourceAdditional<t_version>, TextureResourceAdditional<t_version>> additional;
-	};
-
-	// ----------------
-
-	template <auto t_version>
-	struct Package;
-
-	template <auto t_version> requires
-		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}))
-	struct Package<t_version> {
-		Map<Path, Resource<t_version>> resource;
-		ResourceDataSectionStoreMode   resource_data_section_store_mode;
-	};
-
-	// ----------------
-
-	using PackageVariant = VariantOfVersion<VersionEnum, Package>;
-
-}
-
-namespace TwinKleS::Core::JSON {
-
-	template <auto t_version> requires
-		AutoConstraint
-		&& (Tool::PopCap::RSGP::check_version(t_version, {3, 4}))
-	M_json_value_adapter_for_aggregate_as_object_by_field_of(
-		M_wrap(Tool::PopCap::RSGP::Manifest::GenericResourceAdditional<t_version>),
-		M_wrap(),
-	);
-
-	// ----------------
-
-	template <auto t_version> requires
-		AutoConstraint
-		&& (Tool::PopCap::RSGP::check_version(t_version, {3, 4}))
-	M_json_value_adapter_for_aggregate_as_object_by_field_of(
-		M_wrap(Tool::PopCap::RSGP::Manifest::TextureResourceAdditional<t_version>),
-		M_wrap(index, size),
-	);
-
-	// ----------------
-
-	template <auto t_version> requires
-		AutoConstraint
-		&& (Tool::PopCap::RSGP::check_version(t_version, {3, 4}))
-	M_json_value_adapter_for_aggregate_as_object_by_field_of(
-		M_wrap(Tool::PopCap::RSGP::Manifest::Resource<t_version>),
-		M_wrap(additional),
-	);
-
-	// ----------------
-
-	template <auto t_version> requires
-		AutoConstraint
-		&& (Tool::PopCap::RSGP::check_version(t_version, {3, 4}))
-	M_json_value_adapter_for_aggregate_as_object_by_field_of(
-		M_wrap(Tool::PopCap::RSGP::Manifest::Package<t_version>),
-		M_wrap(resource, resource_data_section_store_mode),
-	);
 
 }

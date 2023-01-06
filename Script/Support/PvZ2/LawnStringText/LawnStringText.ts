@@ -1,5 +1,5 @@
 /** PvZ2文本表版本转换 */
-namespace TwinKleS.Support.PvZ2.LawnStringText {
+namespace TwinStar.Support.PvZ2.LawnStringText {
 
 	// ------------------------------------------------
 
@@ -46,7 +46,7 @@ namespace TwinKleS.Support.PvZ2.LawnStringText {
 		}
 		switch (actual_source_version) {
 			case 'text': {
-				let source_text = Core.Misc.cast_CharacterListView_to_JS_String(Core.Misc.cast_ByteListView_to_CharacterListView(Core.ByteListView.value(source_data)));
+				let source_text = Core.Miscellaneous.cast_CharacterListView_to_JS_String(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(Core.ByteListView.value(source_data)));
 				let key_regexp = /^\[.+\]$/gm;
 				let value_regexp = /(.|[\n\r])*?(?=[\n\r]*?(\[|$))/gy;
 				let key_match: RegExpExecArray | null;
@@ -104,7 +104,7 @@ namespace TwinKleS.Support.PvZ2.LawnStringText {
 				for (let key in string_map) {
 					dest_text.push(`[${key}]\n${string_map[key]}\n`);
 				}
-				dest_data = Core.Misc.cast_moveable_String_to_ByteArray(Core.String.value(dest_text.join('\n'))).release();
+				dest_data = Core.Miscellaneous.cast_moveable_String_to_ByteArray(Core.String.value(dest_text.join('\n'))).release();
 				break;
 			}
 			case 'json_map': {

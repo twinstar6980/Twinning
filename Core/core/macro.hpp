@@ -1,6 +1,6 @@
 #pragma once
 
-// TODO refactor
+// TODO : refactor
 
 #include "core/version.hpp"
 #include <version>
@@ -26,6 +26,16 @@
 // wrap
 
 #define M_wrap(...)\
+	__VA_ARGS__
+
+// detach
+
+#define M_detach(...)\
+	
+
+// remain
+
+#define M_remain(...)\
 	__VA_ARGS__
 
 // stringify
@@ -81,43 +91,75 @@
 // NOTE : M_map_0 with a va, because need support M_xxx(_x) == M_map(_m, _x) if _x is empty va and it passing by M_wrap(...), this case can't use ## to fix dot
 // NOTE : use __VA_OPT__(, __VA_ARGS__) replace ##__VA_ARGS__ can fix this error, but resharper will show error highlight
 #define M_map_0(_m,     ...) 
-#define M_map_1(_m, _1, ...) _m(_1) M_map_0(_m, ##__VA_ARGS__)
+#define M_map_1(_m, _1, ...) 
 #define M_map_2(_m, _1, ...) _m(_1) M_map_1(_m, ##__VA_ARGS__)
-#define M_map_3(_m, _1, ...) _m(_1) M_map_2(_m, ## __VA_ARGS__)
-#define M_map_4(_m, _1, ...) _m(_1) M_map_3(_m, ## __VA_ARGS__)
-#define M_map_5(_m, _1, ...) _m(_1) M_map_4(_m, ## __VA_ARGS__)
-#define M_map_6(_m, _1, ...) _m(_1) M_map_5(_m, ## __VA_ARGS__)
-#define M_map_7(_m, _1, ...) _m(_1) M_map_6(_m, ## __VA_ARGS__)
-#define M_map_8(_m, _1, ...) _m(_1) M_map_7(_m, ## __VA_ARGS__)
-#define M_map_9(_m, _1, ...) _m(_1) M_map_8(_m, ## __VA_ARGS__)
-#define M_map_10(_m, _1, ...) _m(_1) M_map_9(_m, ## __VA_ARGS__)
-#define M_map_11(_m, _1, ...) _m(_1) M_map_10(_m, ## __VA_ARGS__)
-#define M_map_12(_m, _1, ...) _m(_1) M_map_11(_m, ## __VA_ARGS__)
-#define M_map_13(_m, _1, ...) _m(_1) M_map_12(_m, ## __VA_ARGS__)
-#define M_map_14(_m, _1, ...) _m(_1) M_map_13(_m, ## __VA_ARGS__)
-#define M_map_15(_m, _1, ...) _m(_1) M_map_14(_m, ## __VA_ARGS__)
-#define M_map_16(_m, _1, ...) _m(_1) M_map_15(_m, ## __VA_ARGS__)
-#define M_map_17(_m, _1, ...) _m(_1) M_map_16(_m, ## __VA_ARGS__)
-#define M_map_18(_m, _1, ...) _m(_1) M_map_17(_m, ## __VA_ARGS__)
-#define M_map_19(_m, _1, ...) _m(_1) M_map_18(_m, ## __VA_ARGS__)
-#define M_map_20(_m, _1, ...) _m(_1) M_map_19(_m, ## __VA_ARGS__)
-#define M_map_21(_m, _1, ...) _m(_1) M_map_20(_m, ## __VA_ARGS__)
-#define M_map_22(_m, _1, ...) _m(_1) M_map_21(_m, ## __VA_ARGS__)
-#define M_map_23(_m, _1, ...) _m(_1) M_map_22(_m, ## __VA_ARGS__)
-#define M_map_24(_m, _1, ...) _m(_1) M_map_23(_m, ## __VA_ARGS__)
-#define M_map_25(_m, _1, ...) _m(_1) M_map_24(_m, ## __VA_ARGS__)
-#define M_map_26(_m, _1, ...) _m(_1) M_map_25(_m, ## __VA_ARGS__)
-#define M_map_27(_m, _1, ...) _m(_1) M_map_26(_m, ## __VA_ARGS__)
-#define M_map_28(_m, _1, ...) _m(_1) M_map_27(_m, ## __VA_ARGS__)
-#define M_map_29(_m, _1, ...) _m(_1) M_map_28(_m, ## __VA_ARGS__)
-#define M_map_30(_m, _1, ...) _m(_1) M_map_29(_m, ## __VA_ARGS__)
-#define M_map_31(_m, _1, ...) _m(_1) M_map_30(_m, ## __VA_ARGS__)
-#define M_map_32(_m, _1, ...) _m(_1) M_map_31(_m, ## __VA_ARGS__)
+#define M_map_3(_m, _1, ...) _m(_1) M_map_2(_m, ##__VA_ARGS__)
+#define M_map_4(_m, _1, ...) _m(_1) M_map_3(_m, ##__VA_ARGS__)
+#define M_map_5(_m, _1, ...) _m(_1) M_map_4(_m, ##__VA_ARGS__)
+#define M_map_6(_m, _1, ...) _m(_1) M_map_5(_m, ##__VA_ARGS__)
+#define M_map_7(_m, _1, ...) _m(_1) M_map_6(_m, ##__VA_ARGS__)
+#define M_map_8(_m, _1, ...) _m(_1) M_map_7(_m, ##__VA_ARGS__)
+#define M_map_9(_m, _1, ...) _m(_1) M_map_8(_m, ##__VA_ARGS__)
+#define M_map_10(_m, _1, ...) _m(_1) M_map_9(_m, ##__VA_ARGS__)
+#define M_map_11(_m, _1, ...) _m(_1) M_map_10(_m, ##__VA_ARGS__)
+#define M_map_12(_m, _1, ...) _m(_1) M_map_11(_m, ##__VA_ARGS__)
+#define M_map_13(_m, _1, ...) _m(_1) M_map_12(_m, ##__VA_ARGS__)
+#define M_map_14(_m, _1, ...) _m(_1) M_map_13(_m, ##__VA_ARGS__)
+#define M_map_15(_m, _1, ...) _m(_1) M_map_14(_m, ##__VA_ARGS__)
+#define M_map_16(_m, _1, ...) _m(_1) M_map_15(_m, ##__VA_ARGS__)
+#define M_map_17(_m, _1, ...) _m(_1) M_map_16(_m, ##__VA_ARGS__)
+#define M_map_18(_m, _1, ...) _m(_1) M_map_17(_m, ##__VA_ARGS__)
+#define M_map_19(_m, _1, ...) _m(_1) M_map_18(_m, ##__VA_ARGS__)
+#define M_map_20(_m, _1, ...) _m(_1) M_map_19(_m, ##__VA_ARGS__)
+#define M_map_21(_m, _1, ...) _m(_1) M_map_20(_m, ##__VA_ARGS__)
+#define M_map_22(_m, _1, ...) _m(_1) M_map_21(_m, ##__VA_ARGS__)
+#define M_map_23(_m, _1, ...) _m(_1) M_map_22(_m, ##__VA_ARGS__)
+#define M_map_24(_m, _1, ...) _m(_1) M_map_23(_m, ##__VA_ARGS__)
+#define M_map_25(_m, _1, ...) _m(_1) M_map_24(_m, ##__VA_ARGS__)
+#define M_map_26(_m, _1, ...) _m(_1) M_map_25(_m, ##__VA_ARGS__)
+#define M_map_27(_m, _1, ...) _m(_1) M_map_26(_m, ##__VA_ARGS__)
+#define M_map_28(_m, _1, ...) _m(_1) M_map_27(_m, ##__VA_ARGS__)
+#define M_map_29(_m, _1, ...) _m(_1) M_map_28(_m, ##__VA_ARGS__)
+#define M_map_30(_m, _1, ...) _m(_1) M_map_29(_m, ##__VA_ARGS__)
+#define M_map_31(_m, _1, ...) _m(_1) M_map_30(_m, ##__VA_ARGS__)
+#define M_map_32(_m, _1, ...) _m(_1) M_map_31(_m, ##__VA_ARGS__)
+#define M_map_33(_m, _1, ...) _m(_1) M_map_32(_m, ##__VA_ARGS__)
+#define M_map_34(_m, _1, ...) _m(_1) M_map_33(_m, ##__VA_ARGS__)
+#define M_map_35(_m, _1, ...) _m(_1) M_map_34(_m, ##__VA_ARGS__)
+#define M_map_36(_m, _1, ...) _m(_1) M_map_35(_m, ##__VA_ARGS__)
+#define M_map_37(_m, _1, ...) _m(_1) M_map_36(_m, ##__VA_ARGS__)
+#define M_map_38(_m, _1, ...) _m(_1) M_map_37(_m, ##__VA_ARGS__)
+#define M_map_39(_m, _1, ...) _m(_1) M_map_38(_m, ##__VA_ARGS__)
+#define M_map_40(_m, _1, ...) _m(_1) M_map_39(_m, ##__VA_ARGS__)
+#define M_map_41(_m, _1, ...) _m(_1) M_map_40(_m, ##__VA_ARGS__)
+#define M_map_42(_m, _1, ...) _m(_1) M_map_41(_m, ##__VA_ARGS__)
+#define M_map_43(_m, _1, ...) _m(_1) M_map_42(_m, ##__VA_ARGS__)
+#define M_map_44(_m, _1, ...) _m(_1) M_map_43(_m, ##__VA_ARGS__)
+#define M_map_45(_m, _1, ...) _m(_1) M_map_44(_m, ##__VA_ARGS__)
+#define M_map_46(_m, _1, ...) _m(_1) M_map_45(_m, ##__VA_ARGS__)
+#define M_map_47(_m, _1, ...) _m(_1) M_map_46(_m, ##__VA_ARGS__)
+#define M_map_48(_m, _1, ...) _m(_1) M_map_47(_m, ##__VA_ARGS__)
+#define M_map_49(_m, _1, ...) _m(_1) M_map_48(_m, ##__VA_ARGS__)
+#define M_map_50(_m, _1, ...) _m(_1) M_map_49(_m, ##__VA_ARGS__)
+#define M_map_51(_m, _1, ...) _m(_1) M_map_50(_m, ##__VA_ARGS__)
+#define M_map_52(_m, _1, ...) _m(_1) M_map_51(_m, ##__VA_ARGS__)
+#define M_map_53(_m, _1, ...) _m(_1) M_map_52(_m, ##__VA_ARGS__)
+#define M_map_54(_m, _1, ...) _m(_1) M_map_53(_m, ##__VA_ARGS__)
+#define M_map_55(_m, _1, ...) _m(_1) M_map_54(_m, ##__VA_ARGS__)
+#define M_map_56(_m, _1, ...) _m(_1) M_map_55(_m, ##__VA_ARGS__)
+#define M_map_57(_m, _1, ...) _m(_1) M_map_56(_m, ##__VA_ARGS__)
+#define M_map_58(_m, _1, ...) _m(_1) M_map_57(_m, ##__VA_ARGS__)
+#define M_map_59(_m, _1, ...) _m(_1) M_map_58(_m, ##__VA_ARGS__)
+#define M_map_60(_m, _1, ...) _m(_1) M_map_59(_m, ##__VA_ARGS__)
+#define M_map_61(_m, _1, ...) _m(_1) M_map_60(_m, ##__VA_ARGS__)
+#define M_map_62(_m, _1, ...) _m(_1) M_map_61(_m, ##__VA_ARGS__)
+#define M_map_63(_m, _1, ...) _m(_1) M_map_62(_m, ##__VA_ARGS__)
+#define M_map_64(_m, _1, ...) _m(_1) M_map_63(_m, ##__VA_ARGS__)
 
 #define M_map(_m, ...)\
 	M_catenate(M_map_, M_count(__VA_ARGS__))(_m, ##__VA_ARGS__)
 
-// misc
+// miscellaneous
 
 // implicit specification of constructor and conversion operator
 #define implicit\
@@ -145,7 +187,7 @@
 
 // TODO
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	using std::swap;
 

@@ -1,5 +1,5 @@
 /** 执行器功能 */
-namespace TwinKleS.Executor {
+namespace TwinStar.Executor {
 
 	// ------------------------------------------------
 

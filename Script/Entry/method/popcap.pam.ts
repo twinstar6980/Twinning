@@ -12,7 +12,7 @@
  * + popcap.pam.convert.flash.resize.batch [批处理] PopCap-PAM Flash 图像分辨率调整
  * + popcap.pam.convert.flash.link_media.batch [批处理] PopCap-PAM Flash 创建图像文件链接
  */
-namespace TwinKleS.Entry.method.popcap.pam {
+namespace TwinStar.Entry.method.popcap.pam {
 
 	// ------------------------------------------------
 
@@ -59,7 +59,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
+							() => (Console.option([0n, null, [1n, ''], [2n, ''], [3n, ''], [4n, ''], [5n, ''], [6n, '']], null)),
 							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : localized(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
@@ -67,7 +67,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.binary_size(null)),
+							() => (Console.size(null)),
 							(value) => (null),
 						);
 					}
@@ -117,7 +117,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
+							() => (Console.option([0n, null, [1n, ''], [2n, ''], [3n, ''], [4n, ''], [5n, ''], [6n, '']], null)),
 							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : localized(`版本不受支持`)),
 						);
 					}
@@ -325,7 +325,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
+							() => (Console.option([0n, null, [1n, ''], [2n, ''], [3n, ''], [4n, ''], [5n, ''], [6n, '']], null)),
 							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : localized(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
@@ -333,7 +333,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.binary_size(null)),
+							() => (Console.size(null)),
 							(value) => (null),
 						);
 					}
@@ -384,7 +384,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 							...Executor.query_argument_message(this.id, 'manifest_file_directory'),
 							a.manifest_file_directory,
 							(value) => (value),
-							() => (manifest_file_directory.replace(/$/i, '.pam_decode')),
+							() => (data_file_directory.replace(/$/i, '.pam_decode')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
 						version_number = Executor.request_argument(
@@ -392,7 +392,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
+							() => (Console.option([0n, null, [1n, ''], [2n, ''], [3n, ''], [4n, ''], [5n, ''], [6n, '']], null)),
 							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : localized(`版本不受支持`)),
 						);
 					}
@@ -588,8 +588,7 @@ namespace TwinKleS.Entry.method.popcap.pam {
 							CoreX.FileSystem.list_file(`${directory}/..`, 1n)
 								.filter((e) => (/.+(\.png)$/i.test(e)))
 								.forEach((e) => {
-									//CoreX.FileSystem.create_hard_link(`${media_directory}/${e}`, `${directory}/../${e}`);
-									CoreX.FileSystem.rename(`${directory}/../${e}`, `${media_directory}/${e}`);
+									CoreX.FileSystem.create_hard_link(`${media_directory}/${e}`, `${directory}/../${e}`);
 								});
 						},
 					);
@@ -610,5 +609,5 @@ namespace TwinKleS.Entry.method.popcap.pam {
 }
 
 ({
-	injector: TwinKleS.Entry.method.popcap.pam._injector,
+	injector: TwinStar.Entry.method.popcap.pam._injector,
 });

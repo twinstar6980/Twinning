@@ -3,17 +3,17 @@
 #include "core/utility/base_wrapper/wrapper.hpp"
 #include <any>
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
 	class Any {
 
-	protected: //
+	protected:
 
 		std::any m_value{};
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -69,13 +69,13 @@ namespace TwinKleS::Core {
 			return;
 		}
 
-		template <typename ValueObject, typename ...Argument> requires
-			CategoryConstraint<IsPureInstance<ValueObject> && IsValid<Argument...>>
-			&& (IsConstructible<ValueObject, Argument &&...>)
+		template <typename ValueObject, typename ... Argument> requires
+			CategoryConstraint<IsPureInstance<ValueObject> && IsValid<Argument ...>>
+			&& (IsConstructible<ValueObject, Argument && ...>)
 		auto set (
-			Argument && ...argument
+			Argument && ... argument
 		) -> ValueObject& {
-			thiz.m_value.emplace<ValueObject>(as_forward<Argument>(argument)...);
+			thiz.m_value.emplace<ValueObject>(as_forward<Argument>(argument) ...);
 			return *std::any_cast<ValueObject>(&thiz.m_value);
 		}
 
@@ -105,13 +105,13 @@ namespace TwinKleS::Core {
 
 	#pragma region utility
 
-	template <typename Value, typename ...Argument> requires
-		CategoryConstraint<IsPureInstance<Value> && IsValid<Argument...>>
+	template <typename Value, typename ... Argument> requires
+		CategoryConstraint<IsPureInstance<Value> && IsValid<Argument ...>>
 	inline auto make_any (
-		Argument && ...argument
+		Argument && ... argument
 	) -> Any {
 		auto result = Any{};
-		result.set<Value>(as_forward<Argument>(argument)...);
+		result.set<Value>(as_forward<Argument>(argument) ...);
 		return result;
 	}
 

@@ -1,12 +1,8 @@
 #pragma once
 
-#include "core/utility/container/wrapper/wrapper.hpp"
-#include "core/utility/null.hpp"
-#include "core/utility/misc/byte_series/container.hpp"
-#include "core/utility/string/string.hpp"
-#include "core/utility/data/json/value.hpp"
+#include "core/utility/base_wrapper/wrapper.hpp"
 
-namespace TwinKleS::Core::JS {
+namespace TwinStar::Core::JS {
 
 	#pragma region type
 

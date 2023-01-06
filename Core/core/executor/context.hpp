@@ -3,20 +3,20 @@
 #include "core/utility/utility.hpp"
 #include "core/executor/shell_callback.hpp"
 
-namespace TwinKleS::Core::Executor {
+namespace TwinStar::Core::Executor {
 
 	#pragma region type
 
 	class Context {
 
-	protected: //
+	protected:
 
 		JS::Runtime   m_runtime;
 		JS::Context   m_context;
 		ShellCallback m_shell_callback;
 		Boolean       m_busy;
 
-	public: //
+	public:
 
 		#pragma region structor
 

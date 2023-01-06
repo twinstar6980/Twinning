@@ -1,5 +1,5 @@
 /** XML */
-namespace TwinKleS.XML {
+namespace TwinStar.XML {
 
 	// ------------------------------------------------
 

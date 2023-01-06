@@ -1,11 +1,10 @@
 #pragma once
 
 #include "core/utility/container/list/list.hpp"
-#include "core/utility/misc/character_series/type.hpp"
 #include "core/utility/string/basic_string_view.hpp"
 #include "core/utility/string/basic_string_adapter.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
@@ -15,11 +14,11 @@ namespace TwinKleS::Core {
 	class BasicString :
 		public BasicCharacterList<TElement> {
 
-	private: //
+	private:
 
 		using BasicCharacterList = BasicCharacterList<TElement>;
 
-	public: //
+	public:
 
 		using typename BasicCharacterList::Element;
 
@@ -39,7 +38,7 @@ namespace TwinKleS::Core {
 
 		using CView = BasicStringView<TElement, true>;
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -211,41 +210,41 @@ namespace TwinKleS::Core {
 
 		#pragma region from & to by adapter
 
-		template <typename That, typename ...Option> requires
-			CategoryConstraint<IsValid<That> && IsValid<Option...>>
+		template <typename That, typename ... Option> requires
+			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
 		auto from (
-			That &&      that,
-			Option && ...option
+			That &&       that,
+			Option && ... option
 		) -> Void {
-			BasicStringAdapter<Element, AsPure<That>>::from(thiz, as_forward<That>(that), as_forward<Option>(option)...);
+			BasicStringAdapter<Element, AsPure<That>>::from(thiz, as_forward<That>(that), as_forward<Option>(option) ...);
 			return;
 		}
 
-		template <typename That, typename ...Option> requires
-			CategoryConstraint<IsValid<That> && IsValid<Option...>>
+		template <typename That, typename ... Option> requires
+			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
 		auto to (
-			That &&      that,
-			Option && ...option
+			That &&       that,
+			Option && ... option
 		) const -> Void {
-			BasicStringAdapter<Element, AsPure<That>>::to(thiz, as_forward<That>(that), as_forward<Option>(option)...);
+			BasicStringAdapter<Element, AsPure<That>>::to(thiz, as_forward<That>(that), as_forward<Option>(option) ...);
 			return;
 		}
 
 		// ----------------
 
-		template <typename That, typename ...Option> requires
-			CategoryConstraint<IsPureInstance<That> && IsValid<Option...>>
+		template <typename That, typename ... Option> requires
+			CategoryConstraint<IsPureInstance<That> && IsValid<Option ...>>
 		auto to_of (
-			Option && ...option
+			Option && ... option
 		) const -> That {
 			auto that = That{};
-			thiz.to(that, as_forward<Option>(option)...);
+			thiz.to(that, as_forward<Option>(option) ...);
 			return that;
 		}
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region operator
 

@@ -2,13 +2,13 @@
 
 #include "shell/base.hpp"
 
-namespace TwinKleS::Shell {
+namespace TwinStar::Shell {
 
 	#pragma region type
 
 	class Library {
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -60,8 +60,8 @@ namespace TwinKleS::Shell {
 
 		auto wrapped_version (
 		) -> std::size_t {
-			auto result_c = thiz.version();
-			return from_size_structure(*result_c);
+			auto result_s = thiz.version();
+			return CoreTypeConverter::from_size(*result_s);
 		}
 
 		auto wrapped_execute (
@@ -70,12 +70,12 @@ namespace TwinKleS::Shell {
 			std::vector<std::string> const & argument,
 			Core::ShellCallback const &      shell_callback
 		) -> std::optional<std::string> {
-			auto script_s = to_string_structure(script);
-			auto script_is_path_s = to_boolean_structure(script_is_path);
-			auto argument_s = allocate_string_list_structure(argument);
+			auto script_s = CoreTypeConverter::to_string(script);
+			auto script_is_path_s = CoreTypeConverter::to_boolean(script_is_path);
+			auto argument_s = CoreTypeConverter::allocate_string_list(argument);
 			auto result_s = thiz.execute(script_s, script_is_path_s, argument_s, shell_callback);
-			free_string_list_structure(argument_s);
-			return result_s ? std::make_optional<std::string>(from_string_structure(*result_s)) : std::nullopt;
+			CoreTypeConverter::free_string_list(argument_s);
+			return result_s ? std::make_optional<std::string>(CoreTypeConverter::from_string(*result_s)) : std::nullopt;
 		}
 
 		#pragma endregion
@@ -97,12 +97,12 @@ namespace TwinKleS::Shell {
 	}
 	k_symbol_id = {
 		#if defined M_compiler_msvc
-		.version = "?version@Interface@Core@TwinKleS@@YAPEBUSize@123@XZ"sv,
-		.execute = "?execute@Interface@Core@TwinKleS@@YAPEBUString@123@AEBU4123@AEBUBoolean@123@AEBUStringList@123@AEBQ6AAEBU6123@2@Z@Z"sv,
+		.version = "?version@Interface@Core@TwinStar@@YAPEBUSize@123@XZ"sv,
+		.execute = "?execute@Interface@Core@TwinStar@@YAPEBUString@123@AEBU4123@AEBUBoolean@123@AEBUStringList@123@AEBQ6AAEBU6123@2@Z@Z"sv,
 		#endif
 		#if defined M_compiler_clang
-		.version = "_ZN8TwinKleS4Core9Interface7versionEv"sv,
-		.execute = "_ZN8TwinKleS4Core9Interface7executeERKNS1_6StringERKNS1_7BooleanERKNS1_10StringListERKPFSA_SA_E"sv,
+		.version = "_ZN8TwinStar4Core9Interface7versionEv"sv,
+		.execute = "_ZN8TwinStar4Core9Interface7executeERKNS1_6StringERKNS1_7BooleanERKNS1_10StringListERKPFSA_SA_E"sv,
 		#endif
 	};
 

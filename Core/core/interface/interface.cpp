@@ -1,16 +1,17 @@
 //
 
-#define M_interface_implement
-
 #include "core/interface/implement.hpp"
-#include "core/interface/interface.hpp"
+#include <exception>
 #include <clocale>
 
 #if defined M_vld
 #include "vld.h"
 #endif
 
-namespace TwinKleS::Core::Interface {
+#define M_interface_implement
+#include "core/interface/interface.hpp"
+
+namespace TwinStar::Core::Interface {
 
 	#pragma region initialize
 
@@ -50,16 +51,16 @@ namespace TwinKleS::Core::Interface {
 		thread_local auto result = Core::Optional<Core::String>{};
 		#if defined M_build_release
 		try {
-			#endif
-			result.reset();
-			initialize();
-			result = Implement::execute(
-				self_cast<Core::String>(script),
-				self_cast<Core::Boolean>(script_is_path),
-				self_cast<Core::List<Core::String>>(argument),
-				self_cast<Core::Executor::ShellCallback>(shell_callback)
-			);
-			#if defined M_build_release
+		#endif
+		result.reset();
+		initialize();
+		result = Implement::execute(
+			self_cast<Core::String>(script),
+			self_cast<Core::Boolean>(script_is_path),
+			self_cast<Core::List<Core::String>>(argument),
+			self_cast<Core::Executor::ShellCallback>(shell_callback)
+		);
+		#if defined M_build_release
 		} catch (Exception & exception) {
 			result.set(make_string_view(exception.what()));
 		} catch (std::exception & exception) {

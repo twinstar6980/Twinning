@@ -10,19 +10,19 @@ using std_source_location = std::source_location;
 using std_source_location = int;
 #endif
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
 	class SourceLocation {
 
-	protected: //
+	protected:
 
 		std::string_view m_file{};
 		std::size_t      m_line{};
 		std::string_view m_function{};
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -65,7 +65,7 @@ namespace TwinKleS::Core {
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region make
 
@@ -74,7 +74,7 @@ namespace TwinKleS::Core {
 		) -> SourceLocation {
 			auto result = SourceLocation{};
 			#if defined __cpp_lib_source_location
-			result.m_file = location.file_name() + (std::string_view{std_source_location::current().file_name()}.size() - std::string_view{"/utility/exception/source_location.hpp"}.size());
+			result.m_file = location.file_name() + (std::string_view{std_source_location::current().file_name()}.size() - std::string_view{"core/utility/exception/source_location.hpp"}.size());
 			result.m_line = location.line();
 			result.m_function = location.function_name();
 			#endif
@@ -93,8 +93,8 @@ namespace TwinKleS::Core {
 #define M_current_source_location std_source_location::current()
 #define M_current_source_location_x std_source_location::current()
 #if defined M_compiler_clang
-// TODO : clang bug : https://github.com/llvm/llvm-project/issues/56379
-// TODO : clang bug : https://github.com/llvm/llvm-project/issues/48230 (fixed in new version)
+// TODO : clang bug : https://github.com/llvm/llvm-project/issues/48230 (fixed in ?)
+// TODO : clang bug : https://github.com/llvm/llvm-project/issues/56379 (fixed in clang 16)
 #undef M_current_source_location_x
 #define M_current_source_location_x std_source_location{}
 #endif

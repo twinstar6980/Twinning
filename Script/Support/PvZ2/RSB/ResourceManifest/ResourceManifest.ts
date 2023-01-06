@@ -1,5 +1,5 @@
 /** 自定义的规范化资源清单 */
-namespace TwinKleS.Support.PvZ2.RSB.ResourceManifest {
+namespace TwinStar.Support.PvZ2.RSB.ResourceManifest {
 
 	// ------------------------------------------------
 

@@ -3,7 +3,7 @@
 #include "core/utility/base_wrapper/base.hpp"
 #include "core/utility/base_wrapper/boolean.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
@@ -22,6 +22,11 @@ namespace TwinKleS::Core {
 		&& (IsBaseWrapperValue<TValue>)
 	M_simple_derived_class(FloatingWrapper, NumberWrapper<TValue>, NumberWrapper);
 
+	template <typename TValue> requires
+		CategoryConstraint<IsPureInstance<TValue>>
+		&& (IsBaseWrapperValue<TValue>)
+	M_simple_derived_class(SizeWrapper, IntegerWrapper<TValue>, IntegerWrapper);
+
 	// ----------------
 
 	template <typename It>
@@ -34,54 +39,23 @@ namespace TwinKleS::Core {
 	concept IsFloatingWrapper = IsTemplateInstanceOfT<It, FloatingWrapper>;
 
 	template <typename It>
+	concept IsSizeWrapper = IsTemplateInstanceOfT<It, SizeWrapper>;
+
+	// ----------------
+
+	template <typename It>
 	concept IsUnsignedIntegerWrapper =
-	CategoryConstraint<IsPureInstance<It>>
-	&& (IsIntegerWrapper<It>)
-	&& (IsBuiltinUnsignedInteger<typename It::Value>)
-	;
+		CategoryConstraint<IsPureInstance<It>>
+		&& (IsIntegerWrapper<It>)
+		&& (IsBuiltinUnsignedInteger<typename It::Value>)
+		;
 
 	template <typename It>
 	concept IsSignedIntegerWrapper =
-	CategoryConstraint<IsPureInstance<It>>
-	&& (IsIntegerWrapper<It>)
-	&& (IsBuiltinSignedInteger<typename It::Value>)
-	;
-
-	#pragma endregion
-
-	#pragma region alias
-
-	using IntegerU8 = IntegerWrapper<ZIntegerU8>;
-
-	using IntegerU16 = IntegerWrapper<ZIntegerU16>;
-
-	using IntegerU32 = IntegerWrapper<ZIntegerU32>;
-
-	using IntegerU64 = IntegerWrapper<ZIntegerU64>;
-
-	using IntegerS8 = IntegerWrapper<ZIntegerS8>;
-
-	using IntegerS16 = IntegerWrapper<ZIntegerS16>;
-
-	using IntegerS32 = IntegerWrapper<ZIntegerS32>;
-
-	using IntegerS64 = IntegerWrapper<ZIntegerS64>;
-
-	using Floating32 = FloatingWrapper<ZFloating32>;
-
-	using Floating64 = FloatingWrapper<ZFloating64>;
-
-	// ----------------
-
-	M_simple_derived_class(Integer, IntegerS64, IntegerS64);
-
-	M_simple_derived_class(Floating, Floating64, Floating64);
-
-	// ----------------
-
-	M_simple_derived_class(Size, IntegerWrapper<ZSize>, IntegerWrapper);
-
-	M_simple_derived_class(SSize, IntegerWrapper<ZSSize>, IntegerWrapper);
+		CategoryConstraint<IsPureInstance<It>>
+		&& (IsIntegerWrapper<It>)
+		&& (IsBuiltinSignedInteger<typename It::Value>)
+		;
 
 	#pragma endregion
 
@@ -93,18 +67,8 @@ namespace TwinKleS::Core {
 	inline constexpr auto operator == (
 		It const & thix,
 		It const & that
-	) -> Boolean {
-		return mbw<Boolean>(thix.value == that.value);
-	}
-
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsNumberWrapper<It>)
-	inline constexpr auto operator != (
-		It const & thix,
-		It const & that
-	) -> Boolean {
-		return !(thix == that);
+	) -> bool {
+		return thix.value == that.value;
 	}
 
 	// ----------------
@@ -115,8 +79,8 @@ namespace TwinKleS::Core {
 	inline constexpr auto operator < (
 		It const & thix,
 		It const & that
-	) -> Boolean {
-		return mbw<Boolean>(thix.value < that.value);
+	) -> bool {
+		return thix.value < that.value;
 	}
 
 	template <typename It> requires
@@ -125,8 +89,8 @@ namespace TwinKleS::Core {
 	inline constexpr auto operator > (
 		It const & thix,
 		It const & that
-	) -> Boolean {
-		return mbw<Boolean>(thix.value > that.value);
+	) -> bool {
+		return thix.value > that.value;
 	}
 
 	template <typename It> requires
@@ -135,8 +99,8 @@ namespace TwinKleS::Core {
 	inline constexpr auto operator <= (
 		It const & thix,
 		It const & that
-	) -> Boolean {
-		return mbw<Boolean>(thix.value <= that.value);
+	) -> bool {
+		return thix.value <= that.value;
 	}
 
 	template <typename It> requires
@@ -145,8 +109,8 @@ namespace TwinKleS::Core {
 	inline constexpr auto operator >= (
 		It const & thix,
 		It const & that
-	) -> Boolean {
-		return mbw<Boolean>(thix.value >= that.value);
+	) -> bool {
+		return thix.value >= that.value;
 	}
 
 	// ----------------
@@ -307,7 +271,7 @@ namespace TwinKleS::Core {
 		&& (IsIntegerWrapper<It>)
 	inline constexpr auto operator ++ (
 		It & thix,
-		int  
+		int
 	) -> It {
 		return It{thix.value++};
 	}
@@ -317,7 +281,7 @@ namespace TwinKleS::Core {
 		&& (IsIntegerWrapper<It>)
 	inline constexpr auto operator -- (
 		It & thix,
-		int  
+		int
 	) -> It {
 		return It{thix.value--};
 	}
@@ -363,9 +327,10 @@ namespace TwinKleS::Core {
 		return It{static_cast<typename It::Value>(thix.value ^ that.value)};
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
+	template <typename It, typename Size> requires
+		CategoryConstraint<IsPureInstance<It> && IsPureInstance<Size>>
 		&& (IsIntegerWrapper<It>)
+		&& (IsSizeWrapper<Size>)
 	inline constexpr auto operator << (
 		It const &   thix,
 		Size const & size
@@ -373,9 +338,10 @@ namespace TwinKleS::Core {
 		return It{static_cast<typename It::Value>(thix.value << size.value)};
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
+	template <typename It, typename Size> requires
+		CategoryConstraint<IsPureInstance<It> && IsPureInstance<Size>>
 		&& (IsIntegerWrapper<It>)
+		&& (IsSizeWrapper<Size>)
 	inline constexpr auto operator >> (
 		It const &   thix,
 		Size const & size
@@ -418,9 +384,10 @@ namespace TwinKleS::Core {
 		return thix;
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
+	template <typename It, typename Size> requires
+		CategoryConstraint<IsPureInstance<It> && IsPureInstance<Size>>
 		&& (IsIntegerWrapper<It>)
+		&& (IsSizeWrapper<Size>)
 	inline constexpr auto operator <<= (
 		It &         thix,
 		Size const & size
@@ -429,9 +396,10 @@ namespace TwinKleS::Core {
 		return thix;
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
+	template <typename It, typename Size> requires
+		CategoryConstraint<IsPureInstance<It> && IsPureInstance<Size>>
 		&& (IsIntegerWrapper<It>)
+		&& (IsSizeWrapper<Size>)
 	inline constexpr auto operator >>= (
 		It &         thix,
 		Size const & size
@@ -439,6 +407,54 @@ namespace TwinKleS::Core {
 		thix.value >>= size.value;
 		return thix;
 	}
+
+	#pragma endregion
+
+	#pragma region alias
+
+	using IntegerU8 = IntegerWrapper<ZIntegerU8>;
+
+	using IntegerU16 = IntegerWrapper<ZIntegerU16>;
+
+	using IntegerU32 = IntegerWrapper<ZIntegerU32>;
+
+	using IntegerU64 = IntegerWrapper<ZIntegerU64>;
+
+	using IntegerS8 = IntegerWrapper<ZIntegerS8>;
+
+	using IntegerS16 = IntegerWrapper<ZIntegerS16>;
+
+	using IntegerS32 = IntegerWrapper<ZIntegerS32>;
+
+	using IntegerS64 = IntegerWrapper<ZIntegerS64>;
+
+	// ----------------
+
+	using Floating32 = FloatingWrapper<ZFloating32>;
+
+	using Floating64 = FloatingWrapper<ZFloating64>;
+
+	// ----------------
+
+	using SizeU = SizeWrapper<ZSize>;
+
+	using SizeS = SizeWrapper<ZSSize>;
+
+	#pragma endregion
+
+	#pragma region regular type
+
+	M_simple_derived_class(Integer, IntegerS64, IntegerS64);
+
+	// ----------------
+
+	M_simple_derived_class(Floating, Floating64, Floating64);
+
+	// ----------------
+
+	M_simple_derived_class(Size, SizeU, SizeU);
+
+	M_simple_derived_class(SSize, SizeS, SizeS);
 
 	#pragma endregion
 
@@ -467,8 +483,6 @@ namespace TwinKleS::Core {
 	) -> IntegerU64 {
 		return mbw<IntegerU64>(value);
 	}
-
-	// ----------------
 
 	inline constexpr auto operator ""_is8 (
 		ZLiteralInteger value
@@ -510,11 +524,27 @@ namespace TwinKleS::Core {
 
 	// ----------------
 
+	inline constexpr auto operator ""_szu (
+		ZLiteralInteger value
+	) -> SizeU {
+		return mbw<SizeU>(value);
+	}
+
+	inline constexpr auto operator ""_szs (
+		ZLiteralInteger value
+	) -> SizeS {
+		return mbw<SizeS>(value);
+	}
+
+	// ----------------
+
 	inline constexpr auto operator ""_i (
 		ZLiteralInteger value
 	) -> Integer {
 		return mbw<Integer>(value);
 	}
+
+	// ----------------
 
 	inline constexpr auto operator ""_f (
 		ZLiteralFloating value

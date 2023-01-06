@@ -4,26 +4,26 @@
 
 #include <variant>
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
-	template <typename TEnum, typename ...TValue> requires
-		CategoryConstraint<IsPureInstance<TEnum> && IsPureInstance<TValue...>>
-		&& (IsEnum<TEnum>)
+	template <typename TEnumeration, typename ... TValue> requires
+		CategoryConstraint<IsPureInstance<TEnumeration> && IsPureInstance<TValue ...>>
+		&& (IsEnumerationWrapper<TEnumeration>)
 		&& (sizeof...(TValue) > 0_szz)
 	class EnumerableVariant :
-		public Variant<TValue...> {
+		public Variant<TValue ...> {
 
-	private: //
+	private:
 
-		using Variant = Variant<TValue...>;
+		using Variant = Variant<TValue ...>;
 
-	public: //
+	public:
 
-		using Enum = TEnum;
+		using Enumeration = TEnumeration;
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -64,8 +64,8 @@ namespace TwinKleS::Core {
 		#pragma region type
 
 		constexpr auto type (
-		) const -> Enum {
-			return make_enum<Enum>(thiz.index());
+		) const -> Enumeration {
+			return cbw<Enumeration>(thiz.index());
 		}
 
 		#pragma endregion
@@ -74,49 +74,49 @@ namespace TwinKleS::Core {
 
 		template <auto type> requires
 			CategoryConstraint<>
-			&& (IsSameV<type, Enum>)
-			&& (static_cast<ZSize>(type) < sizeof...(TValue))
+			&& (IsSameV<type, Enumeration>)
+			&& (static_cast<ZSize>(type.value) < sizeof...(TValue))
 		constexpr auto is_of_type (
 		) const -> Boolean {
-			return thiz.template is<AsSelect<static_cast<ZSize>(type), TValue...>>();
+			return thiz.template is<AsSelect<static_cast<ZSize>(type.value), TValue ...>>();
 		}
 
 		// ----------------
 
-		template <auto type, typename ...Argument> requires
+		template <auto type, typename ... Argument> requires
 			CategoryConstraint<>
-			&& (IsSameV<type, Enum>)
-			&& (static_cast<ZSize>(type) < sizeof...(TValue))
-			&& (IsConstructible<AsSelect<static_cast<ZSize>(type), TValue...>, Argument &&...>)
+			&& (IsSameV<type, Enumeration>)
+			&& (static_cast<ZSize>(type.value) < sizeof...(TValue))
+			&& (IsConstructible<AsSelect<static_cast<ZSize>(type.value), TValue ...>, Argument && ...>)
 		constexpr auto set_of_type (
-			Argument && ...argument
-		) -> AsSelect<static_cast<ZSize>(type), TValue...>& {
-			return thiz.template set<AsSelect<static_cast<ZSize>(type), TValue...>>(as_forward<Argument>(argument)...);
+			Argument && ... argument
+		) -> AsSelect<static_cast<ZSize>(type.value), TValue ...>& {
+			return thiz.template set<AsSelect<static_cast<ZSize>(type.value), TValue ...>>(as_forward<Argument>(argument) ...);
 		}
 
 		// ----------------
 
 		template <auto type> requires
 			CategoryConstraint<>
-			&& (IsSameV<type, Enum>)
-			&& (static_cast<ZSize>(type) < sizeof...(TValue))
+			&& (IsSameV<type, Enumeration>)
+			&& (static_cast<ZSize>(type.value) < sizeof...(TValue))
 		constexpr auto get_of_type (
-		) -> AsSelect<static_cast<ZSize>(type), TValue...>& {
-			return thiz.template get<AsSelect<static_cast<ZSize>(type), TValue...>>();
+		) -> AsSelect<static_cast<ZSize>(type.value), TValue ...>& {
+			return thiz.template get<AsSelect<static_cast<ZSize>(type.value), TValue ...>>();
 		}
 
 		template <auto type> requires
 			CategoryConstraint<>
-			&& (IsSameV<type, Enum>)
-			&& (static_cast<ZSize>(type) < sizeof...(TValue))
+			&& (IsSameV<type, Enumeration>)
+			&& (static_cast<ZSize>(type.value) < sizeof...(TValue))
 		constexpr auto get_of_type (
-		) const -> AsSelect<static_cast<ZSize>(type), TValue...> const& {
-			return thiz.template get<AsSelect<static_cast<ZSize>(type), TValue...>>();
+		) const -> AsSelect<static_cast<ZSize>(type.value), TValue ...> const& {
+			return thiz.template get<AsSelect<static_cast<ZSize>(type.value), TValue ...>>();
 		}
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region operator
 

@@ -2,7 +2,7 @@
 
 #include "core/executor/executor.hpp"
 
-namespace TwinKleS::Core::Interface::Implement {
+namespace TwinStar::Core::Interface::Implement {
 
 	#pragma region function
 

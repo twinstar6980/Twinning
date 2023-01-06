@@ -7,6 +7,7 @@
 #include "core/utility/base_wrapper/byte.hpp"
 #include "core/utility/base_wrapper/pointer.hpp"
 #include "core/utility/base_wrapper/null_pointer.hpp"
+#include "core/utility/base_wrapper/enumeration.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 }

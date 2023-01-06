@@ -1,15 +1,32 @@
-# TwinKleS ToolKit - Script
+# TwinStar ToolKit - Script
 
-与 Core 及 Shell 配合使用的脚本。
+脚本，控制工具的运行流程。
 
-此为跨平台 TypeScript 项目。
+本项目是跨平台的 `TypeScript` 项目，依赖 `Core` 与 `Shell` 的实现。
 
-## 项目构建
+## 项目开发
 
-1. 首先，安装 ⌈ node.js ⌋ 及 ⌈ typescript ⌋ 。
+* 要求
+	
+	* [Node.js 18.12+](https://nodejs.org/)
+	
+	* [TypeScript 4.9+](https://www.typescriptlang.org/)
+	
+	* [PowerShell](https://learn.microsoft.com/powershell/)
 
-2. 之后，进入项目目录，执行 ⌈ tsc ⌋ ，将编译项目至输出目录 ⌈ .build ⌋ 内。
+* 构建
+	
+	在 `+ <project>` 下执行 `> tsc` ，构建产物将输出至 `+ <project>/.build` 。
 
-3. 初次编译后，还需运行 ⌈ link_config.bat ⌋ ，以在输出目录内创建指向脚本配置文件的符号链接。
+* 链接配置文件
+	
+	初次构建后，还须在 `+ <project>` 下以管理员权限执行 `> ./link.ps1` ，该脚本将在输出目录内创建指向脚本配置文件的软链接。
+	
+	> 该脚本仅适用于 `PowerShell` ，需要预先安装该环境。你也可以考虑自行编写 shell 脚本。
 
-4. 最后，删除工具主目录内的脚本目录 ⌈ `<home>/script` ⌋ ，并创建指向项目输出目录的符号链接 ⌈ `<home>/script` ⌋ ，即可开始进行拓展开发。
+## 第三方库使用
+
+| 库 | 用途 |
+|:--:|:----:|
+
+## 说明

@@ -5,26 +5,26 @@
 #include "core/utility/trait/template_instance.hpp"
 #include "core/utility/trait/object.hpp"
 
-namespace TwinKleS::Core::Trait {
+namespace TwinStar::Core::Trait {
 
 	#pragma region type
 
-	template <typename Result, typename ...Argument> requires
-		CategoryConstraint<IsAnything<Result> && IsValid<Argument...>>
+	template <typename Result, typename ... Argument> requires
+		CategoryConstraint<IsAnything<Result> && IsValid<Argument ...>>
 	using AsGlobalFunction = ZPointer<Result  (Argument ...)>;
 
-	template <typename Class, typename Result, typename ...Argument> requires
-		CategoryConstraint<IsPureInstance<Class> && IsAnything<Result> && IsValid<Argument...>>
+	template <typename Class, typename Result, typename ... Argument> requires
+		CategoryConstraint<IsPureInstance<Class> && IsAnything<Result> && IsValid<Argument ...>>
 	using AsVMemberFunction = ZMemberPointer<Class, Result  (Argument ...)>;
 
-	template <typename Class, typename Result, typename ...Argument> requires
-		CategoryConstraint<IsPureInstance<Class> && IsAnything<Result> && IsValid<Argument...>>
+	template <typename Class, typename Result, typename ... Argument> requires
+		CategoryConstraint<IsPureInstance<Class> && IsAnything<Result> && IsValid<Argument ...>>
 	using AsCMemberFunction = ZMemberPointer<Class, Result  (Argument ...) const>;
 
-	template <typename Class, auto constant, typename Result, typename ...Argument> requires
-		CategoryConstraint<IsPureInstance<Class> && IsAnything<Result> && IsValid<Argument...>>
+	template <typename Class, auto constant, typename Result, typename ... Argument> requires
+		CategoryConstraint<IsPureInstance<Class> && IsAnything<Result> && IsValid<Argument ...>>
 		&& (IsSameV<constant, ZBoolean>)
-	using AsMemberFunction = AsSwitch<!constant, AsVMemberFunction<Class, Result, Argument...>, AsCMemberFunction<Class, Result, Argument...>>;
+	using AsMemberFunction = AsSwitch<!constant, AsVMemberFunction<Class, Result, Argument ...>, AsCMemberFunction<Class, Result, Argument ...>>;
 
 	template <typename Class> requires
 		CategoryConstraint<IsPureInstance<Class>>
@@ -40,18 +40,18 @@ namespace TwinKleS::Core::Trait {
 
 	// ----------------
 
-	template <typename TResult, typename ...TArgument> requires
-		CategoryConstraint<IsAnything<TResult> && IsValid<TArgument...>>
+	template <typename TResult, typename ... TArgument> requires
+		CategoryConstraint<IsAnything<TResult> && IsValid<TArgument ...>>
 	struct GlobalFunctionTrait {
 
-		using Argument = TypePackage<TArgument...>;
+		using Argument = TypePackage<TArgument ...>;
 
 		using Result = TResult;
 
 	};
 
-	template <typename TClass, auto t_constant, typename TResult, typename ...TArgument> requires
-		CategoryConstraint<IsPureInstance<TClass> && IsAnything<TResult> && IsValid<TArgument...>>
+	template <typename TClass, auto t_constant, typename TResult, typename ... TArgument> requires
+		CategoryConstraint<IsPureInstance<TClass> && IsAnything<TResult> && IsValid<TArgument ...>>
 		&& (IsSameV<t_constant, ZBoolean>)
 	struct MemberFunctionTrait {
 
@@ -61,7 +61,7 @@ namespace TwinKleS::Core::Trait {
 
 		// ----------------
 
-		using Argument = TypePackage<TArgument...>;
+		using Argument = TypePackage<TArgument ...>;
 
 		using Result = TResult;
 
@@ -86,22 +86,30 @@ namespace TwinKleS::Core::Trait {
 
 	// ----------------
 
-	template <typename TResult, typename ...TArgument> requires
+	#if defined M_compiler_msvc // TODO : avoid msvc bug : in msvc 19.34, pass global function pointer to non-type template argument will auto cast to function object, such as R (*)(A...) -> R (A...)
+	template <typename TResult, typename ... TArgument> requires
 		AutoConstraint
-	struct CallableTrait<AsGlobalFunction<TResult, TArgument...>> :
-		GlobalFunctionTrait<TResult, TArgument...> {
+	struct CallableTrait<TResult  (TArgument ...)> :
+		GlobalFunctionTrait<TResult, TArgument ...> {
+	};
+	#endif
+
+	template <typename TResult, typename ... TArgument> requires
+		AutoConstraint
+	struct CallableTrait<AsGlobalFunction<TResult, TArgument ...>> :
+		GlobalFunctionTrait<TResult, TArgument ...> {
 	};
 
-	template <typename TClass, typename TResult, typename ...TArgument> requires
+	template <typename TClass, typename TResult, typename ... TArgument> requires
 		AutoConstraint
-	struct CallableTrait<AsVMemberFunction<TClass, TResult, TArgument...>> :
-		MemberFunctionTrait<TClass, false, TResult, TArgument...> {
+	struct CallableTrait<AsVMemberFunction<TClass, TResult, TArgument ...>> :
+		MemberFunctionTrait<TClass, false, TResult, TArgument ...> {
 	};
 
-	template <typename TClass, typename TResult, typename ...TArgument> requires
+	template <typename TClass, typename TResult, typename ... TArgument> requires
 		AutoConstraint
-	struct CallableTrait<AsCMemberFunction<TClass, TResult, TArgument...>> :
-		MemberFunctionTrait<TClass, true, TResult, TArgument...> {
+	struct CallableTrait<AsCMemberFunction<TClass, TResult, TArgument ...>> :
+		MemberFunctionTrait<TClass, true, TResult, TArgument ...> {
 	};
 
 	template <typename TClass> requires
@@ -114,53 +122,53 @@ namespace TwinKleS::Core::Trait {
 
 	#pragma region concept
 
-	template <typename Callable, typename ...Argument>
+	template <typename Callable, typename ... Argument>
 	concept IsInvocable =
-	CategoryConstraint<IsPureInstance<Callable> && IsValid<Argument...>>
-	&& (std::is_invocable_v<Callable, Argument...>)
-	;
+		CategoryConstraint<IsPureInstance<Callable> && IsValid<Argument ...>>
+		&& (std::is_invocable_v<Callable, Argument ...>)
+		;
 
 	template <typename It>
 	concept IsCallable =
-	CategoryConstraint<IsPureInstance<It>>
-	&& (requires { typename CallableTrait<It>::Result; })
-	;
+		CategoryConstraint<IsPureInstance<It>>
+		&& (requires { typename CallableTrait<It>::Result; })
+		;
 
 	// NOTE : just a name, generic callable object can not test
 	template <typename It>
 	concept IsGenericCallable =
-	CategoryConstraint<IsPureInstance<It>>
-	;
+		CategoryConstraint<IsPureInstance<It>>
+		;
 
 	// ----------------
 
 	template <typename It>
 	concept IsGlobalFunction =
-	CategoryConstraint<IsPureInstance<It>>
-	&& (IsTemplateInstanceOfTNT<CallableTrait<It>, GlobalFunctionTrait>)
-	;
+		CategoryConstraint<IsPureInstance<It>>
+		&& (IsTemplateInstanceOfTNT<CallableTrait<It>, GlobalFunctionTrait>)
+		;
 
 	template <typename It>
 	concept IsMemberFunction =
-	CategoryConstraint<IsPureInstance<It>>
-	&& (IsTemplateInstanceOfTVTNT<CallableTrait<It>, MemberFunctionTrait>)
-	;
+		CategoryConstraint<IsPureInstance<It>>
+		&& (IsTemplateInstanceOfTVTNT<CallableTrait<It>, MemberFunctionTrait>)
+		;
 
 	template <typename It>
 	concept IsCallableClass =
-	CategoryConstraint<IsPureInstance<It>>
-	&& (IsTemplateInstanceOfT<CallableTrait<It>, CallableClassTrait>)
-	;
+		CategoryConstraint<IsPureInstance<It>>
+		&& (IsTemplateInstanceOfT<CallableTrait<It>, CallableClassTrait>)
+		;
 
 	template <typename It>
 	concept IsFunction =
-	CategoryConstraint<IsPureInstance<It>>
-	&& (IsGlobalFunction<It> || IsMemberFunction<It>)
-	;
+		CategoryConstraint<IsPureInstance<It>>
+		&& (IsGlobalFunction<It> || IsMemberFunction<It>)
+		;
 
 	#pragma endregion
 
-	#pragma region misc
+	#pragma region miscellaneous
 
 	template <auto it> requires
 		CategoryConstraint<>
@@ -173,49 +181,49 @@ namespace TwinKleS::Core::Trait {
 
 	namespace Detail {
 
-		template <auto function, typename ...ProxyArgument> requires
+		template <auto function, typename ... ProxyArgument> requires
 			NoneConstraint
 		inline auto proxy_global_function (
-			ProxyArgument ...argument
+			ProxyArgument ... argument
 		) -> typename CallableTraitOf<function>::Result {
-			return function(as_forward<ProxyArgument>(argument)...);
+			return function(as_forward<ProxyArgument>(argument) ...);
 		}
 
-		template <auto function, typename ...ProxyArgument, auto ...argument_index> requires
+		template <auto function, typename ... ProxyArgument, auto ... argument_index> requires
 			NoneConstraint
 		inline constexpr auto make_proxy_global_function (
-			ValuePackage<argument_index...>
+			ValuePackage<argument_index ...>
 		) -> auto {
-			return &proxy_global_function<function, AsSwitch<!IsVoid<typename TypePackage<ProxyArgument...>::template Element<argument_index>>, typename TypePackage<ProxyArgument...>::template Element<argument_index>, typename CallableTraitOf<function>::Argument::template Element<argument_index>>...>;
+			return &proxy_global_function<function, AsSwitch<!IsVoid<typename TypePackage<ProxyArgument ...>::template Element<argument_index>>, typename TypePackage<ProxyArgument ...>::template Element<argument_index>, typename CallableTraitOf<function>::Argument::template Element<argument_index>> ...>;
 		}
 
 	}
 
-	template <auto function, typename ...ProxyArgument> requires
-		CategoryConstraint<IsValid<ProxyArgument...>>
+	template <auto function, typename ... ProxyArgument> requires
+		CategoryConstraint<IsValid<ProxyArgument ...>>
 		&& (IsGlobalFunction<decltype(function)>)
 		&& (sizeof...(ProxyArgument) == CallableTraitOf<function>::Argument::size)
-	inline constexpr auto & proxy_global_function = *Detail::make_proxy_global_function<function, ProxyArgument...>(AsValuePackageOfIndex<CallableTraitOf<function>::Argument::size>{});
+	inline constexpr auto & proxy_global_function = *Detail::make_proxy_global_function<function, ProxyArgument ...>(AsValuePackageOfIndex<CallableTraitOf<function>::Argument::size>{});
 
 	// ----------------
 
 	namespace Detail {
 
-		template <auto function, typename Object, auto constant, typename Result, typename ...Argument> requires
+		template <auto function, typename Object, auto constant, typename Result, typename ... Argument> requires
 			NoneConstraint
 		inline auto normalized_method (
 			AsConstantIf<Object, constant> & object,
 			Argument ...                     argument
 		) -> Result {
-			return (object.*function)(as_forward<Argument>(argument)...);
+			return (object.*function)(as_forward<Argument>(argument) ...);
 		}
 
-		template <auto function, typename Object, auto ...argument_index> requires
+		template <auto function, typename Object, auto ... argument_index> requires
 			NoneConstraint
 		inline constexpr auto make_normalized_method (
-			ValuePackage<argument_index...>
+			ValuePackage<argument_index ...>
 		) -> auto {
-			return &normalized_method<function, Object, CallableTraitOf<function>::constant, typename CallableTraitOf<function>::Result, typename CallableTraitOf<function>::Argument::template Element<argument_index>...>;
+			return &normalized_method<function, Object, CallableTraitOf<function>::constant, typename CallableTraitOf<function>::Result, typename CallableTraitOf<function>::Argument::template Element<argument_index> ...>;
 		}
 
 	}
@@ -230,20 +238,20 @@ namespace TwinKleS::Core::Trait {
 
 	namespace Detail {
 
-		template <auto lambda, typename Result, typename ...Argument> requires
+		template <auto lambda, typename Result, typename ... Argument> requires
 			NoneConstraint
 		inline auto normalized_lambda (
-			Argument ...argument
+			Argument ... argument
 		) -> Result {
-			return lambda(as_forward<Argument>(argument)...);
+			return lambda(as_forward<Argument>(argument) ...);
 		}
 
-		template <auto lambda, auto ...argument_index> requires
+		template <auto lambda, auto ... argument_index> requires
 			NoneConstraint
 		inline constexpr auto make_normalized_lambda (
-			ValuePackage<argument_index...>
+			ValuePackage<argument_index ...>
 		) -> auto {
-			return &normalized_lambda<lambda, typename CallableTraitOf<lambda>::Result, typename CallableTraitOf<lambda>::Argument::template Element<argument_index>...>;
+			return &normalized_lambda<lambda, typename CallableTraitOf<lambda>::Result, typename CallableTraitOf<lambda>::Argument::template Element<argument_index> ...>;
 		}
 
 	}

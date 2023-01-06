@@ -1,5 +1,5 @@
 /** 计时 */
-namespace TwinKleS {
+namespace TwinStar {
 
 	// ------------------------------------------------
 
@@ -26,7 +26,7 @@ namespace TwinKleS {
 		start(
 		): void {
 			if (this.m_last_begin !== null) {
-				throw new Error(`TwinKleS.Timer.start : timer already start`);
+				throw new Error(`TwinStar.Timer.start : timer already start`);
 			}
 			this.m_last_begin = Date.now();
 			return;
@@ -36,7 +36,7 @@ namespace TwinKleS {
 		stop(
 		): void {
 			if (this.m_last_begin === null) {
-				throw new Error(`TwinKleS.Timer.stop : timer no start`);
+				throw new Error(`TwinStar.Timer.stop : timer no start`);
 			}
 			this.m_duration += Date.now() - this.m_last_begin;
 			this.m_last_begin = null;

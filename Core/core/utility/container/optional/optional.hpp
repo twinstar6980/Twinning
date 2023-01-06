@@ -3,7 +3,7 @@
 #include "core/utility/base_wrapper/wrapper.hpp"
 #include <optional>
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
@@ -11,15 +11,15 @@ namespace TwinKleS::Core {
 		CategoryConstraint<IsPureInstance<TValue>>
 	class Optional {
 
-	public: //
+	public:
 
 		using Value = TValue;
 
-	protected: //
+	protected:
 
 		std::optional<Value> m_value{};
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -89,13 +89,13 @@ namespace TwinKleS::Core {
 			return;
 		}
 
-		template <typename ...Argument> requires
-			CategoryConstraint<IsValid<Argument...>>
-			&& (IsConstructible<Value, Argument &&...>)
+		template <typename ... Argument> requires
+			CategoryConstraint<IsValid<Argument ...>>
+			&& (IsConstructible<Value, Argument && ...>)
 		constexpr auto set (
-			Argument && ...argument
+			Argument && ... argument
 		) -> Value& {
-			thiz.m_value.emplace(as_forward<Argument>(argument)...);
+			thiz.m_value.emplace(as_forward<Argument>(argument) ...);
 			return thiz.m_value.value();
 		}
 
@@ -115,7 +115,7 @@ namespace TwinKleS::Core {
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region operator
 
@@ -132,13 +132,13 @@ namespace TwinKleS::Core {
 
 	#pragma region utility
 
-	template <typename Value, typename ...Argument> requires
-		CategoryConstraint<IsPureInstance<Value> && IsValid<Argument...>>
+	template <typename Value, typename ... Argument> requires
+		CategoryConstraint<IsPureInstance<Value> && IsValid<Argument ...>>
 	inline constexpr auto make_optional (
-		Argument && ...argument
+		Argument && ... argument
 	) -> Optional<Value> {
 		auto result = Optional<Value>{};
-		result.set(as_forward<Argument>(argument)...);
+		result.set(as_forward<Argument>(argument) ...);
 		return result;
 	}
 

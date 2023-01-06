@@ -1,5 +1,5 @@
 /** 图像源管理 */
-namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.SourceManager {
+namespace TwinStar.Support.PopCapAnimation.Convert.Flash.SourceManager {
 
 	// ------------------------------------------------
 

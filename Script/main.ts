@@ -1,9 +1,9 @@
-namespace TwinKleS {
+namespace TwinStar {
 
 	// ------------------------------------------------
 
 	/** 版本编号 */
-	export const k_version = 21;
+	export const k_version = 22;
 
 	// ------------------------------------------------
 
@@ -63,10 +63,17 @@ namespace TwinKleS {
 				file: string,
 			): ConstraintT {
 				let data = Core.FileSystem.read_file(Core.Path.value(file));
-				let stream = Core.CharacterStreamView.look(Core.Misc.cast_ByteListView_to_CharacterListView(data.view()));
+				let stream = Core.CharacterStreamView.look(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(data.view()));
 				let json = Core.JSON.Value.default<ConstraintT>();
-				Core.JSON.Read.process(stream, json);
+				Core.Tool.Data.Serialization.JSON.Read.process_whole(stream, json);
 				return json.value;
+			}
+
+			// ------------------------------------------------
+
+			export function get_working_directory(
+			): string {
+				return Core.FileSystem.get_working_directory().value;
 			}
 
 			// ------------------------------------------------
@@ -75,7 +82,7 @@ namespace TwinKleS {
 				script_file: string,
 			): any {
 				let script = Core.FileSystem.read_file(Core.Path.value(script_file));
-				return Core.Misc.g_context.evaluate(Core.Misc.cast_ByteListView_to_CharacterListView(script.view()), Core.String.value(script_file));
+				return Core.Miscellaneous.g_context.evaluate(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(script.view()), Core.String.value(script_file));
 			}
 
 			// ------------------------------------------------
@@ -83,12 +90,12 @@ namespace TwinKleS {
 			export function notify(
 				message: string,
 			): void {
-				var shell_name = Core.Misc.g_context.shell_callback(Core.StringList.value(['name'])).value[1];
-				if (shell_name.endsWith('.cli')) {
-					Core.Misc.g_context.shell_callback(Core.StringList.value(['output', `${message}\n`]));
+				var shell_name = Core.Miscellaneous.g_context.shell_callback(Core.StringList.value(['name'])).value[1];
+				if (shell_name === 'cli') {
+					Core.Miscellaneous.g_context.shell_callback(Core.StringList.value(['output', `${message}\n`]));
 				}
-				if (shell_name.endsWith('.gui')) {
-					Core.Misc.g_context.shell_callback(Core.StringList.value(['output', 'v', `${message}`]));
+				if (shell_name === 'gui') {
+					Core.Miscellaneous.g_context.shell_callback(Core.StringList.value(['output_notify', 'v', `${message}`]));
 				}
 				return;
 			}
@@ -166,7 +173,7 @@ namespace TwinKleS {
 		export function path_at_home(
 			format: string,
 		): string {
-			return format.replaceAll(/<home>/g, g_home_directory);
+			return format.replaceAll(/^~(?=[\\\/])/g, g_home_directory);
 		}
 
 		// ------------------------------------------------
@@ -178,7 +185,8 @@ namespace TwinKleS {
 			argument: Array<string>,
 		): null | string {
 			let result: null | string = null;
-			Detail.notify(`TwinKleS.ToolKit.Script ${k_version}`);
+			// todo : get core version
+			Detail.notify(`TwinStar.ToolKit @ Script:${k_version} & Core:${Core.Miscellaneous.g_version.value} & Shell:${Core.Miscellaneous.g_context.shell_callback(Core.StringList.value(['name'])).value[1]}:${Core.Miscellaneous.g_context.shell_callback(Core.StringList.value(['version'])).value[1]}`);
 			try {
 				if (script_path === null) {
 					throw new Error(`must run as file`);
@@ -187,9 +195,8 @@ namespace TwinKleS {
 				if (script_path_match === null) {
 					throw new Error(`script path error`);
 				}
-				if (script_path_match[1].startsWith('.') || script_path_match[1].startsWith('..')) {
-					let current_directory = Core.FileSystem.get_working_directory().value;
-					g_home_directory = `${current_directory}/${script_path_match[1]}`;
+				if (/^\.{1,2}[\\\/]/.test(script_path_match[1])) {
+					g_home_directory = `${Detail.get_working_directory()}/${script_path_match[1]}`;
 				} else {
 					g_home_directory = script_path_match[1];
 				}
@@ -197,6 +204,23 @@ namespace TwinKleS {
 				let entry = load_module(g_module_manifest, `${g_home_directory}/script`);
 				let end_time = Date.now();
 				Console.notify('s', localized(`所有脚本模块已加载`), [localized(`用时 {} s`, ((end_time - begin_time) / 1000).toFixed(3))]);
+				{
+					// Console.notify('w', '输入测试', []);
+					// Console.notify('i', 'pause', []);
+					// Console.pause();
+					// Console.notify('i', 'confirm', []);
+					// Console.confirm(null, true);
+					// Console.notify('i', 'number', []);
+					// Console.number(null, true);
+					// Console.notify('i', 'integer', []);
+					// Console.integer(null, true);
+					// Console.notify('i', 'size', []);
+					// Console.size(null, true);
+					// Console.notify('i', 'string', []);
+					// Console.string(null, true);
+					// Console.notify('i', 'option', []);
+					// Console.option([[43]], null, true);
+				}
 				entry?.[0](entry[1], argument);
 			} catch (error: any) {
 				if (error instanceof Error) {
@@ -220,7 +244,7 @@ namespace TwinKleS {
 
 }
 
-TwinKleS.Main.g_module_manifest = {
+TwinStar.Main.g_module_manifest = {
 	module: [
 		`utility/Timer`,
 		`utility/TypeUtility`,
@@ -278,4 +302,4 @@ TwinKleS.Main.g_module_manifest = {
 	entry: `Entry/Entry`,
 };
 
-(TwinKleS.Main.main);
+(TwinStar.Main.main);

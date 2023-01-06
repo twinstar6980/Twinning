@@ -1,5 +1,5 @@
 /** PvZ2-RSB资源提取 */
-namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
+namespace TwinStar.Support.PvZ2.RSB.ResourceExtract {
 
 	// ------------------------------------------------
 
@@ -118,7 +118,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 				tree: PathUtility.Tree,
 			) => {
 				for (let name in tree) {
-					CoreX.FileSystem.rename(`${parent}/${name.toUpperCase()}`, `${parent}/${name}`);
+					CoreX.FileSystem.rename(`${parent}/${name.toUpperCase()}`, `${parent}/${name}`, Shell.is_android);
 					if (tree[name] !== null) {
 						rename_tree(`${parent}/${name}`, tree[name]!);
 					}
@@ -196,10 +196,10 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 					let flash_directory = `${path}.xfl`;
 					let data = CoreX.FileSystem.read_file(`${resource_directory}/${path}`);
 					let stream = Core.ByteStreamView.look(data.view());
-					let version_c = Core.Tool.PopCap.PAM.Version.json(Core.JSON.Value.value({ number: 6n }));
-					let information = Core.Tool.PopCap.PAM.Manifest.AnimationVariant.default();
-					Core.Tool.PopCap.PAM.Decode.process(stream, information, version_c);
-					let information_json = information.to_json(version_c);
+					let version_c = Core.Tool.PopCap.PAM.Version.value({ number: 6n });
+					let information = Core.Tool.PopCap.PAM.Manifest.Animation.default();
+					Core.Tool.PopCap.PAM.Decode.process_animation(stream, information, version_c);
+					let information_json = information.get_json(version_c);
 					let information_js = information_json.value;
 					if (option.animation.json !== null) {
 						CoreX.JSON.write_fs(`${option.animation.directory}/${raw_file}`, information_json);
@@ -253,12 +253,12 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 		Console.notify('i', localized(`解包 ...`), []);
 		let package_manifest: Core.Tool.PopCap.RSB.Manifest.JS_N.Package;
 		{
-			let version_c = Core.Tool.PopCap.RSB.Version.json(Core.JSON.Value.value({ number: version_number, additional_texture_information_for_pvz_2_chinese_android: version_additional_texture_information_for_pvz_2_chinese_android }));
+			let version_c = Core.Tool.PopCap.RSB.Version.value({ number: version_number, additional_texture_information_for_pvz_2_chinese_android: version_additional_texture_information_for_pvz_2_chinese_android });
 			let data = CoreX.FileSystem.read_file(data_file);
 			let stream = Core.ByteStreamView.look(data.view());
-			let manifest = Core.Tool.PopCap.RSB.Manifest.PackageVariant.default();
-			let description = Core.Tool.PopCap.RSB.Description.PackageOptionalVariant.default();
-			Core.Tool.PopCap.RSB.Unpack.process(
+			let manifest = Core.Tool.PopCap.RSB.Manifest.Package.default();
+			let description = Core.Tool.PopCap.RSB.Description.PackageOptional.default();
+			Core.Tool.PopCap.RSB.Unpack.process_package(
 				stream,
 				manifest,
 				description,
@@ -267,7 +267,7 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 				version_c,
 			);
 			data.reset();
-			let manifest_json = manifest.to_json(version_c);
+			let manifest_json = manifest.get_json(version_c);
 			package_manifest = manifest_json.value as any;
 			CoreX.JSON.write_fs(manifest_file, manifest_json);
 		}
@@ -305,10 +305,10 @@ namespace TwinKleS.Support.PvZ2.RSB.ResourceExtract {
 			let rton = CoreX.FileSystem.read_file(resource_directory + '/' + resource_path);
 			let rton_stream = Core.ByteStreamView.look(rton.view());
 			let json = Core.JSON.Value.default<OfficialResourceManifest.Package>();
-			Core.Tool.PopCap.RTON.Decode.process(
+			Core.Tool.PopCap.RTON.Decode.process_whole(
 				rton_stream,
 				json,
-				Core.Tool.PopCap.RTON.Version.json(Core.JSON.Value.value({ number: 1n })),
+				Core.Tool.PopCap.RTON.Version.value({ number: 1n }),
 			);
 			official_resource_manifest = json.value;
 		}

@@ -17,7 +17,7 @@
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinKleS::Core::ThirdParty::bzip2 {
+namespace TwinStar::Core::ThirdParty::bzip2 {
 
 	using bz_stream = ::bz_stream;
 

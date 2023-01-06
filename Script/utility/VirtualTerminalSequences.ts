@@ -1,5 +1,5 @@
 /** 虚拟终端序列 */
-namespace TwinKleS.VirtualTerminalSequences {
+namespace TwinStar.VirtualTerminalSequences {
 
 	// ------------------------------------------------
 

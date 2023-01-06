@@ -3,7 +3,7 @@
 #include "core/utility/container/list/list_view.hpp"
 #include "core/utility/container/stream/stream_method.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
@@ -12,32 +12,32 @@ namespace TwinKleS::Core {
 		&& (IsSameV<t_method, StreamMethod>)
 	class StreamView {
 
-	private: //
+	private:
 
-		using IOStream = StreamView<TElement, StreamMethod::io, TMListView>;
+		using IOStream = StreamView<TElement, StreamMethod::Constant::io(), TMListView>;
 
-		using IStream = StreamView<TElement, StreamMethod::i, TMListView>;
+		using IStream = StreamView<TElement, StreamMethod::Constant::i(), TMListView>;
 
-		using OStream = StreamView<TElement, StreamMethod::o, TMListView>;
+		using OStream = StreamView<TElement, StreamMethod::Constant::o(), TMListView>;
 
-	public: //
+	public:
 
 		using Element = TElement;
 
 		inline static constexpr auto method = StreamMethod{t_method};
 
-		using ListView = TMListView<Element, t_method == StreamMethod::i>;
+		using ListView = TMListView<Element, t_method == StreamMethod::Constant::i()>;
 
 		using QElement = typename ListView::QElement;
 
 		using QIterator = typename ListView::QIterator;
 
-	protected: //
+	protected:
 
 		ListView m_view{};
 		Size     m_position{k_begin_index};
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -83,12 +83,12 @@ namespace TwinKleS::Core {
 		// ----------------
 
 		implicit operator IStream & () requires
-			(method == StreamMethod::io) {
+			(method == StreamMethod::Constant::io()) {
 			return thiz.as_input_stream();
 		}
 
 		implicit operator OStream & () requires
-			(method == StreamMethod::io) {
+			(method == StreamMethod::Constant::io()) {
 			return thiz.as_output_stream();
 		}
 
@@ -279,7 +279,7 @@ namespace TwinKleS::Core {
 		auto write (
 			Element const & value
 		) -> Void requires
-			(method == StreamMethod::o || method == StreamMethod::io) {
+			(method == StreamMethod::Constant::o() || method == StreamMethod::Constant::io()) {
 			assert_condition(!thiz.full());
 			thiz.next() = value;
 			return;
@@ -288,7 +288,7 @@ namespace TwinKleS::Core {
 		auto read (
 			Element & value
 		) -> Void requires
-			(method == StreamMethod::i || method == StreamMethod::io) {
+			(method == StreamMethod::Constant::i() || method == StreamMethod::Constant::io()) {
 			assert_condition(!thiz.full());
 			value = thiz.next();
 			return;
@@ -298,10 +298,40 @@ namespace TwinKleS::Core {
 
 		auto read_of (
 		) -> Element requires
-			(method == StreamMethod::i || method == StreamMethod::io) {
+			(method == StreamMethod::Constant::i() || method == StreamMethod::Constant::io()) {
 			auto value = Element{};
 			thiz.read(value);
 			return value;
+		}
+
+		#pragma endregion
+
+		#pragma region write & read space
+
+		auto write_space (
+			Element const & value,
+			Size const &    size
+		) -> Void requires
+			(method == StreamMethod::Constant::o() || method == StreamMethod::Constant::io()) {
+			assert_condition(size <= thiz.reserve());
+			auto space = thiz.forward_view(size);
+			for (auto & element : space) {
+				element = value;
+			}
+			return;
+		}
+
+		auto read_space (
+			Element const & value,
+			Size const &    size
+		) -> Void requires
+			(method == StreamMethod::Constant::i() || method == StreamMethod::Constant::io()) {
+			assert_condition(size <= thiz.reserve());
+			auto space = thiz.forward_view(size);
+			for (auto & element : space) {
+				assert_condition(element == value);
+			}
+			return;
 		}
 
 		#pragma endregion
@@ -310,13 +340,13 @@ namespace TwinKleS::Core {
 
 		auto as_input_stream (
 		) -> IStream& requires
-			(method == StreamMethod::io) {
+			(method == StreamMethod::Constant::io()) {
 			return self_cast<IStream>(thiz);
 		}
 
 		auto as_output_stream (
 		) -> OStream& requires
-			(method == StreamMethod::io) {
+			(method == StreamMethod::Constant::io()) {
 			return self_cast<OStream>(thiz);
 		}
 
@@ -330,15 +360,15 @@ namespace TwinKleS::Core {
 
 	template <typename Element, template <typename, auto> typename ListView = ListView> requires
 		AutoConstraint
-	using IOStreamView = StreamView<Element, StreamMethod::io, ListView>;
+	using IOStreamView = StreamView<Element, StreamMethod::Constant::io(), ListView>;
 
 	template <typename Element, template <typename, auto> typename ListView = ListView> requires
 		AutoConstraint
-	using IStreamView = StreamView<Element, StreamMethod::i, ListView>;
+	using IStreamView = StreamView<Element, StreamMethod::Constant::i(), ListView>;
 
 	template <typename Element, template <typename, auto> typename ListView = ListView> requires
 		AutoConstraint
-	using OStreamView = StreamView<Element, StreamMethod::o, ListView>;
+	using OStreamView = StreamView<Element, StreamMethod::Constant::o(), ListView>;
 
 	#pragma endregion
 

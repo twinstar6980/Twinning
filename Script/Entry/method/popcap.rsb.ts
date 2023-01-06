@@ -3,7 +3,7 @@
  * + popcap.rsb.unpack PopCap-RSB 解包
  * + popcap.rsb.extract_resource PopCap-RSB 资源提取
  */
-namespace TwinKleS.Entry.method.popcap.rsb {
+namespace TwinStar.Entry.method.popcap.rsb {
 
 	// ------------------------------------------------
 
@@ -141,7 +141,7 @@ namespace TwinKleS.Entry.method.popcap.rsb {
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
+							() => (Console.option([0n, null, null, null, [3n, ''], [4n, '']], null)),
 							(value) => ([3n, 4n].includes(value) ? null : localized(`版本不受支持`)),
 						);
 						version_additional_texture_information_for_pvz_2_chinese_android = Executor.request_argument(
@@ -157,7 +157,7 @@ namespace TwinKleS.Entry.method.popcap.rsb {
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.binary_size(null)),
+							() => (Console.size(null)),
 							(value) => (null),
 						);
 						input_packet = Executor.request_argument(
@@ -253,7 +253,7 @@ namespace TwinKleS.Entry.method.popcap.rsb {
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
+							() => (Console.option([0n, null, null, null, [3n, ''], [4n, '']], null)),
 							(value) => ([3n, 4n].includes(value) ? null : localized(`版本不受支持`)),
 						);
 						version_additional_texture_information_for_pvz_2_chinese_android = Executor.request_argument(
@@ -344,7 +344,7 @@ namespace TwinKleS.Entry.method.popcap.rsb {
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
+							() => (Console.option([0n, null, null, null, [3n, ''], [4n, '']], null)),
 							(value) => ([3n, 4n].includes(value) ? null : localized(`版本不受支持`)),
 						);
 						version_additional_texture_information_for_pvz_2_chinese_android = Executor.request_argument(
@@ -562,5 +562,5 @@ namespace TwinKleS.Entry.method.popcap.rsb {
 }
 
 ({
-	injector: TwinKleS.Entry.method.popcap.rsb._injector,
+	injector: TwinStar.Entry.method.popcap.rsb._injector,
 });

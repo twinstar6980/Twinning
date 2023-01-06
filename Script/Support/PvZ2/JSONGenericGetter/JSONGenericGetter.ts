@@ -1,5 +1,5 @@
 /** PvZ2-JSON数据通用读取 */
-namespace TwinKleS.Support.PvZ2.JSONGenericGetter {
+namespace TwinStar.Support.PvZ2.JSONGenericGetter {
 
 	// ------------------------------------------------
 

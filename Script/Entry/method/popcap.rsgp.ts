@@ -2,7 +2,7 @@
  * + popcap.rsgp.pack PopCap-RSGP 打包
  * + popcap.rsgp.unpack PopCap-RSGP 解包
  */
-namespace TwinKleS.Entry.method.popcap.rsgp {
+namespace TwinStar.Entry.method.popcap.rsgp {
 
 	// ------------------------------------------------
 
@@ -49,7 +49,7 @@ namespace TwinKleS.Entry.method.popcap.rsgp {
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
+							() => (Console.option([0n, null, null, null, [3n, ''], [4n, '']], null)),
 							(value) => ([3n, 4n].includes(value) ? null : localized(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
@@ -57,7 +57,7 @@ namespace TwinKleS.Entry.method.popcap.rsgp {
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.binary_size(null)),
+							() => (Console.size(null)),
 							(value) => (null),
 						);
 					}
@@ -109,7 +109,7 @@ namespace TwinKleS.Entry.method.popcap.rsgp {
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
+							() => (Console.option([0n, null, null, null, [3n, ''], [4n, '']], null)),
 							(value) => ([3n, 4n].includes(value) ? null : localized(`版本不受支持`)),
 						);
 					}
@@ -135,5 +135,5 @@ namespace TwinKleS.Entry.method.popcap.rsgp {
 }
 
 ({
-	injector: TwinKleS.Entry.method.popcap.rsgp._injector,
+	injector: TwinStar.Entry.method.popcap.rsgp._injector,
 });

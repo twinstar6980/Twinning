@@ -2,7 +2,7 @@
 
 #include "core/utility/image/channel.hpp"
 
-namespace TwinKleS::Core::Image {
+namespace TwinStar::Core::Image {
 
 	#pragma region type
 
@@ -14,7 +14,7 @@ namespace TwinKleS::Core::Image {
 
 		// ----------------
 
-		friend auto operator == (
+		friend constexpr auto operator == (
 			PixelRGB const & thix,
 			PixelRGB const & that
 		) -> bool = default;
@@ -30,7 +30,7 @@ namespace TwinKleS::Core::Image {
 
 		// ----------------
 
-		friend auto operator == (
+		friend constexpr auto operator == (
 			PixelRGBA const & thix,
 			PixelRGBA const & that
 		) -> bool = default;

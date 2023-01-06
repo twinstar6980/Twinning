@@ -10,7 +10,7 @@
 #include "core/utility/image/pixel.hpp"
 #include "core/utility/file_system/path.hpp"
 
-namespace TwinKleS::Core::JS {
+namespace TwinStar::Core::JS {
 
 	#pragma region basic
 
@@ -170,13 +170,12 @@ namespace TwinKleS::Core::JS {
 
 	// ----------------
 
-	template <typename TValue> requires
-		AutoConstraint
-	struct ValueAdapter<BooleanWrapper<TValue>> {
+	template <>
+	struct ValueAdapter<Boolean> {
 
 		using This = Value;
 
-		using That = BooleanWrapper<TValue>;
+		using That = Boolean;
 
 		// ----------------
 
@@ -184,7 +183,7 @@ namespace TwinKleS::Core::JS {
 			This &       thix,
 			That const & that
 		) -> Void {
-			thix.set_boolean(cbw<Boolean>(that));
+			thix.set_boolean(that);
 			return;
 		}
 
@@ -193,7 +192,7 @@ namespace TwinKleS::Core::JS {
 			That & that
 		) -> Void {
 			assert_condition(thix.is_boolean());
-			that = cbw<That>(thix.get_boolean());
+			that = thix.get_boolean();
 			return;
 		}
 
@@ -201,13 +200,12 @@ namespace TwinKleS::Core::JS {
 
 	// ----------------
 
-	template <typename TValue> requires
-		AutoConstraint
-	struct ValueAdapter<IntegerWrapper<TValue>> {
+	template <>
+	struct ValueAdapter<Integer> {
 
 		using This = Value;
 
-		using That = IntegerWrapper<TValue>;
+		using That = Integer;
 
 		// ----------------
 
@@ -215,7 +213,7 @@ namespace TwinKleS::Core::JS {
 			This &       thix,
 			That const & that
 		) -> Void {
-			thix.set_bigint(cbw<Integer>(that));
+			thix.set_bigint(that);
 			return;
 		}
 
@@ -224,19 +222,18 @@ namespace TwinKleS::Core::JS {
 			That & that
 		) -> Void {
 			assert_condition(thix.is_bigint());
-			that = cbw<That>(thix.get_bigint());
+			that = thix.get_bigint();
 			return;
 		}
 
 	};
 
-	template <typename TValue> requires
-		AutoConstraint
-	struct ValueAdapter<FloatingWrapper<TValue>> {
+	template <>
+	struct ValueAdapter<Floating> {
 
 		using This = Value;
 
-		using That = FloatingWrapper<TValue>;
+		using That = Floating;
 
 		// ----------------
 
@@ -244,7 +241,7 @@ namespace TwinKleS::Core::JS {
 			This &       thix,
 			That const & that
 		) -> Void {
-			thix.set_number(cbw<Floating>(that));
+			thix.set_number(that);
 			return;
 		}
 
@@ -253,7 +250,7 @@ namespace TwinKleS::Core::JS {
 			That & that
 		) -> Void {
 			assert_condition(thix.is_number());
-			that = cbw<That>(thix.get_number());
+			that = thix.get_number();
 			return;
 		}
 
@@ -291,6 +288,36 @@ namespace TwinKleS::Core::JS {
 			} else {
 				assert_failed(R"(/* thix type is number or bigint */)");
 			}
+			return;
+		}
+
+	};
+
+	// ----------------
+
+	template <>
+	struct ValueAdapter<Size> {
+
+		using This = Value;
+
+		using That = Size;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.set_bigint(cbw<Integer>(that));
+			return;
+		}
+
+		static auto to (
+			This & thix,
+			That & that
+		) -> Void {
+			assert_condition(thix.is_bigint());
+			that = cbw<That>(thix.get_bigint());
 			return;
 		}
 
@@ -344,9 +371,76 @@ namespace TwinKleS::Core::JS {
 
 	};
 
+	// ----------------
+
+	template <typename TType> requires
+		AutoConstraint
+		&& (IsEnumerationWrapper<TType>)
+		&& (IsDerivedFrom<TType, Enumeration<typename TType::Value>>)
+		&& (!IsSame<TType, Enumeration<typename TType::Value>>)
+	struct ValueAdapter<TType> {
+
+		using This = Value;
+
+		using That = TType;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			auto string = String{};
+			string.from(that);
+			thix.set_string(string);
+			return;
+		}
+
+		static auto to (
+			This & thix,
+			That & that
+		) -> Void {
+			assert_condition(thix.is_string());
+			auto string = thix.get_string();
+			string.to(that);
+			return;
+		}
+
+	};
+
 	#pragma endregion
 
 	#pragma region container
+
+	template <typename TValue> requires
+		AutoConstraint
+	struct ValueAdapter<Wrapper<TValue>> {
+
+		using This = Value;
+
+		using That = Wrapper<TValue>;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.from(that.get());
+			return;
+		}
+
+		static auto to (
+			This & thix,
+			That & that
+		) -> Void {
+			thix.to(that.get());
+			return;
+		}
+
+	};
+
+	// ----------------
 
 	template <typename TValue> requires
 		AutoConstraint
@@ -387,6 +481,181 @@ namespace TwinKleS::Core::JS {
 
 	// ----------------
 
+	template <typename ... TValue> requires
+		AutoConstraint
+	struct ValueAdapter<Variant<TValue ...>> {
+
+		using This = Value;
+
+		using That = Variant<TValue ...>;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that,
+			Size const & variant_index
+		) -> Void {
+			Generalization::match<AsValuePackageOfIndex<sizeof...(TValue)>>(
+				variant_index.value,
+				[&] <auto index> (ValuePackage<index>, auto) {
+					thix.from(that.template get_of_index<mbw<Size>(index)>());
+				}
+			);
+			return;
+		}
+
+		static auto to (
+			This &       thix,
+			That &       that,
+			Size const & variant_index
+		) -> Void {
+			Generalization::match<AsValuePackageOfIndex<sizeof...(TValue)>>(
+				variant_index.value,
+				[&] <auto index> (ValuePackage<index>, auto) {
+					thix.to(that.template set_of_index<mbw<Size>(index)>());
+				}
+			);
+			return;
+		}
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.set_object_of_object();
+			auto variant_index = that.index();
+			thix.set_object_property("type"_sv, thix.new_value(variant_index));
+			thix.set_object_property("value"_sv, thix.new_value(that, variant_index));
+			return;
+		}
+
+		static auto to (
+			This & thix,
+			That & that
+		) -> Void {
+			auto thix_object = thix.collect_object_own_property_of_object();
+			assert_condition(thix_object.size() == 2_sz);
+			auto variant_index = Size{};
+			thix_object["type"_sv].to(variant_index);
+			thix_object["value"_sv].to(that, variant_index);
+			return;
+		}
+
+	};
+
+	template <typename TEnumeration, typename ... TValue> requires
+		AutoConstraint
+	struct ValueAdapter<EnumerableVariant<TEnumeration, TValue ...>> {
+
+		using This = Value;
+
+		using That = EnumerableVariant<TEnumeration, TValue ...>;
+
+		// ----------------
+
+		static auto from (
+			This &               thix,
+			That const &         that,
+			TEnumeration const & variant_type
+		) -> Void {
+			auto variant_index = cbw<Size>(variant_type);
+			Generalization::match<AsValuePackageOfIndex<sizeof...(TValue)>>(
+				variant_index.value,
+				[&] <auto index> (ValuePackage<index>, auto) {
+					thix.from(that.template get_of_index<mbw<Size>(index)>());
+				}
+			);
+			return;
+		}
+
+		static auto to (
+			This &               thix,
+			That &               that,
+			TEnumeration const & variant_type
+		) -> Void {
+			auto variant_index = cbw<Size>(variant_type);
+			Generalization::match<AsValuePackageOfIndex<sizeof...(TValue)>>(
+				variant_index.value,
+				[&] <auto index> (ValuePackage<index>, auto) {
+					thix.to(that.template set_of_index<mbw<Size>(index)>());
+				}
+			);
+			return;
+		}
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.set_object_of_object();
+			auto variant_type = that.type();
+			thix.set_object_property("type"_sv, thix.new_value(variant_type));
+			thix.set_object_property("value"_sv, thix.new_value(that, variant_type));
+			return;
+		}
+
+		static auto to (
+			This & thix,
+			That & that
+		) -> Void {
+			auto thix_object = thix.collect_object_own_property_of_object();
+			assert_condition(thix_object.size() == 2_sz);
+			auto variant_type = TEnumeration{};
+			thix_object["type"_sv].to(variant_type);
+			thix_object["value"_sv].to(that, variant_type);
+			return;
+		}
+
+	};
+
+	// ----------------
+
+	template <typename ... TValue> requires
+		AutoConstraint
+	struct ValueAdapter<Tuple<TValue ...>> {
+
+		using This = Value;
+
+		using That = Tuple<TValue ...>;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.set_object_of_array();
+			Generalization::each<AsValuePackageOfIndex<sizeof...(TValue)>>(
+				[&] <auto index> (ValuePackage<index>, auto) {
+					thix.set_object_property(mbw<Size>(index), thix.new_value(that.template get<mbw<Size>(index)>()));
+				}
+			);
+			return;
+		}
+
+		static auto to (
+			This & thix,
+			That & that
+		) -> Void {
+			auto thix_array = thix.collect_object_own_property_of_array();
+			assert_condition(thix_array.size() == mbw<Size>(sizeof...(TValue)));
+			Generalization::each<AsValuePackageOfIndex<sizeof...(TValue)>>(
+				[&] <auto index> (ValuePackage<index>, auto) {
+					thix_array.at(mbw<Size>(index)).to(that.template get<mbw<Size>(index)>());
+				}
+			);
+			return;
+		}
+
+	};
+
+	// ----------------
+
 	template <typename TElement> requires
 		AutoConstraint
 	struct ValueAdapter<List<TElement>> {
@@ -403,7 +672,7 @@ namespace TwinKleS::Core::JS {
 		) -> Void {
 			thix.set_object_of_array();
 			for (auto & index : SizeRange{that.size()}) {
-				thix.define_object_property_value(index, thix.new_value(that[index]));
+				thix.set_object_property(index, thix.new_value(that[index]));
 			}
 			return;
 		}
@@ -412,12 +681,13 @@ namespace TwinKleS::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_condition(thix.is_object_of_array());
-			auto size = cbw<Size>(thix.get_object_property("length"_sv).to_of<Floating>());
-			that.allocate_full(size);
-			for (auto & index : SizeRange{size}) {
-				thix.get_object_property(index).to(that[index]);
-			}
+			auto thix_array = thix.collect_object_own_property_of_array();
+			that.convert(
+				thix_array,
+				[] (auto & that_element, auto & thix_element) {
+					thix_element.to(that_element);
+				}
+			);
 			return;
 		}
 
@@ -439,9 +709,11 @@ namespace TwinKleS::Core::JS {
 			This &       thix,
 			That const & that
 		) -> Void {
-			thix.set_object();
+			thix.set_object_of_object();
 			for (auto & index : SizeRange{that.size()}) {
-				thix.define_object_property_value(that.at(index).key, thix.new_value(that.at(index).value));
+				auto thix_property_key = String{};
+				thix_property_key.from(that.at(index).key);
+				thix.set_object_property(thix_property_key, thix.new_value(that.at(index).value));
 			}
 			return;
 		}
@@ -450,13 +722,14 @@ namespace TwinKleS::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_condition(thix.is_object());
-			auto property_map = thix.get_object_own_property();
-			that.allocate_full(property_map.size());
-			for (auto & index : SizeRange{property_map.size()}) {
-				that.at(index).key = property_map.at(index).key;
-				property_map.at(index).value.to(that.at(index).value);
-			}
+			auto thix_object = thix.collect_object_own_property_of_object();
+			that.convert(
+				thix_object,
+				[] (auto & that_element, auto & thix_element) {
+					thix_element.key.to(that_element.key);
+					thix_element.value.to(that_element.value);
+				}
+			);
 			return;
 		}
 
@@ -464,15 +737,18 @@ namespace TwinKleS::Core::JS {
 
 	#pragma endregion
 
-	#pragma region misc
+	#pragma region record
 
 	template <typename TType> requires
 		AutoConstraint
-	struct ValueAdapter<AsEnum<TType>> {
+		&& (IsDerivedFrom<TType, ListRecord>)
+	struct ValueAdapter<TType> {
 
 		using This = Value;
 
-		using That = AsEnum<TType>;
+		using That = TType;
+
+		using FieldPackage = typename TType::Reflection::MemberVariable;
 
 		// ----------------
 
@@ -480,9 +756,12 @@ namespace TwinKleS::Core::JS {
 			This &       thix,
 			That const & that
 		) -> Void {
-			auto string = String{};
-			string.from(that);
-			thix.set_string(string);
+			thix.set_object_of_array();
+			Generalization::each<FieldPackage>(
+				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
+					thix.set_object_property(mbw<Size>(index), thix.new_value(Field::value_of(that)));
+				}
+			);
 			return;
 		}
 
@@ -490,15 +769,173 @@ namespace TwinKleS::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_condition(thix.is_string());
-			auto string = thix.get_string();
-			string.to(that);
+			auto thix_array = thix.collect_object_own_property_of_array();
+			assert_condition(thix_array.size() == mbw<Size>(FieldPackage::size));
+			Generalization::each<FieldPackage>(
+				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
+					thix_array.at(mbw<Size>(index)).to(Field::value_of(that));
+				}
+			);
+			return;
+		}
+
+	};
+
+	template <typename TType> requires
+		AutoConstraint
+		&& (IsDerivedFrom<TType, MapRecord>)
+	struct ValueAdapter<TType> {
+
+		using This = Value;
+
+		using That = TType;
+
+		using FieldPackage = typename TType::Reflection::MemberVariable;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.set_object_of_object();
+			Generalization::each<FieldPackage>(
+				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
+					thix.set_object_property(make_string_view(Field::name.view()), thix.new_value(Field::value_of(that)));
+				}
+			);
+			return;
+		}
+
+		static auto to (
+			This & thix,
+			That & that
+		) -> Void {
+			auto thix_object = thix.collect_object_own_property_of_object();
+			assert_condition(thix_object.size() == mbw<Size>(FieldPackage::size));
+			Generalization::each<FieldPackage>(
+				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
+					assert_condition(thix_object.at(mbw<Size>(index)).key == make_string_view(Field::name.view()));
+					thix_object.at(mbw<Size>(index)).value.to(Field::value_of(that));
+				}
+			);
 			return;
 		}
 
 	};
 
 	// ----------------
+
+	template <typename ... TValue> requires
+		AutoConstraint
+	struct ValueAdapter<ListRecordVariant<TValue ...>> {
+
+		using This = Value;
+
+		using That = ListRecordVariant<TValue ...>;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.from(up_cast<Variant<TValue ...>>(that), that.index());
+			return;
+		}
+
+		static auto to (
+			This & thix,
+			That & that
+		) -> Void {
+			auto thix_array = thix.collect_object_own_property_of_array();
+			Generalization::match<ValuePackage<TValue::Reflection::MemberVariable::size ...>>(
+				thix_array.size().value,
+				[&] <auto index> (ValuePackage<index>, auto) {
+					auto & that_value = that.template set_of_index<mbw<Size>(index)>();
+					Generalization::each<typename TypePackage<TValue ...>::template Element<index>::Reflection::MemberVariable>(
+						[&] <auto field_index, typename Field> (ValuePackage<field_index>, TypePackage<Field>) {
+							thix_array.at(mbw<Size>(field_index)).to(Field::value_of(that_value));
+						}
+					);
+				}
+			);
+			return;
+		}
+
+	};
+
+	template <typename ... TValue> requires
+		AutoConstraint
+	struct ValueAdapter<MapRecordVariant<TValue ...>> {
+
+		using This = Value;
+
+		using That = MapRecordVariant<TValue ...>;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.from(up_cast<Variant<TValue ...>>(that), that.index());
+			return;
+		}
+
+		static auto to (
+			This & thix,
+			That & that
+		) -> Void {
+			auto thix_object = thix.collect_object_own_property_of_object();
+			Generalization::match<ValuePackage<TValue::Reflection::MemberVariable::size ...>>(
+				thix_object.size().value,
+				[&] <auto index> (ValuePackage<index>, auto) {
+					auto & that_value = that.template set_of_index<mbw<Size>(index)>();
+					Generalization::each<typename TypePackage<TValue ...>::template Element<index>::Reflection::MemberVariable>(
+						[&] <auto field_index, typename Field> (ValuePackage<field_index>, TypePackage<Field>) {
+							assert_condition(thix_object.at(mbw<Size>(field_index)).key == make_string_view(Field::name.view()));
+							thix_object.at(mbw<Size>(field_index)).value.to(Field::value_of(that_value));
+						}
+					);
+				}
+			);
+			return;
+		}
+
+	};
+
+	#pragma endregion
+
+	#pragma region byte
+
+	template <>
+	struct ValueAdapter<Byte> {
+
+		using This = Value;
+
+		using That = Byte;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.set_bigint(cbw<Integer>(that));
+			return;
+		}
+
+		static auto to (
+			This & thix,
+			That & that
+		) -> Void {
+			assert_condition(thix.is_bigint());
+			that = cbw<That>(thix.get_bigint());
+			return;
+		}
+
+	};
 
 	template <>
 	struct ValueAdapter<ByteArray> {
@@ -530,7 +967,7 @@ namespace TwinKleS::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			that.assign(thix.get_object_data_of_array_buffer());
+			that.assign(thix.get_object_of_array_buffer());
 			return;
 		}
 
@@ -557,21 +994,25 @@ namespace TwinKleS::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			restruct(that, thix.get_object_data_of_array_buffer());
+			restruct(that, thix.get_object_of_array_buffer());
 			return;
 		}
 
 	};
 
+	#pragma endregion
+
+	#pragma region miscellaneous
+
 	// ----------------
 
-	template <typename TNumber> requires
+	template <typename XValue> requires
 		AutoConstraint
-	struct ValueAdapter<Position2D<TNumber>> {
+	struct ValueAdapter<Position1D<XValue>> {
 
 		using This = Value;
 
-		using That = Position2D<TNumber>;
+		using That = Position1D<XValue>;
 
 		// ----------------
 
@@ -580,8 +1021,38 @@ namespace TwinKleS::Core::JS {
 			That const & that
 		) -> Void {
 			thix.set_object_of_array();
-			thix.define_object_property_value(1_ix, thix.new_value(that.x));
-			thix.define_object_property_value(2_ix, thix.new_value(that.y));
+			thix.set_object_property(1_ix, thix.new_value(that.x));
+			return;
+		}
+
+		static auto to (
+			This & thix,
+			That & that
+		) -> Void {
+			assert_condition(thix.is_object_of_array());
+			thix.get_object_property(1_ix).to(that.x);
+			return;
+		}
+
+	};
+
+	template <typename XValue, typename YValue> requires
+		AutoConstraint
+	struct ValueAdapter<Position2D<XValue, YValue>> {
+
+		using This = Value;
+
+		using That = Position2D<XValue, YValue>;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.set_object_of_array();
+			thix.set_object_property(1_ix, thix.new_value(that.x));
+			thix.set_object_property(2_ix, thix.new_value(that.y));
 			return;
 		}
 
@@ -597,13 +1068,13 @@ namespace TwinKleS::Core::JS {
 
 	};
 
-	template <typename TNumber> requires
+	template <typename XValue, typename YValue, typename ZValue> requires
 		AutoConstraint
-	struct ValueAdapter<Size2D<TNumber>> {
+	struct ValueAdapter<Position3D<XValue, YValue, ZValue>> {
 
 		using This = Value;
 
-		using That = Size2D<TNumber>;
+		using That = Position3D<XValue, YValue, ZValue>;
 
 		// ----------------
 
@@ -612,8 +1083,72 @@ namespace TwinKleS::Core::JS {
 			That const & that
 		) -> Void {
 			thix.set_object_of_array();
-			thix.define_object_property_value(1_ix, thix.new_value(that.width));
-			thix.define_object_property_value(2_ix, thix.new_value(that.height));
+			thix.set_object_property(1_ix, thix.new_value(that.x));
+			thix.set_object_property(2_ix, thix.new_value(that.y));
+			thix.set_object_property(3_ix, thix.new_value(that.z));
+			return;
+		}
+
+		static auto to (
+			This & thix,
+			That & that
+		) -> Void {
+			assert_condition(thix.is_object_of_array());
+			thix.get_object_property(1_ix).to(that.x);
+			thix.get_object_property(2_ix).to(that.y);
+			thix.get_object_property(3_ix).to(that.z);
+			return;
+		}
+
+	};
+
+	template <typename XValue> requires
+		AutoConstraint
+	struct ValueAdapter<Size1D<XValue>> {
+
+		using This = Value;
+
+		using That = Size1D<XValue>;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.set_object_of_array();
+			thix.set_object_property(1_ix, thix.new_value(that.width));
+			return;
+		}
+
+		static auto to (
+			This & thix,
+			That & that
+		) -> Void {
+			assert_condition(thix.is_object_of_array());
+			thix.get_object_property(1_ix).to(that.width);
+			return;
+		}
+
+	};
+
+	template <typename XValue, typename YValue> requires
+		AutoConstraint
+	struct ValueAdapter<Size2D<XValue, YValue>> {
+
+		using This = Value;
+
+		using That = Size2D<XValue, YValue>;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.set_object_of_array();
+			thix.set_object_property(1_ix, thix.new_value(that.width));
+			thix.set_object_property(2_ix, thix.new_value(that.height));
 			return;
 		}
 
@@ -624,6 +1159,40 @@ namespace TwinKleS::Core::JS {
 			assert_condition(thix.is_object_of_array());
 			thix.get_object_property(1_ix).to(that.width);
 			thix.get_object_property(2_ix).to(that.height);
+			return;
+		}
+
+	};
+
+	template <typename XValue, typename YValue, typename ZValue> requires
+		AutoConstraint
+	struct ValueAdapter<Size3D<XValue, YValue, ZValue>> {
+
+		using This = Value;
+
+		using That = Size3D<XValue, YValue, ZValue>;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.set_object_of_array();
+			thix.set_object_property(1_ix, thix.new_value(that.width));
+			thix.set_object_property(2_ix, thix.new_value(that.height));
+			thix.set_object_property(3_ix, thix.new_value(that.depth));
+			return;
+		}
+
+		static auto to (
+			This & thix,
+			That & that
+		) -> Void {
+			assert_condition(thix.is_object_of_array());
+			thix.get_object_property(1_ix).to(that.width);
+			thix.get_object_property(2_ix).to(that.height);
+			thix.get_object_property(3_ix).to(that.depth);
 			return;
 		}
 
@@ -645,10 +1214,10 @@ namespace TwinKleS::Core::JS {
 			That const & that
 		) -> Void {
 			thix.set_object_of_array();
-			thix.define_object_property_value(1_ix, thix.new_value(that.red));
-			thix.define_object_property_value(2_ix, thix.new_value(that.green));
-			thix.define_object_property_value(3_ix, thix.new_value(that.blue));
-			thix.define_object_property_value(4_ix, thix.new_value(that.alpha));
+			thix.set_object_property(1_ix, thix.new_value(that.red));
+			thix.set_object_property(2_ix, thix.new_value(that.green));
+			thix.set_object_property(3_ix, thix.new_value(that.blue));
+			thix.set_object_property(4_ix, thix.new_value(that.alpha));
 			return;
 		}
 
@@ -682,28 +1251,28 @@ namespace TwinKleS::Core::JS {
 			That const & that
 		) -> Void {
 			using namespace JSON;
-			switch (that.type()) {
-				case ValueType::null : {
+			switch (that.type().value) {
+				case ValueType::Constant::null().value : {
 					thix.from(that.get_null());
 					break;
 				}
-				case ValueType::boolean : {
+				case ValueType::Constant::boolean().value : {
 					thix.from(that.get_boolean());
 					break;
 				}
-				case ValueType::number : {
+				case ValueType::Constant::number().value : {
 					thix.from(that.get_number());
 					break;
 				}
-				case ValueType::string : {
+				case ValueType::Constant::string().value : {
 					thix.from(that.get_string());
 					break;
 				}
-				case ValueType::array : {
+				case ValueType::Constant::array().value : {
 					thix.from(that.get_array());
 					break;
 				}
-				case ValueType::object : {
+				case ValueType::Constant::object().value : {
 					thix.from(that.get_object());
 					break;
 				}
@@ -724,12 +1293,10 @@ namespace TwinKleS::Core::JS {
 				thix.to(that.set_number());
 			} else if (thix.is_string()) {
 				thix.to(that.set_string());
-			} else if (thix.is_object()) {
-				if (thix.is_object_of_array()) {
-					thix.to(that.set_array());
-				} else {
-					thix.to(that.set_object());
-				}
+			} else if (thix.is_object_of_array()) {
+				thix.to(that.set_array());
+			} else if (thix.is_object_of_object()) {
+				thix.to(that.set_object());
 			} else {
 				assert_failed(R"(/* thix type is valid */)");
 			}
@@ -752,34 +1319,34 @@ namespace TwinKleS::Core::JS {
 			That const & that
 		) -> Void {
 			using namespace XML;
-			thix.set_object();
+			thix.set_object_of_object();
 			auto type = that.type();
-			thix.define_object_property_value("type"_sv, thix.new_value(type));
+			thix.set_object_property("type"_sv, thix.new_value(type));
 			auto node_value_js = thix.new_value();
-			switch (type) {
-				case NodeType::element : {
+			switch (type.value) {
+				case NodeType::Constant::element().value : {
 					auto & node_value = that.get_element();
-					node_value_js.set_object();
-					node_value_js.define_object_property_value("name"_sv, thix.new_value(node_value.name));
-					node_value_js.define_object_property_value("attribute"_sv, thix.new_value(node_value.attribute));
-					node_value_js.define_object_property_value("child"_sv, thix.new_value(node_value.child));
+					node_value_js.set_object_of_object();
+					node_value_js.set_object_property("name"_sv, thix.new_value(node_value.name));
+					node_value_js.set_object_property("attribute"_sv, thix.new_value(node_value.attribute));
+					node_value_js.set_object_property("child"_sv, thix.new_value(node_value.child));
 					break;
 				}
-				case NodeType::text : {
+				case NodeType::Constant::text().value : {
 					auto & node_value = that.get_text();
-					node_value_js.set_object();
-					node_value_js.define_object_property_value("value"_sv, thix.new_value(node_value.value));
-					node_value_js.define_object_property_value("cdata"_sv, thix.new_value(node_value.cdata));
+					node_value_js.set_object_of_object();
+					node_value_js.set_object_property("value"_sv, thix.new_value(node_value.value));
+					node_value_js.set_object_property("cdata"_sv, thix.new_value(node_value.cdata));
 					break;
 				}
-				case NodeType::comment : {
+				case NodeType::Constant::comment().value : {
 					auto & node_value = that.get_comment();
-					node_value_js.set_object();
-					node_value_js.define_object_property_value("value"_sv, thix.new_value(node_value.value));
+					node_value_js.set_object_of_object();
+					node_value_js.set_object_property("value"_sv, thix.new_value(node_value.value));
 					break;
 				}
 			}
-			thix.define_object_property_value("value"_sv, as_moveable(node_value_js));
+			thix.set_object_property("value"_sv, as_moveable(node_value_js));
 			return;
 		}
 
@@ -787,30 +1354,30 @@ namespace TwinKleS::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_condition(thix.is_object());
 			using namespace XML;
+			assert_condition(thix.is_object_of_object());
 			auto type = NodeType{};
 			thix.get_object_property("type"_sv).to(type);
 			auto node_value_js = thix.get_object_property("value"_sv);
-			switch (type) {
-				case NodeType::element : {
-					that.set_element();
-					auto & node_value = that.get_element();
+			switch (type.value) {
+				case NodeType::Constant::element().value : {
+					auto & node_value = that.set_element();
+					assert_condition(node_value_js.is_object_of_object());
 					node_value_js.get_object_property("name"_sv).to(node_value.name);
 					node_value_js.get_object_property("attribute"_sv).to(node_value.attribute);
 					node_value_js.get_object_property("child"_sv).to(node_value.child);
 					break;
 				}
-				case NodeType::text : {
-					that.set_text();
-					auto & node_value = that.get_text();
+				case NodeType::Constant::text().value : {
+					auto & node_value = that.set_text();
+					assert_condition(node_value_js.is_object_of_object());
 					node_value_js.get_object_property("value"_sv).to(node_value.value);
 					node_value_js.get_object_property("cdata"_sv).to(node_value.cdata);
 					break;
 				}
-				case NodeType::comment : {
-					that.set_comment();
-					auto & node_value = that.get_comment();
+				case NodeType::Constant::comment().value : {
+					auto & node_value = that.set_comment();
+					assert_condition(node_value_js.is_object_of_object());
 					node_value_js.get_object_property("value"_sv).to(node_value.value);
 					break;
 				}
@@ -853,28 +1420,59 @@ namespace TwinKleS::Core::JS {
 	// ----------------
 
 	template <>
-	struct ValueAdapter<Boolean> :
-		ValueAdapter<BooleanWrapper<Boolean::Value>> {
+	struct ValueAdapter<IntegerU8> {
+
+		using This = Value;
+
+		using That = IntegerU8;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.set_bigint(cbw<Integer>(that));
+			return;
+		}
+
+		static auto to (
+			This & thix,
+			That & that
+		) -> Void {
+			assert_condition(thix.is_bigint());
+			that = cbw<That>(thix.get_bigint());
+			return;
+		}
+
 	};
 
 	template <>
-	struct ValueAdapter<Integer> :
-		ValueAdapter<IntegerWrapper<Integer::Value>> {
-	};
+	struct ValueAdapter<IntegerS32> {
 
-	template <>
-	struct ValueAdapter<Floating> :
-		ValueAdapter<FloatingWrapper<Floating::Value>> {
-	};
+		using This = Value;
 
-	template <>
-	struct ValueAdapter<Byte> :
-		ValueAdapter<IntegerWrapper<Byte::Value>> {
-	};
+		using That = IntegerS32;
 
-	template <>
-	struct ValueAdapter<Size> :
-		ValueAdapter<IntegerWrapper<Size::Value>> {
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.set_bigint(cbw<Integer>(that));
+			return;
+		}
+
+		static auto to (
+			This & thix,
+			That & that
+		) -> Void {
+			assert_condition(thix.is_bigint());
+			that = cbw<That>(thix.get_bigint());
+			return;
+		}
+
 	};
 
 	#pragma endregion

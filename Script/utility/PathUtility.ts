@@ -1,5 +1,5 @@
 /** 路径处理工具集 */
-namespace TwinKleS.PathUtility {
+namespace TwinStar.PathUtility {
 
 	// ------------------------------------------------
 

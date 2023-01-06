@@ -8,7 +8,7 @@ namespace std {
 
 	inline auto operator << (
 		std::ostream &                      thix,
-		TwinKleS::Core::CStringView const & that
+		TwinStar::Core::CStringView const & that
 	) -> std::ostream& {
 		for (auto & element : that) {
 			thix << element.value;
@@ -21,27 +21,36 @@ namespace std {
 	#pragma region hash
 
 	template <>
-	struct hash<TwinKleS::Core::CStringView> {
+	struct hash<TwinStar::Core::IntegerU32> {
 		auto operator () (
-			TwinKleS::Core::CStringView const & it
+			TwinStar::Core::IntegerU32 const & it
+		) const noexcept -> std::size_t {
+			return it.value;
+		}
+	};
+
+	template <>
+	struct hash<TwinStar::Core::CStringView> {
+		auto operator () (
+			TwinStar::Core::CStringView const & it
 		) const noexcept -> std::size_t {
 			return it.hash().value;
 		}
 	};
 
 	template <>
-	struct hash<TwinKleS::Core::VStringView> {
+	struct hash<TwinStar::Core::VStringView> {
 		auto operator () (
-			TwinKleS::Core::VStringView const & it
+			TwinStar::Core::VStringView const & it
 		) const noexcept -> std::size_t {
 			return it.hash().value;
 		}
 	};
 
 	template <>
-	struct hash<TwinKleS::Core::String> {
+	struct hash<TwinStar::Core::String> {
 		auto operator () (
-			TwinKleS::Core::String const & it
+			TwinStar::Core::String const & it
 		) const noexcept -> std::size_t {
 			return it.hash().value;
 		}

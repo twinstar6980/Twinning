@@ -2,15 +2,15 @@
 
 #include "core/utility/trait/trait.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region value
 
 	template <typename It>
 	concept IsBaseWrapperValue =
-	CategoryConstraint<IsPureInstance<It>>
-	&& (IsBuiltinFundamental<It> || IsBuiltinPointer<It> || IsEnum<It>)
-	;
+		CategoryConstraint<IsPureInstance<It>>
+		&& (IsBuiltinFundamental<It> || IsBuiltinPointer<It> || IsBuiltinEnumeration<It>)
+		;
 
 	#pragma endregion
 
@@ -21,15 +21,15 @@ namespace TwinKleS::Core {
 		&& (IsBaseWrapperValue<TValue>)
 	class BaseWrapper {
 
-	public: //
+	public:
 
 		using Value = TValue;
 
-	public: //
+	public:
 
 		Value value{};
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -96,14 +96,14 @@ namespace TwinKleS::Core {
 	// ----------------
 
 	// NOTE : short-name of cast_base_wrapper
-	template <typename Dest, typename Source> requires
-		CategoryConstraint<IsPureInstance<Dest> && IsPureInstance<Source>>
-		&& (IsBaseWrapper<Dest>)
+	template <typename Destination, typename Source> requires
+		CategoryConstraint<IsPureInstance<Destination> && IsPureInstance<Source>>
+		&& (IsBaseWrapper<Destination>)
 		&& (IsBaseWrapper<Source>)
 	inline constexpr auto cbw (
 		Source const & source
-	) -> Dest {
-		return Dest{static_cast<typename Dest::Value>(source.value)};
+	) -> Destination {
+		return Destination{static_cast<typename Destination::Value>(source.value)};
 	}
 
 	#pragma endregion

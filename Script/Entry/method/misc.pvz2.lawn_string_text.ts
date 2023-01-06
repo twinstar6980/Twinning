@@ -1,7 +1,7 @@
 /**
  * + misc.pvz2.lawn_string_text.convert PvZ-2字符串表 版本转换
  */
-namespace TwinKleS.Entry.method.misc.pvz2.lawn_string_text {
+namespace TwinStar.Entry.method.misc.pvz2.lawn_string_text {
 
 	// ------------------------------------------------
 
@@ -69,5 +69,5 @@ namespace TwinKleS.Entry.method.misc.pvz2.lawn_string_text {
 }
 
 ({
-	injector: TwinKleS.Entry.method.misc.pvz2.lawn_string_text._injector,
+	injector: TwinStar.Entry.method.misc.pvz2.lawn_string_text._injector,
 });

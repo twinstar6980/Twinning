@@ -1,18 +1,15 @@
 #pragma once
 
 #include "core/utility/base_wrapper/wrapper.hpp"
-#include "core/utility/misc/number_variant.hpp"
-#include "core/utility/misc/enum.hpp"
-#include "core/utility/file_system/path.hpp"
+#include "core/utility/miscellaneous/number_variant.hpp"
 #include "core/utility/container/variant/variant.hpp"
 #include "core/utility/container/variant/enumerable_variant.hpp"
 #include "core/utility/container/list/list.hpp"
 #include "core/utility/container/map/map.hpp"
 #include "core/utility/string/string.hpp"
-#include "core/utility/misc/fourcc.hpp"
 #include "core/utility/data/json/value_adapter.hpp"
 
-namespace TwinKleS::Core::JSON {
+namespace TwinStar::Core::JSON {
 
 	#pragma region declaration
 
@@ -36,14 +33,17 @@ namespace TwinKleS::Core::JSON {
 
 	// ----------------
 
-	enum class ValueType : ZIntegerU8 {
-		null,
-		boolean,
-		number,
-		string,
-		array,
-		object,
-	};
+	M_enumeration(
+		M_wrap(ValueType),
+		M_wrap(
+			null,
+			boolean,
+			number,
+			string,
+			array,
+			object,
+		),
+	);
 
 	#pragma endregion
 
@@ -52,7 +52,7 @@ namespace TwinKleS::Core::JSON {
 	class Value :
 		public EnumerableVariant<ValueType, Null, Boolean, Number, String, Array, Object> {
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -185,52 +185,52 @@ namespace TwinKleS::Core::JSON {
 
 		// ----------------
 
-		template <typename ...Argument> requires
-			CategoryConstraint<IsValid<Argument...>>
+		template <typename ... Argument> requires
+			CategoryConstraint<IsValid<Argument ...>>
 		auto set_null (
-			Argument && ...argument
+			Argument && ... argument
 		) -> Null& {
-			return thiz.set<Null>(as_forward<Argument>(argument)...);
+			return thiz.set<Null>(as_forward<Argument>(argument) ...);
 		}
 
-		template <typename ...Argument> requires
-			CategoryConstraint<IsValid<Argument...>>
+		template <typename ... Argument> requires
+			CategoryConstraint<IsValid<Argument ...>>
 		auto set_boolean (
-			Argument && ...argument
+			Argument && ... argument
 		) -> Boolean& {
-			return thiz.set<Boolean>(as_forward<Argument>(argument)...);
+			return thiz.set<Boolean>(as_forward<Argument>(argument) ...);
 		}
 
-		template <typename ...Argument> requires
-			CategoryConstraint<IsValid<Argument...>>
+		template <typename ... Argument> requires
+			CategoryConstraint<IsValid<Argument ...>>
 		auto set_number (
-			Argument && ...argument
+			Argument && ... argument
 		) -> Number& {
-			return thiz.set<Number>(as_forward<Argument>(argument)...);
+			return thiz.set<Number>(as_forward<Argument>(argument) ...);
 		}
 
-		template <typename ...Argument> requires
-			CategoryConstraint<IsValid<Argument...>>
+		template <typename ... Argument> requires
+			CategoryConstraint<IsValid<Argument ...>>
 		auto set_string (
-			Argument && ...argument
+			Argument && ... argument
 		) -> String& {
-			return thiz.set<String>(as_forward<Argument>(argument)...);
+			return thiz.set<String>(as_forward<Argument>(argument) ...);
 		}
 
-		template <typename ...Argument> requires
-			CategoryConstraint<IsValid<Argument...>>
+		template <typename ... Argument> requires
+			CategoryConstraint<IsValid<Argument ...>>
 		auto set_array (
-			Argument && ...argument
+			Argument && ... argument
 		) -> Array& {
-			return thiz.set<Array>(as_forward<Argument>(argument)...);
+			return thiz.set<Array>(as_forward<Argument>(argument) ...);
 		}
 
-		template <typename ...Argument> requires
-			CategoryConstraint<IsValid<Argument...>>
+		template <typename ... Argument> requires
+			CategoryConstraint<IsValid<Argument ...>>
 		auto set_object (
-			Argument && ...argument
+			Argument && ... argument
 		) -> Object& {
-			return thiz.set<Object>(as_forward<Argument>(argument)...);
+			return thiz.set<Object>(as_forward<Argument>(argument) ...);
 		}
 
 		// ----------------
@@ -301,35 +301,35 @@ namespace TwinKleS::Core::JSON {
 
 		#pragma region from & to by adapter
 
-		template <typename That, typename ...Option> requires
-			CategoryConstraint<IsValid<That> && IsValid<Option...>>
+		template <typename That, typename ... Option> requires
+			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
 		auto from (
-			That &&      that,
-			Option && ...option
+			That &&       that,
+			Option && ... option
 		) -> Void {
-			ValueAdapter<AsPure<That>>::from(thiz, as_forward<That>(that), as_forward<Option>(option)...);
+			ValueAdapter<AsPure<That>>::from(thiz, as_forward<That>(that), as_forward<Option>(option) ...);
 			return;
 		}
 
-		template <typename That, typename ...Option> requires
-			CategoryConstraint<IsValid<That> && IsValid<Option...>>
+		template <typename That, typename ... Option> requires
+			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
 		auto to (
-			That &&      that,
-			Option && ...option
+			That &&       that,
+			Option && ... option
 		) const -> Void {
-			ValueAdapter<AsPure<That>>::to(thiz, as_forward<That>(that), as_forward<Option>(option)...);
+			ValueAdapter<AsPure<That>>::to(thiz, as_forward<That>(that), as_forward<Option>(option) ...);
 			return;
 		}
 
 		// ----------------
 
-		template <typename That, typename ...Option> requires
-			CategoryConstraint<IsPureInstance<That> && IsValid<Option...>>
+		template <typename That, typename ... Option> requires
+			CategoryConstraint<IsPureInstance<That> && IsValid<Option ...>>
 		auto to_of (
-			Option && ...option
+			Option && ... option
 		) const -> That {
 			auto that = That{};
-			thiz.to(that, as_forward<Option>(option)...);
+			thiz.to(that, as_forward<Option>(option) ...);
 			return that;
 		}
 
@@ -338,15 +338,5 @@ namespace TwinKleS::Core::JSON {
 	};
 
 	#pragma endregion
-
-}
-
-namespace TwinKleS::Core::Trait::Reflection {
-
-	M_reflection_enum(
-		M_wrap(JSON::ValueType),
-		M_wrap(ValueType),
-		M_wrap(null, boolean, number, string, array, object),
-	);
 
 }

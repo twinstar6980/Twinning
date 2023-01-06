@@ -4,7 +4,7 @@
 
 #include "core/utility/base_wrapper/wrapper.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
@@ -13,16 +13,16 @@ namespace TwinKleS::Core {
 		&& (IsIterator<TIterator>)
 	class RangeWrapper {
 
-	public: //
+	public:
 
 		using Iterator = TIterator;
 
-	protected: //
+	protected:
 
 		Iterator m_begin;
 		Iterator m_end;
 
-	public: //
+	public:
 
 		#pragma region structor
 

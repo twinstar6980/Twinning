@@ -2,13 +2,13 @@
 
 #include "shell/base.hpp"
 
-namespace TwinKleS::Shell {
+namespace TwinStar::Shell {
 
 	#pragma region type
 
 	class Host {
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -65,12 +65,12 @@ namespace TwinKleS::Shell {
 		auto wrapped_callback (
 			Core::StringList const & argument
 		) -> Core::StringList const& {
-			thread_local auto result_handler = CTypeStringListHandler{};
+			thread_local auto result_s_handler = CoreTypeStringListHandler{};
 			// result handler control result structure
 			auto result = std::vector<std::string>{};
 			try {
-				auto argument_value = from_string_list_structure(argument);
-				auto valid_result = thiz.callback(argument_value);
+				auto argument_v = CoreTypeConverter::from_string_list(argument);
+				auto valid_result = thiz.callback(argument_v);
 				result.emplace_back(""s);
 				result.insert(result.end(), std::make_move_iterator(valid_result.begin()), std::make_move_iterator(valid_result.end()));
 			} catch (std::exception & exception) {
@@ -78,8 +78,8 @@ namespace TwinKleS::Shell {
 			} catch (...) {
 				result.emplace_back("unknown exception"s);
 			}
-			result_handler.imbue(allocate_string_list_structure(result));
-			return result_handler.value();
+			result_s_handler.imbue(CoreTypeConverter::allocate_string_list(result));
+			return result_s_handler.value();
 		}
 
 		#pragma endregion

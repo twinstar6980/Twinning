@@ -8,7 +8,7 @@
  * + data.compress.bzip2.compress BZip2 压缩
  * + data.compress.bzip2.uncompress BZip2 解压
  */
-namespace TwinKleS.Entry.method.data.compress {
+namespace TwinStar.Entry.method.data.compress {
 
 	// ------------------------------------------------
 
@@ -90,7 +90,7 @@ namespace TwinKleS.Entry.method.data.compress {
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.binary_size(null)),
+							() => (Console.size(null)),
 							(value) => (null),
 						);
 					}
@@ -177,7 +177,7 @@ namespace TwinKleS.Entry.method.data.compress {
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.binary_size(null)),
+							() => (Console.size(null)),
 							(value) => (null),
 						);
 					}
@@ -264,7 +264,7 @@ namespace TwinKleS.Entry.method.data.compress {
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.binary_size(null)),
+							() => (Console.size(null)),
 							(value) => (null),
 						);
 					}
@@ -351,7 +351,7 @@ namespace TwinKleS.Entry.method.data.compress {
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.binary_size(null)),
+							() => (Console.size(null)),
 							(value) => (null),
 						);
 					}
@@ -375,5 +375,5 @@ namespace TwinKleS.Entry.method.data.compress {
 }
 
 ({
-	injector: TwinKleS.Entry.method.data.compress._injector,
+	injector: TwinStar.Entry.method.data.compress._injector,
 });

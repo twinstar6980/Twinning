@@ -2,11 +2,9 @@
 
 #include "core/utility/trait/base.hpp"
 #include "core/utility/trait/category.hpp"
-#include "core/utility/trait/callable.hpp"
-
 #include "core/utility/trait/reflection/string.hpp"
 
-namespace TwinKleS::Core::Trait::Reflection {
+namespace TwinStar::Core::Trait::Reflection {
 
 	#pragma region base
 
@@ -21,19 +19,6 @@ namespace TwinKleS::Core::Trait::Reflection {
 
 	};
 
-	#pragma region indexed
-
-	template <auto t_index, typename TField> requires
-		CategoryConstraint<IsPureInstance<TField>>
-		&& (IsSameV<t_index, ZSize>)
-		&& (IsTemplateInstanceOfVV<TField, Field>)
-	struct IndexedField :
-		TField {
-
-		inline static constexpr auto index = ZSize{t_index};
-
-	};
-
 	#pragma endregion
 
 	#pragma region class
@@ -43,7 +28,7 @@ namespace TwinKleS::Core::Trait::Reflection {
 		&& (IsTemplateInstanceOfV<decltype(t_name), String>)
 		&& (IsSameV<t_is_static, ZBoolean>)
 		&& (IsSameV<t_is_function, ZBoolean>)
-		&& ((t_is_static && IsBuiltinPointer<decltype(t_value)>) || (!t_is_static && IsBuiltinMemberPointer<decltype(t_value)>))
+	// TODO : && ((t_is_static && IsBuiltinPointer<decltype(t_value)>) || (!t_is_static && IsBuiltinMemberPointer<decltype(t_value)>))
 	// TODO check t_is_function & t_value
 	struct ClassField :
 		Field<t_name, t_value> {
@@ -91,13 +76,12 @@ namespace TwinKleS::Core::Trait::Reflection {
 
 	#pragma endregion
 
-	#pragma region enum
+	#pragma region enumeration
 
 	template <auto t_name, auto t_value> requires
 		CategoryConstraint<>
 		&& (IsTemplateInstanceOfV<decltype(t_name), String>)
-		&& (IsEnum<decltype(t_value)>)
-	struct EnumField :
+	struct EnumerationField :
 		Field<t_name, t_value> {
 	};
 
@@ -105,7 +89,7 @@ namespace TwinKleS::Core::Trait::Reflection {
 
 	template <auto t_name, auto t_value> requires
 		AutoConstraint
-	using EnumValueField = EnumField<t_name, t_value>;
+	using EnumerationValueField = EnumerationField<t_name, t_value>;
 
 	#pragma endregion
 

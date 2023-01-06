@@ -7,7 +7,7 @@
 #include "core/third_party/system/windows.hpp"
 #endif
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region utility
 

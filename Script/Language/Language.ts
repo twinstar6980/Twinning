@@ -1,5 +1,5 @@
 /** 多语言 */
-namespace TwinKleS.Language {
+namespace TwinStar.Language {
 
 	// ------------------------------------------------
 
@@ -72,15 +72,15 @@ namespace TwinKleS.Language {
 
 }
 
-namespace TwinKleS {
+namespace TwinStar {
 	/** @see {@link Language.query} */
 	export const localized = Language.query;
 }
 
 ({
 	injector: (
-		config: TwinKleS.Language.Table,
+		config: TwinStar.Language.Table,
 	) => {
-		TwinKleS.Language.push(config);
+		TwinStar.Language.push(config);
 	}
 });

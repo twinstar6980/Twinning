@@ -1,12 +1,12 @@
 #pragma once
 
-// todo : remove file api, RAII wrapper ?
+// TODO : remove file api, RAII wrapper ?
 
 #include "core/utility/image/bitmap.hpp"
 #include "core/utility/file_system/file_system.hpp"
 #include "core/third_party/libpng.hpp"
 
-namespace TwinKleS::Core::Image::File::PNG {
+namespace TwinStar::Core::Image::File::PNG {
 
 	#pragma region detail
 
@@ -138,7 +138,6 @@ namespace TwinKleS::Core::Image::File::PNG {
 	#pragma endregion
 
 	#pragma region basic - file style
-	// todo : remove
 
 	inline auto size_file (
 		Path const & path

@@ -2,16 +2,16 @@
 
 #include "core/utility/container/list/list_view.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
 	template <typename TElement, auto t_size> requires
 		CategoryConstraint<IsPureInstance<TElement>>
-		&& (IsSameV<t_size, ZSize>)
+		&& (IsSameV<t_size, Size>)
 	class StaticArray {
 
-	public: //
+	public:
 
 		using Element = TElement;
 
@@ -31,15 +31,15 @@ namespace TwinKleS::Core {
 
 		using CView = ListView<Element, true>;
 
-		using RawArray = ZArray<Element, t_size>;
+		using RawArray = ZArray<Element, t_size.value>;
 
-		using ValidRawArray = ZArray<Element, t_size == 0_szz ? (1_szz) : (t_size)>;
+		using ValidRawArray = ZArray<Element, t_size == 0_sz ? (1_szz) : (t_size.value)>;
 
-	protected: //
+	protected:
 
 		ValidRawArray m_data{Element{}};
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -84,7 +84,7 @@ namespace TwinKleS::Core {
 		explicit constexpr StaticArray (
 			RawArray const & raw_array
 		) :
-			StaticArray{CView{make_pointer(static_cast<decltype(&*raw_array)>(raw_array)), mbw<Size>(t_size)}} {
+			StaticArray{CView{make_pointer(static_cast<decltype(&*raw_array)>(raw_array)), t_size}} {
 		}
 
 		#pragma endregion
@@ -125,7 +125,7 @@ namespace TwinKleS::Core {
 
 		constexpr auto size (
 		) const -> Size {
-			return mbw<Size>(t_size);
+			return t_size;
 		}
 
 		// ----------------
@@ -250,7 +250,7 @@ namespace TwinKleS::Core {
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region operator
 
@@ -269,19 +269,19 @@ namespace TwinKleS::Core {
 
 	#pragma region utility
 
-	template <typename Element, typename ...Argument> requires
-		CategoryConstraint<IsPureInstance<Element> && IsValid<Argument...>>
+	template <typename Element, typename ... Argument> requires
+		CategoryConstraint<IsPureInstance<Element> && IsValid<Argument ...>>
 		&& (IsConstructible<Element, Argument &&> && ...)
 	inline constexpr auto make_static_array (
-		Argument && ...argument
-	) -> StaticArray<Element, sizeof...(Argument)> {
-		auto result = StaticArray<Element, sizeof...(Argument)>{};
-		[&] <auto ...index> (
-			ValuePackage<index...>
-		) -> auto {
-				(restruct(result[mbw<Size>(index)], as_forward<Argument>(argument)), ...);
-				return;
-			}(AsValuePackageOfIndex<sizeof...(Argument)>{});
+		Argument && ... argument
+	) -> StaticArray<Element, mbw<Size>(sizeof...(Argument))> {
+		auto result = StaticArray<Element, mbw<Size>(sizeof...(Argument))>{};
+		Generalization::each_with<>(
+			[&] <auto index, typename CurrentArgument> (ValuePackage<index>, CurrentArgument && current_argument) {
+				restruct(result.at(mbw<Size>(index)), as_forward<CurrentArgument>(current_argument));
+			},
+			as_forward<Argument>(argument) ...
+		);
 		return result;
 	}
 

@@ -2,7 +2,7 @@
 
 #include "core/utility/image/basic_bitmap_view.hpp"
 
-namespace TwinKleS::Core::Image {
+namespace TwinStar::Core::Image {
 
 	#pragma region type
 
@@ -10,7 +10,7 @@ namespace TwinKleS::Core::Image {
 		CategoryConstraint<IsPureInstance<TPixel>>
 	class BasicBitmap {
 
-	public: //
+	public:
 
 		using Pixel = TPixel;
 
@@ -26,11 +26,11 @@ namespace TwinKleS::Core::Image {
 
 		using CView = BasicBitmapView<Pixel, true>;
 
-	protected: //
+	protected:
 
 		Array<Array<Pixel>> m_data{};
 
-	public: //
+	public:
 
 		#pragma region structor
 

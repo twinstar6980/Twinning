@@ -30,7 +30,7 @@ auto main (
 		it.reserve(raw_args.size());
 		for (auto & raw_arg : raw_args) {
 			#if defined M_system_windows
-			auto raw_arg_8 = TwinKleS::Shell::utf16_to_utf8(std::u16string_view{reinterpret_cast<char16_t const *>(raw_arg)});
+			auto raw_arg_8 = TwinStar::Shell::utf16_to_utf8(std::u16string_view{reinterpret_cast<char16_t const *>(raw_arg)});
 			it.emplace_back(std::move(reinterpret_cast<std::string &>(raw_arg_8)));
 			#endif
 			#if defined M_system_linux || defined M_system_macos || defined M_system_android || defined M_system_ios
@@ -41,16 +41,14 @@ auto main (
 	}();
 	auto exception_message = std::optional<std::string>{};
 	try {
-		std::cout << "TwinKleS.ToolKit.Shell " << std::size_t{M_version} << "\n" << std::flush;
 		assert_condition(args.size() >= 4);
 		auto library_file = args[1];
 		auto script = args[2];
-		auto script_is_path = TwinKleS::Shell::string_to_boolean(args[3]);
+		auto script_is_path = TwinStar::Shell::string_to_boolean(args[3]);
 		auto argument = std::vector<std::string>{args.begin() + 4, args.end()};
-		auto library = TwinKleS::Shell::DynamicLibrary{nullptr, library_file};
-		std::cout << "TwinKleS.ToolKit.Core " << library.wrapped_version() << "\n" << std::flush;
-		auto host = TwinKleS::Shell::CLIHost{nullptr};
-		auto result = TwinKleS::Shell::launch(host, library, script, script_is_path, argument);
+		auto library = TwinStar::Shell::DynamicLibrary{nullptr, library_file};
+		auto host = TwinStar::Shell::CLIHost{nullptr};
+		auto result = TwinStar::Shell::launch(host, library, script, script_is_path, argument);
 		if (result) {
 			exception_message.emplace(result.value());
 		}

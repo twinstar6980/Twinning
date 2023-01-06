@@ -1,13 +1,11 @@
 #pragma once
 
-// todo
-
 #include "core/utility/base_wrapper/wrapper.hpp"
 #include "core/utility/container/optional/optional.hpp"
 #include "core/utility/container/optional/null_optional.hpp"
 #include "core/utility/range/number_range.hpp"
 
-namespace TwinKleS::Core::Range {
+namespace TwinStar::Core::Range {
 
 	#pragma region size
 
@@ -15,15 +13,15 @@ namespace TwinKleS::Core::Range {
 
 		template <typename It>
 		concept IsHasSizeMethodRange =
-		CategoryConstraint<IsPureInstance<It>>
-		&& (requires { { declare<It &>().size() } -> IsSame<Size>; })
-		;
+			CategoryConstraint<IsPureInstance<It>>
+			&& (requires { { declare<It &>().size() } -> IsSame<Size>; })
+			;
 
 		template <typename It>
 		concept IsHasBuiltinSizeMethodRange =
-		CategoryConstraint<IsPureInstance<It>>
-		&& (requires { { declare<It &>().size() } -> IsBuiltinInteger<>; })
-		;
+			CategoryConstraint<IsPureInstance<It>>
+			&& (requires { { declare<It &>().size() } -> IsBuiltinInteger<>; })
+			;
 
 	}
 
@@ -538,17 +536,17 @@ namespace TwinKleS::Core::Range {
 
 	#pragma region assign
 
-	template <typename Range, typename ...Argument> requires
-		CategoryConstraint<IsValid<Range> && IsPureInstance<Argument...>>
+	template <typename Range, typename ... Argument> requires
+		CategoryConstraint<IsValid<Range> && IsPureInstance<Argument ...>>
 		&& (IsRange<AsPure<Range>>)
 	inline constexpr auto restruct (
-		Range &&            range,
-		Argument const & ...argument
+		Range &&             range,
+		Argument const & ... argument
 	) -> Void {
 		each(
 			range,
 			[&] <typename Element> (Element && element) -> auto {
-				Trait::restruct(element, argument...);
+				Trait::restruct(element, argument ...);
 				return;
 			}
 		);
@@ -612,76 +610,76 @@ namespace TwinKleS::Core::Range {
 
 	// ----------------
 
-	template <typename DestRange, typename SourceRange> requires
-		CategoryConstraint<IsValid<DestRange> && IsValid<SourceRange>>
-		&& (IsRange<AsPure<DestRange>> && IsRange<AsPure<SourceRange>>)
+	template <typename DestinationRange, typename SourceRange> requires
+		CategoryConstraint<IsValid<DestinationRange> && IsValid<SourceRange>>
+		&& (IsRange<AsPure<DestinationRange>> && IsRange<AsPure<SourceRange>>)
 	inline constexpr auto restruct_from (
-		DestRange &&   dest,
-		SourceRange && source
+		DestinationRange && destination,
+		SourceRange &&      source
 	) -> Void {
 		each_pair(
-			dest,
+			destination,
 			source,
-			[&] <typename DestElement, typename SourceElement> (DestElement && dest_element, SourceElement && source_element) -> auto {
-				Trait::restruct(dest_element, as_forward<SourceElement>(source_element));
+			[&] <typename DestinationElement, typename SourceElement> (DestinationElement && destination_element, SourceElement && source_element) -> auto {
+				Trait::restruct(destination_element, as_forward<SourceElement>(source_element));
 				return;
 			}
 		);
 		return;
 	}
 
-	template <typename DestRange, typename SourceRange> requires
-		CategoryConstraint<IsValid<DestRange> && IsValid<SourceRange>>
-		&& (IsRange<AsPure<DestRange>> && IsRange<AsPure<SourceRange>>)
+	template <typename DestinationRange, typename SourceRange> requires
+		CategoryConstraint<IsValid<DestinationRange> && IsValid<SourceRange>>
+		&& (IsRange<AsPure<DestinationRange>> && IsRange<AsPure<SourceRange>>)
 	inline constexpr auto assign_from (
-		DestRange &&   dest,
-		SourceRange && source
+		DestinationRange && destination,
+		SourceRange &&      source
 	) -> Void {
 		each_pair(
-			dest,
+			destination,
 			source,
-			[&] <typename DestElement, typename SourceElement> (DestElement && dest_element, SourceElement && source_element) -> auto {
-				dest_element = as_forward<SourceElement>(source_element);
+			[&] <typename DestinationElement, typename SourceElement> (DestinationElement && destination_element, SourceElement && source_element) -> auto {
+				destination_element = as_forward<SourceElement>(source_element);
 				return;
 			}
 		);
 		return;
 	}
 
-	template <typename DestRange, typename SourceRange, typename Transformer> requires
-		CategoryConstraint<IsValid<DestRange> && IsValid<SourceRange> && IsPureInstance<Transformer>>
-		&& (IsRange<AsPure<DestRange>> && IsRange<AsPure<SourceRange>>)
+	template <typename DestinationRange, typename SourceRange, typename Transformer> requires
+		CategoryConstraint<IsValid<DestinationRange> && IsValid<SourceRange> && IsPureInstance<Transformer>>
+		&& (IsRange<AsPure<DestinationRange>> && IsRange<AsPure<SourceRange>>)
 		&& (IsGenericCallable<Transformer>)
 	inline constexpr auto assign_from (
-		DestRange &&        dest,
+		DestinationRange && destination,
 		SourceRange &&      source,
 		Transformer const & transformer
 	) -> Void {
 		each_pair(
-			dest,
+			destination,
 			source,
-			[&] <typename DestElement, typename SourceElement> (DestElement && dest_element, SourceElement && source_element) -> auto {
-				dest_element = transformer(as_forward<SourceElement>(source_element));
+			[&] <typename DestinationElement, typename SourceElement> (DestinationElement && destination_element, SourceElement && source_element) -> auto {
+				destination_element = transformer(as_forward<SourceElement>(source_element));
 				return;
 			}
 		);
 		return;
 	}
 
-	template <typename DestRange, typename SourceRange, typename Converter> requires
-		CategoryConstraint<IsValid<DestRange> && IsValid<SourceRange> && IsPureInstance<Converter>>
-		&& (IsRange<AsPure<DestRange>> && IsRange<AsPure<SourceRange>>)
+	template <typename DestinationRange, typename SourceRange, typename Converter> requires
+		CategoryConstraint<IsValid<DestinationRange> && IsValid<SourceRange> && IsPureInstance<Converter>>
+		&& (IsRange<AsPure<DestinationRange>> && IsRange<AsPure<SourceRange>>)
 		&& (IsGenericCallable<Converter>)
 	inline constexpr auto convert_from (
-		DestRange &&      dest,
-		SourceRange &&    source,
-		Converter const & converter
+		DestinationRange && destination,
+		SourceRange &&      source,
+		Converter const &   converter
 	) -> Void {
 		each_pair(
-			dest,
+			destination,
 			source,
-			[&] <typename DestElement, typename SourceElement> (DestElement && dest_element, SourceElement && source_element) -> auto {
-				converter(dest_element, as_forward<SourceElement>(source_element));
+			[&] <typename DestinationElement, typename SourceElement> (DestinationElement && destination_element, SourceElement && source_element) -> auto {
+				converter(destination_element, as_forward<SourceElement>(source_element));
 				return;
 			}
 		);

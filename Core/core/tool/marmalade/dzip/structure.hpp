@@ -4,11 +4,11 @@
 #include "core/tool/marmalade/dzip/version.hpp"
 #include "core/tool/data/compress/lzma.hpp"
 
-namespace TwinKleS::Core::Tool::Marmalade::DZip::Structure {
+namespace TwinStar::Core::Tool::Marmalade::DZip::Structure {
 
 	#pragma region magic identifier
 
-	using MagicIdentifier = StaticByteArray<4_szz>;
+	using MagicIdentifier = StaticByteArray<4_sz>;
 
 	inline constexpr auto k_magic_identifier = MagicIdentifier{{'D'_b, 'T'_b, 'R'_b, 'Z'_b}};
 
@@ -28,11 +28,14 @@ namespace TwinKleS::Core::Tool::Marmalade::DZip::Structure {
 	template <auto t_version> requires
 		CategoryConstraint<>
 		&& (check_version(t_version, {0}))
-	struct ArchiveSetting<t_version> {
-		IntegerU16    resource_file_count;
-		IntegerU16    resource_directory_count;
-		VersionNumber version;
-	};
+	M_record_of_data(
+		M_wrap(ArchiveSetting<t_version>),
+		M_wrap(
+			(IntegerU16) resource_file_count,
+			(IntegerU16) resource_directory_count,
+			(VersionNumber) version,
+		),
+	);
 
 	// ----------------
 
@@ -42,10 +45,13 @@ namespace TwinKleS::Core::Tool::Marmalade::DZip::Structure {
 	template <auto t_version> requires
 		CategoryConstraint<>
 		&& (check_version(t_version, {0}))
-	struct ResourceInformation<t_version> {
-		IntegerU16       directory_index;
-		List<IntegerU16> chunk_index;
-	};
+	M_record_of_data(
+		M_wrap(ResourceInformation<t_version>),
+		M_wrap(
+			(IntegerU16) directory_index,
+			(List<IntegerU16>) chunk_index,
+		),
+	);
 
 	// ----------------
 
@@ -55,10 +61,13 @@ namespace TwinKleS::Core::Tool::Marmalade::DZip::Structure {
 	template <auto t_version> requires
 		CategoryConstraint<>
 		&& (check_version(t_version, {0}))
-	struct ChunkSetting<t_version> {
-		IntegerU16 archive_resource_count;
-		IntegerU16 chunk_count;
-	};
+	M_record_of_data(
+		M_wrap(ChunkSetting<t_version>),
+		M_wrap(
+			(IntegerU16) archive_resource_count,
+			(IntegerU16) chunk_count,
+		),
+	);
 
 	// ----------------
 
@@ -68,25 +77,31 @@ namespace TwinKleS::Core::Tool::Marmalade::DZip::Structure {
 	template <auto t_version> requires
 		CategoryConstraint<>
 		&& (check_version(t_version, {0}))
-	struct ChunkInformation<t_version> {
-		IntegerU32 offset;
-		IntegerU32 size_compressed;
-		IntegerU32 size_uncompressed;
-		IntegerU16 flag;
-		IntegerU16 file;
-	};
+	M_record_of_data(
+		M_wrap(ChunkInformation<t_version>),
+		M_wrap(
+			(IntegerU32) offset,
+			(IntegerU32) size_compressed,
+			(IntegerU32) size_uncompressed,
+			(IntegerU16) flag,
+			(IntegerU16) file,
+		),
+	);
 
 	// ----------------
 
-	// todo
+	// TODO
 	template <auto t_version>
 	struct ArchiveResourceInformation;
 
 	template <auto t_version> requires
 		CategoryConstraint<>
 		&& (check_version(t_version, {0}))
-	struct ArchiveResourceInformation<t_version> {
-	};
+	M_record_of_data(
+		M_wrap(ArchiveResourceInformation<t_version>),
+		M_wrap(
+		),
+	);
 
 	// ----------------
 
@@ -96,19 +111,22 @@ namespace TwinKleS::Core::Tool::Marmalade::DZip::Structure {
 	template <auto t_version> requires
 		CategoryConstraint<>
 		&& (check_version(t_version, {0}))
-	struct Information<t_version> {
-		ArchiveSetting<t_version>                   archive_setting;
-		List<String>                                resource_file;
-		List<String>                                resource_directory;
-		List<ResourceInformation<t_version>>        resource_information;
-		ChunkSetting<t_version>                     chunk_setting;
-		List<ChunkInformation<t_version>>           chunk_information;
-		List<ArchiveResourceInformation<t_version>> archive_resource_information;
-	};
+	M_record_of_data(
+		M_wrap(Information<t_version>),
+		M_wrap(
+			(ArchiveSetting<t_version>) archive_setting,
+			(List<String>) resource_file,
+			(List<String>) resource_directory,
+			(List<ResourceInformation<t_version>>) resource_information,
+			(ChunkSetting<t_version>) chunk_setting,
+			(List<ChunkInformation<t_version>>) chunk_information,
+			(List<ArchiveResourceInformation<t_version>>) archive_resource_information,
+		),
+	);
 
 	#pragma endregion
 
-	#pragma region misc
+	#pragma region miscellaneous
 
 	template <auto t_version>
 	struct ChunkFlag;
@@ -139,27 +157,20 @@ namespace TwinKleS::Core::Tool::Marmalade::DZip::Structure {
 	template <auto t_version> requires
 		CategoryConstraint<>
 		&& (check_version(t_version, {0}))
-	struct ChunkHeaderLzma<t_version> {
-		StaticByteArray<Data::Compress::Lzma::k_props_size.value> props;
-		IntegerU32                                                size;
-		PaddingBlock<4_szz>                                       unused_1;
-	};
+	M_record_of_data(
+		M_wrap(ChunkHeaderLzma<t_version>),
+		M_wrap(
+			(StaticByteArray<Data::Compress::Lzma::k_property_size>) property,
+			(IntegerU32) size,
+			(PaddingBlock<4_sz>) unused_1,
+		),
+	);
 
 	#pragma endregion
 
 }
 
-namespace TwinKleS::Core {
-
-	template <auto t_version> requires
-		AutoConstraint
-		&& (Tool::Marmalade::DZip::check_version(t_version, {0}))
-	M_byte_stream_adapter_for_aggregate_by_field_of(
-		M_wrap(Tool::Marmalade::DZip::Structure::ArchiveSetting<t_version>),
-		M_wrap(resource_file_count, resource_directory_count, version),
-	);
-
-	// ----------------
+namespace TwinStar::Core {
 
 	template <auto t_version> requires
 		AutoConstraint
@@ -213,45 +224,5 @@ namespace TwinKleS::Core {
 		}
 
 	};
-
-	// ----------------
-
-	template <auto t_version> requires
-		AutoConstraint
-		&& (Tool::Marmalade::DZip::check_version(t_version, {0}))
-	M_byte_stream_adapter_for_aggregate_by_field_of(
-		M_wrap(Tool::Marmalade::DZip::Structure::ChunkSetting<t_version>),
-		M_wrap(archive_resource_count, chunk_count),
-	);
-
-	// ----------------
-
-	template <auto t_version> requires
-		AutoConstraint
-		&& (Tool::Marmalade::DZip::check_version(t_version, {0}))
-	M_byte_stream_adapter_for_aggregate_by_field_of(
-		M_wrap(Tool::Marmalade::DZip::Structure::ChunkInformation<t_version>),
-		M_wrap(offset, size_compressed, size_uncompressed, flag, file),
-	);
-
-	// ----------------
-
-	template <auto t_version> requires
-		AutoConstraint
-		&& (Tool::Marmalade::DZip::check_version(t_version, {0}))
-	M_byte_stream_adapter_for_aggregate_by_field_of(
-		M_wrap(Tool::Marmalade::DZip::Structure::ArchiveResourceInformation<t_version>),
-		M_wrap(),
-	);
-
-	// ----------------
-
-	template <auto t_version> requires
-		AutoConstraint
-		&& (Tool::Marmalade::DZip::check_version(t_version, {0}))
-	M_byte_stream_adapter_for_aggregate_by_field_of(
-		M_wrap(Tool::Marmalade::DZip::Structure::ChunkHeaderLzma<t_version>),
-		M_wrap(props, size, unused_1),
-	);
 
 }

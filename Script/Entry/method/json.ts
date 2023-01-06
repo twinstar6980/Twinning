@@ -2,7 +2,7 @@
  * + json.format JSON 格式化
  * + json.format.batch [批处理] JSON 格式化
  */
-namespace TwinKleS.Entry.method.json {
+namespace TwinStar.Entry.method.json {
 
 	// ------------------------------------------------
 
@@ -97,7 +97,7 @@ namespace TwinKleS.Entry.method.json {
 							...Executor.query_argument_message(this.id, 'source_file_directory'),
 							a.source_file_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
 						dest_file_directory = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'dest_file_directory'),
@@ -153,5 +153,5 @@ namespace TwinKleS.Entry.method.json {
 }
 
 ({
-	injector: TwinKleS.Entry.method.json._injector,
+	injector: TwinStar.Entry.method.json._injector,
 });

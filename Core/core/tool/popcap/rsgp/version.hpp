@@ -1,26 +1,19 @@
 #pragma once
 
 #include "core/utility/utility.hpp"
-#include "core/tool/common/version_utility.hpp"
 
-namespace TwinKleS::Core::Tool::PopCap::RSGP {
+namespace TwinStar::Core::Tool::PopCap::RSGP {
 
-	struct Version {
+	M_record_of_map(
+		M_wrap(Version),
+		M_wrap(
+			(Integer) number,
+		),
+	);
 
-		Integer number;
-
-		// ----------------
-
-		friend constexpr auto operator == (
-			Version const & thix,
-			Version const & that
-		) -> bool = default;
-
-	};
-
-	using VersionEnum = ValuePackage<
-		Version{3_i},
-		Version{4_i}
+	using VersionPackage = ValuePackage<
+		Version{.number = 3_i},
+		Version{.number = 4_i}
 	>;
 
 	// ----------------
@@ -30,17 +23,9 @@ namespace TwinKleS::Core::Tool::PopCap::RSGP {
 		std::initializer_list<Integer::Value> const & number
 	) -> ZBoolean {
 		auto result = true;
+		result &= VersionPackage::has(it);
 		result &= (number.size() == 0 || Range::has(number, it.number.value));
 		return result;
 	}
-
-}
-
-namespace TwinKleS::Core::JSON {
-
-	M_json_value_adapter_for_aggregate_as_object_by_field_of_unique(
-		M_wrap(Tool::PopCap::RSGP::Version),
-		M_wrap(number),
-	);
 
 }

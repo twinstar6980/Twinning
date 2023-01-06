@@ -2,10 +2,9 @@
 
 #include "core/utility/string/format.hpp"
 #include "core/utility/null.hpp"
-#include "core/utility/misc/enum.hpp"
-#include "core/utility/misc/fourcc.hpp"
+#include "core/utility/miscellaneous/fourcc.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region string
 
@@ -196,7 +195,7 @@ namespace TwinKleS::Core {
 			That const &    that,
 			Boolean const & disable_sign_when_positive = k_false
 		) -> Void {
-			// TODO : max size ?
+			// TODO : maximum size ?
 			thix.allocate_full(32_sz);
 			auto stream = OCharacterStreamView{thix};
 			stream.write(that, disable_sign_when_positive);
@@ -232,7 +231,7 @@ namespace TwinKleS::Core {
 			That const &    that,
 			Boolean const & disable_sign_when_positive = k_false
 		) -> Void {
-			// TODO : max size ?
+			// TODO : maximum size ?
 			thix.allocate_full(32_sz);
 			auto stream = OCharacterStreamView{thix};
 			stream.write(that, disable_sign_when_positive);
@@ -247,6 +246,71 @@ namespace TwinKleS::Core {
 			auto stream = ICharacterStreamView{thix};
 			stream.read(that);
 			assert_condition(stream.full());
+			return;
+		}
+
+	};
+
+	#pragma endregion
+
+	#pragma region enumeration
+
+	template <typename TType> requires
+		AutoConstraint
+		&& (IsEnumerationWrapper<TType>)
+		&& (IsDerivedFrom<TType, Enumeration<typename TType::Value>>)
+		&& (!IsSame<TType, Enumeration<typename TType::Value>>)
+	struct BasicStringAdapter<Character, TType> {
+
+		using This = BasicString<Character>;
+
+		using That = TType;
+
+		using FieldPackage = typename TType::Reflection::EnumerationValue;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			auto has_case = k_false;
+			Generalization::each<FieldPackage>(
+				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
+					if (!has_case) {
+						if (Field::value == that.value) {
+							thix = make_string(Field::name.view());
+							has_case = k_true;
+						}
+					}
+				}
+			);
+			if (!has_case) {
+				assert_failed(R"(/* enumeration value is invalid */)");
+			}
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			auto has_case = k_false;
+			auto thix_hash = thix.hash().value;
+			Generalization::each<FieldPackage>(
+				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
+					if (!has_case) {
+						constexpr auto name_hash = hash_std_string_view(Field::name.view());
+						if (name_hash == thix_hash) {
+							that.value = Field::value;
+							has_case = k_true;
+						}
+					}
+				}
+			);
+			if (!has_case) {
+				assert_failed(R"(/* enumeration name is invalid */)");
+			}
 			return;
 		}
 
@@ -326,67 +390,7 @@ namespace TwinKleS::Core {
 
 	#pragma endregion
 
-	#pragma region misc
-
-	template <typename TType> requires
-		AutoConstraint
-	struct BasicStringAdapter<Character, AsEnum<TType>> {
-
-		using This = BasicString<Character>;
-
-		using That = AsEnum<TType>;
-
-		// ----------------
-
-		static auto from (
-			This &       thix,
-			That const & that
-		) -> Void {
-			auto has_case = k_false;
-			Reflection::iterate_enum_value<TType>(
-				[&] <typename Field> (Field) -> auto {
-					if (!has_case) {
-						if (Field::value == that) {
-							thix = make_string(Field::name.view());
-							has_case = k_true;
-						}
-					}
-					return;
-				}
-			);
-			if (!has_case) {
-				assert_failed(R"(/* enum value is invalid */)");
-			}
-			return;
-		}
-
-		static auto to (
-			This const & thix,
-			That &       that
-		) -> Void {
-			auto has_case = k_false;
-			auto string_hash = thix.hash().value;
-			Reflection::iterate_enum_value<TType>(
-				[&] <typename Field> (Field) -> auto {
-					if (!has_case) {
-						constexpr auto name_hash = hash_std_string_view(Field::name.view());
-						if (string_hash == name_hash) {
-							that = Field::value;
-							has_case = k_true;
-						}
-					}
-					return;
-				}
-			);
-			if (!has_case) {
-				assert_failed(R"(/* enum name is invalid */)");
-			}
-			return;
-		}
-
-	};
-
-	// ----------------
+	#pragma region miscellaneous
 
 	template <>
 	struct BasicStringAdapter<Character, FourCC> {

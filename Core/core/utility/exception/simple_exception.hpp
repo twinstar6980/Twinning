@@ -3,18 +3,18 @@
 #include "core/utility/exception/source_location.hpp"
 #include <string>
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
 	class SimpleException :
 		public Exception {
 
-	protected: //
+	protected:
 
 		std::string m_message{};
 
-	public: //
+	public:
 
 		#pragma region structor
 

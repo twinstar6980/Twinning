@@ -4,13 +4,13 @@
 #include "core/utility/string/basic_string.hpp"
 #include "core/utility/string/basic_static_string.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region alias
 
-	template <auto t_constant> requires
+	template <auto constant> requires
 		AutoConstraint
-	using StringView = BasicStringView<Character, t_constant>;
+	using StringView = BasicStringView<Character, constant>;
 
 	using VStringView = VBasicStringView<Character>;
 
@@ -22,13 +22,13 @@ namespace TwinKleS::Core {
 
 	template <auto t_size> requires
 		CategoryConstraint<>
-	//&& (IsSameV<t_size, ZSSize>)
+		&& (IsSameV<t_size, ZSize>)
 	struct StaticString :
-		BasicStaticString<Character, t_size> {
+		BasicStaticString<Character, mbw<Size>(t_size)> {
 		implicit constexpr StaticString (
 			ZArray<Character::Value, t_size> const & data
 		) :
-			BasicStaticString<Character, t_size>{data} {
+			BasicStaticString<Character, mbw<Size>(t_size)>{data} {
 		}
 	};
 

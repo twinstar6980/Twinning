@@ -1,5 +1,5 @@
 /** 图集打包 */
-namespace TwinKleS.Support.Atlas.Pack {
+namespace TwinStar.Support.Atlas.Pack {
 
 	// ------------------------------------------------
 

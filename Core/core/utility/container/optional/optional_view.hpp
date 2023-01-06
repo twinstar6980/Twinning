@@ -2,7 +2,7 @@
 
 #include "core/utility/base_wrapper/wrapper.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
@@ -11,7 +11,7 @@ namespace TwinKleS::Core {
 		&& (IsSameV<t_constant, ZBoolean>)
 	class OptionalView {
 
-	public: //
+	public:
 
 		using Value = TValue;
 
@@ -19,12 +19,12 @@ namespace TwinKleS::Core {
 
 		using QValue = AsConstantIf<Value, constant>;
 
-	protected: //
+	protected:
 
 		Boolean         m_has{k_false};
 		Pointer<QValue> m_value{k_null_pointer};
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -111,7 +111,7 @@ namespace TwinKleS::Core {
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region operator
 

@@ -3,77 +3,77 @@
 #include "core/utility/trait/base.hpp"
 #include "core/utility/trait/category.hpp"
 
-namespace TwinKleS::Core::Trait {
+namespace TwinStar::Core::Trait {
 
 	#pragma region concept
 
 	template <typename Derived, typename Base>
 	concept IsDerivedFrom =
-	CategoryConstraint<IsPureInstance<Derived> && IsPureInstance<Base>>
-	&& (std::is_base_of_v<Base, Derived> && std::is_convertible_v<Derived &, Base &>)
-	;
+		CategoryConstraint<IsPureInstance<Derived> && IsPureInstance<Base>>
+		&& (std::is_base_of_v<Base, Derived> && std::is_convertible_v<Derived &, Base &>)
+		;
 
 	// ----------------
 
-	template <typename It, typename ...Argument>
+	template <typename It, typename ... Argument>
 	concept IsConstructible =
-	CategoryConstraint<IsPureInstance<It> && IsValid<Argument...>>
-	&& (std::is_constructible_v<It, Argument...>)
-	;
+		CategoryConstraint<IsPureInstance<It> && IsValid<Argument ...>>
+		&& (std::is_constructible_v<It, Argument ...>)
+		;
 
 	template <typename It>
 	concept IsDefaultConstructible =
-	CategoryConstraint<IsPureInstance<It>>
-	&& (std::is_default_constructible_v<It>)
-	;
+		CategoryConstraint<IsPureInstance<It>>
+		&& (std::is_default_constructible_v<It>)
+		;
 
 	template <typename It>
 	concept IsCopyConstructible =
-	CategoryConstraint<IsPureInstance<It>>
-	&& (std::is_copy_constructible_v<It>)
-	;
+		CategoryConstraint<IsPureInstance<It>>
+		&& (std::is_copy_constructible_v<It>)
+		;
 
 	template <typename It>
 	concept IsMoveConstructible =
-	CategoryConstraint<IsPureInstance<It>>
-	&& (std::is_move_constructible_v<It>)
-	;
+		CategoryConstraint<IsPureInstance<It>>
+		&& (std::is_move_constructible_v<It>)
+		;
 
 	// ----------------
 
 	template <typename It>
 	concept IsDestructible =
-	CategoryConstraint<IsPureInstance<It>>
-	&& (std::is_destructible_v<It>)
-	;
+		CategoryConstraint<IsPureInstance<It>>
+		&& (std::is_destructible_v<It>)
+		;
 
 	// ----------------
 
 	template <typename To, typename From>
 	concept IsAssignable =
-	CategoryConstraint<IsValid<To> && IsValid<From>>
-	&& (std::is_assignable_v<To, From>)
-	;
+		CategoryConstraint<IsValid<To> && IsValid<From>>
+		&& (std::is_assignable_v<To, From>)
+		;
 
 	template <typename It>
 	concept IsCopyAssignable =
-	CategoryConstraint<IsPureInstance<It>>
-	&& (std::is_copy_assignable_v<It>)
-	;
+		CategoryConstraint<IsPureInstance<It>>
+		&& (std::is_copy_assignable_v<It>)
+		;
 
 	template <typename It>
 	concept IsMoveAssignable =
-	CategoryConstraint<IsPureInstance<It>>
-	&& (std::is_move_assignable_v<It>)
-	;
+		CategoryConstraint<IsPureInstance<It>>
+		&& (std::is_move_assignable_v<It>)
+		;
 
 	// ----------------
 
 	template <typename From, typename To>
 	concept IsConvertible =
-	CategoryConstraint<IsValid<From> && IsValid<To>>
-	&& (std::is_convertible_v<From, To>)
-	;
+		CategoryConstraint<IsValid<From> && IsValid<To>>
+		&& (std::is_convertible_v<From, To>)
+		;
 
 	#pragma endregion
 
@@ -138,17 +138,17 @@ namespace TwinKleS::Core::Trait {
 	// ----------------
 
 	// NOTE : maybe bug ? use assignment instead of constructor if in consteval context
-	template <typename It, typename ...Argument> requires
-		CategoryConstraint<IsInstance<It> && IsValid<Argument...>>
-		&& (IsConstructible<AsPure<It>, Argument &&...>)
+	template <typename It, typename ... Argument> requires
+		CategoryConstraint<IsInstance<It> && IsValid<Argument ...>>
+		&& (IsConstructible<AsPure<It>, Argument && ...>)
 	inline constexpr auto construct (
-		It &           it,
-		Argument && ...argument
+		It &            it,
+		Argument && ... argument
 	) -> Void {
 		if (std::is_constant_evaluated()) {
-			it = AsUnmakeConstant<It>{as_forward<Argument>(argument)...};
+			it = AsUnmakeConstant<It>{as_forward<Argument>(argument) ...};
 		} else {
-			new(&as_variable(it)) AsUnmakeConstant<It>{as_forward<Argument>(argument)...};
+			new(&as_variable(it)) AsUnmakeConstant<It>{as_forward<Argument>(argument) ...};
 		}
 		return;
 	}
@@ -166,16 +166,16 @@ namespace TwinKleS::Core::Trait {
 		return;
 	}
 
-	template <typename It, typename ...Argument> requires
-		CategoryConstraint<IsInstance<It> && IsValid<Argument...>>
-		&& (IsConstructible<AsPure<It>, Argument &&...>)
+	template <typename It, typename ... Argument> requires
+		CategoryConstraint<IsInstance<It> && IsValid<Argument ...>>
+		&& (IsConstructible<AsPure<It>, Argument && ...>)
 		&& (IsDestructible<AsPure<It>>)
 	inline constexpr auto restruct (
-		It &           it,
-		Argument && ...argument
+		It &            it,
+		Argument && ... argument
 	) -> Void {
 		destruct(it);
-		construct(it, as_forward<Argument>(argument)...);
+		construct(it, as_forward<Argument>(argument) ...);
 		return;
 	}
 

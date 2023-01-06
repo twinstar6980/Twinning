@@ -1,10 +1,8 @@
 #pragma once
 
-#include "core/utility/container/list/list.hpp"
-#include "core/utility/misc/character_series/type.hpp"
-#include "core/utility/string/basic_string_view.hpp"
+#include "core/utility/base_wrapper/wrapper.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 

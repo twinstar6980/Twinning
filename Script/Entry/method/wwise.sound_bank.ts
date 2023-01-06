@@ -1,15 +1,17 @@
 /**
- * + wwise.sound_bank.pack Wwise-Sound-Bank 打包
- * + wwise.sound_bank.unpack Wwise-Sound-Bank 解包
- * + wwise.sound_bank.pack.batch [批处理] Wwise-Sound-Bank 打包
- * + wwise.sound_bank.unpack.batch [批处理] Wwise-Sound-Bank 解包
+ * + wwise.sound_bank.encode Wwise-Sound-Bank 编码
+ * + wwise.sound_bank.decode Wwise-Sound-Bank 解码
+ * + wwise.sound_bank.encode.batch [批处理] Wwise-Sound-Bank 编码
+ * + wwise.sound_bank.decode.batch [批处理] Wwise-Sound-Bank 解码
  */
-namespace TwinKleS.Entry.method.wwise.sound_bank {
+namespace TwinStar.Entry.method.wwise.sound_bank {
 
 	// ------------------------------------------------
 
 	type Config = {
-		pack_buffer_size: Executor.RequestArgument<string, false>;
+		encode_buffer_size: Executor.RequestArgument<string, false>;
+		id_name_map: Array<string>,
+		id_alias_map: Record<string, bigint>,
 	};
 
 	export function _injector(
@@ -17,7 +19,7 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 	) {
 		g_executor_method.push(
 			Executor.method_of({
-				id: 'wwise.sound_bank.pack',
+				id: 'wwise.sound_bank.encode',
 				descriptor(
 				) {
 					return Executor.query_method_description(this.id);
@@ -30,7 +32,7 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 				}) {
 					let bundle_directory: string;
 					let data_file: string;
-					let version_number: [112n][number];
+					let version_number: [88n, 112n, 140n][number];
 					let buffer_size: bigint;
 					{
 						bundle_directory = Executor.require_argument(
@@ -51,21 +53,21 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
-							(value) => ([112n].includes(value) ? null : localized(`版本不受支持`)),
+							() => (Console.option([88n, [88n, ''], 112n, [112n, ''], 140n, [140n, '']], null)),
+							(value) => ([88n, 112n, 140n].includes(value) ? null : localized(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.binary_size(null)),
+							() => (Console.size(null)),
 							(value) => (null),
 						);
 					}
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let embedded_audio_directory = `${bundle_directory}/embedded_audio`;
-					CoreX.Tool.Wwise.SoundBank.pack_fs(data_file, manifest_file, embedded_audio_directory, { number: version_number }, buffer_size);
+					CoreX.Tool.Wwise.SoundBank.encode_fs(data_file, manifest_file, embedded_audio_directory, { number: version_number }, buffer_size);
 					Console.notify('s', localized(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
@@ -73,13 +75,13 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 					bundle_directory: undefined!,
 					data_file: '?default',
 					version_number: '?input',
-					buffer_size: config.pack_buffer_size,
+					buffer_size: config.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', /.+(\.bnk)(\.bundle)$/i]]),
 				input_forwarder: 'bundle_directory',
 			}),
 			Executor.method_of({
-				id: 'wwise.sound_bank.unpack',
+				id: 'wwise.sound_bank.decode',
 				descriptor(
 				) {
 					return Executor.query_method_description(this.id);
@@ -91,7 +93,7 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 				}) {
 					let data_file: string;
 					let bundle_directory: string;
-					let version_number: [112n][number];
+					let version_number: [88n, 112n, 140n][number];
 					{
 						data_file = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'data_file'),
@@ -111,13 +113,13 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
-							(value) => ([112n].includes(value) ? null : localized(`版本不受支持`)),
+							() => (Console.option([88n, [88n, ''], 112n, [112n, ''], 140n, [140n, '']], null)),
+							(value) => ([88n, 112n, 140n].includes(value) ? null : localized(`版本不受支持`)),
 						);
 					}
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let embedded_audio_directory = `${bundle_directory}/embedded_audio`;
-					CoreX.Tool.Wwise.SoundBank.unpack_fs(data_file, manifest_file, embedded_audio_directory, { number: version_number });
+					CoreX.Tool.Wwise.SoundBank.decode_fs(data_file, manifest_file, embedded_audio_directory, { number: version_number });
 					Console.notify('s', localized(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {
@@ -132,7 +134,7 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 		);
 		g_executor_method_of_batch.push(
 			Executor.method_of({
-				id: 'wwise.sound_bank.pack.batch',
+				id: 'wwise.sound_bank.encode.batch',
 				descriptor(
 				) {
 					return Executor.query_method_description(this.id);
@@ -145,7 +147,7 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 				}) {
 					let bundle_directory_directory: string;
 					let data_file_directory: string;
-					let version_number: [112n][number];
+					let version_number: [88n, 112n, 140n][number];
 					let buffer_size: bigint;
 					{
 						bundle_directory_directory = Executor.require_argument(
@@ -158,7 +160,7 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 							...Executor.query_argument_message(this.id, 'data_file_directory'),
 							a.data_file_directory,
 							(value) => (value),
-							() => (bundle_directory_directory.replace(/$/i, '.bnk_pack')),
+							() => (bundle_directory_directory.replace(/$/i, '.bnk_encode')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
 						version_number = Executor.request_argument(
@@ -166,15 +168,15 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
-							(value) => ([112n].includes(value) ? null : localized(`版本不受支持`)),
+							() => (Console.option([88n, [88n, ''], 112n, [112n, ''], 140n, [140n, '']], null)),
+							(value) => ([88n, 112n, 140n].includes(value) ? null : localized(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.binary_size(null)),
+							() => (Console.size(null)),
 							(value) => (null),
 						);
 					}
@@ -184,10 +186,10 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 						['directory', /.+(\.bnk)(\.bundle)$/i],
 						(item) => {
 							let bundle_directory = `${bundle_directory_directory}/${item}`;
-							let data_file = `${data_file_directory}/${item.slice(0, -8)}`;
+							let data_file = `${data_file_directory}/${item.slice(0, -7)}`;
 							let manifest_file = `${bundle_directory}/manifest.json`;
 							let embedded_audio_directory = `${bundle_directory}/embedded_audio`;
-							CoreX.Tool.Wwise.SoundBank.pack_fs(data_file, manifest_file, embedded_audio_directory, { number: version_number }, data_buffer.view());
+							CoreX.Tool.Wwise.SoundBank.encode_fs(data_file, manifest_file, embedded_audio_directory, { number: version_number }, data_buffer.view());
 						},
 					);
 					Console.notify('s', localized(`执行成功`), [`${data_file_directory}`]);
@@ -197,13 +199,13 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 					bundle_directory_directory: undefined!,
 					data_file_directory: '?default',
 					version_number: '?input',
-					buffer_size: config.pack_buffer_size,
+					buffer_size: config.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'bundle_directory_directory',
 			}),
 			Executor.method_of({
-				id: 'wwise.sound_bank.unpack.batch',
+				id: 'wwise.sound_bank.decode.batch',
 				descriptor(
 				) {
 					return Executor.query_method_description(this.id);
@@ -215,7 +217,7 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 				}) {
 					let data_file_directory: string;
 					let bundle_directory_directory: string;
-					let version_number: [112n][number];
+					let version_number: [88n, 112n, 140n][number];
 					{
 						data_file_directory = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'data_file_directory'),
@@ -227,7 +229,7 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 							...Executor.query_argument_message(this.id, 'bundle_directory_directory'),
 							a.bundle_directory_directory,
 							(value) => (value),
-							() => (data_file_directory.replace(/$/i, '.bnk_unpack')),
+							() => (data_file_directory.replace(/$/i, '.bnk_decode')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
 						version_number = Executor.request_argument(
@@ -235,8 +237,8 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
-							(value) => ([112n].includes(value) ? null : localized(`版本不受支持`)),
+							() => (Console.option([88n, [88n, ''], 112n, [112n, ''], 140n, [140n, '']], null)),
+							(value) => ([88n, 112n, 140n].includes(value) ? null : localized(`版本不受支持`)),
 						);
 					}
 					simple_batch_execute(
@@ -247,7 +249,7 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 							let bundle_directory = `${bundle_directory_directory}/${item}.bundle`;
 							let manifest_file = `${bundle_directory}/manifest.json`;
 							let embedded_audio_directory = `${bundle_directory}/embedded_audio`;
-							CoreX.Tool.Wwise.SoundBank.unpack_fs(data_file, manifest_file, embedded_audio_directory, { number: version_number });
+							CoreX.Tool.Wwise.SoundBank.decode_fs(data_file, manifest_file, embedded_audio_directory, { number: version_number });
 						},
 					);
 					Console.notify('s', localized(`执行成功`), [`${bundle_directory_directory}`]);
@@ -269,5 +271,5 @@ namespace TwinKleS.Entry.method.wwise.sound_bank {
 }
 
 ({
-	injector: TwinKleS.Entry.method.wwise.sound_bank._injector,
+	injector: TwinStar.Entry.method.wwise.sound_bank._injector,
 });

@@ -4,18 +4,18 @@
 #include "core/utility/container/list/list.hpp"
 #include "core/utility/string/string.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
 	class ExceptionMessage {
 
-	protected: //
+	protected:
 
 		SourceLocation m_location{};
 		List<String>   m_message{};
 
-	public: //
+	public:
 
 		#pragma region structor
 

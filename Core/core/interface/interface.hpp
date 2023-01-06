@@ -9,7 +9,7 @@
 #endif
 #endif
 
-namespace TwinKleS::Core::Interface {
+namespace TwinStar::Core::Interface {
 
 	struct Size {
 		decltype(sizeof(0)) value;

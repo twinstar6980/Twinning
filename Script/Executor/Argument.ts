@@ -1,5 +1,5 @@
 /** 执行器参数 */
-namespace TwinKleS.Executor {
+namespace TwinStar.Executor {
 
 	// ------------------------------------------------
 
@@ -88,10 +88,6 @@ namespace TwinKleS.Executor {
 						throw new Error(`command name is too long`);
 					}
 					switch (input[1]) {
-						default: {
-							throw new Error(`command name is invalid`);
-							break;
-						}
 						case 't': {
 							if (require_type[0] !== false) {
 								throw new Error(`trash command precondition failed`);
@@ -126,8 +122,8 @@ namespace TwinKleS.Executor {
 							break;
 						}
 						case 's': {
-							if (Shell.is_windows) {
-								throw new Error(`show(_open_fild_dialog) command only enabled on windows shell`);
+							if (Shell.is_windows && Shell.is_cli) {
+								throw new Error(`show(_open_fild_dialog) command only enabled on windows cli shell`);
 							}
 							let pick_folder: boolean;
 							switch (type) {
@@ -152,6 +148,9 @@ namespace TwinKleS.Executor {
 								input = selected[0];
 							}
 							break;
+						}
+						default: {
+							throw new Error(`command name is invalid`);
 						}
 					}
 				}

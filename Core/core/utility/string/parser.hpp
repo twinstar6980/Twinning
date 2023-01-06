@@ -1,11 +1,11 @@
 #pragma once
 
-#include "core/utility/misc/character_series/stream.hpp"
-#include "core/utility/misc/character_series/type.hpp"
+#include "core/utility/miscellaneous/character_series/stream.hpp"
+#include "core/utility/miscellaneous/character_series/type.hpp"
 #include "core/utility/string/string.hpp"
 #include "core/utility/base_wrapper/wrapper.hpp"
 #include "core/utility/null.hpp"
-#include "core/utility/misc/number_variant.hpp"
+#include "core/utility/miscellaneous/number_variant.hpp"
 #include "core/utility/range/algorithm.hpp"
 
 #if defined M_system_windows
@@ -14,10 +14,10 @@ namespace mscharconv = std;
 #endif
 #if defined M_system_linux || defined M_system_macos || defined M_system_android || defined M_system_ios
 #include "core/third_party/mscharconv.hpp"
-namespace mscharconv = TwinKleS::Core::ThirdParty::mscharconv;
+namespace mscharconv = TwinStar::Core::ThirdParty::mscharconv;
 #endif
 
-namespace TwinKleS::Core::StringParser {
+namespace TwinStar::Core::StringParser {
 
 	#pragma region character
 
@@ -63,7 +63,7 @@ namespace TwinKleS::Core::StringParser {
 		return;
 	}
 
-	// todo : bug if character is signed ?
+	// TODO : maybe bug if character is signed ?
 	inline auto read_utf8_character (
 		ICharacterStreamView & stream,
 		Character32 &          character
@@ -142,12 +142,6 @@ namespace TwinKleS::Core::StringParser {
 			stream.write(CharacterType::to_number_hex_upper(cbw<IntegerU8>(clip_bit(character, 1_ix, 4_sz))));
 		} else {
 			switch (character.value) {
-				default : {
-					stream.write('x'_c);
-					stream.write(CharacterType::to_number_hex_upper(cbw<IntegerU8>(clip_bit(character, 5_ix, 4_sz))));
-					stream.write(CharacterType::to_number_hex_upper(cbw<IntegerU8>(clip_bit(character, 1_ix, 4_sz))));
-					break;
-				}
 				case '\'' :
 				case '\"' :
 				case '\?' :
@@ -183,6 +177,11 @@ namespace TwinKleS::Core::StringParser {
 					stream.write('v'_c);
 					break;
 				}
+				default : {
+					stream.write('x'_c);
+					stream.write(CharacterType::to_number_hex_upper(cbw<IntegerU8>(clip_bit(character, 5_ix, 4_sz))));
+					stream.write(CharacterType::to_number_hex_upper(cbw<IntegerU8>(clip_bit(character, 1_ix, 4_sz))));
+				}
 			}
 		}
 		return;
@@ -194,10 +193,6 @@ namespace TwinKleS::Core::StringParser {
 	) -> Void {
 		auto current = stream.read_of();
 		switch (current.value) {
-			default : {
-				assert_failed(R"(current == /* valid */)");
-				break;
-			}
 			case '\'' : {
 				character = '\''_c32;
 				break;
@@ -207,7 +202,7 @@ namespace TwinKleS::Core::StringParser {
 				break;
 			}
 			case '\?' : {
-				character = '\"'_c32;
+				character = '\?'_c32;
 				break;
 			}
 			case '\\' : {
@@ -276,6 +271,9 @@ namespace TwinKleS::Core::StringParser {
 					character = character << 4_sz | cbw<Character32>(CharacterType::from_number_hex(stream.read_of()));
 				}
 				break;
+			}
+			default : {
+				assert_failed(R"(current == /* valid */)");
 			}
 		}
 		return;
@@ -421,10 +419,6 @@ namespace TwinKleS::Core::StringParser {
 	) -> CStringView {
 		auto result = CStringView{};
 		switch (stream.read_of().value) {
-			default : {
-				assert_failed(R"(stream.next() == /* valid */)");
-				break;
-			}
 			case '/' : {
 				result = read_line_comment_after_mark(stream);
 				break;
@@ -432,6 +426,9 @@ namespace TwinKleS::Core::StringParser {
 			case '*' : {
 				result = read_block_comment_after_mark(stream);
 				break;
+			}
+			default : {
+				assert_failed(R"(stream.next() == /* valid */)");
 			}
 		}
 		return result;
@@ -528,10 +525,6 @@ namespace TwinKleS::Core::StringParser {
 		while (!stream.full()) {
 			auto current_character = stream.read_of();
 			switch (current_character.value) {
-				default : {
-					stream.backward();
-					break;
-				}
 				case '0' :
 				case '1' :
 				case '2' :
@@ -544,6 +537,9 @@ namespace TwinKleS::Core::StringParser {
 				case '9' : {
 					continue;
 					break;
+				}
+				default : {
+					stream.backward();
 				}
 			}
 			break;
@@ -589,10 +585,6 @@ namespace TwinKleS::Core::StringParser {
 		while (!stream.full()) {
 			auto current_character = stream.read_of();
 			switch (current_character.value) {
-				default : {
-					stream.backward();
-					break;
-				}
 				case '0' :
 				case '1' :
 				case '2' :
@@ -622,6 +614,9 @@ namespace TwinKleS::Core::StringParser {
 					continue;
 					break;
 				}
+				default : {
+					stream.backward();
+				}
 			}
 			break;
 		}
@@ -640,12 +635,12 @@ namespace TwinKleS::Core::StringParser {
 		NumberVariant const &  value,
 		Boolean const &        disable_sign_when_positive = k_false
 	) -> Void {
-		switch (value.type()) {
-			case NumberVariantType::floating : {
+		switch (value.type().value) {
+			case NumberVariantType::Constant::floating().value : {
 				write_number(stream, value.get_floating(), disable_sign_when_positive);
 				break;
 			}
-			case NumberVariantType::integer : {
+			case NumberVariantType::Constant::integer().value : {
 				write_number(stream, value.get_integer(), disable_sign_when_positive);
 				break;
 			}
@@ -672,10 +667,6 @@ namespace TwinKleS::Core::StringParser {
 		while (!stream.full()) {
 			auto current_character = stream.read_of();
 			switch (current_character.value) {
-				default : {
-					stream.backward();
-					break;
-				}
 				case '0' :
 				case '1' :
 				case '2' :
@@ -704,6 +695,9 @@ namespace TwinKleS::Core::StringParser {
 					assert_condition(next_character == '+'_c || next_character == '-'_c);
 					continue;
 					break;
+				}
+				default : {
+					stream.backward();
 				}
 			}
 			break;

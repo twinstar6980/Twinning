@@ -3,7 +3,7 @@
 #include "core/utility/utility.hpp"
 #include "core/tool/popcap/pak/version.hpp"
 
-namespace TwinKleS::Core::Tool::PopCap::PAK::Structure {
+namespace TwinStar::Core::Tool::PopCap::PAK::Structure {
 
 	#pragma region magic identifier
 
@@ -27,21 +27,27 @@ namespace TwinKleS::Core::Tool::PopCap::PAK::Structure {
 	template <auto t_version> requires
 		CategoryConstraint<>
 		&& (check_version(t_version, {0}, {false}))
-	struct ResourceInformation<t_version> {
-		StringBlock8 path;
-		IntegerU32   size;
-		IntegerU64   time;
-	};
+	M_record_of_data(
+		M_wrap(ResourceInformation<t_version>),
+		M_wrap(
+			(StringBlock8) path,
+			(IntegerU32) size,
+			(IntegerU64) time,
+		),
+	);
 
 	template <auto t_version> requires
 		CategoryConstraint<>
 		&& (check_version(t_version, {0}, {true}))
-	struct ResourceInformation<t_version> {
-		StringBlock8 path;
-		IntegerU32   size;
-		IntegerU32   size_original;
-		IntegerU64   time;
-	};
+	M_record_of_data(
+		M_wrap(ResourceInformation<t_version>),
+		M_wrap(
+			(StringBlock8) path,
+			(IntegerU32) size,
+			(IntegerU32) size_original,
+			(IntegerU64) time,
+		),
+	);
 
 	// ----------------
 
@@ -51,13 +57,16 @@ namespace TwinKleS::Core::Tool::PopCap::PAK::Structure {
 	template <auto t_version> requires
 		CategoryConstraint<>
 		&& (check_version(t_version, {0}, {}))
-	struct Information<t_version> {
-		List<ResourceInformation<t_version>> resource_information;
-	};
+	M_record_of_data(
+		M_wrap(Information<t_version>),
+		M_wrap(
+			(List<ResourceInformation<t_version>>) resource_information,
+		),
+	);
 
 	#pragma endregion
 
-	#pragma region misc
+	#pragma region miscellaneous
 
 	template <auto t_version>
 	struct ResourceInformationListStateFlag;
@@ -71,25 +80,5 @@ namespace TwinKleS::Core::Tool::PopCap::PAK::Structure {
 	};
 
 	#pragma endregion
-
-}
-
-namespace TwinKleS::Core {
-
-	template <auto t_version> requires
-		AutoConstraint
-		&& (Tool::PopCap::PAK::check_version(t_version, {0}, {false}))
-	M_byte_stream_adapter_for_aggregate_by_field_of(
-		M_wrap(Tool::PopCap::PAK::Structure::ResourceInformation<t_version>),
-		M_wrap(path, size, time),
-	);
-
-	template <auto t_version> requires
-		AutoConstraint
-		&& (Tool::PopCap::PAK::check_version(t_version, {0}, {true}))
-	M_byte_stream_adapter_for_aggregate_by_field_of(
-		M_wrap(Tool::PopCap::PAK::Structure::ResourceInformation<t_version>),
-		M_wrap(path, size, size_original, time),
-	);
 
 }

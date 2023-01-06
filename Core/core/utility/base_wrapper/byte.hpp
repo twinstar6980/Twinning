@@ -2,7 +2,7 @@
 
 #include "core/utility/base_wrapper/number.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
@@ -22,7 +22,9 @@ namespace TwinKleS::Core {
 
 	using Byte8 = ByteWrapper<ZByte8>;
 
-	// ----------------
+	#pragma endregion
+
+	#pragma region regular type
 
 	M_simple_derived_class(Byte, Byte8, Byte8);
 

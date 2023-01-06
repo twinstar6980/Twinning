@@ -1,7 +1,7 @@
 /**
- * + data.hash.md5 MD5 哈希
+ * + data.hash.md5 MD5 散列
  */
-namespace TwinKleS.Entry.method.data.hash {
+namespace TwinStar.Entry.method.data.hash {
 
 	// ------------------------------------------------
 
@@ -31,7 +31,7 @@ namespace TwinKleS.Entry.method.data.hash {
 						);
 					}
 					let result = CoreX.Tool.Data.Hash.MD5.hash_fs(file);
-					Console.notify('s', localized(`执行成功`), [`${result}`]);
+					Console.notify('s', localized(`执行成功`), [`${result.toString(16)}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -48,5 +48,5 @@ namespace TwinKleS.Entry.method.data.hash {
 }
 
 ({
-	injector: TwinKleS.Entry.method.data.hash._injector,
+	injector: TwinStar.Entry.method.data.hash._injector,
 });

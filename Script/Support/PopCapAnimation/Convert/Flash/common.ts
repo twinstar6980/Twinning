@@ -1,5 +1,5 @@
 /** PAM转换Flash */
-namespace TwinKleS.Support.PopCapAnimation.Convert.Flash {
+namespace TwinStar.Support.PopCapAnimation.Convert.Flash {
 
 	// ------------------------------------------------
 

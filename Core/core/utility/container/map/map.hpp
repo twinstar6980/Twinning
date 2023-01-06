@@ -3,7 +3,7 @@
 #include "core/utility/container/map/map_view.hpp"
 #include "core/utility/container/list/list.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
@@ -12,11 +12,11 @@ namespace TwinKleS::Core {
 	class Map :
 		protected List<KVPair<TKey, TValue>> {
 
-	private: //
+	private:
 
 		using List = List<KVPair<TKey, TValue>>;
 
-	public: //
+	public:
 
 		using Key = TKey;
 
@@ -48,7 +48,7 @@ namespace TwinKleS::Core {
 
 		using CView = MapView<Key, Value, true>;
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -426,7 +426,7 @@ namespace TwinKleS::Core {
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region operator
 
@@ -445,20 +445,20 @@ namespace TwinKleS::Core {
 
 	#pragma region utility
 
-	template <typename Key, typename Value, typename ...Argument> requires
-		CategoryConstraint<IsPureInstance<Key> && IsPureInstance<Value> && IsValid<Argument...>>
+	template <typename Key, typename Value, typename ... Argument> requires
+		CategoryConstraint<IsPureInstance<Key> && IsPureInstance<Value> && IsValid<Argument ...>>
 		&& (IsConstructible<KVPair<Key, Value>, Argument &&> && ...)
 	inline auto make_map (
-		Argument && ...argument
+		Argument && ... argument
 	) -> Map<Key, Value> {
 		auto result = Map<Key, Value>{mbw<Size>(sizeof...(Argument))};
 		result.expand_size_to_full();
-		[&] <auto ...index> (
-			ValuePackage<index...>
-		) -> auto {
-				(restruct(result.at(mbw<Size>(index)), as_forward<Argument>(argument)), ...);
-				return;
-			}(AsValuePackageOfIndex<sizeof...(Argument)>{});
+		Generalization::each_with<>(
+			[&] <auto index, typename CurrentArgument> (ValuePackage<index>, CurrentArgument && current_argument) {
+				restruct(result.at(mbw<Size>(index)), as_forward<CurrentArgument>(current_argument));
+			},
+			as_forward<Argument>(argument) ...
+		);
 		return result;
 	}
 

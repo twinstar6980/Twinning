@@ -2,145 +2,145 @@
 
 #include "core/utility/trait/base.hpp"
 
-namespace TwinKleS::Core::Trait {
+namespace TwinStar::Core::Trait {
 
 	#pragma region concept
 
-	template <typename ...It>
+	template <typename ... It>
 	concept IsAnything =
-	CustomConstraint
-	;
+		CustomConstraint
+		;
 
 	// ----------------
 
-	template <typename ...It>
+	template <typename ... It>
 	concept IsVoid =
-	CustomConstraint
-	&& (IsAnything<It...>)
-	&& (std::is_void_v<It> && ...)
-	;
+		CustomConstraint
+		&& (IsAnything<It ...>)
+		&& (std::is_void_v<It> && ...)
+		;
 
-	template <typename ...It>
+	template <typename ... It>
 	concept IsValid =
-	CustomConstraint
-	&& (IsAnything<It...>)
-	&& (!std::is_void_v<It> && ...)
-	;
+		CustomConstraint
+		&& (IsAnything<It ...>)
+		&& (!std::is_void_v<It> && ...)
+		;
 
 	// ----------------
 
-	template <typename ...It>
+	template <typename ... It>
 	concept IsInstance =
-	CustomConstraint
-	&& (IsValid<It...>)
-	&& (!std::is_reference_v<It> && ...)
-	;
+		CustomConstraint
+		&& (IsValid<It ...>)
+		&& (!std::is_reference_v<It> && ...)
+		;
 
-	template <typename ...It>
+	template <typename ... It>
 	concept IsVInstance =
-	CustomConstraint
-	&& (IsInstance<It...>)
-	&& (!std::is_const_v<It> && ...)
-	;
+		CustomConstraint
+		&& (IsInstance<It ...>)
+		&& (!std::is_const_v<It> && ...)
+		;
 
-	template <typename ...It>
+	template <typename ... It>
 	concept IsCInstance =
-	CustomConstraint
-	&& (IsInstance<It...>)
-	&& (std::is_const_v<It> && ...)
-	;
+		CustomConstraint
+		&& (IsInstance<It ...>)
+		&& (std::is_const_v<It> && ...)
+		;
 
 	// ----------------
 
-	template <typename ...It>
+	template <typename ... It>
 	concept IsReference =
-	CustomConstraint
-	&& (IsValid<It...>)
-	&& (std::is_reference_v<It> && ...)
-	;
+		CustomConstraint
+		&& (IsValid<It ...>)
+		&& (std::is_reference_v<It> && ...)
+		;
 
-	template <typename ...It>
+	template <typename ... It>
 	concept IsLReference =
-	CustomConstraint
-	&& (IsReference<It...>)
-	&& (std::is_lvalue_reference_v<It> && ...)
-	;
+		CustomConstraint
+		&& (IsReference<It ...>)
+		&& (std::is_lvalue_reference_v<It> && ...)
+		;
 
-	template <typename ...It>
+	template <typename ... It>
 	concept IsRReference =
-	CustomConstraint
-	&& (IsReference<It...>)
-	&& (std::is_rvalue_reference_v<It> && ...)
-	;
+		CustomConstraint
+		&& (IsReference<It ...>)
+		&& (std::is_rvalue_reference_v<It> && ...)
+		;
 
-	template <typename ...It>
+	template <typename ... It>
 	concept IsVReference =
-	CustomConstraint
-	&& (IsLReference<It...>)
-	&& (!std::is_const_v<std::remove_reference_t<It>> && ...)
-	;
+		CustomConstraint
+		&& (IsLReference<It ...>)
+		&& (!std::is_const_v<std::remove_reference_t<It>> && ...)
+		;
 
-	template <typename ...It>
+	template <typename ... It>
 	concept IsCReference =
-	CustomConstraint
-	&& (IsLReference<It...>)
-	&& (!std::is_const_v<std::remove_reference_t<It>> && ...)
-	;
+		CustomConstraint
+		&& (IsLReference<It ...>)
+		&& (!std::is_const_v<std::remove_reference_t<It>> && ...)
+		;
 
-	template <typename ...It>
+	template <typename ... It>
 	concept IsMReference =
-	CustomConstraint
-	&& (IsRReference<It...>)
-	;
+		CustomConstraint
+		&& (IsRReference<It ...>)
+		;
 
 	// ----------------
 
-	template <typename ...It>
+	template <typename ... It>
 	concept IsPure =
-	CustomConstraint
-	&& (IsAnything<It...>)
-	&& (std::is_same_v<It, std::remove_cvref_t<It>> && ...)
-	;
+		CustomConstraint
+		&& (IsAnything<It ...>)
+		&& (std::is_same_v<It, std::remove_cvref_t<It>> && ...)
+		;
 
-	template <typename ...It>
+	template <typename ... It>
 	concept IsPureInstance =
-	CustomConstraint
-	&& (IsPure<It...>)
-	&& (IsInstance<It> && ...)
-	;
+		CustomConstraint
+		&& (IsPure<It ...>)
+		&& (IsInstance<It> && ...)
+		;
 
 	// ----------------
 
-	template <typename ...It>
+	template <typename ... It>
 	concept IsPointable =
-	CustomConstraint
-	&& (IsAnything<It...>)
-	&& (!IsReference<It> && ...)
-	;
+		CustomConstraint
+		&& (IsAnything<It ...>)
+		&& (!IsReference<It> && ...)
+		;
 
 	#pragma endregion
 
 	#pragma region utility
 
-	template <typename It, typename ...Alternative>
+	template <typename It, typename ... Alternative>
 	concept IsSame =
-	CategoryConstraint<IsAnything<It> && IsAnything<Alternative...>>
-	&& (std::is_same_v<It, Alternative> || ...)
-	;
+		CategoryConstraint<IsAnything<It> && IsAnything<Alternative ...>>
+		&& (std::is_same_v<It, Alternative> || ...)
+		;
 
-	template <auto it, typename ...Alternative>
+	template <auto it, typename ... Alternative>
 	concept IsSameV =
-	CategoryConstraint<IsAnything<Alternative...>>
-	&& (std::is_same_v<decltype(it), Alternative> || ...)
-	;
+		CategoryConstraint<IsAnything<Alternative ...>>
+		&& (std::is_same_v<std::remove_cv_t<decltype(it)>, Alternative> || ...)
+		;
 
 	// ----------------
 
-	template <auto index, typename ...Alternative> requires
-		CategoryConstraint<IsAnything<Alternative...>>
+	template <auto index, typename ... Alternative> requires
+		CategoryConstraint<IsAnything<Alternative ...>>
 		&& (IsSameV<index, ZSize>)
 		&& (index < sizeof...(Alternative))
-	using AsSelect = std::tuple_element_t<index, std::tuple<Alternative...>>;
+	using AsSelect = std::tuple_element_t<index, std::tuple<Alternative ...>>;
 
 	template <auto condition, typename TrulyAlternative, typename FalsyAlternative> requires
 		CategoryConstraint<IsAnything<TrulyAlternative> && IsAnything<FalsyAlternative>>
@@ -271,7 +271,7 @@ namespace TwinKleS::Core::Trait {
 
 	#pragma endregion
 
-	#pragma region misc
+	#pragma region miscellaneous
 
 	template <typename It, auto condition> requires
 		CategoryConstraint<IsAnything<It>>

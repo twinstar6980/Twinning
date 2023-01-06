@@ -2,7 +2,7 @@
 
 #include "core/utility/base_wrapper/wrapper.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
@@ -11,16 +11,16 @@ namespace TwinKleS::Core {
 		&& (IsNumberWrapper<TNumber>)
 	class NumberIterator {
 
-	public: //
+	public:
 
 		using Number = TNumber;
 
-	protected: //
+	protected:
 
 		Number m_value;
 		Number m_step;
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -79,7 +79,7 @@ namespace TwinKleS::Core {
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region operator
 

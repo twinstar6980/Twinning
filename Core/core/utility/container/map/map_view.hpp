@@ -1,10 +1,10 @@
 #pragma once
 
 #include "core/utility/container/list/list_view.hpp"
-#include "core/utility/misc/kv_pair.hpp"
+#include "core/utility/miscellaneous/kv_pair.hpp"
 #include "core/utility/container/optional/optional.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
@@ -14,13 +14,13 @@ namespace TwinKleS::Core {
 	class MapView :
 		protected ListView<KVPair<TKey, TValue>, t_constant> {
 
-	private: //
+	private:
 
 		using CView = MapView<TKey, TValue, true>;
 
 		using ListView = ListView<KVPair<TKey, TValue>, t_constant>;
 
-	public: //
+	public:
 
 		using Key = TKey;
 
@@ -38,7 +38,7 @@ namespace TwinKleS::Core {
 
 		using typename ListView::QIterator;
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -236,7 +236,7 @@ namespace TwinKleS::Core {
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region operator
 

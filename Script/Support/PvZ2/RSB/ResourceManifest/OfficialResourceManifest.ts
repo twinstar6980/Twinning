@@ -1,5 +1,5 @@
 /** PvZ2数据包中原生的资源清单 */
-namespace TwinKleS.Support.PvZ2.RSB.OfficialResourceManifest {
+namespace TwinStar.Support.PvZ2.RSB.OfficialResourceManifest {
 
 	// ------------------------------------------------
 

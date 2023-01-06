@@ -1,15 +1,15 @@
 #pragma once
 
 #include "core/utility/file_system/path.hpp"
-#include "core/utility/misc/finalizer.hpp"
-#include "core/utility/misc/byte_series/container.hpp"
-#include "core/utility/misc/byte_series/stream.hpp"
-#include "core/utility/misc/character_series/stream.hpp"
+#include "core/utility/miscellaneous/finalizer.hpp"
+#include "core/utility/miscellaneous/byte_series/container.hpp"
+#include "core/utility/miscellaneous/byte_series/stream.hpp"
+#include "core/utility/miscellaneous/character_series/stream.hpp"
 #include "core/utility/exception/base_exception/base_exception.hpp"
 #include "core/utility/exception/base_exception/utility.hpp"
 #include <filesystem>
 
-namespace TwinKleS::Core::FileSystem {
+namespace TwinStar::Core::FileSystem {
 
 	#pragma region declaration
 
@@ -89,11 +89,11 @@ namespace TwinKleS::Core::FileSystem {
 
 		class FileHandler {
 
-		protected: //
+		protected:
 
 			Pointer<std::FILE> m_value;
 
-		protected: //
+		protected:
 
 			#pragma region structor
 
@@ -105,7 +105,7 @@ namespace TwinKleS::Core::FileSystem {
 
 			#pragma endregion
 
-		public: //
+		public:
 
 			#pragma region structor
 
@@ -155,7 +155,7 @@ namespace TwinKleS::Core::FileSystem {
 
 			#pragma endregion
 
-		public: //
+		public:
 
 			#pragma region open
 
@@ -186,12 +186,15 @@ namespace TwinKleS::Core::FileSystem {
 
 		#pragma region type
 
-		enum class ObjectType : ZIntegerU8 {
-			none,
-			file,
-			directory,
-			other,
-		};
+		M_enumeration(
+			M_wrap(ObjectType),
+			M_wrap(
+				none,
+				file,
+				directory,
+				other,
+			),
+		);
 
 		// ----------------
 
@@ -200,21 +203,20 @@ namespace TwinKleS::Core::FileSystem {
 		) -> ObjectType {
 			auto result = ObjectType{};
 			switch (type) {
-				default : {
-					result = ObjectType::other;
-					break;
-				}
 				case std::filesystem::file_type::not_found : {
-					result = ObjectType::none;
+					result = ObjectType::Constant::none();
 					break;
 				}
 				case std::filesystem::file_type::regular : {
-					result = ObjectType::file;
+					result = ObjectType::Constant::file();
 					break;
 				}
 				case std::filesystem::file_type::directory : {
-					result = ObjectType::directory;
+					result = ObjectType::Constant::directory();
 					break;
+				}
+				default : {
+					result = ObjectType::Constant::other();
 				}
 			}
 			return result;
@@ -236,11 +238,14 @@ namespace TwinKleS::Core::FileSystem {
 
 		#pragma region iterate
 
-		enum class FilterType : ZIntegerU8 {
-			any,
-			file,
-			directory,
-		};
+		M_enumeration(
+			M_wrap(FilterType),
+			M_wrap(
+				any,
+				file,
+				directory,
+			),
+		);
 
 		// ----------------
 
@@ -260,20 +265,20 @@ namespace TwinKleS::Core::FileSystem {
 				for (auto & entry : std::filesystem::directory_iterator{make_std_path(target)}) {
 					auto name = make_string(entry.path().filename().string());
 					auto type = get_type(entry.status().type());
-					if constexpr (filter == FilterType::any) {
-						if (type == ObjectType::file || type == ObjectType::directory) {
+					if constexpr (filter == FilterType::Constant::any()) {
+						if (type == ObjectType::Constant::file() || type == ObjectType::Constant::directory()) {
 							++result;
 						}
-					} else if constexpr (filter == FilterType::file) {
-						if (type == ObjectType::file) {
+					} else if constexpr (filter == FilterType::Constant::file()) {
+						if (type == ObjectType::Constant::file()) {
 							++result;
 						}
-					} else if constexpr (filter == FilterType::directory) {
-						if (type == ObjectType::directory) {
+					} else if constexpr (filter == FilterType::Constant::directory()) {
+						if (type == ObjectType::Constant::directory()) {
 							++result;
 						}
 					}
-					if (type == ObjectType::directory) {
+					if (type == ObjectType::Constant::directory()) {
 						result += count<filter>(target / name, depth, current_depth + k_next_index);
 					}
 				}
@@ -299,20 +304,20 @@ namespace TwinKleS::Core::FileSystem {
 				for (auto & entry : std::filesystem::directory_iterator{make_std_path(target)}) {
 					auto name = make_string(entry.path().filename().string());
 					auto type = get_type(entry.status().type());
-					if constexpr (filter == FilterType::any) {
-						if (type == ObjectType::file || type == ObjectType::directory) {
+					if constexpr (filter == FilterType::Constant::any()) {
+						if (type == ObjectType::Constant::file() || type == ObjectType::Constant::directory()) {
 							result.append(current_target / name);
 						}
-					} else if constexpr (filter == FilterType::file) {
-						if (type == ObjectType::file) {
+					} else if constexpr (filter == FilterType::Constant::file()) {
+						if (type == ObjectType::Constant::file()) {
 							result.append(current_target / name);
 						}
-					} else if constexpr (filter == FilterType::directory) {
-						if (type == ObjectType::directory) {
+					} else if constexpr (filter == FilterType::Constant::directory()) {
+						if (type == ObjectType::Constant::directory()) {
 							result.append(current_target / name);
 						}
 					}
-					if (type == ObjectType::directory) {
+					if (type == ObjectType::Constant::directory()) {
 						list<filter>(target / name, depth, result, current_target / name, current_depth + k_next_index);
 					}
 				}
@@ -332,21 +337,21 @@ namespace TwinKleS::Core::FileSystem {
 		Path const & target
 	) -> Boolean {
 		auto type = Detail::get_type(target);
-		return type == Detail::ObjectType::file || type == Detail::ObjectType::directory;
+		return type == Detail::ObjectType::Constant::file() || type == Detail::ObjectType::Constant::directory();
 	}
 
 	inline auto exist_file (
 		Path const & target
 	) -> Boolean {
 		auto type = Detail::get_type(target);
-		return type == Detail::ObjectType::file;
+		return type == Detail::ObjectType::Constant::file();
 	}
 
 	inline auto exist_directory (
 		Path const & target
 	) -> Boolean {
 		auto type = Detail::get_type(target);
-		return type == Detail::ObjectType::directory;
+		return type == Detail::ObjectType::Constant::directory();
 	}
 
 	#pragma endregion
@@ -355,14 +360,14 @@ namespace TwinKleS::Core::FileSystem {
 
 	inline auto copy (
 		Path const & source,
-		Path const & dest
+		Path const & destination
 	) -> Void {
 		assert_condition(exist(source));
-		if (!dest.sub_path().empty() && !exist_directory(dest.parent())) {
-			create_directory(dest.parent());
+		if (!destination.sub_path().empty() && !exist_directory(destination.parent())) {
+			create_directory(destination.parent());
 		}
 		try {
-			std::filesystem::copy(Detail::make_std_path(source), Detail::make_std_path(dest), std::filesystem::copy_options::recursive | std::filesystem::copy_options::overwrite_existing);
+			std::filesystem::copy(Detail::make_std_path(source), Detail::make_std_path(destination), std::filesystem::copy_options::recursive | std::filesystem::copy_options::overwrite_existing);
 		} catch (std::filesystem::filesystem_error & error) {
 			throw BaseException{{"^ std::filesystem::copy : {}"_sf(message_of_std_error_code(error.code()))}};
 		}
@@ -371,32 +376,13 @@ namespace TwinKleS::Core::FileSystem {
 
 	inline auto rename (
 		Path const & source,
-		Path const & dest
+		Path const & destination
 	) -> Void {
-		// todo : on Android system, filesystem::rename can not success if it's alpha equal by ignore case
-		#if false && defined M_system_android
-				if (!old_name.equal_icase(new_name)) {
-					std::filesystem::rename(to_fs_path(parent_directory + old_name), to_fs_path(parent_directory + new_name));
-				} else {
-					while (k_true) {
-						auto random_number = Tool::random_iu32();
-						auto temporary_path = parent_directory + "{}"_sf(random_number);
-						if (exist_path(temporary_path)) {
-							continue;
-						} else {
-							std::filesystem::rename(to_fs_path(parent_directory + old_name), to_fs_path(temporary_path));
-							std::filesystem::rename(to_fs_path(temporary_path), to_fs_path(parent_directory + new_name));
-							break;
-						}
-					}
-				}
-		#else
 		try {
-			std::filesystem::rename(Detail::make_std_path(source), Detail::make_std_path(dest));
+			std::filesystem::rename(Detail::make_std_path(source), Detail::make_std_path(destination));
 		} catch (std::filesystem::filesystem_error & error) {
 			throw BaseException{{"^ std::filesystem::rename : {}"_sf(message_of_std_error_code(error.code()))}};
 		}
-		#endif
 		return;
 	}
 
@@ -568,21 +554,21 @@ namespace TwinKleS::Core::FileSystem {
 		Path const &           target,
 		Optional<Size> const & depth = k_null_optional
 	) -> Size {
-		return Detail::count<Detail::FilterType::any>(target, depth);
+		return Detail::count<Detail::FilterType::Constant::any()>(target, depth);
 	}
 
 	inline auto count_file (
 		Path const &           target,
 		Optional<Size> const & depth = k_null_optional
 	) -> Size {
-		return Detail::count<Detail::FilterType::file>(target, depth);
+		return Detail::count<Detail::FilterType::Constant::file()>(target, depth);
 	}
 
 	inline auto count_directory (
 		Path const &           target,
 		Optional<Size> const & depth = k_null_optional
 	) -> Size {
-		return Detail::count<Detail::FilterType::directory>(target, depth);
+		return Detail::count<Detail::FilterType::Constant::directory()>(target, depth);
 	}
 
 	// ----------------
@@ -592,7 +578,7 @@ namespace TwinKleS::Core::FileSystem {
 		Optional<Size> const & depth = k_null_optional
 	) -> List<Path> {
 		auto result = List<Path>{};
-		Detail::list<Detail::FilterType::any>(target, depth, result);
+		Detail::list<Detail::FilterType::Constant::any()>(target, depth, result);
 		return result;
 	}
 
@@ -601,7 +587,7 @@ namespace TwinKleS::Core::FileSystem {
 		Optional<Size> const & depth = k_null_optional
 	) -> List<Path> {
 		auto result = List<Path>{};
-		Detail::list<Detail::FilterType::file>(target, depth, result);
+		Detail::list<Detail::FilterType::Constant::file()>(target, depth, result);
 		return result;
 	}
 
@@ -610,7 +596,7 @@ namespace TwinKleS::Core::FileSystem {
 		Optional<Size> const & depth = k_null_optional
 	) -> List<Path> {
 		auto result = List<Path>{};
-		Detail::list<Detail::FilterType::directory>(target, depth, result);
+		Detail::list<Detail::FilterType::Constant::directory()>(target, depth, result);
 		return result;
 	}
 

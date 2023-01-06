@@ -3,228 +3,285 @@
 #include "core/utility/utility.hpp"
 #include "core/tool/popcap/reanim/version.hpp"
 #include "core/tool/popcap/reanim/manifest.hpp"
-#include "core/tool/popcap/reanim/structure.hpp"
 
-namespace TwinKleS::Core::Tool::PopCap::Reanim {
+namespace TwinStar::Core::Tool::PopCap::Reanim {
 
-	inline namespace CommonOfEncode {
+	template <auto version> requires (check_version(version, {}, {}))
+	struct EncodeCommon {
 
-		namespace Detail {
+	protected:
 
+		using Manifest = Manifest<version>;
+
+		// ----------------
+
+		using MagicIdentifier = IntegerU32;
+
+		inline static constexpr auto k_magic_identifier = [] {
+			if constexpr (check_version(version, {VersionPlatform::Constant::desktop()}, {false})) {
+				return MagicIdentifier{0xB393B4C0_iu32};
+			}
+			if constexpr (check_version(version, {VersionPlatform::Constant::phone()}, {false})) {
+				return MagicIdentifier{0xFF2565B5_iu32};
+			}
+			if constexpr (check_version(version, {VersionPlatform::Constant::phone()}, {true})) {
+				return MagicIdentifier{0xC046E570_iu32};
+			}
+		}();
+
+		// ----------------
+
+		using IntegerOfPlatform = AsSwitch<version.variant_64.value, IntegerU64, IntegerU32>;
+
+		// ----------------
+
+		inline static constexpr auto k_track_data_size = Size{bs_static_size<IntegerOfPlatform>() + bs_static_size<IntegerOfPlatform>() + (version.platform == VersionPlatform::Constant::phone() ? (bs_static_size<IntegerOfPlatform>()) : (k_none_size)) + bs_static_size<IntegerOfPlatform>()};
+
+		inline static constexpr auto k_t_data_size = Size{bs_static_size<Floating32>() * 8_sz + bs_static_size<IntegerOfPlatform>() * 3_sz};
+
+	};
+
+	template <auto version> requires (check_version(version, {}, {}))
+	struct Encode :
+		EncodeCommon<version> {
+
+	protected:
+
+		using Common = EncodeCommon<version>;
+
+		using typename Common::Manifest;
+
+		using typename Common::MagicIdentifier;
+
+		using Common::k_magic_identifier;
+
+		using typename Common::IntegerOfPlatform;
+
+		using Common::k_track_data_size;
+
+		using Common::k_t_data_size;
+
+		// ----------------
+
+		static auto exchange_integer_platform (
+			OByteStreamView & data,
+			Integer const &   value
+		) -> Void {
+			data.write(cbw<IntegerOfPlatform>(value));
+			return;
 		}
 
-	}
-
-	namespace Encode {
-
-		namespace Detail {
-
-			#pragma region using
-
-			using namespace CommonOfEncode::Detail;
-
-			#pragma endregion
-
-			#pragma region process
-
-			template <auto version> requires
-				CategoryConstraint<>
-				&& (IsSameV<version, Version>)
-				&& (VersionEnum::has(version))
-			inline auto process_animation (
-				OByteStreamView &                    data,
-				Manifest::Animation<version> const & manifest
-			) -> Void {
-				using IntegerOfPlatform = AsSwitch<version.variant_64.value, IntegerU64, IntegerU32>;
-				if constexpr (version.platform == Version::Platform::desktop) {
-					data.write(Structure::k_magic_identifier_desktop_32);
-				}
-				if constexpr (version.platform == Version::Platform::phone) {
-					data.write(!version.variant_64 ? (Structure::k_magic_identifier_phone_32) : (Structure::k_magic_identifier_phone_64));
-				}
-				data.write(IntegerOfPlatform{});
-				data.write(cbw<IntegerU32>(manifest.track.size()));
-				data.write(cbw<Floating32>(manifest.fps));
-				data.write(IntegerOfPlatform{});
-				data.write(cbw<IntegerU32>(bs_static_size<IntegerOfPlatform>() + bs_static_size<IntegerOfPlatform>() + (version.platform == Version::Platform::phone ? (bs_static_size<IntegerOfPlatform>()) : (k_none_size)) + bs_static_size<IntegerOfPlatform>()));
-				for (auto & track_manifest : manifest.track) {
-					data.write(IntegerOfPlatform{});
-					data.write(IntegerOfPlatform{});
-					if constexpr (version.platform == Version::Platform::phone) {
-						data.write(IntegerOfPlatform{});
-					}
-					data.write(cbw<IntegerOfPlatform>(track_manifest.t.size()));
-				}
-				for (auto & track_manifest : manifest.track) {
-					data.write(self_cast<StringBlock32>(track_manifest.name));
-					data.write(cbw<IntegerU32>(bs_static_size<Floating32>() * 8_sz + bs_static_size<IntegerOfPlatform>() * 3_sz));
-					for (auto & t_manifest : track_manifest.t) {
-						data.write(cbw<Floating32>(t_manifest.x));
-						data.write(cbw<Floating32>(t_manifest.y));
-						data.write(cbw<Floating32>(t_manifest.kx));
-						data.write(cbw<Floating32>(t_manifest.ky));
-						data.write(cbw<Floating32>(t_manifest.sx));
-						data.write(cbw<Floating32>(t_manifest.sy));
-						data.write(cbw<Floating32>(t_manifest.f));
-						data.write(cbw<Floating32>(t_manifest.a));
-						data.write(IntegerOfPlatform{});
-						data.write(IntegerOfPlatform{});
-						data.write(IntegerOfPlatform{});
-					}
-					for (auto & t_manifest : track_manifest.t) {
-						if constexpr (version.platform == Version::Platform::desktop) {
-							data.write(self_cast<StringBlock32>(t_manifest.i));
-						}
-						if constexpr (version.platform == Version::Platform::phone) {
-							data.write(cbw<IntegerU32>(t_manifest.i));
-						}
-						data.write(self_cast<StringBlock32>(t_manifest.font));
-						data.write(self_cast<StringBlock32>(t_manifest.text));
-					}
-				}
-				return;
-			}
-
-			// ----------------
-
-			template <auto version> requires
-				CategoryConstraint<>
-				&& (IsSameV<version, Version>)
-				&& (VersionEnum::has(version))
-			inline auto process (
-				OByteStreamView &                    data,
-				Manifest::Animation<version> const & manifest
-			) -> Void {
-				process_animation<version>(data, manifest);
-				return;
-			}
-
-			inline auto process (
-				OByteStreamView &                  data,
-				Manifest::AnimationVariant const & manifest,
-				Version const &                    version
-			) -> Void {
-				Generalization::execute<VersionEnum>(
-					version,
-					[&] <auto index, auto version> (ValuePackage<index, version>) {
-						process<version>(data, manifest.get<Manifest::Animation<version>>());
-					}
-				);
-				return;
-			}
-
-			#pragma endregion
-
+		static auto exchange_integer (
+			OByteStreamView & data,
+			Integer const &   value
+		) -> Void {
+			data.write(cbw<IntegerU32>(value));
+			return;
 		}
 
-		using Detail::process;
-
-	}
-
-	namespace Decode {
-
-		namespace Detail {
-
-			#pragma region using
-
-			using namespace CommonOfEncode::Detail;
-
-			#pragma endregion
-
-			#pragma region process
-
-			template <auto version> requires
-				CategoryConstraint<>
-				&& (IsSameV<version, Version>)
-				&& (VersionEnum::has(version))
-			inline auto process_animation (
-				IByteStreamView &              data,
-				Manifest::Animation<version> & manifest
-			) -> Void {
-				using IntegerOfPlatform = AsSwitch<version.variant_64.value, IntegerU64, IntegerU32>;
-				if constexpr (version.platform == Version::Platform::desktop) {
-					assert_condition(data.read_of<Structure::MagicIdentifier>() == Structure::k_magic_identifier_desktop_32);
-				}
-				if constexpr (version.platform == Version::Platform::phone) {
-					assert_condition(data.read_of<Structure::MagicIdentifier>() == (!version.variant_64 ? (Structure::k_magic_identifier_phone_32) : (Structure::k_magic_identifier_phone_64)));
-				}
-				data.read_of<IntegerOfPlatform>();
-				manifest.track.allocate_full(cbw<Size>(data.read_of<IntegerU32>()));
-				manifest.fps = cbw<Floating>(data.read_of<Floating32>());
-				data.read_of<IntegerOfPlatform>();
-				assert_condition(data.read_of<IntegerU32>() == cbw<IntegerU32>(bs_static_size<IntegerOfPlatform>() + bs_static_size<IntegerOfPlatform>() + (version.platform == Version::Platform::phone ? (bs_static_size<IntegerOfPlatform>()) : (k_none_size)) + bs_static_size<IntegerOfPlatform>()));
-				for (auto & track_manifest : manifest.track) {
-					data.read_of<IntegerOfPlatform>();
-					data.read_of<IntegerOfPlatform>();
-					if constexpr (version.platform == Version::Platform::phone) {
-						data.read_of<IntegerOfPlatform>();
-					}
-					track_manifest.t.allocate_full(cbw<Size>(data.read_of<IntegerOfPlatform>()));
-				}
-				for (auto & track_manifest : manifest.track) {
-					track_manifest.name = data.read_of<StringBlock32>().value;
-					assert_condition(data.read_of<IntegerU32>() == cbw<IntegerU32>(bs_static_size<Floating32>() * 8_sz + bs_static_size<IntegerOfPlatform>() * 3_sz));
-					for (auto & t_manifest : track_manifest.t) {
-						t_manifest.x = cbw<Floating>(data.read_of<Floating32>());
-						t_manifest.y = cbw<Floating>(data.read_of<Floating32>());
-						t_manifest.kx = cbw<Floating>(data.read_of<Floating32>());
-						t_manifest.ky = cbw<Floating>(data.read_of<Floating32>());
-						t_manifest.sx = cbw<Floating>(data.read_of<Floating32>());
-						t_manifest.sy = cbw<Floating>(data.read_of<Floating32>());
-						t_manifest.f = cbw<Floating>(data.read_of<Floating32>());
-						t_manifest.a = cbw<Floating>(data.read_of<Floating32>());
-						data.read_of<IntegerOfPlatform>();
-						data.read_of<IntegerOfPlatform>();
-						data.read_of<IntegerOfPlatform>();
-					}
-					for (auto & t_manifest : track_manifest.t) {
-						if constexpr (version.platform == Version::Platform::desktop) {
-							t_manifest.i = data.read_of<StringBlock32>().value;
-						}
-						if constexpr (version.platform == Version::Platform::phone) {
-							t_manifest.i = cbw<Integer>(data.read_of<IntegerU32>());
-						}
-						t_manifest.font = data.read_of<StringBlock32>().value;
-						t_manifest.text = data.read_of<StringBlock32>().value;
-					}
-				}
-				return;
-			}
-
-			// ----------------
-
-			template <auto version> requires
-				CategoryConstraint<>
-				&& (IsSameV<version, Version>)
-				&& (VersionEnum::has(version))
-			inline auto process (
-				IByteStreamView &              data,
-				Manifest::Animation<version> & manifest
-			) -> Void {
-				process_animation<version>(data, manifest);
-				return;
-			}
-
-			inline auto process (
-				IByteStreamView &            data,
-				Manifest::AnimationVariant & manifest,
-				Version const &              version
-			) -> Void {
-				Generalization::execute<VersionEnum>(
-					version,
-					[&] <auto index, auto version> (ValuePackage<index, version>) {
-						process<version>(data, manifest.set<Manifest::Animation<version>>());
-					}
-				);
-				return;
-			}
-
-			#pragma endregion
-
+		static auto exchange_floating (
+			OByteStreamView & data,
+			Floating const &  value
+		) -> Void {
+			data.write(cbw<Floating32>(value));
+			return;
 		}
 
-		using Detail::process;
+		static auto exchange_string (
+			OByteStreamView & data,
+			String const &    value
+		) -> Void {
+			data.write(self_cast<StringBlock32>(value));
+			return;
+		}
 
-	}
+		// ----------------
+
+		static auto process_animation (
+			OByteStreamView &                    animation_data,
+			typename Manifest::Animation const & animation_manifest
+		) -> Void {
+			auto integer_of_platform = Integer{};
+			animation_data.write(k_magic_identifier);
+			exchange_integer_platform(animation_data, integer_of_platform);
+			exchange_integer(animation_data, cbw<Integer>(animation_manifest.track.size()));
+			exchange_floating(animation_data, animation_manifest.fps);
+			exchange_integer_platform(animation_data, integer_of_platform);
+			exchange_integer(animation_data, cbw<Integer>(k_track_data_size));
+			for (auto & track_manifest : animation_manifest.track) {
+				exchange_integer_platform(animation_data, integer_of_platform);
+				exchange_integer_platform(animation_data, integer_of_platform);
+				if constexpr (version.platform == VersionPlatform::Constant::phone()) {
+					exchange_integer_platform(animation_data, integer_of_platform);
+				}
+				exchange_integer_platform(animation_data, cbw<Integer>(track_manifest.t.size()));
+			}
+			for (auto & track_manifest : animation_manifest.track) {
+				exchange_string(animation_data, track_manifest.name);
+				exchange_integer(animation_data, cbw<Integer>(k_t_data_size));
+				for (auto & t_manifest : track_manifest.t) {
+					exchange_floating(animation_data, t_manifest.x);
+					exchange_floating(animation_data, t_manifest.y);
+					exchange_floating(animation_data, t_manifest.kx);
+					exchange_floating(animation_data, t_manifest.ky);
+					exchange_floating(animation_data, t_manifest.sx);
+					exchange_floating(animation_data, t_manifest.sy);
+					exchange_floating(animation_data, t_manifest.f);
+					exchange_floating(animation_data, t_manifest.a);
+					exchange_integer_platform(animation_data, integer_of_platform);
+					exchange_integer_platform(animation_data, integer_of_platform);
+					exchange_integer_platform(animation_data, integer_of_platform);
+				}
+				for (auto & t_manifest : track_manifest.t) {
+					if constexpr (version.platform == VersionPlatform::Constant::desktop()) {
+						exchange_string(animation_data, t_manifest.i);
+					}
+					if constexpr (version.platform == VersionPlatform::Constant::phone()) {
+						exchange_integer(animation_data, t_manifest.i);
+					}
+					exchange_string(animation_data, t_manifest.font);
+					exchange_string(animation_data, t_manifest.text);
+				}
+			}
+			return;
+		}
+
+	public:
+
+		static auto do_process_animation (
+			OByteStreamView &                    animation_data_,
+			typename Manifest::Animation const & animation_manifest
+		) -> Void {
+			M_use_zps_of(animation_data);
+			return process_animation(animation_data, animation_manifest);
+		}
+
+	};
+
+	template <auto version> requires (check_version(version, {}, {}))
+	struct Decode :
+		EncodeCommon<version> {
+
+	protected:
+
+		using Common = EncodeCommon<version>;
+
+		using typename Common::Manifest;
+
+		using typename Common::MagicIdentifier;
+
+		using Common::k_magic_identifier;
+
+		using typename Common::IntegerOfPlatform;
+
+		using Common::k_track_data_size;
+
+		using Common::k_t_data_size;
+
+		// ----------------
+
+		static auto exchange_integer_platform (
+			IByteStreamView & data,
+			Integer &         value
+		) -> Void {
+			value = cbw<Integer>(data.read_of<IntegerOfPlatform>());
+			return;
+		}
+
+		static auto exchange_integer (
+			IByteStreamView & data,
+			Integer &         value
+		) -> Void {
+			value = cbw<Integer>(data.read_of<IntegerU32>());
+			return;
+		}
+
+		static auto exchange_floating (
+			IByteStreamView & data,
+			Floating &        value
+		) -> Void {
+			value = cbw<Floating>(data.read_of<Floating32>());
+			return;
+		}
+
+		static auto exchange_string (
+			IByteStreamView & data,
+			String &          value
+		) -> Void {
+			data.read(self_cast<StringBlock32>(value));
+			return;
+		}
+
+		// ----------------
+
+		static auto process_animation (
+			IByteStreamView &              animation_data,
+			typename Manifest::Animation & animation_manifest
+		) -> Void {
+			auto integer_of_platform = Integer{};
+			assert_condition(animation_data.read_of<MagicIdentifier>() == k_magic_identifier);
+			exchange_integer_platform(animation_data, integer_of_platform);
+			auto track_count = Integer{};
+			exchange_integer(animation_data, track_count);
+			animation_manifest.track.allocate_full(cbw<Size>(track_count));
+			exchange_floating(animation_data, animation_manifest.fps);
+			exchange_integer_platform(animation_data, integer_of_platform);
+			auto track_data_size = Integer{};
+			exchange_integer(animation_data, track_data_size);
+			assert_condition(cbw<Size>(track_data_size) == k_track_data_size);
+			for (auto & track_manifest : animation_manifest.track) {
+				exchange_integer_platform(animation_data, integer_of_platform);
+				exchange_integer_platform(animation_data, integer_of_platform);
+				if constexpr (version.platform == VersionPlatform::Constant::phone()) {
+					exchange_integer_platform(animation_data, integer_of_platform);
+				}
+				auto t_count = Integer{};
+				exchange_integer_platform(animation_data, t_count);
+				track_manifest.t.allocate_full(cbw<Size>(t_count));
+			}
+			for (auto & track_manifest : animation_manifest.track) {
+				exchange_string(animation_data, track_manifest.name);
+				auto t_data_size = Integer{};
+				exchange_integer(animation_data, t_data_size);
+				assert_condition(cbw<Size>(t_data_size) == k_t_data_size);
+				for (auto & t_manifest : track_manifest.t) {
+					exchange_floating(animation_data, t_manifest.x);
+					exchange_floating(animation_data, t_manifest.y);
+					exchange_floating(animation_data, t_manifest.kx);
+					exchange_floating(animation_data, t_manifest.ky);
+					exchange_floating(animation_data, t_manifest.sx);
+					exchange_floating(animation_data, t_manifest.sy);
+					exchange_floating(animation_data, t_manifest.f);
+					exchange_floating(animation_data, t_manifest.a);
+					exchange_integer_platform(animation_data, integer_of_platform);
+					exchange_integer_platform(animation_data, integer_of_platform);
+					exchange_integer_platform(animation_data, integer_of_platform);
+				}
+				for (auto & t_manifest : track_manifest.t) {
+					if constexpr (version.platform == VersionPlatform::Constant::desktop()) {
+						exchange_string(animation_data, t_manifest.i);
+					}
+					if constexpr (version.platform == VersionPlatform::Constant::phone()) {
+						exchange_integer(animation_data, t_manifest.i);
+					}
+					exchange_string(animation_data, t_manifest.font);
+					exchange_string(animation_data, t_manifest.text);
+				}
+			}
+			return;
+		}
+
+	public:
+
+		static auto do_process_animation (
+			IByteStreamView &              animation_data_,
+			typename Manifest::Animation & animation_manifest
+		) -> Void {
+			M_use_zps_of(animation_data);
+			restruct(animation_manifest);
+			return process_animation(animation_data, animation_manifest);
+		}
+
+	};
 
 }

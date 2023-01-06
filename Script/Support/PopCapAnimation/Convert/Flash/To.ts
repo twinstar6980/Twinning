@@ -1,5 +1,5 @@
 /** PAM转换自Flash */
-namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.To {
+namespace TwinStar.Support.PopCapAnimation.Convert.Flash.To {
 
 	// ------------------------------------------------
 
@@ -462,9 +462,9 @@ namespace TwinKleS.Support.PopCapAnimation.Convert.Flash.To {
 			image: flash.extra.image.map((e, i) => ({ name: e.name, size: e.size, transform: parse_image_document(flash.library.image[i], i) })),
 			sprite: flash.extra.sprite.map((e, i) => {
 				let frame = parse_sprite_document(flash.library.sprite[i], i);
-				return { name: e.name, frame_rate: Number(frame_rate), work_area: [0n, BigInt(frame.length)], frame: frame };
+				return { name: e.name, frame_rate: Number(frame_rate), work_area: [0n, BigInt(frame.length - 1)], frame: frame };
 			}),
-			main_sprite: { name: flash.extra.main_sprite!.name, frame_rate: Number(frame_rate), work_area: [0n, BigInt(main_sprite_frame.length)], frame: main_sprite_frame },
+			main_sprite: { name: flash.extra.main_sprite!.name, frame_rate: Number(frame_rate), work_area: [0n, BigInt(main_sprite_frame.length - 1)], frame: main_sprite_frame },
 		};
 	}
 

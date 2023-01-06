@@ -1,5 +1,5 @@
 /** PopCap-PAK资源打包 */
-namespace TwinKleS.Support.PopCapPAK.ResourcePack {
+namespace TwinStar.Support.PopCapPAK.ResourcePack {
 
 	// ------------------------------------------------
 
@@ -13,7 +13,7 @@ namespace TwinKleS.Support.PopCapPAK.ResourcePack {
 		version_number: [0n][number],
 		version_compress_resource_data: boolean,
 	): [Core.ByteArray, Core.Size] {
-		let version_c = Core.Tool.PopCap.PAK.Version.json(Core.JSON.Value.value({ number: version_number, compress_resource_data: version_compress_resource_data }));
+		let version_c = Core.Tool.PopCap.PAK.Version.value({ number: version_number, compress_resource_data: version_compress_resource_data });
 		let resource_list = CoreX.FileSystem.list_file(resource_directory);
 		let manifest_js: Core.Tool.PopCap.PAK.Manifest.JS_N.Package = {
 			resource: {},
@@ -32,8 +32,8 @@ namespace TwinKleS.Support.PopCapPAK.ResourcePack {
 		Console.notify('i', localized(`打包开始`), [localized(`共 {} 个资源文件`, resource_list.length)]);
 		let data = Core.ByteArray.allocate(Core.Size.value(BigInt(data_size_bound)));
 		let stream = Core.ByteStreamView.look(data.view());
-		let manifest = Core.Tool.PopCap.PAK.Manifest.PackageVariant.from_json(Core.JSON.Value.value(manifest_js), version_c);
-		Core.Tool.PopCap.PAK.Pack.process(stream, manifest, Core.Path.value(resource_directory), version_c);
+		let manifest = Core.Tool.PopCap.PAK.Manifest.Package.json(Core.JSON.Value.value(manifest_js), version_c);
+		Core.Tool.PopCap.PAK.Pack.process_package(stream, manifest, Core.Path.value(resource_directory), version_c);
 		Console.notify('s', localized(`打包完成`), []);
 		return [data, stream.position()];
 	}

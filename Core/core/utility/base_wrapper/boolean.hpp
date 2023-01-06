@@ -2,7 +2,7 @@
 
 #include "core/utility/base_wrapper/base.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
@@ -12,15 +12,15 @@ namespace TwinKleS::Core {
 	class BooleanWrapper :
 		public BaseWrapper<TValue> {
 
-	private: //
+	private:
 
 		using BaseWrapper = BaseWrapper<TValue>;
 
-	public: //
+	public:
 
 		using typename BaseWrapper::Value;
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -81,36 +81,19 @@ namespace TwinKleS::Core {
 
 	#pragma endregion
 
-	#pragma region alias
-
-	using Boolean8 = BooleanWrapper<ZBoolean8>;
-
-	// ----------------
-
-	M_simple_derived_class(Boolean, Boolean8, Boolean8);
-
-	#pragma endregion
-
 	#pragma region operator
 
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsBooleanWrapper<It>)
+	#if defined M_compiler_clang // NOTE : avoid clang bug
+		&& (IsDerivedFrom<It, BooleanWrapper<typename It::Value>>)
+	#endif
 	inline constexpr auto operator == (
 		It const & thix,
 		It const & that
-	) -> It {
-		return It{thix.value == that.value};
-	}
-
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsBooleanWrapper<It>)
-	inline constexpr auto operator != (
-		It const & thix,
-		It const & that
-	) -> It {
-		return !(thix == that);
+	) -> bool {
+		return thix.value == that.value;
 	}
 
 	// ----------------
@@ -118,11 +101,26 @@ namespace TwinKleS::Core {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsBooleanWrapper<It>)
+	#if defined M_compiler_clang // NOTE : avoid clang bug
+		&& (IsDerivedFrom<It, BooleanWrapper<typename It::Value>>)
+	#endif
 	inline constexpr auto operator ! (
 		It const & thix
 	) -> It {
 		return It{!thix.value};
 	}
+
+	#pragma endregion
+
+	#pragma region alias
+
+	using Boolean8 = BooleanWrapper<ZBoolean8>;
+
+	#pragma endregion
+
+	#pragma region regular type
+
+	M_simple_derived_class(Boolean, Boolean8, Boolean8);
 
 	#pragma endregion
 

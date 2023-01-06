@@ -4,18 +4,18 @@
 #include "shell/host/host.hpp"
 #include <iostream>
 
-namespace TwinKleS::Shell {
+namespace TwinStar::Shell {
 
 	#pragma region type
 
 	class CLIHost :
 		public Host {
 
-	protected: //
+	protected:
 
 		bool m_running;
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -94,6 +94,16 @@ namespace TwinKleS::Shell {
 					result.emplace_back(std::move(name));
 					break;
 				}
+				case hash_string("version"sv) : {
+					auto version = thiz.version();
+					result.emplace_back(std::to_string(version));
+					break;
+				}
+				case hash_string("system"sv) : {
+					auto system = thiz.system();
+					result.emplace_back(std::move(system));
+					break;
+				}
 				case hash_string("output"sv) : {
 					auto text = argument[1];
 					thiz.output(text);
@@ -123,22 +133,17 @@ namespace TwinKleS::Shell {
 
 		auto name (
 		) -> std::string {
-			#if defined M_system_windows
-			auto name = "windows.cli"s;
-			#endif
-			#if defined M_system_linux
-			auto name = "linux.cli"s;
-			#endif
-			#if defined M_system_macos
-			auto name = "macos.cli"s;
-			#endif
-			#if defined M_system_android
-			auto name = "android.cli"s;
-			#endif
-			#if defined M_system_ios
-			auto name = "ios.cli"s;
-			#endif
-			return name;
+			return "cli"s;
+		}
+
+		auto version (
+		) -> std::size_t {
+			return std::size_t{M_version};
+		}
+
+		auto system (
+		) -> std::string {
+			return std::string{M_system};
 		}
 
 		// ----------------

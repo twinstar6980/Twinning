@@ -1,5 +1,5 @@
 /** PvZ2 图像 */
-namespace TwinKleS.Support.PvZ2.Image {
+namespace TwinStar.Support.PvZ2.Image {
 
 	// ------------------------------------------------
 

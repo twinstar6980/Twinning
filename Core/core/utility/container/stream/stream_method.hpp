@@ -2,26 +2,19 @@
 
 #include "core/utility/container/list/list_view.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
-	enum class StreamMethod : ZIntegerU8 {
-		io,
-		i,
-		o,
-	};
+	M_enumeration(
+		M_wrap(StreamMethod),
+		M_wrap(
+			io,
+			i,
+			o,
+		),
+	);
 
 	#pragma endregion
-
-}
-
-namespace TwinKleS::Core::Trait::Reflection {
-
-	M_reflection_enum(
-		M_wrap(StreamMethod),
-		M_wrap(StreamMethod),
-		M_wrap(io, i, o),
-	);
 
 }

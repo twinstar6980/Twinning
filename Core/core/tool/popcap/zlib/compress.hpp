@@ -1,150 +1,183 @@
 #pragma once
 
 #include "core/utility/utility.hpp"
-#include "core/tool/popcap/zlib/structure.hpp"
+#include "core/tool/popcap/zlib/version.hpp"
+#include "core/tool/data/compress/deflate.hpp"
 
-namespace TwinKleS::Core::Tool::PopCap::ZLib {
+namespace TwinStar::Core::Tool::PopCap::ZLib {
 
-	inline namespace CommonOfCompress {
+	template <auto version> requires (check_version(version, {}))
+	struct CompressCommon {
 
-		namespace Detail {
+	protected:
 
+		using MagicIdentifier = IntegerU32;
+
+		inline static constexpr auto k_magic_identifier = MagicIdentifier{0xDEADFED4_iu32};
+
+	};
+
+	template <auto version> requires (check_version(version, {}))
+	struct Compress :
+		CompressCommon<version> {
+
+	protected:
+
+		using Common = CompressCommon<version>;
+
+		using typename Common::MagicIdentifier;
+
+		using Common::k_magic_identifier;
+
+		// ----------------
+
+		static auto compute_size_bound (
+			Size const & raw_size,
+			Size &       ripe_size_bound,
+			Size const & window_bits,
+			Size const & memory_level
+		) -> Void {
+			ripe_size_bound = k_none_size;
+			ripe_size_bound += bs_static_size<MagicIdentifier>();
+			if constexpr (version.variant_64) {
+				ripe_size_bound += bs_static_size<IntegerU32>();
+			}
+			if constexpr (!version.variant_64) {
+				ripe_size_bound += bs_static_size<IntegerU32>();
+			} else {
+				ripe_size_bound += bs_static_size<IntegerU64>();
+			}
+			auto ripe_data_size_bound = Size{};
+			Data::Compress::Deflate::Compress::do_compute_size_bound(raw_size, ripe_data_size_bound, window_bits, memory_level, Data::Compress::Deflate::Wrapper::Constant::zlib());
+			ripe_size_bound += ripe_data_size_bound;
+			return;
 		}
 
-	}
+		// ----------------
 
-	namespace Compress {
-
-		namespace Detail {
-
-			#pragma region using
-
-			using namespace CommonOfCompress::Detail;
-
-			#pragma endregion
-
-			#pragma region compute size
-
-			inline auto compute_size_bound (
-				Size const &    raw_size,
-				Size const &    window_bits,
-				Size const &    memory_level,
-				Boolean const & variant_64
-			) -> Size {
-				auto size = k_none_size;
-				size += bs_static_size<Structure::MagicIdentifier>();
-				if (variant_64) {
-					size += bs_static_size<IntegerU32>();
-				}
-				if (!variant_64) {
-					size += bs_static_size<IntegerU32>();
-				} else {
-					size += bs_static_size<IntegerU64>();
-				}
-				size += Data::Compress::Deflate::Compress::compute_size_bound(raw_size, window_bits, memory_level, Data::Compress::Deflate::Wrapper::zlib);
-				return size;
+		static auto process_whole (
+			IByteStreamView &                         raw,
+			OByteStreamView &                         ripe,
+			Size const &                              level,
+			Size const &                              window_bits,
+			Size const &                              memory_level,
+			Data::Compress::Deflate::Strategy const & strategy
+		) -> Void {
+			ripe.write(k_magic_identifier);
+			if constexpr (version.variant_64) {
+				ripe.forward(bs_static_size<IntegerU32>());
 			}
-
-			#pragma endregion
-
-			#pragma region process
-
-			inline auto process (
-				IByteStreamView &                         raw,
-				OByteStreamView &                         ripe,
-				Size const &                              level,
-				Size const &                              window_bits,
-				Size const &                              memory_level,
-				Data::Compress::Deflate::Strategy const & strategy,
-				Boolean const &                           variant_64
-			) -> Void {
-				ripe.write(Structure::k_magic_identifier);
-				if (variant_64) {
-					ripe.forward(bs_static_size<IntegerU32>());
-				}
-				if (!variant_64) {
-					ripe.write(cbw<IntegerU32>(raw.reserve()));
-				} else {
-					ripe.write(cbw<IntegerU64>(raw.reserve()));
-				}
-				Data::Compress::Deflate::Compress::process(raw, ripe, level, window_bits, memory_level, strategy, Data::Compress::Deflate::Wrapper::zlib);
-				return;
+			if constexpr (!version.variant_64) {
+				ripe.write(cbw<IntegerU32>(raw.reserve()));
+			} else {
+				ripe.write(cbw<IntegerU64>(raw.reserve()));
 			}
-
-			#pragma endregion
-
+			Data::Compress::Deflate::Compress::do_process_whole(raw, ripe, level, window_bits, memory_level, strategy, Data::Compress::Deflate::Wrapper::Constant::zlib());
+			return;
 		}
 
-		using Detail::compute_size_bound;
+	public:
 
-		using Detail::process;
-
-	}
-
-	namespace Uncompress {
-
-		namespace Detail {
-
-			#pragma region using
-
-			using namespace CommonOfCompress::Detail;
-
-			#pragma endregion
-
-			#pragma region compute size
-
-			inline auto compute_size (
-				CByteListView const & ripe,
-				Boolean const &       variant_64
-			) -> Size {
-				auto ripe_stream = IByteStreamView{ripe};
-				assert_condition(ripe_stream.read_of<Structure::MagicIdentifier>() == Structure::k_magic_identifier);
-				if (variant_64) {
-					ripe_stream.forward(bs_static_size<IntegerU32>());
-				}
-				auto size = Size{};
-				if (!variant_64) {
-					size = cbw<Size>(ripe_stream.read_of<IntegerU32>());
-				} else {
-					size = cbw<Size>(ripe_stream.read_of<IntegerU64>());
-				}
-				return size;
-			}
-
-			#pragma endregion
-
-			#pragma region process
-
-			inline auto process (
-				IByteStreamView & ripe,
-				OByteStreamView & raw,
-				Size const &      window_bits,
-				Boolean const &   variant_64
-			) -> Void {
-				assert_condition(ripe.read_of<Structure::MagicIdentifier>() == Structure::k_magic_identifier);
-				if (variant_64) {
-					ripe.forward(bs_static_size<IntegerU32>());
-				}
-				auto size = Size{};
-				if (!variant_64) {
-					size = cbw<Size>(ripe.read_of<IntegerU32>());
-				} else {
-					size = cbw<Size>(ripe.read_of<IntegerU64>());
-				}
-				auto raw_begin = raw.position();
-				Data::Compress::Deflate::Uncompress::process(ripe, raw, window_bits, Data::Compress::Deflate::Wrapper::zlib);
-				assert_condition(raw.position() - raw_begin == size);
-				return;
-			}
-
-			#pragma endregion
-
+		static auto do_compute_size_bound (
+			Size const & raw_size,
+			Size &       ripe_size_bound,
+			Size const & window_bits,
+			Size const & memory_level
+		) -> Void {
+			restruct(ripe_size_bound);
+			return compute_size_bound(raw_size, ripe_size_bound, window_bits, memory_level);
 		}
 
-		using Detail::compute_size;
+		static auto do_process_whole (
+			IByteStreamView &                         raw_,
+			OByteStreamView &                         ripe_,
+			Size const &                              level,
+			Size const &                              window_bits,
+			Size const &                              memory_level,
+			Data::Compress::Deflate::Strategy const & strategy
+		) -> Void {
+			M_use_zps_of(raw);
+			M_use_zps_of(ripe);
+			return process_whole(raw, ripe, level, window_bits, memory_level, strategy);
+		}
 
-		using Detail::process;
+	};
 
-	}
+	template <auto version> requires (check_version(version, {}))
+	struct Uncompress :
+		CompressCommon<version> {
+
+	protected:
+
+		using Common = CompressCommon<version>;
+
+		using typename Common::MagicIdentifier;
+
+		using Common::k_magic_identifier;
+
+		// ----------------
+
+		static auto compute_size (
+			CByteListView const & ripe,
+			Size &                raw_size
+		) -> Void {
+			raw_size = k_none_size;
+			auto ripe_stream = IByteStreamView{ripe};
+			assert_condition(ripe_stream.read_of<MagicIdentifier>() == k_magic_identifier);
+			if constexpr (version.variant_64) {
+				ripe_stream.forward(bs_static_size<IntegerU32>());
+			}
+			if constexpr (!version.variant_64) {
+				raw_size += cbw<Size>(ripe_stream.read_of<IntegerU32>());
+			} else {
+				raw_size += cbw<Size>(ripe_stream.read_of<IntegerU64>());
+			}
+			return;
+		}
+
+		// ----------------
+
+		static auto process_whole (
+			IByteStreamView & ripe,
+			OByteStreamView & raw,
+			Size const &      window_bits
+		) -> Void {
+			assert_condition(ripe.read_of<MagicIdentifier>() == k_magic_identifier);
+			if constexpr (version.variant_64) {
+				ripe.forward(bs_static_size<IntegerU32>());
+			}
+			auto size = Size{};
+			if constexpr (!version.variant_64) {
+				size = cbw<Size>(ripe.read_of<IntegerU32>());
+			} else {
+				size = cbw<Size>(ripe.read_of<IntegerU64>());
+			}
+			auto raw_begin = raw.position();
+			Data::Compress::Deflate::Uncompress::do_process_whole(ripe, raw, window_bits, Data::Compress::Deflate::Wrapper::Constant::zlib());
+			assert_condition(raw.position() - raw_begin == size);
+			return;
+		}
+
+	public:
+
+		static auto do_compute_size (
+			CByteListView const & ripe,
+			Size &                raw_size
+		) -> Void {
+			restruct(raw_size);
+			return compute_size(ripe, raw_size);
+		}
+
+		static auto do_process_whole (
+			IByteStreamView & ripe_,
+			OByteStreamView & raw_,
+			Size const &      window_bits
+		) -> Void {
+			M_use_zps_of(ripe);
+			M_use_zps_of(raw);
+			return process_whole(ripe, raw, window_bits);
+		}
+
+	};
 
 }

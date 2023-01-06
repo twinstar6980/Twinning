@@ -1,9 +1,11 @@
 #pragma once
 
+// TODO : refactor
+
 #include "core/utility/utility.hpp"
 #include "core/tool/popcap/rsb/version.hpp"
 
-namespace TwinKleS::Core::Tool::PopCap::RSB::Common {
+namespace TwinStar::Core::Tool::PopCap::RSB::Common {
 
 	#pragma region
 
@@ -13,19 +15,25 @@ namespace TwinKleS::Core::Tool::PopCap::RSB::Common {
 
 	#pragma region
 
-	enum class ResourceType : ZIntegerU8 {
-		generic,
-		texture,
-	};
+	M_enumeration(
+		M_wrap(ResourceType),
+		M_wrap(
+			generic,
+			texture,
+		),
+	);
 
 	#pragma endregion
 
 	#pragma region
 
-	struct ResourceDataSectionStoreMode {
-		Boolean compress_generic;
-		Boolean compress_texture;
-	};
+	M_record_of_list(
+		M_wrap(ResourceDataSectionStoreMode),
+		M_wrap(
+			(Boolean) compress_generic,
+			(Boolean) compress_texture,
+		),
+	);
 
 	inline constexpr auto k_resource_data_section_store_mode_flag_count = Size{2_sz};
 
@@ -37,7 +45,7 @@ namespace TwinKleS::Core::Tool::PopCap::RSB::Common {
 	inline auto resource_data_section_store_mode_to_data (
 		ResourceDataSectionStoreMode const & it
 	) -> IntegerU32 {
-		auto bitset = BitSet<k_resource_data_section_store_mode_flag_count.value>{};
+		auto bitset = BitSet<k_resource_data_section_store_mode_flag_count>{};
 		bitset.set(ResourceDataStoreModeFlag::compress_generic, it.compress_generic);
 		bitset.set(ResourceDataStoreModeFlag::compress_texture, it.compress_texture);
 		return cbw<IntegerU32>(bitset.to_integer());
@@ -47,7 +55,7 @@ namespace TwinKleS::Core::Tool::PopCap::RSB::Common {
 		IntegerU32 const & bitset_integer
 	) -> ResourceDataSectionStoreMode {
 		auto it = ResourceDataSectionStoreMode{};
-		auto bitset = BitSet<k_resource_data_section_store_mode_flag_count.value>{};
+		auto bitset = BitSet<k_resource_data_section_store_mode_flag_count>{};
 		bitset.from_integer(cbw<IntegerU8>(bitset_integer));
 		it.compress_generic = bitset.get(ResourceDataStoreModeFlag::compress_generic);
 		it.compress_texture = bitset.get(ResourceDataStoreModeFlag::compress_texture);
@@ -58,10 +66,13 @@ namespace TwinKleS::Core::Tool::PopCap::RSB::Common {
 
 	#pragma region
 
-	struct SubgroupCategory {
-		Optional<Integer> resolution;
-		Optional<String>  locale;
-	};
+	M_record_of_list(
+		M_wrap(SubgroupCategory),
+		M_wrap(
+			(Optional<Integer>) resolution,
+			(Optional<String>) locale,
+		),
+	);
 
 	inline auto subgroup_category_to_data (
 		SubgroupCategory const & value,
@@ -103,7 +114,7 @@ namespace TwinKleS::Core::Tool::PopCap::RSB::Common {
 
 	#pragma region
 
-	using StringBlockFixed128 = StaticArray<Character, 128_szz>;
+	using StringBlockFixed128 = StaticArray<Character, 128_sz>;
 
 	inline auto string_block_fixed_128_to_string (
 		StringBlockFixed128 const & string
@@ -125,6 +136,8 @@ namespace TwinKleS::Core::Tool::PopCap::RSB::Common {
 		assert_condition(block.size() <= 128_sz);
 		return StringBlockFixed128{block};
 	}
+
+	// ----------------
 
 	inline auto const k_suffix_of_composite_shell = CStringView{"_CompositeShell"_sv};
 
@@ -197,7 +210,7 @@ namespace TwinKleS::Core::Tool::PopCap::RSB::Common {
 			return;
 		}
 
-		// #
+		// ----------------
 
 		template <typename TAdditionalBlock> requires IsPureInstance<TAdditionalBlock>
 		inline auto compute_ripe_size (
@@ -355,34 +368,10 @@ namespace TwinKleS::Core::Tool::PopCap::RSB::Common {
 
 }
 
-namespace TwinKleS::Core::Tool::PopCap::RSB {
+namespace TwinStar::Core::Tool::PopCap::RSB {
 	using namespace RSB::Common;
 }
 
-namespace TwinKleS::Core::Tool::PopCap::RSGP {
+namespace TwinStar::Core::Tool::PopCap::RSGP {
 	using namespace RSB::Common;
-}
-
-namespace TwinKleS::Core::Trait::Reflection {
-
-	M_reflection_enum(
-		M_wrap(Tool::PopCap::RSB::Common::ResourceType),
-		M_wrap(ResourceType),
-		M_wrap(generic, texture),
-	);
-
-}
-
-namespace TwinKleS::Core::JSON {
-
-	M_json_value_adapter_for_aggregate_as_array_by_field_of_unique(
-		M_wrap(Tool::PopCap::RSB::Common::ResourceDataSectionStoreMode),
-		M_wrap(compress_generic, compress_texture),
-	);
-
-	M_json_value_adapter_for_aggregate_as_array_by_field_of_unique(
-		M_wrap(Tool::PopCap::RSB::Common::SubgroupCategory),
-		M_wrap(resolution, locale),
-	);
-
 }

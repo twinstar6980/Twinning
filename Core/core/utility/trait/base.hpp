@@ -5,7 +5,7 @@
 #include <concepts>
 #include <tuple>
 
-namespace TwinKleS::Core::Trait {
+namespace TwinStar::Core::Trait {
 
 	#pragma region constraint comment
 
@@ -19,19 +19,20 @@ namespace TwinKleS::Core::Trait {
 
 	template <auto condition = true>
 	concept CategoryConstraint =
-	CustomConstraint
-	&& (condition)
-	;
+		CustomConstraint
+		&& (condition)
+		;
 
 	#pragma endregion
 
 	#pragma region utility
 
-	// ReSharper disable once CppFunctionIsNotImplemented
 	template <typename It> requires
 		AutoConstraint
 	inline constexpr auto declare (
-	) -> It;
+	) -> It {
+		throw "this function can only be used in unevaluated context";
+	}
 
 	#pragma endregion
 

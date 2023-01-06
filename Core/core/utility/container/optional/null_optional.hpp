@@ -3,13 +3,13 @@
 #include "core/utility/container/optional/optional.hpp"
 #include "core/utility/container/optional/optional_view.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
 	class NullOptional final {
 
-	public: //
+	public:
 
 		#pragma region operator
 
@@ -22,12 +22,12 @@ namespace TwinKleS::Core {
 		template <typename Value, auto constant> requires
 			AutoConstraint
 		implicit constexpr operator OptionalView<Value, constant> () const {
-			return Optional<Value>{};
+			return OptionalView<Value, constant>{};
 		}
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region operator
 

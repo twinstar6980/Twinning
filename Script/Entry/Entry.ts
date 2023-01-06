@@ -1,5 +1,5 @@
 /** 以命令处理器为核心的模块入口实现 */
-namespace TwinKleS.Entry {
+namespace TwinStar.Entry {
 
 	// ------------------------------------------------
 
@@ -93,7 +93,7 @@ namespace TwinKleS.Entry {
 			let progress = new TextGenerator.Progress('fraction', false, 40, item_list.length);
 			for (let item of item_list) {
 				progress.increase();
-				Console.notify('i', `${progress}`, []);
+				Console.notify('i', `${progress}`, [`${item}`]);
 				try {
 					work(item);
 				} catch (e: any) {
@@ -157,11 +157,14 @@ namespace TwinKleS.Entry {
 			timer.start();
 			let raw_command = [...argument];
 			if (raw_command.length === 0) {
-				Console.notify('i', localized(`请依次输入命令参数`), [localized(`输入空串以结束输入`)]);
+				Console.notify('i', localized(`请依次输入命令参数`), [localized(`输入为空则结束输入`)]);
 				while (true) {
 					let input = Console.string(null, true);
 					if (input === null) {
 						break;
+					}
+					if (input.startsWith('"') && input.endsWith('"')) {
+						input = input.substring(1, input.length - 1);
 					}
 					raw_command.push(input);
 				}
@@ -172,7 +175,7 @@ namespace TwinKleS.Entry {
 			let progress = new TextGenerator.Progress('fraction', true, 40, command.length);
 			for (let e of command) {
 				progress.increase();
-				Console.notify('i', localized(`命令执行中：{}`, progress), [`${e.input!.value}${e.method === null ? '' : ` | ${e.method}`}`]);
+				Console.notify('i', localized(`命令执行中：{}`, progress), [`${e.input === null ? '?' : e.input.value}${e.method === null ? '' : ` | ${e.method}`}`]);
 				try {
 					Executor.execute(e, method);
 				} catch (e: any) {
@@ -197,6 +200,6 @@ namespace TwinKleS.Entry {
 }
 
 ({
-	injector: TwinKleS.Entry._injector,
-	entry: TwinKleS.Entry._entry,
+	injector: TwinStar.Entry._injector,
+	entry: TwinStar.Entry._entry,
 });

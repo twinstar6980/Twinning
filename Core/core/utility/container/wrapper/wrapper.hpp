@@ -2,7 +2,7 @@
 
 #include "core/utility/base_wrapper/wrapper.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
@@ -10,15 +10,15 @@ namespace TwinKleS::Core {
 		CategoryConstraint<IsPureInstance<TValue>>
 	class Wrapper {
 
-	public: //
+	public:
 
 		using Value = TValue;
 
-	protected: //
+	protected:
 
 		Value m_value{};
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -65,13 +65,13 @@ namespace TwinKleS::Core {
 
 		#pragma region value
 
-		template <typename ...Argument> requires
-			CategoryConstraint<IsValid<Argument...>>
-			&& (IsConstructible<Value, Argument &&...>)
+		template <typename ... Argument> requires
+			CategoryConstraint<IsValid<Argument ...>>
+			&& (IsConstructible<Value, Argument && ...>)
 		constexpr auto set (
-			Argument && ...argument
+			Argument && ... argument
 		) -> Value& {
-			restruct(thiz.m_value, as_forward<Argument>(argument)...);
+			restruct(thiz.m_value, as_forward<Argument>(argument) ...);
 			return thiz.m_value;
 		}
 
@@ -89,7 +89,7 @@ namespace TwinKleS::Core {
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region operator
 
@@ -106,13 +106,13 @@ namespace TwinKleS::Core {
 
 	#pragma region utility
 
-	template <typename Value, typename ...Argument> requires
-		CategoryConstraint<IsPureInstance<Value> && IsValid<Argument...>>
+	template <typename Value, typename ... Argument> requires
+		CategoryConstraint<IsPureInstance<Value> && IsValid<Argument ...>>
 	inline constexpr auto make_wrapper (
-		Argument && ...argument
+		Argument && ... argument
 	) -> Wrapper<Value> {
 		auto result = Wrapper<Value>{};
-		result.set(as_forward<Argument>(argument)...);
+		result.set(as_forward<Argument>(argument) ...);
 		return result;
 	}
 

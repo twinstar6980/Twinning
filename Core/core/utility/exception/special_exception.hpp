@@ -1,17 +1,15 @@
 #pragma once
 
-// TODO
-
 #include "core/utility/exception/simple_exception.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
 	class NeverException :
 		public SimpleException {
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -27,7 +25,7 @@ namespace TwinKleS::Core {
 	class ToDoException :
 		public SimpleException {
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -48,7 +46,7 @@ namespace TwinKleS::Core {
 	if (!(__VA_ARGS__)) {\
 		throw SimpleException{SourceLocation::make(M_current_source_location).to_string() + "\nassert failed : " #__VA_ARGS__};\
 	}\
-	void()
+	static_assert(true)
 
 #define assert_failed(message) \
 	throw SimpleException{SourceLocation::make(M_current_source_location).to_string() + "\nassert failed : " message}

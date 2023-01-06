@@ -10,7 +10,7 @@
 #include "dlfcn.h"
 #endif
 
-namespace TwinKleS::Shell {
+namespace TwinStar::Shell {
 
 	#pragma region detail
 
@@ -87,12 +87,12 @@ namespace TwinKleS::Shell {
 	class DynamicLibrary :
 		public Library {
 
-	protected: //
+	protected:
 
 		SymbolTable           m_symbol;
 		Detail::LibraryHandle m_handle;
 
-	public: //
+	public:
 
 		#pragma region structor
 

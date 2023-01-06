@@ -4,7 +4,7 @@
  * + popcap.reanim.encode.batch [批处理] PopCap-Reanim 编码
  * + popcap.reanim.decode.batch [批处理] PopCap-Reanim 解码
  */
-namespace TwinKleS.Entry.method.popcap.reanim {
+namespace TwinStar.Entry.method.popcap.reanim {
 
 	// ------------------------------------------------
 
@@ -69,7 +69,7 @@ namespace TwinKleS.Entry.method.popcap.reanim {
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.binary_size(null)),
+							() => (Console.size(null)),
 							(value) => (null),
 						);
 					}
@@ -202,7 +202,7 @@ namespace TwinKleS.Entry.method.popcap.reanim {
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.binary_size(null)),
+							() => (Console.size(null)),
 							(value) => (null),
 						);
 					}
@@ -212,7 +212,7 @@ namespace TwinKleS.Entry.method.popcap.reanim {
 						['file', /.+(\.reanim)(\.json)$/i],
 						(item) => {
 							let manifest_file = `${manifest_file_directory}/${item}`;
-							let data_file = `${data_file_directory}/${item.slice(0, -9)}.compiled`;
+							let data_file = `${data_file_directory}/${item.slice(0, -5)}.compiled`;
 							CoreX.Tool.PopCap.Reanim.encode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 }, data_buffer.view());
 						},
 					);
@@ -305,5 +305,5 @@ namespace TwinKleS.Entry.method.popcap.reanim {
 }
 
 ({
-	injector: TwinKleS.Entry.method.popcap.reanim._injector,
+	injector: TwinStar.Entry.method.popcap.reanim._injector,
 });

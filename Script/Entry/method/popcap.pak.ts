@@ -4,7 +4,7 @@
  * + popcap.pak.pack_auto PopCap-PAK 自动打包
  * + popcap.pak.crypt PopCap-PAK 加解密
  */
-namespace TwinKleS.Entry.method.popcap.pak {
+namespace TwinStar.Entry.method.popcap.pak {
 
 	// ------------------------------------------------
 
@@ -53,7 +53,7 @@ namespace TwinKleS.Entry.method.popcap.pak {
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
+							() => (Console.option([0n, [0n, '']], null)),
 							(value) => ([0n].includes(value) ? null : localized(`版本不受支持`)),
 						);
 						version_compress_resource_data = Executor.request_argument(
@@ -69,7 +69,7 @@ namespace TwinKleS.Entry.method.popcap.pak {
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.binary_size(null)),
+							() => (Console.size(null)),
 							(value) => (null),
 						);
 					}
@@ -124,7 +124,7 @@ namespace TwinKleS.Entry.method.popcap.pak {
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
+							() => (Console.option([0n, [0n, '']], null)),
 							(value) => ([0n].includes(value) ? null : localized(`版本不受支持`)),
 						);
 						version_compress_resource_data = Executor.request_argument(
@@ -186,7 +186,7 @@ namespace TwinKleS.Entry.method.popcap.pak {
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
+							() => (Console.option([0n, [0n, '']], null)),
 							(value) => ([0n].includes(value) ? null : localized(`版本不受支持`)),
 						);
 						version_compress_resource_data = Executor.request_argument(
@@ -239,7 +239,7 @@ namespace TwinKleS.Entry.method.popcap.pak {
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
 					}
-					CoreX.Tool.Data.Encrypt.XOR.crypt_fs(plain_file, cipher_file, 0xF7n);
+					CoreX.Tool.Data.Encrypt.XOR.encrypt_fs(plain_file, cipher_file, 0xF7n);
 					Console.notify('s', localized(`执行成功`), [`${cipher_file}`]);
 				},
 				default_argument: {
@@ -258,5 +258,5 @@ namespace TwinKleS.Entry.method.popcap.pak {
 }
 
 ({
-	injector: TwinKleS.Entry.method.popcap.pak._injector,
+	injector: TwinStar.Entry.method.popcap.pak._injector,
 });

@@ -4,17 +4,17 @@
 
 #include "core/third_party/fmt.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region function
 
-	template <typename ...Argument> requires
-		CategoryConstraint<IsValid<Argument...>>
+	template <typename ... Argument> requires
+		CategoryConstraint<IsValid<Argument ...>>
 	inline auto format_string (
 		CStringView const & format,
 		Argument && ...     argument
 	) -> String {
-		return make_string(fmt::format(fmt::runtime(make_std_string_view(format)), as_forward<Argument>(argument)...));
+		return make_string(fmt::format(fmt::runtime(make_std_string_view(format)), as_forward<Argument>(argument) ...));
 	}
 
 	#pragma endregion
@@ -27,12 +27,12 @@ namespace TwinKleS::Core {
 
 		// ----------------
 
-		template <typename ...Argument> requires
-			CategoryConstraint<IsValid<Argument...>>
+		template <typename ... Argument> requires
+			CategoryConstraint<IsValid<Argument ...>>
 		auto operator () (
-			Argument && ...argument
+			Argument && ... argument
 		) const -> String {
-			return format_string(thiz.format, as_forward<Argument>(argument)...);
+			return format_string(thiz.format, as_forward<Argument>(argument) ...);
 		}
 
 	};

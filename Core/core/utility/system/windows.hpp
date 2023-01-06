@@ -7,7 +7,7 @@
 #include "core/utility/file_system/path.hpp"
 #include "core/third_party/system/windows.hpp"
 
-namespace TwinKleS::Core::System::Windows {
+namespace TwinStar::Core::System::Windows {
 
 	#pragma region control
 
@@ -36,7 +36,7 @@ namespace TwinKleS::Core::System::Windows {
 		return mbw<IntegerS32>(std::system(cast_pointer<char>(make_null_terminated_string(command).begin()).value));
 	}
 
-	// todo : bug if argument value has \" character
+	// TODO : bug if argument value has \" character
 	inline auto process (
 		Path const &         path,
 		List<String> const & argument
@@ -93,7 +93,7 @@ namespace TwinKleS::Core::System::Windows {
 
 	#pragma region encoding
 
-	// todo : remove ?
+	// TODO : remove ?
 	inline auto encoding_ansi_to_utf8 (
 		CBasicStringView<Character> const & source
 	) -> BasicString<Character8> {

@@ -23,7 +23,7 @@
 #undef max
 #undef min
 
-namespace TwinKleS::Core::ThirdParty::windows {
+namespace TwinStar::Core::ThirdParty::windows {
 }
 
 #endif

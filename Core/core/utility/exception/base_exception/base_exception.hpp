@@ -5,20 +5,20 @@
 #include "core/utility/string/string.hpp"
 #include "core/utility/exception/base_exception/exception_message.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
 	class BaseException :
 		public Exception {
 
-	protected: //
+	protected:
 
 		List<ExceptionMessage> m_message{};
 
 		mutable String m_temporary{};
 
-	public: //
+	public:
 
 		#pragma region structor
 

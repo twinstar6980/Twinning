@@ -19,7 +19,7 @@
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinKleS::Core::ThirdParty::Rijndael {
+namespace TwinStar::Core::ThirdParty::Rijndael {
 
 	using CRijndael = ::CRijndael;
 

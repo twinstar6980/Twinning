@@ -12,7 +12,7 @@
  * + popcap.rton.encode_then_encrypt.batch [批处理] PopCap-RTON 编码并加密
  * + popcap.rton.decrypt_then_decode.batch [批处理] PopCap-RTON 解密并解码
  */
-namespace TwinKleS.Entry.method.popcap.rton {
+namespace TwinStar.Entry.method.popcap.rton {
 
 	// ------------------------------------------------
 
@@ -32,25 +32,25 @@ namespace TwinKleS.Entry.method.popcap.rton {
 					return Executor.query_method_description(this.id);
 				},
 				worker(a: Entry.CFSA & {
-					json_file: Executor.RequireArgument<string>;
-					rton_file: Executor.RequestArgument<string, true>;
+					value_file: Executor.RequireArgument<string>;
+					data_file: Executor.RequestArgument<string, true>;
 					buffer_size: Executor.RequestArgument<string, false>;
 				}) {
-					let json_file: string;
-					let rton_file: string;
+					let value_file: string;
+					let data_file: string;
 					let buffer_size: bigint;
 					{
-						json_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'json_file'),
-							a.json_file,
+						value_file = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'value_file'),
+							a.value_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
-						rton_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'rton_file'),
-							a.rton_file,
+						data_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'data_file'),
+							a.data_file,
 							(value) => (value),
-							() => (json_file.replace(/((\.json))?$/i, '.rton')),
+							() => (value_file.replace(/((\.json))?$/i, '.rton')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
 						buffer_size = Executor.request_argument(
@@ -58,21 +58,21 @@ namespace TwinKleS.Entry.method.popcap.rton {
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.binary_size(null)),
+							() => (Console.size(null)),
 							(value) => (null),
 						);
 					}
-					CoreX.Tool.PopCap.RTON.encode_fs(json_file, rton_file, true, true, buffer_size);
-					Console.notify('s', localized(`执行成功`), [`${rton_file}`]);
+					CoreX.Tool.PopCap.RTON.encode_fs(data_file, value_file, true, true, buffer_size);
+					Console.notify('s', localized(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
-					json_file: undefined!,
-					rton_file: '?default',
+					value_file: undefined!,
+					data_file: '?default',
 					buffer_size: config.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.json)$/i]]),
-				input_forwarder: 'json_file',
+				input_forwarder: 'value_file',
 			}),
 			Executor.method_of({
 				id: 'popcap.rton.decode',
@@ -81,36 +81,36 @@ namespace TwinKleS.Entry.method.popcap.rton {
 					return Executor.query_method_description(this.id);
 				},
 				worker(a: Entry.CFSA & {
-					rton_file: Executor.RequireArgument<string>;
-					json_file: Executor.RequestArgument<string, true>;
+					data_file: Executor.RequireArgument<string>;
+					value_file: Executor.RequestArgument<string, true>;
 				}) {
-					let rton_file: string;
-					let json_file: string;
+					let data_file: string;
+					let value_file: string;
 					{
-						rton_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'rton_file'),
-							a.rton_file,
+						data_file = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'data_file'),
+							a.data_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
-						json_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'json_file'),
-							a.json_file,
+						value_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'value_file'),
+							a.value_file,
 							(value) => (value),
-							() => (rton_file.replace(/((\.rton))?$/i, '.json')),
+							() => (data_file.replace(/((\.rton))?$/i, '.json')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
 					}
-					CoreX.Tool.PopCap.RTON.decode_fs(rton_file, json_file);
-					Console.notify('s', localized(`执行成功`), [`${json_file}`]);
+					CoreX.Tool.PopCap.RTON.decode_fs(data_file, value_file);
+					Console.notify('s', localized(`执行成功`), [`${value_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
-					rton_file: undefined!,
-					json_file: '?default',
+					data_file: undefined!,
+					value_file: '?default',
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.rton)$/i]]),
-				input_forwarder: 'rton_file',
+				input_forwarder: 'data_file',
 			}),
 			Executor.method_of({
 				id: 'popcap.rton.encrypt',
@@ -217,27 +217,27 @@ namespace TwinKleS.Entry.method.popcap.rton {
 					return Executor.query_method_description(this.id);
 				},
 				worker(a: Entry.CFSA & {
-					json_file: Executor.RequireArgument<string>;
-					rton_file: Executor.RequestArgument<string, true>;
+					value_file: Executor.RequireArgument<string>;
+					data_file: Executor.RequestArgument<string, true>;
 					key: Executor.RequestArgument<string, false>;
 					buffer_size: Executor.RequestArgument<string, false>;
 				}) {
-					let json_file: string;
-					let rton_file: string;
+					let value_file: string;
+					let data_file: string;
 					let key: string;
 					let buffer_size: bigint;
 					{
-						json_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'json_file'),
-							a.json_file,
+						value_file = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'value_file'),
+							a.value_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
-						rton_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'rton_file'),
-							a.rton_file,
+						data_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'data_file'),
+							a.data_file,
 							(value) => (value),
-							() => (json_file.replace(/((\.json))?$/i, '.rton')),
+							() => (value_file.replace(/((\.json))?$/i, '.rton')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
 						key = Executor.request_argument(
@@ -253,22 +253,22 @@ namespace TwinKleS.Entry.method.popcap.rton {
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.binary_size(null)),
+							() => (Console.size(null)),
 							(value) => (null),
 						);
 					}
-					CoreX.Tool.PopCap.RTON.encode_then_encrypt_fs(json_file, rton_file, true, true, key, buffer_size);
-					Console.notify('s', localized(`执行成功`), [`${rton_file}`]);
+					CoreX.Tool.PopCap.RTON.encode_then_encrypt_fs(value_file, data_file, true, true, key, buffer_size);
+					Console.notify('s', localized(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
-					json_file: undefined!,
-					rton_file: '?default',
+					value_file: undefined!,
+					data_file: '?default',
 					key: config.crypt_key,
 					buffer_size: config.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.json)$/i]]),
-				input_forwarder: 'json_file',
+				input_forwarder: 'value_file',
 			}),
 			Executor.method_of({
 				id: 'popcap.rton.decrypt_then_decode',
@@ -277,25 +277,25 @@ namespace TwinKleS.Entry.method.popcap.rton {
 					return Executor.query_method_description(this.id);
 				},
 				worker(a: Entry.CFSA & {
-					rton_file: Executor.RequireArgument<string>;
-					json_file: Executor.RequestArgument<string, true>;
+					data_file: Executor.RequireArgument<string>;
+					value_file: Executor.RequestArgument<string, true>;
 					key: Executor.RequestArgument<string, false>;
 				}) {
-					let rton_file: string;
-					let json_file: string;
+					let data_file: string;
+					let value_file: string;
 					let key: string;
 					{
-						rton_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'rton_file'),
-							a.rton_file,
+						data_file = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'data_file'),
+							a.data_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
-						json_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'json_file'),
-							a.json_file,
+						value_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'value_file'),
+							a.value_file,
 							(value) => (value),
-							() => (rton_file.replace(/((\.rton))?$/i, '.json')),
+							() => (data_file.replace(/((\.rton))?$/i, '.json')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
 						key = Executor.request_argument(
@@ -307,17 +307,17 @@ namespace TwinKleS.Entry.method.popcap.rton {
 							(value) => (null),
 						);
 					}
-					CoreX.Tool.PopCap.RTON.decrypt_then_decode_fs(rton_file, json_file, key);
-					Console.notify('s', localized(`执行成功`), [`${json_file}`]);
+					CoreX.Tool.PopCap.RTON.decrypt_then_decode_fs(data_file, value_file, key);
+					Console.notify('s', localized(`执行成功`), [`${value_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
-					rton_file: undefined!,
-					json_file: '?default',
+					data_file: undefined!,
+					value_file: '?default',
 					key: config.crypt_key,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.rton)$/i]]),
-				input_forwarder: 'rton_file',
+				input_forwarder: 'data_file',
 			}),
 		);
 		g_executor_method_of_batch.push(
@@ -328,25 +328,25 @@ namespace TwinKleS.Entry.method.popcap.rton {
 					return Executor.query_method_description(this.id);
 				},
 				worker(a: Entry.CFSA & {
-					json_file_directory: Executor.RequireArgument<string>;
-					rton_file_directory: Executor.RequestArgument<string, true>;
+					value_file_directory: Executor.RequireArgument<string>;
+					data_file_directory: Executor.RequestArgument<string, true>;
 					buffer_size: Executor.RequestArgument<string, false>;
 				}) {
-					let json_file_directory: string;
-					let rton_file_directory: string;
+					let value_file_directory: string;
+					let data_file_directory: string;
 					let buffer_size: bigint;
 					{
-						json_file_directory = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'json_file_directory'),
-							a.json_file_directory,
+						value_file_directory = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'value_file_directory'),
+							a.value_file_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
-						rton_file_directory = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'rton_file_directory'),
-							a.rton_file_directory,
+						data_file_directory = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'data_file_directory'),
+							a.data_file_directory,
 							(value) => (value),
-							() => (json_file_directory.replace(/$/i, '.rton_encode')),
+							() => (value_file_directory.replace(/$/i, '.rton_encode')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
 						buffer_size = Executor.request_argument(
@@ -354,30 +354,30 @@ namespace TwinKleS.Entry.method.popcap.rton {
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.binary_size(null)),
+							() => (Console.size(null)),
 							(value) => (null),
 						);
 					}
 					let rton_data_buffer = Core.ByteArray.allocate(Core.Size.value(buffer_size));
 					simple_batch_execute(
-						json_file_directory,
+						value_file_directory,
 						['file', /.+(\.json)$/i],
 						(item) => {
-							let json_file = `${json_file_directory}/${item}`;
-							let rton_file = `${rton_file_directory}/${item.slice(0, -5)}.rton`;
-							CoreX.Tool.PopCap.RTON.encode_fs(json_file, rton_file, true, true, rton_data_buffer.view());
+							let json_file = `${value_file_directory}/${item}`;
+							let rton_file = `${data_file_directory}/${item.slice(0, -5)}.rton`;
+							CoreX.Tool.PopCap.RTON.encode_fs(rton_file, json_file, true, true, rton_data_buffer.view());
 						},
 					);
-					Console.notify('s', localized(`执行成功`), [`${rton_file_directory}`]);
+					Console.notify('s', localized(`执行成功`), [`${data_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
-					json_file_directory: undefined!,
-					rton_file_directory: '?default',
+					value_file_directory: undefined!,
+					data_file_directory: '?default',
 					buffer_size: config.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
-				input_forwarder: 'json_file_directory',
+				input_forwarder: 'value_file_directory',
 			}),
 			Executor.method_of({
 				id: 'popcap.rton.decode.batch',
@@ -386,44 +386,44 @@ namespace TwinKleS.Entry.method.popcap.rton {
 					return Executor.query_method_description(this.id);
 				},
 				worker(a: Entry.CFSA & {
-					rton_file_directory: Executor.RequireArgument<string>;
-					json_file_directory: Executor.RequestArgument<string, true>;
+					data_file_directory: Executor.RequireArgument<string>;
+					value_file_directory: Executor.RequestArgument<string, true>;
 				}) {
-					let rton_file_directory: string;
-					let json_file_directory: string;
+					let data_file_directory: string;
+					let value_file_directory: string;
 					{
-						rton_file_directory = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'rton_file_directory'),
-							a.rton_file_directory,
+						data_file_directory = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'data_file_directory'),
+							a.data_file_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
-						json_file_directory = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'json_file_directory'),
-							a.json_file_directory,
+						value_file_directory = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'value_file_directory'),
+							a.value_file_directory,
 							(value) => (value),
-							() => (rton_file_directory.replace(/$/i, '.rton_decode')),
+							() => (data_file_directory.replace(/$/i, '.rton_decode')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
 					}
 					simple_batch_execute(
-						rton_file_directory,
+						data_file_directory,
 						['file', /.+(\.rton)$/i],
 						(item) => {
-							let rton_file = `${rton_file_directory}/${item}`;
-							let json_file = `${json_file_directory}/${item.slice(0, -5)}.json`;
+							let rton_file = `${data_file_directory}/${item}`;
+							let json_file = `${value_file_directory}/${item.slice(0, -5)}.json`;
 							CoreX.Tool.PopCap.RTON.decode_fs(rton_file, json_file);
 						},
 					);
-					Console.notify('s', localized(`执行成功`), [`${json_file_directory}`]);
+					Console.notify('s', localized(`执行成功`), [`${value_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
-					rton_file_directory: undefined!,
-					json_file_directory: '?default',
+					data_file_directory: undefined!,
+					value_file_directory: '?default',
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
-				input_forwarder: 'rton_file_directory',
+				input_forwarder: 'data_file_directory',
 			}),
 			Executor.method_of({
 				id: 'popcap.rton.encrypt.batch',
@@ -546,27 +546,27 @@ namespace TwinKleS.Entry.method.popcap.rton {
 					return Executor.query_method_description(this.id);
 				},
 				worker(a: Entry.CFSA & {
-					json_file_directory: Executor.RequireArgument<string>;
-					rton_file_directory: Executor.RequestArgument<string, true>;
+					value_file_directory: Executor.RequireArgument<string>;
+					data_file_directory: Executor.RequestArgument<string, true>;
 					key: Executor.RequestArgument<string, false>;
 					buffer_size: Executor.RequestArgument<string, false>;
 				}) {
-					let json_file_directory: string;
-					let rton_file_directory: string;
+					let value_file_directory: string;
+					let data_file_directory: string;
 					let key: string;
 					let buffer_size: bigint;
 					{
-						json_file_directory = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'json_file_directory'),
-							a.json_file_directory,
+						value_file_directory = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'value_file_directory'),
+							a.value_file_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
-						rton_file_directory = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'rton_file_directory'),
-							a.rton_file_directory,
+						data_file_directory = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'data_file_directory'),
+							a.data_file_directory,
 							(value) => (value),
-							() => (json_file_directory.replace(/$/i, '.rton_encode_then_encrypt')),
+							() => (value_file_directory.replace(/$/i, '.rton_encode_then_encrypt')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
 						key = Executor.request_argument(
@@ -582,31 +582,31 @@ namespace TwinKleS.Entry.method.popcap.rton {
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.binary_size(null)),
+							() => (Console.size(null)),
 							(value) => (null),
 						);
 					}
 					let rton_data_buffer = Core.ByteArray.allocate(Core.Size.value(buffer_size));
 					simple_batch_execute(
-						json_file_directory,
+						value_file_directory,
 						['file', /.+(\.json)$/i],
 						(item) => {
-							let json_file = `${json_file_directory}/${item}`;
-							let rton_file = `${rton_file_directory}/${item.slice(0, -5)}.rton`;
+							let json_file = `${value_file_directory}/${item}`;
+							let rton_file = `${data_file_directory}/${item.slice(0, -5)}.rton`;
 							CoreX.Tool.PopCap.RTON.encode_then_encrypt_fs(json_file, rton_file, true, true, key, rton_data_buffer.view());
 						},
 					);
-					Console.notify('s', localized(`执行成功`), [`${rton_file_directory}`]);
+					Console.notify('s', localized(`执行成功`), [`${data_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
-					json_file_directory: undefined!,
-					rton_file_directory: '?default',
+					value_file_directory: undefined!,
+					data_file_directory: '?default',
 					key: config.crypt_key,
 					buffer_size: config.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
-				input_forwarder: 'json_file_directory',
+				input_forwarder: 'value_file_directory',
 			}),
 			Executor.method_of({
 				id: 'popcap.rton.decrypt_then_decode.batch',
@@ -615,25 +615,25 @@ namespace TwinKleS.Entry.method.popcap.rton {
 					return Executor.query_method_description(this.id);
 				},
 				worker(a: Entry.CFSA & {
-					rton_file_directory: Executor.RequireArgument<string>;
-					json_file_directory: Executor.RequestArgument<string, true>;
+					data_file_directory: Executor.RequireArgument<string>;
+					value_file_directory: Executor.RequestArgument<string, true>;
 					key: Executor.RequestArgument<string, false>;
 				}) {
-					let rton_file_directory: string;
-					let json_file_directory: string;
+					let data_file_directory: string;
+					let value_file_directory: string;
 					let key: string;
 					{
-						rton_file_directory = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'rton_file_directory'),
-							a.rton_file_directory,
+						data_file_directory = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'data_file_directory'),
+							a.data_file_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
-						json_file_directory = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'json_file_directory'),
-							a.json_file_directory,
+						value_file_directory = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'value_file_directory'),
+							a.value_file_directory,
 							(value) => (value),
-							() => (rton_file_directory.replace(/$/i, '.rton_decrypt_then_decode')),
+							() => (data_file_directory.replace(/$/i, '.rton_decrypt_then_decode')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
 						key = Executor.request_argument(
@@ -646,24 +646,24 @@ namespace TwinKleS.Entry.method.popcap.rton {
 						);
 					}
 					simple_batch_execute(
-						rton_file_directory,
+						data_file_directory,
 						['file', /.+(\.rton)$/i],
 						(item) => {
-							let rton_file = `${rton_file_directory}/${item}`;
-							let json_file = `${json_file_directory}/${item.slice(0, -5)}.json`;
+							let rton_file = `${data_file_directory}/${item}`;
+							let json_file = `${value_file_directory}/${item.slice(0, -5)}.json`;
 							CoreX.Tool.PopCap.RTON.decrypt_then_decode_fs(rton_file, json_file, key);
 						},
 					);
-					Console.notify('s', localized(`执行成功`), [`${json_file_directory}`]);
+					Console.notify('s', localized(`执行成功`), [`${value_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
-					rton_file_directory: undefined!,
-					json_file_directory: '?default',
+					data_file_directory: undefined!,
+					value_file_directory: '?default',
 					key: config.crypt_key,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
-				input_forwarder: 'rton_file_directory',
+				input_forwarder: 'data_file_directory',
 			}),
 		);
 	}
@@ -673,5 +673,5 @@ namespace TwinKleS.Entry.method.popcap.rton {
 }
 
 ({
-	injector: TwinKleS.Entry.method.popcap.rton._injector,
+	injector: TwinStar.Entry.method.popcap.rton._injector,
 });

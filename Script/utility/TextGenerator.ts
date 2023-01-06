@@ -1,5 +1,5 @@
 /** 文本生成器 */
-namespace TwinKleS.TextGenerator {
+namespace TwinStar.TextGenerator {
 
 	// ------------------------------------------------
 

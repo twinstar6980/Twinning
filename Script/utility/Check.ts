@@ -1,5 +1,5 @@
 /** 校验器 */
-namespace TwinKleS.Check {
+namespace TwinStar.Check {
 
 	// ------------------------------------------------
 
@@ -16,7 +16,7 @@ namespace TwinKleS.Check {
 	 * @param source 枚举值
 	 * @returns 校验器
 	 */
-	export function enum_checkerx<T>(
+	export function enumeration_checkerx<T>(
 		source: Array<T>,
 	): CheckerX<T> {
 		return (value) => (source.includes(value) ? null : localized('须为其中之一：{}', `[ ${source.join(' , ')} ]`));

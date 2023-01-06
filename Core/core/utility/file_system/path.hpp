@@ -5,19 +5,19 @@
 #include "core/utility/string/string.hpp"
 #include "core/utility/exception/base_exception/base_exception.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
 	class Path {
 
-	protected: //
+	protected:
 
 		Optional<String> m_root;
 		Boolean          m_absolute;
 		List<String>     m_sub_path;
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -224,7 +224,7 @@ namespace TwinKleS::Core {
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region operator
 

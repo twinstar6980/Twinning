@@ -6,7 +6,7 @@
 #include "core/utility/exception/special_exception.hpp"
 #include <cstdint>
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region void
 
@@ -60,9 +60,9 @@ namespace TwinKleS::Core {
 
 	// ----------------
 
-	using ZSizeX = std::size_t;
+	using ZSizeU = std::size_t;
 
-	using ZSSizeX = std::ptrdiff_t;
+	using ZSizeS = std::ptrdiff_t;
 
 	#pragma endregion
 
@@ -97,9 +97,9 @@ namespace TwinKleS::Core {
 
 	using ZByte = ZByte8;
 
-	using ZSize = ZSizeX;
+	using ZSize = ZSizeU;
 
-	using ZSSize = ZSSizeX;
+	using ZSSize = ZSizeS;
 
 	// ----------------
 
@@ -119,7 +119,7 @@ namespace TwinKleS::Core {
 
 	#pragma endregion
 
-	#pragma region misc
+	#pragma region miscellaneous
 
 	inline constexpr auto operator ""_szz (
 		ZLiteralInteger value

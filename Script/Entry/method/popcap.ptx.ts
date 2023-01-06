@@ -2,7 +2,7 @@
  * + popcap.ptx.encode PopCap-PTX 编码
  * + popcap.ptx.decode PopCap-PTX 解码
  */
-namespace TwinKleS.Entry.method.popcap.ptx {
+namespace TwinStar.Entry.method.popcap.ptx {
 
 	// ------------------------------------------------
 
@@ -116,7 +116,7 @@ namespace TwinKleS.Entry.method.popcap.ptx {
 							a.image_size,
 							(value) => (value),
 							null,
-							() => (input_image_size(``)),
+							() => (input_image_size(``)), // todo : fix empty message line
 							(value) => (value.length === 2 ? null : localized(`数组长度非法`)),
 						);
 					}
@@ -141,5 +141,5 @@ namespace TwinKleS.Entry.method.popcap.ptx {
 }
 
 ({
-	injector: TwinKleS.Entry.method.popcap.ptx._injector,
+	injector: TwinStar.Entry.method.popcap.ptx._injector,
 });

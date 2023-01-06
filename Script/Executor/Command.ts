@@ -1,5 +1,5 @@
 /** 执行器命令 */
-namespace TwinKleS.Executor {
+namespace TwinStar.Executor {
 
 	// ------------------------------------------------
 
@@ -84,7 +84,14 @@ namespace TwinKleS.Executor {
 			selected_method = target_method;
 		} else {
 			if (command.input === null) {
-				throw new Error(`input is null`);
+				Console.notify('i', localized(`此条命令未提供输入值，请输入`), []);
+				let input_value = Console.string(null);
+				Console.notify('i', localized(`此条命令是否需禁用功能过滤`), []);
+				let input_disable_filter = Console.confirm(null);
+				command.input = {
+					value: input_value,
+					disable_filter: input_disable_filter,
+				};
 			}
 			let method_state: Array<boolean> = [];
 			for (let i in method) {
@@ -94,7 +101,7 @@ namespace TwinKleS.Executor {
 				Console.notify('w', localized(`未筛选到可选的功能，故跳过此条命令`), []);
 				selected_method = null;
 			} else {
-				Console.notify('i', localized(`请选择需要应用的功能`), [localized(`跳过输入则跳过此条命令`)]);
+				Console.notify('i', localized(`请选择需要应用的功能`), [localized(`输入为空则跳过此条命令`)]);
 				selected_method = Console.option(method_state.map((e, i) => (e ? [method[i], `${method[i].descriptor()}`] : null)), null, true);
 			}
 		}

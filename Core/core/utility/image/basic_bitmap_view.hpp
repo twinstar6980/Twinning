@@ -4,7 +4,7 @@
 #include "core/utility/image/channel.hpp"
 #include "core/utility/image/pixel.hpp"
 
-namespace TwinKleS::Core::Image {
+namespace TwinStar::Core::Image {
 
 	#pragma region type
 
@@ -13,11 +13,11 @@ namespace TwinKleS::Core::Image {
 		&& (IsSameV<t_constant, ZBoolean>)
 	class BasicBitmapView {
 
-	private: //
+	private:
 
 		using CView = BasicBitmapView<TPixel, true>;
 
-	public: //
+	public:
 
 		using Pixel = TPixel;
 
@@ -27,11 +27,11 @@ namespace TwinKleS::Core::Image {
 
 		using QPixelRow = ListView<Pixel, constant>;
 
-	protected: //
+	protected:
 
 		Array<QPixelRow> m_data{};
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -145,8 +145,8 @@ namespace TwinKleS::Core::Image {
 			Range::convert_from(
 				thiz.data(),
 				image.data(),
-				[] (auto & dest_row, auto & source_row) -> auto {
-					Range::assign_from(dest_row, source_row);
+				[] (auto & destination_row, auto & source_row) -> auto {
+					Range::assign_from(destination_row, source_row);
 					return;
 				}
 			);
@@ -166,8 +166,8 @@ namespace TwinKleS::Core::Image {
 			auto sub_view = BasicBitmapView{};
 			sub_view.m_data.convert(
 				thiz.m_data.sub(position.y, size.height),
-				[&] (auto & dest_row, auto & source_row) -> auto {
-					dest_row = source_row.sub(position.x, size.width);
+				[&] (auto & destination_row, auto & source_row) -> auto {
+					destination_row = source_row.sub(position.x, size.width);
 					return;
 				}
 			);

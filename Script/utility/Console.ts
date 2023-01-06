@@ -1,26 +1,26 @@
 /** 输出工具 */
-namespace TwinKleS.Console {
+namespace TwinStar.Console {
 
 	// ------------------------------------------------
 
 	/**
-	 * 消息栏分类
-	 * + v 常规
-	 * + i 消息
-	 * + w 警告
-	 * + e 错误
-	 * + s 成功
-	 * + t 输入
+	 * 消息分类
+	 * + Verbose     常规
+	 * + Information 消息
+	 * + Warning     警告
+	 * + Error       错误
+	 * + Success     成功
+	 * + inpuT/Type  输入
 	 */
-	export type BarType = 'v' | 'i' | 'w' | 'e' | 's' | 't';
+	export type MessageType = 'v' | 'i' | 'w' | 'e' | 's' | 't';
 
 	// ------------------------------------------------
 
 	/** 是否禁用虚拟终端序列 */
 	export let cli_disable_virtual_terminal_sequences = false;
 
-	/** 消息栏属性 */
-	const k_cli_bar_text_attribute: Record<BarType, VirtualTerminalSequences.TextAttribute> = {
+	/** 消息文本属性 */
+	const k_cli_message_text_attribute: Record<MessageType, VirtualTerminalSequences.TextAttribute> = {
 		v: {
 			background: null,
 			foreground: 'default',
@@ -60,19 +60,46 @@ namespace TwinKleS.Console {
 	};
 
 	/**
-	 * 设置分类化文本属性
+	 * 设置消息文本属性
 	 * 
 	 * 仅当 cli_disable_virtual_terminal_sequences == false 时输出控制序列，以避免在不支持虚拟终端序列的环境下输出控制序列
 	 * 
 	 * @param type 类型名
 	 */
-	function cli_set_bar_text_attribute(
-		type: BarType,
+	function cli_set_message_text_attribute(
+		type: MessageType,
 	): void {
 		if (!cli_disable_virtual_terminal_sequences) {
-			Shell.cli_output(VirtualTerminalSequences.text_attribute(k_cli_bar_text_attribute[type]));
+			Shell.cli_output(VirtualTerminalSequences.text_attribute(k_cli_message_text_attribute[type]));
 		}
 		return;
+	}
+
+	// ------------------------------------------------
+
+	function basic_input_with_checker<Value>(
+		inputer: () => Value | null,
+		printer: (value: Value | null) => void,
+		checker: Check.CheckerX<Value> | null,
+		nullable: boolean,
+	): Value | null {
+		let result: Value | null;
+		while (true) {
+			let input = inputer();
+			printer(input);
+			let check_result: string | null;
+			if (input === null) {
+				check_result = nullable ? null : localized(`不可为空`);
+			} else {
+				check_result = checker === null ? null : checker(input);
+			}
+			if (check_result === null) {
+				result = input;
+				break;
+			}
+			notify('w', localized(`输入无效，请重新输入`), [`${check_result}`]);
+		}
+		return result;
 	}
 
 	// ------------------------------------------------
@@ -90,56 +117,86 @@ namespace TwinKleS.Console {
 	function cli_basic_input(
 		leading: string,
 		checker: Check.CheckerX<string> | null,
-		nullable: boolean = false,
+		nullable: boolean,
 	): string | null {
-		let result: string | null = undefined as any;
-		while (true) {
-			let input: string = undefined as any;
-			if (Shell.is_cli) {
-				cli_set_bar_text_attribute('t');
+		return basic_input_with_checker(
+			() => {
+				cli_set_message_text_attribute('t');
 				cli_basic_output(`${leading} `, true, 0, false);
-				input = Shell.cli_input();
-				cli_set_bar_text_attribute('v');
-			}
-			if (Shell.is_gui) {
-				input = Shell.gui_input_string();
-			}
-			if (nullable && input === '') {
-				result = null;
-				break;
-			}
-			if (checker === null) {
-				result = input;
-				break;
-			}
-			let check_result = checker(input);
-			if (check_result === null) {
-				result = input;
-				break;
-			}
-			notify('w', localized(`输入无效，请重新输入`), [`${check_result}`]);
-		}
-		return result;
+				let input = Shell.cli_input();
+				cli_set_message_text_attribute('v');
+				return input === '' ? null : input;
+			},
+			(value) => {
+				return;
+			},
+			checker,
+			nullable,
+		);
+	}
+
+	// ------------------------------------------------
+
+	function gui_basic_output(
+		type: MessageType,
+		title: string,
+		description: Array<string>,
+	): void {
+		Shell.gui_output_notify(type, title, description);
+		return;
+	}
+
+	function gui_basic_input<Value>(
+		inputer: () => Value | null,
+		printer_leading: string,
+		printer_content: (value: Value) => string,
+		checker: Check.CheckerX<Value> | null,
+		nullable: boolean,
+	): Value | null {
+		return basic_input_with_checker(
+			inputer,
+			(value) => {
+				gui_basic_output('t', `${printer_leading} ${value === null ? '' : printer_content(value)}`, []);
+				return;
+			},
+			checker,
+			nullable,
+		);
 	}
 
 	// ------------------------------------------------
 
 	export function notify(
-		type: BarType,
+		type: MessageType,
 		title: string,
 		description: Array<string>,
 	): void {
 		if (Shell.is_cli) {
-			cli_set_bar_text_attribute(type);
+			cli_set_message_text_attribute(type);
 			cli_basic_output(title, true, 0, true);
-			cli_set_bar_text_attribute('v');
+			cli_set_message_text_attribute('v');
 			for (let description_element of description) {
 				cli_basic_output(description_element, false, 1, true);
 			}
-			cli_set_bar_text_attribute('v');
+			cli_set_message_text_attribute('v');
 		}
 		if (Shell.is_gui) {
-			Shell.gui_output(type, title, description);
+			gui_basic_output(type, title, description);
+		}
+		return;
+	}
+
+	export function notify_error(
+		error: any,
+	): void {
+		if (error instanceof Error) {
+			if (error.name === 'NativeError') {
+				Console.notify('e', `${error.name}`, [...error.message.split('\n'), ...parse_stack_string(error.stack)]);
+			} else {
+				Console.notify('e', `${error.name} : ${error.message}`, [...parse_stack_string(error.stack)]);
+			}
+		} else {
+			Console.notify('e', `${error}`, []);
 		}
 		return;
 	}
@@ -149,7 +206,7 @@ namespace TwinKleS.Console {
 	export function pause(
 	): void {
 		if (Shell.is_cli) {
-			cli_set_bar_text_attribute('t');
+			cli_set_message_text_attribute('t');
 			if (Shell.is_windows) {
 				cli_basic_output(`P ${localized(`键入以继续 ...`)} `, true, 0, false);
 				CoreX.System.system(`pause > nul`);
@@ -165,9 +222,11 @@ namespace TwinKleS.Console {
 					Shell.cli_input();
 				}
 			}
-			cli_set_bar_text_attribute('v');
+			cli_set_message_text_attribute('v');
 		}
 		if (Shell.is_gui) {
+			Shell.gui_input_pause();
+			gui_basic_output('t', `P ${localized(`响应以继续 ...`)} `, []);
 		}
 		return;
 	}
@@ -189,16 +248,34 @@ namespace TwinKleS.Console {
 	): boolean | null {
 		let result: boolean | null = undefined as any;
 		if (Shell.is_cli) {
-			let input = cli_basic_input('C', (value) => {
-				let regexp_check_result = Check.enum_checkerx(['n', 'y'])(value);
-				if (regexp_check_result !== null) {
-					return localized(`确认值格式非法，须为 n 或 y`);
-				}
-				return checker === null ? null : checker(value === 'y');
-			}, nullable);
+			let input = cli_basic_input(
+				'C',
+				(value) => {
+					let regexp_check_result = Check.enumeration_checkerx(['n', 'y'])(value);
+					if (regexp_check_result !== null) {
+						return localized(`确认值格式非法，须为 n 或 y`);
+					}
+					return checker === null ? null : checker(parse_confirm_string(value));
+				},
+				nullable,
+			);
 			result = input === null ? null : input === 'y';
 		}
 		if (Shell.is_gui) {
+			let input = gui_basic_input(
+				() => {
+					return Shell.gui_input_confirm();
+				},
+				'C',
+				(value) => {
+					return value;
+				},
+				(value) => {
+					return checker === null ? null : checker(parse_confirm_string(value));
+				},
+				nullable,
+			);
+			result = input === null ? null : parse_confirm_string(input);
 		}
 		return result;
 	}
@@ -220,16 +297,34 @@ namespace TwinKleS.Console {
 	): number | null {
 		let result: number | null = undefined as any;
 		if (Shell.is_cli) {
-			let input = cli_basic_input('N', (value) => {
-				let regexp_check_result = Check.regexp_checkerx(/^[\\+\\-]?\d+(\.\d+)?$/)(value);
-				if (regexp_check_result !== null) {
-					return localized(`数字格式非法，{}`, regexp_check_result);
-				}
-				return checker === null ? null : checker(Number.parseFloat(value));
-			}, nullable);
+			let input = cli_basic_input(
+				'N',
+				(value) => {
+					let regexp_check_result = Check.regexp_checkerx(/^(\+|\-)?(\d+)(\.\d*)?$/)(value);
+					if (regexp_check_result !== null) {
+						return localized(`数字格式非法，{}`, regexp_check_result);
+					}
+					return checker === null ? null : checker(Number.parseFloat(value));
+				},
+				nullable,
+			);
 			result = input === null ? null : Number.parseFloat(input);
 		}
 		if (Shell.is_gui) {
+			let input = gui_basic_input(
+				() => {
+					return Shell.gui_input_number();
+				},
+				'N',
+				(value) => {
+					return value;
+				},
+				(value) => {
+					return checker === null ? null : checker(Number(value));
+				},
+				nullable,
+			);
+			result = input === null ? null : Number(input);
 		}
 		return result;
 	}
@@ -251,93 +346,83 @@ namespace TwinKleS.Console {
 	): bigint | null {
 		let result: bigint | null = undefined as any;
 		if (Shell.is_cli) {
-			let input = cli_basic_input('I', (value) => {
-				let regexp_check_result = Check.regexp_checkerx(/^[\\+\\-]?\d+$/)(value);
-				if (regexp_check_result !== null) {
-					return localized(`整数格式非法，{}`, regexp_check_result);
-				}
-				return checker === null ? null : checker(BigInt(value));
-			}, nullable);
+			let input = cli_basic_input(
+				'I',
+				(value) => {
+					let regexp_check_result = Check.regexp_checkerx(/^(\+|\-)?(\d+)$/)(value);
+					if (regexp_check_result !== null) {
+						return localized(`整数格式非法，{}`, regexp_check_result);
+					}
+					return checker === null ? null : checker(BigInt(value));
+				},
+				nullable,
+			);
 			result = input === null ? null : BigInt(input);
 		}
 		if (Shell.is_gui) {
+			let input = gui_basic_input(
+				() => {
+					return Shell.gui_input_integer();
+				},
+				'I',
+				(value) => {
+					return value;
+				},
+				(value) => {
+					return checker === null ? null : checker(BigInt(value));
+				},
+				nullable,
+			);
+			result = input === null ? null : BigInt(input);
 		}
 		return result;
 	}
 
 	// ------------------------------------------------
 
-	export function binary_size(
+	export function size(
 		checker: Check.CheckerX<bigint> | null,
 	): bigint;
 
-	export function binary_size(
+	export function size(
 		checker: Check.CheckerX<bigint> | null,
 		nullable: boolean,
 	): bigint | null;
 
-	export function binary_size(
+	export function size(
 		checker: Check.CheckerX<bigint> | null,
 		nullable: boolean = false,
 	): bigint | null {
 		let result: bigint | null = undefined as any;
 		if (Shell.is_cli) {
-			let input = cli_basic_input('Z', (value) => {
-				let regexp_check_result = Check.regexp_checkerx(/^\d+(\.\d+)?(b|k|m|g)$/)(value);
-				if (regexp_check_result !== null) {
-					return localized(`二进制尺寸格式非法，{}`, regexp_check_result);
-				}
-				return checker === null ? null : checker(parse_size_string(value));
-			}, nullable);
+			let input = cli_basic_input(
+				'Z',
+				(value) => {
+					let regexp_check_result = Check.regexp_checkerx(/^(\d+)(\.\d*)?(b|k|m|g)$/)(value);
+					if (regexp_check_result !== null) {
+						return localized(`尺寸格式非法，{}`, regexp_check_result);
+					}
+					return checker === null ? null : checker(parse_size_string(value));
+				},
+				nullable,
+			);
 			result = input === null ? null : parse_size_string(input);
 		}
 		if (Shell.is_gui) {
-		}
-		return result;
-	}
-
-	// ------------------------------------------------
-
-	export function option<Value>(
-		option: Array<[Value, string?] | null>,
-		checker: Check.CheckerX<Value> | null,
-	): Value;
-
-	export function option<Value>(
-		option: Array<[Value, string?] | null>,
-		checker: Check.CheckerX<Value> | null,
-		nullable: boolean,
-	): Value | null;
-
-	export function option<Value>(
-		option: Array<[Value, string?] | null>,
-		checker: Check.CheckerX<Value> | null,
-		nullable: boolean = false,
-	): Value | null {
-		let result: Value | null = undefined as any;
-		if (Shell.is_cli) {
-			let max_index_string_length = `${option.length}`.length;
-			let valid_option_index: Array<bigint> = [];
-			option.forEach((e, i) => {
-				if (e !== null) {
-					cli_basic_output(`${make_prefix_padded_string(i + 1, ' ', max_index_string_length)}. ${e[1] === undefined ? e[0] : e[1]}\n`, false, 1, false);
-					valid_option_index.push(BigInt(i) + 1n);
-				}
-			});
-			let input = cli_basic_input('O', (value) => {
-				let regexp_check_result = Check.regexp_checkerx(/^[\\+\\-]?\d+$/)(value);
-				if (regexp_check_result !== null) {
-					return localized(`整数格式非法，{}`, regexp_check_result);
-				}
-				let value_integer = BigInt(value);
-				if (!valid_option_index.includes(value_integer)) {
-					return localized(`输入项不在可选项中`);
-				}
-				return checker === null ? null : checker(option[Number(value_integer - 1n)]![0]);
-			}, nullable);
-			result = input === null ? null : option[Number(BigInt(input) - 1n)]![0];
-		}
-		if (Shell.is_gui) {
+			let input = gui_basic_input(
+				() => {
+					return Shell.gui_input_size();
+				},
+				'Z',
+				(value) => {
+					return value;
+				},
+				(value) => {
+					return checker === null ? null : checker(parse_size_string(value));
+				},
+				nullable,
+			);
+			result = input === null ? null : parse_size_string(input);
 		}
 		return result;
 	}
@@ -359,29 +444,106 @@ namespace TwinKleS.Console {
 	): string | null {
 		let result: string | null = undefined as any;
 		if (Shell.is_cli) {
-			let input = cli_basic_input('S', checker, nullable);
+			let input = cli_basic_input(
+				'S',
+				checker,
+				nullable,
+			);
 			result = input;
 		}
 		if (Shell.is_gui) {
+			let input = gui_basic_input(
+				() => {
+					return Shell.gui_input_string();
+				},
+				'S',
+				(value) => {
+					return value;
+				},
+				(value) => {
+					return checker === null ? null : checker(String(value));
+				},
+				nullable,
+			);
+			result = input === null ? null : String(input);
 		}
 		return result;
 	}
 
 	// ------------------------------------------------
 
-	export function notify_error(
-		error: any,
-	): void {
-		if (error instanceof Error) {
-			if (error.name === 'NativeError') {
-				Console.notify('e', `${error.name}`, [...error.message.split('\n'), ...parse_stack_string(error.stack)]);
+	export function option<Value>(
+		option: Array<[Value, string?] | bigint | null>,
+		checker: Check.CheckerX<Value> | null,
+	): Value;
+
+	export function option<Value>(
+		option: Array<[Value, string?] | bigint | null>,
+		checker: Check.CheckerX<Value> | null,
+		nullable: boolean,
+	): Value | null;
+
+	export function option<Value>(
+		option: Array<[Value, string?] | bigint | null>,
+		checker: Check.CheckerX<Value> | null,
+		nullable: boolean = false,
+	): Value | null {
+		let result: Value | null = undefined as any;
+		let max_index_string_length = `${option.length}`.length;
+		let option_index = new Array<number>();
+		let option_index_discretized = new Map<bigint, number>();
+		let option_message = new Array<string>();
+		let current_option_index = 1n;
+		option.forEach((e, i) => {
+			if (e === null) {
+				current_option_index += 1n;
+			} else if (typeof e === 'bigint') {
+				current_option_index = e;
 			} else {
-				Console.notify('e', `${error.name} : ${error.message}`, [...parse_stack_string(error.stack)]);
+				option_index.push(i);
+				option_index_discretized.set(current_option_index, i);
+				option_message.push(`${make_prefix_padded_string(current_option_index, ' ', max_index_string_length)}. ${e[1] === undefined ? e[0] : e[1]}`);
+				current_option_index += 1n;
 			}
-		} else {
-			Console.notify('e', `${error}`, []);
+		});
+		if (Shell.is_cli) {
+			option_message.forEach((e) => {
+				cli_basic_output(e, false, 1, true);
+			});
+			let input = cli_basic_input(
+				'O',
+				(value) => {
+					let regexp_check_result = Check.regexp_checkerx(/^(\+|\-)?(\d+)$/)(value);
+					if (regexp_check_result !== null) {
+						return localized(`整数格式非法，{}`, regexp_check_result);
+					}
+					let value_integer = BigInt(value);
+					if (!option_index_discretized.has(value_integer)) {
+						return localized(`输入项不在可选项中`);
+					}
+					return checker === null ? null : checker((option[option_index_discretized.get(value_integer)!] as [Value, string?])[0]);
+				},
+				nullable,
+			);
+			result = input === null ? null : (option[option_index_discretized.get(BigInt(input))!] as [Value, string?])[0];
 		}
-		return;
+		if (Shell.is_gui) {
+			let input = gui_basic_input(
+				() => {
+					return Shell.gui_input_option(option_message);
+				},
+				'O',
+				(value) => {
+					return option_message[Number(BigInt(value) - 1n)];
+				},
+				(value) => {
+					return checker === null ? null : checker((option[option_index[Number(value) - 1]] as [Value, string?])[0]);
+				},
+				nullable,
+			);
+			result = input === null ? null : (option[Number(option_index[Number(input) - 1])] as [Value, string?])[0];
+		}
+		return result;
 	}
 
 	// ------------------------------------------------

@@ -7,7 +7,7 @@
 #include "core/third_party/system/posix.hpp"
 #include <cerrno>
 
-namespace TwinKleS::Core::System::POSIX {
+namespace TwinStar::Core::System::POSIX {
 
 	#pragma region control
 
@@ -34,12 +34,12 @@ namespace TwinKleS::Core::System::POSIX {
 	inline auto system (
 		String const & command
 	) -> IntegerS32 {
-		#if defined M_system_linux || defined M_system_macos || defined M_system_android
+#if defined M_system_linux || defined M_system_macos || defined M_system_android
 		return mbw<IntegerS32>(std::system(cast_pointer<char>(make_null_terminated_string(command).begin()).value));
-		#endif
-		#if defined M_system_ios
+#endif
+#if defined M_system_ios
 		return mbw<IntegerS32>(0);
-		#endif
+#endif
 	}
 
 	inline auto process (

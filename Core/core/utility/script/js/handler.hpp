@@ -2,11 +2,11 @@
 
 #include "core/utility/container/wrapper/wrapper.hpp"
 #include "core/utility/null.hpp"
-#include "core/utility/misc/byte_series/container.hpp"
+#include "core/utility/miscellaneous/byte_series/container.hpp"
 #include "core/utility/string/string.hpp"
 #include "core/utility/data/json/value.hpp"
 
-namespace TwinKleS::Core::JS {
+namespace TwinStar::Core::JS {
 
 	#pragma region type
 
@@ -14,15 +14,15 @@ namespace TwinKleS::Core::JS {
 		CategoryConstraint<IsPureInstance<TValue>>
 	class Handler {
 
-	public: //
+	public:
 
 		using Value = TValue;
 
-	protected: //
+	protected:
 
 		Variant<Null, Pointer<Value>, std::shared_ptr<Value>> m_value{};
 
-	protected: //
+	protected:
 
 		#pragma region structor
 
@@ -40,7 +40,7 @@ namespace TwinKleS::Core::JS {
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -90,7 +90,7 @@ namespace TwinKleS::Core::JS {
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region create
 
@@ -106,13 +106,13 @@ namespace TwinKleS::Core::JS {
 			return Handler{make_pointer(&value), k_false};
 		}
 
-		template <typename ...Argument> requires
-			CategoryConstraint<IsValid<Argument...>>
-			&& (IsConstructible<Value, Argument &&...>)
+		template <typename ... Argument> requires
+			CategoryConstraint<IsValid<Argument ...>>
+			&& (IsConstructible<Value, Argument && ...>)
 		static auto new_instance_allocate (
-			Argument && ...argument
+			Argument && ... argument
 		) -> Handler {
-			return new_instance(*allocate_instance<Value>(as_forward<Argument>(argument)...));
+			return new_instance(*allocate_instance<Value>(as_forward<Argument>(argument) ...));
 		}
 
 		#pragma endregion

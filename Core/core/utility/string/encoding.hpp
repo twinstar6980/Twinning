@@ -5,7 +5,7 @@
 #include <locale>
 #include <codecvt>
 
-namespace TwinKleS::Core::StringEncoding {
+namespace TwinStar::Core::StringEncoding {
 
 	#pragma region utf-8 & utf-16
 

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "core/utility/misc/character_series/stream.hpp"
+#include "core/utility/miscellaneous/character_series/stream.hpp"
 #include "core/utility/string/string.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region character
 

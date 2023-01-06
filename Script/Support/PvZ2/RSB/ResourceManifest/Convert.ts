@@ -1,5 +1,5 @@
 /** 资源清单转换 */
-namespace TwinKleS.Support.PvZ2.RSB.ResourceManifest.Convert {
+namespace TwinStar.Support.PvZ2.RSB.ResourceManifest.Convert {
 
 	// ------------------------------------------------
 

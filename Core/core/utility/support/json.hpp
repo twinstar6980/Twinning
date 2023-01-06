@@ -1,12 +1,11 @@
 #pragma once
 
 #include "core/utility/data/json/value.hpp"
-#include "core/utility/data/json/value_adapter_utility.hpp"
 #include "core/utility/container/wrapper/wrapper.hpp"
 #include "core/utility/string/parser.hpp"
-#include "core/utility/misc/2d_type.hpp"
+#include "core/utility/miscellaneous/dimension.hpp"
 
-namespace TwinKleS::Core::JSON {
+namespace TwinStar::Core::JSON {
 
 	#pragma region basic
 
@@ -84,7 +83,9 @@ namespace TwinKleS::Core::JSON {
 
 	};
 
-	// ----------------
+	#pragma endregion
+
+	#pragma region base
 
 	template <>
 	struct ValueAdapter<Integer> {
@@ -135,6 +136,68 @@ namespace TwinKleS::Core::JSON {
 			That &       that
 		) -> Void {
 			that = thix.get_number().get_floating();
+			return;
+		}
+
+	};
+
+	// ----------------
+
+	template <>
+	struct ValueAdapter<Size> {
+
+		using This = Value;
+
+		using That = Size;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.set_number(cbw<Integer>(that));
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			that = cbw<Size>(thix.get_number().get_integer());
+			return;
+		}
+
+	};
+
+	// ----------------
+
+	template <typename TType> requires
+		AutoConstraint
+		&& (IsEnumerationWrapper<TType>)
+		&& (IsDerivedFrom<TType, Enumeration<typename TType::Value>>)
+		&& (!IsSame<TType, Enumeration<typename TType::Value>>)
+	struct ValueAdapter<TType> {
+
+		using This = Value;
+
+		using That = TType;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.set_string().from(that);
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			thix.get_string().to(that);
 			return;
 		}
 
@@ -212,13 +275,13 @@ namespace TwinKleS::Core::JSON {
 
 	// ----------------
 
-	template <typename ...TValue> requires
+	template <typename ... TValue> requires
 		AutoConstraint
-	struct ValueAdapter<Variant<TValue...>> {
+	struct ValueAdapter<Variant<TValue ...>> {
 
 		using This = Value;
 
-		using That = Variant<TValue...>;
+		using That = Variant<TValue ...>;
 
 		// ----------------
 
@@ -227,10 +290,10 @@ namespace TwinKleS::Core::JSON {
 			That const & that,
 			Size const & variant_index
 		) -> Void {
-			Generalization::execute<AsValuePackageOfIndex<sizeof...(TValue)>>(
+			Generalization::match<AsValuePackageOfIndex<sizeof...(TValue)>>(
 				variant_index.value,
-				[&] <auto index, auto variant_index> (ValuePackage<index, variant_index>) {
-					thix.from(that.template get_of_index<variant_index>());
+				[&] <auto index> (ValuePackage<index>, auto) {
+					thix.from(that.template get_of_index<mbw<Size>(index)>());
 				}
 			);
 			return;
@@ -241,10 +304,10 @@ namespace TwinKleS::Core::JSON {
 			That &       that,
 			Size const & variant_index
 		) -> Void {
-			Generalization::execute<AsValuePackageOfIndex<sizeof...(TValue)>>(
+			Generalization::match<AsValuePackageOfIndex<sizeof...(TValue)>>(
 				variant_index.value,
-				[&] <auto index, auto variant_index> (ValuePackage<index, variant_index>) {
-					thix.to(that.template set_of_index<variant_index>());
+				[&] <auto index> (ValuePackage<index>, auto) {
+					thix.to(that.template set_of_index<mbw<Size>(index)>());
 				}
 			);
 			return;
@@ -256,8 +319,9 @@ namespace TwinKleS::Core::JSON {
 			This &       thix,
 			That const & that
 		) -> Void {
-			auto & thix_object = thix.set_object(2_sz);
-			auto   variant_index = that.index();
+			auto & thix_object = thix.set_object();
+			thix_object.allocate(2_sz);
+			auto variant_index = that.index();
 			thix_object("type"_sv).from(variant_index);
 			thix_object("value"_sv).from(that, variant_index);
 			return;
@@ -268,7 +332,8 @@ namespace TwinKleS::Core::JSON {
 			That &       that
 		) -> Void {
 			auto & thix_object = thix.get_object();
-			auto   variant_index = Size{};
+			assert_condition(thix_object.size() == 2_sz);
+			auto variant_index = Size{};
 			thix_object["type"_sv].to(variant_index);
 			thix_object["value"_sv].to(that, variant_index);
 			return;
@@ -276,41 +341,41 @@ namespace TwinKleS::Core::JSON {
 
 	};
 
-	template <typename TEnum, typename ...TValue> requires
+	template <typename TEnumeration, typename ... TValue> requires
 		AutoConstraint
-	struct ValueAdapter<EnumerableVariant<TEnum, TValue...>> {
+	struct ValueAdapter<EnumerableVariant<TEnumeration, TValue ...>> {
 
 		using This = Value;
 
-		using That = EnumerableVariant<TEnum, TValue...>;
+		using That = EnumerableVariant<TEnumeration, TValue ...>;
 
 		// ----------------
 
 		static auto from (
-			This &        thix,
-			That const &  that,
-			TEnum const & variant_type
+			This &               thix,
+			That const &         that,
+			TEnumeration const & variant_type
 		) -> Void {
-			auto variant_index = mbw<Size>(variant_type);
-			Generalization::execute<AsValuePackageOfIndex<sizeof...(TValue)>>(
+			auto variant_index = cbw<Size>(variant_type);
+			Generalization::match<AsValuePackageOfIndex<sizeof...(TValue)>>(
 				variant_index.value,
-				[&] <auto index, auto variant_index> (ValuePackage<index, variant_index>) {
-					thix.from(that.template get_of_index<variant_index>());
+				[&] <auto index> (ValuePackage<index>, auto) {
+					thix.from(that.template get_of_index<mbw<Size>(index)>());
 				}
 			);
 			return;
 		}
 
 		static auto to (
-			This const &  thix,
-			That &        that,
-			TEnum const & variant_type
+			This const &         thix,
+			That &               that,
+			TEnumeration const & variant_type
 		) -> Void {
-			auto variant_index = mbw<Size>(variant_type);
-			Generalization::execute<AsValuePackageOfIndex<sizeof...(TValue)>>(
+			auto variant_index = cbw<Size>(variant_type);
+			Generalization::match<AsValuePackageOfIndex<sizeof...(TValue)>>(
 				variant_index.value,
-				[&] <auto index, auto variant_index> (ValuePackage<index, variant_index>) {
-					thix.to(that.template set_of_index<variant_index>());
+				[&] <auto index> (ValuePackage<index>, auto) {
+					thix.to(that.template set_of_index<mbw<Size>(index)>());
 				}
 			);
 			return;
@@ -322,8 +387,9 @@ namespace TwinKleS::Core::JSON {
 			This &       thix,
 			That const & that
 		) -> Void {
-			auto & thix_object = thix.set_object(2_sz);
-			auto   variant_type = that.type();
+			auto & thix_object = thix.set_object();
+			thix_object.allocate(2_sz);
+			auto variant_type = that.type();
 			thix_object("type"_sv).from(variant_type);
 			thix_object("value"_sv).from(that, variant_type);
 			return;
@@ -334,7 +400,8 @@ namespace TwinKleS::Core::JSON {
 			That &       that
 		) -> Void {
 			auto & thix_object = thix.get_object();
-			auto   variant_type = TEnum{};
+			assert_condition(thix_object.size() == 2_sz);
+			auto variant_type = TEnumeration{};
 			thix_object["type"_sv].to(variant_type);
 			thix_object["value"_sv].to(that, variant_type);
 			return;
@@ -344,13 +411,13 @@ namespace TwinKleS::Core::JSON {
 
 	// ----------------
 
-	template <typename ...TValue> requires
+	template <typename ... TValue> requires
 		AutoConstraint
-	struct ValueAdapter<Tuple<TValue...>> {
+	struct ValueAdapter<Tuple<TValue ...>> {
 
 		using This = Value;
 
-		using That = Tuple<TValue...>;
+		using That = Tuple<TValue ...>;
 
 		// ----------------
 
@@ -358,10 +425,11 @@ namespace TwinKleS::Core::JSON {
 			This &       thix,
 			That const & that
 		) -> Void {
-			auto & thix_array = thix.set_array(mbw<Size>(sizeof...(TValue)));
-			Generalization::iterate<AsValuePackageOfIndex<sizeof...(TValue)>>(
-				[&] <auto index, auto element_index> (ValuePackage<index, element_index>) {
-					thix_array(mbw<Size>(element_index)).from(that.template get<element_index>());
+			auto & thix_array = thix.set_array();
+			thix_array.allocate_full(mbw<Size>(sizeof...(TValue)));
+			Generalization::each<AsValuePackageOfIndex<sizeof...(TValue)>>(
+				[&] <auto index> (ValuePackage<index>, auto) {
+					thix_array.at(mbw<Size>(index)).from(that.template get<mbw<Size>(index)>());
 				}
 			);
 			return;
@@ -372,9 +440,10 @@ namespace TwinKleS::Core::JSON {
 			That &       that
 		) -> Void {
 			auto & thix_array = thix.get_array();
-			Generalization::iterate<AsValuePackageOfIndex<sizeof...(TValue)>>(
-				[&] <auto index, auto element_index> (ValuePackage<index, element_index>) {
-					thix_array[mbw<Size>(element_index)].to(that.template set<element_index>());
+			assert_condition(thix_array.size() == mbw<Size>(sizeof...(TValue)));
+			Generalization::each<AsValuePackageOfIndex<sizeof...(TValue)>>(
+				[&] <auto index> (ValuePackage<index>, auto) {
+					thix_array.at(mbw<Size>(index)).to(that.template set<mbw<Size>(index)>());
 				}
 			);
 			return;
@@ -470,6 +539,166 @@ namespace TwinKleS::Core::JSON {
 
 	#pragma endregion
 
+	#pragma region record
+
+	template <typename TType> requires
+		AutoConstraint
+		&& (IsDerivedFrom<TType, ListRecord>)
+	struct ValueAdapter<TType> {
+
+		using This = Value;
+
+		using That = TType;
+
+		using FieldPackage = typename TType::Reflection::MemberVariable;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			auto & thix_array = thix.set_array();
+			thix_array.allocate_full(mbw<Size>(FieldPackage::size));
+			Generalization::each<FieldPackage>(
+				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
+					thix_array.at(mbw<Size>(index)).from(Field::value_of(that));
+				}
+			);
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			auto & thix_array = thix.get_array();
+			assert_condition(thix_array.size() == mbw<Size>(FieldPackage::size));
+			Generalization::each<FieldPackage>(
+				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
+					thix_array.at(mbw<Size>(index)).to(Field::value_of(that));
+				}
+			);
+			return;
+		}
+
+	};
+
+	template <typename TType> requires
+		AutoConstraint
+		&& (IsDerivedFrom<TType, MapRecord>)
+	struct ValueAdapter<TType> {
+
+		using This = Value;
+
+		using That = TType;
+
+		using FieldPackage = typename TType::Reflection::MemberVariable;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			auto & thix_object = thix.set_object();
+			thix_object.allocate_full(mbw<Size>(FieldPackage::size));
+			Generalization::each<FieldPackage>(
+				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
+					thix_object.at(mbw<Size>(index)).key = make_string_view(Field::name.view());
+					thix_object.at(mbw<Size>(index)).value.from(Field::value_of(that));
+				}
+			);
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			auto & thix_object = thix.get_object();
+			assert_condition(thix_object.size() == mbw<Size>(FieldPackage::size));
+			Generalization::each<FieldPackage>(
+				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
+					assert_condition(thix_object.at(mbw<Size>(index)).key == make_string_view(Field::name.view()));
+					thix_object.at(mbw<Size>(index)).value.to(Field::value_of(that));
+				}
+			);
+			return;
+		}
+
+	};
+
+	// ----------------
+
+	template <typename ... TValue> requires
+		AutoConstraint
+	struct ValueAdapter<ListRecordVariant<TValue ...>> {
+
+		using This = Value;
+
+		using That = ListRecordVariant<TValue ...>;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.from(up_cast<Variant<TValue ...>>(that), that.index());
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			Generalization::match<ValuePackage<TValue::Reflection::MemberVariable::size ...>>(
+				thix.get_array().size().value,
+				[&] <auto index> (ValuePackage<index>, auto) {
+					thix.to(that.template set_of_index<mbw<Size>(index)>());
+				}
+			);
+			return;
+		}
+
+	};
+
+	template <typename ... TValue> requires
+		AutoConstraint
+	struct ValueAdapter<MapRecordVariant<TValue ...>> {
+
+		using This = Value;
+
+		using That = MapRecordVariant<TValue ...>;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.from(up_cast<Variant<TValue ...>>(that), that.index());
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			Generalization::match<ValuePackage<TValue::Reflection::MemberVariable::size ...>>(
+				thix.get_object().size().value,
+				[&] <auto index> (ValuePackage<index>, auto) {
+					thix.to(that.template set_of_index<mbw<Size>(index)>());
+				}
+			);
+			return;
+		}
+
+	};
+
+	#pragma endregion
+
 	#pragma region byte
 
 	template <>
@@ -499,9 +728,7 @@ namespace TwinKleS::Core::JSON {
 
 	};
 
-	#pragma endregion
-
-	#pragma region byte list
+	// ----------------
 
 	template <>
 	struct ValueAdapter<ByteList> {
@@ -532,15 +759,15 @@ namespace TwinKleS::Core::JSON {
 
 	#pragma endregion
 
-	#pragma region misc
+	#pragma region miscellaneous
 
-	template <typename TType> requires
+	template <typename XValue> requires
 		AutoConstraint
-	struct ValueAdapter<AsEnum<TType>> {
+	struct ValueAdapter<Position1D<XValue>> {
 
 		using This = Value;
 
-		using That = AsEnum<TType>;
+		using That = Position1D<XValue>;
 
 		// ----------------
 
@@ -548,7 +775,9 @@ namespace TwinKleS::Core::JSON {
 			This &       thix,
 			That const & that
 		) -> Void {
-			thix.set_string().from(that);
+			auto & thix_array = thix.set_array();
+			thix_array.allocate(1_sz);
+			thix_array(1_ix).from(that.x);
 			return;
 		}
 
@@ -556,21 +785,21 @@ namespace TwinKleS::Core::JSON {
 			This const & thix,
 			That &       that
 		) -> Void {
-			thix.get_string().to(that);
+			auto & thix_array = thix.get_array();
+			assert_condition(thix_array.size() == 1_sz);
+			thix_array[1_ix].to(that.x);
 			return;
 		}
 
 	};
 
-	// ----------------
-
-	template <typename TNumber> requires
+	template <typename XValue, typename YValue> requires
 		AutoConstraint
-	struct ValueAdapter<Position2D<TNumber>> {
+	struct ValueAdapter<Position2D<XValue, YValue>> {
 
 		using This = Value;
 
-		using That = Position2D<TNumber>;
+		using That = Position2D<XValue, YValue>;
 
 		// ----------------
 
@@ -578,7 +807,8 @@ namespace TwinKleS::Core::JSON {
 			This &       thix,
 			That const & that
 		) -> Void {
-			auto & thix_array = thix.set_array(2_sz);
+			auto & thix_array = thix.set_array();
+			thix_array.allocate(2_sz);
 			thix_array(1_ix).from(that.x);
 			thix_array(2_ix).from(that.y);
 			return;
@@ -589,6 +819,7 @@ namespace TwinKleS::Core::JSON {
 			That &       that
 		) -> Void {
 			auto & thix_array = thix.get_array();
+			assert_condition(thix_array.size() == 2_sz);
 			thix_array[1_ix].to(that.x);
 			thix_array[2_ix].to(that.y);
 			return;
@@ -596,13 +827,13 @@ namespace TwinKleS::Core::JSON {
 
 	};
 
-	template <typename TNumber> requires
+	template <typename XValue, typename YValue, typename ZValue> requires
 		AutoConstraint
-	struct ValueAdapter<Size2D<TNumber>> {
+	struct ValueAdapter<Position3D<XValue, YValue, ZValue>> {
 
 		using This = Value;
 
-		using That = Size2D<TNumber>;
+		using That = Position3D<XValue, YValue, ZValue>;
 
 		// ----------------
 
@@ -610,7 +841,76 @@ namespace TwinKleS::Core::JSON {
 			This &       thix,
 			That const & that
 		) -> Void {
-			auto & thix_array = thix.set_array(2_sz);
+			auto & thix_array = thix.set_array();
+			thix_array.allocate(3_sz);
+			thix_array(1_ix).from(that.x);
+			thix_array(2_ix).from(that.y);
+			thix_array(3_ix).from(that.z);
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			auto & thix_array = thix.get_array();
+			assert_condition(thix_array.size() == 3_sz);
+			thix_array[1_ix].to(that.x);
+			thix_array[2_ix].to(that.y);
+			thix_array[3_ix].to(that.z);
+			return;
+		}
+
+	};
+
+	template <typename XValue> requires
+		AutoConstraint
+	struct ValueAdapter<Size1D<XValue>> {
+
+		using This = Value;
+
+		using That = Size1D<XValue>;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			auto & thix_array = thix.set_array();
+			thix_array.allocate(1_sz);
+			thix_array(1_ix).from(that.width);
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			auto & thix_array = thix.get_array();
+			assert_condition(thix_array.size() == 1_sz);
+			thix_array[1_ix].to(that.width);
+			return;
+		}
+
+	};
+
+	template <typename XValue, typename YValue> requires
+		AutoConstraint
+	struct ValueAdapter<Size2D<XValue, YValue>> {
+
+		using This = Value;
+
+		using That = Size2D<XValue, YValue>;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			auto & thix_array = thix.set_array();
+			thix_array.allocate(2_sz);
 			thix_array(1_ix).from(that.width);
 			thix_array(2_ix).from(that.height);
 			return;
@@ -621,8 +921,45 @@ namespace TwinKleS::Core::JSON {
 			That &       that
 		) -> Void {
 			auto & thix_array = thix.get_array();
+			assert_condition(thix_array.size() == 2_sz);
 			thix_array[1_ix].to(that.width);
 			thix_array[2_ix].to(that.height);
+			return;
+		}
+
+	};
+
+	template <typename XValue, typename YValue, typename ZValue> requires
+		AutoConstraint
+	struct ValueAdapter<Size3D<XValue, YValue, ZValue>> {
+
+		using This = Value;
+
+		using That = Size3D<XValue, YValue, ZValue>;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			auto & thix_array = thix.set_array();
+			thix_array.allocate(3_sz);
+			thix_array(1_ix).from(that.width);
+			thix_array(2_ix).from(that.height);
+			thix_array(3_ix).from(that.depth);
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			auto & thix_array = thix.get_array();
+			assert_condition(thix_array.size() == 3_sz);
+			thix_array[1_ix].to(that.width);
+			thix_array[2_ix].to(that.height);
+			thix_array[3_ix].to(that.depth);
 			return;
 		}
 

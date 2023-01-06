@@ -2,33 +2,33 @@
 
 #include "core/utility/script/js/js.hpp"
 
-namespace TwinKleS::Core::JS {
+namespace TwinStar::Core::JS {
 
 	#pragma region proxy function by handler
 
 	namespace Detail {
 
-		template <auto function, typename ...Argument> requires
+		template <auto function, typename ... Argument> requires
 			NoneConstraint
 		inline auto proxy_function_by_handler (
-			Handler<AsPure<Argument>> & ...argument
+			Handler<AsPure<Argument>> & ... argument
 		) -> auto {
 			using Result = typename CallableTraitOf<function>::Result;
 			if constexpr (IsVoid<Result>) {
-				return function(as_forward<Argument>(argument.value())...);
+				return function(as_forward<Argument>(argument.value()) ...);
 			} else if constexpr (IsInstance<Result>) {
-				return Handler<Result>::new_instance_allocate(function(as_forward<Argument>(argument.value())...));
+				return Handler<Result>::new_instance_allocate(function(as_forward<Argument>(argument.value()) ...));
 			} else {
-				return Handler<AsPure<Result>>::new_reference(function(as_forward<Argument>(argument.value())...));
+				return Handler<AsPure<Result>>::new_reference(function(as_forward<Argument>(argument.value()) ...));
 			}
 		}
 
-		template <auto function, auto ...argument_index> requires
+		template <auto function, auto ... argument_index> requires
 			NoneConstraint
 		inline constexpr auto make_proxy_function_by_handler (
-			ValuePackage<argument_index...>
+			ValuePackage<argument_index ...>
 		) -> auto {
-			return &proxy_function_by_handler<function, typename CallableTraitOf<function>::Argument::template Element<argument_index>...>;
+			return &proxy_function_by_handler<function, typename CallableTraitOf<function>::Argument::template Element<argument_index> ...>;
 		}
 
 	}
@@ -47,29 +47,29 @@ namespace TwinKleS::Core::JS {
 
 	namespace Detail {
 
-		template <typename Type, typename ...Argument> requires
+		template <typename Type, typename ... Argument> requires
 			NoneConstraint
 		inline constexpr auto proxy_allocate_handler (
-			Handler<AsPure<Argument>> & ...argument
+			Handler<AsPure<Argument>> & ... argument
 		) -> Handler<Type> {
-			return Handler<Type>::new_instance_allocate(as_forward<Argument>(argument.value())...);
+			return Handler<Type>::new_instance_allocate(as_forward<Argument>(argument.value()) ...);
 		}
 
-		template <typename Type, typename ...Argument> requires
+		template <typename Type, typename ... Argument> requires
 			NoneConstraint
 		inline constexpr auto make_proxy_allocate_handler (
 		) -> auto {
-			return &proxy_allocate_handler<Type, Argument...>;
+			return &proxy_allocate_handler<Type, Argument ...>;
 		}
 
 	}
 
 	// ----------------
 
-	template <typename Type, typename ...Argument> requires
-		CategoryConstraint<IsPureInstance<Type> && IsValid<Argument...>>
-		&& (IsConstructible<Type, Argument &&...>)
-	inline constexpr auto & proxy_allocate_handler = *Detail::make_proxy_allocate_handler<Type, Argument...>();
+	template <typename Type, typename ... Argument> requires
+		CategoryConstraint<IsPureInstance<Type> && IsValid<Argument ...>>
+		&& (IsConstructible<Type, Argument && ...>)
+	inline constexpr auto & proxy_allocate_handler = *Detail::make_proxy_allocate_handler<Type, Argument ...>();
 
 	#pragma endregion
 
@@ -105,11 +105,11 @@ namespace TwinKleS::Core::JS {
 		CategoryConstraint<IsPureInstance<TClass>>
 	class ClassBuilder {
 
-	public: //
+	public:
 
 		using Class = TClass;
 
-	protected: //
+	protected:
 
 		Context          m_context;
 		Value            m_parent;
@@ -118,7 +118,7 @@ namespace TwinKleS::Core::JS {
 		Value            m_prototype;
 		Value            m_constructor;
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -154,7 +154,7 @@ namespace TwinKleS::Core::JS {
 			m_constructor{} {
 			thiz.m_context.runtime().template register_class<Class>(name);
 			thiz.m_prototype = thiz.m_context.new_value();
-			thiz.m_prototype.set_object();
+			thiz.m_prototype.set_object_of_object();
 			thiz.m_context.template set_class_prototype<Class>(Value{thiz.m_prototype});
 		}
 
@@ -191,7 +191,7 @@ namespace TwinKleS::Core::JS {
 		) -> ClassBuilder& {
 			thiz.m_constructor = thiz.m_context.new_value(ConstructorWrapper<function>{thiz.whole_name(), k_false});
 			quickjs::JS_SetConstructor(thiz.m_context._context(), thiz.m_constructor._value(), thiz.m_prototype._value());
-			thiz.m_parent.define_object_property_value(
+			thiz.m_parent.define_object_property(
 				thiz.m_name,
 				Value::new_reference(thiz.m_context._context(), thiz.m_constructor._value())
 			);
@@ -205,7 +205,7 @@ namespace TwinKleS::Core::JS {
 		auto add_second_constructor (
 			String const & name
 		) -> ClassBuilder& {
-			thiz.m_constructor.define_object_property_value(
+			thiz.m_constructor.define_object_property(
 				name,
 				thiz.m_context.new_value(ConstructorWrapper<function>{thiz.whole_name(), k_true})
 			);
@@ -222,7 +222,7 @@ namespace TwinKleS::Core::JS {
 		auto add_static_function (
 			String const & name
 		) -> ClassBuilder& {
-			thiz.m_constructor.define_object_property_value(
+			thiz.m_constructor.define_object_property(
 				name,
 				thiz.m_context.new_value(FunctionWrapper<function, false>{name})
 			);
@@ -236,7 +236,7 @@ namespace TwinKleS::Core::JS {
 		auto add_member_function (
 			String const & name
 		) -> ClassBuilder& {
-			thiz.m_prototype.define_object_property_value(
+			thiz.m_prototype.define_object_property(
 				name,
 				thiz.m_context.new_value(FunctionWrapper<function, true>{name})
 			);
@@ -256,7 +256,7 @@ namespace TwinKleS::Core::JS {
 		auto add_getter_setter (
 			String const & name
 		) -> ClassBuilder& {
-			thiz.m_prototype.define_object_property_getter_setter(
+			thiz.m_prototype.define_object_property(
 				name,
 				thiz.m_context.new_value(FunctionWrapper<getter, true>{name}),
 				thiz.m_context.new_value(FunctionWrapper<setter, true>{name})
@@ -271,7 +271,7 @@ namespace TwinKleS::Core::JS {
 		auto add_getter (
 			String const & name
 		) -> ClassBuilder& {
-			thiz.m_prototype.define_object_property_getter_setter(
+			thiz.m_prototype.define_object_property(
 				name,
 				thiz.m_context.new_value(FunctionWrapper<getter, true>{name}),
 				[&] {
@@ -287,21 +287,21 @@ namespace TwinKleS::Core::JS {
 
 		#pragma region by proxy
 
-		template <typename ...Argument> requires
-			CategoryConstraint<IsValid<Argument...>>
-			&& (IsConstructible<Class, Argument...>)
+		template <typename ... Argument> requires
+			CategoryConstraint<IsValid<Argument ...>>
+			&& (IsConstructible<Class, Argument ...>)
 		auto set_constructor_allocate_proxy (
 		) -> ClassBuilder& {
-			return thiz.template set_constructor<&proxy_allocate_handler<Class, Argument...>>();
+			return thiz.template set_constructor<&proxy_allocate_handler<Class, Argument ...>>();
 		}
 
-		template <typename ...Argument> requires
-			CategoryConstraint<IsValid<Argument...>>
-			&& (IsConstructible<Class, Argument...>)
+		template <typename ... Argument> requires
+			CategoryConstraint<IsValid<Argument ...>>
+			&& (IsConstructible<Class, Argument ...>)
 		auto add_second_constructor_allocate_proxy (
 			String const & name
 		) -> ClassBuilder& {
-			return thiz.template add_second_constructor<&proxy_allocate_handler<Class, Argument...>>(name);
+			return thiz.template add_second_constructor<&proxy_allocate_handler<Class, Argument ...>>(name);
 		}
 
 		// ----------------
@@ -341,14 +341,14 @@ namespace TwinKleS::Core::JS {
 
 	class NamespaceBuilder {
 
-	protected: //
+	protected:
 
 		Context          m_context;
 		Optional<String> m_parent_name;
 		String           m_name;
 		Value            m_object;
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -381,8 +381,8 @@ namespace TwinKleS::Core::JS {
 			m_name{name},
 			m_object{} {
 			thiz.m_object = thiz.m_context.new_value();
-			thiz.m_object.set_object();
-			parent.define_object_property_value(thiz.m_name, Value::new_reference(thiz.m_object._context(), thiz.m_object._value()));
+			thiz.m_object.set_object_of_object();
+			parent.define_object_property(thiz.m_name, Value::new_reference(thiz.m_object._context(), thiz.m_object._value()));
 		}
 
 		#pragma endregion
@@ -428,7 +428,7 @@ namespace TwinKleS::Core::JS {
 			String const & name,
 			Value &&       value
 		) -> NamespaceBuilder& {
-			thiz.m_object.define_object_property_value(name, as_moveable(value));
+			thiz.m_object.define_object_property(name, as_moveable(value));
 			return thiz;
 		}
 

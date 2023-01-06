@@ -16,7 +16,7 @@
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinKleS::Core::ThirdParty::rg_etc1 {
+namespace TwinStar::Core::ThirdParty::rg_etc1 {
 
 	using namespace ::rg_etc1;
 

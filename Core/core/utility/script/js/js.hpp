@@ -2,14 +2,14 @@
 
 #include "core/utility/container/wrapper/wrapper.hpp"
 #include "core/utility/null.hpp"
-#include "core/utility/misc/byte_series/container.hpp"
+#include "core/utility/miscellaneous/byte_series/container.hpp"
 #include "core/utility/string/string.hpp"
 #include "core/utility/data/json/value.hpp"
 #include "core/utility/script/js/value_adapter.hpp"
 #include "core/utility/script/js/handler.hpp"
 #include "core/third_party/quickjs.hpp"
 
-namespace TwinKleS::Core::JS {
+namespace TwinStar::Core::JS {
 
 	#pragma region namespace alias
 
@@ -37,12 +37,12 @@ namespace TwinKleS::Core::JS {
 
 	class Runtime {
 
-	protected: //
+	protected:
 
 		Pointer<quickjs::JSRuntime> m_runtime;
 		Boolean                     m_is_holder;
 
-	protected: //
+	protected:
 
 		#pragma region structor
 
@@ -56,7 +56,7 @@ namespace TwinKleS::Core::JS {
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region create
 
@@ -73,7 +73,7 @@ namespace TwinKleS::Core::JS {
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -151,12 +151,12 @@ namespace TwinKleS::Core::JS {
 
 	class Context {
 
-	protected: //
+	protected:
 
 		Pointer<quickjs::JSContext> m_context;
 		Boolean                     m_is_holder;
 
-	protected: //
+	protected:
 
 		#pragma region structor
 
@@ -170,7 +170,7 @@ namespace TwinKleS::Core::JS {
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region create
 
@@ -188,7 +188,7 @@ namespace TwinKleS::Core::JS {
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -309,12 +309,12 @@ namespace TwinKleS::Core::JS {
 
 	class Value {
 
-	protected: //
+	protected:
 
 		Optional<ZPointer<quickjs::JSContext>> m_context;
 		quickjs::JSValue                       m_value;
 
-	protected: //
+	protected:
 
 		#pragma region structor
 
@@ -336,7 +336,7 @@ namespace TwinKleS::Core::JS {
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region create
 
@@ -356,21 +356,20 @@ namespace TwinKleS::Core::JS {
 
 		// ----------------
 
-		template <typename ValueObject> requires
-			CategoryConstraint<IsValid<ValueObject>>
-			&& (!IsSame<AsPure<ValueObject>, quickjs::JSValue>)
+		template <typename ... Argument> requires
+			CategoryConstraint<IsValid<Argument ...>>
 		static auto new_instance_of (
 			ZPointer<quickjs::JSContext> const & context,
-			ValueObject &&                       value
+			Argument && ...                      argument
 		) -> Value {
 			auto result = new_instance(context);
-			result.from(value);
+			result.from(as_forward<Argument>(argument) ...);
 			return result;
 		}
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -503,12 +502,12 @@ namespace TwinKleS::Core::JS {
 			return thiz.new_instance(thiz._context());
 		}
 
-		template <typename ValueObject> requires
-			CategoryConstraint<IsValid<ValueObject>>
+		template <typename ... Argument> requires
+			CategoryConstraint<IsValid<Argument ...>>
 		auto new_value (
-			ValueObject && value
+			Argument && ... argument
 		) -> Value {
-			return thiz.new_instance_of(thiz._context(), value);
+			return thiz.new_instance_of(thiz._context(), as_forward<Argument>(argument) ...);
 		}
 
 		#pragma endregion
@@ -571,6 +570,8 @@ namespace TwinKleS::Core::JS {
 			return mbw<Boolean>(quickjs::JS_IsObject(thiz._value()));
 		}
 
+		// ----------------
+
 		auto is_exception (
 		) -> Boolean {
 			assert_condition(thiz.m_context);
@@ -580,6 +581,12 @@ namespace TwinKleS::Core::JS {
 		#pragma endregion
 
 		#pragma region get
+
+		auto get_undefined (
+		) -> Void {
+			assert_condition(thiz.is_undefined());
+			return;
+		}
 
 		auto get_null (
 		) -> Null {
@@ -618,6 +625,16 @@ namespace TwinKleS::Core::JS {
 			auto value = make_string(raw_value, raw_length);
 			quickjs::JS_FreeCString(thiz._context(), raw_value);
 			return value;
+		}
+
+		// ----------------
+
+		auto get_object_of_array_buffer (
+		) -> VByteListView {
+			auto size = size_t{};
+			auto data = quickjs::JS_GetArrayBuffer(thiz._context(), &size, thiz._value());
+			assert_condition(data);
+			return VByteListView{cast_pointer<Byte>(make_pointer(data)), mbw<Size>(size)};
 		}
 
 		#pragma endregion
@@ -659,14 +676,16 @@ namespace TwinKleS::Core::JS {
 			return thiz._rebind_value(quickjs::JS_NewStringLen(thiz._context(), cast_pointer<char>(value.begin()).value, value.size().value));
 		}
 
-		// todo : sv remove
+		// TODO : sv remove
 		auto set_string (
 			CStringView const & value
 		) -> Void {
 			return thiz._rebind_value(quickjs::JS_NewStringLen(thiz._context(), cast_pointer<char>(value.begin()).value, value.size().value));
 		}
 
-		auto set_object (
+		// ----------------
+
+		auto set_object_of_object (
 		) -> Void {
 			return thiz._rebind_value(quickjs::JS_NewObject(thiz._context()));
 		}
@@ -747,116 +766,223 @@ namespace TwinKleS::Core::JS {
 
 		#pragma endregion
 
+		#pragma region object class name
+
+		auto get_object_class_name (
+		) -> String {
+			assert_condition(thiz.is_object());
+			return thiz.get_object_prototype().get_object_property("constructor"_sv).get_object_property("name"_sv).get_string();
+		}
+
+		// ----------------
+
+		auto is_object_of_class (
+			String const & name
+		) -> Boolean {
+			return thiz.is_object() && thiz.get_object_class_name() == name;
+		}
+
+		// TODO : sv remove
+		auto is_object_of_class (
+			CStringView const & name
+		) -> Boolean {
+			return thiz.is_object() && thiz.get_object_class_name() == name;
+		}
+
+		// ----------------
+
+		auto is_object_of_object (
+		) -> Boolean {
+			return thiz.is_object_of_class("Object"_sv);
+		}
+
+		auto is_object_of_array (
+		) -> Boolean {
+			return thiz.is_object_of_class("Array"_sv);
+		}
+
+		#pragma endregion
+
 		#pragma region object property
 
-		// todo : sv remove
-		auto get_object_property (
-			CStringView const & name
-		) -> Value {
-			assert_condition(thiz.is_object());
-			return thiz.new_instance(thiz._context(), quickjs::JS_GetPropertyStr(thiz._context(), thiz._value(), cast_pointer<char>(make_null_terminated_string(name).begin()).value));
-		}
-
-		auto get_object_property (
-			String const & name
-		) -> Value {
-			assert_condition(thiz.is_object());
-			return thiz.new_instance(thiz._context(), quickjs::JS_GetPropertyStr(thiz._context(), thiz._value(), cast_pointer<char>(make_null_terminated_string(name).begin()).value));
-		}
-
-		auto get_object_property (
-			Size const & index
-		) -> Value {
-			assert_condition(thiz.is_object());
-			return thiz.new_instance(thiz._context(), quickjs::JS_GetPropertyUint32(thiz._context(), thiz._value(), static_cast<uint32_t>(index.value)));
-		}
-
-		// ----------------
-
-		auto set_object_property (
+		auto define_object_property (
 			String const & name,
 			Value &&       value
-		) -> Void {
-			assert_condition(thiz.is_object());
-			quickjs::JS_SetPropertyStr(thiz._context(), thiz._value(), cast_pointer<char>(make_null_terminated_string(name).begin()).value, value._release_value());
-			return;
-		}
-
-		auto set_object_property (
-			Size const & index,
-			Value &&     value
-		) -> Void {
-			assert_condition(thiz.is_object());
-			quickjs::JS_SetPropertyUint32(thiz._context(), thiz._value(), static_cast<uint32_t>(index.value), value._release_value());
-			return;
-		}
-
-		// ----------------
-
-		// todo : sv remove
-		auto define_object_property_value (
-			CStringView const & name,
-			Value &&            value
-		) -> Void {
-			assert_condition(thiz.is_object());
-			quickjs::JS_DefinePropertyValueStr(thiz._context(), thiz._value(), cast_pointer<char>(make_null_terminated_string(name).begin()).value, value._release_value(), quickjs::JS_PROP_C_W_E_);
-			return;
-		}
-
-		auto define_object_property_value (
-			String const & name,
-			Value &&       value
-		) -> Void {
-			assert_condition(thiz.is_object());
-			quickjs::JS_DefinePropertyValueStr(thiz._context(), thiz._value(), cast_pointer<char>(make_null_terminated_string(name).begin()).value, value._release_value(), quickjs::JS_PROP_C_W_E_);
-			return;
-		}
-
-		auto define_object_property_value (
-			Size const & index,
-			Value &&     value
-		) -> Void {
-			assert_condition(thiz.is_object());
-			quickjs::JS_DefinePropertyValueUint32(thiz._context(), thiz._value(), static_cast<uint32_t>(index.value), value._release_value(), quickjs::JS_PROP_C_W_E_);
-			return;
-		}
-
-		// ----------------
-
-		// todo : sv remove
-		auto define_object_property_getter_setter (
-			CStringView const & name,
-			Value &&            getter,
-			Value &&            setter
 		) -> Void {
 			assert_condition(thiz.is_object());
 			auto atom = quickjs::JS_NewAtomLen(thiz._context(), cast_pointer<char>(name.begin()).value, name.size().value);
-			quickjs::JS_DefinePropertyGetSet(thiz._context(), thiz._value(), atom, getter._release_value(), setter._release_value(), quickjs::JS_PROP_C_W_E_);
+			auto result = quickjs::JS_DefinePropertyValue(thiz._context(), thiz._value(), atom, value._release_value(), quickjs::JS_PROP_C_W_E_);
 			quickjs::JS_FreeAtom(thiz._context(), atom);
+			assert_condition(result != -1);
+			assert_condition(result == 1);
 			return;
 		}
 
-		auto define_object_property_getter_setter (
+		auto define_object_property (
+			Size const & index,
+			Value &&     value
+		) -> Void {
+			assert_condition(thiz.is_object());
+			auto atom = quickjs::JS_NewAtomUInt32(thiz._context(), static_cast<uint32_t>(index.value));
+			auto result = quickjs::JS_DefinePropertyValue(thiz._context(), thiz._value(), atom, value._release_value(), quickjs::JS_PROP_C_W_E_);
+			quickjs::JS_FreeAtom(thiz._context(), atom);
+			assert_condition(result != -1);
+			assert_condition(result == 1);
+			return;
+		}
+
+		// ----------------
+
+		auto define_object_property (
 			String const & name,
 			Value &&       getter,
 			Value &&       setter
 		) -> Void {
 			assert_condition(thiz.is_object());
 			auto atom = quickjs::JS_NewAtomLen(thiz._context(), cast_pointer<char>(name.begin()).value, name.size().value);
-			quickjs::JS_DefinePropertyGetSet(thiz._context(), thiz._value(), atom, getter._release_value(), setter._release_value(), quickjs::JS_PROP_C_W_E_);
+			auto result = quickjs::JS_DefinePropertyGetSet(thiz._context(), thiz._value(), atom, getter._release_value(), setter._release_value(), quickjs::JS_PROP_C_W_E_);
 			quickjs::JS_FreeAtom(thiz._context(), atom);
+			assert_condition(result != -1);
+			assert_condition(result == 1);
 			return;
 		}
 
-		auto define_object_property_getter_setter (
+		auto define_object_property (
 			Size const & index,
 			Value &&     getter,
 			Value &&     setter
 		) -> Void {
 			assert_condition(thiz.is_object());
 			auto atom = quickjs::JS_NewAtomUInt32(thiz._context(), static_cast<uint32_t>(index.value));
-			quickjs::JS_DefinePropertyGetSet(thiz._context(), thiz._value(), atom, getter._release_value(), setter._release_value(), quickjs::JS_PROP_C_W_E_);
+			auto result = quickjs::JS_DefinePropertyGetSet(thiz._context(), thiz._value(), atom, getter._release_value(), setter._release_value(), quickjs::JS_PROP_C_W_E_);
 			quickjs::JS_FreeAtom(thiz._context(), atom);
+			assert_condition(result != -1);
+			assert_condition(result == 1);
+			return;
+		}
+
+		// ----------------
+
+		auto delete_object_property (
+			String const & name
+		) -> Void {
+			assert_condition(thiz.is_object());
+			auto atom = quickjs::JS_NewAtomLen(thiz._context(), cast_pointer<char>(name.begin()).value, name.size().value);
+			auto result = quickjs::JS_DeleteProperty(thiz._context(), thiz._value(), atom, quickjs::JS_PROP_THROW_);
+			quickjs::JS_FreeAtom(thiz._context(), atom);
+			assert_condition(result != -1);
+			assert_condition(result == 1);
+			return;
+		}
+
+		auto delete_object_property (
+			Size const & index
+		) -> Void {
+			assert_condition(thiz.is_object());
+			auto atom = quickjs::JS_NewAtomUInt32(thiz._context(), static_cast<uint32_t>(index.value));
+			auto result = quickjs::JS_DeleteProperty(thiz._context(), thiz._value(), atom, quickjs::JS_PROP_THROW_);
+			quickjs::JS_FreeAtom(thiz._context(), atom);
+			assert_condition(result != -1);
+			assert_condition(result == 1);
+			return;
+		}
+
+		// ----------------
+
+		auto has_object_property (
+			String const & name
+		) -> Boolean {
+			assert_condition(thiz.is_object());
+			auto atom = quickjs::JS_NewAtomLen(thiz._context(), cast_pointer<char>(name.begin()).value, name.size().value);
+			auto result = quickjs::JS_HasProperty(thiz._context(), thiz._value(), atom);
+			quickjs::JS_FreeAtom(thiz._context(), atom);
+			assert_condition(result != -1);
+			return mbw<Boolean>(result == 1);
+		}
+
+		auto has_object_property (
+			Size const & index
+		) -> Boolean {
+			assert_condition(thiz.is_object());
+			auto atom = quickjs::JS_NewAtomUInt32(thiz._context(), static_cast<uint32_t>(index.value));
+			auto result = quickjs::JS_HasProperty(thiz._context(), thiz._value(), atom);
+			quickjs::JS_FreeAtom(thiz._context(), atom);
+			assert_condition(result != -1);
+			return mbw<Boolean>(result == 1);
+		}
+
+		// ----------------
+
+		// TODO : sv remove
+		auto get_object_property (
+			CStringView const & name
+		) -> Value {
+			assert_condition(thiz.is_object());
+			auto atom = quickjs::JS_NewAtomLen(thiz._context(), cast_pointer<char>(name.begin()).value, name.size().value);
+			auto result = quickjs::JS_GetProperty(thiz._context(), thiz._value(), atom);
+			quickjs::JS_FreeAtom(thiz._context(), atom);
+			return thiz.new_instance(thiz._context(), result);
+		}
+
+		auto get_object_property (
+			String const & name
+		) -> Value {
+			assert_condition(thiz.is_object());
+			auto atom = quickjs::JS_NewAtomLen(thiz._context(), cast_pointer<char>(name.begin()).value, name.size().value);
+			auto result = quickjs::JS_GetProperty(thiz._context(), thiz._value(), atom);
+			quickjs::JS_FreeAtom(thiz._context(), atom);
+			return thiz.new_instance(thiz._context(), result);
+		}
+
+		auto get_object_property (
+			Size const & index
+		) -> Value {
+			assert_condition(thiz.is_object());
+			auto atom = quickjs::JS_NewAtomUInt32(thiz._context(), static_cast<uint32_t>(index.value));
+			auto result = quickjs::JS_GetProperty(thiz._context(), thiz._value(), atom);
+			quickjs::JS_FreeAtom(thiz._context(), atom);
+			return thiz.new_instance(thiz._context(), result);
+		}
+
+		// ----------------
+
+		// TODO : sv remove
+		auto set_object_property (
+			CStringView const & name,
+			Value &&            value
+		) -> Void {
+			assert_condition(thiz.is_object());
+			auto atom = quickjs::JS_NewAtomLen(thiz._context(), cast_pointer<char>(name.begin()).value, name.size().value);
+			auto result = quickjs::JS_SetProperty(thiz._context(), thiz._value(), atom, value._release_value());
+			quickjs::JS_FreeAtom(thiz._context(), atom);
+			assert_condition(result != -1);
+			assert_condition(result == 1);
+			return;
+		}
+
+		auto set_object_property (
+			String const & name,
+			Value &&       value
+		) -> Void {
+			assert_condition(thiz.is_object());
+			auto atom = quickjs::JS_NewAtomLen(thiz._context(), cast_pointer<char>(name.begin()).value, name.size().value);
+			auto result = quickjs::JS_SetProperty(thiz._context(), thiz._value(), atom, value._release_value());
+			quickjs::JS_FreeAtom(thiz._context(), atom);
+			assert_condition(result != -1);
+			assert_condition(result == 1);
+			return;
+		}
+
+		auto set_object_property (
+			Size const & index,
+			Value &&     value
+		) -> Void {
+			assert_condition(thiz.is_object());
+			auto atom = quickjs::JS_NewAtomUInt32(thiz._context(), static_cast<uint32_t>(index.value));
+			auto result = quickjs::JS_SetProperty(thiz._context(), thiz._value(), atom, value._release_value());
+			quickjs::JS_FreeAtom(thiz._context(), atom);
+			assert_condition(result != -1);
+			assert_condition(result == 1);
 			return;
 		}
 
@@ -864,7 +990,7 @@ namespace TwinKleS::Core::JS {
 
 		#pragma region object own property
 
-		auto get_object_own_property (
+		auto collect_object_own_property (
 		) -> Map<String, Value> {
 			assert_condition(thiz.is_object());
 			auto property_enum = ZPointer<quickjs::JSPropertyEnum>{};
@@ -880,16 +1006,27 @@ namespace TwinKleS::Core::JS {
 			return result;
 		}
 
-		#pragma endregion
+		// ----------------
 
-		#pragma region array buffer data
+		auto collect_object_own_property_of_object (
+		) -> Map<String, Value> {
+			assert_condition(thiz.is_object_of_object());
+			auto map = thiz.collect_object_own_property();
+			return map;
+		}
 
-		auto get_object_data_of_array_buffer (
-		) -> VByteListView {
-			auto size = size_t{};
-			auto data = quickjs::JS_GetArrayBuffer(thiz._context(), &size, thiz._value());
-			assert_condition(data);
-			return VByteListView{cast_pointer<Byte>(make_pointer(data)), mbw<Size>(size)};
+		auto collect_object_own_property_of_array (
+		) -> List<Value> {
+			assert_condition(thiz.is_object_of_array());
+			auto map = thiz.collect_object_own_property();
+			auto list = List<Value>{};
+			auto length = cbw<Size>(map["length"_sv].to_of<Floating>());
+			list.allocate_full(length);
+			for (auto & index : SizeRange{length}) {
+				assert_condition(cbw<Size>(map.at(index).key.to_of<Integer>()) == index);
+				list[index] = as_moveable(map.at(index).value);
+			}
+			return list;
 		}
 
 		#pragma endregion
@@ -928,72 +1065,40 @@ namespace TwinKleS::Core::JS {
 
 		#pragma endregion
 
-		#pragma region class name
-
-		auto get_object_class_name (
-		) -> String {
-			assert_condition(thiz.is_object());
-			return thiz.get_object_prototype().get_object_property("constructor"_sv).get_object_property("name"_sv).get_string();
-		}
-
-		// ----------------
-
-		auto is_object_of_class (
-			String const & name
-		) -> Boolean {
-			return thiz.is_object() && thiz.get_object_class_name() == name;
-		}
-
-		// todo : sv remove
-		auto is_object_of_class (
-			CStringView const & name
-		) -> Boolean {
-			return thiz.is_object() && thiz.get_object_class_name() == name;
-		}
-
-		// ----------------
-
-		auto is_object_of_array (
-		) -> Boolean {
-			return thiz.is_object_of_class("Array"_sv);
-		}
-
-		#pragma endregion
-
 		#pragma region from & to by adapter
 
-		template <typename That, typename ...Option> requires
-			CategoryConstraint<IsValid<That> && IsValid<Option...>>
+		template <typename That, typename ... Option> requires
+			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
 		auto from (
-			That &&      that,
-			Option && ...option
+			That &&       that,
+			Option && ... option
 		) -> Void {
 			assert_condition(thiz.m_context);
 			thiz.set_uninitialized();
-			ValueAdapter<AsPure<That>>::from(thiz, as_forward<That>(that), as_forward<Option>(option)...);
+			ValueAdapter<AsPure<That>>::from(thiz, as_forward<That>(that), as_forward<Option>(option) ...);
 			return;
 		}
 
-		template <typename That, typename ...Option> requires
-			CategoryConstraint<IsValid<That> && IsValid<Option...>>
+		template <typename That, typename ... Option> requires
+			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
 		auto to (
-			That &&      that,
-			Option && ...option
+			That &&       that,
+			Option && ... option
 		) -> That&& {
 			assert_condition(thiz.m_context);
-			ValueAdapter<AsPure<That>>::to(thiz, as_forward<That>(that), as_forward<Option>(option)...);
+			ValueAdapter<AsPure<That>>::to(thiz, as_forward<That>(that), as_forward<Option>(option) ...);
 			return as_forward<That>(that);
 		}
 
 		// ----------------
 
-		template <typename That, typename ...Option> requires
-			CategoryConstraint<IsPureInstance<That> && IsValid<Option...>>
+		template <typename That, typename ... Option> requires
+			CategoryConstraint<IsPureInstance<That> && IsValid<Option ...>>
 		auto to_of (
-			Option && ...option
+			Option && ... option
 		) -> That {
 			auto that = That{};
-			thiz.to(that, as_forward<Option>(option)...);
+			thiz.to(that, as_forward<Option>(option) ...);
 			return that;
 		}
 
@@ -1015,10 +1120,10 @@ namespace TwinKleS::Core::JS {
 
 		// ----------------
 
-		template <auto function, typename ...Argument> requires
+		template <auto function, typename ... Argument> requires
 			NoneConstraint
 		inline auto call_native_function_inner (
-			Argument && ...argument
+			Argument && ... argument
 		) -> typename CallableTraitOf<function>::Result {
 			auto finalizer = make_finalizer(
 				[] {
@@ -1028,7 +1133,7 @@ namespace TwinKleS::Core::JS {
 					g_mutex.lock();
 				}
 			);
-			return function(as_forward<Argument>(argument)...);
+			return function(as_forward<Argument>(argument) ...);
 		}
 
 		template <auto function, auto forward_object> requires
@@ -1038,18 +1143,18 @@ namespace TwinKleS::Core::JS {
 			quickjs::JSValue const &     object,
 			quickjs::JSValue * const &   argument
 		) -> typename CallableTraitOf<function>::Result {
-			return [&] <auto ...index> (ValuePackage<index...>) -> typename CallableTraitOf<function>::Result {
+			return [&] <auto ... index> (ValuePackage<index ...>) -> typename CallableTraitOf<function>::Result {
 				if constexpr (forward_object) {
 					using Class = AsPure<typename CallableTraitOf<function>::Argument::template Element<1_ixz>>;
 					using Argument = AsTypePackageRemoveHead<typename CallableTraitOf<function>::Argument, 1_szz>;
 					return call_native_function_inner<function>(
 						as_lvalue(Value::new_reference(context, object).to_of<Class>()),
-						as_forward<typename Argument::template Element<index>>(Value::new_reference(context, argument[index]).template to_of<AsPure<typename Argument::template Element<index>>>())...
+						as_forward<typename Argument::template Element<index>>(Value::new_reference(context, argument[index]).template to_of<AsPure<typename Argument::template Element<index>>>()) ...
 					);
 				} else {
 					using Argument = typename CallableTraitOf<function>::Argument;
 					return call_native_function_inner<function>(
-						as_forward<typename Argument::template Element<index>>(Value::new_reference(context, argument[index]).template to_of<AsPure<typename Argument::template Element<index>>>())...
+						as_forward<typename Argument::template Element<index>>(Value::new_reference(context, argument[index]).template to_of<AsPure<typename Argument::template Element<index>>>()) ...
 					);
 				}
 			}(AsValuePackageOfIndex<CallableTraitOf<function>::Argument::size - (forward_object ? (1) : (0))>{});
@@ -1092,17 +1197,17 @@ namespace TwinKleS::Core::JS {
 				return quickjs::JS_EXCEPTION_;
 			};
 			try {
-				#endif
-				if constexpr (IsVoid<typename CallableTraitOf<function>::Result>) {
-					call_native_function<function, forward_object>(context, this_value, argument);
-					return quickjs::JS_UNDEFINED_;
-				} else {
-					auto && native_result = call_native_function<function, forward_object>(context, this_value, argument);
-					auto    result = Value::new_instance(context);
-					result.from(as_forward<decltype(native_result)>(native_result));
-					return result._release_value();
-				}
-				#if defined M_build_release
+			#endif
+			if constexpr (IsVoid<typename CallableTraitOf<function>::Result>) {
+				call_native_function<function, forward_object>(context, this_value, argument);
+				return quickjs::JS_UNDEFINED_;
+			} else {
+				auto && native_result = call_native_function<function, forward_object>(context, this_value, argument);
+				auto    result = Value::new_instance(context);
+				result.from(as_forward<decltype(native_result)>(native_result));
+				return result._release_value();
+			}
+			#if defined M_build_release
 			} catch (Exception & exception) {
 				return throw_js_exception(context, make_string_view(exception.what()));
 			} catch (std::exception & exception) {

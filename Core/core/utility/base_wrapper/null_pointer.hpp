@@ -2,13 +2,13 @@
 
 #include "core/utility/base_wrapper/pointer.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
 	class NullPointerWrapper final {
 
-	public: //
+	public:
 
 		#pragma region operator
 
@@ -30,15 +30,8 @@ namespace TwinKleS::Core {
 	inline constexpr auto operator == (
 		NullPointerWrapper const & thix,
 		NullPointerWrapper const & that
-	) -> Boolean {
-		return k_true;
-	}
-
-	inline constexpr auto operator != (
-		NullPointerWrapper const & thix,
-		NullPointerWrapper const & that
-	) -> Boolean {
-		return !(thix == that);
+	) -> bool {
+		return true;
 	}
 
 	// ----------------
@@ -49,18 +42,8 @@ namespace TwinKleS::Core {
 	inline constexpr auto operator == (
 		It const &                 thix,
 		NullPointerWrapper const & that
-	) -> Boolean {
-		return mbw<Boolean>(thix.value == nullptr);
-	}
-
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsPointerWrapper<It>)
-	inline constexpr auto operator != (
-		It const &                 thix,
-		NullPointerWrapper const & that
-	) -> Boolean {
-		return !(thix == that);
+	) -> bool {
+		return thix.value == nullptr;
 	}
 
 	#pragma endregion

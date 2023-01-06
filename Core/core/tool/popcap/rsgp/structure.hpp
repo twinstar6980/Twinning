@@ -4,7 +4,7 @@
 #include "core/tool/popcap/rsgp/version.hpp"
 #include "core/tool/popcap/rsb/common.hpp"
 
-namespace TwinKleS::Core::Tool::PopCap::RSGP::Structure {
+namespace TwinStar::Core::Tool::PopCap::RSGP::Structure {
 
 	#pragma region magic identifier
 
@@ -28,22 +28,25 @@ namespace TwinKleS::Core::Tool::PopCap::RSGP::Structure {
 	template <auto t_version> requires
 		CategoryConstraint<>
 		&& (check_version(t_version, {3, 4}))
-	struct Header<t_version> {
-		PaddingBlock<8_szz>  unused_1;
-		IntegerU32           resource_data_section_store_mode;
-		IntegerU32           information_section_size;
-		IntegerU32           generic_resource_data_section_offset;
-		IntegerU32           generic_resource_data_section_size;
-		IntegerU32           generic_resource_data_section_size_original;
-		PaddingBlock<4_szz>  unused_2;
-		IntegerU32           texture_resource_data_section_offset;
-		IntegerU32           texture_resource_data_section_size;
-		IntegerU32           texture_resource_data_section_size_original;
-		PaddingBlock<20_szz> unused_3;
-		IntegerU32           resource_information_section_size;
-		IntegerU32           resource_information_section_offset;
-		PaddingBlock<12_szz> unused_4;
-	};
+	M_record_of_data(
+		M_wrap(Header<t_version>),
+		M_wrap(
+			(PaddingBlock<8_sz>) unused_1,
+			(IntegerU32) resource_data_section_store_mode,
+			(IntegerU32) information_section_size,
+			(IntegerU32) generic_resource_data_section_offset,
+			(IntegerU32) generic_resource_data_section_size,
+			(IntegerU32) generic_resource_data_section_size_original,
+			(PaddingBlock<4_sz>) unused_2,
+			(IntegerU32) texture_resource_data_section_offset,
+			(IntegerU32) texture_resource_data_section_size,
+			(IntegerU32) texture_resource_data_section_size_original,
+			(PaddingBlock<20_sz>) unused_3,
+			(IntegerU32) resource_information_section_size,
+			(IntegerU32) resource_information_section_offset,
+			(PaddingBlock<12_sz>) unused_4,
+		),
+	);
 
 	// ----------------
 
@@ -53,11 +56,14 @@ namespace TwinKleS::Core::Tool::PopCap::RSGP::Structure {
 	template <auto t_version> requires
 		CategoryConstraint<>
 		&& (check_version(t_version, {3, 4}))
-	struct ResourceBasicInformation<t_version> {
-		IntegerU32 type;
-		IntegerU32 offset;
-		IntegerU32 size;
-	};
+	M_record_of_data(
+		M_wrap(ResourceBasicInformation<t_version>),
+		M_wrap(
+			(IntegerU32) type,
+			(IntegerU32) offset,
+			(IntegerU32) size,
+		),
+	);
 
 	// ----------------
 
@@ -67,8 +73,11 @@ namespace TwinKleS::Core::Tool::PopCap::RSGP::Structure {
 	template <auto t_version> requires
 		CategoryConstraint<>
 		&& (check_version(t_version, {3, 4}))
-	struct GenericResourceAdditionalInformation<t_version> {
-	};
+	M_record_of_data(
+		M_wrap(GenericResourceAdditionalInformation<t_version>),
+		M_wrap(
+		),
+	);
 
 	// ----------------
 
@@ -78,15 +87,18 @@ namespace TwinKleS::Core::Tool::PopCap::RSGP::Structure {
 	template <auto t_version> requires
 		CategoryConstraint<>
 		&& (check_version(t_version, {3, 4}))
-	struct TextureResourceAdditionalInformation<t_version> {
-		IntegerU32          index;
-		PaddingBlock<8_szz> unused_1;
-		IntegerU32          size_width;
-		IntegerU32          size_height;
-
-	};
+	M_record_of_data(
+		M_wrap(TextureResourceAdditionalInformation<t_version>),
+		M_wrap(
+			(IntegerU32) index,
+			(PaddingBlock<8_sz>) unused_1,
+			(IntegerU32) size_width,
+			(IntegerU32) size_height,
+		),
+	);
 
 	// ----------------
+	// todo
 
 	template <auto t_version>
 	struct ResourceInformation;
@@ -107,14 +119,17 @@ namespace TwinKleS::Core::Tool::PopCap::RSGP::Structure {
 	template <auto t_version> requires
 		CategoryConstraint<>
 		&& (check_version(t_version, {3, 4}))
-	struct Information<t_version> {
-		Header<t_version>                           header;
-		Map<String, ResourceInformation<t_version>> resource_information;
-	};
+	M_record_of_data(
+		M_wrap(Information<t_version>),
+		M_wrap(
+			(Header<t_version>) header,
+			(Map<String, ResourceInformation<t_version>>) resource_information,
+		),
+	);
 
 	#pragma endregion
 
-	#pragma region misc
+	#pragma region miscellaneous
 
 	template <auto t_version>
 	struct ResourceTypeFlag;
@@ -131,47 +146,7 @@ namespace TwinKleS::Core::Tool::PopCap::RSGP::Structure {
 
 }
 
-namespace TwinKleS::Core {
-
-	template <auto t_version> requires
-		AutoConstraint
-		&& (Tool::PopCap::RSGP::check_version(t_version, {3, 4}))
-	M_byte_stream_adapter_for_aggregate_by_field_of(
-		M_wrap(Tool::PopCap::RSGP::Structure::Header<t_version>),
-		M_wrap(unused_1, resource_data_section_store_mode, information_section_size, generic_resource_data_section_offset, generic_resource_data_section_size, generic_resource_data_section_size_original, unused_2, texture_resource_data_section_offset, texture_resource_data_section_size, texture_resource_data_section_size_original, unused_3, resource_information_section_size, resource_information_section_offset, unused_4),
-	);
-
-	// ----------------
-
-	template <auto t_version> requires
-		AutoConstraint
-		&& (Tool::PopCap::RSGP::check_version(t_version, {3, 4}))
-	M_byte_stream_adapter_for_aggregate_by_field_of(
-		M_wrap(Tool::PopCap::RSGP::Structure::ResourceBasicInformation<t_version>),
-		M_wrap(type, offset, size),
-	);
-
-	// ----------------
-
-	template <auto t_version> requires
-		AutoConstraint
-		&& (Tool::PopCap::RSGP::check_version(t_version, {3, 4}))
-	M_byte_stream_adapter_for_aggregate_by_field_of(
-		M_wrap(Tool::PopCap::RSGP::Structure::GenericResourceAdditionalInformation<t_version>),
-		M_wrap(),
-	);
-
-	// ----------------
-
-	template <auto t_version> requires
-		AutoConstraint
-		&& (Tool::PopCap::RSGP::check_version(t_version, {3, 4}))
-	M_byte_stream_adapter_for_aggregate_by_field_of(
-		M_wrap(Tool::PopCap::RSGP::Structure::TextureResourceAdditionalInformation<t_version>),
-		M_wrap(index, unused_1, size_width, size_height),
-	);
-
-	// ----------------
+namespace TwinStar::Core {
 
 	template <auto t_version> requires
 		AutoConstraint

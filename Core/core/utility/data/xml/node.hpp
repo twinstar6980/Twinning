@@ -1,14 +1,13 @@
 #pragma once
 
 #include "core/utility/base_wrapper/wrapper.hpp"
-#include "core/utility/misc/enum.hpp"
 #include "core/utility/container/variant/variant.hpp"
 #include "core/utility/container/variant/enumerable_variant.hpp"
 #include "core/utility/container/list/list.hpp"
 #include "core/utility/container/map/map.hpp"
 #include "core/utility/string/string.hpp"
 
-namespace TwinKleS::Core::XML {
+namespace TwinStar::Core::XML {
 
 	#pragma region declaration
 
@@ -62,11 +61,14 @@ namespace TwinKleS::Core::XML {
 
 	// ----------------
 
-	enum class NodeType : ZIntegerU8 {
-		element,
-		text,
-		comment,
-	};
+	M_enumeration(
+		M_wrap(NodeType),
+		M_wrap(
+			element,
+			text,
+			comment,
+		),
+	);
 
 	#pragma endregion
 
@@ -75,7 +77,7 @@ namespace TwinKleS::Core::XML {
 	class Node :
 		public EnumerableVariant<NodeType, Element, Text, Comment> {
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -132,28 +134,28 @@ namespace TwinKleS::Core::XML {
 
 		// ----------------
 
-		template <typename ...Argument> requires
-			CategoryConstraint<IsValid<Argument...>>
+		template <typename ... Argument> requires
+			CategoryConstraint<IsValid<Argument ...>>
 		auto set_element (
-			Argument && ...argument
+			Argument && ... argument
 		) -> Element& {
-			return thiz.set<Element>(as_forward<Argument>(argument)...);
+			return thiz.set<Element>(as_forward<Argument>(argument) ...);
 		}
 
-		template <typename ...Argument> requires
-			CategoryConstraint<IsValid<Argument...>>
+		template <typename ... Argument> requires
+			CategoryConstraint<IsValid<Argument ...>>
 		auto set_text (
-			Argument && ...argument
+			Argument && ... argument
 		) -> Text& {
-			return thiz.set<Text>(as_forward<Argument>(argument)...);
+			return thiz.set<Text>(as_forward<Argument>(argument) ...);
 		}
 
-		template <typename ...Argument> requires
-			CategoryConstraint<IsValid<Argument...>>
+		template <typename ... Argument> requires
+			CategoryConstraint<IsValid<Argument ...>>
 		auto set_comment (
-			Argument && ...argument
+			Argument && ... argument
 		) -> Comment& {
-			return thiz.set<Comment>(as_forward<Argument>(argument)...);
+			return thiz.set<Comment>(as_forward<Argument>(argument) ...);
 		}
 
 		// ----------------
@@ -195,15 +197,5 @@ namespace TwinKleS::Core::XML {
 	};
 
 	#pragma endregion
-
-}
-
-namespace TwinKleS::Core::Trait::Reflection {
-
-	M_reflection_enum(
-		M_wrap(XML::NodeType),
-		M_wrap(NodeType),
-		M_wrap(element, text, comment),
-	);
 
 }

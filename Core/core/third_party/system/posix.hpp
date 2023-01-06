@@ -20,7 +20,7 @@
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinKleS::Core::ThirdParty::posix {
+namespace TwinStar::Core::ThirdParty::posix {
 }
 
 #endif

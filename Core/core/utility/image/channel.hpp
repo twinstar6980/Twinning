@@ -2,7 +2,7 @@
 
 #include "core/utility/data/json/value.hpp"
 
-namespace TwinKleS::Core::Image {
+namespace TwinStar::Core::Image {
 
 	#pragma region type
 

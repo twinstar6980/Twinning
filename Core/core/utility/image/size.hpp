@@ -1,9 +1,9 @@
 #pragma once
 
 #include "core/utility/data/json/value.hpp"
-#include "core/utility/misc/2d_type.hpp"
+#include "core/utility/miscellaneous/dimension.hpp"
 
-namespace TwinKleS::Core::Image {
+namespace TwinStar::Core::Image {
 
 	#pragma region type
 

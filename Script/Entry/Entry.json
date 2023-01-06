@@ -1,10 +1,10 @@
 {
 	"language": "Chinese",
 	"cli_disable_virtual_terminal_sequences": false,
-	"workspace": "<home>/workspace",
+	"workspace": "~/workspace",
 	"byte_stream_use_big_endian": false,
 	"json_write": {
-		"buffer_size": "64m",
+		"buffer_size": "64.0m",
 		"format": {
 			"disable_trailing_comma": false,
 			"disable_array_wrap_line": false,

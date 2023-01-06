@@ -33,7 +33,7 @@
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinKleS::Core::ThirdParty::quickjs {
+namespace TwinStar::Core::ThirdParty::quickjs {
 
 	using JSRuntime = ::JSRuntime;
 
@@ -73,9 +73,9 @@ namespace TwinKleS::Core::ThirdParty::quickjs {
 
 	inline constexpr auto JS_IsBool = ::JS_IsBool;
 
-	inline constexpr auto JS_IsNumber = ::JS_IsNumber;
-
 	inline constexpr auto JS_IsBigInt = ::JS_IsBigInt;
+
+	inline constexpr auto JS_IsNumber = ::JS_IsNumber;
 
 	inline constexpr auto JS_IsString = ::JS_IsString;
 
@@ -97,15 +97,15 @@ namespace TwinKleS::Core::ThirdParty::quickjs {
 
 	inline constexpr auto JS_NewBool = ::JS_NewBool;
 
-	inline constexpr auto JS_NewFloat64 = ::JS_NewFloat64;
-
 	inline constexpr auto JS_NewBigInt64 = ::JS_NewBigInt64;
+
+	inline constexpr auto JS_NewFloat64 = ::JS_NewFloat64;
 
 	inline constexpr auto JS_NewStringLen = ::JS_NewStringLen;
 
-	inline constexpr auto JS_NewObject = ::JS_NewObject;
-
 	inline constexpr auto JS_NewObjectClass = ::JS_NewObjectClass;
+
+	inline constexpr auto JS_NewObject = ::JS_NewObject;
 
 	inline constexpr auto JS_NewArray = ::JS_NewArray;
 
@@ -119,21 +119,17 @@ namespace TwinKleS::Core::ThirdParty::quickjs {
 
 	inline constexpr auto JS_SetPrototype = ::JS_SetPrototype;
 
-	inline constexpr auto JS_GetProperty = ::JS_GetProperty;
-
-	inline constexpr auto JS_GetPropertyStr = ::JS_GetPropertyStr;
-
-	inline constexpr auto JS_GetPropertyUint32 = ::JS_GetPropertyUint32;
-
-	inline constexpr auto JS_SetPropertyStr = ::JS_SetPropertyStr;
-
-	inline constexpr auto JS_SetPropertyUint32 = ::JS_SetPropertyUint32;
-
-	inline constexpr auto JS_DefinePropertyValueStr = ::JS_DefinePropertyValueStr;
-
-	inline constexpr auto JS_DefinePropertyValueUint32 = ::JS_DefinePropertyValueUint32;
+	inline constexpr auto JS_DefinePropertyValue = ::JS_DefinePropertyValue;
 
 	inline constexpr auto JS_DefinePropertyGetSet = ::JS_DefinePropertyGetSet;
+
+	inline constexpr auto JS_DeleteProperty = ::JS_DeleteProperty;
+
+	inline constexpr auto JS_HasProperty = ::JS_HasProperty;
+
+	inline constexpr auto JS_GetProperty = ::JS_GetProperty;
+
+	inline constexpr auto JS_SetProperty = ::JS_SetProperty;
 
 	inline constexpr auto JS_GetOwnPropertyNames = ::JS_GetOwnPropertyNames;
 
@@ -184,6 +180,8 @@ namespace TwinKleS::Core::ThirdParty::quickjs {
 	inline constexpr auto JS_NULL_ = ::JSValue{JS_NULL};
 
 	inline constexpr auto JS_EXCEPTION_ = ::JSValue{JS_EXCEPTION};
+
+	inline constexpr auto JS_PROP_THROW_ = int{JS_PROP_THROW};
 
 	inline constexpr auto JS_PROP_C_W_E_ = int{JS_PROP_C_W_E};
 

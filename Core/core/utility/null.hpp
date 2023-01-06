@@ -2,13 +2,13 @@
 
 #include "core/utility/base_wrapper/wrapper.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
 	class Null final {
 
-	public: //
+	public:
 
 		#pragma region operator
 

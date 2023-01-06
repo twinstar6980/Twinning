@@ -1,5 +1,5 @@
 /** 对外壳回调的包装 */
-namespace TwinKleS.Shell {
+namespace TwinStar.Shell {
 
 	// ------------------------------------------------
 
@@ -7,7 +7,7 @@ namespace TwinKleS.Shell {
 	export function callback(
 		argument: Array<string>,
 	): Array<string> {
-		let result = CoreX.Misc.shell_callback(argument);
+		let result = CoreX.Miscellaneous.shell_callback(argument);
 		if (result[0].length !== 0) {
 			throw new Error(`shell callback invoke failed : ${result[0]}`);
 		}
@@ -16,22 +16,30 @@ namespace TwinKleS.Shell {
 
 	// ------------------------------------------------
 
-	/** 外壳名 */
-	export const name = callback(['name'])[0] as 'windows.cli' | 'linux.cli' | 'macos.cli' | 'android.cli' | 'ios.cli';
+	/** 外壳名称 */
+	export const name = String(callback(['name'])[0]);
 
-	export const is_cli = name.endsWith('.cli');
+	/** 外壳版本 */
+	export const version = BigInt(callback(['version'])[0]);
 
-	export const is_gui = name.endsWith('.gui');
+	/** 所处系统 */
+	export const system = String(callback(['system'])[0]);
 
-	export const is_windows = name.startsWith('windows.');
+	// ------------------------------------------------
 
-	export const is_linux = name.startsWith('linux.');
+	export const is_cli = name === 'cli';
 
-	export const is_macos = name.startsWith('macos.');
+	export const is_gui = name === 'gui';
 
-	export const is_android = name.startsWith('android.');
+	export const is_windows = system === 'windows';
 
-	export const is_ios = name.startsWith('ios.');
+	export const is_linux = system === 'linux';
+
+	export const is_macos = system === 'macos';
+
+	export const is_android = system === 'android';
+
+	export const is_ios = system === 'ios';
 
 	// ------------------------------------------------
 
@@ -65,26 +73,56 @@ namespace TwinKleS.Shell {
 
 	// ------------------------------------------------
 
-	export function gui_output(
+	export function gui_output_notify(
 		type: 'v' | 'i' | 'w' | 'e' | 's' | 't',
 		title: string,
 		description: Array<string>,
 	): void {
-		let result = callback(['output', type, title, ...description]);
+		let result = callback(['output_notify', type, title, ...description]);
 		return;
 	}
 
+	export function gui_input_pause(
+	): void {
+		let result = callback(['input_pause']);
+		return;
+	}
+
+	export function gui_input_confirm(
+	): string | null {
+		let result = callback(['input_confirm']);
+		return result[0].length === 0 ? null : result[0];
+	}
+
+	export function gui_input_number(
+	): string | null {
+		let result = callback(['input_number']);
+		return result[0].length === 0 ? null : result[0];
+	}
+
+	export function gui_input_integer(
+	): string | null {
+		let result = callback(['input_integer']);
+		return result[0].length === 0 ? null : result[0];
+	}
+
+	export function gui_input_size(
+	): string | null {
+		let result = callback(['input_size']);
+		return result[0].length === 0 ? null : result[0];
+	}
+
 	export function gui_input_string(
-	): string {
+	): string | null {
 		let result = callback(['input_string']);
-		return result[0];
+		return result[0].length === 0 ? null : result[0];
 	}
 
 	export function gui_input_option(
 		option: Array<string>,
-	): bigint {
+	): string | null {
 		let result = callback(['input_option', ...option]);
-		return BigInt(result[0]);
+		return result[0].length === 0 ? null : result[0];
 	}
 
 	// ------------------------------------------------

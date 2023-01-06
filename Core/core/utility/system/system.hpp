@@ -5,7 +5,7 @@
 #include "core/utility/string/string.hpp"
 #include "core/utility/file_system/path.hpp"
 
-namespace TwinKleS::Core::System {
+namespace TwinStar::Core::System {
 
 	#pragma region namespace alias
 

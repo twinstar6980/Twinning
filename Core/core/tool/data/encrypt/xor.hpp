@@ -2,45 +2,43 @@
 
 #include "core/utility/utility.hpp"
 
-namespace TwinKleS::Core::Tool::Data::Encrypt::XOR {
+namespace TwinStar::Core::Tool::Data::Encrypt::XOR {
 
-	inline namespace Common {
+	struct EncryptCommon {
 
-		namespace Detail {
+	protected:
 
-		}
+	};
 
-	}
+	struct Encrypt :
+		EncryptCommon {
 
-	namespace Crypt {
+	protected:
 
-		namespace Detail {
-
-			#pragma region using
-
-			using namespace Common::Detail;
-
-			#pragma endregion
-
-			#pragma region process
-
-			inline auto process (
-				IByteStreamView & plain,
-				OByteStreamView & cipher,
-				Byte const &      key
-			) -> Void {
-				while (!plain.full()) {
-					cipher.write(plain.read_of() ^ key);
-				}
-				return;
+		// TODO : key -> CByteListView
+		static auto process_whole (
+			IByteStreamView & plain,
+			OByteStreamView & cipher,
+			Byte const &      key
+		) -> Void {
+			while (!plain.full()) {
+				cipher.write(plain.read_of() ^ key);
 			}
-
-			#pragma endregion
-
+			return;
 		}
 
-		using Detail::process;
+	public:
 
-	}
+		static auto do_process_whole (
+			IByteStreamView & plain_,
+			OByteStreamView & cipher_,
+			Byte const &      key
+		) -> Void {
+			M_use_zps_of(plain);
+			M_use_zps_of(cipher);
+			return process_whole(plain, cipher, key);
+		}
+
+	};
 
 }

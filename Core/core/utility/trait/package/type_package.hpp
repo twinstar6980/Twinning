@@ -3,12 +3,12 @@
 #include "core/utility/trait/base.hpp"
 #include "core/utility/trait/category.hpp"
 
-namespace TwinKleS::Core::Trait {
+namespace TwinStar::Core::Trait {
 
 	#pragma region type
 
-	template <typename ...TElement> requires
-		CategoryConstraint<IsAnything<TElement...>>
+	template <typename ... TElement> requires
+		CategoryConstraint<IsAnything<TElement ...>>
 	struct TypePackage {
 
 		inline static constexpr auto size = ZSize{sizeof...(TElement)};
@@ -17,7 +17,7 @@ namespace TwinKleS::Core::Trait {
 			CategoryConstraint<>
 			&& (IsSameV<index, ZSize>)
 			&& (index < size)
-		using Element = AsSelect<index, TElement...>;
+		using Element = AsSelect<index, TElement ...>;
 
 	};
 
@@ -35,9 +35,9 @@ namespace TwinKleS::Core::Trait {
 		&& (IsTypePackage<Package> && IsSameV<begin, ZSize> && IsSameV<size, ZSize>)
 		&& (begin + size <= Package::size)
 	using AsTypePackageSub = decltype(
-		[] <auto ...index> (
-		std::index_sequence<index...>
-	) -> TypePackage<typename Package::template Element<begin + index>...> {
+		[] <auto ... index> (
+		std::index_sequence<index ...>
+	) -> TypePackage<typename Package::template Element<begin + index> ...> {
 			return {};
 		}(std::make_index_sequence<size>{})
 	);
@@ -60,23 +60,34 @@ namespace TwinKleS::Core::Trait {
 		CategoryConstraint<IsPureInstance<Package1> && IsPureInstance<Package2>>
 		&& (IsTypePackage<Package1> && IsTypePackage<Package2>)
 	using AsTypePackageConcat = decltype(
-		[] <auto ...index_1, auto ...index_2> (
-		std::index_sequence<index_1...>,
-		std::index_sequence<index_2...>
-	) -> TypePackage<typename Package1::template Element<index_1>..., typename Package2::template Element<index_2>...> {
+		[] <auto ... index_1, auto ... index_2> (
+		std::index_sequence<index_1 ...>,
+		std::index_sequence<index_2 ...>
+	) -> TypePackage<typename Package1::template Element<index_1> ..., typename Package2::template Element<index_2> ...> {
 			return {};
 		}(std::make_index_sequence<Package1::size>{}, std::make_index_sequence<Package2::size>{})
 	);
 
-	template <typename Package, typename ...Element> requires
-		CategoryConstraint<IsPureInstance<Package> && IsAnything<Element...>>
+	template <typename Package, typename ... Element> requires
+		CategoryConstraint<IsPureInstance<Package> && IsAnything<Element ...>>
 		&& (IsTypePackage<Package>)
-	using AsTypePackagePrepend = AsTypePackageConcat<TypePackage<Element...>, Package>;
+	using AsTypePackagePrepend = AsTypePackageConcat<TypePackage<Element ...>, Package>;
 
-	template <typename Package, typename ...Element> requires
-		CategoryConstraint<IsPureInstance<Package> && IsAnything<Element...>>
+	template <typename Package, typename ... Element> requires
+		CategoryConstraint<IsPureInstance<Package> && IsAnything<Element ...>>
 		&& (IsTypePackage<Package>)
-	using AsTypePackageAppend = AsTypePackageConcat<Package, TypePackage<Element...>>;
+	using AsTypePackageAppend = AsTypePackageConcat<Package, TypePackage<Element ...>>;
+
+	// ----------------
+
+	template <typename Package, template <typename ...> typename Transformer>
+	using AsTypePackageTransform = decltype([] {
+		return [&] <auto ... index> (
+			std::index_sequence<index ...>
+		) -> Transformer<typename Package::template Element<index> ...> {
+				return {};
+			}(std::make_index_sequence<Package::size>{});
+	}());
 
 	#pragma endregion
 

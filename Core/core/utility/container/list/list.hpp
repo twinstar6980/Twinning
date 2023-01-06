@@ -1,9 +1,9 @@
 #pragma once
 
 #include "core/utility/container/list/list_view.hpp"
-#include "core/utility/misc/allocator.hpp"
+#include "core/utility/miscellaneous/allocator.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
@@ -11,7 +11,7 @@ namespace TwinKleS::Core {
 		CategoryConstraint<IsPureInstance<TElement>>
 	class List {
 
-	public: //
+	public:
 
 		using Element = TElement;
 
@@ -31,13 +31,13 @@ namespace TwinKleS::Core {
 
 		using CView = ListView<Element, true>;
 
-	protected: //
+	protected:
 
 		Iterator m_data{k_null_pointer};
 		Size     m_size{k_none_size};
 		Size     m_capacity{k_none_size};
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -529,15 +529,15 @@ namespace TwinKleS::Core {
 
 		#pragma region insert
 
-		template <typename ...Argument> requires
-			CategoryConstraint<IsValid<Argument...>>
-			&& (IsConstructible<Element, Argument &&...>)
+		template <typename ... Argument> requires
+			CategoryConstraint<IsValid<Argument ...>>
+			&& (IsConstructible<Element, Argument && ...>)
 		auto insert (
-			Size const &   position,
-			Argument && ...argument
+			Size const &    position,
+			Argument && ... argument
 		) -> VElement& {
 			thiz.insert_space(position, 1_sz);
-			restruct(thiz.at(position), as_forward<Argument>(argument)...);
+			restruct(thiz.at(position), as_forward<Argument>(argument) ...);
 			return thiz.at(position);
 		}
 
@@ -556,13 +556,13 @@ namespace TwinKleS::Core {
 
 		// ----------------
 
-		template <typename ...Argument> requires
-			CategoryConstraint<IsValid<Argument...>>
-			&& (IsConstructible<Element, Argument &&...>)
+		template <typename ... Argument> requires
+			CategoryConstraint<IsValid<Argument ...>>
+			&& (IsConstructible<Element, Argument && ...>)
 		auto prepend (
-			Argument && ...argument
+			Argument && ... argument
 		) -> VElement& {
-			return thiz.insert(thiz.begin_index(), as_forward<Argument>(argument)...);
+			return thiz.insert(thiz.begin_index(), as_forward<Argument>(argument) ...);
 		}
 
 		template <typename RangeObject> requires
@@ -576,13 +576,13 @@ namespace TwinKleS::Core {
 
 		// ----------------
 
-		template <typename ...Argument> requires
-			CategoryConstraint<IsValid<Argument...>>
-			&& (IsConstructible<Element, Argument &&...>)
+		template <typename ... Argument> requires
+			CategoryConstraint<IsValid<Argument ...>>
+			&& (IsConstructible<Element, Argument && ...>)
 		auto append (
-			Argument && ...argument
+			Argument && ... argument
 		) -> VElement& {
-			return thiz.insert(thiz.end_index(), as_forward<Argument>(argument)...);
+			return thiz.insert(thiz.end_index(), as_forward<Argument>(argument) ...);
 		}
 
 		template <typename RangeObject> requires
@@ -647,7 +647,7 @@ namespace TwinKleS::Core {
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region operator
 
@@ -660,7 +660,7 @@ namespace TwinKleS::Core {
 
 		#pragma endregion
 
-	protected: //
+	protected:
 
 		#pragma region insert space
 
@@ -689,20 +689,20 @@ namespace TwinKleS::Core {
 
 	#pragma region utility
 
-	template <typename Element, typename ...Argument> requires
-		CategoryConstraint<IsPureInstance<Element> && IsValid<Argument...>>
+	template <typename Element, typename ... Argument> requires
+		CategoryConstraint<IsPureInstance<Element> && IsValid<Argument ...>>
 		&& (IsConstructible<Element, Argument &&> && ...)
 	inline auto make_list (
-		Argument && ...argument
+		Argument && ... argument
 	) -> List<Element> {
 		auto result = List<Element>{mbw<Size>(sizeof...(Argument))};
 		result.expand_size_to_full();
-		[&] <auto ...index> (
-			ValuePackage<index...>
-		) -> auto {
-				(restruct(result[mbw<Size>(index)], as_forward<Argument>(argument)), ...);
-				return;
-			}(AsValuePackageOfIndex<sizeof...(Argument)>{});
+		Generalization::each_with<>(
+			[&] <auto index, typename CurrentArgument> (ValuePackage<index>, CurrentArgument && current_argument) {
+				restruct(result.at(mbw<Size>(index)), as_forward<CurrentArgument>(current_argument));
+			},
+			as_forward<Argument>(argument) ...
+		);
 		return result;
 	}
 

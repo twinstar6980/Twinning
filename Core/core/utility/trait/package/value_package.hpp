@@ -3,11 +3,11 @@
 #include "core/utility/trait/base.hpp"
 #include "core/utility/trait/category.hpp"
 
-namespace TwinKleS::Core::Trait {
+namespace TwinStar::Core::Trait {
 
 	#pragma region type
 
-	template <auto ...t_element> requires
+	template <auto ... t_element> requires
 		CategoryConstraint<>
 	struct ValuePackage {
 
@@ -17,16 +17,16 @@ namespace TwinKleS::Core::Trait {
 			CategoryConstraint<>
 			&& (IsSameV<index, ZSize>)
 			&& (index < size)
-		using Element = AsSelect<index, decltype(t_element)...>;
+		using Element = AsSelect<index, decltype(t_element) ...>;
 
 		template <auto index> requires
 			CategoryConstraint<>
 			&& (IsSameV<index, ZSize>)
 			&& (index < size)
 		inline static constexpr auto element =
-			[] <auto ...element_index> (
-			std::index_sequence<element_index...>,
-			auto ...                             element_value
+			[] <auto ... element_index> (
+			std::index_sequence<element_index ...>,
+			auto ... element_value
 		) -> auto {
 				auto result = ValuePackage::Element<index>{};
 				auto iterate =
@@ -41,7 +41,7 @@ namespace TwinKleS::Core::Trait {
 				};
 				(iterate(element_index, element_value), ...);
 				return result;
-			}(std::make_index_sequence<size>{}, t_element...);
+			}(std::make_index_sequence<size>{}, t_element ...);
 
 		template <typename Value> requires
 			CategoryConstraint<>
@@ -79,9 +79,9 @@ namespace TwinKleS::Core::Trait {
 		&& (IsValuePackage<Package> && IsSameV<begin, ZSize> && IsSameV<size, ZSize>)
 		&& (begin + size <= Package::size)
 	using AsValuePackageSub = decltype(
-		[] <ZSize ...index> (
-		std::index_sequence<index...>
-	) -> ValuePackage<Package::template value<begin + index>...> {
+		[] <ZSize ... index> (
+		std::index_sequence<index ...>
+	) -> ValuePackage<Package::template value<begin + index> ...> {
 			return {};
 		}(std::make_index_sequence<size>{})
 	);
@@ -104,23 +104,23 @@ namespace TwinKleS::Core::Trait {
 		CategoryConstraint<IsPureInstance<Package1> && IsPureInstance<Package2>>
 		&& (IsValuePackage<Package1> && IsValuePackage<Package2>)
 	using AsValuePackageConcat = decltype(
-		[] <auto ...index_1, auto ...index_2> (
-		std::index_sequence<index_1...>,
-		std::index_sequence<index_2...>
-	) -> ValuePackage<Package1::template value<index_1>..., Package2::template value<index_2>...> {
+		[] <auto ... index_1, auto ... index_2> (
+		std::index_sequence<index_1 ...>,
+		std::index_sequence<index_2 ...>
+	) -> ValuePackage<Package1::template value<index_1> ..., Package2::template value<index_2> ...> {
 			return {};
 		}(std::make_index_sequence<Package1::size>{}, std::make_index_sequence<Package2::size>{})
 	);
 
-	template <typename Package, auto ...element> requires
+	template <typename Package, auto ... element> requires
 		CategoryConstraint<IsPureInstance<Package>>
 		&& (IsValuePackage<Package>)
-	using AsValuePackagePrepend = AsValuePackageConcat<ValuePackage<element...>, Package>;
+	using AsValuePackagePrepend = AsValuePackageConcat<ValuePackage<element ...>, Package>;
 
-	template <typename Package, auto ...element> requires
+	template <typename Package, auto ... element> requires
 		CategoryConstraint<IsPureInstance<Package>>
 		&& (IsValuePackage<Package>)
-	using AsValuePackageAppend = AsValuePackageConcat<Package, ValuePackage<element...>>;
+	using AsValuePackageAppend = AsValuePackageConcat<Package, ValuePackage<element ...>>;
 
 	// ----------------
 
@@ -128,9 +128,9 @@ namespace TwinKleS::Core::Trait {
 		CategoryConstraint<>
 		&& (IsSameV<size, ZSize>)
 	using AsValuePackageOfIndex = decltype(
-		[] <auto ...index> (
-		std::index_sequence<index...>
-	) -> ValuePackage<index...> {
+		[] <auto ... index> (
+		std::index_sequence<index ...>
+	) -> ValuePackage<index ...> {
 			return {};
 		}(std::make_index_sequence<size>{})
 	);

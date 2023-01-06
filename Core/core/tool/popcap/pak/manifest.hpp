@@ -3,54 +3,45 @@
 #include "core/utility/utility.hpp"
 #include "core/tool/popcap/pak/version.hpp"
 
-namespace TwinKleS::Core::Tool::PopCap::PAK::Manifest {
+namespace TwinStar::Core::Tool::PopCap::PAK {
 
-	template <auto t_version>
-	struct Resource;
+	template <auto version> requires (check_version(version, {}, {}))
+	struct Manifest {
 
-	template <auto t_version> requires
-		CategoryConstraint<>
-		&& (check_version(t_version, {0}, {}))
-	struct Resource<t_version> {
-		Integer time;
+		#pragma region resource
+
+		template <typename = None>
+		struct Resource_;
+
+		using Resource = Resource_<>;
+
+		template <typename _> requires (check_version(version, {0}, {}))
+		M_record_of_map(
+			M_wrap(Resource_<_>),
+			M_wrap(
+				(Integer) time,
+			),
+		);
+
+		#pragma endregion
+
+		#pragma region package
+
+		template <typename = None>
+		struct Package_;
+
+		using Package = Package_<>;
+
+		template <typename _> requires (check_version(version, {0}, {}))
+		M_record_of_map(
+			M_wrap(Package_<_>),
+			M_wrap(
+				(Map<Path, Resource>) resource,
+			),
+		);
+
+		#pragma endregion
+
 	};
-
-	// ----------------
-
-	template <auto t_version>
-	struct Package;
-
-	template <auto t_version> requires
-		CategoryConstraint<>
-		&& (check_version(t_version, {0}, {}))
-	struct Package<t_version> {
-		Map<Path, Resource<t_version>> resource;
-	};
-
-	// ----------------
-
-	using PackageVariant = VariantOfVersion<VersionEnum, Package>;
-
-}
-
-namespace TwinKleS::Core::JSON {
-
-	template <auto t_version> requires
-		AutoConstraint
-		&& (Tool::PopCap::PAK::check_version(t_version, {0}, {}))
-	M_json_value_adapter_for_aggregate_as_object_by_field_of(
-		M_wrap(Tool::PopCap::PAK::Manifest::Resource<t_version>),
-		M_wrap(time),
-	);
-
-	// ----------------
-
-	template <auto t_version> requires
-		AutoConstraint
-		&& (Tool::PopCap::PAK::check_version(t_version, {0}, {}))
-	M_json_value_adapter_for_aggregate_as_object_by_field_of(
-		M_wrap(Tool::PopCap::PAK::Manifest::Package<t_version>),
-		M_wrap(resource),
-	);
 
 }

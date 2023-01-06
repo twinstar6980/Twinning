@@ -4,7 +4,7 @@
 #include "core/utility/trait/category.hpp"
 #include "core/utility/trait/callable.hpp"
 
-namespace TwinKleS::Core::Trait::Reflection {
+namespace TwinStar::Core::Trait::Reflection {
 
 	#pragma region type
 

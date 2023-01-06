@@ -2,7 +2,7 @@
 
 #include "core/utility/utility.hpp"
 
-namespace TwinKleS::Core::Executor {
+namespace TwinStar::Core::Executor {
 
 	#pragma region type
 

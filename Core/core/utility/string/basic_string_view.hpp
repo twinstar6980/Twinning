@@ -1,11 +1,9 @@
 #pragma once
 
-#include "core/utility/misc/character_series/container.hpp"
-#include "core/utility/misc/character_series/type.hpp"
+#include "core/utility/miscellaneous/character_series/container.hpp"
+#include "core/utility/miscellaneous/character_series/type.hpp"
 
-#include <string_view>
-
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
@@ -16,13 +14,13 @@ namespace TwinKleS::Core {
 	class BasicStringView :
 		public BasicCharacterListView<TElement, t_constant> {
 
-	private: //
+	private:
 
 		using BasicCharacterListView = BasicCharacterListView<TElement, t_constant>;
 
 		using CView = BasicStringView<TElement, true>;
 
-	public: //
+	public:
 
 		using typename BasicCharacterListView::Element;
 
@@ -32,7 +30,7 @@ namespace TwinKleS::Core {
 
 		using typename BasicCharacterListView::QIterator;
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -175,7 +173,7 @@ namespace TwinKleS::Core {
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region operator
 

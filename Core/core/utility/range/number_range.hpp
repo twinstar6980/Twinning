@@ -3,7 +3,7 @@
 #include "core/utility/base_wrapper/wrapper.hpp"
 #include "core/utility/range/number_iterator.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
@@ -12,19 +12,19 @@ namespace TwinKleS::Core {
 		&& (IsNumberWrapper<TNumber>)
 	class NumberRange {
 
-	public: //
+	public:
 
 		using Number = TNumber;
 
 		using Iterator = NumberIterator<Number>;
 
-	protected: //
+	protected:
 
 		Number m_begin;
 		Number m_end;
 		Number m_step;
 
-	public: //
+	public:
 
 		#pragma region structor
 

@@ -1,12 +1,12 @@
-namespace TwinKleS {
+namespace TwinStar {
 
 	// ------------------------------------------------
 
 	export class ThreadManager {
 
 		private m_pool: Array<{
-			thread: Core.Misc.Thread;
-			context: Core.Misc.Context;
+			thread: Core.Miscellaneous.Thread;
+			context: Core.Miscellaneous.Context;
 			result: [boolean, any];
 		}> = [];
 
@@ -35,8 +35,8 @@ namespace TwinKleS {
 			this.m_pool = new Array(size);
 			for (let index = 0; index < size; ++index) {
 				this.m_pool[index] = {
-					thread: Core.Misc.Thread.default(),
-					context: Core.Misc.g_context.spawn(),
+					thread: Core.Miscellaneous.Thread.default(),
+					context: Core.Miscellaneous.g_context.spawn(),
 					result: [false, undefined],
 				};
 				if (initializer !== null) {
@@ -99,7 +99,7 @@ namespace TwinKleS {
 				index = this.m_pool.findIndex((e, i) => (this.idle(i)));
 				if (index === -1) {
 					index = null;
-					Core.Misc.Thread.yield();
+					Core.Miscellaneous.Thread.yield();
 				}
 			}
 			this.execute(index, executor);
@@ -109,7 +109,7 @@ namespace TwinKleS {
 		wait(
 		): void {
 			while (!this.m_pool.every((e, i) => (this.idle(i)))) {
-				Core.Misc.Thread.yield();
+				Core.Miscellaneous.Thread.yield();
 			}
 		}
 

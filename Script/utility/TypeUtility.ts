@@ -1,5 +1,5 @@
 /** 工具集 */
-namespace TwinKleS {
+namespace TwinStar {
 
 	// ------------------------------------------------
 
@@ -235,7 +235,24 @@ namespace TwinKleS {
 	// ------------------------------------------------
 
 	/**
-	 * 解析用于表示size的字符串
+	 * 解析用于表示确认值的字符串
+	 * @param string 字符串
+	 * @returns 解析值
+	 */
+	export function parse_confirm_string(
+		string: string,
+	): boolean {
+		if (string === 'n') {
+			return false;
+		}
+		if (string === 'y') {
+			return true;
+		}
+		throw Error('invalid confirm string');
+	}
+
+	/**
+	 * 解析用于表示尺寸的字符串
 	 * @param string 字符串
 	 * @returns 解析值
 	 */
@@ -248,7 +265,7 @@ namespace TwinKleS {
 			m: 1024 * 1024,
 			g: 1024 * 1024 * 1024,
 		};
-		return BigInt(Number.parseInt(`${Number.parseFloat(string.slice(0, -1)) * k_unit_map[string.slice(-1) as 'b' | 'k' | 'm' | 'g']}`));
+		return BigInt((Number.parseFloat(string.slice(0, -1)) * k_unit_map[string.slice(-1) as 'b' | 'k' | 'm' | 'g']).toFixed(0));
 	}
 
 	// ------------------------------------------------
@@ -347,6 +364,24 @@ namespace TwinKleS {
 	): string {
 		let p = (source: number, max_length: number) => (make_prefix_padded_string(source, '0', max_length));
 		return `${p(date.getFullYear() % 100, 2)}-${p(date.getMonth() + 1, 2)}-${p(date.getDate(), 2)}.${p(date.getHours(), 2)}-${p(date.getMinutes(), 2)}-${p(date.getSeconds(), 2)}.${p(date.getMilliseconds(), 3)}`;
+	}
+
+	// ------------------------------------------------
+
+	/**
+	 * 从字节数组中解析一个整数（小端序）
+	 * @param byte_array 字节数组
+	 * @returns 整数值
+	 */
+	export function integer_from_byte(
+		byte_array: ArrayBuffer,
+	): bigint {
+		let integer_array = new Uint8Array(byte_array);
+		let result = 0n;
+		for (let index in integer_array) {
+			result |= BigInt(integer_array[index]) << BigInt(8 * Number(index));
+		}
+		return result;
 	}
 
 	// ------------------------------------------------

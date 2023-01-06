@@ -1,5 +1,5 @@
 /** 从 PvZ-2 安卓中文版的 APK 解压目录中提取 RSB */
-namespace TwinKleS.Script.ExtractRSBFromPvZ2CHSAPKDirectory {
+namespace TwinStar.Script.ExtractRSBFromPvZ2CHSAPKDirectory {
 
 	export function execute(
 	): void {
@@ -24,7 +24,7 @@ namespace TwinKleS.Script.ExtractRSBFromPvZ2CHSAPKDirectory {
 		Entry.simple_batch_execute(input_directory, ['file', /.+\.rsb\.smf$/i], (item) => {
 			let input_file = `${input_directory}/${item}`;
 			let output_file = `${output_directory}/${item.slice(0, -4)}`;
-			CoreX.Tool.PopCap.ZLib.uncompress_fs(input_file, output_file, 15n, false);
+			CoreX.Tool.PopCap.ZLib.uncompress_fs(input_file, output_file, 15n, { variant_64: false });
 		});
 		Console.notify('s', localized(`提取完成`), []);
 		return;
@@ -32,4 +32,4 @@ namespace TwinKleS.Script.ExtractRSBFromPvZ2CHSAPKDirectory {
 
 }
 
-TwinKleS.Script.ExtractRSBFromPvZ2CHSAPKDirectory.execute();
+TwinStar.Script.ExtractRSBFromPvZ2CHSAPKDirectory.execute();

@@ -3,13 +3,13 @@
 #include "core/utility/exception/source_location.hpp"
 #include <string>
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
 	class Exception {
 
-	public: //
+	public:
 
 		#pragma region structor
 

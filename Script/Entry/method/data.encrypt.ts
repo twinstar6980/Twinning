@@ -1,9 +1,9 @@
 /**
- * + data.encrypt.xor.crypt XOR 加解密
+ * + data.encrypt.xor.encrypt XOR 加密
  * + data.encrypt.rijndael.encrypt Rijndael 加密
  * + data.encrypt.rijndael.decrypt Rijndael 解密
  */
-namespace TwinKleS.Entry.method.data.encrypt {
+namespace TwinStar.Entry.method.data.encrypt {
 
 	// ------------------------------------------------
 
@@ -15,7 +15,7 @@ namespace TwinKleS.Entry.method.data.encrypt {
 	) {
 		g_executor_method.push(
 			Executor.method_of({
-				id: 'data.encrypt.xor.crypt',
+				id: 'data.encrypt.xor.encrypt',
 				descriptor(
 				) {
 					return Executor.query_method_description(this.id);
@@ -51,7 +51,7 @@ namespace TwinKleS.Entry.method.data.encrypt {
 							(value) => (0x00n <= value && value <= 0xFFn ? null : localized(`范围溢出`)),
 						);
 					}
-					CoreX.Tool.Data.Encrypt.XOR.crypt_fs(plain_file, cipher_file, key);
+					CoreX.Tool.Data.Encrypt.XOR.encrypt_fs(plain_file, cipher_file, key);
 					Console.notify('s', localized(`执行成功`), [`${cipher_file}`]);
 				},
 				default_argument: {
@@ -243,5 +243,5 @@ namespace TwinKleS.Entry.method.data.encrypt {
 }
 
 ({
-	injector: TwinKleS.Entry.method.data.encrypt._injector,
+	injector: TwinStar.Entry.method.data.encrypt._injector,
 });

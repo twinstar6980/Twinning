@@ -1,41 +1,33 @@
-# TwinKleS ToolKit
+# TwinStar ToolKit
 
 Powerful tool for PvZ-2 Modder .
 
-by TwinKleS-China .
+by TwinStar, China .
 
 ## 开源说明
 
-本项目使用 GPL 协议，可以随意使用与修改，但使用本项目的项目也须开源并使用 GPL 协议。
+本项目使用 **GPL** 协议，可以随意使用与修改，但使用本项目的项目也须开源并使用 GPL 协议。
 
 ## 模块组成
 
-* Core
+* `Core`
 	
-	核心功能的实现，以动态库形式分发。
+	核心库，负责内部功能的实现。
 
-* Shell
+* `Shell`
 	
-	面向用户的外壳程序，提供基于终端的命令行界面。
+	外壳程序，提供基于终端的命令行界面。
 
-* Script
+* `Script`
 	
-	与 Core 及 Shell 配合使用的脚本。
+	脚本，控制工具的运行流程。
 
-* Windows Explorer Extension
+* `Windows Explorer Extension`
 	
-	适用于 Windows 的资源管理器拓展，将 ToolKit 集成至系统资源管理器的右键菜单中。
+	Windows 资源管理器拓展，将工具集成至 Windows Explorer 右键菜单中。
 
 ## 平台支持
 
-* 操作系统
-	
-	* Windows | Linux | MacOS
-	
-	* Android | iOS
+* 操作系统：`Windows 7+` 、`Linux ?+` 、`MacOS 12.0+(maybe below)` 、`Android 9+` 、`iOS 13.0+` 。
 
-* 处理器架构
-	
-	* x86_32 | x86_64
-	
-	* arm_32 | arm_64
+* 处理器架构：`x86 32|64` 、`arm 32|64` 。

@@ -3,24 +3,24 @@
 #include "core/utility/base_wrapper/wrapper.hpp"
 #include <variant>
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
-	template <typename ...TValue> requires
-		CategoryConstraint<IsPureInstance<TValue...>>
+	template <typename ... TValue> requires
+		CategoryConstraint<IsPureInstance<TValue ...>>
 		&& (sizeof...(TValue) > 0_szz)
 	class Variant {
 
-	public: //
+	public:
 
-		using Value = TypePackage<TValue...>;
+		using Value = TypePackage<TValue ...>;
 
-	protected: //
+	protected:
 
-		std::variant<TValue...> m_value{};
+		std::variant<TValue ...> m_value{};
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -44,7 +44,7 @@ namespace TwinKleS::Core {
 
 		template <typename ValueObject> requires
 			CategoryConstraint<IsValid<ValueObject>>
-			&& (IsSame<AsPure<ValueObject>, TValue...>)
+			&& (IsSame<AsPure<ValueObject>, TValue ...>)
 		explicit constexpr Variant (
 			ValueObject && value
 		) :
@@ -69,7 +69,7 @@ namespace TwinKleS::Core {
 
 		template <typename ValueObject> requires
 			CategoryConstraint<IsPureInstance<ValueObject>>
-			&& (IsSame<ValueObject, TValue...>)
+			&& (IsSame<ValueObject, TValue ...>)
 		constexpr auto is (
 		) const -> Boolean {
 			return std::holds_alternative<ValueObject>(thiz.m_value);
@@ -77,14 +77,14 @@ namespace TwinKleS::Core {
 
 		// ----------------
 
-		template <typename ValueObject, typename ...Argument> requires
-			CategoryConstraint<IsPureInstance<ValueObject> && IsValid<Argument...>>
-			&& (IsSame<ValueObject, TValue...>)
-			&& (IsConstructible<ValueObject, Argument &&...>)
+		template <typename ValueObject, typename ... Argument> requires
+			CategoryConstraint<IsPureInstance<ValueObject> && IsValid<Argument ...>>
+			&& (IsSame<ValueObject, TValue ...>)
+			&& (IsConstructible<ValueObject, Argument && ...>)
 		constexpr auto set (
-			Argument && ...argument
+			Argument && ... argument
 		) -> ValueObject& {
-			thiz.m_value.template emplace<ValueObject>(as_forward<Argument>(argument)...);
+			thiz.m_value.template emplace<ValueObject>(as_forward<Argument>(argument) ...);
 			return std::get<ValueObject>(thiz.m_value);
 		}
 
@@ -92,7 +92,7 @@ namespace TwinKleS::Core {
 
 		template <typename ValueObject> requires
 			CategoryConstraint<IsPureInstance<ValueObject>>
-			&& (IsSame<ValueObject, TValue...>)
+			&& (IsSame<ValueObject, TValue ...>)
 		constexpr auto get (
 		) -> ValueObject& {
 			assert_condition(thiz.template is<ValueObject>());
@@ -101,7 +101,7 @@ namespace TwinKleS::Core {
 
 		template <typename ValueObject> requires
 			CategoryConstraint<IsPureInstance<ValueObject>>
-			&& (IsSame<ValueObject, TValue...>)
+			&& (IsSame<ValueObject, TValue ...>)
 		constexpr auto get (
 		) const -> ValueObject const& {
 			assert_condition(thiz.template is<ValueObject>());
@@ -123,49 +123,49 @@ namespace TwinKleS::Core {
 
 		template <auto index> requires
 			CategoryConstraint<>
-			&& (IsSameV<index, ZSize>)
-			&& (index < sizeof...(TValue))
+			&& (IsSameV<index, Size>)
+			&& (index.value < sizeof...(TValue))
 		constexpr auto is_of_index (
 		) const -> Boolean {
-			return thiz.template is<AsSelect<index, TValue...>>();
+			return thiz.template is<AsSelect<index.value, TValue ...>>();
 		}
 
 		// ----------------
 
-		template <auto index, typename ...Argument> requires
-			CategoryConstraint<IsValid<Argument...>>
-			&& (IsSameV<index, ZSize>)
-			&& (index < sizeof...(TValue))
-			&& (IsConstructible<AsSelect<index, TValue...>, Argument &&...>)
+		template <auto index, typename ... Argument> requires
+			CategoryConstraint<IsValid<Argument ...>>
+			&& (IsSameV<index, Size>)
+			&& (index.value < sizeof...(TValue))
+			&& (IsConstructible<AsSelect<index.value, TValue ...>, Argument && ...>)
 		constexpr auto set_of_index (
-			Argument && ...argument
-		) -> AsSelect<index, TValue...>& {
-			return thiz.template set<AsSelect<index, TValue...>>(as_forward<Argument>(argument)...);
+			Argument && ... argument
+		) -> AsSelect<index.value, TValue ...>& {
+			return thiz.template set<AsSelect<index.value, TValue ...>>(as_forward<Argument>(argument) ...);
 		}
 
 		// ----------------
 
 		template <auto index> requires
 			CategoryConstraint<>
-			&& (IsSameV<index, ZSize>)
-			&& (index < sizeof...(TValue))
+			&& (IsSameV<index, Size>)
+			&& (index.value < sizeof...(TValue))
 		constexpr auto get_of_index (
-		) -> AsSelect<index, TValue...>& {
-			return thiz.template get<AsSelect<index, TValue...>>();
+		) -> AsSelect<index.value, TValue ...>& {
+			return thiz.template get<AsSelect<index.value, TValue ...>>();
 		}
 
 		template <auto index> requires
 			CategoryConstraint<>
-			&& (IsSameV<index, ZSize>)
-			&& (index < sizeof...(TValue))
+			&& (IsSameV<index, Size>)
+			&& (index.value < sizeof...(TValue))
 		constexpr auto get_of_index (
-		) const -> AsSelect<index, TValue...> const& {
-			return thiz.template get<AsSelect<index, TValue...>>();
+		) const -> AsSelect<index.value, TValue ...> const& {
+			return thiz.template get<AsSelect<index.value, TValue ...>>();
 		}
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region operator
 
@@ -182,22 +182,22 @@ namespace TwinKleS::Core {
 
 	#pragma region utility
 
-	template <typename ActiveValue, typename ...Value, typename ...Argument> requires
-		CategoryConstraint<IsPureInstance<ActiveValue> && IsPureInstance<Value...> && IsValid<Argument...>>
+	template <typename ActiveValue, typename ... Value, typename ... Argument> requires
+		CategoryConstraint<IsPureInstance<ActiveValue> && IsPureInstance<Value ...> && IsValid<Argument ...>>
 	inline constexpr auto make_variant (
-		Argument && ...argument
-	) -> Variant<Value...> {
-		auto result = Variant<Value...>{};
-		result.template set<ActiveValue>(as_forward<Argument>(argument)...);
+		Argument && ... argument
+	) -> Variant<Value ...> {
+		auto result = Variant<Value ...>{};
+		result.template set<ActiveValue>(as_forward<Argument>(argument) ...);
 		return result;
 	}
 
-	template <typename ActiveValue, typename ...Value> requires
-		CategoryConstraint<IsValid<ActiveValue> && IsPureInstance<Value...>>
+	template <typename ActiveValue, typename ... Value> requires
+		CategoryConstraint<IsValid<ActiveValue> && IsPureInstance<Value ...>>
 	inline constexpr auto make_variant_of (
 		ActiveValue && value
-	) -> Variant<AsPure<Value>...> {
-		return Variant<AsPure<Value>...>{as_forward<ActiveValue>(value)};
+	) -> Variant<AsPure<Value> ...> {
+		return Variant<AsPure<Value> ...>{as_forward<ActiveValue>(value)};
 	}
 
 	#pragma endregion

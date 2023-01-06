@@ -3,7 +3,7 @@
  * + marmalade.dzip.unpack Marmalade-DZip 解包
  * + marmalade.dzip.pack_auto Marmalade-DZip 自动打包
  */
-namespace TwinKleS.Entry.method.marmalade.dzip {
+namespace TwinStar.Entry.method.marmalade.dzip {
 
 	// ------------------------------------------------
 
@@ -50,7 +50,7 @@ namespace TwinKleS.Entry.method.marmalade.dzip {
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
+							() => (Console.option([0n, [0n, '']], null)),
 							(value) => ([0n].includes(value) ? null : localized(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
@@ -58,7 +58,7 @@ namespace TwinKleS.Entry.method.marmalade.dzip {
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.binary_size(null)),
+							() => (Console.size(null)),
 							(value) => (null),
 						);
 					}
@@ -110,7 +110,7 @@ namespace TwinKleS.Entry.method.marmalade.dzip {
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
+							() => (Console.option([0n, [0n, '']], null)),
 							(value) => ([0n].includes(value) ? null : localized(`版本不受支持`)),
 						);
 					}
@@ -161,7 +161,7 @@ namespace TwinKleS.Entry.method.marmalade.dzip {
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
+							() => (Console.option([0n, [0n, '']], null)),
 							(value) => ([0n].includes(value) ? null : localized(`版本不受支持`)),
 						);
 					}
@@ -186,5 +186,5 @@ namespace TwinKleS.Entry.method.marmalade.dzip {
 }
 
 ({
-	injector: TwinKleS.Entry.method.marmalade.dzip._injector,
+	injector: TwinStar.Entry.method.marmalade.dzip._injector,
 });

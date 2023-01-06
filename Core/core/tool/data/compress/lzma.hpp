@@ -3,118 +3,113 @@
 #include "core/utility/utility.hpp"
 #include "core/third_party/lzma.hpp"
 
-namespace TwinKleS::Core::Tool::Data::Compress::Lzma {
+namespace TwinStar::Core::Tool::Data::Compress::Lzma {
 
-	inline namespace Common {
+	inline constexpr auto k_property_size = Size{mbw<Size>(ThirdParty::lzma::LZMA_PROPS_SIZE_)};
 
-		namespace Detail {
+	// ----------------
 
-			#pragma region parameter
+	struct CompressCommon {
 
-			inline constexpr auto k_props_size = Size{mbw<Size>(ThirdParty::lzma::LZMA_PROPS_SIZE_)};
+	protected:
 
-			#pragma endregion
+	};
 
+	struct Compress :
+		CompressCommon {
+
+	protected:
+
+		static auto process_whole (
+			IByteStreamView & raw,
+			OByteStreamView & ripe,
+			OByteStreamView & property,
+			Size const &      level
+		) -> Void {
+			assert_condition(Math::between(level, 0_sz, 9_sz));
+			auto raw_size = raw.reserve().value;
+			auto ripe_size = ripe.reserve().value;
+			auto property_size = property.reserve().value;
+			auto state = ThirdParty::lzma::LzmaCompress(
+				cast_pointer<ThirdParty::lzma::Byte>(ripe.current_pointer()).value,
+				&ripe_size,
+				cast_pointer<ThirdParty::lzma::Byte>(raw.current_pointer()).value,
+				raw_size,
+				cast_pointer<ThirdParty::lzma::Byte>(property.current_pointer()).value,
+				&property_size,
+				static_cast<int>(level.value),
+				0,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
+			);
+			assert_condition(state == ThirdParty::lzma::SZ_OK_);
+			raw.forward(mbw<Size>(raw_size));
+			ripe.forward(mbw<Size>(ripe_size));
+			property.forward(mbw<Size>(property_size));
+			assert_condition(raw.full());
+			return;
 		}
 
-		using Detail::k_props_size;
+	public:
 
-	}
-
-	namespace Compress {
-
-		namespace Detail {
-
-			#pragma region using
-
-			using namespace Common::Detail;
-
-			#pragma endregion
-
-			#pragma region process
-
-			inline auto process (
-				IByteStreamView & raw,
-				OByteStreamView & ripe,
-				OByteStreamView & props,
-				Size const &      level
-			) -> Void {
-				assert_condition(Math::between(level, 0_sz, 9_sz));
-				auto raw_size = raw.reserve().value;
-				auto ripe_size = ripe.reserve().value;
-				auto props_size = props.reserve().value;
-				auto state = ThirdParty::lzma::LzmaCompress(
-					cast_pointer<ThirdParty::lzma::Byte>(ripe.current_pointer()).value,
-					&ripe_size,
-					cast_pointer<ThirdParty::lzma::Byte>(raw.current_pointer()).value,
-					raw_size,
-					cast_pointer<ThirdParty::lzma::Byte>(props.current_pointer()).value,
-					&props_size,
-					static_cast<int>(level.value),
-					0,
-					-1,
-					-1,
-					-1,
-					-1,
-					-1
-				);
-				assert_condition(state == ThirdParty::lzma::SZ_OK_);
-				raw.forward(mbw<Size>(raw_size));
-				ripe.forward(mbw<Size>(ripe_size));
-				props.forward(mbw<Size>(props_size));
-				assert_condition(raw.full());
-				return;
-			}
-
-			#pragma endregion
-
+		static auto do_process_whole (
+			IByteStreamView & raw_,
+			OByteStreamView & ripe_,
+			OByteStreamView & property_,
+			Size const &      level
+		) -> Void {
+			M_use_zps_of(raw);
+			M_use_zps_of(ripe);
+			M_use_zps_of(property);
+			return process_whole(raw, ripe, property, level);
 		}
 
-		using Detail::process;
+	};
 
-	}
+	struct Uncompress :
+		CompressCommon {
 
-	namespace Uncompress {
+	protected:
 
-		namespace Detail {
-
-			#pragma region using
-
-			using namespace Common::Detail;
-
-			#pragma endregion
-
-			#pragma region process
-
-			inline auto process (
-				IByteStreamView & ripe,
-				OByteStreamView & raw,
-				IByteStreamView & props
-			) -> Void {
-				auto ripe_size = ripe.reserve().value;
-				auto raw_size = raw.reserve().value;
-				auto props_size = props.reserve().value;
-				auto state = ThirdParty::lzma::LzmaUncompress(
-					cast_pointer<ThirdParty::lzma::Byte>(raw.current_pointer()).value,
-					&raw_size,
-					cast_pointer<ThirdParty::lzma::Byte>(ripe.current_pointer()).value,
-					&ripe_size,
-					cast_pointer<ThirdParty::lzma::Byte>(props.current_pointer()).value,
-					props_size
-				);
-				assert_condition(state == ThirdParty::lzma::SZ_OK_);
-				ripe.forward(mbw<Size>(ripe_size));
-				raw.forward(mbw<Size>(raw_size));
-				props.forward(mbw<Size>(props_size));
-				return;
-			}
-
-			#pragma endregion
-
+		static auto process_whole (
+			IByteStreamView & ripe,
+			OByteStreamView & raw,
+			IByteStreamView & property
+		) -> Void {
+			auto ripe_size = ripe.reserve().value;
+			auto raw_size = raw.reserve().value;
+			auto property_size = property.reserve().value;
+			auto state = ThirdParty::lzma::LzmaUncompress(
+				cast_pointer<ThirdParty::lzma::Byte>(raw.current_pointer()).value,
+				&raw_size,
+				cast_pointer<ThirdParty::lzma::Byte>(ripe.current_pointer()).value,
+				&ripe_size,
+				cast_pointer<ThirdParty::lzma::Byte>(property.current_pointer()).value,
+				property_size
+			);
+			assert_condition(state == ThirdParty::lzma::SZ_OK_);
+			ripe.forward(mbw<Size>(ripe_size));
+			raw.forward(mbw<Size>(raw_size));
+			property.forward(mbw<Size>(property_size));
+			return;
 		}
 
-		using Detail::process;
+	public:
 
-	}
+		static auto do_process_whole (
+			IByteStreamView & ripe_,
+			OByteStreamView & raw_,
+			IByteStreamView & property_
+		) -> Void {
+			M_use_zps_of(ripe);
+			M_use_zps_of(raw);
+			M_use_zps_of(property);
+			return process_whole(ripe, raw, property);
+		}
+
+	};
 
 }

@@ -4,7 +4,7 @@
 #include "core/utility/base_wrapper/boolean.hpp"
 #include "core/utility/base_wrapper/number.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
@@ -13,15 +13,15 @@ namespace TwinKleS::Core {
 	class PointerWrapper :
 		public BaseWrapper<ZPointer<TTarget>> {
 
-	private: //
+	private:
 
 		using BaseWrapper = BaseWrapper<ZPointer<TTarget>>;
 
-	public: //
+	public:
 
 		using Target = TTarget;
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -124,18 +124,8 @@ namespace TwinKleS::Core {
 	inline constexpr auto operator == (
 		It const & thix,
 		It const & that
-	) -> Boolean {
-		return mbw<Boolean>(thix.value == that.value);
-	}
-
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsPointerWrapper<It>)
-	inline constexpr auto operator != (
-		It const & thix,
-		It const & that
-	) -> Boolean {
-		return !(thix == that);
+	) -> bool {
+		return thix.value == that.value;
 	}
 
 	// ----------------
@@ -146,8 +136,8 @@ namespace TwinKleS::Core {
 	inline constexpr auto operator < (
 		It const & thix,
 		It const & that
-	) -> Boolean {
-		return mbw<Boolean>(thix.value < that.value);
+	) -> bool {
+		return thix.value < that.value;
 	}
 
 	template <typename It> requires
@@ -156,8 +146,8 @@ namespace TwinKleS::Core {
 	inline constexpr auto operator > (
 		It const & thix,
 		It const & that
-	) -> Boolean {
-		return mbw<Boolean>(thix.value > that.value);
+	) -> bool {
+		return thix.value > that.value;
 	}
 
 	template <typename It> requires
@@ -166,8 +156,8 @@ namespace TwinKleS::Core {
 	inline constexpr auto operator <= (
 		It const & thix,
 		It const & that
-	) -> Boolean {
-		return mbw<Boolean>(thix.value <= that.value);
+	) -> bool {
+		return thix.value <= that.value;
 	}
 
 	template <typename It> requires
@@ -176,8 +166,8 @@ namespace TwinKleS::Core {
 	inline constexpr auto operator >= (
 		It const & thix,
 		It const & that
-	) -> Boolean {
-		return mbw<Boolean>(thix.value >= that.value);
+	) -> bool {
+		return thix.value >= that.value;
 	}
 
 	// ----------------
@@ -255,7 +245,7 @@ namespace TwinKleS::Core {
 		&& (IsPointerWrapper<It>)
 	inline constexpr auto operator ++ (
 		It & thix,
-		int  
+		int
 	) -> It {
 		return It{thix.value++};
 	}
@@ -265,7 +255,7 @@ namespace TwinKleS::Core {
 		&& (IsPointerWrapper<It>)
 	inline constexpr auto operator -- (
 		It & thix,
-		int  
+		int
 	) -> It {
 		return It{thix.value--};
 	}
@@ -296,12 +286,12 @@ namespace TwinKleS::Core {
 
 	// ----------------
 
-	template <typename DestTarget, typename SourceTarget> requires
-		CategoryConstraint<IsPure<DestTarget> && IsPointable<SourceTarget>>
+	template <typename DestinationTarget, typename SourceTarget> requires
+		CategoryConstraint<IsPure<DestinationTarget> && IsPointable<SourceTarget>>
 	inline auto cast_pointer (
 		PointerWrapper<SourceTarget> const & source
-	) -> PointerWrapper<AsConstantIf<DestTarget, IsCInstance<SourceTarget>>> {
-		return self_cast<PointerWrapper<AsConstantIf<DestTarget, IsCInstance<SourceTarget>>>>(source);
+	) -> PointerWrapper<AsConstantIf<DestinationTarget, IsCInstance<SourceTarget>>> {
+		return self_cast<PointerWrapper<AsConstantIf<DestinationTarget, IsCInstance<SourceTarget>>>>(source);
 	}
 
 	// ----------------

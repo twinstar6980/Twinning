@@ -2,7 +2,7 @@
  * + data.encode.base64.encode Base64 编码
  * + data.encode.base64.decode Base64 解码
  */
-namespace TwinKleS.Entry.method.data.encode {
+namespace TwinStar.Entry.method.data.encode {
 
 	// ------------------------------------------------
 
@@ -97,5 +97,5 @@ namespace TwinKleS.Entry.method.data.encode {
 }
 
 ({
-	injector: TwinKleS.Entry.method.data.encode._injector,
+	injector: TwinStar.Entry.method.data.encode._injector,
 });

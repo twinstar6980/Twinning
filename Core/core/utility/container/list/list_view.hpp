@@ -3,7 +3,7 @@
 #include "core/utility/range/range_wrapper.hpp"
 #include "core/utility/range/algorithm.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 
 	#pragma region type
 
@@ -12,11 +12,11 @@ namespace TwinKleS::Core {
 		&& (IsSameV<t_constant, ZBoolean>)
 	class ListView {
 
-	private: //
+	private:
 
 		using CView = ListView<TElement, true>;
 
-	public: //
+	public:
 
 		using Element = TElement;
 
@@ -26,12 +26,12 @@ namespace TwinKleS::Core {
 
 		using QIterator = Pointer<AsConstantIf<Element, constant>>;
 
-	protected: //
+	protected:
 
 		QIterator m_data{k_null_pointer};
 		Size      m_size{k_none_size};
 
-	public: //
+	public:
 
 		#pragma region structor
 
@@ -223,7 +223,7 @@ namespace TwinKleS::Core {
 
 		#pragma endregion
 
-	public: //
+	public:
 
 		#pragma region operator
 

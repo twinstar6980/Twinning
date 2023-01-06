@@ -4,7 +4,7 @@
  * + popcap.zlib.compress.batch [批处理] PopCap-ZLib 压缩
  * + popcap.zlib.uncompress.batch [批处理] PopCap-ZLib 解压
  */
-namespace TwinKleS.Entry.method.popcap.zlib {
+namespace TwinStar.Entry.method.popcap.zlib {
 
 	// ------------------------------------------------
 
@@ -24,11 +24,11 @@ namespace TwinKleS.Entry.method.popcap.zlib {
 				worker(a: Entry.CFSA & {
 					raw_file: Executor.RequireArgument<string>;
 					ripe_file: Executor.RequestArgument<string, true>;
-					variant_64: boolean | '?input';
+					version_variant_64: boolean | '?input';
 				}) {
 					let raw_file: string;
 					let ripe_file: string;
-					let variant_64: boolean;
+					let version_variant_64: boolean;
 					{
 						raw_file = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'raw_file'),
@@ -43,23 +43,23 @@ namespace TwinKleS.Entry.method.popcap.zlib {
 							() => (raw_file.replace(/()?$/i, '.bin')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
-						variant_64 = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'variant_64'),
-							a.variant_64,
+						version_variant_64 = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_variant_64'),
+							a.version_variant_64,
 							(value) => (value),
 							null,
 							() => (Console.confirm(null)),
 							(value) => (null),
 						);
 					}
-					CoreX.Tool.PopCap.ZLib.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', variant_64);
+					CoreX.Tool.PopCap.ZLib.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', { variant_64: version_variant_64 });
 					Console.notify('s', localized(`执行成功`), [`${ripe_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
 					raw_file: undefined!,
 					ripe_file: '?default',
-					variant_64: '?input',
+					version_variant_64: '?input',
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),
 				input_forwarder: 'raw_file',
@@ -73,11 +73,11 @@ namespace TwinKleS.Entry.method.popcap.zlib {
 				worker(a: Entry.CFSA & {
 					ripe_file: Executor.RequireArgument<string>;
 					raw_file: Executor.RequestArgument<string, true>;
-					variant_64: boolean | '?input';
+					version_variant_64: boolean | '?input';
 				}) {
 					let ripe_file: string;
 					let raw_file: string;
-					let variant_64: boolean;
+					let version_variant_64: boolean;
 					{
 						ripe_file = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'ripe_file'),
@@ -92,23 +92,23 @@ namespace TwinKleS.Entry.method.popcap.zlib {
 							() => (ripe_file.replace(/()?$/i, '.bin')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
-						variant_64 = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'variant_64'),
-							a.variant_64,
+						version_variant_64 = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_variant_64'),
+							a.version_variant_64,
 							(value) => (value),
 							null,
 							() => (Console.confirm(null)),
 							(value) => (null),
 						);
 					}
-					CoreX.Tool.PopCap.ZLib.uncompress_fs(ripe_file, raw_file, 15n, variant_64);
+					CoreX.Tool.PopCap.ZLib.uncompress_fs(ripe_file, raw_file, 15n, { variant_64: version_variant_64 });
 					Console.notify('s', localized(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
 					ripe_file: undefined!,
 					raw_file: '?default',
-					variant_64: '?input',
+					version_variant_64: '?input',
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),
 				input_forwarder: 'ripe_file',
@@ -124,11 +124,11 @@ namespace TwinKleS.Entry.method.popcap.zlib {
 				worker(a: Entry.CFSA & {
 					raw_file_directory: Executor.RequireArgument<string>;
 					ripe_file_directory: Executor.RequestArgument<string, true>;
-					variant_64: boolean | '?input';
+					version_variant_64: boolean | '?input';
 				}) {
 					let raw_file_directory: string;
 					let ripe_file_directory: string;
-					let variant_64: boolean;
+					let version_variant_64: boolean;
 					{
 						raw_file_directory = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'raw_file_directory'),
@@ -143,9 +143,9 @@ namespace TwinKleS.Entry.method.popcap.zlib {
 							() => (raw_file_directory.replace(/$/i, '.popcap_zlib_compress')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
-						variant_64 = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'variant_64'),
-							a.variant_64,
+						version_variant_64 = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_variant_64'),
+							a.version_variant_64,
 							(value) => (value),
 							null,
 							() => (Console.confirm(null)),
@@ -158,7 +158,7 @@ namespace TwinKleS.Entry.method.popcap.zlib {
 						(item) => {
 							let raw_file = `${raw_file_directory}/${item}`;
 							let ripe_file = `${ripe_file_directory}/${item}`;
-							CoreX.Tool.PopCap.ZLib.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', variant_64);
+							CoreX.Tool.PopCap.ZLib.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', { variant_64: version_variant_64 });
 						},
 					);
 					Console.notify('s', localized(`执行成功`), [`${ripe_file_directory}`]);
@@ -167,7 +167,7 @@ namespace TwinKleS.Entry.method.popcap.zlib {
 					...Entry.k_cfsa,
 					raw_file_directory: undefined!,
 					ripe_file_directory: '?default',
-					variant_64: '?input',
+					version_variant_64: '?input',
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'raw_file_directory',
@@ -181,11 +181,11 @@ namespace TwinKleS.Entry.method.popcap.zlib {
 				worker(a: Entry.CFSA & {
 					ripe_file_directory: Executor.RequireArgument<string>;
 					raw_file_directory: Executor.RequestArgument<string, true>;
-					variant_64: boolean | '?input';
+					version_variant_64: boolean | '?input';
 				}) {
 					let ripe_file_directory: string;
 					let raw_file_directory: string;
-					let variant_64: boolean;
+					let version_variant_64: boolean;
 					{
 						ripe_file_directory = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'ripe_file_directory'),
@@ -200,9 +200,9 @@ namespace TwinKleS.Entry.method.popcap.zlib {
 							() => (ripe_file_directory.replace(/$/i, '.popcap_zlib_uncompress')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
-						variant_64 = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'variant_64'),
-							a.variant_64,
+						version_variant_64 = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_variant_64'),
+							a.version_variant_64,
 							(value) => (value),
 							null,
 							() => (Console.confirm(null)),
@@ -215,7 +215,7 @@ namespace TwinKleS.Entry.method.popcap.zlib {
 						(item) => {
 							let ripe_file = `${ripe_file_directory}/${item}`;
 							let raw_file = `${raw_file_directory}/${item}`;
-							CoreX.Tool.PopCap.ZLib.uncompress_fs(ripe_file, raw_file, 15n, variant_64);
+							CoreX.Tool.PopCap.ZLib.uncompress_fs(ripe_file, raw_file, 15n, { variant_64: version_variant_64 });
 						},
 					);
 					Console.notify('s', localized(`执行成功`), [`${raw_file_directory}`]);
@@ -224,7 +224,7 @@ namespace TwinKleS.Entry.method.popcap.zlib {
 					...Entry.k_cfsa,
 					ripe_file_directory: undefined!,
 					raw_file_directory: '?default',
-					variant_64: '?input',
+					version_variant_64: '?input',
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'ripe_file_directory',
@@ -237,5 +237,5 @@ namespace TwinKleS.Entry.method.popcap.zlib {
 }
 
 ({
-	injector: TwinKleS.Entry.method.popcap.zlib._injector,
+	injector: TwinStar.Entry.method.popcap.zlib._injector,
 });

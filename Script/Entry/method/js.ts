@@ -1,7 +1,7 @@
 /**
  * + js.evaluate JS 执行
  */
-namespace TwinKleS.Entry.method.js {
+namespace TwinStar.Entry.method.js {
 
 	// ------------------------------------------------
 
@@ -30,7 +30,7 @@ namespace TwinKleS.Entry.method.js {
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 					}
-					let result = CoreX.Misc.evaluate_fs(script_file);
+					let result = CoreX.Miscellaneous.evaluate_fs(script_file);
 					Console.notify('s', localized(`执行成功`), [`${result}`]);
 				},
 				default_argument: {
@@ -48,5 +48,5 @@ namespace TwinKleS.Entry.method.js {
 }
 
 ({
-	injector: TwinKleS.Entry.method.js._injector,
+	injector: TwinStar.Entry.method.js._injector,
 });

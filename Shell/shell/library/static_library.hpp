@@ -3,18 +3,18 @@
 #include "shell/base.hpp"
 #include "shell/library/library.hpp"
 
-namespace TwinKleS::Shell {
+namespace TwinStar::Shell {
 
 	#pragma region type
 
 	class StaticLibrary :
 		public Library {
 
-	protected: //
+	protected:
 
 		SymbolTable m_symbol;
 
-	public: //
+	public:
 
 		#pragma region structor
 

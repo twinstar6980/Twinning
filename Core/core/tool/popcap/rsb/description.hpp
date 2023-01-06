@@ -4,102 +4,81 @@
 #include "core/tool/popcap/rsb/version.hpp"
 #include "core/tool/popcap/rsb/common.hpp"
 
-namespace TwinKleS::Core::Tool::PopCap::RSB::Description {
+namespace TwinStar::Core::Tool::PopCap::RSB {
 
-	template <auto t_version>
-	struct Resource;
+	template <auto version> requires (check_version(version, {}, {}))
+	struct Description {
 
-	template <auto t_version> requires
-		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}, {}))
-	struct Resource<t_version> {
-		Path                path;
-		Integer             type;
-		Map<String, String> property;
+		#pragma region resource
+
+		template <typename = None>
+		struct Resource_;
+
+		using Resource = Resource_<>;
+
+		template <typename _> requires (check_version(version, {3, 4}, {}))
+		M_record_of_map(
+			M_wrap(Resource_<_>),
+			M_wrap(
+				(Path) path,
+				(Integer) type,
+				(Map<String, String>) property,
+			),
+		);
+
+		#pragma endregion
+
+		#pragma region group
+
+		template <typename = None>
+		struct Subgroup_;
+
+		using Subgroup = Subgroup_<>;
+
+		template <typename _> requires (check_version(version, {3, 4}, {}))
+		M_record_of_map(
+			M_wrap(Subgroup_<_>),
+			M_wrap(
+				(SubgroupCategory) category,
+				(Map<String, Resource>) resource,
+			),
+		);
+
+		// ----------------
+
+		template <typename = None>
+		struct Group_;
+
+		using Group = Group_<>;
+
+		template <typename _> requires (check_version(version, {3, 4}, {}))
+		M_record_of_map(
+			M_wrap(Group_<_>),
+			M_wrap(
+				(Boolean) composite,
+				(Map<String, Subgroup>) subgroup,
+			),
+		);
+
+		#pragma endregion
+
+		#pragma region package
+
+		template <typename = None>
+		struct Package_;
+
+		using Package = Package_<>;
+
+		template <typename _> requires (check_version(version, {3, 4}, {}))
+		M_record_of_map(
+			M_wrap(Package_<_>),
+			M_wrap(
+				(Map<String, Group>) group,
+			),
+		);
+
+		#pragma endregion
+
 	};
-
-	// ----------------
-
-	template <auto t_version>
-	struct Subgroup;
-
-	template <auto t_version> requires
-		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}, {}))
-	struct Subgroup<t_version> {
-		SubgroupCategory                 category;
-		Map<String, Resource<t_version>> resource;
-	};
-
-	// ----------------
-
-	template <auto t_version>
-	struct Group;
-
-	template <auto t_version> requires
-		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}, {}))
-	struct Group<t_version> {
-		Boolean                          composite;
-		Map<String, Subgroup<t_version>> subgroup;
-	};
-
-	// ----------------
-
-	template <auto t_version>
-	struct Package;
-
-	template <auto t_version> requires
-		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}, {}))
-	struct Package<t_version> {
-		Map<String, Group<t_version>> group;
-	};
-
-	// ----------------
-
-	using PackageOptionalVariant = VariantOfVersion<VersionEnum, Package, Optional>;
-
-}
-
-namespace TwinKleS::Core::JSON {
-
-	template <auto t_version> requires
-		AutoConstraint
-		&& (Tool::PopCap::RSB::check_version(t_version, {3, 4}, {}))
-	M_json_value_adapter_for_aggregate_as_object_by_field_of(
-		M_wrap(Tool::PopCap::RSB::Description::Resource<t_version>),
-		M_wrap(path, type, property),
-	);
-
-	// ----------------
-
-	template <auto t_version> requires
-		AutoConstraint
-		&& (Tool::PopCap::RSB::check_version(t_version, {3, 4}, {}))
-	M_json_value_adapter_for_aggregate_as_object_by_field_of(
-		M_wrap(Tool::PopCap::RSB::Description::Subgroup<t_version>),
-		M_wrap(category, resource),
-	);
-
-	// ----------------
-
-	template <auto t_version> requires
-		AutoConstraint
-		&& (Tool::PopCap::RSB::check_version(t_version, {3, 4}, {}))
-	M_json_value_adapter_for_aggregate_as_object_by_field_of(
-		M_wrap(Tool::PopCap::RSB::Description::Group<t_version>),
-		M_wrap(composite, subgroup),
-	);
-
-	// ----------------
-
-	template <auto t_version> requires
-		AutoConstraint
-		&& (Tool::PopCap::RSB::check_version(t_version, {3, 4}, {}))
-	M_json_value_adapter_for_aggregate_as_object_by_field_of(
-		M_wrap(Tool::PopCap::RSB::Description::Package<t_version>),
-		M_wrap(group),
-	);
 
 }

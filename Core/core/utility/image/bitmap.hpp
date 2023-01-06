@@ -2,7 +2,7 @@
 
 #include "core/utility/image/basic_bitmap.hpp"
 
-namespace TwinKleS::Core::Image {
+namespace TwinStar::Core::Image {
 
 	#pragma region alias
 

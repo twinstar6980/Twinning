@@ -1,6 +1,6 @@
 /**
  */
-namespace TwinKleS.Entry.method.expand {
+namespace TwinStar.Entry.method.expand {
 
 	// ------------------------------------------------
 
@@ -19,5 +19,5 @@ namespace TwinKleS.Entry.method.expand {
 }
 
 ({
-	injector: TwinKleS.Entry.method.expand._injector,
+	injector: TwinStar.Entry.method.expand._injector,
 });

@@ -13,15 +13,12 @@
 #include "core/utility/trait/template_instance.hpp"
 #include "core/utility/trait/object.hpp"
 #include "core/utility/trait/builtin.hpp"
-#include "core/utility/trait/enum.hpp"
 #include "core/utility/trait/range.hpp"
 #include "core/utility/trait/package/type_package.hpp"
 #include "core/utility/trait/package/value_package.hpp"
 #include "core/utility/trait/callable.hpp"
 #include "core/utility/trait/reflection/string.hpp"
-#include "core/utility/trait/reflection/information.hpp"
 #include "core/utility/trait/reflection/field.hpp"
-#include "core/utility/trait/reflection/utility.hpp"
 #include "core/utility/trait/generalization.hpp"
 #include "core/utility/trait/trait.hpp"
 
@@ -34,7 +31,7 @@
 #include "core/utility/base_wrapper/null_pointer.hpp"
 #include "core/utility/base_wrapper/wrapper.hpp"
 
-#include "core/utility/misc/allocator.hpp"
+#include "core/utility/miscellaneous/allocator.hpp"
 
 #include "core/utility/null.hpp"
 
@@ -62,22 +59,21 @@
 #include "core/utility/container/stream/stream_method.hpp"
 #include "core/utility/container/stream/stream_view.hpp"
 
-#include "core/utility/misc/math.hpp"
-#include "core/utility/misc/enum.hpp"
-#include "core/utility/misc/fourcc.hpp"
-#include "core/utility/misc/number_variant.hpp"
-#include "core/utility/misc/finalizer.hpp"
+#include "core/utility/miscellaneous/record.hpp"
+#include "core/utility/miscellaneous/math.hpp"
+#include "core/utility/miscellaneous/fourcc.hpp"
+#include "core/utility/miscellaneous/number_variant.hpp"
+#include "core/utility/miscellaneous/finalizer.hpp"
 
-#include "core/utility/misc/byte_series/container.hpp"
-#include "core/utility/misc/byte_series/utility.hpp"
-#include "core/utility/misc/byte_series/stream_adapter.hpp"
-#include "core/utility/misc/byte_series/stream.hpp"
-#include "core/utility/misc/byte_series/stream_adapter_utility.hpp"
+#include "core/utility/miscellaneous/byte_series/container.hpp"
+#include "core/utility/miscellaneous/byte_series/utility.hpp"
+#include "core/utility/miscellaneous/byte_series/stream_adapter.hpp"
+#include "core/utility/miscellaneous/byte_series/stream.hpp"
 
-#include "core/utility/misc/character_series/type.hpp"
-#include "core/utility/misc/character_series/container.hpp"
-#include "core/utility/misc/character_series/stream_adapter.hpp"
-#include "core/utility/misc/character_series/stream.hpp"
+#include "core/utility/miscellaneous/character_series/type.hpp"
+#include "core/utility/miscellaneous/character_series/container.hpp"
+#include "core/utility/miscellaneous/character_series/stream_adapter.hpp"
+#include "core/utility/miscellaneous/character_series/stream.hpp"
 
 #include "core/utility/string/basic_string_adapter.hpp"
 #include "core/utility/string/basic_string_view.hpp"
@@ -98,11 +94,8 @@
 
 #include "core/utility/data/json/value_adapter.hpp"
 #include "core/utility/data/json/value.hpp"
-#include "core/utility/data/json/value_adapter_utility.hpp"
-#include "core/utility/data/json/parser.hpp"
 
 #include "core/utility/data/xml/node.hpp"
-#include "core/utility/data/xml/parser.hpp"
 
 #include "core/utility/script/js/value_adapter.hpp"
 #include "core/utility/script/js/handler.hpp"
@@ -116,12 +109,12 @@
 #include "core/utility/system/posix.hpp"
 #include "core/utility/system/system.hpp"
 
-#include "core/utility/misc/bitset.hpp"
-#include "core/utility/misc/kv_pair.hpp"
-#include "core/utility/misc/2d_type.hpp"
-#include "core/utility/misc/padding_block.hpp"
-#include "core/utility/misc/string_block.hpp"
-#include "core/utility/misc/thread.hpp"
+#include "core/utility/miscellaneous/bitset.hpp"
+#include "core/utility/miscellaneous/kv_pair.hpp"
+#include "core/utility/miscellaneous/dimension.hpp"
+#include "core/utility/miscellaneous/padding_block.hpp"
+#include "core/utility/miscellaneous/string_block.hpp"
+#include "core/utility/miscellaneous/thread.hpp"
 
 #include "core/utility/support/byte_stream.hpp"
 #include "core/utility/support/character_stream.hpp"
@@ -131,5 +124,5 @@
 #include "core/utility/support/stl.hpp"
 #include "core/utility/support/fmt.hpp"
 
-namespace TwinKleS::Core {
+namespace TwinStar::Core {
 }
