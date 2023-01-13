@@ -1,8 +1,7 @@
 {
 	"tool": {
-		"ffmpeg": "~/extern/ffmpeg/ffmpeg",
-		"ww2ogg": "~/extern/ww2ogg/ww2ogg",
-		"ww2ogg_pcb": "~/extern/ww2ogg/packed_codebooks_aoTuV_603.bin",
+		"ffmpeg_program": "~/external/ffmpeg/ffmpeg",
+		"ww2ogg_program": "~/external/ww2ogg/ww2ogg",
+		"ww2ogg_code_book": "~/external/ww2ogg/packed_codebooks_aoTuV_603.bin",
 	},
-	"temp_directpry": "~/workspace/temp",
 }

@@ -37,7 +37,7 @@ target('zlib', function()
 		'./zutil.c',
 		{}
 	)
-	if m.system:is('linux', 'macos', 'android', 'ios') then
+	if m.system:is('linux', 'macintosh', 'android', 'iphone') then
 		add_defines(
 			'Z_HAVE_UNISTD_H',
 			'_LARGEFILE64_SOURCE=1',

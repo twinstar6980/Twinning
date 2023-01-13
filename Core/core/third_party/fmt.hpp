@@ -9,7 +9,6 @@
 #pragma warning(disable:4626)
 #pragma warning(disable:5026)
 #pragma warning(disable:5027)
-#pragma warning(disable:5045)
 #endif
 #if defined M_compiler_clang
 #pragma clang diagnostic push

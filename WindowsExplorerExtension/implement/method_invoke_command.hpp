@@ -1,7 +1,13 @@
 #pragma once
 
-#include "framework.h"
-#include "base_command.hpp"
+#include "implement/common.hpp"
+#include "implement/base_command.hpp"
+
+#pragma warning(push)
+#pragma warning(disable:4625)
+#pragma warning(disable:4626)
+#pragma warning(disable:5026)
+#pragma warning(disable:5027)
 
 namespace TwinStar::WindowsExplorerExtension {
 
@@ -41,17 +47,6 @@ namespace TwinStar::WindowsExplorerExtension {
 		return result;
 	}
 
-	inline auto make_single_code (
-		MethodInvokeCommandConfig const & config,
-		std::wstring const &              path
-	) -> std::wstring {
-		if (!config.method) {
-			return std::format(LR"("{}" "-argument" "{}")", path, config.argument);
-		} else {
-			return std::format(LR"("{}" "-method" "{}" "-argument" "{}")", path, config.method.value(), config.argument);
-		}
-	}
-
 	#pragma endregion
 
 	#pragma region command
@@ -87,19 +82,17 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		virtual auto icon (
 		) -> LPCWSTR override {
-			static auto dll_path = std::wstring{};
-			if (thiz.m_has_icon) {
-				dll_path = get_dll_path(g_dll_handle);
-				return dll_path.data();
-			} else {
-				return nullptr;
-			}
+			static auto dll_path = get_module_file_name(g_dll_handle);
+			return thiz.m_has_icon ? dll_path.data() : nullptr;
 		}
 
 		virtual auto state (
 			_In_opt_ IShellItemArray * selection
 		) -> EXPCMDSTATE override {
-			auto path_list = get_selection_path(selection);
+			if (selection == nullptr) {
+				throw std::runtime_error{std::format("selection is null")};
+			}
+			auto path_list = get_shell_item_file_path(selection);
 			for (auto & path : path_list) {
 				if (!test_single_path(thiz.m_config, path)) {
 					return ECS_DISABLED;
@@ -111,28 +104,30 @@ namespace TwinStar::WindowsExplorerExtension {
 		virtual auto invoke (
 			_In_opt_ IShellItemArray * selection
 		) -> void override {
-			auto launch_file = std::wstring{L"C:\\Program Files\\TwinStar\\ToolKit\\launch.bat"};
-			auto parameter = std::wstring{};
-			if (selection) {
-				auto path_list = get_selection_path(selection);
-				parameter.reserve(2 + 1 + 2 + launch_file.size() + 2 + path_list.size() * 256);
-				parameter.append(L"/C ");
-				parameter.append(1, L'"');
-				parameter.append(1, L'"');
-				parameter.append(launch_file);
-				parameter.append(1, L'"');
-				for (auto & path : path_list) {
-					parameter.append(1, L' ');
-					parameter.append(make_single_code(thiz.m_config, path));
+			try {
+				if (selection == nullptr) {
+					throw std::runtime_error{std::format("selection is null")};
 				}
-				parameter.append(1, L'"');
+				auto path_list = get_shell_item_file_path(selection);
+				auto program = std::wstring{L"C:\\Windows\\System32\\cmd.exe"};
+				auto argument = std::vector<std::wstring>{};
+				argument.emplace_back(L"/C");
+				argument.emplace_back(L"%TwinStar.ToolKit.WindowsExplorerExtension.launch_file%");
+				for (auto & path : path_list) {
+					argument.emplace_back(path);
+					if (thiz.m_config.method.has_value()) {
+						argument.emplace_back(L"-method");
+						argument.emplace_back(thiz.m_config.method.value());
+					}
+					argument.emplace_back(L"-argument");
+					argument.emplace_back(thiz.m_config.argument);
+				}
+				create_process(program, argument);
+			} catch (std::exception const & exception) {
+				// TODO : suppose encoding is ANSI, right ?
+				auto message = exception.what();
+				MessageBoxA(nullptr, message, "TwinStar.ToolKit.WindowsExplorerExtension ERROR", MB_OK | MB_ICONERROR);
 			}
-			parameter.append(1, L'\0');
-			auto startup_info = STARTUPINFOW{};
-			auto process_information = PROCESS_INFORMATION{};
-			ZeroMemory(&startup_info, sizeof(startup_info));
-			ZeroMemory(&process_information, sizeof(process_information));
-			CreateProcessW(L"C:\\Windows\\System32\\cmd.exe", parameter.data(), nullptr, nullptr, FALSE, CREATE_NEW_CONSOLE, nullptr, nullptr, &startup_info, &process_information);
 			return;
 		}
 
@@ -251,15 +246,17 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		virtual auto icon (
 		) -> LPCWSTR override {
-			static auto dll_path = std::wstring{};
-			dll_path = get_dll_path(g_dll_handle);
+			static auto dll_path = get_module_file_name(g_dll_handle);
 			return dll_path.data();
 		}
 
 		virtual auto state (
 			_In_opt_ IShellItemArray * selection
 		) -> EXPCMDSTATE override {
-			auto path_list = get_selection_path(selection);
+			if (selection == nullptr) {
+				throw std::runtime_error{std::format("selection is null")};
+			}
+			auto path_list = get_shell_item_file_path(selection);
 			for (auto & config : thiz.m_config.child) {
 				auto state = true;
 				for (auto & path : path_list) {
@@ -293,3 +290,5 @@ namespace TwinStar::WindowsExplorerExtension {
 	#pragma endregion
 
 }
+
+#pragma warning(pop)

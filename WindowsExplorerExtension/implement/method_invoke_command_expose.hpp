@@ -1,8 +1,13 @@
 #pragma once
 
-#include "framework.h"
-#include "base_command.hpp"
-#include "method_invoke_command.hpp"
+#include "implement/common.hpp"
+#include "implement/method_invoke_command.hpp"
+
+#pragma warning(push)
+#pragma warning(disable:4625)
+#pragma warning(disable:4626)
+#pragma warning(disable:5026)
+#pragma warning(disable:5027)
 
 namespace TwinStar::WindowsExplorerExtension {
 
@@ -41,7 +46,7 @@ namespace TwinStar::WindowsExplorerExtension {
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.json)$)", std::wregex::icase},
 					.method = L"json.format",
-					.argument = LR"({ """disable_trailing_comma""": """?default""", """disable_array_wrap_line""": """?default""" })",
+					.argument = LR"({ "disable_trailing_comma": "?default", "disable_array_wrap_line": "?default" })",
 				},
 				{
 					.name = L"[批处理] 格式化",
@@ -55,7 +60,7 @@ namespace TwinStar::WindowsExplorerExtension {
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"json.format.batch",
-					.argument = LR"({ """disable_trailing_comma""": """?default""", """disable_array_wrap_line""": """?default""" })",
+					.argument = LR"({ "disable_trailing_comma": "?default", "disable_array_wrap_line": "?default" })",
 				},
 			},
 			.separator = {
@@ -491,35 +496,35 @@ namespace TwinStar::WindowsExplorerExtension {
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
 					.method = L"popcap.ptx.encode",
-					.argument = LR"({ """format""": """rgba_8888""" })",
+					.argument = LR"({ "format": "rgba_8888" })",
 				},
 				{
 					.name = L"编码（argb_8888）",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
 					.method = L"popcap.ptx.encode",
-					.argument = LR"({ """format""": """argb_8888""" })",
+					.argument = LR"({ "format": "argb_8888" })",
 				},
 				{
 					.name = L"编码（rgba_pvrtc4）",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
 					.method = L"popcap.ptx.encode",
-					.argument = LR"({ """format""": """rgba_pvrtc4""" })",
+					.argument = LR"({ "format": "rgba_pvrtc4" })",
 				},
 				{
 					.name = L"编码（rgb_etc1_a_8）",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
 					.method = L"popcap.ptx.encode",
-					.argument = LR"({ """format""": """rgb_etc1_a_8""" })",
+					.argument = LR"({ "format": "rgb_etc1_a_8" })",
 				},
 				{
 					.name = L"编码（rgb_etc1_a_8_index）",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
 					.method = L"popcap.ptx.encode",
-					.argument = LR"({ """format""": """rgb_etc1_a_8_index""" })",
+					.argument = LR"({ "format": "rgb_etc1_a_8_index" })",
 				},
 				{
 					.name = L"解码",
@@ -533,35 +538,35 @@ namespace TwinStar::WindowsExplorerExtension {
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.ptx)$)", std::wregex::icase},
 					.method = L"popcap.ptx.decode",
-					.argument = LR"({ """format""": """rgba_8888""" })",
+					.argument = LR"({ "format": "rgba_8888" })",
 				},
 				{
 					.name = L"解码（argb_8888）",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.ptx)$)", std::wregex::icase},
 					.method = L"popcap.ptx.decode",
-					.argument = LR"({ """format""": """argb_8888""" })",
+					.argument = LR"({ "format": "argb_8888" })",
 				},
 				{
 					.name = L"解码（rgba_pvrtc4）",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.ptx)$)", std::wregex::icase},
 					.method = L"popcap.ptx.decode",
-					.argument = LR"({ """format""": """rgba_pvrtc4""" })",
+					.argument = LR"({ "format": "rgba_pvrtc4" })",
 				},
 				{
 					.name = L"解码（rgb_etc1_a_8）",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.ptx)$)", std::wregex::icase},
 					.method = L"popcap.ptx.decode",
-					.argument = LR"({ """format""": """rgb_etc1_a_8""" })",
+					.argument = LR"({ "format": "rgb_etc1_a_8" })",
 				},
 				{
 					.name = L"解码（rgb_etc1_a_8_index）",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.ptx)$)", std::wregex::icase},
 					.method = L"popcap.ptx.decode",
-					.argument = LR"({ """format""": """rgb_etc1_a_8_index""" })",
+					.argument = LR"({ "format": "rgb_etc1_a_8_index" })",
 				},
 			},
 			.separator = {
@@ -613,14 +618,14 @@ namespace TwinStar::WindowsExplorerExtension {
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.pam)(\.xfl)$)", std::wregex::icase},
 					.method = L"popcap.pam.convert.flash.resize",
-					.argument = LR"({ """resolution""": 1536 })",
+					.argument = LR"({ "resolution": 1536 })",
 				},
 				{
 					.name = L"Flash 图像分辨率调整（768）",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.pam)(\.xfl)$)", std::wregex::icase},
 					.method = L"popcap.pam.convert.flash.resize",
-					.argument = LR"({ """resolution""": 768 })",
+					.argument = LR"({ "resolution": 768 })",
 				},
 				{
 					.name = L"Flash 创建图像文件链接",
@@ -669,14 +674,14 @@ namespace TwinStar::WindowsExplorerExtension {
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.pam.convert.flash.resize.batch",
-					.argument = LR"({ """resolution""": 1536 })",
+					.argument = LR"({ "resolution": 1536 })",
 				},
 				{
 					.name = L"[批处理] Flash 图像分辨率调整（768）",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.pam.convert.flash.resize.batch",
-					.argument = LR"({ """resolution""": 768 })",
+					.argument = LR"({ "resolution": 768 })",
 				},
 				{
 					.name = L"[批处理] Flash 创建图像文件链接",
@@ -800,21 +805,21 @@ namespace TwinStar::WindowsExplorerExtension {
 					.type = false,
 					.rule = std::wregex{LR"(.*(LawnStrings).*(\.(txt|json))$)", std::wregex::icase},
 					.method = L"other.pvz2.lawn_string_text.convert",
-					.argument = LR"({ """dest_version""": """text""" })",
+					.argument = LR"({ "dest_version": "text" })",
 				},
 				{
 					.name = L"转换为 json_map",
 					.type = false,
 					.rule = std::wregex{LR"(.*(LawnStrings).*(\.(txt|json))$)", std::wregex::icase},
 					.method = L"other.pvz2.lawn_string_text.convert",
-					.argument = LR"({ """dest_version""": """json_map""" })",
+					.argument = LR"({ "dest_version": "json_map" })",
 				},
 				{
 					.name = L"转换为 json_list",
 					.type = false,
 					.rule = std::wregex{LR"(.*(LawnStrings).*(\.(txt|json))$)", std::wregex::icase},
 					.method = L"other.pvz2.lawn_string_text.convert",
-					.argument = LR"({ """dest_version""": """json_list""" })",
+					.argument = LR"({ "dest_version": "json_list" })",
 				},
 			},
 			.separator = {
@@ -967,3 +972,5 @@ namespace TwinStar::WindowsExplorerExtension {
 	#pragma endregion
 
 }
+
+#pragma warning(pop)

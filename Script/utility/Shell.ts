@@ -35,11 +35,11 @@ namespace TwinStar.Shell {
 
 	export const is_linux = system === 'linux';
 
-	export const is_macos = system === 'macos';
+	export const is_macintosh = system === 'macintosh';
 
 	export const is_android = system === 'android';
 
-	export const is_ios = system === 'ios';
+	export const is_iphone = system === 'iphone';
 
 	// ------------------------------------------------
 

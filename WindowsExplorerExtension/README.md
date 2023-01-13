@@ -22,13 +22,13 @@ Windows 资源管理器拓展，将工具集成至 Windows Explorer 右键菜单
 	
 	* CMake ：`> xmake project -k cmakelists .project` ，适用于 VS 、CLion 。
 	
-	> 具体参见 [xmake 文档](https://xmake.io/#/plugin/builtin_plugins?id=generate-ide-project-files) 。
+	> 具体参阅 [xmake 文档](https://xmake.io/#/plugin/builtin_plugins?id=generate-ide-project-files) 。
 
 * 构建
 	
 	在 `+ <project>` 下执行 `> xmake f -o .build` & `> xmake` ，构建产物将输出至 `+ <project>/.build` 。
 	
-	> 具体参见 [xmake 文档](https://xmake.io/#/) 。
+	> 具体参阅 [xmake 文档](https://xmake.io/#/) 。
 
 ## 第三方库使用
 

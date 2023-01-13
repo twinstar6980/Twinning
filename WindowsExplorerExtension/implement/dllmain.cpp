@@ -1,6 +1,7 @@
 //
 
-#include "method_invoke_command_expose.hpp"
+#include "implement/common.hpp"
+#include "implement/method_invoke_command_expose.hpp"
 
 #pragma region dll implement
 

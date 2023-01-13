@@ -202,7 +202,7 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 						auto chunk_header = Structure::ChunkHeaderLzma<version>{};
 						auto chunk_header_data = OByteStreamView{package_data.forward_view(bs_size(chunk_header))};
 						Data::Compress::Lzma::Compress::do_process_whole(as_lvalue(IByteStreamView{chunk_data}), package_data, as_lvalue(OByteStreamView{chunk_header.property.view()}), 9_sz);
-						chunk_header.size = cbw<IntegerU32>(chunk_data.size());
+						chunk_header.size = cbw<IntegerU64>(chunk_data.size()); // TODO : should assert size is 32 bit ?
 						chunk_header_data.write(chunk_header);
 						chunk_size_uncompressed = chunk_data.size();
 						chunk_size_compressed = chunk_size_uncompressed;

@@ -10,7 +10,7 @@
 	
 	* 项目构建工具：[xmake 2.7.3+](https://xmake.io/#/) 。
 	
-	* 本地编译工具链：[MSVC 19.33+ with MSVC-STL and Windows-SDK for Windows](https://visualstudio.microsoft.com/downloads/) 、[Clang 14+ with libstdc++/libc++ and POSIX for Linux/MacOS](https://llvm.org/) 。
+	* 本地编译工具链：[MSVC 19.33+ with MSVC-STL and Windows-SDK for Windows](https://visualstudio.microsoft.com/downloads/) 、[Clang 14+ with libstdc++/libc++ and POSIX for Linux/Macintosh](https://llvm.org/) 。
 	
 	* 跨平台编译工具链：[NDK 25.1+ for Android](https://developer.android.google.com/ndk/downloads) 。
 
@@ -22,22 +22,21 @@
 	
 	* CMake ：`> xmake project -k cmakelists .project` ，适用于 VS 、CLion 。
 	
-	> 具体参见 [xmake 文档](https://xmake.io/#/plugin/builtin_plugins?id=generate-ide-project-files) 。
+	> 具体参阅 [xmake 文档](https://xmake.io/#/plugin/builtin_plugins?id=generate-ide-project-files) 。
 
 * 构建
 	
 	在 `+ <project>` 下执行 `> xmake f -o .build` & `> xmake` ，构建产物将输出至 `+ <project>/.build` 。
 	
-	> 具体参见 [xmake 文档](https://xmake.io/#/) 。
+	> 具体参阅 [xmake 文档](https://xmake.io/#/) 。
 
 ## 第三方库使用
 
 | 库                                                                   | 用途                           |
 |:--------------------------------------------------------------------:|:------------------------------:|
+| [mscharconv 1.2.1](https://github.com/iboB/mscharconv)               | charconv 支持 ( for non-MSVC ) |
 | [fmt 9.0.0](https://github.com/fmtlib/fmt)                           | 字符串格式化                   |
 | [tinyxml2 9.0.0](https://github.com/leethomason/tinyxml2)            | XML 读写                       |
-| [quickjs 2021-03-27](https://github.com/bellard/quickjs)             | JS 引擎                        |
-| [quickjs 2021-03-27 (c-smile)](https://github.com/c-smile/quickjspp) | JS 引擎 ( for MSVC )           |
 | [md5](https://github.com/JieweiWei/md5)                              | MD5 哈希计算                   |
 | [Rijndael](#)                                                        | Rijndael 加密与解密            |
 | [zlib 1.2.12](https://www.zlib.net/)                                 | ZLib 压缩与解压                |
@@ -47,7 +46,8 @@
 | [ETCPACK 2.74](https://github.com/Ericsson/ETCPACK)                  | ETC1 解压                      |
 | [rg_ect1](https://github.com/richgel999/rg-etc1)                     | ETC1 压缩                      |
 | [PVRTCCompressor](https://github.com/brenwill/PVRTCCompressor)       | PVRTC4 压缩与解压              |
-| [mscharconv 1.2.1](https://github.com/iboB/mscharconv)               | charconv 支持 ( for non-MSVC ) |
+| [quickjs 2021-03-27](https://github.com/bellard/quickjs)             | JS 引擎                        |
+| [quickjs 2021-03-27 (c-smile)](https://github.com/c-smile/quickjspp) | JS 引擎 ( for MSVC )           |
 | [vld 2.5.1](https://github.com/KindDragon/vld)                       | 内存泄漏检测                   |
 
 ## 说明

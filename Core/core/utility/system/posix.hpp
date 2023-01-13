@@ -1,6 +1,6 @@
 #pragma once
 
-#if defined M_system_linux || defined M_system_macos || defined M_system_android || defined M_system_ios
+#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 
 #include "core/utility/string/string.hpp"
 #include "core/utility/file_system/file_system.hpp"
@@ -9,43 +9,22 @@
 
 namespace TwinStar::Core::System::POSIX {
 
-	#pragma region control
+	#pragma region process
 
-	// NOTE : [[noreturn]]
 	inline auto exit (
-		IntegerS32 const & code
+		IntegerU32 const & code
 	) -> Void {
-		std::exit(code.value);
+		std::exit(static_cast<std::int32_t>(code.value));
 		return;
 	}
 
-	inline auto sleep (
-		Size const & time
-	) -> Void {
-		// TODO : lose
-		usleep(static_cast<useconds_t>(time.value * 1000));
-		return;
-	}
-
-	#pragma endregion
-
-	#pragma region command
-
-	inline auto system (
-		String const & command
-	) -> IntegerS32 {
-#if defined M_system_linux || defined M_system_macos || defined M_system_android
-		return mbw<IntegerS32>(std::system(cast_pointer<char>(make_null_terminated_string(command).begin()).value));
-#endif
-#if defined M_system_ios
-		return mbw<IntegerS32>(0);
-#endif
-	}
-
-	inline auto process (
-		Path const &         path,
-		List<String> const & argument
-	) -> IntegerS32 {
+	inline auto execute (
+		Path const &           program,
+		List<String> const &   argument,
+		Optional<Path> const & redirect_input,
+		Optional<Path> const & redirect_output,
+		Optional<Path> const & redirect_error
+	) -> IntegerU32 {
 		int pipe_fd[2] = {0, 0};
 		assert_condition(pipe(pipe_fd) == 0);
 		{
@@ -58,36 +37,69 @@ namespace TwinStar::Core::System::POSIX {
 		assert_condition(pid >= 0);
 		if (pid == 0) {
 			close(pipe_fd[0]);
-			auto null_terminated_path = make_null_terminated_string(path.to_string());
-			auto null_terminated_argument = List<String>{};
-			null_terminated_argument.assign(
-				argument,
-				[] (auto & element) -> auto {
-					return make_null_terminated_string(element);
+			try {
+				auto program_string = make_null_terminated_string(program.to_string());
+				auto argument_string = List<String>{};
+				argument_string.assign(
+					argument,
+					[] (auto & element) -> auto {
+						return make_null_terminated_string(element);
+					}
+				);
+				auto argument_string_list = List<char *>{1_sz + argument.size() + 1_sz};
+				argument_string_list.append(cast_pointer<char>(program_string.begin()).value);
+				for (auto & element : argument_string) {
+					argument_string_list.append(cast_pointer<char>(element.begin()).value);
 				}
-			);
-			auto argument_pointer_list = List<char *>{1_sz + argument.size() + 1_sz};
-			argument_pointer_list.append(cast_pointer<char>(null_terminated_path.begin()).value);
-			for (auto & element : null_terminated_argument) {
-				argument_pointer_list.append(cast_pointer<char>(element.begin()).value);
+				argument_string_list.append(nullptr);
+				if (redirect_input.has()) {
+					auto redirect_fd = open(cast_pointer<char>(make_null_terminated_string(redirect_input.get().to_string()).begin()).value, O_RDWR, 0777);
+					assert_condition(redirect_fd >= 0);
+					auto dup_state = dup2(redirect_fd, STDIN_FILENO);
+					assert_condition(dup_state != -1);
+					close(redirect_fd);
+				}
+				if (redirect_output.has()) {
+					auto redirect_fd = open(cast_pointer<char>(make_null_terminated_string(redirect_output.get().to_string()).begin()).value, O_RDWR, 0777);
+					assert_condition(redirect_fd >= 0);
+					auto dup_state = dup2(redirect_fd, STDOUT_FILENO);
+					assert_condition(dup_state != -1);
+					close(redirect_fd);
+				}
+				if (redirect_error.has()) {
+					auto redirect_fd = open(cast_pointer<char>(make_null_terminated_string(redirect_error.get().to_string()).begin()).value, O_RDWR, 0777);
+					assert_condition(redirect_fd >= 0);
+					auto dup_state = dup2(redirect_fd, STDERR_FILENO);
+					assert_condition(dup_state != -1);
+					close(redirect_fd);
+				}
+				execv(cast_pointer<char>(program_string.begin()).value, argument_string_list.begin().value);
+			} catch (Exception & exception) {
 			}
-			argument_pointer_list.append(nullptr);
-			execv(cast_pointer<char>(null_terminated_path.begin()).value, argument_pointer_list.begin().value);
 			write(pipe_fd[1], &errno, sizeof(errno));
 			close(pipe_fd[1]);
-			std::exit(-1);
+			std::exit(0);
 		} else {
 			close(pipe_fd[1]);
-			auto status = int{0};
-			waitpid(pid, &status, 0);
-			assert_condition(WIFEXITED(status));
+			auto info = siginfo_t{};
+			auto wait_state = waitid(P_PID, pid, &info, WEXITED | WSTOPPED);
+			assert_condition(wait_state == 0);
 			auto pipe_read_count = read(pipe_fd[0], &errno, sizeof(errno));
 			close(pipe_fd[0]);
-			if (pipe_read_count != 0) {
-				assert_failed(R"(/* execv success */)");
-			}
-			return mbw<IntegerS32>(WEXITSTATUS(status));
+			assert_condition(pipe_read_count == 0);
+			return mbw<IntegerU32>(info.si_status);
 		}
+	}
+
+	inline auto system (
+		String const & command
+	) -> IntegerU32 {
+		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android
+		return mbw<IntegerU32>(std::system(cast_pointer<char>(make_null_terminated_string(command).begin()).value));
+		#endif
+		#if defined M_system_iphone
+		return mbw<IntegerU32>(0x00000000);
+		#endif
 	}
 
 	#pragma endregion

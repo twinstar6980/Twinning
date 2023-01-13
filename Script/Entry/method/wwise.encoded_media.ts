@@ -8,11 +8,10 @@ namespace TwinStar.Entry.method.wwise.encoded_media {
 
 	type Config = {
 		tool: {
-			ffmpeg: string;
-			ww2ogg: string;
-			ww2ogg_pcb: string;
+			ffmpeg_program: string;
+			ww2ogg_program: string;
+			ww2ogg_code_book: string;
 		};
-		temp_directpry: Executor.RequireArgument<string>;
 	};
 
 	export function _injector(
@@ -28,15 +27,15 @@ namespace TwinStar.Entry.method.wwise.encoded_media {
 				worker(a: Entry.CFSA & {
 					ripe_file: Executor.RequireArgument<string>;
 					raw_file: Executor.RequestArgument<string, true>;
-					tool_ffmpeg_file: Executor.RequestArgument<string, false>;
-					tool_ww2ogg_file: Executor.RequestArgument<string, false>;
-					tool_ww2ogg_pcb_file: Executor.RequestArgument<string, false>;
+					tool_ffmpeg_program_file: Executor.RequestArgument<string, false>;
+					tool_ww2ogg_program_file: Executor.RequestArgument<string, false>;
+					tool_ww2ogg_code_book_file: Executor.RequestArgument<string, false>;
 				}) {
 					let ripe_file: string;
 					let raw_file: string;
-					let tool_ffmpeg_file: string;
-					let tool_ww2ogg_file: string;
-					let tool_ww2ogg_pcb_file: string;
+					let tool_ffmpeg_program_file: string;
+					let tool_ww2ogg_program_file: string;
+					let tool_ww2ogg_code_book_file: string;
 					{
 						ripe_file = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'ripe_file'),
@@ -51,38 +50,39 @@ namespace TwinStar.Entry.method.wwise.encoded_media {
 							() => (ripe_file.replace(/((\.wem))?$/i, '.wav')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
-						tool_ffmpeg_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'tool_ffmpeg_file'),
-							a.tool_ffmpeg_file,
+						tool_ffmpeg_program_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'tool_ffmpeg_program_file'),
+							a.tool_ffmpeg_program_file,
 							(value) => (value),
 							null,
 							...Executor.argument_requester_for_path('file', [true]),
 						);
-						tool_ww2ogg_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'tool_ww2ogg_file'),
-							a.tool_ww2ogg_file,
+						tool_ww2ogg_program_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'tool_ww2ogg_program_file'),
+							a.tool_ww2ogg_program_file,
 							(value) => (value),
 							null,
 							...Executor.argument_requester_for_path('file', [true]),
 						);
-						tool_ww2ogg_pcb_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'tool_ww2ogg_pcb_file'),
-							a.tool_ww2ogg_pcb_file,
+						tool_ww2ogg_code_book_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'tool_ww2ogg_code_book_file'),
+							a.tool_ww2ogg_code_book_file,
 							(value) => (value),
 							null,
 							...Executor.argument_requester_for_path('file', [true]),
 						);
 					}
-					CoreX.Tool.Wwise.EncodedMedia.decode_fs(ripe_file, raw_file, tool_ffmpeg_file, tool_ww2ogg_file, tool_ww2ogg_pcb_file, Main.path_at_home(config.temp_directpry));
+					let temporary_directpry = Entry.temporary();
+					CoreX.Tool.Wwise.EncodedMedia.decode_fs(ripe_file, raw_file, tool_ffmpeg_program_file, tool_ww2ogg_program_file, tool_ww2ogg_code_book_file, temporary_directpry);
 					Console.notify('s', localized(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
 					ripe_file: undefined!,
 					raw_file: '?default',
-					tool_ffmpeg_file: Main.path_at_home(config.tool.ffmpeg),
-					tool_ww2ogg_file: Main.path_at_home(config.tool.ww2ogg),
-					tool_ww2ogg_pcb_file: Main.path_at_home(config.tool.ww2ogg_pcb),
+					tool_ffmpeg_program_file: Main.path_at_home(config.tool.ffmpeg_program),
+					tool_ww2ogg_program_file: Main.path_at_home(config.tool.ww2ogg_program),
+					tool_ww2ogg_code_book_file: Main.path_at_home(config.tool.ww2ogg_code_book),
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.wem)$/i]]),
 				input_forwarder: 'ripe_file',
@@ -98,15 +98,15 @@ namespace TwinStar.Entry.method.wwise.encoded_media {
 				worker(a: Entry.CFSA & {
 					ripe_file_directory: Executor.RequireArgument<string>;
 					raw_file_directory: Executor.RequestArgument<string, true>;
-					tool_ffmpeg_file: Executor.RequestArgument<string, false>;
-					tool_ww2ogg_file: Executor.RequestArgument<string, false>;
-					tool_ww2ogg_pcb_file: Executor.RequestArgument<string, false>;
+					tool_ffmpeg_program_file: Executor.RequestArgument<string, false>;
+					tool_ww2ogg_program_file: Executor.RequestArgument<string, false>;
+					tool_ww2ogg_code_book_file: Executor.RequestArgument<string, false>;
 				}) {
 					let ripe_file_directory: string;
 					let raw_file_directory: string;
-					let tool_ffmpeg_file: string;
-					let tool_ww2ogg_file: string;
-					let tool_ww2ogg_pcb_file: string;
+					let tool_ffmpeg_program_file: string;
+					let tool_ww2ogg_program_file: string;
+					let tool_ww2ogg_code_book_file: string;
 					{
 						ripe_file_directory = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'ripe_file_directory'),
@@ -121,35 +121,36 @@ namespace TwinStar.Entry.method.wwise.encoded_media {
 							() => (ripe_file_directory.replace(/$/i, '.wem_decode')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
-						tool_ffmpeg_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'tool_ffmpeg_file'),
-							a.tool_ffmpeg_file,
+						tool_ffmpeg_program_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'tool_ffmpeg_program_file'),
+							a.tool_ffmpeg_program_file,
 							(value) => (value),
 							null,
 							...Executor.argument_requester_for_path('file', [true]),
 						);
-						tool_ww2ogg_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'tool_ww2ogg_file'),
-							a.tool_ww2ogg_file,
+						tool_ww2ogg_program_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'tool_ww2ogg_program_file'),
+							a.tool_ww2ogg_program_file,
 							(value) => (value),
 							null,
 							...Executor.argument_requester_for_path('file', [true]),
 						);
-						tool_ww2ogg_pcb_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'tool_ww2ogg_pcb_file'),
-							a.tool_ww2ogg_pcb_file,
+						tool_ww2ogg_code_book_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'tool_ww2ogg_code_book_file'),
+							a.tool_ww2ogg_code_book_file,
 							(value) => (value),
 							null,
 							...Executor.argument_requester_for_path('file', [true]),
 						);
 					}
+					let temporary_directpry = Entry.temporary();
 					simple_batch_execute(
 						ripe_file_directory,
 						['file', /.+(\.wem)$/i],
 						(item) => {
 							let ripe_file = `${ripe_file_directory}/${item}`;
 							let raw_file = `${raw_file_directory}/${item.slice(0, -4)}.wav`;
-							CoreX.Tool.Wwise.EncodedMedia.decode_fs(ripe_file, raw_file, tool_ffmpeg_file, tool_ww2ogg_file, tool_ww2ogg_pcb_file, Main.path_at_home(config.temp_directpry));
+							CoreX.Tool.Wwise.EncodedMedia.decode_fs(ripe_file, raw_file, tool_ffmpeg_program_file, tool_ww2ogg_program_file, tool_ww2ogg_code_book_file, temporary_directpry);
 						},
 					);
 					Console.notify('s', localized(`执行成功`), [`${raw_file_directory}`]);
@@ -158,9 +159,9 @@ namespace TwinStar.Entry.method.wwise.encoded_media {
 					...Entry.k_cfsa,
 					ripe_file_directory: undefined!,
 					raw_file_directory: '?default',
-					tool_ffmpeg_file: Main.path_at_home(config.tool.ffmpeg),
-					tool_ww2ogg_file: Main.path_at_home(config.tool.ww2ogg),
-					tool_ww2ogg_pcb_file: Main.path_at_home(config.tool.ww2ogg_pcb),
+					tool_ffmpeg_program_file: Main.path_at_home(config.tool.ffmpeg_program),
+					tool_ww2ogg_program_file: Main.path_at_home(config.tool.ww2ogg_program),
+					tool_ww2ogg_code_book_file: Main.path_at_home(config.tool.ww2ogg_code_book),
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'ripe_file_directory',

@@ -34,8 +34,7 @@ namespace TwinStar::Core::CharacterType {
 	inline constexpr auto is_control (
 		Character const & character
 	) -> Boolean {
-		// NOTE : character maybe signed
-		return (character >= 0x00_c && character <= 0x1F_c) || character == 0x7F_c;
+		return (0x00_c <= character && character <= 0x1F_c) || character == 0x7F_c;
 	}
 
 	#pragma endregion

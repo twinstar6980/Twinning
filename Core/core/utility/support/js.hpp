@@ -1448,11 +1448,11 @@ namespace TwinStar::Core::JS {
 	};
 
 	template <>
-	struct ValueAdapter<IntegerS32> {
+	struct ValueAdapter<IntegerU32> {
 
 		using This = Value;
 
-		using That = IntegerS32;
+		using That = IntegerU32;
 
 		// ----------------
 

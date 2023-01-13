@@ -355,7 +355,7 @@ namespace TwinStar {
 	// ------------------------------------------------
 
 	/**
-	 * 将日期转换为简易表示的字符串 yy-mm-dd.hh-mm-ss.ss
+	 * 将日期转换为简易表示的字符串 yy-mm-dd.hh-mm-ss.sss
 	 * @param date 日期
 	 * @returns 简易表示的字符串
 	 */

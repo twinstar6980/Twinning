@@ -1,7 +1,7 @@
 #pragma once
 
-// NOTE :
-// 在编解码PAM的一些细节上，与SexyFramework自身的逻辑有所出入。
+// NOTE
+// 在编解码PAM的一些细节上，与SexyFramework本身的逻辑有所出入。
 // 对于一些应该为无符号整数的数值（列表大小、层索引），SexyFramework均使用有符号数存储，
 // 加之代码本身并未判别符号位情况，因此，这导致了SexyFramework在二进制读写时出现了不合理之处：
 // 对于Frame中的LayerRemove/Append/Change操作，三者都拥有一个指代层索引的index值，

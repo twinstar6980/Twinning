@@ -161,8 +161,7 @@ namespace TwinStar::Core::Tool::Marmalade::DZip::Structure {
 		M_wrap(ChunkHeaderLzma<t_version>),
 		M_wrap(
 			(StaticByteArray<Data::Compress::Lzma::k_property_size>) property,
-			(IntegerU32) size,
-			(PaddingBlock<4_sz>) unused_1,
+			(IntegerU64) size,
 		),
 	);
 

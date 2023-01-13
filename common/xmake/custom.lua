@@ -50,13 +50,13 @@ function make_m()
 		m.system.name = 'linux'
 	end
 	if is_os('macosx') then
-		m.system.name = 'macos'
+		m.system.name = 'macintosh'
 	end
 	if is_os('android') then
 		m.system.name = 'android'
 	end
 	if is_os('ios') then
-		m.system.name = 'ios'
+		m.system.name = 'iphone'
 	end
 	m.compiler.name = 'unknown'
 	if is_os('windows') then
@@ -126,10 +126,10 @@ function apply_compiler_option_basic(target)
 	if m.compiler:is('msvc') then
 		target:add(
 			'cxflags',
-			'/utf-8',
-			'/bigobj',
-			'/permissive-',
-			'/Zc:preprocessor',
+			'-utf-8',
+			'-bigobj',
+			'-permissive-',
+			'-Zc:preprocessor',
 			{ private = true }
 		)
 		target:add(
@@ -153,7 +153,7 @@ function apply_compiler_option_warning_disable(target)
 	if m.compiler:is('msvc') then
 		target:add(
 			'cxflags',
-			'/w',
+			'-w',
 			{ private = true }
 		)
 	end
@@ -172,21 +172,22 @@ function apply_compiler_option_warning_regular(target)
 	if m.compiler:is('msvc') then
 		target:add(
 			'cxflags',
-			'/Wall',
-			'/wd4820', -- like -Wpadded in clang, enable this warning will make compiler crashed
-			'/wd4100', -- unused parameter
-			'/wd4189', -- unused local variable
-			'/wd4458', -- shadow the member
-			'/wd4514', -- unused inline function is deleted
-			'/wd4710', -- inline function is not inlined
-			'/wd4711', -- non-inline function is inlined
-			'/wd4668', -- symbol not be defined to preprocessor macro
-			'/wd4061', -- switch case of enum not explicitly given
-			'/wd5264', -- 'const' variable is not used
-			'/wd4927', -- TODO
-			'/wd4065', -- TODO : switch only default case
-			'/wd4946', -- TODO : reinterpret_cast ...
-			'/wd5262', -- TODO : implicit fallthrough in switch (stl variant, remove this option if msvc fix this wrong)
+			'-Wall',
+			'-wd4820', -- like -Wpadded in clang, enable this warning will make compiler crashed
+			'-wd4100', -- unused parameter
+			'-wd4189', -- unused local variable
+			'-wd4458', -- shadow the member
+			'-wd4514', -- unused inline function is deleted
+			'-wd4710', -- inline function is not inlined
+			'-wd4711', -- non-inline function is inlined
+			'-wd4668', -- symbol not be defined to preprocessor macro
+			'-wd4061', -- switch case of enum not explicitly given
+			'-wd5264', -- 'const' variable is not used
+			'-wd5045', -- about spectre mitigation, enable this warning if compile with /Qspectre flag, see https://learn.microsoft.com/cpp/error-messages/compiler-warnings/c5045?view=msvc-170
+			'-wd4927', -- TODO
+			'-wd4065', -- TODO : switch only default case
+			'-wd4946', -- TODO : reinterpret_cast ...
+			'-wd5262', -- TODO : implicit fallthrough in switch (stl variant, remove this option if msvc fix this wrong)
 			{ private = true }
 		)
 	end
@@ -217,6 +218,7 @@ function apply_compiler_option_warning_regular(target)
 			'-Wno-shadow-field-in-constructor',
 			'-Wno-shadow-uncaptured-local',
 			'-Wno-float-equal', -- TODO
+			'-Wno-gnu-line-marker', -- if using xmake ...
 			{ private = true }
 		)
 	end

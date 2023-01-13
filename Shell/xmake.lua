@@ -1,5 +1,4 @@
 set_project('TwinStar.ToolKit.Shell')
-set_version('16')
 
 add_rules('mode.debug', 'mode.release')
 

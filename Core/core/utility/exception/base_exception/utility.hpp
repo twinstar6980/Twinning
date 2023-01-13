@@ -22,7 +22,6 @@ namespace TwinStar::Core {
 	) -> String {
 		#if defined M_system_windows
 		// NOTE : on windows, the error_code message is ANSI encoding
-		// NOTE : duplicate of System::Windows::encoding_ansi_to_utf8
 		auto encoding_ansi_to_utf8 =
 			[] (
 			CBasicStringView<Character> const & source

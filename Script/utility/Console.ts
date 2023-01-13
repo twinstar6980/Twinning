@@ -1,4 +1,4 @@
-/** 输出工具 */
+/** 控制台交互，将不同类型 Shell 的交互操作抽象为统一的 API */
 namespace TwinStar.Console {
 
 	// ------------------------------------------------
@@ -212,10 +212,10 @@ namespace TwinStar.Console {
 				CoreX.System.system(`pause > nul`);
 				Shell.cli_output('\n');
 			}
-			if (Shell.is_linux || Shell.is_macos || Shell.is_android || Shell.is_ios) {
+			if (Shell.is_linux || Shell.is_macintosh || Shell.is_android || Shell.is_iphone) {
 				if (CoreX.FileSystem.exist_file(`/bin/bash`)) {
 					cli_basic_output(`P ${localized(`键入以继续 ...`)} `, true, 0, false);
-					CoreX.System.process(`/bin/bash`, [`-c`, `read -s -n 1 _`]);
+					CoreX.System.execute(`/bin/bash`, [`-c`, `read -s -n 1 _`], null, null, null);
 					Shell.cli_output('\n');
 				} else {
 					cli_basic_output(`P ${localized(`键入回车以继续 ...`)} `, true, 0, false);

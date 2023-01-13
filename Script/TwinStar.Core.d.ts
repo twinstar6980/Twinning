@@ -1,6 +1,6 @@
 /**
  * JS API of TwinStar.ToolKit.Core
- * @version 21
+ * @version 22
  */
 declare namespace TwinStar.Core {
 
@@ -84,8 +84,8 @@ declare namespace TwinStar.Core {
 
 	// ------------------------------------------------
 
-	/** 32位有符号整数 */
-	class IntegerS32 {
+	/** 32位无符号整数 */
+	class IntegerU32 {
 
 		// ------------------------------------------------
 
@@ -93,19 +93,19 @@ declare namespace TwinStar.Core {
 
 		// ------------------------------------------------
 
-		static default(): IntegerS32;
+		static default(): IntegerU32;
 
-		static copy(it: IntegerS32): IntegerS32;
+		static copy(it: IntegerU32): IntegerU32;
 
 		// ------------------------------------------------
 
 		static Value: bigint;
 
-		static value(it: typeof IntegerS32.Value): IntegerS32;
+		static value(it: typeof IntegerU32.Value): IntegerU32;
 
-		get value(): typeof IntegerS32.Value;
+		get value(): typeof IntegerU32.Value;
 
-		set value(it: typeof IntegerS32.Value);
+		set value(it: typeof IntegerU32.Value);
 
 		// ------------------------------------------------
 
@@ -1216,6 +1216,14 @@ declare namespace TwinStar.Core {
 		// ------------------------------------------------
 
 		/**
+		 * 创建文件
+		 * @param target 目标文件
+		 */
+		function create_file(
+			target: Path,
+		): Void;
+
+		/**
 		 * 获取文件大小
 		 * @param target 目标文件
 		 * @returns 文件大小
@@ -1369,8 +1377,8 @@ declare namespace TwinStar.Core {
 		): Void;
 
 		/**
-		 * 获取当前工作目录
-		 * @returns 当前工作目录
+		 * 获取临时目录
+		 * @returns 临时目录
 		 */
 		function get_temporary_directory(
 		): Path;
@@ -1387,36 +1395,32 @@ declare namespace TwinStar.Core {
 		 * @param code 退出状态
 		 */
 		function exit(
-			code: IntegerS32,
+			code: IntegerU32,
 		): Void;
-
-		/**
-		 * 休眠一段时间，释放CPU使用
-		 * @param time 休眠时间，单位为毫秒
-		 */
-		function sleep(
-			time: Size,
-		): Void;
-
-		// ------------------------------------------------
-
-		/**
-		 * 调用宿主环境的命令处理器
-		 * @param command 命令参数
-		 */
-		function system(
-			command: String,
-		): IntegerS32;
 
 		/**
 		 * 执行外部程序
-		 * @param path 路径
+		 * @param program 程序
 		 * @param argument 参数
+		 * @param redirect_input 重定向输入文件
+		 * @param redirect_output 重定向输出文件
+		 * @param redirect_error 重定向错误文件
 		 */
-		function process(
-			path: Path,
+		function execute(
+			program: Path,
 			argument: StringList,
-		): IntegerS32;
+			redirect_input: PathOptional,
+			redirect_output: PathOptional,
+			redirect_error: PathOptional,
+		): IntegerU32;
+
+		/**
+		 * 调用宿主环境的命令处理器
+		 * @param command 命令
+		 */
+		function system(
+			command: String,
+		): IntegerU32;
 
 		// ------------------------------------------------
 
@@ -2151,17 +2155,17 @@ declare namespace TwinStar.Core {
 					 * 解码
 					 * @param ripe 已编码的音频数据
 					 * @param raw 解码后的音频数据
-					 * @param ffmpeg_file ffmpeg可执行文件的路径，pcm、adpcm、aac、vorbis音频解码时需要调用该程序
-					 * @param ww2ogg_file ww2ogg可执行文件的路径，vorbis音频解码时需要调用该程序
-					 * @param ww2ogg_pcb_file ww2ogg-pcb文件的路径，vorbis音频解码时需要使用该文件
+					 * @param ffmpeg_program ffmpeg程序文件的路径，pcm、adpcm、aac、vorbis音频解码时需要调用该程序
+					 * @param ww2ogg_program ww2ogg程序文件的路径，vorbis音频解码时需要调用该程序
+					 * @param ww2ogg_code_book ww2ogg代码本文件的路径，vorbis音频解码时需要使用该文件
 					 * @param temporary_directory 临时文件目录
 					 */
 					function process_audio(
 						ripe: CByteListView,
 						raw: ByteArray,
-						ffmpeg_file: Path,
-						ww2ogg_file: Path,
-						ww2ogg_pcb_file: Path,
+						ffmpeg_program: Path,
+						ww2ogg_program: Path,
+						ww2ogg_code_book: Path,
 						temporary_directory: Path,
 					): Void;
 
@@ -3638,7 +3642,7 @@ declare namespace TwinStar.Core {
 
 			/**
 			 * 当前线程休眠
-			 * @param duration 休眠时间
+			 * @param duration 休眠时间，单位为毫秒
 			 */
 			static sleep(
 				duration: Size,

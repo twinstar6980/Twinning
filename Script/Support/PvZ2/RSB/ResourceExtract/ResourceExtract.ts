@@ -33,11 +33,10 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceExtract {
 		audio: null | {
 			directory: string;
 			tool: {
-				ffmpeg: string;
-				ww2ogg: string;
-				ww2ogg_pcb: string;
+				ffmpeg_program: string;
+				ww2ogg_program: string;
+				ww2ogg_code_book: string;
 			};
-			temp_directory: string;
 		},
 	};
 
@@ -128,6 +127,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceExtract {
 			rename_tree(resource_directory, resource_path_tree);
 		}
 		Console.notify('i', localized(`提取资源 ...`), []);
+		let audio_temporary_directory = Entry.temporary();
 		iterate_manifest(true)((group, subgroup, resource) => {
 			let path = resource[1].path;
 			if (option.json !== null && path.endsWith('.rton')) {
@@ -220,10 +220,10 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceExtract {
 					CoreX.Tool.Wwise.EncodedMedia.decode_fs(
 						`${resource_directory}/${path}`,
 						`${option.audio.directory}/${path.slice(0, -3)}wav`,
-						option.audio.tool.ffmpeg,
-						option.audio.tool.ww2ogg,
-						option.audio.tool.ww2ogg_pcb,
-						option.audio.temp_directory,
+						option.audio.tool.ffmpeg_program,
+						option.audio.tool.ww2ogg_program,
+						option.audio.tool.ww2ogg_code_book,
+						audio_temporary_directory,
 					);
 				} catch (e: any) {
 					Console.notify_error(e);

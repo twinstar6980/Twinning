@@ -325,6 +325,14 @@ namespace TwinStar.CoreX {
 
 		// ------------------------------------------------
 
+		export function create_file(
+			target: string,
+		): void {
+			return Core.FileSystem.create_file(Core.Path.value(target));
+		}
+
+		// ------------------------------------------------
+
 		export function size_file(
 			target: string,
 		): bigint {
@@ -448,28 +456,23 @@ namespace TwinStar.CoreX {
 		export function exit(
 			code: bigint,
 		): void {
-			return Core.System.exit(Core.IntegerS32.value(code));
+			return Core.System.exit(Core.IntegerU32.value(code));
 		}
 
-		export function sleep(
-			time: bigint,
-		): void {
-			return Core.System.sleep(Core.Size.value(time));
+		export function execute(
+			program: string,
+			argument: Array<string>,
+			redirect_input: null | string,
+			redirect_output: null | string,
+			redirect_error: null | string,
+		): bigint {
+			return Core.System.execute(Core.Path.value(program), Core.StringList.value(argument), Core.PathOptional.value(redirect_input), Core.PathOptional.value(redirect_output), Core.PathOptional.value(redirect_error)).value;
 		}
-
-		// ------------------------------------------------
 
 		export function system(
 			command: string,
 		): bigint {
 			return Core.System.system(Core.String.value(command)).value;
-		}
-
-		export function process(
-			path: string,
-			argument: Array<string>,
-		): bigint {
-			return Core.System.process(Core.Path.value(path), Core.StringList.value(argument)).value;
 		}
 
 		// ------------------------------------------------
@@ -976,14 +979,14 @@ namespace TwinStar.CoreX {
 				export function decode_fs(
 					ripe_file: string,
 					raw_file: string,
-					ffmpeg_file: string,
-					ww2ogg_file: string,
-					ww2ogg_pcb_file: string,
+					ffmpeg_program_file: string,
+					ww2ogg_program_file: string,
+					ww2ogg_code_book_file: string,
 					temporary_directory: string,
 				): void {
 					let ripe_data = FileSystem.read_file(ripe_file);
 					let raw_data = Core.ByteArray.default();
-					Core.Tool.Wwise.EncodedMedia.Decode.process_audio(ripe_data.view(), raw_data, Core.Path.value(ffmpeg_file), Core.Path.value(ww2ogg_file), Core.Path.value(ww2ogg_pcb_file), Core.Path.value(temporary_directory));
+					Core.Tool.Wwise.EncodedMedia.Decode.process_audio(ripe_data.view(), raw_data, Core.Path.value(ffmpeg_program_file), Core.Path.value(ww2ogg_program_file), Core.Path.value(ww2ogg_code_book_file), Core.Path.value(temporary_directory));
 					FileSystem.write_file(raw_file, raw_data.view());
 					return;
 				}

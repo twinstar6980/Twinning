@@ -20,7 +20,7 @@ namespace TwinStar.Script.ExtractRSBFromPvZ2CHSAPKDirectory {
 		Console.notify('t', selected_output_directory[0], []);
 		let input_directory = selected_input_directory[0];
 		let output_directory = selected_output_directory[0];
-		Console.notify('i', localized(`提取开始`), [localized(`输入目录：${input_directory}`), localized(`输出目录：${output_directory}`)]);
+		Console.notify('i', localized(`提取开始`), [localized(`输入目录：{}`, input_directory), localized(`输出目录：{}`, output_directory)]);
 		Entry.simple_batch_execute(input_directory, ['file', /.+\.rsb\.smf$/i], (item) => {
 			let input_file = `${input_directory}/${item}`;
 			let output_file = `${output_directory}/${item.slice(0, -4)}`;

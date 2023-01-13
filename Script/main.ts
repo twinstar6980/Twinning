@@ -3,7 +3,7 @@ namespace TwinStar {
 	// ------------------------------------------------
 
 	/** 版本编号 */
-	export const k_version = 22;
+	export const k_version = 23;
 
 	// ------------------------------------------------
 
@@ -185,9 +185,9 @@ namespace TwinStar {
 			argument: Array<string>,
 		): null | string {
 			let result: null | string = null;
-			// todo : get core version
-			Detail.notify(`TwinStar.ToolKit @ Script:${k_version} & Core:${Core.Miscellaneous.g_version.value} & Shell:${Core.Miscellaneous.g_context.shell_callback(Core.StringList.value(['name'])).value[1]}:${Core.Miscellaneous.g_context.shell_callback(Core.StringList.value(['version'])).value[1]}`);
 			try {
+				Detail.notify(`TwinStar.ToolKit @ Script:${k_version} & Core:${Core.Miscellaneous.g_version.value} & Shell:${Core.Miscellaneous.g_context.shell_callback(Core.StringList.value(['name'])).value[1]}:${Core.Miscellaneous.g_context.shell_callback(Core.StringList.value(['version'])).value[1]}:${Core.Miscellaneous.g_context.shell_callback(Core.StringList.value(['system'])).value[1]}`);
+				// 分析主目录
 				if (script_path === null) {
 					throw new Error(`must run as file`);
 				}
@@ -200,28 +200,47 @@ namespace TwinStar {
 				} else {
 					g_home_directory = script_path_match[1];
 				}
+				// 加载子模块
+				// 如果 load_module 调用成功，则所有子模块处于可用状态，否则，请勿使用任何子模块
 				let begin_time = Date.now();
 				let entry = load_module(g_module_manifest, `${g_home_directory}/script`);
 				let end_time = Date.now();
-				Console.notify('s', localized(`所有脚本模块已加载`), [localized(`用时 {} s`, ((end_time - begin_time) / 1000).toFixed(3))]);
-				{
-					// Console.notify('w', '输入测试', []);
-					// Console.notify('i', 'pause', []);
-					// Console.pause();
-					// Console.notify('i', 'confirm', []);
-					// Console.confirm(null, true);
-					// Console.notify('i', 'number', []);
-					// Console.number(null, true);
-					// Console.notify('i', 'integer', []);
-					// Console.integer(null, true);
-					// Console.notify('i', 'size', []);
-					// Console.size(null, true);
-					// Console.notify('i', 'string', []);
-					// Console.string(null, true);
-					// Console.notify('i', 'option', []);
-					// Console.option([[43]], null, true);
+				// 现在，子模块可用，因此应使用 Console 模块来保证更好的交互效果
+				try {
+					Console.notify('s', localized(`所有脚本模块已加载`), [localized(`用时 {} s`, ((end_time - begin_time) / 1000).toFixed(3))]);
+					{
+						// let demo = path_at_home('~/workspace/demo');
+						// let r = CoreX.System.execute(
+						// 	demo + "/build/windows/x64/release/main.exe",
+						// 	[],
+						// 	demo + `/in`,
+						// 	demo + `/out`,
+						// 	`nul`,
+						// );
+						// Console.notify('w', r.toString(16), []);
+					}
+					{
+						// Console.notify('w', '输入测试', []);
+						// Console.notify('i', 'pause', []);
+						// Console.pause();
+						// Console.notify('i', 'confirm', []);
+						// Console.confirm(null, true);
+						// Console.notify('i', 'number', []);
+						// Console.number(null, true);
+						// Console.notify('i', 'integer', []);
+						// Console.integer(null, true);
+						// Console.notify('i', 'size', []);
+						// Console.size(null, true);
+						// Console.notify('i', 'string', []);
+						// Console.string(null, true);
+						// Console.notify('i', 'option', []);
+						// Console.option([[43]], null, true);
+					}
+					entry?.[0](entry[1], argument);
+				} catch (e: any) {
+					Console.notify_error(e);
+					Console.pause();
 				}
-				entry?.[0](entry[1], argument);
 			} catch (error: any) {
 				if (error instanceof Error) {
 					if (error.name === 'NativeError') {
@@ -231,6 +250,11 @@ namespace TwinStar {
 					}
 				} else {
 					result = `${error}`;
+				}
+			} finally {
+				// 需要释放的资源可能位于子模块中，而目前无法保证子模块已被成功加载
+				if (g_thread_manager !== undefined) {
+					g_thread_manager.resize(0);
 				}
 			}
 			return result;

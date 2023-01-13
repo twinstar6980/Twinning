@@ -1,6 +1,12 @@
 #pragma once
 
-#include "framework.h"
+#include "implement/common.hpp"
+
+#pragma warning(push)
+#pragma warning(disable:4625)
+#pragma warning(disable:4626)
+#pragma warning(disable:5026)
+#pragma warning(disable:5027)
 
 namespace TwinStar::WindowsExplorerExtension {
 
@@ -21,30 +27,36 @@ namespace TwinStar::WindowsExplorerExtension {
 			_In_opt_ IShellItemArray *            psiItemArray,
 			_Outptr_result_nullonfailure_ PWSTR * ppszName
 		) override {
-			*ppszName = nullptr;
-			auto title_data = thiz.title();
-			if (title_data == nullptr) {
-				return S_FALSE;
+			try {
+				*ppszName = nullptr;
+				auto title_data = thiz.title();
+				if (title_data == nullptr) {
+					return S_FALSE;
+				}
+				auto title_s = wil::make_cotaskmem_string_nothrow(title_data);
+				RETURN_IF_NULL_ALLOC(title_s);
+				*ppszName = title_s.release();
+				return S_OK;
 			}
-			auto title_s = wil::make_cotaskmem_string_nothrow(title_data);
-			RETURN_IF_NULL_ALLOC(title_s);
-			*ppszName = title_s.release();
-			return S_OK;
+			CATCH_RETURN()
 		}
 
 		virtual IFACEMETHODIMP GetIcon (
 			_In_opt_ IShellItemArray *            psiItemArray,
 			_Outptr_result_nullonfailure_ PWSTR * ppszIcon
 		) override {
-			*ppszIcon = nullptr;
-			auto icon_data = thiz.icon();
-			if (icon_data == nullptr) {
-				return E_NOTIMPL;
+			try {
+				*ppszIcon = nullptr;
+				auto icon_data = thiz.icon();
+				if (icon_data == nullptr) {
+					return E_NOTIMPL;
+				}
+				auto icon_s = wil::make_cotaskmem_string_nothrow(icon_data);
+				RETURN_IF_NULL_ALLOC(icon_s);
+				*ppszIcon = icon_s.release();
+				return S_OK;
 			}
-			auto icon_s = wil::make_cotaskmem_string_nothrow(icon_data);
-			RETURN_IF_NULL_ALLOC(icon_s);
-			*ppszIcon = icon_s.release();
-			return S_OK;
+			CATCH_RETURN()
 		}
 
 		virtual IFACEMETHODIMP GetToolTip (
@@ -67,8 +79,11 @@ namespace TwinStar::WindowsExplorerExtension {
 			_In_ BOOL                  fOkToBeSlow,
 			_Out_ EXPCMDSTATE *        pCmdState
 		) override {
-			*pCmdState = thiz.state(psiItemArray);
-			return S_OK;
+			try {
+				*pCmdState = thiz.state(psiItemArray);
+				return S_OK;
+			}
+			CATCH_RETURN()
 		}
 
 		virtual IFACEMETHODIMP Invoke (
@@ -85,8 +100,11 @@ namespace TwinStar::WindowsExplorerExtension {
 		virtual IFACEMETHODIMP GetFlags (
 			_Out_ EXPCMDFLAGS * pFlags
 		) override {
-			*pFlags = thiz.flags();
-			return S_OK;
+			try {
+				*pFlags = thiz.flags();
+				return S_OK;
+			}
+			CATCH_RETURN()
 		}
 
 		virtual IFACEMETHODIMP EnumSubCommands (
@@ -169,32 +187,6 @@ namespace TwinStar::WindowsExplorerExtension {
 
 	#pragma endregion
 
-	#pragma region utility
-
-	inline auto get_selection_path (
-		IShellItemArray * const & selection
-	) -> std::vector<std::wstring> {
-		auto result = std::vector<std::wstring>{};
-		if (selection) {
-			auto count = DWORD{};
-			selection->GetCount(&count);
-			if (count > 0) {
-				result.reserve(count);
-				for (auto i = DWORD{0}; i < count; ++i) {
-					auto item = X<IShellItem *>{};
-					if (SUCCEEDED(selection->GetItemAt(i, &item))) {
-						auto name = LPWSTR{};
-						item->GetDisplayName(SIGDN_FILESYSPATH, &name);
-						item->Release();
-						result.emplace_back(name);
-						CoTaskMemFree(name);
-					}
-				}
-			}
-		}
-		return result;
-	}
-
-	#pragma endregion
-
 }
+
+#pragma warning(pop)

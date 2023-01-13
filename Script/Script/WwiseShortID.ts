@@ -3,7 +3,7 @@ namespace TwinStar.Script.WwiseShortID {
 
 	export function execute(
 	): void {
-		Console.notify('i', '请输入字符串', []);
+		Console.notify('i', localized(`请输入 Wwise ID 字符串`), []);
 		while (true) {
 			let s = Console.string(null).toLowerCase();
 			let v = CoreX.Tool.Data.Hash.FNV.hash_s(s, 'm_1', 'b_32');

@@ -28,6 +28,6 @@ by TwinStar, China .
 
 ## 平台支持
 
-* 操作系统：`Windows 7+` 、`Linux ?+` 、`MacOS 12.0+(maybe below)` 、`Android 9+` 、`iOS 13.0+` 。
+* 操作系统：`Windows 7+` 、`Linux ?+` 、`Macintosh 12.0+(maybe below)` 、`Android 9+` 、`iPhone 13.0+` 。
 
 * 处理器架构：`x86 32|64` 、`arm 32|64` 。

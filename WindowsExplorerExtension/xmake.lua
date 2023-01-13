@@ -1,5 +1,4 @@
 set_project('TwinStar.ToolKit.WindowsExplorerExtension')
-set_version('7')
 
 add_rules('mode.debug', 'mode.release')
 

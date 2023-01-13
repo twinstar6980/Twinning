@@ -19,6 +19,19 @@ namespace TwinStar.Entry {
 		return;
 	}
 
+	/**
+	 * 创建并返回一个临时目录
+	 * @param name 
+	 * @returns 临时目录
+	 */
+	export function temporary(
+		name: string | undefined = undefined,
+	): string {
+		let temporary_sub_directory = `${g_workspace}/temporary/${date_to_simple_string(new Date())}`;
+		CoreX.FileSystem.create_directory(temporary_sub_directory);
+		return temporary_sub_directory;
+	}
+
 	// ------------------------------------------------
 
 	/** 全局执行器功能 */
@@ -152,47 +165,42 @@ namespace TwinStar.Entry {
 		argument: Array<string>,
 	) {
 		g_thread_manager.resize(Number(config.thread_limit));
-		try {
-			let timer = new Timer();
-			timer.start();
-			let raw_command = [...argument];
-			if (raw_command.length === 0) {
-				Console.notify('i', localized(`请依次输入命令参数`), [localized(`输入为空则结束输入`)]);
-				while (true) {
-					let input = Console.string(null, true);
-					if (input === null) {
-						break;
-					}
-					if (input.startsWith('"') && input.endsWith('"')) {
-						input = input.substring(1, input.length - 1);
-					}
-					raw_command.push(input);
+		let timer = new Timer();
+		timer.start();
+		let raw_command = [...argument];
+		if (raw_command.length === 0) {
+			Console.notify('i', localized(`请依次输入命令参数`), [localized(`输入为空则结束输入`)]);
+			while (true) {
+				let input = Console.string(null, true);
+				if (input === null) {
+					break;
 				}
-			}
-			let command = Executor.parse(raw_command);
-			let method = [...g_executor_method, ...g_executor_method_of_batch];
-			Console.notify('i', localized(`所有命令已解析`), [localized(`共 {} 条`, command.length)]);
-			let progress = new TextGenerator.Progress('fraction', true, 40, command.length);
-			for (let e of command) {
-				progress.increase();
-				Console.notify('i', localized(`命令执行中：{}`, progress), [`${e.input === null ? '?' : e.input.value}${e.method === null ? '' : ` | ${e.method}`}`]);
-				try {
-					Executor.execute(e, method);
-				} catch (e: any) {
-					Console.notify_error(e);
-					Console.pause();
+				if (input.startsWith('"') && input.endsWith('"')) {
+					input = input.substring(1, input.length - 1);
 				}
+				raw_command.push(input);
 			}
-			timer.stop();
-			Console.notify('s', localized(`所有命令已执行`), [localized(`用时 {} s`, (timer.duration() / 1000).toFixed(3))]);
-			if (config.pause_when_finish) {
+		}
+		let command = Executor.parse(raw_command);
+		let method = [...g_executor_method, ...g_executor_method_of_batch];
+		Console.notify('i', localized(`所有命令已解析`), [localized(`共 {} 条`, command.length)]);
+		let progress = new TextGenerator.Progress('fraction', true, 40, command.length);
+		for (let e of command) {
+			progress.increase();
+			Console.notify('i', localized(`命令执行中：{}`, progress), [`${e.input === null ? '?' : e.input.value}${e.method === null ? '' : ` | ${e.method}`}`]);
+			try {
+				Executor.execute(e, method);
+			} catch (e: any) {
+				Console.notify_error(e);
 				Console.pause();
 			}
-		} catch (e: any) {
-			Console.notify_error(e);
+		}
+		timer.stop();
+		Console.notify('s', localized(`所有命令已执行`), [localized(`用时 {} s`, (timer.duration() / 1000).toFixed(3))]);
+		if (config.pause_when_finish) {
 			Console.pause();
 		}
-		g_thread_manager.resize(0);
+		return;
 	}
 
 	// ------------------------------------------------

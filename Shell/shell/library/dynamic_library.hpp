@@ -1,14 +1,7 @@
 #pragma once
 
-#include "shell/base.hpp"
+#include "shell/common.hpp"
 #include "shell/library/library.hpp"
-
-#if defined M_system_windows
-#include "Windows.h"
-#endif
-#if defined M_system_linux || defined M_system_macos || defined M_system_android || defined M_system_ios
-#include "dlfcn.h"
-#endif
 
 namespace TwinStar::Shell {
 
@@ -30,32 +23,34 @@ namespace TwinStar::Shell {
 			if (!result) {
 				throw std::runtime_error{"can not open library : "s + std::string{path}};
 			}
+			return result;
 			#endif
-			#if defined M_system_linux || defined M_system_macos || defined M_system_android || defined M_system_ios
+			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 			auto result = dlopen(path.data(), RTLD_LAZY | RTLD_LOCAL);
 			if (!result) {
 				throw std::runtime_error{"can not open library : "s + std::string{path}};
 			}
-			#endif
 			return result;
+			#endif
 		}
 
 		inline auto close_library (
 			LibraryHandle const & handle
 		) -> void {
 			#if defined M_system_windows
-			auto result = FreeLibrary(static_cast<HMODULE>(handle));
-			if (result != TRUE) {
+			auto state = FreeLibrary(static_cast<HMODULE>(handle));
+			if (state != TRUE) {
 				throw std::runtime_error{"can not close library"s};
 			}
-			#endif
-			#if defined M_system_linux || defined M_system_macos || defined M_system_android || defined M_system_ios
-			auto result = dlclose(handle);
-			if (result != 0) {
-				throw std::runtime_error{"can not close library"s};
-			}
-			#endif
 			return;
+			#endif
+			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
+			auto state = dlclose(handle);
+			if (state != 0) {
+				throw std::runtime_error{"can not close library"s};
+			}
+			return;
+			#endif
 		}
 
 		template <typename Symbol>
@@ -68,14 +63,15 @@ namespace TwinStar::Shell {
 			if (!result) {
 				throw std::runtime_error{"can not get symbol : "s + std::string{symbol}};
 			}
+			return reinterpret_cast<Symbol>(result);
 			#endif
-			#if defined M_system_linux || defined M_system_macos || defined M_system_android || defined M_system_ios
+			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 			auto result = dlsym(handle, symbol.data());
 			if (!result) {
 				throw std::runtime_error{"can not get symbol : "s + std::string{symbol}};
 			}
-			#endif
 			return reinterpret_cast<Symbol>(result);
+			#endif
 		}
 
 	}

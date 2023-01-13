@@ -17,7 +17,7 @@ auto wmain (
 	wchar_t * argv[]
 ) -> int
 #endif
-#if defined M_system_linux || defined M_system_macos || defined M_system_android || defined M_system_ios
+#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 auto main (
 	int    argc,
 	char * argv[]
@@ -33,7 +33,7 @@ auto main (
 			auto raw_arg_8 = TwinStar::Shell::utf16_to_utf8(std::u16string_view{reinterpret_cast<char16_t const *>(raw_arg)});
 			it.emplace_back(std::move(reinterpret_cast<std::string &>(raw_arg_8)));
 			#endif
-			#if defined M_system_linux || defined M_system_macos || defined M_system_android || defined M_system_ios
+			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 			it.emplace_back(raw_arg);
 			#endif
 		}
@@ -58,12 +58,13 @@ auto main (
 		exception_message.emplace("unknown exception");
 	}
 	if (exception_message) {
-		std::cout << "\n" << std::flush;
-		std::cout << "Exception :\n" << exception_message.value() << "\n" << std::flush;
-		std::cout << "\n" << std::flush;
-		std::cout << "Press <ENTER> to exit ... " << std::flush;
-		auto pause_text = std::string{};
-		std::getline(std::cin, pause_text);
+		TwinStar::Shell::output("\n");
+		TwinStar::Shell::output("Exception :\n");
+		TwinStar::Shell::output(exception_message.value());
+		TwinStar::Shell::output("\n");
+		TwinStar::Shell::output("\n");
+		TwinStar::Shell::output("Press <ENTER> to exit ... ");
+		TwinStar::Shell::input();
 		return 1;
 	}
 	return 0;

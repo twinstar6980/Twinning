@@ -5,7 +5,7 @@ target('implement', function()
 	set_kind('shared')
 	add_headerfiles(
 		'./version.hpp',
-		'./framework.h',
+		'./common.hpp',
 		'./base_command.hpp',
 		'./method_invoke_command.hpp',
 		'./method_invoke_command_expose.hpp',

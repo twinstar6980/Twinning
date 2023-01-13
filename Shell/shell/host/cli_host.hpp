@@ -1,8 +1,7 @@
 #pragma once
 
-#include "shell/base.hpp"
+#include "shell/common.hpp"
 #include "shell/host/host.hpp"
-#include <iostream>
 
 namespace TwinStar::Shell {
 
@@ -85,10 +84,6 @@ namespace TwinStar::Shell {
 			auto result = std::vector<std::string>{};
 			auto method = argument[0];
 			switch (hash_string(method)) {
-				default : {
-					throw std::runtime_error{"invalid method"s};
-					break;
-				}
 				case hash_string("name"sv) : {
 					auto name = thiz.name();
 					result.emplace_back(std::move(name));
@@ -123,6 +118,9 @@ namespace TwinStar::Shell {
 					break;
 				}
 					#endif
+				default : {
+					throw std::runtime_error{"invalid method"s};
+				}
 			}
 			return result;
 		}
@@ -151,44 +149,67 @@ namespace TwinStar::Shell {
 		auto output (
 			std::string const & text
 		) -> void {
-			#if defined M_system_windows
-			auto text_16 = utf8_to_utf16(reinterpret_cast<std::u8string const &>(text));
-			auto length = DWORD{};
-			auto state = WriteConsoleW(GetStdHandle(STD_OUTPUT_HANDLE), text_16.data(), static_cast<DWORD>(text_16.size()), &length, nullptr);
-			assert_condition(state);
-			#endif
-			#if defined M_system_linux || defined M_system_macos || defined M_system_android || defined M_system_ios
-			std::cout << text << std::flush;
-			#endif
-			return;
+			return Shell::output(text);
 		}
 
 		auto input (
 		) -> std::string {
-			#if defined M_system_windows
-			auto text_16 = std::array<char16_t, 0x1000>{};
-			auto length = DWORD{};
-			auto state = ReadConsoleW(GetStdHandle(STD_INPUT_HANDLE), text_16.data(), static_cast<DWORD>(text_16.size()), &length, nullptr);
-			assert_condition(state);
-			auto text_8 = utf16_to_utf8(std::u16string_view{text_16.data(), length - 2});
-			return std::string{std::move(reinterpret_cast<std::string &>(text_8))};
-			#endif
-			#if defined M_system_linux || defined M_system_macos || defined M_system_android || defined M_system_ios
-			auto text = std::string{};
-			std::getline(std::cin, text);
-			return text;
-			#endif
+			return Shell::input();
 		}
 
 		// ----------------
 
 		#if defined M_system_windows
 
+		// NOTE : if arch == arm_32 : compile failed : undefined symbol "CoInitialize"...
 		auto open_file_dialog (
 			bool const & pick_folder,
 			bool const & multiple
 		) -> std::vector<std::string> {
-			return Windows::open_file_dialog(pick_folder, multiple);
+			auto state_h = HRESULT{};
+			auto result = std::vector<std::string>{};
+			CoInitialize(nullptr);
+			auto dialog = X<IFileOpenDialog *>{nullptr};
+			state_h = CoCreateInstance(__uuidof(FileOpenDialog), nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&dialog));
+			assert_condition(state_h == S_OK);
+			auto option = FILEOPENDIALOGOPTIONS{};
+			state_h = dialog->GetOptions(&option);
+			assert_condition(state_h == S_OK);
+			option |= FOS_NOCHANGEDIR | FOS_FORCEFILESYSTEM | FOS_NODEREFERENCELINKS | FOS_DONTADDTORECENT | FOS_FORCESHOWHIDDEN;
+			if (pick_folder) {
+				option |= FOS_PICKFOLDERS;
+			}
+			if (multiple) {
+				option |= FOS_ALLOWMULTISELECT;
+			}
+			state_h = dialog->SetOptions(option);
+			assert_condition(state_h == S_OK);
+			state_h = dialog->Show(nullptr);
+			if (state_h != HRESULT_FROM_WIN32(ERROR_CANCELLED)) {
+				assert_condition(state_h == S_OK);
+				auto selected_item_list = X<IShellItemArray *>{nullptr};
+				state_h = dialog->GetResults(&selected_item_list);
+				assert_condition(state_h == S_OK);
+				auto count = DWORD{0};
+				state_h = selected_item_list->GetCount(&count);
+				assert_condition(state_h == S_OK);
+				result.reserve(count);
+				for (auto index = DWORD{0}; index < count; index++) {
+					auto item = X<IShellItem *>{nullptr};
+					auto display_name = LPWSTR{nullptr};
+					state_h = selected_item_list->GetItemAt(index, &item);
+					assert_condition(state_h == S_OK);
+					state_h = item->GetDisplayName(SIGDN_FILESYSPATH, &display_name);
+					assert_condition(state_h == S_OK);
+					auto display_name_8 = utf16_to_utf8(std::u16string_view{reinterpret_cast<char16_t const *>(display_name)});
+					result.emplace_back(std::move(reinterpret_cast<std::string &>(display_name_8)));
+					CoTaskMemFree(display_name);
+					item->Release();
+				}
+				selected_item_list->Release();
+			}
+			dialog->Release();
+			return result;
 		}
 
 		#endif

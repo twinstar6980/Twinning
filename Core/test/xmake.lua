@@ -40,7 +40,7 @@ target('test', function()
 	end
 	set_runargs(
 		'_',
-		'C:/Program Files/TwinStar/ToolKit/script/main.js',
+		'/TwinStar.ToolKit/script/main.js',
 		'true',
 		{ private = true }
 	)

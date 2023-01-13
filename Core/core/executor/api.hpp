@@ -254,15 +254,14 @@ namespace TwinStar::Core::Executor::API {
 
 	#pragma region proxy function by special type promotion
 
-	/* NOTE :
-	 * 为了简化API，对部分类型进行提升
-	 * (V|C)StringView          -> String
-	 * (C)ByteListView          -> VByteListView            : ByteListView
-	 * (I|O)ByteStreamView      -> IOByteStreamView         : ByteStreamView
-	 * (C)CharacterListView     -> VCharacterListView       : CharacterListView
-	 * (I|O)CharacterStreamView -> IOCharacterStreamView    : CharacterStreamView
-	 * Image::(C)BitmapView     -> Image::VBitmapView       : Image::BitmapView
-	 */
+	// NOTE
+	// 为了简化API，对部分类型进行提升
+	// (V|C)StringView          -> String
+	// (C)ByteListView          -> VByteListView            : ByteListView
+	// (I|O)ByteStreamView      -> IOByteStreamView         : ByteStreamView
+	// (C)CharacterListView     -> VCharacterListView       : CharacterListView
+	// (I|O)CharacterStreamView -> IOCharacterStreamView    : CharacterStreamView
+	// Image::(C)BitmapView     -> Image::VBitmapView       : Image::BitmapView
 
 	namespace Detail {
 
@@ -340,7 +339,7 @@ namespace TwinStar::Core::Executor::API {
 		// Boolean
 		define_generic_class<Boolean>(n_Core, "Boolean"_s);
 		// Number
-		define_generic_class<IntegerS32>(n_Core, "IntegerS32"_s);
+		define_generic_class<IntegerU32>(n_Core, "IntegerU32"_s);
 		// Size
 		define_generic_class<Size>(n_Core, "Size"_s);
 		define_generic_class<Optional<Size>>(n_Core, "SizeOptional"_s);
@@ -457,6 +456,7 @@ namespace TwinStar::Core::Executor::API {
 				// hard link
 				.add_function_proxy<&stp<&FileSystem::create_hard_link>>("create_hard_link"_s)
 				// file
+				.add_function_proxy<&stp<&FileSystem::create_file>>("create_file"_s)
 				.add_function_proxy<&stp<&FileSystem::size_file>>("size_file"_s)
 				.add_function_proxy<&stp<&FileSystem::resize_file>>("resize_file"_s)
 				.add_function_proxy<&stp<&FileSystem::read_file>>("read_file"_s)
@@ -482,9 +482,8 @@ namespace TwinStar::Core::Executor::API {
 			auto n_System = n_Core.add_namespace("System"_s);
 			n_System
 				.add_function_proxy<&stp<&System::exit>>("exit"_s)
-				.add_function_proxy<&stp<&System::sleep>>("sleep"_s)
-				.add_function_proxy<&stp<&System::system>>("system"_s)
-				.add_function_proxy<&stp<&System::process>>("process"_s);
+				.add_function_proxy<&stp<&System::execute>>("execute"_s)
+				.add_function_proxy<&stp<&System::system>>("system"_s);
 		}
 		// Tool
 		{

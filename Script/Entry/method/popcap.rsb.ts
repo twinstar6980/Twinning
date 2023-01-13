@@ -69,9 +69,9 @@ namespace TwinStar.Entry.method.popcap.rsb {
 		animation_flash: Executor.RequestArgument<boolean, false>;
 		audio: Executor.RequestArgument<boolean, false>;
 		audio_tool: {
-			ffmpeg: string;
-			ww2ogg: string;
-			ww2ogg_pcb: string;
+			ffmpeg_program: string;
+			ww2ogg_program: string;
+			ww2ogg_code_book: string;
 		};
 	};
 
@@ -522,11 +522,10 @@ namespace TwinStar.Entry.method.popcap.rsb {
 								option.audio = {
 									directory: extract_directory,
 									tool: {
-										ffmpeg: Main.path_at_home(a.option.audio_tool.ffmpeg),
-										ww2ogg: Main.path_at_home(a.option.audio_tool.ww2ogg),
-										ww2ogg_pcb: Main.path_at_home(a.option.audio_tool.ww2ogg_pcb),
+										ffmpeg_program: Main.path_at_home(a.option.audio_tool.ffmpeg_program),
+										ww2ogg_program: Main.path_at_home(a.option.audio_tool.ww2ogg_program),
+										ww2ogg_code_book: Main.path_at_home(a.option.audio_tool.ww2ogg_code_book),
 									},
-									temp_directory: `${bundle_directory}/audio_temp`,
 								};
 							}
 						}
@@ -540,7 +539,6 @@ namespace TwinStar.Entry.method.popcap.rsb {
 						version_number,
 						version_additional_texture_information_for_pvz_2_chinese_android,
 					);
-					CoreX.FileSystem.remove(`${bundle_directory}/audio_temp`);
 					Console.notify('s', localized(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {

@@ -159,12 +159,24 @@ namespace TwinStar::Core::FileSystem {
 
 			#pragma region open
 
+			static auto open (
+				Path const &            target,
+				ZConstantString const & mode
+			) -> FileHandler {
+				auto file = std::fopen(cast_pointer<char>(make_null_terminated_string(make_regular_path(target).to_string()).begin()).value, mode);
+				assert_condition(file);
+				return FileHandler{make_pointer(file)};
+			}
+
+			// ----------------
+
 			static auto open_by_read (
 				Path const & target
 			) -> FileHandler {
-				auto file = std::fopen(cast_pointer<char>(make_null_terminated_string(make_regular_path(target).to_string()).begin()).value, "rb");
-				assert_condition(file);
-				return FileHandler{make_pointer(file)};
+				if (!exist_directory(target.parent())) {
+					assert_failed(R"(/* parent directory not exist */)");
+				}
+				return open(target, "rb");
 			}
 
 			static auto open_by_write (
@@ -173,9 +185,16 @@ namespace TwinStar::Core::FileSystem {
 				if (!exist_directory(target.parent())) {
 					create_directory(target.parent());
 				}
-				auto file = std::fopen(cast_pointer<char>(make_null_terminated_string(make_regular_path(target).to_string()).begin()).value, "wb");
-				assert_condition(file);
-				return FileHandler{make_pointer(file)};
+				return open(target, "wb");
+			}
+
+			static auto open_by_append (
+				Path const & target
+			) -> FileHandler {
+				if (!exist_directory(target.parent())) {
+					create_directory(target.parent());
+				}
+				return open(target, "ab");
 			}
 
 			#pragma endregion
@@ -455,6 +474,15 @@ namespace TwinStar::Core::FileSystem {
 	#pragma endregion
 
 	#pragma region file
+
+	inline auto create_file (
+		Path const & target
+	) -> Void {
+		auto handler = Detail::FileHandler::open_by_append(target);
+		return;
+	}
+
+	// ----------------
 
 	inline auto size_file (
 		Path const & target
