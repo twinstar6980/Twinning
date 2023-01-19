@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/utility/utility.hpp"
-#include "core/third_party/Rijndael.hpp"
+#include "core/third/Rijndael.hpp"
 
 namespace TwinStar::Core::Tool::Data::Encrypt::Rijndael {
 

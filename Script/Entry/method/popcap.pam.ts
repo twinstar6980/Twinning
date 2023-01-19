@@ -60,7 +60,7 @@ namespace TwinStar.Entry.method.popcap.pam {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, null, [1n, ''], [2n, ''], [3n, ''], [4n, ''], [5n, ''], [6n, '']], null)),
-							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : los(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
@@ -72,7 +72,7 @@ namespace TwinStar.Entry.method.popcap.pam {
 						);
 					}
 					CoreX.Tool.PopCap.PAM.encode_fs(data_file, manifest_file, { number: version_number }, buffer_size);
-					Console.notify('s', localized(`执行成功`), [`${data_file}`]);
+					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -118,11 +118,11 @@ namespace TwinStar.Entry.method.popcap.pam {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, null, [1n, ''], [2n, ''], [3n, ''], [4n, ''], [5n, ''], [6n, '']], null)),
-							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : los(`版本不受支持`)),
 						);
 					}
 					CoreX.Tool.PopCap.PAM.decode_fs(data_file, manifest_file, { number: version_number });
-					Console.notify('s', localized(`执行成功`), [`${manifest_file}`]);
+					Console.notify('s', los(`执行成功`), [`${manifest_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -164,7 +164,7 @@ namespace TwinStar.Entry.method.popcap.pam {
 					Support.PopCapAnimation.Convert.Flash.From.from_fsh(raw, ripe_directory);
 					Support.PopCapAnimation.Convert.Flash.SourceManager.create_fsh(ripe_directory, raw);
 					Support.PopCapAnimation.Convert.Flash.create_xfl_content_file(ripe_directory);
-					Console.notify('s', localized(`执行成功`), [`${ripe_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${ripe_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -202,7 +202,7 @@ namespace TwinStar.Entry.method.popcap.pam {
 						);
 					}
 					Support.PopCapAnimation.Convert.Flash.To.to_fs(raw_file, ripe_directory);
-					Console.notify('s', localized(`执行成功`), [`${raw_file}`]);
+					Console.notify('s', los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -237,11 +237,11 @@ namespace TwinStar.Entry.method.popcap.pam {
 							(value) => (value),
 							null,
 							() => (Console.integer(null)),
-							(value) => (value > 0n ? null : localized(`分辨率应大于零`)),
+							(value) => (value > 0n ? null : los(`分辨率应大于零`)),
 						);
 					}
 					Support.PopCapAnimation.Convert.Flash.SourceManager.resize_fs(directory, resolution);
-					Console.notify('s', localized(`执行成功`), [`${directory}`]);
+					Console.notify('s', los(`执行成功`), [`${directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -279,7 +279,7 @@ namespace TwinStar.Entry.method.popcap.pam {
 						.forEach((e) => {
 							CoreX.FileSystem.create_hard_link(`${media_directory}/${e}`, `${directory}/../${e}`);
 						});
-					Console.notify('s', localized(`执行成功`), [`${directory}`]);
+					Console.notify('s', los(`执行成功`), [`${directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -326,7 +326,7 @@ namespace TwinStar.Entry.method.popcap.pam {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, null, [1n, ''], [2n, ''], [3n, ''], [4n, ''], [5n, ''], [6n, '']], null)),
-							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : los(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
@@ -347,7 +347,7 @@ namespace TwinStar.Entry.method.popcap.pam {
 							CoreX.Tool.PopCap.PAM.encode_fs(data_file, manifest_file, { number: version_number }, data_buffer.view());
 						},
 					);
-					Console.notify('s', localized(`执行成功`), [`${data_file_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${data_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -393,7 +393,7 @@ namespace TwinStar.Entry.method.popcap.pam {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, null, [1n, ''], [2n, ''], [3n, ''], [4n, ''], [5n, ''], [6n, '']], null)),
-							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : los(`版本不受支持`)),
 						);
 					}
 					simple_batch_execute(
@@ -405,7 +405,7 @@ namespace TwinStar.Entry.method.popcap.pam {
 							CoreX.Tool.PopCap.PAM.decode_fs(data_file, manifest_file, { number: version_number });
 						},
 					);
-					Console.notify('s', localized(`执行成功`), [`${manifest_file_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${manifest_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -455,7 +455,7 @@ namespace TwinStar.Entry.method.popcap.pam {
 							Support.PopCapAnimation.Convert.Flash.create_xfl_content_file(ripe_directory);
 						},
 					);
-					Console.notify('s', localized(`执行成功`), [`${ripe_directory_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${ripe_directory_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -501,7 +501,7 @@ namespace TwinStar.Entry.method.popcap.pam {
 							Support.PopCapAnimation.Convert.Flash.To.to_fs(raw_file, ripe_directory);
 						},
 					);
-					Console.notify('s', localized(`执行成功`), [`${raw_file_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${raw_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -536,7 +536,7 @@ namespace TwinStar.Entry.method.popcap.pam {
 							(value) => (value),
 							null,
 							() => (Console.integer(null)),
-							(value) => (value > 0n ? null : localized(`分辨率应大于零`)),
+							(value) => (value > 0n ? null : los(`分辨率应大于零`)),
 						);
 					}
 					simple_batch_execute(
@@ -547,7 +547,7 @@ namespace TwinStar.Entry.method.popcap.pam {
 							Support.PopCapAnimation.Convert.Flash.SourceManager.resize_fs(directory, resolution);
 						},
 					);
-					Console.notify('s', localized(`执行成功`), [`${directory_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${directory_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -592,7 +592,7 @@ namespace TwinStar.Entry.method.popcap.pam {
 								});
 						},
 					);
-					Console.notify('s', localized(`执行成功`), [`${directory_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${directory_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

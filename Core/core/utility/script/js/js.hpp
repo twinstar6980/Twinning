@@ -7,7 +7,7 @@
 #include "core/utility/data/json/value.hpp"
 #include "core/utility/script/js/value_adapter.hpp"
 #include "core/utility/script/js/handler.hpp"
-#include "core/third_party/quickjs.hpp"
+#include "core/third/quickjs.hpp"
 
 namespace TwinStar::Core::JS {
 

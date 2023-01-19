@@ -268,25 +268,25 @@ namespace TwinStar.CoreX {
 
 		export function copy(
 			source: string,
-			dest: string,
+			destination: string,
 		): void {
-			return Core.FileSystem.copy(Core.Path.value(source), Core.Path.value(dest));
+			return Core.FileSystem.copy(Core.Path.value(source), Core.Path.value(destination));
 		}
 
 		// todo : process case for android fuse storage ?
 		export function rename(
 			source: string,
-			dest: string,
+			destination: string,
 			process_case: boolean = false,
 		): void {
 			if (!process_case) {
-				return Core.FileSystem.rename(Core.Path.value(source), Core.Path.value(dest));
+				return Core.FileSystem.rename(Core.Path.value(source), Core.Path.value(destination));
 			} else {
-				if (source.toLowerCase() !== dest.toLowerCase()) {
-					rename(source, dest);
+				if (source.toLowerCase() !== destination.toLowerCase()) {
+					rename(source, destination);
 				} else {
 					rename(source, source + '!');
-					rename(source + '!', dest);
+					rename(source + '!', destination);
 				}
 				return;
 			}
@@ -449,30 +449,36 @@ namespace TwinStar.CoreX {
 
 	}
 
-	export namespace System {
+	export namespace Process {
 
 		// ------------------------------------------------
+
+		export function environment(
+		): Array<string> {
+			return Core.Process.environment().value;
+		}
 
 		export function exit(
 			code: bigint,
 		): void {
-			return Core.System.exit(Core.IntegerU32.value(code));
+			return Core.Process.exit(Core.IntegerU32.value(code));
 		}
 
 		export function execute(
 			program: string,
 			argument: Array<string>,
-			redirect_input: null | string,
-			redirect_output: null | string,
-			redirect_error: null | string,
+			environment: Array<string>,
+			input: null | string,
+			output: null | string,
+			error: null | string,
 		): bigint {
-			return Core.System.execute(Core.Path.value(program), Core.StringList.value(argument), Core.PathOptional.value(redirect_input), Core.PathOptional.value(redirect_output), Core.PathOptional.value(redirect_error)).value;
+			return Core.Process.execute(Core.Path.value(program), Core.StringList.value(argument), Core.StringList.value(environment), Core.PathOptional.value(input), Core.PathOptional.value(output), Core.PathOptional.value(error)).value;
 		}
 
 		export function system(
 			command: string,
 		): bigint {
-			return Core.System.system(Core.String.value(command)).value;
+			return Core.Process.system(Core.String.value(command)).value;
 		}
 
 		// ------------------------------------------------
@@ -1424,7 +1430,7 @@ namespace TwinStar.CoreX {
 
 		}
 
-		export namespace Misc {
+		export namespace Miscellaneous {
 
 			export namespace PvZ2CHSRSBTextureAlphaIndex {
 

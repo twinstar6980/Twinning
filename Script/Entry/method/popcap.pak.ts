@@ -54,7 +54,7 @@ namespace TwinStar.Entry.method.popcap.pak {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, [0n, '']], null)),
-							(value) => ([0n].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => ([0n].includes(value) ? null : los(`版本不受支持`)),
 						);
 						version_compress_resource_data = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_compress_resource_data'),
@@ -76,7 +76,7 @@ namespace TwinStar.Entry.method.popcap.pak {
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.PopCap.PAK.pack_fs(data_file, manifest_file, resource_directory, { number: version_number, compress_resource_data: version_compress_resource_data }, buffer_size);
-					Console.notify('s', localized(`执行成功`), [`${data_file}`]);
+					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -125,7 +125,7 @@ namespace TwinStar.Entry.method.popcap.pak {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, [0n, '']], null)),
-							(value) => ([0n].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => ([0n].includes(value) ? null : los(`版本不受支持`)),
 						);
 						version_compress_resource_data = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_compress_resource_data'),
@@ -139,7 +139,7 @@ namespace TwinStar.Entry.method.popcap.pak {
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.PopCap.PAK.unpack_fs(data_file, manifest_file, resource_directory, { number: version_number, compress_resource_data: version_compress_resource_data });
-					Console.notify('s', localized(`执行成功`), [`${bundle_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -187,7 +187,7 @@ namespace TwinStar.Entry.method.popcap.pak {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, [0n, '']], null)),
-							(value) => ([0n].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => ([0n].includes(value) ? null : los(`版本不受支持`)),
 						);
 						version_compress_resource_data = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_compress_resource_data'),
@@ -200,7 +200,7 @@ namespace TwinStar.Entry.method.popcap.pak {
 					}
 					let data = Support.PopCapPAK.ResourcePack.pack(resource_directory, version_number, version_compress_resource_data);
 					CoreX.FileSystem.write_file(data_file, data[0].view().sub(Core.Size.value(0n), data[1]));
-					Console.notify('s', localized(`执行成功`), [`${data_file}`]);
+					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -240,7 +240,7 @@ namespace TwinStar.Entry.method.popcap.pak {
 						);
 					}
 					CoreX.Tool.Data.Encrypt.XOR.encrypt_fs(plain_file, cipher_file, 0xF7n);
-					Console.notify('s', localized(`执行成功`), [`${cipher_file}`]);
+					Console.notify('s', los(`执行成功`), [`${cipher_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

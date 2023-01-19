@@ -11,7 +11,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceManifest.Convert {
 	export function from_official(
 		source: OfficialResourceManifest.Package,
 	): ResourceManifest.Package {
-		let dest: ResourceManifest.Package = {
+		let destination: ResourceManifest.Package = {
 			group: {},
 		};
 		for (let source_group of source.groups) {
@@ -20,7 +20,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceManifest.Convert {
 			}
 			switch (source_group.type) {
 				case 'composite': {
-					dest.group[source_group.id] = {
+					destination.group[source_group.id] = {
 						composite: true,
 						subgroup: {},
 					};
@@ -30,13 +30,13 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceManifest.Convert {
 					let source_subgroup = source_group as OfficialResourceManifest.SimpleGroupInformation;
 					let dest_group: ResourceManifest.Group;
 					if (source_subgroup.parent === undefined) {
-						dest.group[source_group.id] = {
+						destination.group[source_group.id] = {
 							composite: false,
 							subgroup: {},
 						};
-						dest_group = dest.group[source_group.id];
+						dest_group = destination.group[source_group.id];
 					} else {
-						let dest_group_if = dest.group[source_subgroup.parent];
+						let dest_group_if = destination.group[source_subgroup.parent];
 						if (dest_group_if === undefined) {
 							throw new Error(`subgroup's parent is not found : ${source_group.id}`);
 						}
@@ -98,7 +98,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceManifest.Convert {
 				}
 			}
 		}
-		return dest;
+		return destination;
 	}
 
 	/**
@@ -120,7 +120,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceManifest.Convert {
 			}
 			return value;
 		};
-		let dest: OfficialResourceManifest.Package = {
+		let destination: OfficialResourceManifest.Package = {
 			slot_count: 0n,
 			groups: [],
 		};
@@ -133,7 +133,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceManifest.Convert {
 					id: group_id,
 					subgroups: [],
 				};
-				dest.groups.push(dest_group);
+				destination.groups.push(dest_group);
 			}
 			for (let subgroup_id in source_group.subgroup) {
 				let source_subgroup = source_group.subgroup[subgroup_id];
@@ -187,11 +187,11 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceManifest.Convert {
 						}
 					}
 				}
-				dest.groups.push(dest_subgroup);
+				destination.groups.push(dest_subgroup);
 			}
 		}
-		dest.slot_count = BigInt(slot_map.size);
-		return dest;
+		destination.slot_count = BigInt(slot_map.size);
+		return destination;
 	}
 
 	// ------------------------------------------------

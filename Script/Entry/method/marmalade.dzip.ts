@@ -51,7 +51,7 @@ namespace TwinStar.Entry.method.marmalade.dzip {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, [0n, '']], null)),
-							(value) => ([0n].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => ([0n].includes(value) ? null : los(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
@@ -65,7 +65,7 @@ namespace TwinStar.Entry.method.marmalade.dzip {
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.Marmalade.DZip.pack_fs(data_file, manifest_file, resource_directory, { number: version_number }, buffer_size);
-					Console.notify('s', localized(`执行成功`), [`${data_file}`]);
+					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -111,13 +111,13 @@ namespace TwinStar.Entry.method.marmalade.dzip {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, [0n, '']], null)),
-							(value) => ([0n].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => ([0n].includes(value) ? null : los(`版本不受支持`)),
 						);
 					}
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.Marmalade.DZip.unpack_fs(data_file, manifest_file, resource_directory, { number: version_number });
-					Console.notify('s', localized(`执行成功`), [`${bundle_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -162,12 +162,12 @@ namespace TwinStar.Entry.method.marmalade.dzip {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, [0n, '']], null)),
-							(value) => ([0n].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => ([0n].includes(value) ? null : los(`版本不受支持`)),
 						);
 					}
 					let data = Support.MarmaladeDZip.ResourcePack.pack(resource_directory, version_number);
 					CoreX.FileSystem.write_file(data_file, data[0].view().sub(Core.Size.value(0n), data[1]));
-					Console.notify('s', localized(`执行成功`), [`${data_file}`]);
+					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

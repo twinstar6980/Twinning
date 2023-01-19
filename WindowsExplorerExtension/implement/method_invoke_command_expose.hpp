@@ -804,26 +804,102 @@ namespace TwinStar::WindowsExplorerExtension {
 					.name = L"转换为 text",
 					.type = false,
 					.rule = std::wregex{LR"(.*(LawnStrings).*(\.(txt|json))$)", std::wregex::icase},
-					.method = L"other.pvz2.lawn_string_text.convert",
+					.method = L"pvz2.lawn_string_text.convert",
 					.argument = LR"({ "dest_version": "text" })",
 				},
 				{
 					.name = L"转换为 json_map",
 					.type = false,
 					.rule = std::wregex{LR"(.*(LawnStrings).*(\.(txt|json))$)", std::wregex::icase},
-					.method = L"other.pvz2.lawn_string_text.convert",
+					.method = L"pvz2.lawn_string_text.convert",
 					.argument = LR"({ "dest_version": "json_map" })",
 				},
 				{
 					.name = L"转换为 json_list",
 					.type = false,
 					.rule = std::wregex{LR"(.*(LawnStrings).*(\.(txt|json))$)", std::wregex::icase},
-					.method = L"other.pvz2.lawn_string_text.convert",
+					.method = L"pvz2.lawn_string_text.convert",
 					.argument = LR"({ "dest_version": "json_list" })",
 				},
 			},
 			.separator = {
 				3,
+			},
+		};
+
+		inline auto const pvz2_remote_android_helper = MethodInvokeCommandConfigGroup{
+			.name = L"PvZ-2 Remote Android Helper",
+			.child = {
+				{
+					.name = L"拉取主数据包",
+					.type = true,
+					.rule = std::wregex{LR"(.+(\.pvz2_remote_android_helper_project)$)", std::wregex::icase},
+					.method = L"pvz2.remote_android_helper.launch",
+					.argument = LR"({ "action": "pull_main_package" })",
+				},
+				{
+					.name = L"推送主数据包",
+					.type = true,
+					.rule = std::wregex{LR"(.+(\.pvz2_remote_android_helper_project)$)", std::wregex::icase},
+					.method = L"pvz2.remote_android_helper.launch",
+					.argument = LR"({ "action": "push_main_package" })",
+				},
+				{
+					.name = L"拉取本地配置",
+					.type = true,
+					.rule = std::wregex{LR"(.+(\.pvz2_remote_android_helper_project)$)", std::wregex::icase},
+					.method = L"pvz2.remote_android_helper.launch",
+					.argument = LR"({ "action": "pull_local_profile" })",
+				},
+				{
+					.name = L"推送本地配置",
+					.type = true,
+					.rule = std::wregex{LR"(.+(\.pvz2_remote_android_helper_project)$)", std::wregex::icase},
+					.method = L"pvz2.remote_android_helper.launch",
+					.argument = LR"({ "action": "push_local_profile" })",
+				},
+				{
+					.name = L"拉取玩家配置",
+					.type = true,
+					.rule = std::wregex{LR"(.+(\.pvz2_remote_android_helper_project)$)", std::wregex::icase},
+					.method = L"pvz2.remote_android_helper.launch",
+					.argument = LR"({ "action": "pull_player_profile" })",
+				},
+				{
+					.name = L"推送玩家配置",
+					.type = true,
+					.rule = std::wregex{LR"(.+(\.pvz2_remote_android_helper_project)$)", std::wregex::icase},
+					.method = L"pvz2.remote_android_helper.launch",
+					.argument = LR"({ "action": "push_player_profile" })",
+				},
+				{
+					.name = L"拉取内容分发",
+					.type = true,
+					.rule = std::wregex{LR"(.+(\.pvz2_remote_android_helper_project)$)", std::wregex::icase},
+					.method = L"pvz2.remote_android_helper.launch",
+					.argument = LR"({ "action": "pull_content_delivery" })",
+				},
+				{
+					.name = L"推送内容分发",
+					.type = true,
+					.rule = std::wregex{LR"(.+(\.pvz2_remote_android_helper_project)$)", std::wregex::icase},
+					.method = L"pvz2.remote_android_helper.launch",
+					.argument = LR"({ "action": "push_content_delivery" })",
+				},
+				{
+					.name = L"清除玩家配置快照",
+					.type = true,
+					.rule = std::wregex{LR"(.+(\.pvz2_remote_android_helper_project)$)", std::wregex::icase},
+					.method = L"pvz2.remote_android_helper.launch",
+					.argument = LR"({ "action": "clear_snapshot" })",
+				},
+			},
+			.separator = {
+				2,
+				2,
+				2,
+				2,
+				1,
 			},
 		};
 
@@ -966,6 +1042,14 @@ namespace TwinStar::WindowsExplorerExtension {
 	public:
 		PvZ2LawnStringTextMethodInvokeGroupCommand () :
 			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::pvz2_lawn_string_text} {
+		}
+	};
+
+	class __declspec(uuid("CD04E4D3-2224-14FC-C9DD-66D746408D62")) PvZ2RemoteAndroidHelperMethodInvokeGroupCommand :
+		public MethodInvokeGroupCommand {
+	public:
+		PvZ2RemoteAndroidHelperMethodInvokeGroupCommand () :
+			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::pvz2_remote_android_helper} {
 		}
 	};
 

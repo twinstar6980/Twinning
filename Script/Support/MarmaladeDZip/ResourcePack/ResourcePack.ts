@@ -30,12 +30,12 @@ namespace TwinStar.Support.MarmaladeDZip.ResourcePack {
 			let resource_size = CoreX.FileSystem.size_file(`${resource_directory}/${resource}`);
 			data_size_bound += (2 + resource.length) + 6 + 16 + Number(resource_size); // path string + resource information + chunk information + resource data
 		}
-		Console.notify('i', localized(`打包开始`), [localized(`共 {} 个资源文件`, resource_list.length)]);
+		Console.notify('i', los(`打包开始`), [los(`共 {} 个资源文件`, resource_list.length)]);
 		let data = Core.ByteArray.allocate(Core.Size.value(BigInt(data_size_bound)));
 		let stream = Core.ByteStreamView.look(data.view());
 		let manifest = Core.Tool.Marmalade.DZip.Manifest.Package.json(Core.JSON.Value.value(manifest_js), version_c);
 		Core.Tool.Marmalade.DZip.Pack.process_package(stream, manifest, Core.Path.value(resource_directory), version_c);
-		Console.notify('s', localized(`打包完成`), []);
+		Console.notify('s', los(`打包完成`), []);
 		return [data, stream.position()];
 	}
 

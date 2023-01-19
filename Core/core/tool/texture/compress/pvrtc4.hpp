@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/utility/utility.hpp"
-#include "core/third_party/PVRTCCompressor.hpp"
+#include "core/third/PVRTCCompressor.hpp"
 
 namespace TwinStar::Core::Tool::Texture::Compress::PVRTC4 {
 

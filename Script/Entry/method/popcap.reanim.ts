@@ -54,7 +54,7 @@ namespace TwinStar.Entry.method.popcap.reanim {
 							(value) => (value),
 							null,
 							() => (Console.option(['desktop', 'phone'].map((e) => ([e])), null)),
-							(value) => (['desktop', 'phone'].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => (['desktop', 'phone'].includes(value) ? null : los(`版本不受支持`)),
 						);
 						version_variant_64 = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_variant_64'),
@@ -74,7 +74,7 @@ namespace TwinStar.Entry.method.popcap.reanim {
 						);
 					}
 					CoreX.Tool.PopCap.Reanim.encode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 }, buffer_size);
-					Console.notify('s', localized(`执行成功`), [`${data_file}`]);
+					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -123,7 +123,7 @@ namespace TwinStar.Entry.method.popcap.reanim {
 							(value) => (value),
 							null,
 							() => (Console.option(['desktop', 'phone'].map((e) => ([e])), null)),
-							(value) => (['desktop', 'phone'].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => (['desktop', 'phone'].includes(value) ? null : los(`版本不受支持`)),
 						);
 						version_variant_64 = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_variant_64'),
@@ -135,7 +135,7 @@ namespace TwinStar.Entry.method.popcap.reanim {
 						);
 					}
 					CoreX.Tool.PopCap.Reanim.decode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 });
-					Console.notify('s', localized(`执行成功`), [`${manifest_file}`]);
+					Console.notify('s', los(`执行成功`), [`${manifest_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -187,7 +187,7 @@ namespace TwinStar.Entry.method.popcap.reanim {
 							(value) => (value),
 							null,
 							() => (Console.option(['desktop', 'phone'].map((e) => ([e])), null)),
-							(value) => (['desktop', 'phone'].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => (['desktop', 'phone'].includes(value) ? null : los(`版本不受支持`)),
 						);
 						version_variant_64 = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_variant_64'),
@@ -216,7 +216,7 @@ namespace TwinStar.Entry.method.popcap.reanim {
 							CoreX.Tool.PopCap.Reanim.encode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 }, data_buffer.view());
 						},
 					);
-					Console.notify('s', localized(`执行成功`), [`${data_file_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${data_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -265,7 +265,7 @@ namespace TwinStar.Entry.method.popcap.reanim {
 							(value) => (value),
 							null,
 							() => (Console.option(['desktop', 'phone'].map((e) => ([e])), null)),
-							(value) => (['desktop', 'phone'].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => (['desktop', 'phone'].includes(value) ? null : los(`版本不受支持`)),
 						);
 						version_variant_64 = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_variant_64'),
@@ -285,7 +285,7 @@ namespace TwinStar.Entry.method.popcap.reanim {
 							CoreX.Tool.PopCap.Reanim.decode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 });
 						},
 					);
-					Console.notify('s', localized(`执行成功`), [`${manifest_file_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${manifest_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

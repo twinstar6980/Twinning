@@ -18,9 +18,9 @@ namespace TwinStar.Executor {
 	): Result {
 		let result: Raw;
 		result = given_converter(given);
-		Console.notify('i', localized(`已取得参数：{}`, name), [`${result}`]);
+		Console.notify('i', los(`已取得参数：{}`, name), [`${result}`]);
 		if (!checker(result)) {
-			Console.notify('w', localized(`参数值无效`), []);
+			Console.notify('w', los(`参数值无效`), []);
 			throw new Error(`require argument is invalid`);
 		}
 		return result as Result;
@@ -37,7 +37,7 @@ namespace TwinStar.Executor {
 	): Result {
 		let result: Raw;
 		if (given === '?input') {
-			Console.notify('i', localized(`请输入参数：{}`, name), []);
+			Console.notify('i', los(`请输入参数：{}`, name), []);
 			result = input_generator();
 		} else if (given === '?default') {
 			if (default_generator === null) {
@@ -45,17 +45,17 @@ namespace TwinStar.Executor {
 			}
 			let default_value = default_generator();
 			result = default_value;
-			Console.notify('i', localized(`已默认参数：{}`, name), [`${result}`]);
+			Console.notify('i', los(`已默认参数：{}`, name), [`${result}`]);
 		} else {
 			result = given_converter(given);
-			Console.notify('i', localized(`已取得参数：{}`, name), [`${result}`]);
+			Console.notify('i', los(`已取得参数：{}`, name), [`${result}`]);
 		}
 		while (true) {
 			let check_result = checker(result);
 			if (check_result === null) {
 				break;
 			}
-			Console.notify('w', localized(`参数值无效，请重新输入`), [check_result]);
+			Console.notify('w', los(`参数值无效，请重新输入`), [check_result]);
 			result = input_generator();
 		}
 		return result as Result;
@@ -67,7 +67,7 @@ namespace TwinStar.Executor {
 		method: string,
 		argument: string,
 	): [string, string] {
-		return [localized(`method#${method}$${argument}:name`), localized(`method#${method}$${argument}:message`)];
+		return [los(`method#${method}$${argument}:name`), los(`method#${method}$${argument}:message`)];
 	}
 
 	// ------------------------------------------------
@@ -128,7 +128,7 @@ namespace TwinStar.Executor {
 							let pick_folder: boolean;
 							switch (type) {
 								case 'any': {
-									Console.notify('i', localized(`选择窗口是否应选择目录（否则为文件）`), []);
+									Console.notify('i', los(`选择窗口是否应选择目录（否则为文件）`), []);
 									pick_folder = Console.confirm(null);
 									break;
 								}
@@ -169,24 +169,24 @@ namespace TwinStar.Executor {
 						if (CoreX.FileSystem.exist(value)) {
 							switch (state_data.tactic_if_exist) {
 								case 'trash': {
-									Entry.trash(value);
-									Console.notify('w', localized(`指定路径已存在，现已回收`), []);
+									HomeDirectory.new_trash(value);
+									Console.notify('w', los(`指定路径已存在，现已回收`), []);
 									result = null;
 									break;
 								}
 								case 'delete': {
 									CoreX.FileSystem.remove(value);
-									Console.notify('w', localized(`指定路径已存在，现已删除`), []);
+									Console.notify('w', los(`指定路径已存在，现已删除`), []);
 									result = null;
 									break;
 								}
 								case 'override': {
-									Console.notify('w', localized(`指定路径已存在，现将覆盖`), []);
+									Console.notify('w', los(`指定路径已存在，现将覆盖`), []);
 									result = null;
 									break;
 								}
 								case null: {
-									result = localized(`指定路径已存在`);
+									result = los(`指定路径已存在`);
 									break;
 								}
 							}
@@ -194,7 +194,7 @@ namespace TwinStar.Executor {
 							result = null;
 						}
 					} else {
-						result = CoreX.FileSystem[type === 'file' ? 'exist_file' : type === 'directory' ? 'exist_directory' : 'exist'](value) ? null : localized(`指定路径不存在`);
+						result = CoreX.FileSystem[type === 'file' ? 'exist_file' : type === 'directory' ? 'exist_directory' : 'exist'](value) ? null : los(`指定路径不存在`);
 					}
 				}
 				return result;

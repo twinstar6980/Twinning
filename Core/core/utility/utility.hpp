@@ -105,9 +105,7 @@
 #include "core/utility/file_system/path.hpp"
 #include "core/utility/file_system/file_system.hpp"
 
-#include "core/utility/system/windows.hpp"
-#include "core/utility/system/posix.hpp"
-#include "core/utility/system/system.hpp"
+#include "core/utility/process/process.hpp"
 
 #include "core/utility/miscellaneous/bitset.hpp"
 #include "core/utility/miscellaneous/kv_pair.hpp"

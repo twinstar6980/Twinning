@@ -107,7 +107,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceExtract {
 			return;
 		};
 		{
-			Console.notify('i', localized(`恢复文件路径大小写 ...`), []);
+			Console.notify('i', los(`恢复文件路径大小写 ...`), []);
 			let resource_path_list: Array<string> = [];
 			iterate_manifest(false)((group, subgroup, resource) => {
 				resource_path_list.push(`${resource[1].path}${(resource[1].expand[0] === 'atlas' ? '.ptx' : '')}`);
@@ -126,8 +126,8 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceExtract {
 			let resource_path_tree = PathUtility.to_tree(resource_path_list);
 			rename_tree(resource_directory, resource_path_tree);
 		}
-		Console.notify('i', localized(`提取资源 ...`), []);
-		let audio_temporary_directory = Entry.temporary();
+		Console.notify('i', los(`提取资源 ...`), []);
+		let audio_temporary_directory = HomeDirectory.new_temporary();
 		iterate_manifest(true)((group, subgroup, resource) => {
 			let path = resource[1].path;
 			if (option.json !== null && path.endsWith('.rton')) {
@@ -250,7 +250,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceExtract {
 		version_number: [3n, 4n][number],
 		version_additional_texture_information_for_pvz_2_chinese_android: [0n, 1n, 2n][number],
 	): void {
-		Console.notify('i', localized(`解包 ...`), []);
+		Console.notify('i', los(`解包 ...`), []);
 		let package_manifest: Core.Tool.PopCap.RSB.Manifest.JS_N.Package;
 		{
 			let version_c = Core.Tool.PopCap.RSB.Version.value({ number: version_number, additional_texture_information_for_pvz_2_chinese_android: version_additional_texture_information_for_pvz_2_chinese_android });
@@ -271,7 +271,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceExtract {
 			package_manifest = manifest_json.value as any;
 			CoreX.JSON.write_fs(manifest_file, manifest_json);
 		}
-		Console.notify('i', localized(`提取资源清单文件 ...`), []);
+		Console.notify('i', los(`提取资源清单文件 ...`), []);
 		let official_resource_manifest: OfficialResourceManifest.Package;
 		{
 			let group_id = Object.keys(package_manifest.group).filter((e) => (/__MANIFESTGROUP__(.+)?/.test(e)));
@@ -312,7 +312,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceExtract {
 			);
 			official_resource_manifest = json.value;
 		}
-		Console.notify('i', localized(`解析资源清单 ...`), []);
+		Console.notify('i', los(`解析资源清单 ...`), []);
 		let resource_manifest = ResourceManifest.Convert.from_official(official_resource_manifest);
 		CoreX.JSON.write_fs(resource_manifest_file, Core.JSON.Value.value(resource_manifest));
 		extract(

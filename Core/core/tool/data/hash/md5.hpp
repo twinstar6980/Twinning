@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/utility/utility.hpp"
-#include "core/third_party/md5.hpp"
+#include "core/third/md5.hpp"
 
 namespace TwinStar::Core::Tool::Data::Hash::MD5 {
 

@@ -2,7 +2,7 @@
 
 #include "core/utility/string/string.hpp"
 
-#include "core/third_party/fmt.hpp"
+#include "core/third/fmt.hpp"
 
 namespace TwinStar::Core {
 

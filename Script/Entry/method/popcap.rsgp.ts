@@ -50,7 +50,7 @@ namespace TwinStar.Entry.method.popcap.rsgp {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, null, null, null, [3n, ''], [4n, '']], null)),
-							(value) => ([3n, 4n].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => ([3n, 4n].includes(value) ? null : los(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
@@ -64,7 +64,7 @@ namespace TwinStar.Entry.method.popcap.rsgp {
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.PopCap.RSGP.pack_fs(data_file, manifest_file, resource_directory, { number: version_number }, buffer_size);
-					Console.notify('s', localized(`执行成功`), [`${data_file}`]);
+					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -110,13 +110,13 @@ namespace TwinStar.Entry.method.popcap.rsgp {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, null, null, null, [3n, ''], [4n, '']], null)),
-							(value) => ([3n, 4n].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => ([3n, 4n].includes(value) ? null : los(`版本不受支持`)),
 						);
 					}
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.PopCap.RSGP.unpack_fs(data_file, manifest_file, resource_directory, { number: version_number });
-					Console.notify('s', localized(`执行成功`), [`${bundle_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

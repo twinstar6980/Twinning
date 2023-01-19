@@ -1,7 +1,6 @@
 {
 	"language": "Chinese",
 	"cli_disable_virtual_terminal_sequences": false,
-	"workspace": "~/workspace",
 	"byte_stream_use_big_endian": false,
 	"json_write": {
 		"buffer_size": "64.0m",

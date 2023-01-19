@@ -8,7 +8,7 @@
   xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
   xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
   IgnorableNamespaces="rescap uap uap10 com desktop4 desktop5">
-  <Identity Name="TwinStar.ToolKit.WindowsExplorerExtension" Publisher="CN=TwinStar" Version="9.0.0.0" ProcessorArchitecture="x64" />
+  <Identity Name="TwinStar.ToolKit.WindowsExplorerExtension" Publisher="CN=TwinStar" Version="10.0.0.0" ProcessorArchitecture="x64" />
   <Properties>
     <DisplayName>TwinStar ToolKit - Windows Explorer Extension</DisplayName>
     <PublisherDisplayName>TwinStar</PublisherDisplayName>
@@ -52,6 +52,7 @@
               <desktop5:Verb Id="15PopCapRSGPMethodInvokeGroupCommand" Clsid="95E74A50-81DC-48BA-A24B-E0AD30C75139" />
               <desktop5:Verb Id="16PopCapRSBMethodInvokeGroupCommand" Clsid="BCF8438E-67D1-4B7B-8649-78C46FAB4CFE" />
               <desktop5:Verb Id="17PvZ2LawnStringTextMethodInvokeGroupCommand" Clsid="3F961602-866A-4305-8031-42597990C6AB" />
+              <desktop5:Verb Id="18PvZ2RemoteAndroidHelperMethodInvokeGroupCommand" Clsid="CD04E4D3-2224-14FC-C9DD-66D746408D62" />
             </desktop5:ItemType>
             <desktop5:ItemType Type="Directory">
               <desktop5:Verb Id="01LaunchMethodInvokeCommand" Clsid="A918A8A8-1436-43C5-99C1-9420D0D56D40" />
@@ -71,6 +72,7 @@
               <desktop5:Verb Id="15PopCapRSGPMethodInvokeGroupCommand" Clsid="95E74A50-81DC-48BA-A24B-E0AD30C75139" />
               <desktop5:Verb Id="16PopCapRSBMethodInvokeGroupCommand" Clsid="BCF8438E-67D1-4B7B-8649-78C46FAB4CFE" />
               <desktop5:Verb Id="17PvZ2LawnStringTextMethodInvokeGroupCommand" Clsid="3F961602-866A-4305-8031-42597990C6AB" />
+              <desktop5:Verb Id="18PvZ2RemoteAndroidHelperMethodInvokeGroupCommand" Clsid="CD04E4D3-2224-14FC-C9DD-66D746408D62" />
             </desktop5:ItemType>
           </desktop4:FileExplorerContextMenus>
         </desktop4:Extension>
@@ -126,6 +128,9 @@
             </com:SurrogateServer>
             <com:SurrogateServer>
               <com:Class Id="3F961602-866A-4305-8031-42597990C6AB" Path="Assets\Library\implement.dll" ThreadingModel="STA" />
+            </com:SurrogateServer>
+            <com:SurrogateServer>
+              <com:Class Id="CD04E4D3-2224-14FC-C9DD-66D746408D62" Path="Assets\Library\implement.dll" ThreadingModel="STA" />
             </com:SurrogateServer>
           </com:ComServer>
         </com:Extension>

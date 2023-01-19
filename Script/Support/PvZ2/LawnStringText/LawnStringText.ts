@@ -108,7 +108,7 @@ namespace TwinStar.Support.PvZ2.LawnStringText {
 				break;
 			}
 			case 'json_map': {
-				let dest = {
+				let destination = {
 					"version": 1n,
 					"objects": [
 						{
@@ -122,11 +122,11 @@ namespace TwinStar.Support.PvZ2.LawnStringText {
 						}
 					]
 				};
-				dest_data = Core.ByteArray.value(CoreX.JSON.write_js(dest)).release();
+				dest_data = Core.ByteArray.value(CoreX.JSON.write_js(destination)).release();
 				break;
 			}
 			case 'json_list': {
-				let dest = {
+				let destination = {
 					"version": 1n,
 					"objects": [
 						{
@@ -147,7 +147,7 @@ namespace TwinStar.Support.PvZ2.LawnStringText {
 						}
 					]
 				};
-				dest_data = Core.ByteArray.value(CoreX.JSON.write_js(dest)).release();
+				dest_data = Core.ByteArray.value(CoreX.JSON.write_js(destination)).release();
 				break;
 			}
 		}

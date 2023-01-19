@@ -41,7 +41,7 @@ namespace TwinStar.Entry.method.data.encode {
 						);
 					}
 					CoreX.Tool.Data.Encode.Base64.encode_fs(raw_file, ripe_file);
-					Console.notify('s', localized(`执行成功`), [`${ripe_file}`]);
+					Console.notify('s', los(`执行成功`), [`${ripe_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -79,7 +79,7 @@ namespace TwinStar.Entry.method.data.encode {
 						);
 					}
 					CoreX.Tool.Data.Encode.Base64.decode_fs(ripe_file, raw_file);
-					Console.notify('s', localized(`执行成功`), [`${raw_file}`]);
+					Console.notify('s', los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

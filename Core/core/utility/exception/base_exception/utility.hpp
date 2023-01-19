@@ -4,7 +4,7 @@
 
 #if defined M_system_windows
 #include "core/utility/string/encoding.hpp"
-#include "core/third_party/system/windows.hpp"
+#include "core/third/system/windows.hpp"
 #endif
 
 namespace TwinStar::Core {

@@ -3,7 +3,7 @@
 // TODO : refactor, use stream style api ?
 
 #include "core/utility/utility.hpp"
-#include "core/third_party/tinyxml2.hpp"
+#include "core/third/tinyxml2.hpp"
 
 namespace TwinStar::Core::Tool::Data::Serialization::XML {
 

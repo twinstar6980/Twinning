@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/utility/utility.hpp"
-#include "core/third_party/zlib.hpp"
+#include "core/third/zlib.hpp"
 
 namespace TwinStar::Core::Tool::Data::Compress::Deflate {
 

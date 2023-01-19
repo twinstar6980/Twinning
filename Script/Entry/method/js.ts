@@ -31,7 +31,7 @@ namespace TwinStar.Entry.method.js {
 						);
 					}
 					let result = CoreX.Miscellaneous.evaluate_fs(script_file);
-					Console.notify('s', localized(`执行成功`), [`${result}`]);
+					Console.notify('s', los(`执行成功`), [`${result}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

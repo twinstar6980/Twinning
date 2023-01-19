@@ -10,8 +10,8 @@ namespace TwinStar.Entry.method.popcap.ptx {
 		message: string,
 	): CoreX.Image.ImageSize {
 		Console.notify('i', message, []);
-		let width = Console.integer((value) => (value > 0n ? null : localized(`尺寸应大于零`)));
-		let height = Console.integer((value) => (value > 0n ? null : localized(`尺寸应大于零`)));
+		let width = Console.integer((value) => (value > 0n ? null : los(`尺寸应大于零`)));
+		let height = Console.integer((value) => (value > 0n ? null : los(`尺寸应大于零`)));
 		return [width, height];
 	}
 
@@ -58,11 +58,11 @@ namespace TwinStar.Entry.method.popcap.ptx {
 							(value) => (value),
 							null,
 							() => (Console.option(Support.PopCapTexture.Encode.FormatE.map((e) => ([e])), null)),
-							(value) => (Support.PopCapTexture.Encode.FormatE.includes(value as any) ? null : localized(`选项非法`)),
+							(value) => (Support.PopCapTexture.Encode.FormatE.includes(value as any) ? null : los(`选项非法`)),
 						);
 					}
 					Support.PopCapTexture.Encode.encode_fs(image_file, data_file, format);
-					Console.notify('s', localized(`执行成功`), [`${data_file}`]);
+					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -109,7 +109,7 @@ namespace TwinStar.Entry.method.popcap.ptx {
 							(value) => (value),
 							null,
 							() => (Console.option(Support.PopCapTexture.Encode.FormatE.map((e) => ([e])), null)),
-							(value) => (Support.PopCapTexture.Encode.FormatE.includes(value as any) ? null : localized(`选项非法`)),
+							(value) => (Support.PopCapTexture.Encode.FormatE.includes(value as any) ? null : los(`选项非法`)),
 						);
 						image_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'image_size'),
@@ -117,11 +117,11 @@ namespace TwinStar.Entry.method.popcap.ptx {
 							(value) => (value),
 							null,
 							() => (input_image_size(``)), // todo : fix empty message line
-							(value) => (value.length === 2 ? null : localized(`数组长度非法`)),
+							(value) => (value.length === 2 ? null : los(`数组长度非法`)),
 						);
 					}
 					Support.PopCapTexture.Encode.decode_fs(data_file, image_file, image_size, format);
-					Console.notify('s', localized(`执行成功`), [`${image_file}`]);
+					Console.notify('s', los(`执行成功`), [`${image_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

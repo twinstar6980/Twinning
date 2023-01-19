@@ -63,7 +63,7 @@ namespace TwinStar.Entry.method.popcap.rton {
 						);
 					}
 					CoreX.Tool.PopCap.RTON.encode_fs(data_file, value_file, true, true, buffer_size);
-					Console.notify('s', localized(`执行成功`), [`${data_file}`]);
+					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -102,7 +102,7 @@ namespace TwinStar.Entry.method.popcap.rton {
 						);
 					}
 					CoreX.Tool.PopCap.RTON.decode_fs(data_file, value_file);
-					Console.notify('s', localized(`执行成功`), [`${value_file}`]);
+					Console.notify('s', los(`执行成功`), [`${value_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -150,7 +150,7 @@ namespace TwinStar.Entry.method.popcap.rton {
 						);
 					}
 					CoreX.Tool.PopCap.RTON.encrypt_fs(plain_file, cipher_file, key);
-					Console.notify('s', localized(`执行成功`), [`${cipher_file}`]);
+					Console.notify('s', los(`执行成功`), [`${cipher_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -199,7 +199,7 @@ namespace TwinStar.Entry.method.popcap.rton {
 						);
 					}
 					CoreX.Tool.PopCap.RTON.decrypt_fs(cipher_file, plain_file, key);
-					Console.notify('s', localized(`执行成功`), [`${plain_file}`]);
+					Console.notify('s', los(`执行成功`), [`${plain_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -258,7 +258,7 @@ namespace TwinStar.Entry.method.popcap.rton {
 						);
 					}
 					CoreX.Tool.PopCap.RTON.encode_then_encrypt_fs(value_file, data_file, true, true, key, buffer_size);
-					Console.notify('s', localized(`执行成功`), [`${data_file}`]);
+					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -308,7 +308,7 @@ namespace TwinStar.Entry.method.popcap.rton {
 						);
 					}
 					CoreX.Tool.PopCap.RTON.decrypt_then_decode_fs(data_file, value_file, key);
-					Console.notify('s', localized(`执行成功`), [`${value_file}`]);
+					Console.notify('s', los(`执行成功`), [`${value_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -368,7 +368,7 @@ namespace TwinStar.Entry.method.popcap.rton {
 							CoreX.Tool.PopCap.RTON.encode_fs(rton_file, json_file, true, true, rton_data_buffer.view());
 						},
 					);
-					Console.notify('s', localized(`执行成功`), [`${data_file_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${data_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -415,7 +415,7 @@ namespace TwinStar.Entry.method.popcap.rton {
 							CoreX.Tool.PopCap.RTON.decode_fs(rton_file, json_file);
 						},
 					);
-					Console.notify('s', localized(`执行成功`), [`${value_file_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${value_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -471,7 +471,7 @@ namespace TwinStar.Entry.method.popcap.rton {
 							CoreX.Tool.PopCap.RTON.encrypt_fs(plain_file, cipher_file, key);
 						},
 					);
-					Console.notify('s', localized(`执行成功`), [`${cipher_file_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${cipher_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -528,7 +528,7 @@ namespace TwinStar.Entry.method.popcap.rton {
 							CoreX.Tool.PopCap.RTON.decrypt_fs(cipher_file, plain_file, key);
 						},
 					);
-					Console.notify('s', localized(`执行成功`), [`${plain_file_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${plain_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -596,7 +596,7 @@ namespace TwinStar.Entry.method.popcap.rton {
 							CoreX.Tool.PopCap.RTON.encode_then_encrypt_fs(json_file, rton_file, true, true, key, rton_data_buffer.view());
 						},
 					);
-					Console.notify('s', localized(`执行成功`), [`${data_file_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${data_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -654,7 +654,7 @@ namespace TwinStar.Entry.method.popcap.rton {
 							CoreX.Tool.PopCap.RTON.decrypt_then_decode_fs(rton_file, json_file, key);
 						},
 					);
-					Console.notify('s', localized(`执行成功`), [`${value_file_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${value_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

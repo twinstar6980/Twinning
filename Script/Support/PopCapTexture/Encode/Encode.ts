@@ -118,7 +118,7 @@ namespace TwinStar.Support.PopCapTexture.Encode {
 					if (option.rgb_etc1_a_8_index === null) {
 						throw new Error(`option is null`);
 					}
-					data_size = CoreX.Tool.Texture.compute_data_size(size, 'rgb_etc1') + CoreX.Tool.Misc.PvZ2CHSRSBTextureAlphaIndex.compute_data_size_with_index_list(size, option.rgb_etc1_a_8_index.index.length);
+					data_size = CoreX.Tool.Texture.compute_data_size(size, 'rgb_etc1') + CoreX.Tool.Miscellaneous.PvZ2CHSRSBTextureAlphaIndex.compute_data_size_with_index_list(size, option.rgb_etc1_a_8_index.index.length);
 					break;
 				}
 			}
@@ -147,7 +147,7 @@ namespace TwinStar.Support.PopCapTexture.Encode {
 						throw new Error(`option is null`);
 					}
 					CoreX.Tool.Texture.encode(data, image, 'rgb_etc1');
-					CoreX.Tool.Misc.PvZ2CHSRSBTextureAlphaIndex.encode_with_map(data, image, option.rgb_etc1_a_8_index.index);
+					CoreX.Tool.Miscellaneous.PvZ2CHSRSBTextureAlphaIndex.encode_with_map(data, image, option.rgb_etc1_a_8_index.index);
 					break;
 				}
 			}
@@ -172,7 +172,7 @@ namespace TwinStar.Support.PopCapTexture.Encode {
 				}
 				case 'rgb_etc1_a_8_index': {
 					CoreX.Tool.Texture.decode(data, image, 'rgb_etc1');
-					CoreX.Tool.Misc.PvZ2CHSRSBTextureAlphaIndex.decode_with_map(data, image);
+					CoreX.Tool.Miscellaneous.PvZ2CHSRSBTextureAlphaIndex.decode_with_map(data, image);
 					break;
 				}
 			}
@@ -197,7 +197,7 @@ namespace TwinStar.Support.PopCapTexture.Encode {
 		};
 		if (format === 'rgb_etc1_a_8_index') {
 			option.rgb_etc1_a_8_index = {
-				index: CoreX.Tool.Misc.PvZ2CHSRSBTextureAlphaIndex.evaluate_index_list(image_view),
+				index: CoreX.Tool.Miscellaneous.PvZ2CHSRSBTextureAlphaIndex.evaluate_index_list(image_view),
 			};
 		}
 		let data_size = compute_data_size(padded_image_size, format, option);

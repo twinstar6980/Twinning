@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/macro.hpp"
-#include "core/third_party/fmt.hpp"
+#include "core/third/fmt.hpp"
 
 #if defined __cpp_lib_source_location
 #include <source_location>

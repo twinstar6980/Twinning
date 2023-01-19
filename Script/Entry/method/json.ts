@@ -62,7 +62,7 @@ namespace TwinStar.Entry.method.json {
 					}
 					let json = CoreX.JSON.read_fs(source_file);
 					CoreX.JSON.write_fs(dest_file, json, disable_trailing_comma === null ? undefined : disable_trailing_comma, disable_array_wrap_line === null ? undefined : disable_array_wrap_line);
-					Console.notify('s', localized(`执行成功`), [`${dest_file}`]);
+					Console.notify('s', los(`执行成功`), [`${dest_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -133,7 +133,7 @@ namespace TwinStar.Entry.method.json {
 							CoreX.JSON.write_fs(dest_file, json, disable_trailing_comma === null ? undefined : disable_trailing_comma, disable_array_wrap_line === null ? undefined : disable_array_wrap_line);
 						},
 					);
-					Console.notify('s', localized(`执行成功`), [`${dest_file_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${dest_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

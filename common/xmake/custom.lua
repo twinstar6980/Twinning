@@ -1,4 +1,4 @@
----@diagnostic disable: lowercase-global
+
 
 function create_m()
 	return {

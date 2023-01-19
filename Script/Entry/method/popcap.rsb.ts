@@ -130,11 +130,11 @@ namespace TwinStar.Entry.method.popcap.rsb {
 							(value) => (value),
 							null,
 							() => (Console.option([
-								[RSBPackAndUnpackModeE[0], localized(`群组：按群+子群树形结构导入，资源与子包均导入自group/<群名>/<子群名>目录`)],
-								[RSBPackAndUnpackModeE[1], localized(`子群：按子群树形结构导入，资源与子包均导入自subgroup/<子群名>目录`)],
-								[RSBPackAndUnpackModeE[2], localized(`资源：所有资源导入自resource目录，所有子包导入自packet目录`)],
+								[RSBPackAndUnpackModeE[0], los(`群组：按群+子群树形结构导入，资源与子包均导入自group/<群名>/<子群名>目录`)],
+								[RSBPackAndUnpackModeE[1], los(`子群：按子群树形结构导入，资源与子包均导入自subgroup/<子群名>目录`)],
+								[RSBPackAndUnpackModeE[2], los(`资源：所有资源导入自resource目录，所有子包导入自packet目录`)],
 							], null)),
-							(value) => (RSBPackAndUnpackModeE.includes(value as any) ? null : localized(`选项非法`)),
+							(value) => (RSBPackAndUnpackModeE.includes(value as any) ? null : los(`选项非法`)),
 						);
 						version_number = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_number'),
@@ -142,7 +142,7 @@ namespace TwinStar.Entry.method.popcap.rsb {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, null, null, null, [3n, ''], [4n, '']], null)),
-							(value) => ([3n, 4n].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => ([3n, 4n].includes(value) ? null : los(`版本不受支持`)),
 						);
 						version_additional_texture_information_for_pvz_2_chinese_android = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_additional_texture_information_for_pvz_2_chinese_android'),
@@ -150,7 +150,7 @@ namespace TwinStar.Entry.method.popcap.rsb {
 							(value) => (value),
 							null,
 							() => (Console.integer(null)),
-							(value) => ([0n, 1n, 2n].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => ([0n, 1n, 2n].includes(value) ? null : los(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
@@ -184,7 +184,7 @@ namespace TwinStar.Entry.method.popcap.rsb {
 					let packet_file = !input_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
 					let new_packet_file = !output_new_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
 					CoreX.Tool.PopCap.RSB.pack_fs(data_file, manifest_file, description_file, resource_directory, packet_file, new_packet_file, { number: version_number, additional_texture_information_for_pvz_2_chinese_android: version_additional_texture_information_for_pvz_2_chinese_android }, buffer_size);
-					Console.notify('s', localized(`执行成功`), [`${data_file}`]);
+					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -242,11 +242,11 @@ namespace TwinStar.Entry.method.popcap.rsb {
 							(value) => (value),
 							null,
 							() => (Console.option([
-								[RSBPackAndUnpackModeE[0], localized(`群组：按群+子群树形结构导出，资源与子包均导出至group/<群名>/<子群名>目录`)],
-								[RSBPackAndUnpackModeE[1], localized(`子群：按子群树形结构导出，资源与子包均导出至subgroup/<子群名>目录`)],
-								[RSBPackAndUnpackModeE[2], localized(`资源：所有资源导出至resource目录，所有子包导出至packet目录`)],
+								[RSBPackAndUnpackModeE[0], los(`群组：按群+子群树形结构导出，资源与子包均导出至group/<群名>/<子群名>目录`)],
+								[RSBPackAndUnpackModeE[1], los(`子群：按子群树形结构导出，资源与子包均导出至subgroup/<子群名>目录`)],
+								[RSBPackAndUnpackModeE[2], los(`资源：所有资源导出至resource目录，所有子包导出至packet目录`)],
 							], null)),
-							(value) => (RSBPackAndUnpackModeE.includes(value as any) ? null : localized(`选项非法`)),
+							(value) => (RSBPackAndUnpackModeE.includes(value as any) ? null : los(`选项非法`)),
 						);
 						version_number = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_number'),
@@ -254,7 +254,7 @@ namespace TwinStar.Entry.method.popcap.rsb {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, null, null, null, [3n, ''], [4n, '']], null)),
-							(value) => ([3n, 4n].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => ([3n, 4n].includes(value) ? null : los(`版本不受支持`)),
 						);
 						version_additional_texture_information_for_pvz_2_chinese_android = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_additional_texture_information_for_pvz_2_chinese_android'),
@@ -262,7 +262,7 @@ namespace TwinStar.Entry.method.popcap.rsb {
 							(value) => (value),
 							null,
 							() => (Console.integer(null)),
-							(value) => ([0n, 1n, 2n].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => ([0n, 1n, 2n].includes(value) ? null : los(`版本不受支持`)),
 						);
 						output_resource = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'output_resource'),
@@ -287,7 +287,7 @@ namespace TwinStar.Entry.method.popcap.rsb {
 					let resource_directory = !output_resource ? null : `${bundle_directory}/${relative_path.resource_directory}`;
 					let packet_file = !output_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
 					CoreX.Tool.PopCap.RSB.unpack_fs(data_file, manifest_file, description_file, resource_directory, packet_file, { number: version_number, additional_texture_information_for_pvz_2_chinese_android: version_additional_texture_information_for_pvz_2_chinese_android });
-					Console.notify('s', localized(`执行成功`), [`${bundle_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -345,7 +345,7 @@ namespace TwinStar.Entry.method.popcap.rsb {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, null, null, null, [3n, ''], [4n, '']], null)),
-							(value) => ([3n, 4n].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => ([3n, 4n].includes(value) ? null : los(`版本不受支持`)),
 						);
 						version_additional_texture_information_for_pvz_2_chinese_android = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_additional_texture_information_for_pvz_2_chinese_android'),
@@ -353,7 +353,7 @@ namespace TwinStar.Entry.method.popcap.rsb {
 							(value) => (value),
 							null,
 							() => (Console.integer(null)),
-							(value) => ([0n, 1n, 2n].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => ([0n, 1n, 2n].includes(value) ? null : los(`版本不受支持`)),
 						);
 						let extract_directory = `${bundle_directory}/extract`;
 						{
@@ -425,7 +425,7 @@ namespace TwinStar.Entry.method.popcap.rsb {
 										(value) => (value),
 										null,
 										() => (Console.option(map_name_list.map((e) => ([e])), null)),
-										(value) => (map_name_list.includes(value) ? null : localized(`选项非法`)),
+										(value) => (map_name_list.includes(value) ? null : los(`选项非法`)),
 									);
 									option.image.texture_format_map = a.option.image_texture_format_map_list[texture_format_map_name];
 								}
@@ -522,9 +522,9 @@ namespace TwinStar.Entry.method.popcap.rsb {
 								option.audio = {
 									directory: extract_directory,
 									tool: {
-										ffmpeg_program: Main.path_at_home(a.option.audio_tool.ffmpeg_program),
-										ww2ogg_program: Main.path_at_home(a.option.audio_tool.ww2ogg_program),
-										ww2ogg_code_book: Main.path_at_home(a.option.audio_tool.ww2ogg_code_book),
+										ffmpeg_program: HomeDirectory.of(a.option.audio_tool.ffmpeg_program),
+										ww2ogg_program: HomeDirectory.of(a.option.audio_tool.ww2ogg_program),
+										ww2ogg_code_book: HomeDirectory.of(a.option.audio_tool.ww2ogg_code_book),
 									},
 								};
 							}
@@ -539,7 +539,7 @@ namespace TwinStar.Entry.method.popcap.rsb {
 						version_number,
 						version_additional_texture_information_for_pvz_2_chinese_android,
 					);
-					Console.notify('s', localized(`执行成功`), [`${bundle_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

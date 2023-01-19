@@ -3,7 +3,7 @@ namespace TwinStar.Script.JSShell {
 
 	export function execute(
 	): void {
-		Console.notify('i', localized(`JS交互模式已开启`), [localized(`输入为空则完成一轮输入，若一轮输入为空则结束交互`)]);
+		Console.notify('i', los(`JS交互模式已开启`), [los(`输入为空则完成一轮输入，若一轮输入为空则结束交互`)]);
 		while (true) {
 			let script = '';
 			while (true) {

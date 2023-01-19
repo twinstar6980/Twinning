@@ -84,9 +84,9 @@ namespace TwinStar.Executor {
 			selected_method = target_method;
 		} else {
 			if (command.input === null) {
-				Console.notify('i', localized(`此条命令未提供输入值，请输入`), []);
+				Console.notify('i', los(`此条命令未提供输入值，请输入`), []);
 				let input_value = Console.string(null);
-				Console.notify('i', localized(`此条命令是否需禁用功能过滤`), []);
+				Console.notify('i', los(`此条命令是否需禁用功能过滤`), []);
 				let input_disable_filter = Console.confirm(null);
 				command.input = {
 					value: input_value,
@@ -98,10 +98,10 @@ namespace TwinStar.Executor {
 				method_state[i] = command.input.disable_filter || method[i].input_filter(command.input.value);
 			}
 			if (!method_state.includes(true)) {
-				Console.notify('w', localized(`未筛选到可选的功能，故跳过此条命令`), []);
+				Console.notify('w', los(`未筛选到可选的功能，故跳过此条命令`), []);
 				selected_method = null;
 			} else {
-				Console.notify('i', localized(`请选择需要应用的功能`), [localized(`输入为空则跳过此条命令`)]);
+				Console.notify('i', los(`请选择需要应用的功能`), [los(`输入为空则跳过此条命令`)]);
 				selected_method = Console.option(method_state.map((e, i) => (e ? [method[i], `${method[i].descriptor()}`] : null)), null, true);
 			}
 		}

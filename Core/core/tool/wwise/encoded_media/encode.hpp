@@ -62,27 +62,24 @@ namespace TwinStar::Core::Tool::Wwise::EncodedMedia {
 		) -> Void {
 			auto external_program_execute_result = IntegerU32{};
 			struct {
-				Path ww2ogg_input;
-				Path ffmpeg_input;
 				Path ffmpeg_output;
-				Path ffmpeg_redirect_output;
-				Path ffmpeg_redirect_error;
-				Path ww2ogg_redirect_output;
-				Path ww2ogg_redirect_error;
+				Path ffmpeg_error;
+				Path ww2ogg_output;
+				Path ffmpeg_input_audio;
+				Path ffmpeg_output_audio;
+				Path ww2ogg_input_audio;
 			}
 				temporary_file = {
-					.ww2ogg_input = temporary_directory / "ww2ogg_input"_s,
-					.ffmpeg_input = temporary_directory / "ffmpeg_input"_s,
 					.ffmpeg_output = temporary_directory / "ffmpeg_output"_s,
-					.ffmpeg_redirect_output = temporary_directory / "ffmpeg_redirect_output"_s,
-					.ffmpeg_redirect_error = temporary_directory / "ffmpeg_redirect_error"_s,
-					.ww2ogg_redirect_output = temporary_directory / "ww2ogg_redirect_output"_s,
-					.ww2ogg_redirect_error = temporary_directory / "ww2ogg_redirect_error"_s,
+					.ffmpeg_error = temporary_directory / "ffmpeg_error"_s,
+					.ww2ogg_output = temporary_directory / "ww2ogg_output"_s,
+					.ffmpeg_input_audio = temporary_directory / "ffmpeg_input_audio"_s,
+					.ffmpeg_output_audio = temporary_directory / "ffmpeg_output_audio"_s,
+					.ww2ogg_input_audio = temporary_directory / "ww2ogg_input_audio"_s,
 				};
-			FileSystem::create_file(temporary_file.ffmpeg_redirect_output);
-			FileSystem::create_file(temporary_file.ffmpeg_redirect_error);
-			FileSystem::create_file(temporary_file.ww2ogg_redirect_output);
-			FileSystem::create_file(temporary_file.ww2ogg_redirect_error);
+			FileSystem::create_file(temporary_file.ffmpeg_output);
+			FileSystem::create_file(temporary_file.ffmpeg_error);
+			FileSystem::create_file(temporary_file.ww2ogg_output);
 			auto subchunk_location = [&] {
 				auto it = Map<FourCC, Tuple<Size, Size>>{};
 				auto ripe_stream = IByteStreamView{ripe};
@@ -143,28 +140,30 @@ namespace TwinStar::Core::Tool::Wwise::EncodedMedia {
 							.size = cbw<IntegerU32>(real_ripe_stream.position() - bs_static_size<WaveStructure::ChunkSign>()),
 						}
 					);
-					FileSystem::write_file(temporary_file.ffmpeg_input, real_ripe);
-					external_program_execute_result = System::execute(
+					FileSystem::write_file(temporary_file.ffmpeg_input_audio, real_ripe);
+					external_program_execute_result = Process::execute(
 						ffmpeg_program,
 						make_list<String>(
 							"-v"_sv,
 							"warning"_sv,
 							"-y"_sv,
 							"-i"_sv,
-							temporary_file.ffmpeg_input.to_string(),
+							temporary_file.ffmpeg_input_audio.to_string(),
 							"-f"_sv,
 							"wav"_sv,
 							"-bitexact"_sv,
-							temporary_file.ffmpeg_output.to_string()
+							temporary_file.ffmpeg_output_audio.to_string()
+						),
+						make_list<String>(
 						),
 						k_null_optional,
-						make_optional_of(temporary_file.ffmpeg_redirect_output),
-						make_optional_of(temporary_file.ffmpeg_redirect_error)
+						make_optional_of(temporary_file.ffmpeg_output),
+						make_optional_of(temporary_file.ffmpeg_error)
 					);
 					assert_condition(external_program_execute_result == 0x00000000_iu32);
-					raw = FileSystem::read_file(temporary_file.ffmpeg_output);
-					FileSystem::remove(temporary_file.ffmpeg_input);
-					FileSystem::remove(temporary_file.ffmpeg_output);
+					raw = FileSystem::read_file(temporary_file.ffmpeg_output_audio);
+					FileSystem::remove(temporary_file.ffmpeg_input_audio);
+					FileSystem::remove(temporary_file.ffmpeg_output_audio);
 					break;
 				}
 				case AudioFormatFlag::adpcm.value : {
@@ -207,93 +206,101 @@ namespace TwinStar::Core::Tool::Wwise::EncodedMedia {
 							.size = cbw<IntegerU32>(real_ripe_stream.position() - bs_static_size<WaveStructure::ChunkSign>()),
 						}
 					);
-					FileSystem::write_file(temporary_file.ffmpeg_input, real_ripe);
-					external_program_execute_result = System::execute(
+					FileSystem::write_file(temporary_file.ffmpeg_input_audio, real_ripe);
+					external_program_execute_result = Process::execute(
 						ffmpeg_program,
 						make_list<String>(
 							"-v"_sv,
 							"warning"_sv,
 							"-y"_sv,
 							"-i"_sv,
-							temporary_file.ffmpeg_input.to_string(),
+							temporary_file.ffmpeg_input_audio.to_string(),
 							"-f"_sv,
 							"wav"_sv,
 							"-bitexact"_sv,
-							temporary_file.ffmpeg_output.to_string()
+							temporary_file.ffmpeg_output_audio.to_string()
+						),
+						make_list<String>(
 						),
 						k_null_optional,
-						make_optional_of(temporary_file.ffmpeg_redirect_output),
-						make_optional_of(temporary_file.ffmpeg_redirect_error)
+						make_optional_of(temporary_file.ffmpeg_output),
+						make_optional_of(temporary_file.ffmpeg_error)
 					);
 					assert_condition(external_program_execute_result == 0x00000000_iu32);
-					raw = FileSystem::read_file(temporary_file.ffmpeg_output);
-					FileSystem::remove(temporary_file.ffmpeg_input);
-					FileSystem::remove(temporary_file.ffmpeg_output);
+					raw = FileSystem::read_file(temporary_file.ffmpeg_output_audio);
+					FileSystem::remove(temporary_file.ffmpeg_input_audio);
+					FileSystem::remove(temporary_file.ffmpeg_output_audio);
 					break;
 				}
 				case AudioFormatFlag::aac.value : {
-					FileSystem::write_file(temporary_file.ffmpeg_input, data);
-					external_program_execute_result = System::execute(
+					FileSystem::write_file(temporary_file.ffmpeg_input_audio, data);
+					external_program_execute_result = Process::execute(
 						ffmpeg_program,
 						make_list<String>(
 							"-v"_sv,
 							"warning"_sv,
 							"-y"_sv,
 							"-i"_sv,
-							temporary_file.ffmpeg_input.to_string(),
+							temporary_file.ffmpeg_input_audio.to_string(),
 							"-f"_sv,
 							"wav"_sv,
 							"-bitexact"_sv,
-							temporary_file.ffmpeg_output.to_string()
+							temporary_file.ffmpeg_output_audio.to_string()
+						),
+						make_list<String>(
 						),
 						k_null_optional,
-						make_optional_of(temporary_file.ffmpeg_redirect_output),
-						make_optional_of(temporary_file.ffmpeg_redirect_error)
+						make_optional_of(temporary_file.ffmpeg_output),
+						make_optional_of(temporary_file.ffmpeg_error)
 					);
 					assert_condition(external_program_execute_result == 0x00000000_iu32);
-					raw = FileSystem::read_file(temporary_file.ffmpeg_output);
-					FileSystem::remove(temporary_file.ffmpeg_input);
-					FileSystem::remove(temporary_file.ffmpeg_output);
+					raw = FileSystem::read_file(temporary_file.ffmpeg_output_audio);
+					FileSystem::remove(temporary_file.ffmpeg_input_audio);
+					FileSystem::remove(temporary_file.ffmpeg_output_audio);
 					break;
 				}
 				case AudioFormatFlag::vorbis.value : {
-					FileSystem::write_file(temporary_file.ww2ogg_input, ripe);
-					external_program_execute_result = System::execute(
+					FileSystem::write_file(temporary_file.ww2ogg_input_audio, ripe);
+					external_program_execute_result = Process::execute(
 						ww2ogg_program,
 						make_list<String>(
 							"--pcb"_sv,
 							ww2ogg_code_book.to_string(),
-							temporary_file.ww2ogg_input.to_string(),
+							temporary_file.ww2ogg_input_audio.to_string(),
 							"-o"_sv,
-							temporary_file.ffmpeg_input.to_string()
+							temporary_file.ffmpeg_input_audio.to_string()
+						),
+						make_list<String>(
 						),
 						k_null_optional,
-						make_optional_of(temporary_file.ww2ogg_redirect_output),
-						make_optional_of(temporary_file.ww2ogg_redirect_error)
+						make_optional_of(temporary_file.ww2ogg_output),
+						k_null_optional
 					);
 					assert_condition(external_program_execute_result == 0x00000000_iu32);
-					external_program_execute_result = System::execute(
+					external_program_execute_result = Process::execute(
 						ffmpeg_program,
 						make_list<String>(
 							"-v"_sv,
 							"warning"_sv,
 							"-y"_sv,
 							"-i"_sv,
-							temporary_file.ffmpeg_input.to_string(),
+							temporary_file.ffmpeg_input_audio.to_string(),
 							"-f"_sv,
 							"wav"_sv,
 							"-bitexact"_sv,
-							temporary_file.ffmpeg_output.to_string()
+							temporary_file.ffmpeg_output_audio.to_string()
+						),
+						make_list<String>(
 						),
 						k_null_optional,
-						make_optional_of(temporary_file.ffmpeg_redirect_output),
-						make_optional_of(temporary_file.ffmpeg_redirect_error)
+						make_optional_of(temporary_file.ffmpeg_output),
+						make_optional_of(temporary_file.ffmpeg_error)
 					);
 					assert_condition(external_program_execute_result == 0x00000000_iu32);
-					raw = FileSystem::read_file(temporary_file.ffmpeg_output);
-					FileSystem::remove(temporary_file.ww2ogg_input);
-					FileSystem::remove(temporary_file.ffmpeg_input);
-					FileSystem::remove(temporary_file.ffmpeg_output);
+					raw = FileSystem::read_file(temporary_file.ffmpeg_output_audio);
+					FileSystem::remove(temporary_file.ww2ogg_input_audio);
+					FileSystem::remove(temporary_file.ffmpeg_input_audio);
+					FileSystem::remove(temporary_file.ffmpeg_output_audio);
 					break;
 				}
 				default : {

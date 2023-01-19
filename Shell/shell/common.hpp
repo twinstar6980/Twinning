@@ -17,10 +17,10 @@
 #include <iostream>
 
 #if defined M_system_windows
-#include "shell/third_party/system/windows.hpp"
+#include "shell/third/system/windows.hpp"
 #endif
 #if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-#include "shell/third_party/system/posix.hpp"
+#include "shell/third/system/posix.hpp"
 #endif
 
 #define thiz (*this)

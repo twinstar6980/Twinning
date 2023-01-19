@@ -108,4 +108,39 @@ namespace TwinStar.PathUtility {
 
 	// ------------------------------------------------
 
+	/**
+	 * 获取路径字符串的父目录
+	 * @param source 源串
+	 * @returns 父目录
+	 */
+	export function parent(
+		source: string,
+	): null | string {
+		return split_pair(source)[0];
+	}
+
+	/**
+	 * 获取路径字符串的名称
+	 * @param source 源串
+	 * @returns 名称
+	 */
+	export function name(
+		source: string,
+	): string {
+		return split_pair(source)[1];
+	}
+
+	/**
+	 * 获取路径字符串的拓展名
+	 * @param source 源串
+	 * @returns 拓展名
+	 */
+	export function extension(
+		source: string,
+	): null | string {
+		return split_extension(source)[1];
+	}
+
+	// ------------------------------------------------
+
 }

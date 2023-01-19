@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/utility/utility.hpp"
-#include "core/third_party/lzma.hpp"
+#include "core/third/lzma.hpp"
 
 namespace TwinStar::Core::Tool::Data::Compress::Lzma {
 

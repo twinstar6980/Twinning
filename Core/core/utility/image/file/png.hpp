@@ -4,7 +4,7 @@
 
 #include "core/utility/image/bitmap.hpp"
 #include "core/utility/file_system/file_system.hpp"
-#include "core/third_party/libpng.hpp"
+#include "core/third/libpng.hpp"
 
 namespace TwinStar::Core::Image::File::PNG {
 

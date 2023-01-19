@@ -45,7 +45,7 @@ namespace TwinStar.Executor {
 	export function query_method_description(
 		method: string,
 	): string {
-		return localized(`method#${method}:description`);
+		return los(`method#${method}:description`);
 	}
 
 	// ------------------------------------------------

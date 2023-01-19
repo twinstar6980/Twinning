@@ -6,7 +6,7 @@ namespace TwinStar.Console {
 	/**
 	 * 消息分类
 	 * + Verbose     常规
-	 * + Information 消息
+	 * + Information 信息
 	 * + Warning     警告
 	 * + Error       错误
 	 * + Success     成功
@@ -89,7 +89,7 @@ namespace TwinStar.Console {
 			printer(input);
 			let check_result: string | null;
 			if (input === null) {
-				check_result = nullable ? null : localized(`不可为空`);
+				check_result = nullable ? null : los(`不可为空`);
 			} else {
 				check_result = checker === null ? null : checker(input);
 			}
@@ -97,7 +97,7 @@ namespace TwinStar.Console {
 				result = input;
 				break;
 			}
-			notify('w', localized(`输入无效，请重新输入`), [`${check_result}`]);
+			notify('w', los(`输入无效，请重新输入`), [`${check_result}`]);
 		}
 		return result;
 	}
@@ -208,17 +208,17 @@ namespace TwinStar.Console {
 		if (Shell.is_cli) {
 			cli_set_message_text_attribute('t');
 			if (Shell.is_windows) {
-				cli_basic_output(`P ${localized(`键入以继续 ...`)} `, true, 0, false);
-				CoreX.System.system(`pause > nul`);
+				cli_basic_output(`P ${los(`键入以继续 ...`)} `, true, 0, false);
+				CoreX.Process.system(`pause > NUL`);
 				Shell.cli_output('\n');
 			}
 			if (Shell.is_linux || Shell.is_macintosh || Shell.is_android || Shell.is_iphone) {
 				if (CoreX.FileSystem.exist_file(`/bin/bash`)) {
-					cli_basic_output(`P ${localized(`键入以继续 ...`)} `, true, 0, false);
-					CoreX.System.execute(`/bin/bash`, [`-c`, `read -s -n 1 _`], null, null, null);
+					cli_basic_output(`P ${los(`键入以继续 ...`)} `, true, 0, false);
+					CoreX.Process.execute(`/bin/bash`, [`-c`, `read -s -n 1 _`], [], null, null, null);
 					Shell.cli_output('\n');
 				} else {
-					cli_basic_output(`P ${localized(`键入回车以继续 ...`)} `, true, 0, false);
+					cli_basic_output(`P ${los(`键入回车以继续 ...`)} `, true, 0, false);
 					Shell.cli_input();
 				}
 			}
@@ -226,7 +226,7 @@ namespace TwinStar.Console {
 		}
 		if (Shell.is_gui) {
 			Shell.gui_input_pause();
-			gui_basic_output('t', `P ${localized(`响应以继续 ...`)} `, []);
+			gui_basic_output('t', `P ${los(`响应以继续 ...`)} `, []);
 		}
 		return;
 	}
@@ -253,7 +253,7 @@ namespace TwinStar.Console {
 				(value) => {
 					let regexp_check_result = Check.enumeration_checkerx(['n', 'y'])(value);
 					if (regexp_check_result !== null) {
-						return localized(`确认值格式非法，须为 n 或 y`);
+						return los(`确认值格式非法，须为 n 或 y`);
 					}
 					return checker === null ? null : checker(parse_confirm_string(value));
 				},
@@ -302,7 +302,7 @@ namespace TwinStar.Console {
 				(value) => {
 					let regexp_check_result = Check.regexp_checkerx(/^(\+|\-)?(\d+)(\.\d*)?$/)(value);
 					if (regexp_check_result !== null) {
-						return localized(`数字格式非法，{}`, regexp_check_result);
+						return los(`数字格式非法，{}`, regexp_check_result);
 					}
 					return checker === null ? null : checker(Number.parseFloat(value));
 				},
@@ -351,7 +351,7 @@ namespace TwinStar.Console {
 				(value) => {
 					let regexp_check_result = Check.regexp_checkerx(/^(\+|\-)?(\d+)$/)(value);
 					if (regexp_check_result !== null) {
-						return localized(`整数格式非法，{}`, regexp_check_result);
+						return los(`整数格式非法，{}`, regexp_check_result);
 					}
 					return checker === null ? null : checker(BigInt(value));
 				},
@@ -400,7 +400,7 @@ namespace TwinStar.Console {
 				(value) => {
 					let regexp_check_result = Check.regexp_checkerx(/^(\d+)(\.\d*)?(b|k|m|g)$/)(value);
 					if (regexp_check_result !== null) {
-						return localized(`尺寸格式非法，{}`, regexp_check_result);
+						return los(`尺寸格式非法，{}`, regexp_check_result);
 					}
 					return checker === null ? null : checker(parse_size_string(value));
 				},
@@ -515,11 +515,11 @@ namespace TwinStar.Console {
 				(value) => {
 					let regexp_check_result = Check.regexp_checkerx(/^(\+|\-)?(\d+)$/)(value);
 					if (regexp_check_result !== null) {
-						return localized(`整数格式非法，{}`, regexp_check_result);
+						return los(`整数格式非法，{}`, regexp_check_result);
 					}
 					let value_integer = BigInt(value);
 					if (!option_index_discretized.has(value_integer)) {
-						return localized(`输入项不在可选项中`);
+						return los(`输入项不在可选项中`);
 					}
 					return checker === null ? null : checker((option[option_index_discretized.get(value_integer)!] as [Value, string?])[0]);
 				},

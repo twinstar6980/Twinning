@@ -48,11 +48,11 @@ namespace TwinStar.Entry.method.data.encrypt {
 							(value) => (value),
 							null,
 							() => (Console.integer(null)),
-							(value) => (0x00n <= value && value <= 0xFFn ? null : localized(`范围溢出`)),
+							(value) => (0x00n <= value && value <= 0xFFn ? null : los(`范围溢出`)),
 						);
 					}
 					CoreX.Tool.Data.Encrypt.XOR.encrypt_fs(plain_file, cipher_file, key);
-					Console.notify('s', localized(`执行成功`), [`${cipher_file}`]);
+					Console.notify('s', los(`执行成功`), [`${cipher_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -103,7 +103,7 @@ namespace TwinStar.Entry.method.data.encrypt {
 							(value) => (value),
 							null,
 							() => (Console.option(CoreX.Tool.Data.Encrypt.Rijndael.ModeE.map((e) => ([e])), null)),
-							(value) => (CoreX.Tool.Data.Encrypt.Rijndael.ModeE.includes(value as any) ? null : localized(`选项非法`)),
+							(value) => (CoreX.Tool.Data.Encrypt.Rijndael.ModeE.includes(value as any) ? null : los(`选项非法`)),
 						);
 						block_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'block_size'),
@@ -111,7 +111,7 @@ namespace TwinStar.Entry.method.data.encrypt {
 							(value) => (value),
 							null,
 							() => (Console.option(CoreX.Tool.Data.Encrypt.Rijndael.BlockSizeE.map((e) => ([e])), null)),
-							(value) => (CoreX.Tool.Data.Encrypt.Rijndael.BlockSizeE.includes(value as any) ? null : localized(`选项非法`)),
+							(value) => (CoreX.Tool.Data.Encrypt.Rijndael.BlockSizeE.includes(value as any) ? null : los(`选项非法`)),
 						);
 						key = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'key'),
@@ -119,7 +119,7 @@ namespace TwinStar.Entry.method.data.encrypt {
 							(value) => (value),
 							null,
 							() => (Console.string(null)),
-							(value) => (CoreX.Tool.Data.Encrypt.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : localized(`密钥长度非法`)),
+							(value) => (CoreX.Tool.Data.Encrypt.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : los(`密钥长度非法`)),
 						);
 						if (mode === 'cbc' || mode === 'cfb') {
 							iv = Executor.request_argument(
@@ -128,14 +128,14 @@ namespace TwinStar.Entry.method.data.encrypt {
 								(value) => (value),
 								null,
 								() => (Console.string(null)),
-								(value) => (value.length === Number(block_size) ? null : localized(`长度不匹配`)),
+								(value) => (value.length === Number(block_size) ? null : los(`长度不匹配`)),
 							);
 						} else {
 							iv = '';
 						}
 					}
 					CoreX.Tool.Data.Encrypt.Rijndael.encrypt_fs(plain_file, cipher_file, mode, block_size, BigInt(key.length) as CoreX.Tool.Data.Encrypt.Rijndael.BlockSize, key, iv);
-					Console.notify('s', localized(`执行成功`), [`${cipher_file}`]);
+					Console.notify('s', los(`执行成功`), [`${cipher_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -189,7 +189,7 @@ namespace TwinStar.Entry.method.data.encrypt {
 							(value) => (value),
 							null,
 							() => (Console.option(CoreX.Tool.Data.Encrypt.Rijndael.ModeE.map((e) => ([e])), null)),
-							(value) => (CoreX.Tool.Data.Encrypt.Rijndael.ModeE.includes(value as any) ? null : localized(`选项非法`)),
+							(value) => (CoreX.Tool.Data.Encrypt.Rijndael.ModeE.includes(value as any) ? null : los(`选项非法`)),
 						);
 						block_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'block_size'),
@@ -197,7 +197,7 @@ namespace TwinStar.Entry.method.data.encrypt {
 							(value) => (value),
 							null,
 							() => (Console.option(CoreX.Tool.Data.Encrypt.Rijndael.BlockSizeE.map((e) => ([e])), null)),
-							(value) => (CoreX.Tool.Data.Encrypt.Rijndael.BlockSizeE.includes(value as any) ? null : localized(`选项非法`)),
+							(value) => (CoreX.Tool.Data.Encrypt.Rijndael.BlockSizeE.includes(value as any) ? null : los(`选项非法`)),
 						);
 						key = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'key'),
@@ -205,7 +205,7 @@ namespace TwinStar.Entry.method.data.encrypt {
 							(value) => (value),
 							null,
 							() => (Console.string(null)),
-							(value) => (CoreX.Tool.Data.Encrypt.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : localized(`密钥长度非法`)),
+							(value) => (CoreX.Tool.Data.Encrypt.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : los(`密钥长度非法`)),
 						);
 						if (mode === 'cbc' || mode === 'cfb') {
 							iv = Executor.request_argument(
@@ -214,14 +214,14 @@ namespace TwinStar.Entry.method.data.encrypt {
 								(value) => (value),
 								null,
 								() => (Console.string(null)),
-								(value) => (value.length === Number(block_size) ? null : localized(`长度不匹配`)),
+								(value) => (value.length === Number(block_size) ? null : los(`长度不匹配`)),
 							);
 						} else {
 							iv = '';
 						}
 					}
 					CoreX.Tool.Data.Encrypt.Rijndael.decrypt_fs(cipher_file, plain_file, mode, block_size, BigInt(key.length) as CoreX.Tool.Data.Encrypt.Rijndael.BlockSize, key, iv);
-					Console.notify('s', localized(`执行成功`), [`${plain_file}`]);
+					Console.notify('s', los(`执行成功`), [`${plain_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

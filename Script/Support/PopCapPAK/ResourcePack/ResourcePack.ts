@@ -29,12 +29,12 @@ namespace TwinStar.Support.PopCapPAK.ResourcePack {
 			data_size_bound += (1 + 1 + resource.length + 4 + 4 + 8) + (Number(resource_size) + 16); // resource information + resource data
 		}
 		data_size_bound += 1; // list done flag
-		Console.notify('i', localized(`打包开始`), [localized(`共 {} 个资源文件`, resource_list.length)]);
+		Console.notify('i', los(`打包开始`), [los(`共 {} 个资源文件`, resource_list.length)]);
 		let data = Core.ByteArray.allocate(Core.Size.value(BigInt(data_size_bound)));
 		let stream = Core.ByteStreamView.look(data.view());
 		let manifest = Core.Tool.PopCap.PAK.Manifest.Package.json(Core.JSON.Value.value(manifest_js), version_c);
 		Core.Tool.PopCap.PAK.Pack.process_package(stream, manifest, Core.Path.value(resource_directory), version_c);
-		Console.notify('s', localized(`打包完成`), []);
+		Console.notify('s', los(`打包完成`), []);
 		return [data, stream.position()];
 	}
 

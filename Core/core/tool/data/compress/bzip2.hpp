@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/utility/utility.hpp"
-#include "core/third_party/bzip2.hpp"
+#include "core/third/bzip2.hpp"
 
 namespace TwinStar::Core::Tool::Data::Compress::BZip2 {
 

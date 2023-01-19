@@ -72,17 +72,17 @@ namespace TwinStar.Entry.method.wwise.encoded_media {
 							...Executor.argument_requester_for_path('file', [true]),
 						);
 					}
-					let temporary_directpry = Entry.temporary();
+					let temporary_directpry = HomeDirectory.new_temporary();
 					CoreX.Tool.Wwise.EncodedMedia.decode_fs(ripe_file, raw_file, tool_ffmpeg_program_file, tool_ww2ogg_program_file, tool_ww2ogg_code_book_file, temporary_directpry);
-					Console.notify('s', localized(`执行成功`), [`${raw_file}`]);
+					Console.notify('s', los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
 					ripe_file: undefined!,
 					raw_file: '?default',
-					tool_ffmpeg_program_file: Main.path_at_home(config.tool.ffmpeg_program),
-					tool_ww2ogg_program_file: Main.path_at_home(config.tool.ww2ogg_program),
-					tool_ww2ogg_code_book_file: Main.path_at_home(config.tool.ww2ogg_code_book),
+					tool_ffmpeg_program_file: HomeDirectory.of(config.tool.ffmpeg_program),
+					tool_ww2ogg_program_file: HomeDirectory.of(config.tool.ww2ogg_program),
+					tool_ww2ogg_code_book_file: HomeDirectory.of(config.tool.ww2ogg_code_book),
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.wem)$/i]]),
 				input_forwarder: 'ripe_file',
@@ -143,7 +143,7 @@ namespace TwinStar.Entry.method.wwise.encoded_media {
 							...Executor.argument_requester_for_path('file', [true]),
 						);
 					}
-					let temporary_directpry = Entry.temporary();
+					let temporary_directpry = HomeDirectory.new_temporary();
 					simple_batch_execute(
 						ripe_file_directory,
 						['file', /.+(\.wem)$/i],
@@ -153,15 +153,15 @@ namespace TwinStar.Entry.method.wwise.encoded_media {
 							CoreX.Tool.Wwise.EncodedMedia.decode_fs(ripe_file, raw_file, tool_ffmpeg_program_file, tool_ww2ogg_program_file, tool_ww2ogg_code_book_file, temporary_directpry);
 						},
 					);
-					Console.notify('s', localized(`执行成功`), [`${raw_file_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${raw_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
 					ripe_file_directory: undefined!,
 					raw_file_directory: '?default',
-					tool_ffmpeg_program_file: Main.path_at_home(config.tool.ffmpeg_program),
-					tool_ww2ogg_program_file: Main.path_at_home(config.tool.ww2ogg_program),
-					tool_ww2ogg_code_book_file: Main.path_at_home(config.tool.ww2ogg_code_book),
+					tool_ffmpeg_program_file: HomeDirectory.of(config.tool.ffmpeg_program),
+					tool_ww2ogg_program_file: HomeDirectory.of(config.tool.ww2ogg_program),
+					tool_ww2ogg_code_book_file: HomeDirectory.of(config.tool.ww2ogg_code_book),
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'ripe_file_directory',

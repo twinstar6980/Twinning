@@ -32,18 +32,6 @@ target('test', function()
 			{ private = true }
 		)
 	end
-	if m.system:is('linux') then
-		add_links(
-			'pthread',
-			{ private = true }
-		)
-	end
-	set_runargs(
-		'_',
-		'/TwinStar.ToolKit/script/main.js',
-		'true',
-		{ private = true }
-	)
 	on_load(function(target)
 		import('custom')
 		custom.apply_condition_definition_basic(target)
@@ -51,4 +39,10 @@ target('test', function()
 		custom.apply_compiler_option_warning_regular(target)
 		custom.apply_import_vld_if_can(target)
 	end)
+	set_runargs(
+		'_',
+		'/TwinStar.ToolKit/script/main.js',
+		'true',
+		{ private = true }
+	)
 end)

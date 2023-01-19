@@ -6,8 +6,8 @@ target('shell', function()
 	add_headerfiles(
 		'./core_interface.hpp',
 		'./version.hpp',
-		'./third_party/system/windows.hpp',
-		'./third_party/system/posix.hpp',
+		'./third/system/windows.hpp',
+		'./third/system/posix.hpp',
 		'./common.hpp',
 		'./library/library.hpp',
 		'./library/static_library.hpp',

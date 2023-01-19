@@ -1,6 +1,6 @@
 /**
  * JS API of TwinStar.ToolKit.Core
- * @version 22
+ * @version 23
  */
 declare namespace TwinStar.Core {
 
@@ -1152,27 +1152,27 @@ declare namespace TwinStar.Core {
 
 		/**
 		 * 复制文件或目录
-		 * @param source 源路径
-		 * @param dest 目的路径
+		 * @param source 来源路径
+		 * @param destination 目的路径
 		 */
 		function copy(
 			source: Path,
-			dest: Path,
+			destination: Path,
 		): Void;
 
 		/**
 		 * 移动文件或目录
-		 * @param source 源路径
-		 * @param dest 目的路径
+		 * @param source 来源路径
+		 * @param destination 目的路径
 		 */
 		function rename(
 			source: Path,
-			dest: Path,
+			destination: Path,
 		): Void;
 
 		/**
 		 * 删除文件或目录
-		 * @param source 源路径
+		 * @param source 来源路径
 		 */
 		function remove(
 			source: Path,
@@ -1385,14 +1385,21 @@ declare namespace TwinStar.Core {
 
 	}
 
-	/** 系统 */
-	namespace System {
+	/** 进程 */
+	namespace Process {
 
 		// ------------------------------------------------
 
 		/**
+		 * 获取环境变量
+		 * @returns 环境变量
+		 */
+		function environment(
+		): StringList;
+
+		/**
 		 * 退出程序
-		 * @param code 退出状态
+		 * @param code 退出码
 		 */
 		function exit(
 			code: IntegerU32,
@@ -1402,21 +1409,25 @@ declare namespace TwinStar.Core {
 		 * 执行外部程序
 		 * @param program 程序
 		 * @param argument 参数
-		 * @param redirect_input 重定向输入文件
-		 * @param redirect_output 重定向输出文件
-		 * @param redirect_error 重定向错误文件
+		 * @param environment 环境
+		 * @param input 输入
+		 * @param output 输出
+		 * @param error 错误
+		 * @returns 程序正常退出时，返回其退出码
 		 */
 		function execute(
 			program: Path,
 			argument: StringList,
-			redirect_input: PathOptional,
-			redirect_output: PathOptional,
-			redirect_error: PathOptional,
+			environment: StringList,
+			input: PathOptional,
+			output: PathOptional,
+			error: PathOptional,
 		): IntegerU32;
 
 		/**
 		 * 调用宿主环境的命令处理器
 		 * @param command 命令
+		 * @returns std::system的返回值，由实现定义
 		 */
 		function system(
 			command: String,

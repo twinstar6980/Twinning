@@ -1,8 +1,8 @@
 #pragma once
 
 #include "core/utility/utility.hpp"
-#include "core/third_party/ETCPACK.hpp"
-#include "core/third_party/rg_etc1.hpp"
+#include "core/third/ETCPACK.hpp"
+#include "core/third/rg_etc1.hpp"
 
 static_assert(sizeof(unsigned) == 4);
 

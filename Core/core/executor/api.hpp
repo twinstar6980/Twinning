@@ -47,8 +47,8 @@ namespace TwinStar::Core::Executor::API {
 		// - set value(it: typeof T.Value);
 		value_setter = 1 << 4,
 		// mask
-		none_mask    = 0b000'000'00,
-		all_mask     = 0b111'111'11,
+		none_mask    = 0b000'00,
+		all_mask     = 0b111'11,
 		generic_mask = default_constructor | copy_constructor,
 		value_mask   = value_constructor | value_getter | value_setter,
 		default_mask = generic_mask | value_mask,
@@ -477,13 +477,14 @@ namespace TwinStar::Core::Executor::API {
 				.add_function_proxy<&stp<&FileSystem::set_working_directory>>("set_working_directory"_s)
 				.add_function_proxy<&stp<&FileSystem::get_temporary_directory>>("get_temporary_directory"_s);
 		}
-		// System
+		// Process
 		{
-			auto n_System = n_Core.add_namespace("System"_s);
-			n_System
-				.add_function_proxy<&stp<&System::exit>>("exit"_s)
-				.add_function_proxy<&stp<&System::execute>>("execute"_s)
-				.add_function_proxy<&stp<&System::system>>("system"_s);
+			auto n_Process = n_Core.add_namespace("Process"_s);
+			n_Process
+				.add_function_proxy<&stp<&Process::environment>>("environment"_s)
+				.add_function_proxy<&stp<&Process::exit>>("exit"_s)
+				.add_function_proxy<&stp<&Process::execute>>("execute"_s)
+				.add_function_proxy<&stp<&Process::system>>("system"_s);
 		}
 		// Tool
 		{

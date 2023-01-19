@@ -20,19 +20,19 @@ target('core', function()
 		{ private = true }
 	)
 	add_deps(
-		'mscharconv',
-		'fmt',
-		'tinyxml2',
-		'quickjs',
-		'md5',
-		'Rijndael',
-		'zlib',
-		'bzip2',
-		'lzma',
-		'libpng',
-		'ETCPACK',
-		'rg_etc1',
-		'PVRTCCompressor',
+		'third.mscharconv',
+		'third.fmt',
+		'third.tinyxml2',
+		'third.quickjs',
+		'third.md5',
+		'third.Rijndael',
+		'third.zlib',
+		'third.bzip2',
+		'third.lzma',
+		'third.libpng',
+		'third.ETCPACK',
+		'third.rg_etc1',
+		'third.PVRTCCompressor',
 		{}
 	)
 	on_load(function(target)

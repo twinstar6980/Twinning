@@ -54,7 +54,7 @@ namespace TwinStar.Entry.method.wwise.sound_bank {
 							(value) => (value),
 							null,
 							() => (Console.option([88n, [88n, ''], 112n, [112n, ''], 140n, [140n, '']], null)),
-							(value) => ([88n, 112n, 140n].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => ([88n, 112n, 140n].includes(value) ? null : los(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
@@ -68,7 +68,7 @@ namespace TwinStar.Entry.method.wwise.sound_bank {
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let embedded_audio_directory = `${bundle_directory}/embedded_audio`;
 					CoreX.Tool.Wwise.SoundBank.encode_fs(data_file, manifest_file, embedded_audio_directory, { number: version_number }, buffer_size);
-					Console.notify('s', localized(`执行成功`), [`${data_file}`]);
+					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -114,13 +114,13 @@ namespace TwinStar.Entry.method.wwise.sound_bank {
 							(value) => (value),
 							null,
 							() => (Console.option([88n, [88n, ''], 112n, [112n, ''], 140n, [140n, '']], null)),
-							(value) => ([88n, 112n, 140n].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => ([88n, 112n, 140n].includes(value) ? null : los(`版本不受支持`)),
 						);
 					}
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let embedded_audio_directory = `${bundle_directory}/embedded_audio`;
 					CoreX.Tool.Wwise.SoundBank.decode_fs(data_file, manifest_file, embedded_audio_directory, { number: version_number });
-					Console.notify('s', localized(`执行成功`), [`${bundle_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -169,7 +169,7 @@ namespace TwinStar.Entry.method.wwise.sound_bank {
 							(value) => (value),
 							null,
 							() => (Console.option([88n, [88n, ''], 112n, [112n, ''], 140n, [140n, '']], null)),
-							(value) => ([88n, 112n, 140n].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => ([88n, 112n, 140n].includes(value) ? null : los(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
@@ -192,7 +192,7 @@ namespace TwinStar.Entry.method.wwise.sound_bank {
 							CoreX.Tool.Wwise.SoundBank.encode_fs(data_file, manifest_file, embedded_audio_directory, { number: version_number }, data_buffer.view());
 						},
 					);
-					Console.notify('s', localized(`执行成功`), [`${data_file_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${data_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -238,7 +238,7 @@ namespace TwinStar.Entry.method.wwise.sound_bank {
 							(value) => (value),
 							null,
 							() => (Console.option([88n, [88n, ''], 112n, [112n, ''], 140n, [140n, '']], null)),
-							(value) => ([88n, 112n, 140n].includes(value) ? null : localized(`版本不受支持`)),
+							(value) => ([88n, 112n, 140n].includes(value) ? null : los(`版本不受支持`)),
 						);
 					}
 					simple_batch_execute(
@@ -252,7 +252,7 @@ namespace TwinStar.Entry.method.wwise.sound_bank {
 							CoreX.Tool.Wwise.SoundBank.decode_fs(data_file, manifest_file, embedded_audio_directory, { number: version_number });
 						},
 					);
-					Console.notify('s', localized(`执行成功`), [`${bundle_directory_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${bundle_directory_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

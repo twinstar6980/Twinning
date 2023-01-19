@@ -27,8 +27,8 @@ target('implement', function()
 		{ private = true }
 	)
 	add_links(
-		' WindowsApp',
-		' User32',
+		'WindowsApp',
+		'User32',
 		{ private = true }
 	)
 	add_packages(
