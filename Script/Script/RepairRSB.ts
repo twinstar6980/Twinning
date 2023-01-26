@@ -1,4 +1,4 @@
-/** 尽量将RSB修复为标准结构，以免核心处理逻辑因低容错特性而无法解包被刻意处理过的RSB */
+/** 尽可能地将RSB修复为标准结构，以免核心处理逻辑因拒绝容错的特性而无法解包被刻意处理过的RSB */
 namespace TwinStar.Script.RepairRSB {
 
 	// ------------------------------------------------
@@ -279,9 +279,10 @@ namespace TwinStar.Script.RepairRSB {
 		repair_package(data_js);
 		let empty_packet = create_empty_packet();
 		let data_with_empty_packet = Core.ByteArray.allocate(Core.Size.value(data.size().value + 0x1000n));
-		new Uint32Array(data_with_empty_packet.view().sub(Core.Size.value(0x0n), data.size()).value).set(new Uint32Array(data_js));
+		new Uint8Array(data_with_empty_packet.view().sub(Core.Size.value(0x0n), data.size()).value).set(new Uint8Array(data_js));
 		new Uint32Array(data_with_empty_packet.view().sub(data.size(), Core.Size.value(0x1000n)).value).set(new Uint32Array(empty_packet));
 		CoreX.FileSystem.write_file(output_file, data_with_empty_packet);
+		Console.notify('i', los(`修复成功`), [output_file]);
 		return;
 	}
 
