@@ -18,7 +18,7 @@ namespace TwinStar.Support.PvZ2.LawnStringText {
 	export function convert(
 		source_data: ArrayBuffer,
 		source_version: Version | 'auto',
-		dest_version: Version,
+		destination_version: Version,
 	): ArrayBuffer {
 		let string_map: Record<string, string> = {};
 		let actual_source_version: Version;
@@ -97,14 +97,14 @@ namespace TwinStar.Support.PvZ2.LawnStringText {
 				break;
 			}
 		}
-		let dest_data: ArrayBuffer;
-		switch (dest_version) {
+		let destination_data: ArrayBuffer;
+		switch (destination_version) {
 			case 'text': {
-				let dest_text: Array<string> = [];
+				let destination_text: Array<string> = [];
 				for (let key in string_map) {
-					dest_text.push(`[${key}]\n${string_map[key]}\n`);
+					destination_text.push(`[${key}]\n${string_map[key]}\n`);
 				}
-				dest_data = Core.Miscellaneous.cast_moveable_String_to_ByteArray(Core.String.value(dest_text.join('\n'))).release();
+				destination_data = Core.Miscellaneous.cast_moveable_String_to_ByteArray(Core.String.value(destination_text.join('\n'))).release();
 				break;
 			}
 			case 'json_map': {
@@ -122,7 +122,7 @@ namespace TwinStar.Support.PvZ2.LawnStringText {
 						}
 					]
 				};
-				dest_data = Core.ByteArray.value(CoreX.JSON.write_js(destination)).release();
+				destination_data = Core.ByteArray.value(CoreX.JSON.write_js(destination)).release();
 				break;
 			}
 			case 'json_list': {
@@ -136,35 +136,35 @@ namespace TwinStar.Support.PvZ2.LawnStringText {
 							"objclass": "LawnStringsData",
 							"objdata": {
 								"LocStringValues": (() => {
-									let dest_list: Array<string> = [];
+									let destination_list: Array<string> = [];
 									for (let key in string_map) {
-										dest_list.push(key);
-										dest_list.push(string_map[key]);
+										destination_list.push(key);
+										destination_list.push(string_map[key]);
 									}
-									return dest_list;
+									return destination_list;
 								})()
 							}
 						}
 					]
 				};
-				dest_data = Core.ByteArray.value(CoreX.JSON.write_js(destination)).release();
+				destination_data = Core.ByteArray.value(CoreX.JSON.write_js(destination)).release();
 				break;
 			}
 		}
-		return dest_data;
+		return destination_data;
 	}
 
 	// ------------------------------------------------
 
 	export function convert_fs(
 		source_file: string,
-		dest_file: string,
+		destination_file: string,
 		source_version: Version | 'auto',
-		dest_version: Version,
+		destination_version: Version,
 	): void {
 		let source_data = CoreX.FileSystem.read_file(source_file);
-		let dest_data = convert(source_data.value, source_version, dest_version);
-		CoreX.FileSystem.write_file(dest_file, dest_data);
+		let destination_data = convert(source_data.value, source_version, destination_version);
+		CoreX.FileSystem.write_file(destination_file, destination_data);
 		return;
 	}
 

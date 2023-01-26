@@ -1,12 +1,16 @@
 # TwinStar ToolKit
 
-Powerful tool for PvZ-2 Modder .
+`TwinStar ToolKit` aka `双子星工具箱`
 
-by TwinStar, China .
+一款帮助我们创作 PvZ-2 MOD 的工具。
+
+A tool to help us create PvZ-2 MOD .
+
+by TwinStar ( aka TwinKleS or SmallPC or 一路上海外 ) .
 
 ## 开源说明
 
-本项目使用 **GPL** 协议，可以随意使用与修改，但使用本项目的项目也须开源并使用 GPL 协议。
+本工具是自由软件并遵循 **GPL** 协议，任何人都可以随意使用与修改，但须依据 GPL 协议保证软件的自由、开源。
 
 ## 模块组成
 
@@ -28,6 +32,6 @@ by TwinStar, China .
 
 ## 平台支持
 
-* 操作系统：`Windows 7+` 、`Linux ?+` 、`Macintosh 13.1+` 、`Android 9+` 、`iPhone 16.2+` 。
+* 操作系统：`Windows 7+` 、`Linux ?` 、`Macintosh 13.1~` 、`Android 9~` 、`iPhone 16.2~` 。
 
 * 处理器架构：`x86 32|64` 、`arm 32|64` 。

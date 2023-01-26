@@ -19,9 +19,9 @@ namespace TwinStar::Core::Interface {
 	) -> Void {
 		// TODO : thread unsafe ?
 		// set locale
+		std::setlocale(LC_ALL, "C");
 		try {
 			// NOTE : LC_NUMERIC的设置会影响quickjs对字符串的解析，这在一些不以点作为小数点的地区（如俄罗斯）本地化设置下将导致脚本运行出错
-			std::setlocale(LC_ALL, "C");
 			std::setlocale(LC_CTYPE, ".utf-8");
 		} catch (std::exception & exception) {
 			M_log("set locale failed : {}"_sf(message_of_std_exception(exception)));
@@ -43,10 +43,9 @@ namespace TwinStar::Core::Interface {
 
 	M_symbol_export
 	extern auto execute (
-		String const &        script,
-		Boolean const &       script_is_path,
-		StringList const &    argument,
-		ShellCallback const & shell_callback
+		Callback const &   callback,
+		String const &     script,
+		StringList const & argument
 	) -> String const* {
 		thread_local auto result = Core::Optional<Core::String>{};
 		#if defined M_build_release
@@ -55,10 +54,9 @@ namespace TwinStar::Core::Interface {
 		result.reset();
 		initialize();
 		result = Implement::execute(
+			self_cast<Core::Executor::Callback>(callback),
 			self_cast<Core::String>(script),
-			self_cast<Core::Boolean>(script_is_path),
-			self_cast<Core::List<Core::String>>(argument),
-			self_cast<Core::Executor::ShellCallback>(shell_callback)
+			self_cast<Core::List<Core::String>>(argument)
 		);
 		#if defined M_build_release
 		} catch (Exception & exception) {

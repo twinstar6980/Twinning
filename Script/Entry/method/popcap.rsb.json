@@ -1,6 +1,6 @@
 {
 	"pack_buffer_size": "1g",
-	"resource_extract_option": {
+	"resource_convert_option": {
 		"json": "?input",
 		"json_crypt": "?input",
 		"json_crypt_key": "?input",

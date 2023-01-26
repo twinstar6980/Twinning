@@ -273,23 +273,11 @@ namespace TwinStar.CoreX {
 			return Core.FileSystem.copy(Core.Path.value(source), Core.Path.value(destination));
 		}
 
-		// todo : process case for android fuse storage ?
 		export function rename(
 			source: string,
 			destination: string,
-			process_case: boolean = false,
 		): void {
-			if (!process_case) {
-				return Core.FileSystem.rename(Core.Path.value(source), Core.Path.value(destination));
-			} else {
-				if (source.toLowerCase() !== destination.toLowerCase()) {
-					rename(source, destination);
-				} else {
-					rename(source, source + '!');
-					rename(source + '!', destination);
-				}
-				return;
-			}
+			return Core.FileSystem.rename(Core.Path.value(source), Core.Path.value(destination));
 		}
 
 		export function remove(
@@ -1001,6 +989,21 @@ namespace TwinStar.CoreX {
 
 			export namespace SoundBank {
 
+				// TODO
+				export function detect_version(
+					data: ArrayBuffer,
+				): typeof Core.Tool.Wwise.SoundBank.Version.Value {
+					let version: typeof Core.Tool.Wwise.SoundBank.Version.Value = {
+						number: undefined!,
+					};
+					let view = new DataView(data);
+					version.number = BigInt(view.getUint32(0x0)) as any;
+					if (version.number !== 88n && version.number !== 112n && version.number !== 140n) {
+						throw new Error(`version number error`);
+					}
+					return version;
+				}
+
 				export function encode_fs(
 					data_file: string,
 					manifest_file: string,
@@ -1558,10 +1561,10 @@ namespace TwinStar.CoreX {
 			return Core.Miscellaneous.g_context.evaluate(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(script.view()), Core.String.value(name));
 		}
 
-		export function shell_callback(
+		export function callback(
 			argument: Array<string>,
 		): Array<string> {
-			return Core.Miscellaneous.g_context.shell_callback(Core.StringList.value(argument)).value;
+			return Core.Miscellaneous.g_context.callback(Core.StringList.value(argument)).value;
 		}
 
 	}

@@ -3,12 +3,6 @@ namespace TwinStar.ADBHelper {
 
 	// ------------------------------------------------
 
-	const external_directory = `/storage/emulated/0`;
-
-	const external_android_data_directory = `/storage/emulated/0/Android/data`;
-
-	const external_android_obb_directory = `/storage/emulated/0/Android/obb`;
-
 	export function parse_output_by_line(
 		source: string,
 	): Array<string> {
@@ -92,7 +86,7 @@ namespace TwinStar.ADBHelper {
 		destination: string,
 		source: string | Array<string>,
 		application: ApplicationInformation,
-		temporary: string = `/storage/emulated/0/Download/TwinStar.ToolKit/ADBHelper.Temporary`,
+		temporary: string = `/sdcard/Download/TwinStar.ToolKit/ADBHelper.Temporary`,
 	): void {
 		remove(temporary);
 		create_directory(temporary);
@@ -196,10 +190,10 @@ namespace TwinStar.ADBHelper {
 		target: string,
 		owner: string,
 	): void {
-		if (target.startsWith(external_directory) + '/') {
-			if (target.startsWith(external_android_data_directory + '/')) {
+		if (PathUtility.is_android_fuse_object(target)) {
+			if (PathUtility.is_android_fuse_ext_data_object(target)) {
 				change_owner_group(target, owner, 'ext_data_rw');
-			} else if (target.startsWith(external_android_obb_directory + '/')) {
+			} else if (PathUtility.is_android_fuse_ext_obb_object(target)) {
 				change_owner_group(target, owner, 'ext_obb_rw');
 			} else {
 				change_owner_group(target, owner, 'media_rw');

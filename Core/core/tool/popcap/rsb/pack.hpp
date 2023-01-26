@@ -19,6 +19,114 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 
 		using Description = Description<version>;
 
+		// ----------------
+
+		inline static auto const k_suffix_of_composite_shell_upper = CStringView{"_COMPOSITESHELL"_sv};
+
+		inline static auto const k_suffix_of_composite_shell = CStringView{"_CompositeShell"_sv};
+
+		inline static auto const k_suffix_of_auto_pool = CStringView{"_AutoPool"_sv};
+
+		static auto make_original_group_id_upper (
+			CStringView const & standard_id,
+			Boolean &           is_composite,
+			String &            original_id
+		) -> Void {
+			is_composite = !Range::end_with(standard_id, k_suffix_of_composite_shell_upper);
+			if (is_composite) {
+				original_id = standard_id;
+			} else {
+				original_id = standard_id.head(standard_id.size() - k_suffix_of_composite_shell_upper.size());
+			}
+			return;
+		}
+
+		static auto make_original_group_id (
+			CStringView const & standard_id,
+			Boolean &           is_composite,
+			String &            original_id
+		) -> Void {
+			is_composite = !Range::end_with(standard_id, k_suffix_of_composite_shell);
+			if (is_composite) {
+				original_id = standard_id;
+			} else {
+				original_id = standard_id.head(standard_id.size() - k_suffix_of_composite_shell.size());
+			}
+			return;
+		}
+
+		static auto make_standard_group_id (
+			CStringView const & group_id,
+			Boolean const &     is_composite
+		) -> String {
+			auto standard_id = String{group_id};
+			if (!is_composite) {
+				standard_id.append_list(k_suffix_of_composite_shell);
+			}
+			return standard_id;
+		}
+
+		// ----------------
+
+		static auto string_block_fixed_128_from_string (
+			CStringView const & block
+		) -> StringBlockFixed128 {
+			assert_condition(block.size() <= 128_sz);
+			return StringBlockFixed128{block};
+		}
+
+		static auto string_block_fixed_128_to_string (
+			StringBlockFixed128 const & string
+		) -> String {
+			auto size = k_none_size;
+			for (auto & element : string) {
+				if (element == CharacterType::k_null) {
+					break;
+				}
+				++size;
+			}
+			assert_condition(size <= 128_sz);
+			return String{string.begin(), size};
+		}
+
+		// ----------------
+
+		static auto subgroup_category_from_data (
+			SubgroupCategory & value,
+			IntegerU32 const & resolution_data,
+			IntegerU32 const & locale_data
+		) -> Void {
+			if (resolution_data == 0_iu32) {
+				value.resolution.reset();
+			} else {
+				value.resolution.set(cbw<Integer>(resolution_data));
+			}
+			if (locale_data == 0_iu32) {
+				value.locale.reset();
+			} else {
+				value.locale.set().from(cbw<FourCC>(reverse_endian(locale_data)));
+			}
+			return;
+		}
+
+		static auto subgroup_category_to_data (
+			SubgroupCategory const & value,
+			IntegerU32 &             resolution_data,
+			IntegerU32 &             locale_data
+		) -> Void {
+			if (!value.resolution) {
+				resolution_data = 0_iu32;
+			} else {
+				resolution_data = cbw<IntegerU32>(value.resolution.get());
+			}
+			if (!value.locale) {
+				locale_data = 0_iu32;
+			} else {
+				locale_data = reverse_endian(cbw<IntegerU32>(value.locale.get().to_of<FourCC>()));
+			}
+			return;
+		}
+
 	};
 
 	template <auto version> requires (check_version(version, {}, {}))
@@ -32,6 +140,26 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 		using typename Common::Manifest;
 
 		using typename Common::Description;
+
+		using Common::k_suffix_of_composite_shell_upper;
+
+		using Common::k_suffix_of_composite_shell;
+
+		using Common::k_suffix_of_auto_pool;
+
+		using Common::make_original_group_id_upper;
+
+		using Common::make_original_group_id;
+
+		using Common::make_standard_group_id;
+
+		using Common::string_block_fixed_128_from_string;
+
+		using Common::string_block_fixed_128_to_string;
+
+		using Common::subgroup_category_from_data;
+
+		using Common::subgroup_category_to_data;
 
 		// ----------------
 
@@ -502,6 +630,26 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 
 		using typename Common::Description;
 
+		using Common::k_suffix_of_composite_shell_upper;
+
+		using Common::k_suffix_of_composite_shell;
+
+		using Common::k_suffix_of_auto_pool;
+
+		using Common::make_original_group_id_upper;
+
+		using Common::make_original_group_id;
+
+		using Common::make_standard_group_id;
+
+		using Common::string_block_fixed_128_from_string;
+
+		using Common::string_block_fixed_128_to_string;
+
+		using Common::subgroup_category_from_data;
+
+		using Common::subgroup_category_to_data;
+
 		// ----------------
 
 		static auto process_package_description (
@@ -601,17 +749,33 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 					process_package_description(package_data, information_structure.header, package_description.set());
 				}
 			}
+			auto group_id_list = Map<Size, String>{};
+			auto subgroup_id_list = Map<Size, String>{};
+			group_id_list.convert(
+				information_structure.group_id,
+				[] (auto & destination_element, auto & source_element) {
+					destination_element.key = cbw<Size>(source_element.value);
+					destination_element.value = source_element.key;
+				}
+			);
+			subgroup_id_list.convert(
+				information_structure.subgroup_id,
+				[] (auto & destination_element, auto & source_element) {
+					destination_element.key = cbw<Size>(source_element.value);
+					destination_element.value = source_element.key;
+				}
+			);
 			package_manifest.group.allocate_full(information_structure.group_information.size());
 			for (auto & group_index : SizeRange{information_structure.group_information.size()}) {
 				auto & group_information_structure = information_structure.group_information[group_index];
 				auto & group_manifest = package_manifest.group.at(group_index);
-				make_original_group_id(string_block_fixed_128_to_string(group_information_structure.id), group_manifest.value.composite, group_manifest.key);
+				make_original_group_id_upper(group_id_list[group_index], group_manifest.value.composite, group_manifest.key);
 				group_manifest.value.subgroup.allocate_full(cbw<Size>(group_information_structure.subgroup_count));
 				for (auto & subgroup_index : SizeRange{cbw<Size>(group_information_structure.subgroup_count)}) {
 					auto & simple_subgroup_information_structure = group_information_structure.subgroup_information[subgroup_index];
 					auto & subgroup_information_structure = information_structure.subgroup_information[cbw<Size>(simple_subgroup_information_structure.index)];
 					auto & subgroup_manifest = group_manifest.value.subgroup.at(subgroup_index);
-					subgroup_manifest.key = string_block_fixed_128_to_string(subgroup_information_structure.id);
+					subgroup_manifest.key = subgroup_id_list[cbw<Size>(simple_subgroup_information_structure.index)];
 					subgroup_category_from_data(subgroup_manifest.value.category, simple_subgroup_information_structure.resolution, simple_subgroup_information_structure.locale);
 					auto make_formatted_path =
 						[&] (

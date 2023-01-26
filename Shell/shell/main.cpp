@@ -41,14 +41,13 @@ auto main (
 	}();
 	auto exception_message = std::optional<std::string>{};
 	try {
-		assert_condition(args.size() >= 4);
+		assert_condition(args.size() >= 3);
 		auto library_file = args[1];
 		auto script = args[2];
-		auto script_is_path = TwinStar::Shell::string_to_boolean(args[3]);
-		auto argument = std::vector<std::string>{args.begin() + 4, args.end()};
+		auto argument = std::vector<std::string>{args.begin() + 3, args.end()};
 		auto library = TwinStar::Shell::DynamicLibrary{nullptr, library_file};
 		auto host = TwinStar::Shell::CLIHost{nullptr};
-		auto result = TwinStar::Shell::launch(host, library, script, script_is_path, argument);
+		auto result = TwinStar::Shell::launch(host, library, script, argument);
 		if (result) {
 			exception_message.emplace(result.value());
 		}

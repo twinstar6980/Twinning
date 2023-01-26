@@ -28,31 +28,31 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceManifest.Convert {
 				}
 				case 'simple': {
 					let source_subgroup = source_group as OfficialResourceManifest.SimpleGroupInformation;
-					let dest_group: ResourceManifest.Group;
+					let destination_group: ResourceManifest.Group;
 					if (source_subgroup.parent === undefined) {
 						destination.group[source_group.id] = {
 							composite: false,
 							subgroup: {},
 						};
-						dest_group = destination.group[source_group.id];
+						destination_group = destination.group[source_group.id];
 					} else {
-						let dest_group_if = destination.group[source_subgroup.parent];
-						if (dest_group_if === undefined) {
+						let destination_group_if = destination.group[source_subgroup.parent];
+						if (destination_group_if === undefined) {
 							throw new Error(`subgroup's parent is not found : ${source_group.id}`);
 						}
-						dest_group = dest_group_if;
+						destination_group = destination_group_if;
 					}
-					dest_group.subgroup[source_group.id] = {
+					destination_group.subgroup[source_group.id] = {
 						category: [
 							JSONGenericGetter.integer(source_subgroup.res, null),
 							JSONGenericGetter.string(source_subgroup.loc, null),
 						],
 						resource: {},
 					};
-					let dest_subgroup = dest_group.subgroup[source_group.id];
+					let destination_subgroup = destination_group.subgroup[source_group.id];
 					for (let source_resource of source_subgroup.resources) {
 						if ('atlas' in source_resource) {
-							dest_subgroup.resource[source_resource.id] = {
+							destination_subgroup.resource[source_resource.id] = {
 								path: source_resource.path.join('/'),
 								type: source_resource.type,
 								expand: ['atlas', {
@@ -64,7 +64,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceManifest.Convert {
 								}],
 							};
 						} else if ('parent' in source_resource) {
-							let atlas = dest_subgroup.resource[(source_resource as OfficialResourceManifest.SpriteImageResourceInformation).parent];
+							let atlas = destination_subgroup.resource[(source_resource as OfficialResourceManifest.SpriteImageResourceInformation).parent];
 							if (atlas === undefined) {
 								throw new Error(`sprite's parent is not found : ${source_resource.parent}`);
 							}
@@ -87,7 +87,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceManifest.Convert {
 								],
 							};
 						} else {
-							dest_subgroup.resource[source_resource.id] = {
+							destination_subgroup.resource[source_resource.id] = {
 								path: source_resource.path.join('/'),
 								type: source_resource.type,
 								expand: ['generic', {}],
@@ -126,18 +126,18 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceManifest.Convert {
 		};
 		for (let group_id in source.group) {
 			let source_group = source.group[group_id];
-			let dest_group: (OfficialResourceManifest.GroupBase & { type: 'composite'; } & OfficialResourceManifest.CompositeGroupInformation) | null = null;
+			let destination_group: (OfficialResourceManifest.GroupBase & { type: 'composite'; } & OfficialResourceManifest.CompositeGroupInformation) | null = null;
 			if (source_group.composite) {
-				dest_group = {
+				destination_group = {
 					type: 'composite',
 					id: group_id,
 					subgroups: [],
 				};
-				destination.groups.push(dest_group);
+				destination.groups.push(destination_group);
 			}
 			for (let subgroup_id in source_group.subgroup) {
 				let source_subgroup = source_group.subgroup[subgroup_id];
-				let dest_subgroup: OfficialResourceManifest.GroupBase & { type: 'simple'; } & OfficialResourceManifest.SimpleGroupInformation = {
+				let destination_subgroup: OfficialResourceManifest.GroupBase & { type: 'simple'; } & OfficialResourceManifest.SimpleGroupInformation = {
 					type: 'simple',
 					id: subgroup_id,
 				} as any;
@@ -148,31 +148,31 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceManifest.Convert {
 				if (source_subgroup.category[1] !== null) {
 					category_property['loc'] = source_subgroup.category[1];
 				}
-				Object.assign(dest_subgroup, category_property);
+				Object.assign(destination_subgroup, category_property);
 				if (source_group.composite) {
-					dest_subgroup['parent'] = group_id;
-					dest_group!.subgroups.push({
+					destination_subgroup['parent'] = group_id;
+					destination_group!.subgroups.push({
 						id: subgroup_id,
 						...category_property,
 					});
 				}
-				dest_subgroup['resources'] = [];
+				destination_subgroup['resources'] = [];
 				for (let resource_id in source_subgroup.resource) {
 					let source_resource = source_subgroup.resource[resource_id];
-					let dest_resource: OfficialResourceManifest.Resource = {
+					let destination_resource: OfficialResourceManifest.Resource = {
 						slot: slot_of(resource_id),
 						id: resource_id,
 						path: PathUtility.split(source_resource.path),
 						type: source_resource.type,
 					} as OfficialResourceManifest.Resource;
-					dest_subgroup.resources.push(dest_resource);
+					destination_subgroup.resources.push(destination_resource);
 					if (source_resource.expand[0] === 'atlas') {
-						(dest_resource as OfficialResourceManifest.AtlasImageResourceInformation).atlas = true;
-						(dest_resource as OfficialResourceManifest.AtlasImageResourceInformation).width = source_resource.expand[1].size[0];
-						(dest_resource as OfficialResourceManifest.AtlasImageResourceInformation).height = source_resource.expand[1].size[1];
+						(destination_resource as OfficialResourceManifest.AtlasImageResourceInformation).atlas = true;
+						(destination_resource as OfficialResourceManifest.AtlasImageResourceInformation).width = source_resource.expand[1].size[0];
+						(destination_resource as OfficialResourceManifest.AtlasImageResourceInformation).height = source_resource.expand[1].size[1];
 						for (let sprite_resource_id in source_resource.expand[1].sprite) {
 							let source_sprite_resource = source_resource.expand[1].sprite[sprite_resource_id];
-							let dest_sprite_resource: OfficialResourceManifest.ResourceBase & OfficialResourceManifest.SpriteImageResourceInformation = {
+							let destination_sprite_resource: OfficialResourceManifest.ResourceBase & OfficialResourceManifest.SpriteImageResourceInformation = {
 								slot: slot_of(sprite_resource_id),
 								id: sprite_resource_id,
 								path: PathUtility.split(source_sprite_resource.path),
@@ -183,11 +183,11 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceManifest.Convert {
 								aw: source_sprite_resource.size[0],
 								ah: source_sprite_resource.size[1],
 							};
-							dest_subgroup.resources.push(dest_sprite_resource);
+							destination_subgroup.resources.push(destination_sprite_resource);
 						}
 					}
 				}
-				destination.groups.push(dest_subgroup);
+				destination.groups.push(destination_subgroup);
 			}
 		}
 		destination.slot_count = BigInt(slot_map.size);

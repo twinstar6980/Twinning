@@ -41,8 +41,8 @@ target('test', function()
 	end)
 	set_runargs(
 		'_',
-		'/TwinStar.ToolKit/script/main.js',
-		'true',
+		'?/TwinStar.ToolKit/script/main.js',
+		'/TwinStar.ToolKit',
 		{ private = true }
 	)
 end)

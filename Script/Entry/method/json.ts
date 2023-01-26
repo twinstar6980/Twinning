@@ -21,12 +21,12 @@ namespace TwinStar.Entry.method.json {
 				},
 				worker(a: Entry.CFSA & {
 					source_file: Executor.RequireArgument<string>;
-					dest_file: Executor.RequestArgument<string, true>;
+					destination_file: Executor.RequestArgument<string, true>;
 					disable_trailing_comma: Executor.RequestArgument<boolean | null, true>;
 					disable_array_wrap_line: Executor.RequestArgument<boolean | null, true>;
 				}) {
 					let source_file: string;
-					let dest_file: string;
+					let destination_file: string;
 					let disable_trailing_comma: boolean | null;
 					let disable_array_wrap_line: boolean | null;
 					{
@@ -36,9 +36,9 @@ namespace TwinStar.Entry.method.json {
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
-						dest_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'dest_file'),
-							a.dest_file,
+						destination_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'destination_file'),
+							a.destination_file,
 							(value) => (value),
 							() => (source_file.replace(/((\.json))?$/i, '.formatted.json')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
@@ -61,13 +61,13 @@ namespace TwinStar.Entry.method.json {
 						);
 					}
 					let json = CoreX.JSON.read_fs(source_file);
-					CoreX.JSON.write_fs(dest_file, json, disable_trailing_comma === null ? undefined : disable_trailing_comma, disable_array_wrap_line === null ? undefined : disable_array_wrap_line);
-					Console.notify('s', los(`执行成功`), [`${dest_file}`]);
+					CoreX.JSON.write_fs(destination_file, json, disable_trailing_comma === null ? undefined : disable_trailing_comma, disable_array_wrap_line === null ? undefined : disable_array_wrap_line);
+					Console.notify('s', los(`执行成功`), [`${destination_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
 					source_file: undefined!,
-					dest_file: '?default',
+					destination_file: '?default',
 					disable_trailing_comma: '?input',
 					disable_array_wrap_line: '?input',
 				},
@@ -84,12 +84,12 @@ namespace TwinStar.Entry.method.json {
 				},
 				worker(a: Entry.CFSA & {
 					source_file_directory: Executor.RequireArgument<string>;
-					dest_file_directory: Executor.RequestArgument<string, true>;
+					destination_file_directory: Executor.RequestArgument<string, true>;
 					disable_trailing_comma: Executor.RequestArgument<boolean | null, true>;
 					disable_array_wrap_line: Executor.RequestArgument<boolean | null, true>;
 				}) {
 					let source_file_directory: string;
-					let dest_file_directory: string;
+					let destination_file_directory: string;
 					let disable_trailing_comma: boolean | null;
 					let disable_array_wrap_line: boolean | null;
 					{
@@ -99,9 +99,9 @@ namespace TwinStar.Entry.method.json {
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
-						dest_file_directory = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'dest_file_directory'),
-							a.dest_file_directory,
+						destination_file_directory = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'destination_file_directory'),
+							a.destination_file_directory,
 							(value) => (value),
 							() => (source_file_directory.replace(/$/i, '.json_format')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
@@ -128,17 +128,17 @@ namespace TwinStar.Entry.method.json {
 						['file', /.+(\.json)$/i],
 						(item) => {
 							let source_file = `${source_file_directory}/${item}`;
-							let dest_file = `${dest_file_directory}/${item}`;
+							let destination_file = `${destination_file_directory}/${item}`;
 							let json = CoreX.JSON.read_fs(source_file);
-							CoreX.JSON.write_fs(dest_file, json, disable_trailing_comma === null ? undefined : disable_trailing_comma, disable_array_wrap_line === null ? undefined : disable_array_wrap_line);
+							CoreX.JSON.write_fs(destination_file, json, disable_trailing_comma === null ? undefined : disable_trailing_comma, disable_array_wrap_line === null ? undefined : disable_array_wrap_line);
 						},
 					);
-					Console.notify('s', los(`执行成功`), [`${dest_file_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${destination_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
 					source_file_directory: undefined!,
-					dest_file_directory: '?default',
+					destination_file_directory: '?default',
 					disable_trailing_comma: '?input',
 					disable_array_wrap_line: '?input',
 				},

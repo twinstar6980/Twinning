@@ -143,4 +143,37 @@ namespace TwinStar.PathUtility {
 
 	// ------------------------------------------------
 
+	export function is_android_fuse_object(
+		path: string,
+	): boolean {
+		return /^\/(storage\/emulated\/[0-9]+)|(sdcard)\//.test(path);
+	}
+
+	export function is_android_fuse_ext_data_object(
+		path: string,
+	): boolean {
+		return /^\/(storage\/emulated\/[0-9]+)|(sdcard)\/Android\/data\//.test(path);
+	}
+
+	export function is_android_fuse_ext_obb_object(
+		path: string,
+	): boolean {
+		return /^\/(storage\/emulated\/[0-9]+)|(sdcard)\/Android\/obb\//.test(path);
+	}
+
+	export function safe_rename(
+		source: string,
+		destination: string,
+	): void {
+		if (Shell.is_android && is_android_fuse_object(destination) && source.toLowerCase() === destination.toLowerCase()) {
+			CoreX.FileSystem.rename(source, source + '!');
+			CoreX.FileSystem.rename(source + '!', destination);
+		} else {
+			CoreX.FileSystem.rename(source, destination);
+		}
+		return;
+	}
+
+	// ------------------------------------------------
+
 }

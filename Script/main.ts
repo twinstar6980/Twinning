@@ -3,7 +3,7 @@ namespace TwinStar {
 	// ------------------------------------------------
 
 	/** 版本编号 */
-	export const k_version = 24;
+	export const k_version = 25;
 
 	// ------------------------------------------------
 
@@ -56,12 +56,12 @@ namespace TwinStar {
 		export function notify(
 			message: string,
 		): void {
-			var shell_name = Core.Miscellaneous.g_context.shell_callback(Core.StringList.value(['name'])).value[1];
+			var shell_name = Core.Miscellaneous.g_context.callback(Core.StringList.value(['name'])).value[1];
 			if (shell_name === 'cli') {
-				Core.Miscellaneous.g_context.shell_callback(Core.StringList.value(['output', `${message}\n`]));
+				Core.Miscellaneous.g_context.callback(Core.StringList.value(['output', `● ${message}\n`]));
 			}
 			if (shell_name === 'gui') {
-				Core.Miscellaneous.g_context.shell_callback(Core.StringList.value(['output_notify', 'v', `${message}`]));
+				Core.Miscellaneous.g_context.callback(Core.StringList.value(['output_notify', 'v', `${message}`]));
 			}
 			return;
 		}
@@ -170,6 +170,7 @@ namespace TwinStar {
 			CoreX.FileSystem.create_directory(workspace());
 			CoreX.FileSystem.create_directory(trash());
 			CoreX.FileSystem.create_directory(temporary());
+			CoreX.FileSystem.set_working_directory(workspace());
 			return;
 		}
 
@@ -265,38 +266,34 @@ namespace TwinStar {
 		export let g_module_manifest: ModuleLoader.Manifest = undefined!;
 
 		export function main(
-			script_path: null | string,
 			argument: Array<string>,
 		): null | string {
 			let result: null | string = null;
 			let load_module_success = false;
 			try {
-				Detail.notify(`● TwinStar.ToolKit @ Script:${k_version} & Core:${Core.Miscellaneous.g_version.value} & Shell:${Core.Miscellaneous.g_context.shell_callback(Core.StringList.value(['name'])).value[1]}:${Core.Miscellaneous.g_context.shell_callback(Core.StringList.value(['version'])).value[1]}:${Core.Miscellaneous.g_context.shell_callback(Core.StringList.value(['system'])).value[1]}`);
-				// 分析主目录
-				if (script_path === null) {
-					throw new Error(`must run as file`);
+				Detail.notify(`TwinStar.ToolKit ~ Core:${Core.Miscellaneous.g_version.value} & Shell:${Core.Miscellaneous.g_context.callback(Core.StringList.value(['name'])).value[1]}:${Core.Miscellaneous.g_context.callback(Core.StringList.value(['version'])).value[1]} & Script:${k_version} ~ ${Core.Miscellaneous.g_context.callback(Core.StringList.value(['system'])).value[1]}`);
+				if (argument.length < 1) {
+					throw new Error(`argument too few`);
 				}
-				let script_path_match = /^(.+)\/script\/main.js$/.exec(script_path.replaceAll('\\', '/'));
-				if (script_path_match === null) {
-					throw new Error(`script path error`);
+				// 获取主目录
+				let home_directory = argument[0];
+				home_directory = home_directory.replaceAll(`\\`, '/');
+				if (/^\.{1,2}[\/]/.test(home_directory)) {
+					home_directory = `${Detail.get_working_directory()}/${home_directory}`;
 				}
-				if (/^\.{1,2}[\\\/]/.test(script_path_match[1])) {
-					HomeDirectory.path = `${Detail.get_working_directory()}/${script_path_match[1]}`;
-				} else {
-					HomeDirectory.path = script_path_match[1];
-				}
+				HomeDirectory.path = home_directory;
 				// 加载子模块
-				// 仅当所有子模块加载成功时，它们才处于可用状态，否则，请勿使用任何子模块
+				// 仅当所有子模块加载完成时，它们才处于可用状态，否则，请勿使用任何子模块
 				let begin_time = Date.now();
 				let entry = ModuleLoader.load(g_module_manifest, HomeDirectory.script());
 				let end_time = Date.now();
 				load_module_success = true;
 				// 现在，子模块可用，因此应使用 Console 模块来保证更好的交互效果
 				try {
-					Console.notify('s', los(`所有脚本模块已加载`), [los(`用时 {} s`, ((end_time - begin_time) / 1000).toFixed(3))]);
+					Console.notify('s', los(`模块加载完成`), [los(`用时 {} s`, ((end_time - begin_time) / 1000).toFixed(3))]);
 					HomeDirectory.initialize();
-					//Console.notify('s', EnvironmentVariable.search_from_path('adb')!, []);
 					{
+						//Console.notify('s', EnvironmentVariable.search_from_path('adb')!, []);
 						// let env = CoreX.Process.environment();
 						// let em = EnvironmentVariable.parse(env);
 						// Console.notify('w', 'env', record_to_array(em, (key, value) => (`${key}: ${value}`)));
@@ -330,7 +327,7 @@ namespace TwinStar {
 						// Console.notify('i', 'option', []);
 						// Console.option([[43]], null, true);
 					}
-					entry?.[0](entry[1], argument);
+					entry?.[0](entry[1], argument.slice(1));
 				} catch (e: any) {
 					Console.notify_error(e);
 					Console.pause();
@@ -348,8 +345,8 @@ namespace TwinStar {
 			} finally {
 				// 需要释放的资源可能位于子模块中，而目前无法保证子模块已被成功加载
 				if (load_module_success) {
-					g_thread_manager.resize(0);
 					HomeDirectory.deinitialize();
+					g_thread_manager.resize(0);
 				}
 			}
 			return result;
@@ -394,7 +391,7 @@ TwinStar.Main.g_module_manifest = {
 		`Support/PvZ2/RSB/ResourceManifest/Convert`,
 		`Support/PvZ2/RSB/ResourceManifest/ResourceManifest`,
 		`Support/PvZ2/RSB/ResourceManifest/OfficialResourceManifest`,
-		`Support/PvZ2/RSB/ResourceExtract/ResourceExtract`,
+		`Support/PvZ2/RSB/ResourceConvert/ResourceConvert`,
 		`Support/PvZ2/RemoteAndroidHelper`,
 		`Executor/Method`,
 		`Executor/Argument`,

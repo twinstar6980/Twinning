@@ -48,10 +48,9 @@ namespace TwinStar::Shell {
 		) -> Core::Size const* = 0;
 
 		virtual auto execute (
-			Core::String const &        script,
-			Core::Boolean const &       script_is_path,
-			Core::StringList const &    argument,
-			Core::ShellCallback const & shell_callback
+			Core::Callback const &   callback,
+			Core::String const &     script,
+			Core::StringList const & argument
 		) -> Core::String const* = 0;
 
 		#pragma endregion
@@ -65,15 +64,13 @@ namespace TwinStar::Shell {
 		}
 
 		auto wrapped_execute (
+			Core::Callback const &           callback,
 			std::string const &              script,
-			bool const &                     script_is_path,
-			std::vector<std::string> const & argument,
-			Core::ShellCallback const &      shell_callback
+			std::vector<std::string> const & argument
 		) -> std::optional<std::string> {
 			auto script_s = CoreTypeConverter::to_string(script);
-			auto script_is_path_s = CoreTypeConverter::to_boolean(script_is_path);
 			auto argument_s = CoreTypeConverter::allocate_string_list(argument);
-			auto result_s = thiz.execute(script_s, script_is_path_s, argument_s, shell_callback);
+			auto result_s = thiz.execute(callback, script_s, argument_s);
 			CoreTypeConverter::free_string_list(argument_s);
 			return result_s ? std::make_optional<std::string>(CoreTypeConverter::from_string(*result_s)) : std::nullopt;
 		}
@@ -98,11 +95,11 @@ namespace TwinStar::Shell {
 	k_symbol_id = {
 		#if defined M_compiler_msvc
 		.version = "?version@Interface@Core@TwinStar@@YAPEBUSize@123@XZ"sv,
-		.execute = "?execute@Interface@Core@TwinStar@@YAPEBUString@123@AEBU4123@AEBUBoolean@123@AEBUStringList@123@AEBQ6AAEBU6123@2@Z@Z"sv,
+		.execute = "?execute@Interface@Core@TwinStar@@YAPEBUString@123@AEBQ6AAEBUStringList@123@AEBU5123@@ZAEBU4123@0@Z"sv,
 		#endif
 		#if defined M_compiler_clang
 		.version = "_ZN8TwinStar4Core9Interface7versionEv"sv,
-		.execute = "_ZN8TwinStar4Core9Interface7executeERKNS1_6StringERKNS1_7BooleanERKNS1_10StringListERKPFSA_SA_E"sv,
+		.execute = "_ZN8TwinStar4Core9Interface7executeERKPFRKNS1_10StringListES4_ERKNS1_6StringES4_"sv,
 		#endif
 	};
 

@@ -74,114 +74,11 @@ namespace TwinStar::Core::Tool::PopCap::RSB::Common {
 		),
 	);
 
-	inline auto subgroup_category_to_data (
-		SubgroupCategory const & value,
-		IntegerU32 &             resolution_data,
-		IntegerU32 &             locale_data
-	) -> Void {
-		if (!value.resolution) {
-			resolution_data = 0_iu32;
-		} else {
-			resolution_data = cbw<IntegerU32>(value.resolution.get());
-		}
-		if (!value.locale) {
-			locale_data = 0_iu32;
-		} else {
-			locale_data = reverse_endian(cbw<IntegerU32>(value.locale.get().to_of<FourCC>()));
-		}
-		return;
-	}
-
-	inline auto subgroup_category_from_data (
-		SubgroupCategory & value,
-		IntegerU32 const & resolution_data,
-		IntegerU32 const & locale_data
-	) -> Void {
-		if (resolution_data == 0_iu32) {
-			value.resolution.reset();
-		} else {
-			value.resolution.set(cbw<Integer>(resolution_data));
-		}
-		if (locale_data == 0_iu32) {
-			value.locale.reset();
-		} else {
-			value.locale.set().from(cbw<FourCC>(reverse_endian(locale_data)));
-		}
-		return;
-	}
-
 	#pragma endregion
 
 	#pragma region
 
 	using StringBlockFixed128 = StaticArray<Character, 128_sz>;
-
-	inline auto string_block_fixed_128_to_string (
-		StringBlockFixed128 const & string
-	) -> String {
-		auto size = k_none_size;
-		for (auto & element : string) {
-			if (element == CharacterType::k_null) {
-				break;
-			}
-			++size;
-		}
-		assert_condition(size <= 128_sz);
-		return String{string.begin(), size};
-	}
-
-	inline auto string_block_fixed_128_from_string (
-		CStringView const & block
-	) -> StringBlockFixed128 {
-		assert_condition(block.size() <= 128_sz);
-		return StringBlockFixed128{block};
-	}
-
-	// ----------------
-
-	inline auto const k_suffix_of_composite_shell = CStringView{"_CompositeShell"_sv};
-
-	inline auto const k_suffix_of_auto_pool = CStringView{"_AutoPool"_sv};
-
-	inline auto group_id_has_composite_shell (
-		CStringView const & group_id
-	) -> Boolean {
-		return Range::end_with(group_id, k_suffix_of_composite_shell);
-	}
-
-	inline auto make_original_group_id (
-		CStringView const & standard_id,
-		Boolean &           is_composite,
-		String &            original_id
-	) -> Void {
-		is_composite = !group_id_has_composite_shell(standard_id);
-		if (is_composite) {
-			original_id = standard_id;
-		} else {
-			original_id = standard_id.head(standard_id.size() - k_suffix_of_composite_shell.size());
-		}
-		return;
-	}
-
-	inline auto make_original_group_id (
-		CStringView const & standard_id
-	) -> String {
-		auto is_composite = Boolean{};
-		auto original_id = String{};
-		make_original_group_id(standard_id, is_composite, original_id);
-		return original_id;
-	}
-
-	inline auto make_standard_group_id (
-		CStringView const & group_id,
-		Boolean const &     is_composite
-	) -> String {
-		auto standard_id = String{group_id};
-		if (!is_composite) {
-			standard_id.append_list(k_suffix_of_composite_shell);
-		}
-		return standard_id;
-	}
 
 	#pragma endregion
 

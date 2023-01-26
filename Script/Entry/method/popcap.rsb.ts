@@ -1,7 +1,7 @@
 /**
  * + popcap.rsb.pack PopCap-RSB 打包
  * + popcap.rsb.unpack PopCap-RSB 解包
- * + popcap.rsb.extract_resource PopCap-RSB 资源提取
+ * + popcap.rsb.resource_convert PopCap-RSB 资源转换
  */
 namespace TwinStar.Entry.method.popcap.rsb {
 
@@ -54,12 +54,12 @@ namespace TwinStar.Entry.method.popcap.rsb {
 
 	// ------------------------------------------------
 
-	type ResourceExtractOption = {
+	type ResourceConvertOption = {
 		json: Executor.RequestArgument<boolean, false>;
 		json_crypt: Executor.RequestArgument<boolean, false>;
 		json_crypt_key: Executor.RequestArgument<string, false>;
 		image: Executor.RequestArgument<boolean, false>;
-		image_texture_format_map_list: Record<string, Support.PvZ2.RSB.ResourceExtract.TextureFormatMap>;
+		image_texture_format_map_list: Record<string, Support.PvZ2.RSB.ResourceConvert.TextureFormatMap>;
 		image_texture_format_map_name: Executor.RequestArgument<string, false>;
 		image_atlas: Executor.RequestArgument<boolean, false>;
 		image_atlas_resize: Executor.RequestArgument<boolean, false>;
@@ -79,7 +79,7 @@ namespace TwinStar.Entry.method.popcap.rsb {
 
 	type Config = {
 		pack_buffer_size: Executor.RequestArgument<string, false>;
-		resource_extract_option: ResourceExtractOption;
+		resource_convert_option: ResourceConvertOption;
 	};
 
 	export function _injector(
@@ -303,41 +303,32 @@ namespace TwinStar.Entry.method.popcap.rsb {
 				input_forwarder: 'data_file',
 			}),
 			Executor.method_of({
-				id: 'popcap.rsb.extract_resource',
+				id: 'popcap.rsb.resource_convert',
 				descriptor(
 				) {
 					return Executor.query_method_description(this.id);
 				},
 				worker(a: Entry.CFSA & {
-					data_file: Executor.RequireArgument<string>;
 					bundle_directory: Executor.RequestArgument<string, true>;
 					version_number: Executor.RequestArgument<bigint, false>;
 					version_additional_texture_information_for_pvz_2_chinese_android: bigint | '?input';
-					option: ResourceExtractOption;
+					option: ResourceConvertOption;
 				}) {
-					let data_file: string;
 					let bundle_directory: string;
 					let version_number: [3n, 4n][number];
 					let version_additional_texture_information_for_pvz_2_chinese_android: [0n, 1n, 2n][number];
-					let option: Support.PvZ2.RSB.ResourceExtract.Option = {
+					let option: Support.PvZ2.RSB.ResourceConvert.Option = {
 						json: null,
 						image: null,
 						animation: null,
 						audio: null,
 					};
 					{
-						data_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'data_file'),
-							a.data_file,
-							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
-						);
-						bundle_directory = Executor.request_argument(
+						bundle_directory = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'bundle_directory'),
 							a.bundle_directory,
 							(value) => (value),
-							() => (data_file.replace(/((\.rsb))?$/i, '.rsb.bundle')),
-							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
 						version_number = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_number'),
@@ -355,7 +346,7 @@ namespace TwinStar.Entry.method.popcap.rsb {
 							() => (Console.integer(null)),
 							(value) => ([0n, 1n, 2n].includes(value) ? null : los(`版本不受支持`)),
 						);
-						let extract_directory = `${bundle_directory}/extract`;
+						let convert_directory = `${bundle_directory}/convert`;
 						{
 							let json: boolean;
 							json = Executor.request_argument(
@@ -368,7 +359,7 @@ namespace TwinStar.Entry.method.popcap.rsb {
 							);
 							if (json) {
 								option.json = {
-									directory: extract_directory,
+									directory: convert_directory,
 									crypt: null,
 								};
 								let crypt: boolean;
@@ -408,7 +399,7 @@ namespace TwinStar.Entry.method.popcap.rsb {
 							);
 							if (image) {
 								option.image = {
-									directory: extract_directory,
+									directory: convert_directory,
 									texture_format_map: null!,
 									atlas: null,
 									sprite: null,
@@ -478,7 +469,7 @@ namespace TwinStar.Entry.method.popcap.rsb {
 							);
 							if (animation) {
 								option.animation = {
-									directory: extract_directory,
+									directory: convert_directory,
 									json: null,
 									flash: null,
 								};
@@ -520,7 +511,7 @@ namespace TwinStar.Entry.method.popcap.rsb {
 							);
 							if (audio) {
 								option.audio = {
-									directory: extract_directory,
+									directory: convert_directory,
 									tool: {
 										ffmpeg_program: HomeDirectory.of(a.option.audio_tool.ffmpeg_program),
 										ww2ogg_program: HomeDirectory.of(a.option.audio_tool.ww2ogg_program),
@@ -530,27 +521,24 @@ namespace TwinStar.Entry.method.popcap.rsb {
 							}
 						}
 					}
-					Support.PvZ2.RSB.ResourceExtract.extract_package(
-						data_file,
+					Support.PvZ2.RSB.ResourceConvert.convert_fs(
+						`${bundle_directory}/resource`,
 						`${bundle_directory}/manifest.json`,
 						`${bundle_directory}/resource_manifest.json`,
-						`${bundle_directory}/resource`,
 						option,
-						version_number,
-						version_additional_texture_information_for_pvz_2_chinese_android,
+						{ number: version_number, additional_texture_information_for_pvz_2_chinese_android: version_additional_texture_information_for_pvz_2_chinese_android },
 					);
 					Console.notify('s', los(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
-					data_file: undefined!,
 					bundle_directory: '?default',
 					version_number: '?input',
 					version_additional_texture_information_for_pvz_2_chinese_android: '?input',
-					option: config.resource_extract_option,
+					option: config.resource_convert_option,
 				},
-				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.rsb)$/i]]),
-				input_forwarder: 'data_file',
+				input_filter: Entry.file_system_path_test_generator([['directory', /.+(\.rsb)(\.bundle)$/i]]),
+				input_forwarder: 'bundle_directory',
 			}),
 		);
 	}

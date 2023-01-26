@@ -12,23 +12,20 @@ namespace TwinStar::Core::Interface::Implement {
 	}
 
 	inline auto execute (
-		String const &                  script,
-		Boolean const &                 script_is_path,
-		List<String> const &            argument,
-		Executor::ShellCallback const & shell_callback
+		Executor::Callback const & callback,
+		String const &             script,
+		List<String> const &       argument
 	) -> Optional<String> {
-		auto script_text = String{};
-		auto script_path = Optional<Path>{};
-		if (!script_is_path) {
-			script_text = script;
-		} else {
-			script_path.set(script);
-			auto data = FileSystem::read_file(Path{script});
+		auto script_value = String{};
+		if (script.size() >= 1_sz && script.first() == '?'_c) {
+			auto script_data = FileSystem::read_file(Path{String{script.tail(script.size() - 1_sz)}});
 			// NOTE : avoid clang bug : explicit provide template argument <ListView>
-			script_text.bind(from_byte_view<Character, ListView>(data.view()));
-			data.unbind();
+			script_value.bind(from_byte_view<Character, ListView>(script_data.view()));
+			script_data.unbind();
+		} else {
+			script_value = script;
 		}
-		return Executor::execute(script_text, script_path, argument, shell_callback);
+		return Executor::execute(callback, script_value, argument);
 	}
 
 	#pragma endregion

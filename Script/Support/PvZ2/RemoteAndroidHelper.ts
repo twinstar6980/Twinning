@@ -85,13 +85,13 @@ namespace TwinStar.Support.PvZ2.RemoteAndroidHelper {
 				Console.notify('i', los(`拉取 ...`), [remote.main_package]);
 				ADBHelper.pull(local_temporary.main_package, remote.main_package);
 				Console.notify('i', los(`解包 ...`), [local_temporary.main_package]);
-				CoreX.Tool.PopCap.RSB.unpack_fs(local_temporary.main_package, `${local.main_package}/mainfest.json`, `${local.main_package}/description.json`, `${local.main_package}/group/{0}/{1}/resource`, `${local.main_package}/group/{0}/{1}/packet.rsgp`, { number: 4n, additional_texture_information_for_pvz_2_chinese_android: 0n });
+				CoreX.Tool.PopCap.RSB.unpack_fs(local_temporary.main_package, `${local.main_package}/manifest.json`, `${local.main_package}/description.json`, `${local.main_package}/group/{0}/{1}/resource`, `${local.main_package}/group/{0}/{1}/packet.rsgp`, { number: 4n, additional_texture_information_for_pvz_2_chinese_android: 0n });
 				Console.notify('s', los(`完成`), [local.main_package]);
 				break;
 			}
 			case 'push_main_package': {
 				Console.notify('i', los(`打包 ...`), [local.main_package]);
-				CoreX.Tool.PopCap.RSB.pack_fs(local_temporary.main_package, `${local.main_package}/mainfest.json`, `${local.main_package}/description.json`, `${local.main_package}/group/{0}/{1}/resource`, `${local.main_package}/group/{0}/{1}/packet.rsgp`, `${local.main_package}/group/{0}/{1}/packet.rsgp`, { number: 4n, additional_texture_information_for_pvz_2_chinese_android: 0n }, 1024n << 20n);
+				CoreX.Tool.PopCap.RSB.pack_fs(local_temporary.main_package, `${local.main_package}/manifest.json`, `${local.main_package}/description.json`, `${local.main_package}/group/{0}/{1}/resource`, `${local.main_package}/group/{0}/{1}/packet.rsgp`, `${local.main_package}/group/{0}/{1}/packet.rsgp`, { number: 4n, additional_texture_information_for_pvz_2_chinese_android: 0n }, 1024n << 20n);
 				Console.notify('i', los(`推送 ...`), [local_temporary.main_package]);
 				ADBHelper.push_secure(remote.main_package, local_temporary.main_package, application);
 				Console.notify('s', los(`完成`), [remote.main_package]);

@@ -35,7 +35,7 @@ namespace TwinStar::Core::Interface {
 		Size     capacity;
 	};
 
-	using ShellCallback = StringList const & (*) (StringList const &);
+	using Callback = StringList const & (*) (StringList const &);
 
 	// ----------------
 
@@ -49,10 +49,9 @@ namespace TwinStar::Core::Interface {
 	M_symbol_export
 	#endif
 	extern auto execute (
-		String const &        script,
-		Boolean const &       script_is_path,
-		StringList const &    argument,
-		ShellCallback const & shell_callback
+		Callback const &   callback,
+		String const &     script,
+		StringList const & argument
 	) -> String const*;
 
 }

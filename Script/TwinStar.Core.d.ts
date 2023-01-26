@@ -1,6 +1,6 @@
 /**
- * JS API of TwinStar.ToolKit.Core
- * @version 23
+ * JS interface of TwinStar.ToolKit.Core
+ * @version 24
  */
 declare namespace TwinStar.Core {
 
@@ -1122,17 +1122,17 @@ declare namespace TwinStar.Core {
 		// ------------------------------------------------
 
 		/**
-		 * 判断路径是否存在
-		 * @param target 路径
-		 * @returns 路径存在与否
+		 * 判断目标是否存在
+		 * @param target 目标
+		 * @returns 目标存在与否
 		 */
 		function exist(
 			target: Path,
 		): Boolean;
 
 		/**
-		 * 判断路径是否存在且为文件
-		 * @param target 文件路径
+		 * 判断目标是否存在且为文件
+		 * @param target 目标
 		 * @returns 文件存在与否
 		 */
 		function exist_file(
@@ -1140,8 +1140,8 @@ declare namespace TwinStar.Core {
 		): Boolean;
 
 		/**
-		 * 判断路径是否存在且为目录
-		 * @param target 目录路径
+		 * 判断目标是否存在且为目录
+		 * @param target 目标
 		 * @returns 目录存在与否
 		 */
 		function exist_directory(
@@ -1152,8 +1152,8 @@ declare namespace TwinStar.Core {
 
 		/**
 		 * 复制文件或目录
-		 * @param source 来源路径
-		 * @param destination 目的路径
+		 * @param source 来源
+		 * @param destination 目的
 		 */
 		function copy(
 			source: Path,
@@ -1162,8 +1162,8 @@ declare namespace TwinStar.Core {
 
 		/**
 		 * 移动文件或目录
-		 * @param source 来源路径
-		 * @param destination 目的路径
+		 * @param source 来源
+		 * @param destination 目的
 		 */
 		function rename(
 			source: Path,
@@ -1172,7 +1172,7 @@ declare namespace TwinStar.Core {
 
 		/**
 		 * 删除文件或目录
-		 * @param source 来源路径
+		 * @param source 来源
 		 */
 		function remove(
 			source: Path,
@@ -1184,7 +1184,7 @@ declare namespace TwinStar.Core {
 		 * 创建符号链接
 		 * @param target 目标
 		 * @param object 对象，即链接指向的路径，可以不存在或为非法
-		 * @param is_directory 指向路径是否为目录
+		 * @param is_directory 指向的路径是否为目录
 		 */
 		function create_link(
 			target: Path,
@@ -1327,10 +1327,10 @@ declare namespace TwinStar.Core {
 		): Size;
 
 		/**
-		 * 获取目标目录下的文件与目录路径
+		 * 获取目标目录下的文件与目录
 		 * @param target 目标目录
 		 * @param depth 需要获取的深度，为空时获取所有层级
-		 * @returns 目标目录下的文件与目录路径列表
+		 * @returns 目标目录下的文件与目录列表
 		 */
 		function list(
 			target: Path,
@@ -1338,10 +1338,10 @@ declare namespace TwinStar.Core {
 		): PathList;
 
 		/**
-		 * 获取目标目录下的文件路径
+		 * 获取目标目录下的文件
 		 * @param target 目标目录
 		 * @param depth 需要获取的深度，为空时获取所有层级
-		 * @returns 目标目录下的文件路径列表
+		 * @returns 目标目录下的文件列表
 		 */
 		function list_file(
 			target: Path,
@@ -1349,10 +1349,10 @@ declare namespace TwinStar.Core {
 		): PathList;
 
 		/**
-		 * 获取目标目录下的目录路径
+		 * 获取目标目录下的目录
 		 * @param target 目标目录
 		 * @param depth 需要获取的深度，为空时获取所有层级
-		 * @returns 目标目录下的目录路径列表
+		 * @returns 目标目录下的目录列表
 		 */
 		function list_directory(
 			target: Path,
@@ -1362,15 +1362,15 @@ declare namespace TwinStar.Core {
 		// ------------------------------------------------
 
 		/**
-		 * 获取当前工作目录
-		 * @returns 当前工作目录
+		 * 获取工作目录
+		 * @returns 工作目录
 		 */
 		function get_working_directory(
 		): Path;
 
 		/**
-		 * 改变当前工作目录
-		 * @param target 当前工作目录
+		 * 设置工作目录
+		 * @param target 工作目录
 		 */
 		function set_working_directory(
 			target: Path,
@@ -3683,11 +3683,11 @@ declare namespace TwinStar.Core {
 			): any;
 
 			/**
-			 * 调用外壳程序提供的回调函数
+			 * 调用回调函数，由外壳程序提供
 			 * @param argument 参数
 			 * @returns 结果
 			 */
-			shell_callback(
+			callback(
 				argument: StringList,
 			): StringList;
 
@@ -3773,9 +3773,7 @@ declare namespace TwinStar.Core {
 
 	/** 主函数；返回值为null时，表示执行成功，为string时，表示执行失败，返回值为错误信息 */
 	type JS_MainFunction = (
-		/** 脚本路径；若不以文件形式运行脚本，则为null */
-		script_path: null | string,
-		/** 启动参数 */
+		/** 参数 */
 		argument: Array<string>,
 	) => null | string;
 

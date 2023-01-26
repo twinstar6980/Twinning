@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/utility/utility.hpp"
-#include "core/executor/shell_callback.hpp"
+#include "core/executor/callback.hpp"
 
 namespace TwinStar::Core::Executor {
 
@@ -11,10 +11,10 @@ namespace TwinStar::Core::Executor {
 
 	protected:
 
-		JS::Runtime   m_runtime;
-		JS::Context   m_context;
-		ShellCallback m_shell_callback;
-		Boolean       m_busy;
+		JS::Runtime m_runtime;
+		JS::Context m_context;
+		Callback    m_callback;
+		Boolean     m_busy;
 
 	public:
 
@@ -39,21 +39,21 @@ namespace TwinStar::Core::Executor {
 		// ----------------
 
 		Context (
-			ShellCallback const & shell_callback
+			Callback const & callback
 		) :
 			m_runtime{JS::Runtime::new_instance()},
 			m_context{m_runtime.new_context()},
-			m_shell_callback{shell_callback},
+			m_callback{callback},
 			m_busy{k_false} {
 		}
 
 		Context (
-			JS::Runtime &         runtime,
-			ShellCallback const & shell_callback
+			JS::Runtime &    runtime,
+			Callback const & callback
 		) :
 			m_runtime{JS::Runtime::new_reference(runtime._runtime())},
 			m_context{m_runtime.new_context()},
-			m_shell_callback{shell_callback},
+			m_callback{callback},
 			m_busy{k_false} {
 		}
 
@@ -95,11 +95,11 @@ namespace TwinStar::Core::Executor {
 			return thiz.m_context.evaluate(script, name);
 		}
 
-		auto shell_callback (
+		auto callback (
 			List<String> const & argument
 		) -> List<String> {
 			auto guard = std::lock_guard{JS::g_mutex};
-			return thiz.m_shell_callback(argument);
+			return thiz.m_callback(argument);
 		}
 
 		#pragma endregion
@@ -109,7 +109,7 @@ namespace TwinStar::Core::Executor {
 		auto spawn (
 		) -> Context {
 			auto guard = std::lock_guard{JS::g_mutex};
-			return Context{thiz.m_runtime, thiz.m_shell_callback};
+			return Context{thiz.m_runtime, thiz.m_callback};
 		}
 
 		// ----------------

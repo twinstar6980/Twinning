@@ -147,12 +147,11 @@ namespace TwinStar::Shell {
 		}
 
 		virtual auto execute (
-			Core::String const &        script,
-			Core::Boolean const &       script_is_path,
-			Core::StringList const &    argument,
-			Core::ShellCallback const & shell_callback
+			Core::Callback const &   callback,
+			Core::String const &     script,
+			Core::StringList const & argument
 		) -> Core::String const* override {
-			return thiz.m_symbol.execute(script, script_is_path, argument, shell_callback);
+			return thiz.m_symbol.execute(callback, script, argument);
 		}
 
 		#pragma endregion

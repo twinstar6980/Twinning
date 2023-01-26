@@ -7,9 +7,9 @@ namespace TwinStar.Shell {
 	export function callback(
 		argument: Array<string>,
 	): Array<string> {
-		let result = CoreX.Miscellaneous.shell_callback(argument);
+		let result = CoreX.Miscellaneous.callback(argument);
 		if (result[0].length !== 0) {
-			throw new Error(`shell callback invoke failed : ${result[0]}`);
+			throw new Error(`callback invoke failed : ${result[0]}`);
 		}
 		return result.slice(1);
 	}

@@ -56,7 +56,7 @@ namespace TwinStar.Entry {
 
 	/**
 	 * 简单批处理执行
-	 * @param directory 扫描路径
+	 * @param directory 批处理所扫描的目录
 	 * @param filter 子项过滤规则
 	 * @param work 工作函数
 	 */
