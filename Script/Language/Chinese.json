@@ -109,7 +109,7 @@
 	"检测到ZLib异常，现截断数据": null,
 	"检测到Packet异常，现以空Packet替换": null,
 	"请输入需要修复的RSB文件路径": null,
-	"修复成功": null,
+	"修复完成": null,
 	// Entry/method/js
 	"method#js.evaluate:description": "JS 执行",
 	"method#js.evaluate$script_file:name": "脚本文件",

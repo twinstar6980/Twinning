@@ -194,15 +194,20 @@ namespace TwinStar.Script.RepairRSB {
 			}
 		}
 		// subgroup_information_section
+		let progress = new TextGenerator.Progress('fraction', false, 20, subgroup_information_section_block_count);
 		for (let subgroup_index = 0; subgroup_index < subgroup_information_section_block_count; ++subgroup_index) {
+			progress.increase();
+			Console.notify('i', `${progress}`, []);
 			let view = new DataView(data, subgroup_information_section_offset + subgroup_information_section_block_size * subgroup_index);
+			let pool_view = new DataView(data, subgroup_pool_information_section_offset + subgroup_pool_information_section_block_size * subgroup_index);
 			// id
 			// offset
 			let offset = view.getUint32(0x80, true);
 			// size
 			// index
 			// resource_data_section_store_mode
-			view.setUint32(0x8C, view.getUint32(0x8C, true) & 0b11, true);
+			let resource_data_section_store_mode = view.getUint32(0x8C, true);
+			view.setUint32(0x8C, resource_data_section_store_mode & 0b11, true);
 			// information_section_size
 			let information_section_size = view.getUint32(0x90, true);
 			// generic_resource_data_section_offset
@@ -210,12 +215,15 @@ namespace TwinStar.Script.RepairRSB {
 			// generic_resource_data_section_size
 			let generic_resource_data_section_size = view.getUint32(0x98, true);
 			// generic_resource_data_section_size_original
+			let generic_resource_data_section_size_original = view.getUint32(0x9C, true);
 			// generic_resource_data_section_size_original_1
 			// texture_resource_data_section_offset
 			let texture_resource_data_section_offset = view.getUint32(0xA4, true);
 			// texture_resource_data_section_size
 			let texture_resource_data_section_size = view.getUint32(0xA8, true);
 			// texture_resource_data_section_size_original
+			view.setUint32(0xAC, pool_view.getUint32(0x84, true), true);
+			let texture_resource_data_section_size_original = view.getUint32(0xAC, true);
 			// unused_1
 			view.setUint32(0xB0, 0x00000000, true);
 			view.setUint32(0xB4, 0x00000000, true);
@@ -247,19 +255,74 @@ namespace TwinStar.Script.RepairRSB {
 				view.setUint32(0xC8, 0x00000000, true);
 			} else {
 				// repair packet
-				repair_packet(data, offset);
 				let packet_view = new DataView(data, offset);
-				view.setUint32(0x8C, packet_view.getUint32(0x10, true), true);
-				view.setUint32(0x90, packet_view.getUint32(0x14, true), true);
-				view.setUint32(0x94, packet_view.getUint32(0x18, true), true);
-				view.setUint32(0x98, packet_view.getUint32(0x1C, true), true);
-				view.setUint32(0x9C, packet_view.getUint32(0x20, true), true);
-				view.setUint32(0xA0, packet_view.getUint32(0x20, true), true);
-				view.setUint32(0xA4, packet_view.getUint32(0x28, true), true);
-				view.setUint32(0xA8, packet_view.getUint32(0x2C, true), true);
-				view.setUint32(0xAC, packet_view.getUint32(0x30, true), true);
-				actual_packet_size = Math.max(packet_view.getUint32(0x14, true), packet_view.getUint32(0x18, true) + packet_view.getUint32(0x1C, true), packet_view.getUint32(0x28, true) + packet_view.getUint32(0x2C, true));
-				view.setUint32(0x84, actual_packet_size, true);
+				// magic
+				packet_view.setUint32(0x00, 0x72736770, true);
+				// version_number
+				packet_view.setUint32(0x04, 0x00000004, true);
+				// unused_1
+				packet_view.setUint32(0x08, 0x00000000, true);
+				packet_view.setUint32(0x0C, 0x00000000, true);
+				// resource_data_section_store_mode
+				packet_view.setUint32(0x10, resource_data_section_store_mode & 0b11, true);
+				// information_section_size
+				packet_view.setUint32(0x14, information_section_size, true);
+				// generic_resource_data_section_offset
+				packet_view.setUint32(0x18, generic_resource_data_section_offset, true);
+				// generic_resource_data_section_size
+				packet_view.setUint32(0x1C, generic_resource_data_section_size, true);
+				// generic_resource_data_section_size_original
+				packet_view.setUint32(0x20, generic_resource_data_section_size_original, true);
+				// unused_2
+				packet_view.setUint32(0x24, 0x00000000, true);
+				// texture_resource_data_section_offset
+				packet_view.setUint32(0x28, texture_resource_data_section_offset, true);
+				// texture_resource_data_section_size
+				packet_view.setUint32(0x2C, texture_resource_data_section_size, true);
+				// texture_resource_data_section_size_original
+				packet_view.setUint32(0x30, texture_resource_data_section_size_original, true);
+				// unused_3
+				packet_view.setUint32(0x34, 0x00000000, true);
+				packet_view.setUint32(0x38, 0x00000000, true);
+				packet_view.setUint32(0x3C, 0x00000000, true);
+				packet_view.setUint32(0x40, 0x00000000, true);
+				packet_view.setUint32(0x44, 0x00000000, true);
+				// resource_information_section_size
+				// resource_information_section_offset
+				// unused_4
+				packet_view.setUint32(0x50, 0x00000000, true);
+				packet_view.setUint32(0x54, 0x00000000, true);
+				packet_view.setUint32(0x58, 0x00000000, true);
+				// test zlib ripe
+				// Console.notify('i', `test ${offset.toString(16)}`, [
+				// 	`generic offset=${generic_resource_data_section_offset.toString(16)} size=${generic_resource_data_section_size.toString(16)}~${generic_resource_data_section_size_original.toString(16)}`,
+				// 	`texture offset=${texture_resource_data_section_offset.toString(16)} size=${texture_resource_data_section_size.toString(16)}~${texture_resource_data_section_size_original.toString(16)}`,
+				// ]);
+				if (((resource_data_section_store_mode & 0b10) && !test_zlib_ripe(data, offset + generic_resource_data_section_offset, generic_resource_data_section_size, generic_resource_data_section_size_original)) ||
+					((resource_data_section_store_mode & 0b01) && !test_zlib_ripe(data, offset + texture_resource_data_section_offset, texture_resource_data_section_size, texture_resource_data_section_size_original))) {
+					Console.notify('w', los(`检测到ZLib异常，现截断数据`), [
+						`generic offset=${generic_resource_data_section_offset.toString(16)} size=${generic_resource_data_section_size.toString(16)}`,
+						`texture offset=${texture_resource_data_section_offset.toString(16)} size=${texture_resource_data_section_size.toString(16)}`,
+					]);
+					packet_view.setUint32(0x10, 0x00000000, true);
+					packet_view.setUint32(0x1C, 0x00000000, true);
+					packet_view.setUint32(0x20, 0x00000000, true);
+					packet_view.setUint32(0x2C, 0x00000000, true);
+					packet_view.setUint32(0x30, 0x00000000, true);
+					packet_view.setUint32(0x48, 0x00000000, true);
+					view.setUint32(0x8C, packet_view.getUint32(0x10, true), true);
+					view.setUint32(0x90, packet_view.getUint32(0x14, true), true);
+					view.setUint32(0x94, packet_view.getUint32(0x18, true), true);
+					view.setUint32(0x98, packet_view.getUint32(0x1C, true), true);
+					view.setUint32(0x9C, packet_view.getUint32(0x20, true), true);
+					view.setUint32(0xA0, packet_view.getUint32(0x20, true), true);
+					view.setUint32(0xA4, packet_view.getUint32(0x28, true), true);
+					view.setUint32(0xA8, packet_view.getUint32(0x2C, true), true);
+					view.setUint32(0xAC, packet_view.getUint32(0x30, true), true);
+					actual_packet_size = Math.max(packet_view.getUint32(0x14, true), packet_view.getUint32(0x18, true) + packet_view.getUint32(0x1C, true), packet_view.getUint32(0x28, true) + packet_view.getUint32(0x2C, true));
+					view.setUint32(0x84, actual_packet_size, true);
+	
+				}
 			}
 		}
 		// texture_resource_information_section
@@ -282,7 +345,7 @@ namespace TwinStar.Script.RepairRSB {
 		new Uint8Array(data_with_empty_packet.view().sub(Core.Size.value(0x0n), data.size()).value).set(new Uint8Array(data_js));
 		new Uint32Array(data_with_empty_packet.view().sub(data.size(), Core.Size.value(0x1000n)).value).set(new Uint32Array(empty_packet));
 		CoreX.FileSystem.write_file(output_file, data_with_empty_packet);
-		Console.notify('i', los(`修复成功`), [output_file]);
+		Console.notify('i', los(`修复完成`), [output_file]);
 		return;
 	}
 
