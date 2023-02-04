@@ -1,4 +1,3 @@
-/** PAM转换至Flash */
 namespace TwinStar.Support.PopCapAnimation.Convert.Flash.From {
 
 	// ------------------------------------------------
@@ -7,9 +6,7 @@ namespace TwinStar.Support.PopCapAnimation.Convert.Flash.From {
 		index: number,
 		image: Core.Tool.PopCap.PAM.Manifest.JS_N.Image,
 	): Core.XML.JS_Element {
-		if (image.transform.length !== 6) {
-			throw new Error('');
-		}
+		assert(image.transform.length === 6);
 		return XML.create_element('DOMSymbolItem', {
 			...k_xmlns_attribute,
 			name: `image/image_${index + 1}`,
@@ -193,9 +190,7 @@ namespace TwinStar.Support.PopCapAnimation.Convert.Flash.From {
 	function make_main_document(
 		animation: Core.Tool.PopCap.PAM.Manifest.JS_N.Animation,
 	): Core.XML.JS_Element {
-		if (animation.main_sprite == null) {
-			throw new Error('');
-		}
+		assert(animation.main_sprite !== null);
 		let prev_end = {
 			flow: -1,
 			command: -1,
@@ -347,9 +342,7 @@ namespace TwinStar.Support.PopCapAnimation.Convert.Flash.From {
 	export function from(
 		animation: Core.Tool.PopCap.PAM.Manifest.JS_N.Animation,
 	): FlashPackage {
-		if (animation.main_sprite == null) {
-			throw new Error('');
-		}
+		assert(animation.main_sprite !== null);
 		return {
 			extra: {
 				position: animation.position,
@@ -380,7 +373,7 @@ namespace TwinStar.Support.PopCapAnimation.Convert.Flash.From {
 		ripe_directory: string,
 	): void {
 		let ripe = from(raw);
-		save_flash_package(ripe, ripe_directory);
+		save_flash_package(ripe_directory, ripe);
 		return;
 	}
 
@@ -390,7 +383,7 @@ namespace TwinStar.Support.PopCapAnimation.Convert.Flash.From {
 	): void {
 		let raw = CoreX.JSON.read_fs_js<Core.Tool.PopCap.PAM.Manifest.JS_N.Animation>(raw_file);
 		let ripe = from(raw);
-		save_flash_package(ripe, ripe_directory);
+		save_flash_package(ripe_directory, ripe);
 		return;
 	}
 

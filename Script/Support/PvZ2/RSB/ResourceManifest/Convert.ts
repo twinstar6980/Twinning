@@ -1,13 +1,7 @@
-/** 资源清单转换 */
 namespace TwinStar.Support.PvZ2.RSB.ResourceManifest.Convert {
 
 	// ------------------------------------------------
 
-	/**
-	 * 将原生资源清单转换至自定义资源清单
-	 * @param source 原生资源清单
-	 * @returns 自定义资源清单
-	 */
 	export function from_official(
 		source: OfficialResourceManifest.Package,
 	): ResourceManifest.Package {
@@ -15,9 +9,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceManifest.Convert {
 			group: {},
 		};
 		for (let source_group of source.groups) {
-			if (!OfficialResourceManifest.GroupTypeE.includes(source_group.type)) {
-				throw new Error(`group type invalid`);
-			}
+			assert(OfficialResourceManifest.GroupTypeE.includes(source_group.type), `group type invalid`);
 			switch (source_group.type) {
 				case 'composite': {
 					destination.group[source_group.id] = {
@@ -37,9 +29,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceManifest.Convert {
 						destination_group = destination.group[source_group.id];
 					} else {
 						let destination_group_if = destination.group[source_subgroup.parent];
-						if (destination_group_if === undefined) {
-							throw new Error(`subgroup's parent is not found : ${source_group.id}`);
-						}
+						assert(destination_group_if !== undefined, `subgroup's parent is not found : ${source_group.id}`);
 						destination_group = destination_group_if;
 					}
 					destination_group.subgroup[source_group.id] = {
@@ -65,12 +55,8 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceManifest.Convert {
 							};
 						} else if ('parent' in source_resource) {
 							let atlas = destination_subgroup.resource[(source_resource as OfficialResourceManifest.SpriteImageResourceInformation).parent];
-							if (atlas === undefined) {
-								throw new Error(`sprite's parent is not found : ${source_resource.parent}`);
-							}
-							if (atlas.expand[0] !== 'atlas') {
-								throw new Error(`sprite's expand type is not 'atlas' : ${source_resource.parent}`);
-							}
+							assert(atlas !== undefined, `sprite's parent is not found : ${source_resource.parent}`);
+							assert(atlas.expand[0] === 'atlas', `sprite's expand type is not 'atlas' : ${source_resource.parent}`);
 							atlas.expand[1].sprite[source_resource.id] = {
 								path: source_resource.path.join('/'),
 								position: [
@@ -101,11 +87,6 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceManifest.Convert {
 		return destination;
 	}
 
-	/**
-	 * 将自定义资源清单转换至原生资源清单
-	 * @param source 自定义资源清单
-	 * @returns 原生资源清单
-	 */
 	export function to_official(
 		source: ResourceManifest.Package,
 	): OfficialResourceManifest.Package {

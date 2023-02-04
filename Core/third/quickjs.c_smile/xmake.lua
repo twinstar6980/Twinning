@@ -1,5 +1,5 @@
 -- quickjs for windows.msvc
--- 2021-03-27
+-- 2021-03-27 121dca5c9c71763dacbf086563d81c09f727d84d
 -- https://github.com/c-smile/quickjspp
 
 target('third.quickjs', function()

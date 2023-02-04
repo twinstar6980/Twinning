@@ -1,6 +1,6 @@
 /**
- * JS interface of TwinStar.ToolKit.Core
- * @version 24
+ * JS interface of Core
+ * @version 25
  */
 declare namespace TwinStar.Core {
 
@@ -365,6 +365,7 @@ declare namespace TwinStar.Core {
 		/**
 		 * 根据所给大小构造数组
 		 * @param size 数组大小
+		 * @returns 对象
 		 */
 		static allocate(
 			size: Size,
@@ -375,6 +376,7 @@ declare namespace TwinStar.Core {
 		/**
 		 * 分配新数组
 		 * @param size 新数组的大小
+		 * @returns 无
 		 */
 		allocate(
 			size: Size,
@@ -382,6 +384,7 @@ declare namespace TwinStar.Core {
 
 		/**
 		 * 重置数组
+		 * @returns 无
 		 */
 		reset(
 		): Void;
@@ -408,6 +411,7 @@ declare namespace TwinStar.Core {
 
 		/**
 		 * 移交内存的所有权给所返回的ArrayBuffer对象，调用之后对象表现为重置之后的状态
+		 * @returns 持有所有权的ArrayBuffer
 		 */
 		release(
 		): typeof ByteArray.Value;
@@ -493,6 +497,7 @@ declare namespace TwinStar.Core {
 		/**
 		 * 使用字节序列视图作为观测对象，初始流位置为0
 		 * @param list 观测对象
+		 * @returns 对象
 		 */
 		static look(
 			list: ByteListView,
@@ -519,6 +524,7 @@ declare namespace TwinStar.Core {
 		/**
 		 * 设置流所处的位置
 		 * @param position 位置，不大于视图的大小
+		 * @returns 无
 		 */
 		set_position(
 			position: Size,
@@ -552,6 +558,7 @@ declare namespace TwinStar.Core {
 		/**
 		 * 向流的当前位置写入一个字节
 		 * @param value 字节值
+		 * @returns 无
 		 */
 		write(
 			value: Byte,
@@ -566,9 +573,6 @@ declare namespace TwinStar.Core {
 
 	/** 字节输出流视图 */
 	type OByteStreamView = ByteStreamView;
-
-	/** 字节流读写数据时是否使用大端序，默认为false */
-	const g_byte_stream_use_big_endian: Boolean;
 
 	// ------------------------------------------------
 
@@ -637,6 +641,7 @@ declare namespace TwinStar.Core {
 		/**
 		 * 使用字符序列视图作为观测对象，初始流位置为0
 		 * @param list 观测对象
+		 * @returns 对象
 		 */
 		static look(
 			list: CharacterListView,
@@ -663,6 +668,7 @@ declare namespace TwinStar.Core {
 		/**
 		 * 设置流所处的位置
 		 * @param position 位置，不大于视图的大小
+		 * @returns 无
 		 */
 		set_position(
 			position: Size,
@@ -699,10 +705,11 @@ declare namespace TwinStar.Core {
 	/** JSON */
 	namespace JSON {
 
+		/** 值 */
 		type JS_Value = undefined | null | boolean | bigint | number | string | JS_Value[] | { [key: string]: JS_Value; };
 
 		/**
-		 * JSON值，存储 null、boolean、bigint、number、string、array、object 类型值的变体
+		 * 值，存储 null、boolean、bigint、number、string、array、object 类型值的变体
 		 * 
 		 * Constraint 是为在 JS_Value 基础上对值的进一步约束，仅用于TS的静态类型检查
 		 */
@@ -918,6 +925,7 @@ declare namespace TwinStar.Core {
 			/**
 			 * 根据所给大小构造位图
 			 * @param size 位图大小
+			 * @returns 对象
 			 */
 			static allocate(
 				size: ImageSize,
@@ -928,6 +936,7 @@ declare namespace TwinStar.Core {
 			/**
 			 * 分配新位图
 			 * @param size 新位图的大小
+			 * @returns 无
 			 */
 			allocate(
 				size: ImageSize,
@@ -935,6 +944,7 @@ declare namespace TwinStar.Core {
 
 			/**
 			 * 重置位图
+			 * @returns 无
 			 */
 			reset(
 			): Void;
@@ -1001,6 +1011,7 @@ declare namespace TwinStar.Core {
 			/**
 			 * 以像素填充视图
 			 * @param pixel 像素
+			 * @returns 无
 			 */
 			fill(
 				pixel: Pixel,
@@ -1009,6 +1020,7 @@ declare namespace TwinStar.Core {
 			/**
 			 * 以图像填充视图
 			 * @param image 图像
+			 * @returns 无
 			 */
 			draw(
 				image: BitmapView,
@@ -1045,6 +1057,7 @@ declare namespace TwinStar.Core {
 				 * 读取PNG至图像
 				 * @param data 数据
 				 * @param image 图像
+				 * @returns 无
 				 */
 				function read(
 					data: IByteStreamView,
@@ -1055,6 +1068,7 @@ declare namespace TwinStar.Core {
 				 * 将图像写入PNG
 				 * @param data 数据
 				 * @param image 图像
+				 * @returns 无
 				 */
 				function write(
 					data: OByteStreamView,
@@ -1083,6 +1097,7 @@ declare namespace TwinStar.Core {
 				 * 读取PNG文件至图像
 				 * @param path 文件
 				 * @param image 图像
+				 * @returns 无
 				 */
 				function read_file(
 					path: Path,
@@ -1093,6 +1108,7 @@ declare namespace TwinStar.Core {
 				 * 将图像写入PNG文件
 				 * @param path 文件
 				 * @param image 图像
+				 * @returns 无
 				 */
 				function write_file(
 					path: Path,
@@ -1154,6 +1170,7 @@ declare namespace TwinStar.Core {
 		 * 复制文件或目录
 		 * @param source 来源
 		 * @param destination 目的
+		 * @returns 无
 		 */
 		function copy(
 			source: Path,
@@ -1164,6 +1181,7 @@ declare namespace TwinStar.Core {
 		 * 移动文件或目录
 		 * @param source 来源
 		 * @param destination 目的
+		 * @returns 无
 		 */
 		function rename(
 			source: Path,
@@ -1173,6 +1191,7 @@ declare namespace TwinStar.Core {
 		/**
 		 * 删除文件或目录
 		 * @param source 来源
+		 * @returns 无
 		 */
 		function remove(
 			source: Path,
@@ -1185,6 +1204,7 @@ declare namespace TwinStar.Core {
 		 * @param target 目标
 		 * @param object 对象，即链接指向的路径，可以不存在或为非法
 		 * @param is_directory 指向的路径是否为目录
+		 * @returns 无
 		 */
 		function create_link(
 			target: Path,
@@ -1207,6 +1227,7 @@ declare namespace TwinStar.Core {
 		 * 创建硬链接
 		 * @param target 目标
 		 * @param object 对象，即链接所指向的文件系统对象，必须存在
+		 * @returns 无
 		 */
 		function create_hard_link(
 			target: Path,
@@ -1218,6 +1239,7 @@ declare namespace TwinStar.Core {
 		/**
 		 * 创建文件
 		 * @param target 目标文件
+		 * @returns 无
 		 */
 		function create_file(
 			target: Path,
@@ -1236,6 +1258,7 @@ declare namespace TwinStar.Core {
 		 * 调整文件大小
 		 * @param target 目标文件
 		 * @param size 文件大小
+		 * @returns 无
 		 */
 		function resize_file(
 			target: Path,
@@ -1255,6 +1278,7 @@ declare namespace TwinStar.Core {
 		 * 将字节序列写入文件
 		 * @param target 目标文件
 		 * @param data 文件内容
+		 * @returns 无
 		 */
 		function write_file(
 			target: Path,
@@ -1265,6 +1289,7 @@ declare namespace TwinStar.Core {
 		 * 读取文件至字节输出流
 		 * @param target 目标文件
 		 * @param data 文件内容
+		 * @returns 无
 		 */
 		function read_stream_file(
 			target: Path,
@@ -1275,6 +1300,7 @@ declare namespace TwinStar.Core {
 		 * 将字节输入流写入文件
 		 * @param target 目标文件
 		 * @param data 文件内容
+		 * @returns 无
 		 */
 		function write_stream_file(
 			target: Path,
@@ -1286,6 +1312,7 @@ declare namespace TwinStar.Core {
 		/**
 		 * 创建目录
 		 * @param target 目标目录
+		 * @returns 无
 		 */
 		function create_directory(
 			target: Path,
@@ -1371,6 +1398,7 @@ declare namespace TwinStar.Core {
 		/**
 		 * 设置工作目录
 		 * @param target 工作目录
+		 * @returns 无
 		 */
 		function set_working_directory(
 			target: Path,
@@ -1400,6 +1428,7 @@ declare namespace TwinStar.Core {
 		/**
 		 * 退出程序
 		 * @param code 退出码
+		 * @returns 无
 		 */
 		function exit(
 			code: IntegerU32,
@@ -1547,7 +1576,7 @@ declare namespace TwinStar.Core {
 			}
 
 			/** 编码 */
-			namespace Encode {
+			namespace Encoding {
 
 				/** Base64 */
 				namespace Base64 {
@@ -1607,7 +1636,7 @@ declare namespace TwinStar.Core {
 			}
 
 			/** 加密 */
-			namespace Encrypt {
+			namespace Encryption {
 
 				/** 异或 */
 				namespace XOR {
@@ -1716,7 +1745,7 @@ declare namespace TwinStar.Core {
 			}
 
 			/** 压缩 */
-			namespace Compress {
+			namespace Compression {
 
 				/** Deflate */
 				namespace Deflate {
@@ -1921,6 +1950,54 @@ declare namespace TwinStar.Core {
 
 			}
 
+			/** 差异 */
+			namespace Differentiation {
+
+				/** VCDiff */
+				namespace VCDiff {
+
+					/** 编码 */
+					namespace Encode {
+
+						/**
+						 * 编码
+						 * @param before 变动前数据
+						 * @param after 变动后数据
+						 * @param patch 补丁数据
+						 * @param interleaved 使用交叉模式生成差异数据
+						 */
+						function process_whole(
+							before: IByteStreamView,
+							after: IByteStreamView,
+							patch: OByteStreamView,
+							interleaved: Boolean,
+						): Void;
+
+					}
+
+					/** 解码 */
+					namespace Decode {
+
+						/**
+						 * 解码
+						 * @param before 变动前数据
+						 * @param after 变动后数据
+						 * @param patch 补丁数据
+						 * @param maximum_window_size 最大窗口大小
+						 */
+						function process_whole(
+							before: IByteStreamView,
+							after: OByteStreamView,
+							patch: IByteStreamView,
+							maximum_window_size: Size,
+						): Void;
+
+					}
+
+				}
+
+			}
+
 			/** 序列化 */
 			namespace Serialization {
 
@@ -2071,7 +2148,7 @@ declare namespace TwinStar.Core {
 			// ------------------------------------------------
 
 			/** 压缩 */
-			namespace Compress {
+			namespace Compression {
 
 				/** ETC1 */
 				namespace ETC1 {
@@ -2102,6 +2179,45 @@ declare namespace TwinStar.Core {
 						function process_image(
 							data: IByteStreamView,
 							image: Image.VBitmapView,
+						): Void;
+
+					}
+
+				}
+
+				/** ETC2 */
+				namespace ETC2 {
+
+					/** 压缩 */
+					namespace Compress {
+
+						/**
+						 * 压缩
+						 * @param data 数据
+						 * @param image 图像
+						 * @param with_alpha 是否携带alpha通道
+						 */
+						function process_image(
+							data: OByteStreamView,
+							image: Image.CBitmapView,
+							with_alpha: Boolean,
+						): Void;
+
+					}
+
+					/** 解压 */
+					namespace Uncompress {
+
+						/**
+						 * 解压
+						 * @param data 数据
+						 * @param image 图像
+						 * @param with_alpha 是否携带alpha通道
+						 */
+						function process_image(
+							data: IByteStreamView,
+							image: Image.VBitmapView,
+							with_alpha: Boolean,
 						): Void;
 
 					}
@@ -2499,7 +2615,7 @@ declare namespace TwinStar.Core {
 						level: Size,
 						window_bits: Size,
 						memory_level: Size,
-						strategy: Data.Compress.Deflate.Strategy,
+						strategy: Data.Compression.Deflate.Strategy,
 						version: Version,
 					): Void;
 
@@ -3515,6 +3631,82 @@ declare namespace TwinStar.Core {
 
 			}
 
+			/** RSBPatch补丁 */
+			namespace RSBPatch {
+
+				/** 版本 */
+				class Version {
+
+					// ------------------------------------------------
+
+					private _Tool_PopCap_RSBPatch_Version;
+
+					// ------------------------------------------------
+
+					static default(): Version;
+
+					static copy(it: Version): Version;
+
+					// ------------------------------------------------
+
+					static Value: {
+						number: 1n;
+					};
+
+					static value(it: typeof Version.Value): Version;
+
+					get value(): typeof Version.Value;
+
+					set value(it: typeof Version.Value);
+
+					// ------------------------------------------------
+
+				}
+
+				/** 编码 */
+				namespace Encode {
+
+					/**
+					 * 编码
+					 * @param before 变动前数据
+					 * @param after 变动后数据
+					 * @param patch 补丁数据
+					 * @param use_raw_packet 使用原始子包
+					 * @param version 版本
+					 */
+					function process_whole(
+						before: IByteStreamView,
+						after: IByteStreamView,
+						patch: OByteStreamView,
+						use_raw_packet: Boolean,
+						version: Version,
+					): Void;
+
+				}
+
+				/** 解码 */
+				namespace Decode {
+
+					/**
+					 * 解码
+					 * @param before 变动前数据
+					 * @param after 变动后数据
+					 * @param patch 补丁数据
+					 * @param use_raw_packet 使用原始子包
+					 * @param version 版本
+					 */
+					function process_whole(
+						before: IByteStreamView,
+						after: OByteStreamView,
+						patch: IByteStreamView,
+						use_raw_packet: Boolean,
+						version: Version,
+					): Void;
+
+				}
+
+			}
+
 		}
 
 		/** 杂项 */
@@ -3609,12 +3801,14 @@ declare namespace TwinStar.Core {
 	/** 杂项 */
 	namespace Miscellaneous {
 
+		// ------------------------------------------------
+
 		/** 上下文 */
 		class Thread {
 
 			// ------------------------------------------------
 
-			private _Thread;
+			private _Miscellaneous_Thread;
 
 			// ------------------------------------------------
 
@@ -3633,12 +3827,14 @@ declare namespace TwinStar.Core {
 
 			/**
 			 * 合并线程
+			 * @returns 无
 			 */
 			join(
 			): Void;
 
 			/**
 			 * 分离线程
+			 * @returns 无
 			 */
 			detach(
 			): Void;
@@ -3647,6 +3843,7 @@ declare namespace TwinStar.Core {
 
 			/**
 			 * 当前线程放弃目前的执行，以允许其他线程执行
+			 * @returns 无
 			 */
 			static yield(
 			): Void;
@@ -3654,6 +3851,7 @@ declare namespace TwinStar.Core {
 			/**
 			 * 当前线程休眠
 			 * @param duration 休眠时间，单位为毫秒
+			 * @returns 无
 			 */
 			static sleep(
 				duration: Size,
@@ -3668,7 +3866,7 @@ declare namespace TwinStar.Core {
 
 			// ------------------------------------------------
 
-			private _Context;
+			private _Miscellaneous_Context;
 
 			// ------------------------------------------------
 
@@ -3713,6 +3911,7 @@ declare namespace TwinStar.Core {
 			 * 在新线程中执行函数
 			 * @param executor 函数
 			 * @param thread 线程
+			 * @returns 无
 			 */
 			execute(
 				executor: () => any,
@@ -3761,11 +3960,16 @@ declare namespace TwinStar.Core {
 
 		// ------------------------------------------------
 
+		/** 版本编号 */
+		const g_version: Size;
+
 		/** 当前上下文对象 */
 		const g_context: Context;
 
-		/** 版本编号 */
-		const g_version: Size;
+		/** 字节流读写数据时是否使用大端序，默认为false */
+		const g_byte_stream_use_big_endian: Boolean;
+
+		// ------------------------------------------------
 
 	}
 

@@ -14,7 +14,7 @@ namespace mscharconv = std;
 #endif
 #if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 #include "core/third/mscharconv.hpp"
-namespace mscharconv = TwinStar::Core::ThirdParty::mscharconv;
+namespace mscharconv = TwinStar::Core::Third::mscharconv;
 #endif
 
 namespace TwinStar::Core::StringParser {
@@ -503,7 +503,7 @@ namespace TwinStar::Core::StringParser {
 		if (value > 0_i && !disable_sign_when_positive) {
 			stream.write('+'_c);
 		}
-		auto format_result = ThirdParty::fmt::format_to_n(cast_pointer<char>(stream.current_pointer()).value, stream.reserve().value, "{:d}", value.value);
+		auto format_result = Third::fmt::format_to_n(cast_pointer<char>(stream.current_pointer()).value, stream.reserve().value, "{:d}", value.value);
 		stream.forward(mbw<Size>(format_result.size));
 		return;
 	}
@@ -561,7 +561,7 @@ namespace TwinStar::Core::StringParser {
 		if (value > 0.0_f && !disable_sign_when_positive) {
 			stream.write('+'_c);
 		}
-		auto format_result = ThirdParty::fmt::format_to_n(cast_pointer<char>(stream.current_pointer()).value, stream.reserve().value, "{:#}", value == 0.0_f ? 0.0_f .value : value.value);
+		auto format_result = Third::fmt::format_to_n(cast_pointer<char>(stream.current_pointer()).value, stream.reserve().value, "{:#}", value == 0.0_f ? 0.0_f .value : value.value);
 		stream.forward(mbw<Size>(format_result.size));
 		return;
 	}

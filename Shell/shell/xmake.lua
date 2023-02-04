@@ -4,17 +4,19 @@ target('shell', function()
 	set_group('source')
 	set_kind('binary')
 	add_headerfiles(
-		'./core_interface.hpp',
 		'./version.hpp',
 		'./third/system/windows.hpp',
 		'./third/system/posix.hpp',
 		'./common.hpp',
-		'./library/library.hpp',
-		'./library/static_library.hpp',
-		'./library/dynamic_library.hpp',
+		'./core/interface.hpp',
+		'./core/symbol.hpp',
+		'./core/converter.hpp',
+		'./core/library.hpp',
+		'./core/invoker.hpp',
+		'./core/static_library.hpp',
+		'./core/dynamic_library.hpp',
 		'./host/host.hpp',
 		'./host/cli_host.hpp',
-		'./launch.hpp',
 		{ install = false }
 	)
 	add_files(
@@ -23,6 +25,7 @@ target('shell', function()
 	)
 	add_includedirs(
 		m.root .. '',
+		m.root .. '/../Core',
 		{ private = true }
 	)
 	add_defines(

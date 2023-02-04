@@ -1,4 +1,3 @@
-/** 对 Core 中部分功能的包装 */
 namespace TwinStar.CoreX {
 
 	export namespace JSON {
@@ -520,7 +519,7 @@ namespace TwinStar.CoreX {
 
 			}
 
-			export namespace Encode {
+			export namespace Encoding {
 
 				export namespace Base64 {
 
@@ -530,11 +529,11 @@ namespace TwinStar.CoreX {
 					): void {
 						let raw_data = FileSystem.read_file(raw_file);
 						let ripe_size = Core.Size.default();
-						Core.Tool.Data.Encode.Base64.Encode.compute_size(raw_data.size(), ripe_size);
+						Core.Tool.Data.Encoding.Base64.Encode.compute_size(raw_data.size(), ripe_size);
 						let ripe_data = Core.ByteArray.allocate(ripe_size);
 						let raw_stream = Core.ByteStreamView.look(raw_data.view());
 						let ripe_stream = Core.CharacterStreamView.look(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(ripe_data.view()));
-						Core.Tool.Data.Encode.Base64.Encode.process_whole(raw_stream, ripe_stream);
+						Core.Tool.Data.Encoding.Base64.Encode.process_whole(raw_stream, ripe_stream);
 						FileSystem.write_file(ripe_file, Core.Miscellaneous.cast_CharacterListView_to_ByteListView(ripe_stream.stream_view()));
 						return;
 					}
@@ -546,10 +545,10 @@ namespace TwinStar.CoreX {
 						let ripe_data = FileSystem.read_file(ripe_file);
 						let ripe_stream = Core.CharacterStreamView.look(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(ripe_data.view()));
 						let raw_size = Core.Size.default();
-						Core.Tool.Data.Encode.Base64.Decode.compute_size(ripe_stream.view(), raw_size);
+						Core.Tool.Data.Encoding.Base64.Decode.compute_size(ripe_stream.view(), raw_size);
 						let raw_data = Core.ByteArray.allocate(raw_size);
 						let raw_stream = Core.ByteStreamView.look(raw_data.view());
-						Core.Tool.Data.Encode.Base64.Decode.process_whole(ripe_stream, raw_stream);
+						Core.Tool.Data.Encoding.Base64.Decode.process_whole(ripe_stream, raw_stream);
 						FileSystem.write_file(raw_file, raw_stream.stream_view());
 						return;
 					}
@@ -558,7 +557,7 @@ namespace TwinStar.CoreX {
 
 			}
 
-			export namespace Encrypt {
+			export namespace Encryption {
 
 				export namespace XOR {
 
@@ -571,7 +570,7 @@ namespace TwinStar.CoreX {
 						let cipher_data = Core.ByteArray.allocate(plain_data.size());
 						let plain_stream = Core.ByteStreamView.look(plain_data.view());
 						let cipher_stream = Core.ByteStreamView.look(cipher_data.view());
-						Core.Tool.Data.Encrypt.XOR.Encrypt.process_whole(plain_stream, cipher_stream, Core.Byte.value(key));
+						Core.Tool.Data.Encryption.XOR.Encrypt.process_whole(plain_stream, cipher_stream, Core.Byte.value(key));
 						FileSystem.write_file(cipher_file, cipher_stream.stream_view());
 						return;
 					}
@@ -601,7 +600,7 @@ namespace TwinStar.CoreX {
 						let cipher_data = Core.ByteArray.allocate(plain_data.size());
 						let plain_stream = Core.ByteStreamView.look(plain_data.view());
 						let cipher_stream = Core.ByteStreamView.look(cipher_data.view());
-						Core.Tool.Data.Encrypt.Rijndael.Encrypt.process_whole(plain_stream, cipher_stream, Core.Tool.Data.Encrypt.Rijndael.Mode.value(mode), Core.Size.value(block_size), Core.Size.value(key_size), Core.String.value(key), Core.String.value(iv));
+						Core.Tool.Data.Encryption.Rijndael.Encrypt.process_whole(plain_stream, cipher_stream, Core.Tool.Data.Encryption.Rijndael.Mode.value(mode), Core.Size.value(block_size), Core.Size.value(key_size), Core.String.value(key), Core.String.value(iv));
 						FileSystem.write_file(cipher_file, cipher_stream.stream_view());
 						return;
 					}
@@ -619,7 +618,7 @@ namespace TwinStar.CoreX {
 						let plain_data = Core.ByteArray.allocate(cipher_data.size());
 						let cipher_stream = Core.ByteStreamView.look(cipher_data.view());
 						let plain_stream = Core.ByteStreamView.look(plain_data.view());
-						Core.Tool.Data.Encrypt.Rijndael.Decrypt.process_whole(cipher_stream, plain_stream, Core.Tool.Data.Encrypt.Rijndael.Mode.value(mode), Core.Size.value(block_size), Core.Size.value(key_size), Core.String.value(key), Core.String.value(iv));
+						Core.Tool.Data.Encryption.Rijndael.Decrypt.process_whole(cipher_stream, plain_stream, Core.Tool.Data.Encryption.Rijndael.Mode.value(mode), Core.Size.value(block_size), Core.Size.value(key_size), Core.String.value(key), Core.String.value(iv));
 						FileSystem.write_file(plain_file, plain_stream.stream_view());
 						return;
 					}
@@ -628,7 +627,7 @@ namespace TwinStar.CoreX {
 
 			}
 
-			export namespace Compress {
+			export namespace Compression {
 
 				export namespace Deflate {
 
@@ -663,11 +662,11 @@ namespace TwinStar.CoreX {
 					): void {
 						let raw_data = FileSystem.read_file(raw_file);
 						let ripe_size_bound = Core.Size.default();
-						Core.Tool.Data.Compress.Deflate.Compress.compute_size_bound(raw_data.size(), ripe_size_bound, Core.Size.value(window_bits), Core.Size.value(memory_level), Core.Tool.Data.Compress.Deflate.Wrapper.value(wrapper));
+						Core.Tool.Data.Compression.Deflate.Compress.compute_size_bound(raw_data.size(), ripe_size_bound, Core.Size.value(window_bits), Core.Size.value(memory_level), Core.Tool.Data.Compression.Deflate.Wrapper.value(wrapper));
 						let ripe_data = Core.ByteArray.allocate(ripe_size_bound);
 						let raw_stream = Core.ByteStreamView.look(raw_data.view());
 						let ripe_stream = Core.ByteStreamView.look(ripe_data.view());
-						Core.Tool.Data.Compress.Deflate.Compress.process_whole(raw_stream, ripe_stream, Core.Size.value(level), Core.Size.value(window_bits), Core.Size.value(memory_level), Core.Tool.Data.Compress.Deflate.Strategy.value(strategy), Core.Tool.Data.Compress.Deflate.Wrapper.value(wrapper));
+						Core.Tool.Data.Compression.Deflate.Compress.process_whole(raw_stream, ripe_stream, Core.Size.value(level), Core.Size.value(window_bits), Core.Size.value(memory_level), Core.Tool.Data.Compression.Deflate.Strategy.value(strategy), Core.Tool.Data.Compression.Deflate.Wrapper.value(wrapper));
 						FileSystem.write_file(ripe_file, ripe_stream.stream_view());
 						return;
 					}
@@ -684,7 +683,7 @@ namespace TwinStar.CoreX {
 						let ripe_data = FileSystem.read_file(ripe_file);
 						let ripe_stream = Core.ByteStreamView.look(ripe_data.view());
 						let raw_stream = Core.ByteStreamView.look(raw_data_buffer_view);
-						Core.Tool.Data.Compress.Deflate.Uncompress.process_whole(ripe_stream, raw_stream, Core.Size.value(window_bits), Core.Tool.Data.Compress.Deflate.Wrapper.value(wrapper));
+						Core.Tool.Data.Compression.Deflate.Uncompress.process_whole(ripe_stream, raw_stream, Core.Size.value(window_bits), Core.Tool.Data.Compression.Deflate.Wrapper.value(wrapper));
 						FileSystem.write_file(raw_file, raw_stream.stream_view());
 						return;
 					}
@@ -707,7 +706,7 @@ namespace TwinStar.CoreX {
 						let ripe_data = Core.ByteArray.allocate(ripe_size_bound);
 						let raw_stream = Core.ByteStreamView.look(raw_data.view());
 						let ripe_stream = Core.ByteStreamView.look(ripe_data.view());
-						Core.Tool.Data.Compress.BZip2.Compress.process_whole(raw_stream, ripe_stream, Core.Size.value(block_size), Core.Size.value(0n));
+						Core.Tool.Data.Compression.BZip2.Compress.process_whole(raw_stream, ripe_stream, Core.Size.value(block_size), Core.Size.value(0n));
 						FileSystem.write_file(ripe_file, ripe_stream.stream_view());
 						return;
 					}
@@ -722,8 +721,52 @@ namespace TwinStar.CoreX {
 						let ripe_data = FileSystem.read_file(ripe_file);
 						let ripe_stream = Core.ByteStreamView.look(ripe_data.view());
 						let raw_stream = Core.ByteStreamView.look(raw_data_buffer_view);
-						Core.Tool.Data.Compress.BZip2.Uncompress.process_whole(ripe_stream, raw_stream, Core.Boolean.value(false));
+						Core.Tool.Data.Compression.BZip2.Uncompress.process_whole(ripe_stream, raw_stream, Core.Boolean.value(false));
 						FileSystem.write_file(raw_file, raw_stream.stream_view());
+						return;
+					}
+
+				}
+
+			}
+
+			export namespace Differentiation {
+
+				export namespace VCDiff {
+
+					export function encode_fs(
+						before_file: string,
+						after_file: string,
+						patch_file: string,
+						interleaved: boolean,
+						patch_size_bound: bigint,
+					): void {
+						let before_data = FileSystem.read_file(before_file);
+						let after_data = FileSystem.read_file(after_file);
+						let patch_data = Core.ByteArray.allocate(Core.Size.value(patch_size_bound));
+						let before_stream = Core.ByteStreamView.look(before_data.view());
+						let after_stream = Core.ByteStreamView.look(after_data.view());
+						let patch_stream = Core.ByteStreamView.look(patch_data.view());
+						Core.Tool.Data.Differentiation.VCDiff.Encode.process_whole(before_stream, after_stream, patch_stream, Core.Boolean.value(interleaved));
+						FileSystem.write_file(patch_file, patch_stream.stream_view());
+						return;
+					}
+
+					export function decode_fs(
+						before_file: string,
+						after_file: string,
+						patch_file: string,
+						maximum_window_size: bigint,
+						after_size_bound: bigint,
+					): void {
+						let before_data = FileSystem.read_file(before_file);
+						let after_data = Core.ByteArray.allocate(Core.Size.value(after_size_bound));
+						let patch_data = FileSystem.read_file(patch_file);
+						let before_stream = Core.ByteStreamView.look(before_data.view());
+						let after_stream = Core.ByteStreamView.look(after_data.view());
+						let patch_stream = Core.ByteStreamView.look(patch_data.view());
+						Core.Tool.Data.Differentiation.VCDiff.Decode.process_whole(before_stream, after_stream, patch_stream, Core.Size.value(maximum_window_size));
+						FileSystem.write_file(after_file, after_stream.stream_view());
 						return;
 					}
 
@@ -752,6 +795,8 @@ namespace TwinStar.CoreX {
 
 			export const CompressionE = [
 				'rgb_etc1',
+				'rgb_etc2',
+				'rgba_etc2',
 				'rgb_pvrtc4',
 				'rgba_pvrtc4',
 			] as const;
@@ -808,6 +853,14 @@ namespace TwinStar.CoreX {
 						result = 4n;
 						break;
 					}
+					case 'rgb_etc2': {
+						result = 4n;
+						break;
+					}
+					case 'rgba_etc2': {
+						result = 8n;
+						break;
+					}
 					case 'rgb_pvrtc4': {
 						result = 4n;
 						break;
@@ -858,15 +911,23 @@ namespace TwinStar.CoreX {
 						break;
 					}
 					case 'rgb_etc1': {
-						Core.Tool.Texture.Compress.ETC1.Compress.process_image(data, image);
+						Core.Tool.Texture.Compression.ETC1.Compress.process_image(data, image);
+						break;
+					}
+					case 'rgb_etc2': {
+						Core.Tool.Texture.Compression.ETC2.Compress.process_image(data, image, Core.Boolean.value(false));
+						break;
+					}
+					case 'rgba_etc2': {
+						Core.Tool.Texture.Compression.ETC2.Compress.process_image(data, image, Core.Boolean.value(true));
 						break;
 					}
 					case 'rgb_pvrtc4': {
-						Core.Tool.Texture.Compress.PVRTC4.Compress.process_image(data, image, Core.Boolean.value(false));
+						Core.Tool.Texture.Compression.PVRTC4.Compress.process_image(data, image, Core.Boolean.value(false));
 						break;
 					}
 					case 'rgba_pvrtc4': {
-						Core.Tool.Texture.Compress.PVRTC4.Compress.process_image(data, image, Core.Boolean.value(true));
+						Core.Tool.Texture.Compression.PVRTC4.Compress.process_image(data, image, Core.Boolean.value(true));
 						break;
 					}
 				}
@@ -891,15 +952,23 @@ namespace TwinStar.CoreX {
 						break;
 					}
 					case 'rgb_etc1': {
-						Core.Tool.Texture.Compress.ETC1.Uncompress.process_image(data, image);
+						Core.Tool.Texture.Compression.ETC1.Uncompress.process_image(data, image);
+						break;
+					}
+					case 'rgb_etc2': {
+						Core.Tool.Texture.Compression.ETC2.Uncompress.process_image(data, image, Core.Boolean.value(false));
+						break;
+					}
+					case 'rgba_etc2': {
+						Core.Tool.Texture.Compression.ETC2.Uncompress.process_image(data, image, Core.Boolean.value(true));
 						break;
 					}
 					case 'rgb_pvrtc4': {
-						Core.Tool.Texture.Compress.PVRTC4.Uncompress.process_image(data, image, Core.Boolean.value(false));
+						Core.Tool.Texture.Compression.PVRTC4.Uncompress.process_image(data, image, Core.Boolean.value(false));
 						break;
 					}
 					case 'rgba_pvrtc4': {
-						Core.Tool.Texture.Compress.PVRTC4.Uncompress.process_image(data, image, Core.Boolean.value(true));
+						Core.Tool.Texture.Compression.PVRTC4.Uncompress.process_image(data, image, Core.Boolean.value(true));
 						break;
 					}
 				}
@@ -998,9 +1067,7 @@ namespace TwinStar.CoreX {
 					};
 					let view = new DataView(data);
 					version.number = BigInt(view.getUint32(0x0)) as any;
-					if (version.number !== 88n && version.number !== 112n && version.number !== 140n) {
-						throw new Error(`version number error`);
-					}
+					assert([88n, 112n, 140n].includes(version.number));
 					return version;
 				}
 
@@ -1091,10 +1158,10 @@ namespace TwinStar.CoreX {
 				export function compress_fs(
 					raw_file: string,
 					ripe_file: string,
-					level: Data.Compress.Deflate.CompressionLevel,
-					window_bits: Data.Compress.Deflate.WindowBits,
-					memory_level: Data.Compress.Deflate.MemoryLevel,
-					strategy: Data.Compress.Deflate.Strategy,
+					level: Data.Compression.Deflate.CompressionLevel,
+					window_bits: Data.Compression.Deflate.WindowBits,
+					memory_level: Data.Compression.Deflate.MemoryLevel,
+					strategy: Data.Compression.Deflate.Strategy,
 					version: typeof Core.Tool.PopCap.ZLib.Version.Value,
 				): void {
 					let version_c = Core.Tool.PopCap.ZLib.Version.value(version);
@@ -1104,7 +1171,7 @@ namespace TwinStar.CoreX {
 					let ripe_data = Core.ByteArray.allocate(ripe_size_bound);
 					let raw_stream = Core.ByteStreamView.look(raw_data.view());
 					let ripe_stream = Core.ByteStreamView.look(ripe_data.view());
-					Core.Tool.PopCap.ZLib.Compress.process_whole(raw_stream, ripe_stream, Core.Size.value(level), Core.Size.value(window_bits), Core.Size.value(memory_level), Core.Tool.Data.Compress.Deflate.Strategy.value(strategy), version_c);
+					Core.Tool.PopCap.ZLib.Compress.process_whole(raw_stream, ripe_stream, Core.Size.value(level), Core.Size.value(window_bits), Core.Size.value(memory_level), Core.Tool.Data.Compression.Deflate.Strategy.value(strategy), version_c);
 					FileSystem.write_file(ripe_file, ripe_stream.stream_view());
 					return;
 				}
@@ -1112,7 +1179,7 @@ namespace TwinStar.CoreX {
 				export function uncompress_fs(
 					ripe_file: string,
 					raw_file: string,
-					window_bits: Data.Compress.Deflate.WindowBits,
+					window_bits: Data.Compression.Deflate.WindowBits,
 					version: typeof Core.Tool.PopCap.ZLib.Version.Value,
 				): void {
 					let version_c = Core.Tool.PopCap.ZLib.Version.value(version);
@@ -1431,6 +1498,50 @@ namespace TwinStar.CoreX {
 
 			}
 
+			export namespace RSBPatch {
+
+				export function encode_fs(
+					before_file: string,
+					after_file: string,
+					patch_file: string,
+					use_raw_packet: boolean,
+					version: typeof Core.Tool.PopCap.RSBPatch.Version.Value,
+					patch_size_bound: bigint,
+				): void {
+					let version_c = Core.Tool.PopCap.RSBPatch.Version.value(version);
+					let before_data = FileSystem.read_file(before_file);
+					let after_data = FileSystem.read_file(after_file);
+					let patch_data = Core.ByteArray.allocate(Core.Size.value(patch_size_bound));
+					let before_stream = Core.ByteStreamView.look(before_data.view());
+					let after_stream = Core.ByteStreamView.look(after_data.view());
+					let patch_stream = Core.ByteStreamView.look(patch_data.view());
+					Core.Tool.PopCap.RSBPatch.Encode.process_whole(before_stream, after_stream, patch_stream, Core.Boolean.value(use_raw_packet), version_c);
+					FileSystem.write_file(patch_file, patch_stream.stream_view());
+					return;
+				}
+
+				export function decode_fs(
+					before_file: string,
+					after_file: string,
+					patch_file: string,
+					use_raw_packet: boolean,
+					version: typeof Core.Tool.PopCap.RSBPatch.Version.Value,
+					after_size_bound: bigint,
+				): void {
+					let version_c = Core.Tool.PopCap.RSBPatch.Version.value(version);
+					let before_data = FileSystem.read_file(before_file);
+					let after_data = Core.ByteArray.allocate(Core.Size.value(after_size_bound));
+					let patch_data = FileSystem.read_file(patch_file);
+					let before_stream = Core.ByteStreamView.look(before_data.view());
+					let after_stream = Core.ByteStreamView.look(after_data.view());
+					let patch_stream = Core.ByteStreamView.look(patch_data.view());
+					Core.Tool.PopCap.RSBPatch.Decode.process_whole(before_stream, after_stream, patch_stream, Core.Boolean.value(use_raw_packet), version_c);
+					FileSystem.write_file(after_file, after_stream.stream_view());
+					return;
+				}
+
+			}
+
 		}
 
 		export namespace Miscellaneous {
@@ -1444,9 +1555,7 @@ namespace TwinStar.CoreX {
 				export function compute_bit_count(
 					value_count: number,
 				): BitCount {
-					if (value_count <= 0b1 || value_count > 0b10000) {
-						throw new Error(`invalue value count`);
-					}
+					assert(0b1 < value_count && value_count <= 0b1 << 4, `invalue value count`);
 					let bit_count: BitCount;
 					if (value_count <= 0b10) {
 						bit_count = 1;

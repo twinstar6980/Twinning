@@ -1,4 +1,3 @@
-/** PAM转换Flash */
 namespace TwinStar.Support.PopCapAnimation.Convert.Flash {
 
 	// ------------------------------------------------
@@ -43,8 +42,8 @@ namespace TwinStar.Support.PopCapAnimation.Convert.Flash {
 	};
 
 	export function save_flash_package(
-		data: FlashPackage,
 		directory: string,
+		data: FlashPackage,
 	): void {
 		CoreX.JSON.write_fs_js(`${directory}/extra.json`, data.extra);
 		CoreX.XML.write_fs_js(`${directory}/DOMDocument.xml`, XML.wrap_element(data.document));
@@ -80,12 +79,7 @@ namespace TwinStar.Support.PopCapAnimation.Convert.Flash {
 	export function create_xfl_content_file(
 		directory: string,
 	): void {
-		let data = new ArrayBuffer(k_xfl_content.length);
-		let data_view = new DataView(data);
-		for (let i = 0; i < k_xfl_content.length; ++i) {
-			data_view.setUint8(i, k_xfl_content.charCodeAt(i));
-		}
-		CoreX.FileSystem.write_file(`${directory}/main.xfl`, data);
+		CoreX.FileSystem.write_file(`${directory}/main.xfl`, Core.Miscellaneous.cast_moveable_String_to_ByteArray(Core.String.value(k_xfl_content)));
 		return;
 	}
 

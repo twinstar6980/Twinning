@@ -1,14 +1,7 @@
-/** Marmalade-DZip资源打包 */
 namespace TwinStar.Support.MarmaladeDZip.ResourcePack {
 
 	// ------------------------------------------------
 
-	/**
-	 * 将资源目录内的所有文件打包为Marmalade-DZip数据包
-	 * @param resource_directory 资源目录
-	 * @param version_number 版本
-	 * @returns 数据包数据
-	 */
 	export function pack(
 		resource_directory: string,
 		version_number: [0n][number],

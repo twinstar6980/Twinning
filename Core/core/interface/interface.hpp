@@ -11,31 +11,34 @@
 
 namespace TwinStar::Core::Interface {
 
-	struct Size {
-		decltype(sizeof(0)) value;
-	};
+	template <typename It>
+	using Type = It;
 
-	struct Boolean {
-		bool value;
+	// ----------------
+
+	struct Size {
+		Type<decltype(sizeof(0))> value;
 	};
 
 	struct Character {
-		char value;
+		Type<char> value;
 	};
 
 	struct String {
-		Character * data;
-		Size        size;
-		Size        capacity;
+		Type<Character *> data;
+		Type<Size>        size;
+		Type<Size>        capacity;
 	};
 
 	struct StringList {
-		String * data;
-		Size     size;
-		Size     capacity;
+		Type<String *> data;
+		Type<Size>     size;
+		Type<Size>     capacity;
 	};
 
-	using Callback = StringList const & (*) (StringList const &);
+	struct Callback {
+		Type<StringList const & (*) (StringList const &)> value;
+	};
 
 	// ----------------
 
@@ -49,9 +52,15 @@ namespace TwinStar::Core::Interface {
 	M_symbol_export
 	#endif
 	extern auto execute (
-		Callback const &   callback,
-		String const &     script,
-		StringList const & argument
+		Callback const *   callback,
+		String const *     script,
+		StringList const * argument
+	) -> String const*;
+
+	#if defined M_interface_implement
+	M_symbol_export
+	#endif
+	extern auto prepare (
 	) -> String const*;
 
 }

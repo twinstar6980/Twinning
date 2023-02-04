@@ -102,7 +102,7 @@ namespace TwinStar::Core::Tool::PopCap::Reanim {
 			typename Manifest::Animation const & animation_manifest
 		) -> Void {
 			auto integer_of_platform = Integer{};
-			animation_data.write(k_magic_identifier);
+			animation_data.write_constant(k_magic_identifier);
 			exchange_integer_platform(animation_data, integer_of_platform);
 			exchange_integer(animation_data, cbw<Integer>(animation_manifest.track.size()));
 			exchange_floating(animation_data, animation_manifest.fps);
@@ -219,7 +219,7 @@ namespace TwinStar::Core::Tool::PopCap::Reanim {
 			typename Manifest::Animation & animation_manifest
 		) -> Void {
 			auto integer_of_platform = Integer{};
-			assert_condition(animation_data.read_of<MagicIdentifier>() == k_magic_identifier);
+			animation_data.read_constant(k_magic_identifier);
 			exchange_integer_platform(animation_data, integer_of_platform);
 			auto track_count = Integer{};
 			exchange_integer(animation_data, track_count);

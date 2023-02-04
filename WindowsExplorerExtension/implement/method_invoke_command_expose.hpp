@@ -83,91 +83,105 @@ namespace TwinStar::WindowsExplorerExtension {
 					.name = L"Base64 编码",
 					.type = false,
 					.rule = std::nullopt,
-					.method = L"data.encode.base64.encode",
+					.method = L"data.encoding.base64.encode",
 					.argument = LR"({})",
 				},
 				{
 					.name = L"Base64 解码",
 					.type = false,
 					.rule = std::nullopt,
-					.method = L"data.encode.base64.decode",
+					.method = L"data.encoding.base64.decode",
 					.argument = LR"({})",
 				},
 				{
 					.name = L"XOR 加密",
 					.type = false,
 					.rule = std::nullopt,
-					.method = L"data.encrypt.xor.encrypt",
+					.method = L"data.encryption.xor.encrypt",
 					.argument = LR"({})",
 				},
 				{
 					.name = L"Rijndael 加密",
 					.type = false,
 					.rule = std::nullopt,
-					.method = L"data.encrypt.rijndael.encrypt",
+					.method = L"data.encryption.rijndael.encrypt",
 					.argument = LR"({})",
 				},
 				{
 					.name = L"Rijndael 解密",
 					.type = false,
 					.rule = std::nullopt,
-					.method = L"data.encrypt.rijndael.decrypt",
+					.method = L"data.encryption.rijndael.decrypt",
 					.argument = LR"({})",
 				},
 				{
 					.name = L"Deflate 压缩",
 					.type = false,
 					.rule = std::nullopt,
-					.method = L"data.compress.deflate.compress",
+					.method = L"data.compression.deflate.compress",
 					.argument = LR"({})",
 				},
 				{
 					.name = L"Deflate 解压",
 					.type = false,
 					.rule = std::nullopt,
-					.method = L"data.compress.deflate.uncompress",
+					.method = L"data.compression.deflate.uncompress",
 					.argument = LR"({})",
 				},
 				{
 					.name = L"ZLib 压缩",
 					.type = false,
 					.rule = std::nullopt,
-					.method = L"data.compress.zlib.compress",
+					.method = L"data.compression.zlib.compress",
 					.argument = LR"({})",
 				},
 				{
 					.name = L"ZLib 解压",
 					.type = false,
 					.rule = std::nullopt,
-					.method = L"data.compress.zlib.uncompress",
+					.method = L"data.compression.zlib.uncompress",
 					.argument = LR"({})",
 				},
 				{
 					.name = L"GZip 压缩",
 					.type = false,
 					.rule = std::nullopt,
-					.method = L"data.compress.gzip.compress",
+					.method = L"data.compression.gzip.compress",
 					.argument = LR"({})",
 				},
 				{
 					.name = L"GZip 解压",
 					.type = false,
 					.rule = std::nullopt,
-					.method = L"data.compress.gzip.uncompress",
+					.method = L"data.compression.gzip.uncompress",
 					.argument = LR"({})",
 				},
 				{
 					.name = L"BZip2 压缩",
 					.type = false,
 					.rule = std::nullopt,
-					.method = L"data.compress.bzip2.compress",
+					.method = L"data.compression.bzip2.compress",
 					.argument = LR"({})",
 				},
 				{
 					.name = L"BZip2 解压",
 					.type = false,
 					.rule = std::nullopt,
-					.method = L"data.compress.bzip2.uncompress",
+					.method = L"data.compression.bzip2.uncompress",
+					.argument = LR"({})",
+				},
+				{
+					.name = L"VCDiff 编码",
+					.type = false,
+					.rule = std::nullopt,
+					.method = L"data.differentiation.vcdiff.encode",
+					.argument = LR"({})",
+				},
+				{
+					.name = L"VCDiff 解码",
+					.type = false,
+					.rule = std::nullopt,
+					.method = L"data.differentiation.vcdiff.decode",
 					.argument = LR"({})",
 				},
 			},
@@ -175,6 +189,7 @@ namespace TwinStar::WindowsExplorerExtension {
 				1,
 				2,
 				1,
+				2,
 				2,
 				2,
 				2,
@@ -797,6 +812,29 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
+		inline auto const popcap_rsb_patch = MethodInvokeCommandConfigGroup{
+			.name = L"PopCap RSB-Patch",
+			.child = {
+				{
+					.name = L"编码",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.rsb)$)", std::wregex::icase},
+					.method = L"popcap.rsb_patch.encode",
+					.argument = LR"({})",
+				},
+				{
+					.name = L"解码",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.rsb)$)", std::wregex::icase},
+					.method = L"popcap.rsb_patch.decode",
+					.argument = LR"({})",
+				},
+			},
+			.separator = {
+				2,
+			},
+		};
+
 		inline auto const pvz2_lawn_string_text = MethodInvokeCommandConfigGroup{
 			.name = L"PvZ-2 LawnString Text",
 			.child = {
@@ -1034,6 +1072,14 @@ namespace TwinStar::WindowsExplorerExtension {
 	public:
 		PopCapRSBMethodInvokeGroupCommand () :
 			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::popcap_rsb} {
+		}
+	};
+
+	class __declspec(uuid("C83A33D4-B96D-4002-9D76-4DB88AF589C0")) PopCapRSBPatchMethodInvokeGroupCommand :
+		public MethodInvokeGroupCommand {
+	public:
+		PopCapRSBPatchMethodInvokeGroupCommand () :
+			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::popcap_rsb_patch} {
 		}
 	};
 

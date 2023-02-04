@@ -3972,7 +3972,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			typename Manifest::SoundBank const & manifest
 		) -> Void {
 			if constexpr (version.number >= 88_i) {
-				data.write(cbw<VersionNumber>(version.number));
+				data.write_constant(cbw<VersionNumber>(version.number));
 				exchange_unit_id(data, manifest.id);
 				exchange_unit_id(data, manifest.language);
 				data.write(manifest.header_expand);
@@ -7040,7 +7040,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			typename Manifest::SoundBank & manifest
 		) -> Void {
 			if constexpr (version.number >= 88_i) {
-				assert_condition(data.read_of<VersionNumber>() == cbw<VersionNumber>(version.number));
+				data.read_constant(cbw<VersionNumber>(version.number));
 				exchange_unit_id(data, manifest.id);
 				exchange_unit_id(data, manifest.language);
 				manifest.header_expand = data.forward_view(data.reserve());

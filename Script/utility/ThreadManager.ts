@@ -8,11 +8,11 @@ namespace TwinStar {
 			thread: Core.Miscellaneous.Thread;
 			context: Core.Miscellaneous.Context;
 			result: [boolean, any];
-		}> = [];
+		}>;
 
 		// ------------------------------------------------
 
-		make_executor(
+		private make_executor(
 			index: number,
 			executor: () => any,
 		) {
@@ -26,6 +26,52 @@ namespace TwinStar {
 					item.result = [true, e];
 				}
 			};
+		}
+
+		// ------------------------------------------------
+
+		constructor(
+		) {
+			this.m_pool = [];
+		}
+
+		// ------------------------------------------------
+
+		idle(
+			index: number
+		): boolean {
+			assert(0 <= index && index < this.m_pool.length, `invalid thread index`);
+			let item = this.m_pool[index];
+			return !item.context.busy().value;
+		}
+
+		execute(
+			index: number,
+			executor: () => any,
+		): void {
+			assert(0 <= index && index < this.m_pool.length, `invalid thread index`);
+			let item = this.m_pool[index];
+			assert(!item.context.busy().value, `context is busy`);
+			item.context.execute(this.make_executor(index, executor), item.thread);
+			item.thread.detach();
+			return;
+		}
+
+		result(
+			index: number,
+		): [boolean, any] {
+			assert(0 <= index && index < this.m_pool.length, `invalid thread index`);
+			let item = this.m_pool[index];
+			assert(!item.context.busy().value, `context is busy`);
+			return item.result;
+		}
+
+		wait(
+		): void {
+			while (!this.m_pool.every((e, i) => (this.idle(i)))) {
+				Core.Miscellaneous.Thread.yield();
+			}
+			return;
 		}
 
 		resize(
@@ -49,51 +95,10 @@ namespace TwinStar {
 			return;
 		}
 
-		idle(
-			index: number
-		): boolean {
-			if (index >= this.m_pool.length) {
-				throw new Error(`#${index} : invalid thread index`);
-			}
-			let item = this.m_pool[index];
-			return !item.context.busy().value;
-		}
-
-		execute(
-			index: number,
-			executor: () => any,
-		): void {
-			if (index >= this.m_pool.length) {
-				throw new Error(`#${index} : invalid thread index`);
-			}
-			let item = this.m_pool[index];
-			if (item.context.busy().value) {
-				throw new Error(`#${index} : context is busy`);
-			}
-			item.context.execute(this.make_executor(index, executor), item.thread);
-			item.thread.detach();
-			return;
-		}
-
-		result(
-			index: number,
-		): [boolean, any] {
-			if (index >= this.m_pool.length) {
-				throw new Error(`#${index} : invalid thread index`);
-			}
-			let item = this.m_pool[index];
-			if (item.context.busy().value) {
-				throw new Error(`#${index} : context is busy`);
-			}
-			return item.result;
-		}
-
 		push_execute(
 			executor: () => any,
 		): void {
-			if (this.m_pool.length === 0) {
-				throw new Error(`thread pool is empty`);
-			}
+			assert(this.m_pool.length !== 0, `thread pool is empty`);
 			let index = null;
 			while (index === null) {
 				index = this.m_pool.findIndex((e, i) => (this.idle(i)));
@@ -104,13 +109,6 @@ namespace TwinStar {
 			}
 			this.execute(index, executor);
 			return;
-		}
-
-		wait(
-		): void {
-			while (!this.m_pool.every((e, i) => (this.idle(i)))) {
-				Core.Miscellaneous.Thread.yield();
-			}
 		}
 
 	}

@@ -1,5 +1,5 @@
 -- zlib
--- 1.2.12
+-- 1.2.12 21767c654d31d2dccdde4330529775c6c5fd5389
 -- https://www.zlib.net/
 
 target('third.zlib', function()

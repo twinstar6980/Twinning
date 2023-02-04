@@ -1,4 +1,3 @@
-/** PvZ2 图像 */
 namespace TwinStar.Support.PvZ2.Image {
 
 	// ------------------------------------------------

@@ -11,6 +11,7 @@ target('test', function()
 		{}
 	)
 	add_includedirs(
+		m.root .. '',
 		m.root .. '/../Shell',
 		{ private = true }
 	)

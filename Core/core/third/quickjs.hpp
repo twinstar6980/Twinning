@@ -34,7 +34,7 @@
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinStar::Core::ThirdParty::quickjs {
+namespace TwinStar::Core::Third::quickjs {
 
 	using JSRuntime = ::JSRuntime;
 

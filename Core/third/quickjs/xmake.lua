@@ -1,5 +1,5 @@
 -- quickjs
--- 2021-03-27
+-- 2021-03-27 b5e62895c619d4ffc75c9d822c8d85f1ece77e5b
 -- https://github.com/bellard/quickjs
 
 target('third.quickjs', function()

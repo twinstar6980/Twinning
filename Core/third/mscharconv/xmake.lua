@@ -1,5 +1,5 @@
 -- mscharconv
--- 1.2.1
+-- 1.2.1 e1a23741136aeb1e08f1a8b712c9eca331f7dd32
 -- https://github.com/iboB/mscharconv
 
 target('third.mscharconv', function()

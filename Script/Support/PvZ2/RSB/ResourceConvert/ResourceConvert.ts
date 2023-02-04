@@ -1,15 +1,12 @@
-/** PvZ2-RSB资源转换 */
 namespace TwinStar.Support.PvZ2.RSB.ResourceConvert {
 
 	// ------------------------------------------------
 
-	/** 纹理索引表 */
 	export type TextureFormatMap = Array<{
 		index: bigint;
 		format: Support.PopCapTexture.Encode.Format;
 	}>;
 
-	/** 转换选项 */
 	export type Option = {
 		json: null | {
 			directory: string;
@@ -40,44 +37,50 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceConvert {
 		},
 	};
 
-	/**
-	 * 从资源目录中转换资源
-	 * @param resource_directory 资源目录
-	 * @param package_manifest 包清单
-	 * @param resource_manifest 资源清单
-	 * @param option 选项
-	 */
 	export function convert(
 		resource_directory: string,
 		package_manifest: Core.Tool.PopCap.RSB.Manifest.JS_N.Package,
 		resource_manifest: ResourceManifest.Package,
 		option: Option,
 	): void {
-		let iterate_manifest = (show_group_progress: boolean) => (work: (
+		let find_key_ignore_case = <T>(map: Record<string, T>, key: string): string | null => {
+			let key_lower = key.toLowerCase();
+			for (let key_in_map in map) {
+				if (key_in_map.toLowerCase() === key_lower) {
+					return key_in_map;
+				}
+			}
+			return null;
+		};
+		let iterate_manifest = (show_group_progress: boolean) => (worker: (
 			group: [string, ResourceManifest.Group, Core.Tool.PopCap.RSB.Manifest.JS_N.Group],
 			subgroup: [string, ResourceManifest.Subgroup, Core.Tool.PopCap.RSB.Manifest.JS_N.Subgroup],
 			resource: [string, ResourceManifest.Resource, Core.Tool.PopCap.RSB.Manifest.JS_N.Resource],
 		) => void): void => {
 			let group_progress = new TextGenerator.Progress('fraction', false, 40, Object.keys(package_manifest.group).length);
-			for (let group_id in package_manifest.group) {
+			for (let package_group_id in package_manifest.group) {
 				group_progress.increase();
 				if (show_group_progress) {
-					Console.notify('i', `${group_progress} - ${group_id}`, []);
+					Console.notify('i', `${group_progress} - ${package_group_id}`, []);
 				}
-				if (/__MANIFESTGROUP__(.+)?/.test(group_id)) {
+				if (/__MANIFESTGROUP__(.+)?/.test(package_group_id)) {
 					continue;
 				}
-				let package_group = package_manifest.group[group_id];
-				let group = resource_manifest.group[group_id];
-				if (group === undefined) {
-					throw new Error(`group not found in resource manifest : ${group_id}`);
+				let package_group = package_manifest.group[package_group_id];
+				let group_id = find_key_ignore_case(resource_manifest.group, package_group_id);
+				if (group_id === null) {
+					Console.notify('w', `group not found in resource manifest : ${package_group_id}`, []);
+					continue;
 				}
-				for (let subgroup_id in package_group.subgroup) {
-					let package_subgroup = package_group.subgroup[subgroup_id];
-					let subgroup = group.subgroup[subgroup_id];
-					if (subgroup === undefined) {
-						throw new Error(`subgroup not found in resource manifest : ${subgroup_id}`);
+				let group = resource_manifest.group[group_id];
+				for (let package_subgroup_id in package_group.subgroup) {
+					let package_subgroup = package_group.subgroup[package_subgroup_id];
+					let subgroup_id = find_key_ignore_case(group.subgroup, package_subgroup_id);
+					if (subgroup_id === null) {
+						Console.notify('w', `subgroup not found in resource manifest : ${package_subgroup_id}`, []);
+						continue;
 					}
+					let subgroup = group.subgroup[subgroup_id];
 					for (let package_resource_path in package_subgroup.resource) {
 						let package_resource = package_subgroup.resource[package_resource_path];
 						let resource: null | ResourceManifest.Resource = null;
@@ -94,9 +97,10 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceConvert {
 							}
 						}
 						if (resource === null) {
-							throw new Error(`resource not found in resource manifest : ${package_resource_path}`);
+							Console.notify('w', `resource not found in resource manifest : ${package_resource_path}`, []);
+							continue;
 						}
-						work(
+						worker(
 							[group_id, group, package_group],
 							[subgroup_id, subgroup, package_subgroup],
 							[resource_id, resource, package_resource],
@@ -124,7 +128,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceConvert {
 					}
 				}
 			};
-			let resource_path_tree = PathUtility.to_tree(resource_path_list);
+			let resource_path_tree = PathUtility.tree(resource_path_list);
 			rename_tree(resource_directory, resource_path_tree);
 		}
 		Console.notify('i', los(`提取资源 ...`), []);
@@ -153,20 +157,13 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceConvert {
 			if (option.image !== null && resource[1].expand[0] === 'atlas') {
 				Console.notify('v', `  ${path}`, []);
 				try {
-					if (!(option.image !== null && resource[1].expand[0] === 'atlas')) {
-						throw new Error(`NEVER`);
-					}
-					if (resource[2].additional.type !== 'texture') {
-						throw new Error(`invalid image resource`);
-					}
+					assert(resource[2].additional.type === 'texture', `invalid image resource`);
 					let atlas_image_information = resource[1].expand[1];
 					let texture_information_source = resource[2].additional.value;
 					let size = atlas_image_information.size;
 					let actual_size = texture_information_source.size;
 					let texture_format = option.image.texture_format_map.find((e) => (e.index === texture_information_source.format));
-					if (texture_format === undefined) {
-						throw new Error(`unknown texture format : ${texture_information_source.format}`);
-					}
+					assert(texture_format !== undefined, `unknown texture format : ${texture_information_source.format}`);
 					Console.notify('v', `    size : [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] , actual_size : [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ] , format : ${texture_format.format}`, []);
 					let data = CoreX.FileSystem.read_file(`${resource_directory}/${path}.ptx`);
 					let stream = Core.ByteStreamView.look(data.view());
@@ -207,7 +204,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceConvert {
 					}
 					if (option.animation.flash !== null) {
 						let flash_package = Support.PopCapAnimation.Convert.Flash.From.from(information_js as any);
-						Support.PopCapAnimation.Convert.Flash.save_flash_package(flash_package, `${option.animation.directory}/${flash_directory}`);
+						Support.PopCapAnimation.Convert.Flash.save_flash_package(`${option.animation.directory}/${flash_directory}`, flash_package);
 						Support.PopCapAnimation.Convert.Flash.SourceManager.create_fsh(`${option.animation.directory}/${flash_directory}`, information_js as any);
 						Support.PopCapAnimation.Convert.Flash.create_xfl_content_file(`${option.animation.directory}/${flash_directory}`);
 					}
@@ -234,13 +231,6 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceConvert {
 		return;
 	}
 
-	/**
-	 * 从资源目录中转换资源
-	 * @param resource_directory 资源目录
-	 * @param package_manifest_file 包清单文件
-	 * @param resource_manifest_file 资源清单文件（输出）
-	 * @param option 选项
-	 */
 	export function convert_fs(
 		resource_directory: string,
 		package_manifest_file: string,
@@ -254,33 +244,18 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceConvert {
 		let official_resource_manifest: OfficialResourceManifest.Package;
 		{
 			let group_id = Object.keys(package_manifest.group).filter((e) => (/__MANIFESTGROUP__(.+)?/.test(e)));
-			if (group_id.length === 0) {
-				throw new Error(`can not found manifest group`);
-			}
-			if (group_id.length > 1) {
-				throw new Error(`too many manifest group`);
-			}
+			assert(group_id.length === 1, `package must has only one manifest group`);
 			let group = package_manifest.group[group_id[0]];
-			if (group.composite) {
-				throw new Error(`manifest should not be a composite group`);
-			}
+			assert(!group.composite, `manifest should not be a composite group`);
 			let subgroup_id = Object.keys(group.subgroup);
-			if (subgroup_id.length !== 1) {
-				throw new Error(`manifest subgroup must has one only subgroup`);
-			}
-			if (subgroup_id[0] !== group_id[0]) {
-				throw new Error(`manifest subgroup id must equal group id`);
-			}
+			assert(subgroup_id.length === 1, `manifest subgroup must has only one subgroup`);
+			assert(subgroup_id[0] === group_id[0], `manifest subgroup id must equal group id`);
 			let subgroup = group.subgroup[subgroup_id[0]];
 			let resource_path_list = Object.keys(subgroup.resource);
-			if (resource_path_list.length !== 1) {
-				throw new Error(`manifest subgroup must has one only resource`);
-			}
+			assert(resource_path_list.length === 1, `manifest subgroup must has one only resource`);
 			let resource_path = resource_path_list[0];
 			let resource = subgroup.resource[resource_path];
-			if (/properties\/resources(_.+)?\.rton/.test(resource_path)) {
-				throw new Error(`manifest resource path invalid`);
-			}
+			assert(/properties\/resources(_.+)?\.rton/i.test(resource_path), `manifest resource path invalid`);
 			let rton = CoreX.FileSystem.read_file(resource_directory + '/' + resource_path);
 			let rton_stream = Core.ByteStreamView.look(rton.view());
 			let json = Core.JSON.Value.default<OfficialResourceManifest.Package>();

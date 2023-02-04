@@ -4,6 +4,7 @@
 #include "core/tool/popcap/pak/version.hpp"
 #include "core/tool/popcap/pak/manifest.hpp"
 #include "core/tool/popcap/pak/structure.hpp"
+#include "core/tool/data/compression/deflate.hpp"
 
 namespace TwinStar::Core::Tool::PopCap::PAK {
 
@@ -33,8 +34,8 @@ namespace TwinStar::Core::Tool::PopCap::PAK {
 			typename Manifest::Package const & package_manifest,
 			Path const &                       resource_directory
 		) -> Void {
-			package_data.write(Structure::k_magic_identifier);
-			package_data.write(cbw<Structure::VersionNumber>(version.number));
+			package_data.write_constant(Structure::k_magic_identifier);
+			package_data.write_constant(cbw<Structure::VersionNumber>(version.number));
 			struct {
 				OByteStreamView resource_information;
 			}
@@ -73,7 +74,7 @@ namespace TwinStar::Core::Tool::PopCap::PAK {
 					auto resource_data = FileSystem::read_file(resource_path);
 					auto resource_data_stream = IByteStreamView{resource_data};
 					auto resource_offset = package_data.position();
-					Data::Compress::Deflate::Compress::do_process_whole(resource_data_stream, package_data, 9_sz, 15_sz, 9_sz, Data::Compress::Deflate::Strategy::Constant::default_mode(), Data::Compress::Deflate::Wrapper::Constant::zlib());
+					Data::Compression::Deflate::Compress::do_process_whole(resource_data_stream, package_data, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
 					resource_information_structure.size = cbw<IntegerU32>(package_data.position() - resource_offset);
 					resource_information_structure.size_original = cbw<IntegerU32>(resource_data.size());
 				} else {
@@ -121,8 +122,8 @@ namespace TwinStar::Core::Tool::PopCap::PAK {
 			typename Manifest::Package & package_manifest,
 			Optional<Path> const &       resource_directory
 		) -> Void {
-			assert_condition(package_data.read_of<Structure::MagicIdentifier>() == Structure::k_magic_identifier);
-			assert_condition(package_data.read_of<Structure::VersionNumber>() == cbw<Structure::VersionNumber>(version.number));
+			package_data.read_constant(Structure::k_magic_identifier);
+			package_data.read_constant(cbw<Structure::VersionNumber>(version.number));
 			auto information_structure = Structure::Information<version>{};
 			{
 				information_structure.resource_information.allocate(k_none_size);
@@ -150,7 +151,7 @@ namespace TwinStar::Core::Tool::PopCap::PAK {
 					auto resource_data_original = ByteArray{cbw<Size>(resource_information_structure.size_original)};
 					auto resource_data_stream = IByteStreamView{resource_data};
 					auto resource_data_original_stream = OByteStreamView{resource_data_original};
-					Data::Compress::Deflate::Uncompress::do_process_whole(resource_data_stream, resource_data_original_stream, 15_sz, Data::Compress::Deflate::Wrapper::Constant::zlib());
+					Data::Compression::Deflate::Uncompress::do_process_whole(resource_data_stream, resource_data_original_stream, 15_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
 					assert_condition(resource_data_stream.full() && resource_data_original_stream.full());
 					if (resource_directory) {
 						FileSystem::write_file(resource_directory.get() / resource_manifest.key, resource_data_original);

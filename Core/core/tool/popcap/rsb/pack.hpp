@@ -275,8 +275,8 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 			Optional<Path> const &                          new_packet_file
 		) -> Void {
 			constexpr auto packet_version = RSGP::Version{.number = version.number};
-			package_data.write(Structure::k_magic_identifier);
-			package_data.write(cbw<Structure::VersionNumber>(version.number));
+			package_data.write_constant(Structure::k_magic_identifier);
+			package_data.write_constant(cbw<Structure::VersionNumber>(version.number));
 			struct {
 				OByteStreamView header;
 				Size            group_id_offset;
@@ -554,8 +554,8 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 						if (FileSystem::exist_file(make_formatted_path(packet_file.get()))) {
 							auto legacy_packet_size = FileSystem::read_stream_file(make_formatted_path(packet_file.get()), packet_data);
 							auto legacy_packet_stream = IByteStreamView{packet_data.prev_view(legacy_packet_size)};
-							assert_condition(legacy_packet_stream.read_of<RSGP::Structure::MagicIdentifier>() == RSGP::Structure::k_magic_identifier);
-							assert_condition(legacy_packet_stream.read_of<RSGP::Structure::VersionNumber>() == cbw<RSGP::Structure::VersionNumber>(version.number));
+							legacy_packet_stream.read_constant(RSGP::Structure::k_magic_identifier);
+							legacy_packet_stream.read_constant(cbw<RSGP::Structure::VersionNumber>(packet_version.number));
 							legacy_packet_stream.read(packet_header_structure);
 							use_legacy_packet = k_true;
 						}
@@ -724,8 +724,8 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 			Optional<Path> const &                    packet_file
 		) -> Void {
 			constexpr auto packet_version = RSGP::Version{.number = version.number};
-			assert_condition(package_data.read_of<Structure::MagicIdentifier>() == Structure::k_magic_identifier);
-			assert_condition(package_data.read_of<Structure::VersionNumber>() == cbw<Structure::VersionNumber>(version.number));
+			package_data.read_constant(Structure::k_magic_identifier);
+			package_data.read_constant(cbw<Structure::VersionNumber>(version.number));
 			auto information_structure = Structure::Information<version>{};
 			{
 				package_data.read(information_structure.header);
@@ -748,6 +748,8 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 					assert_condition(information_structure.header.description_group_section_offset != 0_iu32 && information_structure.header.description_resource_section_offset != 0_iu32 && information_structure.header.description_string_section_offset != 0_iu32);
 					process_package_description(package_data, information_structure.header, package_description.set());
 				}
+				assert_condition(information_structure.group_id.size() == cbw<Size>(information_structure.header.group_information_section_block_count));
+				assert_condition(information_structure.subgroup_id.size() == cbw<Size>(information_structure.header.subgroup_information_section_block_count));
 			}
 			auto group_id_list = Map<Size, String>{};
 			auto subgroup_id_list = Map<Size, String>{};
@@ -766,6 +768,7 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 				}
 			);
 			package_manifest.group.allocate_full(information_structure.group_information.size());
+			auto package_data_end_position = cbw<Size>(information_structure.header.information_section_size);
 			for (auto & group_index : SizeRange{information_structure.group_information.size()}) {
 				auto & group_information_structure = information_structure.group_information[group_index];
 				auto & group_manifest = package_manifest.group.at(group_index);
@@ -820,8 +823,10 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 							}
 						}
 					}
+					package_data_end_position = max(package_data_end_position, cbw<Size>(subgroup_information_structure.offset + subgroup_information_structure.size));
 				}
 			}
+			package_data.set_position(package_data_end_position);
 			return;
 		}
 

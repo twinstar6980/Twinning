@@ -13,7 +13,7 @@ namespace TwinStar::Core::JS {
 
 	#pragma region namespace alias
 
-	namespace quickjs = ThirdParty::quickjs;
+	namespace quickjs = Third::quickjs;
 
 	#pragma endregion
 
@@ -1198,15 +1198,15 @@ namespace TwinStar::Core::JS {
 			};
 			try {
 			#endif
-			if constexpr (IsVoid<typename CallableTraitOf<function>::Result>) {
-				call_native_function<function, forward_object>(context, this_value, argument);
-				return quickjs::JS_UNDEFINED_;
-			} else {
-				auto && native_result = call_native_function<function, forward_object>(context, this_value, argument);
-				auto    result = Value::new_instance(context);
-				result.from(as_forward<decltype(native_result)>(native_result));
-				return result._release_value();
-			}
+				if constexpr (IsVoid<typename CallableTraitOf<function>::Result>) {
+					call_native_function<function, forward_object>(context, this_value, argument);
+					return quickjs::JS_UNDEFINED_;
+				} else {
+					auto && native_result = call_native_function<function, forward_object>(context, this_value, argument);
+					auto    result = Value::new_instance(context);
+					result.from(as_forward<decltype(native_result)>(native_result));
+					return result._release_value();
+				}
 			#if defined M_build_release
 			} catch (Exception & exception) {
 				return throw_js_exception(context, make_string_view(exception.what()));

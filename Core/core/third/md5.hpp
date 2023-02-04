@@ -16,7 +16,7 @@
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinStar::Core::ThirdParty::md5 {
+namespace TwinStar::Core::Third::md5 {
 
 	using MD5 = ::MD5;
 

@@ -1,4 +1,3 @@
-/** PTX编解码 */
 namespace TwinStar.Support.PopCapTexture.Encode {
 
 	// ------------------------------------------------
@@ -9,9 +8,14 @@ namespace TwinStar.Support.PopCapTexture.Encode {
 		'rgba_4444',
 		'rgb_565',
 		'rgba_5551',
+		'rgb_etc1',
 		'rgb_etc1_a_8',
-		'rgba_pvrtc4',
+		'rgb_etc2',
+		'rgb_etc2_a_8',
+		'rgba_etc2',
+		'rgb_pvrtc4',
 		'rgb_pvrtc4_a_8',
+		'rgba_pvrtc4',
 	] as const;
 
 	export const SpecialFormatE = [
@@ -50,16 +54,32 @@ namespace TwinStar.Support.PopCapTexture.Encode {
 		rgba_5551: [
 			'rgba_5551_l',
 		],
+		rgb_etc1: [
+			'rgb_etc1',
+		],
 		rgb_etc1_a_8: [
 			'rgb_etc1',
 			'a_8',
 		],
-		rgba_pvrtc4: [
-			'rgba_pvrtc4',
+		rgb_etc2: [
+			'rgb_etc2',
+		],
+		rgb_etc2_a_8: [
+			'rgb_etc2',
+			'a_8',
+		],
+		rgba_etc2: [
+			'rgba_etc2',
+		],
+		rgb_pvrtc4: [
+			'rgb_pvrtc4',
 		],
 		rgb_pvrtc4_a_8: [
 			'rgb_pvrtc4',
 			'a_8',
+		],
+		rgba_pvrtc4: [
+			'rgba_pvrtc4',
 		],
 	};
 
@@ -90,8 +110,8 @@ namespace TwinStar.Support.PopCapTexture.Encode {
 		} else if (format.includes('pvrtc')) {
 			let padded_width = compute(origin_size[0]);
 			let padded_height = compute(origin_size[1]);
-			let max_size = padded_width > padded_height ? padded_width : padded_height;
-			padded_size = [max_size, max_size];
+			let maximum_size = padded_width > padded_height ? padded_width : padded_height;
+			padded_size = [maximum_size, maximum_size];
 		} else {
 			padded_size = [origin_size[0], origin_size[1]];
 		}
@@ -115,9 +135,7 @@ namespace TwinStar.Support.PopCapTexture.Encode {
 					break;
 				}
 				case 'rgb_etc1_a_8_index': {
-					if (option.rgb_etc1_a_8_index === null) {
-						throw new Error(`option is null`);
-					}
+					assert(option.rgb_etc1_a_8_index !== null, `option is null`);
 					data_size = CoreX.Tool.Texture.compute_data_size(size, 'rgb_etc1') + CoreX.Tool.Miscellaneous.PvZ2CHSRSBTextureAlphaIndex.compute_data_size_with_index_list(size, option.rgb_etc1_a_8_index.index.length);
 					break;
 				}
@@ -143,9 +161,7 @@ namespace TwinStar.Support.PopCapTexture.Encode {
 					break;
 				}
 				case 'rgb_etc1_a_8_index': {
-					if (option.rgb_etc1_a_8_index === null) {
-						throw new Error(`option is null`);
-					}
+					assert(option.rgb_etc1_a_8_index !== null, `option is null`);
 					CoreX.Tool.Texture.encode(data, image, 'rgb_etc1');
 					CoreX.Tool.Miscellaneous.PvZ2CHSRSBTextureAlphaIndex.encode_with_map(data, image, option.rgb_etc1_a_8_index.index);
 					break;

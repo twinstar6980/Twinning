@@ -20,7 +20,7 @@ namespace TwinStar::Core::Tool::Data::Hash::MD5 {
 			CByteListView const & data,
 			ByteArray &           value
 		) -> Void {
-			auto generator = ThirdParty::md5::MD5{std::span{cast_pointer<ThirdParty::md5::byte>(data.begin()).value, data.size().value}};
+			auto generator = Third::md5::MD5{std::span{cast_pointer<Third::md5::byte>(data.begin()).value, data.size().value}};
 			value.assign(CByteListView{cast_pointer<Byte>(make_pointer(generator.getDigest())), 16_sz});
 			return;
 		}

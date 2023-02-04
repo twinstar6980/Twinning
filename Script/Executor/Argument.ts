@@ -1,4 +1,3 @@
-/** 执行器参数 */
 namespace TwinStar.Executor {
 
 	// ------------------------------------------------
@@ -40,9 +39,7 @@ namespace TwinStar.Executor {
 			Console.notify('i', los(`请输入参数：{}`, name), []);
 			result = input_generator();
 		} else if (given === '?default') {
-			if (default_generator === null) {
-				throw new Error(`?default is disabled`);
-			}
+			assert(default_generator !== null, `?default is disabled`);
 			let default_value = default_generator();
 			result = default_value;
 			Console.notify('i', los(`已默认参数：{}`, name), [`${result}`]);
@@ -84,47 +81,32 @@ namespace TwinStar.Executor {
 			(): string => {
 				let input = Console.string(null);
 				if (input.length > 0 && input[0] === ':') {
-					if (input.length !== 2) {
-						throw new Error(`command name is too long`);
-					}
+					assert(input.length === 2, `command name is too long`);
 					switch (input[1]) {
 						case 't': {
-							if (require_type[0] !== false) {
-								throw new Error(`trash command precondition failed`);
-							}
-							if (state_data.last_value === null) {
-								throw new Error(`last_value is undefined`);
-							}
+							assert(require_type[0] === false, `trash command precondition failed`);
+							assert(state_data.last_value !== null, `last_value is undefined`);
 							state_data.tactic_if_exist = 'trash';
 							input = state_data.last_value;
 							break;
 						}
 						case 'd': {
-							if (require_type[0] !== false) {
-								throw new Error(`delete command precondition failed`);
-							}
-							if (state_data.last_value === null) {
-								throw new Error(`last_value is undefined`);
-							}
+							assert(require_type[0] === false, `delete command precondition failed`);
+							assert(state_data.last_value !== null, `last_value is undefined`);
 							state_data.tactic_if_exist = 'delete';
 							input = state_data.last_value;
 							break;
 						}
 						case 'o': {
-							if (require_type[0] !== false) {
-								throw new Error(`override command precondition failed`);
-							}
-							if (state_data.last_value === null) {
-								throw new Error(`last_value is undefined`);
-							}
+							assert(require_type[0] === false, `override command precondition failed`);
+							assert(state_data.last_value !== null, `last_value is undefined`);
 							state_data.tactic_if_exist = 'override';
 							input = state_data.last_value;
 							break;
 						}
 						case 's': {
-							if (Shell.is_windows && Shell.is_cli) {
-								throw new Error(`show(_open_fild_dialog) command only enabled on windows cli shell`);
-							}
+							assert(require_type[0] === true, `show command precondition failed`);
+							assert(Shell.is_windows && Shell.is_cli, `show(_select_fild_dialog) command only enabled on windows cli shell`);
 							let pick_folder: boolean;
 							switch (type) {
 								case 'any': {
@@ -150,7 +132,7 @@ namespace TwinStar.Executor {
 							break;
 						}
 						default: {
-							throw new Error(`command name is invalid`);
+							assert(false, `command name is invalid`);
 						}
 					}
 				}

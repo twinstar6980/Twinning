@@ -239,7 +239,7 @@ namespace TwinStar.Entry.method.popcap.pak {
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
 					}
-					CoreX.Tool.Data.Encrypt.XOR.encrypt_fs(plain_file, cipher_file, 0xF7n);
+					CoreX.Tool.Data.Encryption.XOR.encrypt_fs(plain_file, cipher_file, 0xF7n);
 					Console.notify('s', los(`执行成功`), [`${cipher_file}`]);
 				},
 				default_argument: {

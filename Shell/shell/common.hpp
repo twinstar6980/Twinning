@@ -1,6 +1,5 @@
 #pragma once
 
-#include "shell/core_interface.hpp"
 #include "shell/version.hpp"
 #include <cstring>
 #include <string>
@@ -12,6 +11,7 @@
 #include <unordered_map>
 #include <charconv>
 #include <codecvt>
+#include <functional>
 #include <locale>
 #include <thread>
 #include <iostream>
@@ -29,15 +29,9 @@
 	if (!(__VA_ARGS__)) {\
 		throw std::runtime_error{"assert failed : " #__VA_ARGS__};\
 	}\
-	void()
+	static_assert(true)
 
 namespace TwinStar::Shell {
-
-	#pragma region namespace alias
-
-	namespace Core = Core::Interface;
-
-	#pragma endregion
 
 	#pragma region using literal
 
@@ -54,7 +48,7 @@ namespace TwinStar::Shell {
 
 	#pragma endregion
 
-	#pragma region string utility
+	#pragma region string
 
 	inline constexpr auto hash_string (
 		std::string_view const & string
@@ -82,15 +76,6 @@ namespace TwinStar::Shell {
 		} else {
 			throw std::runtime_error{"invalid string of boolean"};
 		}
-		return result;
-	}
-
-	inline auto string_to_integer (
-		std::string const & string
-	) -> std::int64_t {
-		auto result = std::int64_t{};
-		auto parse_result = std::from_chars(string.data(), string.data() + string.size(), result);
-		assert_condition(parse_result.ec == std::errc{} && parse_result.ptr == string.data() + string.size());
 		return result;
 	}
 
@@ -122,172 +107,22 @@ namespace TwinStar::Shell {
 
 	#pragma endregion
 
-	#pragma region Core type converter utility
+	#pragma region function
 
-	namespace CoreTypeConverter {
-
-		inline auto from_size (
-			Core::Size const & structure
-		) -> std::size_t {
-			return structure.value;
-		}
-
-		inline auto to_size (
-			std::size_t const & value
-		) -> Core::Size {
-			return Core::Size{
-				.value = value,
-			};
-		}
-
-		// ----------------
-
-		inline auto from_boolean (
-			Core::Boolean const & structure
-		) -> bool {
-			return structure.value;
-		}
-
-		inline auto to_boolean (
-			bool const & value
-		) -> Core::Boolean {
-			return Core::Boolean{
-				.value = value,
-			};
-		}
-
-		// ----------------
-
-		inline auto from_string (
-			Core::String const & structure
-		) -> std::string {
-			return std::string{reinterpret_cast<char const *>(structure.data), from_size(structure.size)};
-		}
-
-		inline auto to_string (
-			std::string const & value
-		) -> Core::String {
-			return Core::String{
-				.data = const_cast<Core::Character *>(reinterpret_cast<Core::Character const *>(value.data())),
-				.size = to_size(value.size()),
-				.capacity = to_size(value.size()),
-			};
-		}
-
-		// ----------------
-
-		inline auto from_string_list (
-			Core::StringList const & structure
-		) -> std::vector<std::string> {
-			auto value = std::vector<std::string>{};
-			value.reserve(from_size(structure.size));
-			for (auto & element : std::span{structure.data, from_size(structure.size)}) {
-				value.emplace_back(reinterpret_cast<char const *>(element.data), from_size(element.size));
-			}
-			return value;
-		}
-
-		inline auto allocate_string_list (
-			std::vector<std::string> const & value
-		) -> Core::StringList {
-			auto structure = Core::StringList{
-				.data = new Core::String[value.size()]{},
-				.size = to_size(value.size()),
-				.capacity = to_size(value.size()),
-			};
-			for (auto index = std::size_t{0}; index < value.size(); ++index) {
-				auto & element = value[index];
-				structure.data[index] = Core::String{
-					.data = new Core::Character[element.size()]{},
-					.size = to_size(element.size()),
-					.capacity = to_size(element.size()),
-				};
-				std::memcpy(structure.data[index].data, element.data(), element.size());
-			}
-			return structure;
-		}
-
-		inline auto free_string_list (
-			Core::StringList & structure
-		) -> void {
-			if (structure.data != nullptr) {
-				for (auto & element : std::span{structure.data, from_size(structure.capacity)}) {
-					delete[] element.data;
-				}
-				delete[] structure.data;
-				structure.data = nullptr;
-			}
-			structure.size = to_size(0);
-			structure.capacity = to_size(0);
-			return;
-		}
-
+	template <auto id, typename Result, typename ... Argument, typename Function>
+	inline auto proxy_dynamic_function_in_current_thread (
+		Function const & function
+	) -> Result(*) (Argument ...) {
+		static auto map = std::unordered_map<std::thread::id, Function>{};
+		//
+		auto thread_id = std::this_thread::get_id();
+		auto item_pair = map.try_emplace(thread_id, function);
+		assert_condition(item_pair.second);
+		return [] (Argument ... argument) -> Result {
+			auto thread_id = std::this_thread::get_id();
+			return map.at(thread_id)(std::forward<Argument>(argument) ...);
+		};
 	}
-
-	#pragma endregion
-
-	#pragma region core type wrapper
-
-	class CoreTypeStringListHandler {
-
-	protected:
-
-		Core::StringList m_value;
-
-	public:
-
-		#pragma region structor
-
-		~CoreTypeStringListHandler (
-		) {
-			CoreTypeConverter::free_string_list(thiz.m_value);
-		}
-
-		// ----------------
-
-		CoreTypeStringListHandler (
-		) = default;
-
-		CoreTypeStringListHandler (
-			CoreTypeStringListHandler const & that
-		) = delete;
-
-		CoreTypeStringListHandler (
-			CoreTypeStringListHandler && that
-		) = delete;
-
-		#pragma endregion
-
-		#pragma region operator
-
-		auto operator = (
-			CoreTypeStringListHandler const & that
-		) -> CoreTypeStringListHandler& = delete;
-
-		auto operator = (
-			CoreTypeStringListHandler && that
-		) -> CoreTypeStringListHandler& = delete;
-
-		#pragma endregion
-
-		#pragma region value
-
-		auto value (
-		) const -> Core::StringList const& {
-			return thiz.m_value;
-		}
-
-		auto imbue (
-			Core::StringList const & value
-		) -> void {
-			CoreTypeConverter::free_string_list(thiz.m_value);
-			thiz.m_value = value;
-			return;
-		}
-
-		#pragma endregion
-
-	};
 
 	#pragma endregion
 

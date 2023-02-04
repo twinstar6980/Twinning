@@ -1,5 +1,6 @@
-/** 用于 PvZ-2 的远程 Android 辅助功能 */
 namespace TwinStar.Support.PvZ2.RemoteAndroidHelper {
+
+	// ------------------------------------------------
 
 	export const ActionE = [
 		'pull_main_package',
@@ -15,7 +16,9 @@ namespace TwinStar.Support.PvZ2.RemoteAndroidHelper {
 
 	export type Action = typeof ActionE[number];
 
-	export function collect_application_information(
+	// ------------------------------------------------
+
+	function collect_application_information(
 	): null | ADBHelper.ApplicationInformation {
 		let id: string;
 		let id_list = ADBHelper.find_application(/^com\.ea\.game\.pvz2_[a-z]+$/);
@@ -32,6 +35,8 @@ namespace TwinStar.Support.PvZ2.RemoteAndroidHelper {
 		let information = ADBHelper.get_application_information(id);
 		return information;
 	}
+
+	// ------------------------------------------------
 
 	export function execute(
 		project_directory: string,
@@ -171,5 +176,7 @@ namespace TwinStar.Support.PvZ2.RemoteAndroidHelper {
 		}
 		return;
 	}
+
+	// ------------------------------------------------
 
 }

@@ -2,8 +2,41 @@ namespace TwinStar {
 
 	// ------------------------------------------------
 
-	/** 版本编号 */
-	export const k_version = 27;
+	export const k_version = 28;
+
+	// ------------------------------------------------
+
+	export function assert(
+		condition: boolean,
+		message: string = `assert failed`,
+	): asserts condition {
+		if (!condition) {
+			throw new Error(message);
+		}
+		return;
+	}
+
+	export function parse_stack_string(
+		stack: string | undefined,
+	): Array<string> {
+		if (stack === undefined) {
+			return [];
+		} else {
+			let stack_array = stack.split('\n');
+			stack_array.pop();
+			stack_array = stack_array.map((e) => {
+				let result: string;
+				let regexp_result = /    at (.*) \((.*)\)/.exec(e);
+				if (regexp_result === null) {
+					result = '';
+				} else {
+					result = `@ ${regexp_result[2]} ${regexp_result[1]}`;
+				}
+				return result;
+			});
+			return stack_array;
+		}
+	}
 
 	// ------------------------------------------------
 
@@ -72,36 +105,6 @@ namespace TwinStar {
 
 	// ------------------------------------------------
 
-	/**
-	 * 分割错误堆栈字符串
-	 * @param stack 堆栈
-	 * @returns 分割所得的字符串数组
-	 */
-	export function parse_stack_string(
-		stack: string | undefined,
-	): Array<string> {
-		if (stack === undefined) {
-			return [];
-		} else {
-			let stack_array = stack.split('\n');
-			stack_array.pop();
-			stack_array = stack_array.map((e) => {
-				let result: string;
-				let regexp_result = /    at (.*) \((.*)\)/.exec(e);
-				if (regexp_result === null) {
-					result = '';
-				} else {
-					result = `@ ${regexp_result[2]} ${regexp_result[1]}`;
-				}
-				return result;
-			});
-			return stack_array;
-		}
-	}
-
-	// ------------------------------------------------
-
-	/** 主目录 */
 	export namespace HomeDirectory {
 
 		// ------------------------------------------------
@@ -138,24 +141,16 @@ namespace TwinStar {
 
 		// ------------------------------------------------
 
-		/**
-		 * 将文件回收到垃圾箱目录
-		 * @param path 需要回收的文件
-		 */
 		export function new_trash(
 			path: string,
 		): void {
 			// TODO : only allow if same drive
 			let trash_sub_direcotry = `${trash()}/${date_to_simple_string(new Date())}.${make_prefix_padded_string((Math.random() * 10000).toFixed(0), '0', 4)}`;
 			CoreX.FileSystem.create_directory(trash_sub_direcotry);
-			CoreX.FileSystem.rename(path, `${trash_sub_direcotry}/${PathUtility.split_pair(path)[1]}`);
+			CoreX.FileSystem.rename(path, `${trash_sub_direcotry}/${PathUtility.name(path)}`);
 			return;
 		}
 
-		/**
-		 * 创建并返回一个临时目录
-		 * @returns 临时目录
-		 */
 		export function new_temporary(
 		): string {
 			let temporary_sub_directory = `${temporary()}/${date_to_simple_string(new Date())}.${make_prefix_padded_string((Math.random() * 10000).toFixed(0), '0', 4)}`;
@@ -187,7 +182,6 @@ namespace TwinStar {
 
 	}
 
-	/** 模块加载 */
 	export namespace ModuleLoader {
 
 		// ------------------------------------------------
@@ -214,25 +208,17 @@ namespace TwinStar {
 			manifest: Manifest,
 			main_directory: string,
 		): [Entry, null | Config] | null {
-			if (!Detail.exist_directory(main_directory)) {
-				throw new Error(`main directory is not found : <${main_directory}>`);
-			}
+			assert(Detail.exist_directory(main_directory), `main directory is not found : <${main_directory}>`);
 			let entry: [Entry, null | Config] | null = null;
-			if (manifest.entry !== null && !manifest.module.includes(manifest.entry)) {
-				throw new Error(`entry module is invalid : <${manifest.entry}>`);
-			}
+			assert(manifest.entry === null || manifest.module.includes(manifest.entry), `entry module is invalid : <${manifest.entry}>`);
 			for (let module of manifest.module) {
 				let script_file = `${main_directory}/${module}.js`;
 				let config_file = `${main_directory}/${module}.json`;
-				if (!Detail.exist_file(script_file)) {
-					throw new Error(`module script file not found : <${module}>`);
-				}
+				assert(Detail.exist_file(script_file), `module script file not found : <${module}>`);
 				let config: null | Config = null;
 				if (Detail.exist_file(config_file)) {
 					let raw_module_config = Detail.read_json(config_file);
-					if (typeof raw_module_config !== 'object' || raw_module_config === null || (raw_module_config as Object).constructor.name !== 'Object') {
-						throw new Error(`module config must be object : <${module}>`);
-					}
+					assert(raw_module_config !== null && typeof raw_module_config === 'object' && (raw_module_config as Object).constructor.name === 'Object', `module config must be object : <${module}>`);
 					config = raw_module_config as Config;
 				}
 				let evaluate_result = Detail.evaluate(script_file) as EvaluateResult;
@@ -242,11 +228,8 @@ namespace TwinStar {
 					}
 				}
 				if (module === manifest.entry) {
-					if (evaluate_result !== undefined && evaluate_result.entry !== undefined) {
-						entry = [evaluate_result.entry as Entry, config];
-					} else {
-						throw new Error(`module is loaded, but entry function is not found : <${module}>`);
-					}
+					assert(evaluate_result !== undefined && evaluate_result.entry !== undefined, `module is loaded, but entry function is not found : <${module}>`);
+					entry = [evaluate_result.entry as Entry, config];
 				}
 			}
 			return entry;
@@ -258,7 +241,6 @@ namespace TwinStar {
 
 	// ------------------------------------------------
 
-	/** 主函数实现 */
 	export namespace Main {
 
 		// ------------------------------------------------
@@ -272,9 +254,7 @@ namespace TwinStar {
 			let load_module_success = false;
 			try {
 				Detail.notify(`TwinStar.ToolKit ~ Core:${Core.Miscellaneous.g_version.value} & Shell:${Core.Miscellaneous.g_context.callback(Core.StringList.value(['name'])).value[1]}:${Core.Miscellaneous.g_context.callback(Core.StringList.value(['version'])).value[1]} & Script:${k_version} ~ ${Core.Miscellaneous.g_context.callback(Core.StringList.value(['system'])).value[1]}`);
-				if (argument.length < 1) {
-					throw new Error(`argument too few`);
-				}
+				assert(argument.length >= 1, `argument too few`);
 				// 获取主目录
 				let home_directory = argument[0];
 				home_directory = home_directory.replaceAll(`\\`, '/');
@@ -369,6 +349,7 @@ TwinStar.Main.g_module_manifest = {
 		`utility/TextGenerator`,
 		`utility/VirtualTerminalSequences`,
 		`utility/XML`,
+		`utility/ByteListView`,
 		`utility/CoreX`,
 		`utility/Shell`,
 		`utility/ThreadManager`,
@@ -400,9 +381,10 @@ TwinStar.Main.g_module_manifest = {
 		`Entry/method/js`,
 		`Entry/method/json`,
 		`Entry/method/data.hash`,
-		`Entry/method/data.encode`,
-		`Entry/method/data.encrypt`,
-		`Entry/method/data.compress`,
+		`Entry/method/data.encoding`,
+		`Entry/method/data.encryption`,
+		`Entry/method/data.compression`,
+		`Entry/method/data.differentiation`,
 		`Entry/method/image.atlas`,
 		`Entry/method/wwise.encoded_media`,
 		`Entry/method/wwise.sound_bank`,
@@ -415,6 +397,7 @@ TwinStar.Main.g_module_manifest = {
 		`Entry/method/popcap.pak`,
 		`Entry/method/popcap.rsgp`,
 		`Entry/method/popcap.rsb`,
+		`Entry/method/popcap.rsb_patch`,
 		`Entry/method/pvz2.lawn_string_text`,
 		`Entry/method/pvz2.remote_android_helper`,
 		`Entry/method/expand`,

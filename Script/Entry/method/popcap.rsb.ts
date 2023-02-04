@@ -406,9 +406,7 @@ namespace TwinStar.Entry.method.popcap.rsb {
 								};
 								{
 									let map_name_list = Object.keys(a.option.image_texture_format_map_list);
-									if (map_name_list.length === 0) {
-										throw new Error(`texture format map list is empty`);
-									}
+									assert(map_name_list.length !== 0, `texture format map list is empty`);
 									let texture_format_map_name: string;
 									texture_format_map_name = Executor.request_argument(
 										...Executor.query_argument_message(this.id, 'option_image_texture_format_map_name'),

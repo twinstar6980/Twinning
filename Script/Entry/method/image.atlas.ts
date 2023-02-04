@@ -46,7 +46,7 @@ namespace TwinStar.Entry.method.image.atlas {
 							...Executor.query_argument_message(this.id, 'atlas_file'),
 							a.atlas_file,
 							(value) => (value),
-							() => (manifest_file.replace(/((\.atlas)(\.json))?$/i, '.png')),
+							() => (manifest_file.replace(/((\.atlas)(\.json))?$/i, '.atlas.png')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
 					}
@@ -87,7 +87,7 @@ namespace TwinStar.Entry.method.image.atlas {
 							...Executor.query_argument_message(this.id, 'atlas_file'),
 							a.atlas_file,
 							(value) => (value),
-							() => (manifest_file.replace(/((\.atlas)(\.json))?$/i, '.png')),
+							() => (manifest_file.replace(/((\.atlas)(\.json))?$/i, '.atlas.png')),
 							...Executor.argument_requester_for_path('file', [true]),
 						);
 						sprite_directory = Executor.request_argument(
@@ -142,7 +142,7 @@ namespace TwinStar.Entry.method.image.atlas {
 							...Executor.query_argument_message(this.id, 'atlas_file'),
 							a.atlas_file,
 							(value) => (value),
-							() => (sprite_directory.replace(/((\.sprite))?$/i, '.png')),
+							() => (sprite_directory.replace(/((\.sprite))?$/i, '.atlas.png')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
 					}

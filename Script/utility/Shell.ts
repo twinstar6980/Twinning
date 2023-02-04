@@ -1,9 +1,7 @@
-/** 对外壳回调的包装 */
 namespace TwinStar.Shell {
 
 	// ------------------------------------------------
 
-	/** 调用外壳回调，并判断是否出现异常 */
 	export function callback(
 		argument: Array<string>,
 	): Array<string> {
@@ -16,13 +14,10 @@ namespace TwinStar.Shell {
 
 	// ------------------------------------------------
 
-	/** 外壳名称 */
 	export const name = String(callback(['name'])[0]);
 
-	/** 外壳版本 */
 	export const version = BigInt(callback(['version'])[0]);
 
-	/** 所处系统 */
 	export const system = String(callback(['system'])[0]);
 
 	// ------------------------------------------------
@@ -56,13 +51,6 @@ namespace TwinStar.Shell {
 		return result[0];
 	}
 
-	/**
-	 * 弹出文件选择对话框，要求用户选择任意文件或目录
-	 * @param pick_folder 是否选择目录
-	 * @param multiple 是否允许多选
-	 * @returns 选中的文件路径
-	 * @description select_file_by_dialog $pick_folder $multiple -> $path
-	 */
 	export function windows_cli_open_file_dialog(
 		pick_folder: boolean,
 		multiple: boolean,

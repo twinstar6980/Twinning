@@ -28,7 +28,7 @@ namespace TwinStar::Core::Tool::Data::Serialization::XML {
 		#endif
 
 		class TinyXML2Printer :
-			public ThirdParty::tinyxml2::XMLPrinter {
+			public Third::tinyxml2::XMLPrinter {
 
 		public:
 
@@ -84,10 +84,10 @@ namespace TwinStar::Core::Tool::Data::Serialization::XML {
 		};
 
 		// NOTE : maybe failed if api changed
-		static_assert(sizeof(TinyXML2PrinterImitator) == sizeof(ThirdParty::tinyxml2::XMLPrinter));
+		static_assert(sizeof(TinyXML2PrinterImitator) == sizeof(Third::tinyxml2::XMLPrinter));
 
 		static auto move_printer_buffer_if_can (
-			ThirdParty::tinyxml2::XMLPrinter & printer
+			Third::tinyxml2::XMLPrinter & printer
 		) -> String {
 			auto & printer_imitator = self_cast<TinyXML2PrinterImitator>(printer);
 			auto   buffer_data = cast_pointer<Character>(make_pointer(printer_imitator._buffer._mem));
@@ -116,10 +116,10 @@ namespace TwinStar::Core::Tool::Data::Serialization::XML {
 	protected:
 
 		static auto process_node (
-			ThirdParty::tinyxml2::XMLDocument & raw_document,
-			Node const &                        node
-		) -> ZPointer<ThirdParty::tinyxml2::XMLNode> {
-			auto raw_node = ZPointer<ThirdParty::tinyxml2::XMLNode>{};
+			Third::tinyxml2::XMLDocument & raw_document,
+			Node const &                   node
+		) -> ZPointer<Third::tinyxml2::XMLNode> {
+			auto raw_node = ZPointer<Third::tinyxml2::XMLNode>{};
 			switch (node.type().value) {
 				case NodeType::Constant::element().value : {
 					auto & node_value = node.get_element();
@@ -155,7 +155,7 @@ namespace TwinStar::Core::Tool::Data::Serialization::XML {
 			String &     data,
 			Node const & value
 		) -> Void {
-			auto raw_document = ThirdParty::tinyxml2::XMLDocument{};
+			auto raw_document = Third::tinyxml2::XMLDocument{};
 			raw_document.InsertEndChild(process_node(raw_document, value));
 			auto printer = TinyXML2Printer{};
 			raw_document.Print(&printer);
@@ -181,8 +181,8 @@ namespace TwinStar::Core::Tool::Data::Serialization::XML {
 	protected:
 
 		static auto process_node (
-			ZPointer<ThirdParty::tinyxml2::XMLNode const> const & raw_node,
-			Node &                                                node
+			ZPointer<Third::tinyxml2::XMLNode const> const & raw_node,
+			Node &                                           node
 		) -> Void {
 			if (auto raw_element = raw_node->ToElement()) {
 				node.set_element();
@@ -224,8 +224,8 @@ namespace TwinStar::Core::Tool::Data::Serialization::XML {
 		}
 
 		static auto process_document (
-			ThirdParty::tinyxml2::XMLDocument const & raw_document,
-			Node &                                    node
+			Third::tinyxml2::XMLDocument const & raw_document,
+			Node &                               node
 		) -> Void {
 			auto current_child = raw_document.FirstChild();
 			assert_condition(current_child);
@@ -248,7 +248,7 @@ namespace TwinStar::Core::Tool::Data::Serialization::XML {
 			String const & data,
 			Node &         value
 		) -> Void {
-			auto raw_document = ThirdParty::tinyxml2::XMLDocument{};
+			auto raw_document = Third::tinyxml2::XMLDocument{};
 			raw_document.Parse(cast_pointer<ZCharacter>(data.begin()).value, data.size().value);
 			process_document(raw_document, value);
 			return;

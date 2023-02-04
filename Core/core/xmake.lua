@@ -29,9 +29,10 @@ target('core', function()
 		'third.zlib',
 		'third.bzip2',
 		'third.lzma',
+		'third.open_vcdiff',
 		'third.libpng',
 		'third.ETCPACK',
-		'third.rg_etc1',
+		'third.etcpak',
 		'third.PVRTCCompressor',
 		{}
 	)

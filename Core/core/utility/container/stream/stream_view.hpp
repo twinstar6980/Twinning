@@ -296,6 +296,26 @@ namespace TwinStar::Core {
 
 		// ----------------
 
+		auto write_constant (
+			Element const & value
+		) -> Void requires
+			(method == StreamMethod::Constant::o() || method == StreamMethod::Constant::io()) {
+			thiz.write(value);
+			return;
+		}
+
+		auto read_constant (
+			Element const & value
+		) -> Void requires
+			(method == StreamMethod::Constant::i() || method == StreamMethod::Constant::io()) {
+			auto temporary_value = Element{};
+			thiz.read(temporary_value);
+			assert_condition(temporary_value == value);
+			return;
+		}
+
+		// ----------------
+
 		auto read_of (
 		) -> Element requires
 			(method == StreamMethod::Constant::i() || method == StreamMethod::Constant::io()) {

@@ -24,7 +24,7 @@
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinStar::Core::ThirdParty::PVRTCCompressor {
+namespace TwinStar::Core::Third::PVRTCCompressor {
 
 	using namespace ::Javelin;
 

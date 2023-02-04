@@ -1,4 +1,3 @@
-/** 控制台交互，将不同类型 Shell 的交互操作抽象为统一的接口 */
 namespace TwinStar.Console {
 
 	// ------------------------------------------------
@@ -16,10 +15,8 @@ namespace TwinStar.Console {
 
 	// ------------------------------------------------
 
-	/** 是否禁用虚拟终端序列 */
 	export let cli_disable_virtual_terminal_sequences = false;
 
-	/** 消息文本属性 */
 	const k_cli_message_text_attribute: Record<MessageType, VirtualTerminalSequences.TextAttribute> = {
 		v: {
 			background: null,
@@ -59,13 +56,6 @@ namespace TwinStar.Console {
 		},
 	};
 
-	/**
-	 * 设置消息文本属性
-	 * 
-	 * 仅当 cli_disable_virtual_terminal_sequences == false 时输出控制序列，以避免在不支持虚拟终端序列的环境下输出控制序列
-	 * 
-	 * @param type 类型名
-	 */
 	function cli_set_message_text_attribute(
 		type: MessageType,
 	): void {
@@ -251,7 +241,7 @@ namespace TwinStar.Console {
 			let input = cli_basic_input(
 				'C',
 				(value) => {
-					let regexp_check_result = Check.enumeration_checkerx(['n', 'y'])(value);
+					let regexp_check_result = Check.enumeration_checker_x(['n', 'y'])(value);
 					if (regexp_check_result !== null) {
 						return los(`确认值格式非法，须为 n 或 y`);
 					}
@@ -300,7 +290,7 @@ namespace TwinStar.Console {
 			let input = cli_basic_input(
 				'N',
 				(value) => {
-					let regexp_check_result = Check.regexp_checkerx(/^(\+|\-)?(\d+)(\.\d*)?$/)(value);
+					let regexp_check_result = Check.regexp_checker_x(/^(\+|\-)?(\d+)(\.\d*)?$/)(value);
 					if (regexp_check_result !== null) {
 						return los(`数字格式非法，{}`, regexp_check_result);
 					}
@@ -349,7 +339,7 @@ namespace TwinStar.Console {
 			let input = cli_basic_input(
 				'I',
 				(value) => {
-					let regexp_check_result = Check.regexp_checkerx(/^(\+|\-)?(\d+)$/)(value);
+					let regexp_check_result = Check.regexp_checker_x(/^(\+|\-)?(\d+)$/)(value);
 					if (regexp_check_result !== null) {
 						return los(`整数格式非法，{}`, regexp_check_result);
 					}
@@ -398,7 +388,7 @@ namespace TwinStar.Console {
 			let input = cli_basic_input(
 				'Z',
 				(value) => {
-					let regexp_check_result = Check.regexp_checkerx(/^(\d+)(\.\d*)?(b|k|m|g)$/)(value);
+					let regexp_check_result = Check.regexp_checker_x(/^(\d+)(\.\d*)?(b|k|m|g)$/)(value);
 					if (regexp_check_result !== null) {
 						return los(`尺寸格式非法，{}`, regexp_check_result);
 					}
@@ -489,7 +479,7 @@ namespace TwinStar.Console {
 		nullable: boolean = false,
 	): Value | null {
 		let result: Value | null = undefined as any;
-		let max_index_string_length = `${option.length}`.length;
+		let maximum_index_string_length = `${option.length}`.length;
 		let option_index = new Array<number>();
 		let option_index_discretized = new Map<bigint, number>();
 		let option_message = new Array<string>();
@@ -502,7 +492,7 @@ namespace TwinStar.Console {
 			} else {
 				option_index.push(i);
 				option_index_discretized.set(current_option_index, i);
-				option_message.push(`${make_prefix_padded_string(current_option_index, ' ', max_index_string_length)}. ${e[1] === undefined ? e[0] : e[1]}`);
+				option_message.push(`${make_prefix_padded_string(current_option_index, ' ', maximum_index_string_length)}. ${e[1] === undefined ? e[0] : e[1]}`);
 				current_option_index += 1n;
 			}
 		});
@@ -513,7 +503,7 @@ namespace TwinStar.Console {
 			let input = cli_basic_input(
 				'O',
 				(value) => {
-					let regexp_check_result = Check.regexp_checkerx(/^(\+|\-)?(\d+)$/)(value);
+					let regexp_check_result = Check.regexp_checker_x(/^(\+|\-)?(\d+)$/)(value);
 					if (regexp_check_result !== null) {
 						return los(`整数格式非法，{}`, regexp_check_result);
 					}

@@ -113,6 +113,32 @@ namespace TwinStar::Core {
 
 		// ----------------
 
+		template <typename That, typename ... Option> requires
+			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
+		auto write_constant (
+			That const &  that,
+			Option && ... option
+		) -> Void requires
+			(method == StreamMethod::Constant::o() || method == StreamMethod::Constant::io()) {
+			thiz.write(that, as_forward<Option>(option) ...);
+			return;
+		}
+
+		template <typename That, typename ... Option> requires
+			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
+		auto read_constant (
+			That const &  that,
+			Option && ... option
+		) -> Void requires
+			(method == StreamMethod::Constant::i() || method == StreamMethod::Constant::io()) {
+			auto temporary_that = That{};
+			thiz.read(temporary_that, as_forward<Option>(option) ...);
+			assert_condition(temporary_that == that);
+			return;
+		}
+
+		// ----------------
+
 		template <typename That = Byte, typename ... Option> requires
 			CategoryConstraint<IsPureInstance<That> && IsValid<Option ...>>
 		auto read_of (

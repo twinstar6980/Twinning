@@ -1,13 +1,7 @@
-/** PopCap-PAK资源打包 */
 namespace TwinStar.Support.PopCapPAK.ResourcePack {
 
 	// ------------------------------------------------
 
-	/**
-	 * 将资源目录内的所有文件打包为PopCap-PAK数据包
-	 * @param resource_directory 资源目录
-	 * @returns 数据包数据
-	 */
 	export function pack(
 		resource_directory: string,
 		version_number: [0n][number],

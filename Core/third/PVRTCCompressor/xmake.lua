@@ -1,5 +1,5 @@
 -- PVRTCCompressor
--- ?
+-- ? 234ecb7db4785bd3c971d01d7f5556192fe9ab28
 -- https://github.com/brenwill/PVRTCCompressor
 
 target('third.PVRTCCompressor', function()

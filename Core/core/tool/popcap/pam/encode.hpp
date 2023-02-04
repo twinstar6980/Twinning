@@ -403,8 +403,8 @@ namespace TwinStar::Core::Tool::PopCap::PAM {
 			OByteStreamView &                    animation_data,
 			typename Manifest::Animation const & animation_manifest
 		) -> Void {
-			animation_data.write(k_magic_identifier);
-			animation_data.write(cbw<VersionNumber>(version.number));
+			animation_data.write_constant(k_magic_identifier);
+			animation_data.write_constant(cbw<VersionNumber>(version.number));
 			exchange_integer<IntegerU8>(animation_data, animation_manifest.frame_rate);
 			exchange_floating<IntegerS16, ValueRate::size>(animation_data, animation_manifest.position.x);
 			exchange_floating<IntegerS16, ValueRate::size>(animation_data, animation_manifest.position.y);
@@ -775,8 +775,8 @@ namespace TwinStar::Core::Tool::PopCap::PAM {
 			IByteStreamView &              animation_data,
 			typename Manifest::Animation & animation_manifest
 		) -> Void {
-			assert_condition(animation_data.read_of<MagicIdentifier>() == k_magic_identifier);
-			assert_condition(animation_data.read_of<VersionNumber>() == cbw<VersionNumber>(version.number));
+			animation_data.read_constant(k_magic_identifier);
+			animation_data.read_constant(cbw<VersionNumber>(version.number));
 			exchange_integer<IntegerU8>(animation_data, animation_manifest.frame_rate);
 			exchange_floating<IntegerS16, ValueRate::size>(animation_data, animation_manifest.position.x);
 			exchange_floating<IntegerS16, ValueRate::size>(animation_data, animation_manifest.position.y);

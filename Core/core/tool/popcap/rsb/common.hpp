@@ -265,10 +265,14 @@ namespace TwinStar::Core::Tool::PopCap::RSB::Common {
 
 }
 
+namespace TwinStar::Core::Tool::PopCap::RSGP {
+	using namespace RSB::Common;
+}
+
 namespace TwinStar::Core::Tool::PopCap::RSB {
 	using namespace RSB::Common;
 }
 
-namespace TwinStar::Core::Tool::PopCap::RSGP {
+namespace TwinStar::Core::Tool::PopCap::RSBPatch {
 	using namespace RSB::Common;
 }

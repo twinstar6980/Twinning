@@ -2,7 +2,7 @@
 
 #include "core/utility/utility.hpp"
 #include "core/tool/popcap/zlib/version.hpp"
-#include "core/tool/data/compress/deflate.hpp"
+#include "core/tool/data/compression/deflate.hpp"
 
 namespace TwinStar::Core::Tool::PopCap::ZLib {
 
@@ -48,7 +48,7 @@ namespace TwinStar::Core::Tool::PopCap::ZLib {
 				ripe_size_bound += bs_static_size<IntegerU64>();
 			}
 			auto ripe_data_size_bound = Size{};
-			Data::Compress::Deflate::Compress::do_compute_size_bound(raw_size, ripe_data_size_bound, window_bits, memory_level, Data::Compress::Deflate::Wrapper::Constant::zlib());
+			Data::Compression::Deflate::Compress::do_compute_size_bound(raw_size, ripe_data_size_bound, window_bits, memory_level, Data::Compression::Deflate::Wrapper::Constant::zlib());
 			ripe_size_bound += ripe_data_size_bound;
 			return;
 		}
@@ -56,14 +56,14 @@ namespace TwinStar::Core::Tool::PopCap::ZLib {
 		// ----------------
 
 		static auto process_whole (
-			IByteStreamView &                         raw,
-			OByteStreamView &                         ripe,
-			Size const &                              level,
-			Size const &                              window_bits,
-			Size const &                              memory_level,
-			Data::Compress::Deflate::Strategy const & strategy
+			IByteStreamView &                            raw,
+			OByteStreamView &                            ripe,
+			Size const &                                 level,
+			Size const &                                 window_bits,
+			Size const &                                 memory_level,
+			Data::Compression::Deflate::Strategy const & strategy
 		) -> Void {
-			ripe.write(k_magic_identifier);
+			ripe.write_constant(k_magic_identifier);
 			if constexpr (version.variant_64) {
 				ripe.forward(bs_static_size<IntegerU32>());
 			}
@@ -72,7 +72,7 @@ namespace TwinStar::Core::Tool::PopCap::ZLib {
 			} else {
 				ripe.write(cbw<IntegerU64>(raw.reserve()));
 			}
-			Data::Compress::Deflate::Compress::do_process_whole(raw, ripe, level, window_bits, memory_level, strategy, Data::Compress::Deflate::Wrapper::Constant::zlib());
+			Data::Compression::Deflate::Compress::do_process_whole(raw, ripe, level, window_bits, memory_level, strategy, Data::Compression::Deflate::Wrapper::Constant::zlib());
 			return;
 		}
 
@@ -89,12 +89,12 @@ namespace TwinStar::Core::Tool::PopCap::ZLib {
 		}
 
 		static auto do_process_whole (
-			IByteStreamView &                         raw_,
-			OByteStreamView &                         ripe_,
-			Size const &                              level,
-			Size const &                              window_bits,
-			Size const &                              memory_level,
-			Data::Compress::Deflate::Strategy const & strategy
+			IByteStreamView &                            raw_,
+			OByteStreamView &                            ripe_,
+			Size const &                                 level,
+			Size const &                                 window_bits,
+			Size const &                                 memory_level,
+			Data::Compression::Deflate::Strategy const & strategy
 		) -> Void {
 			M_use_zps_of(raw);
 			M_use_zps_of(ripe);
@@ -123,7 +123,7 @@ namespace TwinStar::Core::Tool::PopCap::ZLib {
 		) -> Void {
 			raw_size = k_none_size;
 			auto ripe_stream = IByteStreamView{ripe};
-			assert_condition(ripe_stream.read_of<MagicIdentifier>() == k_magic_identifier);
+			ripe_stream.read_constant(k_magic_identifier);
 			if constexpr (version.variant_64) {
 				ripe_stream.forward(bs_static_size<IntegerU32>());
 			}
@@ -142,7 +142,7 @@ namespace TwinStar::Core::Tool::PopCap::ZLib {
 			OByteStreamView & raw,
 			Size const &      window_bits
 		) -> Void {
-			assert_condition(ripe.read_of<MagicIdentifier>() == k_magic_identifier);
+			ripe.read_constant(k_magic_identifier);
 			if constexpr (version.variant_64) {
 				ripe.forward(bs_static_size<IntegerU32>());
 			}
@@ -153,7 +153,7 @@ namespace TwinStar::Core::Tool::PopCap::ZLib {
 				size = cbw<Size>(ripe.read_of<IntegerU64>());
 			}
 			auto raw_begin = raw.position();
-			Data::Compress::Deflate::Uncompress::do_process_whole(ripe, raw, window_bits, Data::Compress::Deflate::Wrapper::Constant::zlib());
+			Data::Compression::Deflate::Uncompress::do_process_whole(ripe, raw, window_bits, Data::Compression::Deflate::Wrapper::Constant::zlib());
 			assert_condition(raw.position() - raw_begin == size);
 			return;
 		}

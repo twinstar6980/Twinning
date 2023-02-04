@@ -1,9 +1,7 @@
-/** 执行器功能 */
 namespace TwinStar.Executor {
 
 	// ------------------------------------------------
 
-	/** 功能 */
 	export type Method<Argument extends Command['argument'] = Command['argument'], InputForwarderKey extends keyof Argument = keyof Argument> = {
 		/** ID；用于指定功能，应唯一 */
 		id: string;
@@ -19,9 +17,6 @@ namespace TwinStar.Executor {
 		input_forwarder: InputForwarderKey;
 	};
 
-	/**
-	 * 自动推导Method的类型模板
-	 */
 	export function method_of<Argument extends Command['argument']>(
 		object: {
 			id: string;
@@ -37,11 +32,6 @@ namespace TwinStar.Executor {
 
 	// ------------------------------------------------
 
-	/**
-	 * 查询本地化的功能描述
-	 * @param method 功能ID
-	 * @returns 本地化的功能描述
-	 */
 	export function query_method_description(
 		method: string,
 	): string {

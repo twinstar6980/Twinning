@@ -4,6 +4,9 @@
 #include "core/tool/marmalade/dzip/version.hpp"
 #include "core/tool/marmalade/dzip/manifest.hpp"
 #include "core/tool/marmalade/dzip/structure.hpp"
+#include "core/tool/data/compression/deflate.hpp"
+#include "core/tool/data/compression/bzip2.hpp"
+#include "core/tool/data/compression/lzma.hpp"
 
 namespace TwinStar::Core::Tool::Marmalade::DZip {
 
@@ -33,7 +36,7 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 			typename Manifest::Package const & package_manifest,
 			Path const &                       resource_directory
 		) -> Void {
-			package_data.write(Structure::k_magic_identifier);
+			package_data.write_constant(Structure::k_magic_identifier);
 			struct {
 				OByteStreamView archive_setting;
 				OByteStreamView resource_file;
@@ -170,14 +173,14 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::zlib)) {
 						auto chunk_data = FileSystem::read_file(resource_path);
-						Data::Compress::Deflate::Compress::do_process_whole(as_lvalue(IByteStreamView{chunk_data}), package_data, 9_sz, 15_sz, 9_sz, Data::Compress::Deflate::Strategy::Constant::default_mode(), Data::Compress::Deflate::Wrapper::Constant::gzip());
+						Data::Compression::Deflate::Compress::do_process_whole(as_lvalue(IByteStreamView{chunk_data}), package_data, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::gzip());
 						package_data.backward(8_sz); // NOTE : overwrite gzip trail
 						chunk_size_uncompressed = chunk_data.size();
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::bzip2)) {
 						auto chunk_data = FileSystem::read_file(resource_path);
-						Data::Compress::BZip2::Compress::do_process_whole(as_lvalue(IByteStreamView{chunk_data}), package_data, 9_sz, 0_sz);
+						Data::Compression::BZip2::Compress::do_process_whole(as_lvalue(IByteStreamView{chunk_data}), package_data, 9_sz, 0_sz);
 						chunk_size_uncompressed = chunk_data.size();
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
@@ -201,7 +204,7 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 						auto chunk_data = FileSystem::read_file(resource_path);
 						auto chunk_header = Structure::ChunkHeaderLzma<version>{};
 						auto chunk_header_data = OByteStreamView{package_data.forward_view(bs_size(chunk_header))};
-						Data::Compress::Lzma::Compress::do_process_whole(as_lvalue(IByteStreamView{chunk_data}), package_data, as_lvalue(OByteStreamView{chunk_header.property.view()}), 9_sz);
+						Data::Compression::Lzma::Compress::do_process_whole(as_lvalue(IByteStreamView{chunk_data}), package_data, as_lvalue(OByteStreamView{chunk_header.property.view()}), 9_sz);
 						chunk_header.size = cbw<IntegerU64>(chunk_data.size()); // TODO : should assert size is 32 bit ?
 						chunk_header_data.write(chunk_header);
 						chunk_size_uncompressed = chunk_data.size();
@@ -269,7 +272,7 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 			typename Manifest::Package & package_manifest,
 			Optional<Path> const &       resource_directory
 		) -> Void {
-			assert_condition(package_data.read_of<Structure::MagicIdentifier>() == Structure::k_magic_identifier);
+			package_data.read_constant(Structure::k_magic_identifier);
 			auto information_structure = Structure::Information<version>{};
 			{
 				package_data.read(information_structure.archive_setting);
@@ -330,7 +333,7 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 						chunk_manifest.flag = "zlib"_s;
 						auto chunk_stream = OByteStreamView{chunk_data};
 						package_data.forward(10_sz); // TODO NOTE : skip gzip header
-						Data::Compress::Deflate::Uncompress::do_process_whole(package_data, chunk_stream, 15_sz, Data::Compress::Deflate::Wrapper::Constant::none());
+						Data::Compression::Deflate::Uncompress::do_process_whole(package_data, chunk_stream, 15_sz, Data::Compression::Deflate::Wrapper::Constant::none());
 						assert_condition(chunk_stream.full());
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::bzip2)) {
@@ -339,7 +342,7 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 						assert_condition(chunk_size_compressed == chunk_data.size());
 						chunk_manifest.flag = "bzip2"_s;
 						auto chunk_stream = OByteStreamView{chunk_data};
-						Data::Compress::BZip2::Uncompress::do_process_whole(package_data, chunk_stream, k_false);
+						Data::Compression::BZip2::Uncompress::do_process_whole(package_data, chunk_stream, k_false);
 						assert_condition(chunk_stream.full());
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::mp3)) {
@@ -374,7 +377,7 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 						auto chunk_stream = OByteStreamView{chunk_data};
 						auto chunk_header = package_data.read_of<Structure::ChunkHeaderLzma<version>>();
 						assert_condition(cbw<Size>(chunk_header.size) == chunk_data.size());
-						Data::Compress::Lzma::Uncompress::do_process_whole(package_data, chunk_stream, as_lvalue(IByteStreamView{chunk_header.property.view()}));
+						Data::Compression::Lzma::Uncompress::do_process_whole(package_data, chunk_stream, as_lvalue(IByteStreamView{chunk_header.property.view()}));
 						assert_condition(chunk_stream.full());
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::random_access)) {
@@ -383,9 +386,7 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 						throw ToDoException{};
 					}
 					assert_condition(chunk_ok);
-					if (package_data.position() > package_data_end_position) {
-						package_data_end_position = package_data.position();
-					}
+					package_data_end_position = max(package_data_end_position, package_data.position());
 				}
 				assert_condition(!chunk_data_list.empty() && Range::all_of(chunk_data_list.tail(chunk_data_list.size() - 1_sz), [&] (auto & element) { return element == chunk_data_list.first(); }));
 				if (resource_directory) {

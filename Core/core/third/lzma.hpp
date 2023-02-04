@@ -17,7 +17,7 @@
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinStar::Core::ThirdParty::lzma {
+namespace TwinStar::Core::Third::lzma {
 
 	using Byte = ::Byte;
 

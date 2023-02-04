@@ -1,16 +1,13 @@
-/** PvZ2文本表版本转换 */
 namespace TwinStar.Support.PvZ2.LawnStringText {
 
 	// ------------------------------------------------
 
-	/** 文本版本 */
 	export const VersionE = [
 		'text',      // 文本形式，早期版本（6.?及之前）
 		'json_map',  // JSON键值对形式，中期版本
 		'json_list', // JSON数组形式，当前版本
 	] as const;
 
-	/** 文本版本 */
 	export type Version = typeof VersionE[number];
 
 	// ------------------------------------------------
@@ -28,9 +25,7 @@ namespace TwinStar.Support.PvZ2.LawnStringText {
 			try {
 				let source = CoreX.JSON.read(source_data).value as any;
 				let source_variant = source?.objects[0]?.objdata?.LocStringValues;
-				if (typeof source_variant !== 'object') {
-					throw new Error(`invalid source`);
-				}
+				assert(typeof source_variant === 'object', `invalid source`);
 				if (source_variant instanceof Array) {
 					source_list = source_variant;
 					actual_source_version = 'json_list';
@@ -63,14 +58,10 @@ namespace TwinStar.Support.PvZ2.LawnStringText {
 				if (source_map === null) {
 					let source = CoreX.JSON.read(source_data).value as any;
 					source_map = source?.objects[0]?.objdata?.LocStringValues as Record<string, string>;
-					if (typeof source_map !== 'object' || source_map instanceof Array) {
-						throw new Error(`invalid source`);
-					}
+					assert(typeof source_map === 'object' && (source_map as Object).constructor.name === 'Object', `invalid source`);
 				}
 				for (let key in source_map) {
-					if (typeof source_map[key] !== 'string') {
-						throw new Error(`invalid map element`);
-					}
+					assert(typeof source_map[key] === 'string', `invalid map element`);
 					string_map[key] = source_map[key];
 				}
 				break;
@@ -79,19 +70,13 @@ namespace TwinStar.Support.PvZ2.LawnStringText {
 				if (source_list === null) {
 					let source = CoreX.JSON.read(source_data).value as any;
 					source_list = source?.objects[0]?.objdata?.LocStringValues as Array<string>;
-					if (typeof source_list !== 'object' || !(source_list instanceof Array)) {
-						throw new Error(`invalid source`);
-					}
+					assert(typeof source_list === 'object' && (source_map as Object).constructor.name === 'Array', `invalid source`);
 				}
-				if (source_list.length % 2 !== 0) {
-					throw new Error(`invalid list size`);
-				}
+				assert(source_list.length % 2 === 0, `invalid list size`);
 				for (let i = 0; i < source_list.length; i += 2) {
 					let key = source_list[i + 0];
 					let value = source_list[i + 1];
-					if (typeof key !== 'string' || typeof value !== 'string') {
-						throw new Error(`invalid list element`);
-					}
+					assert(typeof key === 'string' && typeof value === 'string', `invalid list element`);
 					string_map[source_list[i]] = source_list[i + 1];
 				}
 				break;

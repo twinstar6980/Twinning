@@ -2,7 +2,7 @@
 
 #include "core/utility/utility.hpp"
 #include "core/tool/marmalade/dzip/version.hpp"
-#include "core/tool/data/compress/lzma.hpp"
+#include "core/tool/data/compression/lzma.hpp"
 
 namespace TwinStar::Core::Tool::Marmalade::DZip::Structure {
 
@@ -160,7 +160,7 @@ namespace TwinStar::Core::Tool::Marmalade::DZip::Structure {
 	M_record_of_data(
 		M_wrap(ChunkHeaderLzma<t_version>),
 		M_wrap(
-			(StaticByteArray<Data::Compress::Lzma::k_property_size>) property,
+			(StaticByteArray<Data::Compression::Lzma::k_property_size>) property,
 			(IntegerU64) size,
 		),
 	);

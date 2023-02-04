@@ -1,19 +1,17 @@
-/** 环境变量 */
 namespace TwinStar.EnvironmentVariable {
 
 	// ------------------------------------------------
 
 	export function parse(
-		source: Array<string>,
+		list: Array<string>,
 	): Record<string, string> {
-		let result: Record<string, string> = {};
-		for (let element of source) {
-			let split_index = element.indexOf('=');
-			let key = element.substring(0, split_index);
-			let value = element.substring(split_index + 1, undefined);
-			result[key] = value;
-		}
-		return result;
+		return record_from_array(
+			list,
+			(index, element) => {
+				let split_index = element.indexOf('=');
+				return [element.substring(0, split_index), element.substring(split_index + 1, undefined)];
+			},
+		);
 	}
 
 	export function query(
@@ -30,6 +28,8 @@ namespace TwinStar.EnvironmentVariable {
 		return result;
 	}
 
+	// ------------------------------------------------
+
 	export function search_from_path(
 		name: string,
 	): null | string {
@@ -37,16 +37,12 @@ namespace TwinStar.EnvironmentVariable {
 		let item_delimiter = Shell.is_windows ? ';' : ':';
 		let environment = parse(CoreX.Process.environment());
 		let path_string = query(environment, 'PATH');
-		if (path_string === null) {
-			throw new Error(`environment PATH not found`);
-		}
+		assert(path_string !== null, `environment PATH not found`);
 		let path_list = path_string.split(item_delimiter);
 		let path_extension_list = [''];
 		if (Shell.is_windows) {
 			let path_extension_string = query(environment, 'PATHEXT');
-			if (path_extension_string === null) {
-				throw new Error(`environment PATHEXT not found`);
-			}
+			assert(path_extension_string !== null, `environment PATHEXT not found`);
 			path_extension_list.push(...path_extension_string.split(item_delimiter).map((e) => (e.toLowerCase())));
 		}
 		for (let path of path_list) {

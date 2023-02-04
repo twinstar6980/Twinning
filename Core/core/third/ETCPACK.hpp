@@ -16,12 +16,12 @@
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinStar::Core::ThirdParty::ETCPACK {
+namespace TwinStar::Core::Third::ETCPACK {
 
 	using uint8 = ::uint8;
 
-	inline constexpr auto compressBlockETC1Exhaustive = ::compressBlockETC1Exhaustive;
+	inline constexpr auto decompressBlockETC2c = ::decompressBlockETC2c;
 
-	inline constexpr auto decompressBlockETC2 = ::decompressBlockETC2;
+	inline constexpr auto decompressBlockAlphaC = ::decompressBlockAlphaC;
 
 }

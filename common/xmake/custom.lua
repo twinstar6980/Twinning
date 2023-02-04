@@ -101,9 +101,9 @@ function apply_common_setting()
 	set_policy("check.auto_ignore_flags", false)
 	set_policy("build.warning", true)
 	if m.system:is('linux') then
-		set_languages('gnu99', 'cxxlatest')
+		set_languages('gnu99', 'cxx23')
 	else
-		set_languages('c17', 'cxxlatest')
+		set_languages('c17', 'cxx23')
 	end
 end
 
@@ -135,6 +135,7 @@ function apply_compiler_option_basic(target)
 		target:add(
 			'defines',
 			'_CRT_SECURE_NO_WARNINGS',
+			'NOMINMAX',
 			{ private = true }
 		)
 	end

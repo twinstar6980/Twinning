@@ -4,7 +4,7 @@
 #include "core/tool/popcap/rsgp/version.hpp"
 #include "core/tool/popcap/rsgp/manifest.hpp"
 #include "core/tool/popcap/rsgp/structure.hpp"
-#include "core/tool/data/compress/deflate.hpp"
+#include "core/tool/data/compression/deflate.hpp"
 
 namespace TwinStar::Core::Tool::PopCap::RSGP {
 
@@ -34,8 +34,8 @@ namespace TwinStar::Core::Tool::PopCap::RSGP {
 			typename Manifest::Package const & package_manifest,
 			Path const &                       resource_directory
 		) -> Void {
-			package_data.write(Structure::k_magic_identifier);
-			package_data.write(cbw<Structure::VersionNumber>(version.number));
+			package_data.write_constant(Structure::k_magic_identifier);
+			package_data.write_constant(cbw<Structure::VersionNumber>(version.number));
 			struct {
 				OByteStreamView header;
 				OByteStreamView resource_information;
@@ -139,7 +139,7 @@ namespace TwinStar::Core::Tool::PopCap::RSGP {
 				if (!compress_resource_data_section || (current_resource_type == ResourceType::Constant::texture() && resource_data_section_size_original == k_none_size)) {
 					package_data.forward(resource_data_section_view.size());
 				} else {
-					Data::Compress::Deflate::Compress::do_process_whole(as_lvalue(IByteStreamView{resource_data_section_view}), package_data, 9_sz, 15_sz, 9_sz, Data::Compress::Deflate::Strategy::Constant::default_mode(), Data::Compress::Deflate::Wrapper::Constant::zlib());
+					Data::Compression::Deflate::Compress::do_process_whole(as_lvalue(IByteStreamView{resource_data_section_view}), package_data, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
 					package_data.write_space(k_null_byte, compute_padding_size(package_data.position(), k_padding_unit_size));
 				}
 				auto resource_data_section_size = package_data.position() - resource_data_section_offset;
@@ -197,8 +197,8 @@ namespace TwinStar::Core::Tool::PopCap::RSGP {
 			typename Manifest::Package & package_manifest,
 			Optional<Path> const &       resource_directory
 		) -> Void {
-			assert_condition(package_data.read_of<Structure::MagicIdentifier>() == Structure::k_magic_identifier);
-			assert_condition(package_data.read_of<Structure::VersionNumber>() == cbw<Structure::VersionNumber>(version.number));
+			package_data.read_constant(Structure::k_magic_identifier);
+			package_data.read_constant(cbw<Structure::VersionNumber>(version.number));
 			auto information_structure = Structure::Information<version>{};
 			{
 				package_data.read(information_structure.header);
@@ -237,7 +237,7 @@ namespace TwinStar::Core::Tool::PopCap::RSGP {
 					if (resource_data_section_size_original != k_none_size) {
 						auto resource_data_section_stored_stream = IByteStreamView{resource_data_section_view_stored};
 						auto resource_data_section_original_stream = OByteStreamView{resource_data_section_container};
-						Data::Compress::Deflate::Uncompress::do_process_whole(resource_data_section_stored_stream, resource_data_section_original_stream, 15_sz, Data::Compress::Deflate::Wrapper::Constant::zlib());
+						Data::Compression::Deflate::Uncompress::do_process_whole(resource_data_section_stored_stream, resource_data_section_original_stream, 15_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
 					}
 					resource_data_section_view = resource_data_section_container.view();
 				}
@@ -270,12 +270,14 @@ namespace TwinStar::Core::Tool::PopCap::RSGP {
 				}
 			}
 			package_data.set_position(
-				max(
-					{
-						cbw<Size>(information_structure.header.information_section_size),
-						cbw<Size>(information_structure.header.generic_resource_data_section_offset + information_structure.header.generic_resource_data_section_size),
-						cbw<Size>(information_structure.header.texture_resource_data_section_offset + information_structure.header.texture_resource_data_section_size),
-					}
+				cbw<Size>(
+					max(
+						{
+							information_structure.header.information_section_size,
+							information_structure.header.generic_resource_data_section_offset + information_structure.header.generic_resource_data_section_size,
+							information_structure.header.texture_resource_data_section_offset + information_structure.header.texture_resource_data_section_size,
+						}
+					)
 				)
 			);
 			return;

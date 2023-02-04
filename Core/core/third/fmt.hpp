@@ -27,7 +27,7 @@
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinStar::Core::ThirdParty::fmt {
+namespace TwinStar::Core::Third::fmt {
 
 	using namespace ::fmt;
 

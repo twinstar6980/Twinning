@@ -1,22 +1,17 @@
-/** 以命令处理器为核心的模块入口实现 */
 namespace TwinStar.Entry {
 
 	// ------------------------------------------------
 
-	/** 全局执行器功能 */
 	export const g_executor_method: Array<Executor.Method> = [];
 
-	/** 全局执行器功能（用于批处理） */
 	export const g_executor_method_of_batch: Array<Executor.Method> = [];
 
 	// ------------------------------------------------
 
-	/** 用于执行器功能的通用文件系统相关参数 */
 	export type CommonFileSystemArgument = {
 		fs_tactic_if_exist: 'trash' | 'delete' | 'override' | null;
 	};
 
-	/** 用于执行器功能的通用文件系统相关参数的默认值 */
 	export const k_common_file_system_argument: CommonFileSystemArgument = {
 		fs_tactic_if_exist: null,
 	};
@@ -31,11 +26,6 @@ namespace TwinStar.Entry {
 
 	// ------------------------------------------------
 
-	/**
-	 * 生成用于测试文件路径是否有效的简易函数
-	 * @param filter 有效路径规则
-	 * @returns 测试函数
-	 */
 	export function file_system_path_test_generator(
 		filter: Array<['any' | 'file' | 'directory', null | RegExp]>,
 	): (path: string) => boolean {
@@ -54,16 +44,10 @@ namespace TwinStar.Entry {
 
 	// ------------------------------------------------
 
-	/**
-	 * 简单批处理执行
-	 * @param directory 批处理所扫描的目录
-	 * @param filter 子项过滤规则
-	 * @param work 工作函数
-	 */
 	export function simple_batch_execute(
 		directory: string,
 		filter: ['any' | 'file' | 'directory', null | RegExp],
-		work: (item: string) => void,
+		worker: (item: string) => void,
 	): void {
 		let item_list = CoreX.FileSystem[filter[0] === 'file' ? 'list_file' : filter[0] === 'directory' ? 'list_directory' : 'list'](directory);
 		if (filter[1] !== null) {
@@ -77,7 +61,7 @@ namespace TwinStar.Entry {
 				progress.increase();
 				Console.notify('i', `${progress}`, [`${item}`]);
 				try {
-					work(item);
+					worker(item);
 				} catch (e: any) {
 					Console.notify_error(e);
 					Console.pause();
@@ -113,7 +97,7 @@ namespace TwinStar.Entry {
 		// cli disable virtual-terminal-sequences
 		Console.cli_disable_virtual_terminal_sequences = config.cli_disable_virtual_terminal_sequences;
 		// set byte stream endian
-		Core.g_byte_stream_use_big_endian.value = config.byte_stream_use_big_endian;
+		Core.Miscellaneous.g_byte_stream_use_big_endian.value = config.byte_stream_use_big_endian;
 		// set json write option
 		{
 			CoreX.JSON.set_write_buffer_size(

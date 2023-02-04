@@ -1,4 +1,3 @@
-/** PvZ2数据包中原生的资源清单 */
 namespace TwinStar.Support.PvZ2.RSB.OfficialResourceManifest {
 
 	// ------------------------------------------------

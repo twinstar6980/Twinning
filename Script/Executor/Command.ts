@@ -1,9 +1,7 @@
-/** 执行器命令 */
 namespace TwinStar.Executor {
 
 	// ------------------------------------------------
 
-	/** 命令 */
 	export type Command = {
 		/** 需要应用的功能，若未指定，则需由用户选择 */
 		method: string | null;
@@ -20,11 +18,6 @@ namespace TwinStar.Executor {
 
 	// ------------------------------------------------
 
-	/**
-	 * 解析字符串列表形式的命令
-	 * @param raw_command 字符串
-	 * @returns 解析所得的命令
-	 */
 	export function parse(
 		raw_command: Array<string>,
 	): Array<Command> {
@@ -56,9 +49,7 @@ namespace TwinStar.Executor {
 			if (i < raw_command.length && raw_command[i] === '-argument') {
 				++i;
 				let argument = CoreX.JSON.read_s_js(raw_command[i++]);
-				if (argument === null || typeof argument !== 'object' || argument instanceof Array) {
-					throw new Error(`argument must be a object`);
-				}
+				assert(argument !== null && typeof argument === 'object' && (argument as Object).constructor.name === 'Object' && !(argument instanceof Array), `argument must be a object`);
 				command.argument = argument;
 			}
 			result.push(command);
@@ -66,11 +57,6 @@ namespace TwinStar.Executor {
 		return result;
 	}
 
-	/**
-	 * 执行命令
-	 * @param command 命令
-	 * @param method 可能待选的功能列表
-	 */
 	export function execute(
 		command: Command,
 		method: Array<Method>,
@@ -78,9 +64,7 @@ namespace TwinStar.Executor {
 		let selected_method: Method | null;
 		if (command.method !== null) {
 			let target_method = method.find((e) => (e.id === command.method));
-			if (target_method === undefined) {
-				throw new Error(`invalid method id`);
-			}
+			assert(target_method !== undefined, `invalid method id`);
 			selected_method = target_method;
 		} else {
 			if (command.input === null) {
@@ -112,9 +96,7 @@ namespace TwinStar.Executor {
 			}
 			for (let key in selected_method.default_argument) {
 				if (argument[key] === undefined) {
-					if (selected_method.default_argument[key] === undefined) {
-						throw new Error(`argument <${key}> is required`);
-					}
+					assert(selected_method.default_argument[key] !== undefined, `argument <${key}> is required`);
 					argument[key] = selected_method.default_argument[key];
 				}
 			}

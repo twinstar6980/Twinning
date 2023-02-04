@@ -2,7 +2,7 @@
 
 #include "core/utility/utility.hpp"
 #include "core/tool/data/hash/md5.hpp"
-#include "core/tool/data/encrypt/rijndael.hpp"
+#include "core/tool/data/encryption/rijndael.hpp"
 
 namespace TwinStar::Core::Tool::PopCap::RTON {
 
@@ -70,11 +70,11 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 				Range::assign_from(rijndael_plain_container.head(plain_data.size()), plain_data);
 				rijndael_plain.set(rijndael_plain_container);
 			}
-			cipher.write(k_magic_identifier);
+			cipher.write_constant(k_magic_identifier);
 			auto rijndael_cipher = OByteStreamView{cipher.forward_view(rijndael_data_size)};
 			auto rijndael_key = hash_to_string(to_byte_view(key.view()));
 			auto rijndael_iv = String{rijndael_key.sub(5_ix, 24_sz)};
-			Data::Encrypt::Rijndael::Encrypt::do_process_whole(rijndael_plain, rijndael_cipher, Data::Encrypt::Rijndael::Mode::Constant::cbc(), k_crypt_block_size, k_crypt_key_size, rijndael_key, rijndael_iv);
+			Data::Encryption::Rijndael::Encrypt::do_process_whole(rijndael_plain, rijndael_cipher, Data::Encryption::Rijndael::Mode::Constant::cbc(), k_crypt_block_size, k_crypt_key_size, rijndael_key, rijndael_iv);
 			return;
 		}
 
@@ -126,12 +126,12 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 		) -> Void {
 			auto rijndael_data_size = Size{};
 			compute_size(cipher.reserve(), rijndael_data_size);
-			assert_condition(cipher.read_of<MagicIdentifier>() == k_magic_identifier);
+			cipher.read_constant(k_magic_identifier);
 			auto rijndael_cipher = IByteStreamView{cipher.forward_view(rijndael_data_size)};
 			auto rijndael_plain = OByteStreamView{plain.forward_view(rijndael_data_size)};
 			auto rijndael_key = hash_to_string(to_byte_view(key.view()));
 			auto rijndael_iv = String{rijndael_key.sub(5_ix, 24_sz)};
-			Data::Encrypt::Rijndael::Decrypt::do_process_whole(rijndael_cipher, rijndael_plain, Data::Encrypt::Rijndael::Mode::Constant::cbc(), k_crypt_block_size, k_crypt_key_size, rijndael_key, rijndael_iv);
+			Data::Encryption::Rijndael::Decrypt::do_process_whole(rijndael_cipher, rijndael_plain, Data::Encryption::Rijndael::Mode::Constant::cbc(), k_crypt_block_size, k_crypt_key_size, rijndael_key, rijndael_iv);
 			return;
 		}
 

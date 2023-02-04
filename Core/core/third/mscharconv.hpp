@@ -26,7 +26,7 @@
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinStar::Core::ThirdParty::mscharconv {
+namespace TwinStar::Core::Third::mscharconv {
 
 	using namespace ::msstl;
 

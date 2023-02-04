@@ -1,9 +1,7 @@
-/** 计时 */
 namespace TwinStar {
 
 	// ------------------------------------------------
 
-	/** 计时器 */
 	export class Timer {
 
 		// ------------------------------------------------
@@ -22,28 +20,21 @@ namespace TwinStar {
 
 		// ------------------------------------------------
 
-		/** 继续计时 */
 		start(
 		): void {
-			if (this.m_last_begin !== null) {
-				throw new Error(`TwinStar.Timer.start : timer already start`);
-			}
+			assert(this.m_last_begin === null, `TwinStar.Timer.start : timer already start`);
 			this.m_last_begin = Date.now();
 			return;
 		}
 
-		/** 暂停计时 */
 		stop(
 		): void {
-			if (this.m_last_begin === null) {
-				throw new Error(`TwinStar.Timer.stop : timer no start`);
-			}
+			assert(this.m_last_begin !== null, `TwinStar.Timer.stop : timer no start`);
 			this.m_duration += Date.now() - this.m_last_begin;
 			this.m_last_begin = null;
 			return;
 		}
 
-		/** 重置计时 */
 		reset(
 		): void {
 			this.m_last_begin = null;
@@ -53,7 +44,6 @@ namespace TwinStar {
 
 		// ------------------------------------------------
 
-		/** 获取累计时长 */
 		duration(
 		): number {
 			return this.m_duration;

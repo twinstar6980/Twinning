@@ -42,9 +42,10 @@
 | [zlib 1.2.12](https://www.zlib.net/)                                 | ZLib 压缩与解压                |
 | [bzip2 1.0.8](https://sourceware.org/bzip2/)                         | BZip2 压缩与解压               |
 | [lzma 22.01](https://www.7-zip.org/sdk.html)                         | Lzma 压缩与解压                |
+| [open-vcdiff 0.8.4](https://github.com/google/open-vcdiff)           | VCDiff 差异分析                |
 | [libpng 1.6.37](http://www.libpng.org/pub/png/libpng.html)           | PNG 读写                       |
 | [ETCPACK 2.74](https://github.com/Ericsson/ETCPACK)                  | ETC1 解压                      |
-| [rg_ect1](https://github.com/richgel999/rg-etc1)                     | ETC1 压缩                      |
+| [etcpak 1.0](https://github.com/wolfpld/etcpak)                      | ETC1 压缩                      |
 | [PVRTCCompressor](https://github.com/brenwill/PVRTCCompressor)       | PVRTC4 压缩与解压              |
 | [quickjs 2021-03-27](https://github.com/bellard/quickjs)             | JS 引擎                        |
 | [quickjs 2021-03-27 (c-smile)](https://github.com/c-smile/quickjspp) | JS 引擎 ( for MSVC )           |

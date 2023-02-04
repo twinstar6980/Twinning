@@ -185,7 +185,7 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 			OByteStreamView &     data,
 			JSON::Boolean const & value
 		) -> Void {
-			data.write(TypeIdentifier(value ? (TypeIdentifier::Value::boolean_true) : (TypeIdentifier::Value::boolean_false)));
+			data.write(TypeIdentifier{value ? (TypeIdentifier::Value::boolean_true) : (TypeIdentifier::Value::boolean_false)});
 			return;
 		}
 
@@ -194,10 +194,10 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 			JSON::Number const & value
 		) -> Void {
 			if (value.is_integer()) {
-				data.write(TypeIdentifier(TypeIdentifier::Value::integer_variable_length_signed_64));
+				data.write(TypeIdentifier{TypeIdentifier::Value::integer_variable_length_signed_64});
 				ProtocolBufferVariableLengthInteger::encode_s64(data, up_cast<IntegerS64>(value.get_integer()));
 			} else {
-				data.write(TypeIdentifier(TypeIdentifier::Value::floating_64));
+				data.write(TypeIdentifier{TypeIdentifier::Value::floating_64});
 				data.write(up_cast<Floating64>(value.get_floating()));
 			}
 			return;
@@ -210,16 +210,16 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 		) -> Void {
 			if (string_index) {
 				if (auto indexed_string = string_index.get().find(value); indexed_string != string_index.get().end()) {
-					data.write(TypeIdentifier(TypeIdentifier::Value::string_native_indexed));
+					data.write(TypeIdentifier{TypeIdentifier::Value::string_native_indexed});
 					ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>((*indexed_string).second));
 				} else {
 					string_index.get()[value] = mbw<Size>(string_index.get().size());
-					data.write(TypeIdentifier(TypeIdentifier::Value::string_native_indexing));
+					data.write(TypeIdentifier{TypeIdentifier::Value::string_native_indexing});
 					ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(value.size()));
 					data.write(value);
 				}
 			} else {
-				data.write(TypeIdentifier(TypeIdentifier::Value::string_native));
+				data.write(TypeIdentifier{TypeIdentifier::Value::string_native});
 				ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(value.size()));
 				data.write(value);
 			}
@@ -234,7 +234,7 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 		) -> Void {
 			if (enable_rtid) {
 				if (auto rtid_type = analysis_rtid(value)) {
-					data.write(TypeIdentifier(TypeIdentifier::Value::string_rtid));
+					data.write(TypeIdentifier{TypeIdentifier::Value::string_rtid});
 					data.write(rtid_type.get());
 					switch (rtid_type.get().value) {
 						case RTIDTypeIdentifier::Value::null : {
@@ -288,13 +288,13 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 			Optional<std::unordered_map<CStringView, Size>> & string_index,
 			Boolean const &                                   enable_rtid
 		) -> Void {
-			data.write(TypeIdentifier(TypeIdentifier::Value::array_begin));
-			data.write(TypeIdentifier(TypeIdentifier::Value::array_size));
+			data.write(TypeIdentifier{TypeIdentifier::Value::array_begin});
+			data.write_constant(TypeIdentifier{TypeIdentifier::Value::array_size});
 			ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(value.size()));
 			for (auto & element : value) {
 				process_unit(data, element, string_index, enable_rtid);
 			}
-			data.write(TypeIdentifier(TypeIdentifier::Value::array_end));
+			data.write(TypeIdentifier{TypeIdentifier::Value::array_end});
 			return;
 		}
 
@@ -304,12 +304,12 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 			Optional<std::unordered_map<CStringView, Size>> & string_index,
 			Boolean const &                                   enable_rtid
 		) -> Void {
-			data.write(TypeIdentifier(TypeIdentifier::Value::object_begin));
+			data.write(TypeIdentifier{TypeIdentifier::Value::object_begin});
 			for (auto & element : value) {
 				process_unit(data, element.key, string_index);
 				process_unit(data, element.value, string_index, enable_rtid);
 			}
-			data.write(TypeIdentifier(TypeIdentifier::Value::object_end));
+			data.write(TypeIdentifier{TypeIdentifier::Value::object_end});
 			return;
 		}
 
@@ -354,7 +354,7 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 			Boolean const &     enable_string_index,
 			Boolean const &     enable_rtid
 		) -> Void {
-			data.write(k_magic_identifier);
+			data.write_constant(k_magic_identifier);
 			auto version_data = OByteStreamView{data.forward_view(bs_static_size<VersionNumber>())};
 			data.backward(bs_static_size<TypeIdentifier>());
 			auto string_index = Optional<std::unordered_map<CStringView, Size>>{};
@@ -362,8 +362,8 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 				string_index.set();
 			}
 			process_unit(data, value.get_object(), string_index, enable_rtid);
-			data.write(k_done_identifier);
-			version_data.write(cbw<VersionNumber>(version.number));
+			data.write_constant(k_done_identifier);
+			version_data.write_constant(cbw<VersionNumber>(version.number));
 			return;
 		}
 
@@ -602,7 +602,7 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 				}
 				case TypeIdentifier::Value::array_begin : {
 					auto & array = value.set_array();
-					assert_condition(data.read_of<TypeIdentifier>().value == TypeIdentifier::Value::array_size);
+					data.read_constant(TypeIdentifier{TypeIdentifier::Value::array_size});
 					auto array_size = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 					array.allocate(array_size);
 					while (k_true) {
@@ -651,8 +651,8 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 			IByteStreamView & data,
 			JSON::Value &     value
 		) -> Void {
-			assert_condition(data.read_of<MagicIdentifier>() == k_magic_identifier);
-			assert_condition(data.read_of<VersionNumber>() == cbw<VersionNumber>(version.number));
+			data.read_constant(k_magic_identifier);
+			data.read_constant(cbw<VersionNumber>(version.number));
 			value.set_null();
 			auto native_string_upper_bound = k_none_size;
 			auto unicode_string_upper_bound = k_none_size;
@@ -674,7 +674,7 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 			auto native_string_index_list = List<CStringView>{native_string_upper_bound};
 			auto unicode_string_index_list = List<CStringView>{unicode_string_upper_bound};
 			process_unit(data, value, native_string_index_list, unicode_string_index_list, TypeIdentifier{TypeIdentifier::Value::object_begin});
-			assert_condition(data.read_of<DoneIdentifier>() == k_done_identifier);
+			data.read_constant(k_done_identifier);
 			return;
 		}
 

@@ -1,5 +1,5 @@
 -- bzip2
--- 1.0.8
+-- 1.0.8 6a8690fc8d26c815e798c588f796eabe9d684cf0
 -- https://sourceware.org/bzip2/
 
 target('third.bzip2', function()

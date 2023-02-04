@@ -1,164 +1,91 @@
-/** 路径处理工具集 */
 namespace TwinStar.PathUtility {
 
 	// ------------------------------------------------
 
-	/**
-	 * 转换路径字符串内的层级分隔符
-	 * @param source 源串
-	 * @returns 转换结果
-	 */
-	export function convert_delimiter(
-		source: string,
-		delimiter: string = '/',
+	export function regularize(
+		target: string,
 	): string {
-		return source.replaceAll(/[\\\/]/g, delimiter);
-	}
-
-	/**
-	 * 将路径字符串转换为常规路径字符串（仅以/作为层级分隔符）
-	 * @param source 源串
-	 * @returns 常规路径字符串
-	 */
-	export function to_regular(
-		source: string,
-	): string {
-		return source.replaceAll('\\', '/');
+		return target.replaceAll('\\', '/');
 	}
 
 	// ------------------------------------------------
 
-	/**
-	 * 将路径字符串按/分割层级
-	 * @param source 源串
-	 * @returns 层级数组
-	 */
 	export function split(
-		source: string,
+		target: string,
 	): Array<string> {
-		return to_regular(source).split('/');
-	}
-
-	/**
-	 * 将路径字符串分割为父目录与名称组成的元组
-	 * @param source 源串
-	 * @returns 父目录与名称组成的元组；若无父路径，则以null占位
-	 */
-	export function split_pair(
-		source: string,
-	): [null | string, string] {
-		let list = split(source);
-		return [list.length === 1 ? null : list.slice(0, -1).join('/'), list[list.length - 1]];
-	}
-
-	/**
-	 * 将路径字符串分割为名称与拓展名组成的元组
-	 * @param source 源串
-	 * @returns 名称与拓展名组成的元组；若无拓展名，则以null占位
-	 */
-	export function split_extension(
-		source: string,
-	): [string, null | string] {
-		let regular_source = to_regular(source);
-		let i = regular_source.lastIndexOf('.');
-		if (i === -1) {
-			return [regular_source, null];
-		} else {
-			return [regular_source.slice(0, i), regular_source.slice(i + 1)];
-		}
+		return regularize(target).split('/');
 	}
 
 	// ------------------------------------------------
 
-	/** 表示文件与目录组成的树形结构 */
+	export function parent(
+		target: string,
+	): null | string {
+		let regular_target = regularize(target);
+		let index = regular_target.lastIndexOf('/');
+		return (index === -1) ? (null) : (regular_target.slice(0, index));
+	}
+
+	export function name(
+		target: string,
+	): string {
+		let regular_target = regularize(target);
+		let index = regular_target.lastIndexOf('/');
+		return (index === -1) ? (regular_target) : (regular_target.slice(index + 1));
+	}
+
+	export function extension(
+		target: string,
+	): null | string {
+		let regular_target = regularize(target);
+		let index = regular_target.lastIndexOf('.');
+		return (index === -1) ? (null) : (regular_target.slice(index + 1));
+	}
+
+	// ------------------------------------------------
+
 	export type Tree = { [key: string]: null | Tree; };
 
-	/**
-	 * 将路径字符串列表转换为树形结构
-	 * @param source 源串
-	 * @returns 树形结构
-	 */
-	export function to_tree(
-		source: Array<string>,
+	export function tree(
+		target: Array<string>,
 	): Tree {
 		let tree: Tree = {};
-		let list = source.map(split);
+		let list = target.map(split);
 		for (let path of list) {
 			let current = tree;
-			for (let i in path) {
-				let e = path[i];
-				let is_file_name = parseInt(i) === path.length - 1;
-				if (current[e] === undefined) {
-					current[e] = is_file_name ? null : {};
-					current = current[e]!;
+			for (let index in path) {
+				let element = path[index];
+				let is_name = parseInt(index) === path.length - 1;
+				if (current[element] === undefined) {
+					current[element] = is_name ? null : {};
 				} else {
-					if (current[e] === null) {
-						throw new Error(`file is exist : ${e}, ${path.join('/')}`);
-					} else {
-						if (is_file_name) {
-							throw new Error(`directory is exist : ${e}, ${path.join('/')}`);
-						}
-						current = current[e]!;
-					}
+					assert(current[element] !== null && !is_name);
 				}
+				current = current[element]!;
 			}
 		}
 		return tree;
 	}
 
 	// ------------------------------------------------
-
-	/**
-	 * 获取路径字符串的父目录
-	 * @param source 源串
-	 * @returns 父目录
-	 */
-	export function parent(
-		source: string,
-	): null | string {
-		return split_pair(source)[0];
-	}
-
-	/**
-	 * 获取路径字符串的名称
-	 * @param source 源串
-	 * @returns 名称
-	 */
-	export function name(
-		source: string,
-	): string {
-		return split_pair(source)[1];
-	}
-
-	/**
-	 * 获取路径字符串的拓展名
-	 * @param source 源串
-	 * @returns 拓展名
-	 */
-	export function extension(
-		source: string,
-	): null | string {
-		return split_extension(source)[1];
-	}
-
-	// ------------------------------------------------
+	// TODO
 
 	export function is_android_fuse_object(
-		path: string,
+		target: string,
 	): boolean {
-		return /^\/(storage\/emulated\/[0-9]+)|(sdcard)\//.test(path);
+		return /^\/(storage\/emulated\/[0-9]+)|(sdcard)\//.test(target);
 	}
 
 	export function is_android_fuse_ext_data_object(
-		path: string,
+		target: string,
 	): boolean {
-		return /^\/(storage\/emulated\/[0-9]+)|(sdcard)\/Android\/data\//.test(path);
+		return /^\/(storage\/emulated\/[0-9]+)|(sdcard)\/Android\/data\//.test(target);
 	}
 
 	export function is_android_fuse_ext_obb_object(
-		path: string,
+		target: string,
 	): boolean {
-		return /^\/(storage\/emulated\/[0-9]+)|(sdcard)\/Android\/obb\//.test(path);
+		return /^\/(storage\/emulated\/[0-9]+)|(sdcard)\/Android\/obb\//.test(target);
 	}
 
 	export function safe_rename(

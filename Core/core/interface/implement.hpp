@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/executor/executor.hpp"
+#include <clocale>
 
 namespace TwinStar::Core::Interface::Implement {
 
@@ -26,6 +27,15 @@ namespace TwinStar::Core::Interface::Implement {
 			script_value = script;
 		}
 		return Executor::execute(callback, script_value, argument);
+	}
+
+	inline auto prepare (
+	) -> Optional<String> {
+		auto result = Optional<String>{};
+		std::setlocale(LC_ALL, "C");
+		// NOTE : LC_NUMERIC的设置会影响quickjs对字符串的解析，这在一些不以点作为小数点的地区（如俄罗斯）本地化设置下将导致脚本运行出错
+		std::setlocale(LC_CTYPE, ".utf-8");
+		return result;
 	}
 
 	#pragma endregion

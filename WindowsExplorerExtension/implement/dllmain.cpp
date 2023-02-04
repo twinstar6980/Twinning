@@ -67,6 +67,7 @@ M_CoCreatableClass_X(PopCapPAMMethodInvokeGroupCommand);
 M_CoCreatableClass_X(PopCapPAKMethodInvokeGroupCommand);
 M_CoCreatableClass_X(PopCapRSGPMethodInvokeGroupCommand);
 M_CoCreatableClass_X(PopCapRSBMethodInvokeGroupCommand);
+M_CoCreatableClass_X(PopCapRSBPatchMethodInvokeGroupCommand);
 M_CoCreatableClass_X(PvZ2LawnStringTextMethodInvokeGroupCommand);
 M_CoCreatableClass_X(PvZ2RemoteAndroidHelperMethodInvokeGroupCommand);
 

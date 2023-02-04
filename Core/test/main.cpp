@@ -1,9 +1,7 @@
 //
 
-#include "shell/library/static_library.hpp"
+#include "shell/core/static_library.hpp"
 #include "shell/host/cli_host.hpp"
-#include "shell/launch.hpp"
-#include <span>
 
 #if defined M_vld
 #include "vld.h"
@@ -45,7 +43,7 @@ auto main (
 		auto library_file = args[1];
 		auto script = args[2];
 		auto argument = std::vector<std::string>{args.begin() + 3, args.end()};
-		auto library = TwinStar::Shell::StaticLibrary{nullptr};
+		auto library = TwinStar::Shell::Core::StaticLibrary{nullptr};
 		auto host = TwinStar::Shell::CLIHost{nullptr};
 		auto result = TwinStar::Shell::launch(host, library, script, argument);
 		if (result) {

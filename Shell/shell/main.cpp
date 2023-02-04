@@ -1,9 +1,8 @@
 //
 
-#include "shell/library/static_library.hpp"
-#include "shell/library/dynamic_library.hpp"
+#include "shell/common.hpp"
+#include "shell/core/dynamic_library.hpp"
 #include "shell/host/cli_host.hpp"
-#include "shell/launch.hpp"
 
 #if defined M_vld
 #include "vld.h"
@@ -45,7 +44,7 @@ auto main (
 		auto library_file = args[1];
 		auto script = args[2];
 		auto argument = std::vector<std::string>{args.begin() + 3, args.end()};
-		auto library = TwinStar::Shell::DynamicLibrary{nullptr, library_file};
+		auto library = TwinStar::Shell::Core::DynamicLibrary{nullptr, library_file};
 		auto host = TwinStar::Shell::CLIHost{nullptr};
 		auto result = TwinStar::Shell::launch(host, library, script, argument);
 		if (result) {

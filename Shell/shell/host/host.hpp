@@ -1,6 +1,8 @@
 #pragma once
 
 #include "shell/common.hpp"
+#include "shell/core/library.hpp"
+#include "shell/core/invoker.hpp"
 
 namespace TwinStar::Shell {
 
@@ -42,7 +44,7 @@ namespace TwinStar::Shell {
 
 		#pragma endregion
 
-		#pragma region life-time
+		#pragma region life
 
 		virtual auto start (
 		) -> void = 0;
@@ -60,31 +62,28 @@ namespace TwinStar::Shell {
 
 		#pragma endregion
 
-		#pragma region callback wrapper
-
-		auto wrapped_callback (
-			Core::StringList const & argument
-		) -> Core::StringList const& {
-			thread_local auto result_s_handler = CoreTypeStringListHandler{};
-			// result handler control result structure
-			auto result = std::vector<std::string>{};
-			try {
-				auto argument_v = CoreTypeConverter::from_string_list(argument);
-				auto valid_result = thiz.callback(argument_v);
-				result.emplace_back(""s);
-				result.insert(result.end(), std::make_move_iterator(valid_result.begin()), std::make_move_iterator(valid_result.end()));
-			} catch (std::exception & exception) {
-				result.emplace_back(""s + typeid(exception).name() + " : " + exception.what());
-			} catch (...) {
-				result.emplace_back("unknown exception"s);
-			}
-			result_s_handler.imbue(CoreTypeConverter::allocate_string_list(result));
-			return result_s_handler.value();
-		}
-
-		#pragma endregion
-
 	};
+
+	#pragma endregion
+
+	#pragma region function
+
+	inline auto launch (
+		Host &                           host,
+		Core::Library &                  library,
+		std::string const &              script,
+		std::vector<std::string> const & argument
+	) -> std::optional<std::string> {
+		auto prepare_result = Core::Invoker::prepare(library);
+		if (prepare_result.has_value()) {
+			output("prepare failed : "s + prepare_result.value());
+		}
+		host.start();
+		auto callback = std::bind(&Host::callback, &host, std::placeholders::_1);
+		auto result = Core::Invoker::execute(library, callback, script, argument);
+		host.finish();
+		return result;
+	}
 
 	#pragma endregion
 

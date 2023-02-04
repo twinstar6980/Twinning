@@ -1,4 +1,3 @@
-/** PAM转换 */
 namespace TwinStar.Support.PopCapAnimation.Convert {
 
 	// ------------------------------------------------
@@ -31,8 +30,6 @@ namespace TwinStar.Support.PopCapAnimation.Convert {
 				transform[1 - 1],
 				transform[2 - 1],
 			];
-		} else if (transform.length === 6) {
-			result = [...transform];
 		} else if (transform.length === 3) {
 			let cos_value = Math.cos(transform[1 - 1]);
 			let sin_value = Math.sin(transform[1 - 1]);
@@ -44,13 +41,15 @@ namespace TwinStar.Support.PopCapAnimation.Convert {
 				transform[2 - 1],
 				transform[3 - 1],
 			];
+		} else if (transform.length === 6) {
+			result = [...transform];
 		} else {
-			throw new Error(`invalid transform size`);
+			assert(false, `invalid transform size`);
 		}
 		return result;
 	}
 
-	export function comput_variant_transform_from_standard(
+	export function compute_variant_transform_from_standard(
 		data: Transform,
 	): Core.Tool.PopCap.PAM.Manifest.JS_N.VariantTransform {
 		if (data[0] === data[3] && data[1] === -data[2]) {

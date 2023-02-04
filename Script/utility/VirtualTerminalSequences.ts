@@ -1,4 +1,3 @@
-/** 虚拟终端序列 */
 namespace TwinStar.VirtualTerminalSequences {
 
 	// ------------------------------------------------
@@ -14,28 +13,17 @@ namespace TwinStar.VirtualTerminalSequences {
 		white: 7,
 	} as const;
 
-	/** 颜色名 */
 	export type ColorName = keyof typeof k_color_value;
 
 	// ------------------------------------------------
 
-	/** 文本属性 */
 	export type TextAttribute = {
-		/** 背景色 */
 		background: null | 'default' | [ColorName, boolean];
-		/** 前景色 */
 		foreground: null | 'default' | [ColorName, boolean];
-		/** 下划线 */
 		underline: null | boolean;
-		/** 强调 */
 		bold: null | boolean;
 	};
 
-	/**
-	 * 生成修改文本属性的控制序列
-	 * @param attribute 文本属性
-	 * @returns 控制序列；当所提供的文本属性不修改任何属性时，为空串
-	 */
 	export function text_attribute(
 		attribute: TextAttribute,
 	): string {

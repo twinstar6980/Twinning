@@ -4,17 +4,19 @@
 #include "core/executor/context.hpp"
 #include "core/tool/data/hash/fnv.hpp"
 #include "core/tool/data/hash/md5.hpp"
-#include "core/tool/data/encode/base64.hpp"
-#include "core/tool/data/encrypt/xor.hpp"
-#include "core/tool/data/encrypt/rijndael.hpp"
-#include "core/tool/data/compress/deflate.hpp"
-#include "core/tool/data/compress/bzip2.hpp"
-#include "core/tool/data/compress/lzma.hpp"
+#include "core/tool/data/encoding/base64.hpp"
+#include "core/tool/data/encryption/xor.hpp"
+#include "core/tool/data/encryption/rijndael.hpp"
+#include "core/tool/data/compression/deflate.hpp"
+#include "core/tool/data/compression/bzip2.hpp"
+#include "core/tool/data/compression/lzma.hpp"
+#include "core/tool/data/differentiation/vcdiff.hpp"
 #include "core/tool/data/serialization/json.hpp"
 #include "core/tool/data/serialization/xml.hpp"
 #include "core/tool/texture/encode.hpp"
-#include "core/tool/texture/compress/etc1.hpp"
-#include "core/tool/texture/compress/pvrtc4.hpp"
+#include "core/tool/texture/compression/etc1.hpp"
+#include "core/tool/texture/compression/etc2.hpp"
+#include "core/tool/texture/compression/pvrtc4.hpp"
 #include "core/tool/wwise/sound_bank/encode.hpp"
 #include "core/tool/wwise/encoded_media/encode.hpp"
 #include "core/tool/marmalade/dzip/pack.hpp"
@@ -26,6 +28,7 @@
 #include "core/tool/popcap/pak/pack.hpp"
 #include "core/tool/popcap/rsgp/pack.hpp"
 #include "core/tool/popcap/rsb/pack.hpp"
+#include "core/tool/popcap/rsb_patch/encode.hpp"
 #include "core/tool/miscellaneous/pvz1_rsb_texture_20_series_layout/encode.hpp"
 #include "core/tool/miscellaneous/pvz2_chs_rsb_texture_alpha_index/encode.hpp"
 
@@ -382,7 +385,6 @@ namespace TwinStar::Core::Executor::Interface {
 			.add_member_function_proxy<&IOByteStreamView::stream_view>("stream_view"_s)
 			.add_member_function_proxy<AsVMemberFunction<IOByteStreamView, Byte>{&IOByteStreamView::read_of}>("read"_s)
 			.add_member_function_proxy<AsVMemberFunction<IOByteStreamView, Void, Byte const &>{&IOByteStreamView::write}>("write"_s);
-		n_Core.add_variable("g_byte_stream_use_big_endian"_s, context.context().new_value(JS::Handler<Boolean>::new_reference(g_byte_stream_use_big_endian)));
 		// CharacterListView
 		define_generic_class<VCharacterListView, GCDF::generic_mask>(n_Core, "CharacterListView"_s)
 			.add_member_function_proxy<&VCharacterListView::size>("size"_s)
@@ -508,58 +510,68 @@ namespace TwinStar::Core::Executor::Interface {
 					}
 				}
 				{
-					auto n_Encode = n_Data.add_namespace("Encode"_s);
+					auto n_Encoding = n_Data.add_namespace("Encoding"_s);
 					{
-						auto n_Base64 = n_Encode.add_namespace("Base64"_s);
+						auto n_Base64 = n_Encoding.add_namespace("Base64"_s);
 						n_Base64.add_namespace("Encode"_s)
-							.add_function_proxy<&stp<&Tool::Data::Encode::Base64::Encode::do_compute_size>>("compute_size"_s)
-							.add_function_proxy<&stp<&Tool::Data::Encode::Base64::Encode::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Encoding::Base64::Encode::do_compute_size>>("compute_size"_s)
+							.add_function_proxy<&stp<&Tool::Data::Encoding::Base64::Encode::do_process_whole>>("process_whole"_s);
 						n_Base64.add_namespace("Decode"_s)
-							.add_function_proxy<&stp<&Tool::Data::Encode::Base64::Decode::do_compute_size>>("compute_size"_s)
-							.add_function_proxy<&stp<&Tool::Data::Encode::Base64::Decode::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Encoding::Base64::Decode::do_compute_size>>("compute_size"_s)
+							.add_function_proxy<&stp<&Tool::Data::Encoding::Base64::Decode::do_process_whole>>("process_whole"_s);
 					}
 				}
 				{
-					auto n_Encrypt = n_Data.add_namespace("Encrypt"_s);
+					auto n_Encryption = n_Data.add_namespace("Encryption"_s);
 					{
-						auto n_XOR = n_Encrypt.add_namespace("XOR"_s);
+						auto n_XOR = n_Encryption.add_namespace("XOR"_s);
 						n_XOR.add_namespace("Encrypt"_s)
-							.add_function_proxy<&stp<&Tool::Data::Encrypt::XOR::Encrypt::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Encryption::XOR::Encrypt::do_process_whole>>("process_whole"_s);
 					}
 					{
-						auto n_Rijndael = n_Encrypt.add_namespace("Rijndael"_s);
-						define_generic_class<Tool::Data::Encrypt::Rijndael::Mode>(n_Rijndael, "Mode"_s);
+						auto n_Rijndael = n_Encryption.add_namespace("Rijndael"_s);
+						define_generic_class<Tool::Data::Encryption::Rijndael::Mode>(n_Rijndael, "Mode"_s);
 						n_Rijndael.add_namespace("Encrypt"_s)
-							.add_function_proxy<&stp<&Tool::Data::Encrypt::Rijndael::Encrypt::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Encryption::Rijndael::Encrypt::do_process_whole>>("process_whole"_s);
 						n_Rijndael.add_namespace("Decrypt"_s)
-							.add_function_proxy<&stp<&Tool::Data::Encrypt::Rijndael::Decrypt::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Encryption::Rijndael::Decrypt::do_process_whole>>("process_whole"_s);
 					}
 				}
 				{
-					auto n_Compress = n_Data.add_namespace("Compress"_s);
+					auto n_Compression = n_Data.add_namespace("Compression"_s);
 					{
-						auto n_Deflate = n_Compress.add_namespace("Deflate"_s);
-						define_generic_class<Tool::Data::Compress::Deflate::Strategy>(n_Deflate, "Strategy"_s);
-						define_generic_class<Tool::Data::Compress::Deflate::Wrapper>(n_Deflate, "Wrapper"_s);
+						auto n_Deflate = n_Compression.add_namespace("Deflate"_s);
+						define_generic_class<Tool::Data::Compression::Deflate::Strategy>(n_Deflate, "Strategy"_s);
+						define_generic_class<Tool::Data::Compression::Deflate::Wrapper>(n_Deflate, "Wrapper"_s);
 						n_Deflate.add_namespace("Compress"_s)
-							.add_function_proxy<&stp<&Tool::Data::Compress::Deflate::Compress::do_compute_size_bound>>("compute_size_bound"_s)
-							.add_function_proxy<&stp<&Tool::Data::Compress::Deflate::Compress::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Compression::Deflate::Compress::do_compute_size_bound>>("compute_size_bound"_s)
+							.add_function_proxy<&stp<&Tool::Data::Compression::Deflate::Compress::do_process_whole>>("process_whole"_s);
 						n_Deflate.add_namespace("Uncompress"_s)
-							.add_function_proxy<&stp<&Tool::Data::Compress::Deflate::Uncompress::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Compression::Deflate::Uncompress::do_process_whole>>("process_whole"_s);
 					}
 					{
-						auto n_BZip2 = n_Compress.add_namespace("BZip2"_s);
+						auto n_BZip2 = n_Compression.add_namespace("BZip2"_s);
 						n_BZip2.add_namespace("Compress"_s)
-							.add_function_proxy<&stp<&Tool::Data::Compress::BZip2::Compress::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Compression::BZip2::Compress::do_process_whole>>("process_whole"_s);
 						n_BZip2.add_namespace("Uncompress"_s)
-							.add_function_proxy<&stp<&Tool::Data::Compress::BZip2::Uncompress::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Compression::BZip2::Uncompress::do_process_whole>>("process_whole"_s);
 					}
 					{
-						auto n_Lzma = n_Compress.add_namespace("Lzma"_s);
+						auto n_Lzma = n_Compression.add_namespace("Lzma"_s);
 						n_Lzma.add_namespace("Compress"_s)
-							.add_function_proxy<&stp<&Tool::Data::Compress::Lzma::Compress::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Compression::Lzma::Compress::do_process_whole>>("process_whole"_s);
 						n_Lzma.add_namespace("Uncompress"_s)
-							.add_function_proxy<&stp<&Tool::Data::Compress::Lzma::Uncompress::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Compression::Lzma::Uncompress::do_process_whole>>("process_whole"_s);
+					}
+				}
+				{
+					auto n_Differentiation = n_Data.add_namespace("Differentiation"_s);
+					{
+						auto n_VCDiff = n_Differentiation.add_namespace("VCDiff"_s);
+						n_VCDiff.add_namespace("Encode"_s)
+							.add_function_proxy<&stp<&Tool::Data::Differentiation::VCDiff::Encode::do_process_whole>>("process_whole"_s);
+						n_VCDiff.add_namespace("Decode"_s)
+							.add_function_proxy<&stp<&Tool::Data::Differentiation::VCDiff::Decode::do_process_whole>>("process_whole"_s);
 					}
 				}
 				{
@@ -615,20 +627,27 @@ namespace TwinStar::Core::Executor::Interface {
 						}
 					>>>("process_image"_s);
 				{
-					auto n_Compress = n_Texture.add_namespace("Compress"_s);
+					auto n_Compression = n_Texture.add_namespace("Compression"_s);
 					{
-						auto n_ETC1 = n_Compress.add_namespace("ETC1"_s);
+						auto n_ETC1 = n_Compression.add_namespace("ETC1"_s);
 						n_ETC1.add_namespace("Compress"_s)
-							.add_function_proxy<&stp<&Tool::Texture::Compress::ETC1::Compress::do_process_image>>("process_image"_s);
+							.add_function_proxy<&stp<&Tool::Texture::Compression::ETC1::Compress::do_process_image>>("process_image"_s);
 						n_ETC1.add_namespace("Uncompress"_s)
-							.add_function_proxy<&stp<&Tool::Texture::Compress::ETC1::Uncompress::do_process_image>>("process_image"_s);
+							.add_function_proxy<&stp<&Tool::Texture::Compression::ETC1::Uncompress::do_process_image>>("process_image"_s);
 					}
 					{
-						auto n_PVRTC4 = n_Compress.add_namespace("PVRTC4"_s);
+						auto n_ETC2 = n_Compression.add_namespace("ETC2"_s);
+						n_ETC2.add_namespace("Compress"_s)
+							.add_function_proxy<&stp<&Tool::Texture::Compression::ETC2::Compress::do_process_image>>("process_image"_s);
+						n_ETC2.add_namespace("Uncompress"_s)
+							.add_function_proxy<&stp<&Tool::Texture::Compression::ETC2::Uncompress::do_process_image>>("process_image"_s);
+					}
+					{
+						auto n_PVRTC4 = n_Compression.add_namespace("PVRTC4"_s);
 						n_PVRTC4.add_namespace("Compress"_s)
-							.add_function_proxy<&stp<&Tool::Texture::Compress::PVRTC4::Compress::do_process_image>>("process_image"_s);
+							.add_function_proxy<&stp<&Tool::Texture::Compression::PVRTC4::Compress::do_process_image>>("process_image"_s);
 						n_PVRTC4.add_namespace("Uncompress"_s)
-							.add_function_proxy<&stp<&Tool::Texture::Compress::PVRTC4::Uncompress::do_process_image>>("process_image"_s);
+							.add_function_proxy<&stp<&Tool::Texture::Compression::PVRTC4::Uncompress::do_process_image>>("process_image"_s);
 					}
 				}
 			}
@@ -768,13 +787,13 @@ namespace TwinStar::Core::Executor::Interface {
 						>>>("compute_size_bound"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							IByteStreamView &                               raw,
-							OByteStreamView &                               ripe,
-							Size const &                                    level,
-							Size const &                                    window_bits,
-							Size const &                                    memory_level,
-							Tool::Data::Compress::Deflate::Strategy const & strategy,
-							Version const &                                 version
+							IByteStreamView &                                  raw,
+							OByteStreamView &                                  ripe,
+							Size const &                                       level,
+							Size const &                                       window_bits,
+							Size const &                                       memory_level,
+							Tool::Data::Compression::Deflate::Strategy const & strategy,
+							Version const &                                    version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -1119,6 +1138,46 @@ namespace TwinStar::Core::Executor::Interface {
 							}
 						>>>("process_package"_s);
 				}
+				{
+					using Tool::PopCap::RSBPatch::Version;
+					using Tool::PopCap::RSBPatch::VersionPackage;
+					auto n_RSBPatch = n_PopCap.add_namespace("RSBPatch"_s);
+					define_generic_class<Version>(n_RSBPatch, "Version"_s);
+					n_RSBPatch.add_namespace("Encode"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							IByteStreamView & before,
+							IByteStreamView & after,
+							OByteStreamView & patch,
+							Boolean const &   use_raw_packet,
+							Version const &   version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::RSBPatch::Encode<version>::do_process_whole(before, after, patch, use_raw_packet);
+									}
+								);
+							}
+						>>>("process_whole"_s);
+					n_RSBPatch.add_namespace("Decode"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							IByteStreamView & before,
+							OByteStreamView & after,
+							IByteStreamView & patch,
+							Boolean const &   use_raw_packet,
+							Version const &   version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::RSBPatch::Decode<version>::do_process_whole(before, after, patch, use_raw_packet);
+									}
+								);
+							}
+						>>>("process_whole"_s);
+				}
 			}
 			// Miscellaneous
 			{
@@ -1280,8 +1339,9 @@ namespace TwinStar::Core::Executor::Interface {
 						}
 					>
 				>("cast_CharacterListView_to_JS_String"_s);
-			n_Miscellaneous.add_variable("g_context"_s, context.context().new_value(JS::Handler<Context>::new_reference(context)));
 			n_Miscellaneous.add_variable("g_version"_s, context.context().new_value(JS::Handler<Size>::new_instance_allocate(mbw<Size>(M_version))));
+			n_Miscellaneous.add_variable("g_context"_s, context.context().new_value(JS::Handler<Context>::new_reference(context)));
+			n_Miscellaneous.add_variable("g_byte_stream_use_big_endian"_s, context.context().new_value(JS::Handler<Boolean>::new_reference(g_byte_stream_use_big_endian)));
 		}
 		return;
 		#if defined M_compiler_msvc

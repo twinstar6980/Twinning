@@ -15,7 +15,7 @@ namespace TwinStar::Core::Tool::Miscellaneous::PvZ2CHSRSBTextureAlphaIndex {
 		static auto test_index_list (
 			List<Image::Channel> const & list
 		) -> Size {
-			assert_condition(list.size() > 0b1_sz && list.size() <= 0b1_sz << k_maximum_bit_count);
+			assert_condition(0b1_sz < list.size() && list.size() <= 0b1_sz << k_maximum_bit_count);
 			auto bit_count = k_none_size;
 			for (auto & index : SizeRange{k_maximum_bit_count}) {
 				++bit_count;

@@ -1,5 +1,5 @@
 -- ETCPACK
--- 2.74
+-- 2.74 14a64d9d19318fb9f81ce339b7103ffa0f1781d7
 -- https://github.com/Ericsson/ETCPACK
 
 target('third.ETCPACK', function()

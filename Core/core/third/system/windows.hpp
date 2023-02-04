@@ -20,10 +20,7 @@
 #pragma clang diagnostic pop
 #endif
 
-#undef max
-#undef min
-
-namespace TwinStar::Core::ThirdParty::windows {
+namespace TwinStar::Core::Third::windows {
 }
 
 #endif
