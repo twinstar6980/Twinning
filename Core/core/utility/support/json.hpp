@@ -332,7 +332,7 @@ namespace TwinStar::Core::JSON {
 			That &       that
 		) -> Void {
 			auto & thix_object = thix.get_object();
-			assert_condition(thix_object.size() == 2_sz);
+			assert_test(thix_object.size() == 2_sz);
 			auto variant_index = Size{};
 			thix_object["type"_sv].to(variant_index);
 			thix_object["value"_sv].to(that, variant_index);
@@ -400,7 +400,7 @@ namespace TwinStar::Core::JSON {
 			That &       that
 		) -> Void {
 			auto & thix_object = thix.get_object();
-			assert_condition(thix_object.size() == 2_sz);
+			assert_test(thix_object.size() == 2_sz);
 			auto variant_type = TEnumeration{};
 			thix_object["type"_sv].to(variant_type);
 			thix_object["value"_sv].to(that, variant_type);
@@ -440,7 +440,7 @@ namespace TwinStar::Core::JSON {
 			That &       that
 		) -> Void {
 			auto & thix_array = thix.get_array();
-			assert_condition(thix_array.size() == mbw<Size>(sizeof...(TValue)));
+			assert_test(thix_array.size() == mbw<Size>(sizeof...(TValue)));
 			Generalization::each<AsValuePackageOfIndex<sizeof...(TValue)>>(
 				[&] <auto index> (ValuePackage<index>, auto) {
 					thix_array.at(mbw<Size>(index)).to(that.template set<mbw<Size>(index)>());
@@ -573,7 +573,7 @@ namespace TwinStar::Core::JSON {
 			That &       that
 		) -> Void {
 			auto & thix_array = thix.get_array();
-			assert_condition(thix_array.size() == mbw<Size>(FieldPackage::size));
+			assert_test(thix_array.size() == mbw<Size>(FieldPackage::size));
 			Generalization::each<FieldPackage>(
 				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
 					thix_array.at(mbw<Size>(index)).to(Field::value_of(that));
@@ -617,10 +617,10 @@ namespace TwinStar::Core::JSON {
 			That &       that
 		) -> Void {
 			auto & thix_object = thix.get_object();
-			assert_condition(thix_object.size() == mbw<Size>(FieldPackage::size));
+			assert_test(thix_object.size() == mbw<Size>(FieldPackage::size));
 			Generalization::each<FieldPackage>(
 				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
-					assert_condition(thix_object.at(mbw<Size>(index)).key == make_string_view(Field::name.view()));
+					assert_test(thix_object.at(mbw<Size>(index)).key == make_string_view(Field::name.view()));
 					thix_object.at(mbw<Size>(index)).value.to(Field::value_of(that));
 				}
 			);
@@ -786,7 +786,7 @@ namespace TwinStar::Core::JSON {
 			That &       that
 		) -> Void {
 			auto & thix_array = thix.get_array();
-			assert_condition(thix_array.size() == 1_sz);
+			assert_test(thix_array.size() == 1_sz);
 			thix_array[1_ix].to(that.x);
 			return;
 		}
@@ -819,7 +819,7 @@ namespace TwinStar::Core::JSON {
 			That &       that
 		) -> Void {
 			auto & thix_array = thix.get_array();
-			assert_condition(thix_array.size() == 2_sz);
+			assert_test(thix_array.size() == 2_sz);
 			thix_array[1_ix].to(that.x);
 			thix_array[2_ix].to(that.y);
 			return;
@@ -854,7 +854,7 @@ namespace TwinStar::Core::JSON {
 			That &       that
 		) -> Void {
 			auto & thix_array = thix.get_array();
-			assert_condition(thix_array.size() == 3_sz);
+			assert_test(thix_array.size() == 3_sz);
 			thix_array[1_ix].to(that.x);
 			thix_array[2_ix].to(that.y);
 			thix_array[3_ix].to(that.z);
@@ -888,7 +888,7 @@ namespace TwinStar::Core::JSON {
 			That &       that
 		) -> Void {
 			auto & thix_array = thix.get_array();
-			assert_condition(thix_array.size() == 1_sz);
+			assert_test(thix_array.size() == 1_sz);
 			thix_array[1_ix].to(that.width);
 			return;
 		}
@@ -921,7 +921,7 @@ namespace TwinStar::Core::JSON {
 			That &       that
 		) -> Void {
 			auto & thix_array = thix.get_array();
-			assert_condition(thix_array.size() == 2_sz);
+			assert_test(thix_array.size() == 2_sz);
 			thix_array[1_ix].to(that.width);
 			thix_array[2_ix].to(that.height);
 			return;
@@ -956,7 +956,7 @@ namespace TwinStar::Core::JSON {
 			That &       that
 		) -> Void {
 			auto & thix_array = thix.get_array();
-			assert_condition(thix_array.size() == 3_sz);
+			assert_test(thix_array.size() == 3_sz);
 			thix_array[1_ix].to(that.width);
 			thix_array[2_ix].to(that.height);
 			thix_array[3_ix].to(that.depth);

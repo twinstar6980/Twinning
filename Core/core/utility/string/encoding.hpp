@@ -17,7 +17,7 @@ namespace TwinStar::Core::StringEncoding {
 			cast_pointer<ZCharacterLocale>(source.begin()).value,
 			cast_pointer<ZCharacterLocale>(source.end()).value
 		);
-		assert_condition(converter.converted() == source.size().value);
+		assert_test(converter.converted() == source.size().value);
 		return BasicString<Character16>{cast_pointer<Character16>(make_pointer(result.data())), mbw<Size>(result.size())};
 	}
 
@@ -29,7 +29,7 @@ namespace TwinStar::Core::StringEncoding {
 			cast_pointer<ZCharacter16>(source.begin()).value,
 			cast_pointer<ZCharacter16>(source.end()).value
 		);
-		assert_condition(converter.converted() == source.size().value);
+		assert_test(converter.converted() == source.size().value);
 		return BasicString<Character8>{cast_pointer<Character8>(make_pointer(result.data())), mbw<Size>(result.size())};
 	}
 

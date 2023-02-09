@@ -137,7 +137,7 @@ namespace TwinStar::Core::Tool::PopCap::PAK {
 						package_data.read(information_structure.resource_information.last());
 						continue;
 					}
-					assert_failed(R"(flag == /* valid */)");
+					assert_fail(R"(flag == /* valid */)");
 				}
 			}
 			package_manifest.resource.allocate_full(information_structure.resource_information.size());
@@ -152,7 +152,7 @@ namespace TwinStar::Core::Tool::PopCap::PAK {
 					auto resource_data_stream = IByteStreamView{resource_data};
 					auto resource_data_original_stream = OByteStreamView{resource_data_original};
 					Data::Compression::Deflate::Uncompress::do_process_whole(resource_data_stream, resource_data_original_stream, 15_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
-					assert_condition(resource_data_stream.full() && resource_data_original_stream.full());
+					assert_test(resource_data_stream.full() && resource_data_original_stream.full());
 					if (resource_directory) {
 						FileSystem::write_file(resource_directory.get() / resource_manifest.key, resource_data_original);
 					}

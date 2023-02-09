@@ -156,7 +156,7 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 							break;
 						}
 						default : {
-							assert_failed(R"(chunk.flag == /* valid */)");
+							assert_fail(R"(chunk.flag == /* valid */)");
 						}
 					}
 					auto chunk_size_uncompressed = Size{};
@@ -277,7 +277,7 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 			{
 				package_data.read(information_structure.archive_setting);
 				information_structure.resource_file.allocate_full(cbw<Size>(information_structure.archive_setting.resource_file_count));
-				assert_condition(information_structure.archive_setting.version == cbw<Structure::VersionNumber>(version.number));
+				assert_test(information_structure.archive_setting.version == cbw<Structure::VersionNumber>(version.number));
 				for (auto & element : information_structure.resource_file) {
 					auto string = CStringView{};
 					StringParser::read_string(self_cast<ICharacterStreamView>(package_data), string);
@@ -314,81 +314,81 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 					auto chunk_size_compressed = cbw<Size>(chunk_information_structure.size_compressed);
 					auto chunk_flag = BitSet<Structure::ChunkFlag<version>::k_count>{};
 					chunk_flag.from_integer(chunk_information_structure.flag);
-					assert_condition(!chunk_flag.get(Structure::ChunkFlag<version>::unused_2));
+					assert_test(!chunk_flag.get(Structure::ChunkFlag<version>::unused_2));
 					auto chunk_ok = k_false;
 					if (chunk_flag.get(Structure::ChunkFlag<version>::combuf)) {
-						assert_condition(!chunk_ok);
+						assert_test(!chunk_ok);
 						chunk_ok = k_true;
 						throw ToDoException{};
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::dzip)) {
-						assert_condition(!chunk_ok);
+						assert_test(!chunk_ok);
 						chunk_ok = k_true;
 						throw ToDoException{};
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::zlib)) {
-						assert_condition(!chunk_ok);
+						assert_test(!chunk_ok);
 						chunk_ok = k_true;
-						assert_condition(chunk_size_compressed == chunk_data.size());
+						assert_test(chunk_size_compressed == chunk_data.size());
 						chunk_manifest.flag = "zlib"_s;
 						auto chunk_stream = OByteStreamView{chunk_data};
 						package_data.forward(10_sz); // TODO NOTE : skip gzip header
 						Data::Compression::Deflate::Uncompress::do_process_whole(package_data, chunk_stream, 15_sz, Data::Compression::Deflate::Wrapper::Constant::none());
-						assert_condition(chunk_stream.full());
+						assert_test(chunk_stream.full());
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::bzip2)) {
-						assert_condition(!chunk_ok);
+						assert_test(!chunk_ok);
 						chunk_ok = k_true;
-						assert_condition(chunk_size_compressed == chunk_data.size());
+						assert_test(chunk_size_compressed == chunk_data.size());
 						chunk_manifest.flag = "bzip2"_s;
 						auto chunk_stream = OByteStreamView{chunk_data};
 						Data::Compression::BZip2::Uncompress::do_process_whole(package_data, chunk_stream, k_false);
-						assert_condition(chunk_stream.full());
+						assert_test(chunk_stream.full());
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::mp3)) {
-						assert_condition(!chunk_ok);
+						assert_test(!chunk_ok);
 						chunk_ok = k_true;
 						throw ToDoException{};
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::jpeg)) {
-						assert_condition(!chunk_ok);
+						assert_test(!chunk_ok);
 						chunk_ok = k_true;
 						throw ToDoException{};
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::zerod_out)) {
-						assert_condition(!chunk_ok);
+						assert_test(!chunk_ok);
 						chunk_ok = k_true;
-						assert_condition(chunk_size_compressed == k_none_size);
+						assert_test(chunk_size_compressed == k_none_size);
 						chunk_manifest.flag = "zerod_out"_s;
 						Range::assign(chunk_data, k_null_byte);
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::copy_coded)) {
-						assert_condition(!chunk_ok);
+						assert_test(!chunk_ok);
 						chunk_ok = k_true;
-						assert_condition(chunk_size_compressed == chunk_data.size());
+						assert_test(chunk_size_compressed == chunk_data.size());
 						chunk_manifest.flag = "copy_coded"_s;
 						Range::assign_from(chunk_data, package_data.forward_view(chunk_data.size()));
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::lzma)) {
-						assert_condition(!chunk_ok);
+						assert_test(!chunk_ok);
 						chunk_ok = k_true;
-						assert_condition(chunk_size_compressed == chunk_data.size());
+						assert_test(chunk_size_compressed == chunk_data.size());
 						chunk_manifest.flag = "lzma"_s;
 						auto chunk_stream = OByteStreamView{chunk_data};
 						auto chunk_header = package_data.read_of<Structure::ChunkHeaderLzma<version>>();
-						assert_condition(cbw<Size>(chunk_header.size) == chunk_data.size());
+						assert_test(cbw<Size>(chunk_header.size) == chunk_data.size());
 						Data::Compression::Lzma::Uncompress::do_process_whole(package_data, chunk_stream, as_lvalue(IByteStreamView{chunk_header.property.view()}));
-						assert_condition(chunk_stream.full());
+						assert_test(chunk_stream.full());
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::random_access)) {
-						assert_condition(!chunk_ok);
+						assert_test(!chunk_ok);
 						chunk_ok = k_true;
 						throw ToDoException{};
 					}
-					assert_condition(chunk_ok);
+					assert_test(chunk_ok);
 					package_data_end_position = max(package_data_end_position, package_data.position());
 				}
-				assert_condition(!chunk_data_list.empty() && Range::all_of(chunk_data_list.tail(chunk_data_list.size() - 1_sz), [&] (auto & element) { return element == chunk_data_list.first(); }));
+				assert_test(!chunk_data_list.empty() && Range::all_of(chunk_data_list.tail(chunk_data_list.size() - 1_sz), [&] (auto & element) { return element == chunk_data_list.first(); }));
 				if (resource_directory) {
 					FileSystem::write_file(resource_directory.get() / resource_manifest.key, chunk_data_list.first());
 				}

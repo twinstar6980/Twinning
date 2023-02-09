@@ -54,7 +54,7 @@ namespace TwinStar::Core::StringParser {
 			stream.write(0b11110'000_c | cbw<Character>(clip_bit(character, 6_sz * 3_sz, 6_sz)));
 			extra_size = 3_sz;
 		} else {
-			assert_failed(R"(/* unicode character is valid */)");
+			assert_fail(R"(/* unicode character is valid */)");
 		}
 		while (extra_size != 0_sz) {
 			--extra_size;
@@ -74,7 +74,7 @@ namespace TwinStar::Core::StringParser {
 			character = cbw<Character32>(current);
 			extra_size = 0_sz;
 		} else if (current < 0b11'000000_c) {
-			assert_failed(R"(/* first utf-8 character is valid */)");
+			assert_fail(R"(/* first utf-8 character is valid */)");
 		} else if (current < 0b111'00000_c) {
 			character = cbw<Character32>(current & 0b000'11111_c);
 			extra_size = 1_sz;
@@ -85,13 +85,13 @@ namespace TwinStar::Core::StringParser {
 			character = cbw<Character32>(current & 0b00000'111_c);
 			extra_size = 3_sz;
 		} else {
-			assert_failed(R"(/* first utf-8 character is valid */)");
+			assert_fail(R"(/* first utf-8 character is valid */)");
 		}
 		while (extra_size != 0_sz) {
 			--extra_size;
 			current = stream.read_of();
 			if ((current & 0x10'000000_c) != 0x10'000000_c) {
-				assert_failed(R"(/* extra utf-8 character is valid */)");
+				assert_fail(R"(/* extra utf-8 character is valid */)");
 			}
 			character = character << 6_sz | cbw<Character32>(current & 0b00'111111_c);
 		}
@@ -105,7 +105,7 @@ namespace TwinStar::Core::StringParser {
 		if (character < 0b10000000_c8) {
 			size = 1_sz;
 		} else if (character < 0b11'000000_c8) {
-			assert_failed(R"(/* first utf-8 character is valid */)");
+			assert_fail(R"(/* first utf-8 character is valid */)");
 		} else if (character < 0b111'00000_c8) {
 			size = 2_sz;
 		} else if (character < 0b1111'0000_c8) {
@@ -113,7 +113,7 @@ namespace TwinStar::Core::StringParser {
 		} else if (character < 0b11111'000_c8) {
 			size = 4_sz;
 		} else {
-			assert_failed(R"(/* first utf-8 character is valid */)");
+			assert_fail(R"(/* first utf-8 character is valid */)");
 		}
 		return size;
 	}
@@ -273,7 +273,7 @@ namespace TwinStar::Core::StringParser {
 				break;
 			}
 			default : {
-				assert_failed(R"(current == /* valid */)");
+				assert_fail(R"(current == /* valid */)");
 			}
 		}
 		return;
@@ -428,7 +428,7 @@ namespace TwinStar::Core::StringParser {
 				break;
 			}
 			default : {
-				assert_failed(R"(stream.next() == /* valid */)");
+				assert_fail(R"(stream.next() == /* valid */)");
 			}
 		}
 		return result;
@@ -450,10 +450,10 @@ namespace TwinStar::Core::StringParser {
 		ICharacterStreamView & stream,
 		Null &                 value
 	) -> Void {
-		assert_condition(stream.read_of<Character>() == 'n'_c);
-		assert_condition(stream.read_of<Character>() == 'u'_c);
-		assert_condition(stream.read_of<Character>() == 'l'_c);
-		assert_condition(stream.read_of<Character>() == 'l'_c);
+		assert_test(stream.read_of<Character>() == 'n'_c);
+		assert_test(stream.read_of<Character>() == 'u'_c);
+		assert_test(stream.read_of<Character>() == 'l'_c);
+		assert_test(stream.read_of<Character>() == 'l'_c);
 		return;
 	}
 
@@ -475,18 +475,18 @@ namespace TwinStar::Core::StringParser {
 	) -> Void {
 		auto first_character = stream.read_of<Character>();
 		if (first_character == 't'_c) {
-			assert_condition(stream.read_of<Character>() == 'r'_c);
-			assert_condition(stream.read_of<Character>() == 'u'_c);
-			assert_condition(stream.read_of<Character>() == 'e'_c);
+			assert_test(stream.read_of<Character>() == 'r'_c);
+			assert_test(stream.read_of<Character>() == 'u'_c);
+			assert_test(stream.read_of<Character>() == 'e'_c);
 			value = k_true;
 		} else if (first_character == 'f'_c) {
-			assert_condition(stream.read_of<Character>() == 'a'_c);
-			assert_condition(stream.read_of<Character>() == 'l'_c);
-			assert_condition(stream.read_of<Character>() == 's'_c);
-			assert_condition(stream.read_of<Character>() == 'e'_c);
+			assert_test(stream.read_of<Character>() == 'a'_c);
+			assert_test(stream.read_of<Character>() == 'l'_c);
+			assert_test(stream.read_of<Character>() == 's'_c);
+			assert_test(stream.read_of<Character>() == 'e'_c);
 			value = k_false;
 		} else {
-			assert_failed(R"(first_character == /* valid */)");
+			assert_fail(R"(first_character == /* valid */)");
 		}
 		return;
 	}
@@ -519,7 +519,7 @@ namespace TwinStar::Core::StringParser {
 				++valid_begin;
 			} else if (first_character == '-'_c) {
 			} else {
-				assert_condition(CharacterType::is_number_dec(first_character));
+				assert_test(CharacterType::is_number_dec(first_character));
 			}
 		}
 		while (!stream.full()) {
@@ -545,9 +545,9 @@ namespace TwinStar::Core::StringParser {
 			break;
 		}
 		auto valid_end = stream.current_pointer();
-		assert_condition(valid_begin != valid_end);
+		assert_test(valid_begin != valid_end);
 		auto parse_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, 10);
-		assert_condition(parse_result.ec == std::errc{});
+		assert_test(parse_result.ec == std::errc{});
 		return;
 	}
 
@@ -579,7 +579,7 @@ namespace TwinStar::Core::StringParser {
 				++valid_begin;
 			} else if (first_character == '-'_c) {
 			} else {
-				assert_condition(CharacterType::is_number_dec(first_character));
+				assert_test(CharacterType::is_number_dec(first_character));
 			}
 		}
 		while (!stream.full()) {
@@ -599,18 +599,18 @@ namespace TwinStar::Core::StringParser {
 					break;
 				}
 				case '.' : {
-					assert_condition(!is_floating);
+					assert_test(!is_floating);
 					is_floating = k_true;
 					auto next_character = stream.read_of();
-					assert_condition(CharacterType::is_number_dec(next_character));
+					assert_test(CharacterType::is_number_dec(next_character));
 					continue;
 					break;
 				}
 				case 'e' : {
-					assert_condition(!is_scientific);
+					assert_test(!is_scientific);
 					is_scientific = k_true;
 					auto next_character = stream.read_of();
-					assert_condition(next_character == '+'_c || next_character == '-'_c);
+					assert_test(next_character == '+'_c || next_character == '-'_c);
 					continue;
 					break;
 				}
@@ -620,11 +620,11 @@ namespace TwinStar::Core::StringParser {
 			}
 			break;
 		}
-		assert_condition(is_floating);
+		assert_test(is_floating);
 		auto valid_end = stream.current_pointer();
-		assert_condition(valid_begin != valid_end);
+		assert_test(valid_begin != valid_end);
 		auto parse_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, is_scientific ? mscharconv::chars_format::scientific : mscharconv::chars_format::fixed);
-		assert_condition(parse_result.ec == std::errc{});
+		assert_test(parse_result.ec == std::errc{});
 		return;
 	}
 
@@ -661,7 +661,7 @@ namespace TwinStar::Core::StringParser {
 				++valid_begin;
 			} else if (first_character == '-'_c) {
 			} else {
-				assert_condition(CharacterType::is_number_dec(first_character));
+				assert_test(CharacterType::is_number_dec(first_character));
 			}
 		}
 		while (!stream.full()) {
@@ -681,18 +681,18 @@ namespace TwinStar::Core::StringParser {
 					break;
 				}
 				case '.' : {
-					assert_condition(!is_floating);
+					assert_test(!is_floating);
 					is_floating = k_true;
 					auto next_character = stream.read_of();
-					assert_condition(CharacterType::is_number_dec(next_character));
+					assert_test(CharacterType::is_number_dec(next_character));
 					continue;
 					break;
 				}
 				case 'e' : {
-					assert_condition(!is_scientific);
+					assert_test(!is_scientific);
 					is_scientific = k_true;
 					auto next_character = stream.read_of();
-					assert_condition(next_character == '+'_c || next_character == '-'_c);
+					assert_test(next_character == '+'_c || next_character == '-'_c);
 					continue;
 					break;
 				}
@@ -703,14 +703,14 @@ namespace TwinStar::Core::StringParser {
 			break;
 		}
 		auto valid_end = stream.current_pointer();
-		assert_condition(valid_begin != valid_end);
+		assert_test(valid_begin != valid_end);
 		auto parse_result = mscharconv::from_chars_result{};
 		if (!is_floating) {
 			parse_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_integer().value, 10);
 		} else {
 			parse_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_floating().value, is_scientific ? mscharconv::chars_format::scientific : mscharconv::chars_format::fixed);
 		}
-		assert_condition(parse_result.ec == std::errc{});
+		assert_test(parse_result.ec == std::errc{});
 		return;
 	}
 
@@ -762,7 +762,7 @@ namespace TwinStar::Core::StringParser {
 		if (!value.empty()) {
 			read_byte(stream, value.first());
 			for (auto & element : value.tail(value.size() - 1_sz)) {
-				assert_condition(stream.read_of() == ' '_c);
+				assert_test(stream.read_of() == ' '_c);
 				read_byte(stream, element);
 			}
 		}

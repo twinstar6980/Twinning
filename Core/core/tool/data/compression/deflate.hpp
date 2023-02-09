@@ -79,10 +79,10 @@ namespace TwinStar::Core::Tool::Data::Compression::Deflate {
 			Strategy const &  strategy,
 			Wrapper const &   wrapper
 		) -> Void {
-			assert_condition(Math::between(level, 0_sz, mbw<Size>(Third::zlib::Z_BEST_COMPRESSION_)));
-			assert_condition(Math::between(window_bits, 8_sz, mbw<Size>(Third::zlib::MAX_WBITS_)));
-			assert_condition(Math::between(memory_level, 1_sz, mbw<Size>(Third::zlib::MAX_MEM_LEVEL_)));
-			assert_condition(!(window_bits == 8_sz && wrapper != Wrapper::Constant::zlib()));
+			assert_test(Math::between(level, 0_sz, mbw<Size>(Third::zlib::Z_BEST_COMPRESSION_)));
+			assert_test(Math::between(window_bits, 8_sz, mbw<Size>(Third::zlib::MAX_WBITS_)));
+			assert_test(Math::between(memory_level, 1_sz, mbw<Size>(Third::zlib::MAX_MEM_LEVEL_)));
+			assert_test(!(window_bits == 8_sz && wrapper != Wrapper::Constant::zlib()));
 			auto actual_window_bits = static_cast<int>(window_bits.value);
 			switch (wrapper.value) {
 				case Wrapper::Constant::none().value : {
@@ -123,25 +123,25 @@ namespace TwinStar::Core::Tool::Data::Compression::Deflate {
 				static_cast<int>(memory_level.value),
 				static_cast<int>(strategy.value)
 			);
-			assert_condition(state == Third::zlib::Z_OK_);
+			assert_test(state == Third::zlib::Z_OK_);
 			state = Third::zlib::deflate(
 				&z_stream,
 				Third::zlib::Z_NO_FLUSH_
 			);
-			assert_condition(state == Third::zlib::Z_OK_);
+			assert_test(state == Third::zlib::Z_OK_);
 			state = Third::zlib::deflate(
 				&z_stream,
 				Third::zlib::Z_FINISH_
 			);
-			assert_condition(state == Third::zlib::Z_STREAM_END_);
+			assert_test(state == Third::zlib::Z_STREAM_END_);
 			state = Third::zlib::deflateEnd(
 				&z_stream
 			);
-			assert_condition(state == Third::zlib::Z_OK_);
-			assert_condition(z_stream.avail_in == 0);
+			assert_test(state == Third::zlib::Z_OK_);
+			assert_test(z_stream.avail_in == 0);
 			raw.forward(mbw<Size>(z_stream.total_in));
 			ripe.forward(mbw<Size>(z_stream.total_out));
-			assert_condition(raw.full());
+			assert_test(raw.full());
 			return;
 		}
 
@@ -187,7 +187,7 @@ namespace TwinStar::Core::Tool::Data::Compression::Deflate {
 			Size const &      window_bits,
 			Wrapper const &   wrapper
 		) -> Void {
-			assert_condition(Math::between(window_bits, 8_sz, mbw<Size>(Third::zlib::MAX_WBITS_)));
+			assert_test(Math::between(window_bits, 8_sz, mbw<Size>(Third::zlib::MAX_WBITS_)));
 			auto actual_window_bits = static_cast<int>(window_bits.value);
 			switch (wrapper.value) {
 				case Wrapper::Constant::none().value : {
@@ -224,16 +224,16 @@ namespace TwinStar::Core::Tool::Data::Compression::Deflate {
 				&z_stream,
 				actual_window_bits
 			);
-			assert_condition(state == Third::zlib::Z_OK_);
+			assert_test(state == Third::zlib::Z_OK_);
 			state = Third::zlib::inflate(
 				&z_stream,
 				Third::zlib::Z_NO_FLUSH_
 			);
-			assert_condition(state == Third::zlib::Z_STREAM_END_);
+			assert_test(state == Third::zlib::Z_STREAM_END_);
 			state = Third::zlib::inflateEnd(
 				&z_stream
 			);
-			assert_condition(state == Third::zlib::Z_OK_);
+			assert_test(state == Third::zlib::Z_OK_);
 			ripe.forward(mbw<Size>(z_stream.total_in));
 			raw.forward(mbw<Size>(z_stream.total_out));
 			return;

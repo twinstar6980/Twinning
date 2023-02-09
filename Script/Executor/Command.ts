@@ -49,7 +49,7 @@ namespace TwinStar.Executor {
 			if (i < raw_command.length && raw_command[i] === '-argument') {
 				++i;
 				let argument = CoreX.JSON.read_s_js(raw_command[i++]);
-				assert(argument !== null && typeof argument === 'object' && (argument as Object).constructor.name === 'Object' && !(argument instanceof Array), `argument must be a object`);
+				assert_test(argument !== null && typeof argument === 'object' && (argument as Object).constructor.name === 'Object' && !(argument instanceof Array), `argument must be a object`);
 				command.argument = argument;
 			}
 			result.push(command);
@@ -64,7 +64,7 @@ namespace TwinStar.Executor {
 		let selected_method: Method | null;
 		if (command.method !== null) {
 			let target_method = method.find((e) => (e.id === command.method));
-			assert(target_method !== undefined, `invalid method id`);
+			assert_test(target_method !== undefined, `invalid method id`);
 			selected_method = target_method;
 		} else {
 			if (command.input === null) {
@@ -96,7 +96,7 @@ namespace TwinStar.Executor {
 			}
 			for (let key in selected_method.default_argument) {
 				if (argument[key] === undefined) {
-					assert(selected_method.default_argument[key] !== undefined, `argument <${key}> is required`);
+					assert_test(selected_method.default_argument[key] !== undefined, `argument <${key}> is required`);
 					argument[key] = selected_method.default_argument[key];
 				}
 			}

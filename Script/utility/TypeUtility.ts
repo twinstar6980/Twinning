@@ -155,7 +155,7 @@ namespace TwinStar {
 		if (string === 'y') {
 			return true;
 		}
-		assert(false, `invalid confirm string`);
+		assert_test(false, `invalid confirm string`);
 	}
 
 	export function parse_size_string(

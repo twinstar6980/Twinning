@@ -89,7 +89,7 @@ namespace TwinStar::Core::Trait::Generalization {
 				}
 			}
 		);
-		assert_condition(has_case);
+		assert_test(has_case);
 		return;
 	}
 

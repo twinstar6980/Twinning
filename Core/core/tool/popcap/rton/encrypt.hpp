@@ -110,9 +110,9 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 			Size &       plain_size
 		) -> Void {
 			plain_size = k_none_size;
-			assert_condition(cipher_size >= bs_static_size<MagicIdentifier>());
+			assert_test(cipher_size >= bs_static_size<MagicIdentifier>());
 			auto rijndael_data_size = cipher_size - bs_static_size<MagicIdentifier>();
-			assert_condition(is_padded_size(rijndael_data_size, k_crypt_block_size));
+			assert_test(is_padded_size(rijndael_data_size, k_crypt_block_size));
 			plain_size += rijndael_data_size;
 			return;
 		}

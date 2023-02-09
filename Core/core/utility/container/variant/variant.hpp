@@ -95,7 +95,7 @@ namespace TwinStar::Core {
 			&& (IsSame<ValueObject, TValue ...>)
 		constexpr auto get (
 		) -> ValueObject& {
-			assert_condition(thiz.template is<ValueObject>());
+			assert_test(thiz.template is<ValueObject>());
 			return std::get<ValueObject>(thiz.m_value);
 		}
 
@@ -104,7 +104,7 @@ namespace TwinStar::Core {
 			&& (IsSame<ValueObject, TValue ...>)
 		constexpr auto get (
 		) const -> ValueObject const& {
-			assert_condition(thiz.template is<ValueObject>());
+			assert_test(thiz.template is<ValueObject>());
 			return std::get<ValueObject>(thiz.m_value);
 		}
 

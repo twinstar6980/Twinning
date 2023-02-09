@@ -105,7 +105,7 @@ namespace TwinStar::Core {
 
 		constexpr auto get (
 		) const -> QValue& {
-			assert_condition(thiz.has());
+			assert_test(thiz.has());
 			return thiz.m_value.dereference();
 		}
 

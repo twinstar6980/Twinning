@@ -250,7 +250,7 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 							auto uid_last = IntegerU32{};
 							// TODO : do not use scanf ?
 							auto scan_result = std::sscanf(cast_pointer<char>(make_null_terminated_string(uid).begin()).value, "%u.%u.%x", &uid_first.value, &uid_middle.value, &uid_last.value);
-							assert_condition(scan_result == 3);
+							assert_test(scan_result == 3);
 							ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(sheet.size()));
 							ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(sheet.size()));
 							data.write(sheet);
@@ -321,7 +321,7 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 		) -> Void {
 			switch (value.type().value) {
 				case JSON::ValueType::Constant::null().value : {
-					assert_failed(R"(json.type() == /* non-null */)");
+					assert_fail(R"(json.type() == /* non-null */)");
 					break;
 				}
 				case JSON::ValueType::Constant::boolean().value : {
@@ -591,7 +591,7 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 							break;
 						}
 						default : {
-							assert_failed(R"(rton.read_of<Structure::RTIDTypeIdentifier>() == /* valid */)");
+							assert_fail(R"(rton.read_of<Structure::RTIDTypeIdentifier>() == /* valid */)");
 						}
 					}
 					break;
@@ -613,7 +613,7 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 						array.append();
 						process_unit(data, array.last(), native_string_index, unicode_string_index, value_type_identifier);
 					}
-					assert_condition(array.size() == array_size);
+					assert_test(array.size() == array_size);
 					break;
 				}
 				case TypeIdentifier::Value::object_begin : {
@@ -641,7 +641,7 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 					break;
 				}
 				default : {
-					assert_failed(R"(type_identifier == /* valid */)");
+					assert_fail(R"(type_identifier == /* valid */)");
 				}
 			}
 			return;

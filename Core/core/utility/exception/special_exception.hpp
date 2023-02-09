@@ -42,11 +42,11 @@ namespace TwinStar::Core {
 
 }
 
-#define assert_condition(...) \
+#define assert_test(...) \
 	if (!(__VA_ARGS__)) {\
-		throw SimpleException{SourceLocation::make(M_current_source_location).to_string() + "\nassert failed : " #__VA_ARGS__};\
+		throw SimpleException{SourceLocation::make(M_current_source_location).to_string() + "\nassertion failed : " #__VA_ARGS__};\
 	}\
 	static_assert(true)
 
-#define assert_failed(message) \
-	throw SimpleException{SourceLocation::make(M_current_source_location).to_string() + "\nassert failed : " message}
+#define assert_fail(message) \
+	throw SimpleException{SourceLocation::make(M_current_source_location).to_string() + "\nassertion failed : " message}

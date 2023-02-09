@@ -16,6 +16,7 @@ target('shell', function()
 		'./core/static_library.hpp',
 		'./core/dynamic_library.hpp',
 		'./host/host.hpp',
+		'./host/launcher.hpp',
 		'./host/cli_host.hpp',
 		{ install = false }
 	)
@@ -34,8 +35,7 @@ target('shell', function()
 	)
 	if m.system:is('windows') then
 		add_files(
-			'./windows/application.manifest',
-			'./windows/application.rc',
+			'./resource/windows/application.manifest',
 			{}
 		)
 		add_links(

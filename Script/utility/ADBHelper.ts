@@ -21,7 +21,7 @@ namespace TwinStar.ADBHelper {
 		argument: Array<string>,
 	): string {
 		let adb_path = EnvironmentVariable.search_from_path(`adb`);
-		assert(adb_path !== null, `can not found adb path from PATH environment`);
+		assert_test(adb_path !== null, `can not found adb path from PATH environment`);
 		let buffer: Core.ByteArray;
 		let buffer_content: string;
 		let temporary_directory = HomeDirectory.new_temporary();
@@ -127,13 +127,13 @@ namespace TwinStar.ADBHelper {
 		result.id = id;
 		shell_result = shell(`pm dump ${id}`);
 		match = /versionCode=([0-9]+)/.exec(shell_result);
-		assert(match !== null);
+		assert_test(match !== null);
 		result.version_code = BigInt(match[1]);
 		match = /versionName=([0-9a-zA-Z\.\+\-]+)/.exec(shell_result);
-		assert(match !== null);
+		assert_test(match !== null);
 		result.version_name = match[1];
 		match = /userId=([0-9]+)/.exec(shell_result);
-		assert(match !== null);
+		assert_test(match !== null);
 		let userIDNumber = BigInt(match[1]);
 		result.user = `u${userIDNumber / 100000n}_a${userIDNumber - 10000n}`;
 		return result;

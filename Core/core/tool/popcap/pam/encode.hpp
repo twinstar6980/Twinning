@@ -639,7 +639,7 @@ namespace TwinStar::Core::Tool::PopCap::PAM {
 					auto translate_x = VWrapperView<Floating>{};
 					auto translate_y = VWrapperView<Floating>{};
 					if (layer_flag.get(LayerChangeFlag::matrix)) {
-						assert_condition(!layer_flag.get(LayerChangeFlag::rotate));
+						assert_test(!layer_flag.get(LayerChangeFlag::rotate));
 						element.transform.template set<typename Manifest::MatrixTranslateTransform>();
 						auto & transform = element.transform.template get<typename Manifest::MatrixTranslateTransform>();
 						exchange_floating<IntegerS32, ValueRate::matrix>(frame_data, transform.a);
@@ -649,7 +649,7 @@ namespace TwinStar::Core::Tool::PopCap::PAM {
 						translate_x.set(transform.x);
 						translate_y.set(transform.y);
 					} else if (layer_flag.get(LayerChangeFlag::rotate)) {
-						assert_condition(!layer_flag.get(LayerChangeFlag::matrix));
+						assert_test(!layer_flag.get(LayerChangeFlag::matrix));
 						element.transform.template set<typename Manifest::RotateTranslateTransform>();
 						auto & transform = element.transform.template get<typename Manifest::RotateTranslateTransform>();
 						exchange_floating<IntegerS16, ValueRate::angle>(frame_data, transform.angle);

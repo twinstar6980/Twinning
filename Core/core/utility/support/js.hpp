@@ -65,7 +65,7 @@ namespace TwinStar::Core::JS {
 			This &       thix,
 			That const & that
 		) -> Void {
-			assert_condition(Detail::g_class_id<TValue> != Detail::k_invalid_class_id);
+			assert_test(Detail::g_class_id<TValue> != Detail::k_invalid_class_id);
 			auto js_value = quickjs::JS_NewObjectClass(thix._context(), static_cast<int>(Detail::g_class_id<TValue>));
 			quickjs::JS_SetOpaque(js_value, new That{that});
 			thix._rebind_value(js_value);
@@ -76,7 +76,7 @@ namespace TwinStar::Core::JS {
 			This &  thix,
 			That && that
 		) -> Void {
-			assert_condition(Detail::g_class_id<TValue> != Detail::k_invalid_class_id);
+			assert_test(Detail::g_class_id<TValue> != Detail::k_invalid_class_id);
 			auto js_value = quickjs::JS_NewObjectClass(thix._context(), static_cast<int>(Detail::g_class_id<TValue>));
 			quickjs::JS_SetOpaque(js_value, new That{as_moveable(that)});
 			thix._rebind_value(js_value);
@@ -87,7 +87,7 @@ namespace TwinStar::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_condition(Detail::g_class_id<TValue> != Detail::k_invalid_class_id);
+			assert_test(Detail::g_class_id<TValue> != Detail::k_invalid_class_id);
 			that = *static_cast<That *>(quickjs::JS_GetOpaque(thix._value(), Detail::g_class_id<TValue>));
 			return;
 		}
@@ -161,7 +161,7 @@ namespace TwinStar::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_condition(thix.is_null());
+			assert_test(thix.is_null());
 			that = thix.get_null();
 			return;
 		}
@@ -191,7 +191,7 @@ namespace TwinStar::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_condition(thix.is_boolean());
+			assert_test(thix.is_boolean());
 			that = thix.get_boolean();
 			return;
 		}
@@ -221,7 +221,7 @@ namespace TwinStar::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_condition(thix.is_bigint());
+			assert_test(thix.is_bigint());
 			that = thix.get_bigint();
 			return;
 		}
@@ -249,7 +249,7 @@ namespace TwinStar::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_condition(thix.is_number());
+			assert_test(thix.is_number());
 			that = thix.get_number();
 			return;
 		}
@@ -286,7 +286,7 @@ namespace TwinStar::Core::JS {
 			} else if (thix.is_bigint()) {
 				that.set_integer(thix.get_bigint());
 			} else {
-				assert_failed(R"(/* thix type is number or bigint */)");
+				assert_fail(R"(/* thix type is number or bigint */)");
 			}
 			return;
 		}
@@ -316,7 +316,7 @@ namespace TwinStar::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_condition(thix.is_bigint());
+			assert_test(thix.is_bigint());
 			that = cbw<That>(thix.get_bigint());
 			return;
 		}
@@ -346,7 +346,7 @@ namespace TwinStar::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_condition(thix.is_string());
+			assert_test(thix.is_string());
 			that = thix.get_string();
 			return;
 		}
@@ -400,7 +400,7 @@ namespace TwinStar::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_condition(thix.is_string());
+			assert_test(thix.is_string());
 			auto string = thix.get_string();
 			string.to(that);
 			return;
@@ -537,7 +537,7 @@ namespace TwinStar::Core::JS {
 			That & that
 		) -> Void {
 			auto thix_object = thix.collect_object_own_property_of_object();
-			assert_condition(thix_object.size() == 2_sz);
+			assert_test(thix_object.size() == 2_sz);
 			auto variant_index = Size{};
 			thix_object["type"_sv].to(variant_index);
 			thix_object["value"_sv].to(that, variant_index);
@@ -604,7 +604,7 @@ namespace TwinStar::Core::JS {
 			That & that
 		) -> Void {
 			auto thix_object = thix.collect_object_own_property_of_object();
-			assert_condition(thix_object.size() == 2_sz);
+			assert_test(thix_object.size() == 2_sz);
 			auto variant_type = TEnumeration{};
 			thix_object["type"_sv].to(variant_type);
 			thix_object["value"_sv].to(that, variant_type);
@@ -643,7 +643,7 @@ namespace TwinStar::Core::JS {
 			That & that
 		) -> Void {
 			auto thix_array = thix.collect_object_own_property_of_array();
-			assert_condition(thix_array.size() == mbw<Size>(sizeof...(TValue)));
+			assert_test(thix_array.size() == mbw<Size>(sizeof...(TValue)));
 			Generalization::each<AsValuePackageOfIndex<sizeof...(TValue)>>(
 				[&] <auto index> (ValuePackage<index>, auto) {
 					thix_array.at(mbw<Size>(index)).to(that.template get<mbw<Size>(index)>());
@@ -770,7 +770,7 @@ namespace TwinStar::Core::JS {
 			That & that
 		) -> Void {
 			auto thix_array = thix.collect_object_own_property_of_array();
-			assert_condition(thix_array.size() == mbw<Size>(FieldPackage::size));
+			assert_test(thix_array.size() == mbw<Size>(FieldPackage::size));
 			Generalization::each<FieldPackage>(
 				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
 					thix_array.at(mbw<Size>(index)).to(Field::value_of(that));
@@ -812,10 +812,10 @@ namespace TwinStar::Core::JS {
 			That & that
 		) -> Void {
 			auto thix_object = thix.collect_object_own_property_of_object();
-			assert_condition(thix_object.size() == mbw<Size>(FieldPackage::size));
+			assert_test(thix_object.size() == mbw<Size>(FieldPackage::size));
 			Generalization::each<FieldPackage>(
 				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
-					assert_condition(thix_object.at(mbw<Size>(index)).key == make_string_view(Field::name.view()));
+					assert_test(thix_object.at(mbw<Size>(index)).key == make_string_view(Field::name.view()));
 					thix_object.at(mbw<Size>(index)).value.to(Field::value_of(that));
 				}
 			);
@@ -894,7 +894,7 @@ namespace TwinStar::Core::JS {
 					auto & that_value = that.template set_of_index<mbw<Size>(index)>();
 					Generalization::each<typename TypePackage<TValue ...>::template Element<index>::Reflection::MemberVariable>(
 						[&] <auto field_index, typename Field> (ValuePackage<field_index>, TypePackage<Field>) {
-							assert_condition(thix_object.at(mbw<Size>(field_index)).key == make_string_view(Field::name.view()));
+							assert_test(thix_object.at(mbw<Size>(field_index)).key == make_string_view(Field::name.view()));
 							thix_object.at(mbw<Size>(field_index)).value.to(Field::value_of(that_value));
 						}
 					);
@@ -930,7 +930,7 @@ namespace TwinStar::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_condition(thix.is_bigint());
+			assert_test(thix.is_bigint());
 			that = cbw<That>(thix.get_bigint());
 			return;
 		}
@@ -1029,7 +1029,7 @@ namespace TwinStar::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_condition(thix.is_object_of_array());
+			assert_test(thix.is_object_of_array());
 			thix.get_object_property(1_ix).to(that.x);
 			return;
 		}
@@ -1060,7 +1060,7 @@ namespace TwinStar::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_condition(thix.is_object_of_array());
+			assert_test(thix.is_object_of_array());
 			thix.get_object_property(1_ix).to(that.x);
 			thix.get_object_property(2_ix).to(that.y);
 			return;
@@ -1093,7 +1093,7 @@ namespace TwinStar::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_condition(thix.is_object_of_array());
+			assert_test(thix.is_object_of_array());
 			thix.get_object_property(1_ix).to(that.x);
 			thix.get_object_property(2_ix).to(that.y);
 			thix.get_object_property(3_ix).to(that.z);
@@ -1125,7 +1125,7 @@ namespace TwinStar::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_condition(thix.is_object_of_array());
+			assert_test(thix.is_object_of_array());
 			thix.get_object_property(1_ix).to(that.width);
 			return;
 		}
@@ -1156,7 +1156,7 @@ namespace TwinStar::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_condition(thix.is_object_of_array());
+			assert_test(thix.is_object_of_array());
 			thix.get_object_property(1_ix).to(that.width);
 			thix.get_object_property(2_ix).to(that.height);
 			return;
@@ -1189,7 +1189,7 @@ namespace TwinStar::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_condition(thix.is_object_of_array());
+			assert_test(thix.is_object_of_array());
 			thix.get_object_property(1_ix).to(that.width);
 			thix.get_object_property(2_ix).to(that.height);
 			thix.get_object_property(3_ix).to(that.depth);
@@ -1225,7 +1225,7 @@ namespace TwinStar::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_condition(thix.is_object_of_array());
+			assert_test(thix.is_object_of_array());
 			thix.get_object_property(1_ix).to(that.red);
 			thix.get_object_property(2_ix).to(that.green);
 			thix.get_object_property(3_ix).to(that.blue);
@@ -1298,7 +1298,7 @@ namespace TwinStar::Core::JS {
 			} else if (thix.is_object_of_object()) {
 				thix.to(that.set_object());
 			} else {
-				assert_failed(R"(/* thix type is valid */)");
+				assert_fail(R"(/* thix type is valid */)");
 			}
 			return;
 		}
@@ -1355,14 +1355,14 @@ namespace TwinStar::Core::JS {
 			That & that
 		) -> Void {
 			using namespace XML;
-			assert_condition(thix.is_object_of_object());
+			assert_test(thix.is_object_of_object());
 			auto type = NodeType{};
 			thix.get_object_property("type"_sv).to(type);
 			auto node_value_js = thix.get_object_property("value"_sv);
 			switch (type.value) {
 				case NodeType::Constant::element().value : {
 					auto & node_value = that.set_element();
-					assert_condition(node_value_js.is_object_of_object());
+					assert_test(node_value_js.is_object_of_object());
 					node_value_js.get_object_property("name"_sv).to(node_value.name);
 					node_value_js.get_object_property("attribute"_sv).to(node_value.attribute);
 					node_value_js.get_object_property("child"_sv).to(node_value.child);
@@ -1370,14 +1370,14 @@ namespace TwinStar::Core::JS {
 				}
 				case NodeType::Constant::text().value : {
 					auto & node_value = that.set_text();
-					assert_condition(node_value_js.is_object_of_object());
+					assert_test(node_value_js.is_object_of_object());
 					node_value_js.get_object_property("value"_sv).to(node_value.value);
 					node_value_js.get_object_property("cdata"_sv).to(node_value.cdata);
 					break;
 				}
 				case NodeType::Constant::comment().value : {
 					auto & node_value = that.set_comment();
-					assert_condition(node_value_js.is_object_of_object());
+					assert_test(node_value_js.is_object_of_object());
 					node_value_js.get_object_property("value"_sv).to(node_value.value);
 					break;
 				}
@@ -1410,7 +1410,7 @@ namespace TwinStar::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_condition(thix.is_string());
+			assert_test(thix.is_string());
 			that.from_string(thix.get_string());
 			return;
 		}
@@ -1440,7 +1440,7 @@ namespace TwinStar::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_condition(thix.is_bigint());
+			assert_test(thix.is_bigint());
 			that = cbw<That>(thix.get_bigint());
 			return;
 		}
@@ -1468,7 +1468,7 @@ namespace TwinStar::Core::JS {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_condition(thix.is_bigint());
+			assert_test(thix.is_bigint());
 			that = cbw<That>(thix.get_bigint());
 			return;
 		}

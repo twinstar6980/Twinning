@@ -71,7 +71,7 @@ namespace TwinStar::Core {
 		constexpr auto iterator (
 			Size const & index
 		) const -> Iterator {
-			assert_condition(index <= thiz.size());
+			assert_test(index <= thiz.size());
 			return thiz.m_begin + index;
 		}
 
@@ -99,7 +99,7 @@ namespace TwinStar::Core {
 				return mbw<Size>(thiz.m_end - thiz.m_begin);
 			} else {
 				static_assert(k_static_assert_fail<TIterator>);
-				assert_failed("");
+				assert_fail("");
 			}
 		}
 

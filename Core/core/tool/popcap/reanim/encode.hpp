@@ -228,7 +228,7 @@ namespace TwinStar::Core::Tool::PopCap::Reanim {
 			exchange_integer_platform(animation_data, integer_of_platform);
 			auto track_data_size = Integer{};
 			exchange_integer(animation_data, track_data_size);
-			assert_condition(cbw<Size>(track_data_size) == k_track_data_size);
+			assert_test(cbw<Size>(track_data_size) == k_track_data_size);
 			for (auto & track_manifest : animation_manifest.track) {
 				exchange_integer_platform(animation_data, integer_of_platform);
 				exchange_integer_platform(animation_data, integer_of_platform);
@@ -243,7 +243,7 @@ namespace TwinStar::Core::Tool::PopCap::Reanim {
 				exchange_string(animation_data, track_manifest.name);
 				auto t_data_size = Integer{};
 				exchange_integer(animation_data, t_data_size);
-				assert_condition(cbw<Size>(t_data_size) == k_t_data_size);
+				assert_test(cbw<Size>(t_data_size) == k_t_data_size);
 				for (auto & t_manifest : track_manifest.t) {
 					exchange_floating(animation_data, t_manifest.x);
 					exchange_floating(animation_data, t_manifest.y);

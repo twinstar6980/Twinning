@@ -69,7 +69,7 @@ namespace TwinStar::Core {
 			This const & thix,
 			That &       that
 		) -> Void {
-			assert_condition(thix.size() == 1_sz);
+			assert_test(thix.size() == 1_sz);
 			that = thix.first();
 			return;
 		}
@@ -101,7 +101,7 @@ namespace TwinStar::Core {
 			This const & thix,
 			That &       that
 		) -> Void {
-			assert_condition(thix == "null"_sv);
+			assert_test(thix == "null"_sv);
 			return;
 		}
 
@@ -137,7 +137,7 @@ namespace TwinStar::Core {
 			} else if (thix == "false"_sv) {
 				that = k_false;
 			} else {
-				assert_failed(R"(thix == "true"_sv || thix == "false"_sv)");
+				assert_fail(R"(thix == "true"_sv || thix == "false"_sv)");
 			}
 			return;
 		}
@@ -175,7 +175,7 @@ namespace TwinStar::Core {
 		) -> Void {
 			auto stream = ICharacterStreamView{thix};
 			stream.read(that);
-			assert_condition(stream.full());
+			assert_test(stream.full());
 			return;
 		}
 
@@ -209,7 +209,7 @@ namespace TwinStar::Core {
 		) -> Void {
 			auto stream = ICharacterStreamView{thix};
 			stream.read(that);
-			assert_condition(stream.full());
+			assert_test(stream.full());
 			return;
 		}
 
@@ -245,7 +245,7 @@ namespace TwinStar::Core {
 		) -> Void {
 			auto stream = ICharacterStreamView{thix};
 			stream.read(that);
-			assert_condition(stream.full());
+			assert_test(stream.full());
 			return;
 		}
 
@@ -286,7 +286,7 @@ namespace TwinStar::Core {
 				}
 			);
 			if (!has_case) {
-				assert_failed(R"(/* enumeration value is invalid */)");
+				assert_fail(R"(/* enumeration value is invalid */)");
 			}
 			return;
 		}
@@ -309,7 +309,7 @@ namespace TwinStar::Core {
 				}
 			);
 			if (!has_case) {
-				assert_failed(R"(/* enumeration name is invalid */)");
+				assert_fail(R"(/* enumeration name is invalid */)");
 			}
 			return;
 		}
@@ -346,7 +346,7 @@ namespace TwinStar::Core {
 		) -> Void {
 			auto stream = ICharacterStreamView{thix};
 			stream.read(that);
-			assert_condition(stream.full());
+			assert_test(stream.full());
 			return;
 		}
 
@@ -379,7 +379,7 @@ namespace TwinStar::Core {
 			This const & thix,
 			That &       that
 		) -> Void {
-			assert_condition(thix.size() == 0_sz || thix.size() % 3_sz == 2_sz);
+			assert_test(thix.size() == 0_sz || thix.size() % 3_sz == 2_sz);
 			that.allocate_full((thix.size() + 1_sz) / 3_sz);
 			auto stream = ICharacterStreamView{thix};
 			stream.read(that.view());
@@ -413,7 +413,7 @@ namespace TwinStar::Core {
 			This const & thix,
 			That &       that
 		) -> Void {
-			assert_condition(thix.size() == k_type_size<FourCC>);
+			assert_test(thix.size() == k_type_size<FourCC>);
 			that = make_fourcc(
 				thix[1_ix],
 				thix[2_ix],

@@ -396,7 +396,7 @@ namespace TwinStar::Core {
 		auto shrink (
 			Size const & size
 		) -> Void {
-			assert_condition(size <= thiz.size());
+			assert_test(size <= thiz.size());
 			return thiz.allocate_retain(thiz.size() - size);
 		}
 

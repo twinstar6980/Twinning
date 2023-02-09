@@ -12,7 +12,7 @@
 	
 	* 本地编译工具链：[MSVC 19.33+ with MSVC-STL and Windows-SDK for Windows](https://visualstudio.microsoft.com/downloads/) 、[Clang 14+ with libstdc++/libc++ and POSIX for Linux/Macintosh](https://llvm.org/) 。
 	
-	* 跨平台编译工具链：[NDK 25.1+ for Android](https://developer.android.google.com/ndk/downloads) 。
+	* 跨平台编译工具链：[NDK 25.1+ for Android](https://developer.android.com/ndk/downloads) 。
 
 * 开发
 	

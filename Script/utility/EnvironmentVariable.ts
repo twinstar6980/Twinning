@@ -37,12 +37,12 @@ namespace TwinStar.EnvironmentVariable {
 		let item_delimiter = Shell.is_windows ? ';' : ':';
 		let environment = parse(CoreX.Process.environment());
 		let path_string = query(environment, 'PATH');
-		assert(path_string !== null, `environment PATH not found`);
+		assert_test(path_string !== null, `environment PATH not found`);
 		let path_list = path_string.split(item_delimiter);
 		let path_extension_list = [''];
 		if (Shell.is_windows) {
 			let path_extension_string = query(environment, 'PATHEXT');
-			assert(path_extension_string !== null, `environment PATHEXT not found`);
+			assert_test(path_extension_string !== null, `environment PATHEXT not found`);
 			path_extension_list.push(...path_extension_string.split(item_delimiter).map((e) => (e.toLowerCase())));
 		}
 		for (let path of path_list) {

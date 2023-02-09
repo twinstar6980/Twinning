@@ -24,8 +24,8 @@ namespace TwinStar::Core::Tool::Texture::Compression::PVRTC4 {
 			OByteStreamView &          data,
 			Image::CBitmapView const & image
 		) -> Void {
-			assert_condition(is_padded_size(image.size().width, k_block_width));
-			assert_condition(is_padded_size(image.size().height, k_block_width));
+			assert_test(is_padded_size(image.size().width, k_block_width));
+			assert_test(is_padded_size(image.size().height, k_block_width));
 			auto actual_image = Third::PVRTCCompressor::RgbBitmap{static_cast<int>(image.size().width.value), static_cast<int>(image.size().height.value)};
 			auto actual_data = VListView<Third::PVRTCCompressor::ColorRgb<unsigned char>>{make_pointer(actual_image.GetData()), image.size().area()};
 			for (auto & y : SizeRange{image.size().height}) {
@@ -46,8 +46,8 @@ namespace TwinStar::Core::Tool::Texture::Compression::PVRTC4 {
 			OByteStreamView &          data,
 			Image::CBitmapView const & image
 		) -> Void {
-			assert_condition(is_padded_size(image.size().width, k_block_width));
-			assert_condition(is_padded_size(image.size().height, k_block_width));
+			assert_test(is_padded_size(image.size().width, k_block_width));
+			assert_test(is_padded_size(image.size().height, k_block_width));
 			auto actual_image = Third::PVRTCCompressor::RgbaBitmap{static_cast<int>(image.size().width.value), static_cast<int>(image.size().height.value)};
 			auto actual_data = VListView<Third::PVRTCCompressor::ColorRgba<unsigned char>>{make_pointer(actual_image.GetData()), image.size().area()};
 			for (auto & y : SizeRange{image.size().height}) {
@@ -102,8 +102,8 @@ namespace TwinStar::Core::Tool::Texture::Compression::PVRTC4 {
 			IByteStreamView &          data,
 			Image::VBitmapView const & image
 		) -> Void {
-			assert_condition(is_padded_size(image.size().width, k_block_width));
-			assert_condition(is_padded_size(image.size().height, k_block_width));
+			assert_test(is_padded_size(image.size().width, k_block_width));
+			assert_test(is_padded_size(image.size().height, k_block_width));
 			auto actual_data = Array<Third::PVRTCCompressor::ColorRgb<unsigned char>>{image.size().area()};
 			Third::PVRTCCompressor::PvrTcDecoder::DecodeRgb4Bpp(actual_data.begin().value, Third::PVRTCCompressor::Point2<int>{static_cast<int>(image.size().width.value), static_cast<int>(image.size().height.value)}, data.current_pointer().value);
 			for (auto & y : SizeRange{image.size().height}) {
@@ -123,8 +123,8 @@ namespace TwinStar::Core::Tool::Texture::Compression::PVRTC4 {
 			IByteStreamView &          data,
 			Image::VBitmapView const & image
 		) -> Void {
-			assert_condition(is_padded_size(image.size().width, k_block_width));
-			assert_condition(is_padded_size(image.size().height, k_block_width));
+			assert_test(is_padded_size(image.size().width, k_block_width));
+			assert_test(is_padded_size(image.size().height, k_block_width));
 			auto actual_data = Array<Third::PVRTCCompressor::ColorRgba<unsigned char>>{image.size().area()};
 			Third::PVRTCCompressor::PvrTcDecoder::DecodeRgba4Bpp(actual_data.begin().value, Third::PVRTCCompressor::Point2<int>{static_cast<int>(image.size().width.value), static_cast<int>(image.size().height.value)}, data.current_pointer().value);
 			for (auto & y : SizeRange{image.size().height}) {

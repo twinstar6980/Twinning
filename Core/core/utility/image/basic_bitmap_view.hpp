@@ -68,15 +68,15 @@ namespace TwinStar::Core::Image {
 		auto operator [] (
 			Size const & y
 		) const -> QPixelRow const& {
-			assert_condition(y < thiz.size().height);
+			assert_test(y < thiz.size().height);
 			return thiz.m_data[y];
 		}
 
 		auto operator [] (
 			ImagePosition const & position
 		) const -> QPixel& {
-			assert_condition(position.y < thiz.size().height);
-			assert_condition(position.x < thiz.size().width);
+			assert_test(position.y < thiz.size().height);
+			assert_test(position.x < thiz.size().width);
 			return thiz.m_data[position.y][position.x];
 		}
 
@@ -141,7 +141,7 @@ namespace TwinStar::Core::Image {
 			CView const & image
 		) const -> Void requires
 			(!constant) {
-			assert_condition(thiz.size() == image.size());
+			assert_test(thiz.size() == image.size());
 			Range::convert_from(
 				thiz.data(),
 				image.data(),
@@ -161,8 +161,8 @@ namespace TwinStar::Core::Image {
 			ImagePosition const & position,
 			ImageSize const &     size
 		) -> BasicBitmapView {
-			assert_condition(position.y + size.height <= thiz.size().height);
-			assert_condition(position.x + size.width <= thiz.size().width);
+			assert_test(position.y + size.height <= thiz.size().height);
+			assert_test(position.x + size.width <= thiz.size().width);
 			auto sub_view = BasicBitmapView{};
 			sub_view.m_data.convert(
 				thiz.m_data.sub(position.y, size.height),

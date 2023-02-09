@@ -144,13 +144,13 @@ namespace TwinStar::Core {
 
 		constexpr auto first_index (
 		) const -> Size {
-			assert_condition(!thiz.empty());
+			assert_test(!thiz.empty());
 			return thiz.begin_index();
 		}
 
 		constexpr auto last_index (
 		) const -> Size {
-			assert_condition(!thiz.empty());
+			assert_test(!thiz.empty());
 			return thiz.end_index() - k_next_index;
 		}
 
@@ -161,7 +161,7 @@ namespace TwinStar::Core {
 		constexpr auto iterator (
 			Size const & index
 		) -> VIterator {
-			assert_condition(index <= thiz.end_index());
+			assert_test(index <= thiz.end_index());
 			return Iterator{thiz.m_data + index.value};
 		}
 
@@ -180,7 +180,7 @@ namespace TwinStar::Core {
 		constexpr auto iterator (
 			Size const & index
 		) const -> CIterator {
-			assert_condition(index <= thiz.end_index());
+			assert_test(index <= thiz.end_index());
 			return CIterator{thiz.m_data + index.value};
 		}
 
@@ -201,7 +201,7 @@ namespace TwinStar::Core {
 		constexpr auto at (
 			Size const & index
 		) -> VElement& {
-			assert_condition(index < thiz.end_index());
+			assert_test(index < thiz.end_index());
 			return thiz.m_data[index.value];
 		}
 
@@ -220,7 +220,7 @@ namespace TwinStar::Core {
 		constexpr auto at (
 			Size const & index
 		) const -> CElement& {
-			assert_condition(index < thiz.end_index());
+			assert_test(index < thiz.end_index());
 			return thiz.m_data[index.value];
 		}
 

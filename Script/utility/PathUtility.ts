@@ -59,7 +59,7 @@ namespace TwinStar.PathUtility {
 				if (current[element] === undefined) {
 					current[element] = is_name ? null : {};
 				} else {
-					assert(current[element] !== null && !is_name);
+					assert_test(current[element] !== null && !is_name);
 				}
 				current = current[element]!;
 			}

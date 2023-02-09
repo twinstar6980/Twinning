@@ -25,7 +25,7 @@ target('test', function()
 	)
 	if m.system:is('windows') then
 		add_files(
-			m.root .. '/../Shell/shell/windows/application.manifest',
+			m.root .. '/../Shell/shell/resource/windows/application.manifest',
 			{}
 		)
 		add_links(

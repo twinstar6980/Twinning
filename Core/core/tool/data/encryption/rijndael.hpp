@@ -47,11 +47,11 @@ namespace TwinStar::Core::Tool::Data::Encryption::Rijndael {
 			String const &    key,
 			String const &    iv
 		) -> Void {
-			assert_condition(is_padded_size(plain.reserve(), block_size));
-			assert_condition(Range::has(k_valid_block_size, block_size));
-			assert_condition(Range::has(k_valid_block_size, key_size));
-			assert_condition(is_padded_size(key.size() * k_type_bit_count<Character>, key_size));
-			assert_condition(is_padded_size(iv.size() * k_type_bit_count<Character>, block_size));
+			assert_test(is_padded_size(plain.reserve(), block_size));
+			assert_test(Range::has(k_valid_block_size, block_size));
+			assert_test(Range::has(k_valid_block_size, key_size));
+			assert_test(is_padded_size(key.size() * k_type_bit_count<Character>, key_size));
+			assert_test(is_padded_size(iv.size() * k_type_bit_count<Character>, block_size));
 			auto iv_view = mode == Mode::Constant::ecb() ? k_empty_iv.view().head(block_size) : iv.view();
 			auto plain_size = plain.reserve();
 			if (plain_size != k_none_size) {
@@ -96,11 +96,11 @@ namespace TwinStar::Core::Tool::Data::Encryption::Rijndael {
 			String const &    key,
 			String const &    iv
 		) -> Void {
-			assert_condition(is_padded_size(cipher.reserve(), block_size));
-			assert_condition(Range::has(k_valid_block_size, block_size));
-			assert_condition(Range::has(k_valid_block_size, key_size));
-			assert_condition(is_padded_size(key.size() * k_type_bit_count<Character>, key_size));
-			assert_condition(is_padded_size(iv.size() * k_type_bit_count<Character>, block_size));
+			assert_test(is_padded_size(cipher.reserve(), block_size));
+			assert_test(Range::has(k_valid_block_size, block_size));
+			assert_test(Range::has(k_valid_block_size, key_size));
+			assert_test(is_padded_size(key.size() * k_type_bit_count<Character>, key_size));
+			assert_test(is_padded_size(iv.size() * k_type_bit_count<Character>, block_size));
 			auto iv_view = mode == Mode::Constant::ecb() ? k_empty_iv.view().head(block_size) : iv.view();
 			auto cipher_size = cipher.reserve();
 			if (cipher_size != k_none_size) {

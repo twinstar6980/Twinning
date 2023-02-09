@@ -85,7 +85,7 @@ namespace TwinStar::Core {
 			CategoryConstraint<IsPureInstance<ValueObject>>
 		auto get (
 		) -> ValueObject& {
-			assert_condition(thiz.is<ValueObject>());
+			assert_test(thiz.is<ValueObject>());
 			return *std::any_cast<ValueObject>(&thiz.m_value);
 		}
 
@@ -93,7 +93,7 @@ namespace TwinStar::Core {
 			CategoryConstraint<IsPureInstance<ValueObject>>
 		auto get (
 		) const -> ValueObject const& {
-			assert_condition(thiz.is<ValueObject>());
+			assert_test(thiz.is<ValueObject>());
 			return *std::any_cast<ValueObject>(&thiz.m_value);
 		}
 

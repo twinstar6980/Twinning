@@ -530,43 +530,43 @@ namespace TwinStar::Core::JS {
 
 		auto is_undefined (
 		) -> Boolean {
-			assert_condition(thiz.m_context);
+			assert_test(thiz.m_context);
 			return mbw<Boolean>(quickjs::JS_IsUndefined(thiz._value()));
 		}
 
 		auto is_null (
 		) -> Boolean {
-			assert_condition(thiz.m_context);
+			assert_test(thiz.m_context);
 			return mbw<Boolean>(quickjs::JS_IsNull(thiz._value()));
 		}
 
 		auto is_boolean (
 		) -> Boolean {
-			assert_condition(thiz.m_context);
+			assert_test(thiz.m_context);
 			return mbw<Boolean>(quickjs::JS_IsBool(thiz._value()));
 		}
 
 		auto is_bigint (
 		) -> Boolean {
-			assert_condition(thiz.m_context);
+			assert_test(thiz.m_context);
 			return mbw<Boolean>(quickjs::JS_IsBigInt(thiz._context(), thiz._value()));
 		}
 
 		auto is_number (
 		) -> Boolean {
-			assert_condition(thiz.m_context);
+			assert_test(thiz.m_context);
 			return mbw<Boolean>(quickjs::JS_IsNumber(thiz._value()));
 		}
 
 		auto is_string (
 		) -> Boolean {
-			assert_condition(thiz.m_context);
+			assert_test(thiz.m_context);
 			return mbw<Boolean>(quickjs::JS_IsString(thiz._value()));
 		}
 
 		auto is_object (
 		) -> Boolean {
-			assert_condition(thiz.m_context);
+			assert_test(thiz.m_context);
 			return mbw<Boolean>(quickjs::JS_IsObject(thiz._value()));
 		}
 
@@ -574,7 +574,7 @@ namespace TwinStar::Core::JS {
 
 		auto is_exception (
 		) -> Boolean {
-			assert_condition(thiz.m_context);
+			assert_test(thiz.m_context);
 			return mbw<Boolean>(quickjs::JS_IsException(thiz._value()));
 		}
 
@@ -584,26 +584,26 @@ namespace TwinStar::Core::JS {
 
 		auto get_undefined (
 		) -> Void {
-			assert_condition(thiz.is_undefined());
+			assert_test(thiz.is_undefined());
 			return;
 		}
 
 		auto get_null (
 		) -> Null {
-			assert_condition(thiz.is_null());
+			assert_test(thiz.is_null());
 			return k_null;
 		}
 
 		auto get_boolean (
 		) -> Boolean {
-			assert_condition(thiz.is_boolean());
+			assert_test(thiz.is_boolean());
 			auto raw_value = quickjs::JS_ToBool(thiz._context(), thiz._value());
 			return mbw<Boolean>(raw_value);
 		}
 
 		auto get_bigint (
 		) -> Integer {
-			assert_condition(thiz.is_bigint());
+			assert_test(thiz.is_bigint());
 			auto raw_value = int64_t{};
 			quickjs::JS_ToBigInt64(thiz._context(), &raw_value, thiz._value());
 			return mbw<Integer>(raw_value);
@@ -611,7 +611,7 @@ namespace TwinStar::Core::JS {
 
 		auto get_number (
 		) -> Floating {
-			assert_condition(thiz.is_number());
+			assert_test(thiz.is_number());
 			auto raw_value = double{};
 			quickjs::JS_ToFloat64(thiz._context(), &raw_value, thiz._value());
 			return mbw<Floating>(raw_value);
@@ -619,7 +619,7 @@ namespace TwinStar::Core::JS {
 
 		auto get_string (
 		) -> String {
-			assert_condition(thiz.is_string());
+			assert_test(thiz.is_string());
 			auto raw_length = size_t{};
 			auto raw_value = quickjs::JS_ToCStringLen(thiz._context(), &raw_length, thiz._value());
 			auto value = make_string(raw_value, raw_length);
@@ -633,7 +633,7 @@ namespace TwinStar::Core::JS {
 		) -> VByteListView {
 			auto size = size_t{};
 			auto data = quickjs::JS_GetArrayBuffer(thiz._context(), &size, thiz._value());
-			assert_condition(data);
+			assert_test(data);
 			return VByteListView{cast_pointer<Byte>(make_pointer(data)), mbw<Size>(size)};
 		}
 
@@ -752,14 +752,14 @@ namespace TwinStar::Core::JS {
 
 		auto get_object_prototype (
 		) -> Value {
-			assert_condition(thiz.is_object());
+			assert_test(thiz.is_object());
 			return thiz.new_instance(thiz._context(), quickjs::JS_GetPrototype(thiz._context(), thiz._value()));
 		}
 
 		auto set_object_prototype (
 			Value && value
 		) -> Void {
-			assert_condition(thiz.is_object());
+			assert_test(thiz.is_object());
 			quickjs::JS_SetPrototype(thiz._context(), thiz._value(), value._release_value());
 			return;
 		}
@@ -770,7 +770,7 @@ namespace TwinStar::Core::JS {
 
 		auto get_object_class_name (
 		) -> String {
-			assert_condition(thiz.is_object());
+			assert_test(thiz.is_object());
 			return thiz.get_object_prototype().get_object_property("constructor"_sv).get_object_property("name"_sv).get_string();
 		}
 
@@ -809,12 +809,12 @@ namespace TwinStar::Core::JS {
 			String const & name,
 			Value &&       value
 		) -> Void {
-			assert_condition(thiz.is_object());
+			assert_test(thiz.is_object());
 			auto atom = quickjs::JS_NewAtomLen(thiz._context(), cast_pointer<char>(name.begin()).value, name.size().value);
 			auto result = quickjs::JS_DefinePropertyValue(thiz._context(), thiz._value(), atom, value._release_value(), quickjs::JS_PROP_C_W_E_);
 			quickjs::JS_FreeAtom(thiz._context(), atom);
-			assert_condition(result != -1);
-			assert_condition(result == 1);
+			assert_test(result != -1);
+			assert_test(result == 1);
 			return;
 		}
 
@@ -822,12 +822,12 @@ namespace TwinStar::Core::JS {
 			Size const & index,
 			Value &&     value
 		) -> Void {
-			assert_condition(thiz.is_object());
+			assert_test(thiz.is_object());
 			auto atom = quickjs::JS_NewAtomUInt32(thiz._context(), static_cast<uint32_t>(index.value));
 			auto result = quickjs::JS_DefinePropertyValue(thiz._context(), thiz._value(), atom, value._release_value(), quickjs::JS_PROP_C_W_E_);
 			quickjs::JS_FreeAtom(thiz._context(), atom);
-			assert_condition(result != -1);
-			assert_condition(result == 1);
+			assert_test(result != -1);
+			assert_test(result == 1);
 			return;
 		}
 
@@ -838,12 +838,12 @@ namespace TwinStar::Core::JS {
 			Value &&       getter,
 			Value &&       setter
 		) -> Void {
-			assert_condition(thiz.is_object());
+			assert_test(thiz.is_object());
 			auto atom = quickjs::JS_NewAtomLen(thiz._context(), cast_pointer<char>(name.begin()).value, name.size().value);
 			auto result = quickjs::JS_DefinePropertyGetSet(thiz._context(), thiz._value(), atom, getter._release_value(), setter._release_value(), quickjs::JS_PROP_C_W_E_);
 			quickjs::JS_FreeAtom(thiz._context(), atom);
-			assert_condition(result != -1);
-			assert_condition(result == 1);
+			assert_test(result != -1);
+			assert_test(result == 1);
 			return;
 		}
 
@@ -852,12 +852,12 @@ namespace TwinStar::Core::JS {
 			Value &&     getter,
 			Value &&     setter
 		) -> Void {
-			assert_condition(thiz.is_object());
+			assert_test(thiz.is_object());
 			auto atom = quickjs::JS_NewAtomUInt32(thiz._context(), static_cast<uint32_t>(index.value));
 			auto result = quickjs::JS_DefinePropertyGetSet(thiz._context(), thiz._value(), atom, getter._release_value(), setter._release_value(), quickjs::JS_PROP_C_W_E_);
 			quickjs::JS_FreeAtom(thiz._context(), atom);
-			assert_condition(result != -1);
-			assert_condition(result == 1);
+			assert_test(result != -1);
+			assert_test(result == 1);
 			return;
 		}
 
@@ -866,24 +866,24 @@ namespace TwinStar::Core::JS {
 		auto delete_object_property (
 			String const & name
 		) -> Void {
-			assert_condition(thiz.is_object());
+			assert_test(thiz.is_object());
 			auto atom = quickjs::JS_NewAtomLen(thiz._context(), cast_pointer<char>(name.begin()).value, name.size().value);
 			auto result = quickjs::JS_DeleteProperty(thiz._context(), thiz._value(), atom, quickjs::JS_PROP_THROW_);
 			quickjs::JS_FreeAtom(thiz._context(), atom);
-			assert_condition(result != -1);
-			assert_condition(result == 1);
+			assert_test(result != -1);
+			assert_test(result == 1);
 			return;
 		}
 
 		auto delete_object_property (
 			Size const & index
 		) -> Void {
-			assert_condition(thiz.is_object());
+			assert_test(thiz.is_object());
 			auto atom = quickjs::JS_NewAtomUInt32(thiz._context(), static_cast<uint32_t>(index.value));
 			auto result = quickjs::JS_DeleteProperty(thiz._context(), thiz._value(), atom, quickjs::JS_PROP_THROW_);
 			quickjs::JS_FreeAtom(thiz._context(), atom);
-			assert_condition(result != -1);
-			assert_condition(result == 1);
+			assert_test(result != -1);
+			assert_test(result == 1);
 			return;
 		}
 
@@ -892,22 +892,22 @@ namespace TwinStar::Core::JS {
 		auto has_object_property (
 			String const & name
 		) -> Boolean {
-			assert_condition(thiz.is_object());
+			assert_test(thiz.is_object());
 			auto atom = quickjs::JS_NewAtomLen(thiz._context(), cast_pointer<char>(name.begin()).value, name.size().value);
 			auto result = quickjs::JS_HasProperty(thiz._context(), thiz._value(), atom);
 			quickjs::JS_FreeAtom(thiz._context(), atom);
-			assert_condition(result != -1);
+			assert_test(result != -1);
 			return mbw<Boolean>(result == 1);
 		}
 
 		auto has_object_property (
 			Size const & index
 		) -> Boolean {
-			assert_condition(thiz.is_object());
+			assert_test(thiz.is_object());
 			auto atom = quickjs::JS_NewAtomUInt32(thiz._context(), static_cast<uint32_t>(index.value));
 			auto result = quickjs::JS_HasProperty(thiz._context(), thiz._value(), atom);
 			quickjs::JS_FreeAtom(thiz._context(), atom);
-			assert_condition(result != -1);
+			assert_test(result != -1);
 			return mbw<Boolean>(result == 1);
 		}
 
@@ -917,7 +917,7 @@ namespace TwinStar::Core::JS {
 		auto get_object_property (
 			CStringView const & name
 		) -> Value {
-			assert_condition(thiz.is_object());
+			assert_test(thiz.is_object());
 			auto atom = quickjs::JS_NewAtomLen(thiz._context(), cast_pointer<char>(name.begin()).value, name.size().value);
 			auto result = quickjs::JS_GetProperty(thiz._context(), thiz._value(), atom);
 			quickjs::JS_FreeAtom(thiz._context(), atom);
@@ -927,7 +927,7 @@ namespace TwinStar::Core::JS {
 		auto get_object_property (
 			String const & name
 		) -> Value {
-			assert_condition(thiz.is_object());
+			assert_test(thiz.is_object());
 			auto atom = quickjs::JS_NewAtomLen(thiz._context(), cast_pointer<char>(name.begin()).value, name.size().value);
 			auto result = quickjs::JS_GetProperty(thiz._context(), thiz._value(), atom);
 			quickjs::JS_FreeAtom(thiz._context(), atom);
@@ -937,7 +937,7 @@ namespace TwinStar::Core::JS {
 		auto get_object_property (
 			Size const & index
 		) -> Value {
-			assert_condition(thiz.is_object());
+			assert_test(thiz.is_object());
 			auto atom = quickjs::JS_NewAtomUInt32(thiz._context(), static_cast<uint32_t>(index.value));
 			auto result = quickjs::JS_GetProperty(thiz._context(), thiz._value(), atom);
 			quickjs::JS_FreeAtom(thiz._context(), atom);
@@ -951,12 +951,12 @@ namespace TwinStar::Core::JS {
 			CStringView const & name,
 			Value &&            value
 		) -> Void {
-			assert_condition(thiz.is_object());
+			assert_test(thiz.is_object());
 			auto atom = quickjs::JS_NewAtomLen(thiz._context(), cast_pointer<char>(name.begin()).value, name.size().value);
 			auto result = quickjs::JS_SetProperty(thiz._context(), thiz._value(), atom, value._release_value());
 			quickjs::JS_FreeAtom(thiz._context(), atom);
-			assert_condition(result != -1);
-			assert_condition(result == 1);
+			assert_test(result != -1);
+			assert_test(result == 1);
 			return;
 		}
 
@@ -964,12 +964,12 @@ namespace TwinStar::Core::JS {
 			String const & name,
 			Value &&       value
 		) -> Void {
-			assert_condition(thiz.is_object());
+			assert_test(thiz.is_object());
 			auto atom = quickjs::JS_NewAtomLen(thiz._context(), cast_pointer<char>(name.begin()).value, name.size().value);
 			auto result = quickjs::JS_SetProperty(thiz._context(), thiz._value(), atom, value._release_value());
 			quickjs::JS_FreeAtom(thiz._context(), atom);
-			assert_condition(result != -1);
-			assert_condition(result == 1);
+			assert_test(result != -1);
+			assert_test(result == 1);
 			return;
 		}
 
@@ -977,12 +977,12 @@ namespace TwinStar::Core::JS {
 			Size const & index,
 			Value &&     value
 		) -> Void {
-			assert_condition(thiz.is_object());
+			assert_test(thiz.is_object());
 			auto atom = quickjs::JS_NewAtomUInt32(thiz._context(), static_cast<uint32_t>(index.value));
 			auto result = quickjs::JS_SetProperty(thiz._context(), thiz._value(), atom, value._release_value());
 			quickjs::JS_FreeAtom(thiz._context(), atom);
-			assert_condition(result != -1);
-			assert_condition(result == 1);
+			assert_test(result != -1);
+			assert_test(result == 1);
 			return;
 		}
 
@@ -992,7 +992,7 @@ namespace TwinStar::Core::JS {
 
 		auto collect_object_own_property (
 		) -> Map<String, Value> {
-			assert_condition(thiz.is_object());
+			assert_test(thiz.is_object());
 			auto property_enum = ZPointer<quickjs::JSPropertyEnum>{};
 			auto property_count = uint32_t{};
 			quickjs::JS_GetOwnPropertyNames(thiz._context(), &property_enum, &property_count, thiz._value(), quickjs::JS_GPN_STRING_MASK_);
@@ -1010,20 +1010,20 @@ namespace TwinStar::Core::JS {
 
 		auto collect_object_own_property_of_object (
 		) -> Map<String, Value> {
-			assert_condition(thiz.is_object_of_object());
+			assert_test(thiz.is_object_of_object());
 			auto map = thiz.collect_object_own_property();
 			return map;
 		}
 
 		auto collect_object_own_property_of_array (
 		) -> List<Value> {
-			assert_condition(thiz.is_object_of_array());
+			assert_test(thiz.is_object_of_array());
 			auto map = thiz.collect_object_own_property();
 			auto list = List<Value>{};
 			auto length = cbw<Size>(map["length"_sv].to_of<Floating>());
 			list.allocate_full(length);
 			for (auto & index : SizeRange{length}) {
-				assert_condition(cbw<Size>(map.at(index).key.to_of<Integer>()) == index);
+				assert_test(cbw<Size>(map.at(index).key.to_of<Integer>()) == index);
 				list[index] = as_moveable(map.at(index).value);
 			}
 			return list;
@@ -1036,7 +1036,7 @@ namespace TwinStar::Core::JS {
 		auto call (
 			List<Value> const & argument
 		) -> Value {
-			assert_condition(thiz.is_object());
+			assert_test(thiz.is_object());
 			auto argument_value = Array<quickjs::JSValue>{};
 			argument_value.assign(
 				argument,
@@ -1051,7 +1051,7 @@ namespace TwinStar::Core::JS {
 			String const &      name,
 			List<Value> const & argument
 		) -> Value {
-			assert_condition(thiz.is_object());
+			assert_test(thiz.is_object());
 			auto function = thiz.get_object_property(name);
 			auto argument_value = Array<quickjs::JSValue>{};
 			argument_value.assign(
@@ -1073,7 +1073,7 @@ namespace TwinStar::Core::JS {
 			That &&       that,
 			Option && ... option
 		) -> Void {
-			assert_condition(thiz.m_context);
+			assert_test(thiz.m_context);
 			thiz.set_uninitialized();
 			ValueAdapter<AsPure<That>>::from(thiz, as_forward<That>(that), as_forward<Option>(option) ...);
 			return;
@@ -1085,7 +1085,7 @@ namespace TwinStar::Core::JS {
 			That &&       that,
 			Option && ... option
 		) -> That&& {
-			assert_condition(thiz.m_context);
+			assert_test(thiz.m_context);
 			ValueAdapter<AsPure<That>>::to(thiz, as_forward<That>(that), as_forward<Option>(option) ...);
 			return as_forward<That>(that);
 		}

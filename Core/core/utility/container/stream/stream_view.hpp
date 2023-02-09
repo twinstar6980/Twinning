@@ -65,7 +65,7 @@ namespace TwinStar::Core {
 		) :
 			m_view{view},
 			m_position{position} {
-			assert_condition(position <= view.size());
+			assert_test(position <= view.size());
 		}
 
 		#pragma endregion
@@ -107,7 +107,7 @@ namespace TwinStar::Core {
 			ListView const & view,
 			Size const &     position = k_begin_index
 		) -> Void {
-			assert_condition(position <= view.size());
+			assert_test(position <= view.size());
 			thiz.m_view = view;
 			thiz.m_position = position;
 			return;
@@ -159,7 +159,7 @@ namespace TwinStar::Core {
 		auto set_position (
 			Size const & position
 		) -> Void {
-			assert_condition(position <= thiz.size());
+			assert_test(position <= thiz.size());
 			thiz.m_position = position;
 			return;
 		}
@@ -169,14 +169,14 @@ namespace TwinStar::Core {
 		auto backward (
 			Size const & size = 1_sz
 		) -> Void {
-			assert_condition(size <= thiz.position());
+			assert_test(size <= thiz.position());
 			return thiz.set_position(thiz.position() - size);
 		}
 
 		auto forward (
 			Size const & size = 1_sz
 		) -> Void {
-			assert_condition(size <= thiz.reserve());
+			assert_test(size <= thiz.reserve());
 			return thiz.set_position(thiz.position() + size);
 		}
 
@@ -205,7 +205,7 @@ namespace TwinStar::Core {
 			Size const & begin,
 			Size const & count
 		) -> ListView {
-			assert_condition(begin + count <= thiz.size());
+			assert_test(begin + count <= thiz.size());
 			return ListView{thiz.data() + begin, count};
 		}
 
@@ -214,14 +214,14 @@ namespace TwinStar::Core {
 		auto prev_view (
 			Size const & size
 		) -> ListView {
-			assert_condition(size <= thiz.position());
+			assert_test(size <= thiz.position());
 			return thiz.sub_view(thiz.position() - size, size);
 		}
 
 		auto next_view (
 			Size const & size
 		) -> ListView {
-			assert_condition(size <= thiz.reserve());
+			assert_test(size <= thiz.reserve());
 			return thiz.sub_view(thiz.position(), size);
 		}
 
@@ -243,7 +243,7 @@ namespace TwinStar::Core {
 
 		auto current_pointer (
 		) -> QIterator {
-			assert_condition(thiz.position() <= thiz.size());
+			assert_test(thiz.position() <= thiz.size());
 			return thiz.data() + thiz.position();
 		}
 
@@ -251,7 +251,7 @@ namespace TwinStar::Core {
 
 		auto current (
 		) -> QElement& {
-			assert_condition(!thiz.full());
+			assert_test(!thiz.full());
 			return thiz.m_view[thiz.m_position];
 		}
 
@@ -280,7 +280,7 @@ namespace TwinStar::Core {
 			Element const & value
 		) -> Void requires
 			(method == StreamMethod::Constant::o() || method == StreamMethod::Constant::io()) {
-			assert_condition(!thiz.full());
+			assert_test(!thiz.full());
 			thiz.next() = value;
 			return;
 		}
@@ -289,7 +289,7 @@ namespace TwinStar::Core {
 			Element & value
 		) -> Void requires
 			(method == StreamMethod::Constant::i() || method == StreamMethod::Constant::io()) {
-			assert_condition(!thiz.full());
+			assert_test(!thiz.full());
 			value = thiz.next();
 			return;
 		}
@@ -310,7 +310,7 @@ namespace TwinStar::Core {
 			(method == StreamMethod::Constant::i() || method == StreamMethod::Constant::io()) {
 			auto temporary_value = Element{};
 			thiz.read(temporary_value);
-			assert_condition(temporary_value == value);
+			assert_test(temporary_value == value);
 			return;
 		}
 
@@ -333,7 +333,7 @@ namespace TwinStar::Core {
 			Size const &    size
 		) -> Void requires
 			(method == StreamMethod::Constant::o() || method == StreamMethod::Constant::io()) {
-			assert_condition(size <= thiz.reserve());
+			assert_test(size <= thiz.reserve());
 			auto space = thiz.forward_view(size);
 			for (auto & element : space) {
 				element = value;
@@ -346,10 +346,10 @@ namespace TwinStar::Core {
 			Size const &    size
 		) -> Void requires
 			(method == StreamMethod::Constant::i() || method == StreamMethod::Constant::io()) {
-			assert_condition(size <= thiz.reserve());
+			assert_test(size <= thiz.reserve());
 			auto space = thiz.forward_view(size);
 			for (auto & element : space) {
-				assert_condition(element == value);
+				assert_test(element == value);
 			}
 			return;
 		}

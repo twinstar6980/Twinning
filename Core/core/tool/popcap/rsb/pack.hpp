@@ -71,7 +71,7 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 		static auto string_block_fixed_128_from_string (
 			CStringView const & block
 		) -> StringBlockFixed128 {
-			assert_condition(block.size() <= 128_sz);
+			assert_test(block.size() <= 128_sz);
 			return StringBlockFixed128{block};
 		}
 
@@ -85,7 +85,7 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 				}
 				++size;
 			}
-			assert_condition(size <= 128_sz);
+			assert_test(size <= 128_sz);
 			return String{string.begin(), size};
 		}
 
@@ -729,10 +729,10 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 			auto information_structure = Structure::Information<version>{};
 			{
 				package_data.read(information_structure.header);
-				assert_condition(cbw<Size>(information_structure.header.group_information_section_block_size) == bs_static_size<Structure::GroupInformation<version>>());
-				assert_condition(cbw<Size>(information_structure.header.subgroup_information_section_block_size) == bs_static_size<Structure::SubgroupInformation<version>>());
-				assert_condition(cbw<Size>(information_structure.header.subgroup_pool_information_section_block_size) == bs_static_size<Structure::SubgroupPoolInformation<version>>());
-				assert_condition(cbw<Size>(information_structure.header.texture_resource_information_section_block_size) == bs_static_size<Structure::TextureResourceInformation<version>>());
+				assert_test(cbw<Size>(information_structure.header.group_information_section_block_size) == bs_static_size<Structure::GroupInformation<version>>());
+				assert_test(cbw<Size>(information_structure.header.subgroup_information_section_block_size) == bs_static_size<Structure::SubgroupInformation<version>>());
+				assert_test(cbw<Size>(information_structure.header.subgroup_pool_information_section_block_size) == bs_static_size<Structure::SubgroupPoolInformation<version>>());
+				assert_test(cbw<Size>(information_structure.header.texture_resource_information_section_block_size) == bs_static_size<Structure::TextureResourceInformation<version>>());
 				StringMapSection::decode(information_structure.group_id, package_data.sub_view(cbw<Size>(information_structure.header.group_id_section_offset), cbw<Size>(information_structure.header.group_id_section_size)));
 				StringMapSection::decode(information_structure.subgroup_id, package_data.sub_view(cbw<Size>(information_structure.header.subgroup_id_section_offset), cbw<Size>(information_structure.header.subgroup_id_section_size)));
 				StringMapSection::decode(information_structure.resource_path, package_data.sub_view(cbw<Size>(information_structure.header.resource_path_section_offset), cbw<Size>(information_structure.header.resource_path_section_size)));
@@ -745,11 +745,11 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 				package_data.set_position(cbw<Size>(information_structure.header.texture_resource_information_section_offset));
 				package_data.read(information_structure.texture_resource_information, cbw<Size>(information_structure.header.texture_resource_information_section_block_count));
 				if (information_structure.header.description_group_section_offset != 0_iu32 || information_structure.header.description_resource_section_offset != 0_iu32 || information_structure.header.description_string_section_offset != 0_iu32) {
-					assert_condition(information_structure.header.description_group_section_offset != 0_iu32 && information_structure.header.description_resource_section_offset != 0_iu32 && information_structure.header.description_string_section_offset != 0_iu32);
+					assert_test(information_structure.header.description_group_section_offset != 0_iu32 && information_structure.header.description_resource_section_offset != 0_iu32 && information_structure.header.description_string_section_offset != 0_iu32);
 					process_package_description(package_data, information_structure.header, package_description.set());
 				}
-				assert_condition(information_structure.group_id.size() == cbw<Size>(information_structure.header.group_information_section_block_count));
-				assert_condition(information_structure.subgroup_id.size() == cbw<Size>(information_structure.header.subgroup_information_section_block_count));
+				assert_test(information_structure.group_id.size() == cbw<Size>(information_structure.header.group_information_section_block_count));
+				assert_test(information_structure.subgroup_id.size() == cbw<Size>(information_structure.header.subgroup_information_section_block_count));
 			}
 			auto group_id_list = Map<Size, String>{};
 			auto subgroup_id_list = Map<Size, String>{};
@@ -790,7 +790,7 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 					auto packet_stream = IByteStreamView{packet_data};
 					auto packet_package_manifest = typename RSGP::Manifest<packet_version>::Package{};
 					RSGP::Unpack<packet_version>::do_process_package(packet_stream, packet_package_manifest, resource_directory ? (make_optional_of(make_formatted_path(resource_directory.get()))) : (k_null_optional));
-					assert_condition(packet_stream.full());
+					assert_test(packet_stream.full());
 					if (packet_file) {
 						FileSystem::write_file(make_formatted_path(packet_file.get()), packet_data);
 					}
@@ -810,14 +810,14 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 								auto & packet_resource_additional_manifest = packet_resource_manifest.value.additional.template get_of_type<ResourceType::Constant::texture()>();
 								auto & resource_additional_manifest = resource_manifest.value.additional.template set_of_type<ResourceType::Constant::texture()>();
 								auto & texture_information_structure = information_structure.texture_resource_information[cbw<Size>(subgroup_information_structure.texture_resource_begin_index) + cbw<Size>(packet_resource_additional_manifest.index)];
-								assert_condition(cbw<Integer>(texture_information_structure.size_width) == packet_resource_additional_manifest.size.width);
-								assert_condition(cbw<Integer>(texture_information_structure.size_height) == packet_resource_additional_manifest.size.height);
+								assert_test(cbw<Integer>(texture_information_structure.size_width) == packet_resource_additional_manifest.size.width);
+								assert_test(cbw<Integer>(texture_information_structure.size_height) == packet_resource_additional_manifest.size.height);
 								resource_additional_manifest.size = packet_resource_additional_manifest.size;
 								if constexpr (version.additional_texture_information_for_pvz_2_chinese_android >= 2_i) {
 									resource_additional_manifest.scale = cbw<Integer>(texture_information_structure.scale);
 								}
 								resource_additional_manifest.format = cbw<Integer>(texture_information_structure.format);
-								assert_condition(is_padded_size(cbw<Size>(texture_information_structure.bit_per_channel_of_row_division_2 * 2_iu32), cbw<Size>(texture_information_structure.size_width)));
+								assert_test(is_padded_size(cbw<Size>(texture_information_structure.bit_per_channel_of_row_division_2 * 2_iu32), cbw<Size>(texture_information_structure.size_width)));
 								resource_additional_manifest.bit_per_channel = cbw<Integer>(texture_information_structure.bit_per_channel_of_row_division_2 * 2_iu32 / texture_information_structure.size_width);
 								break;
 							}

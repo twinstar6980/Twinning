@@ -37,7 +37,7 @@ namespace TwinStar::Core::Interface {
 	};
 
 	struct Callback {
-		Type<StringList const & (*) (StringList const &)> value;
+		Type<StringList const * (*) (StringList const *)> value;
 	};
 
 	// ----------------

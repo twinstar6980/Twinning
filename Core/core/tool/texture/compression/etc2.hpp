@@ -29,8 +29,8 @@ namespace TwinStar::Core::Tool::Texture::Compression::ETC2 {
 			OByteStreamView &          data,
 			Image::CBitmapView const & image
 		) -> Void {
-			assert_condition(is_padded_size(image.size().width, k_block_width));
-			assert_condition(is_padded_size(image.size().height, k_block_width));
+			assert_test(is_padded_size(image.size().width, k_block_width));
+			assert_test(is_padded_size(image.size().height, k_block_width));
 			auto image_block = Array<Image::PixelRGBA>{k_block_width * k_block_width};
 			for (auto & block_y : SizeRange{image.size().height / k_block_width}) {
 				for (auto & block_x : SizeRange{image.size().width / k_block_width}) {
@@ -55,8 +55,8 @@ namespace TwinStar::Core::Tool::Texture::Compression::ETC2 {
 			OByteStreamView &          data,
 			Image::CBitmapView const & image
 		) -> Void {
-			assert_condition(is_padded_size(image.size().width, k_block_width));
-			assert_condition(is_padded_size(image.size().height, k_block_width));
+			assert_test(is_padded_size(image.size().width, k_block_width));
+			assert_test(is_padded_size(image.size().height, k_block_width));
 			auto image_block = Array<Image::PixelRGBA>{k_block_width * k_block_width};
 			for (auto & block_y : SizeRange{image.size().height / k_block_width}) {
 				for (auto & block_x : SizeRange{image.size().width / k_block_width}) {
@@ -114,8 +114,8 @@ namespace TwinStar::Core::Tool::Texture::Compression::ETC2 {
 			IByteStreamView &          data,
 			Image::VBitmapView const & image
 		) -> Void {
-			assert_condition(is_padded_size(image.size().width, k_block_width));
-			assert_condition(is_padded_size(image.size().height, k_block_width));
+			assert_test(is_padded_size(image.size().width, k_block_width));
+			assert_test(is_padded_size(image.size().height, k_block_width));
 			auto image_block = Array<Image::PixelRGBA>{k_block_width * k_block_width};
 			for (auto & block_y : SizeRange{image.size().height / k_block_width}) {
 				for (auto & block_x : SizeRange{image.size().width / k_block_width}) {
@@ -149,8 +149,8 @@ namespace TwinStar::Core::Tool::Texture::Compression::ETC2 {
 			IByteStreamView &          data,
 			Image::VBitmapView const & image
 		) -> Void {
-			assert_condition(is_padded_size(image.size().width, k_block_width));
-			assert_condition(is_padded_size(image.size().height, k_block_width));
+			assert_test(is_padded_size(image.size().width, k_block_width));
+			assert_test(is_padded_size(image.size().height, k_block_width));
 			auto image_block = Array<Image::PixelRGBA>{k_block_width * k_block_width};
 			for (auto & block_y : SizeRange{image.size().height / k_block_width}) {
 				for (auto & block_x : SizeRange{image.size().width / k_block_width}) {

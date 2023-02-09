@@ -197,14 +197,14 @@ namespace TwinStar::Core::CharacterType {
 	inline constexpr auto from_number_oct (
 		Character const & character
 	) -> IntegerU8 {
-		assert_condition(is_number_oct(character));
+		assert_test(is_number_oct(character));
 		return cbw<IntegerU8>(character - '0'_c);
 	}
 
 	inline constexpr auto to_number_oct (
 		IntegerU8 const & number
 	) -> Character {
-		assert_condition(number < 010_iu8);
+		assert_test(number < 010_iu8);
 		return '0'_c + cbw<Character>(number);
 	}
 
@@ -222,14 +222,14 @@ namespace TwinStar::Core::CharacterType {
 		} else if (is_number_dec(character)) {
 			return 0x0_iu8 + cbw<IntegerU8>(character - '0'_c);
 		} else {
-			assert_failed(R"(/* number is valid */)");
+			assert_fail(R"(/* number is valid */)");
 		}
 	}
 
 	inline constexpr auto to_number_hex_lower (
 		IntegerU8 const & number
 	) -> Character {
-		assert_condition(number < 0x10_iu8);
+		assert_test(number < 0x10_iu8);
 		if (number >= 0xa_iu8) {
 			return 'a'_c + cbw<Character>(number - 0xa_iu8);
 		} else {
@@ -240,7 +240,7 @@ namespace TwinStar::Core::CharacterType {
 	inline constexpr auto to_number_hex_upper (
 		IntegerU8 const & number
 	) -> Character {
-		assert_condition(number < 0x10_iu8);
+		assert_test(number < 0x10_iu8);
 		if (number >= 0xA_iu8) {
 			return 'A'_c + cbw<Character>(number - 0xA_iu8);
 		} else {

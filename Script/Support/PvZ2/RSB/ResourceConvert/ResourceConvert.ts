@@ -157,13 +157,13 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceConvert {
 			if (option.image !== null && resource[1].expand[0] === 'atlas') {
 				Console.notify('v', `  ${path}`, []);
 				try {
-					assert(resource[2].additional.type === 'texture', `invalid image resource`);
+					assert_test(resource[2].additional.type === 'texture', `invalid image resource`);
 					let atlas_image_information = resource[1].expand[1];
 					let texture_information_source = resource[2].additional.value;
 					let size = atlas_image_information.size;
 					let actual_size = texture_information_source.size;
 					let texture_format = option.image.texture_format_map.find((e) => (e.index === texture_information_source.format));
-					assert(texture_format !== undefined, `unknown texture format : ${texture_information_source.format}`);
+					assert_test(texture_format !== undefined, `unknown texture format : ${texture_information_source.format}`);
 					Console.notify('v', `    size : [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] , actual_size : [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ] , format : ${texture_format.format}`, []);
 					let data = CoreX.FileSystem.read_file(`${resource_directory}/${path}.ptx`);
 					let stream = Core.ByteStreamView.look(data.view());
@@ -244,18 +244,18 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceConvert {
 		let official_resource_manifest: OfficialResourceManifest.Package;
 		{
 			let group_id = Object.keys(package_manifest.group).filter((e) => (/__MANIFESTGROUP__(.+)?/.test(e)));
-			assert(group_id.length === 1, `package must has only one manifest group`);
+			assert_test(group_id.length === 1, `package must has only one manifest group`);
 			let group = package_manifest.group[group_id[0]];
-			assert(!group.composite, `manifest should not be a composite group`);
+			assert_test(!group.composite, `manifest should not be a composite group`);
 			let subgroup_id = Object.keys(group.subgroup);
-			assert(subgroup_id.length === 1, `manifest subgroup must has only one subgroup`);
-			assert(subgroup_id[0] === group_id[0], `manifest subgroup id must equal group id`);
+			assert_test(subgroup_id.length === 1, `manifest subgroup must has only one subgroup`);
+			assert_test(subgroup_id[0] === group_id[0], `manifest subgroup id must equal group id`);
 			let subgroup = group.subgroup[subgroup_id[0]];
 			let resource_path_list = Object.keys(subgroup.resource);
-			assert(resource_path_list.length === 1, `manifest subgroup must has one only resource`);
+			assert_test(resource_path_list.length === 1, `manifest subgroup must has one only resource`);
 			let resource_path = resource_path_list[0];
 			let resource = subgroup.resource[resource_path];
-			assert(/properties\/resources(_.+)?\.rton/i.test(resource_path), `manifest resource path invalid`);
+			assert_test(/properties\/resources(_.+)?\.rton/i.test(resource_path), `manifest resource path invalid`);
 			let rton = CoreX.FileSystem.read_file(resource_directory + '/' + resource_path);
 			let rton_stream = Core.ByteStreamView.look(rton.view());
 			let json = Core.JSON.Value.default<OfficialResourceManifest.Package>();

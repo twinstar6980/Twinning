@@ -55,7 +55,7 @@ namespace TwinStar::Core {
 		auto run (
 			Executor const & executor
 		) -> void {
-			assert_condition(!thiz.joinable());
+			assert_test(!thiz.joinable());
 			thiz.m_thread = std::thread{executor};
 			return;
 		}
@@ -71,13 +71,13 @@ namespace TwinStar::Core {
 
 		auto join (
 		) -> Void {
-			assert_condition(thiz.joinable());
+			assert_test(thiz.joinable());
 			return thiz.m_thread.join();
 		}
 
 		auto detach (
 		) -> Void {
-			assert_condition(thiz.joinable());
+			assert_test(thiz.joinable());
 			return thiz.m_thread.detach();
 		}
 

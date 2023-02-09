@@ -171,7 +171,7 @@ namespace TwinStar::Core {
 			} else if (that.type == ResourceTypeFlag<t_version>::texture) {
 				size += bs_size(that.additional.template get<TextureResourceAdditionalInformation<t_version>>());
 			} else {
-				assert_failed(R"(that.type == /* valid */)");
+				assert_fail(R"(that.type == /* valid */)");
 			}
 			return size;
 		}
@@ -187,7 +187,7 @@ namespace TwinStar::Core {
 			} else if (that.type == ResourceTypeFlag<t_version>::texture) {
 				thix.write(that.additional.template get<TextureResourceAdditionalInformation<t_version>>());
 			} else {
-				assert_failed(R"(that.type == /* valid */)");
+				assert_fail(R"(that.type == /* valid */)");
 			}
 			return;
 		}
@@ -203,7 +203,7 @@ namespace TwinStar::Core {
 			} else if (that.type == ResourceTypeFlag<t_version>::texture) {
 				thix.read(that.additional.template set<TextureResourceAdditionalInformation<t_version>>());
 			} else {
-				assert_failed(R"(that.type == /* valid */)");
+				assert_fail(R"(that.type == /* valid */)");
 			}
 			return;
 		}

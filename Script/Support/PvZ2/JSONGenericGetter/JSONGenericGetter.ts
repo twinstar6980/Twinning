@@ -11,7 +11,7 @@ namespace TwinStar.Support.PvZ2.JSONGenericGetter {
 		default_value?: T,
 	): boolean | T {
 		if (source === undefined) {
-			assert(default_value !== undefined, `type error`);
+			assert_test(default_value !== undefined, `type error`);
 			return default_value;
 		}
 		if (typeof source === 'boolean') {
@@ -26,7 +26,7 @@ namespace TwinStar.Support.PvZ2.JSONGenericGetter {
 		if (typeof source === 'string') {
 			return source === '';
 		}
-		assert(false, `type error`);
+		assert_test(false, `type error`);
 	}
 
 	export function number<T = never>(
@@ -34,7 +34,7 @@ namespace TwinStar.Support.PvZ2.JSONGenericGetter {
 		default_value?: T,
 	): number | T {
 		if (source === undefined) {
-			assert(default_value !== undefined, `type error`);
+			assert_test(default_value !== undefined, `type error`);
 			return default_value;
 		}
 		if (typeof source === 'number') {
@@ -49,7 +49,7 @@ namespace TwinStar.Support.PvZ2.JSONGenericGetter {
 		if (typeof source === 'string') {
 			return Number.parseFloat(source);
 		}
-		assert(false, `type error`);
+		assert_test(false, `type error`);
 	}
 
 	export function integer<T = never>(
@@ -57,7 +57,7 @@ namespace TwinStar.Support.PvZ2.JSONGenericGetter {
 		default_value?: T,
 	): bigint | T {
 		if (source === undefined) {
-			assert(default_value !== undefined, `type error`);
+			assert_test(default_value !== undefined, `type error`);
 			return default_value;
 		}
 		if (typeof source === 'bigint') {
@@ -76,7 +76,7 @@ namespace TwinStar.Support.PvZ2.JSONGenericGetter {
 		if (typeof source === 'string') {
 			return BigInt(source);
 		}
-		assert(false, `type error`);
+		assert_test(false, `type error`);
 	}
 
 	export function string<T = never>(
@@ -84,13 +84,13 @@ namespace TwinStar.Support.PvZ2.JSONGenericGetter {
 		default_value?: T,
 	): string | T {
 		if (source === undefined) {
-			assert(default_value !== undefined, `type error`);
+			assert_test(default_value !== undefined, `type error`);
 			return default_value;
 		}
 		if (typeof source === 'string') {
 			return source;
 		}
-		assert(false, `type error`);
+		assert_test(false, `type error`);
 	}
 
 	// ------------------------------------------------

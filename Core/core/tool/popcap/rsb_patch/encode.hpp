@@ -30,10 +30,10 @@ namespace TwinStar::Core::Tool::PopCap::RSBPatch {
 			data.read_constant(RSB::Structure::k_magic_identifier);
 			data.read_constant(cbw<RSB::Structure::VersionNumber>(package_version.number));
 			data.read(information_structure.header);
-			assert_condition(cbw<Size>(information_structure.header.group_information_section_block_size) == bs_static_size<RSB::Structure::GroupInformation<package_version>>());
-			assert_condition(cbw<Size>(information_structure.header.subgroup_information_section_block_size) == bs_static_size<RSB::Structure::SubgroupInformation<package_version>>());
-			assert_condition(cbw<Size>(information_structure.header.subgroup_pool_information_section_block_size) == bs_static_size<RSB::Structure::SubgroupPoolInformation<package_version>>());
-			assert_condition(cbw<Size>(information_structure.header.texture_resource_information_section_block_size) == bs_static_size<RSB::Structure::TextureResourceInformation<package_version>>());
+			assert_test(cbw<Size>(information_structure.header.group_information_section_block_size) == bs_static_size<RSB::Structure::GroupInformation<package_version>>());
+			assert_test(cbw<Size>(information_structure.header.subgroup_information_section_block_size) == bs_static_size<RSB::Structure::SubgroupInformation<package_version>>());
+			assert_test(cbw<Size>(information_structure.header.subgroup_pool_information_section_block_size) == bs_static_size<RSB::Structure::SubgroupPoolInformation<package_version>>());
+			assert_test(cbw<Size>(information_structure.header.texture_resource_information_section_block_size) == bs_static_size<RSB::Structure::TextureResourceInformation<package_version>>());
 			StringMapSection::decode(information_structure.group_id, data.sub_view(cbw<Size>(information_structure.header.group_id_section_offset), cbw<Size>(information_structure.header.group_id_section_size)));
 			StringMapSection::decode(information_structure.subgroup_id, data.sub_view(cbw<Size>(information_structure.header.subgroup_id_section_offset), cbw<Size>(information_structure.header.subgroup_id_section_size)));
 			StringMapSection::decode(information_structure.resource_path, data.sub_view(cbw<Size>(information_structure.header.resource_path_section_offset), cbw<Size>(information_structure.header.resource_path_section_size)));
@@ -45,8 +45,8 @@ namespace TwinStar::Core::Tool::PopCap::RSBPatch {
 			data.read(information_structure.subgroup_pool_information, cbw<Size>(information_structure.header.subgroup_pool_information_section_block_count));
 			data.set_position(cbw<Size>(information_structure.header.texture_resource_information_section_offset));
 			data.read(information_structure.texture_resource_information, cbw<Size>(information_structure.header.texture_resource_information_section_block_count));
-			assert_condition(information_structure.group_id.size() == cbw<Size>(information_structure.header.group_information_section_block_count));
-			assert_condition(information_structure.subgroup_id.size() == cbw<Size>(information_structure.header.subgroup_information_section_block_count));
+			assert_test(information_structure.group_id.size() == cbw<Size>(information_structure.header.group_information_section_block_count));
+			assert_test(information_structure.subgroup_id.size() == cbw<Size>(information_structure.header.subgroup_information_section_block_count));
 			return;
 		}
 
@@ -328,7 +328,7 @@ namespace TwinStar::Core::Tool::PopCap::RSBPatch {
 						}
 						auto packet_before_raw = OByteStreamView{packet_before_raw_container};
 						uncompress_packet(packet_before_ripe, packet_before_raw);
-						assert_condition(packet_before_ripe.full());
+						assert_test(packet_before_ripe.full());
 						packet_before = packet_before_raw.stream_view();
 					}
 					before_end_position = max(before_end_position, cbw<Size>(packet_before_subgroup_information.offset + packet_before_subgroup_information.size));
@@ -346,7 +346,7 @@ namespace TwinStar::Core::Tool::PopCap::RSBPatch {
 						}
 						auto packet_after_raw = OByteStreamView{packet_after_raw_container};
 						uncompress_packet(packet_after_ripe, packet_after_raw);
-						assert_condition(packet_after_ripe.full());
+						assert_test(packet_after_ripe.full());
 						packet_after = packet_after_raw.stream_view();
 					}
 					after_end_position = max(after_end_position, cbw<Size>(packet_after_subgroup_information.offset + packet_after_subgroup_information.size));
@@ -466,7 +466,7 @@ namespace TwinStar::Core::Tool::PopCap::RSBPatch {
 		) -> Void {
 			auto hash_test = ByteArray{};
 			Data::Hash::MD5::Hash::do_process_whole(data, hash_test);
-			assert_condition(hash_test == hash);
+			assert_test(hash_test == hash);
 			return;
 		}
 
@@ -510,13 +510,13 @@ namespace TwinStar::Core::Tool::PopCap::RSBPatch {
 			auto information_section_before = before.sub_view(k_begin_index, cbw<Size>(information_section_before_structure.header.information_section_size));
 			process_hash_validate(information_section_before, information_section_before_hash);
 			if (!information_section_patch_exist) {
-				assert_condition(information_section_patch_size == k_none_size);
+				assert_test(information_section_patch_size == k_none_size);
 				after.write(information_section_before);
 			} else {
 				process_sub_patch(information_section_before, after, patch, information_section_patch_size);
 			}
 			read_package_information_structure(as_lvalue(IByteStreamView{after.view()}), information_section_after_structure);
-			assert_condition(packet_patch_count == information_section_after_structure.subgroup_information.size());
+			assert_test(packet_patch_count == information_section_after_structure.subgroup_information.size());
 			auto packet_before_subgroup_information_index_map = indexing_subgroup_information_by_id(information_section_before_structure.subgroup_information);
 			auto packet_before_raw_container = ByteArray{};
 			auto packet_after_raw_container = ByteArray{};
@@ -535,7 +535,7 @@ namespace TwinStar::Core::Tool::PopCap::RSBPatch {
 					auto packet_name_upper = packet_name;
 					packet_name_upper.as_upper_case();
 					auto packet_after_subgroup_index = cbw<Size>(information_section_after_structure.subgroup_id[packet_name_upper]);
-					assert_condition(packet_after_subgroup_index == packet_index);
+					assert_test(packet_after_subgroup_index == packet_index);
 				}
 				auto packet_before = CByteListView{};
 				if (auto packet_before_subgroup_information_index = packet_before_subgroup_information_index_map.query_if(packet_name)) {
@@ -550,7 +550,7 @@ namespace TwinStar::Core::Tool::PopCap::RSBPatch {
 						}
 						auto packet_before_raw = OByteStreamView{packet_before_raw_container};
 						uncompress_packet(packet_before_ripe, packet_before_raw);
-						assert_condition(packet_before_ripe.full());
+						assert_test(packet_before_ripe.full());
 						packet_before = packet_before_raw.stream_view();
 					}
 					before_end_position = max(before_end_position, cbw<Size>(packet_before_subgroup_information.offset + packet_before_subgroup_information.size));
@@ -558,7 +558,7 @@ namespace TwinStar::Core::Tool::PopCap::RSBPatch {
 				process_hash_validate(packet_before, packet_before_hash);
 				auto packet_after = CByteListView{};
 				if (!packet_patch_exist) {
-					assert_condition(packet_patch_size == k_none_size);
+					assert_test(packet_patch_size == k_none_size);
 					packet_after = packet_before;
 				} else {
 					auto packet_after_raw_size = cbw<Size>(packet_after_subgroup_information.information_section_size + packet_after_subgroup_information.generic_resource_data_section_size_original + packet_after_subgroup_information.texture_resource_data_section_size_original);
@@ -575,7 +575,7 @@ namespace TwinStar::Core::Tool::PopCap::RSBPatch {
 					auto packet_after_raw = IByteStreamView{packet_after};
 					auto packet_after_ripe = OByteStreamView{after.reserve_view()};
 					auto packet_after_information_structure = compress_packet(packet_after_raw, packet_after_ripe);
-					assert_condition(packet_after_raw.full());
+					assert_test(packet_after_raw.full());
 					packet_after_subgroup_information.offset = cbw<IntegerU32>(after.position());
 					packet_after_subgroup_information.size = max(
 						{

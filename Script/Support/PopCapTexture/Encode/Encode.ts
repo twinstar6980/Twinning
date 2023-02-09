@@ -135,7 +135,7 @@ namespace TwinStar.Support.PopCapTexture.Encode {
 					break;
 				}
 				case 'rgb_etc1_a_8_index': {
-					assert(option.rgb_etc1_a_8_index !== null, `option is null`);
+					assert_test(option.rgb_etc1_a_8_index !== null, `option is null`);
 					data_size = CoreX.Tool.Texture.compute_data_size(size, 'rgb_etc1') + CoreX.Tool.Miscellaneous.PvZ2CHSRSBTextureAlphaIndex.compute_data_size_with_index_list(size, option.rgb_etc1_a_8_index.index.length);
 					break;
 				}
@@ -161,7 +161,7 @@ namespace TwinStar.Support.PopCapTexture.Encode {
 					break;
 				}
 				case 'rgb_etc1_a_8_index': {
-					assert(option.rgb_etc1_a_8_index !== null, `option is null`);
+					assert_test(option.rgb_etc1_a_8_index !== null, `option is null`);
 					CoreX.Tool.Texture.encode(data, image, 'rgb_etc1');
 					CoreX.Tool.Miscellaneous.PvZ2CHSRSBTextureAlphaIndex.encode_with_map(data, image, option.rgb_etc1_a_8_index.index);
 					break;

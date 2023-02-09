@@ -94,7 +94,7 @@ namespace TwinStar::Core::Tool::Data::Serialization::XML {
 			auto   buffer_size = mbw<Size>(printer_imitator._buffer._size);
 			auto   buffer_capacity = mbw<Size>(printer_imitator._buffer._allocated);
 			auto   result = String{};
-			assert_condition(buffer_size > 0_sz);
+			assert_test(buffer_size > 0_sz);
 			if (printer_imitator._buffer._mem == printer_imitator._buffer._pool) {
 				result.assign(CStringView{buffer_data, buffer_size - 1_sz});
 			} else {
@@ -219,7 +219,7 @@ namespace TwinStar::Core::Tool::Data::Serialization::XML {
 				auto & node_value = node.get_comment();
 				node_value.value = make_string_view(raw_comment->Value());
 			} else {
-				assert_failed(R"(/* node is valid */)");
+				assert_fail(R"(/* node is valid */)");
 			}
 		}
 
@@ -228,16 +228,16 @@ namespace TwinStar::Core::Tool::Data::Serialization::XML {
 			Node &                               node
 		) -> Void {
 			auto current_child = raw_document.FirstChild();
-			assert_condition(current_child);
+			assert_test(current_child);
 			auto declaration = current_child->ToDeclaration();
 			if (declaration) {
 				current_child = current_child->NextSibling();
 			}
-			assert_condition(current_child);
+			assert_test(current_child);
 			auto root_element = current_child->ToElement();
-			assert_condition(root_element);
+			assert_test(root_element);
 			current_child = current_child->NextSibling();
-			assert_condition(!current_child);
+			assert_test(!current_child);
 			process_node(root_element, node);
 			return;
 		}

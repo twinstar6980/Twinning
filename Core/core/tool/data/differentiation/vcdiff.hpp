@@ -27,13 +27,13 @@ namespace TwinStar::Core::Tool::Data::Differentiation::VCDiff {
 			auto hashed_dictionary = Third::open_vcdiff::HashedDictionary{cast_pointer<char>(as_variable_pointer(before.current_pointer())).value, before.reserve().value};
 			auto encoder = Third::open_vcdiff::VCDiffStreamingEncoder{&hashed_dictionary, !interleaved ? (Third::open_vcdiff::VCDiffFormatExtensionFlagValues::VCD_STANDARD_FORMAT) : (Third::open_vcdiff::VCDiffFormatExtensionFlagValues::VCD_FORMAT_INTERLEAVED), true};
 			state = hashed_dictionary.Init();
-			assert_condition(state);
+			assert_test(state);
 			state = encoder.StartEncoding(&patch_container);
-			assert_condition(state);
+			assert_test(state);
 			state = encoder.EncodeChunk(cast_pointer<char>(as_variable_pointer(after.current_pointer())).value, after.reserve().value, &patch_container);
-			assert_condition(state);
+			assert_test(state);
 			state = encoder.FinishEncoding(&patch_container);
-			assert_condition(state);
+			assert_test(state);
 			before.forward(before.reserve());
 			after.forward(after.reserve());
 			for (auto & element : patch_container) {
@@ -77,9 +77,9 @@ namespace TwinStar::Core::Tool::Data::Differentiation::VCDiff {
 			decoder.SetMaximumTargetWindowSize(maximum_window_size.value);
 			decoder.StartDecoding(cast_pointer<char>(as_variable_pointer(before.current_pointer())).value, before.reserve().value);
 			state = decoder.DecodeChunk(cast_pointer<char>(as_variable_pointer(patch.current_pointer())).value, patch.reserve().value, &after_container);
-			assert_condition(state);
+			assert_test(state);
 			state = decoder.FinishDecoding();
-			assert_condition(state);
+			assert_test(state);
 			before.forward(before.reserve());
 			patch.forward(patch.reserve());
 			for (auto & element : after_container) {

@@ -6,7 +6,7 @@ namespace TwinStar.Support.PopCapAnimation.Convert.Flash.From {
 		index: number,
 		image: Core.Tool.PopCap.PAM.Manifest.JS_N.Image,
 	): Core.XML.JS_Element {
-		assert(image.transform.length === 6);
+		assert_test(image.transform.length === 6);
 		return XML.create_element('DOMSymbolItem', {
 			...k_xmlns_attribute,
 			name: `image/image_${index + 1}`,
@@ -190,7 +190,7 @@ namespace TwinStar.Support.PopCapAnimation.Convert.Flash.From {
 	function make_main_document(
 		animation: Core.Tool.PopCap.PAM.Manifest.JS_N.Animation,
 	): Core.XML.JS_Element {
-		assert(animation.main_sprite !== null);
+		assert_test(animation.main_sprite !== null);
 		let prev_end = {
 			flow: -1,
 			command: -1,
@@ -342,7 +342,7 @@ namespace TwinStar.Support.PopCapAnimation.Convert.Flash.From {
 	export function from(
 		animation: Core.Tool.PopCap.PAM.Manifest.JS_N.Animation,
 	): FlashPackage {
-		assert(animation.main_sprite !== null);
+		assert_test(animation.main_sprite !== null);
 		return {
 			extra: {
 				position: animation.position,

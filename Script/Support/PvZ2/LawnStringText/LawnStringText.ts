@@ -25,7 +25,7 @@ namespace TwinStar.Support.PvZ2.LawnStringText {
 			try {
 				let source = CoreX.JSON.read(source_data).value as any;
 				let source_variant = source?.objects[0]?.objdata?.LocStringValues;
-				assert(typeof source_variant === 'object', `invalid source`);
+				assert_test(typeof source_variant === 'object', `invalid source`);
 				if (source_variant instanceof Array) {
 					source_list = source_variant;
 					actual_source_version = 'json_list';
@@ -58,10 +58,10 @@ namespace TwinStar.Support.PvZ2.LawnStringText {
 				if (source_map === null) {
 					let source = CoreX.JSON.read(source_data).value as any;
 					source_map = source?.objects[0]?.objdata?.LocStringValues as Record<string, string>;
-					assert(typeof source_map === 'object' && (source_map as Object).constructor.name === 'Object', `invalid source`);
+					assert_test(typeof source_map === 'object' && (source_map as Object).constructor.name === 'Object', `invalid source`);
 				}
 				for (let key in source_map) {
-					assert(typeof source_map[key] === 'string', `invalid map element`);
+					assert_test(typeof source_map[key] === 'string', `invalid map element`);
 					string_map[key] = source_map[key];
 				}
 				break;
@@ -70,13 +70,13 @@ namespace TwinStar.Support.PvZ2.LawnStringText {
 				if (source_list === null) {
 					let source = CoreX.JSON.read(source_data).value as any;
 					source_list = source?.objects[0]?.objdata?.LocStringValues as Array<string>;
-					assert(typeof source_list === 'object' && (source_map as Object).constructor.name === 'Array', `invalid source`);
+					assert_test(typeof source_list === 'object' && (source_map as Object).constructor.name === 'Array', `invalid source`);
 				}
-				assert(source_list.length % 2 === 0, `invalid list size`);
+				assert_test(source_list.length % 2 === 0, `invalid list size`);
 				for (let i = 0; i < source_list.length; i += 2) {
 					let key = source_list[i + 0];
 					let value = source_list[i + 1];
-					assert(typeof key === 'string' && typeof value === 'string', `invalid list element`);
+					assert_test(typeof key === 'string' && typeof value === 'string', `invalid list element`);
 					string_map[source_list[i]] = source_list[i + 1];
 				}
 				break;

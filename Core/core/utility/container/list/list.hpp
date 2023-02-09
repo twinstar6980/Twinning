@@ -358,7 +358,7 @@ namespace TwinStar::Core {
 		auto set_size (
 			Size const & size
 		) -> Void {
-			assert_condition(size <= thiz.capacity());
+			assert_test(size <= thiz.capacity());
 			thiz.m_size = size;
 			return;
 		}
@@ -366,14 +366,14 @@ namespace TwinStar::Core {
 		auto shrink_size (
 			Size const & size
 		) -> Void {
-			assert_condition(size <= thiz.size());
+			assert_test(size <= thiz.size());
 			return thiz.set_size(thiz.size() - size);
 		}
 
 		auto expand_size (
 			Size const & size
 		) -> Void {
-			assert_condition(size <= thiz.reserve());
+			assert_test(size <= thiz.reserve());
 			return thiz.set_size(thiz.size() + size);
 		}
 
@@ -399,7 +399,7 @@ namespace TwinStar::Core {
 			Size const &     size,
 			Size const &     capacity
 		) -> Void {
-			assert_condition(size <= capacity);
+			assert_test(size <= capacity);
 			thiz.reset();
 			thiz.m_data = begin;
 			thiz.m_size = size;
@@ -469,7 +469,7 @@ namespace TwinStar::Core {
 		auto shrink (
 			Size const & capacity
 		) -> Void {
-			assert_condition(capacity <= thiz.capacity());
+			assert_test(capacity <= thiz.capacity());
 			return thiz.allocate_retain(thiz.capacity() - capacity);
 		}
 
@@ -602,7 +602,7 @@ namespace TwinStar::Core {
 			Size const & begin,
 			Size const & size
 		) -> Void {
-			assert_condition(begin + size <= thiz.end_index());
+			assert_test(begin + size <= thiz.end_index());
 			auto move_size = thiz.size() - (begin + size);
 			Range::assign_from(thiz.sub(begin, move_size), make_moveable_range(thiz.sub(begin + size, move_size)));
 			Range::restruct(thiz.tail(size));
@@ -668,7 +668,7 @@ namespace TwinStar::Core {
 			Size const & position,
 			Size const & size
 		) -> Void {
-			assert_condition(position <= thiz.end_index());
+			assert_test(position <= thiz.end_index());
 			if (size > thiz.reserve()) {
 				thiz.allocate_retain(size > thiz.reserve() ? ((thiz.size() + size) * 2_sz) : (thiz.capacity()));
 			}

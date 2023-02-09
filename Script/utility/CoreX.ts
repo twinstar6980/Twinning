@@ -1067,7 +1067,7 @@ namespace TwinStar.CoreX {
 					};
 					let view = new DataView(data);
 					version.number = BigInt(view.getUint32(0x0)) as any;
-					assert([88n, 112n, 140n].includes(version.number));
+					assert_test([88n, 112n, 140n].includes(version.number));
 					return version;
 				}
 
@@ -1555,7 +1555,7 @@ namespace TwinStar.CoreX {
 				export function compute_bit_count(
 					value_count: number,
 				): BitCount {
-					assert(0b1 < value_count && value_count <= 0b1 << 4, `invalue value count`);
+					assert_test(0b1 < value_count && value_count <= 0b1 << 4, `invalue value count`);
 					let bit_count: BitCount;
 					if (value_count <= 0b10) {
 						bit_count = 1;

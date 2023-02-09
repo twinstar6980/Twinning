@@ -88,21 +88,21 @@ namespace TwinStar::Core {
 			Size const & begin,
 			Size const & size
 		) const -> BasicByteListView {
-			assert_condition(begin + size <= thiz.size());
+			assert_test(begin + size <= thiz.size());
 			return BasicByteListView{thiz.iterator(begin), size};
 		}
 
 		constexpr auto head (
 			Size const & size
 		) const -> BasicByteListView {
-			assert_condition(size <= thiz.size());
+			assert_test(size <= thiz.size());
 			return thiz.sub(thiz.begin_index(), size);
 		}
 
 		constexpr auto tail (
 			Size const & size
 		) const -> BasicByteListView {
-			assert_condition(size <= thiz.size());
+			assert_test(size <= thiz.size());
 			return thiz.sub(thiz.end_index() - size, size);
 		}
 

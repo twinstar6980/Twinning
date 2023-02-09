@@ -9,7 +9,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceManifest.Convert {
 			group: {},
 		};
 		for (let source_group of source.groups) {
-			assert(OfficialResourceManifest.GroupTypeE.includes(source_group.type), `group type invalid`);
+			assert_test(OfficialResourceManifest.GroupTypeE.includes(source_group.type), `group type invalid`);
 			switch (source_group.type) {
 				case 'composite': {
 					destination.group[source_group.id] = {
@@ -29,7 +29,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceManifest.Convert {
 						destination_group = destination.group[source_group.id];
 					} else {
 						let destination_group_if = destination.group[source_subgroup.parent];
-						assert(destination_group_if !== undefined, `subgroup's parent is not found : ${source_group.id}`);
+						assert_test(destination_group_if !== undefined, `subgroup's parent is not found : ${source_group.id}`);
 						destination_group = destination_group_if;
 					}
 					destination_group.subgroup[source_group.id] = {
@@ -55,8 +55,8 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceManifest.Convert {
 							};
 						} else if ('parent' in source_resource) {
 							let atlas = destination_subgroup.resource[(source_resource as OfficialResourceManifest.SpriteImageResourceInformation).parent];
-							assert(atlas !== undefined, `sprite's parent is not found : ${source_resource.parent}`);
-							assert(atlas.expand[0] === 'atlas', `sprite's expand type is not 'atlas' : ${source_resource.parent}`);
+							assert_test(atlas !== undefined, `sprite's parent is not found : ${source_resource.parent}`);
+							assert_test(atlas.expand[0] === 'atlas', `sprite's expand type is not 'atlas' : ${source_resource.parent}`);
 							atlas.expand[1].sprite[source_resource.id] = {
 								path: source_resource.path.join('/'),
 								position: [

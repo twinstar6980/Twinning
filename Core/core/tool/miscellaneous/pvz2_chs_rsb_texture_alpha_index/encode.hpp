@@ -15,7 +15,7 @@ namespace TwinStar::Core::Tool::Miscellaneous::PvZ2CHSRSBTextureAlphaIndex {
 		static auto test_index_list (
 			List<Image::Channel> const & list
 		) -> Size {
-			assert_condition(0b1_sz < list.size() && list.size() <= 0b1_sz << k_maximum_bit_count);
+			assert_test(0b1_sz < list.size() && list.size() <= 0b1_sz << k_maximum_bit_count);
 			auto bit_count = k_none_size;
 			for (auto & index : SizeRange{k_maximum_bit_count}) {
 				++bit_count;
@@ -24,7 +24,7 @@ namespace TwinStar::Core::Tool::Miscellaneous::PvZ2CHSRSBTextureAlphaIndex {
 				}
 			}
 			auto maximum_value = 0b1_iu8 << k_maximum_bit_count;
-			assert_condition(Range::all_of(list, [&] (auto & element) { return element <= maximum_value; }));
+			assert_test(Range::all_of(list, [&] (auto & element) { return element <= maximum_value; }));
 			return bit_count;
 		}
 

@@ -1,8 +1,6 @@
 #pragma once
 
 #include "shell/common.hpp"
-#include "shell/core/library.hpp"
-#include "shell/core/invoker.hpp"
 
 namespace TwinStar::Shell {
 
@@ -44,7 +42,7 @@ namespace TwinStar::Shell {
 
 		#pragma endregion
 
-		#pragma region life
+		#pragma region function
 
 		virtual auto start (
 		) -> void = 0;
@@ -52,38 +50,15 @@ namespace TwinStar::Shell {
 		virtual auto finish (
 		) -> void = 0;
 
-		#pragma endregion
+		// ----------------
 
-		#pragma region callback
-
-		virtual auto callback (
+		virtual auto execute (
 			std::vector<std::string> const & argument
 		) -> std::vector<std::string> = 0;
 
 		#pragma endregion
 
 	};
-
-	#pragma endregion
-
-	#pragma region function
-
-	inline auto launch (
-		Host &                           host,
-		Core::Library &                  library,
-		std::string const &              script,
-		std::vector<std::string> const & argument
-	) -> std::optional<std::string> {
-		auto prepare_result = Core::Invoker::prepare(library);
-		if (prepare_result.has_value()) {
-			output("prepare failed : "s + prepare_result.value());
-		}
-		host.start();
-		auto callback = std::bind(&Host::callback, &host, std::placeholders::_1);
-		auto result = Core::Invoker::execute(library, callback, script, argument);
-		host.finish();
-		return result;
-	}
 
 	#pragma endregion
 

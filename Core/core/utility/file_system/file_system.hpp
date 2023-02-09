@@ -114,7 +114,7 @@ namespace TwinStar::Core::FileSystem {
 				if (thiz.m_value != k_null_pointer) {
 					auto state = std::fclose(thiz.m_value.value);
 					// NOTE : nothrow
-					// assert_condition(state == 0);
+					// assert_test(state == 0);
 					thiz.m_value = k_null_pointer;
 				}
 			}
@@ -164,7 +164,7 @@ namespace TwinStar::Core::FileSystem {
 				ZConstantString const & mode
 			) -> FileHandler {
 				auto file = std::fopen(cast_pointer<char>(make_null_terminated_string(make_regular_path(target).to_string()).begin()).value, mode);
-				assert_condition(file);
+				assert_test(file);
 				return FileHandler{make_pointer(file)};
 			}
 
@@ -174,7 +174,7 @@ namespace TwinStar::Core::FileSystem {
 				Path const & target
 			) -> FileHandler {
 				if (!exist_directory(target.parent())) {
-					assert_failed(R"(/* parent directory not exist */)");
+					assert_fail(R"(/* parent directory not exist */)");
 				}
 				return open(target, "rb");
 			}
@@ -277,7 +277,7 @@ namespace TwinStar::Core::FileSystem {
 			Size const &           current_depth = k_begin_index
 		) -> Size {
 			if (current_depth == k_begin_index) {
-				assert_condition(exist_directory(target));
+				assert_test(exist_directory(target));
 			}
 			auto result = k_none_size;
 			if (!depth || current_depth < depth.get()) {
@@ -316,7 +316,7 @@ namespace TwinStar::Core::FileSystem {
 			Size const &           current_depth = k_begin_index
 		) -> Void {
 			if (current_depth == k_begin_index) {
-				assert_condition(exist_directory(target));
+				assert_test(exist_directory(target));
 				result.allocate(count<filter>(target, depth));
 			}
 			if (!depth || current_depth < depth.get()) {
@@ -381,7 +381,7 @@ namespace TwinStar::Core::FileSystem {
 		Path const & source,
 		Path const & destination
 	) -> Void {
-		assert_condition(exist(source));
+		assert_test(exist(source));
 		if (!destination.sub_path().empty() && !exist_directory(destination.parent())) {
 			create_directory(destination.parent());
 		}
@@ -517,7 +517,7 @@ namespace TwinStar::Core::FileSystem {
 		auto data = ByteArray{size};
 		auto handler = Detail::FileHandler::open_by_read(target);
 		auto count = std::fread(data.begin().value, size.value, 1, handler.value());
-		assert_condition(count == 1 || size == k_none_size);
+		assert_test(count == 1 || size == k_none_size);
 		return data;
 	}
 
@@ -528,7 +528,7 @@ namespace TwinStar::Core::FileSystem {
 		auto size = data.size();
 		auto handler = Detail::FileHandler::open_by_write(target);
 		auto count = std::fwrite(data.begin().value, size.value, 1, handler.value());
-		assert_condition(count == 1 || size == k_none_size);
+		assert_test(count == 1 || size == k_none_size);
 		return;
 	}
 
@@ -539,10 +539,10 @@ namespace TwinStar::Core::FileSystem {
 		OByteStreamView & data
 	) -> Size {
 		auto size = size_file(target);
-		assert_condition(data.reserve() >= size);
+		assert_test(data.reserve() >= size);
 		auto handler = Detail::FileHandler::open_by_read(target);
 		auto count = std::fread(data.current_pointer().value, size.value, 1, handler.value());
-		assert_condition(count == 1 || size == k_none_size);
+		assert_test(count == 1 || size == k_none_size);
 		data.forward(size);
 		return size;
 	}
@@ -554,7 +554,7 @@ namespace TwinStar::Core::FileSystem {
 		auto size = data.reserve();
 		auto handler = Detail::FileHandler::open_by_write(target);
 		auto count = std::fwrite(data.current_pointer().value, size.value, 1, handler.value());
-		assert_condition(count == 1 || size == k_none_size);
+		assert_test(count == 1 || size == k_none_size);
 		data.forward(size);
 		return size;
 	}

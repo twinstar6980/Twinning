@@ -133,7 +133,7 @@ namespace TwinStar::Core {
 			(method == StreamMethod::Constant::i() || method == StreamMethod::Constant::io()) {
 			auto temporary_that = That{};
 			thiz.read(temporary_that, as_forward<Option>(option) ...);
-			assert_condition(temporary_that == that);
+			assert_test(temporary_that == that);
 			return;
 		}
 

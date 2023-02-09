@@ -3,105 +3,133 @@
 #include "shell/common.hpp"
 #include "shell/core/interface.hpp"
 
-namespace TwinStar::Shell::Core::Converter {
+namespace TwinStar::Shell::Core {
 
-	#pragma region function
+	#pragma region type
 
-	inline auto from_size (
-		Interface::Size const & structure
-	) -> std::size_t {
-		return structure.value;
-	}
+	struct Converter {
 
-	inline auto to_size (
-		std::size_t const & value
-	) -> Interface::Size {
-		return Interface::Size{
-			.value = value,
-		};
-	}
+		#pragma region function
 
-	// ----------------
-
-	inline auto from_string (
-		Interface::String const & structure
-	) -> std::string {
-		return std::string{reinterpret_cast<char const *>(structure.data), from_size(structure.size)};
-	}
-
-	inline auto to_string (
-		std::string const & value
-	) -> Interface::String {
-		return Interface::String{
-			.data = const_cast<Interface::Character *>(reinterpret_cast<Interface::Character const *>(value.data())),
-			.size = to_size(value.size()),
-			.capacity = to_size(value.size()),
-		};
-	}
-
-	// ----------------
-
-	inline auto from_string_list (
-		Interface::StringList const & structure
-	) -> std::vector<std::string> {
-		auto value = std::vector<std::string>{};
-		value.reserve(from_size(structure.size));
-		for (auto & structure_element : std::span{structure.data, from_size(structure.size)}) {
-			value.emplace_back(reinterpret_cast<char const *>(structure_element.data), from_size(structure_element.size));
+		static auto parse_size (
+			Interface::Size const & structure
+		) -> std::size_t {
+			return structure.value;
 		}
-		return value;
-	}
 
-	inline auto allocate_string_list (
-		std::vector<std::string> const & value
-	) -> Interface::StringList {
-		auto structure = Interface::StringList{
-			.data = new Interface::String[value.size()]{},
-			.size = to_size(value.size()),
-			.capacity = to_size(value.size()),
-		};
-		for (auto index = std::size_t{0}; index < value.size(); ++index) {
-			auto & value_element = value[index];
-			structure.data[index] = Interface::String{
-				.data = new Interface::Character[value_element.size()]{},
-				.size = to_size(value_element.size()),
-				.capacity = to_size(value_element.size()),
-			};
-			std::memcpy(structure.data[index].data, value_element.data(), value_element.size());
+		static auto construct_size (
+			Interface::Size &   structure,
+			std::size_t const & value
+		) -> void {
+			structure.value = value;
+			return;
 		}
-		return structure;
-	}
 
-	inline auto free_string_list (
-		Interface::StringList & structure
-	) -> void {
-		if (structure.data != nullptr) {
-			for (auto & structure_element : std::span{structure.data, from_size(structure.capacity)}) {
-				delete[] structure_element.data;
+		static auto destruct_size (
+			Interface::Size & structure
+		) -> void {
+			structure.value = 0;
+			return;
+		}
+
+		// ----------------
+
+		static auto parse_string (
+			Interface::String const & structure
+		) -> std::string {
+			return std::string{reinterpret_cast<char const *>(structure.data), parse_size(structure.size)};
+		}
+
+		static auto construct_string (
+			Interface::String & structure,
+			std::string const & value
+		) -> void {
+			structure.data = new Interface::Character[value.size()]{};
+			std::memcpy(structure.data, value.data(), value.size());
+			construct_size(structure.size, value.size());
+			construct_size(structure.capacity, value.size());
+			return;
+		}
+
+		static auto destruct_string (
+			Interface::String & structure
+		) -> void {
+			if (structure.data != nullptr) {
+				delete[] structure.data;
+				structure.data = nullptr;
 			}
-			delete[] structure.data;
-			structure.data = nullptr;
+			destruct_size(structure.size);
+			destruct_size(structure.capacity);
+			return;
 		}
-		structure.size = to_size(0);
-		structure.capacity = to_size(0);
-		return;
-	}
 
-	// ----------------
+		// ----------------
 
-	inline auto from_callback (
-		Interface::Callback const & structure
-	) -> std::function<Interface::StringList const & (Interface::StringList const &)> {
-		return std::function<Interface::StringList const & (Interface::StringList const &)>{structure.value};
-	}
+		static auto parse_string_list (
+			Interface::StringList const & structure
+		) -> std::vector<std::string> {
+			auto value = std::vector<std::string>{};
+			value.reserve(parse_size(structure.size));
+			for (auto & structure_element : std::span{structure.data, parse_size(structure.size)}) {
+				value.emplace_back(parse_string(structure_element));
+			}
+			return value;
+		}
 
-	inline auto to_callback (
-		std::function<Interface::StringList const & (Interface::StringList const &)> const & value
-	) -> Interface::Callback {
-		return Interface::Callback{
-			.value = *value.target<Interface::StringList const & (*) (Interface::StringList const &)>(),
-		};
-	}
+		static auto construct_string_list (
+			Interface::StringList &          structure,
+			std::vector<std::string> const & value
+		) -> void {
+			structure.data = new Interface::String[value.size()]{};
+			for (auto index = std::size_t{0}; index < value.size(); ++index) {
+				construct_string(structure.data[index], value[index]);
+			}
+			construct_size(structure.size, value.size());
+			construct_size(structure.capacity, value.size());
+			return;
+		}
+
+		static auto destruct_string_list (
+			Interface::StringList & structure
+		) -> void {
+			if (structure.data != nullptr) {
+				for (auto & structure_element : std::span{structure.data, parse_size(structure.capacity)}) {
+					destruct_string(structure_element);
+				}
+				delete[] structure.data;
+				structure.data = nullptr;
+			}
+			destruct_size(structure.size);
+			destruct_size(structure.capacity);
+			return;
+		}
+
+		// ----------------
+
+		static auto parse_callback (
+			Interface::Callback const & structure
+		) -> std::function<Interface::StringList const * (Interface::StringList const *)> {
+			return std::function<Interface::StringList const * (Interface::StringList const *)>{structure.value};
+		}
+
+		static auto construct_callback (
+			Interface::Callback &                                                                structure,
+			std::function<Interface::StringList const * (Interface::StringList const *)> const & value
+		) -> void {
+			structure.value = *value.target<Interface::StringList const* (*) (Interface::StringList const *)>();
+			return;
+		}
+
+		static auto destruct_callback (
+			Interface::Callback & structure
+		) -> void {
+			structure.value = nullptr;
+			return;
+		}
+
+		#pragma endregion
+
+	};
 
 	#pragma endregion
 

@@ -191,7 +191,7 @@ namespace TwinStar::Core {
 			KeyObject const & key
 		) const -> QElement& {
 			auto index = thiz.find_key(key);
-			assert_condition(index);
+			assert_test(index);
 			return thiz.at(index.get());
 		}
 
@@ -216,21 +216,21 @@ namespace TwinStar::Core {
 			Size const & begin,
 			Size const & size
 		) const -> MapView {
-			assert_condition(begin + size <= thiz.size());
+			assert_test(begin + size <= thiz.size());
 			return MapView{thiz.iterator(begin), size};
 		}
 
 		constexpr auto head (
 			Size const & size
 		) const -> MapView {
-			assert_condition(size <= thiz.size());
+			assert_test(size <= thiz.size());
 			return thiz.sub(thiz.begin_index(), size);
 		}
 
 		constexpr auto tail (
 			Size const & size
 		) const -> MapView {
-			assert_condition(size <= thiz.size());
+			assert_test(size <= thiz.size());
 			return thiz.sub(thiz.end_index() - size, size);
 		}
 

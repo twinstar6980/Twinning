@@ -200,7 +200,7 @@ namespace TwinStar.Support.Atlas.Pack.AutoPack {
 			box_pathological_multiplier,
 		],
 	): [Box, Record<string, Rect>] {
-		assert(item_weighter.length !== 0, `item_weighter list must be not empty`);
+		assert_test(item_weighter.length !== 0, `item_weighter list must be not empty`);
 		let candidate = item_weighter.map((e) => (pack_auto(item_map, container_expander, e)));
 		let best = candidate[0];
 		for (let e of candidate.slice(1)) {

@@ -84,18 +84,18 @@ namespace TwinStar::Core::Tool::Wwise::EncodedMedia {
 				auto it = Map<FourCC, Tuple<Size, Size>>{};
 				auto ripe_stream = IByteStreamView{ripe};
 				auto riff_sign = ripe_stream.read_of<WaveStructure::ChunkSign>();
-				assert_condition(riff_sign.id == WaveStructure::ChunkSignFlag::riff);
+				assert_test(riff_sign.id == WaveStructure::ChunkSignFlag::riff);
 				auto chunk_offset = ripe_stream.position();
 				auto riff_format = ripe_stream.read_of<WaveStructure::RIFFChunk::Format>();
-				assert_condition(riff_format.format == WaveStructure::RIFFChunk::FormatFlag::wave);
+				assert_test(riff_format.format == WaveStructure::RIFFChunk::FormatFlag::wave);
 				while (!ripe_stream.full()) {
 					auto sign = ripe_stream.read_of<WaveStructure::ChunkSign>();
-					assert_condition(!it.has_key(sign.id));
+					assert_test(!it.has_key(sign.id));
 					auto location = make_tuple_of(ripe_stream.position(), cbw<Size>(sign.size));
 					ripe_stream.forward(location.get<2_ix>());
 					it.append(sign.id, location);
 				}
-				assert_condition(ripe_stream.position() - chunk_offset == cbw<Size>(riff_sign.size));
+				assert_test(ripe_stream.position() - chunk_offset == cbw<Size>(riff_sign.size));
 				return it;
 			}();
 			auto get_subchunk =
@@ -160,7 +160,7 @@ namespace TwinStar::Core::Tool::Wwise::EncodedMedia {
 						make_optional_of(temporary_file.ffmpeg_output),
 						make_optional_of(temporary_file.ffmpeg_error)
 					);
-					assert_condition(external_program_execute_result == 0x00000000_iu32);
+					assert_test(external_program_execute_result == 0x00000000_iu32);
 					raw = FileSystem::read_file(temporary_file.ffmpeg_output_audio);
 					FileSystem::remove(temporary_file.ffmpeg_input_audio);
 					FileSystem::remove(temporary_file.ffmpeg_output_audio);
@@ -168,7 +168,7 @@ namespace TwinStar::Core::Tool::Wwise::EncodedMedia {
 				}
 				case AudioFormatFlag::adpcm.value : {
 					auto format_expand_size = cbw<Size>(format_chunk_stream.read_of<IntegerU16>());
-					assert_condition(format_expand_size == bs_static_size<FormatChunkExpand6>());
+					assert_test(format_expand_size == bs_static_size<FormatChunkExpand6>());
 					auto format_expand = format_chunk_stream.read_of<FormatChunkExpand6>();
 					auto real_ripe = ByteArray{ripe.size()};
 					auto real_ripe_stream = OByteStreamView{real_ripe};
@@ -226,7 +226,7 @@ namespace TwinStar::Core::Tool::Wwise::EncodedMedia {
 						make_optional_of(temporary_file.ffmpeg_output),
 						make_optional_of(temporary_file.ffmpeg_error)
 					);
-					assert_condition(external_program_execute_result == 0x00000000_iu32);
+					assert_test(external_program_execute_result == 0x00000000_iu32);
 					raw = FileSystem::read_file(temporary_file.ffmpeg_output_audio);
 					FileSystem::remove(temporary_file.ffmpeg_input_audio);
 					FileSystem::remove(temporary_file.ffmpeg_output_audio);
@@ -253,7 +253,7 @@ namespace TwinStar::Core::Tool::Wwise::EncodedMedia {
 						make_optional_of(temporary_file.ffmpeg_output),
 						make_optional_of(temporary_file.ffmpeg_error)
 					);
-					assert_condition(external_program_execute_result == 0x00000000_iu32);
+					assert_test(external_program_execute_result == 0x00000000_iu32);
 					raw = FileSystem::read_file(temporary_file.ffmpeg_output_audio);
 					FileSystem::remove(temporary_file.ffmpeg_input_audio);
 					FileSystem::remove(temporary_file.ffmpeg_output_audio);
@@ -276,7 +276,7 @@ namespace TwinStar::Core::Tool::Wwise::EncodedMedia {
 						make_optional_of(temporary_file.ww2ogg_output),
 						k_null_optional
 					);
-					assert_condition(external_program_execute_result == 0x00000000_iu32);
+					assert_test(external_program_execute_result == 0x00000000_iu32);
 					external_program_execute_result = Process::execute(
 						ffmpeg_program,
 						make_list<String>(
@@ -296,7 +296,7 @@ namespace TwinStar::Core::Tool::Wwise::EncodedMedia {
 						make_optional_of(temporary_file.ffmpeg_output),
 						make_optional_of(temporary_file.ffmpeg_error)
 					);
-					assert_condition(external_program_execute_result == 0x00000000_iu32);
+					assert_test(external_program_execute_result == 0x00000000_iu32);
 					raw = FileSystem::read_file(temporary_file.ffmpeg_output_audio);
 					FileSystem::remove(temporary_file.ww2ogg_input_audio);
 					FileSystem::remove(temporary_file.ffmpeg_input_audio);
@@ -304,7 +304,7 @@ namespace TwinStar::Core::Tool::Wwise::EncodedMedia {
 					break;
 				}
 				default : {
-					assert_failed(R"(format.audio_format == /* valid */)");
+					assert_fail(R"(format.audio_format == /* valid */)");
 				}
 			}
 			return;

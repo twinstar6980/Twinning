@@ -123,7 +123,7 @@ namespace TwinStar::Core::Executor {
 			JS::Value & executor,
 			Thread &    thread
 		) -> Void {
-			assert_condition(!thiz.busy());
+			assert_test(!thiz.busy());
 			thiz.m_busy = k_true;
 			auto guard = std::lock_guard{JS::g_mutex};
 			thread.run(

@@ -41,7 +41,7 @@ namespace TwinStar::Core {
 		ZLiteralString string,
 		ZLiteralLength length
 	) -> FourCC {
-		assert_condition(length == 4_szz);
+		assert_test(length == 4_szz);
 		return make_fourcc(
 			mbw<Character>(string[0]),
 			mbw<Character>(string[1]),

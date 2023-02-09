@@ -461,12 +461,12 @@ namespace TwinStar::Core {
 			using namespace Tool::PopCap::RSB::Structure;
 			thix.read(up_cast<ResourceBasicDetailDescriptionInformation<t_version>>(that));
 			if (that.image_property_information_offset != 0_iu32) {
-				assert_condition(cbw<Size>(that.image_property_information_offset) == thix.position());
+				assert_test(cbw<Size>(that.image_property_information_offset) == thix.position());
 				thix.read(that.image_property_information.set());
 			} else {
 				that.image_property_information.reset();
 			}
-			assert_condition(cbw<Size>(that.property_information_offset) == thix.position());
+			assert_test(cbw<Size>(that.property_information_offset) == thix.position());
 			thix.read(that.property_information, cbw<Size>(that.property_information_count));
 			return;
 		}

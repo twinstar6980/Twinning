@@ -261,7 +261,7 @@ namespace TwinStar.Entry.method.popcap.rsb {
 							a.version_additional_texture_information_for_pvz_2_chinese_android,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
+							() => (Console.option([0n, [0n, ''], [1n, ''], [2n, '']], null)),
 							(value) => ([0n, 1n, 2n].includes(value) ? null : los(`版本不受支持`)),
 						);
 						output_resource = Executor.request_argument(
@@ -406,7 +406,7 @@ namespace TwinStar.Entry.method.popcap.rsb {
 								};
 								{
 									let map_name_list = Object.keys(a.option.image_texture_format_map_list);
-									assert(map_name_list.length !== 0, `texture format map list is empty`);
+									assert_test(map_name_list.length !== 0, `texture format map list is empty`);
 									let texture_format_map_name: string;
 									texture_format_map_name = Executor.request_argument(
 										...Executor.query_argument_message(this.id, 'option_image_texture_format_map_name'),

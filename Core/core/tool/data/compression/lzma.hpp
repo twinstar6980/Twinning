@@ -26,7 +26,7 @@ namespace TwinStar::Core::Tool::Data::Compression::Lzma {
 			OByteStreamView & property,
 			Size const &      level
 		) -> Void {
-			assert_condition(Math::between(level, 0_sz, 9_sz));
+			assert_test(Math::between(level, 0_sz, 9_sz));
 			auto raw_size = raw.reserve().value;
 			auto ripe_size = ripe.reserve().value;
 			auto property_size = property.reserve().value;
@@ -45,11 +45,11 @@ namespace TwinStar::Core::Tool::Data::Compression::Lzma {
 				-1,
 				-1
 			);
-			assert_condition(state == Third::lzma::SZ_OK_);
+			assert_test(state == Third::lzma::SZ_OK_);
 			raw.forward(mbw<Size>(raw_size));
 			ripe.forward(mbw<Size>(ripe_size));
 			property.forward(mbw<Size>(property_size));
-			assert_condition(raw.full());
+			assert_test(raw.full());
 			return;
 		}
 
@@ -90,7 +90,7 @@ namespace TwinStar::Core::Tool::Data::Compression::Lzma {
 				cast_pointer<Third::lzma::Byte>(property.current_pointer()).value,
 				property_size
 			);
-			assert_condition(state == Third::lzma::SZ_OK_);
+			assert_test(state == Third::lzma::SZ_OK_);
 			ripe.forward(mbw<Size>(ripe_size));
 			raw.forward(mbw<Size>(raw_size));
 			property.forward(mbw<Size>(property_size));

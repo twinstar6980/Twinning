@@ -13,9 +13,9 @@ target('implement', function()
 	)
 	add_files(
 		'./dllmain.cpp',
-		'./Source.def',
-		'./windows/application.manifest',
-		'./windows/application.rc',
+		'./resource/source.def',
+		'./resource/application.manifest',
+		'./resource/application.rc',
 		{}
 	)
 	add_includedirs(
@@ -44,6 +44,6 @@ target('implement', function()
 	after_build(function (target)
 		import('custom')
 		local m = custom.load_m(target)
-		os.cp(target:targetfile(), m.root .. '/package/Assets/Library/implement.dll')
+		os.cp(target:targetfile(), m.root .. '/package/Asset/Library/implement.dll')
 	end)
 end)

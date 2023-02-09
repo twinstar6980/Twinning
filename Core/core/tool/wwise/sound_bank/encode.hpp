@@ -1334,7 +1334,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					}
 				}
 			);
-			assert_condition(has_case);
+			assert_test(has_case);
 			return;
 		}
 
@@ -1828,7 +1828,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 							}
 						}
 					);
-					assert_condition(has_case);
+					assert_test(has_case);
 					exchange_unit_size<IntegerU8>(data, type);
 				},
 				[] (auto & data, auto & element) {
@@ -1843,7 +1843,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 							}
 						}
 					);
-					assert_condition(has_case);
+					assert_test(has_case);
 				}
 			);
 			if (exist_randomizer) {
@@ -1866,7 +1866,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								}
 							}
 						);
-						assert_condition(has_case);
+						assert_test(has_case);
 						exchange_unit_size<IntegerU8>(data, type);
 					},
 					[] (auto & data, auto & element) {
@@ -1882,7 +1882,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								}
 							}
 						);
-						assert_condition(has_case);
+						assert_test(has_case);
 					}
 				);
 			}
@@ -1940,7 +1940,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			Boolean const &                                      user_defined_auxiliary_send_override,
 			Boolean const &                                      early_reflection_auxiliary_send_override
 		) -> Void {
-			assert_condition(auxiliary_send_manifest.user_defined.item.size() == 4_sz);
+			assert_test(auxiliary_send_manifest.user_defined.item.size() == 4_sz);
 			exchange_unit_bitset<IntegerU8>(
 				data,
 				game_defined_auxiliary_send_override,
@@ -2118,7 +2118,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				data,
 				effect_manifest.item,
 				[&] (auto & count) {
-					assert_condition(effect_manifest.bypass.size() == 5_sz);
+					assert_test(effect_manifest.bypass.size() == 5_sz);
 					if (count > 0_sz) {
 						exchange_unit_bitset<IntegerU8>(
 							data,
@@ -2129,11 +2129,11 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 							effect_manifest.bypass[5_ix]
 						);
 					} else {
-						assert_condition(effect_manifest.bypass[1_ix] == k_false);
-						assert_condition(effect_manifest.bypass[2_ix] == k_false);
-						assert_condition(effect_manifest.bypass[3_ix] == k_false);
-						assert_condition(effect_manifest.bypass[4_ix] == k_false);
-						assert_condition(effect_manifest.bypass[5_ix] == k_false);
+						assert_test(effect_manifest.bypass[1_ix] == k_false);
+						assert_test(effect_manifest.bypass[2_ix] == k_false);
+						assert_test(effect_manifest.bypass[3_ix] == k_false);
+						assert_test(effect_manifest.bypass[4_ix] == k_false);
+						assert_test(effect_manifest.bypass[5_ix] == k_false);
 					}
 				},
 				[] (auto & data, auto & manifest) {
@@ -2337,7 +2337,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			typename Manifest::AudioSourceSetting const & manifest
 		) -> Void {
 			exchange_unit_plug_in_id(data, manifest.plug_in);
-			assert_condition(manifest.plug_in.u1 == 0_i || manifest.plug_in.u1 == 1_i || manifest.plug_in.u1 == 2_i);
+			assert_test(manifest.plug_in.u1 == 0_i || manifest.plug_in.u1 == 1_i || manifest.plug_in.u1 == 2_i);
 			exchange_unit_enumeration<IntegerU8>(data, manifest.type);
 			exchange_unit_id(data, manifest.resource);
 			// note : if external_prefetch, is internal data size
@@ -2750,7 +2750,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					exchange_unit_integer<IntegerU32>(data, manifest.child_count);
 					{
 						// NOTE : here
-						assert_condition(manifest.play_type.has() == manifest.play_mode.has());
+						assert_test(manifest.play_type.has() == manifest.play_mode.has());
 						if (manifest.play_type.has()) {
 							exchange_unit_bitset<IntegerU32>(
 								data,
@@ -3258,7 +3258,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						exchange_common_property_as_randomized<CPTC::delay()>(common_property, property_manifest.delay);
 						process_section_sub(data, common_property, k_true);
 					}
-					assert_condition(property_manifest.value.size() == 5_sz);
+					assert_test(property_manifest.value.size() == 5_sz);
 					exchange_unit_bitset<IntegerU8>(data, property_manifest.enable);
 					exchange_unit_bitset<IntegerU8>(
 						data,
@@ -3296,7 +3296,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					has_case = k_true;
 				}
 			}
-			assert_condition(has_case);
+			assert_test(has_case);
 			if (!manifest.globally) {
 				scope = manifest.target == 0_i ? 5_sz : 3_sz;
 			} else {
@@ -3304,25 +3304,25 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			}
 			if (type == 4_sz) {
 				// play
-				assert_condition(scope == 3_sz);
+				assert_test(scope == 3_sz);
 			}
 			if (type == 33_sz) {
 				// post_event
-				assert_condition(scope == 3_sz);
+				assert_test(scope == 3_sz);
 			}
 			if (type == 16_sz || type == 17_sz) {
 				// enable/disable state
-				assert_condition(scope == 2_sz);
+				assert_test(scope == 2_sz);
 			}
 			if (type == 18_sz) {
 				// set state
-				assert_condition(scope == 2_sz);
+				assert_test(scope == 2_sz);
 				// todo : maybe wwise bug?
 				scope = 4_sz;
 			}
 			if (type == 25_sz) {
 				// set switch
-				assert_condition(scope == 3_sz);
+				assert_test(scope == 3_sz);
 				// 1 is only used for set_switch
 				// todo : maybe wwise bug?
 				scope = 1_sz;
@@ -3497,7 +3497,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			exchange_unit_plug_in_id(data, manifest.plug_in);
 			// NOTE : here
 			if (manifest.plug_in.u1 == 7_i && manifest.plug_in.u2 == 174_i) {
-				assert_condition(manifest.expand.system.has());
+				assert_test(manifest.expand.system.has());
 				exchange_unit_size<IntegerU32>(data, 12_sz);
 				exchange_unit_bitset<IntegerU8>(data, manifest.expand.system.get().allow_3d_audio);
 				exchange_unit_id(data, manifest.expand.system.get().main_mix_configuration_for_binauralization);
@@ -3505,7 +3505,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				exchange_unit_bitset<IntegerU8>(data, manifest.expand.system.get().allow_system_audio_object);
 				exchange_unit_integer<IntegerU16>(data, manifest.expand.system.get().minimum_system_audio_object_required);
 			} else {
-				assert_condition(!manifest.expand.system.has());
+				assert_test(!manifest.expand.system.has());
 				exchange_unit_size<IntegerU32>(data, 0_sz);
 			}
 			exchange_unit_constant(data, 0_iu8);
@@ -3575,7 +3575,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			if (manifest.parent == 0_i) {
 				exchange_unit_id(data, manifest.audio_device);
 			} else {
-				assert_condition(manifest.audio_device == find_id(0_iu32));
+				assert_test(manifest.audio_device == find_id(0_iu32));
 			}
 			process_section_sub(data, common_property, k_false);
 			process_section_sub(data, manifest.positioning, override_positioning);
@@ -4393,7 +4393,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					}
 				}
 			);
-			assert_condition(has_case);
+			assert_test(has_case);
 			return;
 		}
 
@@ -4682,7 +4682,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		) -> Void {
 			auto raw_value = RawValue{};
 			data.read(raw_value);
-			assert_condition(raw_value == value);
+			assert_test(raw_value == value);
 			return;
 		}
 
@@ -4777,7 +4777,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			Generalization::each_with<>(
 				[&] <auto index, typename CurrentValue> (ValuePackage<index>, CurrentValue & current_value) {
 					if constexpr (IsSame<CurrentValue, Boolean const>) {
-						assert_condition(bitset.get(current_index) == current_value);
+						assert_test(bitset.get(current_index) == current_value);
 						++current_index;
 					} else if constexpr (IsSame<CurrentValue, Boolean>) {
 						current_value = bitset.get(current_index);
@@ -4794,7 +4794,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				value ...
 			);
 			for (auto & index : SizeRange{k_type_bit_count<RawValue> - current_index}) {
-				assert_condition(!bitset.get(current_index + index));
+				assert_test(!bitset.get(current_index + index));
 			}
 			return;
 		}
@@ -4894,7 +4894,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 							}
 						}
 					);
-					assert_condition(has_case);
+					assert_test(has_case);
 				},
 				[] (auto & data, auto & element) {
 					auto has_case = k_false;
@@ -4906,7 +4906,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 							}
 						}
 					);
-					assert_condition(has_case);
+					assert_test(has_case);
 				}
 			);
 			if (exist_randomizer) {
@@ -4928,7 +4928,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								}
 							}
 						);
-						assert_condition(has_case);
+						assert_test(has_case);
 					},
 					[] (auto & data, auto & element) {
 						auto has_case = k_false;
@@ -4941,7 +4941,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								}
 							}
 						);
-						assert_condition(has_case);
+						assert_test(has_case);
 					}
 				);
 			}
@@ -5401,7 +5401,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			typename Manifest::AudioSourceSetting & manifest
 		) -> Void {
 			exchange_unit_plug_in_id(data, manifest.plug_in);
-			assert_condition(manifest.plug_in.u1 == 0_i || manifest.plug_in.u1 == 1_i || manifest.plug_in.u1 == 2_i);
+			assert_test(manifest.plug_in.u1 == 0_i || manifest.plug_in.u1 == 1_i || manifest.plug_in.u1 == 2_i);
 			exchange_unit_enumeration<IntegerU8>(data, manifest.type);
 			exchange_unit_id(data, manifest.resource);
 			// note : if external_prefetch, is internal data size
@@ -5672,7 +5672,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				switcher_association_manifest.path,
 				[&] (auto & count) {
 					// NOTE : here
-					assert_condition(count % 12_sz == 0_sz);
+					assert_test(count % 12_sz == 0_sz);
 					count /= 12_sz;
 					exchange_unit_bitset<IntegerU8>(
 						data,
@@ -6055,25 +6055,25 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			// todo
 			if (type == 4_sz) {
 				// play
-				assert_condition(scope == 3_sz);
+				assert_test(scope == 3_sz);
 			}
 			if (type == 33_sz) {
 				// post_event
-				assert_condition(scope == 3_sz);
+				assert_test(scope == 3_sz);
 			}
 			if (type == 16_sz || type == 17_sz) {
 				// enable/disable state
-				assert_condition(scope == 2_sz);
+				assert_test(scope == 2_sz);
 			}
 			if (type == 18_sz) {
 				// set state
-				assert_condition(scope == 4_sz);
+				assert_test(scope == 4_sz);
 				// todo : maybe wwise bug?
 				scope = 2_sz;
 			}
 			if (type == 25_sz) {
 				// set switch
-				assert_condition(scope == 1_sz);
+				assert_test(scope == 1_sz);
 				// 1 is only used for set_switch
 				// todo : maybe wwise bug?
 				scope = 3_sz;
@@ -6081,22 +6081,22 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			manifest.target = find_id(target);
 			switch (scope.value) {
 				case 2 : {
-					assert_condition(target != 0_iu32);
+					assert_test(target != 0_iu32);
 					manifest.globally = k_true;
 					break;
 				}
 				case 3 : {
-					assert_condition(target != 0_iu32);
+					assert_test(target != 0_iu32);
 					manifest.globally = k_false;
 					break;
 				}
 				case 4 : {
-					assert_condition(target == 0_iu32);
+					assert_test(target == 0_iu32);
 					manifest.globally = k_true;
 					break;
 				}
 				case 5 : {
-					assert_condition(target == 0_iu32);
+					assert_test(target == 0_iu32);
 					manifest.globally = k_false;
 					break;
 				}
@@ -6388,7 +6388,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					has_case = k_true;
 				}
 			}
-			assert_condition(has_case);
+			assert_test(has_case);
 			return;
 		}
 
@@ -6562,7 +6562,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			auto expand_size = Size{};
 			exchange_unit_size<IntegerU32>(data, expand_size);
 			if (manifest.plug_in.u1 == 7_i && manifest.plug_in.u2 == 174_i) {
-				assert_condition(expand_size == 12_sz);
+				assert_test(expand_size == 12_sz);
 				manifest.expand.system.set();
 				exchange_unit_bitset<IntegerU8>(data, manifest.expand.system.get().allow_3d_audio);
 				exchange_unit_id(data, manifest.expand.system.get().main_mix_configuration_for_binauralization);
@@ -6570,7 +6570,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				exchange_unit_bitset<IntegerU8>(data, manifest.expand.system.get().allow_system_audio_object);
 				exchange_unit_integer<IntegerU16>(data, manifest.expand.system.get().minimum_system_audio_object_required);
 			} else {
-				assert_condition(expand_size == 0_sz);
+				assert_test(expand_size == 0_sz);
 			}
 			exchange_unit_constant(data, 0_iu8);
 			exchange_unit_list<IntegerU16>(
@@ -6643,10 +6643,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			process_section_sub(data, manifest.metadata);
 			process_section_sub(data, manifest.real_time_parameter_control);
 			process_section_sub(data, manifest.state);
-			assert_condition(override_positioning);
-			assert_condition(override_game_defined_auxiliary_send);
-			assert_condition(override_user_defined_auxiliary_send);
-			assert_condition(override_early_reflection_auxiliary_send);
+			assert_test(override_positioning);
+			assert_test(override_game_defined_auxiliary_send);
+			assert_test(override_user_defined_auxiliary_send);
+			assert_test(override_early_reflection_auxiliary_send);
 			{
 				using CPTC = typename AudioCommonPropertyType::Constant;
 				process_common_property(common_property, manifest.voice);
@@ -7056,7 +7056,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		) -> Void {
 			if constexpr (version.number >= 88_i) {
 				constexpr auto didx_item_structure_size = bs_static_size<IDNumber>() + bs_static_size<IntegerU32>() + bs_static_size<IntegerU32>();
-				assert_condition(is_padded_size(didx_data.reserve(), didx_item_structure_size));
+				assert_test(is_padded_size(didx_data.reserve(), didx_item_structure_size));
 				manifest.allocate_full(didx_data.reserve() / didx_item_structure_size);
 				exchange_unit_list<Void>(
 					didx_data,
@@ -7070,8 +7070,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						exchange_unit_size<IntegerU32>(data, data_offset);
 						exchange_unit_size<IntegerU32>(data, data_size);
 						if (manifest == 0_i) {
-							assert_condition(data_offset == 1_ix);
-							assert_condition(data_size == 0_sz);
+							assert_test(data_offset == 1_ix);
+							assert_test(data_size == 0_sz);
 						} else {
 							auto item_data = data_data.sub_view(data_offset, data_size);
 							if (embedded_audio_directory) {
@@ -7187,7 +7187,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 							unknown_manifest.data = data.forward_view(size);
 							M_log("warning : unknown hierarchy type {}"_sf(type));
 						}
-						assert_condition(data.position() - data_position == size);
+						assert_test(data.position() - data_position == size);
 					}
 				);
 			}
@@ -7277,7 +7277,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			auto next_chunk =
 				[&] (
 			) -> auto {
-				assert_condition(chunk.full());
+				assert_test(chunk.full());
 				state = !sound_bank_data.full();
 				if (state) {
 					sign = sound_bank_data.read_of<ChunkSign>();
@@ -7287,7 +7287,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			};
 			next_chunk();
 			if constexpr (version.number >= 88_i) {
-				assert_condition(state && sign.id == ChunkSignFlag::bkhd);
+				assert_test(state && sign.id == ChunkSignFlag::bkhd);
 				{
 					process_chunk_bkhd(chunk, sound_bank_manifest);
 					next_chunk();
@@ -7298,7 +7298,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					auto didx_data = chunk;
 					chunk.forward_to_end();
 					next_chunk();
-					assert_condition(state && sign.id == ChunkSignFlag::data);
+					assert_test(state && sign.id == ChunkSignFlag::data);
 					auto data_data = chunk;
 					chunk.forward_to_end();
 					next_chunk();
@@ -7343,7 +7343,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					next_chunk();
 				}
 			}
-			assert_condition(!state);
+			assert_test(!state);
 			return;
 		}
 

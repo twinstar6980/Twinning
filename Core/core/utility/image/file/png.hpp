@@ -85,8 +85,8 @@ namespace TwinStar::Core::Image::File::PNG {
 		auto png_info = Third::libpng::png_create_info_struct(png_struct);
 		Third::libpng::png_set_read_fn(png_struct, &data, &Detail::png_read_data_by_memory);
 		Third::libpng::png_read_info(png_struct, png_info);
-		assert_condition((*png_info).color_type == Third::libpng::PNG_COLOR_TYPE_RGBA_);
-		assert_condition(image.size() == ImageSize{mbw<Size>((*png_struct).width), mbw<Size>((*png_struct).height)});
+		assert_test((*png_info).color_type == Third::libpng::PNG_COLOR_TYPE_RGBA_);
+		assert_test(image.size() == ImageSize{mbw<Size>((*png_struct).width), mbw<Size>((*png_struct).height)});
 		for (auto & row : image.data()) {
 			Third::libpng::png_read_row(png_struct, reinterpret_cast<Third::libpng::png_bytep>(row.begin().value), nullptr);
 		}
@@ -125,7 +125,7 @@ namespace TwinStar::Core::Image::File::PNG {
 		auto png_info = Third::libpng::png_create_info_struct(png_struct);
 		Third::libpng::png_set_read_fn(png_struct, &data, &Detail::png_read_data_by_memory);
 		Third::libpng::png_read_info(png_struct, png_info);
-		assert_condition((*png_info).color_type == Third::libpng::PNG_COLOR_TYPE_RGBA_);
+		assert_test((*png_info).color_type == Third::libpng::PNG_COLOR_TYPE_RGBA_);
 		image.allocate(ImageSize{mbw<Size>((*png_struct).width), mbw<Size>((*png_struct).height)});
 		for (auto & row : image.data()) {
 			Third::libpng::png_read_row(png_struct, reinterpret_cast<Third::libpng::png_bytep>(row.begin().value), nullptr);
@@ -165,8 +165,8 @@ namespace TwinStar::Core::Image::File::PNG {
 		auto file = FileSystem::Detail::FileHandler::open_by_read(path);
 		Third::libpng::png_init_io(png_struct, file.value());
 		Third::libpng::png_read_info(png_struct, png_info);
-		assert_condition((*png_info).color_type == Third::libpng::PNG_COLOR_TYPE_RGBA_);
-		assert_condition(image.size() == ImageSize{mbw<Size>((*png_struct).width), mbw<Size>((*png_struct).height)});
+		assert_test((*png_info).color_type == Third::libpng::PNG_COLOR_TYPE_RGBA_);
+		assert_test(image.size() == ImageSize{mbw<Size>((*png_struct).width), mbw<Size>((*png_struct).height)});
 		for (auto & row : image.data()) {
 			Third::libpng::png_read_row(png_struct, reinterpret_cast<Third::libpng::png_bytep>(row.begin().value), nullptr);
 		}
@@ -207,7 +207,7 @@ namespace TwinStar::Core::Image::File::PNG {
 		auto file = FileSystem::Detail::FileHandler::open_by_read(path);
 		Third::libpng::png_init_io(png_struct, file.value());
 		Third::libpng::png_read_info(png_struct, png_info);
-		assert_condition((*png_info).color_type == Third::libpng::PNG_COLOR_TYPE_RGBA_);
+		assert_test((*png_info).color_type == Third::libpng::PNG_COLOR_TYPE_RGBA_);
 		image.allocate(ImageSize{mbw<Size>((*png_struct).width), mbw<Size>((*png_struct).height)});
 		for (auto & row : image.data()) {
 			Third::libpng::png_read_row(png_struct, reinterpret_cast<Third::libpng::png_bytep>(row.begin().value), nullptr);

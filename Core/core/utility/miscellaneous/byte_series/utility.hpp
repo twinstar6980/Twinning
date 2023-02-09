@@ -88,7 +88,7 @@ namespace TwinStar::Core {
 	inline auto from_byte_view (
 		ByteListView<constant> const & source
 	) -> DestinationView<DestinationElement, constant> {
-		assert_condition(is_padded_size(source.size(), k_type_size<DestinationElement>));
+		assert_test(is_padded_size(source.size(), k_type_size<DestinationElement>));
 		return DestinationView<DestinationElement, constant>{cast_pointer<DestinationElement>(source.begin()), source.size() / k_type_size<DestinationElement>};
 	}
 

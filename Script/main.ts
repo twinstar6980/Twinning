@@ -2,19 +2,21 @@ namespace TwinStar {
 
 	// ------------------------------------------------
 
-	export const k_version = 28;
+	export const k_version = 29;
 
 	// ------------------------------------------------
 
-	export function assert(
+	export function assert_test(
 		condition: boolean,
-		message: string = `assert failed`,
+		message: string = `assertion failed`,
 	): asserts condition {
 		if (!condition) {
 			throw new Error(message);
 		}
 		return;
 	}
+
+	// ------------------------------------------------
 
 	export function parse_stack_string(
 		stack: string | undefined,
@@ -206,19 +208,19 @@ namespace TwinStar {
 
 		export function load(
 			manifest: Manifest,
-			main_directory: string,
+			directory: string,
 		): [Entry, null | Config] | null {
-			assert(Detail.exist_directory(main_directory), `main directory is not found : <${main_directory}>`);
+			assert_test(Detail.exist_directory(directory), `directory is not found : <${directory}>`);
 			let entry: [Entry, null | Config] | null = null;
-			assert(manifest.entry === null || manifest.module.includes(manifest.entry), `entry module is invalid : <${manifest.entry}>`);
+			assert_test(manifest.entry === null || manifest.module.includes(manifest.entry), `entry module is invalid : <${manifest.entry}>`);
 			for (let module of manifest.module) {
-				let script_file = `${main_directory}/${module}.js`;
-				let config_file = `${main_directory}/${module}.json`;
-				assert(Detail.exist_file(script_file), `module script file not found : <${module}>`);
+				let script_file = `${directory}/${module}.js`;
+				let config_file = `${directory}/${module}.json`;
+				assert_test(Detail.exist_file(script_file), `module script file not found : <${module}>`);
 				let config: null | Config = null;
 				if (Detail.exist_file(config_file)) {
 					let raw_module_config = Detail.read_json(config_file);
-					assert(raw_module_config !== null && typeof raw_module_config === 'object' && (raw_module_config as Object).constructor.name === 'Object', `module config must be object : <${module}>`);
+					assert_test(raw_module_config !== null && typeof raw_module_config === 'object' && (raw_module_config as Object).constructor.name === 'Object', `module config must be object : <${module}>`);
 					config = raw_module_config as Config;
 				}
 				let evaluate_result = Detail.evaluate(script_file) as EvaluateResult;
@@ -228,7 +230,7 @@ namespace TwinStar {
 					}
 				}
 				if (module === manifest.entry) {
-					assert(evaluate_result !== undefined && evaluate_result.entry !== undefined, `module is loaded, but entry function is not found : <${module}>`);
+					assert_test(evaluate_result !== undefined && evaluate_result.entry !== undefined, `module is loaded, but entry function is not found : <${module}>`);
 					entry = [evaluate_result.entry as Entry, config];
 				}
 			}
@@ -251,10 +253,10 @@ namespace TwinStar {
 			argument: Array<string>,
 		): null | string {
 			let result: null | string = null;
-			let load_module_success = false;
+			let load_module_succeed = false;
 			try {
 				Detail.notify(`TwinStar.ToolKit ~ Core:${Core.Miscellaneous.g_version.value} & Shell:${Core.Miscellaneous.g_context.callback(Core.StringList.value(['name'])).value[1]}:${Core.Miscellaneous.g_context.callback(Core.StringList.value(['version'])).value[1]} & Script:${k_version} ~ ${Core.Miscellaneous.g_context.callback(Core.StringList.value(['system'])).value[1]}`);
-				assert(argument.length >= 1, `argument too few`);
+				assert_test(argument.length >= 1, `argument too few`);
 				// 获取主目录
 				let home_directory = argument[0];
 				home_directory = home_directory.replaceAll(`\\`, '/');
@@ -267,7 +269,7 @@ namespace TwinStar {
 				let begin_time = Date.now();
 				let entry = ModuleLoader.load(g_module_manifest, HomeDirectory.script());
 				let end_time = Date.now();
-				load_module_success = true;
+				load_module_succeed = true;
 				// 现在，子模块可用，因此应使用 Console 模块来保证更好的交互效果
 				try {
 					Console.notify('s', los(`模块加载完成`), [los(`用时 {} s`, ((end_time - begin_time) / 1000).toFixed(3))]);
@@ -324,7 +326,7 @@ namespace TwinStar {
 				}
 			} finally {
 				// 需要释放的资源可能位于子模块中，而目前无法保证子模块已被成功加载
-				if (load_module_success) {
+				if (load_module_succeed) {
 					HomeDirectory.deinitialize();
 					g_thread_manager.resize(0);
 				}

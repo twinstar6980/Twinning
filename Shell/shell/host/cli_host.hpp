@@ -57,30 +57,28 @@ namespace TwinStar::Shell {
 
 		#pragma endregion
 
-		#pragma region life-time
+		#pragma region function
 
 		virtual auto start (
 		) -> void override {
-			assert_condition(!thiz.m_running);
+			assert_test(!thiz.m_running);
 			thiz.m_running = true;
 			return;
 		}
 
 		virtual auto finish (
 		) -> void override {
-			assert_condition(thiz.m_running);
+			assert_test(thiz.m_running);
 			thiz.m_running = false;
 			return;
 		}
 
-		#pragma endregion
+		// ----------------
 
-		#pragma region callback
-
-		virtual auto callback (
+		virtual auto execute (
 			std::vector<std::string> const & argument
 		) -> std::vector<std::string> override {
-			assert_condition(thiz.m_running);
+			assert_test(thiz.m_running);
 			auto result = std::vector<std::string>{};
 			auto method = argument[0];
 			switch (hash_string(method)) {
@@ -127,7 +125,7 @@ namespace TwinStar::Shell {
 
 		#pragma endregion
 
-		#pragma region callback implement
+		#pragma region execute implement
 
 		auto name (
 		) -> std::string {
@@ -171,10 +169,10 @@ namespace TwinStar::Shell {
 			CoInitialize(nullptr);
 			auto dialog = X<IFileOpenDialog *>{nullptr};
 			state_h = CoCreateInstance(__uuidof(FileOpenDialog), nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&dialog));
-			assert_condition(state_h == S_OK);
+			assert_test(state_h == S_OK);
 			auto option = FILEOPENDIALOGOPTIONS{};
 			state_h = dialog->GetOptions(&option);
-			assert_condition(state_h == S_OK);
+			assert_test(state_h == S_OK);
 			option |= FOS_NOCHANGEDIR | FOS_FORCEFILESYSTEM | FOS_NODEREFERENCELINKS | FOS_DONTADDTORECENT | FOS_FORCESHOWHIDDEN;
 			if (pick_folder) {
 				option |= FOS_PICKFOLDERS;
@@ -183,24 +181,24 @@ namespace TwinStar::Shell {
 				option |= FOS_ALLOWMULTISELECT;
 			}
 			state_h = dialog->SetOptions(option);
-			assert_condition(state_h == S_OK);
+			assert_test(state_h == S_OK);
 			state_h = dialog->Show(nullptr);
 			if (state_h != HRESULT_FROM_WIN32(ERROR_CANCELLED)) {
-				assert_condition(state_h == S_OK);
+				assert_test(state_h == S_OK);
 				auto selected_item_list = X<IShellItemArray *>{nullptr};
 				state_h = dialog->GetResults(&selected_item_list);
-				assert_condition(state_h == S_OK);
+				assert_test(state_h == S_OK);
 				auto count = DWORD{0};
 				state_h = selected_item_list->GetCount(&count);
-				assert_condition(state_h == S_OK);
+				assert_test(state_h == S_OK);
 				result.reserve(count);
-				for (auto index = DWORD{0}; index < count; index++) {
+				for (auto index = DWORD{0}; index < count; ++index) {
 					auto item = X<IShellItem *>{nullptr};
 					auto display_name = LPWSTR{nullptr};
 					state_h = selected_item_list->GetItemAt(index, &item);
-					assert_condition(state_h == S_OK);
+					assert_test(state_h == S_OK);
 					state_h = item->GetDisplayName(SIGDN_FILESYSPATH, &display_name);
-					assert_condition(state_h == S_OK);
+					assert_test(state_h == S_OK);
 					auto display_name_8 = utf16_to_utf8(std::u16string_view{reinterpret_cast<char16_t const *>(display_name)});
 					result.emplace_back(std::move(reinterpret_cast<std::string &>(display_name_8)));
 					CoTaskMemFree(display_name);

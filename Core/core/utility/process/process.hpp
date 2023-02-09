@@ -188,7 +188,7 @@ namespace TwinStar::Core::Process {
 			FILE_ATTRIBUTE_NORMAL,
 			nullptr
 		);
-		assert_condition(startup_information.hStdInput != INVALID_HANDLE_VALUE);
+		assert_test(startup_information.hStdInput != INVALID_HANDLE_VALUE);
 		startup_information.cb = sizeof(STARTUPINFO);
 		startup_information.dwFlags = STARTF_USESTDHANDLES;
 		startup_information.hStdOutput = CreateFileW(
@@ -200,7 +200,7 @@ namespace TwinStar::Core::Process {
 			FILE_ATTRIBUTE_NORMAL,
 			nullptr
 		);
-		assert_condition(startup_information.hStdOutput != INVALID_HANDLE_VALUE);
+		assert_test(startup_information.hStdOutput != INVALID_HANDLE_VALUE);
 		startup_information.hStdError = CreateFileW(
 			cast_pointer<WCHAR>(error_string.begin()).value,
 			GENERIC_WRITE,
@@ -210,7 +210,7 @@ namespace TwinStar::Core::Process {
 			FILE_ATTRIBUTE_NORMAL,
 			nullptr
 		);
-		assert_condition(startup_information.hStdError != INVALID_HANDLE_VALUE);
+		assert_test(startup_information.hStdError != INVALID_HANDLE_VALUE);
 		state_b = CreateProcessW(
 			cast_pointer<WCHAR>(program_string.begin()).value,
 			cast_pointer<WCHAR>(argument_string.begin()).value,
@@ -223,17 +223,17 @@ namespace TwinStar::Core::Process {
 			&startup_information,
 			&process_information
 		);
-		assert_condition(state_b);
+		assert_test(state_b);
 		state_d = WaitForSingleObject(process_information.hProcess, INFINITE);
-		assert_condition(state_d == WAIT_OBJECT_0);
+		assert_test(state_d == WAIT_OBJECT_0);
 		state_b = CloseHandle(startup_information.hStdInput);
-		assert_condition(state_b);
+		assert_test(state_b);
 		state_b = CloseHandle(startup_information.hStdOutput);
-		assert_condition(state_b);
+		assert_test(state_b);
 		state_b = CloseHandle(startup_information.hStdError);
-		assert_condition(state_b);
+		assert_test(state_b);
 		state_b = GetExitCodeProcess(process_information.hProcess, &exit_code_d);
-		assert_condition(state_b);
+		assert_test(state_b);
 		result = mbw<IntegerU32>(exit_code_d);
 		#endif
 		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
@@ -274,19 +274,19 @@ namespace TwinStar::Core::Process {
 		output_string = make_null_terminated_string((output.has() ? output.get() : null_device).to_string());
 		error_string = make_null_terminated_string((error.has() ? error.get() : null_device).to_string());
 		state_i = posix_spawn_file_actions_init(&spawn_file_action);
-		assert_condition(state_i == 0);
+		assert_test(state_i == 0);
 		state_i = posix_spawn_file_actions_addopen(&spawn_file_action, STDIN_FILENO, cast_pointer<char>(input_string.begin()).value, O_RDONLY, 0);
-		assert_condition(state_i == 0);
+		assert_test(state_i == 0);
 		state_i = posix_spawn_file_actions_addopen(&spawn_file_action, STDOUT_FILENO, cast_pointer<char>(output_string.begin()).value, O_WRONLY, 0);
-		assert_condition(state_i == 0);
+		assert_test(state_i == 0);
 		state_i = posix_spawn_file_actions_addopen(&spawn_file_action, STDERR_FILENO, cast_pointer<char>(error_string.begin()).value, O_WRONLY, 0);
-		assert_condition(state_i == 0);
+		assert_test(state_i == 0);
 		state_i = posix_spawn(&process_id, cast_pointer<char>(program_string.begin()).value, &spawn_file_action, nullptr, cast_pointer<char *>(argument_string_list.begin()).value, cast_pointer<char *>(environment_string_list.begin()).value);
-		assert_condition(state_i == 0);
+		assert_test(state_i == 0);
 		state_i = posix_spawn_file_actions_destroy(&spawn_file_action);
-		assert_condition(state_i == 0);
+		assert_test(state_i == 0);
 		state_i = waitid(P_PID, process_id, &wait_info, WEXITED | WSTOPPED);
-		assert_condition(state_i == 0);
+		assert_test(state_i == 0);
 		result = mbw<IntegerU32>(wait_info.si_status);
 		#endif
 		return result;

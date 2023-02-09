@@ -2,7 +2,6 @@
 
 #include "shell/common.hpp"
 #include "shell/core/interface.hpp"
-#include "shell/core/symbol.hpp"
 
 namespace TwinStar::Shell::Core {
 

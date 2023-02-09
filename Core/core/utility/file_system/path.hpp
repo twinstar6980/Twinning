@@ -89,7 +89,7 @@ namespace TwinStar::Core {
 		auto operator / (
 			Path const & that
 		) const -> Path {
-			assert_condition(!that.m_root && !that.m_absolute);
+			assert_test(!that.m_root && !that.m_absolute);
 			auto result = Path{};
 			result.m_root = thiz.m_root;
 			result.m_absolute = thiz.m_absolute;
@@ -102,7 +102,7 @@ namespace TwinStar::Core {
 		auto operator / (
 			Path && that
 		) const -> Path {
-			assert_condition(!that.m_root && !that.m_absolute);
+			assert_test(!that.m_root && !that.m_absolute);
 			auto result = Path{};
 			result.m_root = thiz.m_root;
 			result.m_absolute = thiz.m_absolute;
@@ -133,7 +133,7 @@ namespace TwinStar::Core {
 		auto operator /= (
 			Path const & that
 		) -> Path& {
-			assert_condition(!that.m_root && !that.m_absolute);
+			assert_test(!that.m_root && !that.m_absolute);
 			thiz.m_sub_path.append_list(that.m_sub_path);
 			return thiz;
 		}
@@ -141,7 +141,7 @@ namespace TwinStar::Core {
 		auto operator /= (
 			Path && that
 		) -> Path& {
-			assert_condition(!that.m_root && !that.m_absolute);
+			assert_test(!that.m_root && !that.m_absolute);
 			thiz.m_sub_path.append_list(make_moveable_range_of(that.m_sub_path));
 			return thiz;
 		}
@@ -171,7 +171,7 @@ namespace TwinStar::Core {
 
 		auto parent (
 		) const -> Path {
-			assert_condition(!thiz.m_sub_path.empty());
+			assert_test(!thiz.m_sub_path.empty());
 			auto result = Path{};
 			result.m_root = thiz.m_root;
 			result.m_absolute = thiz.m_absolute;
@@ -181,7 +181,7 @@ namespace TwinStar::Core {
 
 		auto name (
 		) const -> String {
-			assert_condition(!thiz.m_sub_path.empty());
+			assert_test(!thiz.m_sub_path.empty());
 			return thiz.m_sub_path.last();
 		}
 

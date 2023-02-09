@@ -25,9 +25,9 @@
 
 #define thiz (*this)
 
-#define assert_condition(...)\
+#define assert_test(...)\
 	if (!(__VA_ARGS__)) {\
-		throw std::runtime_error{"assert failed : " #__VA_ARGS__};\
+		throw std::runtime_error{"assertion failed : " #__VA_ARGS__};\
 	}\
 	static_assert(true)
 
@@ -89,7 +89,7 @@ namespace TwinStar::Shell {
 			reinterpret_cast<char const *>(source.data()),
 			reinterpret_cast<char const *>(source.data() + source.size())
 		);
-		assert_condition(converter.converted() == source.size());
+		assert_test(converter.converted() == source.size());
 		return result;
 	}
 
@@ -101,7 +101,7 @@ namespace TwinStar::Shell {
 			source.data(),
 			source.data() + source.size()
 		);
-		assert_condition(converter.converted() == source.size());
+		assert_test(converter.converted() == source.size());
 		return reinterpret_cast<std::u8string &>(result);
 	}
 
@@ -117,7 +117,7 @@ namespace TwinStar::Shell {
 		//
 		auto thread_id = std::this_thread::get_id();
 		auto item_pair = map.try_emplace(thread_id, function);
-		assert_condition(item_pair.second);
+		assert_test(item_pair.second);
 		return [] (Argument ... argument) -> Result {
 			auto thread_id = std::this_thread::get_id();
 			return map.at(thread_id)(std::forward<Argument>(argument) ...);
@@ -136,7 +136,7 @@ namespace TwinStar::Shell {
 		auto text_16 = utf8_to_utf16(reinterpret_cast<std::u8string const &>(text));
 		auto length = DWORD{};
 		state_b = WriteConsoleW(GetStdHandle(STD_OUTPUT_HANDLE), text_16.data(), static_cast<DWORD>(text_16.size()), &length, nullptr);
-		assert_condition(state_b);
+		assert_test(state_b);
 		return;
 		#endif
 		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
@@ -152,7 +152,7 @@ namespace TwinStar::Shell {
 		auto text_16 = std::array<char16_t, 0x1000>{};
 		auto length = DWORD{};
 		state_b = ReadConsoleW(GetStdHandle(STD_INPUT_HANDLE), text_16.data(), static_cast<DWORD>(text_16.size()), &length, nullptr);
-		assert_condition(state_b);
+		assert_test(state_b);
 		auto text_8 = utf16_to_utf8(std::u16string_view{text_16.data(), length - 2});
 		return std::string{std::move(reinterpret_cast<std::string &>(text_8))};
 		#endif

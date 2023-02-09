@@ -101,7 +101,7 @@ namespace TwinStar::Core {
 		) -> Void {
 			thix.read(up_cast<BaseWrapper<TValue>>(that));
 			// todo
-			assert_condition((self_cast<IntegerWrapper<ZIntegerU8>>(that) & ~mbw<IntegerWrapper<ZIntegerU8>>(0b1)) == mbw<IntegerWrapper<ZIntegerU8>>(0));
+			assert_test((self_cast<IntegerWrapper<ZIntegerU8>>(that) & ~mbw<IntegerWrapper<ZIntegerU8>>(0b1)) == mbw<IntegerWrapper<ZIntegerU8>>(0));
 			return;
 		}
 
@@ -579,7 +579,7 @@ namespace TwinStar::Core {
 			That &  that
 		) -> Void {
 			for (auto & index : SizeRange{t_size}) {
-				assert_condition(thix.read_of() == k_null_byte);
+				assert_test(thix.read_of() == k_null_byte);
 			}
 			return;
 		}

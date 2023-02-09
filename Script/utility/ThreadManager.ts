@@ -40,7 +40,7 @@ namespace TwinStar {
 		idle(
 			index: number
 		): boolean {
-			assert(0 <= index && index < this.m_pool.length, `invalid thread index`);
+			assert_test(0 <= index && index < this.m_pool.length, `invalid thread index`);
 			let item = this.m_pool[index];
 			return !item.context.busy().value;
 		}
@@ -49,9 +49,9 @@ namespace TwinStar {
 			index: number,
 			executor: () => any,
 		): void {
-			assert(0 <= index && index < this.m_pool.length, `invalid thread index`);
+			assert_test(0 <= index && index < this.m_pool.length, `invalid thread index`);
 			let item = this.m_pool[index];
-			assert(!item.context.busy().value, `context is busy`);
+			assert_test(!item.context.busy().value, `context is busy`);
 			item.context.execute(this.make_executor(index, executor), item.thread);
 			item.thread.detach();
 			return;
@@ -60,9 +60,9 @@ namespace TwinStar {
 		result(
 			index: number,
 		): [boolean, any] {
-			assert(0 <= index && index < this.m_pool.length, `invalid thread index`);
+			assert_test(0 <= index && index < this.m_pool.length, `invalid thread index`);
 			let item = this.m_pool[index];
-			assert(!item.context.busy().value, `context is busy`);
+			assert_test(!item.context.busy().value, `context is busy`);
 			return item.result;
 		}
 
@@ -98,7 +98,7 @@ namespace TwinStar {
 		push_execute(
 			executor: () => any,
 		): void {
-			assert(this.m_pool.length !== 0, `thread pool is empty`);
+			assert_test(this.m_pool.length !== 0, `thread pool is empty`);
 			let index = null;
 			while (index === null) {
 				index = this.m_pool.findIndex((e, i) => (this.idle(i)));

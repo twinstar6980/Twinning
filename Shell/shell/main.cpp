@@ -3,6 +3,7 @@
 #include "shell/common.hpp"
 #include "shell/core/dynamic_library.hpp"
 #include "shell/host/cli_host.hpp"
+#include "shell/host/launcher.hpp"
 
 #if defined M_vld
 #include "vld.h"
@@ -40,13 +41,13 @@ auto main (
 	}();
 	auto exception_message = std::optional<std::string>{};
 	try {
-		assert_condition(args.size() >= 3);
-		auto library_file = args[1];
+		assert_test(args.size() >= 3);
+		auto core_path = args[1];
 		auto script = args[2];
 		auto argument = std::vector<std::string>{args.begin() + 3, args.end()};
-		auto library = TwinStar::Shell::Core::DynamicLibrary{nullptr, library_file};
+		auto core = TwinStar::Shell::Core::DynamicLibrary{nullptr, core_path};
 		auto host = TwinStar::Shell::CLIHost{nullptr};
-		auto result = TwinStar::Shell::launch(host, library, script, argument);
+		auto result = TwinStar::Shell::Launcher::launch(host, core, script, argument);
 		if (result) {
 			exception_message.emplace(result.value());
 		}

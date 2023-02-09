@@ -78,7 +78,7 @@ namespace TwinStar::Core::JS {
 
 		auto value (
 		) -> Value& {
-			assert_condition(!thiz.m_value.template is<Null>());
+			assert_test(!thiz.m_value.template is<Null>());
 			if (thiz.m_value.template is<Pointer<Value>>()) {
 				return *thiz.m_value.template get<Pointer<Value>>();
 			} else if (thiz.m_value.template is<std::shared_ptr<Value>>()) {

@@ -45,7 +45,7 @@ namespace TwinStar::Core::Range {
 			return mbw<Size>(range.end() - range.begin());
 		} else {
 			static_assert(k_static_assert_fail<Range>);
-			assert_failed("");
+			assert_fail("");
 		}
 	}
 
@@ -79,7 +79,7 @@ namespace TwinStar::Core::Range {
 		Range2 &&        range_2,
 		Executor const & executor
 	) -> Void {
-		assert_condition(size(range_1) == size(range_2));
+		assert_test(size(range_1) == size(range_2));
 		auto current_1 = range_1.begin();
 		auto current_2 = range_2.begin();
 		auto end_1 = range_1.end();

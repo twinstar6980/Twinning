@@ -39,9 +39,9 @@ namespace TwinStar.Language {
 		...argumant: any[]
 	): string {
 		let map = g_table[g_target];
-		assert(map !== undefined, `locale target not found : ${g_target}`);
+		assert_test(map !== undefined, `locale target not found : ${g_target}`);
 		let format = map[key];
-		assert(format !== undefined, `locale key not found : ${key}`);
+		assert_test(format !== undefined, `locale key not found : ${key}`);
 		if (format === null) {
 			format = key;
 		}

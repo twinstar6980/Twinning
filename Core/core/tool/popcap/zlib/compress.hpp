@@ -154,7 +154,7 @@ namespace TwinStar::Core::Tool::PopCap::ZLib {
 			}
 			auto raw_begin = raw.position();
 			Data::Compression::Deflate::Uncompress::do_process_whole(ripe, raw, window_bits, Data::Compression::Deflate::Wrapper::Constant::zlib());
-			assert_condition(raw.position() - raw_begin == size);
+			assert_test(raw.position() - raw_begin == size);
 			return;
 		}
 

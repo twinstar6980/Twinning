@@ -61,7 +61,7 @@ namespace TwinStar::WindowsExplorerExtension {
 		if (state_d == 0) {
 			throw std::runtime_error{std::format("^ GetModuleFileNameW : {}", GetLastError())};
 		}
-		// TODO : maybe ERROR_INSUFFICIENT_BUFFER even if function success
+		// TODO : maybe ERROR_INSUFFICIENT_BUFFER even if function succeeded
 		return std::wstring{buffer.data(), state_d};
 	}
 

@@ -44,7 +44,7 @@ namespace TwinStar.Support.PopCapAnimation.Convert {
 		} else if (transform.length === 6) {
 			result = [...transform];
 		} else {
-			assert(false, `invalid transform size`);
+			assert_test(false, `invalid transform size`);
 		}
 		return result;
 	}

@@ -150,7 +150,7 @@ namespace TwinStar::Core::Tool::PopCap::RSB::Common {
 				}
 				block_count += element.key.size() - character_index + 1_sz;
 				auto additional_size = bs_size(element.value);
-				assert_condition(is_padded_size(additional_size, bs_static_size<IntegerU32>()));
+				assert_test(is_padded_size(additional_size, bs_static_size<IntegerU32>()));
 				block_count += additional_size / bs_static_size<IntegerU32>();
 			}
 			return block_count * k_block_size;
