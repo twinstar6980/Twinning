@@ -1,0 +1,10 @@
+include: package:flutter_lints/flutter.yaml
+linter:
+  rules:
+    lines_longer_than_80_chars: false
+    unnecessary_this: false
+    unnecessary_brace_in_string_interps: false
+    unnecessary_string_interpolations: false
+    prefer_single_quotes: true
+    prefer_function_declarations_over_variables: false
+    # require_trailing_commas: true

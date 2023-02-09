@@ -20,7 +20,11 @@ by TwinStar ( aka TwinKleS or SmallPC or 一路上海外 ) .
 
 * `Shell`
 	
-	外壳程序，提供基于终端的命令行界面。
+	外壳程序，提供命令行界面。
+
+* `ShellGUI`
+	
+	外壳程序，提供图形界面。
 
 * `Script`
 	
