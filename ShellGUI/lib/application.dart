@@ -45,8 +45,11 @@ class Application extends StatelessWidget {
                 colorScheme: setting.data.mThemeColorInheritFromSystem ? lightDynamic : null,
                 scaffoldBackgroundColor: setting.data.mThemeColorInheritFromSystem ? lightDynamic?.background : null,
                 fontFamily: 'Noto Sans Mono CJK SC',
-                appBarTheme: const AppBarTheme(
+                appBarTheme: AppBarTheme(
                   centerTitle: false,
+                  elevation: 4,
+                  scrolledUnderElevation: 4,
+                  shadowColor: darkDynamic?.shadow,
                 ),
               ),
               darkTheme: ThemeData(
@@ -56,8 +59,11 @@ class Application extends StatelessWidget {
                 colorScheme: setting.data.mThemeColorInheritFromSystem ? darkDynamic : null,
                 scaffoldBackgroundColor: setting.data.mThemeColorInheritFromSystem ? darkDynamic?.background : null,
                 fontFamily: 'Noto Sans Mono CJK SC',
-                appBarTheme: const AppBarTheme(
+                appBarTheme: AppBarTheme(
                   centerTitle: false,
+                  elevation: 4,
+                  scrolledUnderElevation: 4,
+                  shadowColor: darkDynamic?.shadow,
                 ),
               ),
               themeMode: setting.data.mThemeMode,

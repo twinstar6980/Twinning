@@ -68,8 +68,8 @@ class _HomePageState extends State<HomePage> {
         children: this._page,
       ),
       bottomNavigationBar: NavigationBar(
-        selectedIndex: this._pageIndex,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        selectedIndex: this._pageIndex,
         onDestinationSelected: this._pageIndexSet,
         destinations: const [
           NavigationDestination(

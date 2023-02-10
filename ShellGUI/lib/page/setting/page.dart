@@ -27,12 +27,13 @@ class _SettingPageState extends State<SettingPage> {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return Container(
-      padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
       child: Column(
         children: [
           Expanded(
             child: ListView(
               children: [
+                const SizedBox(height: 8),
                 ListTile(
                   dense: true,
                   title: Text(
@@ -413,6 +414,7 @@ class _SettingPageState extends State<SettingPage> {
                   ),
                   Expanded(child: Container()),
                 ]),
+                const SizedBox(height: 8),
               ],
             ),
           )

@@ -23,13 +23,9 @@ class LaunchBarContent extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: OutlinedButton(
+          child: FilledButton.tonal(
             onPressed: () {
               this.onLaunch([]);
-              // showDialog<String>(
-              //   context: context,
-              //   builder: (context) => LaunchArgumentSetterDialog(onLaunch: onLaunch),
-              // );
             },
             child: const Text('启动'),
           ),

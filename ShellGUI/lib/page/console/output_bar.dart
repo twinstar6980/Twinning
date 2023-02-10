@@ -33,7 +33,8 @@ class NotifyOutputBar extends StatelessWidget {
     var titleTextStyle = !setting.data.mUseLargerFontInConsole ? theme.textTheme.titleSmall! : theme.textTheme.titleMedium!;
     var descriptionTextStyle = !setting.data.mUseLargerFontInConsole ? theme.textTheme.bodySmall! : theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.secondary);
     return Card(
-      elevation: 1.0,
+      margin: EdgeInsets.zero,
+      elevation: 1,
       color: Color.alphaBlend(typeColor.withOpacity(0.025), theme.colorScheme.surface),
       child: Container(
           padding: const EdgeInsets.all(8),

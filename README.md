@@ -22,7 +22,7 @@ by TwinStar ( aka TwinKleS or SmallPC or 一路上海外 ) .
 	
 	外壳程序，提供命令行界面。
 
-* `ShellGUI`
+* `Shell GUI`
 	
 	外壳程序，提供图形界面。
 

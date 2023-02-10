@@ -33,9 +33,9 @@ class ConsolePage extends StatefulWidget {
 
 class _ConsolePageState extends State<ConsolePage> implements Host {
 
-  final List<NotifyOutputBar> _notify = [];
-  final ScrollController      _notifyListScrollController = ScrollController();
-        Widget?               _inputBarContent;
+  final ScrollController _outputBarListScrollController = ScrollController();
+  final List<Widget>     _outputBarListItem = [];
+        Widget?          _inputBarContent;
 
   // ----------------
 
@@ -46,7 +46,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
   start(
   ) async {
     assert(!this._running);
-    this._notify.clear();
+    this._outputBarListItem.clear();
     this._inputBarContent = const IdleInputBarContent();
     this.setState(() {});
     this._running = true;
@@ -77,7 +77,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'version': {
-        result.add('1');
+        result.add('${kApplicationVersion}');
         break;
       }
       case 'system': {
@@ -106,7 +106,10 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         var type = MessageTypeExtension.fromString(argument[1]);
         var title = argument[2];
         var description = argument.sublist(3);
-        this._notify.add(
+        this._outputBarListItem.add(
+          const SizedBox(height: 8),
+        );
+        this._outputBarListItem.add(
           NotifyOutputBar(
             type: type,
             title: title,
@@ -115,7 +118,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         );
         this.setState(() {});
         Future.delayed(const Duration(milliseconds: 100), () {
-          this._notifyListScrollController.jumpTo(this._notifyListScrollController.position.maxScrollExtent);
+          this._outputBarListScrollController.jumpTo(this._outputBarListScrollController.position.maxScrollExtent);
         });
         break;
       }
@@ -250,7 +253,10 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
       result = '${e}';
     }
     if (result != null) {
-      this._notify.add(
+      this._outputBarListItem.add(
+        const SizedBox(height: 8),
+      );
+      this._outputBarListItem.add(
         NotifyOutputBar(
           type: MessageType.error,
           title: result,
@@ -258,7 +264,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         ),
       );
       await Future.delayed(const Duration(milliseconds: 100));
-      this._notifyListScrollController.jumpTo(this._notifyListScrollController.position.maxScrollExtent);
+      this._outputBarListScrollController.jumpTo(this._outputBarListScrollController.position.maxScrollExtent);
       this.setState(() {});
     }
     return result;
@@ -281,22 +287,25 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
       }();
     }
     return Container(
-      padding: const EdgeInsets.fromLTRB(8, 0, 8, 4),
+      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
       child: Column(
         children: [
           Expanded(
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(0, 4, 0, 0),
-              child: ListView(
-                controller: this._notifyListScrollController,
-                children: [...this._notify],
-              ),
+            child: ListView(
+              controller: this._outputBarListScrollController,
+              children: [...this._outputBarListItem],
             ),
           ),
-          ActionBar(
-            running: this._inputBarContent != null,
-            content: this._inputBarContent ?? LaunchBarContent(onLaunch: this._launch),
+          const SizedBox(height: 8),
+          LinearProgressIndicator(
+            minHeight: 1,
+            value: this._running ? null : 0.0,
           ),
+          const SizedBox(height: 8),
+          ActionBar(
+            content: this._running ? this._inputBarContent! : LaunchBarContent(onLaunch: this._launch),
+          ),
+          const SizedBox(height: 8),
         ],
       ),
     );
