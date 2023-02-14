@@ -176,7 +176,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			nullptr,
 			nullptr,
 			TRUE,
-			CREATE_UNICODE_ENVIRONMENT,
+			CREATE_UNICODE_ENVIRONMENT | DETACHED_PROCESS,
 			nullptr,
 			nullptr,
 			&startup_information,

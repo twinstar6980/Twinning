@@ -217,7 +217,7 @@ namespace TwinStar::Core::Process {
 			nullptr,
 			nullptr,
 			TRUE,
-			CREATE_UNICODE_ENVIRONMENT,
+			CREATE_UNICODE_ENVIRONMENT | DETACHED_PROCESS,
 			cast_pointer<WCHAR>(environment_string.begin()).value,
 			nullptr,
 			&startup_information,
