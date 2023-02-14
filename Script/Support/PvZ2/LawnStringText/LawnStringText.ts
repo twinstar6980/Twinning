@@ -14,14 +14,14 @@ namespace TwinStar.Support.PvZ2.LawnStringText {
 
 	export function convert(
 		source_data: ArrayBuffer,
-		source_version: Version | 'auto',
+		source_version: Version | null,
 		destination_version: Version,
 	): ArrayBuffer {
 		let string_map: Record<string, string> = {};
 		let actual_source_version: Version;
 		let source_map: Record<string, string> | null = null;
 		let source_list: Array<string> | null = null;
-		if (source_version === 'auto') {
+		if (source_version === null) {
 			try {
 				let source = CoreX.JSON.read(source_data).value as any;
 				let source_variant = source?.objects[0]?.objdata?.LocStringValues;
@@ -144,7 +144,7 @@ namespace TwinStar.Support.PvZ2.LawnStringText {
 	export function convert_fs(
 		source_file: string,
 		destination_file: string,
-		source_version: Version | 'auto',
+		source_version: Version | null,
 		destination_version: Version,
 	): void {
 		let source_data = CoreX.FileSystem.read_file(source_file);

@@ -17,6 +17,7 @@ namespace TwinStar.Entry.method.popcap.pam {
 	// ------------------------------------------------
 
 	type Config = {
+		version_number: Executor.RequestArgument<bigint, false>;
 		encode_buffer_size: Executor.RequestArgument<string, false>;
 	};
 
@@ -78,7 +79,7 @@ namespace TwinStar.Entry.method.popcap.pam {
 					...Entry.k_cfsa,
 					manifest_file: undefined!,
 					data_file: '?default',
-					version_number: '?input',
+					version_number: config.version_number,
 					buffer_size: config.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.pam)(\.json)$/i]]),
@@ -128,7 +129,7 @@ namespace TwinStar.Entry.method.popcap.pam {
 					...Entry.k_cfsa,
 					data_file: undefined!,
 					manifest_file: '?default',
-					version_number: '?input',
+					version_number: config.version_number,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.pam)$/i]]),
 				input_forwarder: 'data_file',
@@ -353,7 +354,7 @@ namespace TwinStar.Entry.method.popcap.pam {
 					...Entry.k_cfsa,
 					manifest_file_directory: undefined!,
 					data_file_directory: '?default',
-					version_number: '?input',
+					version_number: config.version_number,
 					buffer_size: config.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
@@ -411,7 +412,7 @@ namespace TwinStar.Entry.method.popcap.pam {
 					...Entry.k_cfsa,
 					data_file_directory: undefined!,
 					manifest_file_directory: '?default',
-					version_number: '?input',
+					version_number: config.version_number,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'data_file_directory',

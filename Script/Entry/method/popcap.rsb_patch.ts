@@ -7,6 +7,8 @@ namespace TwinStar.Entry.method.popcap.rsb_patch {
 	// ------------------------------------------------
 
 	type Config = {
+		use_raw_packet: Executor.RequestArgument<boolean, false>;
+		version_number: Executor.RequestArgument<bigint, false>;
 		encode_buffer_size: Executor.RequestArgument<string, false>;
 		decode_buffer_size: Executor.RequestArgument<string, false>;
 	};
@@ -26,12 +28,14 @@ namespace TwinStar.Entry.method.popcap.rsb_patch {
 					after_file: Executor.RequestArgument<string, false>;
 					patch_file: Executor.RequestArgument<string, true>;
 					use_raw_packet: Executor.RequestArgument<boolean, false>;
+					version_number: Executor.RequestArgument<bigint, false>;
 					buffer_size: Executor.RequestArgument<string, false>;
 				}) {
 					let before_file: string;
 					let after_file: string;
 					let patch_file: string;
 					let use_raw_packet: boolean;
+					let version_number: [1n][number];
 					let buffer_size: bigint;
 					{
 						before_file = Executor.require_argument(
@@ -62,6 +66,14 @@ namespace TwinStar.Entry.method.popcap.rsb_patch {
 							() => (Console.confirm(null)),
 							(value) => (null),
 						);
+						version_number = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_number'),
+							a.version_number,
+							(value) => (value),
+							null,
+							() => (Console.option([0n, null, [1n, '']], null)),
+							(value) => ([1n].includes(value) ? null : los(`版本不受支持`)),
+						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
 							a.buffer_size,
@@ -71,7 +83,7 @@ namespace TwinStar.Entry.method.popcap.rsb_patch {
 							(value) => (null),
 						);
 					}
-					CoreX.Tool.PopCap.RSBPatch.encode_fs(before_file, after_file, patch_file, use_raw_packet, { number: 1n }, buffer_size);
+					CoreX.Tool.PopCap.RSBPatch.encode_fs(before_file, after_file, patch_file, use_raw_packet, { number: version_number }, buffer_size);
 					Console.notify('s', los(`执行成功`), [`${patch_file}`]);
 				},
 				default_argument: {
@@ -79,7 +91,8 @@ namespace TwinStar.Entry.method.popcap.rsb_patch {
 					before_file: undefined!,
 					after_file: '?input',
 					patch_file: '?default',
-					use_raw_packet: '?input',
+					use_raw_packet: config.use_raw_packet,
+					version_number: config.version_number,
 					buffer_size: config.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.rsb)$/i]]),
@@ -96,12 +109,14 @@ namespace TwinStar.Entry.method.popcap.rsb_patch {
 					patch_file: Executor.RequestArgument<string, true>;
 					after_file: Executor.RequestArgument<string, false>;
 					use_raw_packet: Executor.RequestArgument<boolean, false>;
+					version_number: Executor.RequestArgument<bigint, false>;
 					buffer_size: Executor.RequestArgument<string, false>;
 				}) {
 					let before_file: string;
 					let patch_file: string;
 					let after_file: string;
 					let use_raw_packet: boolean;
+					let version_number: [1n][number];
 					let buffer_size: bigint;
 					{
 						before_file = Executor.require_argument(
@@ -132,6 +147,14 @@ namespace TwinStar.Entry.method.popcap.rsb_patch {
 							() => (Console.confirm(null)),
 							(value) => (null),
 						);
+						version_number = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_number'),
+							a.version_number,
+							(value) => (value),
+							null,
+							() => (Console.option([0n, null, [1n, '']], null)),
+							(value) => ([1n].includes(value) ? null : los(`版本不受支持`)),
+						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
 							a.buffer_size,
@@ -141,7 +164,7 @@ namespace TwinStar.Entry.method.popcap.rsb_patch {
 							(value) => (null),
 						);
 					}
-					CoreX.Tool.PopCap.RSBPatch.decode_fs(before_file, after_file, patch_file, use_raw_packet, { number: 1n }, buffer_size);
+					CoreX.Tool.PopCap.RSBPatch.decode_fs(before_file, after_file, patch_file, use_raw_packet, { number: version_number }, buffer_size);
 					Console.notify('s', los(`执行成功`), [`${after_file}`]);
 				},
 				default_argument: {
@@ -149,7 +172,8 @@ namespace TwinStar.Entry.method.popcap.rsb_patch {
 					before_file: undefined!,
 					patch_file: '?input',
 					after_file: '?default',
-					use_raw_packet: '?input',
+					use_raw_packet: config.use_raw_packet,
+					version_number: config.version_number,
 					buffer_size: config.decode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.rsb)$/i]]),

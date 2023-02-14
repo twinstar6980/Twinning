@@ -7,6 +7,7 @@ namespace TwinStar.Entry.method.popcap.rsgp {
 	// ------------------------------------------------
 
 	type Config = {
+		version_number: Executor.RequestArgument<bigint, false>;
 		pack_buffer_size: Executor.RequestArgument<string, false>;
 	};
 
@@ -70,8 +71,8 @@ namespace TwinStar.Entry.method.popcap.rsgp {
 					...Entry.k_cfsa,
 					bundle_directory: undefined!,
 					data_file: '?default',
+					version_number: config.version_number,
 					buffer_size: config.pack_buffer_size,
-					version_number: '?input',
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', /.+(\.rsgp)(\.bundle)$/i]]),
 				input_forwarder: 'bundle_directory',
@@ -122,7 +123,7 @@ namespace TwinStar.Entry.method.popcap.rsgp {
 					...Entry.k_cfsa,
 					data_file: undefined!,
 					bundle_directory: '?default',
-					version_number: '?input',
+					version_number: config.version_number,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.rsgp)$/i]]),
 				input_forwarder: 'data_file',

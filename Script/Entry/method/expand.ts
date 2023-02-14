@@ -12,6 +12,8 @@ namespace TwinStar.Entry.method.expand {
 	) {
 		g_executor_method.push(
 		);
+		g_executor_method_of_batch.push(
+		);
 	}
 
 	// ------------------------------------------------

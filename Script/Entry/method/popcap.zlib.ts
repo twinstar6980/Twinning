@@ -9,6 +9,7 @@ namespace TwinStar.Entry.method.popcap.zlib {
 	// ------------------------------------------------
 
 	type Config = {
+		version_variant_64: Executor.RequestArgument<boolean, false>;
 	};
 
 	export function _injector(
@@ -24,7 +25,7 @@ namespace TwinStar.Entry.method.popcap.zlib {
 				worker(a: Entry.CFSA & {
 					raw_file: Executor.RequireArgument<string>;
 					ripe_file: Executor.RequestArgument<string, true>;
-					version_variant_64: boolean | '?input';
+					version_variant_64: Executor.RequestArgument<boolean, false>;
 				}) {
 					let raw_file: string;
 					let ripe_file: string;
@@ -59,7 +60,7 @@ namespace TwinStar.Entry.method.popcap.zlib {
 					...Entry.k_cfsa,
 					raw_file: undefined!,
 					ripe_file: '?default',
-					version_variant_64: '?input',
+					version_variant_64: config.version_variant_64,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),
 				input_forwarder: 'raw_file',
@@ -73,7 +74,7 @@ namespace TwinStar.Entry.method.popcap.zlib {
 				worker(a: Entry.CFSA & {
 					ripe_file: Executor.RequireArgument<string>;
 					raw_file: Executor.RequestArgument<string, true>;
-					version_variant_64: boolean | '?input';
+					version_variant_64: Executor.RequestArgument<boolean, false>;
 				}) {
 					let ripe_file: string;
 					let raw_file: string;
@@ -108,7 +109,7 @@ namespace TwinStar.Entry.method.popcap.zlib {
 					...Entry.k_cfsa,
 					ripe_file: undefined!,
 					raw_file: '?default',
-					version_variant_64: '?input',
+					version_variant_64: config.version_variant_64,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),
 				input_forwarder: 'ripe_file',
@@ -124,7 +125,7 @@ namespace TwinStar.Entry.method.popcap.zlib {
 				worker(a: Entry.CFSA & {
 					raw_file_directory: Executor.RequireArgument<string>;
 					ripe_file_directory: Executor.RequestArgument<string, true>;
-					version_variant_64: boolean | '?input';
+					version_variant_64: Executor.RequestArgument<boolean, false>;
 				}) {
 					let raw_file_directory: string;
 					let ripe_file_directory: string;
@@ -167,7 +168,7 @@ namespace TwinStar.Entry.method.popcap.zlib {
 					...Entry.k_cfsa,
 					raw_file_directory: undefined!,
 					ripe_file_directory: '?default',
-					version_variant_64: '?input',
+					version_variant_64: config.version_variant_64,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'raw_file_directory',
@@ -181,7 +182,7 @@ namespace TwinStar.Entry.method.popcap.zlib {
 				worker(a: Entry.CFSA & {
 					ripe_file_directory: Executor.RequireArgument<string>;
 					raw_file_directory: Executor.RequestArgument<string, true>;
-					version_variant_64: boolean | '?input';
+					version_variant_64: Executor.RequestArgument<boolean, false>;
 				}) {
 					let ripe_file_directory: string;
 					let raw_file_directory: string;
@@ -224,7 +225,7 @@ namespace TwinStar.Entry.method.popcap.zlib {
 					...Entry.k_cfsa,
 					ripe_file_directory: undefined!,
 					raw_file_directory: '?default',
-					version_variant_64: '?input',
+					version_variant_64: config.version_variant_64,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'ripe_file_directory',

@@ -1,4 +1,6 @@
 {
+	"use_raw_packet": "?input",
+	"version_number": 1,
 	"encode_buffer_size": "1024.0m",
 	"decode_buffer_size": "1024.0m",
 }

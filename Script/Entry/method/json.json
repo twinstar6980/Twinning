@@ -1,1 +1,4 @@
-{}
+{
+	"disable_trailing_comma": "?input",
+	"disable_array_wrap_line": "?input",
+}

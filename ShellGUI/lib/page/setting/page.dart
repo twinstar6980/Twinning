@@ -417,7 +417,7 @@ class _SettingPageState extends State<SettingPage> {
                 const SizedBox(height: 8),
               ],
             ),
-          )
+          ),
         ],
       ),
     );

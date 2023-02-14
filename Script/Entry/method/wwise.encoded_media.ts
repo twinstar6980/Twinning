@@ -7,11 +7,9 @@ namespace TwinStar.Entry.method.wwise.encoded_media {
 	// ------------------------------------------------
 
 	type Config = {
-		tool: {
-			ffmpeg_program: string;
-			ww2ogg_program: string;
-			ww2ogg_code_book: string;
-		};
+		tool_ffmpeg_program_file: Executor.RequestArgument<string, false>;
+		tool_ww2ogg_program_file: Executor.RequestArgument<string, false>;
+		tool_ww2ogg_code_book_file: Executor.RequestArgument<string, false>;
 	};
 
 	export function _injector(
@@ -53,21 +51,21 @@ namespace TwinStar.Entry.method.wwise.encoded_media {
 						tool_ffmpeg_program_file = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'tool_ffmpeg_program_file'),
 							a.tool_ffmpeg_program_file,
-							(value) => (value),
+							(value) => (HomeDirectory.of(value)),
 							null,
 							...Executor.argument_requester_for_path('file', [true]),
 						);
 						tool_ww2ogg_program_file = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'tool_ww2ogg_program_file'),
 							a.tool_ww2ogg_program_file,
-							(value) => (value),
+							(value) => (HomeDirectory.of(value)),
 							null,
 							...Executor.argument_requester_for_path('file', [true]),
 						);
 						tool_ww2ogg_code_book_file = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'tool_ww2ogg_code_book_file'),
 							a.tool_ww2ogg_code_book_file,
-							(value) => (value),
+							(value) => (HomeDirectory.of(value)),
 							null,
 							...Executor.argument_requester_for_path('file', [true]),
 						);
@@ -80,9 +78,9 @@ namespace TwinStar.Entry.method.wwise.encoded_media {
 					...Entry.k_cfsa,
 					ripe_file: undefined!,
 					raw_file: '?default',
-					tool_ffmpeg_program_file: HomeDirectory.of(config.tool.ffmpeg_program),
-					tool_ww2ogg_program_file: HomeDirectory.of(config.tool.ww2ogg_program),
-					tool_ww2ogg_code_book_file: HomeDirectory.of(config.tool.ww2ogg_code_book),
+					tool_ffmpeg_program_file: config.tool_ffmpeg_program_file,
+					tool_ww2ogg_program_file: config.tool_ww2ogg_program_file,
+					tool_ww2ogg_code_book_file: config.tool_ww2ogg_code_book_file,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.wem)$/i]]),
 				input_forwarder: 'ripe_file',
@@ -124,21 +122,21 @@ namespace TwinStar.Entry.method.wwise.encoded_media {
 						tool_ffmpeg_program_file = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'tool_ffmpeg_program_file'),
 							a.tool_ffmpeg_program_file,
-							(value) => (value),
+							(value) => (HomeDirectory.of(value)),
 							null,
 							...Executor.argument_requester_for_path('file', [true]),
 						);
 						tool_ww2ogg_program_file = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'tool_ww2ogg_program_file'),
 							a.tool_ww2ogg_program_file,
-							(value) => (value),
+							(value) => (HomeDirectory.of(value)),
 							null,
 							...Executor.argument_requester_for_path('file', [true]),
 						);
 						tool_ww2ogg_code_book_file = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'tool_ww2ogg_code_book_file'),
 							a.tool_ww2ogg_code_book_file,
-							(value) => (value),
+							(value) => (HomeDirectory.of(value)),
 							null,
 							...Executor.argument_requester_for_path('file', [true]),
 						);
@@ -159,9 +157,9 @@ namespace TwinStar.Entry.method.wwise.encoded_media {
 					...Entry.k_cfsa,
 					ripe_file_directory: undefined!,
 					raw_file_directory: '?default',
-					tool_ffmpeg_program_file: HomeDirectory.of(config.tool.ffmpeg_program),
-					tool_ww2ogg_program_file: HomeDirectory.of(config.tool.ww2ogg_program),
-					tool_ww2ogg_code_book_file: HomeDirectory.of(config.tool.ww2ogg_code_book),
+					tool_ffmpeg_program_file: config.tool_ffmpeg_program_file,
+					tool_ww2ogg_program_file: config.tool_ww2ogg_program_file,
+					tool_ww2ogg_code_book_file: config.tool_ww2ogg_code_book_file,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'ripe_file_directory',

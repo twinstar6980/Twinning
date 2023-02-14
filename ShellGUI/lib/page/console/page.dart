@@ -279,7 +279,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
     if (setting.loaded && command.additionalArgument != null) {
       () async {
         var additionalArgument = command.additionalArgument!;
-        await command.set([]);
+        command.set(null);
         var result = await this._launch(additionalArgument);
         if (setting.data.mExitAfterCommandSucceed && result == null) {
           exitApp();

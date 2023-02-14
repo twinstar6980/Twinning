@@ -1,12 +1,15 @@
-// ignore_for_file: unused_import
+// ignore_for_file: unused_import, unnecessary_import, dead_code
 
 import '/common.dart';
 import 'dart:io';
+import 'dart:ui';
 import 'dart:convert';
+import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:window_manager/window_manager.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import '/setting.dart';
 import '/command.dart';
 import '/page/home.dart';
@@ -22,7 +25,7 @@ class Application extends StatelessWidget {
 
   // ----------------
 
-  final List<String> command;
+  final List<String>? command;
 
   // ----------------
 

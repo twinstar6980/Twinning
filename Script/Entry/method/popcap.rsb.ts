@@ -78,6 +78,9 @@ namespace TwinStar.Entry.method.popcap.rsb {
 	// ------------------------------------------------
 
 	type Config = {
+		mode: Executor.RequestArgument<string, false>;
+		version_number: Executor.RequestArgument<bigint, false>;
+		version_additional_texture_information_for_pvz_2_chinese_android: Executor.RequestArgument<bigint, false>;
 		pack_buffer_size: Executor.RequestArgument<string, false>;
 		resource_convert_option: ResourceConvertOption;
 	};
@@ -97,7 +100,7 @@ namespace TwinStar.Entry.method.popcap.rsb {
 					data_file: Executor.RequestArgument<string, true>;
 					mode: Executor.RequestArgument<string, false>;
 					version_number: Executor.RequestArgument<bigint, false>;
-					version_additional_texture_information_for_pvz_2_chinese_android: bigint | '?input';
+					version_additional_texture_information_for_pvz_2_chinese_android: Executor.RequestArgument<bigint, false>;
 					buffer_size: Executor.RequestArgument<string, false>;
 					input_packet: Executor.RequestArgument<boolean, false>;
 					output_new_packet: Executor.RequestArgument<boolean, false>;
@@ -190,9 +193,9 @@ namespace TwinStar.Entry.method.popcap.rsb {
 					...Entry.k_cfsa,
 					bundle_directory: undefined!,
 					data_file: '?default',
-					mode: '?input',
-					version_number: '?input',
-					version_additional_texture_information_for_pvz_2_chinese_android: '?input',
+					mode: config.mode,
+					version_number: config.version_number,
+					version_additional_texture_information_for_pvz_2_chinese_android: config.version_additional_texture_information_for_pvz_2_chinese_android,
 					buffer_size: config.pack_buffer_size,
 					input_packet: '?input',
 					output_new_packet: '?input',
@@ -211,7 +214,7 @@ namespace TwinStar.Entry.method.popcap.rsb {
 					bundle_directory: Executor.RequestArgument<string, true>;
 					mode: Executor.RequestArgument<string, false>;
 					version_number: Executor.RequestArgument<bigint, false>;
-					version_additional_texture_information_for_pvz_2_chinese_android: bigint | '?input';
+					version_additional_texture_information_for_pvz_2_chinese_android: Executor.RequestArgument<bigint, false>;
 					output_resource: Executor.RequestArgument<boolean, false>;
 					output_packet: Executor.RequestArgument<boolean, false>;
 				}) {
@@ -293,9 +296,9 @@ namespace TwinStar.Entry.method.popcap.rsb {
 					...Entry.k_cfsa,
 					data_file: undefined!,
 					bundle_directory: '?default',
-					mode: '?input',
-					version_number: '?input',
-					version_additional_texture_information_for_pvz_2_chinese_android: '?input',
+					mode: config.mode,
+					version_number: config.version_number,
+					version_additional_texture_information_for_pvz_2_chinese_android: config.version_additional_texture_information_for_pvz_2_chinese_android,
 					output_resource: '?input',
 					output_packet: '?input',
 				},
@@ -311,7 +314,7 @@ namespace TwinStar.Entry.method.popcap.rsb {
 				worker(a: Entry.CFSA & {
 					bundle_directory: Executor.RequestArgument<string, true>;
 					version_number: Executor.RequestArgument<bigint, false>;
-					version_additional_texture_information_for_pvz_2_chinese_android: bigint | '?input';
+					version_additional_texture_information_for_pvz_2_chinese_android: Executor.RequestArgument<bigint, false>;
 					option: ResourceConvertOption;
 				}) {
 					let bundle_directory: string;
@@ -531,8 +534,8 @@ namespace TwinStar.Entry.method.popcap.rsb {
 				default_argument: {
 					...Entry.k_cfsa,
 					bundle_directory: '?default',
-					version_number: '?input',
-					version_additional_texture_information_for_pvz_2_chinese_android: '?input',
+					version_number: config.version_number,
+					version_additional_texture_information_for_pvz_2_chinese_android: config.version_additional_texture_information_for_pvz_2_chinese_android,
 					option: config.resource_convert_option,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', /.+(\.rsb)(\.bundle)$/i]]),

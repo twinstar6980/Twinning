@@ -9,6 +9,8 @@ namespace TwinStar.Entry.method.popcap.pak {
 	// ------------------------------------------------
 
 	type Config = {
+		version_number: Executor.RequestArgument<bigint, false>;
+		version_compress_resource_data: Executor.RequestArgument<boolean, false>;
 		pack_buffer_size: Executor.RequestArgument<string, false>;
 	};
 
@@ -82,8 +84,8 @@ namespace TwinStar.Entry.method.popcap.pak {
 					...Entry.k_cfsa,
 					bundle_directory: undefined!,
 					data_file: '?default',
-					version_number: '?input',
-					version_compress_resource_data: '?input',
+					version_number: config.version_number,
+					version_compress_resource_data: config.version_compress_resource_data,
 					buffer_size: config.pack_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', /.+(\.pak)(\.bundle)$/i]]),
@@ -145,8 +147,8 @@ namespace TwinStar.Entry.method.popcap.pak {
 					...Entry.k_cfsa,
 					data_file: undefined!,
 					bundle_directory: '?default',
-					version_number: '?input',
-					version_compress_resource_data: '?input',
+					version_number: config.version_number,
+					version_compress_resource_data: config.version_compress_resource_data,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.pak)$/i]]),
 				input_forwarder: 'data_file',
@@ -206,8 +208,8 @@ namespace TwinStar.Entry.method.popcap.pak {
 					...Entry.k_cfsa,
 					resource_directory: undefined!,
 					data_file: '?default',
-					version_number: '?input',
-					version_compress_resource_data: '?input',
+					version_number: config.version_number,
+					version_compress_resource_data: config.version_compress_resource_data,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'resource_directory',

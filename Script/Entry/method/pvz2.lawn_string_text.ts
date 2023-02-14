@@ -49,7 +49,7 @@ namespace TwinStar.Entry.method.pvz2.lawn_string_text {
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
 					}
-					Support.PvZ2.LawnStringText.convert_fs(source_file, destination_file, 'auto', destination_version);
+					Support.PvZ2.LawnStringText.convert_fs(source_file, destination_file, null, destination_version);
 					Console.notify('s', los(`执行成功`), [`${destination_file}`]);
 				},
 				default_argument: {

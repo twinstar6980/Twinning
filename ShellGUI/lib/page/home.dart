@@ -41,23 +41,6 @@ class _HomePageState extends State<HomePage> {
   // ----------------
 
   @override
-  void initState() {
-    super.initState();
-    if (Platform.isAndroid) {
-      Future.microtask(() async {
-        var methodArgument = <String, dynamic>{};
-        var methodResult = await gPlatformMethod!.invokeMethod('getCommand', methodArgument) as List<Object?>?;
-        if (methodResult != null) {
-          var commandFromAndroid = methodResult.map((e) => e as String).toList();
-          var command = Provider.of<CommandProvider>(this.context);
-          command.set(['', ...commandFromAndroid]);
-        }
-      });
-    }
-    return;
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

@@ -2,7 +2,7 @@ namespace TwinStar {
 
 	// ------------------------------------------------
 
-	export const k_version = 29;
+	export const k_version = 30;
 
 	// ------------------------------------------------
 

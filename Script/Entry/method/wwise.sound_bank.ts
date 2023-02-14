@@ -9,9 +9,8 @@ namespace TwinStar.Entry.method.wwise.sound_bank {
 	// ------------------------------------------------
 
 	type Config = {
+		version_number: Executor.RequestArgument<bigint, false>;
 		encode_buffer_size: Executor.RequestArgument<string, false>;
-		id_name_map: Array<string>,
-		id_alias_map: Record<string, bigint>,
 	};
 
 	export function _injector(
@@ -74,7 +73,7 @@ namespace TwinStar.Entry.method.wwise.sound_bank {
 					...Entry.k_cfsa,
 					bundle_directory: undefined!,
 					data_file: '?default',
-					version_number: '?input',
+					version_number: config.version_number,
 					buffer_size: config.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', /.+(\.bnk)(\.bundle)$/i]]),
@@ -126,7 +125,7 @@ namespace TwinStar.Entry.method.wwise.sound_bank {
 					...Entry.k_cfsa,
 					data_file: undefined!,
 					bundle_directory: '?default',
-					version_number: '?input',
+					version_number: config.version_number,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.bnk)$/i]]),
 				input_forwarder: 'data_file',
@@ -198,7 +197,7 @@ namespace TwinStar.Entry.method.wwise.sound_bank {
 					...Entry.k_cfsa,
 					bundle_directory_directory: undefined!,
 					data_file_directory: '?default',
-					version_number: '?input',
+					version_number: config.version_number,
 					buffer_size: config.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
@@ -258,7 +257,7 @@ namespace TwinStar.Entry.method.wwise.sound_bank {
 					...Entry.k_cfsa,
 					data_file_directory: undefined!,
 					bundle_directory_directory: '?default',
-					version_number: '?input',
+					version_number: config.version_number,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'data_file_directory',

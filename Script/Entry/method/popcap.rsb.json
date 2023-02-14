@@ -1,5 +1,8 @@
 {
-	"pack_buffer_size": "1g",
+	"mode": "?input",
+	"version_number": "?input",
+	"version_additional_texture_information_for_pvz_2_chinese_android": "?input",
+	"pack_buffer_size": "1.0g",
 	"resource_convert_option": {
 		"json": "?input",
 		"json_crypt": "?input",

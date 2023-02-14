@@ -142,12 +142,14 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceConvert {
 						CoreX.Tool.PopCap.RTON.decrypt_then_decode_fs(
 							`${resource_directory}/${path}`,
 							`${option.json.directory}/${path.slice(0, -4)}json`,
+							{ number: 1n },
 							option.json.crypt.key,
 						);
 					} else {
 						CoreX.Tool.PopCap.RTON.decode_fs(
 							`${resource_directory}/${path}`,
 							`${option.json.directory}/${path.slice(0, -4)}json`,
+							{ number: 1n },
 						);
 					}
 				} catch (e: any) {

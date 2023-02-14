@@ -3,7 +3,7 @@
 import '/common.dart';
 import 'dart:io';
 import 'dart:convert';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 
 // ----------------
@@ -13,7 +13,7 @@ class CommandProvider with ChangeNotifier {
   List<String>? additionalArgument;
 
   CommandProvider(
-    List<String> command,
+    List<String>? command,
   ) {
     this.set(command);
   }
@@ -27,16 +27,15 @@ class CommandProvider with ChangeNotifier {
     return;
   }
 
-  Future<Void>
+  Void
   set(
-    List<String> command,
-  ) async {
-    if (command.isEmpty) {
+    List<String>? command,
+  ) {
+    if (command == null) {
       this.additionalArgument = null;
     } else {
-      this.additionalArgument = command.sublist(1);
+      this.additionalArgument = command.sublist(0);
     }
-    this.notify();
     return;
   }
 

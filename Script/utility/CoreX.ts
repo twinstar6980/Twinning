@@ -1237,9 +1237,10 @@ namespace TwinStar.CoreX {
 					value_file: string,
 					enable_string_index: boolean,
 					enable_rtid: boolean,
+					version: typeof Core.Tool.PopCap.RTON.Version.Value,
 					rton_data_buffer: Core.ByteListView | bigint,
 				): void {
-					let version_c = Core.Tool.PopCap.RTON.Version.value({ number: 1n });
+					let version_c = Core.Tool.PopCap.RTON.Version.value(version);
 					let data_buffer_if = typeof rton_data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(rton_data_buffer)) : null;
 					let data_buffer_view = rton_data_buffer instanceof Core.ByteListView ? rton_data_buffer : data_buffer_if!.view();
 					let value = JSON.read_fs<Core.Tool.PopCap.RTON.JS_ValidValue>(value_file);
@@ -1252,8 +1253,9 @@ namespace TwinStar.CoreX {
 				export function decode_fs(
 					data_file: string,
 					value_file: string,
+					version: typeof Core.Tool.PopCap.RTON.Version.Value,
 				): void {
-					let version_c = Core.Tool.PopCap.RTON.Version.value({ number: 1n });
+					let version_c = Core.Tool.PopCap.RTON.Version.value(version);
 					let data = FileSystem.read_file(data_file);
 					let stream = Core.ByteStreamView.look(data.view());
 					let value = Core.JSON.Value.default<Core.Tool.PopCap.RTON.JS_ValidValue>();
@@ -1299,10 +1301,11 @@ namespace TwinStar.CoreX {
 					rton_file: string,
 					enable_string_index: boolean,
 					enable_rtid: boolean,
+					version: typeof Core.Tool.PopCap.RTON.Version.Value,
 					key: string,
 					rton_data_buffer: Core.ByteListView | bigint,
 				): void {
-					let version_c = Core.Tool.PopCap.RTON.Version.value({ number: 1n });
+					let version_c = Core.Tool.PopCap.RTON.Version.value(version);
 					let rton_data_buffer_if = typeof rton_data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(rton_data_buffer)) : null;
 					let rton_data_buffer_view = rton_data_buffer instanceof Core.ByteListView ? rton_data_buffer : rton_data_buffer_if!.view();
 					let json = JSON.read_fs<Core.Tool.PopCap.RTON.JS_ValidValue>(json_file);
@@ -1321,9 +1324,10 @@ namespace TwinStar.CoreX {
 				export function decrypt_then_decode_fs(
 					rton_file: string,
 					json_file: string,
+					version: typeof Core.Tool.PopCap.RTON.Version.Value,
 					key: string,
 				): void {
-					let version_c = Core.Tool.PopCap.RTON.Version.value({ number: 1n });
+					let version_c = Core.Tool.PopCap.RTON.Version.value(version);
 					let cipher_data = FileSystem.read_file(rton_file);
 					let plain_size = Core.Size.default();
 					Core.Tool.PopCap.RTON.Decrypt.compute_size(cipher_data.size(), plain_size);

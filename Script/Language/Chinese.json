@@ -454,6 +454,8 @@
 	"method#popcap.rton.encode$value_file:message": "",
 	"method#popcap.rton.encode$data_file:name": "RTON文件",
 	"method#popcap.rton.encode$data_file:message": "",
+	"method#popcap.rton.encode$version_number:name": "版本编号",
+	"method#popcap.rton.encode$version_number:message": "",
 	"method#popcap.rton.encode$buffer_size:name": "内存缓冲区大小",
 	"method#popcap.rton.encode$buffer_size:message": "",
 	// 
@@ -462,6 +464,8 @@
 	"method#popcap.rton.decode$data_file:message": "",
 	"method#popcap.rton.decode$value_file:name": "JSON文件",
 	"method#popcap.rton.decode$value_file:message": "",
+	"method#popcap.rton.decode$version_number:name": "版本编号",
+	"method#popcap.rton.decode$version_number:message": "",
 	// 
 	"method#popcap.rton.encrypt:description": "PopCap-RTON 加密",
 	"method#popcap.rton.encrypt$plain_file:name": "明文文件",
@@ -484,6 +488,8 @@
 	"method#popcap.rton.encode_then_encrypt$value_file:message": "",
 	"method#popcap.rton.encode_then_encrypt$data_file:name": "RTON文件",
 	"method#popcap.rton.encode_then_encrypt$data_file:message": "",
+	"method#popcap.rton.encode_then_encrypt$version_number:name": "版本编号",
+	"method#popcap.rton.encode_then_encrypt$version_number:message": "",
 	"method#popcap.rton.encode_then_encrypt$key:name": "密钥",
 	"method#popcap.rton.encode_then_encrypt$key:message": "",
 	"method#popcap.rton.encode_then_encrypt$buffer_size:name": "内存缓冲区大小",
@@ -494,6 +500,8 @@
 	"method#popcap.rton.decrypt_then_decode$data_file:message": "",
 	"method#popcap.rton.decrypt_then_decode$value_file:name": "JSON文件",
 	"method#popcap.rton.decrypt_then_decode$value_file:message": "",
+	"method#popcap.rton.decrypt_then_decode$version_number:name": "版本编号",
+	"method#popcap.rton.decrypt_then_decode$version_number:message": "",
 	"method#popcap.rton.decrypt_then_decode$key:name": "密钥",
 	"method#popcap.rton.decrypt_then_decode$key:message": "",
 	// 
@@ -502,6 +510,8 @@
 	"method#popcap.rton.encode.batch$value_file_directory:message": "",
 	"method#popcap.rton.encode.batch$data_file_directory:name": "RTON文件目录",
 	"method#popcap.rton.encode.batch$data_file_directory:message": "",
+	"method#popcap.rton.encode.batch$version_number:name": "版本编号",
+	"method#popcap.rton.encode.batch$version_number:message": "",
 	"method#popcap.rton.encode.batch$buffer_size:name": "内存缓冲区大小",
 	"method#popcap.rton.encode.batch$buffer_size:message": "",
 	// 
@@ -510,6 +520,8 @@
 	"method#popcap.rton.decode.batch$data_file_directory:message": "",
 	"method#popcap.rton.decode.batch$value_file_directory:name": "JSON文件目录",
 	"method#popcap.rton.decode.batch$value_file_directory:message": "",
+	"method#popcap.rton.decode.batch$version_number:name": "版本编号",
+	"method#popcap.rton.decode.batch$version_number:message": "",
 	// 
 	"method#popcap.rton.encrypt.batch:description": "[批处理] PopCap-RTON 加密",
 	"method#popcap.rton.encrypt.batch$plain_file_directory:name": "明文文件目录",
@@ -532,6 +544,8 @@
 	"method#popcap.rton.encode_then_encrypt.batch$value_file_directory:message": "",
 	"method#popcap.rton.encode_then_encrypt.batch$data_file_directory:name": "RTON文件目录",
 	"method#popcap.rton.encode_then_encrypt.batch$data_file_directory:message": "",
+	"method#popcap.rton.encode_then_encrypt.batch$version_number:name": "版本编号",
+	"method#popcap.rton.encode_then_encrypt.batch$version_number:message": "",
 	"method#popcap.rton.encode_then_encrypt.batch$key:name": "密钥",
 	"method#popcap.rton.encode_then_encrypt.batch$key:message": "",
 	"method#popcap.rton.encode_then_encrypt.batch$buffer_size:name": "内存缓冲区大小",
@@ -542,6 +556,8 @@
 	"method#popcap.rton.decrypt_then_decode.batch$data_file_directory:message": "",
 	"method#popcap.rton.decrypt_then_decode.batch$value_file_directory:name": "JSON文件目录",
 	"method#popcap.rton.decrypt_then_decode.batch$value_file_directory:message": "",
+	"method#popcap.rton.decrypt_then_decode.batch$version_number:name": "版本编号",
+	"method#popcap.rton.decrypt_then_decode.batch$version_number:message": "",
 	"method#popcap.rton.decrypt_then_decode.batch$key:name": "密钥",
 	"method#popcap.rton.decrypt_then_decode.batch$key:message": "",
 	// Entry/method/popcap.ptx
@@ -774,6 +790,8 @@
 	"method#popcap.rsb_patch.encode$patch_file:message": "",
 	"method#popcap.rsb_patch.encode$use_raw_packet:name": "使用原始子包",
 	"method#popcap.rsb_patch.encode$use_raw_packet:message": "",
+	"method#popcap.rsb_patch.encode$version_number:name": "版本编号",
+	"method#popcap.rsb_patch.encode$version_number:message": "",
 	"method#popcap.rsb_patch.encode$buffer_size:name": "内存缓冲区大小",
 	"method#popcap.rsb_patch.encode$buffer_size:message": "",
 	// 
@@ -786,6 +804,8 @@
 	"method#popcap.rsb_patch.decode$patch_file:message": "",
 	"method#popcap.rsb_patch.decode$use_raw_packet:name": "使用原始子包",
 	"method#popcap.rsb_patch.decode$use_raw_packet:message": "",
+	"method#popcap.rsb_patch.decode$version_number:name": "版本编号",
+	"method#popcap.rsb_patch.decode$version_number:message": "",
 	"method#popcap.rsb_patch.decode$buffer_size:name": "内存缓冲区大小",
 	"method#popcap.rsb_patch.decode$buffer_size:message": "",
 	// Entry/method/pvz2.lawn_string_text

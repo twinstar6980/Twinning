@@ -8,6 +8,7 @@ namespace TwinStar.Entry.method.marmalade.dzip {
 	// ------------------------------------------------
 
 	type Config = {
+		version_number: Executor.RequestArgument<bigint, false>;
 		pack_buffer_size: Executor.RequestArgument<string, false>;
 	};
 
@@ -71,7 +72,7 @@ namespace TwinStar.Entry.method.marmalade.dzip {
 					...Entry.k_cfsa,
 					bundle_directory: undefined!,
 					data_file: '?default',
-					version_number: '?input',
+					version_number: config.version_number,
 					buffer_size: config.pack_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', /.+(\.dz)(\.bundle)$/i]]),
@@ -123,7 +124,7 @@ namespace TwinStar.Entry.method.marmalade.dzip {
 					...Entry.k_cfsa,
 					data_file: undefined!,
 					bundle_directory: '?default',
-					version_number: '?input',
+					version_number: config.version_number,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.dz)$/i]]),
 				input_forwarder: 'data_file',
@@ -173,7 +174,7 @@ namespace TwinStar.Entry.method.marmalade.dzip {
 					...Entry.k_cfsa,
 					resource_directory: undefined!,
 					data_file: '?default',
-					version_number: '?input',
+					version_number: config.version_number,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'resource_directory',

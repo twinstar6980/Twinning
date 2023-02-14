@@ -17,8 +17,9 @@ namespace TwinStar.Entry.method.popcap.rton {
 	// ------------------------------------------------
 
 	type Config = {
+		version_number: Executor.RequestArgument<bigint, false>;
+		key: Executor.RequestArgument<string, false>;
 		encode_buffer_size: Executor.RequestArgument<string, false>;
-		crypt_key: Executor.RequestArgument<string, false>;
 	};
 
 	export function _injector(
@@ -34,10 +35,12 @@ namespace TwinStar.Entry.method.popcap.rton {
 				worker(a: Entry.CFSA & {
 					value_file: Executor.RequireArgument<string>;
 					data_file: Executor.RequestArgument<string, true>;
+					version_number: Executor.RequestArgument<bigint, false>;
 					buffer_size: Executor.RequestArgument<string, false>;
 				}) {
 					let value_file: string;
 					let data_file: string;
+					let version_number: [1n][number];
 					let buffer_size: bigint;
 					{
 						value_file = Executor.require_argument(
@@ -53,6 +56,14 @@ namespace TwinStar.Entry.method.popcap.rton {
 							() => (value_file.replace(/((\.json))?$/i, '.rton')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
+						version_number = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_number'),
+							a.version_number,
+							(value) => (value),
+							null,
+							() => (Console.option([0n, null, [1n, '']], null)),
+							(value) => ([1n].includes(value) ? null : los(`版本不受支持`)),
+						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
 							a.buffer_size,
@@ -62,13 +73,14 @@ namespace TwinStar.Entry.method.popcap.rton {
 							(value) => (null),
 						);
 					}
-					CoreX.Tool.PopCap.RTON.encode_fs(data_file, value_file, true, true, buffer_size);
+					CoreX.Tool.PopCap.RTON.encode_fs(data_file, value_file, true, true, { number: version_number }, buffer_size);
 					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
 					value_file: undefined!,
 					data_file: '?default',
+					version_number: config.version_number,
 					buffer_size: config.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.json)$/i]]),
@@ -83,9 +95,11 @@ namespace TwinStar.Entry.method.popcap.rton {
 				worker(a: Entry.CFSA & {
 					data_file: Executor.RequireArgument<string>;
 					value_file: Executor.RequestArgument<string, true>;
+					version_number: Executor.RequestArgument<bigint, false>;
 				}) {
 					let data_file: string;
 					let value_file: string;
+					let version_number: [1n][number];
 					{
 						data_file = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'data_file'),
@@ -100,14 +114,23 @@ namespace TwinStar.Entry.method.popcap.rton {
 							() => (data_file.replace(/((\.rton))?$/i, '.json')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
+						version_number = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_number'),
+							a.version_number,
+							(value) => (value),
+							null,
+							() => (Console.option([0n, null, [1n, '']], null)),
+							(value) => ([1n].includes(value) ? null : los(`版本不受支持`)),
+						);
 					}
-					CoreX.Tool.PopCap.RTON.decode_fs(data_file, value_file);
+					CoreX.Tool.PopCap.RTON.decode_fs(data_file, value_file, { number: version_number });
 					Console.notify('s', los(`执行成功`), [`${value_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
 					data_file: undefined!,
 					value_file: '?default',
+					version_number: config.version_number,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.rton)$/i]]),
 				input_forwarder: 'data_file',
@@ -156,7 +179,7 @@ namespace TwinStar.Entry.method.popcap.rton {
 					...Entry.k_cfsa,
 					plain_file: undefined!,
 					cipher_file: '?default',
-					key: config.crypt_key,
+					key: config.key,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.rton)$/i]]),
 				input_forwarder: 'plain_file',
@@ -205,7 +228,7 @@ namespace TwinStar.Entry.method.popcap.rton {
 					...Entry.k_cfsa,
 					cipher_file: undefined!,
 					plain_file: '?default',
-					key: config.crypt_key,
+					key: config.key,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.rton)$/i]]),
 				input_forwarder: 'cipher_file',
@@ -219,11 +242,13 @@ namespace TwinStar.Entry.method.popcap.rton {
 				worker(a: Entry.CFSA & {
 					value_file: Executor.RequireArgument<string>;
 					data_file: Executor.RequestArgument<string, true>;
+					version_number: Executor.RequestArgument<bigint, false>;
 					key: Executor.RequestArgument<string, false>;
 					buffer_size: Executor.RequestArgument<string, false>;
 				}) {
 					let value_file: string;
 					let data_file: string;
+					let version_number: [1n][number];
 					let key: string;
 					let buffer_size: bigint;
 					{
@@ -239,6 +264,14 @@ namespace TwinStar.Entry.method.popcap.rton {
 							(value) => (value),
 							() => (value_file.replace(/((\.json))?$/i, '.rton')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+						);
+						version_number = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_number'),
+							a.version_number,
+							(value) => (value),
+							null,
+							() => (Console.option([0n, null, [1n, '']], null)),
+							(value) => ([1n].includes(value) ? null : los(`版本不受支持`)),
 						);
 						key = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'key'),
@@ -257,14 +290,15 @@ namespace TwinStar.Entry.method.popcap.rton {
 							(value) => (null),
 						);
 					}
-					CoreX.Tool.PopCap.RTON.encode_then_encrypt_fs(value_file, data_file, true, true, key, buffer_size);
+					CoreX.Tool.PopCap.RTON.encode_then_encrypt_fs(value_file, data_file, true, true, { number: version_number }, key, buffer_size);
 					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
 					value_file: undefined!,
 					data_file: '?default',
-					key: config.crypt_key,
+					version_number: config.version_number,
+					key: config.key,
 					buffer_size: config.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.json)$/i]]),
@@ -279,10 +313,12 @@ namespace TwinStar.Entry.method.popcap.rton {
 				worker(a: Entry.CFSA & {
 					data_file: Executor.RequireArgument<string>;
 					value_file: Executor.RequestArgument<string, true>;
+					version_number: Executor.RequestArgument<bigint, false>;
 					key: Executor.RequestArgument<string, false>;
 				}) {
 					let data_file: string;
 					let value_file: string;
+					let version_number: [1n][number];
 					let key: string;
 					{
 						data_file = Executor.require_argument(
@@ -298,6 +334,14 @@ namespace TwinStar.Entry.method.popcap.rton {
 							() => (data_file.replace(/((\.rton))?$/i, '.json')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
+						version_number = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_number'),
+							a.version_number,
+							(value) => (value),
+							null,
+							() => (Console.option([0n, null, [1n, '']], null)),
+							(value) => ([1n].includes(value) ? null : los(`版本不受支持`)),
+						);
 						key = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'key'),
 							a.key,
@@ -307,14 +351,15 @@ namespace TwinStar.Entry.method.popcap.rton {
 							(value) => (null),
 						);
 					}
-					CoreX.Tool.PopCap.RTON.decrypt_then_decode_fs(data_file, value_file, key);
+					CoreX.Tool.PopCap.RTON.decrypt_then_decode_fs(data_file, value_file, { number: version_number }, key);
 					Console.notify('s', los(`执行成功`), [`${value_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
 					data_file: undefined!,
 					value_file: '?default',
-					key: config.crypt_key,
+					version_number: config.version_number,
+					key: config.key,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.rton)$/i]]),
 				input_forwarder: 'data_file',
@@ -330,10 +375,12 @@ namespace TwinStar.Entry.method.popcap.rton {
 				worker(a: Entry.CFSA & {
 					value_file_directory: Executor.RequireArgument<string>;
 					data_file_directory: Executor.RequestArgument<string, true>;
+					version_number: Executor.RequestArgument<bigint, false>;
 					buffer_size: Executor.RequestArgument<string, false>;
 				}) {
 					let value_file_directory: string;
 					let data_file_directory: string;
+					let version_number: [1n][number];
 					let buffer_size: bigint;
 					{
 						value_file_directory = Executor.require_argument(
@@ -348,6 +395,14 @@ namespace TwinStar.Entry.method.popcap.rton {
 							(value) => (value),
 							() => (value_file_directory.replace(/$/i, '.rton_encode')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+						);
+						version_number = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_number'),
+							a.version_number,
+							(value) => (value),
+							null,
+							() => (Console.option([0n, null, [1n, '']], null)),
+							(value) => ([1n].includes(value) ? null : los(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
@@ -365,7 +420,7 @@ namespace TwinStar.Entry.method.popcap.rton {
 						(item) => {
 							let json_file = `${value_file_directory}/${item}`;
 							let rton_file = `${data_file_directory}/${item.slice(0, -5)}.rton`;
-							CoreX.Tool.PopCap.RTON.encode_fs(rton_file, json_file, true, true, rton_data_buffer.view());
+							CoreX.Tool.PopCap.RTON.encode_fs(rton_file, json_file, true, true, { number: version_number }, rton_data_buffer.view());
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${data_file_directory}`]);
@@ -374,6 +429,7 @@ namespace TwinStar.Entry.method.popcap.rton {
 					...Entry.k_cfsa,
 					value_file_directory: undefined!,
 					data_file_directory: '?default',
+					version_number: config.version_number,
 					buffer_size: config.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
@@ -388,9 +444,11 @@ namespace TwinStar.Entry.method.popcap.rton {
 				worker(a: Entry.CFSA & {
 					data_file_directory: Executor.RequireArgument<string>;
 					value_file_directory: Executor.RequestArgument<string, true>;
+					version_number: Executor.RequestArgument<bigint, false>;
 				}) {
 					let data_file_directory: string;
 					let value_file_directory: string;
+					let version_number: [1n][number];
 					{
 						data_file_directory = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'data_file_directory'),
@@ -405,6 +463,14 @@ namespace TwinStar.Entry.method.popcap.rton {
 							() => (data_file_directory.replace(/$/i, '.rton_decode')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
+						version_number = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_number'),
+							a.version_number,
+							(value) => (value),
+							null,
+							() => (Console.option([0n, null, [1n, '']], null)),
+							(value) => ([1n].includes(value) ? null : los(`版本不受支持`)),
+						);
 					}
 					simple_batch_execute(
 						data_file_directory,
@@ -412,7 +478,7 @@ namespace TwinStar.Entry.method.popcap.rton {
 						(item) => {
 							let rton_file = `${data_file_directory}/${item}`;
 							let json_file = `${value_file_directory}/${item.slice(0, -5)}.json`;
-							CoreX.Tool.PopCap.RTON.decode_fs(rton_file, json_file);
+							CoreX.Tool.PopCap.RTON.decode_fs(rton_file, json_file, { number: version_number });
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${value_file_directory}`]);
@@ -421,6 +487,7 @@ namespace TwinStar.Entry.method.popcap.rton {
 					...Entry.k_cfsa,
 					data_file_directory: undefined!,
 					value_file_directory: '?default',
+					version_number: config.version_number,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'data_file_directory',
@@ -477,7 +544,7 @@ namespace TwinStar.Entry.method.popcap.rton {
 					...Entry.k_cfsa,
 					plain_file_directory: undefined!,
 					cipher_file_directory: '?default',
-					key: config.crypt_key,
+					key: config.key,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'plain_file_directory',
@@ -534,7 +601,7 @@ namespace TwinStar.Entry.method.popcap.rton {
 					...Entry.k_cfsa,
 					cipher_file_directory: undefined!,
 					plain_file_directory: '?default',
-					key: config.crypt_key,
+					key: config.key,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'cipher_file_directory',
@@ -548,11 +615,13 @@ namespace TwinStar.Entry.method.popcap.rton {
 				worker(a: Entry.CFSA & {
 					value_file_directory: Executor.RequireArgument<string>;
 					data_file_directory: Executor.RequestArgument<string, true>;
+					version_number: Executor.RequestArgument<bigint, false>;
 					key: Executor.RequestArgument<string, false>;
 					buffer_size: Executor.RequestArgument<string, false>;
 				}) {
 					let value_file_directory: string;
 					let data_file_directory: string;
+					let version_number: [1n][number];
 					let key: string;
 					let buffer_size: bigint;
 					{
@@ -568,6 +637,14 @@ namespace TwinStar.Entry.method.popcap.rton {
 							(value) => (value),
 							() => (value_file_directory.replace(/$/i, '.rton_encode_then_encrypt')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+						);
+						version_number = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_number'),
+							a.version_number,
+							(value) => (value),
+							null,
+							() => (Console.option([0n, null, [1n, '']], null)),
+							(value) => ([1n].includes(value) ? null : los(`版本不受支持`)),
 						);
 						key = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'key'),
@@ -593,7 +670,7 @@ namespace TwinStar.Entry.method.popcap.rton {
 						(item) => {
 							let json_file = `${value_file_directory}/${item}`;
 							let rton_file = `${data_file_directory}/${item.slice(0, -5)}.rton`;
-							CoreX.Tool.PopCap.RTON.encode_then_encrypt_fs(json_file, rton_file, true, true, key, rton_data_buffer.view());
+							CoreX.Tool.PopCap.RTON.encode_then_encrypt_fs(json_file, rton_file, true, true, { number: version_number }, key, rton_data_buffer.view());
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${data_file_directory}`]);
@@ -602,7 +679,8 @@ namespace TwinStar.Entry.method.popcap.rton {
 					...Entry.k_cfsa,
 					value_file_directory: undefined!,
 					data_file_directory: '?default',
-					key: config.crypt_key,
+					version_number: config.version_number,
+					key: config.key,
 					buffer_size: config.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
@@ -617,10 +695,12 @@ namespace TwinStar.Entry.method.popcap.rton {
 				worker(a: Entry.CFSA & {
 					data_file_directory: Executor.RequireArgument<string>;
 					value_file_directory: Executor.RequestArgument<string, true>;
+					version_number: Executor.RequestArgument<bigint, false>;
 					key: Executor.RequestArgument<string, false>;
 				}) {
 					let data_file_directory: string;
 					let value_file_directory: string;
+					let version_number: [1n][number];
 					let key: string;
 					{
 						data_file_directory = Executor.require_argument(
@@ -635,6 +715,14 @@ namespace TwinStar.Entry.method.popcap.rton {
 							(value) => (value),
 							() => (data_file_directory.replace(/$/i, '.rton_decrypt_then_decode')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+						);
+						version_number = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_number'),
+							a.version_number,
+							(value) => (value),
+							null,
+							() => (Console.option([0n, null, [1n, '']], null)),
+							(value) => ([1n].includes(value) ? null : los(`版本不受支持`)),
 						);
 						key = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'key'),
@@ -651,7 +739,7 @@ namespace TwinStar.Entry.method.popcap.rton {
 						(item) => {
 							let rton_file = `${data_file_directory}/${item}`;
 							let json_file = `${value_file_directory}/${item.slice(0, -5)}.json`;
-							CoreX.Tool.PopCap.RTON.decrypt_then_decode_fs(rton_file, json_file, key);
+							CoreX.Tool.PopCap.RTON.decrypt_then_decode_fs(rton_file, json_file, { number: version_number }, key);
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${value_file_directory}`]);
@@ -660,7 +748,8 @@ namespace TwinStar.Entry.method.popcap.rton {
 					...Entry.k_cfsa,
 					data_file_directory: undefined!,
 					value_file_directory: '?default',
-					key: config.crypt_key,
+					version_number: config.version_number,
+					key: config.key,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'data_file_directory',

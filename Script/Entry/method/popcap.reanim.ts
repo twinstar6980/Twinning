@@ -9,6 +9,8 @@ namespace TwinStar.Entry.method.popcap.reanim {
 	// ------------------------------------------------
 
 	type Config = {
+		version_platform: Executor.RequestArgument<string, false>;
+		version_variant_64: Executor.RequestArgument<boolean, false>;
 		encode_buffer_size: Executor.RequestArgument<string, false>;
 	};
 
@@ -26,7 +28,7 @@ namespace TwinStar.Entry.method.popcap.reanim {
 					manifest_file: Executor.RequireArgument<string>;
 					data_file: Executor.RequestArgument<string, true>;
 					version_platform: Executor.RequestArgument<string, false>;
-					version_variant_64: boolean | '?input';
+					version_variant_64: Executor.RequestArgument<boolean, false>;
 					buffer_size: Executor.RequestArgument<string, false>;
 				}) {
 					let manifest_file: string;
@@ -80,8 +82,8 @@ namespace TwinStar.Entry.method.popcap.reanim {
 					...Entry.k_cfsa,
 					manifest_file: undefined!,
 					data_file: '?default',
-					version_platform: '?input',
-					version_variant_64: '?input',
+					version_platform: config.version_platform,
+					version_variant_64: config.version_variant_64,
 					buffer_size: config.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.reanim)(\.json)$/i]]),
@@ -97,7 +99,7 @@ namespace TwinStar.Entry.method.popcap.reanim {
 					data_file: Executor.RequireArgument<string>;
 					manifest_file: Executor.RequestArgument<string, true>;
 					version_platform: Executor.RequestArgument<string, false>;
-					version_variant_64: boolean | '?input';
+					version_variant_64: Executor.RequestArgument<boolean, false>;
 				}) {
 					let data_file: string;
 					let manifest_file: string;
@@ -141,8 +143,8 @@ namespace TwinStar.Entry.method.popcap.reanim {
 					...Entry.k_cfsa,
 					data_file: undefined!,
 					manifest_file: '?default',
-					version_platform: '?input',
-					version_variant_64: '?input',
+					version_platform: config.version_platform,
+					version_variant_64: config.version_variant_64,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.reanim)(\.compiled)$/i]]),
 				input_forwarder: 'data_file',
@@ -159,7 +161,7 @@ namespace TwinStar.Entry.method.popcap.reanim {
 					manifest_file_directory: Executor.RequireArgument<string>;
 					data_file_directory: Executor.RequestArgument<string, true>;
 					version_platform: Executor.RequestArgument<string, false>;
-					version_variant_64: boolean | '?input';
+					version_variant_64: Executor.RequestArgument<boolean, false>;
 					buffer_size: Executor.RequestArgument<string, false>;
 				}) {
 					let manifest_file_directory: string;
@@ -222,8 +224,8 @@ namespace TwinStar.Entry.method.popcap.reanim {
 					...Entry.k_cfsa,
 					manifest_file_directory: undefined!,
 					data_file_directory: '?default',
-					version_platform: '?input',
-					version_variant_64: '?input',
+					version_platform: config.version_platform,
+					version_variant_64: config.version_variant_64,
 					buffer_size: config.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
@@ -239,7 +241,7 @@ namespace TwinStar.Entry.method.popcap.reanim {
 					data_file_directory: Executor.RequireArgument<string>;
 					manifest_file_directory: Executor.RequestArgument<string, true>;
 					version_platform: Executor.RequestArgument<string, false>;
-					version_variant_64: boolean | '?input';
+					version_variant_64: Executor.RequestArgument<boolean, false>;
 				}) {
 					let data_file_directory: string;
 					let manifest_file_directory: string;
@@ -291,8 +293,8 @@ namespace TwinStar.Entry.method.popcap.reanim {
 					...Entry.k_cfsa,
 					data_file_directory: undefined!,
 					manifest_file_directory: '?default',
-					version_platform: '?input',
-					version_variant_64: '?input',
+					version_platform: config.version_platform,
+					version_variant_64: config.version_variant_64,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'data_file_directory',
