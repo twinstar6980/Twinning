@@ -615,8 +615,8 @@ namespace TwinStar::Core {
 			That const & that
 		) -> Void {
 			if constexpr (IsVoid<TLength>) {
-				StringParser::write_string(self_cast<OCharacterStreamView>(thix), that.value);
-				self_cast<OCharacterStreamView>(thix).write(CharacterType::k_null);
+				StringParser::write_string_until(self_cast<OCharacterStreamView>(thix), that.value.as_view(), CharacterType::k_null);
+				self_cast<OCharacterStreamView>(thix).write_constant(CharacterType::k_null);
 			} else {
 				thix.write(cbw<TLength>(that.value.size()));
 				thix.write(that.value);
@@ -630,9 +630,9 @@ namespace TwinStar::Core {
 		) -> Void {
 			if constexpr (IsVoid<TLength>) {
 				auto that_view = CStringView{};
-				StringParser::read_string(self_cast<ICharacterStreamView>(thix), that_view);
+				StringParser::read_string_until(self_cast<ICharacterStreamView>(thix), that_view, CharacterType::k_null);
+				self_cast<ICharacterStreamView>(thix).read_constant(CharacterType::k_null);
 				that.value = that_view;
-				self_cast<ICharacterStreamView>(thix).forward(1_sz);
 			} else {
 				auto length = thix.read_of<TLength>();
 				thix.read(that.value, cbw<Size>(length));

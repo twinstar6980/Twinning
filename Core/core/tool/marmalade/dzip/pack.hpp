@@ -227,12 +227,12 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 			{
 				information_data.archive_setting.write(information_structure.archive_setting);
 				for (auto & element : information_structure.resource_file) {
-					StringParser::write_string(self_cast<OCharacterStreamView>(information_data.resource_file), element);
-					information_data.resource_file.write(CharacterType::k_null);
+					StringParser::write_string_until(self_cast<OCharacterStreamView>(information_data.resource_file), element, CharacterType::k_null);
+					self_cast<OCharacterStreamView>(information_data.resource_file).write_constant(CharacterType::k_null);
 				}
 				for (auto & element : information_structure.resource_directory.tail(information_structure.resource_directory.size() - 1_sz)) {
-					StringParser::write_string(self_cast<OCharacterStreamView>(information_data.resource_directory), element);
-					information_data.resource_directory.write(CharacterType::k_null);
+					StringParser::write_string_until(self_cast<OCharacterStreamView>(information_data.resource_directory), element, CharacterType::k_null);
+					self_cast<OCharacterStreamView>(information_data.resource_directory).write_constant(CharacterType::k_null);
 				}
 				information_data.resource_information.write(information_structure.resource_information);
 				information_data.chunk_setting.write(information_structure.chunk_setting);
@@ -280,16 +280,16 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 				assert_test(information_structure.archive_setting.version == cbw<Structure::VersionNumber>(version.number));
 				for (auto & element : information_structure.resource_file) {
 					auto string = CStringView{};
-					StringParser::read_string(self_cast<ICharacterStreamView>(package_data), string);
-					package_data.forward(bs_size(CharacterType::k_null));
+					StringParser::read_string_until(self_cast<ICharacterStreamView>(package_data), string, CharacterType::k_null);
+					self_cast<ICharacterStreamView>(package_data).read_constant(CharacterType::k_null);
 					element = string;
 				}
 				information_structure.resource_directory.allocate_full(cbw<Size>(information_structure.archive_setting.resource_directory_count));
 				information_structure.resource_directory[1_ix] = ""_sv;
 				for (auto & element : information_structure.resource_directory.tail(information_structure.resource_directory.size() - 1_sz)) {
 					auto string = CStringView{};
-					StringParser::read_string(self_cast<ICharacterStreamView>(package_data), string);
-					package_data.forward(bs_size(CharacterType::k_null));
+					StringParser::read_string_until(self_cast<ICharacterStreamView>(package_data), string, CharacterType::k_null);
+					self_cast<ICharacterStreamView>(package_data).read_constant(CharacterType::k_null);
 					element = string;
 				}
 				package_data.read(information_structure.resource_information, cbw<Size>(information_structure.archive_setting.resource_file_count));

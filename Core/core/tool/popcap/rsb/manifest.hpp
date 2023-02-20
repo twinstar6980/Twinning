@@ -36,7 +36,7 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 			M_wrap(
 				(Size2D<Integer>) size,
 				(Integer) format,
-				(Integer) bit_per_channel,
+				(Integer) pixel_bit_count,
 			),
 		);
 
@@ -47,7 +47,7 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 				(Size2D<Integer>) size,
 				(Integer) scale,
 				(Integer) format,
-				(Integer) bit_per_channel,
+				(Integer) pixel_bit_count,
 			),
 		);
 

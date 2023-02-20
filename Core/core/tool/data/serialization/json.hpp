@@ -50,7 +50,7 @@ namespace TwinStar::Core::Tool::Data::Serialization::JSON {
 				}
 				case ValueType::Constant::string().value : {
 					data.write('"'_c);
-					StringParser::write_escape_string(data, as_lvalue(ICharacterStreamView{value.get_string()}), '"'_c);
+					StringParser::write_escape_utf8_string_until(data, as_lvalue(ICharacterStreamView{value.get_string()}), '"'_c);
 					data.write('"'_c);
 					break;
 				}
@@ -122,7 +122,7 @@ namespace TwinStar::Core::Tool::Data::Serialization::JSON {
 						) -> auto {
 							write_indent(k_true);
 							data.write('"'_c);
-							StringParser::write_escape_string(data, as_lvalue(ICharacterStreamView{member.key}), '"'_c);
+							StringParser::write_escape_utf8_string_until(data, as_lvalue(ICharacterStreamView{member.key}), '"'_c);
 							data.write('"'_c);
 							data.write(':'_c);
 							data.write(' '_c);
@@ -246,7 +246,7 @@ namespace TwinStar::Core::Tool::Data::Serialization::JSON {
 						case '\"' : {
 							value.set_string();
 							buffer_stream.backward_to_begin();
-							StringParser::read_escape_string(data, buffer_stream, '"'_c);
+							StringParser::read_escape_utf8_string_until(data, buffer_stream, '"'_c);
 							data.forward();
 							value.get_string() = String{buffer_stream.stream_view()};
 							break;
@@ -339,7 +339,7 @@ namespace TwinStar::Core::Tool::Data::Serialization::JSON {
 											throw ExceptionMessage{{"syntax error : key must be string"_sf()}};
 										}
 										buffer_stream.backward_to_begin();
-										StringParser::read_escape_string(data, buffer_stream, '"'_c);
+										StringParser::read_escape_utf8_string_until(data, buffer_stream, '"'_c);
 										data.forward();
 										value_list.back().key = String{buffer_stream.stream_view()};
 										while (k_true) {

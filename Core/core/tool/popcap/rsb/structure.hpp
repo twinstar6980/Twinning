@@ -187,7 +187,7 @@ namespace TwinStar::Core::Tool::PopCap::RSB::Structure {
 		M_wrap(
 			(IntegerU32) size_width,
 			(IntegerU32) size_height,
-			(IntegerU32) bit_per_channel_of_row_division_2,
+			(IntegerU32) row_byte_count,
 			(IntegerU32) format,
 		),
 	);
@@ -200,7 +200,7 @@ namespace TwinStar::Core::Tool::PopCap::RSB::Structure {
 		M_wrap(
 			(IntegerU32) size_width,
 			(IntegerU32) size_height,
-			(IntegerU32) bit_per_channel_of_row_division_2,
+			(IntegerU32) row_byte_count,
 			(IntegerU32) format,
 			(IntegerU32) alpha_size,
 		),
@@ -214,7 +214,7 @@ namespace TwinStar::Core::Tool::PopCap::RSB::Structure {
 		M_wrap(
 			(IntegerU32) size_width,
 			(IntegerU32) size_height,
-			(IntegerU32) bit_per_channel_of_row_division_2,
+			(IntegerU32) row_byte_count,
 			(IntegerU32) format,
 			(IntegerU32) alpha_size,
 			(IntegerU32) scale,

@@ -81,21 +81,21 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 				object_begin = 0x85,
 				object_end   = 0xFF,
 				// TODO : never appeared in known rton file
-				_binary_cast              = 0x87,
-				_star                     = 0x02,
-				_string_x1                = 0xB0,
-				_string_x2                = 0xB1,
-				_wide_string_x1           = 0xB2,
-				_wide_string_x2           = 0xB3,
-				_string_or_wide_string_x1 = 0xB4,
-				_string_or_wide_string_x2 = 0xB5,
-				_string_or_wide_string_x3 = 0xB6,
-				_string_or_wide_string_x4 = 0xB7,
-				_object_begin_x1          = 0xB8,
-				_array_begin_x1           = 0xB9,
-				_string_x3                = 0xBA,
-				_binary_cast_x1           = 0xBB,
-				_boolean_x1               = 0xBC,
+				_binary_blob                 = 0x87,
+				_star                        = 0x02,
+				_string_native_x1            = 0xB0,
+				_string_native_x2            = 0xB1,
+				_string_unicode_x1           = 0xB2,
+				_string_unicode_x2           = 0xB3,
+				_string_native_or_unicode_x1 = 0xB4,
+				_string_native_or_unicode_x2 = 0xB5,
+				_string_native_or_unicode_x3 = 0xB6,
+				_string_native_or_unicode_x4 = 0xB7,
+				_object_begin_x1             = 0xB8,
+				_array_begin_x1              = 0xB9,
+				_string_native_x3            = 0xBA,
+				_binary_blob_x1              = 0xBB,
+				_boolean_x1                  = 0xBC,
 			};
 		};
 
@@ -143,7 +143,7 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 
 		// ----------------
 
-		inline static constexpr auto k_binary_cast_format = StringFormatter{R"($BINARY("{:s}", {:d}))"_sf};
+		inline static constexpr auto k_binary_blob_format = StringFormatter{R"($BINARY("{:s}", {:d}))"_sf};
 
 	};
 
@@ -177,7 +177,7 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 
 		using Common::analysis_rtid;
 
-		using Common::k_binary_cast_format;
+		using Common::k_binary_blob_format;
 
 		// ----------------
 
@@ -216,12 +216,12 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 					string_index.get()[value] = mbw<Size>(string_index.get().size());
 					data.write(TypeIdentifier{TypeIdentifier::Value::string_native_indexing});
 					ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(value.size()));
-					data.write(value);
+					StringParser::write_string(self_cast<OCharacterStreamView>(data), value.as_view(), as_lvalue(Size{}));
 				}
 			} else {
 				data.write(TypeIdentifier{TypeIdentifier::Value::string_native});
 				ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(value.size()));
-				data.write(value);
+				StringParser::write_string(self_cast<OCharacterStreamView>(data), value.as_view(), as_lvalue(Size{}));
 			}
 			return;
 		}
@@ -411,7 +411,7 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 
 		using Common::analysis_rtid;
 
-		using Common::k_binary_cast_format;
+		using Common::k_binary_blob_format;
 
 		// ----------------
 
@@ -531,12 +531,16 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 				}
 				case TypeIdentifier::Value::string_native : {
 					auto length = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
-					value.set_string(from_byte_view<Character, BasicStringView>(data.forward_view(bs_static_size<BasicString<Character>>(length))));
+					auto content = CStringView{};
+					StringParser::read_string(self_cast<ICharacterStreamView>(data), content, length);
+					value.set_string(content);
 					break;
 				}
 				case TypeIdentifier::Value::string_native_indexing : {
 					auto length = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
-					value.set_string(from_byte_view<Character, BasicStringView>(data.forward_view(bs_static_size<BasicString<Character>>(length))));
+					auto content = CStringView{};
+					StringParser::read_string(self_cast<ICharacterStreamView>(data), content, length);
+					value.set_string(content);
 					native_string_index.append(value.get_string());
 					break;
 				}
@@ -548,13 +552,19 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 				case TypeIdentifier::Value::string_unicode : {
 					auto length = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 					auto size = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
-					value.set_string(from_byte_view<Character, BasicStringView>(data.forward_view(bs_static_size<BasicString<Character>>(size))));
+					auto content = CStringView{};
+					StringParser::read_utf8_string(self_cast<ICharacterStreamView>(data), content, length);
+					assert_test(content.size() == size);
+					value.set_string(content);
 					break;
 				}
 				case TypeIdentifier::Value::string_unicode_indexing : {
 					auto length = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 					auto size = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
-					value.set_string(from_byte_view<Character, BasicStringView>(data.forward_view(bs_static_size<BasicString<Character>>(size))));
+					auto content = CStringView{};
+					StringParser::read_utf8_string(self_cast<ICharacterStreamView>(data), content, length);
+					assert_test(content.size() == size);
+					value.set_string(content);
 					unicode_string_index.append(value.get_string());
 					break;
 				}
@@ -572,22 +582,28 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 						case RTIDTypeIdentifier::Value::uid : {
 							auto sheet_length = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 							auto sheet_size = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
-							auto sheet = from_byte_view<Character, BasicStringView>(data.forward_view(bs_static_size<BasicString<Character>>(sheet_size)));
+							auto sheet_content = CStringView{};
+							StringParser::read_utf8_string(self_cast<ICharacterStreamView>(data), sheet_content, sheet_length);
+							assert_test(sheet_content.size() == sheet_size);
 							auto uid_middle = ProtocolBufferVariableLengthInteger::decode_u32(data);
 							auto uid_first = ProtocolBufferVariableLengthInteger::decode_u32(data);
 							auto uid_last = data.read_of<IntegerU32>();
-							// TODO : unknown type of uid 's value , define them be 'u32'
-							value.set_string(RTIDFormat::uid(uid_first, uid_middle, uid_last, sheet));
+							// TODO : unknown type of uid 's value , define them be 'var-int-u32'
+							value.set_string(RTIDFormat::uid(uid_first, uid_middle, uid_last, sheet_content));
 							break;
 						}
 						case RTIDTypeIdentifier::Value::alias : {
 							auto sheet_length = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 							auto sheet_size = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
-							auto sheet = from_byte_view<Character, BasicStringView>(data.forward_view(bs_static_size<BasicString<Character>>(sheet_size)));
+							auto sheet_content = CStringView{};
+							StringParser::read_utf8_string(self_cast<ICharacterStreamView>(data), sheet_content, sheet_length);
+							assert_test(sheet_content.size() == sheet_size);
 							auto alias_length = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 							auto alias_size = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
-							auto alias = from_byte_view<Character, BasicStringView>(data.forward_view(bs_static_size<BasicString<Character>>(alias_size)));
-							value.set_string(RTIDFormat::alias(alias, sheet));
+							auto alias_content = CStringView{};
+							StringParser::read_utf8_string(self_cast<ICharacterStreamView>(data), alias_content, alias_length);
+							assert_test(alias_content.size() == alias_size);
+							value.set_string(RTIDFormat::alias(alias_content, sheet_content));
 							break;
 						}
 						default : {
@@ -603,8 +619,8 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 				case TypeIdentifier::Value::array_begin : {
 					auto & array = value.set_array();
 					data.read_constant(TypeIdentifier{TypeIdentifier::Value::array_size});
-					auto array_size = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
-					array.allocate(array_size);
+					auto size = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
+					array.allocate(size);
 					while (k_true) {
 						auto value_type_identifier = data.read_of<TypeIdentifier>();
 						if (value_type_identifier.value == TypeIdentifier::Value::array_end) {
@@ -613,12 +629,11 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 						array.append();
 						process_unit(data, array.last(), native_string_index, unicode_string_index, value_type_identifier);
 					}
-					assert_test(array.size() == array_size);
+					assert_test(array.size() == size);
 					break;
 				}
 				case TypeIdentifier::Value::object_begin : {
-					value.set_object();
-					auto & object = value.get_object();
+					auto & object = value.set_object();
 					auto   member_list = std::list<JSON::Object::Element>{};
 					while (k_true) {
 						auto key_type_identifier = data.read_of<TypeIdentifier>();

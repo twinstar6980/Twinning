@@ -34,92 +34,6 @@ namespace TwinStar::Core::StringParser {
 
 	#pragma endregion
 
-	#pragma region utf-8 character
-
-	inline auto write_utf8_character (
-		OCharacterStreamView & stream,
-		Character32 const &    character
-	) -> Void {
-		auto extra_size = Size{};
-		if (character < 0x80_c32) {
-			stream.write(cbw<Character>(character));
-			extra_size = 0_sz;
-		} else if (character < 0x800_c32) {
-			stream.write(0b110'00000_c | cbw<Character>(clip_bit(character, 6_sz * 1_sz, 6_sz)));
-			extra_size = 1_sz;
-		} else if (character < 0x10000_c32) {
-			stream.write(0b1110'0000_c | cbw<Character>(clip_bit(character, 6_sz * 2_sz, 6_sz)));
-			extra_size = 2_sz;
-		} else if (character < 0x110000_c32) {
-			stream.write(0b11110'000_c | cbw<Character>(clip_bit(character, 6_sz * 3_sz, 6_sz)));
-			extra_size = 3_sz;
-		} else {
-			assert_fail(R"(/* unicode character is valid */)");
-		}
-		while (extra_size != 0_sz) {
-			--extra_size;
-			stream.write(0b10'000000_c | cbw<Character>(clip_bit(character, 6_sz * extra_size, 6_sz)));
-		}
-		return;
-	}
-
-	// TODO : maybe bug if character is signed ?
-	inline auto read_utf8_character (
-		ICharacterStreamView & stream,
-		Character32 &          character
-	) -> Void {
-		auto current = stream.read_of();
-		auto extra_size = Size{};
-		if (current < 0b10000000_c) {
-			character = cbw<Character32>(current);
-			extra_size = 0_sz;
-		} else if (current < 0b11'000000_c) {
-			assert_fail(R"(/* first utf-8 character is valid */)");
-		} else if (current < 0b111'00000_c) {
-			character = cbw<Character32>(current & 0b000'11111_c);
-			extra_size = 1_sz;
-		} else if (current < 0b1111'0000_c) {
-			character = cbw<Character32>(current & 0b0000'1111_c);
-			extra_size = 2_sz;
-		} else if (current < 0b11111'000_c) {
-			character = cbw<Character32>(current & 0b00000'111_c);
-			extra_size = 3_sz;
-		} else {
-			assert_fail(R"(/* first utf-8 character is valid */)");
-		}
-		while (extra_size != 0_sz) {
-			--extra_size;
-			current = stream.read_of();
-			if ((current & 0x10'000000_c) != 0x10'000000_c) {
-				assert_fail(R"(/* extra utf-8 character is valid */)");
-			}
-			character = character << 6_sz | cbw<Character32>(current & 0b00'111111_c);
-		}
-		return;
-	}
-
-	inline auto compute_utf8_character_size_by_first_character (
-		Character8 const & character
-	) -> Size {
-		auto size = Size{};
-		if (character < 0b10000000_c8) {
-			size = 1_sz;
-		} else if (character < 0b11'000000_c8) {
-			assert_fail(R"(/* first utf-8 character is valid */)");
-		} else if (character < 0b111'00000_c8) {
-			size = 2_sz;
-		} else if (character < 0b1111'0000_c8) {
-			size = 3_sz;
-		} else if (character < 0b11111'000_c8) {
-			size = 4_sz;
-		} else {
-			assert_fail(R"(/* first utf-8 character is valid */)");
-		}
-		return size;
-	}
-
-	#pragma endregion
-
 	#pragma region escape character
 
 	inline auto write_escape_character (
@@ -281,98 +195,249 @@ namespace TwinStar::Core::StringParser {
 
 	#pragma endregion
 
-	#pragma region string
+	#pragma region utf-8 character
 
-	// TODO : end identifier behavior ? ignore or not ?
-	inline auto write_string (
+	inline auto write_utf8_character (
 		OCharacterStreamView & stream,
-		CStringView const &    string,
-		Character const &      end_identifier = CharacterType::k_null
+		Character32 const &    character
 	) -> Void {
-		for (auto & element : string) {
-			stream.write(element);
+		auto extra_size = Size{};
+		if (character < 0x80_c32) {
+			stream.write(self_cast<Character>(cbw<Character8>(character)));
+			extra_size = 0_sz;
+		} else if (character < 0x800_c32) {
+			stream.write(self_cast<Character>(0b110'00000_c8 | cbw<Character8>(clip_bit(character, 6_sz * 1_sz, 6_sz))));
+			extra_size = 1_sz;
+		} else if (character < 0x10000_c32) {
+			stream.write(self_cast<Character>(0b1110'0000_c8 | cbw<Character8>(clip_bit(character, 6_sz * 2_sz, 6_sz))));
+			extra_size = 2_sz;
+		} else if (character < 0x110000_c32) {
+			stream.write(self_cast<Character>(0b11110'000_c8 | cbw<Character8>(clip_bit(character, 6_sz * 3_sz, 6_sz))));
+			extra_size = 3_sz;
+		} else {
+			assert_fail(R"(/* unicode character is valid */)");
+		}
+		while (extra_size > 0_sz) {
+			--extra_size;
+			stream.write(self_cast<Character>(0b10'000000_c8 | cbw<Character8>(clip_bit(character, 6_sz * extra_size, 6_sz))));
 		}
 		return;
 	}
 
-	// TODO : end identifier behavior ? backward or not ?
+	inline auto read_utf8_character (
+		ICharacterStreamView & stream,
+		Character32 &          character
+	) -> Void {
+		auto current = self_cast<Character8>(stream.read_of());
+		auto extra_size = Size{};
+		if (current < 0b1'0000000_c8) {
+			character = cbw<Character32>(current);
+			extra_size = 0_sz;
+		} else if (current < 0b11'000000_c8) {
+			assert_fail(R"(/* first utf-8 character is valid */)");
+		} else if (current < 0b111'00000_c8) {
+			character = cbw<Character32>(current & 0b000'11111_c8);
+			extra_size = 1_sz;
+		} else if (current < 0b1111'0000_c8) {
+			character = cbw<Character32>(current & 0b0000'1111_c8);
+			extra_size = 2_sz;
+		} else if (current < 0b11111'000_c8) {
+			character = cbw<Character32>(current & 0b00000'111_c8);
+			extra_size = 3_sz;
+		} else {
+			assert_fail(R"(/* first utf-8 character is valid */)");
+		}
+		while (extra_size > 0_sz) {
+			--extra_size;
+			current = self_cast<Character8>(stream.read_of());
+			if ((current & 0x10'000000_c8) != 0x10'000000_c8) {
+				assert_fail(R"(/* extra utf-8 character is valid */)");
+			}
+			character = character << 6_sz | cbw<Character32>(current & 0b00'111111_c8);
+		}
+		return;
+	}
+
+	inline auto compute_utf8_character_extra_size (
+		Character8 const & character
+	) -> Size {
+		auto size = Size{};
+		if (character < 0b1'0000000_c8) {
+			size = 0_sz;
+		} else if (character < 0b11'000000_c8) {
+			assert_fail(R"(/* first utf-8 character is valid */)");
+		} else if (character < 0b111'00000_c8) {
+			size = 1_sz;
+		} else if (character < 0b1111'0000_c8) {
+			size = 2_sz;
+		} else if (character < 0b11111'000_c8) {
+			size = 3_sz;
+		} else {
+			assert_fail(R"(/* first utf-8 character is valid */)");
+		}
+		return size;
+	}
+
+	#pragma endregion
+
+	#pragma region string
+
+	inline auto write_string (
+		OCharacterStreamView & stream,
+		CStringView const &    string,
+		Size &                 length
+	) -> Void {
+		length = string.size();
+		stream.write(string);
+		return;
+	}
+
 	inline auto read_string (
 		ICharacterStreamView & stream,
 		CStringView &          string,
-		Character const &      end_identifier = CharacterType::k_null
+		Size const &           length
 	) -> Void {
-		auto begin = stream.current_pointer();
-		auto size = k_none_size;
-		while (!stream.full()) {
-			if (stream.read_of() == end_identifier) {
-				stream.backward();
-				break;
-			}
-			++size;
-		}
-		string.set(begin, size);
+		string = down_cast<CStringView>(stream.forward_view(length));
 		return;
 	}
 
 	#pragma endregion
 
-	#pragma region escape string
+	#pragma region utf-8 string
 
-	// TODO : end identifier behavior ? ignore or not ?
-	inline auto write_escape_string (
+	inline auto write_utf8_string (
+		OCharacterStreamView & stream,
+		CStringView const &    string,
+		Size &                 length
+	) -> Void {
+		auto string_stream = ICharacterStreamView{string};
+		while (!string_stream.full()) {
+			auto current = self_cast<Character8>(string_stream.read_of());
+			auto extra_size = compute_utf8_character_extra_size(current);
+			stream.write(self_cast<Character>(current));
+			while (extra_size > 0_sz) {
+				--extra_size;
+				current = self_cast<Character8>(string_stream.read_of());
+				if ((current & 0x10'000000_c8) != 0x10'000000_c8) {
+					assert_fail(R"(/* extra utf-8 character is valid */)");
+				}
+				stream.write(self_cast<Character>(current));
+			}
+			++length;
+		}
+		return;
+	}
+
+	inline auto read_utf8_string (
+		ICharacterStreamView & stream,
+		CStringView &          string,
+		Size const &           length
+	) -> Void {
+		auto string_stream = ICharacterStreamView{stream.reserve_view()};
+		for (auto & index : SizeRange{length}) {
+			auto current = self_cast<Character8>(string_stream.read_of());
+			auto extra_size = compute_utf8_character_extra_size(current);
+			while (extra_size > 0_sz) {
+				--extra_size;
+				current = self_cast<Character8>(string_stream.read_of());
+				if ((current & 0x10'000000_c8) != 0x10'000000_c8) {
+					assert_fail(R"(/* extra utf-8 character is valid */)");
+				}
+			}
+		}
+		string = down_cast<CStringView>(string_stream.stream_view());
+		stream.forward(string_stream.position());
+		return;
+	}
+
+	#pragma endregion
+
+	#pragma region string until
+
+	inline auto write_string_until (
+		OCharacterStreamView & stream,
+		CStringView const &    string,
+		Character const &      end_identifier
+	) -> Void {
+		for (auto & character : string) {
+			stream.write(character);
+		}
+		return;
+	}
+
+	inline auto read_string_until (
+		ICharacterStreamView & stream,
+		CStringView &          string,
+		Character const &      end_identifier
+	) -> Void {
+		auto string_stream = ICharacterStreamView{stream.reserve_view()};
+		while (k_true) {
+			auto character = string_stream.read_of();
+			if (character == end_identifier) {
+				string_stream.backward();
+				break;
+			}
+		}
+		string = down_cast<CStringView>(string_stream.stream_view());
+		stream.forward(string_stream.position());
+		return;
+	}
+
+	#pragma endregion
+
+	#pragma region escape utf-8 string until
+
+	inline auto write_escape_utf8_string_until (
 		OCharacterStreamView & stream,
 		ICharacterStreamView & string,
 		Character const &      end_identifier
 	) -> Void {
 		while (!string.full()) {
-			auto character = string.read_of();
-			if (CharacterType::is_control(character) || character == CharacterType::k_escape_slash || character == end_identifier) {
+			auto current = string.read_of();
+			if (CharacterType::is_control(current) || current == CharacterType::k_escape_slash || current == end_identifier) {
 				stream.write(CharacterType::k_escape_slash);
-				write_escape_character(stream, cbw<Character32>(character));
+				write_escape_character(stream, cbw<Character32>(current));
 			} else {
-				auto character_size = compute_utf8_character_size_by_first_character(self_cast<Character8>(character));
-				stream.write(character);
-				if (character_size >= 2_sz) {
-					stream.write(string.read_of());
-				}
-				if (character_size >= 3_sz) {
-					stream.write(string.read_of());
-				}
-				if (character_size >= 4_sz) {
-					stream.write(string.read_of());
+				auto extra_size = compute_utf8_character_extra_size(self_cast<Character8>(current));
+				stream.write(current);
+				while (extra_size > 0_sz) {
+					--extra_size;
+					auto current_8 = self_cast<Character8>(string.read_of());
+					if ((current_8 & 0x10'000000_c8) != 0x10'000000_c8) {
+						assert_fail(R"(/* extra utf-8 character is valid */)");
+					}
+					stream.write(self_cast<Character>(current_8));
 				}
 			}
 		}
 		return;
 	}
 
-	// TODO : end identifier behavior ? backward or not ?
-	inline auto read_escape_string (
+	inline auto read_escape_utf8_string_until (
 		ICharacterStreamView & stream,
 		OCharacterStreamView & string,
 		Character const &      end_identifier
 	) -> Void {
-		while (!stream.full()) {
-			auto character = stream.read_of();
-			if (character == end_identifier) {
+		while (k_true) {
+			auto current = stream.read_of();
+			if (current == end_identifier) {
 				stream.backward();
 				break;
 			}
-			if (character == CharacterType::k_escape_slash) {
+			if (current == CharacterType::k_escape_slash) {
 				auto escape_character = Character32{};
 				read_escape_character(stream, escape_character);
 				write_utf8_character(string, escape_character);
 			} else {
-				auto character_size = compute_utf8_character_size_by_first_character(self_cast<Character8>(character));
-				string.write(character);
-				if (character_size >= 2_sz) {
-					string.write(stream.read_of());
-				}
-				if (character_size >= 3_sz) {
-					string.write(stream.read_of());
-				}
-				if (character_size >= 4_sz) {
-					string.write(stream.read_of());
+				auto extra_size = compute_utf8_character_extra_size(self_cast<Character8>(current));
+				string.write(current);
+				while (extra_size > 0_sz) {
+					--extra_size;
+					auto current_8 = self_cast<Character8>(stream.read_of());
+					if ((current_8 & 0x10'000000_c8) != 0x10'000000_c8) {
+						assert_fail(R"(/* extra utf-8 character is valid */)");
+					}
+					string.write(self_cast<Character>(current_8));
 				}
 			}
 		}

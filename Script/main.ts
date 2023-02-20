@@ -2,7 +2,7 @@ namespace TwinStar {
 
 	// ------------------------------------------------
 
-	export const k_version = 30;
+	export const k_version = 31;
 
 	// ------------------------------------------------
 
@@ -274,41 +274,6 @@ namespace TwinStar {
 				try {
 					Console.notify('s', los(`模块加载完成`), [los(`用时 {} s`, ((end_time - begin_time) / 1000).toFixed(3))]);
 					HomeDirectory.initialize();
-					{
-						//Console.notify('s', EnvironmentVariable.search_from_path('adb')!, []);
-						// let env = CoreX.Process.environment();
-						// let em = EnvironmentVariable.parse(env);
-						// Console.notify('w', 'env', record_to_array(em, (key, value) => (`${key}: ${value}`)));
-						// let demo = HomeDirectory.of('~/workspace/demo');
-						// let r = CoreX.Process.execute(
-						// 	demo + "/build/windows/x64/release/main.exe",
-						// 	//demo + "/build/linux/x86_64/release/main",
-						// 	//demo + "/build/macosx/x86_64/release/main",
-						// 	['s', `a"r"" fz "d "'z`],
-						// 	env,
-						// 	demo + `/in`,
-						// 	demo + `/out`,
-						// 	demo + `/err`,
-						// );
-						// Console.notify('w', r.toString(16), []);
-					}
-					{
-						// Console.notify('w', '输入测试', []);
-						// Console.notify('i', 'pause', []);
-						// Console.pause();
-						// Console.notify('i', 'confirm', []);
-						// Console.confirm(null, true);
-						// Console.notify('i', 'number', []);
-						// Console.number(null, true);
-						// Console.notify('i', 'integer', []);
-						// Console.integer(null, true);
-						// Console.notify('i', 'size', []);
-						// Console.size(null, true);
-						// Console.notify('i', 'string', []);
-						// Console.string(null, true);
-						// Console.notify('i', 'option', []);
-						// Console.option([[43]], null, true);
-					}
 					entry?.[0](entry[1], argument.slice(1));
 				} catch (e: any) {
 					Console.notify_error(e);

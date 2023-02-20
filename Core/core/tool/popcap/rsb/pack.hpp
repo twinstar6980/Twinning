@@ -260,8 +260,8 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 			package_data.write(resource_detail_description_information_structure_list);
 			header_structure.description_string_section_offset = cbw<IntegerU32>(package_data.position());
 			for (auto & element : string_list) {
-				package_data.write(element);
-				package_data.write(CharacterType::k_null);
+				StringParser::write_string_until(self_cast<OCharacterStreamView>(package_data), element, CharacterType::k_null);
+				package_data.write_constant(CharacterType::k_null);
 			}
 			return;
 		}
@@ -526,7 +526,7 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 								texture_information_structure.size_width = cbw<IntegerU32>(resource_additional_manifest.size.width);
 								texture_information_structure.size_height = cbw<IntegerU32>(resource_additional_manifest.size.height);
 								texture_information_structure.format = cbw<IntegerU32>(resource_additional_manifest.format);
-								texture_information_structure.bit_per_channel_of_row_division_2 = cbw<IntegerU32>(resource_additional_manifest.size.width * resource_additional_manifest.bit_per_channel / 2_i);
+								texture_information_structure.row_byte_count = cbw<IntegerU32>(resource_additional_manifest.size.width * resource_additional_manifest.pixel_bit_count / cbw<Integer>(k_type_bit_count<Byte>));
 								if constexpr (version.additional_texture_information_for_pvz_2_chinese_android >= 1_i) {
 									if (resource_additional_manifest.format == 0x93_i || resource_additional_manifest.format == 0x96_i) {
 										texture_information_structure.alpha_size = cbw<IntegerU32>(FileSystem::size_file(make_formatted_path(resource_directory) / resource_manifest.key) - cbw<Size>(resource_additional_manifest.size.area() / 2_i));
@@ -666,7 +666,7 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 			) -> auto {
 				auto result = CStringView{};
 				string_information_data.set_position(cbw<Size>(offset));
-				StringParser::read_string(string_information_data, result);
+				StringParser::read_string_until(string_information_data, result, CharacterType::k_null);
 				return result;
 			};
 			package_description.group.allocate_full(k_none_size);
@@ -817,8 +817,8 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 									resource_additional_manifest.scale = cbw<Integer>(texture_information_structure.scale);
 								}
 								resource_additional_manifest.format = cbw<Integer>(texture_information_structure.format);
-								assert_test(is_padded_size(cbw<Size>(texture_information_structure.bit_per_channel_of_row_division_2 * 2_iu32), cbw<Size>(texture_information_structure.size_width)));
-								resource_additional_manifest.bit_per_channel = cbw<Integer>(texture_information_structure.bit_per_channel_of_row_division_2 * 2_iu32 / texture_information_structure.size_width);
+								assert_test(is_padded_size(cbw<Size>(texture_information_structure.row_byte_count * cbw<IntegerU32>(k_type_bit_count<Byte>)), cbw<Size>(texture_information_structure.size_width)));
+								resource_additional_manifest.pixel_bit_count = cbw<Integer>(texture_information_structure.row_byte_count * cbw<IntegerU32>(k_type_bit_count<Byte>) / texture_information_structure.size_width);
 								break;
 							}
 						}
