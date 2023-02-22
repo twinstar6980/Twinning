@@ -1,5 +1,5 @@
 /**
- * + pvz2.lawn_string_text.convert PvZ-2字符串表 版本转换
+ * + pvz2.lawn_string_text.convert
  */
 namespace TwinStar.Script.Entry.method.pvz2.lawn_string_text {
 

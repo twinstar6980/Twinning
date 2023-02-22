@@ -8,7 +8,7 @@
   xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
   xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
   IgnorableNamespaces="rescap uap uap10 com desktop4 desktop5">
-  <Identity Name="TwinStar.ToolKit.WindowsExplorerExtension" Publisher="CN=TwinStar" Version="15.0.0.0" ProcessorArchitecture="x64" />
+  <Identity Name="TwinStar.ToolKit.WindowsExplorerExtension" Publisher="CN=TwinStar" Version="16.0.0.0" ProcessorArchitecture="x64" />
   <Properties>
     <DisplayName>TwinStar ToolKit - Windows Explorer Extension</DisplayName>
     <PublisherDisplayName>TwinStar</PublisherDisplayName>
@@ -39,7 +39,7 @@
               <desktop5:Verb Id="02JSEvaluateMethodInvokeCommand" Clsid="314F8A42-AC6F-4192-8F9A-D2DF1C9F0546" />
               <desktop5:Verb Id="03JSONMethodInvokeGroupCommand" Clsid="D60FB9DD-7677-4742-A2BC-C9049E268CBA" />
               <desktop5:Verb Id="04DataMethodInvokeGroupCommand" Clsid="1DAED04B-CD51-45DA-91E4-F15DC831C7D5" />
-              <desktop5:Verb Id="05ImageAtlasMethodInvokeGroupCommand" Clsid="2BEEB70E-8211-4DB4-B6BF-8D6FDAB791BF" />
+              <desktop5:Verb Id="05ImageMethodInvokeGroupCommand" Clsid="2BEEB70E-8211-4DB4-B6BF-8D6FDAB791BF" />
               <desktop5:Verb Id="06WwiseEncodedMediaMethodInvokeGroupCommand" Clsid="C9A257AC-8048-4257-85AD-CE68CACD7922" />
               <desktop5:Verb Id="07WwiseSoundBankMethodInvokeGroupCommand" Clsid="8B32AE59-795E-4F2D-B3B8-A4558CF9488F" />
               <desktop5:Verb Id="08MarmaladeDZipMethodInvokeGroupCommand" Clsid="164D100A-5228-429D-A926-EFF742D00E9D" />
@@ -60,7 +60,7 @@
               <desktop5:Verb Id="02JSEvaluateMethodInvokeCommand" Clsid="314F8A42-AC6F-4192-8F9A-D2DF1C9F0546" />
               <desktop5:Verb Id="03JSONMethodInvokeGroupCommand" Clsid="D60FB9DD-7677-4742-A2BC-C9049E268CBA" />
               <desktop5:Verb Id="04DataMethodInvokeGroupCommand" Clsid="1DAED04B-CD51-45DA-91E4-F15DC831C7D5" />
-              <desktop5:Verb Id="05ImageAtlasMethodInvokeGroupCommand" Clsid="2BEEB70E-8211-4DB4-B6BF-8D6FDAB791BF" />
+              <desktop5:Verb Id="05ImageMethodInvokeGroupCommand" Clsid="2BEEB70E-8211-4DB4-B6BF-8D6FDAB791BF" />
               <desktop5:Verb Id="06WwiseEncodedMediaMethodInvokeGroupCommand" Clsid="C9A257AC-8048-4257-85AD-CE68CACD7922" />
               <desktop5:Verb Id="07WwiseSoundBankMethodInvokeGroupCommand" Clsid="8B32AE59-795E-4F2D-B3B8-A4558CF9488F" />
               <desktop5:Verb Id="08MarmaladeDZipMethodInvokeGroupCommand" Clsid="164D100A-5228-429D-A926-EFF742D00E9D" />

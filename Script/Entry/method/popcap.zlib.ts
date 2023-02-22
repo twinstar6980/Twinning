@@ -1,8 +1,8 @@
 /**
- * + popcap.zlib.compress PopCap-ZLib 压缩
- * + popcap.zlib.uncompress PopCap-ZLib 解压
- * + popcap.zlib.compress.batch [批处理] PopCap-ZLib 压缩
- * + popcap.zlib.uncompress.batch [批处理] PopCap-ZLib 解压
+ * + popcap.zlib.compress
+ * + popcap.zlib.uncompress
+ * + popcap.zlib.compress.batch
+ * + popcap.zlib.uncompress.batch
  */
 namespace TwinStar.Script.Entry.method.popcap.zlib {
 

@@ -16,7 +16,7 @@ namespace TwinStar.Script.Support.Atlas.Pack {
 
 	export function pack_fsh(
 		manifest: Manifest,
-		atlas: Core.Image.BitmapView,
+		atlas: Core.Image.ImageView,
 		sprite_directory: string,
 	): void {
 		for (let sprite_name in manifest.sprite) {
@@ -28,7 +28,7 @@ namespace TwinStar.Script.Support.Atlas.Pack {
 
 	export function unpack_fsh(
 		manifest: Manifest,
-		atlas: Core.Image.CBitmapView,
+		atlas: Core.Image.CImageView,
 		sprite_directory: string,
 	): void {
 		for (let sprite_name in manifest.sprite) {
@@ -41,7 +41,7 @@ namespace TwinStar.Script.Support.Atlas.Pack {
 	export function pack_auto_fsh(
 		sprite_directory: string,
 		expand_value: number | 'exponent_of_2' = 'exponent_of_2',
-	): [Manifest, Core.Image.Bitmap] {
+	): [Manifest, Core.Image.Image] {
 		let sprite_file_list = CoreX.FileSystem.list_file(sprite_directory).filter((e) => (/.+(\.png)/i.test(e))).map((e) => (e.substring(0, e.length - 4)));
 		let sprite_box = record_from_array(sprite_file_list, (i, e) => {
 			let size = CoreX.Image.File.PNG.size_fs(`${sprite_directory}/${e}.png`);
@@ -52,7 +52,7 @@ namespace TwinStar.Script.Support.Atlas.Pack {
 			size: [BigInt(atlas_box.w), BigInt(atlas_box.h)],
 			sprite: {},
 		};
-		let atlas = Core.Image.Bitmap.allocate(Core.Image.ImageSize.value(manifest.size));
+		let atlas = Core.Image.Image.allocate(Core.Image.ImageSize.value(manifest.size));
 		let atlas_view = atlas.view();
 		for (let sprite_file in sprite_rect) {
 			let rect = sprite_rect[sprite_file];
@@ -75,7 +75,7 @@ namespace TwinStar.Script.Support.Atlas.Pack {
 		sprite_directory: string,
 	): void {
 		let manifest = CoreX.JSON.read_fs_js<Manifest>(manifest_file);
-		let atlas = Core.Image.Bitmap.allocate(Core.Image.ImageSize.value(manifest.size));
+		let atlas = Core.Image.Image.allocate(Core.Image.ImageSize.value(manifest.size));
 		let atlas_view = atlas.view();
 		pack_fsh(manifest, atlas_view, sprite_directory);
 		CoreX.Image.File.PNG.write_fs(atlas_file, atlas_view);

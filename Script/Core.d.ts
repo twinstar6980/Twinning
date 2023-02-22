@@ -1,6 +1,6 @@
 /**
  * JS interface of Core
- * @version 29
+ * @version 31
  */
 declare namespace TwinStar.Core {
 
@@ -363,8 +363,8 @@ declare namespace TwinStar.Core {
 		// ------------------------------------------------
 
 		/**
-		 * 根据所给大小构造数组
-		 * @param size 数组大小
+		 * 根据所给尺寸构造数组
+		 * @param size 数组尺寸
 		 * @returns 对象
 		 */
 		static allocate(
@@ -375,7 +375,7 @@ declare namespace TwinStar.Core {
 
 		/**
 		 * 分配新数组
-		 * @param size 新数组的大小
+		 * @param size 新数组的尺寸
 		 * @returns 无
 		 */
 		allocate(
@@ -392,8 +392,8 @@ declare namespace TwinStar.Core {
 		// ------------------------------------------------
 
 		/**
-		 * 获取序列大小
-		 * @returns 序列大小
+		 * 获取序列尺寸
+		 * @returns 序列尺寸
 		 */
 		size(
 		): Size;
@@ -448,8 +448,8 @@ declare namespace TwinStar.Core {
 		// ------------------------------------------------
 
 		/**
-		 * 获取视图大小
-		 * @returns 视图大小
+		 * 获取视图尺寸
+		 * @returns 视图尺寸
 		 */
 		size(
 		): Size;
@@ -459,7 +459,7 @@ declare namespace TwinStar.Core {
 		/**
 		 * 获取子视图
 		 * @param begin 起始位置
-		 * @param size 大小
+		 * @param size 尺寸
 		 * @returns 子视图
 		 */
 		sub(
@@ -506,8 +506,8 @@ declare namespace TwinStar.Core {
 		// ------------------------------------------------
 
 		/**
-		 * 获取视图大小
-		 * @returns 视图大小
+		 * 获取视图尺寸
+		 * @returns 视图尺寸
 		 */
 		size(
 		): Size;
@@ -523,7 +523,7 @@ declare namespace TwinStar.Core {
 
 		/**
 		 * 设置流所处的位置
-		 * @param position 位置，不大于视图的大小
+		 * @param position 位置，不大于视图的尺寸
 		 * @returns 无
 		 */
 		set_position(
@@ -592,8 +592,8 @@ declare namespace TwinStar.Core {
 		// ------------------------------------------------
 
 		/**
-		 * 获取视图大小
-		 * @returns 视图大小
+		 * 获取视图尺寸
+		 * @returns 视图尺寸
 		 */
 		size(
 		): Size;
@@ -603,7 +603,7 @@ declare namespace TwinStar.Core {
 		/**
 		 * 获取子视图
 		 * @param begin 起始位置
-		 * @param size 大小
+		 * @param size 尺寸
 		 * @returns 子视图
 		 */
 		sub(
@@ -650,8 +650,8 @@ declare namespace TwinStar.Core {
 		// ------------------------------------------------
 
 		/**
-		 * 获取视图大小
-		 * @returns 视图大小
+		 * 获取视图尺寸
+		 * @returns 视图尺寸
 		 */
 		size(
 		): Size;
@@ -667,7 +667,7 @@ declare namespace TwinStar.Core {
 
 		/**
 		 * 设置流所处的位置
-		 * @param position 位置，不大于视图的大小
+		 * @param position 位置，不大于视图的尺寸
 		 * @returns 无
 		 */
 		set_position(
@@ -878,6 +878,64 @@ declare namespace TwinStar.Core {
 
 		// ------------------------------------------------
 
+		/** 颜色 */
+		class Color {
+
+			// ------------------------------------------------
+
+			private _Image_Color;
+
+			// ------------------------------------------------
+
+			static default(): Color;
+
+			static copy(it: Color): Color;
+
+			// ------------------------------------------------
+
+			static Value: bigint;
+
+			static value(it: typeof Color.Value): Color;
+
+			get value(): typeof Color.Value;
+
+			set value(it: typeof Color.Value);
+
+			// ------------------------------------------------
+
+		}
+
+		// ------------------------------------------------
+
+		/** 颜色列表 */
+		class ColorList {
+
+			// ------------------------------------------------
+
+			private _Image_ColorList;
+
+			// ------------------------------------------------
+
+			static default(): ColorList;
+
+			static copy(it: ColorList): ColorList;
+
+			// ------------------------------------------------
+
+			static Value: Array<bigint>;
+
+			static value(it: typeof ColorList.Value): ColorList;
+
+			get value(): typeof ColorList.Value;
+
+			set value(it: typeof ColorList.Value);
+
+			// ------------------------------------------------
+
+		}
+
+		// ------------------------------------------------
+
 		/** 像素 */
 		class Pixel {
 
@@ -907,35 +965,35 @@ declare namespace TwinStar.Core {
 
 		// ------------------------------------------------
 
-		/** 位图 */
-		class Bitmap {
+		/** 图像 */
+		class Image {
 
 			// ------------------------------------------------
 
-			private _Image_Bitmap;
+			private _Image_Image;
 
 			// ------------------------------------------------
 
-			static default(): Bitmap;
+			static default(): Image;
 
-			static copy(it: Bitmap): Bitmap;
+			static copy(it: Image): Image;
 
 			// ------------------------------------------------
 
 			/**
-			 * 根据所给大小构造位图
-			 * @param size 位图大小
+			 * 根据所给尺寸构造图像
+			 * @param size 图像尺寸
 			 * @returns 对象
 			 */
 			static allocate(
 				size: ImageSize,
-			): Bitmap;
+			): Image;
 
 			// ------------------------------------------------
 
 			/**
-			 * 分配新位图
-			 * @param size 新位图的大小
+			 * 分配新图像
+			 * @param size 新图像的尺寸
 			 * @returns 无
 			 */
 			allocate(
@@ -943,7 +1001,7 @@ declare namespace TwinStar.Core {
 			): Void;
 
 			/**
-			 * 重置位图
+			 * 重置图像
 			 * @returns 无
 			 */
 			reset(
@@ -952,8 +1010,8 @@ declare namespace TwinStar.Core {
 			// ------------------------------------------------
 
 			/**
-			 * 获取位图大小
-			 * @returns 位图大小
+			 * 获取图像尺寸
+			 * @returns 图像尺寸
 			 */
 			size(
 			): ImageSize;
@@ -961,34 +1019,34 @@ declare namespace TwinStar.Core {
 			// ------------------------------------------------
 
 			/**
-			 * 获取观测本位图的视图
-			 * @returns 观测本位图的视图
+			 * 获取观测本图像的视图
+			 * @returns 观测本图像的视图
 			 */
 			view(
-			): BitmapView;
+			): ImageView;
 
 			// ------------------------------------------------
 
 		}
 
-		/** 位图视图 */
-		class BitmapView {
+		/** 图像视图 */
+		class ImageView {
 
 			// ------------------------------------------------
 
-			private _Image_BitmapView;
+			private _Image_ImageView;
 
 			// ------------------------------------------------
 
-			static default(): BitmapView;
+			static default(): ImageView;
 
-			static copy(it: BitmapView): BitmapView;
+			static copy(it: ImageView): ImageView;
 
 			// ------------------------------------------------
 
 			/**
-			 * 获取视图大小
-			 * @returns 视图大小
+			 * 获取视图尺寸
+			 * @returns 视图尺寸
 			 */
 			size(
 			): ImageSize;
@@ -998,13 +1056,13 @@ declare namespace TwinStar.Core {
 			/**
 			 * 获取子视图
 			 * @param position 起始位置
-			 * @param size 大小
+			 * @param size 尺寸
 			 * @returns 子视图
 			 */
 			sub(
 				position: ImagePosition,
 				size: ImageSize,
-			): BitmapView;
+			): ImageView;
 
 			// ------------------------------------------------
 
@@ -1023,61 +1081,18 @@ declare namespace TwinStar.Core {
 			 * @returns 无
 			 */
 			draw(
-				image: BitmapView,
+				image: ImageView,
 			): Void;
 
 			// ------------------------------------------------
 
 		}
 
-		/** 变量位图视图 */
-		type VBitmapView = BitmapView;
+		/** 变量图像视图 */
+		type VImageView = ImageView;
 
-		/** 常量位图视图 */
-		type CBitmapView = BitmapView;
-
-		// ------------------------------------------------
-
-		/** 文件支持 */
-		namespace File {
-
-			/** PNG文件 */
-			namespace PNG {
-
-				/**
-				 * 获取PNG的图像尺寸
-				 * @param data 数据
-				 * @returns 图像尺寸
-				 */
-				function size(
-					data: CByteListView,
-				): ImageSize;
-
-				/**
-				 * 读取PNG至图像
-				 * @param data 数据
-				 * @param image 图像
-				 * @returns 无
-				 */
-				function read(
-					data: IByteStreamView,
-					image: VBitmapView,
-				): Void;
-
-				/**
-				 * 将图像写入PNG
-				 * @param data 数据
-				 * @param image 图像
-				 * @returns 无
-				 */
-				function write(
-					data: OByteStreamView,
-					image: CBitmapView,
-				): Void;
-
-			}
-
-		}
+		/** 常量图像视图 */
+		type CImageView = ImageView;
 
 		// ------------------------------------------------
 
@@ -1197,18 +1212,18 @@ declare namespace TwinStar.Core {
 		): Void;
 
 		/**
-		 * 获取文件大小
+		 * 获取文件尺寸
 		 * @param target 目标文件
-		 * @returns 文件大小
+		 * @returns 文件尺寸
 		 */
 		function size_file(
 			target: Path,
 		): Size;
 
 		/**
-		 * 调整文件大小
+		 * 调整文件尺寸
 		 * @param target 目标文件
-		 * @param size 文件大小
+		 * @param size 文件尺寸
 		 * @returns 无
 		 */
 		function resize_file(
@@ -1536,9 +1551,9 @@ declare namespace TwinStar.Core {
 					namespace Encode {
 
 						/**
-						 * 计算成品数据大小
-						 * @param raw_size 原始数据大小
-						 * @param ripe_size 成品数据大小
+						 * 计算成品数据尺寸
+						 * @param raw_size 原始数据尺寸
+						 * @param ripe_size 成品数据尺寸
 						 */
 						function compute_size(
 							raw_size: Size,
@@ -1561,9 +1576,9 @@ declare namespace TwinStar.Core {
 					namespace Decode {
 
 						/**
-						 * 计算原始数据大小
+						 * 计算原始数据尺寸
 						 * @param ripe 成品数据
-						 * @param raw_size 原始数据大小
+						 * @param raw_size 原始数据尺寸
 						 */
 						function compute_size(
 							ripe: CCharacterListView,
@@ -1649,10 +1664,10 @@ declare namespace TwinStar.Core {
 						 * @param plain 明文数据
 						 * @param cipher 密文数据
 						 * @param mode 模式
-						 * @param block_size 块大小，允许16、24、32
-						 * @param key_size 密钥大小，允许16、24、32
-						 * @param key 密钥，大小必须与key_size一致
-						 * @param iv 初始向量，当模式为cbc或cfb时有效，此时大小必须与block_size一致
+						 * @param block_size 块尺寸，允许16、24、32
+						 * @param key_size 密钥尺寸，允许16、24、32
+						 * @param key 密钥，尺寸必须与key_size一致
+						 * @param iv 初始向量，当模式为cbc或cfb时有效，此时尺寸必须与block_size一致
 						 */
 						function process_whole(
 							plain: IByteStreamView,
@@ -1674,10 +1689,10 @@ declare namespace TwinStar.Core {
 						 * @param cipher 密文数据
 						 * @param plain 明文数据
 						 * @param mode 模式
-						 * @param block_size 块大小，允许16、24、32
-						 * @param key_size 密钥大小，允许16、24、32
-						 * @param key 密钥，大小必须与key_size一致
-						 * @param iv 初始向量，当模式为cbc或cfb时有效，此时大小必须与block_size一致
+						 * @param block_size 块尺寸，允许16、24、32
+						 * @param key_size 密钥尺寸，允许16、24、32
+						 * @param key 密钥，尺寸必须与key_size一致
+						 * @param iv 初始向量，当模式为cbc或cfb时有效，此时尺寸必须与block_size一致
 						 */
 						function process_whole(
 							cipher: IByteStreamView,
@@ -1759,10 +1774,10 @@ declare namespace TwinStar.Core {
 					namespace Compress {
 
 						/**
-						 * 计算成品数据大小上限
-						 * @param raw_size 原始数据大小
-						 * @param ripe_size_bound 成品数据大小上限
-						 * @param window_bits 窗口大小(8~15)
+						 * 计算成品数据尺寸上限
+						 * @param raw_size 原始数据尺寸
+						 * @param ripe_size_bound 成品数据尺寸上限
+						 * @param window_bits 窗口尺寸(8~15)
 						 * @param memory_level 内存级别(1~9)
 						 * @param wrapper 封装
 						 */
@@ -1779,7 +1794,7 @@ declare namespace TwinStar.Core {
 						 * @param raw 原始数据
 						 * @param ripe 成品数据
 						 * @param level 压缩级别(0~9)
-						 * @param window_bits 窗口大小(8~15)
+						 * @param window_bits 窗口尺寸(8~15)
 						 * @param memory_level 内存级别(1~9)
 						 * @param strategy 策略
 						 * @param wrapper 封装
@@ -1803,7 +1818,7 @@ declare namespace TwinStar.Core {
 						 * 解压
 						 * @param ripe 成品数据
 						 * @param raw 原始数据
-						 * @param window_bits 窗口大小(8~15)
+						 * @param window_bits 窗口尺寸(8~15)
 						 * @param wrapper 封装
 						 */
 						function process_whole(
@@ -1827,7 +1842,7 @@ declare namespace TwinStar.Core {
 						 * 压缩
 						 * @param raw 原始数据
 						 * @param ripe 成品数据
-						 * @param block_size 块大小(1~9)
+						 * @param block_size 块尺寸(1~9)
 						 * @param work_factor 工作因子(0~250，0==30)
 						 */
 						function process_whole(
@@ -1934,7 +1949,7 @@ declare namespace TwinStar.Core {
 						 * @param before 变动前数据
 						 * @param after 变动后数据
 						 * @param patch 补丁数据
-						 * @param maximum_window_size 最大窗口大小
+						 * @param maximum_window_size 最大窗口尺寸
 						 */
 						function process_whole(
 							before: IByteStreamView,
@@ -2030,193 +2045,303 @@ declare namespace TwinStar.Core {
 
 		}
 
-		/** 纹理 */
-		namespace Texture {
+		/** 图像 */
+		namespace Image {
+
+			type ImageSize = Core.Image.ImageSize;
+
+			type ImagePosition = Core.Image.ImagePosition;
+
+			type Color = Core.Image.Color;
+
+			type ColorList = Core.Image.ColorList;
+
+			type Pixel = Core.Image.Pixel;
+
+			type CImageView = Core.Image.CImageView;
+
+			type VImageView = Core.Image.VImageView;
+
+			type Image = Core.Image.Image;
 
 			// ------------------------------------------------
 
-			/** 格式 */
-			class Format {
+			/** 变换 */
+			namespace Transformation {
+
+				/** 翻转 */
+				namespace Flip {
+
+					/**
+					 * 翻转
+					 * @param target 目标
+					 * @param flip_horizontal 翻转水平方向
+					 * @param flip_vertical 翻转垂直方向
+					 */
+					function process_image(
+						target: Image.VImageView,
+						flip_horizontal: Boolean,
+						flip_vertical: Boolean,
+					): Void;
+
+				}
+
+				/** 缩放 */
+				namespace Scale {
+
+					/**
+					 * 缩放
+					 * @param source 来源
+					 * @param destination 目的
+					 */
+					function process_image(
+						source: Image.CImageView,
+						destination: Image.VImageView,
+					): Void;
+
+				}
+
+			}
+
+			/** 纹理 */
+			namespace Texture {
 
 				// ------------------------------------------------
 
-				private _Tool_Texture_Format;
+				/** 格式 */
+				class Format {
+
+					// ------------------------------------------------
+
+					private _Tool_Texture_Format;
+
+					// ------------------------------------------------
+
+					static default(): Format;
+
+					static copy(it: Format): Format;
+
+					// ------------------------------------------------
+
+					static Value: 'a_8' | 'rgb_888' | 'rgba_8888' | 'rgb_565_l' | 'rgba_4444_l' | 'rgba_5551_l' | 'argb_4444_l' | 'argb_8888_l';
+
+					static value(it: typeof Format.Value): Format;
+
+					get value(): typeof Format.Value;
+
+					set value(it: typeof Format.Value);
+
+					// ------------------------------------------------
+
+				}
+
+				/** 编码 */
+				namespace Encode {
+
+					/**
+					 * 编码
+					 * @param data 数据
+					 * @param image 图像
+					 * @param format 格式
+					 */
+					function process_image(
+						data: OByteStreamView,
+						image: Image.CImageView,
+						format: Format,
+					): Void;
+
+				}
+
+				/** 解码 */
+				namespace Decode {
+
+					/**
+					 * 解码
+					 * @param data 数据
+					 * @param image 图像
+					 * @param format 格式
+					 */
+					function process_image(
+						data: IByteStreamView,
+						image: Image.VImageView,
+						format: Format,
+					): Void;
+
+				}
 
 				// ------------------------------------------------
 
-				static default(): Format;
+				/** 压缩 */
+				namespace Compression {
 
-				static copy(it: Format): Format;
+					/** ETC1 */
+					namespace ETC1 {
 
-				// ------------------------------------------------
+						/** 压缩 */
+						namespace Compress {
 
-				static Value: 'a_8' | 'rgb_888' | 'rgba_8888' | 'rgb_565_l' | 'rgba_4444_l' | 'rgba_5551_l' | 'argb_4444_l' | 'argb_8888_l';
+							/**
+							 * 压缩
+							 * @param data 数据
+							 * @param image 图像
+							 */
+							function process_image(
+								data: OByteStreamView,
+								image: Image.CImageView,
+							): Void;
 
-				static value(it: typeof Format.Value): Format;
+						}
 
-				get value(): typeof Format.Value;
+						/** 解压 */
+						namespace Uncompress {
 
-				set value(it: typeof Format.Value);
+							/**
+							 * 解压
+							 * @param data 数据
+							 * @param image 图像
+							 */
+							function process_image(
+								data: IByteStreamView,
+								image: Image.VImageView,
+							): Void;
+
+						}
+
+					}
+
+					/** ETC2 */
+					namespace ETC2 {
+
+						/** 压缩 */
+						namespace Compress {
+
+							/**
+							 * 压缩
+							 * @param data 数据
+							 * @param image 图像
+							 * @param with_alpha 是否携带alpha通道
+							 */
+							function process_image(
+								data: OByteStreamView,
+								image: Image.CImageView,
+								with_alpha: Boolean,
+							): Void;
+
+						}
+
+						/** 解压 */
+						namespace Uncompress {
+
+							/**
+							 * 解压
+							 * @param data 数据
+							 * @param image 图像
+							 * @param with_alpha 是否携带alpha通道
+							 */
+							function process_image(
+								data: IByteStreamView,
+								image: Image.VImageView,
+								with_alpha: Boolean,
+							): Void;
+
+						}
+
+					}
+
+					/** PVRTC4 */
+					namespace PVRTC4 {
+
+						/** 压缩 */
+						namespace Compress {
+
+							/**
+							 * 压缩
+							 * @param data 数据
+							 * @param image 图像
+							 * @param with_alpha 是否携带alpha通道
+							 */
+							function process_image(
+								data: OByteStreamView,
+								image: Image.CImageView,
+								with_alpha: Boolean,
+							): Void;
+
+						}
+
+						/** 解压 */
+						namespace Uncompress {
+
+							/**
+							 * 解压
+							 * @param data 数据
+							 * @param image 图像
+							 * @param with_alpha 是否携带alpha通道
+							 */
+							function process_image(
+								data: IByteStreamView,
+								image: Image.VImageView,
+								with_alpha: Boolean,
+							): Void;
+
+						}
+
+					}
+
+				}
 
 				// ------------------------------------------------
 
 			}
 
-			/** 编码 */
-			namespace Encode {
+			/** 文件 */
+			namespace File {
 
-				/**
-				 * 编码
-				 * @param data 数据
-				 * @param image 图像
-				 * @param format 格式
-				 */
-				function process_image(
-					data: OByteStreamView,
-					image: Image.CBitmapView,
-					format: Format,
-				): Void;
+				/** PNG */
+				namespace PNG {
 
-			}
-
-			/** 解码 */
-			namespace Decode {
-
-				/**
-				 * 解码
-				 * @param data 数据
-				 * @param image 图像
-				 * @param format 格式
-				 */
-				function process_image(
-					data: IByteStreamView,
-					image: Image.VBitmapView,
-					format: Format,
-				): Void;
-
-			}
-
-			// ------------------------------------------------
-
-			/** 压缩 */
-			namespace Compression {
-
-				/** ETC1 */
-				namespace ETC1 {
-
-					/** 压缩 */
-					namespace Compress {
+					/** 写 */
+					namespace Write {
 
 						/**
-						 * 压缩
+						 * 写
 						 * @param data 数据
 						 * @param image 图像
 						 */
 						function process_image(
 							data: OByteStreamView,
-							image: Image.CBitmapView,
+							image: CImageView,
 						): Void;
 
 					}
 
-					/** 解压 */
-					namespace Uncompress {
+					/** 读 */
+					namespace Read {
 
 						/**
-						 * 解压
+						 * 计算图像尺寸
+						 * @param data 数据
+						 * @param size 图像尺寸
+						 */
+						function compute_size(
+							data: CByteListView,
+							size: Image.ImageSize,
+						): Void;
+
+						/**
+						 * 读
 						 * @param data 数据
 						 * @param image 图像
 						 */
 						function process_image(
 							data: IByteStreamView,
-							image: Image.VBitmapView,
+							image: VImageView,
 						): Void;
 
 					}
 
 				}
 
-				/** ETC2 */
-				namespace ETC2 {
-
-					/** 压缩 */
-					namespace Compress {
-
-						/**
-						 * 压缩
-						 * @param data 数据
-						 * @param image 图像
-						 * @param with_alpha 是否携带alpha通道
-						 */
-						function process_image(
-							data: OByteStreamView,
-							image: Image.CBitmapView,
-							with_alpha: Boolean,
-						): Void;
-
-					}
-
-					/** 解压 */
-					namespace Uncompress {
-
-						/**
-						 * 解压
-						 * @param data 数据
-						 * @param image 图像
-						 * @param with_alpha 是否携带alpha通道
-						 */
-						function process_image(
-							data: IByteStreamView,
-							image: Image.VBitmapView,
-							with_alpha: Boolean,
-						): Void;
-
-					}
-
-				}
-
-				/** PVRTC4 */
-				namespace PVRTC4 {
-
-					/** 压缩 */
-					namespace Compress {
-
-						/**
-						 * 压缩
-						 * @param data 数据
-						 * @param image 图像
-						 * @param with_alpha 是否携带alpha通道
-						 */
-						function process_image(
-							data: OByteStreamView,
-							image: Image.CBitmapView,
-							with_alpha: Boolean,
-						): Void;
-
-					}
-
-					/** 解压 */
-					namespace Uncompress {
-
-						/**
-						 * 解压
-						 * @param data 数据
-						 * @param image 图像
-						 * @param with_alpha 是否携带alpha通道
-						 */
-						function process_image(
-							data: IByteStreamView,
-							image: Image.VBitmapView,
-							with_alpha: Boolean,
-						): Void;
-
-					}
-
-				}
-
 			}
-
-			// ------------------------------------------------
 
 		}
 
@@ -2499,7 +2624,7 @@ declare namespace TwinStar.Core {
 		/** PopCap */
 		namespace PopCap {
 
-			/** ZLib（附有原始数据大小信息的ZLib） */
+			/** ZLib（附有原始数据尺寸信息的ZLib） */
 			namespace ZLib {
 
 				/** 版本 */
@@ -2535,10 +2660,10 @@ declare namespace TwinStar.Core {
 				namespace Compress {
 
 					/**
-					 * 计算成品数据大小上限
-					 * @param raw_size 原始数据大小
-					 * @param ripe_size_bound 成品数据大小上限
-					 * @param window_bits 窗口大小(8~15)
+					 * 计算成品数据尺寸上限
+					 * @param raw_size 原始数据尺寸
+					 * @param ripe_size_bound 成品数据尺寸上限
+					 * @param window_bits 窗口尺寸(8~15)
 					 * @param memory_level 内存级别(1~9)
 					 * @param version 版本
 					 */
@@ -2555,7 +2680,7 @@ declare namespace TwinStar.Core {
 					 * @param raw 原始数据
 					 * @param ripe 成品数据
 					 * @param level 压缩级别(0~9)
-					 * @param window_bits 窗口大小(8~15)
+					 * @param window_bits 窗口尺寸(8~15)
 					 * @param memory_level 内存级别(1~9)
 					 * @param strategy 策略
 					 * @param version 版本
@@ -2576,9 +2701,9 @@ declare namespace TwinStar.Core {
 				namespace Uncompress {
 
 					/**
-					 * 计算原始数据大小
+					 * 计算原始数据尺寸
 					 * @param ripe 成品数据
-					 * @param raw_size 原始数据大小
+					 * @param raw_size 原始数据尺寸
 					 * @param version 版本
 					 */
 					function compute_size(
@@ -2591,7 +2716,7 @@ declare namespace TwinStar.Core {
 					 * 解压
 					 * @param ripe 成品数据
 					 * @param raw 原始数据
-					 * @param window_bits 窗口大小(8~15)
+					 * @param window_bits 窗口尺寸(8~15)
 					 * @param version 版本
 					 */
 					function process_whole(
@@ -2770,7 +2895,7 @@ declare namespace TwinStar.Core {
 					 * 编码
 					 * @param data 数据
 					 * @param value 值
-					 * @param enable_string_index 启用字符串索引，若是，确保同一字符串只会明文编码一次，之后只使用索引值，可减少编码出的rton的大小
+					 * @param enable_string_index 启用字符串索引，若是，确保同一字符串只会明文编码一次，之后只使用索引值，可减少编码出的rton的尺寸
 					 * @param enable_rtid 启用rtid，若是，符合RTID格式的字符串将编码为0x83系列的rton值单元
 					 * @param version 版本
 					 */
@@ -2805,9 +2930,9 @@ declare namespace TwinStar.Core {
 				namespace Encrypt {
 
 					/**
-					 * 计算密文数据的大小
-					 * @param plain_size 明文数据大小
-					 * @param cipher_size 密文数据的大小
+					 * 计算密文数据的尺寸
+					 * @param plain_size 明文数据尺寸
+					 * @param cipher_size 密文数据的尺寸
 					 */
 					function compute_size(
 						plain_size: Size,
@@ -2832,9 +2957,9 @@ declare namespace TwinStar.Core {
 				namespace Decrypt {
 
 					/**
-					 * 计算明文数据的大小
-					 * @param cipher_size 密文数据大小
-					 * @param plain_size 明文数据的大小
+					 * 计算明文数据的尺寸
+					 * @param cipher_size 密文数据尺寸
+					 * @param plain_size 明文数据的尺寸
 					 */
 					function compute_size(
 						cipher_size: Size,
@@ -2927,7 +3052,7 @@ declare namespace TwinStar.Core {
 						type Rectangle = {
 							/** 位置 */
 							position: [number, number];
-							/** 大小 */
+							/** 尺寸 */
 							size: [number, number];
 						};
 
@@ -3677,8 +3802,8 @@ declare namespace TwinStar.Core {
 					 */
 					function process_image(
 						data: OByteStreamView,
-						image: Image.CBitmapView,
-						format: Texture.Format,
+						image: Image.CImageView,
+						format: Image.Texture.Format,
 					): Void;
 
 				}
@@ -3694,8 +3819,8 @@ declare namespace TwinStar.Core {
 					 */
 					function process_image(
 						data: IByteStreamView,
-						image: Image.VBitmapView,
-						format: Texture.Format,
+						image: Image.VImageView,
+						format: Image.Texture.Format,
 					): Void;
 
 				}
@@ -3704,9 +3829,6 @@ declare namespace TwinStar.Core {
 
 			/** PvZ2-中文安卓版中的alpha调色板纹理 */
 			namespace PvZ2ChineseAndroidAlphaPaletteTexture {
-
-				/** 调色板 */
-				type JS_Palette = Array<bigint>;
 
 				/** 编码 */
 				namespace Encode {
@@ -3719,8 +3841,8 @@ declare namespace TwinStar.Core {
 					 */
 					function process_image(
 						data: OByteStreamView,
-						image: Image.CBitmapView,
-						palette: JS_Palette,
+						image: Image.CImageView,
+						palette: Image.ColorList,
 					): Void;
 
 				}
@@ -3736,8 +3858,8 @@ declare namespace TwinStar.Core {
 					 */
 					function process_image(
 						data: IByteStreamView,
-						image: Image.VBitmapView,
-						palette: JS_Palette,
+						image: Image.VImageView,
+						palette: Image.ColorList,
 					): Void;
 
 				}

@@ -1,5 +1,5 @@
 /**
- * + js.evaluate JS 执行
+ * + js.evaluate
  */
 namespace TwinStar.Script.Entry.method.js {
 

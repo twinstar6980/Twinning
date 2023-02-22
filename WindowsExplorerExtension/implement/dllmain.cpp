@@ -55,7 +55,7 @@ M_CoCreatableClass_X(LaunchMethodInvokeCommand);
 M_CoCreatableClass_X(JSEvaluateMethodInvokeCommand);
 M_CoCreatableClass_X(JSONMethodInvokeGroupCommand);
 M_CoCreatableClass_X(DataMethodInvokeGroupCommand);
-M_CoCreatableClass_X(ImageAtlasMethodInvokeGroupCommand);
+M_CoCreatableClass_X(ImageMethodInvokeGroupCommand);
 M_CoCreatableClass_X(WwiseEncodedMediaMethodInvokeGroupCommand);
 M_CoCreatableClass_X(WwiseSoundBankMethodInvokeGroupCommand);
 M_CoCreatableClass_X(MarmaladeDZipMethodInvokeGroupCommand);

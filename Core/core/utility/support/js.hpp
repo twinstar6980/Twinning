@@ -1201,43 +1201,6 @@ namespace TwinStar::Core::JS {
 	// ----------------
 
 	template <>
-	struct ValueAdapter<Image::Pixel> {
-
-		using This = Value;
-
-		using That = Image::Pixel;
-
-		// ----------------
-
-		static auto from (
-			This &       thix,
-			That const & that
-		) -> Void {
-			thix.set_object_of_array();
-			thix.set_object_property(1_ix, thix.new_value(that.red));
-			thix.set_object_property(2_ix, thix.new_value(that.green));
-			thix.set_object_property(3_ix, thix.new_value(that.blue));
-			thix.set_object_property(4_ix, thix.new_value(that.alpha));
-			return;
-		}
-
-		static auto to (
-			This & thix,
-			That & that
-		) -> Void {
-			assert_test(thix.is_object_of_array());
-			thix.get_object_property(1_ix).to(that.red);
-			thix.get_object_property(2_ix).to(that.green);
-			thix.get_object_property(3_ix).to(that.blue);
-			thix.get_object_property(4_ix).to(that.alpha);
-			return;
-		}
-
-	};
-
-	// ----------------
-
-	template <>
 	struct ValueAdapter<JSON::Value> {
 
 		using This = Value;
@@ -1382,6 +1345,71 @@ namespace TwinStar::Core::JS {
 					break;
 				}
 			}
+			return;
+		}
+
+	};
+
+	// ----------------
+
+	template <>
+	struct ValueAdapter<Image::Color> {
+
+		using This = Value;
+
+		using That = Image::Color;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.set_bigint(cbw<Integer>(that));
+			return;
+		}
+
+		static auto to (
+			This & thix,
+			That & that
+		) -> Void {
+			assert_test(thix.is_bigint());
+			that = cbw<That>(thix.get_bigint());
+			return;
+		}
+
+	};
+
+	template <>
+	struct ValueAdapter<Image::Pixel> {
+
+		using This = Value;
+
+		using That = Image::Pixel;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.set_object_of_array();
+			thix.set_object_property(1_ix, thix.new_value(that.red));
+			thix.set_object_property(2_ix, thix.new_value(that.green));
+			thix.set_object_property(3_ix, thix.new_value(that.blue));
+			thix.set_object_property(4_ix, thix.new_value(that.alpha));
+			return;
+		}
+
+		static auto to (
+			This & thix,
+			That & that
+		) -> Void {
+			assert_test(thix.is_object_of_array());
+			thix.get_object_property(1_ix).to(that.red);
+			thix.get_object_property(2_ix).to(that.green);
+			thix.get_object_property(3_ix).to(that.blue);
+			thix.get_object_property(4_ix).to(that.alpha);
 			return;
 		}
 

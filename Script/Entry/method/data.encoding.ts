@@ -1,6 +1,6 @@
 /**
- * + data.encoding.base64.encode Base64 编码
- * + data.encoding.base64.decode Base64 解码
+ * + data.encoding.base64.encode
+ * + data.encoding.base64.decode
  */
 namespace TwinStar.Script.Entry.method.data.encoding {
 

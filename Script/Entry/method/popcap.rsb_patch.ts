@@ -1,6 +1,6 @@
 /**
- * + popcap.rsb_patch.encode PopCap-RSB-Patch 编码
- * + popcap.rsb_patch.decode PopCap-RSB-Patch 解码
+ * + popcap.rsb_patch.encode
+ * + popcap.rsb_patch.decode
  */
 namespace TwinStar.Script.Entry.method.popcap.rsb_patch {
 

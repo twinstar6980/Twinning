@@ -13,7 +13,7 @@ namespace TwinStar::Core::Tool::Miscellaneous::PvZ2ChineseAndroidAlphaPaletteTex
 		// ----------------
 
 		static auto test_palette (
-			List<Image::Channel> const & palette
+			List<Image::Color> const & palette
 		) -> Size {
 			assert_test(0b1_sz < palette.size() && palette.size() <= 0b1_sz << k_maximum_bit_count);
 			auto bit_count = k_none_size;
@@ -23,7 +23,7 @@ namespace TwinStar::Core::Tool::Miscellaneous::PvZ2ChineseAndroidAlphaPaletteTex
 					break;
 				}
 			}
-			auto maximum_value = 0b1_iu8 << k_maximum_bit_count;
+			auto maximum_value = cbw<Image::Color>(0b1_iu8 << k_maximum_bit_count);
 			assert_test(Range::all_of(palette, [&] (auto & element) { return element <= maximum_value; }));
 			return bit_count;
 		}
@@ -36,9 +36,9 @@ namespace TwinStar::Core::Tool::Miscellaneous::PvZ2ChineseAndroidAlphaPaletteTex
 	protected:
 
 		static auto process_image (
-			OByteStreamView &            data,
-			Image::CBitmapView const &   image,
-			List<Image::Channel> const & palette
+			OByteStreamView &          data,
+			Image::CImageView const &  image,
+			List<Image::Color> const & palette
 		) -> Void {
 			auto bit_count = test_palette(palette);
 			auto index_data = OByteStreamView{data.forward_view(image.size().area() * bit_count / k_type_bit_count<Byte>)};
@@ -54,7 +54,7 @@ namespace TwinStar::Core::Tool::Miscellaneous::PvZ2ChineseAndroidAlphaPaletteTex
 					pixel_row.set(pixel_row_stream.next());
 				}
 				auto & pixel = pixel_row.next();
-				auto   alpha = Image::compress_channel(pixel.alpha, k_maximum_bit_count);
+				auto   alpha = Image::compress_color(pixel.alpha, k_maximum_bit_count);
 				auto   index_value = cbw<Byte>(index_table[cbw<Size>(alpha)].get());
 				if (bit_reserve > bit_count) {
 					index_data.current() |= index_value << (bit_reserve - bit_count);
@@ -82,9 +82,9 @@ namespace TwinStar::Core::Tool::Miscellaneous::PvZ2ChineseAndroidAlphaPaletteTex
 	public:
 
 		static auto do_process_image (
-			OByteStreamView &            data_,
-			Image::CBitmapView const &   image,
-			List<Image::Channel> const & palette
+			OByteStreamView &          data_,
+			Image::CImageView const &  image,
+			List<Image::Color> const & palette
 		) -> Void {
 			M_use_zps_of(data);
 			return process_image(data, image, palette);
@@ -98,9 +98,9 @@ namespace TwinStar::Core::Tool::Miscellaneous::PvZ2ChineseAndroidAlphaPaletteTex
 	protected:
 
 		static auto process_image (
-			IByteStreamView &            data,
-			Image::VBitmapView const &   image,
-			List<Image::Channel> const & palette
+			IByteStreamView &          data,
+			Image::VImageView const &  image,
+			List<Image::Color> const & palette
 		) -> Void {
 			auto bit_count = test_palette(palette);
 			auto index_data = IByteStreamView{data.forward_view(image.size().area() * bit_count / k_type_bit_count<Byte>)};
@@ -131,7 +131,7 @@ namespace TwinStar::Core::Tool::Miscellaneous::PvZ2ChineseAndroidAlphaPaletteTex
 					}
 				}
 				auto & pixel = pixel_row.next();
-				pixel.alpha = Image::uncompress_channel(palette[cbw<Size>(index_value)], k_maximum_bit_count);
+				pixel.alpha = Image::uncompress_color(palette[cbw<Size>(index_value)], k_maximum_bit_count);
 			}
 			return;
 		}
@@ -139,9 +139,9 @@ namespace TwinStar::Core::Tool::Miscellaneous::PvZ2ChineseAndroidAlphaPaletteTex
 	public:
 
 		static auto do_process_image (
-			IByteStreamView &            data_,
-			Image::VBitmapView const &   image,
-			List<Image::Channel> const & palette
+			IByteStreamView &          data_,
+			Image::VImageView const &  image,
+			List<Image::Color> const & palette
 		) -> Void {
 			M_use_zps_of(data);
 			return process_image(data, image, palette);

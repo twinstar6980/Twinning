@@ -1,6 +1,6 @@
 /**
- * + wwise.encoded_media.decode Wwise-Encoded-Media 解码
- * + wwise.encoded_media.decode.batch [批处理] Wwise-Encoded-Media 解码
+ * + wwise.encoded_media.decode
+ * + wwise.encoded_media.decode.batch
  */
 namespace TwinStar.Script.Entry.method.wwise.encoded_media {
 

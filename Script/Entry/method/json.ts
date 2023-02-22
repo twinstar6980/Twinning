@@ -1,6 +1,6 @@
 /**
- * + json.format JSON 格式化
- * + json.format.batch [批处理] JSON 格式化
+ * + json.format
+ * + json.format.batch
  */
 namespace TwinStar.Script.Entry.method.json {
 

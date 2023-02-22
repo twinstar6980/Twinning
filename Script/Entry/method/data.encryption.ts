@@ -1,7 +1,7 @@
 /**
- * + data.encryption.xor.encrypt XOR 加密
- * + data.encryption.rijndael.encrypt Rijndael 加密
- * + data.encryption.rijndael.decrypt Rijndael 解密
+ * + data.encryption.xor.encrypt
+ * + data.encryption.rijndael.encrypt
+ * + data.encryption.rijndael.decrypt
  */
 namespace TwinStar.Script.Entry.method.data.encryption {
 

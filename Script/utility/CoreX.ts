@@ -210,6 +210,14 @@ namespace TwinStar.Script.CoreX {
 
 		// ------------------------------------------------
 
+		export type Color = typeof Core.Image.Color.Value;
+
+		export type ColorList = typeof Core.Image.ColorList.Value;
+
+		export type Pixel = typeof Core.Image.Pixel.Value;
+
+		// ------------------------------------------------
+
 		export namespace File {
 
 			// ------------------------------------------------
@@ -221,21 +229,23 @@ namespace TwinStar.Script.CoreX {
 				export function size(
 					data: Core.ByteListView,
 				): ImageSize {
-					return Core.Image.File.PNG.size(data).value;
+					let size = Core.Image.ImageSize.default();
+					Core.Tool.Image.File.PNG.Read.compute_size(data, size);
+					return size.value;
 				}
 
 				export function read(
 					data: Core.ByteStreamView,
-					image: Core.Image.VBitmapView,
+					image: Core.Image.VImageView,
 				): void {
-					return Core.Image.File.PNG.read(data, image);
+					return Core.Tool.Image.File.PNG.Read.process_image(data, image);
 				}
 
 				export function write(
 					data: Core.ByteStreamView,
-					image: Core.Image.CBitmapView,
+					image: Core.Image.CImageView,
 				): void {
-					return Core.Image.File.PNG.write(data, image);
+					return Core.Tool.Image.File.PNG.Write.process_image(data, image);
 				}
 
 				// ------------------------------------------------
@@ -251,7 +261,7 @@ namespace TwinStar.Script.CoreX {
 
 				export function read_fs(
 					file: string,
-					image: Core.Image.VBitmapView,
+					image: Core.Image.VImageView,
 				): void {
 					let data = FileSystem.read_file(file);
 					let data_stream = Core.ByteStreamView.watch(data.view());
@@ -261,7 +271,7 @@ namespace TwinStar.Script.CoreX {
 
 				export function write_fs(
 					file: string,
-					image: Core.Image.CBitmapView,
+					image: Core.Image.CImageView,
 					data_buffer: Core.ByteListView | bigint = g_common_buffer.view(),
 				): void {
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
@@ -274,11 +284,11 @@ namespace TwinStar.Script.CoreX {
 
 				export function read_fs_of(
 					file: string,
-				): Core.Image.Bitmap {
+				): Core.Image.Image {
 					let data = FileSystem.read_file(file);
 					let data_stream = Core.ByteStreamView.watch(data.view());
 					let image_size = size(data.view());
-					let image = Core.Image.Bitmap.allocate(Core.Image.ImageSize.value(image_size));
+					let image = Core.Image.Image.allocate(Core.Image.ImageSize.value(image_size));
 					read(data_stream, image.view());
 					return image;
 				}
@@ -830,230 +840,308 @@ namespace TwinStar.Script.CoreX {
 
 		}
 
-		export namespace Texture {
+		export namespace Image {
+
+			export type ImageSize = CoreX.Image.ImageSize;
+
+			export type ImagePosition = CoreX.Image.ImagePosition;
+
+			export type Color = CoreX.Image.Color;
+
+			export type ColorList = CoreX.Image.ColorList;
+
+			export type Pixel = CoreX.Image.Pixel;
 
 			// ------------------------------------------------
 
-			export const FormatE = [
-				'a_8',
-				'rgb_888',
-				'rgba_8888',
-				'rgb_565_l',
-				'rgba_4444_l',
-				'rgba_5551_l',
-				'argb_4444_l',
-				'argb_8888_l',
-			] as const;
+			export namespace Transformation {
 
-			export type Format = typeof FormatE[number];
-
-			export const CompressionE = [
-				'rgb_etc1',
-				'rgb_etc2',
-				'rgba_etc2',
-				'rgb_pvrtc4',
-				'rgba_pvrtc4',
-			] as const;
-
-			export type Compression = typeof CompressionE[number];
-
-			export const TextureFormatE = [
-				...FormatE,
-				...CompressionE,
-			] as const;
-
-			export type CompositeFormat = typeof TextureFormatE[number];
-
-			// ------------------------------------------------
-
-			export function get_bpp(
-				format: CompositeFormat,
-			): bigint {
-				let result: bigint;
-				switch (format) {
-					case 'a_8': {
-						result = 8n;
-						break;
-					}
-					case 'rgb_888': {
-						result = 24n;
-						break;
-					}
-					case 'rgba_8888': {
-						result = 32n;
-						break;
-					}
-					case 'rgb_565_l': {
-						result = 16n;
-						break;
-					}
-					case 'rgba_4444_l': {
-						result = 16n;
-						break;
-					}
-					case 'rgba_5551_l': {
-						result = 16n;
-						break;
-					}
-					case 'argb_4444_l': {
-						result = 16n;
-						break;
-					}
-					case 'argb_8888_l': {
-						result = 32n;
-						break;
-					}
-					case 'rgb_etc1': {
-						result = 4n;
-						break;
-					}
-					case 'rgb_etc2': {
-						result = 4n;
-						break;
-					}
-					case 'rgba_etc2': {
-						result = 8n;
-						break;
-					}
-					case 'rgb_pvrtc4': {
-						result = 4n;
-						break;
-					}
-					case 'rgba_pvrtc4': {
-						result = 4n;
-						break;
-					}
+				export function flip(
+					target: Core.Image.VImageView,
+					flip_horizontal: boolean,
+					flip_vertical: boolean,
+				): void {
+					return Core.Tool.Image.Transformation.Flip.process_image(target, Core.Boolean.value(flip_horizontal), Core.Boolean.value(flip_vertical));
 				}
-				return result;
-			}
 
-			export function compute_data_size(
-				size: Image.ImageSize,
-				format: CompositeFormat,
-			): bigint {
-				return size[0] * size[1] * get_bpp(format) / 8n;
-			}
-
-			export function compute_data_size_n(
-				size: Image.ImageSize,
-				format: Array<CompositeFormat>,
-			): bigint {
-				let data_size = 0n;
-				for (let e of format) {
-					data_size += compute_data_size(size, e);
+				export function scale(
+					source: Core.Image.CImageView,
+					destination: Core.Image.VImageView,
+				): void {
+					return Core.Tool.Image.Transformation.Scale.process_image(source, destination);
 				}
-				return data_size;
-			}
 
-			// ------------------------------------------------
+				// ------------------------------------------------
 
-			export function encode(
-				data: Core.OByteStreamView,
-				image: Core.Image.CBitmapView,
-				format: CompositeFormat,
-			): void {
-				switch (format) {
-					case 'a_8':
-					case 'rgb_888':
-					case 'rgba_8888':
-					case 'rgb_565_l':
-					case 'rgba_4444_l':
-					case 'rgba_5551_l':
-					case 'argb_4444_l':
-					case 'argb_8888_l': {
-						Core.Tool.Texture.Encode.process_image(data, image, Core.Tool.Texture.Format.value(format));
-						break;
-					}
-					case 'rgb_etc1': {
-						Core.Tool.Texture.Compression.ETC1.Compress.process_image(data, image);
-						break;
-					}
-					case 'rgb_etc2': {
-						Core.Tool.Texture.Compression.ETC2.Compress.process_image(data, image, Core.Boolean.value(false));
-						break;
-					}
-					case 'rgba_etc2': {
-						Core.Tool.Texture.Compression.ETC2.Compress.process_image(data, image, Core.Boolean.value(true));
-						break;
-					}
-					case 'rgb_pvrtc4': {
-						Core.Tool.Texture.Compression.PVRTC4.Compress.process_image(data, image, Core.Boolean.value(false));
-						break;
-					}
-					case 'rgba_pvrtc4': {
-						Core.Tool.Texture.Compression.PVRTC4.Compress.process_image(data, image, Core.Boolean.value(true));
-						break;
-					}
+				export function flip_fs(
+					source_file: string,
+					destination_file: string,
+					flip_horizontal: boolean,
+					flip_vertical: boolean,
+				): void {
+					let target = CoreX.Image.File.PNG.read_fs_of(source_file);
+					let target_view = target.view();
+					flip(target_view, flip_horizontal, flip_vertical);
+					CoreX.Image.File.PNG.write_fs(destination_file, target_view);
+					return;
 				}
-				return;
-			}
 
-			export function decode(
-				data: Core.IByteStreamView,
-				image: Core.Image.VBitmapView,
-				format: CompositeFormat,
-			): void {
-				switch (format) {
-					case 'a_8':
-					case 'rgb_888':
-					case 'rgba_8888':
-					case 'rgb_565_l':
-					case 'rgba_4444_l':
-					case 'rgba_5551_l':
-					case 'argb_4444_l':
-					case 'argb_8888_l': {
-						Core.Tool.Texture.Decode.process_image(data, image, Core.Tool.Texture.Format.value(format));
-						break;
-					}
-					case 'rgb_etc1': {
-						Core.Tool.Texture.Compression.ETC1.Uncompress.process_image(data, image);
-						break;
-					}
-					case 'rgb_etc2': {
-						Core.Tool.Texture.Compression.ETC2.Uncompress.process_image(data, image, Core.Boolean.value(false));
-						break;
-					}
-					case 'rgba_etc2': {
-						Core.Tool.Texture.Compression.ETC2.Uncompress.process_image(data, image, Core.Boolean.value(true));
-						break;
-					}
-					case 'rgb_pvrtc4': {
-						Core.Tool.Texture.Compression.PVRTC4.Uncompress.process_image(data, image, Core.Boolean.value(false));
-						break;
-					}
-					case 'rgba_pvrtc4': {
-						Core.Tool.Texture.Compression.PVRTC4.Uncompress.process_image(data, image, Core.Boolean.value(true));
-						break;
-					}
+				export function scale_fs(
+					source_file: string,
+					destination_file: string,
+					scale_size: ImageSize,
+				): void {
+					let source = CoreX.Image.File.PNG.read_fs_of(source_file);
+					let destination = Core.Image.Image.allocate(Core.Image.ImageSize.value(scale_size));
+					let source_view = source.view();
+					let destination_view = destination.view();
+					scale(source_view, destination_view);
+					CoreX.Image.File.PNG.write_fs(destination_file, destination_view);
+					return;
 				}
-				return;
-			}
 
-			// ------------------------------------------------
-
-			export function encode_n(
-				data: Core.OByteStreamView,
-				image: Core.Image.CBitmapView,
-				format: Array<CompositeFormat>,
-			): void {
-				for (let e of format) {
-					encode(data, image, e);
+				export function scale_rate_fs(
+					source_file: string,
+					destination_file: string,
+					scale_rate: number,
+				): void {
+					let source = CoreX.Image.File.PNG.read_fs_of(source_file);
+					let destination = Core.Image.Image.allocate(Core.Image.ImageSize.value([BigInt(Math.max(1, Math.round(Number(source.size().value[0]) * scale_rate))), BigInt(Math.max(1, Math.round(Number(source.size().value[1]) * scale_rate)))]));
+					let source_view = source.view();
+					let destination_view = destination.view();
+					scale(source_view, destination_view);
+					CoreX.Image.File.PNG.write_fs(destination_file, destination_view);
+					return;
 				}
-				return;
+
 			}
 
-			export function decode_n(
-				data: Core.IByteStreamView,
-				image: Core.Image.VBitmapView,
-				format: Array<CompositeFormat>,
-			): void {
-				for (let e of format) {
-					decode(data, image, e);
+			export namespace Texture {
+
+				// ------------------------------------------------
+
+				export const FormatE = [
+					'a_8',
+					'rgb_888',
+					'rgba_8888',
+					'rgb_565_l',
+					'rgba_4444_l',
+					'rgba_5551_l',
+					'argb_4444_l',
+					'argb_8888_l',
+				] as const;
+
+				export type Format = typeof FormatE[number];
+
+				export const CompressionE = [
+					'rgb_etc1',
+					'rgb_etc2',
+					'rgba_etc2',
+					'rgb_pvrtc4',
+					'rgba_pvrtc4',
+				] as const;
+
+				export type Compression = typeof CompressionE[number];
+
+				export const TextureFormatE = [
+					...FormatE,
+					...CompressionE,
+				] as const;
+
+				export type CompositeFormat = typeof TextureFormatE[number];
+
+				// ------------------------------------------------
+
+				export function get_bpp(
+					format: CompositeFormat,
+				): bigint {
+					let result: bigint;
+					switch (format) {
+						case 'a_8': {
+							result = 8n;
+							break;
+						}
+						case 'rgb_888': {
+							result = 24n;
+							break;
+						}
+						case 'rgba_8888': {
+							result = 32n;
+							break;
+						}
+						case 'rgb_565_l': {
+							result = 16n;
+							break;
+						}
+						case 'rgba_4444_l': {
+							result = 16n;
+							break;
+						}
+						case 'rgba_5551_l': {
+							result = 16n;
+							break;
+						}
+						case 'argb_4444_l': {
+							result = 16n;
+							break;
+						}
+						case 'argb_8888_l': {
+							result = 32n;
+							break;
+						}
+						case 'rgb_etc1': {
+							result = 4n;
+							break;
+						}
+						case 'rgb_etc2': {
+							result = 4n;
+							break;
+						}
+						case 'rgba_etc2': {
+							result = 8n;
+							break;
+						}
+						case 'rgb_pvrtc4': {
+							result = 4n;
+							break;
+						}
+						case 'rgba_pvrtc4': {
+							result = 4n;
+							break;
+						}
+					}
+					return result;
 				}
-				return;
-			}
 
-			// ------------------------------------------------
+				export function compute_data_size(
+					size: Image.ImageSize,
+					format: CompositeFormat,
+				): bigint {
+					return size[0] * size[1] * get_bpp(format) / 8n;
+				}
+
+				export function compute_data_size_n(
+					size: Image.ImageSize,
+					format: Array<CompositeFormat>,
+				): bigint {
+					let data_size = 0n;
+					for (let e of format) {
+						data_size += compute_data_size(size, e);
+					}
+					return data_size;
+				}
+
+				// ------------------------------------------------
+
+				export function encode(
+					data: Core.OByteStreamView,
+					image: Core.Image.CImageView,
+					format: CompositeFormat,
+				): void {
+					switch (format) {
+						case 'a_8':
+						case 'rgb_888':
+						case 'rgba_8888':
+						case 'rgb_565_l':
+						case 'rgba_4444_l':
+						case 'rgba_5551_l':
+						case 'argb_4444_l':
+						case 'argb_8888_l': {
+							Core.Tool.Image.Texture.Encode.process_image(data, image, Core.Tool.Image.Texture.Format.value(format));
+							break;
+						}
+						case 'rgb_etc1': {
+							Core.Tool.Image.Texture.Compression.ETC1.Compress.process_image(data, image);
+							break;
+						}
+						case 'rgb_etc2': {
+							Core.Tool.Image.Texture.Compression.ETC2.Compress.process_image(data, image, Core.Boolean.value(false));
+							break;
+						}
+						case 'rgba_etc2': {
+							Core.Tool.Image.Texture.Compression.ETC2.Compress.process_image(data, image, Core.Boolean.value(true));
+							break;
+						}
+						case 'rgb_pvrtc4': {
+							Core.Tool.Image.Texture.Compression.PVRTC4.Compress.process_image(data, image, Core.Boolean.value(false));
+							break;
+						}
+						case 'rgba_pvrtc4': {
+							Core.Tool.Image.Texture.Compression.PVRTC4.Compress.process_image(data, image, Core.Boolean.value(true));
+							break;
+						}
+					}
+					return;
+				}
+
+				export function decode(
+					data: Core.IByteStreamView,
+					image: Core.Image.VImageView,
+					format: CompositeFormat,
+				): void {
+					switch (format) {
+						case 'a_8':
+						case 'rgb_888':
+						case 'rgba_8888':
+						case 'rgb_565_l':
+						case 'rgba_4444_l':
+						case 'rgba_5551_l':
+						case 'argb_4444_l':
+						case 'argb_8888_l': {
+							Core.Tool.Image.Texture.Decode.process_image(data, image, Core.Tool.Image.Texture.Format.value(format));
+							break;
+						}
+						case 'rgb_etc1': {
+							Core.Tool.Image.Texture.Compression.ETC1.Uncompress.process_image(data, image);
+							break;
+						}
+						case 'rgb_etc2': {
+							Core.Tool.Image.Texture.Compression.ETC2.Uncompress.process_image(data, image, Core.Boolean.value(false));
+							break;
+						}
+						case 'rgba_etc2': {
+							Core.Tool.Image.Texture.Compression.ETC2.Uncompress.process_image(data, image, Core.Boolean.value(true));
+							break;
+						}
+						case 'rgb_pvrtc4': {
+							Core.Tool.Image.Texture.Compression.PVRTC4.Uncompress.process_image(data, image, Core.Boolean.value(false));
+							break;
+						}
+						case 'rgba_pvrtc4': {
+							Core.Tool.Image.Texture.Compression.PVRTC4.Uncompress.process_image(data, image, Core.Boolean.value(true));
+							break;
+						}
+					}
+					return;
+				}
+
+				// ------------------------------------------------
+
+				export function encode_n(
+					data: Core.OByteStreamView,
+					image: Core.Image.CImageView,
+					format: Array<CompositeFormat>,
+				): void {
+					for (let e of format) {
+						encode(data, image, e);
+					}
+					return;
+				}
+
+				export function decode_n(
+					data: Core.IByteStreamView,
+					image: Core.Image.VImageView,
+					format: Array<CompositeFormat>,
+				): void {
+					for (let e of format) {
+						decode(data, image, e);
+					}
+					return;
+				}
+
+				// ------------------------------------------------
+
+			}
 
 		}
 
@@ -1578,20 +1666,18 @@ namespace TwinStar.Script.CoreX {
 
 				export function encode(
 					data: Core.OByteStreamView,
-					image: Core.Image.CBitmapView,
-					format: Texture.Format,
+					image: Core.Image.CImageView,
+					format: Image.Texture.Format,
 				): void {
-					Core.Tool.Miscellaneous.XboxTiledTexture.Encode.process_image(data, image, Core.Tool.Texture.Format.value(format));
-					return;
+					return Core.Tool.Miscellaneous.XboxTiledTexture.Encode.process_image(data, image, Core.Tool.Image.Texture.Format.value(format));
 				}
 
 				export function decode(
 					data: Core.IByteStreamView,
-					image: Core.Image.VBitmapView,
-					format: Texture.Format,
+					image: Core.Image.VImageView,
+					format: Image.Texture.Format,
 				): void {
-					Core.Tool.Miscellaneous.XboxTiledTexture.Decode.process_image(data, image, Core.Tool.Texture.Format.value(format));
-					return;
+					return Core.Tool.Miscellaneous.XboxTiledTexture.Decode.process_image(data, image, Core.Tool.Image.Texture.Format.value(format));
 				}
 
 				// ------------------------------------------------
@@ -1632,12 +1718,12 @@ namespace TwinStar.Script.CoreX {
 				}
 
 				export function evaluate_palette(
-					image: Core.Image.CBitmapView,
-				): Core.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.JS_Palette {
+					image: Core.Image.CImageView,
+				): typeof Core.Image.ColorList.Value {
 					let image_size = image.size().value;
 					let image_data = Core.ByteArray.allocate(Core.Size.value(image_size[0] * image_size[1] * 8n / 8n));
 					let image_stream = Core.ByteStreamView.watch(image_data.view());
-					Texture.encode(image_stream, image, 'a_8');
+					Image.Texture.encode(image_stream, image, 'a_8');
 					let alpha_count: Record<number, number> = {};
 					for (let e of new Uint8Array(image_stream.stream_view().value)) {
 						let alpha_4 = (e >> 4) & ~(~0 << 4);
@@ -1662,8 +1748,8 @@ namespace TwinStar.Script.CoreX {
 
 				export function encode_with_palette(
 					data: Core.OByteStreamView,
-					image: Core.Image.CBitmapView,
-					palette: Core.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.JS_Palette,
+					image: Core.Image.CImageView,
+					palette: CoreX.Image.ColorList,
 				): void {
 					let bit_count = compute_bit_count(palette.length);
 					if (bit_count === 1) {
@@ -1674,16 +1760,16 @@ namespace TwinStar.Script.CoreX {
 							data.write(Core.Byte.value(e));
 						}
 					}
-					Core.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.Encode.process_image(data, image, palette);
+					Core.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.Encode.process_image(data, image, Core.Image.ColorList.value(palette));
 					return;
 				}
 
 				export function decode_with_palette(
 					data: Core.IByteStreamView,
-					image: Core.Image.VBitmapView,
+					image: Core.Image.VImageView,
 				): void {
 					let index_count = data.read().value;
-					let palette: Core.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.JS_Palette;
+					let palette: CoreX.Image.ColorList;
 					if (index_count === 0n) {
 						palette = [0b0000n, 0b1111n];
 					} else {
@@ -1692,7 +1778,7 @@ namespace TwinStar.Script.CoreX {
 							palette.push(data.read().value);
 						}
 					}
-					Core.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.Decode.process_image(data, image, palette);
+					Core.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.Decode.process_image(data, image, Core.Image.ColorList.value(palette));
 					return;
 				}
 

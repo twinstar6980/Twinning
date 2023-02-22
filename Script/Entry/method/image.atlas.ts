@@ -1,7 +1,7 @@
 /**
- * + image.atlas.pack Atlas 打包
- * + image.atlas.unpack Atlas 解包
- * + image.atlas.pack_auto Atlas 自动打包
+ * + image.atlas.pack
+ * + image.atlas.unpack
+ * + image.atlas.pack_auto
  */
 namespace TwinStar.Script.Entry.method.image.atlas {
 

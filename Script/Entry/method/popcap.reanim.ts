@@ -1,8 +1,8 @@
 /**
- * + popcap.reanim.encode PopCap-Reanim 编码
- * + popcap.reanim.decode PopCap-Reanim 解码
- * + popcap.reanim.encode.batch [批处理] PopCap-Reanim 编码
- * + popcap.reanim.decode.batch [批处理] PopCap-Reanim 解码
+ * + popcap.reanim.encode
+ * + popcap.reanim.decode
+ * + popcap.reanim.encode.batch
+ * + popcap.reanim.decode.batch
  */
 namespace TwinStar.Script.Entry.method.popcap.reanim {
 

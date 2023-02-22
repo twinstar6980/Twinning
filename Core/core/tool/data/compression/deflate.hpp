@@ -99,7 +99,7 @@ namespace TwinStar::Core::Tool::Data::Compression::Deflate {
 				}
 			}
 			auto z_stream = Third::zlib::z_stream{
-				.next_in = cast_pointer<Third::zlib::Bytef>(raw.current_pointer()).value,
+				.next_in = cast_pointer<Third::zlib::Bytef>(as_variable_pointer(raw.current_pointer())).value,
 				.avail_in = static_cast<unsigned>(raw.reserve().value),
 				.total_in = 0,
 				.next_out = cast_pointer<Third::zlib::Bytef>(ripe.current_pointer()).value,
@@ -204,7 +204,7 @@ namespace TwinStar::Core::Tool::Data::Compression::Deflate {
 				}
 			}
 			auto z_stream = Third::zlib::z_stream{
-				.next_in = cast_pointer<Third::zlib::Bytef>(ripe.current_pointer()).value,
+				.next_in = cast_pointer<Third::zlib::Bytef>(as_variable_pointer(ripe.current_pointer())).value,
 				.avail_in = static_cast<unsigned>(ripe.reserve().value),
 				.total_in = 0,
 				.next_out = cast_pointer<Third::zlib::Bytef>(raw.current_pointer()).value,

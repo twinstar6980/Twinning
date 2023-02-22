@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 33;
+	export const k_version = 34;
 
 	// ------------------------------------------------
 
@@ -352,6 +352,7 @@ TwinStar.Script.Main.g_module_manifest = {
 		`Entry/method/data.encryption`,
 		`Entry/method/data.compression`,
 		`Entry/method/data.differentiation`,
+		`Entry/method/image.transformation`,
 		`Entry/method/image.atlas`,
 		`Entry/method/wwise.encoded_media`,
 		`Entry/method/wwise.sound_bank`,

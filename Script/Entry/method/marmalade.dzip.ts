@@ -1,7 +1,7 @@
 /**
- * + marmalade.dzip.pack Marmalade-DZip 打包
- * + marmalade.dzip.unpack Marmalade-DZip 解包
- * + marmalade.dzip.pack_auto Marmalade-DZip 自动打包
+ * + marmalade.dzip.pack
+ * + marmalade.dzip.unpack
+ * + marmalade.dzip.pack_auto
  */
 namespace TwinStar.Script.Entry.method.marmalade.dzip {
 

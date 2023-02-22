@@ -1,5 +1,5 @@
 /**
- * + data.hash.md5 MD5 散列
+ * + data.hash.md5
  */
 namespace TwinStar.Script.Entry.method.data.hash {
 

@@ -1,6 +1,6 @@
 /**
- * + data.differentiation.vcdiff.encode VCDiff 编码
- * + data.differentiation.vcdiff.decode VCDiff 解码
+ * + data.differentiation.vcdiff.encode
+ * + data.differentiation.vcdiff.decode
  */
 namespace TwinStar.Script.Entry.method.data.differentiation {
 

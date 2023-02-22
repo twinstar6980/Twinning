@@ -198,25 +198,81 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const image_atlas = MethodInvokeCommandConfigGroup{
-			.name = L"Image Atlas",
+		inline auto const image = MethodInvokeCommandConfigGroup{
+			.name = L"Image",
 			.child = {
 				{
-					.name = L"打包",
+					.name = L"翻转",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
+					.method = L"image.transformation.flip",
+					.argument = LR"({})",
+				},
+				{
+					.name = L"翻转（水平）",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
+					.method = L"image.transformation.flip",
+					.argument = LR"({ "flip_horizontal": true, "flip_vertical": false })",
+				},
+				{
+					.name = L"翻转（垂直）",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
+					.method = L"image.transformation.flip",
+					.argument = LR"({ "flip_horizontal": false, "flip_vertical": true })",
+				},
+				{
+					.name = L"翻转（水平与垂直）",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
+					.method = L"image.transformation.flip",
+					.argument = LR"({ "flip_horizontal": true, "flip_vertical": true })",
+				},
+				{
+					.name = L"缩放",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
+					.method = L"image.transformation.scale",
+					.argument = LR"({})",
+				},
+				{
+					.name = L"比例缩放",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
+					.method = L"image.transformation.scale_rate",
+					.argument = LR"({})",
+				},
+				{
+					.name = L"比例缩放（除2）",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
+					.method = L"image.transformation.scale_rate",
+					.argument = LR"({ "scale_rate": 0.5 })",
+				},
+				{
+					.name = L"比例缩放（乘2）",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
+					.method = L"image.transformation.scale_rate",
+					.argument = LR"({ "scale_rate": 2.0 })",
+				},
+				{
+					.name = L"图集打包",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.atlas)(\.json)$)", std::wregex::icase},
 					.method = L"image.atlas.pack",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"解包",
+					.name = L"图集解包",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.atlas)(\.json)$)", std::wregex::icase},
 					.method = L"image.atlas.unpack",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"自动打包",
+					.name = L"图集自动打包",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.sprite)$)", std::wregex::icase},
 					.method = L"image.atlas.pack_auto",
@@ -224,8 +280,9 @@ namespace TwinStar::WindowsExplorerExtension {
 				},
 			},
 			.separator = {
-				2,
-				1,
+				4,
+				4,
+				3,
 			},
 		};
 
@@ -839,21 +896,21 @@ namespace TwinStar::WindowsExplorerExtension {
 			.name = L"PvZ-2 LawnString Text",
 			.child = {
 				{
-					.name = L"转换为 text",
+					.name = L"转换（text）",
 					.type = false,
 					.rule = std::wregex{LR"(.*(LawnStrings).*(\.(txt|json))$)", std::wregex::icase},
 					.method = L"pvz2.lawn_string_text.convert",
 					.argument = LR"({ "destination_version": "text" })",
 				},
 				{
-					.name = L"转换为 json_map",
+					.name = L"转换（json_map）",
 					.type = false,
 					.rule = std::wregex{LR"(.*(LawnStrings).*(\.(txt|json))$)", std::wregex::icase},
 					.method = L"pvz2.lawn_string_text.convert",
 					.argument = LR"({ "destination_version": "json_map" })",
 				},
 				{
-					.name = L"转换为 json_list",
+					.name = L"转换（json_list）",
 					.type = false,
 					.rule = std::wregex{LR"(.*(LawnStrings).*(\.(txt|json))$)", std::wregex::icase},
 					.method = L"pvz2.lawn_string_text.convert",
@@ -979,11 +1036,11 @@ namespace TwinStar::WindowsExplorerExtension {
 		}
 	};
 
-	class __declspec(uuid("2BEEB70E-8211-4DB4-B6BF-8D6FDAB791BF")) ImageAtlasMethodInvokeGroupCommand :
+	class __declspec(uuid("2BEEB70E-8211-4DB4-B6BF-8D6FDAB791BF")) ImageMethodInvokeGroupCommand :
 		public MethodInvokeGroupCommand {
 	public:
-		ImageAtlasMethodInvokeGroupCommand ():
-			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::image_atlas} {
+		ImageMethodInvokeGroupCommand ():
+			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::image} {
 		}
 	};
 

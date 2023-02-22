@@ -15,10 +15,11 @@ includes('./third/zlib')
 includes('./third/bzip2')
 includes('./third/lzma')
 includes('./third/open_vcdiff')
-includes('./third/libpng')
+includes('./third/avir')
 includes('./third/ETCPACK')
 includes('./third/etcpak')
 includes('./third/PVRTCCompressor')
+includes('./third/libpng')
 if m.system:is('linux', 'macintosh', 'android', 'iphone') then
 	includes('./third/quickjs')
 end

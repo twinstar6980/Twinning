@@ -1,7 +1,5 @@
 #pragma once
 
-// TODO : refactor
-
 #include "core/utility/utility.hpp"
 #include <list>
 

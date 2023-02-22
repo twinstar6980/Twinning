@@ -1,47 +1,32 @@
 #pragma once
 
-#include "core/utility/image/channel.hpp"
+#include "core/utility/image/color.hpp"
 
 namespace TwinStar::Core::Image {
 
 	#pragma region type
 
-	struct PixelRGB {
+	template <typename TColor> requires
+		CategoryConstraint<IsPureInstance<TColor>>
+	struct BasicPixelRGBA {
 
-		Channel red;
-		Channel green;
-		Channel blue;
+		using Color = TColor;
+
+		// ----------------
+
+		Color red;
+		Color green;
+		Color blue;
+		Color alpha;
 
 		// ----------------
 
 		friend constexpr auto operator == (
-			PixelRGB const & thix,
-			PixelRGB const & that
+			BasicPixelRGBA const & thix,
+			BasicPixelRGBA const & that
 		) -> bool = default;
 
 	};
-
-	struct PixelRGBA {
-
-		Channel red;
-		Channel green;
-		Channel blue;
-		Channel alpha;
-
-		// ----------------
-
-		friend constexpr auto operator == (
-			PixelRGBA const & thix,
-			PixelRGBA const & that
-		) -> bool = default;
-
-	};
-
-	#pragma endregion
-
-	#pragma region alias
-
-	using Pixel = PixelRGBA;
 
 	#pragma endregion
 

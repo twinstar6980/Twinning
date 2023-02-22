@@ -43,10 +43,11 @@
 | [bzip2 1.0.8](https://sourceware.org/bzip2/)                         | BZip2 压缩与解压               |
 | [lzma 22.01](https://www.7-zip.org/sdk.html)                         | Lzma 压缩与解压                |
 | [open-vcdiff 0.8.4](https://github.com/google/open-vcdiff)           | VCDiff 差异分析                |
-| [libpng 1.6.37](http://www.libpng.org/pub/png/libpng.html)           | PNG 读写                       |
+| [avir 3.0](https://github.com/avaneev/avir)                          | 图像缩放                       |
 | [ETCPACK 2.74](https://github.com/Ericsson/ETCPACK)                  | ETC1 解压                      |
 | [etcpak 1.0](https://github.com/wolfpld/etcpak)                      | ETC1 压缩                      |
 | [PVRTCCompressor](https://github.com/brenwill/PVRTCCompressor)       | PVRTC4 压缩与解压              |
+| [libpng 1.6.37](http://www.libpng.org/pub/png/libpng.html)           | PNG 读写                       |
 | [quickjs 2021-03-27](https://github.com/bellard/quickjs)             | JS 引擎                        |
 | [quickjs 2021-03-27 (c-smile)](https://github.com/c-smile/quickjspp) | JS 引擎 ( for MSVC )           |
 | [vld 2.5.1](https://github.com/KindDragon/vld)                       | 内存泄漏检测                   |

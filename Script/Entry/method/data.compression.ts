@@ -1,12 +1,12 @@
 /**
- * + data.compression.deflate.compress Deflate 压缩
- * + data.compression.deflate.uncompress Deflate 解压
- * + data.compression.zlib.compress ZLib 压缩
- * + data.compression.zlib.uncompress ZLib 解压
- * + data.compression.gzip.compress GZip 压缩
- * + data.compression.gzip.uncompress GZip 解压
- * + data.compression.bzip2.compress BZip2 压缩
- * + data.compression.bzip2.uncompress BZip2 解压
+ * + data.compression.deflate.compress
+ * + data.compression.deflate.uncompress
+ * + data.compression.zlib.compress
+ * + data.compression.zlib.uncompress
+ * + data.compression.gzip.compress
+ * + data.compression.gzip.uncompress
+ * + data.compression.bzip2.compress
+ * + data.compression.bzip2.uncompress
  */
 namespace TwinStar.Script.Entry.method.data.compression {
 

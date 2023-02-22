@@ -1,16 +1,16 @@
 /**
- * + popcap.pam.encode PopCap-PAM 编码
- * + popcap.pam.decode PopCap-PAM 解码
- * + popcap.pam.convert.flash.from PopCap-PAM Flash 转换自JSON
- * + popcap.pam.convert.flash.to PopCap-PAM Flash 转换至JSON
- * + popcap.pam.convert.flash.resize PopCap-PAM Flash 图像分辨率调整
- * + popcap.pam.convert.flash.link_media PopCap-PAM Flash 创建图像文件链接
- * + popcap.pam.encode.batch [批处理] PopCap-PAM 编码
- * + popcap.pam.decode.batch [批处理] PopCap-PAM 解码
- * + popcap.pam.convert.flash.from.batch [批处理] PopCap-PAM Flash 转换自JSON
- * + popcap.pam.convert.flash.to.batch [批处理] PopCap-PAM Flash 转换至JSON
- * + popcap.pam.convert.flash.resize.batch [批处理] PopCap-PAM Flash 图像分辨率调整
- * + popcap.pam.convert.flash.link_media.batch [批处理] PopCap-PAM Flash 创建图像文件链接
+ * + popcap.pam.encode
+ * + popcap.pam.decode
+ * + popcap.pam.convert.flash.from
+ * + popcap.pam.convert.flash.to
+ * + popcap.pam.convert.flash.resize
+ * + popcap.pam.convert.flash.link_media
+ * + popcap.pam.encode.batch
+ * + popcap.pam.decode.batch 
+ * + popcap.pam.convert.flash.from.batch
+ * + popcap.pam.convert.flash.to.batch
+ * + popcap.pam.convert.flash.resize.batch
+ * + popcap.pam.convert.flash.link_media.batch
  */
 namespace TwinStar.Script.Entry.method.popcap.pam {
 

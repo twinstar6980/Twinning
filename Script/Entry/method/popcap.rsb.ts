@@ -1,7 +1,7 @@
 /**
- * + popcap.rsb.pack PopCap-RSB 打包
- * + popcap.rsb.unpack PopCap-RSB 解包
- * + popcap.rsb.resource_convert PopCap-RSB 资源转换
+ * + popcap.rsb.pack
+ * + popcap.rsb.unpack
+ * + popcap.rsb.resource_convert
  */
 namespace TwinStar.Script.Entry.method.popcap.rsb {
 

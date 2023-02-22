@@ -85,12 +85,11 @@
 #include "core/utility/string/parser.hpp"
 
 #include "core/utility/image/size.hpp"
-#include "core/utility/image/channel.hpp"
+#include "core/utility/image/color.hpp"
 #include "core/utility/image/pixel.hpp"
-#include "core/utility/image/basic_bitmap_view.hpp"
-#include "core/utility/image/basic_bitmap.hpp"
-#include "core/utility/image/bitmap.hpp"
-#include "core/utility/image/file/png.hpp"
+#include "core/utility/image/image_view.hpp"
+#include "core/utility/image/image.hpp"
+#include "core/utility/image/standard.hpp"
 
 #include "core/utility/data/json/value_adapter.hpp"
 #include "core/utility/data/json/value.hpp"

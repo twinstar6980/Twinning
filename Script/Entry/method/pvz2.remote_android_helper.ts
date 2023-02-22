@@ -1,5 +1,5 @@
 /**
- * + pvz2.remote_android_helper.launch PvZ-2远程安卓辅助
+ * + pvz2.remote_android_helper.launch
  */
 namespace TwinStar.Script.Entry.method.pvz2.remote_android_helper {
 

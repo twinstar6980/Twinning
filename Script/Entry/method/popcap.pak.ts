@@ -1,8 +1,8 @@
 /**
- * + popcap.pak.pack PopCap-PAK 打包
- * + popcap.pak.unpack PopCap-PAK 解包
- * + popcap.pak.pack_auto PopCap-PAK 自动打包
- * + popcap.pak.crypt PopCap-PAK 加解密
+ * + popcap.pak.pack
+ * + popcap.pak.unpack
+ * + popcap.pak.pack_auto
+ * + popcap.pak.crypt
  */
 namespace TwinStar.Script.Entry.method.popcap.pak {
 

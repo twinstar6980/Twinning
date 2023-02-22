@@ -38,7 +38,7 @@ namespace TwinStar.Script.Support.PopCapTexture.Encode {
 
 	// ------------------------------------------------
 
-	const k_base_format: Record<BaseFormat, Array<CoreX.Tool.Texture.CompositeFormat>> = {
+	const k_base_format: Record<BaseFormat, Array<CoreX.Tool.Image.Texture.CompositeFormat>> = {
 		rgba_8888: [
 			'rgba_8888',
 		],
@@ -87,7 +87,7 @@ namespace TwinStar.Script.Support.PopCapTexture.Encode {
 
 	type EncodeOption = {
 		rgb_etc1_a_palette: null | {
-			palette: Core.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.JS_Palette;
+			palette: CoreX.Image.ColorList;
 		};
 	};
 
@@ -139,18 +139,18 @@ namespace TwinStar.Script.Support.PopCapTexture.Encode {
 	): bigint {
 		let data_size = 0n;
 		if (BaseFormatE.includes(format as BaseFormat)) {
-			data_size = CoreX.Tool.Texture.compute_data_size_n(size, k_base_format[format as BaseFormat]);
+			data_size = CoreX.Tool.Image.Texture.compute_data_size_n(size, k_base_format[format as BaseFormat]);
 		} else {
 			switch (format) {
 				case 'rgba_4444_tiled':
 				case 'rgb_565_tiled':
 				case 'rgba_5551_tiled': {
-					data_size = CoreX.Tool.Texture.compute_data_size_n(size, k_base_format[format.slice(0, -6) as BaseFormat]);
+					data_size = CoreX.Tool.Image.Texture.compute_data_size_n(size, k_base_format[format.slice(0, -6) as BaseFormat]);
 					break;
 				}
 				case 'rgb_etc1_a_palette': {
 					assert_test(option.rgb_etc1_a_palette !== null, `option is null`);
-					data_size = CoreX.Tool.Texture.compute_data_size(size, 'rgb_etc1') + CoreX.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.compute_data_size_with_palette(size, option.rgb_etc1_a_palette.palette.length);
+					data_size = CoreX.Tool.Image.Texture.compute_data_size(size, 'rgb_etc1') + CoreX.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.compute_data_size_with_palette(size, option.rgb_etc1_a_palette.palette.length);
 					break;
 				}
 			}
@@ -159,24 +159,24 @@ namespace TwinStar.Script.Support.PopCapTexture.Encode {
 	}
 
 	export function encode(
-		image: Core.Image.CBitmapView,
+		image: Core.Image.CImageView,
 		data: Core.OByteStreamView,
 		format: Format,
 		option: EncodeOption,
 	): void {
 		if (BaseFormatE.includes(format as BaseFormat)) {
-			CoreX.Tool.Texture.encode_n(data, image, k_base_format[format as BaseFormat]);
+			CoreX.Tool.Image.Texture.encode_n(data, image, k_base_format[format as BaseFormat]);
 		} else {
 			switch (format) {
 				case 'rgba_4444_tiled':
 				case 'rgb_565_tiled':
 				case 'rgba_5551_tiled': {
-					CoreX.Tool.Miscellaneous.XboxTiledTexture.encode(data, image, k_base_format[format.slice(0, -6) as BaseFormat][0] as typeof Core.Tool.Texture.Format.Value);
+					CoreX.Tool.Miscellaneous.XboxTiledTexture.encode(data, image, k_base_format[format.slice(0, -6) as BaseFormat][0] as typeof Core.Tool.Image.Texture.Format.Value);
 					break;
 				}
 				case 'rgb_etc1_a_palette': {
 					assert_test(option.rgb_etc1_a_palette !== null, `option is null`);
-					CoreX.Tool.Texture.encode(data, image, 'rgb_etc1');
+					CoreX.Tool.Image.Texture.encode(data, image, 'rgb_etc1');
 					CoreX.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.encode_with_palette(data, image, option.rgb_etc1_a_palette.palette);
 					break;
 				}
@@ -187,24 +187,24 @@ namespace TwinStar.Script.Support.PopCapTexture.Encode {
 
 	export function decode(
 		data: Core.IByteStreamView,
-		image: Core.Image.VBitmapView,
+		image: Core.Image.VImageView,
 		format: Format,
 	): void {
 		if (is_opacity_format(format)) {
 			image.fill(Core.Image.Pixel.value([0xFFn, 0xFFn, 0xFFn, 0xFFn]));
 		}
 		if (BaseFormatE.includes(format as BaseFormat)) {
-			CoreX.Tool.Texture.decode_n(data, image, k_base_format[format as BaseFormat]);
+			CoreX.Tool.Image.Texture.decode_n(data, image, k_base_format[format as BaseFormat]);
 		} else {
 			switch (format) {
 				case 'rgba_4444_tiled':
 				case 'rgb_565_tiled':
 				case 'rgba_5551_tiled': {
-					CoreX.Tool.Miscellaneous.XboxTiledTexture.decode(data, image, k_base_format[format.slice(0, -6) as BaseFormat][0] as typeof Core.Tool.Texture.Format.Value);
+					CoreX.Tool.Miscellaneous.XboxTiledTexture.decode(data, image, k_base_format[format.slice(0, -6) as BaseFormat][0] as typeof Core.Tool.Image.Texture.Format.Value);
 					break;
 				}
 				case 'rgb_etc1_a_palette': {
-					CoreX.Tool.Texture.decode(data, image, 'rgb_etc1');
+					CoreX.Tool.Image.Texture.decode(data, image, 'rgb_etc1');
 					CoreX.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.decode_with_palette(data, image);
 					break;
 				}
@@ -224,7 +224,7 @@ namespace TwinStar.Script.Support.PopCapTexture.Encode {
 		let image_stream = Core.ByteStreamView.watch(image_data.view());
 		let image_size = CoreX.Image.File.PNG.size(image_stream.view());
 		let padded_image_size = compute_padded_image_size(image_size, format);
-		let image = Core.Image.Bitmap.allocate(Core.Image.ImageSize.value(padded_image_size));
+		let image = Core.Image.Image.allocate(Core.Image.ImageSize.value(padded_image_size));
 		let image_view = image.view();
 		CoreX.Image.File.PNG.read(image_stream, image_view.sub(Core.Image.ImagePosition.value([0n, 0n]), Core.Image.ImageSize.value(image_size)));
 		let option: EncodeOption = {
@@ -252,7 +252,7 @@ namespace TwinStar.Script.Support.PopCapTexture.Encode {
 		let data = CoreX.FileSystem.read_file(data_file);
 		let stream = Core.ByteStreamView.watch(data.view());
 		let padded_image_size = compute_padded_image_size(image_size, format);
-		let image = Core.Image.Bitmap.allocate(Core.Image.ImageSize.value(padded_image_size));
+		let image = Core.Image.Image.allocate(Core.Image.ImageSize.value(padded_image_size));
 		let image_view = image.view();
 		decode(stream, image_view, format);
 		CoreX.Image.File.PNG.write_fs(image_file, image_view.sub(Core.Image.ImagePosition.value([0n, 0n]), Core.Image.ImageSize.value(image_size)));

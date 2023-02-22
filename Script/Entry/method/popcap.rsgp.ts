@@ -1,6 +1,6 @@
 /**
- * + popcap.rsgp.pack PopCap-RSGP 打包
- * + popcap.rsgp.unpack PopCap-RSGP 解包
+ * + popcap.rsgp.pack
+ * + popcap.rsgp.unpack
  */
 namespace TwinStar.Script.Entry.method.popcap.rsgp {
 

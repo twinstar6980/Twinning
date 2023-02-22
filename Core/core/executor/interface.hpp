@@ -13,10 +13,12 @@
 #include "core/tool/data/differentiation/vcdiff.hpp"
 #include "core/tool/data/serialization/json.hpp"
 #include "core/tool/data/serialization/xml.hpp"
-#include "core/tool/texture/encode.hpp"
-#include "core/tool/texture/compression/etc1.hpp"
-#include "core/tool/texture/compression/etc2.hpp"
-#include "core/tool/texture/compression/pvrtc4.hpp"
+#include "core/tool/image/transformation/transform.hpp"
+#include "core/tool/image/texture/encode.hpp"
+#include "core/tool/image/texture/compression/etc1.hpp"
+#include "core/tool/image/texture/compression/etc2.hpp"
+#include "core/tool/image/texture/compression/pvrtc4.hpp"
+#include "core/tool/image/file/png.hpp"
 #include "core/tool/wwise/sound_bank/encode.hpp"
 #include "core/tool/wwise/encoded_media/encode.hpp"
 #include "core/tool/marmalade/dzip/pack.hpp"
@@ -264,7 +266,7 @@ namespace TwinStar::Core::Executor::Interface {
 	// (I|O)ByteStreamView      -> IOByteStreamView         : ByteStreamView
 	// (C)CharacterListView     -> VCharacterListView       : CharacterListView
 	// (I|O)CharacterStreamView -> IOCharacterStreamView    : CharacterStreamView
-	// Image::(C)BitmapView     -> Image::VBitmapView       : Image::BitmapView
+	// Image::(C)ImageView      -> Image::VImageView        : Image::ImageView
 
 	namespace Detail {
 
@@ -286,8 +288,8 @@ namespace TwinStar::Core::Executor::Interface {
 							IsSame<Type, ICharacterStreamView, OCharacterStreamView>,
 							IOCharacterStreamView,
 							AsSwitch<
-								IsSame<Type, Image::CBitmapView>,
-								Image::VBitmapView,
+								IsSame<Type, Image::CImageView>,
+								Image::VImageView,
 								Type
 							>
 						>
@@ -412,28 +414,20 @@ namespace TwinStar::Core::Executor::Interface {
 			auto n_Image = n_Core.add_namespace("Image"_s);
 			define_generic_class<Image::ImageSize>(n_Image, "ImageSize"_s);
 			define_generic_class<Image::ImagePosition>(n_Image, "ImagePosition"_s);
+			define_generic_class<Image::Color>(n_Image, "Color"_s);
+			define_generic_class<List<Image::Color>>(n_Image, "ColorList"_s);
 			define_generic_class<Image::Pixel>(n_Image, "Pixel"_s);
-			define_generic_class<Image::VBitmapView, GCDF::generic_mask>(n_Image, "BitmapView"_s)
-				.add_member_function_proxy<&Image::VBitmapView::size>("size"_s)
-				.add_member_function_proxy<&Image::VBitmapView::fill>("fill"_s)
-				.add_member_function_proxy<&Image::VBitmapView::draw>("draw"_s)
-				.add_member_function_proxy<&Image::VBitmapView::sub>("sub"_s);
-			define_generic_class<Image::Bitmap, GCDF::generic_mask>(n_Image, "Bitmap"_s)
+			define_generic_class<Image::VImageView, GCDF::generic_mask>(n_Image, "ImageView"_s)
+				.add_member_function_proxy<&Image::VImageView::size>("size"_s)
+				.add_member_function_proxy<&Image::VImageView::fill>("fill"_s)
+				.add_member_function_proxy<&Image::VImageView::draw>("draw"_s)
+				.add_member_function_proxy<&Image::VImageView::sub>("sub"_s);
+			define_generic_class<Image::Image, GCDF::generic_mask>(n_Image, "Image"_s)
 				.add_second_constructor_allocate_proxy<Image::ImageSize const &>("allocate"_s)
-				.add_member_function_proxy<&Image::Bitmap::allocate>("allocate"_s)
-				.add_member_function_proxy<&Image::Bitmap::reset>("reset"_s)
-				.add_member_function_proxy<&Image::Bitmap::size>("size"_s)
-				.add_member_function_proxy<AsVMemberFunction<Image::Bitmap, Image::VBitmapView>{&Image::Bitmap::view}>("view"_s);
-			{
-				auto n_File = n_Image.add_namespace("File"_s);
-				{
-					auto n_PNG = n_File.add_namespace("PNG"_s);
-					n_PNG
-						.add_function_proxy<&stp<&Image::File::PNG::size>>("size"_s)
-						.add_function_proxy<&stp<&Image::File::PNG::read>>("read"_s)
-						.add_function_proxy<&stp<&Image::File::PNG::write>>("write"_s);
-				}
-			}
+				.add_member_function_proxy<&Image::Image::allocate>("allocate"_s)
+				.add_member_function_proxy<&Image::Image::reset>("reset"_s)
+				.add_member_function_proxy<&Image::Image::size>("size"_s)
+				.add_member_function_proxy<AsVMemberFunction<Image::Image, Image::VImageView>{&Image::Image::view}>("view"_s);
 		}
 		// FileSystem
 		{
@@ -587,62 +581,83 @@ namespace TwinStar::Core::Executor::Interface {
 					}
 				}
 			}
-			// Texture
+			// Image
 			{
-				auto n_Texture = n_Tool.add_namespace("Texture"_s);
-				define_generic_class<Tool::Texture::Format>(n_Texture, "Format"_s);
-				n_Texture.add_namespace("Encode"_s)
-					.add_function_proxy<&stp<&normalized_lambda<
-						[] (
-						OByteStreamView &             data,
-						Image::CBitmapView const &    image,
-						Tool::Texture::Format const & format
-					) -> Void {
-							Generalization::match<Tool::Texture::FormatPackage>(
-								format,
-								[&] <auto index, auto format> (ValuePackage<index>, ValuePackage<format>) {
-									Tool::Texture::Encode<format>::do_process_image(data, image);
-								}
-							);
-						}
-					>>>("process_image"_s);
-				n_Texture.add_namespace("Decode"_s)
-					.add_function_proxy<&stp<&normalized_lambda<
-						[] (
-						IByteStreamView &             data,
-						Image::VBitmapView const &    image,
-						Tool::Texture::Format const & format
-					) -> Void {
-							Generalization::match<Tool::Texture::FormatPackage>(
-								format,
-								[&] <auto index, auto format> (ValuePackage<index>, ValuePackage<format>) {
-									Tool::Texture::Decode<format>::do_process_image(data, image);
-								}
-							);
-						}
-					>>>("process_image"_s);
+				auto n_Image = n_Tool.add_namespace("Image"_s);
 				{
-					auto n_Compression = n_Texture.add_namespace("Compression"_s);
+					auto n_Transformation = n_Image.add_namespace("Transformation"_s);
+					n_Transformation.add_namespace("Flip"_s)
+						.add_function_proxy<&stp<&Tool::Image::Transformation::Flip::do_process_image>>("process_image"_s);
+					n_Transformation.add_namespace("Scale"_s)
+						.add_function_proxy<&stp<&Tool::Image::Transformation::Scale::do_process_image>>("process_image"_s);
+				}
+				{
+					auto n_Texture = n_Image.add_namespace("Texture"_s);
+					define_generic_class<Tool::Image::Texture::Format>(n_Texture, "Format"_s);
+					n_Texture.add_namespace("Encode"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							OByteStreamView &                    data,
+							Image::CImageView const &            image,
+							Tool::Image::Texture::Format const & format
+						) -> Void {
+								Generalization::match<Tool::Image::Texture::FormatPackage>(
+									format,
+									[&] <auto index, auto format> (ValuePackage<index>, ValuePackage<format>) {
+										Tool::Image::Texture::Encode<format>::do_process_image(data, image);
+									}
+								);
+							}
+						>>>("process_image"_s);
+					n_Texture.add_namespace("Decode"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							IByteStreamView &                    data,
+							Image::VImageView const &            image,
+							Tool::Image::Texture::Format const & format
+						) -> Void {
+								Generalization::match<Tool::Image::Texture::FormatPackage>(
+									format,
+									[&] <auto index, auto format> (ValuePackage<index>, ValuePackage<format>) {
+										Tool::Image::Texture::Decode<format>::do_process_image(data, image);
+									}
+								);
+							}
+						>>>("process_image"_s);
 					{
-						auto n_ETC1 = n_Compression.add_namespace("ETC1"_s);
-						n_ETC1.add_namespace("Compress"_s)
-							.add_function_proxy<&stp<&Tool::Texture::Compression::ETC1::Compress::do_process_image>>("process_image"_s);
-						n_ETC1.add_namespace("Uncompress"_s)
-							.add_function_proxy<&stp<&Tool::Texture::Compression::ETC1::Uncompress::do_process_image>>("process_image"_s);
+						auto n_Compression = n_Texture.add_namespace("Compression"_s);
+						{
+							auto n_ETC1 = n_Compression.add_namespace("ETC1"_s);
+							n_ETC1.add_namespace("Compress"_s)
+								.add_function_proxy<&stp<&Tool::Image::Texture::Compression::ETC1::Compress::do_process_image>>("process_image"_s);
+							n_ETC1.add_namespace("Uncompress"_s)
+								.add_function_proxy<&stp<&Tool::Image::Texture::Compression::ETC1::Uncompress::do_process_image>>("process_image"_s);
+						}
+						{
+							auto n_ETC2 = n_Compression.add_namespace("ETC2"_s);
+							n_ETC2.add_namespace("Compress"_s)
+								.add_function_proxy<&stp<&Tool::Image::Texture::Compression::ETC2::Compress::do_process_image>>("process_image"_s);
+							n_ETC2.add_namespace("Uncompress"_s)
+								.add_function_proxy<&stp<&Tool::Image::Texture::Compression::ETC2::Uncompress::do_process_image>>("process_image"_s);
+						}
+						{
+							auto n_PVRTC4 = n_Compression.add_namespace("PVRTC4"_s);
+							n_PVRTC4.add_namespace("Compress"_s)
+								.add_function_proxy<&stp<&Tool::Image::Texture::Compression::PVRTC4::Compress::do_process_image>>("process_image"_s);
+							n_PVRTC4.add_namespace("Uncompress"_s)
+								.add_function_proxy<&stp<&Tool::Image::Texture::Compression::PVRTC4::Uncompress::do_process_image>>("process_image"_s);
+						}
 					}
+				}
+				{
+					auto n_File = n_Image.add_namespace("File"_s);
 					{
-						auto n_ETC2 = n_Compression.add_namespace("ETC2"_s);
-						n_ETC2.add_namespace("Compress"_s)
-							.add_function_proxy<&stp<&Tool::Texture::Compression::ETC2::Compress::do_process_image>>("process_image"_s);
-						n_ETC2.add_namespace("Uncompress"_s)
-							.add_function_proxy<&stp<&Tool::Texture::Compression::ETC2::Uncompress::do_process_image>>("process_image"_s);
-					}
-					{
-						auto n_PVRTC4 = n_Compression.add_namespace("PVRTC4"_s);
-						n_PVRTC4.add_namespace("Compress"_s)
-							.add_function_proxy<&stp<&Tool::Texture::Compression::PVRTC4::Compress::do_process_image>>("process_image"_s);
-						n_PVRTC4.add_namespace("Uncompress"_s)
-							.add_function_proxy<&stp<&Tool::Texture::Compression::PVRTC4::Uncompress::do_process_image>>("process_image"_s);
+						auto n_PNG = n_File.add_namespace("PNG"_s);
+						n_PNG.add_namespace("Write"_s)
+							.add_function_proxy<&stp<&Tool::Image::File::PNG::Write::do_process_image>>("process_image"_s);
+						n_PNG.add_namespace("Read"_s)
+							.add_function_proxy<&stp<&Tool::Image::File::PNG::Read::do_compute_size>>("compute_size"_s)
+							.add_function_proxy<&stp<&Tool::Image::File::PNG::Read::do_process_image>>("process_image"_s);
 					}
 				}
 			}
@@ -1185,30 +1200,11 @@ namespace TwinStar::Core::Executor::Interface {
 						.add_function_proxy<&stp<&Tool::Miscellaneous::XboxTiledTexture::Decode::do_process_image>>("process_image"_s);
 				}
 				{
-					// TODO
 					auto n_PvZ2ChineseAndroidAlphaPaletteTexture = n_Miscellaneous.add_namespace("PvZ2ChineseAndroidAlphaPaletteTexture"_s);
 					n_PvZ2ChineseAndroidAlphaPaletteTexture.add_namespace("Encode"_s)
-						.add_function<&normalized_lambda<
-							[] (
-							JS::Handler<IOByteStreamView> &   data,
-							JS::Handler<Image::VBitmapView> & image,
-							JS::Value &                       palette_js
-						) -> Void {
-								auto palette = palette_js.to_of<List<Image::Channel>>();
-								Tool::Miscellaneous::PvZ2ChineseAndroidAlphaPaletteTexture::Encode::do_process_image(data.value(), image.value(), palette);
-							}
-						>>("process_image"_s);
+						.add_function_proxy<&stp<&Tool::Miscellaneous::PvZ2ChineseAndroidAlphaPaletteTexture::Encode::do_process_image>>("process_image"_s);
 					n_PvZ2ChineseAndroidAlphaPaletteTexture.add_namespace("Decode"_s)
-						.add_function<&normalized_lambda<
-							[] (
-							JS::Handler<IOByteStreamView> &   data,
-							JS::Handler<Image::VBitmapView> & image,
-							JS::Value &                       palette_js
-						) -> Void {
-								auto palette = palette_js.to_of<List<Image::Channel>>();
-								Tool::Miscellaneous::PvZ2ChineseAndroidAlphaPaletteTexture::Decode::do_process_image(data.value(), image.value(), palette);
-							}
-						>>("process_image"_s);
+						.add_function_proxy<&stp<&Tool::Miscellaneous::PvZ2ChineseAndroidAlphaPaletteTexture::Decode::do_process_image>>("process_image"_s);
 				}
 			}
 		}

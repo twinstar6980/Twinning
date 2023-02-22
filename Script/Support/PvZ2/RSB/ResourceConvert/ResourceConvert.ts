@@ -169,7 +169,7 @@ namespace TwinStar.Script.Support.PvZ2.RSB.ResourceConvert {
 					Console.notify('v', `    size : [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] , actual_size : [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ] , format : ${texture_format.format}`, []);
 					let data = CoreX.FileSystem.read_file(`${resource_directory}/${path}.ptx`);
 					let stream = Core.ByteStreamView.watch(data.view());
-					let image = Core.Image.Bitmap.allocate(Core.Image.ImageSize.value(actual_size));
+					let image = Core.Image.Image.allocate(Core.Image.ImageSize.value(actual_size));
 					let image_view = image.view();
 					Support.PopCapTexture.Encode.decode(stream, image_view, texture_format.format);
 					if (option.image.atlas !== null) {

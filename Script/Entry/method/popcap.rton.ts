@@ -1,16 +1,16 @@
 /**
- * + popcap.rton.encode PopCap-RTON 编码
- * + popcap.rton.decode PopCap-RTON 解码
- * + popcap.rton.encrypt PopCap-RTON 加密
- * + popcap.rton.decrypt PopCap-RTON 解密
- * + popcap.rton.encode_then_encrypt PopCap-RTON 编码并加密
- * + popcap.rton.decrypt_then_decode PopCap-RTON 解密并解码
- * + popcap.rton.encode.batch [批处理] PopCap-RTON 编码
- * + popcap.rton.decode.batch [批处理] PopCap-RTON 解码
- * + popcap.rton.encrypt.batch [批处理] PopCap-RTON 加密
- * + popcap.rton.decrypt.batch [批处理] PopCap-RTON 解密
- * + popcap.rton.encode_then_encrypt.batch [批处理] PopCap-RTON 编码并加密
- * + popcap.rton.decrypt_then_decode.batch [批处理] PopCap-RTON 解密并解码
+ * + popcap.rton.encode
+ * + popcap.rton.decode
+ * + popcap.rton.encrypt
+ * + popcap.rton.decrypt
+ * + popcap.rton.encode_then_encrypt
+ * + popcap.rton.decrypt_then_decode
+ * + popcap.rton.encode.batch
+ * + popcap.rton.decode.batch
+ * + popcap.rton.encrypt.batch
+ * + popcap.rton.decrypt.batch
+ * + popcap.rton.encode_then_encrypt.batch
+ * + popcap.rton.decrypt_then_decode.batch
  */
 namespace TwinStar.Script.Entry.method.popcap.rton {
 
