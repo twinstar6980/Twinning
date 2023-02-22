@@ -858,10 +858,10 @@ namespace TwinStar.Script.CoreX {
 
 				export function flip(
 					target: Core.Image.VImageView,
-					flip_horizontal: boolean,
-					flip_vertical: boolean,
+					horizontal: boolean,
+					vertical: boolean,
 				): void {
-					return Core.Tool.Image.Transformation.Flip.process_image(target, Core.Boolean.value(flip_horizontal), Core.Boolean.value(flip_vertical));
+					return Core.Tool.Image.Transformation.Flip.process_image(target, Core.Boolean.value(horizontal), Core.Boolean.value(vertical));
 				}
 
 				export function scale(
@@ -876,12 +876,12 @@ namespace TwinStar.Script.CoreX {
 				export function flip_fs(
 					source_file: string,
 					destination_file: string,
-					flip_horizontal: boolean,
-					flip_vertical: boolean,
+					horizontal: boolean,
+					vertical: boolean,
 				): void {
 					let target = CoreX.Image.File.PNG.read_fs_of(source_file);
 					let target_view = target.view();
-					flip(target_view, flip_horizontal, flip_vertical);
+					flip(target_view, horizontal, vertical);
 					CoreX.Image.File.PNG.write_fs(destination_file, target_view);
 					return;
 				}
@@ -889,10 +889,10 @@ namespace TwinStar.Script.CoreX {
 				export function scale_fs(
 					source_file: string,
 					destination_file: string,
-					scale_size: ImageSize,
+					size: ImageSize,
 				): void {
 					let source = CoreX.Image.File.PNG.read_fs_of(source_file);
-					let destination = Core.Image.Image.allocate(Core.Image.ImageSize.value(scale_size));
+					let destination = Core.Image.Image.allocate(Core.Image.ImageSize.value(size));
 					let source_view = source.view();
 					let destination_view = destination.view();
 					scale(source_view, destination_view);
@@ -903,10 +903,10 @@ namespace TwinStar.Script.CoreX {
 				export function scale_rate_fs(
 					source_file: string,
 					destination_file: string,
-					scale_rate: number,
+					size_rate: number,
 				): void {
 					let source = CoreX.Image.File.PNG.read_fs_of(source_file);
-					let destination = Core.Image.Image.allocate(Core.Image.ImageSize.value([BigInt(Math.max(1, Math.round(Number(source.size().value[0]) * scale_rate))), BigInt(Math.max(1, Math.round(Number(source.size().value[1]) * scale_rate)))]));
+					let destination = Core.Image.Image.allocate(Core.Image.ImageSize.value([BigInt(Math.max(1, Math.round(Number(source.size().value[0]) * size_rate))), BigInt(Math.max(1, Math.round(Number(source.size().value[1]) * size_rate)))]));
 					let source_view = source.view();
 					let destination_view = destination.view();
 					scale(source_view, destination_view);

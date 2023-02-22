@@ -2075,13 +2075,13 @@ declare namespace TwinStar.Core {
 					/**
 					 * 翻转
 					 * @param target 目标
-					 * @param flip_horizontal 翻转水平方向
-					 * @param flip_vertical 翻转垂直方向
+					 * @param horizontal 水平翻转
+					 * @param vertical 垂直翻转
 					 */
 					function process_image(
 						target: Image.VImageView,
-						flip_horizontal: Boolean,
-						flip_vertical: Boolean,
+						horizontal: Boolean,
+						vertical: Boolean,
 					): Void;
 
 				}

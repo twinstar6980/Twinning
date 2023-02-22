@@ -19,17 +19,17 @@ namespace TwinStar::Core::Tool::Image::Transformation {
 
 		static auto process_image (
 			Image::VImageView const & target,
-			Boolean const             flip_horizontal,
-			Boolean const             flip_vertical
+			Boolean const &           horizontal,
+			Boolean const &           vertical
 		) -> Void {
-			if (flip_horizontal) {
+			if (horizontal) {
 				for (auto & row : SizeRange{target.size().height}) {
 					for (auto & column : SizeRange{target.size().width / 2_sz}) {
 						swap(target[row][column], target[row][target.size().width - column - 1_sz]);
 					}
 				}
 			}
-			if (flip_vertical) {
+			if (vertical) {
 				for (auto & column : SizeRange{target.size().width}) {
 					for (auto & row : SizeRange{target.size().height / 2_sz}) {
 						swap(target[row][column], target[target.size().height - row - 1_sz][column]);
@@ -43,10 +43,10 @@ namespace TwinStar::Core::Tool::Image::Transformation {
 
 		static auto do_process_image (
 			Image::VImageView const & target,
-			Boolean const             flip_horizontal,
-			Boolean const             flip_vertical
+			Boolean const &           horizontal,
+			Boolean const &           vertical
 		) -> Void {
-			return process_image(target, flip_horizontal, flip_vertical);
+			return process_image(target, horizontal, vertical);
 		}
 
 	};

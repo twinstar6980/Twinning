@@ -23,13 +23,13 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 				worker(a: Entry.CFSA & {
 					source_file: Executor.RequireArgument<string>;
 					destination_file: Executor.RequestArgument<string, true>;
-					flip_horizontal: Executor.RequestArgument<boolean, false>;
-					flip_vertical: Executor.RequestArgument<boolean, false>;
+					horizontal: Executor.RequestArgument<boolean, false>;
+					vertical: Executor.RequestArgument<boolean, false>;
 				}) {
 					let source_file: string;
 					let destination_file: string;
-					let flip_horizontal: boolean;
-					let flip_vertical: boolean;
+					let horizontal: boolean;
+					let vertical: boolean;
 					{
 						source_file = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'source_file'),
@@ -44,32 +44,32 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 							() => (source_file.replace(/((\.png))?$/i, '.flip.png')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
-						flip_horizontal = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'flip_horizontal'),
-							a.flip_horizontal,
+						horizontal = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'horizontal'),
+							a.horizontal,
 							(value) => (value),
 							null,
 							() => (Console.confirm(null)),
 							(value) => (null),
 						);
-						flip_vertical = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'flip_vertical'),
-							a.flip_vertical,
+						vertical = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'vertical'),
+							a.vertical,
 							(value) => (value),
 							null,
 							() => (Console.confirm(null)),
 							(value) => (null),
 						);
 					}
-					CoreX.Tool.Image.Transformation.flip_fs(source_file, destination_file, flip_horizontal, flip_vertical);
+					CoreX.Tool.Image.Transformation.flip_fs(source_file, destination_file, horizontal, vertical);
 					Console.notify('s', los(`执行成功`), [`${destination_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
 					source_file: undefined!,
 					destination_file: '?default',
-					flip_horizontal: '?input',
-					flip_vertical: '?input',
+					horizontal: '?input',
+					vertical: '?input',
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.png)$/i]]),
 				input_forwarder: 'source_file',
@@ -83,13 +83,13 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 				worker(a: Entry.CFSA & {
 					source_file: Executor.RequireArgument<string>;
 					destination_file: Executor.RequestArgument<string, true>;
-					scale_width: Executor.RequestArgument<bigint, false>;
-					scale_height: Executor.RequestArgument<bigint, false>;
+					width: Executor.RequestArgument<bigint, false>;
+					height: Executor.RequestArgument<bigint, false>;
 				}) {
 					let source_file: string;
 					let destination_file: string;
-					let scale_width: bigint;
-					let scale_height: bigint;
+					let width: bigint;
+					let height: bigint;
 					{
 						source_file = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'source_file'),
@@ -104,32 +104,32 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 							() => (source_file.replace(/((\.png))?$/i, '.scale.png')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
-						scale_width = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'scale_width'),
-							a.scale_width,
+						width = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'width'),
+							a.width,
 							(value) => (value),
 							null,
 							() => (Console.integer(null)),
 							(value) => ((0n < value) ? null : los(`尺寸应大于零`)),
 						);
-						scale_height = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'scale_height'),
-							a.scale_height,
+						height = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'height'),
+							a.height,
 							(value) => (value),
 							null,
 							() => (Console.integer(null)),
 							(value) => ((0n < value) ? null : los(`尺寸应大于零`)),
 						);
 					}
-					CoreX.Tool.Image.Transformation.scale_fs(source_file, destination_file, [scale_width, scale_height]);
+					CoreX.Tool.Image.Transformation.scale_fs(source_file, destination_file, [width, height]);
 					Console.notify('s', los(`执行成功`), [`${destination_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
 					source_file: undefined!,
 					destination_file: '?default',
-					scale_width: '?input',
-					scale_height: '?input',
+					width: '?input',
+					height: '?input',
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.png)$/i]]),
 				input_forwarder: 'source_file',
@@ -143,11 +143,11 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 				worker(a: Entry.CFSA & {
 					source_file: Executor.RequireArgument<string>;
 					destination_file: Executor.RequestArgument<string, true>;
-					scale_rate: Executor.RequestArgument<number, false>;
+					size_rate: Executor.RequestArgument<number, false>;
 				}) {
 					let source_file: string;
 					let destination_file: string;
-					let scale_rate: number;
+					let size_rate: number;
 					{
 						source_file = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'source_file'),
@@ -162,23 +162,23 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 							() => (source_file.replace(/((\.png))?$/i, '.scale.png')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
-						scale_rate = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'scale_rate'),
-							a.scale_rate,
+						size_rate = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'size_rate'),
+							a.size_rate,
 							(value) => (value),
 							null,
 							() => (Console.number(null)),
 							(value) => ((0.0 < value) ? null : los(`比例应大于零`)),
 						);
 					}
-					CoreX.Tool.Image.Transformation.scale_rate_fs(source_file, destination_file, scale_rate);
+					CoreX.Tool.Image.Transformation.scale_rate_fs(source_file, destination_file, size_rate);
 					Console.notify('s', los(`执行成功`), [`${destination_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
 					source_file: undefined!,
 					destination_file: '?default',
-					scale_rate: '?input',
+					size_rate: '?input',
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.png)$/i]]),
 				input_forwarder: 'source_file',
