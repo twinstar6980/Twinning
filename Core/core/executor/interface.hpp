@@ -29,8 +29,8 @@
 #include "core/tool/popcap/rsgp/pack.hpp"
 #include "core/tool/popcap/rsb/pack.hpp"
 #include "core/tool/popcap/rsb_patch/encode.hpp"
-#include "core/tool/miscellaneous/pvz1_rsb_texture_20_series_layout/encode.hpp"
-#include "core/tool/miscellaneous/pvz2_chs_rsb_texture_alpha_index/encode.hpp"
+#include "core/tool/miscellaneous/xbox_tiled_texture/encode.hpp"
+#include "core/tool/miscellaneous/pvz2_chinese_android_aplha_palette_texture/encode.hpp"
 
 namespace TwinStar::Core::Executor::Interface {
 
@@ -377,7 +377,7 @@ namespace TwinStar::Core::Executor::Interface {
 			.add_member_function_proxy<AsCMemberFunction<VByteListView, VByteListView, Size const &, Size const &>{&VByteListView::sub}>("sub"_s);
 		// ByteStreamView
 		define_generic_class<IOByteStreamView, GCDF::generic_mask>(n_Core, "ByteStreamView"_s)
-			.add_second_constructor_allocate_proxy<VByteListView const &>("look"_s)
+			.add_second_constructor_allocate_proxy<VByteListView const &>("watch"_s)
 			.add_member_function_proxy<&IOByteStreamView::size>("size"_s)
 			.add_member_function_proxy<&IOByteStreamView::position>("position"_s)
 			.add_member_function_proxy<&IOByteStreamView::set_position>("set_position"_s)
@@ -391,7 +391,7 @@ namespace TwinStar::Core::Executor::Interface {
 			.add_member_function_proxy<AsCMemberFunction<VCharacterListView, VCharacterListView, Size const &, Size const &>{&VCharacterListView::sub}>("sub"_s);
 		// CharacterStreamView
 		define_generic_class<IOCharacterStreamView, GCDF::generic_mask>(n_Core, "CharacterStreamView"_s)
-			.add_second_constructor_allocate_proxy<VCharacterListView const &>("look"_s)
+			.add_second_constructor_allocate_proxy<VCharacterListView const &>("watch"_s)
 			.add_member_function_proxy<&IOCharacterStreamView::size>("size"_s)
 			.add_member_function_proxy<&IOCharacterStreamView::position>("position"_s)
 			.add_member_function_proxy<&IOCharacterStreamView::set_position>("set_position"_s)
@@ -431,12 +431,7 @@ namespace TwinStar::Core::Executor::Interface {
 					n_PNG
 						.add_function_proxy<&stp<&Image::File::PNG::size>>("size"_s)
 						.add_function_proxy<&stp<&Image::File::PNG::read>>("read"_s)
-						.add_function_proxy<&stp<&Image::File::PNG::write>>("write"_s)
-						.add_function_proxy<&stp<&Image::File::PNG::read_of>>("read_of"_s)
-						.add_function_proxy<&stp<&Image::File::PNG::size_file>>("size_file"_s)
-						.add_function_proxy<&stp<&Image::File::PNG::read_file>>("read_file"_s)
-						.add_function_proxy<&stp<&Image::File::PNG::write_file>>("write_file"_s)
-						.add_function_proxy<&stp<&Image::File::PNG::read_file_of>>("read_file_of"_s);
+						.add_function_proxy<&stp<&Image::File::PNG::write>>("write"_s);
 				}
 			}
 		}
@@ -1183,35 +1178,35 @@ namespace TwinStar::Core::Executor::Interface {
 			{
 				auto n_Miscellaneous = n_Tool.add_namespace("Miscellaneous"_s);
 				{
-					auto n_PvZ1RSBTexture20SeriesLayout = n_Miscellaneous.add_namespace("PvZ1RSBTexture20SeriesLayout"_s);
-					n_PvZ1RSBTexture20SeriesLayout.add_namespace("Encode"_s)
-						.add_function_proxy<&stp<&Tool::Miscellaneous::PvZ1RSBTexture20SeriesLayout::Encode::do_process_image>>("process_image"_s);
-					n_PvZ1RSBTexture20SeriesLayout.add_namespace("Decode"_s)
-						.add_function_proxy<&stp<&Tool::Miscellaneous::PvZ1RSBTexture20SeriesLayout::Decode::do_process_image>>("process_image"_s);
+					auto n_XboxTiledTexture = n_Miscellaneous.add_namespace("XboxTiledTexture"_s);
+					n_XboxTiledTexture.add_namespace("Encode"_s)
+						.add_function_proxy<&stp<&Tool::Miscellaneous::XboxTiledTexture::Encode::do_process_image>>("process_image"_s);
+					n_XboxTiledTexture.add_namespace("Decode"_s)
+						.add_function_proxy<&stp<&Tool::Miscellaneous::XboxTiledTexture::Decode::do_process_image>>("process_image"_s);
 				}
 				{
 					// TODO
-					auto n_PvZ2CHSRSBTextureAlphaIndex = n_Miscellaneous.add_namespace("PvZ2CHSRSBTextureAlphaIndex"_s);
-					n_PvZ2CHSRSBTextureAlphaIndex.add_namespace("Encode"_s)
+					auto n_PvZ2ChineseAndroidAlphaPaletteTexture = n_Miscellaneous.add_namespace("PvZ2ChineseAndroidAlphaPaletteTexture"_s);
+					n_PvZ2ChineseAndroidAlphaPaletteTexture.add_namespace("Encode"_s)
 						.add_function<&normalized_lambda<
 							[] (
 							JS::Handler<IOByteStreamView> &   data,
 							JS::Handler<Image::VBitmapView> & image,
-							JS::Value &                       index_map_js
+							JS::Value &                       palette_js
 						) -> Void {
-								auto index_map = index_map_js.to_of<List<Image::Channel>>();
-								Tool::Miscellaneous::PvZ2CHSRSBTextureAlphaIndex::Encode::do_process_image(data.value(), image.value(), index_map);
+								auto palette = palette_js.to_of<List<Image::Channel>>();
+								Tool::Miscellaneous::PvZ2ChineseAndroidAlphaPaletteTexture::Encode::do_process_image(data.value(), image.value(), palette);
 							}
 						>>("process_image"_s);
-					n_PvZ2CHSRSBTextureAlphaIndex.add_namespace("Decode"_s)
+					n_PvZ2ChineseAndroidAlphaPaletteTexture.add_namespace("Decode"_s)
 						.add_function<&normalized_lambda<
 							[] (
 							JS::Handler<IOByteStreamView> &   data,
 							JS::Handler<Image::VBitmapView> & image,
-							JS::Value &                       index_map_js
+							JS::Value &                       palette_js
 						) -> Void {
-								auto index_map = index_map_js.to_of<List<Image::Channel>>();
-								Tool::Miscellaneous::PvZ2CHSRSBTextureAlphaIndex::Decode::do_process_image(data.value(), image.value(), index_map);
+								auto palette = palette_js.to_of<List<Image::Channel>>();
+								Tool::Miscellaneous::PvZ2ChineseAndroidAlphaPaletteTexture::Decode::do_process_image(data.value(), image.value(), palette);
 							}
 						>>("process_image"_s);
 				}

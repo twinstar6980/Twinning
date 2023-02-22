@@ -21,11 +21,11 @@
 	"打包开始": null,
 	"共 {} 个资源文件": null,
 	"打包完成": null,
-	// Support/PvZ2/RSB/ResourceExtract
+	// Support/PvZ2/RSB/ResourceConvert
 	"恢复文件路径大小写 ...": null,
-	"提取资源 ...": null,
+	"转换资源 ...": null,
 	"解包 ...": null,
-	"提取资源清单文件 ...": null,
+	"提取资源清单 ...": null,
 	"解析资源清单 ...": null,
 	// Support/PvZ2/RemoteAndroidHelper
 	"检测到 PvZ-2 应用不存在": null,
@@ -48,13 +48,7 @@
 	"编码 ...": null,
 	"解码 ...": null,
 	"完成": null,
-	// Executor/Executor
-	"此条命令未提供输入值，请输入": null,
-	"此条命令是否需禁用功能过滤": null,
-	"未筛选到可选的功能，故跳过此条命令": null,
-	"请选择需要应用的功能": null,
-	"输入为空则跳过此条命令": null,
-	// Entry/Argument
+	// Executor/Argument
 	"已取得参数：{}": null,
 	"参数值无效": null,
 	"请输入参数：{}": null,
@@ -66,6 +60,12 @@
 	"指定路径已存在": null,
 	"指定路径不存在": null,
 	"选择窗口是否应选择目录（否则为文件）": null,
+	// Executor/Command
+	"此条命令未提供输入值，请输入": null,
+	"此条命令是否需禁用功能过滤": null,
+	"未筛选到可选的功能，故跳过此条命令": null,
+	"请选择需要应用的功能": null,
+	"输入为空则跳过此条命令": null,
 	// Entry/Entry
 	"请依次输入命令参数": null,
 	"输入为空则结束输入": null,
@@ -92,12 +92,12 @@
 	"群组：按群+子群树形结构导出，资源与子包均导出至group/<群名>/<子群名>目录": null,
 	"子群：按子群树形结构导出，资源与子包均导出至subgroup/<子群名>目录": null,
 	"资源：所有资源导出至resource目录，所有子包导出至packet目录": null,
-	// Script/JSShell
+	// Executable/JSShell
 	"JS交互模式已开启": null,
 	"输入为空则完成一轮输入，若一轮输入为空则结束交互": null,
-	// Script/WwiseShortID
+	// Executable/ComputeWwiseShortID
 	"请输入 Wwise ID 字符串": null,
-	// Script/ExtractRSBFromPvZ2CHSAPKDirectory
+	// Executable/ExtractRSBFromPvZ2CHSAPKDirectory
 	"请选择需要提取的 APK 解压所得的目录": null,
 	"已取消操作": null,
 	"请选择输出目录": null,
@@ -105,7 +105,7 @@
 	"输入目录：{}": null,
 	"输出目录：{}": null,
 	"提取完成": null,
-	// Script/RepairRSB
+	// Executable/RepairPopCapRSB
 	"检测到ZLib异常，现截断数据": null,
 	"检测到Packet异常，现以空Packet替换": null,
 	"检测到Texture-Resource-Information异常，现修复数据": null,

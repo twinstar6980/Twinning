@@ -131,7 +131,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceConvert {
 			let resource_path_tree = PathUtility.tree(resource_path_list);
 			rename_tree(resource_directory, resource_path_tree);
 		}
-		Console.notify('i', los(`提取资源 ...`), []);
+		Console.notify('i', los(`转换资源 ...`), []);
 		let audio_temporary_directory = HomeDirectory.new_temporary();
 		iterate_manifest(true)((group, subgroup, resource) => {
 			let path = resource[1].path;
@@ -168,7 +168,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceConvert {
 					assert_test(texture_format !== undefined, `unknown texture format : ${texture_information_source.format}`);
 					Console.notify('v', `    size : [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] , actual_size : [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ] , format : ${texture_format.format}`, []);
 					let data = CoreX.FileSystem.read_file(`${resource_directory}/${path}.ptx`);
-					let stream = Core.ByteStreamView.look(data.view());
+					let stream = Core.ByteStreamView.watch(data.view());
 					let image = Core.Image.Bitmap.allocate(Core.Image.ImageSize.value(actual_size));
 					let image_view = image.view();
 					Support.PopCapTexture.Encode.decode(stream, image_view, texture_format.format);
@@ -177,7 +177,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceConvert {
 						if (option.image.atlas.resize) {
 							atlas_view = atlas_view.sub(Core.Image.ImagePosition.value([0n, 0n]), Core.Image.ImageSize.value(size));
 						}
-						CoreX.Image.File.png_write_file(`${option.image.directory}/${path}.png`, atlas_view);
+						CoreX.Image.File.PNG.write_fs(`${option.image.directory}/${path}.png`, atlas_view);
 					}
 					if (option.image.sprite !== null) {
 						Support.Atlas.Pack.unpack_fsh({
@@ -195,7 +195,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceConvert {
 					let raw_file = `${path}.json`;
 					let flash_directory = `${path}.xfl`;
 					let data = CoreX.FileSystem.read_file(`${resource_directory}/${path}`);
-					let stream = Core.ByteStreamView.look(data.view());
+					let stream = Core.ByteStreamView.watch(data.view());
 					let version_c = Core.Tool.PopCap.PAM.Version.value({ number: 6n });
 					let information = Core.Tool.PopCap.PAM.Manifest.Animation.default();
 					Core.Tool.PopCap.PAM.Decode.process_animation(stream, information, version_c);
@@ -242,7 +242,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceConvert {
 	): void {
 		let version_c = Core.Tool.PopCap.RSB.Version.value(version);
 		let package_manifest = CoreX.JSON.read_fs_js<Core.Tool.PopCap.RSB.Manifest.JS_N.Package>(package_manifest_file);
-		Console.notify('i', los(`提取资源清单文件 ...`), []);
+		Console.notify('i', los(`提取资源清单 ...`), []);
 		let official_resource_manifest: OfficialResourceManifest.Package;
 		{
 			let group_id = Object.keys(package_manifest.group).filter((e) => (/__MANIFESTGROUP__(.+)?/.test(e)));
@@ -259,7 +259,7 @@ namespace TwinStar.Support.PvZ2.RSB.ResourceConvert {
 			let resource = subgroup.resource[resource_path];
 			assert_test(/properties\/resources(_.+)?\.rton/i.test(resource_path), `manifest resource path invalid`);
 			let rton = CoreX.FileSystem.read_file(resource_directory + '/' + resource_path);
-			let rton_stream = Core.ByteStreamView.look(rton.view());
+			let rton_stream = Core.ByteStreamView.watch(rton.view());
 			let json = Core.JSON.Value.default<OfficialResourceManifest.Package>();
 			Core.Tool.PopCap.RTON.Decode.process_whole(
 				rton_stream,

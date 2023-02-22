@@ -2,7 +2,7 @@ namespace TwinStar {
 
 	// ------------------------------------------------
 
-	export const k_version = 31;
+	export const k_version = 32;
 
 	// ------------------------------------------------
 
@@ -64,7 +64,7 @@ namespace TwinStar {
 			file: string,
 		): ConstraintT {
 			let data = Core.FileSystem.read_file(Core.Path.value(file));
-			let stream = Core.CharacterStreamView.look(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(data.view()));
+			let stream = Core.CharacterStreamView.watch(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(data.view()));
 			let json = Core.JSON.Value.default<ConstraintT>();
 			Core.Tool.Data.Serialization.JSON.Read.process_whole(stream, json);
 			return json.value;

@@ -21,12 +21,12 @@
 	"打包开始": "Packing started",
 	"共 {} 个资源文件": "{} resource file(s) in total",
 	"打包完成": "Packing finished",
-	// Support/PvZ2/RSB/ResourceExtract
+	// Support/PvZ2/RSB/ResourceConvert
 	"恢复文件路径大小写 ...": "Restoring file path case...",
-	"提取资源 ...": "Extracting resources...",
+	"转换资源 ...": "Converting resources...",
 	"解包 ...": "Unpacking...",
-	"提取资源清单文件 ...": "Extracting manifest files..",
-	"解析资源清单 ...": "Parsing manifest files..",
+	"提取资源清单 ...": "Extracting resource manifest...",
+	"解析资源清单 ...": "Parsing resource manifest...",
 	// Support/PvZ2/RemoteAndroidHelper
 	"检测到 PvZ-2 应用不存在": null,
 	"检测到 PvZ-2 应用存在": null,
@@ -48,13 +48,7 @@
 	"编码 ...": null,
 	"解码 ...": null,
 	"完成": null,
-	// Executor/Executor
-	"此条命令未提供输入值，请输入": "No input is provided for this command, please enter",
-	"此条命令是否需禁用功能过滤": "Disable method filter for this command?",
-	"未筛选到可选的功能，故跳过此条命令": "No available methods found, command skipped",
-	"请选择需要应用的功能": "Select methods to apply",
-	"输入为空则跳过此条命令": "Enter empty string to skip this command",
-	// Entry/Argument
+	// Executor/Argument
 	"已取得参数：{}": "Argument obtained: {}",
 	"参数值无效": "Invalid argument",
 	"请输入参数：{}": "Input argument: {}",
@@ -66,6 +60,12 @@
 	"指定路径已存在": "Path specified already exists",
 	"指定路径不存在": "Path specified doesn't exist",
 	"选择窗口是否应选择目录（否则为文件）": "Select directories in the File Selector window (or files otherwise)",
+	// Executor/Command
+	"此条命令未提供输入值，请输入": "No input is provided for this command, please enter",
+	"此条命令是否需禁用功能过滤": "Disable method filter for this command?",
+	"未筛选到可选的功能，故跳过此条命令": "No available methods found, command skipped",
+	"请选择需要应用的功能": "Select methods to apply",
+	"输入为空则跳过此条命令": "Enter empty string to skip this command",
 	// Entry/Entry
 	"请依次输入命令参数": "Enter the command arguments in sequence",
 	"输入为空则结束输入": "Enter empty string to finish typing",
@@ -92,12 +92,12 @@
 	"群组：按群+子群树形结构导出，资源与子包均导出至group/<群名>/<子群名>目录": "Group: Export in a structure of \"Group + Subgroup tree\". All resources and packets are exported to \"group/<group-name>/<subgroup-name>\"",
 	"子群：按子群树形结构导出，资源与子包均导出至subgroup/<子群名>目录": "Subgroup: Export in a structure of \"Subgroup tree\". All resources and packets are exported to \"subgroup/<subgroup-name>\"",
 	"资源：所有资源导出至resource目录，所有子包导出至packet目录": "Resource: All resources are exported to \"resource\" directory, all packets are exported to \"packet\"  directory",
-	// Script/JSShell
+	// Executable/JSShell
 	"JS交互模式已开启": "JS Interation Mode enabled",
 	"输入为空则完成一轮输入，若一轮输入为空则结束交互": "Enter empty string to finish one round of input, enter empty strings for an entire round to finish interation",
-	// Script/WwiseShortID
+	// Executable/ComputeWwiseShortID
 	"请输入 Wwise ID 字符串": "Please enter the wwise id string",
-	// Script/ExtractRSBFromPvZ2CHSAPKDirectory
+	// Executable/ExtractRSBFromPvZ2CHSAPKDirectory
 	"请选择需要提取的 APK 解压所得的目录": "Select the directory of an extracted APK that is to be deeper extracted by this tool",
 	"已取消操作": "Operation cancelled",
 	"请选择输出目录": "Select output directory",
@@ -105,7 +105,7 @@
 	"输入目录：{}": "Input path: {}",
 	"输出目录：{}": "Output path: {}",
 	"提取完成": "Extraction finished",
-	// Script/RepairRSB
+	// Executable/RepairPopCapRSB
 	"检测到ZLib异常，现截断数据": null,
 	"检测到Packet异常，现以空Packet替换": null,
 	"检测到Texture-Resource-Information异常，现修复数据": null,

@@ -126,7 +126,6 @@ namespace TwinStar::Core::Tool::Texture::Compression::ETC1 {
 			Image::VBitmapView const & image
 		) -> Void {
 			M_use_zps_of(data);
-			// TODO : reset image
 			return process_image(data, image);
 		}
 

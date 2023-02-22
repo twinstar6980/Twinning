@@ -13,7 +13,7 @@
 		"newLine": "lf",
 	},
 	"include": [
-		"./TwinStar.Core.d.ts",
+		"./Core.d.ts",
 		"./**/*",
 	],
 	"exclude": [

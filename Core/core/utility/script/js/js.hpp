@@ -8,6 +8,7 @@
 #include "core/utility/script/js/value_adapter.hpp"
 #include "core/utility/script/js/handler.hpp"
 #include "core/third/quickjs.hpp"
+#include <mutex>
 
 namespace TwinStar::Core::JS {
 

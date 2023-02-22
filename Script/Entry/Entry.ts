@@ -77,12 +77,10 @@ namespace TwinStar.Entry {
 		language: string;
 		cli_disable_virtual_terminal_sequences: boolean;
 		byte_stream_use_big_endian: boolean;
-		json_write: {
-			buffer_size: string;
-			format: {
-				disable_trailing_comma: boolean;
-				disable_array_wrap_line: boolean;
-			};
+		common_buffer_size: string;
+		json_format: {
+			disable_trailing_comma: boolean;
+			disable_array_wrap_line: boolean;
 		};
 		pause_when_finish: boolean;
 		thread_limit: bigint;
@@ -98,16 +96,10 @@ namespace TwinStar.Entry {
 		Console.cli_disable_virtual_terminal_sequences = config.cli_disable_virtual_terminal_sequences;
 		// set byte stream endian
 		Core.Miscellaneous.g_byte_stream_use_big_endian.value = config.byte_stream_use_big_endian;
+		// set common buffer size
+		CoreX.set_common_buffer_size(parse_size_string(config.common_buffer_size));
 		// set json write option
-		{
-			CoreX.JSON.set_write_buffer_size(
-				parse_size_string(config.json_write.buffer_size),
-			);
-			CoreX.JSON.set_write_format(
-				config.json_write.format.disable_trailing_comma,
-				config.json_write.format.disable_array_wrap_line,
-			);
-		}
+		CoreX.JSON.set_write_format(config.json_format.disable_trailing_comma, config.json_format.disable_array_wrap_line);
 	}
 
 	export function _entry(

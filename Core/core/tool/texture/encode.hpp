@@ -260,7 +260,6 @@ namespace TwinStar::Core::Tool::Texture {
 			Image::Pixel &    pixel
 		) -> Void {
 			M_use_zps_of(data);
-			restruct(pixel);
 			return process_pixel(data, pixel);
 		}
 
@@ -269,7 +268,6 @@ namespace TwinStar::Core::Tool::Texture {
 			Image::VBitmapView const & image
 		) -> Void {
 			M_use_zps_of(data);
-			// TODO : reset image
 			return process_image(data, image);
 		}
 

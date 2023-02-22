@@ -40,7 +40,7 @@
 				},
 				{
 					"index": 147,
-					"format": "rgb_etc1_a_8_index",
+					"format": "rgb_etc1_a_palette",
 				},
 			],
 			"pvz1_ios": [
@@ -62,15 +62,15 @@
 				},
 				{
 					"index": 21,
-					"format": "rgba_4444_block",
+					"format": "rgba_4444_tiled",
 				},
 				{
 					"index": 22,
-					"format": "rgb_565_block",
+					"format": "rgb_565_tiled",
 				},
 				{
 					"index": 23,
-					"format": "rgba_5551_block",
+					"format": "rgba_5551_tiled",
 				},
 			],
 		},

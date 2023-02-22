@@ -49,9 +49,9 @@ namespace TwinStar.Executable.RepairPopCapRSB {
 		if (ripe_size === 0n) {
 			return true;
 		}
-		let ripe = Core.ByteStreamView.look(Core.ByteListView.value(data).sub(Core.Size.value(BigInt(offset)), Core.Size.value(BigInt(ripe_size))));
+		let ripe = Core.ByteStreamView.watch(Core.ByteListView.value(data).sub(Core.Size.value(BigInt(offset)), Core.Size.value(BigInt(ripe_size))));
 		let raw_buffer = Core.ByteArray.allocate(Core.Size.value(BigInt(raw_size)));
-		let raw = Core.ByteStreamView.look(raw_buffer.view());
+		let raw = Core.ByteStreamView.watch(raw_buffer.view());
 		try {
 			Core.Tool.Data.Compression.Deflate.Uncompress.process_whole(ripe, raw, Core.Size.value(15n), Core.Tool.Data.Compression.Deflate.Wrapper.value('zlib'));
 			return true;
@@ -340,15 +340,15 @@ namespace TwinStar.Executable.RepairPopCapRSB {
 				}
 				// rgba_4444
 				case 1n:
-				// rgba_4444
+				// rgb_565
 				case 2n:
-				// rgba_4444
+				// rgba_5551
 				case 3n:
-				// rgba_4444
+				// rgba_4444_tiled
 				case 21n:
-				// rgba_4444
+				// rgb_565_tiled
 				case 22n:
-				// rgba_4444
+				// rgba_5551_tiled
 				case 23n: {
 					pixel_bit_count = 16n;
 					break;
@@ -360,7 +360,7 @@ namespace TwinStar.Executable.RepairPopCapRSB {
 					pixel_bit_count = 4n;
 					break;
 				}
-				// rgb_etc1_a_8 or rgb_etc1_a_8_index
+				// rgb_etc1_a_8 or rgb_etc1_a_palette
 				case 147n: {
 					pixel_bit_count = 32n;
 					break;

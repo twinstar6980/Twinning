@@ -1,17 +1,19 @@
 namespace TwinStar.CoreX {
 
+	// ------------------------------------------------
+
+	const g_common_buffer = Core.ByteArray.default();
+
+	export function set_common_buffer_size(
+		size: bigint,
+	): void {
+		g_common_buffer.allocate(Core.Size.value(size));
+		return;
+	}
+
+	// ------------------------------------------------
+
 	export namespace JSON {
-
-		// ------------------------------------------------
-
-		const g_write_buffer = Core.ByteArray.default();
-
-		export function set_write_buffer_size(
-			size: bigint,
-		): void {
-			g_write_buffer.allocate(Core.Size.value(size));
-			return;
-		}
 
 		// ------------------------------------------------
 
@@ -37,7 +39,7 @@ namespace TwinStar.CoreX {
 		export function read<ConstraintT extends Core.JSON.JS_Value>(
 			data: ArrayBuffer,
 		): Core.JSON.Value<ConstraintT> {
-			let data_stream = Core.CharacterStreamView.look(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(Core.ByteListView.value(data)));
+			let data_stream = Core.CharacterStreamView.watch(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(Core.ByteListView.value(data)));
 			let value = Core.JSON.Value.default<ConstraintT>();
 			Core.Tool.Data.Serialization.JSON.Read.process_whole(data_stream, value);
 			return value;
@@ -48,11 +50,11 @@ namespace TwinStar.CoreX {
 			value: Core.JSON.Value<ConstraintT>,
 			disable_trailing_comma: boolean = g_write_format.disable_trailing_comma,
 			disable_array_wrap_line: boolean = g_write_format.disable_array_wrap_line,
-			data_buffer: Core.CharacterListView | bigint = Core.Miscellaneous.cast_ByteListView_to_CharacterListView(g_write_buffer.view()),
+			data_buffer: Core.CharacterListView | bigint = Core.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
 		): ArrayBuffer {
 			let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 			let data_buffer_view = data_buffer instanceof Core.CharacterListView ? data_buffer : Core.Miscellaneous.cast_ByteListView_to_CharacterListView(data_buffer_if!.view());
-			let data_stream = Core.CharacterStreamView.look(data_buffer_view);
+			let data_stream = Core.CharacterStreamView.watch(data_buffer_view);
 			Core.Tool.Data.Serialization.JSON.Write.process_whole(data_stream, value, Core.Boolean.value(disable_trailing_comma), Core.Boolean.value(disable_array_wrap_line));
 			return Core.Miscellaneous.cast_CharacterListView_to_ByteListView(data_stream.stream_view()).value;
 		}
@@ -70,7 +72,7 @@ namespace TwinStar.CoreX {
 			value: Core.JSON.Value<ConstraintT>,
 			disable_trailing_comma: boolean = g_write_format.disable_trailing_comma,
 			disable_array_wrap_line: boolean = g_write_format.disable_array_wrap_line,
-			data_buffer: Core.CharacterListView | bigint = Core.Miscellaneous.cast_ByteListView_to_CharacterListView(g_write_buffer.view()),
+			data_buffer: Core.CharacterListView | bigint = Core.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
 		): string {
 			let data = write(value, disable_trailing_comma, disable_array_wrap_line, data_buffer);
 			return Core.Miscellaneous.cast_CharacterListView_to_JS_String(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(Core.ByteListView.value(data)));
@@ -90,7 +92,7 @@ namespace TwinStar.CoreX {
 			value: Core.JSON.Value<ConstraintT>,
 			disable_trailing_comma: boolean = g_write_format.disable_trailing_comma,
 			disable_array_wrap_line: boolean = g_write_format.disable_array_wrap_line,
-			data_buffer: Core.CharacterListView | bigint = Core.Miscellaneous.cast_ByteListView_to_CharacterListView(g_write_buffer.view()),
+			data_buffer: Core.CharacterListView | bigint = Core.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
 		): void {
 			let data = write(value, disable_trailing_comma, disable_array_wrap_line, data_buffer);
 			FileSystem.write_file(data_file, data);
@@ -105,11 +107,12 @@ namespace TwinStar.CoreX {
 			return read<ConstraintT>(data).value;
 		}
 
+		/** NOTE : result is a view of buffer */
 		export function write_js<ConstraintT extends Core.JSON.JS_Value>(
 			value: ConstraintT,
 			disable_trailing_comma: boolean = g_write_format.disable_trailing_comma,
 			disable_array_wrap_line: boolean = g_write_format.disable_array_wrap_line,
-			data_buffer: Core.CharacterListView | bigint = Core.Miscellaneous.cast_ByteListView_to_CharacterListView(g_write_buffer.view()),
+			data_buffer: Core.CharacterListView | bigint = Core.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
 		): ArrayBuffer {
 			return write(Core.JSON.Value.value<ConstraintT>(value), disable_trailing_comma, disable_array_wrap_line, data_buffer);
 		}
@@ -126,7 +129,7 @@ namespace TwinStar.CoreX {
 			value: ConstraintT,
 			disable_trailing_comma: boolean = g_write_format.disable_trailing_comma,
 			disable_array_wrap_line: boolean = g_write_format.disable_array_wrap_line,
-			data_buffer: Core.CharacterListView | bigint = Core.Miscellaneous.cast_ByteListView_to_CharacterListView(g_write_buffer.view()),
+			data_buffer: Core.CharacterListView | bigint = Core.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
 		): string {
 			return write_s(Core.JSON.Value.value<ConstraintT>(value), disable_trailing_comma, disable_array_wrap_line, data_buffer);
 		}
@@ -144,7 +147,7 @@ namespace TwinStar.CoreX {
 			value: ConstraintT,
 			disable_trailing_comma: boolean = g_write_format.disable_trailing_comma,
 			disable_array_wrap_line: boolean = g_write_format.disable_array_wrap_line,
-			data_buffer: Core.CharacterListView | bigint = Core.Miscellaneous.cast_ByteListView_to_CharacterListView(g_write_buffer.view()),
+			data_buffer: Core.CharacterListView | bigint = Core.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
 		): void {
 			return write_fs(data_file, Core.JSON.Value.value<ConstraintT>(value), disable_trailing_comma, disable_array_wrap_line, data_buffer);
 		}
@@ -209,31 +212,82 @@ namespace TwinStar.CoreX {
 
 		export namespace File {
 
-			export function png_size_file(
-				path: string,
-			): ImageSize {
-				return Core.Image.File.PNG.size_file(Core.Path.value(path)).value;
+			// ------------------------------------------------
+
+			export namespace PNG {
+
+				// ------------------------------------------------
+
+				export function size(
+					data: Core.ByteListView,
+				): ImageSize {
+					return Core.Image.File.PNG.size(data).value;
+				}
+
+				export function read(
+					data: Core.ByteStreamView,
+					image: Core.Image.VBitmapView,
+				): void {
+					return Core.Image.File.PNG.read(data, image);
+				}
+
+				export function write(
+					data: Core.ByteStreamView,
+					image: Core.Image.CBitmapView,
+				): void {
+					return Core.Image.File.PNG.write(data, image);
+				}
+
+				// ------------------------------------------------
+
+				// NOTE : avoid use this function
+				export function size_fs(
+					file: string,
+				): ImageSize {
+					let data = FileSystem.read_file(file);
+					let image_size = size(data.view());
+					return image_size;
+				}
+
+				export function read_fs(
+					file: string,
+					image: Core.Image.VBitmapView,
+				): void {
+					let data = FileSystem.read_file(file);
+					let data_stream = Core.ByteStreamView.watch(data.view());
+					read(data_stream, image);
+					return;
+				}
+
+				export function write_fs(
+					file: string,
+					image: Core.Image.CBitmapView,
+					data_buffer: Core.ByteListView | bigint = g_common_buffer.view(),
+				): void {
+					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
+					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
+					let data_stream = Core.ByteStreamView.watch(data_buffer_view);
+					write(data_stream, image);
+					FileSystem.write_file(file, data_stream.stream_view());
+					return;
+				}
+
+				export function read_fs_of(
+					file: string,
+				): Core.Image.Bitmap {
+					let data = FileSystem.read_file(file);
+					let data_stream = Core.ByteStreamView.watch(data.view());
+					let image_size = size(data.view());
+					let image = Core.Image.Bitmap.allocate(Core.Image.ImageSize.value(image_size));
+					read(data_stream, image.view());
+					return image;
+				}
+
+				// ------------------------------------------------
+
 			}
 
-			export function png_read_file(
-				path: string,
-				image: Core.Image.VBitmapView,
-			): void {
-				return Core.Image.File.PNG.read_file(Core.Path.value(path), image);
-			}
-
-			export function png_write_file(
-				path: string,
-				image: Core.Image.CBitmapView,
-			): void {
-				return Core.Image.File.PNG.write_file(Core.Path.value(path), image);
-			}
-
-			export function png_read_file_of(
-				path: string,
-			): Core.Image.Bitmap {
-				return Core.Image.File.PNG.read_file_of(Core.Path.value(path));
-			}
+			// ------------------------------------------------
 
 		}
 
@@ -531,8 +585,8 @@ namespace TwinStar.CoreX {
 						let ripe_size = Core.Size.default();
 						Core.Tool.Data.Encoding.Base64.Encode.compute_size(raw_data.size(), ripe_size);
 						let ripe_data = Core.ByteArray.allocate(ripe_size);
-						let raw_stream = Core.ByteStreamView.look(raw_data.view());
-						let ripe_stream = Core.CharacterStreamView.look(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(ripe_data.view()));
+						let raw_stream = Core.ByteStreamView.watch(raw_data.view());
+						let ripe_stream = Core.CharacterStreamView.watch(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(ripe_data.view()));
 						Core.Tool.Data.Encoding.Base64.Encode.process_whole(raw_stream, ripe_stream);
 						FileSystem.write_file(ripe_file, Core.Miscellaneous.cast_CharacterListView_to_ByteListView(ripe_stream.stream_view()));
 						return;
@@ -543,11 +597,11 @@ namespace TwinStar.CoreX {
 						raw_file: string,
 					): void {
 						let ripe_data = FileSystem.read_file(ripe_file);
-						let ripe_stream = Core.CharacterStreamView.look(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(ripe_data.view()));
+						let ripe_stream = Core.CharacterStreamView.watch(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(ripe_data.view()));
 						let raw_size = Core.Size.default();
 						Core.Tool.Data.Encoding.Base64.Decode.compute_size(ripe_stream.view(), raw_size);
 						let raw_data = Core.ByteArray.allocate(raw_size);
-						let raw_stream = Core.ByteStreamView.look(raw_data.view());
+						let raw_stream = Core.ByteStreamView.watch(raw_data.view());
 						Core.Tool.Data.Encoding.Base64.Decode.process_whole(ripe_stream, raw_stream);
 						FileSystem.write_file(raw_file, raw_stream.stream_view());
 						return;
@@ -568,8 +622,8 @@ namespace TwinStar.CoreX {
 					): void {
 						let plain_data = FileSystem.read_file(plain_file);
 						let cipher_data = Core.ByteArray.allocate(plain_data.size());
-						let plain_stream = Core.ByteStreamView.look(plain_data.view());
-						let cipher_stream = Core.ByteStreamView.look(cipher_data.view());
+						let plain_stream = Core.ByteStreamView.watch(plain_data.view());
+						let cipher_stream = Core.ByteStreamView.watch(cipher_data.view());
 						Core.Tool.Data.Encryption.XOR.Encrypt.process_whole(plain_stream, cipher_stream, Core.Byte.value(key));
 						FileSystem.write_file(cipher_file, cipher_stream.stream_view());
 						return;
@@ -598,8 +652,8 @@ namespace TwinStar.CoreX {
 					): void {
 						let plain_data = FileSystem.read_file(plain_file);
 						let cipher_data = Core.ByteArray.allocate(plain_data.size());
-						let plain_stream = Core.ByteStreamView.look(plain_data.view());
-						let cipher_stream = Core.ByteStreamView.look(cipher_data.view());
+						let plain_stream = Core.ByteStreamView.watch(plain_data.view());
+						let cipher_stream = Core.ByteStreamView.watch(cipher_data.view());
 						Core.Tool.Data.Encryption.Rijndael.Encrypt.process_whole(plain_stream, cipher_stream, Core.Tool.Data.Encryption.Rijndael.Mode.value(mode), Core.Size.value(block_size), Core.Size.value(key_size), Core.String.value(key), Core.String.value(iv));
 						FileSystem.write_file(cipher_file, cipher_stream.stream_view());
 						return;
@@ -616,8 +670,8 @@ namespace TwinStar.CoreX {
 					): void {
 						let cipher_data = FileSystem.read_file(cipher_file);
 						let plain_data = Core.ByteArray.allocate(cipher_data.size());
-						let cipher_stream = Core.ByteStreamView.look(cipher_data.view());
-						let plain_stream = Core.ByteStreamView.look(plain_data.view());
+						let cipher_stream = Core.ByteStreamView.watch(cipher_data.view());
+						let plain_stream = Core.ByteStreamView.watch(plain_data.view());
 						Core.Tool.Data.Encryption.Rijndael.Decrypt.process_whole(cipher_stream, plain_stream, Core.Tool.Data.Encryption.Rijndael.Mode.value(mode), Core.Size.value(block_size), Core.Size.value(key_size), Core.String.value(key), Core.String.value(iv));
 						FileSystem.write_file(plain_file, plain_stream.stream_view());
 						return;
@@ -664,8 +718,8 @@ namespace TwinStar.CoreX {
 						let ripe_size_bound = Core.Size.default();
 						Core.Tool.Data.Compression.Deflate.Compress.compute_size_bound(raw_data.size(), ripe_size_bound, Core.Size.value(window_bits), Core.Size.value(memory_level), Core.Tool.Data.Compression.Deflate.Wrapper.value(wrapper));
 						let ripe_data = Core.ByteArray.allocate(ripe_size_bound);
-						let raw_stream = Core.ByteStreamView.look(raw_data.view());
-						let ripe_stream = Core.ByteStreamView.look(ripe_data.view());
+						let raw_stream = Core.ByteStreamView.watch(raw_data.view());
+						let ripe_stream = Core.ByteStreamView.watch(ripe_data.view());
 						Core.Tool.Data.Compression.Deflate.Compress.process_whole(raw_stream, ripe_stream, Core.Size.value(level), Core.Size.value(window_bits), Core.Size.value(memory_level), Core.Tool.Data.Compression.Deflate.Strategy.value(strategy), Core.Tool.Data.Compression.Deflate.Wrapper.value(wrapper));
 						FileSystem.write_file(ripe_file, ripe_stream.stream_view());
 						return;
@@ -681,8 +735,8 @@ namespace TwinStar.CoreX {
 						let raw_data_buffer_if = typeof raw_data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(raw_data_buffer)) : null;
 						let raw_data_buffer_view = raw_data_buffer instanceof Core.ByteListView ? raw_data_buffer : raw_data_buffer_if!.view();
 						let ripe_data = FileSystem.read_file(ripe_file);
-						let ripe_stream = Core.ByteStreamView.look(ripe_data.view());
-						let raw_stream = Core.ByteStreamView.look(raw_data_buffer_view);
+						let ripe_stream = Core.ByteStreamView.watch(ripe_data.view());
+						let raw_stream = Core.ByteStreamView.watch(raw_data_buffer_view);
 						Core.Tool.Data.Compression.Deflate.Uncompress.process_whole(ripe_stream, raw_stream, Core.Size.value(window_bits), Core.Tool.Data.Compression.Deflate.Wrapper.value(wrapper));
 						FileSystem.write_file(raw_file, raw_stream.stream_view());
 						return;
@@ -704,8 +758,8 @@ namespace TwinStar.CoreX {
 						let raw_data = FileSystem.read_file(raw_file);
 						let ripe_size_bound = Core.Size.value(raw_data.size().value + 128n); // TODO
 						let ripe_data = Core.ByteArray.allocate(ripe_size_bound);
-						let raw_stream = Core.ByteStreamView.look(raw_data.view());
-						let ripe_stream = Core.ByteStreamView.look(ripe_data.view());
+						let raw_stream = Core.ByteStreamView.watch(raw_data.view());
+						let ripe_stream = Core.ByteStreamView.watch(ripe_data.view());
 						Core.Tool.Data.Compression.BZip2.Compress.process_whole(raw_stream, ripe_stream, Core.Size.value(block_size), Core.Size.value(0n));
 						FileSystem.write_file(ripe_file, ripe_stream.stream_view());
 						return;
@@ -719,8 +773,8 @@ namespace TwinStar.CoreX {
 						let raw_data_buffer_if = typeof raw_data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(raw_data_buffer)) : null;
 						let raw_data_buffer_view = raw_data_buffer instanceof Core.ByteListView ? raw_data_buffer : raw_data_buffer_if!.view();
 						let ripe_data = FileSystem.read_file(ripe_file);
-						let ripe_stream = Core.ByteStreamView.look(ripe_data.view());
-						let raw_stream = Core.ByteStreamView.look(raw_data_buffer_view);
+						let ripe_stream = Core.ByteStreamView.watch(ripe_data.view());
+						let raw_stream = Core.ByteStreamView.watch(raw_data_buffer_view);
 						Core.Tool.Data.Compression.BZip2.Uncompress.process_whole(ripe_stream, raw_stream, Core.Boolean.value(false));
 						FileSystem.write_file(raw_file, raw_stream.stream_view());
 						return;
@@ -744,9 +798,9 @@ namespace TwinStar.CoreX {
 						let before_data = FileSystem.read_file(before_file);
 						let after_data = FileSystem.read_file(after_file);
 						let patch_data = Core.ByteArray.allocate(Core.Size.value(patch_size_bound));
-						let before_stream = Core.ByteStreamView.look(before_data.view());
-						let after_stream = Core.ByteStreamView.look(after_data.view());
-						let patch_stream = Core.ByteStreamView.look(patch_data.view());
+						let before_stream = Core.ByteStreamView.watch(before_data.view());
+						let after_stream = Core.ByteStreamView.watch(after_data.view());
+						let patch_stream = Core.ByteStreamView.watch(patch_data.view());
 						Core.Tool.Data.Differentiation.VCDiff.Encode.process_whole(before_stream, after_stream, patch_stream, Core.Boolean.value(interleaved));
 						FileSystem.write_file(patch_file, patch_stream.stream_view());
 						return;
@@ -762,9 +816,9 @@ namespace TwinStar.CoreX {
 						let before_data = FileSystem.read_file(before_file);
 						let after_data = Core.ByteArray.allocate(Core.Size.value(after_size_bound));
 						let patch_data = FileSystem.read_file(patch_file);
-						let before_stream = Core.ByteStreamView.look(before_data.view());
-						let after_stream = Core.ByteStreamView.look(after_data.view());
-						let patch_stream = Core.ByteStreamView.look(patch_data.view());
+						let before_stream = Core.ByteStreamView.watch(before_data.view());
+						let after_stream = Core.ByteStreamView.watch(after_data.view());
+						let patch_stream = Core.ByteStreamView.watch(patch_data.view());
 						Core.Tool.Data.Differentiation.VCDiff.Decode.process_whole(before_stream, after_stream, patch_stream, Core.Size.value(maximum_window_size));
 						FileSystem.write_file(after_file, after_stream.stream_view());
 						return;
@@ -1001,38 +1055,6 @@ namespace TwinStar.CoreX {
 
 			// ------------------------------------------------
 
-			export function encode_fs(
-				data_file: string,
-				image_file: string,
-				format: Array<CompositeFormat>,
-			): void {
-				let image = Image.File.png_read_file_of(image_file);
-				let image_size = image.size().value;
-				let data_size = compute_data_size_n(image_size, format);
-				let data = Core.ByteArray.allocate(Core.Size.value(data_size));
-				let stream = Core.ByteStreamView.look(data.view());
-				encode_n(stream, image.view(), format);
-				FileSystem.write_file(data_file, stream.stream_view());
-				return;
-			}
-
-			export function decode_fs(
-				data_file: string,
-				image_file: string,
-				size: Image.ImageSize,
-				format: Array<CompositeFormat>,
-			): void {
-				let data = FileSystem.read_file(data_file);
-				let stream = Core.ByteStreamView.look(data.view());
-				let image = Core.Image.Bitmap.allocate(Core.Image.ImageSize.value(size));
-				let image_view = image.view();
-				decode_n(stream, image_view, format);
-				Image.File.png_write_file(image_file, image_view);
-				return;
-			}
-
-			// ------------------------------------------------
-
 		}
 
 		export namespace Wwise {
@@ -1081,7 +1103,7 @@ namespace TwinStar.CoreX {
 					let version_c = Core.Tool.Wwise.SoundBank.Version.value(version);
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
-					let stream = Core.ByteStreamView.look(data_buffer_view);
+					let stream = Core.ByteStreamView.watch(data_buffer_view);
 					let manifest = Core.Tool.Wwise.SoundBank.Manifest.SoundBank.json(JSON.read_fs(manifest_file), version_c);
 					Core.Tool.Wwise.SoundBank.Encode.process_sound_bank(stream, manifest, Core.Path.value(embedded_audio_directory), version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
@@ -1096,7 +1118,7 @@ namespace TwinStar.CoreX {
 				): void {
 					let version_c = Core.Tool.Wwise.SoundBank.Version.value(version);
 					let data = FileSystem.read_file(data_file);
-					let stream = Core.ByteStreamView.look(data.view());
+					let stream = Core.ByteStreamView.watch(data.view());
 					let manifest = Core.Tool.Wwise.SoundBank.Manifest.SoundBank.default();
 					Core.Tool.Wwise.SoundBank.Decode.process_sound_bank(stream, manifest, Core.PathOptional.value(embedded_audio_directory), version_c);
 					if (manifest_file !== null) {
@@ -1123,7 +1145,7 @@ namespace TwinStar.CoreX {
 					let version_c = Core.Tool.Marmalade.DZip.Version.value(version);
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
-					let stream = Core.ByteStreamView.look(data_buffer_view);
+					let stream = Core.ByteStreamView.watch(data_buffer_view);
 					let manifest = Core.Tool.Marmalade.DZip.Manifest.Package.json(JSON.read_fs(manifest_file), version_c);
 					Core.Tool.Marmalade.DZip.Pack.process_package(stream, manifest, Core.Path.value(resource_directory), version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
@@ -1138,7 +1160,7 @@ namespace TwinStar.CoreX {
 				): void {
 					let version_c = Core.Tool.Marmalade.DZip.Version.value(version);
 					let data = FileSystem.read_file(data_file);
-					let stream = Core.ByteStreamView.look(data.view());
+					let stream = Core.ByteStreamView.watch(data.view());
 					let manifest = Core.Tool.Marmalade.DZip.Manifest.Package.default();
 					Core.Tool.Marmalade.DZip.Unpack.process_package(stream, manifest, Core.PathOptional.value(resource_directory), version_c);
 					if (manifest_file !== null) {
@@ -1169,8 +1191,8 @@ namespace TwinStar.CoreX {
 					let ripe_size_bound = Core.Size.default();
 					Core.Tool.PopCap.ZLib.Compress.compute_size_bound(raw_data.size(), ripe_size_bound, Core.Size.value(window_bits), Core.Size.value(memory_level), version_c);
 					let ripe_data = Core.ByteArray.allocate(ripe_size_bound);
-					let raw_stream = Core.ByteStreamView.look(raw_data.view());
-					let ripe_stream = Core.ByteStreamView.look(ripe_data.view());
+					let raw_stream = Core.ByteStreamView.watch(raw_data.view());
+					let ripe_stream = Core.ByteStreamView.watch(ripe_data.view());
 					Core.Tool.PopCap.ZLib.Compress.process_whole(raw_stream, ripe_stream, Core.Size.value(level), Core.Size.value(window_bits), Core.Size.value(memory_level), Core.Tool.Data.Compression.Deflate.Strategy.value(strategy), version_c);
 					FileSystem.write_file(ripe_file, ripe_stream.stream_view());
 					return;
@@ -1187,8 +1209,8 @@ namespace TwinStar.CoreX {
 					let raw_size = Core.Size.default();
 					Core.Tool.PopCap.ZLib.Uncompress.compute_size(ripe_data.view(), raw_size, version_c);
 					let raw_data = Core.ByteArray.allocate(raw_size);
-					let ripe_stream = Core.ByteStreamView.look(ripe_data.view());
-					let raw_stream = Core.ByteStreamView.look(raw_data.view());
+					let ripe_stream = Core.ByteStreamView.watch(ripe_data.view());
+					let raw_stream = Core.ByteStreamView.watch(raw_data.view());
 					Core.Tool.PopCap.ZLib.Uncompress.process_whole(ripe_stream, raw_stream, Core.Size.value(window_bits), version_c);
 					FileSystem.write_file(raw_file, raw_stream.stream_view());
 					return;
@@ -1207,7 +1229,7 @@ namespace TwinStar.CoreX {
 					let version_c = Core.Tool.PopCap.Reanim.Version.value(version);
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
-					let stream = Core.ByteStreamView.look(data_buffer_view);
+					let stream = Core.ByteStreamView.watch(data_buffer_view);
 					let manifest = Core.Tool.PopCap.Reanim.Manifest.Animation.json(JSON.read_fs(manifest_file), version_c);
 					Core.Tool.PopCap.Reanim.Encode.process_animation(stream, manifest, version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
@@ -1221,7 +1243,7 @@ namespace TwinStar.CoreX {
 				): void {
 					let version_c = Core.Tool.PopCap.Reanim.Version.value(version);
 					let data = FileSystem.read_file(data_file);
-					let stream = Core.ByteStreamView.look(data.view());
+					let stream = Core.ByteStreamView.watch(data.view());
 					let manifest = Core.Tool.PopCap.Reanim.Manifest.Animation.default();
 					Core.Tool.PopCap.Reanim.Decode.process_animation(stream, manifest, version_c);
 					JSON.write_fs(manifest_file, manifest.get_json(version_c));
@@ -1244,7 +1266,7 @@ namespace TwinStar.CoreX {
 					let data_buffer_if = typeof rton_data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(rton_data_buffer)) : null;
 					let data_buffer_view = rton_data_buffer instanceof Core.ByteListView ? rton_data_buffer : data_buffer_if!.view();
 					let value = JSON.read_fs<Core.Tool.PopCap.RTON.JS_ValidValue>(value_file);
-					let stream = Core.ByteStreamView.look(data_buffer_view);
+					let stream = Core.ByteStreamView.watch(data_buffer_view);
 					Core.Tool.PopCap.RTON.Encode.process_whole(stream, value, Core.Boolean.value(enable_string_index), Core.Boolean.value(enable_rtid), version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
 					return;
@@ -1257,7 +1279,7 @@ namespace TwinStar.CoreX {
 				): void {
 					let version_c = Core.Tool.PopCap.RTON.Version.value(version);
 					let data = FileSystem.read_file(data_file);
-					let stream = Core.ByteStreamView.look(data.view());
+					let stream = Core.ByteStreamView.watch(data.view());
 					let value = Core.JSON.Value.default<Core.Tool.PopCap.RTON.JS_ValidValue>();
 					Core.Tool.PopCap.RTON.Decode.process_whole(stream, value, version_c);
 					JSON.write_fs(value_file, value);
@@ -1273,8 +1295,8 @@ namespace TwinStar.CoreX {
 					let cipher_size = Core.Size.default();
 					Core.Tool.PopCap.RTON.Encrypt.compute_size(plain_data.size(), cipher_size);
 					let cipher_data = Core.ByteArray.allocate(cipher_size);
-					let plain_stream = Core.ByteStreamView.look(plain_data.view());
-					let cipher_stream = Core.ByteStreamView.look(cipher_data.view());
+					let plain_stream = Core.ByteStreamView.watch(plain_data.view());
+					let cipher_stream = Core.ByteStreamView.watch(cipher_data.view());
 					Core.Tool.PopCap.RTON.Encrypt.process_whole(plain_stream, cipher_stream, Core.String.value(key));
 					FileSystem.write_file(cipher_file, cipher_stream.stream_view());
 					return;
@@ -1289,8 +1311,8 @@ namespace TwinStar.CoreX {
 					let plain_size = Core.Size.default();
 					Core.Tool.PopCap.RTON.Decrypt.compute_size(cipher_data.size(), plain_size);
 					let plain_data = Core.ByteArray.allocate(plain_size);
-					let cipher_stream = Core.ByteStreamView.look(cipher_data.view());
-					let plain_stream = Core.ByteStreamView.look(plain_data.view());
+					let cipher_stream = Core.ByteStreamView.watch(cipher_data.view());
+					let plain_stream = Core.ByteStreamView.watch(plain_data.view());
 					Core.Tool.PopCap.RTON.Decrypt.process_whole(cipher_stream, plain_stream, Core.String.value(key));
 					FileSystem.write_file(plain_file, plain_stream.stream_view());
 					return;
@@ -1309,13 +1331,13 @@ namespace TwinStar.CoreX {
 					let rton_data_buffer_if = typeof rton_data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(rton_data_buffer)) : null;
 					let rton_data_buffer_view = rton_data_buffer instanceof Core.ByteListView ? rton_data_buffer : rton_data_buffer_if!.view();
 					let json = JSON.read_fs<Core.Tool.PopCap.RTON.JS_ValidValue>(json_file);
-					let rton_stream = Core.ByteStreamView.look(rton_data_buffer_view);
+					let rton_stream = Core.ByteStreamView.watch(rton_data_buffer_view);
 					Core.Tool.PopCap.RTON.Encode.process_whole(rton_stream, json, Core.Boolean.value(enable_string_index), Core.Boolean.value(enable_rtid), version_c);
-					let plain_stream = Core.ByteStreamView.look(rton_stream.stream_view());
+					let plain_stream = Core.ByteStreamView.watch(rton_stream.stream_view());
 					let cipher_size = Core.Size.default();
 					Core.Tool.PopCap.RTON.Encrypt.compute_size(plain_stream.size(), cipher_size);
 					let cipher_data = Core.ByteArray.allocate(cipher_size);
-					let cipher_stream = Core.ByteStreamView.look(cipher_data.view());
+					let cipher_stream = Core.ByteStreamView.watch(cipher_data.view());
 					Core.Tool.PopCap.RTON.Encrypt.process_whole(plain_stream, cipher_stream, Core.String.value(key));
 					FileSystem.write_file(rton_file, cipher_stream.stream_view());
 					return;
@@ -1332,10 +1354,10 @@ namespace TwinStar.CoreX {
 					let plain_size = Core.Size.default();
 					Core.Tool.PopCap.RTON.Decrypt.compute_size(cipher_data.size(), plain_size);
 					let plain_data = Core.ByteArray.allocate(plain_size);
-					let cipher_stream = Core.ByteStreamView.look(cipher_data.view());
-					let plain_stream = Core.ByteStreamView.look(plain_data.view());
+					let cipher_stream = Core.ByteStreamView.watch(cipher_data.view());
+					let plain_stream = Core.ByteStreamView.watch(plain_data.view());
 					Core.Tool.PopCap.RTON.Decrypt.process_whole(cipher_stream, plain_stream, Core.String.value(key));
-					let rton_stream = Core.ByteStreamView.look(plain_stream.stream_view());
+					let rton_stream = Core.ByteStreamView.watch(plain_stream.stream_view());
 					let json = Core.JSON.Value.default<Core.Tool.PopCap.RTON.JS_ValidValue>();
 					Core.Tool.PopCap.RTON.Decode.process_whole(rton_stream, json, version_c);
 					JSON.write_fs(json_file, json);
@@ -1355,7 +1377,7 @@ namespace TwinStar.CoreX {
 					let version_c = Core.Tool.PopCap.PAM.Version.value(version);
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
-					let stream = Core.ByteStreamView.look(data_buffer_view);
+					let stream = Core.ByteStreamView.watch(data_buffer_view);
 					let manifest = Core.Tool.PopCap.PAM.Manifest.Animation.json(JSON.read_fs(manifest_file), version_c);
 					Core.Tool.PopCap.PAM.Encode.process_animation(stream, manifest, version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
@@ -1369,7 +1391,7 @@ namespace TwinStar.CoreX {
 				): void {
 					let version_c = Core.Tool.PopCap.PAM.Version.value(version);
 					let data = FileSystem.read_file(data_file);
-					let stream = Core.ByteStreamView.look(data.view());
+					let stream = Core.ByteStreamView.watch(data.view());
 					let manifest = Core.Tool.PopCap.PAM.Manifest.Animation.default();
 					Core.Tool.PopCap.PAM.Decode.process_animation(stream, manifest, version_c);
 					JSON.write_fs(manifest_file, manifest.get_json(version_c));
@@ -1390,7 +1412,7 @@ namespace TwinStar.CoreX {
 					let version_c = Core.Tool.PopCap.PAK.Version.value(version);
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
-					let stream = Core.ByteStreamView.look(data_buffer_view);
+					let stream = Core.ByteStreamView.watch(data_buffer_view);
 					let manifest = Core.Tool.PopCap.PAK.Manifest.Package.json(JSON.read_fs(manifest_file), version_c);
 					Core.Tool.PopCap.PAK.Pack.process_package(stream, manifest, Core.Path.value(resource_directory), version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
@@ -1405,7 +1427,7 @@ namespace TwinStar.CoreX {
 				): void {
 					let version_c = Core.Tool.PopCap.PAK.Version.value(version);
 					let data = FileSystem.read_file(data_file);
-					let stream = Core.ByteStreamView.look(data.view());
+					let stream = Core.ByteStreamView.watch(data.view());
 					let manifest = Core.Tool.PopCap.PAK.Manifest.Package.default();
 					Core.Tool.PopCap.PAK.Unpack.process_package(stream, manifest, Core.PathOptional.value(resource_directory), version_c);
 					if (manifest_file !== null) {
@@ -1428,7 +1450,7 @@ namespace TwinStar.CoreX {
 					let version_c = Core.Tool.PopCap.RSGP.Version.value(version);
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
-					let stream = Core.ByteStreamView.look(data_buffer_view);
+					let stream = Core.ByteStreamView.watch(data_buffer_view);
 					let manifest = Core.Tool.PopCap.RSGP.Manifest.Package.json(JSON.read_fs(manifest_file), version_c);
 					Core.Tool.PopCap.RSGP.Pack.process_package(stream, manifest, Core.Path.value(resource_directory), version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
@@ -1443,7 +1465,7 @@ namespace TwinStar.CoreX {
 				): void {
 					let version_c = Core.Tool.PopCap.RSGP.Version.value(version);
 					let data = FileSystem.read_file(data_file);
-					let stream = Core.ByteStreamView.look(data.view());
+					let stream = Core.ByteStreamView.watch(data.view());
 					let manifest = Core.Tool.PopCap.RSGP.Manifest.Package.default();
 					Core.Tool.PopCap.RSGP.Unpack.process_package(stream, manifest, Core.PathOptional.value(resource_directory), version_c);
 					if (manifest_file !== null) {
@@ -1469,7 +1491,7 @@ namespace TwinStar.CoreX {
 					let version_c = Core.Tool.PopCap.RSB.Version.value(version);
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
-					let stream = Core.ByteStreamView.look(data_buffer_view);
+					let stream = Core.ByteStreamView.watch(data_buffer_view);
 					let manifest = Core.Tool.PopCap.RSB.Manifest.Package.json(JSON.read_fs(manifest_file), version_c);
 					let description = Core.Tool.PopCap.RSB.Description.PackageOptional.json(JSON.read_fs(description_file), version_c);
 					Core.Tool.PopCap.RSB.Pack.process_package(stream, manifest, description, Core.Path.value(resource_directory), Core.PathOptional.value(packet_file), Core.PathOptional.value(new_packet_file), version_c);
@@ -1487,7 +1509,7 @@ namespace TwinStar.CoreX {
 				): void {
 					let version_c = Core.Tool.PopCap.RSB.Version.value(version);
 					let data = FileSystem.read_file(data_file);
-					let stream = Core.ByteStreamView.look(data.view());
+					let stream = Core.ByteStreamView.watch(data.view());
 					let manifest = Core.Tool.PopCap.RSB.Manifest.Package.default();
 					let description = Core.Tool.PopCap.RSB.Description.PackageOptional.default();
 					Core.Tool.PopCap.RSB.Unpack.process_package(stream, manifest, description, Core.PathOptional.value(resource_directory), Core.PathOptional.value(packet_file), version_c);
@@ -1516,9 +1538,9 @@ namespace TwinStar.CoreX {
 					let before_data = FileSystem.read_file(before_file);
 					let after_data = FileSystem.read_file(after_file);
 					let patch_data = Core.ByteArray.allocate(Core.Size.value(patch_size_bound));
-					let before_stream = Core.ByteStreamView.look(before_data.view());
-					let after_stream = Core.ByteStreamView.look(after_data.view());
-					let patch_stream = Core.ByteStreamView.look(patch_data.view());
+					let before_stream = Core.ByteStreamView.watch(before_data.view());
+					let after_stream = Core.ByteStreamView.watch(after_data.view());
+					let patch_stream = Core.ByteStreamView.watch(patch_data.view());
 					Core.Tool.PopCap.RSBPatch.Encode.process_whole(before_stream, after_stream, patch_stream, Core.Boolean.value(use_raw_packet), version_c);
 					FileSystem.write_file(patch_file, patch_stream.stream_view());
 					return;
@@ -1536,9 +1558,9 @@ namespace TwinStar.CoreX {
 					let before_data = FileSystem.read_file(before_file);
 					let after_data = Core.ByteArray.allocate(Core.Size.value(after_size_bound));
 					let patch_data = FileSystem.read_file(patch_file);
-					let before_stream = Core.ByteStreamView.look(before_data.view());
-					let after_stream = Core.ByteStreamView.look(after_data.view());
-					let patch_stream = Core.ByteStreamView.look(patch_data.view());
+					let before_stream = Core.ByteStreamView.watch(before_data.view());
+					let after_stream = Core.ByteStreamView.watch(after_data.view());
+					let patch_stream = Core.ByteStreamView.watch(patch_data.view());
 					Core.Tool.PopCap.RSBPatch.Decode.process_whole(before_stream, after_stream, patch_stream, Core.Boolean.value(use_raw_packet), version_c);
 					FileSystem.write_file(after_file, after_stream.stream_view());
 					return;
@@ -1550,7 +1572,33 @@ namespace TwinStar.CoreX {
 
 		export namespace Miscellaneous {
 
-			export namespace PvZ2CHSRSBTextureAlphaIndex {
+			export namespace XboxTiledTexture {
+
+				// ------------------------------------------------
+
+				export function encode(
+					data: Core.OByteStreamView,
+					image: Core.Image.CBitmapView,
+					format: Texture.Format,
+				): void {
+					Core.Tool.Miscellaneous.XboxTiledTexture.Encode.process_image(data, image, Core.Tool.Texture.Format.value(format));
+					return;
+				}
+
+				export function decode(
+					data: Core.IByteStreamView,
+					image: Core.Image.VBitmapView,
+					format: Texture.Format,
+				): void {
+					Core.Tool.Miscellaneous.XboxTiledTexture.Decode.process_image(data, image, Core.Tool.Texture.Format.value(format));
+					return;
+				}
+
+				// ------------------------------------------------
+
+			}
+
+			export namespace PvZ2ChineseAndroidAlphaPaletteTexture {
 
 				// ------------------------------------------------
 
@@ -1575,7 +1623,7 @@ namespace TwinStar.CoreX {
 
 				// ------------------------------------------------
 
-				export function compute_data_size_with_index_list(
+				export function compute_data_size_with_palette(
 					size: Image.ImageSize,
 					index_count: number,
 				): bigint {
@@ -1583,68 +1631,68 @@ namespace TwinStar.CoreX {
 					return 1n + BigInt(index_count === 2 ? 0 : index_count) + size[0] * size[1] * BigInt(bit_count) / 8n;
 				}
 
-				export function evaluate_index_list(
+				export function evaluate_palette(
 					image: Core.Image.CBitmapView,
-				): Core.Tool.Miscellaneous.PvZ2CHSRSBTextureAlphaIndex.JS_IndexList {
+				): Core.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.JS_Palette {
 					let image_size = image.size().value;
 					let image_data = Core.ByteArray.allocate(Core.Size.value(image_size[0] * image_size[1] * 8n / 8n));
-					let image_stream = Core.ByteStreamView.look(image_data.view());
+					let image_stream = Core.ByteStreamView.watch(image_data.view());
 					Texture.encode(image_stream, image, 'a_8');
 					let alpha_count: Record<number, number> = {};
 					for (let e of new Uint8Array(image_stream.stream_view().value)) {
 						let alpha_4 = (e >> 4) & ~(~0 << 4);
 						alpha_count[alpha_4] = (alpha_count[alpha_4] || 0) + 1;
 					}
-					let index_list = Object.keys(alpha_count).map(BigInt);
-					if (index_list.length <= 2) {
-						if (!index_list.includes(0b0000n)) {
-							index_list.push(0b0000n);
+					let palette = Object.keys(alpha_count).map(BigInt);
+					if (palette.length <= 2) {
+						if (!palette.includes(0b0000n)) {
+							palette.push(0b0000n);
 						}
-						if (!index_list.includes(0b1111n)) {
-							index_list.push(0b1111n);
+						if (!palette.includes(0b1111n)) {
+							palette.push(0b1111n);
 						}
-						if (index_list.length === 2) {
-							index_list = [0b0000n, 0b1111n];
+						if (palette.length === 2) {
+							palette = [0b0000n, 0b1111n];
 						}
 					}
-					return index_list;
+					return palette;
 				}
 
 				// ------------------------------------------------
 
-				export function encode_with_map(
+				export function encode_with_palette(
 					data: Core.OByteStreamView,
 					image: Core.Image.CBitmapView,
-					index: Core.Tool.Miscellaneous.PvZ2CHSRSBTextureAlphaIndex.JS_IndexList,
+					palette: Core.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.JS_Palette,
 				): void {
-					let bit_count = compute_bit_count(index.length);
+					let bit_count = compute_bit_count(palette.length);
 					if (bit_count === 1) {
 						data.write(Core.Byte.value(0n));
 					} else {
-						data.write(Core.Byte.value(BigInt(index.length)));
-						for (let e of index) {
+						data.write(Core.Byte.value(BigInt(palette.length)));
+						for (let e of palette) {
 							data.write(Core.Byte.value(e));
 						}
 					}
-					Core.Tool.Miscellaneous.PvZ2CHSRSBTextureAlphaIndex.Encode.process_image(data, image, index);
+					Core.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.Encode.process_image(data, image, palette);
 					return;
 				}
 
-				export function decode_with_map(
+				export function decode_with_palette(
 					data: Core.IByteStreamView,
 					image: Core.Image.VBitmapView,
 				): void {
 					let index_count = data.read().value;
-					let index: Core.Tool.Miscellaneous.PvZ2CHSRSBTextureAlphaIndex.JS_IndexList;
+					let palette: Core.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.JS_Palette;
 					if (index_count === 0n) {
-						index = [0b0000n, 0b1111n];
+						palette = [0b0000n, 0b1111n];
 					} else {
-						index = [];
+						palette = [];
 						for (let i = 0n; i < index_count; ++i) {
-							index.push(data.read().value);
+							palette.push(data.read().value);
 						}
 					}
-					Core.Tool.Miscellaneous.PvZ2CHSRSBTextureAlphaIndex.Decode.process_image(data, image, index);
+					Core.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.Decode.process_image(data, image, palette);
 					return;
 				}
 
@@ -1657,6 +1705,8 @@ namespace TwinStar.CoreX {
 	}
 
 	export namespace Miscellaneous {
+
+		// ------------------------------------------------
 
 		export function evaluate(
 			script: string,
@@ -1680,6 +1730,10 @@ namespace TwinStar.CoreX {
 			return Core.Miscellaneous.g_context.callback(Core.StringList.value(argument)).value;
 		}
 
+		// ------------------------------------------------
+
 	}
+
+	// ------------------------------------------------
 
 }

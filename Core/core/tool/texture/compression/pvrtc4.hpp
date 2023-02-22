@@ -164,7 +164,6 @@ namespace TwinStar::Core::Tool::Texture::Compression::PVRTC4 {
 			Boolean const &            with_alpha
 		) -> Void {
 			M_use_zps_of(data);
-			// TODO : reset image
 			return process_image(data, image, with_alpha);
 		}
 

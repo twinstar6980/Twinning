@@ -535,11 +535,11 @@ namespace TwinStar::WindowsExplorerExtension {
 					.argument = LR"({ "format": "rgb_etc1_a_8" })",
 				},
 				{
-					.name = L"编码（rgb_etc1_a_8_index）",
+					.name = L"编码（rgb_etc1_a_palette）",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
 					.method = L"popcap.ptx.encode",
-					.argument = LR"({ "format": "rgb_etc1_a_8_index" })",
+					.argument = LR"({ "format": "rgb_etc1_a_palette" })",
 				},
 				{
 					.name = L"解码",
@@ -577,11 +577,11 @@ namespace TwinStar::WindowsExplorerExtension {
 					.argument = LR"({ "format": "rgb_etc1_a_8" })",
 				},
 				{
-					.name = L"解码（rgb_etc1_a_8_index）",
+					.name = L"解码（rgb_etc1_a_palette）",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.ptx)$)", std::wregex::icase},
 					.method = L"popcap.ptx.decode",
-					.argument = LR"({ "format": "rgb_etc1_a_8_index" })",
+					.argument = LR"({ "format": "rgb_etc1_a_palette" })",
 				},
 			},
 			.separator = {
