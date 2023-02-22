@@ -1,4 +1,4 @@
-namespace TwinStar {
+namespace TwinStar.Script {
 
 	// ------------------------------------------------
 

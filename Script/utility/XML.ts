@@ -1,4 +1,4 @@
-namespace TwinStar.XML {
+namespace TwinStar.Script.XML {
 
 	// ------------------------------------------------
 

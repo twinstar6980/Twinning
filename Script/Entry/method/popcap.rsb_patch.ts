@@ -2,7 +2,7 @@
  * + popcap.rsb_patch.encode PopCap-RSB-Patch 编码
  * + popcap.rsb_patch.decode PopCap-RSB-Patch 解码
  */
-namespace TwinStar.Entry.method.popcap.rsb_patch {
+namespace TwinStar.Script.Entry.method.popcap.rsb_patch {
 
 	// ------------------------------------------------
 
@@ -187,5 +187,5 @@ namespace TwinStar.Entry.method.popcap.rsb_patch {
 }
 
 ({
-	injector: TwinStar.Entry.method.popcap.rsb_patch._injector,
+	injector: TwinStar.Script.Entry.method.popcap.rsb_patch._injector,
 });

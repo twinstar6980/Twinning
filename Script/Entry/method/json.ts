@@ -2,7 +2,7 @@
  * + json.format JSON 格式化
  * + json.format.batch [批处理] JSON 格式化
  */
-namespace TwinStar.Entry.method.json {
+namespace TwinStar.Script.Entry.method.json {
 
 	// ------------------------------------------------
 
@@ -155,5 +155,5 @@ namespace TwinStar.Entry.method.json {
 }
 
 ({
-	injector: TwinStar.Entry.method.json._injector,
+	injector: TwinStar.Script.Entry.method.json._injector,
 });

@@ -1,4 +1,4 @@
-namespace TwinStar.Support.PopCapPAK.ResourcePack {
+namespace TwinStar.Script.Support.PopCapPAK.ResourcePack {
 
 	// ------------------------------------------------
 

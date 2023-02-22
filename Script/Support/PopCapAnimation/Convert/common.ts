@@ -1,4 +1,4 @@
-namespace TwinStar.Support.PopCapAnimation.Convert {
+namespace TwinStar.Script.Support.PopCapAnimation.Convert {
 
 	// ------------------------------------------------
 

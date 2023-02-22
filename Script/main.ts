@@ -1,8 +1,8 @@
-namespace TwinStar {
+namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 32;
+	export const k_version = 33;
 
 	// ------------------------------------------------
 
@@ -307,7 +307,7 @@ namespace TwinStar {
 
 }
 
-TwinStar.Main.g_module_manifest = {
+TwinStar.Script.Main.g_module_manifest = {
 	module: [
 		`utility/Timer`,
 		`utility/TypeUtility`,
@@ -372,4 +372,4 @@ TwinStar.Main.g_module_manifest = {
 	entry: `Entry/Entry`,
 };
 
-(TwinStar.Main.main);
+(TwinStar.Script.Main.main);

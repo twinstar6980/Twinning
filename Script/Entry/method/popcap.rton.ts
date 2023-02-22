@@ -12,7 +12,7 @@
  * + popcap.rton.encode_then_encrypt.batch [批处理] PopCap-RTON 编码并加密
  * + popcap.rton.decrypt_then_decode.batch [批处理] PopCap-RTON 解密并解码
  */
-namespace TwinStar.Entry.method.popcap.rton {
+namespace TwinStar.Script.Entry.method.popcap.rton {
 
 	// ------------------------------------------------
 
@@ -762,5 +762,5 @@ namespace TwinStar.Entry.method.popcap.rton {
 }
 
 ({
-	injector: TwinStar.Entry.method.popcap.rton._injector,
+	injector: TwinStar.Script.Entry.method.popcap.rton._injector,
 });

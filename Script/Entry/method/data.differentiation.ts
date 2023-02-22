@@ -2,7 +2,7 @@
  * + data.differentiation.vcdiff.encode VCDiff 编码
  * + data.differentiation.vcdiff.decode VCDiff 解码
  */
-namespace TwinStar.Entry.method.data.differentiation {
+namespace TwinStar.Script.Entry.method.data.differentiation {
 
 	// ------------------------------------------------
 
@@ -141,5 +141,5 @@ namespace TwinStar.Entry.method.data.differentiation {
 }
 
 ({
-	injector: TwinStar.Entry.method.data.differentiation._injector,
+	injector: TwinStar.Script.Entry.method.data.differentiation._injector,
 });

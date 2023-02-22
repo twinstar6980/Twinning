@@ -3,7 +3,7 @@
  * + data.encryption.rijndael.encrypt Rijndael 加密
  * + data.encryption.rijndael.decrypt Rijndael 解密
  */
-namespace TwinStar.Entry.method.data.encryption {
+namespace TwinStar.Script.Entry.method.data.encryption {
 
 	// ------------------------------------------------
 
@@ -243,5 +243,5 @@ namespace TwinStar.Entry.method.data.encryption {
 }
 
 ({
-	injector: TwinStar.Entry.method.data.encryption._injector,
+	injector: TwinStar.Script.Entry.method.data.encryption._injector,
 });

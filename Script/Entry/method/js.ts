@@ -1,7 +1,7 @@
 /**
  * + js.evaluate JS 执行
  */
-namespace TwinStar.Entry.method.js {
+namespace TwinStar.Script.Entry.method.js {
 
 	// ------------------------------------------------
 
@@ -48,5 +48,5 @@ namespace TwinStar.Entry.method.js {
 }
 
 ({
-	injector: TwinStar.Entry.method.js._injector,
+	injector: TwinStar.Script.Entry.method.js._injector,
 });

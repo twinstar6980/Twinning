@@ -4,7 +4,7 @@
  * + popcap.zlib.compress.batch [批处理] PopCap-ZLib 压缩
  * + popcap.zlib.uncompress.batch [批处理] PopCap-ZLib 解压
  */
-namespace TwinStar.Entry.method.popcap.zlib {
+namespace TwinStar.Script.Entry.method.popcap.zlib {
 
 	// ------------------------------------------------
 
@@ -238,5 +238,5 @@ namespace TwinStar.Entry.method.popcap.zlib {
 }
 
 ({
-	injector: TwinStar.Entry.method.popcap.zlib._injector,
+	injector: TwinStar.Script.Entry.method.popcap.zlib._injector,
 });

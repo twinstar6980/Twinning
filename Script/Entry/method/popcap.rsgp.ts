@@ -2,7 +2,7 @@
  * + popcap.rsgp.pack PopCap-RSGP 打包
  * + popcap.rsgp.unpack PopCap-RSGP 解包
  */
-namespace TwinStar.Entry.method.popcap.rsgp {
+namespace TwinStar.Script.Entry.method.popcap.rsgp {
 
 	// ------------------------------------------------
 
@@ -136,5 +136,5 @@ namespace TwinStar.Entry.method.popcap.rsgp {
 }
 
 ({
-	injector: TwinStar.Entry.method.popcap.rsgp._injector,
+	injector: TwinStar.Script.Entry.method.popcap.rsgp._injector,
 });

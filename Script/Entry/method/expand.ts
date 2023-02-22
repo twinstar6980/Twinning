@@ -1,6 +1,6 @@
 /**
  */
-namespace TwinStar.Entry.method.expand {
+namespace TwinStar.Script.Entry.method.expand {
 
 	// ------------------------------------------------
 
@@ -21,5 +21,5 @@ namespace TwinStar.Entry.method.expand {
 }
 
 ({
-	injector: TwinStar.Entry.method.expand._injector,
+	injector: TwinStar.Script.Entry.method.expand._injector,
 });

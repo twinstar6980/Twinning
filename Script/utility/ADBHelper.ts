@@ -1,4 +1,4 @@
-namespace TwinStar.ADBHelper {
+namespace TwinStar.Script.ADBHelper {
 
 	// ------------------------------------------------
 

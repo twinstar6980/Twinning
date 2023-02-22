@@ -3,7 +3,7 @@
  * + marmalade.dzip.unpack Marmalade-DZip 解包
  * + marmalade.dzip.pack_auto Marmalade-DZip 自动打包
  */
-namespace TwinStar.Entry.method.marmalade.dzip {
+namespace TwinStar.Script.Entry.method.marmalade.dzip {
 
 	// ------------------------------------------------
 
@@ -187,5 +187,5 @@ namespace TwinStar.Entry.method.marmalade.dzip {
 }
 
 ({
-	injector: TwinStar.Entry.method.marmalade.dzip._injector,
+	injector: TwinStar.Script.Entry.method.marmalade.dzip._injector,
 });

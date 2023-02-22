@@ -1,4 +1,4 @@
-namespace TwinStar.Support.PvZ2.LawnStringText {
+namespace TwinStar.Script.Support.PvZ2.LawnStringText {
 
 	// ------------------------------------------------
 

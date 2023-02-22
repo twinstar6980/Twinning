@@ -2,7 +2,7 @@
  * + wwise.encoded_media.decode Wwise-Encoded-Media 解码
  * + wwise.encoded_media.decode.batch [批处理] Wwise-Encoded-Media 解码
  */
-namespace TwinStar.Entry.method.wwise.encoded_media {
+namespace TwinStar.Script.Entry.method.wwise.encoded_media {
 
 	// ------------------------------------------------
 
@@ -172,5 +172,5 @@ namespace TwinStar.Entry.method.wwise.encoded_media {
 }
 
 ({
-	injector: TwinStar.Entry.method.wwise.encoded_media._injector,
+	injector: TwinStar.Script.Entry.method.wwise.encoded_media._injector,
 });

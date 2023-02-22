@@ -1,4 +1,4 @@
-namespace TwinStar.Language {
+namespace TwinStar.Script.Language {
 
 	// ------------------------------------------------
 
@@ -63,7 +63,7 @@ namespace TwinStar.Language {
 	// ------------------------------------------------
 
 }
-namespace TwinStar {
+namespace TwinStar.Script {
 	/** LOcalized String, @see {@link Language.query} */
 	export const los = Language.query;
 }

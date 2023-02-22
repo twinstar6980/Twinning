@@ -1,4 +1,4 @@
-namespace TwinStar.Support.Atlas.Pack.AutoPack {
+namespace TwinStar.Script.Support.Atlas.Pack.AutoPack {
 
 	// ------------------------------------------------
 

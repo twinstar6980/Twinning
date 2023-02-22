@@ -1,4 +1,4 @@
-namespace TwinStar.TextGenerator {
+namespace TwinStar.Script.TextGenerator {
 
 	// ------------------------------------------------
 

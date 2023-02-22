@@ -1,4 +1,4 @@
-namespace TwinStar.CoreX {
+namespace TwinStar.Script.CoreX {
 
 	// ------------------------------------------------
 

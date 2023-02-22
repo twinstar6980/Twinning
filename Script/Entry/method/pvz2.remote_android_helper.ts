@@ -1,7 +1,7 @@
 /**
  * + pvz2.remote_android_helper.launch PvZ-2远程安卓辅助
  */
-namespace TwinStar.Entry.method.pvz2.remote_android_helper {
+namespace TwinStar.Script.Entry.method.pvz2.remote_android_helper {
 
 	// ------------------------------------------------
 
@@ -59,5 +59,5 @@ namespace TwinStar.Entry.method.pvz2.remote_android_helper {
 }
 
 ({
-	injector: TwinStar.Entry.method.pvz2.remote_android_helper._injector,
+	injector: TwinStar.Script.Entry.method.pvz2.remote_android_helper._injector,
 });

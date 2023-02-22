@@ -1,4 +1,4 @@
-namespace TwinStar.PathUtility {
+namespace TwinStar.Script.PathUtility {
 
 	// ------------------------------------------------
 

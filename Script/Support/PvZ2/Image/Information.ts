@@ -1,4 +1,4 @@
-namespace TwinStar.Support.PvZ2.Image {
+namespace TwinStar.Script.Support.PvZ2.Image {
 
 	// ------------------------------------------------
 

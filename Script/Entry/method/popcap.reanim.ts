@@ -4,7 +4,7 @@
  * + popcap.reanim.encode.batch [批处理] PopCap-Reanim 编码
  * + popcap.reanim.decode.batch [批处理] PopCap-Reanim 解码
  */
-namespace TwinStar.Entry.method.popcap.reanim {
+namespace TwinStar.Script.Entry.method.popcap.reanim {
 
 	// ------------------------------------------------
 
@@ -307,5 +307,5 @@ namespace TwinStar.Entry.method.popcap.reanim {
 }
 
 ({
-	injector: TwinStar.Entry.method.popcap.reanim._injector,
+	injector: TwinStar.Script.Entry.method.popcap.reanim._injector,
 });

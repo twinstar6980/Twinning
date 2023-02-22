@@ -2,7 +2,7 @@
  * + data.encoding.base64.encode Base64 编码
  * + data.encoding.base64.decode Base64 解码
  */
-namespace TwinStar.Entry.method.data.encoding {
+namespace TwinStar.Script.Entry.method.data.encoding {
 
 	// ------------------------------------------------
 
@@ -97,5 +97,5 @@ namespace TwinStar.Entry.method.data.encoding {
 }
 
 ({
-	injector: TwinStar.Entry.method.data.encoding._injector,
+	injector: TwinStar.Script.Entry.method.data.encoding._injector,
 });

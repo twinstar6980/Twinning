@@ -3,7 +3,7 @@
  * + image.atlas.unpack Atlas 解包
  * + image.atlas.pack_auto Atlas 自动打包
  */
-namespace TwinStar.Entry.method.image.atlas {
+namespace TwinStar.Script.Entry.method.image.atlas {
 
 	// ------------------------------------------------
 
@@ -166,5 +166,5 @@ namespace TwinStar.Entry.method.image.atlas {
 }
 
 ({
-	injector: TwinStar.Entry.method.image.atlas._injector,
+	injector: TwinStar.Script.Entry.method.image.atlas._injector,
 });

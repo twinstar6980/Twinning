@@ -8,7 +8,7 @@
  * + data.compression.bzip2.compress BZip2 压缩
  * + data.compression.bzip2.uncompress BZip2 解压
  */
-namespace TwinStar.Entry.method.data.compression {
+namespace TwinStar.Script.Entry.method.data.compression {
 
 	// ------------------------------------------------
 
@@ -376,5 +376,5 @@ namespace TwinStar.Entry.method.data.compression {
 }
 
 ({
-	injector: TwinStar.Entry.method.data.compression._injector,
+	injector: TwinStar.Script.Entry.method.data.compression._injector,
 });

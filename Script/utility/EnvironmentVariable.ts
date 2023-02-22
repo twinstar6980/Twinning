@@ -1,4 +1,4 @@
-namespace TwinStar.EnvironmentVariable {
+namespace TwinStar.Script.EnvironmentVariable {
 
 	// ------------------------------------------------
 

@@ -1,5 +1,5 @@
 /** 计算 Wwise Short ID */
-namespace TwinStar.Executable.ComputeWwiseShortID {
+namespace TwinStar.Script.Executable.ComputeWwiseShortID {
 
 	export function execute(
 	): void {
@@ -14,4 +14,4 @@ namespace TwinStar.Executable.ComputeWwiseShortID {
 
 }
 
-TwinStar.Executable.ComputeWwiseShortID.execute();
+TwinStar.Script.Executable.ComputeWwiseShortID.execute();

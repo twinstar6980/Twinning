@@ -1,4 +1,4 @@
-namespace TwinStar.Support.PopCapAnimation.Convert.Flash.SourceManager {
+namespace TwinStar.Script.Support.PopCapAnimation.Convert.Flash.SourceManager {
 
 	// ------------------------------------------------
 

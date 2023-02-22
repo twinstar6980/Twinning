@@ -4,7 +4,7 @@
  * + popcap.pak.pack_auto PopCap-PAK 自动打包
  * + popcap.pak.crypt PopCap-PAK 加解密
  */
-namespace TwinStar.Entry.method.popcap.pak {
+namespace TwinStar.Script.Entry.method.popcap.pak {
 
 	// ------------------------------------------------
 
@@ -260,5 +260,5 @@ namespace TwinStar.Entry.method.popcap.pak {
 }
 
 ({
-	injector: TwinStar.Entry.method.popcap.pak._injector,
+	injector: TwinStar.Script.Entry.method.popcap.pak._injector,
 });

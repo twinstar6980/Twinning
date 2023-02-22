@@ -1,5 +1,5 @@
 /** 尽可能地将PopCap-RSB修复为标准结构，以免核心处理逻辑因拒绝容错的特性而无法解包被刻意处理过的RSB */
-namespace TwinStar.Executable.RepairPopCapRSB {
+namespace TwinStar.Script.Executable.RepairPopCapRSB {
 
 	// ------------------------------------------------
 
@@ -405,4 +405,4 @@ namespace TwinStar.Executable.RepairPopCapRSB {
 
 }
 
-TwinStar.Executable.RepairPopCapRSB.execute();
+TwinStar.Script.Executable.RepairPopCapRSB.execute();

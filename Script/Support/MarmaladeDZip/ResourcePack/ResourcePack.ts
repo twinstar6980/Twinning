@@ -1,4 +1,4 @@
-namespace TwinStar.Support.MarmaladeDZip.ResourcePack {
+namespace TwinStar.Script.Support.MarmaladeDZip.ResourcePack {
 
 	// ------------------------------------------------
 

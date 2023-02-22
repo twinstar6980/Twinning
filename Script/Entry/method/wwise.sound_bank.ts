@@ -4,7 +4,7 @@
  * + wwise.sound_bank.encode.batch [批处理] Wwise-Sound-Bank 编码
  * + wwise.sound_bank.decode.batch [批处理] Wwise-Sound-Bank 解码
  */
-namespace TwinStar.Entry.method.wwise.sound_bank {
+namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 
 	// ------------------------------------------------
 
@@ -270,5 +270,5 @@ namespace TwinStar.Entry.method.wwise.sound_bank {
 }
 
 ({
-	injector: TwinStar.Entry.method.wwise.sound_bank._injector,
+	injector: TwinStar.Script.Entry.method.wwise.sound_bank._injector,
 });

@@ -1,7 +1,7 @@
 /**
  * + data.hash.md5 MD5 散列
  */
-namespace TwinStar.Entry.method.data.hash {
+namespace TwinStar.Script.Entry.method.data.hash {
 
 	// ------------------------------------------------
 
@@ -48,5 +48,5 @@ namespace TwinStar.Entry.method.data.hash {
 }
 
 ({
-	injector: TwinStar.Entry.method.data.hash._injector,
+	injector: TwinStar.Script.Entry.method.data.hash._injector,
 });

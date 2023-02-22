@@ -12,7 +12,7 @@
  * + popcap.pam.convert.flash.resize.batch [批处理] PopCap-PAM Flash 图像分辨率调整
  * + popcap.pam.convert.flash.link_media.batch [批处理] PopCap-PAM Flash 创建图像文件链接
  */
-namespace TwinStar.Entry.method.popcap.pam {
+namespace TwinStar.Script.Entry.method.popcap.pam {
 
 	// ------------------------------------------------
 
@@ -610,5 +610,5 @@ namespace TwinStar.Entry.method.popcap.pam {
 }
 
 ({
-	injector: TwinStar.Entry.method.popcap.pam._injector,
+	injector: TwinStar.Script.Entry.method.popcap.pam._injector,
 });

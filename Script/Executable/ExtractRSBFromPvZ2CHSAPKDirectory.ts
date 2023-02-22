@@ -1,5 +1,5 @@
 /** 从 PvZ-2 安卓中文版的 APK 解压目录中提取 RSB */
-namespace TwinStar.Executable.ExtractRSBFromPvZ2CHSAPKDirectory {
+namespace TwinStar.Script.Executable.ExtractRSBFromPvZ2CHSAPKDirectory {
 
 	export function execute(
 	): void {
@@ -32,4 +32,4 @@ namespace TwinStar.Executable.ExtractRSBFromPvZ2CHSAPKDirectory {
 
 }
 
-TwinStar.Executable.ExtractRSBFromPvZ2CHSAPKDirectory.execute();
+TwinStar.Script.Executable.ExtractRSBFromPvZ2CHSAPKDirectory.execute();

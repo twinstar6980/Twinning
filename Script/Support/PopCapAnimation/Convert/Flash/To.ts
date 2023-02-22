@@ -1,4 +1,4 @@
-namespace TwinStar.Support.PopCapAnimation.Convert.Flash.To {
+namespace TwinStar.Script.Support.PopCapAnimation.Convert.Flash.To {
 
 	// ------------------------------------------------
 

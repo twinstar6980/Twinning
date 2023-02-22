@@ -3,7 +3,7 @@
  * + popcap.rsb.unpack PopCap-RSB 解包
  * + popcap.rsb.resource_convert PopCap-RSB 资源转换
  */
-namespace TwinStar.Entry.method.popcap.rsb {
+namespace TwinStar.Script.Entry.method.popcap.rsb {
 
 	// ------------------------------------------------
 
@@ -549,5 +549,5 @@ namespace TwinStar.Entry.method.popcap.rsb {
 }
 
 ({
-	injector: TwinStar.Entry.method.popcap.rsb._injector,
+	injector: TwinStar.Script.Entry.method.popcap.rsb._injector,
 });

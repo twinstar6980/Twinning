@@ -1,5 +1,5 @@
 /** 提供JS交互模式命令行 */
-namespace TwinStar.Executable.JSShell {
+namespace TwinStar.Script.Executable.JSShell {
 
 	export function execute(
 	): void {
@@ -28,4 +28,4 @@ namespace TwinStar.Executable.JSShell {
 
 }
 
-TwinStar.Executable.JSShell.execute();
+TwinStar.Script.Executable.JSShell.execute();

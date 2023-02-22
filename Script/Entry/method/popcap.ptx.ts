@@ -2,7 +2,7 @@
  * + popcap.ptx.encode PopCap-PTX 编码
  * + popcap.ptx.decode PopCap-PTX 解码
  */
-namespace TwinStar.Entry.method.popcap.ptx {
+namespace TwinStar.Script.Entry.method.popcap.ptx {
 
 	// ------------------------------------------------
 
@@ -141,5 +141,5 @@ namespace TwinStar.Entry.method.popcap.ptx {
 }
 
 ({
-	injector: TwinStar.Entry.method.popcap.ptx._injector,
+	injector: TwinStar.Script.Entry.method.popcap.ptx._injector,
 });
