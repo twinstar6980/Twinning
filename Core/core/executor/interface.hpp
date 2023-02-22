@@ -30,7 +30,7 @@
 #include "core/tool/popcap/rsb/pack.hpp"
 #include "core/tool/popcap/rsb_patch/encode.hpp"
 #include "core/tool/miscellaneous/xbox_tiled_texture/encode.hpp"
-#include "core/tool/miscellaneous/pvz2_chinese_android_aplha_palette_texture/encode.hpp"
+#include "core/tool/miscellaneous/pvz2_chinese_android_alpha_palette_texture/encode.hpp"
 
 namespace TwinStar::Core::Executor::Interface {
 
