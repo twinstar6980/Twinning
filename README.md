@@ -16,15 +16,15 @@ by TwinStar ( aka TwinKleS or SmallPC or 一路上海外 ) .
 
 * `Core`
 	
-	核心库，负责内部功能的实现。
+	核心，负责内部功能的实现。
 
 * `Shell`
 	
-	外壳程序，提供命令行界面。
+	外壳，提供命令行界面。
 
 * `Shell GUI`
 	
-	外壳程序，提供图形界面。
+	外壳，提供图形界面。
 
 * `Script`
 	
@@ -32,7 +32,7 @@ by TwinStar ( aka TwinKleS or SmallPC or 一路上海外 ) .
 
 * `Windows Explorer Extension`
 	
-	Windows 资源管理器拓展，将工具集成至 Windows Explorer 右键菜单中。
+	Windows Explorer 扩展，将工具集成至 Windows Explorer 右键菜单中。
 
 ## 平台支持
 

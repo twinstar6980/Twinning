@@ -1,6 +1,6 @@
 # TwinStar ToolKit - Shell GUI
 
-外壳程序，提供图形界面。
+外壳，提供图形界面。
 
 本项目是跨平台的 `Flutter` 项目，依赖 `Core` 的实现。
 

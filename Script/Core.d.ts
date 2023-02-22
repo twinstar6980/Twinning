@@ -2417,7 +2417,7 @@ declare namespace TwinStar.Core {
 						type SoundBank = {
 							/** ID */
 							id: bigint;
-							/** 文件头拓展数据 */
+							/** BNK头扩展数据 */
 							header_expand: string;
 						};
 
