@@ -261,21 +261,21 @@ namespace TwinStar::Core::StringParser {
 	inline auto compute_utf8_character_extra_size (
 		Character8 const & character
 	) -> Size {
-		auto size = Size{};
+		auto extra_size = Size{};
 		if (character < 0b1'0000000_c8) {
-			size = 0_sz;
+			extra_size = 0_sz;
 		} else if (character < 0b11'000000_c8) {
 			assert_fail(R"(/* first utf-8 character is valid */)");
 		} else if (character < 0b111'00000_c8) {
-			size = 1_sz;
+			extra_size = 1_sz;
 		} else if (character < 0b1111'0000_c8) {
-			size = 2_sz;
+			extra_size = 2_sz;
 		} else if (character < 0b11111'000_c8) {
-			size = 3_sz;
+			extra_size = 3_sz;
 		} else {
 			assert_fail(R"(/* first utf-8 character is valid */)");
 		}
-		return size;
+		return extra_size;
 	}
 
 	#pragma endregion
