@@ -249,7 +249,7 @@ class _NumberInputBarContentState extends State<NumberInputBarContent> {
           decimal: true,
         ),
         inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp(r'^(\+|\-)?(\d*)(\.\d*)?$')),
+          FilteringTextInputFormatter.allow(RegExp(r'^([+-])?([\d]*)([.][\d]*)?$')),
         ],
         decoration: const InputDecoration(
           border: InputBorder.none,
@@ -305,7 +305,7 @@ class _IntegerInputBarContentState extends State<IntegerInputBarContent> {
           decimal: false,
         ),
         inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp(r'^(\+|\-)?(\d*)$')),
+          FilteringTextInputFormatter.allow(RegExp(r'^([+-])?([\d]*)$')),
         ],
         decoration: const InputDecoration(
           border: InputBorder.none,
@@ -365,7 +365,7 @@ class _SizeInputBarContentState extends State<SizeInputBarContent> {
                 decimal: false,
               ),
               inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^(\d*)(\.\d*)?$')),
+                FilteringTextInputFormatter.allow(RegExp(r'^([\d]*)([.][\d]*)?$')),
               ],
               decoration: const InputDecoration(
                 border: InputBorder.none,

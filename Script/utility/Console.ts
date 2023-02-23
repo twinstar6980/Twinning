@@ -290,7 +290,7 @@ namespace TwinStar.Script.Console {
 			let input = cli_basic_input(
 				'N',
 				(value) => {
-					let regexp_check_result = Check.regexp_checker_x(/^(\+|\-)?(\d+)(\.\d*)?$/)(value);
+					let regexp_check_result = Check.regexp_checker_x(/^([+-])?([\d]+)([.][\d]+)?$/)(value);
 					if (regexp_check_result !== null) {
 						return los(`数字格式非法，{}`, regexp_check_result);
 					}
@@ -339,7 +339,7 @@ namespace TwinStar.Script.Console {
 			let input = cli_basic_input(
 				'I',
 				(value) => {
-					let regexp_check_result = Check.regexp_checker_x(/^(\+|\-)?(\d+)$/)(value);
+					let regexp_check_result = Check.regexp_checker_x(/^([+-])?([\d]+)$/)(value);
 					if (regexp_check_result !== null) {
 						return los(`整数格式非法，{}`, regexp_check_result);
 					}
@@ -388,7 +388,7 @@ namespace TwinStar.Script.Console {
 			let input = cli_basic_input(
 				'Z',
 				(value) => {
-					let regexp_check_result = Check.regexp_checker_x(/^(\d+)(\.\d*)?(b|k|m|g)$/)(value);
+					let regexp_check_result = Check.regexp_checker_x(/^([\d]+)([.][\d]+)?([bkmg])$/)(value);
 					if (regexp_check_result !== null) {
 						return los(`尺寸格式非法，{}`, regexp_check_result);
 					}
@@ -503,7 +503,7 @@ namespace TwinStar.Script.Console {
 			let input = cli_basic_input(
 				'O',
 				(value) => {
-					let regexp_check_result = Check.regexp_checker_x(/^(\+|\-)?(\d+)$/)(value);
+					let regexp_check_result = Check.regexp_checker_x(/^([+-])?([\d]+)$/)(value);
 					if (regexp_check_result !== null) {
 						return los(`整数格式非法，{}`, regexp_check_result);
 					}

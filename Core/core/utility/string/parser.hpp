@@ -40,7 +40,7 @@ namespace TwinStar::Core::StringParser {
 		OCharacterStreamView & stream,
 		Character32 const &    character
 	) -> Void {
-		if (character >= 0x80_c32) {
+		if (character >= 0x100_c32) {
 			if (character >= 0x10000_c32) {
 				stream.write('U'_c);
 				stream.write(CharacterType::to_number_hex_upper(cbw<IntegerU8>(clip_bit(character, 29_ix, 4_sz))));
@@ -56,11 +56,16 @@ namespace TwinStar::Core::StringParser {
 			stream.write(CharacterType::to_number_hex_upper(cbw<IntegerU8>(clip_bit(character, 1_ix, 4_sz))));
 		} else {
 			switch (character.value) {
-				case '\'' :
-				case '\"' :
-				case '\?' :
 				case '\\' : {
-					stream.write(cbw<Character>(character));
+					stream.write('\\'_c);
+					break;
+				}
+				case '\'' : {
+					stream.write('\''_c);
+					break;
+				}
+				case '\"' : {
+					stream.write('\"'_c);
 					break;
 				}
 				case '\a' : {
@@ -91,6 +96,10 @@ namespace TwinStar::Core::StringParser {
 					stream.write('v'_c);
 					break;
 				}
+				case '\0' : {
+					stream.write('0'_c);
+					break;
+				}
 				default : {
 					stream.write('x'_c);
 					stream.write(CharacterType::to_number_hex_upper(cbw<IntegerU8>(clip_bit(character, 5_ix, 4_sz))));
@@ -107,20 +116,16 @@ namespace TwinStar::Core::StringParser {
 	) -> Void {
 		auto current = stream.read_of();
 		switch (current.value) {
+			case '\\' : {
+				character = '\\'_c32;
+				break;
+			}
 			case '\'' : {
 				character = '\''_c32;
 				break;
 			}
 			case '\"' : {
 				character = '\"'_c32;
-				break;
-			}
-			case '\?' : {
-				character = '\?'_c32;
-				break;
-			}
-			case '\\' : {
-				character = '\\'_c32;
 				break;
 			}
 			case 'a' : {
@@ -151,16 +156,13 @@ namespace TwinStar::Core::StringParser {
 				character = '\v'_c32;
 				break;
 			}
-			case '0' :
-			case '1' :
-			case '2' :
-			case '3' :
-			case '4' :
-			case '5' :
-			case '6' :
-			case '7' : {
-				character = cbw<Character32>(CharacterType::from_number_oct(current));
-				for (auto & index : SizeRange{2_sz}) {
+			case '0' : {
+				character = '\0'_c32;
+				break;
+			}
+			case 'o' : {
+				character = '\0'_c32;
+				for (auto & index : SizeRange{3_sz}) {
 					character = character << 3_sz | cbw<Character32>(CharacterType::from_number_oct(stream.read_of()));
 				}
 				break;
@@ -538,20 +540,20 @@ namespace TwinStar::Core::StringParser {
 		ICharacterStreamView & stream,
 		Boolean &              value
 	) -> Void {
-		auto first_character = stream.read_of<Character>();
-		if (first_character == 't'_c) {
+		auto first = stream.read_of<Character>();
+		if (first == 't'_c) {
 			assert_test(stream.read_of<Character>() == 'r'_c);
 			assert_test(stream.read_of<Character>() == 'u'_c);
 			assert_test(stream.read_of<Character>() == 'e'_c);
 			value = k_true;
-		} else if (first_character == 'f'_c) {
+		} else if (first == 'f'_c) {
 			assert_test(stream.read_of<Character>() == 'a'_c);
 			assert_test(stream.read_of<Character>() == 'l'_c);
 			assert_test(stream.read_of<Character>() == 's'_c);
 			assert_test(stream.read_of<Character>() == 'e'_c);
 			value = k_false;
 		} else {
-			assert_fail(R"(first_character == /* valid */)");
+			assert_fail(R"(first == /* valid */)");
 		}
 		return;
 	}
@@ -578,18 +580,17 @@ namespace TwinStar::Core::StringParser {
 		Integer &              value
 	) -> Void {
 		auto valid_begin = stream.current_pointer();
-		{
-			auto first_character = stream.read_of();
-			if (first_character == '+'_c) {
-				++valid_begin;
-			} else if (first_character == '-'_c) {
-			} else {
-				assert_test(CharacterType::is_number_dec(first_character));
-			}
+		auto current = Character{};
+		current = stream.read_of();
+		if (current == '+'_c) {
+			++valid_begin;
+		} else if (current == '-'_c) {
+		} else {
+			assert_test(CharacterType::is_number_dec(current));
 		}
 		while (!stream.full()) {
-			auto current_character = stream.read_of();
-			switch (current_character.value) {
+			current = stream.read_of();
+			switch (current.value) {
 				case '0' :
 				case '1' :
 				case '2' :
@@ -638,18 +639,17 @@ namespace TwinStar::Core::StringParser {
 		auto is_floating = k_false;
 		auto is_scientific = k_false;
 		auto valid_begin = stream.current_pointer();
-		{
-			auto first_character = stream.read_of();
-			if (first_character == '+'_c) {
-				++valid_begin;
-			} else if (first_character == '-'_c) {
-			} else {
-				assert_test(CharacterType::is_number_dec(first_character));
-			}
+		auto current = Character{};
+		current = stream.read_of();
+		if (current == '+'_c) {
+			++valid_begin;
+		} else if (current == '-'_c) {
+		} else {
+			assert_test(CharacterType::is_number_dec(current));
 		}
 		while (!stream.full()) {
-			auto current_character = stream.read_of();
-			switch (current_character.value) {
+			current = stream.read_of();
+			switch (current.value) {
 				case '0' :
 				case '1' :
 				case '2' :
@@ -666,16 +666,19 @@ namespace TwinStar::Core::StringParser {
 				case '.' : {
 					assert_test(!is_floating);
 					is_floating = k_true;
-					auto next_character = stream.read_of();
-					assert_test(CharacterType::is_number_dec(next_character));
+					current = stream.read_of();
+					assert_test(CharacterType::is_number_dec(current));
 					continue;
 					break;
 				}
 				case 'e' : {
 					assert_test(!is_scientific);
+					assert_test(is_floating);
 					is_scientific = k_true;
-					auto next_character = stream.read_of();
-					assert_test(next_character == '+'_c || next_character == '-'_c);
+					current = stream.read_of();
+					assert_test(current == '+'_c || current == '-'_c);
+					current = stream.read_of();
+					assert_test(CharacterType::is_number_dec(current));
 					continue;
 					break;
 				}
@@ -720,18 +723,17 @@ namespace TwinStar::Core::StringParser {
 		auto is_floating = k_false;
 		auto is_scientific = k_false;
 		auto valid_begin = stream.current_pointer();
-		{
-			auto first_character = stream.read_of();
-			if (first_character == '+'_c) {
-				++valid_begin;
-			} else if (first_character == '-'_c) {
-			} else {
-				assert_test(CharacterType::is_number_dec(first_character));
-			}
+		auto current = Character{};
+		current = stream.read_of();
+		if (current == '+'_c) {
+			++valid_begin;
+		} else if (current == '-'_c) {
+		} else {
+			assert_test(CharacterType::is_number_dec(current));
 		}
 		while (!stream.full()) {
-			auto current_character = stream.read_of();
-			switch (current_character.value) {
+			current = stream.read_of();
+			switch (current.value) {
 				case '0' :
 				case '1' :
 				case '2' :
@@ -748,16 +750,19 @@ namespace TwinStar::Core::StringParser {
 				case '.' : {
 					assert_test(!is_floating);
 					is_floating = k_true;
-					auto next_character = stream.read_of();
-					assert_test(CharacterType::is_number_dec(next_character));
+					current = stream.read_of();
+					assert_test(CharacterType::is_number_dec(current));
 					continue;
 					break;
 				}
 				case 'e' : {
 					assert_test(!is_scientific);
+					assert_test(is_floating);
 					is_scientific = k_true;
-					auto next_character = stream.read_of();
-					assert_test(next_character == '+'_c || next_character == '-'_c);
+					current = stream.read_of();
+					assert_test(current == '+'_c || current == '-'_c);
+					current = stream.read_of();
+					assert_test(CharacterType::is_number_dec(current));
 					continue;
 					break;
 				}

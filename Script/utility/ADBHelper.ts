@@ -129,7 +129,7 @@ namespace TwinStar.Script.ADBHelper {
 		match = /versionCode=([0-9]+)/.exec(shell_result);
 		assert_test(match !== null);
 		result.version_code = BigInt(match[1]);
-		match = /versionName=([0-9a-zA-Z\.\+\-]+)/.exec(shell_result);
+		match = /versionName=([0-9a-zA-Z.+-]+)/.exec(shell_result);
 		assert_test(match !== null);
 		result.version_name = match[1];
 		match = /userId=([0-9]+)/.exec(shell_result);
