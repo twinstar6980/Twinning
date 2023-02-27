@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 37;
+	export const k_version = 38;
 
 	// ------------------------------------------------
 
@@ -314,7 +314,7 @@ TwinStar.Script.Main.g_module_manifest = {
 		`utility/PathUtility`,
 		`utility/Check`,
 		`utility/TextGenerator`,
-		`utility/VirtualTerminalSequences`,
+		`utility/VirtualTerminalSequence`,
 		`utility/XML`,
 		`utility/ByteListView`,
 		`utility/CoreX`,
@@ -359,6 +359,7 @@ TwinStar.Script.Main.g_module_manifest = {
 		`Entry/method/marmalade.dzip`,
 		`Entry/method/popcap.zlib`,
 		`Entry/method/popcap.reanim`,
+		`Entry/method/popcap.particle`,
 		`Entry/method/popcap.rton`,
 		`Entry/method/popcap.ptx`,
 		`Entry/method/popcap.pam`,

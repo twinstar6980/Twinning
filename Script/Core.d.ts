@@ -1,6 +1,6 @@
 /**
  * JS interface of Core
- * @version 31
+ * @version 35
  */
 declare namespace TwinStar.Core {
 
@@ -2123,7 +2123,7 @@ declare namespace TwinStar.Core {
 
 					// ------------------------------------------------
 
-					static Value: 'a_8' | 'rgb_888' | 'rgba_8888' | 'rgb_565_l' | 'rgba_4444_l' | 'rgba_5551_l' | 'argb_4444_l' | 'argb_8888_l';
+					static Value: 'a_8' | 'rgb_565' | 'rgba_5551' | 'rgba_4444' | 'rgba_8888' | 'argb_4444' | 'argb_8888';
 
 					static value(it: typeof Format.Value): Format;
 
@@ -2730,15 +2730,15 @@ declare namespace TwinStar.Core {
 
 			}
 
-			/** Reanim */
-			namespace Reanim {
+			/** REANIM */
+			namespace REANIM {
 
 				/** 版本 */
 				class Version {
 
 					// ------------------------------------------------
 
-					private _Tool_PopCap_Reanim_Version;
+					private _Tool_PopCap_REANIM_Version;
 
 					// ------------------------------------------------
 
@@ -2749,7 +2749,7 @@ declare namespace TwinStar.Core {
 					// ------------------------------------------------
 
 					static Value: {
-						platform: 'desktop' | 'phone';
+						platform: 'desktop' | 'mobile' | 'television';
 						variant_64: boolean;
 					};
 
@@ -2795,7 +2795,7 @@ declare namespace TwinStar.Core {
 
 						// ------------------------------------------------
 
-						private _Tool_PopCap_Reanim_Manifest_Animation;
+						private _Tool_PopCap_REANIM_Manifest_Animation;
 
 						// ------------------------------------------------
 
@@ -2846,6 +2846,109 @@ declare namespace TwinStar.Core {
 					function process_animation(
 						animation_data: IByteStreamView,
 						animation_manifest: Manifest.Animation,
+						version: Version,
+					): Void;
+
+				}
+
+			}
+
+			/** PARTICLE */
+			namespace PARTICLE {
+
+				/** 版本 */
+				class Version {
+
+					// ------------------------------------------------
+
+					private _Tool_PopCap_PARTICLE_Version;
+
+					// ------------------------------------------------
+
+					static default(): Version;
+
+					static copy(it: Version): Version;
+
+					// ------------------------------------------------
+
+					static Value: {
+						platform: 'desktop' | 'mobile' | 'television';
+						variant_64: boolean;
+					};
+
+					static value(it: typeof Version.Value): Version;
+
+					get value(): typeof Version.Value;
+
+					set value(it: typeof Version.Value);
+
+					// ------------------------------------------------
+
+				}
+
+				/** 清单 */
+				namespace Manifest {
+
+					namespace JS_N {
+
+					}
+
+					/** 粒子 */
+					class Particle {
+
+						// ------------------------------------------------
+
+						private _Tool_PopCap_PARTICLE_Manifest_Particle;
+
+						// ------------------------------------------------
+
+						static default(): Particle;
+
+						static copy(it: Particle): Particle;
+
+						// ------------------------------------------------
+
+						static json(it: JSON.Value<undefined>, version: Version): Particle;
+
+						get_json(version: Version): JSON.Value<undefined>;
+
+						set_json(it: JSON.Value<undefined>, version: Version): Void;
+
+						// ------------------------------------------------
+
+					}
+
+				}
+
+				/** 编码 */
+				namespace Encode {
+
+					/**
+					 * 编码
+					 * @param particle_data 粒子数据
+					 * @param particle_manifest 粒子清单
+					 * @param version 版本
+					 */
+					function process_particle(
+						particle_data: OByteStreamView,
+						particle_manifest: Manifest.Particle,
+						version: Version,
+					): Void;
+
+				}
+
+				/** 解码 */
+				namespace Decode {
+
+					/**
+					 * 解码
+					 * @param particle_data 粒子数据
+					 * @param particle_manifest 粒子清单
+					 * @param version 版本
+					 */
+					function process_particle(
+						particle_data: IByteStreamView,
+						particle_manifest: Manifest.Particle,
 						version: Version,
 					): Void;
 

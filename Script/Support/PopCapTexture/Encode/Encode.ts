@@ -3,7 +3,7 @@ namespace TwinStar.Script.Support.PopCapTexture.Encode {
 	// ------------------------------------------------
 
 	export const BaseFormatE = [
-		'rgba_8888',
+		'abgr_8888',
 		'argb_8888',
 		'rgba_4444',
 		'rgb_565',
@@ -39,20 +39,20 @@ namespace TwinStar.Script.Support.PopCapTexture.Encode {
 	// ------------------------------------------------
 
 	const k_base_format: Record<BaseFormat, Array<CoreX.Tool.Image.Texture.CompositeFormat>> = {
-		rgba_8888: [
+		abgr_8888: [
 			'rgba_8888',
 		],
 		argb_8888: [
-			'argb_8888_l',
+			'argb_8888',
 		],
 		rgba_4444: [
-			'rgba_4444_l',
+			'rgba_4444',
 		],
 		rgb_565: [
-			'rgb_565_l',
+			'rgb_565',
 		],
 		rgba_5551: [
-			'rgba_5551_l',
+			'rgba_5551',
 		],
 		rgb_etc1: [
 			'rgb_etc1',
@@ -165,7 +165,13 @@ namespace TwinStar.Script.Support.PopCapTexture.Encode {
 		option: EncodeOption,
 	): void {
 		if (BaseFormatE.includes(format as BaseFormat)) {
+			if (['abgr_8888'].includes(format)) {
+				Core.Miscellaneous.g_byte_stream_use_big_endian.value = !Core.Miscellaneous.g_byte_stream_use_big_endian.value;
+			}
 			CoreX.Tool.Image.Texture.encode_n(data, image, k_base_format[format as BaseFormat]);
+			if (['abgr_8888'].includes(format)) {
+				Core.Miscellaneous.g_byte_stream_use_big_endian.value = !Core.Miscellaneous.g_byte_stream_use_big_endian.value;
+			}
 		} else {
 			switch (format) {
 				case 'rgba_4444_tiled':
@@ -194,7 +200,13 @@ namespace TwinStar.Script.Support.PopCapTexture.Encode {
 			image.fill(Core.Image.Pixel.value([0xFFn, 0xFFn, 0xFFn, 0xFFn]));
 		}
 		if (BaseFormatE.includes(format as BaseFormat)) {
+			if (['abgr_8888'].includes(format)) {
+				Core.Miscellaneous.g_byte_stream_use_big_endian.value = !Core.Miscellaneous.g_byte_stream_use_big_endian.value;
+			}
 			CoreX.Tool.Image.Texture.decode_n(data, image, k_base_format[format as BaseFormat]);
+			if (['abgr_8888'].includes(format)) {
+				Core.Miscellaneous.g_byte_stream_use_big_endian.value = !Core.Miscellaneous.g_byte_stream_use_big_endian.value;
+			}
 		} else {
 			switch (format) {
 				case 'rgba_4444_tiled':

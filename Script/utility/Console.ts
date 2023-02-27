@@ -15,9 +15,9 @@ namespace TwinStar.Script.Console {
 
 	// ------------------------------------------------
 
-	export let cli_disable_virtual_terminal_sequences = false;
+	export let cli_disable_virtual_terminal_sequence = false;
 
-	const k_cli_message_text_attribute: Record<MessageType, VirtualTerminalSequences.TextAttribute> = {
+	const k_cli_message_text_attribute: Record<MessageType, VirtualTerminalSequence.TextAttribute> = {
 		v: {
 			background: null,
 			foreground: 'default',
@@ -59,8 +59,8 @@ namespace TwinStar.Script.Console {
 	function cli_set_message_text_attribute(
 		type: MessageType,
 	): void {
-		if (!cli_disable_virtual_terminal_sequences) {
-			Shell.cli_output(VirtualTerminalSequences.text_attribute(k_cli_message_text_attribute[type]));
+		if (!cli_disable_virtual_terminal_sequence) {
+			Shell.cli_output(VirtualTerminalSequence.text_attribute(k_cli_message_text_attribute[type]));
 		}
 		return;
 	}

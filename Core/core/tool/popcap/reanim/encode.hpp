@@ -4,7 +4,7 @@
 #include "core/tool/popcap/reanim/version.hpp"
 #include "core/tool/popcap/reanim/manifest.hpp"
 
-namespace TwinStar::Core::Tool::PopCap::Reanim {
+namespace TwinStar::Core::Tool::PopCap::REANIM {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct EncodeCommon {
@@ -18,14 +18,17 @@ namespace TwinStar::Core::Tool::PopCap::Reanim {
 		using MagicIdentifier = IntegerU32;
 
 		inline static constexpr auto k_magic_identifier = [] {
-			if constexpr (check_version(version, {VersionPlatform::Constant::desktop()}, {false})) {
+			if constexpr (version.platform == VersionPlatform::Constant::desktop() && version.variant_64 == k_false) {
 				return MagicIdentifier{0xB393B4C0_iu32};
 			}
-			if constexpr (check_version(version, {VersionPlatform::Constant::phone()}, {false})) {
+			if constexpr (version.platform == VersionPlatform::Constant::mobile() && version.variant_64 == k_false) {
 				return MagicIdentifier{0xFF2565B5_iu32};
 			}
-			if constexpr (check_version(version, {VersionPlatform::Constant::phone()}, {true})) {
+			if constexpr (version.platform == VersionPlatform::Constant::mobile() && version.variant_64 == k_true) {
 				return MagicIdentifier{0xC046E570_iu32};
+			}
+			if constexpr (version.platform == VersionPlatform::Constant::television() && version.variant_64 == k_false) {
+				return MagicIdentifier{0x00000000_iu32};
 			}
 		}();
 
@@ -35,9 +38,38 @@ namespace TwinStar::Core::Tool::PopCap::Reanim {
 
 		// ----------------
 
-		inline static constexpr auto k_track_data_size = Size{bs_static_size<IntegerOfPlatform>() + bs_static_size<IntegerOfPlatform>() + (version.platform == VersionPlatform::Constant::phone() ? (bs_static_size<IntegerOfPlatform>()) : (k_none_size)) + bs_static_size<IntegerOfPlatform>()};
+		inline static constexpr auto k_transform_data_size = [] {
+			auto size = k_none_size;
+			size += bs_static_size<Floating32>();
+			size += bs_static_size<Floating32>();
+			size += bs_static_size<Floating32>();
+			size += bs_static_size<Floating32>();
+			size += bs_static_size<Floating32>();
+			size += bs_static_size<Floating32>();
+			size += bs_static_size<Floating32>();
+			size += bs_static_size<Floating32>();
+			size += bs_static_size<IntegerOfPlatform>();
+			size += bs_static_size<IntegerOfPlatform>();
+			size += bs_static_size<IntegerOfPlatform>();
+			if constexpr (version.platform == VersionPlatform::Constant::television()) {
+				size += bs_static_size<IntegerOfPlatform>();
+			}
+			return size;
+		}();
 
-		inline static constexpr auto k_t_data_size = Size{bs_static_size<Floating32>() * 8_sz + bs_static_size<IntegerOfPlatform>() * 3_sz};
+		inline static constexpr auto k_track_data_size = [] {
+			auto size = k_none_size;
+			size += bs_static_size<IntegerOfPlatform>();
+			size += bs_static_size<IntegerOfPlatform>();
+			if constexpr (version.platform == VersionPlatform::Constant::mobile() || version.platform == VersionPlatform::Constant::television()) {
+				size += bs_static_size<IntegerOfPlatform>();
+			}
+			size += bs_static_size<IntegerOfPlatform>();
+			if constexpr (version.platform == VersionPlatform::Constant::television()) {
+				size += bs_static_size<IntegerOfPlatform>();
+			}
+			return size;
+		}();
 
 	};
 
@@ -57,9 +89,9 @@ namespace TwinStar::Core::Tool::PopCap::Reanim {
 
 		using typename Common::IntegerOfPlatform;
 
-		using Common::k_track_data_size;
+		using Common::k_transform_data_size;
 
-		using Common::k_t_data_size;
+		using Common::k_track_data_size;
 
 		// ----------------
 
@@ -95,52 +127,71 @@ namespace TwinStar::Core::Tool::PopCap::Reanim {
 			return;
 		}
 
+		static auto exchange_integer_constant (
+			OByteStreamView & data,
+			Integer const &   value
+		) -> Void {
+			data.write_constant(cbw<IntegerU32>(value));
+			return;
+		}
+
 		// ----------------
 
 		static auto process_animation (
 			OByteStreamView &                    animation_data,
 			typename Manifest::Animation const & animation_manifest
 		) -> Void {
-			auto integer_of_platform = Integer{};
+			auto ignored = Integer{0_i};
 			animation_data.write_constant(k_magic_identifier);
-			exchange_integer_platform(animation_data, integer_of_platform);
+			exchange_integer_platform(animation_data, ignored);
 			exchange_integer(animation_data, cbw<Integer>(animation_manifest.track.size()));
-			exchange_floating(animation_data, animation_manifest.fps);
-			exchange_integer_platform(animation_data, integer_of_platform);
-			exchange_integer(animation_data, cbw<Integer>(k_track_data_size));
+			exchange_floating(animation_data, animation_manifest.frame_rate);
+			exchange_integer_platform(animation_data, ignored);
+			exchange_integer_constant(animation_data, cbw<Integer>(k_track_data_size));
 			for (auto & track_manifest : animation_manifest.track) {
-				exchange_integer_platform(animation_data, integer_of_platform);
-				exchange_integer_platform(animation_data, integer_of_platform);
-				if constexpr (version.platform == VersionPlatform::Constant::phone()) {
-					exchange_integer_platform(animation_data, integer_of_platform);
+				exchange_integer_platform(animation_data, ignored);
+				exchange_integer_platform(animation_data, ignored);
+				if constexpr (version.platform == VersionPlatform::Constant::mobile() || version.platform == VersionPlatform::Constant::television()) {
+					exchange_integer_platform(animation_data, ignored);
 				}
-				exchange_integer_platform(animation_data, cbw<Integer>(track_manifest.t.size()));
+				exchange_integer_platform(animation_data, cbw<Integer>(track_manifest.transform.size()));
+				if constexpr (version.platform == VersionPlatform::Constant::television()) {
+					exchange_integer_platform(animation_data, ignored);
+				}
 			}
 			for (auto & track_manifest : animation_manifest.track) {
 				exchange_string(animation_data, track_manifest.name);
-				exchange_integer(animation_data, cbw<Integer>(k_t_data_size));
-				for (auto & t_manifest : track_manifest.t) {
-					exchange_floating(animation_data, t_manifest.x);
-					exchange_floating(animation_data, t_manifest.y);
-					exchange_floating(animation_data, t_manifest.kx);
-					exchange_floating(animation_data, t_manifest.ky);
-					exchange_floating(animation_data, t_manifest.sx);
-					exchange_floating(animation_data, t_manifest.sy);
-					exchange_floating(animation_data, t_manifest.f);
-					exchange_floating(animation_data, t_manifest.a);
-					exchange_integer_platform(animation_data, integer_of_platform);
-					exchange_integer_platform(animation_data, integer_of_platform);
-					exchange_integer_platform(animation_data, integer_of_platform);
+				exchange_integer_constant(animation_data, cbw<Integer>(k_transform_data_size));
+				for (auto & transform_manifest : track_manifest.transform) {
+					exchange_floating(animation_data, transform_manifest.x);
+					exchange_floating(animation_data, transform_manifest.y);
+					exchange_floating(animation_data, transform_manifest.kx);
+					exchange_floating(animation_data, transform_manifest.ky);
+					exchange_floating(animation_data, transform_manifest.sx);
+					exchange_floating(animation_data, transform_manifest.sy);
+					exchange_floating(animation_data, transform_manifest.f);
+					exchange_floating(animation_data, transform_manifest.a);
+					exchange_integer_platform(animation_data, ignored);
+					exchange_integer_platform(animation_data, ignored);
+					exchange_integer_platform(animation_data, ignored);
+					if constexpr (version.platform == VersionPlatform::Constant::television()) {
+						exchange_integer_platform(animation_data, ignored);
+					}
 				}
-				for (auto & t_manifest : track_manifest.t) {
-					if constexpr (version.platform == VersionPlatform::Constant::desktop()) {
-						exchange_string(animation_data, t_manifest.i);
+				for (auto & transform_manifest : track_manifest.transform) {
+					if constexpr (version.platform == VersionPlatform::Constant::desktop() || version.platform == VersionPlatform::Constant::television()) {
+						exchange_string(animation_data, transform_manifest.image);
 					}
-					if constexpr (version.platform == VersionPlatform::Constant::phone()) {
-						exchange_integer(animation_data, t_manifest.i);
+					if constexpr (version.platform == VersionPlatform::Constant::mobile()) {
+						exchange_integer(animation_data, transform_manifest.image);
 					}
-					exchange_string(animation_data, t_manifest.font);
-					exchange_string(animation_data, t_manifest.text);
+					if constexpr (version.platform == VersionPlatform::Constant::television()) {
+						exchange_string(animation_data, transform_manifest.image_path);
+						exchange_string(animation_data, transform_manifest.image_another);
+						exchange_string(animation_data, transform_manifest.image_path_another);
+					}
+					exchange_string(animation_data, transform_manifest.font);
+					exchange_string(animation_data, transform_manifest.text);
 				}
 			}
 			return;
@@ -174,9 +225,9 @@ namespace TwinStar::Core::Tool::PopCap::Reanim {
 
 		using typename Common::IntegerOfPlatform;
 
-		using Common::k_track_data_size;
+		using Common::k_transform_data_size;
 
-		using Common::k_t_data_size;
+		using Common::k_track_data_size;
 
 		// ----------------
 
@@ -212,60 +263,75 @@ namespace TwinStar::Core::Tool::PopCap::Reanim {
 			return;
 		}
 
+		static auto exchange_integer_constant (
+			IByteStreamView & data,
+			Integer const &   value
+		) -> Void {
+			data.read_constant(cbw<IntegerU32>(value));
+			return;
+		}
+
 		// ----------------
 
 		static auto process_animation (
 			IByteStreamView &              animation_data,
 			typename Manifest::Animation & animation_manifest
 		) -> Void {
-			auto integer_of_platform = Integer{};
+			auto ignored = Integer{0_i};
 			animation_data.read_constant(k_magic_identifier);
-			exchange_integer_platform(animation_data, integer_of_platform);
+			exchange_integer_platform(animation_data, ignored);
 			auto track_count = Integer{};
 			exchange_integer(animation_data, track_count);
 			animation_manifest.track.allocate_full(cbw<Size>(track_count));
-			exchange_floating(animation_data, animation_manifest.fps);
-			exchange_integer_platform(animation_data, integer_of_platform);
-			auto track_data_size = Integer{};
-			exchange_integer(animation_data, track_data_size);
-			assert_test(cbw<Size>(track_data_size) == k_track_data_size);
+			exchange_floating(animation_data, animation_manifest.frame_rate);
+			exchange_integer_platform(animation_data, ignored);
+			exchange_integer_constant(animation_data, cbw<Integer>(k_track_data_size));
 			for (auto & track_manifest : animation_manifest.track) {
-				exchange_integer_platform(animation_data, integer_of_platform);
-				exchange_integer_platform(animation_data, integer_of_platform);
-				if constexpr (version.platform == VersionPlatform::Constant::phone()) {
-					exchange_integer_platform(animation_data, integer_of_platform);
+				exchange_integer_platform(animation_data, ignored);
+				exchange_integer_platform(animation_data, ignored);
+				if constexpr (version.platform == VersionPlatform::Constant::mobile() || version.platform == VersionPlatform::Constant::television()) {
+					exchange_integer_platform(animation_data, ignored);
 				}
-				auto t_count = Integer{};
-				exchange_integer_platform(animation_data, t_count);
-				track_manifest.t.allocate_full(cbw<Size>(t_count));
+				auto transform_count = Integer{};
+				exchange_integer_platform(animation_data, transform_count);
+				track_manifest.transform.allocate_full(cbw<Size>(transform_count));
+				if constexpr (version.platform == VersionPlatform::Constant::television()) {
+					exchange_integer_platform(animation_data, ignored);
+				}
 			}
 			for (auto & track_manifest : animation_manifest.track) {
 				exchange_string(animation_data, track_manifest.name);
-				auto t_data_size = Integer{};
-				exchange_integer(animation_data, t_data_size);
-				assert_test(cbw<Size>(t_data_size) == k_t_data_size);
-				for (auto & t_manifest : track_manifest.t) {
-					exchange_floating(animation_data, t_manifest.x);
-					exchange_floating(animation_data, t_manifest.y);
-					exchange_floating(animation_data, t_manifest.kx);
-					exchange_floating(animation_data, t_manifest.ky);
-					exchange_floating(animation_data, t_manifest.sx);
-					exchange_floating(animation_data, t_manifest.sy);
-					exchange_floating(animation_data, t_manifest.f);
-					exchange_floating(animation_data, t_manifest.a);
-					exchange_integer_platform(animation_data, integer_of_platform);
-					exchange_integer_platform(animation_data, integer_of_platform);
-					exchange_integer_platform(animation_data, integer_of_platform);
+				exchange_integer_constant(animation_data, cbw<Integer>(k_transform_data_size));
+				for (auto & transform_manifest : track_manifest.transform) {
+					exchange_floating(animation_data, transform_manifest.x);
+					exchange_floating(animation_data, transform_manifest.y);
+					exchange_floating(animation_data, transform_manifest.kx);
+					exchange_floating(animation_data, transform_manifest.ky);
+					exchange_floating(animation_data, transform_manifest.sx);
+					exchange_floating(animation_data, transform_manifest.sy);
+					exchange_floating(animation_data, transform_manifest.f);
+					exchange_floating(animation_data, transform_manifest.a);
+					exchange_integer_platform(animation_data, ignored);
+					exchange_integer_platform(animation_data, ignored);
+					exchange_integer_platform(animation_data, ignored);
+					if constexpr (version.platform == VersionPlatform::Constant::television()) {
+						exchange_integer_platform(animation_data, ignored);
+					}
 				}
-				for (auto & t_manifest : track_manifest.t) {
-					if constexpr (version.platform == VersionPlatform::Constant::desktop()) {
-						exchange_string(animation_data, t_manifest.i);
+				for (auto & transform_manifest : track_manifest.transform) {
+					if constexpr (version.platform == VersionPlatform::Constant::desktop() || version.platform == VersionPlatform::Constant::television()) {
+						exchange_string(animation_data, transform_manifest.image);
 					}
-					if constexpr (version.platform == VersionPlatform::Constant::phone()) {
-						exchange_integer(animation_data, t_manifest.i);
+					if constexpr (version.platform == VersionPlatform::Constant::mobile()) {
+						exchange_integer(animation_data, transform_manifest.image);
 					}
-					exchange_string(animation_data, t_manifest.font);
-					exchange_string(animation_data, t_manifest.text);
+					if constexpr (version.platform == VersionPlatform::Constant::television()) {
+						exchange_string(animation_data, transform_manifest.image_path);
+						exchange_string(animation_data, transform_manifest.image_another);
+						exchange_string(animation_data, transform_manifest.image_path_another);
+					}
+					exchange_string(animation_data, transform_manifest.font);
+					exchange_string(animation_data, transform_manifest.text);
 				}
 			}
 			return;

@@ -922,13 +922,12 @@ namespace TwinStar.Script.CoreX {
 
 				export const FormatE = [
 					'a_8',
-					'rgb_888',
+					'rgb_565',
+					'rgba_5551',
+					'rgba_4444',
 					'rgba_8888',
-					'rgb_565_l',
-					'rgba_4444_l',
-					'rgba_5551_l',
-					'argb_4444_l',
-					'argb_8888_l',
+					'argb_4444',
+					'argb_8888',
 				] as const;
 
 				export type Format = typeof FormatE[number];
@@ -961,31 +960,27 @@ namespace TwinStar.Script.CoreX {
 							result = 8n;
 							break;
 						}
-						case 'rgb_888': {
-							result = 24n;
+						case 'rgb_565': {
+							result = 16n;
+							break;
+						}
+						case 'rgba_5551': {
+							result = 16n;
+							break;
+						}
+						case 'rgba_4444': {
+							result = 16n;
 							break;
 						}
 						case 'rgba_8888': {
 							result = 32n;
 							break;
 						}
-						case 'rgb_565_l': {
+						case 'argb_4444': {
 							result = 16n;
 							break;
 						}
-						case 'rgba_4444_l': {
-							result = 16n;
-							break;
-						}
-						case 'rgba_5551_l': {
-							result = 16n;
-							break;
-						}
-						case 'argb_4444_l': {
-							result = 16n;
-							break;
-						}
-						case 'argb_8888_l': {
+						case 'argb_8888': {
 							result = 32n;
 							break;
 						}
@@ -1040,13 +1035,12 @@ namespace TwinStar.Script.CoreX {
 				): void {
 					switch (format) {
 						case 'a_8':
-						case 'rgb_888':
+						case 'rgb_565':
+						case 'rgba_5551':
+						case 'rgba_4444':
 						case 'rgba_8888':
-						case 'rgb_565_l':
-						case 'rgba_4444_l':
-						case 'rgba_5551_l':
-						case 'argb_4444_l':
-						case 'argb_8888_l': {
+						case 'argb_4444':
+						case 'argb_8888': {
 							Core.Tool.Image.Texture.Encode.process_image(data, image, Core.Tool.Image.Texture.Format.value(format));
 							break;
 						}
@@ -1081,13 +1075,12 @@ namespace TwinStar.Script.CoreX {
 				): void {
 					switch (format) {
 						case 'a_8':
-						case 'rgb_888':
+						case 'rgb_565':
+						case 'rgba_5551':
+						case 'rgba_4444':
 						case 'rgba_8888':
-						case 'rgb_565_l':
-						case 'rgba_4444_l':
-						case 'rgba_5551_l':
-						case 'argb_4444_l':
-						case 'argb_8888_l': {
+						case 'argb_4444':
+						case 'argb_8888': {
 							Core.Tool.Image.Texture.Decode.process_image(data, image, Core.Tool.Image.Texture.Format.value(format));
 							break;
 						}
@@ -1306,20 +1299,20 @@ namespace TwinStar.Script.CoreX {
 
 			}
 
-			export namespace Reanim {
+			export namespace REANIM {
 
 				export function encode_fs(
 					data_file: string,
 					manifest_file: string,
-					version: typeof Core.Tool.PopCap.Reanim.Version.Value,
+					version: typeof Core.Tool.PopCap.REANIM.Version.Value,
 					data_buffer: Core.ByteListView | bigint,
 				): void {
-					let version_c = Core.Tool.PopCap.Reanim.Version.value(version);
+					let version_c = Core.Tool.PopCap.REANIM.Version.value(version);
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
 					let stream = Core.ByteStreamView.watch(data_buffer_view);
-					let manifest = Core.Tool.PopCap.Reanim.Manifest.Animation.json(JSON.read_fs(manifest_file), version_c);
-					Core.Tool.PopCap.Reanim.Encode.process_animation(stream, manifest, version_c);
+					let manifest = Core.Tool.PopCap.REANIM.Manifest.Animation.json(JSON.read_fs(manifest_file), version_c);
+					Core.Tool.PopCap.REANIM.Encode.process_animation(stream, manifest, version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
 					return;
 				}
@@ -1327,14 +1320,50 @@ namespace TwinStar.Script.CoreX {
 				export function decode_fs(
 					data_file: string,
 					manifest_file: string,
-					version: typeof Core.Tool.PopCap.Reanim.Version.Value,
+					version: typeof Core.Tool.PopCap.REANIM.Version.Value,
 				): void {
-					let version_c = Core.Tool.PopCap.Reanim.Version.value(version);
+					let version_c = Core.Tool.PopCap.REANIM.Version.value(version);
 					let data = FileSystem.read_file(data_file);
 					let stream = Core.ByteStreamView.watch(data.view());
-					let manifest = Core.Tool.PopCap.Reanim.Manifest.Animation.default();
-					Core.Tool.PopCap.Reanim.Decode.process_animation(stream, manifest, version_c);
+					let manifest = Core.Tool.PopCap.REANIM.Manifest.Animation.default();
+					Core.Tool.PopCap.REANIM.Decode.process_animation(stream, manifest, version_c);
 					JSON.write_fs(manifest_file, manifest.get_json(version_c));
+					assert_test(stream.position().value === stream.size().value);
+					return;
+				}
+
+			}
+
+			export namespace PARTICLE {
+
+				export function encode_fs(
+					data_file: string,
+					manifest_file: string,
+					version: typeof Core.Tool.PopCap.PARTICLE.Version.Value,
+					data_buffer: Core.ByteListView | bigint,
+				): void {
+					let version_c = Core.Tool.PopCap.PARTICLE.Version.value(version);
+					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
+					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
+					let stream = Core.ByteStreamView.watch(data_buffer_view);
+					let manifest = Core.Tool.PopCap.PARTICLE.Manifest.Particle.json(JSON.read_fs(manifest_file), version_c);
+					Core.Tool.PopCap.PARTICLE.Encode.process_particle(stream, manifest, version_c);
+					FileSystem.write_file(data_file, stream.stream_view());
+					return;
+				}
+
+				export function decode_fs(
+					data_file: string,
+					manifest_file: string,
+					version: typeof Core.Tool.PopCap.PARTICLE.Version.Value,
+				): void {
+					let version_c = Core.Tool.PopCap.PARTICLE.Version.value(version);
+					let data = FileSystem.read_file(data_file);
+					let stream = Core.ByteStreamView.watch(data.view());
+					let manifest = Core.Tool.PopCap.PARTICLE.Manifest.Particle.default();
+					Core.Tool.PopCap.PARTICLE.Decode.process_particle(stream, manifest, version_c);
+					JSON.write_fs(manifest_file, manifest.get_json(version_c));
+					assert_test(stream.position().value === stream.size().value);
 					return;
 				}
 

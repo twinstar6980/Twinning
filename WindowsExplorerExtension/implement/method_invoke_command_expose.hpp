@@ -23,12 +23,20 @@ namespace TwinStar::WindowsExplorerExtension {
 			.argument = LR"({})",
 		};
 
-		inline auto const js_evaluate = MethodInvokeCommandConfig{
-			.name = L"JS Evaluate",
-			.type = false,
-			.rule = std::wregex{LR"(.+(\.js)$)", std::wregex::icase},
-			.method = L"js.evaluate",
-			.argument = LR"({})",
+		inline auto const js = MethodInvokeCommandConfigGroup{
+			.name = L"JS",
+			.child = {
+				{
+					.name = L"执行",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.js)$)", std::wregex::icase},
+					.method = L"js.evaluate",
+					.argument = LR"({})",
+				},
+			},
+			.separator = {
+				1,
+			},
 		};
 
 		inline auto const json = MethodInvokeCommandConfigGroup{
@@ -42,7 +50,7 @@ namespace TwinStar::WindowsExplorerExtension {
 					.argument = LR"({})",
 				},
 				{
-					.name = L"格式化（默认格式）",
+					.name = L"格式化 ~ 默认格式",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.json)$)", std::wregex::icase},
 					.method = L"json.format",
@@ -56,7 +64,7 @@ namespace TwinStar::WindowsExplorerExtension {
 					.argument = LR"({})",
 				},
 				{
-					.name = L"[批处理] 格式化（默认格式）",
+					.name = L"[批处理] 格式化 ~ 默认格式",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"json.format.batch",
@@ -209,27 +217,6 @@ namespace TwinStar::WindowsExplorerExtension {
 					.argument = LR"({})",
 				},
 				{
-					.name = L"翻转（水平）",
-					.type = false,
-					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
-					.method = L"image.transformation.flip",
-					.argument = LR"({ "horizontal": true, "vertical": false })",
-				},
-				{
-					.name = L"翻转（垂直）",
-					.type = false,
-					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
-					.method = L"image.transformation.flip",
-					.argument = LR"({ "horizontal": false, "vertical": true })",
-				},
-				{
-					.name = L"翻转（水平与垂直）",
-					.type = false,
-					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
-					.method = L"image.transformation.flip",
-					.argument = LR"({ "horizontal": true, "vertical": true })",
-				},
-				{
 					.name = L"缩放",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
@@ -242,20 +229,6 @@ namespace TwinStar::WindowsExplorerExtension {
 					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
 					.method = L"image.transformation.scale_rate",
 					.argument = LR"({})",
-				},
-				{
-					.name = L"比例缩放（除2）",
-					.type = false,
-					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
-					.method = L"image.transformation.scale_rate",
-					.argument = LR"({ "size_rate": 0.5 })",
-				},
-				{
-					.name = L"比例缩放（乘2）",
-					.type = false,
-					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
-					.method = L"image.transformation.scale_rate",
-					.argument = LR"({ "size_rate": 2.0 })",
 				},
 				{
 					.name = L"图集打包",
@@ -280,9 +253,10 @@ namespace TwinStar::WindowsExplorerExtension {
 				},
 			},
 			.separator = {
-				4,
-				4,
-				3,
+				1,
+				2,
+				2,
+				1,
 			},
 		};
 
@@ -375,7 +349,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 			.separator = {
 				2,
-				2,
+				1,
 			},
 		};
 
@@ -383,73 +357,321 @@ namespace TwinStar::WindowsExplorerExtension {
 			.name = L"PopCap ZLib",
 			.child = {
 				{
-					.name = L"压缩",
+					.name = L"压缩 ~ 32",
 					.type = false,
 					.rule = std::nullopt,
 					.method = L"popcap.zlib.compress",
-					.argument = LR"({})",
+					.argument = LR"({ "version_variant_64": false })",
 				},
 				{
-					.name = L"解压",
+					.name = L"解压 ~ 32",
 					.type = false,
 					.rule = std::nullopt,
 					.method = L"popcap.zlib.uncompress",
-					.argument = LR"({})",
+					.argument = LR"({ "version_variant_64": false })",
 				},
 				{
-					.name = L"[批处理] 压缩",
+					.name = L"压缩 ~ 64",
+					.type = false,
+					.rule = std::nullopt,
+					.method = L"popcap.zlib.compress",
+					.argument = LR"({ "version_variant_64": true })",
+				},
+				{
+					.name = L"解压 ~ 64",
+					.type = false,
+					.rule = std::nullopt,
+					.method = L"popcap.zlib.uncompress",
+					.argument = LR"({ "version_variant_64": true })",
+				},
+				{
+					.name = L"[批处理] 压缩 ~ 32",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.zlib.compress.batch",
-					.argument = LR"({})",
+					.argument = LR"({ "version_variant_64": false })",
 				},
 				{
-					.name = L"[批处理] 解压",
+					.name = L"[批处理] 解压 ~ 32",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.zlib.uncompress.batch",
-					.argument = LR"({})",
+					.argument = LR"({ "version_variant_64": false })",
+				},
+				{
+					.name = L"[批处理] 压缩 ~ 64",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.zlib.compress.batch",
+					.argument = LR"({ "version_variant_64": true })",
+				},
+				{
+					.name = L"[批处理] 解压 ~ 64",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.zlib.uncompress.batch",
+					.argument = LR"({ "version_variant_64": true })",
 				},
 			},
 			.separator = {
+				2,
+				2,
 				2,
 				2,
 			},
 		};
 
 		inline auto const popcap_reanim = MethodInvokeCommandConfigGroup{
-			.name = L"PopCap Reanim",
+			.name = L"PopCap REANIM",
 			.child = {
 				{
-					.name = L"编码",
+					.name = L"编码 ~ desktop_32",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.reanim)(\.json)$)", std::wregex::icase},
 					.method = L"popcap.reanim.encode",
-					.argument = LR"({})",
+					.argument = LR"({ "version_platform": "desktop", "version_variant_64": false })",
 				},
 				{
-					.name = L"解码",
+					.name = L"解码 ~ desktop_32",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.reanim)(\.compiled)$)", std::wregex::icase},
 					.method = L"popcap.reanim.decode",
-					.argument = LR"({})",
+					.argument = LR"({ "version_platform": "desktop", "version_variant_64": false })",
 				},
 				{
-					.name = L"[批处理] 编码",
+					.name = L"编码 ~ mobile_32",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.reanim)(\.json)$)", std::wregex::icase},
+					.method = L"popcap.reanim.encode",
+					.argument = LR"({ "version_platform": "mobile", "version_variant_64": false })",
+				},
+				{
+					.name = L"解码 ~ mobile_32",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.reanim)(\.compiled)$)", std::wregex::icase},
+					.method = L"popcap.reanim.decode",
+					.argument = LR"({ "version_platform": "mobile", "version_variant_64": false })",
+				},
+				{
+					.name = L"编码 ~ mobile_64",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.reanim)(\.json)$)", std::wregex::icase},
+					.method = L"popcap.reanim.encode",
+					.argument = LR"({ "version_platform": "mobile", "version_variant_64": true })",
+				},
+				{
+					.name = L"解码 ~ mobile_64",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.reanim)(\.compiled)$)", std::wregex::icase},
+					.method = L"popcap.reanim.decode",
+					.argument = LR"({ "version_platform": "mobile", "version_variant_64": true })",
+				},
+				{
+					.name = L"编码 ~ television_32",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.reanim)(\.json)$)", std::wregex::icase},
+					.method = L"popcap.reanim.encode",
+					.argument = LR"({ "version_platform": "television", "version_variant_64": false })",
+				},
+				{
+					.name = L"解码 ~ television_32",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.reanim)(\.compiled)$)", std::wregex::icase},
+					.method = L"popcap.reanim.decode",
+					.argument = LR"({ "version_platform": "television", "version_variant_64": false })",
+				},
+				{
+					.name = L"[批处理] 编码 ~ desktop_32",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.reanim.encode.batch",
-					.argument = LR"({})",
+					.argument = LR"({ "version_platform": "desktop", "version_variant_64": false })",
 				},
 				{
-					.name = L"[批处理] 解码",
+					.name = L"[批处理] 解码 ~ desktop_32",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.reanim.decode.batch",
-					.argument = LR"({})",
+					.argument = LR"({ "version_platform": "desktop", "version_variant_64": false })",
+				},
+				{
+					.name = L"[批处理] 编码 ~ mobile_32",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.reanim.encode.batch",
+					.argument = LR"({ "version_platform": "mobile", "version_variant_64": false })",
+				},
+				{
+					.name = L"[批处理] 解码 ~ mobile_32",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.reanim.decode.batch",
+					.argument = LR"({ "version_platform": "mobile", "version_variant_64": false })",
+				},
+				{
+					.name = L"[批处理] 编码 ~ mobile_64",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.reanim.encode.batch",
+					.argument = LR"({ "version_platform": "mobile", "version_variant_64": true })",
+				},
+				{
+					.name = L"[批处理] 解码 ~ mobile_64",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.reanim.decode.batch",
+					.argument = LR"({ "version_platform": "mobile", "version_variant_64": true })",
+				},
+				{
+					.name = L"[批处理] 编码 ~ television_32",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.reanim.encode.batch",
+					.argument = LR"({ "version_platform": "television", "version_variant_64": false })",
+				},
+				{
+					.name = L"[批处理] 解码 ~ television_32",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.reanim.decode.batch",
+					.argument = LR"({ "version_platform": "television", "version_variant_64": false })",
 				},
 			},
 			.separator = {
+				2,
+				2,
+				2,
+				2,
+				2,
+				2,
+				2,
+				2,
+			},
+		};
+
+		inline auto const popcap_particle = MethodInvokeCommandConfigGroup{
+			.name = L"PopCap PARTICLE",
+			.child = {
+				{
+					.name = L"编码 ~ desktop_32",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.particle)(\.json)$)", std::wregex::icase},
+					.method = L"popcap.particle.encode",
+					.argument = LR"({ "version_platform": "desktop", "version_variant_64": false })",
+				},
+				{
+					.name = L"解码 ~ desktop_32",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.xml)(\.compiled)$)", std::wregex::icase},
+					.method = L"popcap.particle.decode",
+					.argument = LR"({ "version_platform": "desktop", "version_variant_64": false })",
+				},
+				{
+					.name = L"编码 ~ mobile_32",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.particle)(\.json)$)", std::wregex::icase},
+					.method = L"popcap.particle.encode",
+					.argument = LR"({ "version_platform": "mobile", "version_variant_64": false })",
+				},
+				{
+					.name = L"解码 ~ mobile_32",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.xml)(\.compiled)$)", std::wregex::icase},
+					.method = L"popcap.particle.decode",
+					.argument = LR"({ "version_platform": "mobile", "version_variant_64": false })",
+				},
+				{
+					.name = L"编码 ~ mobile_64",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.particle)(\.json)$)", std::wregex::icase},
+					.method = L"popcap.particle.encode",
+					.argument = LR"({ "version_platform": "mobile", "version_variant_64": true })",
+				},
+				{
+					.name = L"解码 ~ mobile_64",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.xml)(\.compiled)$)", std::wregex::icase},
+					.method = L"popcap.particle.decode",
+					.argument = LR"({ "version_platform": "mobile", "version_variant_64": true })",
+				},
+				{
+					.name = L"编码 ~ television_32",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.particle)(\.json)$)", std::wregex::icase},
+					.method = L"popcap.particle.encode",
+					.argument = LR"({ "version_platform": "television", "version_variant_64": false })",
+				},
+				{
+					.name = L"解码 ~ television_32",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.xml)(\.compiled)$)", std::wregex::icase},
+					.method = L"popcap.particle.decode",
+					.argument = LR"({ "version_platform": "television", "version_variant_64": false })",
+				},
+				{
+					.name = L"[批处理] 编码 ~ desktop_32",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.particle.encode.batch",
+					.argument = LR"({ "version_platform": "desktop", "version_variant_64": false })",
+				},
+				{
+					.name = L"[批处理] 解码 ~ desktop_32",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.particle.decode.batch",
+					.argument = LR"({ "version_platform": "desktop", "version_variant_64": false })",
+				},
+				{
+					.name = L"[批处理] 编码 ~ mobile_32",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.particle.encode.batch",
+					.argument = LR"({ "version_platform": "mobile", "version_variant_64": false })",
+				},
+				{
+					.name = L"[批处理] 解码 ~ mobile_32",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.particle.decode.batch",
+					.argument = LR"({ "version_platform": "mobile", "version_variant_64": false })",
+				},
+				{
+					.name = L"[批处理] 编码 ~ mobile_64",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.particle.encode.batch",
+					.argument = LR"({ "version_platform": "mobile", "version_variant_64": true })",
+				},
+				{
+					.name = L"[批处理] 解码 ~ mobile_64",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.particle.decode.batch",
+					.argument = LR"({ "version_platform": "mobile", "version_variant_64": true })",
+				},
+				{
+					.name = L"[批处理] 编码 ~ television_32",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.particle.encode.batch",
+					.argument = LR"({ "version_platform": "television", "version_variant_64": false })",
+				},
+				{
+					.name = L"[批处理] 解码 ~ television_32",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.particle.decode.batch",
+					.argument = LR"({ "version_platform": "television", "version_variant_64": false })",
+				},
+			},
+			.separator = {
+				2,
+				2,
+				2,
+				2,
+				2,
+				2,
 				2,
 				2,
 			},
@@ -564,41 +786,6 @@ namespace TwinStar::WindowsExplorerExtension {
 					.argument = LR"({})",
 				},
 				{
-					.name = L"编码（rgba_8888）",
-					.type = false,
-					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
-					.method = L"popcap.ptx.encode",
-					.argument = LR"({ "format": "rgba_8888" })",
-				},
-				{
-					.name = L"编码（argb_8888）",
-					.type = false,
-					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
-					.method = L"popcap.ptx.encode",
-					.argument = LR"({ "format": "argb_8888" })",
-				},
-				{
-					.name = L"编码（rgba_pvrtc4）",
-					.type = false,
-					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
-					.method = L"popcap.ptx.encode",
-					.argument = LR"({ "format": "rgba_pvrtc4" })",
-				},
-				{
-					.name = L"编码（rgb_etc1_a_8）",
-					.type = false,
-					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
-					.method = L"popcap.ptx.encode",
-					.argument = LR"({ "format": "rgb_etc1_a_8" })",
-				},
-				{
-					.name = L"编码（rgb_etc1_a_palette）",
-					.type = false,
-					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
-					.method = L"popcap.ptx.encode",
-					.argument = LR"({ "format": "rgb_etc1_a_palette" })",
-				},
-				{
 					.name = L"解码",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.ptx)$)", std::wregex::icase},
@@ -606,35 +793,70 @@ namespace TwinStar::WindowsExplorerExtension {
 					.argument = LR"({})",
 				},
 				{
-					.name = L"解码（rgba_8888）",
+					.name = L"编码 ~ abgr_8888",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
+					.method = L"popcap.ptx.encode",
+					.argument = LR"({ "format": "abgr_8888" })",
+				},
+				{
+					.name = L"解码 ~ abgr_8888",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.ptx)$)", std::wregex::icase},
 					.method = L"popcap.ptx.decode",
-					.argument = LR"({ "format": "rgba_8888" })",
+					.argument = LR"({ "format": "abgr_8888" })",
 				},
 				{
-					.name = L"解码（argb_8888）",
+					.name = L"编码 ~ argb_8888",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
+					.method = L"popcap.ptx.encode",
+					.argument = LR"({ "format": "argb_8888" })",
+				},
+				{
+					.name = L"解码 ~ argb_8888",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.ptx)$)", std::wregex::icase},
 					.method = L"popcap.ptx.decode",
 					.argument = LR"({ "format": "argb_8888" })",
 				},
 				{
-					.name = L"解码（rgba_pvrtc4）",
+					.name = L"编码 ~ rgba_pvrtc4",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
+					.method = L"popcap.ptx.encode",
+					.argument = LR"({ "format": "rgba_pvrtc4" })",
+				},
+				{
+					.name = L"解码 ~ rgba_pvrtc4",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.ptx)$)", std::wregex::icase},
 					.method = L"popcap.ptx.decode",
 					.argument = LR"({ "format": "rgba_pvrtc4" })",
 				},
 				{
-					.name = L"解码（rgb_etc1_a_8）",
+					.name = L"编码 ~ rgb_etc1_a_8",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
+					.method = L"popcap.ptx.encode",
+					.argument = LR"({ "format": "rgb_etc1_a_8" })",
+				},
+				{
+					.name = L"解码 ~ rgb_etc1_a_8",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.ptx)$)", std::wregex::icase},
 					.method = L"popcap.ptx.decode",
 					.argument = LR"({ "format": "rgb_etc1_a_8" })",
 				},
 				{
-					.name = L"解码（rgb_etc1_a_palette）",
+					.name = L"编码 ~ rgb_etc1_a_palette",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
+					.method = L"popcap.ptx.encode",
+					.argument = LR"({ "format": "rgb_etc1_a_palette" })",
+				},
+				{
+					.name = L"解码 ~ rgb_etc1_a_palette",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.ptx)$)", std::wregex::icase},
 					.method = L"popcap.ptx.decode",
@@ -642,8 +864,12 @@ namespace TwinStar::WindowsExplorerExtension {
 				},
 			},
 			.separator = {
-				6,
-				6,
+				2,
+				2,
+				2,
+				2,
+				2,
+				2,
 			},
 		};
 
@@ -686,14 +912,14 @@ namespace TwinStar::WindowsExplorerExtension {
 					.argument = LR"({})",
 				},
 				{
-					.name = L"Flash 图像分辨率调整（1536）",
+					.name = L"Flash 图像分辨率调整 ~ 1536",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.pam)(\.xfl)$)", std::wregex::icase},
 					.method = L"popcap.pam.convert.flash.resize",
 					.argument = LR"({ "resolution": 1536 })",
 				},
 				{
-					.name = L"Flash 图像分辨率调整（768）",
+					.name = L"Flash 图像分辨率调整 ~ 768",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.pam)(\.xfl)$)", std::wregex::icase},
 					.method = L"popcap.pam.convert.flash.resize",
@@ -742,14 +968,14 @@ namespace TwinStar::WindowsExplorerExtension {
 					.argument = LR"({})",
 				},
 				{
-					.name = L"[批处理] Flash 图像分辨率调整（1536）",
+					.name = L"[批处理] Flash 图像分辨率调整 ~ 1536",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.pam.convert.flash.resize.batch",
 					.argument = LR"({ "resolution": 1536 })",
 				},
 				{
-					.name = L"[批处理] Flash 图像分辨率调整（768）",
+					.name = L"[批处理] Flash 图像分辨率调整 ~ 768",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.pam.convert.flash.resize.batch",
@@ -809,7 +1035,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 			.separator = {
 				2,
-				2,
+				1,
 				1,
 			},
 		};
@@ -834,7 +1060,6 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 			.separator = {
 				2,
-				1,
 			},
 		};
 
@@ -896,21 +1121,21 @@ namespace TwinStar::WindowsExplorerExtension {
 			.name = L"PvZ-2 LawnString Text",
 			.child = {
 				{
-					.name = L"转换（text）",
+					.name = L"转换 ~ text",
 					.type = false,
 					.rule = std::wregex{LR"(.*(LawnStrings).*(\.(txt|json))$)", std::wregex::icase},
 					.method = L"pvz2.lawn_string_text.convert",
 					.argument = LR"({ "destination_version": "text" })",
 				},
 				{
-					.name = L"转换（json_map）",
+					.name = L"转换 ~ json_map",
 					.type = false,
 					.rule = std::wregex{LR"(.*(LawnStrings).*(\.(txt|json))$)", std::wregex::icase},
 					.method = L"pvz2.lawn_string_text.convert",
 					.argument = LR"({ "destination_version": "json_map" })",
 				},
 				{
-					.name = L"转换（json_list）",
+					.name = L"转换 ~ json_list",
 					.type = false,
 					.rule = std::wregex{LR"(.*(LawnStrings).*(\.(txt|json))$)", std::wregex::icase},
 					.method = L"pvz2.lawn_string_text.convert",
@@ -1012,11 +1237,11 @@ namespace TwinStar::WindowsExplorerExtension {
 		}
 	};
 
-	class __declspec(uuid("314F8A42-AC6F-4192-8F9A-D2DF1C9F0546")) JSEvaluateMethodInvokeCommand :
-		public MethodInvokeCommand {
+	class __declspec(uuid("314F8A42-AC6F-4192-8F9A-D2DF1C9F0546")) JSMethodInvokeCommand :
+		public MethodInvokeGroupCommand {
 	public:
-		JSEvaluateMethodInvokeCommand () :
-			MethodInvokeCommand{MethodInvokeCommandConfigList::js_evaluate} {
+		JSMethodInvokeCommand () :
+			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::js} {
 		}
 	};
 
@@ -1076,11 +1301,19 @@ namespace TwinStar::WindowsExplorerExtension {
 		}
 	};
 
-	class __declspec(uuid("E2D6187D-7E0E-4089-82F2-768A6EE7D4D1")) PopCapReanimMethodInvokeGroupCommand :
+	class __declspec(uuid("E2D6187D-7E0E-4089-82F2-768A6EE7D4D1")) PopCapREANIMMethodInvokeGroupCommand :
 		public MethodInvokeGroupCommand {
 	public:
-		PopCapReanimMethodInvokeGroupCommand () :
+		PopCapREANIMMethodInvokeGroupCommand () :
 			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::popcap_reanim} {
+		}
+	};
+
+	class __declspec(uuid("0DD08DF0-3B5D-5273-99AA-1A3766355ED1")) PopCapPARTICLEMethodInvokeGroupCommand :
+		public MethodInvokeGroupCommand {
+	public:
+		PopCapPARTICLEMethodInvokeGroupCommand () :
+			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::popcap_particle} {
 		}
 	};
 

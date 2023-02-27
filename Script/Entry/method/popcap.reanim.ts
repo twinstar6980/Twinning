@@ -33,7 +33,7 @@ namespace TwinStar.Script.Entry.method.popcap.reanim {
 				}) {
 					let manifest_file: string;
 					let data_file: string;
-					let version_platform: ['desktop', 'phone'][number];
+					let version_platform: ['desktop', 'mobile', 'television'][number];
 					let version_variant_64: boolean;
 					let buffer_size: bigint;
 					{
@@ -55,8 +55,8 @@ namespace TwinStar.Script.Entry.method.popcap.reanim {
 							a.version_platform,
 							(value) => (value),
 							null,
-							() => (Console.option(['desktop', 'phone'].map((e) => ([e])), null)),
-							(value) => (['desktop', 'phone'].includes(value) ? null : los(`版本不受支持`)),
+							() => (Console.option(['desktop', 'mobile', 'television'].map((e) => ([e])), null)),
+							(value) => (['desktop', 'mobile', 'television'].includes(value) ? null : los(`版本不受支持`)),
 						);
 						version_variant_64 = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_variant_64'),
@@ -75,7 +75,7 @@ namespace TwinStar.Script.Entry.method.popcap.reanim {
 							(value) => (null),
 						);
 					}
-					CoreX.Tool.PopCap.Reanim.encode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 }, buffer_size);
+					CoreX.Tool.PopCap.REANIM.encode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 }, buffer_size);
 					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
@@ -103,7 +103,7 @@ namespace TwinStar.Script.Entry.method.popcap.reanim {
 				}) {
 					let data_file: string;
 					let manifest_file: string;
-					let version_platform: ['desktop', 'phone'][number];
+					let version_platform: ['desktop', 'mobile', 'television'][number];
 					let version_variant_64: boolean;
 					{
 						data_file = Executor.require_argument(
@@ -124,8 +124,8 @@ namespace TwinStar.Script.Entry.method.popcap.reanim {
 							a.version_platform,
 							(value) => (value),
 							null,
-							() => (Console.option(['desktop', 'phone'].map((e) => ([e])), null)),
-							(value) => (['desktop', 'phone'].includes(value) ? null : los(`版本不受支持`)),
+							() => (Console.option(['desktop', 'mobile', 'television'].map((e) => ([e])), null)),
+							(value) => (['desktop', 'mobile', 'television'].includes(value) ? null : los(`版本不受支持`)),
 						);
 						version_variant_64 = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_variant_64'),
@@ -136,7 +136,7 @@ namespace TwinStar.Script.Entry.method.popcap.reanim {
 							(value) => (null),
 						);
 					}
-					CoreX.Tool.PopCap.Reanim.decode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 });
+					CoreX.Tool.PopCap.REANIM.decode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 });
 					Console.notify('s', los(`执行成功`), [`${manifest_file}`]);
 				},
 				default_argument: {
@@ -166,7 +166,7 @@ namespace TwinStar.Script.Entry.method.popcap.reanim {
 				}) {
 					let manifest_file_directory: string;
 					let data_file_directory: string;
-					let version_platform: ['desktop', 'phone'][number];
+					let version_platform: ['desktop', 'mobile', 'television'][number];
 					let version_variant_64: boolean;
 					let buffer_size: bigint;
 					{
@@ -188,8 +188,8 @@ namespace TwinStar.Script.Entry.method.popcap.reanim {
 							a.version_platform,
 							(value) => (value),
 							null,
-							() => (Console.option(['desktop', 'phone'].map((e) => ([e])), null)),
-							(value) => (['desktop', 'phone'].includes(value) ? null : los(`版本不受支持`)),
+							() => (Console.option(['desktop', 'mobile', 'television'].map((e) => ([e])), null)),
+							(value) => (['desktop', 'mobile', 'television'].includes(value) ? null : los(`版本不受支持`)),
 						);
 						version_variant_64 = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_variant_64'),
@@ -215,7 +215,7 @@ namespace TwinStar.Script.Entry.method.popcap.reanim {
 						(item) => {
 							let manifest_file = `${manifest_file_directory}/${item}`;
 							let data_file = `${data_file_directory}/${item.slice(0, -5)}.compiled`;
-							CoreX.Tool.PopCap.Reanim.encode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 }, data_buffer.view());
+							CoreX.Tool.PopCap.REANIM.encode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 }, data_buffer.view());
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${data_file_directory}`]);
@@ -245,7 +245,7 @@ namespace TwinStar.Script.Entry.method.popcap.reanim {
 				}) {
 					let data_file_directory: string;
 					let manifest_file_directory: string;
-					let version_platform: ['desktop', 'phone'][number];
+					let version_platform: ['desktop', 'mobile', 'television'][number];
 					let version_variant_64: boolean;
 					{
 						data_file_directory = Executor.require_argument(
@@ -266,8 +266,8 @@ namespace TwinStar.Script.Entry.method.popcap.reanim {
 							a.version_platform,
 							(value) => (value),
 							null,
-							() => (Console.option(['desktop', 'phone'].map((e) => ([e])), null)),
-							(value) => (['desktop', 'phone'].includes(value) ? null : los(`版本不受支持`)),
+							() => (Console.option(['desktop', 'mobile', 'television'].map((e) => ([e])), null)),
+							(value) => (['desktop', 'mobile', 'television'].includes(value) ? null : los(`版本不受支持`)),
 						);
 						version_variant_64 = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_variant_64'),
@@ -284,7 +284,7 @@ namespace TwinStar.Script.Entry.method.popcap.reanim {
 						(item) => {
 							let data_file = `${data_file_directory}/${item}`;
 							let manifest_file = `${manifest_file_directory}/${item.slice(0, -9)}.json`;
-							CoreX.Tool.PopCap.Reanim.decode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 });
+							CoreX.Tool.PopCap.REANIM.decode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 });
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${manifest_file_directory}`]);

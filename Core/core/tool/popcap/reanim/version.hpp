@@ -2,13 +2,14 @@
 
 #include "core/utility/utility.hpp"
 
-namespace TwinStar::Core::Tool::PopCap::Reanim {
+namespace TwinStar::Core::Tool::PopCap::REANIM {
 
 	M_enumeration(
 		M_wrap(VersionPlatform),
 		M_wrap(
 			desktop,
-			phone,
+			mobile,
+			television,
 		),
 	);
 
@@ -24,8 +25,9 @@ namespace TwinStar::Core::Tool::PopCap::Reanim {
 
 	using VersionPackage = ValuePackage<
 		Version{.platform = VersionPlatform::Constant::desktop(), .variant_64 = k_false},
-		Version{.platform = VersionPlatform::Constant::phone(), .variant_64 = k_false},
-		Version{.platform = VersionPlatform::Constant::phone(), .variant_64 = k_true}
+		Version{.platform = VersionPlatform::Constant::mobile(), .variant_64 = k_false},
+		Version{.platform = VersionPlatform::Constant::mobile(), .variant_64 = k_true},
+		Version{.platform = VersionPlatform::Constant::television(), .variant_64 = k_false}
 	>;
 
 	// ----------------

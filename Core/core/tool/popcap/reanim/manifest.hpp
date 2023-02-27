@@ -3,7 +3,7 @@
 #include "core/utility/utility.hpp"
 #include "core/tool/popcap/reanim/version.hpp"
 
-namespace TwinStar::Core::Tool::PopCap::Reanim {
+namespace TwinStar::Core::Tool::PopCap::REANIM {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Manifest {
@@ -27,13 +27,13 @@ namespace TwinStar::Core::Tool::PopCap::Reanim {
 				(Floating) sy,
 				(Floating) f,
 				(Floating) a,
-				(String) i,
+				(String) image,
 				(String) font,
 				(String) text,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {VersionPlatform::Constant::phone()}, {}))
+		template <typename _> requires (check_version(version, {VersionPlatform::Constant::mobile()}, {}))
 		M_record_of_map(
 			M_wrap(Transform_<_>),
 			M_wrap(
@@ -45,7 +45,28 @@ namespace TwinStar::Core::Tool::PopCap::Reanim {
 				(Floating) sy,
 				(Floating) f,
 				(Floating) a,
-				(Integer) i,
+				(Integer) image,
+				(String) font,
+				(String) text,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {VersionPlatform::Constant::television()}, {}))
+		M_record_of_map(
+			M_wrap(Transform_<_>),
+			M_wrap(
+				(Floating) x,
+				(Floating) y,
+				(Floating) kx,
+				(Floating) ky,
+				(Floating) sx,
+				(Floating) sy,
+				(Floating) f,
+				(Floating) a,
+				(String) image,
+				(String) image_path,
+				(String) image_another,
+				(String) image_path_another,
 				(String) font,
 				(String) text,
 			),
@@ -60,12 +81,12 @@ namespace TwinStar::Core::Tool::PopCap::Reanim {
 
 		using Track = Track_<>;
 
-		template <typename _> requires (check_version(version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::phone()}, {}))
+		template <typename _> requires (check_version(version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::mobile(), VersionPlatform::Constant::television()}, {}))
 		M_record_of_map(
 			M_wrap(Track_<_>),
 			M_wrap(
 				(String) name,
-				(List<Transform>) t,
+				(List<Transform>) transform,
 			),
 		);
 
@@ -78,11 +99,11 @@ namespace TwinStar::Core::Tool::PopCap::Reanim {
 
 		using Animation = Animation_<>;
 
-		template <typename _> requires (check_version(version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::phone()}, {}))
+		template <typename _> requires (check_version(version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::mobile(), VersionPlatform::Constant::television()}, {}))
 		M_record_of_map(
 			M_wrap(Animation_<_>),
 			M_wrap(
-				(Floating) fps,
+				(Floating) frame_rate,
 				(List<Track>) track,
 			),
 		);

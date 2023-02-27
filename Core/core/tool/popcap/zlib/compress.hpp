@@ -65,7 +65,7 @@ namespace TwinStar::Core::Tool::PopCap::ZLib {
 		) -> Void {
 			ripe.write_constant(k_magic_identifier);
 			if constexpr (version.variant_64) {
-				ripe.forward(bs_static_size<IntegerU32>());
+				ripe.write_constant(0x00000000_iu32);
 			}
 			if constexpr (!version.variant_64) {
 				ripe.write(cbw<IntegerU32>(raw.reserve()));
@@ -125,7 +125,7 @@ namespace TwinStar::Core::Tool::PopCap::ZLib {
 			auto ripe_stream = IByteStreamView{ripe};
 			ripe_stream.read_constant(k_magic_identifier);
 			if constexpr (version.variant_64) {
-				ripe_stream.forward(bs_static_size<IntegerU32>());
+				ripe_stream.read_constant(0x00000000_iu32);
 			}
 			if constexpr (!version.variant_64) {
 				raw_size += cbw<Size>(ripe_stream.read_of<IntegerU32>());
@@ -144,7 +144,7 @@ namespace TwinStar::Core::Tool::PopCap::ZLib {
 		) -> Void {
 			ripe.read_constant(k_magic_identifier);
 			if constexpr (version.variant_64) {
-				ripe.forward(bs_static_size<IntegerU32>());
+				ripe.read_constant(0x00000000_iu32);
 			}
 			auto size = Size{};
 			if constexpr (!version.variant_64) {

@@ -52,7 +52,7 @@ using namespace TwinStar::WindowsExplorerExtension;
 	CoCreatableClassWrlCreatorMapInclude(_class)
 
 M_CoCreatableClass_X(LaunchMethodInvokeCommand);
-M_CoCreatableClass_X(JSEvaluateMethodInvokeCommand);
+M_CoCreatableClass_X(JSMethodInvokeCommand);
 M_CoCreatableClass_X(JSONMethodInvokeGroupCommand);
 M_CoCreatableClass_X(DataMethodInvokeGroupCommand);
 M_CoCreatableClass_X(ImageMethodInvokeGroupCommand);
@@ -60,7 +60,8 @@ M_CoCreatableClass_X(WwiseEncodedMediaMethodInvokeGroupCommand);
 M_CoCreatableClass_X(WwiseSoundBankMethodInvokeGroupCommand);
 M_CoCreatableClass_X(MarmaladeDZipMethodInvokeGroupCommand);
 M_CoCreatableClass_X(PopCapZLibMethodInvokeGroupCommand);
-M_CoCreatableClass_X(PopCapReanimMethodInvokeGroupCommand);
+M_CoCreatableClass_X(PopCapREANIMMethodInvokeGroupCommand);
+M_CoCreatableClass_X(PopCapPARTICLEMethodInvokeGroupCommand);
 M_CoCreatableClass_X(PopCapRTONMethodInvokeGroupCommand);
 M_CoCreatableClass_X(PopCapPTXMethodInvokeGroupCommand);
 M_CoCreatableClass_X(PopCapPAMMethodInvokeGroupCommand);

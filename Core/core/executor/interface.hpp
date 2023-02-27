@@ -24,6 +24,7 @@
 #include "core/tool/marmalade/dzip/pack.hpp"
 #include "core/tool/popcap/zlib/compress.hpp"
 #include "core/tool/popcap/reanim/encode.hpp"
+#include "core/tool/popcap/particle/encode.hpp"
 #include "core/tool/popcap/rton/encode.hpp"
 #include "core/tool/popcap/rton/encrypt.hpp"
 #include "core/tool/popcap/pam/encode.hpp"
@@ -845,22 +846,23 @@ namespace TwinStar::Core::Executor::Interface {
 						>>>("process_whole"_s);
 				}
 				{
-					using Tool::PopCap::Reanim::Version;
-					using Tool::PopCap::Reanim::VersionPackage;
-					using Tool::PopCap::Reanim::Manifest;
+					using Tool::PopCap::REANIM::Version;
+					using Tool::PopCap::REANIM::VersionPackage;
+					using Tool::PopCap::REANIM::Manifest;
 					using AnimationManifest = Variant<
 						typename Manifest<VersionPackage::element<1_ixz>>::Animation,
 						typename Manifest<VersionPackage::element<2_ixz>>::Animation,
-						typename Manifest<VersionPackage::element<3_ixz>>::Animation
+						typename Manifest<VersionPackage::element<3_ixz>>::Animation,
+						typename Manifest<VersionPackage::element<4_ixz>>::Animation
 					>;
-					auto n_Reanim = n_PopCap.add_namespace("Reanim"_s);
-					define_generic_class<Version>(n_Reanim, "Version"_s);
+					auto n_REANIM = n_PopCap.add_namespace("REANIM"_s);
+					define_generic_class<Version>(n_REANIM, "Version"_s);
 					{
-						auto n_Manifest = n_Reanim.add_namespace("Manifest"_s);
+						auto n_Manifest = n_REANIM.add_namespace("Manifest"_s);
 						auto c_Animation = define_generic_class<AnimationManifest, GCDF::generic_mask>(n_Manifest, "Animation"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Animation);
 					}
-					n_Reanim.add_namespace("Encode"_s)
+					n_REANIM.add_namespace("Encode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							OByteStreamView &         animation_data,
@@ -870,12 +872,12 @@ namespace TwinStar::Core::Executor::Interface {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::Reanim::Encode<version>::do_process_animation(animation_data, animation_manifest.template get_of_index<mbw<Size>(index)>());
+										Tool::PopCap::REANIM::Encode<version>::do_process_animation(animation_data, animation_manifest.template get_of_index<mbw<Size>(index)>());
 									}
 								);
 							}
 						>>>("process_animation"_s);
-					n_Reanim.add_namespace("Decode"_s)
+					n_REANIM.add_namespace("Decode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							IByteStreamView &   animation_data,
@@ -885,11 +887,59 @@ namespace TwinStar::Core::Executor::Interface {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::Reanim::Decode<version>::do_process_animation(animation_data, animation_manifest.template set_of_index<mbw<Size>(index)>());
+										Tool::PopCap::REANIM::Decode<version>::do_process_animation(animation_data, animation_manifest.template set_of_index<mbw<Size>(index)>());
 									}
 								);
 							}
 						>>>("process_animation"_s);
+				}
+				{
+					using Tool::PopCap::PARTICLE::Version;
+					using Tool::PopCap::PARTICLE::VersionPackage;
+					using Tool::PopCap::PARTICLE::Manifest;
+					using ParticleManifest = Variant<
+						typename Manifest<VersionPackage::element<1_ixz>>::Particle,
+						typename Manifest<VersionPackage::element<2_ixz>>::Particle,
+						typename Manifest<VersionPackage::element<3_ixz>>::Particle,
+						typename Manifest<VersionPackage::element<4_ixz>>::Particle
+					>;
+					auto n_PARTICLE = n_PopCap.add_namespace("PARTICLE"_s);
+					define_generic_class<Version>(n_PARTICLE, "Version"_s);
+					{
+						auto n_Manifest = n_PARTICLE.add_namespace("Manifest"_s);
+						auto c_Particle = define_generic_class<ParticleManifest, GCDF::generic_mask>(n_Manifest, "Particle"_s);
+						define_variant_class_version_method<Version, VersionPackage>(c_Particle);
+					}
+					n_PARTICLE.add_namespace("Encode"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							OByteStreamView &        particle_data,
+							ParticleManifest const & particle_manifest,
+							Version const &          version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::PARTICLE::Encode<version>::do_process_particle(particle_data, particle_manifest.template get_of_index<mbw<Size>(index)>());
+									}
+								);
+							}
+						>>>("process_particle"_s);
+					n_PARTICLE.add_namespace("Decode"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							IByteStreamView &  particle_data,
+							ParticleManifest & particle_manifest,
+							Version const &    version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::PARTICLE::Decode<version>::do_process_particle(particle_data, particle_manifest.template set_of_index<mbw<Size>(index)>());
+									}
+								);
+							}
+						>>>("process_particle"_s);
 				}
 				{
 					using Tool::PopCap::RTON::Version;

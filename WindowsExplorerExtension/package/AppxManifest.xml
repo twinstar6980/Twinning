@@ -8,7 +8,7 @@
   xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
   xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
   IgnorableNamespaces="rescap uap uap10 com desktop4 desktop5">
-  <Identity Name="TwinStar.ToolKit.WindowsExplorerExtension" Publisher="CN=TwinStar" Version="17.0.0.0" ProcessorArchitecture="x64" />
+  <Identity Name="TwinStar.ToolKit.WindowsExplorerExtension" Publisher="CN=TwinStar" Version="18.0.0.0" ProcessorArchitecture="x64" />
   <Properties>
     <DisplayName>TwinStar ToolKit - Windows Explorer Extension</DisplayName>
     <PublisherDisplayName>TwinStar</PublisherDisplayName>
@@ -36,7 +36,7 @@
           <desktop4:FileExplorerContextMenus>
             <desktop5:ItemType Type="*">
               <desktop5:Verb Id="01LaunchMethodInvokeCommand" Clsid="A918A8A8-1436-43C5-99C1-9420D0D56D40" />
-              <desktop5:Verb Id="02JSEvaluateMethodInvokeCommand" Clsid="314F8A42-AC6F-4192-8F9A-D2DF1C9F0546" />
+              <desktop5:Verb Id="02JSMethodInvokeCommand" Clsid="314F8A42-AC6F-4192-8F9A-D2DF1C9F0546" />
               <desktop5:Verb Id="03JSONMethodInvokeGroupCommand" Clsid="D60FB9DD-7677-4742-A2BC-C9049E268CBA" />
               <desktop5:Verb Id="04DataMethodInvokeGroupCommand" Clsid="1DAED04B-CD51-45DA-91E4-F15DC831C7D5" />
               <desktop5:Verb Id="05ImageMethodInvokeGroupCommand" Clsid="2BEEB70E-8211-4DB4-B6BF-8D6FDAB791BF" />
@@ -44,20 +44,21 @@
               <desktop5:Verb Id="07WwiseSoundBankMethodInvokeGroupCommand" Clsid="8B32AE59-795E-4F2D-B3B8-A4558CF9488F" />
               <desktop5:Verb Id="08MarmaladeDZipMethodInvokeGroupCommand" Clsid="164D100A-5228-429D-A926-EFF742D00E9D" />
               <desktop5:Verb Id="09PopCapZLibMethodInvokeGroupCommand" Clsid="5F334CE4-29A4-4B0F-A696-10EB3D773666" />
-              <desktop5:Verb Id="10PopCapReanimMethodInvokeGroupCommand" Clsid="E2D6187D-7E0E-4089-82F2-768A6EE7D4D1" />
-              <desktop5:Verb Id="11PopCapRTONMethodInvokeGroupCommand" Clsid="A7121460-0260-4E4A-829F-D21A7E649B50" />
-              <desktop5:Verb Id="12PopCapPTXMethodInvokeGroupCommand" Clsid="654DB9CD-DA07-4942-96A5-57F948C6A44C" />
-              <desktop5:Verb Id="13PopCapPAMMethodInvokeGroupCommand" Clsid="D3EBD69C-CB8B-452D-BFC7-7C06519BDA68" />
-              <desktop5:Verb Id="14PopCapPAKMethodInvokeGroupCommand" Clsid="64DBC2C3-402F-42AA-B8BF-B43B3280F813" />
-              <desktop5:Verb Id="15PopCapRSGPMethodInvokeGroupCommand" Clsid="95E74A50-81DC-48BA-A24B-E0AD30C75139" />
-              <desktop5:Verb Id="16PopCapRSBMethodInvokeGroupCommand" Clsid="BCF8438E-67D1-4B7B-8649-78C46FAB4CFE" />
-              <desktop5:Verb Id="17PopCapRSBPatchMethodInvokeGroupCommand" Clsid="C83A33D4-B96D-4002-9D76-4DB88AF589C0" />
-              <desktop5:Verb Id="18PvZ2LawnStringTextMethodInvokeGroupCommand" Clsid="3F961602-866A-4305-8031-42597990C6AB" />
-              <desktop5:Verb Id="19PvZ2RemoteAndroidHelperMethodInvokeGroupCommand" Clsid="CD04E4D3-2224-14FC-C9DD-66D746408D62" />
+              <desktop5:Verb Id="10PopCapREANIMMethodInvokeGroupCommand" Clsid="E2D6187D-7E0E-4089-82F2-768A6EE7D4D1" />
+              <desktop5:Verb Id="11PopCapPARTICLEMethodInvokeGroupCommand" Clsid="0DD08DF0-3B5D-5273-99AA-1A3766355ED1" />
+              <desktop5:Verb Id="12PopCapRTONMethodInvokeGroupCommand" Clsid="A7121460-0260-4E4A-829F-D21A7E649B50" />
+              <desktop5:Verb Id="13PopCapPTXMethodInvokeGroupCommand" Clsid="654DB9CD-DA07-4942-96A5-57F948C6A44C" />
+              <desktop5:Verb Id="14PopCapPAMMethodInvokeGroupCommand" Clsid="D3EBD69C-CB8B-452D-BFC7-7C06519BDA68" />
+              <desktop5:Verb Id="15PopCapPAKMethodInvokeGroupCommand" Clsid="64DBC2C3-402F-42AA-B8BF-B43B3280F813" />
+              <desktop5:Verb Id="16PopCapRSGPMethodInvokeGroupCommand" Clsid="95E74A50-81DC-48BA-A24B-E0AD30C75139" />
+              <desktop5:Verb Id="17PopCapRSBMethodInvokeGroupCommand" Clsid="BCF8438E-67D1-4B7B-8649-78C46FAB4CFE" />
+              <desktop5:Verb Id="18PopCapRSBPatchMethodInvokeGroupCommand" Clsid="C83A33D4-B96D-4002-9D76-4DB88AF589C0" />
+              <desktop5:Verb Id="19PvZ2LawnStringTextMethodInvokeGroupCommand" Clsid="3F961602-866A-4305-8031-42597990C6AB" />
+              <desktop5:Verb Id="20PvZ2RemoteAndroidHelperMethodInvokeGroupCommand" Clsid="CD04E4D3-2224-14FC-C9DD-66D746408D62" />
             </desktop5:ItemType>
             <desktop5:ItemType Type="Directory">
               <desktop5:Verb Id="01LaunchMethodInvokeCommand" Clsid="A918A8A8-1436-43C5-99C1-9420D0D56D40" />
-              <desktop5:Verb Id="02JSEvaluateMethodInvokeCommand" Clsid="314F8A42-AC6F-4192-8F9A-D2DF1C9F0546" />
+              <desktop5:Verb Id="02JSMethodInvokeCommand" Clsid="314F8A42-AC6F-4192-8F9A-D2DF1C9F0546" />
               <desktop5:Verb Id="03JSONMethodInvokeGroupCommand" Clsid="D60FB9DD-7677-4742-A2BC-C9049E268CBA" />
               <desktop5:Verb Id="04DataMethodInvokeGroupCommand" Clsid="1DAED04B-CD51-45DA-91E4-F15DC831C7D5" />
               <desktop5:Verb Id="05ImageMethodInvokeGroupCommand" Clsid="2BEEB70E-8211-4DB4-B6BF-8D6FDAB791BF" />
@@ -65,16 +66,17 @@
               <desktop5:Verb Id="07WwiseSoundBankMethodInvokeGroupCommand" Clsid="8B32AE59-795E-4F2D-B3B8-A4558CF9488F" />
               <desktop5:Verb Id="08MarmaladeDZipMethodInvokeGroupCommand" Clsid="164D100A-5228-429D-A926-EFF742D00E9D" />
               <desktop5:Verb Id="09PopCapZLibMethodInvokeGroupCommand" Clsid="5F334CE4-29A4-4B0F-A696-10EB3D773666" />
-              <desktop5:Verb Id="10PopCapReanimMethodInvokeGroupCommand" Clsid="E2D6187D-7E0E-4089-82F2-768A6EE7D4D1" />
-              <desktop5:Verb Id="11PopCapRTONMethodInvokeGroupCommand" Clsid="A7121460-0260-4E4A-829F-D21A7E649B50" />
-              <desktop5:Verb Id="12PopCapPTXMethodInvokeGroupCommand" Clsid="654DB9CD-DA07-4942-96A5-57F948C6A44C" />
-              <desktop5:Verb Id="13PopCapPAMMethodInvokeGroupCommand" Clsid="D3EBD69C-CB8B-452D-BFC7-7C06519BDA68" />
-              <desktop5:Verb Id="14PopCapPAKMethodInvokeGroupCommand" Clsid="64DBC2C3-402F-42AA-B8BF-B43B3280F813" />
-              <desktop5:Verb Id="15PopCapRSGPMethodInvokeGroupCommand" Clsid="95E74A50-81DC-48BA-A24B-E0AD30C75139" />
-              <desktop5:Verb Id="16PopCapRSBMethodInvokeGroupCommand" Clsid="BCF8438E-67D1-4B7B-8649-78C46FAB4CFE" />
-              <desktop5:Verb Id="17PopCapRSBPatchMethodInvokeGroupCommand" Clsid="C83A33D4-B96D-4002-9D76-4DB88AF589C0" />
-              <desktop5:Verb Id="18PvZ2LawnStringTextMethodInvokeGroupCommand" Clsid="3F961602-866A-4305-8031-42597990C6AB" />
-              <desktop5:Verb Id="19PvZ2RemoteAndroidHelperMethodInvokeGroupCommand" Clsid="CD04E4D3-2224-14FC-C9DD-66D746408D62" />
+              <desktop5:Verb Id="10PopCapREANIMMethodInvokeGroupCommand" Clsid="E2D6187D-7E0E-4089-82F2-768A6EE7D4D1" />
+              <desktop5:Verb Id="11PopCapPARTICLEMethodInvokeGroupCommand" Clsid="0DD08DF0-3B5D-5273-99AA-1A3766355ED1" />
+              <desktop5:Verb Id="12PopCapRTONMethodInvokeGroupCommand" Clsid="A7121460-0260-4E4A-829F-D21A7E649B50" />
+              <desktop5:Verb Id="13PopCapPTXMethodInvokeGroupCommand" Clsid="654DB9CD-DA07-4942-96A5-57F948C6A44C" />
+              <desktop5:Verb Id="14PopCapPAMMethodInvokeGroupCommand" Clsid="D3EBD69C-CB8B-452D-BFC7-7C06519BDA68" />
+              <desktop5:Verb Id="15PopCapPAKMethodInvokeGroupCommand" Clsid="64DBC2C3-402F-42AA-B8BF-B43B3280F813" />
+              <desktop5:Verb Id="16PopCapRSGPMethodInvokeGroupCommand" Clsid="95E74A50-81DC-48BA-A24B-E0AD30C75139" />
+              <desktop5:Verb Id="17PopCapRSBMethodInvokeGroupCommand" Clsid="BCF8438E-67D1-4B7B-8649-78C46FAB4CFE" />
+              <desktop5:Verb Id="18PopCapRSBPatchMethodInvokeGroupCommand" Clsid="C83A33D4-B96D-4002-9D76-4DB88AF589C0" />
+              <desktop5:Verb Id="19PvZ2LawnStringTextMethodInvokeGroupCommand" Clsid="3F961602-866A-4305-8031-42597990C6AB" />
+              <desktop5:Verb Id="20PvZ2RemoteAndroidHelperMethodInvokeGroupCommand" Clsid="CD04E4D3-2224-14FC-C9DD-66D746408D62" />
             </desktop5:ItemType>
           </desktop4:FileExplorerContextMenus>
         </desktop4:Extension>
@@ -109,6 +111,9 @@
             </com:SurrogateServer>
             <com:SurrogateServer>
               <com:Class Id="E2D6187D-7E0E-4089-82F2-768A6EE7D4D1" Path="Asset\Library\implement.dll" ThreadingModel="STA" />
+            </com:SurrogateServer>
+            <com:SurrogateServer>
+              <com:Class Id="0DD08DF0-3B5D-5273-99AA-1A3766355ED1" Path="Asset\Library\implement.dll" ThreadingModel="STA" />
             </com:SurrogateServer>
             <com:SurrogateServer>
               <com:Class Id="A7121460-0260-4E4A-829F-D21A7E649B50" Path="Asset\Library\implement.dll" ThreadingModel="STA" />

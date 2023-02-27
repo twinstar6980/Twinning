@@ -3,7 +3,7 @@ namespace TwinStar.Script.Support.PvZ2.RSB.ResourceManifest {
 	// ------------------------------------------------
 
 	export const TextureFormatE = [
-		'rgba_8888',
+		'abgr_8888',
 		'argb_8888',
 		'rgb_etc1_a_8',
 		'rgba_pvrtc4',

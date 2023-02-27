@@ -152,7 +152,7 @@ namespace TwinStar.Script.Entry.method.popcap.rsb {
 							a.version_additional_texture_information_for_pvz_2_chinese_android,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
+							() => (Console.option([0n, [0n, ''], [1n, ''], [2n, '']], null)),
 							(value) => ([0n, 1n, 2n].includes(value) ? null : los(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
@@ -346,7 +346,7 @@ namespace TwinStar.Script.Entry.method.popcap.rsb {
 							a.version_additional_texture_information_for_pvz_2_chinese_android,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
+							() => (Console.option([0n, [0n, ''], [1n, ''], [2n, '']], null)),
 							(value) => ([0n, 1n, 2n].includes(value) ? null : los(`版本不受支持`)),
 						);
 						let convert_directory = `${bundle_directory}/convert`;
