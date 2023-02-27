@@ -62,6 +62,7 @@ namespace TwinStar::Core::Tool::PopCap::RSGP {
 						}
 					}
 				}
+				StringMapSection::adjust_sequence(information_structure.resource_information);
 				information_data.header = OByteStreamView{
 					package_data.forward_view(bs_size(information_structure.header))
 				};
@@ -160,6 +161,7 @@ namespace TwinStar::Core::Tool::PopCap::RSGP {
 			}
 			information_structure.header.resource_information_section_offset = cbw<IntegerU32>(information_data.resource_information_offset);
 			information_structure.header.resource_information_section_size = cbw<IntegerU32>(information_data.resource_information.size());
+			StringMapSection::adjust_sequence(information_structure.resource_information);
 			{
 				information_data.header.write(information_structure.header);
 				StringMapSection::encode(information_structure.resource_information, information_data.resource_information);
@@ -202,7 +204,7 @@ namespace TwinStar::Core::Tool::PopCap::RSGP {
 			auto information_structure = Structure::Information<version>{};
 			{
 				package_data.read(information_structure.header);
-				StringMapSection::decode(information_structure.resource_information, package_data.sub_view(cbw<Size>(information_structure.header.resource_information_section_offset), cbw<Size>(information_structure.header.resource_information_section_size)));
+				StringMapSection::decode(information_structure.resource_information, as_lvalue(IByteStreamView{package_data.sub_view(cbw<Size>(information_structure.header.resource_information_section_offset), cbw<Size>(information_structure.header.resource_information_section_size))}));
 			}
 			package_manifest.resource_data_section_store_mode = resource_data_section_store_mode_from_data(information_structure.header.resource_data_section_store_mode);
 			package_manifest.resource.allocate_full(information_structure.resource_information.size());
@@ -271,12 +273,14 @@ namespace TwinStar::Core::Tool::PopCap::RSGP {
 			}
 			package_data.set_position(
 				cbw<Size>(
-					max(
-						{
-							information_structure.header.information_section_size,
-							information_structure.header.generic_resource_data_section_offset + information_structure.header.generic_resource_data_section_size,
-							information_structure.header.texture_resource_data_section_offset + information_structure.header.texture_resource_data_section_size,
-						}
+					maximum(
+						make_initializer_list(
+							{
+								information_structure.header.information_section_size,
+								information_structure.header.generic_resource_data_section_offset + information_structure.header.generic_resource_data_section_size,
+								information_structure.header.texture_resource_data_section_offset + information_structure.header.texture_resource_data_section_size,
+							}
+						)
 					)
 				)
 			);

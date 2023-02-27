@@ -1041,13 +1041,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <typename = None>
-		struct BusAutoDuckingSetting_;
+		struct BusAutomaticDuckingSetting_;
 
-		using BusAutoDuckingSetting = BusAutoDuckingSetting_<>;
+		using BusAutomaticDuckingSetting = BusAutomaticDuckingSetting_<>;
 
 		template <typename _> requires (check_version(version, {140}))
 		M_record_of_map(
-			M_wrap(BusAutoDuckingSetting_<_>),
+			M_wrap(BusAutomaticDuckingSetting_<_>),
 			M_wrap(
 				(Integer) recovery_time,
 				(Floating) maximum_ducking_volume,
@@ -3040,7 +3040,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(AudioRealTimeParameterControlSetting) real_time_parameter_control,
 				(AudioStateSetting) state,
-				(BusAutoDuckingSetting) auto_ducking,
+				(BusAutomaticDuckingSetting) automatic_ducking,
 				(BusHDRSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
 			),
@@ -3072,7 +3072,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(AudioRealTimeParameterControlSetting) real_time_parameter_control,
 				(AudioStateSetting) state,
-				(BusAutoDuckingSetting) auto_ducking,
+				(BusAutomaticDuckingSetting) automatic_ducking,
 				(BusHDRSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
 			),

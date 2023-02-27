@@ -85,7 +85,7 @@ namespace TwinStar::Core::Trait {
 		return [&] <auto ... index> (
 			std::index_sequence<index ...>
 		) -> Transformer<typename Package::template Element<index> ...> {
-				return {};
+				return declare<Transformer<typename Package::template Element<index> ...>>();
 			}(std::make_index_sequence<Package::size>{});
 	}());
 

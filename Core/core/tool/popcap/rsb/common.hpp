@@ -88,7 +88,8 @@ namespace TwinStar::Core::Tool::PopCap::RSB::Common {
 
 		inline constexpr auto k_block_size = Size{bs_static_size<IntegerU32>()};
 
-		template <typename TAdditionalBlock> requires IsPureInstance<TAdditionalBlock>
+		template <typename TAdditionalBlock> requires
+			CategoryConstraint<IsPureInstance<TAdditionalBlock>>
 		inline auto adjust_sequence (
 			Map<String, TAdditionalBlock> & list
 		) -> Void {
@@ -109,7 +110,8 @@ namespace TwinStar::Core::Tool::PopCap::RSB::Common {
 
 		// ----------------
 
-		template <typename TAdditionalBlock> requires IsPureInstance<TAdditionalBlock>
+		template <typename TAdditionalBlock> requires
+			CategoryConstraint<IsPureInstance<TAdditionalBlock>>
 		inline auto compute_ripe_size (
 			Map<String, TAdditionalBlock> const & list
 		) -> Size {
@@ -156,7 +158,8 @@ namespace TwinStar::Core::Tool::PopCap::RSB::Common {
 			return block_count * k_block_size;
 		}
 
-		template <typename TAdditionalBlock> requires IsPureInstance<TAdditionalBlock>
+		template <typename TAdditionalBlock> requires
+			CategoryConstraint<IsPureInstance<TAdditionalBlock>>
 		inline auto encode (
 			Map<String, TAdditionalBlock> const & list,
 			OByteStreamView &                     data
@@ -196,10 +199,10 @@ namespace TwinStar::Core::Tool::PopCap::RSB::Common {
 						character_index += work_option[index].get().inherit_length;
 						auto current_position = stream.position();
 						stream.set_position(work_option[index].get().parent_offset * k_block_size);
-						auto origin_value = stream.read_of<IntegerU32>();
-						origin_value |= cbw<IntegerU32>(current_position / k_block_size) << k_type_bit_count<IntegerU8>;
+						auto composite_value = stream.read_of<IntegerU32>();
+						composite_value |= cbw<IntegerU32>(current_position / k_block_size) << k_type_bit_count<IntegerU8>;
 						stream.backward(bs_static_size<IntegerU32>());
-						stream.write(origin_value);
+						stream.write(composite_value);
 						stream.set_position(current_position);
 						work_option[index].reset();
 					}
@@ -218,9 +221,9 @@ namespace TwinStar::Core::Tool::PopCap::RSB::Common {
 		template <typename TAdditionalBlock> requires IsPureInstance<TAdditionalBlock>
 		inline auto decode (
 			Map<String, TAdditionalBlock> & list,
-			CByteListView const &           data
+			IByteStreamView &               data
 		) -> Void {
-			auto stream = IByteStreamView{data};
+			auto stream = IByteStreamView{data.reserve_view()};
 			list.allocate(stream.reserve() / k_block_size);
 			auto parent_string_list = Array<Optional<CStringView>>{stream.reserve() / k_block_size};
 			while (!stream.full()) {
@@ -242,9 +245,9 @@ namespace TwinStar::Core::Tool::PopCap::RSB::Common {
 					element.key.allocate(string_length_in_next_stream);
 				}
 				while (k_true) {
-					auto current_unit = stream.read_of<IntegerU32>();
-					auto child_string_offset = clip_bit(current_unit, 2_ix * k_type_bit_count<IntegerU8>, 3_sz * k_type_bit_count<IntegerU8>);
-					auto current_character = cbw<Character>(clip_bit(current_unit, 1_ix * k_type_bit_count<IntegerU8>, 1_sz * k_type_bit_count<IntegerU8>));
+					auto composite_value = stream.read_of<IntegerU32>();
+					auto child_string_offset = clip_bit(composite_value, 2_ix * k_type_bit_count<IntegerU8>, 3_sz * k_type_bit_count<IntegerU8>);
+					auto current_character = cbw<Character>(clip_bit(composite_value, 1_ix * k_type_bit_count<IntegerU8>, 1_sz * k_type_bit_count<IntegerU8>));
 					if (child_string_offset != 0x000000_iu32) {
 						parent_string_list[cbw<Size>(child_string_offset)].set(element.key);
 					}
@@ -256,6 +259,7 @@ namespace TwinStar::Core::Tool::PopCap::RSB::Common {
 				stream.read(element.value);
 			}
 			list.shrink_to_fit();
+			data.forward(stream.position());
 			return;
 		}
 

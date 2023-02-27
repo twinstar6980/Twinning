@@ -5,6 +5,8 @@
 #include "core/utility/exception/simple_exception.hpp"
 #include "core/utility/exception/special_exception.hpp"
 #include <cstdint>
+#include <algorithm>
+#include <compare>
 
 namespace TwinStar::Core {
 
@@ -131,6 +133,27 @@ namespace TwinStar::Core {
 		ZLiteralInteger value
 	) -> ZSize {
 		return ZSize{static_cast<ZSize>(value - 1)};
+	}
+
+	// ----------------
+
+	using StorageOrdering = std::strong_ordering;
+
+	// ----------------
+
+	M_define_function_alias(swap, std::swap);
+
+	M_define_function_alias(minimum, std::min);
+
+	M_define_function_alias(maximum, std::max);
+
+	// ----------------
+
+	template <typename Element>
+	inline constexpr auto make_initializer_list (
+		std::initializer_list<Element> value
+	) -> std::initializer_list<Element> {
+		return value;
 	}
 
 	#pragma endregion

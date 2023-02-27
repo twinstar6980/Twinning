@@ -71,7 +71,7 @@ namespace TwinStar::Core {
 			CView const & view
 		) :
 			StaticArray{} {
-			Range::assign_from(make_range_n(thiz.begin(), min(view.size(), thiz.size())), view);
+			Range::assign_from(make_range_n(thiz.begin(), minimum(view.size(), thiz.size())), view);
 		}
 
 		explicit constexpr StaticArray (

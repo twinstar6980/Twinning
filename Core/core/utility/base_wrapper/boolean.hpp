@@ -120,7 +120,7 @@ namespace TwinStar::Core {
 
 	#pragma region regular type
 
-	M_simple_derived_class(Boolean, Boolean8, Boolean8);
+	M_define_simple_derived_class(Boolean, Boolean8, Boolean8);
 
 	#pragma endregion
 

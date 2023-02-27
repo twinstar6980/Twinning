@@ -9,7 +9,7 @@ namespace TwinStar::Core::Image {
 	template <typename TValue> requires
 		CategoryConstraint<>
 		&& (IsBaseWrapperValue<TValue>)
-	M_simple_derived_class(BasicColor, IntegerWrapper<TValue>, IntegerWrapper);
+	M_define_simple_derived_class(BasicColor, IntegerWrapper<TValue>, IntegerWrapper);
 
 	#pragma endregion
 

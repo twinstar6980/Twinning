@@ -213,7 +213,7 @@ namespace TwinStar::Core::Range {
 		Range1 && range_1,
 		Range2 && range_2
 	) -> Size {
-		auto maximum_common_size = min(size(range_1), size(range_2));
+		auto maximum_common_size = minimum(size(range_1), size(range_2));
 		auto size = k_none_size;
 		auto current_1 = range_1.begin();
 		auto current_2 = range_2.begin();

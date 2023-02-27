@@ -90,7 +90,7 @@ namespace TwinStar::Core::Tool::Data::Hash::FNV {
 						BitCount::Constant::b_64()
 					>>(
 						bit_count,
-						// todo : compiler error if use same name
+						// TODO : compiler error if use same name
 						[&] <auto index_, auto bit_count_> (ValuePackage<index_>, ValuePackage<bit_count_>) {
 							auto value_integer = typename Parameter<bit_count_>::Value{};
 							process_whole_integer<mode, bit_count_>(data, value_integer);

@@ -386,7 +386,7 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 						throw ToDoException{};
 					}
 					assert_test(chunk_ok);
-					package_data_end_position = max(package_data_end_position, package_data.position());
+					package_data_end_position = maximum(package_data_end_position, package_data.position());
 				}
 				assert_test(!chunk_data_list.empty() && Range::all_of(chunk_data_list.tail(chunk_data_list.size() - 1_sz), [&] (auto & element) { return element == chunk_data_list.first(); }));
 				if (resource_directory) {

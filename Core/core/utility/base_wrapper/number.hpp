@@ -10,22 +10,22 @@ namespace TwinStar::Core {
 	template <typename TValue> requires
 		CategoryConstraint<IsPureInstance<TValue>>
 		&& (IsBaseWrapperValue<TValue>)
-	M_simple_derived_class(NumberWrapper, BaseWrapper<TValue>, BaseWrapper);
+	M_define_simple_derived_class(NumberWrapper, BaseWrapper<TValue>, BaseWrapper);
 
 	template <typename TValue> requires
 		CategoryConstraint<IsPureInstance<TValue>>
 		&& (IsBaseWrapperValue<TValue>)
-	M_simple_derived_class(IntegerWrapper, NumberWrapper<TValue>, NumberWrapper);
+	M_define_simple_derived_class(IntegerWrapper, NumberWrapper<TValue>, NumberWrapper);
 
 	template <typename TValue> requires
 		CategoryConstraint<IsPureInstance<TValue>>
 		&& (IsBaseWrapperValue<TValue>)
-	M_simple_derived_class(FloatingWrapper, NumberWrapper<TValue>, NumberWrapper);
+	M_define_simple_derived_class(FloatingWrapper, NumberWrapper<TValue>, NumberWrapper);
 
 	template <typename TValue> requires
 		CategoryConstraint<IsPureInstance<TValue>>
 		&& (IsBaseWrapperValue<TValue>)
-	M_simple_derived_class(SizeWrapper, IntegerWrapper<TValue>, IntegerWrapper);
+	M_define_simple_derived_class(SizeWrapper, IntegerWrapper<TValue>, IntegerWrapper);
 
 	// ----------------
 
@@ -444,17 +444,17 @@ namespace TwinStar::Core {
 
 	#pragma region regular type
 
-	M_simple_derived_class(Integer, IntegerS64, IntegerS64);
+	M_define_simple_derived_class(Integer, IntegerS64, IntegerS64);
 
 	// ----------------
 
-	M_simple_derived_class(Floating, Floating64, Floating64);
+	M_define_simple_derived_class(Floating, Floating64, Floating64);
 
 	// ----------------
 
-	M_simple_derived_class(Size, SizeU, SizeU);
+	M_define_simple_derived_class(Size, SizeU, SizeU);
 
-	M_simple_derived_class(SSize, SizeS, SizeS);
+	M_define_simple_derived_class(SSize, SizeS, SizeS);
 
 	#pragma endregion
 

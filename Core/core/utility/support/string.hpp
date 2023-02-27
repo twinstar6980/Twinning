@@ -369,7 +369,7 @@ namespace TwinStar::Core {
 			This &       thix,
 			That const & that
 		) -> Void {
-			thix.allocate_full(that.size() * 2_sz + max(that.size(), 1_sz) - 1_sz);
+			thix.allocate_full(that.size() * 2_sz + maximum(that.size(), 1_sz) - 1_sz);
 			auto stream = OCharacterStreamView{thix};
 			stream.write(that.view());
 			return;
@@ -405,7 +405,11 @@ namespace TwinStar::Core {
 			This &       thix,
 			That const & that
 		) -> Void {
-			thix = CStringView{cast_pointer<Character>(make_pointer(&that)), k_type_size<FourCC>};
+			thix.allocate_full(4_sz);
+			thix[1_ix] = cbw<Character>(that.first);
+			thix[2_ix] = cbw<Character>(that.second);
+			thix[3_ix] = cbw<Character>(that.third);
+			thix[4_ix] = cbw<Character>(that.fourth);
 			return;
 		}
 
@@ -413,13 +417,11 @@ namespace TwinStar::Core {
 			This const & thix,
 			That &       that
 		) -> Void {
-			assert_test(thix.size() == k_type_size<FourCC>);
-			that = make_fourcc(
-				thix[1_ix],
-				thix[2_ix],
-				thix[3_ix],
-				thix[4_ix]
-			);
+			assert_test(thix.size() == 4_sz);
+			that.first = cbw<Character8>(thix[1_ix]);
+			that.second = cbw<Character8>(thix[2_ix]);
+			that.third = cbw<Character8>(thix[3_ix]);
+			that.fourth = cbw<Character8>(thix[4_ix]);
 			return;
 		}
 

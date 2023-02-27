@@ -458,7 +458,7 @@ namespace TwinStar::Core {
 			Size const & capacity
 		) -> Void {
 			auto old = as_moveable(thiz);
-			auto old_size = min(capacity, old.size());
+			auto old_size = minimum(capacity, old.size());
 			thiz.allocate(capacity);
 			thiz.set_size(old_size);
 			Range::assign_from(thiz, make_moveable_range_of(old.head(old_size)));

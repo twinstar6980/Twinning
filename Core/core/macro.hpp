@@ -1,44 +1,31 @@
 #pragma once
 
-// TODO : refactor
-
 #include "core/version.hpp"
 #include <version>
 #include <iostream>
-#include <algorithm>
-#include <compare>
 
-// style
+#pragma region keyword
 
-/* naming style
- * - namespace : [CamelCase]
- * - type : [@Prefix][CamelCase]
- * - - concept : Is
- * - - decoration alias : As
- * - - template parameter (if for class) : T
- * - value : [@prefix_][under_line]
- * - - constant : k
- * - - global variable : g
- * - - non-public class field : m
- * - - template parameter (if for class) : t
- */
+#define implicit\
 
-// wrap
+
+#define thiz\
+	(*this)
+
+#pragma endregion
+
+#pragma region utility
 
 #define M_wrap(...)\
 	__VA_ARGS__
 
-// detach
-
 #define M_detach(...)\
 	
-
-// remain
 
 #define M_remain(...)\
 	__VA_ARGS__
 
-// stringify
+// ----------------
 
 #define M_stringify_detail(...)\
 	#__VA_ARGS__
@@ -46,7 +33,7 @@
 #define M_stringify(...)\
 	M_stringify_detail(__VA_ARGS__)
 
-// catenate
+// ----------------
 
 #define M_catenate_detail(_1, _2)\
 	_1##_2
@@ -54,7 +41,7 @@
 #define M_catenate(_1, _2)\
 	M_catenate_detail(_1, _2)
 
-// count
+// ----------------
 
 #define M_count_detail(\
 	_0, _1, _2, _3, _4, _5, _6, _7, _8, _9,\
@@ -86,7 +73,7 @@
 		9, 8, 7, 6, 5, 4, 3, 2, 1, 0\
 	)
 
-// map
+// ----------------
 
 // NOTE : M_map_0 with a va, because need support M_xxx(_x) == M_map(_m, _x) if _x is empty va and it passing by M_wrap(...), this case can't use ## to fix dot
 // NOTE : use __VA_OPT__(, __VA_ARGS__) replace ##__VA_ARGS__ can fix this error, but resharper will show error highlight
@@ -159,49 +146,30 @@
 #define M_map(_m, ...)\
 	M_catenate(M_map_, M_count(__VA_ARGS__))(_m, ##__VA_ARGS__)
 
-// miscellaneous
+#pragma endregion
 
-// implicit specification of constructor and conversion operator
-#define implicit\
+#pragma region advanced
 
-
-// dereference this pointer
-#define thiz\
-	(*this)
-
-// log to cout
-#define M_log(...)\
-	std::cout << (__VA_ARGS__) << "\n" << std::flush
-
-// log to cout no line
-#define M_log_no_line(...)\
-	std::cout << (__VA_ARGS__) << std::flush
-
-// TODO
-
-#define M_simple_derived_class(TDerived, TBase, TSimplifyBase)\
-	class TDerived : public TBase {\
+#define M_define_simple_derived_class(_derived, _base, _simplify_base)\
+	class _derived : public _base {\
 	public:\
-		using TBase::TSimplifyBase;\
+		using _base::_simplify_base;\
 	}
 
-// TODO
+#define M_define_function_alias(_alias, _name)\
+	template <typename ... Argument> \
+	inline constexpr auto _alias (\
+		Argument && ... argument\
+	) -> decltype(_name(std::forward<Argument>(argument)...)) {\
+		return _name(std::forward<Argument>(argument)...);\
+	}
 
-namespace TwinStar::Core {
+// ----------------
 
-	using std::swap;
+#define M_log(...)\
+	std::cerr << (__VA_ARGS__) << "\n"
 
-	using std::min;
+#define M_log_no_line(...)\
+	std::cerr << (__VA_ARGS__)
 
-	using std::max;
-
-	// ----------------
-
-	using StorageOrdering = std::strong_ordering;
-
-	// ----------------
-
-	template <typename>
-	inline constexpr auto k_static_assert_fail = bool{false};
-
-}
+#pragma endregion

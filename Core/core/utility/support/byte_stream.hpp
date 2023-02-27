@@ -91,7 +91,9 @@ namespace TwinStar::Core {
 			ThisO &      thix,
 			That const & that
 		) -> Void {
-			thix.write(up_cast<BaseWrapper<TValue>>(that));
+			using RawValueAlternative = AsSwitch<IsSame<TValue, ZBoolean>, ZIntegerU8, TValue>;
+			using RawWrapper = IntegerWrapper<std::make_unsigned_t<RawValueAlternative>>;
+			thix.write(self_cast<RawWrapper>(that));
 			return;
 		}
 
@@ -99,9 +101,10 @@ namespace TwinStar::Core {
 			ThisI & thix,
 			That &  that
 		) -> Void {
-			thix.read(up_cast<BaseWrapper<TValue>>(that));
-			// todo
-			assert_test((self_cast<IntegerWrapper<ZIntegerU8>>(that) & ~mbw<IntegerWrapper<ZIntegerU8>>(0b1)) == mbw<IntegerWrapper<ZIntegerU8>>(0));
+			using RawValueAlternative = AsSwitch<IsSame<TValue, ZBoolean>, ZIntegerU8, TValue>;
+			using RawWrapper = IntegerWrapper<std::make_unsigned_t<RawValueAlternative>>;
+			thix.read(self_cast<RawWrapper>(that));
+			assert_test((self_cast<RawWrapper>(that) & ~mbw<RawWrapper>(0b1)) == mbw<RawWrapper>(0));
 			return;
 		}
 
@@ -535,8 +538,59 @@ namespace TwinStar::Core {
 	#pragma region miscellaneous
 
 	template <>
-	struct ByteStreamAdapter<FourCC> :
-		ByteStreamAdapter<IntegerU32> {
+	struct ByteStreamAdapter<FourCC> {
+
+		using ThisI = IByteStreamView;
+
+		using ThisO = OByteStreamView;
+
+		using That = FourCC;
+
+		// ----------------
+
+		static constexpr auto static_size (
+		) -> Size {
+			auto result = k_none_size;
+			result += bs_static_size<decltype(That::first)>();
+			result += bs_static_size<decltype(That::second)>();
+			result += bs_static_size<decltype(That::third)>();
+			result += bs_static_size<decltype(That::fourth)>();
+			return result;
+		}
+
+		static constexpr auto size (
+			That const & that
+		) -> Size {
+			auto result = k_none_size;
+			result += bs_size(that.first);
+			result += bs_size(that.second);
+			result += bs_size(that.third);
+			result += bs_size(that.fourth);
+			return result;
+		}
+
+		static auto write (
+			ThisO &      thix,
+			That const & that
+		) -> Void {
+			thix.write(that.first);
+			thix.write(that.second);
+			thix.write(that.third);
+			thix.write(that.fourth);
+			return;
+		}
+
+		static auto read (
+			ThisI & thix,
+			That &  that
+		) -> Void {
+			thix.read(that.first);
+			thix.read(that.second);
+			thix.read(that.third);
+			thix.read(that.fourth);
+			return;
+		}
+
 	};
 
 	// ----------------
@@ -569,7 +623,7 @@ namespace TwinStar::Core {
 			That const & that
 		) -> Void {
 			for (auto & index : SizeRange{t_size}) {
-				thix.write(k_null_byte);
+				thix.write_constant(k_null_byte);
 			}
 			return;
 		}
@@ -579,7 +633,7 @@ namespace TwinStar::Core {
 			That &  that
 		) -> Void {
 			for (auto & index : SizeRange{t_size}) {
-				assert_test(thix.read_of() == k_null_byte);
+				thix.read_constant(k_null_byte);
 			}
 			return;
 		}

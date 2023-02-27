@@ -98,7 +98,7 @@ namespace TwinStar::Core::Tool::PopCap::RSGP::Structure {
 	);
 
 	// ----------------
-	// todo
+	// TODO
 
 	template <auto t_version>
 	struct ResourceInformation;

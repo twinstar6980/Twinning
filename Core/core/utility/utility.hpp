@@ -89,7 +89,7 @@
 #include "core/utility/image/pixel.hpp"
 #include "core/utility/image/image_view.hpp"
 #include "core/utility/image/image.hpp"
-#include "core/utility/image/standard.hpp"
+#include "core/utility/image/regular.hpp"
 
 #include "core/utility/data/json/value_adapter.hpp"
 #include "core/utility/data/json/value.hpp"

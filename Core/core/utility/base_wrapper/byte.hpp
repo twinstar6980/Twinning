@@ -9,7 +9,7 @@ namespace TwinStar::Core {
 	template <typename TValue> requires
 		CategoryConstraint<IsPureInstance<TValue>>
 		&& (IsBaseWrapperValue<TValue>)
-	M_simple_derived_class(ByteWrapper, IntegerWrapper<TValue>, IntegerWrapper);
+	M_define_simple_derived_class(ByteWrapper, IntegerWrapper<TValue>, IntegerWrapper);
 
 	// ----------------
 
@@ -26,7 +26,7 @@ namespace TwinStar::Core {
 
 	#pragma region regular type
 
-	M_simple_derived_class(Byte, Byte8, Byte8);
+	M_define_simple_derived_class(Byte, Byte8, Byte8);
 
 	#pragma endregion
 

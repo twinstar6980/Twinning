@@ -343,7 +343,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						// midi_filter_velocity_maximum,
 						TypePackage<ValuePackage<52_sz>, TypePackage<Integer>, ValuePackage<127_i>>,
 						// midi_filter_channel,
-						// todo : bitset ?
+						// TODO : bitset ?
 						TypePackage<ValuePackage<53_sz>, TypePackage<Integer>, ValuePackage<65535_i>>,
 						// midi_clip_tempo_source,
 						TypePackage<ValuePackage<55_sz>, TypePackage<Size>, ValuePackage<0_sz>>,
@@ -2098,7 +2098,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			typename Manifest::AudioPlaybackLimitSetting const &      playback_limit_manifest,
 			typename Manifest::AudioBusMuteForBackgroundMusic const & mute_for_background_music_manifest
 		) -> Void {
-			auto b3 = Boolean{}; // todo
+			auto b3 = Boolean{}; // TODO
 			exchange_unit_bitset<IntegerU8>(
 				data,
 				playback_limit_manifest.when_priority_is_equal,
@@ -2139,8 +2139,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				[] (auto & data, auto & manifest) {
 					exchange_unit_integer<IntegerU8>(data, manifest.index);
 					exchange_unit_id(data, manifest.id);
-					// todo : in typical, render = 1 -> mode = 0 & u2 = 1, render = 0 -> mode = 1 & u2 = 0
-					// todo : if render, mode value will be changed ?
+					// TODO : in typical, render = 1 -> mode = 0 & u2 = 1, render = 0 -> mode = 1 & u2 = 0
+					// TODO : if render, mode value will be changed ?
 					exchange_unit_bitset<IntegerU8>(data, manifest.use_share_set);
 					exchange_unit_bitset<IntegerU8>(data, manifest.u1);
 				}
@@ -2340,7 +2340,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			assert_test(manifest.plug_in.u1 == 0_i || manifest.plug_in.u1 == 1_i || manifest.plug_in.u1 == 2_i);
 			exchange_unit_enumeration<IntegerU8>(data, manifest.type);
 			exchange_unit_id(data, manifest.resource);
-			// note : if external_prefetch, is internal data size
+			// NOTE : if external_prefetch, is internal data size
 			exchange_unit_integer<IntegerU32>(data, manifest.resource_size);
 			exchange_unit_bitset<IntegerU8>(
 				data,
@@ -2349,7 +2349,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				k_false,
 				manifest.non_cachable_stream
 			);
-			// todo
+			// TODO
 			if (manifest.plug_in.u1 == 2_i) {
 				exchange_unit_constant(data, 0_iu32);
 			}
@@ -2373,14 +2373,14 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		}
 
 		static auto process_section_sub (
-			OByteStreamView &                                data,
-			typename Manifest::BusAutoDuckingSetting const & auto_ducking_manifest
+			OByteStreamView &                                     data,
+			typename Manifest::BusAutomaticDuckingSetting const & automatic_ducking_manifest
 		) -> Void {
-			exchange_unit_integer<IntegerU32>(data, auto_ducking_manifest.recovery_time);
-			exchange_unit_floating<Floating32>(data, auto_ducking_manifest.maximum_ducking_volume);
+			exchange_unit_integer<IntegerU32>(data, automatic_ducking_manifest.recovery_time);
+			exchange_unit_floating<Floating32>(data, automatic_ducking_manifest.maximum_ducking_volume);
 			exchange_unit_list<IntegerU32>(
 				data,
-				auto_ducking_manifest.bus,
+				automatic_ducking_manifest.bus,
 				[] (auto & count) {
 				},
 				[] (auto & data, auto & manifest) {
@@ -2420,10 +2420,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			typename Manifest::AudioTimeSetting const & time_setting_manifest,
 			Boolean const &                             time_setting_override
 		) -> Void {
-			// todo : test frequency mode-preset time and offset
-			// note : time = 960000 * signature / tempo, then with frequency mode-preset
+			// TODO : test frequency mode-preset time and offset
+			// NOTE : time = 960000 * signature / tempo, then with frequency mode-preset
 			exchange_unit_floating<Floating64>(data, time_setting_manifest.time);
-			// note : 0 if mode.no, millisecond if mode.custom, else by mode-preset
+			// NOTE : 0 if mode.no, millisecond if mode.custom, else by mode-preset
 			exchange_unit_floating<Floating64>(data, time_setting_manifest.offset);
 			exchange_unit_floating<Floating32>(data, time_setting_manifest.tempo);
 			exchange_unit_integer<IntegerU8>(data, time_setting_manifest.signature.template get<1_ix>());
@@ -2508,11 +2508,11 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				OByteStreamView &                                         data,
 				typename Manifest::MusicTransitionSettingItemFade const & manifest
 			) {
-				// note : always default = 0 if non-fade
+				// NOTE : always default = 0 if non-fade
 				exchange_unit_integer<IntegerS32>(data, manifest.time);
-				// note : always default = 4 if non-fade
+				// NOTE : always default = 4 if non-fade
 				exchange_unit_integer<IntegerU32>(data, manifest.curve);
-				// note : always default = 0 if non-fade
+				// NOTE : always default = 0 if non-fade
 				exchange_unit_integer<IntegerS32>(data, manifest.offset);
 				return;
 			};
@@ -2560,11 +2560,11 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				OByteStreamView &                                         data,
 				typename Manifest::MusicTransitionSettingItemFade const & manifest
 			) {
-				// note : always default = 0 if non-fade
+				// NOTE : always default = 0 if non-fade
 				exchange_unit_integer<IntegerS32>(data, manifest.time);
-				// note : always default = 4 if non-fade
+				// NOTE : always default = 4 if non-fade
 				exchange_unit_integer<IntegerU32>(data, manifest.curve);
-				// note : always default = 0 if non-fade
+				// NOTE : always default = 0 if non-fade
 				exchange_unit_integer<IntegerS32>(data, manifest.offset);
 				return;
 			};
@@ -2765,7 +2765,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					exchange_unit_constant(data, 0_iu32);
 					exchange_unit_integer<IntegerU32>(data, manifest.weight);
 					exchange_unit_integer<IntegerU16>(data, manifest.random_setting.avoid_repeat);
-					exchange_unit_bitset<IntegerU8>(data, manifest.group); // todo : maybe
+					exchange_unit_bitset<IntegerU8>(data, manifest.group); // TODO : maybe
 					exchange_unit_bitset<IntegerU8>(data, manifest.random_setting.type);
 				}
 			);
@@ -3290,7 +3290,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						exchange_common_property_as_randomized<CPTC::delay()>(common_property, property_manifest.delay);
 						process_section_sub(data, common_property, k_true);
 					}
-					// todo : maybe fade curve ?
+					// TODO : maybe fade curve ?
 					exchange_unit_integer<IntegerU8>(data, property_manifest.u1);
 					exchange_unit_constant(data, 0_iu8);
 					has_case = k_true;
@@ -3317,14 +3317,14 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			if (type == 18_sz) {
 				// set state
 				assert_test(scope == 2_sz);
-				// todo : maybe wwise bug?
+				// TODO : maybe wwise bug?
 				scope = 4_sz;
 			}
 			if (type == 25_sz) {
 				// set switch
 				assert_test(scope == 3_sz);
 				// 1 is only used for set_switch
-				// todo : maybe wwise bug?
+				// TODO : maybe wwise bug?
 				scope = 1_sz;
 			}
 			exchange_unit_size<IntegerU8>(scope_data, scope);
@@ -3583,7 +3583,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			process_section_sub(data, manifest.playback_limit, manifest.mute_for_background_music);
 			process_section_sub(data, manifest.bus_configuration);
 			process_section_sub(data, manifest.hdr);
-			process_section_sub(data, manifest.auto_ducking);
+			process_section_sub(data, manifest.automatic_ducking);
 			process_section_sub(data, manifest.effect);
 			exchange_unit_constant(data, 0_iu32);
 			exchange_unit_constant(data, 0_iu16);
@@ -5162,7 +5162,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			typename Manifest::AudioPlaybackLimitSetting &      playback_limit_manifest,
 			typename Manifest::AudioBusMuteForBackgroundMusic & mute_for_background_music_manifest
 		) -> Void {
-			auto b3 = Boolean{}; // todo
+			auto b3 = Boolean{}; // TODO
 			exchange_unit_bitset<IntegerU8>(
 				data,
 				playback_limit_manifest.when_priority_is_equal,
@@ -5203,8 +5203,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				[] (auto & data, auto & manifest) {
 					exchange_unit_integer<IntegerU8>(data, manifest.index);
 					exchange_unit_id(data, manifest.id);
-					// todo : in typical, render = 1 -> mode = 0 & u2 = 1, render = 0 -> mode = 1 & u2 = 0
-					// todo : if render, mode value will be changed ?
+					// TODO : in typical, render = 1 -> mode = 0 & u2 = 1, render = 0 -> mode = 1 & u2 = 0
+					// TODO : if render, mode value will be changed ?
 					exchange_unit_bitset<IntegerU8>(data, manifest.use_share_set);
 					exchange_unit_bitset<IntegerU8>(data, manifest.u1);
 				}
@@ -5404,7 +5404,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			assert_test(manifest.plug_in.u1 == 0_i || manifest.plug_in.u1 == 1_i || manifest.plug_in.u1 == 2_i);
 			exchange_unit_enumeration<IntegerU8>(data, manifest.type);
 			exchange_unit_id(data, manifest.resource);
-			// note : if external_prefetch, is internal data size
+			// NOTE : if external_prefetch, is internal data size
 			exchange_unit_integer<IntegerU32>(data, manifest.resource_size);
 			exchange_unit_bitset<IntegerU8>(
 				data,
@@ -5413,7 +5413,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				k_false,
 				manifest.non_cachable_stream
 			);
-			// todo
+			// TODO
 			if (manifest.plug_in.u1 == 2_i) {
 				exchange_unit_constant(data, 0_iu32);
 			}
@@ -5437,14 +5437,14 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		}
 
 		static auto process_section_sub (
-			IByteStreamView &                          data,
-			typename Manifest::BusAutoDuckingSetting & auto_ducking_manifest
+			IByteStreamView &                               data,
+			typename Manifest::BusAutomaticDuckingSetting & automatic_ducking_manifest
 		) -> Void {
-			exchange_unit_integer<IntegerU32>(data, auto_ducking_manifest.recovery_time);
-			exchange_unit_floating<Floating32>(data, auto_ducking_manifest.maximum_ducking_volume);
+			exchange_unit_integer<IntegerU32>(data, automatic_ducking_manifest.recovery_time);
+			exchange_unit_floating<Floating32>(data, automatic_ducking_manifest.maximum_ducking_volume);
 			exchange_unit_list<IntegerU32>(
 				data,
-				auto_ducking_manifest.bus,
+				automatic_ducking_manifest.bus,
 				[] (auto & count) {
 				},
 				[] (auto & data, auto & manifest) {
@@ -5484,10 +5484,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			typename Manifest::AudioTimeSetting & time_setting_manifest,
 			Boolean &                             time_setting_override
 		) -> Void {
-			// todo : test frequency mode-preset time and offset
-			// note : time = 960000 * signature / tempo, then with frequency mode-preset
+			// TODO : test frequency mode-preset time and offset
+			// NOTE : time = 960000 * signature / tempo, then with frequency mode-preset
 			exchange_unit_floating<Floating64>(data, time_setting_manifest.time);
-			// note : 0 if mode.no, millisecond if mode.custom, else by mode-preset
+			// NOTE : 0 if mode.no, millisecond if mode.custom, else by mode-preset
 			exchange_unit_floating<Floating64>(data, time_setting_manifest.offset);
 			exchange_unit_floating<Floating32>(data, time_setting_manifest.tempo);
 			exchange_unit_integer<IntegerU8>(data, time_setting_manifest.signature.template get<1_ix>());
@@ -5572,11 +5572,11 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				IByteStreamView &                                   data,
 				typename Manifest::MusicTransitionSettingItemFade & manifest
 			) {
-				// note : always default = 0 if non-fade
+				// NOTE : always default = 0 if non-fade
 				exchange_unit_integer<IntegerS32>(data, manifest.time);
-				// note : always default = 4 if non-fade
+				// NOTE : always default = 4 if non-fade
 				exchange_unit_integer<IntegerU32>(data, manifest.curve);
-				// note : always default = 0 if non-fade
+				// NOTE : always default = 0 if non-fade
 				exchange_unit_integer<IntegerS32>(data, manifest.offset);
 				return;
 			};
@@ -5624,11 +5624,11 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				IByteStreamView &                                   data,
 				typename Manifest::MusicTransitionSettingItemFade & manifest
 			) {
-				// note : always default = 0 if non-fade
+				// NOTE : always default = 0 if non-fade
 				exchange_unit_integer<IntegerS32>(data, manifest.time);
-				// note : always default = 4 if non-fade
+				// NOTE : always default = 4 if non-fade
 				exchange_unit_integer<IntegerU32>(data, manifest.curve);
-				// note : always default = 0 if non-fade
+				// NOTE : always default = 0 if non-fade
 				exchange_unit_integer<IntegerS32>(data, manifest.offset);
 				return;
 			};
@@ -5835,7 +5835,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					exchange_unit_constant(data, 0_iu32);
 					exchange_unit_integer<IntegerU32>(data, manifest.weight);
 					exchange_unit_integer<IntegerU16>(data, manifest.random_setting.avoid_repeat);
-					exchange_unit_bitset<IntegerU8>(data, manifest.group); // todo : maybe
+					exchange_unit_bitset<IntegerU8>(data, manifest.group); // TODO : maybe
 					exchange_unit_bitset<IntegerU8>(data, manifest.random_setting.type);
 				}
 			);
@@ -6052,7 +6052,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			exchange_unit_size<IntegerU8>(data, scope);
 			exchange_unit_size<IntegerU8>(data, type);
 			exchange_unit_raw(data, target);
-			// todo
+			// TODO
 			if (type == 4_sz) {
 				// play
 				assert_test(scope == 3_sz);
@@ -6068,14 +6068,14 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			if (type == 18_sz) {
 				// set state
 				assert_test(scope == 4_sz);
-				// todo : maybe wwise bug?
+				// TODO : maybe wwise bug?
 				scope = 2_sz;
 			}
 			if (type == 25_sz) {
 				// set switch
 				assert_test(scope == 1_sz);
 				// 1 is only used for set_switch
-				// todo : maybe wwise bug?
+				// TODO : maybe wwise bug?
 				scope = 3_sz;
 			}
 			manifest.target = find_id(target);
@@ -6379,7 +6379,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				}
 				if (type == 34_sz) {
 					auto & property_manifest = manifest.property.template set_of_type<Manifest::EventActionProperty::Type::Constant::reset_playlist()>();
-					// todo : maybe fade curve ?
+					// TODO : maybe fade curve ?
 					exchange_unit_integer<IntegerU8>(data, property_manifest.u1);
 					exchange_unit_constant(data, 0_iu8);
 					{
@@ -6636,7 +6636,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			process_section_sub(data, manifest.playback_limit, manifest.mute_for_background_music);
 			process_section_sub(data, manifest.bus_configuration);
 			process_section_sub(data, manifest.hdr);
-			process_section_sub(data, manifest.auto_ducking);
+			process_section_sub(data, manifest.automatic_ducking);
 			process_section_sub(data, manifest.effect);
 			exchange_unit_constant(data, 0_iu32);
 			exchange_unit_constant(data, 0_iu16);

@@ -25,7 +25,7 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 
 		inline static auto const k_suffix_of_composite_shell = CStringView{"_CompositeShell"_sv};
 
-		inline static auto const k_suffix_of_auto_pool = CStringView{"_AutoPool"_sv};
+		inline static auto const k_suffix_of_automation_pool = CStringView{"_AutoPool"_sv};
 
 		static auto make_original_group_id_upper (
 			CStringView const & standard_id,
@@ -71,7 +71,7 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 		static auto string_block_fixed_128_from_string (
 			CStringView const & block
 		) -> StringBlockFixed128 {
-			assert_test(block.size() <= 128_sz);
+			assert_test(block.size() < 128_sz);
 			return StringBlockFixed128{block};
 		}
 
@@ -85,7 +85,7 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 				}
 				++size;
 			}
-			assert_test(size <= 128_sz);
+			assert_test(size < 128_sz);
 			return String{string.begin(), size};
 		}
 
@@ -96,15 +96,15 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 			IntegerU32 const & resolution_data,
 			IntegerU32 const & locale_data
 		) -> Void {
-			if (resolution_data == 0_iu32) {
+			if (resolution_data == 0x00000000_iu32) {
 				value.resolution.reset();
 			} else {
 				value.resolution.set(cbw<Integer>(resolution_data));
 			}
-			if (locale_data == 0_iu32) {
+			if (locale_data == 0x00000000_iu32) {
 				value.locale.reset();
 			} else {
-				value.locale.set().from(cbw<FourCC>(reverse_endian(locale_data)));
+				value.locale.set().from(fourcc_from_integer(locale_data));
 			}
 			return;
 		}
@@ -115,14 +115,14 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 			IntegerU32 &             locale_data
 		) -> Void {
 			if (!value.resolution) {
-				resolution_data = 0_iu32;
+				resolution_data = 0x00000000_iu32;
 			} else {
 				resolution_data = cbw<IntegerU32>(value.resolution.get());
 			}
 			if (!value.locale) {
-				locale_data = 0_iu32;
+				locale_data = 0x00000000_iu32;
 			} else {
-				locale_data = reverse_endian(cbw<IntegerU32>(value.locale.get().to_of<FourCC>()));
+				locale_data = fourcc_to_integer(value.locale.get().to_of<FourCC>());
 			}
 			return;
 		}
@@ -145,7 +145,7 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 
 		using Common::k_suffix_of_composite_shell;
 
-		using Common::k_suffix_of_auto_pool;
+		using Common::k_suffix_of_automation_pool;
 
 		using Common::make_original_group_id_upper;
 
@@ -365,9 +365,9 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 					}
 					++global_group_index;
 				}
-				StringMapSection::adjust_sequence(information_structure.resource_path);
 				StringMapSection::adjust_sequence(information_structure.group_id);
 				StringMapSection::adjust_sequence(information_structure.subgroup_id);
+				StringMapSection::adjust_sequence(information_structure.resource_path);
 				information_data.header = OByteStreamView{
 					package_data.forward_view(bs_size(information_structure.header))
 				};
@@ -492,7 +492,7 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 					subgroup_information_structure.index = cbw<IntegerU32>(global_subgroup_index);
 					subgroup_information_structure.texture_resource_begin_index = cbw<IntegerU32>(global_texture_resource_index);
 					subgroup_information_structure.texture_resource_count = cbw<IntegerU32>(k_none_size);
-					subgroup_pool_information_structure.id = string_block_fixed_128_from_string(subgroup_manifest.key + k_suffix_of_auto_pool);
+					subgroup_pool_information_structure.id = string_block_fixed_128_from_string(subgroup_manifest.key + k_suffix_of_automation_pool);
 					subgroup_pool_information_structure.unknown_1 = 1_iu32;
 					packet_package_manifest.resource_data_section_store_mode = subgroup_manifest.value.resource_data_section_store_mode;
 					packet_package_manifest.resource.allocate_full(subgroup_manifest.value.resource.size());
@@ -586,9 +586,9 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 				}
 				++global_group_index;
 			}
-			StringMapSection::adjust_sequence(information_structure.resource_path);
 			StringMapSection::adjust_sequence(information_structure.group_id);
 			StringMapSection::adjust_sequence(information_structure.subgroup_id);
+			StringMapSection::adjust_sequence(information_structure.resource_path);
 			{
 				information_data.header.write(information_structure.header);
 				StringMapSection::encode(information_structure.resource_path, information_data.resource_path);
@@ -634,7 +634,7 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 
 		using Common::k_suffix_of_composite_shell;
 
-		using Common::k_suffix_of_auto_pool;
+		using Common::k_suffix_of_automation_pool;
 
 		using Common::make_original_group_id_upper;
 
@@ -733,9 +733,9 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 				assert_test(cbw<Size>(information_structure.header.subgroup_information_section_block_size) == bs_static_size<Structure::SubgroupInformation<version>>());
 				assert_test(cbw<Size>(information_structure.header.subgroup_pool_information_section_block_size) == bs_static_size<Structure::SubgroupPoolInformation<version>>());
 				assert_test(cbw<Size>(information_structure.header.texture_resource_information_section_block_size) == bs_static_size<Structure::TextureResourceInformation<version>>());
-				StringMapSection::decode(information_structure.group_id, package_data.sub_view(cbw<Size>(information_structure.header.group_id_section_offset), cbw<Size>(information_structure.header.group_id_section_size)));
-				StringMapSection::decode(information_structure.subgroup_id, package_data.sub_view(cbw<Size>(information_structure.header.subgroup_id_section_offset), cbw<Size>(information_structure.header.subgroup_id_section_size)));
-				StringMapSection::decode(information_structure.resource_path, package_data.sub_view(cbw<Size>(information_structure.header.resource_path_section_offset), cbw<Size>(information_structure.header.resource_path_section_size)));
+				StringMapSection::decode(information_structure.group_id, as_lvalue(IByteStreamView{package_data.sub_view(cbw<Size>(information_structure.header.group_id_section_offset), cbw<Size>(information_structure.header.group_id_section_size))}));
+				StringMapSection::decode(information_structure.subgroup_id, as_lvalue(IByteStreamView{package_data.sub_view(cbw<Size>(information_structure.header.subgroup_id_section_offset), cbw<Size>(information_structure.header.subgroup_id_section_size))}));
+				StringMapSection::decode(information_structure.resource_path, as_lvalue(IByteStreamView{package_data.sub_view(cbw<Size>(information_structure.header.resource_path_section_offset), cbw<Size>(information_structure.header.resource_path_section_size))}));
 				package_data.set_position(cbw<Size>(information_structure.header.group_information_section_offset));
 				package_data.read(information_structure.group_information, cbw<Size>(information_structure.header.group_information_section_block_count));
 				package_data.set_position(cbw<Size>(information_structure.header.subgroup_information_section_offset));
@@ -823,7 +823,7 @@ namespace TwinStar::Core::Tool::PopCap::RSB {
 							}
 						}
 					}
-					package_data_end_position = max(package_data_end_position, cbw<Size>(subgroup_information_structure.offset + subgroup_information_structure.size));
+					package_data_end_position = maximum(package_data_end_position, cbw<Size>(subgroup_information_structure.offset + subgroup_information_structure.size));
 				}
 			}
 			package_data.set_position(package_data_end_position);

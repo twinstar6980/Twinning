@@ -113,7 +113,7 @@ namespace TwinStar::Core {
 			CView const & that
 		) const -> StorageOrdering requires
 			(IsSame<Element, Character>) {
-			auto common_size = min(thiz.size(), that.size());
+			auto common_size = minimum(thiz.size(), that.size());
 			for (auto & index : SizeRange{common_size}) {
 				auto & thiz_element = thiz[index];
 				auto & that_element = that[index];

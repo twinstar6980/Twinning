@@ -1,36 +1,52 @@
 #pragma once
 
 #include "core/utility/base_wrapper/wrapper.hpp"
-#include <bit>
+#include "core/utility/miscellaneous/byte_series/utility.hpp"
 
 namespace TwinStar::Core {
 
 	#pragma region type
 
-	// TODO : use character-array ?
-	M_simple_derived_class(FourCC, IntegerWrapper<ZIntegerU32>, IntegerWrapper);
+	struct FourCC {
+
+		Character8 first;
+		Character8 second;
+		Character8 third;
+		Character8 fourth;
+
+		// ----------------
+
+		friend constexpr auto operator == (
+			FourCC const & thix,
+			FourCC const & that
+		) -> bool = default;
+
+	};
 
 	#pragma endregion
 
 	#pragma region utility
 
-	inline constexpr auto make_fourcc (
-		Character const & a,
-		Character const & b,
-		Character const & c,
-		Character const & d
+	inline constexpr auto fourcc_from_integer (
+		IntegerU32 const & integer
 	) -> FourCC {
-		if constexpr (std::endian::native == std::endian::little) {
-			return cbw<FourCC>(a) << 0_sz |
-				cbw<FourCC>(b) << 8_sz |
-				cbw<FourCC>(c) << 16_sz |
-				cbw<FourCC>(d) << 24_sz;
-		} else {
-			return cbw<FourCC>(a) << 24_sz |
-				cbw<FourCC>(b) << 16_sz |
-				cbw<FourCC>(c) << 8_sz |
-				cbw<FourCC>(d) << 0_sz;
-		}
+		auto fourcc = FourCC{};
+		fourcc.fourth = cbw<Character8>(clip_bit(integer, 1_ix, 8_sz));
+		fourcc.third = cbw<Character8>(clip_bit(integer, 9_ix, 8_sz));
+		fourcc.second = cbw<Character8>(clip_bit(integer, 17_ix, 8_sz));
+		fourcc.first = cbw<Character8>(clip_bit(integer, 25_ix, 8_sz));
+		return fourcc;
+	}
+
+	inline constexpr auto fourcc_to_integer (
+		FourCC const & fourcc
+	) -> IntegerU32 {
+		auto integer = IntegerU32{};
+		integer |= cbw<IntegerU32>(fourcc.fourth) << 0_sz;
+		integer |= cbw<IntegerU32>(fourcc.third) << 8_sz;
+		integer |= cbw<IntegerU32>(fourcc.second) << 16_sz;
+		integer |= cbw<IntegerU32>(fourcc.first) << 24_sz;
+		return integer;
 	}
 
 	#pragma endregion
@@ -42,12 +58,12 @@ namespace TwinStar::Core {
 		ZLiteralLength length
 	) -> FourCC {
 		assert_test(length == 4_szz);
-		return make_fourcc(
-			mbw<Character>(string[0]),
-			mbw<Character>(string[1]),
-			mbw<Character>(string[2]),
-			mbw<Character>(string[3])
-		);
+		return FourCC{
+			.first = mbw<Character8>(string[0]),
+			.second = mbw<Character8>(string[1]),
+			.third = mbw<Character8>(string[2]),
+			.fourth = mbw<Character8>(string[3]),
+		};
 	}
 
 	#pragma endregion

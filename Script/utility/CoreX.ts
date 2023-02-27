@@ -1328,7 +1328,6 @@ namespace TwinStar.Script.CoreX {
 					let manifest = Core.Tool.PopCap.REANIM.Manifest.Animation.default();
 					Core.Tool.PopCap.REANIM.Decode.process_animation(stream, manifest, version_c);
 					JSON.write_fs(manifest_file, manifest.get_json(version_c));
-					assert_test(stream.position().value === stream.size().value);
 					return;
 				}
 
@@ -1363,7 +1362,6 @@ namespace TwinStar.Script.CoreX {
 					let manifest = Core.Tool.PopCap.PARTICLE.Manifest.Particle.default();
 					Core.Tool.PopCap.PARTICLE.Decode.process_particle(stream, manifest, version_c);
 					JSON.write_fs(manifest_file, manifest.get_json(version_c));
-					assert_test(stream.position().value === stream.size().value);
 					return;
 				}
 

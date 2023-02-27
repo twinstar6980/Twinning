@@ -27,11 +27,16 @@ namespace TwinStar::Core::Trait {
 
 	#pragma region utility
 
+	template <typename>
+	inline constexpr auto k_static_assert_fail = bool{false};
+
+	// ----------------
+
 	template <typename It> requires
 		AutoConstraint
 	inline constexpr auto declare (
 	) -> It {
-		throw "this function can only be used in unevaluated context";
+		throw NeverException{};
 	}
 
 	#pragma endregion

@@ -301,13 +301,13 @@ namespace TwinStar::Core::Tool::PopCap::RSB::Structure {
 		M_wrap(ResourcePropertyDetailDescriptionInformation<t_version>),
 		M_wrap(
 			(IntegerU32) key_offset,
-			(PaddingBlock<4_sz>) unused_1, // NOTE : value type ?
+			(PaddingBlock<4_sz>) unused_1, // TODO : value type ?
 			(IntegerU32) value_offset,
 		),
 	);
 
 	// ----------------
-	// todo
+	// TODO
 
 	template <auto t_version>
 	struct ResourceDetailDescriptionInformation;
@@ -337,7 +337,7 @@ namespace TwinStar::Core::Tool::PopCap::RSB::Structure {
 	);
 
 	// ----------------
-	// todo
+	// TODO
 
 	template <auto t_version>
 	struct ResourceDescriptionInformation;
@@ -368,7 +368,7 @@ namespace TwinStar::Core::Tool::PopCap::RSB::Structure {
 	);
 
 	// ----------------
-	// todo
+	// TODO
 
 	template <auto t_version>
 	struct SubgroupDescriptionInformation;
@@ -399,7 +399,7 @@ namespace TwinStar::Core::Tool::PopCap::RSB::Structure {
 	);
 
 	// ----------------
-	// todo
+	// TODO
 
 	template <auto t_version>
 	struct GroupDescriptionInformation;

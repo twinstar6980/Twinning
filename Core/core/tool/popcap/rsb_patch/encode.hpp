@@ -34,9 +34,9 @@ namespace TwinStar::Core::Tool::PopCap::RSBPatch {
 			assert_test(cbw<Size>(information_structure.header.subgroup_information_section_block_size) == bs_static_size<RSB::Structure::SubgroupInformation<package_version>>());
 			assert_test(cbw<Size>(information_structure.header.subgroup_pool_information_section_block_size) == bs_static_size<RSB::Structure::SubgroupPoolInformation<package_version>>());
 			assert_test(cbw<Size>(information_structure.header.texture_resource_information_section_block_size) == bs_static_size<RSB::Structure::TextureResourceInformation<package_version>>());
-			StringMapSection::decode(information_structure.group_id, data.sub_view(cbw<Size>(information_structure.header.group_id_section_offset), cbw<Size>(information_structure.header.group_id_section_size)));
-			StringMapSection::decode(information_structure.subgroup_id, data.sub_view(cbw<Size>(information_structure.header.subgroup_id_section_offset), cbw<Size>(information_structure.header.subgroup_id_section_size)));
-			StringMapSection::decode(information_structure.resource_path, data.sub_view(cbw<Size>(information_structure.header.resource_path_section_offset), cbw<Size>(information_structure.header.resource_path_section_size)));
+			StringMapSection::decode(information_structure.group_id, as_lvalue(IByteStreamView{data.sub_view(cbw<Size>(information_structure.header.group_id_section_offset), cbw<Size>(information_structure.header.group_id_section_size))}));
+			StringMapSection::decode(information_structure.subgroup_id, as_lvalue(IByteStreamView{data.sub_view(cbw<Size>(information_structure.header.subgroup_id_section_offset), cbw<Size>(information_structure.header.subgroup_id_section_size))}));
+			StringMapSection::decode(information_structure.resource_path, as_lvalue(IByteStreamView{data.sub_view(cbw<Size>(information_structure.header.resource_path_section_offset), cbw<Size>(information_structure.header.resource_path_section_size))}));
 			data.set_position(cbw<Size>(information_structure.header.group_information_section_offset));
 			data.read(information_structure.group_information, cbw<Size>(information_structure.header.group_information_section_block_count));
 			data.set_position(cbw<Size>(information_structure.header.subgroup_information_section_offset));
@@ -63,16 +63,18 @@ namespace TwinStar::Core::Tool::PopCap::RSBPatch {
 			auto information_structure = RSGP::Structure::Information<packet_version>{};
 			{
 				raw.read(information_structure.header);
-				StringMapSection::decode(information_structure.resource_information, raw.sub_view(cbw<Size>(information_structure.header.resource_information_section_offset), cbw<Size>(information_structure.header.resource_information_section_size)));
+				StringMapSection::decode(information_structure.resource_information, as_lvalue(IByteStreamView{raw.sub_view(cbw<Size>(information_structure.header.resource_information_section_offset), cbw<Size>(information_structure.header.resource_information_section_size))}));
 			}
 			raw.set_position(
 				cbw<Size>(
-					max(
-						{
-							information_structure.header.information_section_size,
-							information_structure.header.generic_resource_data_section_offset + information_structure.header.generic_resource_data_section_size_original,
-							information_structure.header.texture_resource_data_section_offset + information_structure.header.texture_resource_data_section_size_original,
-						}
+					maximum(
+						make_initializer_list(
+							{
+								information_structure.header.information_section_size,
+								information_structure.header.generic_resource_data_section_offset + information_structure.header.generic_resource_data_section_size_original,
+								information_structure.header.texture_resource_data_section_offset + information_structure.header.texture_resource_data_section_size_original,
+							}
+						)
 					)
 				)
 			);
@@ -114,16 +116,18 @@ namespace TwinStar::Core::Tool::PopCap::RSBPatch {
 			auto information_structure = RSGP::Structure::Information<packet_version>{};
 			{
 				ripe.read(information_structure.header);
-				StringMapSection::decode(information_structure.resource_information, ripe.sub_view(cbw<Size>(information_structure.header.resource_information_section_offset), cbw<Size>(information_structure.header.resource_information_section_size)));
+				StringMapSection::decode(information_structure.resource_information, as_lvalue(IByteStreamView{ripe.sub_view(cbw<Size>(information_structure.header.resource_information_section_offset), cbw<Size>(information_structure.header.resource_information_section_size))}));
 			}
 			ripe.set_position(
 				cbw<Size>(
-					max(
-						{
-							information_structure.header.information_section_size,
-							information_structure.header.generic_resource_data_section_offset + information_structure.header.generic_resource_data_section_size,
-							information_structure.header.texture_resource_data_section_offset + information_structure.header.texture_resource_data_section_size,
-						}
+					maximum(
+						make_initializer_list(
+							{
+								information_structure.header.information_section_size,
+								information_structure.header.generic_resource_data_section_offset + information_structure.header.generic_resource_data_section_size,
+								information_structure.header.texture_resource_data_section_offset + information_structure.header.texture_resource_data_section_size,
+							}
+						)
 					)
 				)
 			);
@@ -331,7 +335,7 @@ namespace TwinStar::Core::Tool::PopCap::RSBPatch {
 						assert_test(packet_before_ripe.full());
 						packet_before = packet_before_raw.stream_view();
 					}
-					before_end_position = max(before_end_position, cbw<Size>(packet_before_subgroup_information.offset + packet_before_subgroup_information.size));
+					before_end_position = maximum(before_end_position, cbw<Size>(packet_before_subgroup_information.offset + packet_before_subgroup_information.size));
 				}
 				process_hash_validate(packet_before, packet_before_hash);
 				auto packet_after = CByteListView{};
@@ -349,7 +353,7 @@ namespace TwinStar::Core::Tool::PopCap::RSBPatch {
 						assert_test(packet_after_ripe.full());
 						packet_after = packet_after_raw.stream_view();
 					}
-					after_end_position = max(after_end_position, cbw<Size>(packet_after_subgroup_information.offset + packet_after_subgroup_information.size));
+					after_end_position = maximum(after_end_position, cbw<Size>(packet_after_subgroup_information.offset + packet_after_subgroup_information.size));
 				}
 				auto packet_patch_header = OByteStreamView{patch.forward_view(4_sz + 4_sz + 128_sz + 16_sz)};
 				packet_patch_exist = packet_after != packet_before;
@@ -553,7 +557,7 @@ namespace TwinStar::Core::Tool::PopCap::RSBPatch {
 						assert_test(packet_before_ripe.full());
 						packet_before = packet_before_raw.stream_view();
 					}
-					before_end_position = max(before_end_position, cbw<Size>(packet_before_subgroup_information.offset + packet_before_subgroup_information.size));
+					before_end_position = maximum(before_end_position, cbw<Size>(packet_before_subgroup_information.offset + packet_before_subgroup_information.size));
 				}
 				process_hash_validate(packet_before, packet_before_hash);
 				auto packet_after = CByteListView{};
@@ -577,12 +581,14 @@ namespace TwinStar::Core::Tool::PopCap::RSBPatch {
 					auto packet_after_information_structure = compress_packet(packet_after_raw, packet_after_ripe);
 					assert_test(packet_after_raw.full());
 					packet_after_subgroup_information.offset = cbw<IntegerU32>(after.position());
-					packet_after_subgroup_information.size = max(
-						{
-							packet_after_information_structure.header.information_section_size,
-							packet_after_information_structure.header.generic_resource_data_section_offset + packet_after_information_structure.header.generic_resource_data_section_size,
-							packet_after_information_structure.header.texture_resource_data_section_offset + packet_after_information_structure.header.texture_resource_data_section_size,
-						}
+					packet_after_subgroup_information.size = maximum(
+						make_initializer_list(
+							{
+								packet_after_information_structure.header.information_section_size,
+								packet_after_information_structure.header.generic_resource_data_section_offset + packet_after_information_structure.header.generic_resource_data_section_size,
+								packet_after_information_structure.header.texture_resource_data_section_offset + packet_after_information_structure.header.texture_resource_data_section_size,
+							}
+						)
 					);
 					packet_after_subgroup_information.generic_resource_data_section_offset = packet_after_information_structure.header.generic_resource_data_section_offset;
 					packet_after_subgroup_information.generic_resource_data_section_size = packet_after_information_structure.header.generic_resource_data_section_size;
