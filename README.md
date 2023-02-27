@@ -39,3 +39,9 @@ by TwinStar ( aka TwinKleS or SmallPC or 一路上海外 ) .
 * 操作系统：`Windows 7+` 、`Linux ?` 、`Macintosh 13.1~` 、`Android 9~` 、`iPhone 16.2~` 。
 
 * 处理器架构：`x86 32|64` 、`arm 32|64` 。
+
+## 鸣谢
+
+* `时漪` `PAK向日葵` `伊特` 等于 2019 年与我一同破解 PopCap PAM 格式。
+
+* [`迎风听雨`](https://github.com/YingFengTingYu) 为项目中部分 PopCap 文件的解析提供了帮助。

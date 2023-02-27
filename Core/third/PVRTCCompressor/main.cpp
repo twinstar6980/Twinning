@@ -2,7 +2,6 @@
 #define _CRT_SECURE_NO_WARNINGS // disable fopen/fread warnings on windows
 #endif
 
-#include <string.h>
 #include <iostream>
 #include <stdio.h>
 #include <stdint.h>
@@ -10,6 +9,8 @@
 #include "RgbaBitmap.h"
 #include "PvrTcEncoder.h"
 #include "PvrTcDecoder.h"
+// TwinStar : insert
+#include <string.h>
 
 /*
  Test program for the PvrTcEncoder, it compresses and then decompresses an

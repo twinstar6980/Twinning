@@ -100,6 +100,8 @@ void removeSpaces(FILE *f1)
 // after that follows RGBRGBRGB...
 // 
 // NO WARRANTY --- SEE STATEMENT IN TOP OF FILE (C) Ericsson AB 2005-2013. All Rights Reserved.
+// TwinStar : change
+// bool fReadPPM(char *filename, int &width, int &height, unsigned char *&pixels, int targetbitrate)
 bool fReadPPM(const char *filename, int &width, int &height, unsigned char *&pixels, int targetbitrate)
 {
 	FILE *f1;
@@ -226,6 +228,8 @@ bool fReadPPM(const char *filename, int &width, int &height, unsigned char *&pix
 
 // Write PPM 
 // NO WARRANTY --- SEE STATEMENT IN TOP OF FILE (C) Ericsson AB 2005-2013. All Rights Reserved.
+// TwinStar : change
+// bool fWritePPM(char *filename, int width, int height, unsigned char *pixels, int bitrate, bool reverse_y)
 bool fWritePPM(const char *filename, int width, int height, unsigned char *pixels, int bitrate, bool reverse_y)
 {
 	FILE *fsave;
@@ -257,6 +261,8 @@ bool fWritePPM(const char *filename, int width, int height, unsigned char *pixel
 
 // WritePGM
 // NO WARRANTY --- SEE STATEMENT IN TOP OF FILE (C) Ericsson AB 2005-2013. All Rights Reserved.
+// TwinStar : change
+// bool fWritePGM(char *filename, int width, int height, unsigned char *pixels,bool reverse_y, int bitdepth)
 bool fWritePGM(const char *filename, int width, int height, unsigned char *pixels,bool reverse_y, int bitdepth)
 {
    FILE *f;
@@ -296,6 +302,8 @@ bool fWritePGM(const char *filename, int width, int height, unsigned char *pixel
  * then follows RGBRGBRGBRGBRGB...
  */
 // NO WARRANTY --- SEE STATEMENT IN TOP OF FILE (C) Ericsson AB 2005-2013. All Rights Reserved.
+// TwinStar : change
+// int fReadPGM(char *filename, int &width, int &height, unsigned char *&pixels, int wantedBitDepth)
 int fReadPGM(const char *filename, int &width, int &height, unsigned char *&pixels, int wantedBitDepth)
 {
 	FILE *f;
@@ -396,7 +404,9 @@ int fReadPGM(const char *filename, int &width, int &height, unsigned char *&pixe
 /* writes a .tga file from two arrays --- one RGB array and one alpha-array */
 /* */
 // NO WARRANTY --- SEE STATEMENT IN TOP OF FILE (C) Ericsson AB 2012. All Rights Reserved.
-bool fWriteTGAfromRGBandA(char *filename, int width, int height, unsigned char *pixelsRGB, unsigned char *pixelsA, bool reverse_y)
+// TwinStar : change
+// bool fWriteTGAfromRGBandA(char *filename, int width, int height, unsigned char *pixelsRGB, unsigned char *pixelsA, bool reverse_y)
+bool fWriteTGAfromRGBandA(const char *filename, int width, int height, unsigned char *pixelsRGB, unsigned char *pixelsA, bool reverse_y)
 {
 	FILE *f1;
 

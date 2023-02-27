@@ -34,12 +34,12 @@
 
 | 库                                                                   | 用途                           |
 |:--------------------------------------------------------------------:|:------------------------------:|
-| [mscharconv 1.2.1](https://github.com/iboB/mscharconv)               | charconv 支持 ( for non-MSVC ) |
-| [fmt 9.0.0](https://github.com/fmtlib/fmt)                           | 字符串格式化                   |
+| [mscharconv 1.2.3](https://github.com/iboB/mscharconv)               | charconv 支持 ( for non-MSVC ) |
+| [fmt 9.1.0](https://github.com/fmtlib/fmt)                           | 字符串格式化                   |
 | [tinyxml2 9.0.0](https://github.com/leethomason/tinyxml2)            | XML 读写                       |
-| [md5](https://github.com/JieweiWei/md5)                              | MD5 哈希计算                   |
+| [md5 1.0](https://github.com/JieweiWei/md5)                          | MD5 哈希计算                   |
 | [Rijndael](#)                                                        | Rijndael 加密与解密            |
-| [zlib 1.2.12](https://www.zlib.net/)                                 | ZLib 压缩与解压                |
+| [zlib 1.2.13](https://github.com/madler/zlib)                        | ZLib 压缩与解压                |
 | [bzip2 1.0.8](https://sourceware.org/bzip2/)                         | BZip2 压缩与解压               |
 | [lzma 22.01](https://www.7-zip.org/sdk.html)                         | Lzma 压缩与解压                |
 | [open-vcdiff 0.8.4](https://github.com/google/open-vcdiff)           | VCDiff 差异分析                |
@@ -47,7 +47,7 @@
 | [ETCPACK 2.74](https://github.com/Ericsson/ETCPACK)                  | ETC1 解压                      |
 | [etcpak 1.0](https://github.com/wolfpld/etcpak)                      | ETC1 压缩                      |
 | [PVRTCCompressor](https://github.com/brenwill/PVRTCCompressor)       | PVRTC4 压缩与解压              |
-| [libpng 1.6.37](http://www.libpng.org/pub/png/libpng.html)           | PNG 读写                       |
+| [libpng 1.6.39](http://www.libpng.org/pub/png/libpng.html)           | PNG 读写                       |
 | [quickjs 2021-03-27](https://github.com/bellard/quickjs)             | JS 引擎                        |
 | [quickjs 2021-03-27 (c-smile)](https://github.com/c-smile/quickjspp) | JS 引擎 ( for MSVC )           |
 | [vld 2.5.1](https://github.com/KindDragon/vld)                       | 内存泄漏检测                   |
@@ -69,3 +69,19 @@
 	2. 由于 GCC 的策略，需要添加 `-fpermissive` 选项以使 GCC 容许项目中的部分代码。
 	
 	3. 由于 GCC 的 BUG ，本项目无法通过 GCC 编译，参阅 [GCC Bugzilla # 102367](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=102367) 。
+
+* 对第三方库的修改
+	
+	对第三方库做出少许修改，使它们更符合本项目的需求。
+	
+	> 任何修改都会以 `// TwinStar : source|insert|remove|change` 做出标示。
+	
+	1. `fmt`：修改浮点数输出格式。
+	
+	2. `md5`：修改传参类型。
+	
+	3. `Rijndael`：修正非标准代码，避免符号冲突。
+	
+	4. `ETCPACK`：修正错误代码，移除平台依赖，暴露库 API 。
+	
+	4. `PVRTCCompressor`：引入依赖头文件。

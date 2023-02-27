@@ -1,5 +1,5 @@
 -- libpng
--- 1.6.37 a40189cf881e9f0db80511c382292a5604c3c3d1
+-- 1.6.39 07b8803110da160b158ebfef872627da6c85cbdf
 -- http://www.libpng.org/pub/png/libpng.html
 
 -- TODO : apply special processor setting, see https://github.com/xmake-io/xmake-repo/blob/master/packages/l/libpng/xmake.lua
@@ -43,6 +43,12 @@ target('third.libpng', function()
 		'third.zlib',
 		{}
 	)
+	if m.system:is('iphone') then
+		add_defines(
+			'PNG_ARM_NEON_OPT=0',
+			{ public = true }
+		)
+	end
 	on_load(function(target)
 		import('custom')
 		custom.apply_compiler_option_basic(target)

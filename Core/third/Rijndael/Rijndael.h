@@ -6,7 +6,11 @@
 
 #include <exception>
 #include <cstring>
+// TwinStar : insert
 #include <stdexcept>
+
+// TwinStar : remove
+// using namespace std;
 
 //Rijndael (pronounced Reindaal) is a block cipher, designed by Joan Daemen and Vincent Rijmen as a candidate algorithm for the AES.
 //The cipher has a variable block length and key length. The authors currently specify how to use keys with a length
@@ -76,6 +80,8 @@ private:
 	void Xor(char* buff, char const* chain)
 	{
 		if(false==m_bKeyInit)
+			// TwinStar : change
+			// throw exception(sm_szErrorMsg1);
 			throw std::runtime_error(sm_szErrorMsg1);
 		for(int i=0; i<m_blockSize; i++)
 			*(buff++) ^= *(chain++);	
@@ -112,6 +118,8 @@ public:
 	int GetKeyLength()
 	{
 		if(false==m_bKeyInit)
+			// TwinStar : change
+			// throw exception(sm_szErrorMsg1);
 			throw std::runtime_error(sm_szErrorMsg1);
 		return m_keylength;
 	}
@@ -120,6 +128,8 @@ public:
 	int	GetBlockSize()
 	{
 		if(false==m_bKeyInit)
+			// TwinStar : change
+			// throw exception(sm_szErrorMsg1);
 			throw std::runtime_error(sm_szErrorMsg1);
 		return m_blockSize;
 	}
@@ -128,6 +138,8 @@ public:
 	int GetRounds()
 	{
 		if(false==m_bKeyInit)
+			// TwinStar : change
+			// throw exception(sm_szErrorMsg1);
 			throw std::runtime_error(sm_szErrorMsg1);
 		return m_iROUNDS;
 	}

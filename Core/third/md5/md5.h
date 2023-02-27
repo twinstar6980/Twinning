@@ -76,12 +76,14 @@
   (a) += (b); \
 }
 
-#include <span>
 #include <string>
 #include <cstring>
+// TwinStar : insert
+#include <span>
 
-using std::span;
 using std::string;
+// TwinStar : insert
+using std::span;
 
 /* Define of btye.*/
 typedef unsigned char byte;
@@ -91,6 +93,8 @@ typedef unsigned int bit32;
 class MD5 {
 public:
   /* Construct a MD5 object with a string. */
+  // TwinStar : change
+  // MD5(const string& message);
   MD5(const span<const byte>& message);
 
   /* Generate md5 digest. */

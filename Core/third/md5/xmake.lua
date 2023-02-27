@@ -1,5 +1,5 @@
 -- md5
--- ? 30774d0c9ecf82fb003fc15978b1f21bc85858f7
+-- 1.0 30774d0c9ecf82fb003fc15978b1f21bc85858f7
 -- https://github.com/JieweiWei/md5
 
 target('third.md5', function()

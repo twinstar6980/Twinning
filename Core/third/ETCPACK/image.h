@@ -1,4 +1,4 @@
-﻿//// etcpack v2.74
+//// etcpack v2.74
 //// 
 //// NO WARRANTY 
 //// 
@@ -48,15 +48,32 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
-bool fReadPPM(const char * filename, int & width, int & height, unsigned char *& pixels, int targetbitrate);
-bool fWritePPM(const char * filename, int width, int height, unsigned char * pixels, int bitrate, bool reverse_y);
+// TwinStar : change
+// bool fReadPPM(char *filename, int &width, int &height, unsigned char *&pixels, int targetbitrate);
+bool fReadPPM(const char *filename, int &width, int &height, unsigned char *&pixels, int targetbitrate);
+// TwinStar : change
+// bool fWritePPM(char *filename, int width, int height, unsigned char *pixels, int bitrate, bool reverse_y);
+bool fWritePPM(const char *filename, int width, int height, unsigned char *pixels, int bitrate, bool reverse_y);
 
-bool fReadPFM(const char * filename, int & width, int & height, float *& pixels);
-bool fWritePFM(char * filename, int width, int height, float * pixels, bool reverse_y);
+// TwinStar : change
+// bool fReadPFM(char *filename, int &width, int &height, float *&pixels);
+bool fReadPFM(const char *filename, int &width, int &height, float *&pixels);
+// TwinStar : change
+// bool fWritePFM(char *filename, int width, int height, float *pixels,bool reverse_y);
+bool fWritePFM(const char *filename, int width, int height, float *pixels,bool reverse_y);
 // write a grey scale image
-bool fWritePGM(const char * filename, int width, int height, unsigned char * pixels, bool reverse_y, int bitdepth);
-int fReadPGM(const char * filename, int & width, int & height, unsigned char *& pixels, int wantedBitDepth);
+// TwinStar : change
+// bool fWritePGM(char *filename, int width, int height, unsigned char *pixels,bool reverse_y, int bitdepth);
+bool fWritePGM(const char *filename, int width, int height, unsigned char *pixels,bool reverse_y, int bitdepth);
+// TwinStar : change
+// int fReadPGM(char *filename, int &width, int &height, unsigned char *&pixels, int wantedBitDepth);
+int fReadPGM(const char *filename, int &width, int &height, unsigned char *&pixels, int wantedBitDepth);
 // write a TGA image with both RGB and alpha
-bool fWriteTGAfromRGBandA(char * filename, int width, int height, unsigned char * pixelsRGB, unsigned char * pixelsA, bool reverse_y);
+// TwinStar : change
+// bool fWriteTGAfromRGBandA(char *filename, int width, int height, unsigned char *pixelsRGB, unsigned char *pixelsA, bool reverse_y);
+bool fWriteTGAfromRGBandA(const char *filename, int width, int height, unsigned char *pixelsRGB, unsigned char *pixelsA, bool reverse_y);
 
 #endif
+
+
+
