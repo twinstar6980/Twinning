@@ -435,7 +435,7 @@ typedef struct JSPropertyEnum {
     JS_BOOL is_enumerable;
     JSAtom atom;
 } JSPropertyEnum;
-
+// TwinStar : append
 void js_free_prop_enum(JSContext *ctx, JSPropertyEnum *tab, uint32_t len);
 
 typedef struct JSPropertyDescriptor {

@@ -7433,6 +7433,8 @@ static int num_keys_cmp(const void *p1, const void *p2, void *opaque)
         return 1;
 }
 
+// TwinStar : change
+// static void js_free_prop_enum(JSContext *ctx, JSPropertyEnum *tab, uint32_t len)
 void js_free_prop_enum(JSContext *ctx, JSPropertyEnum *tab, uint32_t len)
 {
     uint32_t i;
