@@ -8,7 +8,6 @@ namespace TwinStar::Core::CharacterType {
 
 	#pragma region constant
 
-	// TODO : rename ?
 	inline constexpr auto k_null = Character{'\0'_c};
 
 	inline constexpr auto k_escape_slash = Character{'\\'_c};

@@ -219,40 +219,6 @@ namespace TwinStar::Core::Executor::Interface {
 		builder.template add_second_constructor<&json_constructor>("json"_s);
 		builder.template add_member_function<&json_getter>("get_json"_s);
 		builder.template add_member_function<&json_setter>("set_json"_s);
-		// TODO : remove
-		/*constexpr auto & value_getter = normalized_lambda<
-			[] (
-			JS::Handler<Class> &   thix,
-			JS::Handler<Version> & version,
-			JS::Value &            js_context
-		) -> JS::Value {
-				auto value = js_context.new_value();
-				Generalization::match<VersionPackage>(
-					version.value(),
-					[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-						value.from(thix.value(), mbw<Size>(index));
-					}
-				);
-				return value;
-			}
-		>;
-		constexpr auto & value_setter = normalized_lambda<
-			[] (
-			JS::Handler<Class> &   thix,
-			JS::Handler<Version> & version,
-			JS::Value &            value
-		) -> Void {
-				Generalization::match<VersionPackage>(
-					version.value(),
-					[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-						value.to(thix.value(), mbw<Size>(index));
-					}
-				);
-				return;
-			}
-		>;
-		builder.template add_member_function<&value_getter>("get_value"_s);
-		builder.template add_member_function<&value_setter>("set_value"_s);*/
 		return builder;
 	}
 
@@ -385,9 +351,7 @@ namespace TwinStar::Core::Executor::Interface {
 			.add_member_function_proxy<&IOByteStreamView::position>("position"_s)
 			.add_member_function_proxy<&IOByteStreamView::set_position>("set_position"_s)
 			.add_member_function_proxy<&IOByteStreamView::view>("view"_s)
-			.add_member_function_proxy<&IOByteStreamView::stream_view>("stream_view"_s)
-			.add_member_function_proxy<AsVMemberFunction<IOByteStreamView, Byte>{&IOByteStreamView::read_of}>("read"_s)
-			.add_member_function_proxy<AsVMemberFunction<IOByteStreamView, Void, Byte const &>{&IOByteStreamView::write}>("write"_s);
+			.add_member_function_proxy<&IOByteStreamView::stream_view>("stream_view"_s);
 		// CharacterListView
 		define_generic_class<VCharacterListView, GCDF::generic_mask>(n_Core, "CharacterListView"_s)
 			.add_member_function_proxy<&VCharacterListView::size>("size"_s)

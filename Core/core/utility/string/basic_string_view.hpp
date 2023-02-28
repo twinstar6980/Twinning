@@ -132,7 +132,6 @@ namespace TwinStar::Core {
 
 		#pragma region hash
 
-		// TODO : size type ?
 		constexpr auto hash (
 		) const -> IntegerU64 {
 			auto offset = 14695981039346656037_iu64;

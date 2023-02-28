@@ -195,7 +195,6 @@ namespace TwinStar::Core {
 			That const &    that,
 			Boolean const & disable_sign_when_positive = k_false
 		) -> Void {
-			// TODO : maximum size ?
 			thix.allocate_full(32_sz);
 			auto stream = OCharacterStreamView{thix};
 			stream.write(that, disable_sign_when_positive);
@@ -231,7 +230,6 @@ namespace TwinStar::Core {
 			That const &    that,
 			Boolean const & disable_sign_when_positive = k_false
 		) -> Void {
-			// TODO : maximum size ?
 			thix.allocate_full(32_sz);
 			auto stream = OCharacterStreamView{thix};
 			stream.write(that, disable_sign_when_positive);

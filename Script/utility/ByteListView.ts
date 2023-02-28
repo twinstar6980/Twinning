@@ -213,6 +213,213 @@ namespace TwinStar.Script {
 
 	}
 
+	export class ByteStreamView {
+
+		// ------------------------------------------------
+
+		private m_view: ByteListView;
+
+		private m_position: number;
+
+		// ------------------------------------------------
+
+		constructor(
+			data: ArrayBuffer,
+			offset: number = 0,
+		) {
+			this.m_view = new ByteListView(data, offset);
+			this.m_position = 0;
+		}
+
+		// ------------------------------------------------
+
+		p(
+		): number;
+
+		p(
+			value: number,
+		): void;
+
+		p(
+			value?: number,
+		): void | number {
+			return (value === undefined) ? (this.m_position) : (this.m_position = value, undefined);
+		}
+
+		// ------------------------------------------------
+
+		u8(
+		): bigint;
+
+		u8(
+			value: bigint,
+		): void;
+
+		u8(
+			value?: bigint,
+		): void | bigint {
+			let position = this.m_position;
+			this.m_position += 1;
+			return this.m_view.u8(position, value!);
+		}
+
+		// ------------------------------------------------
+
+		u16(
+		): bigint;
+
+		u16(
+			value: bigint,
+		): void;
+
+		u16(
+			value?: bigint,
+		): void | bigint {
+			let position = this.m_position;
+			this.m_position += 2;
+			return this.m_view.u16(position, value!);
+		}
+
+		// ------------------------------------------------
+
+		u32(
+		): bigint;
+
+		u32(
+			value: bigint,
+		): void;
+
+		u32(
+			value?: bigint,
+		): void | bigint {
+			let position = this.m_position;
+			this.m_position += 4;
+			return this.m_view.u32(position, value!);
+		}
+
+		// ------------------------------------------------
+
+		u64(
+		): bigint;
+
+		u64(
+			value: bigint,
+		): void;
+
+		u64(
+			value?: bigint,
+		): void | bigint {
+			let position = this.m_position;
+			this.m_position += 8;
+			return this.m_view.u64(position, value!);
+		}
+
+		// ------------------------------------------------
+
+		i8(
+		): bigint;
+
+		i8(
+			value: bigint,
+		): void;
+
+		i8(
+			value?: bigint,
+		): void | bigint {
+			let position = this.m_position;
+			this.m_position += 1;
+			return this.m_view.i8(position, value!);
+		}
+
+		// ------------------------------------------------
+
+		i16(
+		): bigint;
+
+		i16(
+			value: bigint,
+		): void;
+
+		i16(
+			value?: bigint,
+		): void | bigint {
+			let position = this.m_position;
+			this.m_position += 2;
+			return this.m_view.i16(position, value!);
+		}
+
+		// ------------------------------------------------
+
+		i32(
+		): bigint;
+
+		i32(
+			value: bigint,
+		): void;
+
+		i32(
+			value?: bigint,
+		): void | bigint {
+			let position = this.m_position;
+			this.m_position += 4;
+			return this.m_view.i32(position, value!);
+		}
+
+		// ------------------------------------------------
+
+		i64(
+		): bigint;
+
+		i64(
+			value: bigint,
+		): void;
+
+		i64(
+			value?: bigint,
+		): void | bigint {
+			let position = this.m_position;
+			this.m_position += 8;
+			return this.m_view.i64(position, value!);
+		}
+
+		// ------------------------------------------------
+
+		f32(
+		): number;
+
+		f32(
+			value: number,
+		): void;
+
+		f32(
+			value?: number,
+		): void | number {
+			let position = this.m_position;
+			this.m_position += 4;
+			return this.m_view.f32(position, value!);
+		}
+
+		// ------------------------------------------------
+
+		f64(
+		): number;
+
+		f64(
+			value: number,
+		): void;
+
+		f64(
+			value?: number,
+		): void | number {
+			let position = this.m_position;
+			this.m_position += 8;
+			return this.m_view.f64(position, value!);
+		}
+
+		// ------------------------------------------------
+
+	}
+
 	// ------------------------------------------------
 
 }

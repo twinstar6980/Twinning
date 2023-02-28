@@ -1,6 +1,6 @@
 /**
  * JS interface of Core
- * @version 35
+ * @version 37
  */
 declare namespace TwinStar.Core {
 
@@ -545,24 +545,6 @@ declare namespace TwinStar.Core {
 		 */
 		stream_view(
 		): ByteListView;
-
-		// ------------------------------------------------
-
-		/**
-		 * 从流的当前位置读取一个字节
-		 * @returns 读取到的字节
-		 */
-		read(
-		): Byte;
-
-		/**
-		 * 向流的当前位置写入一个字节
-		 * @param value 字节值
-		 * @returns 无
-		 */
-		write(
-			value: Byte,
-		): Void;
 
 		// ------------------------------------------------
 

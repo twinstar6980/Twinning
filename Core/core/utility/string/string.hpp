@@ -75,7 +75,6 @@ namespace TwinStar::Core {
 	inline constexpr auto hash_std_string_view (
 		std::string_view const & string
 	) -> ZIntegerU64 {
-		// NOTE : ull -> ui64
 		auto offset = ZIntegerU64{14695981039346656037ull};
 		auto prime = ZIntegerU64{1099511628211ull};
 		auto result = offset;

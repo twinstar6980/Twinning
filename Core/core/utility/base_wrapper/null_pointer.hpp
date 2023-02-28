@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/utility/base_wrapper/base.hpp"
 #include "core/utility/base_wrapper/pointer.hpp"
 
 namespace TwinStar::Core {

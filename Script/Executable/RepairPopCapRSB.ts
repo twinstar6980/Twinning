@@ -168,7 +168,7 @@ namespace TwinStar.Script.Executable.RepairPopCapRSB {
 		// description_resource_section_offset
 		// description_string_section_offset
 		// information_without_description_section_size
-		// todo : 6C
+		// TODO : 6C
 		// group_information_section
 		for (let group_index = 0; group_index < group_information_section_block_count; ++group_index) {
 			let view = new ByteListView(data, Number(group_information_section_offset) + Number(group_information_section_block_size) * group_index);

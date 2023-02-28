@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/utility/base_wrapper/base.hpp"
+#include "core/utility/base_wrapper/number.hpp"
 
 namespace TwinStar::Core {
 

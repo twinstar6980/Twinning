@@ -104,7 +104,7 @@ namespace TwinStar::Core {
 			using RawValueAlternative = AsSwitch<IsSame<TValue, ZBoolean>, ZIntegerU8, TValue>;
 			using RawWrapper = IntegerWrapper<std::make_unsigned_t<RawValueAlternative>>;
 			thix.read(self_cast<RawWrapper>(that));
-			assert_test((self_cast<RawWrapper>(that) & ~mbw<RawWrapper>(0b1)) == mbw<RawWrapper>(0));
+			assert_test((self_cast<RawWrapper>(that) & ~mbw<RawWrapper>(0b1)) == mbw<RawWrapper>(0b0));
 			return;
 		}
 

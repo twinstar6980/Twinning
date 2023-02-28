@@ -1778,15 +1778,17 @@ namespace TwinStar.Script.CoreX {
 					image: Core.Image.CImageView,
 					palette: CoreX.Image.ColorList,
 				): void {
+					let palette_data = new ByteStreamView(data.view().value, Number(data.position().value));
 					let bit_count = compute_bit_count(palette.length);
 					if (bit_count === 1) {
-						data.write(Core.Byte.value(0n));
+						palette_data.u8(0n);
 					} else {
-						data.write(Core.Byte.value(BigInt(palette.length)));
+						palette_data.u8(BigInt(palette.length));
 						for (let e of palette) {
-							data.write(Core.Byte.value(e));
+							palette_data.u8(e);
 						}
 					}
+					data.set_position(Core.Size.value(data.position().value + BigInt(palette_data.p())));
 					Core.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.Encode.process_image(data, image, Core.Image.ColorList.value(palette));
 					return;
 				}
@@ -1795,16 +1797,18 @@ namespace TwinStar.Script.CoreX {
 					data: Core.IByteStreamView,
 					image: Core.Image.VImageView,
 				): void {
-					let index_count = data.read().value;
+					let palette_data = new ByteStreamView(data.view().value, Number(data.position().value));
+					let index_count = palette_data.u8();
 					let palette: CoreX.Image.ColorList;
 					if (index_count === 0n) {
 						palette = [0b0000n, 0b1111n];
 					} else {
 						palette = [];
 						for (let i = 0n; i < index_count; ++i) {
-							palette.push(data.read().value);
+							palette.push(palette_data.u8());
 						}
 					}
+					data.set_position(Core.Size.value(data.position().value + BigInt(palette_data.p())));
 					Core.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.Decode.process_image(data, image, Core.Image.ColorList.value(palette));
 					return;
 				}
