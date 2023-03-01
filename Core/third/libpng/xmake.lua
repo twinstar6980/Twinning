@@ -43,7 +43,7 @@ target('third.libpng', function()
 		'third.zlib',
 		{}
 	)
-	if m.system:is('iphone') then
+	if m.system:is('android', 'iphone') then
 		add_defines(
 			'PNG_ARM_NEON_OPT=0',
 			{ public = true }
