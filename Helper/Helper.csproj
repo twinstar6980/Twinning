@@ -1,0 +1,87 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
+    <RootNamespace>Helper</RootNamespace>
+    <Platforms>x64</Platforms>
+    <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
+    <PublishProfile>win10-$(Platform).pubxml</PublishProfile>
+    <UseWinUI>true</UseWinUI>
+    <EnableMsixTooling>true</EnableMsixTooling>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <LangVersion>preview</LangVersion>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+    <PackageCertificateThumbprint>315E4F64A239C38ED3696FAC664F80527C45E9B2</PackageCertificateThumbprint>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+    <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+    <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <AppxBundle>Never</AppxBundle>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <ApplicationIcon>Asset\logo.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Asset\logo.ico" />
+    <Content Include="Asset\logo.png" />
+    <Content Include="Asset\Logo\Square150x150Logo.scale-100.png" />
+    <Content Include="Asset\Logo\Square150x150Logo.scale-200.png" />
+    <Content Include="Asset\Logo\Square150x150Logo.scale-400.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.altform-lightunplated_targetsize-16.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.altform-lightunplated_targetsize-256.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.altform-unplated_targetsize-16.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.altform-unplated_targetsize-256.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.altform-unplated_targetsize-48.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.scale-100.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.scale-200.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.scale-400.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.targetsize-16.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.targetsize-256.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.targetsize-48.png" />
+    <Content Include="Asset\Logo\StoreLogo.scale-100.png" />
+    <Content Include="Asset\Logo\StoreLogo.scale-200.png" />
+    <Content Include="Asset\Logo\StoreLogo.scale-400.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Common" Version="8.1.0" />
+    <PackageReference Include="CommunityToolkit.WinUI" Version="7.1.2" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <Manifest Include="$(ApplicationManifest)" />
+  </ItemGroup>
+
+  <!-- 
+    Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
+    Tools extension to be activated for this project even if the Windows App SDK Nuget
+    package has not yet been restored.
+  -->
+  <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+    <ProjectCapability Include="Msix" />
+  </ItemGroup>
+
+  <!-- 
+    Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution 
+    Explorer "Package and Publish" context menu entry to be enabled for this project even if 
+    the Windows App SDK Nuget package has not yet been restored.
+  -->
+  <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+    <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <Optimize>False</Optimize>
+    <NoWarn>1998</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <Optimize>True</Optimize>
+    <DefineConstants></DefineConstants>
+    <NoWarn>1998</NoWarn>
+  </PropertyGroup>
+</Project>

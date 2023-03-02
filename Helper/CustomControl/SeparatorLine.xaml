@@ -1,0 +1,25 @@
+<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:local="using:Helper"
+	xmlns:localCustomControl="using:Helper.CustomControl"
+>
+	<Style TargetType="localCustomControl:HorizontalSeparatorLine">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="localCustomControl:HorizontalSeparatorLine">
+					<Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" />
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style TargetType="localCustomControl:VerticalSeparatorLine">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="localCustomControl:VerticalSeparatorLine">
+					<Rectangle Width="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" />
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+</ResourceDictionary>

@@ -166,7 +166,7 @@ namespace TwinStar.Script.Support.PvZ2.RSB.ResourceConvert {
 					let actual_size = texture_information_source.size;
 					let texture_format = option.image.texture_format_map.find((e) => (e.index === texture_information_source.format));
 					assert_test(texture_format !== undefined, `unknown texture format : ${texture_information_source.format}`);
-					Console.notify('v', `    size : [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] , actual_size : [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ] , format : ${texture_format.format}`, []);
+					Console.notify('v', `    size : [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] of [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ] , format : ${texture_format.format}`, []);
 					let data = CoreX.FileSystem.read_file(`${resource_directory}/${path}.ptx`);
 					let stream = Core.ByteStreamView.watch(data.view());
 					let image = Core.Image.Image.allocate(Core.Image.ImageSize.value(actual_size));

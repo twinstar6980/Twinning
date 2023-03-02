@@ -34,6 +34,10 @@ by TwinStar ( aka TwinKleS or SmallPC or 一路上海外 ) .
 	
 	Windows Explorer 扩展，将工具集成至 Windows Explorer 右键菜单中。
 
+* `Helper`
+	
+	助手，提供额外的高级功能。
+
 ## 平台支持
 
 * 操作系统：`Windows 7+` 、`Linux ?` 、`Macintosh 13.1~` 、`Android 9~` 、`iPhone 16.2~` 。

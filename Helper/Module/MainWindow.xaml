@@ -1,0 +1,40 @@
+<Window
+	x:Class="Helper.Module.MainWindow"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:local="using:Helper"
+	mc:Ignorable="d"
+>
+	<TabView
+		x:Name="uTab" x:FieldModifier="public"
+		HorizontalAlignment="Stretch" Width="NaN"
+		VerticalAlignment="Stretch" Height="NaN"
+		IsAddTabButtonVisible="False"
+		TabCloseRequested="{x:Bind uTab_OnTabCloseRequested, Mode = OneTime}"
+		Loaded="{x:Bind uTab_OnLoaded, Mode = OneTime}"
+	>
+		<TabView.TabStripHeader>
+			<Grid
+				HorizontalAlignment="Stretch" Width="NaN"
+				VerticalAlignment="Stretch" Height="NaN"
+				Padding="16,4,4,4"
+			>
+				<ImageIcon
+					HorizontalAlignment="Stretch" Width="22"
+					VerticalAlignment="Bottom" Height="22"
+					Source="/Asset/logo.png"
+				/>
+			</Grid>
+		</TabView.TabStripHeader>
+		<TabView.TabStripFooter>
+			<Grid
+				HorizontalAlignment="Stretch" Width="NaN"
+				VerticalAlignment="Stretch" Height="NaN"
+				MinWidth="160"
+			>
+			</Grid>
+		</TabView.TabStripFooter>
+	</TabView>
+</Window>
