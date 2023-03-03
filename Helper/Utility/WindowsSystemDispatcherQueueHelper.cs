@@ -14,7 +14,8 @@ namespace Helper.Utility {
 
 		// ----------------
 
-		public void EnsureWindowsSystemDispatcherQueueController () {
+		public void EnsureWindowsSystemDispatcherQueueController (
+		) {
 			if (Windows.System.DispatcherQueue.GetForCurrentThread() != null) {
 				return;
 			}

@@ -11,11 +11,26 @@
 				<ResourceDictionary Source="/CustomControl/FluentIconGlyph.xaml" />
 				<ResourceDictionary Source="/CustomControl/SeparatorLine.xaml" />
 			</ResourceDictionary.MergedDictionaries>
-			<SolidColorBrush x:Key="WindowCaptionBackground">Transparent</SolidColorBrush>
-			<SolidColorBrush x:Key="WindowCaptionBackgroundDisabled">Transparent</SolidColorBrush>
-			<SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected">Transparent</SolidColorBrush>
+			<SolidColorBrush x:Key="WindowCaptionBackground" Color="Transparent" />
+			<SolidColorBrush x:Key="WindowCaptionBackgroundDisabled" Color="Transparent" />
+			<SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected" Color="Transparent" />
+			<SolidColorBrush x:Key="TabViewBorderBrush" Color="{ThemeResource DividerStrokeColorDefault}" />
+			<x:Double x:Key="SmallIconSize">17</x:Double>
+			<x:Double x:Key="MediumIconSize">19</x:Double>
+			<x:Double x:Key="LargeIconSize">21</x:Double>
 			<Style TargetType="FontIcon">
 				<Setter Property="FontFamily" Value="{StaticResource SymbolThemeFontFamily}" />
+			</Style>
+			<Style TargetType="TextBox">
+				<Setter Property="BorderBrush" Value="{ThemeResource ControlStrokeColorDefault}" />
+				<Setter Property="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
+			</Style>
+			<Style TargetType="NumberBox">
+				<Setter Property="BorderBrush" Value="{ThemeResource ControlStrokeColorDefault}" />
+			</Style>
+			<Style TargetType="ToggleButton">
+				<Setter Property="BorderBrush" Value="{ThemeResource ControlStrokeColorDefault}" />
+				<Setter Property="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
 			</Style>
 			<Style x:Key="NoExpanderCardStyle" TargetType="Grid">
 				<Setter Property="Height" Value="48" />
@@ -23,7 +38,7 @@
 				<Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefault}" />
 				<Setter Property="BorderBrush" Value="{ThemeResource DividerStrokeColorDefaultBrush}" />
 				<Setter Property="BorderThickness" Value="1" />
-				<Setter Property="CornerRadius" Value="4" />
+				<Setter Property="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
 			</Style>
 			<Style x:Key="ShadowStyle" TargetType="UIElement">
 				<Setter Property="Shadow">
@@ -35,7 +50,7 @@
 			<Style x:Key="LayerStyle" TargetType="Grid" BasedOn="{StaticResource ShadowStyle}">
 				<Setter Property="BorderBrush" Value="{ThemeResource DividerStrokeColorDefaultBrush}" />
 				<Setter Property="BorderThickness" Value="0" />
-				<Setter Property="CornerRadius" Value="8" />
+				<Setter Property="CornerRadius" Value="{ThemeResource OverlayCornerRadius}" />
 			</Style>
 		</ResourceDictionary>
 	</Application.Resources>

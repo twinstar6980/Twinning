@@ -7,34 +7,38 @@
 	xmlns:local="using:Helper"
 	mc:Ignorable="d"
 >
-	<TabView
-		x:Name="uTab" x:FieldModifier="public"
-		HorizontalAlignment="Stretch" Width="NaN"
-		VerticalAlignment="Stretch" Height="NaN"
-		IsAddTabButtonVisible="False"
-		TabCloseRequested="{x:Bind uTab_OnTabCloseRequested, Mode = OneTime}"
-		Loaded="{x:Bind uTab_OnLoaded, Mode = OneTime}"
+	<Grid
+		Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
 	>
-		<TabView.TabStripHeader>
-			<Grid
-				HorizontalAlignment="Stretch" Width="NaN"
-				VerticalAlignment="Stretch" Height="NaN"
-				Padding="16,4,4,4"
-			>
-				<ImageIcon
-					HorizontalAlignment="Stretch" Width="22"
-					VerticalAlignment="Bottom" Height="22"
-					Source="/Asset/logo.png"
-				/>
-			</Grid>
-		</TabView.TabStripHeader>
-		<TabView.TabStripFooter>
-			<Grid
-				HorizontalAlignment="Stretch" Width="NaN"
-				VerticalAlignment="Stretch" Height="NaN"
-				MinWidth="160"
-			>
-			</Grid>
-		</TabView.TabStripFooter>
-	</TabView>
+		<TabView
+			x:Name="uTab" x:FieldModifier="public"
+			HorizontalAlignment="Stretch" Width="NaN"
+			VerticalAlignment="Stretch" Height="NaN"
+			IsAddTabButtonVisible="False"
+			TabCloseRequested="{x:Bind uTab_OnTabCloseRequested, Mode = OneTime}"
+			Loaded="{x:Bind uTab_OnLoaded, Mode = OneTime}"
+		>
+			<TabView.TabStripHeader>
+				<Grid
+					HorizontalAlignment="Stretch" Width="NaN"
+					VerticalAlignment="Stretch" Height="NaN"
+					Padding="16,4,4,4"
+				>
+					<ImageIcon
+						HorizontalAlignment="Stretch" Width="22"
+						VerticalAlignment="Bottom" Height="22"
+						Source="/Asset/logo.png"
+					/>
+				</Grid>
+			</TabView.TabStripHeader>
+			<TabView.TabStripFooter>
+				<Grid
+					HorizontalAlignment="Stretch" Width="NaN"
+					VerticalAlignment="Stretch" Height="NaN"
+					MinWidth="160"
+				>
+				</Grid>
+			</TabView.TabStripFooter>
+		</TabView>
+	</Grid>
 </Window>

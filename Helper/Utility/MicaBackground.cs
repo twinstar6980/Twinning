@@ -4,6 +4,7 @@
 using Helper;
 using Microsoft.UI.Composition;
 using Microsoft.UI.Composition.SystemBackdrops;
+using Microsoft.UI.Xaml.Media;
 using WinRT;
 
 namespace Helper.Utility {
@@ -29,8 +30,10 @@ namespace Helper.Utility {
 
 		#region apply
 
-		public Boolean TrySetMicaBackdrop () {
+		public Boolean TrySetMicaBackdrop (
+		) {
 			if (MicaController.IsSupported()) {
+				Debug.WriteLine(this.mWindow.Content.GetType().Name);
 				this.mWindowsSystemDispatcherQueueHelper = new WindowsSystemDispatcherQueueHelper();
 				this.mWindowsSystemDispatcherQueueHelper.EnsureWindowsSystemDispatcherQueueController();
 				this.mSystemBackdropConfiguration = new SystemBackdropConfiguration();
@@ -48,7 +51,8 @@ namespace Helper.Utility {
 			}
 		}
 
-		private void SetConfigurationSourceTheme () {
+		private void SetConfigurationSourceTheme (
+		) {
 			if (this.mSystemBackdropConfiguration != null) {
 				this.mSystemBackdropConfiguration.Theme = ((FrameworkElement)this.mWindow.Content).ActualTheme switch {
 					ElementTheme.Dark => SystemBackdropTheme.Dark,

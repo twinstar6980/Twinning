@@ -13,7 +13,7 @@
 		HorizontalAlignment="Stretch" Width="NaN"
 		VerticalAlignment="Stretch" Height="NaN"
 		Padding="8,4"
-		ColumnSpacing="4" RowSpacing="4"
+		ColumnSpacing="4" RowSpacing="0"
 	>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="1*" MinWidth="208" MaxWidth="312" />
@@ -23,15 +23,11 @@
 			<ColumnDefinition Width="1*" MinWidth="208" MaxWidth="312" />
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="1" />
 			<RowDefinition Height="1*" />
 		</Grid.RowDefinitions>
-		<localCustomControl:HorizontalSeparatorLine
-			Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5"
-		/>
 		<Grid
 			Grid.Column="0" HorizontalAlignment="Stretch" Width="NaN"
-			Grid.Row="1" VerticalAlignment="Stretch" Height="NaN"
+			Grid.Row="0" VerticalAlignment="Stretch" Height="NaN"
 			Padding="0"
 			ColumnSpacing="0" RowSpacing="0"
 		>
@@ -46,7 +42,7 @@
 			<Grid
 				Grid.Column="0" HorizontalAlignment="Stretch" Width="NaN"
 				Grid.Row="0" VerticalAlignment="Stretch" Height="NaN"
-				Padding="16,8"
+				Padding="16,4,16,8"
 				ColumnSpacing="12" RowSpacing="0"
 			>
 				<Grid.ColumnDefinitions>
@@ -61,7 +57,7 @@
 				<FontIcon
 					Grid.Column="0" HorizontalAlignment="Center" Width="32"
 					Grid.Row="0" VerticalAlignment="Center" Height="NaN"
-					FontSize="20"
+					FontSize="{StaticResource LargeIconSize}"
 					Glyph="{StaticResource FluentIconGlyph.CircleRing}"
 				/>
 				<TextBlock
@@ -82,14 +78,14 @@
 						Opacity="0"
 					>
 						<FontIcon
-							FontSize="16"
+							FontSize="{StaticResource MediumIconSize}"
 							Glyph=""
 						/>
 					</Button>
 				</StackPanel>
 			</Grid>
 			<localCustomControl:HorizontalSeparatorLine
-				Grid.Row="1"
+				Grid.Column="0" Grid.Row="1"
 			/>
 			<ListView
 				x:Name="uImageList" x:FieldModifier="public"
@@ -148,11 +144,11 @@
 			</ListView>
 		</Grid>
 		<localCustomControl:VerticalSeparatorLine
-			Grid.Row="1" Grid.Column="1"
+			Grid.Column="1" Grid.Row="0"
 		/>
 		<Grid
 			Grid.Column="2" HorizontalAlignment="Stretch" Width="NaN"
-			Grid.Row="1" VerticalAlignment="Stretch" Height="NaN"
+			Grid.Row="0" VerticalAlignment="Stretch" Height="NaN"
 			Padding="0"
 			ColumnSpacing="0" RowSpacing="0"
 		>
@@ -169,7 +165,7 @@
 			<Grid
 				Grid.Column="0" HorizontalAlignment="Stretch" Width="NaN"
 				Grid.Row="0" VerticalAlignment="Stretch" Height="NaN"
-				Padding="16,8"
+				Padding="16,4,16,8"
 				ColumnSpacing="12" RowSpacing="0"
 			>
 				<Grid.ColumnDefinitions>
@@ -184,7 +180,7 @@
 				<FontIcon
 					Grid.Column="0" HorizontalAlignment="Center" Width="32"
 					Grid.Row="0" VerticalAlignment="Center" Height="NaN"
-					FontSize="20"
+					FontSize="{StaticResource LargeIconSize}"
 					Glyph="{StaticResource FluentIconGlyph.FitPage}"
 				/>
 				<TextBlock
@@ -205,14 +201,14 @@
 						Click="{x:Bind Controller.uClearSource_OnClick, Mode = OneTime}"
 					>
 						<FontIcon
-							FontSize="16"
+							FontSize="{StaticResource MediumIconSize}"
 							Glyph="{StaticResource FluentIconGlyph.Clear}"
 						/>
 					</Button>
 				</StackPanel>
 			</Grid>
 			<localCustomControl:HorizontalSeparatorLine
-				Grid.Row="1"
+				Grid.Column="0" Grid.Row="1"
 			/>
 			<Grid
 				Grid.Column="0" HorizontalAlignment="Stretch" Width="NaN"
@@ -242,7 +238,7 @@
 				<StackPanel
 					Grid.Column="0" HorizontalAlignment="Right" Width="NaN"
 					Grid.Row="0" VerticalAlignment="Top" Height="NaN"
-					Padding="16,8"
+					Padding="16"
 					Orientation="Vertical" Spacing="8"
 				>
 					<StackPanel
@@ -252,9 +248,9 @@
 						Orientation="Horizontal" Spacing="8"
 					>
 						<TextBox
-							HorizontalAlignment="Stretch" Width="244"
+							HorizontalAlignment="Stretch" Width="240"
 							VerticalAlignment="Center" Height="NaN"
-							PlaceholderText="Animation File" IsReadOnly="True" BorderThickness="0"
+							PlaceholderText="Animation File" IsReadOnly="True"
 							IsEnabled="{x:Bind Controller.uAnimationFile_IsEnabled, Mode = OneWay}"
 							Text="{x:Bind Controller.uAnimationFile_Text, Mode = OneWay}"
 						/>
@@ -265,7 +261,7 @@
 							Click="{x:Bind Controller.uSelectAnimationFile_OnClick, Mode = OneTime}"
 						>
 							<FontIcon
-								FontSize="16"
+								FontSize="{StaticResource MediumIconSize}"
 								Glyph="{StaticResource FluentIconGlyph.OpenFile}"
 							/>
 						</Button>
@@ -277,9 +273,9 @@
 						Orientation="Horizontal" Spacing="8"
 					>
 						<TextBox
-							HorizontalAlignment="Stretch" Width="244"
+							HorizontalAlignment="Stretch" Width="240"
 							VerticalAlignment="Center" Height="NaN"
-							PlaceholderText="Image Directory" IsReadOnly="True" BorderThickness="0"
+							PlaceholderText="Image Directory" IsReadOnly="True"
 							IsEnabled="{x:Bind Controller.uImageDirectory_IsEnabled, Mode = OneWay}"
 							Text="{x:Bind Controller.uImageDirectory_Text, Mode = OneWay}"
 						/>
@@ -290,7 +286,7 @@
 							Click="{x:Bind Controller.uSelectImageDirectory_OnClick, Mode = OneTime}"
 						>
 							<FontIcon
-								FontSize="16"
+								FontSize="{StaticResource MediumIconSize}"
 								Glyph="{StaticResource FluentIconGlyph.OpenFolderHorizontal}"
 							/>
 						</Button>
@@ -310,7 +306,7 @@
 						<FontIcon
 							HorizontalAlignment="Stretch" Width="32"
 							VerticalAlignment="Center" Height="32"
-							FontSize="20"
+							FontSize="{StaticResource MediumIconSize}"
 							Glyph="{StaticResource FluentIconGlyph.ScrollUpDown}"
 						>
 							<FontIcon.RenderTransform>
@@ -318,9 +314,9 @@
 							</FontIcon.RenderTransform>
 						</FontIcon>
 						<TextBox
-							HorizontalAlignment="Stretch" Width="96"
+							HorizontalAlignment="Stretch" Width="94"
 							VerticalAlignment="Center" Height="NaN"
-							IsReadOnly="True" BorderThickness="0"
+							IsReadOnly="True"
 							Text="{x:Bind Controller.uStagePositionX_Text, Mode = OneWay}"
 						/>
 					</StackPanel>
@@ -332,7 +328,7 @@
 						<FontIcon
 							HorizontalAlignment="Stretch" Width="32"
 							VerticalAlignment="Center" Height="32"
-							FontSize="20"
+							FontSize="{StaticResource MediumIconSize}"
 							Glyph="{StaticResource FluentIconGlyph.ScrollUpDown}"
 						>
 							<FontIcon.RenderTransform>
@@ -340,9 +336,9 @@
 							</FontIcon.RenderTransform>
 						</FontIcon>
 						<TextBox
-							HorizontalAlignment="Stretch" Width="96"
+							HorizontalAlignment="Stretch" Width="94"
 							VerticalAlignment="Center" Height="NaN"
-							IsReadOnly="True" BorderThickness="0"
+							IsReadOnly="True"
 							Text="{x:Bind Controller.uStagePositionY_Text, Mode = OneWay}"
 						/>
 					</StackPanel>
@@ -354,7 +350,7 @@
 						<FontIcon
 							HorizontalAlignment="Stretch" Width="32"
 							VerticalAlignment="Center" Height="32"
-							FontSize="20"
+							FontSize="{StaticResource MediumIconSize}"
 							Glyph="{x:Bind Controller.uStageScaleIcon_Glyph, Mode = OneWay}"
 						>
 							<FontIcon.RenderTransform>
@@ -362,9 +358,9 @@
 							</FontIcon.RenderTransform>
 						</FontIcon>
 						<TextBox
-							HorizontalAlignment="Stretch" Width="96"
+							HorizontalAlignment="Stretch" Width="94"
 							VerticalAlignment="Center" Height="NaN"
-							IsReadOnly="True" BorderThickness="0"
+							IsReadOnly="True"
 							Text="{x:Bind Controller.uStageScale_Text, Mode = OneWay}"
 						/>
 					</StackPanel>
@@ -383,7 +379,7 @@
 						<FontIcon
 							HorizontalAlignment="Center" Width="32"
 							VerticalAlignment="Center" Height="NaN"
-							FontSize="20"
+							FontSize="{StaticResource MediumIconSize}"
 							Glyph="{StaticResource FluentIconGlyph.TiltDown}"
 							Opacity="{x:Bind Controller.uZombieGroundSwatchLayerIcon_Opacity, Mode = OneWay}"
 						/>
@@ -406,7 +402,7 @@
 						<FontIcon
 							HorizontalAlignment="Center" Width="32"
 							VerticalAlignment="Center" Height="NaN"
-							FontSize="20"
+							FontSize="{StaticResource MediumIconSize}"
 							Glyph="{StaticResource FluentIconGlyph.Eyedropper}"
 							Opacity="{x:Bind Controller.uZombieStateLayerIcon_Opacity, Mode = OneWay}"
 						/>
@@ -429,7 +425,7 @@
 						<FontIcon
 							HorizontalAlignment="Center" Width="32"
 							VerticalAlignment="Center" Height="NaN"
-							FontSize="20"
+							FontSize="{StaticResource MediumIconSize}"
 							Glyph="{StaticResource FluentIconGlyph.EmojiTabCelebrationObjects}"
 							Opacity="{x:Bind Controller.uPlantCustomLayerIcon_Opacity, Mode = OneWay}"
 						/>
@@ -452,7 +448,7 @@
 						<FontIcon
 							HorizontalAlignment="Center" Width="32"
 							VerticalAlignment="Center" Height="NaN"
-							FontSize="20"
+							FontSize="{StaticResource MediumIconSize}"
 							Glyph="{StaticResource FluentIconGlyph.FitPage}"
 						/>
 						<ToggleButton
@@ -467,7 +463,7 @@
 				</StackPanel>
 			</Grid>
 			<localCustomControl:HorizontalSeparatorLine
-				Grid.Row="3"
+				Grid.Column="0" Grid.Row="3"
 			/>
 			<Grid
 				Grid.Column="0" HorizontalAlignment="Stretch" Width="NaN"
@@ -510,7 +506,7 @@
 					<FontIcon
 						HorizontalAlignment="Center" Width="32"
 						VerticalAlignment="Center" Height="NaN"
-						FontSize="20"
+						FontSize="{StaticResource MediumIconSize}"
 						Glyph="{StaticResource FluentIconGlyph.Settings}"
 					/>
 					<ToggleButton
@@ -520,7 +516,7 @@
 						Click="{x:Bind Controller.uAutomaticPlay_OnClick, Mode = OneTime}"
 					>
 						<FontIcon
-							FontSize="16" Width="20" Height="20"
+							FontSize="{StaticResource MediumIconSize}"
 							Glyph="{StaticResource FluentIconGlyph.Play}"
 						/>
 					</ToggleButton>
@@ -531,21 +527,21 @@
 						Click="{x:Bind Controller.uRepeatPlay_OnClick, Mode = OneTime}"
 					>
 						<FontIcon
-							FontSize="16" Width="20" Height="20"
+							FontSize="{StaticResource MediumIconSize}"
 							Glyph="{StaticResource FluentIconGlyph.RepeatAll}"
 						/>
 					</ToggleButton>
 					<FontIcon
 						HorizontalAlignment="Center" Width="32"
 						VerticalAlignment="Center" Height="NaN"
-						FontSize="20"
+						FontSize="{StaticResource MediumIconSize}"
 						Glyph="{StaticResource FluentIconGlyph.SpeedMedium}"
 						Opacity="{x:Bind Controller.uWorkingSpriteFrameRateIcon_Opacity, Mode = OneWay}"
 					/>
 					<NumberBox
 						HorizontalAlignment="Center" Width="64"
 						VerticalAlignment="Center" Height="NaN"
-						PlaceholderText="Rate" BorderThickness="0"
+						PlaceholderText="Rate"
 						Minimum="0.1" Maximum="360.0"
 						IsEnabled="{x:Bind Controller.uWorkingSpriteFrameRate_IsEnabled, Mode = OneWay}"
 						NumberFormatter="{x:Bind Controller.uWorkingSpriteFrameRate_NumberFormatter, Mode = OneTime}"
@@ -566,7 +562,7 @@
 						Click="{x:Bind Controller.uWorkingSpritePrev_OnClick, Mode = OneTime}"
 					>
 						<FontIcon
-							FontSize="20"
+							FontSize="{StaticResource MediumIconSize}"
 							Glyph="{StaticResource FluentIconGlyph.LeftArrowKeyTime0}"
 						/>
 					</Button>
@@ -577,7 +573,7 @@
 						Click="{x:Bind Controller.uWorkingSpritePause_OnClick, Mode = OneTime}"
 					>
 						<FontIcon
-							FontSize="20"
+							FontSize="{StaticResource MediumIconSize}"
 							Glyph="{x:Bind Controller.uWorkingSpritePauseIcon_Glyph, Mode = OneWay}"
 						/>
 					</Button>
@@ -588,7 +584,7 @@
 						Click="{x:Bind Controller.uWorkingSpriteNext_OnClick, Mode = OneTime}"
 					>
 						<FontIcon
-							FontSize="20"
+							FontSize="{StaticResource MediumIconSize}"
 							Glyph="{StaticResource FluentIconGlyph.RightArrowKeyTime0}"
 						/>
 					</Button>
@@ -602,7 +598,7 @@
 					<FontIcon
 						HorizontalAlignment="Center" Width="32"
 						VerticalAlignment="Center" Height="32"
-						FontSize="20"
+						FontSize="{StaticResource MediumIconSize}"
 						Glyph="{StaticResource FluentIconGlyph.Tag}"
 						Opacity="{x:Bind Controller.uWorkingSpriteFrameRangeLabelIcon_Opacity, Mode = OneWay}"
 					/>
@@ -618,7 +614,7 @@
 					<FontIcon
 						HorizontalAlignment="Center" Width="32"
 						VerticalAlignment="Center" Height="32"
-						FontSize="20"
+						FontSize="{StaticResource MediumIconSize}"
 						Glyph="{StaticResource FluentIconGlyph.ScrollMode}"
 						Opacity="{x:Bind Controller.uWorkingSpriteFrameRangeIcon_Opacity, Mode = OneWay}"
 					>
@@ -629,7 +625,7 @@
 					<NumberBox
 						HorizontalAlignment="Center" Width="64"
 						VerticalAlignment="Center" Height="NaN"
-						PlaceholderText="Begin" BorderThickness="0"
+						PlaceholderText="Begin"
 						IsEnabled="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_IsEnabled, Mode = OneWay}"
 						Minimum="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_Minimum, Mode = OneWay}" Maximum="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_Maximum, Mode = OneWay}"
 						Value="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_Value, Mode = OneWay}"
@@ -638,7 +634,7 @@
 					<NumberBox
 						HorizontalAlignment="Center" Width="64"
 						VerticalAlignment="Center" Height="NaN"
-						PlaceholderText="End" BorderThickness="0"
+						PlaceholderText="End"
 						IsEnabled="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_IsEnabled, Mode = OneWay}"
 						Minimum="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_Minimum, Mode = OneWay}" Maximum="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_Maximum, Mode = OneWay}"
 						Value="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_Value, Mode = OneWay}"
@@ -648,11 +644,11 @@
 			</Grid>
 		</Grid>
 		<localCustomControl:VerticalSeparatorLine
-			Grid.Row="1" Grid.Column="3"
+			Grid.Column="3" Grid.Row="0"
 		/>
 		<Grid
 			Grid.Column="4" HorizontalAlignment="Stretch" Width="NaN"
-			Grid.Row="1" VerticalAlignment="Stretch" Height="NaN"
+			Grid.Row="0" VerticalAlignment="Stretch" Height="NaN"
 			Padding="0"
 			ColumnSpacing="0" RowSpacing="0"
 		>
@@ -669,7 +665,7 @@
 			<Grid
 				Grid.Column="0" HorizontalAlignment="Stretch" Width="NaN"
 				Grid.Row="0" VerticalAlignment="Stretch" Height="NaN"
-				Padding="16,8"
+				Padding="16,4,16,8"
 				ColumnSpacing="12" RowSpacing="0"
 			>
 				<Grid.ColumnDefinitions>
@@ -684,7 +680,7 @@
 				<FontIcon
 					Grid.Column="0" HorizontalAlignment="Center" Width="32"
 					Grid.Row="0" VerticalAlignment="Center" Height="NaN"
-					FontSize="20"
+					FontSize="{StaticResource LargeIconSize}"
 					Glyph="{StaticResource FluentIconGlyph.HomeGroup}"
 				/>
 				<TextBlock
@@ -705,14 +701,14 @@
 						Opacity="0"
 					>
 						<FontIcon
-							FontSize="16"
+							FontSize="{StaticResource MediumIconSize}"
 							Glyph=""
 						/>
 					</Button>
 				</StackPanel>
 			</Grid>
 			<localCustomControl:HorizontalSeparatorLine
-				Grid.Row="1"
+				Grid.Column="0" Grid.Row="1"
 			/>
 			<ListView
 				x:Name="uSpriteList" x:FieldModifier="public"
@@ -774,7 +770,7 @@
 							>
 								<FontIcon
 									Opacity="0.7"
-									FontSize="20"
+									FontSize="{StaticResource MediumIconSize}"
 									Glyph="{StaticResource FluentIconGlyph.Flow}"
 								/>
 							</ToggleButton>
@@ -783,7 +779,7 @@
 				</ListView.ItemTemplate>
 			</ListView>
 			<localCustomControl:HorizontalSeparatorLine
-				Grid.Row="3"
+				Grid.Column="0" Grid.Row="3"
 			/>
 			<ListView
 				x:Name="uMainSpriteList" x:FieldModifier="public"
@@ -846,7 +842,7 @@
 							>
 								<FontIcon
 									Opacity="0.7"
-									FontSize="20"
+									FontSize="{StaticResource MediumIconSize}"
 									Glyph="{StaticResource FluentIconGlyph.Flow}"
 								/>
 							</ToggleButton>

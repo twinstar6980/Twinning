@@ -15,8 +15,9 @@ namespace Helper.Module {
 			this.InitializeComponent();
 			this.ExtendsContentIntoTitleBar = true;
 			this.SetTitleBar(this.uTab.TabStripFooter as UIElement);
-			var mica = new Utility.MicaBackground(this);
-			mica.TrySetMicaBackdrop();
+			if (new Utility.MicaBackground(this).TrySetMicaBackdrop()) {
+				((Grid)this.Content).Background = null;
+			}
 			MainWindow.sInstance = this;
 		}
 
@@ -58,9 +59,7 @@ namespace Helper.Module {
 			ModuleType type,
 			Boolean    isClosable
 		) {
-			Debug.WriteLine(this.uTab.TabItems.Count);
 			this.uTab.TabItems.Add(this.CreateTabItem(type, isClosable));
-			Debug.WriteLine(this.uTab.TabItems.Count);
 			this.DispatcherQueue.EnqueueAsync(
 				async Task () => {
 					await Task.Delay(20);
