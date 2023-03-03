@@ -8,12 +8,24 @@ namespace TwinStar.Script.PathUtility {
 		return target.replaceAll('\\', '/');
 	}
 
+	export function to_windows_style(
+		target: string,
+	): string {
+		return target.replaceAll('\\', '/');
+	}
+
 	// ------------------------------------------------
 
 	export function split(
 		target: string,
 	): Array<string> {
 		return regularize(target).split('/');
+	}
+
+	export function catenate(
+		target: Array<string>,
+	): string {
+		return regularize(target.join('/'));
 	}
 
 	// ------------------------------------------------

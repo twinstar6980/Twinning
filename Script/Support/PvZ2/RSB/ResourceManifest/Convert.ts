@@ -41,9 +41,10 @@ namespace TwinStar.Script.Support.PvZ2.RSB.ResourceManifest.Convert {
 					};
 					let destination_subgroup = destination_group.subgroup[source_group.id];
 					for (let source_resource of source_subgroup.resources) {
+						let destination_resource_path = typeof source_resource.path === 'string' ? PathUtility.regularize(source_resource.path) : PathUtility.catenate(source_resource.path);
 						if ('atlas' in source_resource) {
 							destination_subgroup.resource[source_resource.id] = {
-								path: source_resource.path.join('/'),
+								path: destination_resource_path,
 								type: source_resource.type,
 								expand: ['atlas', {
 									size: [
@@ -58,7 +59,7 @@ namespace TwinStar.Script.Support.PvZ2.RSB.ResourceManifest.Convert {
 							assert_test(atlas !== undefined, `sprite's parent is not found : ${source_resource.parent}`);
 							assert_test(atlas.expand[0] === 'atlas', `sprite's expand type is not 'atlas' : ${source_resource.parent}`);
 							atlas.expand[1].sprite[source_resource.id] = {
-								path: source_resource.path.join('/'),
+								path: destination_resource_path,
 								position: [
 									JSONGenericGetter.integer(source_resource.ax),
 									JSONGenericGetter.integer(source_resource.ay),
@@ -74,7 +75,7 @@ namespace TwinStar.Script.Support.PvZ2.RSB.ResourceManifest.Convert {
 							};
 						} else {
 							destination_subgroup.resource[source_resource.id] = {
-								path: source_resource.path.join('/'),
+								path: destination_resource_path,
 								type: source_resource.type,
 								expand: ['generic', {}],
 							};
@@ -89,6 +90,7 @@ namespace TwinStar.Script.Support.PvZ2.RSB.ResourceManifest.Convert {
 
 	export function to_official(
 		source: ResourceManifest.Package,
+		use_array_style_path: boolean,
 	): OfficialResourceManifest.Package {
 		let slot_map: Map<string, bigint> = new Map();
 		let slot_of = (
@@ -143,7 +145,7 @@ namespace TwinStar.Script.Support.PvZ2.RSB.ResourceManifest.Convert {
 					let destination_resource: OfficialResourceManifest.Resource = {
 						slot: slot_of(resource_id),
 						id: resource_id,
-						path: PathUtility.split(source_resource.path),
+						path: !use_array_style_path ? PathUtility.to_windows_style(source_resource.path) : PathUtility.split(source_resource.path),
 						type: source_resource.type,
 					} as OfficialResourceManifest.Resource;
 					destination_subgroup.resources.push(destination_resource);

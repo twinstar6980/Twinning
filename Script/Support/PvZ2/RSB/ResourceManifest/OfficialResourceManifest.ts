@@ -48,7 +48,7 @@ namespace TwinStar.Script.Support.PvZ2.RSB.OfficialResourceManifest {
 	export type ResourceBase = {
 		slot: bigint;
 		id: string;
-		path: Array<string>;
+		path: Array<string> | string;
 		type: ResourceType;
 	};
 
