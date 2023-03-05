@@ -1,7 +1,8 @@
-#pragma warning disable 0, 1998
+#pragma warning disable 0,
 // ReSharper disable
 
 using Helper;
+using Helper.Utility;
 
 namespace Helper.Module.HomeSetting {
 
@@ -55,7 +56,7 @@ namespace Helper.Module.HomeSetting {
 
 		public Size uThemeComboBox_SelectedIndex {
 			get {
-				return (Size)Utility.ThemeHelper.RootTheme;
+				return (Size)ThemeHelper.RootTheme;
 			}
 		}
 
@@ -64,7 +65,7 @@ namespace Helper.Module.HomeSetting {
 			SelectionChangedEventArgs e
 		) {
 			var selectedValue = (ElementTheme)((ComboBox)sender).SelectedValue;
-			Utility.ThemeHelper.RootTheme = selectedValue;
+			ThemeHelper.RootTheme = selectedValue;
 		}
 
 		#endregion

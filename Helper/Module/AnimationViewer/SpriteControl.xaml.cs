@@ -1,10 +1,11 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using CommunityToolkit.WinUI;
 using Helper;
+using Helper.Utility;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Media.Imaging;
 using RepeatBehavior = Microsoft.UI.Xaml.Media.Animation.RepeatBehavior;
 
 namespace Helper.Module.AnimationViewer {
@@ -24,13 +25,13 @@ namespace Helper.Module.AnimationViewer {
 
 		public TimeSpan BasicTimeOffsetValue {
 			get {
-				return TimeSpan.FromSeconds(Utility.Animation.BasicOffset);
+				return TimeSpan.FromSeconds(AnimationHelper.BasicOffset);
 			}
 		}
 
 		public TimeSpan BasicTimeOffset {
 			get {
-				return TimeSpan.FromSeconds(Utility.Animation.BasicOffset / this.Speed);
+				return TimeSpan.FromSeconds(AnimationHelper.BasicOffset / this.Speed);
 			}
 		}
 
@@ -90,26 +91,25 @@ namespace Helper.Module.AnimationViewer {
 		// ----------------
 
 		public void Load (
-			Model.Animation    animation,
-			List<ImageSource?> imageSource,
-			List<Boolean>      imageFilter,
-			List<Boolean>      spriteFilter,
-			Size               workingSpriteIndex
+			AnimationModel.Animation animation,
+			List<BitmapSource?>      imageSource,
+			List<Boolean>            imageFilter,
+			List<Boolean>            spriteFilter,
+			Size                     workingSpriteIndex
 		) {
 			Debug.Assert(!this.Loaded);
-			var workingSprite = Utility.Animation.SelectSprite(animation, workingSpriteIndex);
-			var ui = Utility.Animation.CreateUI(animation, imageSource, imageFilter, spriteFilter, workingSpriteIndex);
-			this.Width = animation.size[0];
-			this.Height = animation.size[1];
-			this.Padding = new Thickness(animation.position[0], animation.position[1], 0.0, 0.0);
+			var workingSprite = AnimationHelper.SelectSprite(animation, workingSpriteIndex);
+			var ui = AnimationHelper.CreateUI(animation, imageSource, imageFilter, spriteFilter, workingSpriteIndex);
+			this.Width = animation.Size[0];
+			this.Height = animation.Size[1];
+			this.Padding = new Thickness(animation.Position[0], animation.Position[1], 0.0, 0.0);
 			this.Canvas = ui.Canvas;
 			this.Storyboard = ui.Storyboard;
 			this.Storyboard.RepeatBehavior = new RepeatBehavior(1.0);
 			this.Storyboard.Completed += this.Storyboard_OnCompleted;
-			this.FrameRange = new Utility.Animation.FrameRangeInformation() {
-				Count = workingSprite.frame.Count,
+			this.FrameRange = new AnimationHelper.FrameRange() {
 				Start = 0,
-				Duration = workingSprite.frame.Count,
+				Duration = workingSprite.Frame.Count,
 			};
 			this.HoldEnd = this.HoldEnd;
 			this.Repeat = this.Repeat;
@@ -184,9 +184,9 @@ namespace Helper.Module.AnimationViewer {
 
 		#region attribute
 
-		private Utility.Animation.FrameRangeInformation? mFrameRange = null;
+		private AnimationHelper.FrameRange? mFrameRange = null;
 
-		public Utility.Animation.FrameRangeInformation FrameRange {
+		public AnimationHelper.FrameRange FrameRange {
 			get {
 				Debug.Assert(this.Loaded);
 				return this.mFrameRange!;

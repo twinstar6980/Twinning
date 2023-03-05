@@ -69,7 +69,6 @@ namespace TwinStar.Script.Support.PopCapAnimation.Convert.Flash.To {
 		let x_DOMSymbolInstance = x_DOMSymbolInstance_list[0];
 		assert_test(x_DOMSymbolInstance.attribute.libraryItemName === `source/source_${index + 1}`);
 		let transform: Transform;
-		let transform_origin: [number, number];
 		let x_matrix_list = XML.find_child_element(x_DOMSymbolInstance, 'matrix');
 		if (x_matrix_list.length === 0) {
 			transform = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0];
@@ -81,18 +80,6 @@ namespace TwinStar.Script.Support.PopCapAnimation.Convert.Flash.To {
 			let x_Matrix = x_Matrix_list[0];
 			transform = parse_transform(x_Matrix);
 		}
-		let x_transformationPoint_list = XML.find_child_element(x_DOMSymbolInstance, 'transformationPoint');
-		if (x_matrix_list.length === 0) {
-			transform_origin = [0.0, 0.0];
-		} else {
-			assert_test(x_transformationPoint_list.length === 1);
-			let x_transformationPoint = x_transformationPoint_list[0];
-			let x_Point_list = XML.find_child_element(x_transformationPoint, 'Point');
-			assert_test(x_Point_list.length === 1);
-			let x_Point = x_Point_list[0];
-			transform_origin = parse_transform_origin(x_Point);
-		}
-		assert_test(transform[4] === -transform_origin[0] && transform[5] === -transform_origin[1]);
 		return transform;
 	}
 

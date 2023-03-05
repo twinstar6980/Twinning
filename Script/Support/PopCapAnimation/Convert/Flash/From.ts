@@ -38,12 +38,6 @@ namespace TwinStar.Script.Support.PopCapAnimation.Convert.Flash.From {
 													ty: `${image.transform[5].toFixed(6)}`,
 												}, []),
 											]),
-											XML.create_element_node('transformationPoint', {}, [
-												XML.create_element_node('Point', {
-													x: `${(-image.transform[4]).toFixed(6)}`,
-													y: `${(-image.transform[5]).toFixed(6)}`,
-												}, []),
-											]),
 										]),
 									]),
 								]),

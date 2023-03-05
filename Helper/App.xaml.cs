@@ -2,6 +2,7 @@
 // ReSharper disable
 
 using Helper;
+using Helper.Utility;
 
 namespace Helper {
 
@@ -19,9 +20,9 @@ namespace Helper {
 		protected override void OnLaunched (
 			LaunchActivatedEventArgs args
 		) {
-			var window = Utility.WindowHelper.TrackWindow(new Module.MainWindow());
+			var window = WindowHelper.TrackWindow(new Module.MainWindow());
 			window.Activate();
-			Utility.ThemeHelper.Initialize();
+			ThemeHelper.Initialize();
 		}
 
 		#endregion

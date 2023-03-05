@@ -29,7 +29,7 @@ namespace Helper.Core {
 		public static String ParseString (
 			ref Interface.String structure
 		) {
-			return Encoding.UTF8.GetString((Byte*)structure.data, (Int32)Converter.ParseSize(ref structure.size));
+			return Encoding.UTF8.GetString((Byte*)structure.data, (Size)Converter.ParseSize(ref structure.size));
 		}
 
 		public static Interface.String CreateString (
@@ -51,7 +51,7 @@ namespace Helper.Core {
 			ref Interface.StringList structure
 		) {
 			var value = new List<String> {
-				Capacity = (Int32)Converter.ParseSize(ref structure.size),
+				Capacity = (Size)Converter.ParseSize(ref structure.size),
 			};
 			for (var index = 0; index < (Size)Converter.ParseSize(ref structure.size); ++index) {
 				value.Add(Converter.ParseString(ref structure.data[index]));
@@ -66,8 +66,8 @@ namespace Helper.Core {
 			fixed (Interface.String* pointer = new Interface.String[value.Count]) {
 				structure.data = pointer;
 			}
-			structure.size = Converter.CreateSize((UInt64)value.Count);
-			structure.capacity = Converter.CreateSize((UInt64)value.Count);
+			structure.size = Converter.CreateSize((IntegerU64)value.Count);
+			structure.capacity = Converter.CreateSize((IntegerU64)value.Count);
 			for (var index = 0; index < value.Count; ++index) {
 				structure.data[index] = Converter.CreateString(value[index]);
 			}

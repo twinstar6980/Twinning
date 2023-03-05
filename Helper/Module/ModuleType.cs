@@ -37,14 +37,14 @@ namespace Helper.Module {
 				Type = ModuleType.HomeSetting,
 				Icon = FluentIconGlyph.OEM,
 				Title = "Home & Setting",
-				Description = "View all modules and settings.",
+				Description = "...",
 				Page = typeof(HomeSetting.MainPage),
 			},
 			new ModuleInformation {
 				Type = ModuleType.AnimationViewer,
 				Icon = FluentIconGlyph.HomeGroup,
 				Title = "Animation Viewer",
-				Description = "A viewer for PvZ-2 animation.",
+				Description = "...",
 				Page = typeof(AnimationViewer.MainPage),
 			},
 		};

@@ -2,6 +2,7 @@
 // ReSharper disable
 
 using Helper;
+using Helper.Utility;
 using CommunityToolkit.WinUI;
 
 namespace Helper.Module {
@@ -15,7 +16,7 @@ namespace Helper.Module {
 			this.InitializeComponent();
 			this.ExtendsContentIntoTitleBar = true;
 			this.SetTitleBar(this.uTab.TabStripFooter as UIElement);
-			if (new Utility.MicaBackground(this).TrySetMicaBackdrop()) {
+			if (new BackdropHelper(this).TryApplyMica()) {
 				((Grid)this.Content).Background = null;
 			}
 			MainWindow.sInstance = this;
@@ -41,7 +42,7 @@ namespace Helper.Module {
 			ModuleType type,
 			Boolean    isClosable
 		) {
-			var information = ModuleInformationConstant.Value[(Int32)type];
+			var information = ModuleInformationConstant.Value[(Size)type];
 			var tabFrame = new Frame();
 			tabFrame.Navigate(information.Page);
 			return new TabViewItem {

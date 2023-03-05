@@ -296,15 +296,17 @@ namespace TwinStar.Script.Executable.RepairPopCapRSB {
 				packet_view.u32(0x58, 0x00000000n);
 				// test resource_information_section
 				if (resource_information_section_offset + resource_information_section_size > information_section_size) {
-					packet_view.u32(0x48, 0x00000000n);
-					packet_view.u32(0x4C, 0x0000005Cn);
+					resource_information_section_offset = 0x00000000n;
+					resource_information_section_size = 0x00000000n;
 				}
 				if (resource_information_section_size !== 0n) {
 					let first_block = packet_view.u32(Number(resource_information_section_offset));
 					if (first_block === 0n) {
-						packet_view.u32(0x48, 0x00000000n);
+						resource_information_section_size = 0x00000000n;
 					}
 				}
+				packet_view.u32(0x48, resource_information_section_size);
+				packet_view.u32(0x4C, resource_information_section_offset);
 				// test zlib ripe
 				if (((resource_data_section_store_mode & 0b10n) && !test_zlib_ripe(data, offset + generic_resource_data_section_offset, generic_resource_data_section_size, generic_resource_data_section_size_original)) ||
 					((resource_data_section_store_mode & 0b01n) && !test_zlib_ripe(data, offset + texture_resource_data_section_offset, texture_resource_data_section_size, texture_resource_data_section_size_original))) {
