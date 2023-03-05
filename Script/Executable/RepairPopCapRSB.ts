@@ -287,16 +287,25 @@ namespace TwinStar.Script.Executable.RepairPopCapRSB {
 				packet_view.u32(0x40, 0x00000000n);
 				packet_view.u32(0x44, 0x00000000n);
 				// resource_information_section_size
+				let resource_information_section_size = packet_view.u32(0x48);
 				// resource_information_section_offset
+				let resource_information_section_offset = packet_view.u32(0x4C);
 				// unused_4
 				packet_view.u32(0x50, 0x00000000n);
 				packet_view.u32(0x54, 0x00000000n);
 				packet_view.u32(0x58, 0x00000000n);
+				// test resource_information_section
+				if (resource_information_section_offset + resource_information_section_size > information_section_size) {
+					packet_view.u32(0x48, 0x00000000n);
+					packet_view.u32(0x4C, 0x0000005Cn);
+				}
+				if (resource_information_section_size !== 0n) {
+					let first_block = packet_view.u32(Number(resource_information_section_offset));
+					if (first_block === 0n) {
+						packet_view.u32(0x48, 0x00000000n);
+					}
+				}
 				// test zlib ripe
-				// Console.notify('i', `test ${offset.toString(16)}`, [
-				// 	`generic offset=${generic_resource_data_section_offset.toString(16)} size=${generic_resource_data_section_size.toString(16)}~${generic_resource_data_section_size_original.toString(16)}`,
-				// 	`texture offset=${texture_resource_data_section_offset.toString(16)} size=${texture_resource_data_section_size.toString(16)}~${texture_resource_data_section_size_original.toString(16)}`,
-				// ]);
 				if (((resource_data_section_store_mode & 0b10n) && !test_zlib_ripe(data, offset + generic_resource_data_section_offset, generic_resource_data_section_size, generic_resource_data_section_size_original)) ||
 					((resource_data_section_store_mode & 0b01n) && !test_zlib_ripe(data, offset + texture_resource_data_section_offset, texture_resource_data_section_size, texture_resource_data_section_size_original))) {
 					Console.notify('w', los(`检测到ZLib异常，现截断数据`), [
@@ -320,7 +329,6 @@ namespace TwinStar.Script.Executable.RepairPopCapRSB {
 					view.u32(0xAC, packet_view.u32(0x30));
 					actual_packet_size = Math.max(Number(packet_view.u32(0x14)), Number(packet_view.u32(0x18) + packet_view.u32(0x1C)), Number(packet_view.u32(0x28) + packet_view.u32(0x2C)));
 					view.u32(0x84, BigInt(actual_packet_size));
-
 				}
 			}
 		}
