@@ -1,4 +1,4 @@
-set_project('TwinStar.ToolKit.Core')
+set_project('Core')
 
 add_rules('mode.debug', 'mode.release')
 

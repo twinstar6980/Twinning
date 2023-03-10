@@ -84,7 +84,7 @@ namespace Helper.Module.AnimationViewer {
 		[MemberNotNullWhen(true, nameof(SpriteControl.Storyboard))]
 		public new Boolean Loaded {
 			get {
-				return this.Storyboard != null;
+				return this.Canvas != null;
 			}
 		}
 
@@ -116,6 +116,7 @@ namespace Helper.Module.AnimationViewer {
 			this.Speed = this.Speed;
 			this.ShowBoundary = this.ShowBoundary;
 			this.Content = this.Canvas;
+			this.State = StateType.Idle;
 			return;
 		}
 
@@ -124,7 +125,9 @@ namespace Helper.Module.AnimationViewer {
 			Debug.Assert(this.Loaded);
 			this.State = StateType.Idle;
 			this.Content = null;
+			this.Canvas = null;
 			this.Storyboard = null;
+			this.mFrameRange = null;
 			return;
 		}
 
@@ -240,7 +243,7 @@ namespace Helper.Module.AnimationViewer {
 			}
 			set {
 				if (this.Loaded) {
-					this.Storyboard.FillBehavior = value ? FillBehavior.HoldEnd : FillBehavior.Stop;
+					this.Storyboard.FillBehavior = !value ? FillBehavior.Stop : FillBehavior.HoldEnd;
 				}
 				this.mHoldEnd = value;
 				return;
@@ -264,7 +267,7 @@ namespace Helper.Module.AnimationViewer {
 					this.Storyboard.SpeedRatio = value;
 					this.Storyboard.BeginTime = -TimeSpan.FromSeconds(this.FrameRange.Start) / value;
 					if (this.State != StateType.Idle) {
-						this.Storyboard.Seek((-TimeSpan.FromSeconds(this.FrameRange.Start) + (TimeSpan)timeBeforeChange!) / value + this.BasicTimeOffsetValue / value);
+						this.Storyboard.Seek((-TimeSpan.FromSeconds(this.FrameRange.Start) + timeBeforeChange!.Value) / value + this.BasicTimeOffsetValue / value);
 					}
 				}
 				this.mSpeed = value;

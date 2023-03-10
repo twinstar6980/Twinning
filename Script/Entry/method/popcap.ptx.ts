@@ -26,7 +26,7 @@ namespace TwinStar.Script.Entry.method.popcap.ptx {
 				}) {
 					let image_file: string;
 					let data_file: string;
-					let format: Support.PopCapTexture.Encode.Format;
+					let format: Support.PopCap.PTX.Encode.Format;
 					{
 						image_file = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'image_file'),
@@ -46,11 +46,11 @@ namespace TwinStar.Script.Entry.method.popcap.ptx {
 							a.format,
 							(value) => (value),
 							null,
-							() => (Console.option(Support.PopCapTexture.Encode.FormatE.map((e) => ([e])), null)),
-							(value) => (Support.PopCapTexture.Encode.FormatE.includes(value as any) ? null : los(`选项非法`)),
+							() => (Console.option(Support.PopCap.PTX.Encode.FormatE.map((e) => ([e])), null)),
+							(value) => (Support.PopCap.PTX.Encode.FormatE.includes(value as any) ? null : los(`选项非法`)),
 						);
 					}
-					Support.PopCapTexture.Encode.encode_fs(image_file, data_file, format);
+					Support.PopCap.PTX.Encode.encode_fs(image_file, data_file, format);
 					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
@@ -77,7 +77,7 @@ namespace TwinStar.Script.Entry.method.popcap.ptx {
 				}) {
 					let data_file: string;
 					let image_file: string;
-					let format: Support.PopCapTexture.Encode.Format;
+					let format: Support.PopCap.PTX.Encode.Format;
 					let image_width: bigint;
 					let image_height: bigint;
 					{
@@ -99,8 +99,8 @@ namespace TwinStar.Script.Entry.method.popcap.ptx {
 							a.format,
 							(value) => (value),
 							null,
-							() => (Console.option(Support.PopCapTexture.Encode.FormatE.map((e) => ([e])), null)),
-							(value) => (Support.PopCapTexture.Encode.FormatE.includes(value as any) ? null : los(`选项非法`)),
+							() => (Console.option(Support.PopCap.PTX.Encode.FormatE.map((e) => ([e])), null)),
+							(value) => (Support.PopCap.PTX.Encode.FormatE.includes(value as any) ? null : los(`选项非法`)),
 						);
 						image_width = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'image_width'),
@@ -119,7 +119,7 @@ namespace TwinStar.Script.Entry.method.popcap.ptx {
 							(value) => ((0n < value) ? null : los(`尺寸应大于零`)),
 						);
 					}
-					Support.PopCapTexture.Encode.decode_fs(data_file, image_file, [image_width, image_height], format);
+					Support.PopCap.PTX.Encode.decode_fs(data_file, image_file, [image_width, image_height], format);
 					Console.notify('s', los(`执行成功`), [`${image_file}`]);
 				},
 				default_argument: {

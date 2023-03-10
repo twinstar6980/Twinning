@@ -1,7 +1,7 @@
 /**
  * + popcap.pak.pack
  * + popcap.pak.unpack
- * + popcap.pak.pack_auto
+ * + popcap.pak.pack_automatic
  * + popcap.pak.crypt
  */
 namespace TwinStar.Script.Entry.method.popcap.pak {
@@ -154,7 +154,7 @@ namespace TwinStar.Script.Entry.method.popcap.pak {
 				input_forwarder: 'data_file',
 			}),
 			Executor.method_of({
-				id: 'popcap.pak.pack_auto',
+				id: 'popcap.pak.pack_automatic',
 				descriptor(
 				) {
 					return Executor.query_method_description(this.id);
@@ -200,7 +200,7 @@ namespace TwinStar.Script.Entry.method.popcap.pak {
 							(value) => (null),
 						);
 					}
-					let data = Support.PopCapPAK.ResourcePack.pack(resource_directory, version_number, version_compress_resource_data);
+					let data = Support.PopCap.PAK.PackAutomatic.pack(resource_directory, version_number, version_compress_resource_data);
 					CoreX.FileSystem.write_file(data_file, data[0].view().sub(Core.Size.value(0n), data[1]));
 					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},

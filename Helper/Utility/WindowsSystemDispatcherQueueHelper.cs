@@ -2,7 +2,6 @@
 // ReSharper disable
 
 using Helper;
-using ExternalLibrary = Helper.ExternalLibrary;
 
 namespace Helper.Utility {
 

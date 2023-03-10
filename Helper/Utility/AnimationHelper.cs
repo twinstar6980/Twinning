@@ -1,7 +1,6 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using Windows.Foundation;
 using Helper;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -48,12 +47,13 @@ namespace Helper.Utility {
 			AnimationModel.Animation animation,
 			Size                     index
 		) {
-			Debug.Assert(index >= 0);
-			var result = (AnimationModel.Sprite?)null;
-			if (index < animation.Sprite.Count) {
+			var result = (AnimationModel.Sprite)null!;
+			if (0 <= index && index < animation.Sprite.Count) {
 				result = animation.Sprite[index];
 			} else if (index == animation.Sprite.Count) {
-				Debug.Assert(animation.MainSprite != null);
+				if (animation.MainSprite == null) {
+					throw new Exception();
+				}
 				result = animation.MainSprite;
 			} else {
 				throw new ArgumentException();
@@ -188,7 +188,7 @@ namespace Helper.Utility {
 					layer.IsFirst = true;
 				}
 				foreach (var change in frame.Change) {
-					var layer = layerList[(UInt32)change.Index];
+					var layer = layerList[change.Index];
 					if (layer == null) {
 						continue;
 					}

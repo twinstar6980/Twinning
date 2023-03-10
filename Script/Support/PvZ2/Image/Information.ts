@@ -8,7 +8,7 @@ namespace TwinStar.Script.Support.PvZ2.Image {
 	};
 
 	export type AtlasInformation = {
-		format: Support.PopCapTexture.Encode.Format;
+		format: Support.PopCap.PTX.Encode.Format;
 		size: [bigint, bigint];
 		sprite: Record<string, SpriteInformation>;
 	};

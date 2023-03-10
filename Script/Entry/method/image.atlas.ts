@@ -1,7 +1,7 @@
 /**
  * + image.atlas.pack
  * + image.atlas.unpack
- * + image.atlas.pack_auto
+ * + image.atlas.pack_automatic
  */
 namespace TwinStar.Script.Entry.method.image.atlas {
 
@@ -111,7 +111,7 @@ namespace TwinStar.Script.Entry.method.image.atlas {
 				input_forwarder: 'manifest_file',
 			}),
 			Executor.method_of({
-				id: 'image.atlas.pack_auto',
+				id: 'image.atlas.pack_automatic',
 				descriptor(
 				) {
 					return Executor.query_method_description(this.id);
@@ -146,7 +146,7 @@ namespace TwinStar.Script.Entry.method.image.atlas {
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
 					}
-					Support.Atlas.Pack.pack_auto_fs(manifest_file, atlas_file, sprite_directory);
+					Support.Atlas.Pack.pack_automatic_fs(manifest_file, atlas_file, sprite_directory);
 					Console.notify('s', los(`执行成功`), [`${atlas_file}`]);
 				},
 				default_argument: {

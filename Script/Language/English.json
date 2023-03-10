@@ -17,10 +17,14 @@
 	"整数格式非法，{}": "Illegal integer format, {}",
 	"尺寸格式非法，{}": "Illegal size format, {}",
 	"输入项不在可选项中": "Input is not one of the options",
-	// Support/MarmaladeDZip|PopCapPAK/ResourcePack/ResourcePack.ts
+	// Support/*/PackAutomatic
 	"打包开始": "Packing started",
 	"共 {} 个资源文件": "{} resource file(s) in total",
 	"打包完成": "Packing finished",
+	// Support/PopCap/RSB/Repair
+	"检测到ZLib异常，现截断数据": null,
+	"检测到Packet异常，现以空Packet替换": null,
+	"检测到Texture-Resource-Information异常，现修复数据": null,
 	// Support/PvZ2/RSB/ResourceConvert
 	"恢复文件路径大小写 ...": "Restoring file path case...",
 	"转换资源 ...": "Converting resources...",
@@ -106,16 +110,10 @@
 	"输入目录：{}": "Input path: {}",
 	"输出目录：{}": "Output path: {}",
 	"提取完成": "Extraction finished",
-	// Executable/RepairPopCapRSB
-	"检测到ZLib异常，现截断数据": null,
-	"检测到Packet异常，现以空Packet替换": null,
-	"检测到Texture-Resource-Information异常，现修复数据": null,
-	"请输入需要修复的RSB文件路径": null,
-	"修复完成": null,
 	// Entry/method/js
-	"method#js.evaluate:description": "JS Execution",
-	"method#js.evaluate$script_file:name": "Script file",
-	"method#js.evaluate$script_file:message": "",
+	"method#js.execute:description": "JS Execute",
+	"method#js.execute$script_file:name": "Script file",
+	"method#js.execute$script_file:message": "",
 	// Entry/method/json
 	"method#json.format:description": "JSON Format",
 	"method#json.format$source_file:name": "Source file",
@@ -309,15 +307,15 @@
 	"method#image.atlas.unpack$sprite_directory:name": "Sprite directory",
 	"method#image.atlas.unpack$sprite_directory:message": "",
 	// 
-	"method#image.atlas.pack_auto:description": "Image Atlas Pack by automatic",
-	"method#image.atlas.pack_auto$sprite_directory:name": "Sprite directory",
-	"method#image.atlas.pack_auto$sprite_directory:message": "",
-	"method#image.atlas.pack_auto$manifest_file:name": "Manifest file",
-	"method#image.atlas.pack_auto$manifest_file:message": "",
-	"method#image.atlas.pack_auto$atlas_file:name": "Atlas file",
-	"method#image.atlas.pack_auto$atlas_file:message": "",
+	"method#image.atlas.pack_automatic:description": "Image Atlas Pack by automatic",
+	"method#image.atlas.pack_automatic$sprite_directory:name": "Sprite directory",
+	"method#image.atlas.pack_automatic$sprite_directory:message": "",
+	"method#image.atlas.pack_automatic$manifest_file:name": "Manifest file",
+	"method#image.atlas.pack_automatic$manifest_file:message": "",
+	"method#image.atlas.pack_automatic$atlas_file:name": "Atlas file",
+	"method#image.atlas.pack_automatic$atlas_file:message": "",
 	// Entry/method/wwise.encoded_media
-	"method#wwise.encoded_media.decode:description": "Wwise-Encoded-Media Decode",
+	"method#wwise.encoded_media.decode:description": "Wwise Encoded-Media Decode",
 	"method#wwise.encoded_media.decode$ripe_file:name": "Finished file",
 	"method#wwise.encoded_media.decode$ripe_file:message": "",
 	"method#wwise.encoded_media.decode$raw_file:name": "Original File",
@@ -329,7 +327,7 @@
 	"method#wwise.encoded_media.decode$tool_ww2ogg_code_book_file:name": "WW2OGG code-book file",
 	"method#wwise.encoded_media.decode$tool_ww2ogg_code_book_file:message": "",
 	// 
-	"method#wwise.encoded_media.decode.batch:description": "[BATCH] Wwise-Encoded-Media Decode",
+	"method#wwise.encoded_media.decode.batch:description": "[BATCH] Wwise Encoded-Media Decode",
 	"method#wwise.encoded_media.decode.batch$ripe_file_directory:name": "Finished files directory",
 	"method#wwise.encoded_media.decode.batch$ripe_file_directory:message": "",
 	"method#wwise.encoded_media.decode.batch$raw_file_directory:name": "Original files directory",
@@ -341,7 +339,7 @@
 	"method#wwise.encoded_media.decode.batch$tool_ww2ogg_code_book_file:name": "WW2OGG code-book file",
 	"method#wwise.encoded_media.decode.batch$tool_ww2ogg_code_book_file:message": "",
 	// Entry/method/wwise.sound_bank
-	"method#wwise.sound_bank.encode:description": "Wwise-Sound-Bank Encode",
+	"method#wwise.sound_bank.encode:description": "Wwise Sound-Bank Encode",
 	"method#wwise.sound_bank.encode$bundle_directory:name": "Bundle directory",
 	"method#wwise.sound_bank.encode$bundle_directory:message": "",
 	"method#wwise.sound_bank.encode$data_file:name": "Data file",
@@ -351,7 +349,7 @@
 	"method#wwise.sound_bank.encode$buffer_size:name": "Buffer memory size",
 	"method#wwise.sound_bank.encode$buffer_size:message": "",
 	// 
-	"method#wwise.sound_bank.decode:description": "Wwise-Sound-Bank Decode",
+	"method#wwise.sound_bank.decode:description": "Wwise Sound-Bank Decode",
 	"method#wwise.sound_bank.decode$data_file:name": "Data file",
 	"method#wwise.sound_bank.decode$data_file:message": "",
 	"method#wwise.sound_bank.decode$bundle_directory:name": "Bundle directory",
@@ -359,7 +357,7 @@
 	"method#wwise.sound_bank.decode$version_number:name": "Version number",
 	"method#wwise.sound_bank.decode$version_number:message": "",
 	// 
-	"method#wwise.sound_bank.encode.batch:description": "[BATCH] Wwise-Sound-Bank Encode",
+	"method#wwise.sound_bank.encode.batch:description": "[BATCH] Wwise Sound-Bank Encode",
 	"method#wwise.sound_bank.encode.batch$bundle_directory_directory:name": "Bundle directories in the directory",
 	"method#wwise.sound_bank.encode.batch$bundle_directory_directory:message": "",
 	"method#wwise.sound_bank.encode.batch$data_file_directory:name": "Data file",
@@ -369,7 +367,7 @@
 	"method#wwise.sound_bank.encode.batch$buffer_size:name": "Buffer memory size",
 	"method#wwise.sound_bank.encode.batch$buffer_size:message": "",
 	// 
-	"method#wwise.sound_bank.decode.batch:description": "[BATCH] Wwise-Sound-Bank Decode",
+	"method#wwise.sound_bank.decode.batch:description": "[BATCH] Wwise Sound-Bank Decode",
 	"method#wwise.sound_bank.decode.batch$data_file_directory:name": "Data files directory",
 	"method#wwise.sound_bank.decode.batch$data_file_directory:message": "",
 	"method#wwise.sound_bank.decode.batch$bundle_directory_directory:name": "Bundle files directory",
@@ -395,15 +393,15 @@
 	"method#marmalade.dzip.unpack$version_number:name": "Version number",
 	"method#marmalade.dzip.unpack$version_number:message": "",
 	// 
-	"method#marmalade.dzip.pack_auto:description": "Marmalade-DZip Pack by automatic",
-	"method#marmalade.dzip.pack_auto$resource_directory:name": "Resource directory",
-	"method#marmalade.dzip.pack_auto$resource_directory:message": "",
-	"method#marmalade.dzip.pack_auto$data_file:name": "Data file",
-	"method#marmalade.dzip.pack_auto$data_file:message": "",
-	"method#marmalade.dzip.pack_auto$version_number:name": "Version number",
-	"method#marmalade.dzip.pack_auto$version_number:message": "",
+	"method#marmalade.dzip.pack_automatic:description": "Marmalade-DZip Pack by automatic",
+	"method#marmalade.dzip.pack_automatic$resource_directory:name": "Resource directory",
+	"method#marmalade.dzip.pack_automatic$resource_directory:message": "",
+	"method#marmalade.dzip.pack_automatic$data_file:name": "Data file",
+	"method#marmalade.dzip.pack_automatic$data_file:message": "",
+	"method#marmalade.dzip.pack_automatic$version_number:name": "Version number",
+	"method#marmalade.dzip.pack_automatic$version_number:message": "",
 	// Entry/method/popcap.zlib
-	"method#popcap.zlib.compress:description": "PopCap-ZLib Compress",
+	"method#popcap.zlib.compress:description": "PopCap ZLib Compress",
 	"method#popcap.zlib.compress$raw_file:name": "Original file",
 	"method#popcap.zlib.compress$raw_file:message": "",
 	"method#popcap.zlib.compress$ripe_file:name": "Finished file",
@@ -411,7 +409,7 @@
 	"method#popcap.zlib.compress$version_variant_64:name": "Use the 64-bit variant",
 	"method#popcap.zlib.compress$version_variant_64:message": "",
 	// 
-	"method#popcap.zlib.uncompress:description": "PopCap-ZLib Uncompress",
+	"method#popcap.zlib.uncompress:description": "PopCap ZLib Uncompress",
 	"method#popcap.zlib.uncompress$ripe_file:name": "Finished file",
 	"method#popcap.zlib.uncompress$ripe_file:message": "",
 	"method#popcap.zlib.uncompress$raw_file:name": "Original file",
@@ -419,7 +417,7 @@
 	"method#popcap.zlib.uncompress$version_variant_64:name": "Use the 64-bit variant",
 	"method#popcap.zlib.uncompress$version_variant_64:message": "",
 	// 
-	"method#popcap.zlib.compress.batch:description": "[BATCH] PopCap-ZLib Compress",
+	"method#popcap.zlib.compress.batch:description": "[BATCH] PopCap ZLib Compress",
 	"method#popcap.zlib.compress.batch$raw_file_directory:name": "Original file directory",
 	"method#popcap.zlib.compress.batch$raw_file_directory:message": "",
 	"method#popcap.zlib.compress.batch$ripe_file_directory:name": "Finished file directory",
@@ -427,7 +425,7 @@
 	"method#popcap.zlib.compress.batch$version_variant_64:name": "Use the 64-bit variant",
 	"method#popcap.zlib.compress.batch$version_variant_64:message": "",
 	// 
-	"method#popcap.zlib.uncompress.batch:description": "[BATCH] PopCap-ZLib Uncompress",
+	"method#popcap.zlib.uncompress.batch:description": "[BATCH] PopCap ZLib Uncompress",
 	"method#popcap.zlib.uncompress.batch$ripe_file_directory:name": "Finished file directory",
 	"method#popcap.zlib.uncompress.batch$ripe_file_directory:message": "",
 	"method#popcap.zlib.uncompress.batch$raw_file_directory:name": "Original file directory",
@@ -435,7 +433,7 @@
 	"method#popcap.zlib.uncompress.batch$version_variant_64:name": "Use the 64-bit variant",
 	"method#popcap.zlib.uncompress.batch$version_variant_64:message": "",
 	// Entry/method/popcap.reanim
-	"method#popcap.reanim.encode:description": "PopCap-REANIM Encode",
+	"method#popcap.reanim.encode:description": "PopCap REANIM Encode",
 	"method#popcap.reanim.encode$manifest_file:name": "Manifest file",
 	"method#popcap.reanim.encode$manifest_file:message": "",
 	"method#popcap.reanim.encode$data_file:name": "Data file",
@@ -447,7 +445,7 @@
 	"method#popcap.reanim.encode$buffer_size:name": "Buffer memory size",
 	"method#popcap.reanim.encode$buffer_size:message": "",
 	// 
-	"method#popcap.reanim.decode:description": "PopCap-REANIM Decode",
+	"method#popcap.reanim.decode:description": "PopCap REANIM Decode",
 	"method#popcap.reanim.decode$data_file:name": "Data file",
 	"method#popcap.reanim.decode$data_file:message": "",
 	"method#popcap.reanim.decode$manifest_file:name": "Manifest file",
@@ -457,7 +455,7 @@
 	"method#popcap.reanim.decode$version_variant_64:name": "Use the 64-bit variant",
 	"method#popcap.reanim.decode$version_variant_64:message": "",
 	// 
-	"method#popcap.reanim.encode.batch:description": "[BATCH] PopCap-REANIM Encode",
+	"method#popcap.reanim.encode.batch:description": "[BATCH] PopCap REANIM Encode",
 	"method#popcap.reanim.encode.batch$manifest_file_directory:name": "Manifest file directory",
 	"method#popcap.reanim.encode.batch$manifest_file_directory:message": "",
 	"method#popcap.reanim.encode.batch$data_file_directory:name": "Data file directory",
@@ -469,7 +467,7 @@
 	"method#popcap.reanim.encode.batch$buffer_size:name": "Buffer memory size",
 	"method#popcap.reanim.encode.batch$buffer_size:message": "",
 	// 
-	"method#popcap.reanim.decode.batch:description": "[BATCH] PopCap-REANIM Decode",
+	"method#popcap.reanim.decode.batch:description": "[BATCH] PopCap REANIM Decode",
 	"method#popcap.reanim.decode.batch$data_file_directory:name": "Data file directory",
 	"method#popcap.reanim.decode.batch$data_file_directory:message": "",
 	"method#popcap.reanim.decode.batch$manifest_file_directory:name": "Manifest file directory",
@@ -479,7 +477,7 @@
 	"method#popcap.reanim.decode.batch$version_variant_64:name": "Use the 64-bit variant",
 	"method#popcap.reanim.decode.batch$version_variant_64:message": "",
 	// Entry/method/popcap.particle
-	"method#popcap.particle.encode:description": "PopCap-PARTICLE Encode",
+	"method#popcap.particle.encode:description": "PopCap PARTICLE Encode",
 	"method#popcap.particle.encode$manifest_file:name": "Manifest file",
 	"method#popcap.particle.encode$manifest_file:message": "",
 	"method#popcap.particle.encode$data_file:name": "Data file",
@@ -491,7 +489,7 @@
 	"method#popcap.particle.encode$buffer_size:name": "Buffer memory size",
 	"method#popcap.particle.encode$buffer_size:message": "",
 	// 
-	"method#popcap.particle.decode:description": "PopCap-PARTICLE Decode",
+	"method#popcap.particle.decode:description": "PopCap PARTICLE Decode",
 	"method#popcap.particle.decode$data_file:name": "Data file",
 	"method#popcap.particle.decode$data_file:message": "",
 	"method#popcap.particle.decode$manifest_file:name": "Manifest file",
@@ -501,7 +499,7 @@
 	"method#popcap.particle.decode$version_variant_64:name": "Use the 64-bit variant",
 	"method#popcap.particle.decode$version_variant_64:message": "",
 	// 
-	"method#popcap.particle.encode.batch:description": "[BATCH] PopCap-PARTICLE Encode",
+	"method#popcap.particle.encode.batch:description": "[BATCH] PopCap PARTICLE Encode",
 	"method#popcap.particle.encode.batch$manifest_file_directory:name": "Manifest file directory",
 	"method#popcap.particle.encode.batch$manifest_file_directory:message": "",
 	"method#popcap.particle.encode.batch$data_file_directory:name": "Data file directory",
@@ -513,7 +511,7 @@
 	"method#popcap.particle.encode.batch$buffer_size:name": "Buffer memory size",
 	"method#popcap.particle.encode.batch$buffer_size:message": "",
 	// 
-	"method#popcap.particle.decode.batch:description": "[BATCH] PopCap-PARTICLE Decode",
+	"method#popcap.particle.decode.batch:description": "[BATCH] PopCap PARTICLE Decode",
 	"method#popcap.particle.decode.batch$data_file_directory:name": "Data file directory",
 	"method#popcap.particle.decode.batch$data_file_directory:message": "",
 	"method#popcap.particle.decode.batch$manifest_file_directory:name": "Manifest file directory",
@@ -523,7 +521,7 @@
 	"method#popcap.particle.decode.batch$version_variant_64:name": "Use the 64-bit variant",
 	"method#popcap.particle.decode.batch$version_variant_64:message": "",
 	// Entry/method/popcap.rton
-	"method#popcap.rton.encode:description": "PopCap-RTON Encode",
+	"method#popcap.rton.encode:description": "PopCap RTON Encode",
 	"method#popcap.rton.encode$value_file:name": "JSON file",
 	"method#popcap.rton.encode$value_file:message": "",
 	"method#popcap.rton.encode$data_file:name": "RTON file",
@@ -533,7 +531,7 @@
 	"method#popcap.rton.encode$buffer_size:name": "Buffer memory size",
 	"method#popcap.rton.encode$buffer_size:message": "",
 	// 
-	"method#popcap.rton.decode:description": "PopCap-RTON Decode",
+	"method#popcap.rton.decode:description": "PopCap RTON Decode",
 	"method#popcap.rton.decode$data_file:name": "RTON file",
 	"method#popcap.rton.decode$data_file:message": "",
 	"method#popcap.rton.decode$value_file:name": "JSON file",
@@ -541,7 +539,7 @@
 	"method#popcap.rton.decode$version_number:name": "Version number",
 	"method#popcap.rton.decode$version_number:message": "",
 	// 
-	"method#popcap.rton.encrypt:description": "PopCap-RTON Encrypt",
+	"method#popcap.rton.encrypt:description": "PopCap RTON Encrypt",
 	"method#popcap.rton.encrypt$plain_file:name": "Plaintext file",
 	"method#popcap.rton.encrypt$plain_file:message": "",
 	"method#popcap.rton.encrypt$cipher_file:name": "Ciphertext file",
@@ -549,7 +547,7 @@
 	"method#popcap.rton.encrypt$key:name": "Key",
 	"method#popcap.rton.encrypt$key:message": "",
 	// 
-	"method#popcap.rton.decrypt:description": "PopCap-RTON Decrypt",
+	"method#popcap.rton.decrypt:description": "PopCap RTON Decrypt",
 	"method#popcap.rton.decrypt$cipher_file:name": "Ciphertext file",
 	"method#popcap.rton.decrypt$cipher_file:message": "",
 	"method#popcap.rton.decrypt$plain_file:name": "Plaintext file",
@@ -557,7 +555,7 @@
 	"method#popcap.rton.decrypt$key:name": "Key",
 	"method#popcap.rton.decrypt$key:message": "",
 	// 
-	"method#popcap.rton.encode_then_encrypt:description": "PopCap-RTON Encode & Encrypt",
+	"method#popcap.rton.encode_then_encrypt:description": "PopCap RTON Encode & Encrypt",
 	"method#popcap.rton.encode_then_encrypt$value_file:name": "JSON file",
 	"method#popcap.rton.encode_then_encrypt$value_file:message": "",
 	"method#popcap.rton.encode_then_encrypt$data_file:name": "RTON file",
@@ -569,7 +567,7 @@
 	"method#popcap.rton.encode_then_encrypt$buffer_size:name": "Buffer memory size",
 	"method#popcap.rton.encode_then_encrypt$buffer_size:message": "",
 	// 
-	"method#popcap.rton.decrypt_then_decode:description": "PopCap-RTON Decrypt & Decode",
+	"method#popcap.rton.decrypt_then_decode:description": "PopCap RTON Decrypt & Decode",
 	"method#popcap.rton.decrypt_then_decode$data_file:name": "RTON file",
 	"method#popcap.rton.decrypt_then_decode$data_file:message": "",
 	"method#popcap.rton.decrypt_then_decode$value_file:name": "JSON file",
@@ -579,7 +577,7 @@
 	"method#popcap.rton.decrypt_then_decode$key:name": "Key",
 	"method#popcap.rton.decrypt_then_decode$key:message": "",
 	// 
-	"method#popcap.rton.encode.batch:description": "[BATCH] PopCap-RTON Encode",
+	"method#popcap.rton.encode.batch:description": "[BATCH] PopCap RTON Encode",
 	"method#popcap.rton.encode.batch$value_file_directory:name": "JSON file directory",
 	"method#popcap.rton.encode.batch$value_file_directory:message": "",
 	"method#popcap.rton.encode.batch$data_file_directory:name": "RTON file directory",
@@ -589,7 +587,7 @@
 	"method#popcap.rton.encode.batch$buffer_size:name": "Buffer memory size",
 	"method#popcap.rton.encode.batch$buffer_size:message": "",
 	// 
-	"method#popcap.rton.decode.batch:description": "[BATCH] PopCap-RTON Decode",
+	"method#popcap.rton.decode.batch:description": "[BATCH] PopCap RTON Decode",
 	"method#popcap.rton.decode.batch$data_file_directory:name": "RTON file directory",
 	"method#popcap.rton.decode.batch$data_file_directory:message": "",
 	"method#popcap.rton.decode.batch$value_file_directory:name": "JSON file directory",
@@ -597,7 +595,7 @@
 	"method#popcap.rton.decode.batch$version_number:name": "Version number",
 	"method#popcap.rton.decode.batch$version_number:message": "",
 	// 
-	"method#popcap.rton.encrypt.batch:description": "[BATCH] PopCap-RTON Encrypt",
+	"method#popcap.rton.encrypt.batch:description": "[BATCH] PopCap RTON Encrypt",
 	"method#popcap.rton.encrypt.batch$plain_file_directory:name": "Plaintext file directory",
 	"method#popcap.rton.encrypt.batch$plain_file_directory:message": "",
 	"method#popcap.rton.encrypt.batch$cipher_file_directory:name": "Cipher te x t file directory",
@@ -605,7 +603,7 @@
 	"method#popcap.rton.encrypt.batch$key:name": "Key",
 	"method#popcap.rton.encrypt.batch$key:message": "",
 	// 
-	"method#popcap.rton.decrypt.batch:description": "[BATCH] PopCap-RTON Decrypt",
+	"method#popcap.rton.decrypt.batch:description": "[BATCH] PopCap RTON Decrypt",
 	"method#popcap.rton.decrypt.batch$cipher_file_directory:name": "Ciphertext file directory",
 	"method#popcap.rton.decrypt.batch$cipher_file_directory:message": "",
 	"method#popcap.rton.decrypt.batch$plain_file_directory:name": "Plaintext file directory",
@@ -613,7 +611,7 @@
 	"method#popcap.rton.decrypt.batch$key:name": "Key",
 	"method#popcap.rton.decrypt.batch$key:message": "",
 	// 
-	"method#popcap.rton.encode_then_encrypt.batch:description": "[BATCH] PopCap-RTON Encode & Encrypt",
+	"method#popcap.rton.encode_then_encrypt.batch:description": "[BATCH] PopCap RTON Encode & Encrypt",
 	"method#popcap.rton.encode_then_encrypt.batch$value_file_directory:name": "JSON file directory",
 	"method#popcap.rton.encode_then_encrypt.batch$value_file_directory:message": "",
 	"method#popcap.rton.encode_then_encrypt.batch$data_file_directory:name": "RTON file directory",
@@ -625,7 +623,7 @@
 	"method#popcap.rton.encode_then_encrypt.batch$buffer_size:name": "Buffer memory size",
 	"method#popcap.rton.encode_then_encrypt.batch$buffer_size:message": "",
 	// 
-	"method#popcap.rton.decrypt_then_decode.batch:description": "[BATCH] PopCap-RTON Decrypt & Decode",
+	"method#popcap.rton.decrypt_then_decode.batch:description": "[BATCH] PopCap RTON Decrypt & Decode",
 	"method#popcap.rton.decrypt_then_decode.batch$data_file_directory:name": "RTON file directory",
 	"method#popcap.rton.decrypt_then_decode.batch$data_file_directory:message": "",
 	"method#popcap.rton.decrypt_then_decode.batch$value_file_directory:name": "JSON file directory",
@@ -635,7 +633,7 @@
 	"method#popcap.rton.decrypt_then_decode.batch$key:name": "Key",
 	"method#popcap.rton.decrypt_then_decode.batch$key:message": "",
 	// Entry/method/popcap.ptx
-	"method#popcap.ptx.encode:description": "PopCap-PTX Encode",
+	"method#popcap.ptx.encode:description": "PopCap PTX Encode",
 	"method#popcap.ptx.encode$image_file:name": "Image file",
 	"method#popcap.ptx.encode$image_file:message": "",
 	"method#popcap.ptx.encode$data_file:name": "Data file",
@@ -643,7 +641,7 @@
 	"method#popcap.ptx.encode$format:name": "Texture format",
 	"method#popcap.ptx.encode$format:message": "",
 	// 
-	"method#popcap.ptx.decode:description": "PopCap-PTX Decode",
+	"method#popcap.ptx.decode:description": "PopCap PTX Decode",
 	"method#popcap.ptx.decode$data_file:name": "Data file",
 	"method#popcap.ptx.decode$data_file:message": "",
 	"method#popcap.ptx.decode$image_file:name": "Image file",
@@ -655,7 +653,7 @@
 	"method#popcap.ptx.decode$image_height:name": "Image height",
 	"method#popcap.ptx.decode$image_height:message": "",
 	// Entry/method/popcap.pam
-	"method#popcap.pam.encode:description": "PopCap-PAM Encode",
+	"method#popcap.pam.encode:description": "PopCap PAM Encode",
 	"method#popcap.pam.encode$manifest_file:name": "Manifest file",
 	"method#popcap.pam.encode$manifest_file:message": "",
 	"method#popcap.pam.encode$data_file:name": "Data file",
@@ -665,7 +663,7 @@
 	"method#popcap.pam.encode$buffer_size:name": "Buffer memory size",
 	"method#popcap.pam.encode$buffer_size:message": "",
 	// 
-	"method#popcap.pam.decode:description": "PopCap-PAM Decode",
+	"method#popcap.pam.decode:description": "PopCap PAM Decode",
 	"method#popcap.pam.decode$data_file:name": "Data file",
 	"method#popcap.pam.decode$data_file:message": "",
 	"method#popcap.pam.decode$manifest_file:name": "Manifest file",
@@ -673,29 +671,29 @@
 	"method#popcap.pam.decode$version_number:name": "Version number",
 	"method#popcap.pam.decode$version_number:message": "",
 	// 
-	"method#popcap.pam.convert.flash.from:description": "PopCap-PAM Flash Convert from JSON",
+	"method#popcap.pam.convert.flash.from:description": "PopCap PAM Flash Convert from JSON",
 	"method#popcap.pam.convert.flash.from$raw_file:name": "Original file",
 	"method#popcap.pam.convert.flash.from$raw_file:message": "",
 	"method#popcap.pam.convert.flash.from$ripe_directory:name": "Finished directory",
 	"method#popcap.pam.convert.flash.from$ripe_directory:message": "",
 	// 
-	"method#popcap.pam.convert.flash.to:description": "PopCap-PAM Flash Convert to JSON",
+	"method#popcap.pam.convert.flash.to:description": "PopCap PAM Flash Convert to JSON",
 	"method#popcap.pam.convert.flash.to$ripe_directory:name": "Finished directory",
 	"method#popcap.pam.convert.flash.to$ripe_directory:message": "",
 	"method#popcap.pam.convert.flash.to$raw_file:name": "Original file",
 	"method#popcap.pam.convert.flash.to$raw_file:message": "",
 	// 
-	"method#popcap.pam.convert.flash.resize:description": "PopCap-PAM Flash Resize image",
+	"method#popcap.pam.convert.flash.resize:description": "PopCap PAM Flash Resize image",
 	"method#popcap.pam.convert.flash.resize$directory:name": "Directory",
 	"method#popcap.pam.convert.flash.resize$directory:message": "",
 	"method#popcap.pam.convert.flash.resize$resolution:name": "Image resolution",
 	"method#popcap.pam.convert.flash.resize$resolution:message": "",
 	// 
-	"method#popcap.pam.convert.flash.link_media:description": "PopCap-PAM Flash Create links for image files",
+	"method#popcap.pam.convert.flash.link_media:description": "PopCap PAM Flash Create links for image files",
 	"method#popcap.pam.convert.flash.link_media$directory:name": "Directory",
 	"method#popcap.pam.convert.flash.link_media$directory:message": "",
 	// 
-	"method#popcap.pam.encode.batch:description": "[BATCH] PopCap-PAM Encode",
+	"method#popcap.pam.encode.batch:description": "[BATCH] PopCap PAM Encode",
 	"method#popcap.pam.encode.batch$manifest_file_directory:name": "Manifest file directory",
 	"method#popcap.pam.encode.batch$manifest_file_directory:message": "",
 	"method#popcap.pam.encode.batch$data_file_directory:name": "Data file directory",
@@ -705,7 +703,7 @@
 	"method#popcap.pam.encode.batch$buffer_size:name": "Buffer memory size",
 	"method#popcap.pam.encode.batch$buffer_size:message": "",
 	// 
-	"method#popcap.pam.decode.batch:description": "[BATCH] PopCap-PAM Decode",
+	"method#popcap.pam.decode.batch:description": "[BATCH] PopCap PAM Decode",
 	"method#popcap.pam.decode.batch$data_file_directory:name": "Data file directory",
 	"method#popcap.pam.decode.batch$data_file_directory:message": "",
 	"method#popcap.pam.decode.batch$manifest_file_directory:name": "Manifest file directory",
@@ -713,29 +711,29 @@
 	"method#popcap.pam.decode.batch$version_number:name": "Version number",
 	"method#popcap.pam.decode.batch$version_number:message": "",
 	// 
-	"method#popcap.pam.convert.flash.from.batch:description": "[BATCH] PopCap-PAM Flash Convert from JSON",
+	"method#popcap.pam.convert.flash.from.batch:description": "[BATCH] PopCap PAM Flash Convert from JSON",
 	"method#popcap.pam.convert.flash.from.batch$raw_file_directory:name": "Original file directory",
 	"method#popcap.pam.convert.flash.from.batch$raw_file_directory:message": "",
 	"method#popcap.pam.convert.flash.from.batch$ripe_directory_directory:name": "Finished directories in the directory",
 	"method#popcap.pam.convert.flash.from.batch$ripe_directory_directory:message": "",
 	// 
-	"method#popcap.pam.convert.flash.to.batch:description": "[BATCH] PopCap-PAM Flash Convert to JSON",
+	"method#popcap.pam.convert.flash.to.batch:description": "[BATCH] PopCap PAM Flash Convert to JSON",
 	"method#popcap.pam.convert.flash.to.batch$ripe_directory_directory:name": "Finished directories in the directory",
 	"method#popcap.pam.convert.flash.to.batch$ripe_directory_directory:message": "",
 	"method#popcap.pam.convert.flash.to.batch$raw_file_directory:name": "Original file directory",
 	"method#popcap.pam.convert.flash.to.batch$raw_file_directory:message": "",
 	// 
-	"method#popcap.pam.convert.flash.resize.batch:description": "[BATCH] PopCap-PAM Flash Resize image",
+	"method#popcap.pam.convert.flash.resize.batch:description": "[BATCH] PopCap PAM Flash Resize image",
 	"method#popcap.pam.convert.flash.resize.batch$directory_directory:name": "Directories in the directory",
 	"method#popcap.pam.convert.flash.resize.batch$directory_directory:message": "",
 	"method#popcap.pam.convert.flash.resize.batch$resolution:name": "Image resolution",
 	"method#popcap.pam.convert.flash.resize.batch$resolution:message": "",
 	// 
-	"method#popcap.pam.convert.flash.link_media.batch:description": "[BATCH] PopCap-PAM Flash Create links for image files",
+	"method#popcap.pam.convert.flash.link_media.batch:description": "[BATCH] PopCap PAM Flash Create links for image files",
 	"method#popcap.pam.convert.flash.link_media.batch$directory_directory:name": "Directories in the directory",
 	"method#popcap.pam.convert.flash.link_media.batch$directory_directory:message": "",
 	// Entry/method/popcap.pak
-	"method#popcap.pak.pack:description": "PopCap-PAK Pack",
+	"method#popcap.pak.pack:description": "PopCap PAK Pack",
 	"method#popcap.pak.pack$bundle_directory:name": "Bundle directory",
 	"method#popcap.pak.pack$bundle_directory:message": "",
 	"method#popcap.pak.pack$data_file:name": "Data file",
@@ -747,7 +745,7 @@
 	"method#popcap.pak.pack$buffer_size:name": "Buffer memory size",
 	"method#popcap.pak.pack$buffer_size:message": "",
 	// 
-	"method#popcap.pak.unpack:description": "PopCap-PAK Unpack",
+	"method#popcap.pak.unpack:description": "PopCap PAK Unpack",
 	"method#popcap.pak.unpack$data_file:name": "Data file",
 	"method#popcap.pak.unpack$data_file:message": "",
 	"method#popcap.pak.unpack$bundle_directory:name": "Bundle directory",
@@ -757,23 +755,23 @@
 	"method#popcap.pak.unpack$version_compress_resource_data:name": "Enable resource data compression",
 	"method#popcap.pak.unpack$version_compress_resource_data:message": "",
 	// 
-	"method#popcap.pak.pack_auto:description": "PopCap-PAK Pack by automatic",
-	"method#popcap.pak.pack_auto$resource_directory:name": "Resource directory",
-	"method#popcap.pak.pack_auto$resource_directory:message": "",
-	"method#popcap.pak.pack_auto$data_file:name": "Data file",
-	"method#popcap.pak.pack_auto$data_file:message": "",
-	"method#popcap.pak.pack_auto$version_number:name": "Version number",
-	"method#popcap.pak.pack_auto$version_number:message": "",
-	"method#popcap.pak.pack_auto$version_compress_resource_data:name": "Enable resource data compression",
-	"method#popcap.pak.pack_auto$version_compress_resource_data:message": "",
+	"method#popcap.pak.pack_automatic:description": "PopCap PAK Pack by automatic",
+	"method#popcap.pak.pack_automatic$resource_directory:name": "Resource directory",
+	"method#popcap.pak.pack_automatic$resource_directory:message": "",
+	"method#popcap.pak.pack_automatic$data_file:name": "Data file",
+	"method#popcap.pak.pack_automatic$data_file:message": "",
+	"method#popcap.pak.pack_automatic$version_number:name": "Version number",
+	"method#popcap.pak.pack_automatic$version_number:message": "",
+	"method#popcap.pak.pack_automatic$version_compress_resource_data:name": "Enable resource data compression",
+	"method#popcap.pak.pack_automatic$version_compress_resource_data:message": "",
 	// 
-	"method#popcap.pak.crypt:description": "PopCap-PAK Encrypt/Decrypt",
+	"method#popcap.pak.crypt:description": "PopCap PAK Encrypt | Decrypt",
 	"method#popcap.pak.crypt$plain_file:name": "Plaintext file",
 	"method#popcap.pak.crypt$plain_file:message": "",
 	"method#popcap.pak.crypt$cipher_file:name": "Ciphertext file",
 	"method#popcap.pak.crypt$cipher_file:message": "",
 	// Entry/method/popcap.rsgp
-	"method#popcap.rsgp.pack:description": "PopCap-RSGP Pack",
+	"method#popcap.rsgp.pack:description": "PopCap RSGP Pack",
 	"method#popcap.rsgp.pack$bundle_directory:name": "Bundle directory",
 	"method#popcap.rsgp.pack$bundle_directory:message": "",
 	"method#popcap.rsgp.pack$data_file:name": "Data file",
@@ -783,7 +781,7 @@
 	"method#popcap.rsgp.pack$buffer_size:name": "Buffer memory size",
 	"method#popcap.rsgp.pack$buffer_size:message": "",
 	// 
-	"method#popcap.rsgp.unpack:description": "PopCap-RSGP Unpack",
+	"method#popcap.rsgp.unpack:description": "PopCap RSGP Unpack",
 	"method#popcap.rsgp.unpack$data_file:name": "Data file",
 	"method#popcap.rsgp.unpack$data_file:message": "",
 	"method#popcap.rsgp.unpack$bundle_directory:name": "Bundle directory",
@@ -791,7 +789,7 @@
 	"method#popcap.rsgp.unpack$version_number:name": "Version number",
 	"method#popcap.rsgp.unpack$version_number:message": "",
 	// Entry/method/popcap.rsb
-	"method#popcap.rsb.pack:description": "PopCap-RSB Pack",
+	"method#popcap.rsb.pack:description": "PopCap RSB Pack",
 	"method#popcap.rsb.pack$bundle_directory:name": "Bundle directory",
 	"method#popcap.rsb.pack$bundle_directory:message": "",
 	"method#popcap.rsb.pack$data_file:name": "Data file",
@@ -809,7 +807,7 @@
 	"method#popcap.rsb.pack$output_new_packet:name": "Export newly packed packets (to the path of the corresponding mode, this will overwrite the original packet)",
 	"method#popcap.rsb.pack$output_new_packet:message": "",
 	// 
-	"method#popcap.rsb.unpack:description": "PopCap-RSB Unpack",
+	"method#popcap.rsb.unpack:description": "PopCap RSB Unpack",
 	"method#popcap.rsb.unpack$data_file:name": "Data file",
 	"method#popcap.rsb.unpack$data_file:message": "",
 	"method#popcap.rsb.unpack$bundle_directory:name": "Bundle directory",
@@ -825,7 +823,7 @@
 	"method#popcap.rsb.unpack$output_packet:name": "Export packet",
 	"method#popcap.rsb.unpack$output_packet:message": "",
 	// 
-	"method#popcap.rsb.resource_convert:description": "PopCap-RSB Convert resources",
+	"method#popcap.rsb.resource_convert:description": "PopCap RSB Resource convert",
 	"method#popcap.rsb.resource_convert$bundle_directory:name": "Bundle directory",
 	"method#popcap.rsb.resource_convert$bundle_directory:message": "",
 	"method#popcap.rsb.resource_convert$version_number:name": "Version number",
@@ -856,8 +854,14 @@
 	"method#popcap.rsb.resource_convert$option_animation_flash:message": "",
 	"method#popcap.rsb.resource_convert$option_audio:name": "Extract audio",
 	"method#popcap.rsb.resource_convert$option_audio:message": "",
+	// 
+	"method#popcap.rsb.repair:description": "PopCap RSB Repair",
+	"method#popcap.rsb.repair$raw_file:name": "Original file",
+	"method#popcap.rsb.repair$raw_file:message": "",
+	"method#popcap.rsb.repair$ripe_file:name": "Finished file",
+	"method#popcap.rsb.repair$ripe_file:message": "",
 	// Entry/method/popcap.rsb_patch
-	"method#popcap.rsb_patch.encode:description": "PopCap-RSB-Patch Encode",
+	"method#popcap.rsb_patch.encode:description": "PopCap RSB-Patch Encode",
 	"method#popcap.rsb_patch.encode$before_file:name": "Before file",
 	"method#popcap.rsb_patch.encode$before_file:message": "",
 	"method#popcap.rsb_patch.encode$after_file:name": "After file",
@@ -871,7 +875,7 @@
 	"method#popcap.rsb_patch.encode$buffer_size:name": "Buffer memory size",
 	"method#popcap.rsb_patch.encode$buffer_size:message": "",
 	// 
-	"method#popcap.rsb_patch.decode:description": "PopCap-RSB-Patch Decode",
+	"method#popcap.rsb_patch.decode:description": "PopCap RSB-Patch Decode",
 	"method#popcap.rsb_patch.decode$before_file:name": "Before file",
 	"method#popcap.rsb_patch.decode$before_file:message": "",
 	"method#popcap.rsb_patch.decode$after_file:name": "After file",
@@ -885,7 +889,7 @@
 	"method#popcap.rsb_patch.decode$buffer_size:name": "Buffer memory size",
 	"method#popcap.rsb_patch.decode$buffer_size:message": "",
 	// Entry/method/pvz2.lawn_string_text
-	"method#pvz2.lawn_string_text.convert:description": "PvZ-2 LawnStrings version convert",
+	"method#pvz2.lawn_string_text.convert:description": "PvZ-2 LawnString-Text Convert",
 	"method#pvz2.lawn_string_text.convert$source_file:name": "Source file",
 	"method#pvz2.lawn_string_text.convert$source_file:message": "",
 	"method#pvz2.lawn_string_text.convert$destination_version:name": "Destination version",

@@ -2,6 +2,7 @@
  * + popcap.rsb.pack
  * + popcap.rsb.unpack
  * + popcap.rsb.resource_convert
+ * + popcap.rsb.repair
  */
 namespace TwinStar.Script.Entry.method.popcap.rsb {
 
@@ -540,6 +541,44 @@ namespace TwinStar.Script.Entry.method.popcap.rsb {
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', /.+(\.rsb)(\.bundle)$/i]]),
 				input_forwarder: 'bundle_directory',
+			}),
+			Executor.method_of({
+				id: 'popcap.rsb.repair',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
+				worker(a: Entry.CFSA & {
+					raw_file: Executor.RequireArgument<string>;
+					ripe_file: Executor.RequestArgument<string, true>;
+				}) {
+					let raw_file: string;
+					let ripe_file: string;
+					{
+						raw_file = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'raw_file'),
+							a.raw_file,
+							(value) => (value),
+							(value) => (CoreX.FileSystem.exist_file(value)),
+						);
+						ripe_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'ripe_file'),
+							a.ripe_file,
+							(value) => (value),
+							() => (raw_file.replace(/((\.rsb))?$/i, '.repair.rsb')),
+							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+						);
+					}
+					Support.PopCap.RSB.Repair.repair_package_fs(raw_file, ripe_file);
+					Console.notify('s', los(`执行成功`), [`${ripe_file}`]);
+				},
+				default_argument: {
+					...Entry.k_cfsa,
+					raw_file: undefined!,
+					ripe_file: '?default',
+				},
+				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.rsb)$/i]]),
+				input_forwarder: 'raw_file',
 			}),
 		);
 	}

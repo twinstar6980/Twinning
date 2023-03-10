@@ -1,4 +1,4 @@
-set_project('TwinStar.ToolKit.Shell')
+set_project('Shell')
 
 add_rules('mode.debug', 'mode.release')
 

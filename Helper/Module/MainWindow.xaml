@@ -5,9 +5,13 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:local="using:Helper"
+	xmlns:my="using:Helper.CustomControl"
 	mc:Ignorable="d"
 >
-	<Grid
+	<my:MBox
+		HorizontalAlignment="Stretch" Width="NaN"
+		VerticalAlignment="Stretch" Height="NaN"
+		Padding="0"
 		Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
 	>
 		<TabView
@@ -15,30 +19,32 @@
 			HorizontalAlignment="Stretch" Width="NaN"
 			VerticalAlignment="Stretch" Height="NaN"
 			IsAddTabButtonVisible="False"
-			TabCloseRequested="{x:Bind uTab_OnTabCloseRequested, Mode = OneTime}"
-			Loaded="{x:Bind uTab_OnLoaded, Mode = OneTime}"
+			TabCloseRequested="{x:Bind uTab_OnTabCloseRequested, Mode=OneTime}"
+			Loaded="{x:Bind uTab_OnLoaded, Mode=OneTime}"
 		>
 			<TabView.TabStripHeader>
-				<Grid
+				<my:MStack
 					HorizontalAlignment="Stretch" Width="NaN"
 					VerticalAlignment="Stretch" Height="NaN"
 					Padding="16,4,4,4"
+					Orientation="Horizontal" Spacing="8"
 				>
 					<ImageIcon
 						HorizontalAlignment="Stretch" Width="22"
 						VerticalAlignment="Bottom" Height="22"
 						Source="/Asset/logo.png"
 					/>
-				</Grid>
+				</my:MStack>
 			</TabView.TabStripHeader>
 			<TabView.TabStripFooter>
-				<Grid
-					HorizontalAlignment="Stretch" Width="NaN"
+				<my:MStack
+					HorizontalAlignment="Stretch" Width="NaN" MinWidth="160"
 					VerticalAlignment="Stretch" Height="NaN"
-					MinWidth="160"
+					Padding="4,4,16,4"
+					Orientation="Horizontal" Spacing="8"
 				>
-				</Grid>
+				</my:MStack>
 			</TabView.TabStripFooter>
 		</TabView>
-	</Grid>
+	</my:MBox>
 </Window>

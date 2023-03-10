@@ -6,38 +6,41 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:local="using:Helper"
 	xmlns:localModuleHomeSetting="using:Helper.Module.HomeSetting"
+	xmlns:my="using:Helper.CustomControl"
 	mc:Ignorable="d"
 >
 	<ScrollViewer
 		HorizontalAlignment="Stretch" Width="NaN"
 		VerticalAlignment="Stretch" Height="NaN"
-		Margin="56,8,56,0"
-		Padding="0,8,16,8"
+		Padding="56,52,56,0"
 		HorizontalScrollMode="Enabled" VerticalScrollMode="Enabled"
 	>
-		<StackPanel
+		<my:MStack
 			HorizontalAlignment="Stretch" Width="NaN"
 			VerticalAlignment="Stretch" Height="NaN"
-			Padding="0,52,0,0"
+			Padding="0"
 			Orientation="Vertical" Spacing="52"
 		>
-			<StackPanel
+			<my:MStack
+				my:MStack.Weight="NaN"
 				HorizontalAlignment="Stretch" Width="NaN"
 				VerticalAlignment="Stretch" Height="NaN"
 				Padding="0"
 				Orientation="Vertical" Spacing="12"
 			>
 				<TextBlock
+					my:MStack.Weight="NaN"
 					HorizontalAlignment="Stretch" Width="NaN"
 					VerticalAlignment="Stretch" Height="NaN"
 					Text="Module"
 					Style="{ThemeResource SubtitleTextBlockStyle}"
 				/>
 				<GridView
+					my:MStack.Weight="NaN"
 					HorizontalAlignment="Stretch" Width="NaN"
 					VerticalAlignment="Stretch" Height="NaN"
 					SelectionMode="None" IsItemClickEnabled="True"
-					ItemsSource="{x:Bind Controller.uModuleList_ItemSource, Mode = OneWay}"
+					ItemsSource="{x:Bind Controller.uModuleList_ItemsSource, Mode=OneWay}"
 					Padding="-4"
 				>
 					<GridView.ItemContainerStyle>
@@ -47,140 +50,123 @@
 					</GridView.ItemContainerStyle>
 					<GridView.ItemTemplate>
 						<DataTemplate x:DataType="localModuleHomeSetting:ModuleItemController">
-							<UserControl>
-								<Button
-									HorizontalAlignment="Stretch" Width="360" HorizontalContentAlignment="Stretch"
-									VerticalAlignment="Stretch" Height="90" VerticalContentAlignment="Stretch"
-									BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
-									Click="{x:Bind uCreate_OnClick, Mode = OneTime}"
+							<Button
+								HorizontalAlignment="Stretch" Width="360" HorizontalContentAlignment="Stretch"
+								VerticalAlignment="Stretch" Height="90" VerticalContentAlignment="Stretch"
+								BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+								Click="{x:Bind uCreate_OnClick, Mode=OneTime}"
+							>
+								<Grid
+									Padding="0"
+									ColumnSpacing="16" RowSpacing="0"
 								>
+									<VisualStateManager.VisualStateGroups>
+										<VisualStateGroup x:Name="LayoutVisualStates">
+											<VisualState x:Name="WideLayout">
+												<VisualState.StateTriggers>
+													<AdaptiveTrigger MinWindowWidth="{ThemeResource Breakpoint640Plus}" />
+												</VisualState.StateTriggers>
+												<VisualState.Setters />
+											</VisualState>
+											<VisualState x:Name="NarrowLayout">
+												<VisualState.StateTriggers>
+													<AdaptiveTrigger MinWindowWidth="0" />
+												</VisualState.StateTriggers>
+												<VisualState.Setters>
+													<Setter Target="controlRoot.Width" Value="Auto" />
+													<Setter Target="controlRoot.Height" Value="120" />
+												</VisualState.Setters>
+											</VisualState>
+										</VisualStateGroup>
+									</VisualStateManager.VisualStateGroups>
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="Auto" />
+										<ColumnDefinition Width="*" />
+									</Grid.ColumnDefinitions>
+									<Grid.RowDefinitions>
+										<RowDefinition Height="1*" />
+									</Grid.RowDefinitions>
 									<Grid
-										Padding="0"
-										ColumnSpacing="16" RowSpacing="0"
+										Grid.Column="0" HorizontalAlignment="Stretch" Width="72"
+										Grid.Row="0" VerticalAlignment="Center" Height="NaN"
 									>
-										<VisualStateManager.VisualStateGroups>
-											<VisualStateGroup x:Name="LayoutVisualStates">
-												<VisualState x:Name="WideLayout">
-													<VisualState.StateTriggers>
-														<AdaptiveTrigger MinWindowWidth="{ThemeResource Breakpoint640Plus}" />
-													</VisualState.StateTriggers>
-													<VisualState.Setters />
-												</VisualState>
-												<VisualState x:Name="NarrowLayout">
-													<VisualState.StateTriggers>
-														<AdaptiveTrigger MinWindowWidth="0" />
-													</VisualState.StateTriggers>
-													<VisualState.Setters>
-														<Setter Target="controlRoot.Width" Value="Auto" />
-														<Setter Target="controlRoot.Height" Value="120" />
-													</VisualState.Setters>
-												</VisualState>
-											</VisualStateGroup>
-										</VisualStateManager.VisualStateGroups>
-										<Grid.ColumnDefinitions>
-											<ColumnDefinition Width="Auto" />
-											<ColumnDefinition Width="*" />
-										</Grid.ColumnDefinitions>
-										<Grid.RowDefinitions>
-											<RowDefinition Height="1*" />
-										</Grid.RowDefinitions>
-										<Grid
-											Grid.Column="0" HorizontalAlignment="Stretch" Width="72"
-											Grid.Row="0" VerticalAlignment="Center" Height="NaN"
-										>
-											<FontIcon
-												HorizontalAlignment="Center" VerticalAlignment="Center"
-												Width="48" Height="48"
-												FontSize="40"
-												Glyph="{x:Bind uIcon_Glyph, Mode = OneWay}"
-											/>
-										</Grid>
-										<StackPanel
-											Grid.Column="1" HorizontalAlignment="Stretch" Width="NaN"
-											Grid.Row="0" VerticalAlignment="Center" Height="NaN"
-											Padding="0"
-											Orientation="Vertical" Spacing="4"
-										>
-											<TextBlock
-												HorizontalAlignment="Left" Width="NaN"
-												VerticalAlignment="Stretch" Height="NaN"
-												TextWrapping="NoWrap"
-												Style="{ThemeResource BodyStrongTextBlockStyle}"
-												Text="{x:Bind uTitle_Text, Mode = OneWay}"
-											/>
-											<TextBlock
-												HorizontalAlignment="Left" Width="NaN"
-												VerticalAlignment="Stretch" Height="NaN"
-												TextWrapping="NoWrap"
-												Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-												Style="{StaticResource CaptionTextBlockStyle}"
-												Text="{x:Bind uDescription_Text, Mode = OneWay}"
-											/>
-										</StackPanel>
+										<FontIcon
+											HorizontalAlignment="Center" VerticalAlignment="Center"
+											Width="48" Height="48"
+											FontSize="40"
+											Glyph="{x:Bind uIcon_Glyph, Mode=OneWay}"
+										/>
 									</Grid>
-								</Button>
-							</UserControl>
+									<StackPanel
+										Grid.Column="1" HorizontalAlignment="Stretch" Width="NaN"
+										Grid.Row="0" VerticalAlignment="Center" Height="NaN"
+										Padding="0"
+										Orientation="Vertical" Spacing="4"
+									>
+										<TextBlock
+											HorizontalAlignment="Left" Width="NaN"
+											VerticalAlignment="Stretch" Height="NaN"
+											TextWrapping="NoWrap"
+											Style="{ThemeResource BodyStrongTextBlockStyle}"
+											Text="{x:Bind uTitle_Text, Mode=OneWay}"
+										/>
+										<TextBlock
+											HorizontalAlignment="Left" Width="NaN"
+											VerticalAlignment="Stretch" Height="NaN"
+											TextWrapping="NoWrap"
+											Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+											Style="{StaticResource CaptionTextBlockStyle}"
+											Text="{x:Bind uDescription_Text, Mode=OneWay}"
+										/>
+									</StackPanel>
+								</Grid>
+							</Button>
 						</DataTemplate>
 					</GridView.ItemTemplate>
 				</GridView>
-			</StackPanel>
-			<StackPanel
+			</my:MStack>
+			<my:MStack
+				my:MStack.Weight="NaN"
 				HorizontalAlignment="Stretch" Width="NaN"
 				VerticalAlignment="Stretch" Height="NaN"
 				Padding="0"
 				Orientation="Vertical" Spacing="12"
 			>
 				<TextBlock
+					my:MStack.Weight="NaN"
 					HorizontalAlignment="Stretch" Width="NaN"
 					VerticalAlignment="Stretch" Height="NaN"
 					Text="Customize Setting"
 					Style="{ThemeResource SubtitleTextBlockStyle}"
 				/>
-				<StackPanel
+				<my:MStack
+					my:MStack.Weight="NaN"
 					HorizontalAlignment="Stretch" Width="NaN"
 					VerticalAlignment="Stretch" Height="NaN"
 					Padding="0"
 					Orientation="Vertical" Spacing="12"
 				>
-					<Grid
+					<my:MExpandBar
+						my:MStack.Weight="NaN"
 						HorizontalAlignment="Stretch" Width="NaN"
 						VerticalAlignment="Stretch" Height="NaN"
-						ColumnSpacing="16" RowSpacing="0"
-						Style="{StaticResource NoExpanderCardStyle}"
+						Icon="{StaticResource FluentIconGlyph.BlueLight}"
+						Title="Theme Mode"
 					>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="Auto" />
-							<ColumnDefinition Width="Auto" />
-							<ColumnDefinition Width="*" />
-							<ColumnDefinition Width="Auto" />
-						</Grid.ColumnDefinitions>
-						<Grid.RowDefinitions>
-							<RowDefinition Height="1*" />
-						</Grid.RowDefinitions>
-						<FontIcon
-							Grid.Column="0" HorizontalAlignment="Stretch" Width="20"
-							Grid.Row="0" VerticalAlignment="Center" Height="NaN"
-							FontSize="{StaticResource LargeIconSize}"
-							Margin="-4,0,4,0"
-							Glyph="{StaticResource FluentIconGlyph.BlueLight}"
-						/>
-						<TextBlock
-							Grid.Column="1" HorizontalAlignment="Stretch" Width="NaN"
-							Grid.Row="0" VerticalAlignment="Center" Height="NaN"
-							Text="Theme Mode"
-							Style="{ThemeResource BodyStrongTextBlockStyle}"
-						/>
-						<ComboBox
-							Grid.Column="3" HorizontalAlignment="Stretch" Width="96"
-							Grid.Row="0" VerticalAlignment="Center" Height="NaN"
-							ItemsSource="{x:Bind Controller.uThemeComboBox_ItemsSource, Mode = OneWay}"
-							SelectedValuePath="Item1" DisplayMemberPath="Item2"
-							SelectedIndex="{x:Bind Controller.uThemeComboBox_SelectedIndex, Mode = OneWay}"
-							SelectionChanged="{x:Bind Controller.uThemeComboBox_OnSelectionChanged, Mode = OneWay}"
-						/>
-					</Grid>
-				</StackPanel>
-			</StackPanel>
-		</StackPanel>
+						<my:MExpandBar.Action>
+							<ComboBox
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Stretch" Width="96"
+								VerticalAlignment="Center" Height="NaN"
+								ItemsSource="{x:Bind Controller.uThemeComboBox_ItemsSource, Mode=OneWay}"
+								SelectedValuePath="Item1" DisplayMemberPath="Item2"
+								SelectedIndex="{x:Bind Controller.uThemeComboBox_SelectedIndex, Mode=OneWay}"
+								SelectionChanged="{x:Bind Controller.uThemeComboBox_OnSelectionChanged, Mode=OneTime}"
+							/>
+						</my:MExpandBar.Action>
+					</my:MExpandBar>
+				</my:MStack>
+			</my:MStack>
+		</my:MStack>
 	</ScrollViewer>
 </Page>

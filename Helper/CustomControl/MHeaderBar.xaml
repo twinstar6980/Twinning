@@ -1,0 +1,42 @@
+<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:local="using:Helper"
+	xmlns:my="using:Helper.CustomControl"
+>
+	<Style TargetType="my:MHeaderBar">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="my:MHeaderBar">
+					<my:MStack
+						HorizontalAlignment="Stretch" Width="NaN"
+						VerticalAlignment="Stretch" Height="NaN"
+						Padding="16,8"
+						Orientation="Horizontal" Spacing="12"
+					>
+						<FontIcon
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Center" Width="32"
+							VerticalAlignment="Center" Height="NaN"
+							FontSize="{StaticResource LargeIconSize}"
+							Glyph="{TemplateBinding Icon}"
+						/>
+						<TextBlock
+							my:MStack.Weight="1"
+							HorizontalAlignment="Left" Width="NaN"
+							VerticalAlignment="Center" Height="NaN"
+							Text="{TemplateBinding Title}"
+							Style="{ThemeResource BodyStrongTextBlockStyle}"
+						/>
+						<ContentPresenter
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Right" Width="NaN"
+							VerticalAlignment="Center" Height="NaN"
+							Content="{TemplateBinding Action}"
+						/>
+					</my:MStack>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+</ResourceDictionary>

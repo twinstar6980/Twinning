@@ -18,12 +18,13 @@
 #include <string>
 #include <regex>
 #include <optional>
-#include <vector>
 #include <array>
+#include <vector>
+#include <unordered_map>
+#include <codecvt>
 #include <filesystem>
 #include <Windows.h>
 #include <ShObjIdl_core.h>
-#include <shellapi.h>
 #include <wrl/module.h>
 #include <wrl/implements.h>
 #include <wrl/client.h>
@@ -41,6 +42,12 @@ using Microsoft::WRL::InProc;
 
 #define thiz (*this)
 
+#define assert_test(...)\
+	if (!(__VA_ARGS__)) {\
+		throw std::runtime_error{"assertion failed : " #__VA_ARGS__};\
+	}\
+	static_assert(true)
+
 namespace TwinStar::WindowsExplorerExtension {
 
 	template <typename T>
@@ -48,41 +55,73 @@ namespace TwinStar::WindowsExplorerExtension {
 
 	// ----------------
 
-	inline auto g_dll_handle = HMODULE{};
-
-	// ----------------
-
-	inline auto get_module_file_name (
-		HMODULE const & handle
-	) -> std::wstring {
+	inline auto get_environment_variable (
+		std::wstring const & name
+	) -> std::optional<std::wstring> {
 		auto state_d = DWORD{};
-		auto buffer = std::array<wchar_t, 1024>{};
-		state_d = GetModuleFileNameW(handle, buffer.data(), static_cast<DWORD>(buffer.size()));
+		state_d = GetEnvironmentVariableW(name.data(), nullptr, 0);
 		if (state_d == 0) {
-			throw std::runtime_error{std::format("^ GetModuleFileNameW : {}", GetLastError())};
+			if (GetLastError() != ERROR_ENVVAR_NOT_FOUND) {
+				throw std::runtime_error{std::format("^ GetEnvironmentVariableW : {}", GetLastError())};
+			}
 		}
-		// TODO : maybe ERROR_INSUFFICIENT_BUFFER even if function succeeded
-		return std::wstring{buffer.data(), state_d};
+		auto value = std::optional<std::wstring>{};
+		if (state_d != 0) {
+			auto & buffer = value.emplace();
+			buffer.resize(state_d);
+			state_d = GetEnvironmentVariableW(name.data(), buffer.data(), static_cast<DWORD>(buffer.size()));
+			assert_test(state_d == buffer.size() - 1);
+			buffer.resize(buffer.size() - 1);
+		}
+		return value;
 	}
 
 	// ----------------
 
-	// TODO : error 14007 ?
-	inline auto get_environment_variable (
-		std::wstring const & name
-	) -> std::wstring {
-		auto state_d = DWORD{};
-		auto buffer = std::vector<wchar_t>{};
-		state_d = GetEnvironmentVariableW(name.data(), nullptr, 0);
-		if (state_d == 0) {
-			throw std::runtime_error{std::format("^ GetEnvironmentVariableW : {}", GetLastError())};
+	inline auto get_register_value_dword (
+		HKEY const &         key_parent,
+		std::wstring const & key_path,
+		std::wstring const & value_name
+	) -> std::optional<std::uint32_t> {
+		auto state_s = LSTATUS{};
+		auto data_size = DWORD{};
+		state_s = RegGetValueW(key_parent, key_path.data(), value_name.data(), RRF_RT_REG_DWORD, nullptr, nullptr, &data_size);
+		if (state_s != ERROR_SUCCESS) {
+			if (state_s != ERROR_FILE_NOT_FOUND) {
+				throw std::runtime_error{std::format("^ RegGetValueW : {}", GetLastError())};
+			}
 		}
-		buffer.reserve(state_d);
-		state_d = GetEnvironmentVariableW(name.data(), buffer.data(), static_cast<DWORD>(buffer.size()));
-		if (state_d != buffer.size() - 1) {
-			throw std::runtime_error{std::format("^ GetEnvironmentVariableW : {}", GetLastError())};
+		auto value = std::optional<std::uint32_t>{};
+		if (data_size != 0) {
+			auto & data = value.emplace();
+			state_s = RegGetValueW(key_parent, key_path.data(), value_name.data(), RRF_RT_REG_DWORD, nullptr, &data, &data_size);
+			assert_test(state_s == ERROR_SUCCESS);
 		}
-		return std::wstring{buffer.data(), state_d};
+		return value;
+	}
+
+	inline auto get_register_value_string (
+		HKEY const &         key_parent,
+		std::wstring const & key_path,
+		std::wstring const & value_name
+	) -> std::optional<std::wstring> {
+		auto state_s = LSTATUS{};
+		auto data_size = DWORD{};
+		state_s = RegGetValueW(key_parent, key_path.data(), value_name.data(), RRF_RT_REG_SZ, nullptr, nullptr, &data_size);
+		if (state_s != ERROR_SUCCESS) {
+			if (state_s != ERROR_FILE_NOT_FOUND) {
+				throw std::runtime_error{std::format("^ RegGetValueW : {}", GetLastError())};
+			}
+		}
+		auto value = std::optional<std::wstring>{};
+		if (data_size != 0) {
+			auto & data = value.emplace();
+			data.resize(data_size / sizeof(wchar_t) - 1);
+			state_s = RegGetValueW(key_parent, key_path.data(), value_name.data(), RRF_RT_REG_SZ, nullptr, data.data(), &data_size);
+			assert_test(state_s == ERROR_SUCCESS);
+			data.resize(data.size() - 1);
+		}
+		return value;
 	}
 
 	// ----------------
@@ -158,7 +197,6 @@ namespace TwinStar::WindowsExplorerExtension {
 		std::vector<std::wstring> const & argument
 	) -> void {
 		auto state_b = BOOL{};
-		auto state_d = DWORD{};
 		auto program_string = program;
 		auto argument_string = encode_command_line_string(program, argument);
 		auto startup_information = STARTUPINFOW{
@@ -182,9 +220,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			&startup_information,
 			&process_information
 		);
-		if (!state_b) {
-			throw std::runtime_error{std::format("^ CreateProcessW : {}", GetLastError())};
-		}
+		assert_test(state_b);
 		return;
 	}
 
@@ -195,31 +231,44 @@ namespace TwinStar::WindowsExplorerExtension {
 	) -> std::vector<std::wstring> {
 		auto state_h = HRESULT{};
 		auto result = std::vector<std::wstring>{};
-		if (selection == nullptr) {
-			throw std::runtime_error{std::format("selection is null")};
-		}
+		assert_test(selection != nullptr);
 		auto count = DWORD{};
 		state_h = selection->GetCount(&count);
-		if (state_h != S_OK) {
-			throw std::runtime_error{std::format("^ IShellItemArray::GetCount : {}", state_h)};
-		}
+		assert_test(state_h == S_OK);
 		result.reserve(count);
 		for (auto i = DWORD{0}; i < count; ++i) {
 			auto item = X<IShellItem *>{};
 			state_h = selection->GetItemAt(i, &item);
-			if (state_h != S_OK) {
-				throw std::runtime_error{std::format("^ IShellItemArray::GetItemAt : {}", state_h)};
-			}
+			assert_test(state_h == S_OK);
 			auto name = LPWSTR{};
 			state_h = item->GetDisplayName(SIGDN_FILESYSPATH, &name);
-			if (state_h != S_OK) {
-				throw std::runtime_error{std::format("^ IShellItemArray::GetDisplayName : {}", state_h)};
-			}
+			assert_test(state_h == S_OK);
 			item->Release();
 			result.emplace_back(name);
 			CoTaskMemFree(name);
 		}
 		return result;
 	}
+
+	// ----------------
+
+	inline auto get_module_file_name (
+		HMODULE const & handle
+	) -> std::wstring {
+		auto state_d = DWORD{};
+		auto buffer = std::array<wchar_t, 1024>{};
+		state_d = GetModuleFileNameW(handle, buffer.data(), static_cast<DWORD>(buffer.size()));
+		assert_test(state_d != 0 && state_d != buffer.size());
+		// TODO : maybe ERROR_INSUFFICIENT_BUFFER even if function succeeded
+		return std::wstring{buffer.data(), state_d};
+	}
+
+	// ----------------
+
+	inline auto const k_register_key_parent = HKEY{HKEY_CURRENT_USER};
+
+	inline auto const k_register_key_path = std::wstring{L"Software\\TwinStar\\ToolKit\\WindowsExplorerExtension"};
+
+	inline auto g_dll_handle = HMODULE{};
 
 }

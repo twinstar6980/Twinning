@@ -1,12 +1,7 @@
 #pragma once
 
 #include "implement/common.hpp"
-
-#pragma warning(push)
-#pragma warning(disable:4625)
-#pragma warning(disable:4626)
-#pragma warning(disable:5026)
-#pragma warning(disable:5027)
+#include "implement/language.hpp"
 
 namespace TwinStar::WindowsExplorerExtension {
 
@@ -185,8 +180,47 @@ namespace TwinStar::WindowsExplorerExtension {
 
 	};
 
+	// ----------------
+
+	template <typename TBase>
+	class VisibleCommand :
+		public TBase {
+
+	protected:
+
+		std::wstring m_id;
+
+	public:
+
+		#pragma region structor
+
+		template <typename ... Argument>
+		explicit VisibleCommand (
+			std::wstring const & id,
+			Argument && ...      argument
+		):
+			TBase{std::forward<Argument>(argument) ...},
+			m_id{id} {
+		}
+
+		#pragma endregion
+
+		#pragma region implement
+
+		virtual auto state (
+			_In_opt_ IShellItemArray * selection
+		) -> EXPCMDSTATE override {
+			auto visible = get_register_value_dword(k_register_key_parent, k_register_key_path, std::format(L"visible_{}", thiz.m_id)).value_or(0) != 0;
+			if (!visible) {
+				return ECS_HIDDEN;
+			}
+			return TBase::state(selection);
+		}
+
+		#pragma endregion
+
+	};
+
 	#pragma endregion
 
 }
-
-#pragma warning(pop)

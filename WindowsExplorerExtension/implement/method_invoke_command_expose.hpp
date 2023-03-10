@@ -1,36 +1,59 @@
 #pragma once
 
 #include "implement/common.hpp"
+#include "implement/language.hpp"
 #include "implement/method_invoke_command.hpp"
 
-#pragma warning(push)
-#pragma warning(disable:4625)
-#pragma warning(disable:4626)
-#pragma warning(disable:5026)
-#pragma warning(disable:5027)
+#define M_define_exposed_method_invoke_command(_uuid, _base, _name, _id)\
+	class __declspec(uuid(_uuid)) _name##_base :\
+		public _base {\
+	public:\
+		_name##_base () :\
+			_base{MethodInvokeCommandConfigTable::_id} {\
+		}\
+	};
+
+#define M_define_exposed_visible_method_invoke_command(_uuid, _base, _name, _id)\
+	class __declspec(uuid(_uuid)) _name##_base :\
+		public VisibleCommand<_base> {\
+	public:\
+		_name##_base () :\
+			VisibleCommand{L###_id, MethodInvokeCommandConfigTable::_id} {\
+		}\
+	};
 
 namespace TwinStar::WindowsExplorerExtension {
 
 	#pragma region config
 
-	namespace MethodInvokeCommandConfigList {
+	namespace MethodInvokeCommandConfigTable {
 
-		inline auto const launch = MethodInvokeCommandConfig{
-			.name = L"Launch",
+		inline auto const main = MethodInvokeCommandConfig{
+			.id = L"main",
 			.type = std::nullopt,
 			.rule = std::nullopt,
 			.method = std::nullopt,
 			.argument = LR"({})",
 		};
 
-		inline auto const js = MethodInvokeCommandConfigGroup{
-			.name = L"JS",
+		// ----------------
+
+		inline auto const launch = MethodInvokeCommandConfig{
+			.id = L"launch",
+			.type = std::nullopt,
+			.rule = std::nullopt,
+			.method = std::nullopt,
+			.argument = LR"({})",
+		};
+
+		inline auto const js = GroupMethodInvokeCommandConfig{
+			.id = L"js",
 			.child = {
 				{
-					.name = L"执行",
+					.id = L"js.execute",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.js)$)", std::wregex::icase},
-					.method = L"js.evaluate",
+					.method = L"js.execute",
 					.argument = LR"({})",
 				},
 			},
@@ -39,32 +62,32 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const json = MethodInvokeCommandConfigGroup{
-			.name = L"JSON",
+		inline auto const json = GroupMethodInvokeCommandConfig{
+			.id = L"json",
 			.child = {
 				{
-					.name = L"格式化",
+					.id = L"json.format",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.json)$)", std::wregex::icase},
 					.method = L"json.format",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"格式化 ~ 默认格式",
+					.id = L"json.format:default",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.json)$)", std::wregex::icase},
 					.method = L"json.format",
 					.argument = LR"({ "disable_trailing_comma": "?default", "disable_array_wrap_line": "?default" })",
 				},
 				{
-					.name = L"[批处理] 格式化",
+					.id = L"json.format.batch",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"json.format.batch",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"[批处理] 格式化 ~ 默认格式",
+					.id = L"json.format.batch:default",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"json.format.batch",
@@ -77,116 +100,116 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const data = MethodInvokeCommandConfigGroup{
-			.name = L"Data",
+		inline auto const data = GroupMethodInvokeCommandConfig{
+			.id = L"data",
 			.child = {
 				{
-					.name = L"MD5 散列",
+					.id = L"data.hash.md5",
 					.type = false,
 					.rule = std::nullopt,
 					.method = L"data.hash.md5",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"Base64 编码",
+					.id = L"data.encoding.base64.encode",
 					.type = false,
 					.rule = std::nullopt,
 					.method = L"data.encoding.base64.encode",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"Base64 解码",
+					.id = L"data.encoding.base64.decode",
 					.type = false,
 					.rule = std::nullopt,
 					.method = L"data.encoding.base64.decode",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"XOR 加密",
+					.id = L"data.encryption.xor.encrypt",
 					.type = false,
 					.rule = std::nullopt,
 					.method = L"data.encryption.xor.encrypt",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"Rijndael 加密",
+					.id = L"data.encryption.rijndael.encrypt",
 					.type = false,
 					.rule = std::nullopt,
 					.method = L"data.encryption.rijndael.encrypt",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"Rijndael 解密",
+					.id = L"data.encryption.rijndael.decrypt",
 					.type = false,
 					.rule = std::nullopt,
 					.method = L"data.encryption.rijndael.decrypt",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"Deflate 压缩",
+					.id = L"data.compression.deflate.compress",
 					.type = false,
 					.rule = std::nullopt,
 					.method = L"data.compression.deflate.compress",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"Deflate 解压",
+					.id = L"data.compression.deflate.uncompress",
 					.type = false,
 					.rule = std::nullopt,
 					.method = L"data.compression.deflate.uncompress",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"ZLib 压缩",
+					.id = L"data.compression.zlib.compress",
 					.type = false,
 					.rule = std::nullopt,
 					.method = L"data.compression.zlib.compress",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"ZLib 解压",
+					.id = L"data.compression.zlib.uncompress",
 					.type = false,
 					.rule = std::nullopt,
 					.method = L"data.compression.zlib.uncompress",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"GZip 压缩",
+					.id = L"data.compression.gzip.compress",
 					.type = false,
 					.rule = std::nullopt,
 					.method = L"data.compression.gzip.compress",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"GZip 解压",
+					.id = L"data.compression.gzip.uncompress",
 					.type = false,
 					.rule = std::nullopt,
 					.method = L"data.compression.gzip.uncompress",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"BZip2 压缩",
+					.id = L"data.compression.bzip2.compress",
 					.type = false,
 					.rule = std::nullopt,
 					.method = L"data.compression.bzip2.compress",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"BZip2 解压",
+					.id = L"data.compression.bzip2.uncompress",
 					.type = false,
 					.rule = std::nullopt,
 					.method = L"data.compression.bzip2.uncompress",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"VCDiff 编码",
+					.id = L"data.differentiation.vcdiff.encode",
 					.type = false,
 					.rule = std::nullopt,
 					.method = L"data.differentiation.vcdiff.encode",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"VCDiff 解码",
+					.id = L"data.differentiation.vcdiff.decode",
 					.type = false,
 					.rule = std::nullopt,
 					.method = L"data.differentiation.vcdiff.decode",
@@ -206,49 +229,49 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const image = MethodInvokeCommandConfigGroup{
-			.name = L"Image",
+		inline auto const image = GroupMethodInvokeCommandConfig{
+			.id = L"image",
 			.child = {
 				{
-					.name = L"翻转",
+					.id = L"image.transformation.flip",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
 					.method = L"image.transformation.flip",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"缩放",
+					.id = L"image.transformation.scale",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
 					.method = L"image.transformation.scale",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"比例缩放",
+					.id = L"image.transformation.scale_rate",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
 					.method = L"image.transformation.scale_rate",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"图集打包",
+					.id = L"image.atlas.pack",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.atlas)(\.json)$)", std::wregex::icase},
 					.method = L"image.atlas.pack",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"图集解包",
+					.id = L"image.atlas.unpack",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.atlas)(\.json)$)", std::wregex::icase},
 					.method = L"image.atlas.unpack",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"图集自动打包",
+					.id = L"image.atlas.pack_automatic",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.sprite)$)", std::wregex::icase},
-					.method = L"image.atlas.pack_auto",
+					.method = L"image.atlas.pack_automatic",
 					.argument = LR"({})",
 				},
 			},
@@ -260,18 +283,18 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const wwise_encoded_media = MethodInvokeCommandConfigGroup{
-			.name = L"Wwise Encoded-Media",
+		inline auto const wwise_encoded_media = GroupMethodInvokeCommandConfig{
+			.id = L"wwise.encoded_media",
 			.child = {
 				{
-					.name = L"解码",
+					.id = L"wwise.encoded_media.decode",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.wem)$)", std::wregex::icase},
 					.method = L"wwise.encoded_media.decode",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"[批处理] 解码",
+					.id = L"wwise.encoded_media.decode.batch",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"wwise.encoded_media.decode.batch",
@@ -284,32 +307,32 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const wwise_sound_bank = MethodInvokeCommandConfigGroup{
-			.name = L"Wwise Sound-Bank",
+		inline auto const wwise_sound_bank = GroupMethodInvokeCommandConfig{
+			.id = L"wwise.sound_bank",
 			.child = {
 				{
-					.name = L"编码",
+					.id = L"wwise.sound_bank.encode",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.bnk)(\.bundle)$)", std::wregex::icase},
 					.method = L"wwise.sound_bank.encode",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"解码",
+					.id = L"wwise.sound_bank.decode",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.bnk)$)", std::wregex::icase},
 					.method = L"wwise.sound_bank.decode",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"[批处理] 编码",
+					.id = L"wwise.sound_bank.encode.batch",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"wwise.sound_bank.encode.batch",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"[批处理] 解码",
+					.id = L"wwise.sound_bank.decode.batch",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"wwise.sound_bank.decode.batch",
@@ -322,28 +345,28 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const marmalade_dzip = MethodInvokeCommandConfigGroup{
-			.name = L"Marmalade DZip",
+		inline auto const marmalade_dzip = GroupMethodInvokeCommandConfig{
+			.id = L"marmalade.dzip",
 			.child = {
 				{
-					.name = L"打包",
+					.id = L"marmalade.dzip.pack",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.dz)(\.bundle)$)", std::wregex::icase},
 					.method = L"marmalade.dzip.pack",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"解包",
+					.id = L"marmalade.dzip.unpack",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.dz)$)", std::wregex::icase},
 					.method = L"marmalade.dzip.unpack",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"自动打包",
+					.id = L"marmalade.dzip.pack_automatic",
 					.type = true,
 					.rule = std::nullopt,
-					.method = L"marmalade.dzip.pack_auto",
+					.method = L"marmalade.dzip.pack_automatic",
 					.argument = LR"({})",
 				},
 			},
@@ -353,60 +376,60 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_zlib = MethodInvokeCommandConfigGroup{
-			.name = L"PopCap ZLib",
+		inline auto const popcap_zlib = GroupMethodInvokeCommandConfig{
+			.id = L"popcap.zlib",
 			.child = {
 				{
-					.name = L"压缩 ~ 32",
+					.id = L"popcap.zlib.compress:32",
 					.type = false,
 					.rule = std::nullopt,
 					.method = L"popcap.zlib.compress",
 					.argument = LR"({ "version_variant_64": false })",
 				},
 				{
-					.name = L"解压 ~ 32",
+					.id = L"popcap.zlib.uncompress:32",
 					.type = false,
 					.rule = std::nullopt,
 					.method = L"popcap.zlib.uncompress",
 					.argument = LR"({ "version_variant_64": false })",
 				},
 				{
-					.name = L"压缩 ~ 64",
+					.id = L"popcap.zlib.compress:64",
 					.type = false,
 					.rule = std::nullopt,
 					.method = L"popcap.zlib.compress",
 					.argument = LR"({ "version_variant_64": true })",
 				},
 				{
-					.name = L"解压 ~ 64",
+					.id = L"popcap.zlib.uncompress:64",
 					.type = false,
 					.rule = std::nullopt,
 					.method = L"popcap.zlib.uncompress",
 					.argument = LR"({ "version_variant_64": true })",
 				},
 				{
-					.name = L"[批处理] 压缩 ~ 32",
+					.id = L"popcap.zlib.compress.batch:32",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.zlib.compress.batch",
 					.argument = LR"({ "version_variant_64": false })",
 				},
 				{
-					.name = L"[批处理] 解压 ~ 32",
+					.id = L"popcap.zlib.uncompress.batch:32",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.zlib.uncompress.batch",
 					.argument = LR"({ "version_variant_64": false })",
 				},
 				{
-					.name = L"[批处理] 压缩 ~ 64",
+					.id = L"popcap.zlib.compress.batch:64",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.zlib.compress.batch",
 					.argument = LR"({ "version_variant_64": true })",
 				},
 				{
-					.name = L"[批处理] 解压 ~ 64",
+					.id = L"popcap.zlib.uncompress.batch:64",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.zlib.uncompress.batch",
@@ -421,116 +444,116 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_reanim = MethodInvokeCommandConfigGroup{
-			.name = L"PopCap REANIM",
+		inline auto const popcap_reanim = GroupMethodInvokeCommandConfig{
+			.id = L"popcap.reanim",
 			.child = {
 				{
-					.name = L"编码 ~ desktop_32",
+					.id = L"popcap.reanim.encode:desktop_32",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.reanim)(\.json)$)", std::wregex::icase},
 					.method = L"popcap.reanim.encode",
 					.argument = LR"({ "version_platform": "desktop", "version_variant_64": false })",
 				},
 				{
-					.name = L"解码 ~ desktop_32",
+					.id = L"popcap.reanim.decode:desktop_32",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.reanim)(\.compiled)$)", std::wregex::icase},
 					.method = L"popcap.reanim.decode",
 					.argument = LR"({ "version_platform": "desktop", "version_variant_64": false })",
 				},
 				{
-					.name = L"编码 ~ mobile_32",
+					.id = L"popcap.reanim.encode:mobile_32",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.reanim)(\.json)$)", std::wregex::icase},
 					.method = L"popcap.reanim.encode",
 					.argument = LR"({ "version_platform": "mobile", "version_variant_64": false })",
 				},
 				{
-					.name = L"解码 ~ mobile_32",
+					.id = L"popcap.reanim.decode:mobile_32",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.reanim)(\.compiled)$)", std::wregex::icase},
 					.method = L"popcap.reanim.decode",
 					.argument = LR"({ "version_platform": "mobile", "version_variant_64": false })",
 				},
 				{
-					.name = L"编码 ~ mobile_64",
+					.id = L"popcap.reanim.encode:mobile_64",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.reanim)(\.json)$)", std::wregex::icase},
 					.method = L"popcap.reanim.encode",
 					.argument = LR"({ "version_platform": "mobile", "version_variant_64": true })",
 				},
 				{
-					.name = L"解码 ~ mobile_64",
+					.id = L"popcap.reanim.decode:mobile_64",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.reanim)(\.compiled)$)", std::wregex::icase},
 					.method = L"popcap.reanim.decode",
 					.argument = LR"({ "version_platform": "mobile", "version_variant_64": true })",
 				},
 				{
-					.name = L"编码 ~ television_32",
+					.id = L"popcap.reanim.encode:television_32",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.reanim)(\.json)$)", std::wregex::icase},
 					.method = L"popcap.reanim.encode",
 					.argument = LR"({ "version_platform": "television", "version_variant_64": false })",
 				},
 				{
-					.name = L"解码 ~ television_32",
+					.id = L"popcap.reanim.decode:television_32",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.reanim)(\.compiled)$)", std::wregex::icase},
 					.method = L"popcap.reanim.decode",
 					.argument = LR"({ "version_platform": "television", "version_variant_64": false })",
 				},
 				{
-					.name = L"[批处理] 编码 ~ desktop_32",
+					.id = L"popcap.reanim.encode.batch:desktop_32",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.reanim.encode.batch",
 					.argument = LR"({ "version_platform": "desktop", "version_variant_64": false })",
 				},
 				{
-					.name = L"[批处理] 解码 ~ desktop_32",
+					.id = L"popcap.reanim.decode.batch:desktop_32",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.reanim.decode.batch",
 					.argument = LR"({ "version_platform": "desktop", "version_variant_64": false })",
 				},
 				{
-					.name = L"[批处理] 编码 ~ mobile_32",
+					.id = L"popcap.reanim.encode.batch:mobile_32",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.reanim.encode.batch",
 					.argument = LR"({ "version_platform": "mobile", "version_variant_64": false })",
 				},
 				{
-					.name = L"[批处理] 解码 ~ mobile_32",
+					.id = L"popcap.reanim.decode.batch:mobile_32",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.reanim.decode.batch",
 					.argument = LR"({ "version_platform": "mobile", "version_variant_64": false })",
 				},
 				{
-					.name = L"[批处理] 编码 ~ mobile_64",
+					.id = L"popcap.reanim.encode.batch:mobile_64",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.reanim.encode.batch",
 					.argument = LR"({ "version_platform": "mobile", "version_variant_64": true })",
 				},
 				{
-					.name = L"[批处理] 解码 ~ mobile_64",
+					.id = L"popcap.reanim.decode.batch:mobile_64",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.reanim.decode.batch",
 					.argument = LR"({ "version_platform": "mobile", "version_variant_64": true })",
 				},
 				{
-					.name = L"[批处理] 编码 ~ television_32",
+					.id = L"popcap.reanim.encode.batch:television_32",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.reanim.encode.batch",
 					.argument = LR"({ "version_platform": "television", "version_variant_64": false })",
 				},
 				{
-					.name = L"[批处理] 解码 ~ television_32",
+					.id = L"popcap.reanim.decode.batch:television_32",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.reanim.decode.batch",
@@ -549,116 +572,116 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_particle = MethodInvokeCommandConfigGroup{
-			.name = L"PopCap PARTICLE",
+		inline auto const popcap_particle = GroupMethodInvokeCommandConfig{
+			.id = L"popcap.particle",
 			.child = {
 				{
-					.name = L"编码 ~ desktop_32",
+					.id = L"popcap.particle.encode:desktop_32",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.particle)(\.json)$)", std::wregex::icase},
 					.method = L"popcap.particle.encode",
 					.argument = LR"({ "version_platform": "desktop", "version_variant_64": false })",
 				},
 				{
-					.name = L"解码 ~ desktop_32",
+					.id = L"popcap.particle.decode:desktop_32",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.xml)(\.compiled)$)", std::wregex::icase},
 					.method = L"popcap.particle.decode",
 					.argument = LR"({ "version_platform": "desktop", "version_variant_64": false })",
 				},
 				{
-					.name = L"编码 ~ mobile_32",
+					.id = L"popcap.particle.encode:mobile_32",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.particle)(\.json)$)", std::wregex::icase},
 					.method = L"popcap.particle.encode",
 					.argument = LR"({ "version_platform": "mobile", "version_variant_64": false })",
 				},
 				{
-					.name = L"解码 ~ mobile_32",
+					.id = L"popcap.particle.decode:mobile_32",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.xml)(\.compiled)$)", std::wregex::icase},
 					.method = L"popcap.particle.decode",
 					.argument = LR"({ "version_platform": "mobile", "version_variant_64": false })",
 				},
 				{
-					.name = L"编码 ~ mobile_64",
+					.id = L"popcap.particle.encode:mobile_64",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.particle)(\.json)$)", std::wregex::icase},
 					.method = L"popcap.particle.encode",
 					.argument = LR"({ "version_platform": "mobile", "version_variant_64": true })",
 				},
 				{
-					.name = L"解码 ~ mobile_64",
+					.id = L"popcap.particle.decode:mobile_64",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.xml)(\.compiled)$)", std::wregex::icase},
 					.method = L"popcap.particle.decode",
 					.argument = LR"({ "version_platform": "mobile", "version_variant_64": true })",
 				},
 				{
-					.name = L"编码 ~ television_32",
+					.id = L"popcap.particle.encode:television_32",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.particle)(\.json)$)", std::wregex::icase},
 					.method = L"popcap.particle.encode",
 					.argument = LR"({ "version_platform": "television", "version_variant_64": false })",
 				},
 				{
-					.name = L"解码 ~ television_32",
+					.id = L"popcap.particle.decode:television_32",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.xml)(\.compiled)$)", std::wregex::icase},
 					.method = L"popcap.particle.decode",
 					.argument = LR"({ "version_platform": "television", "version_variant_64": false })",
 				},
 				{
-					.name = L"[批处理] 编码 ~ desktop_32",
+					.id = L"popcap.particle.encode.batch:desktop_32",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.particle.encode.batch",
 					.argument = LR"({ "version_platform": "desktop", "version_variant_64": false })",
 				},
 				{
-					.name = L"[批处理] 解码 ~ desktop_32",
+					.id = L"popcap.particle.decode.batch:desktop_32",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.particle.decode.batch",
 					.argument = LR"({ "version_platform": "desktop", "version_variant_64": false })",
 				},
 				{
-					.name = L"[批处理] 编码 ~ mobile_32",
+					.id = L"popcap.particle.encode.batch:mobile_32",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.particle.encode.batch",
 					.argument = LR"({ "version_platform": "mobile", "version_variant_64": false })",
 				},
 				{
-					.name = L"[批处理] 解码 ~ mobile_32",
+					.id = L"popcap.particle.decode.batch:mobile_32",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.particle.decode.batch",
 					.argument = LR"({ "version_platform": "mobile", "version_variant_64": false })",
 				},
 				{
-					.name = L"[批处理] 编码 ~ mobile_64",
+					.id = L"popcap.particle.encode.batch:mobile_64",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.particle.encode.batch",
 					.argument = LR"({ "version_platform": "mobile", "version_variant_64": true })",
 				},
 				{
-					.name = L"[批处理] 解码 ~ mobile_64",
+					.id = L"popcap.particle.decode.batch:mobile_64",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.particle.decode.batch",
 					.argument = LR"({ "version_platform": "mobile", "version_variant_64": true })",
 				},
 				{
-					.name = L"[批处理] 编码 ~ television_32",
+					.id = L"popcap.particle.encode.batch:television_32",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.particle.encode.batch",
 					.argument = LR"({ "version_platform": "television", "version_variant_64": false })",
 				},
 				{
-					.name = L"[批处理] 解码 ~ television_32",
+					.id = L"popcap.particle.decode.batch:television_32",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.particle.decode.batch",
@@ -677,88 +700,88 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_rton = MethodInvokeCommandConfigGroup{
-			.name = L"PopCap RTON",
+		inline auto const popcap_rton = GroupMethodInvokeCommandConfig{
+			.id = L"popcap.rton",
 			.child = {
 				{
-					.name = L"编码",
+					.id = L"popcap.rton.encode",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.json)$)", std::wregex::icase},
 					.method = L"popcap.rton.encode",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"解码",
+					.id = L"popcap.rton.decode",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.rton)$)", std::wregex::icase},
 					.method = L"popcap.rton.decode",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"加密",
+					.id = L"popcap.rton.encrypt",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.rton)$)", std::wregex::icase},
 					.method = L"popcap.rton.encrypt",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"解密",
+					.id = L"popcap.rton.decrypt",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.rton)$)", std::wregex::icase},
 					.method = L"popcap.rton.decrypt",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"编码并加密",
+					.id = L"popcap.rton.encode_then_encrypt",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.json)$)", std::wregex::icase},
 					.method = L"popcap.rton.encode_then_encrypt",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"解密并解码",
+					.id = L"popcap.rton.decrypt_then_decode",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.rton)$)", std::wregex::icase},
 					.method = L"popcap.rton.decrypt_then_decode",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"[批处理] 编码",
+					.id = L"popcap.rton.encode.batch",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.rton.encode.batch",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"[批处理] 解码",
+					.id = L"popcap.rton.decode.batch",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.rton.decode.batch",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"[批处理] 加密",
+					.id = L"popcap.rton.encrypt.batch",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.rton.encrypt.batch",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"[批处理] 解密",
+					.id = L"popcap.rton.decrypt.batch",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.rton.decrypt.batch",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"[批处理] 编码并加密",
+					.id = L"popcap.rton.encode_then_encrypt.batch",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.rton.encode_then_encrypt.batch",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"[批处理] 解密并解码",
+					.id = L"popcap.rton.decrypt_then_decode.batch",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.rton.decrypt_then_decode.batch",
@@ -775,88 +798,88 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_ptx = MethodInvokeCommandConfigGroup{
-			.name = L"PopCap PTX",
+		inline auto const popcap_ptx = GroupMethodInvokeCommandConfig{
+			.id = L"popcap.ptx",
 			.child = {
 				{
-					.name = L"编码",
+					.id = L"popcap.ptx.encode",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
 					.method = L"popcap.ptx.encode",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"解码",
+					.id = L"popcap.ptx.decode",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.ptx)$)", std::wregex::icase},
 					.method = L"popcap.ptx.decode",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"编码 ~ abgr_8888",
+					.id = L"popcap.ptx.encode:abgr_8888",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
 					.method = L"popcap.ptx.encode",
 					.argument = LR"({ "format": "abgr_8888" })",
 				},
 				{
-					.name = L"解码 ~ abgr_8888",
+					.id = L"popcap.ptx.decode:abgr_8888",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.ptx)$)", std::wregex::icase},
 					.method = L"popcap.ptx.decode",
 					.argument = LR"({ "format": "abgr_8888" })",
 				},
 				{
-					.name = L"编码 ~ argb_8888",
+					.id = L"popcap.ptx.encode:argb_8888",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
 					.method = L"popcap.ptx.encode",
 					.argument = LR"({ "format": "argb_8888" })",
 				},
 				{
-					.name = L"解码 ~ argb_8888",
+					.id = L"popcap.ptx.decode:argb_8888",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.ptx)$)", std::wregex::icase},
 					.method = L"popcap.ptx.decode",
 					.argument = LR"({ "format": "argb_8888" })",
 				},
 				{
-					.name = L"编码 ~ rgba_pvrtc4",
+					.id = L"popcap.ptx.encode:rgba_pvrtc4",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
 					.method = L"popcap.ptx.encode",
 					.argument = LR"({ "format": "rgba_pvrtc4" })",
 				},
 				{
-					.name = L"解码 ~ rgba_pvrtc4",
+					.id = L"popcap.ptx.decode:rgba_pvrtc4",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.ptx)$)", std::wregex::icase},
 					.method = L"popcap.ptx.decode",
 					.argument = LR"({ "format": "rgba_pvrtc4" })",
 				},
 				{
-					.name = L"编码 ~ rgb_etc1_a_8",
+					.id = L"popcap.ptx.encode:rgb_etc1_a_8",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
 					.method = L"popcap.ptx.encode",
 					.argument = LR"({ "format": "rgb_etc1_a_8" })",
 				},
 				{
-					.name = L"解码 ~ rgb_etc1_a_8",
+					.id = L"popcap.ptx.decode:rgb_etc1_a_8",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.ptx)$)", std::wregex::icase},
 					.method = L"popcap.ptx.decode",
 					.argument = LR"({ "format": "rgb_etc1_a_8" })",
 				},
 				{
-					.name = L"编码 ~ rgb_etc1_a_palette",
+					.id = L"popcap.ptx.encode:rgb_etc1_a_palette",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
 					.method = L"popcap.ptx.encode",
 					.argument = LR"({ "format": "rgb_etc1_a_palette" })",
 				},
 				{
-					.name = L"解码 ~ rgb_etc1_a_palette",
+					.id = L"popcap.ptx.decode:rgb_etc1_a_palette",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.ptx)$)", std::wregex::icase},
 					.method = L"popcap.ptx.decode",
@@ -873,116 +896,116 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_pam = MethodInvokeCommandConfigGroup{
-			.name = L"PopCap PAM",
+		inline auto const popcap_pam = GroupMethodInvokeCommandConfig{
+			.id = L"popcap.pam",
 			.child = {
 				{
-					.name = L"编码",
+					.id = L"popcap.pam.encode",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.pam)(\.json)$)", std::wregex::icase},
 					.method = L"popcap.pam.encode",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"解码",
+					.id = L"popcap.pam.decode",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.pam)$)", std::wregex::icase},
 					.method = L"popcap.pam.decode",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"Flash 转换自JSON",
+					.id = L"popcap.pam.convert.flash.from",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.pam)(\.json)$)", std::wregex::icase},
 					.method = L"popcap.pam.convert.flash.from",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"Flash 转换至JSON",
+					.id = L"popcap.pam.convert.flash.to",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.pam)(\.xfl)$)", std::wregex::icase},
 					.method = L"popcap.pam.convert.flash.to",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"Flash 图像分辨率调整",
+					.id = L"popcap.pam.convert.flash.resize",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.pam)(\.xfl)$)", std::wregex::icase},
 					.method = L"popcap.pam.convert.flash.resize",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"Flash 图像分辨率调整 ~ 1536",
+					.id = L"popcap.pam.convert.flash.resize:1536",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.pam)(\.xfl)$)", std::wregex::icase},
 					.method = L"popcap.pam.convert.flash.resize",
 					.argument = LR"({ "resolution": 1536 })",
 				},
 				{
-					.name = L"Flash 图像分辨率调整 ~ 768",
+					.id = L"popcap.pam.convert.flash.resize:768",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.pam)(\.xfl)$)", std::wregex::icase},
 					.method = L"popcap.pam.convert.flash.resize",
 					.argument = LR"({ "resolution": 768 })",
 				},
 				{
-					.name = L"Flash 创建图像文件链接",
+					.id = L"popcap.pam.convert.flash.link_media",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.pam)(\.xfl)$)", std::wregex::icase},
 					.method = L"popcap.pam.convert.flash.link_media",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"[批处理] 编码",
+					.id = L"popcap.pam.encode.batch",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.pam.encode.batch",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"[批处理] 解码",
+					.id = L"popcap.pam.decode.batch",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.pam.decode.batch",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"[批处理] 转换自JSON",
+					.id = L"popcap.pam.convert.flash.from.batch",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.pam.convert.flash.from.batch",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"[批处理] 转换至JSON",
+					.id = L"popcap.pam.convert.flash.to.batch",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.pam.convert.flash.to.batch",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"[批处理] Flash 图像分辨率调整",
+					.id = L"popcap.pam.convert.flash.resize.batch",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.pam.convert.flash.resize.batch",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"[批处理] Flash 图像分辨率调整 ~ 1536",
+					.id = L"popcap.pam.convert.flash.resize.batch:1536",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.pam.convert.flash.resize.batch",
 					.argument = LR"({ "resolution": 1536 })",
 				},
 				{
-					.name = L"[批处理] Flash 图像分辨率调整 ~ 768",
+					.id = L"popcap.pam.convert.flash.resize.batch:768",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.pam.convert.flash.resize.batch",
 					.argument = LR"({ "resolution": 768 })",
 				},
 				{
-					.name = L"[批处理] Flash 创建图像文件链接",
+					.id = L"popcap.pam.convert.flash.link_media.batch",
 					.type = true,
 					.rule = std::nullopt,
 					.method = L"popcap.pam.convert.flash.link_media.batch",
@@ -1001,32 +1024,32 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_pak = MethodInvokeCommandConfigGroup{
-			.name = L"PopCap PAK",
+		inline auto const popcap_pak = GroupMethodInvokeCommandConfig{
+			.id = L"popcap.pak",
 			.child = {
 				{
-					.name = L"打包",
+					.id = L"popcap.pak.pack",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.pak)(\.bundle)$)", std::wregex::icase},
 					.method = L"popcap.pak.pack",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"解包",
+					.id = L"popcap.pak.unpack",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.pak)$)", std::wregex::icase},
 					.method = L"popcap.pak.unpack",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"自动打包",
+					.id = L"popcap.pak.pack_automatic",
 					.type = true,
 					.rule = std::nullopt,
-					.method = L"popcap.pak.pack_auto",
+					.method = L"popcap.pak.pack_automatic",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"加解密",
+					.id = L"popcap.pak.crypt",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.pak)$)", std::wregex::icase},
 					.method = L"popcap.pak.crypt",
@@ -1040,18 +1063,18 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_rsgp = MethodInvokeCommandConfigGroup{
-			.name = L"PopCap RSGP",
+		inline auto const popcap_rsgp = GroupMethodInvokeCommandConfig{
+			.id = L"popcap.rsgp",
 			.child = {
 				{
-					.name = L"打包",
+					.id = L"popcap.rsgp.pack",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.rsgp)(\.bundle)$)", std::wregex::icase},
 					.method = L"popcap.rsgp.pack",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"解包",
+					.id = L"popcap.rsgp.unpack",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.rsgp)$)", std::wregex::icase},
 					.method = L"popcap.rsgp.unpack",
@@ -1063,49 +1086,57 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_rsb = MethodInvokeCommandConfigGroup{
-			.name = L"PopCap RSB",
+		inline auto const popcap_rsb = GroupMethodInvokeCommandConfig{
+			.id = L"popcap.rsb",
 			.child = {
 				{
-					.name = L"打包",
+					.id = L"popcap.rsb.pack",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.rsb)(\.bundle)$)", std::wregex::icase},
 					.method = L"popcap.rsb.pack",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"解包",
+					.id = L"popcap.rsb.unpack",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.rsb)$)", std::wregex::icase},
 					.method = L"popcap.rsb.unpack",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"资源转换",
+					.id = L"popcap.rsb.resource_convert",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.rsb)(\.bundle)$)", std::wregex::icase},
 					.method = L"popcap.rsb.resource_convert",
+					.argument = LR"({})",
+				},
+				{
+					.id = L"popcap.rsb.repair",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.rsb)$)", std::wregex::icase},
+					.method = L"popcap.rsb.repair",
 					.argument = LR"({})",
 				},
 			},
 			.separator = {
 				2,
 				1,
+				1,
 			},
 		};
 
-		inline auto const popcap_rsb_patch = MethodInvokeCommandConfigGroup{
-			.name = L"PopCap RSB-Patch",
+		inline auto const popcap_rsb_patch = GroupMethodInvokeCommandConfig{
+			.id = L"popcap.rsb_patch",
 			.child = {
 				{
-					.name = L"编码",
+					.id = L"popcap.rsb_patch.encode",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.rsb)$)", std::wregex::icase},
 					.method = L"popcap.rsb_patch.encode",
 					.argument = LR"({})",
 				},
 				{
-					.name = L"解码",
+					.id = L"popcap.rsb_patch.decode",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.rsb)$)", std::wregex::icase},
 					.method = L"popcap.rsb_patch.decode",
@@ -1117,25 +1148,25 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const pvz2_lawn_string_text = MethodInvokeCommandConfigGroup{
-			.name = L"PvZ-2 LawnString Text",
+		inline auto const pvz2_lawn_string_text = GroupMethodInvokeCommandConfig{
+			.id = L"pvz2.lawn_string_text",
 			.child = {
 				{
-					.name = L"转换 ~ text",
+					.id = L"pvz2.lawn_string_text.convert:text",
 					.type = false,
 					.rule = std::wregex{LR"(.*(LawnStrings).*(\.(txt|json))$)", std::wregex::icase},
 					.method = L"pvz2.lawn_string_text.convert",
 					.argument = LR"({ "destination_version": "text" })",
 				},
 				{
-					.name = L"转换 ~ json_map",
+					.id = L"pvz2.lawn_string_text.convert:json_map",
 					.type = false,
 					.rule = std::wregex{LR"(.*(LawnStrings).*(\.(txt|json))$)", std::wregex::icase},
 					.method = L"pvz2.lawn_string_text.convert",
 					.argument = LR"({ "destination_version": "json_map" })",
 				},
 				{
-					.name = L"转换 ~ json_list",
+					.id = L"pvz2.lawn_string_text.convert:json_list",
 					.type = false,
 					.rule = std::wregex{LR"(.*(LawnStrings).*(\.(txt|json))$)", std::wregex::icase},
 					.method = L"pvz2.lawn_string_text.convert",
@@ -1147,67 +1178,67 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const pvz2_remote_android_helper = MethodInvokeCommandConfigGroup{
-			.name = L"PvZ-2 Remote Android Helper",
+		inline auto const pvz2_remote_android_helper = GroupMethodInvokeCommandConfig{
+			.id = L"pvz2.remote_android_helper",
 			.child = {
 				{
-					.name = L"拉取主数据包",
+					.id = L"pvz2.remote_android_helper.launch:pull_main_package",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.pvz2_remote_android_helper_project)$)", std::wregex::icase},
 					.method = L"pvz2.remote_android_helper.launch",
 					.argument = LR"({ "action": "pull_main_package" })",
 				},
 				{
-					.name = L"推送主数据包",
+					.id = L"pvz2.remote_android_helper.launch:push_main_package",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.pvz2_remote_android_helper_project)$)", std::wregex::icase},
 					.method = L"pvz2.remote_android_helper.launch",
 					.argument = LR"({ "action": "push_main_package" })",
 				},
 				{
-					.name = L"拉取本地配置",
+					.id = L"pvz2.remote_android_helper.launch:pull_local_profile",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.pvz2_remote_android_helper_project)$)", std::wregex::icase},
 					.method = L"pvz2.remote_android_helper.launch",
 					.argument = LR"({ "action": "pull_local_profile" })",
 				},
 				{
-					.name = L"推送本地配置",
+					.id = L"pvz2.remote_android_helper.launch:push_local_profile",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.pvz2_remote_android_helper_project)$)", std::wregex::icase},
 					.method = L"pvz2.remote_android_helper.launch",
 					.argument = LR"({ "action": "push_local_profile" })",
 				},
 				{
-					.name = L"拉取玩家配置",
+					.id = L"pvz2.remote_android_helper.launch:pull_player_profile",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.pvz2_remote_android_helper_project)$)", std::wregex::icase},
 					.method = L"pvz2.remote_android_helper.launch",
 					.argument = LR"({ "action": "pull_player_profile" })",
 				},
 				{
-					.name = L"推送玩家配置",
+					.id = L"pvz2.remote_android_helper.launch:push_player_profile",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.pvz2_remote_android_helper_project)$)", std::wregex::icase},
 					.method = L"pvz2.remote_android_helper.launch",
 					.argument = LR"({ "action": "push_player_profile" })",
 				},
 				{
-					.name = L"拉取内容分发",
+					.id = L"pvz2.remote_android_helper.launch:pull_content_delivery",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.pvz2_remote_android_helper_project)$)", std::wregex::icase},
 					.method = L"pvz2.remote_android_helper.launch",
 					.argument = LR"({ "action": "pull_content_delivery" })",
 				},
 				{
-					.name = L"推送内容分发",
+					.id = L"pvz2.remote_android_helper.launch:push_content_delivery",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.pvz2_remote_android_helper_project)$)", std::wregex::icase},
 					.method = L"pvz2.remote_android_helper.launch",
 					.argument = LR"({ "action": "push_content_delivery" })",
 				},
 				{
-					.name = L"清除玩家配置快照",
+					.id = L"pvz2.remote_android_helper.launch:clear_snapshot",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.pvz2_remote_android_helper_project)$)", std::wregex::icase},
 					.method = L"pvz2.remote_android_helper.launch",
@@ -1227,170 +1258,52 @@ namespace TwinStar::WindowsExplorerExtension {
 
 	#pragma endregion
 
-	#pragma region class
+	#pragma region type
 
-	class __declspec(uuid("A918A8A8-1436-43C5-99C1-9420D0D56D40")) LaunchMethodInvokeCommand :
-		public MethodInvokeCommand {
-	public:
-		LaunchMethodInvokeCommand () :
-			MethodInvokeCommand{MethodInvokeCommandConfigList::launch} {
-		}
-	};
+	M_define_exposed_method_invoke_command("9992EC48-22A5-86FA-EA42-72DA1A53F23D", MethodInvokeCommand, Main, main);
 
-	class __declspec(uuid("314F8A42-AC6F-4192-8F9A-D2DF1C9F0546")) JSMethodInvokeCommand :
-		public MethodInvokeGroupCommand {
-	public:
-		JSMethodInvokeCommand () :
-			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::js} {
-		}
-	};
+	// ----------------
 
-	class __declspec(uuid("D60FB9DD-7677-4742-A2BC-C9049E268CBA")) JSONMethodInvokeGroupCommand :
-		public MethodInvokeGroupCommand {
-	public:
-		JSONMethodInvokeGroupCommand () :
-			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::json} {
-		}
-	};
+	M_define_exposed_method_invoke_command("A918A8A8-1436-43C5-99C1-9420D0D56D40", MethodInvokeCommand, Launch, launch);
 
-	class __declspec(uuid("1DAED04B-CD51-45DA-91E4-F15DC831C7D5")) DataMethodInvokeGroupCommand :
-		public MethodInvokeGroupCommand {
-	public:
-		DataMethodInvokeGroupCommand () :
-			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::data} {
-		}
-	};
+	M_define_exposed_visible_method_invoke_command("314F8A42-AC6F-4192-8F9A-D2DF1C9F0546", GroupMethodInvokeCommand, JS, js);
 
-	class __declspec(uuid("2BEEB70E-8211-4DB4-B6BF-8D6FDAB791BF")) ImageMethodInvokeGroupCommand :
-		public MethodInvokeGroupCommand {
-	public:
-		ImageMethodInvokeGroupCommand ():
-			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::image} {
-		}
-	};
+	M_define_exposed_visible_method_invoke_command("D60FB9DD-7677-4742-A2BC-C9049E268CBA", GroupMethodInvokeCommand, JSON, json);
 
-	class __declspec(uuid("C9A257AC-8048-4257-85AD-CE68CACD7922")) WwiseEncodedMediaMethodInvokeGroupCommand :
-		public MethodInvokeGroupCommand {
-	public:
-		WwiseEncodedMediaMethodInvokeGroupCommand () :
-			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::wwise_encoded_media} {
-		}
-	};
+	M_define_exposed_visible_method_invoke_command("1DAED04B-CD51-45DA-91E4-F15DC831C7D5", GroupMethodInvokeCommand, Data, data);
 
-	class __declspec(uuid("8B32AE59-795E-4F2D-B3B8-A4558CF9488F")) WwiseSoundBankMethodInvokeGroupCommand :
-		public MethodInvokeGroupCommand {
-	public:
-		WwiseSoundBankMethodInvokeGroupCommand () :
-			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::wwise_sound_bank} {
-		}
-	};
+	M_define_exposed_visible_method_invoke_command("2BEEB70E-8211-4DB4-B6BF-8D6FDAB791BF", GroupMethodInvokeCommand, Image, image);
 
-	class __declspec(uuid("164D100A-5228-429D-A926-EFF742D00E9D")) MarmaladeDZipMethodInvokeGroupCommand :
-		public MethodInvokeGroupCommand {
-	public:
-		MarmaladeDZipMethodInvokeGroupCommand () :
-			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::marmalade_dzip} {
-		}
-	};
+	M_define_exposed_visible_method_invoke_command("C9A257AC-8048-4257-85AD-CE68CACD7922", GroupMethodInvokeCommand, WwiseEncodedMedia, wwise_encoded_media);
 
-	class __declspec(uuid("5F334CE4-29A4-4B0F-A696-10EB3D773666")) PopCapZLibMethodInvokeGroupCommand :
-		public MethodInvokeGroupCommand {
-	public:
-		PopCapZLibMethodInvokeGroupCommand () :
-			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::popcap_zlib} {
-		}
-	};
+	M_define_exposed_visible_method_invoke_command("8B32AE59-795E-4F2D-B3B8-A4558CF9488F", GroupMethodInvokeCommand, WwiseSoundBank, wwise_sound_bank);
 
-	class __declspec(uuid("E2D6187D-7E0E-4089-82F2-768A6EE7D4D1")) PopCapREANIMMethodInvokeGroupCommand :
-		public MethodInvokeGroupCommand {
-	public:
-		PopCapREANIMMethodInvokeGroupCommand () :
-			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::popcap_reanim} {
-		}
-	};
+	M_define_exposed_visible_method_invoke_command("164D100A-5228-429D-A926-EFF742D00E9D", GroupMethodInvokeCommand, MarmaladeDZip, marmalade_dzip);
 
-	class __declspec(uuid("0DD08DF0-3B5D-5273-99AA-1A3766355ED1")) PopCapPARTICLEMethodInvokeGroupCommand :
-		public MethodInvokeGroupCommand {
-	public:
-		PopCapPARTICLEMethodInvokeGroupCommand () :
-			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::popcap_particle} {
-		}
-	};
+	M_define_exposed_visible_method_invoke_command("5F334CE4-29A4-4B0F-A696-10EB3D773666", GroupMethodInvokeCommand, PopCapZLib, popcap_zlib);
 
-	class __declspec(uuid("A7121460-0260-4E4A-829F-D21A7E649B50")) PopCapRTONMethodInvokeGroupCommand :
-		public MethodInvokeGroupCommand {
-	public:
-		PopCapRTONMethodInvokeGroupCommand () :
-			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::popcap_rton} {
-		}
-	};
+	M_define_exposed_visible_method_invoke_command("E2D6187D-7E0E-4089-82F2-768A6EE7D4D1", GroupMethodInvokeCommand, PopCapREANIM, popcap_reanim);
 
-	class __declspec(uuid("654DB9CD-DA07-4942-96A5-57F948C6A44C")) PopCapPTXMethodInvokeGroupCommand :
-		public MethodInvokeGroupCommand {
-	public:
-		PopCapPTXMethodInvokeGroupCommand () :
-			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::popcap_ptx} {
-		}
-	};
+	M_define_exposed_visible_method_invoke_command("0DD08DF0-3B5D-5273-99AA-1A3766355ED1", GroupMethodInvokeCommand, PopCapPARTICLE, popcap_particle);
 
-	class __declspec(uuid("D3EBD69C-CB8B-452D-BFC7-7C06519BDA68")) PopCapPAMMethodInvokeGroupCommand :
-		public MethodInvokeGroupCommand {
-	public:
-		PopCapPAMMethodInvokeGroupCommand () :
-			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::popcap_pam} {
-		}
-	};
+	M_define_exposed_visible_method_invoke_command("A7121460-0260-4E4A-829F-D21A7E649B50", GroupMethodInvokeCommand, PopCapRTON, popcap_rton);
 
-	class __declspec(uuid("64DBC2C3-402F-42AA-B8BF-B43B3280F813")) PopCapPAKMethodInvokeGroupCommand :
-		public MethodInvokeGroupCommand {
-	public:
-		PopCapPAKMethodInvokeGroupCommand () :
-			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::popcap_pak} {
-		}
-	};
+	M_define_exposed_visible_method_invoke_command("654DB9CD-DA07-4942-96A5-57F948C6A44C", GroupMethodInvokeCommand, PopCapPTX, popcap_ptx);
 
-	class __declspec(uuid("95E74A50-81DC-48BA-A24B-E0AD30C75139")) PopCapRSGPMethodInvokeGroupCommand :
-		public MethodInvokeGroupCommand {
-	public:
-		PopCapRSGPMethodInvokeGroupCommand () :
-			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::popcap_rsgp} {
-		}
-	};
+	M_define_exposed_visible_method_invoke_command("D3EBD69C-CB8B-452D-BFC7-7C06519BDA68", GroupMethodInvokeCommand, PopCapPAM, popcap_pam);
 
-	class __declspec(uuid("BCF8438E-67D1-4B7B-8649-78C46FAB4CFE")) PopCapRSBMethodInvokeGroupCommand :
-		public MethodInvokeGroupCommand {
-	public:
-		PopCapRSBMethodInvokeGroupCommand () :
-			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::popcap_rsb} {
-		}
-	};
+	M_define_exposed_visible_method_invoke_command("64DBC2C3-402F-42AA-B8BF-B43B3280F813", GroupMethodInvokeCommand, PopCapPAK, popcap_pak);
 
-	class __declspec(uuid("C83A33D4-B96D-4002-9D76-4DB88AF589C0")) PopCapRSBPatchMethodInvokeGroupCommand :
-		public MethodInvokeGroupCommand {
-	public:
-		PopCapRSBPatchMethodInvokeGroupCommand () :
-			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::popcap_rsb_patch} {
-		}
-	};
+	M_define_exposed_visible_method_invoke_command("95E74A50-81DC-48BA-A24B-E0AD30C75139", GroupMethodInvokeCommand, PopCapRSGP, popcap_rsgp);
 
-	class __declspec(uuid("3F961602-866A-4305-8031-42597990C6AB")) PvZ2LawnStringTextMethodInvokeGroupCommand :
-		public MethodInvokeGroupCommand {
-	public:
-		PvZ2LawnStringTextMethodInvokeGroupCommand () :
-			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::pvz2_lawn_string_text} {
-		}
-	};
+	M_define_exposed_visible_method_invoke_command("BCF8438E-67D1-4B7B-8649-78C46FAB4CFE", GroupMethodInvokeCommand, PopCapRSB, popcap_rsb);
 
-	class __declspec(uuid("CD04E4D3-2224-14FC-C9DD-66D746408D62")) PvZ2RemoteAndroidHelperMethodInvokeGroupCommand :
-		public MethodInvokeGroupCommand {
-	public:
-		PvZ2RemoteAndroidHelperMethodInvokeGroupCommand () :
-			MethodInvokeGroupCommand{MethodInvokeCommandConfigList::pvz2_remote_android_helper} {
-		}
-	};
+	M_define_exposed_visible_method_invoke_command("C83A33D4-B96D-4002-9D76-4DB88AF589C0", GroupMethodInvokeCommand, PopCapRSBPatch, popcap_rsb_patch);
+
+	M_define_exposed_visible_method_invoke_command("3F961602-866A-4305-8031-42597990C6AB", GroupMethodInvokeCommand, PvZ2LawnStringText, pvz2_lawn_string_text);
+
+	M_define_exposed_visible_method_invoke_command("CD04E4D3-2224-14FC-C9DD-66D746408D62", GroupMethodInvokeCommand, PvZ2RemoteAndroidHelper, pvz2_remote_android_helper);
 
 	#pragma endregion
 
 }
-
-#pragma warning(pop)

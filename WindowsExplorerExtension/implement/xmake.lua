@@ -6,6 +6,7 @@ target('implement', function()
 	add_headerfiles(
 		'./version.hpp',
 		'./common.hpp',
+		'./language.hpp',
 		'./base_command.hpp',
 		'./method_invoke_command.hpp',
 		'./method_invoke_command_expose.hpp',

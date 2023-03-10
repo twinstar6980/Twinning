@@ -160,23 +160,25 @@ namespace Helper.Module.AnimationViewer {
 				nameof(this.uSelectImageDirectory_IsEnabled),
 				nameof(this.uClearSource_IsEnabled),
 				nameof(this.uImageList_IsEnabled),
-				nameof(this.uImageList_ItemSource),
+				nameof(this.uImageList_ItemsSource),
 				nameof(this.uSpriteList_IsEnabled),
-				nameof(this.uSpriteList_ItemSource),
+				nameof(this.uSpriteList_ItemsSource),
 				nameof(this.uMainSpriteList_IsEnabled),
-				nameof(this.uMainSpriteList_ItemSource)
+				nameof(this.uMainSpriteList_ItemsSource)
 			);
 			this.View.uImageList.SelectAll();
 			this.View.uSpriteList.SelectAll();
-			this.View.uMainSpriteList.SelectAll();
+			if (this.Animation.MainSprite != null) {
+				this.View.uMainSpriteList.SelectAll();
+			}
 			this.NotifyPropertyChanged(
 				nameof(this.uPlantCustomLayerIcon_Opacity),
 				nameof(this.uPlantCustomLayer_IsEnabled),
-				nameof(this.uPlantCustomLayer_ItemSource),
+				nameof(this.uPlantCustomLayer_ItemsSource),
 				nameof(this.uPlantCustomLayer_SelectedValue),
 				nameof(this.uZombieStateLayerIcon_Opacity),
 				nameof(this.uZombieStateLayer_IsEnabled),
-				nameof(this.uZombieStateLayer_ItemSource),
+				nameof(this.uZombieStateLayer_ItemsSource),
 				nameof(this.uZombieStateLayer_SelectedValue),
 				nameof(this.uZombieGroundSwatchLayerIcon_Opacity),
 				nameof(this.uZombieGroundSwatchLayer_IsEnabled),
@@ -190,7 +192,9 @@ namespace Helper.Module.AnimationViewer {
 			Debug.Assert(this.Loaded && !this.Working);
 			this.View.uImageList.DeselectRange(new ItemIndexRange(0, (USize)this.Animation.Image.Count));
 			this.View.uSpriteList.DeselectRange(new ItemIndexRange(0, (USize)this.Animation.Sprite.Count));
-			this.View.uMainSpriteList.DeselectRange(new ItemIndexRange(0, 1));
+			if (this.Animation.MainSprite != null) {
+				this.View.uMainSpriteList.DeselectRange(new ItemIndexRange(0, 1));
+			}
 			this.AnimationFile = null;
 			this.ImageDirectory = null;
 			this.Animation = null;
@@ -209,18 +213,18 @@ namespace Helper.Module.AnimationViewer {
 				nameof(this.uSelectImageDirectory_IsEnabled),
 				nameof(this.uClearSource_IsEnabled),
 				nameof(this.uImageList_IsEnabled),
-				nameof(this.uImageList_ItemSource),
+				nameof(this.uImageList_ItemsSource),
 				nameof(this.uSpriteList_IsEnabled),
-				nameof(this.uSpriteList_ItemSource),
+				nameof(this.uSpriteList_ItemsSource),
 				nameof(this.uMainSpriteList_IsEnabled),
-				nameof(this.uMainSpriteList_ItemSource),
+				nameof(this.uMainSpriteList_ItemsSource),
 				nameof(this.uPlantCustomLayerIcon_Opacity),
 				nameof(this.uPlantCustomLayer_IsEnabled),
-				nameof(this.uPlantCustomLayer_ItemSource),
+				nameof(this.uPlantCustomLayer_ItemsSource),
 				nameof(this.uPlantCustomLayer_SelectedValue),
 				nameof(this.uZombieStateLayerIcon_Opacity),
 				nameof(this.uZombieStateLayer_IsEnabled),
-				nameof(this.uZombieStateLayer_ItemSource),
+				nameof(this.uZombieStateLayer_ItemsSource),
 				nameof(this.uZombieStateLayer_SelectedValue),
 				nameof(this.uZombieGroundSwatchLayerIcon_Opacity),
 				nameof(this.uZombieGroundSwatchLayer_IsEnabled),
@@ -240,7 +244,7 @@ namespace Helper.Module.AnimationViewer {
 			this.WorkingSpriteFrameRate = workingSprite.FrameRate;
 			this.WorkingSpriteFrameRange = new AnimationHelper.FrameRange() { Start = 0, Duration = workingSprite.Frame.Count };
 			this.WorkingSpriteFrameRangeLabelInformation = new List<Tuple<String, AnimationHelper.FrameRange>>();
-			var currentFrameLabel = new List<Tuple<String, Int32>>();
+			var currentFrameLabel = new List<Tuple<String, Size>>();
 			for (var frameIndex = 0; frameIndex < workingSprite.Frame.Count; ++frameIndex) {
 				var frame = workingSprite.Frame[frameIndex];
 				if (frame.Label != null) {
@@ -291,7 +295,7 @@ namespace Helper.Module.AnimationViewer {
 					);
 				}
 			};
-			this.View.uSprite.State = this.AutomaticPlay ? SpriteControl.StateType.Playing : SpriteControl.StateType.Paused;
+			this.View.uSprite.State = !this.AutomaticPlay ? SpriteControl.StateType.Paused : SpriteControl.StateType.Playing;
 			this.NotifyPropertyChanged(
 				nameof(this.uWorkingSpriteFrameRateIcon_Opacity),
 				nameof(this.uWorkingSpriteFrameRate_IsEnabled),
@@ -307,7 +311,7 @@ namespace Helper.Module.AnimationViewer {
 				nameof(this.uWorkingSpriteFrameRangeEnd_Value),
 				nameof(this.uWorkingSpriteFrameRangeLabelIcon_Opacity),
 				nameof(this.uWorkingSpriteFrameRangeLabel_IsEnabled),
-				nameof(this.uWorkingSpriteFrameRangeLabel_ItemSource),
+				nameof(this.uWorkingSpriteFrameRangeLabel_ItemsSource),
 				nameof(this.uWorkingSpriteFrameRangeLabel_SelectedValue),
 				nameof(this.uWorkingSpriteFrameProgress_IsEnabled),
 				nameof(this.uWorkingSpriteFrameProgress_Minimum),
@@ -349,7 +353,7 @@ namespace Helper.Module.AnimationViewer {
 				nameof(this.uWorkingSpriteFrameRangeEnd_Value),
 				nameof(this.uWorkingSpriteFrameRangeLabelIcon_Opacity),
 				nameof(this.uWorkingSpriteFrameRangeLabel_IsEnabled),
-				nameof(this.uWorkingSpriteFrameRangeLabel_ItemSource),
+				nameof(this.uWorkingSpriteFrameRangeLabel_ItemsSource),
 				nameof(this.uWorkingSpriteFrameRangeLabel_SelectedValue),
 				nameof(this.uWorkingSpriteFrameProgress_IsEnabled),
 				nameof(this.uWorkingSpriteFrameProgress_Minimum),
@@ -460,11 +464,12 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public async void uAutomaticPlay_OnClick (
+		public async void uAutomaticPlay_OnChecked (
 			Object          sender,
 			RoutedEventArgs e
 		) {
-			var newValue = !this.AutomaticPlay;
+			var senderX = (ToggleButton)e.OriginalSource;
+			var newValue = senderX.IsChecked!.Value;
 			this.AutomaticPlay = newValue;
 			this.NotifyPropertyChanged(
 				nameof(this.uAutomaticPlay_IsChecked)
@@ -479,11 +484,12 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public async void uRepeatPlay_OnClick (
+		public async void uRepeatPlay_OnChecked (
 			Object          sender,
 			RoutedEventArgs e
 		) {
-			var newValue = !this.RepeatPlay;
+			var senderX = (ToggleButton)e.OriginalSource;
+			var newValue = senderX.IsChecked!.Value;
 			this.RepeatPlay = newValue;
 			this.View.uSprite.Repeat = newValue;
 			this.NotifyPropertyChanged(
@@ -522,9 +528,9 @@ namespace Helper.Module.AnimationViewer {
 
 		public String uAnimationFile_Text {
 			get {
-				return this.Loaded
-					? this.AnimationFile
-					: "";
+				return !this.Loaded
+					? ""
+					: this.AnimationFile;
 			}
 		}
 
@@ -571,9 +577,9 @@ namespace Helper.Module.AnimationViewer {
 
 		public String uImageDirectory_Text {
 			get {
-				return this.Loaded
-					? this.ImageDirectory
-					: "";
+				return !this.Loaded
+					? ""
+					: this.ImageDirectory;
 			}
 		}
 
@@ -621,11 +627,11 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public List<ImageItemController> uImageList_ItemSource {
+		public List<ImageItemController> uImageList_ItemsSource {
 			get {
-				return this.Loaded
-					? new List<ImageItemController>(Enumerable.Range(0, this.Animation.Image.Count).Select(i => new ImageItemController() { Host = this, Index = i }))
-					: new List<ImageItemController>();
+				return !this.Loaded
+					? new List<ImageItemController>()
+					: new List<ImageItemController>(Enumerable.Range(0, this.Animation.Image.Count).Select(i => new ImageItemController() { Host = this, Index = i }));
 			}
 		}
 
@@ -657,11 +663,11 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public List<SpriteItemController> uSpriteList_ItemSource {
+		public List<SpriteItemController> uSpriteList_ItemsSource {
 			get {
-				return this.Loaded
-					? new List<SpriteItemController>(Enumerable.Range(0, this.Animation.Sprite.Count).Select(i => new SpriteItemController() { Host = this, Index = i }))
-					: new List<SpriteItemController>();
+				return !this.Loaded
+					? new List<SpriteItemController>()
+					: new List<SpriteItemController>(Enumerable.Range(0, this.Animation.Sprite.Count).Select(i => new SpriteItemController() { Host = this, Index = i }));
 			}
 		}
 
@@ -689,23 +695,23 @@ namespace Helper.Module.AnimationViewer {
 
 		public Boolean uMainSpriteList_IsEnabled {
 			get {
-				return this.Loaded;
+				return this.Loaded && this.Animation.MainSprite != null;
 			}
 		}
 
-		public List<MainSpriteItemController> uMainSpriteList_ItemSource {
+		public List<MainSpriteItemController> uMainSpriteList_ItemsSource {
 			get {
-				return this.Loaded
+				return !this.Loaded
 					? new List<MainSpriteItemController>() {
 						new () {
 							Host = this,
-							Index = this.Animation.MainSprite == null ? null : this.Animation.Sprite.Count,
+							Index = null,
 						},
 					}
 					: new List<MainSpriteItemController>() {
 						new () {
 							Host = this,
-							Index = null,
+							Index = this.Animation.MainSprite == null ? null : this.Animation.Sprite.Count,
 						},
 					};
 			}
@@ -751,9 +757,9 @@ namespace Helper.Module.AnimationViewer {
 
 		public Floating uWorkingSpriteFrameRate_Value {
 			get {
-				return this.Working
-					? this.WorkingSpriteFrameRate.Value
-					: Floating.NaN;
+				return !this.Working
+					? Floating.NaN
+					: this.WorkingSpriteFrameRate.Value;
 			}
 		}
 
@@ -798,25 +804,25 @@ namespace Helper.Module.AnimationViewer {
 
 		public Floating uWorkingSpriteFrameRangeBegin_Minimum {
 			get {
-				return this.Working
-					? 1.0
-					: Floating.NaN;
+				return !this.Working
+					? Floating.NaN
+					: 1.0;
 			}
 		}
 
 		public Floating uWorkingSpriteFrameRangeBegin_Maximum {
 			get {
-				return this.Working
-					? AnimationHelper.SelectSprite(this.Animation, this.WorkingSpriteIndex.Value).Frame.Count
-					: Floating.NaN;
+				return !this.Working
+					? Floating.NaN
+					: AnimationHelper.SelectSprite(this.Animation, this.WorkingSpriteIndex.Value).Frame.Count;
 			}
 		}
 
 		public Floating uWorkingSpriteFrameRangeBegin_Value {
 			get {
-				return this.Working
-					? this.WorkingSpriteFrameRange.Start + 1
-					: Floating.NaN;
+				return !this.Working
+					? Floating.NaN
+					: this.WorkingSpriteFrameRange.Start + 1;
 			}
 		}
 
@@ -857,25 +863,25 @@ namespace Helper.Module.AnimationViewer {
 
 		public Floating uWorkingSpriteFrameRangeEnd_Minimum {
 			get {
-				return this.Working
-					? 1.0
-					: Floating.NaN;
+				return !this.Working
+					? Floating.NaN
+					: 1.0;
 			}
 		}
 
 		public Floating uWorkingSpriteFrameRangeEnd_Maximum {
 			get {
-				return this.Working
-					? AnimationHelper.SelectSprite(this.Animation, this.WorkingSpriteIndex.Value).Frame.Count
-					: Floating.NaN;
+				return !this.Working
+					? Floating.NaN
+					: AnimationHelper.SelectSprite(this.Animation, this.WorkingSpriteIndex.Value).Frame.Count;
 			}
 		}
 
 		public Floating uWorkingSpriteFrameRangeEnd_Value {
 			get {
-				return this.Working
-					? this.WorkingSpriteFrameRange.Start + this.WorkingSpriteFrameRange.Duration
-					: Floating.NaN;
+				return !this.Working
+					? Floating.NaN
+					: this.WorkingSpriteFrameRange.Start + this.WorkingSpriteFrameRange.Duration;
 			}
 		}
 
@@ -931,7 +937,7 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public List<String> uWorkingSpriteFrameRangeLabel_ItemSource {
+		public List<String> uWorkingSpriteFrameRangeLabel_ItemsSource {
 			get {
 				if (!this.Working) {
 					return new List<String>();
@@ -985,17 +991,17 @@ namespace Helper.Module.AnimationViewer {
 
 		public Floating uWorkingSpriteFrameProgress_Minimum {
 			get {
-				return this.Working
-					? this.WorkingSpriteFrameRange.Start + 1
-					: 0.0;
+				return !this.Working
+					? 0.0
+					: this.WorkingSpriteFrameRange.Start + 1;
 			}
 		}
 
 		public Floating uWorkingSpriteFrameProgress_Maximum {
 			get {
-				return this.Working
-					? this.WorkingSpriteFrameRange.Start + this.WorkingSpriteFrameRange.Duration
-					: 0.0;
+				return !this.Working
+					? 0.0
+					: this.WorkingSpriteFrameRange.Start + this.WorkingSpriteFrameRange.Duration;
 			}
 		}
 
@@ -1080,9 +1086,11 @@ namespace Helper.Module.AnimationViewer {
 
 		public String uWorkingSpritePauseIcon_Glyph {
 			get {
-				return this.Working
-					? this.WorkingSpritePaused.Value ? FluentIconGlyph.Play : FluentIconGlyph.Pause
-					: FluentIconGlyph.Play;
+				return !this.Working
+					? FluentIconGlyph.Pause
+					: this.WorkingSpritePaused.Value
+						? FluentIconGlyph.Play
+						: FluentIconGlyph.Pause;
 			}
 		}
 
@@ -1140,11 +1148,12 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public async void uShowSpriteBoundary_OnClick (
+		public async void uShowSpriteBoundary_OnChecked (
 			Object          sender,
 			RoutedEventArgs e
 		) {
-			var newValue = !this.ShowSpriteBoundary;
+			var senderX = (ToggleButton)e.OriginalSource;
+			var newValue = senderX.IsChecked!.Value;
 			this.ShowSpriteBoundary = newValue;
 			this.View.uSprite.ShowBoundary = this.ShowSpriteBoundary;
 			this.NotifyPropertyChanged(
@@ -1170,7 +1179,7 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public List<String> uPlantCustomLayer_ItemSource {
+		public List<String> uPlantCustomLayer_ItemsSource {
 			get {
 				if (!this.Loaded) {
 					return new List<String>();
@@ -1198,7 +1207,7 @@ namespace Helper.Module.AnimationViewer {
 			// TODO : avoid repeat rendering
 			if (this.Loaded && e.AddedItems.Count == 1) {
 				var targetCustomName = $"custom_{(String)e.AddedItems[0]}";
-				foreach (var customName in this.PlantCustomLayerName!) {
+				foreach (var customName in this.PlantCustomLayerName) {
 					for (var index = 0; index < this.Animation.Sprite.Count; ++index) {
 						var sprite = this.Animation.Sprite[index];
 						if (sprite.Name == customName) {
@@ -1234,7 +1243,7 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public List<String> uZombieStateLayer_ItemSource {
+		public List<String> uZombieStateLayer_ItemsSource {
 			get {
 				if (!this.Loaded) {
 					return new List<String>();
@@ -1262,7 +1271,7 @@ namespace Helper.Module.AnimationViewer {
 			// TODO : avoid repeat rendering
 			if (this.Loaded && e.AddedItems.Count == 1) {
 				var targetCustomName = (String)e.AddedItems[0];
-				foreach (var customName in this.ZombieStateLayerName!) {
+				foreach (var customName in this.ZombieStateLayerName) {
 					for (var index = 0; index < this.Animation.Sprite.Count; ++index) {
 						var sprite = this.Animation.Sprite[index];
 						if (sprite.Name == customName) {
@@ -1312,15 +1321,14 @@ namespace Helper.Module.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs e
 		) {
+			var senderX = (ToggleButton)e.OriginalSource;
 			// TODO : avoid repeat rendering
 			if (this.Loaded) {
-				var senderX = (ToggleButton)e.OriginalSource;
-				var newState = senderX.IsChecked!.Value;
-				Debug.WriteLine(newState);
+				var newValue = senderX.IsChecked!.Value;
 				for (var index = 0; index < this.Animation.Sprite.Count; ++index) {
 					var sprite = this.Animation.Sprite[index];
 					if (this.ZombieGroundSwatchLayerName.Contains(sprite.Name)) {
-						if (newState) {
+						if (newValue) {
 							this.View.uSpriteList.SelectRange(new ItemIndexRange(index, 1));
 						} else {
 							this.View.uSpriteList.DeselectRange(new ItemIndexRange(index, 1));

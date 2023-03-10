@@ -20,7 +20,7 @@ namespace TwinStar::Shell::Core {
 			#if defined M_system_windows
 			auto path_absolute = std::string{path} + "."s;
 			auto path_w = utf8_to_utf16(reinterpret_cast<std::u8string const &>(path_absolute));
-			auto result = LoadLibraryW(reinterpret_cast<LPCWSTR>(path_w.c_str()));
+			auto result = LoadLibraryW(reinterpret_cast<LPCWSTR>(path_w.data()));
 			if (!result) {
 				throw std::runtime_error{"can not open library : "s + std::string{path}};
 			}

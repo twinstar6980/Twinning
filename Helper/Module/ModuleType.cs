@@ -47,6 +47,34 @@ namespace Helper.Module {
 				Description = "...",
 				Page = typeof(AnimationViewer.MainPage),
 			},
+			//new ModuleInformation {
+			//	Type = ModuleType.ObjectEditor,
+			//	Icon = FluentIconGlyph.Code,
+			//	Title = "Object Editor",
+			//	Description = "...",
+			//	Page = typeof(ObjectEditor.MainPage),
+			//},
+			//new ModuleInformation {
+			//	Type = ModuleType.LevelCreator,
+			//	Icon = FluentIconGlyph.FitPage,
+			//	Title = "Level Creator",
+			//	Description = "...",
+			//	Page = typeof(LevelCreator.MainPage),
+			//},
+			//new ModuleInformation {
+			//	Type = ModuleType.MapDesigner,
+			//	Icon = FluentIconGlyph.MapPin,
+			//	Title = "Map Designer",
+			//	Description = "...",
+			//	Page = typeof(MapDesigner.MainPage),
+			//},
+			//new ModuleInformation {
+			//	Type = ModuleType.PackageBuilder,
+			//	Icon = FluentIconGlyph.IOT,
+			//	Title = "Package Builder",
+			//	Description = "...",
+			//	Page = typeof(PackageBuilder.MainPage),
+			//},
 		};
 	}
 

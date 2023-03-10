@@ -34,7 +34,7 @@ namespace Helper.Module.HomeSetting {
 
 		#region module
 
-		public List<ModuleItemController> uModuleList_ItemSource {
+		public List<ModuleItemController> uModuleList_ItemsSource {
 			get {
 				return new List<ModuleItemController>(Enumerable.Range(1, ModuleInformationConstant.Value.Count - 1).Select(i => new ModuleItemController() { Host = this, Index = i }));
 			}

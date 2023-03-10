@@ -1,35 +1,30 @@
 #pragma once
 
 #include "implement/common.hpp"
+#include "implement/language.hpp"
 #include "implement/base_command.hpp"
-
-#pragma warning(push)
-#pragma warning(disable:4625)
-#pragma warning(disable:4626)
-#pragma warning(disable:5026)
-#pragma warning(disable:5027)
 
 namespace TwinStar::WindowsExplorerExtension {
 
 	#pragma region config
 
 	struct MethodInvokeCommandConfig {
-		std::wstring                name;
+		std::wstring                id;
 		std::optional<bool>         type;
 		std::optional<std::wregex>  rule;
 		std::optional<std::wstring> method;
 		std::wstring                argument;
 	};
 
-	struct MethodInvokeCommandConfigGroup {
-		std::wstring                           name;
+	struct GroupMethodInvokeCommandConfig {
+		std::wstring                           id;
 		std::vector<MethodInvokeCommandConfig> child;
 		std::vector<std::size_t>               separator;
 	};
 
 	// ----------------
 
-	inline auto test_single_path (
+	inline auto test_method_available (
 		MethodInvokeCommandConfig const & config,
 		std::wstring const &              path
 	) -> bool {
@@ -77,7 +72,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		virtual auto title (
 		) -> LPCWSTR override {
-			return thiz.m_config.name.c_str();
+			return Language::query(std::format(L"method:{}", thiz.m_config.id)).data();
 		}
 
 		virtual auto icon (
@@ -89,12 +84,10 @@ namespace TwinStar::WindowsExplorerExtension {
 		virtual auto state (
 			_In_opt_ IShellItemArray * selection
 		) -> EXPCMDSTATE override {
-			if (selection == nullptr) {
-				throw std::runtime_error{std::format("selection is null")};
-			}
+			assert_test(selection != nullptr);
 			auto path_list = get_shell_item_file_path(selection);
 			for (auto & path : path_list) {
-				if (!test_single_path(thiz.m_config, path)) {
+				if (!test_method_available(thiz.m_config, path)) {
 					return ECS_DISABLED;
 				}
 			}
@@ -105,14 +98,16 @@ namespace TwinStar::WindowsExplorerExtension {
 			_In_opt_ IShellItemArray * selection
 		) -> void override {
 			try {
-				if (selection == nullptr) {
-					throw std::runtime_error{std::format("selection is null")};
+				assert_test(selection != nullptr);
+				auto launch_script = get_register_value_string(k_register_key_parent, k_register_key_path, L"launch_script").value_or(L"");
+				if (!std::filesystem::is_regular_file(std::filesystem::path{launch_script})) {
+					throw std::runtime_error{std::format("launch script is invalid")};
 				}
 				auto path_list = get_shell_item_file_path(selection);
 				auto program = std::wstring{L"C:\\Windows\\System32\\cmd.exe"};
 				auto argument = std::vector<std::wstring>{};
 				argument.emplace_back(L"/C");
-				argument.emplace_back(L"%TwinStar.ToolKit.WindowsExplorerExtension.launch_file%");
+				argument.emplace_back(launch_script);
 				for (auto & path : path_list) {
 					argument.emplace_back(path);
 					if (thiz.m_config.method.has_value()) {
@@ -125,8 +120,7 @@ namespace TwinStar::WindowsExplorerExtension {
 				create_process(program, argument);
 			} catch (std::exception const & exception) {
 				// TODO : suppose encoding is ANSI, right ?
-				auto message = exception.what();
-				MessageBoxA(nullptr, message, "TwinStar.ToolKit.WindowsExplorerExtension ERROR", MB_OK | MB_ICONERROR);
+				MessageBoxA(nullptr, exception.what(), "ERROR", MB_OK | MB_ICONERROR);
 			}
 			return;
 		}
@@ -148,7 +142,7 @@ namespace TwinStar::WindowsExplorerExtension {
 		#pragma region structor
 
 		explicit MethodInvokeCommandEnum (
-			MethodInvokeCommandConfigGroup const & config
+			GroupMethodInvokeCommandConfig const & config
 		) {
 			auto separator_index = std::size_t{0};
 			auto current_separator_section_count = std::size_t{0};
@@ -208,19 +202,19 @@ namespace TwinStar::WindowsExplorerExtension {
 
 	};
 
-	class MethodInvokeGroupCommand :
+	class GroupMethodInvokeCommand :
 		public BaseCommand {
 
 	protected:
 
-		MethodInvokeCommandConfigGroup const & m_config;
+		GroupMethodInvokeCommandConfig const & m_config;
 
 	public:
 
 		#pragma region structor
 
-		explicit MethodInvokeGroupCommand (
-			MethodInvokeCommandConfigGroup const & config
+		explicit GroupMethodInvokeCommand (
+			GroupMethodInvokeCommandConfig const & config
 		):
 			m_config{config} {
 		}
@@ -241,7 +235,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		virtual auto title (
 		) -> LPCWSTR override {
-			return thiz.m_config.name.c_str();
+			return Language::query(std::format(L"method:{}", thiz.m_config.id)).data();
 		}
 
 		virtual auto icon (
@@ -253,14 +247,12 @@ namespace TwinStar::WindowsExplorerExtension {
 		virtual auto state (
 			_In_opt_ IShellItemArray * selection
 		) -> EXPCMDSTATE override {
-			if (selection == nullptr) {
-				throw std::runtime_error{std::format("selection is null")};
-			}
+			assert_test(selection != nullptr);
 			auto path_list = get_shell_item_file_path(selection);
 			for (auto & config : thiz.m_config.child) {
 				auto state = true;
 				for (auto & path : path_list) {
-					if (!test_single_path(config, path)) {
+					if (!test_method_available(config, path)) {
 						state = false;
 						break;
 					}
@@ -290,5 +282,3 @@ namespace TwinStar::WindowsExplorerExtension {
 	#pragma endregion
 
 }
-
-#pragma warning(pop)

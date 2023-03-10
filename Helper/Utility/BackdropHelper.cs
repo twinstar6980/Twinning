@@ -33,7 +33,6 @@ namespace Helper.Utility {
 		public Boolean TryApplyMica (
 		) {
 			if (MicaController.IsSupported()) {
-				Debug.WriteLine(this.mWindow.Content.GetType().Name);
 				this.mWindowsSystemDispatcherQueueHelper = new WindowsSystemDispatcherQueueHelper();
 				this.mWindowsSystemDispatcherQueueHelper.EnsureWindowsSystemDispatcherQueueController();
 				this.mSystemBackdropConfiguration = new SystemBackdropConfiguration();

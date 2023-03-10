@@ -12,7 +12,17 @@ namespace Helper.Utility {
 		public static Floating BooleanToFloatingOfOpacity (
 			Boolean state
 		) {
-			return state ? 1.0 : 0.5;
+			return !state ? 0.5 : 1.0;
+		}
+
+		#endregion
+
+		#region switch
+
+		public static String BooleanToSwitchString (
+			Boolean state
+		) {
+			return !state ? "Off" : "On";
 		}
 
 		#endregion

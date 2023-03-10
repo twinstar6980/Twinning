@@ -17,7 +17,7 @@ namespace Helper.Module {
 			this.ExtendsContentIntoTitleBar = true;
 			this.SetTitleBar(this.uTab.TabStripFooter as UIElement);
 			if (new BackdropHelper(this).TryApplyMica()) {
-				((Grid)this.Content).Background = null;
+				((Panel)this.Content).Background = null;
 			}
 			MainWindow.sInstance = this;
 		}
@@ -30,7 +30,7 @@ namespace Helper.Module {
 
 		public static MainWindow Instance {
 			get {
-				return MainWindow.sInstance!;
+				return MainWindow.sInstance ?? throw new Exception("");
 			}
 		}
 

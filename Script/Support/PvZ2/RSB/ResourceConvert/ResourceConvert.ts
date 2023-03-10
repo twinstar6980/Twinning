@@ -4,7 +4,7 @@ namespace TwinStar.Script.Support.PvZ2.RSB.ResourceConvert {
 
 	export type TextureFormatMap = Array<{
 		index: bigint;
-		format: Support.PopCapTexture.Encode.Format;
+		format: Support.PopCap.PTX.Encode.Format;
 	}>;
 
 	export type Option = {
@@ -171,7 +171,7 @@ namespace TwinStar.Script.Support.PvZ2.RSB.ResourceConvert {
 					let stream = Core.ByteStreamView.watch(data.view());
 					let image = Core.Image.Image.allocate(Core.Image.ImageSize.value(actual_size));
 					let image_view = image.view();
-					Support.PopCapTexture.Encode.decode(stream, image_view, texture_format.format);
+					Support.PopCap.PTX.Encode.decode(stream, image_view, texture_format.format);
 					if (option.image.atlas !== null) {
 						let atlas_view = image_view;
 						if (option.image.atlas.resize) {
@@ -205,10 +205,10 @@ namespace TwinStar.Script.Support.PvZ2.RSB.ResourceConvert {
 						CoreX.JSON.write_fs(`${option.animation.directory}/${raw_file}`, information_json);
 					}
 					if (option.animation.flash !== null) {
-						let flash_package = Support.PopCapAnimation.Convert.Flash.From.from(information_js as any);
-						Support.PopCapAnimation.Convert.Flash.save_flash_package(`${option.animation.directory}/${flash_directory}`, flash_package);
-						Support.PopCapAnimation.Convert.Flash.SourceManager.create_fsh(`${option.animation.directory}/${flash_directory}`, information_js as any);
-						Support.PopCapAnimation.Convert.Flash.create_xfl_content_file(`${option.animation.directory}/${flash_directory}`);
+						let flash_package = Support.PopCap.PAM.Convert.Flash.From.from(information_js as any);
+						Support.PopCap.PAM.Convert.Flash.save_flash_package(`${option.animation.directory}/${flash_directory}`, flash_package);
+						Support.PopCap.PAM.Convert.Flash.SourceManager.create_fsh(`${option.animation.directory}/${flash_directory}`, information_js as any);
+						Support.PopCap.PAM.Convert.Flash.create_xfl_content_file(`${option.animation.directory}/${flash_directory}`);
 					}
 				} catch (e: any) {
 					Console.notify_error(e);

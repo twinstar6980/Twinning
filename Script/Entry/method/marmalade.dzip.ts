@@ -1,7 +1,7 @@
 /**
  * + marmalade.dzip.pack
  * + marmalade.dzip.unpack
- * + marmalade.dzip.pack_auto
+ * + marmalade.dzip.pack_automatic
  */
 namespace TwinStar.Script.Entry.method.marmalade.dzip {
 
@@ -130,7 +130,7 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 				input_forwarder: 'data_file',
 			}),
 			Executor.method_of({
-				id: 'marmalade.dzip.pack_auto',
+				id: 'marmalade.dzip.pack_automatic',
 				descriptor(
 				) {
 					return Executor.query_method_description(this.id);
@@ -166,7 +166,7 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 							(value) => ([0n].includes(value) ? null : los(`版本不受支持`)),
 						);
 					}
-					let data = Support.MarmaladeDZip.ResourcePack.pack(resource_directory, version_number);
+					let data = Support.Marmalade.DZip.PackAutomatic.pack(resource_directory, version_number);
 					CoreX.FileSystem.write_file(data_file, data[0].view().sub(Core.Size.value(0n), data[1]));
 					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},

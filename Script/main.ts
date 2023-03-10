@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 44;
+	export const k_version = 45;
 
 	// ------------------------------------------------
 
@@ -324,16 +324,17 @@ TwinStar.Script.Main.g_module_manifest = {
 		`utility/Console`,
 		`utility/ADBHelper`,
 		`Language/Language`,
-		`Support/MarmaladeDZip/ResourcePack/ResourcePack`,
-		`Support/PopCapPAK/ResourcePack/ResourcePack`,
-		`Support/Atlas/Pack/AutoPack`,
-		`Support/Atlas/Pack/Pack`,
-		`Support/PopCapTexture/Encode/Encode`,
-		`Support/PopCapAnimation/Convert/common`,
-		`Support/PopCapAnimation/Convert/Flash/common`,
-		`Support/PopCapAnimation/Convert/Flash/From`,
-		`Support/PopCapAnimation/Convert/Flash/To`,
-		`Support/PopCapAnimation/Convert/Flash/SourceManager`,
+		`Support/Atlas/Pack`,
+		`Support/Atlas/PackAutomatic`,
+		`Support/Marmalade/DZip/PackAutomatic`,
+		`Support/PopCap/PTX/Encode`,
+		`Support/PopCap/PAM/Convert/common`,
+		`Support/PopCap/PAM/Convert/Flash/common`,
+		`Support/PopCap/PAM/Convert/Flash/From`,
+		`Support/PopCap/PAM/Convert/Flash/To`,
+		`Support/PopCap/PAM/Convert/Flash/SourceManager`,
+		`Support/PopCap/PAK/PackAutomatic`,
+		`Support/PopCap/RSB/Repair`,
 		`Support/PvZ2/JSONGenericGetter/JSONGenericGetter`,
 		`Support/PvZ2/LawnStringText/LawnStringText`,
 		`Support/PvZ2/RSB/ResourceManifest/Convert`,

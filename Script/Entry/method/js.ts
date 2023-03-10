@@ -1,5 +1,5 @@
 /**
- * + js.evaluate
+ * + js.execute
  */
 namespace TwinStar.Script.Entry.method.js {
 
@@ -13,7 +13,7 @@ namespace TwinStar.Script.Entry.method.js {
 	) {
 		g_executor_method.push(
 			Executor.method_of({
-				id: 'js.evaluate',
+				id: 'js.execute',
 				descriptor(
 				) {
 					return Executor.query_method_description(this.id);

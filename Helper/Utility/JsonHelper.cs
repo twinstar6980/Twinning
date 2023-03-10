@@ -2,9 +2,9 @@
 // ReSharper disable
 
 using Helper;
-using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 
 namespace Helper.Utility {
 
@@ -28,13 +28,13 @@ namespace Helper.Utility {
 		public static String Serialize<TValue> (
 			TValue value
 		) {
-			return JsonConvert.SerializeObject(value, JsonHelper.JsonSerializerSettings);
+			return JsonConvert.SerializeObject(value, Formatting.Indented, JsonHelper.JsonSerializerSettings);
 		}
 
 		public static TValue Deserialize<TValue> (
 			String text
 		) {
-			return JsonConvert.DeserializeObject<TValue>(text, JsonHelper.JsonSerializerSettings)!;
+			return JsonConvert.DeserializeObject<TValue>(text, JsonHelper.JsonSerializerSettings) ?? throw new Exception("");
 		}
 
 		#endregion

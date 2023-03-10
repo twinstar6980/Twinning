@@ -27,9 +27,9 @@ namespace Helper.Core {
 		) {
 			this.mHandle = ExternalLibrary.Kernel32.LoadLibrary($"{path}.");
 			this.mSymbol = new SymbolTable() {
-				version = Marshal.GetDelegateForFunctionPointer(ExternalLibrary.Kernel32.GetProcAddress(this.mHandle, SymbolNameTable.version), typeof(Interface.version)) as Interface.version ?? throw new Exception($"can not found symbol : {SymbolNameTable.version}"),
-				execute = Marshal.GetDelegateForFunctionPointer(ExternalLibrary.Kernel32.GetProcAddress(this.mHandle, SymbolNameTable.execute), typeof(Interface.execute)) as Interface.execute ?? throw new Exception($"can not found symbol : {SymbolNameTable.execute}"),
-				prepare = Marshal.GetDelegateForFunctionPointer(ExternalLibrary.Kernel32.GetProcAddress(this.mHandle, SymbolNameTable.prepare), typeof(Interface.prepare)) as Interface.prepare ?? throw new Exception($"can not found symbol : {SymbolNameTable.prepare}"),
+				version = (Interface.version)Marshal.GetDelegateForFunctionPointer(ExternalLibrary.Kernel32.GetProcAddress(this.mHandle, SymbolNameTable.version), typeof(Interface.version)),
+				execute = (Interface.execute)Marshal.GetDelegateForFunctionPointer(ExternalLibrary.Kernel32.GetProcAddress(this.mHandle, SymbolNameTable.execute), typeof(Interface.execute)),
+				prepare = (Interface.prepare)Marshal.GetDelegateForFunctionPointer(ExternalLibrary.Kernel32.GetProcAddress(this.mHandle, SymbolNameTable.prepare), typeof(Interface.prepare)),
 			};
 		}
 

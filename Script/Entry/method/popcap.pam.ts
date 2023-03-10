@@ -162,9 +162,9 @@ namespace TwinStar.Script.Entry.method.popcap.pam {
 						);
 					}
 					let raw = CoreX.JSON.read_fs_js<Core.Tool.PopCap.PAM.Manifest.JS_N.Animation>(raw_file);
-					Support.PopCapAnimation.Convert.Flash.From.from_fsh(raw, ripe_directory);
-					Support.PopCapAnimation.Convert.Flash.SourceManager.create_fsh(ripe_directory, raw);
-					Support.PopCapAnimation.Convert.Flash.create_xfl_content_file(ripe_directory);
+					Support.PopCap.PAM.Convert.Flash.From.from_fsh(raw, ripe_directory);
+					Support.PopCap.PAM.Convert.Flash.SourceManager.create_fsh(ripe_directory, raw);
+					Support.PopCap.PAM.Convert.Flash.create_xfl_content_file(ripe_directory);
 					Console.notify('s', los(`执行成功`), [`${ripe_directory}`]);
 				},
 				default_argument: {
@@ -202,7 +202,7 @@ namespace TwinStar.Script.Entry.method.popcap.pam {
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
 					}
-					Support.PopCapAnimation.Convert.Flash.To.to_fs(raw_file, ripe_directory);
+					Support.PopCap.PAM.Convert.Flash.To.to_fs(raw_file, ripe_directory);
 					Console.notify('s', los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
@@ -241,7 +241,7 @@ namespace TwinStar.Script.Entry.method.popcap.pam {
 							(value) => (value > 0n ? null : los(`分辨率应大于零`)),
 						);
 					}
-					Support.PopCapAnimation.Convert.Flash.SourceManager.resize_fs(directory, resolution);
+					Support.PopCap.PAM.Convert.Flash.SourceManager.resize_fs(directory, resolution);
 					Console.notify('s', los(`执行成功`), [`${directory}`]);
 				},
 				default_argument: {
@@ -451,9 +451,9 @@ namespace TwinStar.Script.Entry.method.popcap.pam {
 							let raw_file = `${raw_file_directory}/${item}`;
 							let ripe_directory = `${ripe_directory_directory}/${item.slice(0, -5)}.xfl`;
 							let raw = CoreX.JSON.read_fs_js<Core.Tool.PopCap.PAM.Manifest.JS_N.Animation>(raw_file);
-							Support.PopCapAnimation.Convert.Flash.From.from_fsh(raw, ripe_directory);
-							Support.PopCapAnimation.Convert.Flash.SourceManager.create_fsh(ripe_directory, raw);
-							Support.PopCapAnimation.Convert.Flash.create_xfl_content_file(ripe_directory);
+							Support.PopCap.PAM.Convert.Flash.From.from_fsh(raw, ripe_directory);
+							Support.PopCap.PAM.Convert.Flash.SourceManager.create_fsh(ripe_directory, raw);
+							Support.PopCap.PAM.Convert.Flash.create_xfl_content_file(ripe_directory);
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${ripe_directory_directory}`]);
@@ -499,7 +499,7 @@ namespace TwinStar.Script.Entry.method.popcap.pam {
 						(item) => {
 							let ripe_directory = `${ripe_directory_directory}/${item}`;
 							let raw_file = `${raw_file_directory}/${item.slice(0, -4)}.json`;
-							Support.PopCapAnimation.Convert.Flash.To.to_fs(raw_file, ripe_directory);
+							Support.PopCap.PAM.Convert.Flash.To.to_fs(raw_file, ripe_directory);
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${raw_file_directory}`]);
@@ -545,7 +545,7 @@ namespace TwinStar.Script.Entry.method.popcap.pam {
 						['directory', /.+(\.pam)(\.xfl)$/i],
 						(item) => {
 							let directory = `${directory_directory}/${item}`;
-							Support.PopCapAnimation.Convert.Flash.SourceManager.resize_fs(directory, resolution);
+							Support.PopCap.PAM.Convert.Flash.SourceManager.resize_fs(directory, resolution);
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${directory_directory}`]);

@@ -1,11 +1,10 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Graphics.Imaging;
 using Helper;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Storage.Pickers;
-using Windows.Storage.Streams;
+using Windows.Graphics.Imaging;
 using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace Helper.Utility {

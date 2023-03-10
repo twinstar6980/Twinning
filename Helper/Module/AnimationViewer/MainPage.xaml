@@ -5,8 +5,8 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:local="using:Helper"
-	xmlns:localCustomControl="using:Helper.CustomControl"
 	xmlns:localModuleAnimationViewer="using:Helper.Module.AnimationViewer"
+	xmlns:my="using:Helper.CustomControl"
 	mc:Ignorable="d"
 >
 	<Grid
@@ -25,748 +25,744 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="1*" />
 		</Grid.RowDefinitions>
-		<Grid
+		<my:MStack
 			Grid.Column="0" HorizontalAlignment="Stretch" Width="NaN"
 			Grid.Row="0" VerticalAlignment="Stretch" Height="NaN"
-			Padding="0"
-			ColumnSpacing="0" RowSpacing="0"
+			Padding="0,-4,0,0"
+			Orientation="Vertical" Spacing="0"
 		>
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="1*" />
-			</Grid.ColumnDefinitions>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="1*" />
-			</Grid.RowDefinitions>
-			<Grid
-				Grid.Column="0" HorizontalAlignment="Stretch" Width="NaN"
-				Grid.Row="0" VerticalAlignment="Stretch" Height="NaN"
-				Padding="16,4,16,8"
-				ColumnSpacing="12" RowSpacing="0"
+			<my:MHeaderBar
+				my:MStack.Weight="NaN"
+				HorizontalAlignment="Stretch" Width="NaN"
+				VerticalAlignment="Stretch" Height="NaN"
+				Icon="{StaticResource FluentIconGlyph.CircleRing}"
+				Title="Image"
 			>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto" />
-					<ColumnDefinition Width="Auto" />
-					<ColumnDefinition Width="1*" />
-					<ColumnDefinition Width="Auto" />
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="1*" />
-				</Grid.RowDefinitions>
-				<FontIcon
-					Grid.Column="0" HorizontalAlignment="Center" Width="32"
-					Grid.Row="0" VerticalAlignment="Center" Height="NaN"
-					FontSize="{StaticResource LargeIconSize}"
-					Glyph="{StaticResource FluentIconGlyph.CircleRing}"
-				/>
-				<TextBlock
-					Grid.Column="1" HorizontalAlignment="Center" Width="NaN"
-					Grid.Row="0" VerticalAlignment="Center" Height="NaN"
-					Text="Image"
-					Style="{ThemeResource BodyStrongTextBlockStyle}"
-				/>
-				<StackPanel
-					Grid.Column="3" HorizontalAlignment="Center" Width="NaN"
-					Grid.Row="0" VerticalAlignment="Center" Height="NaN"
-					Padding="0"
-					Orientation="Horizontal" Spacing="8"
-				>
-					<Button
-						HorizontalAlignment="Stretch" Width="NaN" VerticalAlignment="Center" Height="NaN"
-						IsEnabled="False"
-						Opacity="0"
+				<my:MHeaderBar.Action>
+					<my:MStack
+						HorizontalAlignment="Stretch" Width="NaN"
+						VerticalAlignment="Stretch" Height="NaN"
+						Padding="0"
+						Orientation="Horizontal" Spacing="8"
 					>
-						<FontIcon
-							FontSize="{StaticResource MediumIconSize}"
-							Glyph=""
-						/>
-					</Button>
-				</StackPanel>
-			</Grid>
-			<localCustomControl:HorizontalSeparatorLine
-				Grid.Column="0" Grid.Row="1"
+						<Button
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Stretch" Width="NaN"
+							VerticalAlignment="Center" Height="NaN"
+							IsEnabled="False"
+							Opacity="0"
+						>
+							<FontIcon
+								FontSize="{StaticResource MediumIconSize}"
+								Glyph=""
+							/>
+						</Button>
+					</my:MStack>
+				</my:MHeaderBar.Action>
+			</my:MHeaderBar>
+			<my:MDivider
+				my:MStack.Weight="NaN"
+				HorizontalAlignment="Stretch" Width="NaN"
+				VerticalAlignment="Stretch" Height="{StaticResource DividerThickness}"
 			/>
 			<ListView
 				x:Name="uImageList" x:FieldModifier="public"
-				Grid.Column="0" HorizontalAlignment="Stretch" Width="NaN"
-				Grid.Row="2" VerticalAlignment="Stretch" Height="NaN"
+				my:MStack.Weight="1"
+				HorizontalAlignment="Stretch" Width="NaN"
+				VerticalAlignment="Stretch" Height="NaN"
+				Padding="0,2,0,-2"
 				SelectionMode="Extended" IsItemClickEnabled="True"
-				IsEnabled="{x:Bind Controller.uImageList_IsEnabled, Mode = OneWay}"
-				ItemsSource="{x:Bind Controller.uImageList_ItemSource, Mode = OneWay}"
-				SelectionChanged="{x:Bind Controller.uImageList_OnSelectionChanged, Mode = OneTime}"
+				IsEnabled="{x:Bind Controller.uImageList_IsEnabled, Mode=OneWay}"
+				ItemsSource="{x:Bind Controller.uImageList_ItemsSource, Mode=OneWay}"
+				SelectionChanged="{x:Bind Controller.uImageList_OnSelectionChanged, Mode=OneTime}"
 			>
 				<ListView.ItemTemplate>
 					<DataTemplate x:DataType="localModuleAnimationViewer:ImageItemController">
-						<Grid
+						<my:MStack
 							HorizontalAlignment="Stretch" Width="NaN"
 							VerticalAlignment="Stretch" Height="NaN"
 							Padding="0,8,4,8"
-							ColumnSpacing="12" RowSpacing="0"
+							Orientation="Horizontal" Spacing="12"
 						>
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="Auto" />
-								<ColumnDefinition Width="1*" />
-								<ColumnDefinition Width="Auto" />
-							</Grid.ColumnDefinitions>
-							<Grid.RowDefinitions>
-								<RowDefinition Height="1*" />
-							</Grid.RowDefinitions>
 							<Viewbox
-								Grid.Column="0" HorizontalAlignment="Left" Width="32"
-								Grid.Row="0" VerticalAlignment="Center" Height="32"
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Stretch" Width="32"
+								VerticalAlignment="Center" Height="32"
 								Stretch="None"
-								Child="{x:Bind uPreview_Content, Mode = OneWay}"
+								Child="{x:Bind uPreview_Content, Mode=OneWay}"
 							/>
-							<StackPanel
-								Grid.Column="1" HorizontalAlignment="Left" Width="NaN"
-								Grid.Row="0" VerticalAlignment="Center" Height="NaN"
+							<my:MStack
+								my:MStack.Weight="1"
+								HorizontalAlignment="Stretch" Width="NaN"
+								VerticalAlignment="Center" Height="NaN"
 								Padding="0"
 								Orientation="Vertical" Spacing="0"
 							>
 								<TextBlock
-									HorizontalAlignment="Left"
+									my:MStack.Weight="NaN"
+									HorizontalAlignment="Left" Width="NaN"
+									VerticalAlignment="Stretch" Height="NaN"
 									TextWrapping="NoWrap"
-									Text="{x:Bind uTitle_Text, Mode = OneWay}"
+									Text="{x:Bind uTitle_Text, Mode=OneWay}"
 									Style="{ThemeResource BodyTextBlockStyle}"
 								/>
 								<TextBlock
-									HorizontalAlignment="Left"
+									my:MStack.Weight="NaN"
+									HorizontalAlignment="Left" Width="NaN"
+									VerticalAlignment="Stretch" Height="NaN"
 									TextWrapping="NoWrap"
 									Foreground="{ThemeResource TextFillColorSecondary}"
-									Text="{x:Bind uDescription_Text, Mode = OneWay}"
+									Text="{x:Bind uDescription_Text, Mode=OneWay}"
 									Style="{ThemeResource CaptionTextBlockStyle}"
 								/>
-							</StackPanel>
-						</Grid>
+							</my:MStack>
+						</my:MStack>
 					</DataTemplate>
 				</ListView.ItemTemplate>
 			</ListView>
-		</Grid>
-		<localCustomControl:VerticalSeparatorLine
-			Grid.Column="1" Grid.Row="0"
+		</my:MStack>
+		<my:MDivider
+			Grid.Column="1" HorizontalAlignment="Stretch" Width="{StaticResource DividerThickness}"
+			Grid.Row="0" VerticalAlignment="Stretch" Height="NaN"
 		/>
-		<Grid
+		<my:MStack
 			Grid.Column="2" HorizontalAlignment="Stretch" Width="NaN"
 			Grid.Row="0" VerticalAlignment="Stretch" Height="NaN"
-			Padding="0"
-			ColumnSpacing="0" RowSpacing="0"
+			Padding="0,-4,0,0"
+			Orientation="Vertical" Spacing="0"
 		>
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="1*" />
-			</Grid.ColumnDefinitions>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="1*" />
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="Auto" />
-			</Grid.RowDefinitions>
-			<Grid
-				Grid.Column="0" HorizontalAlignment="Stretch" Width="NaN"
-				Grid.Row="0" VerticalAlignment="Stretch" Height="NaN"
-				Padding="16,4,16,8"
-				ColumnSpacing="12" RowSpacing="0"
+			<my:MHeaderBar
+				my:MStack.Weight="NaN"
+				HorizontalAlignment="Stretch" Width="NaN"
+				VerticalAlignment="Stretch" Height="NaN"
+				Icon="{StaticResource FluentIconGlyph.FitPage}"
+				Title="Stage"
 			>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto" />
-					<ColumnDefinition Width="Auto" />
-					<ColumnDefinition Width="1*" />
-					<ColumnDefinition Width="Auto" />
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="1*" />
-				</Grid.RowDefinitions>
-				<FontIcon
-					Grid.Column="0" HorizontalAlignment="Center" Width="32"
-					Grid.Row="0" VerticalAlignment="Center" Height="NaN"
-					FontSize="{StaticResource LargeIconSize}"
-					Glyph="{StaticResource FluentIconGlyph.FitPage}"
-				/>
-				<TextBlock
-					Grid.Column="1" HorizontalAlignment="Center" Width="NaN"
-					Grid.Row="0" VerticalAlignment="Center" Height="NaN"
-					Text="Stage"
-					Style="{ThemeResource BodyStrongTextBlockStyle}"
-				/>
-				<StackPanel
-					Grid.Column="3" HorizontalAlignment="Center" Width="NaN"
-					Grid.Row="0" VerticalAlignment="Center" Height="NaN"
-					Padding="0"
-					Orientation="Horizontal" Spacing="8"
-				>
-					<Button
-						HorizontalAlignment="Stretch" Width="NaN" VerticalAlignment="Center" Height="NaN"
-						IsEnabled="{x:Bind Controller.uClearSource_IsEnabled, Mode = OneWay}"
-						Click="{x:Bind Controller.uClearSource_OnClick, Mode = OneTime}"
+				<my:MHeaderBar.Action>
+					<my:MStack
+						HorizontalAlignment="Stretch" Width="NaN"
+						VerticalAlignment="Stretch" Height="NaN"
+						Padding="0"
+						Orientation="Horizontal" Spacing="8"
 					>
-						<FontIcon
-							FontSize="{StaticResource MediumIconSize}"
-							Glyph="{StaticResource FluentIconGlyph.Clear}"
-						/>
-					</Button>
-				</StackPanel>
-			</Grid>
-			<localCustomControl:HorizontalSeparatorLine
-				Grid.Column="0" Grid.Row="1"
+						<Button
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Stretch" Width="NaN"
+							VerticalAlignment="Center" Height="NaN"
+							IsEnabled="{x:Bind Controller.uClearSource_IsEnabled, Mode=OneWay}"
+							Click="{x:Bind Controller.uClearSource_OnClick, Mode=OneTime}"
+						>
+							<FontIcon
+								FontSize="{StaticResource MediumIconSize}"
+								Glyph="{StaticResource FluentIconGlyph.Clear}"
+							/>
+						</Button>
+					</my:MStack>
+				</my:MHeaderBar.Action>
+			</my:MHeaderBar>
+			<my:MDivider
+				my:MStack.Weight="NaN"
+				HorizontalAlignment="Stretch" Width="NaN"
+				VerticalAlignment="Stretch" Height="{StaticResource DividerThickness}"
 			/>
-			<Grid
-				Grid.Column="0" HorizontalAlignment="Stretch" Width="NaN"
-				Grid.Row="2" VerticalAlignment="Stretch" Height="NaN"
+			<my:MBox
+				my:MStack.Weight="1"
+				HorizontalAlignment="Stretch" Width="NaN"
+				VerticalAlignment="Stretch" Height="NaN"
 				Padding="0"
-				ColumnSpacing="0" RowSpacing="0"
 			>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="1*" />
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="1*" />
-				</Grid.RowDefinitions>
 				<ScrollViewer
-					Grid.Column="0" HorizontalAlignment="Stretch" Width="NaN"
-					Grid.Row="0" VerticalAlignment="Stretch" Height="NaN"
+					HorizontalAlignment="Stretch" Width="NaN"
+					VerticalAlignment="Stretch" Height="NaN"
 					ZoomMode="Enabled" MinZoomFactor="0.1" MaxZoomFactor="50.0"
 					HorizontalScrollMode="Enabled" VerticalScrollMode="Enabled"
 					HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"
-					ViewChanged="{x:Bind Controller.uStage_OnViewChanged, Mode = OneTime}"
-					SizeChanged="{x:Bind Controller.uStage_OnViewChanged, Mode = OneTime}"
+					ViewChanged="{x:Bind Controller.uStage_OnViewChanged, Mode=OneTime}"
+					SizeChanged="{x:Bind Controller.uStage_OnViewChanged, Mode=OneTime}"
 				>
 					<localModuleAnimationViewer:SpriteControl
 						x:Name="uSprite" x:FieldModifier="public"
 					/>
 				</ScrollViewer>
-				<StackPanel
-					Grid.Column="0" HorizontalAlignment="Right" Width="NaN"
-					Grid.Row="0" VerticalAlignment="Top" Height="NaN"
+				<my:MBox
+					HorizontalAlignment="Stretch" Width="NaN"
+					VerticalAlignment="Stretch" Height="NaN"
 					Padding="16"
-					Orientation="Vertical" Spacing="8"
 				>
-					<StackPanel
+					<my:MStack
 						HorizontalAlignment="Right" Width="NaN"
-						VerticalAlignment="Stretch" Height="NaN"
+						VerticalAlignment="Top" Height="NaN"
 						Padding="0"
-						Orientation="Horizontal" Spacing="8"
+						Orientation="Vertical" Spacing="8"
 					>
-						<TextBox
-							HorizontalAlignment="Stretch" Width="240"
-							VerticalAlignment="Center" Height="NaN"
-							PlaceholderText="Animation File" IsReadOnly="True"
-							IsEnabled="{x:Bind Controller.uAnimationFile_IsEnabled, Mode = OneWay}"
-							Text="{x:Bind Controller.uAnimationFile_Text, Mode = OneWay}"
-						/>
-						<Button
-							HorizontalAlignment="Stretch" Width="NaN"
-							VerticalAlignment="Center" Height="NaN"
-							IsEnabled="{x:Bind Controller.uSelectAnimationFile_IsEnabled, Mode = OneWay}"
-							Click="{x:Bind Controller.uSelectAnimationFile_OnClick, Mode = OneTime}"
+						<my:MStack
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Right" Width="NaN"
+							VerticalAlignment="Stretch" Height="NaN"
+							Padding="0"
+							Orientation="Horizontal" Spacing="8"
+						>
+							<TextBox
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Stretch" Width="240"
+								VerticalAlignment="Center" Height="NaN"
+								PlaceholderText="Animation File" IsReadOnly="True"
+								IsEnabled="{x:Bind Controller.uAnimationFile_IsEnabled, Mode=OneWay}"
+								Text="{x:Bind Controller.uAnimationFile_Text, Mode=OneWay}"
+							/>
+							<Button
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Stretch" Width="NaN"
+								VerticalAlignment="Center" Height="NaN"
+								IsEnabled="{x:Bind Controller.uSelectAnimationFile_IsEnabled, Mode=OneWay}"
+								Click="{x:Bind Controller.uSelectAnimationFile_OnClick, Mode=OneTime}"
+							>
+								<FontIcon
+									FontSize="{StaticResource MediumIconSize}"
+									Glyph="{StaticResource FluentIconGlyph.OpenFile}"
+								/>
+							</Button>
+						</my:MStack>
+						<my:MStack
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Right" Width="NaN"
+							VerticalAlignment="Stretch" Height="NaN"
+							Padding="0"
+							Orientation="Horizontal" Spacing="8"
+						>
+							<TextBox
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Stretch" Width="240"
+								VerticalAlignment="Center" Height="NaN"
+								PlaceholderText="Image Directory" IsReadOnly="True"
+								IsEnabled="{x:Bind Controller.uImageDirectory_IsEnabled, Mode=OneWay}"
+								Text="{x:Bind Controller.uImageDirectory_Text, Mode=OneWay}"
+							/>
+							<Button
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Stretch" Width="NaN"
+								VerticalAlignment="Center" Height="NaN"
+								IsEnabled="{x:Bind Controller.uSelectImageDirectory_IsEnabled, Mode=OneWay}"
+								Click="{x:Bind Controller.uSelectImageDirectory_OnClick, Mode=OneTime}"
+							>
+								<FontIcon
+									FontSize="{StaticResource MediumIconSize}"
+									Glyph="{StaticResource FluentIconGlyph.OpenFolderHorizontal}"
+								/>
+							</Button>
+						</my:MStack>
+					</my:MStack>
+					<my:MStack
+						HorizontalAlignment="Left" Width="NaN"
+						VerticalAlignment="Bottom" Height="NaN"
+						Padding="0"
+						Orientation="Vertical" Spacing="8"
+					>
+						<my:MStack
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Left" Width="NaN"
+							VerticalAlignment="Stretch" Height="NaN"
+							Padding="0"
+							Orientation="Horizontal" Spacing="8"
 						>
 							<FontIcon
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Stretch" Width="32"
+								VerticalAlignment="Center" Height="32"
 								FontSize="{StaticResource MediumIconSize}"
-								Glyph="{StaticResource FluentIconGlyph.OpenFile}"
+								Glyph="{StaticResource FluentIconGlyph.ScrollUpDown}"
+							>
+								<FontIcon.RenderTransform>
+									<RotateTransform CenterX="16" CenterY="16" Angle="90" />
+								</FontIcon.RenderTransform>
+							</FontIcon>
+							<TextBox
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Stretch" Width="94"
+								VerticalAlignment="Center" Height="NaN"
+								IsReadOnly="True"
+								Text="{x:Bind Controller.uStagePositionX_Text, Mode=OneWay}"
 							/>
-						</Button>
-					</StackPanel>
-					<StackPanel
-						HorizontalAlignment="Right" Width="NaN"
-						VerticalAlignment="Stretch" Height="NaN"
-						Padding="0"
-						Orientation="Horizontal" Spacing="8"
-					>
-						<TextBox
-							HorizontalAlignment="Stretch" Width="240"
-							VerticalAlignment="Center" Height="NaN"
-							PlaceholderText="Image Directory" IsReadOnly="True"
-							IsEnabled="{x:Bind Controller.uImageDirectory_IsEnabled, Mode = OneWay}"
-							Text="{x:Bind Controller.uImageDirectory_Text, Mode = OneWay}"
-						/>
-						<Button
-							HorizontalAlignment="Stretch" Width="NaN"
-							VerticalAlignment="Center" Height="NaN"
-							IsEnabled="{x:Bind Controller.uSelectImageDirectory_IsEnabled, Mode = OneWay}"
-							Click="{x:Bind Controller.uSelectImageDirectory_OnClick, Mode = OneTime}"
+						</my:MStack>
+						<my:MStack
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Left" Width="NaN"
+							VerticalAlignment="Stretch" Height="NaN"
+							Padding="0"
+							Orientation="Horizontal" Spacing="8"
 						>
 							<FontIcon
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Stretch" Width="32"
+								VerticalAlignment="Center" Height="32"
 								FontSize="{StaticResource MediumIconSize}"
-								Glyph="{StaticResource FluentIconGlyph.OpenFolderHorizontal}"
+								Glyph="{StaticResource FluentIconGlyph.ScrollUpDown}"
+							>
+								<FontIcon.RenderTransform>
+									<RotateTransform CenterX="16" CenterY="16" Angle="0" />
+								</FontIcon.RenderTransform>
+							</FontIcon>
+							<TextBox
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Stretch" Width="94"
+								VerticalAlignment="Center" Height="NaN"
+								IsReadOnly="True"
+								Text="{x:Bind Controller.uStagePositionY_Text, Mode=OneWay}"
 							/>
-						</Button>
-					</StackPanel>
-				</StackPanel>
-				<StackPanel
-					Grid.Column="0" HorizontalAlignment="Left" Width="NaN"
-					Grid.Row="0" VerticalAlignment="Bottom" Height="NaN"
-					Padding="16,16"
-					Orientation="Vertical" Spacing="8"
+						</my:MStack>
+						<my:MStack
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Left" Width="NaN"
+							VerticalAlignment="Stretch" Height="NaN"
+							Padding="0"
+							Orientation="Horizontal" Spacing="8"
+						>
+							<FontIcon
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Stretch" Width="32"
+								VerticalAlignment="Center" Height="32"
+								FontSize="{StaticResource MediumIconSize}"
+								Glyph="{x:Bind Controller.uStageScaleIcon_Glyph, Mode=OneWay}"
+							>
+								<FontIcon.RenderTransform>
+									<RotateTransform CenterX="16" CenterY="16" Angle="0" />
+								</FontIcon.RenderTransform>
+							</FontIcon>
+							<TextBox
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Stretch" Width="94"
+								VerticalAlignment="Center" Height="NaN"
+								IsReadOnly="True"
+								Text="{x:Bind Controller.uStageScale_Text, Mode=OneWay}"
+							/>
+						</my:MStack>
+					</my:MStack>
+					<my:MStack
+						HorizontalAlignment="Right" Width="NaN"
+						VerticalAlignment="Bottom" Height="NaN"
+						Padding="0"
+						Orientation="Vertical" Spacing="8"
+					>
+						<my:MStack
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Right" Width="NaN"
+							VerticalAlignment="Stretch" Height="NaN"
+							Padding="0"
+							Orientation="Horizontal" Spacing="8"
+						>
+							<FontIcon
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Center" Width="32"
+								VerticalAlignment="Center" Height="NaN"
+								FontSize="{StaticResource MediumIconSize}"
+								Glyph="{StaticResource FluentIconGlyph.TiltDown}"
+								Opacity="{x:Bind Controller.uZombieGroundSwatchLayerIcon_Opacity, Mode=OneWay}"
+							/>
+							<ToggleButton
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Stretch" Width="136"
+								VerticalAlignment="Center" Height="NaN"
+								HorizontalContentAlignment="Left"
+								IsEnabled="{x:Bind Controller.uZombieGroundSwatchLayer_IsEnabled, Mode=OneWay}"
+								IsChecked="{x:Bind Controller.uZombieGroundSwatchLayer_IsChecked, Mode=OneWay}"
+								Checked="{x:Bind Controller.uZombieGroundSwatchLayer_OnChecked, Mode=OneTime}"
+								Unchecked="{x:Bind Controller.uZombieGroundSwatchLayer_OnChecked, Mode=OneTime}"
+							>
+								<TextBlock
+									Text="Swatch"
+								/>
+							</ToggleButton>
+						</my:MStack>
+						<my:MStack
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Right" Width="NaN"
+							VerticalAlignment="Stretch" Height="NaN"
+							Padding="0"
+							Orientation="Horizontal" Spacing="8"
+						>
+							<FontIcon
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Center" Width="32"
+								VerticalAlignment="Center" Height="NaN"
+								FontSize="{StaticResource MediumIconSize}"
+								Glyph="{StaticResource FluentIconGlyph.Eyedropper}"
+								Opacity="{x:Bind Controller.uZombieStateLayerIcon_Opacity, Mode=OneWay}"
+							/>
+							<ComboBox
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Stretch" Width="136"
+								VerticalAlignment="Center" Height="NaN"
+								HorizontalContentAlignment="Left"
+								PlaceholderText="State"
+								IsEnabled="{x:Bind Controller.uZombieStateLayer_IsEnabled, Mode=OneWay}"
+								ItemsSource="{x:Bind Controller.uZombieStateLayer_ItemsSource, Mode=OneWay}"
+								SelectedValue="{x:Bind Controller.uZombieStateLayer_SelectedValue, Mode=OneWay}"
+								SelectionChanged="{x:Bind Controller.uZombieStateLayer_OnSelectionChanged, Mode=OneTime}"
+							/>
+						</my:MStack>
+						<my:MStack
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Right" Width="NaN"
+							VerticalAlignment="Stretch" Height="NaN"
+							Padding="0"
+							Orientation="Horizontal" Spacing="8"
+						>
+							<FontIcon
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Center" Width="32"
+								VerticalAlignment="Center" Height="NaN"
+								FontSize="{StaticResource MediumIconSize}"
+								Glyph="{StaticResource FluentIconGlyph.EmojiTabCelebrationObjects}"
+								Opacity="{x:Bind Controller.uPlantCustomLayerIcon_Opacity, Mode=OneWay}"
+							/>
+							<ComboBox
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Stretch" Width="136"
+								VerticalAlignment="Center" Height="NaN"
+								HorizontalContentAlignment="Left"
+								PlaceholderText="Custom"
+								IsEnabled="{x:Bind Controller.uPlantCustomLayer_IsEnabled, Mode=OneWay}"
+								ItemsSource="{x:Bind Controller.uPlantCustomLayer_ItemsSource, Mode=OneWay}"
+								SelectedValue="{x:Bind Controller.uPlantCustomLayer_SelectedValue, Mode=OneWay}"
+								SelectionChanged="{x:Bind Controller.uPlantCustomLayer_OnSelectionChanged, Mode=OneTime}"
+							/>
+						</my:MStack>
+						<my:MStack
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Right" Width="NaN"
+							VerticalAlignment="Stretch" Height="NaN"
+							Padding="0"
+							Orientation="Horizontal" Spacing="8"
+						>
+							<FontIcon
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Center" Width="32"
+								VerticalAlignment="Center" Height="NaN"
+								FontSize="{StaticResource MediumIconSize}"
+								Glyph="{StaticResource FluentIconGlyph.FitPage}"
+							/>
+							<ToggleButton
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Stretch" Width="136"
+								VerticalAlignment="Center" Height="NaN"
+								HorizontalContentAlignment="Left"
+								IsChecked="{x:Bind Controller.uShowSpriteBoundary_IsChecked, Mode=OneWay}"
+								Checked="{x:Bind Controller.uShowSpriteBoundary_OnChecked, Mode=OneTime}"
+								Unchecked="{x:Bind Controller.uShowSpriteBoundary_OnChecked, Mode=OneTime}"
+							>
+								<TextBlock
+									Text="Boundary"
+								/>
+							</ToggleButton>
+						</my:MStack>
+					</my:MStack>
+				</my:MBox>
+			</my:MBox>
+			<my:MDivider
+				my:MStack.Weight="NaN"
+				HorizontalAlignment="Stretch" Width="NaN"
+				VerticalAlignment="Stretch" Height="{StaticResource DividerThickness}"
+			/>
+			<my:MStack
+				my:MStack.Weight="NaN"
+				HorizontalAlignment="Stretch" Width="NaN"
+				VerticalAlignment="Stretch" Height="NaN"
+				Padding="16,8"
+				Orientation="Vertical" Spacing="8"
+			>
+				<my:MStack
+					my:MStack.Weight="NaN"
+					HorizontalAlignment="Stretch" Width="NaN"
+					VerticalAlignment="Stretch" Height="NaN"
+					Padding="0,-8"
+					Orientation="Horizontal" Spacing="0"
 				>
-					<StackPanel
+					<Slider
+						x:Name="uWorkingSpriteFrameProgress" x:FieldModifier="public"
+						my:MStack.Weight="1"
+						HorizontalAlignment="Stretch" Width="NaN"
+						VerticalAlignment="Stretch" Height="NaN"
+						StepFrequency="1"
+						IsEnabled="{x:Bind Controller.uWorkingSpriteFrameProgress_IsEnabled, Mode=OneWay}"
+						Minimum="{x:Bind Controller.uWorkingSpriteFrameProgress_Minimum, Mode=OneWay}"
+						Maximum="{x:Bind Controller.uWorkingSpriteFrameProgress_Maximum, Mode=OneWay}"
+						ValueChanged="{x:Bind Controller.uWorkingSpriteFrameProgress_OnValueChanged, Mode=OneTime}"
+					/>
+				</my:MStack>
+				<my:MStack
+					my:MStack.Weight="NaN"
+					HorizontalAlignment="Stretch" Width="NaN"
+					VerticalAlignment="Stretch" Height="NaN"
+					Padding="0,0"
+					Orientation="Horizontal" Spacing="0"
+				>
+					<my:MStack
+						my:MStack.Weight="1"
 						HorizontalAlignment="Left" Width="NaN"
 						VerticalAlignment="Stretch" Height="NaN"
+						Padding="0"
 						Orientation="Horizontal" Spacing="8"
 					>
 						<FontIcon
-							HorizontalAlignment="Stretch" Width="32"
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Center" Width="32"
+							VerticalAlignment="Center" Height="NaN"
+							FontSize="{StaticResource MediumIconSize}"
+							Glyph="{StaticResource FluentIconGlyph.Settings}"
+						/>
+						<ToggleButton
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Center" Width="NaN"
+							VerticalAlignment="Center" Height="NaN"
+							IsChecked="{x:Bind Controller.uAutomaticPlay_IsChecked, Mode=OneWay}"
+							Checked="{x:Bind Controller.uAutomaticPlay_OnChecked, Mode=OneTime}"
+							Unchecked="{x:Bind Controller.uAutomaticPlay_OnChecked, Mode=OneTime}"
+						>
+							<FontIcon
+								FontSize="{StaticResource MediumIconSize}"
+								Glyph="{StaticResource FluentIconGlyph.Play}"
+							/>
+						</ToggleButton>
+						<ToggleButton
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Center" Width="NaN"
+							VerticalAlignment="Center" Height="NaN"
+							IsChecked="{x:Bind Controller.uRepeatPlay_IsChecked, Mode=OneWay}"
+							Checked="{x:Bind Controller.uRepeatPlay_OnChecked, Mode=OneTime}"
+							Unchecked="{x:Bind Controller.uRepeatPlay_OnChecked, Mode=OneTime}"
+						>
+							<FontIcon
+								FontSize="{StaticResource MediumIconSize}"
+								Glyph="{StaticResource FluentIconGlyph.RepeatAll}"
+							/>
+						</ToggleButton>
+						<FontIcon
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Center" Width="32"
+							VerticalAlignment="Center" Height="NaN"
+							FontSize="{StaticResource MediumIconSize}"
+							Glyph="{StaticResource FluentIconGlyph.SpeedMedium}"
+							Opacity="{x:Bind Controller.uWorkingSpriteFrameRateIcon_Opacity, Mode=OneWay}"
+						/>
+						<NumberBox
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Center" Width="64"
+							VerticalAlignment="Center" Height="NaN"
+							PlaceholderText="Rate"
+							Minimum="0.1" Maximum="360.0"
+							IsEnabled="{x:Bind Controller.uWorkingSpriteFrameRate_IsEnabled, Mode=OneWay}"
+							NumberFormatter="{x:Bind Controller.uWorkingSpriteFrameRate_NumberFormatter, Mode=OneWay}"
+							Value="{x:Bind Controller.uWorkingSpriteFrameRate_Value, Mode=OneWay}"
+							ValueChanged="{x:Bind Controller.uWorkingSpriteFrameRate_OnValueChanged, Mode=OneTime}"
+						/>
+					</my:MStack>
+					<my:MStack
+						my:MStack.Weight="NaN"
+						HorizontalAlignment="Center" Width="NaN"
+						VerticalAlignment="Stretch" Height="NaN"
+						Padding="0"
+						Orientation="Horizontal" Spacing="8"
+					>
+						<Button
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Center" Width="48"
+							VerticalAlignment="Center" Height="NaN"
+							IsEnabled="{x:Bind Controller.uWorkingSpritePrev_IsEnabled, Mode=OneWay}"
+							Click="{x:Bind Controller.uWorkingSpritePrev_OnClick, Mode=OneTime}"
+						>
+							<FontIcon
+								FontSize="{StaticResource MediumIconSize}"
+								Glyph="{StaticResource FluentIconGlyph.LeftArrowKeyTime0}"
+							/>
+						</Button>
+						<Button
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Center" Width="48"
+							VerticalAlignment="Center" Height="NaN"
+							IsEnabled="{x:Bind Controller.uWorkingSpritePause_IsEnabled, Mode=OneWay}"
+							Click="{x:Bind Controller.uWorkingSpritePause_OnClick, Mode=OneTime}"
+						>
+							<FontIcon
+								FontSize="{StaticResource MediumIconSize}"
+								Glyph="{x:Bind Controller.uWorkingSpritePauseIcon_Glyph, Mode=OneWay}"
+							/>
+						</Button>
+						<Button
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Center" Width="48"
+							VerticalAlignment="Center" Height="NaN"
+							IsEnabled="{x:Bind Controller.uWorkingSpriteNext_IsEnabled, Mode=OneWay}"
+							Click="{x:Bind Controller.uWorkingSpriteNext_OnClick, Mode=OneTime}"
+						>
+							<FontIcon
+								FontSize="{StaticResource MediumIconSize}"
+								Glyph="{StaticResource FluentIconGlyph.RightArrowKeyTime0}"
+							/>
+						</Button>
+					</my:MStack>
+					<my:MStack
+						my:MStack.Weight="1"
+						HorizontalAlignment="Right" Width="NaN"
+						VerticalAlignment="Stretch" Height="NaN"
+						Padding="0"
+						Orientation="Horizontal" Spacing="8"
+					>
+						<FontIcon
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Center" Width="32"
 							VerticalAlignment="Center" Height="32"
 							FontSize="{StaticResource MediumIconSize}"
-							Glyph="{StaticResource FluentIconGlyph.ScrollUpDown}"
+							Glyph="{StaticResource FluentIconGlyph.Tag}"
+							Opacity="{x:Bind Controller.uWorkingSpriteFrameRangeLabelIcon_Opacity, Mode=OneWay}"
+						/>
+						<ComboBox
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Center" Width="108"
+							VerticalAlignment="Center" Height="NaN"
+							PlaceholderText="Label"
+							IsEnabled="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_IsEnabled, Mode=OneWay}"
+							ItemsSource="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_ItemsSource, Mode=OneWay}"
+							SelectedValue="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_SelectedValue, Mode=OneWay}"
+							SelectionChanged="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_OnSelectionChanged, Mode=OneTime}"
+						/>
+						<FontIcon
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Center" Width="32"
+							VerticalAlignment="Center" Height="32"
+							FontSize="{StaticResource MediumIconSize}"
+							Glyph="{StaticResource FluentIconGlyph.ScrollMode}"
+							Opacity="{x:Bind Controller.uWorkingSpriteFrameRangeIcon_Opacity, Mode=OneWay}"
 						>
 							<FontIcon.RenderTransform>
 								<RotateTransform CenterX="16" CenterY="16" Angle="90" />
 							</FontIcon.RenderTransform>
 						</FontIcon>
-						<TextBox
-							HorizontalAlignment="Stretch" Width="94"
+						<NumberBox
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Center" Width="64"
 							VerticalAlignment="Center" Height="NaN"
-							IsReadOnly="True"
-							Text="{x:Bind Controller.uStagePositionX_Text, Mode = OneWay}"
+							PlaceholderText="Begin"
+							IsEnabled="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_IsEnabled, Mode=OneWay}"
+							Minimum="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_Minimum, Mode=OneWay}" Maximum="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_Maximum, Mode=OneWay}"
+							Value="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_Value, Mode=OneWay}"
+							ValueChanged="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_OnValueChanged, Mode=OneTime}"
 						/>
-					</StackPanel>
-					<StackPanel
-						HorizontalAlignment="Left" Width="NaN"
-						VerticalAlignment="Stretch" Height="NaN"
-						Orientation="Horizontal" Spacing="8"
-					>
-						<FontIcon
-							HorizontalAlignment="Stretch" Width="32"
-							VerticalAlignment="Center" Height="32"
-							FontSize="{StaticResource MediumIconSize}"
-							Glyph="{StaticResource FluentIconGlyph.ScrollUpDown}"
-						>
-							<FontIcon.RenderTransform>
-								<RotateTransform CenterX="16" CenterY="16" Angle="0" />
-							</FontIcon.RenderTransform>
-						</FontIcon>
-						<TextBox
-							HorizontalAlignment="Stretch" Width="94"
+						<NumberBox
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Center" Width="64"
 							VerticalAlignment="Center" Height="NaN"
-							IsReadOnly="True"
-							Text="{x:Bind Controller.uStagePositionY_Text, Mode = OneWay}"
+							PlaceholderText="End"
+							IsEnabled="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_IsEnabled, Mode=OneWay}"
+							Minimum="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_Minimum, Mode=OneWay}" Maximum="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_Maximum, Mode=OneWay}"
+							Value="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_Value, Mode=OneWay}"
+							ValueChanged="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_OnValueChanged, Mode=OneTime}"
 						/>
-					</StackPanel>
-					<StackPanel
-						HorizontalAlignment="Left" Width="NaN"
-						VerticalAlignment="Stretch" Height="NaN"
-						Orientation="Horizontal" Spacing="8"
-					>
-						<FontIcon
-							HorizontalAlignment="Stretch" Width="32"
-							VerticalAlignment="Center" Height="32"
-							FontSize="{StaticResource MediumIconSize}"
-							Glyph="{x:Bind Controller.uStageScaleIcon_Glyph, Mode = OneWay}"
-						>
-							<FontIcon.RenderTransform>
-								<RotateTransform CenterX="16" CenterY="16" Angle="0" />
-							</FontIcon.RenderTransform>
-						</FontIcon>
-						<TextBox
-							HorizontalAlignment="Stretch" Width="94"
-							VerticalAlignment="Center" Height="NaN"
-							IsReadOnly="True"
-							Text="{x:Bind Controller.uStageScale_Text, Mode = OneWay}"
-						/>
-					</StackPanel>
-				</StackPanel>
-				<StackPanel
-					Grid.Column="0" HorizontalAlignment="Right" Width="NaN"
-					Grid.Row="0" VerticalAlignment="Bottom" Height="NaN"
-					Padding="16,16"
-					Orientation="Vertical" Spacing="8"
-				>
-					<StackPanel
-						HorizontalAlignment="Right" Width="NaN"
-						VerticalAlignment="Stretch" Height="NaN"
-						Orientation="Horizontal" Spacing="8"
-					>
-						<FontIcon
-							HorizontalAlignment="Center" Width="32"
-							VerticalAlignment="Center" Height="NaN"
-							FontSize="{StaticResource MediumIconSize}"
-							Glyph="{StaticResource FluentIconGlyph.TiltDown}"
-							Opacity="{x:Bind Controller.uZombieGroundSwatchLayerIcon_Opacity, Mode = OneWay}"
-						/>
-						<ToggleButton
-							HorizontalAlignment="Stretch" Width="136"
-							VerticalAlignment="Center" Height="NaN"
-							HorizontalContentAlignment="Left"
-							Content="Swatch"
-							IsEnabled="{x:Bind Controller.uZombieGroundSwatchLayer_IsEnabled, Mode = OneWay}"
-							IsChecked="{x:Bind Controller.uZombieGroundSwatchLayer_IsChecked, Mode = OneWay}"
-							Checked="{x:Bind Controller.uZombieGroundSwatchLayer_OnChecked, Mode = OneTime}"
-							Unchecked="{x:Bind Controller.uZombieGroundSwatchLayer_OnChecked, Mode = OneTime}"
-						/>
-					</StackPanel>
-					<StackPanel
-						HorizontalAlignment="Right" Width="NaN"
-						VerticalAlignment="Stretch" Height="NaN"
-						Orientation="Horizontal" Spacing="8"
-					>
-						<FontIcon
-							HorizontalAlignment="Center" Width="32"
-							VerticalAlignment="Center" Height="NaN"
-							FontSize="{StaticResource MediumIconSize}"
-							Glyph="{StaticResource FluentIconGlyph.Eyedropper}"
-							Opacity="{x:Bind Controller.uZombieStateLayerIcon_Opacity, Mode = OneWay}"
-						/>
-						<ComboBox
-							HorizontalAlignment="Stretch" Width="136"
-							VerticalAlignment="Center" Height="NaN"
-							HorizontalContentAlignment="Left"
-							PlaceholderText="State"
-							IsEnabled="{x:Bind Controller.uZombieStateLayer_IsEnabled, Mode = OneWay}"
-							ItemsSource="{x:Bind Controller.uZombieStateLayer_ItemSource, Mode = OneWay}"
-							SelectedValue="{x:Bind Controller.uZombieStateLayer_SelectedValue, Mode = OneWay}"
-							SelectionChanged="{x:Bind Controller.uZombieStateLayer_OnSelectionChanged, Mode = OneTime}"
-						/>
-					</StackPanel>
-					<StackPanel
-						HorizontalAlignment="Right" Width="NaN"
-						VerticalAlignment="Stretch" Height="NaN"
-						Orientation="Horizontal" Spacing="8"
-					>
-						<FontIcon
-							HorizontalAlignment="Center" Width="32"
-							VerticalAlignment="Center" Height="NaN"
-							FontSize="{StaticResource MediumIconSize}"
-							Glyph="{StaticResource FluentIconGlyph.EmojiTabCelebrationObjects}"
-							Opacity="{x:Bind Controller.uPlantCustomLayerIcon_Opacity, Mode = OneWay}"
-						/>
-						<ComboBox
-							HorizontalAlignment="Stretch" Width="136"
-							VerticalAlignment="Center" Height="NaN"
-							HorizontalContentAlignment="Left"
-							PlaceholderText="Custom"
-							IsEnabled="{x:Bind Controller.uPlantCustomLayer_IsEnabled, Mode = OneWay}"
-							ItemsSource="{x:Bind Controller.uPlantCustomLayer_ItemSource, Mode = OneWay}"
-							SelectedValue="{x:Bind Controller.uPlantCustomLayer_SelectedValue, Mode = OneWay}"
-							SelectionChanged="{x:Bind Controller.uPlantCustomLayer_OnSelectionChanged, Mode = OneTime}"
-						/>
-					</StackPanel>
-					<StackPanel
-						HorizontalAlignment="Right" Width="NaN"
-						VerticalAlignment="Stretch" Height="NaN"
-						Orientation="Horizontal" Spacing="8"
-					>
-						<FontIcon
-							HorizontalAlignment="Center" Width="32"
-							VerticalAlignment="Center" Height="NaN"
-							FontSize="{StaticResource MediumIconSize}"
-							Glyph="{StaticResource FluentIconGlyph.FitPage}"
-						/>
-						<ToggleButton
-							HorizontalAlignment="Stretch" Width="136"
-							VerticalAlignment="Center" Height="NaN"
-							HorizontalContentAlignment="Left"
-							Content="Boundary"
-							IsChecked="{x:Bind Controller.uShowSpriteBoundary_IsChecked, Mode = OneWay}"
-							Click="{x:Bind Controller.uShowSpriteBoundary_OnClick, Mode = OneTime}"
-						/>
-					</StackPanel>
-				</StackPanel>
-			</Grid>
-			<localCustomControl:HorizontalSeparatorLine
-				Grid.Column="0" Grid.Row="3"
-			/>
-			<Grid
-				Grid.Column="0" HorizontalAlignment="Stretch" Width="NaN"
-				Grid.Row="4" VerticalAlignment="Stretch" Height="NaN"
-				Padding="16,8"
-				ColumnSpacing="8" RowSpacing="8"
-			>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="1*" />
-					<ColumnDefinition Width="Auto" />
-					<ColumnDefinition Width="1*" />
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-				</Grid.RowDefinitions>
-				<StackPanel
-					Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" Width="NaN"
-					Grid.Row="0" VerticalAlignment="Stretch" Height="NaN"
-					Padding="0,-8"
-					Orientation="Vertical" Spacing="0"
-				>
-					<Slider
-						x:Name="uWorkingSpriteFrameProgress" x:FieldModifier="public"
-						HorizontalAlignment="Stretch" Width="NaN"
-						VerticalAlignment="Stretch" Height="NaN"
-						StepFrequency="1"
-						IsEnabled="{x:Bind Controller.uWorkingSpriteFrameProgress_IsEnabled, Mode = OneWay}"
-						Minimum="{x:Bind Controller.uWorkingSpriteFrameProgress_Minimum, Mode = OneWay}"
-						Maximum="{x:Bind Controller.uWorkingSpriteFrameProgress_Maximum, Mode = OneWay}"
-						ValueChanged="{x:Bind Controller.uWorkingSpriteFrameProgress_OnValueChanged, Mode = OneTime}"
-					/>
-				</StackPanel>
-				<StackPanel
-					Grid.Column="0" HorizontalAlignment="Left" Width="NaN"
-					Grid.Row="1" VerticalAlignment="Stretch" Height="NaN"
-					Padding="0"
-					Orientation="Horizontal" Spacing="8"
-				>
-					<FontIcon
-						HorizontalAlignment="Center" Width="32"
-						VerticalAlignment="Center" Height="NaN"
-						FontSize="{StaticResource MediumIconSize}"
-						Glyph="{StaticResource FluentIconGlyph.Settings}"
-					/>
-					<ToggleButton
-						HorizontalAlignment="Center" Width="NaN"
-						VerticalAlignment="Center" Height="NaN"
-						IsChecked="{x:Bind Controller.uAutomaticPlay_IsChecked, Mode = OneWay}"
-						Click="{x:Bind Controller.uAutomaticPlay_OnClick, Mode = OneTime}"
-					>
-						<FontIcon
-							FontSize="{StaticResource MediumIconSize}"
-							Glyph="{StaticResource FluentIconGlyph.Play}"
-						/>
-					</ToggleButton>
-					<ToggleButton
-						HorizontalAlignment="Center" Width="NaN"
-						VerticalAlignment="Center" Height="NaN"
-						IsChecked="{x:Bind Controller.uRepeatPlay_IsChecked, Mode = OneWay}"
-						Click="{x:Bind Controller.uRepeatPlay_OnClick, Mode = OneTime}"
-					>
-						<FontIcon
-							FontSize="{StaticResource MediumIconSize}"
-							Glyph="{StaticResource FluentIconGlyph.RepeatAll}"
-						/>
-					</ToggleButton>
-					<FontIcon
-						HorizontalAlignment="Center" Width="32"
-						VerticalAlignment="Center" Height="NaN"
-						FontSize="{StaticResource MediumIconSize}"
-						Glyph="{StaticResource FluentIconGlyph.SpeedMedium}"
-						Opacity="{x:Bind Controller.uWorkingSpriteFrameRateIcon_Opacity, Mode = OneWay}"
-					/>
-					<NumberBox
-						HorizontalAlignment="Center" Width="64"
-						VerticalAlignment="Center" Height="NaN"
-						PlaceholderText="Rate"
-						Minimum="0.1" Maximum="360.0"
-						IsEnabled="{x:Bind Controller.uWorkingSpriteFrameRate_IsEnabled, Mode = OneWay}"
-						NumberFormatter="{x:Bind Controller.uWorkingSpriteFrameRate_NumberFormatter, Mode = OneTime}"
-						Value="{x:Bind Controller.uWorkingSpriteFrameRate_Value, Mode = OneWay}"
-						ValueChanged="{x:Bind Controller.uWorkingSpriteFrameRate_OnValueChanged, Mode = OneTime}"
-					/>
-				</StackPanel>
-				<StackPanel
-					Grid.Column="1" HorizontalAlignment="Center" Width="NaN"
-					Grid.Row="1" VerticalAlignment="Stretch" Height="NaN"
-					Padding="0"
-					Orientation="Horizontal" Spacing="8"
-				>
-					<Button
-						HorizontalAlignment="Center" Width="48"
-						VerticalAlignment="Center" Height="NaN"
-						IsEnabled="{x:Bind Controller.uWorkingSpritePrev_IsEnabled, Mode = OneWay}"
-						Click="{x:Bind Controller.uWorkingSpritePrev_OnClick, Mode = OneTime}"
-					>
-						<FontIcon
-							FontSize="{StaticResource MediumIconSize}"
-							Glyph="{StaticResource FluentIconGlyph.LeftArrowKeyTime0}"
-						/>
-					</Button>
-					<Button
-						HorizontalAlignment="Center" Width="48"
-						VerticalAlignment="Center" Height="NaN"
-						IsEnabled="{x:Bind Controller.uWorkingSpritePause_IsEnabled, Mode = OneWay}"
-						Click="{x:Bind Controller.uWorkingSpritePause_OnClick, Mode = OneTime}"
-					>
-						<FontIcon
-							FontSize="{StaticResource MediumIconSize}"
-							Glyph="{x:Bind Controller.uWorkingSpritePauseIcon_Glyph, Mode = OneWay}"
-						/>
-					</Button>
-					<Button
-						HorizontalAlignment="Center" Width="48"
-						VerticalAlignment="Center" Height="NaN"
-						IsEnabled="{x:Bind Controller.uWorkingSpriteNext_IsEnabled, Mode = OneWay}"
-						Click="{x:Bind Controller.uWorkingSpriteNext_OnClick, Mode = OneTime}"
-					>
-						<FontIcon
-							FontSize="{StaticResource MediumIconSize}"
-							Glyph="{StaticResource FluentIconGlyph.RightArrowKeyTime0}"
-						/>
-					</Button>
-				</StackPanel>
-				<StackPanel
-					Grid.Column="2" HorizontalAlignment="Right" Width="NaN"
-					Grid.Row="1" VerticalAlignment="Stretch" Height="NaN"
-					Padding="0"
-					Orientation="Horizontal" Spacing="8"
-				>
-					<FontIcon
-						HorizontalAlignment="Center" Width="32"
-						VerticalAlignment="Center" Height="32"
-						FontSize="{StaticResource MediumIconSize}"
-						Glyph="{StaticResource FluentIconGlyph.Tag}"
-						Opacity="{x:Bind Controller.uWorkingSpriteFrameRangeLabelIcon_Opacity, Mode = OneWay}"
-					/>
-					<ComboBox
-						HorizontalAlignment="Center" Width="108"
-						VerticalAlignment="Center" Height="NaN"
-						PlaceholderText="Label"
-						IsEnabled="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_IsEnabled, Mode = OneWay}"
-						ItemsSource="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_ItemSource, Mode = OneWay}"
-						SelectedValue="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_SelectedValue, Mode = OneWay}"
-						SelectionChanged="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_OnSelectionChanged, Mode = OneTime}"
-					/>
-					<FontIcon
-						HorizontalAlignment="Center" Width="32"
-						VerticalAlignment="Center" Height="32"
-						FontSize="{StaticResource MediumIconSize}"
-						Glyph="{StaticResource FluentIconGlyph.ScrollMode}"
-						Opacity="{x:Bind Controller.uWorkingSpriteFrameRangeIcon_Opacity, Mode = OneWay}"
-					>
-						<FontIcon.RenderTransform>
-							<RotateTransform CenterX="16" CenterY="16" Angle="90" />
-						</FontIcon.RenderTransform>
-					</FontIcon>
-					<NumberBox
-						HorizontalAlignment="Center" Width="64"
-						VerticalAlignment="Center" Height="NaN"
-						PlaceholderText="Begin"
-						IsEnabled="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_IsEnabled, Mode = OneWay}"
-						Minimum="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_Minimum, Mode = OneWay}" Maximum="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_Maximum, Mode = OneWay}"
-						Value="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_Value, Mode = OneWay}"
-						ValueChanged="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_OnValueChanged, Mode = OneTime}"
-					/>
-					<NumberBox
-						HorizontalAlignment="Center" Width="64"
-						VerticalAlignment="Center" Height="NaN"
-						PlaceholderText="End"
-						IsEnabled="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_IsEnabled, Mode = OneWay}"
-						Minimum="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_Minimum, Mode = OneWay}" Maximum="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_Maximum, Mode = OneWay}"
-						Value="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_Value, Mode = OneWay}"
-						ValueChanged="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_OnValueChanged, Mode = OneTime}"
-					/>
-				</StackPanel>
-			</Grid>
-		</Grid>
-		<localCustomControl:VerticalSeparatorLine
-			Grid.Column="3" Grid.Row="0"
+					</my:MStack>
+				</my:MStack>
+			</my:MStack>
+		</my:MStack>
+		<my:MDivider
+			Grid.Column="3" HorizontalAlignment="Stretch" Width="{StaticResource DividerThickness}"
+			Grid.Row="0" VerticalAlignment="Stretch" Height="NaN"
 		/>
-		<Grid
+		<my:MStack
 			Grid.Column="4" HorizontalAlignment="Stretch" Width="NaN"
 			Grid.Row="0" VerticalAlignment="Stretch" Height="NaN"
-			Padding="0"
-			ColumnSpacing="0" RowSpacing="0"
+			Padding="0,-4,0,0"
+			Orientation="Vertical" Spacing="0"
 		>
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="1*" />
-			</Grid.ColumnDefinitions>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="*" />
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="Auto" />
-			</Grid.RowDefinitions>
-			<Grid
-				Grid.Column="0" HorizontalAlignment="Stretch" Width="NaN"
-				Grid.Row="0" VerticalAlignment="Stretch" Height="NaN"
-				Padding="16,4,16,8"
-				ColumnSpacing="12" RowSpacing="0"
+			<my:MHeaderBar
+				my:MStack.Weight="NaN"
+				HorizontalAlignment="Stretch" Width="NaN"
+				VerticalAlignment="Stretch" Height="NaN"
+				Icon="{StaticResource FluentIconGlyph.HomeGroup}"
+				Title="Sprite"
 			>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto" />
-					<ColumnDefinition Width="Auto" />
-					<ColumnDefinition Width="1*" />
-					<ColumnDefinition Width="Auto" />
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="1*" />
-				</Grid.RowDefinitions>
-				<FontIcon
-					Grid.Column="0" HorizontalAlignment="Center" Width="32"
-					Grid.Row="0" VerticalAlignment="Center" Height="NaN"
-					FontSize="{StaticResource LargeIconSize}"
-					Glyph="{StaticResource FluentIconGlyph.HomeGroup}"
-				/>
-				<TextBlock
-					Grid.Column="1" HorizontalAlignment="Center" Width="NaN"
-					Grid.Row="0" VerticalAlignment="Center" Height="NaN"
-					Text="Sprite"
-					Style="{ThemeResource BodyStrongTextBlockStyle}"
-				/>
-				<StackPanel
-					Grid.Column="3" HorizontalAlignment="Center" Width="NaN"
-					Grid.Row="0" VerticalAlignment="Center" Height="NaN"
-					Padding="0"
-					Orientation="Horizontal" Spacing="8"
-				>
-					<Button
-						HorizontalAlignment="Stretch" Width="NaN" VerticalAlignment="Center" Height="NaN"
-						IsEnabled="False"
-						Opacity="0"
+				<my:MHeaderBar.Action>
+					<my:MStack
+						HorizontalAlignment="Stretch" Width="NaN"
+						VerticalAlignment="Stretch" Height="NaN"
+						Padding="0"
+						Orientation="Horizontal" Spacing="8"
 					>
-						<FontIcon
-							FontSize="{StaticResource MediumIconSize}"
-							Glyph=""
-						/>
-					</Button>
-				</StackPanel>
-			</Grid>
-			<localCustomControl:HorizontalSeparatorLine
-				Grid.Column="0" Grid.Row="1"
+						<Button
+							my:MStack.Weight="NaN"
+							HorizontalAlignment="Stretch" Width="NaN"
+							VerticalAlignment="Center" Height="NaN"
+							IsEnabled="False"
+							Opacity="0"
+						>
+							<FontIcon
+								FontSize="{StaticResource MediumIconSize}"
+								Glyph=""
+							/>
+						</Button>
+					</my:MStack>
+				</my:MHeaderBar.Action>
+			</my:MHeaderBar>
+			<my:MDivider
+				my:MStack.Weight="NaN"
+				HorizontalAlignment="Stretch" Width="NaN"
+				VerticalAlignment="Stretch" Height="{StaticResource DividerThickness}"
 			/>
 			<ListView
 				x:Name="uSpriteList" x:FieldModifier="public"
-				Grid.Column="0" HorizontalAlignment="Stretch" Width="NaN"
-				Grid.Row="2" VerticalAlignment="Stretch" Height="NaN"
+				my:MStack.Weight="1"
+				HorizontalAlignment="Stretch" Width="NaN"
+				VerticalAlignment="Stretch" Height="NaN"
+				Padding="0,2,0,2"
 				SelectionMode="Extended" IsItemClickEnabled="True"
-				IsEnabled="{x:Bind Controller.uSpriteList_IsEnabled, Mode = OneWay}"
-				ItemsSource="{x:Bind Controller.uSpriteList_ItemSource, Mode = OneWay}"
-				SelectionChanged="{x:Bind Controller.uSpriteList_OnSelectionChanged, Mode = OneTime}"
+				IsEnabled="{x:Bind Controller.uSpriteList_IsEnabled, Mode=OneWay}"
+				ItemsSource="{x:Bind Controller.uSpriteList_ItemsSource, Mode=OneWay}"
+				SelectionChanged="{x:Bind Controller.uSpriteList_OnSelectionChanged, Mode=OneTime}"
 			>
 				<ListView.ItemTemplate>
 					<DataTemplate x:DataType="localModuleAnimationViewer:SpriteItemController">
-						<Grid
+						<my:MStack
 							HorizontalAlignment="Stretch" Width="NaN"
 							VerticalAlignment="Stretch" Height="NaN"
 							Padding="0,8,4,8"
-							ColumnSpacing="12" RowSpacing="0"
+							Orientation="Horizontal" Spacing="12"
 						>
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="Auto" />
-								<ColumnDefinition Width="1*" />
-								<ColumnDefinition Width="Auto" />
-							</Grid.ColumnDefinitions>
-							<Grid.RowDefinitions>
-								<RowDefinition Height="1*" />
-							</Grid.RowDefinitions>
 							<Viewbox
-								Grid.Column="0" HorizontalAlignment="Left" Width="32"
-								Grid.Row="0" VerticalAlignment="Center" Height="32"
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Stretch" Width="32"
+								VerticalAlignment="Center" Height="32"
 								Stretch="None"
-								Child="{x:Bind uPreview_Content, Mode = OneWay}"
+								Child="{x:Bind uPreview_Content, Mode=OneWay}"
 							/>
-							<StackPanel
-								Grid.Column="1" HorizontalAlignment="Left" Width="NaN"
-								Grid.Row="0" VerticalAlignment="Center" Height="NaN"
+							<my:MStack
+								my:MStack.Weight="1"
+								HorizontalAlignment="Stretch" Width="NaN"
+								VerticalAlignment="Center" Height="NaN"
 								Padding="0"
 								Orientation="Vertical" Spacing="0"
 							>
 								<TextBlock
-									HorizontalAlignment="Left"
+									my:MStack.Weight="NaN"
+									HorizontalAlignment="Left" Width="NaN"
+									VerticalAlignment="Stretch" Height="NaN"
 									TextWrapping="NoWrap"
-									Text="{x:Bind uTitle_Text, Mode = OneWay}"
+									Text="{x:Bind uTitle_Text, Mode=OneWay}"
 									Style="{ThemeResource BodyTextBlockStyle}"
 								/>
 								<TextBlock
-									HorizontalAlignment="Left"
+									my:MStack.Weight="NaN"
+									HorizontalAlignment="Left" Width="NaN"
+									VerticalAlignment="Stretch" Height="NaN"
 									TextWrapping="NoWrap"
 									Foreground="{ThemeResource TextFillColorSecondary}"
-									Text="{x:Bind uDescription_Text, Mode = OneWay}"
+									Text="{x:Bind uDescription_Text, Mode=OneWay}"
 									Style="{ThemeResource CaptionTextBlockStyle}"
 								/>
-							</StackPanel>
+							</my:MStack>
 							<ToggleButton
-								Grid.Column="2" HorizontalAlignment="Left" Width="32"
-								Grid.Row="0" VerticalAlignment="Center" Height="32"
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Stretch" Width="32"
+								VerticalAlignment="Center" Height="32"
 								Padding="0"
-								IsChecked="{x:Bind uToggle_IsChecked, Mode = OneWay}"
-								Click="{x:Bind uToggle_OnClick, Mode = OneTime}"
+								IsChecked="{x:Bind uToggle_IsChecked, Mode=OneWay}"
+								Click="{x:Bind uToggle_OnClick, Mode=OneTime}"
 							>
 								<FontIcon
 									Opacity="0.7"
@@ -774,71 +770,74 @@
 									Glyph="{StaticResource FluentIconGlyph.Flow}"
 								/>
 							</ToggleButton>
-						</Grid>
+						</my:MStack>
 					</DataTemplate>
 				</ListView.ItemTemplate>
 			</ListView>
-			<localCustomControl:HorizontalSeparatorLine
-				Grid.Column="0" Grid.Row="3"
+			<my:MDivider
+				my:MStack.Weight="NaN"
+				HorizontalAlignment="Stretch" Width="NaN"
+				VerticalAlignment="Stretch" Height="{StaticResource DividerThickness}"
 			/>
 			<ListView
 				x:Name="uMainSpriteList" x:FieldModifier="public"
-				Grid.Column="0" HorizontalAlignment="Stretch" Width="NaN"
-				Grid.Row="4" VerticalAlignment="Stretch" Height="NaN"
+				my:MStack.Weight="NaN"
+				HorizontalAlignment="Stretch" Width="NaN"
+				VerticalAlignment="Stretch" Height="NaN"
+				Padding="0,2,0,-2"
 				SelectionMode="Extended" IsItemClickEnabled="True"
-				IsEnabled="{x:Bind Controller.uMainSpriteList_IsEnabled, Mode = OneWay}"
-				ItemsSource="{x:Bind Controller.uMainSpriteList_ItemSource, Mode = OneWay}"
-				SelectionChanged="{x:Bind Controller.uMainSpriteList_OnSelectionChanged, Mode = OneTime}"
+				IsEnabled="{x:Bind Controller.uMainSpriteList_IsEnabled, Mode=OneWay}"
+				ItemsSource="{x:Bind Controller.uMainSpriteList_ItemsSource, Mode=OneWay}"
+				SelectionChanged="{x:Bind Controller.uMainSpriteList_OnSelectionChanged, Mode=OneTime}"
 			>
 				<ListView.ItemTemplate>
 					<DataTemplate x:DataType="localModuleAnimationViewer:MainSpriteItemController">
-						<Grid
+						<my:MStack
 							HorizontalAlignment="Stretch" Width="NaN"
 							VerticalAlignment="Stretch" Height="NaN"
 							Padding="0,8,4,8"
-							ColumnSpacing="12" RowSpacing="0"
-							Opacity="{x:Bind uRoot_Opacity, Mode = OneWay}"
+							Orientation="Horizontal" Spacing="12"
+							Opacity="{x:Bind uRoot_Opacity, Mode=OneWay}"
 						>
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="Auto" />
-								<ColumnDefinition Width="1*" />
-								<ColumnDefinition Width="Auto" />
-							</Grid.ColumnDefinitions>
-							<Grid.RowDefinitions>
-								<RowDefinition Height="1*" />
-							</Grid.RowDefinitions>
 							<Viewbox
-								Grid.Column="0" HorizontalAlignment="Left" Width="32"
-								Grid.Row="0" VerticalAlignment="Center" Height="32"
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Stretch" Width="32"
+								VerticalAlignment="Center" Height="32"
 								Stretch="None"
-								Child="{x:Bind uPreview_Content, Mode = OneWay}"
+								Child="{x:Bind uPreview_Content, Mode=OneWay}"
 							/>
-							<StackPanel
-								Grid.Column="1" HorizontalAlignment="Left" Width="NaN"
-								Grid.Row="0" VerticalAlignment="Center" Height="NaN"
+							<my:MStack
+								my:MStack.Weight="1"
+								HorizontalAlignment="Stretch" Width="NaN"
+								VerticalAlignment="Center" Height="NaN"
 								Padding="0"
 								Orientation="Vertical" Spacing="0"
 							>
 								<TextBlock
-									HorizontalAlignment="Left"
+									my:MStack.Weight="NaN"
+									HorizontalAlignment="Left" Width="NaN"
+									VerticalAlignment="Stretch" Height="NaN"
 									TextWrapping="NoWrap"
-									Text="{x:Bind uTitle_Text, Mode = OneWay}"
+									Text="{x:Bind uTitle_Text, Mode=OneWay}"
 									Style="{ThemeResource BodyTextBlockStyle}"
 								/>
 								<TextBlock
-									HorizontalAlignment="Left"
+									my:MStack.Weight="NaN"
+									HorizontalAlignment="Left" Width="NaN"
+									VerticalAlignment="Stretch" Height="NaN"
 									TextWrapping="NoWrap"
 									Foreground="{ThemeResource TextFillColorSecondary}"
-									Text="{x:Bind uDescription_Text, Mode = OneWay}"
+									Text="{x:Bind uDescription_Text, Mode=OneWay}"
 									Style="{ThemeResource CaptionTextBlockStyle}"
 								/>
-							</StackPanel>
+							</my:MStack>
 							<ToggleButton
-								Grid.Column="2" HorizontalAlignment="Left" Width="32"
-								Grid.Row="0" VerticalAlignment="Center" Height="32"
+								my:MStack.Weight="NaN"
+								HorizontalAlignment="Stretch" Width="32"
+								VerticalAlignment="Center" Height="32"
 								Padding="0"
-								IsChecked="{x:Bind uToggle_IsChecked, Mode = OneWay}"
-								Click="{x:Bind uToggle_OnClick, Mode = OneTime}"
+								IsChecked="{x:Bind uToggle_IsChecked, Mode=OneWay}"
+								Click="{x:Bind uToggle_OnClick, Mode=OneTime}"
 							>
 								<FontIcon
 									Opacity="0.7"
@@ -846,10 +845,10 @@
 									Glyph="{StaticResource FluentIconGlyph.Flow}"
 								/>
 							</ToggleButton>
-						</Grid>
+						</my:MStack>
 					</DataTemplate>
 				</ListView.ItemTemplate>
 			</ListView>
-		</Grid>
+		</my:MStack>
 	</Grid>
 </Page>

@@ -1,7 +1,12 @@
 //
 
 #include "implement/common.hpp"
+#include "implement/language.hpp"
 #include "implement/method_invoke_command_expose.hpp"
+
+#define M_define_co_creatable_class(_class)\
+	CoCreatableClass(_class)\
+	CoCreatableClassWrlCreatorMapInclude(_class)
 
 #pragma region dll implement
 
@@ -43,33 +48,30 @@ STDAPI DllGetActivationFactory (
 
 #pragma endregion
 
-#pragma region creatable class
+#pragma region co creatable class
 
 using namespace TwinStar::WindowsExplorerExtension;
 
-#define M_CoCreatableClass_X(_class)\
-	CoCreatableClass(_class)\
-	CoCreatableClassWrlCreatorMapInclude(_class)
-
-M_CoCreatableClass_X(LaunchMethodInvokeCommand);
-M_CoCreatableClass_X(JSMethodInvokeCommand);
-M_CoCreatableClass_X(JSONMethodInvokeGroupCommand);
-M_CoCreatableClass_X(DataMethodInvokeGroupCommand);
-M_CoCreatableClass_X(ImageMethodInvokeGroupCommand);
-M_CoCreatableClass_X(WwiseEncodedMediaMethodInvokeGroupCommand);
-M_CoCreatableClass_X(WwiseSoundBankMethodInvokeGroupCommand);
-M_CoCreatableClass_X(MarmaladeDZipMethodInvokeGroupCommand);
-M_CoCreatableClass_X(PopCapZLibMethodInvokeGroupCommand);
-M_CoCreatableClass_X(PopCapREANIMMethodInvokeGroupCommand);
-M_CoCreatableClass_X(PopCapPARTICLEMethodInvokeGroupCommand);
-M_CoCreatableClass_X(PopCapRTONMethodInvokeGroupCommand);
-M_CoCreatableClass_X(PopCapPTXMethodInvokeGroupCommand);
-M_CoCreatableClass_X(PopCapPAMMethodInvokeGroupCommand);
-M_CoCreatableClass_X(PopCapPAKMethodInvokeGroupCommand);
-M_CoCreatableClass_X(PopCapRSGPMethodInvokeGroupCommand);
-M_CoCreatableClass_X(PopCapRSBMethodInvokeGroupCommand);
-M_CoCreatableClass_X(PopCapRSBPatchMethodInvokeGroupCommand);
-M_CoCreatableClass_X(PvZ2LawnStringTextMethodInvokeGroupCommand);
-M_CoCreatableClass_X(PvZ2RemoteAndroidHelperMethodInvokeGroupCommand);
+M_define_co_creatable_class(MainMethodInvokeCommand);
+M_define_co_creatable_class(LaunchMethodInvokeCommand);
+M_define_co_creatable_class(JSGroupMethodInvokeCommand);
+M_define_co_creatable_class(JSONGroupMethodInvokeCommand);
+M_define_co_creatable_class(DataGroupMethodInvokeCommand);
+M_define_co_creatable_class(ImageGroupMethodInvokeCommand);
+M_define_co_creatable_class(WwiseEncodedMediaGroupMethodInvokeCommand);
+M_define_co_creatable_class(WwiseSoundBankGroupMethodInvokeCommand);
+M_define_co_creatable_class(MarmaladeDZipGroupMethodInvokeCommand);
+M_define_co_creatable_class(PopCapZLibGroupMethodInvokeCommand);
+M_define_co_creatable_class(PopCapREANIMGroupMethodInvokeCommand);
+M_define_co_creatable_class(PopCapPARTICLEGroupMethodInvokeCommand);
+M_define_co_creatable_class(PopCapRTONGroupMethodInvokeCommand);
+M_define_co_creatable_class(PopCapPTXGroupMethodInvokeCommand);
+M_define_co_creatable_class(PopCapPAMGroupMethodInvokeCommand);
+M_define_co_creatable_class(PopCapPAKGroupMethodInvokeCommand);
+M_define_co_creatable_class(PopCapRSGPGroupMethodInvokeCommand);
+M_define_co_creatable_class(PopCapRSBGroupMethodInvokeCommand);
+M_define_co_creatable_class(PopCapRSBPatchGroupMethodInvokeCommand);
+M_define_co_creatable_class(PvZ2LawnStringTextGroupMethodInvokeCommand);
+M_define_co_creatable_class(PvZ2RemoteAndroidHelperGroupMethodInvokeCommand);
 
 #pragma endregion
