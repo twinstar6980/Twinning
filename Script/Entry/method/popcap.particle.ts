@@ -1,12 +1,9 @@
-/**
- * + popcap.particle.encode
- * + popcap.particle.decode
- * + popcap.particle.encode.batch
- * + popcap.particle.decode.batch
- */
 namespace TwinStar.Script.Entry.method.popcap.particle {
 
 	// ------------------------------------------------
+
+	// encode *
+	// decode *
 
 	type Config = {
 		version_platform: Executor.RequestArgument<string, false>;

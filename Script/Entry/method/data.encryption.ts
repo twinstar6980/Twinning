@@ -1,11 +1,10 @@
-/**
- * + data.encryption.xor.encrypt
- * + data.encryption.rijndael.encrypt
- * + data.encryption.rijndael.decrypt
- */
 namespace TwinStar.Script.Entry.method.data.encryption {
 
 	// ------------------------------------------------
+
+	// xor.encrypt
+	// rijndael.encrypt
+	// rijndael.decrypt
 
 	type Config = {
 	};

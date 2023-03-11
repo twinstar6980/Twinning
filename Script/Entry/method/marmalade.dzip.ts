@@ -1,11 +1,10 @@
-/**
- * + marmalade.dzip.pack
- * + marmalade.dzip.unpack
- * + marmalade.dzip.pack_automatic
- */
 namespace TwinStar.Script.Entry.method.marmalade.dzip {
 
 	// ------------------------------------------------
+
+	// pack
+	// unpack
+	// pack_automatic
 
 	type Config = {
 		version_number: Executor.RequestArgument<bigint, false>;

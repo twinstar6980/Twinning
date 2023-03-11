@@ -1,5 +1,3 @@
-/**
- */
 namespace TwinStar.Script.Entry.method.expand {
 
 	// ------------------------------------------------

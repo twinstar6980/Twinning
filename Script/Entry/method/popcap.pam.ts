@@ -1,20 +1,13 @@
-/**
- * + popcap.pam.encode
- * + popcap.pam.decode
- * + popcap.pam.convert.flash.from
- * + popcap.pam.convert.flash.to
- * + popcap.pam.convert.flash.resize
- * + popcap.pam.convert.flash.link_media
- * + popcap.pam.encode.batch
- * + popcap.pam.decode.batch 
- * + popcap.pam.convert.flash.from.batch
- * + popcap.pam.convert.flash.to.batch
- * + popcap.pam.convert.flash.resize.batch
- * + popcap.pam.convert.flash.link_media.batch
- */
 namespace TwinStar.Script.Entry.method.popcap.pam {
 
 	// ------------------------------------------------
+
+	// encode *
+	// decode *
+	// convert.flash.from *
+	// convert.flash.to *
+	// convert.flash.resize *
+	// convert.flash.link_media *
 
 	type Config = {
 		version_number: Executor.RequestArgument<bigint, false>;
@@ -220,15 +213,15 @@ namespace TwinStar.Script.Entry.method.popcap.pam {
 					return Executor.query_method_description(this.id);
 				},
 				worker(a: Entry.CFSA & {
-					directory: Executor.RequireArgument<string>;
+					target_directory: Executor.RequireArgument<string>;
 					resolution: Executor.RequestArgument<bigint, false>;
 				}) {
-					let directory: string;
+					let target_directory: string;
 					let resolution: bigint;
 					{
-						directory = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'directory'),
-							a.directory,
+						target_directory = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'target_directory'),
+							a.target_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
@@ -241,16 +234,16 @@ namespace TwinStar.Script.Entry.method.popcap.pam {
 							(value) => (value > 0n ? null : los(`分辨率应大于零`)),
 						);
 					}
-					Support.PopCap.PAM.Convert.Flash.SourceManager.resize_fs(directory, resolution);
-					Console.notify('s', los(`执行成功`), [`${directory}`]);
+					Support.PopCap.PAM.Convert.Flash.SourceManager.resize_fs(target_directory, resolution);
+					Console.notify('s', los(`执行成功`), [`${target_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
-					directory: undefined!,
+					target_directory: undefined!,
 					resolution: '?input',
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', /.+(\.pam)(\.xfl)$/i]]),
-				input_forwarder: 'directory',
+				input_forwarder: 'target_directory',
 			}),
 			Executor.method_of({
 				id: 'popcap.pam.convert.flash.link_media',
@@ -259,35 +252,35 @@ namespace TwinStar.Script.Entry.method.popcap.pam {
 					return Executor.query_method_description(this.id);
 				},
 				worker(a: Entry.CFSA & {
-					directory: Executor.RequireArgument<string>;
+					target_directory: Executor.RequireArgument<string>;
 				}) {
-					let directory: string;
+					let target_directory: string;
 					{
-						directory = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'directory'),
-							a.directory,
+						target_directory = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'target_directory'),
+							a.target_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
 					}
-					let media_directory = `${directory}/LIBRARY/media`;
+					let media_directory = `${target_directory}/LIBRARY/media`;
 					if (CoreX.FileSystem.exist(media_directory)) {
 						CoreX.FileSystem.remove(media_directory);
 					}
 					CoreX.FileSystem.create_directory(media_directory);
-					CoreX.FileSystem.list_file(`${directory}/..`, 1n)
+					CoreX.FileSystem.list_file(`${target_directory}/..`, 1n)
 						.filter((e) => (/.+(\.png)$/i.test(e)))
 						.forEach((e) => {
-							CoreX.FileSystem.create_hard_link(`${media_directory}/${e}`, `${directory}/../${e}`);
+							CoreX.FileSystem.create_hard_link(`${media_directory}/${e}`, `${target_directory}/../${e}`);
 						});
-					Console.notify('s', los(`执行成功`), [`${directory}`]);
+					Console.notify('s', los(`执行成功`), [`${target_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
-					directory: undefined!,
+					target_directory: undefined!,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', /.+(\.pam)(\.xfl)$/i]]),
-				input_forwarder: 'directory',
+				input_forwarder: 'target_directory',
 			}),
 		);
 		g_executor_method_of_batch.push(
@@ -519,15 +512,15 @@ namespace TwinStar.Script.Entry.method.popcap.pam {
 					return Executor.query_method_description(this.id);
 				},
 				worker(a: Entry.CFSA & {
-					directory_directory: Executor.RequireArgument<string>;
+					target_directory_directory: Executor.RequireArgument<string>;
 					resolution: Executor.RequestArgument<bigint, false>;
 				}) {
-					let directory_directory: string;
+					let target_directory_directory: string;
 					let resolution: bigint;
 					{
-						directory_directory = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'directory_directory'),
-							a.directory_directory,
+						target_directory_directory = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'target_directory_directory'),
+							a.target_directory_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
@@ -541,22 +534,22 @@ namespace TwinStar.Script.Entry.method.popcap.pam {
 						);
 					}
 					simple_batch_execute(
-						directory_directory,
+						target_directory_directory,
 						['directory', /.+(\.pam)(\.xfl)$/i],
 						(item) => {
-							let directory = `${directory_directory}/${item}`;
-							Support.PopCap.PAM.Convert.Flash.SourceManager.resize_fs(directory, resolution);
+							let target_directory = `${target_directory_directory}/${item}`;
+							Support.PopCap.PAM.Convert.Flash.SourceManager.resize_fs(target_directory, resolution);
 						},
 					);
-					Console.notify('s', los(`执行成功`), [`${directory_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${target_directory_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
-					directory_directory: undefined!,
+					target_directory_directory: undefined!,
 					resolution: '?input',
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
-				input_forwarder: 'directory_directory',
+				input_forwarder: 'target_directory_directory',
 			}),
 			Executor.method_of({
 				id: 'popcap.pam.convert.flash.link_media.batch',
@@ -565,42 +558,42 @@ namespace TwinStar.Script.Entry.method.popcap.pam {
 					return Executor.query_method_description(this.id);
 				},
 				worker(a: Entry.CFSA & {
-					directory_directory: Executor.RequireArgument<string>;
+					target_directory_directory: Executor.RequireArgument<string>;
 				}) {
-					let directory_directory: string;
+					let target_directory_directory: string;
 					{
-						directory_directory = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'directory_directory'),
-							a.directory_directory,
+						target_directory_directory = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'target_directory_directory'),
+							a.target_directory_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
 					}
 					simple_batch_execute(
-						directory_directory,
+						target_directory_directory,
 						['directory', /.+(\.pam)(\.xfl)$/i],
 						(item) => {
-							let directory = `${directory_directory}/${item}`;
-							let media_directory = `${directory}/LIBRARY/media`;
+							let target_directory = `${target_directory_directory}/${item}`;
+							let media_directory = `${target_directory}/LIBRARY/media`;
 							if (CoreX.FileSystem.exist(media_directory)) {
 								CoreX.FileSystem.remove(media_directory);
 							}
 							CoreX.FileSystem.create_directory(media_directory);
-							CoreX.FileSystem.list_file(`${directory}/..`, 1n)
+							CoreX.FileSystem.list_file(`${target_directory}/..`, 1n)
 								.filter((e) => (/.+(\.png)$/i.test(e)))
 								.forEach((e) => {
-									CoreX.FileSystem.create_hard_link(`${media_directory}/${e}`, `${directory}/../${e}`);
+									CoreX.FileSystem.create_hard_link(`${media_directory}/${e}`, `${target_directory}/../${e}`);
 								});
 						},
 					);
-					Console.notify('s', los(`执行成功`), [`${directory_directory}`]);
+					Console.notify('s', los(`执行成功`), [`${target_directory_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
-					directory_directory: undefined!,
+					target_directory_directory: undefined!,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
-				input_forwarder: 'directory_directory',
+				input_forwarder: 'target_directory_directory',
 			}),
 		);
 	}

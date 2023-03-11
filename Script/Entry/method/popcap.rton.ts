@@ -1,20 +1,13 @@
-/**
- * + popcap.rton.encode
- * + popcap.rton.decode
- * + popcap.rton.encrypt
- * + popcap.rton.decrypt
- * + popcap.rton.encode_then_encrypt
- * + popcap.rton.decrypt_then_decode
- * + popcap.rton.encode.batch
- * + popcap.rton.decode.batch
- * + popcap.rton.encrypt.batch
- * + popcap.rton.decrypt.batch
- * + popcap.rton.encode_then_encrypt.batch
- * + popcap.rton.decrypt_then_decode.batch
- */
 namespace TwinStar.Script.Entry.method.popcap.rton {
 
 	// ------------------------------------------------
+
+	// encode *
+	// decode *
+	// encrypt *
+	// decrypt *
+	// encode_then_encrypt *
+	// decrypt_then_decode *
 
 	type Config = {
 		version_number: Executor.RequestArgument<bigint, false>;

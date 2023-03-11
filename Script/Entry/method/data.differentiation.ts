@@ -1,10 +1,9 @@
-/**
- * + data.differentiation.vcdiff.encode
- * + data.differentiation.vcdiff.decode
- */
 namespace TwinStar.Script.Entry.method.data.differentiation {
 
 	// ------------------------------------------------
+
+	// vcdiff.encode
+	// vcdiff.decode
 
 	type Config = {
 		encode_buffer_size: Executor.RequestArgument<string, false>;
@@ -82,8 +81,8 @@ namespace TwinStar.Script.Entry.method.data.differentiation {
 				},
 				worker(a: Entry.CFSA & {
 					before_file: Executor.RequireArgument<string>;
-					patch_file: Executor.RequestArgument<string, true>;
-					after_file: Executor.RequestArgument<string, false>;
+					patch_file: Executor.RequestArgument<string, false>;
+					after_file: Executor.RequestArgument<string, true>;
 					buffer_size: Executor.RequestArgument<string, false>;
 				}) {
 					let before_file: string;

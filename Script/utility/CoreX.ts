@@ -2,14 +2,7 @@ namespace TwinStar.Script.CoreX {
 
 	// ------------------------------------------------
 
-	const g_common_buffer = Core.ByteArray.default();
-
-	export function set_common_buffer_size(
-		size: bigint,
-	): void {
-		g_common_buffer.allocate(Core.Size.value(size));
-		return;
-	}
+	export const g_common_buffer = Core.ByteArray.default();
 
 	// ------------------------------------------------
 
@@ -17,22 +10,13 @@ namespace TwinStar.Script.CoreX {
 
 		// ------------------------------------------------
 
-		const g_write_format: {
+		export const g_format: {
 			disable_trailing_comma: boolean;
 			disable_array_wrap_line: boolean;
 		} = {
 			disable_trailing_comma: false,
 			disable_array_wrap_line: false,
 		};
-
-		export function set_write_format(
-			disable_trailing_comma: boolean,
-			disable_array_wrap_line: boolean,
-		): void {
-			g_write_format.disable_trailing_comma = disable_trailing_comma;
-			g_write_format.disable_array_wrap_line = disable_array_wrap_line;
-			return;
-		}
 
 		// ------------------------------------------------
 
@@ -48,8 +32,8 @@ namespace TwinStar.Script.CoreX {
 		/** NOTE : result is a view of buffer */
 		export function write<ConstraintT extends Core.JSON.JS_Value>(
 			value: Core.JSON.Value<ConstraintT>,
-			disable_trailing_comma: boolean = g_write_format.disable_trailing_comma,
-			disable_array_wrap_line: boolean = g_write_format.disable_array_wrap_line,
+			disable_trailing_comma: boolean = g_format.disable_trailing_comma,
+			disable_array_wrap_line: boolean = g_format.disable_array_wrap_line,
 			data_buffer: Core.CharacterListView | bigint = Core.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
 		): ArrayBuffer {
 			let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
@@ -70,8 +54,8 @@ namespace TwinStar.Script.CoreX {
 
 		export function write_s<ConstraintT extends Core.JSON.JS_Value>(
 			value: Core.JSON.Value<ConstraintT>,
-			disable_trailing_comma: boolean = g_write_format.disable_trailing_comma,
-			disable_array_wrap_line: boolean = g_write_format.disable_array_wrap_line,
+			disable_trailing_comma: boolean = g_format.disable_trailing_comma,
+			disable_array_wrap_line: boolean = g_format.disable_array_wrap_line,
 			data_buffer: Core.CharacterListView | bigint = Core.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
 		): string {
 			let data = write(value, disable_trailing_comma, disable_array_wrap_line, data_buffer);
@@ -90,8 +74,8 @@ namespace TwinStar.Script.CoreX {
 		export function write_fs<ConstraintT extends Core.JSON.JS_Value>(
 			data_file: string,
 			value: Core.JSON.Value<ConstraintT>,
-			disable_trailing_comma: boolean = g_write_format.disable_trailing_comma,
-			disable_array_wrap_line: boolean = g_write_format.disable_array_wrap_line,
+			disable_trailing_comma: boolean = g_format.disable_trailing_comma,
+			disable_array_wrap_line: boolean = g_format.disable_array_wrap_line,
 			data_buffer: Core.CharacterListView | bigint = Core.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
 		): void {
 			let data = write(value, disable_trailing_comma, disable_array_wrap_line, data_buffer);
@@ -110,8 +94,8 @@ namespace TwinStar.Script.CoreX {
 		/** NOTE : result is a view of buffer */
 		export function write_js<ConstraintT extends Core.JSON.JS_Value>(
 			value: ConstraintT,
-			disable_trailing_comma: boolean = g_write_format.disable_trailing_comma,
-			disable_array_wrap_line: boolean = g_write_format.disable_array_wrap_line,
+			disable_trailing_comma: boolean = g_format.disable_trailing_comma,
+			disable_array_wrap_line: boolean = g_format.disable_array_wrap_line,
 			data_buffer: Core.CharacterListView | bigint = Core.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
 		): ArrayBuffer {
 			return write(Core.JSON.Value.value<ConstraintT>(value), disable_trailing_comma, disable_array_wrap_line, data_buffer);
@@ -127,8 +111,8 @@ namespace TwinStar.Script.CoreX {
 
 		export function write_s_js<ConstraintT extends Core.JSON.JS_Value>(
 			value: ConstraintT,
-			disable_trailing_comma: boolean = g_write_format.disable_trailing_comma,
-			disable_array_wrap_line: boolean = g_write_format.disable_array_wrap_line,
+			disable_trailing_comma: boolean = g_format.disable_trailing_comma,
+			disable_array_wrap_line: boolean = g_format.disable_array_wrap_line,
 			data_buffer: Core.CharacterListView | bigint = Core.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
 		): string {
 			return write_s(Core.JSON.Value.value<ConstraintT>(value), disable_trailing_comma, disable_array_wrap_line, data_buffer);
@@ -145,8 +129,8 @@ namespace TwinStar.Script.CoreX {
 		export function write_fs_js<ConstraintT extends Core.JSON.JS_Value>(
 			data_file: string,
 			value: ConstraintT,
-			disable_trailing_comma: boolean = g_write_format.disable_trailing_comma,
-			disable_array_wrap_line: boolean = g_write_format.disable_array_wrap_line,
+			disable_trailing_comma: boolean = g_format.disable_trailing_comma,
+			disable_array_wrap_line: boolean = g_format.disable_array_wrap_line,
 			data_buffer: Core.CharacterListView | bigint = Core.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
 		): void {
 			return write_fs(data_file, Core.JSON.Value.value<ConstraintT>(value), disable_trailing_comma, disable_array_wrap_line, data_buffer);

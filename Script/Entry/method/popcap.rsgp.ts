@@ -1,10 +1,9 @@
-/**
- * + popcap.rsgp.pack
- * + popcap.rsgp.unpack
- */
 namespace TwinStar.Script.Entry.method.popcap.rsgp {
 
 	// ------------------------------------------------
+
+	// pack
+	// unpack
 
 	type Config = {
 		version_number: Executor.RequestArgument<bigint, false>;

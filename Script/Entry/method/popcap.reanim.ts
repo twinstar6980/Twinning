@@ -1,12 +1,9 @@
-/**
- * + popcap.reanim.encode
- * + popcap.reanim.decode
- * + popcap.reanim.encode.batch
- * + popcap.reanim.decode.batch
- */
 namespace TwinStar.Script.Entry.method.popcap.reanim {
 
 	// ------------------------------------------------
+
+	// encode *
+	// decode *
 
 	type Config = {
 		version_platform: Executor.RequestArgument<string, false>;

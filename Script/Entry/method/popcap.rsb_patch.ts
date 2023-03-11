@@ -1,10 +1,9 @@
-/**
- * + popcap.rsb_patch.encode
- * + popcap.rsb_patch.decode
- */
 namespace TwinStar.Script.Entry.method.popcap.rsb_patch {
 
 	// ------------------------------------------------
+
+	// encode
+	// decode
 
 	type Config = {
 		use_raw_packet: Executor.RequestArgument<boolean, false>;
@@ -106,8 +105,8 @@ namespace TwinStar.Script.Entry.method.popcap.rsb_patch {
 				},
 				worker(a: Entry.CFSA & {
 					before_file: Executor.RequireArgument<string>;
-					patch_file: Executor.RequestArgument<string, true>;
-					after_file: Executor.RequestArgument<string, false>;
+					patch_file: Executor.RequestArgument<string, false>;
+					after_file: Executor.RequestArgument<string, true>;
 					use_raw_packet: Executor.RequestArgument<boolean, false>;
 					version_number: Executor.RequestArgument<bigint, false>;
 					buffer_size: Executor.RequestArgument<string, false>;

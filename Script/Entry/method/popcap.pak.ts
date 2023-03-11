@@ -1,12 +1,11 @@
-/**
- * + popcap.pak.pack
- * + popcap.pak.unpack
- * + popcap.pak.pack_automatic
- * + popcap.pak.crypt
- */
 namespace TwinStar.Script.Entry.method.popcap.pak {
 
 	// ------------------------------------------------
+
+	// pack
+	// unpack
+	// pack_automatic
+	// encrypt
 
 	type Config = {
 		version_number: Executor.RequestArgument<bigint, false>;
@@ -215,7 +214,7 @@ namespace TwinStar.Script.Entry.method.popcap.pak {
 				input_forwarder: 'resource_directory',
 			}),
 			Executor.method_of({
-				id: 'popcap.pak.crypt',
+				id: 'popcap.pak.encrypt',
 				descriptor(
 				) {
 					return Executor.query_method_description(this.id);
@@ -237,7 +236,7 @@ namespace TwinStar.Script.Entry.method.popcap.pak {
 							...Executor.query_argument_message(this.id, 'cipher_file'),
 							a.cipher_file,
 							(value) => (value),
-							() => (plain_file.replace(/((\.pak))?$/i, '.xor.pak')),
+							() => (plain_file.replace(/((\.pak))?$/i, '.cipher.pak')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
 					}

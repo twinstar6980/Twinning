@@ -1,9 +1,8 @@
-/**
- * + pvz2.remote_android_helper.launch
- */
 namespace TwinStar.Script.Entry.method.pvz2.remote_android_helper {
 
 	// ------------------------------------------------
+
+	// launch
 
 	type Config = {
 	};

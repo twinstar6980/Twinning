@@ -1,10 +1,9 @@
-/**
- * + popcap.ptx.encode
- * + popcap.ptx.decode
- */
 namespace TwinStar.Script.Entry.method.popcap.ptx {
 
 	// ------------------------------------------------
+
+	// encode
+	// decode
 
 	type Config = {
 	};

@@ -1,12 +1,9 @@
-/**
- * + popcap.zlib.compress
- * + popcap.zlib.uncompress
- * + popcap.zlib.compress.batch
- * + popcap.zlib.uncompress.batch
- */
 namespace TwinStar.Script.Entry.method.popcap.zlib {
 
 	// ------------------------------------------------
+
+	// compress *
+	// uncompress *
 
 	type Config = {
 		version_variant_64: Executor.RequestArgument<boolean, false>;

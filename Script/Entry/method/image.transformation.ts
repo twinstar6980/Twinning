@@ -1,11 +1,10 @@
-/**
- * + image.transformation.flip
- * + image.transformation.scale
- * + image.transformation.scale_rate
- */
 namespace TwinStar.Script.Entry.method.image.transformation {
 
 	// ------------------------------------------------
+
+	// flip
+	// scale
+	// scale_rate
 
 	type Config = {
 	};

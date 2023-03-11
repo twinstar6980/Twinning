@@ -1,11 +1,10 @@
-/**
- * + image.atlas.pack
- * + image.atlas.unpack
- * + image.atlas.pack_automatic
- */
 namespace TwinStar.Script.Entry.method.image.atlas {
 
 	// ------------------------------------------------
+
+	// pack
+	// unpack
+	// pack_automatic
 
 	type Config = {
 	};

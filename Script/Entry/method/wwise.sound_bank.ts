@@ -1,12 +1,9 @@
-/**
- * + wwise.sound_bank.encode
- * + wwise.sound_bank.decode
- * + wwise.sound_bank.encode.batch
- * + wwise.sound_bank.decode.batch
- */
 namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 
 	// ------------------------------------------------
+
+	// encode *
+	// decode *
 
 	type Config = {
 		version_number: Executor.RequestArgument<bigint, false>;

@@ -1,9 +1,8 @@
-/**
- * + pvz2.lawn_string_text.convert
- */
 namespace TwinStar.Script.Entry.method.pvz2.lawn_string_text {
 
 	// ------------------------------------------------
+
+	// convert
 
 	type Config = {
 	};

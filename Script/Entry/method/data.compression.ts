@@ -1,16 +1,15 @@
-/**
- * + data.compression.deflate.compress
- * + data.compression.deflate.uncompress
- * + data.compression.zlib.compress
- * + data.compression.zlib.uncompress
- * + data.compression.gzip.compress
- * + data.compression.gzip.uncompress
- * + data.compression.bzip2.compress
- * + data.compression.bzip2.uncompress
- */
 namespace TwinStar.Script.Entry.method.data.compression {
 
 	// ------------------------------------------------
+
+	// deflate.compress
+	// deflate.uncompress
+	// zlib.compress
+	// zlib.uncompress
+	// gzip.compress
+	// gzip.uncompress
+	// bzip2.compress
+	// bzip2.uncompress
 
 	type Config = {
 		uncompress_buffer_size: Executor.RequestArgument<string, false>;

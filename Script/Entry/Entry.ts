@@ -97,9 +97,10 @@ namespace TwinStar.Script.Entry {
 		// set byte stream endian
 		Core.Miscellaneous.g_byte_stream_use_big_endian.value = config.byte_stream_use_big_endian;
 		// set common buffer size
-		CoreX.set_common_buffer_size(parse_size_string(config.common_buffer_size));
-		// set json write option
-		CoreX.JSON.set_write_format(config.json_format.disable_trailing_comma, config.json_format.disable_array_wrap_line);
+		CoreX.g_common_buffer.allocate(Core.Size.value(parse_size_string(config.common_buffer_size)));
+		// set json format
+		CoreX.JSON.g_format.disable_trailing_comma = config.json_format.disable_trailing_comma;
+		CoreX.JSON.g_format.disable_array_wrap_line = config.json_format.disable_array_wrap_line;
 	}
 
 	export function _entry(

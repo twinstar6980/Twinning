@@ -1,10 +1,8 @@
-/**
- * + wwise.encoded_media.decode
- * + wwise.encoded_media.decode.batch
- */
 namespace TwinStar.Script.Entry.method.wwise.encoded_media {
 
 	// ------------------------------------------------
+
+	// decode *
 
 	type Config = {
 		tool_ffmpeg_program_file: Executor.RequestArgument<string, false>;

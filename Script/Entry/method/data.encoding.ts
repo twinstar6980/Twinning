@@ -1,10 +1,9 @@
-/**
- * + data.encoding.base64.encode
- * + data.encoding.base64.decode
- */
 namespace TwinStar.Script.Entry.method.data.encoding {
 
 	// ------------------------------------------------
+
+	// base64.encode
+	// base64.decode
 
 	type Config = {
 	};

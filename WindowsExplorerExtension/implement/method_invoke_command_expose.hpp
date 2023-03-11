@@ -1049,10 +1049,10 @@ namespace TwinStar::WindowsExplorerExtension {
 					.argument = LR"({})",
 				},
 				{
-					.id = L"popcap.pak.crypt",
+					.id = L"popcap.pak.encrypt",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.pak)$)", std::wregex::icase},
-					.method = L"popcap.pak.crypt",
+					.method = L"popcap.pak.encrypt",
 					.argument = LR"({})",
 				},
 			},

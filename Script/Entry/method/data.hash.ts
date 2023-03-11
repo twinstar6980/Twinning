@@ -1,9 +1,8 @@
-/**
- * + data.hash.md5
- */
 namespace TwinStar.Script.Entry.method.data.hash {
 
 	// ------------------------------------------------
+
+	// md5
 
 	type Config = {
 	};
@@ -19,26 +18,26 @@ namespace TwinStar.Script.Entry.method.data.hash {
 					return Executor.query_method_description(this.id);
 				},
 				worker(a: Entry.CFSA & {
-					file: Executor.RequireArgument<string>;
+					target_file: Executor.RequireArgument<string>;
 				}) {
-					let file: string;
+					let target_file: string;
 					{
-						file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'file'),
-							a.file,
+						target_file = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'target_file'),
+							a.target_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 					}
-					let result = CoreX.Tool.Data.Hash.MD5.hash_fs(file);
+					let result = CoreX.Tool.Data.Hash.MD5.hash_fs(target_file);
 					Console.notify('s', los(`执行成功`), [`${result.toString(16)}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
-					file: undefined!,
+					target_file: undefined!,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),
-				input_forwarder: 'file',
+				input_forwarder: 'target_file',
 			}),
 		);
 	}

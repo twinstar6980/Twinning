@@ -1,9 +1,8 @@
-/**
- * + js.execute
- */
 namespace TwinStar.Script.Entry.method.js {
 
 	// ------------------------------------------------
+
+	// execute
 
 	type Config = {
 	};

@@ -1,9 +1,3 @@
-/**
- * + popcap.rsb.pack
- * + popcap.rsb.unpack
- * + popcap.rsb.resource_convert
- * + popcap.rsb.repair
- */
 namespace TwinStar.Script.Entry.method.popcap.rsb {
 
 	// ------------------------------------------------
@@ -77,6 +71,11 @@ namespace TwinStar.Script.Entry.method.popcap.rsb {
 	};
 
 	// ------------------------------------------------
+
+	// pack
+	// unpack
+	// resource_convert
+	// repair
 
 	type Config = {
 		mode: Executor.RequestArgument<string, false>;
@@ -534,7 +533,7 @@ namespace TwinStar.Script.Entry.method.popcap.rsb {
 				},
 				default_argument: {
 					...Entry.k_cfsa,
-					bundle_directory: '?default',
+					bundle_directory: undefined!,
 					version_number: config.version_number,
 					version_additional_texture_information_for_pvz_2_chinese_android: config.version_additional_texture_information_for_pvz_2_chinese_android,
 					option: config.resource_convert_option,
