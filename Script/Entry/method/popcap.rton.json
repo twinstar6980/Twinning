@@ -1,5 +1,6 @@
 {
 	"version_number": 1,
+	"native_string_encoding_use_extended_ascii": false,
 	"key": "?input",
 	"encode_buffer_size": "64.0m",
 }

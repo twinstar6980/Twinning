@@ -8,9 +8,11 @@ namespace TwinStar.Script.Entry.method.popcap.rton {
 	// decrypt *
 	// encode_then_encrypt *
 	// decrypt_then_decode *
+	// decode_lenient
 
 	type Config = {
 		version_number: Executor.RequestArgument<bigint, false>;
+		native_string_encoding_use_extended_ascii: Executor.RequestArgument<boolean, false>;
 		key: Executor.RequestArgument<string, false>;
 		encode_buffer_size: Executor.RequestArgument<string, false>;
 	};
@@ -88,10 +90,12 @@ namespace TwinStar.Script.Entry.method.popcap.rton {
 				worker(a: Entry.CFSA & {
 					data_file: Executor.RequireArgument<string>;
 					value_file: Executor.RequestArgument<string, true>;
+					native_string_encoding_use_extended_ascii: Executor.RequestArgument<boolean, false>;
 					version_number: Executor.RequestArgument<bigint, false>;
 				}) {
 					let data_file: string;
 					let value_file: string;
+					let native_string_encoding_use_extended_ascii: boolean;
 					let version_number: [1n][number];
 					{
 						data_file = Executor.require_argument(
@@ -107,6 +111,14 @@ namespace TwinStar.Script.Entry.method.popcap.rton {
 							() => (data_file.replace(/((\.rton))?$/i, '.json')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
+						native_string_encoding_use_extended_ascii = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'native_string_encoding_use_extended_ascii'),
+							a.native_string_encoding_use_extended_ascii,
+							(value) => (value),
+							null,
+							() => (Console.confirm(null)),
+							(value) => (null),
+						);
 						version_number = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_number'),
 							a.version_number,
@@ -116,13 +128,14 @@ namespace TwinStar.Script.Entry.method.popcap.rton {
 							(value) => ([1n].includes(value) ? null : los(`版本不受支持`)),
 						);
 					}
-					CoreX.Tool.PopCap.RTON.decode_fs(data_file, value_file, { number: version_number });
+					CoreX.Tool.PopCap.RTON.decode_fs(data_file, value_file, native_string_encoding_use_extended_ascii, { number: version_number });
 					Console.notify('s', los(`执行成功`), [`${value_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
 					data_file: undefined!,
 					value_file: '?default',
+					native_string_encoding_use_extended_ascii: config.native_string_encoding_use_extended_ascii,
 					version_number: config.version_number,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.rton)$/i]]),
@@ -306,11 +319,13 @@ namespace TwinStar.Script.Entry.method.popcap.rton {
 				worker(a: Entry.CFSA & {
 					data_file: Executor.RequireArgument<string>;
 					value_file: Executor.RequestArgument<string, true>;
+					native_string_encoding_use_extended_ascii: Executor.RequestArgument<boolean, false>;
 					version_number: Executor.RequestArgument<bigint, false>;
 					key: Executor.RequestArgument<string, false>;
 				}) {
 					let data_file: string;
 					let value_file: string;
+					let native_string_encoding_use_extended_ascii: boolean;
 					let version_number: [1n][number];
 					let key: string;
 					{
@@ -326,6 +341,14 @@ namespace TwinStar.Script.Entry.method.popcap.rton {
 							(value) => (value),
 							() => (data_file.replace(/((\.rton))?$/i, '.json')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+						);
+						native_string_encoding_use_extended_ascii = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'native_string_encoding_use_extended_ascii'),
+							a.native_string_encoding_use_extended_ascii,
+							(value) => (value),
+							null,
+							() => (Console.confirm(null)),
+							(value) => (null),
 						);
 						version_number = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_number'),
@@ -344,15 +367,76 @@ namespace TwinStar.Script.Entry.method.popcap.rton {
 							(value) => (null),
 						);
 					}
-					CoreX.Tool.PopCap.RTON.decrypt_then_decode_fs(data_file, value_file, { number: version_number }, key);
+					CoreX.Tool.PopCap.RTON.decrypt_then_decode_fs(data_file, value_file, native_string_encoding_use_extended_ascii, { number: version_number }, key);
 					Console.notify('s', los(`执行成功`), [`${value_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
 					data_file: undefined!,
 					value_file: '?default',
+					native_string_encoding_use_extended_ascii: config.native_string_encoding_use_extended_ascii,
 					version_number: config.version_number,
 					key: config.key,
+				},
+				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.rton)$/i]]),
+				input_forwarder: 'data_file',
+			}),
+			Executor.method_of({
+				id: 'popcap.rton.decode_lenient',
+				descriptor(
+				) {
+					return Executor.query_method_description(this.id);
+				},
+				worker(a: Entry.CFSA & {
+					data_file: Executor.RequireArgument<string>;
+					value_file: Executor.RequestArgument<string, true>;
+					native_string_encoding_use_extended_ascii: Executor.RequestArgument<boolean, false>;
+					version_number: Executor.RequestArgument<bigint, false>;
+				}) {
+					let data_file: string;
+					let value_file: string;
+					let native_string_encoding_use_extended_ascii: boolean;
+					let version_number: [1n][number];
+					{
+						data_file = Executor.require_argument(
+							...Executor.query_argument_message(this.id, 'data_file'),
+							a.data_file,
+							(value) => (value),
+							(value) => (CoreX.FileSystem.exist_file(value)),
+						);
+						value_file = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'value_file'),
+							a.value_file,
+							(value) => (value),
+							() => (data_file.replace(/((\.rton))?$/i, '.json')),
+							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+						);
+						native_string_encoding_use_extended_ascii = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'native_string_encoding_use_extended_ascii'),
+							a.native_string_encoding_use_extended_ascii,
+							(value) => (value),
+							null,
+							() => (Console.confirm(null)),
+							(value) => (null),
+						);
+						version_number = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_number'),
+							a.version_number,
+							(value) => (value),
+							null,
+							() => (Console.option([0n, null, [1n, '']], null)),
+							(value) => ([1n].includes(value) ? null : los(`版本不受支持`)),
+						);
+					}
+					Support.PopCap.RTON.DecodeLenient.decode_whole_fs(data_file, value_file, native_string_encoding_use_extended_ascii, { number: version_number });
+					Console.notify('s', los(`执行成功`), [`${value_file}`]);
+				},
+				default_argument: {
+					...Entry.k_cfsa,
+					data_file: undefined!,
+					value_file: '?default',
+					native_string_encoding_use_extended_ascii: config.native_string_encoding_use_extended_ascii,
+					version_number: config.version_number,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.rton)$/i]]),
 				input_forwarder: 'data_file',
@@ -437,10 +521,12 @@ namespace TwinStar.Script.Entry.method.popcap.rton {
 				worker(a: Entry.CFSA & {
 					data_file_directory: Executor.RequireArgument<string>;
 					value_file_directory: Executor.RequestArgument<string, true>;
+					native_string_encoding_use_extended_ascii: Executor.RequestArgument<boolean, false>;
 					version_number: Executor.RequestArgument<bigint, false>;
 				}) {
 					let data_file_directory: string;
 					let value_file_directory: string;
+					let native_string_encoding_use_extended_ascii: boolean;
 					let version_number: [1n][number];
 					{
 						data_file_directory = Executor.require_argument(
@@ -455,6 +541,14 @@ namespace TwinStar.Script.Entry.method.popcap.rton {
 							(value) => (value),
 							() => (data_file_directory.replace(/$/i, '.rton_decode')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+						);
+						native_string_encoding_use_extended_ascii = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'native_string_encoding_use_extended_ascii'),
+							a.native_string_encoding_use_extended_ascii,
+							(value) => (value),
+							null,
+							() => (Console.confirm(null)),
+							(value) => (null),
 						);
 						version_number = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_number'),
@@ -471,7 +565,7 @@ namespace TwinStar.Script.Entry.method.popcap.rton {
 						(item) => {
 							let rton_file = `${data_file_directory}/${item}`;
 							let json_file = `${value_file_directory}/${item.slice(0, -5)}.json`;
-							CoreX.Tool.PopCap.RTON.decode_fs(rton_file, json_file, { number: version_number });
+							CoreX.Tool.PopCap.RTON.decode_fs(rton_file, json_file, native_string_encoding_use_extended_ascii, { number: version_number });
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${value_file_directory}`]);
@@ -480,6 +574,7 @@ namespace TwinStar.Script.Entry.method.popcap.rton {
 					...Entry.k_cfsa,
 					data_file_directory: undefined!,
 					value_file_directory: '?default',
+					native_string_encoding_use_extended_ascii: config.native_string_encoding_use_extended_ascii,
 					version_number: config.version_number,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
@@ -688,11 +783,13 @@ namespace TwinStar.Script.Entry.method.popcap.rton {
 				worker(a: Entry.CFSA & {
 					data_file_directory: Executor.RequireArgument<string>;
 					value_file_directory: Executor.RequestArgument<string, true>;
+					native_string_encoding_use_extended_ascii: Executor.RequestArgument<boolean, false>;
 					version_number: Executor.RequestArgument<bigint, false>;
 					key: Executor.RequestArgument<string, false>;
 				}) {
 					let data_file_directory: string;
 					let value_file_directory: string;
+					let native_string_encoding_use_extended_ascii: boolean;
 					let version_number: [1n][number];
 					let key: string;
 					{
@@ -708,6 +805,14 @@ namespace TwinStar.Script.Entry.method.popcap.rton {
 							(value) => (value),
 							() => (data_file_directory.replace(/$/i, '.rton_decrypt_then_decode')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+						);
+						native_string_encoding_use_extended_ascii = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'native_string_encoding_use_extended_ascii'),
+							a.native_string_encoding_use_extended_ascii,
+							(value) => (value),
+							null,
+							() => (Console.confirm(null)),
+							(value) => (null),
 						);
 						version_number = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_number'),
@@ -732,7 +837,7 @@ namespace TwinStar.Script.Entry.method.popcap.rton {
 						(item) => {
 							let rton_file = `${data_file_directory}/${item}`;
 							let json_file = `${value_file_directory}/${item.slice(0, -5)}.json`;
-							CoreX.Tool.PopCap.RTON.decrypt_then_decode_fs(rton_file, json_file, { number: version_number }, key);
+							CoreX.Tool.PopCap.RTON.decrypt_then_decode_fs(rton_file, json_file, native_string_encoding_use_extended_ascii, { number: version_number }, key);
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${value_file_directory}`]);
@@ -741,6 +846,7 @@ namespace TwinStar.Script.Entry.method.popcap.rton {
 					...Entry.k_cfsa,
 					data_file_directory: undefined!,
 					value_file_directory: '?default',
+					native_string_encoding_use_extended_ascii: config.native_string_encoding_use_extended_ascii,
 					version_number: config.version_number,
 					key: config.key,
 				},

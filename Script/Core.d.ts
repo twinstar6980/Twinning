@@ -1,6 +1,6 @@
 /**
  * JS interface of Core
- * @version 37
+ * @version 38
  */
 declare namespace TwinStar.Core {
 
@@ -3001,11 +3001,13 @@ declare namespace TwinStar.Core {
 					 * 解码
 					 * @param data 数据
 					 * @param value 值
+					 * @param native_string_encoding_use_extended_ascii 本地字符串编码使用扩展ASCII，否则为UTF-8
 					 * @param version 版本
 					 */
 					function process_whole(
 						data: IByteStreamView,
 						value: JSON.Value<JS_ValidValue>,
+						native_string_encoding_use_extended_ascii: Boolean,
 						version: Version,
 					): Void;
 

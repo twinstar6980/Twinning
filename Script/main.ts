@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 46;
+	export const k_version = 47;
 
 	// ------------------------------------------------
 
@@ -333,6 +333,7 @@ TwinStar.Script.Main.g_module_manifest = {
 		`Support/PopCap/PAM/Convert/Flash/From`,
 		`Support/PopCap/PAM/Convert/Flash/To`,
 		`Support/PopCap/PAM/Convert/Flash/SourceManager`,
+		`Support/PopCap/RTON/DecodeLenient`,
 		`Support/PopCap/PAK/PackAutomatic`,
 		`Support/PopCap/RSB/Repair`,
 		`Support/PvZ2/JSONGenericGetter/JSONGenericGetter`,

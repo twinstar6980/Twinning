@@ -64,7 +64,7 @@ namespace TwinStar.Script.Support.PopCap.RSB.Repair {
 	export function repair_packet(
 		data: ArrayBuffer,
 	): void {
-		let view = new ByteListView(data);
+		let view = new ByteListView(data, 0x0);
 		// magic
 		view.u32(0x00, 0x72736770n);
 		// version_number
@@ -124,7 +124,7 @@ namespace TwinStar.Script.Support.PopCap.RSB.Repair {
 	export function repair_package(
 		data: ArrayBuffer,
 	): void {
-		let view = new ByteListView(data);
+		let view = new ByteListView(data, 0x0);
 		// magic
 		view.u32(0x00, 0x72736231n);
 		// version_number
@@ -400,10 +400,10 @@ namespace TwinStar.Script.Support.PopCap.RSB.Repair {
 		ripe_file: string,
 	): void {
 		let data = CoreX.FileSystem.read_file(raw_file);
-		repair_package(data.value);
+		repair_package(data.view().value);
 		let empty_packet = create_empty_packet();
 		let data_with_empty_packet = Core.ByteArray.allocate(Core.Size.value(data.size().value + 0x1000n));
-		new Uint8Array(data_with_empty_packet.view().sub(Core.Size.value(0x0n), data.size()).value).set(new Uint8Array(data.value));
+		new Uint8Array(data_with_empty_packet.view().sub(Core.Size.value(0x0n), data.size()).value).set(new Uint8Array(data.view().value));
 		new Uint32Array(data_with_empty_packet.view().sub(data.size(), Core.Size.value(0x1000n)).value).set(new Uint32Array(empty_packet));
 		CoreX.FileSystem.write_file(ripe_file, data_with_empty_packet);
 		return;

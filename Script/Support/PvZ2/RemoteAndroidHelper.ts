@@ -106,7 +106,7 @@ namespace TwinStar.Script.Support.PvZ2.RemoteAndroidHelper {
 				Console.notify('i', los(`拉取 ...`), [remote.local_profile]);
 				ADBHelper.pull(local_temporary.local_profile, remote.local_profile);
 				Console.notify('i', los(`解码 ...`), [local_temporary.local_profile]);
-				CoreX.Tool.PopCap.RTON.decode_fs(local_temporary.local_profile, local.local_profile, { number: 1n });
+				CoreX.Tool.PopCap.RTON.decode_fs(local_temporary.local_profile, local.local_profile, false, { number: 1n });
 				Console.notify('s', los(`完成`), [local.local_profile]);
 				break;
 			}
@@ -122,7 +122,7 @@ namespace TwinStar.Script.Support.PvZ2.RemoteAndroidHelper {
 				Console.notify('i', los(`拉取 ...`), [remote.player_profile]);
 				ADBHelper.pull(local_temporary.player_profile, remote.player_profile);
 				Console.notify('i', los(`解码 ...`), [local_temporary.player_profile]);
-				CoreX.Tool.PopCap.RTON.decode_fs(local_temporary.player_profile, local.player_profile, { number: 1n });
+				CoreX.Tool.PopCap.RTON.decode_fs(local_temporary.player_profile, local.player_profile, false, { number: 1n });
 				Console.notify('s', los(`完成`), [local.player_profile]);
 				break;
 			}
@@ -142,7 +142,7 @@ namespace TwinStar.Script.Support.PvZ2.RemoteAndroidHelper {
 				let sub_file_list = CoreX.FileSystem.list_file(local_temporary.content_delivery, 1n);
 				for (let sub_file of sub_file_list) {
 					let json_name = sub_file.replace(/\.rton$/i, '.json');
-					CoreX.Tool.PopCap.RTON.decode_fs(`${local_temporary.content_delivery}/${sub_file}`, `${local.content_delivery}/${json_name}`, { number: 1n });
+					CoreX.Tool.PopCap.RTON.decode_fs(`${local_temporary.content_delivery}/${sub_file}`, `${local.content_delivery}/${json_name}`, false, { number: 1n });
 				}
 				for (let sub_directory of sub_directory_list) {
 					CoreX.FileSystem.copy(`${local_temporary.content_delivery}/${sub_directory}`, `${local.content_delivery}/${sub_directory}`);

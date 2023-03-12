@@ -210,16 +210,18 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 		) -> Void {
 			if (string_index) {
 				if (auto indexed_string = string_index.get().find(value); indexed_string != string_index.get().end()) {
-					data.write(TypeIdentifier{TypeIdentifier::Value::string_native_indexed});
+					data.write(TypeIdentifier{TypeIdentifier::Value::string_unicode_indexed});
 					ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>((*indexed_string).second));
 				} else {
 					string_index.get()[value] = mbw<Size>(string_index.get().size());
-					data.write(TypeIdentifier{TypeIdentifier::Value::string_native_indexing});
+					data.write(TypeIdentifier{TypeIdentifier::Value::string_unicode_indexing});
+					ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(StringParser::compute_utf8_string_length(value)));
 					ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(value.size()));
 					StringParser::write_string(self_cast<OCharacterStreamView>(data), value.as_view(), as_lvalue(Size{}));
 				}
 			} else {
-				data.write(TypeIdentifier{TypeIdentifier::Value::string_native});
+				data.write(TypeIdentifier{TypeIdentifier::Value::string_unicode});
+				ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(StringParser::compute_utf8_string_length(value)));
 				ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(value.size()));
 				StringParser::write_string(self_cast<OCharacterStreamView>(data), value.as_view(), as_lvalue(Size{}));
 			}
@@ -251,7 +253,7 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 							// TODO : do not use scanf ?
 							auto scan_result = std::sscanf(cast_pointer<char>(make_null_terminated_string(uid).begin()).value, "%u.%u.%x", &uid_first.value, &uid_middle.value, &uid_last.value);
 							assert_test(scan_result == 3);
-							ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(sheet.size()));
+							ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(StringParser::compute_utf8_string_length(sheet)));
 							ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(sheet.size()));
 							data.write(sheet);
 							ProtocolBufferVariableLengthInteger::encode_u32(data, uid_middle);
@@ -264,10 +266,10 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 							auto at_position = Range::find_index(content, '@'_c).get();
 							auto sheet = content.tail(content.size() - (at_position + "@"_sl));
 							auto alias = content.head(at_position);
-							ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(sheet.size()));
+							ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(StringParser::compute_utf8_string_length(sheet)));
 							ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(sheet.size()));
 							data.write(sheet);
-							ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(alias.size()));
+							ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(StringParser::compute_utf8_string_length(alias)));
 							ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(alias.size()));
 							data.write(alias);
 							break;
@@ -418,6 +420,7 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 		static auto process_unit (
 			IByteStreamView &      data,
 			JSON::Value &          value,
+			Boolean const &        native_string_encoding_use_extended_ascii,
 			List<CStringView> &    native_string_index,
 			List<CStringView> &    unicode_string_index,
 			TypeIdentifier const & type_identifier
@@ -530,16 +533,28 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 					break;
 				}
 				case TypeIdentifier::Value::string_native : {
-					auto length = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
+					auto size = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 					auto content = CStringView{};
-					StringParser::read_string(self_cast<ICharacterStreamView>(data), content, length);
+					auto content_container = String{};
+					if (native_string_encoding_use_extended_ascii) {
+						StringParser::read_extended_ascii_string(self_cast<ICharacterStreamView>(data), content_container, size);
+						content = content_container.as_view();
+					} else {
+						StringParser::read_utf8_string_by_size(self_cast<ICharacterStreamView>(data), content, as_lvalue(Size{}), size);
+					}
 					value.set_string(content);
 					break;
 				}
 				case TypeIdentifier::Value::string_native_indexing : {
-					auto length = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
+					auto size = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 					auto content = CStringView{};
-					StringParser::read_string(self_cast<ICharacterStreamView>(data), content, length);
+					auto content_container = String{};
+					if (native_string_encoding_use_extended_ascii) {
+						StringParser::read_extended_ascii_string(self_cast<ICharacterStreamView>(data), content_container, size);
+						content = content_container.as_view();
+					} else {
+						StringParser::read_utf8_string_by_size(self_cast<ICharacterStreamView>(data), content, as_lvalue(Size{}), size);
+					}
 					value.set_string(content);
 					native_string_index.append(value.get_string());
 					break;
@@ -627,7 +642,7 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 							break;
 						}
 						array.append();
-						process_unit(data, array.last(), native_string_index, unicode_string_index, value_type_identifier);
+						process_unit(data, array.last(), native_string_encoding_use_extended_ascii, native_string_index, unicode_string_index, value_type_identifier);
 					}
 					assert_test(array.size() == size);
 					break;
@@ -642,10 +657,10 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 						}
 						member_list.emplace_back();
 						auto member_key = JSON::Value{};
-						process_unit(data, member_key, native_string_index, unicode_string_index, key_type_identifier);
+						process_unit(data, member_key, native_string_encoding_use_extended_ascii, native_string_index, unicode_string_index, key_type_identifier);
 						member_list.back().key = as_moveable(member_key.get_string());
 						auto value_type_identifier = data.read_of<TypeIdentifier>();
-						process_unit(data, member_list.back().value, native_string_index, unicode_string_index, value_type_identifier);
+						process_unit(data, member_list.back().value, native_string_encoding_use_extended_ascii, native_string_index, unicode_string_index, value_type_identifier);
 					}
 					object.assign(
 						member_list,
@@ -664,7 +679,8 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 
 		static auto process_whole (
 			IByteStreamView & data,
-			JSON::Value &     value
+			JSON::Value &     value,
+			Boolean const &   native_string_encoding_use_extended_ascii
 		) -> Void {
 			data.read_constant(k_magic_identifier);
 			data.read_constant(cbw<VersionNumber>(version.number));
@@ -688,7 +704,7 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 			}
 			auto native_string_index_list = List<CStringView>{native_string_upper_bound};
 			auto unicode_string_index_list = List<CStringView>{unicode_string_upper_bound};
-			process_unit(data, value, native_string_index_list, unicode_string_index_list, TypeIdentifier{TypeIdentifier::Value::object_begin});
+			process_unit(data, value, native_string_encoding_use_extended_ascii, native_string_index_list, unicode_string_index_list, TypeIdentifier{TypeIdentifier::Value::object_begin});
 			data.read_constant(k_done_identifier);
 			return;
 		}
@@ -697,11 +713,12 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 
 		static auto do_process_whole (
 			IByteStreamView & data_,
-			JSON::Value &     value
+			JSON::Value &     value,
+			Boolean const &   native_string_encoding_use_extended_ascii
 		) -> Void {
 			M_use_zps_of(data);
 			restruct(value);
-			return process_whole(data, value);
+			return process_whole(data, value, native_string_encoding_use_extended_ascii);
 		}
 
 	};

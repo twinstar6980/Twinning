@@ -142,6 +142,7 @@ namespace TwinStar.Script.Support.PvZ2.RSB.ResourceConvert {
 						CoreX.Tool.PopCap.RTON.decrypt_then_decode_fs(
 							`${resource_directory}/${path}`,
 							`${option.json.directory}/${path.slice(0, -4)}json`,
+							false,
 							{ number: 1n },
 							option.json.crypt.key,
 						);
@@ -149,6 +150,7 @@ namespace TwinStar.Script.Support.PvZ2.RSB.ResourceConvert {
 						CoreX.Tool.PopCap.RTON.decode_fs(
 							`${resource_directory}/${path}`,
 							`${option.json.directory}/${path.slice(0, -4)}json`,
+							false,
 							{ number: 1n },
 						);
 					}
@@ -264,6 +266,7 @@ namespace TwinStar.Script.Support.PvZ2.RSB.ResourceConvert {
 			Core.Tool.PopCap.RTON.Decode.process_whole(
 				rton_stream,
 				json,
+				Core.Boolean.value(false),
 				Core.Tool.PopCap.RTON.Version.value({ number: 1n }),
 			);
 			official_resource_manifest = json.value;

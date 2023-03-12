@@ -14,19 +14,25 @@ namespace TwinStar.Script {
 
 		constructor(
 			data: ArrayBuffer,
-			offset: number = 0,
+			offset: number,
+			size?: number,
 		) {
-			this.m_view = new DataView(data, offset);
-			this.m_endian_little = true;
+			this.m_view = new DataView(data, offset, size);
+			this.m_endian_little = !Core.Miscellaneous.g_byte_stream_use_big_endian.value;
 		}
 
 		// ------------------------------------------------
+
+		size(
+		): number {
+			return this.m_view.byteLength;
+		}
 
 		sub(
 			begin: number,
 			size: number,
 		): ArrayBuffer {
-			return Core.ByteListView.value(this.m_view.buffer).sub(Core.Size.value(BigInt(begin)), Core.Size.value(BigInt(size))).value;
+			return Core.ByteListView.value(this.m_view.buffer).sub(Core.Size.value(BigInt(this.m_view.byteOffset + begin)), Core.Size.value(BigInt(size))).value;
 		}
 
 		// ------------------------------------------------
@@ -98,7 +104,7 @@ namespace TwinStar.Script {
 			position: number,
 			value?: bigint,
 		): void | bigint {
-			return (value === undefined) ? this.m_view.getBigInt64(position, this.m_endian_little) : this.m_view.setBigInt64(position, value, this.m_endian_little);
+			return (value === undefined) ? this.m_view.getBigUint64(position, this.m_endian_little) : this.m_view.setBigInt64(position, value, this.m_endian_little);
 		}
 
 		// ------------------------------------------------
@@ -225,10 +231,32 @@ namespace TwinStar.Script {
 
 		constructor(
 			data: ArrayBuffer,
-			offset: number = 0,
+			offset: number,
+			size?: number,
 		) {
-			this.m_view = new ByteListView(data, offset);
+			this.m_view = new ByteListView(data, offset, size);
 			this.m_position = 0;
+		}
+
+		// ------------------------------------------------
+
+		list(
+		): ByteListView {
+			return this.m_view;
+		}
+
+		// ------------------------------------------------
+
+		size(
+		): number {
+			return this.m_view.size();
+		}
+
+		sub(
+			begin: number,
+			size: number,
+		): ArrayBuffer {
+			return this.m_view.sub(begin, size);
 		}
 
 		// ------------------------------------------------

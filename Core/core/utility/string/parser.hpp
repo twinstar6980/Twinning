@@ -252,7 +252,7 @@ namespace TwinStar::Core::StringParser {
 		while (extra_size > 0_sz) {
 			--extra_size;
 			current = self_cast<Character8>(stream.read_of());
-			if ((current & 0x10'000000_c8) != 0x10'000000_c8) {
+			if ((current & 0b11'000000_c8) != 0b10'000000_c8) {
 				assert_fail(R"(/* extra utf-8 character is valid */)");
 			}
 			character = character << 6_sz | cbw<Character32>(current & 0b00'111111_c8);
@@ -305,6 +305,43 @@ namespace TwinStar::Core::StringParser {
 
 	#pragma endregion
 
+	#pragma region extended ascii string
+
+	inline auto write_extended_ascii_string (
+		OCharacterStreamView & stream,
+		String const &         string,
+		Size &                 length
+	) -> Void {
+		auto string_stream = ICharacterStreamView{string};
+		while (!string_stream.full()) {
+			auto character = Character32{};
+			read_utf8_character(string_stream, character);
+			assert_test(character < 0x100_c32);
+			stream.write(self_cast<Character>(cbw<Character8>(character)));
+			++length;
+		}
+		return;
+	}
+
+	inline auto read_extended_ascii_string (
+		ICharacterStreamView & stream,
+		String &               string,
+		Size const &           length
+	) -> Void {
+		string.allocate_full(length * 2_sz);
+		auto string_stream = ICharacterStreamView{stream.reserve_view()};
+		auto output_stream = OCharacterStreamView{string.view()};
+		for (auto & index : SizeRange{length}) {
+			auto current = self_cast<Character8>(string_stream.read_of());
+			write_utf8_character(output_stream, cbw<Character32>(current));
+		}
+		string.set_size(output_stream.position());
+		stream.forward(string_stream.position());
+		return;
+	}
+
+	#pragma endregion
+
 	#pragma region utf-8 string
 
 	inline auto write_utf8_string (
@@ -320,7 +357,7 @@ namespace TwinStar::Core::StringParser {
 			while (extra_size > 0_sz) {
 				--extra_size;
 				current = self_cast<Character8>(string_stream.read_of());
-				if ((current & 0x10'000000_c8) != 0x10'000000_c8) {
+				if ((current & 0b11'000000_c8) != 0b10'000000_c8) {
 					assert_fail(R"(/* extra utf-8 character is valid */)");
 				}
 				stream.write(self_cast<Character>(current));
@@ -342,7 +379,7 @@ namespace TwinStar::Core::StringParser {
 			while (extra_size > 0_sz) {
 				--extra_size;
 				current = self_cast<Character8>(string_stream.read_of());
-				if ((current & 0x10'000000_c8) != 0x10'000000_c8) {
+				if ((current & 0b11'000000_c8) != 0b10'000000_c8) {
 					assert_fail(R"(/* extra utf-8 character is valid */)");
 				}
 			}
@@ -350,6 +387,40 @@ namespace TwinStar::Core::StringParser {
 		string = down_cast<CStringView>(string_stream.stream_view());
 		stream.forward(string_stream.position());
 		return;
+	}
+
+	inline auto read_utf8_string_by_size (
+		ICharacterStreamView & stream,
+		CStringView &          string,
+		Size &                 length,
+		Size const &           size
+	) -> Void {
+		auto string_stream = ICharacterStreamView{stream.next_view(size)};
+		length = k_none_size;
+		while (!string_stream.full()) {
+			auto current = self_cast<Character8>(string_stream.read_of());
+			auto extra_size = compute_utf8_character_extra_size(current);
+			while (extra_size > 0_sz) {
+				--extra_size;
+				current = self_cast<Character8>(string_stream.read_of());
+				if ((current & 0b11'000000_c8) != 0b10'000000_c8) {
+					assert_fail(R"(/* extra utf-8 character is valid */)");
+				}
+			}
+			++length;
+		}
+		string = down_cast<CStringView>(string_stream.stream_view());
+		stream.forward(string_stream.position());
+		return;
+	}
+
+	inline auto compute_utf8_string_length (
+		CStringView const & string
+	) -> Size {
+		auto string_stream = ICharacterStreamView{string};
+		auto length = Size{};
+		read_utf8_string_by_size(string_stream, as_lvalue(CStringView{}), length, string.size());
+		return length;
 	}
 
 	#pragma endregion
@@ -405,7 +476,7 @@ namespace TwinStar::Core::StringParser {
 				while (extra_size > 0_sz) {
 					--extra_size;
 					auto current_8 = self_cast<Character8>(string.read_of());
-					if ((current_8 & 0x10'000000_c8) != 0x10'000000_c8) {
+					if ((current_8 & 0b11'000000_c8) != 0b10'000000_c8) {
 						assert_fail(R"(/* extra utf-8 character is valid */)");
 					}
 					stream.write(self_cast<Character>(current_8));
@@ -436,7 +507,7 @@ namespace TwinStar::Core::StringParser {
 				while (extra_size > 0_sz) {
 					--extra_size;
 					auto current_8 = self_cast<Character8>(stream.read_of());
-					if ((current_8 & 0x10'000000_c8) != 0x10'000000_c8) {
+					if ((current_8 & 0b11'000000_c8) != 0b10'000000_c8) {
 						assert_fail(R"(/* extra utf-8 character is valid */)");
 					}
 					string.write(self_cast<Character>(current_8));

@@ -932,12 +932,13 @@ namespace TwinStar::Core::Executor::Interface {
 							[] (
 							IByteStreamView & data,
 							JSON::Value &     value,
+							Boolean const &   native_string_encoding_use_extended_ascii,
 							Version const &   version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::RTON::Decode<version>::do_process_whole(data, value);
+										Tool::PopCap::RTON::Decode<version>::do_process_whole(data, value, native_string_encoding_use_extended_ascii);
 									}
 								);
 							}

@@ -99,25 +99,36 @@ namespace TwinStar::WindowsExplorerExtension {
 		) -> void override {
 			try {
 				assert_test(selection != nullptr);
+				auto target_list = get_shell_item_file_path(selection);
 				auto launch_script = get_register_value_string(k_register_key_parent, k_register_key_path, L"launch_script").value_or(L"");
+				auto launch_limit = get_register_value_dword(k_register_key_parent, k_register_key_path, L"launch_limit").value_or(0);
 				if (!std::filesystem::is_regular_file(std::filesystem::path{launch_script})) {
-					throw std::runtime_error{std::format("launch script is invalid")};
+					throw std::runtime_error{std::format("invalid launch script")};
 				}
-				auto path_list = get_shell_item_file_path(selection);
+				if (launch_limit != 0 && target_list.size() > launch_limit) {
+					throw std::runtime_error{std::format("too many item")};
+				}
 				auto program = std::wstring{L"C:\\Windows\\System32\\cmd.exe"};
 				auto argument = std::vector<std::wstring>{};
 				argument.emplace_back(L"/C");
 				argument.emplace_back(launch_script);
-				for (auto & path : path_list) {
-					argument.emplace_back(path);
+				auto every_target_argument_count = std::ptrdiff_t{1 + (!thiz.m_config.method.has_value() ? 0 : 2) + 2};
+				for (auto & target : target_list) {
+					argument.emplace_back(target);
 					if (thiz.m_config.method.has_value()) {
 						argument.emplace_back(L"-method");
 						argument.emplace_back(thiz.m_config.method.value());
 					}
 					argument.emplace_back(L"-argument");
 					argument.emplace_back(thiz.m_config.argument);
+					if (launch_limit != 0) {
+						create_process(program, argument);
+						argument.erase(argument.end() - every_target_argument_count, argument.end());
+					}
 				}
-				create_process(program, argument);
+				if (launch_limit == 0) {
+					create_process(program, argument);
+				}
 			} catch (std::exception const & exception) {
 				// TODO : suppose encoding is ANSI, right ?
 				MessageBoxA(nullptr, exception.what(), "ERROR", MB_OK | MB_ICONERROR);

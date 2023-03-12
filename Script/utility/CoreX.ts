@@ -1374,13 +1374,14 @@ namespace TwinStar.Script.CoreX {
 				export function decode_fs(
 					data_file: string,
 					value_file: string,
+					native_string_encoding_use_extended_ascii: boolean,
 					version: typeof Core.Tool.PopCap.RTON.Version.Value,
 				): void {
 					let version_c = Core.Tool.PopCap.RTON.Version.value(version);
 					let data = FileSystem.read_file(data_file);
 					let stream = Core.ByteStreamView.watch(data.view());
 					let value = Core.JSON.Value.default<Core.Tool.PopCap.RTON.JS_ValidValue>();
-					Core.Tool.PopCap.RTON.Decode.process_whole(stream, value, version_c);
+					Core.Tool.PopCap.RTON.Decode.process_whole(stream, value, Core.Boolean.value(native_string_encoding_use_extended_ascii), version_c);
 					JSON.write_fs(value_file, value);
 					return;
 				}
@@ -1445,6 +1446,7 @@ namespace TwinStar.Script.CoreX {
 				export function decrypt_then_decode_fs(
 					rton_file: string,
 					json_file: string,
+					native_string_encoding_use_extended_ascii: boolean,
 					version: typeof Core.Tool.PopCap.RTON.Version.Value,
 					key: string,
 				): void {
@@ -1458,7 +1460,7 @@ namespace TwinStar.Script.CoreX {
 					Core.Tool.PopCap.RTON.Decrypt.process_whole(cipher_stream, plain_stream, Core.String.value(key));
 					let rton_stream = Core.ByteStreamView.watch(plain_stream.stream_view());
 					let json = Core.JSON.Value.default<Core.Tool.PopCap.RTON.JS_ValidValue>();
-					Core.Tool.PopCap.RTON.Decode.process_whole(rton_stream, json, version_c);
+					Core.Tool.PopCap.RTON.Decode.process_whole(rton_stream, json, Core.Boolean.value(native_string_encoding_use_extended_ascii), version_c);
 					JSON.write_fs(json_file, json);
 					return;
 				}

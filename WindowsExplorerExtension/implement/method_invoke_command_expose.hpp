@@ -746,6 +746,13 @@ namespace TwinStar::WindowsExplorerExtension {
 					.argument = LR"({})",
 				},
 				{
+					.id = L"popcap.rton.decode_lenient",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.rton)$)", std::wregex::icase},
+					.method = L"popcap.rton.decode_lenient",
+					.argument = LR"({})",
+				},
+				{
 					.id = L"popcap.rton.encode.batch",
 					.type = true,
 					.rule = std::nullopt,
@@ -792,6 +799,7 @@ namespace TwinStar::WindowsExplorerExtension {
 				2,
 				2,
 				2,
+				1,
 				2,
 				2,
 				2,
