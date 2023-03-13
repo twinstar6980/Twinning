@@ -533,30 +533,28 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 					break;
 				}
 				case TypeIdentifier::Value::string_native : {
-					auto size = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
-					auto content = CStringView{};
-					auto content_container = String{};
+					auto   size = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
+					auto & content = value.set_string();
 					if (native_string_encoding_use_extended_ascii) {
-						StringParser::read_extended_ascii_string(self_cast<ICharacterStreamView>(data), content_container, size);
-						content = content_container.as_view();
+						StringParser::read_extended_ascii_string(self_cast<ICharacterStreamView>(data), content, size);
 					} else {
-						StringParser::read_utf8_string_by_size(self_cast<ICharacterStreamView>(data), content, as_lvalue(Size{}), size);
+						auto content_view = CStringView{};
+						StringParser::read_utf8_string_by_size(self_cast<ICharacterStreamView>(data), content_view, as_lvalue(Size{}), size);
+						content = content_view;
 					}
-					value.set_string(content);
 					break;
 				}
 				case TypeIdentifier::Value::string_native_indexing : {
-					auto size = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
-					auto content = CStringView{};
-					auto content_container = String{};
+					auto   size = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
+					auto & content = value.set_string();
 					if (native_string_encoding_use_extended_ascii) {
-						StringParser::read_extended_ascii_string(self_cast<ICharacterStreamView>(data), content_container, size);
-						content = content_container.as_view();
+						StringParser::read_extended_ascii_string(self_cast<ICharacterStreamView>(data), content, size);
 					} else {
-						StringParser::read_utf8_string_by_size(self_cast<ICharacterStreamView>(data), content, as_lvalue(Size{}), size);
+						auto content_view = CStringView{};
+						StringParser::read_utf8_string_by_size(self_cast<ICharacterStreamView>(data), content_view, as_lvalue(Size{}), size);
+						content = content_view;
 					}
-					value.set_string(content);
-					native_string_index.append(value.get_string());
+					native_string_index.append(content);
 					break;
 				}
 				case TypeIdentifier::Value::string_native_indexed : {
@@ -580,7 +578,7 @@ namespace TwinStar::Core::Tool::PopCap::RTON {
 					StringParser::read_utf8_string(self_cast<ICharacterStreamView>(data), content, length);
 					assert_test(content.size() == size);
 					value.set_string(content);
-					unicode_string_index.append(value.get_string());
+					unicode_string_index.append(content);
 					break;
 				}
 				case TypeIdentifier::Value::string_unicode_indexed : {
