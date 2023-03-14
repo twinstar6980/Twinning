@@ -698,7 +698,7 @@ namespace TwinStar::Core::StringParser {
 		if (value > 0.0_f && !disable_sign_when_positive) {
 			stream.write('+'_c);
 		}
-		auto format_result = Third::fmt::format_to_n(cast_pointer<char>(stream.current_pointer()).value, stream.reserve().value, "{:#}", value == 0.0_f ? 0.0_f .value : value.value);
+		auto format_result = Third::fmt::format_to_n(cast_pointer<char>(stream.current_pointer()).value, stream.reserve().value, "{:#}", value == 0.0_f ? (0.0_f .value) : (value.value));
 		stream.forward(mbw<Size>(format_result.size));
 		return;
 	}
@@ -762,7 +762,7 @@ namespace TwinStar::Core::StringParser {
 		assert_test(is_floating);
 		auto valid_end = stream.current_pointer();
 		assert_test(valid_begin != valid_end);
-		auto parse_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, is_scientific ? mscharconv::chars_format::scientific : mscharconv::chars_format::fixed);
+		auto parse_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, !is_scientific ? (mscharconv::chars_format::fixed) : (mscharconv::chars_format::scientific));
 		assert_test(parse_result.ec == std::errc{});
 		return;
 	}
@@ -849,7 +849,7 @@ namespace TwinStar::Core::StringParser {
 		if (!is_floating) {
 			parse_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_integer().value, 10);
 		} else {
-			parse_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_floating().value, is_scientific ? mscharconv::chars_format::scientific : mscharconv::chars_format::fixed);
+			parse_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_floating().value, !is_scientific ? (mscharconv::chars_format::fixed) : (mscharconv::chars_format::scientific));
 		}
 		assert_test(parse_result.ec == std::errc{});
 		return;

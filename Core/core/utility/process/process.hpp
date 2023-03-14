@@ -173,9 +173,9 @@ namespace TwinStar::Core::Process {
 		program_string = make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<CBasicStringView<Character8>>(program.to_string(CharacterType::PathSeparator::windows))));
 		argument_string = make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<CBasicStringView<Character8>>(Detail::encode_windows_command_line_string(program, argument))));
 		environment_string = make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<CBasicStringView<Character8>>(Detail::encode_windows_environment_variable_string(environment))));
-		input_string = make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<BasicString<Character8>>((input.has() ? input.get() : null_device).to_string())));
-		output_string = make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<BasicString<Character8>>((output.has() ? output.get() : null_device).to_string())));
-		error_string = make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<BasicString<Character8>>((error.has() ? error.get() : null_device).to_string())));
+		input_string = make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<BasicString<Character8>>((!input.has() ? (null_device) : (input.get())).to_string())));
+		output_string = make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<BasicString<Character8>>((!output.has() ? (null_device) : (output.get())).to_string())));
+		error_string = make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<BasicString<Character8>>((!error.has() ? (null_device) : (error.get())).to_string())));
 		security_attribute.nLength = sizeof(SECURITY_ATTRIBUTES);
 		security_attribute.lpSecurityDescriptor = nullptr;
 		security_attribute.bInheritHandle = TRUE;
@@ -270,9 +270,9 @@ namespace TwinStar::Core::Process {
 			environment_string_list.append(element.begin().value);
 		}
 		environment_string_list.append(nullptr);
-		input_string = make_null_terminated_string((input.has() ? input.get() : null_device).to_string());
-		output_string = make_null_terminated_string((output.has() ? output.get() : null_device).to_string());
-		error_string = make_null_terminated_string((error.has() ? error.get() : null_device).to_string());
+		input_string = make_null_terminated_string((!input.has() ? (null_device) : (input.get())).to_string());
+		output_string = make_null_terminated_string((!output.has() ? (null_device) : (output.get())).to_string());
+		error_string = make_null_terminated_string((!error.has() ? (null_device) : (error.get())).to_string());
 		state_i = posix_spawn_file_actions_init(&spawn_file_action);
 		assert_test(state_i == 0);
 		state_i = posix_spawn_file_actions_addopen(&spawn_file_action, STDIN_FILENO, cast_pointer<char>(input_string.begin()).value, O_RDONLY, 0);

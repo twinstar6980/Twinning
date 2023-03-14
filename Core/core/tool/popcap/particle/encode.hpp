@@ -4,7 +4,7 @@
 #include "core/tool/popcap/particle/version.hpp"
 #include "core/tool/popcap/particle/manifest.hpp"
 
-namespace TwinStar::Core::Tool::PopCap::PARTICLE {
+namespace TwinStar::Core::Tool::PopCap::Particle {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct EncodeCommon {

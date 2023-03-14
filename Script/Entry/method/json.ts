@@ -103,7 +103,7 @@ namespace TwinStar.Script.Entry.method.json {
 							...Executor.query_argument_message(this.id, 'destination_file_directory'),
 							a.destination_file_directory,
 							(value) => (value),
-							() => (source_file_directory.replace(/$/i, '.json_format')),
+							() => (source_file_directory.replace(/$/i, '.format')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
 						disable_trailing_comma = Executor.request_argument(

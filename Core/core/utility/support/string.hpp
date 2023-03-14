@@ -124,7 +124,7 @@ namespace TwinStar::Core {
 			This &       thix,
 			That const & that
 		) -> Void {
-			thix = that ? "true"_sv : "false"_sv;
+			thix = that ? ("true"_sv) : ("false"_sv);
 			return;
 		}
 

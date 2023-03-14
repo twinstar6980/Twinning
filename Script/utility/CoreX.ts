@@ -612,13 +612,15 @@ namespace TwinStar.Script.CoreX {
 					export function encrypt_fs(
 						plain_file: string,
 						cipher_file: string,
-						key: bigint,
+						key: Array<bigint>,
 					): void {
+						let key_c = Core.ByteArray.allocate(Core.Size.value(BigInt(key.length)));
+						new Uint8Array(key_c.view().value).set(key.map((e) => (Number(e))));
 						let plain_data = FileSystem.read_file(plain_file);
 						let cipher_data = Core.ByteArray.allocate(plain_data.size());
 						let plain_stream = Core.ByteStreamView.watch(plain_data.view());
 						let cipher_stream = Core.ByteStreamView.watch(cipher_data.view());
-						Core.Tool.Data.Encryption.XOR.Encrypt.process_whole(plain_stream, cipher_stream, Core.Byte.value(key));
+						Core.Tool.Data.Encryption.XOR.Encrypt.process_whole(plain_stream, cipher_stream, key_c.view());
 						FileSystem.write_file(cipher_file, cipher_stream.stream_view());
 						return;
 					}
@@ -1124,7 +1126,7 @@ namespace TwinStar.Script.CoreX {
 
 		export namespace Wwise {
 
-			export namespace EncodedMedia {
+			export namespace Media {
 
 				export function decode_fs(
 					ripe_file: string,
@@ -1136,7 +1138,7 @@ namespace TwinStar.Script.CoreX {
 				): void {
 					let ripe_data = FileSystem.read_file(ripe_file);
 					let raw_data = Core.ByteArray.default();
-					Core.Tool.Wwise.EncodedMedia.Decode.process_audio(ripe_data.view(), raw_data, Core.Path.value(ffmpeg_program_file), Core.Path.value(ww2ogg_program_file), Core.Path.value(ww2ogg_code_book_file), Core.Path.value(temporary_directory));
+					Core.Tool.Wwise.Media.Decode.process_audio(ripe_data.view(), raw_data, Core.Path.value(ffmpeg_program_file), Core.Path.value(ww2ogg_program_file), Core.Path.value(ww2ogg_code_book_file), Core.Path.value(temporary_directory));
 					FileSystem.write_file(raw_file, raw_data.view());
 					return;
 				}
@@ -1283,90 +1285,64 @@ namespace TwinStar.Script.CoreX {
 
 			}
 
-			export namespace REANIM {
+			export namespace CryptData {
 
-				export function encode_fs(
-					data_file: string,
-					manifest_file: string,
-					version: typeof Core.Tool.PopCap.REANIM.Version.Value,
-					data_buffer: Core.ByteListView | bigint,
+				export function encrypt_fs(
+					plain_file: string,
+					cipher_file: string,
+					limit: bigint,
+					key: string,
+					version: typeof Core.Tool.PopCap.CryptData.Version.Value,
 				): void {
-					let version_c = Core.Tool.PopCap.REANIM.Version.value(version);
-					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
-					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
-					let stream = Core.ByteStreamView.watch(data_buffer_view);
-					let manifest = Core.Tool.PopCap.REANIM.Manifest.Animation.json(JSON.read_fs(manifest_file), version_c);
-					Core.Tool.PopCap.REANIM.Encode.process_animation(stream, manifest, version_c);
-					FileSystem.write_file(data_file, stream.stream_view());
+					let version_c = Core.Tool.PopCap.CryptData.Version.value(version);
+					let plain_data = FileSystem.read_file(plain_file);
+					let cipher_size = Core.Size.default();
+					Core.Tool.PopCap.CryptData.Encrypt.compute_size(plain_data.size(), cipher_size, Core.Size.value(limit), version_c);
+					let cipher_data = Core.ByteArray.allocate(cipher_size);
+					let plain_stream = Core.ByteStreamView.watch(plain_data.view());
+					let cipher_stream = Core.ByteStreamView.watch(cipher_data.view());
+					Core.Tool.PopCap.CryptData.Encrypt.process_whole(plain_stream, cipher_stream, Core.Size.value(limit), Core.String.value(key), version_c);
+					FileSystem.write_file(cipher_file, cipher_stream.stream_view());
 					return;
 				}
 
-				export function decode_fs(
-					data_file: string,
-					manifest_file: string,
-					version: typeof Core.Tool.PopCap.REANIM.Version.Value,
+				export function decrypt_fs(
+					cipher_file: string,
+					plain_file: string,
+					limit: bigint,
+					key: string,
+					version: typeof Core.Tool.PopCap.CryptData.Version.Value,
 				): void {
-					let version_c = Core.Tool.PopCap.REANIM.Version.value(version);
-					let data = FileSystem.read_file(data_file);
-					let stream = Core.ByteStreamView.watch(data.view());
-					let manifest = Core.Tool.PopCap.REANIM.Manifest.Animation.default();
-					Core.Tool.PopCap.REANIM.Decode.process_animation(stream, manifest, version_c);
-					JSON.write_fs(manifest_file, manifest.get_json(version_c));
-					return;
-				}
-
-			}
-
-			export namespace PARTICLE {
-
-				export function encode_fs(
-					data_file: string,
-					manifest_file: string,
-					version: typeof Core.Tool.PopCap.PARTICLE.Version.Value,
-					data_buffer: Core.ByteListView | bigint,
-				): void {
-					let version_c = Core.Tool.PopCap.PARTICLE.Version.value(version);
-					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
-					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
-					let stream = Core.ByteStreamView.watch(data_buffer_view);
-					let manifest = Core.Tool.PopCap.PARTICLE.Manifest.Particle.json(JSON.read_fs(manifest_file), version_c);
-					Core.Tool.PopCap.PARTICLE.Encode.process_particle(stream, manifest, version_c);
-					FileSystem.write_file(data_file, stream.stream_view());
-					return;
-				}
-
-				export function decode_fs(
-					data_file: string,
-					manifest_file: string,
-					version: typeof Core.Tool.PopCap.PARTICLE.Version.Value,
-				): void {
-					let version_c = Core.Tool.PopCap.PARTICLE.Version.value(version);
-					let data = FileSystem.read_file(data_file);
-					let stream = Core.ByteStreamView.watch(data.view());
-					let manifest = Core.Tool.PopCap.PARTICLE.Manifest.Particle.default();
-					Core.Tool.PopCap.PARTICLE.Decode.process_particle(stream, manifest, version_c);
-					JSON.write_fs(manifest_file, manifest.get_json(version_c));
+					let version_c = Core.Tool.PopCap.CryptData.Version.value(version);
+					let cipher_data = FileSystem.read_file(cipher_file);
+					let plain_size = Core.Size.default();
+					Core.Tool.PopCap.CryptData.Decrypt.compute_size(cipher_data.view(), plain_size, Core.Size.value(limit), version_c);
+					let plain_data = Core.ByteArray.allocate(plain_size);
+					let cipher_stream = Core.ByteStreamView.watch(cipher_data.view());
+					let plain_stream = Core.ByteStreamView.watch(plain_data.view());
+					Core.Tool.PopCap.CryptData.Decrypt.process_whole(cipher_stream, plain_stream, Core.Size.value(limit), Core.String.value(key), version_c);
+					FileSystem.write_file(plain_file, plain_stream.stream_view());
 					return;
 				}
 
 			}
 
-			export namespace RTON {
+			export namespace ReflectionObjectNotation {
 
 				export function encode_fs(
 					data_file: string,
 					value_file: string,
 					enable_string_index: boolean,
 					enable_rtid: boolean,
-					version: typeof Core.Tool.PopCap.RTON.Version.Value,
-					rton_data_buffer: Core.ByteListView | bigint,
+					version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
+					data_buffer: Core.ByteListView | bigint,
 				): void {
-					let version_c = Core.Tool.PopCap.RTON.Version.value(version);
-					let data_buffer_if = typeof rton_data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(rton_data_buffer)) : null;
-					let data_buffer_view = rton_data_buffer instanceof Core.ByteListView ? rton_data_buffer : data_buffer_if!.view();
-					let value = JSON.read_fs<Core.Tool.PopCap.RTON.JS_ValidValue>(value_file);
+					let version_c = Core.Tool.PopCap.ReflectionObjectNotation.Version.value(version);
+					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
+					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
+					let value = JSON.read_fs<Core.Tool.PopCap.ReflectionObjectNotation.JS_ValidValue>(value_file);
 					let stream = Core.ByteStreamView.watch(data_buffer_view);
-					Core.Tool.PopCap.RTON.Encode.process_whole(stream, value, Core.Boolean.value(enable_string_index), Core.Boolean.value(enable_rtid), version_c);
+					Core.Tool.PopCap.ReflectionObjectNotation.Encode.process_whole(stream, value, Core.Boolean.value(enable_string_index), Core.Boolean.value(enable_rtid), version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
 					return;
 				}
@@ -1375,13 +1351,13 @@ namespace TwinStar.Script.CoreX {
 					data_file: string,
 					value_file: string,
 					native_string_encoding_use_extended_ascii: boolean,
-					version: typeof Core.Tool.PopCap.RTON.Version.Value,
+					version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
 				): void {
-					let version_c = Core.Tool.PopCap.RTON.Version.value(version);
+					let version_c = Core.Tool.PopCap.ReflectionObjectNotation.Version.value(version);
 					let data = FileSystem.read_file(data_file);
 					let stream = Core.ByteStreamView.watch(data.view());
-					let value = Core.JSON.Value.default<Core.Tool.PopCap.RTON.JS_ValidValue>();
-					Core.Tool.PopCap.RTON.Decode.process_whole(stream, value, Core.Boolean.value(native_string_encoding_use_extended_ascii), version_c);
+					let value = Core.JSON.Value.default<Core.Tool.PopCap.ReflectionObjectNotation.JS_ValidValue>();
+					Core.Tool.PopCap.ReflectionObjectNotation.Decode.process_whole(stream, value, Core.Boolean.value(native_string_encoding_use_extended_ascii), version_c);
 					JSON.write_fs(value_file, value);
 					return;
 				}
@@ -1393,11 +1369,11 @@ namespace TwinStar.Script.CoreX {
 				): void {
 					let plain_data = FileSystem.read_file(plain_file);
 					let cipher_size = Core.Size.default();
-					Core.Tool.PopCap.RTON.Encrypt.compute_size(plain_data.size(), cipher_size);
+					Core.Tool.PopCap.ReflectionObjectNotation.Encrypt.compute_size(plain_data.size(), cipher_size);
 					let cipher_data = Core.ByteArray.allocate(cipher_size);
 					let plain_stream = Core.ByteStreamView.watch(plain_data.view());
 					let cipher_stream = Core.ByteStreamView.watch(cipher_data.view());
-					Core.Tool.PopCap.RTON.Encrypt.process_whole(plain_stream, cipher_stream, Core.String.value(key));
+					Core.Tool.PopCap.ReflectionObjectNotation.Encrypt.process_whole(plain_stream, cipher_stream, Core.String.value(key));
 					FileSystem.write_file(cipher_file, cipher_stream.stream_view());
 					return;
 				}
@@ -1409,78 +1385,78 @@ namespace TwinStar.Script.CoreX {
 				): void {
 					let cipher_data = FileSystem.read_file(cipher_file);
 					let plain_size = Core.Size.default();
-					Core.Tool.PopCap.RTON.Decrypt.compute_size(cipher_data.size(), plain_size);
+					Core.Tool.PopCap.ReflectionObjectNotation.Decrypt.compute_size(cipher_data.size(), plain_size);
 					let plain_data = Core.ByteArray.allocate(plain_size);
 					let cipher_stream = Core.ByteStreamView.watch(cipher_data.view());
 					let plain_stream = Core.ByteStreamView.watch(plain_data.view());
-					Core.Tool.PopCap.RTON.Decrypt.process_whole(cipher_stream, plain_stream, Core.String.value(key));
+					Core.Tool.PopCap.ReflectionObjectNotation.Decrypt.process_whole(cipher_stream, plain_stream, Core.String.value(key));
 					FileSystem.write_file(plain_file, plain_stream.stream_view());
 					return;
 				}
 
 				export function encode_then_encrypt_fs(
-					json_file: string,
-					rton_file: string,
+					data_file: string,
+					value_file: string,
 					enable_string_index: boolean,
 					enable_rtid: boolean,
-					version: typeof Core.Tool.PopCap.RTON.Version.Value,
+					version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
 					key: string,
-					rton_data_buffer: Core.ByteListView | bigint,
+					data_buffer: Core.ByteListView | bigint,
 				): void {
-					let version_c = Core.Tool.PopCap.RTON.Version.value(version);
-					let rton_data_buffer_if = typeof rton_data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(rton_data_buffer)) : null;
-					let rton_data_buffer_view = rton_data_buffer instanceof Core.ByteListView ? rton_data_buffer : rton_data_buffer_if!.view();
-					let json = JSON.read_fs<Core.Tool.PopCap.RTON.JS_ValidValue>(json_file);
-					let rton_stream = Core.ByteStreamView.watch(rton_data_buffer_view);
-					Core.Tool.PopCap.RTON.Encode.process_whole(rton_stream, json, Core.Boolean.value(enable_string_index), Core.Boolean.value(enable_rtid), version_c);
-					let plain_stream = Core.ByteStreamView.watch(rton_stream.stream_view());
+					let version_c = Core.Tool.PopCap.ReflectionObjectNotation.Version.value(version);
+					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
+					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
+					let value = JSON.read_fs<Core.Tool.PopCap.ReflectionObjectNotation.JS_ValidValue>(value_file);
+					let data_stream = Core.ByteStreamView.watch(data_buffer_view);
+					Core.Tool.PopCap.ReflectionObjectNotation.Encode.process_whole(data_stream, value, Core.Boolean.value(enable_string_index), Core.Boolean.value(enable_rtid), version_c);
+					let plain_stream = Core.ByteStreamView.watch(data_stream.stream_view());
 					let cipher_size = Core.Size.default();
-					Core.Tool.PopCap.RTON.Encrypt.compute_size(plain_stream.size(), cipher_size);
+					Core.Tool.PopCap.ReflectionObjectNotation.Encrypt.compute_size(plain_stream.size(), cipher_size);
 					let cipher_data = Core.ByteArray.allocate(cipher_size);
 					let cipher_stream = Core.ByteStreamView.watch(cipher_data.view());
-					Core.Tool.PopCap.RTON.Encrypt.process_whole(plain_stream, cipher_stream, Core.String.value(key));
-					FileSystem.write_file(rton_file, cipher_stream.stream_view());
+					Core.Tool.PopCap.ReflectionObjectNotation.Encrypt.process_whole(plain_stream, cipher_stream, Core.String.value(key));
+					FileSystem.write_file(data_file, cipher_stream.stream_view());
 					return;
 				}
 
 				export function decrypt_then_decode_fs(
-					rton_file: string,
-					json_file: string,
+					data_file: string,
+					value_file: string,
 					native_string_encoding_use_extended_ascii: boolean,
-					version: typeof Core.Tool.PopCap.RTON.Version.Value,
+					version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
 					key: string,
 				): void {
-					let version_c = Core.Tool.PopCap.RTON.Version.value(version);
-					let cipher_data = FileSystem.read_file(rton_file);
+					let version_c = Core.Tool.PopCap.ReflectionObjectNotation.Version.value(version);
+					let cipher_data = FileSystem.read_file(data_file);
 					let plain_size = Core.Size.default();
-					Core.Tool.PopCap.RTON.Decrypt.compute_size(cipher_data.size(), plain_size);
+					Core.Tool.PopCap.ReflectionObjectNotation.Decrypt.compute_size(cipher_data.size(), plain_size);
 					let plain_data = Core.ByteArray.allocate(plain_size);
 					let cipher_stream = Core.ByteStreamView.watch(cipher_data.view());
 					let plain_stream = Core.ByteStreamView.watch(plain_data.view());
-					Core.Tool.PopCap.RTON.Decrypt.process_whole(cipher_stream, plain_stream, Core.String.value(key));
-					let rton_stream = Core.ByteStreamView.watch(plain_stream.stream_view());
-					let json = Core.JSON.Value.default<Core.Tool.PopCap.RTON.JS_ValidValue>();
-					Core.Tool.PopCap.RTON.Decode.process_whole(rton_stream, json, Core.Boolean.value(native_string_encoding_use_extended_ascii), version_c);
-					JSON.write_fs(json_file, json);
+					Core.Tool.PopCap.ReflectionObjectNotation.Decrypt.process_whole(cipher_stream, plain_stream, Core.String.value(key));
+					let data_stream = Core.ByteStreamView.watch(plain_stream.stream_view());
+					let value = Core.JSON.Value.default<Core.Tool.PopCap.ReflectionObjectNotation.JS_ValidValue>();
+					Core.Tool.PopCap.ReflectionObjectNotation.Decode.process_whole(data_stream, value, Core.Boolean.value(native_string_encoding_use_extended_ascii), version_c);
+					JSON.write_fs(value_file, value);
 					return;
 				}
 
 			}
 
-			export namespace PAM {
+			export namespace Animation {
 
 				export function encode_fs(
 					data_file: string,
 					manifest_file: string,
-					version: typeof Core.Tool.PopCap.PAM.Version.Value,
+					version: typeof Core.Tool.PopCap.Animation.Version.Value,
 					data_buffer: Core.ByteListView | bigint,
 				): void {
-					let version_c = Core.Tool.PopCap.PAM.Version.value(version);
+					let version_c = Core.Tool.PopCap.Animation.Version.value(version);
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
 					let stream = Core.ByteStreamView.watch(data_buffer_view);
-					let manifest = Core.Tool.PopCap.PAM.Manifest.Animation.json(JSON.read_fs(manifest_file), version_c);
-					Core.Tool.PopCap.PAM.Encode.process_animation(stream, manifest, version_c);
+					let manifest = Core.Tool.PopCap.Animation.Manifest.Animation.json(JSON.read_fs(manifest_file), version_c);
+					Core.Tool.PopCap.Animation.Encode.process_animation(stream, manifest, version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
 					return;
 				}
@@ -1488,34 +1464,136 @@ namespace TwinStar.Script.CoreX {
 				export function decode_fs(
 					data_file: string,
 					manifest_file: string,
-					version: typeof Core.Tool.PopCap.PAM.Version.Value,
+					version: typeof Core.Tool.PopCap.Animation.Version.Value,
 				): void {
-					let version_c = Core.Tool.PopCap.PAM.Version.value(version);
+					let version_c = Core.Tool.PopCap.Animation.Version.value(version);
 					let data = FileSystem.read_file(data_file);
 					let stream = Core.ByteStreamView.watch(data.view());
-					let manifest = Core.Tool.PopCap.PAM.Manifest.Animation.default();
-					Core.Tool.PopCap.PAM.Decode.process_animation(stream, manifest, version_c);
+					let manifest = Core.Tool.PopCap.Animation.Manifest.Animation.default();
+					Core.Tool.PopCap.Animation.Decode.process_animation(stream, manifest, version_c);
 					JSON.write_fs(manifest_file, manifest.get_json(version_c));
 					return;
 				}
 
 			}
 
-			export namespace PAK {
+			export namespace ReAnimation {
+
+				export function encode_fs(
+					data_file: string,
+					manifest_file: string,
+					version: typeof Core.Tool.PopCap.ReAnimation.Version.Value,
+					data_buffer: Core.ByteListView | bigint,
+				): void {
+					let version_c = Core.Tool.PopCap.ReAnimation.Version.value(version);
+					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
+					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
+					let stream = Core.ByteStreamView.watch(data_buffer_view);
+					let manifest = Core.Tool.PopCap.ReAnimation.Manifest.Animation.json(JSON.read_fs(manifest_file), version_c);
+					Core.Tool.PopCap.ReAnimation.Encode.process_animation(stream, manifest, version_c);
+					FileSystem.write_file(data_file, stream.stream_view());
+					return;
+				}
+
+				export function decode_fs(
+					data_file: string,
+					manifest_file: string,
+					version: typeof Core.Tool.PopCap.ReAnimation.Version.Value,
+				): void {
+					let version_c = Core.Tool.PopCap.ReAnimation.Version.value(version);
+					let data = FileSystem.read_file(data_file);
+					let stream = Core.ByteStreamView.watch(data.view());
+					let manifest = Core.Tool.PopCap.ReAnimation.Manifest.Animation.default();
+					Core.Tool.PopCap.ReAnimation.Decode.process_animation(stream, manifest, version_c);
+					JSON.write_fs(manifest_file, manifest.get_json(version_c));
+					return;
+				}
+
+			}
+
+			export namespace Particle {
+
+				export function encode_fs(
+					data_file: string,
+					manifest_file: string,
+					version: typeof Core.Tool.PopCap.Particle.Version.Value,
+					data_buffer: Core.ByteListView | bigint,
+				): void {
+					let version_c = Core.Tool.PopCap.Particle.Version.value(version);
+					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
+					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
+					let stream = Core.ByteStreamView.watch(data_buffer_view);
+					let manifest = Core.Tool.PopCap.Particle.Manifest.Particle.json(JSON.read_fs(manifest_file), version_c);
+					Core.Tool.PopCap.Particle.Encode.process_particle(stream, manifest, version_c);
+					FileSystem.write_file(data_file, stream.stream_view());
+					return;
+				}
+
+				export function decode_fs(
+					data_file: string,
+					manifest_file: string,
+					version: typeof Core.Tool.PopCap.Particle.Version.Value,
+				): void {
+					let version_c = Core.Tool.PopCap.Particle.Version.value(version);
+					let data = FileSystem.read_file(data_file);
+					let stream = Core.ByteStreamView.watch(data.view());
+					let manifest = Core.Tool.PopCap.Particle.Manifest.Particle.default();
+					Core.Tool.PopCap.Particle.Decode.process_particle(stream, manifest, version_c);
+					JSON.write_fs(manifest_file, manifest.get_json(version_c));
+					return;
+				}
+
+			}
+
+			export namespace Trail {
+
+				export function encode_fs(
+					data_file: string,
+					manifest_file: string,
+					version: typeof Core.Tool.PopCap.Trail.Version.Value,
+					data_buffer: Core.ByteListView | bigint,
+				): void {
+					let version_c = Core.Tool.PopCap.Trail.Version.value(version);
+					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
+					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
+					let stream = Core.ByteStreamView.watch(data_buffer_view);
+					let manifest = Core.Tool.PopCap.Trail.Manifest.Trail.json(JSON.read_fs(manifest_file), version_c);
+					Core.Tool.PopCap.Trail.Encode.process_trail(stream, manifest, version_c);
+					FileSystem.write_file(data_file, stream.stream_view());
+					return;
+				}
+
+				export function decode_fs(
+					data_file: string,
+					manifest_file: string,
+					version: typeof Core.Tool.PopCap.Trail.Version.Value,
+				): void {
+					let version_c = Core.Tool.PopCap.Trail.Version.value(version);
+					let data = FileSystem.read_file(data_file);
+					let stream = Core.ByteStreamView.watch(data.view());
+					let manifest = Core.Tool.PopCap.Trail.Manifest.Trail.default();
+					Core.Tool.PopCap.Trail.Decode.process_trail(stream, manifest, version_c);
+					JSON.write_fs(manifest_file, manifest.get_json(version_c));
+					return;
+				}
+
+			}
+
+			export namespace Package {
 
 				export function pack_fs(
 					data_file: string,
 					manifest_file: string,
 					resource_directory: string,
-					version: typeof Core.Tool.PopCap.PAK.Version.Value,
+					version: typeof Core.Tool.PopCap.Package.Version.Value,
 					data_buffer: Core.ByteListView | bigint,
 				): void {
-					let version_c = Core.Tool.PopCap.PAK.Version.value(version);
+					let version_c = Core.Tool.PopCap.Package.Version.value(version);
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
 					let stream = Core.ByteStreamView.watch(data_buffer_view);
-					let manifest = Core.Tool.PopCap.PAK.Manifest.Package.json(JSON.read_fs(manifest_file), version_c);
-					Core.Tool.PopCap.PAK.Pack.process_package(stream, manifest, Core.Path.value(resource_directory), version_c);
+					let manifest = Core.Tool.PopCap.Package.Manifest.Package.json(JSON.read_fs(manifest_file), version_c);
+					Core.Tool.PopCap.Package.Pack.process_package(stream, manifest, Core.Path.value(resource_directory), version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
 					return;
 				}
@@ -1524,13 +1602,13 @@ namespace TwinStar.Script.CoreX {
 					data_file: string,
 					manifest_file: null | string,
 					resource_directory: null | string,
-					version: typeof Core.Tool.PopCap.PAK.Version.Value,
+					version: typeof Core.Tool.PopCap.Package.Version.Value,
 				): void {
-					let version_c = Core.Tool.PopCap.PAK.Version.value(version);
+					let version_c = Core.Tool.PopCap.Package.Version.value(version);
 					let data = FileSystem.read_file(data_file);
 					let stream = Core.ByteStreamView.watch(data.view());
-					let manifest = Core.Tool.PopCap.PAK.Manifest.Package.default();
-					Core.Tool.PopCap.PAK.Unpack.process_package(stream, manifest, Core.PathOptional.value(resource_directory), version_c);
+					let manifest = Core.Tool.PopCap.Package.Manifest.Package.default();
+					Core.Tool.PopCap.Package.Unpack.process_package(stream, manifest, Core.PathOptional.value(resource_directory), version_c);
 					if (manifest_file !== null) {
 						JSON.write_fs(manifest_file, manifest.get_json(version_c));
 					}
@@ -1539,21 +1617,21 @@ namespace TwinStar.Script.CoreX {
 
 			}
 
-			export namespace RSGP {
+			export namespace ResourceStreamGroup {
 
 				export function pack_fs(
 					data_file: string,
 					manifest_file: string,
 					resource_directory: string,
-					version: typeof Core.Tool.PopCap.RSGP.Version.Value,
+					version: typeof Core.Tool.PopCap.ResourceStreamGroup.Version.Value,
 					data_buffer: Core.ByteListView | bigint,
 				): void {
-					let version_c = Core.Tool.PopCap.RSGP.Version.value(version);
+					let version_c = Core.Tool.PopCap.ResourceStreamGroup.Version.value(version);
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
 					let stream = Core.ByteStreamView.watch(data_buffer_view);
-					let manifest = Core.Tool.PopCap.RSGP.Manifest.Package.json(JSON.read_fs(manifest_file), version_c);
-					Core.Tool.PopCap.RSGP.Pack.process_package(stream, manifest, Core.Path.value(resource_directory), version_c);
+					let manifest = Core.Tool.PopCap.ResourceStreamGroup.Manifest.Package.json(JSON.read_fs(manifest_file), version_c);
+					Core.Tool.PopCap.ResourceStreamGroup.Pack.process_package(stream, manifest, Core.Path.value(resource_directory), version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
 					return;
 				}
@@ -1562,13 +1640,13 @@ namespace TwinStar.Script.CoreX {
 					data_file: string,
 					manifest_file: null | string,
 					resource_directory: null | string,
-					version: typeof Core.Tool.PopCap.RSGP.Version.Value,
+					version: typeof Core.Tool.PopCap.ResourceStreamGroup.Version.Value,
 				): void {
-					let version_c = Core.Tool.PopCap.RSGP.Version.value(version);
+					let version_c = Core.Tool.PopCap.ResourceStreamGroup.Version.value(version);
 					let data = FileSystem.read_file(data_file);
 					let stream = Core.ByteStreamView.watch(data.view());
-					let manifest = Core.Tool.PopCap.RSGP.Manifest.Package.default();
-					Core.Tool.PopCap.RSGP.Unpack.process_package(stream, manifest, Core.PathOptional.value(resource_directory), version_c);
+					let manifest = Core.Tool.PopCap.ResourceStreamGroup.Manifest.Package.default();
+					Core.Tool.PopCap.ResourceStreamGroup.Unpack.process_package(stream, manifest, Core.PathOptional.value(resource_directory), version_c);
 					if (manifest_file !== null) {
 						JSON.write_fs(manifest_file, manifest.get_json(version_c));
 					}
@@ -1577,7 +1655,7 @@ namespace TwinStar.Script.CoreX {
 
 			}
 
-			export namespace RSB {
+			export namespace ResourceStreamBundle {
 
 				export function pack_fs(
 					data_file: string,
@@ -1586,16 +1664,16 @@ namespace TwinStar.Script.CoreX {
 					resource_directory: string,
 					packet_file: null | string,
 					new_packet_file: null | string,
-					version: typeof Core.Tool.PopCap.RSB.Version.Value,
+					version: typeof Core.Tool.PopCap.ResourceStreamBundle.Version.Value,
 					data_buffer: Core.ByteListView | bigint,
 				): void {
-					let version_c = Core.Tool.PopCap.RSB.Version.value(version);
+					let version_c = Core.Tool.PopCap.ResourceStreamBundle.Version.value(version);
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
 					let stream = Core.ByteStreamView.watch(data_buffer_view);
-					let manifest = Core.Tool.PopCap.RSB.Manifest.Package.json(JSON.read_fs(manifest_file), version_c);
-					let description = Core.Tool.PopCap.RSB.Description.PackageOptional.json(JSON.read_fs(description_file), version_c);
-					Core.Tool.PopCap.RSB.Pack.process_package(stream, manifest, description, Core.Path.value(resource_directory), Core.PathOptional.value(packet_file), Core.PathOptional.value(new_packet_file), version_c);
+					let manifest = Core.Tool.PopCap.ResourceStreamBundle.Manifest.Package.json(JSON.read_fs(manifest_file), version_c);
+					let description = Core.Tool.PopCap.ResourceStreamBundle.Description.PackageOptional.json(JSON.read_fs(description_file), version_c);
+					Core.Tool.PopCap.ResourceStreamBundle.Pack.process_package(stream, manifest, description, Core.Path.value(resource_directory), Core.PathOptional.value(packet_file), Core.PathOptional.value(new_packet_file), version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
 					return;
 				}
@@ -1606,14 +1684,14 @@ namespace TwinStar.Script.CoreX {
 					description_file: null | string,
 					resource_directory: null | string,
 					packet_file: null | string,
-					version: typeof Core.Tool.PopCap.RSB.Version.Value,
+					version: typeof Core.Tool.PopCap.ResourceStreamBundle.Version.Value,
 				): void {
-					let version_c = Core.Tool.PopCap.RSB.Version.value(version);
+					let version_c = Core.Tool.PopCap.ResourceStreamBundle.Version.value(version);
 					let data = FileSystem.read_file(data_file);
 					let stream = Core.ByteStreamView.watch(data.view());
-					let manifest = Core.Tool.PopCap.RSB.Manifest.Package.default();
-					let description = Core.Tool.PopCap.RSB.Description.PackageOptional.default();
-					Core.Tool.PopCap.RSB.Unpack.process_package(stream, manifest, description, Core.PathOptional.value(resource_directory), Core.PathOptional.value(packet_file), version_c);
+					let manifest = Core.Tool.PopCap.ResourceStreamBundle.Manifest.Package.default();
+					let description = Core.Tool.PopCap.ResourceStreamBundle.Description.PackageOptional.default();
+					Core.Tool.PopCap.ResourceStreamBundle.Unpack.process_package(stream, manifest, description, Core.PathOptional.value(resource_directory), Core.PathOptional.value(packet_file), version_c);
 					if (manifest_file !== null) {
 						JSON.write_fs(manifest_file, manifest.get_json(version_c));
 					}
@@ -1625,24 +1703,24 @@ namespace TwinStar.Script.CoreX {
 
 			}
 
-			export namespace RSBPatch {
+			export namespace ResourceStreamBundlePatch {
 
 				export function encode_fs(
 					before_file: string,
 					after_file: string,
 					patch_file: string,
 					use_raw_packet: boolean,
-					version: typeof Core.Tool.PopCap.RSBPatch.Version.Value,
+					version: typeof Core.Tool.PopCap.ResourceStreamBundlePatch.Version.Value,
 					patch_size_bound: bigint,
 				): void {
-					let version_c = Core.Tool.PopCap.RSBPatch.Version.value(version);
+					let version_c = Core.Tool.PopCap.ResourceStreamBundlePatch.Version.value(version);
 					let before_data = FileSystem.read_file(before_file);
 					let after_data = FileSystem.read_file(after_file);
 					let patch_data = Core.ByteArray.allocate(Core.Size.value(patch_size_bound));
 					let before_stream = Core.ByteStreamView.watch(before_data.view());
 					let after_stream = Core.ByteStreamView.watch(after_data.view());
 					let patch_stream = Core.ByteStreamView.watch(patch_data.view());
-					Core.Tool.PopCap.RSBPatch.Encode.process_whole(before_stream, after_stream, patch_stream, Core.Boolean.value(use_raw_packet), version_c);
+					Core.Tool.PopCap.ResourceStreamBundlePatch.Encode.process_whole(before_stream, after_stream, patch_stream, Core.Boolean.value(use_raw_packet), version_c);
 					FileSystem.write_file(patch_file, patch_stream.stream_view());
 					return;
 				}
@@ -1652,17 +1730,17 @@ namespace TwinStar.Script.CoreX {
 					after_file: string,
 					patch_file: string,
 					use_raw_packet: boolean,
-					version: typeof Core.Tool.PopCap.RSBPatch.Version.Value,
+					version: typeof Core.Tool.PopCap.ResourceStreamBundlePatch.Version.Value,
 					after_size_bound: bigint,
 				): void {
-					let version_c = Core.Tool.PopCap.RSBPatch.Version.value(version);
+					let version_c = Core.Tool.PopCap.ResourceStreamBundlePatch.Version.value(version);
 					let before_data = FileSystem.read_file(before_file);
 					let after_data = Core.ByteArray.allocate(Core.Size.value(after_size_bound));
 					let patch_data = FileSystem.read_file(patch_file);
 					let before_stream = Core.ByteStreamView.watch(before_data.view());
 					let after_stream = Core.ByteStreamView.watch(after_data.view());
 					let patch_stream = Core.ByteStreamView.watch(patch_data.view());
-					Core.Tool.PopCap.RSBPatch.Decode.process_whole(before_stream, after_stream, patch_stream, Core.Boolean.value(use_raw_packet), version_c);
+					Core.Tool.PopCap.ResourceStreamBundlePatch.Decode.process_whole(before_stream, after_stream, patch_stream, Core.Boolean.value(use_raw_packet), version_c);
 					FileSystem.write_file(after_file, after_stream.stream_view());
 					return;
 				}

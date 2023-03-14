@@ -50,7 +50,7 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 							(value) => (0x00n <= value && value <= 0xFFn ? null : los(`范围溢出`)),
 						);
 					}
-					CoreX.Tool.Data.Encryption.XOR.encrypt_fs(plain_file, cipher_file, key);
+					CoreX.Tool.Data.Encryption.XOR.encrypt_fs(plain_file, cipher_file, [key]);
 					Console.notify('s', los(`执行成功`), [`${cipher_file}`]);
 				},
 				default_argument: {

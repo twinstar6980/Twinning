@@ -78,7 +78,7 @@ namespace TwinStar::WindowsExplorerExtension {
 		virtual auto icon (
 		) -> LPCWSTR override {
 			static auto dll_path = get_module_file_name(g_dll_handle);
-			return thiz.m_has_icon ? dll_path.data() : nullptr;
+			return !thiz.m_has_icon ? (nullptr) : (dll_path.data());
 		}
 
 		virtual auto state (
@@ -112,7 +112,7 @@ namespace TwinStar::WindowsExplorerExtension {
 				auto argument = std::vector<std::wstring>{};
 				argument.emplace_back(L"/C");
 				argument.emplace_back(launch_script);
-				auto every_target_argument_count = std::ptrdiff_t{1 + (!thiz.m_config.method.has_value() ? 0 : 2) + 2};
+				auto every_target_argument_count = std::ptrdiff_t{1 + (!thiz.m_config.method.has_value() ? (0) : (2)) + 2};
 				for (auto & target : target_list) {
 					argument.emplace_back(target);
 					if (thiz.m_config.method.has_value()) {
@@ -187,7 +187,7 @@ namespace TwinStar::WindowsExplorerExtension {
 				++fetched;
 			}
 			wil::assign_to_opt_param(pceltFetched, fetched);
-			return fetched == celt ? S_OK : S_FALSE;
+			return fetched == celt ? (S_OK) : (S_FALSE);
 		}
 
 		virtual IFACEMETHODIMP Skip (

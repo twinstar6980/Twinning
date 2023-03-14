@@ -3,7 +3,7 @@
 #include "core/utility/utility.hpp"
 #include "core/tool/popcap/particle/version.hpp"
 
-namespace TwinStar::Core::Tool::PopCap::PARTICLE {
+namespace TwinStar::Core::Tool::PopCap::Particle {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Manifest {

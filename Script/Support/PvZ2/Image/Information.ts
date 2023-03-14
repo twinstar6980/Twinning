@@ -8,7 +8,7 @@ namespace TwinStar.Script.Support.PvZ2.Image {
 	};
 
 	export type AtlasInformation = {
-		format: Support.PopCap.PTX.Encode.Format;
+		format: Support.PopCap.Texture.Encode.Format;
 		size: [bigint, bigint];
 		sprite: Record<string, SpriteInformation>;
 	};
@@ -18,7 +18,7 @@ namespace TwinStar.Script.Support.PvZ2.Image {
 	// ------------------------------------------------
 
 	export function from_resource_manifest(
-		resource_manifest: RSB.ResourceManifest.Package,
+		resource_manifest: ResourceStreamBundle.ResourceManifest.Package,
 	): Manifest {
 		let manifest: Manifest = {};
 		for (let group_id in resource_manifest.group) {

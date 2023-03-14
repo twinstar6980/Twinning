@@ -138,7 +138,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 							...Executor.query_argument_message(this.id, 'ripe_file_directory'),
 							a.ripe_file_directory,
 							(value) => (value),
-							() => (raw_file_directory.replace(/$/i, '.popcap_zlib_compress')),
+							() => (raw_file_directory.replace(/$/i, '.compress')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
 						version_variant_64 = Executor.request_argument(
@@ -195,7 +195,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 							...Executor.query_argument_message(this.id, 'raw_file_directory'),
 							a.raw_file_directory,
 							(value) => (value),
-							() => (ripe_file_directory.replace(/$/i, '.popcap_zlib_uncompress')),
+							() => (ripe_file_directory.replace(/$/i, '.uncompress')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
 						version_variant_64 = Executor.request_argument(

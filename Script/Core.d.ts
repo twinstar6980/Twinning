@@ -1,6 +1,6 @@
 /**
  * JS interface of Core
- * @version 38
+ * @version 40
  */
 declare namespace TwinStar.Core {
 
@@ -1601,7 +1601,7 @@ declare namespace TwinStar.Core {
 						function process_whole(
 							plain: IByteStreamView,
 							cipher: OByteStreamView,
-							key: Byte,
+							key: ByteListView,
 						): Void;
 
 					}
@@ -2330,8 +2330,8 @@ declare namespace TwinStar.Core {
 		/** Wwise */
 		namespace Wwise {
 
-			/** EncodedMedia */
-			namespace EncodedMedia {
+			/** Media */
+			namespace Media {
 
 				/** 解码 */
 				namespace Decode {
@@ -2606,7 +2606,7 @@ declare namespace TwinStar.Core {
 		/** PopCap */
 		namespace PopCap {
 
-			/** ZLib（附有原始数据尺寸信息的ZLib） */
+			/** ZLib */
 			namespace ZLib {
 
 				/** 版本 */
@@ -2712,15 +2712,15 @@ declare namespace TwinStar.Core {
 
 			}
 
-			/** REANIM */
-			namespace REANIM {
+			/** CryptData */
+			namespace CryptData {
 
 				/** 版本 */
 				class Version {
 
 					// ------------------------------------------------
 
-					private _Tool_PopCap_REANIM_Version;
+					private _Tool_PopCap_CryptData_Version;
 
 					// ------------------------------------------------
 
@@ -2731,8 +2731,6 @@ declare namespace TwinStar.Core {
 					// ------------------------------------------------
 
 					static Value: {
-						platform: 'desktop' | 'mobile' | 'television';
-						variant_64: boolean;
 					};
 
 					static value(it: typeof Version.Value): Version;
@@ -2745,89 +2743,71 @@ declare namespace TwinStar.Core {
 
 				}
 
-				/** 清单 */
-				namespace Manifest {
-
-					namespace JS_N {
-
-						/** 精灵 */
-						type Transform = {
-						};
-
-						/** 图像 */
-						type Track = {
-							/** 名称 */
-							name: string;
-							/** 尺寸。版本4开始存在 */
-							t: Array<Transform>;
-						};
-
-						/** 动画 */
-						type Animation = {
-							/** 帧率 */
-							fps: number;
-							/** 位置 */
-							track: Array<Track>;
-						};
-
-					}
-
-					/** 动画 */
-					class Animation {
-
-						// ------------------------------------------------
-
-						private _Tool_PopCap_REANIM_Manifest_Animation;
-
-						// ------------------------------------------------
-
-						static default(): Animation;
-
-						static copy(it: Animation): Animation;
-
-						// ------------------------------------------------
-
-						static json(it: JSON.Value<undefined>, version: Version): Animation;
-
-						get_json(version: Version): JSON.Value<undefined>;
-
-						set_json(it: JSON.Value<undefined>, version: Version): Void;
-
-						// ------------------------------------------------
-
-					}
-
-				}
-
-				/** 编码 */
-				namespace Encode {
+				/** 加密 */
+				namespace Encrypt {
 
 					/**
-					 * 编码
-					 * @param animation_data 动画数据
-					 * @param animation_manifest 动画清单
+					 * 计算密文数据尺寸
+					 * @param plain_size 明文数据尺寸
+					 * @param cipher_size 密文数据尺寸
+					 * @param limit 限度
 					 * @param version 版本
 					 */
-					function process_animation(
-						animation_data: OByteStreamView,
-						animation_manifest: Manifest.Animation,
+					function compute_size(
+						plain_size: Size,
+						cipher_size: Size,
+						limit: Size,
+						version: Version,
+					): Void;
+
+					/**
+					 * 加密
+					 * @param plain 明文数据
+					 * @param cipher 密文数据
+					 * @param limit 限度
+					 * @param key 密钥
+					 * @param version 版本
+					 */
+					function process_whole(
+						plain: IByteStreamView,
+						cipher: OByteStreamView,
+						limit: Size,
+						key: String,
 						version: Version,
 					): Void;
 
 				}
 
-				/** 解码 */
-				namespace Decode {
+				/** 解密 */
+				namespace Decrypt {
 
 					/**
-					 * 解码
-					 * @param animation_data 动画数据
-					 * @param animation_manifest 动画清单
+					 * 计算明文数据尺寸
+					 * @param cipher 密文数据
+					 * @param plain_size 明文数据尺寸
+					 * @param limit 限度
 					 * @param version 版本
 					 */
-					function process_animation(
-						animation_data: IByteStreamView,
-						animation_manifest: Manifest.Animation,
+					function compute_size(
+						cipher: CByteListView,
+						plain_size: Size,
+						limit: Size,
+						version: Version,
+					): Void;
+
+					/**
+					 * 解密
+					 * @param cipher 密文数据
+					 * @param plain 明文数据
+					 * @param limit 限度
+					 * @param key 密钥
+					 * @param version 版本
+					 */
+					function process_whole(
+						cipher: IByteStreamView,
+						plain: OByteStreamView,
+						limit: Size,
+						key: String,
 						version: Version,
 					): Void;
 
@@ -2835,118 +2815,15 @@ declare namespace TwinStar.Core {
 
 			}
 
-			/** PARTICLE */
-			namespace PARTICLE {
+			/** ReflectionObjectNotation */
+			namespace ReflectionObjectNotation {
 
 				/** 版本 */
 				class Version {
 
 					// ------------------------------------------------
 
-					private _Tool_PopCap_PARTICLE_Version;
-
-					// ------------------------------------------------
-
-					static default(): Version;
-
-					static copy(it: Version): Version;
-
-					// ------------------------------------------------
-
-					static Value: {
-						platform: 'desktop' | 'mobile' | 'television';
-						variant_64: boolean;
-					};
-
-					static value(it: typeof Version.Value): Version;
-
-					get value(): typeof Version.Value;
-
-					set value(it: typeof Version.Value);
-
-					// ------------------------------------------------
-
-				}
-
-				/** 清单 */
-				namespace Manifest {
-
-					namespace JS_N {
-
-					}
-
-					/** 粒子 */
-					class Particle {
-
-						// ------------------------------------------------
-
-						private _Tool_PopCap_PARTICLE_Manifest_Particle;
-
-						// ------------------------------------------------
-
-						static default(): Particle;
-
-						static copy(it: Particle): Particle;
-
-						// ------------------------------------------------
-
-						static json(it: JSON.Value<undefined>, version: Version): Particle;
-
-						get_json(version: Version): JSON.Value<undefined>;
-
-						set_json(it: JSON.Value<undefined>, version: Version): Void;
-
-						// ------------------------------------------------
-
-					}
-
-				}
-
-				/** 编码 */
-				namespace Encode {
-
-					/**
-					 * 编码
-					 * @param particle_data 粒子数据
-					 * @param particle_manifest 粒子清单
-					 * @param version 版本
-					 */
-					function process_particle(
-						particle_data: OByteStreamView,
-						particle_manifest: Manifest.Particle,
-						version: Version,
-					): Void;
-
-				}
-
-				/** 解码 */
-				namespace Decode {
-
-					/**
-					 * 解码
-					 * @param particle_data 粒子数据
-					 * @param particle_manifest 粒子清单
-					 * @param version 版本
-					 */
-					function process_particle(
-						particle_data: IByteStreamView,
-						particle_manifest: Manifest.Particle,
-						version: Version,
-					): Void;
-
-				}
-
-			}
-
-			/** RTON */
-			namespace RTON {
-
-				/** 版本 */
-				class Version {
-
-					// ------------------------------------------------
-
-					private _Tool_PopCap_RTON_Version;
+					private _Tool_PopCap_ReflectionObjectNotation_Version;
 
 					// ------------------------------------------------
 
@@ -2970,7 +2847,7 @@ declare namespace TwinStar.Core {
 
 				}
 
-				/** RTON所能存储的JSON值类型 */
+				/** ReflectionObjectNotation所能存储的JSON值类型 */
 				type JS_ValidValue = boolean | number | bigint | string | JS_ValidValue[] | { [key: string]: JS_ValidValue; };
 
 				/** 编码 */
@@ -2980,8 +2857,8 @@ declare namespace TwinStar.Core {
 					 * 编码
 					 * @param data 数据
 					 * @param value 值
-					 * @param enable_string_index 启用字符串索引，若是，确保同一字符串只会明文编码一次，之后只使用索引值，可减少编码出的rton的尺寸
-					 * @param enable_rtid 启用rtid，若是，符合RTID格式的字符串将编码为0x83系列的rton值单元
+					 * @param enable_string_index 启用字符串索引，若是，确保同一字符串只会明文编码一次，之后只使用索引值，可减少编码出的数据的尺寸
+					 * @param enable_rtid 启用rtid，若是，符合RTID格式的字符串将编码为0x83系列的值单元
 					 * @param version 版本
 					 */
 					function process_whole(
@@ -3069,15 +2946,15 @@ declare namespace TwinStar.Core {
 
 			}
 
-			/** PAM */
-			namespace PAM {
+			/** Animation */
+			namespace Animation {
 
 				/** 版本 */
 				class Version {
 
 					// ------------------------------------------------
 
-					private _Tool_PopCap_PAM_Version;
+					private _Tool_PopCap_Animation_Version;
 
 					// ------------------------------------------------
 
@@ -3242,7 +3119,7 @@ declare namespace TwinStar.Core {
 
 						// ------------------------------------------------
 
-						private _Tool_PopCap_PAM_Manifest_Animation;
+						private _Tool_PopCap_Animation_Manifest_Animation;
 
 						// ------------------------------------------------
 
@@ -3300,15 +3177,344 @@ declare namespace TwinStar.Core {
 
 			}
 
-			/** PAK */
-			namespace PAK {
+			/** ReAnimation */
+			namespace ReAnimation {
 
 				/** 版本 */
 				class Version {
 
 					// ------------------------------------------------
 
-					private _Tool_PopCap_PAK_Version;
+					private _Tool_PopCap_ReAnimation_Version;
+
+					// ------------------------------------------------
+
+					static default(): Version;
+
+					static copy(it: Version): Version;
+
+					// ------------------------------------------------
+
+					static Value: {
+						platform: 'desktop' | 'mobile' | 'television';
+						variant_64: boolean;
+					};
+
+					static value(it: typeof Version.Value): Version;
+
+					get value(): typeof Version.Value;
+
+					set value(it: typeof Version.Value);
+
+					// ------------------------------------------------
+
+				}
+
+				/** 清单 */
+				namespace Manifest {
+
+					namespace JS_N {
+
+						/** 精灵 */
+						type Transform = {
+						};
+
+						/** 图像 */
+						type Track = {
+							/** 名称 */
+							name: string;
+							/** 尺寸。版本4开始存在 */
+							t: Array<Transform>;
+						};
+
+						/** 动画 */
+						type Animation = {
+							/** 帧率 */
+							fps: number;
+							/** 位置 */
+							track: Array<Track>;
+						};
+
+					}
+
+					/** 动画 */
+					class Animation {
+
+						// ------------------------------------------------
+
+						private _Tool_PopCap_ReAnimation_Manifest_Animation;
+
+						// ------------------------------------------------
+
+						static default(): Animation;
+
+						static copy(it: Animation): Animation;
+
+						// ------------------------------------------------
+
+						static json(it: JSON.Value<undefined>, version: Version): Animation;
+
+						get_json(version: Version): JSON.Value<undefined>;
+
+						set_json(it: JSON.Value<undefined>, version: Version): Void;
+
+						// ------------------------------------------------
+
+					}
+
+				}
+
+				/** 编码 */
+				namespace Encode {
+
+					/**
+					 * 编码
+					 * @param animation_data 动画数据
+					 * @param animation_manifest 动画清单
+					 * @param version 版本
+					 */
+					function process_animation(
+						animation_data: OByteStreamView,
+						animation_manifest: Manifest.Animation,
+						version: Version,
+					): Void;
+
+				}
+
+				/** 解码 */
+				namespace Decode {
+
+					/**
+					 * 解码
+					 * @param animation_data 动画数据
+					 * @param animation_manifest 动画清单
+					 * @param version 版本
+					 */
+					function process_animation(
+						animation_data: IByteStreamView,
+						animation_manifest: Manifest.Animation,
+						version: Version,
+					): Void;
+
+				}
+
+			}
+
+			/** Particle */
+			namespace Particle {
+
+				/** 版本 */
+				class Version {
+
+					// ------------------------------------------------
+
+					private _Tool_PopCap_Particle_Version;
+
+					// ------------------------------------------------
+
+					static default(): Version;
+
+					static copy(it: Version): Version;
+
+					// ------------------------------------------------
+
+					static Value: {
+						platform: 'desktop' | 'mobile' | 'television';
+						variant_64: boolean;
+					};
+
+					static value(it: typeof Version.Value): Version;
+
+					get value(): typeof Version.Value;
+
+					set value(it: typeof Version.Value);
+
+					// ------------------------------------------------
+
+				}
+
+				/** 清单 */
+				namespace Manifest {
+
+					namespace JS_N {
+
+					}
+
+					/** 粒子 */
+					class Particle {
+
+						// ------------------------------------------------
+
+						private _Tool_PopCap_Particle_Manifest_Particle;
+
+						// ------------------------------------------------
+
+						static default(): Particle;
+
+						static copy(it: Particle): Particle;
+
+						// ------------------------------------------------
+
+						static json(it: JSON.Value<undefined>, version: Version): Particle;
+
+						get_json(version: Version): JSON.Value<undefined>;
+
+						set_json(it: JSON.Value<undefined>, version: Version): Void;
+
+						// ------------------------------------------------
+
+					}
+
+				}
+
+				/** 编码 */
+				namespace Encode {
+
+					/**
+					 * 编码
+					 * @param particle_data 粒子数据
+					 * @param particle_manifest 粒子清单
+					 * @param version 版本
+					 */
+					function process_particle(
+						particle_data: OByteStreamView,
+						particle_manifest: Manifest.Particle,
+						version: Version,
+					): Void;
+
+				}
+
+				/** 解码 */
+				namespace Decode {
+
+					/**
+					 * 解码
+					 * @param particle_data 粒子数据
+					 * @param particle_manifest 粒子清单
+					 * @param version 版本
+					 */
+					function process_particle(
+						particle_data: IByteStreamView,
+						particle_manifest: Manifest.Particle,
+						version: Version,
+					): Void;
+
+				}
+
+			}
+
+			/** Trail */
+			namespace Trail {
+
+				/** 版本 */
+				class Version {
+
+					// ------------------------------------------------
+
+					private _Tool_PopCap_Trail_Version;
+
+					// ------------------------------------------------
+
+					static default(): Version;
+
+					static copy(it: Version): Version;
+
+					// ------------------------------------------------
+
+					static Value: {
+						platform: 'desktop' | 'mobile' | 'television';
+						variant_64: boolean;
+					};
+
+					static value(it: typeof Version.Value): Version;
+
+					get value(): typeof Version.Value;
+
+					set value(it: typeof Version.Value);
+
+					// ------------------------------------------------
+
+				}
+
+				/** 清单 */
+				namespace Manifest {
+
+					namespace JS_N {
+
+					}
+
+					/** 拖尾 */
+					class Trail {
+
+						// ------------------------------------------------
+
+						private _Tool_PopCap_Trail_Manifest_Trail;
+
+						// ------------------------------------------------
+
+						static default(): Trail;
+
+						static copy(it: Trail): Trail;
+
+						// ------------------------------------------------
+
+						static json(it: JSON.Value<undefined>, version: Version): Trail;
+
+						get_json(version: Version): JSON.Value<undefined>;
+
+						set_json(it: JSON.Value<undefined>, version: Version): Void;
+
+						// ------------------------------------------------
+
+					}
+
+				}
+
+				/** 编码 */
+				namespace Encode {
+
+					/**
+					 * 编码
+					 * @param trail_data 拖尾数据
+					 * @param trail_manifest 拖尾清单
+					 * @param version 版本
+					 */
+					function process_trail(
+						trail_data: OByteStreamView,
+						trail_manifest: Manifest.Trail,
+						version: Version,
+					): Void;
+
+				}
+
+				/** 解码 */
+				namespace Decode {
+
+					/**
+					 * 解码
+					 * @param trail_data 拖尾数据
+					 * @param trail_manifest 拖尾清单
+					 * @param version 版本
+					 */
+					function process_trail(
+						trail_data: IByteStreamView,
+						trail_manifest: Manifest.Trail,
+						version: Version,
+					): Void;
+
+				}
+
+			}
+
+			/** Package */
+			namespace Package {
+
+				/** 版本 */
+				class Version {
+
+					// ------------------------------------------------
+
+					private _Tool_PopCap_Package_Version;
 
 					// ------------------------------------------------
 
@@ -3357,7 +3563,7 @@ declare namespace TwinStar.Core {
 
 						// ------------------------------------------------
 
-						private _Tool_PopCap_PAK_Manifest_Package;
+						private _Tool_PopCap_Package_Manifest_Package;
 
 						// ------------------------------------------------
 
@@ -3419,15 +3625,15 @@ declare namespace TwinStar.Core {
 
 			}
 
-			/** RSGP数据包 */
-			namespace RSGP {
+			/** ResourceStreamGroup */
+			namespace ResourceStreamGroup {
 
 				/** 版本 */
 				class Version {
 
 					// ------------------------------------------------
 
-					private _Tool_PopCap_RSGP_Version;
+					private _Tool_PopCap_ResourceStreamGroup_Version;
 
 					// ------------------------------------------------
 
@@ -3512,7 +3718,7 @@ declare namespace TwinStar.Core {
 
 						// ------------------------------------------------
 
-						private _Tool_PopCap_RSGP_Manifest_Package;
+						private _Tool_PopCap_ResourceStreamGroup_Manifest_Package;
 
 						// ------------------------------------------------
 
@@ -3574,15 +3780,15 @@ declare namespace TwinStar.Core {
 
 			}
 
-			/** RSB数据包 */
-			namespace RSB {
+			/** ResourceStreamBundle */
+			namespace ResourceStreamBundle {
 
 				/** 版本 */
 				class Version {
 
 					// ------------------------------------------------
 
-					private _Tool_PopCap_RSB_Version;
+					private _Tool_PopCap_ResourceStreamBundle_Version;
 
 					// ------------------------------------------------
 
@@ -3689,7 +3895,7 @@ declare namespace TwinStar.Core {
 
 						// ------------------------------------------------
 
-						private _Tool_PopCap_RSB_Manifest_Package;
+						private _Tool_PopCap_ResourceStreamBundle_Manifest_Package;
 
 						// ------------------------------------------------
 
@@ -3722,7 +3928,7 @@ declare namespace TwinStar.Core {
 
 						// ------------------------------------------------
 
-						private _Tool_PopCap_RSB_Description_PackageOptional;
+						private _Tool_PopCap_ResourceStreamBundle_Description_PackageOptional;
 
 						// ------------------------------------------------
 
@@ -3794,15 +4000,15 @@ declare namespace TwinStar.Core {
 
 			}
 
-			/** RSBPatch补丁 */
-			namespace RSBPatch {
+			/** ResourceStreamBundlePatch */
+			namespace ResourceStreamBundlePatch {
 
 				/** 版本 */
 				class Version {
 
 					// ------------------------------------------------
 
-					private _Tool_PopCap_RSBPatch_Version;
+					private _Tool_PopCap_ResourceStreamBundlePatch_Version;
 
 					// ------------------------------------------------
 
@@ -3914,7 +4120,7 @@ declare namespace TwinStar.Core {
 
 			}
 
-			/** PvZ2-中文安卓版中的alpha调色板纹理 */
+			/** PvZ-2中文安卓版中的alpha调色板纹理 */
 			namespace PvZ2ChineseAndroidAlphaPaletteTexture {
 
 				/** 编码 */

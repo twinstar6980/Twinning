@@ -146,15 +146,15 @@ namespace TwinStar::Core::Tool::PopCap::ZLib {
 			if constexpr (version.variant_64) {
 				ripe.read_constant(0x00000000_iu32);
 			}
-			auto size = Size{};
+			auto raw_size = Size{};
 			if constexpr (!version.variant_64) {
-				size = cbw<Size>(ripe.read_of<IntegerU32>());
+				raw_size = cbw<Size>(ripe.read_of<IntegerU32>());
 			} else {
-				size = cbw<Size>(ripe.read_of<IntegerU64>());
+				raw_size = cbw<Size>(ripe.read_of<IntegerU64>());
 			}
 			auto raw_begin = raw.position();
 			Data::Compression::Deflate::Uncompress::do_process_whole(ripe, raw, window_bits, Data::Compression::Deflate::Wrapper::Constant::zlib());
-			assert_test(raw.position() - raw_begin == size);
+			assert_test(raw.position() - raw_begin == raw_size);
 			return;
 		}
 

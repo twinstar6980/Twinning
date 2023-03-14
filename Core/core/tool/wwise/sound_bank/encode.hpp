@@ -3104,7 +3104,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				}
 				if (manifest.property.type() == Manifest::EventActionProperty::Type::Constant::set_voice_pitch()) {
 					auto & property_manifest = manifest.property.template get_of_type<Manifest::EventActionProperty::Type::Constant::set_voice_pitch()>();
-					type = property_manifest.reset ? 9_sz : 8_sz;
+					type = property_manifest.reset ? (9_sz) : (8_sz);
 					{
 						exchange_common_property_as_randomized<CPTC::delay()>(common_property, property_manifest.delay);
 						exchange_common_property_as_randomized<CPTC::fade_time()>(common_property, property_manifest.fade_time);
@@ -3120,7 +3120,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				}
 				if (manifest.property.type() == Manifest::EventActionProperty::Type::Constant::set_voice_volume()) {
 					auto & property_manifest = manifest.property.template get_of_type<Manifest::EventActionProperty::Type::Constant::set_voice_volume()>();
-					type = property_manifest.reset ? 11_sz : 10_sz;
+					type = property_manifest.reset ? (11_sz) : (10_sz);
 					{
 						exchange_common_property_as_randomized<CPTC::delay()>(common_property, property_manifest.delay);
 						exchange_common_property_as_randomized<CPTC::fade_time()>(common_property, property_manifest.fade_time);
@@ -3136,7 +3136,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				}
 				if (manifest.property.type() == Manifest::EventActionProperty::Type::Constant::set_bus_volume()) {
 					auto & property_manifest = manifest.property.template get_of_type<Manifest::EventActionProperty::Type::Constant::set_bus_volume()>();
-					type = property_manifest.reset ? 13_sz : 12_sz;
+					type = property_manifest.reset ? (13_sz) : (12_sz);
 					{
 						exchange_common_property_as_randomized<CPTC::delay()>(common_property, property_manifest.delay);
 						exchange_common_property_as_randomized<CPTC::fade_time()>(common_property, property_manifest.fade_time);
@@ -3152,7 +3152,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				}
 				if (manifest.property.type() == Manifest::EventActionProperty::Type::Constant::set_voice_low_pass_filter()) {
 					auto & property_manifest = manifest.property.template get_of_type<Manifest::EventActionProperty::Type::Constant::set_voice_low_pass_filter()>();
-					type = property_manifest.reset ? 15_sz : 14_sz;
+					type = property_manifest.reset ? (15_sz) : (14_sz);
 					{
 						exchange_common_property_as_randomized<CPTC::delay()>(common_property, property_manifest.delay);
 						exchange_common_property_as_randomized<CPTC::fade_time()>(common_property, property_manifest.fade_time);
@@ -3168,7 +3168,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				}
 				if (manifest.property.type() == Manifest::EventActionProperty::Type::Constant::set_voice_high_pass_filter()) {
 					auto & property_manifest = manifest.property.template get_of_type<Manifest::EventActionProperty::Type::Constant::set_voice_high_pass_filter()>();
-					type = property_manifest.reset ? 48_sz : 32_sz;
+					type = property_manifest.reset ? (48_sz) : (32_sz);
 					{
 						exchange_common_property_as_randomized<CPTC::delay()>(common_property, property_manifest.delay);
 						exchange_common_property_as_randomized<CPTC::fade_time()>(common_property, property_manifest.fade_time);
@@ -3184,7 +3184,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				}
 				if (manifest.property.type() == Manifest::EventActionProperty::Type::Constant::set_mute()) {
 					auto & property_manifest = manifest.property.template get_of_type<Manifest::EventActionProperty::Type::Constant::set_mute()>();
-					type = property_manifest.reset ? 7_sz : 6_sz;
+					type = property_manifest.reset ? (7_sz) : (6_sz);
 					{
 						exchange_common_property_as_randomized<CPTC::delay()>(common_property, property_manifest.delay);
 						exchange_common_property_as_randomized<CPTC::fade_time()>(common_property, property_manifest.fade_time);
@@ -3196,7 +3196,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				}
 				if (manifest.property.type() == Manifest::EventActionProperty::Type::Constant::set_game_parameter()) {
 					auto & property_manifest = manifest.property.template get_of_type<Manifest::EventActionProperty::Type::Constant::set_game_parameter()>();
-					type = property_manifest.reset ? 20_sz : 19_sz;
+					type = property_manifest.reset ? (20_sz) : (19_sz);
 					{
 						exchange_common_property_as_randomized<CPTC::delay()>(common_property, property_manifest.delay);
 						exchange_common_property_as_randomized<CPTC::fade_time()>(common_property, property_manifest.fade_time);
@@ -3213,7 +3213,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				}
 				if (manifest.property.type() == Manifest::EventActionProperty::Type::Constant::set_state_availability()) {
 					auto & property_manifest = manifest.property.template get_of_type<Manifest::EventActionProperty::Type::Constant::set_state_availability()>();
-					type = property_manifest.enable ? 16_sz : 17_sz;
+					type = property_manifest.enable ? (16_sz) : (17_sz);
 					{
 						exchange_common_property_as_randomized<CPTC::delay()>(common_property, property_manifest.delay);
 						process_section_sub(data, common_property, k_true);
@@ -3253,7 +3253,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				}
 				if (manifest.property.type() == Manifest::EventActionProperty::Type::Constant::set_bypass_effect()) {
 					auto & property_manifest = manifest.property.template get_of_type<Manifest::EventActionProperty::Type::Constant::set_bypass_effect()>();
-					type = property_manifest.reset ? 27_sz : 26_sz;
+					type = property_manifest.reset ? (27_sz) : (26_sz);
 					{
 						exchange_common_property_as_randomized<CPTC::delay()>(common_property, property_manifest.delay);
 						process_section_sub(data, common_property, k_true);
@@ -3298,9 +3298,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			}
 			assert_test(has_case);
 			if (!manifest.globally) {
-				scope = manifest.target == 0_i ? 5_sz : 3_sz;
+				scope = manifest.target == 0_i ? (5_sz) : (3_sz);
 			} else {
-				scope = manifest.target == 0_i ? 4_sz : 2_sz;
+				scope = manifest.target == 0_i ? (4_sz) : (2_sz);
 			}
 			if (type == 4_sz) {
 				// play

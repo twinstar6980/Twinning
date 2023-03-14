@@ -156,7 +156,7 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 							...Executor.query_argument_message(this.id, 'data_file_directory'),
 							a.data_file_directory,
 							(value) => (value),
-							() => (bundle_directory_directory.replace(/$/i, '.bnk_encode')),
+							() => (bundle_directory_directory.replace(/$/i, '.encode')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
 						version_number = Executor.request_argument(
@@ -225,7 +225,7 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 							...Executor.query_argument_message(this.id, 'bundle_directory_directory'),
 							a.bundle_directory_directory,
 							(value) => (value),
-							() => (data_file_directory.replace(/$/i, '.bnk_decode')),
+							() => (data_file_directory.replace(/$/i, '.decode')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
 						version_number = Executor.request_argument(

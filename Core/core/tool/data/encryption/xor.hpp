@@ -15,14 +15,28 @@ namespace TwinStar::Core::Tool::Data::Encryption::XOR {
 
 	protected:
 
-		// TODO : key -> CByteListView
 		static auto process_whole (
-			IByteStreamView & plain,
-			OByteStreamView & cipher,
-			Byte const &      key
+			IByteStreamView &     plain,
+			OByteStreamView &     cipher,
+			CByteListView const & key
 		) -> Void {
-			while (!plain.full()) {
-				cipher.write(plain.read_of() ^ key);
+			if (key.size() == 0_sz) {
+				while (!plain.full()) {
+					cipher.write(plain.read_of());
+				}
+			} else if (key.size() == 1_sz) {
+				while (!plain.full()) {
+					cipher.write(plain.read_of() ^ key.first());
+				}
+			} else {
+				auto key_index = key.begin_index();
+				while (!plain.full()) {
+					cipher.write(plain.read_of() ^ key[key_index]);
+					++key_index;
+					if (key_index == key.end_index()) {
+						key_index = key.begin_index();
+					}
+				}
 			}
 			return;
 		}
@@ -30,9 +44,9 @@ namespace TwinStar::Core::Tool::Data::Encryption::XOR {
 	public:
 
 		static auto do_process_whole (
-			IByteStreamView & plain_,
-			OByteStreamView & cipher_,
-			Byte const &      key
+			IByteStreamView &     plain_,
+			OByteStreamView &     cipher_,
+			CByteListView const & key
 		) -> Void {
 			M_use_zps_of(plain);
 			M_use_zps_of(cipher);

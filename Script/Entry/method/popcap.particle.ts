@@ -72,7 +72,7 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 							(value) => (null),
 						);
 					}
-					CoreX.Tool.PopCap.PARTICLE.encode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 }, buffer_size);
+					CoreX.Tool.PopCap.Particle.encode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 }, buffer_size);
 					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
@@ -133,7 +133,7 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 							(value) => (null),
 						);
 					}
-					CoreX.Tool.PopCap.PARTICLE.decode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 });
+					CoreX.Tool.PopCap.Particle.decode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 });
 					Console.notify('s', los(`执行成功`), [`${manifest_file}`]);
 				},
 				default_argument: {
@@ -177,7 +177,7 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 							...Executor.query_argument_message(this.id, 'data_file_directory'),
 							a.data_file_directory,
 							(value) => (value),
-							() => (manifest_file_directory.replace(/$/i, '.particle_encode')),
+							() => (manifest_file_directory.replace(/$/i, '.encode')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
 						version_platform = Executor.request_argument(
@@ -212,7 +212,7 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 						(item) => {
 							let manifest_file = `${manifest_file_directory}/${item}`;
 							let data_file = `${data_file_directory}/${item.slice(0, -14)}.xml.compiled`;
-							CoreX.Tool.PopCap.PARTICLE.encode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 }, data_buffer.view());
+							CoreX.Tool.PopCap.Particle.encode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 }, data_buffer.view());
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${data_file_directory}`]);
@@ -255,7 +255,7 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 							...Executor.query_argument_message(this.id, 'manifest_file_directory'),
 							a.manifest_file_directory,
 							(value) => (value),
-							() => (data_file_directory.replace(/$/i, '.particle_decode')),
+							() => (data_file_directory.replace(/$/i, '.decode')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
 						version_platform = Executor.request_argument(
@@ -281,7 +281,7 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 						(item) => {
 							let data_file = `${data_file_directory}/${item}`;
 							let manifest_file = `${manifest_file_directory}/${item.slice(0, -13)}.particle.json`;
-							CoreX.Tool.PopCap.PARTICLE.decode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 });
+							CoreX.Tool.PopCap.Particle.decode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 });
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${manifest_file_directory}`]);

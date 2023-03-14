@@ -61,14 +61,14 @@ namespace TwinStar::Shell::Core {
 			Converter::destruct_string(script_structure);
 			Converter::destruct_string_list(argument_structure);
 			Converter::destruct_string_list(callback_result);
-			return !result_structure ? std::nullopt : std::make_optional<std::string>(Converter::parse_string(*result_structure));
+			return !result_structure ? (std::nullopt) : (std::make_optional<std::string>(Converter::parse_string(*result_structure)));
 		}
 
 		static auto prepare (
 			Library & library
 		) -> std::optional<std::string> {
 			auto result_structure = library.prepare();
-			return !result_structure ? std::nullopt : std::make_optional<std::string>(Converter::parse_string(*result_structure));
+			return !result_structure ? (std::nullopt) : (std::make_optional<std::string>(Converter::parse_string(*result_structure)));
 		}
 
 		#pragma endregion

@@ -1,4 +1,4 @@
-/** 从 PvZ-2 安卓中文版的 APK 解压目录中提取 RSB */
+/** 从 PvZ-2 安卓中文版的 APK 解压目录中提取经过压缩的 RSB 文件 */
 namespace TwinStar.Script.Executable.ExtractRSBFromPvZ2CHSAPKDirectory {
 
 	export function execute(

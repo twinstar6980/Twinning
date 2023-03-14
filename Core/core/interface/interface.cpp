@@ -47,7 +47,7 @@ namespace TwinStar::Core::Interface {
 			result.set(make_string_view("unknown exception"));
 		}
 		#endif
-		return !result ? nullptr : &self_cast<String>(result.get());
+		return !result ? (nullptr) : (&self_cast<String>(result.get()));
 	}
 
 	M_symbol_export
@@ -65,7 +65,7 @@ namespace TwinStar::Core::Interface {
 			result.set(make_string_view("unknown exception"));
 		}
 		#endif
-		return !result ? nullptr : &self_cast<String>(result.get());
+		return !result ? (nullptr) : (&self_cast<String>(result.get()));
 	}
 
 	#pragma endregion
