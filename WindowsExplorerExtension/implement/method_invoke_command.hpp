@@ -18,7 +18,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 	struct GroupMethodInvokeCommandConfig {
 		std::wstring                           id;
-		std::vector<MethodInvokeCommandConfig> child;
+		std::vector<MethodInvokeCommandConfig> item;
 		std::vector<std::size_t>               separator;
 	};
 
@@ -26,18 +26,18 @@ namespace TwinStar::WindowsExplorerExtension {
 
 	inline auto test_method_available (
 		MethodInvokeCommandConfig const & config,
-		std::wstring const &              path
+		std::wstring const &              input
 	) -> bool {
 		auto result = true;
 		if (config.type) {
 			if (config.type.value()) {
-				result &= std::filesystem::is_directory(std::filesystem::path{path});
+				result &= std::filesystem::is_directory(std::filesystem::path{input});
 			} else {
-				result &= std::filesystem::is_regular_file(std::filesystem::path{path});
+				result &= std::filesystem::is_regular_file(std::filesystem::path{input});
 			}
 		}
 		if (result && config.rule) {
-			result &= std::regex_search(path, config.rule.value());
+			result &= std::regex_search(input, config.rule.value());
 		}
 		return result;
 	}
@@ -85,13 +85,19 @@ namespace TwinStar::WindowsExplorerExtension {
 			_In_opt_ IShellItemArray * selection
 		) -> EXPCMDSTATE override {
 			assert_test(selection != nullptr);
-			auto path_list = get_shell_item_file_path(selection);
-			for (auto & path : path_list) {
-				if (!test_method_available(thiz.m_config, path)) {
-					return ECS_DISABLED;
+			auto hidden_item_when_unavailable = get_register_value_dword(k_register_key_parent, k_register_key_path, L"hidden_item_when_unavailable").value_or(0) != 0;
+			auto input_list = get_shell_item_file_path(selection);
+			auto available = std::ranges::all_of(
+				input_list,
+				[&] (auto & input) {
+					return test_method_available(thiz.m_config, input);
 				}
+			);
+			auto state = !available ? (ECS_DISABLED) : (ECS_ENABLED);
+			if (hidden_item_when_unavailable && state == ECS_DISABLED) {
+				state = ECS_HIDDEN;
 			}
-			return ECS_ENABLED;
+			return state;
 		}
 
 		virtual auto invoke (
@@ -99,22 +105,22 @@ namespace TwinStar::WindowsExplorerExtension {
 		) -> void override {
 			try {
 				assert_test(selection != nullptr);
-				auto target_list = get_shell_item_file_path(selection);
+				auto input_list = get_shell_item_file_path(selection);
 				auto launch_script = get_register_value_string(k_register_key_parent, k_register_key_path, L"launch_script").value_or(L"");
 				auto launch_limit = get_register_value_dword(k_register_key_parent, k_register_key_path, L"launch_limit").value_or(0);
 				if (!std::filesystem::is_regular_file(std::filesystem::path{launch_script})) {
 					throw std::runtime_error{std::format("invalid launch script")};
 				}
-				if (launch_limit != 0 && target_list.size() > launch_limit) {
+				if (launch_limit != 0 && input_list.size() > launch_limit) {
 					throw std::runtime_error{std::format("too many item")};
 				}
 				auto program = std::wstring{L"C:\\Windows\\System32\\cmd.exe"};
 				auto argument = std::vector<std::wstring>{};
 				argument.emplace_back(L"/C");
 				argument.emplace_back(launch_script);
-				auto every_target_argument_count = std::ptrdiff_t{1 + (!thiz.m_config.method.has_value() ? (0) : (2)) + 2};
-				for (auto & target : target_list) {
-					argument.emplace_back(target);
+				auto argument_count_per_command = std::ptrdiff_t{1 + (!thiz.m_config.method.has_value() ? (0) : (2)) + 2};
+				for (auto & input : input_list) {
+					argument.emplace_back(input);
 					if (thiz.m_config.method.has_value()) {
 						argument.emplace_back(L"-method");
 						argument.emplace_back(thiz.m_config.method.value());
@@ -123,7 +129,7 @@ namespace TwinStar::WindowsExplorerExtension {
 					argument.emplace_back(thiz.m_config.argument);
 					if (launch_limit != 0) {
 						create_process(program, argument);
-						argument.erase(argument.end() - every_target_argument_count, argument.end());
+						argument.erase(argument.end() - argument_count_per_command, argument.end());
 					}
 				}
 				if (launch_limit == 0) {
@@ -157,8 +163,8 @@ namespace TwinStar::WindowsExplorerExtension {
 		) {
 			auto separator_index = std::size_t{0};
 			auto current_separator_section_count = std::size_t{0};
-			thiz.m_commands.reserve(config.child.size() + config.separator.size());
-			for (auto & element : config.child) {
+			thiz.m_commands.reserve(config.item.size() + config.separator.size());
+			for (auto & element : config.item) {
 				if (separator_index < config.separator.size() && current_separator_section_count == config.separator[separator_index]) {
 					current_separator_section_count = 0;
 					thiz.m_commands.emplace_back(Make<SeparatorCommand>());
@@ -259,20 +265,24 @@ namespace TwinStar::WindowsExplorerExtension {
 			_In_opt_ IShellItemArray * selection
 		) -> EXPCMDSTATE override {
 			assert_test(selection != nullptr);
-			auto path_list = get_shell_item_file_path(selection);
-			for (auto & config : thiz.m_config.child) {
-				auto state = true;
-				for (auto & path : path_list) {
-					if (!test_method_available(config, path)) {
-						state = false;
-						break;
-					}
+			auto hidden_group_when_unavailable = get_register_value_dword(k_register_key_parent, k_register_key_path, L"hidden_group_when_unavailable").value_or(0) != 0;
+			auto input_list = get_shell_item_file_path(selection);
+			auto available = std::ranges::any_of(
+				thiz.m_config.item,
+				[&] (auto & config) {
+					return std::ranges::all_of(
+						input_list,
+						[&] (auto & input) {
+							return test_method_available(config, input);
+						}
+					);
 				}
-				if (state) {
-					return ECS_ENABLED;
-				}
+			);
+			auto state = !available ? (ECS_DISABLED) : (ECS_ENABLED);
+			if (hidden_group_when_unavailable && state == ECS_DISABLED) {
+				state = ECS_HIDDEN;
 			}
-			return ECS_DISABLED;
+			return state;
 		}
 
 		virtual auto flags (

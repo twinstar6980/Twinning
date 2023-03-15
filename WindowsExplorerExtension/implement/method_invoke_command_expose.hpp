@@ -48,7 +48,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		inline auto const js = GroupMethodInvokeCommandConfig{
 			.id = L"js",
-			.child = {
+			.item = {
 				{
 					.id = L"js.execute",
 					.type = false,
@@ -64,7 +64,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		inline auto const json = GroupMethodInvokeCommandConfig{
 			.id = L"json",
-			.child = {
+			.item = {
 				{
 					.id = L"json.format",
 					.type = false,
@@ -102,7 +102,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		inline auto const data = GroupMethodInvokeCommandConfig{
 			.id = L"data",
-			.child = {
+			.item = {
 				{
 					.id = L"data.hash.md5",
 					.type = false,
@@ -231,7 +231,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		inline auto const image = GroupMethodInvokeCommandConfig{
 			.id = L"image",
-			.child = {
+			.item = {
 				{
 					.id = L"image.transformation.flip",
 					.type = false,
@@ -285,7 +285,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		inline auto const wwise_media = GroupMethodInvokeCommandConfig{
 			.id = L"wwise.media",
-			.child = {
+			.item = {
 				{
 					.id = L"wwise.media.decode",
 					.type = false,
@@ -309,7 +309,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		inline auto const wwise_sound_bank = GroupMethodInvokeCommandConfig{
 			.id = L"wwise.sound_bank",
-			.child = {
+			.item = {
 				{
 					.id = L"wwise.sound_bank.encode",
 					.type = true,
@@ -347,7 +347,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		inline auto const marmalade_dzip = GroupMethodInvokeCommandConfig{
 			.id = L"marmalade.dzip",
-			.child = {
+			.item = {
 				{
 					.id = L"marmalade.dzip.pack",
 					.type = true,
@@ -378,7 +378,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		inline auto const popcap_zlib = GroupMethodInvokeCommandConfig{
 			.id = L"popcap.zlib",
-			.child = {
+			.item = {
 				{
 					.id = L"popcap.zlib.compress:32",
 					.type = false,
@@ -446,7 +446,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		inline auto const popcap_crypt_data = GroupMethodInvokeCommandConfig{
 			.id = L"popcap.crypt_data",
-			.child = {
+			.item = {
 				{
 					.id = L"popcap.crypt_data.encrypt",
 					.type = false,
@@ -469,7 +469,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		inline auto const popcap_reflection_object_notation = GroupMethodInvokeCommandConfig{
 			.id = L"popcap.reflection_object_notation",
-			.child = {
+			.item = {
 				{
 					.id = L"popcap.reflection_object_notation.encode",
 					.type = false,
@@ -575,7 +575,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		inline auto const popcap_texture = GroupMethodInvokeCommandConfig{
 			.id = L"popcap.texture",
-			.child = {
+			.item = {
 				{
 					.id = L"popcap.texture.encode",
 					.type = false,
@@ -673,7 +673,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		inline auto const popcap_animation = GroupMethodInvokeCommandConfig{
 			.id = L"popcap.animation",
-			.child = {
+			.item = {
 				{
 					.id = L"popcap.animation.encode",
 					.type = false,
@@ -801,7 +801,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		inline auto const popcap_re_animation = GroupMethodInvokeCommandConfig{
 			.id = L"popcap.re_animation",
-			.child = {
+			.item = {
 				{
 					.id = L"popcap.re_animation.encode:desktop_32",
 					.type = false,
@@ -929,7 +929,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		inline auto const popcap_particle = GroupMethodInvokeCommandConfig{
 			.id = L"popcap.particle",
-			.child = {
+			.item = {
 				{
 					.id = L"popcap.particle.encode:desktop_32",
 					.type = false,
@@ -1057,7 +1057,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		inline auto const popcap_trail = GroupMethodInvokeCommandConfig{
 			.id = L"popcap.trail",
-			.child = {
+			.item = {
 				{
 					.id = L"popcap.trail.encode:desktop_32",
 					.type = false,
@@ -1185,7 +1185,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		inline auto const popcap_package = GroupMethodInvokeCommandConfig{
 			.id = L"popcap.package",
-			.child = {
+			.item = {
 				{
 					.id = L"popcap.package.pack",
 					.type = true,
@@ -1224,7 +1224,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		inline auto const popcap_resource_stream_group = GroupMethodInvokeCommandConfig{
 			.id = L"popcap.resource_stream_group",
-			.child = {
+			.item = {
 				{
 					.id = L"popcap.resource_stream_group.pack",
 					.type = true,
@@ -1247,7 +1247,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		inline auto const popcap_resource_stream_bundle = GroupMethodInvokeCommandConfig{
 			.id = L"popcap.resource_stream_bundle",
-			.child = {
+			.item = {
 				{
 					.id = L"popcap.resource_stream_bundle.pack",
 					.type = true,
@@ -1286,7 +1286,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		inline auto const popcap_resource_stream_bundle_patch = GroupMethodInvokeCommandConfig{
 			.id = L"popcap.resource_stream_bundle_patch",
-			.child = {
+			.item = {
 				{
 					.id = L"popcap.resource_stream_bundle_patch.encode",
 					.type = false,
@@ -1309,7 +1309,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		inline auto const pvz2_text_table = GroupMethodInvokeCommandConfig{
 			.id = L"pvz2.text_table",
-			.child = {
+			.item = {
 				{
 					.id = L"pvz2.text_table.convert:text",
 					.type = false,
@@ -1339,7 +1339,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		inline auto const pvz2_remote_android_helper = GroupMethodInvokeCommandConfig{
 			.id = L"pvz2.remote_android_helper",
-			.child = {
+			.item = {
 				{
 					.id = L"pvz2.remote_android_helper.launch:pull_main_package",
 					.type = true,

@@ -1,6 +1,6 @@
 /**
  * JS interface of Core
- * @version 40
+ * @version 41
  */
 declare namespace TwinStar.Core {
 
@@ -3833,10 +3833,12 @@ declare namespace TwinStar.Core {
 						type TextureResourceAdditional = {
 							/** 尺寸 */
 							size: [bigint, bigint];
-							/** 缩放。当 version.additional_texture_information_for_pvz_2_chinese_android == 2 时存在 */
-							scale: undefined | bigint;
 							/** 格式 */
 							format: bigint;
+							/** 行字节数 */
+							row_byte_count: bigint;
+							/** 缩放。当 version.additional_texture_information_for_pvz_2_chinese_android == 2 时存在 */
+							scale: undefined | bigint;
 						};
 
 						/** 资源附加 */

@@ -213,8 +213,9 @@ namespace TwinStar::WindowsExplorerExtension {
 			auto visible = get_register_value_dword(k_register_key_parent, k_register_key_path, std::format(L"visible_{}", thiz.m_id)).value_or(0) != 0;
 			if (!visible) {
 				return ECS_HIDDEN;
+			} else {
+				return TBase::state(selection);
 			}
-			return TBase::state(selection);
 		}
 
 		#pragma endregion

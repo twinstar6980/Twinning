@@ -123,8 +123,8 @@ namespace TwinStar::Core::Tool::Image::Texture::Compression::ETC2 {
 					auto block_part_1 = reverse_endian(data.read_of<IntegerU32>());
 					auto block_part_2 = reverse_endian(data.read_of<IntegerU32>());
 					Third::ETCPACK::decompressBlockETC2c(
-						self_cast<unsigned>(block_part_1),
-						self_cast<unsigned>(block_part_2),
+						block_part_1.value,
+						block_part_2.value,
 						cast_pointer<Third::ETCPACK::uint8>(image_block.begin()).value,
 						static_cast<int>(k_block_width.value),
 						static_cast<int>(k_block_width.value),
@@ -168,8 +168,8 @@ namespace TwinStar::Core::Tool::Image::Texture::Compression::ETC2 {
 					auto block_part_1 = reverse_endian(data.read_of<IntegerU32>());
 					auto block_part_2 = reverse_endian(data.read_of<IntegerU32>());
 					Third::ETCPACK::decompressBlockETC2c(
-						self_cast<unsigned>(block_part_1),
-						self_cast<unsigned>(block_part_2),
+						block_part_1.value,
+						block_part_2.value,
 						cast_pointer<Third::ETCPACK::uint8>(image_block.begin()).value,
 						static_cast<int>(k_block_width.value),
 						static_cast<int>(k_block_width.value),

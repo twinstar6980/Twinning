@@ -384,7 +384,7 @@ namespace TwinStar::WindowsExplorerExtension::Language {
 	inline auto query (
 		std::wstring const & key
 	) -> std::wstring const& {
-		auto language = get_register_value_string(k_register_key_parent, k_register_key_path, std::format(L"language")).value_or(L"Chinese");
+		auto language = get_register_value_string(k_register_key_parent, k_register_key_path, L"language").value_or(L"Chinese");
 		return g_table.at(language).at(key);
 	}
 

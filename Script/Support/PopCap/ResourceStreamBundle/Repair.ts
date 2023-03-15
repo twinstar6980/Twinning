@@ -335,60 +335,6 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.Repair {
 				}
 			}
 		}
-		// texture_resource_information_section
-		for (let texture_resource_index = 0; texture_resource_index < texture_resource_information_section_block_count; ++texture_resource_index) {
-			let view = new ByteListView(data, Number(texture_resource_information_section_offset) + Number(texture_resource_information_section_block_size) * texture_resource_index);
-			let width = view.u32(0x00);
-			let height = view.u32(0x04);
-			let row_byte_count = view.u32(0x08);
-			let format = view.u32(0x0C);
-			let pixel_bit_count: bigint | null;
-			switch (format) {
-				// rgba_8888 or argb_8888
-				case 0n: {
-					pixel_bit_count = 32n;
-					break;
-				}
-				// rgba_4444
-				case 1n:
-				// rgb_565
-				case 2n:
-				// rgba_5551
-				case 3n:
-				// rgba_4444_tiled
-				case 21n:
-				// rgb_565_tiled
-				case 22n:
-				// rgba_5551_tiled
-				case 23n: {
-					pixel_bit_count = 16n;
-					break;
-				}
-				// rgba_pvrtc4
-				case 30n:
-				// rgb_pvrtc4_a_8 (TODO : maybe 4bpp, or 32bpp?)
-				case 148n: {
-					pixel_bit_count = 4n;
-					break;
-				}
-				// rgb_etc1_a_8 or rgb_etc1_a_palette
-				case 147n: {
-					pixel_bit_count = 32n;
-					break;
-				}
-				default: {
-					pixel_bit_count = null;
-					break;
-				}
-			}
-			if (pixel_bit_count !== null) {
-				let actual_row_byte_count = width * pixel_bit_count / 8n;
-				if (row_byte_count !== actual_row_byte_count) {
-					Console.notify('w', los(`检测到Texture-Resource-Information异常，现修复数据`), []);
-					view.u32(0x08, actual_row_byte_count);
-				}
-			}
-		}
 		// done
 		return;
 	}

@@ -36,7 +36,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 			M_wrap(
 				(Size2D<Integer>) size,
 				(Integer) format,
-				(Integer) pixel_bit_count,
+				(Integer) row_byte_count,
 			),
 		);
 
@@ -45,9 +45,9 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 			M_wrap(TextureResourceAdditional_<_>),
 			M_wrap(
 				(Size2D<Integer>) size,
-				(Integer) scale,
 				(Integer) format,
-				(Integer) pixel_bit_count,
+				(Integer) row_byte_count,
+				(Integer) scale,
 			),
 		);
 

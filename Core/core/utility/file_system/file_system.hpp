@@ -67,7 +67,7 @@ namespace TwinStar::Core::FileSystem {
 			#if defined M_system_android
 			if (!string.empty()) [[likely]]
 			{
-				return std::filesystem::path{self_cast<std::string_view>(make_std_string_view(string))};
+				return std::filesystem::path{make_std_string_view(string)};
 			} else [[unlikely]]
 			{
 				return std::filesystem::path{std::string_view{"."}};
