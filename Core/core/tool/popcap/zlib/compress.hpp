@@ -15,6 +15,10 @@ namespace TwinStar::Core::Tool::PopCap::ZLib {
 
 		inline static constexpr auto k_magic_identifier = MagicIdentifier{0xDEADFED4_iu32};
 
+		// ----------------
+
+		using IntegerOfPlatform = AsSwitch<version.variant_64.value, IntegerU64, IntegerU32>;
+
 	};
 
 	template <auto version> requires (check_version(version, {}))
@@ -29,6 +33,29 @@ namespace TwinStar::Core::Tool::PopCap::ZLib {
 
 		using Common::k_magic_identifier;
 
+		using typename Common::IntegerOfPlatform;
+
+		// ----------------
+
+		template <typename RawValue> requires
+			CategoryConstraint<IsPureInstance<RawValue>>
+			&& (IsBaseWrapper<RawValue>)
+		static auto exchange_unit_constant (
+			OByteStreamView & data,
+			RawValue const &  value
+		) -> Void {
+			data.write_constant(value);
+			return;
+		}
+
+		static auto exchange_unit_integer_platform (
+			OByteStreamView & data,
+			Integer const &   value
+		) -> Void {
+			data.write(cbw<IntegerOfPlatform>(value));
+			return;
+		}
+
 		// ----------------
 
 		static auto compute_size_bound (
@@ -42,11 +69,7 @@ namespace TwinStar::Core::Tool::PopCap::ZLib {
 			if constexpr (version.variant_64) {
 				ripe_size_bound += bs_static_size<IntegerU32>();
 			}
-			if constexpr (!version.variant_64) {
-				ripe_size_bound += bs_static_size<IntegerU32>();
-			} else {
-				ripe_size_bound += bs_static_size<IntegerU64>();
-			}
+			ripe_size_bound += bs_static_size<IntegerOfPlatform>();
 			auto ripe_data_size_bound = Size{};
 			Data::Compression::Deflate::Compress::do_compute_size_bound(raw_size, ripe_data_size_bound, window_bits, memory_level, Data::Compression::Deflate::Wrapper::Constant::zlib());
 			ripe_size_bound += ripe_data_size_bound;
@@ -65,13 +88,9 @@ namespace TwinStar::Core::Tool::PopCap::ZLib {
 		) -> Void {
 			ripe.write_constant(k_magic_identifier);
 			if constexpr (version.variant_64) {
-				ripe.write_constant(0x00000000_iu32);
+				exchange_unit_constant(ripe, 0x00000000_iu32);
 			}
-			if constexpr (!version.variant_64) {
-				ripe.write(cbw<IntegerU32>(raw.reserve()));
-			} else {
-				ripe.write(cbw<IntegerU64>(raw.reserve()));
-			}
+			exchange_unit_integer_platform(ripe, cbw<Integer>(raw.reserve()));
 			Data::Compression::Deflate::Compress::do_process_whole(raw, ripe, level, window_bits, memory_level, strategy, Data::Compression::Deflate::Wrapper::Constant::zlib());
 			return;
 		}
@@ -115,6 +134,29 @@ namespace TwinStar::Core::Tool::PopCap::ZLib {
 
 		using Common::k_magic_identifier;
 
+		using typename Common::IntegerOfPlatform;
+
+		// ----------------
+
+		template <typename RawValue> requires
+			CategoryConstraint<IsPureInstance<RawValue>>
+			&& (IsBaseWrapper<RawValue>)
+		static auto exchange_unit_constant (
+			IByteStreamView & data,
+			RawValue const &  value
+		) -> Void {
+			data.read_constant(value);
+			return;
+		}
+
+		static auto exchange_unit_integer_platform (
+			IByteStreamView & data,
+			Integer &         value
+		) -> Void {
+			value = cbw<Integer>(data.read_of<IntegerOfPlatform>());
+			return;
+		}
+
 		// ----------------
 
 		static auto compute_size (
@@ -125,13 +167,10 @@ namespace TwinStar::Core::Tool::PopCap::ZLib {
 			auto ripe_stream = IByteStreamView{ripe};
 			ripe_stream.read_constant(k_magic_identifier);
 			if constexpr (version.variant_64) {
-				ripe_stream.read_constant(0x00000000_iu32);
+				exchange_unit_constant(ripe_stream, 0x00000000_iu32);
 			}
-			if constexpr (!version.variant_64) {
-				raw_size += cbw<Size>(ripe_stream.read_of<IntegerU32>());
-			} else {
-				raw_size += cbw<Size>(ripe_stream.read_of<IntegerU64>());
-			}
+			auto raw_data_size = cbw<Size>(M_apply(M_wrap(Integer{}), M_wrap({ exchange_unit_integer_platform(ripe_stream, it); })));
+			raw_size += raw_data_size;
 			return;
 		}
 
@@ -144,17 +183,12 @@ namespace TwinStar::Core::Tool::PopCap::ZLib {
 		) -> Void {
 			ripe.read_constant(k_magic_identifier);
 			if constexpr (version.variant_64) {
-				ripe.read_constant(0x00000000_iu32);
+				exchange_unit_constant(ripe, 0x00000000_iu32);
 			}
-			auto raw_size = Size{};
-			if constexpr (!version.variant_64) {
-				raw_size = cbw<Size>(ripe.read_of<IntegerU32>());
-			} else {
-				raw_size = cbw<Size>(ripe.read_of<IntegerU64>());
-			}
-			auto raw_begin = raw.position();
+			auto raw_data_begin = raw.position();
+			auto raw_data_size = cbw<Size>(M_apply(M_wrap(Integer{}), M_wrap({ exchange_unit_integer_platform(ripe, it); })));
 			Data::Compression::Deflate::Uncompress::do_process_whole(ripe, raw, window_bits, Data::Compression::Deflate::Wrapper::Constant::zlib());
-			assert_test(raw.position() - raw_begin == raw_size);
+			assert_test(raw.position() - raw_data_begin == raw_data_size);
 			return;
 		}
 

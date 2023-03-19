@@ -34,9 +34,9 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundlePatch {
 			assert_test(cbw<Size>(information_structure.header.subgroup_information_section_block_size) == bs_static_size<ResourceStreamBundle::Structure::SubgroupInformation<package_version>>());
 			assert_test(cbw<Size>(information_structure.header.subgroup_pool_information_section_block_size) == bs_static_size<ResourceStreamBundle::Structure::SubgroupPoolInformation<package_version>>());
 			assert_test(cbw<Size>(information_structure.header.texture_resource_information_section_block_size) == bs_static_size<ResourceStreamBundle::Structure::TextureResourceInformation<package_version>>());
-			MapData::decode(information_structure.group_id, as_lvalue(IByteStreamView{data.sub_view(cbw<Size>(information_structure.header.group_id_section_offset), cbw<Size>(information_structure.header.group_id_section_size))}));
-			MapData::decode(information_structure.subgroup_id, as_lvalue(IByteStreamView{data.sub_view(cbw<Size>(information_structure.header.subgroup_id_section_offset), cbw<Size>(information_structure.header.subgroup_id_section_size))}));
-			MapData::decode(information_structure.resource_path, as_lvalue(IByteStreamView{data.sub_view(cbw<Size>(information_structure.header.resource_path_section_offset), cbw<Size>(information_structure.header.resource_path_section_size))}));
+			CompiledMapData::decode(information_structure.group_id, as_lvalue(IByteStreamView{data.sub_view(cbw<Size>(information_structure.header.group_id_section_offset), cbw<Size>(information_structure.header.group_id_section_size))}));
+			CompiledMapData::decode(information_structure.subgroup_id, as_lvalue(IByteStreamView{data.sub_view(cbw<Size>(information_structure.header.subgroup_id_section_offset), cbw<Size>(information_structure.header.subgroup_id_section_size))}));
+			CompiledMapData::decode(information_structure.resource_path, as_lvalue(IByteStreamView{data.sub_view(cbw<Size>(information_structure.header.resource_path_section_offset), cbw<Size>(information_structure.header.resource_path_section_size))}));
 			data.set_position(cbw<Size>(information_structure.header.group_information_section_offset));
 			data.read(information_structure.group_information, cbw<Size>(information_structure.header.group_information_section_block_count));
 			data.set_position(cbw<Size>(information_structure.header.subgroup_information_section_offset));
@@ -63,7 +63,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundlePatch {
 			auto information_structure = ResourceStreamGroup::Structure::Information<packet_version>{};
 			{
 				raw.read(information_structure.header);
-				MapData::decode(information_structure.resource_information, as_lvalue(IByteStreamView{raw.sub_view(cbw<Size>(information_structure.header.resource_information_section_offset), cbw<Size>(information_structure.header.resource_information_section_size))}));
+				CompiledMapData::decode(information_structure.resource_information, as_lvalue(IByteStreamView{raw.sub_view(cbw<Size>(information_structure.header.resource_information_section_offset), cbw<Size>(information_structure.header.resource_information_section_size))}));
 			}
 			raw.set_position(
 				cbw<Size>(
@@ -116,7 +116,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundlePatch {
 			auto information_structure = ResourceStreamGroup::Structure::Information<packet_version>{};
 			{
 				ripe.read(information_structure.header);
-				MapData::decode(information_structure.resource_information, as_lvalue(IByteStreamView{ripe.sub_view(cbw<Size>(information_structure.header.resource_information_section_offset), cbw<Size>(information_structure.header.resource_information_section_size))}));
+				CompiledMapData::decode(information_structure.resource_information, as_lvalue(IByteStreamView{ripe.sub_view(cbw<Size>(information_structure.header.resource_information_section_offset), cbw<Size>(information_structure.header.resource_information_section_size))}));
 			}
 			ripe.set_position(
 				cbw<Size>(
@@ -199,7 +199,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundlePatch {
 
 		// ----------------
 
-		static auto exchange_constant_32 (
+		static auto exchange_unit_constant (
 			OByteStreamView &  data,
 			IntegerU32 const & value
 		) -> Void {
@@ -207,7 +207,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundlePatch {
 			return;
 		}
 
-		static auto exchange_boolean_32 (
+		static auto exchange_unit_boolean (
 			OByteStreamView & data,
 			Boolean const &   value
 		) -> Void {
@@ -217,7 +217,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundlePatch {
 			return;
 		}
 
-		static auto exchange_size_32 (
+		static auto exchange_unit_size (
 			OByteStreamView & data,
 			Size const &      value
 		) -> Void {
@@ -227,21 +227,21 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundlePatch {
 			return;
 		}
 
-		static auto exchange_hash_128 (
-			OByteStreamView & data,
-			ByteArray const & value
-		) -> Void {
-			data.write(value);
-			return;
-		}
-
-		static auto exchange_string_128 (
+		static auto exchange_unit_string (
 			OByteStreamView & data,
 			String const &    value
 		) -> Void {
 			auto raw_value = StaticCharacterArray<128_sz>{};
 			Range::assign_from(raw_value.view().head(value.size()), value.view());
 			data.write(raw_value);
+			return;
+		}
+
+		static auto exchange_unit_hash (
+			OByteStreamView & data,
+			ByteArray const & value
+		) -> Void {
+			data.write(value);
 			return;
 		}
 
@@ -287,9 +287,9 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundlePatch {
 			auto information_section_before_structure = ResourceStreamBundle::Structure::Information<package_version>{};
 			auto information_section_after_structure = ResourceStreamBundle::Structure::Information<package_version>{};
 			after_size = after.reserve();
-			exchange_constant_32(patch, 0x00000002_iu32);
-			exchange_size_32(patch, after_size);
-			exchange_constant_32(patch, 0x00000000_iu32);
+			exchange_unit_constant(patch, 0x00000002_iu32);
+			exchange_unit_size(patch, after_size);
+			exchange_unit_constant(patch, 0x00000000_iu32);
 			read_package_information_structure(as_lvalue(IByteStreamView{before.view()}), information_section_before_structure);
 			read_package_information_structure(as_lvalue(IByteStreamView{after.view()}), information_section_after_structure);
 			auto information_section_patch_header = OByteStreamView{patch.forward_view(4_sz + 4_sz + 4_sz + 16_sz)};
@@ -303,10 +303,10 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundlePatch {
 			} else {
 				process_sub_patch(information_section_before, information_section_after, patch, information_section_patch_size);
 			}
-			exchange_size_32(information_section_patch_header, information_section_patch_size);
-			exchange_hash_128(information_section_patch_header, information_section_before_hash);
-			exchange_size_32(information_section_patch_header, packet_patch_count);
-			exchange_boolean_32(information_section_patch_header, information_section_patch_exist);
+			exchange_unit_size(information_section_patch_header, information_section_patch_size);
+			exchange_unit_hash(information_section_patch_header, information_section_before_hash);
+			exchange_unit_size(information_section_patch_header, packet_patch_count);
+			exchange_unit_boolean(information_section_patch_header, information_section_patch_exist);
 			auto packet_before_subgroup_information_index_map = indexing_subgroup_information_by_id(information_section_before_structure.subgroup_information);
 			auto packet_before_raw_container = ByteArray{};
 			auto packet_after_raw_container = ByteArray{};
@@ -362,10 +362,10 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundlePatch {
 				} else {
 					process_sub_patch(packet_before, packet_after, patch, packet_patch_size);
 				}
-				exchange_boolean_32(packet_patch_header, packet_patch_exist);
-				exchange_size_32(packet_patch_header, packet_patch_size);
-				exchange_string_128(packet_patch_header, packet_name);
-				exchange_hash_128(packet_patch_header, packet_before_hash);
+				exchange_unit_boolean(packet_patch_header, packet_patch_exist);
+				exchange_unit_size(packet_patch_header, packet_patch_size);
+				exchange_unit_string(packet_patch_header, packet_name);
+				exchange_unit_hash(packet_patch_header, packet_before_hash);
 			}
 			before.set_position(before_end_position);
 			after.set_position(after_end_position);
@@ -416,7 +416,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundlePatch {
 
 		// ----------------
 
-		static auto exchange_constant_32 (
+		static auto exchange_unit_constant (
 			IByteStreamView &  data,
 			IntegerU32 const & value
 		) -> Void {
@@ -424,7 +424,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundlePatch {
 			return;
 		}
 
-		static auto exchange_boolean_32 (
+		static auto exchange_unit_boolean (
 			IByteStreamView & data,
 			Boolean &         value
 		) -> Void {
@@ -434,7 +434,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundlePatch {
 			return;
 		}
 
-		static auto exchange_size_32 (
+		static auto exchange_unit_size (
 			IByteStreamView & data,
 			Size &            value
 		) -> Void {
@@ -444,21 +444,21 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundlePatch {
 			return;
 		}
 
-		static auto exchange_hash_128 (
-			IByteStreamView & data,
-			ByteArray &       value
-		) -> Void {
-			data.read(value, 16_sz);
-			return;
-		}
-
-		static auto exchange_string_128 (
+		static auto exchange_unit_string (
 			IByteStreamView & data,
 			String &          value
 		) -> Void {
 			auto raw_value = StaticCharacterArray<128_sz>{};
 			data.read(raw_value);
 			value = String{raw_value.begin(), null_terminated_string_size_of(raw_value.begin())};
+			return;
+		}
+
+		static auto exchange_unit_hash (
+			IByteStreamView & data,
+			ByteArray &       value
+		) -> Void {
+			data.read(value, 16_sz);
 			return;
 		}
 
@@ -501,13 +501,13 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundlePatch {
 			auto information_section_patch_exist = Boolean{};
 			auto information_section_patch_size = Size{};
 			auto packet_patch_count = Size{};
-			exchange_constant_32(patch, 0x00000002_iu32);
-			exchange_size_32(patch, after_size);
-			exchange_constant_32(patch, 0x00000000_iu32);
-			exchange_size_32(patch, information_section_patch_size);
-			exchange_hash_128(patch, information_section_before_hash);
-			exchange_size_32(patch, packet_patch_count);
-			exchange_boolean_32(patch, information_section_patch_exist);
+			exchange_unit_constant(patch, 0x00000002_iu32);
+			exchange_unit_size(patch, after_size);
+			exchange_unit_constant(patch, 0x00000000_iu32);
+			exchange_unit_size(patch, information_section_patch_size);
+			exchange_unit_hash(patch, information_section_before_hash);
+			exchange_unit_size(patch, packet_patch_count);
+			exchange_unit_boolean(patch, information_section_patch_exist);
 			auto information_section_before_structure = ResourceStreamBundle::Structure::Information<package_version>{};
 			auto information_section_after_structure = ResourceStreamBundle::Structure::Information<package_version>{};
 			read_package_information_structure(as_lvalue(IByteStreamView{before.view()}), information_section_before_structure);
@@ -531,10 +531,10 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundlePatch {
 				auto   packet_before_hash = ByteArray{};
 				auto   packet_patch_exist = Boolean{};
 				auto   packet_patch_size = Size{};
-				exchange_boolean_32(patch, packet_patch_exist);
-				exchange_size_32(patch, packet_patch_size);
-				exchange_string_128(patch, packet_name);
-				exchange_hash_128(patch, packet_before_hash);
+				exchange_unit_boolean(patch, packet_patch_exist);
+				exchange_unit_size(patch, packet_patch_size);
+				exchange_unit_string(patch, packet_name);
+				exchange_unit_hash(patch, packet_before_hash);
 				{
 					auto packet_name_upper = packet_name;
 					packet_name_upper.as_upper_case();

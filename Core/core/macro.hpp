@@ -150,6 +150,14 @@
 
 #pragma region advanced
 
+#define M_apply(_variable, _function)\
+	[&] (auto & it) -> auto & {\
+		_function;\
+		return it;\
+	}(as_lvalue(_variable))
+
+// ----------------
+
 #define M_define_simple_derived_class(_derived, _base, _simplify_base)\
 	class _derived : public _base {\
 	public:\

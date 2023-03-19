@@ -32,7 +32,20 @@ namespace TwinStar::Core::Image {
 		BasicColor<Value> const & value,
 		Size const &              bit_count
 	) -> BasicColor<Value> {
-		return Math::round<BasicColor<Value>>(cbw<Floating64>(value) * cbw<Floating64>(~BasicColor<Value>{0}) / cbw<Floating64>((0b1_iu64 << bit_count) - 1_iu64));
+		return Math::round<BasicColor<Value>>(cbw<Floating>(value) * cbw<Floating>(~BasicColor<Value>{0}) / cbw<Floating>((0b1_iu64 << bit_count) - 1_iu64));
+	}
+
+	// ----------------
+
+	template <typename Value> requires
+		CategoryConstraint<>
+		&& (IsBaseWrapperValue<Value>)
+	inline auto convert_luminance_from_rgb (
+		BasicColor<Value> const & red,
+		BasicColor<Value> const & green,
+		BasicColor<Value> const & blue
+	) -> BasicColor<Value> {
+		return Math::round<BasicColor<Value>>(cbw<Floating>(red) * 0.299_f + cbw<Floating>(green) * 0.587_f + cbw<Floating>(blue) * 0.114_f);
 	}
 
 	#pragma endregion

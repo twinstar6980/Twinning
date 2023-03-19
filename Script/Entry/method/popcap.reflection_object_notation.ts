@@ -12,7 +12,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 
 	type Config = {
 		version_number: Executor.RequestArgument<bigint, false>;
-		native_string_encoding_use_extended_ascii: Executor.RequestArgument<boolean, false>;
+		version_native_string_encoding_use_utf8: Executor.RequestArgument<boolean, false>;
 		key: Executor.RequestArgument<string, false>;
 		encode_buffer_size: Executor.RequestArgument<string, false>;
 	};
@@ -31,11 +31,13 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					value_file: Executor.RequireArgument<string>;
 					data_file: Executor.RequestArgument<string, true>;
 					version_number: Executor.RequestArgument<bigint, false>;
+					version_native_string_encoding_use_utf8: Executor.RequestArgument<boolean, false>;
 					buffer_size: Executor.RequestArgument<string, false>;
 				}) {
 					let value_file: string;
 					let data_file: string;
 					let version_number: [1n][number];
+					let version_native_string_encoding_use_utf8: boolean;
 					let buffer_size: bigint;
 					{
 						value_file = Executor.require_argument(
@@ -59,6 +61,14 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							() => (Console.option([0n, null, [1n, '']], null)),
 							(value) => ([1n].includes(value) ? null : los(`版本不受支持`)),
 						);
+						version_native_string_encoding_use_utf8 = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_native_string_encoding_use_utf8'),
+							a.version_native_string_encoding_use_utf8,
+							(value) => (value),
+							null,
+							() => (Console.confirm(null)),
+							(value) => (null),
+						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
 							a.buffer_size,
@@ -68,7 +78,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							(value) => (null),
 						);
 					}
-					CoreX.Tool.PopCap.ReflectionObjectNotation.encode_fs(data_file, value_file, true, true, { number: version_number }, buffer_size);
+					CoreX.Tool.PopCap.ReflectionObjectNotation.encode_fs(data_file, value_file, true, true, { number: version_number, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, buffer_size);
 					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
@@ -76,6 +86,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					value_file: undefined!,
 					data_file: '?default',
 					version_number: config.version_number,
+					version_native_string_encoding_use_utf8: config.version_native_string_encoding_use_utf8,
 					buffer_size: config.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.json)$/i]]),
@@ -90,13 +101,13 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				worker(a: Entry.CFSA & {
 					data_file: Executor.RequireArgument<string>;
 					value_file: Executor.RequestArgument<string, true>;
-					native_string_encoding_use_extended_ascii: Executor.RequestArgument<boolean, false>;
 					version_number: Executor.RequestArgument<bigint, false>;
+					version_native_string_encoding_use_utf8: Executor.RequestArgument<boolean, false>;
 				}) {
 					let data_file: string;
 					let value_file: string;
-					let native_string_encoding_use_extended_ascii: boolean;
 					let version_number: [1n][number];
+					let version_native_string_encoding_use_utf8: boolean;
 					{
 						data_file = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'data_file'),
@@ -111,14 +122,6 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							() => (data_file.replace(/((\.rton))?$/i, '.json')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
-						native_string_encoding_use_extended_ascii = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'native_string_encoding_use_extended_ascii'),
-							a.native_string_encoding_use_extended_ascii,
-							(value) => (value),
-							null,
-							() => (Console.confirm(null)),
-							(value) => (null),
-						);
 						version_number = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_number'),
 							a.version_number,
@@ -127,16 +130,24 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							() => (Console.option([0n, null, [1n, '']], null)),
 							(value) => ([1n].includes(value) ? null : los(`版本不受支持`)),
 						);
+						version_native_string_encoding_use_utf8 = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_native_string_encoding_use_utf8'),
+							a.version_native_string_encoding_use_utf8,
+							(value) => (value),
+							null,
+							() => (Console.confirm(null)),
+							(value) => (null),
+						);
 					}
-					CoreX.Tool.PopCap.ReflectionObjectNotation.decode_fs(data_file, value_file, native_string_encoding_use_extended_ascii, { number: version_number });
+					CoreX.Tool.PopCap.ReflectionObjectNotation.decode_fs(data_file, value_file, { number: version_number, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 });
 					Console.notify('s', los(`执行成功`), [`${value_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
 					data_file: undefined!,
 					value_file: '?default',
-					native_string_encoding_use_extended_ascii: config.native_string_encoding_use_extended_ascii,
 					version_number: config.version_number,
+					version_native_string_encoding_use_utf8: config.version_native_string_encoding_use_utf8,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.rton)$/i]]),
 				input_forwarder: 'data_file',
@@ -249,12 +260,14 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					value_file: Executor.RequireArgument<string>;
 					data_file: Executor.RequestArgument<string, true>;
 					version_number: Executor.RequestArgument<bigint, false>;
+					version_native_string_encoding_use_utf8: Executor.RequestArgument<boolean, false>;
 					key: Executor.RequestArgument<string, false>;
 					buffer_size: Executor.RequestArgument<string, false>;
 				}) {
 					let value_file: string;
 					let data_file: string;
 					let version_number: [1n][number];
+					let version_native_string_encoding_use_utf8: boolean;
 					let key: string;
 					let buffer_size: bigint;
 					{
@@ -279,6 +292,14 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							() => (Console.option([0n, null, [1n, '']], null)),
 							(value) => ([1n].includes(value) ? null : los(`版本不受支持`)),
 						);
+						version_native_string_encoding_use_utf8 = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_native_string_encoding_use_utf8'),
+							a.version_native_string_encoding_use_utf8,
+							(value) => (value),
+							null,
+							() => (Console.confirm(null)),
+							(value) => (null),
+						);
 						key = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'key'),
 							a.key,
@@ -296,7 +317,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							(value) => (null),
 						);
 					}
-					CoreX.Tool.PopCap.ReflectionObjectNotation.encode_then_encrypt_fs(data_file, value_file, true, true, { number: version_number }, key, buffer_size);
+					CoreX.Tool.PopCap.ReflectionObjectNotation.encode_then_encrypt_fs(data_file, value_file, true, true, { number: version_number, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key, buffer_size);
 					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
@@ -304,6 +325,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					value_file: undefined!,
 					data_file: '?default',
 					version_number: config.version_number,
+					version_native_string_encoding_use_utf8: config.version_native_string_encoding_use_utf8,
 					key: config.key,
 					buffer_size: config.encode_buffer_size,
 				},
@@ -319,14 +341,14 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				worker(a: Entry.CFSA & {
 					data_file: Executor.RequireArgument<string>;
 					value_file: Executor.RequestArgument<string, true>;
-					native_string_encoding_use_extended_ascii: Executor.RequestArgument<boolean, false>;
 					version_number: Executor.RequestArgument<bigint, false>;
+					version_native_string_encoding_use_utf8: Executor.RequestArgument<boolean, false>;
 					key: Executor.RequestArgument<string, false>;
 				}) {
 					let data_file: string;
 					let value_file: string;
-					let native_string_encoding_use_extended_ascii: boolean;
 					let version_number: [1n][number];
+					let version_native_string_encoding_use_utf8: boolean;
 					let key: string;
 					{
 						data_file = Executor.require_argument(
@@ -342,14 +364,6 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							() => (data_file.replace(/((\.rton))?$/i, '.json')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
-						native_string_encoding_use_extended_ascii = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'native_string_encoding_use_extended_ascii'),
-							a.native_string_encoding_use_extended_ascii,
-							(value) => (value),
-							null,
-							() => (Console.confirm(null)),
-							(value) => (null),
-						);
 						version_number = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_number'),
 							a.version_number,
@@ -357,6 +371,14 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							null,
 							() => (Console.option([0n, null, [1n, '']], null)),
 							(value) => ([1n].includes(value) ? null : los(`版本不受支持`)),
+						);
+						version_native_string_encoding_use_utf8 = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_native_string_encoding_use_utf8'),
+							a.version_native_string_encoding_use_utf8,
+							(value) => (value),
+							null,
+							() => (Console.confirm(null)),
+							(value) => (null),
 						);
 						key = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'key'),
@@ -367,15 +389,15 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							(value) => (null),
 						);
 					}
-					CoreX.Tool.PopCap.ReflectionObjectNotation.decrypt_then_decode_fs(data_file, value_file, native_string_encoding_use_extended_ascii, { number: version_number }, key);
+					CoreX.Tool.PopCap.ReflectionObjectNotation.decrypt_then_decode_fs(data_file, value_file, { number: version_number, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key);
 					Console.notify('s', los(`执行成功`), [`${value_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
 					data_file: undefined!,
 					value_file: '?default',
-					native_string_encoding_use_extended_ascii: config.native_string_encoding_use_extended_ascii,
 					version_number: config.version_number,
+					version_native_string_encoding_use_utf8: config.version_native_string_encoding_use_utf8,
 					key: config.key,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.rton)$/i]]),
@@ -390,13 +412,13 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				worker(a: Entry.CFSA & {
 					data_file: Executor.RequireArgument<string>;
 					value_file: Executor.RequestArgument<string, true>;
-					native_string_encoding_use_extended_ascii: Executor.RequestArgument<boolean, false>;
 					version_number: Executor.RequestArgument<bigint, false>;
+					version_native_string_encoding_use_utf8: Executor.RequestArgument<boolean, false>;
 				}) {
 					let data_file: string;
 					let value_file: string;
-					let native_string_encoding_use_extended_ascii: boolean;
 					let version_number: [1n][number];
+					let version_native_string_encoding_use_utf8: boolean;
 					{
 						data_file = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'data_file'),
@@ -411,14 +433,6 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							() => (data_file.replace(/((\.rton))?$/i, '.json')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
-						native_string_encoding_use_extended_ascii = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'native_string_encoding_use_extended_ascii'),
-							a.native_string_encoding_use_extended_ascii,
-							(value) => (value),
-							null,
-							() => (Console.confirm(null)),
-							(value) => (null),
-						);
 						version_number = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_number'),
 							a.version_number,
@@ -427,16 +441,24 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							() => (Console.option([0n, null, [1n, '']], null)),
 							(value) => ([1n].includes(value) ? null : los(`版本不受支持`)),
 						);
+						version_native_string_encoding_use_utf8 = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_native_string_encoding_use_utf8'),
+							a.version_native_string_encoding_use_utf8,
+							(value) => (value),
+							null,
+							() => (Console.confirm(null)),
+							(value) => (null),
+						);
 					}
-					Support.PopCap.ReflectionObjectNotation.DecodeLenient.decode_whole_fs(data_file, value_file, native_string_encoding_use_extended_ascii, { number: version_number });
+					Support.PopCap.ReflectionObjectNotation.DecodeLenient.decode_whole_fs(data_file, value_file, { number: version_number, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 });
 					Console.notify('s', los(`执行成功`), [`${value_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
 					data_file: undefined!,
 					value_file: '?default',
-					native_string_encoding_use_extended_ascii: config.native_string_encoding_use_extended_ascii,
 					version_number: config.version_number,
+					version_native_string_encoding_use_utf8: config.version_native_string_encoding_use_utf8,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.rton)$/i]]),
 				input_forwarder: 'data_file',
@@ -453,11 +475,13 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					value_file_directory: Executor.RequireArgument<string>;
 					data_file_directory: Executor.RequestArgument<string, true>;
 					version_number: Executor.RequestArgument<bigint, false>;
+					version_native_string_encoding_use_utf8: Executor.RequestArgument<boolean, false>;
 					buffer_size: Executor.RequestArgument<string, false>;
 				}) {
 					let value_file_directory: string;
 					let data_file_directory: string;
 					let version_number: [1n][number];
+					let version_native_string_encoding_use_utf8: boolean;
 					let buffer_size: bigint;
 					{
 						value_file_directory = Executor.require_argument(
@@ -481,6 +505,14 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							() => (Console.option([0n, null, [1n, '']], null)),
 							(value) => ([1n].includes(value) ? null : los(`版本不受支持`)),
 						);
+						version_native_string_encoding_use_utf8 = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_native_string_encoding_use_utf8'),
+							a.version_native_string_encoding_use_utf8,
+							(value) => (value),
+							null,
+							() => (Console.confirm(null)),
+							(value) => (null),
+						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
 							a.buffer_size,
@@ -497,7 +529,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 						(item) => {
 							let value_file = `${value_file_directory}/${item}`;
 							let data_file = `${data_file_directory}/${item.slice(0, -5)}.rton`;
-							CoreX.Tool.PopCap.ReflectionObjectNotation.encode_fs(data_file, value_file, true, true, { number: version_number }, data_buffer.view());
+							CoreX.Tool.PopCap.ReflectionObjectNotation.encode_fs(data_file, value_file, true, true, { number: version_number, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, data_buffer.view());
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${data_file_directory}`]);
@@ -507,6 +539,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					value_file_directory: undefined!,
 					data_file_directory: '?default',
 					version_number: config.version_number,
+					version_native_string_encoding_use_utf8: config.version_native_string_encoding_use_utf8,
 					buffer_size: config.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
@@ -521,13 +554,13 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				worker(a: Entry.CFSA & {
 					data_file_directory: Executor.RequireArgument<string>;
 					value_file_directory: Executor.RequestArgument<string, true>;
-					native_string_encoding_use_extended_ascii: Executor.RequestArgument<boolean, false>;
 					version_number: Executor.RequestArgument<bigint, false>;
+					version_native_string_encoding_use_utf8: Executor.RequestArgument<boolean, false>;
 				}) {
 					let data_file_directory: string;
 					let value_file_directory: string;
-					let native_string_encoding_use_extended_ascii: boolean;
 					let version_number: [1n][number];
+					let version_native_string_encoding_use_utf8: boolean;
 					{
 						data_file_directory = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'data_file_directory'),
@@ -542,14 +575,6 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							() => (data_file_directory.replace(/$/i, '.decode')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
-						native_string_encoding_use_extended_ascii = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'native_string_encoding_use_extended_ascii'),
-							a.native_string_encoding_use_extended_ascii,
-							(value) => (value),
-							null,
-							() => (Console.confirm(null)),
-							(value) => (null),
-						);
 						version_number = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_number'),
 							a.version_number,
@@ -558,6 +583,14 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							() => (Console.option([0n, null, [1n, '']], null)),
 							(value) => ([1n].includes(value) ? null : los(`版本不受支持`)),
 						);
+						version_native_string_encoding_use_utf8 = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_native_string_encoding_use_utf8'),
+							a.version_native_string_encoding_use_utf8,
+							(value) => (value),
+							null,
+							() => (Console.confirm(null)),
+							(value) => (null),
+						);
 					}
 					simple_batch_execute(
 						data_file_directory,
@@ -565,7 +598,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 						(item) => {
 							let data_file = `${data_file_directory}/${item}`;
 							let value_file = `${value_file_directory}/${item.slice(0, -5)}.json`;
-							CoreX.Tool.PopCap.ReflectionObjectNotation.decode_fs(data_file, value_file, native_string_encoding_use_extended_ascii, { number: version_number });
+							CoreX.Tool.PopCap.ReflectionObjectNotation.decode_fs(data_file, value_file, { number: version_number, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 });
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${value_file_directory}`]);
@@ -574,8 +607,8 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					...Entry.k_cfsa,
 					data_file_directory: undefined!,
 					value_file_directory: '?default',
-					native_string_encoding_use_extended_ascii: config.native_string_encoding_use_extended_ascii,
 					version_number: config.version_number,
+					version_native_string_encoding_use_utf8: config.version_native_string_encoding_use_utf8,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'data_file_directory',
@@ -704,12 +737,14 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					value_file_directory: Executor.RequireArgument<string>;
 					data_file_directory: Executor.RequestArgument<string, true>;
 					version_number: Executor.RequestArgument<bigint, false>;
+					version_native_string_encoding_use_utf8: Executor.RequestArgument<boolean, false>;
 					key: Executor.RequestArgument<string, false>;
 					buffer_size: Executor.RequestArgument<string, false>;
 				}) {
 					let value_file_directory: string;
 					let data_file_directory: string;
 					let version_number: [1n][number];
+					let version_native_string_encoding_use_utf8: boolean;
 					let key: string;
 					let buffer_size: bigint;
 					{
@@ -733,6 +768,14 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							null,
 							() => (Console.option([0n, null, [1n, '']], null)),
 							(value) => ([1n].includes(value) ? null : los(`版本不受支持`)),
+						);
+						version_native_string_encoding_use_utf8 = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_native_string_encoding_use_utf8'),
+							a.version_native_string_encoding_use_utf8,
+							(value) => (value),
+							null,
+							() => (Console.confirm(null)),
+							(value) => (null),
 						);
 						key = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'key'),
@@ -758,7 +801,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 						(item) => {
 							let value_file = `${value_file_directory}/${item}`;
 							let data_file = `${data_file_directory}/${item.slice(0, -5)}.rton`;
-							CoreX.Tool.PopCap.ReflectionObjectNotation.encode_then_encrypt_fs(data_file, value_file, true, true, { number: version_number }, key, data_buffer.view());
+							CoreX.Tool.PopCap.ReflectionObjectNotation.encode_then_encrypt_fs(data_file, value_file, true, true, { number: version_number, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key, data_buffer.view());
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${data_file_directory}`]);
@@ -768,6 +811,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					value_file_directory: undefined!,
 					data_file_directory: '?default',
 					version_number: config.version_number,
+					version_native_string_encoding_use_utf8: config.version_native_string_encoding_use_utf8,
 					key: config.key,
 					buffer_size: config.encode_buffer_size,
 				},
@@ -783,14 +827,14 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				worker(a: Entry.CFSA & {
 					data_file_directory: Executor.RequireArgument<string>;
 					value_file_directory: Executor.RequestArgument<string, true>;
-					native_string_encoding_use_extended_ascii: Executor.RequestArgument<boolean, false>;
 					version_number: Executor.RequestArgument<bigint, false>;
+					version_native_string_encoding_use_utf8: Executor.RequestArgument<boolean, false>;
 					key: Executor.RequestArgument<string, false>;
 				}) {
 					let data_file_directory: string;
 					let value_file_directory: string;
-					let native_string_encoding_use_extended_ascii: boolean;
 					let version_number: [1n][number];
+					let version_native_string_encoding_use_utf8: boolean;
 					let key: string;
 					{
 						data_file_directory = Executor.require_argument(
@@ -806,14 +850,6 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							() => (data_file_directory.replace(/$/i, '.decrypt_then_decode')),
 							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
 						);
-						native_string_encoding_use_extended_ascii = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'native_string_encoding_use_extended_ascii'),
-							a.native_string_encoding_use_extended_ascii,
-							(value) => (value),
-							null,
-							() => (Console.confirm(null)),
-							(value) => (null),
-						);
 						version_number = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_number'),
 							a.version_number,
@@ -821,6 +857,14 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							null,
 							() => (Console.option([0n, null, [1n, '']], null)),
 							(value) => ([1n].includes(value) ? null : los(`版本不受支持`)),
+						);
+						version_native_string_encoding_use_utf8 = Executor.request_argument(
+							...Executor.query_argument_message(this.id, 'version_native_string_encoding_use_utf8'),
+							a.version_native_string_encoding_use_utf8,
+							(value) => (value),
+							null,
+							() => (Console.confirm(null)),
+							(value) => (null),
 						);
 						key = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'key'),
@@ -837,7 +881,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 						(item) => {
 							let data_file = `${data_file_directory}/${item}`;
 							let value_file = `${value_file_directory}/${item.slice(0, -5)}.json`;
-							CoreX.Tool.PopCap.ReflectionObjectNotation.decrypt_then_decode_fs(data_file, value_file, native_string_encoding_use_extended_ascii, { number: version_number }, key);
+							CoreX.Tool.PopCap.ReflectionObjectNotation.decrypt_then_decode_fs(data_file, value_file, { number: version_number, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key);
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${value_file_directory}`]);
@@ -846,8 +890,8 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					...Entry.k_cfsa,
 					data_file_directory: undefined!,
 					value_file_directory: '?default',
-					native_string_encoding_use_extended_ascii: config.native_string_encoding_use_extended_ascii,
 					version_number: config.version_number,
+					version_native_string_encoding_use_utf8: config.version_native_string_encoding_use_utf8,
 					key: config.key,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),

@@ -85,19 +85,19 @@ namespace TwinStar.Script.PathUtility {
 	export function is_android_fuse_object(
 		target: string,
 	): boolean {
-		return /^\/(storage\/emulated\/[0-9]+)|(sdcard)\//.test(target);
+		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\//.test(target);
 	}
 
 	export function is_android_fuse_ext_data_object(
 		target: string,
 	): boolean {
-		return /^\/(storage\/emulated\/[0-9]+)|(sdcard)\/Android\/data\//.test(target);
+		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\/Android\/data\//.test(target);
 	}
 
 	export function is_android_fuse_ext_obb_object(
 		target: string,
 	): boolean {
-		return /^\/(storage\/emulated\/[0-9]+)|(sdcard)\/Android\/obb\//.test(target);
+		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\/Android\/obb\//.test(target);
 	}
 
 	export function safe_rename(

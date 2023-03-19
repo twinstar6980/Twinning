@@ -8,7 +8,7 @@
 
 * 要求
 	
-	* Flutter-SDK：[Flutter 3.7.2](https://docs.flutter.dev/get-started/install) 。
+	* [Flutter 3.7.2](https://docs.flutter.dev/get-started/install)
 
 * 开发
 	

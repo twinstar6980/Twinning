@@ -149,22 +149,6 @@ namespace TwinStar::Core::Tool::Marmalade::DZip::Structure {
 		inline static constexpr auto random_access = Size{11_ix};
 	};
 
-	// ----------------
-
-	template <auto t_version>
-	struct ChunkHeaderLzma;
-
-	template <auto t_version> requires
-		CategoryConstraint<>
-		&& (check_version(t_version, {0}))
-	M_record_of_data(
-		M_wrap(ChunkHeaderLzma<t_version>),
-		M_wrap(
-			(StaticByteArray<Data::Compression::Lzma::k_property_size>) property,
-			(IntegerU64) size,
-		),
-	);
-
 	#pragma endregion
 
 }

@@ -247,7 +247,7 @@ namespace TwinStar::Core::Process {
 		auto input_string = String{};
 		auto output_string = String{};
 		auto error_string = String{};
-		auto process_id = int{};
+		auto process_id = pid_t{};
 		auto spawn_file_action = posix_spawn_file_actions_t{};
 		auto wait_info = siginfo_t{};
 		program_string = make_null_terminated_string(program.to_string());
@@ -285,7 +285,7 @@ namespace TwinStar::Core::Process {
 		assert_test(state_i == 0);
 		state_i = posix_spawn_file_actions_destroy(&spawn_file_action);
 		assert_test(state_i == 0);
-		state_i = waitid(P_PID, process_id, &wait_info, WEXITED | WSTOPPED);
+		state_i = waitid(P_PID, static_cast<id_t>(process_id), &wait_info, WEXITED | WSTOPPED);
 		assert_test(state_i == 0);
 		result = mbw<IntegerU32>(wait_info.si_status);
 		#endif

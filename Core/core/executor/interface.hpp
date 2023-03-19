@@ -26,10 +26,13 @@
 #include "core/tool/popcap/crypt_data/encrypt.hpp"
 #include "core/tool/popcap/reflection_object_notation/encode.hpp"
 #include "core/tool/popcap/reflection_object_notation/encrypt.hpp"
+#include "core/tool/popcap/u_texture/encode.hpp"
+#include "core/tool/popcap/sexy_texture/encode.hpp"
 #include "core/tool/popcap/animation/encode.hpp"
 #include "core/tool/popcap/re_animation/encode.hpp"
 #include "core/tool/popcap/particle/encode.hpp"
 #include "core/tool/popcap/trail/encode.hpp"
+#include "core/tool/popcap/effect/encode.hpp"
 #include "core/tool/popcap/package/pack.hpp"
 #include "core/tool/popcap/resource_stream_group/pack.hpp"
 #include "core/tool/popcap/resource_stream_bundle/pack.hpp"
@@ -623,7 +626,7 @@ namespace TwinStar::Core::Executor::Interface {
 						n_PNG.add_namespace("Write"_s)
 							.add_function_proxy<&stp<&Tool::Image::File::PNG::Write::do_process_image>>("process_image"_s);
 						n_PNG.add_namespace("Read"_s)
-							.add_function_proxy<&stp<&Tool::Image::File::PNG::Read::do_compute_size>>("compute_size"_s)
+							.add_function_proxy<&stp<&Tool::Image::File::PNG::Read::do_compute_image_size>>("compute_image_size"_s)
 							.add_function_proxy<&stp<&Tool::Image::File::PNG::Read::do_process_image>>("process_image"_s);
 					}
 				}
@@ -632,9 +635,29 @@ namespace TwinStar::Core::Executor::Interface {
 			{
 				auto n_Wwise = n_Tool.add_namespace("Wwise"_s);
 				{
+					using Tool::Wwise::Media::Version;
+					using Tool::Wwise::Media::VersionPackage;
 					auto n_Media = n_Wwise.add_namespace("Media"_s);
+					define_generic_class<Version>(n_Media, "Version"_s);
 					n_Media.add_namespace("Decode"_s)
-						.add_function_proxy<&stp<&Tool::Wwise::Media::Decode::do_process_audio>>("process_audio"_s);
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							CByteListView const & ripe,
+							ByteArray &           raw,
+							Path const &          ffmpeg_program,
+							Path const &          ww2ogg_program,
+							Path const &          ww2ogg_code_book,
+							Path const &          temporary_directory,
+							Version const &       version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::Wwise::Media::Decode<version>::do_process_media(ripe, raw, ffmpeg_program, ww2ogg_program, ww2ogg_code_book, temporary_directory);
+									}
+								);
+							}
+						>>>("process_media"_s);
 				}
 				{
 					using Tool::Wwise::SoundBank::Version;
@@ -908,13 +931,12 @@ namespace TwinStar::Core::Executor::Interface {
 							[] (
 							IByteStreamView & data,
 							JSON::Value &     value,
-							Boolean const &   native_string_encoding_use_extended_ascii,
 							Version const &   version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ReflectionObjectNotation::Decode<version>::do_process_whole(data, value, native_string_encoding_use_extended_ascii);
+										Tool::PopCap::ReflectionObjectNotation::Decode<version>::do_process_whole(data, value);
 									}
 								);
 							}
@@ -925,6 +947,140 @@ namespace TwinStar::Core::Executor::Interface {
 					n_ReflectionObjectNotation.add_namespace("Decrypt"_s)
 						.add_function_proxy<&stp<&Tool::PopCap::ReflectionObjectNotation::Decrypt::do_compute_size>>("compute_size"_s)
 						.add_function_proxy<&stp<&Tool::PopCap::ReflectionObjectNotation::Decrypt::do_process_whole>>("process_whole"_s);
+				}
+				{
+					using Tool::PopCap::UTexture::Version;
+					using Tool::PopCap::UTexture::VersionPackage;
+					auto n_UTexture = n_PopCap.add_namespace("UTexture"_s);
+					define_generic_class<Version>(n_UTexture, "Version"_s);
+					n_UTexture.add_namespace("Encode"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							Size &                               data_size_bound,
+							Image::ImageSize const &             image_size,
+							Tool::Image::Texture::Format const & format,
+							Version const &                      version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::UTexture::Encode<version>::do_compute_data_size_bound(data_size_bound, image_size, format);
+									}
+								);
+							}
+						>>>("compute_data_size_bound"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							OByteStreamView &                    data,
+							Image::CImageView const &            image,
+							Tool::Image::Texture::Format const & format,
+							Version const &                      version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::UTexture::Encode<version>::do_process_image(data, image, format);
+									}
+								);
+							}
+						>>>("process_image"_s);
+					n_UTexture.add_namespace("Decode"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							CByteListView &    data,
+							Image::ImageSize & image_size,
+							Version const &    version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::UTexture::Decode<version>::do_compute_image_size(data, image_size);
+									}
+								);
+							}
+						>>>("compute_image_size"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							IByteStreamView &         data,
+							Image::VImageView const & image,
+							Version const &           version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::UTexture::Decode<version>::do_process_image(data, image);
+									}
+								);
+							}
+						>>>("process_image"_s);
+				}
+				{
+					using Tool::PopCap::SexyTexture::Version;
+					using Tool::PopCap::SexyTexture::VersionPackage;
+					auto n_SexyTexture = n_PopCap.add_namespace("SexyTexture"_s);
+					define_generic_class<Version>(n_SexyTexture, "Version"_s);
+					n_SexyTexture.add_namespace("Encode"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							Size &                               data_size_bound,
+							Image::ImageSize const &             image_size,
+							Tool::Image::Texture::Format const & format,
+							Boolean const &                      compress_texture_data,
+							Version const &                      version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::SexyTexture::Encode<version>::do_compute_data_size_bound(data_size_bound, image_size, format, compress_texture_data);
+									}
+								);
+							}
+						>>>("compute_data_size_bound"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							OByteStreamView &                    data,
+							Image::CImageView const &            image,
+							Tool::Image::Texture::Format const & format,
+							Boolean const &                      compress_texture_data,
+							Version const &                      version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::SexyTexture::Encode<version>::do_process_image(data, image, format, compress_texture_data);
+									}
+								);
+							}
+						>>>("process_image"_s);
+					n_SexyTexture.add_namespace("Decode"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							CByteListView &    data,
+							Image::ImageSize & image_size,
+							Version const &    version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::SexyTexture::Decode<version>::do_compute_image_size(data, image_size);
+									}
+								);
+							}
+						>>>("compute_image_size"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							IByteStreamView &         data,
+							Image::VImageView const & image,
+							Version const &           version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::SexyTexture::Decode<version>::do_process_image(data, image);
+									}
+								);
+							}
+						>>>("process_image"_s);
 				}
 				{
 					using Tool::PopCap::Animation::Version;
@@ -1119,6 +1275,51 @@ namespace TwinStar::Core::Executor::Interface {
 								);
 							}
 						>>>("process_trail"_s);
+				}
+				{
+					using Tool::PopCap::Effect::Version;
+					using Tool::PopCap::Effect::VersionPackage;
+					using Tool::PopCap::Effect::Manifest;
+					using EffectManifest = Variant<
+						typename Manifest<VersionPackage::element<1_ixz>>::Effect
+					>;
+					auto n_Effect = n_PopCap.add_namespace("Effect"_s);
+					define_generic_class<Version>(n_Effect, "Version"_s);
+					{
+						auto n_Manifest = n_Effect.add_namespace("Manifest"_s);
+						auto c_Effect = define_generic_class<EffectManifest, GCDF::generic_mask>(n_Manifest, "Effect"_s);
+						define_variant_class_version_method<Version, VersionPackage>(c_Effect);
+					}
+					n_Effect.add_namespace("Encode"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							OByteStreamView &      effect_data,
+							EffectManifest const & effect_manifest,
+							Version const &        version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::Effect::Encode<version>::do_process_effect(effect_data, effect_manifest.template get_of_index<mbw<Size>(index)>());
+									}
+								);
+							}
+						>>>("process_effect"_s);
+					n_Effect.add_namespace("Decode"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							IByteStreamView & effect_data,
+							EffectManifest &  effect_manifest,
+							Version const &   version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::Effect::Decode<version>::do_process_effect(effect_data, effect_manifest.template set_of_index<mbw<Size>(index)>());
+									}
+								);
+							}
+						>>>("process_effect"_s);
 				}
 				{
 					using Tool::PopCap::Package::Version;

@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 49;
+	export const k_version = 50;
 
 	// ------------------------------------------------
 
@@ -363,10 +363,13 @@ TwinStar.Script.Main.g_module_manifest = {
 		`Entry/method/popcap.crypt_data`,
 		`Entry/method/popcap.reflection_object_notation`,
 		`Entry/method/popcap.texture`,
+		`Entry/method/popcap.u_texture`,
+		`Entry/method/popcap.sexy_texture`,
 		`Entry/method/popcap.animation`,
 		`Entry/method/popcap.re_animation`,
 		`Entry/method/popcap.particle`,
 		`Entry/method/popcap.trail`,
+		`Entry/method/popcap.effect`,
 		`Entry/method/popcap.package`,
 		`Entry/method/popcap.resource_stream_group`,
 		`Entry/method/popcap.resource_stream_bundle`,

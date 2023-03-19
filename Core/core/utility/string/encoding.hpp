@@ -14,8 +14,8 @@ namespace TwinStar::Core::StringEncoding {
 	) -> BasicString<Character16> {
 		auto converter = std::wstring_convert<std::codecvt_utf8_utf16<ZCharacter16>, ZCharacter16>{};
 		auto result = converter.from_bytes(
-			cast_pointer<ZCharacterLocale>(source.begin()).value,
-			cast_pointer<ZCharacterLocale>(source.end()).value
+			cast_pointer<ZCharacterN>(source.begin()).value,
+			cast_pointer<ZCharacterN>(source.end()).value
 		);
 		assert_test(converter.converted() == source.size().value);
 		return BasicString<Character16>{cast_pointer<Character16>(make_pointer(result.data())), mbw<Size>(result.size())};

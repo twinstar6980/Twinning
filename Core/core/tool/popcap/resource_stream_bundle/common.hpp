@@ -83,23 +83,23 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStream {
 
 	#pragma region
 
-	namespace MapData {
+	namespace CompiledMapData {
 
 		inline constexpr auto k_block_size = Size{bs_static_size<IntegerU32>()};
 
-		template <typename AdditionalBlock> requires
-			CategoryConstraint<IsPureInstance<AdditionalBlock>>
+		template <typename Value> requires
+			CategoryConstraint<IsPureInstance<Value>>
 		inline auto adjust_sequence (
-			Map<String, AdditionalBlock> & list
+			Map<String, Value> & map
 		) -> Void {
 			Range::each(
-				list,
+				map,
 				[] (auto & element) {
 					element.key.as_upper_case();
 				}
 			);
 			Range::sort(
-				list,
+				map,
 				[] (auto & thix, auto & that) {
 					return thix.key > that.key;
 				}
@@ -109,16 +109,16 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStream {
 
 		// ----------------
 
-		template <typename AdditionalBlock> requires
-			CategoryConstraint<IsPureInstance<AdditionalBlock>>
+		template <typename Value> requires
+			CategoryConstraint<IsPureInstance<Value>>
 		inline auto compute_ripe_size (
-			Map<String, AdditionalBlock> const & list
+			Map<String, Value> const & map
 		) -> Size {
 			struct WorkOption {
 				Size inherit_length;
 			};
-			auto work_option = Array<Optional<WorkOption>>{list.size()};
-			if (!list.empty()) {
+			auto work_option = Array<Optional<WorkOption>>{map.size()};
+			if (!map.empty()) {
 				work_option[1_ix].set(
 					WorkOption{
 						.inherit_length = k_none_size,
@@ -126,13 +126,13 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStream {
 				);
 			}
 			auto block_count = k_none_size;
-			for (auto & index : SizeRange{list.size()}) {
-				auto & element = list.at(index);
+			for (auto & index : SizeRange{map.size()}) {
+				auto & element = map.at(index);
 				{
 					auto a_string_has_child = Array<Boolean>{element.key.size() + 1_sz};
-					for (auto & index_1 : SizeRange{index + 2_ix, list.size()}) {
+					for (auto & index_1 : SizeRange{index + 2_ix, map.size()}) {
 						if (!work_option[index_1].has()) {
-							auto common_size = Range::common_size(list.at(index).key, list.at(index_1).key);
+							auto common_size = Range::common_size(map.at(index).key, map.at(index_1).key);
 							if (!a_string_has_child[common_size] && common_size >= work_option[index].get().inherit_length) {
 								a_string_has_child[common_size] = k_true;
 								work_option[index_1].set(
@@ -157,31 +157,31 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStream {
 			return block_count * k_block_size;
 		}
 
-		template <typename AdditionalBlock> requires
-			CategoryConstraint<IsPureInstance<AdditionalBlock>>
+		template <typename Value> requires
+			CategoryConstraint<IsPureInstance<Value>>
 		inline auto encode (
-			Map<String, AdditionalBlock> const & list,
-			OByteStreamView &                    data
+			Map<String, Value> const & map,
+			OByteStreamView &          data
 		) -> Void {
 			auto stream = IOByteStreamView{data.reserve_view()};
 			struct WorkOption {
 				Size inherit_length;
 				Size parent_offset;
 			};
-			auto work_option = Array<Optional<WorkOption>>{list.size()};
-			if (!list.empty()) {
+			auto work_option = Array<Optional<WorkOption>>{map.size()};
+			if (!map.empty()) {
 				work_option.first().set(
 					WorkOption{
 						.inherit_length = k_none_size,
 						.parent_offset = k_begin_index,
 					}
 				);
-				for (auto & index : SizeRange{list.size()}) {
-					auto & element = list.at(index);
+				for (auto & index : SizeRange{map.size()}) {
+					auto & element = map.at(index);
 					auto   current_string_has_child = Array<Boolean>{element.key.size() + 1_sz};
-					for (auto & index_1 : SizeRange{index + k_next_index, list.size()}) {
+					for (auto & index_1 : SizeRange{index + k_next_index, map.size()}) {
 						if (!work_option[index_1]) {
-							auto common_size = Range::common_size(element.key, list.at(index_1).key);
+							auto common_size = Range::common_size(element.key, map.at(index_1).key);
 							if (!current_string_has_child[common_size] && common_size >= work_option[index].get().inherit_length) {
 								current_string_has_child[common_size] = k_true;
 								work_option[index_1].set(
@@ -217,18 +217,18 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStream {
 			return;
 		}
 
-		template <typename AdditionalBlock> requires
-			CategoryConstraint<IsPureInstance<AdditionalBlock>>
+		template <typename Value> requires
+			CategoryConstraint<IsPureInstance<Value>>
 		inline auto decode (
-			Map<String, AdditionalBlock> & list,
-			IByteStreamView &              data
+			Map<String, Value> & map,
+			IByteStreamView &    data
 		) -> Void {
 			auto stream = IByteStreamView{data.reserve_view()};
-			list.allocate(stream.reserve() / k_block_size);
+			map.allocate(stream.reserve() / k_block_size);
 			auto parent_string_list = Array<Optional<CStringView>>{stream.reserve() / k_block_size};
 			while (!stream.full()) {
-				list.append();
-				auto & element = list.last();
+				map.append();
+				auto & element = map.last();
 				auto   string_length_in_next_stream = k_none_size;
 				{
 					auto string_begin_position = stream.position();
@@ -258,7 +258,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStream {
 				}
 				stream.read(element.value);
 			}
-			list.shrink_to_fit();
+			map.shrink_to_fit();
 			data.forward(stream.position());
 			return;
 		}

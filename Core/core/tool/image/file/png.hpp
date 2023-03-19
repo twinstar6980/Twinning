@@ -103,9 +103,9 @@ namespace TwinStar::Core::Tool::Image::File::PNG {
 
 	protected:
 
-		static auto compute_size (
+		static auto compute_image_size (
 			CByteListView const & data,
-			Image::ImageSize &    size
+			Image::ImageSize &    image_size
 		) -> Void {
 			auto stream = IByteStreamView{data};
 			auto png_struct = Third::libpng::png_create_read_struct(Third::libpng::PNG_LIBPNG_VER_STRING_, nullptr, nullptr, nullptr);
@@ -113,7 +113,7 @@ namespace TwinStar::Core::Tool::Image::File::PNG {
 			Third::libpng::png_set_read_fn(png_struct, &stream, &png_read_data);
 			auto png_info = Third::libpng::png_create_info_struct(png_struct);
 			Third::libpng::png_read_info(png_struct, png_info);
-			size = Image::ImageSize{mbw<Size>((*png_struct).width), mbw<Size>((*png_struct).height)};
+			image_size = Image::ImageSize{mbw<Size>((*png_struct).width), mbw<Size>((*png_struct).height)};
 			Third::libpng::png_destroy_read_struct(&png_struct, &png_info, nullptr);
 			return;
 		}
@@ -193,12 +193,12 @@ namespace TwinStar::Core::Tool::Image::File::PNG {
 
 	public:
 
-		static auto do_compute_size (
+		static auto do_compute_image_size (
 			CByteListView const & data,
-			Image::ImageSize &    size
+			Image::ImageSize &    image_size
 		) -> Void {
-			restruct(size);
-			return compute_size(data, size);
+			restruct(image_size);
+			return compute_image_size(data, image_size);
 		}
 
 		// ----------------

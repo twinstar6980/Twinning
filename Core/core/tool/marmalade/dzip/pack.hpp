@@ -202,11 +202,7 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::lzma)) {
 						auto chunk_data = FileSystem::read_file(resource_path);
-						auto chunk_header = Structure::ChunkHeaderLzma<version>{};
-						auto chunk_header_data = OByteStreamView{package_data.forward_view(bs_size(chunk_header))};
-						Data::Compression::Lzma::Compress::do_process_whole(as_lvalue(IByteStreamView{chunk_data}), package_data, as_lvalue(OByteStreamView{chunk_header.property.view()}), 9_sz);
-						chunk_header.size = cbw<IntegerU64>(chunk_data.size()); // TODO : should assert size is 32 bit ?
-						chunk_header_data.write(chunk_header);
+						Data::Compression::Lzma::Compress::do_process_whole(as_lvalue(IByteStreamView{chunk_data}), package_data, 9_sz);
 						chunk_size_uncompressed = chunk_data.size();
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
@@ -375,9 +371,7 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 						assert_test(chunk_size_compressed == chunk_data.size());
 						chunk_manifest.flag = "lzma"_s;
 						auto chunk_stream = OByteStreamView{chunk_data};
-						auto chunk_header = package_data.read_of<Structure::ChunkHeaderLzma<version>>();
-						assert_test(cbw<Size>(chunk_header.size) == chunk_data.size());
-						Data::Compression::Lzma::Uncompress::do_process_whole(package_data, chunk_stream, as_lvalue(IByteStreamView{chunk_header.property.view()}));
+						Data::Compression::Lzma::Uncompress::do_process_whole(package_data, chunk_stream);
 						assert_test(chunk_stream.full());
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::random_access)) {

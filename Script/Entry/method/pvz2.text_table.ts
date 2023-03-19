@@ -44,7 +44,7 @@ namespace TwinStar.Script.Entry.method.pvz2.text_table {
 							...Executor.query_argument_message(this.id, 'destination_file'),
 							a.destination_file,
 							(value) => (value),
-							() => (source_file.replace(/((\.(txt|json)))?$/i, `.converted.${{ 'text': 'txt', 'json_map': 'map.json', 'json_list': 'list.json' }[destination_version]}`)),
+							() => (source_file.replace(/((\.(txt|json)))?$/i, `.convert.${{ 'text': 'txt', 'json_map': 'json', 'json_list': 'json' }[destination_version]}`)),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
 					}

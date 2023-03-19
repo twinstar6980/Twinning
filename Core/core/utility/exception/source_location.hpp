@@ -92,9 +92,9 @@ namespace TwinStar::Core {
 #if defined __cpp_lib_source_location
 #define M_current_source_location std_source_location::current()
 #define M_current_source_location_x std_source_location::current()
-#if defined M_compiler_clang
-// TODO : clang bug : https://github.com/llvm/llvm-project/issues/48230 (fixed in ?)
-// TODO : clang bug : https://github.com/llvm/llvm-project/issues/56379 (fixed in clang 16)
+#if defined M_compiler_clang && __clang_major__ < 16
+// TODO : clang bug : https://github.com/llvm/llvm-project/issues/48230 (fixed in 15)
+// TODO : clang bug : https://github.com/llvm/llvm-project/issues/56379 (fixed in 16)
 #undef M_current_source_location_x
 #define M_current_source_location_x std_source_location{}
 #endif

@@ -305,9 +305,9 @@ namespace TwinStar::Core::StringParser {
 
 	#pragma endregion
 
-	#pragma region extended ascii string
+	#pragma region e-ascii string
 
-	inline auto write_extended_ascii_string (
+	inline auto write_eascii_string (
 		OCharacterStreamView & stream,
 		String const &         string,
 		Size &                 length
@@ -323,7 +323,7 @@ namespace TwinStar::Core::StringParser {
 		return;
 	}
 
-	inline auto read_extended_ascii_string (
+	inline auto read_eascii_string (
 		ICharacterStreamView & stream,
 		String &               string,
 		Size const &           length

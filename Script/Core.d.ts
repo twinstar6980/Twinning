@@ -1,6 +1,6 @@
 /**
  * JS interface of Core
- * @version 41
+ * @version 42
  */
 declare namespace TwinStar.Core {
 
@@ -1865,13 +1865,11 @@ declare namespace TwinStar.Core {
 						 * 压缩
 						 * @param raw 原始数据
 						 * @param ripe 成品数据
-						 * @param property 属性数据
 						 * @param level 压缩级别(0~9)
 						 */
 						function process_whole(
 							raw: IByteStreamView,
 							ripe: OByteStreamView,
-							property: OByteStreamView,
 							level: Size,
 						): Void;
 
@@ -1884,12 +1882,10 @@ declare namespace TwinStar.Core {
 						 * 解压
 						 * @param ripe 成品数据
 						 * @param raw 原始数据
-						 * @param property 属性数据
 						 */
 						function process_whole(
 							ripe: IByteStreamView,
 							raw: OByteStreamView,
-							property: IByteStreamView,
 						): Void;
 
 					}
@@ -2105,7 +2101,7 @@ declare namespace TwinStar.Core {
 
 					// ------------------------------------------------
 
-					static Value: 'a_8' | 'rgb_565' | 'rgba_5551' | 'rgba_4444' | 'rgba_8888' | 'argb_4444' | 'argb_8888';
+					static Value: 'a_8' | 'rgb_332' | 'rgb_565' | 'rgba_5551' | 'rgba_4444' | 'rgba_8888' | 'argb_1555' | 'argb_4444' | 'argb_8888' | 'l_8' | 'la_44' | 'la_88' | 'al_44' | 'al_88' | 'rgb_888_o' | 'rgba_8888_o';
 
 					static value(it: typeof Format.Value): Format;
 
@@ -2302,11 +2298,11 @@ declare namespace TwinStar.Core {
 						/**
 						 * 计算图像尺寸
 						 * @param data 数据
-						 * @param size 图像尺寸
+						 * @param image_size 图像尺寸
 						 */
-						function compute_size(
+						function compute_image_size(
 							data: CByteListView,
-							size: Image.ImageSize,
+							image_size: Image.ImageSize,
 						): Void;
 
 						/**
@@ -2333,6 +2329,34 @@ declare namespace TwinStar.Core {
 			/** Media */
 			namespace Media {
 
+				/** 版本 */
+				class Version {
+
+					// ------------------------------------------------
+
+					private _Tool_Wwise_Media_Version;
+
+					// ------------------------------------------------
+
+					static default(): Version;
+
+					static copy(it: Version): Version;
+
+					// ------------------------------------------------
+
+					static Value: {
+					};
+
+					static value(it: typeof Version.Value): Version;
+
+					get value(): typeof Version.Value;
+
+					set value(it: typeof Version.Value);
+
+					// ------------------------------------------------
+
+				}
+
 				/** 解码 */
 				namespace Decode {
 
@@ -2344,14 +2368,16 @@ declare namespace TwinStar.Core {
 					 * @param ww2ogg_program ww2ogg程序文件的路径，vorbis音频解码时需要调用该程序
 					 * @param ww2ogg_code_book ww2ogg代码本文件的路径，vorbis音频解码时需要使用该文件
 					 * @param temporary_directory 临时文件目录
+					 * @param version 版本
 					 */
-					function process_audio(
+					function process_media(
 						ripe: CByteListView,
 						raw: ByteArray,
 						ffmpeg_program: Path,
 						ww2ogg_program: Path,
 						ww2ogg_code_book: Path,
 						temporary_directory: Path,
+						version: Version,
 					): Void;
 
 				}
@@ -2625,7 +2651,7 @@ declare namespace TwinStar.Core {
 					// ------------------------------------------------
 
 					static Value: {
-						variant_64: boolean;
+						variant_64: false | true;
 					};
 
 					static value(it: typeof Version.Value): Version;
@@ -2835,6 +2861,7 @@ declare namespace TwinStar.Core {
 
 					static Value: {
 						number: 1n;
+						native_string_encoding_use_utf8: false | true;
 					};
 
 					static value(it: typeof Version.Value): Version;
@@ -2878,13 +2905,11 @@ declare namespace TwinStar.Core {
 					 * 解码
 					 * @param data 数据
 					 * @param value 值
-					 * @param native_string_encoding_use_extended_ascii 本地字符串编码使用扩展ASCII，否则为UTF-8
 					 * @param version 版本
 					 */
 					function process_whole(
 						data: IByteStreamView,
 						value: JSON.Value<JS_ValidValue>,
-						native_string_encoding_use_extended_ascii: Boolean,
 						version: Version,
 					): Void;
 
@@ -2940,6 +2965,202 @@ declare namespace TwinStar.Core {
 						cipher: IByteStreamView,
 						plain: OByteStreamView,
 						key: String,
+					): Void;
+
+				}
+
+			}
+
+			/** UTexture */
+			namespace UTexture {
+
+				/** 版本 */
+				class Version {
+
+					// ------------------------------------------------
+
+					private _Tool_PopCap_UTexture_Version;
+
+					// ------------------------------------------------
+
+					static default(): Version;
+
+					static copy(it: Version): Version;
+
+					// ------------------------------------------------
+
+					static Value: {
+						compress_texture_data: false | true;
+					};
+
+					static value(it: typeof Version.Value): Version;
+
+					get value(): typeof Version.Value;
+
+					set value(it: typeof Version.Value);
+
+					// ------------------------------------------------
+
+				}
+
+				/** 编码 */
+				namespace Encode {
+
+					/**
+					 * 计算数据尺寸上限
+					 * @param data_size_bound 数据尺寸上限
+					 * @param image_size 图像尺寸
+					 * @param format 格式
+					 * @param version 版本
+					 */
+					function compute_data_size_bound(
+						data_size_bound: Size,
+						image_size: Image.ImageSize,
+						format: Image.Texture.Format,
+						version: Version,
+					): Void;
+
+					/**
+					 * 编码
+					 * @param data 数据
+					 * @param image 图像
+					 * @param format 格式
+					 * @param version 版本
+					 */
+					function process_image(
+						data: OByteStreamView,
+						image: Image.CImageView,
+						format: Image.Texture.Format,
+						version: Version,
+					): Void;
+
+				}
+
+				/** 解码 */
+				namespace Decode {
+
+					/**
+					 * 计算图像尺寸
+					 * @param data 数据
+					 * @param image_size 图像尺寸
+					 * @param version 版本
+					 */
+					function compute_image_size(
+						data: CByteListView,
+						image_size: Image.ImageSize,
+						version: Version,
+					): Void;
+
+					/**
+					 * 解码
+					 * @param data 数据
+					 * @param image 图像
+					 * @param version 版本
+					 */
+					function process_image(
+						data: IByteStreamView,
+						image: Image.VImageView,
+						version: Version,
+					): Void;
+
+				}
+
+			}
+
+			/** SexyTexture */
+			namespace SexyTexture {
+
+				/** 版本 */
+				class Version {
+
+					// ------------------------------------------------
+
+					private _Tool_PopCap_SexyTexture_Version;
+
+					// ------------------------------------------------
+
+					static default(): Version;
+
+					static copy(it: Version): Version;
+
+					// ------------------------------------------------
+
+					static Value: {
+						number: 0n;
+					};
+
+					static value(it: typeof Version.Value): Version;
+
+					get value(): typeof Version.Value;
+
+					set value(it: typeof Version.Value);
+
+					// ------------------------------------------------
+
+				}
+
+				/** 编码 */
+				namespace Encode {
+
+					/**
+					 * 计算数据尺寸上限
+					 * @param data_size_bound 数据尺寸上限
+					 * @param image_size 图像尺寸
+					 * @param format 格式
+					 * @param compress_texture_data 压缩纹理数据
+					 * @param version 版本
+					 */
+					function compute_data_size_bound(
+						data_size_bound: Size,
+						image_size: Image.ImageSize,
+						format: Image.Texture.Format,
+						compress_texture_data: Boolean,
+						version: Version,
+					): Void;
+
+					/**
+					 * 编码
+					 * @param data 数据
+					 * @param image 图像
+					 * @param format 格式
+					 * @param compress_texture_data 压缩纹理数据
+					 * @param version 版本
+					 */
+					function process_image(
+						data: OByteStreamView,
+						image: Image.CImageView,
+						format: Image.Texture.Format,
+						compress_texture_data: Boolean,
+						version: Version,
+					): Void;
+
+				}
+
+				/** 解码 */
+				namespace Decode {
+
+					/**
+					 * 计算图像尺寸
+					 * @param data 数据
+					 * @param image_size 图像尺寸
+					 * @param version 版本
+					 */
+					function compute_image_size(
+						data: CByteListView,
+						image_size: Image.ImageSize,
+						version: Version,
+					): Void;
+
+					/**
+					 * 解码
+					 * @param data 数据
+					 * @param image 图像
+					 * @param version 版本
+					 */
+					function process_image(
+						data: IByteStreamView,
+						image: Image.VImageView,
+						version: Version,
 					): Void;
 
 				}
@@ -3197,7 +3418,7 @@ declare namespace TwinStar.Core {
 
 					static Value: {
 						platform: 'desktop' | 'mobile' | 'television';
-						variant_64: boolean;
+						variant_64: false | true;
 					};
 
 					static value(it: typeof Version.Value): Version;
@@ -3320,7 +3541,7 @@ declare namespace TwinStar.Core {
 
 					static Value: {
 						platform: 'desktop' | 'mobile' | 'television';
-						variant_64: boolean;
+						variant_64: false | true;
 					};
 
 					static value(it: typeof Version.Value): Version;
@@ -3423,7 +3644,7 @@ declare namespace TwinStar.Core {
 
 					static Value: {
 						platform: 'desktop' | 'mobile' | 'television';
-						variant_64: boolean;
+						variant_64: false | true;
 					};
 
 					static value(it: typeof Version.Value): Version;
@@ -3499,6 +3720,108 @@ declare namespace TwinStar.Core {
 					function process_trail(
 						trail_data: IByteStreamView,
 						trail_manifest: Manifest.Trail,
+						version: Version,
+					): Void;
+
+				}
+
+			}
+
+			/** Effect */
+			namespace Effect {
+
+				/** 版本 */
+				class Version {
+
+					// ------------------------------------------------
+
+					private _Tool_PopCap_Effect_Version;
+
+					// ------------------------------------------------
+
+					static default(): Version;
+
+					static copy(it: Version): Version;
+
+					// ------------------------------------------------
+
+					static Value: {
+						number: 1n;
+					};
+
+					static value(it: typeof Version.Value): Version;
+
+					get value(): typeof Version.Value;
+
+					set value(it: typeof Version.Value);
+
+					// ------------------------------------------------
+
+				}
+
+				/** 清单 */
+				namespace Manifest {
+
+					namespace JS_N {
+
+					}
+
+					/** 效果 */
+					class Effect {
+
+						// ------------------------------------------------
+
+						private _Tool_PopCap_Effect_Manifest_Effect;
+
+						// ------------------------------------------------
+
+						static default(): Effect;
+
+						static copy(it: Effect): Effect;
+
+						// ------------------------------------------------
+
+						static json(it: JSON.Value<undefined>, version: Version): Effect;
+
+						get_json(version: Version): JSON.Value<undefined>;
+
+						set_json(it: JSON.Value<undefined>, version: Version): Void;
+
+						// ------------------------------------------------
+
+					}
+
+				}
+
+				/** 编码 */
+				namespace Encode {
+
+					/**
+					 * 编码
+					 * @param effect_data 效果数据
+					 * @param effect_manifest 效果清单
+					 * @param version 版本
+					 */
+					function process_effect(
+						effect_data: OByteStreamView,
+						effect_manifest: Manifest.Effect,
+						version: Version,
+					): Void;
+
+				}
+
+				/** 解码 */
+				namespace Decode {
+
+					/**
+					 * 解码
+					 * @param effect_data 效果数据
+					 * @param effect_manifest 效果清单
+					 * @param version 版本
+					 */
+					function process_effect(
+						effect_data: IByteStreamView,
+						effect_manifest: Manifest.Effect,
 						version: Version,
 					): Void;
 

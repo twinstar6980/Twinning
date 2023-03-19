@@ -87,15 +87,18 @@ namespace TwinStar::Core::Tool::PopCap::Particle {
 
 		// ----------------
 
-		static auto exchange_integer_platform (
+		template <typename RawValue> requires
+			CategoryConstraint<IsPureInstance<RawValue>>
+			&& (IsBaseWrapper<RawValue>)
+		static auto exchange_unit_constant (
 			OByteStreamView & data,
-			Integer const &   value
+			RawValue const &  value
 		) -> Void {
-			data.write(cbw<IntegerOfPlatform>(value));
+			data.write_constant(value);
 			return;
 		}
 
-		static auto exchange_integer (
+		static auto exchange_unit_integer (
 			OByteStreamView & data,
 			Integer const &   value
 		) -> Void {
@@ -103,27 +106,27 @@ namespace TwinStar::Core::Tool::PopCap::Particle {
 			return;
 		}
 
-		static auto exchange_floating (
+		static auto exchange_unit_integer_platform (
 			OByteStreamView & data,
-			Floating const &  value
+			Integer const &   value
 		) -> Void {
-			data.write(cbw<Floating32>(value));
+			data.write(cbw<IntegerOfPlatform>(value));
 			return;
 		}
 
-		static auto exchange_string (
+		static auto exchange_unit_floating (
+			OByteStreamView & data,
+			Floating const &  value
+		) -> Void {
+			data.write(cbw<FloatingS32>(value));
+			return;
+		}
+
+		static auto exchange_unit_string (
 			OByteStreamView & data,
 			String const &    value
 		) -> Void {
 			data.write(self_cast<StringBlock32>(value));
-			return;
-		}
-
-		static auto exchange_integer_constant (
-			OByteStreamView & data,
-			Integer const &   value
-		) -> Void {
-			data.write_constant(cbw<IntegerU32>(value));
 			return;
 		}
 
@@ -133,13 +136,13 @@ namespace TwinStar::Core::Tool::PopCap::Particle {
 			OByteStreamView &                          track_node_list_data,
 			List<typename Manifest::TrackNode> const & track_node_list_manifest
 		) -> Void {
-			exchange_integer(track_node_list_data, cbw<Integer>(track_node_list_manifest.size()));
+			exchange_unit_integer(track_node_list_data, cbw<Integer>(track_node_list_manifest.size()));
 			for (auto & track_node_manifest : track_node_list_manifest) {
-				exchange_floating(track_node_list_data, track_node_manifest.time);
-				exchange_floating(track_node_list_data, track_node_manifest.low_value);
-				exchange_floating(track_node_list_data, track_node_manifest.high_value);
-				exchange_integer(track_node_list_data, track_node_manifest.curve);
-				exchange_integer(track_node_list_data, track_node_manifest.distribution);
+				exchange_unit_floating(track_node_list_data, track_node_manifest.time);
+				exchange_unit_floating(track_node_list_data, track_node_manifest.low_value);
+				exchange_unit_floating(track_node_list_data, track_node_manifest.high_value);
+				exchange_unit_integer(track_node_list_data, track_node_manifest.curve);
+				exchange_unit_integer(track_node_list_data, track_node_manifest.distribution);
 			}
 			return;
 		}
@@ -149,13 +152,13 @@ namespace TwinStar::Core::Tool::PopCap::Particle {
 			List<typename Manifest::Field> const & field_list_manifest
 		) -> Void {
 			auto ignored = Integer{0_i};
-			exchange_integer_constant(field_list_data, cbw<Integer>(k_field_data_size));
+			exchange_unit_constant(field_list_data, cbw<IntegerU32>(k_field_data_size));
 			for (auto & field_manifest : field_list_manifest) {
-				exchange_integer_platform(field_list_data, field_manifest.type);
-				exchange_integer_platform(field_list_data, ignored);
-				exchange_integer_platform(field_list_data, ignored);
-				exchange_integer_platform(field_list_data, ignored);
-				exchange_integer_platform(field_list_data, ignored);
+				exchange_unit_integer_platform(field_list_data, field_manifest.type);
+				exchange_unit_integer_platform(field_list_data, ignored);
+				exchange_unit_integer_platform(field_list_data, ignored);
+				exchange_unit_integer_platform(field_list_data, ignored);
+				exchange_unit_integer_platform(field_list_data, ignored);
 			}
 			for (auto & field_manifest : field_list_manifest) {
 				process_track_node_list(field_list_data, field_manifest.offset_x);
@@ -169,47 +172,47 @@ namespace TwinStar::Core::Tool::PopCap::Particle {
 			List<typename Manifest::Emitter> const & emitter_list_manifest
 		) -> Void {
 			auto ignored = Integer{0_i};
-			exchange_integer(emitter_list_data, cbw<Integer>(emitter_list_manifest.size()));
+			exchange_unit_integer(emitter_list_data, cbw<Integer>(emitter_list_manifest.size()));
 			if constexpr (version.variant_64) {
-				exchange_integer(emitter_list_data, ignored);
+				exchange_unit_integer(emitter_list_data, ignored);
 			}
-			exchange_integer_constant(emitter_list_data, cbw<Integer>(k_emitter_data_size));
+			exchange_unit_constant(emitter_list_data, cbw<IntegerU32>(k_emitter_data_size));
 			for (auto & emitter_manifest : emitter_list_manifest) {
-				exchange_integer_platform(emitter_list_data, ignored);
-				exchange_integer(emitter_list_data, emitter_manifest.image_column);
-				exchange_integer(emitter_list_data, emitter_manifest.image_row);
-				exchange_integer(emitter_list_data, emitter_manifest.image_frame);
-				exchange_integer(emitter_list_data, emitter_manifest.animated);
-				exchange_integer(emitter_list_data, emitter_manifest.flag);
-				exchange_integer(emitter_list_data, emitter_manifest.type);
-				exchange_integer_platform(emitter_list_data, ignored);
-				exchange_integer_platform(emitter_list_data, ignored);
+				exchange_unit_integer_platform(emitter_list_data, ignored);
+				exchange_unit_integer(emitter_list_data, emitter_manifest.image_column);
+				exchange_unit_integer(emitter_list_data, emitter_manifest.image_row);
+				exchange_unit_integer(emitter_list_data, emitter_manifest.image_frame);
+				exchange_unit_integer(emitter_list_data, emitter_manifest.animated);
+				exchange_unit_integer(emitter_list_data, emitter_manifest.flag);
+				exchange_unit_integer(emitter_list_data, emitter_manifest.type);
+				exchange_unit_integer_platform(emitter_list_data, ignored);
+				exchange_unit_integer_platform(emitter_list_data, ignored);
 				for (auto & index : SizeRange{22_sz}) {
-					exchange_integer_platform(emitter_list_data, ignored);
-					exchange_integer_platform(emitter_list_data, ignored);
+					exchange_unit_integer_platform(emitter_list_data, ignored);
+					exchange_unit_integer_platform(emitter_list_data, ignored);
 				}
-				exchange_integer_platform(emitter_list_data, ignored);
-				exchange_integer_platform(emitter_list_data, cbw<Integer>(emitter_manifest.field.size()));
-				exchange_integer_platform(emitter_list_data, ignored);
-				exchange_integer_platform(emitter_list_data, cbw<Integer>(emitter_manifest.system_field.size()));
+				exchange_unit_integer_platform(emitter_list_data, ignored);
+				exchange_unit_integer_platform(emitter_list_data, cbw<Integer>(emitter_manifest.field.size()));
+				exchange_unit_integer_platform(emitter_list_data, ignored);
+				exchange_unit_integer_platform(emitter_list_data, cbw<Integer>(emitter_manifest.system_field.size()));
 				for (auto & index : SizeRange{16_sz}) {
-					exchange_integer_platform(emitter_list_data, ignored);
-					exchange_integer_platform(emitter_list_data, ignored);
+					exchange_unit_integer_platform(emitter_list_data, ignored);
+					exchange_unit_integer_platform(emitter_list_data, ignored);
 				}
 			}
 			for (auto & emitter_manifest : emitter_list_manifest) {
 				if constexpr (version.platform == VersionPlatform::Constant::desktop() || version.platform == VersionPlatform::Constant::television()) {
-					exchange_string(emitter_list_data, emitter_manifest.image);
+					exchange_unit_string(emitter_list_data, emitter_manifest.image);
 				}
 				if constexpr (version.platform == VersionPlatform::Constant::mobile()) {
-					exchange_integer(emitter_list_data, emitter_manifest.image);
+					exchange_unit_integer(emitter_list_data, emitter_manifest.image);
 				}
 				if constexpr (version.platform == VersionPlatform::Constant::television()) {
-					exchange_string(emitter_list_data, emitter_manifest.image_path);
+					exchange_unit_string(emitter_list_data, emitter_manifest.image_path);
 				}
-				exchange_string(emitter_list_data, emitter_manifest.name);
+				exchange_unit_string(emitter_list_data, emitter_manifest.name);
 				process_track_node_list(emitter_list_data, emitter_manifest.system_duration);
-				exchange_string(emitter_list_data, emitter_manifest.on_duration);
+				exchange_unit_string(emitter_list_data, emitter_manifest.on_duration);
 				process_track_node_list(emitter_list_data, emitter_manifest.cross_fade_duration);
 				process_track_node_list(emitter_list_data, emitter_manifest.spawn_rate);
 				process_track_node_list(emitter_list_data, emitter_manifest.spawn_minimum_active);
@@ -259,7 +262,7 @@ namespace TwinStar::Core::Tool::PopCap::Particle {
 		) -> Void {
 			auto ignored = Integer{0_i};
 			particle_data.write_constant(k_magic_identifier);
-			exchange_integer_platform(particle_data, ignored);
+			exchange_unit_integer_platform(particle_data, ignored);
 			process_emitter_list(particle_data, particle_manifest.emitter);
 			return;
 		}
@@ -298,15 +301,18 @@ namespace TwinStar::Core::Tool::PopCap::Particle {
 
 		// ----------------
 
-		static auto exchange_integer_platform (
+		template <typename RawValue> requires
+			CategoryConstraint<IsPureInstance<RawValue>>
+			&& (IsBaseWrapper<RawValue>)
+		static auto exchange_unit_constant (
 			IByteStreamView & data,
-			Integer &         value
+			RawValue const &  value
 		) -> Void {
-			value = cbw<Integer>(data.read_of<IntegerOfPlatform>());
+			data.read_constant(value);
 			return;
 		}
 
-		static auto exchange_integer (
+		static auto exchange_unit_integer (
 			IByteStreamView & data,
 			Integer &         value
 		) -> Void {
@@ -314,27 +320,27 @@ namespace TwinStar::Core::Tool::PopCap::Particle {
 			return;
 		}
 
-		static auto exchange_floating (
+		static auto exchange_unit_integer_platform (
 			IByteStreamView & data,
-			Floating &        value
+			Integer &         value
 		) -> Void {
-			value = cbw<Floating>(data.read_of<Floating32>());
+			value = cbw<Integer>(data.read_of<IntegerOfPlatform>());
 			return;
 		}
 
-		static auto exchange_string (
+		static auto exchange_unit_floating (
+			IByteStreamView & data,
+			Floating &        value
+		) -> Void {
+			value = cbw<Floating>(data.read_of<FloatingS32>());
+			return;
+		}
+
+		static auto exchange_unit_string (
 			IByteStreamView & data,
 			String &          value
 		) -> Void {
 			data.read(self_cast<StringBlock32>(value));
-			return;
-		}
-
-		static auto exchange_integer_constant (
-			IByteStreamView & data,
-			Integer const &   value
-		) -> Void {
-			data.read_constant(cbw<IntegerU32>(value));
 			return;
 		}
 
@@ -344,15 +350,13 @@ namespace TwinStar::Core::Tool::PopCap::Particle {
 			IByteStreamView &                    track_node_list_data,
 			List<typename Manifest::TrackNode> & track_node_list_manifest
 		) -> Void {
-			auto track_node_count = Integer{};
-			exchange_integer(track_node_list_data, track_node_count);
-			track_node_list_manifest.allocate_full(cbw<Size>(track_node_count));
+			track_node_list_manifest.allocate_full(cbw<Size>(M_apply(M_wrap(Integer{}), M_wrap({ exchange_unit_integer(track_node_list_data, it); }))));
 			for (auto & track_node_manifest : track_node_list_manifest) {
-				exchange_floating(track_node_list_data, track_node_manifest.time);
-				exchange_floating(track_node_list_data, track_node_manifest.low_value);
-				exchange_floating(track_node_list_data, track_node_manifest.high_value);
-				exchange_integer(track_node_list_data, track_node_manifest.curve);
-				exchange_integer(track_node_list_data, track_node_manifest.distribution);
+				exchange_unit_floating(track_node_list_data, track_node_manifest.time);
+				exchange_unit_floating(track_node_list_data, track_node_manifest.low_value);
+				exchange_unit_floating(track_node_list_data, track_node_manifest.high_value);
+				exchange_unit_integer(track_node_list_data, track_node_manifest.curve);
+				exchange_unit_integer(track_node_list_data, track_node_manifest.distribution);
 			}
 			return;
 		}
@@ -362,13 +366,13 @@ namespace TwinStar::Core::Tool::PopCap::Particle {
 			List<typename Manifest::Field> & field_list_manifest
 		) -> Void {
 			auto ignored = Integer{0_i};
-			exchange_integer_constant(field_list_data, cbw<Integer>(k_field_data_size));
+			exchange_unit_constant(field_list_data, cbw<IntegerU32>(k_field_data_size));
 			for (auto & field_manifest : field_list_manifest) {
-				exchange_integer_platform(field_list_data, field_manifest.type);
-				exchange_integer_platform(field_list_data, ignored);
-				exchange_integer_platform(field_list_data, ignored);
-				exchange_integer_platform(field_list_data, ignored);
-				exchange_integer_platform(field_list_data, ignored);
+				exchange_unit_integer_platform(field_list_data, field_manifest.type);
+				exchange_unit_integer_platform(field_list_data, ignored);
+				exchange_unit_integer_platform(field_list_data, ignored);
+				exchange_unit_integer_platform(field_list_data, ignored);
+				exchange_unit_integer_platform(field_list_data, ignored);
 			}
 			for (auto & field_manifest : field_list_manifest) {
 				process_track_node_list(field_list_data, field_manifest.offset_x);
@@ -382,53 +386,47 @@ namespace TwinStar::Core::Tool::PopCap::Particle {
 			List<typename Manifest::Emitter> & emitter_list_manifest
 		) -> Void {
 			auto ignored = Integer{0_i};
-			auto emitter_count = Integer{};
-			exchange_integer(emitter_list_data, emitter_count);
-			emitter_list_manifest.allocate_full(cbw<Size>(emitter_count));
+			emitter_list_manifest.allocate_full(cbw<Size>(M_apply(M_wrap(Integer{}), M_wrap({ exchange_unit_integer(emitter_list_data, it); }))));
 			if constexpr (version.variant_64) {
-				exchange_integer(emitter_list_data, ignored);
+				exchange_unit_integer(emitter_list_data, ignored);
 			}
-			exchange_integer_constant(emitter_list_data, cbw<Integer>(k_emitter_data_size));
+			exchange_unit_constant(emitter_list_data, cbw<IntegerU32>(k_emitter_data_size));
 			for (auto & emitter_manifest : emitter_list_manifest) {
-				auto field_count = Integer{};
-				auto system_field_count = Integer{};
-				exchange_integer_platform(emitter_list_data, ignored);
-				exchange_integer(emitter_list_data, emitter_manifest.image_column);
-				exchange_integer(emitter_list_data, emitter_manifest.image_row);
-				exchange_integer(emitter_list_data, emitter_manifest.image_frame);
-				exchange_integer(emitter_list_data, emitter_manifest.animated);
-				exchange_integer(emitter_list_data, emitter_manifest.flag);
-				exchange_integer(emitter_list_data, emitter_manifest.type);
-				exchange_integer_platform(emitter_list_data, ignored);
-				exchange_integer_platform(emitter_list_data, ignored);
+				exchange_unit_integer_platform(emitter_list_data, ignored);
+				exchange_unit_integer(emitter_list_data, emitter_manifest.image_column);
+				exchange_unit_integer(emitter_list_data, emitter_manifest.image_row);
+				exchange_unit_integer(emitter_list_data, emitter_manifest.image_frame);
+				exchange_unit_integer(emitter_list_data, emitter_manifest.animated);
+				exchange_unit_integer(emitter_list_data, emitter_manifest.flag);
+				exchange_unit_integer(emitter_list_data, emitter_manifest.type);
+				exchange_unit_integer_platform(emitter_list_data, ignored);
+				exchange_unit_integer_platform(emitter_list_data, ignored);
 				for (auto & index : SizeRange{22_sz}) {
-					exchange_integer_platform(emitter_list_data, ignored);
-					exchange_integer_platform(emitter_list_data, ignored);
+					exchange_unit_integer_platform(emitter_list_data, ignored);
+					exchange_unit_integer_platform(emitter_list_data, ignored);
 				}
-				exchange_integer_platform(emitter_list_data, ignored);
-				exchange_integer_platform(emitter_list_data, field_count);
-				exchange_integer_platform(emitter_list_data, ignored);
-				exchange_integer_platform(emitter_list_data, system_field_count);
+				exchange_unit_integer_platform(emitter_list_data, ignored);
+				emitter_manifest.field.allocate_full(cbw<Size>(M_apply(M_wrap(Integer{}), M_wrap({ exchange_unit_integer_platform(emitter_list_data, it); }))));
+				exchange_unit_integer_platform(emitter_list_data, ignored);
+				emitter_manifest.system_field.allocate_full(cbw<Size>(M_apply(M_wrap(Integer{}), M_wrap({ exchange_unit_integer_platform(emitter_list_data, it); }))));
 				for (auto & index : SizeRange{16_sz}) {
-					exchange_integer_platform(emitter_list_data, ignored);
-					exchange_integer_platform(emitter_list_data, ignored);
+					exchange_unit_integer_platform(emitter_list_data, ignored);
+					exchange_unit_integer_platform(emitter_list_data, ignored);
 				}
-				emitter_manifest.field.allocate_full(cbw<Size>(field_count));
-				emitter_manifest.system_field.allocate_full(cbw<Size>(system_field_count));
 			}
 			for (auto & emitter_manifest : emitter_list_manifest) {
 				if constexpr (version.platform == VersionPlatform::Constant::desktop() || version.platform == VersionPlatform::Constant::television()) {
-					exchange_string(emitter_list_data, emitter_manifest.image);
+					exchange_unit_string(emitter_list_data, emitter_manifest.image);
 				}
 				if constexpr (version.platform == VersionPlatform::Constant::mobile()) {
-					exchange_integer(emitter_list_data, emitter_manifest.image);
+					exchange_unit_integer(emitter_list_data, emitter_manifest.image);
 				}
 				if constexpr (version.platform == VersionPlatform::Constant::television()) {
-					exchange_string(emitter_list_data, emitter_manifest.image_path);
+					exchange_unit_string(emitter_list_data, emitter_manifest.image_path);
 				}
-				exchange_string(emitter_list_data, emitter_manifest.name);
+				exchange_unit_string(emitter_list_data, emitter_manifest.name);
 				process_track_node_list(emitter_list_data, emitter_manifest.system_duration);
-				exchange_string(emitter_list_data, emitter_manifest.on_duration);
+				exchange_unit_string(emitter_list_data, emitter_manifest.on_duration);
 				process_track_node_list(emitter_list_data, emitter_manifest.cross_fade_duration);
 				process_track_node_list(emitter_list_data, emitter_manifest.spawn_rate);
 				process_track_node_list(emitter_list_data, emitter_manifest.spawn_minimum_active);
@@ -478,7 +476,7 @@ namespace TwinStar::Core::Tool::PopCap::Particle {
 		) -> Void {
 			auto ignored = Integer{0_i};
 			particle_data.read_constant(k_magic_identifier);
-			exchange_integer_platform(particle_data, ignored);
+			exchange_unit_integer_platform(particle_data, ignored);
 			process_emitter_list(particle_data, particle_manifest.emitter);
 			return;
 		}

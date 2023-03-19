@@ -21,9 +21,11 @@ namespace TwinStar::Core {
 
 	#pragma region alias
 
-	using CharacterLocale = CharacterWrapper<ZCharacterLocale>;
+	using CharacterN = CharacterWrapper<ZCharacterN>;
 
-	using CharacterWide = CharacterWrapper<ZCharacterWide>;
+	using CharacterW = CharacterWrapper<ZCharacterW>;
+
+	// ----------------
 
 	using Character8 = CharacterWrapper<ZCharacter8>;
 
@@ -35,36 +37,34 @@ namespace TwinStar::Core {
 
 	#pragma region regular type
 
-	M_define_simple_derived_class(Character, CharacterLocale, CharacterLocale);
+	M_define_simple_derived_class(Character, CharacterN, CharacterN);
 
 	#pragma endregion
 
 	#pragma region literal
 
-	inline constexpr auto operator ""_cl (
+	inline constexpr auto operator ""_cn (
 		ZLiteralInteger value
-	) -> CharacterLocale {
-		return mbw<CharacterLocale>(value);
+	) -> CharacterN {
+		return mbw<CharacterN>(value);
 	}
 
-	inline constexpr auto operator ""_cl (
+	inline constexpr auto operator ""_cn (
 		ZLiteralCharacter value
-	) -> CharacterLocale {
-		return mbw<CharacterLocale>(value);
+	) -> CharacterN {
+		return mbw<CharacterN>(value);
 	}
-
-	// ----------------
 
 	inline constexpr auto operator ""_cw (
 		ZLiteralInteger value
-	) -> CharacterWide {
-		return mbw<CharacterWide>(value);
+	) -> CharacterW {
+		return mbw<CharacterW>(value);
 	}
 
 	inline constexpr auto operator ""_cw (
 		ZLiteralCharacter value
-	) -> CharacterWide {
-		return mbw<CharacterWide>(value);
+	) -> CharacterW {
+		return mbw<CharacterW>(value);
 	}
 
 	// ----------------
@@ -81,8 +81,6 @@ namespace TwinStar::Core {
 		return mbw<Character8>(value);
 	}
 
-	// ----------------
-
 	inline constexpr auto operator ""_c16 (
 		ZLiteralInteger value
 	) -> Character16 {
@@ -94,8 +92,6 @@ namespace TwinStar::Core {
 	) -> Character16 {
 		return mbw<Character16>(value);
 	}
-
-	// ----------------
 
 	inline constexpr auto operator ""_c32 (
 		ZLiteralInteger value

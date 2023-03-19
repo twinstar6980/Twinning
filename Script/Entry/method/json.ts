@@ -40,7 +40,7 @@ namespace TwinStar.Script.Entry.method.json {
 							...Executor.query_argument_message(this.id, 'destination_file'),
 							a.destination_file,
 							(value) => (value),
-							() => (source_file.replace(/((\.json))?$/i, '.formatted.json')),
+							() => (source_file.replace(/((\.json))?$/i, '.format.json')),
 							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
 						);
 						disable_trailing_comma = Executor.request_argument(

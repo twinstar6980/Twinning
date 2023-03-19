@@ -8,7 +8,7 @@
 
 * 要求
 	
-	* IDE：[Visual Studio 17.5+](https://visualstudio.microsoft.com/downloads/) 。
+	* [Visual Studio 17.5+](https://visualstudio.microsoft.com/downloads/)
 
 ## 第三方库使用
 

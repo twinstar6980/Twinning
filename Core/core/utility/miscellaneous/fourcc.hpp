@@ -55,7 +55,7 @@ namespace TwinStar::Core {
 
 	inline constexpr auto operator ""_fourcc (
 		ZLiteralString string,
-		ZLiteralLength length
+		ZLiteralSize   length
 	) -> FourCC {
 		assert_test(length == 4_szz);
 		return FourCC{

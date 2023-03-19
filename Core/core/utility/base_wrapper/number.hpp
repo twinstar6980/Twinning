@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core/utility/base_wrapper/base.hpp"
-#include "core/utility/base_wrapper/boolean.hpp"
 
 namespace TwinStar::Core {
 
@@ -55,6 +54,13 @@ namespace TwinStar::Core {
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsIntegerWrapper<It>)
 		&& (IsBuiltinSignedInteger<typename It::Value>)
+		;
+
+	template <typename It>
+	concept IsSignedFloatingWrapper =
+		CategoryConstraint<IsPureInstance<It>>
+		&& (IsFloatingWrapper<It>)
+		&& (IsBuiltinSignedFloating<typename It::Value>)
 		;
 
 	#pragma endregion
@@ -117,7 +123,7 @@ namespace TwinStar::Core {
 
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
-		&& (IsSignedIntegerWrapper<It> || IsFloatingWrapper<It>)
+		&& (IsSignedIntegerWrapper<It> || IsSignedFloatingWrapper<It>)
 	inline constexpr auto operator + (
 		It const & thix
 	) -> It {
@@ -126,7 +132,7 @@ namespace TwinStar::Core {
 
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
-		&& (IsSignedIntegerWrapper<It> || IsFloatingWrapper<It>)
+		&& (IsSignedIntegerWrapper<It> || IsSignedFloatingWrapper<It>)
 	inline constexpr auto operator - (
 		It const & thix
 	) -> It {
@@ -430,9 +436,9 @@ namespace TwinStar::Core {
 
 	// ----------------
 
-	using Floating32 = FloatingWrapper<ZFloating32>;
+	using FloatingS32 = FloatingWrapper<ZFloatingS32>;
 
-	using Floating64 = FloatingWrapper<ZFloating64>;
+	using FloatingS64 = FloatingWrapper<ZFloatingS64>;
 
 	// ----------------
 
@@ -448,7 +454,7 @@ namespace TwinStar::Core {
 
 	// ----------------
 
-	M_define_simple_derived_class(Floating, Floating64, Floating64);
+	M_define_simple_derived_class(Floating, FloatingS64, FloatingS64);
 
 	// ----------------
 
@@ -510,16 +516,16 @@ namespace TwinStar::Core {
 
 	// ----------------
 
-	inline constexpr auto operator ""_f32 (
+	inline constexpr auto operator ""_fs32 (
 		ZLiteralFloating value
-	) -> Floating32 {
-		return mbw<Floating32>(value);
+	) -> FloatingS32 {
+		return mbw<FloatingS32>(value);
 	}
 
-	inline constexpr auto operator ""_f64 (
+	inline constexpr auto operator ""_fs64 (
 		ZLiteralFloating value
-	) -> Floating64 {
-		return mbw<Floating64>(value);
+	) -> FloatingS64 {
+		return mbw<FloatingS64>(value);
 	}
 
 	// ----------------

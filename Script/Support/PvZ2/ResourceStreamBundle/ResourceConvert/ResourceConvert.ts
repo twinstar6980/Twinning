@@ -142,16 +142,14 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 						CoreX.Tool.PopCap.ReflectionObjectNotation.decrypt_then_decode_fs(
 							`${resource_directory}/${path}`,
 							`${option.json.directory}/${path.slice(0, -4)}json`,
-							false,
-							{ number: 1n },
+							{ number: 1n, native_string_encoding_use_utf8: true },
 							option.json.crypt.key,
 						);
 					} else {
 						CoreX.Tool.PopCap.ReflectionObjectNotation.decode_fs(
 							`${resource_directory}/${path}`,
 							`${option.json.directory}/${path.slice(0, -4)}json`,
-							false,
-							{ number: 1n },
+							{ number: 1n, native_string_encoding_use_utf8: true },
 						);
 					}
 				} catch (e: any) {
@@ -226,6 +224,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 						option.audio.tool.ww2ogg_program,
 						option.audio.tool.ww2ogg_code_book,
 						audio_temporary_directory,
+						{},
 					);
 				} catch (e: any) {
 					Console.notify_error(e);
@@ -266,8 +265,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 			Core.Tool.PopCap.ReflectionObjectNotation.Decode.process_whole(
 				rton_stream,
 				json,
-				Core.Boolean.value(false),
-				Core.Tool.PopCap.ReflectionObjectNotation.Version.value({ number: 1n }),
+				Core.Tool.PopCap.ReflectionObjectNotation.Version.value({ number: 1n, native_string_encoding_use_utf8: true }),
 			);
 			official_resource_manifest = json.value;
 		}

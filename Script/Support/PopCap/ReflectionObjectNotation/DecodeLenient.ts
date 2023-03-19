@@ -99,7 +99,7 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 		return value;
 	}
 
-	export function read_extended_ascii_string(
+	export function read_eascii_string(
 		data: ByteStreamView,
 		length: bigint,
 	): string {
@@ -115,10 +115,10 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 
 	export function decode_unit(
 		data: ByteStreamView,
-		native_string_encoding_use_extended_ascii: boolean,
 		native_string_index: Array<string>,
 		unicode_string_index: Array<string>,
 		type_identifier: bigint,
+		version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
 	): Core.JSON.JS_Value {
 		let value: Core.JSON.JS_Value;
 		switch (type_identifier) {
@@ -231,8 +231,8 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 			case 0x81n: {
 				let size = read_pb_varint_unsigned(data);
 				let content: string;
-				if (native_string_encoding_use_extended_ascii) {
-					content = read_extended_ascii_string(data, size);
+				if (!version.native_string_encoding_use_utf8) {
+					content = read_eascii_string(data, size);
 				} else {
 					content = read_utf8_string_by_size(data, size);
 				}
@@ -242,8 +242,8 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 			case 0x90n: {
 				let size = read_pb_varint_unsigned(data);
 				let content: string;
-				if (native_string_encoding_use_extended_ascii) {
-					content = read_extended_ascii_string(data, size);
+				if (!version.native_string_encoding_use_utf8) {
+					content = read_eascii_string(data, size);
 				} else {
 					content = read_utf8_string_by_size(data, size);
 				}
@@ -349,7 +349,7 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 					if (value_type_identifier == 0xFEn) {
 						break;
 					}
-					let element_value = decode_unit(data, native_string_encoding_use_extended_ascii, native_string_index, unicode_string_index, value_type_identifier);
+					let element_value = decode_unit(data, native_string_index, unicode_string_index, value_type_identifier, version);
 					value.push(element_value);
 				}
 				if (value.length !== Number(size)) {
@@ -364,9 +364,9 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 					if (key_type_identifier == 0xFFn) {
 						break;
 					}
-					let member_key = decode_unit(data, native_string_encoding_use_extended_ascii, native_string_index, unicode_string_index, key_type_identifier);
+					let member_key = decode_unit(data, native_string_index, unicode_string_index, key_type_identifier, version);
 					let value_type_identifier = data.u8();
-					let member_value = decode_unit(data, native_string_encoding_use_extended_ascii, native_string_index, unicode_string_index, value_type_identifier);
+					let member_value = decode_unit(data, native_string_index, unicode_string_index, value_type_identifier, version);
 					value[member_key as string] = member_value;
 				}
 				break;
@@ -380,7 +380,6 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 
 	export function decode_whole(
 		data: ByteStreamView,
-		native_string_encoding_use_extended_ascii: boolean,
 		version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
 	): Core.JSON.JS_Value {
 		if (data.u32() !== 0x4E4F5452n) {
@@ -389,7 +388,7 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 		if (data.u32() !== version.number) {
 			Console.notify('w', `data:${data.p().toString(16)}h : invalid version`, []);
 		}
-		let value = decode_unit(data, native_string_encoding_use_extended_ascii, [], [], 0x85n);
+		let value = decode_unit(data, [], [], 0x85n, version);
 		if (data.u32() !== 0x454E4F44n) {
 			Console.notify('w', `data:${data.p().toString(16)}h : invalid done`, []);
 		}
@@ -401,11 +400,10 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 	export function decode_whole_fs(
 		data_file: string,
 		value_file: string,
-		native_string_encoding_use_extended_ascii: boolean,
 		version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
 	): void {
 		let data = CoreX.FileSystem.read_file(data_file);
-		let value = decode_whole(new ByteStreamView(data.view().value, 0x0), native_string_encoding_use_extended_ascii, version);
+		let value = decode_whole(new ByteStreamView(data.view().value, 0x0), version);
 		CoreX.JSON.write_fs_js(value_file, value);
 		return;
 	}

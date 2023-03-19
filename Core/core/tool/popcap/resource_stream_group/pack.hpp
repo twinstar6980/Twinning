@@ -62,13 +62,13 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup {
 						}
 					}
 				}
-				MapData::adjust_sequence(information_structure.resource_information);
+				CompiledMapData::adjust_sequence(information_structure.resource_information);
 				information_data.header = OByteStreamView{
 					package_data.forward_view(bs_size(information_structure.header))
 				};
 				information_data.resource_information_offset = package_data.position();
 				information_data.resource_information = OByteStreamView{
-					package_data.forward_view(MapData::compute_ripe_size(information_structure.resource_information))
+					package_data.forward_view(CompiledMapData::compute_ripe_size(information_structure.resource_information))
 				};
 				package_data.write_space(k_null_byte, compute_padding_size(package_data.position(), k_padding_unit_size));
 			}
@@ -161,10 +161,10 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup {
 			}
 			information_structure.header.resource_information_section_offset = cbw<IntegerU32>(information_data.resource_information_offset);
 			information_structure.header.resource_information_section_size = cbw<IntegerU32>(information_data.resource_information.size());
-			MapData::adjust_sequence(information_structure.resource_information);
+			CompiledMapData::adjust_sequence(information_structure.resource_information);
 			{
 				information_data.header.write(information_structure.header);
-				MapData::encode(information_structure.resource_information, information_data.resource_information);
+				CompiledMapData::encode(information_structure.resource_information, information_data.resource_information);
 			}
 			return;
 		}
@@ -204,7 +204,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup {
 			auto information_structure = Structure::Information<version>{};
 			{
 				package_data.read(information_structure.header);
-				MapData::decode(information_structure.resource_information, as_lvalue(IByteStreamView{package_data.sub_view(cbw<Size>(information_structure.header.resource_information_section_offset), cbw<Size>(information_structure.header.resource_information_section_size))}));
+				CompiledMapData::decode(information_structure.resource_information, as_lvalue(IByteStreamView{package_data.sub_view(cbw<Size>(information_structure.header.resource_information_section_offset), cbw<Size>(information_structure.header.resource_information_section_size))}));
 			}
 			package_manifest.resource_data_section_store_mode = resource_data_section_store_mode_from_data(information_structure.header.resource_data_section_store_mode);
 			package_manifest.resource.allocate_full(information_structure.resource_information.size());

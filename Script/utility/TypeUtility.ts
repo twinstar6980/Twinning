@@ -181,7 +181,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export function integer_from_byte(
+	export function integer_from_byte_le(
 		byte_array: ArrayBuffer,
 	): bigint {
 		let integer_array = new Uint8Array(byte_array);

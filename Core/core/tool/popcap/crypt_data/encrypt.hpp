@@ -30,6 +30,27 @@ namespace TwinStar::Core::Tool::PopCap::CryptData {
 
 		// ----------------
 
+		template <typename RawValue> requires
+			CategoryConstraint<IsPureInstance<RawValue>>
+			&& (IsBaseWrapper<RawValue>)
+		static auto exchange_unit_constant (
+			OByteStreamView & data,
+			RawValue const &  value
+		) -> Void {
+			data.write_constant(value);
+			return;
+		}
+
+		static auto exchange_unit_integer (
+			OByteStreamView & data,
+			Integer const &   value
+		) -> Void {
+			data.write(cbw<IntegerU64>(value));
+			return;
+		}
+
+		// ----------------
+
 		static auto compute_size (
 			Size const & plain_size,
 			Size &       cipher_size,
@@ -54,7 +75,7 @@ namespace TwinStar::Core::Tool::PopCap::CryptData {
 		) -> Void {
 			if (plain.reserve() >= limit) {
 				cipher.write_constant(k_magic_identifier);
-				cipher.write(cbw<IntegerU64>(plain.reserve()));
+				exchange_unit_integer(cipher, cbw<Integer>(plain.reserve()));
 				Data::Encryption::XOR::Encrypt::do_process_whole(as_lvalue(IByteStreamView{plain.forward_view(limit)}), cipher, to_byte_view(key.as_view()));
 			}
 			cipher.write(plain.forward_view(plain.reserve()));
@@ -99,6 +120,27 @@ namespace TwinStar::Core::Tool::PopCap::CryptData {
 
 		// ----------------
 
+		template <typename RawValue> requires
+			CategoryConstraint<IsPureInstance<RawValue>>
+			&& (IsBaseWrapper<RawValue>)
+		static auto exchange_unit_constant (
+			IByteStreamView & data,
+			RawValue const &  value
+		) -> Void {
+			data.read_constant(value);
+			return;
+		}
+
+		static auto exchange_unit_integer (
+			IByteStreamView & data,
+			Integer &         value
+		) -> Void {
+			value = cbw<Integer>(data.read_of<IntegerU64>());
+			return;
+		}
+
+		// ----------------
+
 		static auto compute_size (
 			CByteListView const & cipher,
 			Size &                plain_size,
@@ -108,7 +150,9 @@ namespace TwinStar::Core::Tool::PopCap::CryptData {
 			if (cipher.size() >= limit + bs_static_size<MagicIdentifier>() + bs_static_size<IntegerU64>()) {
 				auto cipher_stream = IByteStreamView{cipher};
 				cipher_stream.read_constant(k_magic_identifier);
-				plain_size += cbw<Size>(cipher_stream.read_of<IntegerU64>());
+				auto plain_data_size = cbw<Size>(M_apply(M_wrap(Integer{}), M_wrap({ exchange_unit_integer(cipher_stream, it); })));
+				assert_test(plain_data_size >= limit);
+				plain_size += plain_data_size;
 			} else {
 				plain_size += cipher.size();
 			}
@@ -125,10 +169,10 @@ namespace TwinStar::Core::Tool::PopCap::CryptData {
 		) -> Void {
 			if (cipher.reserve() >= limit + bs_static_size<MagicIdentifier>() + bs_static_size<IntegerU64>()) {
 				cipher.read_constant(k_magic_identifier);
-				auto plain_size = cbw<Size>(cipher.read_of<IntegerU64>());
-				assert_test(plain_size >= limit);
+				auto plain_data_size = cbw<Size>(M_apply(M_wrap(Integer{}), M_wrap({ exchange_unit_integer(cipher, it); })));
+				assert_test(plain_data_size >= limit);
 				Data::Encryption::XOR::Encrypt::do_process_whole(as_lvalue(IByteStreamView{cipher.forward_view(limit)}), plain, to_byte_view(key.as_view()));
-				plain.write(cipher.forward_view(plain_size - limit));
+				plain.write(cipher.forward_view(plain_data_size - limit));
 			} else {
 				plain.write(cipher.forward_view(cipher.reserve()));
 			}

@@ -2,12 +2,23 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 
 	// ------------------------------------------------
 
-	export const BaseFormatE = [
-		'abgr_8888',
-		'argb_8888',
-		'rgba_4444',
+	export const BasicFormatE = [
+		'a_8',
+		'rgb_332',
 		'rgb_565',
 		'rgba_5551',
+		'rgba_4444',
+		'rgba_8888',
+		'argb_1555',
+		'argb_4444',
+		'argb_8888',
+		'l_8',
+		'la_44',
+		'la_88',
+		'al_44',
+		'al_88',
+		'rgb_888_o',
+		'rgba_8888_o',
 		'rgb_etc1',
 		'rgb_etc1_a_8',
 		'rgb_etc2',
@@ -19,18 +30,31 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 	] as const;
 
 	export const SpecialFormatE = [
-		'rgba_4444_tiled',
+		'a_8_tiled',
+		'rgb_332_tiled',
 		'rgb_565_tiled',
 		'rgba_5551_tiled',
+		'rgba_4444_tiled',
+		'rgba_8888_tiled',
+		'argb_1555_tiled',
+		'argb_4444_tiled',
+		'argb_8888_tiled',
+		'l_8_tiled',
+		'la_44_tiled',
+		'la_88_tiled',
+		'al_44_tiled',
+		'al_88_tiled',
+		'rgb_888_o_tiled',
+		'rgba_8888_o_tiled',
 		'rgb_etc1_a_palette',
 	] as const;
 
 	export const FormatE = [
-		...BaseFormatE,
+		...BasicFormatE,
 		...SpecialFormatE,
 	] as const;
 
-	export type BaseFormat = typeof BaseFormatE[number];
+	export type BasicFormat = typeof BasicFormatE[number];
 
 	export type SpecialFormat = typeof SpecialFormatE[number];
 
@@ -38,21 +62,54 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 
 	// ------------------------------------------------
 
-	const k_base_format: Record<BaseFormat, Array<CoreX.Tool.Image.Texture.CompositeFormat>> = {
-		abgr_8888: [
-			'rgba_8888',
+	const k_basic_format: Record<BasicFormat, Array<CoreX.Tool.Image.Texture.CompositeFormat>> =  {
+		a_8: [
+			'a_8',
 		],
-		argb_8888: [
-			'argb_8888',
-		],
-		rgba_4444: [
-			'rgba_4444',
+		rgb_332: [
+			'rgb_332',
 		],
 		rgb_565: [
 			'rgb_565',
 		],
 		rgba_5551: [
 			'rgba_5551',
+		],
+		rgba_4444: [
+			'rgba_4444',
+		],
+		rgba_8888: [
+			'rgba_8888',
+		],
+		argb_1555: [
+			'argb_1555',
+		],
+		argb_4444: [
+			'argb_4444',
+		],
+		argb_8888: [
+			'argb_8888',
+		],
+		l_8: [
+			'l_8',
+		],
+		la_44: [
+			'la_44',
+		],
+		la_88: [
+			'la_88',
+		],
+		al_44: [
+			'al_44',
+		],
+		al_88: [
+			'al_88',
+		],
+		rgb_888_o: [
+			'rgb_888_o',
+		],
+		rgba_8888_o: [
+			'rgba_8888_o',
 		],
 		rgb_etc1: [
 			'rgb_etc1',
@@ -97,11 +154,17 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 		format: Format,
 	): boolean {
 		return [
+			'rgb_332',
 			'rgb_565',
+			'l_8',
+			'rgb_888_o',
 			'rgb_etc1',
 			'rgb_etc2',
 			'rgb_pvrtc4',
+			'rgb_332_tiled',
 			'rgb_565_tiled',
+			'l_8_tiled',
+			'rgb_888_o_tiled',
 		].includes(format);
 	}
 
@@ -138,20 +201,18 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 		option: EncodeOption,
 	): bigint {
 		let data_size = 0n;
-		if (BaseFormatE.includes(format as BaseFormat)) {
-			data_size = CoreX.Tool.Image.Texture.compute_data_size_n(size, k_base_format[format as BaseFormat]);
+		if (BasicFormatE.includes(format as BasicFormat)) {
+			data_size = CoreX.Tool.Image.Texture.compute_data_size_n(size, k_basic_format[format as BasicFormat]);
 		} else {
-			switch (format) {
-				case 'rgba_4444_tiled':
-				case 'rgb_565_tiled':
-				case 'rgba_5551_tiled': {
-					data_size = CoreX.Tool.Image.Texture.compute_data_size_n(size, k_base_format[format.slice(0, -6) as BaseFormat]);
-					break;
-				}
-				case 'rgb_etc1_a_palette': {
-					assert_test(option.rgb_etc1_a_palette !== null, `option is null`);
-					data_size = CoreX.Tool.Image.Texture.compute_data_size(size, 'rgb_etc1') + CoreX.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.compute_data_size_with_palette(size, option.rgb_etc1_a_palette.palette.length);
-					break;
+			if (format.endsWith('_tiled')) {
+				data_size = CoreX.Tool.Image.Texture.compute_data_size_n(size, k_basic_format[format.slice(0, -6) as BasicFormat]);
+			} else {
+				switch (format) {
+					case 'rgb_etc1_a_palette': {
+						assert_test(option.rgb_etc1_a_palette !== null, `option is null`);
+						data_size = CoreX.Tool.Image.Texture.compute_data_size(size, 'rgb_etc1') + CoreX.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.compute_data_size_with_palette(size, option.rgb_etc1_a_palette.palette.length);
+						break;
+					}
 				}
 			}
 		}
@@ -164,27 +225,19 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 		format: Format,
 		option: EncodeOption,
 	): void {
-		if (BaseFormatE.includes(format as BaseFormat)) {
-			if (['abgr_8888'].includes(format)) {
-				Core.Miscellaneous.g_byte_stream_use_big_endian.value = !Core.Miscellaneous.g_byte_stream_use_big_endian.value;
-			}
-			CoreX.Tool.Image.Texture.encode_n(data, image, k_base_format[format as BaseFormat]);
-			if (['abgr_8888'].includes(format)) {
-				Core.Miscellaneous.g_byte_stream_use_big_endian.value = !Core.Miscellaneous.g_byte_stream_use_big_endian.value;
-			}
+		if (BasicFormatE.includes(format as BasicFormat)) {
+			CoreX.Tool.Image.Texture.encode_n(data, image, k_basic_format[format as BasicFormat]);
 		} else {
-			switch (format) {
-				case 'rgba_4444_tiled':
-				case 'rgb_565_tiled':
-				case 'rgba_5551_tiled': {
-					CoreX.Tool.Miscellaneous.XboxTiledTexture.encode(data, image, k_base_format[format.slice(0, -6) as BaseFormat][0] as typeof Core.Tool.Image.Texture.Format.Value);
-					break;
-				}
-				case 'rgb_etc1_a_palette': {
-					assert_test(option.rgb_etc1_a_palette !== null, `option is null`);
-					CoreX.Tool.Image.Texture.encode(data, image, 'rgb_etc1');
-					CoreX.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.encode_with_palette(data, image, option.rgb_etc1_a_palette.palette);
-					break;
+			if (format.endsWith('_tiled')) {
+				CoreX.Tool.Miscellaneous.XboxTiledTexture.encode(data, image, k_basic_format[format.slice(0, -6) as BasicFormat][0] as typeof Core.Tool.Image.Texture.Format.Value);
+			} else {
+				switch (format) {
+					case 'rgb_etc1_a_palette': {
+						assert_test(option.rgb_etc1_a_palette !== null, `option is null`);
+						CoreX.Tool.Image.Texture.encode(data, image, 'rgb_etc1');
+						CoreX.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.encode_with_palette(data, image, option.rgb_etc1_a_palette.palette);
+						break;
+					}
 				}
 			}
 		}
@@ -199,26 +252,18 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 		if (is_opacity_format(format)) {
 			image.fill(Core.Image.Pixel.value([0xFFn, 0xFFn, 0xFFn, 0xFFn]));
 		}
-		if (BaseFormatE.includes(format as BaseFormat)) {
-			if (['abgr_8888'].includes(format)) {
-				Core.Miscellaneous.g_byte_stream_use_big_endian.value = !Core.Miscellaneous.g_byte_stream_use_big_endian.value;
-			}
-			CoreX.Tool.Image.Texture.decode_n(data, image, k_base_format[format as BaseFormat]);
-			if (['abgr_8888'].includes(format)) {
-				Core.Miscellaneous.g_byte_stream_use_big_endian.value = !Core.Miscellaneous.g_byte_stream_use_big_endian.value;
-			}
+		if (BasicFormatE.includes(format as BasicFormat)) {
+			CoreX.Tool.Image.Texture.decode_n(data, image, k_basic_format[format as BasicFormat]);
 		} else {
-			switch (format) {
-				case 'rgba_4444_tiled':
-				case 'rgb_565_tiled':
-				case 'rgba_5551_tiled': {
-					CoreX.Tool.Miscellaneous.XboxTiledTexture.decode(data, image, k_base_format[format.slice(0, -6) as BaseFormat][0] as typeof Core.Tool.Image.Texture.Format.Value);
-					break;
-				}
-				case 'rgb_etc1_a_palette': {
-					CoreX.Tool.Image.Texture.decode(data, image, 'rgb_etc1');
-					CoreX.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.decode_with_palette(data, image);
-					break;
+			if (format.endsWith('_tiled')) {
+				CoreX.Tool.Miscellaneous.XboxTiledTexture.decode(data, image, k_basic_format[format.slice(0, -6) as BasicFormat][0] as typeof Core.Tool.Image.Texture.Format.Value);
+			} else {
+				switch (format) {
+					case 'rgb_etc1_a_palette': {
+						CoreX.Tool.Image.Texture.decode(data, image, 'rgb_etc1');
+						CoreX.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.decode_with_palette(data, image);
+						break;
+					}
 				}
 			}
 		}

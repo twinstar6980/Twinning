@@ -1603,24 +1603,22 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		template <typename RawValue> requires
 			CategoryConstraint<IsPureInstance<RawValue>>
 			&& (IsBaseWrapper<RawValue>)
-		static auto exchange_unit_raw (
+		static auto exchange_unit_constant (
 			OByteStreamView & data,
 			RawValue const &  value
 		) -> Void {
-			data.write(value);
+			data.write_constant(value);
 			return;
 		}
 
 		template <typename RawValue> requires
 			CategoryConstraint<IsPureInstance<RawValue>>
 			&& (IsBaseWrapper<RawValue>)
-		static auto exchange_unit_constant (
+		static auto exchange_unit_raw (
 			OByteStreamView & data,
 			RawValue const &  value
 		) -> Void {
-			auto raw_value = RawValue{};
-			raw_value = value;
-			data.write(raw_value);
+			data.write(value);
 			return;
 		}
 
@@ -1788,7 +1786,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				exchange_unit_integer<IntegerS32>(data, value.template get<Integer>());
 			}
 			if constexpr (IsSame<ActualValue, Floating>) {
-				exchange_unit_floating<Floating32>(data, value.template get<Floating>());
+				exchange_unit_floating<FloatingS32>(data, value.template get<Floating>());
 			}
 			if constexpr (IsSame<ActualValue, Size>) {
 				exchange_unit_size<IntegerU32>(data, value.template get<Size>());
@@ -1999,9 +1997,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					[] (auto & count) {
 					},
 					[] (auto & data, auto & manifest) {
-						exchange_unit_floating<Floating32>(data, manifest.position.x);
-						exchange_unit_floating<Floating32>(data, manifest.position.z);
-						exchange_unit_floating<Floating32>(data, manifest.position.y);
+						exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+						exchange_unit_floating<FloatingS32>(data, manifest.position.z);
+						exchange_unit_floating<FloatingS32>(data, manifest.position.y);
 						exchange_unit_integer<IntegerS32>(data, manifest.duration);
 					}
 				);
@@ -2015,9 +2013,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						exchange_unit_integer<IntegerU32>(data, manifest.point.count);
 					},
 					[] (auto & data, auto & manifest) {
-						exchange_unit_floating<Floating32>(data, manifest.random_range.left_right);
-						exchange_unit_floating<Floating32>(data, manifest.random_range.front_back);
-						exchange_unit_floating<Floating32>(data, manifest.random_range.up_down);
+						exchange_unit_floating<FloatingS32>(data, manifest.random_range.left_right);
+						exchange_unit_floating<FloatingS32>(data, manifest.random_range.front_back);
+						exchange_unit_floating<FloatingS32>(data, manifest.random_range.up_down);
 					}
 				);
 			}
@@ -2212,8 +2210,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						[] (auto & count) {
 						},
 						[] (auto & data, auto & manifest) {
-							exchange_unit_floating<Floating32>(data, manifest.position.x);
-							exchange_unit_floating<Floating32>(data, manifest.position.y);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.y);
 							exchange_unit_enumeration<IntegerU32>(data, manifest.curve);
 						}
 					);
@@ -2248,8 +2246,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						[] (auto & count) {
 						},
 						[] (auto & data, auto & manifest) {
-							exchange_unit_floating<Floating32>(data, manifest.position.x);
-							exchange_unit_floating<Floating32>(data, manifest.position.y);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.y);
 							exchange_unit_enumeration<IntegerU32>(data, manifest.curve);
 						}
 					);
@@ -2284,8 +2282,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						[] (auto & count) {
 						},
 						[] (auto & data, auto & manifest) {
-							exchange_unit_floating<Floating32>(data, manifest.position.x);
-							exchange_unit_floating<Floating32>(data, manifest.position.y);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.y);
 							exchange_unit_enumeration<IntegerU32>(data, manifest.curve);
 						}
 					);
@@ -2377,7 +2375,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			typename Manifest::BusAutomaticDuckingSetting const & automatic_ducking_manifest
 		) -> Void {
 			exchange_unit_integer<IntegerU32>(data, automatic_ducking_manifest.recovery_time);
-			exchange_unit_floating<Floating32>(data, automatic_ducking_manifest.maximum_ducking_volume);
+			exchange_unit_floating<FloatingS32>(data, automatic_ducking_manifest.maximum_ducking_volume);
 			exchange_unit_list<IntegerU32>(
 				data,
 				automatic_ducking_manifest.bus,
@@ -2385,7 +2383,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				},
 				[] (auto & data, auto & manifest) {
 					exchange_unit_id(data, manifest.id);
-					exchange_unit_floating<Floating32>(data, manifest.volume);
+					exchange_unit_floating<FloatingS32>(data, manifest.volume);
 					exchange_unit_integer<IntegerS32>(data, manifest.fade_out);
 					exchange_unit_integer<IntegerS32>(data, manifest.fade_in);
 					exchange_unit_enumeration<IntegerU8>(data, manifest.curve);
@@ -2422,10 +2420,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		) -> Void {
 			// TODO : test frequency mode-preset time and offset
 			// NOTE : time = 960000 * signature / tempo, then with frequency mode-preset
-			exchange_unit_floating<Floating64>(data, time_setting_manifest.time);
+			exchange_unit_floating<FloatingS64>(data, time_setting_manifest.time);
 			// NOTE : 0 if mode.no, millisecond if mode.custom, else by mode-preset
-			exchange_unit_floating<Floating64>(data, time_setting_manifest.offset);
-			exchange_unit_floating<Floating32>(data, time_setting_manifest.tempo);
+			exchange_unit_floating<FloatingS64>(data, time_setting_manifest.offset);
+			exchange_unit_floating<FloatingS32>(data, time_setting_manifest.tempo);
 			exchange_unit_integer<IntegerU8>(data, time_setting_manifest.signature.template get<1_ix>());
 			exchange_unit_integer<IntegerU8>(data, time_setting_manifest.signature.template get<2_ix>());
 			exchange_unit_bitset<IntegerU8>(data, time_setting_override);
@@ -2445,10 +2443,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					exchange_unit_integer<IntegerU32>(data, manifest.u1);
 					exchange_unit_id(data, manifest.source);
 					exchange_unit_id(data, manifest.event);
-					exchange_unit_floating<Floating64>(data, manifest.offset);
-					exchange_unit_floating<Floating64>(data, manifest.begin);
-					exchange_unit_floating<Floating64>(data, manifest.end);
-					exchange_unit_floating<Floating64>(data, manifest.duration);
+					exchange_unit_floating<FloatingS64>(data, manifest.offset);
+					exchange_unit_floating<FloatingS64>(data, manifest.begin);
+					exchange_unit_floating<FloatingS64>(data, manifest.end);
+					exchange_unit_floating<FloatingS64>(data, manifest.duration);
 				}
 			);
 			if (!clip_manifest.item.empty()) {
@@ -2468,8 +2466,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						[] (auto & count) {
 						},
 						[] (auto & data, auto & manifest) {
-							exchange_unit_floating<Floating32>(data, manifest.position.x);
-							exchange_unit_floating<Floating32>(data, manifest.position.y);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.y);
 							exchange_unit_enumeration<IntegerU32>(data, manifest.curve);
 						}
 					);
@@ -2635,9 +2633,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			exchange_unit_integer<IntegerS16>(data, play_mode_setting_manifest.continuous.loop_count.value);
 			exchange_unit_integer<IntegerS16>(data, play_mode_setting_manifest.continuous.loop_count.minimum_value);
 			exchange_unit_integer<IntegerS16>(data, play_mode_setting_manifest.continuous.loop_count.maximum_value);
-			exchange_unit_floating<Floating32>(data, play_mode_setting_manifest.continuous.transition_duration.value);
-			exchange_unit_floating<Floating32>(data, play_mode_setting_manifest.continuous.transition_duration.minimum_value);
-			exchange_unit_floating<Floating32>(data, play_mode_setting_manifest.continuous.transition_duration.maximum_value);
+			exchange_unit_floating<FloatingS32>(data, play_mode_setting_manifest.continuous.transition_duration.value);
+			exchange_unit_floating<FloatingS32>(data, play_mode_setting_manifest.continuous.transition_duration.minimum_value);
+			exchange_unit_floating<FloatingS32>(data, play_mode_setting_manifest.continuous.transition_duration.maximum_value);
 			exchange_unit_integer<IntegerU16>(data, play_type_setting_manifest.random.avoid_repeat);
 			exchange_unit_enumeration<IntegerU8>(data, play_mode_setting_manifest.continuous.transition_type);
 			exchange_unit_bitset<IntegerU8>(data, play_type_setting_manifest.random.type);
@@ -2813,7 +2811,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				},
 				[] (auto & data, auto & manifest) {
 					exchange_unit_id(data, manifest.name);
-					exchange_unit_floating<Floating64>(data, manifest.time);
+					exchange_unit_floating<FloatingS64>(data, manifest.time);
 					exchange_unit_constant(data, 0_iu8);
 				}
 			);
@@ -2855,7 +2853,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				[] (auto & count) {
 				},
 				[] (auto & data, auto & manifest) {
-					exchange_unit_floating<Floating32>(data, manifest.position.x);
+					exchange_unit_floating<FloatingS32>(data, manifest.position.x);
 					exchange_unit_id(data, manifest.position.y);
 					exchange_unit_enumeration<IntegerU32>(data, manifest.curve);
 				}
@@ -2868,10 +2866,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			typename Manifest::GameParameter const & manifest
 		) -> Void {
 			exchange_unit_id(data, manifest.id);
-			exchange_unit_floating<Floating32>(data, manifest.range_default);
+			exchange_unit_floating<FloatingS32>(data, manifest.range_default);
 			exchange_unit_integer<IntegerU32>(data, manifest.interpolation_mode);
-			exchange_unit_floating<Floating32>(data, manifest.interpolation_attack);
-			exchange_unit_floating<Floating32>(data, manifest.interpolation_release);
+			exchange_unit_floating<FloatingS32>(data, manifest.interpolation_attack);
+			exchange_unit_floating<FloatingS32>(data, manifest.interpolation_release);
 			exchange_unit_integer<IntegerU8>(data, manifest.bind_to_built_in_parameter);
 			return;
 		}
@@ -2881,12 +2879,12 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			typename Manifest::GameSynchronizationU1 const & manifest
 		) -> Void {
 			exchange_unit_id(data, manifest.id);
-			exchange_unit_floating<Floating32>(data, manifest.u1);
-			exchange_unit_floating<Floating32>(data, manifest.u2);
-			exchange_unit_floating<Floating32>(data, manifest.u3);
-			exchange_unit_floating<Floating32>(data, manifest.u4);
-			exchange_unit_floating<Floating32>(data, manifest.u5);
-			exchange_unit_floating<Floating32>(data, manifest.u6);
+			exchange_unit_floating<FloatingS32>(data, manifest.u1);
+			exchange_unit_floating<FloatingS32>(data, manifest.u2);
+			exchange_unit_floating<FloatingS32>(data, manifest.u3);
+			exchange_unit_floating<FloatingS32>(data, manifest.u4);
+			exchange_unit_floating<FloatingS32>(data, manifest.u5);
+			exchange_unit_floating<FloatingS32>(data, manifest.u6);
 			return;
 		}
 
@@ -2920,8 +2918,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						[] (auto & count) {
 						},
 						[] (auto & data, auto & manifest) {
-							exchange_unit_floating<Floating32>(data, manifest.position.x);
-							exchange_unit_floating<Floating32>(data, manifest.position.y);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.y);
 							exchange_unit_enumeration<IntegerU32>(data, manifest.curve);
 						}
 					);
@@ -2936,7 +2934,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				[] (auto & data, auto & manifest) {
 					exchange_unit_integer<IntegerU8>(data, manifest.u1);
 					exchange_unit_integer<IntegerU8>(data, manifest.u2);
-					exchange_unit_floating<Floating32>(data, manifest.u3);
+					exchange_unit_floating<FloatingS32>(data, manifest.u3);
 				}
 			);
 			return;
@@ -2963,7 +2961,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					exchange_unit_enumeration<IntegerU16>(data, manifest.key);
 				},
 				[] (auto & data, auto & manifest) {
-					exchange_unit_floating<Floating32>(data, manifest.value);
+					exchange_unit_floating<FloatingS32>(data, manifest.value);
 				}
 			);
 			return;
@@ -3083,9 +3081,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						process_section_sub(data, common_property, k_true);
 					}
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.seek_type);
-					exchange_unit_floating<Floating32>(data, property_manifest.seek_value.value);
-					exchange_unit_floating<Floating32>(data, property_manifest.seek_value.minimum_value);
-					exchange_unit_floating<Floating32>(data, property_manifest.seek_value.maximum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.seek_value.value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.seek_value.minimum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.seek_value.maximum_value);
 					exchange_unit_bitset<IntegerU8>(
 						data,
 						property_manifest.seek_to_nearest_marker
@@ -3112,9 +3110,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					}
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.fade_curve);
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.apply_mode);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.minimum_value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.maximum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
 					process_section_sub_of_exception_list();
 					has_case = k_true;
 				}
@@ -3128,9 +3126,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					}
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.fade_curve);
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.apply_mode);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.minimum_value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.maximum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
 					process_section_sub_of_exception_list();
 					has_case = k_true;
 				}
@@ -3144,9 +3142,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					}
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.fade_curve);
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.apply_mode);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.minimum_value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.maximum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
 					process_section_sub_of_exception_list();
 					has_case = k_true;
 				}
@@ -3160,9 +3158,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					}
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.fade_curve);
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.apply_mode);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.minimum_value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.maximum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
 					process_section_sub_of_exception_list();
 					has_case = k_true;
 				}
@@ -3176,9 +3174,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					}
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.fade_curve);
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.apply_mode);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.minimum_value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.maximum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
 					process_section_sub_of_exception_list();
 					has_case = k_true;
 				}
@@ -3205,9 +3203,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.fade_curve);
 					exchange_unit_bitset<IntegerU8>(data, property_manifest.bypass_game_parameter_interpolation);
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.apply_mode);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.minimum_value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.maximum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
 					process_section_sub_of_exception_list();
 					has_case = k_true;
 				}
@@ -3370,11 +3368,11 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				// NOTE : here
 				exchange_unit_bitset<IntegerU8>(data, manifest.cone.has());
 				if (manifest.cone.has()) {
-					exchange_unit_floating<Floating32>(data, manifest.cone.get().inner_angle);
-					exchange_unit_floating<Floating32>(data, manifest.cone.get().outer_angle);
-					exchange_unit_floating<Floating32>(data, manifest.cone.get().max_value);
-					exchange_unit_floating<Floating32>(data, manifest.cone.get().low_pass_filter);
-					exchange_unit_floating<Floating32>(data, manifest.cone.get().high_pass_filter);
+					exchange_unit_floating<FloatingS32>(data, manifest.cone.get().inner_angle);
+					exchange_unit_floating<FloatingS32>(data, manifest.cone.get().outer_angle);
+					exchange_unit_floating<FloatingS32>(data, manifest.cone.get().max_value);
+					exchange_unit_floating<FloatingS32>(data, manifest.cone.get().low_pass_filter);
+					exchange_unit_floating<FloatingS32>(data, manifest.cone.get().high_pass_filter);
 				}
 			}
 			{
@@ -3412,8 +3410,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						[] (auto & count) {
 						},
 						[] (auto & data, auto & manifest) {
-							exchange_unit_floating<Floating32>(data, manifest.position.x);
-							exchange_unit_floating<Floating32>(data, manifest.position.y);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.y);
 							exchange_unit_enumeration<IntegerU32>(data, manifest.curve);
 						}
 					);
@@ -3527,8 +3525,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						[] (auto & count) {
 						},
 						[] (auto & data, auto & manifest) {
-							exchange_unit_floating<Floating32>(data, manifest.position.x);
-							exchange_unit_floating<Floating32>(data, manifest.position.y);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.y);
 							exchange_unit_enumeration<IntegerU32>(data, manifest.curve);
 						}
 					);
@@ -3543,7 +3541,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				[] (auto & data, auto & manifest) {
 					exchange_unit_integer<IntegerU8>(data, manifest.u1);
 					exchange_unit_integer<IntegerU8>(data, manifest.u2);
-					exchange_unit_floating<Floating32>(data, manifest.u3);
+					exchange_unit_floating<FloatingS32>(data, manifest.u3);
 				}
 			);
 			process_section_sub(data, manifest.effect);
@@ -3872,7 +3870,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			process_section_sub(data, manifest.time_setting, manifest.override_time_setting);
 			process_section_sub(data, manifest.stinger);
 			{
-				exchange_unit_floating<Floating64>(data, manifest.playback_setting.duration);
+				exchange_unit_floating<FloatingS64>(data, manifest.playback_setting.duration);
 			}
 			process_section_sub(data, manifest.playback_setting.cue);
 			return;
@@ -4038,7 +4036,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			typename Manifest::GameSynchronization const & game_synchronization_manifest
 		) -> Void {
 			if constexpr (version.number >= 140_i) {
-				exchange_unit_floating<Floating32>(data, manifest.volume_threshold);
+				exchange_unit_floating<FloatingS32>(data, manifest.volume_threshold);
 				exchange_unit_integer<IntegerS16>(data, manifest.maximum_voice_instance);
 				exchange_unit_constant(data, 50_iu16);
 				exchange_unit_list<IntegerU32>(
@@ -4172,8 +4170,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 							[] (auto & count) {
 							},
 							[] (auto & data, auto & manifest) {
-								exchange_unit_floating<Floating32>(data, manifest.position.x);
-								exchange_unit_floating<Floating32>(data, manifest.position.y);
+								exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+								exchange_unit_floating<FloatingS32>(data, manifest.position.y);
 								exchange_unit_enumeration<IntegerU32>(data, manifest.curve);
 							}
 						);
@@ -4665,24 +4663,22 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		template <typename RawValue> requires
 			CategoryConstraint<IsPureInstance<RawValue>>
 			&& (IsBaseWrapper<RawValue>)
-		static auto exchange_unit_raw (
+		static auto exchange_unit_constant (
 			IByteStreamView & data,
-			RawValue &        value
+			RawValue const &  value
 		) -> Void {
-			data.read(value);
+			data.read_constant(value);
 			return;
 		}
 
 		template <typename RawValue> requires
 			CategoryConstraint<IsPureInstance<RawValue>>
 			&& (IsBaseWrapper<RawValue>)
-		static auto exchange_unit_constant (
+		static auto exchange_unit_raw (
 			IByteStreamView & data,
-			RawValue const &  value
+			RawValue &        value
 		) -> Void {
-			auto raw_value = RawValue{};
-			data.read(raw_value);
-			assert_test(raw_value == value);
+			data.read(value);
 			return;
 		}
 
@@ -4855,7 +4851,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				exchange_unit_integer<IntegerS32>(data, value.template set<Integer>());
 			}
 			if constexpr (IsSame<ActualValue, Floating>) {
-				exchange_unit_floating<Floating32>(data, value.template set<Floating>());
+				exchange_unit_floating<FloatingS32>(data, value.template set<Floating>());
 			}
 			if constexpr (IsSame<ActualValue, Size>) {
 				exchange_unit_size<IntegerU32>(data, value.template set<Size>());
@@ -5063,9 +5059,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					[] (auto & count) {
 					},
 					[] (auto & data, auto & manifest) {
-						exchange_unit_floating<Floating32>(data, manifest.position.x);
-						exchange_unit_floating<Floating32>(data, manifest.position.z);
-						exchange_unit_floating<Floating32>(data, manifest.position.y);
+						exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+						exchange_unit_floating<FloatingS32>(data, manifest.position.z);
+						exchange_unit_floating<FloatingS32>(data, manifest.position.y);
 						exchange_unit_integer<IntegerS32>(data, manifest.duration);
 					}
 				);
@@ -5079,9 +5075,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						exchange_unit_integer<IntegerU32>(data, manifest.point.count);
 					},
 					[] (auto & data, auto & manifest) {
-						exchange_unit_floating<Floating32>(data, manifest.random_range.left_right);
-						exchange_unit_floating<Floating32>(data, manifest.random_range.front_back);
-						exchange_unit_floating<Floating32>(data, manifest.random_range.up_down);
+						exchange_unit_floating<FloatingS32>(data, manifest.random_range.left_right);
+						exchange_unit_floating<FloatingS32>(data, manifest.random_range.front_back);
+						exchange_unit_floating<FloatingS32>(data, manifest.random_range.up_down);
 					}
 				);
 			}
@@ -5276,8 +5272,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						[] (auto & count) {
 						},
 						[] (auto & data, auto & manifest) {
-							exchange_unit_floating<Floating32>(data, manifest.position.x);
-							exchange_unit_floating<Floating32>(data, manifest.position.y);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.y);
 							exchange_unit_enumeration<IntegerU32>(data, manifest.curve);
 						}
 					);
@@ -5312,8 +5308,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						[] (auto & count) {
 						},
 						[] (auto & data, auto & manifest) {
-							exchange_unit_floating<Floating32>(data, manifest.position.x);
-							exchange_unit_floating<Floating32>(data, manifest.position.y);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.y);
 							exchange_unit_enumeration<IntegerU32>(data, manifest.curve);
 						}
 					);
@@ -5348,8 +5344,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						[] (auto & count) {
 						},
 						[] (auto & data, auto & manifest) {
-							exchange_unit_floating<Floating32>(data, manifest.position.x);
-							exchange_unit_floating<Floating32>(data, manifest.position.y);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.y);
 							exchange_unit_enumeration<IntegerU32>(data, manifest.curve);
 						}
 					);
@@ -5441,7 +5437,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			typename Manifest::BusAutomaticDuckingSetting & automatic_ducking_manifest
 		) -> Void {
 			exchange_unit_integer<IntegerU32>(data, automatic_ducking_manifest.recovery_time);
-			exchange_unit_floating<Floating32>(data, automatic_ducking_manifest.maximum_ducking_volume);
+			exchange_unit_floating<FloatingS32>(data, automatic_ducking_manifest.maximum_ducking_volume);
 			exchange_unit_list<IntegerU32>(
 				data,
 				automatic_ducking_manifest.bus,
@@ -5449,7 +5445,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				},
 				[] (auto & data, auto & manifest) {
 					exchange_unit_id(data, manifest.id);
-					exchange_unit_floating<Floating32>(data, manifest.volume);
+					exchange_unit_floating<FloatingS32>(data, manifest.volume);
 					exchange_unit_integer<IntegerS32>(data, manifest.fade_out);
 					exchange_unit_integer<IntegerS32>(data, manifest.fade_in);
 					exchange_unit_enumeration<IntegerU8>(data, manifest.curve);
@@ -5486,10 +5482,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		) -> Void {
 			// TODO : test frequency mode-preset time and offset
 			// NOTE : time = 960000 * signature / tempo, then with frequency mode-preset
-			exchange_unit_floating<Floating64>(data, time_setting_manifest.time);
+			exchange_unit_floating<FloatingS64>(data, time_setting_manifest.time);
 			// NOTE : 0 if mode.no, millisecond if mode.custom, else by mode-preset
-			exchange_unit_floating<Floating64>(data, time_setting_manifest.offset);
-			exchange_unit_floating<Floating32>(data, time_setting_manifest.tempo);
+			exchange_unit_floating<FloatingS64>(data, time_setting_manifest.offset);
+			exchange_unit_floating<FloatingS32>(data, time_setting_manifest.tempo);
 			exchange_unit_integer<IntegerU8>(data, time_setting_manifest.signature.template get<1_ix>());
 			exchange_unit_integer<IntegerU8>(data, time_setting_manifest.signature.template get<2_ix>());
 			exchange_unit_bitset<IntegerU8>(data, time_setting_override);
@@ -5509,10 +5505,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					exchange_unit_integer<IntegerU32>(data, manifest.u1);
 					exchange_unit_id(data, manifest.source);
 					exchange_unit_id(data, manifest.event);
-					exchange_unit_floating<Floating64>(data, manifest.offset);
-					exchange_unit_floating<Floating64>(data, manifest.begin);
-					exchange_unit_floating<Floating64>(data, manifest.end);
-					exchange_unit_floating<Floating64>(data, manifest.duration);
+					exchange_unit_floating<FloatingS64>(data, manifest.offset);
+					exchange_unit_floating<FloatingS64>(data, manifest.begin);
+					exchange_unit_floating<FloatingS64>(data, manifest.end);
+					exchange_unit_floating<FloatingS64>(data, manifest.duration);
 				}
 			);
 			if (!clip_manifest.item.empty()) {
@@ -5532,8 +5528,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						[] (auto & count) {
 						},
 						[] (auto & data, auto & manifest) {
-							exchange_unit_floating<Floating32>(data, manifest.position.x);
-							exchange_unit_floating<Floating32>(data, manifest.position.y);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.y);
 							exchange_unit_enumeration<IntegerU32>(data, manifest.curve);
 						}
 					);
@@ -5700,9 +5696,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			exchange_unit_integer<IntegerS16>(data, play_mode_setting_manifest.continuous.loop_count.value);
 			exchange_unit_integer<IntegerS16>(data, play_mode_setting_manifest.continuous.loop_count.minimum_value);
 			exchange_unit_integer<IntegerS16>(data, play_mode_setting_manifest.continuous.loop_count.maximum_value);
-			exchange_unit_floating<Floating32>(data, play_mode_setting_manifest.continuous.transition_duration.value);
-			exchange_unit_floating<Floating32>(data, play_mode_setting_manifest.continuous.transition_duration.minimum_value);
-			exchange_unit_floating<Floating32>(data, play_mode_setting_manifest.continuous.transition_duration.maximum_value);
+			exchange_unit_floating<FloatingS32>(data, play_mode_setting_manifest.continuous.transition_duration.value);
+			exchange_unit_floating<FloatingS32>(data, play_mode_setting_manifest.continuous.transition_duration.minimum_value);
+			exchange_unit_floating<FloatingS32>(data, play_mode_setting_manifest.continuous.transition_duration.maximum_value);
 			exchange_unit_integer<IntegerU16>(data, play_type_setting_manifest.random.avoid_repeat);
 			exchange_unit_enumeration<IntegerU8>(data, play_mode_setting_manifest.continuous.transition_type);
 			exchange_unit_bitset<IntegerU8>(data, play_type_setting_manifest.random.type);
@@ -5883,7 +5879,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				},
 				[] (auto & data, auto & manifest) {
 					exchange_unit_id(data, manifest.name);
-					exchange_unit_floating<Floating64>(data, manifest.time);
+					exchange_unit_floating<FloatingS64>(data, manifest.time);
 					exchange_unit_constant(data, 0_iu8);
 				}
 			);
@@ -5925,7 +5921,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				[] (auto & count) {
 				},
 				[] (auto & data, auto & manifest) {
-					exchange_unit_floating<Floating32>(data, manifest.position.x);
+					exchange_unit_floating<FloatingS32>(data, manifest.position.x);
 					exchange_unit_id(data, manifest.position.y);
 					exchange_unit_enumeration<IntegerU32>(data, manifest.curve);
 				}
@@ -5938,10 +5934,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			typename Manifest::GameParameter & manifest
 		) -> Void {
 			exchange_unit_id(data, manifest.id);
-			exchange_unit_floating<Floating32>(data, manifest.range_default);
+			exchange_unit_floating<FloatingS32>(data, manifest.range_default);
 			exchange_unit_integer<IntegerU32>(data, manifest.interpolation_mode);
-			exchange_unit_floating<Floating32>(data, manifest.interpolation_attack);
-			exchange_unit_floating<Floating32>(data, manifest.interpolation_release);
+			exchange_unit_floating<FloatingS32>(data, manifest.interpolation_attack);
+			exchange_unit_floating<FloatingS32>(data, manifest.interpolation_release);
 			exchange_unit_integer<IntegerU8>(data, manifest.bind_to_built_in_parameter);
 			return;
 		}
@@ -5951,12 +5947,12 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			typename Manifest::GameSynchronizationU1 & manifest
 		) -> Void {
 			exchange_unit_id(data, manifest.id);
-			exchange_unit_floating<Floating32>(data, manifest.u1);
-			exchange_unit_floating<Floating32>(data, manifest.u2);
-			exchange_unit_floating<Floating32>(data, manifest.u3);
-			exchange_unit_floating<Floating32>(data, manifest.u4);
-			exchange_unit_floating<Floating32>(data, manifest.u5);
-			exchange_unit_floating<Floating32>(data, manifest.u6);
+			exchange_unit_floating<FloatingS32>(data, manifest.u1);
+			exchange_unit_floating<FloatingS32>(data, manifest.u2);
+			exchange_unit_floating<FloatingS32>(data, manifest.u3);
+			exchange_unit_floating<FloatingS32>(data, manifest.u4);
+			exchange_unit_floating<FloatingS32>(data, manifest.u5);
+			exchange_unit_floating<FloatingS32>(data, manifest.u6);
 			return;
 		}
 
@@ -5991,8 +5987,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						[] (auto & count) {
 						},
 						[] (auto & data, auto & manifest) {
-							exchange_unit_floating<Floating32>(data, manifest.position.x);
-							exchange_unit_floating<Floating32>(data, manifest.position.y);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.y);
 							exchange_unit_enumeration<IntegerU32>(data, manifest.curve);
 						}
 					);
@@ -6007,7 +6003,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				[] (auto & data, auto & manifest) {
 					exchange_unit_integer<IntegerU8>(data, manifest.u1);
 					exchange_unit_integer<IntegerU8>(data, manifest.u2);
-					exchange_unit_floating<Floating32>(data, manifest.u3);
+					exchange_unit_floating<FloatingS32>(data, manifest.u3);
 				}
 			);
 			return;
@@ -6034,7 +6030,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					exchange_unit_enumeration<IntegerU16>(data, manifest.key);
 				},
 				[] (auto & data, auto & manifest) {
-					exchange_unit_floating<Floating32>(data, manifest.value);
+					exchange_unit_floating<FloatingS32>(data, manifest.value);
 				}
 			);
 			return;
@@ -6193,9 +6189,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				if (type == 30_sz) {
 					auto & property_manifest = manifest.property.template set_of_type<Manifest::EventActionProperty::Type::Constant::seek_audio()>();
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.seek_type);
-					exchange_unit_floating<Floating32>(data, property_manifest.seek_value.value);
-					exchange_unit_floating<Floating32>(data, property_manifest.seek_value.minimum_value);
-					exchange_unit_floating<Floating32>(data, property_manifest.seek_value.maximum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.seek_value.value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.seek_value.minimum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.seek_value.maximum_value);
 					exchange_unit_bitset<IntegerU8>(
 						data,
 						property_manifest.seek_to_nearest_marker
@@ -6218,9 +6214,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					property_manifest.reset = type == 9_sz;
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.fade_curve);
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.apply_mode);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.minimum_value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.maximum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
 					process_section_sub_of_exception_list();
 					{
 						exchange_common_property_as_randomized<CPTC::delay()>(common_property, property_manifest.delay);
@@ -6233,9 +6229,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					property_manifest.reset = type == 11_sz;
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.fade_curve);
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.apply_mode);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.minimum_value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.maximum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
 					process_section_sub_of_exception_list();
 					{
 						exchange_common_property_as_randomized<CPTC::delay()>(common_property, property_manifest.delay);
@@ -6248,9 +6244,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					property_manifest.reset = type == 13_sz;
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.fade_curve);
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.apply_mode);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.minimum_value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.maximum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
 					process_section_sub_of_exception_list();
 					{
 						exchange_common_property_as_randomized<CPTC::delay()>(common_property, property_manifest.delay);
@@ -6263,9 +6259,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					property_manifest.reset = type == 15_sz;
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.fade_curve);
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.apply_mode);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.minimum_value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.maximum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
 					process_section_sub_of_exception_list();
 					{
 						exchange_common_property_as_randomized<CPTC::delay()>(common_property, property_manifest.delay);
@@ -6278,9 +6274,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					property_manifest.reset = type == 48_sz;
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.fade_curve);
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.apply_mode);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.minimum_value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.maximum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
 					process_section_sub_of_exception_list();
 					{
 						exchange_common_property_as_randomized<CPTC::delay()>(common_property, property_manifest.delay);
@@ -6305,9 +6301,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.fade_curve);
 					exchange_unit_bitset<IntegerU8>(data, property_manifest.bypass_game_parameter_interpolation);
 					exchange_unit_enumeration<IntegerU8>(data, property_manifest.apply_mode);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.minimum_value);
-					exchange_unit_floating<Floating32>(data, property_manifest.value.maximum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+					exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
 					process_section_sub_of_exception_list();
 					{
 						exchange_common_property_as_randomized<CPTC::delay()>(common_property, property_manifest.delay);
@@ -6432,11 +6428,11 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				exchange_unit_bitset<IntegerU8>(data, has_cone);
 				if (has_cone) {
 					manifest.cone.set();
-					exchange_unit_floating<Floating32>(data, manifest.cone.get().inner_angle);
-					exchange_unit_floating<Floating32>(data, manifest.cone.get().outer_angle);
-					exchange_unit_floating<Floating32>(data, manifest.cone.get().max_value);
-					exchange_unit_floating<Floating32>(data, manifest.cone.get().low_pass_filter);
-					exchange_unit_floating<Floating32>(data, manifest.cone.get().high_pass_filter);
+					exchange_unit_floating<FloatingS32>(data, manifest.cone.get().inner_angle);
+					exchange_unit_floating<FloatingS32>(data, manifest.cone.get().outer_angle);
+					exchange_unit_floating<FloatingS32>(data, manifest.cone.get().max_value);
+					exchange_unit_floating<FloatingS32>(data, manifest.cone.get().low_pass_filter);
+					exchange_unit_floating<FloatingS32>(data, manifest.cone.get().high_pass_filter);
 				} else {
 					manifest.cone.reset();
 				}
@@ -6476,8 +6472,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						[] (auto & count) {
 						},
 						[] (auto & data, auto & manifest) {
-							exchange_unit_floating<Floating32>(data, manifest.position.x);
-							exchange_unit_floating<Floating32>(data, manifest.position.y);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.y);
 							exchange_unit_enumeration<IntegerU32>(data, manifest.curve);
 						}
 					);
@@ -6591,8 +6587,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						[] (auto & count) {
 						},
 						[] (auto & data, auto & manifest) {
-							exchange_unit_floating<Floating32>(data, manifest.position.x);
-							exchange_unit_floating<Floating32>(data, manifest.position.y);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+							exchange_unit_floating<FloatingS32>(data, manifest.position.y);
 							exchange_unit_enumeration<IntegerU32>(data, manifest.curve);
 						}
 					);
@@ -6607,7 +6603,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				[] (auto & data, auto & manifest) {
 					exchange_unit_integer<IntegerU8>(data, manifest.u1);
 					exchange_unit_integer<IntegerU8>(data, manifest.u2);
-					exchange_unit_floating<Floating32>(data, manifest.u3);
+					exchange_unit_floating<FloatingS32>(data, manifest.u3);
 				}
 			);
 			process_section_sub(data, manifest.effect);
@@ -6926,7 +6922,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			process_section_sub(data, manifest.time_setting, manifest.override_time_setting);
 			process_section_sub(data, manifest.stinger);
 			{
-				exchange_unit_floating<Floating64>(data, manifest.playback_setting.duration);
+				exchange_unit_floating<FloatingS64>(data, manifest.playback_setting.duration);
 			}
 			process_section_sub(data, manifest.playback_setting.cue);
 			{
@@ -7110,7 +7106,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			typename Manifest::GameSynchronization & game_synchronization_manifest
 		) -> Void {
 			if constexpr (version.number >= 140_i) {
-				exchange_unit_floating<Floating32>(data, manifest.volume_threshold);
+				exchange_unit_floating<FloatingS32>(data, manifest.volume_threshold);
 				exchange_unit_integer<IntegerS16>(data, manifest.maximum_voice_instance);
 				exchange_unit_constant(data, 50_iu16);
 				exchange_unit_list<IntegerU32>(
@@ -7243,8 +7239,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 							[] (auto & count) {
 							},
 							[] (auto & data, auto & manifest) {
-								exchange_unit_floating<Floating32>(data, manifest.position.x);
-								exchange_unit_floating<Floating32>(data, manifest.position.y);
+								exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+								exchange_unit_floating<FloatingS32>(data, manifest.position.y);
 								exchange_unit_enumeration<IntegerU32>(data, manifest.curve);
 							}
 						);

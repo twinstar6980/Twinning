@@ -218,6 +218,7 @@ function apply_compiler_option_warning_regular(target)
 			'-Wno-shadow-field',
 			'-Wno-shadow-field-in-constructor',
 			'-Wno-shadow-uncaptured-local',
+			'-Wno-unsafe-buffer-usage',
 			'-Wno-float-equal', -- TODO
 			'-Wno-gnu-line-marker', -- if using xmake ...
 			{ private = true }

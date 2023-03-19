@@ -15,6 +15,10 @@ namespace TwinStar.Script.ADBHelper {
 
 	// ------------------------------------------------
 
+	const k_remote_temporary_directory = `/data/local/tmp/TwinStar.ToolKit.ADBHelper.Temporary`;
+
+	// ------------------------------------------------
+
 	export let g_run_shell_as_su: boolean = true;
 
 	export function execute(
@@ -84,28 +88,29 @@ namespace TwinStar.Script.ADBHelper {
 		destination: string,
 		source: string | Array<string>,
 		application: ApplicationInformation,
-		temporary: string = `/sdcard/Download/TwinStar.ToolKit/ADBHelper.Temporary`,
 	): void {
-		remove(temporary);
-		create_directory(temporary);
+		remove(k_remote_temporary_directory);
+		create_directory(k_remote_temporary_directory);
+		change_mode(k_remote_temporary_directory, `777`);
 		if (typeof source === 'string') {
 			remove(destination);
-			execute([`push`, source, `${temporary}`]);
-			copy(`${temporary}/${PathUtility.name(source)}`, destination);
+			execute([`push`, source, `${k_remote_temporary_directory}`]);
+			copy(`${k_remote_temporary_directory}/${PathUtility.name(source)}`, destination);
 		} else {
 			if (!exist_directory(destination)) {
 				remove(destination);
 				create_directory(destination);
 			}
-			execute([`push`, ...source, `${temporary}`]);
+			execute([`push`, ...source, `${k_remote_temporary_directory}`]);
 			for (let element of source) {
 				if (exist(`${destination}/${PathUtility.name(element)}`)) {
 					remove(`${destination}/${PathUtility.name(element)}`);
 				}
-				copy(`${temporary}/${PathUtility.name(element)}`, `${destination}/${PathUtility.name(element)}`);
+				copy(`${k_remote_temporary_directory}/${PathUtility.name(element)}`, `${destination}/${PathUtility.name(element)}`);
 			}
 		}
 		change_fuse_owner_group(destination, application.user);
+		remove(k_remote_temporary_directory);
 		return;
 	}
 
@@ -149,6 +154,15 @@ namespace TwinStar.Script.ADBHelper {
 	}
 
 	// ------------------------------------------------
+
+	export function change_mode(
+		target: string,
+		mode: string,
+	): void {
+		let shell_result: string;
+		shell_result = ADBHelper.shell(`chmod -R ${mode} "${target}"`);
+		return;
+	}
 
 	export function change_owner(
 		target: string,

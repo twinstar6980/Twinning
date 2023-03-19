@@ -55,22 +55,22 @@ namespace TwinStar::Core::Tool::Data::Serialization::JSON {
 				case ValueType::Constant::array().value : {
 					auto & array = value.get_array();
 					data.write('['_c);
+					auto write_space =
+						[&] (
+					) -> auto {
+						data.write(!disable_array_wrap_line ? ('\n'_c) : (' '_c));
+						return;
+					};
+					auto write_indent =
+						[&] (
+						Boolean const & is_inner
+					) -> auto {
+						if (!disable_array_wrap_line) {
+							StringParser::write_character_repeat(data, '\t'_c, is_inner ? (indent_level + 1_sz) : (indent_level));
+						}
+						return;
+					};
 					if (!array.empty()) {
-						auto write_space =
-							[&] (
-						) -> auto {
-							data.write(!disable_array_wrap_line ? ('\n'_c) : (' '_c));
-							return;
-						};
-						auto write_indent =
-							[&] (
-							Boolean const & is_inner
-						) -> auto {
-							if (!disable_array_wrap_line) {
-								StringParser::write_character_repeat(data, '\t'_c, is_inner ? (indent_level + 1_sz) : (indent_level));
-							}
-							return;
-						};
 						auto write_element =
 							[&] (
 							Array::Element const & element
@@ -87,33 +87,33 @@ namespace TwinStar::Core::Tool::Data::Serialization::JSON {
 						}
 						{
 							write_element(array.last());
-							if (!disable_trailing_comma) {
+							if (!disable_trailing_comma && !disable_array_wrap_line) {
 								data.write(','_c);
 							}
-							write_space();
 						}
-						write_indent(k_false);
 					}
+					write_space();
+					write_indent(k_false);
 					data.write(']'_c);
 					break;
 				}
 				case ValueType::Constant::object().value : {
 					auto & object = value.get_object();
 					data.write('{'_c);
+					auto write_space =
+						[&] (
+					) -> auto {
+						data.write('\n'_c);
+						return;
+					};
+					auto write_indent =
+						[&] (
+						Boolean const & is_inner
+					) -> auto {
+						StringParser::write_character_repeat(data, '\t'_c, is_inner ? (indent_level + 1_sz) : (indent_level));
+						return;
+					};
 					if (!object.empty()) {
-						auto write_space =
-							[&] (
-						) -> auto {
-							data.write('\n'_c);
-							return;
-						};
-						auto write_indent =
-							[&] (
-							Boolean const & is_inner
-						) -> auto {
-							StringParser::write_character_repeat(data, '\t'_c, is_inner ? (indent_level + 1_sz) : (indent_level));
-							return;
-						};
 						auto write_member =
 							[&] (
 							Object::Element const & member
@@ -138,10 +138,10 @@ namespace TwinStar::Core::Tool::Data::Serialization::JSON {
 							if (!disable_trailing_comma) {
 								data.write(','_c);
 							}
-							write_space();
 						}
-						write_indent(k_false);
 					}
+					write_space();
+					write_indent(k_false);
 					data.write('}'_c);
 					break;
 				}

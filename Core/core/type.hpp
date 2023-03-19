@@ -40,15 +40,15 @@ namespace TwinStar::Core {
 
 	// ----------------
 
-	using ZFloating32 = float;
+	using ZFloatingS32 = float;
 
-	using ZFloating64 = double;
+	using ZFloatingS64 = double;
 
 	// ----------------
 
-	using ZCharacterLocale = char;
+	using ZCharacterN = char;
 
-	using ZCharacterWide = wchar_t;
+	using ZCharacterW = wchar_t;
 
 	using ZCharacter8 = char8_t;
 
@@ -93,9 +93,9 @@ namespace TwinStar::Core {
 
 	using ZInteger = ZIntegerS64;
 
-	using ZFloating = ZFloating64;
+	using ZFloating = ZFloatingS64;
 
-	using ZCharacter = ZCharacterLocale;
+	using ZCharacter = ZCharacterN;
 
 	using ZByte = ZByte8;
 
@@ -115,9 +115,9 @@ namespace TwinStar::Core {
 
 	using ZLiteralCharacter = char const;
 
-	using ZLiteralString = char const * const;
+	using ZLiteralSize = std::size_t const;
 
-	using ZLiteralLength = std::size_t const;
+	using ZLiteralString = char const * const;
 
 	#pragma endregion
 

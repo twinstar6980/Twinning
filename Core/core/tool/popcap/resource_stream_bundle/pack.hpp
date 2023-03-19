@@ -365,19 +365,19 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 					}
 					++global_group_index;
 				}
-				MapData::adjust_sequence(information_structure.group_id);
-				MapData::adjust_sequence(information_structure.subgroup_id);
-				MapData::adjust_sequence(information_structure.resource_path);
+				CompiledMapData::adjust_sequence(information_structure.group_id);
+				CompiledMapData::adjust_sequence(information_structure.subgroup_id);
+				CompiledMapData::adjust_sequence(information_structure.resource_path);
 				information_data.header = OByteStreamView{
 					package_data.forward_view(bs_size(information_structure.header))
 				};
 				information_data.resource_path_offset = package_data.position();
 				information_data.resource_path = OByteStreamView{
-					package_data.forward_view(MapData::compute_ripe_size(information_structure.resource_path))
+					package_data.forward_view(CompiledMapData::compute_ripe_size(information_structure.resource_path))
 				};
 				information_data.subgroup_id_offset = package_data.position();
 				information_data.subgroup_id = OByteStreamView{
-					package_data.forward_view(MapData::compute_ripe_size(information_structure.subgroup_id))
+					package_data.forward_view(CompiledMapData::compute_ripe_size(information_structure.subgroup_id))
 				};
 				information_data.group_information_offset = package_data.position();
 				information_data.group_information = OByteStreamView{
@@ -385,7 +385,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 				};
 				information_data.group_id_offset = package_data.position();
 				information_data.group_id = OByteStreamView{
-					package_data.forward_view(MapData::compute_ripe_size(information_structure.group_id))
+					package_data.forward_view(CompiledMapData::compute_ripe_size(information_structure.group_id))
 				};
 				information_data.subgroup_information_offset = package_data.position();
 				information_data.subgroup_information = OByteStreamView{
@@ -586,15 +586,15 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 				}
 				++global_group_index;
 			}
-			MapData::adjust_sequence(information_structure.group_id);
-			MapData::adjust_sequence(information_structure.subgroup_id);
-			MapData::adjust_sequence(information_structure.resource_path);
+			CompiledMapData::adjust_sequence(information_structure.group_id);
+			CompiledMapData::adjust_sequence(information_structure.subgroup_id);
+			CompiledMapData::adjust_sequence(information_structure.resource_path);
 			{
 				information_data.header.write(information_structure.header);
-				MapData::encode(information_structure.resource_path, information_data.resource_path);
-				MapData::encode(information_structure.subgroup_id, information_data.subgroup_id);
+				CompiledMapData::encode(information_structure.resource_path, information_data.resource_path);
+				CompiledMapData::encode(information_structure.subgroup_id, information_data.subgroup_id);
 				information_data.group_information.write(information_structure.group_information);
-				MapData::encode(information_structure.group_id, information_data.group_id);
+				CompiledMapData::encode(information_structure.group_id, information_data.group_id);
 				information_data.subgroup_information.write(information_structure.subgroup_information);
 				information_data.subgroup_pool_information.write(information_structure.subgroup_pool_information);
 				information_data.texture_resource_information.write(information_structure.texture_resource_information);
@@ -733,9 +733,9 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 				assert_test(cbw<Size>(information_structure.header.subgroup_information_section_block_size) == bs_static_size<Structure::SubgroupInformation<version>>());
 				assert_test(cbw<Size>(information_structure.header.subgroup_pool_information_section_block_size) == bs_static_size<Structure::SubgroupPoolInformation<version>>());
 				assert_test(cbw<Size>(information_structure.header.texture_resource_information_section_block_size) == bs_static_size<Structure::TextureResourceInformation<version>>());
-				MapData::decode(information_structure.group_id, as_lvalue(IByteStreamView{package_data.sub_view(cbw<Size>(information_structure.header.group_id_section_offset), cbw<Size>(information_structure.header.group_id_section_size))}));
-				MapData::decode(information_structure.subgroup_id, as_lvalue(IByteStreamView{package_data.sub_view(cbw<Size>(information_structure.header.subgroup_id_section_offset), cbw<Size>(information_structure.header.subgroup_id_section_size))}));
-				MapData::decode(information_structure.resource_path, as_lvalue(IByteStreamView{package_data.sub_view(cbw<Size>(information_structure.header.resource_path_section_offset), cbw<Size>(information_structure.header.resource_path_section_size))}));
+				CompiledMapData::decode(information_structure.group_id, as_lvalue(IByteStreamView{package_data.sub_view(cbw<Size>(information_structure.header.group_id_section_offset), cbw<Size>(information_structure.header.group_id_section_size))}));
+				CompiledMapData::decode(information_structure.subgroup_id, as_lvalue(IByteStreamView{package_data.sub_view(cbw<Size>(information_structure.header.subgroup_id_section_offset), cbw<Size>(information_structure.header.subgroup_id_section_size))}));
+				CompiledMapData::decode(information_structure.resource_path, as_lvalue(IByteStreamView{package_data.sub_view(cbw<Size>(information_structure.header.resource_path_section_offset), cbw<Size>(information_structure.header.resource_path_section_size))}));
 				package_data.set_position(cbw<Size>(information_structure.header.group_information_section_offset));
 				package_data.read(information_structure.group_information, cbw<Size>(information_structure.header.group_information_section_block_count));
 				package_data.set_position(cbw<Size>(information_structure.header.subgroup_information_section_offset));

@@ -44,9 +44,15 @@ namespace TwinStar::Core::Trait {
 	// ----------------
 
 	template <typename It>
-	concept IsBuiltinFloating =
+	concept IsBuiltinSignedFloating =
 		CategoryConstraint<IsPure<It>>
 		&& (IsSame<It, float, double, long double>)
+		;
+
+	template <typename It>
+	concept IsBuiltinFloating =
+		CategoryConstraint<IsPure<It>>
+		&& (IsBuiltinSignedFloating<It>)
 		;
 
 	// ----------------

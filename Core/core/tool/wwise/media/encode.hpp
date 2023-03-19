@@ -1,10 +1,12 @@
 #pragma once
 
 #include "core/utility/utility.hpp"
+#include "core/tool/wwise/media/version.hpp"
 #include "core/tool/common/wave_structure.hpp"
 
 namespace TwinStar::Core::Tool::Wwise::Media {
 
+	template <auto version> requires (check_version(version))
 	struct EncodeCommon {
 
 	protected:
@@ -28,10 +30,19 @@ namespace TwinStar::Core::Tool::Wwise::Media {
 
 	};
 
+	template <auto version> requires (check_version(version))
 	struct Decode :
-		EncodeCommon {
+		EncodeCommon<version> {
 
 	protected:
+
+		using Common = EncodeCommon<version>;
+
+		using typename Common::AudioFormatFlag;
+
+		using typename Common::FormatChunkExpand6;
+
+		// ----------------
 
 		static auto reshuffle_adpcm (
 			VListView<IntegerU32> const & raw,
@@ -53,7 +64,7 @@ namespace TwinStar::Core::Tool::Wwise::Media {
 
 		// ----------------
 
-		static auto process_audio (
+		static auto process_media (
 			CByteListView const & ripe,
 			ByteArray &           raw,
 			Path const &          ffmpeg_program,
@@ -104,7 +115,7 @@ namespace TwinStar::Core::Tool::Wwise::Media {
 				FourCC const & id
 			) -> auto {
 				auto location = subchunk_location[id];
-				return ripe.sub(location.get<1_ix>(), location.get<2_ix>());
+				return ripe.sub(location.template get<1_ix>(), location.template get<2_ix>());
 			};
 			auto format_chunk_stream = IByteStreamView{get_subchunk(WaveStructure::ChunkSignFlag::fmt)};
 			auto format = format_chunk_stream.read_of<WaveStructure::RIFFChunk::WaveChunk::FormatChunk>();
@@ -313,7 +324,7 @@ namespace TwinStar::Core::Tool::Wwise::Media {
 
 	public:
 
-		static auto do_process_audio (
+		static auto do_process_media (
 			CByteListView const & ripe,
 			ByteArray &           raw,
 			Path const &          ffmpeg_program,
@@ -322,7 +333,7 @@ namespace TwinStar::Core::Tool::Wwise::Media {
 			Path const &          temporary_directory
 		) -> Void {
 			restruct(raw);
-			return process_audio(ripe, raw, ffmpeg_program, ww2ogg_program, ww2ogg_code_book, temporary_directory);
+			return process_media(ripe, raw, ffmpeg_program, ww2ogg_program, ww2ogg_code_book, temporary_directory);
 		}
 
 	};

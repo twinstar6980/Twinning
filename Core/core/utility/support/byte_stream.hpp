@@ -131,13 +131,13 @@ namespace TwinStar::Core {
 
 	template <typename TValue> requires
 		AutoConstraint
-	struct ByteStreamAdapter<ByteWrapper<TValue>> :
+	struct ByteStreamAdapter<CharacterWrapper<TValue>> :
 		ByteStreamAdapter<IntegerWrapper<TValue>> {
 	};
 
 	template <typename TValue> requires
 		AutoConstraint
-	struct ByteStreamAdapter<CharacterWrapper<TValue>> :
+	struct ByteStreamAdapter<ByteWrapper<TValue>> :
 		ByteStreamAdapter<IntegerWrapper<TValue>> {
 	};
 
@@ -185,13 +185,13 @@ namespace TwinStar::Core {
 	// ----------------
 
 	template <>
-	struct ByteStreamAdapter<Byte> :
-		ByteStreamAdapter<Byte8> {
+	struct ByteStreamAdapter<Character> :
+		ByteStreamAdapter<CharacterN> {
 	};
 
 	template <>
-	struct ByteStreamAdapter<Character> :
-		ByteStreamAdapter<CharacterLocale> {
+	struct ByteStreamAdapter<Byte> :
+		ByteStreamAdapter<Byte8> {
 	};
 
 	#pragma endregion
