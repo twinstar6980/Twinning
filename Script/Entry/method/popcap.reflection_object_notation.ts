@@ -37,7 +37,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					let value_file: string;
 					let data_file: string;
 					let version_number: [1n][number];
-					let version_native_string_encoding_use_utf8: boolean;
+					let version_native_string_encoding_use_utf8: [false, true][number];
 					let buffer_size: bigint;
 					{
 						value_file = Executor.require_argument(
@@ -107,7 +107,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					let data_file: string;
 					let value_file: string;
 					let version_number: [1n][number];
-					let version_native_string_encoding_use_utf8: boolean;
+					let version_native_string_encoding_use_utf8: [false, true][number];
 					{
 						data_file = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'data_file'),
@@ -267,7 +267,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					let value_file: string;
 					let data_file: string;
 					let version_number: [1n][number];
-					let version_native_string_encoding_use_utf8: boolean;
+					let version_native_string_encoding_use_utf8: [false, true][number];
 					let key: string;
 					let buffer_size: bigint;
 					{
@@ -348,7 +348,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					let data_file: string;
 					let value_file: string;
 					let version_number: [1n][number];
-					let version_native_string_encoding_use_utf8: boolean;
+					let version_native_string_encoding_use_utf8: [false, true][number];
 					let key: string;
 					{
 						data_file = Executor.require_argument(
@@ -418,7 +418,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					let data_file: string;
 					let value_file: string;
 					let version_number: [1n][number];
-					let version_native_string_encoding_use_utf8: boolean;
+					let version_native_string_encoding_use_utf8: [false, true][number];
 					{
 						data_file = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'data_file'),
@@ -481,7 +481,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					let value_file_directory: string;
 					let data_file_directory: string;
 					let version_number: [1n][number];
-					let version_native_string_encoding_use_utf8: boolean;
+					let version_native_string_encoding_use_utf8: [false, true][number];
 					let buffer_size: bigint;
 					{
 						value_file_directory = Executor.require_argument(
@@ -560,7 +560,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					let data_file_directory: string;
 					let value_file_directory: string;
 					let version_number: [1n][number];
-					let version_native_string_encoding_use_utf8: boolean;
+					let version_native_string_encoding_use_utf8: [false, true][number];
 					{
 						data_file_directory = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'data_file_directory'),
@@ -744,7 +744,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					let value_file_directory: string;
 					let data_file_directory: string;
 					let version_number: [1n][number];
-					let version_native_string_encoding_use_utf8: boolean;
+					let version_native_string_encoding_use_utf8: [false, true][number];
 					let key: string;
 					let buffer_size: bigint;
 					{
@@ -834,7 +834,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					let data_file_directory: string;
 					let value_file_directory: string;
 					let version_number: [1n][number];
-					let version_native_string_encoding_use_utf8: boolean;
+					let version_native_string_encoding_use_utf8: [false, true][number];
 					let key: string;
 					{
 						data_file_directory = Executor.require_argument(

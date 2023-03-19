@@ -158,6 +158,8 @@ namespace TwinStar.Script.Entry.method.image.atlas {
 				input_forwarder: 'sprite_directory',
 			}),
 		);
+		g_executor_method_of_batch.push(
+		);
 	}
 
 	// ------------------------------------------------

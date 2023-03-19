@@ -133,6 +133,8 @@ namespace TwinStar.Script.Entry.method.data.differentiation {
 				input_forwarder: 'before_file',
 			}),
 		);
+		g_executor_method_of_batch.push(
+		);
 	}
 
 	// ------------------------------------------------

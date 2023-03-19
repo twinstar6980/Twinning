@@ -128,6 +128,8 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_group {
 				input_forwarder: 'data_file',
 			}),
 		);
+		g_executor_method_of_batch.push(
+		);
 	}
 
 	// ------------------------------------------------

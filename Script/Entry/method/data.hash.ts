@@ -40,6 +40,8 @@ namespace TwinStar.Script.Entry.method.data.hash {
 				input_forwarder: 'target_file',
 			}),
 		);
+		g_executor_method_of_batch.push(
+		);
 	}
 
 	// ------------------------------------------------

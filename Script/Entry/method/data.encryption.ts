@@ -235,6 +235,8 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 				input_forwarder: 'cipher_file',
 			}),
 		);
+		g_executor_method_of_batch.push(
+		);
 	}
 
 	// ------------------------------------------------

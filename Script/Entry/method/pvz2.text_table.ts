@@ -61,6 +61,8 @@ namespace TwinStar.Script.Entry.method.pvz2.text_table {
 				input_forwarder: 'source_file',
 			}),
 		);
+		g_executor_method_of_batch.push(
+		);
 	}
 
 	// ------------------------------------------------

@@ -33,7 +33,7 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 					let bundle_directory: string;
 					let data_file: string;
 					let version_number: [0n][number];
-					let version_compress_resource_data: boolean;
+					let version_compress_resource_data: [false, true][number];
 					let buffer_size: bigint;
 					{
 						bundle_directory = Executor.require_argument(
@@ -105,7 +105,7 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 					let data_file: string;
 					let bundle_directory: string;
 					let version_number: [0n][number];
-					let version_compress_resource_data: boolean;
+					let version_compress_resource_data: [false, true][number];
 					{
 						data_file = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'data_file'),
@@ -167,7 +167,7 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 					let resource_directory: string;
 					let data_file: string;
 					let version_number: [0n][number];
-					let version_compress_resource_data: boolean;
+					let version_compress_resource_data: [false, true][number];
 					{
 						resource_directory = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'resource_directory'),
@@ -251,6 +251,8 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.pak)$/i]]),
 				input_forwarder: 'plain_file',
 			}),
+		);
+		g_executor_method_of_batch.push(
 		);
 	}
 

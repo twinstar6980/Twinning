@@ -179,6 +179,8 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 				input_forwarder: 'before_file',
 			}),
 		);
+		g_executor_method_of_batch.push(
+		);
 	}
 
 	// ------------------------------------------------

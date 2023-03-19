@@ -580,6 +580,8 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 				input_forwarder: 'raw_file',
 			}),
 		);
+		g_executor_method_of_batch.push(
+		);
 	}
 
 	// ------------------------------------------------

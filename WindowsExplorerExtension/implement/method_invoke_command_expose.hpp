@@ -202,6 +202,20 @@ namespace TwinStar::WindowsExplorerExtension {
 					.argument = LR"({})",
 				},
 				{
+					.id = L"data.compression.lzma.compress",
+					.type = false,
+					.rule = std::nullopt,
+					.method = L"data.compression.lzma.compress",
+					.argument = LR"({})",
+				},
+				{
+					.id = L"data.compression.lzma.uncompress",
+					.type = false,
+					.rule = std::nullopt,
+					.method = L"data.compression.lzma.uncompress",
+					.argument = LR"({})",
+				},
+				{
 					.id = L"data.differentiation.vcdiff.encode",
 					.type = false,
 					.rule = std::nullopt,
@@ -220,6 +234,7 @@ namespace TwinStar::WindowsExplorerExtension {
 				1,
 				2,
 				1,
+				2,
 				2,
 				2,
 				2,
@@ -461,8 +476,23 @@ namespace TwinStar::WindowsExplorerExtension {
 					.method = L"popcap.crypt_data.decrypt",
 					.argument = LR"({})",
 				},
+				{
+					.id = L"popcap.crypt_data.encrypt.batch",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.crypt_data.encrypt.batch",
+					.argument = LR"({})",
+				},
+				{
+					.id = L"popcap.crypt_data.decrypt.batch",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.crypt_data.decrypt.batch",
+					.argument = LR"({})",
+				},
 			},
 			.separator = {
+				2,
 				2,
 			},
 		};
@@ -591,18 +621,18 @@ namespace TwinStar::WindowsExplorerExtension {
 					.argument = LR"({})",
 				},
 				{
-					.id = L"popcap.texture.encode:abgr_8888",
+					.id = L"popcap.texture.encode:rgba_8888_o",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
 					.method = L"popcap.texture.encode",
-					.argument = LR"({ "format": "abgr_8888" })",
+					.argument = LR"({ "format": "rgba_8888_o" })",
 				},
 				{
-					.id = L"popcap.texture.decode:abgr_8888",
+					.id = L"popcap.texture.decode:rgba_8888_o",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.ptx)$)", std::wregex::icase},
 					.method = L"popcap.texture.decode",
-					.argument = LR"({ "format": "abgr_8888" })",
+					.argument = LR"({ "format": "rgba_8888_o" })",
 				},
 				{
 					.id = L"popcap.texture.encode:argb_8888",
@@ -666,6 +696,82 @@ namespace TwinStar::WindowsExplorerExtension {
 				2,
 				2,
 				2,
+				2,
+				2,
+			},
+		};
+
+		inline auto const popcap_u_texture = GroupMethodInvokeCommandConfig{
+			.id = L"popcap.u_texture",
+			.item = {
+				{
+					.id = L"popcap.u_texture.encode",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
+					.method = L"popcap.u_texture.encode",
+					.argument = LR"({})",
+				},
+				{
+					.id = L"popcap.u_texture.decode",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.tex)$)", std::wregex::icase},
+					.method = L"popcap.u_texture.decode",
+					.argument = LR"({})",
+				},
+				{
+					.id = L"popcap.u_texture.encode.batch",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.u_texture.encode.batch",
+					.argument = LR"({})",
+				},
+				{
+					.id = L"popcap.u_texture.decode.batch",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.u_texture.decode.batch",
+					.argument = LR"({})",
+				},
+			},
+			.separator = {
+				2,
+				2,
+			},
+		};
+
+		inline auto const popcap_sexy_texture = GroupMethodInvokeCommandConfig{
+			.id = L"popcap.sexy_texture",
+			.item = {
+				{
+					.id = L"popcap.sexy_texture.encode",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
+					.method = L"popcap.sexy_texture.encode",
+					.argument = LR"({})",
+				},
+				{
+					.id = L"popcap.sexy_texture.decode",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.tex)$)", std::wregex::icase},
+					.method = L"popcap.sexy_texture.decode",
+					.argument = LR"({})",
+				},
+				{
+					.id = L"popcap.sexy_texture.encode.batch",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.sexy_texture.encode.batch",
+					.argument = LR"({})",
+				},
+				{
+					.id = L"popcap.sexy_texture.decode.batch",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.sexy_texture.decode.batch",
+					.argument = LR"({})",
+				},
+			},
+			.separator = {
 				2,
 				2,
 			},
@@ -1183,6 +1289,44 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
+		inline auto const popcap_effect = GroupMethodInvokeCommandConfig{
+			.id = L"popcap.effect",
+			.item = {
+				{
+					.id = L"popcap.effect.encode",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.popfx)(\.json)$)", std::wregex::icase},
+					.method = L"popcap.effect.encode",
+					.argument = LR"({})",
+				},
+				{
+					.id = L"popcap.effect.decode",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.popfx)$)", std::wregex::icase},
+					.method = L"popcap.effect.decode",
+					.argument = LR"({})",
+				},
+				{
+					.id = L"popcap.effect.encode.batch",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.effect.encode.batch",
+					.argument = LR"({})",
+				},
+				{
+					.id = L"popcap.effect.decode.batch",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.effect.decode.batch",
+					.argument = LR"({})",
+				},
+			},
+			.separator = {
+				2,
+				2,
+			},
+		};
+
 		inline auto const popcap_package = GroupMethodInvokeCommandConfig{
 			.id = L"popcap.package",
 			.item = {
@@ -1447,6 +1591,10 @@ namespace TwinStar::WindowsExplorerExtension {
 
 	M_define_exposed_visible_method_invoke_command("654DB9CD-DA07-4942-96A5-57F948C6A44C", GroupMethodInvokeCommand, PopCapTexture, popcap_texture);
 
+	M_define_exposed_visible_method_invoke_command("5E774A16-C9AA-8096-DFFC-71EB187033E6", GroupMethodInvokeCommand, PopCapUTexture, popcap_u_texture);
+
+	M_define_exposed_visible_method_invoke_command("F4410002-C25F-BF2B-6D68-1434FAC08314", GroupMethodInvokeCommand, PopCapSexyTexture, popcap_sexy_texture);
+
 	M_define_exposed_visible_method_invoke_command("D3EBD69C-CB8B-452D-BFC7-7C06519BDA68", GroupMethodInvokeCommand, PopCapAnimation, popcap_animation);
 
 	M_define_exposed_visible_method_invoke_command("E2D6187D-7E0E-4089-82F2-768A6EE7D4D1", GroupMethodInvokeCommand, PopCapReAnimation, popcap_re_animation);
@@ -1454,6 +1602,8 @@ namespace TwinStar::WindowsExplorerExtension {
 	M_define_exposed_visible_method_invoke_command("0DD08DF0-3B5D-5273-99AA-1A3766355ED1", GroupMethodInvokeCommand, PopCapParticle, popcap_particle);
 
 	M_define_exposed_visible_method_invoke_command("8532B3AF-4E59-149E-A324-BABC012C38F2", GroupMethodInvokeCommand, PopCapTrail, popcap_trail);
+
+	M_define_exposed_visible_method_invoke_command("A29DEC4C-30C3-1C40-63C2-AD34D4F828AF", GroupMethodInvokeCommand, PopCapEffect, popcap_effect);
 
 	M_define_exposed_visible_method_invoke_command("64DBC2C3-402F-42AA-B8BF-B43B3280F813", GroupMethodInvokeCommand, PopCapPackage, popcap_package);
 

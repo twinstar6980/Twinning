@@ -89,6 +89,8 @@ namespace TwinStar.Script.Entry.method.data.encoding {
 				input_forwarder: 'ripe_file',
 			}),
 		);
+		g_executor_method_of_batch.push(
+		);
 	}
 
 	// ------------------------------------------------

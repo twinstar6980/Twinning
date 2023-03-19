@@ -183,6 +183,8 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 				input_forwarder: 'source_file',
 			}),
 		);
+		g_executor_method_of_batch.push(
+		);
 	}
 
 	// ------------------------------------------------

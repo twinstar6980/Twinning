@@ -8,11 +8,11 @@ Windows Explorer 扩展，将工具集成至 Windows Explorer 右键菜单中。
 
 * 要求
 	
-	* 项目构建工具：[xmake 2.7.3+](https://xmake.io/#/) 。
+	* [xmake 2.7.7+](https://xmake.io/#/)
 	
-	* 本地编译工具链：[MSVC 19.33+ with MSVC-STL and Windows-SDK for Windows](https://visualstudio.microsoft.com/downloads/) 。
+	* [MSVC 19.35+ with MSVC-STL and Windows-SDK for Windows](https://visualstudio.microsoft.com/downloads/)
 	
-	* 包管理工具：[vcpkg](https://vcpkg.io) 。
+	* [vcpkg](https://vcpkg.io)
 
 * 开发
 	

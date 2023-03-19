@@ -51,6 +51,8 @@ namespace TwinStar.Script.Entry.method.pvz2.remote_android_helper {
 				input_forwarder: 'project_directory',
 			}),
 		);
+		g_executor_method_of_batch.push(
+		);
 	}
 
 	// ------------------------------------------------

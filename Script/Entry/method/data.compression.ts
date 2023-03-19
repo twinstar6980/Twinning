@@ -457,6 +457,8 @@ namespace TwinStar.Script.Entry.method.data.compression {
 				input_forwarder: 'ripe_file',
 			}),
 		);
+		g_executor_method_of_batch.push(
+		);
 	}
 
 	// ------------------------------------------------

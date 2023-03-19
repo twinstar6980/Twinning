@@ -40,6 +40,8 @@ namespace TwinStar.Script.Entry.method.js {
 				input_forwarder: 'script_file',
 			}),
 		);
+		g_executor_method_of_batch.push(
+		);
 	}
 
 	// ------------------------------------------------

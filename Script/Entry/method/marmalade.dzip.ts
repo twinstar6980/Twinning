@@ -179,6 +179,8 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 				input_forwarder: 'resource_directory',
 			}),
 		);
+		g_executor_method_of_batch.push(
+		);
 	}
 
 	// ------------------------------------------------

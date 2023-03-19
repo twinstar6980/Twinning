@@ -133,6 +133,8 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 				input_forwarder: 'data_file',
 			}),
 		);
+		g_executor_method_of_batch.push(
+		);
 	}
 
 	// ------------------------------------------------
