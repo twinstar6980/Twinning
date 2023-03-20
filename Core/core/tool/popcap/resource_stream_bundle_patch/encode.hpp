@@ -241,6 +241,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundlePatch {
 			OByteStreamView & data,
 			ByteArray const & value
 		) -> Void {
+			assert_test(value.size() == 16_sz);
 			data.write(value);
 			return;
 		}

@@ -21,17 +21,17 @@ namespace TwinStar::Core {
 
 	#pragma region alias
 
-	using CharacterN = CharacterWrapper<ZCharacterN>;
-
-	using CharacterW = CharacterWrapper<ZCharacterW>;
-
-	// ----------------
-
 	using Character8 = CharacterWrapper<ZCharacter8>;
 
 	using Character16 = CharacterWrapper<ZCharacter16>;
 
 	using Character32 = CharacterWrapper<ZCharacter32>;
+
+	// ----------------
+
+	using CharacterN = CharacterWrapper<ZCharacterN>;
+
+	using CharacterW = CharacterWrapper<ZCharacterW>;
 
 	#pragma endregion
 
@@ -39,36 +39,12 @@ namespace TwinStar::Core {
 
 	M_define_simple_derived_class(Character, CharacterN, CharacterN);
 
+	M_define_simple_derived_class(Unicode, Character32, Character32);
+
 	#pragma endregion
 
 	#pragma region literal
 
-	inline constexpr auto operator ""_cn (
-		ZLiteralInteger value
-	) -> CharacterN {
-		return mbw<CharacterN>(value);
-	}
-
-	inline constexpr auto operator ""_cn (
-		ZLiteralCharacter value
-	) -> CharacterN {
-		return mbw<CharacterN>(value);
-	}
-
-	inline constexpr auto operator ""_cw (
-		ZLiteralInteger value
-	) -> CharacterW {
-		return mbw<CharacterW>(value);
-	}
-
-	inline constexpr auto operator ""_cw (
-		ZLiteralCharacter value
-	) -> CharacterW {
-		return mbw<CharacterW>(value);
-	}
-
-	// ----------------
-
 	inline constexpr auto operator ""_c8 (
 		ZLiteralInteger value
 	) -> Character8 {
@@ -107,6 +83,32 @@ namespace TwinStar::Core {
 
 	// ----------------
 
+	inline constexpr auto operator ""_cn (
+		ZLiteralInteger value
+	) -> CharacterN {
+		return mbw<CharacterN>(value);
+	}
+
+	inline constexpr auto operator ""_cn (
+		ZLiteralCharacter value
+	) -> CharacterN {
+		return mbw<CharacterN>(value);
+	}
+
+	inline constexpr auto operator ""_cw (
+		ZLiteralInteger value
+	) -> CharacterW {
+		return mbw<CharacterW>(value);
+	}
+
+	inline constexpr auto operator ""_cw (
+		ZLiteralCharacter value
+	) -> CharacterW {
+		return mbw<CharacterW>(value);
+	}
+
+	// ----------------
+
 	inline constexpr auto operator ""_c (
 		ZLiteralInteger value
 	) -> Character {
@@ -117,6 +119,18 @@ namespace TwinStar::Core {
 		ZLiteralCharacter value
 	) -> Character {
 		return mbw<Character>(value);
+	}
+
+	inline constexpr auto operator ""_u (
+		ZLiteralInteger value
+	) -> Unicode {
+		return mbw<Unicode>(value);
+	}
+
+	inline constexpr auto operator ""_u (
+		ZLiteralCharacter value
+	) -> Unicode {
+		return mbw<Unicode>(value);
 	}
 
 	#pragma endregion

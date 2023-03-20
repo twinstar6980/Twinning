@@ -1,6 +1,6 @@
 /**
  * JS interface of Core
- * @version 42
+ * @version 43
  */
 declare namespace TwinStar.Core {
 
@@ -3822,6 +3822,107 @@ declare namespace TwinStar.Core {
 					function process_effect(
 						effect_data: IByteStreamView,
 						effect_manifest: Manifest.Effect,
+						version: Version,
+					): Void;
+
+				}
+
+			}
+
+			/** CharacterFontWidget2 */
+			namespace CharacterFontWidget2 {
+
+				/** 版本 */
+				class Version {
+
+					// ------------------------------------------------
+
+					private _Tool_PopCap_CharacterFontWidget2_Version;
+
+					// ------------------------------------------------
+
+					static default(): Version;
+
+					static copy(it: Version): Version;
+
+					// ------------------------------------------------
+
+					static Value: {
+					};
+
+					static value(it: typeof Version.Value): Version;
+
+					get value(): typeof Version.Value;
+
+					set value(it: typeof Version.Value);
+
+					// ------------------------------------------------
+
+				}
+
+				/** 清单 */
+				namespace Manifest {
+
+					namespace JS_N {
+
+					}
+
+					/** 字体部件 */
+					class FontWidget {
+
+						// ------------------------------------------------
+
+						private _Tool_PopCap_CharacterFontWidget2_Manifest_FontWidget;
+
+						// ------------------------------------------------
+
+						static default(): FontWidget;
+
+						static copy(it: FontWidget): FontWidget;
+
+						// ------------------------------------------------
+
+						static json(it: JSON.Value<undefined>, version: Version): FontWidget;
+
+						get_json(version: Version): JSON.Value<undefined>;
+
+						set_json(it: JSON.Value<undefined>, version: Version): Void;
+
+						// ------------------------------------------------
+
+					}
+
+				}
+
+				/** 编码 */
+				namespace Encode {
+
+					/**
+					 * 编码
+					 * @param font_widget_data 字体部件数据
+					 * @param font_widget_manifest 字体部件清单
+					 * @param version 版本
+					 */
+					function process_font_widget(
+						font_widget_data: OByteStreamView,
+						font_widget_manifest: Manifest.FontWidget,
+						version: Version,
+					): Void;
+
+				}
+
+				/** 解码 */
+				namespace Decode {
+
+					/**
+					 * 解码
+					 * @param font_widget_data 字体部件数据
+					 * @param font_widget_manifest 字体部件清单
+					 * @param version 版本
+					 */
+					function process_font_widget(
+						font_widget_data: IByteStreamView,
+						font_widget_manifest: Manifest.FontWidget,
 						version: Version,
 					): Void;
 

@@ -9,7 +9,7 @@
 		"json_crypt_key": "?input",
 		"image": "?input",
 		"image_texture_format_map_list": {
-			"pvz2_ios": [
+			"pvz2_iphone": [
 				{
 					"index": 0,
 					"format": "argb_8888",
@@ -33,7 +33,7 @@
 					"format": "rgb_etc1_a_8",
 				},
 			],
-			"pvz2_chs_android": [
+			"pvz2_android_chinese": [
 				{
 					"index": 0,
 					"format": "abgr_8888",
@@ -43,7 +43,7 @@
 					"format": "rgb_etc1_a_palette",
 				},
 			],
-			"pvz1_ios": [
+			"pvz1_iphone": [
 				{
 					"index": 0,
 					"format": "argb_8888",

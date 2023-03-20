@@ -33,6 +33,7 @@
 #include "core/tool/popcap/particle/encode.hpp"
 #include "core/tool/popcap/trail/encode.hpp"
 #include "core/tool/popcap/effect/encode.hpp"
+#include "core/tool/popcap/character_font_widget_2/encode.hpp"
 #include "core/tool/popcap/package/pack.hpp"
 #include "core/tool/popcap/resource_stream_group/pack.hpp"
 #include "core/tool/popcap/resource_stream_bundle/pack.hpp"
@@ -1320,6 +1321,51 @@ namespace TwinStar::Core::Executor::Interface {
 								);
 							}
 						>>>("process_effect"_s);
+				}
+				{
+					using Tool::PopCap::CharacterFontWidget2::Version;
+					using Tool::PopCap::CharacterFontWidget2::VersionPackage;
+					using Tool::PopCap::CharacterFontWidget2::Manifest;
+					using FontWidgetManifest = Variant<
+						typename Manifest<VersionPackage::element<1_ixz>>::FontWidget
+					>;
+					auto n_CharacterFontWidget2 = n_PopCap.add_namespace("CharacterFontWidget2"_s);
+					define_generic_class<Version>(n_CharacterFontWidget2, "Version"_s);
+					{
+						auto n_Manifest = n_CharacterFontWidget2.add_namespace("Manifest"_s);
+						auto c_FontWidget = define_generic_class<FontWidgetManifest, GCDF::generic_mask>(n_Manifest, "FontWidget"_s);
+						define_variant_class_version_method<Version, VersionPackage>(c_FontWidget);
+					}
+					n_CharacterFontWidget2.add_namespace("Encode"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							OByteStreamView &          font_widget_data,
+							FontWidgetManifest const & font_widget_manifest,
+							Version const &            version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::CharacterFontWidget2::Encode<version>::do_process_font_widget(font_widget_data, font_widget_manifest.template get_of_index<mbw<Size>(index)>());
+									}
+								);
+							}
+						>>>("process_font_widget"_s);
+					n_CharacterFontWidget2.add_namespace("Decode"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							IByteStreamView &    font_widget_data,
+							FontWidgetManifest & font_widget_manifest,
+							Version const &      version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::CharacterFontWidget2::Decode<version>::do_process_font_widget(font_widget_data, font_widget_manifest.template set_of_index<mbw<Size>(index)>());
+									}
+								);
+							}
+						>>>("process_font_widget"_s);
 				}
 				{
 					using Tool::PopCap::Package::Version;

@@ -76,6 +76,38 @@ namespace TwinStar::Core {
 
 	};
 
+	template <>
+	struct BasicStringAdapter<Character, Unicode> {
+
+		using This = BasicString<Character>;
+
+		using That = Unicode;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.allocate_full(6_sz);
+			auto thix_stream = OCharacterStreamView{thix};
+			StringParser::write_utf8_character(thix_stream, that);
+			thix.set_size(thix_stream.position());
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			auto thix_stream = ICharacterStreamView{thix};
+			StringParser::read_utf8_character(thix_stream, that);
+			assert_test(thix_stream.full());
+			return;
+		}
+
+	};
+
 	#pragma endregion
 
 	#pragma region null

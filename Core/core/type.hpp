@@ -46,15 +46,17 @@ namespace TwinStar::Core {
 
 	// ----------------
 
-	using ZCharacterN = char;
-
-	using ZCharacterW = wchar_t;
-
 	using ZCharacter8 = char8_t;
 
 	using ZCharacter16 = char16_t;
 
 	using ZCharacter32 = char32_t;
+
+	// ----------------
+
+	using ZCharacterN = char;
+
+	using ZCharacterW = wchar_t;
 
 	// ----------------
 

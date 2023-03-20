@@ -172,6 +172,64 @@ namespace TwinStar::Core::JSON {
 
 	// ----------------
 
+	template <>
+	struct ValueAdapter<Character> {
+
+		using This = Value;
+
+		using That = Character;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.set_string().from(that);
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			thix.get_string().to(that);
+			return;
+		}
+
+	};
+
+	// ----------------
+
+	template <>
+	struct ValueAdapter<Unicode> {
+
+		using This = Value;
+
+		using That = Unicode;
+
+		// ----------------
+
+		static auto from (
+			This &       thix,
+			That const & that
+		) -> Void {
+			thix.set_string().from(that);
+			return;
+		}
+
+		static auto to (
+			This const & thix,
+			That &       that
+		) -> Void {
+			thix.get_string().to(that);
+			return;
+		}
+
+	};
+
+	// ----------------
+
 	template <typename TType> requires
 		AutoConstraint
 		&& (IsEnumerationWrapper<TType>)

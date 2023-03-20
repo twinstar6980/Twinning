@@ -1327,6 +1327,44 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
+		inline auto const popcap_character_font_widget_2 = GroupMethodInvokeCommandConfig{
+			.id = L"popcap.character_font_widget_2",
+			.item = {
+				{
+					.id = L"popcap.character_font_widget_2.encode",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.cfw2)(\.json)$)", std::wregex::icase},
+					.method = L"popcap.character_font_widget_2.encode",
+					.argument = LR"({})",
+				},
+				{
+					.id = L"popcap.character_font_widget_2.decode",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.cfw2)$)", std::wregex::icase},
+					.method = L"popcap.character_font_widget_2.decode",
+					.argument = LR"({})",
+				},
+				{
+					.id = L"popcap.character_font_widget_2.encode.batch",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.character_font_widget_2.encode.batch",
+					.argument = LR"({})",
+				},
+				{
+					.id = L"popcap.character_font_widget_2.decode.batch",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.character_font_widget_2.decode.batch",
+					.argument = LR"({})",
+				},
+			},
+			.separator = {
+				2,
+				2,
+			},
+		};
+
 		inline auto const popcap_package = GroupMethodInvokeCommandConfig{
 			.id = L"popcap.package",
 			.item = {
@@ -1604,6 +1642,8 @@ namespace TwinStar::WindowsExplorerExtension {
 	M_define_exposed_visible_method_invoke_command("8532B3AF-4E59-149E-A324-BABC012C38F2", GroupMethodInvokeCommand, PopCapTrail, popcap_trail);
 
 	M_define_exposed_visible_method_invoke_command("A29DEC4C-30C3-1C40-63C2-AD34D4F828AF", GroupMethodInvokeCommand, PopCapEffect, popcap_effect);
+
+	M_define_exposed_visible_method_invoke_command("3AB6C4D5-C386-E654-C646-54D42FF58065", GroupMethodInvokeCommand, PopCapCharacterFontWidget2, popcap_character_font_widget_2);
 
 	M_define_exposed_visible_method_invoke_command("64DBC2C3-402F-42AA-B8BF-B43B3280F813", GroupMethodInvokeCommand, PopCapPackage, popcap_package);
 

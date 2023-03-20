@@ -1820,6 +1820,40 @@ namespace TwinStar.Script.CoreX {
 
 			}
 
+			export namespace CharacterFontWidget2 {
+
+				export function encode_fs(
+					data_file: string,
+					manifest_file: string,
+					version: typeof Core.Tool.PopCap.CharacterFontWidget2.Version.Value,
+					data_buffer: Core.ByteListView | bigint,
+				): void {
+					let version_c = Core.Tool.PopCap.CharacterFontWidget2.Version.value(version);
+					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
+					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
+					let stream = Core.ByteStreamView.watch(data_buffer_view);
+					let manifest = Core.Tool.PopCap.CharacterFontWidget2.Manifest.FontWidget.json(JSON.read_fs(manifest_file), version_c);
+					Core.Tool.PopCap.CharacterFontWidget2.Encode.process_font_widget(stream, manifest, version_c);
+					FileSystem.write_file(data_file, stream.stream_view());
+					return;
+				}
+
+				export function decode_fs(
+					data_file: string,
+					manifest_file: string,
+					version: typeof Core.Tool.PopCap.CharacterFontWidget2.Version.Value,
+				): void {
+					let version_c = Core.Tool.PopCap.CharacterFontWidget2.Version.value(version);
+					let data = FileSystem.read_file(data_file);
+					let stream = Core.ByteStreamView.watch(data.view());
+					let manifest = Core.Tool.PopCap.CharacterFontWidget2.Manifest.FontWidget.default();
+					Core.Tool.PopCap.CharacterFontWidget2.Decode.process_font_widget(stream, manifest, version_c);
+					JSON.write_fs(manifest_file, manifest.get_json(version_c));
+					return;
+				}
+
+			}
+
 			export namespace Package {
 
 				export function pack_fs(
