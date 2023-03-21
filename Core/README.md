@@ -72,9 +72,11 @@
 	
 	1. 本项目重度依赖模板，并仅使用头文件进行代码组织，最终只有单个源文件被编译，这导致了较长的编译时间，应当考虑在未来借助 C++ Modules 进行优化（在其成熟之后）。
 	
-	2. 由于 GCC 的策略，需要添加 `-fpermissive` 选项以使 GCC 容许项目中的部分代码。
+	2. 在 Windows 上使用 MSVC 编译本项目将使用大量内存（10G左右），请确保设备的物理内存与交换内存充足。
 	
-	3. 由于 GCC 的 BUG ，本项目无法通过 GCC 编译，参阅 [GCC Bugzilla # 102367](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=102367) 。
+	3. 由于 GCC 的策略，需要添加 `-fpermissive` 选项以使 GCC 容许项目中的部分代码。
+	
+	4. 由于 GCC 的 BUG ，本项目无法通过 GCC 编译，参阅 [GCC Bugzilla # 102367](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=102367) 。
 
 * 对第三方库的修改
 	
