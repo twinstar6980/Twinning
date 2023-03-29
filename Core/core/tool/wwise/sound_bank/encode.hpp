@@ -135,7 +135,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				sustain_time,
 				initial_delay,
 				duration,
-				loop_count,
+				loop,
 				playback_rate,
 				stop_playback,
 			),
@@ -180,7 +180,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<19_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// duration,
 						TypePackage<ValuePackage<16_e>, TypePackage<Floating>, ValuePackage<1.0_f>>,
-						// loop_count,
+						// loop,
 						TypePackage<ValuePackage<17_e>, TypePackage<Integer>, ValuePackage<1_i>>,
 						// playback_rate,
 						TypePackage<ValuePackage<18_e>, TypePackage<Floating>, ValuePackage<1.0_f>>,
@@ -203,11 +203,12 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_enumeration(
 			M_wrap(AudioCommonPropertyType_<_>),
 			M_wrap(
+				bus_volume,
+				output_bus_volume,
+				output_bus_low_pass_filter,
 				voice_volume,
 				voice_pitch,
 				voice_low_pass_filter,
-				output_bus_volume,
-				output_bus_low_pass_filter,
 				game_defined_auxiliary_send_volume,
 				user_defined_auxiliary_send_volume_0,
 				user_defined_auxiliary_send_volume_1,
@@ -216,10 +217,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				positioning_center_percent,
 				positioning_speaker_panning_x,
 				positioning_speaker_panning_y,
-				bus_volume,
 				playback_priority_value,
 				playback_priority_offset_at_maximum_distance,
-				loop_count,
+				playback_loop,
 				motion_volume_offset,
 				motion_low_pass_filter,
 			),
@@ -229,11 +229,12 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_enumeration(
 			M_wrap(AudioCommonPropertyType_<_>),
 			M_wrap(
+				bus_volume,
+				output_bus_volume,
+				output_bus_low_pass_filter,
 				voice_volume,
 				voice_pitch,
 				voice_low_pass_filter,
-				output_bus_volume,
-				output_bus_low_pass_filter,
 				voice_volume_make_up_gain,
 				game_defined_auxiliary_send_volume,
 				user_defined_auxiliary_send_volume_0,
@@ -243,18 +244,17 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				positioning_center_percent,
 				positioning_speaker_panning_x,
 				positioning_speaker_panning_y,
-				hdr_envelope_tracking_active_range,
-				bus_volume,
 				hdr_threshold,
 				hdr_ratio,
 				hdr_release_time,
 				hdr_window_tap_output_game_parameter_id,
 				hdr_window_tap_output_game_parameter_minimum,
 				hdr_window_tap_output_game_parameter_maximum,
+				hdr_envelope_tracking_active_range,
 				playback_priority_value,
 				playback_priority_offset_at_maximum_distance,
-				initial_delay,
-				loop_count,
+				playback_initial_delay,
+				playback_loop,
 				motion_volume_offset,
 				motion_low_pass_filter,
 			),
@@ -264,14 +264,15 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_enumeration(
 			M_wrap(AudioCommonPropertyType_<_>),
 			M_wrap(
+				bus_volume,
+				output_bus_volume,
+				output_bus_low_pass_filter,
+				output_bus_high_pass_filter,
 				voice_volume,
 				voice_pitch,
 				voice_low_pass_filter,
 				voice_high_pass_filter,
 				voice_volume_make_up_gain,
-				output_bus_volume,
-				output_bus_low_pass_filter,
-				output_bus_high_pass_filter,
 				game_defined_auxiliary_send_volume,
 				user_defined_auxiliary_send_volume_0,
 				user_defined_auxiliary_send_volume_1,
@@ -280,6 +281,12 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				positioning_center_percent,
 				positioning_speaker_panning_x,
 				positioning_speaker_panning_y,
+				hdr_threshold,
+				hdr_ratio,
+				hdr_release_time,
+				hdr_window_tap_output_game_parameter_id,
+				hdr_window_tap_output_game_parameter_minimum,
+				hdr_window_tap_output_game_parameter_maximum,
 				hdr_envelope_tracking_active_range,
 				midi_note_tracking_root_note,
 				midi_event_play_on,
@@ -292,18 +299,11 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				midi_filter_channel,
 				midi_clip_tempo_source,
 				midi_target_id,
-				playback_speed,
-				bus_volume,
-				hdr_threshold,
-				hdr_ratio,
-				hdr_release_time,
-				hdr_window_tap_output_game_parameter_id,
-				hdr_window_tap_output_game_parameter_minimum,
-				hdr_window_tap_output_game_parameter_maximum,
 				playback_priority_value,
 				playback_priority_offset_at_maximum_distance,
-				initial_delay,
-				loop_count,
+				playback_initial_delay,
+				playback_loop,
+				playback_speed,
 				motion_volume_offset,
 				motion_low_pass_filter,
 				mixer_id,
@@ -314,14 +314,15 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_enumeration(
 			M_wrap(AudioCommonPropertyType_<_>),
 			M_wrap(
+				bus_volume,
+				output_bus_volume,
+				output_bus_low_pass_filter,
+				output_bus_high_pass_filter,
 				voice_volume,
 				voice_pitch,
 				voice_low_pass_filter,
 				voice_high_pass_filter,
 				voice_volume_make_up_gain,
-				output_bus_volume,
-				output_bus_low_pass_filter,
-				output_bus_high_pass_filter,
 				game_defined_auxiliary_send_volume,
 				game_defined_auxiliary_send_low_pass_filter,
 				game_defined_auxiliary_send_high_pass_filter,
@@ -340,6 +341,12 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				positioning_center_percent,
 				positioning_speaker_panning_x,
 				positioning_speaker_panning_y,
+				hdr_threshold,
+				hdr_ratio,
+				hdr_release_time,
+				hdr_window_tap_output_game_parameter_id,
+				hdr_window_tap_output_game_parameter_minimum,
+				hdr_window_tap_output_game_parameter_maximum,
 				hdr_envelope_tracking_active_range,
 				midi_note_tracking_root_note,
 				midi_event_play_on,
@@ -352,18 +359,11 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				midi_filter_channel,
 				midi_clip_tempo_source,
 				midi_target_id,
-				playback_speed,
-				bus_volume,
-				hdr_threshold,
-				hdr_ratio,
-				hdr_release_time,
-				hdr_window_tap_output_game_parameter_id,
-				hdr_window_tap_output_game_parameter_minimum,
-				hdr_window_tap_output_game_parameter_maximum,
 				playback_priority_value,
 				playback_priority_offset_at_maximum_distance,
-				initial_delay,
-				loop_count,
+				playback_initial_delay,
+				playback_loop,
+				playback_speed,
 				mixer_id,
 			),
 		);
@@ -372,14 +372,15 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_enumeration(
 			M_wrap(AudioCommonPropertyType_<_>),
 			M_wrap(
+				bus_volume,
+				output_bus_volume,
+				output_bus_low_pass_filter,
+				output_bus_high_pass_filter,
 				voice_volume,
 				voice_pitch,
 				voice_low_pass_filter,
 				voice_high_pass_filter,
 				voice_volume_make_up_gain,
-				output_bus_volume,
-				output_bus_low_pass_filter,
-				output_bus_high_pass_filter,
 				game_defined_auxiliary_send_volume,
 				game_defined_auxiliary_send_low_pass_filter,
 				game_defined_auxiliary_send_high_pass_filter,
@@ -400,6 +401,12 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				positioning_speaker_panning_y,
 				positioning_listener_routing_speaker_panning_division_spatialization_mix,
 				positioning_listener_routing_attenuation_id,
+				hdr_threshold,
+				hdr_ratio,
+				hdr_release_time,
+				hdr_window_tap_output_game_parameter_id,
+				hdr_window_tap_output_game_parameter_minimum,
+				hdr_window_tap_output_game_parameter_maximum,
 				hdr_envelope_tracking_active_range,
 				midi_note_tracking_root_note,
 				midi_event_play_on,
@@ -412,18 +419,11 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				midi_filter_channel,
 				midi_clip_tempo_source,
 				midi_target_id,
-				playback_speed,
-				bus_volume,
-				hdr_threshold,
-				hdr_ratio,
-				hdr_release_time,
-				hdr_window_tap_output_game_parameter_id,
-				hdr_window_tap_output_game_parameter_minimum,
-				hdr_window_tap_output_game_parameter_maximum,
 				playback_priority_value,
 				playback_priority_offset_at_maximum_distance,
-				initial_delay,
-				loop_count,
+				playback_initial_delay,
+				playback_loop,
+				playback_speed,
 				mixer_id,
 			),
 		);
@@ -432,14 +432,15 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_enumeration(
 			M_wrap(AudioCommonPropertyType_<_>),
 			M_wrap(
+				bus_volume,
+				output_bus_volume,
+				output_bus_low_pass_filter,
+				output_bus_high_pass_filter,
 				voice_volume,
 				voice_pitch,
 				voice_low_pass_filter,
 				voice_high_pass_filter,
 				voice_volume_make_up_gain,
-				output_bus_volume,
-				output_bus_low_pass_filter,
-				output_bus_high_pass_filter,
 				game_defined_auxiliary_send_volume,
 				game_defined_auxiliary_send_low_pass_filter,
 				game_defined_auxiliary_send_high_pass_filter,
@@ -461,6 +462,12 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				positioning_speaker_panning_y,
 				positioning_listener_routing_speaker_panning_division_spatialization_mix,
 				positioning_listener_routing_attenuation_id,
+				hdr_threshold,
+				hdr_ratio,
+				hdr_release_time,
+				hdr_window_tap_output_game_parameter_id,
+				hdr_window_tap_output_game_parameter_minimum,
+				hdr_window_tap_output_game_parameter_maximum,
 				hdr_envelope_tracking_active_range,
 				midi_note_tracking_root_note,
 				midi_event_play_on,
@@ -473,18 +480,11 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				midi_filter_channel,
 				midi_clip_tempo_source,
 				midi_target_id,
-				playback_speed,
-				bus_volume,
-				hdr_threshold,
-				hdr_ratio,
-				hdr_release_time,
-				hdr_window_tap_output_game_parameter_id,
-				hdr_window_tap_output_game_parameter_minimum,
-				hdr_window_tap_output_game_parameter_maximum,
 				playback_priority_value,
 				playback_priority_offset_at_maximum_distance,
-				initial_delay,
-				loop_count,
+				playback_initial_delay,
+				playback_loop,
+				playback_speed,
 				mixer_id,
 			),
 		);
@@ -493,14 +493,15 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_enumeration(
 			M_wrap(AudioCommonPropertyType_<_>),
 			M_wrap(
+				bus_volume,
+				output_bus_volume,
+				output_bus_low_pass_filter,
+				output_bus_high_pass_filter,
 				voice_volume,
 				voice_pitch,
 				voice_low_pass_filter,
 				voice_high_pass_filter,
 				voice_volume_make_up_gain,
-				output_bus_volume,
-				output_bus_low_pass_filter,
-				output_bus_high_pass_filter,
 				game_defined_auxiliary_send_volume,
 				game_defined_auxiliary_send_low_pass_filter,
 				game_defined_auxiliary_send_high_pass_filter,
@@ -523,6 +524,12 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				positioning_speaker_panning_z,
 				positioning_listener_routing_speaker_panning_division_spatialization_mix,
 				positioning_listener_routing_attenuation_id,
+				hdr_threshold,
+				hdr_ratio,
+				hdr_release_time,
+				hdr_window_tap_output_game_parameter_id,
+				hdr_window_tap_output_game_parameter_minimum,
+				hdr_window_tap_output_game_parameter_maximum,
 				hdr_envelope_tracking_active_range,
 				midi_note_tracking_root_note,
 				midi_event_play_on,
@@ -535,18 +542,11 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				midi_filter_channel,
 				midi_clip_tempo_source,
 				midi_target_id,
-				playback_speed,
-				bus_volume,
-				hdr_threshold,
-				hdr_ratio,
-				hdr_release_time,
-				hdr_window_tap_output_game_parameter_id,
-				hdr_window_tap_output_game_parameter_minimum,
-				hdr_window_tap_output_game_parameter_maximum,
 				playback_priority_value,
 				playback_priority_offset_at_maximum_distance,
-				initial_delay,
-				loop_count,
+				playback_initial_delay,
+				playback_loop,
+				playback_speed,
 				mixer_id,
 			),
 		);
@@ -556,16 +556,18 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			using Attribute = decltype([] {
 				if constexpr (check_version(version, {72, 88})) {
 					using Type = TypePackage<
+						// bus_volume,
+						TypePackage<ValuePackage<4_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// output_bus_volume,
+						TypePackage<ValuePackage<23_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// output_bus_low_pass_filter,
+						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_volume,
 						TypePackage<ValuePackage<0_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_pitch,
 						TypePackage<ValuePackage<2_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_low_pass_filter,
 						TypePackage<ValuePackage<3_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// output_bus_volume,
-						TypePackage<ValuePackage<23_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// output_bus_low_pass_filter,
-						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_volume,
 						TypePackage<ValuePackage<22_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_0,
@@ -582,13 +584,11 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<11_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// positioning_speaker_panning_y,
 						TypePackage<ValuePackage<12_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// bus_volume,
-						TypePackage<ValuePackage<4_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// playback_priority_value,
 						TypePackage<ValuePackage<5_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// playback_priority_offset_at_maximum_distance,
 						TypePackage<ValuePackage<6_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// loop_count,
+						// playback_loop,
 						TypePackage<ValuePackage<7_e>, TypePackage<Integer>, ValuePackage<0_i>>,
 						// motion_volume_offset,
 						TypePackage<ValuePackage<8_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
@@ -599,16 +599,18 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				}
 				if constexpr (check_version(version, {88, 112})) {
 					using Type = TypePackage<
+						// bus_volume,
+						TypePackage<ValuePackage<4_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// output_bus_volume,
+						TypePackage<ValuePackage<23_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// output_bus_low_pass_filter,
+						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_volume,
 						TypePackage<ValuePackage<0_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_pitch,
 						TypePackage<ValuePackage<2_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_low_pass_filter,
 						TypePackage<ValuePackage<3_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// output_bus_volume,
-						TypePackage<ValuePackage<23_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// output_bus_low_pass_filter,
-						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_volume_make_up_gain,
 						TypePackage<ValuePackage<33_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_volume,
@@ -627,10 +629,6 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<11_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// positioning_speaker_panning_y,
 						TypePackage<ValuePackage<12_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_envelope_tracking_active_range,
-						TypePackage<ValuePackage<32_e>, TypePackage<Floating>, ValuePackage<12.0_f>>,
-						// bus_volume,
-						TypePackage<ValuePackage<4_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// hdr_threshold,
 						TypePackage<ValuePackage<26_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// hdr_ratio,
@@ -643,13 +641,15 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<30_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// hdr_window_tap_output_game_parameter_maximum,
 						TypePackage<ValuePackage<31_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_envelope_tracking_active_range,
+						TypePackage<ValuePackage<32_e>, TypePackage<Floating>, ValuePackage<12.0_f>>,
 						// playback_priority_value,
 						TypePackage<ValuePackage<5_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// playback_priority_offset_at_maximum_distance,
 						TypePackage<ValuePackage<6_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// initial_delay,
-						TypePackage<ValuePackage<59_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// loop_count,
+						// playback_initial_delay,
+						TypePackage<ValuePackage<25_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// playback_loop,
 						TypePackage<ValuePackage<7_e>, TypePackage<Integer>, ValuePackage<0_i>>,
 						// motion_volume_offset,
 						TypePackage<ValuePackage<8_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
@@ -660,6 +660,14 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				}
 				if constexpr (check_version(version, {112, 118})) {
 					using Type = TypePackage<
+						// bus_volume,
+						TypePackage<ValuePackage<5_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// output_bus_volume,
+						TypePackage<ValuePackage<23_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// output_bus_low_pass_filter,
+						TypePackage<ValuePackage<25_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// output_bus_high_pass_filter,
+						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_volume,
 						TypePackage<ValuePackage<0_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_pitch,
@@ -670,12 +678,6 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<4_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_volume_make_up_gain,
 						TypePackage<ValuePackage<33_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// output_bus_volume,
-						TypePackage<ValuePackage<23_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// output_bus_low_pass_filter,
-						TypePackage<ValuePackage<25_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// output_bus_high_pass_filter,
-						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_volume,
 						TypePackage<ValuePackage<22_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_0,
@@ -692,6 +694,18 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<11_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// positioning_speaker_panning_y,
 						TypePackage<ValuePackage<12_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_threshold,
+						TypePackage<ValuePackage<26_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_ratio,
+						TypePackage<ValuePackage<27_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_release_time,
+						TypePackage<ValuePackage<28_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_window_tap_output_game_parameter_id,
+						TypePackage<ValuePackage<29_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// hdr_window_tap_output_game_parameter_minimum,
+						TypePackage<ValuePackage<30_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_window_tap_output_game_parameter_maximum,
+						TypePackage<ValuePackage<31_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// hdr_envelope_tracking_active_range,
 						TypePackage<ValuePackage<32_e>, TypePackage<Floating>, ValuePackage<12.0_f>>,
 						// midi_note_tracking_root_note,
@@ -716,30 +730,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<55_e>, TypePackage<Enumerated>, ValuePackage<0_e>>,
 						// midi_target_id,
 						TypePackage<ValuePackage<56_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
-						// playback_speed,
-						TypePackage<ValuePackage<54_e>, TypePackage<Floating>, ValuePackage<1.0_f>>,
-						// bus_volume,
-						TypePackage<ValuePackage<5_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_threshold,
-						TypePackage<ValuePackage<26_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_ratio,
-						TypePackage<ValuePackage<27_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_release_time,
-						TypePackage<ValuePackage<28_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_window_tap_output_game_parameter_id,
-						TypePackage<ValuePackage<29_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
-						// hdr_window_tap_output_game_parameter_minimum,
-						TypePackage<ValuePackage<30_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_window_tap_output_game_parameter_maximum,
-						TypePackage<ValuePackage<31_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// playback_priority_value,
 						TypePackage<ValuePackage<6_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// playback_priority_offset_at_maximum_distance,
 						TypePackage<ValuePackage<7_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// initial_delay,
+						// playback_initial_delay,
 						TypePackage<ValuePackage<59_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// loop_count,
+						// playback_loop,
 						TypePackage<ValuePackage<58_e>, TypePackage<Integer>, ValuePackage<0_i>>,
+						// playback_speed,
+						TypePackage<ValuePackage<54_e>, TypePackage<Floating>, ValuePackage<1.0_f>>,
 						// motion_volume_offset,
 						TypePackage<ValuePackage<8_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// motion_low_pass_filter,
@@ -751,6 +751,14 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				}
 				if constexpr (check_version(version, {118, 128})) {
 					using Type = TypePackage<
+						// bus_volume,
+						TypePackage<ValuePackage<5_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// output_bus_volume,
+						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// output_bus_low_pass_filter,
+						TypePackage<ValuePackage<26_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// output_bus_high_pass_filter,
+						TypePackage<ValuePackage<25_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_volume,
 						TypePackage<ValuePackage<0_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_pitch,
@@ -761,12 +769,6 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<4_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_volume_make_up_gain,
 						TypePackage<ValuePackage<6_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// output_bus_volume,
-						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// output_bus_low_pass_filter,
-						TypePackage<ValuePackage<26_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// output_bus_high_pass_filter,
-						TypePackage<ValuePackage<25_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_volume,
 						TypePackage<ValuePackage<23_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_0,
@@ -783,6 +785,18 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<12_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// positioning_speaker_panning_y,
 						TypePackage<ValuePackage<13_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_threshold,
+						TypePackage<ValuePackage<27_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_ratio,
+						TypePackage<ValuePackage<28_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_release_time,
+						TypePackage<ValuePackage<29_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_window_tap_output_game_parameter_id,
+						TypePackage<ValuePackage<30_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// hdr_window_tap_output_game_parameter_minimum,
+						TypePackage<ValuePackage<31_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_window_tap_output_game_parameter_maximum,
+						TypePackage<ValuePackage<32_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// hdr_envelope_tracking_active_range,
 						TypePackage<ValuePackage<33_e>, TypePackage<Floating>, ValuePackage<12.0_f>>,
 						// midi_note_tracking_root_note,
@@ -807,30 +821,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<55_e>, TypePackage<Enumerated>, ValuePackage<0_e>>,
 						// midi_target_id,
 						TypePackage<ValuePackage<56_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
-						// playback_speed,
-						TypePackage<ValuePackage<54_e>, TypePackage<Floating>, ValuePackage<1.0_f>>,
-						// bus_volume,
-						TypePackage<ValuePackage<5_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_threshold,
-						TypePackage<ValuePackage<27_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_ratio,
-						TypePackage<ValuePackage<28_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_release_time,
-						TypePackage<ValuePackage<29_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_window_tap_output_game_parameter_id,
-						TypePackage<ValuePackage<30_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
-						// hdr_window_tap_output_game_parameter_minimum,
-						TypePackage<ValuePackage<31_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_window_tap_output_game_parameter_maximum,
-						TypePackage<ValuePackage<32_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// playback_priority_value,
 						TypePackage<ValuePackage<7_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// playback_priority_offset_at_maximum_distance,
 						TypePackage<ValuePackage<8_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// initial_delay,
+						// playback_initial_delay,
 						TypePackage<ValuePackage<59_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// loop_count,
+						// playback_loop,
 						TypePackage<ValuePackage<58_e>, TypePackage<Integer>, ValuePackage<0_i>>,
+						// playback_speed,
+						TypePackage<ValuePackage<54_e>, TypePackage<Floating>, ValuePackage<1.0_f>>,
 						// motion_volume_offset,
 						TypePackage<ValuePackage<9_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// motion_low_pass_filter,
@@ -842,6 +842,14 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				}
 				if constexpr (check_version(version, {128, 132})) {
 					using Type = TypePackage<
+						// bus_volume,
+						TypePackage<ValuePackage<5_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// output_bus_volume,
+						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// output_bus_low_pass_filter,
+						TypePackage<ValuePackage<26_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// output_bus_high_pass_filter,
+						TypePackage<ValuePackage<25_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_volume,
 						TypePackage<ValuePackage<0_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_pitch,
@@ -852,12 +860,6 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<4_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_volume_make_up_gain,
 						TypePackage<ValuePackage<6_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// output_bus_volume,
-						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// output_bus_low_pass_filter,
-						TypePackage<ValuePackage<26_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// output_bus_high_pass_filter,
-						TypePackage<ValuePackage<25_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_volume,
 						TypePackage<ValuePackage<23_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_low_pass_filter,
@@ -894,6 +896,18 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<12_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// positioning_speaker_panning_y,
 						TypePackage<ValuePackage<13_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_threshold,
+						TypePackage<ValuePackage<27_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_ratio,
+						TypePackage<ValuePackage<28_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_release_time,
+						TypePackage<ValuePackage<29_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_window_tap_output_game_parameter_id,
+						TypePackage<ValuePackage<30_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// hdr_window_tap_output_game_parameter_minimum,
+						TypePackage<ValuePackage<31_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_window_tap_output_game_parameter_maximum,
+						TypePackage<ValuePackage<32_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// hdr_envelope_tracking_active_range,
 						TypePackage<ValuePackage<33_e>, TypePackage<Floating>, ValuePackage<12.0_f>>,
 						// midi_note_tracking_root_note,
@@ -918,30 +932,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<55_e>, TypePackage<Enumerated>, ValuePackage<0_e>>,
 						// midi_target_id,
 						TypePackage<ValuePackage<56_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
-						// playback_speed,
-						TypePackage<ValuePackage<54_e>, TypePackage<Floating>, ValuePackage<1.0_f>>,
-						// bus_volume,
-						TypePackage<ValuePackage<5_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_threshold,
-						TypePackage<ValuePackage<27_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_ratio,
-						TypePackage<ValuePackage<28_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_release_time,
-						TypePackage<ValuePackage<29_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_window_tap_output_game_parameter_id,
-						TypePackage<ValuePackage<30_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
-						// hdr_window_tap_output_game_parameter_minimum,
-						TypePackage<ValuePackage<31_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_window_tap_output_game_parameter_maximum,
-						TypePackage<ValuePackage<32_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// playback_priority_value,
 						TypePackage<ValuePackage<7_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// playback_priority_offset_at_maximum_distance,
 						TypePackage<ValuePackage<8_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// initial_delay,
+						// playback_initial_delay,
 						TypePackage<ValuePackage<59_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// loop_count,
+						// playback_loop,
 						TypePackage<ValuePackage<58_e>, TypePackage<Integer>, ValuePackage<0_i>>,
+						// playback_speed,
+						TypePackage<ValuePackage<54_e>, TypePackage<Floating>, ValuePackage<1.0_f>>,
 						// mixer_id,
 						TypePackage<ValuePackage<57_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>
 					>;
@@ -949,6 +949,14 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				}
 				if constexpr (check_version(version, {132, 135})) {
 					using Type = TypePackage<
+						// bus_volume,
+						TypePackage<ValuePackage<5_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// output_bus_volume,
+						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// output_bus_low_pass_filter,
+						TypePackage<ValuePackage<26_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// output_bus_high_pass_filter,
+						TypePackage<ValuePackage<25_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_volume,
 						TypePackage<ValuePackage<0_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_pitch,
@@ -959,12 +967,6 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<4_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_volume_make_up_gain,
 						TypePackage<ValuePackage<6_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// output_bus_volume,
-						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// output_bus_low_pass_filter,
-						TypePackage<ValuePackage<26_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// output_bus_high_pass_filter,
-						TypePackage<ValuePackage<25_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_volume,
 						TypePackage<ValuePackage<23_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_low_pass_filter,
@@ -1005,6 +1007,18 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<71_e>, TypePackage<Floating>, ValuePackage<100.0_f>>,
 						// positioning_listener_routing_attenuation_id,
 						TypePackage<ValuePackage<70_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// hdr_threshold,
+						TypePackage<ValuePackage<27_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_ratio,
+						TypePackage<ValuePackage<28_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_release_time,
+						TypePackage<ValuePackage<29_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_window_tap_output_game_parameter_id,
+						TypePackage<ValuePackage<30_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// hdr_window_tap_output_game_parameter_minimum,
+						TypePackage<ValuePackage<31_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_window_tap_output_game_parameter_maximum,
+						TypePackage<ValuePackage<32_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// hdr_envelope_tracking_active_range,
 						TypePackage<ValuePackage<33_e>, TypePackage<Floating>, ValuePackage<12.0_f>>,
 						// midi_note_tracking_root_note,
@@ -1029,30 +1043,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<55_e>, TypePackage<Enumerated>, ValuePackage<0_e>>,
 						// midi_target_id,
 						TypePackage<ValuePackage<56_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
-						// playback_speed,
-						TypePackage<ValuePackage<54_e>, TypePackage<Floating>, ValuePackage<1.0_f>>,
-						// bus_volume,
-						TypePackage<ValuePackage<5_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_threshold,
-						TypePackage<ValuePackage<27_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_ratio,
-						TypePackage<ValuePackage<28_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_release_time,
-						TypePackage<ValuePackage<29_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_window_tap_output_game_parameter_id,
-						TypePackage<ValuePackage<30_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
-						// hdr_window_tap_output_game_parameter_minimum,
-						TypePackage<ValuePackage<31_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_window_tap_output_game_parameter_maximum,
-						TypePackage<ValuePackage<32_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// playback_priority_value,
 						TypePackage<ValuePackage<7_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// playback_priority_offset_at_maximum_distance,
 						TypePackage<ValuePackage<8_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// initial_delay,
+						// playback_initial_delay,
 						TypePackage<ValuePackage<59_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// loop_count,
+						// playback_loop,
 						TypePackage<ValuePackage<58_e>, TypePackage<Integer>, ValuePackage<0_i>>,
+						// playback_speed,
+						TypePackage<ValuePackage<54_e>, TypePackage<Floating>, ValuePackage<1.0_f>>,
 						// mixer_id,
 						TypePackage<ValuePackage<57_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>
 					>;
@@ -1060,6 +1060,14 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				}
 				if constexpr (check_version(version, {135, 140})) {
 					using Type = TypePackage<
+						// bus_volume,
+						TypePackage<ValuePackage<5_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// output_bus_volume,
+						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// output_bus_low_pass_filter,
+						TypePackage<ValuePackage<26_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// output_bus_high_pass_filter,
+						TypePackage<ValuePackage<25_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_volume,
 						TypePackage<ValuePackage<0_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_pitch,
@@ -1070,12 +1078,6 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<4_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_volume_make_up_gain,
 						TypePackage<ValuePackage<6_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// output_bus_volume,
-						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// output_bus_low_pass_filter,
-						TypePackage<ValuePackage<26_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// output_bus_high_pass_filter,
-						TypePackage<ValuePackage<25_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_volume,
 						TypePackage<ValuePackage<23_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_low_pass_filter,
@@ -1118,6 +1120,18 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<71_e>, TypePackage<Floating>, ValuePackage<100.0_f>>,
 						// positioning_listener_routing_attenuation_id,
 						TypePackage<ValuePackage<70_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// hdr_threshold,
+						TypePackage<ValuePackage<27_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_ratio,
+						TypePackage<ValuePackage<28_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_release_time,
+						TypePackage<ValuePackage<29_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_window_tap_output_game_parameter_id,
+						TypePackage<ValuePackage<30_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// hdr_window_tap_output_game_parameter_minimum,
+						TypePackage<ValuePackage<31_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_window_tap_output_game_parameter_maximum,
+						TypePackage<ValuePackage<32_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// hdr_envelope_tracking_active_range,
 						TypePackage<ValuePackage<33_e>, TypePackage<Floating>, ValuePackage<12.0_f>>,
 						// midi_note_tracking_root_note,
@@ -1142,30 +1156,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<55_e>, TypePackage<Enumerated>, ValuePackage<0_e>>,
 						// midi_target_id,
 						TypePackage<ValuePackage<56_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
-						// playback_speed,
-						TypePackage<ValuePackage<54_e>, TypePackage<Floating>, ValuePackage<1.0_f>>,
-						// bus_volume,
-						TypePackage<ValuePackage<5_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_threshold,
-						TypePackage<ValuePackage<27_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_ratio,
-						TypePackage<ValuePackage<28_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_release_time,
-						TypePackage<ValuePackage<29_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_window_tap_output_game_parameter_id,
-						TypePackage<ValuePackage<30_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
-						// hdr_window_tap_output_game_parameter_minimum,
-						TypePackage<ValuePackage<31_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_window_tap_output_game_parameter_maximum,
-						TypePackage<ValuePackage<32_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// playback_priority_value,
 						TypePackage<ValuePackage<7_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// playback_priority_offset_at_maximum_distance,
 						TypePackage<ValuePackage<8_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// initial_delay,
+						// playback_initial_delay,
 						TypePackage<ValuePackage<59_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// loop_count,
+						// playback_loop,
 						TypePackage<ValuePackage<58_e>, TypePackage<Integer>, ValuePackage<0_i>>,
+						// playback_speed,
+						TypePackage<ValuePackage<54_e>, TypePackage<Floating>, ValuePackage<1.0_f>>,
 						// mixer_id,
 						TypePackage<ValuePackage<57_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>
 					>;
@@ -1173,6 +1173,14 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				}
 				if constexpr (check_version(version, {140})) {
 					using Type = TypePackage<
+						// bus_volume,
+						TypePackage<ValuePackage<5_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// output_bus_volume,
+						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// output_bus_low_pass_filter,
+						TypePackage<ValuePackage<26_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// output_bus_high_pass_filter,
+						TypePackage<ValuePackage<25_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_volume,
 						TypePackage<ValuePackage<0_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_pitch,
@@ -1183,12 +1191,6 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<4_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// voice_volume_make_up_gain,
 						TypePackage<ValuePackage<6_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// output_bus_volume,
-						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// output_bus_low_pass_filter,
-						TypePackage<ValuePackage<26_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// output_bus_high_pass_filter,
-						TypePackage<ValuePackage<25_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_volume,
 						TypePackage<ValuePackage<23_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_low_pass_filter,
@@ -1233,6 +1235,18 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<71_e>, TypePackage<Floating>, ValuePackage<100.0_f>>,
 						// positioning_listener_routing_attenuation_id,
 						TypePackage<ValuePackage<70_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// hdr_threshold,
+						TypePackage<ValuePackage<27_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_ratio,
+						TypePackage<ValuePackage<28_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_release_time,
+						TypePackage<ValuePackage<29_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_window_tap_output_game_parameter_id,
+						TypePackage<ValuePackage<30_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// hdr_window_tap_output_game_parameter_minimum,
+						TypePackage<ValuePackage<31_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						// hdr_window_tap_output_game_parameter_maximum,
+						TypePackage<ValuePackage<32_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// hdr_envelope_tracking_active_range,
 						TypePackage<ValuePackage<33_e>, TypePackage<Floating>, ValuePackage<12.0_f>>,
 						// midi_note_tracking_root_note,
@@ -1257,30 +1271,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<55_e>, TypePackage<Enumerated>, ValuePackage<0_e>>,
 						// midi_target_id,
 						TypePackage<ValuePackage<56_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
-						// playback_speed,
-						TypePackage<ValuePackage<54_e>, TypePackage<Floating>, ValuePackage<1.0_f>>,
-						// bus_volume,
-						TypePackage<ValuePackage<5_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_threshold,
-						TypePackage<ValuePackage<27_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_ratio,
-						TypePackage<ValuePackage<28_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_release_time,
-						TypePackage<ValuePackage<29_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_window_tap_output_game_parameter_id,
-						TypePackage<ValuePackage<30_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
-						// hdr_window_tap_output_game_parameter_minimum,
-						TypePackage<ValuePackage<31_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// hdr_window_tap_output_game_parameter_maximum,
-						TypePackage<ValuePackage<32_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// playback_priority_value,
 						TypePackage<ValuePackage<7_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
 						// playback_priority_offset_at_maximum_distance,
 						TypePackage<ValuePackage<8_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// initial_delay,
+						// playback_initial_delay,
 						TypePackage<ValuePackage<59_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
-						// loop_count,
+						// playback_loop,
 						TypePackage<ValuePackage<58_e>, TypePackage<Integer>, ValuePackage<0_i>>,
+						// playback_speed,
+						TypePackage<ValuePackage<54_e>, TypePackage<Floating>, ValuePackage<1.0_f>>,
 						// mixer_id,
 						TypePackage<ValuePackage<57_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>
 					>;
@@ -4912,13 +4912,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			typename Manifest::AudioPlayModeSetting const &        play_mode_setting_manifest
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
-				exchange_unit_integer<IntegerS16>(data, play_mode_setting_manifest.continuous.loop_count.value);
+				exchange_unit_integer<IntegerS16>(data, play_mode_setting_manifest.continuous.loop.value);
 			}
 			if constexpr (check_version(version, {88})) {
-				exchange_unit_integer<IntegerS16>(data, play_mode_setting_manifest.continuous.loop_count.minimum_value);
+				exchange_unit_integer<IntegerS16>(data, play_mode_setting_manifest.continuous.loop.minimum_value);
 			}
 			if constexpr (check_version(version, {88})) {
-				exchange_unit_integer<IntegerS16>(data, play_mode_setting_manifest.continuous.loop_count.maximum_value);
+				exchange_unit_integer<IntegerS16>(data, play_mode_setting_manifest.continuous.loop.maximum_value);
 			}
 			if constexpr (check_version(version, {72})) {
 				exchange_unit_floating<FloatingS32>(data, play_mode_setting_manifest.continuous.transition_duration.value);
@@ -5222,7 +5222,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 							exchange_unit_bit<IntegerU32, k_true>(data, manifest.play_mode, manifest.play_type);
 						}
 						if constexpr (check_version(version, {72})) {
-							exchange_unit_integer<IntegerU16>(data, manifest.loop_count);
+							exchange_unit_integer<IntegerU16>(data, manifest.loop);
 						}
 						if constexpr (check_version(version, {112})) {
 							exchange_unit_constant(data, 0_iu32);
@@ -6426,7 +6426,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 							exchange_common_property_as_regular<CPTC::duration()>(common_property, manifest.duration);
 						}
 						if constexpr (check_version(version, {132})) {
-							exchange_common_property_as_randomizable<CPTC::loop_count()>(common_property, manifest.loop_count);
+							exchange_common_property_as_randomizable<CPTC::loop()>(common_property, manifest.loop);
 						}
 						if constexpr (check_version(version, {132})) {
 							exchange_common_property_as_randomizable<CPTC::playback_rate()>(common_property, manifest.playback_rate);
@@ -6567,7 +6567,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				exchange_unit_bit<IntegerU8>(data, manifest.positioning.speaker_panning.enable);
 			}
 			if constexpr (check_version(version, {112, 125})) {
-				process_section_sub(data, manifest.positioning, manifest.override_positioning);
+				exchange_unit_bit<IntegerU8>(data, manifest.override_positioning, manifest.positioning.speaker_panning.enable);
 			}
 			if constexpr (check_version(version, {125})) {
 				// NOTE : here
@@ -6669,10 +6669,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					[&] (auto & common_property) {
 						using CPTC = typename AudioCommonPropertyType::Constant;
 						if constexpr (check_version(version, {88})) {
-							exchange_common_property_as_randomizable<CPTC::initial_delay()>(common_property, manifest.playback_setting.initial_delay);
+							exchange_common_property_as_randomizable<CPTC::playback_initial_delay()>(common_property, manifest.playback_setting.initial_delay);
 						}
 						if constexpr (check_version(version, {72})) {
-							exchange_common_property_as_randomizable<CPTC::loop_count()>(common_property, manifest.playback_setting.loop_count);
+							exchange_common_property_as_randomizable<CPTC::playback_loop()>(common_property, manifest.playback_setting.loop);
 						}
 						if constexpr (check_version(version, {72})) {
 							process_common_property(common_property, manifest.voice);
@@ -6770,7 +6770,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					[&] (auto & common_property) {
 						using CPTC = typename AudioCommonPropertyType::Constant;
 						if constexpr (check_version(version, {88})) {
-							exchange_common_property_as_randomizable<CPTC::initial_delay()>(common_property, manifest.playback_setting.initial_delay);
+							exchange_common_property_as_randomizable<CPTC::playback_initial_delay()>(common_property, manifest.playback_setting.initial_delay);
 						}
 						if constexpr (check_version(version, {72})) {
 							process_common_property(common_property, manifest.voice);
@@ -6877,7 +6877,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					[&] (auto & common_property) {
 						using CPTC = typename AudioCommonPropertyType::Constant;
 						if constexpr (check_version(version, {88})) {
-							exchange_common_property_as_randomizable<CPTC::initial_delay()>(common_property, manifest.playback_setting.initial_delay);
+							exchange_common_property_as_randomizable<CPTC::playback_initial_delay()>(common_property, manifest.playback_setting.initial_delay);
 						}
 						if constexpr (check_version(version, {72})) {
 							process_common_property(common_property, manifest.voice);
@@ -6990,7 +6990,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					[&] (auto & common_property) {
 						using CPTC = typename AudioCommonPropertyType::Constant;
 						if constexpr (check_version(version, {88})) {
-							exchange_common_property_as_randomizable<CPTC::initial_delay()>(common_property, manifest.playback_setting.initial_delay);
+							exchange_common_property_as_randomizable<CPTC::playback_initial_delay()>(common_property, manifest.playback_setting.initial_delay);
 						}
 						if constexpr (check_version(version, {72})) {
 							process_common_property(common_property, manifest.voice);
@@ -10293,13 +10293,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			typename Manifest::AudioPlayModeSetting &        play_mode_setting_manifest
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
-				exchange_unit_integer<IntegerS16>(data, play_mode_setting_manifest.continuous.loop_count.value);
+				exchange_unit_integer<IntegerS16>(data, play_mode_setting_manifest.continuous.loop.value);
 			}
 			if constexpr (check_version(version, {88})) {
-				exchange_unit_integer<IntegerS16>(data, play_mode_setting_manifest.continuous.loop_count.minimum_value);
+				exchange_unit_integer<IntegerS16>(data, play_mode_setting_manifest.continuous.loop.minimum_value);
 			}
 			if constexpr (check_version(version, {88})) {
-				exchange_unit_integer<IntegerS16>(data, play_mode_setting_manifest.continuous.loop_count.maximum_value);
+				exchange_unit_integer<IntegerS16>(data, play_mode_setting_manifest.continuous.loop.maximum_value);
 			}
 			if constexpr (check_version(version, {72})) {
 				exchange_unit_floating<FloatingS32>(data, play_mode_setting_manifest.continuous.transition_duration.value);
@@ -10603,7 +10603,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 							exchange_unit_bit<IntegerU32, k_true>(data, manifest.play_mode, manifest.play_type);
 						}
 						if constexpr (check_version(version, {72})) {
-							exchange_unit_integer<IntegerU16>(data, manifest.loop_count);
+							exchange_unit_integer<IntegerU16>(data, manifest.loop);
 						}
 						if constexpr (check_version(version, {112})) {
 							exchange_unit_constant(data, 0_iu32);
@@ -11790,7 +11790,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 							exchange_common_property_as_regular<CPTC::duration()>(common_property, manifest.duration);
 						}
 						if constexpr (check_version(version, {132})) {
-							exchange_common_property_as_randomizable<CPTC::loop_count()>(common_property, manifest.loop_count);
+							exchange_common_property_as_randomizable<CPTC::loop()>(common_property, manifest.loop);
 						}
 						if constexpr (check_version(version, {132})) {
 							exchange_common_property_as_randomizable<CPTC::playback_rate()>(common_property, manifest.playback_rate);
@@ -11931,7 +11931,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				exchange_unit_bit<IntegerU8>(data, manifest.positioning.speaker_panning.enable);
 			}
 			if constexpr (check_version(version, {112, 125})) {
-				process_section_sub(data, manifest.positioning, manifest.override_positioning);
+				exchange_unit_bit<IntegerU8>(data, manifest.override_positioning, manifest.positioning.speaker_panning.enable);
 			}
 			if constexpr (check_version(version, {125})) {
 				// NOTE : here
@@ -12039,10 +12039,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					[&] (auto & common_property) {
 						using CPTC = typename AudioCommonPropertyType::Constant;
 						if constexpr (check_version(version, {88})) {
-							exchange_common_property_as_randomizable<CPTC::initial_delay()>(common_property, manifest.playback_setting.initial_delay);
+							exchange_common_property_as_randomizable<CPTC::playback_initial_delay()>(common_property, manifest.playback_setting.initial_delay);
 						}
 						if constexpr (check_version(version, {72})) {
-							exchange_common_property_as_randomizable<CPTC::loop_count()>(common_property, manifest.playback_setting.loop_count);
+							exchange_common_property_as_randomizable<CPTC::playback_loop()>(common_property, manifest.playback_setting.loop);
 						}
 						if constexpr (check_version(version, {72})) {
 							process_common_property(common_property, manifest.voice);
@@ -12140,7 +12140,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					[&] (auto & common_property) {
 						using CPTC = typename AudioCommonPropertyType::Constant;
 						if constexpr (check_version(version, {88})) {
-							exchange_common_property_as_randomizable<CPTC::initial_delay()>(common_property, manifest.playback_setting.initial_delay);
+							exchange_common_property_as_randomizable<CPTC::playback_initial_delay()>(common_property, manifest.playback_setting.initial_delay);
 						}
 						if constexpr (check_version(version, {72})) {
 							process_common_property(common_property, manifest.voice);
@@ -12247,7 +12247,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					[&] (auto & common_property) {
 						using CPTC = typename AudioCommonPropertyType::Constant;
 						if constexpr (check_version(version, {88})) {
-							exchange_common_property_as_randomizable<CPTC::initial_delay()>(common_property, manifest.playback_setting.initial_delay);
+							exchange_common_property_as_randomizable<CPTC::playback_initial_delay()>(common_property, manifest.playback_setting.initial_delay);
 						}
 						if constexpr (check_version(version, {72})) {
 							process_common_property(common_property, manifest.voice);
@@ -12360,7 +12360,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					[&] (auto & common_property) {
 						using CPTC = typename AudioCommonPropertyType::Constant;
 						if constexpr (check_version(version, {88})) {
-							exchange_common_property_as_randomizable<CPTC::initial_delay()>(common_property, manifest.playback_setting.initial_delay);
+							exchange_common_property_as_randomizable<CPTC::playback_initial_delay()>(common_property, manifest.playback_setting.initial_delay);
 						}
 						if constexpr (check_version(version, {72})) {
 							process_common_property(common_property, manifest.voice);

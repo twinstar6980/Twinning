@@ -2210,7 +2210,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(AudioPlayModeContinuousSetting_<_>),
 			M_wrap(
 				(Boolean) always_reset_playlist,
-				(RegularValue<Integer>) loop_count,
+				(RegularValue<Integer>) loop,
 				(AudioPlayModeContinuousTransitionType) transition_type,
 				(RandomizableValue<Floating>) transition_duration,
 			),
@@ -2221,7 +2221,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(AudioPlayModeContinuousSetting_<_>),
 			M_wrap(
 				(Boolean) always_reset_playlist,
-				(RandomizableValue<Integer>) loop_count,
+				(RandomizableValue<Integer>) loop,
 				(AudioPlayModeContinuousTransitionType) transition_type,
 				(RandomizableValue<Floating>) transition_duration,
 			),
@@ -3497,7 +3497,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(ID) id,
 				(RandomizableValue<Floating>) initial_delay,
 				(RegularValue<Floating>) duration,
-				(RandomizableValue<Integer>) loop_count,
+				(RandomizableValue<Integer>) loop,
 				(RandomizableValue<Floating>) playback_rate,
 				(ModulatorScope) scope,
 				(ModulatorTriggerOn) trigger_on,
@@ -3726,8 +3726,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(BusAutomaticDuckingSetting) automatic_ducking,
 				(BusHDRSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
-				(Boolean) override_playback_limit,
 				(Boolean) override_positioning,
+				(Boolean) override_playback_limit,
 			),
 		);
 
@@ -3871,8 +3871,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(BusAutomaticDuckingSetting) automatic_ducking,
 				(BusHDRSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
-				(Boolean) override_playback_limit,
 				(Boolean) override_positioning,
+				(Boolean) override_playback_limit,
 			),
 		);
 
@@ -3989,7 +3989,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundPlaybackSetting_<_>),
 			M_wrap(
-				(RandomizableValue<Integer>) loop_count,
+				(RandomizableValue<Integer>) loop,
 			),
 		);
 
@@ -3998,7 +3998,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(SoundPlaybackSetting_<_>),
 			M_wrap(
 				(RandomizableValue<Floating>) initial_delay,
-				(RandomizableValue<Integer>) loop_count,
+				(RandomizableValue<Integer>) loop,
 			),
 		);
 
@@ -6040,7 +6040,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(AudioPlayMode) play_mode,
 				(AudioPlayTypeRandomSetting) random_setting,
 				(Integer) weight,
-				(Integer) loop_count,
+				(Integer) loop,
 			),
 		);
 
