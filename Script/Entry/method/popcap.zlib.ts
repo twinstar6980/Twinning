@@ -47,7 +47,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 							(value) => (value),
 							null,
 							() => (Console.confirm(null)),
-							(value) => (null),
+							(value) => (CoreX.Tool.PopCap.ZLib.VersionVariant64E.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 					}
 					CoreX.Tool.PopCap.ZLib.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', { variant_64: version_variant_64 });
@@ -96,7 +96,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 							(value) => (value),
 							null,
 							() => (Console.confirm(null)),
-							(value) => (null),
+							(value) => (CoreX.Tool.PopCap.ZLib.VersionVariant64E.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 					}
 					CoreX.Tool.PopCap.ZLib.uncompress_fs(ripe_file, raw_file, 15n, { variant_64: version_variant_64 });
@@ -147,7 +147,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 							(value) => (value),
 							null,
 							() => (Console.confirm(null)),
-							(value) => (null),
+							(value) => (CoreX.Tool.PopCap.ZLib.VersionVariant64E.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 					}
 					simple_batch_execute(
@@ -204,7 +204,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 							(value) => (value),
 							null,
 							() => (Console.confirm(null)),
-							(value) => (null),
+							(value) => (CoreX.Tool.PopCap.ZLib.VersionVariant64E.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 					}
 					simple_batch_execute(

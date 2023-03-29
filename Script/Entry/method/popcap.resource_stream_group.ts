@@ -28,7 +28,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_group {
 				}) {
 					let bundle_directory: string;
 					let data_file: string;
-					let version_number: [3n, 4n][number];
+					let version_number: bigint;
 					let buffer_size: bigint;
 					{
 						bundle_directory = Executor.require_argument(
@@ -50,7 +50,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_group {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, null, null, null, [3n, ''], [4n, '']], null)),
-							(value) => ([3n, 4n].includes(value) ? null : los(`版本不受支持`)),
+							(value) => (CoreX.Tool.PopCap.ResourceStreamGroup.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
@@ -63,7 +63,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_group {
 					}
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					CoreX.Tool.PopCap.ResourceStreamGroup.pack_fs(data_file, manifest_file, resource_directory, { number: version_number }, buffer_size);
+					CoreX.Tool.PopCap.ResourceStreamGroup.pack_fs(data_file, manifest_file, resource_directory, { number: version_number as any }, buffer_size);
 					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
@@ -89,7 +89,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_group {
 				}) {
 					let data_file: string;
 					let bundle_directory: string;
-					let version_number: [3n, 4n][number];
+					let version_number: bigint;
 					{
 						data_file = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'data_file'),
@@ -110,12 +110,12 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_group {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, null, null, null, [3n, ''], [4n, '']], null)),
-							(value) => ([3n, 4n].includes(value) ? null : los(`版本不受支持`)),
+							(value) => (CoreX.Tool.PopCap.ResourceStreamGroup.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 					}
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					CoreX.Tool.PopCap.ResourceStreamGroup.unpack_fs(data_file, manifest_file, resource_directory, { number: version_number });
+					CoreX.Tool.PopCap.ResourceStreamGroup.unpack_fs(data_file, manifest_file, resource_directory, { number: version_number as any });
 					Console.notify('s', los(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {

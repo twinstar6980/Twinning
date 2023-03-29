@@ -23,7 +23,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundlePatch {
 	) -> ZBoolean {
 		auto result = true;
 		result &= VersionPackage::has(it);
-		result &= (number.size() == 0 || Range::has(number, it.number.value));
+		result &= (number.size() < 1 || *(number.begin() + 0) <= it.number.value) && (number.size() < 2 || *(number.begin() + 1) > it.number.value);
 		return result;
 	}
 

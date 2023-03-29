@@ -28,7 +28,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 	) -> ZBoolean {
 		auto result = true;
 		result &= VersionPackage::has(it);
-		result &= (number.size() == 0 || Range::has(number, it.number.value));
+		result &= (number.size() < 1 || *(number.begin() + 0) <= it.number.value) && (number.size() < 2 || *(number.begin() + 1) > it.number.value);
 		result &= (additional_texture_information_for_pvz_2_chinese_android.size() == 0 || Range::has(additional_texture_information_for_pvz_2_chinese_android, it.additional_texture_information_for_pvz_2_chinese_android.value));
 		return result;
 	}

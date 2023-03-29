@@ -70,10 +70,11 @@ namespace TwinStar::Core::Tool::PopCap::Package {
 				auto   resource_path = resource_directory / resource_manifest.key;
 				resource_information_structure.path = {resource_manifest.key.to_string(CharacterType::PathSeparator::windows)};
 				resource_information_structure.time = cbw<IntegerU64>(resource_manifest.value.time);
-				if constexpr (!version.compress_resource_data) {
+				if constexpr (check_version(version, {}, {false})) {
 					auto resource_size = FileSystem::read_stream_file(resource_path, package_data);
 					resource_information_structure.size = cbw<IntegerU32>(resource_size);
-				} else {
+				}
+				if constexpr (check_version(version, {}, {true})) {
 					auto resource_data = FileSystem::read_file(resource_path);
 					auto resource_data_stream = IByteStreamView{resource_data};
 					auto resource_offset = package_data.position();
@@ -147,11 +148,12 @@ namespace TwinStar::Core::Tool::PopCap::Package {
 				resource_manifest.key = Path{resource_information_structure.path.value};
 				resource_manifest.value.time = cbw<Integer>(resource_information_structure.time);
 				auto resource_data = package_data.forward_view(cbw<Size>(resource_information_structure.size));
-				if constexpr (!version.compress_resource_data) {
+				if constexpr (check_version(version, {}, {false})) {
 					if (resource_directory) {
 						FileSystem::write_file(resource_directory.get() / resource_manifest.key, resource_data);
 					}
-				} else {
+				}
+				if constexpr (check_version(version, {}, {true})) {
 					auto resource_data_original = ByteArray{cbw<Size>(resource_information_structure.size_original)};
 					auto resource_data_stream = IByteStreamView{resource_data};
 					auto resource_data_original_stream = OByteStreamView{resource_data_original};

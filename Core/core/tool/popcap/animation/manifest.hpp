@@ -15,7 +15,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 
 		using TranslateTransform = TranslateTransform_<>;
 
-		template <typename _> requires (check_version(version, {1, 2, 3, 4, 5, 6}))
+		template <typename _> requires (check_version(version, {1}))
 		M_record_of_list(
 			M_wrap(TranslateTransform_<_>),
 			M_wrap(
@@ -31,7 +31,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 
 		using RotateTranslateTransform = RotateTranslateTransform_<>;
 
-		template <typename _> requires (check_version(version, {1, 2, 3, 4, 5, 6}))
+		template <typename _> requires (check_version(version, {1}))
 		M_record_of_list(
 			M_wrap(RotateTranslateTransform_<_>),
 			M_wrap(
@@ -48,7 +48,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 
 		using MatrixTranslateTransform = MatrixTranslateTransform_<>;
 
-		template <typename _> requires (check_version(version, {1, 2, 3, 4, 5, 6}))
+		template <typename _> requires (check_version(version, {1}))
 		M_record_of_list(
 			M_wrap(MatrixTranslateTransform_<_>),
 			M_wrap(
@@ -64,7 +64,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 		// ----------------
 
 		using VariantTransform = decltype([] {
-			if constexpr (check_version(version, {1, 2, 3, 4, 5, 6})) {
+			if constexpr (check_version(version, {1})) {
 				using Type = ListRecordVariant<TranslateTransform, RotateTranslateTransform, MatrixTranslateTransform>;
 				return declare<Type>();
 			}
@@ -79,7 +79,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 
 		using Color = Color_<>;
 
-		template <typename _> requires (check_version(version, {1, 2, 3, 4, 5, 6}))
+		template <typename _> requires (check_version(version, {1}))
 		M_record_of_list(
 			M_wrap(Color_<_>),
 			M_wrap(
@@ -99,7 +99,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 
 		using Rectangle = Rectangle_<>;
 
-		template <typename _> requires (check_version(version, {1, 2, 3, 4, 5, 6}))
+		template <typename _> requires (check_version(version, {1}))
 		M_record_of_map(
 			M_wrap(Rectangle_<_>),
 			M_wrap(
@@ -117,7 +117,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 
 		using Command = Command_<>;
 
-		template <typename _> requires (check_version(version, {1, 2, 3, 4, 5, 6}))
+		template <typename _> requires (check_version(version, {1}))
 		M_record_of_list(
 			M_wrap(Command_<_>),
 			M_wrap(
@@ -133,7 +133,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 
 		using LayerRemove = LayerRemove_<>;
 
-		template <typename _> requires (check_version(version, {1, 2, 3, 4, 5, 6}))
+		template <typename _> requires (check_version(version, {1}))
 		M_record_of_map(
 			M_wrap(LayerRemove_<_>),
 			M_wrap(
@@ -148,7 +148,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 
 		using LayerAppend = LayerAppend_<>;
 
-		template <typename _> requires (check_version(version, {1, 2, 3, 4, 5, 6}))
+		template <typename _> requires (check_version(version, {1}))
 		M_record_of_map(
 			M_wrap(LayerAppend_<_>),
 			M_wrap(
@@ -169,7 +169,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 
 		using LayerChange = LayerChange_<>;
 
-		template <typename _> requires (check_version(version, {1, 2, 3, 4, 5, 6}))
+		template <typename _> requires (check_version(version, {1}))
 		M_record_of_map(
 			M_wrap(LayerChange_<_>),
 			M_wrap(
@@ -188,7 +188,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 
 		using Frame = Frame_<>;
 
-		template <typename _> requires (check_version(version, {1, 2, 3, 4, 5, 6}))
+		template <typename _> requires (check_version(version, {1}))
 		M_record_of_map(
 			M_wrap(Frame_<_>),
 			M_wrap(
@@ -210,7 +210,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 
 		using WorkArea = WorkArea_<>;
 
-		template <typename _> requires (check_version(version, {5, 6}))
+		template <typename _> requires (check_version(version, {5}))
 		M_record_of_list(
 			M_wrap(WorkArea_<_>),
 			M_wrap(
@@ -226,7 +226,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 
 		using Sprite = Sprite_<>;
 
-		template <typename _> requires (check_version(version, {1, 2, 3}))
+		template <typename _> requires (check_version(version, {1, 4}))
 		M_record_of_map(
 			M_wrap(Sprite_<_>),
 			M_wrap(
@@ -234,7 +234,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {4}))
+		template <typename _> requires (check_version(version, {4, 5}))
 		M_record_of_map(
 			M_wrap(Sprite_<_>),
 			M_wrap(
@@ -244,7 +244,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {5, 6}))
+		template <typename _> requires (check_version(version, {5}))
 		M_record_of_map(
 			M_wrap(Sprite_<_>),
 			M_wrap(
@@ -264,7 +264,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 
 		using Image = Image_<>;
 
-		template <typename _> requires (check_version(version, {1}))
+		template <typename _> requires (check_version(version, {1, 2}))
 		M_record_of_map(
 			M_wrap(Image_<_>),
 			M_wrap(
@@ -273,7 +273,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {2, 3}))
+		template <typename _> requires (check_version(version, {2, 4}))
 		M_record_of_map(
 			M_wrap(Image_<_>),
 			M_wrap(
@@ -282,7 +282,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {4, 5, 6}))
+		template <typename _> requires (check_version(version, {4}))
 		M_record_of_map(
 			M_wrap(Image_<_>),
 			M_wrap(
@@ -301,7 +301,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 
 		using Animation = Animation_<>;
 
-		template <typename _> requires (check_version(version, {1, 2, 3}))
+		template <typename _> requires (check_version(version, {1, 4}))
 		M_record_of_map(
 			M_wrap(Animation_<_>),
 			M_wrap(
@@ -314,7 +314,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {4, 5, 6}))
+		template <typename _> requires (check_version(version, {4}))
 		M_record_of_map(
 			M_wrap(Animation_<_>),
 			M_wrap(

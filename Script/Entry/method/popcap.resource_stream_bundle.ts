@@ -107,9 +107,9 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 				}) {
 					let bundle_directory: string;
 					let data_file: string;
-					let mode: ResourceStreamBundlePackAndUnpackMode;
-					let version_number: [3n, 4n][number];
-					let version_additional_texture_information_for_pvz_2_chinese_android: [0n, 1n, 2n][number];
+					let mode: string;
+					let version_number: bigint;
+					let version_additional_texture_information_for_pvz_2_chinese_android: bigint;
 					let buffer_size: bigint;
 					let input_packet: boolean;
 					let output_new_packet: boolean;
@@ -145,7 +145,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, null, null, null, [3n, ''], [4n, '']], null)),
-							(value) => ([3n, 4n].includes(value) ? null : los(`版本不受支持`)),
+							(value) => (CoreX.Tool.PopCap.ResourceStreamBundle.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 						version_additional_texture_information_for_pvz_2_chinese_android = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_additional_texture_information_for_pvz_2_chinese_android'),
@@ -153,7 +153,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, [0n, ''], [1n, ''], [2n, '']], null)),
-							(value) => ([0n, 1n, 2n].includes(value) ? null : los(`版本不受支持`)),
+							(value) => (CoreX.Tool.PopCap.ResourceStreamBundle.VersionaAditionalTextureInformationForPVZ2ChineseAndroidE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
@@ -180,13 +180,13 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 							(value) => (null),
 						);
 					}
-					let relative_path = make_resource_stream_bundle_package_relative_path(mode);
+					let relative_path = make_resource_stream_bundle_package_relative_path(mode as any);
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let description_file = `${bundle_directory}/description.json`;
 					let resource_directory = `${bundle_directory}/${relative_path.resource_directory}`;
 					let packet_file = !input_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
 					let new_packet_file = !output_new_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
-					CoreX.Tool.PopCap.ResourceStreamBundle.pack_fs(data_file, manifest_file, description_file, resource_directory, packet_file, new_packet_file, { number: version_number, additional_texture_information_for_pvz_2_chinese_android: version_additional_texture_information_for_pvz_2_chinese_android }, buffer_size);
+					CoreX.Tool.PopCap.ResourceStreamBundle.pack_fs(data_file, manifest_file, description_file, resource_directory, packet_file, new_packet_file, { number: version_number as any, additional_texture_information_for_pvz_2_chinese_android: version_additional_texture_information_for_pvz_2_chinese_android as any }, buffer_size);
 					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
@@ -220,9 +220,9 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 				}) {
 					let data_file: string;
 					let bundle_directory: string;
-					let mode: ResourceStreamBundlePackAndUnpackMode;
-					let version_number: [3n, 4n][number];
-					let version_additional_texture_information_for_pvz_2_chinese_android: [0n, 1n, 2n][number];
+					let mode: string;
+					let version_number: bigint;
+					let version_additional_texture_information_for_pvz_2_chinese_android: bigint;
 					let output_resource: boolean;
 					let output_packet: boolean;
 					{
@@ -257,7 +257,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, null, null, null, [3n, ''], [4n, '']], null)),
-							(value) => ([3n, 4n].includes(value) ? null : los(`版本不受支持`)),
+							(value) => (CoreX.Tool.PopCap.ResourceStreamBundle.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 						version_additional_texture_information_for_pvz_2_chinese_android = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_additional_texture_information_for_pvz_2_chinese_android'),
@@ -265,7 +265,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, [0n, ''], [1n, ''], [2n, '']], null)),
-							(value) => ([0n, 1n, 2n].includes(value) ? null : los(`版本不受支持`)),
+							(value) => (CoreX.Tool.PopCap.ResourceStreamBundle.VersionaAditionalTextureInformationForPVZ2ChineseAndroidE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 						output_resource = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'output_resource'),
@@ -284,12 +284,12 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 							(value) => (null),
 						);
 					}
-					let relative_path = make_resource_stream_bundle_package_relative_path(mode);
+					let relative_path = make_resource_stream_bundle_package_relative_path(mode as any);
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let description_file = `${bundle_directory}/description.json`;
 					let resource_directory = !output_resource ? null : `${bundle_directory}/${relative_path.resource_directory}`;
 					let packet_file = !output_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
-					CoreX.Tool.PopCap.ResourceStreamBundle.unpack_fs(data_file, manifest_file, description_file, resource_directory, packet_file, { number: version_number, additional_texture_information_for_pvz_2_chinese_android: version_additional_texture_information_for_pvz_2_chinese_android });
+					CoreX.Tool.PopCap.ResourceStreamBundle.unpack_fs(data_file, manifest_file, description_file, resource_directory, packet_file, { number: version_number as any, additional_texture_information_for_pvz_2_chinese_android: version_additional_texture_information_for_pvz_2_chinese_android as any });
 					Console.notify('s', los(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {
@@ -318,8 +318,8 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 					option: ResourceConvertOption;
 				}) {
 					let bundle_directory: string;
-					let version_number: [3n, 4n][number];
-					let version_additional_texture_information_for_pvz_2_chinese_android: [0n, 1n, 2n][number];
+					let version_number: bigint;
+					let version_additional_texture_information_for_pvz_2_chinese_android: bigint;
 					let option: Support.PvZ2.ResourceStreamBundle.ResourceConvert.Option = {
 						json: null,
 						image: null,
@@ -339,7 +339,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, null, null, null, [3n, ''], [4n, '']], null)),
-							(value) => ([3n, 4n].includes(value) ? null : los(`版本不受支持`)),
+							(value) => (CoreX.Tool.PopCap.ResourceStreamBundle.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 						version_additional_texture_information_for_pvz_2_chinese_android = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_additional_texture_information_for_pvz_2_chinese_android'),
@@ -347,7 +347,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, [0n, ''], [1n, ''], [2n, '']], null)),
-							(value) => ([0n, 1n, 2n].includes(value) ? null : los(`版本不受支持`)),
+							(value) => (CoreX.Tool.PopCap.ResourceStreamBundle.VersionaAditionalTextureInformationForPVZ2ChineseAndroidE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 						let convert_directory = `${bundle_directory}/convert`;
 						{
@@ -527,7 +527,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 						`${bundle_directory}/manifest.json`,
 						`${bundle_directory}/resource_manifest.json`,
 						option,
-						{ number: version_number, additional_texture_information_for_pvz_2_chinese_android: version_additional_texture_information_for_pvz_2_chinese_android },
+						{ number: version_number as any, additional_texture_information_for_pvz_2_chinese_android: version_additional_texture_information_for_pvz_2_chinese_android as any },
 					);
 					Console.notify('s', los(`执行成功`), [`${bundle_directory}`]);
 				},

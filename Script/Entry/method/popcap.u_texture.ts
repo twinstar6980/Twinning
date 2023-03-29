@@ -27,8 +27,8 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 				}) {
 					let image_file: string;
 					let data_file: string;
-					let format: CoreX.Tool.PopCap.UTexture.Format;
-					let version_compress_texture_data: [false, true][number];
+					let format: string;
+					let version_compress_texture_data: boolean;
 					{
 						image_file = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'image_file'),
@@ -57,10 +57,10 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 							(value) => (value),
 							null,
 							() => (Console.confirm(null)),
-							(value) => (null),
+							(value) => (CoreX.Tool.PopCap.UTexture.VersionCompressTextureDataE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 					}
-					CoreX.Tool.PopCap.UTexture.encode_fs(data_file, image_file, format, { compress_texture_data: version_compress_texture_data });
+					CoreX.Tool.PopCap.UTexture.encode_fs(data_file, image_file, format as any, { compress_texture_data: version_compress_texture_data });
 					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
@@ -86,7 +86,7 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 				}) {
 					let data_file: string;
 					let image_file: string;
-					let version_compress_texture_data: [false, true][number];
+					let version_compress_texture_data: boolean;
 					{
 						data_file = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'data_file'),
@@ -107,7 +107,7 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 							(value) => (value),
 							null,
 							() => (Console.confirm(null)),
-							(value) => (null),
+							(value) => (CoreX.Tool.PopCap.UTexture.VersionCompressTextureDataE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 					}
 					CoreX.Tool.PopCap.UTexture.decode_fs(data_file, image_file, { compress_texture_data: version_compress_texture_data });
@@ -138,8 +138,8 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 				}) {
 					let image_file_directory: string;
 					let data_file_directory: string;
-					let format: CoreX.Tool.PopCap.UTexture.Format;
-					let version_compress_texture_data: [false, true][number];
+					let format: string;
+					let version_compress_texture_data: boolean;
 					{
 						image_file_directory = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'image_file_directory'),
@@ -168,7 +168,7 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 							(value) => (value),
 							null,
 							() => (Console.confirm(null)),
-							(value) => (null),
+							(value) => (CoreX.Tool.PopCap.UTexture.VersionCompressTextureDataE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 					}
 					simple_batch_execute(
@@ -177,7 +177,7 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 						(item) => {
 							let image_file = `${image_file_directory}/${item}`;
 							let data_file = `${data_file_directory}/${item.slice(0, -4)}.tex`;
-							CoreX.Tool.PopCap.UTexture.encode_fs(data_file, image_file, format, { compress_texture_data: version_compress_texture_data });
+							CoreX.Tool.PopCap.UTexture.encode_fs(data_file, image_file, format as any, { compress_texture_data: version_compress_texture_data });
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${data_file_directory}`]);
@@ -205,7 +205,7 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 				}) {
 					let data_file_directory: string;
 					let image_file_directory: string;
-					let version_compress_texture_data: [false, true][number];
+					let version_compress_texture_data: boolean;
 					{
 						data_file_directory = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'data_file_directory'),
@@ -226,7 +226,7 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 							(value) => (value),
 							null,
 							() => (Console.confirm(null)),
-							(value) => (null),
+							(value) => (CoreX.Tool.PopCap.UTexture.VersionCompressTextureDataE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 					}
 					simple_batch_execute(

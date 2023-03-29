@@ -25,7 +25,7 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 				}) {
 					let image_file: string;
 					let data_file: string;
-					let format: Support.PopCap.Texture.Encode.Format;
+					let format: string;
 					{
 						image_file = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'image_file'),
@@ -49,7 +49,7 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 							(value) => (Support.PopCap.Texture.Encode.FormatE.includes(value as any) ? null : los(`选项非法`)),
 						);
 					}
-					Support.PopCap.Texture.Encode.encode_fs(image_file, data_file, format);
+					Support.PopCap.Texture.Encode.encode_fs(image_file, data_file, format as any);
 					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
@@ -76,7 +76,7 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 				}) {
 					let data_file: string;
 					let image_file: string;
-					let format: Support.PopCap.Texture.Encode.Format;
+					let format: string;
 					let image_width: bigint;
 					let image_height: bigint;
 					{
@@ -118,7 +118,7 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 							(value) => ((0n < value) ? null : los(`尺寸应大于零`)),
 						);
 					}
-					Support.PopCap.Texture.Encode.decode_fs(data_file, image_file, [image_width, image_height], format);
+					Support.PopCap.Texture.Encode.decode_fs(data_file, image_file, [image_width, image_height], format as any);
 					Console.notify('s', los(`执行成功`), [`${image_file}`]);
 				},
 				default_argument: {

@@ -32,8 +32,8 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 				}) {
 					let bundle_directory: string;
 					let data_file: string;
-					let version_number: [0n][number];
-					let version_compress_resource_data: [false, true][number];
+					let version_number: bigint;
+					let version_compress_resource_data: boolean;
 					let buffer_size: bigint;
 					{
 						bundle_directory = Executor.require_argument(
@@ -55,7 +55,7 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, [0n, '']], null)),
-							(value) => ([0n].includes(value) ? null : los(`版本不受支持`)),
+							(value) => (CoreX.Tool.PopCap.Package.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 						version_compress_resource_data = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_compress_resource_data'),
@@ -63,7 +63,7 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 							(value) => (value),
 							null,
 							() => (Console.confirm(null)),
-							(value) => (null),
+							(value) => (CoreX.Tool.PopCap.Package.VersionCompressResourceDataE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
@@ -76,7 +76,7 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 					}
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					CoreX.Tool.PopCap.Package.pack_fs(data_file, manifest_file, resource_directory, { number: version_number, compress_resource_data: version_compress_resource_data }, buffer_size);
+					CoreX.Tool.PopCap.Package.pack_fs(data_file, manifest_file, resource_directory, { number: version_number as any, compress_resource_data: version_compress_resource_data }, buffer_size);
 					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
@@ -104,8 +104,8 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 				}) {
 					let data_file: string;
 					let bundle_directory: string;
-					let version_number: [0n][number];
-					let version_compress_resource_data: [false, true][number];
+					let version_number: bigint;
+					let version_compress_resource_data: boolean;
 					{
 						data_file = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'data_file'),
@@ -126,7 +126,7 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, [0n, '']], null)),
-							(value) => ([0n].includes(value) ? null : los(`版本不受支持`)),
+							(value) => (CoreX.Tool.PopCap.Package.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 						version_compress_resource_data = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_compress_resource_data'),
@@ -134,12 +134,12 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 							(value) => (value),
 							null,
 							() => (Console.confirm(null)),
-							(value) => (null),
+							(value) => (CoreX.Tool.PopCap.Package.VersionCompressResourceDataE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 					}
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					CoreX.Tool.PopCap.Package.unpack_fs(data_file, manifest_file, resource_directory, { number: version_number, compress_resource_data: version_compress_resource_data });
+					CoreX.Tool.PopCap.Package.unpack_fs(data_file, manifest_file, resource_directory, { number: version_number as any, compress_resource_data: version_compress_resource_data });
 					Console.notify('s', los(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {
@@ -166,8 +166,8 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 				}) {
 					let resource_directory: string;
 					let data_file: string;
-					let version_number: [0n][number];
-					let version_compress_resource_data: [false, true][number];
+					let version_number: bigint;
+					let version_compress_resource_data: boolean;
 					{
 						resource_directory = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'resource_directory'),
@@ -188,7 +188,7 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, [0n, '']], null)),
-							(value) => ([0n].includes(value) ? null : los(`版本不受支持`)),
+							(value) => (CoreX.Tool.PopCap.Package.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 						version_compress_resource_data = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_compress_resource_data'),
@@ -196,10 +196,10 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 							(value) => (value),
 							null,
 							() => (Console.confirm(null)),
-							(value) => (null),
+							(value) => (CoreX.Tool.PopCap.Package.VersionCompressResourceDataE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 					}
-					let data = Support.PopCap.Package.PackAutomatic.pack(resource_directory, version_number, version_compress_resource_data);
+					let data = Support.PopCap.Package.PackAutomatic.pack(resource_directory, version_number as any, version_compress_resource_data);
 					CoreX.FileSystem.write_file(data_file, data[0].view().sub(Core.Size.value(0n), data[1]));
 					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},

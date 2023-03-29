@@ -1,6 +1,6 @@
 /**
  * JS interface of Core
- * @version 43
+ * @version 44
  */
 declare namespace TwinStar.Core {
 
@@ -2403,7 +2403,7 @@ declare namespace TwinStar.Core {
 					// ------------------------------------------------
 
 					static Value: {
-						number: 88n | 112n | 140n;
+						number: 72n | 88n | 112n | 113n | 118n | 120n | 125n | 128n | 132n | 134n | 135n | 140n | 145n;
 					};
 
 					static value(it: typeof Version.Value): Version;
@@ -2465,13 +2465,13 @@ declare namespace TwinStar.Core {
 					 * 编码
 					 * @param sound_bank_data 声音库数据
 					 * @param sound_bank_manifest 声音库清单
-					 * @param embedded_audio_directory 内嵌音频目录
+					 * @param embedded_media_directory 内嵌媒体目录
 					 * @param version 版本
 					 */
 					function process_sound_bank(
 						sound_bank_data: OByteStreamView,
 						sound_bank_manifest: Manifest.SoundBank,
-						embedded_audio_directory: Path,
+						embedded_media_directory: Path,
 						version: Version,
 					): Void;
 
@@ -2484,13 +2484,13 @@ declare namespace TwinStar.Core {
 					 * 解码
 					 * @param sound_bank_data 声音库数据
 					 * @param sound_bank_manifest 声音库清单
-					 * @param embedded_audio_directory 内嵌音频目录
+					 * @param embedded_media_directory 内嵌媒体目录
 					 * @param version 版本
 					 */
 					function process_sound_bank(
 						sound_bank_data: IByteStreamView,
 						sound_bank_manifest: Manifest.SoundBank,
-						embedded_audio_directory: PathOptional,
+						embedded_media_directory: PathOptional,
 						version: Version,
 					): Void;
 

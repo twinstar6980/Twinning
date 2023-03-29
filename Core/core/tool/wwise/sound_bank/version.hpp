@@ -12,9 +12,19 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 	);
 
 	using VersionPackage = ValuePackage<
+		Version{.number = 72_i},
 		Version{.number = 88_i},
 		Version{.number = 112_i},
-		Version{.number = 140_i}
+		Version{.number = 113_i},
+		Version{.number = 118_i},
+		Version{.number = 120_i},
+		Version{.number = 125_i},
+		Version{.number = 128_i},
+		Version{.number = 132_i},
+		Version{.number = 134_i},
+		Version{.number = 135_i},
+		Version{.number = 140_i},
+		Version{.number = 145_i}
 	>;
 
 	// ----------------
@@ -25,7 +35,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 	) -> ZBoolean {
 		auto result = true;
 		result &= VersionPackage::has(it);
-		result &= (number.size() == 0 || Range::has(number, it.number.value));
+		result &= (number.size() < 1 || *(number.begin() + 0) <= it.number.value) && (number.size() < 2 || *(number.begin() + 1) > it.number.value);
 		return result;
 	}
 

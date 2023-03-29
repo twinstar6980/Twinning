@@ -16,7 +16,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 
 		using Resource = Resource_<>;
 
-		template <typename _> requires (check_version(version, {3, 4}, {}))
+		template <typename _> requires (check_version(version, {3}, {}))
 		M_record_of_map(
 			M_wrap(Resource_<_>),
 			M_wrap(
@@ -35,7 +35,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 
 		using Subgroup = Subgroup_<>;
 
-		template <typename _> requires (check_version(version, {3, 4}, {}))
+		template <typename _> requires (check_version(version, {3}, {}))
 		M_record_of_map(
 			M_wrap(Subgroup_<_>),
 			M_wrap(
@@ -51,7 +51,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 
 		using Group = Group_<>;
 
-		template <typename _> requires (check_version(version, {3, 4}, {}))
+		template <typename _> requires (check_version(version, {3}, {}))
 		M_record_of_map(
 			M_wrap(Group_<_>),
 			M_wrap(
@@ -69,7 +69,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 
 		using Package = Package_<>;
 
-		template <typename _> requires (check_version(version, {3, 4}, {}))
+		template <typename _> requires (check_version(version, {3}, {}))
 		M_record_of_map(
 			M_wrap(Package_<_>),
 			M_wrap(

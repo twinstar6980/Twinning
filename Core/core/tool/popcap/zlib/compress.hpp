@@ -66,7 +66,7 @@ namespace TwinStar::Core::Tool::PopCap::ZLib {
 		) -> Void {
 			ripe_size_bound = k_none_size;
 			ripe_size_bound += bs_static_size<MagicIdentifier>();
-			if constexpr (version.variant_64) {
+			if constexpr (check_version(version, {true})) {
 				ripe_size_bound += bs_static_size<IntegerU32>();
 			}
 			ripe_size_bound += bs_static_size<IntegerOfPlatform>();
@@ -87,7 +87,7 @@ namespace TwinStar::Core::Tool::PopCap::ZLib {
 			Data::Compression::Deflate::Strategy const & strategy
 		) -> Void {
 			ripe.write_constant(k_magic_identifier);
-			if constexpr (version.variant_64) {
+			if constexpr (check_version(version, {true})) {
 				exchange_unit_constant(ripe, 0x00000000_iu32);
 			}
 			exchange_unit_integer_platform(ripe, cbw<Integer>(raw.reserve()));
@@ -166,7 +166,7 @@ namespace TwinStar::Core::Tool::PopCap::ZLib {
 			raw_size = k_none_size;
 			auto ripe_stream = IByteStreamView{ripe};
 			ripe_stream.read_constant(k_magic_identifier);
-			if constexpr (version.variant_64) {
+			if constexpr (check_version(version, {true})) {
 				exchange_unit_constant(ripe_stream, 0x00000000_iu32);
 			}
 			auto raw_data_size = cbw<Size>(M_apply(M_wrap(Integer{}), M_wrap({ exchange_unit_integer_platform(ripe_stream, it); })));
@@ -182,7 +182,7 @@ namespace TwinStar::Core::Tool::PopCap::ZLib {
 			Size const &      window_bits
 		) -> Void {
 			ripe.read_constant(k_magic_identifier);
-			if constexpr (version.variant_64) {
+			if constexpr (check_version(version, {true})) {
 				exchange_unit_constant(ripe, 0x00000000_iu32);
 			}
 			auto raw_data_begin = raw.position();

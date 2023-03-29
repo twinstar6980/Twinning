@@ -28,7 +28,7 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 				}) {
 					let bundle_directory: string;
 					let data_file: string;
-					let version_number: [88n, 112n, 140n][number];
+					let version_number: bigint;
 					let buffer_size: bigint;
 					{
 						bundle_directory = Executor.require_argument(
@@ -49,8 +49,8 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.option([88n, [88n, ''], 112n, [112n, ''], 140n, [140n, '']], null)),
-							(value) => ([88n, 112n, 140n].includes(value) ? null : los(`版本不受支持`)),
+							() => (Console.option([72n, [72n, ''], 88n, [88n, ''], 112n, [112n, ''], 113n, [113n, ''], 118n, [118n, ''], 120n, [120n, ''], 125n, [125n, ''], 128n, [128n, ''], 132n, [132n, ''], 134n, [134n, ''], 135n, [135n, ''], 140n, [140n, ''], 145n, [145n, '']], null)),
+							(value) => (CoreX.Tool.Wwise.SoundBank.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
@@ -62,8 +62,8 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 						);
 					}
 					let manifest_file = `${bundle_directory}/manifest.json`;
-					let embedded_audio_directory = `${bundle_directory}/embedded_audio`;
-					CoreX.Tool.Wwise.SoundBank.encode_fs(data_file, manifest_file, embedded_audio_directory, { number: version_number }, buffer_size);
+					let embedded_media_directory = `${bundle_directory}/embedded_media`;
+					CoreX.Tool.Wwise.SoundBank.encode_fs(data_file, manifest_file, embedded_media_directory, { number: version_number as any }, buffer_size);
 					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
@@ -89,7 +89,7 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 				}) {
 					let data_file: string;
 					let bundle_directory: string;
-					let version_number: [88n, 112n, 140n][number];
+					let version_number: bigint;
 					{
 						data_file = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'data_file'),
@@ -109,13 +109,13 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.option([88n, [88n, ''], 112n, [112n, ''], 140n, [140n, '']], null)),
-							(value) => ([88n, 112n, 140n].includes(value) ? null : los(`版本不受支持`)),
+							() => (Console.option([72n, [72n, ''], 88n, [88n, ''], 112n, [112n, ''], 113n, [113n, ''], 118n, [118n, ''], 120n, [120n, ''], 125n, [125n, ''], 128n, [128n, ''], 132n, [132n, ''], 134n, [134n, ''], 135n, [135n, ''], 140n, [140n, ''], 145n, [145n, '']], null)),
+							(value) => (CoreX.Tool.Wwise.SoundBank.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 					}
 					let manifest_file = `${bundle_directory}/manifest.json`;
-					let embedded_audio_directory = `${bundle_directory}/embedded_audio`;
-					CoreX.Tool.Wwise.SoundBank.decode_fs(data_file, manifest_file, embedded_audio_directory, { number: version_number });
+					let embedded_media_directory = `${bundle_directory}/embedded_media`;
+					CoreX.Tool.Wwise.SoundBank.decode_fs(data_file, manifest_file, embedded_media_directory, { number: version_number as any });
 					Console.notify('s', los(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {
@@ -143,7 +143,7 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 				}) {
 					let bundle_directory_directory: string;
 					let data_file_directory: string;
-					let version_number: [88n, 112n, 140n][number];
+					let version_number: bigint;
 					let buffer_size: bigint;
 					{
 						bundle_directory_directory = Executor.require_argument(
@@ -164,8 +164,8 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.option([88n, [88n, ''], 112n, [112n, ''], 140n, [140n, '']], null)),
-							(value) => ([88n, 112n, 140n].includes(value) ? null : los(`版本不受支持`)),
+							() => (Console.option([72n, [72n, ''], 88n, [88n, ''], 112n, [112n, ''], 113n, [113n, ''], 118n, [118n, ''], 120n, [120n, ''], 125n, [125n, ''], 128n, [128n, ''], 132n, [132n, ''], 134n, [134n, ''], 135n, [135n, ''], 140n, [140n, ''], 145n, [145n, '']], null)),
+							(value) => (CoreX.Tool.Wwise.SoundBank.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
@@ -184,8 +184,8 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 							let bundle_directory = `${bundle_directory_directory}/${item}`;
 							let data_file = `${data_file_directory}/${item.slice(0, -7)}`;
 							let manifest_file = `${bundle_directory}/manifest.json`;
-							let embedded_audio_directory = `${bundle_directory}/embedded_audio`;
-							CoreX.Tool.Wwise.SoundBank.encode_fs(data_file, manifest_file, embedded_audio_directory, { number: version_number }, data_buffer.view());
+							let embedded_media_directory = `${bundle_directory}/embedded_media`;
+							CoreX.Tool.Wwise.SoundBank.encode_fs(data_file, manifest_file, embedded_media_directory, { number: version_number as any }, data_buffer.view());
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${data_file_directory}`]);
@@ -213,7 +213,7 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 				}) {
 					let data_file_directory: string;
 					let bundle_directory_directory: string;
-					let version_number: [88n, 112n, 140n][number];
+					let version_number: bigint;
 					{
 						data_file_directory = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'data_file_directory'),
@@ -233,8 +233,8 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.option([88n, [88n, ''], 112n, [112n, ''], 140n, [140n, '']], null)),
-							(value) => ([88n, 112n, 140n].includes(value) ? null : los(`版本不受支持`)),
+							() => (Console.option([72n, [72n, ''], 88n, [88n, ''], 112n, [112n, ''], 113n, [113n, ''], 118n, [118n, ''], 120n, [120n, ''], 125n, [125n, ''], 128n, [128n, ''], 132n, [132n, ''], 134n, [134n, ''], 135n, [135n, ''], 140n, [140n, ''], 145n, [145n, '']], null)),
+							(value) => (CoreX.Tool.Wwise.SoundBank.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 					}
 					simple_batch_execute(
@@ -244,8 +244,8 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 							let data_file = `${data_file_directory}/${item}`;
 							let bundle_directory = `${bundle_directory_directory}/${item}.bundle`;
 							let manifest_file = `${bundle_directory}/manifest.json`;
-							let embedded_audio_directory = `${bundle_directory}/embedded_audio`;
-							CoreX.Tool.Wwise.SoundBank.decode_fs(data_file, manifest_file, embedded_audio_directory, { number: version_number });
+							let embedded_media_directory = `${bundle_directory}/embedded_media`;
+							CoreX.Tool.Wwise.SoundBank.decode_fs(data_file, manifest_file, embedded_media_directory, { number: version_number as any });
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${bundle_directory_directory}`]);

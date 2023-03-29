@@ -25,7 +25,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3}, {}))
+		&& (check_version(t_version, {3, 4}, {}))
 	M_record_of_data(
 		M_wrap(Header<t_version>),
 		M_wrap(
@@ -97,7 +97,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}, {}))
+		&& (check_version(t_version, {3}, {}))
 	M_record_of_data(
 		M_wrap(SimpleSubgroupInformation<t_version>),
 		M_wrap(
@@ -115,7 +115,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}, {}))
+		&& (check_version(t_version, {3}, {}))
 	M_record_of_data(
 		M_wrap(GroupInformation<t_version>),
 		M_wrap(
@@ -132,7 +132,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}, {}))
+		&& (check_version(t_version, {3}, {}))
 	M_record_of_data(
 		M_wrap(SubgroupInformation<t_version>),
 		M_wrap(
@@ -162,7 +162,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}, {}))
+		&& (check_version(t_version, {3}, {}))
 	M_record_of_data(
 		M_wrap(SubgroupPoolInformation<t_version>),
 		M_wrap(
@@ -181,7 +181,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}, {0}))
+		&& (check_version(t_version, {3}, {0}))
 	M_record_of_data(
 		M_wrap(TextureResourceInformation<t_version>),
 		M_wrap(
@@ -194,7 +194,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}, {1}))
+		&& (check_version(t_version, {3}, {1}))
 	M_record_of_data(
 		M_wrap(TextureResourceInformation<t_version>),
 		M_wrap(
@@ -208,7 +208,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}, {2}))
+		&& (check_version(t_version, {3}, {2}))
 	M_record_of_data(
 		M_wrap(TextureResourceInformation<t_version>),
 		M_wrap(
@@ -228,7 +228,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}, {}))
+		&& (check_version(t_version, {3}, {}))
 	M_record_of_data(
 		M_wrap(Information<t_version>),
 		M_wrap(
@@ -250,7 +250,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}, {}))
+		&& (check_version(t_version, {3}, {}))
 	M_record_of_data(
 		M_wrap(ResourceBasicDetailDescriptionInformation<t_version>),
 		M_wrap(
@@ -272,7 +272,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}, {}))
+		&& (check_version(t_version, {3}, {}))
 	M_record_of_data(
 		M_wrap(ResourceImagePropertyDetailDescriptionInformation<t_version>),
 		M_wrap(
@@ -314,7 +314,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}, {}))
+		&& (check_version(t_version, {3}, {}))
 	struct ResourceDetailDescriptionInformation<t_version> :
 		ResourceBasicDetailDescriptionInformation<t_version> {
 		Optional<ResourceImagePropertyDetailDescriptionInformation<t_version>> image_property_information;
@@ -328,7 +328,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}, {}))
+		&& (check_version(t_version, {3}, {}))
 	M_record_of_data(
 		M_wrap(ResourceBasicDescriptionInformation<t_version>),
 		M_wrap(
@@ -344,7 +344,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}, {}))
+		&& (check_version(t_version, {3}, {}))
 	struct ResourceDescriptionInformation<t_version> :
 		ResourceBasicDescriptionInformation<t_version> {
 	};
@@ -356,7 +356,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}, {}))
+		&& (check_version(t_version, {3}, {}))
 	M_record_of_data(
 		M_wrap(SubgroupBasicDescriptionInformation<t_version>),
 		M_wrap(
@@ -375,7 +375,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}, {}))
+		&& (check_version(t_version, {3}, {}))
 	struct SubgroupDescriptionInformation<t_version> :
 		SubgroupBasicDescriptionInformation<t_version> {
 		List<ResourceDescriptionInformation<t_version>> resource_information;
@@ -388,7 +388,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}, {}))
+		&& (check_version(t_version, {3}, {}))
 	M_record_of_data(
 		M_wrap(GroupBasicDescriptionInformation<t_version>),
 		M_wrap(
@@ -406,7 +406,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}, {}))
+		&& (check_version(t_version, {3}, {}))
 	struct GroupDescriptionInformation<t_version> :
 		GroupBasicDescriptionInformation<t_version> {
 		List<SubgroupDescriptionInformation<t_version>> subgroup_information;

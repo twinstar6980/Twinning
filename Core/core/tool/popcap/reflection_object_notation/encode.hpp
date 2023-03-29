@@ -210,10 +210,11 @@ namespace TwinStar::Core::Tool::PopCap::ReflectionObjectNotation {
 		) -> Void {
 			if (!native_string_index) {
 				data.write(TypeIdentifier{TypeIdentifier::Value::string_native});
-				if constexpr (!version.native_string_encoding_use_utf8) {
+				if constexpr (check_version(version, {}, {false})) {
 					ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(StringParser::compute_utf8_string_length(value)));
 					StringParser::write_eascii_string(self_cast<OCharacterStreamView>(data), value, as_lvalue(Size{}));
-				} else {
+				}
+				if constexpr (check_version(version, {}, {true})) {
 					ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(value.size()));
 					StringParser::write_utf8_string(self_cast<OCharacterStreamView>(data), value.as_view(), as_lvalue(Size{}));
 				}
@@ -224,10 +225,11 @@ namespace TwinStar::Core::Tool::PopCap::ReflectionObjectNotation {
 				} else {
 					native_string_index.get()[value] = mbw<Size>(native_string_index.get().size());
 					data.write(TypeIdentifier{TypeIdentifier::Value::string_native_indexing});
-					if constexpr (!version.native_string_encoding_use_utf8) {
+					if constexpr (check_version(version, {}, {false})) {
 						ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(StringParser::compute_utf8_string_length(value)));
 						StringParser::write_eascii_string(self_cast<OCharacterStreamView>(data), value, as_lvalue(Size{}));
-					} else {
+					}
+					if constexpr (check_version(version, {}, {true})) {
 						ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(value.size()));
 						StringParser::write_utf8_string(self_cast<OCharacterStreamView>(data), value.as_view(), as_lvalue(Size{}));
 					}
@@ -543,9 +545,10 @@ namespace TwinStar::Core::Tool::PopCap::ReflectionObjectNotation {
 				case TypeIdentifier::Value::string_native : {
 					auto   size = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 					auto & content = value.set_string();
-					if constexpr (!version.native_string_encoding_use_utf8) {
+					if constexpr (check_version(version, {}, {false})) {
 						StringParser::read_eascii_string(self_cast<ICharacterStreamView>(data), content, size);
-					} else {
+					}
+					if constexpr (check_version(version, {}, {true})) {
 						auto content_view = CStringView{};
 						StringParser::read_utf8_string_by_size(self_cast<ICharacterStreamView>(data), content_view, as_lvalue(Size{}), size);
 						content = content_view;
@@ -555,9 +558,10 @@ namespace TwinStar::Core::Tool::PopCap::ReflectionObjectNotation {
 				case TypeIdentifier::Value::string_native_indexing : {
 					auto   size = cbw<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 					auto & content = value.set_string();
-					if constexpr (!version.native_string_encoding_use_utf8) {
+					if constexpr (check_version(version, {}, {false})) {
 						StringParser::read_eascii_string(self_cast<ICharacterStreamView>(data), content, size);
-					} else {
+					}
+					if constexpr (check_version(version, {}, {true})) {
 						auto content_view = CStringView{};
 						StringParser::read_utf8_string_by_size(self_cast<ICharacterStreamView>(data), content_view, as_lvalue(Size{}), size);
 						content = content_view;

@@ -255,7 +255,7 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.Repair {
 				view.u32(0xC8, 0x00000000n);
 			} else {
 				// repair packet
-				let packet_view = new ByteListView(data, Number(offset));
+				let packet_view = new ByteListView(data, Number(offset), actual_packet_size);
 				// magic
 				packet_view.u32(0x00, 0x72736770n);
 				// version_number

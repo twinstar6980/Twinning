@@ -12,19 +12,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using ID = Integer;
 
-		// ----------------
-
-		M_record_of_list(
-			M_wrap(PlugInID),
-			M_wrap(
-				(Integer) u1,
-				(Integer) u2,
-			),
-		);
-
 		#pragma endregion
 
-		#pragma region randomizable value
+		#pragma region value
 
 		template <typename Value>
 		M_record_of_list(
@@ -36,7 +26,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		template <typename Value>
 		M_record_of_list(
-			M_wrap(RandomizedValue),
+			M_wrap(RandomizableValue),
 			M_wrap(
 				(Value) value,
 				(Value) minimum_value,
@@ -53,7 +43,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using Curve = Curve_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_enumeration(
 			M_wrap(Curve_<_>),
 			M_wrap(
@@ -73,32 +63,24 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <typename = None>
-		struct CurveShape_;
-
-		using CurveShape = CurveShape_<>;
-
-		template <typename _> requires (check_version(version, {140}))
-		M_enumeration(
-			M_wrap(CurveShape_<_>),
-			M_wrap(
-				a_1,
-				a_2,
-				b_1,
-				b_2,
-				c_1,
-				c_2,
-				d_1,
-				d_2,
-				e,
-			),
-		);
-
-		// ----------------
-
-		template <typename = None>
 		struct TimePoint_;
 
 		using TimePoint = TimePoint_<>;
+
+		template <typename _> requires (check_version(version, {72, 140}))
+		M_enumeration(
+			M_wrap(TimePoint_<_>),
+			M_wrap(
+				immediate,
+				next_grid,
+				next_bar,
+				next_beat,
+				next_cue,
+				custom_cue,
+				entry_cue,
+				exit_cue,
+			),
+		);
 
 		template <typename _> requires (check_version(version, {140}))
 		M_enumeration(
@@ -107,7 +89,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				immediate,
 				next_grid,
 				next_bar,
-				next_beta,
+				next_beat,
 				next_cue,
 				custom_cue,
 				entry_cue,
@@ -116,32 +98,67 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			),
 		);
 
+		#pragma endregion
+
+		#pragma region coordinate
+
+		template <typename = None>
+		struct CoordinateMode_;
+
+		using CoordinateMode = CoordinateMode_<>;
+
+		template <typename _> requires (check_version(version, {72}))
+		M_enumeration(
+			M_wrap(CoordinateMode_<_>),
+			M_wrap(
+				linear,
+				scaled,
+				scaled_3,
+			),
+		);
+
 		// ----------------
 
 		template <typename = None>
-		struct Point2D_;
+		struct CoordinatePoint_;
 
-		using Point2D = Point2D_<>;
+		using CoordinatePoint = CoordinatePoint_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
-			M_wrap(Point2D_<_>),
+			M_wrap(CoordinatePoint_<_>),
 			M_wrap(
 				(Position2D<Floating>) position,
 				(Curve) curve,
 			),
 		);
 
+		// ----------------
+
+		template <typename = None>
+		struct CoordinateIDPoint_;
+
+		using CoordinateIDPoint = CoordinateIDPoint_<>;
+
+		template <typename _> requires (check_version(version, {72}))
+		M_record_of_map(
+			M_wrap(CoordinateIDPoint_<_>),
+			M_wrap(
+				(Position2D<Floating, ID>) position,
+				(Curve) curve,
+			),
+		);
+
 		#pragma endregion
 
-		#pragma region audio property
+		#pragma region property
 
 		template <typename = None>
 		struct PropertyCategory_;
 
 		using PropertyCategory = PropertyCategory_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 145}))
 		M_enumeration(
 			M_wrap(PropertyCategory_<_>),
 			M_wrap(
@@ -152,116 +169,192 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			),
 		);
 
-		// ----------------
+		template <typename _> requires (check_version(version, {145}))
+		M_enumeration(
+			M_wrap(PropertyCategory_<_>),
+			M_wrap(
+				unidirectional,
+				bidirectional,
+				bidirectional_ranged,
+				boolean,
+				unknown_6,
+			),
+		);
+
+		#pragma endregion
+
+		#pragma region parameter
 
 		template <typename = None>
-		struct AttenuationPropertyType_;
+		struct ParameterCategory_;
 
-		using AttenuationPropertyType = AttenuationPropertyType_<>;
+		using ParameterCategory = ParameterCategory_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {112}))
 		M_enumeration(
-			M_wrap(AttenuationPropertyType_<_>),
+			M_wrap(ParameterCategory_<_>),
 			M_wrap(
-				cone_maximum_attenuation,
-				cone_low_pass_filter,
-				cone_high_pass_filter,
+				game_parameter,
+				midi_parameter,
+				modulator,
 			),
 		);
 
 		// ----------------
 
 		template <typename = None>
-		struct ModulatorPropertyType_;
+		struct Parameter_;
 
-		using ModulatorPropertyType = ModulatorPropertyType_<>;
+		using Parameter = Parameter_<>;
 
-		template <typename _> requires (check_version(version, {140}))
-		M_enumeration(
-			M_wrap(ModulatorPropertyType_<_>),
+		template <typename _> requires (check_version(version, {72, 112}))
+		M_record_of_list(
+			M_wrap(Parameter_<_>),
 			M_wrap(
-				lfo_depth,
-				lfo_frequency,
-				lfo_waveform,
-				lfo_smoothing,
-				lfo_pulse_width_modulation,
-				lfo_attack,
-				lfo_initial_phase_offset,
-				envelope_attack_time,
-				envelope_attack_curve,
-				envelope_decay_time,
-				envelope_sustain_level,
-				envelope_maximum_sustain_time,
-				envelope_release_time,
-				time_initial_delay,
-				time_playback_rate,
+				(ID) id,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112}))
+		M_record_of_list(
+			M_wrap(Parameter_<_>),
+			M_wrap(
+				(ID) id,
+				(ParameterCategory) category,
+			),
+		);
+
+		#pragma endregion
+
+		#pragma region real time parameter control setting
+
+		template <typename = None>
+		struct RealTimeParameterControlSettingItem_;
+
+		using RealTimeParameterControlSettingItem = RealTimeParameterControlSettingItem_<>;
+
+		template <typename _> requires (check_version(version, {72, 112}))
+		M_record_of_map(
+			M_wrap(RealTimeParameterControlSettingItem_<_>),
+			M_wrap(
+				(Integer) type,
+				(Parameter) parameter,
+				(ID) u2,
+				(CoordinateMode) mode,
+				(List<CoordinatePoint>) point,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112}))
+		M_record_of_map(
+			M_wrap(RealTimeParameterControlSettingItem_<_>),
+			M_wrap(
+				(Integer) type,
+				(Parameter) parameter,
+				(PropertyCategory) u1,
+				(ID) u2,
+				(CoordinateMode) mode,
+				(List<CoordinatePoint>) point,
 			),
 		);
 
 		// ----------------
 
 		template <typename = None>
-		struct AudioPropertyType_;
+		struct RealTimeParameterControlSetting_;
 
-		using AudioPropertyType = AudioPropertyType_<>;
+		using RealTimeParameterControlSetting = RealTimeParameterControlSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
-		M_enumeration(
-			M_wrap(AudioPropertyType_<_>),
+		template <typename _> requires (check_version(version, {72}))
+		M_record_of_map(
+			M_wrap(RealTimeParameterControlSetting_<_>),
 			M_wrap(
-				bus_volume,
-				output_bus_volume,
-				output_bus_low_pass_filter,
-				output_bus_high_pass_filter,
-				voice_volume,
-				voice_pitch,
-				voice_low_pass_filter,
-				voice_high_pass_filter,
-				voice_initial_delay,
-				audio_make_up_gain,
-				game_defined_auxiliary_send_volume,
-				game_defined_auxiliary_send_low_pass_filter,
-				game_defined_auxiliary_send_high_pass_filter,
-				user_defined_auxiliary_send_volume_0,
-				user_defined_auxiliary_send_volume_1,
-				user_defined_auxiliary_send_volume_2,
-				user_defined_auxiliary_send_volume_3,
-				user_defined_auxiliary_send_low_pass_filter_0,
-				user_defined_auxiliary_send_low_pass_filter_1,
-				user_defined_auxiliary_send_low_pass_filter_2,
-				user_defined_auxiliary_send_low_pass_filter_3,
-				user_defined_auxiliary_send_high_pass_filter_0,
-				user_defined_auxiliary_send_high_pass_filter_1,
-				user_defined_auxiliary_send_high_pass_filter_2,
-				user_defined_auxiliary_send_high_pass_filter_3,
-				early_reflection_auxiliary_send_volume,
-				playback_limit_value,
-				playback_priority_value,
-				playback_speed,
-				midi_transposition,
-				midi_velocity_offset,
-				transition_duration,
-				effect_bypass_all,
-				effect_bypass_0,
-				effect_bypass_1,
-				effect_bypass_2,
-				effect_bypass_3,
-				positioning_center_percent,
-				speaker_panning_div_3d_spatialization_mix,
-				speaker_panning_pan_front_rear,
-				speaker_panning_pan_left_right,
-				speaker_panning_pan_up_down,
-				spatialization_3d_automation_pan_front_rear,
-				spatialization_3d_automation_pan_left_right,
-				spatialization_3d_automation_pan_up_down,
-				attenuation_enable,
-				attenuation_cone_maximum_attenuation,
-				attenuation_cone_low_pass_filter,
-				attenuation_cone_high_pass_filter,
-				hdr_threshold,
-				hdr_release_time,
-				hdr_ratio,
-				hdr_active_range,
+				(List<RealTimeParameterControlSettingItem>) item,
+			),
+		);
+
+		#pragma endregion
+
+		#pragma region state setting
+
+		template <typename = None>
+		struct StateSettingAttribute_;
+
+		using StateSettingAttribute = StateSettingAttribute_<>;
+
+		template <typename _> requires (check_version(version, {125, 128}))
+		M_record_of_map(
+			M_wrap(StateSettingAttribute_<_>),
+			M_wrap(
+				(Integer) type,
+				(PropertyCategory) category,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {128}))
+		M_record_of_map(
+			M_wrap(StateSettingAttribute_<_>),
+			M_wrap(
+				(Integer) type,
+				(PropertyCategory) category,
+				(Integer) u1,
+			),
+		);
+
+		// ----------------
+
+		template <typename = None>
+		struct StateSettingApplyItem_;
+
+		using StateSettingApplyItem = StateSettingApplyItem_<>;
+
+		template <typename _> requires (check_version(version, {72}))
+		M_record_of_map(
+			M_wrap(StateSettingApplyItem_<_>),
+			M_wrap(
+				(ID) target,
+				(ID) setting,
+			),
+		);
+
+		// ----------------
+
+		template <typename = None>
+		struct StateSettingItem_;
+
+		using StateSettingItem = StateSettingItem_<>;
+
+		template <typename _> requires (check_version(version, {72}))
+		M_record_of_map(
+			M_wrap(StateSettingItem_<_>),
+			M_wrap(
+				(ID) group,
+				(TimePoint) change_occur_at,
+				(List<StateSettingApplyItem>) apply,
+			),
+		);
+
+		// ----------------
+
+		template <typename = None>
+		struct StateSetting_;
+
+		using StateSetting = StateSetting_<>;
+
+		template <typename _> requires (check_version(version, {72, 125}))
+		M_record_of_map(
+			M_wrap(StateSetting_<_>),
+			M_wrap(
+				(List<StateSettingItem>) item,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {125}))
+		M_record_of_map(
+			M_wrap(StateSetting_<_>),
+			M_wrap(
+				(List<StateSettingAttribute>) attribute,
+				(List<StateSettingItem>) item,
 			),
 		);
 
@@ -274,7 +367,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioPlayType = AudioPlayType_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_enumeration(
 			M_wrap(AudioPlayType_<_>),
 			M_wrap(
@@ -290,7 +383,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioPlayMode = AudioPlayMode_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_enumeration(
 			M_wrap(AudioPlayMode_<_>),
 			M_wrap(
@@ -301,14 +394,24 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		#pragma endregion
 
-		#pragma region bus voice setting
+		#pragma region voice setting
 
 		template <typename = None>
 		struct BusVoiceSetting_;
 
 		using BusVoiceSetting = BusVoiceSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 112}))
+		M_record_of_map(
+			M_wrap(BusVoiceSetting_<_>),
+			M_wrap(
+				(RegularValue<Floating>) volume,
+				(RegularValue<Floating>) pitch,
+				(RegularValue<Floating>) low_pass_filter,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
 			M_wrap(BusVoiceSetting_<_>),
 			M_wrap(
@@ -326,25 +429,37 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioVoice = AudioVoice_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 112}))
 		M_record_of_map(
 			M_wrap(AudioVoice_<_>),
 			M_wrap(
-				(RandomizedValue<Floating>) volume,
-				(RandomizedValue<Floating>) pitch,
-				(RandomizedValue<Floating>) low_pass_filter,
-				(RandomizedValue<Floating>) high_pass_filter,
+				(RandomizableValue<Floating>) volume,
+				(RandomizableValue<Floating>) pitch,
+				(RandomizableValue<Floating>) low_pass_filter,
 			),
 		);
 
-		// ----------------
+		template <typename _> requires (check_version(version, {112}))
+		M_record_of_map(
+			M_wrap(AudioVoice_<_>),
+			M_wrap(
+				(RandomizableValue<Floating>) volume,
+				(RandomizableValue<Floating>) pitch,
+				(RandomizableValue<Floating>) low_pass_filter,
+				(RandomizableValue<Floating>) high_pass_filter,
+			),
+		);
+
+		#pragma endregion
+
+		#pragma region voice volume setting
 
 		template <typename = None>
 		struct BusVoiceVolumeGainSetting_;
 
 		using BusVoiceVolumeGainSetting = BusVoiceVolumeGainSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {125}))
 		M_record_of_map(
 			M_wrap(BusVoiceVolumeGainSetting_<_>),
 			M_wrap(
@@ -359,23 +474,34 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioVoiceVolumeGainSetting = AudioVoiceVolumeGainSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {88, 112}))
 		M_record_of_map(
 			M_wrap(AudioVoiceVolumeGainSetting_<_>),
 			M_wrap(
 				(Boolean) normalization,
-				(RandomizedValue<Floating>) make_up,
+				(RegularValue<Floating>) make_up,
 			),
 		);
 
-		// ----------------
+		template <typename _> requires (check_version(version, {112}))
+		M_record_of_map(
+			M_wrap(AudioVoiceVolumeGainSetting_<_>),
+			M_wrap(
+				(Boolean) normalization,
+				(RandomizableValue<Floating>) make_up,
+			),
+		);
+
+		#pragma endregion
+
+		#pragma region bus setting
 
 		template <typename = None>
 		struct BusBusSetting_;
 
 		using BusBusSetting = BusBusSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(BusBusSetting_<_>),
 			M_wrap(
@@ -390,7 +516,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using BusOutputBusSetting = BusOutputBusSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {128}))
 		M_record_of_map(
 			M_wrap(BusOutputBusSetting_<_>),
 			M_wrap(
@@ -407,7 +533,17 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioOutputBusSetting = AudioOutputBusSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 112}))
+		M_record_of_map(
+			M_wrap(AudioOutputBusSetting_<_>),
+			M_wrap(
+				(ID) bus,
+				(RegularValue<Floating>) volume,
+				(RegularValue<Floating>) low_pass_filter,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
 			M_wrap(AudioOutputBusSetting_<_>),
 			M_wrap(
@@ -427,7 +563,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioGameDefinedAuxiliarySendSetting = AudioGameDefinedAuxiliarySendSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 128}))
+		M_record_of_map(
+			M_wrap(AudioGameDefinedAuxiliarySendSetting_<_>),
+			M_wrap(
+				(Boolean) enable,
+				(RegularValue<Floating>) volume,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {128}))
 		M_record_of_map(
 			M_wrap(AudioGameDefinedAuxiliarySendSetting_<_>),
 			M_wrap(
@@ -445,7 +590,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioUserDefinedAuxiliarySendSettingItem = AudioUserDefinedAuxiliarySendSettingItem_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 128}))
+		M_record_of_map(
+			M_wrap(AudioUserDefinedAuxiliarySendSettingItem_<_>),
+			M_wrap(
+				(ID) bus,
+				(RegularValue<Floating>) volume,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {128}))
 		M_record_of_map(
 			M_wrap(AudioUserDefinedAuxiliarySendSettingItem_<_>),
 			M_wrap(
@@ -463,12 +617,15 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioUserDefinedAuxiliarySendSetting = AudioUserDefinedAuxiliarySendSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(AudioUserDefinedAuxiliarySendSetting_<_>),
 			M_wrap(
 				(Boolean) enable,
-				(List<AudioUserDefinedAuxiliarySendSettingItem>) item,
+				(AudioUserDefinedAuxiliarySendSettingItem) item_1,
+				(AudioUserDefinedAuxiliarySendSettingItem) item_2,
+				(AudioUserDefinedAuxiliarySendSettingItem) item_3,
+				(AudioUserDefinedAuxiliarySendSettingItem) item_4,
 			),
 		);
 
@@ -479,7 +636,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioEarlyReflectionAuxiliarySendSetting = AudioEarlyReflectionAuxiliarySendSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {135}))
 		M_record_of_map(
 			M_wrap(AudioEarlyReflectionAuxiliarySendSetting_<_>),
 			M_wrap(
@@ -495,7 +652,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioAuxiliarySendSetting = AudioAuxiliarySendSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 135}))
+		M_record_of_map(
+			M_wrap(AudioAuxiliarySendSetting_<_>),
+			M_wrap(
+				(AudioGameDefinedAuxiliarySendSetting) game_defined,
+				(AudioUserDefinedAuxiliarySendSetting) user_defined,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {135}))
 		M_record_of_map(
 			M_wrap(AudioAuxiliarySendSetting_<_>),
 			M_wrap(
@@ -514,7 +680,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioEffectSettingItem = AudioEffectSettingItem_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(AudioEffectSettingItem_<_>),
 			M_wrap(
@@ -532,11 +698,11 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioEffectSetting = AudioEffectSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(AudioEffectSetting_<_>),
 			M_wrap(
-				(List<Boolean>) bypass,
+				(Tuple<Boolean, Boolean, Boolean, Boolean, Boolean>) bypass,
 				(List<AudioEffectSettingItem>) item,
 			),
 		);
@@ -580,13 +746,22 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		#pragma region audio positioning setting
 
 		template <typename = None>
-		struct AudioPositioningSettingListenerRelativeRoutingPosition3DAutomationPoint_;
+		struct AudioPositioningSettingListenerRoutingPositionSourceAutomationPoint_;
 
-		using AudioPositioningSettingListenerRelativeRoutingPosition3DAutomationPoint = AudioPositioningSettingListenerRelativeRoutingPosition3DAutomationPoint_<>;
+		using AudioPositioningSettingListenerRoutingPositionSourceAutomationPoint = AudioPositioningSettingListenerRoutingPositionSourceAutomationPoint_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 112}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSettingListenerRelativeRoutingPosition3DAutomationPoint_<_>),
+			M_wrap(AudioPositioningSettingListenerRoutingPositionSourceAutomationPoint_<_>),
+			M_wrap(
+				(Position2D<Floating>) position,
+				(Integer) duration,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112}))
+		M_record_of_map(
+			M_wrap(AudioPositioningSettingListenerRoutingPositionSourceAutomationPoint_<_>),
 			M_wrap(
 				(Position3D<Floating>) position,
 				(Integer) duration,
@@ -596,13 +771,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <typename = None>
-		struct AudioPositioningSettingListenerRelativeRoutingPosition3DAutomationPathPoint_;
+		struct AudioPositioningSettingListenerRoutingPositionSourceAutomationPathPoint_;
 
-		using AudioPositioningSettingListenerRelativeRoutingPosition3DAutomationPathPoint = AudioPositioningSettingListenerRelativeRoutingPosition3DAutomationPathPoint_<>;
+		using AudioPositioningSettingListenerRoutingPositionSourceAutomationPathPoint = AudioPositioningSettingListenerRoutingPositionSourceAutomationPathPoint_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_list(
-			M_wrap(AudioPositioningSettingListenerRelativeRoutingPosition3DAutomationPathPoint_<_>),
+			M_wrap(AudioPositioningSettingListenerRoutingPositionSourceAutomationPathPoint_<_>),
 			M_wrap(
 				(Integer) begin,
 				(Integer) count,
@@ -612,13 +787,22 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <typename = None>
-		struct AudioPositioningSettingListenerRelativeRoutingPosition3DAutomationPathRandomRange_;
+		struct AudioPositioningSettingListenerRoutingPositionSourceAutomationPathRandomRange_;
 
-		using AudioPositioningSettingListenerRelativeRoutingPosition3DAutomationPathRandomRange = AudioPositioningSettingListenerRelativeRoutingPosition3DAutomationPathRandomRange_<>;
+		using AudioPositioningSettingListenerRoutingPositionSourceAutomationPathRandomRange = AudioPositioningSettingListenerRoutingPositionSourceAutomationPathRandomRange_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 112}))
 		M_record_of_list(
-			M_wrap(AudioPositioningSettingListenerRelativeRoutingPosition3DAutomationPathRandomRange_<_>),
+			M_wrap(AudioPositioningSettingListenerRoutingPositionSourceAutomationPathRandomRange_<_>),
+			M_wrap(
+				(Floating) left_right,
+				(Floating) front_back,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112}))
+		M_record_of_list(
+			M_wrap(AudioPositioningSettingListenerRoutingPositionSourceAutomationPathRandomRange_<_>),
 			M_wrap(
 				(Floating) left_right,
 				(Floating) front_back,
@@ -629,50 +813,59 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <typename = None>
-		struct AudioPositioningSettingListenerRelativeRoutingPosition3DAutomationPath_;
+		struct AudioPositioningSettingListenerRoutingPositionSourceAutomationPath_;
 
-		using AudioPositioningSettingListenerRelativeRoutingPosition3DAutomationPath = AudioPositioningSettingListenerRelativeRoutingPosition3DAutomationPath_<>;
+		using AudioPositioningSettingListenerRoutingPositionSourceAutomationPath = AudioPositioningSettingListenerRoutingPositionSourceAutomationPath_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSettingListenerRelativeRoutingPosition3DAutomationPath_<_>),
+			M_wrap(AudioPositioningSettingListenerRoutingPositionSourceAutomationPath_<_>),
 			M_wrap(
-				(AudioPositioningSettingListenerRelativeRoutingPosition3DAutomationPathPoint) point,
-				(AudioPositioningSettingListenerRelativeRoutingPosition3DAutomationPathRandomRange) random_range,
+				(AudioPositioningSettingListenerRoutingPositionSourceAutomationPathPoint) point,
+				(AudioPositioningSettingListenerRoutingPositionSourceAutomationPathRandomRange) random_range,
 			),
 		);
 
 		// ----------------
 
 		template <typename = None>
-		struct AudioPositioningSettingListenerRelativeRoutingPosition3DAutomation_;
+		struct AudioPositioningSettingListenerRoutingPositionSourceAutomation_;
 
-		using AudioPositioningSettingListenerRelativeRoutingPosition3DAutomation = AudioPositioningSettingListenerRelativeRoutingPosition3DAutomation_<>;
+		using AudioPositioningSettingListenerRoutingPositionSourceAutomation = AudioPositioningSettingListenerRoutingPositionSourceAutomation_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSettingListenerRelativeRoutingPosition3DAutomation_<_>),
+			M_wrap(AudioPositioningSettingListenerRoutingPositionSourceAutomation_<_>),
 			M_wrap(
 				(AudioPlayType) play_type,
 				(AudioPlayMode) play_mode,
 				(Boolean) pick_new_path_when_sound_start,
 				(Boolean) loop,
 				(Integer) transition_time,
-				(List<AudioPositioningSettingListenerRelativeRoutingPosition3DAutomationPoint>) point,
-				(List<AudioPositioningSettingListenerRelativeRoutingPosition3DAutomationPath>) path,
+				(List<AudioPositioningSettingListenerRoutingPositionSourceAutomationPoint>) point,
+				(List<AudioPositioningSettingListenerRoutingPositionSourceAutomationPath>) path,
 			),
 		);
 
 		// ----------------
 
 		template <typename = None>
-		struct AudioPositioningSettingListenerRelativeRoutingPosition3DMode_;
+		struct AudioPositioningSettingListenerRoutingPositionSourceMode_;
 
-		using AudioPositioningSettingListenerRelativeRoutingPosition3DMode = AudioPositioningSettingListenerRelativeRoutingPosition3DMode_<>;
+		using AudioPositioningSettingListenerRoutingPositionSourceMode = AudioPositioningSettingListenerRoutingPositionSourceMode_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 132}))
 		M_enumeration(
-			M_wrap(AudioPositioningSettingListenerRelativeRoutingPosition3DMode_<_>),
+			M_wrap(AudioPositioningSettingListenerRoutingPositionSourceMode_<_>),
+			M_wrap(
+				user_defined,
+				game_defined,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {132}))
+		M_enumeration(
+			M_wrap(AudioPositioningSettingListenerRoutingPositionSourceMode_<_>),
 			M_wrap(
 				emitter,
 				emitter_with_automation,
@@ -683,49 +876,78 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <typename = None>
-		struct AudioPositioningSettingListenerRelativeRoutingPosition3D_;
+		struct AudioPositioningSettingListenerRoutingPositionSource_;
 
-		using AudioPositioningSettingListenerRelativeRoutingPosition3D = AudioPositioningSettingListenerRelativeRoutingPosition3D_<>;
+		using AudioPositioningSettingListenerRoutingPositionSource = AudioPositioningSettingListenerRoutingPositionSource_<>;
+
+		template <typename _> requires (check_version(version, {72, 132}))
+		M_record_of_map(
+			M_wrap(AudioPositioningSettingListenerRoutingPositionSource_<_>),
+			M_wrap(
+				(AudioPositioningSettingListenerRoutingPositionSourceMode) mode,
+				(Boolean) hold_listener_orientation,
+				(Boolean) update_at_each_frame,
+				(AudioPositioningSettingListenerRoutingPositionSourceAutomation) automation,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {132, 140}))
+		M_record_of_map(
+			M_wrap(AudioPositioningSettingListenerRoutingPositionSource_<_>),
+			M_wrap(
+				(AudioPositioningSettingListenerRoutingPositionSourceMode) mode,
+				(Boolean) hold_listener_orientation,
+				(Boolean) hold_emitter_position_and_orientation,
+				(AudioPositioningSettingListenerRoutingPositionSourceAutomation) automation,
+			),
+		);
 
 		template <typename _> requires (check_version(version, {140}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSettingListenerRelativeRoutingPosition3D_<_>),
+			M_wrap(AudioPositioningSettingListenerRoutingPositionSource_<_>),
 			M_wrap(
-				(AudioPositioningSettingListenerRelativeRoutingPosition3DMode) mode,
+				(AudioPositioningSettingListenerRoutingPositionSourceMode) mode,
 				(Boolean) hold_listener_orientation,
 				(Boolean) hold_emitter_position_and_orientation,
 				(Boolean) diffraction_and_transmission,
-				(AudioPositioningSettingListenerRelativeRoutingPosition3DAutomation) automation,
+				(AudioPositioningSettingListenerRoutingPositionSourceAutomation) automation,
 			),
 		);
 
 		// ----------------
 
 		template <typename = None>
-		struct AudioPositioningSettingListenerRelativeRoutingAttenuation_;
+		struct AudioPositioningSettingListenerRoutingAttenuation_;
 
-		using AudioPositioningSettingListenerRelativeRoutingAttenuation = AudioPositioningSettingListenerRelativeRoutingAttenuation_<>;
+		using AudioPositioningSettingListenerRoutingAttenuation = AudioPositioningSettingListenerRoutingAttenuation_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 134}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSettingListenerRelativeRoutingAttenuation_<_>),
+			M_wrap(AudioPositioningSettingListenerRoutingAttenuation_<_>),
+			M_wrap(
+				(ID) id,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {134}))
+		M_record_of_map(
+			M_wrap(AudioPositioningSettingListenerRoutingAttenuation_<_>),
 			M_wrap(
 				(Boolean) enable,
 				(ID) id,
-				(Boolean) use_share_set,
 			),
 		);
 
 		// ----------------
 
 		template <typename = None>
-		struct AudioPositioningSettingListenerRelativeRoutingSpatialization3D_;
+		struct AudioPositioningSettingListenerRoutingSpatialization_;
 
-		using AudioPositioningSettingListenerRelativeRoutingSpatialization3D = AudioPositioningSettingListenerRelativeRoutingSpatialization3D_<>;
+		using AudioPositioningSettingListenerRoutingSpatialization = AudioPositioningSettingListenerRoutingSpatialization_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {128}))
 		M_enumeration(
-			M_wrap(AudioPositioningSettingListenerRelativeRoutingSpatialization3D_<_>),
+			M_wrap(AudioPositioningSettingListenerRoutingSpatialization_<_>),
 			M_wrap(
 				none,
 				position,
@@ -736,19 +958,39 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <typename = None>
-		struct AudioPositioningSettingListenerRelativeRouting_;
+		struct AudioPositioningSettingListenerRouting_;
 
-		using AudioPositioningSettingListenerRelativeRouting = AudioPositioningSettingListenerRelativeRouting_<>;
+		using AudioPositioningSettingListenerRouting = AudioPositioningSettingListenerRouting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 128}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSettingListenerRelativeRouting_<_>),
+			M_wrap(AudioPositioningSettingListenerRouting_<_>),
+			M_wrap(
+				(Boolean) spatialization,
+				(AudioPositioningSettingListenerRoutingAttenuation) attenuation,
+				(AudioPositioningSettingListenerRoutingPositionSource) position_source,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {128, 132}))
+		M_record_of_map(
+			M_wrap(AudioPositioningSettingListenerRouting_<_>),
+			M_wrap(
+				(AudioPositioningSettingListenerRoutingSpatialization) spatialization,
+				(AudioPositioningSettingListenerRoutingAttenuation) attenuation,
+				(AudioPositioningSettingListenerRoutingPositionSource) position_source,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {132}))
+		M_record_of_map(
+			M_wrap(AudioPositioningSettingListenerRouting_<_>),
 			M_wrap(
 				(Boolean) enable,
-				(AudioPositioningSettingListenerRelativeRoutingSpatialization3D) spatialization_3d,
-				(RegularValue<Floating>) speaker_panning_div_spatialization_3d_mix,
-				(AudioPositioningSettingListenerRelativeRoutingAttenuation) attenuation,
-				(AudioPositioningSettingListenerRelativeRoutingPosition3D) position_3d,
+				(AudioPositioningSettingListenerRoutingSpatialization) spatialization,
+				(RegularValue<Floating>) speaker_panning_divsion_spatialization_mix,
+				(AudioPositioningSettingListenerRoutingAttenuation) attenuation,
+				(AudioPositioningSettingListenerRoutingPositionSource) position_source,
 			),
 		);
 
@@ -758,6 +1000,15 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		struct AudioPositioningSettingSpeakerPanningMode_;
 
 		using AudioPositioningSettingSpeakerPanningMode = AudioPositioningSettingSpeakerPanningMode_<>;
+
+		template <typename _> requires (check_version(version, {132, 140}))
+		M_enumeration(
+			M_wrap(AudioPositioningSettingSpeakerPanningMode_<_>),
+			M_wrap(
+				direct_assignment,
+				balance_fade,
+			),
+		);
 
 		template <typename _> requires (check_version(version, {140}))
 		M_enumeration(
@@ -776,6 +1027,24 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioPositioningSettingSpeakerPanning = AudioPositioningSettingSpeakerPanning_<>;
 
+		template <typename _> requires (check_version(version, {72, 132}))
+		M_record_of_map(
+			M_wrap(AudioPositioningSettingSpeakerPanning_<_>),
+			M_wrap(
+				(Boolean) enable,
+				(Position2D<Floating>) position,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {132, 140}))
+		M_record_of_map(
+			M_wrap(AudioPositioningSettingSpeakerPanning_<_>),
+			M_wrap(
+				(AudioPositioningSettingSpeakerPanningMode) mode,
+				(Position2D<Floating>) position,
+			),
+		);
+
 		template <typename _> requires (check_version(version, {140}))
 		M_record_of_map(
 			M_wrap(AudioPositioningSettingSpeakerPanning_<_>),
@@ -788,215 +1057,91 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <typename = None>
+		struct AudioPositioningSettingType_;
+
+		using AudioPositioningSettingType = AudioPositioningSettingType_<>;
+
+		template <typename _> requires (check_version(version, {72, 132}))
+		M_enumeration(
+			M_wrap(AudioPositioningSettingType_<_>),
+			M_wrap(
+				two_dimension,
+				three_dimension,
+			),
+		);
+
+		// ----------------
+
+		template <typename = None>
 		struct AudioPositioningSetting_;
 
 		using AudioPositioningSetting = AudioPositioningSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 125}))
+		M_record_of_map(
+			M_wrap(AudioPositioningSetting_<_>),
+			M_wrap(
+				(AudioPositioningSettingType) type,
+				(RegularValue<Floating>) center_percent,
+				(AudioPositioningSettingSpeakerPanning) speaker_panning,
+				(AudioPositioningSettingListenerRouting) listener_routing,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {125, 132}))
+		M_record_of_map(
+			M_wrap(AudioPositioningSetting_<_>),
+			M_wrap(
+				(Boolean) enable,
+				(AudioPositioningSettingType) type,
+				(RegularValue<Floating>) center_percent,
+				(AudioPositioningSettingSpeakerPanning) speaker_panning,
+				(AudioPositioningSettingListenerRouting) listener_routing,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {132}))
 		M_record_of_map(
 			M_wrap(AudioPositioningSetting_<_>),
 			M_wrap(
 				(RegularValue<Floating>) center_percent,
 				(AudioPositioningSettingSpeakerPanning) speaker_panning,
-				(AudioPositioningSettingListenerRelativeRouting) listener_relative_routing,
+				(AudioPositioningSettingListenerRouting) listener_routing,
 			),
 		);
 
 		#pragma endregion
 
-		#pragma region audio real time parameter control setting
+		#pragma region audio motion setting
 
 		template <typename = None>
-		struct RealTimeParameterControlXAxisCategory_;
+		struct AudioMotionSetting_;
 
-		using RealTimeParameterControlXAxisCategory = RealTimeParameterControlXAxisCategory_<>;
+		using AudioMotionSetting = AudioMotionSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
-		M_enumeration(
-			M_wrap(RealTimeParameterControlXAxisCategory_<_>),
-			M_wrap(
-				game_parameter,
-				midi_parameter,
-				modulator,
-			),
-		);
-
-		// ----------------
-
-		template <typename = None>
-		struct AttenuationRealTimeParameterControlSettingItem_;
-
-		using AttenuationRealTimeParameterControlSettingItem = AttenuationRealTimeParameterControlSettingItem_<>;
-
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 128}))
 		M_record_of_map(
-			M_wrap(AttenuationRealTimeParameterControlSettingItem_<_>),
+			M_wrap(AudioMotionSetting_<_>),
 			M_wrap(
-				(ID) x_axis,
-				(RealTimeParameterControlXAxisCategory) x_axis_category,
-				(PropertyCategory) y_axis_category,
-				(AttenuationPropertyType) y_axis_type,
-				(ID) u1,
-				(Boolean) u2,
-				(Boolean) u3,
-				(List<Point2D>) point,
-			),
-		);
-
-		// ----------------
-
-		template <typename = None>
-		struct AttenuationRealTimeParameterControlSetting_;
-
-		using AttenuationRealTimeParameterControlSetting = AttenuationRealTimeParameterControlSetting_<>;
-
-		template <typename _> requires (check_version(version, {140}))
-		M_record_of_map(
-			M_wrap(AttenuationRealTimeParameterControlSetting_<_>),
-			M_wrap(
-				(List<AttenuationRealTimeParameterControlSettingItem>) item,
-			),
-		);
-
-		// ----------------
-
-		template <typename = None>
-		struct ModulatorRealTimeParameterControlSettingItem_;
-
-		using ModulatorRealTimeParameterControlSettingItem = ModulatorRealTimeParameterControlSettingItem_<>;
-
-		template <typename _> requires (check_version(version, {140}))
-		M_record_of_map(
-			M_wrap(ModulatorRealTimeParameterControlSettingItem_<_>),
-			M_wrap(
-				(ID) x_axis,
-				(RealTimeParameterControlXAxisCategory) x_axis_category,
-				(PropertyCategory) y_axis_category,
-				(ModulatorPropertyType) y_axis_type,
-				(ID) u1,
-				(Boolean) u2,
-				(Boolean) u3,
-				(List<Point2D>) point,
-			),
-		);
-
-		// ----------------
-
-		template <typename = None>
-		struct ModulatorRealTimeParameterControlSetting_;
-
-		using ModulatorRealTimeParameterControlSetting = ModulatorRealTimeParameterControlSetting_<>;
-
-		template <typename _> requires (check_version(version, {140}))
-		M_record_of_map(
-			M_wrap(ModulatorRealTimeParameterControlSetting_<_>),
-			M_wrap(
-				(List<ModulatorRealTimeParameterControlSettingItem>) item,
-			),
-		);
-
-		// ----------------
-
-		template <typename = None>
-		struct AudioRealTimeParameterControlSettingItem_;
-
-		using AudioRealTimeParameterControlSettingItem = AudioRealTimeParameterControlSettingItem_<>;
-
-		template <typename _> requires (check_version(version, {140}))
-		M_record_of_map(
-			M_wrap(AudioRealTimeParameterControlSettingItem_<_>),
-			M_wrap(
-				(ID) x_axis,
-				(RealTimeParameterControlXAxisCategory) x_axis_category,
-				(PropertyCategory) y_axis_category,
-				(AudioPropertyType) y_axis_type,
-				(ID) u1,
-				(Boolean) u2,
-				(Boolean) u3,
-				(List<Point2D>) point,
-			),
-		);
-
-		// ----------------
-
-		template <typename = None>
-		struct AudioRealTimeParameterControlSetting_;
-
-		using AudioRealTimeParameterControlSetting = AudioRealTimeParameterControlSetting_<>;
-
-		template <typename _> requires (check_version(version, {140}))
-		M_record_of_map(
-			M_wrap(AudioRealTimeParameterControlSetting_<_>),
-			M_wrap(
-				(List<AudioRealTimeParameterControlSettingItem>) item,
+				(RandomizableValue<Floating>) volume_offset,
+				(RandomizableValue<Floating>) low_pass_filter,
 			),
 		);
 
 		#pragma endregion
 
-		#pragma region audio state setting
+		#pragma region audio mixer setting
 
 		template <typename = None>
-		struct AudioStateSettingAttribute_;
+		struct AudioMixerSetting_;
 
-		using AudioStateSettingAttribute = AudioStateSettingAttribute_<>;
+		using AudioMixerSetting = AudioMixerSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
-			M_wrap(AudioStateSettingAttribute_<_>),
+			M_wrap(AudioMixerSetting_<_>),
 			M_wrap(
-				(AudioPropertyType) type,
-				(PropertyCategory) category,
-				(Integer) u1,
-			),
-		);
-
-		// ----------------
-
-		template <typename = None>
-		struct AudioStateSettingApplyItem_;
-
-		using AudioStateSettingApplyItem = AudioStateSettingApplyItem_<>;
-
-		template <typename _> requires (check_version(version, {140}))
-		M_record_of_map(
-			M_wrap(AudioStateSettingApplyItem_<_>),
-			M_wrap(
-				(ID) target,
-				(ID) setting,
-			),
-		);
-
-		// ----------------
-
-		template <typename = None>
-		struct AudioStateSettingItem_;
-
-		using AudioStateSettingItem = AudioStateSettingItem_<>;
-
-		template <typename _> requires (check_version(version, {140}))
-		M_record_of_map(
-			M_wrap(AudioStateSettingItem_<_>),
-			M_wrap(
-				(ID) group,
-				(TimePoint) change_occur_at,
-				(List<AudioStateSettingApplyItem>) apply,
-			),
-		);
-
-		// ----------------
-
-		template <typename = None>
-		struct AudioStateSetting_;
-
-		using AudioStateSetting = AudioStateSetting_<>;
-
-		template <typename _> requires (check_version(version, {140}))
-		M_record_of_map(
-			M_wrap(AudioStateSetting_<_>),
-			M_wrap(
-				(List<AudioStateSettingAttribute>) attribute,
-				(List<AudioStateSettingItem>) item,
+				(ID) id,
 			),
 		);
 
@@ -1005,13 +1150,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		#pragma region bus auto ducking setting
 
 		template <typename = None>
-		struct BusAutoDuckingSettingBusTarget_;
+		struct BusAutomaticDuckingSettingBusTarget_;
 
-		using BusAutoDuckingSettingBusTarget = BusAutoDuckingSettingBusTarget_<>;
+		using BusAutomaticDuckingSettingBusTarget = BusAutomaticDuckingSettingBusTarget_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_enumeration(
-			M_wrap(BusAutoDuckingSettingBusTarget_<_>),
+			M_wrap(BusAutomaticDuckingSettingBusTarget_<_>),
 			M_wrap(
 				voice_volume,
 				bus_volume,
@@ -1021,20 +1166,20 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <typename = None>
-		struct BusAutoDuckingSettingBus_;
+		struct BusAutomaticDuckingSettingBus_;
 
-		using BusAutoDuckingSettingBus = BusAutoDuckingSettingBus_<>;
+		using BusAutomaticDuckingSettingBus = BusAutomaticDuckingSettingBus_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
-			M_wrap(BusAutoDuckingSettingBus_<_>),
+			M_wrap(BusAutomaticDuckingSettingBus_<_>),
 			M_wrap(
 				(ID) id,
 				(Floating) volume,
 				(Integer) fade_out,
 				(Integer) fade_in,
-				(CurveShape) curve,
-				(BusAutoDuckingSettingBusTarget) target,
+				(Curve) curve,
+				(BusAutomaticDuckingSettingBusTarget) target,
 			),
 		);
 
@@ -1045,13 +1190,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using BusAutomaticDuckingSetting = BusAutomaticDuckingSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(BusAutomaticDuckingSetting_<_>),
 			M_wrap(
 				(Integer) recovery_time,
 				(Floating) maximum_ducking_volume,
-				(List<BusAutoDuckingSettingBus>) bus,
+				(List<BusAutomaticDuckingSettingBus>) bus,
 			),
 		);
 
@@ -1060,11 +1205,47 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		#pragma region music transition setting
 
 		template <typename = None>
+		struct MusicTransitionSettingJumpMode_;
+
+		using MusicTransitionSettingJumpMode = MusicTransitionSettingJumpMode_<>;
+
+		template <typename _> requires (check_version(version, {134}))
+		M_enumeration(
+			M_wrap(MusicTransitionSettingJumpMode_<_>),
+			M_wrap(
+				start,
+				specific,
+				next,
+				last_played,
+			),
+		);
+
+		// ----------------
+
+		template <typename = None>
+		struct MusicTransitionSettingSynchronizeMode_;
+
+		using MusicTransitionSettingSynchronizeMode = MusicTransitionSettingSynchronizeMode_<>;
+
+		template <typename _> requires (check_version(version, {72}))
+		M_enumeration(
+			M_wrap(MusicTransitionSettingSynchronizeMode_<_>),
+			M_wrap(
+				entry_cue,
+				random_cue,
+				custom_cue,
+				same_time_as_playing_segment,
+			),
+		);
+
+		// ----------------
+
+		template <typename = None>
 		struct MusicTransitionSettingItemFade_;
 
 		using MusicTransitionSettingItemFade = MusicTransitionSettingItemFade_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(MusicTransitionSettingItemFade_<_>),
 			M_wrap(
@@ -1081,7 +1262,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicTransitionSettingItemSource = MusicTransitionSettingItemSource_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(MusicTransitionSettingItemSource_<_>),
 			M_wrap(
@@ -1100,13 +1281,26 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicTransitionSettingItemDestination = MusicTransitionSettingItemDestination_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 134}))
 		M_record_of_map(
 			M_wrap(MusicTransitionSettingItemDestination_<_>),
 			M_wrap(
 				(ID) id,
-				(Integer) jump_to,
-				(Integer) sync_to,
+				(MusicTransitionSettingSynchronizeMode) synchronize_to,
+				(Boolean) play_pre_entry,
+				(Boolean) custom_cue_filter_match_source_cue_name,
+				(ID) custom_cue_filter_match_target,
+				(MusicTransitionSettingItemFade) fade_in,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {134}))
+		M_record_of_map(
+			M_wrap(MusicTransitionSettingItemDestination_<_>),
+			M_wrap(
+				(ID) id,
+				(MusicTransitionSettingJumpMode) jump_to,
+				(MusicTransitionSettingSynchronizeMode) synchronize_to,
 				(Boolean) play_pre_entry,
 				(Boolean) custom_cue_filter_match_source_cue_name,
 				(ID) custom_cue_filter_match_target,
@@ -1121,7 +1315,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicTransitionSettingItemSegment = MusicTransitionSettingItemSegment_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(MusicTransitionSettingItemSegment_<_>),
 			M_wrap(
@@ -1141,7 +1335,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicTransitionSettingItem = MusicTransitionSettingItem_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(MusicTransitionSettingItem_<_>),
 			M_wrap(
@@ -1159,7 +1353,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicTransitionSetting = MusicTransitionSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(MusicTransitionSetting_<_>),
 			M_wrap(
@@ -1176,7 +1370,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicTrackTransitionSettingItemSource = MusicTrackTransitionSettingItemSource_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
 			M_wrap(MusicTrackTransitionSettingItemSource_<_>),
 			M_wrap(
@@ -1193,7 +1387,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicTrackTransitionSettingItemDestination = MusicTrackTransitionSettingItemDestination_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
 			M_wrap(MusicTrackTransitionSettingItemDestination_<_>),
 			M_wrap(
@@ -1208,7 +1402,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicTrackTransitionSetting = MusicTrackTransitionSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
 			M_wrap(MusicTrackTransitionSetting_<_>),
 			M_wrap(
@@ -1227,7 +1421,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicStingerSettingItem = MusicStingerSettingItem_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(MusicStingerSettingItem_<_>),
 			M_wrap(
@@ -1247,7 +1441,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicStingerSetting = MusicStingerSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(MusicStingerSetting_<_>),
 			M_wrap(
@@ -1260,17 +1454,33 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		#pragma region bus hdr setting
 
 		template <typename = None>
+		struct BusHDRSettingDynamicReleaseMode_;
+
+		using BusHDRSettingDynamicReleaseMode = BusHDRSettingDynamicReleaseMode_<>;
+
+		template <typename _> requires (check_version(version, {88}))
+		M_enumeration(
+			M_wrap(BusHDRSettingDynamicReleaseMode_<_>),
+			M_wrap(
+				linear,
+				exponential,
+			),
+		);
+
+		// ----------------
+
+		template <typename = None>
 		struct BusHDRSettingWindowTopOutputGameParameter_;
 
 		using BusHDRSettingWindowTopOutputGameParameter = BusHDRSettingWindowTopOutputGameParameter_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {88}))
 		M_record_of_map(
 			M_wrap(BusHDRSettingWindowTopOutputGameParameter_<_>),
 			M_wrap(
 				(ID) id,
-				(RegularValue<Floating>) minimum,
-				(RegularValue<Floating>) maximum,
+				(Floating) minimum,
+				(Floating) maximum,
 			),
 		);
 
@@ -1281,14 +1491,14 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using BusHDRSettingDynamic = BusHDRSettingDynamic_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {88}))
 		M_record_of_map(
 			M_wrap(BusHDRSettingDynamic_<_>),
 			M_wrap(
-				(RegularValue<Floating>) threshold,
-				(RegularValue<Floating>) ratio,
-				(RegularValue<Floating>) release_time,
-				(RegularValue<Integer>) release_mode,
+				(Floating) threshold,
+				(Floating) ratio,
+				(Floating) release_time,
+				(BusHDRSettingDynamicReleaseMode) release_mode,
 			),
 		);
 
@@ -1299,7 +1509,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using BusHDRSetting = BusHDRSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {88}))
 		M_record_of_map(
 			M_wrap(BusHDRSetting_<_>),
 			M_wrap(
@@ -1319,12 +1529,12 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioHDRSettingEnvelopeTracking = AudioHDRSettingEnvelopeTracking_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {88}))
 		M_record_of_map(
 			M_wrap(AudioHDRSettingEnvelopeTracking_<_>),
 			M_wrap(
 				(Boolean) enable,
-				(RegularValue<Floating>) active_range,
+				(Floating) active_range,
 			),
 		);
 
@@ -1335,7 +1545,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioHDRSetting = AudioHDRSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {88}))
 		M_record_of_map(
 			M_wrap(AudioHDRSetting_<_>),
 			M_wrap(
@@ -1352,7 +1562,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using SoundMIDISettingEventPlayOn = SoundMIDISettingEventPlayOn_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {112}))
 		M_enumeration(
 			M_wrap(SoundMIDISettingEventPlayOn_<_>),
 			M_wrap(
@@ -1368,7 +1578,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using SoundMIDISettingEvent = SoundMIDISettingEvent_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
 			M_wrap(SoundMIDISettingEvent_<_>),
 			M_wrap(
@@ -1384,7 +1594,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using SoundMIDISettingNoteTracking = SoundMIDISettingNoteTracking_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
 			M_wrap(SoundMIDISettingNoteTracking_<_>),
 			M_wrap(
@@ -1400,7 +1610,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using SoundMIDISettingTransformation = SoundMIDISettingTransformation_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
 			M_wrap(SoundMIDISettingTransformation_<_>),
 			M_wrap(
@@ -1416,7 +1626,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using SoundMIDISettingFilter = SoundMIDISettingFilter_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
 			M_wrap(SoundMIDISettingFilter_<_>),
 			M_wrap(
@@ -1435,7 +1645,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using SoundMIDISetting = SoundMIDISetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
 			M_wrap(SoundMIDISetting_<_>),
 			M_wrap(
@@ -1455,7 +1665,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicMIDISettingTarget = MusicMIDISettingTarget_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
 			M_wrap(MusicMIDISettingTarget_<_>),
 			M_wrap(
@@ -1470,7 +1680,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicMIDISettingClipTempoSource = MusicMIDISettingClipTempoSource_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {112}))
 		M_enumeration(
 			M_wrap(MusicMIDISettingClipTempoSource_<_>),
 			M_wrap(
@@ -1486,7 +1696,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicMIDISettingClipTempo = MusicMIDISettingClipTempo_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
 			M_wrap(MusicMIDISettingClipTempo_<_>),
 			M_wrap(
@@ -1501,7 +1711,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicMIDISetting = MusicMIDISetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
 			M_wrap(MusicMIDISetting_<_>),
 			M_wrap(
@@ -1519,7 +1729,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioPlaybackLimitSettingScope = AudioPlaybackLimitSettingScope_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_enumeration(
 			M_wrap(AudioPlaybackLimitSettingScope_<_>),
 			M_wrap(
@@ -1535,7 +1745,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioPlaybackLimitSettingWhenPriorityIsEqual = AudioPlaybackLimitSettingWhenPriorityIsEqual_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_enumeration(
 			M_wrap(AudioPlaybackLimitSettingWhenPriorityIsEqual_<_>),
 			M_wrap(
@@ -1551,7 +1761,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioPlaybackLimitSettingWhenLimitIsReached = AudioPlaybackLimitSettingWhenLimitIsReached_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_enumeration(
 			M_wrap(AudioPlaybackLimitSettingWhenLimitIsReached_<_>),
 			M_wrap(
@@ -1567,11 +1777,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioPlaybackLimitSetting = AudioPlaybackLimitSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(AudioPlaybackLimitSetting_<_>),
 			M_wrap(
-				(Boolean) ignore_parent,
 				(RegularValue<Integer>) value,
 				(AudioPlaybackLimitSettingScope) scope,
 				(AudioPlaybackLimitSettingWhenLimitIsReached) when_limit_is_reached,
@@ -1587,6 +1796,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		struct AudioVirtualVoiceSettingBehavior_;
 
 		using AudioVirtualVoiceSettingBehavior = AudioVirtualVoiceSettingBehavior_<>;
+
+		template <typename _> requires (check_version(version, {72, 140}))
+		M_enumeration(
+			M_wrap(AudioVirtualVoiceSettingBehavior_<_>),
+			M_wrap(
+				continue_to_play,
+				kill_voice,
+				send_to_virtual_voice,
+			),
+		);
 
 		template <typename _> requires (check_version(version, {140}))
 		M_enumeration(
@@ -1606,7 +1825,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioVirtualVoiceSettingOnReturnToPhysical = AudioVirtualVoiceSettingOnReturnToPhysical_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_enumeration(
 			M_wrap(AudioVirtualVoiceSettingOnReturnToPhysical_<_>),
 			M_wrap(
@@ -1623,7 +1842,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioVirtualVoiceSetting = AudioVirtualVoiceSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(AudioVirtualVoiceSetting_<_>),
 			M_wrap(
@@ -1641,13 +1860,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioPlaybackPrioritySetting = AudioPlaybackPrioritySetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(AudioPlaybackPrioritySetting_<_>),
 			M_wrap(
 				(RegularValue<Floating>) value,
 				(Boolean) use_distance_factor,
-				(RegularValue<Floating>) offset_at_max_distance,
+				(RegularValue<Floating>) offset_at_maximum_distance,
 			),
 		);
 
@@ -1656,18 +1875,34 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		#pragma region audio time setting
 
 		template <typename = None>
+		struct AudioTimeSettingSignature_;
+
+		using AudioTimeSettingSignature = AudioTimeSettingSignature_<>;
+
+		template <typename _> requires (check_version(version, {72}))
+		M_record_of_list(
+			M_wrap(AudioTimeSettingSignature_<_>),
+			M_wrap(
+				(Integer) first,
+				(Integer) second,
+			),
+		);
+
+		// ----------------
+
+		template <typename = None>
 		struct AudioTimeSetting_;
 
 		using AudioTimeSetting = AudioTimeSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(AudioTimeSetting_<_>),
 			M_wrap(
 				(Floating) time,
 				(Floating) offset,
 				(Floating) tempo,
-				(Tuple<Integer, Integer>) signature,
+				(AudioTimeSettingSignature) signature,
 			),
 		);
 
@@ -1680,7 +1915,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioSwitcherSetting = AudioSwitcherSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(AudioSwitcherSetting_<_>),
 			M_wrap(
@@ -1692,32 +1927,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		#pragma endregion
 
-		#pragma region audio switcher association
+		#pragma region audio association
 
 		template <typename = None>
-		struct AudioSwitcherAssociationSettingItem_;
+		struct AudioAssociationSettingMode_;
 
-		using AudioSwitcherAssociationSettingItem = AudioSwitcherAssociationSettingItem_<>;
+		using AudioAssociationSettingMode = AudioAssociationSettingMode_<>;
 
-		template <typename _> requires (check_version(version, {140}))
-		M_record_of_map(
-			M_wrap(AudioSwitcherAssociationSettingItem_<_>),
-			M_wrap(
-				(ID) group,
-				(Boolean) is_state,
-			),
-		);
-
-		// ----------------
-
-		template <typename = None>
-		struct AudioSwitcherAssociationSettingMode_;
-
-		using AudioSwitcherAssociationSettingMode = AudioSwitcherAssociationSettingMode_<>;
-
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_enumeration(
-			M_wrap(AudioSwitcherAssociationSettingMode_<_>),
+			M_wrap(AudioAssociationSettingMode_<_>),
 			M_wrap(
 				best_match,
 				weighted,
@@ -1727,13 +1946,37 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <typename = None>
-		struct AudioSwitcherAssociationSettingPath_;
+		struct AudioAssociationSettingArgument_;
 
-		using AudioSwitcherAssociationSettingPath = AudioSwitcherAssociationSettingPath_<>;
+		using AudioAssociationSettingArgument = AudioAssociationSettingArgument_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 88}))
 		M_record_of_map(
-			M_wrap(AudioSwitcherAssociationSettingPath_<_>),
+			M_wrap(AudioAssociationSettingArgument_<_>),
+			M_wrap(
+				(ID) id,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {88}))
+		M_record_of_map(
+			M_wrap(AudioAssociationSettingArgument_<_>),
+			M_wrap(
+				(ID) id,
+				(Boolean) is_state,
+			),
+		);
+
+		// ----------------
+
+		template <typename = None>
+		struct AudioAssociationSettingPath_;
+
+		using AudioAssociationSettingPath = AudioAssociationSettingPath_<>;
+
+		template <typename _> requires (check_version(version, {72}))
+		M_record_of_map(
+			M_wrap(AudioAssociationSettingPath_<_>),
 			M_wrap(
 				(ID) u1,
 				(ID) object,
@@ -1745,17 +1988,28 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <typename = None>
-		struct AudioSwitcherAssociationSetting_;
+		struct AudioAssociationSetting_;
 
-		using AudioSwitcherAssociationSetting = AudioSwitcherAssociationSetting_<>;
+		using AudioAssociationSetting = AudioAssociationSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 88}))
 		M_record_of_map(
-			M_wrap(AudioSwitcherAssociationSetting_<_>),
+			M_wrap(AudioAssociationSetting_<_>),
 			M_wrap(
-				(List<AudioSwitcherAssociationSettingItem>) item,
-				(AudioSwitcherAssociationSettingMode) mode,
-				(List<AudioSwitcherAssociationSettingPath>) path,
+				(Integer) probability,
+				(AudioAssociationSettingMode) mode,
+				(List<AudioAssociationSettingArgument>) argument,
+				(List<AudioAssociationSettingPath>) path,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {88}))
+		M_record_of_map(
+			M_wrap(AudioAssociationSetting_<_>),
+			M_wrap(
+				(AudioAssociationSettingMode) mode,
+				(List<AudioAssociationSettingArgument>) argument,
+				(List<AudioAssociationSettingPath>) path,
 			),
 		);
 
@@ -1768,13 +2022,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioSourceType = AudioSourceType_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_enumeration(
 			M_wrap(AudioSourceType_<_>),
 			M_wrap(
-				internal,
-				external,
-				external_prefetch,
+				embedded,
+				streamed,
+				streamed_prefetched,
 			),
 		);
 
@@ -1785,14 +2039,44 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioSourceSetting = AudioSourceSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 112}))
 		M_record_of_map(
 			M_wrap(AudioSourceSetting_<_>),
 			M_wrap(
-				(PlugInID) plug_in,
+				(ID) plug_in,
+				(AudioSourceType) type,
+				(ID) source,
+				(ID) resource,
+				(Integer) resource_offset,
+				(Integer) resource_size,
+				(Boolean) is_voice,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112, 113}))
+		M_record_of_map(
+			M_wrap(AudioSourceSetting_<_>),
+			M_wrap(
+				(ID) plug_in,
+				(AudioSourceType) type,
+				(ID) source,
+				(ID) resource,
+				(Integer) resource_offset,
+				(Integer) resource_size,
+				(Boolean) is_voice,
+				(Boolean) non_cachable_stream,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {113}))
+		M_record_of_map(
+			M_wrap(AudioSourceSetting_<_>),
+			M_wrap(
+				(ID) plug_in,
 				(AudioSourceType) type,
 				(ID) resource,
 				(Integer) resource_size,
+				(Boolean) is_voice,
 				(Boolean) non_cachable_stream,
 			),
 		);
@@ -1806,7 +2090,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioPlayTypeRandomType = AudioPlayTypeRandomType_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_enumeration(
 			M_wrap(AudioPlayTypeRandomType_<_>),
 			M_wrap(
@@ -1822,7 +2106,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioPlayTypeRandomSetting = AudioPlayTypeRandomSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(AudioPlayTypeRandomSetting_<_>),
 			M_wrap(
@@ -1838,7 +2122,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioPlayTypeSequenceAtEndOfPlaylist = AudioPlayTypeSequenceAtEndOfPlaylist_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_enumeration(
 			M_wrap(AudioPlayTypeSequenceAtEndOfPlaylist_<_>),
 			M_wrap(
@@ -1854,7 +2138,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioPlayTypeSequenceSetting = AudioPlayTypeSequenceSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(AudioPlayTypeSequenceSetting_<_>),
 			M_wrap(
@@ -1869,7 +2153,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioPlayTypeSetting = AudioPlayTypeSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(AudioPlayTypeSetting_<_>),
 			M_wrap(
@@ -1887,7 +2171,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioPlayModeStepSetting = AudioPlayModeStepSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(AudioPlayModeStepSetting_<_>),
 			M_wrap(
@@ -1901,7 +2185,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioPlayModeContinuousTransitionType = AudioPlayModeContinuousTransitionType_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_enumeration(
 			M_wrap(AudioPlayModeContinuousTransitionType_<_>),
 			M_wrap(
@@ -1921,14 +2205,25 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioPlayModeContinuousSetting = AudioPlayModeContinuousSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 88}))
 		M_record_of_map(
 			M_wrap(AudioPlayModeContinuousSetting_<_>),
 			M_wrap(
 				(Boolean) always_reset_playlist,
-				(RandomizedValue<Integer>) loop_count,
+				(RegularValue<Integer>) loop_count,
 				(AudioPlayModeContinuousTransitionType) transition_type,
-				(RandomizedValue<Floating>) transition_duration,
+				(RandomizableValue<Floating>) transition_duration,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {88}))
+		M_record_of_map(
+			M_wrap(AudioPlayModeContinuousSetting_<_>),
+			M_wrap(
+				(Boolean) always_reset_playlist,
+				(RandomizableValue<Integer>) loop_count,
+				(AudioPlayModeContinuousTransitionType) transition_type,
+				(RandomizableValue<Floating>) transition_duration,
 			),
 		);
 
@@ -1939,7 +2234,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioPlayModeSetting = AudioPlayModeSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(AudioPlayModeSetting_<_>),
 			M_wrap(
@@ -1957,7 +2252,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using UnknownHierarchy = UnknownHierarchy_<>;
 
-		template <typename _> requires (check_version(version, {88, 112, 140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(UnknownHierarchy_<_>),
 			M_wrap(
@@ -1975,7 +2270,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using StateGroupCustomTransition = StateGroupCustomTransition_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(StateGroupCustomTransition_<_>),
 			M_wrap(
@@ -1992,7 +2287,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using StateGroup = StateGroup_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(StateGroup_<_>),
 			M_wrap(
@@ -2007,34 +2302,17 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		#pragma region switch group
 
 		template <typename = None>
-		struct SwitchGroupPoint_;
-
-		using SwitchGroupPoint = SwitchGroupPoint_<>;
-
-		template <typename _> requires (check_version(version, {140}))
-		M_record_of_map(
-			M_wrap(SwitchGroupPoint_<_>),
-			M_wrap(
-				(Position2D<Floating, ID>) position,
-				(Curve) curve,
-			),
-		);
-
-		// ----------------
-
-		template <typename = None>
 		struct SwitchGroup_;
 
 		using SwitchGroup = SwitchGroup_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(SwitchGroup_<_>),
 			M_wrap(
 				(ID) id,
-				(ID) parameter,
-				(RealTimeParameterControlXAxisCategory) parameter_category,
-				(List<SwitchGroupPoint>) point,
+				(Parameter) parameter,
+				(List<CoordinateIDPoint>) point,
 			),
 		);
 
@@ -2043,116 +2321,140 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		#pragma region game parameter
 
 		template <typename = None>
+		struct GameParameterBindToBuiltInParameterMode_;
+
+		using GameParameterBindToBuiltInParameterMode = GameParameterBindToBuiltInParameterMode_<>;
+
+		template <typename _> requires (check_version(version, {112, 128}))
+		M_enumeration(
+			M_wrap(GameParameterBindToBuiltInParameterMode_<_>),
+			M_wrap(
+				none,
+				distance,
+				azimuth,
+				elevation,
+				object_to_listener_angle,
+				obstruction,
+				occlusion,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {128}))
+		M_enumeration(
+			M_wrap(GameParameterBindToBuiltInParameterMode_<_>),
+			M_wrap(
+				none,
+				distance,
+				azimuth,
+				elevation,
+				emitter_cone,
+				obstruction,
+				occlusion,
+				listener_cone,
+				diffraction,
+			),
+		);
+
+		// ----------------
+
+		template <typename = None>
+		struct GameParameterInterpolationMode_;
+
+		using GameParameterInterpolationMode = GameParameterInterpolationMode_<>;
+
+		template <typename _> requires (check_version(version, {112}))
+		M_enumeration(
+			M_wrap(GameParameterInterpolationMode_<_>),
+			M_wrap(
+				none,
+				slew_rate,
+				filtering_over_time,
+			),
+		);
+
+		// ----------------
+
+		template <typename = None>
 		struct GameParameter_;
 
 		using GameParameter = GameParameter_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 112}))
 		M_record_of_map(
 			M_wrap(GameParameter_<_>),
 			M_wrap(
 				(ID) id,
 				(Floating) range_default,
-				(Integer) interpolation_mode,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112}))
+		M_record_of_map(
+			M_wrap(GameParameter_<_>),
+			M_wrap(
+				(ID) id,
+				(Floating) range_default,
+				(GameParameterInterpolationMode) interpolation_mode,
 				(Floating) interpolation_attack,
 				(Floating) interpolation_release,
-				(Integer) bind_to_built_in_parameter,
+				(GameParameterBindToBuiltInParameterMode) bind_to_built_in_parameter,
 			),
 		);
 
 		#pragma endregion
 
-		#pragma region plug-in reference
+		#pragma region game synchronization u1
 
 		template <typename = None>
-		struct SourcePlugInReferenceU2_;
+		struct GameSynchronizationU1_;
 
-		using SourcePlugInReferenceU2 = SourcePlugInReferenceU2_<>;
+		using GameSynchronizationU1 = GameSynchronizationU1_<>;
 
 		template <typename _> requires (check_version(version, {140}))
 		M_record_of_map(
-			M_wrap(SourcePlugInReferenceU2_<_>),
+			M_wrap(GameSynchronizationU1_<_>),
 			M_wrap(
-				(Integer) u1,
-				(Integer) u2,
-				(Integer) u3,
-				(Integer) u4,
-				(Integer) u5,
-				(Integer) u6,
-				(List<Point2D>) point,
-			),
-		);
-
-		// ----------------
-
-		template <typename = None>
-		struct SourcePlugInReferenceU4_;
-
-		using SourcePlugInReferenceU4 = SourcePlugInReferenceU4_<>;
-
-		template <typename _> requires (check_version(version, {140}))
-		M_record_of_map(
-			M_wrap(SourcePlugInReferenceU4_<_>),
-			M_wrap(
-				(Integer) u1,
-				(Integer) u2,
+				(ID) id,
+				(Floating) u1,
+				(Floating) u2,
 				(Floating) u3,
-			),
-		);
-
-		// ----------------
-
-		template <typename = None>
-		struct SourcePlugInReference_;
-
-		using SourcePlugInReference = SourcePlugInReference_<>;
-
-		template <typename _> requires (check_version(version, {140}))
-		M_record_of_map(
-			M_wrap(SourcePlugInReference_<_>),
-			M_wrap(
-				(ID) id,
-				(PlugInID) plug_in,
-				(ByteList) expand,
-				(List<SourcePlugInReferenceU2>) u2,
-				(List<SourcePlugInReferenceU4>) u4,
-			),
-		);
-
-		// ----------------
-
-		template <typename = None>
-		struct UnknownPlugInReference_;
-
-		using UnknownPlugInReference = UnknownPlugInReference_<>;
-
-		template <typename _> requires (check_version(version, {140}))
-		M_record_of_map(
-			M_wrap(UnknownPlugInReference_<_>),
-			M_wrap(
-				(ID) id,
-				(PlugInID) plug_in,
-				(ByteList) expand,
-				(List<SourcePlugInReferenceU2>) u2,
-				(List<SourcePlugInReferenceU4>) u4,
+				(Floating) u4,
+				(Floating) u5,
+				(Floating) u6,
 			),
 		);
 
 		#pragma endregion
 
-		#pragma region stateful audio property setting
+		#pragma region stateful property setting
 
 		template <typename = None>
-		struct StatefulAudioPropertySetting_;
+		struct StatefulPropertySettingItem_;
 
-		using StatefulAudioPropertySetting = StatefulAudioPropertySetting_<>;
+		using StatefulPropertySettingItem = StatefulPropertySettingItem_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
-			M_wrap(StatefulAudioPropertySetting_<_>),
+			M_wrap(StatefulPropertySettingItem_<_>),
+			M_wrap(
+				(Integer) type,
+				(Floating) value,
+			),
+		);
+
+		// ----------------
+
+		template <typename = None>
+		struct StatefulPropertySetting_;
+
+		using StatefulPropertySetting = StatefulPropertySetting_<>;
+
+		template <typename _> requires (check_version(version, {72}))
+		M_record_of_map(
+			M_wrap(StatefulPropertySetting_<_>),
 			M_wrap(
 				(ID) id,
-				(Map<AudioPropertyType, Floating>) value,
+				(List<StatefulPropertySettingItem>) value,
 			),
 		);
 
@@ -2168,7 +2470,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using ValueApplyMode = ValueApplyMode_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {72}))
 			M_enumeration(
 				M_wrap(ValueApplyMode_<_>),
 				M_wrap(
@@ -2184,7 +2486,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using SeekType = SeekType_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {72}))
 			M_enumeration(
 				M_wrap(SeekType_<_>),
 				M_wrap(
@@ -2200,12 +2502,12 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using PlayAudio = PlayAudio_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {72}))
 			M_record_of_map(
 				M_wrap(PlayAudio_<_>),
 				M_wrap(
-					(RandomizedValue<Integer>) delay,
-					(RandomizedValue<Integer>) fade_time,
+					(RandomizableValue<Integer>) delay,
+					(RandomizableValue<Integer>) fade_time,
 					(Curve) fade_curve,
 					(Floating) probability,
 					(ID) sound_bank,
@@ -2219,12 +2521,22 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using StopAudio = StopAudio_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {72, 125}))
 			M_record_of_map(
 				M_wrap(StopAudio_<_>),
 				M_wrap(
-					(RandomizedValue<Integer>) delay,
-					(RandomizedValue<Integer>) fade_time,
+					(RandomizableValue<Integer>) delay,
+					(RandomizableValue<Integer>) fade_time,
+					(Curve) fade_curve,
+				),
+			);
+
+			template <typename _> requires (check_version(version, {125}))
+			M_record_of_map(
+				M_wrap(StopAudio_<_>),
+				M_wrap(
+					(RandomizableValue<Integer>) delay,
+					(RandomizableValue<Integer>) fade_time,
 					(Curve) fade_curve,
 					(Boolean) resume_state_transition,
 					(Boolean) apply_to_dynamic_sequence,
@@ -2238,12 +2550,23 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using PauseAudio = PauseAudio_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {72, 125}))
 			M_record_of_map(
 				M_wrap(PauseAudio_<_>),
 				M_wrap(
-					(RandomizedValue<Integer>) delay,
-					(RandomizedValue<Integer>) fade_time,
+					(RandomizableValue<Integer>) delay,
+					(RandomizableValue<Integer>) fade_time,
+					(Curve) fade_curve,
+					(Boolean) include_delayed_resume_action,
+				),
+			);
+
+			template <typename _> requires (check_version(version, {125}))
+			M_record_of_map(
+				M_wrap(PauseAudio_<_>),
+				M_wrap(
+					(RandomizableValue<Integer>) delay,
+					(RandomizableValue<Integer>) fade_time,
 					(Curve) fade_curve,
 					(Boolean) include_delayed_resume_action,
 					(Boolean) resume_state_transition,
@@ -2258,12 +2581,23 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using ResumeAudio = ResumeAudio_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {72, 125}))
 			M_record_of_map(
 				M_wrap(ResumeAudio_<_>),
 				M_wrap(
-					(RandomizedValue<Integer>) delay,
-					(RandomizedValue<Integer>) fade_time,
+					(RandomizableValue<Integer>) delay,
+					(RandomizableValue<Integer>) fade_time,
+					(Curve) fade_curve,
+					(Boolean) master_resume,
+				),
+			);
+
+			template <typename _> requires (check_version(version, {125}))
+			M_record_of_map(
+				M_wrap(ResumeAudio_<_>),
+				M_wrap(
+					(RandomizableValue<Integer>) delay,
+					(RandomizableValue<Integer>) fade_time,
 					(Curve) fade_curve,
 					(Boolean) master_resume,
 					(Boolean) resume_state_transition,
@@ -2278,11 +2612,11 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using BreakAudio = BreakAudio_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {72}))
 			M_record_of_map(
 				M_wrap(BreakAudio_<_>),
 				M_wrap(
-					(RandomizedValue<Integer>) delay,
+					(RandomizableValue<Integer>) delay,
 				),
 			);
 
@@ -2293,13 +2627,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using SeekAudio = SeekAudio_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {72}))
 			M_record_of_map(
 				M_wrap(SeekAudio_<_>),
 				M_wrap(
-					(RandomizedValue<Integer>) delay,
+					(RandomizableValue<Integer>) delay,
 					(SeekType) seek_type,
-					(RandomizedValue<Floating>) seek_value,
+					(RandomizableValue<Floating>) seek_value,
 					(Boolean) seek_to_nearest_marker,
 				),
 			);
@@ -2311,11 +2645,11 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using PostEvent = PostEvent_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {113}))
 			M_record_of_map(
 				M_wrap(PostEvent_<_>),
 				M_wrap(
-					(RandomizedValue<Integer>) delay,
+					(RandomizableValue<Integer>) delay,
 				),
 			);
 
@@ -2326,16 +2660,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using SetBusVolume = SetBusVolume_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {72}))
 			M_record_of_map(
 				M_wrap(SetBusVolume_<_>),
 				M_wrap(
 					(Boolean) reset,
-					(RandomizedValue<Integer>) delay,
-					(RandomizedValue<Integer>) fade_time,
+					(RandomizableValue<Integer>) delay,
+					(RandomizableValue<Integer>) fade_time,
 					(Curve) fade_curve,
 					(ValueApplyMode) apply_mode,
-					(RandomizedValue<Floating>) value,
+					(RandomizableValue<Floating>) value,
 				),
 			);
 
@@ -2346,16 +2680,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using SetVoiceVolume = SetVoiceVolume_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {72}))
 			M_record_of_map(
 				M_wrap(SetVoiceVolume_<_>),
 				M_wrap(
 					(Boolean) reset,
-					(RandomizedValue<Integer>) delay,
-					(RandomizedValue<Integer>) fade_time,
+					(RandomizableValue<Integer>) delay,
+					(RandomizableValue<Integer>) fade_time,
 					(Curve) fade_curve,
 					(ValueApplyMode) apply_mode,
-					(RandomizedValue<Floating>) value,
+					(RandomizableValue<Floating>) value,
 				),
 			);
 
@@ -2366,16 +2700,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using SetVolumePitch = SetVolumePitch_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {72}))
 			M_record_of_map(
 				M_wrap(SetVolumePitch_<_>),
 				M_wrap(
 					(Boolean) reset,
-					(RandomizedValue<Integer>) delay,
-					(RandomizedValue<Integer>) fade_time,
+					(RandomizableValue<Integer>) delay,
+					(RandomizableValue<Integer>) fade_time,
 					(Curve) fade_curve,
 					(ValueApplyMode) apply_mode,
-					(RandomizedValue<Floating>) value,
+					(RandomizableValue<Floating>) value,
 				),
 			);
 
@@ -2386,16 +2720,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using SetVolumeLowPassFilter = SetVolumeLowPassFilter_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {72}))
 			M_record_of_map(
 				M_wrap(SetVolumeLowPassFilter_<_>),
 				M_wrap(
 					(Boolean) reset,
-					(RandomizedValue<Integer>) delay,
-					(RandomizedValue<Integer>) fade_time,
+					(RandomizableValue<Integer>) delay,
+					(RandomizableValue<Integer>) fade_time,
 					(Curve) fade_curve,
 					(ValueApplyMode) apply_mode,
-					(RandomizedValue<Floating>) value,
+					(RandomizableValue<Floating>) value,
 				),
 			);
 
@@ -2406,16 +2740,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using SetVolumeHighPassFilter = SetVolumeHighPassFilter_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {112}))
 			M_record_of_map(
 				M_wrap(SetVolumeHighPassFilter_<_>),
 				M_wrap(
 					(Boolean) reset,
-					(RandomizedValue<Integer>) delay,
-					(RandomizedValue<Integer>) fade_time,
+					(RandomizableValue<Integer>) delay,
+					(RandomizableValue<Integer>) fade_time,
 					(Curve) fade_curve,
 					(ValueApplyMode) apply_mode,
-					(RandomizedValue<Floating>) value,
+					(RandomizableValue<Floating>) value,
 				),
 			);
 
@@ -2426,13 +2760,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using SetMute = SetMute_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {72}))
 			M_record_of_map(
 				M_wrap(SetMute_<_>),
 				M_wrap(
 					(Boolean) reset,
-					(RandomizedValue<Integer>) delay,
-					(RandomizedValue<Integer>) fade_time,
+					(RandomizableValue<Integer>) delay,
+					(RandomizableValue<Integer>) fade_time,
 					(Curve) fade_curve,
 				),
 			);
@@ -2444,16 +2778,29 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using SetGameParameter = SetGameParameter_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {72, 112}))
 			M_record_of_map(
 				M_wrap(SetGameParameter_<_>),
 				M_wrap(
 					(Boolean) reset,
-					(RandomizedValue<Integer>) delay,
-					(RandomizedValue<Integer>) fade_time,
+					(RandomizableValue<Integer>) delay,
+					(RandomizableValue<Integer>) fade_time,
 					(Curve) fade_curve,
 					(ValueApplyMode) apply_mode,
-					(RandomizedValue<Floating>) value,
+					(RandomizableValue<Floating>) value,
+				),
+			);
+
+			template <typename _> requires (check_version(version, {112}))
+			M_record_of_map(
+				M_wrap(SetGameParameter_<_>),
+				M_wrap(
+					(Boolean) reset,
+					(RandomizableValue<Integer>) delay,
+					(RandomizableValue<Integer>) fade_time,
+					(Curve) fade_curve,
+					(ValueApplyMode) apply_mode,
+					(RandomizableValue<Floating>) value,
 					(Boolean) bypass_game_parameter_interpolation,
 				),
 			);
@@ -2465,12 +2812,12 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using SetStateAvailability = SetStateAvailability_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {72}))
 			M_record_of_map(
 				M_wrap(SetStateAvailability_<_>),
 				M_wrap(
 					(Boolean) enable,
-					(RandomizedValue<Integer>) delay,
+					(RandomizableValue<Integer>) delay,
 				),
 			);
 
@@ -2481,12 +2828,11 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using ActivateState = ActivateState_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {72}))
 			M_record_of_map(
 				M_wrap(ActivateState_<_>),
 				M_wrap(
-					(Boolean) reset,
-					(RandomizedValue<Integer>) delay,
+					(RandomizableValue<Integer>) delay,
 					(ID) group,
 					(ID) item,
 				),
@@ -2499,12 +2845,11 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using ActivateSwitch = ActivateSwitch_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {72}))
 			M_record_of_map(
 				M_wrap(ActivateSwitch_<_>),
 				M_wrap(
-					(Boolean) reset,
-					(RandomizedValue<Integer>) delay,
+					(RandomizableValue<Integer>) delay,
 					(ID) group,
 					(ID) item,
 				),
@@ -2517,12 +2862,11 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using ActivateTrigger = ActivateTrigger_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {72}))
 			M_record_of_map(
 				M_wrap(ActivateTrigger_<_>),
 				M_wrap(
-					(Boolean) reset,
-					(RandomizedValue<Integer>) delay,
+					(RandomizableValue<Integer>) delay,
 				),
 			);
 
@@ -2533,14 +2877,14 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using SetBypassEffect = SetBypassEffect_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {72}))
 			M_record_of_map(
 				M_wrap(SetBypassEffect_<_>),
 				M_wrap(
 					(Boolean) reset,
 					(Boolean) enable,
-					(RandomizedValue<Integer>) delay,
-					(List<Boolean>) value,
+					(RandomizableValue<Integer>) delay,
+					(Tuple<Boolean, Boolean, Boolean, Boolean, Boolean>) value,
 				),
 			);
 
@@ -2551,11 +2895,11 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using ReleaseEnvelope = ReleaseEnvelope_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {112}))
 			M_record_of_map(
 				M_wrap(ReleaseEnvelope_<_>),
 				M_wrap(
-					(RandomizedValue<Integer>) delay,
+					(RandomizableValue<Integer>) delay,
 				),
 			);
 
@@ -2566,12 +2910,11 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using ResetPlaylist = ResetPlaylist_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {113}))
 			M_record_of_map(
 				M_wrap(ResetPlaylist_<_>),
 				M_wrap(
-					(RandomizedValue<Integer>) delay,
-					(Integer) u1,
+					(RandomizableValue<Integer>) delay,
 				),
 			);
 
@@ -2582,7 +2925,57 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 			using Type = Type_<>;
 
-			template <typename _> requires (check_version(version, {140}))
+			template <typename _> requires (check_version(version, {72, 112}))
+			M_enumeration(
+				M_wrap(Type_<_>),
+				M_wrap(
+					play_audio,
+					stop_audio,
+					pause_audio,
+					resume_audio,
+					break_audio,
+					seek_audio,
+					set_bus_volume,
+					set_voice_volume,
+					set_voice_pitch,
+					set_voice_low_pass_filter,
+					set_mute,
+					set_game_parameter,
+					set_state_availability,
+					activate_state,
+					activate_switch,
+					activate_trigger,
+					set_bypass_effect,
+				),
+			);
+
+			template <typename _> requires (check_version(version, {112, 113}))
+			M_enumeration(
+				M_wrap(Type_<_>),
+				M_wrap(
+					play_audio,
+					stop_audio,
+					pause_audio,
+					resume_audio,
+					break_audio,
+					seek_audio,
+					set_bus_volume,
+					set_voice_volume,
+					set_voice_pitch,
+					set_voice_low_pass_filter,
+					set_voice_high_pass_filter,
+					set_mute,
+					set_game_parameter,
+					set_state_availability,
+					activate_state,
+					activate_switch,
+					activate_trigger,
+					set_bypass_effect,
+					release_envelope,
+				),
+			);
+
+			template <typename _> requires (check_version(version, {113}))
 			M_enumeration(
 				M_wrap(Type_<_>),
 				M_wrap(
@@ -2613,7 +3006,55 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			// ----------------
 
 			using Item = decltype([] {
-				if constexpr (check_version(version, {140})) {
+				if constexpr (check_version(version, {72, 112})) {
+					using Type = EnumerableVariant<
+						Type,
+						PlayAudio,
+						StopAudio,
+						PauseAudio,
+						ResumeAudio,
+						BreakAudio,
+						SeekAudio,
+						SetBusVolume,
+						SetVoiceVolume,
+						SetVolumePitch,
+						SetVolumeLowPassFilter,
+						SetMute,
+						SetGameParameter,
+						SetStateAvailability,
+						ActivateState,
+						ActivateSwitch,
+						ActivateTrigger,
+						SetBypassEffect
+					>;
+					return declare<Type>();
+				}
+				if constexpr (check_version(version, {112, 113})) {
+					using Type = EnumerableVariant<
+						Type,
+						PlayAudio,
+						StopAudio,
+						PauseAudio,
+						ResumeAudio,
+						BreakAudio,
+						SeekAudio,
+						SetBusVolume,
+						SetVoiceVolume,
+						SetVolumePitch,
+						SetVolumeLowPassFilter,
+						SetVolumeHighPassFilter,
+						SetMute,
+						SetGameParameter,
+						SetStateAvailability,
+						ActivateState,
+						ActivateSwitch,
+						ActivateTrigger,
+						SetBypassEffect,
+						ReleaseEnvelope
+					>;
+					return declare<Type>();
+				}
+				if constexpr (check_version(version, {113})) {
 					using Type = EnumerableVariant<
 						Type,
 						PlayAudio,
@@ -2649,11 +3090,55 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <typename = None>
+		struct EventActionMode_;
+
+		using EventActionMode = EventActionMode_<>;
+
+		template <typename _> requires (check_version(version, {72, 125}))
+		M_enumeration(
+			M_wrap(EventActionMode_<_>),
+			M_wrap(
+				none,
+				one,
+				all,
+				all_except,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {125}))
+		M_enumeration(
+			M_wrap(EventActionMode_<_>),
+			M_wrap(
+				none,
+				one,
+				all,
+			),
+		);
+
+		// ----------------
+
+		template <typename = None>
+		struct EventActionScope_;
+
+		using EventActionScope = EventActionScope_<>;
+
+		template <typename _> requires (check_version(version, {72}))
+		M_enumeration(
+			M_wrap(EventActionScope_<_>),
+			M_wrap(
+				global,
+				game_object,
+			),
+		);
+
+		// ----------------
+
+		template <typename = None>
 		struct EventActionException_;
 
 		using EventActionException = EventActionException_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(EventActionException_<_>),
 			M_wrap(
@@ -2669,14 +3154,15 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using EventAction = EventAction_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(EventAction_<_>),
 			M_wrap(
 				(ID) id,
 				(ID) target,
+				(EventActionMode) mode,
 				(List<EventActionException>) exception,
-				(Boolean) globally,
+				(EventActionScope) scope,
 				(Integer) u1,
 				(typename EventActionProperty::Item) property,
 			),
@@ -2691,7 +3177,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using Event = Event_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(Event_<_>),
 			M_wrap(
@@ -2709,13 +3195,22 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using DialogueEvent = DialogueEvent_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 88}))
+		M_record_of_map(
+			M_wrap(DialogueEvent_<_>),
+			M_wrap(
+				(ID) id,
+				(AudioAssociationSetting) association,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {88}))
 		M_record_of_map(
 			M_wrap(DialogueEvent_<_>),
 			M_wrap(
 				(ID) id,
 				(Integer) probability,
-				(AudioSwitcherAssociationSetting) switcher_association,
+				(AudioAssociationSetting) association,
 			),
 		);
 
@@ -2728,12 +3223,12 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AttenuationCurve = AttenuationCurve_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(AttenuationCurve_<_>),
 			M_wrap(
-				(Integer) u1,
-				(List<Point2D>) point,
+				(CoordinateMode) mode,
+				(List<CoordinatePoint>) point,
 			),
 		);
 
@@ -2744,17 +3239,66 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AttenuationApplySetting = AttenuationApplySetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 88}))
 		M_record_of_map(
 			M_wrap(AttenuationApplySetting_<_>),
 			M_wrap(
-				(Optional<Integer>) output_bus_volume,
-				(Optional<Integer>) game_defined_auxiliary_send_volume,
-				(Optional<Integer>) user_defined_auxiliary_send_volume,
-				(Optional<Integer>) low_pass_filter,
-				(Optional<Integer>) high_pass_filter,
-				(Optional<Integer>) spread,
-				(Optional<Integer>) focus,
+				(Integer) output_bus_volume,
+				(Integer) auxiliary_send_volume,
+				(Integer) low_pass_filter,
+				(Integer) spread,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {88, 112}))
+		M_record_of_map(
+			M_wrap(AttenuationApplySetting_<_>),
+			M_wrap(
+				(Integer) output_bus_volume,
+				(Integer) game_defined_auxiliary_send_volume,
+				(Integer) user_defined_auxiliary_send_volume,
+				(Integer) low_pass_filter,
+				(Integer) spread,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112, 145}))
+		M_record_of_map(
+			M_wrap(AttenuationApplySetting_<_>),
+			M_wrap(
+				(Integer) output_bus_volume,
+				(Integer) game_defined_auxiliary_send_volume,
+				(Integer) user_defined_auxiliary_send_volume,
+				(Integer) low_pass_filter,
+				(Integer) high_pass_filter,
+				(Integer) spread,
+				(Integer) focus,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {145}))
+		M_record_of_map(
+			M_wrap(AttenuationApplySetting_<_>),
+			M_wrap(
+				(Integer) distance_output_bus_volume,
+				(Integer) distance_game_defined_auxiliary_send_volume,
+				(Integer) distance_user_defined_auxiliary_send_volume,
+				(Integer) distance_low_pass_filter,
+				(Integer) distance_high_pass_filter,
+				(Integer) distance_spread,
+				(Integer) distance_focus,
+				(Integer) obstruction_volume,
+				(Integer) obstruction_low_pass_filter,
+				(Integer) obstruction_high_pass_filter,
+				(Integer) occlusion_volume,
+				(Integer) occlusion_low_pass_filter,
+				(Integer) occlusion_high_pass_filter,
+				(Integer) diffraction_volume,
+				(Integer) diffraction_low_pass_filter,
+				(Integer) diffraction_high_pass_filter,
+				(Integer) transmission_volume,
+				(Integer) transmission_low_pass_filter,
+				(Integer) transmission_high_pass_filter,
 			),
 		);
 
@@ -2765,13 +3309,26 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AttenuationCone = AttenuationCone_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 112}))
 		M_record_of_map(
 			M_wrap(AttenuationCone_<_>),
 			M_wrap(
+				(Boolean) enable,
 				(Floating) inner_angle,
 				(Floating) outer_angle,
-				(Floating) max_value,
+				(Floating) maximum_value,
+				(Floating) low_pass_filter,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112}))
+		M_record_of_map(
+			M_wrap(AttenuationCone_<_>),
+			M_wrap(
+				(Boolean) enable,
+				(Floating) inner_angle,
+				(Floating) outer_angle,
+				(Floating) maximum_value,
 				(Floating) low_pass_filter,
 				(Floating) high_pass_filter,
 			),
@@ -2784,6 +3341,18 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using Attenuation = Attenuation_<>;
 
+		template <typename _> requires (check_version(version, {72, 140}))
+		M_record_of_map(
+			M_wrap(Attenuation_<_>),
+			M_wrap(
+				(ID) id,
+				(AttenuationApplySetting) apply,
+				(List<AttenuationCurve>) curve,
+				(AttenuationCone) cone,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+			),
+		);
+
 		template <typename _> requires (check_version(version, {140}))
 		M_record_of_map(
 			M_wrap(Attenuation_<_>),
@@ -2791,10 +3360,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(ID) id,
 				(AttenuationApplySetting) apply,
 				(List<AttenuationCurve>) curve,
-				(Integer) max_distance,
 				(Boolean) height_spread,
-				(Optional<AttenuationCone>) cone,
-				(AttenuationRealTimeParameterControlSetting) real_time_parameter_control,
+				(AttenuationCone) cone,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
 			),
 		);
 
@@ -2807,7 +3375,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using ModulatorScope = ModulatorScope_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {112}))
 		M_enumeration(
 			M_wrap(ModulatorScope_<_>),
 			M_wrap(
@@ -2825,7 +3393,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using ModulatorTriggerOn = ModulatorTriggerOn_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {112}))
 		M_enumeration(
 			M_wrap(ModulatorTriggerOn_<_>),
 			M_wrap(
@@ -2841,7 +3409,19 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using ModulatorWaveform = ModulatorWaveform_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {112, 125}))
+		M_enumeration(
+			M_wrap(ModulatorWaveform_<_>),
+			M_wrap(
+				sine,
+				triangle,
+				square,
+				saw_up,
+				saw_down,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {125}))
 		M_enumeration(
 			M_wrap(ModulatorWaveform_<_>),
 			M_wrap(
@@ -2861,20 +3441,20 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using LowFrequencyOscillatorModulator = LowFrequencyOscillatorModulator_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
 			M_wrap(LowFrequencyOscillatorModulator_<_>),
 			M_wrap(
 				(ID) id,
-				(RandomizedValue<Floating>) depth,
-				(RandomizedValue<Floating>) frequency,
+				(RandomizableValue<Floating>) depth,
+				(RandomizableValue<Floating>) frequency,
 				(ModulatorWaveform) waveform,
-				(RandomizedValue<Floating>) smoothing,
-				(RandomizedValue<Floating>) pulse_width_modulation,
-				(RandomizedValue<Floating>) attack,
-				(RandomizedValue<Floating>) initial_phase_offset,
+				(RandomizableValue<Floating>) smoothing,
+				(RandomizableValue<Floating>) pulse_width_modulation,
+				(RandomizableValue<Floating>) attack,
+				(RandomizableValue<Floating>) initial_phase_offset,
 				(ModulatorScope) scope,
-				(ModulatorRealTimeParameterControlSetting) real_time_parameter_control,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
 			),
 		);
 
@@ -2885,21 +3465,21 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using EnvelopeModulator = EnvelopeModulator_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
 			M_wrap(EnvelopeModulator_<_>),
 			M_wrap(
 				(ID) id,
-				(RandomizedValue<Floating>) attack_time,
-				(RandomizedValue<Floating>) attack_curve,
-				(RandomizedValue<Floating>) decay_time,
-				(RandomizedValue<Floating>) sustain_level,
-				(RandomizedValue<Floating>) release_time,
+				(RandomizableValue<Floating>) attack_time,
+				(RandomizableValue<Floating>) attack_curve,
+				(RandomizableValue<Floating>) decay_time,
+				(RandomizableValue<Floating>) sustain_level,
+				(RandomizableValue<Floating>) release_time,
 				(ModulatorScope) scope,
 				(ModulatorTriggerOn) trigger_on,
-				(RandomizedValue<Floating>) sustain_time,
+				(RandomizableValue<Floating>) sustain_time,
 				(Boolean) stop_playback_after_release,
-				(ModulatorRealTimeParameterControlSetting) real_time_parameter_control,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
 			),
 		);
 
@@ -2910,55 +3490,133 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using TimeModulator = TimeModulator_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {132}))
 		M_record_of_map(
 			M_wrap(TimeModulator_<_>),
 			M_wrap(
 				(ID) id,
-				(RandomizedValue<Floating>) initial_delay,
+				(RandomizableValue<Floating>) initial_delay,
 				(RegularValue<Floating>) duration,
-				(RandomizedValue<Integer>) loop_count,
-				(RandomizedValue<Floating>) playback_rate,
+				(RandomizableValue<Integer>) loop_count,
+				(RandomizableValue<Floating>) playback_rate,
 				(ModulatorScope) scope,
 				(ModulatorTriggerOn) trigger_on,
 				(Boolean) stop_playback_at_end,
-				(ModulatorRealTimeParameterControlSetting) real_time_parameter_control,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
 			),
 		);
 
 		#pragma endregion
 
-		#pragma region audio device
+		#pragma region effect
 
 		template <typename = None>
-		struct AudioDeviceSystemExpandSetting_;
+		struct EffectU1_;
 
-		using AudioDeviceSystemExpandSetting = AudioDeviceSystemExpandSetting_<>;
+		using EffectU1 = EffectU1_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {112, 128}))
 		M_record_of_map(
-			M_wrap(AudioDeviceSystemExpandSetting_<_>),
+			M_wrap(EffectU1_<_>),
 			M_wrap(
-				(Boolean) allow_3d_audio,
-				(ID) main_mix_configuration_for_binauralization,
-				(ID) main_mix_configuration_for_home_theater,
-				(Boolean) allow_system_audio_object,
-				(Integer) minimum_system_audio_object_required,
+				(Integer) type,
+				(Floating) value,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {128}))
+		M_record_of_map(
+			M_wrap(EffectU1_<_>),
+			M_wrap(
+				(Integer) type,
+				(CoordinateMode) mode,
+				(Floating) value,
 			),
 		);
 
 		// ----------------
 
 		template <typename = None>
-		struct AudioDeviceExpandSetting_;
+		struct Effect_;
 
-		using AudioDeviceExpandSetting = AudioDeviceExpandSetting_<>;
+		using Effect = Effect_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 112}))
 		M_record_of_map(
-			M_wrap(AudioDeviceExpandSetting_<_>),
+			M_wrap(Effect_<_>),
 			M_wrap(
-				(Optional<AudioDeviceSystemExpandSetting>) system,
+				(ID) id,
+				(ID) plug_in,
+				(ByteList) expand,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112, 128}))
+		M_record_of_map(
+			M_wrap(Effect_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) plug_in,
+				(ByteList) expand,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(List<EffectU1>) u1,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {128}))
+		M_record_of_map(
+			M_wrap(Effect_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) plug_in,
+				(ByteList) expand,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(List<EffectU1>) u1,
+			),
+		);
+
+		// ----------------
+
+		template <typename = None>
+		struct Source_;
+
+		using Source = Source_<>;
+
+		template <typename _> requires (check_version(version, {72, 112}))
+		M_record_of_map(
+			M_wrap(Source_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) plug_in,
+				(ByteList) expand,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112, 128}))
+		M_record_of_map(
+			M_wrap(Source_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) plug_in,
+				(ByteList) expand,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(List<EffectU1>) u1,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {128}))
+		M_record_of_map(
+			M_wrap(Source_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) plug_in,
+				(ByteList) expand,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(List<EffectU1>) u1,
 			),
 		);
 
@@ -2969,15 +3627,29 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioDevice = AudioDevice_<>;
 
+		template <typename _> requires (check_version(version, {128, 140}))
+		M_record_of_map(
+			M_wrap(AudioDevice_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) plug_in,
+				(ByteList) expand,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(List<EffectU1>) u1,
+			),
+		);
+
 		template <typename _> requires (check_version(version, {140}))
 		M_record_of_map(
 			M_wrap(AudioDevice_<_>),
 			M_wrap(
 				(ID) id,
-				(PlugInID) plug_in,
-				(AudioDeviceExpandSetting) expand,
-				(List<SourcePlugInReferenceU2>) u2,
-				(List<SourcePlugInReferenceU4>) u4,
+				(ID) plug_in,
+				(ByteList) expand,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(List<EffectU1>) u1,
 				(AudioEffectSetting) effect,
 			),
 		);
@@ -2991,7 +3663,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioBusMuteForBackgroundMusic = AudioBusMuteForBackgroundMusic_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
 			M_wrap(AudioBusMuteForBackgroundMusic_<_>),
 			M_wrap(
@@ -3006,7 +3678,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioBusConfiguration = AudioBusConfiguration_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {88}))
 		M_record_of_map(
 			M_wrap(AudioBusConfiguration_<_>),
 			M_wrap(
@@ -3021,6 +3693,117 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AudioBus = AudioBus_<>;
 
+		template <typename _> requires (check_version(version, {72, 88}))
+		M_record_of_map(
+			M_wrap(AudioBus_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(BusVoiceSetting) voice,
+				(BusBusSetting) bus,
+				(AudioEffectSetting) effect,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(BusAutomaticDuckingSetting) automatic_ducking,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(Boolean) override_playback_limit,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {88, 112}))
+		M_record_of_map(
+			M_wrap(AudioBus_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(AudioBusConfiguration) bus_configuration,
+				(BusVoiceSetting) voice,
+				(BusBusSetting) bus,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(BusAutomaticDuckingSetting) automatic_ducking,
+				(BusHDRSetting) hdr,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(Boolean) override_playback_limit,
+				(Boolean) override_positioning,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112, 125}))
+		M_record_of_map(
+			M_wrap(AudioBus_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(ID) mixer,
+				(AudioBusConfiguration) bus_configuration,
+				(AudioBusMuteForBackgroundMusic) mute_for_background_music,
+				(BusVoiceSetting) voice,
+				(BusBusSetting) bus,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(BusAutomaticDuckingSetting) automatic_ducking,
+				(BusHDRSetting) hdr,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(Boolean) override_positioning,
+				(Boolean) override_playback_limit,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {125, 128}))
+		M_record_of_map(
+			M_wrap(AudioBus_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(ID) mixer,
+				(AudioBusConfiguration) bus_configuration,
+				(AudioBusMuteForBackgroundMusic) mute_for_background_music,
+				(BusVoiceSetting) voice,
+				(BusVoiceVolumeGainSetting) voice_volume_gain,
+				(BusBusSetting) bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(BusAutomaticDuckingSetting) automatic_ducking,
+				(BusHDRSetting) hdr,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(Boolean) override_playback_limit,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {128, 140}))
+		M_record_of_map(
+			M_wrap(AudioBus_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(ID) audio_device,
+				(ID) mixer,
+				(AudioBusConfiguration) bus_configuration,
+				(AudioBusMuteForBackgroundMusic) mute_for_background_music,
+				(BusVoiceSetting) voice,
+				(BusVoiceVolumeGainSetting) voice_volume_gain,
+				(BusBusSetting) bus,
+				(BusOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(BusAutomaticDuckingSetting) automatic_ducking,
+				(BusHDRSetting) hdr,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(Boolean) override_playback_limit,
+			),
+		);
+
 		template <typename _> requires (check_version(version, {140}))
 		M_record_of_map(
 			M_wrap(AudioBus_<_>),
@@ -3028,6 +3811,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(ID) id,
 				(ID) parent,
 				(ID) audio_device,
+				(ID) mixer,
 				(AudioBusConfiguration) bus_configuration,
 				(AudioBusMuteForBackgroundMusic) mute_for_background_music,
 				(BusVoiceSetting) voice,
@@ -3038,11 +3822,12 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(AudioEffectSetting) effect,
 				(AudioMetadataSetting) metadata,
 				(AudioPositioningSetting) positioning,
-				(AudioRealTimeParameterControlSetting) real_time_parameter_control,
-				(AudioStateSetting) state,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
 				(BusAutomaticDuckingSetting) automatic_ducking,
 				(BusHDRSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
+				(Boolean) override_playback_limit,
 			),
 		);
 
@@ -3053,6 +3838,117 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using AuxiliaryAudioBus = AuxiliaryAudioBus_<>;
 
+		template <typename _> requires (check_version(version, {72, 88}))
+		M_record_of_map(
+			M_wrap(AuxiliaryAudioBus_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(BusVoiceSetting) voice,
+				(BusBusSetting) bus,
+				(AudioEffectSetting) effect,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(BusAutomaticDuckingSetting) automatic_ducking,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(Boolean) override_playback_limit,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {88, 112}))
+		M_record_of_map(
+			M_wrap(AuxiliaryAudioBus_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(AudioBusConfiguration) bus_configuration,
+				(BusVoiceSetting) voice,
+				(BusBusSetting) bus,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(BusAutomaticDuckingSetting) automatic_ducking,
+				(BusHDRSetting) hdr,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(Boolean) override_playback_limit,
+				(Boolean) override_positioning,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112, 125}))
+		M_record_of_map(
+			M_wrap(AuxiliaryAudioBus_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(ID) mixer,
+				(AudioBusConfiguration) bus_configuration,
+				(AudioBusMuteForBackgroundMusic) mute_for_background_music,
+				(BusVoiceSetting) voice,
+				(BusBusSetting) bus,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(BusAutomaticDuckingSetting) automatic_ducking,
+				(BusHDRSetting) hdr,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(Boolean) override_positioning,
+				(Boolean) override_playback_limit,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {125, 128}))
+		M_record_of_map(
+			M_wrap(AuxiliaryAudioBus_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(ID) mixer,
+				(AudioBusConfiguration) bus_configuration,
+				(AudioBusMuteForBackgroundMusic) mute_for_background_music,
+				(BusVoiceSetting) voice,
+				(BusVoiceVolumeGainSetting) voice_volume_gain,
+				(BusBusSetting) bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(BusAutomaticDuckingSetting) automatic_ducking,
+				(BusHDRSetting) hdr,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(Boolean) override_playback_limit,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {128, 140}))
+		M_record_of_map(
+			M_wrap(AuxiliaryAudioBus_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(ID) audio_device,
+				(ID) mixer,
+				(AudioBusConfiguration) bus_configuration,
+				(AudioBusMuteForBackgroundMusic) mute_for_background_music,
+				(BusVoiceSetting) voice,
+				(BusVoiceVolumeGainSetting) voice_volume_gain,
+				(BusBusSetting) bus,
+				(BusOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(BusAutomaticDuckingSetting) automatic_ducking,
+				(BusHDRSetting) hdr,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(Boolean) override_playback_limit,
+			),
+		);
+
 		template <typename _> requires (check_version(version, {140}))
 		M_record_of_map(
 			M_wrap(AuxiliaryAudioBus_<_>),
@@ -3060,6 +3956,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(ID) id,
 				(ID) parent,
 				(ID) audio_device,
+				(ID) mixer,
 				(AudioBusConfiguration) bus_configuration,
 				(AudioBusMuteForBackgroundMusic) mute_for_background_music,
 				(BusVoiceSetting) voice,
@@ -3070,11 +3967,12 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(AudioEffectSetting) effect,
 				(AudioMetadataSetting) metadata,
 				(AudioPositioningSetting) positioning,
-				(AudioRealTimeParameterControlSetting) real_time_parameter_control,
-				(AudioStateSetting) state,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
 				(BusAutomaticDuckingSetting) automatic_ducking,
 				(BusHDRSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
+				(Boolean) override_playback_limit,
 			),
 		);
 
@@ -3087,12 +3985,20 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using SoundPlaybackSetting = SoundPlaybackSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 88}))
 		M_record_of_map(
 			M_wrap(SoundPlaybackSetting_<_>),
 			M_wrap(
-				(RandomizedValue<Floating>) initial_delay,
-				(RandomizedValue<Integer>) loop_count,
+				(RandomizableValue<Integer>) loop_count,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {88}))
+		M_record_of_map(
+			M_wrap(SoundPlaybackSetting_<_>),
+			M_wrap(
+				(RandomizableValue<Floating>) initial_delay,
+				(RandomizableValue<Integer>) loop_count,
 			),
 		);
 
@@ -3102,6 +4008,181 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		struct Sound_;
 
 		using Sound = Sound_<>;
+
+		template <typename _> requires (check_version(version, {72, 88}))
+		M_record_of_map(
+			M_wrap(Sound_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(AudioSourceSetting) source,
+				(SoundPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {88, 112}))
+		M_record_of_map(
+			M_wrap(Sound_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(AudioSourceSetting) source,
+				(SoundPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112, 128}))
+		M_record_of_map(
+			M_wrap(Sound_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(AudioSourceSetting) source,
+				(SoundPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(SoundMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_event,
+				(Boolean) override_midi_note_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {128, 135}))
+		M_record_of_map(
+			M_wrap(Sound_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(AudioSourceSetting) source,
+				(SoundPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(SoundMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_event,
+				(Boolean) override_midi_note_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {135, 140}))
+		M_record_of_map(
+			M_wrap(Sound_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(AudioSourceSetting) source,
+				(SoundPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(SoundMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_early_reflection_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_event,
+				(Boolean) override_midi_note_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
 
 		template <typename _> requires (check_version(version, {140}))
 		M_record_of_map(
@@ -3118,13 +4199,14 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(AudioEffectSetting) effect,
 				(AudioMetadataSetting) metadata,
 				(AudioPositioningSetting) positioning,
-				(AudioRealTimeParameterControlSetting) real_time_parameter_control,
-				(AudioStateSetting) state,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
 				(AudioHDRSetting) hdr,
 				(SoundMIDISetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
 				(Boolean) override_voice_volume_loudness_normalization,
 				(Boolean) override_game_defined_auxiliary_send,
 				(Boolean) override_user_defined_auxiliary_send,
@@ -3138,6 +4220,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(Boolean) override_playback_limit,
 				(Boolean) override_virtual_voice,
 				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
 			),
 		);
 
@@ -3148,7 +4231,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using SoundPlaylistContainerScope = SoundPlaylistContainerScope_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_enumeration(
 			M_wrap(SoundPlaylistContainerScope_<_>),
 			M_wrap(
@@ -3164,7 +4247,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using SoundPlaylistContainerPlaylistItem = SoundPlaylistContainerPlaylistItem_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(SoundPlaylistContainerPlaylistItem_<_>),
 			M_wrap(
@@ -3180,11 +4263,24 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using SoundPlaylistContainerPlaybackSetting = SoundPlaylistContainerPlaybackSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 88}))
 		M_record_of_map(
 			M_wrap(SoundPlaylistContainerPlaybackSetting_<_>),
 			M_wrap(
-				(RandomizedValue<Floating>) initial_delay,
+				(SoundPlaylistContainerScope) scope,
+				(AudioPlayType) type,
+				(AudioPlayTypeSetting) type_setting,
+				(AudioPlayMode) mode,
+				(AudioPlayModeSetting) mode_setting,
+				(List<SoundPlaylistContainerPlaylistItem>) playlist,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {88}))
+		M_record_of_map(
+			M_wrap(SoundPlaylistContainerPlaybackSetting_<_>),
+			M_wrap(
+				(RandomizableValue<Floating>) initial_delay,
 				(SoundPlaylistContainerScope) scope,
 				(AudioPlayType) type,
 				(AudioPlayTypeSetting) type_setting,
@@ -3201,6 +4297,181 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using SoundPlaylistContainer = SoundPlaylistContainer_<>;
 
+		template <typename _> requires (check_version(version, {72, 88}))
+		M_record_of_map(
+			M_wrap(SoundPlaylistContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(SoundPlaylistContainerPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {88, 112}))
+		M_record_of_map(
+			M_wrap(SoundPlaylistContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(SoundPlaylistContainerPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112, 128}))
+		M_record_of_map(
+			M_wrap(SoundPlaylistContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(SoundPlaylistContainerPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(SoundMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_event,
+				(Boolean) override_midi_note_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {128, 135}))
+		M_record_of_map(
+			M_wrap(SoundPlaylistContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(SoundPlaylistContainerPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(SoundMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_event,
+				(Boolean) override_midi_note_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {135, 140}))
+		M_record_of_map(
+			M_wrap(SoundPlaylistContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(SoundPlaylistContainerPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(SoundMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_early_reflection_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_event,
+				(Boolean) override_midi_note_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
+
 		template <typename _> requires (check_version(version, {140}))
 		M_record_of_map(
 			M_wrap(SoundPlaylistContainer_<_>),
@@ -3216,13 +4487,14 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(AudioEffectSetting) effect,
 				(AudioMetadataSetting) metadata,
 				(AudioPositioningSetting) positioning,
-				(AudioRealTimeParameterControlSetting) real_time_parameter_control,
-				(AudioStateSetting) state,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
 				(AudioHDRSetting) hdr,
 				(SoundMIDISetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
 				(Boolean) override_voice_volume_loudness_normalization,
 				(Boolean) override_game_defined_auxiliary_send,
 				(Boolean) override_user_defined_auxiliary_send,
@@ -3236,6 +4508,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(Boolean) override_playback_limit,
 				(Boolean) override_virtual_voice,
 				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
 			),
 		);
 
@@ -3246,7 +4519,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using SoundSwitchContainerObjectAttributeItem = SoundSwitchContainerObjectAttributeItem_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(SoundSwitchContainerObjectAttributeItem_<_>),
 			M_wrap(
@@ -3266,7 +4539,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using SoundSwitchContainerObjectAssignItem = SoundSwitchContainerObjectAssignItem_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(SoundSwitchContainerObjectAssignItem_<_>),
 			M_wrap(
@@ -3282,11 +4555,22 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using SoundSwitchContainerPlaybackSetting = SoundSwitchContainerPlaybackSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 88}))
 		M_record_of_map(
 			M_wrap(SoundSwitchContainerPlaybackSetting_<_>),
 			M_wrap(
-				(RandomizedValue<Floating>) initial_delay,
+				(AudioPlayMode) mode,
+				(AudioSwitcherSetting) switcher,
+				(List<SoundSwitchContainerObjectAttributeItem>) object_attribute,
+				(List<SoundSwitchContainerObjectAssignItem>) object_assign,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {88}))
+		M_record_of_map(
+			M_wrap(SoundSwitchContainerPlaybackSetting_<_>),
+			M_wrap(
+				(RandomizableValue<Floating>) initial_delay,
 				(AudioPlayMode) mode,
 				(AudioSwitcherSetting) switcher,
 				(List<SoundSwitchContainerObjectAttributeItem>) object_attribute,
@@ -3300,6 +4584,181 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		struct SoundSwitchContainer_;
 
 		using SoundSwitchContainer = SoundSwitchContainer_<>;
+
+		template <typename _> requires (check_version(version, {72, 88}))
+		M_record_of_map(
+			M_wrap(SoundSwitchContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(SoundSwitchContainerPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {88, 112}))
+		M_record_of_map(
+			M_wrap(SoundSwitchContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(SoundSwitchContainerPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112, 128}))
+		M_record_of_map(
+			M_wrap(SoundSwitchContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(SoundSwitchContainerPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(SoundMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_event,
+				(Boolean) override_midi_note_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {128, 135}))
+		M_record_of_map(
+			M_wrap(SoundSwitchContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(SoundSwitchContainerPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(SoundMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_event,
+				(Boolean) override_midi_note_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {135, 140}))
+		M_record_of_map(
+			M_wrap(SoundSwitchContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(SoundSwitchContainerPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(SoundMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_early_reflection_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_event,
+				(Boolean) override_midi_note_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
 
 		template <typename _> requires (check_version(version, {140}))
 		M_record_of_map(
@@ -3316,13 +4775,14 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(AudioEffectSetting) effect,
 				(AudioMetadataSetting) metadata,
 				(AudioPositioningSetting) positioning,
-				(AudioRealTimeParameterControlSetting) real_time_parameter_control,
-				(AudioStateSetting) state,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
 				(AudioHDRSetting) hdr,
 				(SoundMIDISetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
 				(Boolean) override_voice_volume_loudness_normalization,
 				(Boolean) override_game_defined_auxiliary_send,
 				(Boolean) override_user_defined_auxiliary_send,
@@ -3336,6 +4796,23 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(Boolean) override_playback_limit,
 				(Boolean) override_virtual_voice,
 				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
+
+		// ----------------
+
+		template <typename = None>
+		struct SoundBlendContainerTrackChildItem_;
+
+		using SoundBlendContainerTrackChildItem = SoundBlendContainerTrackChildItem_<>;
+
+		template <typename _> requires (check_version(version, {72}))
+		M_record_of_map(
+			M_wrap(SoundBlendContainerTrackChildItem_<_>),
+			M_wrap(
+				(ID) id,
+				(List<CoordinatePoint>) point,
 			),
 		);
 
@@ -3346,15 +4823,14 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using SoundBlendContainerTrackItem = SoundBlendContainerTrackItem_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(SoundBlendContainerTrackItem_<_>),
 			M_wrap(
 				(ID) id,
-				(AudioRealTimeParameterControlSetting) real_time_parameter_control,
-				(ID) cross_fade,
-				(RealTimeParameterControlXAxisCategory) cross_fade_category,
-				(Integer) u1,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(Parameter) cross_fade,
+				(List<SoundBlendContainerTrackChildItem>) child,
 			),
 		);
 
@@ -3365,11 +4841,28 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using SoundBlendContainerPlaybackSetting = SoundBlendContainerPlaybackSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 88}))
 		M_record_of_map(
 			M_wrap(SoundBlendContainerPlaybackSetting_<_>),
 			M_wrap(
-				(RandomizedValue<Floating>) initial_delay,
+				(List<SoundBlendContainerTrackItem>) track,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {88, 120}))
+		M_record_of_map(
+			M_wrap(SoundBlendContainerPlaybackSetting_<_>),
+			M_wrap(
+				(RandomizableValue<Floating>) initial_delay,
+				(List<SoundBlendContainerTrackItem>) track,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {120}))
+		M_record_of_map(
+			M_wrap(SoundBlendContainerPlaybackSetting_<_>),
+			M_wrap(
+				(RandomizableValue<Floating>) initial_delay,
 				(AudioPlayMode) mode,
 				(List<SoundBlendContainerTrackItem>) track,
 			),
@@ -3381,6 +4874,181 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		struct SoundBlendContainer_;
 
 		using SoundBlendContainer = SoundBlendContainer_<>;
+
+		template <typename _> requires (check_version(version, {72, 88}))
+		M_record_of_map(
+			M_wrap(SoundBlendContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(SoundBlendContainerPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {88, 112}))
+		M_record_of_map(
+			M_wrap(SoundBlendContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(SoundBlendContainerPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112, 128}))
+		M_record_of_map(
+			M_wrap(SoundBlendContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(SoundBlendContainerPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(SoundMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_event,
+				(Boolean) override_midi_note_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {128, 135}))
+		M_record_of_map(
+			M_wrap(SoundBlendContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(SoundBlendContainerPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(SoundMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_event,
+				(Boolean) override_midi_note_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {135, 140}))
+		M_record_of_map(
+			M_wrap(SoundBlendContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(SoundBlendContainerPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(SoundMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_early_reflection_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_event,
+				(Boolean) override_midi_note_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
 
 		template <typename _> requires (check_version(version, {140}))
 		M_record_of_map(
@@ -3397,13 +5065,14 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(AudioEffectSetting) effect,
 				(AudioMetadataSetting) metadata,
 				(AudioPositioningSetting) positioning,
-				(AudioRealTimeParameterControlSetting) real_time_parameter_control,
-				(AudioStateSetting) state,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
 				(AudioHDRSetting) hdr,
 				(SoundMIDISetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
 				(Boolean) override_voice_volume_loudness_normalization,
 				(Boolean) override_game_defined_auxiliary_send,
 				(Boolean) override_user_defined_auxiliary_send,
@@ -3417,6 +5086,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(Boolean) override_playback_limit,
 				(Boolean) override_virtual_voice,
 				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
 			),
 		);
 
@@ -3427,7 +5097,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using ActorMixerPlaybackSetting = ActorMixerPlaybackSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(ActorMixerPlaybackSetting_<_>),
 			M_wrap(
@@ -3440,6 +5110,181 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		struct ActorMixer_;
 
 		using ActorMixer = ActorMixer_<>;
+
+		template <typename _> requires (check_version(version, {72, 88}))
+		M_record_of_map(
+			M_wrap(ActorMixer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(ActorMixerPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {88, 112}))
+		M_record_of_map(
+			M_wrap(ActorMixer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(ActorMixerPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112, 128}))
+		M_record_of_map(
+			M_wrap(ActorMixer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(ActorMixerPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(SoundMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_event,
+				(Boolean) override_midi_note_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {128, 135}))
+		M_record_of_map(
+			M_wrap(ActorMixer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(ActorMixerPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(SoundMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_event,
+				(Boolean) override_midi_note_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {135, 140}))
+		M_record_of_map(
+			M_wrap(ActorMixer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(ActorMixerPlaybackSetting) playback_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(SoundMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_early_reflection_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_event,
+				(Boolean) override_midi_note_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
 
 		template <typename _> requires (check_version(version, {140}))
 		M_record_of_map(
@@ -3456,13 +5301,14 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(AudioEffectSetting) effect,
 				(AudioMetadataSetting) metadata,
 				(AudioPositioningSetting) positioning,
-				(AudioRealTimeParameterControlSetting) real_time_parameter_control,
-				(AudioStateSetting) state,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
 				(AudioHDRSetting) hdr,
 				(SoundMIDISetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
 				(Boolean) override_voice_volume_loudness_normalization,
 				(Boolean) override_game_defined_auxiliary_send,
 				(Boolean) override_user_defined_auxiliary_send,
@@ -3476,6 +5322,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(Boolean) override_playback_limit,
 				(Boolean) override_virtual_voice,
 				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
 			),
 		);
 
@@ -3488,7 +5335,17 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicTrackTrackType = MusicTrackTrackType_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 112}))
+		M_enumeration(
+			M_wrap(MusicTrackTrackType_<_>),
+			M_wrap(
+				normal,
+				random_step,
+				sequence_step,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112}))
 		M_enumeration(
 			M_wrap(MusicTrackTrackType_<_>),
 			M_wrap(
@@ -3506,7 +5363,18 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicTrackClipCurveItemType = MusicTrackClipCurveItemType_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 112}))
+		M_enumeration(
+			M_wrap(MusicTrackClipCurveItemType_<_>),
+			M_wrap(
+				voice_volume,
+				voice_low_pass_filter,
+				clip_fade_in,
+				clip_fade_out,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112}))
 		M_enumeration(
 			M_wrap(MusicTrackClipCurveItemType_<_>),
 			M_wrap(
@@ -3525,13 +5393,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicTrackClipCurveItem = MusicTrackClipCurveItem_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(MusicTrackClipCurveItem_<_>),
 			M_wrap(
 				(Integer) index,
 				(MusicTrackClipCurveItemType) type,
-				(List<Point2D>) point,
+				(List<CoordinatePoint>) point,
 			),
 		);
 
@@ -3541,6 +5409,19 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		struct MusicTrackClipItem_;
 
 		using MusicTrackClipItem = MusicTrackClipItem_<>;
+
+		template <typename _> requires (check_version(version, {72, 140}))
+		M_record_of_map(
+			M_wrap(MusicTrackClipItem_<_>),
+			M_wrap(
+				(Integer) u1,
+				(ID) source,
+				(Floating) offset,
+				(Floating) begin,
+				(Floating) end,
+				(Floating) duration,
+			),
+		);
 
 		template <typename _> requires (check_version(version, {140}))
 		M_record_of_map(
@@ -3563,7 +5444,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicTrackClip = MusicTrackClip_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(MusicTrackClip_<_>),
 			M_wrap(
@@ -3580,7 +5461,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicTrackPlaybackSetting = MusicTrackPlaybackSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 112}))
+		M_record_of_map(
+			M_wrap(MusicTrackPlaybackSetting_<_>),
+			M_wrap(
+				(MusicTrackClip) clip,
+				(MusicTrackTrackType) type,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
 			M_wrap(MusicTrackPlaybackSetting_<_>),
 			M_wrap(
@@ -3598,7 +5488,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicTrackStream = MusicTrackStream_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(MusicTrackStream_<_>),
 			M_wrap(
@@ -3612,6 +5502,186 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		struct MusicTrack_;
 
 		using MusicTrack = MusicTrack_<>;
+
+		template <typename _> requires (check_version(version, {72, 88}))
+		M_record_of_map(
+			M_wrap(MusicTrack_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<AudioSourceSetting>) source,
+				(MusicTrackPlaybackSetting) playback_setting,
+				(MusicTrackStream) stream,
+				(AudioVoice) voice,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {88, 112}))
+		M_record_of_map(
+			M_wrap(MusicTrack_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<AudioSourceSetting>) source,
+				(MusicTrackPlaybackSetting) playback_setting,
+				(MusicTrackStream) stream,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112, 128}))
+		M_record_of_map(
+			M_wrap(MusicTrack_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<AudioSourceSetting>) source,
+				(MusicTrackPlaybackSetting) playback_setting,
+				(MusicTrackStream) stream,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(MusicMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_target,
+				(Boolean) override_midi_clip_tempo,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {128, 135}))
+		M_record_of_map(
+			M_wrap(MusicTrack_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<AudioSourceSetting>) source,
+				(MusicTrackPlaybackSetting) playback_setting,
+				(MusicTrackStream) stream,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(MusicMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_target,
+				(Boolean) override_midi_clip_tempo,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {135, 140}))
+		M_record_of_map(
+			M_wrap(MusicTrack_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<AudioSourceSetting>) source,
+				(MusicTrackPlaybackSetting) playback_setting,
+				(MusicTrackStream) stream,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(AudioHDRSetting) hdr,
+				(MusicMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_early_reflection_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_target,
+				(Boolean) override_midi_clip_tempo,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
 
 		template <typename _> requires (check_version(version, {140}))
 		M_record_of_map(
@@ -3629,14 +5699,14 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(AudioEffectSetting) effect,
 				(AudioMetadataSetting) metadata,
 				(AudioPositioningSetting) positioning,
-				(AudioRealTimeParameterControlSetting) real_time_parameter_control,
-				(AudioStateSetting) state,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
 				(AudioHDRSetting) hdr,
 				(MusicMIDISetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
-				(Boolean) override_time_setting,
+				(AudioMixerSetting) mixer,
 				(Boolean) override_voice_volume_loudness_normalization,
 				(Boolean) override_game_defined_auxiliary_send,
 				(Boolean) override_user_defined_auxiliary_send,
@@ -3650,6 +5720,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(Boolean) override_playback_limit,
 				(Boolean) override_virtual_voice,
 				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
 			),
 		);
 
@@ -3660,7 +5731,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicSegmentCueItem = MusicSegmentCueItem_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(MusicSegmentCueItem_<_>),
 			M_wrap(
@@ -3676,7 +5747,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicSegmentCue = MusicSegmentCue_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(MusicSegmentCue_<_>),
 			M_wrap(
@@ -3691,7 +5762,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicSegmentPlaybackSetting = MusicSegmentPlaybackSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 112}))
+		M_record_of_map(
+			M_wrap(MusicSegmentPlaybackSetting_<_>),
+			M_wrap(
+				(Floating) duration,
+				(MusicSegmentCue) cue,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
 			M_wrap(MusicSegmentPlaybackSetting_<_>),
 			M_wrap(
@@ -3707,6 +5787,196 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		struct MusicSegment_;
 
 		using MusicSegment = MusicSegment_<>;
+
+		template <typename _> requires (check_version(version, {72, 88}))
+		M_record_of_map(
+			M_wrap(MusicSegment_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(MusicSegmentPlaybackSetting) playback_setting,
+				(AudioTimeSetting) time_setting,
+				(AudioVoice) voice,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(MusicStingerSetting) stinger,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(Boolean) override_time_setting,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {88, 112}))
+		M_record_of_map(
+			M_wrap(MusicSegment_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(MusicSegmentPlaybackSetting) playback_setting,
+				(AudioTimeSetting) time_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(MusicStingerSetting) stinger,
+				(AudioHDRSetting) hdr,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(Boolean) override_time_setting,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112, 128}))
+		M_record_of_map(
+			M_wrap(MusicSegment_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(MusicSegmentPlaybackSetting) playback_setting,
+				(AudioTimeSetting) time_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(MusicStingerSetting) stinger,
+				(AudioHDRSetting) hdr,
+				(MusicMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_time_setting,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_target,
+				(Boolean) override_midi_clip_tempo,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {128, 135}))
+		M_record_of_map(
+			M_wrap(MusicSegment_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(MusicSegmentPlaybackSetting) playback_setting,
+				(AudioTimeSetting) time_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(MusicStingerSetting) stinger,
+				(AudioHDRSetting) hdr,
+				(MusicMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_time_setting,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_target,
+				(Boolean) override_midi_clip_tempo,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {135, 140}))
+		M_record_of_map(
+			M_wrap(MusicSegment_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(MusicSegmentPlaybackSetting) playback_setting,
+				(AudioTimeSetting) time_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(MusicStingerSetting) stinger,
+				(AudioHDRSetting) hdr,
+				(MusicMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_time_setting,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_early_reflection_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_target,
+				(Boolean) override_midi_clip_tempo,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
 
 		template <typename _> requires (check_version(version, {140}))
 		M_record_of_map(
@@ -3724,14 +5994,15 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(AudioEffectSetting) effect,
 				(AudioMetadataSetting) metadata,
 				(AudioPositioningSetting) positioning,
-				(AudioRealTimeParameterControlSetting) real_time_parameter_control,
-				(AudioStateSetting) state,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
 				(MusicStingerSetting) stinger,
 				(AudioHDRSetting) hdr,
 				(MusicMIDISetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
 				(Boolean) override_time_setting,
 				(Boolean) override_voice_volume_loudness_normalization,
 				(Boolean) override_game_defined_auxiliary_send,
@@ -3746,6 +6017,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(Boolean) override_playback_limit,
 				(Boolean) override_virtual_voice,
 				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
 			),
 		);
 
@@ -3756,7 +6028,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicPlaylistContainerPlaylistItem = MusicPlaylistContainerPlaylistItem_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(MusicPlaylistContainerPlaylistItem_<_>),
 			M_wrap(
@@ -3764,8 +6036,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(Boolean) group,
 				(Integer) child_count,
 				(ID) item,
-				(Optional<AudioPlayType>) play_type,
-				(Optional<AudioPlayMode>) play_mode,
+				(AudioPlayType) play_type,
+				(AudioPlayMode) play_mode,
 				(AudioPlayTypeRandomSetting) random_setting,
 				(Integer) weight,
 				(Integer) loop_count,
@@ -3779,7 +6051,15 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicPlaylistContainerPlaybackSetting = MusicPlaylistContainerPlaybackSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 112}))
+		M_record_of_map(
+			M_wrap(MusicPlaylistContainerPlaybackSetting_<_>),
+			M_wrap(
+				(List<MusicPlaylistContainerPlaylistItem>) playlist,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
 			M_wrap(MusicPlaylistContainerPlaybackSetting_<_>),
 			M_wrap(
@@ -3794,6 +6074,201 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		struct MusicPlaylistContainer_;
 
 		using MusicPlaylistContainer = MusicPlaylistContainer_<>;
+
+		template <typename _> requires (check_version(version, {72, 88}))
+		M_record_of_map(
+			M_wrap(MusicPlaylistContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(MusicPlaylistContainerPlaybackSetting) playback_setting,
+				(AudioTimeSetting) time_setting,
+				(AudioVoice) voice,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(MusicTransitionSetting) transition,
+				(MusicStingerSetting) stinger,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(Boolean) override_time_setting,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {88, 112}))
+		M_record_of_map(
+			M_wrap(MusicPlaylistContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(MusicPlaylistContainerPlaybackSetting) playback_setting,
+				(AudioTimeSetting) time_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(MusicTransitionSetting) transition,
+				(MusicStingerSetting) stinger,
+				(AudioHDRSetting) hdr,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(Boolean) override_time_setting,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112, 128}))
+		M_record_of_map(
+			M_wrap(MusicPlaylistContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(MusicPlaylistContainerPlaybackSetting) playback_setting,
+				(AudioTimeSetting) time_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(MusicTransitionSetting) transition,
+				(MusicStingerSetting) stinger,
+				(AudioHDRSetting) hdr,
+				(MusicMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_time_setting,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_target,
+				(Boolean) override_midi_clip_tempo,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {128, 135}))
+		M_record_of_map(
+			M_wrap(MusicPlaylistContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(MusicPlaylistContainerPlaybackSetting) playback_setting,
+				(AudioTimeSetting) time_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(MusicTransitionSetting) transition,
+				(MusicStingerSetting) stinger,
+				(AudioHDRSetting) hdr,
+				(MusicMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_time_setting,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_target,
+				(Boolean) override_midi_clip_tempo,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {135, 140}))
+		M_record_of_map(
+			M_wrap(MusicPlaylistContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(MusicPlaylistContainerPlaybackSetting) playback_setting,
+				(AudioTimeSetting) time_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(MusicTransitionSetting) transition,
+				(MusicStingerSetting) stinger,
+				(AudioHDRSetting) hdr,
+				(MusicMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_time_setting,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_early_reflection_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_target,
+				(Boolean) override_midi_clip_tempo,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
 
 		template <typename _> requires (check_version(version, {140}))
 		M_record_of_map(
@@ -3811,8 +6286,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(AudioEffectSetting) effect,
 				(AudioMetadataSetting) metadata,
 				(AudioPositioningSetting) positioning,
-				(AudioRealTimeParameterControlSetting) real_time_parameter_control,
-				(AudioStateSetting) state,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
 				(MusicTransitionSetting) transition,
 				(MusicStingerSetting) stinger,
 				(AudioHDRSetting) hdr,
@@ -3820,6 +6295,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
 				(Boolean) override_time_setting,
 				(Boolean) override_voice_volume_loudness_normalization,
 				(Boolean) override_game_defined_auxiliary_send,
@@ -3834,6 +6310,23 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(Boolean) override_playback_limit,
 				(Boolean) override_virtual_voice,
 				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
+
+		// ----------------
+
+		template <typename = None>
+		struct MusicSwitchContainerAssociationItem_;
+
+		using MusicSwitchContainerAssociationItem = MusicSwitchContainerAssociationItem_<>;
+
+		template <typename _> requires (check_version(version, {72, 88}))
+		M_record_of_map(
+			M_wrap(MusicSwitchContainerAssociationItem_<_>),
+			M_wrap(
+				(ID) item,
+				(ID) child,
 			),
 		);
 
@@ -3844,13 +6337,23 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using MusicSwitchContainerPlaybackSetting = MusicSwitchContainerPlaybackSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 88}))
+		M_record_of_map(
+			M_wrap(MusicSwitchContainerPlaybackSetting_<_>),
+			M_wrap(
+				(Boolean) continue_playing_on_switch_change,
+				(AudioSwitcherSetting) switcher,
+				(List<MusicSwitchContainerAssociationItem>) association,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {88}))
 		M_record_of_map(
 			M_wrap(MusicSwitchContainerPlaybackSetting_<_>),
 			M_wrap(
 				(RegularValue<Floating>) speed,
 				(Boolean) continue_playing_on_switch_change,
-				(AudioSwitcherAssociationSetting) switcher_association,
+				(AudioAssociationSetting) association,
 			),
 		);
 
@@ -3860,6 +6363,201 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		struct MusicSwitchContainer_;
 
 		using MusicSwitchContainer = MusicSwitchContainer_<>;
+
+		template <typename _> requires (check_version(version, {72, 88}))
+		M_record_of_map(
+			M_wrap(MusicSwitchContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(MusicSwitchContainerPlaybackSetting) playback_setting,
+				(AudioTimeSetting) time_setting,
+				(AudioVoice) voice,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(MusicTransitionSetting) transition,
+				(MusicStingerSetting) stinger,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(Boolean) override_time_setting,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {88, 112}))
+		M_record_of_map(
+			M_wrap(MusicSwitchContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(MusicSwitchContainerPlaybackSetting) playback_setting,
+				(AudioTimeSetting) time_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(MusicTransitionSetting) transition,
+				(MusicStingerSetting) stinger,
+				(AudioHDRSetting) hdr,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(Boolean) override_time_setting,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112, 128}))
+		M_record_of_map(
+			M_wrap(MusicSwitchContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(MusicSwitchContainerPlaybackSetting) playback_setting,
+				(AudioTimeSetting) time_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(MusicTransitionSetting) transition,
+				(MusicStingerSetting) stinger,
+				(AudioHDRSetting) hdr,
+				(MusicMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMotionSetting) motion,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_time_setting,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_target,
+				(Boolean) override_midi_clip_tempo,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {128, 135}))
+		M_record_of_map(
+			M_wrap(MusicSwitchContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(MusicSwitchContainerPlaybackSetting) playback_setting,
+				(AudioTimeSetting) time_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(MusicTransitionSetting) transition,
+				(MusicStingerSetting) stinger,
+				(AudioHDRSetting) hdr,
+				(MusicMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_time_setting,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_target,
+				(Boolean) override_midi_clip_tempo,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {135, 140}))
+		M_record_of_map(
+			M_wrap(MusicSwitchContainer_<_>),
+			M_wrap(
+				(ID) id,
+				(ID) parent,
+				(List<ID>) child,
+				(MusicSwitchContainerPlaybackSetting) playback_setting,
+				(AudioTimeSetting) time_setting,
+				(AudioVoice) voice,
+				(AudioVoiceVolumeGainSetting) voice_volume_gain,
+				(AudioOutputBusSetting) output_bus,
+				(AudioAuxiliarySendSetting) auxiliary_send,
+				(AudioEffectSetting) effect,
+				(AudioPositioningSetting) positioning,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
+				(MusicTransitionSetting) transition,
+				(MusicStingerSetting) stinger,
+				(AudioHDRSetting) hdr,
+				(MusicMIDISetting) midi,
+				(AudioPlaybackLimitSetting) playback_limit,
+				(AudioVirtualVoiceSetting) virtual_voice,
+				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
+				(Boolean) override_time_setting,
+				(Boolean) override_voice_volume_loudness_normalization,
+				(Boolean) override_game_defined_auxiliary_send,
+				(Boolean) override_user_defined_auxiliary_send,
+				(Boolean) override_early_reflection_auxiliary_send,
+				(Boolean) override_effect,
+				(Boolean) override_positioning,
+				(Boolean) override_hdr_envelope_tracking,
+				(Boolean) override_midi_target,
+				(Boolean) override_midi_clip_tempo,
+				(Boolean) override_playback_limit,
+				(Boolean) override_virtual_voice,
+				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
+			),
+		);
 
 		template <typename _> requires (check_version(version, {140}))
 		M_record_of_map(
@@ -3877,8 +6575,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(AudioEffectSetting) effect,
 				(AudioMetadataSetting) metadata,
 				(AudioPositioningSetting) positioning,
-				(AudioRealTimeParameterControlSetting) real_time_parameter_control,
-				(AudioStateSetting) state,
+				(RealTimeParameterControlSetting) real_time_parameter_control,
+				(StateSetting) state,
 				(MusicTransitionSetting) transition,
 				(MusicStingerSetting) stinger,
 				(AudioHDRSetting) hdr,
@@ -3886,6 +6584,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
+				(AudioMixerSetting) mixer,
 				(Boolean) override_time_setting,
 				(Boolean) override_voice_volume_loudness_normalization,
 				(Boolean) override_game_defined_auxiliary_send,
@@ -3900,6 +6599,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(Boolean) override_playback_limit,
 				(Boolean) override_virtual_voice,
 				(Boolean) override_playback_priority,
+				(Boolean) override_mixer,
 			),
 		);
 
@@ -3912,22 +6612,95 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using HierarchyType = HierarchyType_<>;
 
-		template <typename _> requires (check_version(version, {88, 112}))
+		template <typename _> requires (check_version(version, {72, 112}))
 		M_enumeration(
 			M_wrap(HierarchyType_<_>),
 			M_wrap(
 				unknown,
+				stateful_property_setting,
+				event_action,
+				event,
+				dialogue_event,
+				attenuation,
+				effect,
+				source,
+				audio_bus,
+				auxiliary_audio_bus,
+				sound,
+				sound_playlist_container,
+				sound_switch_container,
+				sound_blend_container,
+				actor_mixer,
+				music_track,
+				music_segment,
+				music_playlist_container,
+				music_switch_container,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {112, 128}))
 		M_enumeration(
 			M_wrap(HierarchyType_<_>),
 			M_wrap(
 				unknown,
-				source_plug_in_reference,
-				unknown_plug_in_reference,
-				stateful_audio_property_setting,
+				stateful_property_setting,
+				event_action,
+				event,
+				dialogue_event,
+				attenuation,
+				low_frequency_oscillator_modulator,
+				envelope_modulator,
+				effect,
+				source,
+				audio_bus,
+				auxiliary_audio_bus,
+				sound,
+				sound_playlist_container,
+				sound_switch_container,
+				sound_blend_container,
+				actor_mixer,
+				music_track,
+				music_segment,
+				music_playlist_container,
+				music_switch_container,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {128, 132}))
+		M_enumeration(
+			M_wrap(HierarchyType_<_>),
+			M_wrap(
+				unknown,
+				stateful_property_setting,
+				event_action,
+				event,
+				dialogue_event,
+				attenuation,
+				low_frequency_oscillator_modulator,
+				envelope_modulator,
+				effect,
+				source,
+				audio_device,
+				audio_bus,
+				auxiliary_audio_bus,
+				sound,
+				sound_playlist_container,
+				sound_switch_container,
+				sound_blend_container,
+				actor_mixer,
+				music_track,
+				music_segment,
+				music_playlist_container,
+				music_switch_container,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {132}))
+		M_enumeration(
+			M_wrap(HierarchyType_<_>),
+			M_wrap(
+				unknown,
+				stateful_property_setting,
 				event_action,
 				event,
 				dialogue_event,
@@ -3935,6 +6708,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				low_frequency_oscillator_modulator,
 				envelope_modulator,
 				time_modulator,
+				effect,
+				source,
 				audio_device,
 				audio_bus,
 				auxiliary_audio_bus,
@@ -3953,20 +6728,91 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		// ----------------
 
 		using Hierarchy = decltype([] {
-			if constexpr (check_version(version, {88, 112})) {
-				using Type = EnumerableVariant<
-					HierarchyType,
-					UnknownHierarchy
-				>;
-				return declare<Type>();
-			}
-			if constexpr (check_version(version, {140})) {
+			if constexpr (check_version(version, {72, 112})) {
 				using Type = EnumerableVariant<
 					HierarchyType,
 					UnknownHierarchy,
-					SourcePlugInReference,
-					UnknownPlugInReference,
-					StatefulAudioPropertySetting,
+					StatefulPropertySetting,
+					EventAction,
+					Event,
+					DialogueEvent,
+					Attenuation,
+					Effect,
+					Source,
+					AudioBus,
+					AuxiliaryAudioBus,
+					Sound,
+					SoundPlaylistContainer,
+					SoundSwitchContainer,
+					SoundBlendContainer,
+					ActorMixer,
+					MusicTrack,
+					MusicSegment,
+					MusicPlaylistContainer,
+					MusicSwitchContainer
+				>;
+				return declare<Type>();
+			}
+			if constexpr (check_version(version, {112, 128})) {
+				using Type = EnumerableVariant<
+					HierarchyType,
+					UnknownHierarchy,
+					StatefulPropertySetting,
+					EventAction,
+					Event,
+					DialogueEvent,
+					Attenuation,
+					LowFrequencyOscillatorModulator,
+					EnvelopeModulator,
+					Effect,
+					Source,
+					AudioBus,
+					AuxiliaryAudioBus,
+					Sound,
+					SoundPlaylistContainer,
+					SoundSwitchContainer,
+					SoundBlendContainer,
+					ActorMixer,
+					MusicTrack,
+					MusicSegment,
+					MusicPlaylistContainer,
+					MusicSwitchContainer
+				>;
+				return declare<Type>();
+			}
+			if constexpr (check_version(version, {128, 132})) {
+				using Type = EnumerableVariant<
+					HierarchyType,
+					UnknownHierarchy,
+					StatefulPropertySetting,
+					EventAction,
+					Event,
+					DialogueEvent,
+					Attenuation,
+					LowFrequencyOscillatorModulator,
+					EnvelopeModulator,
+					Effect,
+					Source,
+					AudioDevice,
+					AudioBus,
+					AuxiliaryAudioBus,
+					Sound,
+					SoundPlaylistContainer,
+					SoundSwitchContainer,
+					SoundBlendContainer,
+					ActorMixer,
+					MusicTrack,
+					MusicSegment,
+					MusicPlaylistContainer,
+					MusicSwitchContainer
+				>;
+				return declare<Type>();
+			}
+			if constexpr (check_version(version, {132})) {
+				using Type = EnumerableVariant<
+					HierarchyType,
+					UnknownHierarchy,
+					StatefulPropertySetting,
 					EventAction,
 					Event,
 					DialogueEvent,
@@ -3974,6 +6820,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					LowFrequencyOscillatorModulator,
 					EnvelopeModulator,
 					TimeModulator,
+					Effect,
+					Source,
 					AudioDevice,
 					AudioBus,
 					AuxiliaryAudioBus,
@@ -3993,38 +6841,54 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		#pragma endregion
 
-		#pragma region game synchronization
+		#pragma region reference
 
 		template <typename = None>
-		struct GameSynchronizationU1_;
+		struct SoundBankReference_;
 
-		using GameSynchronizationU1 = GameSynchronizationU1_<>;
+		using SoundBankReference = SoundBankReference_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
-			M_wrap(GameSynchronizationU1_<_>),
+			M_wrap(SoundBankReference_<_>),
 			M_wrap(
 				(ID) id,
-				(Floating) u1,
-				(Floating) u2,
-				(Floating) u3,
-				(Floating) u4,
-				(Floating) u5,
-				(Floating) u6,
+				(String) name,
 			),
 		);
 
 		// ----------------
 
 		template <typename = None>
+		struct PlugInReference_;
+
+		using PlugInReference = PlugInReference_<>;
+
+		template <typename _> requires (check_version(version, {118}))
+		M_record_of_map(
+			M_wrap(PlugInReference_<_>),
+			M_wrap(
+				(ID) id,
+				(String) library,
+			),
+		);
+
+		#pragma endregion
+
+		#pragma region game synchronization
+
+		template <typename = None>
 		struct GameSynchronization_;
 
 		using GameSynchronization = GameSynchronization_<>;
 
-		template <typename _> requires (check_version(version, {88, 112}))
+		template <typename _> requires (check_version(version, {72, 140}))
 		M_record_of_map(
 			M_wrap(GameSynchronization_<_>),
 			M_wrap(
+				(List<StateGroup>) state_group,
+				(List<SwitchGroup>) switch_group,
+				(List<GameParameter>) game_parameter,
 			),
 		);
 
@@ -4044,16 +6908,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		#pragma region setting
 
 		template <typename = None>
-		struct PlugIn_;
+		struct VoiceFilterBehavior_;
 
-		using PlugIn = PlugIn_<>;
+		using VoiceFilterBehavior = VoiceFilterBehavior_<>;
 
-		template <typename _> requires (check_version(version, {140}))
-		M_record_of_map(
-			M_wrap(PlugIn_<_>),
+		template <typename _> requires (check_version(version, {145}))
+		M_enumeration(
+			M_wrap(VoiceFilterBehavior_<_>),
 			M_wrap(
-				(PlugInID) id,
-				(String) name,
+				sum_all_value,
+				use_highest_value,
 			),
 		);
 
@@ -4064,13 +6928,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using ObstructionSetting = ObstructionSetting_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(ObstructionSetting_<_>),
 			M_wrap(
 				(Boolean) enable,
-				(Integer) u1,
-				(List<Point2D>) point,
+				(CoordinateMode) mode,
+				(List<CoordinatePoint>) point,
 			),
 		);
 
@@ -4081,7 +6945,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using ObstructionSettingBundle = ObstructionSettingBundle_<>;
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {72, 112}))
+		M_record_of_map(
+			M_wrap(ObstructionSettingBundle_<_>),
+			M_wrap(
+				(ObstructionSetting) volume,
+				(ObstructionSetting) low_pass_filter,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
 			M_wrap(ObstructionSettingBundle_<_>),
 			M_wrap(
@@ -4098,41 +6971,53 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using Setting = Setting_<>;
 
-		template <typename _> requires (check_version(version, {88, 112}))
+		template <typename _> requires (check_version(version, {72, 113}))
 		M_record_of_map(
 			M_wrap(Setting_<_>),
 			M_wrap(
+				(Floating) volume_threshold,
+				(Integer) maximum_voice_instance,
+				(ObstructionSettingBundle) obstruction,
+				(ObstructionSettingBundle) occlusion,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {113, 118}))
 		M_record_of_map(
 			M_wrap(Setting_<_>),
 			M_wrap(
 				(String) platform,
 				(Floating) volume_threshold,
 				(Integer) maximum_voice_instance,
-				(List<PlugIn>) plug_in,
 				(ObstructionSettingBundle) obstruction,
 				(ObstructionSettingBundle) occlusion,
 			),
 		);
 
-		#pragma endregion
-
-		#pragma region reference
-
-		template <typename = None>
-		struct Reference_;
-
-		using Reference = Reference_<>;
-
-		template <typename _> requires (check_version(version, {88, 112, 140}))
+		template <typename _> requires (check_version(version, {118, 145}))
 		M_record_of_map(
-			M_wrap(Reference_<_>),
+			M_wrap(Setting_<_>),
 			M_wrap(
-				(ID) id,
-				(String) name,
+				(String) platform,
+				(Floating) volume_threshold,
+				(Integer) maximum_voice_instance,
+				(ObstructionSettingBundle) obstruction,
+				(ObstructionSettingBundle) occlusion,
+				(List<PlugInReference>) plug_in,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {145}))
+		M_record_of_map(
+			M_wrap(Setting_<_>),
+			M_wrap(
+				(String) platform,
+				(VoiceFilterBehavior) voice_filter_behavior,
+				(Floating) volume_threshold,
+				(Integer) maximum_voice_instance,
+				(ObstructionSettingBundle) obstruction,
+				(ObstructionSettingBundle) occlusion,
+				(List<PlugInReference>) plug_in,
 			),
 		);
 
@@ -4145,30 +7030,15 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		using SoundBank = SoundBank_<>;
 
-		template <typename _> requires (check_version(version, {88, 112}))
+		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
 			M_wrap(SoundBank_<_>),
 			M_wrap(
 				(ID) id,
 				(ID) language,
 				(ByteList) header_expand,
-				(List<Reference>) reference,
-				(List<ID>) embedded_audio,
-				(Optional<Setting>) setting,
-				(Optional<GameSynchronization>) game_synchronization,
-				(List<Hierarchy>) hierarchy,
-			),
-		);
-
-		template <typename _> requires (check_version(version, {140}))
-		M_record_of_map(
-			M_wrap(SoundBank_<_>),
-			M_wrap(
-				(ID) id,
-				(ID) language,
-				(ByteList) header_expand,
-				(List<Reference>) reference,
-				(List<ID>) embedded_audio,
+				(List<ID>) embedded_media,
+				(List<SoundBankReference>) reference,
 				(Optional<Setting>) setting,
 				(Optional<GameSynchronization>) game_synchronization,
 				(List<Hierarchy>) hierarchy,

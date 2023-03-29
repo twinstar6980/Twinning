@@ -26,7 +26,7 @@ namespace TwinStar::Core::Tool::PopCap::Package {
 	) -> ZBoolean {
 		auto result = true;
 		result &= VersionPackage::has(it);
-		result &= (number.size() == 0 || Range::has(number, it.number.value));
+		result &= (number.size() < 1 || *(number.begin() + 0) <= it.number.value) && (number.size() < 2 || *(number.begin() + 1) > it.number.value);
 		result &= (compress_resource_data.size() == 0 || Range::has(compress_resource_data, it.compress_resource_data.value));
 		return result;
 	}

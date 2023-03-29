@@ -32,7 +32,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				}) {
 					let manifest_file: string;
 					let data_file: string;
-					let version_number: [1n, 2n, 3n, 4n, 5n, 6n][number];
+					let version_number: bigint;
 					let buffer_size: bigint;
 					{
 						manifest_file = Executor.require_argument(
@@ -54,7 +54,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, null, [1n, ''], [2n, ''], [3n, ''], [4n, ''], [5n, ''], [6n, '']], null)),
-							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : los(`版本不受支持`)),
+							(value) => (CoreX.Tool.PopCap.Animation.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
@@ -65,7 +65,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							(value) => (null),
 						);
 					}
-					CoreX.Tool.PopCap.Animation.encode_fs(data_file, manifest_file, { number: version_number }, buffer_size);
+					CoreX.Tool.PopCap.Animation.encode_fs(data_file, manifest_file, { number: version_number as any }, buffer_size);
 					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
@@ -91,7 +91,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				}) {
 					let data_file: string;
 					let manifest_file: string;
-					let version_number: [1n, 2n, 3n, 4n, 5n, 6n][number];
+					let version_number: bigint;
 					{
 						data_file = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'data_file'),
@@ -112,10 +112,10 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, null, [1n, ''], [2n, ''], [3n, ''], [4n, ''], [5n, ''], [6n, '']], null)),
-							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : los(`版本不受支持`)),
+							(value) => (CoreX.Tool.PopCap.Animation.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 					}
-					CoreX.Tool.PopCap.Animation.decode_fs(data_file, manifest_file, { number: version_number });
+					CoreX.Tool.PopCap.Animation.decode_fs(data_file, manifest_file, { number: version_number as any });
 					Console.notify('s', los(`执行成功`), [`${manifest_file}`]);
 				},
 				default_argument: {
@@ -298,7 +298,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				}) {
 					let manifest_file_directory: string;
 					let data_file_directory: string;
-					let version_number: [1n, 2n, 3n, 4n, 5n, 6n][number];
+					let version_number: bigint;
 					let buffer_size: bigint;
 					{
 						manifest_file_directory = Executor.require_argument(
@@ -320,7 +320,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, null, [1n, ''], [2n, ''], [3n, ''], [4n, ''], [5n, ''], [6n, '']], null)),
-							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : los(`版本不受支持`)),
+							(value) => (CoreX.Tool.PopCap.Animation.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
@@ -338,7 +338,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 						(item) => {
 							let manifest_file = `${manifest_file_directory}/${item}`;
 							let data_file = `${data_file_directory}/${item.slice(0, -5)}`;
-							CoreX.Tool.PopCap.Animation.encode_fs(data_file, manifest_file, { number: version_number }, data_buffer.view());
+							CoreX.Tool.PopCap.Animation.encode_fs(data_file, manifest_file, { number: version_number as any }, data_buffer.view());
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${data_file_directory}`]);
@@ -366,7 +366,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				}) {
 					let data_file_directory: string;
 					let manifest_file_directory: string;
-					let version_number: [1n, 2n, 3n, 4n, 5n, 6n][number];
+					let version_number: bigint;
 					{
 						data_file_directory = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'data_file_directory'),
@@ -387,7 +387,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, null, [1n, ''], [2n, ''], [3n, ''], [4n, ''], [5n, ''], [6n, '']], null)),
-							(value) => ([1n, 2n, 3n, 4n, 5n, 6n].includes(value) ? null : los(`版本不受支持`)),
+							(value) => (CoreX.Tool.PopCap.Animation.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 					}
 					simple_batch_execute(
@@ -396,7 +396,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 						(item) => {
 							let data_file = `${data_file_directory}/${item}`;
 							let manifest_file = `${manifest_file_directory}/${item}.json`;
-							CoreX.Tool.PopCap.Animation.decode_fs(data_file, manifest_file, { number: version_number });
+							CoreX.Tool.PopCap.Animation.decode_fs(data_file, manifest_file, { number: version_number as any });
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${manifest_file_directory}`]);

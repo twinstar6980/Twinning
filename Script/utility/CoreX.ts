@@ -1250,6 +1250,10 @@ namespace TwinStar.Script.CoreX {
 
 			export namespace SoundBank {
 
+				export const VersionNumberE = [72n, 88n, 112n, 113n, 118n, 120n, 125n, 128n, 132n, 134n, 135n, 140n, 145n] as const;
+
+				export type VersionNumber = typeof VersionNumberE[number];
+
 				// TODO
 				export function detect_version(
 					data: ArrayBuffer,
@@ -1266,7 +1270,7 @@ namespace TwinStar.Script.CoreX {
 				export function encode_fs(
 					data_file: string,
 					manifest_file: string,
-					embedded_audio_directory: string,
+					embedded_media_directory: string,
 					version: typeof Core.Tool.Wwise.SoundBank.Version.Value,
 					data_buffer: Core.ByteListView | bigint,
 				): void {
@@ -1275,7 +1279,7 @@ namespace TwinStar.Script.CoreX {
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
 					let stream = Core.ByteStreamView.watch(data_buffer_view);
 					let manifest = Core.Tool.Wwise.SoundBank.Manifest.SoundBank.json(JSON.read_fs(manifest_file), version_c);
-					Core.Tool.Wwise.SoundBank.Encode.process_sound_bank(stream, manifest, Core.Path.value(embedded_audio_directory), version_c);
+					Core.Tool.Wwise.SoundBank.Encode.process_sound_bank(stream, manifest, Core.Path.value(embedded_media_directory), version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
 					return;
 				}
@@ -1283,14 +1287,14 @@ namespace TwinStar.Script.CoreX {
 				export function decode_fs(
 					data_file: string,
 					manifest_file: null | string,
-					embedded_audio_directory: null | string,
+					embedded_media_directory: null | string,
 					version: typeof Core.Tool.Wwise.SoundBank.Version.Value,
 				): void {
 					let version_c = Core.Tool.Wwise.SoundBank.Version.value(version);
 					let data = FileSystem.read_file(data_file);
 					let stream = Core.ByteStreamView.watch(data.view());
 					let manifest = Core.Tool.Wwise.SoundBank.Manifest.SoundBank.default();
-					Core.Tool.Wwise.SoundBank.Decode.process_sound_bank(stream, manifest, Core.PathOptional.value(embedded_audio_directory), version_c);
+					Core.Tool.Wwise.SoundBank.Decode.process_sound_bank(stream, manifest, Core.PathOptional.value(embedded_media_directory), version_c);
 					if (manifest_file !== null) {
 						JSON.write_fs(manifest_file, manifest.get_json(version_c));
 					}
@@ -1304,6 +1308,10 @@ namespace TwinStar.Script.CoreX {
 		export namespace Marmalade {
 
 			export namespace DZip {
+
+				export const VersionNumberE = [70n] as const;
+
+				export type VersionNumber = typeof VersionNumberE[number];
 
 				export function pack_fs(
 					data_file: string,
@@ -1346,6 +1354,10 @@ namespace TwinStar.Script.CoreX {
 		export namespace PopCap {
 
 			export namespace ZLib {
+
+				export const VersionVariant64E = [false, true] as const;
+
+				export type VersionVariant64 = typeof VersionVariant64E[number];
 
 				export function compress_fs(
 					raw_file: string,
@@ -1431,6 +1443,14 @@ namespace TwinStar.Script.CoreX {
 			}
 
 			export namespace ReflectionObjectNotation {
+
+				export const VersionNumberE = [1n] as const;
+
+				export type VersionNumber = typeof VersionNumberE[number];
+
+				export const VersionNativeStringEncodingUseUTF8E = [false, true] as const;
+
+				export type VersionNativeStringEncodingUseUTF8 = typeof VersionNativeStringEncodingUseUTF8E[number];
 
 				export function encode_fs(
 					data_file: string,
@@ -1546,6 +1566,10 @@ namespace TwinStar.Script.CoreX {
 
 			export namespace UTexture {
 
+				export const VersionCompressTextureDataE = [false, true] as const;
+
+				export type VersionCompressTextureData = typeof VersionCompressTextureDataE[number];
+
 				export const FormatE = [
 					'rgba_8888_o',
 					'rgba_4444',
@@ -1554,8 +1578,6 @@ namespace TwinStar.Script.CoreX {
 				] as const;
 
 				export type Format = typeof FormatE[number];
-
-				// ------------------------------------------------
 
 				export function encode_fs(
 					data_file: string,
@@ -1596,6 +1618,10 @@ namespace TwinStar.Script.CoreX {
 
 			export namespace SexyTexture {
 
+				export const VersionNumberE = [0n] as const;
+
+				export type VersionNumber = typeof VersionNumberE[number];
+
 				export const FormatE = [
 					'argb_8888',
 					'argb_4444',
@@ -1609,8 +1635,6 @@ namespace TwinStar.Script.CoreX {
 				] as const;
 
 				export type Format = typeof FormatE[number];
-
-				// ------------------------------------------------
 
 				export function encode_fs(
 					data_file: string,
@@ -1652,6 +1676,10 @@ namespace TwinStar.Script.CoreX {
 
 			export namespace Animation {
 
+				export const VersionNumberE = [1n, 2n, 3n, 4n, 5n, 6n] as const;
+
+				export type VersionNumber = typeof VersionNumberE[number];
+
 				export function encode_fs(
 					data_file: string,
 					manifest_file: string,
@@ -1685,6 +1713,14 @@ namespace TwinStar.Script.CoreX {
 			}
 
 			export namespace ReAnimation {
+
+				export const VersionPlatformE = ['desktop', 'mobile', 'television'] as const;
+
+				export type VersionPlatform4 = typeof VersionPlatformE[number];
+
+				export const VersionVariant64E = [false, true] as const;
+
+				export type VersionVariant64 = typeof VersionVariant64E[number];
 
 				export function encode_fs(
 					data_file: string,
@@ -1720,6 +1756,14 @@ namespace TwinStar.Script.CoreX {
 
 			export namespace Particle {
 
+				export const VersionPlatformE = ['desktop', 'mobile', 'television'] as const;
+
+				export type VersionPlatform4 = typeof VersionPlatformE[number];
+
+				export const VersionVariant64E = [false, true] as const;
+
+				export type VersionVariant64 = typeof VersionVariant64E[number];
+
 				export function encode_fs(
 					data_file: string,
 					manifest_file: string,
@@ -1754,6 +1798,14 @@ namespace TwinStar.Script.CoreX {
 
 			export namespace Trail {
 
+				export const VersionPlatformE = ['desktop', 'mobile', 'television'] as const;
+
+				export type VersionPlatform4 = typeof VersionPlatformE[number];
+
+				export const VersionVariant64E = [false, true] as const;
+
+				export type VersionVariant64 = typeof VersionVariant64E[number];
+
 				export function encode_fs(
 					data_file: string,
 					manifest_file: string,
@@ -1787,6 +1839,10 @@ namespace TwinStar.Script.CoreX {
 			}
 
 			export namespace Effect {
+
+				export const VersionNumberE = [1n] as const;
+
+				export type VersionNumber = typeof VersionNumberE[number];
 
 				export function encode_fs(
 					data_file: string,
@@ -1856,6 +1912,14 @@ namespace TwinStar.Script.CoreX {
 
 			export namespace Package {
 
+				export const VersionNumberE = [0n] as const;
+
+				export type VersionNumber = typeof VersionNumberE[number];
+
+				export const VersionCompressResourceDataE = [false, true] as const;
+
+				export type VersionCompressResourceData = typeof VersionCompressResourceDataE[number];
+
 				export function pack_fs(
 					data_file: string,
 					manifest_file: string,
@@ -1894,6 +1958,10 @@ namespace TwinStar.Script.CoreX {
 
 			export namespace ResourceStreamGroup {
 
+				export const VersionNumberE = [3n, 4n] as const;
+
+				export type VersionNumber = typeof VersionNumberE[number];
+
 				export function pack_fs(
 					data_file: string,
 					manifest_file: string,
@@ -1931,6 +1999,14 @@ namespace TwinStar.Script.CoreX {
 			}
 
 			export namespace ResourceStreamBundle {
+
+				export const VersionNumberE = [3n, 4n] as const;
+
+				export type VersionNumber = typeof VersionNumberE[number];
+
+				export const VersionaAditionalTextureInformationForPVZ2ChineseAndroidE = [0n, 1n, 2n] as const;
+
+				export type VersionaAditionalTextureInformationForPVZ2ChineseAndroid = typeof VersionaAditionalTextureInformationForPVZ2ChineseAndroidE[number];
 
 				export function pack_fs(
 					data_file: string,
@@ -1979,6 +2055,10 @@ namespace TwinStar.Script.CoreX {
 			}
 
 			export namespace ResourceStreamBundlePatch {
+
+				export const VersionNumberE = [1n] as const;
+
+				export type VersionNumber = typeof VersionNumberE[number];
 
 				export function encode_fs(
 					before_file: string,

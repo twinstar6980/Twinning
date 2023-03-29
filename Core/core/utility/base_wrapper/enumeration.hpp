@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/utility/base_wrapper/base.hpp"
-#include "core/utility/base_wrapper/number.hpp"
+#include "core/utility/base_wrapper/enumerated.hpp"
 
 namespace TwinStar::Core {
 
@@ -11,17 +11,17 @@ namespace TwinStar::Core {
 		CategoryConstraint<IsPureInstance<TValue>>
 		&& (IsBaseWrapperValue<TValue>)
 	class EnumerationWrapper :
-		public BaseWrapper<TValue> {
+		public EnumeratedWrapper<TValue> {
 
 	private:
 
-		using BaseWrapper = BaseWrapper<TValue>;
+		using EnumeratedWrapper = EnumeratedWrapper<TValue>;
 
 	public:
 
-		using typename BaseWrapper::Value;
+		using typename EnumeratedWrapper::Value;
 
-		using Underlying = IntegerWrapper<std::underlying_type_t<Value>>;
+		using Underlying = Core::EnumeratedWrapper<std::underlying_type_t<Value>>;
 
 	public:
 
@@ -45,7 +45,7 @@ namespace TwinStar::Core {
 
 		// ----------------
 
-		using BaseWrapper::BaseWrapper;
+		using EnumeratedWrapper::EnumeratedWrapper;
 
 		#pragma endregion
 
@@ -91,20 +91,6 @@ namespace TwinStar::Core {
 
 	#pragma endregion
 
-	#pragma region operator
-
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsEnumerationWrapper<It>)
-	inline constexpr auto operator == (
-		It const & thix,
-		It const & that
-	) -> bool {
-		return thix.value == that.value;
-	}
-
-	#pragma endregion
-
 	#pragma region alias
 
 	template <typename Value> requires
@@ -131,7 +117,7 @@ namespace TwinStar::Core {
 
 #define M_enumeration(_type, _name, _)\
 	struct _type :\
-		Enumeration<decltype([]{\
+		EnumerationWrapper<decltype([]{\
 			enum class Type : ZIntegerU8 {\
 				M_map(M_enumeration_item, _name)\
 			};\

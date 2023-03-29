@@ -34,7 +34,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 					let after_file: string;
 					let patch_file: string;
 					let use_raw_packet: boolean;
-					let version_number: [1n][number];
+					let version_number: bigint;
 					let buffer_size: bigint;
 					{
 						before_file = Executor.require_argument(
@@ -71,7 +71,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, null, [1n, '']], null)),
-							(value) => ([1n].includes(value) ? null : los(`版本不受支持`)),
+							(value) => (CoreX.Tool.PopCap.ResourceStreamBundlePatch.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
@@ -82,7 +82,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 							(value) => (null),
 						);
 					}
-					CoreX.Tool.PopCap.ResourceStreamBundlePatch.encode_fs(before_file, after_file, patch_file, use_raw_packet, { number: version_number }, buffer_size);
+					CoreX.Tool.PopCap.ResourceStreamBundlePatch.encode_fs(before_file, after_file, patch_file, use_raw_packet, { number: version_number as any }, buffer_size);
 					Console.notify('s', los(`执行成功`), [`${patch_file}`]);
 				},
 				default_argument: {
@@ -115,7 +115,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 					let patch_file: string;
 					let after_file: string;
 					let use_raw_packet: boolean;
-					let version_number: [1n][number];
+					let version_number: bigint;
 					let buffer_size: bigint;
 					{
 						before_file = Executor.require_argument(
@@ -152,7 +152,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, null, [1n, '']], null)),
-							(value) => ([1n].includes(value) ? null : los(`版本不受支持`)),
+							(value) => (CoreX.Tool.PopCap.ResourceStreamBundlePatch.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
@@ -163,7 +163,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 							(value) => (null),
 						);
 					}
-					CoreX.Tool.PopCap.ResourceStreamBundlePatch.decode_fs(before_file, after_file, patch_file, use_raw_packet, { number: version_number }, buffer_size);
+					CoreX.Tool.PopCap.ResourceStreamBundlePatch.decode_fs(before_file, after_file, patch_file, use_raw_packet, { number: version_number as any }, buffer_size);
 					Console.notify('s', los(`执行成功`), [`${after_file}`]);
 				},
 				default_argument: {

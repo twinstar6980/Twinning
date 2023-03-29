@@ -443,7 +443,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 			information_structure.header.texture_resource_information_section_block_count = cbw<IntegerU32>(global_texture_resource_count);
 			information_structure.header.texture_resource_information_section_offset = cbw<IntegerU32>(information_data.texture_resource_information_offset);
 			information_structure.header.texture_resource_information_section_block_size = cbw<IntegerU32>(bs_static_size<Structure::TextureResourceInformation<version>>());
-			if constexpr (version.number >= 4_i) {
+			if constexpr (check_version(version, {4}, {})) {
 				package_data.write_space(k_null_byte, compute_padding_size(package_data.position(), k_padding_unit_size));
 				information_structure.header.information_without_description_section_size = cbw<IntegerU32>(package_data.position());
 			}
@@ -527,14 +527,14 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 								texture_information_structure.size_height = cbw<IntegerU32>(resource_additional_manifest.size.height);
 								texture_information_structure.format = cbw<IntegerU32>(resource_additional_manifest.format);
 								texture_information_structure.row_byte_count = cbw<IntegerU32>(resource_additional_manifest.row_byte_count);
-								if constexpr (version.additional_texture_information_for_pvz_2_chinese_android >= 1_i) {
+								if constexpr (check_version(version, {}, {1, 2})) {
 									if (resource_additional_manifest.format == 0x93_i || resource_additional_manifest.format == 0x96_i) {
 										texture_information_structure.alpha_size = cbw<IntegerU32>(FileSystem::size_file(make_formatted_path(resource_directory) / resource_manifest.key) - cbw<Size>(resource_additional_manifest.size.area() / 2_i));
 									} else {
 										texture_information_structure.alpha_size = cbw<IntegerU32>(k_none_size);
 									}
 								}
-								if constexpr (version.additional_texture_information_for_pvz_2_chinese_android >= 2_i) {
+								if constexpr (check_version(version, {}, {2})) {
 									texture_information_structure.scale = cbw<IntegerU32>(resource_additional_manifest.scale);
 								}
 								packet_resource_additional_manifest.index = cbw<Integer>(texture_resource_index);
@@ -813,7 +813,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 								assert_test(cbw<Integer>(texture_information_structure.size_width) == packet_resource_additional_manifest.size.width);
 								assert_test(cbw<Integer>(texture_information_structure.size_height) == packet_resource_additional_manifest.size.height);
 								resource_additional_manifest.size = packet_resource_additional_manifest.size;
-								if constexpr (version.additional_texture_information_for_pvz_2_chinese_android >= 2_i) {
+								if constexpr (check_version(version, {}, {2})) {
 									resource_additional_manifest.scale = cbw<Integer>(texture_information_structure.scale);
 								}
 								resource_additional_manifest.format = cbw<Integer>(texture_information_structure.format);

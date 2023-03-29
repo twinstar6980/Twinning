@@ -143,6 +143,12 @@ namespace TwinStar::Core {
 
 	template <typename TValue> requires
 		AutoConstraint
+	struct ByteStreamAdapter<EnumeratedWrapper<TValue>> :
+		ByteStreamAdapter<IntegerWrapper<TValue>> {
+	};
+
+	template <typename TValue> requires
+		AutoConstraint
 	struct ByteStreamAdapter<EnumerationWrapper<TValue>> {
 
 		using ThisI = IByteStreamView;
@@ -190,8 +196,18 @@ namespace TwinStar::Core {
 	};
 
 	template <>
+	struct ByteStreamAdapter<Unicode> :
+		ByteStreamAdapter<Character32> {
+	};
+
+	template <>
 	struct ByteStreamAdapter<Byte> :
 		ByteStreamAdapter<Byte8> {
+	};
+
+	template <>
+	struct ByteStreamAdapter<Enumerated> :
+		ByteStreamAdapter<Enumerated8> {
 	};
 
 	#pragma endregion

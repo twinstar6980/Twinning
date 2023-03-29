@@ -18,16 +18,16 @@ namespace TwinStar::Core::Tool::PopCap::Particle {
 		using MagicIdentifier = IntegerU32;
 
 		inline static constexpr auto k_magic_identifier = [] {
-			if constexpr (version.platform == VersionPlatform::Constant::desktop() && version.variant_64 == k_false) {
+			if constexpr (check_version(version, {VersionPlatform::Constant::desktop()}, {false})) {
 				return MagicIdentifier{0x411F994D_iu32};
 			}
-			if constexpr (version.platform == VersionPlatform::Constant::mobile() && version.variant_64 == k_false) {
+			if constexpr (check_version(version, {VersionPlatform::Constant::mobile()}, {false})) {
 				return MagicIdentifier{0x411F994D_iu32};
 			}
-			if constexpr (version.platform == VersionPlatform::Constant::mobile() && version.variant_64 == k_true) {
+			if constexpr (check_version(version, {VersionPlatform::Constant::mobile()}, {true})) {
 				return MagicIdentifier{0xE09295E9_iu32};
 			}
-			if constexpr (version.platform == VersionPlatform::Constant::television() && version.variant_64 == k_false) {
+			if constexpr (check_version(version, {VersionPlatform::Constant::television()}, {false})) {
 				return MagicIdentifier{0x00000000_iu32};
 			}
 		}();
@@ -173,7 +173,7 @@ namespace TwinStar::Core::Tool::PopCap::Particle {
 		) -> Void {
 			auto ignored = Integer{0_i};
 			exchange_unit_integer(emitter_list_data, cbw<Integer>(emitter_list_manifest.size()));
-			if constexpr (version.variant_64) {
+			if constexpr (check_version(version, {}, {true})) {
 				exchange_unit_integer(emitter_list_data, ignored);
 			}
 			exchange_unit_constant(emitter_list_data, cbw<IntegerU32>(k_emitter_data_size));
@@ -201,13 +201,13 @@ namespace TwinStar::Core::Tool::PopCap::Particle {
 				}
 			}
 			for (auto & emitter_manifest : emitter_list_manifest) {
-				if constexpr (version.platform == VersionPlatform::Constant::desktop() || version.platform == VersionPlatform::Constant::television()) {
+				if constexpr (check_version(version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::television()}, {})) {
 					exchange_unit_string(emitter_list_data, emitter_manifest.image);
 				}
-				if constexpr (version.platform == VersionPlatform::Constant::mobile()) {
+				if constexpr (check_version(version, {VersionPlatform::Constant::mobile()}, {})) {
 					exchange_unit_integer(emitter_list_data, emitter_manifest.image);
 				}
-				if constexpr (version.platform == VersionPlatform::Constant::television()) {
+				if constexpr (check_version(version, {VersionPlatform::Constant::television()}, {})) {
 					exchange_unit_string(emitter_list_data, emitter_manifest.image_path);
 				}
 				exchange_unit_string(emitter_list_data, emitter_manifest.name);
@@ -387,7 +387,7 @@ namespace TwinStar::Core::Tool::PopCap::Particle {
 		) -> Void {
 			auto ignored = Integer{0_i};
 			emitter_list_manifest.allocate_full(cbw<Size>(M_apply(M_wrap(Integer{}), M_wrap({ exchange_unit_integer(emitter_list_data, it); }))));
-			if constexpr (version.variant_64) {
+			if constexpr (check_version(version, {}, {true})) {
 				exchange_unit_integer(emitter_list_data, ignored);
 			}
 			exchange_unit_constant(emitter_list_data, cbw<IntegerU32>(k_emitter_data_size));
@@ -415,13 +415,13 @@ namespace TwinStar::Core::Tool::PopCap::Particle {
 				}
 			}
 			for (auto & emitter_manifest : emitter_list_manifest) {
-				if constexpr (version.platform == VersionPlatform::Constant::desktop() || version.platform == VersionPlatform::Constant::television()) {
+				if constexpr (check_version(version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::television()}, {})) {
 					exchange_unit_string(emitter_list_data, emitter_manifest.image);
 				}
-				if constexpr (version.platform == VersionPlatform::Constant::mobile()) {
+				if constexpr (check_version(version, {VersionPlatform::Constant::mobile()}, {})) {
 					exchange_unit_integer(emitter_list_data, emitter_manifest.image);
 				}
-				if constexpr (version.platform == VersionPlatform::Constant::television()) {
+				if constexpr (check_version(version, {VersionPlatform::Constant::television()}, {})) {
 					exchange_unit_string(emitter_list_data, emitter_manifest.image_path);
 				}
 				exchange_unit_string(emitter_list_data, emitter_manifest.name);

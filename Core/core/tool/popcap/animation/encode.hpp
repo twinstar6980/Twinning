@@ -266,9 +266,10 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 						layer_flag.set(LayerAppendFlag::sprite);
 					}
 					exchange_unit_integer_variant_32_with_flag_16<>(frame_data, element.index, layer_flag);
-					if constexpr (version.number <= 5_i) {
+					if constexpr (check_version(version, {1, 6})) {
 						exchange_unit_integer<IntegerU8>(frame_data, element.resource);
-					} else {
+					}
+					if constexpr (check_version(version, {6})) {
 						exchange_unit_integer_variant_16<>(frame_data, cbw<Integer>(element.resource));
 					}
 					if (layer_flag.get(LayerAppendFlag::preload_frame)) {
@@ -359,15 +360,15 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 			OByteStreamView &                 sprite_data,
 			typename Manifest::Sprite const & sprite_manifest
 		) -> Void {
-			if constexpr (version.number >= 4_i) {
+			if constexpr (check_version(version, {4})) {
 				exchange_unit_string(sprite_data, sprite_manifest.name);
-				if constexpr (version.number >= 6_i) {
+				if constexpr (check_version(version, {6})) {
 					exchange_unit_constant(sprite_data, 0x0000_iu16);
 				}
 				exchange_unit_floating<IntegerS32, ValueRate::time>(sprite_data, sprite_manifest.frame_rate);
 			}
 			exchange_unit_integer<IntegerU16>(sprite_data, cbw<Integer>(sprite_manifest.frame.size()));
-			if constexpr (version.number >= 5_i) {
+			if constexpr (check_version(version, {5})) {
 				exchange_unit_integer<IntegerS16>(sprite_data, sprite_manifest.work_area.start);
 				exchange_unit_integer<IntegerS16>(sprite_data, sprite_manifest.work_area.duration);
 			}
@@ -382,13 +383,14 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 			typename Manifest::Image const & image_manifest
 		) -> Void {
 			exchange_unit_string(image_data, image_manifest.name);
-			if constexpr (version.number >= 4_i) {
+			if constexpr (check_version(version, {4})) {
 				exchange_unit_integer<IntegerS16>(image_data, image_manifest.size.width);
 				exchange_unit_integer<IntegerS16>(image_data, image_manifest.size.height);
 			}
-			if constexpr (version.number <= 1_i) {
+			if constexpr (check_version(version, {1, 2})) {
 				exchange_unit_floating<IntegerS16, ValueRate::angle>(image_data, image_manifest.transform.angle);
-			} else {
+			}
+			if constexpr (check_version(version, {2})) {
 				exchange_unit_floating<IntegerS32, ValueRate::matrix_exact>(image_data, image_manifest.transform.a);
 				exchange_unit_floating<IntegerS32, ValueRate::matrix_exact>(image_data, image_manifest.transform.c);
 				exchange_unit_floating<IntegerS32, ValueRate::matrix_exact>(image_data, image_manifest.transform.b);
@@ -418,9 +420,10 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 			for (auto & element : animation_manifest.sprite) {
 				process_sprite(animation_data, element);
 			}
-			if constexpr (version.number <= 3_i) {
+			if constexpr (check_version(version, {1, 4})) {
 				process_sprite(animation_data, animation_manifest.main_sprite);
-			} else {
+			}
+			if constexpr (check_version(version, {4})) {
 				exchange_unit_boolean<Boolean8>(animation_data, animation_manifest.main_sprite.has());
 				if (animation_manifest.main_sprite.has()) {
 					process_sprite(animation_data, animation_manifest.main_sprite.get());
@@ -594,9 +597,10 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 				for (auto & element : frame_manifest.append) {
 					auto layer_flag = BitSet<LayerAppendFlag::k_count>{};
 					exchange_unit_integer_variant_32_with_flag_16<>(frame_data, element.index, layer_flag);
-					if constexpr (version.number <= 5_i) {
+					if constexpr (check_version(version, {1, 6})) {
 						exchange_unit_integer<IntegerU8>(frame_data, element.resource);
-					} else {
+					}
+					if constexpr (check_version(version, {6})) {
 						exchange_unit_integer_variant_16<>(frame_data, element.resource);
 					}
 					if (layer_flag.get(LayerAppendFlag::sprite)) {
@@ -725,15 +729,15 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 			IByteStreamView &           sprite_data,
 			typename Manifest::Sprite & sprite_manifest
 		) -> Void {
-			if constexpr (version.number >= 4_i) {
+			if constexpr (check_version(version, {4})) {
 				exchange_unit_string(sprite_data, sprite_manifest.name);
-				if constexpr (version.number >= 6_i) {
+				if constexpr (check_version(version, {6})) {
 					exchange_unit_constant(sprite_data, 0x0000_iu16);
 				}
 				exchange_unit_floating<IntegerS32, ValueRate::time>(sprite_data, sprite_manifest.frame_rate);
 			}
 			sprite_manifest.frame.allocate_full(cbw<Size>(M_apply(M_wrap(Integer{}), M_wrap({ exchange_unit_integer<IntegerU16>(sprite_data, it); }))));
-			if constexpr (version.number >= 5_i) {
+			if constexpr (check_version(version, {5})) {
 				exchange_unit_integer<IntegerS16>(sprite_data, sprite_manifest.work_area.start);
 				exchange_unit_integer<IntegerS16>(sprite_data, sprite_manifest.work_area.duration);
 			}
@@ -748,13 +752,14 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 			typename Manifest::Image & image_manifest
 		) -> Void {
 			exchange_unit_string(image_data, image_manifest.name);
-			if constexpr (version.number >= 4_i) {
+			if constexpr (check_version(version, {4})) {
 				exchange_unit_integer<IntegerS16>(image_data, image_manifest.size.width);
 				exchange_unit_integer<IntegerS16>(image_data, image_manifest.size.height);
 			}
-			if constexpr (version.number <= 1_i) {
+			if constexpr (check_version(version, {1, 2})) {
 				exchange_unit_floating<IntegerS16, ValueRate::angle>(image_data, image_manifest.transform.angle);
-			} else {
+			}
+			if constexpr (check_version(version, {2})) {
 				exchange_unit_floating<IntegerS32, ValueRate::matrix_exact>(image_data, image_manifest.transform.a);
 				exchange_unit_floating<IntegerS32, ValueRate::matrix_exact>(image_data, image_manifest.transform.c);
 				exchange_unit_floating<IntegerS32, ValueRate::matrix_exact>(image_data, image_manifest.transform.b);
@@ -784,9 +789,10 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 			for (auto & element : animation_manifest.sprite) {
 				process_sprite(animation_data, element);
 			}
-			if constexpr (version.number <= 3_i) {
+			if constexpr (check_version(version, {1, 4})) {
 				process_sprite(animation_data, animation_manifest.main_sprite);
-			} else {
+			}
+			if constexpr (check_version(version, {4})) {
 				auto has_main_script = Boolean{};
 				exchange_unit_boolean<Boolean8>(animation_data, has_main_script);
 				if (has_main_script) {

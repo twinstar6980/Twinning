@@ -18,16 +18,16 @@ namespace TwinStar::Core::Tool::PopCap::Trail {
 		using MagicIdentifier = IntegerU32;
 
 		inline static constexpr auto k_magic_identifier = [] {
-			if constexpr (version.platform == VersionPlatform::Constant::desktop() && version.variant_64 == k_false) {
+			if constexpr (check_version(version, {VersionPlatform::Constant::desktop()}, {false})) {
 				return MagicIdentifier{0xAB8B62B3_iu32};
 			}
-			if constexpr (version.platform == VersionPlatform::Constant::mobile() && version.variant_64 == k_false) {
+			if constexpr (check_version(version, {VersionPlatform::Constant::mobile()}, {false})) {
 				return MagicIdentifier{0xAB8B62B3_iu32};
 			}
-			if constexpr (version.platform == VersionPlatform::Constant::mobile() && version.variant_64 == k_true) {
+			if constexpr (check_version(version, {VersionPlatform::Constant::mobile()}, {true})) {
 				return MagicIdentifier{0x8488BC08_iu32};
 			}
-			if constexpr (version.platform == VersionPlatform::Constant::television() && version.variant_64 == k_false) {
+			if constexpr (check_version(version, {VersionPlatform::Constant::television()}, {false})) {
 				return MagicIdentifier{0xAB8B62B3_iu32};
 			}
 		}();
@@ -126,20 +126,20 @@ namespace TwinStar::Core::Tool::PopCap::Trail {
 			exchange_unit_integer(trail_data, trail_manifest.maximum_point);
 			exchange_unit_floating(trail_data, trail_manifest.minimum_point_distance);
 			exchange_unit_integer(trail_data, trail_manifest.flag);
-			if constexpr (version.variant_64) {
+			if constexpr (check_version(version, {}, {true})) {
 				exchange_unit_integer(trail_data, ignored);
 			}
 			for (auto & index : SizeRange{5_sz}) {
 				exchange_unit_integer_platform(trail_data, ignored);
 				exchange_unit_integer_platform(trail_data, ignored);
 			}
-			if constexpr (version.platform == VersionPlatform::Constant::desktop() || version.platform == VersionPlatform::Constant::television()) {
+			if constexpr (check_version(version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::television()}, {})) {
 				exchange_unit_string(trail_data, trail_manifest.image);
 			}
-			if constexpr (version.platform == VersionPlatform::Constant::mobile()) {
+			if constexpr (check_version(version, {VersionPlatform::Constant::mobile()}, {})) {
 				exchange_unit_integer(trail_data, trail_manifest.image);
 			}
-			if constexpr (version.platform == VersionPlatform::Constant::television()) {
+			if constexpr (check_version(version, {VersionPlatform::Constant::television()}, {})) {
 				exchange_unit_string(trail_data, trail_manifest.image_resource);
 			}
 			process_track_node_list(trail_data, trail_manifest.width_over_length);
@@ -250,20 +250,20 @@ namespace TwinStar::Core::Tool::PopCap::Trail {
 			exchange_unit_integer(trail_data, trail_manifest.maximum_point);
 			exchange_unit_floating(trail_data, trail_manifest.minimum_point_distance);
 			exchange_unit_integer(trail_data, trail_manifest.flag);
-			if constexpr (version.variant_64) {
+			if constexpr (check_version(version, {}, {true})) {
 				exchange_unit_integer(trail_data, ignored);
 			}
 			for (auto & index : SizeRange{5_sz}) {
 				exchange_unit_integer_platform(trail_data, ignored);
 				exchange_unit_integer_platform(trail_data, ignored);
 			}
-			if constexpr (version.platform == VersionPlatform::Constant::desktop() || version.platform == VersionPlatform::Constant::television()) {
+			if constexpr (check_version(version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::television()}, {})) {
 				exchange_unit_string(trail_data, trail_manifest.image);
 			}
-			if constexpr (version.platform == VersionPlatform::Constant::mobile()) {
+			if constexpr (check_version(version, {VersionPlatform::Constant::mobile()}, {})) {
 				exchange_unit_integer(trail_data, trail_manifest.image);
 			}
-			if constexpr (version.platform == VersionPlatform::Constant::television()) {
+			if constexpr (check_version(version, {VersionPlatform::Constant::television()}, {})) {
 				exchange_unit_string(trail_data, trail_manifest.image_resource);
 			}
 			process_track_node_list(trail_data, trail_manifest.width_over_length);

@@ -42,23 +42,23 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStream {
 	}
 
 	inline auto resource_data_section_store_mode_to_data (
-		ResourceDataSectionStoreMode const & it
+		ResourceDataSectionStoreMode const & value
 	) -> IntegerU32 {
-		auto bitset = BitSet<k_resource_data_section_store_mode_flag_count>{};
-		bitset.set(ResourceDataStoreModeFlag::compress_generic, it.compress_generic);
-		bitset.set(ResourceDataStoreModeFlag::compress_texture, it.compress_texture);
-		return cbw<IntegerU32>(bitset.to_integer());
+		auto data_bit = BitSet<k_resource_data_section_store_mode_flag_count>{};
+		data_bit.set(ResourceDataStoreModeFlag::compress_generic, value.compress_generic);
+		data_bit.set(ResourceDataStoreModeFlag::compress_texture, value.compress_texture);
+		return cbw<IntegerU32>(data_bit.to_integer());
 	}
 
 	inline auto resource_data_section_store_mode_from_data (
-		IntegerU32 const & bitset_integer
+		IntegerU32 const & data
 	) -> ResourceDataSectionStoreMode {
-		auto it = ResourceDataSectionStoreMode{};
-		auto bitset = BitSet<k_resource_data_section_store_mode_flag_count>{};
-		bitset.from_integer(cbw<IntegerU8>(bitset_integer));
-		it.compress_generic = bitset.get(ResourceDataStoreModeFlag::compress_generic);
-		it.compress_texture = bitset.get(ResourceDataStoreModeFlag::compress_texture);
-		return it;
+		auto value = ResourceDataSectionStoreMode{};
+		auto data_bit = BitSet<k_resource_data_section_store_mode_flag_count>{};
+		data_bit.from_integer(cbw<IntegerU8>(data));
+		value.compress_generic = data_bit.get(ResourceDataStoreModeFlag::compress_generic);
+		value.compress_texture = data_bit.get(ResourceDataStoreModeFlag::compress_texture);
+		return value;
 	}
 
 	#pragma endregion

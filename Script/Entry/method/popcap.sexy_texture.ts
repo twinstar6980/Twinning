@@ -29,9 +29,9 @@ namespace TwinStar.Script.Entry.method.popcap.sexy_texture {
 				}) {
 					let image_file: string;
 					let data_file: string;
-					let format: CoreX.Tool.PopCap.SexyTexture.Format;
+					let format: string;
 					let compress_texture_data: boolean;
-					let version_number: [0n][number];
+					let version_number: bigint;
 					{
 						image_file = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'image_file'),
@@ -68,10 +68,10 @@ namespace TwinStar.Script.Entry.method.popcap.sexy_texture {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, [0n, '']], null)),
-							(value) => ([0n].includes(value) ? null : los(`版本不受支持`)),
+							(value) => (CoreX.Tool.PopCap.SexyTexture.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 					}
-					CoreX.Tool.PopCap.SexyTexture.encode_fs(data_file, image_file, format, compress_texture_data, { number: version_number });
+					CoreX.Tool.PopCap.SexyTexture.encode_fs(data_file, image_file, format as any, compress_texture_data, { number: version_number as any });
 					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
@@ -98,7 +98,7 @@ namespace TwinStar.Script.Entry.method.popcap.sexy_texture {
 				}) {
 					let data_file: string;
 					let image_file: string;
-					let version_number: [0n][number];
+					let version_number: bigint;
 					{
 						data_file = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'data_file'),
@@ -119,10 +119,10 @@ namespace TwinStar.Script.Entry.method.popcap.sexy_texture {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, [0n, '']], null)),
-							(value) => ([0n].includes(value) ? null : los(`版本不受支持`)),
+							(value) => (CoreX.Tool.PopCap.SexyTexture.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 					}
-					CoreX.Tool.PopCap.SexyTexture.decode_fs(data_file, image_file, { number: version_number });
+					CoreX.Tool.PopCap.SexyTexture.decode_fs(data_file, image_file, { number: version_number as any });
 					Console.notify('s', los(`执行成功`), [`${image_file}`]);
 				},
 				default_argument: {
@@ -151,9 +151,9 @@ namespace TwinStar.Script.Entry.method.popcap.sexy_texture {
 				}) {
 					let image_file_directory: string;
 					let data_file_directory: string;
-					let format: CoreX.Tool.PopCap.SexyTexture.Format;
+					let format: string;
 					let compress_texture_data: boolean;
-					let version_number: [0n][number];
+					let version_number: bigint;
 					{
 						image_file_directory = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'image_file_directory'),
@@ -190,7 +190,7 @@ namespace TwinStar.Script.Entry.method.popcap.sexy_texture {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, [0n, '']], null)),
-							(value) => ([0n].includes(value) ? null : los(`版本不受支持`)),
+							(value) => (CoreX.Tool.PopCap.SexyTexture.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 					}
 					simple_batch_execute(
@@ -199,7 +199,7 @@ namespace TwinStar.Script.Entry.method.popcap.sexy_texture {
 						(item) => {
 							let image_file = `${image_file_directory}/${item}`;
 							let data_file = `${data_file_directory}/${item.slice(0, -4)}.tex`;
-							CoreX.Tool.PopCap.SexyTexture.encode_fs(data_file, image_file, format, compress_texture_data, { number: version_number });
+							CoreX.Tool.PopCap.SexyTexture.encode_fs(data_file, image_file, format as any, compress_texture_data, { number: version_number as any });
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${data_file_directory}`]);
@@ -228,7 +228,7 @@ namespace TwinStar.Script.Entry.method.popcap.sexy_texture {
 				}) {
 					let data_file_directory: string;
 					let image_file_directory: string;
-					let version_number: [0n][number];
+					let version_number: bigint;
 					{
 						data_file_directory = Executor.require_argument(
 							...Executor.query_argument_message(this.id, 'data_file_directory'),
@@ -249,7 +249,7 @@ namespace TwinStar.Script.Entry.method.popcap.sexy_texture {
 							(value) => (value),
 							null,
 							() => (Console.option([0n, [0n, '']], null)),
-							(value) => ([0n].includes(value) ? null : los(`版本不受支持`)),
+							(value) => (CoreX.Tool.PopCap.SexyTexture.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 					}
 					simple_batch_execute(
@@ -258,7 +258,7 @@ namespace TwinStar.Script.Entry.method.popcap.sexy_texture {
 						(item) => {
 							let data_file = `${data_file_directory}/${item}`;
 							let image_file = `${image_file_directory}/${item.slice(0, -4)}.png`;
-							CoreX.Tool.PopCap.SexyTexture.decode_fs(data_file, image_file, { number: version_number });
+							CoreX.Tool.PopCap.SexyTexture.decode_fs(data_file, image_file, { number: version_number as any });
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${image_file_directory}`]);

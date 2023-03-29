@@ -16,7 +16,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup {
 
 		using GenericResourceAdditional = GenericResourceAdditional_<>;
 
-		template <typename _> requires (check_version(version, {3, 4}))
+		template <typename _> requires (check_version(version, {3}))
 		M_record_of_map(
 			M_wrap(GenericResourceAdditional_<_>),
 			M_wrap(
@@ -30,7 +30,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup {
 
 		using TextureResourceAdditional = TextureResourceAdditional_<>;
 
-		template <typename _> requires (check_version(version, {3, 4}))
+		template <typename _> requires (check_version(version, {3}))
 		M_record_of_map(
 			M_wrap(TextureResourceAdditional_<_>),
 			M_wrap(
@@ -46,7 +46,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup {
 
 		using Resource = Resource_<>;
 
-		template <typename _> requires (check_version(version, {3, 4}))
+		template <typename _> requires (check_version(version, {3}))
 		M_record_of_map(
 			M_wrap(Resource_<_>),
 			M_wrap(
@@ -63,7 +63,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup {
 
 		using Package = Package_<>;
 
-		template <typename _> requires (check_version(version, {3, 4}))
+		template <typename _> requires (check_version(version, {3}))
 		M_record_of_map(
 			M_wrap(Package_<_>),
 			M_wrap(

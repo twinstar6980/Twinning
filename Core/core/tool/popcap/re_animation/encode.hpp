@@ -18,16 +18,16 @@ namespace TwinStar::Core::Tool::PopCap::ReAnimation {
 		using MagicIdentifier = IntegerU32;
 
 		inline static constexpr auto k_magic_identifier = [] {
-			if constexpr (version.platform == VersionPlatform::Constant::desktop() && version.variant_64 == k_false) {
+			if constexpr (check_version(version, {VersionPlatform::Constant::desktop()}, {false})) {
 				return MagicIdentifier{0xB393B4C0_iu32};
 			}
-			if constexpr (version.platform == VersionPlatform::Constant::mobile() && version.variant_64 == k_false) {
+			if constexpr (check_version(version, {VersionPlatform::Constant::mobile()}, {false})) {
 				return MagicIdentifier{0xFF2565B5_iu32};
 			}
-			if constexpr (version.platform == VersionPlatform::Constant::mobile() && version.variant_64 == k_true) {
+			if constexpr (check_version(version, {VersionPlatform::Constant::mobile()}, {true})) {
 				return MagicIdentifier{0xC046E570_iu32};
 			}
-			if constexpr (version.platform == VersionPlatform::Constant::television() && version.variant_64 == k_false) {
+			if constexpr (check_version(version, {VersionPlatform::Constant::television()}, {false})) {
 				return MagicIdentifier{0x00000000_iu32};
 			}
 		}();
@@ -51,7 +51,7 @@ namespace TwinStar::Core::Tool::PopCap::ReAnimation {
 			size += bs_static_size<IntegerOfPlatform>();
 			size += bs_static_size<IntegerOfPlatform>();
 			size += bs_static_size<IntegerOfPlatform>();
-			if constexpr (version.platform == VersionPlatform::Constant::television()) {
+			if constexpr (check_version(version, {VersionPlatform::Constant::television()}, {})) {
 				size += bs_static_size<IntegerOfPlatform>();
 			}
 			return size;
@@ -61,11 +61,11 @@ namespace TwinStar::Core::Tool::PopCap::ReAnimation {
 			auto size = k_none_size;
 			size += bs_static_size<IntegerOfPlatform>();
 			size += bs_static_size<IntegerOfPlatform>();
-			if constexpr (version.platform == VersionPlatform::Constant::mobile() || version.platform == VersionPlatform::Constant::television()) {
+			if constexpr (check_version(version, {VersionPlatform::Constant::mobile(), VersionPlatform::Constant::television()}, {})) {
 				size += bs_static_size<IntegerOfPlatform>();
 			}
 			size += bs_static_size<IntegerOfPlatform>();
-			if constexpr (version.platform == VersionPlatform::Constant::television()) {
+			if constexpr (check_version(version, {VersionPlatform::Constant::television()}, {})) {
 				size += bs_static_size<IntegerOfPlatform>();
 			}
 			return size;
@@ -154,11 +154,11 @@ namespace TwinStar::Core::Tool::PopCap::ReAnimation {
 			for (auto & track_manifest : animation_manifest.track) {
 				exchange_unit_integer_platform(animation_data, ignored);
 				exchange_unit_integer_platform(animation_data, ignored);
-				if constexpr (version.platform == VersionPlatform::Constant::mobile() || version.platform == VersionPlatform::Constant::television()) {
+				if constexpr (check_version(version, {VersionPlatform::Constant::mobile(), VersionPlatform::Constant::television()}, {})) {
 					exchange_unit_integer_platform(animation_data, ignored);
 				}
 				exchange_unit_integer_platform(animation_data, cbw<Integer>(track_manifest.transform.size()));
-				if constexpr (version.platform == VersionPlatform::Constant::television()) {
+				if constexpr (check_version(version, {VersionPlatform::Constant::television()}, {})) {
 					exchange_unit_integer_platform(animation_data, ignored);
 				}
 			}
@@ -177,18 +177,18 @@ namespace TwinStar::Core::Tool::PopCap::ReAnimation {
 					exchange_unit_integer_platform(animation_data, ignored);
 					exchange_unit_integer_platform(animation_data, ignored);
 					exchange_unit_integer_platform(animation_data, ignored);
-					if constexpr (version.platform == VersionPlatform::Constant::television()) {
+					if constexpr (check_version(version, {VersionPlatform::Constant::television()}, {})) {
 						exchange_unit_integer_platform(animation_data, ignored);
 					}
 				}
 				for (auto & transform_manifest : track_manifest.transform) {
-					if constexpr (version.platform == VersionPlatform::Constant::desktop() || version.platform == VersionPlatform::Constant::television()) {
+					if constexpr (check_version(version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::television()}, {})) {
 						exchange_unit_string(animation_data, transform_manifest.image);
 					}
-					if constexpr (version.platform == VersionPlatform::Constant::mobile()) {
+					if constexpr (check_version(version, {VersionPlatform::Constant::mobile()}, {})) {
 						exchange_unit_integer(animation_data, transform_manifest.image);
 					}
-					if constexpr (version.platform == VersionPlatform::Constant::television()) {
+					if constexpr (check_version(version, {VersionPlatform::Constant::television()}, {})) {
 						exchange_unit_string(animation_data, transform_manifest.image_path);
 						exchange_unit_string(animation_data, transform_manifest.image_another);
 						exchange_unit_string(animation_data, transform_manifest.image_path_another);
@@ -293,11 +293,11 @@ namespace TwinStar::Core::Tool::PopCap::ReAnimation {
 			for (auto & track_manifest : animation_manifest.track) {
 				exchange_unit_integer_platform(animation_data, ignored);
 				exchange_unit_integer_platform(animation_data, ignored);
-				if constexpr (version.platform == VersionPlatform::Constant::mobile() || version.platform == VersionPlatform::Constant::television()) {
+				if constexpr (check_version(version, {VersionPlatform::Constant::mobile(), VersionPlatform::Constant::television()}, {})) {
 					exchange_unit_integer_platform(animation_data, ignored);
 				}
 				track_manifest.transform.allocate_full(cbw<Size>(M_apply(M_wrap(Integer{}), M_wrap({ exchange_unit_integer_platform(animation_data, it); }))));
-				if constexpr (version.platform == VersionPlatform::Constant::television()) {
+				if constexpr (check_version(version, {VersionPlatform::Constant::television()}, {})) {
 					exchange_unit_integer_platform(animation_data, ignored);
 				}
 			}
@@ -316,18 +316,18 @@ namespace TwinStar::Core::Tool::PopCap::ReAnimation {
 					exchange_unit_integer_platform(animation_data, ignored);
 					exchange_unit_integer_platform(animation_data, ignored);
 					exchange_unit_integer_platform(animation_data, ignored);
-					if constexpr (version.platform == VersionPlatform::Constant::television()) {
+					if constexpr (check_version(version, {VersionPlatform::Constant::television()}, {})) {
 						exchange_unit_integer_platform(animation_data, ignored);
 					}
 				}
 				for (auto & transform_manifest : track_manifest.transform) {
-					if constexpr (version.platform == VersionPlatform::Constant::desktop() || version.platform == VersionPlatform::Constant::television()) {
+					if constexpr (check_version(version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::television()}, {})) {
 						exchange_unit_string(animation_data, transform_manifest.image);
 					}
-					if constexpr (version.platform == VersionPlatform::Constant::mobile()) {
+					if constexpr (check_version(version, {VersionPlatform::Constant::mobile()}, {})) {
 						exchange_unit_integer(animation_data, transform_manifest.image);
 					}
-					if constexpr (version.platform == VersionPlatform::Constant::television()) {
+					if constexpr (check_version(version, {VersionPlatform::Constant::television()}, {})) {
 						exchange_unit_string(animation_data, transform_manifest.image_path);
 						exchange_unit_string(animation_data, transform_manifest.image_another);
 						exchange_unit_string(animation_data, transform_manifest.image_path_another);

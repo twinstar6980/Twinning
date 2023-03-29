@@ -30,7 +30,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 				}) {
 					let manifest_file: string;
 					let data_file: string;
-					let version_platform: ['desktop', 'mobile', 'television'][number];
+					let version_platform: string;
 					let version_variant_64: boolean;
 					let buffer_size: bigint;
 					{
@@ -52,8 +52,8 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 							a.version_platform,
 							(value) => (value),
 							null,
-							() => (Console.option(['desktop', 'mobile', 'television'].map((e) => ([e])), null)),
-							(value) => (['desktop', 'mobile', 'television'].includes(value) ? null : los(`版本不受支持`)),
+							() => (Console.option(CoreX.Tool.PopCap.Trail.VersionPlatformE.map((e) => ([e])), null)),
+							(value) => (CoreX.Tool.PopCap.Trail.VersionPlatformE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 						version_variant_64 = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_variant_64'),
@@ -61,7 +61,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 							(value) => (value),
 							null,
 							() => (Console.confirm(null)),
-							(value) => (null),
+							(value) => (CoreX.Tool.PopCap.Trail.VersionVariant64E.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
@@ -72,7 +72,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 							(value) => (null),
 						);
 					}
-					CoreX.Tool.PopCap.Trail.encode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 }, buffer_size);
+					CoreX.Tool.PopCap.Trail.encode_fs(data_file, manifest_file, { platform: version_platform as any, variant_64: version_variant_64 }, buffer_size);
 					Console.notify('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
@@ -100,7 +100,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 				}) {
 					let data_file: string;
 					let manifest_file: string;
-					let version_platform: ['desktop', 'mobile', 'television'][number];
+					let version_platform: string;
 					let version_variant_64: boolean;
 					{
 						data_file = Executor.require_argument(
@@ -121,8 +121,8 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 							a.version_platform,
 							(value) => (value),
 							null,
-							() => (Console.option(['desktop', 'mobile', 'television'].map((e) => ([e])), null)),
-							(value) => (['desktop', 'mobile', 'television'].includes(value) ? null : los(`版本不受支持`)),
+							() => (Console.option(CoreX.Tool.PopCap.Trail.VersionPlatformE.map((e) => ([e])), null)),
+							(value) => (CoreX.Tool.PopCap.Trail.VersionPlatformE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 						version_variant_64 = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_variant_64'),
@@ -130,10 +130,10 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 							(value) => (value),
 							null,
 							() => (Console.confirm(null)),
-							(value) => (null),
+							(value) => (CoreX.Tool.PopCap.Trail.VersionVariant64E.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 					}
-					CoreX.Tool.PopCap.Trail.decode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 });
+					CoreX.Tool.PopCap.Trail.decode_fs(data_file, manifest_file, { platform: version_platform as any, variant_64: version_variant_64 });
 					Console.notify('s', los(`执行成功`), [`${manifest_file}`]);
 				},
 				default_argument: {
@@ -163,7 +163,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 				}) {
 					let manifest_file_directory: string;
 					let data_file_directory: string;
-					let version_platform: ['desktop', 'mobile', 'television'][number];
+					let version_platform: string;
 					let version_variant_64: boolean;
 					let buffer_size: bigint;
 					{
@@ -185,8 +185,8 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 							a.version_platform,
 							(value) => (value),
 							null,
-							() => (Console.option(['desktop', 'mobile', 'television'].map((e) => ([e])), null)),
-							(value) => (['desktop', 'mobile', 'television'].includes(value) ? null : los(`版本不受支持`)),
+							() => (Console.option(CoreX.Tool.PopCap.Trail.VersionPlatformE.map((e) => ([e])), null)),
+							(value) => (CoreX.Tool.PopCap.Trail.VersionPlatformE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 						version_variant_64 = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_variant_64'),
@@ -194,7 +194,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 							(value) => (value),
 							null,
 							() => (Console.confirm(null)),
-							(value) => (null),
+							(value) => (CoreX.Tool.PopCap.Trail.VersionVariant64E.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 						buffer_size = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'buffer_size'),
@@ -212,7 +212,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 						(item) => {
 							let manifest_file = `${manifest_file_directory}/${item}`;
 							let data_file = `${data_file_directory}/${item.slice(0, -5)}.compiled`;
-							CoreX.Tool.PopCap.Trail.encode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 }, data_buffer.view());
+							CoreX.Tool.PopCap.Trail.encode_fs(data_file, manifest_file, { platform: version_platform as any, variant_64: version_variant_64 }, data_buffer.view());
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${data_file_directory}`]);
@@ -242,7 +242,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 				}) {
 					let data_file_directory: string;
 					let manifest_file_directory: string;
-					let version_platform: ['desktop', 'mobile', 'television'][number];
+					let version_platform: string;
 					let version_variant_64: boolean;
 					{
 						data_file_directory = Executor.require_argument(
@@ -263,8 +263,8 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 							a.version_platform,
 							(value) => (value),
 							null,
-							() => (Console.option(['desktop', 'mobile', 'television'].map((e) => ([e])), null)),
-							(value) => (['desktop', 'mobile', 'television'].includes(value) ? null : los(`版本不受支持`)),
+							() => (Console.option(CoreX.Tool.PopCap.Trail.VersionPlatformE.map((e) => ([e])), null)),
+							(value) => (CoreX.Tool.PopCap.Trail.VersionPlatformE.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 						version_variant_64 = Executor.request_argument(
 							...Executor.query_argument_message(this.id, 'version_variant_64'),
@@ -272,7 +272,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 							(value) => (value),
 							null,
 							() => (Console.confirm(null)),
-							(value) => (null),
+							(value) => (CoreX.Tool.PopCap.Trail.VersionVariant64E.includes(value as any) ? null : los(`版本不受支持`)),
 						);
 					}
 					simple_batch_execute(
@@ -281,7 +281,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 						(item) => {
 							let data_file = `${data_file_directory}/${item}`;
 							let manifest_file = `${manifest_file_directory}/${item.slice(0, -9)}.json`;
-							CoreX.Tool.PopCap.Trail.decode_fs(data_file, manifest_file, { platform: version_platform, variant_64: version_variant_64 });
+							CoreX.Tool.PopCap.Trail.decode_fs(data_file, manifest_file, { platform: version_platform as any, variant_64: version_variant_64 });
 						},
 					);
 					Console.notify('s', los(`执行成功`), [`${manifest_file_directory}`]);

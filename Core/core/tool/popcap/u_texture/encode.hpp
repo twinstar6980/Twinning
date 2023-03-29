@@ -65,9 +65,10 @@ namespace TwinStar::Core::Tool::PopCap::UTexture {
 			data_size_bound += bs_static_size<IntegerU16>();
 			auto texture_data_size = image_size.area() * Image::Texture::bpp_of(format) / k_type_bit_count<Byte>;
 			auto texture_data_size_bound = Size{};
-			if constexpr (!version.compress_texture_data) {
+			if constexpr (check_version(version, {false})) {
 				texture_data_size_bound = texture_data_size;
-			} else {
+			}
+			if constexpr (check_version(version, {true})) {
 				Data::Compression::Deflate::Compress::do_compute_size_bound(texture_data_size, texture_data_size_bound, 15_sz, 9_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
 			}
 			data_size_bound += texture_data_size_bound;
@@ -110,9 +111,10 @@ namespace TwinStar::Core::Tool::PopCap::UTexture {
 			auto texture_data_size = image.size().area() * Image::Texture::bpp_of(format) / k_type_bit_count<Byte>;
 			auto texture_data_view = VByteListView{};
 			auto texture_data_container = ByteArray{};
-			if constexpr (!version.compress_texture_data) {
+			if constexpr (check_version(version, {false})) {
 				texture_data_view = data.forward_view(texture_data_size);
-			} else {
+			}
+			if constexpr (check_version(version, {true})) {
 				texture_data_container.allocate(texture_data_size);
 				texture_data_view = texture_data_container.as_view();
 			}
@@ -122,7 +124,7 @@ namespace TwinStar::Core::Tool::PopCap::UTexture {
 					Image::Texture::Encode<format>::do_process_image(as_lvalue(OByteStreamView{texture_data_view}), image);
 				}
 			);
-			if constexpr (version.compress_texture_data) {
+			if constexpr (check_version(version, {true})) {
 				auto texture_data_stream = IByteStreamView{texture_data_container};
 				Data::Compression::Deflate::Compress::do_process_whole(texture_data_stream, data, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
 			}
@@ -233,13 +235,14 @@ namespace TwinStar::Core::Tool::PopCap::UTexture {
 			auto texture_data_size = image.size().area() * Image::Texture::bpp_of(format) / k_type_bit_count<Byte>;
 			auto texture_data_view = CByteListView{};
 			auto texture_data_container = ByteArray{};
-			if constexpr (!version.compress_texture_data) {
+			if constexpr (check_version(version, {false})) {
 				texture_data_view = data.forward_view(texture_data_size);
-			} else {
+			}
+			if constexpr (check_version(version, {true})) {
 				texture_data_container.allocate(texture_data_size);
 				texture_data_view = texture_data_container.as_view();
 			}
-			if constexpr (version.compress_texture_data) {
+			if constexpr (check_version(version, {true})) {
 				auto texture_data_stream = OByteStreamView{texture_data_container};
 				Data::Compression::Deflate::Uncompress::do_process_whole(data, texture_data_stream, 15_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
 				assert_test(texture_data_stream.full());

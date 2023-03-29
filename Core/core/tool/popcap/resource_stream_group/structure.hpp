@@ -27,7 +27,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}))
+		&& (check_version(t_version, {3}))
 	M_record_of_data(
 		M_wrap(Header<t_version>),
 		M_wrap(
@@ -55,7 +55,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}))
+		&& (check_version(t_version, {3}))
 	M_record_of_data(
 		M_wrap(ResourceBasicInformation<t_version>),
 		M_wrap(
@@ -72,7 +72,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}))
+		&& (check_version(t_version, {3}))
 	M_record_of_data(
 		M_wrap(GenericResourceAdditionalInformation<t_version>),
 		M_wrap(
@@ -86,7 +86,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}))
+		&& (check_version(t_version, {3}))
 	M_record_of_data(
 		M_wrap(TextureResourceAdditionalInformation<t_version>),
 		M_wrap(
@@ -105,7 +105,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}))
+		&& (check_version(t_version, {3}))
 	struct ResourceInformation<t_version> :
 		ResourceBasicInformation<t_version> {
 		EnumerableVariant<ResourceType, GenericResourceAdditionalInformation<t_version>, TextureResourceAdditionalInformation<t_version>> additional;
@@ -118,7 +118,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}))
+		&& (check_version(t_version, {3}))
 	M_record_of_data(
 		M_wrap(Information<t_version>),
 		M_wrap(
@@ -136,7 +136,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3, 4}))
+		&& (check_version(t_version, {3}))
 	struct ResourceTypeFlag<t_version> {
 		inline static constexpr auto generic = IntegerU32{0x00000000_iu32};
 		inline static constexpr auto texture = IntegerU32{0x00000001_iu32};

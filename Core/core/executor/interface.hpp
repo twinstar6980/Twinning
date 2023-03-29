@@ -667,7 +667,17 @@ namespace TwinStar::Core::Executor::Interface {
 					using SoundBankManifest = Variant<
 						typename Manifest<VersionPackage::element<1_ixz>>::SoundBank,
 						typename Manifest<VersionPackage::element<2_ixz>>::SoundBank,
-						typename Manifest<VersionPackage::element<3_ixz>>::SoundBank
+						typename Manifest<VersionPackage::element<3_ixz>>::SoundBank,
+						typename Manifest<VersionPackage::element<4_ixz>>::SoundBank,
+						typename Manifest<VersionPackage::element<5_ixz>>::SoundBank,
+						typename Manifest<VersionPackage::element<6_ixz>>::SoundBank,
+						typename Manifest<VersionPackage::element<7_ixz>>::SoundBank,
+						typename Manifest<VersionPackage::element<8_ixz>>::SoundBank,
+						typename Manifest<VersionPackage::element<9_ixz>>::SoundBank,
+						typename Manifest<VersionPackage::element<10_ixz>>::SoundBank,
+						typename Manifest<VersionPackage::element<11_ixz>>::SoundBank,
+						typename Manifest<VersionPackage::element<12_ixz>>::SoundBank,
+						typename Manifest<VersionPackage::element<13_ixz>>::SoundBank
 					>;
 					auto n_SoundBank = n_Wwise.add_namespace("SoundBank"_s);
 					define_generic_class<Version>(n_SoundBank, "Version"_s);
@@ -681,13 +691,13 @@ namespace TwinStar::Core::Executor::Interface {
 							[] (
 							OByteStreamView &         sound_bank_data,
 							SoundBankManifest const & sound_bank_manifest,
-							Path const &              embedded_audio_directory,
+							Path const &              embedded_media_directory,
 							Version const &           version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::Wwise::SoundBank::Encode<version>::do_process_sound_bank(sound_bank_data, sound_bank_manifest.template get_of_index<mbw<Size>(index)>(), embedded_audio_directory);
+										Tool::Wwise::SoundBank::Encode<version>::do_process_sound_bank(sound_bank_data, sound_bank_manifest.template get_of_index<mbw<Size>(index)>(), embedded_media_directory);
 									}
 								);
 							}
@@ -697,13 +707,13 @@ namespace TwinStar::Core::Executor::Interface {
 							[] (
 							IByteStreamView &      sound_bank_data,
 							SoundBankManifest &    sound_bank_manifest,
-							Optional<Path> const & embedded_audio_directory,
+							Optional<Path> const & embedded_media_directory,
 							Version const &        version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::Wwise::SoundBank::Decode<version>::do_process_sound_bank(sound_bank_data, sound_bank_manifest.template set_of_index<mbw<Size>(index)>(), embedded_audio_directory);
+										Tool::Wwise::SoundBank::Decode<version>::do_process_sound_bank(sound_bank_data, sound_bank_manifest.template set_of_index<mbw<Size>(index)>(), embedded_media_directory);
 									}
 								);
 							}

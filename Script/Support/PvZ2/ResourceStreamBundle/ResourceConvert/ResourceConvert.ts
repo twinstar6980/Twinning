@@ -10,6 +10,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 	export type Option = {
 		json: null | {
 			directory: string;
+			//version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
 			crypt: null | {
 				key: string;
 			};
@@ -24,6 +25,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 		},
 		animation: null | {
 			directory: string;
+			//version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
 			json: null | {};
 			flash: null | {};
 		},

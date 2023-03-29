@@ -26,7 +26,7 @@
 			"pvz2_android": [
 				{
 					"index": 0,
-					"format": "abgr_8888",
+					"format": "rgba_8888_o",
 				},
 				{
 					"index": 147,
@@ -36,7 +36,7 @@
 			"pvz2_android_chinese": [
 				{
 					"index": 0,
-					"format": "abgr_8888",
+					"format": "rgba_8888_o",
 				},
 				{
 					"index": 147,
