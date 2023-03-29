@@ -160,11 +160,8 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.Repair {
 		// subgroup_pool_information_section_block_size
 		let subgroup_pool_information_section_block_size = view.u32(0x50);
 		// texture_resource_information_section_block_count
-		let texture_resource_information_section_block_count = view.u32(0x54);
 		// texture_resource_information_section_offset
-		let texture_resource_information_section_offset = view.u32(0x58);
 		// texture_resource_information_section_block_size
-		let texture_resource_information_section_block_size = view.u32(0x5C);
 		// description_group_section_offset
 		// description_resource_section_offset
 		// description_string_section_offset
@@ -235,7 +232,7 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.Repair {
 			// packet
 			let actual_packet_size = Math.max(Number(information_section_size), Number(generic_resource_data_section_offset + generic_resource_data_section_size), Number(texture_resource_data_section_offset + texture_resource_data_section_size));
 			view.u32(0x84, BigInt(actual_packet_size));
-			if (Number(offset) + actual_packet_size > data.byteLength) {
+			if (actual_packet_size === 0 || Number(offset) + actual_packet_size > data.byteLength) {
 				// replace packet information for invalid packet
 				Console.notify('w', los(`检测到Packet异常，现以空Packet替换`), [
 					`subgroup index=${subgroup_index} offset=${offset.toString(16)} size=${actual_packet_size.toString(16)}`,

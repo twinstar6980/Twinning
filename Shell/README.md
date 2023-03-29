@@ -14,11 +14,11 @@
 	
 	* [Clang 16.0+ with libstdc++ and POSIX for Linux](https://llvm.org/)
 	
-	* [Clang 15.0+ with libc++ and POSIX for Macintosh](https://llvm.org/)
+	* [Clang 16.0+ with libc++ and POSIX for Macintosh](https://llvm.org/)
 	
 	* [NDK 25.1+ for Android](https://developer.android.com/ndk/downloads)
 	
-	* [Clang 15.0+ with libc++ and POSIX for iPhone](https://llvm.org/)
+	* [Clang 16.0+ with libc++ and POSIX for iPhone](https://llvm.org/)
 
 * 开发
 	

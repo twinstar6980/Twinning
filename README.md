@@ -52,7 +52,7 @@ by TwinStar ( aka TwinKleS or SmallPC or 一路上海外 ) .
 
 * `Xentax` 论坛上一份关于 `Wwise Sound-Bank` 格式的 [文档](http://wiki.xentax.com/index.php/Wwise_SoundBank_(*.bnk)#STID_section) ，帮助我初步了解了该文件格式。
 
-* `1Zulu` 、`黄宠红花` 等在 PvZ-2 早期对 `RTON` 文件进行研究与普及的人士，他们是包括我在内的早期 MODDER 的启蒙者，PvZ-2 MOD 的发展离不开它们的贡献。
+* `1Zulu` 、`黄宠红花` 等在 PvZ-2 早期对 `RTON` 文件进行研究与普及的人士，他们为包括我在内的许多早期 MODDER 提供了启蒙，PvZ-2 MOD 的发展离不开他们的贡献。
 
 本工具的完善得益于对 PvZ-2 MOD 技术进行普及的人们。我始终认为，只有技术开放，才能让绝大多数人受益，才能将 MODDER 们从繁重的、与创意无关的工作中解放，才能实现生产力的进步；而技术封闭则反之，妄图将技术私有、垄断，是不切实际的，同时也阻碍着垄断者自身的生产力进步。
 
