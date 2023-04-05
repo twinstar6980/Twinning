@@ -28,11 +28,21 @@ class StringList extends ffi.Struct {
 }
 
 class Callback extends ffi.Struct {
-  external ffi.Pointer<ffi.NativeFunction<ffi.Pointer<StringList> Function(ffi.Pointer<StringList>)>> value;
+  external ffi.Pointer<ffi.NativeFunction<ffi.Pointer<String> Function(ffi.Pointer<ffi.Pointer<StringList>>, ffi.Pointer<ffi.Pointer<StringList>>)>> value;
 }
 
-typedef version = ffi.Pointer<Size> Function();
+// ----------------
 
-typedef execute = ffi.Pointer<String> Function(ffi.Pointer<Callback>, ffi.Pointer<String>, ffi.Pointer<StringList>);
+typedef version = ffi.Pointer<String> Function(
+  ffi.Pointer<ffi.Pointer<Size>> number,
+);
 
-typedef prepare = ffi.Pointer<String> Function();
+typedef execute = ffi.Pointer<String> Function(
+  ffi.Pointer<ffi.Pointer<Callback>>   callback,
+  ffi.Pointer<ffi.Pointer<String>>     script,
+  ffi.Pointer<ffi.Pointer<StringList>> argument,
+  ffi.Pointer<ffi.Pointer<String>>     result,
+);
+
+typedef prepare = ffi.Pointer<String> Function(
+);

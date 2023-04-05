@@ -13,34 +13,33 @@ namespace TwinStar.Script.Entry.method.pvz2.remote_android_helper {
 		g_executor_method.push(
 			Executor.method_of({
 				id: 'pvz2.remote_android_helper.launch',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					project_directory: Executor.RequireArgument<string>;
 					action: Executor.RequestArgument<string, false>;
 				}) {
 					let project_directory: string;
-					let action: Support.PvZ2.RemoteAndroidHelper.Action;
+					let action: string;
 					{
 						project_directory = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'project_directory'),
+							Executor.query_argument_name(this.id, 'project_directory'),
 							a.project_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
 						action = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'action'),
+							Executor.query_argument_name(this.id, 'action'),
 							a.action,
 							(value) => (value),
 							null,
-							() => (Console.option(Support.PvZ2.RemoteAndroidHelper.ActionE.map((e) => ([e])), null)),
-							(value) => (Support.PvZ2.RemoteAndroidHelper.ActionE.includes(value as any) ? null : los(`未知操作`)),
+							(initial) => (Console.option(Support.PvZ2.RemoteAndroidHelper.ActionE.map((e) => ([e])), null, null, initial)),
 						);
 					}
-					Support.PvZ2.RemoteAndroidHelper.execute(project_directory, action);
-					Console.notify('s', los(`执行成功`), [`${project_directory}`]);
+					Support.PvZ2.RemoteAndroidHelper.execute(project_directory, action as any);
+					Console.message('s', los(`执行成功`), [`${project_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/utility/base_wrapper/wrapper.hpp"
+#include "core/utility/range/algorithm.hpp"
 
 namespace TwinStar::Core {
 

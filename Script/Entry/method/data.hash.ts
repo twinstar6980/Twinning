@@ -13,9 +13,9 @@ namespace TwinStar.Script.Entry.method.data.hash {
 		g_executor_method.push(
 			Executor.method_of({
 				id: 'data.hash.md5',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					target_file: Executor.RequireArgument<string>;
@@ -23,14 +23,14 @@ namespace TwinStar.Script.Entry.method.data.hash {
 					let target_file: string;
 					{
 						target_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'target_file'),
+							Executor.query_argument_name(this.id, 'target_file'),
 							a.target_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 					}
 					let result = CoreX.Tool.Data.Hash.MD5.hash_fs(target_file);
-					Console.notify('s', los(`执行成功`), [`${result.toString(16)}`]);
+					Console.message('s', los(`执行成功`), [`${result.toString(16)}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

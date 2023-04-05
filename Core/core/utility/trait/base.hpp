@@ -1,6 +1,10 @@
 #pragma once
 
-#include "core/type.hpp"
+#include "core/common.hpp"
+#include "core/utility/macro.hpp"
+#include "core/utility/builtin.hpp"
+#include "core/utility/exception/exception.hpp"
+#include "core/utility/exception/utility.hpp"
 #include <type_traits>
 #include <concepts>
 #include <tuple>
@@ -36,7 +40,7 @@ namespace TwinStar::Core::Trait {
 		AutoConstraint
 	inline constexpr auto declare (
 	) -> It {
-		throw NeverException{};
+		throw ImpossibleException{};
 	}
 
 	#pragma endregion

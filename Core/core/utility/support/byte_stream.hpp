@@ -125,7 +125,7 @@ namespace TwinStar::Core {
 
 	template <typename TValue> requires
 		AutoConstraint
-	struct ByteStreamAdapter<FloatingWrapper<TValue>> :
+	struct ByteStreamAdapter<FloaterWrapper<TValue>> :
 		ByteStreamAdapter<NumberWrapper<TValue>> {
 	};
 

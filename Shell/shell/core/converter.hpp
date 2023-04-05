@@ -108,15 +108,15 @@ namespace TwinStar::Shell::Core {
 
 		static auto parse_callback (
 			Interface::Callback const & structure
-		) -> std::function<Interface::StringList const * (Interface::StringList const *)> {
-			return std::function<Interface::StringList const * (Interface::StringList const *)>{structure.value};
+		) -> std::function<Interface::String * (Interface::StringList * *, Interface::StringList * *)> {
+			return std::function<Interface::String * (Interface::StringList * *, Interface::StringList * *)>{structure.value};
 		}
 
 		static auto construct_callback (
-			Interface::Callback &                                                                structure,
-			std::function<Interface::StringList const * (Interface::StringList const *)> const & value
+			Interface::Callback &                                                                             structure,
+			std::function<Interface::String * (Interface::StringList * *, Interface::StringList * *)> const & value
 		) -> void {
-			structure.value = *value.target<Interface::StringList const* (*) (Interface::StringList const *)>();
+			structure.value = *value.target<Interface::String * (*) (Interface::StringList * *, Interface::StringList * *)>();
 			return;
 		}
 

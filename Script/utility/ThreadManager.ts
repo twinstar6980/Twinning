@@ -52,7 +52,7 @@ namespace TwinStar.Script {
 			assert_test(0 <= index && index < this.m_pool.length, `invalid thread index`);
 			let item = this.m_pool[index];
 			assert_test(!item.context.busy().value, `context is busy`);
-			item.context.execute(this.make_executor(index, executor), item.thread);
+			item.context.execute(item.thread, this.make_executor(index, executor));
 			item.thread.detach();
 			return;
 		}

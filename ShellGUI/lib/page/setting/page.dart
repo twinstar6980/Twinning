@@ -37,20 +37,20 @@ class _SettingPageState extends State<SettingPage> {
                 ListTile(
                   dense: true,
                   title: Text(
-                    '个性化',
+                    'Customize',
                     style: theme.textTheme.titleSmall!.copyWith(color: theme.colorScheme.primary),
                   ),
                 ),
                 ListTile(
                   leading: const Icon(Icons.auto_mode),
-                  title: const Text('主题模式'),
+                  title: const Text('Theme Mode'),
                   trailing: SizedBox(
                     width: 64,
                     child: Row(
                       children: [
                         Expanded(child: Container()),
                         Text(
-                          ['系统', '亮色', '暗色'][setting.data.mThemeMode.index],
+                          ['System', 'Light', 'Dark'][setting.data.mThemeMode.index],
                           style: theme.textTheme.bodyMedium,
                         ),
                       ],
@@ -60,13 +60,13 @@ class _SettingPageState extends State<SettingPage> {
                     showDialog<String>(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: const Text('主题模式'),
+                        title: const Text('Theme Mode'),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             ...ThemeMode.values.map(
                               (e) => ListTile(
-                                title: Text(['系统', '亮色', '暗色'][e.index]),
+                                title: Text(['System', 'Light', 'Dark'][e.index]),
                                 leading: Radio<ThemeMode>(
                                   value: e,
                                   groupValue: setting.data.mThemeMode,
@@ -82,7 +82,7 @@ class _SettingPageState extends State<SettingPage> {
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context, 'OK'),
-                            child: const Text('完成'),
+                            child: const Text('OK'),
                           ),
                         ],
                       ),
@@ -91,7 +91,7 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 ListTile(
                   leading: const Icon(Icons.color_lens),
-                  title: const Text('主题配色'),
+                  title: const Text('Theme Color'),
                   trailing: SizedBox(
                     width: 64,
                     child: Row(
@@ -113,7 +113,7 @@ class _SettingPageState extends State<SettingPage> {
                     showDialog<String>(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: const Text('主题配色'),
+                        title: const Text('Theme Color'),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -127,7 +127,7 @@ class _SettingPageState extends State<SettingPage> {
                                   },
                                 ),
                                 const SizedBox(width: 12),
-                                Text('继承系统主题配色', style: theme.textTheme.titleMedium),
+                                Text('Inherit From System', style: theme.textTheme.titleMedium),
                               ],
                             ),
                             ...[0, 1].map(
@@ -159,7 +159,7 @@ class _SettingPageState extends State<SettingPage> {
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context, 'OK'),
-                            child: const Text('完成'),
+                            child: const Text('OK'),
                           ),
                         ],
                       ),
@@ -168,14 +168,14 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 ListTile(
                   leading: const Icon(Icons.text_increase),
-                  title: const Text('字体尺寸'),
+                  title: const Text('Font Size'),
                   trailing: SizedBox(
                     width: 64,
                     child: Row(
                       children: [
                         Expanded(child: Container()),
                         Text(
-                          !setting.data.mUseLargerFontInConsole ? '常规' : '较大',
+                          !setting.data.mUseLargerFontInConsole ? 'Regular' : 'Larger',
                           style: theme.textTheme.bodyMedium,
                         ),
                       ],
@@ -185,13 +185,13 @@ class _SettingPageState extends State<SettingPage> {
                     showDialog<String>(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: const Text('字体尺寸'),
+                        title: const Text('Font Size'),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             ...[false, true].map(
                               (e) => ListTile(
-                                title: Text(!e ? '常规' : '较大'),
+                                title: Text(!e ? 'Regular' : 'Larger'),
                                 leading: Radio<Boolean>(
                                   value: e,
                                   groupValue: setting.data.mUseLargerFontInConsole,
@@ -211,13 +211,13 @@ class _SettingPageState extends State<SettingPage> {
                 ListTile(
                   dense: true,
                   title: Text(
-                    '工具设置',
+                    'ToolKit',
                     style: theme.textTheme.titleSmall!.copyWith(color: theme.colorScheme.primary),
                   ),
                 ),
                 ListTile(
                   leading: const Icon(Icons.data_usage),
-                  title: const Text('核心'),
+                  title: const Text('Core'),
                   trailing: SizedBox(
                     width: 64,
                     child: Row(
@@ -234,7 +234,7 @@ class _SettingPageState extends State<SettingPage> {
                     showDialog<String>(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: const Text('核心'),
+                        title: const Text('Core'),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -253,7 +253,7 @@ class _SettingPageState extends State<SettingPage> {
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context, 'OK'),
-                            child: const Text('完成'),
+                            child: const Text('OK'),
                           ),
                         ],
                       ),
@@ -262,7 +262,7 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 ListTile(
                   leading: const Icon(Icons.data_object),
-                  title: const Text('脚本'),
+                  title: const Text('Script'),
                   trailing: SizedBox(
                     width: 64,
                     child: Row(
@@ -279,7 +279,7 @@ class _SettingPageState extends State<SettingPage> {
                     showDialog<String>(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: const Text('脚本'),
+                        title: const Text('Script'),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -298,7 +298,7 @@ class _SettingPageState extends State<SettingPage> {
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context, 'OK'),
-                            child: const Text('完成'),
+                            child: const Text('OK'),
                           ),
                         ],
                       ),
@@ -307,7 +307,7 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 ListTile(
                   leading: const Icon(Icons.list),
-                  title: const Text('参数'),
+                  title: const Text('Argument'),
                   trailing: SizedBox(
                     width: 64,
                     child: Row(
@@ -324,7 +324,7 @@ class _SettingPageState extends State<SettingPage> {
                     showDialog<String>(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: const Text('参数'),
+                        title: const Text('Argument'),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -348,7 +348,7 @@ class _SettingPageState extends State<SettingPage> {
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context, 'OK'),
-                            child: const Text('完成'),
+                            child: const Text('OK'),
                           ),
                         ],
                       ),
@@ -357,14 +357,14 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 ListTile(
                   leading: const Icon(Icons.exit_to_app),
-                  title: const Text('命令完成后行为'),
+                  title: const Text('Behavior After Command Succeed'),
                   trailing: SizedBox(
                     width: 64,
                     child: Row(
                       children: [
                         Expanded(child: Container()),
                         Text(
-                          !setting.data.mExitAfterCommandSucceed ? '驻留' : '退出',
+                          !setting.data.mBehaviorAfterCommandSucceed ? 'Stay' : 'Exit',
                           style: theme.textTheme.bodyMedium,
                         ),
                       ],
@@ -374,18 +374,18 @@ class _SettingPageState extends State<SettingPage> {
                     showDialog<String>(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: const Text('命令完成后行为'),
+                        title: const Text('Behavior After Command Succeed'),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             ...[false, true].map(
                               (e) => ListTile(
-                                title: Text(!e ? '驻留' : '退出'),
+                                title: Text(!e ? 'Stay' : 'Exit'),
                                 leading: Radio<Boolean>(
                                   value: e,
-                                  groupValue: setting.data.mExitAfterCommandSucceed,
+                                  groupValue: setting.data.mBehaviorAfterCommandSucceed,
                                   onChanged: (value) {
-                                    setting.data.mExitAfterCommandSucceed = value!;
+                                    setting.data.mBehaviorAfterCommandSucceed = value!;
                                     setting.notify();
                                   },
                                 ),
@@ -396,7 +396,7 @@ class _SettingPageState extends State<SettingPage> {
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context, 'OK'),
-                            child: const Text('完成'),
+                            child: const Text('OK'),
                           ),
                         ],
                       ),
@@ -410,7 +410,7 @@ class _SettingPageState extends State<SettingPage> {
                     onPressed: () {
                       setting.reset();
                     },
-                    child: const Text('重置'),
+                    child: const Text('Reset'),
                   ),
                   Expanded(child: Container()),
                 ]),

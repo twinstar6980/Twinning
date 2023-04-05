@@ -1,12 +1,11 @@
 #pragma once
 
+#include "core/utility/macro.hpp"
+#include "core/utility/builtin.hpp"
+
 #include "core/utility/exception/source_location.hpp"
 #include "core/utility/exception/exception.hpp"
-#include "core/utility/exception/simple_exception.hpp"
-#include "core/utility/exception/special_exception.hpp"
-#include "core/utility/exception/base_exception/utility.hpp"
-#include "core/utility/exception/base_exception/exception_message.hpp"
-#include "core/utility/exception/base_exception/base_exception.hpp"
+#include "core/utility/exception/utility.hpp"
 
 #include "core/utility/trait/base.hpp"
 #include "core/utility/trait/category.hpp"
@@ -96,15 +95,15 @@
 
 #include "core/utility/data/xml/node.hpp"
 
-#include "core/utility/script/js/value_adapter.hpp"
-#include "core/utility/script/js/handler.hpp"
-#include "core/utility/script/js/js.hpp"
-#include "core/utility/script/js/utility.hpp"
-
 #include "core/utility/file_system/path.hpp"
 #include "core/utility/file_system/file_system.hpp"
 
 #include "core/utility/process/process.hpp"
+
+#include "core/utility/script/java_script/native_value_handler.hpp"
+#include "core/utility/script/java_script/value_adapter.hpp"
+#include "core/utility/script/java_script/value.hpp"
+#include "core/utility/script/java_script/utility.hpp"
 
 #include "core/utility/miscellaneous/bitset.hpp"
 #include "core/utility/miscellaneous/kv_pair.hpp"
@@ -113,13 +112,13 @@
 #include "core/utility/miscellaneous/string_block.hpp"
 #include "core/utility/miscellaneous/thread.hpp"
 
+#include "core/utility/support/std.hpp"
+#include "core/utility/support/fmt.hpp"
 #include "core/utility/support/byte_stream.hpp"
 #include "core/utility/support/character_stream.hpp"
 #include "core/utility/support/string.hpp"
 #include "core/utility/support/json.hpp"
-#include "core/utility/support/js.hpp"
-#include "core/utility/support/stl.hpp"
-#include "core/utility/support/fmt.hpp"
+#include "core/utility/support/java_script.hpp"
 
 namespace TwinStar::Core {
 }

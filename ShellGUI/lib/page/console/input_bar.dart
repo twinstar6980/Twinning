@@ -129,7 +129,7 @@ class _PauseInputBarContentState extends State<PauseInputBarContent> {
       completer: this.widget.completer,
       getCompleterValue: () => null,
       icon: Icons.pause,
-      child: const Text('响应以继续 ...'),
+      child: const Text('Pause ...'),
     );
   }
 
@@ -137,15 +137,15 @@ class _PauseInputBarContentState extends State<PauseInputBarContent> {
 
 // ----------------
 
-class ConfirmInputBarContent extends StatefulWidget {
+class ConfirmationInputBarContent extends StatefulWidget {
 
-  const ConfirmInputBarContent({
+  const ConfirmationInputBarContent({
     super.key,
     required this.completer,
   });
 
   @override
-  State<ConfirmInputBarContent> createState() => _ConfirmInputBarContentState();
+  State<ConfirmationInputBarContent> createState() => _ConfirmationInputBarContentState();
 
   // ----------------
 
@@ -153,7 +153,7 @@ class ConfirmInputBarContent extends StatefulWidget {
 
 }
 
-class _ConfirmInputBarContentState extends State<ConfirmInputBarContent> {
+class _ConfirmationInputBarContentState extends State<ConfirmationInputBarContent> {
 
   Boolean? _value;
 
@@ -175,14 +175,14 @@ class _ConfirmInputBarContentState extends State<ConfirmInputBarContent> {
                         this._value = null;
                         this.setState(() {});
                       },
-                      child: Text(!e ? '否' : '是'),
+                      child: Text(!e ? 'No' : 'Yes'),
                     )
                   : OutlinedButton(
                       onPressed: () {
                         this._value = e;
                         this.setState(() {});
                       },
-                      child: Text(!e ? '否' : '是'),
+                      child: Text(!e ? 'No' : 'Yes'),
                     ),
             );
           }),
@@ -195,14 +195,14 @@ class _ConfirmInputBarContentState extends State<ConfirmInputBarContent> {
                         this._value = null;
                         this.setState(() {});
                       },
-                      child: Text(!e ? '否' : '是'),
+                      child: Text(!e ? 'No' : 'Yes'),
                     )
                   : OutlinedButton(
                       onPressed: () {
                         this._value = e;
                         this.setState(() {});
                       },
-                      child: Text(!e ? '否' : '是'),
+                      child: Text(!e ? 'No' : 'Yes'),
                     ),
             );
           }),
@@ -227,13 +227,13 @@ class NumberInputBarContent extends StatefulWidget {
 
   // ----------------
 
-  final Completer<Floating?> completer;
+  final Completer<Floater?> completer;
 
 }
 
 class _NumberInputBarContentState extends State<NumberInputBarContent> {
 
-  Floating? _value;
+  Floater? _value;
 
   // ----------------
 
@@ -253,11 +253,11 @@ class _NumberInputBarContentState extends State<NumberInputBarContent> {
         ],
         decoration: const InputDecoration(
           border: InputBorder.none,
-          hintText: '请输入数字',
+          hintText: 'Number ...',
         ),
         onChanged: (value) {
           try {
-            this._value = Floating.parse(value);
+            this._value = Floater.parse(value);
           } catch (e) {
             this._value = null;
           }
@@ -309,7 +309,7 @@ class _IntegerInputBarContentState extends State<IntegerInputBarContent> {
         ],
         decoration: const InputDecoration(
           border: InputBorder.none,
-          hintText: '请输入整数',
+          hintText: 'Integer ...',
         ),
         onChanged: (value) {
           try {
@@ -345,8 +345,8 @@ class SizeInputBarContent extends StatefulWidget {
 
 class _SizeInputBarContentState extends State<SizeInputBarContent> {
 
-  Floating? _value;
-  Integer   _unit = 3;
+  Floater? _value;
+  Integer  _unit = 3;
 
   // ----------------
 
@@ -369,11 +369,11 @@ class _SizeInputBarContentState extends State<SizeInputBarContent> {
               ],
               decoration: const InputDecoration(
                 border: InputBorder.none,
-                hintText: '请输入尺寸',
+                hintText: 'Size ...',
               ),
               onChanged: (value) {
                 try {
-                  this._value = Floating.parse(value);
+                  this._value = Floater.parse(value);
                 } catch (e) {
                   this._value = null;
                 }
@@ -454,7 +454,7 @@ class _StringInputBarContentState extends State<StringInputBarContent> {
       child: TextField(
         decoration: const InputDecoration(
           border: InputBorder.none,
-          hintText: '请输入字符串',
+          hintText: 'String ...',
         ),
         onChanged: (value) {
           this._value = value.isEmpty ? null : value;
@@ -511,7 +511,7 @@ class _OptionInputBarContentState extends State<OptionInputBarContent> {
       icon: Icons.menu,
       child: DropdownButton<Integer>(
         value: this._value,
-        hint: const Text('请选择一项'),
+        hint: const Text('Option ...'),
         items: itemList,
         underline: Container(),
         isExpanded: true,

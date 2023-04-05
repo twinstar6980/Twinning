@@ -15,9 +15,9 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 		g_executor_method.push(
 			Executor.method_of({
 				id: 'popcap.character_font_widget_2.encode',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					manifest_file: Executor.RequireArgument<string>;
@@ -29,29 +29,28 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 					let buffer_size: bigint;
 					{
 						manifest_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'manifest_file'),
+							Executor.query_argument_name(this.id, 'manifest_file'),
 							a.manifest_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 						data_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'data_file'),
+							Executor.query_argument_name(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
 							() => (manifest_file.replace(/((\.cfw2)(\.json))?$/i, '.cfw2')),
-							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'buffer_size'),
+							Executor.query_argument_name(this.id, 'buffer_size'),
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.size(null)),
-							(value) => (null),
+							(initial) => (Console.size(null, null, initial)),
 						);
 					}
 					CoreX.Tool.PopCap.CharacterFontWidget2.encode_fs(data_file, manifest_file, {}, buffer_size);
-					Console.notify('s', los(`执行成功`), [`${data_file}`]);
+					Console.message('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -64,9 +63,9 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 			}),
 			Executor.method_of({
 				id: 'popcap.character_font_widget_2.decode',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					data_file: Executor.RequireArgument<string>;
@@ -76,21 +75,21 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 					let manifest_file: string;
 					{
 						data_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'data_file'),
+							Executor.query_argument_name(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 						manifest_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'manifest_file'),
+							Executor.query_argument_name(this.id, 'manifest_file'),
 							a.manifest_file,
 							(value) => (value),
 							() => (data_file.replace(/((\.cfw2))?$/i, '.cfw2.json')),
-							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 					}
 					CoreX.Tool.PopCap.CharacterFontWidget2.decode_fs(data_file, manifest_file, {});
-					Console.notify('s', los(`执行成功`), [`${manifest_file}`]);
+					Console.message('s', los(`执行成功`), [`${manifest_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -104,9 +103,9 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 		g_executor_method_of_batch.push(
 			Executor.method_of({
 				id: 'popcap.character_font_widget_2.encode.batch',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					manifest_file_directory: Executor.RequireArgument<string>;
@@ -118,25 +117,24 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 					let buffer_size: bigint;
 					{
 						manifest_file_directory = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'manifest_file_directory'),
+							Executor.query_argument_name(this.id, 'manifest_file_directory'),
 							a.manifest_file_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
 						data_file_directory = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'data_file_directory'),
+							Executor.query_argument_name(this.id, 'data_file_directory'),
 							a.data_file_directory,
 							(value) => (value),
 							() => (manifest_file_directory.replace(/$/i, '.encode')),
-							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'buffer_size'),
+							Executor.query_argument_name(this.id, 'buffer_size'),
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.size(null)),
-							(value) => (null),
+							(initial) => (Console.size(null, null, initial)),
 						);
 					}
 					let data_buffer = Core.ByteArray.allocate(Core.Size.value(buffer_size));
@@ -149,7 +147,7 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 							CoreX.Tool.PopCap.CharacterFontWidget2.encode_fs(data_file, manifest_file, {}, data_buffer.view());
 						},
 					);
-					Console.notify('s', los(`执行成功`), [`${data_file_directory}`]);
+					Console.message('s', los(`执行成功`), [`${data_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -162,9 +160,9 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 			}),
 			Executor.method_of({
 				id: 'popcap.character_font_widget_2.decode.batch',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					data_file_directory: Executor.RequireArgument<string>;
@@ -174,17 +172,17 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 					let manifest_file_directory: string;
 					{
 						data_file_directory = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'data_file_directory'),
+							Executor.query_argument_name(this.id, 'data_file_directory'),
 							a.data_file_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
 						manifest_file_directory = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'manifest_file_directory'),
+							Executor.query_argument_name(this.id, 'manifest_file_directory'),
 							a.manifest_file_directory,
 							(value) => (value),
 							() => (data_file_directory.replace(/$/i, '.decode')),
-							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 					}
 					simple_batch_execute(
@@ -196,7 +194,7 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 							CoreX.Tool.PopCap.CharacterFontWidget2.decode_fs(data_file, manifest_file, {});
 						},
 					);
-					Console.notify('s', los(`执行成功`), [`${manifest_file_directory}`]);
+					Console.message('s', los(`执行成功`), [`${manifest_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

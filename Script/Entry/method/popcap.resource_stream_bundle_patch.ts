@@ -18,9 +18,9 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 		g_executor_method.push(
 			Executor.method_of({
 				id: 'popcap.resource_stream_bundle_patch.encode',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					before_file: Executor.RequireArgument<string>;
@@ -38,52 +38,50 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 					let buffer_size: bigint;
 					{
 						before_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'before_file'),
+							Executor.query_argument_name(this.id, 'before_file'),
 							a.before_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 						after_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'after_file'),
+							Executor.query_argument_name(this.id, 'after_file'),
 							a.after_file,
 							(value) => (value),
 							null,
-							...Executor.argument_requester_for_path('file', [true]),
+							(initial) => (Console.path('file', [true], null, null, initial)),
 						);
 						patch_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'patch_file'),
+							Executor.query_argument_name(this.id, 'patch_file'),
 							a.patch_file,
 							(value) => (value),
 							() => (after_file.replace(/((\.rsb))?$/i, '.rsbpatch')),
-							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
+						let x = true as boolean;
 						use_raw_packet = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'use_raw_packet'),
+							Executor.query_argument_name(this.id, 'use_raw_packet'),
 							a.use_raw_packet,
 							(value) => (value),
 							null,
-							() => (Console.confirm(null)),
-							(value) => (null),
+							(initial) => (Console.confirmation(null, null, initial)),
 						);
 						version_number = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'version_number'),
+							Executor.query_argument_name(this.id, 'version_number'),
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.option([0n, null, [1n, '']], null)),
-							(value) => (CoreX.Tool.PopCap.ResourceStreamBundlePatch.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
+							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ResourceStreamBundlePatch.VersionNumberE), null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'buffer_size'),
+							Executor.query_argument_name(this.id, 'buffer_size'),
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.size(null)),
-							(value) => (null),
+							(initial) => (Console.size(null, null, initial)),
 						);
 					}
 					CoreX.Tool.PopCap.ResourceStreamBundlePatch.encode_fs(before_file, after_file, patch_file, use_raw_packet, { number: version_number as any }, buffer_size);
-					Console.notify('s', los(`执行成功`), [`${patch_file}`]);
+					Console.message('s', los(`执行成功`), [`${patch_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -99,9 +97,9 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 			}),
 			Executor.method_of({
 				id: 'popcap.resource_stream_bundle_patch.decode',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					before_file: Executor.RequireArgument<string>;
@@ -119,52 +117,49 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 					let buffer_size: bigint;
 					{
 						before_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'before_file'),
+							Executor.query_argument_name(this.id, 'before_file'),
 							a.before_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 						patch_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'patch_file'),
+							Executor.query_argument_name(this.id, 'patch_file'),
 							a.patch_file,
 							(value) => (value),
 							null,
-							...Executor.argument_requester_for_path('file', [true]),
+							(initial) => (Console.path('file', [true], null, null, initial)),
 						);
 						after_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'after_file'),
+							Executor.query_argument_name(this.id, 'after_file'),
 							a.after_file,
 							(value) => (value),
 							() => (patch_file.replace(/((\.rsbpatch))?$/i, '.rsb')),
-							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						use_raw_packet = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'use_raw_packet'),
+							Executor.query_argument_name(this.id, 'use_raw_packet'),
 							a.use_raw_packet,
 							(value) => (value),
 							null,
-							() => (Console.confirm(null)),
-							(value) => (null),
+							(initial) => (Console.confirmation(null, null, initial)),
 						);
 						version_number = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'version_number'),
+							Executor.query_argument_name(this.id, 'version_number'),
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.option([0n, null, [1n, '']], null)),
-							(value) => (CoreX.Tool.PopCap.ResourceStreamBundlePatch.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
+							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ResourceStreamBundlePatch.VersionNumberE), null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'buffer_size'),
+							Executor.query_argument_name(this.id, 'buffer_size'),
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.size(null)),
-							(value) => (null),
+							(initial) => (Console.size(null, null, initial)),
 						);
 					}
 					CoreX.Tool.PopCap.ResourceStreamBundlePatch.decode_fs(before_file, after_file, patch_file, use_raw_packet, { number: version_number as any }, buffer_size);
-					Console.notify('s', los(`执行成功`), [`${after_file}`]);
+					Console.message('s', los(`执行成功`), [`${after_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

@@ -8,7 +8,7 @@ namespace TwinStar::Core {
 
 	template <typename TXValue> requires
 		CategoryConstraint<IsPureInstance<TXValue>>
-	struct Position1D {
+	struct Position1 {
 
 		using XValue = TXValue;
 
@@ -19,15 +19,15 @@ namespace TwinStar::Core {
 		// ----------------
 
 		friend constexpr auto operator == (
-			Position1D const & thix,
-			Position1D const & that
+			Position1 const & thix,
+			Position1 const & that
 		) -> bool = default;
 
 	};
 
 	template <typename TXValue, typename TYValue = TXValue> requires
 		CategoryConstraint<IsPureInstance<TXValue> && IsPureInstance<TYValue>>
-	struct Position2D {
+	struct Position2 {
 
 		using XValue = TXValue;
 
@@ -41,15 +41,15 @@ namespace TwinStar::Core {
 		// ----------------
 
 		friend constexpr auto operator == (
-			Position2D const & thix,
-			Position2D const & that
+			Position2 const & thix,
+			Position2 const & that
 		) -> bool = default;
 
 	};
 
 	template <typename TXValue, typename TYValue = TXValue, typename TZValue = TYValue> requires
 		CategoryConstraint<IsPureInstance<TXValue> && IsPureInstance<TYValue> && IsPureInstance<TZValue>>
-	struct Position3D {
+	struct Position3 {
 
 		using XValue = TXValue;
 
@@ -66,8 +66,8 @@ namespace TwinStar::Core {
 		// ----------------
 
 		friend constexpr auto operator == (
-			Position3D const & thix,
-			Position3D const & that
+			Position3 const & thix,
+			Position3 const & that
 		) -> bool = default;
 
 	};
@@ -76,7 +76,7 @@ namespace TwinStar::Core {
 
 	template <typename TXValue> requires
 		CategoryConstraint<IsPureInstance<TXValue>>
-	struct Size1D {
+	struct Size1 {
 
 		using XValue = TXValue;
 
@@ -96,15 +96,15 @@ namespace TwinStar::Core {
 		// ----------------
 
 		friend constexpr auto operator == (
-			Size1D const & thix,
-			Size1D const & that
+			Size1 const & thix,
+			Size1 const & that
 		) -> bool = default;
 
 	};
 
 	template <typename TXValue, typename TYValue = TXValue> requires
 		CategoryConstraint<IsPureInstance<TXValue> && IsPureInstance<TYValue>>
-	struct Size2D {
+	struct Size2 {
 
 		using XValue = TXValue;
 
@@ -128,15 +128,15 @@ namespace TwinStar::Core {
 		// ----------------
 
 		friend constexpr auto operator == (
-			Size2D const & thix,
-			Size2D const & that
+			Size2 const & thix,
+			Size2 const & that
 		) -> bool = default;
 
 	};
 
 	template <typename TXValue, typename TYValue = TXValue, typename TZValue = TYValue> requires
 		CategoryConstraint<IsPureInstance<TXValue> && IsPureInstance<TYValue> && IsPureInstance<TZValue>>
-	struct Size3D {
+	struct Size3 {
 
 		using XValue = TXValue;
 
@@ -164,8 +164,8 @@ namespace TwinStar::Core {
 		// ----------------
 
 		friend constexpr auto operator == (
-			Size3D const & thix,
-			Size3D const & that
+			Size3 const & thix,
+			Size3 const & that
 		) -> bool = default;
 
 	};

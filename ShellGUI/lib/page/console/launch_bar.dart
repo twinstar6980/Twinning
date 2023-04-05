@@ -23,11 +23,11 @@ class LaunchBarContent extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: FilledButton.tonal(
+          child: OutlinedButton(
             onPressed: () {
               this.onLaunch([]);
             },
-            child: const Text('启动'),
+            child: const Text('Launch'),
           ),
         ),
       ],

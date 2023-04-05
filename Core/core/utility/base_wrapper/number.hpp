@@ -19,7 +19,7 @@ namespace TwinStar::Core {
 	template <typename TValue> requires
 		CategoryConstraint<IsPureInstance<TValue>>
 		&& (IsBaseWrapperValue<TValue>)
-	M_define_simple_derived_class(FloatingWrapper, NumberWrapper<TValue>, NumberWrapper);
+	M_define_simple_derived_class(FloaterWrapper, NumberWrapper<TValue>, NumberWrapper);
 
 	template <typename TValue> requires
 		CategoryConstraint<IsPureInstance<TValue>>
@@ -35,7 +35,7 @@ namespace TwinStar::Core {
 	concept IsIntegerWrapper = IsTemplateInstanceOfT<It, IntegerWrapper>;
 
 	template <typename It>
-	concept IsFloatingWrapper = IsTemplateInstanceOfT<It, FloatingWrapper>;
+	concept IsFloaterWrapper = IsTemplateInstanceOfT<It, FloaterWrapper>;
 
 	template <typename It>
 	concept IsSizeWrapper = IsTemplateInstanceOfT<It, SizeWrapper>;
@@ -57,10 +57,10 @@ namespace TwinStar::Core {
 		;
 
 	template <typename It>
-	concept IsSignedFloatingWrapper =
+	concept IsSignedFloaterWrapper =
 		CategoryConstraint<IsPureInstance<It>>
-		&& (IsFloatingWrapper<It>)
-		&& (IsBuiltinSignedFloating<typename It::Value>)
+		&& (IsFloaterWrapper<It>)
+		&& (IsBuiltinSignedFloater<typename It::Value>)
 		;
 
 	#pragma endregion
@@ -123,7 +123,7 @@ namespace TwinStar::Core {
 
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
-		&& (IsSignedIntegerWrapper<It> || IsSignedFloatingWrapper<It>)
+		&& (IsSignedIntegerWrapper<It> || IsSignedFloaterWrapper<It>)
 	inline constexpr auto operator + (
 		It const & thix
 	) -> It {
@@ -132,7 +132,7 @@ namespace TwinStar::Core {
 
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
-		&& (IsSignedIntegerWrapper<It> || IsSignedFloatingWrapper<It>)
+		&& (IsSignedIntegerWrapper<It> || IsSignedFloaterWrapper<It>)
 	inline constexpr auto operator - (
 		It const & thix
 	) -> It {
@@ -436,9 +436,9 @@ namespace TwinStar::Core {
 
 	// ----------------
 
-	using FloatingS32 = FloatingWrapper<ZFloatingS32>;
+	using FloaterS32 = FloaterWrapper<ZFloaterS32>;
 
-	using FloatingS64 = FloatingWrapper<ZFloatingS64>;
+	using FloaterS64 = FloaterWrapper<ZFloaterS64>;
 
 	// ----------------
 
@@ -454,7 +454,7 @@ namespace TwinStar::Core {
 
 	// ----------------
 
-	M_define_simple_derived_class(Floating, FloatingS64, FloatingS64);
+	M_define_simple_derived_class(Floater, FloaterS64, FloaterS64);
 
 	// ----------------
 
@@ -517,15 +517,15 @@ namespace TwinStar::Core {
 	// ----------------
 
 	inline constexpr auto operator ""_fs32 (
-		ZLiteralFloating value
-	) -> FloatingS32 {
-		return mbw<FloatingS32>(value);
+		ZLiteralFloater value
+	) -> FloaterS32 {
+		return mbw<FloaterS32>(value);
 	}
 
 	inline constexpr auto operator ""_fs64 (
-		ZLiteralFloating value
-	) -> FloatingS64 {
-		return mbw<FloatingS64>(value);
+		ZLiteralFloater value
+	) -> FloaterS64 {
+		return mbw<FloaterS64>(value);
 	}
 
 	// ----------------
@@ -553,9 +553,9 @@ namespace TwinStar::Core {
 	// ----------------
 
 	inline constexpr auto operator ""_f (
-		ZLiteralFloating value
-	) -> Floating {
-		return mbw<Floating>(value);
+		ZLiteralFloater value
+	) -> Floater {
+		return mbw<Floater>(value);
 	}
 
 	// ----------------

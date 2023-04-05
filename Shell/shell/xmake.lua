@@ -4,10 +4,16 @@ target('shell', function()
 	set_group('source')
 	set_kind('binary')
 	add_headerfiles(
-		'./version.hpp',
+		'./common.hpp',
 		'./third/system/windows.hpp',
 		'./third/system/posix.hpp',
-		'./common.hpp',
+		'./utility/macro.hpp',
+		'./utility/exception.hpp',
+		'./utility/string.hpp',
+		'./utility/function.hpp',
+		'./utility/library.hpp',
+		'./utility/interaction.hpp',
+		'./utility/miscellaneous.hpp',
 		'./core/interface.hpp',
 		'./core/symbol.hpp',
 		'./core/converter.hpp',
@@ -38,15 +44,12 @@ target('shell', function()
 			'./resource/windows/application.manifest',
 			{}
 		)
-		add_links(
-			'Ole32',
-			{ private = true }
-		)
 	end
 	on_load(function(target)
 		import('custom')
 		custom.apply_condition_definition_basic(target)
 		custom.apply_compiler_option_basic(target)
 		custom.apply_compiler_option_warning_regular(target)
+		custom.apply_import_vld_if_can(target)
 	end)
 end)

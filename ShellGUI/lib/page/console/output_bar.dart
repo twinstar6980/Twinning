@@ -8,9 +8,9 @@ import '/setting.dart';
 
 // ----------------
 
-class NotifyOutputBar extends StatelessWidget {
+class MessageOutputBar extends StatelessWidget {
 
-  const NotifyOutputBar({
+  const MessageOutputBar({
     super.key,
     required this.type,
     required this.title,
@@ -37,39 +37,48 @@ class NotifyOutputBar extends StatelessWidget {
       elevation: 1,
       color: Color.alphaBlend(typeColor.withOpacity(0.025), theme.colorScheme.surface),
       child: Container(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: titleTextStyle.textBaseline,
-            children: [
-              Icon(
-                Icons.circle,
-                color: Color.alphaBlend(typeColor.withOpacity(0.50), theme.colorScheme.onSurface),
-                size: 12,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: SelectionArea(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        this.title,
-                        style: titleTextStyle,
-                      ),
-                      ...this.description.map((e) => (Container(
-                            padding: const EdgeInsets.fromLTRB(0, 4, 0, 0),
-                            child: Text(
-                              e,
-                              style: descriptionTextStyle,
-                            ),
-                          ))),
-                    ],
-                  ),
+        padding: const EdgeInsets.all(8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.circle,
+                  color: Color.alphaBlend(typeColor.withOpacity(0.50), theme.colorScheme.onSurface),
+                  size: 12,
+                ),
+                Text(
+                  '',
+                  style: titleTextStyle,
+                ),
+              ],
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: SelectionArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      this.title,
+                      style: titleTextStyle,
+                    ),
+                    ...this.description.map((e) => (Container(
+                          padding: const EdgeInsets.fromLTRB(0, 4, 0, 0),
+                          child: Text(
+                            e,
+                            style: descriptionTextStyle,
+                          ),
+                        ))),
+                  ],
                 ),
               ),
-            ],
-          )),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

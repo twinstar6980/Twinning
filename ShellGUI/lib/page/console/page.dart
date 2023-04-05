@@ -102,7 +102,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         result.add(name);
         break;
       }
-      case 'output_notify': {
+      case 'output_message': {
         var type = MessageTypeExtension.fromString(argument[1]);
         var title = argument[2];
         var description = argument.sublist(3);
@@ -110,7 +110,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
           const SizedBox(height: 8),
         );
         this._outputBarListItem.add(
-          NotifyOutputBar(
+          MessageOutputBar(
             type: type,
             title: title,
             description: description,
@@ -134,9 +134,9 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         await Future.delayed(const Duration(milliseconds: 100));
         break;
       }
-      case 'input_confirm': {
+      case 'input_confirmation': {
         var completer = Completer<Boolean?>();
-        this._inputBarContent = ConfirmInputBarContent(
+        this._inputBarContent = ConfirmationInputBarContent(
           completer: completer,
         );
         this.setState(() {});
@@ -150,7 +150,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'input_number': {
-        var completer = Completer<Floating?>();
+        var completer = Completer<Floater?>();
         this._inputBarContent = NumberInputBarContent(
           completer: completer,
         );
@@ -225,11 +225,12 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
   
   // ----------------
 
-  Future<String?>
+  Future<Boolean>
   _launch(
     List<String> additionalArgument,
   ) async {
-    late String? result;
+    var exception = null as String?;
+    var result = null as String?;
     var setting = Provider.of<SettingProvider>(context, listen: false);
     var actualCorePath = setting.data.mCore;
     try {
@@ -250,24 +251,32 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
       }
       result = await Launcher.launch(this, actualCorePath, setting.data.mScript, [...setting.data.mArgument, ...additionalArgument]);
     } catch (e) {
-      result = '${e}';
+      exception = e.toString();
     }
-    if (result != null) {
+    this._outputBarListItem.add(
+      const SizedBox(height: 8),
+    );
+    if (exception == null) {
       this._outputBarListItem.add(
-        const SizedBox(height: 8),
-      );
-      this._outputBarListItem.add(
-        NotifyOutputBar(
-          type: MessageType.error,
-          title: result,
-          description: const [],
+        MessageOutputBar(
+          type: MessageType.success,
+          title: 'SUCCEEDED',
+          description:  [result!],
         ),
       );
-      await Future.delayed(const Duration(milliseconds: 100));
-      this._outputBarListScrollController.jumpTo(this._outputBarListScrollController.position.maxScrollExtent);
-      this.setState(() {});
+    } else {
+      this._outputBarListItem.add(
+        MessageOutputBar(
+          type: MessageType.error,
+          title: 'FAILED',
+          description:  [exception],
+        ),
+      );
     }
-    return result;
+    await Future.delayed(const Duration(milliseconds: 100));
+    this._outputBarListScrollController.jumpTo(this._outputBarListScrollController.position.maxScrollExtent);
+    this.setState(() {});
+    return exception == null;
   }
 
   // ----------------
@@ -280,8 +289,8 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
       () async {
         var additionalArgument = command.additionalArgument!;
         command.set(null);
-        var result = await this._launch(additionalArgument);
-        if (setting.data.mExitAfterCommandSucceed && result == null) {
+        var state = await this._launch(additionalArgument);
+        if (setting.data.mBehaviorAfterCommandSucceed && !state) {
           exitApp();
         }
       }();

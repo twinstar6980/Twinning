@@ -16,25 +16,25 @@ class SymbolTable {
 class SymbolNameTable {
   static String version = () {
     if (Platform.isWindows) {
-      return '?version@Interface@Core@TwinStar@@YAPEBUSize@123@XZ';
+      return '?version@Interface@Core@TwinStar@@YAPEAUString@123@PEAPEAUSize@123@@Z';
     }
     if (Platform.isLinux || Platform.isMacOS || Platform.isAndroid || Platform.isIOS) {
-      return '_ZN8TwinStar4Core9Interface7versionEv';
+      return '_ZN8TwinStar4Core9Interface7versionEPPNS1_4SizeE';
     }
     throw Exception();
   }();
   static String execute = () {
     if (Platform.isWindows) {
-      return '?execute@Interface@Core@TwinStar@@YAPEBUString@123@PEBUCallback@123@PEBU4123@PEBUStringList@123@@Z';
+      return '?execute@Interface@Core@TwinStar@@YAPEAUString@123@PEAPEAUCallback@123@PEAPEAU4123@PEAPEAUStringList@123@1@Z';
     }
     if (Platform.isLinux || Platform.isMacOS || Platform.isAndroid || Platform.isIOS) {
-      return '_ZN8TwinStar4Core9Interface7executeEPKNS1_8CallbackEPKNS1_6StringEPKNS1_10StringListE';
+      return '_ZN8TwinStar4Core9Interface7executeEPPNS1_8CallbackEPPNS1_6StringEPPNS1_10StringListES7_';
     }
     throw Exception();
   }();
   static String prepare = () {
     if (Platform.isWindows) {
-      return '?prepare@Interface@Core@TwinStar@@YAPEBUString@123@XZ';
+      return '?prepare@Interface@Core@TwinStar@@YAPEAUString@123@XZ';
     }
     if (Platform.isLinux || Platform.isMacOS || Platform.isAndroid || Platform.isIOS) {
       return '_ZN8TwinStar4Core9Interface7prepareEv';

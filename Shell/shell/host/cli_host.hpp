@@ -1,6 +1,8 @@
 #pragma once
 
 #include "shell/common.hpp"
+#include "shell/utility/string.hpp"
+#include "shell/utility/interaction.hpp"
 #include "shell/host/host.hpp"
 
 namespace TwinStar::Shell {
@@ -80,42 +82,39 @@ namespace TwinStar::Shell {
 		) -> std::vector<std::string> override {
 			assert_test(thiz.m_running);
 			auto result = std::vector<std::string>{};
+			assert_test(argument.size() >= 1);
 			auto method = argument[0];
 			switch (hash_string(method)) {
 				case hash_string("name"sv) : {
+					assert_test(argument.size() == 1);
 					auto name = thiz.name();
 					result.emplace_back(std::move(name));
 					break;
 				}
 				case hash_string("version"sv) : {
+					assert_test(argument.size() == 1);
 					auto version = thiz.version();
 					result.emplace_back(std::to_string(version));
 					break;
 				}
 				case hash_string("system"sv) : {
+					assert_test(argument.size() == 1);
 					auto system = thiz.system();
 					result.emplace_back(std::move(system));
 					break;
 				}
 				case hash_string("output"sv) : {
+					assert_test(argument.size() == 2);
 					auto text = argument[1];
 					thiz.output(text);
 					break;
 				}
 				case hash_string("input"sv) : {
+					assert_test(argument.size() == 1);
 					auto text = thiz.input();
 					result.emplace_back(std::move(text));
 					break;
 				}
-					#if defined M_system_windows
-				case hash_string("open_file_dialog"sv) : {
-					auto pick_folder = string_to_boolean(argument[1]);
-					auto multiple = string_to_boolean(argument[2]);
-					auto selected_path = thiz.open_file_dialog(pick_folder, multiple);
-					result.insert(result.end(), std::make_move_iterator(selected_path.begin()), std::make_move_iterator(selected_path.end()));
-					break;
-				}
-					#endif
 				default : {
 					throw std::runtime_error{"invalid method"s};
 				}
@@ -147,70 +146,13 @@ namespace TwinStar::Shell {
 		auto output (
 			std::string const & text
 		) -> void {
-			return Shell::output(text);
+			return Interaction::output(text);
 		}
 
 		auto input (
 		) -> std::string {
-			return Shell::input();
+			return Interaction::input();
 		}
-
-		// ----------------
-
-		#if defined M_system_windows
-
-		// NOTE : if arch == arm_32 : compile failed : undefined symbol "CoInitialize"...
-		auto open_file_dialog (
-			bool const & pick_folder,
-			bool const & multiple
-		) -> std::vector<std::string> {
-			auto state_h = HRESULT{};
-			auto result = std::vector<std::string>{};
-			CoInitialize(nullptr);
-			auto dialog = X<IFileOpenDialog *>{nullptr};
-			state_h = CoCreateInstance(__uuidof(FileOpenDialog), nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&dialog));
-			assert_test(state_h == S_OK);
-			auto option = FILEOPENDIALOGOPTIONS{};
-			state_h = dialog->GetOptions(&option);
-			assert_test(state_h == S_OK);
-			option |= FOS_NOCHANGEDIR | FOS_FORCEFILESYSTEM | FOS_NODEREFERENCELINKS | FOS_DONTADDTORECENT | FOS_FORCESHOWHIDDEN;
-			if (pick_folder) {
-				option |= FOS_PICKFOLDERS;
-			}
-			if (multiple) {
-				option |= FOS_ALLOWMULTISELECT;
-			}
-			state_h = dialog->SetOptions(option);
-			assert_test(state_h == S_OK);
-			state_h = dialog->Show(nullptr);
-			if (state_h != HRESULT_FROM_WIN32(ERROR_CANCELLED)) {
-				assert_test(state_h == S_OK);
-				auto selected_item_list = X<IShellItemArray *>{nullptr};
-				state_h = dialog->GetResults(&selected_item_list);
-				assert_test(state_h == S_OK);
-				auto count = DWORD{0};
-				state_h = selected_item_list->GetCount(&count);
-				assert_test(state_h == S_OK);
-				result.reserve(count);
-				for (auto index = DWORD{0}; index < count; ++index) {
-					auto item = X<IShellItem *>{nullptr};
-					auto display_name = LPWSTR{nullptr};
-					state_h = selected_item_list->GetItemAt(index, &item);
-					assert_test(state_h == S_OK);
-					state_h = item->GetDisplayName(SIGDN_FILESYSPATH, &display_name);
-					assert_test(state_h == S_OK);
-					auto display_name_8 = utf16_to_utf8(std::u16string_view{reinterpret_cast<char16_t const *>(display_name)});
-					result.emplace_back(std::move(reinterpret_cast<std::string &>(display_name_8)));
-					CoTaskMemFree(display_name);
-					item->Release();
-				}
-				selected_item_list->Release();
-			}
-			dialog->Release();
-			return result;
-		}
-
-		#endif
 
 		#pragma endregion
 

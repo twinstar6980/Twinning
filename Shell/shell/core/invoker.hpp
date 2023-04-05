@@ -1,6 +1,7 @@
 #pragma once
 
 #include "shell/common.hpp"
+#include "shell/utility/function.hpp"
 #include "shell/core/interface.hpp"
 #include "shell/core/converter.hpp"
 #include "shell/core/library.hpp"
@@ -16,8 +17,18 @@ namespace TwinStar::Shell::Core {
 		static auto version (
 			Library & library
 		) -> std::size_t {
-			auto result_structure = library.version();
-			return Converter::parse_size(*result_structure);
+			auto number_pointer = std::add_pointer_t<Interface::Size>{};
+			{
+			}
+			auto exception_pointer = library.version(&number_pointer);
+			{
+			}
+			auto number = Converter::parse_size(*number_pointer);
+			if (exception_pointer != nullptr) {
+				auto exception = Converter::parse_string(*exception_pointer);
+				throw exception;
+			}
+			return number;
 		}
 
 		static auto execute (
@@ -25,50 +36,79 @@ namespace TwinStar::Shell::Core {
 			std::function<std::vector<std::string>  (std::vector<std::string> const &)> const & callback,
 			std::string const &                                                                 script,
 			std::vector<std::string> const &                                                    argument
-		) -> std::optional<std::string> {
-			auto callback_result = Interface::StringList{};
-			auto callback_proxy = proxy_dynamic_function_in_current_thread<&Invoker::execute, Interface::StringList const *, Interface::StringList const *>(
-				[&callback, &callback_result] (
-				Interface::StringList const * argument
-			) -> Interface::StringList const* {
-					auto result_value = std::vector<std::string>{};
+		) -> std::string {
+			auto callback_exception_handler = Interface::String{};
+			auto callback_result_handler = Interface::StringList{};
+			auto callback_proxy = proxy_dynamic_function_in_current_thread<&Invoker::execute, Interface::String *, Interface::StringList * *, Interface::StringList * *>(
+				[&callback, &callback_exception_handler, &callback_result_handler] (
+				Interface::StringList * * argument,
+				Interface::StringList * * result
+			) -> Interface::String* {
+					Converter::destruct_string(callback_exception_handler);
+					Converter::destruct_string_list(callback_result_handler);
+					*result = &callback_result_handler;
 					try {
-						auto result_content = callback(Converter::parse_string_list(*argument));
-						result_value.clear();
-						result_value.emplace_back(""s);
-						result_value.insert(result_value.end(), result_content.begin(), result_content.end());
-					} catch (std::exception & exception) {
-						result_value.clear();
-						result_value.emplace_back(""s + typeid(exception).name() + " : " + exception.what());
+						auto argument_value = Converter::parse_string_list(**argument);
+						auto result_value = callback(argument_value);
+						Converter::construct_string_list(callback_result_handler, result_value);
+						return nullptr;
 					} catch (...) {
-						result_value.clear();
-						result_value.emplace_back("unknown exception"s);
+						auto exception_value = parse_current_exception();
+						Converter::construct_string(callback_exception_handler, exception_value);
+						return &callback_exception_handler;
 					}
-					Converter::destruct_string_list(callback_result);
-					Converter::construct_string_list(callback_result, result_value);
-					return &callback_result;
 				}
 			);
-			Converter::construct_string_list(callback_result, {});
-			auto callback_structure = Interface::Callback{};
-			auto script_structure = Interface::String{};
-			auto argument_structure = Interface::StringList{};
-			Converter::construct_callback(callback_structure, callback_proxy);
-			Converter::construct_string(script_structure, script);
-			Converter::construct_string_list(argument_structure, argument);
-			auto result_structure = library.execute(&callback_structure, &script_structure, &argument_structure);
-			Converter::destruct_callback(callback_structure);
-			Converter::destruct_string(script_structure);
-			Converter::destruct_string_list(argument_structure);
-			Converter::destruct_string_list(callback_result);
-			return !result_structure ? (std::nullopt) : (std::make_optional<std::string>(Converter::parse_string(*result_structure)));
+			{
+				Converter::construct_string(callback_exception_handler, {});
+				Converter::construct_string_list(callback_result_handler, {});
+			}
+			auto callback_pointer = std::add_pointer_t<Interface::Callback>{};
+			auto script_pointer = std::add_pointer_t<Interface::String>{};
+			auto argument_pointer = std::add_pointer_t<Interface::StringList>{};
+			auto result_pointer = std::add_pointer_t<Interface::String>{};
+			{
+				callback_pointer = new Interface::Callback{};
+				script_pointer = new Interface::String{};
+				argument_pointer = new Interface::StringList{};
+				Converter::construct_callback(*callback_pointer, callback_proxy);
+				Converter::construct_string(*script_pointer, script);
+				Converter::construct_string_list(*argument_pointer, argument);
+			}
+			auto exception_pointer = library.execute(&callback_pointer, &script_pointer, &argument_pointer, &result_pointer);
+			{
+				Converter::destruct_callback(*callback_pointer);
+				Converter::destruct_string(*script_pointer);
+				Converter::destruct_string_list(*argument_pointer);
+				delete callback_pointer;
+				delete script_pointer;
+				delete argument_pointer;
+			}
+			auto result = Converter::parse_string(*result_pointer);
+			{
+				Converter::destruct_string(callback_exception_handler);
+				Converter::destruct_string_list(callback_result_handler);
+			}
+			if (exception_pointer != nullptr) {
+				auto exception = Converter::parse_string(*exception_pointer);
+				throw exception;
+			}
+			return result;
 		}
 
 		static auto prepare (
 			Library & library
-		) -> std::optional<std::string> {
-			auto result_structure = library.prepare();
-			return !result_structure ? (std::nullopt) : (std::make_optional<std::string>(Converter::parse_string(*result_structure)));
+		) -> void {
+			{
+			}
+			auto exception_pointer = library.prepare();
+			{
+			}
+			if (exception_pointer != nullptr) {
+				auto exception = Converter::parse_string(*exception_pointer);
+				throw exception;
+			}
+			return;
 		}
 
 		#pragma endregion

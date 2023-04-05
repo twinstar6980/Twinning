@@ -13,25 +13,29 @@ class Invoker {
 
   static List<String> Function(List<String>)? _callbackTarget;
 
-  static ffi.Pointer<Interface.StringList>?   _callbackResult;
+  static ffi.Pointer<Interface.String>?       _callbackExceptionHandler;
+
+  static ffi.Pointer<Interface.StringList>?   _callbackResultHandler;
 
   static
-  ffi.Pointer<Interface.StringList>
+  ffi.Pointer<Interface.String>
   _callbackProxy(
-    ffi.Pointer<Interface.StringList> argument,
+    ffi.Pointer<ffi.Pointer<Interface.StringList>> argument,
+    ffi.Pointer<ffi.Pointer<Interface.StringList>> result,
   ) {
-    var resultValue = List<String>.empty(growable: true);
+    Converter.destructString(_callbackExceptionHandler!.ref);
+    Converter.destructStringList(_callbackResultHandler!.ref);
+    result.value = _callbackResultHandler!;
     try {
-      resultValue.clear();
-      resultValue.add('');
-      resultValue.addAll(_callbackTarget!(Converter.parseStringList(argument.ref)));
+      var argumentValue = Converter.parseStringList(argument.value.ref);
+      var resultValue = _callbackTarget!(argumentValue);
+      Converter.constructStringList(_callbackResultHandler!.ref, resultValue);
+      return ffi.nullptr;
     } catch (e) {
-      resultValue.clear();
-      resultValue.add(e.toString());
+      var exceptionValue = e.toString();
+      Converter.constructString(_callbackExceptionHandler!.ref, exceptionValue);
+      return _callbackExceptionHandler!;
     }
-    Converter.destructStringList(_callbackResult!.ref);
-    Converter.constructStringList(_callbackResult!.ref, resultValue);
-    return _callbackResult!;
   }
 
   // ----------------
@@ -41,47 +45,108 @@ class Invoker {
   version(
     Library library,
   ) {
-    var resultStructure = library.version();
-    return Converter.parseSize(resultStructure.ref);
+    var numberPointer = ffi.Pointer<ffi.Pointer<Interface.Size>>.fromAddress(0);
+    {
+      numberPointer = ffi.calloc.call<ffi.Pointer<Interface.Size>>();
+    }
+    {
+    }
+    var exceptionPointer = library.version(numberPointer);
+    {
+    }
+    var number = Converter.parseSize(numberPointer.value.ref);
+    {
+      ffi.calloc.free(numberPointer);
+    }
+    if (exceptionPointer != ffi.nullptr) {
+      var exception = Converter.parseString(exceptionPointer.ref);
+      throw exception;
+    }
+    return number;
   }
 
   static
-  String?
+  String
   execute(
     Library                             library,
     List<String> Function(List<String>) callback,
     String                              script,
     List<String>                        argument,
   ) {
-    _callbackTarget = callback;
-    _callbackResult = ffi.calloc<Interface.StringList>();
-    Converter.constructStringList(_callbackResult!.ref, []);
-    var callbackStructure = ffi.calloc<Interface.Callback>();
-    var scriptStructure = ffi.calloc<Interface.String>();
-    var argumentStructure = ffi.calloc<Interface.StringList>();
-    Converter.constructCallback(callbackStructure.ref, ffi.Pointer.fromFunction(_callbackProxy));
-    Converter.constructString(scriptStructure.ref, script);
-    Converter.constructStringList(argumentStructure.ref, argument);
-    var resultStructure = library.execute(callbackStructure, scriptStructure, argumentStructure);
-    Converter.destructCallback(callbackStructure.ref);
-    Converter.destructString(scriptStructure.ref);
-    Converter.destructStringList(argumentStructure.ref);
-    ffi.calloc.free(callbackStructure);
-    ffi.calloc.free(scriptStructure);
-    ffi.calloc.free(argumentStructure);
-    Converter.destructStringList(_callbackResult!.ref);
-    ffi.calloc.free(_callbackResult!);
-    _callbackTarget = null;
-    return resultStructure == ffi.nullptr ? null : Converter.parseString(resultStructure.ref);
+    {
+      _callbackTarget = callback;
+      _callbackExceptionHandler = ffi.calloc.call<Interface.String>();
+      _callbackResultHandler = ffi.calloc.call<Interface.StringList>();
+      Converter.constructStringList(_callbackResultHandler!.ref, []);
+      Converter.constructString(_callbackExceptionHandler!.ref, '');
+    }
+    var callbackPointer = ffi.Pointer<ffi.Pointer<Interface.Callback>>.fromAddress(0);
+    var scriptPointer = ffi.Pointer<ffi.Pointer<Interface.String>>.fromAddress(0);
+    var argumentPointer = ffi.Pointer<ffi.Pointer<Interface.StringList>>.fromAddress(0);
+    var resultPointer = ffi.Pointer<ffi.Pointer<Interface.String>>.fromAddress(0);
+    {
+      callbackPointer = ffi.calloc.call<ffi.Pointer<Interface.Callback>>();
+      scriptPointer = ffi.calloc.call<ffi.Pointer<Interface.String>>();
+      argumentPointer = ffi.calloc.call<ffi.Pointer<Interface.StringList>>();
+      resultPointer = ffi.calloc.call<ffi.Pointer<Interface.String>>();
+    }
+    {
+      callbackPointer.value = ffi.calloc.call<Interface.Callback>();
+      scriptPointer.value = ffi.calloc.call<Interface.String>();
+      argumentPointer.value = ffi.calloc.call<Interface.StringList>();
+      Converter.constructCallback(callbackPointer.value.ref, ffi.Pointer.fromFunction(_callbackProxy));
+      Converter.constructString(scriptPointer.value.ref, script);
+      Converter.constructStringList(argumentPointer.value.ref, argument);
+    }
+    var exceptionPointer = library.execute(callbackPointer, scriptPointer, argumentPointer, resultPointer);
+    {
+      Converter.destructCallback(callbackPointer.value.ref);
+      Converter.destructString(scriptPointer.value.ref);
+      Converter.destructStringList(argumentPointer.value.ref);
+      ffi.calloc.free(callbackPointer.value);
+      ffi.calloc.free(scriptPointer.value);
+      ffi.calloc.free(argumentPointer.value);
+    }
+    var result = Converter.parseString(resultPointer.value.ref);
+    {
+      ffi.calloc.free(callbackPointer);
+      ffi.calloc.free(scriptPointer);
+      ffi.calloc.free(argumentPointer);
+      ffi.calloc.free(resultPointer);
+    }
+    {
+      Converter.destructStringList(_callbackResultHandler!.ref);
+      Converter.destructString(_callbackExceptionHandler!.ref);
+      ffi.calloc.free(_callbackExceptionHandler!);
+      ffi.calloc.free(_callbackResultHandler!);
+      _callbackTarget = null;
+    }
+    if (exceptionPointer != ffi.nullptr) {
+      var exception = Converter.parseString(exceptionPointer.ref);
+      throw exception;
+    }
+    return result;
   }
 
   static
-  String?
+  Void
   prepare(
     Library library,
   ) {
-    var resultStructure = library.prepare();
-    return resultStructure == ffi.nullptr ? null : Converter.parseString(resultStructure.ref);
+    {
+    }
+    {
+    }
+    var exceptionPointer = library.prepare();
+    {
+    }
+    {
+    }
+    if (exceptionPointer != ffi.nullptr) {
+      var exception = Converter.parseString(exceptionPointer.ref);
+      throw exception;
+    }
+    return;
   }
 
 }

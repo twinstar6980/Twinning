@@ -15,9 +15,9 @@ namespace TwinStar.Script.Entry.method.json {
 		g_executor_method.push(
 			Executor.method_of({
 				id: 'json.format',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					source_file: Executor.RequireArgument<string>;
@@ -31,38 +31,36 @@ namespace TwinStar.Script.Entry.method.json {
 					let disable_array_wrap_line: boolean;
 					{
 						source_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'source_file'),
+							Executor.query_argument_name(this.id, 'source_file'),
 							a.source_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 						destination_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'destination_file'),
+							Executor.query_argument_name(this.id, 'destination_file'),
 							a.destination_file,
 							(value) => (value),
 							() => (source_file.replace(/((\.json))?$/i, '.format.json')),
-							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						disable_trailing_comma = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'disable_trailing_comma'),
+							Executor.query_argument_name(this.id, 'disable_trailing_comma'),
 							a.disable_trailing_comma,
 							(value) => (value),
 							() => (CoreX.JSON.g_format.disable_trailing_comma),
-							() => (Console.confirm(null)),
-							(value) => (null),
+							(initial) => (Console.confirmation(null, null, initial)),
 						);
 						disable_array_wrap_line = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'disable_array_wrap_line'),
+							Executor.query_argument_name(this.id, 'disable_array_wrap_line'),
 							a.disable_array_wrap_line,
 							(value) => (value),
 							() => (CoreX.JSON.g_format.disable_array_wrap_line),
-							() => (Console.confirm(null)),
-							(value) => (null),
+							(initial) => (Console.confirmation(null, null, initial)),
 						);
 					}
 					let json = CoreX.JSON.read_fs(source_file);
 					CoreX.JSON.write_fs(destination_file, json, disable_trailing_comma, disable_array_wrap_line);
-					Console.notify('s', los(`执行成功`), [`${destination_file}`]);
+					Console.message('s', los(`执行成功`), [`${destination_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -78,9 +76,9 @@ namespace TwinStar.Script.Entry.method.json {
 		g_executor_method_of_batch.push(
 			Executor.method_of({
 				id: 'json.format.batch',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					source_file_directory: Executor.RequireArgument<string>;
@@ -94,33 +92,31 @@ namespace TwinStar.Script.Entry.method.json {
 					let disable_array_wrap_line: boolean;
 					{
 						source_file_directory = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'source_file_directory'),
+							Executor.query_argument_name(this.id, 'source_file_directory'),
 							a.source_file_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
 						destination_file_directory = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'destination_file_directory'),
+							Executor.query_argument_name(this.id, 'destination_file_directory'),
 							a.destination_file_directory,
 							(value) => (value),
 							() => (source_file_directory.replace(/$/i, '.format')),
-							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						disable_trailing_comma = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'disable_trailing_comma'),
+							Executor.query_argument_name(this.id, 'disable_trailing_comma'),
 							a.disable_trailing_comma,
 							(value) => (value),
 							() => (CoreX.JSON.g_format.disable_trailing_comma),
-							() => (Console.confirm(null)),
-							(value) => (null),
+							(initial) => (Console.confirmation(null, null, initial)),
 						);
 						disable_array_wrap_line = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'disable_array_wrap_line'),
+							Executor.query_argument_name(this.id, 'disable_array_wrap_line'),
 							a.disable_array_wrap_line,
 							(value) => (value),
 							() => (CoreX.JSON.g_format.disable_array_wrap_line),
-							() => (Console.confirm(null)),
-							(value) => (null),
+							(initial) => (Console.confirmation(null, null, initial)),
 						);
 					}
 					simple_batch_execute(
@@ -133,7 +129,7 @@ namespace TwinStar.Script.Entry.method.json {
 							CoreX.JSON.write_fs(destination_file, json, disable_trailing_comma, disable_array_wrap_line);
 						},
 					);
-					Console.notify('s', los(`执行成功`), [`${destination_file_directory}`]);
+					Console.message('s', los(`执行成功`), [`${destination_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

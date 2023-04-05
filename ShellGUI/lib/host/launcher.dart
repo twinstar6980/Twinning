@@ -44,7 +44,7 @@ class Launcher {
     ffi.calloc.free(exceptionStructure);
     ffi.calloc.free(state);
     if (exception.isNotEmpty) {
-      throw Exception(exception);
+      throw exception;
     }
     return result;
   }
@@ -61,23 +61,25 @@ class Launcher {
     var corePath = await subEvent.next as String;
     var script = await subEvent.next as String;
     var argument = await subEvent.next as List<String>;
-    late String? result;
+    var result = null as String?;
+    var exception = null as String?;
     try {
       var core = DynamicLibrary(corePath);
       Invoker.version(core);
       Invoker.prepare(core);
       result = Invoker.execute(core, _callbackProxy, script, argument);
     } catch (e) {
-      result = e.toString();
+      exception = e.toString();
     }
     await subEvent.cancel();
     mainSendPort.send(null);
+    mainSendPort.send(exception);
     mainSendPort.send(result);
     return;
   }
 
   static
-  Future<String?>
+  Future<String>
   _main(
     Host         host,
     String       core,
@@ -92,10 +94,12 @@ class Launcher {
     subSendPort.send(core);
     subSendPort.send(script);
     subSendPort.send(argument);
-    late String? result;
+    var result = null as String?;
+    var exception = null as String?;
     while (await mainEvent.hasNext) {
       var message = await mainEvent.next;
       if (message == null) {
+        exception = await mainEvent.next;
         result = await mainEvent.next;
         break;
       }
@@ -116,13 +120,16 @@ class Launcher {
     }
     await mainEvent.cancel();
     await host.finish();
-    return result;
+    if (exception != null) {
+      throw exception;
+    }
+    return result!;
   }
 
   // ----------------
 
   static
-  Future<String?>
+  Future<String>
   launch(
     Host         host,
     String       core,

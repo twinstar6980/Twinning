@@ -18,7 +18,7 @@ namespace TwinStar::Shell {
 			Core::Library &                  core,
 			std::string const &              script,
 			std::vector<std::string> const & argument
-		) -> std::optional<std::string> {
+		) -> std::string {
 			host.start();
 			Core::Invoker::version(core);
 			Core::Invoker::prepare(core);

@@ -10,7 +10,7 @@ namespace TwinStar::Core {
 	M_enumeration(
 		M_wrap(NumberVariantType),
 		M_wrap(
-			floating,
+			floater,
 			integer,
 		),
 	);
@@ -20,7 +20,7 @@ namespace TwinStar::Core {
 	#pragma region type
 
 	class NumberVariant :
-		public EnumerableVariant<NumberVariantType, Floating, Integer> {
+		public EnumerableVariant<NumberVariantType, Floater, Integer> {
 
 	public:
 
@@ -62,9 +62,9 @@ namespace TwinStar::Core {
 
 		#pragma region value
 
-		constexpr auto is_floating (
+		constexpr auto is_floater (
 		) const -> Boolean {
-			return thiz.is<Floating>();
+			return thiz.is<Floater>();
 		}
 
 		constexpr auto is_integer (
@@ -76,10 +76,10 @@ namespace TwinStar::Core {
 
 		template <typename ... Argument> requires
 			CategoryConstraint<IsValid<Argument ...>>
-		constexpr auto set_floating (
+		constexpr auto set_floater (
 			Argument && ... argument
-		) -> Floating& {
-			return thiz.set<Floating>(as_forward<Argument>(argument) ...);
+		) -> Floater& {
+			return thiz.set<Floater>(as_forward<Argument>(argument) ...);
 		}
 
 		template <typename ... Argument> requires
@@ -92,9 +92,9 @@ namespace TwinStar::Core {
 
 		// ----------------
 
-		constexpr auto get_floating (
-		) -> Floating& {
-			return thiz.get<Floating>();
+		constexpr auto get_floater (
+		) -> Floater& {
+			return thiz.get<Floater>();
 		}
 
 		constexpr auto get_integer (
@@ -104,9 +104,9 @@ namespace TwinStar::Core {
 
 		// ----------------
 
-		constexpr auto get_floating (
-		) const -> Floating const& {
-			return thiz.get<Floating>();
+		constexpr auto get_floater (
+		) const -> Floater const& {
+			return thiz.get<Floater>();
 		}
 
 		constexpr auto get_integer (

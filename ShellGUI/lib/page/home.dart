@@ -57,11 +57,11 @@ class _HomePageState extends State<HomePage> {
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.terminal),
-            label: '控制台',
+            label: 'Console',
           ),
           NavigationDestination(
             icon: Icon(Icons.settings),
-            label: '设置',
+            label: 'Setting',
           ),
         ],
       ),

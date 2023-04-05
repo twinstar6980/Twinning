@@ -91,9 +91,9 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 		g_executor_method.push(
 			Executor.method_of({
 				id: 'popcap.resource_stream_bundle.pack',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					bundle_directory: Executor.RequireArgument<string>;
@@ -115,69 +115,63 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 					let output_new_packet: boolean;
 					{
 						bundle_directory = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'bundle_directory'),
+							Executor.query_argument_name(this.id, 'bundle_directory'),
 							a.bundle_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
 						data_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'data_file'),
+							Executor.query_argument_name(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
 							() => (bundle_directory.replace(/((\.rsb)(\.bundle))?$/i, '.rsb')),
-							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						mode = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'mode'),
+							Executor.query_argument_name(this.id, 'mode'),
 							a.mode,
 							(value) => (value),
 							null,
-							() => (Console.option([
+							(initial) => (Console.option([
 								[ResourceStreamBundlePackAndUnpackModeE[0], los(`群组：按群+子群树形结构导入，资源与子包均导入自group/<群名>/<子群名>目录`)],
 								[ResourceStreamBundlePackAndUnpackModeE[1], los(`子群：按子群树形结构导入，资源与子包均导入自subgroup/<子群名>目录`)],
 								[ResourceStreamBundlePackAndUnpackModeE[2], los(`资源：所有资源导入自resource目录，所有子包导入自packet目录`)],
-							], null)),
-							(value) => (ResourceStreamBundlePackAndUnpackModeE.includes(value as any) ? null : los(`选项非法`)),
+							], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'version_number'),
+							Executor.query_argument_name(this.id, 'version_number'),
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.option([0n, null, null, null, [3n, ''], [4n, '']], null)),
-							(value) => (CoreX.Tool.PopCap.ResourceStreamBundle.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
+							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ResourceStreamBundle.VersionNumberE), null, null, initial)),
 						);
 						version_additional_texture_information_for_pvz_2_chinese_android = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'version_additional_texture_information_for_pvz_2_chinese_android'),
+							Executor.query_argument_name(this.id, 'version_additional_texture_information_for_pvz_2_chinese_android'),
 							a.version_additional_texture_information_for_pvz_2_chinese_android,
 							(value) => (value),
 							null,
-							() => (Console.option([0n, [0n, ''], [1n, ''], [2n, '']], null)),
-							(value) => (CoreX.Tool.PopCap.ResourceStreamBundle.VersionaAditionalTextureInformationForPVZ2ChineseAndroidE.includes(value as any) ? null : los(`版本不受支持`)),
+							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ResourceStreamBundle.VersionaAditionalTextureInformationForPVZ2ChineseAndroidE), null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'buffer_size'),
+							Executor.query_argument_name(this.id, 'buffer_size'),
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.size(null)),
-							(value) => (null),
+							(initial) => (Console.size(null, null, initial)),
 						);
 						input_packet = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'input_packet'),
+							Executor.query_argument_name(this.id, 'input_packet'),
 							a.input_packet,
 							(value) => (value),
 							null,
-							() => (Console.confirm(null)),
-							(value) => (null),
+							(initial) => (Console.confirmation(null, null, initial)),
 						);
 						output_new_packet = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'output_new_packet'),
+							Executor.query_argument_name(this.id, 'output_new_packet'),
 							a.output_new_packet,
 							(value) => (value),
 							null,
-							() => (Console.confirm(null)),
-							(value) => (null),
+							(initial) => (Console.confirmation(null, null, initial)),
 						);
 					}
 					let relative_path = make_resource_stream_bundle_package_relative_path(mode as any);
@@ -187,7 +181,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 					let packet_file = !input_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
 					let new_packet_file = !output_new_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
 					CoreX.Tool.PopCap.ResourceStreamBundle.pack_fs(data_file, manifest_file, description_file, resource_directory, packet_file, new_packet_file, { number: version_number as any, additional_texture_information_for_pvz_2_chinese_android: version_additional_texture_information_for_pvz_2_chinese_android as any }, buffer_size);
-					Console.notify('s', los(`执行成功`), [`${data_file}`]);
+					Console.message('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -205,9 +199,9 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 			}),
 			Executor.method_of({
 				id: 'popcap.resource_stream_bundle.unpack',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					data_file: Executor.RequireArgument<string>;
@@ -227,61 +221,56 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 					let output_packet: boolean;
 					{
 						data_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'data_file'),
+							Executor.query_argument_name(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 						bundle_directory = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'bundle_directory'),
+							Executor.query_argument_name(this.id, 'bundle_directory'),
 							a.bundle_directory,
 							(value) => (value),
 							() => (data_file.replace(/((\.rsb))?$/i, '.rsb.bundle')),
-							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						mode = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'mode'),
+							Executor.query_argument_name(this.id, 'mode'),
 							a.mode,
 							(value) => (value),
 							null,
-							() => (Console.option([
+							(initial) => (Console.option([
 								[ResourceStreamBundlePackAndUnpackModeE[0], los(`群组：按群+子群树形结构导出，资源与子包均导出至group/<群名>/<子群名>目录`)],
 								[ResourceStreamBundlePackAndUnpackModeE[1], los(`子群：按子群树形结构导出，资源与子包均导出至subgroup/<子群名>目录`)],
 								[ResourceStreamBundlePackAndUnpackModeE[2], los(`资源：所有资源导出至resource目录，所有子包导出至packet目录`)],
-							], null)),
-							(value) => (ResourceStreamBundlePackAndUnpackModeE.includes(value as any) ? null : los(`选项非法`)),
+							], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'version_number'),
+							Executor.query_argument_name(this.id, 'version_number'),
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.option([0n, null, null, null, [3n, ''], [4n, '']], null)),
-							(value) => (CoreX.Tool.PopCap.ResourceStreamBundle.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
+							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ResourceStreamBundle.VersionNumberE), null, null, initial)),
 						);
 						version_additional_texture_information_for_pvz_2_chinese_android = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'version_additional_texture_information_for_pvz_2_chinese_android'),
+							Executor.query_argument_name(this.id, 'version_additional_texture_information_for_pvz_2_chinese_android'),
 							a.version_additional_texture_information_for_pvz_2_chinese_android,
 							(value) => (value),
 							null,
-							() => (Console.option([0n, [0n, ''], [1n, ''], [2n, '']], null)),
-							(value) => (CoreX.Tool.PopCap.ResourceStreamBundle.VersionaAditionalTextureInformationForPVZ2ChineseAndroidE.includes(value as any) ? null : los(`版本不受支持`)),
+							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ResourceStreamBundle.VersionaAditionalTextureInformationForPVZ2ChineseAndroidE), null, null, initial)),
 						);
 						output_resource = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'output_resource'),
+							Executor.query_argument_name(this.id, 'output_resource'),
 							a.output_resource,
 							(value) => (value),
 							null,
-							() => (Console.confirm(null)),
-							(value) => (null),
+							(initial) => (Console.confirmation(null, null, initial)),
 						);
 						output_packet = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'output_packet'),
+							Executor.query_argument_name(this.id, 'output_packet'),
 							a.output_packet,
 							(value) => (value),
 							null,
-							() => (Console.confirm(null)),
-							(value) => (null),
+							(initial) => (Console.confirmation(null, null, initial)),
 						);
 					}
 					let relative_path = make_resource_stream_bundle_package_relative_path(mode as any);
@@ -290,7 +279,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 					let resource_directory = !output_resource ? null : `${bundle_directory}/${relative_path.resource_directory}`;
 					let packet_file = !output_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
 					CoreX.Tool.PopCap.ResourceStreamBundle.unpack_fs(data_file, manifest_file, description_file, resource_directory, packet_file, { number: version_number as any, additional_texture_information_for_pvz_2_chinese_android: version_additional_texture_information_for_pvz_2_chinese_android as any });
-					Console.notify('s', los(`执行成功`), [`${bundle_directory}`]);
+					Console.message('s', los(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -307,9 +296,9 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 			}),
 			Executor.method_of({
 				id: 'popcap.resource_stream_bundle.resource_convert',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					bundle_directory: Executor.RequestArgument<string, true>;
@@ -328,37 +317,34 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 					};
 					{
 						bundle_directory = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'bundle_directory'),
+							Executor.query_argument_name(this.id, 'bundle_directory'),
 							a.bundle_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
 						version_number = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'version_number'),
+							Executor.query_argument_name(this.id, 'version_number'),
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.option([0n, null, null, null, [3n, ''], [4n, '']], null)),
-							(value) => (CoreX.Tool.PopCap.ResourceStreamBundle.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
+							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ResourceStreamBundle.VersionNumberE), null, null, initial)),
 						);
 						version_additional_texture_information_for_pvz_2_chinese_android = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'version_additional_texture_information_for_pvz_2_chinese_android'),
+							Executor.query_argument_name(this.id, 'version_additional_texture_information_for_pvz_2_chinese_android'),
 							a.version_additional_texture_information_for_pvz_2_chinese_android,
 							(value) => (value),
 							null,
-							() => (Console.option([0n, [0n, ''], [1n, ''], [2n, '']], null)),
-							(value) => (CoreX.Tool.PopCap.ResourceStreamBundle.VersionaAditionalTextureInformationForPVZ2ChineseAndroidE.includes(value as any) ? null : los(`版本不受支持`)),
+							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ResourceStreamBundle.VersionaAditionalTextureInformationForPVZ2ChineseAndroidE), null, null, initial)),
 						);
 						let convert_directory = `${bundle_directory}/convert`;
 						{
 							let json: boolean;
 							json = Executor.request_argument(
-								...Executor.query_argument_message(this.id, 'option_json'),
+								Executor.query_argument_name(this.id, 'option_json'),
 								a.option.json,
 								(value) => (value),
 								null,
-								() => (Console.confirm(null)),
-								(value) => (null),
+								(initial) => (Console.confirmation(null, null, initial)),
 							);
 							if (json) {
 								option.json = {
@@ -367,22 +353,20 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 								};
 								let crypt: boolean;
 								crypt = Executor.request_argument(
-									...Executor.query_argument_message(this.id, 'option_json_crypt'),
+									Executor.query_argument_name(this.id, 'option_json_crypt'),
 									a.option.json_crypt,
 									(value) => (value),
 									null,
-									() => (Console.confirm(null)),
-									(value) => (null),
+									(initial) => (Console.confirmation(null, null, initial)),
 								);
 								if (crypt) {
 									let key: string;
 									key = Executor.request_argument(
-										...Executor.query_argument_message(this.id, 'option_json_crypt_key'),
+										Executor.query_argument_name(this.id, 'option_json_crypt_key'),
 										a.option.json_crypt_key,
 										(value) => (value),
 										null,
-										() => (Console.string(null)),
-										(value) => (null),
+										(initial) => (Console.string(null, null, initial)),
 									);
 									option.json.crypt = {
 										key: key,
@@ -393,12 +377,11 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 						{
 							let image: boolean;
 							image = Executor.request_argument(
-								...Executor.query_argument_message(this.id, 'option_image'),
+								Executor.query_argument_name(this.id, 'option_image'),
 								a.option.image,
 								(value) => (value),
 								null,
-								() => (Console.confirm(null)),
-								(value) => (null),
+								(initial) => (Console.confirmation(null, null, initial)),
 							);
 							if (image) {
 								option.image = {
@@ -412,42 +395,38 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 									assert_test(map_name_list.length !== 0, `texture format map list is empty`);
 									let texture_format_map_name: string;
 									texture_format_map_name = Executor.request_argument(
-										...Executor.query_argument_message(this.id, 'option_image_texture_format_map_name'),
+										Executor.query_argument_name(this.id, 'option_image_texture_format_map_name'),
 										a.option.image_texture_format_map_name,
 										(value) => (value),
 										null,
-										() => (Console.option(map_name_list.map((e) => ([e])), null)),
-										(value) => (map_name_list.includes(value) ? null : los(`选项非法`)),
+										(initial) => (Console.option(map_name_list.map((e) => ([e])), null, null, initial)),
 									);
 									option.image.texture_format_map = a.option.image_texture_format_map_list[texture_format_map_name];
 								}
 								let atlas: boolean;
 								atlas = Executor.request_argument(
-									...Executor.query_argument_message(this.id, 'option_image_atlas'),
+									Executor.query_argument_name(this.id, 'option_image_atlas'),
 									a.option.image_atlas,
 									(value) => (value),
 									null,
-									() => (Console.confirm(null)),
-									(value) => (null),
+									(initial) => (Console.confirmation(null, null, initial)),
 								);
 								let sprite: boolean;
 								sprite = Executor.request_argument(
-									...Executor.query_argument_message(this.id, 'option_image_sprite'),
+									Executor.query_argument_name(this.id, 'option_image_sprite'),
 									a.option.image_sprite,
 									(value) => (value),
 									null,
-									() => (Console.confirm(null)),
-									(value) => (null),
+									(initial) => (Console.confirmation(null, null, initial)),
 								);
 								if (atlas) {
 									let resize: boolean;
 									resize = Executor.request_argument(
-										...Executor.query_argument_message(this.id, 'option_image_atlas_resize'),
+										Executor.query_argument_name(this.id, 'option_image_atlas_resize'),
 										a.option.image_atlas_resize,
 										(value) => (value),
 										null,
-										() => (Console.confirm(null)),
-										(value) => (null),
+										(initial) => (Console.confirmation(null, null, initial)),
 									);
 									option.image.atlas = {
 										resize: resize,
@@ -461,12 +440,11 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 						{
 							let animation: boolean;
 							animation = Executor.request_argument(
-								...Executor.query_argument_message(this.id, 'option_animation'),
+								Executor.query_argument_name(this.id, 'option_animation'),
 								a.option.animation,
 								(value) => (value),
 								null,
-								() => (Console.confirm(null)),
-								(value) => (null),
+								(initial) => (Console.confirmation(null, null, initial)),
 							);
 							if (animation) {
 								option.animation = {
@@ -476,21 +454,19 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 								};
 								let json: boolean;
 								json = Executor.request_argument(
-									...Executor.query_argument_message(this.id, 'option_animation_json'),
+									Executor.query_argument_name(this.id, 'option_animation_json'),
 									a.option.animation_json,
 									(value) => (value),
 									null,
-									() => (Console.confirm(null)),
-									(value) => (null),
+									(initial) => (Console.confirmation(null, null, initial)),
 								);
 								let flash: boolean;
 								flash = Executor.request_argument(
-									...Executor.query_argument_message(this.id, 'option_animation_flash'),
+									Executor.query_argument_name(this.id, 'option_animation_flash'),
 									a.option.animation_flash,
 									(value) => (value),
 									null,
-									() => (Console.confirm(null)),
-									(value) => (null),
+									(initial) => (Console.confirmation(null, null, initial)),
 								);
 								if (json) {
 									option.animation.json = {};
@@ -503,12 +479,11 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 						{
 							let audio: boolean;
 							audio = Executor.request_argument(
-								...Executor.query_argument_message(this.id, 'option_audio'),
+								Executor.query_argument_name(this.id, 'option_audio'),
 								a.option.audio,
 								(value) => (value),
 								null,
-								() => (Console.confirm(null)),
-								(value) => (null),
+								(initial) => (Console.confirmation(null, null, initial)),
 							);
 							if (audio) {
 								option.audio = {
@@ -529,7 +504,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 						option,
 						{ number: version_number as any, additional_texture_information_for_pvz_2_chinese_android: version_additional_texture_information_for_pvz_2_chinese_android as any },
 					);
-					Console.notify('s', los(`执行成功`), [`${bundle_directory}`]);
+					Console.message('s', los(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -543,9 +518,9 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 			}),
 			Executor.method_of({
 				id: 'popcap.resource_stream_bundle.repair',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					raw_file: Executor.RequireArgument<string>;
@@ -555,21 +530,21 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 					let ripe_file: string;
 					{
 						raw_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'raw_file'),
+							Executor.query_argument_name(this.id, 'raw_file'),
 							a.raw_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 						ripe_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'ripe_file'),
+							Executor.query_argument_name(this.id, 'ripe_file'),
 							a.ripe_file,
 							(value) => (value),
 							() => (raw_file.replace(/((\.rsb))?$/i, '.repair.rsb')),
-							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 					}
 					Support.PopCap.ResourceStreamBundle.Repair.repair_package_fs(raw_file, ripe_file);
-					Console.notify('s', los(`执行成功`), [`${ripe_file}`]);
+					Console.message('s', los(`执行成功`), [`${ripe_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

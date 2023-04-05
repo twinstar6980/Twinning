@@ -79,12 +79,12 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 		// ----------------
 
 		struct ValueRate {
-			inline static constexpr auto time = Floating{65536.0_f};
-			inline static constexpr auto size = Floating{20.0_f};
-			inline static constexpr auto angle = Floating{1000.0_f};
-			inline static constexpr auto matrix = Floating{65536.0_f};
-			inline static constexpr auto matrix_exact = Floating{20.0_f * 65536.0_f};
-			inline static constexpr auto color = Floating{255.0_f};
+			inline static constexpr auto time = Floater{65536.0_f};
+			inline static constexpr auto size = Floater{20.0_f};
+			inline static constexpr auto angle = Floater{1000.0_f};
+			inline static constexpr auto matrix = Floater{65536.0_f};
+			inline static constexpr auto matrix_exact = Floater{20.0_f * 65536.0_f};
+			inline static constexpr auto color = Floater{255.0_f};
 		};
 
 	};
@@ -193,13 +193,13 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 		template <typename RawValue, auto value_rate> requires
 			CategoryConstraint<IsPureInstance<RawValue>>
 			&& (IsIntegerWrapper<RawValue>)
-			&& (IsSameV<value_rate, Floating>)
-		static auto exchange_unit_floating (
+			&& (IsSameV<value_rate, Floater>)
+		static auto exchange_unit_floater (
 			OByteStreamView & data,
-			Floating const &  value
+			Floater const &   value
 		) -> Void {
 			auto value_integer = value * value_rate;
-			data.write(cbw<RawValue>(Math::round<Floating>(value_integer)));
+			data.write(cbw<RawValue>(Math::round<Floater>(value_integer)));
 			return;
 		}
 
@@ -279,7 +279,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 						exchange_unit_string(frame_data, element.name.get());
 					}
 					if (layer_flag.get(LayerAppendFlag::time_scale)) {
-						exchange_unit_floating<IntegerS32, ValueRate::time>(frame_data, element.time_scale);
+						exchange_unit_floater<IntegerS32, ValueRate::time>(frame_data, element.time_scale);
 					}
 				}
 			}
@@ -302,41 +302,41 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 					} else if (element.transform.template is<typename Manifest::MatrixTranslateTransform>()) {
 						layer_flag.set(LayerChangeFlag::matrix);
 					} else {
-						throw NeverException{};
+						throw ImpossibleException{};
 					}
 					layer_flag.set(LayerChangeFlag::long_coord);
 					exchange_unit_integer_variant_32_with_flag_16<>(frame_data, element.index, layer_flag);
 					if (element.transform.template is<typename Manifest::TranslateTransform>()) {
 						auto & transform = element.transform.template get<typename Manifest::TranslateTransform>();
-						exchange_unit_floating<IntegerS32, ValueRate::size>(frame_data, transform.x);
-						exchange_unit_floating<IntegerS32, ValueRate::size>(frame_data, transform.y);
+						exchange_unit_floater<IntegerS32, ValueRate::size>(frame_data, transform.x);
+						exchange_unit_floater<IntegerS32, ValueRate::size>(frame_data, transform.y);
 					} else if (element.transform.template is<typename Manifest::RotateTranslateTransform>()) {
 						auto & transform = element.transform.template get<typename Manifest::RotateTranslateTransform>();
-						exchange_unit_floating<IntegerU16, ValueRate::angle>(frame_data, transform.angle);
-						exchange_unit_floating<IntegerS32, ValueRate::size>(frame_data, transform.x);
-						exchange_unit_floating<IntegerS32, ValueRate::size>(frame_data, transform.y);
+						exchange_unit_floater<IntegerU16, ValueRate::angle>(frame_data, transform.angle);
+						exchange_unit_floater<IntegerS32, ValueRate::size>(frame_data, transform.x);
+						exchange_unit_floater<IntegerS32, ValueRate::size>(frame_data, transform.y);
 					} else if (element.transform.template is<typename Manifest::MatrixTranslateTransform>()) {
 						auto & transform = element.transform.template get<typename Manifest::MatrixTranslateTransform>();
-						exchange_unit_floating<IntegerS32, ValueRate::matrix>(frame_data, transform.a);
-						exchange_unit_floating<IntegerS32, ValueRate::matrix>(frame_data, transform.c);
-						exchange_unit_floating<IntegerS32, ValueRate::matrix>(frame_data, transform.b);
-						exchange_unit_floating<IntegerS32, ValueRate::matrix>(frame_data, transform.d);
-						exchange_unit_floating<IntegerS32, ValueRate::size>(frame_data, transform.x);
-						exchange_unit_floating<IntegerS32, ValueRate::size>(frame_data, transform.y);
+						exchange_unit_floater<IntegerS32, ValueRate::matrix>(frame_data, transform.a);
+						exchange_unit_floater<IntegerS32, ValueRate::matrix>(frame_data, transform.c);
+						exchange_unit_floater<IntegerS32, ValueRate::matrix>(frame_data, transform.b);
+						exchange_unit_floater<IntegerS32, ValueRate::matrix>(frame_data, transform.d);
+						exchange_unit_floater<IntegerS32, ValueRate::size>(frame_data, transform.x);
+						exchange_unit_floater<IntegerS32, ValueRate::size>(frame_data, transform.y);
 					} else {
-						throw NeverException{};
+						throw ImpossibleException{};
 					}
 					if (layer_flag.get(LayerChangeFlag::source_rectangle)) {
-						exchange_unit_floating<IntegerS16, ValueRate::size>(frame_data, element.source_rectangle.get().position.x);
-						exchange_unit_floating<IntegerS16, ValueRate::size>(frame_data, element.source_rectangle.get().position.y);
-						exchange_unit_floating<IntegerS16, ValueRate::size>(frame_data, element.source_rectangle.get().size.width);
-						exchange_unit_floating<IntegerS16, ValueRate::size>(frame_data, element.source_rectangle.get().size.height);
+						exchange_unit_floater<IntegerS16, ValueRate::size>(frame_data, element.source_rectangle.get().position.x);
+						exchange_unit_floater<IntegerS16, ValueRate::size>(frame_data, element.source_rectangle.get().position.y);
+						exchange_unit_floater<IntegerS16, ValueRate::size>(frame_data, element.source_rectangle.get().size.width);
+						exchange_unit_floater<IntegerS16, ValueRate::size>(frame_data, element.source_rectangle.get().size.height);
 					}
 					if (layer_flag.get(LayerChangeFlag::color)) {
-						exchange_unit_floating<IntegerU8, ValueRate::color>(frame_data, element.color.get().red);
-						exchange_unit_floating<IntegerU8, ValueRate::color>(frame_data, element.color.get().green);
-						exchange_unit_floating<IntegerU8, ValueRate::color>(frame_data, element.color.get().blue);
-						exchange_unit_floating<IntegerU8, ValueRate::color>(frame_data, element.color.get().alpha);
+						exchange_unit_floater<IntegerU8, ValueRate::color>(frame_data, element.color.get().red);
+						exchange_unit_floater<IntegerU8, ValueRate::color>(frame_data, element.color.get().green);
+						exchange_unit_floater<IntegerU8, ValueRate::color>(frame_data, element.color.get().blue);
+						exchange_unit_floater<IntegerU8, ValueRate::color>(frame_data, element.color.get().alpha);
 					}
 					if (layer_flag.get(LayerChangeFlag::sprite_frame_number)) {
 						exchange_unit_integer<IntegerS16>(frame_data, element.sprite_frame_number.get());
@@ -365,7 +365,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 				if constexpr (check_version(version, {6})) {
 					exchange_unit_constant(sprite_data, 0x0000_iu16);
 				}
-				exchange_unit_floating<IntegerS32, ValueRate::time>(sprite_data, sprite_manifest.frame_rate);
+				exchange_unit_floater<IntegerS32, ValueRate::time>(sprite_data, sprite_manifest.frame_rate);
 			}
 			exchange_unit_integer<IntegerU16>(sprite_data, cbw<Integer>(sprite_manifest.frame.size()));
 			if constexpr (check_version(version, {5})) {
@@ -388,16 +388,16 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 				exchange_unit_integer<IntegerS16>(image_data, image_manifest.size.height);
 			}
 			if constexpr (check_version(version, {1, 2})) {
-				exchange_unit_floating<IntegerS16, ValueRate::angle>(image_data, image_manifest.transform.angle);
+				exchange_unit_floater<IntegerS16, ValueRate::angle>(image_data, image_manifest.transform.angle);
 			}
 			if constexpr (check_version(version, {2})) {
-				exchange_unit_floating<IntegerS32, ValueRate::matrix_exact>(image_data, image_manifest.transform.a);
-				exchange_unit_floating<IntegerS32, ValueRate::matrix_exact>(image_data, image_manifest.transform.c);
-				exchange_unit_floating<IntegerS32, ValueRate::matrix_exact>(image_data, image_manifest.transform.b);
-				exchange_unit_floating<IntegerS32, ValueRate::matrix_exact>(image_data, image_manifest.transform.d);
+				exchange_unit_floater<IntegerS32, ValueRate::matrix_exact>(image_data, image_manifest.transform.a);
+				exchange_unit_floater<IntegerS32, ValueRate::matrix_exact>(image_data, image_manifest.transform.c);
+				exchange_unit_floater<IntegerS32, ValueRate::matrix_exact>(image_data, image_manifest.transform.b);
+				exchange_unit_floater<IntegerS32, ValueRate::matrix_exact>(image_data, image_manifest.transform.d);
 			}
-			exchange_unit_floating<IntegerS16, ValueRate::size>(image_data, image_manifest.transform.x);
-			exchange_unit_floating<IntegerS16, ValueRate::size>(image_data, image_manifest.transform.y);
+			exchange_unit_floater<IntegerS16, ValueRate::size>(image_data, image_manifest.transform.x);
+			exchange_unit_floater<IntegerS16, ValueRate::size>(image_data, image_manifest.transform.y);
 			return;
 		}
 
@@ -408,10 +408,10 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 			animation_data.write_constant(k_magic_identifier);
 			animation_data.write_constant(cbw<VersionNumber>(version.number));
 			exchange_unit_integer<IntegerU8>(animation_data, animation_manifest.frame_rate);
-			exchange_unit_floating<IntegerS16, ValueRate::size>(animation_data, animation_manifest.position.x);
-			exchange_unit_floating<IntegerS16, ValueRate::size>(animation_data, animation_manifest.position.y);
-			exchange_unit_floating<IntegerU16, ValueRate::size>(animation_data, animation_manifest.size.width);
-			exchange_unit_floating<IntegerU16, ValueRate::size>(animation_data, animation_manifest.size.height);
+			exchange_unit_floater<IntegerS16, ValueRate::size>(animation_data, animation_manifest.position.x);
+			exchange_unit_floater<IntegerS16, ValueRate::size>(animation_data, animation_manifest.position.y);
+			exchange_unit_floater<IntegerU16, ValueRate::size>(animation_data, animation_manifest.size.width);
+			exchange_unit_floater<IntegerU16, ValueRate::size>(animation_data, animation_manifest.size.height);
 			exchange_unit_integer<IntegerU16>(animation_data, cbw<Integer>(animation_manifest.image.size()));
 			for (auto & element : animation_manifest.image) {
 				process_image(animation_data, element);
@@ -549,12 +549,12 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 		template <typename RawValue, auto value_rate> requires
 			CategoryConstraint<IsPureInstance<RawValue>>
 			&& (IsIntegerWrapper<RawValue>)
-			&& (IsSameV<value_rate, Floating>)
-		static auto exchange_unit_floating (
+			&& (IsSameV<value_rate, Floater>)
+		static auto exchange_unit_floater (
 			IByteStreamView & data,
-			Floating &        value
+			Floater &         value
 		) -> Void {
-			auto value_integer = cbw<Floating>(data.read_of<RawValue>());
+			auto value_integer = cbw<Floater>(data.read_of<RawValue>());
 			value = value_integer / value_rate;
 			return;
 		}
@@ -625,7 +625,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 						element.name.reset();
 					}
 					if (layer_flag.get(LayerAppendFlag::time_scale)) {
-						exchange_unit_floating<IntegerS32, ValueRate::time>(frame_data, element.time_scale);
+						exchange_unit_floater<IntegerS32, ValueRate::time>(frame_data, element.time_scale);
 					} else {
 						element.time_scale = 1.0_f;
 					}
@@ -640,23 +640,23 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 				for (auto & element : frame_manifest.change) {
 					auto layer_flag = BitSet<LayerChangeFlag::k_count>{};
 					exchange_unit_integer_variant_32_with_flag_16<>(frame_data, element.index, layer_flag);
-					auto translate_x = VWrapperView<Floating>{};
-					auto translate_y = VWrapperView<Floating>{};
+					auto translate_x = VWrapperView<Floater>{};
+					auto translate_y = VWrapperView<Floater>{};
 					if (layer_flag.get(LayerChangeFlag::matrix)) {
 						assert_test(!layer_flag.get(LayerChangeFlag::rotate));
 						element.transform.template set<typename Manifest::MatrixTranslateTransform>();
 						auto & transform = element.transform.template get<typename Manifest::MatrixTranslateTransform>();
-						exchange_unit_floating<IntegerS32, ValueRate::matrix>(frame_data, transform.a);
-						exchange_unit_floating<IntegerS32, ValueRate::matrix>(frame_data, transform.c);
-						exchange_unit_floating<IntegerS32, ValueRate::matrix>(frame_data, transform.b);
-						exchange_unit_floating<IntegerS32, ValueRate::matrix>(frame_data, transform.d);
+						exchange_unit_floater<IntegerS32, ValueRate::matrix>(frame_data, transform.a);
+						exchange_unit_floater<IntegerS32, ValueRate::matrix>(frame_data, transform.c);
+						exchange_unit_floater<IntegerS32, ValueRate::matrix>(frame_data, transform.b);
+						exchange_unit_floater<IntegerS32, ValueRate::matrix>(frame_data, transform.d);
 						translate_x.set(transform.x);
 						translate_y.set(transform.y);
 					} else if (layer_flag.get(LayerChangeFlag::rotate)) {
 						assert_test(!layer_flag.get(LayerChangeFlag::matrix));
 						element.transform.template set<typename Manifest::RotateTranslateTransform>();
 						auto & transform = element.transform.template get<typename Manifest::RotateTranslateTransform>();
-						exchange_unit_floating<IntegerS16, ValueRate::angle>(frame_data, transform.angle);
+						exchange_unit_floater<IntegerS16, ValueRate::angle>(frame_data, transform.angle);
 						translate_x.set(transform.x);
 						translate_y.set(transform.y);
 					} else {
@@ -666,27 +666,27 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 						translate_y.set(transform.y);
 					}
 					if (layer_flag.get(LayerChangeFlag::long_coord)) {
-						exchange_unit_floating<IntegerS32, ValueRate::size>(frame_data, translate_x.get());
-						exchange_unit_floating<IntegerS32, ValueRate::size>(frame_data, translate_y.get());
+						exchange_unit_floater<IntegerS32, ValueRate::size>(frame_data, translate_x.get());
+						exchange_unit_floater<IntegerS32, ValueRate::size>(frame_data, translate_y.get());
 					} else {
-						exchange_unit_floating<IntegerS16, ValueRate::size>(frame_data, translate_x.get());
-						exchange_unit_floating<IntegerS16, ValueRate::size>(frame_data, translate_y.get());
+						exchange_unit_floater<IntegerS16, ValueRate::size>(frame_data, translate_x.get());
+						exchange_unit_floater<IntegerS16, ValueRate::size>(frame_data, translate_y.get());
 					}
 					if (layer_flag.get(LayerChangeFlag::source_rectangle)) {
 						element.source_rectangle.set();
-						exchange_unit_floating<IntegerS16, ValueRate::size>(frame_data, element.source_rectangle.get().position.x);
-						exchange_unit_floating<IntegerS16, ValueRate::size>(frame_data, element.source_rectangle.get().position.y);
-						exchange_unit_floating<IntegerS16, ValueRate::size>(frame_data, element.source_rectangle.get().size.width);
-						exchange_unit_floating<IntegerS16, ValueRate::size>(frame_data, element.source_rectangle.get().size.height);
+						exchange_unit_floater<IntegerS16, ValueRate::size>(frame_data, element.source_rectangle.get().position.x);
+						exchange_unit_floater<IntegerS16, ValueRate::size>(frame_data, element.source_rectangle.get().position.y);
+						exchange_unit_floater<IntegerS16, ValueRate::size>(frame_data, element.source_rectangle.get().size.width);
+						exchange_unit_floater<IntegerS16, ValueRate::size>(frame_data, element.source_rectangle.get().size.height);
 					} else {
 						element.source_rectangle.reset();
 					}
 					if (layer_flag.get(LayerChangeFlag::color)) {
 						element.color.set();
-						exchange_unit_floating<IntegerU8, ValueRate::color>(frame_data, element.color.get().red);
-						exchange_unit_floating<IntegerU8, ValueRate::color>(frame_data, element.color.get().green);
-						exchange_unit_floating<IntegerU8, ValueRate::color>(frame_data, element.color.get().blue);
-						exchange_unit_floating<IntegerU8, ValueRate::color>(frame_data, element.color.get().alpha);
+						exchange_unit_floater<IntegerU8, ValueRate::color>(frame_data, element.color.get().red);
+						exchange_unit_floater<IntegerU8, ValueRate::color>(frame_data, element.color.get().green);
+						exchange_unit_floater<IntegerU8, ValueRate::color>(frame_data, element.color.get().blue);
+						exchange_unit_floater<IntegerU8, ValueRate::color>(frame_data, element.color.get().alpha);
 					} else {
 						element.color.reset();
 					}
@@ -734,7 +734,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 				if constexpr (check_version(version, {6})) {
 					exchange_unit_constant(sprite_data, 0x0000_iu16);
 				}
-				exchange_unit_floating<IntegerS32, ValueRate::time>(sprite_data, sprite_manifest.frame_rate);
+				exchange_unit_floater<IntegerS32, ValueRate::time>(sprite_data, sprite_manifest.frame_rate);
 			}
 			sprite_manifest.frame.allocate_full(cbw<Size>(M_apply(M_wrap(Integer{}), M_wrap({ exchange_unit_integer<IntegerU16>(sprite_data, it); }))));
 			if constexpr (check_version(version, {5})) {
@@ -757,16 +757,16 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 				exchange_unit_integer<IntegerS16>(image_data, image_manifest.size.height);
 			}
 			if constexpr (check_version(version, {1, 2})) {
-				exchange_unit_floating<IntegerS16, ValueRate::angle>(image_data, image_manifest.transform.angle);
+				exchange_unit_floater<IntegerS16, ValueRate::angle>(image_data, image_manifest.transform.angle);
 			}
 			if constexpr (check_version(version, {2})) {
-				exchange_unit_floating<IntegerS32, ValueRate::matrix_exact>(image_data, image_manifest.transform.a);
-				exchange_unit_floating<IntegerS32, ValueRate::matrix_exact>(image_data, image_manifest.transform.c);
-				exchange_unit_floating<IntegerS32, ValueRate::matrix_exact>(image_data, image_manifest.transform.b);
-				exchange_unit_floating<IntegerS32, ValueRate::matrix_exact>(image_data, image_manifest.transform.d);
+				exchange_unit_floater<IntegerS32, ValueRate::matrix_exact>(image_data, image_manifest.transform.a);
+				exchange_unit_floater<IntegerS32, ValueRate::matrix_exact>(image_data, image_manifest.transform.c);
+				exchange_unit_floater<IntegerS32, ValueRate::matrix_exact>(image_data, image_manifest.transform.b);
+				exchange_unit_floater<IntegerS32, ValueRate::matrix_exact>(image_data, image_manifest.transform.d);
 			}
-			exchange_unit_floating<IntegerS16, ValueRate::size>(image_data, image_manifest.transform.x);
-			exchange_unit_floating<IntegerS16, ValueRate::size>(image_data, image_manifest.transform.y);
+			exchange_unit_floater<IntegerS16, ValueRate::size>(image_data, image_manifest.transform.x);
+			exchange_unit_floater<IntegerS16, ValueRate::size>(image_data, image_manifest.transform.y);
 			return;
 		}
 
@@ -777,10 +777,10 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 			animation_data.read_constant(k_magic_identifier);
 			animation_data.read_constant(cbw<VersionNumber>(version.number));
 			exchange_unit_integer<IntegerU8>(animation_data, animation_manifest.frame_rate);
-			exchange_unit_floating<IntegerS16, ValueRate::size>(animation_data, animation_manifest.position.x);
-			exchange_unit_floating<IntegerS16, ValueRate::size>(animation_data, animation_manifest.position.y);
-			exchange_unit_floating<IntegerU16, ValueRate::size>(animation_data, animation_manifest.size.width);
-			exchange_unit_floating<IntegerU16, ValueRate::size>(animation_data, animation_manifest.size.height);
+			exchange_unit_floater<IntegerS16, ValueRate::size>(animation_data, animation_manifest.position.x);
+			exchange_unit_floater<IntegerS16, ValueRate::size>(animation_data, animation_manifest.position.y);
+			exchange_unit_floater<IntegerU16, ValueRate::size>(animation_data, animation_manifest.size.width);
+			exchange_unit_floater<IntegerU16, ValueRate::size>(animation_data, animation_manifest.size.height);
 			animation_manifest.image.allocate_full(cbw<Size>(M_apply(M_wrap(Integer{}), M_wrap({exchange_unit_integer<IntegerU16>(animation_data, it);}))));
 			for (auto & element : animation_manifest.image) {
 				process_image(animation_data, element);

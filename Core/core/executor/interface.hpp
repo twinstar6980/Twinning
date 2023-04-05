@@ -104,31 +104,31 @@ namespace TwinStar::Core::Executor::Interface {
 		CategoryConstraint<IsPureInstance<Class>>
 		&& (IsSameV<flag, GCDF>)
 	inline auto define_generic_class (
-		JS::NamespaceBuilder & name_space,
-		String const &         class_name
-	) -> JS::ClassBuilder<Class> {
-		auto builder = name_space.add_class<Class>(class_name);
+		JavaScript::NativeSpaceBuilder & space,
+		String const &                   name
+	) -> JavaScript::NativeClassBuilder<Class> {
+		auto builder = space.add_class<Class>(name);
 		builder.template set_constructor<
 			&normalized_lambda<
 				[] (
-			) -> JS::Handler<Class> {
-					throw SimpleException{"js style constructor is not allowed"};
+			) -> JavaScript::NativeValueHandler<Class> {
+					throw UnnamedException{mss("java-script style constructor is not allowed"_sf())};
 				}
 			>
 		>();
 		if constexpr (flag * GCDF::default_constructor) {
-			builder.template add_second_constructor_allocate_proxy<>("default"_s);
+			builder.template add_constructor_allocate_proxy<>("default"_s);
 		}
 		if constexpr (flag * GCDF::copy_constructor) {
-			builder.template add_second_constructor_allocate_proxy<Class const &>("copy"_s);
+			builder.template add_constructor_allocate_proxy<Class const &>("copy"_s);
 		}
 		if constexpr (flag * GCDF::value_constructor) {
-			builder.template add_second_constructor<
+			builder.template add_constructor<
 				&normalized_lambda<
 					[] (
 					Class & that
-				) -> JS::Handler<Class> {
-						return JS::Handler<Class>::new_instance_allocate(that);
+				) -> JavaScript::NativeValueHandler<Class> {
+						return JavaScript::NativeValueHandler<Class>::new_instance_allocate(that);
 					}
 				>
 			>("value"_s);
@@ -138,7 +138,7 @@ namespace TwinStar::Core::Executor::Interface {
 			// NOTE : return reference is cheap
 			constexpr auto & getter = normalized_lambda<
 				[] (
-				JS::Handler<Class> & thix
+				JavaScript::NativeValueHandler<Class> & thix
 			) -> Class& {
 					return thix.value();
 				}
@@ -148,8 +148,8 @@ namespace TwinStar::Core::Executor::Interface {
 			} else {
 				constexpr auto & setter = normalized_lambda<
 					[] (
-					JS::Handler<Class> & thix,
-					Class &              value
+					JavaScript::NativeValueHandler<Class> & thix,
+					Class &                                 value
 				) -> Void {
 						// NOTE : some type has not copy assignment
 						restruct(thix.value(), value);
@@ -169,9 +169,9 @@ namespace TwinStar::Core::Executor::Interface {
 	template <typename Version, typename VersionPackage, typename Class> requires
 		CategoryConstraint<IsPureInstance<Version> && IsPureInstance<VersionPackage> && IsPureInstance<Class>>
 	inline auto define_variant_class_version_method (
-		JS::ClassBuilder<Class> & builder
-	) -> JS::ClassBuilder<Class>& {
-		constexpr auto & json_constructor = JS::proxy_function_by_handler<
+		JavaScript::NativeClassBuilder<Class> & builder
+	) -> JavaScript::NativeClassBuilder<Class>& {
+		constexpr auto & json_constructor = JavaScript::proxy_native_function_by_handler<
 			&normalized_lambda<
 				[] (
 				JSON::Value const & json,
@@ -188,7 +188,7 @@ namespace TwinStar::Core::Executor::Interface {
 				}
 			>
 		>;
-		constexpr auto & json_getter = JS::proxy_function_by_handler<
+		constexpr auto & json_getter = JavaScript::proxy_native_function_by_handler<
 			&normalized_lambda<
 				[] (
 				Class &         thix,
@@ -205,7 +205,7 @@ namespace TwinStar::Core::Executor::Interface {
 				}
 			>
 		>;
-		constexpr auto & json_setter = JS::proxy_function_by_handler<
+		constexpr auto & json_setter = JavaScript::proxy_native_function_by_handler<
 			&normalized_lambda<
 				[] (
 				Class &             thix,
@@ -222,7 +222,7 @@ namespace TwinStar::Core::Executor::Interface {
 				}
 			>
 		>;
-		builder.template add_second_constructor<&json_constructor>("json"_s);
+		builder.template add_constructor<&json_constructor>("json"_s);
 		builder.template add_member_function<&json_getter>("get_json"_s);
 		builder.template add_member_function<&json_setter>("set_json"_s);
 		return builder;
@@ -312,27 +312,28 @@ namespace TwinStar::Core::Executor::Interface {
 		#pragma clang diagnostic push
 		#pragma clang diagnostic ignored "-Wshadow"
 		#endif
-		auto n_TwinStar = JS::NamespaceBuilder{context.context(), as_lvalue(context.context().global_object()), k_null_optional, "TwinStar"_s};
-		auto n_Core = n_TwinStar.add_namespace("Core"_s);
+		auto s_TwinStar = JavaScript::NativeSpaceBuilder{k_null_optional, "TwinStar"_s, as_lvalue(context.context().global_object())};
+		auto s_Core = s_TwinStar.add_space("Core"_s);
 		// Boolean
-		define_generic_class<Boolean>(n_Core, "Boolean"_s);
+		define_generic_class<Boolean>(s_Core, "Boolean"_s);
 		// Number
-		define_generic_class<IntegerU32>(n_Core, "IntegerU32"_s);
+		define_generic_class<IntegerU32>(s_Core, "IntegerU32"_s);
 		// Size
-		define_generic_class<Size>(n_Core, "Size"_s);
-		define_generic_class<Optional<Size>>(n_Core, "SizeOptional"_s);
+		define_generic_class<Size>(s_Core, "Size"_s);
+		define_generic_class<Optional<Size>>(s_Core, "SizeOptional"_s);
 		// Byte
-		define_generic_class<Byte>(n_Core, "Byte"_s);
+		define_generic_class<Byte>(s_Core, "Byte"_s);
 		// String
-		define_generic_class<String>(n_Core, "String"_s);
-		define_generic_class<List<String>>(n_Core, "StringList"_s);
+		define_generic_class<String>(s_Core, "String"_s);
+		define_generic_class<Optional<String>>(s_Core, "StringOptional"_s);
+		define_generic_class<List<String>>(s_Core, "StringList"_s);
 		// Path
-		define_generic_class<Path>(n_Core, "Path"_s);
-		define_generic_class<Optional<Path>>(n_Core, "PathOptional"_s);
-		define_generic_class<List<Path>>(n_Core, "PathList"_s);
+		define_generic_class<Path>(s_Core, "Path"_s);
+		define_generic_class<Optional<Path>>(s_Core, "PathOptional"_s);
+		define_generic_class<List<Path>>(s_Core, "PathList"_s);
 		// ByteArray
-		define_generic_class<ByteArray>(n_Core, "ByteArray"_s)
-			.add_second_constructor_allocate_proxy<Size const &>("allocate"_s)
+		define_generic_class<ByteArray>(s_Core, "ByteArray"_s)
+			.add_constructor_allocate_proxy<Size const &>("allocate"_s)
 			.add_member_function_proxy<&ByteArray::allocate>("allocate"_s)
 			.add_member_function_proxy<&ByteArray::reset>("reset"_s)
 			.add_member_function_proxy<&ByteArray::size>("size"_s)
@@ -340,31 +341,31 @@ namespace TwinStar::Core::Executor::Interface {
 			.add_member_function<
 				&normalized_lambda<
 					[] (
-					JS::Handler<ByteArray> & that
+					JavaScript::NativeValueHandler<ByteArray> & that
 				) -> ByteArray&& {
 						return as_moveable(that.value());
 					}
 				>
 			>("release"_s);
 		// ByteListView
-		define_generic_class<VByteListView>(n_Core, "ByteListView"_s)
+		define_generic_class<VByteListView>(s_Core, "ByteListView"_s)
 			.add_member_function_proxy<&VByteListView::size>("size"_s)
 			.add_member_function_proxy<AsCMemberFunction<VByteListView, VByteListView, Size const &, Size const &>{&VByteListView::sub}>("sub"_s);
 		// ByteStreamView
-		define_generic_class<IOByteStreamView, GCDF::generic_mask>(n_Core, "ByteStreamView"_s)
-			.add_second_constructor_allocate_proxy<VByteListView const &>("watch"_s)
+		define_generic_class<IOByteStreamView, GCDF::generic_mask>(s_Core, "ByteStreamView"_s)
+			.add_constructor_allocate_proxy<VByteListView const &>("watch"_s)
 			.add_member_function_proxy<&IOByteStreamView::size>("size"_s)
 			.add_member_function_proxy<&IOByteStreamView::position>("position"_s)
 			.add_member_function_proxy<&IOByteStreamView::set_position>("set_position"_s)
 			.add_member_function_proxy<&IOByteStreamView::view>("view"_s)
 			.add_member_function_proxy<&IOByteStreamView::stream_view>("stream_view"_s);
 		// CharacterListView
-		define_generic_class<VCharacterListView, GCDF::generic_mask>(n_Core, "CharacterListView"_s)
+		define_generic_class<VCharacterListView, GCDF::generic_mask>(s_Core, "CharacterListView"_s)
 			.add_member_function_proxy<&VCharacterListView::size>("size"_s)
 			.add_member_function_proxy<AsCMemberFunction<VCharacterListView, VCharacterListView, Size const &, Size const &>{&VCharacterListView::sub}>("sub"_s);
 		// CharacterStreamView
-		define_generic_class<IOCharacterStreamView, GCDF::generic_mask>(n_Core, "CharacterStreamView"_s)
-			.add_second_constructor_allocate_proxy<VCharacterListView const &>("watch"_s)
+		define_generic_class<IOCharacterStreamView, GCDF::generic_mask>(s_Core, "CharacterStreamView"_s)
+			.add_constructor_allocate_proxy<VCharacterListView const &>("watch"_s)
 			.add_member_function_proxy<&IOCharacterStreamView::size>("size"_s)
 			.add_member_function_proxy<&IOCharacterStreamView::position>("position"_s)
 			.add_member_function_proxy<&IOCharacterStreamView::set_position>("set_position"_s)
@@ -372,29 +373,29 @@ namespace TwinStar::Core::Executor::Interface {
 			.add_member_function_proxy<&IOCharacterStreamView::stream_view>("stream_view"_s);
 		// JSON
 		{
-			auto n_JSON = n_Core.add_namespace("JSON"_s);
-			define_generic_class<JSON::Value>(n_JSON, "Value"_s);
+			auto s_JSON = s_Core.add_space("JSON"_s);
+			define_generic_class<JSON::Value>(s_JSON, "Value"_s);
 		}
 		// XML
 		{
-			auto n_XML = n_Core.add_namespace("XML"_s);
-			define_generic_class<XML::Node>(n_XML, "Node"_s);
+			auto s_XML = s_Core.add_space("XML"_s);
+			define_generic_class<XML::Node>(s_XML, "Node"_s);
 		}
 		// Image
 		{
-			auto n_Image = n_Core.add_namespace("Image"_s);
-			define_generic_class<Image::ImageSize>(n_Image, "ImageSize"_s);
-			define_generic_class<Image::ImagePosition>(n_Image, "ImagePosition"_s);
-			define_generic_class<Image::Color>(n_Image, "Color"_s);
-			define_generic_class<List<Image::Color>>(n_Image, "ColorList"_s);
-			define_generic_class<Image::Pixel>(n_Image, "Pixel"_s);
-			define_generic_class<Image::VImageView, GCDF::generic_mask>(n_Image, "ImageView"_s)
+			auto s_Image = s_Core.add_space("Image"_s);
+			define_generic_class<Image::ImageSize>(s_Image, "ImageSize"_s);
+			define_generic_class<Image::ImagePosition>(s_Image, "ImagePosition"_s);
+			define_generic_class<Image::Color>(s_Image, "Color"_s);
+			define_generic_class<List<Image::Color>>(s_Image, "ColorList"_s);
+			define_generic_class<Image::Pixel>(s_Image, "Pixel"_s);
+			define_generic_class<Image::VImageView, GCDF::generic_mask>(s_Image, "ImageView"_s)
 				.add_member_function_proxy<&Image::VImageView::size>("size"_s)
 				.add_member_function_proxy<&Image::VImageView::fill>("fill"_s)
 				.add_member_function_proxy<&Image::VImageView::draw>("draw"_s)
 				.add_member_function_proxy<&Image::VImageView::sub>("sub"_s);
-			define_generic_class<Image::Image, GCDF::generic_mask>(n_Image, "Image"_s)
-				.add_second_constructor_allocate_proxy<Image::ImageSize const &>("allocate"_s)
+			define_generic_class<Image::Image, GCDF::generic_mask>(s_Image, "Image"_s)
+				.add_constructor_allocate_proxy<Image::ImageSize const &>("allocate"_s)
 				.add_member_function_proxy<&Image::Image::allocate>("allocate"_s)
 				.add_member_function_proxy<&Image::Image::reset>("reset"_s)
 				.add_member_function_proxy<&Image::Image::size>("size"_s)
@@ -402,8 +403,8 @@ namespace TwinStar::Core::Executor::Interface {
 		}
 		// FileSystem
 		{
-			auto n_FileSystem = n_Core.add_namespace("FileSystem"_s);
-			n_FileSystem
+			auto s_FileSystem = s_Core.add_space("FileSystem"_s);
+			s_FileSystem
 				// exist
 				.add_function_proxy<&stp<&FileSystem::exist>>("exist"_s)
 				.add_function_proxy<&stp<&FileSystem::exist_file>>("exist_file"_s)
@@ -433,139 +434,142 @@ namespace TwinStar::Core::Executor::Interface {
 				.add_function_proxy<&stp<&FileSystem::count_directory>>("count_directory"_s)
 				.add_function_proxy<&stp<&FileSystem::list>>("list"_s)
 				.add_function_proxy<&stp<&FileSystem::list_file>>("list_file"_s)
-				.add_function_proxy<&stp<&FileSystem::list_directory>>("list_directory"_s)
-				// special
-				.add_function_proxy<&stp<&FileSystem::get_working_directory>>("get_working_directory"_s)
-				.add_function_proxy<&stp<&FileSystem::set_working_directory>>("set_working_directory"_s)
-				.add_function_proxy<&stp<&FileSystem::get_temporary_directory>>("get_temporary_directory"_s);
+				.add_function_proxy<&stp<&FileSystem::list_directory>>("list_directory"_s);
 		}
 		// Process
 		{
-			auto n_Process = n_Core.add_namespace("Process"_s);
-			n_Process
-				.add_function_proxy<&stp<&Process::environment>>("environment"_s)
-				.add_function_proxy<&stp<&Process::exit>>("exit"_s)
-				.add_function_proxy<&stp<&Process::execute>>("execute"_s)
-				.add_function_proxy<&stp<&Process::system>>("system"_s);
+			auto s_Process = s_Core.add_space("Process"_s);
+			s_Process
+				// working directory
+				.add_function_proxy<&stp<&Process::get_working_directory>>("get_working_directory"_s)
+				.add_function_proxy<&stp<&Process::set_working_directory>>("set_working_directory"_s)
+				// environment variable
+				.add_function_proxy<&stp<&Process::get_environment_variable>>("get_environment_variable"_s)
+				.add_function_proxy<&stp<&Process::set_environment_variable>>("set_environment_variable"_s)
+				.add_function_proxy<&stp<&Process::list_environment_variable>>("list_environment_variable"_s)
+				// child process
+				.add_function_proxy<&stp<&Process::spawn_process>>("spawn_process"_s)
+				// system command
+				.add_function_proxy<&stp<&Process::system_command>>("system_command"_s);
 		}
 		// Tool
 		{
-			auto n_Tool = n_Core.add_namespace("Tool"_s);
+			auto s_Tool = s_Core.add_space("Tool"_s);
 			// Data
 			{
-				auto n_Data = n_Tool.add_namespace("Data"_s);
+				auto s_Data = s_Tool.add_space("Data"_s);
 				{
-					auto n_Hash = n_Data.add_namespace("Hash"_s);
+					auto s_Hash = s_Data.add_space("Hash"_s);
 					{
-						auto n_FNV = n_Hash.add_namespace("FNV"_s);
-						define_generic_class<Tool::Data::Hash::FNV::Mode>(n_FNV, "Mode"_s);
-						define_generic_class<Tool::Data::Hash::FNV::BitCount>(n_FNV, "BitCount"_s);
-						n_FNV.add_namespace("Hash"_s)
+						auto s_FNV = s_Hash.add_space("FNV"_s);
+						define_generic_class<Tool::Data::Hash::FNV::Mode>(s_FNV, "Mode"_s);
+						define_generic_class<Tool::Data::Hash::FNV::BitCount>(s_FNV, "BitCount"_s);
+						s_FNV.add_space("Hash"_s)
 							.add_function_proxy<&stp<Tool::Data::Hash::FNV::Hash::do_process_whole>>("process_whole"_s);
 					}
 					{
-						auto n_MD5 = n_Hash.add_namespace("MD5"_s);
-						n_MD5.add_namespace("Hash"_s)
+						auto s_MD5 = s_Hash.add_space("MD5"_s);
+						s_MD5.add_space("Hash"_s)
 							.add_function_proxy<&stp<&Tool::Data::Hash::MD5::Hash::do_process_whole>>("process_whole"_s);
 					}
 				}
 				{
-					auto n_Encoding = n_Data.add_namespace("Encoding"_s);
+					auto s_Encoding = s_Data.add_space("Encoding"_s);
 					{
-						auto n_Base64 = n_Encoding.add_namespace("Base64"_s);
-						n_Base64.add_namespace("Encode"_s)
+						auto s_Base64 = s_Encoding.add_space("Base64"_s);
+						s_Base64.add_space("Encode"_s)
 							.add_function_proxy<&stp<&Tool::Data::Encoding::Base64::Encode::do_compute_size>>("compute_size"_s)
 							.add_function_proxy<&stp<&Tool::Data::Encoding::Base64::Encode::do_process_whole>>("process_whole"_s);
-						n_Base64.add_namespace("Decode"_s)
+						s_Base64.add_space("Decode"_s)
 							.add_function_proxy<&stp<&Tool::Data::Encoding::Base64::Decode::do_compute_size>>("compute_size"_s)
 							.add_function_proxy<&stp<&Tool::Data::Encoding::Base64::Decode::do_process_whole>>("process_whole"_s);
 					}
 				}
 				{
-					auto n_Encryption = n_Data.add_namespace("Encryption"_s);
+					auto s_Encryption = s_Data.add_space("Encryption"_s);
 					{
-						auto n_XOR = n_Encryption.add_namespace("XOR"_s);
-						n_XOR.add_namespace("Encrypt"_s)
+						auto s_XOR = s_Encryption.add_space("XOR"_s);
+						s_XOR.add_space("Encrypt"_s)
 							.add_function_proxy<&stp<&Tool::Data::Encryption::XOR::Encrypt::do_process_whole>>("process_whole"_s);
 					}
 					{
-						auto n_Rijndael = n_Encryption.add_namespace("Rijndael"_s);
-						define_generic_class<Tool::Data::Encryption::Rijndael::Mode>(n_Rijndael, "Mode"_s);
-						n_Rijndael.add_namespace("Encrypt"_s)
+						auto s_Rijndael = s_Encryption.add_space("Rijndael"_s);
+						define_generic_class<Tool::Data::Encryption::Rijndael::Mode>(s_Rijndael, "Mode"_s);
+						s_Rijndael.add_space("Encrypt"_s)
 							.add_function_proxy<&stp<&Tool::Data::Encryption::Rijndael::Encrypt::do_process_whole>>("process_whole"_s);
-						n_Rijndael.add_namespace("Decrypt"_s)
+						s_Rijndael.add_space("Decrypt"_s)
 							.add_function_proxy<&stp<&Tool::Data::Encryption::Rijndael::Decrypt::do_process_whole>>("process_whole"_s);
 					}
 				}
 				{
-					auto n_Compression = n_Data.add_namespace("Compression"_s);
+					auto s_Compression = s_Data.add_space("Compression"_s);
 					{
-						auto n_Deflate = n_Compression.add_namespace("Deflate"_s);
-						define_generic_class<Tool::Data::Compression::Deflate::Strategy>(n_Deflate, "Strategy"_s);
-						define_generic_class<Tool::Data::Compression::Deflate::Wrapper>(n_Deflate, "Wrapper"_s);
-						n_Deflate.add_namespace("Compress"_s)
+						auto s_Deflate = s_Compression.add_space("Deflate"_s);
+						define_generic_class<Tool::Data::Compression::Deflate::Strategy>(s_Deflate, "Strategy"_s);
+						define_generic_class<Tool::Data::Compression::Deflate::Wrapper>(s_Deflate, "Wrapper"_s);
+						s_Deflate.add_space("Compress"_s)
 							.add_function_proxy<&stp<&Tool::Data::Compression::Deflate::Compress::do_compute_size_bound>>("compute_size_bound"_s)
 							.add_function_proxy<&stp<&Tool::Data::Compression::Deflate::Compress::do_process_whole>>("process_whole"_s);
-						n_Deflate.add_namespace("Uncompress"_s)
+						s_Deflate.add_space("Uncompress"_s)
 							.add_function_proxy<&stp<&Tool::Data::Compression::Deflate::Uncompress::do_process_whole>>("process_whole"_s);
 					}
 					{
-						auto n_BZip2 = n_Compression.add_namespace("BZip2"_s);
-						n_BZip2.add_namespace("Compress"_s)
+						auto s_BZip2 = s_Compression.add_space("BZip2"_s);
+						s_BZip2.add_space("Compress"_s)
 							.add_function_proxy<&stp<&Tool::Data::Compression::BZip2::Compress::do_process_whole>>("process_whole"_s);
-						n_BZip2.add_namespace("Uncompress"_s)
+						s_BZip2.add_space("Uncompress"_s)
 							.add_function_proxy<&stp<&Tool::Data::Compression::BZip2::Uncompress::do_process_whole>>("process_whole"_s);
 					}
 					{
-						auto n_Lzma = n_Compression.add_namespace("Lzma"_s);
-						n_Lzma.add_namespace("Compress"_s)
+						auto s_Lzma = s_Compression.add_space("Lzma"_s);
+						s_Lzma.add_space("Compress"_s)
 							.add_function_proxy<&stp<&Tool::Data::Compression::Lzma::Compress::do_process_whole>>("process_whole"_s);
-						n_Lzma.add_namespace("Uncompress"_s)
+						s_Lzma.add_space("Uncompress"_s)
 							.add_function_proxy<&stp<&Tool::Data::Compression::Lzma::Uncompress::do_process_whole>>("process_whole"_s);
 					}
 				}
 				{
-					auto n_Differentiation = n_Data.add_namespace("Differentiation"_s);
+					auto s_Differentiation = s_Data.add_space("Differentiation"_s);
 					{
-						auto n_VCDiff = n_Differentiation.add_namespace("VCDiff"_s);
-						n_VCDiff.add_namespace("Encode"_s)
+						auto s_VCDiff = s_Differentiation.add_space("VCDiff"_s);
+						s_VCDiff.add_space("Encode"_s)
 							.add_function_proxy<&stp<&Tool::Data::Differentiation::VCDiff::Encode::do_process_whole>>("process_whole"_s);
-						n_VCDiff.add_namespace("Decode"_s)
+						s_VCDiff.add_space("Decode"_s)
 							.add_function_proxy<&stp<&Tool::Data::Differentiation::VCDiff::Decode::do_process_whole>>("process_whole"_s);
 					}
 				}
 				{
-					auto n_Serialization = n_Data.add_namespace("Serialization"_s);
+					auto s_Serialization = s_Data.add_space("Serialization"_s);
 					{
-						auto n_JSON = n_Serialization.add_namespace("JSON"_s);
-						n_JSON.add_namespace("Write"_s)
+						auto s_JSON = s_Serialization.add_space("JSON"_s);
+						s_JSON.add_space("Write"_s)
 							.add_function_proxy<&stp<&Tool::Data::Serialization::JSON::Write::do_process_whole>>("process_whole"_s);
-						n_JSON.add_namespace("Read"_s)
+						s_JSON.add_space("Read"_s)
 							.add_function_proxy<&stp<&Tool::Data::Serialization::JSON::Read::do_process_whole>>("process_whole"_s);
 					}
 					{
-						auto n_XML = n_Serialization.add_namespace("XML"_s);
-						n_XML.add_namespace("Write"_s)
+						auto s_XML = s_Serialization.add_space("XML"_s);
+						s_XML.add_space("Write"_s)
 							.add_function_proxy<&stp<&Tool::Data::Serialization::XML::Write::do_process_whole>>("process_whole"_s);
-						n_XML.add_namespace("Read"_s)
+						s_XML.add_space("Read"_s)
 							.add_function_proxy<&stp<&Tool::Data::Serialization::XML::Read::do_process_whole>>("process_whole"_s);
 					}
 				}
 			}
 			// Image
 			{
-				auto n_Image = n_Tool.add_namespace("Image"_s);
+				auto s_Image = s_Tool.add_space("Image"_s);
 				{
-					auto n_Transformation = n_Image.add_namespace("Transformation"_s);
-					n_Transformation.add_namespace("Flip"_s)
+					auto s_Transformation = s_Image.add_space("Transformation"_s);
+					s_Transformation.add_space("Flip"_s)
 						.add_function_proxy<&stp<&Tool::Image::Transformation::Flip::do_process_image>>("process_image"_s);
-					n_Transformation.add_namespace("Scale"_s)
+					s_Transformation.add_space("Scale"_s)
 						.add_function_proxy<&stp<&Tool::Image::Transformation::Scale::do_process_image>>("process_image"_s);
 				}
 				{
-					auto n_Texture = n_Image.add_namespace("Texture"_s);
-					define_generic_class<Tool::Image::Texture::Format>(n_Texture, "Format"_s);
-					n_Texture.add_namespace("Encode"_s)
+					auto s_Texture = s_Image.add_space("Texture"_s);
+					define_generic_class<Tool::Image::Texture::Format>(s_Texture, "Format"_s);
+					s_Texture.add_space("Encode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							OByteStreamView &                    data,
@@ -580,7 +584,7 @@ namespace TwinStar::Core::Executor::Interface {
 								);
 							}
 						>>>("process_image"_s);
-					n_Texture.add_namespace("Decode"_s)
+					s_Texture.add_space("Decode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							IByteStreamView &                    data,
@@ -596,37 +600,37 @@ namespace TwinStar::Core::Executor::Interface {
 							}
 						>>>("process_image"_s);
 					{
-						auto n_Compression = n_Texture.add_namespace("Compression"_s);
+						auto s_Compression = s_Texture.add_space("Compression"_s);
 						{
-							auto n_ETC1 = n_Compression.add_namespace("ETC1"_s);
-							n_ETC1.add_namespace("Compress"_s)
+							auto s_ETC1 = s_Compression.add_space("ETC1"_s);
+							s_ETC1.add_space("Compress"_s)
 								.add_function_proxy<&stp<&Tool::Image::Texture::Compression::ETC1::Compress::do_process_image>>("process_image"_s);
-							n_ETC1.add_namespace("Uncompress"_s)
+							s_ETC1.add_space("Uncompress"_s)
 								.add_function_proxy<&stp<&Tool::Image::Texture::Compression::ETC1::Uncompress::do_process_image>>("process_image"_s);
 						}
 						{
-							auto n_ETC2 = n_Compression.add_namespace("ETC2"_s);
-							n_ETC2.add_namespace("Compress"_s)
+							auto s_ETC2 = s_Compression.add_space("ETC2"_s);
+							s_ETC2.add_space("Compress"_s)
 								.add_function_proxy<&stp<&Tool::Image::Texture::Compression::ETC2::Compress::do_process_image>>("process_image"_s);
-							n_ETC2.add_namespace("Uncompress"_s)
+							s_ETC2.add_space("Uncompress"_s)
 								.add_function_proxy<&stp<&Tool::Image::Texture::Compression::ETC2::Uncompress::do_process_image>>("process_image"_s);
 						}
 						{
-							auto n_PVRTC4 = n_Compression.add_namespace("PVRTC4"_s);
-							n_PVRTC4.add_namespace("Compress"_s)
+							auto s_PVRTC4 = s_Compression.add_space("PVRTC4"_s);
+							s_PVRTC4.add_space("Compress"_s)
 								.add_function_proxy<&stp<&Tool::Image::Texture::Compression::PVRTC4::Compress::do_process_image>>("process_image"_s);
-							n_PVRTC4.add_namespace("Uncompress"_s)
+							s_PVRTC4.add_space("Uncompress"_s)
 								.add_function_proxy<&stp<&Tool::Image::Texture::Compression::PVRTC4::Uncompress::do_process_image>>("process_image"_s);
 						}
 					}
 				}
 				{
-					auto n_File = n_Image.add_namespace("File"_s);
+					auto s_File = s_Image.add_space("File"_s);
 					{
-						auto n_PNG = n_File.add_namespace("PNG"_s);
-						n_PNG.add_namespace("Write"_s)
+						auto s_PNG = s_File.add_space("PNG"_s);
+						s_PNG.add_space("Write"_s)
 							.add_function_proxy<&stp<&Tool::Image::File::PNG::Write::do_process_image>>("process_image"_s);
-						n_PNG.add_namespace("Read"_s)
+						s_PNG.add_space("Read"_s)
 							.add_function_proxy<&stp<&Tool::Image::File::PNG::Read::do_compute_image_size>>("compute_image_size"_s)
 							.add_function_proxy<&stp<&Tool::Image::File::PNG::Read::do_process_image>>("process_image"_s);
 					}
@@ -634,13 +638,13 @@ namespace TwinStar::Core::Executor::Interface {
 			}
 			// Wwise
 			{
-				auto n_Wwise = n_Tool.add_namespace("Wwise"_s);
+				auto s_Wwise = s_Tool.add_space("Wwise"_s);
 				{
 					using Tool::Wwise::Media::Version;
 					using Tool::Wwise::Media::VersionPackage;
-					auto n_Media = n_Wwise.add_namespace("Media"_s);
-					define_generic_class<Version>(n_Media, "Version"_s);
-					n_Media.add_namespace("Decode"_s)
+					auto s_Media = s_Wwise.add_space("Media"_s);
+					define_generic_class<Version>(s_Media, "Version"_s);
+					s_Media.add_space("Decode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							CByteListView const & ripe,
@@ -679,14 +683,14 @@ namespace TwinStar::Core::Executor::Interface {
 						typename Manifest<VersionPackage::element<12_ixz>>::SoundBank,
 						typename Manifest<VersionPackage::element<13_ixz>>::SoundBank
 					>;
-					auto n_SoundBank = n_Wwise.add_namespace("SoundBank"_s);
-					define_generic_class<Version>(n_SoundBank, "Version"_s);
+					auto s_SoundBank = s_Wwise.add_space("SoundBank"_s);
+					define_generic_class<Version>(s_SoundBank, "Version"_s);
 					{
-						auto n_Manifest = n_SoundBank.add_namespace("Manifest"_s);
-						auto c_SoundBank = define_generic_class<SoundBankManifest, GCDF::generic_mask>(n_Manifest, "SoundBank"_s);
+						auto s_Manifest = s_SoundBank.add_space("Manifest"_s);
+						auto c_SoundBank = define_generic_class<SoundBankManifest, GCDF::generic_mask>(s_Manifest, "SoundBank"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_SoundBank);
 					}
-					n_SoundBank.add_namespace("Encode"_s)
+					s_SoundBank.add_space("Encode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							OByteStreamView &         sound_bank_data,
@@ -702,7 +706,7 @@ namespace TwinStar::Core::Executor::Interface {
 								);
 							}
 						>>>("process_sound_bank"_s);
-					n_SoundBank.add_namespace("Decode"_s)
+					s_SoundBank.add_space("Decode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							IByteStreamView &      sound_bank_data,
@@ -722,7 +726,7 @@ namespace TwinStar::Core::Executor::Interface {
 			}
 			// Marmalade
 			{
-				auto n_Marmalade = n_Tool.add_namespace("Marmalade"_s);
+				auto s_Marmalade = s_Tool.add_space("Marmalade"_s);
 				{
 					using Tool::Marmalade::DZip::Version;
 					using Tool::Marmalade::DZip::VersionPackage;
@@ -730,14 +734,14 @@ namespace TwinStar::Core::Executor::Interface {
 					using PackageManifest = Variant<
 						typename Manifest<VersionPackage::element<1_ixz>>::Package
 					>;
-					auto n_DZip = n_Marmalade.add_namespace("DZip"_s);
-					define_generic_class<Version>(n_DZip, "Version"_s);
+					auto s_DZip = s_Marmalade.add_space("DZip"_s);
+					define_generic_class<Version>(s_DZip, "Version"_s);
 					{
-						auto n_Manifest = n_DZip.add_namespace("Manifest"_s);
-						auto c_Package = define_generic_class<PackageManifest, GCDF::generic_mask>(n_Manifest, "Package"_s);
+						auto s_Manifest = s_DZip.add_space("Manifest"_s);
+						auto c_Package = define_generic_class<PackageManifest, GCDF::generic_mask>(s_Manifest, "Package"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Package);
 					}
-					n_DZip.add_namespace("Pack"_s)
+					s_DZip.add_space("Pack"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							OByteStreamView &       package_data,
@@ -753,7 +757,7 @@ namespace TwinStar::Core::Executor::Interface {
 								);
 							}
 						>>>("process_package"_s);
-					n_DZip.add_namespace("Unpack"_s)
+					s_DZip.add_space("Unpack"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							IByteStreamView &      package_data,
@@ -773,13 +777,13 @@ namespace TwinStar::Core::Executor::Interface {
 			}
 			// PopCap
 			{
-				auto n_PopCap = n_Tool.add_namespace("PopCap"_s);
+				auto s_PopCap = s_Tool.add_space("PopCap"_s);
 				{
 					using Tool::PopCap::ZLib::Version;
 					using Tool::PopCap::ZLib::VersionPackage;
-					auto n_ZLib = n_PopCap.add_namespace("ZLib"_s);
-					define_generic_class<Version>(n_ZLib, "Version"_s);
-					n_ZLib.add_namespace("Compress"_s)
+					auto s_ZLib = s_PopCap.add_space("ZLib"_s);
+					define_generic_class<Version>(s_ZLib, "Version"_s);
+					s_ZLib.add_space("Compress"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							Size const &    raw_size,
@@ -814,7 +818,7 @@ namespace TwinStar::Core::Executor::Interface {
 								);
 							}
 						>>>("process_whole"_s);
-					n_ZLib.add_namespace("Uncompress"_s)
+					s_ZLib.add_space("Uncompress"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							CByteListView const & ripe,
@@ -848,9 +852,9 @@ namespace TwinStar::Core::Executor::Interface {
 				{
 					using Tool::PopCap::CryptData::Version;
 					using Tool::PopCap::CryptData::VersionPackage;
-					auto n_CryptData = n_PopCap.add_namespace("CryptData"_s);
-					define_generic_class<Version>(n_CryptData, "Version"_s);
-					n_CryptData.add_namespace("Encrypt"_s)
+					auto s_CryptData = s_PopCap.add_space("CryptData"_s);
+					define_generic_class<Version>(s_CryptData, "Version"_s);
+					s_CryptData.add_space("Encrypt"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							Size const &    plain_size,
@@ -882,7 +886,7 @@ namespace TwinStar::Core::Executor::Interface {
 								);
 							}
 						>>>("process_whole"_s);
-					n_CryptData.add_namespace("Decrypt"_s)
+					s_CryptData.add_space("Decrypt"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							CByteListView const & cipher,
@@ -918,9 +922,9 @@ namespace TwinStar::Core::Executor::Interface {
 				{
 					using Tool::PopCap::ReflectionObjectNotation::Version;
 					using Tool::PopCap::ReflectionObjectNotation::VersionPackage;
-					auto n_ReflectionObjectNotation = n_PopCap.add_namespace("ReflectionObjectNotation"_s);
-					define_generic_class<Version>(n_ReflectionObjectNotation, "Version"_s);
-					n_ReflectionObjectNotation.add_namespace("Encode"_s)
+					auto s_ReflectionObjectNotation = s_PopCap.add_space("ReflectionObjectNotation"_s);
+					define_generic_class<Version>(s_ReflectionObjectNotation, "Version"_s);
+					s_ReflectionObjectNotation.add_space("Encode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							OByteStreamView &   data,
@@ -937,7 +941,7 @@ namespace TwinStar::Core::Executor::Interface {
 								);
 							}
 						>>>("process_whole"_s);
-					n_ReflectionObjectNotation.add_namespace("Decode"_s)
+					s_ReflectionObjectNotation.add_space("Decode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							IByteStreamView & data,
@@ -952,19 +956,19 @@ namespace TwinStar::Core::Executor::Interface {
 								);
 							}
 						>>>("process_whole"_s);
-					n_ReflectionObjectNotation.add_namespace("Encrypt"_s)
+					s_ReflectionObjectNotation.add_space("Encrypt"_s)
 						.add_function_proxy<&stp<&Tool::PopCap::ReflectionObjectNotation::Encrypt::do_compute_size>>("compute_size"_s)
 						.add_function_proxy<&stp<&Tool::PopCap::ReflectionObjectNotation::Encrypt::do_process_whole>>("process_whole"_s);
-					n_ReflectionObjectNotation.add_namespace("Decrypt"_s)
+					s_ReflectionObjectNotation.add_space("Decrypt"_s)
 						.add_function_proxy<&stp<&Tool::PopCap::ReflectionObjectNotation::Decrypt::do_compute_size>>("compute_size"_s)
 						.add_function_proxy<&stp<&Tool::PopCap::ReflectionObjectNotation::Decrypt::do_process_whole>>("process_whole"_s);
 				}
 				{
 					using Tool::PopCap::UTexture::Version;
 					using Tool::PopCap::UTexture::VersionPackage;
-					auto n_UTexture = n_PopCap.add_namespace("UTexture"_s);
-					define_generic_class<Version>(n_UTexture, "Version"_s);
-					n_UTexture.add_namespace("Encode"_s)
+					auto s_UTexture = s_PopCap.add_space("UTexture"_s);
+					define_generic_class<Version>(s_UTexture, "Version"_s);
+					s_UTexture.add_space("Encode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							Size &                               data_size_bound,
@@ -995,7 +999,7 @@ namespace TwinStar::Core::Executor::Interface {
 								);
 							}
 						>>>("process_image"_s);
-					n_UTexture.add_namespace("Decode"_s)
+					s_UTexture.add_space("Decode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							CByteListView &    data,
@@ -1028,9 +1032,9 @@ namespace TwinStar::Core::Executor::Interface {
 				{
 					using Tool::PopCap::SexyTexture::Version;
 					using Tool::PopCap::SexyTexture::VersionPackage;
-					auto n_SexyTexture = n_PopCap.add_namespace("SexyTexture"_s);
-					define_generic_class<Version>(n_SexyTexture, "Version"_s);
-					n_SexyTexture.add_namespace("Encode"_s)
+					auto s_SexyTexture = s_PopCap.add_space("SexyTexture"_s);
+					define_generic_class<Version>(s_SexyTexture, "Version"_s);
+					s_SexyTexture.add_space("Encode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							Size &                               data_size_bound,
@@ -1063,7 +1067,7 @@ namespace TwinStar::Core::Executor::Interface {
 								);
 							}
 						>>>("process_image"_s);
-					n_SexyTexture.add_namespace("Decode"_s)
+					s_SexyTexture.add_space("Decode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							CByteListView &    data,
@@ -1105,14 +1109,14 @@ namespace TwinStar::Core::Executor::Interface {
 						typename Manifest<VersionPackage::element<5_ixz>>::Animation,
 						typename Manifest<VersionPackage::element<6_ixz>>::Animation
 					>;
-					auto n_Animation = n_PopCap.add_namespace("Animation"_s);
-					define_generic_class<Version>(n_Animation, "Version"_s);
+					auto s_Animation = s_PopCap.add_space("Animation"_s);
+					define_generic_class<Version>(s_Animation, "Version"_s);
 					{
-						auto n_Manifest = n_Animation.add_namespace("Manifest"_s);
-						auto c_Animation = define_generic_class<AnimationManifest, GCDF::generic_mask>(n_Manifest, "Animation"_s);
+						auto s_Manifest = s_Animation.add_space("Manifest"_s);
+						auto c_Animation = define_generic_class<AnimationManifest, GCDF::generic_mask>(s_Manifest, "Animation"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Animation);
 					}
-					n_Animation.add_namespace("Encode"_s)
+					s_Animation.add_space("Encode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							OByteStreamView &         animation_data,
@@ -1127,7 +1131,7 @@ namespace TwinStar::Core::Executor::Interface {
 								);
 							}
 						>>>("process_animation"_s);
-					n_Animation.add_namespace("Decode"_s)
+					s_Animation.add_space("Decode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							IByteStreamView &   animation_data,
@@ -1153,14 +1157,14 @@ namespace TwinStar::Core::Executor::Interface {
 						typename Manifest<VersionPackage::element<3_ixz>>::Animation,
 						typename Manifest<VersionPackage::element<4_ixz>>::Animation
 					>;
-					auto n_ReAnimation = n_PopCap.add_namespace("ReAnimation"_s);
-					define_generic_class<Version>(n_ReAnimation, "Version"_s);
+					auto s_ReAnimation = s_PopCap.add_space("ReAnimation"_s);
+					define_generic_class<Version>(s_ReAnimation, "Version"_s);
 					{
-						auto n_Manifest = n_ReAnimation.add_namespace("Manifest"_s);
-						auto c_Animation = define_generic_class<AnimationManifest, GCDF::generic_mask>(n_Manifest, "Animation"_s);
+						auto s_Manifest = s_ReAnimation.add_space("Manifest"_s);
+						auto c_Animation = define_generic_class<AnimationManifest, GCDF::generic_mask>(s_Manifest, "Animation"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Animation);
 					}
-					n_ReAnimation.add_namespace("Encode"_s)
+					s_ReAnimation.add_space("Encode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							OByteStreamView &         animation_data,
@@ -1175,7 +1179,7 @@ namespace TwinStar::Core::Executor::Interface {
 								);
 							}
 						>>>("process_animation"_s);
-					n_ReAnimation.add_namespace("Decode"_s)
+					s_ReAnimation.add_space("Decode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							IByteStreamView &   animation_data,
@@ -1201,14 +1205,14 @@ namespace TwinStar::Core::Executor::Interface {
 						typename Manifest<VersionPackage::element<3_ixz>>::Particle,
 						typename Manifest<VersionPackage::element<4_ixz>>::Particle
 					>;
-					auto n_Particle = n_PopCap.add_namespace("Particle"_s);
-					define_generic_class<Version>(n_Particle, "Version"_s);
+					auto s_Particle = s_PopCap.add_space("Particle"_s);
+					define_generic_class<Version>(s_Particle, "Version"_s);
 					{
-						auto n_Manifest = n_Particle.add_namespace("Manifest"_s);
-						auto c_Particle = define_generic_class<ParticleManifest, GCDF::generic_mask>(n_Manifest, "Particle"_s);
+						auto s_Manifest = s_Particle.add_space("Manifest"_s);
+						auto c_Particle = define_generic_class<ParticleManifest, GCDF::generic_mask>(s_Manifest, "Particle"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Particle);
 					}
-					n_Particle.add_namespace("Encode"_s)
+					s_Particle.add_space("Encode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							OByteStreamView &        particle_data,
@@ -1223,7 +1227,7 @@ namespace TwinStar::Core::Executor::Interface {
 								);
 							}
 						>>>("process_particle"_s);
-					n_Particle.add_namespace("Decode"_s)
+					s_Particle.add_space("Decode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							IByteStreamView &  particle_data,
@@ -1249,14 +1253,14 @@ namespace TwinStar::Core::Executor::Interface {
 						typename Manifest<VersionPackage::element<3_ixz>>::Trail,
 						typename Manifest<VersionPackage::element<4_ixz>>::Trail
 					>;
-					auto n_Trail = n_PopCap.add_namespace("Trail"_s);
-					define_generic_class<Version>(n_Trail, "Version"_s);
+					auto s_Trail = s_PopCap.add_space("Trail"_s);
+					define_generic_class<Version>(s_Trail, "Version"_s);
 					{
-						auto n_Manifest = n_Trail.add_namespace("Manifest"_s);
-						auto c_Trail = define_generic_class<TrailManifest, GCDF::generic_mask>(n_Manifest, "Trail"_s);
+						auto s_Manifest = s_Trail.add_space("Manifest"_s);
+						auto c_Trail = define_generic_class<TrailManifest, GCDF::generic_mask>(s_Manifest, "Trail"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Trail);
 					}
-					n_Trail.add_namespace("Encode"_s)
+					s_Trail.add_space("Encode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							OByteStreamView &     trail_data,
@@ -1271,7 +1275,7 @@ namespace TwinStar::Core::Executor::Interface {
 								);
 							}
 						>>>("process_trail"_s);
-					n_Trail.add_namespace("Decode"_s)
+					s_Trail.add_space("Decode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							IByteStreamView & trail_data,
@@ -1294,14 +1298,14 @@ namespace TwinStar::Core::Executor::Interface {
 					using EffectManifest = Variant<
 						typename Manifest<VersionPackage::element<1_ixz>>::Effect
 					>;
-					auto n_Effect = n_PopCap.add_namespace("Effect"_s);
-					define_generic_class<Version>(n_Effect, "Version"_s);
+					auto s_Effect = s_PopCap.add_space("Effect"_s);
+					define_generic_class<Version>(s_Effect, "Version"_s);
 					{
-						auto n_Manifest = n_Effect.add_namespace("Manifest"_s);
-						auto c_Effect = define_generic_class<EffectManifest, GCDF::generic_mask>(n_Manifest, "Effect"_s);
+						auto s_Manifest = s_Effect.add_space("Manifest"_s);
+						auto c_Effect = define_generic_class<EffectManifest, GCDF::generic_mask>(s_Manifest, "Effect"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Effect);
 					}
-					n_Effect.add_namespace("Encode"_s)
+					s_Effect.add_space("Encode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							OByteStreamView &      effect_data,
@@ -1316,7 +1320,7 @@ namespace TwinStar::Core::Executor::Interface {
 								);
 							}
 						>>>("process_effect"_s);
-					n_Effect.add_namespace("Decode"_s)
+					s_Effect.add_space("Decode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							IByteStreamView & effect_data,
@@ -1339,14 +1343,14 @@ namespace TwinStar::Core::Executor::Interface {
 					using FontWidgetManifest = Variant<
 						typename Manifest<VersionPackage::element<1_ixz>>::FontWidget
 					>;
-					auto n_CharacterFontWidget2 = n_PopCap.add_namespace("CharacterFontWidget2"_s);
-					define_generic_class<Version>(n_CharacterFontWidget2, "Version"_s);
+					auto s_CharacterFontWidget2 = s_PopCap.add_space("CharacterFontWidget2"_s);
+					define_generic_class<Version>(s_CharacterFontWidget2, "Version"_s);
 					{
-						auto n_Manifest = n_CharacterFontWidget2.add_namespace("Manifest"_s);
-						auto c_FontWidget = define_generic_class<FontWidgetManifest, GCDF::generic_mask>(n_Manifest, "FontWidget"_s);
+						auto s_Manifest = s_CharacterFontWidget2.add_space("Manifest"_s);
+						auto c_FontWidget = define_generic_class<FontWidgetManifest, GCDF::generic_mask>(s_Manifest, "FontWidget"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_FontWidget);
 					}
-					n_CharacterFontWidget2.add_namespace("Encode"_s)
+					s_CharacterFontWidget2.add_space("Encode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							OByteStreamView &          font_widget_data,
@@ -1361,7 +1365,7 @@ namespace TwinStar::Core::Executor::Interface {
 								);
 							}
 						>>>("process_font_widget"_s);
-					n_CharacterFontWidget2.add_namespace("Decode"_s)
+					s_CharacterFontWidget2.add_space("Decode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							IByteStreamView &    font_widget_data,
@@ -1385,14 +1389,14 @@ namespace TwinStar::Core::Executor::Interface {
 						typename Manifest<VersionPackage::element<1_ixz>>::Package,
 						typename Manifest<VersionPackage::element<2_ixz>>::Package
 					>;
-					auto n_Package = n_PopCap.add_namespace("Package"_s);
-					define_generic_class<Version>(n_Package, "Version"_s);
+					auto s_Package = s_PopCap.add_space("Package"_s);
+					define_generic_class<Version>(s_Package, "Version"_s);
 					{
-						auto n_Manifest = n_Package.add_namespace("Manifest"_s);
-						auto c_Package = define_generic_class<PackageManifest, GCDF::generic_mask>(n_Manifest, "Package"_s);
+						auto s_Manifest = s_Package.add_space("Manifest"_s);
+						auto c_Package = define_generic_class<PackageManifest, GCDF::generic_mask>(s_Manifest, "Package"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Package);
 					}
-					n_Package.add_namespace("Pack"_s)
+					s_Package.add_space("Pack"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							OByteStreamView &       package_data,
@@ -1408,7 +1412,7 @@ namespace TwinStar::Core::Executor::Interface {
 								);
 							}
 						>>>("process_package"_s);
-					n_Package.add_namespace("Unpack"_s)
+					s_Package.add_space("Unpack"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							IByteStreamView &      package_data,
@@ -1433,14 +1437,14 @@ namespace TwinStar::Core::Executor::Interface {
 						typename Manifest<VersionPackage::element<1_ixz>>::Package,
 						typename Manifest<VersionPackage::element<2_ixz>>::Package
 					>;
-					auto n_ResourceStreamGroup = n_PopCap.add_namespace("ResourceStreamGroup"_s);
-					define_generic_class<Version>(n_ResourceStreamGroup, "Version"_s);
+					auto s_ResourceStreamGroup = s_PopCap.add_space("ResourceStreamGroup"_s);
+					define_generic_class<Version>(s_ResourceStreamGroup, "Version"_s);
 					{
-						auto n_Manifest = n_ResourceStreamGroup.add_namespace("Manifest"_s);
-						auto c_Package = define_generic_class<PackageManifest, GCDF::generic_mask>(n_Manifest, "Package"_s);
+						auto s_Manifest = s_ResourceStreamGroup.add_space("Manifest"_s);
+						auto c_Package = define_generic_class<PackageManifest, GCDF::generic_mask>(s_Manifest, "Package"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Package);
 					}
-					n_ResourceStreamGroup.add_namespace("Pack"_s)
+					s_ResourceStreamGroup.add_space("Pack"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							OByteStreamView &       package_data,
@@ -1456,7 +1460,7 @@ namespace TwinStar::Core::Executor::Interface {
 								);
 							}
 						>>>("process_package"_s);
-					n_ResourceStreamGroup.add_namespace("Unpack"_s)
+					s_ResourceStreamGroup.add_space("Unpack"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							IByteStreamView &      package_data,
@@ -1490,19 +1494,19 @@ namespace TwinStar::Core::Executor::Interface {
 						Optional<typename Description<VersionPackage::element<3_ixz>>::Package>,
 						Optional<typename Description<VersionPackage::element<4_ixz>>::Package>
 					>;
-					auto n_ResourceStreamBundle = n_PopCap.add_namespace("ResourceStreamBundle"_s);
-					define_generic_class<Version>(n_ResourceStreamBundle, "Version"_s);
+					auto s_ResourceStreamBundle = s_PopCap.add_space("ResourceStreamBundle"_s);
+					define_generic_class<Version>(s_ResourceStreamBundle, "Version"_s);
 					{
-						auto n_Manifest = n_ResourceStreamBundle.add_namespace("Manifest"_s);
-						auto c_Package = define_generic_class<PackageManifest, GCDF::generic_mask>(n_Manifest, "Package"_s);
+						auto s_Manifest = s_ResourceStreamBundle.add_space("Manifest"_s);
+						auto c_Package = define_generic_class<PackageManifest, GCDF::generic_mask>(s_Manifest, "Package"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Package);
 					}
 					{
-						auto n_Description = n_ResourceStreamBundle.add_namespace("Description"_s);
-						auto c_PackageOptional = define_generic_class<PackageDescriptionOptional, GCDF::generic_mask>(n_Description, "PackageOptional"_s);
+						auto s_Description = s_ResourceStreamBundle.add_space("Description"_s);
+						auto c_PackageOptional = define_generic_class<PackageDescriptionOptional, GCDF::generic_mask>(s_Description, "PackageOptional"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_PackageOptional);
 					}
-					n_ResourceStreamBundle.add_namespace("Pack"_s)
+					s_ResourceStreamBundle.add_space("Pack"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							OByteStreamView &                  package_data,
@@ -1521,7 +1525,7 @@ namespace TwinStar::Core::Executor::Interface {
 								);
 							}
 						>>>("process_package"_s);
-					n_ResourceStreamBundle.add_namespace("Unpack"_s)
+					s_ResourceStreamBundle.add_space("Unpack"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							IByteStreamView &            package_data,
@@ -1543,9 +1547,9 @@ namespace TwinStar::Core::Executor::Interface {
 				{
 					using Tool::PopCap::ResourceStreamBundlePatch::Version;
 					using Tool::PopCap::ResourceStreamBundlePatch::VersionPackage;
-					auto n_ResourceStreamBundlePatch = n_PopCap.add_namespace("ResourceStreamBundlePatch"_s);
-					define_generic_class<Version>(n_ResourceStreamBundlePatch, "Version"_s);
-					n_ResourceStreamBundlePatch.add_namespace("Encode"_s)
+					auto s_ResourceStreamBundlePatch = s_PopCap.add_space("ResourceStreamBundlePatch"_s);
+					define_generic_class<Version>(s_ResourceStreamBundlePatch, "Version"_s);
+					s_ResourceStreamBundlePatch.add_space("Encode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							IByteStreamView & before,
@@ -1562,7 +1566,7 @@ namespace TwinStar::Core::Executor::Interface {
 								);
 							}
 						>>>("process_whole"_s);
-					n_ResourceStreamBundlePatch.add_namespace("Decode"_s)
+					s_ResourceStreamBundlePatch.add_space("Decode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							IByteStreamView & before,
@@ -1583,40 +1587,40 @@ namespace TwinStar::Core::Executor::Interface {
 			}
 			// Miscellaneous
 			{
-				auto n_Miscellaneous = n_Tool.add_namespace("Miscellaneous"_s);
+				auto s_Miscellaneous = s_Tool.add_space("Miscellaneous"_s);
 				{
-					auto n_XboxTiledTexture = n_Miscellaneous.add_namespace("XboxTiledTexture"_s);
-					n_XboxTiledTexture.add_namespace("Encode"_s)
+					auto s_XboxTiledTexture = s_Miscellaneous.add_space("XboxTiledTexture"_s);
+					s_XboxTiledTexture.add_space("Encode"_s)
 						.add_function_proxy<&stp<&Tool::Miscellaneous::XboxTiledTexture::Encode::do_process_image>>("process_image"_s);
-					n_XboxTiledTexture.add_namespace("Decode"_s)
+					s_XboxTiledTexture.add_space("Decode"_s)
 						.add_function_proxy<&stp<&Tool::Miscellaneous::XboxTiledTexture::Decode::do_process_image>>("process_image"_s);
 				}
 				{
-					auto n_PvZ2ChineseAndroidAlphaPaletteTexture = n_Miscellaneous.add_namespace("PvZ2ChineseAndroidAlphaPaletteTexture"_s);
-					n_PvZ2ChineseAndroidAlphaPaletteTexture.add_namespace("Encode"_s)
+					auto s_PvZ2ChineseAndroidAlphaPaletteTexture = s_Miscellaneous.add_space("PvZ2ChineseAndroidAlphaPaletteTexture"_s);
+					s_PvZ2ChineseAndroidAlphaPaletteTexture.add_space("Encode"_s)
 						.add_function_proxy<&stp<&Tool::Miscellaneous::PvZ2ChineseAndroidAlphaPaletteTexture::Encode::do_process_image>>("process_image"_s);
-					n_PvZ2ChineseAndroidAlphaPaletteTexture.add_namespace("Decode"_s)
+					s_PvZ2ChineseAndroidAlphaPaletteTexture.add_space("Decode"_s)
 						.add_function_proxy<&stp<&Tool::Miscellaneous::PvZ2ChineseAndroidAlphaPaletteTexture::Decode::do_process_image>>("process_image"_s);
 				}
 			}
 		}
 		// Miscellaneous
 		{
-			auto n_Miscellaneous = n_Core.add_namespace("Miscellaneous"_s);
-			define_generic_class<Thread, GCDF::default_constructor>(n_Miscellaneous, "Thread"_s)
+			auto s_Miscellaneous = s_Core.add_space("Miscellaneous"_s);
+			define_generic_class<Thread, GCDF::default_constructor>(s_Miscellaneous, "Thread"_s)
 				.add_member_function_proxy<&Thread::joinable>("joinable"_s)
 				.add_member_function_proxy<&Thread::join>("join"_s)
 				.add_member_function_proxy<&Thread::detach>("detach"_s)
 				.add_static_function_proxy<&Thread::yield>("yield"_s)
 				.add_static_function_proxy<&Thread::sleep>("sleep"_s);
-			define_generic_class<Context, GCDF::none_mask>(n_Miscellaneous, "Context"_s)
+			define_generic_class<Context, GCDF::none_mask>(s_Miscellaneous, "Context"_s)
 				.add_member_function<
 					&normalized_lambda<
 						[] (
-						JS::Handler<Context> &            thix,
-						JS::Handler<VCharacterListView> & script,
-						JS::Handler<String> &             name
-					) -> JS::Value {
+						JavaScript::NativeValueHandler<Context> &            thix,
+						JavaScript::NativeValueHandler<VCharacterListView> & script,
+						JavaScript::NativeValueHandler<String> &             name
+					) -> JavaScript::Value {
 							return thix.value().evaluate(down_cast<VStringView>(script.value()), name.value());
 						}
 					>
@@ -1624,43 +1628,43 @@ namespace TwinStar::Core::Executor::Interface {
 				.add_member_function<
 					&normalized_lambda<
 						[] (
-						JS::Handler<Context> &      thix,
-						JS::Handler<List<String>> & argument
-					) -> JS::Handler<List<String>> {
-							return JS::Handler<List<String>>::new_instance_allocate(thix.value().callback(argument.value()));
+						JavaScript::NativeValueHandler<Context> &      thix,
+						JavaScript::NativeValueHandler<List<String>> & argument
+					) -> JavaScript::NativeValueHandler<List<String>> {
+							return JavaScript::NativeValueHandler<List<String>>::new_instance_allocate(thix.value().callback(argument.value()));
 						}
 					>
 				>("callback"_s)
 				.add_member_function<
 					&normalized_lambda<
 						[] (
-						JS::Handler<Context> & thix
-					) -> JS::Handler<Context> {
-							return JS::Handler<Context>::new_instance_allocate(thix.value().spawn());
+						JavaScript::NativeValueHandler<Context> & thix
+					) -> JavaScript::NativeValueHandler<Context> {
+							return JavaScript::NativeValueHandler<Context>::new_instance_allocate(thix.value().spawn());
 						}
 					>
 				>("spawn"_s)
 				.add_member_function<
 					&normalized_lambda<
 						[] (
-						JS::Handler<Context> & thix
-					) -> JS::Handler<Boolean> {
-							return JS::Handler<Boolean>::new_instance_allocate(thix.value().busy());
+						JavaScript::NativeValueHandler<Context> & thix
+					) -> JavaScript::NativeValueHandler<Boolean> {
+							return JavaScript::NativeValueHandler<Boolean>::new_instance_allocate(thix.value().busy());
 						}
 					>
 				>("busy"_s)
 				.add_member_function<
 					&normalized_lambda<
 						[] (
-						JS::Handler<Context> & thix,
-						JS::Value &            executor,
-						JS::Handler<Thread> &  thread
+						JavaScript::NativeValueHandler<Context> & thix,
+						JavaScript::NativeValueHandler<Thread> &  thread,
+						JavaScript::Value &                       executor
 					) -> Void {
-							return thix.value().execute(executor, thread.value());
+							return thix.value().execute(thread.value(), executor);
 						}
 					>
 				>("execute"_s);
-			n_Miscellaneous
+			s_Miscellaneous
 				.add_function_proxy<
 					&normalized_lambda<
 						[] (
@@ -1715,16 +1719,17 @@ namespace TwinStar::Core::Executor::Interface {
 				.add_function<
 					&normalized_lambda<
 						[] (
-						JS::Handler<VCharacterListView> & it
+						JavaScript::NativeValueHandler<VCharacterListView> & it
 					) -> VStringView& {
 							// NOTE : return StringView is cheap
 							return down_cast<VStringView>(it.value());
 						}
 					>
 				>("cast_CharacterListView_to_JS_String"_s);
-			n_Miscellaneous.add_variable("g_version"_s, context.context().new_value(JS::Handler<Size>::new_instance_allocate(mbw<Size>(M_version))));
-			n_Miscellaneous.add_variable("g_context"_s, context.context().new_value(JS::Handler<Context>::new_reference(context)));
-			n_Miscellaneous.add_variable("g_byte_stream_use_big_endian"_s, context.context().new_value(JS::Handler<Boolean>::new_reference(g_byte_stream_use_big_endian)));
+			s_Miscellaneous.add_variable("g_version"_s, context.context().new_value(JavaScript::NativeValueHandler<Size>::new_instance_allocate(mbw<Size>(M_version))));
+			s_Miscellaneous.add_variable("g_context"_s, context.context().new_value(JavaScript::NativeValueHandler<Context>::new_reference(context)));
+			// TODO : can not access the value at other thread
+			s_Miscellaneous.add_variable("g_byte_stream_use_big_endian"_s, context.context().new_value(JavaScript::NativeValueHandler<Boolean>::new_reference(g_byte_stream_use_big_endian)));
 		}
 		return;
 		#if defined M_compiler_msvc

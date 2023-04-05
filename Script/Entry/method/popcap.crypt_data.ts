@@ -16,9 +16,9 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 		g_executor_method.push(
 			Executor.method_of({
 				id: 'popcap.crypt_data.encrypt',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					plain_file: Executor.RequireArgument<string>;
@@ -32,37 +32,35 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 					let key: string;
 					{
 						plain_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'plain_file'),
+							Executor.query_argument_name(this.id, 'plain_file'),
 							a.plain_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 						cipher_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'cipher_file'),
+							Executor.query_argument_name(this.id, 'cipher_file'),
 							a.cipher_file,
 							(value) => (value),
 							() => (plain_file.replace(/()?$/i, '.cdat')),
-							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						limit = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'limit'),
+							Executor.query_argument_name(this.id, 'limit'),
 							a.limit,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
-							(value) => (0x00n <= value ? null : los(`范围溢出`)),
+							(initial) => (Console.integer(null, (value) => (0x00n <= value ? null : los(`范围溢出`)), initial)),
 						);
 						key = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'key'),
+							Executor.query_argument_name(this.id, 'key'),
 							a.key,
 							(value) => (value),
 							null,
-							() => (Console.string(null)),
-							(value) => (null),
+							(initial) => (Console.string(null, null, initial)),
 						);
 					}
 					CoreX.Tool.PopCap.CryptData.encrypt_fs(plain_file, cipher_file, limit, key, {});
-					Console.notify('s', los(`执行成功`), [`${cipher_file}`]);
+					Console.message('s', los(`执行成功`), [`${cipher_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -76,9 +74,9 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 			}),
 			Executor.method_of({
 				id: 'popcap.crypt_data.decrypt',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					cipher_file: Executor.RequireArgument<string>;
@@ -92,37 +90,35 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 					let key: string;
 					{
 						cipher_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'cipher_file'),
+							Executor.query_argument_name(this.id, 'cipher_file'),
 							a.cipher_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 						plain_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'plain_file'),
+							Executor.query_argument_name(this.id, 'plain_file'),
 							a.plain_file,
 							(value) => (value),
 							() => (cipher_file.replace(/((\.cdat))?$/i, '')),
-							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						limit = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'limit'),
+							Executor.query_argument_name(this.id, 'limit'),
 							a.limit,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
-							(value) => (0x00n <= value ? null : los(`范围溢出`)),
+							(initial) => (Console.integer(null, (value) => (0x00n <= value ? null : los(`范围溢出`)), initial)),
 						);
 						key = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'key'),
+							Executor.query_argument_name(this.id, 'key'),
 							a.key,
 							(value) => (value),
 							null,
-							() => (Console.string(null)),
-							(value) => (null),
+							(initial) => (Console.string(null, null, initial)),
 						);
 					}
 					CoreX.Tool.PopCap.CryptData.decrypt_fs(cipher_file, plain_file, limit, key, {});
-					Console.notify('s', los(`执行成功`), [`${plain_file}`]);
+					Console.message('s', los(`执行成功`), [`${plain_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -138,9 +134,9 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 		g_executor_method_of_batch.push(
 			Executor.method_of({
 				id: 'popcap.crypt_data.encrypt.batch',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					plain_file_directory: Executor.RequireArgument<string>;
@@ -154,33 +150,31 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 					let key: string;
 					{
 						plain_file_directory = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'plain_file_directory'),
+							Executor.query_argument_name(this.id, 'plain_file_directory'),
 							a.plain_file_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
 						cipher_file_directory = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'cipher_file_directory'),
+							Executor.query_argument_name(this.id, 'cipher_file_directory'),
 							a.cipher_file_directory,
 							(value) => (value),
 							() => (plain_file_directory.replace(/$/i, '.encrypt')),
-							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						limit = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'limit'),
+							Executor.query_argument_name(this.id, 'limit'),
 							a.limit,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
-							(value) => (0x00n <= value ? null : los(`范围溢出`)),
+							(initial) => (Console.integer(null, (value) => (0x00n <= value ? null : los(`范围溢出`)), initial)),
 						);
 						key = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'key'),
+							Executor.query_argument_name(this.id, 'key'),
 							a.key,
 							(value) => (value),
 							null,
-							() => (Console.string(null)),
-							(value) => (null),
+							(initial) => (Console.string(null, null, initial)),
 						);
 					}
 					simple_batch_execute(
@@ -192,7 +186,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 							CoreX.Tool.PopCap.CryptData.encrypt_fs(plain_file, cipher_file, limit, key, {});
 						},
 					);
-					Console.notify('s', los(`执行成功`), [`${cipher_file_directory}`]);
+					Console.message('s', los(`执行成功`), [`${cipher_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -206,9 +200,9 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 			}),
 			Executor.method_of({
 				id: 'popcap.crypt_data.decrypt.batch',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					cipher_file_directory: Executor.RequireArgument<string>;
@@ -222,33 +216,31 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 					let key: string;
 					{
 						cipher_file_directory = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'cipher_file_directory'),
+							Executor.query_argument_name(this.id, 'cipher_file_directory'),
 							a.cipher_file_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
 						plain_file_directory = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'plain_file_directory'),
+							Executor.query_argument_name(this.id, 'plain_file_directory'),
 							a.plain_file_directory,
 							(value) => (value),
 							() => (cipher_file_directory.replace(/$/i, '.decrypt')),
-							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						limit = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'limit'),
+							Executor.query_argument_name(this.id, 'limit'),
 							a.limit,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
-							(value) => (0x00n <= value ? null : los(`范围溢出`)),
+							(initial) => (Console.integer(null, (value) => (0x00n <= value ? null : los(`范围溢出`)), initial)),
 						);
 						key = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'key'),
+							Executor.query_argument_name(this.id, 'key'),
 							a.key,
 							(value) => (value),
 							null,
-							() => (Console.string(null)),
-							(value) => (null),
+							(initial) => (Console.string(null, null, initial)),
 						);
 					}
 					simple_batch_execute(
@@ -260,7 +252,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 							CoreX.Tool.PopCap.CryptData.decrypt_fs(cipher_file, plain_file, limit, key, {});
 						},
 					);
-					Console.notify('s', los(`执行成功`), [`${plain_file_directory}`]);
+					Console.message('s', los(`执行成功`), [`${plain_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

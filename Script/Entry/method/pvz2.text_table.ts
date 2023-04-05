@@ -13,9 +13,9 @@ namespace TwinStar.Script.Entry.method.pvz2.text_table {
 		g_executor_method.push(
 			Executor.method_of({
 				id: 'pvz2.text_table.convert',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					source_file: Executor.RequireArgument<string>;
@@ -23,33 +23,32 @@ namespace TwinStar.Script.Entry.method.pvz2.text_table {
 					destination_file: Executor.RequestArgument<string, true>;
 				}) {
 					let source_file: string;
-					let destination_version: Support.PvZ2.TextTable.Version;
+					let destination_version: string;
 					let destination_file: string;
 					{
 						source_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'source_file'),
+							Executor.query_argument_name(this.id, 'source_file'),
 							a.source_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 						destination_version = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'destination_version'),
+							Executor.query_argument_name(this.id, 'destination_version'),
 							a.destination_version,
 							(value) => (value),
 							null,
-							() => (Console.option(Support.PvZ2.TextTable.VersionE.map((e) => ([e])), null)),
-							(value) => (Support.PvZ2.TextTable.VersionE.includes(value as any) ? null : los(`版本不受支持`)),
+							(initial) => (Console.option(Support.PvZ2.TextTable.VersionE.map((e) => ([e])), null, null, initial)),
 						);
 						destination_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'destination_file'),
+							Executor.query_argument_name(this.id, 'destination_file'),
 							a.destination_file,
 							(value) => (value),
 							() => (source_file.replace(/((\.(txt|json)))?$/i, `.convert.${{ 'text': 'txt', 'json_map': 'json', 'json_list': 'json' }[destination_version]}`)),
-							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 					}
-					Support.PvZ2.TextTable.convert_fs(source_file, destination_file, null, destination_version);
-					Console.notify('s', los(`执行成功`), [`${destination_file}`]);
+					Support.PvZ2.TextTable.convert_fs(source_file, destination_file, null, destination_version as any);
+					Console.message('s', los(`执行成功`), [`${destination_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

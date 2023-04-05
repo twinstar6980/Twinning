@@ -1,83 +1,12 @@
 #pragma once
 
 #include "shell/common.hpp"
+#include "shell/utility/macro.hpp"
+#include "shell/utility/library.hpp"
 #include "shell/core/library.hpp"
 #include "shell/core/symbol.hpp"
 
 namespace TwinStar::Shell::Core {
-
-	#pragma region detail
-
-	namespace Detail {
-
-		using DynamicLibraryHandle = void *;
-
-		// ----------------
-
-		inline auto open_library (
-			std::string_view const & path
-		) -> DynamicLibraryHandle {
-			#if defined M_system_windows
-			auto path_absolute = std::string{path} + "."s;
-			auto path_w = utf8_to_utf16(reinterpret_cast<std::u8string const &>(path_absolute));
-			auto result = LoadLibraryW(reinterpret_cast<LPCWSTR>(path_w.data()));
-			if (!result) {
-				throw std::runtime_error{"can not open library : "s + std::string{path}};
-			}
-			return result;
-			#endif
-			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-			auto result = dlopen(path.data(), RTLD_LAZY | RTLD_LOCAL);
-			if (!result) {
-				throw std::runtime_error{"can not open library : "s + std::string{path}};
-			}
-			return result;
-			#endif
-		}
-
-		inline auto close_library (
-			DynamicLibraryHandle const & handle
-		) -> void {
-			#if defined M_system_windows
-			auto state = FreeLibrary(static_cast<HMODULE>(handle));
-			if (state != TRUE) {
-				throw std::runtime_error{"can not close library"s};
-			}
-			return;
-			#endif
-			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-			auto state = dlclose(handle);
-			if (state != 0) {
-				throw std::runtime_error{"can not close library"s};
-			}
-			return;
-			#endif
-		}
-
-		template <typename Symbol>
-		inline auto get_symbol (
-			DynamicLibraryHandle const & handle,
-			std::string_view const &     symbol
-		) -> Symbol {
-			#if defined M_system_windows
-			auto result = GetProcAddress(static_cast<HMODULE>(handle), symbol.data());
-			if (!result) {
-				throw std::runtime_error{"can not get symbol : "s + std::string{symbol}};
-			}
-			return reinterpret_cast<Symbol>(result);
-			#endif
-			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-			auto result = dlsym(handle, symbol.data());
-			if (!result) {
-				throw std::runtime_error{"can not get symbol : "s + std::string{symbol}};
-			}
-			return reinterpret_cast<Symbol>(result);
-			#endif
-		}
-
-	}
-
-	#pragma endregion
 
 	#pragma region type
 
@@ -86,8 +15,8 @@ namespace TwinStar::Shell::Core {
 
 	protected:
 
-		SymbolTable                  m_symbol;
-		Detail::DynamicLibraryHandle m_handle;
+		SymbolTable   m_symbol;
+		LibraryLoader m_loader;
 
 	public:
 
@@ -95,7 +24,7 @@ namespace TwinStar::Shell::Core {
 
 		virtual ~DynamicLibrary (
 		) override {
-			Detail::close_library(thiz.m_handle);
+			thiz.m_loader.close();
 		}
 
 		// ----------------
@@ -118,12 +47,12 @@ namespace TwinStar::Shell::Core {
 			std::string_view const & path
 		) :
 			m_symbol{},
-			m_handle{} {
-			thiz.m_handle = Detail::open_library(path);
+			m_loader{} {
+			thiz.m_loader.open(path);
 			thiz.m_symbol = {
-				.version = Detail::get_symbol<decltype(Interface::version) *>(thiz.m_handle, SymbolNameTable::version),
-				.execute = Detail::get_symbol<decltype(Interface::execute) *>(thiz.m_handle, SymbolNameTable::execute),
-				.prepare = Detail::get_symbol<decltype(Interface::prepare) *>(thiz.m_handle, SymbolNameTable::prepare),
+				.version = thiz.m_loader.lookup<decltype(Interface::version) *>(SymbolNameTable::version),
+				.execute = thiz.m_loader.lookup<decltype(Interface::execute) *>(SymbolNameTable::execute),
+				.prepare = thiz.m_loader.lookup<decltype(Interface::prepare) *>(SymbolNameTable::prepare),
 			};
 		}
 
@@ -144,20 +73,22 @@ namespace TwinStar::Shell::Core {
 		#pragma region interface
 
 		virtual auto version (
-		) -> Interface::Size const* override {
-			return thiz.m_symbol.version();
+			Interface::Size * * number
+		) -> Interface::String* override {
+			return thiz.m_symbol.version(number);
 		}
 
 		virtual auto execute (
-			Interface::Callback const *   callback,
-			Interface::String const *     script,
-			Interface::StringList const * argument
-		) -> Interface::String const* override {
-			return thiz.m_symbol.execute(callback, script, argument);
+			Interface::Callback * *   callback,
+			Interface::String * *     script,
+			Interface::StringList * * argument,
+			Interface::String * *     result
+		) -> Interface::String* override {
+			return thiz.m_symbol.execute(callback, script, argument, result);
 		}
 
 		virtual auto prepare (
-		) -> Interface::String const* override {
+		) -> Interface::String* override {
 			return thiz.m_symbol.prepare();
 		}
 

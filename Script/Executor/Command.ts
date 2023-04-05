@@ -22,33 +22,33 @@ namespace TwinStar.Script.Executor {
 		raw_command: Array<string>,
 	): Array<Command> {
 		let result: Array<Command> = [];
-		let i = 0;
-		while (i < raw_command.length) {
+		let index = 0;
+		while (index < raw_command.length) {
 			let command: Command = {
 				method: null,
 				argument: {},
 				input: null,
 			};
 			{
-				let input_value = raw_command[i++];
+				let input_value = raw_command[index++];
 				if (input_value !== '?') {
 					command.input = {
 						value: input_value,
 						disable_filter: false,
 					};
-					if (i < raw_command.length && raw_command[i] === '-disable_filter') {
-						++i;
+					if (index < raw_command.length && raw_command[index] === '-disable_filter') {
+						++index;
 						command.input.disable_filter = true;
 					}
 				}
 			}
-			if (i < raw_command.length && raw_command[i] === '-method') {
-				++i;
-				command.method = raw_command[i++];
+			if (index < raw_command.length && raw_command[index] === '-method') {
+				++index;
+				command.method = raw_command[index++];
 			}
-			if (i < raw_command.length && raw_command[i] === '-argument') {
-				++i;
-				let argument = CoreX.JSON.read_s_js(raw_command[i++]);
+			if (index < raw_command.length && raw_command[index] === '-argument') {
+				++index;
+				let argument = CoreX.JSON.read_s_js(raw_command[index++]);
 				assert_test(argument !== null && typeof argument === 'object' && (argument as Object).constructor.name === 'Object' && !(argument instanceof Array), `argument must be a object`);
 				command.argument = argument;
 			}
@@ -68,10 +68,12 @@ namespace TwinStar.Script.Executor {
 			selected_method = target_method;
 		} else {
 			if (command.input === null) {
-				Console.notify('i', los(`此条命令未提供输入值，请输入`), []);
-				let input_value = Console.string(null);
-				Console.notify('i', los(`此条命令是否需禁用功能过滤`), []);
-				let input_disable_filter = Console.confirm(null);
+				Console.message('i', los('executor.command:no_input'), [
+				]);
+				let input_value = Console.string(null, null);
+				Console.message('i', los('executor.command:should_disable_filter_or_not'), [
+				]);
+				let input_disable_filter = Console.confirmation(null, null);
 				command.input = {
 					value: input_value,
 					disable_filter: input_disable_filter,
@@ -82,11 +84,14 @@ namespace TwinStar.Script.Executor {
 				method_state[i] = command.input.disable_filter || method[i].input_filter(command.input.value);
 			}
 			if (!method_state.includes(true)) {
-				Console.notify('w', los(`未筛选到可选的功能，故跳过此条命令`), []);
+				Console.message('w', los('executor.command:no_method_so_pass'), [
+				]);
 				selected_method = null;
 			} else {
-				Console.notify('i', los(`请选择需要应用的功能`), [los(`输入为空则跳过此条命令`)]);
-				selected_method = Console.option(method_state.map((e, i) => (e ? [method[i], `${method[i].descriptor()}`] : null)), null, true);
+				Console.message('i', los('executor.command:select_method'), [
+					los('executor.command:input_null_to_pass'),
+				]);
+				selected_method = Console.option(method_state.map((e, i) => (e ? [method[i], `${method[i].name()}`] : null)), true, null);
 			}
 		}
 		if (selected_method !== null) {

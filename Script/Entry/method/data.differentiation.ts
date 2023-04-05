@@ -16,9 +16,9 @@ namespace TwinStar.Script.Entry.method.data.differentiation {
 		g_executor_method.push(
 			Executor.method_of({
 				id: 'data.differentiation.vcdiff.encode',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					before_file: Executor.RequireArgument<string>;
@@ -32,36 +32,35 @@ namespace TwinStar.Script.Entry.method.data.differentiation {
 					let buffer_size: bigint;
 					{
 						before_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'before_file'),
+							Executor.query_argument_name(this.id, 'before_file'),
 							a.before_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 						after_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'after_file'),
+							Executor.query_argument_name(this.id, 'after_file'),
 							a.after_file,
 							(value) => (value),
 							null,
-							...Executor.argument_requester_for_path('file', [true]),
+							(initial) => (Console.path('file', [true], null, null, initial)),
 						);
 						patch_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'patch_file'),
+							Executor.query_argument_name(this.id, 'patch_file'),
 							a.patch_file,
 							(value) => (value),
 							() => (after_file.replace(/()?$/i, '.patch.bin')),
-							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'buffer_size'),
+							Executor.query_argument_name(this.id, 'buffer_size'),
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.size(null)),
-							(value) => (null),
+							(initial) => (Console.size(null, null, initial)),
 						);
 					}
 					CoreX.Tool.Data.Differentiation.VCDiff.encode_fs(before_file, after_file, patch_file, false, buffer_size);
-					Console.notify('s', los(`执行成功`), [`${patch_file}`]);
+					Console.message('s', los(`执行成功`), [`${patch_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -75,9 +74,9 @@ namespace TwinStar.Script.Entry.method.data.differentiation {
 			}),
 			Executor.method_of({
 				id: 'data.differentiation.vcdiff.decode',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					before_file: Executor.RequireArgument<string>;
@@ -91,36 +90,35 @@ namespace TwinStar.Script.Entry.method.data.differentiation {
 					let buffer_size: bigint;
 					{
 						before_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'before_file'),
+							Executor.query_argument_name(this.id, 'before_file'),
 							a.before_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 						patch_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'patch_file'),
+							Executor.query_argument_name(this.id, 'patch_file'),
 							a.patch_file,
 							(value) => (value),
 							null,
-							...Executor.argument_requester_for_path('file', [true]),
+							(initial) => (Console.path('file', [true], null, null, initial)),
 						);
 						after_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'after_file'),
+							Executor.query_argument_name(this.id, 'after_file'),
 							a.after_file,
 							(value) => (value),
 							() => (patch_file.replace(/()?$/i, '.after.bin')),
-							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'buffer_size'),
+							Executor.query_argument_name(this.id, 'buffer_size'),
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.size(null)),
-							(value) => (null),
+							(initial) => (Console.size(null, null, initial)),
 						);
 					}
 					CoreX.Tool.Data.Differentiation.VCDiff.decode_fs(before_file, after_file, patch_file, 0x7FFFFFFFn, buffer_size);
-					Console.notify('s', los(`执行成功`), [`${after_file}`]);
+					Console.message('s', los(`执行成功`), [`${after_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

@@ -153,7 +153,7 @@ namespace TwinStar::Core::Tool::Wwise::Media {
 						}
 					);
 					FileSystem::write_file(temporary_file.ffmpeg_input_audio, real_ripe);
-					external_program_execute_result = Process::execute(
+					external_program_execute_result = Process::spawn_process(
 						ffmpeg_program,
 						make_list<String>(
 							"-v"_sv,
@@ -219,7 +219,7 @@ namespace TwinStar::Core::Tool::Wwise::Media {
 						}
 					);
 					FileSystem::write_file(temporary_file.ffmpeg_input_audio, real_ripe);
-					external_program_execute_result = Process::execute(
+					external_program_execute_result = Process::spawn_process(
 						ffmpeg_program,
 						make_list<String>(
 							"-v"_sv,
@@ -246,7 +246,7 @@ namespace TwinStar::Core::Tool::Wwise::Media {
 				}
 				case AudioFormatFlag::aac.value : {
 					FileSystem::write_file(temporary_file.ffmpeg_input_audio, data);
-					external_program_execute_result = Process::execute(
+					external_program_execute_result = Process::spawn_process(
 						ffmpeg_program,
 						make_list<String>(
 							"-v"_sv,
@@ -273,7 +273,7 @@ namespace TwinStar::Core::Tool::Wwise::Media {
 				}
 				case AudioFormatFlag::vorbis.value : {
 					FileSystem::write_file(temporary_file.ww2ogg_input_audio, ripe);
-					external_program_execute_result = Process::execute(
+					external_program_execute_result = Process::spawn_process(
 						ww2ogg_program,
 						make_list<String>(
 							"--pcb"_sv,
@@ -289,7 +289,7 @@ namespace TwinStar::Core::Tool::Wwise::Media {
 						k_null_optional
 					);
 					assert_test(external_program_execute_result == 0x00000000_iu32);
-					external_program_execute_result = Process::execute(
+					external_program_execute_result = Process::spawn_process(
 						ffmpeg_program,
 						make_list<String>(
 							"-v"_sv,

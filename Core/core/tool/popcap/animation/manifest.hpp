@@ -19,8 +19,8 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 		M_record_of_list(
 			M_wrap(TranslateTransform_<_>),
 			M_wrap(
-				(Floating) x,
-				(Floating) y,
+				(Floater) x,
+				(Floater) y,
 			),
 		);
 
@@ -35,9 +35,9 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 		M_record_of_list(
 			M_wrap(RotateTranslateTransform_<_>),
 			M_wrap(
-				(Floating) angle,
-				(Floating) x,
-				(Floating) y,
+				(Floater) angle,
+				(Floater) x,
+				(Floater) y,
 			),
 		);
 
@@ -52,12 +52,12 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 		M_record_of_list(
 			M_wrap(MatrixTranslateTransform_<_>),
 			M_wrap(
-				(Floating) a,
-				(Floating) b,
-				(Floating) c,
-				(Floating) d,
-				(Floating) x,
-				(Floating) y,
+				(Floater) a,
+				(Floater) b,
+				(Floater) c,
+				(Floater) d,
+				(Floater) x,
+				(Floater) y,
 			),
 		);
 
@@ -83,10 +83,10 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 		M_record_of_list(
 			M_wrap(Color_<_>),
 			M_wrap(
-				(Floating) red,
-				(Floating) green,
-				(Floating) blue,
-				(Floating) alpha,
+				(Floater) red,
+				(Floater) green,
+				(Floater) blue,
+				(Floater) alpha,
 			),
 		);
 
@@ -103,8 +103,8 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 		M_record_of_map(
 			M_wrap(Rectangle_<_>),
 			M_wrap(
-				(Position2D<Floating>) position,
-				(Size2D<Floating>) size,
+				(Position2<Floater>) position,
+				(Size2<Floater>) size,
 			),
 		);
 
@@ -158,7 +158,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 				(Boolean) sprite,
 				(Boolean) additive,
 				(Integer) preload_frame,
-				(Floating) time_scale,
+				(Floater) time_scale,
 			),
 		);
 
@@ -239,7 +239,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 			M_wrap(Sprite_<_>),
 			M_wrap(
 				(String) name,
-				(Floating) frame_rate,
+				(Floater) frame_rate,
 				(List<Frame>) frame,
 			),
 		);
@@ -249,7 +249,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 			M_wrap(Sprite_<_>),
 			M_wrap(
 				(String) name,
-				(Floating) frame_rate,
+				(Floater) frame_rate,
 				(WorkArea) work_area,
 				(List<Frame>) frame,
 			),
@@ -287,7 +287,7 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 			M_wrap(Image_<_>),
 			M_wrap(
 				(String) name,
-				(Size2D<Integer>) size,
+				(Size2<Integer>) size,
 				(MatrixTranslateTransform) transform,
 			),
 		);
@@ -306,8 +306,8 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 			M_wrap(Animation_<_>),
 			M_wrap(
 				(Integer) frame_rate,
-				(Position2D<Floating>) position,
-				(Size2D<Floating>) size,
+				(Position2<Floater>) position,
+				(Size2<Floater>) size,
 				(List<Image>) image,
 				(List<Sprite>) sprite,
 				(Sprite) main_sprite,
@@ -319,8 +319,8 @@ namespace TwinStar::Core::Tool::PopCap::Animation {
 			M_wrap(Animation_<_>),
 			M_wrap(
 				(Integer) frame_rate,
-				(Position2D<Floating>) position,
-				(Size2D<Floating>) size,
+				(Position2<Floater>) position,
+				(Size2<Floater>) size,
 				(List<Image>) image,
 				(List<Sprite>) sprite,
 				(Optional<Sprite>) main_sprite,

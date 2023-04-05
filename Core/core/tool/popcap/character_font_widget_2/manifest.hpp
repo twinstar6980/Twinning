@@ -138,7 +138,7 @@ namespace TwinStar::Core::Tool::PopCap::CharacterFontWidget2 {
 				(String) error_header,
 				(Integer) point_size,
 				(List<String>) tag,
-				(Floating) scale,
+				(Floater) scale,
 				(Boolean) force_scaled_image_white,
 				(Boolean) activate_all_layer,
 			),

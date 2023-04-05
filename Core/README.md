@@ -60,23 +60,21 @@
 
 ## 说明
 
-* 关于 API
+* 关于接口
 	
 	1. 本项目被编译为动态库，需要调用方进行动态加载。
 	
-	2. API 声明位于 `- <project>/core/interface/interface.hpp` 。
+	2. 接口声明位于 `- <project>/core/interface/interface.hpp` 。
 	
-	3. 为了容许来自其他语言的调用，API 被设计为完全的 C 风格。参数变量的所有权归调用方，调用方需确保其能够正确析构；返回值变量的所有权属于库自身，调用方不应对其进行读取以外的任何操作。
+	3. 为了容许来自其他语言的调用，接口被设计为完全的 C 风格。输入参数的所有权归调用方，调用方需确保其能够正确析构；输出参数与返回值的所有权属于库自身，调用方不应对其进行读取以外的任何操作。
 
 * 关于构建
 	
-	1. 本项目重度依赖模板，并仅使用头文件进行代码组织，最终只有单个源文件被编译，这导致了较长的编译时间，应当考虑在未来借助 C++ Modules 进行优化（在其成熟之后）。
+	1. 由于项目中大量使用模板，并仅使用头文件进行代码组织，最终只有单个源文件被编译，这导致了较长的编译时间（clang 20m~ | msvc 80m~）与极高的内存占用（clang 12G~ | msvc 48G~），编译时需确保物理内存与交换内存充足，应考虑在未来使用 C++ Modules 进行重构（在其成熟之后）。
 	
-	2. 在 Windows 上使用 MSVC 编译本项目将使用大量内存（10G左右），请确保设备的物理内存与交换内存充足。
+	2. 由于 GCC 的策略，需要添加 `-fpermissive` 选项以使 GCC 容许项目中的部分代码。
 	
-	3. 由于 GCC 的策略，需要添加 `-fpermissive` 选项以使 GCC 容许项目中的部分代码。
-	
-	4. 由于 GCC 的 BUG ，本项目无法通过 GCC 编译，参阅 [GCC Bugzilla # 102367](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=102367) 。
+	3. 由于 GCC 的 BUG ，本项目无法通过 GCC 编译，参阅 [GCC Bugzilla # 102367](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=102367) 。
 
 * 对第三方库的修改
 	
@@ -88,10 +86,10 @@
 	
 	* `Rijndael`：修正非标准代码，避免符号冲突。
 	
-	* `ETCPACK`：修正错误代码，移除平台依赖，暴露 API 。
+	* `ETCPACK`：修正错误代码，移除平台依赖，暴露接口。
 	
 	* `PVRTCCompressor`：引入依赖头文件。
 	
-	* `quickjs`：暴露 API 。
+	* `quickjs`：暴露接口。
 	
 	> 任何修改都会以 `// TwinStar : source|insert|remove|change` 做出标示。

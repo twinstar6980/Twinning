@@ -85,6 +85,15 @@ namespace TwinStar::Core {
 		return result;
 	}
 
+	// ----------------
+
+	// NOTE : short-name of make_std_string
+	inline auto mss (
+		CStringView const & string
+	) -> std::string {
+		return std::string{cast_pointer<char>(string.begin()).value, string.size().value};
+	}
+
 	#pragma endregion
 
 	#pragma region literal

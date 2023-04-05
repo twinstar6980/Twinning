@@ -6,7 +6,7 @@ namespace TwinStar::Core::Executor {
 
 	#pragma region type
 
-	using Callback = AsGlobalFunction<List<String> const &, List<String> const &>;
+	using Callback = AsGlobalFunction<String *, List<String> * *, List<String> * *>;
 
 	#pragma endregion
 

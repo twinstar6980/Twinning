@@ -2,6 +2,7 @@
 
 #include "core/utility/miscellaneous/character_series/stream.hpp"
 #include "core/utility/string/string.hpp"
+#include "core/utility/string/parser.hpp"
 
 namespace TwinStar::Core {
 
@@ -176,13 +177,13 @@ namespace TwinStar::Core {
 	};
 
 	template <>
-	struct CharacterStreamAdapter<Floating> {
+	struct CharacterStreamAdapter<Floater> {
 
 		using ThisI = ICharacterStreamView;
 
 		using ThisO = OCharacterStreamView;
 
-		using That = Floating;
+		using That = Floater;
 
 		// ----------------
 

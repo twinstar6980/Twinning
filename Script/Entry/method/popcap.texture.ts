@@ -14,9 +14,9 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 		g_executor_method.push(
 			Executor.method_of({
 				id: 'popcap.texture.encode',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					image_file: Executor.RequireArgument<string>;
@@ -28,29 +28,28 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 					let format: string;
 					{
 						image_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'image_file'),
+							Executor.query_argument_name(this.id, 'image_file'),
 							a.image_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 						data_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'data_file'),
+							Executor.query_argument_name(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
 							() => (image_file.replace(/((\.png))?$/i, '.ptx')),
-							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						format = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'format'),
+							Executor.query_argument_name(this.id, 'format'),
 							a.format,
 							(value) => (value),
 							null,
-							() => (Console.option(Support.PopCap.Texture.Encode.FormatE.map((e) => ([e])), null)),
-							(value) => (Support.PopCap.Texture.Encode.FormatE.includes(value as any) ? null : los(`选项非法`)),
+							(initial) => (Console.option(Support.PopCap.Texture.Encode.FormatE.map((e) => ([e])), null, null, initial)),
 						);
 					}
 					Support.PopCap.Texture.Encode.encode_fs(image_file, data_file, format as any);
-					Console.notify('s', los(`执行成功`), [`${data_file}`]);
+					Console.message('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -63,9 +62,9 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 			}),
 			Executor.method_of({
 				id: 'popcap.texture.decode',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					data_file: Executor.RequireArgument<string>;
@@ -81,45 +80,42 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 					let image_height: bigint;
 					{
 						data_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'data_file'),
+							Executor.query_argument_name(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 						image_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'image_file'),
+							Executor.query_argument_name(this.id, 'image_file'),
 							a.image_file,
 							(value) => (value),
 							() => (data_file.replace(/((\.ptx))?$/i, '.png')),
-							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						format = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'format'),
+							Executor.query_argument_name(this.id, 'format'),
 							a.format,
 							(value) => (value),
 							null,
-							() => (Console.option(Support.PopCap.Texture.Encode.FormatE.map((e) => ([e])), null)),
-							(value) => (Support.PopCap.Texture.Encode.FormatE.includes(value as any) ? null : los(`选项非法`)),
+							(initial) => (Console.option(Support.PopCap.Texture.Encode.FormatE.map((e) => ([e])), null, null, initial)),
 						);
 						image_width = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'image_width'),
+							Executor.query_argument_name(this.id, 'image_width'),
 							a.image_width,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
-							(value) => ((0n < value) ? null : los(`尺寸应大于零`)),
+							(initial) => (Console.integer(null, (value) => ((0n < value) ? null : los(`尺寸应大于零`)), initial)),
 						);
 						image_height = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'image_height'),
+							Executor.query_argument_name(this.id, 'image_height'),
 							a.image_height,
 							(value) => (value),
 							null,
-							() => (Console.integer(null)),
-							(value) => ((0n < value) ? null : los(`尺寸应大于零`)),
+							(initial) => (Console.integer(null, (value) => ((0n < value) ? null : los(`尺寸应大于零`)), initial)),
 						);
 					}
 					Support.PopCap.Texture.Encode.decode_fs(data_file, image_file, [image_width, image_height], format as any);
-					Console.notify('s', los(`执行成功`), [`${image_file}`]);
+					Console.message('s', los(`执行成功`), [`${image_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

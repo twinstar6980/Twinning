@@ -9,11 +9,11 @@ namespace TwinStar.Script.Entry {
 	// ------------------------------------------------
 
 	export type CommonFileSystemArgument = {
-		fs_tactic_if_exist: 'trash' | 'delete' | 'override' | null;
+		fs_tactic_if_exist: 'none' | 'trash' | 'delete' | 'override';
 	};
 
 	export const k_common_file_system_argument: CommonFileSystemArgument = {
-		fs_tactic_if_exist: null,
+		fs_tactic_if_exist: 'none',
 	};
 
 	// ------------------------------------------------
@@ -45,25 +45,26 @@ namespace TwinStar.Script.Entry {
 	// ------------------------------------------------
 
 	export function simple_batch_execute(
-		directory: string,
+		parent: string,
 		filter: ['any' | 'file' | 'directory', null | RegExp],
 		worker: (item: string) => void,
 	): void {
-		let item_list = CoreX.FileSystem[filter[0] === 'file' ? 'list_file' : filter[0] === 'directory' ? 'list_directory' : 'list'](directory);
+		let item_list = CoreX.FileSystem[filter[0] === 'file' ? 'list_file' : filter[0] === 'directory' ? 'list_directory' : 'list'](parent);
 		if (filter[1] !== null) {
 			item_list = item_list.filter((e) => (filter[1]!.test(e)));
 		}
 		if (item_list.length === 0) {
-			Console.notify('w', los(`无可处理项目`), []);
+			Console.message('w', los('entry:batch_no_item'), [
+			]);
 		} else {
 			let progress = new TextGenerator.Progress('fraction', false, 40, item_list.length);
 			for (let item of item_list) {
 				progress.increase();
-				Console.notify('i', `${progress}`, [`${item}`]);
+				Console.message('i', `${progress}`, [`${item}`]);
 				try {
 					worker(item);
 				} catch (e: any) {
-					Console.notify_error(e);
+					Console.message_error(e);
 					Console.pause();
 				}
 			}
@@ -76,14 +77,14 @@ namespace TwinStar.Script.Entry {
 	type Config = {
 		language: string;
 		cli_disable_virtual_terminal_sequence: boolean;
+		pause_when_finish: boolean;
+		thread_limit: bigint;
 		byte_stream_use_big_endian: boolean;
 		common_buffer_size: string;
 		json_format: {
 			disable_trailing_comma: boolean;
 			disable_array_wrap_line: boolean;
 		};
-		pause_when_finish: boolean;
-		thread_limit: bigint;
 	};
 
 	export function _injector(
@@ -112,9 +113,11 @@ namespace TwinStar.Script.Entry {
 		timer.start();
 		let raw_command = [...argument];
 		if (raw_command.length === 0) {
-			Console.notify('i', los(`请依次输入命令参数`), [los(`输入为空则结束输入`)]);
+			Console.message('i', los('entry:input_command'), [
+				los('entry:input_finish_if_null'),
+			]);
 			while (true) {
-				let input = Console.string(null, true);
+				let input = Console.string(true, null);
 				if (input === null) {
 					break;
 				}
@@ -126,20 +129,33 @@ namespace TwinStar.Script.Entry {
 		}
 		let command = Executor.parse(raw_command);
 		let method = [...g_executor_method, ...g_executor_method_of_batch];
-		Console.notify('i', los(`所有命令已解析`), [los(`共 {} 条`, command.length)]);
+		Console.message('i', los('entry:all_command_parse'), [
+			los('entry:all_command_count', command.length),
+		]);
 		let progress = new TextGenerator.Progress('fraction', true, 40, command.length);
-		for (let e of command) {
+		for (let item of command) {
 			progress.increase();
-			Console.notify('i', los(`命令执行中：{}`, progress), [`${e.input === null ? '?' : e.input.value}${e.method === null ? '' : ` | ${e.method}`}`]);
+			Console.message('i', los('entry:all_command_finish', progress), [
+				`${item.input === null ? '?' : item.input.value}${item.method === null ? '' : ` | ${item.method}`}`,
+			]);
+			let current_exception = null;
+			let current_timer = new Timer();
+			current_timer.start();
 			try {
-				Executor.execute(e, method);
+				Executor.execute(item, method);
 			} catch (e: any) {
-				Console.notify_error(e);
+				current_exception = e;
+			}
+			current_timer.stop();
+			if (current_exception !== null) {
+				Console.message_error(current_exception);
 				Console.pause();
 			}
 		}
 		timer.stop();
-		Console.notify('s', los(`所有命令已执行`), [los(`用时 {} s`, (timer.duration() / 1000).toFixed(3))]);
+		Console.message('s', los('entry:all_command_finish'), [
+			los('entry:all_command_duration', (timer.duration() / 1000).toFixed(3)),
+		]);
 		if (config.pause_when_finish) {
 			Console.pause();
 		}

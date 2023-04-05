@@ -349,6 +349,7 @@ namespace TwinStar::Core {
 		}
 		return size;
 	}
+
 	template <typename Result, typename Source, typename Separator> requires
 		CategoryConstraint<IsPureInstance<Result> && IsPureInstance<Source> && IsPureInstance<Separator>>
 		&& (IsTemplateInstanceOfT<Result, List>)

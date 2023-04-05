@@ -40,14 +40,14 @@ namespace TwinStar::Core::Tool::PopCap::ReAnimation {
 
 		inline static constexpr auto k_transform_data_size = [] {
 			auto size = k_none_size;
-			size += bs_static_size<FloatingS32>();
-			size += bs_static_size<FloatingS32>();
-			size += bs_static_size<FloatingS32>();
-			size += bs_static_size<FloatingS32>();
-			size += bs_static_size<FloatingS32>();
-			size += bs_static_size<FloatingS32>();
-			size += bs_static_size<FloatingS32>();
-			size += bs_static_size<FloatingS32>();
+			size += bs_static_size<FloaterS32>();
+			size += bs_static_size<FloaterS32>();
+			size += bs_static_size<FloaterS32>();
+			size += bs_static_size<FloaterS32>();
+			size += bs_static_size<FloaterS32>();
+			size += bs_static_size<FloaterS32>();
+			size += bs_static_size<FloaterS32>();
+			size += bs_static_size<FloaterS32>();
 			size += bs_static_size<IntegerOfPlatform>();
 			size += bs_static_size<IntegerOfPlatform>();
 			size += bs_static_size<IntegerOfPlatform>();
@@ -122,11 +122,11 @@ namespace TwinStar::Core::Tool::PopCap::ReAnimation {
 			return;
 		}
 
-		static auto exchange_unit_floating (
+		static auto exchange_unit_floater (
 			OByteStreamView & data,
-			Floating const &  value
+			Floater const &   value
 		) -> Void {
-			data.write(cbw<FloatingS32>(value));
+			data.write(cbw<FloaterS32>(value));
 			return;
 		}
 
@@ -148,7 +148,7 @@ namespace TwinStar::Core::Tool::PopCap::ReAnimation {
 			animation_data.write_constant(k_magic_identifier);
 			exchange_unit_integer_platform(animation_data, ignored);
 			exchange_unit_integer(animation_data, cbw<Integer>(animation_manifest.track.size()));
-			exchange_unit_floating(animation_data, animation_manifest.frame_rate);
+			exchange_unit_floater(animation_data, animation_manifest.frame_rate);
 			exchange_unit_integer_platform(animation_data, ignored);
 			exchange_unit_constant(animation_data, cbw<IntegerU32>(k_track_data_size));
 			for (auto & track_manifest : animation_manifest.track) {
@@ -166,14 +166,14 @@ namespace TwinStar::Core::Tool::PopCap::ReAnimation {
 				exchange_unit_string(animation_data, track_manifest.name);
 				exchange_unit_constant(animation_data, cbw<IntegerU32>(k_transform_data_size));
 				for (auto & transform_manifest : track_manifest.transform) {
-					exchange_unit_floating(animation_data, transform_manifest.x);
-					exchange_unit_floating(animation_data, transform_manifest.y);
-					exchange_unit_floating(animation_data, transform_manifest.kx);
-					exchange_unit_floating(animation_data, transform_manifest.ky);
-					exchange_unit_floating(animation_data, transform_manifest.sx);
-					exchange_unit_floating(animation_data, transform_manifest.sy);
-					exchange_unit_floating(animation_data, transform_manifest.f);
-					exchange_unit_floating(animation_data, transform_manifest.a);
+					exchange_unit_floater(animation_data, transform_manifest.x);
+					exchange_unit_floater(animation_data, transform_manifest.y);
+					exchange_unit_floater(animation_data, transform_manifest.kx);
+					exchange_unit_floater(animation_data, transform_manifest.ky);
+					exchange_unit_floater(animation_data, transform_manifest.sx);
+					exchange_unit_floater(animation_data, transform_manifest.sy);
+					exchange_unit_floater(animation_data, transform_manifest.f);
+					exchange_unit_floater(animation_data, transform_manifest.a);
 					exchange_unit_integer_platform(animation_data, ignored);
 					exchange_unit_integer_platform(animation_data, ignored);
 					exchange_unit_integer_platform(animation_data, ignored);
@@ -261,11 +261,11 @@ namespace TwinStar::Core::Tool::PopCap::ReAnimation {
 			return;
 		}
 
-		static auto exchange_unit_floating (
+		static auto exchange_unit_floater (
 			IByteStreamView & data,
-			Floating &        value
+			Floater &         value
 		) -> Void {
-			value = cbw<Floating>(data.read_of<FloatingS32>());
+			value = cbw<Floater>(data.read_of<FloaterS32>());
 			return;
 		}
 
@@ -287,7 +287,7 @@ namespace TwinStar::Core::Tool::PopCap::ReAnimation {
 			animation_data.read_constant(k_magic_identifier);
 			exchange_unit_integer_platform(animation_data, ignored);
 			animation_manifest.track.allocate_full(cbw<Size>(M_apply(M_wrap(Integer{}), M_wrap({ exchange_unit_integer(animation_data, it); }))));
-			exchange_unit_floating(animation_data, animation_manifest.frame_rate);
+			exchange_unit_floater(animation_data, animation_manifest.frame_rate);
 			exchange_unit_integer_platform(animation_data, ignored);
 			exchange_unit_constant(animation_data, cbw<IntegerU32>(k_track_data_size));
 			for (auto & track_manifest : animation_manifest.track) {
@@ -305,14 +305,14 @@ namespace TwinStar::Core::Tool::PopCap::ReAnimation {
 				exchange_unit_string(animation_data, track_manifest.name);
 				exchange_unit_constant(animation_data, cbw<IntegerU32>(k_transform_data_size));
 				for (auto & transform_manifest : track_manifest.transform) {
-					exchange_unit_floating(animation_data, transform_manifest.x);
-					exchange_unit_floating(animation_data, transform_manifest.y);
-					exchange_unit_floating(animation_data, transform_manifest.kx);
-					exchange_unit_floating(animation_data, transform_manifest.ky);
-					exchange_unit_floating(animation_data, transform_manifest.sx);
-					exchange_unit_floating(animation_data, transform_manifest.sy);
-					exchange_unit_floating(animation_data, transform_manifest.f);
-					exchange_unit_floating(animation_data, transform_manifest.a);
+					exchange_unit_floater(animation_data, transform_manifest.x);
+					exchange_unit_floater(animation_data, transform_manifest.y);
+					exchange_unit_floater(animation_data, transform_manifest.kx);
+					exchange_unit_floater(animation_data, transform_manifest.ky);
+					exchange_unit_floater(animation_data, transform_manifest.sx);
+					exchange_unit_floater(animation_data, transform_manifest.sy);
+					exchange_unit_floater(animation_data, transform_manifest.f);
+					exchange_unit_floater(animation_data, transform_manifest.a);
 					exchange_unit_integer_platform(animation_data, ignored);
 					exchange_unit_integer_platform(animation_data, ignored);
 					exchange_unit_integer_platform(animation_data, ignored);

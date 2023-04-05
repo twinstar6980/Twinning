@@ -35,7 +35,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup {
 			M_wrap(TextureResourceAdditional_<_>),
 			M_wrap(
 				(Integer) index,
-				(Size2D<Integer>) size,
+				(Size2<Integer>) size,
 			),
 		);
 

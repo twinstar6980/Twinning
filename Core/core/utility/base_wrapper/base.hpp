@@ -1,6 +1,8 @@
 #pragma once
 
 #include "core/utility/trait/trait.hpp"
+#include "core/utility/exception/exception.hpp"
+#include "core/utility/exception/utility.hpp"
 
 namespace TwinStar::Core {
 

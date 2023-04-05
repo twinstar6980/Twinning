@@ -163,13 +163,13 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 					auto chunk_size_compressed = Size{};
 					chunk_information_structure.offset = cbw<IntegerU32>(package_data.position());
 					if (chunk_flag.get(Structure::ChunkFlag<version>::combuf)) {
-						throw ToDoException{};
+						throw IncompleteException{};
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::unused_2)) {
-						throw ToDoException{};
+						throw IncompleteException{};
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::dzip)) {
-						throw ToDoException{};
+						throw IncompleteException{};
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::zlib)) {
 						auto chunk_data = FileSystem::read_file(resource_path);
@@ -185,13 +185,13 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::mp3)) {
-						throw ToDoException{};
+						throw IncompleteException{};
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::jpeg)) {
-						throw ToDoException{};
+						throw IncompleteException{};
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::zerod_out)) {
-						throw ToDoException{};
+						throw IncompleteException{};
 						// TODO
 						// chunk_size_uncompressed = ;
 						// chunk_size_compressed = k_none_size;
@@ -207,7 +207,7 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::random_access)) {
-						throw ToDoException{};
+						throw IncompleteException{};
 					}
 					chunk_information_structure.size_compressed = cbw<IntegerU32>(chunk_size_compressed);
 					chunk_information_structure.size_uncompressed = cbw<IntegerU32>(chunk_size_uncompressed);
@@ -315,12 +315,12 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 					if (chunk_flag.get(Structure::ChunkFlag<version>::combuf)) {
 						assert_test(!chunk_ok);
 						chunk_ok = k_true;
-						throw ToDoException{};
+						throw IncompleteException{};
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::dzip)) {
 						assert_test(!chunk_ok);
 						chunk_ok = k_true;
-						throw ToDoException{};
+						throw IncompleteException{};
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::zlib)) {
 						assert_test(!chunk_ok);
@@ -344,12 +344,12 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 					if (chunk_flag.get(Structure::ChunkFlag<version>::mp3)) {
 						assert_test(!chunk_ok);
 						chunk_ok = k_true;
-						throw ToDoException{};
+						throw IncompleteException{};
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::jpeg)) {
 						assert_test(!chunk_ok);
 						chunk_ok = k_true;
-						throw ToDoException{};
+						throw IncompleteException{};
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::zerod_out)) {
 						assert_test(!chunk_ok);
@@ -377,7 +377,7 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 					if (chunk_flag.get(Structure::ChunkFlag<version>::random_access)) {
 						assert_test(!chunk_ok);
 						chunk_ok = k_true;
-						throw ToDoException{};
+						throw IncompleteException{};
 					}
 					assert_test(chunk_ok);
 					package_data_end_position = maximum(package_data_end_position, package_data.position());

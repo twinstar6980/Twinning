@@ -19,9 +19,9 @@ namespace TwinStar::Core::Tool::PopCap::Trail {
 		M_record_of_map(
 			M_wrap(TrackNode_<_>),
 			M_wrap(
-				(Floating) time,
-				(Floating) low_value,
-				(Floating) high_value,
+				(Floater) time,
+				(Floater) low_value,
+				(Floater) high_value,
 				(Integer) curve,
 				(Integer) distribution,
 			),
@@ -41,7 +41,7 @@ namespace TwinStar::Core::Tool::PopCap::Trail {
 			M_wrap(Trail_<_>),
 			M_wrap(
 				(Integer) maximum_point,
-				(Floating) minimum_point_distance,
+				(Floater) minimum_point_distance,
 				(Integer) flag,
 				(String) image,
 				(List<TrackNode>) width_over_length,
@@ -57,7 +57,7 @@ namespace TwinStar::Core::Tool::PopCap::Trail {
 			M_wrap(Trail_<_>),
 			M_wrap(
 				(Integer) maximum_point,
-				(Floating) minimum_point_distance,
+				(Floater) minimum_point_distance,
 				(Integer) flag,
 				(Integer) image,
 				(List<TrackNode>) width_over_length,
@@ -73,7 +73,7 @@ namespace TwinStar::Core::Tool::PopCap::Trail {
 			M_wrap(Trail_<_>),
 			M_wrap(
 				(Integer) maximum_point,
-				(Floating) minimum_point_distance,
+				(Floater) minimum_point_distance,
 				(Integer) flag,
 				(String) image,
 				(String) image_resource,

@@ -34,7 +34,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 		M_record_of_map(
 			M_wrap(TextureResourceAdditional_<_>),
 			M_wrap(
-				(Size2D<Integer>) size,
+				(Size2<Integer>) size,
 				(Integer) format,
 				(Integer) row_byte_count,
 			),
@@ -44,7 +44,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 		M_record_of_map(
 			M_wrap(TextureResourceAdditional_<_>),
 			M_wrap(
-				(Size2D<Integer>) size,
+				(Size2<Integer>) size,
 				(Integer) format,
 				(Integer) row_byte_count,
 				(Integer) scale,

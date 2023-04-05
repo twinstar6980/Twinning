@@ -44,7 +44,11 @@ class Converter {
   parseString(
     Interface.String structure,
   ) {
-    return structure.data.cast<ffi.Utf8>().toDartString(length: parseSize(structure.size));
+    if (structure.data == ffi.nullptr) {
+      return '';
+    } else {
+      return structure.data.cast<ffi.Utf8>().toDartString(length: parseSize(structure.size));
+    }
   }
 
   static
@@ -124,7 +128,7 @@ class Converter {
   // ----------------
 
   static
-  ffi.Pointer<ffi.NativeFunction<ffi.Pointer<Interface.StringList> Function(ffi.Pointer<Interface.StringList>)>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Pointer<Interface.String> Function(ffi.Pointer<ffi.Pointer<Interface.StringList>>, ffi.Pointer<ffi.Pointer<Interface.StringList>>)>>
   parseCallback(
     Interface.Callback structure,
   ) {
@@ -134,8 +138,8 @@ class Converter {
   static
   Void
   constructCallback(
-    Interface.Callback                                                                                             structure,
-    ffi.Pointer<ffi.NativeFunction<ffi.Pointer<Interface.StringList> Function(ffi.Pointer<Interface.StringList>)>> value,
+    Interface.Callback                                                                                                                                                      structure,
+    ffi.Pointer<ffi.NativeFunction<ffi.Pointer<Interface.String> Function(ffi.Pointer<ffi.Pointer<Interface.StringList>>, ffi.Pointer<ffi.Pointer<Interface.StringList>>)>> value,
   ) {
     structure.value = value;
     return;

@@ -3,11 +3,13 @@ namespace TwinStar.Script.Executable.JSShell {
 
 	export function execute(
 	): void {
-		Console.notify('i', los(`JS交互模式已开启`), [los(`输入为空则完成一轮输入，若一轮输入为空则结束交互`)]);
+		Console.message('i', los('executable.js_shell:input_start'), [
+			los('executable.js_shell:input_description'),
+		]);
 		while (true) {
 			let script = '';
 			while (true) {
-				let sub_script = Console.string(null, true);
+				let sub_script = Console.string(true, null);
 				if (sub_script === null) {
 					break;
 				}
@@ -18,9 +20,9 @@ namespace TwinStar.Script.Executable.JSShell {
 			}
 			try {
 				let result = CoreX.Miscellaneous.evaluate(script);
-				Console.notify('s', `> ${result}`, []);
+				Console.message('s', `> ${result}`, []);
 			} catch (e: any) {
-				Console.notify_error(e);
+				Console.message_error(e);
 			}
 		}
 		return;

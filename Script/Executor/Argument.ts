@@ -8,180 +8,60 @@ namespace TwinStar.Script.Executor {
 
 	// ------------------------------------------------
 
-	export function require_argument<Given, Raw, Result extends Raw>(
+	export function require_argument<Given, Result>(
 		name: string,
-		message: string,
 		given: Given,
-		given_converter: (value: Given) => Raw,
-		checker: Check.Checker<Raw>,
+		given_converter: (value: Given) => Result,
+		checker: Check.Checker<Result>,
 	): Result {
-		let result: Raw;
+		let result: Result;
 		result = given_converter(given);
-		Console.notify('i', los(`已取得参数：{}`, name), [`${result}`]);
+		Console.message('i', los('executor.argument:get', name), [
+			`${result}`,
+		]);
 		if (!checker(result)) {
-			Console.notify('w', los(`参数值无效`), []);
+			Console.message('w', los('executor.argument:invalid'), [
+			]);
 			throw new Error(`require argument is invalid`);
 		}
 		return result as Result;
 	}
 
-	export function request_argument<Given, Raw, Result extends Raw>(
+	export function request_argument<Given, Result>(
 		name: string,
-		message: string,
 		given: Given | '?default' | '?input',
-		given_converter: (value: Given) => Raw,
-		default_generator: (() => Raw) | null,
-		input_generator: () => Raw,
-		checker: Check.CheckerX<Raw>,
+		given_converter: (value: Given) => Result,
+		default_generator: (() => Result) | null,
+		input_generator: (initial?: Result) => Result,
 	): Result {
-		let result: Raw;
+		let initial: Result | undefined;
 		if (given === '?input') {
-			Console.notify('i', los(`请输入参数：{}`, name), []);
-			result = input_generator();
+			Console.message('i', los('executor.argument:input', name), [
+			]);
+			initial = undefined;
 		} else if (given === '?default') {
 			assert_test(default_generator !== null, `?default is disabled`);
 			let default_value = default_generator();
-			result = default_value;
-			Console.notify('i', los(`已默认参数：{}`, name), [`${result}`]);
+			initial = default_value;
+			Console.message('i', los('executor.argument:default', name), [
+				`${initial}`,
+			]);
 		} else {
-			result = given_converter(given);
-			Console.notify('i', los(`已取得参数：{}`, name), [`${result}`]);
+			initial = given_converter(given);
+			Console.message('i', los('executor.argument:get', name), [
+				`${initial}`,
+			]);
 		}
-		while (true) {
-			let check_result = checker(result);
-			if (check_result === null) {
-				break;
-			}
-			Console.notify('w', los(`参数值无效，请重新输入`), [check_result]);
-			result = input_generator();
-		}
-		return result as Result;
+		return input_generator(initial);
 	}
 
 	// ------------------------------------------------
 
-	export function query_argument_message(
+	export function query_argument_name(
 		method: string,
 		argument: string,
-	): [string, string] {
-		return [los(`method#${method}$${argument}:name`), los(`method#${method}$${argument}:message`)];
-	}
-
-	// ------------------------------------------------
-
-	export function argument_requester_for_path(
-		type: 'any' | 'file' | 'directory',
-		require_type: [null] | [false, 'trash' | 'delete' | 'override' | null] | [true],
-	): [() => string, (value: string) => null | string] {
-		let state_data = {
-			last_value: null as string | null,
-			tactic_if_exist: null as 'trash' | 'delete' | 'override' | null,
-		};
-		return [
-			(): string => {
-				let input = Console.string(null);
-				if (input.length > 0 && input[0] === ':') {
-					assert_test(input.length === 2, `command name is too long`);
-					switch (input[1]) {
-						case 't': {
-							assert_test(require_type[0] === false, `trash command precondition failed`);
-							assert_test(state_data.last_value !== null, `last_value is undefined`);
-							state_data.tactic_if_exist = 'trash';
-							input = state_data.last_value;
-							break;
-						}
-						case 'd': {
-							assert_test(require_type[0] === false, `delete command precondition failed`);
-							assert_test(state_data.last_value !== null, `last_value is undefined`);
-							state_data.tactic_if_exist = 'delete';
-							input = state_data.last_value;
-							break;
-						}
-						case 'o': {
-							assert_test(require_type[0] === false, `override command precondition failed`);
-							assert_test(state_data.last_value !== null, `last_value is undefined`);
-							state_data.tactic_if_exist = 'override';
-							input = state_data.last_value;
-							break;
-						}
-						case 's': {
-							assert_test(require_type[0] === true, `show command precondition failed`);
-							assert_test(Shell.is_windows && Shell.is_cli, `show(_select_fild_dialog) command only enabled on windows cli shell`);
-							let pick_folder: boolean;
-							switch (type) {
-								case 'any': {
-									Console.notify('i', los(`选择窗口是否应选择目录（否则为文件）`), []);
-									pick_folder = Console.confirm(null);
-									break;
-								}
-								case 'file': {
-									pick_folder = false;
-									break;
-								}
-								case 'directory': {
-									pick_folder = true;
-									break;
-								}
-							}
-							let selected = Shell.windows_cli_open_file_dialog(pick_folder, false);
-							if (selected.length === 0) {
-								input = '';
-							} else {
-								input = selected[0];
-							}
-							break;
-						}
-						default: {
-							assert_test(false, `command name is invalid`);
-						}
-					}
-				}
-				return input;
-			},
-			(value): null | string => {
-				let result: null | string;
-				state_data.last_value = value;
-				if (require_type[0] === false && state_data.tactic_if_exist === null) {
-					state_data.tactic_if_exist = require_type[1];
-				}
-				if (require_type[0] === null) {
-					result = null;
-				} else {
-					if (!require_type[0]) {
-						if (CoreX.FileSystem.exist(value)) {
-							switch (state_data.tactic_if_exist) {
-								case 'trash': {
-									HomeDirectory.new_trash(value);
-									Console.notify('w', los(`指定路径已存在，现已回收`), []);
-									result = null;
-									break;
-								}
-								case 'delete': {
-									CoreX.FileSystem.remove(value);
-									Console.notify('w', los(`指定路径已存在，现已删除`), []);
-									result = null;
-									break;
-								}
-								case 'override': {
-									Console.notify('w', los(`指定路径已存在，现将覆盖`), []);
-									result = null;
-									break;
-								}
-								case null: {
-									result = los(`指定路径已存在`);
-									break;
-								}
-							}
-						} else {
-							result = null;
-						}
-					} else {
-						result = CoreX.FileSystem[type === 'file' ? 'exist_file' : type === 'directory' ? 'exist_directory' : 'exist'](value) ? null : los(`指定路径不存在`);
-					}
-				}
-				return result;
-			},
-		];
+	): string {
+		return los(`method:${method}$${argument}:name`);
 	}
 
 	// ------------------------------------------------

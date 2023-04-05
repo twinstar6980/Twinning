@@ -13,7 +13,7 @@ namespace TwinStar::Core::Tool::Image::File::PNG {
 			Third::libpng::png_structp     png_ptr,
 			Third::libpng::png_const_charp error_message
 		) -> Void {
-			throw SimpleException{make_std_string_view("libpng error : {}"_sf(error_message))};
+			throw UnnamedException{mss("libpng error : {}"_sf(error_message))};
 			return;
 		}
 
@@ -21,7 +21,7 @@ namespace TwinStar::Core::Tool::Image::File::PNG {
 			Third::libpng::png_structp     png_ptr,
 			Third::libpng::png_const_charp error_message
 		) -> Void {
-			M_log("libpng error : {}"_sf(error_message));
+			M_log("libpng warning : {}"_sf(error_message));
 			return;
 		}
 
@@ -161,7 +161,7 @@ namespace TwinStar::Core::Tool::Image::File::PNG {
 					break;
 				}
 				default : {
-					throw NeverException{};
+					throw ImpossibleException{};
 				}
 			}
 			auto png_trans_alpha = Third::libpng::png_bytep{};

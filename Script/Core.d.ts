@@ -1,6 +1,6 @@
 /**
  * JS interface of Core
- * @version 44
+ * @version 46
  */
 declare namespace TwinStar.Core {
 
@@ -191,6 +191,33 @@ declare namespace TwinStar.Core {
 		get value(): typeof String.Value;
 
 		set value(it: typeof String.Value);
+
+		// ------------------------------------------------
+
+	}
+
+	/** Optional包装的String */
+	class StringOptional {
+
+		// ------------------------------------------------
+
+		private _StringOptional;
+
+		// ------------------------------------------------
+
+		static default(): StringOptional;
+
+		static copy(it: StringOptional): StringOptional;
+
+		// ------------------------------------------------
+
+		static Value: null | string;
+
+		static value(it: typeof StringOptional.Value): StringOptional;
+
+		get value(): typeof StringOptional.Value;
+
+		set value(it: typeof StringOptional.Value);
 
 		// ------------------------------------------------
 
@@ -1271,7 +1298,7 @@ declare namespace TwinStar.Core {
 		/**
 		 * 计数目标目录下的文件与目录
 		 * @param target 目标目录
-		 * @param depth 需要计算的深度，为空时计算所有层级
+		 * @param depth 需要处理的深度，为空时处理所有层级
 		 * @returns 目标目录下的文件与目录数
 		 */
 		function count(
@@ -1282,7 +1309,7 @@ declare namespace TwinStar.Core {
 		/**
 		 * 计数目标目录下的文件
 		 * @param target 目标目录
-		 * @param depth 需要计算的深度，为空时计算所有层级
+		 * @param depth 需要处理的深度，为空时处理所有层级
 		 * @returns 目标目录下的文件数
 		 */
 		function count_file(
@@ -1293,7 +1320,7 @@ declare namespace TwinStar.Core {
 		/**
 		 * 计数目标目录下的目录
 		 * @param target 目标目录
-		 * @param depth 需要计算的深度，为空时计算所有层级
+		 * @param depth 需要处理的深度，为空时处理所有层级
 		 * @returns 目标目录下的目录数
 		 */
 		function count_directory(
@@ -1302,9 +1329,9 @@ declare namespace TwinStar.Core {
 		): Size;
 
 		/**
-		 * 获取目标目录下的文件与目录
+		 * 列出目标目录下的文件与目录
 		 * @param target 目标目录
-		 * @param depth 需要获取的深度，为空时获取所有层级
+		 * @param depth 需要处理的深度，为空时处理所有层级
 		 * @returns 目标目录下的文件与目录列表
 		 */
 		function list(
@@ -1313,9 +1340,9 @@ declare namespace TwinStar.Core {
 		): PathList;
 
 		/**
-		 * 获取目标目录下的文件
+		 * 列出目标目录下的文件
 		 * @param target 目标目录
-		 * @param depth 需要获取的深度，为空时获取所有层级
+		 * @param depth 需要处理的深度，为空时处理所有层级
 		 * @returns 目标目录下的文件列表
 		 */
 		function list_file(
@@ -1324,15 +1351,20 @@ declare namespace TwinStar.Core {
 		): PathList;
 
 		/**
-		 * 获取目标目录下的目录
+		 * 列出目标目录下的目录
 		 * @param target 目标目录
-		 * @param depth 需要获取的深度，为空时获取所有层级
+		 * @param depth 需要处理的深度，为空时处理所有层级
 		 * @returns 目标目录下的目录列表
 		 */
 		function list_directory(
 			target: Path,
 			depth: SizeOptional,
 		): PathList;
+
+	}
+
+	/** 进程 */
+	namespace Process {
 
 		// ------------------------------------------------
 
@@ -1352,38 +1384,39 @@ declare namespace TwinStar.Core {
 			target: Path,
 		): Void;
 
-		/**
-		 * 获取临时目录
-		 * @returns 临时目录
-		 */
-		function get_temporary_directory(
-		): Path;
-
-	}
-
-	/** 进程 */
-	namespace Process {
-
 		// ------------------------------------------------
 
 		/**
 		 * 获取环境变量
-		 * @returns 环境变量
+		 * @param name 变量名
+		 * @returns 变量值
 		 */
-		function environment(
-		): StringList;
+		function get_environment_variable(
+			name: String,
+		): StringOptional;
 
 		/**
-		 * 退出程序
-		 * @param code 退出码
+		 * 设置环境变量
+		 * @param name 变量名
+		 * @param value 变量值
 		 * @returns 无
 		 */
-		function exit(
-			code: IntegerU32,
+		function set_environment_variable(
+			name: String,
+			value: StringOptional,
 		): Void;
 
 		/**
-		 * 执行外部程序
+		 * 列出环境变量
+		 * @returns 环境变量列表
+		 */
+		function list_environment_variable(
+		): StringList;
+
+		// ------------------------------------------------
+
+		/**
+		 * 生成新进程
 		 * @param program 程序
 		 * @param argument 参数
 		 * @param environment 环境
@@ -1392,7 +1425,7 @@ declare namespace TwinStar.Core {
 		 * @param error 错误
 		 * @returns 程序正常退出时，返回其退出码
 		 */
-		function execute(
+		function spawn_process(
 			program: Path,
 			argument: StringList,
 			environment: StringList,
@@ -1401,12 +1434,14 @@ declare namespace TwinStar.Core {
 			error: PathOptional,
 		): IntegerU32;
 
+		// ------------------------------------------------
+
 		/**
 		 * 调用宿主环境的命令处理器
 		 * @param command 命令
 		 * @returns std::system的返回值，由实现定义
 		 */
-		function system(
+		function system_command(
 			command: String,
 		): IntegerU32;
 
@@ -4666,6 +4701,7 @@ declare namespace TwinStar.Core {
 			/**
 			 * 执行脚本
 			 * @param script 脚本
+			 * @param name 名称
 			 * @returns 计算值
 			 */
 			evaluate(
@@ -4702,13 +4738,13 @@ declare namespace TwinStar.Core {
 
 			/**
 			 * 在新线程中执行函数
-			 * @param executor 函数
 			 * @param thread 线程
+			 * @param executor 函数
 			 * @returns 无
 			 */
 			execute(
-				executor: () => any,
 				thread: Thread,
+				executor: () => any,
 			): Void;
 
 			// ------------------------------------------------
@@ -4768,11 +4804,10 @@ declare namespace TwinStar.Core {
 
 	// ------------------------------------------------
 
-	/** 主函数；返回值为null时，表示执行成功，为string时，表示执行失败，返回值为错误信息 */
+	/** 主函数 */
 	type JS_MainFunction = (
-		/** 参数 */
 		argument: Array<string>,
-	) => null | string;
+	) => string;
 
 	// ------------------------------------------------
 

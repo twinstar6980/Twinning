@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 54;
+	export const k_version = 55;
 
 	// ------------------------------------------------
 
@@ -11,33 +11,11 @@ namespace TwinStar.Script {
 		message: string = `assertion failed`,
 	): asserts condition {
 		if (!condition) {
-			throw new Error(message);
+			let error = new Error(message);
+			error.name = 'AssertionError';
+			throw error;
 		}
 		return;
-	}
-
-	// ------------------------------------------------
-
-	export function parse_stack_string(
-		stack: string | undefined,
-	): Array<string> {
-		if (stack === undefined) {
-			return [];
-		} else {
-			let stack_array = stack.split('\n');
-			stack_array.pop();
-			stack_array = stack_array.map((e) => {
-				let result: string;
-				let regexp_result = /    at (.*) \((.*)\)/.exec(e);
-				if (regexp_result === null) {
-					result = '';
-				} else {
-					result = `@ ${regexp_result[2]} ${regexp_result[1]}`;
-				}
-				return result;
-			});
-			return stack_array;
-		}
 	}
 
 	// ------------------------------------------------
@@ -74,16 +52,17 @@ namespace TwinStar.Script {
 
 		export function get_working_directory(
 		): string {
-			return Core.FileSystem.get_working_directory().value;
+			return Core.Process.get_working_directory().value;
 		}
 
 		// ------------------------------------------------
 
 		export function evaluate(
 			script_file: string,
+			name: string,
 		): any {
 			let script = Core.FileSystem.read_file(Core.Path.value(script_file));
-			return Core.Miscellaneous.g_context.evaluate(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(script.view()), Core.String.value(script_file));
+			return Core.Miscellaneous.g_context.evaluate(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(script.view()), Core.String.value(name));
 		}
 
 		// ------------------------------------------------
@@ -91,12 +70,12 @@ namespace TwinStar.Script {
 		export function notify(
 			message: string,
 		): void {
-			var shell_name = Core.Miscellaneous.g_context.callback(Core.StringList.value(['name'])).value[1];
+			var shell_name = Core.Miscellaneous.g_context.callback(Core.StringList.value(['name'])).value[0];
 			if (shell_name === 'cli') {
 				Core.Miscellaneous.g_context.callback(Core.StringList.value(['output', `● ${message}\n`]));
 			}
 			if (shell_name === 'gui') {
-				Core.Miscellaneous.g_context.callback(Core.StringList.value(['output_notify', 'v', `${message}`]));
+				Core.Miscellaneous.g_context.callback(Core.StringList.value(['output_message', 'v', `${message}`]));
 			}
 			return;
 		}
@@ -141,6 +120,11 @@ namespace TwinStar.Script {
 			return of(`~/temporary`);
 		}
 
+		export function shell_extension(
+		): string {
+			return of(`~/shell_extension`);
+		}
+
 		// ------------------------------------------------
 
 		export function new_trash(
@@ -167,7 +151,7 @@ namespace TwinStar.Script {
 			CoreX.FileSystem.create_directory(workspace());
 			CoreX.FileSystem.create_directory(trash());
 			CoreX.FileSystem.create_directory(temporary());
-			CoreX.FileSystem.set_working_directory(workspace());
+			CoreX.Process.set_working_directory(workspace());
 			return;
 		}
 
@@ -214,6 +198,7 @@ namespace TwinStar.Script {
 			let entry: [Entry, null | Config] | null = null;
 			assert_test(manifest.entry === null || manifest.module.includes(manifest.entry), `entry module is invalid : <${manifest.entry}>`);
 			for (let module of manifest.module) {
+				let script_name = `script/${module}.js`;
 				let script_file = `${directory}/${module}.js`;
 				let config_file = `${directory}/${module}.json`;
 				assert_test(Detail.exist_file(script_file), `module script file not found : <${module}>`);
@@ -223,7 +208,7 @@ namespace TwinStar.Script {
 					assert_test(raw_module_config !== null && typeof raw_module_config === 'object' && (raw_module_config as Object).constructor.name === 'Object', `module config must be object : <${module}>`);
 					config = raw_module_config as Config;
 				}
-				let evaluate_result = Detail.evaluate(script_file) as EvaluateResult;
+				let evaluate_result = Detail.evaluate(script_file, script_name) as EvaluateResult;
 				if (evaluate_result !== undefined) {
 					if (evaluate_result.injector !== undefined) {
 						evaluate_result.injector(config);
@@ -251,52 +236,35 @@ namespace TwinStar.Script {
 
 		export function main(
 			argument: Array<string>,
-		): null | string {
-			let result: null | string = null;
-			let load_module_succeed = false;
-			try {
-				Detail.notify(`TwinStar.ToolKit ~ Core:${Core.Miscellaneous.g_version.value} & Shell:${Core.Miscellaneous.g_context.callback(Core.StringList.value(['name'])).value[1]}:${Core.Miscellaneous.g_context.callback(Core.StringList.value(['version'])).value[1]} & Script:${k_version} ~ ${Core.Miscellaneous.g_context.callback(Core.StringList.value(['system'])).value[1]}`);
-				assert_test(argument.length >= 1, `argument too few`);
-				// 获取主目录
-				let home_directory = argument[0];
-				home_directory = home_directory.replaceAll(`\\`, '/');
-				if (/^\.{1,2}[\/]/.test(home_directory)) {
-					home_directory = `${Detail.get_working_directory()}/${home_directory}`;
-				}
-				HomeDirectory.path = home_directory;
-				// 加载子模块
-				// 仅当所有子模块加载完成时，它们才处于可用状态，否则，请勿使用任何子模块
-				let begin_time = Date.now();
-				let entry = ModuleLoader.load(g_module_manifest, HomeDirectory.script());
-				let end_time = Date.now();
-				load_module_succeed = true;
-				// 现在，子模块可用，因此应使用 Console 模块来保证更好的交互效果
-				try {
-					Console.notify('s', los(`模块加载完成`), [los(`用时 {} s`, ((end_time - begin_time) / 1000).toFixed(3))]);
-					HomeDirectory.initialize();
-					entry?.[0](entry[1], argument.slice(1));
-				} catch (e: any) {
-					Console.notify_error(e);
-					Console.pause();
-				}
-			} catch (error: any) {
-				if (error instanceof Error) {
-					if (error.name === 'NativeError') {
-						result = `${error.name}\n${[...error.message.split('\n'), ...parse_stack_string(error.stack)].join('\n')}`;
-					} else {
-						result = `${error.name} : ${error.message}\n${[...parse_stack_string(error.stack)].join('\n')}`;
-					}
-				} else {
-					result = `${error}`;
-				}
-			} finally {
-				// 需要释放的资源可能位于子模块中，而目前无法保证子模块已被成功加载
-				if (load_module_succeed) {
-					HomeDirectory.deinitialize();
-					g_thread_manager.resize(0);
-				}
+		): string {
+			Detail.notify(`TwinStar.ToolKit ~ Core:${Core.Miscellaneous.g_version.value} & Shell:${Core.Miscellaneous.g_context.callback(Core.StringList.value(['name'])).value[0]}:${Core.Miscellaneous.g_context.callback(Core.StringList.value(['version'])).value[0]} & Script:${k_version} ~ ${Core.Miscellaneous.g_context.callback(Core.StringList.value(['system'])).value[0]}`);
+			assert_test(argument.length >= 1, `argument too few`);
+			// 获取主目录
+			let home_directory = argument[0];
+			home_directory = home_directory.replaceAll(`\\`, '/');
+			if (/^\.{1,2}[\/]/.test(home_directory)) {
+				home_directory = `${Detail.get_working_directory()}/${home_directory}`;
 			}
-			return result;
+			HomeDirectory.path = home_directory;
+			// 加载子模块
+			let timer_begin = Date.now();
+			let entry = ModuleLoader.load(g_module_manifest, HomeDirectory.script());
+			let timer_end = Date.now();
+			// 执行模块入口函数
+			try {
+				Console.message('s', los('main:module_load_finish'), [
+					los('main:module_load_duration', ((timer_end - timer_begin) / 1000).toFixed(3)),
+				]);
+				HomeDirectory.initialize();
+				entry?.[0](entry[1], argument.slice(1));
+			} catch (error: any) {
+				Console.message_error(error);
+				Console.pause();
+			}
+			// 释放资源
+			HomeDirectory.deinitialize();
+			g_thread_manager.resize(0);
+			return '';
 		}
 
 		// ------------------------------------------------
@@ -319,8 +287,9 @@ TwinStar.Script.Main.g_module_manifest = {
 		`utility/ByteListView`,
 		`utility/CoreX`,
 		`utility/Shell`,
+		`utility/ShellExtension`,
 		`utility/ThreadManager`,
-		`utility/EnvironmentVariable`,
+		`utility/ProcessHelper`,
 		`utility/Console`,
 		`utility/ADBHelper`,
 		`Language/Language`,

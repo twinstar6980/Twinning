@@ -1,7 +1,6 @@
 //
 
 #include "core/interface/implement.hpp"
-#include <exception>
 
 #if defined M_vld
 #include "vld.h"
@@ -16,56 +15,78 @@ namespace TwinStar::Core::Interface {
 
 	M_symbol_export
 	extern auto version (
-	) -> Size const* {
-		thread_local auto result = Core::Size{};
-		result = Implement::version();
-		return &self_cast<Size>(result);
+		Size * * number
+	) -> String* {
+		thread_local auto exception_handler = Core::String{};
+		thread_local auto number_handler = Core::Size{};
+		restruct(exception_handler);
+		restruct(number_handler);
+		*number = &self_cast<Size>(number_handler);
+		#if defined M_build_release
+		try {
+		#endif
+			Implement::version(
+				self_cast<Core::Size>(**number)
+			);
+			return nullptr;
+		#if defined M_build_release
+		} catch (...) {
+			auto exception_value = make_string(parse_current_exception().what());
+			exception_handler = as_moveable(exception_value);
+			return &self_cast<String>(exception_handler);
+		}
+		#endif
 	}
 
 	M_symbol_export
 	extern auto execute (
-		Callback const *   callback,
-		String const *     script,
-		StringList const * argument
-	) -> String const* {
-		thread_local auto result = Core::Optional<Core::String>{};
+		Callback * *   callback,
+		String * *     script,
+		StringList * * argument,
+		String * *     result
+	) -> String* {
+		thread_local auto exception_handler = Core::String{};
+		thread_local auto result_handler = Core::String{};
+		restruct(exception_handler);
+		restruct(result_handler);
+		*result = &self_cast<String>(result_handler);
 		#if defined M_build_release
 		try {
 		#endif
-			result.reset();
-			result = Implement::execute(
-				self_cast<Core::Executor::Callback>(*callback),
-				self_cast<Core::String>(*script),
-				self_cast<Core::List<Core::String>>(*argument)
+			Implement::execute(
+				self_cast<Core::Executor::Callback>(**callback),
+				self_cast<Core::String>(**script),
+				self_cast<Core::List<Core::String>>(**argument),
+				self_cast<Core::String>(**result)
 			);
+			return nullptr;
 		#if defined M_build_release
-		} catch (Exception & exception) {
-			result.set(make_string_view(exception.what()));
-		} catch (std::exception & exception) {
-			result.set(make_string_view(exception.what()));
 		} catch (...) {
-			result.set(make_string_view("unknown exception"));
+			auto exception_value = make_string(parse_current_exception().what());
+			exception_handler = as_moveable(exception_value);
+			return &self_cast<String>(exception_handler);
 		}
 		#endif
-		return !result ? (nullptr) : (&self_cast<String>(result.get()));
 	}
 
 	M_symbol_export
 	extern auto prepare (
-	) -> String const* {
-		thread_local auto result = Core::Optional<Core::String>{};
+	) -> String* {
+		thread_local auto exception_handler = Core::String{};
+		restruct(exception_handler);
 		#if defined M_build_release
 		try {
 		#endif
-			result = Implement::prepare();
+			Implement::prepare(
+			);
+			return nullptr;
 		#if defined M_build_release
-		} catch (std::exception & exception) {
-			result.set(make_string_view(exception.what()));
 		} catch (...) {
-			result.set(make_string_view("unknown exception"));
+			auto exception_value = make_string(parse_current_exception().what());
+			exception_handler = as_moveable(exception_value);
+			return &self_cast<String>(exception_handler);
 		}
 		#endif
-		return !result ? (nullptr) : (&self_cast<String>(result.get()));
 	}
 
 	#pragma endregion

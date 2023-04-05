@@ -83,11 +83,11 @@ namespace TwinStar::Core::Tool::PopCap::Trail {
 			return;
 		}
 
-		static auto exchange_unit_floating (
+		static auto exchange_unit_floater (
 			OByteStreamView & data,
-			Floating const &  value
+			Floater const &   value
 		) -> Void {
-			data.write(cbw<FloatingS32>(value));
+			data.write(cbw<FloaterS32>(value));
 			return;
 		}
 
@@ -107,9 +107,9 @@ namespace TwinStar::Core::Tool::PopCap::Trail {
 		) -> Void {
 			exchange_unit_integer(track_node_list_data, cbw<Integer>(track_node_list_manifest.size()));
 			for (auto & track_node_manifest : track_node_list_manifest) {
-				exchange_unit_floating(track_node_list_data, track_node_manifest.time);
-				exchange_unit_floating(track_node_list_data, track_node_manifest.low_value);
-				exchange_unit_floating(track_node_list_data, track_node_manifest.high_value);
+				exchange_unit_floater(track_node_list_data, track_node_manifest.time);
+				exchange_unit_floater(track_node_list_data, track_node_manifest.low_value);
+				exchange_unit_floater(track_node_list_data, track_node_manifest.high_value);
 				exchange_unit_integer(track_node_list_data, track_node_manifest.curve);
 				exchange_unit_integer(track_node_list_data, track_node_manifest.distribution);
 			}
@@ -124,7 +124,7 @@ namespace TwinStar::Core::Tool::PopCap::Trail {
 			trail_data.write_constant(k_magic_identifier);
 			exchange_unit_integer_platform(trail_data, ignored);
 			exchange_unit_integer(trail_data, trail_manifest.maximum_point);
-			exchange_unit_floating(trail_data, trail_manifest.minimum_point_distance);
+			exchange_unit_floater(trail_data, trail_manifest.minimum_point_distance);
 			exchange_unit_integer(trail_data, trail_manifest.flag);
 			if constexpr (check_version(version, {}, {true})) {
 				exchange_unit_integer(trail_data, ignored);
@@ -207,11 +207,11 @@ namespace TwinStar::Core::Tool::PopCap::Trail {
 			return;
 		}
 
-		static auto exchange_unit_floating (
+		static auto exchange_unit_floater (
 			IByteStreamView & data,
-			Floating &        value
+			Floater &         value
 		) -> Void {
-			value = cbw<Floating>(data.read_of<FloatingS32>());
+			value = cbw<Floater>(data.read_of<FloaterS32>());
 			return;
 		}
 
@@ -231,9 +231,9 @@ namespace TwinStar::Core::Tool::PopCap::Trail {
 		) -> Void {
 			track_node_list_manifest.allocate_full(cbw<Size>(M_apply(M_wrap(Integer{}), M_wrap({ exchange_unit_integer(track_node_list_data, it); }))));
 			for (auto & track_node_manifest : track_node_list_manifest) {
-				exchange_unit_floating(track_node_list_data, track_node_manifest.time);
-				exchange_unit_floating(track_node_list_data, track_node_manifest.low_value);
-				exchange_unit_floating(track_node_list_data, track_node_manifest.high_value);
+				exchange_unit_floater(track_node_list_data, track_node_manifest.time);
+				exchange_unit_floater(track_node_list_data, track_node_manifest.low_value);
+				exchange_unit_floater(track_node_list_data, track_node_manifest.high_value);
 				exchange_unit_integer(track_node_list_data, track_node_manifest.curve);
 				exchange_unit_integer(track_node_list_data, track_node_manifest.distribution);
 			}
@@ -248,7 +248,7 @@ namespace TwinStar::Core::Tool::PopCap::Trail {
 			trail_data.read_constant(k_magic_identifier);
 			exchange_unit_integer_platform(trail_data, ignored);
 			exchange_unit_integer(trail_data, trail_manifest.maximum_point);
-			exchange_unit_floating(trail_data, trail_manifest.minimum_point_distance);
+			exchange_unit_floater(trail_data, trail_manifest.minimum_point_distance);
 			exchange_unit_integer(trail_data, trail_manifest.flag);
 			if constexpr (check_version(version, {}, {true})) {
 				exchange_unit_integer(trail_data, ignored);

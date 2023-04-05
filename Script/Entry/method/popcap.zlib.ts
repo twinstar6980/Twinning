@@ -15,9 +15,9 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 		g_executor_method.push(
 			Executor.method_of({
 				id: 'popcap.zlib.compress',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					raw_file: Executor.RequireArgument<string>;
@@ -29,29 +29,28 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 					let version_variant_64: boolean;
 					{
 						raw_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'raw_file'),
+							Executor.query_argument_name(this.id, 'raw_file'),
 							a.raw_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 						ripe_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'ripe_file'),
+							Executor.query_argument_name(this.id, 'ripe_file'),
 							a.ripe_file,
 							(value) => (value),
 							() => (raw_file.replace(/()?$/i, '.bin')),
-							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						version_variant_64 = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'version_variant_64'),
+							Executor.query_argument_name(this.id, 'version_variant_64'),
 							a.version_variant_64,
 							(value) => (value),
 							null,
-							() => (Console.confirm(null)),
-							(value) => (CoreX.Tool.PopCap.ZLib.VersionVariant64E.includes(value as any) ? null : los(`版本不受支持`)),
+							(initial) => (Console.confirmation(null, null, initial)),
 						);
 					}
 					CoreX.Tool.PopCap.ZLib.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', { variant_64: version_variant_64 });
-					Console.notify('s', los(`执行成功`), [`${ripe_file}`]);
+					Console.message('s', los(`执行成功`), [`${ripe_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -64,9 +63,9 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 			}),
 			Executor.method_of({
 				id: 'popcap.zlib.uncompress',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					ripe_file: Executor.RequireArgument<string>;
@@ -78,29 +77,28 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 					let version_variant_64: boolean;
 					{
 						ripe_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'ripe_file'),
+							Executor.query_argument_name(this.id, 'ripe_file'),
 							a.ripe_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 						raw_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'raw_file'),
+							Executor.query_argument_name(this.id, 'raw_file'),
 							a.raw_file,
 							(value) => (value),
 							() => (ripe_file.replace(/()?$/i, '.bin')),
-							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						version_variant_64 = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'version_variant_64'),
+							Executor.query_argument_name(this.id, 'version_variant_64'),
 							a.version_variant_64,
 							(value) => (value),
 							null,
-							() => (Console.confirm(null)),
-							(value) => (CoreX.Tool.PopCap.ZLib.VersionVariant64E.includes(value as any) ? null : los(`版本不受支持`)),
+							(initial) => (Console.confirmation(null, null, initial)),
 						);
 					}
 					CoreX.Tool.PopCap.ZLib.uncompress_fs(ripe_file, raw_file, 15n, { variant_64: version_variant_64 });
-					Console.notify('s', los(`执行成功`), [`${raw_file}`]);
+					Console.message('s', los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -115,9 +113,9 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 		g_executor_method_of_batch.push(
 			Executor.method_of({
 				id: 'popcap.zlib.compress.batch',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					raw_file_directory: Executor.RequireArgument<string>;
@@ -129,25 +127,24 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 					let version_variant_64: boolean;
 					{
 						raw_file_directory = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'raw_file_directory'),
+							Executor.query_argument_name(this.id, 'raw_file_directory'),
 							a.raw_file_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
 						ripe_file_directory = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'ripe_file_directory'),
+							Executor.query_argument_name(this.id, 'ripe_file_directory'),
 							a.ripe_file_directory,
 							(value) => (value),
 							() => (raw_file_directory.replace(/$/i, '.compress')),
-							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						version_variant_64 = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'version_variant_64'),
+							Executor.query_argument_name(this.id, 'version_variant_64'),
 							a.version_variant_64,
 							(value) => (value),
 							null,
-							() => (Console.confirm(null)),
-							(value) => (CoreX.Tool.PopCap.ZLib.VersionVariant64E.includes(value as any) ? null : los(`版本不受支持`)),
+							(initial) => (Console.confirmation(null, null, initial)),
 						);
 					}
 					simple_batch_execute(
@@ -159,7 +156,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 							CoreX.Tool.PopCap.ZLib.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', { variant_64: version_variant_64 });
 						},
 					);
-					Console.notify('s', los(`执行成功`), [`${ripe_file_directory}`]);
+					Console.message('s', los(`执行成功`), [`${ripe_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -172,9 +169,9 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 			}),
 			Executor.method_of({
 				id: 'popcap.zlib.uncompress.batch',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					ripe_file_directory: Executor.RequireArgument<string>;
@@ -186,25 +183,24 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 					let version_variant_64: boolean;
 					{
 						ripe_file_directory = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'ripe_file_directory'),
+							Executor.query_argument_name(this.id, 'ripe_file_directory'),
 							a.ripe_file_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
 						raw_file_directory = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'raw_file_directory'),
+							Executor.query_argument_name(this.id, 'raw_file_directory'),
 							a.raw_file_directory,
 							(value) => (value),
 							() => (ripe_file_directory.replace(/$/i, '.uncompress')),
-							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						version_variant_64 = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'version_variant_64'),
+							Executor.query_argument_name(this.id, 'version_variant_64'),
 							a.version_variant_64,
 							(value) => (value),
 							null,
-							() => (Console.confirm(null)),
-							(value) => (CoreX.Tool.PopCap.ZLib.VersionVariant64E.includes(value as any) ? null : los(`版本不受支持`)),
+							(initial) => (Console.confirmation(null, null, initial)),
 						);
 					}
 					simple_batch_execute(
@@ -216,7 +212,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 							CoreX.Tool.PopCap.ZLib.uncompress_fs(ripe_file, raw_file, 15n, { variant_64: version_variant_64 });
 						},
 					);
-					Console.notify('s', los(`执行成功`), [`${raw_file_directory}`]);
+					Console.message('s', los(`执行成功`), [`${raw_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

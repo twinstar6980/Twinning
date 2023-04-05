@@ -15,9 +15,9 @@ namespace TwinStar.Script.Entry.method.image.atlas {
 		g_executor_method.push(
 			Executor.method_of({
 				id: 'image.atlas.pack',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					manifest_file: Executor.RequireArgument<string>;
@@ -29,28 +29,28 @@ namespace TwinStar.Script.Entry.method.image.atlas {
 					let atlas_file: string;
 					{
 						manifest_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'manifest_file'),
+							Executor.query_argument_name(this.id, 'manifest_file'),
 							a.manifest_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 						sprite_directory = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'sprite_directory'),
+							Executor.query_argument_name(this.id, 'sprite_directory'),
 							a.sprite_directory,
 							(value) => (value),
 							() => (manifest_file.replace(/((\.atlas)(\.json))?$/i, '.sprite')),
-							...Executor.argument_requester_for_path('directory', [true]),
+							(initial) => (Console.path('directory', [true], null, null, initial)),
 						);
 						atlas_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'atlas_file'),
+							Executor.query_argument_name(this.id, 'atlas_file'),
 							a.atlas_file,
 							(value) => (value),
 							() => (manifest_file.replace(/((\.atlas)(\.json))?$/i, '.atlas.png')),
-							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 					}
 					Support.Atlas.Pack.pack_fs(manifest_file, atlas_file, sprite_directory);
-					Console.notify('s', los(`执行成功`), [`${atlas_file}`]);
+					Console.message('s', los(`执行成功`), [`${atlas_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -63,9 +63,9 @@ namespace TwinStar.Script.Entry.method.image.atlas {
 			}),
 			Executor.method_of({
 				id: 'image.atlas.unpack',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					manifest_file: Executor.RequireArgument<string>;
@@ -77,28 +77,28 @@ namespace TwinStar.Script.Entry.method.image.atlas {
 					let sprite_directory: string;
 					{
 						manifest_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'manifest_file'),
+							Executor.query_argument_name(this.id, 'manifest_file'),
 							a.manifest_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 						atlas_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'atlas_file'),
+							Executor.query_argument_name(this.id, 'atlas_file'),
 							a.atlas_file,
 							(value) => (value),
 							() => (manifest_file.replace(/((\.atlas)(\.json))?$/i, '.atlas.png')),
-							...Executor.argument_requester_for_path('file', [true]),
+							(initial) => (Console.path('file', [true], null, null, initial)),
 						);
 						sprite_directory = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'sprite_directory'),
+							Executor.query_argument_name(this.id, 'sprite_directory'),
 							a.sprite_directory,
 							(value) => (value),
 							() => (manifest_file.replace(/((\.atlas)(\.json))?$/i, '.sprite')),
-							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 					}
 					Support.Atlas.Pack.unpack_fs(manifest_file, atlas_file, sprite_directory);
-					Console.notify('s', los(`执行成功`), [`${sprite_directory}`]);
+					Console.message('s', los(`执行成功`), [`${sprite_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -111,9 +111,9 @@ namespace TwinStar.Script.Entry.method.image.atlas {
 			}),
 			Executor.method_of({
 				id: 'image.atlas.pack_automatic',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					sprite_directory: Executor.RequireArgument<string>;
@@ -125,28 +125,28 @@ namespace TwinStar.Script.Entry.method.image.atlas {
 					let atlas_file: string;
 					{
 						sprite_directory = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'sprite_directory'),
+							Executor.query_argument_name(this.id, 'sprite_directory'),
 							a.sprite_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
 						manifest_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'manifest_file'),
+							Executor.query_argument_name(this.id, 'manifest_file'),
 							a.manifest_file,
 							(value) => (value),
 							() => (sprite_directory.replace(/((\.sprite))?$/i, '.atlas.json')),
-							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						atlas_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'atlas_file'),
+							Executor.query_argument_name(this.id, 'atlas_file'),
 							a.atlas_file,
 							(value) => (value),
 							() => (sprite_directory.replace(/((\.sprite))?$/i, '.atlas.png')),
-							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 					}
 					Support.Atlas.Pack.pack_automatic_fs(manifest_file, atlas_file, sprite_directory);
-					Console.notify('s', los(`执行成功`), [`${atlas_file}`]);
+					Console.message('s', los(`执行成功`), [`${atlas_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

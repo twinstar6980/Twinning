@@ -1,104 +1,59 @@
 #pragma once
 
-#include "core/macro.hpp"
-#include "core/third/fmt.hpp"
+#include <string_view>
+#include <string>
 
-#if defined __cpp_lib_source_location
+#if !defined M_system_android
 #include <source_location>
-using std_source_location = std::source_location;
+#define M_current_source_location std::source_location::current()
 #else
-using std_source_location = int;
+namespace std {
+	struct source_location {
+		constexpr source_location (
+		) noexcept = default;
+		static consteval auto current (
+		) -> source_location {
+			return source_location{};
+		}
+		constexpr auto line (
+		) const noexcept -> uint_least32_t {
+			return 0;
+		}
+		constexpr auto column (
+		) const noexcept -> uint_least32_t {
+			return 0;
+		}
+		constexpr auto file_name (
+		) const noexcept -> char const* {
+			return "";
+		}
+		constexpr auto function_name (
+		) const noexcept -> char const* {
+			return "";
+		}
+	};
+}
+#define M_current_source_location std::source_location{}
+// TODO : clang bug : https://github.com/llvm/llvm-project/issues/48230 (fixed in 15)
+// TODO : clang bug : https://github.com/llvm/llvm-project/issues/56379 (fixed in 16)
 #endif
 
 namespace TwinStar::Core {
 
-	#pragma region type
+	#pragma region function
 
-	class SourceLocation {
-
-	protected:
-
-		std::string_view m_file{};
-		std::size_t      m_line{};
-		std::string_view m_function{};
-
-	public:
-
-		#pragma region structor
-
-		constexpr ~SourceLocation (
-		) = default;
-
-		// ----------------
-
-		constexpr SourceLocation (
-		) = default;
-
-		constexpr SourceLocation (
-			SourceLocation const & that
-		) = default;
-
-		constexpr SourceLocation (
-			SourceLocation && that
-		) = default;
-
-		#pragma endregion
-
-		#pragma region operator
-
-		constexpr auto operator = (
-			SourceLocation const & that
-		) -> SourceLocation& = default;
-
-		constexpr auto operator = (
-			SourceLocation && that
-		) -> SourceLocation& = default;
-
-		#pragma endregion
-
-		#pragma region string convert
-
-		auto to_string (
-		) const -> std::string {
-			return fmt::format("@ {}:{} {}", thiz.m_file, thiz.m_line, thiz.m_function);
+	inline auto parse_source_location_file_path (
+		std::source_location const & location
+	) -> std::string {
+		auto string = std::string{location.file_name() + (std::string_view{std::source_location::current().file_name()}.size() - std::string_view{"core/utility/exception/source_location.hpp"}.size())};
+		for (auto & character : string) {
+			if (character == '\\') {
+				character = '/';
+			}
 		}
-
-		#pragma endregion
-
-	public:
-
-		#pragma region make
-
-		static constexpr auto make (
-			std_source_location const & location
-		) -> SourceLocation {
-			auto result = SourceLocation{};
-			#if defined __cpp_lib_source_location
-			result.m_file = location.file_name() + (std::string_view{std_source_location::current().file_name()}.size() - std::string_view{"core/utility/exception/source_location.hpp"}.size());
-			result.m_line = location.line();
-			result.m_function = location.function_name();
-			#endif
-			return result;
-		}
-
-		#pragma endregion
-
-	};
+		return string;
+	}
 
 	#pragma endregion
 
 }
-
-#if defined __cpp_lib_source_location
-#define M_current_source_location std_source_location::current()
-#define M_current_source_location_x std_source_location::current()
-#if defined M_compiler_clang && __clang_major__ < 16
-// TODO : clang bug : https://github.com/llvm/llvm-project/issues/48230 (fixed in 15)
-// TODO : clang bug : https://github.com/llvm/llvm-project/issues/56379 (fixed in 16)
-#undef M_current_source_location_x
-#define M_current_source_location_x std_source_location{}
-#endif
-#else
-#define M_current_source_location std_source_location{}
-#define M_current_source_location_x std_source_location{}
-#endif

@@ -3,7 +3,6 @@
 #include "core/utility/container/optional/optional.hpp"
 #include "core/utility/container/list/list.hpp"
 #include "core/utility/string/string.hpp"
-#include "core/utility/exception/base_exception/base_exception.hpp"
 
 namespace TwinStar::Core {
 

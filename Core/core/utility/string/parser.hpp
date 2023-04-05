@@ -713,7 +713,7 @@ namespace TwinStar::Core::StringParser {
 
 	inline auto write_number (
 		OCharacterStreamView & stream,
-		Floating const &       value,
+		Floater const &        value,
 		Boolean const &        disable_sign_when_positive = k_false
 	) -> Void {
 		if (value > 0.0_f && !disable_sign_when_positive) {
@@ -726,9 +726,9 @@ namespace TwinStar::Core::StringParser {
 
 	inline auto read_number (
 		ICharacterStreamView & stream,
-		Floating &             value
+		Floater &              value
 	) -> Void {
-		auto is_floating = k_false;
+		auto is_floater = k_false;
 		auto is_scientific = k_false;
 		auto valid_begin = stream.current_pointer();
 		auto current = Character{};
@@ -756,8 +756,8 @@ namespace TwinStar::Core::StringParser {
 					break;
 				}
 				case '.' : {
-					assert_test(!is_floating);
-					is_floating = k_true;
+					assert_test(!is_floater);
+					is_floater = k_true;
 					current = stream.read_of();
 					assert_test(CharacterType::is_number_dec(current));
 					continue;
@@ -765,7 +765,7 @@ namespace TwinStar::Core::StringParser {
 				}
 				case 'e' : {
 					assert_test(!is_scientific);
-					assert_test(is_floating);
+					assert_test(is_floater);
 					is_scientific = k_true;
 					current = stream.read_of();
 					assert_test(current == '+'_c || current == '-'_c);
@@ -780,7 +780,7 @@ namespace TwinStar::Core::StringParser {
 			}
 			break;
 		}
-		assert_test(is_floating);
+		assert_test(is_floater);
 		auto valid_end = stream.current_pointer();
 		assert_test(valid_begin != valid_end);
 		auto parse_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, !is_scientific ? (mscharconv::chars_format::fixed) : (mscharconv::chars_format::scientific));
@@ -796,8 +796,8 @@ namespace TwinStar::Core::StringParser {
 		Boolean const &        disable_sign_when_positive = k_false
 	) -> Void {
 		switch (value.type().value) {
-			case NumberVariantType::Constant::floating().value : {
-				write_number(stream, value.get_floating(), disable_sign_when_positive);
+			case NumberVariantType::Constant::floater().value : {
+				write_number(stream, value.get_floater(), disable_sign_when_positive);
 				break;
 			}
 			case NumberVariantType::Constant::integer().value : {
@@ -812,7 +812,7 @@ namespace TwinStar::Core::StringParser {
 		ICharacterStreamView & stream,
 		NumberVariant &        value
 	) -> Void {
-		auto is_floating = k_false;
+		auto is_floater = k_false;
 		auto is_scientific = k_false;
 		auto valid_begin = stream.current_pointer();
 		auto current = Character{};
@@ -840,8 +840,8 @@ namespace TwinStar::Core::StringParser {
 					break;
 				}
 				case '.' : {
-					assert_test(!is_floating);
-					is_floating = k_true;
+					assert_test(!is_floater);
+					is_floater = k_true;
 					current = stream.read_of();
 					assert_test(CharacterType::is_number_dec(current));
 					continue;
@@ -849,7 +849,7 @@ namespace TwinStar::Core::StringParser {
 				}
 				case 'e' : {
 					assert_test(!is_scientific);
-					assert_test(is_floating);
+					assert_test(is_floater);
 					is_scientific = k_true;
 					current = stream.read_of();
 					assert_test(current == '+'_c || current == '-'_c);
@@ -867,10 +867,10 @@ namespace TwinStar::Core::StringParser {
 		auto valid_end = stream.current_pointer();
 		assert_test(valid_begin != valid_end);
 		auto parse_result = mscharconv::from_chars_result{};
-		if (!is_floating) {
+		if (!is_floater) {
 			parse_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_integer().value, 10);
 		} else {
-			parse_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_floating().value, !is_scientific ? (mscharconv::chars_format::fixed) : (mscharconv::chars_format::scientific));
+			parse_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_floater().value, !is_scientific ? (mscharconv::chars_format::fixed) : (mscharconv::chars_format::scientific));
 		}
 		assert_test(parse_result.ec == std::errc{});
 		return;

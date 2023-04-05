@@ -5,8 +5,7 @@
 #include "core/utility/miscellaneous/byte_series/container.hpp"
 #include "core/utility/miscellaneous/byte_series/stream.hpp"
 #include "core/utility/miscellaneous/character_series/stream.hpp"
-#include "core/utility/exception/base_exception/base_exception.hpp"
-#include "core/utility/exception/base_exception/utility.hpp"
+#include "core/utility/exception/utility.hpp"
 #include <filesystem>
 
 namespace TwinStar::Core::FileSystem {
@@ -163,8 +162,13 @@ namespace TwinStar::Core::FileSystem {
 				Path const &            target,
 				ZConstantString const & mode
 			) -> FileHandler {
+				#if defined M_system_windows
+				auto file = _wfopen(cast_pointer<WCHAR>(make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<BasicString<Character8>>(make_regular_path(target).to_string()))).begin()).value, cast_pointer<WCHAR>(make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<BasicString<Character8>>(make_string_view(mode)))).begin()).value);
+				#endif
+				#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 				auto file = std::fopen(cast_pointer<char>(make_null_terminated_string(make_regular_path(target).to_string()).begin()).value, mode);
-				assert_test(file);
+				#endif
+				assert_test(file != nullptr);
 				return FileHandler{make_pointer(file)};
 			}
 
@@ -244,12 +248,7 @@ namespace TwinStar::Core::FileSystem {
 		inline auto get_type (
 			Path const & target
 		) -> ObjectType {
-			auto status = std::filesystem::file_status{};
-			try {
-				status = std::filesystem::status(make_std_path(target));
-			} catch (std::filesystem::filesystem_error & error) {
-				throw BaseException{{"^ std::filesystem::status : {}"_sf(message_of_std_error_code(error.code()))}};
-			}
+			auto status = std::filesystem::status(make_std_path(target));
 			return get_type(status.type());
 		}
 
@@ -282,7 +281,7 @@ namespace TwinStar::Core::FileSystem {
 			auto result = k_none_size;
 			if (!depth || current_depth < depth.get()) {
 				for (auto & entry : std::filesystem::directory_iterator{make_std_path(target)}) {
-					auto name = make_string(entry.path().filename().string());
+					auto name = make_string(self_cast<std::string>(entry.path().filename().generic_u8string()));
 					auto type = get_type(entry.status().type());
 					if constexpr (filter == FilterType::Constant::any()) {
 						if (type == ObjectType::Constant::file() || type == ObjectType::Constant::directory()) {
@@ -321,7 +320,7 @@ namespace TwinStar::Core::FileSystem {
 			}
 			if (!depth || current_depth < depth.get()) {
 				for (auto & entry : std::filesystem::directory_iterator{make_std_path(target)}) {
-					auto name = make_string(entry.path().filename().string());
+					auto name = make_string(self_cast<std::string>(entry.path().filename().generic_u8string()));
 					auto type = get_type(entry.status().type());
 					if constexpr (filter == FilterType::Constant::any()) {
 						if (type == ObjectType::Constant::file() || type == ObjectType::Constant::directory()) {
@@ -385,11 +384,7 @@ namespace TwinStar::Core::FileSystem {
 		if (!destination.sub_path().empty() && !exist_directory(destination.parent())) {
 			create_directory(destination.parent());
 		}
-		try {
-			std::filesystem::copy(Detail::make_std_path(source), Detail::make_std_path(destination), std::filesystem::copy_options::recursive | std::filesystem::copy_options::overwrite_existing);
-		} catch (std::filesystem::filesystem_error & error) {
-			throw BaseException{{"^ std::filesystem::copy : {}"_sf(message_of_std_error_code(error.code()))}};
-		}
+		std::filesystem::copy(Detail::make_std_path(source), Detail::make_std_path(destination), std::filesystem::copy_options::recursive | std::filesystem::copy_options::overwrite_existing);
 		return;
 	}
 
@@ -397,22 +392,14 @@ namespace TwinStar::Core::FileSystem {
 		Path const & source,
 		Path const & destination
 	) -> Void {
-		try {
-			std::filesystem::rename(Detail::make_std_path(source), Detail::make_std_path(destination));
-		} catch (std::filesystem::filesystem_error & error) {
-			throw BaseException{{"^ std::filesystem::rename : {}"_sf(message_of_std_error_code(error.code()))}};
-		}
+		std::filesystem::rename(Detail::make_std_path(source), Detail::make_std_path(destination));
 		return;
 	}
 
 	inline auto remove (
 		Path const & source
 	) -> Void {
-		try {
-			std::filesystem::remove_all(Detail::make_std_path(source));
-		} catch (std::filesystem::filesystem_error & error) {
-			throw BaseException{{"^ std::filesystem::remove_all : {}"_sf(message_of_std_error_code(error.code()))}};
-		}
+		std::filesystem::remove_all(Detail::make_std_path(source));
 		return;
 	}
 
@@ -428,14 +415,10 @@ namespace TwinStar::Core::FileSystem {
 		if (!target.sub_path().empty() && !exist_directory(target.parent())) {
 			create_directory(target.parent());
 		}
-		try {
-			if (is_directory) {
-				std::filesystem::create_directory_symlink(Detail::make_std_path(object), Detail::make_std_path(target));
-			} else {
-				std::filesystem::create_symlink(Detail::make_std_path(object), Detail::make_std_path(target));
-			}
-		} catch (std::filesystem::filesystem_error & error) {
-			throw BaseException{{"^ std::filesystem::{} : {}"_sf(is_directory ? ("create_directory_symlink"_sv) : ("create_symlink"_sv), message_of_std_error_code(error.code()))}};
+		if (!is_directory) {
+			std::filesystem::create_symlink(Detail::make_std_path(object), Detail::make_std_path(target));
+		} else {
+			std::filesystem::create_directory_symlink(Detail::make_std_path(object), Detail::make_std_path(target));
 		}
 		return;
 	}
@@ -443,13 +426,8 @@ namespace TwinStar::Core::FileSystem {
 	inline auto parse_link (
 		Path const & target
 	) -> Path {
-		auto object = std::filesystem::path{};
-		try {
-			object = std::filesystem::read_symlink(Detail::make_std_path(target));
-		} catch (std::filesystem::filesystem_error & error) {
-			throw BaseException{{"^ std::filesystem::read_symlink : {}"_sf(message_of_std_error_code(error.code()))}};
-		}
-		return Path{make_string(object.string())};
+		auto object = std::filesystem::read_symlink(Detail::make_std_path(target));
+		return Path{make_string(self_cast<std::string>(object.generic_u8string()))};
 	}
 
 	#pragma endregion
@@ -463,11 +441,7 @@ namespace TwinStar::Core::FileSystem {
 		if (!target.sub_path().empty() && !exist_directory(target.parent())) {
 			create_directory(target.parent());
 		}
-		try {
-			std::filesystem::create_hard_link(Detail::make_std_path(object), Detail::make_std_path(target));
-		} catch (std::filesystem::filesystem_error & error) {
-			throw BaseException{{"^ std::filesystem::create_hard_link : {}"_sf(message_of_std_error_code(error.code()))}};
-		}
+		std::filesystem::create_hard_link(Detail::make_std_path(object), Detail::make_std_path(target));
 		return;
 	}
 
@@ -487,12 +461,7 @@ namespace TwinStar::Core::FileSystem {
 	inline auto size_file (
 		Path const & target
 	) -> Size {
-		auto size = std::uintmax_t{};
-		try {
-			size = std::filesystem::file_size(Detail::make_std_path(target));
-		} catch (std::filesystem::filesystem_error & error) {
-			throw BaseException{{"^ std::filesystem::file_size : {}"_sf(message_of_std_error_code(error.code()))}};
-		}
+		auto size = std::filesystem::file_size(Detail::make_std_path(target));
 		return mbw<Size>(size);
 	}
 
@@ -500,11 +469,7 @@ namespace TwinStar::Core::FileSystem {
 		Path const & target,
 		Size const & size
 	) -> Void {
-		try {
-			std::filesystem::resize_file(Detail::make_std_path(target), size.value);
-		} catch (std::filesystem::filesystem_error & error) {
-			throw BaseException{{"^ std::filesystem::resize_file : {}"_sf(message_of_std_error_code(error.code()))}};
-		}
+		std::filesystem::resize_file(Detail::make_std_path(target), size.value);
 		return;
 	}
 
@@ -566,11 +531,7 @@ namespace TwinStar::Core::FileSystem {
 	inline auto create_directory (
 		Path const & target
 	) -> Void {
-		try {
-			std::filesystem::create_directories(Detail::make_std_path(target));
-		} catch (std::filesystem::filesystem_error & error) {
-			throw BaseException{{"^ std::filesystem::create_directories : {}"_sf(message_of_std_error_code(error.code()))}};
-		}
+		std::filesystem::create_directories(Detail::make_std_path(target));
 		return;
 	}
 
@@ -626,45 +587,6 @@ namespace TwinStar::Core::FileSystem {
 		auto result = List<Path>{};
 		Detail::list<Detail::FilterType::Constant::directory()>(target, depth, result);
 		return result;
-	}
-
-	#pragma endregion
-
-	#pragma region special
-
-	inline auto get_working_directory (
-	) -> Path {
-		auto target = std::filesystem::path{};
-		try {
-			target = std::filesystem::current_path();
-		} catch (std::filesystem::filesystem_error & error) {
-			throw BaseException{{"^ std::filesystem::current_path : {}"_sf(message_of_std_error_code(error.code()))}};
-		}
-		return Path{make_string(target.string())};
-	}
-
-	inline auto set_working_directory (
-		Path const & target
-	) -> Void {
-		try {
-			std::filesystem::current_path(Detail::make_std_path(target));
-		} catch (std::filesystem::filesystem_error & error) {
-			throw BaseException{{{"^ std::filesystem::current_path : {}"_sf(message_of_std_error_code(error.code()))}}};
-		}
-		return;
-	}
-
-	// ----------------
-
-	inline auto get_temporary_directory (
-	) -> Path {
-		auto target = std::filesystem::path{};
-		try {
-			target = std::filesystem::temp_directory_path();
-		} catch (std::filesystem::filesystem_error & error) {
-			throw BaseException{{"^ std::filesystem::temp_directory_path : {}"_sf(message_of_std_error_code(error.code()))}};
-		}
-		return Path{make_string(target.string())};
 	}
 
 	#pragma endregion

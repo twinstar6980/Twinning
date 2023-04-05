@@ -4,29 +4,36 @@ namespace TwinStar.Script.Executable.ExtractRSBFromPvZ2CHSAPKDirectory {
 	export function execute(
 	): void {
 		// TODO : non-windows & echo selection
-		Console.notify('i', los(`请选择需要提取的 APK 解压所得的目录`), []);
-		let selected_input_directory = Shell.windows_cli_open_file_dialog(true, false);
+		Console.message('i', los('executable.extract_rsb_from_pvz2_chs_apk_directory:select_input_directory'), [
+		]);
+		let selected_input_directory = ShellExtension.select_path(true, false, '');
 		if (selected_input_directory.length === 0) {
-			Console.notify('w', los(`已取消操作`), []);
+			Console.message('w', los('executable.extract_rsb_from_pvz2_chs_apk_directory:cancle'), [
+			]);
 			return;
 		}
-		Console.notify('t', selected_input_directory[0], []);
-		Console.notify('i', los(`请选择输出目录`), []);
-		let selected_output_directory = Shell.windows_cli_open_file_dialog(true, false);
+		Console.message('t', selected_input_directory[0], []);
+		Console.message('i', los('executable.extract_rsb_from_pvz2_chs_apk_directory:select_output_directory'), []);
+		let selected_output_directory = ShellExtension.select_path(true, false, '');
 		if (selected_output_directory.length === 0) {
-			Console.notify('w', los(`已取消操作`), []);
+			Console.message('w', los('executable.extract_rsb_from_pvz2_chs_apk_directory:cancle'), [
+			]);
 			return;
 		}
-		Console.notify('t', selected_output_directory[0], []);
+		Console.message('t', selected_output_directory[0], []);
 		let input_directory = selected_input_directory[0];
 		let output_directory = selected_output_directory[0];
-		Console.notify('i', los(`提取开始`), [los(`输入目录：{}`, input_directory), los(`输出目录：{}`, output_directory)]);
+		Console.message('i', los('executable.extract_rsb_from_pvz2_chs_apk_directory:extract_start'), [
+			los('executable.extract_rsb_from_pvz2_chs_apk_directory:input_directory', input_directory),
+			los('executable.extract_rsb_from_pvz2_chs_apk_directory:output_directory', output_directory),
+		]);
 		Entry.simple_batch_execute(input_directory, ['file', /.+\.rsb\.smf$/i], (item) => {
 			let input_file = `${input_directory}/${item}`;
 			let output_file = `${output_directory}/${item.slice(0, -4)}`;
 			CoreX.Tool.PopCap.ZLib.uncompress_fs(input_file, output_file, 15n, { variant_64: false });
 		});
-		Console.notify('s', los(`提取完成`), []);
+		Console.message('s', los('executable.extract_rsb_from_pvz2_chs_apk_directory:extract_finish'), [
+		]);
 		return;
 	}
 

@@ -50,11 +50,11 @@ namespace TwinStar::Core::Tool::PopCap::ReflectionObjectNotation {
 				integer_signed_64_zero   = 0x41,
 				integer_unsigned_64      = 0x46,
 				integer_unsigned_64_zero = 0x47,
-				// floating
-				floating_signed_32      = 0x22,
-				floating_signed_32_zero = 0x23,
-				floating_signed_64      = 0x42,
-				floating_signed_64_zero = 0x43,
+				// floater
+				floater_signed_32      = 0x22,
+				floater_signed_32_zero = 0x23,
+				floater_signed_64      = 0x42,
+				floater_signed_64_zero = 0x43,
 				// variable length integer
 				integer_variable_length_unsigned_32            = 0x24,
 				integer_variable_length_signed_32              = 0x25,
@@ -197,8 +197,8 @@ namespace TwinStar::Core::Tool::PopCap::ReflectionObjectNotation {
 				data.write(TypeIdentifier{TypeIdentifier::Value::integer_variable_length_signed_64});
 				ProtocolBufferVariableLengthInteger::encode_s64(data, up_cast<IntegerS64>(value.get_integer()));
 			} else {
-				data.write(TypeIdentifier{TypeIdentifier::Value::floating_signed_64});
-				data.write(up_cast<FloatingS64>(value.get_floating()));
+				data.write(TypeIdentifier{TypeIdentifier::Value::floater_signed_64});
+				data.write(up_cast<FloaterS64>(value.get_floater()));
 			}
 			return;
 		}
@@ -508,20 +508,20 @@ namespace TwinStar::Core::Tool::PopCap::ReflectionObjectNotation {
 					value.set_number(cbw<Integer>(0_iu64));
 					break;
 				}
-				case TypeIdentifier::Value::floating_signed_32 : {
-					value.set_number(cbw<Floating>(data.read_of<FloatingS32>()));
+				case TypeIdentifier::Value::floater_signed_32 : {
+					value.set_number(cbw<Floater>(data.read_of<FloaterS32>()));
 					break;
 				}
-				case TypeIdentifier::Value::floating_signed_32_zero : {
-					value.set_number(cbw<Floating>(0.0_fs32));
+				case TypeIdentifier::Value::floater_signed_32_zero : {
+					value.set_number(cbw<Floater>(0.0_fs32));
 					break;
 				}
-				case TypeIdentifier::Value::floating_signed_64 : {
-					value.set_number(cbw<Floating>(data.read_of<FloatingS64>()));
+				case TypeIdentifier::Value::floater_signed_64 : {
+					value.set_number(cbw<Floater>(data.read_of<FloaterS64>()));
 					break;
 				}
-				case TypeIdentifier::Value::floating_signed_64_zero : {
-					value.set_number(cbw<Floating>(0.0_fs64));
+				case TypeIdentifier::Value::floater_signed_64_zero : {
+					value.set_number(cbw<Floater>(0.0_fs64));
 					break;
 				}
 				case TypeIdentifier::Value::integer_variable_length_unsigned_32 :

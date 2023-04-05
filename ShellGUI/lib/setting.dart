@@ -19,7 +19,7 @@ class Setting {
   String       mCore;
   String       mScript;
   List<String> mArgument;
-  Boolean      mExitAfterCommandSucceed;
+  Boolean      mBehaviorAfterCommandSucceed;
 
   // ----------------
 
@@ -32,7 +32,7 @@ class Setting {
     this.mCore,
     this.mScript,
     this.mArgument,
-    this.mExitAfterCommandSucceed,
+    this.mBehaviorAfterCommandSucceed,
   );
 
   Setting.init(
@@ -64,7 +64,7 @@ class Setting {
     data.mCore = json['core'] as String;
     data.mScript = json['script'] as String;
     data.mArgument = (json['argument'] as List<dynamic>).map((e) => e as String).toList();
-    data.mExitAfterCommandSucceed = json['exit_after_command_finish'] as Boolean;
+    data.mBehaviorAfterCommandSucceed = json['behavior_after_command_succeed'] as Boolean;
     return;
   }
 
@@ -82,7 +82,7 @@ class Setting {
     json['core'] = data.mCore;
     json['script'] = data.mScript;
     json['argument'] = data.mArgument;
-    json['exit_after_command_finish'] = data.mExitAfterCommandSucceed;
+    json['behavior_after_command_succeed'] = data.mBehaviorAfterCommandSucceed;
     return;
   }
 

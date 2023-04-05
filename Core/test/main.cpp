@@ -1,5 +1,8 @@
 //
 
+#include "shell/common.hpp"
+#include "shell/utility/interaction.hpp"
+#include "shell/utility/miscellaneous.hpp"
 #include "shell/core/static_library.hpp"
 #include "shell/host/cli_host.hpp"
 #include "shell/host/launcher.hpp"
@@ -10,36 +13,11 @@
 
 #pragma region main
 
-#if defined M_system_windows
-auto wmain (
-	int       argc,
-	wchar_t * argv[]
-) -> int
-#endif
-#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-auto main (
-	int    argc,
-	char * argv[]
-) -> int
-#endif
-{
-	auto args = [&] {
-		auto it = std::vector<std::string>{};
-		auto raw_args = std::span{argv, static_cast<std::size_t>(argc)};
-		it.reserve(raw_args.size());
-		for (auto & raw_arg : raw_args) {
-			#if defined M_system_windows
-			auto raw_arg_8 = TwinStar::Shell::utf16_to_utf8(std::u16string_view{reinterpret_cast<char16_t const *>(raw_arg)});
-			it.emplace_back(std::move(reinterpret_cast<std::string &>(raw_arg_8)));
-			#endif
-			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-			it.emplace_back(raw_arg);
-			#endif
-		}
-		return it;
-	}();
-	auto exception_message = std::optional<std::string>{};
-	{
+M_declare_native_main_function {
+	#if defined M_build_release
+	try {
+	#endif
+		auto args = TwinStar::Shell::parse_raw_native_string(std::span{argv, static_cast<std::size_t>(argc)});
 		assert_test(args.size() >= 3);
 		auto core_path = args[1];
 		auto script = args[2];
@@ -47,21 +25,21 @@ auto main (
 		auto core = TwinStar::Shell::Core::StaticLibrary{nullptr};
 		auto host = TwinStar::Shell::CLIHost{nullptr};
 		auto result = TwinStar::Shell::Launcher::launch(host, core, script, argument);
-		if (result) {
-			exception_message.emplace(result.value());
-		}
-	}
-	if (exception_message) {
-		TwinStar::Shell::output("\n");
-		TwinStar::Shell::output("Exception :\n");
-		TwinStar::Shell::output(exception_message.value());
-		TwinStar::Shell::output("\n");
-		TwinStar::Shell::output("\n");
-		TwinStar::Shell::output("Press <ENTER> to exit ... ");
-		TwinStar::Shell::input();
+		TwinStar::Shell::Interaction::error("SUCCEEDED");
+		TwinStar::Shell::Interaction::error("\n");
+		TwinStar::Shell::Interaction::error(result);
+		TwinStar::Shell::Interaction::error("\n");
+		return 0;
+	#if defined M_build_release
+	} catch (...) {
+		auto exception = TwinStar::Shell::parse_current_exception();
+		TwinStar::Shell::Interaction::error("FAILED");
+		TwinStar::Shell::Interaction::error("\n");
+		TwinStar::Shell::Interaction::error(exception);
+		TwinStar::Shell::Interaction::error("\n");
 		return 1;
 	}
-	return 0;
+	#endif
 }
 
 #pragma endregion

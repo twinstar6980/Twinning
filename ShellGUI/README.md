@@ -54,6 +54,6 @@
 	
 	因此，为了实现动态加载 Core 库文件的目的，应用会在每次运行时将指定的 Core 路径复制至 `/data/user/<id>/<package>/files` 中（这是 `permitted_paths` 中的一项，但不确定是否可用于大多数设备与系统）；并且在应用打包时也必须包含与 Core 编译时所用版本一致的 `libc++_shared.so` 文件。
 	
-	> 当前项目中包含的 libc++_shared.so 版本为 NDK 25.1.8937393 。
+	> 当前项目中包含的 libc++_shared.so 版本为 NDK r25c 。
 	
 	> 具体参阅 [Android 文档](https://source.android.com/docs/core/architecture/vndk/linker-namespace) 。

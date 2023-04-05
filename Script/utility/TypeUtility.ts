@@ -146,7 +146,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export function parse_confirm_string(
+	export function parse_confirmation_string(
 		string: string,
 	): boolean {
 		if (string === 'n') {
@@ -155,7 +155,7 @@ namespace TwinStar.Script {
 		if (string === 'y') {
 			return true;
 		}
-		assert_test(false, `invalid confirm string`);
+		assert_test(false, `invalid confirmation string`);
 	}
 
 	export function parse_size_string(
@@ -190,6 +190,69 @@ namespace TwinStar.Script {
 			result |= BigInt(integer_array[index]) << BigInt(8 * Number(index));
 		}
 		return result;
+	}
+
+	// ------------------------------------------------
+
+	export function normalize_string_line_feed(
+		source: string,
+	): string {
+		return source.replaceAll('\r\n', '\n');
+	}
+
+	export function split_string_by_line_feed(
+		source: string,
+		ignore_last_if_empry: boolean = true,
+	): Array<string> {
+		let destination = source.split('\n');
+		if (ignore_last_if_empry) {
+			if (destination.length > 0 && destination[destination.length - 1].length === 0) {
+				destination.pop();
+			}
+		}
+		return destination;
+	}
+
+	// ------------------------------------------------
+
+	export function split_error_stack(
+		string: string | undefined,
+	): Array<string> {
+		let list: Array<string>;
+		if (string === undefined) {
+			list = [`@ ?`];
+		} else {
+			list = string.split('\n').slice(0, -1).map((e) => {
+				let result: string;
+				let regexp_result = /    at (.*) \((.*)\)/.exec(e);
+				if (regexp_result !== null) {
+					result = `@ ${regexp_result[2] === 'native' ? ('<native>:?') : (regexp_result[2])} ${regexp_result[1]}`;
+				} else {
+					result = '@ ?';
+				}
+				return result;
+			});
+		}
+		return list;
+	}
+
+	export function parse_error_message(
+		error: any,
+	): [string, Array<string>] {
+		let title: string = '';
+		let description: Array<string> = [];
+		if (error instanceof Error) {
+			if (error.name === 'NativeError') {
+				title = `${error.name}`;
+				description.push(...error.message.split('\n'));
+			} else {
+				title = `${error.name}: ${error.message}`;
+			}
+			description.push(...split_error_stack(error.stack));
+		} else {
+			title = `${error}`;
+		}
+		return [title, description];
 	}
 
 	// ------------------------------------------------

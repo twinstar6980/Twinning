@@ -128,7 +128,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(CoordinatePoint_<_>),
 			M_wrap(
-				(Position2D<Floating>) position,
+				(Position2<Floater>) position,
 				(Curve) curve,
 			),
 		);
@@ -144,7 +144,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(CoordinateIDPoint_<_>),
 			M_wrap(
-				(Position2D<Floating, ID>) position,
+				(Position2<Floater, ID>) position,
 				(Curve) curve,
 			),
 		);
@@ -405,9 +405,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(BusVoiceSetting_<_>),
 			M_wrap(
-				(RegularValue<Floating>) volume,
-				(RegularValue<Floating>) pitch,
-				(RegularValue<Floating>) low_pass_filter,
+				(RegularValue<Floater>) volume,
+				(RegularValue<Floater>) pitch,
+				(RegularValue<Floater>) low_pass_filter,
 			),
 		);
 
@@ -415,10 +415,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(BusVoiceSetting_<_>),
 			M_wrap(
-				(RegularValue<Floating>) volume,
-				(RegularValue<Floating>) pitch,
-				(RegularValue<Floating>) low_pass_filter,
-				(RegularValue<Floating>) high_pass_filter,
+				(RegularValue<Floater>) volume,
+				(RegularValue<Floater>) pitch,
+				(RegularValue<Floater>) low_pass_filter,
+				(RegularValue<Floater>) high_pass_filter,
 			),
 		);
 
@@ -433,9 +433,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioVoice_<_>),
 			M_wrap(
-				(RandomizableValue<Floating>) volume,
-				(RandomizableValue<Floating>) pitch,
-				(RandomizableValue<Floating>) low_pass_filter,
+				(RandomizableValue<Floater>) volume,
+				(RandomizableValue<Floater>) pitch,
+				(RandomizableValue<Floater>) low_pass_filter,
 			),
 		);
 
@@ -443,10 +443,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioVoice_<_>),
 			M_wrap(
-				(RandomizableValue<Floating>) volume,
-				(RandomizableValue<Floating>) pitch,
-				(RandomizableValue<Floating>) low_pass_filter,
-				(RandomizableValue<Floating>) high_pass_filter,
+				(RandomizableValue<Floater>) volume,
+				(RandomizableValue<Floater>) pitch,
+				(RandomizableValue<Floater>) low_pass_filter,
+				(RandomizableValue<Floater>) high_pass_filter,
 			),
 		);
 
@@ -463,7 +463,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(BusVoiceVolumeGainSetting_<_>),
 			M_wrap(
-				(RegularValue<Floating>) make_up,
+				(RegularValue<Floater>) make_up,
 			),
 		);
 
@@ -479,7 +479,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(AudioVoiceVolumeGainSetting_<_>),
 			M_wrap(
 				(Boolean) normalization,
-				(RegularValue<Floating>) make_up,
+				(RegularValue<Floater>) make_up,
 			),
 		);
 
@@ -488,7 +488,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(AudioVoiceVolumeGainSetting_<_>),
 			M_wrap(
 				(Boolean) normalization,
-				(RandomizableValue<Floating>) make_up,
+				(RandomizableValue<Floater>) make_up,
 			),
 		);
 
@@ -505,7 +505,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(BusBusSetting_<_>),
 			M_wrap(
-				(RegularValue<Floating>) volume,
+				(RegularValue<Floater>) volume,
 			),
 		);
 
@@ -520,9 +520,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(BusOutputBusSetting_<_>),
 			M_wrap(
-				(RegularValue<Floating>) volume,
-				(RegularValue<Floating>) low_pass_filter,
-				(RegularValue<Floating>) high_pass_filter,
+				(RegularValue<Floater>) volume,
+				(RegularValue<Floater>) low_pass_filter,
+				(RegularValue<Floater>) high_pass_filter,
 			),
 		);
 
@@ -538,8 +538,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(AudioOutputBusSetting_<_>),
 			M_wrap(
 				(ID) bus,
-				(RegularValue<Floating>) volume,
-				(RegularValue<Floating>) low_pass_filter,
+				(RegularValue<Floater>) volume,
+				(RegularValue<Floater>) low_pass_filter,
 			),
 		);
 
@@ -548,9 +548,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(AudioOutputBusSetting_<_>),
 			M_wrap(
 				(ID) bus,
-				(RegularValue<Floating>) volume,
-				(RegularValue<Floating>) low_pass_filter,
-				(RegularValue<Floating>) high_pass_filter,
+				(RegularValue<Floater>) volume,
+				(RegularValue<Floater>) low_pass_filter,
+				(RegularValue<Floater>) high_pass_filter,
 			),
 		);
 
@@ -568,7 +568,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(AudioGameDefinedAuxiliarySendSetting_<_>),
 			M_wrap(
 				(Boolean) enable,
-				(RegularValue<Floating>) volume,
+				(RegularValue<Floater>) volume,
 			),
 		);
 
@@ -577,9 +577,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(AudioGameDefinedAuxiliarySendSetting_<_>),
 			M_wrap(
 				(Boolean) enable,
-				(RegularValue<Floating>) volume,
-				(RegularValue<Floating>) low_pass_filter,
-				(RegularValue<Floating>) high_pass_filter,
+				(RegularValue<Floater>) volume,
+				(RegularValue<Floater>) low_pass_filter,
+				(RegularValue<Floater>) high_pass_filter,
 			),
 		);
 
@@ -595,7 +595,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(AudioUserDefinedAuxiliarySendSettingItem_<_>),
 			M_wrap(
 				(ID) bus,
-				(RegularValue<Floating>) volume,
+				(RegularValue<Floater>) volume,
 			),
 		);
 
@@ -604,9 +604,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(AudioUserDefinedAuxiliarySendSettingItem_<_>),
 			M_wrap(
 				(ID) bus,
-				(RegularValue<Floating>) volume,
-				(RegularValue<Floating>) low_pass_filter,
-				(RegularValue<Floating>) high_pass_filter,
+				(RegularValue<Floater>) volume,
+				(RegularValue<Floater>) low_pass_filter,
+				(RegularValue<Floater>) high_pass_filter,
 			),
 		);
 
@@ -641,7 +641,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(AudioEarlyReflectionAuxiliarySendSetting_<_>),
 			M_wrap(
 				(ID) bus,
-				(RegularValue<Floating>) volume,
+				(RegularValue<Floater>) volume,
 			),
 		);
 
@@ -754,7 +754,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioPositioningSettingListenerRoutingPositionSourceAutomationPoint_<_>),
 			M_wrap(
-				(Position2D<Floating>) position,
+				(Position2<Floater>) position,
 				(Integer) duration,
 			),
 		);
@@ -763,7 +763,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioPositioningSettingListenerRoutingPositionSourceAutomationPoint_<_>),
 			M_wrap(
-				(Position3D<Floating>) position,
+				(Position3<Floater>) position,
 				(Integer) duration,
 			),
 		);
@@ -795,8 +795,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_list(
 			M_wrap(AudioPositioningSettingListenerRoutingPositionSourceAutomationPathRandomRange_<_>),
 			M_wrap(
-				(Floating) left_right,
-				(Floating) front_back,
+				(Floater) left_right,
+				(Floater) front_back,
 			),
 		);
 
@@ -804,9 +804,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_list(
 			M_wrap(AudioPositioningSettingListenerRoutingPositionSourceAutomationPathRandomRange_<_>),
 			M_wrap(
-				(Floating) left_right,
-				(Floating) front_back,
-				(Floating) up_down,
+				(Floater) left_right,
+				(Floater) front_back,
+				(Floater) up_down,
 			),
 		);
 
@@ -988,7 +988,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(
 				(Boolean) enable,
 				(AudioPositioningSettingListenerRoutingSpatialization) spatialization,
-				(RegularValue<Floating>) speaker_panning_divsion_spatialization_mix,
+				(RegularValue<Floater>) speaker_panning_divsion_spatialization_mix,
 				(AudioPositioningSettingListenerRoutingAttenuation) attenuation,
 				(AudioPositioningSettingListenerRoutingPositionSource) position_source,
 			),
@@ -1032,7 +1032,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(AudioPositioningSettingSpeakerPanning_<_>),
 			M_wrap(
 				(Boolean) enable,
-				(Position2D<Floating>) position,
+				(Position2<Floater>) position,
 			),
 		);
 
@@ -1041,7 +1041,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(AudioPositioningSettingSpeakerPanning_<_>),
 			M_wrap(
 				(AudioPositioningSettingSpeakerPanningMode) mode,
-				(Position2D<Floating>) position,
+				(Position2<Floater>) position,
 			),
 		);
 
@@ -1050,7 +1050,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(AudioPositioningSettingSpeakerPanning_<_>),
 			M_wrap(
 				(AudioPositioningSettingSpeakerPanningMode) mode,
-				(Position3D<Floating>) position,
+				(Position3<Floater>) position,
 			),
 		);
 
@@ -1082,7 +1082,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(AudioPositioningSetting_<_>),
 			M_wrap(
 				(AudioPositioningSettingType) type,
-				(RegularValue<Floating>) center_percent,
+				(RegularValue<Floater>) center_percent,
 				(AudioPositioningSettingSpeakerPanning) speaker_panning,
 				(AudioPositioningSettingListenerRouting) listener_routing,
 			),
@@ -1094,7 +1094,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(
 				(Boolean) enable,
 				(AudioPositioningSettingType) type,
-				(RegularValue<Floating>) center_percent,
+				(RegularValue<Floater>) center_percent,
 				(AudioPositioningSettingSpeakerPanning) speaker_panning,
 				(AudioPositioningSettingListenerRouting) listener_routing,
 			),
@@ -1104,7 +1104,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioPositioningSetting_<_>),
 			M_wrap(
-				(RegularValue<Floating>) center_percent,
+				(RegularValue<Floater>) center_percent,
 				(AudioPositioningSettingSpeakerPanning) speaker_panning,
 				(AudioPositioningSettingListenerRouting) listener_routing,
 			),
@@ -1123,8 +1123,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioMotionSetting_<_>),
 			M_wrap(
-				(RandomizableValue<Floating>) volume_offset,
-				(RandomizableValue<Floating>) low_pass_filter,
+				(RandomizableValue<Floater>) volume_offset,
+				(RandomizableValue<Floater>) low_pass_filter,
 			),
 		);
 
@@ -1175,7 +1175,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(BusAutomaticDuckingSettingBus_<_>),
 			M_wrap(
 				(ID) id,
-				(Floating) volume,
+				(Floater) volume,
 				(Integer) fade_out,
 				(Integer) fade_in,
 				(Curve) curve,
@@ -1195,7 +1195,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(BusAutomaticDuckingSetting_<_>),
 			M_wrap(
 				(Integer) recovery_time,
-				(Floating) maximum_ducking_volume,
+				(Floater) maximum_ducking_volume,
 				(List<BusAutomaticDuckingSettingBus>) bus,
 			),
 		);
@@ -1479,8 +1479,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(BusHDRSettingWindowTopOutputGameParameter_<_>),
 			M_wrap(
 				(ID) id,
-				(Floating) minimum,
-				(Floating) maximum,
+				(Floater) minimum,
+				(Floater) maximum,
 			),
 		);
 
@@ -1495,9 +1495,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(BusHDRSettingDynamic_<_>),
 			M_wrap(
-				(Floating) threshold,
-				(Floating) ratio,
-				(Floating) release_time,
+				(Floater) threshold,
+				(Floater) ratio,
+				(Floater) release_time,
 				(BusHDRSettingDynamicReleaseMode) release_mode,
 			),
 		);
@@ -1534,7 +1534,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(AudioHDRSettingEnvelopeTracking_<_>),
 			M_wrap(
 				(Boolean) enable,
-				(Floating) active_range,
+				(Floater) active_range,
 			),
 		);
 
@@ -1864,9 +1864,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioPlaybackPrioritySetting_<_>),
 			M_wrap(
-				(RegularValue<Floating>) value,
+				(RegularValue<Floater>) value,
 				(Boolean) use_distance_factor,
-				(RegularValue<Floating>) offset_at_maximum_distance,
+				(RegularValue<Floater>) offset_at_maximum_distance,
 			),
 		);
 
@@ -1899,9 +1899,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioTimeSetting_<_>),
 			M_wrap(
-				(Floating) time,
-				(Floating) offset,
-				(Floating) tempo,
+				(Floater) time,
+				(Floater) offset,
+				(Floater) tempo,
 				(AudioTimeSettingSignature) signature,
 			),
 		);
@@ -2212,7 +2212,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(Boolean) always_reset_playlist,
 				(RegularValue<Integer>) loop,
 				(AudioPlayModeContinuousTransitionType) transition_type,
-				(RandomizableValue<Floating>) transition_duration,
+				(RandomizableValue<Floater>) transition_duration,
 			),
 		);
 
@@ -2223,7 +2223,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(Boolean) always_reset_playlist,
 				(RandomizableValue<Integer>) loop,
 				(AudioPlayModeContinuousTransitionType) transition_type,
-				(RandomizableValue<Floating>) transition_duration,
+				(RandomizableValue<Floater>) transition_duration,
 			),
 		);
 
@@ -2384,7 +2384,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(GameParameter_<_>),
 			M_wrap(
 				(ID) id,
-				(Floating) range_default,
+				(Floater) range_default,
 			),
 		);
 
@@ -2393,10 +2393,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(GameParameter_<_>),
 			M_wrap(
 				(ID) id,
-				(Floating) range_default,
+				(Floater) range_default,
 				(GameParameterInterpolationMode) interpolation_mode,
-				(Floating) interpolation_attack,
-				(Floating) interpolation_release,
+				(Floater) interpolation_attack,
+				(Floater) interpolation_release,
 				(GameParameterBindToBuiltInParameterMode) bind_to_built_in_parameter,
 			),
 		);
@@ -2415,12 +2415,12 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(GameSynchronizationU1_<_>),
 			M_wrap(
 				(ID) id,
-				(Floating) u1,
-				(Floating) u2,
-				(Floating) u3,
-				(Floating) u4,
-				(Floating) u5,
-				(Floating) u6,
+				(Floater) u1,
+				(Floater) u2,
+				(Floater) u3,
+				(Floater) u4,
+				(Floater) u5,
+				(Floater) u6,
 			),
 		);
 
@@ -2438,7 +2438,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(StatefulPropertySettingItem_<_>),
 			M_wrap(
 				(Integer) type,
-				(Floating) value,
+				(Floater) value,
 			),
 		);
 
@@ -2509,7 +2509,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					(RandomizableValue<Integer>) delay,
 					(RandomizableValue<Integer>) fade_time,
 					(Curve) fade_curve,
-					(Floating) probability,
+					(Floater) probability,
 					(ID) sound_bank,
 				),
 			);
@@ -2633,7 +2633,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				M_wrap(
 					(RandomizableValue<Integer>) delay,
 					(SeekType) seek_type,
-					(RandomizableValue<Floating>) seek_value,
+					(RandomizableValue<Floater>) seek_value,
 					(Boolean) seek_to_nearest_marker,
 				),
 			);
@@ -2669,7 +2669,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					(RandomizableValue<Integer>) fade_time,
 					(Curve) fade_curve,
 					(ValueApplyMode) apply_mode,
-					(RandomizableValue<Floating>) value,
+					(RandomizableValue<Floater>) value,
 				),
 			);
 
@@ -2689,7 +2689,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					(RandomizableValue<Integer>) fade_time,
 					(Curve) fade_curve,
 					(ValueApplyMode) apply_mode,
-					(RandomizableValue<Floating>) value,
+					(RandomizableValue<Floater>) value,
 				),
 			);
 
@@ -2709,7 +2709,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					(RandomizableValue<Integer>) fade_time,
 					(Curve) fade_curve,
 					(ValueApplyMode) apply_mode,
-					(RandomizableValue<Floating>) value,
+					(RandomizableValue<Floater>) value,
 				),
 			);
 
@@ -2729,7 +2729,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					(RandomizableValue<Integer>) fade_time,
 					(Curve) fade_curve,
 					(ValueApplyMode) apply_mode,
-					(RandomizableValue<Floating>) value,
+					(RandomizableValue<Floater>) value,
 				),
 			);
 
@@ -2749,7 +2749,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					(RandomizableValue<Integer>) fade_time,
 					(Curve) fade_curve,
 					(ValueApplyMode) apply_mode,
-					(RandomizableValue<Floating>) value,
+					(RandomizableValue<Floater>) value,
 				),
 			);
 
@@ -2787,7 +2787,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					(RandomizableValue<Integer>) fade_time,
 					(Curve) fade_curve,
 					(ValueApplyMode) apply_mode,
-					(RandomizableValue<Floating>) value,
+					(RandomizableValue<Floater>) value,
 				),
 			);
 
@@ -2800,7 +2800,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					(RandomizableValue<Integer>) fade_time,
 					(Curve) fade_curve,
 					(ValueApplyMode) apply_mode,
-					(RandomizableValue<Floating>) value,
+					(RandomizableValue<Floater>) value,
 					(Boolean) bypass_game_parameter_interpolation,
 				),
 			);
@@ -3314,10 +3314,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(AttenuationCone_<_>),
 			M_wrap(
 				(Boolean) enable,
-				(Floating) inner_angle,
-				(Floating) outer_angle,
-				(Floating) maximum_value,
-				(Floating) low_pass_filter,
+				(Floater) inner_angle,
+				(Floater) outer_angle,
+				(Floater) maximum_value,
+				(Floater) low_pass_filter,
 			),
 		);
 
@@ -3326,11 +3326,11 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(AttenuationCone_<_>),
 			M_wrap(
 				(Boolean) enable,
-				(Floating) inner_angle,
-				(Floating) outer_angle,
-				(Floating) maximum_value,
-				(Floating) low_pass_filter,
-				(Floating) high_pass_filter,
+				(Floater) inner_angle,
+				(Floater) outer_angle,
+				(Floater) maximum_value,
+				(Floater) low_pass_filter,
+				(Floater) high_pass_filter,
 			),
 		);
 
@@ -3446,13 +3446,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(LowFrequencyOscillatorModulator_<_>),
 			M_wrap(
 				(ID) id,
-				(RandomizableValue<Floating>) depth,
-				(RandomizableValue<Floating>) frequency,
+				(RandomizableValue<Floater>) depth,
+				(RandomizableValue<Floater>) frequency,
 				(ModulatorWaveform) waveform,
-				(RandomizableValue<Floating>) smoothing,
-				(RandomizableValue<Floating>) pulse_width_modulation,
-				(RandomizableValue<Floating>) attack,
-				(RandomizableValue<Floating>) initial_phase_offset,
+				(RandomizableValue<Floater>) smoothing,
+				(RandomizableValue<Floater>) pulse_width_modulation,
+				(RandomizableValue<Floater>) attack,
+				(RandomizableValue<Floater>) initial_phase_offset,
 				(ModulatorScope) scope,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 			),
@@ -3470,14 +3470,14 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(EnvelopeModulator_<_>),
 			M_wrap(
 				(ID) id,
-				(RandomizableValue<Floating>) attack_time,
-				(RandomizableValue<Floating>) attack_curve,
-				(RandomizableValue<Floating>) decay_time,
-				(RandomizableValue<Floating>) sustain_level,
-				(RandomizableValue<Floating>) release_time,
+				(RandomizableValue<Floater>) attack_time,
+				(RandomizableValue<Floater>) attack_curve,
+				(RandomizableValue<Floater>) decay_time,
+				(RandomizableValue<Floater>) sustain_level,
+				(RandomizableValue<Floater>) release_time,
 				(ModulatorScope) scope,
 				(ModulatorTriggerOn) trigger_on,
-				(RandomizableValue<Floating>) sustain_time,
+				(RandomizableValue<Floater>) sustain_time,
 				(Boolean) stop_playback_after_release,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 			),
@@ -3495,10 +3495,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(TimeModulator_<_>),
 			M_wrap(
 				(ID) id,
-				(RandomizableValue<Floating>) initial_delay,
-				(RegularValue<Floating>) duration,
+				(RandomizableValue<Floater>) initial_delay,
+				(RegularValue<Floater>) duration,
 				(RandomizableValue<Integer>) loop,
-				(RandomizableValue<Floating>) playback_rate,
+				(RandomizableValue<Floater>) playback_rate,
 				(ModulatorScope) scope,
 				(ModulatorTriggerOn) trigger_on,
 				(Boolean) stop_playback_at_end,
@@ -3520,7 +3520,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(EffectU1_<_>),
 			M_wrap(
 				(Integer) type,
-				(Floating) value,
+				(Floater) value,
 			),
 		);
 
@@ -3530,7 +3530,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(
 				(Integer) type,
 				(CoordinateMode) mode,
-				(Floating) value,
+				(Floater) value,
 			),
 		);
 
@@ -3997,7 +3997,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundPlaybackSetting_<_>),
 			M_wrap(
-				(RandomizableValue<Floating>) initial_delay,
+				(RandomizableValue<Floater>) initial_delay,
 				(RandomizableValue<Integer>) loop,
 			),
 		);
@@ -4280,7 +4280,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundPlaylistContainerPlaybackSetting_<_>),
 			M_wrap(
-				(RandomizableValue<Floating>) initial_delay,
+				(RandomizableValue<Floater>) initial_delay,
 				(SoundPlaylistContainerScope) scope,
 				(AudioPlayType) type,
 				(AudioPlayTypeSetting) type_setting,
@@ -4570,7 +4570,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundSwitchContainerPlaybackSetting_<_>),
 			M_wrap(
-				(RandomizableValue<Floating>) initial_delay,
+				(RandomizableValue<Floater>) initial_delay,
 				(AudioPlayMode) mode,
 				(AudioSwitcherSetting) switcher,
 				(List<SoundSwitchContainerObjectAttributeItem>) object_attribute,
@@ -4853,7 +4853,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundBlendContainerPlaybackSetting_<_>),
 			M_wrap(
-				(RandomizableValue<Floating>) initial_delay,
+				(RandomizableValue<Floater>) initial_delay,
 				(List<SoundBlendContainerTrackItem>) track,
 			),
 		);
@@ -4862,7 +4862,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundBlendContainerPlaybackSetting_<_>),
 			M_wrap(
-				(RandomizableValue<Floating>) initial_delay,
+				(RandomizableValue<Floater>) initial_delay,
 				(AudioPlayMode) mode,
 				(List<SoundBlendContainerTrackItem>) track,
 			),
@@ -5416,10 +5416,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(
 				(Integer) u1,
 				(ID) source,
-				(Floating) offset,
-				(Floating) begin,
-				(Floating) end,
-				(Floating) duration,
+				(Floater) offset,
+				(Floater) begin,
+				(Floater) end,
+				(Floater) duration,
 			),
 		);
 
@@ -5430,10 +5430,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				(Integer) u1,
 				(ID) source,
 				(ID) event,
-				(Floating) offset,
-				(Floating) begin,
-				(Floating) end,
-				(Floating) duration,
+				(Floater) offset,
+				(Floater) begin,
+				(Floater) end,
+				(Floater) duration,
 			),
 		);
 
@@ -5736,7 +5736,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(MusicSegmentCueItem_<_>),
 			M_wrap(
 				(ID) name,
-				(Floating) time,
+				(Floater) time,
 			),
 		);
 
@@ -5766,7 +5766,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicSegmentPlaybackSetting_<_>),
 			M_wrap(
-				(Floating) duration,
+				(Floater) duration,
 				(MusicSegmentCue) cue,
 			),
 		);
@@ -5775,8 +5775,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicSegmentPlaybackSetting_<_>),
 			M_wrap(
-				(RegularValue<Floating>) speed,
-				(Floating) duration,
+				(RegularValue<Floater>) speed,
+				(Floater) duration,
 				(MusicSegmentCue) cue,
 			),
 		);
@@ -6063,7 +6063,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicPlaylistContainerPlaybackSetting_<_>),
 			M_wrap(
-				(RegularValue<Floating>) speed,
+				(RegularValue<Floater>) speed,
 				(List<MusicPlaylistContainerPlaylistItem>) playlist,
 			),
 		);
@@ -6351,7 +6351,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicSwitchContainerPlaybackSetting_<_>),
 			M_wrap(
-				(RegularValue<Floating>) speed,
+				(RegularValue<Floater>) speed,
 				(Boolean) continue_playing_on_switch_change,
 				(AudioAssociationSetting) association,
 			),
@@ -6975,7 +6975,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(Setting_<_>),
 			M_wrap(
-				(Floating) volume_threshold,
+				(Floater) volume_threshold,
 				(Integer) maximum_voice_instance,
 				(ObstructionSettingBundle) obstruction,
 				(ObstructionSettingBundle) occlusion,
@@ -6987,7 +6987,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(Setting_<_>),
 			M_wrap(
 				(String) platform,
-				(Floating) volume_threshold,
+				(Floater) volume_threshold,
 				(Integer) maximum_voice_instance,
 				(ObstructionSettingBundle) obstruction,
 				(ObstructionSettingBundle) occlusion,
@@ -6999,7 +6999,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(Setting_<_>),
 			M_wrap(
 				(String) platform,
-				(Floating) volume_threshold,
+				(Floater) volume_threshold,
 				(Integer) maximum_voice_instance,
 				(ObstructionSettingBundle) obstruction,
 				(ObstructionSettingBundle) occlusion,
@@ -7013,7 +7013,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			M_wrap(
 				(String) platform,
 				(VoiceFilterBehavior) voice_filter_behavior,
-				(Floating) volume_threshold,
+				(Floater) volume_threshold,
 				(Integer) maximum_voice_instance,
 				(ObstructionSettingBundle) obstruction,
 				(ObstructionSettingBundle) occlusion,

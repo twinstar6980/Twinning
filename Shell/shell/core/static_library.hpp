@@ -1,6 +1,7 @@
 #pragma once
 
 #include "shell/common.hpp"
+#include "shell/utility/macro.hpp"
 #include "shell/core/library.hpp"
 #include "shell/core/symbol.hpp"
 
@@ -66,20 +67,22 @@ namespace TwinStar::Shell::Core {
 		#pragma region interface
 
 		virtual auto version (
-		) -> Interface::Size const* override {
-			return thiz.m_symbol.version();
+			Interface::Size * * number
+		) -> Interface::String* override {
+			return thiz.m_symbol.version(number);
 		}
 
 		virtual auto execute (
-			Interface::Callback const *   callback,
-			Interface::String const *     script,
-			Interface::StringList const * argument
-		) -> Interface::String const* override {
-			return thiz.m_symbol.execute(callback, script, argument);
+			Interface::Callback * *   callback,
+			Interface::String * *     script,
+			Interface::StringList * * argument,
+			Interface::String * *     result
+		) -> Interface::String* override {
+			return thiz.m_symbol.execute(callback, script, argument, result);
 		}
 
 		virtual auto prepare (
-		) -> Interface::String const* override {
+		) -> Interface::String* override {
 			return thiz.m_symbol.prepare();
 		}
 

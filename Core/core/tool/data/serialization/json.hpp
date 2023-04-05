@@ -185,208 +185,199 @@ namespace TwinStar::Core::Tool::Data::Serialization::JSON {
 			// TODO : static
 			thread_local auto buffer = CharacterArray{0x10000_sz};
 			thread_local auto buffer_stream = OCharacterStreamView{buffer};
-			try {
-				while (k_true) {
-					switch (auto character = data.read_of(); character.value) {
-						case ' ' :
-						case '\t' :
-						case '\n' :
-						case '\r' : {
-							continue;
-							break;
+			while (k_true) {
+				switch (auto character = data.read_of(); character.value) {
+					case ' ' :
+					case '\t' :
+					case '\n' :
+					case '\r' : {
+						continue;
+						break;
+					}
+					case '/' : {
+						StringParser::read_comment_after_first_mark(data);
+						continue;
+						break;
+					}
+					case 'n' : {
+						if (data.read_of() == 'u'_c && data.read_of() == 'l'_c && data.read_of() == 'l'_c) {
+							value.set_null();
+						} else {
+							throw SyntaxException{mss("invalid null value"_sf())};
 						}
-						case '/' : {
-							StringParser::read_comment_after_first_mark(data);
-							continue;
-							break;
+						break;
+					}
+					case 'f' : {
+						if (data.read_of() == 'a'_c && data.read_of() == 'l'_c && data.read_of() == 's'_c && data.read_of() == 'e'_c) {
+							value.set_boolean(k_false);
+						} else {
+							throw SyntaxException{mss("invalid false value"_sf())};
 						}
-						case 'n' : {
-							if (data.read_of() == 'u'_c && data.read_of() == 'l'_c && data.read_of() == 'l'_c) {
-								value.set_null();
-							} else {
-								throw ExceptionMessage{{"syntax error : not a null value"_sf()}};
-							}
-							break;
+						break;
+					}
+					case 't' : {
+						if (data.read_of() == 'r'_c && data.read_of() == 'u'_c && data.read_of() == 'e'_c) {
+							value.set_boolean(k_true);
+						} else {
+							throw SyntaxException{mss("invalid true value"_sf())};
 						}
-						case 'f' : {
-							if (data.read_of() == 'a'_c && data.read_of() == 'l'_c && data.read_of() == 's'_c && data.read_of() == 'e'_c) {
-								value.set_boolean(k_false);
-							} else {
-								throw ExceptionMessage{{"syntax error : not a false value"_sf()}};
-							}
-							break;
-						}
-						case 't' : {
-							if (data.read_of() == 'r'_c && data.read_of() == 'u'_c && data.read_of() == 'e'_c) {
-								value.set_boolean(k_true);
-							} else {
-								throw ExceptionMessage{{"syntax error : not a true value"_sf()}};
-							}
-							break;
-						}
-						case '-' :
-						case '+' :
-						case '0' :
-						case '1' :
-						case '2' :
-						case '3' :
-						case '4' :
-						case '5' :
-						case '6' :
-						case '7' :
-						case '8' :
-						case '9' : {
-							data.backward();
-							value.set_number();
-							StringParser::read_number(data, value.get_number());
-							break;
-						}
-						case '\"' : {
-							value.set_string();
-							buffer_stream.backward_to_begin();
-							StringParser::read_escape_utf8_string_until(data, buffer_stream, '"'_c);
-							data.forward();
-							value.get_string() = String{buffer_stream.stream_view()};
-							break;
-						}
-						case '[' : {
-							auto & array = value.set_array();
-							auto   value_list = std::list<Array::Element>{};
-							auto   array_size = k_none_size;
-							auto   has_comma = k_false;
-							while (k_true) {
-								switch (data.read_of().value) {
-									case ']' : {
-										goto CLOSE_LOOP_ARRAY;
-										break;
+						break;
+					}
+					case '-' :
+					case '+' :
+					case '0' :
+					case '1' :
+					case '2' :
+					case '3' :
+					case '4' :
+					case '5' :
+					case '6' :
+					case '7' :
+					case '8' :
+					case '9' : {
+						data.backward();
+						value.set_number();
+						StringParser::read_number(data, value.get_number());
+						break;
+					}
+					case '\"' : {
+						value.set_string();
+						buffer_stream.backward_to_begin();
+						StringParser::read_escape_utf8_string_until(data, buffer_stream, '"'_c);
+						data.forward();
+						value.get_string() = String{buffer_stream.stream_view()};
+						break;
+					}
+					case '[' : {
+						auto & array = value.set_array();
+						auto   value_list = std::list<Array::Element>{};
+						auto   array_size = k_none_size;
+						auto   has_comma = k_false;
+						while (k_true) {
+							switch (data.read_of().value) {
+								case ']' : {
+									goto CLOSE_LOOP_ARRAY;
+									break;
+								}
+								case ',' : {
+									if (has_comma) {
+										throw SyntaxException{mss("too many comma on array"_sf())};
 									}
-									case ',' : {
-										if (has_comma) {
-											throw ExceptionMessage{{"syntax error : too many comma on array"_sf()}};
-										}
-										has_comma = k_true;
-										break;
+									has_comma = k_true;
+									break;
+								}
+								case ' ' :
+								case '\t' :
+								case '\n' :
+								case '\r' : {
+									break;
+								}
+								case '/' : {
+									StringParser::read_comment_after_first_mark(data);
+									break;
+								}
+								default : {
+									if (!has_comma && array_size != k_none_size) {
+										throw SyntaxException{mss("need comma between array's element"_sf())};
 									}
-									case ' ' :
-									case '\t' :
-									case '\n' :
-									case '\r' : {
-										break;
-									}
-									case '/' : {
-										StringParser::read_comment_after_first_mark(data);
-										break;
-									}
-									default : {
-										if (!has_comma && array_size != k_none_size) {
-											throw ExceptionMessage{{"syntax error : need comma between array's element"_sf()}};
-										}
-										data.backward();
-										value_list.emplace_back();
-										process_value(data, value_list.back());
-										++array_size;
-										has_comma = k_false;
-									}
+									data.backward();
+									value_list.emplace_back();
+									process_value(data, value_list.back());
+									++array_size;
+									has_comma = k_false;
 								}
 							}
-						CLOSE_LOOP_ARRAY:
-							array.assign(
-								value_list,
-								[] (auto & element) -> auto&& {
-									return as_moveable(element);
-								}
-							);
-							value_list.clear();
-							break;
 						}
-						case '{' : {
-							auto & object = value.set_object();
-							auto   value_list = std::list<Object::Element>{};
-							auto   object_size = k_none_size;
-							auto   has_comma = k_false;
-							while (k_true) {
-								switch (data.read_of().value) {
-									case '}' : {
-										goto TCLOSE_LOOP_OBJEC;
-										break;
+					CLOSE_LOOP_ARRAY:
+						array.assign(
+							value_list,
+							[] (auto & element) -> auto&& {
+								return as_moveable(element);
+							}
+						);
+						value_list.clear();
+						break;
+					}
+					case '{' : {
+						auto & object = value.set_object();
+						auto   value_list = std::list<Object::Element>{};
+						auto   object_size = k_none_size;
+						auto   has_comma = k_false;
+						while (k_true) {
+							switch (data.read_of().value) {
+								case '}' : {
+									goto TCLOSE_LOOP_OBJEC;
+									break;
+								}
+								case ',' : {
+									if (has_comma) {
+										throw SyntaxException{mss("too many comma on object"_sf())};
 									}
-									case ',' : {
-										if (has_comma) {
-											throw ExceptionMessage{{"syntax error : too many comma on object"_sf()}};
-										}
-										has_comma = k_true;
-										break;
+									has_comma = k_true;
+									break;
+								}
+								case ' ' :
+								case '\t' :
+								case '\n' :
+								case '\r' : {
+									break;
+								}
+								case '/' : {
+									StringParser::read_comment_after_first_mark(data);
+									break;
+								}
+								default : {
+									if (!has_comma && object_size != k_none_size) {
+										throw SyntaxException{mss("need comma between object's member"_sf())};
 									}
-									case ' ' :
-									case '\t' :
-									case '\n' :
-									case '\r' : {
-										break;
+									data.backward();
+									value_list.emplace_back();
+									if (data.read_of() != '\"'_c) {
+										throw SyntaxException{mss("key must be string"_sf())};
 									}
-									case '/' : {
-										StringParser::read_comment_after_first_mark(data);
-										break;
-									}
-									default : {
-										if (!has_comma && object_size != k_none_size) {
-											throw ExceptionMessage{{"syntax error : need comma between object's member"_sf()}};
-										}
-										data.backward();
-										value_list.emplace_back();
-										if (data.read_of() != '\"'_c) {
-											throw ExceptionMessage{{"syntax error : key must be string"_sf()}};
-										}
-										buffer_stream.backward_to_begin();
-										StringParser::read_escape_utf8_string_until(data, buffer_stream, '"'_c);
-										data.forward();
-										value_list.back().key = String{buffer_stream.stream_view()};
-										while (k_true) {
-											switch (data.read_of().value) {
-												case ':' : {
-													goto CLOSE_LOOP_MEMBER;
-													break;
-												}
-												case ' ' :
-												case '\t' :
-												case '\n' :
-												case '\r' : {
-													break;
-												}
-												default : {
-													throw ExceptionMessage{{"syntax error : key's next non-space character must be ':'"_sf()}};
-												}
+									buffer_stream.backward_to_begin();
+									StringParser::read_escape_utf8_string_until(data, buffer_stream, '"'_c);
+									data.forward();
+									value_list.back().key = String{buffer_stream.stream_view()};
+									while (k_true) {
+										switch (data.read_of().value) {
+											case ':' : {
+												goto CLOSE_LOOP_MEMBER;
+												break;
+											}
+											case ' ' :
+											case '\t' :
+											case '\n' :
+											case '\r' : {
+												break;
+											}
+											default : {
+												throw SyntaxException{mss("key's next non-space character must be ':'"_sf())};
 											}
 										}
-									CLOSE_LOOP_MEMBER:
-										process_value(data, value_list.back().value);
-										++object_size;
-										has_comma = k_false;
 									}
+								CLOSE_LOOP_MEMBER:
+									process_value(data, value_list.back().value);
+									++object_size;
+									has_comma = k_false;
 								}
 							}
-						TCLOSE_LOOP_OBJEC:
-							object.assign(
-								value_list,
-								[] (auto & element) -> auto&& {
-									return as_moveable(element);
-								}
-							);
-							value_list.clear();
-							break;
 						}
-						default : {
-							throw ExceptionMessage{{"syntax error : invalid character {:02X}h"_sf(character)}};
-						}
+					TCLOSE_LOOP_OBJEC:
+						object.assign(
+							value_list,
+							[] (auto & element) -> auto&& {
+								return as_moveable(element);
+							}
+						);
+						value_list.clear();
+						break;
 					}
-					break;
+					default : {
+						throw SyntaxException{mss("invalid character {:02X}h"_sf(character))};
+					}
 				}
-			} catch (ExceptionMessage & exception_message) {
-				throw BaseException{
-					{
-						"$ stream.position() : {:X}h"_sf(data.position()),
-					},
-					as_moveable(exception_message)
-				};
+				break;
 			}
 			return;
 		}

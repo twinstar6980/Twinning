@@ -16,6 +16,8 @@ namespace TwinStar::Core::Interface {
 
 	// ----------------
 
+	using Void = void;
+
 	struct Size {
 		Type<decltype(sizeof(0))> value;
 	};
@@ -37,7 +39,7 @@ namespace TwinStar::Core::Interface {
 	};
 
 	struct Callback {
-		Type<StringList const * (*) (StringList const *)> value;
+		Type<String * (*) (StringList * *, StringList * *)> value;
 	};
 
 	// ----------------
@@ -46,21 +48,23 @@ namespace TwinStar::Core::Interface {
 	M_symbol_export
 	#endif
 	extern auto version (
-	) -> Size const*;
+		Size * * number
+	) -> String*;
 
 	#if defined M_interface_implement
 	M_symbol_export
 	#endif
 	extern auto execute (
-		Callback const *   callback,
-		String const *     script,
-		StringList const * argument
-	) -> String const*;
+		Callback * *   callback,
+		String * *     script,
+		StringList * * argument,
+		String * *     result
+	) -> String*;
 
 	#if defined M_interface_implement
 	M_symbol_export
 	#endif
 	extern auto prepare (
-	) -> String const*;
+	) -> String*;
 
 }

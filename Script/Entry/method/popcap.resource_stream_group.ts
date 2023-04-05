@@ -16,9 +16,9 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_group {
 		g_executor_method.push(
 			Executor.method_of({
 				id: 'popcap.resource_stream_group.pack',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					bundle_directory: Executor.RequireArgument<string>;
@@ -32,39 +32,37 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_group {
 					let buffer_size: bigint;
 					{
 						bundle_directory = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'bundle_directory'),
+							Executor.query_argument_name(this.id, 'bundle_directory'),
 							a.bundle_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
 						data_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'data_file'),
+							Executor.query_argument_name(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
 							() => (bundle_directory.replace(/((\.rsg)(\.bundle))?$/i, '.rsg')),
-							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'version_number'),
+							Executor.query_argument_name(this.id, 'version_number'),
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.option([0n, null, null, null, [3n, ''], [4n, '']], null)),
-							(value) => (CoreX.Tool.PopCap.ResourceStreamGroup.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
+							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ResourceStreamGroup.VersionNumberE), null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'buffer_size'),
+							Executor.query_argument_name(this.id, 'buffer_size'),
 							a.buffer_size,
 							(value) => (parse_size_string(value)),
 							null,
-							() => (Console.size(null)),
-							(value) => (null),
+							(initial) => (Console.size(null, null, initial)),
 						);
 					}
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.PopCap.ResourceStreamGroup.pack_fs(data_file, manifest_file, resource_directory, { number: version_number as any }, buffer_size);
-					Console.notify('s', los(`执行成功`), [`${data_file}`]);
+					Console.message('s', los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -78,9 +76,9 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_group {
 			}),
 			Executor.method_of({
 				id: 'popcap.resource_stream_group.unpack',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					data_file: Executor.RequireArgument<string>;
@@ -92,31 +90,30 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_group {
 					let version_number: bigint;
 					{
 						data_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'data_file'),
+							Executor.query_argument_name(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 						bundle_directory = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'bundle_directory'),
+							Executor.query_argument_name(this.id, 'bundle_directory'),
 							a.bundle_directory,
 							(value) => (value),
 							() => (data_file.replace(/((\.rsg))?$/i, '.rsg.bundle')),
-							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'version_number'),
+							Executor.query_argument_name(this.id, 'version_number'),
 							a.version_number,
 							(value) => (value),
 							null,
-							() => (Console.option([0n, null, null, null, [3n, ''], [4n, '']], null)),
-							(value) => (CoreX.Tool.PopCap.ResourceStreamGroup.VersionNumberE.includes(value as any) ? null : los(`版本不受支持`)),
+							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ResourceStreamGroup.VersionNumberE), null, null, initial)),
 						);
 					}
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.PopCap.ResourceStreamGroup.unpack_fs(data_file, manifest_file, resource_directory, { number: version_number as any });
-					Console.notify('s', los(`执行成功`), [`${bundle_directory}`]);
+					Console.message('s', los(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

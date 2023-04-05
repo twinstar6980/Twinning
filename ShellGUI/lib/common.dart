@@ -10,7 +10,7 @@ typedef Void = void;
 typedef Object = core.Object;
 typedef Boolean = core.bool;
 typedef Integer = core.int;
-typedef Floating = core.double;
+typedef Floater = core.double;
 typedef String = core.String;
 typedef List<E> = core.List<E>;
 typedef Set<E> = core.Set<E>;
@@ -20,7 +20,7 @@ typedef Map<K, V> = core.Map<K, V>;
 
 const kApplicationName = 'TwinStar ToolKit - Shell GUI';
 
-const kApplicationVersion = 4;
+const kApplicationVersion = 5;
 
 // ----------------
 

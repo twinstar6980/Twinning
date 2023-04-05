@@ -7,9 +7,9 @@ namespace TwinStar::Core::Image {
 
 	#pragma region type
 
-	using ImageSize = Size2D<Size>;
+	using ImageSize = Size2<Size>;
 
-	using ImagePosition = Position2D<Size>;
+	using ImagePosition = Position2<Size>;
 
 	#pragma endregion
 

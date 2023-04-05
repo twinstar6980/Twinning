@@ -462,44 +462,46 @@ namespace TwinStar.Script.CoreX {
 
 		// ------------------------------------------------
 
-		export function get_working_directory(
-		): string {
-			return Core.FileSystem.get_working_directory().value;
-		}
-
-		export function set_working_directory(
-			target: string,
-		): void {
-			return Core.FileSystem.set_working_directory(Core.Path.value(target));
-		}
-
-		// ------------------------------------------------
-
-		export function get_temporary_directory(
-		): string {
-			return Core.FileSystem.get_temporary_directory().value;
-		}
-
-		// ------------------------------------------------
-
 	}
 
 	export namespace Process {
 
 		// ------------------------------------------------
 
-		export function environment(
-		): Array<string> {
-			return Core.Process.environment().value;
+		export function get_working_directory(
+		): string {
+			return Core.Process.get_working_directory().value;
 		}
 
-		export function exit(
-			code: bigint,
+		export function set_working_directory(
+			target: string,
 		): void {
-			return Core.Process.exit(Core.IntegerU32.value(code));
+			return Core.Process.set_working_directory(Core.Path.value(target));
 		}
 
-		export function execute(
+		// ------------------------------------------------
+
+		export function get_environment_variable(
+			name: string,
+		): null | string {
+			return Core.Process.get_environment_variable(Core.String.value(name)).value;
+		}
+
+		export function set_environment_variable(
+			name: string,
+			value: null | string,
+		): void {
+			return Core.Process.set_environment_variable(Core.String.value(name), Core.StringOptional.value(value));
+		}
+
+		export function list_environment_variable(
+		): Array<string> {
+			return Core.Process.list_environment_variable().value;
+		}
+
+		// ------------------------------------------------
+
+		export function spawn_process(
 			program: string,
 			argument: Array<string>,
 			environment: Array<string>,
@@ -507,13 +509,15 @@ namespace TwinStar.Script.CoreX {
 			output: null | string,
 			error: null | string,
 		): bigint {
-			return Core.Process.execute(Core.Path.value(program), Core.StringList.value(argument), Core.StringList.value(environment), Core.PathOptional.value(input), Core.PathOptional.value(output), Core.PathOptional.value(error)).value;
+			return Core.Process.spawn_process(Core.Path.value(program), Core.StringList.value(argument), Core.StringList.value(environment), Core.PathOptional.value(input), Core.PathOptional.value(output), Core.PathOptional.value(error)).value;
 		}
 
-		export function system(
+		// ------------------------------------------------
+
+		export function system_command(
 			command: string,
 		): bigint {
-			return Core.Process.system(Core.String.value(command)).value;
+			return Core.Process.system_command(Core.String.value(command)).value;
 		}
 
 		// ------------------------------------------------

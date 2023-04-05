@@ -1,7 +1,8 @@
 #pragma once
 
-#include "core/utility/string/format.hpp"
-#include "core/utility/null.hpp"
+#include "core/utility/string/string.hpp"
+#include "core/utility/string/parser.hpp"
+#include "core/utility/file_system/path.hpp"
 #include "core/utility/miscellaneous/fourcc.hpp"
 
 namespace TwinStar::Core {
@@ -214,11 +215,11 @@ namespace TwinStar::Core {
 	};
 
 	template <>
-	struct BasicStringAdapter<Character, Floating> {
+	struct BasicStringAdapter<Character, Floater> {
 
 		using This = BasicString<Character>;
 
-		using That = Floating;
+		using That = Floater;
 
 		// ----------------
 

@@ -46,16 +46,18 @@ namespace TwinStar::Shell::Core {
 		#pragma region interface
 
 		virtual auto version (
-		) -> Interface::Size const* = 0;
+			Interface::Size * * number
+		) -> Interface::String* = 0;
 
 		virtual auto execute (
-			Interface::Callback const *   callback,
-			Interface::String const *     script,
-			Interface::StringList const * argument
-		) -> Interface::String const* = 0;
+			Interface::Callback * *   callback,
+			Interface::String * *     script,
+			Interface::StringList * * argument,
+			Interface::String * *     result
+		) -> Interface::String* = 0;
 
 		virtual auto prepare (
-		) -> Interface::String const* = 0;
+		) -> Interface::String* = 0;
 
 		#pragma endregion
 

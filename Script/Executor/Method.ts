@@ -5,8 +5,8 @@ namespace TwinStar.Script.Executor {
 	export type Method<Argument extends Command['argument'] = Command['argument'], InputForwarderKey extends keyof Argument = keyof Argument> = {
 		/** ID；用于指定功能，应唯一 */
 		id: string;
-		/** 描述函数；返回对函数的描述文本 */
-		descriptor(): string;
+		/** 名称函数；返回对函数的名称文本 */
+		name(): string;
 		/** 工作函数；根据参数执行的事务 */
 		worker(argument: Argument): void;
 		/** 默认参数；当命令所提供参数未包含所需参数时，提供默认值，若其中属性值为undefined，则表示命令所提供参数必须包含此值 */
@@ -20,7 +20,7 @@ namespace TwinStar.Script.Executor {
 	export function method_of<Argument extends Command['argument']>(
 		object: {
 			id: string;
-			descriptor(): string;
+			name(): string;
 			worker(argument: Argument): void;
 			default_argument: Argument;
 			input_filter(input: Exclude<Command['input'], null>['value']): boolean;
@@ -32,10 +32,10 @@ namespace TwinStar.Script.Executor {
 
 	// ------------------------------------------------
 
-	export function query_method_description(
+	export function query_method_name(
 		method: string,
 	): string {
-		return los(`method#${method}:description`);
+		return los(`method:${method}:name`);
 	}
 
 	// ------------------------------------------------

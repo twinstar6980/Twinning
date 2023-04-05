@@ -1,10 +1,8 @@
 # TwinStar ToolKit
 
-`TwinStar ToolKit` aka `双子星工具箱`
+`TwinStar ToolKit` | `双子星工具箱` 。
 
 一款帮助我们创作 PvZ-2 MOD 的工具。
-
-A tool to help us create PvZ-2 MOD .
 
 by TwinStar ( aka TwinKleS or SmallPC or 一路上海外 ) .
 

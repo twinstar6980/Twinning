@@ -63,7 +63,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 			for (let package_group_id in package_manifest.group) {
 				group_progress.increase();
 				if (show_group_progress) {
-					Console.notify('i', `${group_progress} - ${package_group_id}`, []);
+					Console.message('i', `${group_progress} - ${package_group_id}`, []);
 				}
 				if (/__MANIFESTGROUP__(.+)?/.test(package_group_id)) {
 					continue;
@@ -71,7 +71,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 				let package_group = package_manifest.group[package_group_id];
 				let group_id = find_key_ignore_case(resource_manifest.group, package_group_id);
 				if (group_id === null) {
-					Console.notify('w', `group not found in resource manifest : ${package_group_id}`, []);
+					Console.message('w', `group not found in resource manifest : ${package_group_id}`, []);
 					continue;
 				}
 				let group = resource_manifest.group[group_id];
@@ -79,7 +79,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 					let package_subgroup = package_group.subgroup[package_subgroup_id];
 					let subgroup_id = find_key_ignore_case(group.subgroup, package_subgroup_id);
 					if (subgroup_id === null) {
-						Console.notify('w', `subgroup not found in resource manifest : ${package_subgroup_id}`, []);
+						Console.message('w', `subgroup not found in resource manifest : ${package_subgroup_id}`, []);
 						continue;
 					}
 					let subgroup = group.subgroup[subgroup_id];
@@ -99,7 +99,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 							}
 						}
 						if (resource === null) {
-							Console.notify('w', `resource not found in resource manifest : ${package_resource_path}`, []);
+							Console.message('w', `resource not found in resource manifest : ${package_resource_path}`, []);
 							continue;
 						}
 						worker(
@@ -113,7 +113,8 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 			return;
 		};
 		{
-			Console.notify('i', los(`恢复文件路径大小写 ...`), []);
+			Console.message('i', los('support.pvz2.resource_stream_bundle.resource_convert:reset_resource_path_case'), [
+			]);
 			let resource_path_list: Array<string> = [];
 			iterate_manifest(false)((group, subgroup, resource) => {
 				resource_path_list.push(`${resource[1].path}${(resource[1].expand[0] === 'atlas' ? '.ptx' : '')}`);
@@ -133,12 +134,13 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 			let resource_path_tree = PathUtility.tree(resource_path_list);
 			rename_tree(resource_directory, resource_path_tree);
 		}
-		Console.notify('i', los(`转换资源 ...`), []);
+		Console.message('i', los('support.pvz2.resource_stream_bundle.resource_convert:convert_resource'), [
+		]);
 		let audio_temporary_directory = HomeDirectory.new_temporary();
 		iterate_manifest(true)((group, subgroup, resource) => {
 			let path = resource[1].path;
 			if (option.json !== null && path.endsWith('.rton')) {
-				Console.notify('v', `  ${path}`, []);
+				Console.message('v', `  ${path}`, []);
 				try {
 					if (option.json.crypt !== null) {
 						CoreX.Tool.PopCap.ReflectionObjectNotation.decrypt_then_decode_fs(
@@ -155,11 +157,11 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 						);
 					}
 				} catch (e: any) {
-					Console.notify_error(e);
+					Console.message_error(e);
 				}
 			}
 			if (option.image !== null && resource[1].expand[0] === 'atlas') {
-				Console.notify('v', `  ${path}`, []);
+				Console.message('v', `  ${path}`, []);
 				try {
 					assert_test(resource[2].additional.type === 'texture', `invalid image resource`);
 					let atlas_image_information = resource[1].expand[1];
@@ -168,7 +170,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 					let actual_size = texture_information_source.size;
 					let texture_format = option.image.texture_format_map.find((e) => (e.index === texture_information_source.format));
 					assert_test(texture_format !== undefined, `unknown texture format : ${texture_information_source.format}`);
-					Console.notify('v', `    size : [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] of [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ] , format : ${texture_format.format}`, []);
+					Console.message('v', `    size : [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] of [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ] , format : ${texture_format.format}`, []);
 					let data = CoreX.FileSystem.read_file(`${resource_directory}/${path}.ptx`);
 					let stream = Core.ByteStreamView.watch(data.view());
 					let image = Core.Image.Image.allocate(Core.Image.ImageSize.value(actual_size));
@@ -188,11 +190,11 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 						}, image_view, option.image.directory);
 					}
 				} catch (e: any) {
-					Console.notify_error(e);
+					Console.message_error(e);
 				}
 			}
 			if (option.animation !== null && path.endsWith('.pam')) {
-				Console.notify('v', `  ${path}`, []);
+				Console.message('v', `  ${path}`, []);
 				try {
 					let raw_file = `${path}.json`;
 					let flash_directory = `${path}.xfl`;
@@ -213,11 +215,11 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 						Support.PopCap.Animation.Convert.Flash.create_xfl_content_file(`${option.animation.directory}/${flash_directory}`);
 					}
 				} catch (e: any) {
-					Console.notify_error(e);
+					Console.message_error(e);
 				}
 			}
 			if (option.audio !== null && path.endsWith('.wem')) {
-				Console.notify('v', `  ${path}`, []);
+				Console.message('v', `  ${path}`, []);
 				try {
 					CoreX.Tool.Wwise.Media.decode_fs(
 						`${resource_directory}/${path}`,
@@ -229,7 +231,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 						{},
 					);
 				} catch (e: any) {
-					Console.notify_error(e);
+					Console.message_error(e);
 				}
 			}
 		});
@@ -245,7 +247,8 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 	): void {
 		let version_c = Core.Tool.PopCap.ResourceStreamBundle.Version.value(version);
 		let package_manifest = CoreX.JSON.read_fs_js<Core.Tool.PopCap.ResourceStreamBundle.Manifest.JS_N.Package>(package_manifest_file);
-		Console.notify('i', los(`提取资源清单 ...`), []);
+		Console.message('i', los('support.pvz2.resource_stream_bundle.resource_convert:extract_resource_manifest'), [
+		]);
 		let official_resource_manifest: OfficialResourceManifest.Package;
 		{
 			let group_id = Object.keys(package_manifest.group).filter((e) => (/__MANIFESTGROUP__(.+)?/.test(e)));
@@ -271,7 +274,8 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 			);
 			official_resource_manifest = json.value;
 		}
-		Console.notify('i', los(`解析资源清单 ...`), []);
+		Console.message('i', los('support.pvz2.resource_stream_bundle.resource_convert:parse_resource_manifest'), [
+		]);
 		let resource_manifest = ResourceManifest.Convert.from_official(official_resource_manifest);
 		CoreX.JSON.write_fs(resource_manifest_file, Core.JSON.Value.value(resource_manifest));
 		convert(

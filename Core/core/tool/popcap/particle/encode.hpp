@@ -114,11 +114,11 @@ namespace TwinStar::Core::Tool::PopCap::Particle {
 			return;
 		}
 
-		static auto exchange_unit_floating (
+		static auto exchange_unit_floater (
 			OByteStreamView & data,
-			Floating const &  value
+			Floater const &   value
 		) -> Void {
-			data.write(cbw<FloatingS32>(value));
+			data.write(cbw<FloaterS32>(value));
 			return;
 		}
 
@@ -138,9 +138,9 @@ namespace TwinStar::Core::Tool::PopCap::Particle {
 		) -> Void {
 			exchange_unit_integer(track_node_list_data, cbw<Integer>(track_node_list_manifest.size()));
 			for (auto & track_node_manifest : track_node_list_manifest) {
-				exchange_unit_floating(track_node_list_data, track_node_manifest.time);
-				exchange_unit_floating(track_node_list_data, track_node_manifest.low_value);
-				exchange_unit_floating(track_node_list_data, track_node_manifest.high_value);
+				exchange_unit_floater(track_node_list_data, track_node_manifest.time);
+				exchange_unit_floater(track_node_list_data, track_node_manifest.low_value);
+				exchange_unit_floater(track_node_list_data, track_node_manifest.high_value);
 				exchange_unit_integer(track_node_list_data, track_node_manifest.curve);
 				exchange_unit_integer(track_node_list_data, track_node_manifest.distribution);
 			}
@@ -328,11 +328,11 @@ namespace TwinStar::Core::Tool::PopCap::Particle {
 			return;
 		}
 
-		static auto exchange_unit_floating (
+		static auto exchange_unit_floater (
 			IByteStreamView & data,
-			Floating &        value
+			Floater &         value
 		) -> Void {
-			value = cbw<Floating>(data.read_of<FloatingS32>());
+			value = cbw<Floater>(data.read_of<FloaterS32>());
 			return;
 		}
 
@@ -352,9 +352,9 @@ namespace TwinStar::Core::Tool::PopCap::Particle {
 		) -> Void {
 			track_node_list_manifest.allocate_full(cbw<Size>(M_apply(M_wrap(Integer{}), M_wrap({ exchange_unit_integer(track_node_list_data, it); }))));
 			for (auto & track_node_manifest : track_node_list_manifest) {
-				exchange_unit_floating(track_node_list_data, track_node_manifest.time);
-				exchange_unit_floating(track_node_list_data, track_node_manifest.low_value);
-				exchange_unit_floating(track_node_list_data, track_node_manifest.high_value);
+				exchange_unit_floater(track_node_list_data, track_node_manifest.time);
+				exchange_unit_floater(track_node_list_data, track_node_manifest.low_value);
+				exchange_unit_floater(track_node_list_data, track_node_manifest.high_value);
 				exchange_unit_integer(track_node_list_data, track_node_manifest.curve);
 				exchange_unit_integer(track_node_list_data, track_node_manifest.distribution);
 			}

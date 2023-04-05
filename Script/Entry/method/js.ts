@@ -13,9 +13,9 @@ namespace TwinStar.Script.Entry.method.js {
 		g_executor_method.push(
 			Executor.method_of({
 				id: 'js.execute',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					script_file: Executor.RequireArgument<string>;
@@ -23,14 +23,14 @@ namespace TwinStar.Script.Entry.method.js {
 					let script_file: string;
 					{
 						script_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'script_file'),
+							Executor.query_argument_name(this.id, 'script_file'),
 							a.script_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 					}
 					let result = CoreX.Miscellaneous.evaluate_fs(script_file);
-					Console.notify('s', los(`执行成功`), [`${result}`]);
+					Console.message('s', los(`执行成功`), [`${result}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

@@ -3,6 +3,7 @@
 #include "core/utility/string/string.hpp"
 #include "core/utility/string/encoding.hpp"
 #include "core/utility/file_system/path.hpp"
+#include "core/utility/file_system/file_system.hpp"
 #include "core/third/system/windows.hpp"
 #include "core/third/system/posix.hpp"
 
@@ -105,9 +106,84 @@ namespace TwinStar::Core::Process {
 
 	#pragma endregion
 
-	#pragma region process
+	#pragma region working directory
 
-	inline auto environment (
+	inline auto get_working_directory (
+	) -> Path {
+		auto target = std::filesystem::current_path();
+		return Path{make_string(self_cast<std::string>(target.generic_u8string()))};
+	}
+
+	inline auto set_working_directory (
+		Path const & target
+	) -> Void {
+		std::filesystem::current_path(FileSystem::Detail::make_std_path(target));
+		return;
+	}
+
+	#pragma endregion
+
+	#pragma region environment variable
+
+	inline auto get_environment_variable (
+		String const & name
+	) -> Optional<String> {
+		auto value = Optional<String>{};
+		#if defined M_system_windows
+		auto state_d = DWORD{};
+		auto name_16 = make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<CBasicStringView<Character8>>(name)));
+		state_d = GetEnvironmentVariableW(cast_pointer<WCHAR>(name_16.begin()).value, nullptr, 0);
+		if (state_d == 0) {
+			assert_test(GetLastError() == ERROR_ENVVAR_NOT_FOUND);
+			value.reset();
+		} else {
+			auto buffer = Array<Character16>{mbw<Size>(state_d)};
+			state_d = GetEnvironmentVariableW(cast_pointer<WCHAR>(name_16.begin()).value, cast_pointer<WCHAR>(buffer.begin()).value, static_cast<DWORD>(buffer.size().value));
+			assert_test(state_d == static_cast<DWORD>((buffer.size() - 1_sz).value));
+			value.set(self_cast<String>(StringEncoding::utf16_to_utf8(CBasicStringView<Character16>{buffer.begin(), buffer.size() - 1_sz})));
+		}
+		#endif
+		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
+		auto value_if = getenv(cast_pointer<char>(make_null_terminated_string(name).begin()).value);
+		if (value_if == nullptr) {
+			value.reset();
+		} else {
+			value.set(make_string_view(value_if));
+		}
+		#endif
+		return value;
+	}
+
+	inline auto set_environment_variable (
+		String const &           name,
+		Optional<String> const & value
+	) -> Void {
+		#if defined M_system_windows
+		auto state_b = BOOL{};
+		auto name_16 = make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<CBasicStringView<Character8>>(name)));
+		if (!value.has()) {
+			state_b = SetEnvironmentVariableW(cast_pointer<WCHAR>(name_16.begin()).value, nullptr);
+		} else {
+			auto value_16 = make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<CBasicStringView<Character8>>(value.get())));
+			state_b = SetEnvironmentVariableW(cast_pointer<WCHAR>(name_16.begin()).value, cast_pointer<WCHAR>(value_16.begin()).value);
+		}
+		assert_test(state_b != FALSE);
+		#endif
+		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
+		auto state_i = int{};
+		if (!value.has()) {
+			state_i = unsetenv(cast_pointer<char>(make_null_terminated_string(name).begin()).value);
+		} else {
+			state_i = setenv(cast_pointer<char>(make_null_terminated_string(name).begin()).value, cast_pointer<char>(make_null_terminated_string(value.get()).begin()).value, 1);
+		}
+		assert_test(state_i == 0);
+		#endif
+		return;
+	}
+
+	// ----------------
+
+	inline auto list_environment_variable (
 	) -> List<String> {
 		auto result = List<String>{};
 		#if defined M_system_windows
@@ -130,15 +206,12 @@ namespace TwinStar::Core::Process {
 		return result;
 	}
 
-	inline auto exit (
-		IntegerU32 const & code
-	) -> Void {
-		std::exit(static_cast<std::int32_t>(code.value));
-		return;
-	}
+	#pragma endregion
+
+	#pragma region child process
 
 	// NOTE
-	// the return value is program's exit code, see the following webpage to understand
+	// the return value is process's exit code, see the following webpage to understand
 	// Windows - https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodeprocess
 	// POSIX   - https://pubs.opengroup.org/onlinepubs/9699919799/functions/waitid.html
 	// in Windows, the complete 32-bit exit code can always be obtained
@@ -147,7 +220,7 @@ namespace TwinStar::Core::Process {
 	// Windows   : all 32 bit
 	// Linux     : low 08 bit
 	// Macintosh : low 24 bit
-	inline auto execute (
+	inline auto spawn_process (
 		Path const &           program,
 		List<String> const &   argument,
 		List<String> const &   environment,
@@ -157,9 +230,9 @@ namespace TwinStar::Core::Process {
 	) -> IntegerU32 {
 		auto result = IntegerU32{};
 		#if defined M_system_windows
-		auto null_device = Path{"/NUL"_s};
 		auto state_b = BOOL{};
 		auto state_d = DWORD{};
+		auto null_device = Path{"/NUL"_s};
 		auto program_string = BasicString<Character16>{};
 		auto argument_string = BasicString<Character16>{};
 		auto environment_string = BasicString<Character16>{};
@@ -223,22 +296,22 @@ namespace TwinStar::Core::Process {
 			&startup_information,
 			&process_information
 		);
-		assert_test(state_b);
+		assert_test(state_b != FALSE);
 		state_d = WaitForSingleObject(process_information.hProcess, INFINITE);
 		assert_test(state_d == WAIT_OBJECT_0);
 		state_b = CloseHandle(startup_information.hStdInput);
-		assert_test(state_b);
+		assert_test(state_b != FALSE);
 		state_b = CloseHandle(startup_information.hStdOutput);
-		assert_test(state_b);
+		assert_test(state_b != FALSE);
 		state_b = CloseHandle(startup_information.hStdError);
-		assert_test(state_b);
+		assert_test(state_b != FALSE);
 		state_b = GetExitCodeProcess(process_information.hProcess, &exit_code_d);
-		assert_test(state_b);
+		assert_test(state_b != FALSE);
 		result = mbw<IntegerU32>(exit_code_d);
 		#endif
 		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-		auto null_device = Path{"/dev/null"_s};
 		auto state_i = int{};
+		auto null_device = Path{"/dev/null"_s};
 		auto program_string = String{};
 		auto argument_string = List<String>{};
 		auto argument_string_list = List<Character *>{};
@@ -292,10 +365,14 @@ namespace TwinStar::Core::Process {
 		return result;
 	}
 
+	#pragma endregion
+
+	#pragma region system command
+
 	// NOTE
 	// implement defined
 	// on iphone, std::system is not available, this function always return 0x00000000
-	inline auto system (
+	inline auto system_command (
 		String const & command
 	) -> IntegerU32 {
 		auto result = IntegerU32{};

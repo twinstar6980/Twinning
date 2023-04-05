@@ -2,19 +2,6 @@ namespace TwinStar.Script.ADBHelper {
 
 	// ------------------------------------------------
 
-	// TODO : move
-	export function parse_output_by_line(
-		source: string,
-	): Array<string> {
-		let destination = source.split(/[\n\r]/);
-		if (destination.length > 0 && destination[destination.length - 1].length === 0) {
-			destination.pop();
-		}
-		return destination;
-	}
-
-	// ------------------------------------------------
-
 	const k_remote_temporary_directory = `/data/local/tmp/TwinStar.ToolKit.ADBHelper.Temporary`;
 
 	// ------------------------------------------------
@@ -24,23 +11,13 @@ namespace TwinStar.Script.ADBHelper {
 	export function execute(
 		argument: Array<string>,
 	): string {
-		let adb_path = EnvironmentVariable.search_from_path(`adb`);
+		let adb_path = ProcessHelper.search_path(`adb`);
 		assert_test(adb_path !== null, `can not found adb path from PATH environment`);
-		let buffer: Core.ByteArray;
-		let buffer_content: string;
-		let temporary_directory = HomeDirectory.new_temporary();
-		CoreX.FileSystem.create_file(`${temporary_directory}/adb_output`);
-		CoreX.FileSystem.create_file(`${temporary_directory}/adb_error`);
-		let environment = CoreX.Process.environment();
-		let code = CoreX.Process.execute(adb_path, argument, environment, null, `${temporary_directory}/adb_output`, `${temporary_directory}/adb_error`);
-		if (code !== 0n) {
-			buffer = CoreX.FileSystem.read_file(`${temporary_directory}/adb_error`);
-			buffer_content = Core.Miscellaneous.cast_CharacterListView_to_JS_String(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(buffer.view())).replaceAll('\r\n', '\n');
-			throw new Error(`adb execute failed : ${code}\n${buffer_content}`);
+		let execute_result = ProcessHelper.execute(adb_path, argument, CoreX.Process.list_environment_variable());
+		if (execute_result.code !== 0n) {
+			throw new Error(`adb execute failed : ${execute_result.code}\n${execute_result.error}`);
 		} else {
-			buffer = CoreX.FileSystem.read_file(`${temporary_directory}/adb_output`);
-			buffer_content = Core.Miscellaneous.cast_CharacterListView_to_JS_String(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(buffer.view())).replaceAll('\r\n', '\n');
-			return buffer_content;
+			return execute_result.output;
 		}
 	}
 
@@ -149,7 +126,7 @@ namespace TwinStar.Script.ADBHelper {
 	): Array<string> {
 		let shell_result: string;
 		shell_result = shell(`pm list packages`);
-		let id = parse_output_by_line(shell_result).map((e) => (e.substring(8))).filter((e) => (rule.test(e)));
+		let id = split_string_by_line_feed(shell_result).map((e) => (e.substring(8))).filter((e) => (rule.test(e)));
 		return id;
 	}
 
@@ -221,7 +198,7 @@ namespace TwinStar.Script.ADBHelper {
 				echo "n"
 			fi
 		`);
-		return parse_output_by_line(shell_result)[0] === 'y';
+		return split_string_by_line_feed(shell_result)[0] === 'y';
 	}
 
 	export function exist_file(
@@ -235,7 +212,7 @@ namespace TwinStar.Script.ADBHelper {
 				echo "n"
 			fi
 		`);
-		return parse_output_by_line(shell_result)[0] === 'y';
+		return split_string_by_line_feed(shell_result)[0] === 'y';
 	}
 
 	export function exist_directory(
@@ -249,7 +226,7 @@ namespace TwinStar.Script.ADBHelper {
 				echo "n"
 			fi
 		`);
-		return parse_output_by_line(shell_result)[0] === 'y';
+		return split_string_by_line_feed(shell_result)[0] === 'y';
 	}
 
 	export function copy(

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core/utility/string/string.hpp"
-
 #include "core/third/fmt.hpp"
 
 namespace TwinStar::Core {

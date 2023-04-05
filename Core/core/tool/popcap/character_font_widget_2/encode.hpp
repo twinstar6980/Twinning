@@ -59,11 +59,11 @@ namespace TwinStar::Core::Tool::PopCap::CharacterFontWidget2 {
 			return;
 		}
 
-		static auto exchange_unit_floating_64 (
+		static auto exchange_unit_floater_64 (
 			OByteStreamView & data,
-			Floating const &  value
+			Floater const &   value
 		) -> Void {
-			data.write(cbw<FloatingS64>(value));
+			data.write(cbw<FloaterS64>(value));
 			return;
 		}
 
@@ -230,7 +230,7 @@ namespace TwinStar::Core::Tool::PopCap::CharacterFontWidget2 {
 					exchange_unit_string_32(data, manifest);
 				}
 			);
-			exchange_unit_floating_64(font_widget_data, font_widget_manifest.scale);
+			exchange_unit_floater_64(font_widget_data, font_widget_manifest.scale);
 			exchange_unit_boolean_8(font_widget_data, font_widget_manifest.force_scaled_image_white);
 			exchange_unit_boolean_8(font_widget_data, font_widget_manifest.activate_all_layer);
 			return;
@@ -292,11 +292,11 @@ namespace TwinStar::Core::Tool::PopCap::CharacterFontWidget2 {
 			return;
 		}
 
-		static auto exchange_unit_floating_64 (
+		static auto exchange_unit_floater_64 (
 			IByteStreamView & data,
-			Floating &        value
+			Floater &         value
 		) -> Void {
-			value = cbw<Floating>(data.read_of<FloatingS64>());
+			value = cbw<Floater>(data.read_of<FloaterS64>());
 			return;
 		}
 
@@ -462,7 +462,7 @@ namespace TwinStar::Core::Tool::PopCap::CharacterFontWidget2 {
 					exchange_unit_string_32(data, manifest);
 				}
 			);
-			exchange_unit_floating_64(font_widget_data, font_widget_manifest.scale);
+			exchange_unit_floater_64(font_widget_data, font_widget_manifest.scale);
 			exchange_unit_boolean_8(font_widget_data, font_widget_manifest.force_scaled_image_white);
 			exchange_unit_boolean_8(font_widget_data, font_widget_manifest.activate_all_layer);
 			return;

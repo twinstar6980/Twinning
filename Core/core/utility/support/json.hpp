@@ -115,11 +115,11 @@ namespace TwinStar::Core::JSON {
 	};
 
 	template <>
-	struct ValueAdapter<Floating> {
+	struct ValueAdapter<Floater> {
 
 		using This = Value;
 
-		using That = Floating;
+		using That = Floater;
 
 		// ----------------
 
@@ -135,7 +135,7 @@ namespace TwinStar::Core::JSON {
 			This const & thix,
 			That &       that
 		) -> Void {
-			that = thix.get_number().get_floating();
+			that = thix.get_number().get_floater();
 			return;
 		}
 
@@ -821,11 +821,11 @@ namespace TwinStar::Core::JSON {
 
 	template <typename XValue> requires
 		AutoConstraint
-	struct ValueAdapter<Position1D<XValue>> {
+	struct ValueAdapter<Position1<XValue>> {
 
 		using This = Value;
 
-		using That = Position1D<XValue>;
+		using That = Position1<XValue>;
 
 		// ----------------
 
@@ -853,11 +853,11 @@ namespace TwinStar::Core::JSON {
 
 	template <typename XValue, typename YValue> requires
 		AutoConstraint
-	struct ValueAdapter<Position2D<XValue, YValue>> {
+	struct ValueAdapter<Position2<XValue, YValue>> {
 
 		using This = Value;
 
-		using That = Position2D<XValue, YValue>;
+		using That = Position2<XValue, YValue>;
 
 		// ----------------
 
@@ -887,11 +887,11 @@ namespace TwinStar::Core::JSON {
 
 	template <typename XValue, typename YValue, typename ZValue> requires
 		AutoConstraint
-	struct ValueAdapter<Position3D<XValue, YValue, ZValue>> {
+	struct ValueAdapter<Position3<XValue, YValue, ZValue>> {
 
 		using This = Value;
 
-		using That = Position3D<XValue, YValue, ZValue>;
+		using That = Position3<XValue, YValue, ZValue>;
 
 		// ----------------
 
@@ -923,11 +923,11 @@ namespace TwinStar::Core::JSON {
 
 	template <typename XValue> requires
 		AutoConstraint
-	struct ValueAdapter<Size1D<XValue>> {
+	struct ValueAdapter<Size1<XValue>> {
 
 		using This = Value;
 
-		using That = Size1D<XValue>;
+		using That = Size1<XValue>;
 
 		// ----------------
 
@@ -955,11 +955,11 @@ namespace TwinStar::Core::JSON {
 
 	template <typename XValue, typename YValue> requires
 		AutoConstraint
-	struct ValueAdapter<Size2D<XValue, YValue>> {
+	struct ValueAdapter<Size2<XValue, YValue>> {
 
 		using This = Value;
 
-		using That = Size2D<XValue, YValue>;
+		using That = Size2<XValue, YValue>;
 
 		// ----------------
 
@@ -989,11 +989,11 @@ namespace TwinStar::Core::JSON {
 
 	template <typename XValue, typename YValue, typename ZValue> requires
 		AutoConstraint
-	struct ValueAdapter<Size3D<XValue, YValue, ZValue>> {
+	struct ValueAdapter<Size3<XValue, YValue, ZValue>> {
 
 		using This = Value;
 
-		using That = Size3D<XValue, YValue, ZValue>;
+		using That = Size3<XValue, YValue, ZValue>;
 
 		// ----------------
 

@@ -14,9 +14,9 @@ namespace TwinStar.Script.Entry.method.data.encoding {
 		g_executor_method.push(
 			Executor.method_of({
 				id: 'data.encoding.base64.encode',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					raw_file: Executor.RequireArgument<string>;
@@ -26,21 +26,21 @@ namespace TwinStar.Script.Entry.method.data.encoding {
 					let ripe_file: string;
 					{
 						raw_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'raw_file'),
+							Executor.query_argument_name(this.id, 'raw_file'),
 							a.raw_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 						ripe_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'ripe_file'),
+							Executor.query_argument_name(this.id, 'ripe_file'),
 							a.ripe_file,
 							(value) => (value),
 							() => (raw_file.replace(/()?$/i, '.bin')),
-							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 					}
 					CoreX.Tool.Data.Encoding.Base64.encode_fs(raw_file, ripe_file);
-					Console.notify('s', los(`执行成功`), [`${ripe_file}`]);
+					Console.message('s', los(`执行成功`), [`${ripe_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -52,9 +52,9 @@ namespace TwinStar.Script.Entry.method.data.encoding {
 			}),
 			Executor.method_of({
 				id: 'data.encoding.base64.decode',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					ripe_file: Executor.RequireArgument<string>;
@@ -64,21 +64,21 @@ namespace TwinStar.Script.Entry.method.data.encoding {
 					let raw_file: string;
 					{
 						ripe_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'ripe_file'),
+							Executor.query_argument_name(this.id, 'ripe_file'),
 							a.ripe_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 						raw_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'raw_file'),
+							Executor.query_argument_name(this.id, 'raw_file'),
 							a.raw_file,
 							(value) => (value),
 							() => (ripe_file.replace(/()?$/i, '.bin')),
-							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 					}
 					CoreX.Tool.Data.Encoding.Base64.decode_fs(ripe_file, raw_file);
-					Console.notify('s', los(`执行成功`), [`${raw_file}`]);
+					Console.message('s', los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

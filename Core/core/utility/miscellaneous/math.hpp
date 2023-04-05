@@ -24,7 +24,7 @@ namespace TwinStar::Core::Math {
 	template <typename Result, typename Value> requires
 		CategoryConstraint<IsPureInstance<Result> && IsPureInstance<Value>>
 		&& (IsNumberWrapper<Result>)
-		&& (IsFloatingWrapper<Value>)
+		&& (IsFloaterWrapper<Value>)
 	inline constexpr auto floor (
 		Value const & value
 	) -> Result {
@@ -34,7 +34,7 @@ namespace TwinStar::Core::Math {
 	template <typename Result, typename Value> requires
 		CategoryConstraint<IsPureInstance<Result> && IsPureInstance<Value>>
 		&& (IsNumberWrapper<Result>)
-		&& (IsFloatingWrapper<Value>)
+		&& (IsFloaterWrapper<Value>)
 	inline constexpr auto round (
 		Value const & value
 	) -> Result {
@@ -44,7 +44,7 @@ namespace TwinStar::Core::Math {
 	template <typename Result, typename Value> requires
 		CategoryConstraint<IsPureInstance<Result> && IsPureInstance<Value>>
 		&& (IsNumberWrapper<Result>)
-		&& (IsFloatingWrapper<Value>)
+		&& (IsFloaterWrapper<Value>)
 	inline constexpr auto ceil (
 		Value const & value
 	) -> Result {

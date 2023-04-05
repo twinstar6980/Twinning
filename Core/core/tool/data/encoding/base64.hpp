@@ -77,7 +77,7 @@ namespace TwinStar::Core::Tool::Data::Encoding::Base64 {
 					break;
 				}
 				default : {
-					throw NeverException{};
+					throw ImpossibleException{};
 				}
 			}
 			return;

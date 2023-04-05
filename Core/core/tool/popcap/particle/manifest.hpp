@@ -19,9 +19,9 @@ namespace TwinStar::Core::Tool::PopCap::Particle {
 		M_record_of_map(
 			M_wrap(TrackNode_<_>),
 			M_wrap(
-				(Floating) time,
-				(Floating) low_value,
-				(Floating) high_value,
+				(Floater) time,
+				(Floater) low_value,
+				(Floater) high_value,
 				(Integer) curve,
 				(Integer) distribution,
 			),

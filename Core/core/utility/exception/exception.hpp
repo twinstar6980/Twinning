@@ -1,7 +1,9 @@
 #pragma once
 
 #include "core/utility/exception/source_location.hpp"
+#include "core/third/fmt.hpp"
 #include <string>
+#include <vector>
 
 namespace TwinStar::Core {
 
@@ -9,11 +11,17 @@ namespace TwinStar::Core {
 
 	class Exception {
 
+	protected:
+
+		std::string              m_title;
+		std::vector<std::string> m_description;
+		std::source_location     m_location;
+
 	public:
 
 		#pragma region structor
 
-		virtual ~Exception (
+		~Exception (
 		) = default;
 
 		// ----------------
@@ -29,6 +37,18 @@ namespace TwinStar::Core {
 			Exception && that
 		) = default;
 
+		// ----------------
+
+		explicit Exception (
+			std::string const &              title,
+			std::vector<std::string> const & description,
+			std::source_location const &     location = M_current_source_location
+		) :
+			m_title{title},
+			m_description{description},
+			m_location{location} {
+		}
+
 		#pragma endregion
 
 		#pragma region operator
@@ -43,10 +63,29 @@ namespace TwinStar::Core {
 
 		#pragma endregion
 
-		#pragma region what message
+		#pragma region what
 
-		virtual auto what (
-		) const -> std::string_view = 0;
+		auto what (
+		) const -> std::string {
+			auto message = std::string{};
+			{
+				message += "# ";
+				message += thiz.m_title;
+			}
+			for (auto & description : thiz.m_description) {
+				message += "\n";
+				message += "$ ";
+				message += description;
+			}
+			{
+				message += "\n";
+				message += "@ ";
+				message += thiz.m_location.file_name()[0] == '\0'
+					? ("?")
+					: (fmt::format("{}:{} {}", parse_source_location_file_path(thiz.m_location), thiz.m_location.line(), thiz.m_location.function_name()));
+			}
+			return message;
+		}
 
 		#pragma endregion
 

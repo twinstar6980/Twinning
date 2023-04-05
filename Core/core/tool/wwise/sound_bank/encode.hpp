@@ -47,7 +47,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		using CommonPropertyValue = Variant<Boolean, Integer, Floating, Enumerated, IDWrapper>;
+		using CommonPropertyValue = Variant<Boolean, Integer, Floater, Enumerated, IDWrapper>;
 
 		template <typename Type> requires
 			CategoryConstraint<>
@@ -89,7 +89,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						// fade_time
 						TypePackage<ValuePackage<15_e>, TypePackage<Integer>, ValuePackage<0_i>>,
 						// probability
-						TypePackage<ValuePackage<16_e>, TypePackage<Floating>, ValuePackage<100.0_f>>
+						TypePackage<ValuePackage<16_e>, TypePackage<Floater>, ValuePackage<100.0_f>>
 					>;
 					return declare<Type>();
 				}
@@ -100,7 +100,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						// fade_time
 						TypePackage<ValuePackage<16_e>, TypePackage<Integer>, ValuePackage<0_i>>,
 						// probability
-						TypePackage<ValuePackage<17_e>, TypePackage<Floating>, ValuePackage<100.0_f>>
+						TypePackage<ValuePackage<17_e>, TypePackage<Floater>, ValuePackage<100.0_f>>
 					>;
 					return declare<Type>();
 				}
@@ -151,39 +151,39 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						// trigger_on,
 						TypePackage<ValuePackage<15_e>, TypePackage<Enumerated>, ValuePackage<0_e>>,
 						// depth,
-						TypePackage<ValuePackage<2_e>, TypePackage<Floating>, ValuePackage<100.0_f>>,
+						TypePackage<ValuePackage<2_e>, TypePackage<Floater>, ValuePackage<100.0_f>>,
 						// frequency,
-						TypePackage<ValuePackage<4_e>, TypePackage<Floating>, ValuePackage<1.0_f>>,
+						TypePackage<ValuePackage<4_e>, TypePackage<Floater>, ValuePackage<1.0_f>>,
 						// waveform,
 						TypePackage<ValuePackage<5_e>, TypePackage<Enumerated>, ValuePackage<0_e>>,
 						// smoothing,
-						TypePackage<ValuePackage<6_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<6_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// pulse_width_modulation,
-						TypePackage<ValuePackage<7_e>, TypePackage<Floating>, ValuePackage<50.0_f>>,
+						TypePackage<ValuePackage<7_e>, TypePackage<Floater>, ValuePackage<50.0_f>>,
 						// attack,
-						TypePackage<ValuePackage<3_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<3_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// initial_phase_offset,
-						TypePackage<ValuePackage<8_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<8_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// attack_time,
-						TypePackage<ValuePackage<9_e>, TypePackage<Floating>, ValuePackage<0.2_f>>,
+						TypePackage<ValuePackage<9_e>, TypePackage<Floater>, ValuePackage<0.2_f>>,
 						// attack_curve,
-						TypePackage<ValuePackage<10_e>, TypePackage<Floating>, ValuePackage<50.0_f>>,
+						TypePackage<ValuePackage<10_e>, TypePackage<Floater>, ValuePackage<50.0_f>>,
 						// decay_time,
-						TypePackage<ValuePackage<11_e>, TypePackage<Floating>, ValuePackage<0.2_f>>,
+						TypePackage<ValuePackage<11_e>, TypePackage<Floater>, ValuePackage<0.2_f>>,
 						// sustain_level,
-						TypePackage<ValuePackage<12_e>, TypePackage<Floating>, ValuePackage<100.0_f>>,
+						TypePackage<ValuePackage<12_e>, TypePackage<Floater>, ValuePackage<100.0_f>>,
 						// release_time,
-						TypePackage<ValuePackage<14_e>, TypePackage<Floating>, ValuePackage<0.5_f>>,
+						TypePackage<ValuePackage<14_e>, TypePackage<Floater>, ValuePackage<0.5_f>>,
 						// sustain_time,
-						TypePackage<ValuePackage<13_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<13_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// initial_delay,
-						TypePackage<ValuePackage<19_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<19_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// duration,
-						TypePackage<ValuePackage<16_e>, TypePackage<Floating>, ValuePackage<1.0_f>>,
+						TypePackage<ValuePackage<16_e>, TypePackage<Floater>, ValuePackage<1.0_f>>,
 						// loop,
 						TypePackage<ValuePackage<17_e>, TypePackage<Integer>, ValuePackage<1_i>>,
 						// playback_rate,
-						TypePackage<ValuePackage<18_e>, TypePackage<Floating>, ValuePackage<1.0_f>>,
+						TypePackage<ValuePackage<18_e>, TypePackage<Floater>, ValuePackage<1.0_f>>,
 						// stop_playback,
 						TypePackage<ValuePackage<1_e>, TypePackage<Boolean>, ValuePackage<k_true>>
 					>;
@@ -557,157 +557,157 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				if constexpr (check_version(version, {72, 88})) {
 					using Type = TypePackage<
 						// bus_volume,
-						TypePackage<ValuePackage<4_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<4_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// output_bus_volume,
-						TypePackage<ValuePackage<23_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<23_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// output_bus_low_pass_filter,
-						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<24_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_volume,
-						TypePackage<ValuePackage<0_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<0_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_pitch,
-						TypePackage<ValuePackage<2_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<2_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_low_pass_filter,
-						TypePackage<ValuePackage<3_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<3_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_volume,
-						TypePackage<ValuePackage<22_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<22_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_0,
-						TypePackage<ValuePackage<18_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<18_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_1,
-						TypePackage<ValuePackage<19_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<19_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_2,
-						TypePackage<ValuePackage<20_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<20_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_3,
-						TypePackage<ValuePackage<21_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<21_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_center_percent,
-						TypePackage<ValuePackage<13_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<13_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_speaker_panning_x,
-						TypePackage<ValuePackage<11_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<11_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_speaker_panning_y,
-						TypePackage<ValuePackage<12_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<12_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_priority_value,
-						TypePackage<ValuePackage<5_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<5_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_priority_offset_at_maximum_distance,
-						TypePackage<ValuePackage<6_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<6_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_loop,
 						TypePackage<ValuePackage<7_e>, TypePackage<Integer>, ValuePackage<0_i>>,
 						// motion_volume_offset,
-						TypePackage<ValuePackage<8_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<8_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// motion_low_pass_filter,
-						TypePackage<ValuePackage<9_e>, TypePackage<Floating>, ValuePackage<0.0_f>>
+						TypePackage<ValuePackage<9_e>, TypePackage<Floater>, ValuePackage<0.0_f>>
 					>;
 					return declare<Type>();
 				}
 				if constexpr (check_version(version, {88, 112})) {
 					using Type = TypePackage<
 						// bus_volume,
-						TypePackage<ValuePackage<4_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<4_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// output_bus_volume,
-						TypePackage<ValuePackage<23_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<23_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// output_bus_low_pass_filter,
-						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<24_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_volume,
-						TypePackage<ValuePackage<0_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<0_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_pitch,
-						TypePackage<ValuePackage<2_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<2_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_low_pass_filter,
-						TypePackage<ValuePackage<3_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<3_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_volume_make_up_gain,
-						TypePackage<ValuePackage<33_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<33_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_volume,
-						TypePackage<ValuePackage<22_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<22_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_0,
-						TypePackage<ValuePackage<18_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<18_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_1,
-						TypePackage<ValuePackage<19_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<19_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_2,
-						TypePackage<ValuePackage<20_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<20_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_3,
-						TypePackage<ValuePackage<21_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<21_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_center_percent,
-						TypePackage<ValuePackage<13_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<13_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_speaker_panning_x,
-						TypePackage<ValuePackage<11_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<11_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_speaker_panning_y,
-						TypePackage<ValuePackage<12_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<12_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_threshold,
-						TypePackage<ValuePackage<26_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<26_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_ratio,
-						TypePackage<ValuePackage<27_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<27_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_release_time,
-						TypePackage<ValuePackage<28_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<28_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_window_tap_output_game_parameter_id,
 						TypePackage<ValuePackage<29_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
 						// hdr_window_tap_output_game_parameter_minimum,
-						TypePackage<ValuePackage<30_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<30_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_window_tap_output_game_parameter_maximum,
-						TypePackage<ValuePackage<31_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<31_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_envelope_tracking_active_range,
-						TypePackage<ValuePackage<32_e>, TypePackage<Floating>, ValuePackage<12.0_f>>,
+						TypePackage<ValuePackage<32_e>, TypePackage<Floater>, ValuePackage<12.0_f>>,
 						// playback_priority_value,
-						TypePackage<ValuePackage<5_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<5_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_priority_offset_at_maximum_distance,
-						TypePackage<ValuePackage<6_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<6_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_initial_delay,
-						TypePackage<ValuePackage<25_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<25_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_loop,
 						TypePackage<ValuePackage<7_e>, TypePackage<Integer>, ValuePackage<0_i>>,
 						// motion_volume_offset,
-						TypePackage<ValuePackage<8_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<8_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// motion_low_pass_filter,
-						TypePackage<ValuePackage<9_e>, TypePackage<Floating>, ValuePackage<0.0_f>>
+						TypePackage<ValuePackage<9_e>, TypePackage<Floater>, ValuePackage<0.0_f>>
 					>;
 					return declare<Type>();
 				}
 				if constexpr (check_version(version, {112, 118})) {
 					using Type = TypePackage<
 						// bus_volume,
-						TypePackage<ValuePackage<5_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<5_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// output_bus_volume,
-						TypePackage<ValuePackage<23_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<23_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// output_bus_low_pass_filter,
-						TypePackage<ValuePackage<25_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<25_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// output_bus_high_pass_filter,
-						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<24_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_volume,
-						TypePackage<ValuePackage<0_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<0_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_pitch,
-						TypePackage<ValuePackage<2_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<2_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_low_pass_filter,
-						TypePackage<ValuePackage<3_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<3_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_high_pass_filter,
-						TypePackage<ValuePackage<4_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<4_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_volume_make_up_gain,
-						TypePackage<ValuePackage<33_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<33_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_volume,
-						TypePackage<ValuePackage<22_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<22_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_0,
-						TypePackage<ValuePackage<18_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<18_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_1,
-						TypePackage<ValuePackage<19_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<19_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_2,
-						TypePackage<ValuePackage<20_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<20_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_3,
-						TypePackage<ValuePackage<21_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<21_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_center_percent,
-						TypePackage<ValuePackage<13_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<13_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_speaker_panning_x,
-						TypePackage<ValuePackage<11_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<11_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_speaker_panning_y,
-						TypePackage<ValuePackage<12_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<12_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_threshold,
-						TypePackage<ValuePackage<26_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<26_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_ratio,
-						TypePackage<ValuePackage<27_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<27_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_release_time,
-						TypePackage<ValuePackage<28_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<28_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_window_tap_output_game_parameter_id,
 						TypePackage<ValuePackage<29_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
 						// hdr_window_tap_output_game_parameter_minimum,
-						TypePackage<ValuePackage<30_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<30_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_window_tap_output_game_parameter_maximum,
-						TypePackage<ValuePackage<31_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<31_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_envelope_tracking_active_range,
-						TypePackage<ValuePackage<32_e>, TypePackage<Floating>, ValuePackage<12.0_f>>,
+						TypePackage<ValuePackage<32_e>, TypePackage<Floater>, ValuePackage<12.0_f>>,
 						// midi_note_tracking_root_note,
 						TypePackage<ValuePackage<45_e>, TypePackage<Integer>, ValuePackage<60_i>>,
 						// midi_event_play_on,
@@ -731,19 +731,19 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						// midi_target_id,
 						TypePackage<ValuePackage<56_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
 						// playback_priority_value,
-						TypePackage<ValuePackage<6_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<6_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_priority_offset_at_maximum_distance,
-						TypePackage<ValuePackage<7_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<7_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_initial_delay,
-						TypePackage<ValuePackage<59_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<59_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_loop,
 						TypePackage<ValuePackage<58_e>, TypePackage<Integer>, ValuePackage<0_i>>,
 						// playback_speed,
-						TypePackage<ValuePackage<54_e>, TypePackage<Floating>, ValuePackage<1.0_f>>,
+						TypePackage<ValuePackage<54_e>, TypePackage<Floater>, ValuePackage<1.0_f>>,
 						// motion_volume_offset,
-						TypePackage<ValuePackage<8_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<8_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// motion_low_pass_filter,
-						TypePackage<ValuePackage<9_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<9_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// mixer_id,
 						TypePackage<ValuePackage<57_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>
 					>;
@@ -752,53 +752,53 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				if constexpr (check_version(version, {118, 128})) {
 					using Type = TypePackage<
 						// bus_volume,
-						TypePackage<ValuePackage<5_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<5_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// output_bus_volume,
-						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<24_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// output_bus_low_pass_filter,
-						TypePackage<ValuePackage<26_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<26_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// output_bus_high_pass_filter,
-						TypePackage<ValuePackage<25_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<25_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_volume,
-						TypePackage<ValuePackage<0_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<0_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_pitch,
-						TypePackage<ValuePackage<2_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<2_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_low_pass_filter,
-						TypePackage<ValuePackage<3_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<3_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_high_pass_filter,
-						TypePackage<ValuePackage<4_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<4_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_volume_make_up_gain,
-						TypePackage<ValuePackage<6_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<6_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_volume,
-						TypePackage<ValuePackage<23_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<23_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_0,
-						TypePackage<ValuePackage<19_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<19_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_1,
-						TypePackage<ValuePackage<20_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<20_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_2,
-						TypePackage<ValuePackage<21_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<21_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_3,
-						TypePackage<ValuePackage<22_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<22_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_center_percent,
-						TypePackage<ValuePackage<14_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<14_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_speaker_panning_x,
-						TypePackage<ValuePackage<12_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<12_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_speaker_panning_y,
-						TypePackage<ValuePackage<13_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<13_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_threshold,
-						TypePackage<ValuePackage<27_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<27_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_ratio,
-						TypePackage<ValuePackage<28_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<28_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_release_time,
-						TypePackage<ValuePackage<29_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<29_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_window_tap_output_game_parameter_id,
 						TypePackage<ValuePackage<30_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
 						// hdr_window_tap_output_game_parameter_minimum,
-						TypePackage<ValuePackage<31_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<31_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_window_tap_output_game_parameter_maximum,
-						TypePackage<ValuePackage<32_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<32_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_envelope_tracking_active_range,
-						TypePackage<ValuePackage<33_e>, TypePackage<Floating>, ValuePackage<12.0_f>>,
+						TypePackage<ValuePackage<33_e>, TypePackage<Floater>, ValuePackage<12.0_f>>,
 						// midi_note_tracking_root_note,
 						TypePackage<ValuePackage<45_e>, TypePackage<Integer>, ValuePackage<60_i>>,
 						// midi_event_play_on,
@@ -822,19 +822,19 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						// midi_target_id,
 						TypePackage<ValuePackage<56_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
 						// playback_priority_value,
-						TypePackage<ValuePackage<7_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<7_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_priority_offset_at_maximum_distance,
-						TypePackage<ValuePackage<8_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<8_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_initial_delay,
-						TypePackage<ValuePackage<59_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<59_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_loop,
 						TypePackage<ValuePackage<58_e>, TypePackage<Integer>, ValuePackage<0_i>>,
 						// playback_speed,
-						TypePackage<ValuePackage<54_e>, TypePackage<Floating>, ValuePackage<1.0_f>>,
+						TypePackage<ValuePackage<54_e>, TypePackage<Floater>, ValuePackage<1.0_f>>,
 						// motion_volume_offset,
-						TypePackage<ValuePackage<9_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<9_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// motion_low_pass_filter,
-						TypePackage<ValuePackage<10_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<10_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// mixer_id,
 						TypePackage<ValuePackage<57_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>
 					>;
@@ -843,73 +843,73 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				if constexpr (check_version(version, {128, 132})) {
 					using Type = TypePackage<
 						// bus_volume,
-						TypePackage<ValuePackage<5_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<5_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// output_bus_volume,
-						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<24_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// output_bus_low_pass_filter,
-						TypePackage<ValuePackage<26_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<26_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// output_bus_high_pass_filter,
-						TypePackage<ValuePackage<25_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<25_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_volume,
-						TypePackage<ValuePackage<0_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<0_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_pitch,
-						TypePackage<ValuePackage<2_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<2_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_low_pass_filter,
-						TypePackage<ValuePackage<3_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<3_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_high_pass_filter,
-						TypePackage<ValuePackage<4_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<4_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_volume_make_up_gain,
-						TypePackage<ValuePackage<6_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<6_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_volume,
-						TypePackage<ValuePackage<23_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<23_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_low_pass_filter,
-						TypePackage<ValuePackage<68_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<68_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_high_pass_filter,
-						TypePackage<ValuePackage<69_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<69_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_0,
-						TypePackage<ValuePackage<19_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<19_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_1,
-						TypePackage<ValuePackage<20_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<20_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_2,
-						TypePackage<ValuePackage<21_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<21_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_3,
-						TypePackage<ValuePackage<22_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<22_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_low_pass_filter_0,
-						TypePackage<ValuePackage<60_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<60_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_low_pass_filter_1,
-						TypePackage<ValuePackage<61_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<61_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_low_pass_filter_2,
-						TypePackage<ValuePackage<62_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<62_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_low_pass_filter_3,
-						TypePackage<ValuePackage<63_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<63_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_high_pass_filter_0,
-						TypePackage<ValuePackage<64_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<64_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_high_pass_filter_1,
-						TypePackage<ValuePackage<65_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<65_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_high_pass_filter_2,
-						TypePackage<ValuePackage<66_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<66_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_high_pass_filter_3,
-						TypePackage<ValuePackage<67_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<67_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_center_percent,
-						TypePackage<ValuePackage<14_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<14_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_speaker_panning_x,
-						TypePackage<ValuePackage<12_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<12_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_speaker_panning_y,
-						TypePackage<ValuePackage<13_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<13_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_threshold,
-						TypePackage<ValuePackage<27_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<27_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_ratio,
-						TypePackage<ValuePackage<28_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<28_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_release_time,
-						TypePackage<ValuePackage<29_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<29_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_window_tap_output_game_parameter_id,
 						TypePackage<ValuePackage<30_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
 						// hdr_window_tap_output_game_parameter_minimum,
-						TypePackage<ValuePackage<31_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<31_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_window_tap_output_game_parameter_maximum,
-						TypePackage<ValuePackage<32_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<32_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_envelope_tracking_active_range,
-						TypePackage<ValuePackage<33_e>, TypePackage<Floating>, ValuePackage<12.0_f>>,
+						TypePackage<ValuePackage<33_e>, TypePackage<Floater>, ValuePackage<12.0_f>>,
 						// midi_note_tracking_root_note,
 						TypePackage<ValuePackage<45_e>, TypePackage<Integer>, ValuePackage<60_i>>,
 						// midi_event_play_on,
@@ -933,15 +933,15 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						// midi_target_id,
 						TypePackage<ValuePackage<56_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
 						// playback_priority_value,
-						TypePackage<ValuePackage<7_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<7_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_priority_offset_at_maximum_distance,
-						TypePackage<ValuePackage<8_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<8_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_initial_delay,
-						TypePackage<ValuePackage<59_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<59_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_loop,
 						TypePackage<ValuePackage<58_e>, TypePackage<Integer>, ValuePackage<0_i>>,
 						// playback_speed,
-						TypePackage<ValuePackage<54_e>, TypePackage<Floating>, ValuePackage<1.0_f>>,
+						TypePackage<ValuePackage<54_e>, TypePackage<Floater>, ValuePackage<1.0_f>>,
 						// mixer_id,
 						TypePackage<ValuePackage<57_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>
 					>;
@@ -950,77 +950,77 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				if constexpr (check_version(version, {132, 135})) {
 					using Type = TypePackage<
 						// bus_volume,
-						TypePackage<ValuePackage<5_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<5_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// output_bus_volume,
-						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<24_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// output_bus_low_pass_filter,
-						TypePackage<ValuePackage<26_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<26_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// output_bus_high_pass_filter,
-						TypePackage<ValuePackage<25_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<25_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_volume,
-						TypePackage<ValuePackage<0_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<0_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_pitch,
-						TypePackage<ValuePackage<2_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<2_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_low_pass_filter,
-						TypePackage<ValuePackage<3_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<3_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_high_pass_filter,
-						TypePackage<ValuePackage<4_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<4_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_volume_make_up_gain,
-						TypePackage<ValuePackage<6_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<6_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_volume,
-						TypePackage<ValuePackage<23_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<23_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_low_pass_filter,
-						TypePackage<ValuePackage<68_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<68_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_high_pass_filter,
-						TypePackage<ValuePackage<69_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<69_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_0,
-						TypePackage<ValuePackage<19_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<19_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_1,
-						TypePackage<ValuePackage<20_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<20_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_2,
-						TypePackage<ValuePackage<21_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<21_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_3,
-						TypePackage<ValuePackage<22_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<22_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_low_pass_filter_0,
-						TypePackage<ValuePackage<60_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<60_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_low_pass_filter_1,
-						TypePackage<ValuePackage<61_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<61_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_low_pass_filter_2,
-						TypePackage<ValuePackage<62_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<62_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_low_pass_filter_3,
-						TypePackage<ValuePackage<63_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<63_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_high_pass_filter_0,
-						TypePackage<ValuePackage<64_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<64_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_high_pass_filter_1,
-						TypePackage<ValuePackage<65_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<65_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_high_pass_filter_2,
-						TypePackage<ValuePackage<66_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<66_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_high_pass_filter_3,
-						TypePackage<ValuePackage<67_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<67_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_center_percent,
-						TypePackage<ValuePackage<14_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<14_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_speaker_panning_x,
-						TypePackage<ValuePackage<12_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<12_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_speaker_panning_y,
-						TypePackage<ValuePackage<13_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<13_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_listener_routing_speaker_panning_division_spatialization_mix,
-						TypePackage<ValuePackage<71_e>, TypePackage<Floating>, ValuePackage<100.0_f>>,
+						TypePackage<ValuePackage<71_e>, TypePackage<Floater>, ValuePackage<100.0_f>>,
 						// positioning_listener_routing_attenuation_id,
 						TypePackage<ValuePackage<70_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
 						// hdr_threshold,
-						TypePackage<ValuePackage<27_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<27_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_ratio,
-						TypePackage<ValuePackage<28_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<28_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_release_time,
-						TypePackage<ValuePackage<29_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<29_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_window_tap_output_game_parameter_id,
 						TypePackage<ValuePackage<30_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
 						// hdr_window_tap_output_game_parameter_minimum,
-						TypePackage<ValuePackage<31_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<31_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_window_tap_output_game_parameter_maximum,
-						TypePackage<ValuePackage<32_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<32_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_envelope_tracking_active_range,
-						TypePackage<ValuePackage<33_e>, TypePackage<Floating>, ValuePackage<12.0_f>>,
+						TypePackage<ValuePackage<33_e>, TypePackage<Floater>, ValuePackage<12.0_f>>,
 						// midi_note_tracking_root_note,
 						TypePackage<ValuePackage<45_e>, TypePackage<Integer>, ValuePackage<60_i>>,
 						// midi_event_play_on,
@@ -1044,15 +1044,15 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						// midi_target_id,
 						TypePackage<ValuePackage<56_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
 						// playback_priority_value,
-						TypePackage<ValuePackage<7_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<7_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_priority_offset_at_maximum_distance,
-						TypePackage<ValuePackage<8_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<8_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_initial_delay,
-						TypePackage<ValuePackage<59_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<59_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_loop,
 						TypePackage<ValuePackage<58_e>, TypePackage<Integer>, ValuePackage<0_i>>,
 						// playback_speed,
-						TypePackage<ValuePackage<54_e>, TypePackage<Floating>, ValuePackage<1.0_f>>,
+						TypePackage<ValuePackage<54_e>, TypePackage<Floater>, ValuePackage<1.0_f>>,
 						// mixer_id,
 						TypePackage<ValuePackage<57_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>
 					>;
@@ -1061,79 +1061,79 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				if constexpr (check_version(version, {135, 140})) {
 					using Type = TypePackage<
 						// bus_volume,
-						TypePackage<ValuePackage<5_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<5_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// output_bus_volume,
-						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<24_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// output_bus_low_pass_filter,
-						TypePackage<ValuePackage<26_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<26_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// output_bus_high_pass_filter,
-						TypePackage<ValuePackage<25_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<25_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_volume,
-						TypePackage<ValuePackage<0_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<0_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_pitch,
-						TypePackage<ValuePackage<2_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<2_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_low_pass_filter,
-						TypePackage<ValuePackage<3_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<3_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_high_pass_filter,
-						TypePackage<ValuePackage<4_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<4_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_volume_make_up_gain,
-						TypePackage<ValuePackage<6_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<6_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_volume,
-						TypePackage<ValuePackage<23_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<23_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_low_pass_filter,
-						TypePackage<ValuePackage<68_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<68_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_high_pass_filter,
-						TypePackage<ValuePackage<69_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<69_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_0,
-						TypePackage<ValuePackage<19_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<19_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_1,
-						TypePackage<ValuePackage<20_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<20_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_2,
-						TypePackage<ValuePackage<21_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<21_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_3,
-						TypePackage<ValuePackage<22_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<22_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_low_pass_filter_0,
-						TypePackage<ValuePackage<60_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<60_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_low_pass_filter_1,
-						TypePackage<ValuePackage<61_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<61_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_low_pass_filter_2,
-						TypePackage<ValuePackage<62_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<62_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_low_pass_filter_3,
-						TypePackage<ValuePackage<63_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<63_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_high_pass_filter_0,
-						TypePackage<ValuePackage<64_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<64_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_high_pass_filter_1,
-						TypePackage<ValuePackage<65_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<65_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_high_pass_filter_2,
-						TypePackage<ValuePackage<66_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<66_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_high_pass_filter_3,
-						TypePackage<ValuePackage<67_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<67_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// early_reflection_auxiliary_send_volume,
-						TypePackage<ValuePackage<72_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<72_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_center_percent,
-						TypePackage<ValuePackage<14_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<14_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_speaker_panning_x,
-						TypePackage<ValuePackage<12_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<12_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_speaker_panning_y,
-						TypePackage<ValuePackage<13_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<13_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_listener_routing_speaker_panning_division_spatialization_mix,
-						TypePackage<ValuePackage<71_e>, TypePackage<Floating>, ValuePackage<100.0_f>>,
+						TypePackage<ValuePackage<71_e>, TypePackage<Floater>, ValuePackage<100.0_f>>,
 						// positioning_listener_routing_attenuation_id,
 						TypePackage<ValuePackage<70_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
 						// hdr_threshold,
-						TypePackage<ValuePackage<27_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<27_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_ratio,
-						TypePackage<ValuePackage<28_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<28_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_release_time,
-						TypePackage<ValuePackage<29_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<29_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_window_tap_output_game_parameter_id,
 						TypePackage<ValuePackage<30_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
 						// hdr_window_tap_output_game_parameter_minimum,
-						TypePackage<ValuePackage<31_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<31_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_window_tap_output_game_parameter_maximum,
-						TypePackage<ValuePackage<32_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<32_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_envelope_tracking_active_range,
-						TypePackage<ValuePackage<33_e>, TypePackage<Floating>, ValuePackage<12.0_f>>,
+						TypePackage<ValuePackage<33_e>, TypePackage<Floater>, ValuePackage<12.0_f>>,
 						// midi_note_tracking_root_note,
 						TypePackage<ValuePackage<45_e>, TypePackage<Integer>, ValuePackage<60_i>>,
 						// midi_event_play_on,
@@ -1157,15 +1157,15 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						// midi_target_id,
 						TypePackage<ValuePackage<56_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
 						// playback_priority_value,
-						TypePackage<ValuePackage<7_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<7_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_priority_offset_at_maximum_distance,
-						TypePackage<ValuePackage<8_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<8_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_initial_delay,
-						TypePackage<ValuePackage<59_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<59_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_loop,
 						TypePackage<ValuePackage<58_e>, TypePackage<Integer>, ValuePackage<0_i>>,
 						// playback_speed,
-						TypePackage<ValuePackage<54_e>, TypePackage<Floating>, ValuePackage<1.0_f>>,
+						TypePackage<ValuePackage<54_e>, TypePackage<Floater>, ValuePackage<1.0_f>>,
 						// mixer_id,
 						TypePackage<ValuePackage<57_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>
 					>;
@@ -1174,81 +1174,81 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				if constexpr (check_version(version, {140})) {
 					using Type = TypePackage<
 						// bus_volume,
-						TypePackage<ValuePackage<5_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<5_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// output_bus_volume,
-						TypePackage<ValuePackage<24_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<24_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// output_bus_low_pass_filter,
-						TypePackage<ValuePackage<26_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<26_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// output_bus_high_pass_filter,
-						TypePackage<ValuePackage<25_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<25_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_volume,
-						TypePackage<ValuePackage<0_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<0_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_pitch,
-						TypePackage<ValuePackage<2_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<2_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_low_pass_filter,
-						TypePackage<ValuePackage<3_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<3_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_high_pass_filter,
-						TypePackage<ValuePackage<4_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<4_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// voice_volume_make_up_gain,
-						TypePackage<ValuePackage<6_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<6_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_volume,
-						TypePackage<ValuePackage<23_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<23_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_low_pass_filter,
-						TypePackage<ValuePackage<68_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<68_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// game_defined_auxiliary_send_high_pass_filter,
-						TypePackage<ValuePackage<69_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<69_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_0,
-						TypePackage<ValuePackage<19_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<19_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_1,
-						TypePackage<ValuePackage<20_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<20_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_2,
-						TypePackage<ValuePackage<21_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<21_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_volume_3,
-						TypePackage<ValuePackage<22_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<22_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_low_pass_filter_0,
-						TypePackage<ValuePackage<60_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<60_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_low_pass_filter_1,
-						TypePackage<ValuePackage<61_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<61_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_low_pass_filter_2,
-						TypePackage<ValuePackage<62_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<62_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_low_pass_filter_3,
-						TypePackage<ValuePackage<63_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<63_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_high_pass_filter_0,
-						TypePackage<ValuePackage<64_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<64_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_high_pass_filter_1,
-						TypePackage<ValuePackage<65_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<65_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_high_pass_filter_2,
-						TypePackage<ValuePackage<66_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<66_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// user_defined_auxiliary_send_high_pass_filter_3,
-						TypePackage<ValuePackage<67_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<67_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// early_reflection_auxiliary_send_volume,
-						TypePackage<ValuePackage<72_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<72_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_center_percent,
-						TypePackage<ValuePackage<14_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<14_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_speaker_panning_x,
-						TypePackage<ValuePackage<12_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<12_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_speaker_panning_y,
-						TypePackage<ValuePackage<13_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<13_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_speaker_panning_z,
-						TypePackage<ValuePackage<73_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<73_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_listener_routing_speaker_panning_division_spatialization_mix,
-						TypePackage<ValuePackage<71_e>, TypePackage<Floating>, ValuePackage<100.0_f>>,
+						TypePackage<ValuePackage<71_e>, TypePackage<Floater>, ValuePackage<100.0_f>>,
 						// positioning_listener_routing_attenuation_id,
 						TypePackage<ValuePackage<70_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
 						// hdr_threshold,
-						TypePackage<ValuePackage<27_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<27_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_ratio,
-						TypePackage<ValuePackage<28_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<28_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_release_time,
-						TypePackage<ValuePackage<29_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<29_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_window_tap_output_game_parameter_id,
 						TypePackage<ValuePackage<30_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
 						// hdr_window_tap_output_game_parameter_minimum,
-						TypePackage<ValuePackage<31_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<31_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_window_tap_output_game_parameter_maximum,
-						TypePackage<ValuePackage<32_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<32_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_envelope_tracking_active_range,
-						TypePackage<ValuePackage<33_e>, TypePackage<Floating>, ValuePackage<12.0_f>>,
+						TypePackage<ValuePackage<33_e>, TypePackage<Floater>, ValuePackage<12.0_f>>,
 						// midi_note_tracking_root_note,
 						TypePackage<ValuePackage<45_e>, TypePackage<Integer>, ValuePackage<60_i>>,
 						// midi_event_play_on,
@@ -1272,15 +1272,15 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						// midi_target_id,
 						TypePackage<ValuePackage<56_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
 						// playback_priority_value,
-						TypePackage<ValuePackage<7_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<7_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_priority_offset_at_maximum_distance,
-						TypePackage<ValuePackage<8_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<8_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_initial_delay,
-						TypePackage<ValuePackage<59_e>, TypePackage<Floating>, ValuePackage<0.0_f>>,
+						TypePackage<ValuePackage<59_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_loop,
 						TypePackage<ValuePackage<58_e>, TypePackage<Integer>, ValuePackage<0_i>>,
 						// playback_speed,
-						TypePackage<ValuePackage<54_e>, TypePackage<Floating>, ValuePackage<1.0_f>>,
+						TypePackage<ValuePackage<54_e>, TypePackage<Floater>, ValuePackage<1.0_f>>,
 						// mixer_id,
 						TypePackage<ValuePackage<57_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>
 					>;
@@ -2838,7 +2838,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		template <auto type, typename Value> requires
 			CategoryConstraint<IsPureInstance<Value>>
 			&& (IsSame<Value, typename EnumerationAttribute<decltype(type)>::Attribute::template Element<static_cast<ZSize>(type.value)>::template Element<2_ixz>::template Element<1_ixz>>)
-			&& (IsSame<Value, Boolean, Integer, Floating>)
+			&& (IsSame<Value, Boolean, Integer, Floater>)
 		static auto exchange_common_property_as_regular (
 			CommonPropertyMap<decltype(type)> &                     map,
 			typename Manifest::template RegularValue<Value> const & value
@@ -2854,7 +2854,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		template <auto type, typename Value> requires
 			CategoryConstraint<IsPureInstance<Value>>
 			&& (IsSame<Value, typename EnumerationAttribute<decltype(type)>::Attribute::template Element<static_cast<ZSize>(type.value)>::template Element<2_ixz>::template Element<1_ixz>>)
-			&& (IsSame<Value, Boolean, Integer, Floating>)
+			&& (IsSame<Value, Boolean, Integer, Floater>)
 		static auto exchange_common_property_as_randomizable (
 			CommonPropertyMap<decltype(type)> &                          map,
 			typename Manifest::template RandomizableValue<Value> const & value
@@ -3253,10 +3253,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		template <typename RawValue> requires
 			CategoryConstraint<IsPureInstance<RawValue>>
-			&& (IsFloatingWrapper<RawValue>)
-		static auto exchange_unit_floating (
+			&& (IsFloaterWrapper<RawValue>)
+		static auto exchange_unit_floater (
 			OByteStreamView & data,
-			Floating const &  value
+			Floater const &   value
 		) -> Void {
 			data.write(cbw<RawValue>(value));
 			return;
@@ -3364,7 +3364,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		template <typename ActualValue> requires
 			CategoryConstraint<>
-			&& (IsSame<ActualValue, Boolean, Integer, Floating, Enumerated, IDWrapper>)
+			&& (IsSame<ActualValue, Boolean, Integer, Floater, Enumerated, IDWrapper>)
 		static auto process_unit_common_property_value (
 			OByteStreamView &           data,
 			CommonPropertyValue const & value
@@ -3375,8 +3375,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			if constexpr (IsSame<ActualValue, Integer>) {
 				exchange_unit_integer<IntegerS32>(data, value.template get<Integer>());
 			}
-			if constexpr (IsSame<ActualValue, Floating>) {
-				exchange_unit_floating<FloatingS32>(data, value.template get<Floating>());
+			if constexpr (IsSame<ActualValue, Floater>) {
+				exchange_unit_floater<FloaterS32>(data, value.template get<Floater>());
 			}
 			if constexpr (IsSame<ActualValue, Enumerated>) {
 				exchange_unit_enumerated<IntegerU32>(data, value.template get<Enumerated>());
@@ -3530,10 +3530,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								},
 								[] (auto & data, auto & manifest) {
 									if constexpr (check_version(version, {72})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.x);
 									}
 									if constexpr (check_version(version, {72})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.y);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.y);
 									}
 									if constexpr (check_version(version, {72})) {
 										exchange_unit_bit<IntegerU32>(data, manifest.curve);
@@ -3653,7 +3653,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 							exchange_unit_bit<IntegerU8>(data, manifest.mode);
 						}
 						if constexpr (check_version(version, {112})) {
-							exchange_unit_floating<FloatingS32>(data, manifest.value);
+							exchange_unit_floater<FloaterS32>(data, manifest.value);
 						}
 					}
 				);
@@ -3874,9 +3874,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								[] (auto & count) {
 								},
 								[] (auto & data, auto & manifest) {
-									exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+									exchange_unit_floater<FloaterS32>(data, manifest.position.x);
 									exchange_unit_constant(data, 0_iu32);
-									exchange_unit_floating<FloatingS32>(data, manifest.position.y);
+									exchange_unit_floater<FloaterS32>(data, manifest.position.y);
 									exchange_unit_integer<IntegerU32>(data, manifest.duration);
 								}
 							);
@@ -3890,8 +3890,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 									exchange_unit_integer<IntegerU32>(data, manifest.point.count);
 								},
 								[] (auto & data, auto & manifest) {
-									exchange_unit_floating<FloatingS32>(data, manifest.random_range.left_right);
-									exchange_unit_floating<FloatingS32>(data, manifest.random_range.front_back);
+									exchange_unit_floater<FloaterS32>(data, manifest.random_range.left_right);
+									exchange_unit_floater<FloaterS32>(data, manifest.random_range.front_back);
 								}
 							);
 						}
@@ -3965,13 +3965,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								},
 								[] (auto & data, auto & manifest) {
 									if constexpr (check_version(version, {112, 132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.x);
 									}
 									if constexpr (check_version(version, {112, 132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.z);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.z);
 									}
 									if constexpr (check_version(version, {112, 132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.y);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.y);
 									}
 									if constexpr (check_version(version, {112, 132})) {
 										exchange_unit_integer<IntegerU32>(data, manifest.duration);
@@ -3995,13 +3995,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								},
 								[] (auto & data, auto & manifest) {
 									if constexpr (check_version(version, {112, 132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.random_range.left_right);
+										exchange_unit_floater<FloaterS32>(data, manifest.random_range.left_right);
 									}
 									if constexpr (check_version(version, {112, 132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.random_range.front_back);
+										exchange_unit_floater<FloaterS32>(data, manifest.random_range.front_back);
 									}
 									if constexpr (check_version(version, {112, 132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.random_range.up_down);
+										exchange_unit_floater<FloaterS32>(data, manifest.random_range.up_down);
 									}
 								}
 							);
@@ -4072,13 +4072,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								},
 								[] (auto & data, auto & manifest) {
 									if constexpr (check_version(version, {132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.x);
 									}
 									if constexpr (check_version(version, {132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.z);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.z);
 									}
 									if constexpr (check_version(version, {132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.y);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.y);
 									}
 									if constexpr (check_version(version, {132})) {
 										exchange_unit_integer<IntegerU32>(data, manifest.duration);
@@ -4102,13 +4102,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								},
 								[] (auto & data, auto & manifest) {
 									if constexpr (check_version(version, {132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.random_range.left_right);
+										exchange_unit_floater<FloaterS32>(data, manifest.random_range.left_right);
 									}
 									if constexpr (check_version(version, {132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.random_range.front_back);
+										exchange_unit_floater<FloaterS32>(data, manifest.random_range.front_back);
 									}
 									if constexpr (check_version(version, {132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.random_range.up_down);
+										exchange_unit_floater<FloaterS32>(data, manifest.random_range.up_down);
 									}
 								}
 							);
@@ -4445,7 +4445,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				exchange_unit_integer<IntegerU32>(data, automatic_ducking_manifest.recovery_time);
 			}
 			if constexpr (check_version(version, {72})) {
-				exchange_unit_floating<FloatingS32>(data, automatic_ducking_manifest.maximum_ducking_volume);
+				exchange_unit_floater<FloaterS32>(data, automatic_ducking_manifest.maximum_ducking_volume);
 			}
 			if constexpr (check_version(version, {72})) {
 				exchange_unit_list<IntegerU32>(
@@ -4458,7 +4458,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 							exchange_unit_id(data, manifest.id);
 						}
 						if constexpr (check_version(version, {72})) {
-							exchange_unit_floating<FloatingS32>(data, manifest.volume);
+							exchange_unit_floater<FloaterS32>(data, manifest.volume);
 						}
 						if constexpr (check_version(version, {72})) {
 							exchange_unit_integer<IntegerU32>(data, manifest.fade_out);
@@ -4520,14 +4520,14 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			if constexpr (check_version(version, {72})) {
 				// TODO : test frequency mode-preset time and offset
 				// NOTE : time = 960000 * signature / tempo, then with frequency mode-preset
-				exchange_unit_floating<FloatingS64>(data, time_setting_manifest.time);
+				exchange_unit_floater<FloaterS64>(data, time_setting_manifest.time);
 			}
 			if constexpr (check_version(version, {72})) {
 				// NOTE : 0 if mode.no, millisecond if mode.custom, else by mode-preset
-				exchange_unit_floating<FloatingS64>(data, time_setting_manifest.offset);
+				exchange_unit_floater<FloaterS64>(data, time_setting_manifest.offset);
 			}
 			if constexpr (check_version(version, {72})) {
-				exchange_unit_floating<FloatingS32>(data, time_setting_manifest.tempo);
+				exchange_unit_floater<FloaterS32>(data, time_setting_manifest.tempo);
 			}
 			if constexpr (check_version(version, {72})) {
 				exchange_unit_integer<IntegerU8>(data, time_setting_manifest.signature.first);
@@ -4573,16 +4573,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 							exchange_unit_id(data, manifest.event);
 						}
 						if constexpr (check_version(version, {72})) {
-							exchange_unit_floating<FloatingS64>(data, manifest.offset);
+							exchange_unit_floater<FloaterS64>(data, manifest.offset);
 						}
 						if constexpr (check_version(version, {72})) {
-							exchange_unit_floating<FloatingS64>(data, manifest.begin);
+							exchange_unit_floater<FloaterS64>(data, manifest.begin);
 						}
 						if constexpr (check_version(version, {72})) {
-							exchange_unit_floating<FloatingS64>(data, manifest.end);
+							exchange_unit_floater<FloaterS64>(data, manifest.end);
 						}
 						if constexpr (check_version(version, {72})) {
-							exchange_unit_floating<FloatingS64>(data, manifest.duration);
+							exchange_unit_floater<FloaterS64>(data, manifest.duration);
 						}
 					}
 				);
@@ -4613,10 +4613,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								},
 								[] (auto & data, auto & manifest) {
 									if constexpr (check_version(version, {72})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.x);
 									}
 									if constexpr (check_version(version, {72})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.y);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.y);
 									}
 									if constexpr (check_version(version, {72})) {
 										exchange_unit_bit<IntegerU32>(data, manifest.curve);
@@ -4921,13 +4921,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				exchange_unit_integer<IntegerS16>(data, play_mode_setting_manifest.continuous.loop.maximum_value);
 			}
 			if constexpr (check_version(version, {72})) {
-				exchange_unit_floating<FloatingS32>(data, play_mode_setting_manifest.continuous.transition_duration.value);
+				exchange_unit_floater<FloaterS32>(data, play_mode_setting_manifest.continuous.transition_duration.value);
 			}
 			if constexpr (check_version(version, {72})) {
-				exchange_unit_floating<FloatingS32>(data, play_mode_setting_manifest.continuous.transition_duration.minimum_value);
+				exchange_unit_floater<FloaterS32>(data, play_mode_setting_manifest.continuous.transition_duration.minimum_value);
 			}
 			if constexpr (check_version(version, {72})) {
-				exchange_unit_floating<FloatingS32>(data, play_mode_setting_manifest.continuous.transition_duration.maximum_value);
+				exchange_unit_floater<FloaterS32>(data, play_mode_setting_manifest.continuous.transition_duration.maximum_value);
 			}
 			if constexpr (check_version(version, {72})) {
 				exchange_unit_integer<IntegerU16>(data, play_type_setting_manifest.random.avoid_repeat);
@@ -5107,10 +5107,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 											},
 											[] (auto & data, auto & manifest) {
 												if constexpr (check_version(version, {72})) {
-													exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+													exchange_unit_floater<FloaterS32>(data, manifest.position.x);
 												}
 												if constexpr (check_version(version, {72})) {
-													exchange_unit_floating<FloatingS32>(data, manifest.position.y);
+													exchange_unit_floater<FloaterS32>(data, manifest.position.y);
 												}
 												if constexpr (check_version(version, {72})) {
 													exchange_unit_bit<IntegerU32>(data, manifest.curve);
@@ -5184,7 +5184,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 							exchange_unit_id(data, manifest.name);
 						}
 						if constexpr (check_version(version, {72})) {
-							exchange_unit_floating<FloatingS64>(data, manifest.time);
+							exchange_unit_floater<FloaterS64>(data, manifest.time);
 						}
 						if constexpr (check_version(version, {72, 140})) {
 							exchange_unit_constant(data, 0_iu32);
@@ -5329,7 +5329,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					},
 					[] (auto & data, auto & manifest) {
 						if constexpr (check_version(version, {72})) {
-							exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+							exchange_unit_floater<FloaterS32>(data, manifest.position.x);
 						}
 						if constexpr (check_version(version, {72})) {
 							exchange_unit_id(data, manifest.position.y);
@@ -5349,16 +5349,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		) -> Void {
 			exchange_unit_id(data, manifest.id);
 			if constexpr (check_version(version, {72})) {
-				exchange_unit_floating<FloatingS32>(data, manifest.range_default);
+				exchange_unit_floater<FloaterS32>(data, manifest.range_default);
 			}
 			if constexpr (check_version(version, {112})) {
 				exchange_unit_bit<IntegerU32>(data, manifest.interpolation_mode);
 			}
 			if constexpr (check_version(version, {112})) {
-				exchange_unit_floating<FloatingS32>(data, manifest.interpolation_attack);
+				exchange_unit_floater<FloaterS32>(data, manifest.interpolation_attack);
 			}
 			if constexpr (check_version(version, {112})) {
-				exchange_unit_floating<FloatingS32>(data, manifest.interpolation_release);
+				exchange_unit_floater<FloaterS32>(data, manifest.interpolation_release);
 			}
 			if constexpr (check_version(version, {112})) {
 				exchange_unit_bit<IntegerU8>(data, manifest.bind_to_built_in_parameter);
@@ -5372,22 +5372,22 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		) -> Void {
 			exchange_unit_id(data, manifest.id);
 			if constexpr (check_version(version, {140})) {
-				exchange_unit_floating<FloatingS32>(data, manifest.u1);
+				exchange_unit_floater<FloaterS32>(data, manifest.u1);
 			}
 			if constexpr (check_version(version, {140})) {
-				exchange_unit_floating<FloatingS32>(data, manifest.u2);
+				exchange_unit_floater<FloaterS32>(data, manifest.u2);
 			}
 			if constexpr (check_version(version, {140})) {
-				exchange_unit_floating<FloatingS32>(data, manifest.u3);
+				exchange_unit_floater<FloaterS32>(data, manifest.u3);
 			}
 			if constexpr (check_version(version, {140})) {
-				exchange_unit_floating<FloatingS32>(data, manifest.u4);
+				exchange_unit_floater<FloaterS32>(data, manifest.u4);
 			}
 			if constexpr (check_version(version, {140})) {
-				exchange_unit_floating<FloatingS32>(data, manifest.u5);
+				exchange_unit_floater<FloaterS32>(data, manifest.u5);
 			}
 			if constexpr (check_version(version, {140})) {
-				exchange_unit_floating<FloatingS32>(data, manifest.u6);
+				exchange_unit_floater<FloaterS32>(data, manifest.u6);
 			}
 			return;
 		}
@@ -5410,7 +5410,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					},
 					[] (auto & data, auto & manifest) {
 						if constexpr (check_version(version, {72, 128})) {
-							exchange_unit_floating<FloatingS32>(data, manifest.value);
+							exchange_unit_floater<FloaterS32>(data, manifest.value);
 						}
 					}
 				);
@@ -5428,7 +5428,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					},
 					[] (auto & data, auto & manifest) {
 						if constexpr (check_version(version, {128})) {
-							exchange_unit_floating<FloatingS32>(data, manifest.value);
+							exchange_unit_floater<FloaterS32>(data, manifest.value);
 						}
 					}
 				);
@@ -5687,13 +5687,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						exchange_unit_bit<IntegerU8>(data, property_manifest.seek_type);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.seek_value.value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.seek_value.value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.seek_value.minimum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.seek_value.minimum_value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.seek_value.maximum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.seek_value.maximum_value);
 					}
 					if constexpr (check_version(version, {72})) {
 						exchange_unit_bit<IntegerU8>(
@@ -5752,13 +5752,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						exchange_unit_bit<IntegerU8>(data, property_manifest.apply_mode);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.minimum_value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.maximum_value);
 					}
 					if constexpr (check_version(version, {72})) {
 						process_section_sub_of_exception_list();
@@ -5792,13 +5792,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						exchange_unit_bit<IntegerU8>(data, property_manifest.apply_mode);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.minimum_value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.maximum_value);
 					}
 					if constexpr (check_version(version, {72})) {
 						process_section_sub_of_exception_list();
@@ -5832,13 +5832,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						exchange_unit_bit<IntegerU8>(data, property_manifest.apply_mode);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.minimum_value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.maximum_value);
 					}
 					if constexpr (check_version(version, {72})) {
 						process_section_sub_of_exception_list();
@@ -5872,13 +5872,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						exchange_unit_bit<IntegerU8>(data, property_manifest.apply_mode);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.minimum_value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.maximum_value);
 					}
 					if constexpr (check_version(version, {72})) {
 						process_section_sub_of_exception_list();
@@ -5912,13 +5912,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						exchange_unit_bit<IntegerU8>(data, property_manifest.apply_mode);
 					}
 					if constexpr (check_version(version, {112})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.value);
 					}
 					if constexpr (check_version(version, {112})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.minimum_value);
 					}
 					if constexpr (check_version(version, {112})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.maximum_value);
 					}
 					if constexpr (check_version(version, {112})) {
 						process_section_sub_of_exception_list();
@@ -5983,13 +5983,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						exchange_unit_bit<IntegerU8>(data, property_manifest.apply_mode);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.minimum_value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.maximum_value);
 					}
 					if constexpr (check_version(version, {72})) {
 						process_section_sub_of_exception_list();
@@ -6220,19 +6220,19 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				exchange_unit_bit<IntegerU8>(data, manifest.cone.enable);
 				if (manifest.cone.enable) {
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, manifest.cone.inner_angle);
+						exchange_unit_floater<FloaterS32>(data, manifest.cone.inner_angle);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, manifest.cone.outer_angle);
+						exchange_unit_floater<FloaterS32>(data, manifest.cone.outer_angle);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, manifest.cone.maximum_value);
+						exchange_unit_floater<FloaterS32>(data, manifest.cone.maximum_value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, manifest.cone.low_pass_filter);
+						exchange_unit_floater<FloaterS32>(data, manifest.cone.low_pass_filter);
 					}
 					if constexpr (check_version(version, {112})) {
-						exchange_unit_floating<FloatingS32>(data, manifest.cone.high_pass_filter);
+						exchange_unit_floater<FloaterS32>(data, manifest.cone.high_pass_filter);
 					}
 				}
 			}
@@ -6297,10 +6297,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								},
 								[] (auto & data, auto & manifest) {
 									if constexpr (check_version(version, {72})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.x);
 									}
 									if constexpr (check_version(version, {72})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.y);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.y);
 									}
 									if constexpr (check_version(version, {72})) {
 										exchange_unit_bit<IntegerU32>(data, manifest.curve);
@@ -7380,7 +7380,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				process_section_sub(data, manifest.stinger);
 			}
 			if constexpr (check_version(version, {72})) {
-				exchange_unit_floating<FloatingS64>(data, manifest.playback_setting.duration);
+				exchange_unit_floater<FloaterS64>(data, manifest.playback_setting.duration);
 			}
 			if constexpr (check_version(version, {72})) {
 				process_section_sub(data, manifest.playback_setting.cue);
@@ -7714,7 +7714,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				exchange_unit_bit<IntegerU16>(data, manifest.voice_filter_behavior);
 			}
 			if constexpr (check_version(version, {72})) {
-				exchange_unit_floating<FloatingS32>(data, manifest.volume_threshold);
+				exchange_unit_floater<FloaterS32>(data, manifest.volume_threshold);
 			}
 			if constexpr (check_version(version, {72})) {
 				exchange_unit_integer<IntegerU16>(data, manifest.maximum_voice_instance);
@@ -7880,10 +7880,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								},
 								[] (auto & data, auto & manifest) {
 									if constexpr (check_version(version, {72, 112})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.x);
 									}
 									if constexpr (check_version(version, {72, 112})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.y);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.y);
 									}
 									if constexpr (check_version(version, {72, 112})) {
 										exchange_unit_bit<IntegerU32>(data, manifest.curve);
@@ -7926,10 +7926,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								},
 								[] (auto & data, auto & manifest) {
 									if constexpr (check_version(version, {112})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.x);
 									}
 									if constexpr (check_version(version, {112})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.y);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.y);
 									}
 									if constexpr (check_version(version, {112})) {
 										exchange_unit_bit<IntegerU32>(data, manifest.curve);
@@ -8199,7 +8199,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		template <auto type, typename Value> requires
 			CategoryConstraint<IsPureInstance<Value>>
 			&& (IsSame<Value, typename EnumerationAttribute<decltype(type)>::Attribute::template Element<static_cast<ZSize>(type.value)>::template Element<2_ixz>::template Element<1_ixz>>)
-			&& (IsSame<Value, Boolean, Integer, Floating>)
+			&& (IsSame<Value, Boolean, Integer, Floater>)
 		static auto exchange_common_property_as_regular (
 			CommonPropertyMap<decltype(type)> const &         map,
 			typename Manifest::template RegularValue<Value> & value
@@ -8216,7 +8216,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		template <auto type, typename Value> requires
 			CategoryConstraint<IsPureInstance<Value>>
 			&& (IsSame<Value, typename EnumerationAttribute<decltype(type)>::Attribute::template Element<static_cast<ZSize>(type.value)>::template Element<2_ixz>::template Element<1_ixz>>)
-			&& (IsSame<Value, Boolean, Integer, Floating>)
+			&& (IsSame<Value, Boolean, Integer, Floater>)
 		static auto exchange_common_property_as_randomizable (
 			CommonPropertyMap<decltype(type)> const &              map,
 			typename Manifest::template RandomizableValue<Value> & value
@@ -8623,14 +8623,14 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		template <typename RawValue> requires
 			CategoryConstraint<IsPureInstance<RawValue>>
-			&& (IsFloatingWrapper<RawValue>)
-		static auto exchange_unit_floating (
+			&& (IsFloaterWrapper<RawValue>)
+		static auto exchange_unit_floater (
 			IByteStreamView & data,
-			Floating &        value
+			Floater &         value
 		) -> Void {
 			auto raw_value = RawValue{};
 			data.read(raw_value);
-			value = cbw<Floating>(raw_value);
+			value = cbw<Floater>(raw_value);
 			return;
 		}
 
@@ -8748,7 +8748,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 
 		template <typename ActualValue> requires
 			CategoryConstraint<>
-			&& (IsSame<ActualValue, Boolean, Integer, Floating, Enumerated, IDWrapper>)
+			&& (IsSame<ActualValue, Boolean, Integer, Floater, Enumerated, IDWrapper>)
 		static auto process_unit_common_property_value (
 			IByteStreamView &     data,
 			CommonPropertyValue & value
@@ -8759,8 +8759,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			if constexpr (IsSame<ActualValue, Integer>) {
 				exchange_unit_integer<IntegerS32>(data, value.template set<Integer>());
 			}
-			if constexpr (IsSame<ActualValue, Floating>) {
-				exchange_unit_floating<FloatingS32>(data, value.template set<Floating>());
+			if constexpr (IsSame<ActualValue, Floater>) {
+				exchange_unit_floater<FloaterS32>(data, value.template set<Floater>());
 			}
 			if constexpr (IsSame<ActualValue, Enumerated>) {
 				exchange_unit_enumerated<IntegerU32>(data, value.template set<Enumerated>());
@@ -8914,10 +8914,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								},
 								[] (auto & data, auto & manifest) {
 									if constexpr (check_version(version, {72})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.x);
 									}
 									if constexpr (check_version(version, {72})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.y);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.y);
 									}
 									if constexpr (check_version(version, {72})) {
 										exchange_unit_bit<IntegerU32>(data, manifest.curve);
@@ -9037,7 +9037,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 							exchange_unit_bit<IntegerU8>(data, manifest.mode);
 						}
 						if constexpr (check_version(version, {112})) {
-							exchange_unit_floating<FloatingS32>(data, manifest.value);
+							exchange_unit_floater<FloaterS32>(data, manifest.value);
 						}
 					}
 				);
@@ -9254,9 +9254,9 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								[] (auto & count) {
 								},
 								[] (auto & data, auto & manifest) {
-									exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+									exchange_unit_floater<FloaterS32>(data, manifest.position.x);
 									exchange_unit_constant(data, 0_iu32);
-									exchange_unit_floating<FloatingS32>(data, manifest.position.y);
+									exchange_unit_floater<FloaterS32>(data, manifest.position.y);
 									exchange_unit_integer<IntegerU32>(data, manifest.duration);
 								}
 							);
@@ -9270,8 +9270,8 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 									exchange_unit_integer<IntegerU32>(data, manifest.point.count);
 								},
 								[] (auto & data, auto & manifest) {
-									exchange_unit_floating<FloatingS32>(data, manifest.random_range.left_right);
-									exchange_unit_floating<FloatingS32>(data, manifest.random_range.front_back);
+									exchange_unit_floater<FloaterS32>(data, manifest.random_range.left_right);
+									exchange_unit_floater<FloaterS32>(data, manifest.random_range.front_back);
 								}
 							);
 						}
@@ -9345,13 +9345,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								},
 								[] (auto & data, auto & manifest) {
 									if constexpr (check_version(version, {112, 132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.x);
 									}
 									if constexpr (check_version(version, {112, 132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.z);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.z);
 									}
 									if constexpr (check_version(version, {112, 132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.y);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.y);
 									}
 									if constexpr (check_version(version, {112, 132})) {
 										exchange_unit_integer<IntegerU32>(data, manifest.duration);
@@ -9375,13 +9375,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								},
 								[] (auto & data, auto & manifest) {
 									if constexpr (check_version(version, {112, 132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.random_range.left_right);
+										exchange_unit_floater<FloaterS32>(data, manifest.random_range.left_right);
 									}
 									if constexpr (check_version(version, {112, 132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.random_range.front_back);
+										exchange_unit_floater<FloaterS32>(data, manifest.random_range.front_back);
 									}
 									if constexpr (check_version(version, {112, 132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.random_range.up_down);
+										exchange_unit_floater<FloaterS32>(data, manifest.random_range.up_down);
 									}
 								}
 							);
@@ -9452,13 +9452,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								},
 								[] (auto & data, auto & manifest) {
 									if constexpr (check_version(version, {132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.x);
 									}
 									if constexpr (check_version(version, {132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.z);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.z);
 									}
 									if constexpr (check_version(version, {132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.y);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.y);
 									}
 									if constexpr (check_version(version, {132})) {
 										exchange_unit_integer<IntegerU32>(data, manifest.duration);
@@ -9482,13 +9482,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								},
 								[] (auto & data, auto & manifest) {
 									if constexpr (check_version(version, {132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.random_range.left_right);
+										exchange_unit_floater<FloaterS32>(data, manifest.random_range.left_right);
 									}
 									if constexpr (check_version(version, {132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.random_range.front_back);
+										exchange_unit_floater<FloaterS32>(data, manifest.random_range.front_back);
 									}
 									if constexpr (check_version(version, {132})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.random_range.up_down);
+										exchange_unit_floater<FloaterS32>(data, manifest.random_range.up_down);
 									}
 								}
 							);
@@ -9825,7 +9825,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				exchange_unit_integer<IntegerU32>(data, automatic_ducking_manifest.recovery_time);
 			}
 			if constexpr (check_version(version, {72})) {
-				exchange_unit_floating<FloatingS32>(data, automatic_ducking_manifest.maximum_ducking_volume);
+				exchange_unit_floater<FloaterS32>(data, automatic_ducking_manifest.maximum_ducking_volume);
 			}
 			if constexpr (check_version(version, {72})) {
 				exchange_unit_list<IntegerU32>(
@@ -9838,7 +9838,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 							exchange_unit_id(data, manifest.id);
 						}
 						if constexpr (check_version(version, {72})) {
-							exchange_unit_floating<FloatingS32>(data, manifest.volume);
+							exchange_unit_floater<FloaterS32>(data, manifest.volume);
 						}
 						if constexpr (check_version(version, {72})) {
 							exchange_unit_integer<IntegerU32>(data, manifest.fade_out);
@@ -9900,14 +9900,14 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 			if constexpr (check_version(version, {72})) {
 				// TODO : test frequency mode-preset time and offset
 				// NOTE : time = 960000 * signature / tempo, then with frequency mode-preset
-				exchange_unit_floating<FloatingS64>(data, time_setting_manifest.time);
+				exchange_unit_floater<FloaterS64>(data, time_setting_manifest.time);
 			}
 			if constexpr (check_version(version, {72})) {
 				// NOTE : 0 if mode.no, millisecond if mode.custom, else by mode-preset
-				exchange_unit_floating<FloatingS64>(data, time_setting_manifest.offset);
+				exchange_unit_floater<FloaterS64>(data, time_setting_manifest.offset);
 			}
 			if constexpr (check_version(version, {72})) {
-				exchange_unit_floating<FloatingS32>(data, time_setting_manifest.tempo);
+				exchange_unit_floater<FloaterS32>(data, time_setting_manifest.tempo);
 			}
 			if constexpr (check_version(version, {72})) {
 				exchange_unit_integer<IntegerU8>(data, time_setting_manifest.signature.first);
@@ -9953,16 +9953,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 							exchange_unit_id(data, manifest.event);
 						}
 						if constexpr (check_version(version, {72})) {
-							exchange_unit_floating<FloatingS64>(data, manifest.offset);
+							exchange_unit_floater<FloaterS64>(data, manifest.offset);
 						}
 						if constexpr (check_version(version, {72})) {
-							exchange_unit_floating<FloatingS64>(data, manifest.begin);
+							exchange_unit_floater<FloaterS64>(data, manifest.begin);
 						}
 						if constexpr (check_version(version, {72})) {
-							exchange_unit_floating<FloatingS64>(data, manifest.end);
+							exchange_unit_floater<FloaterS64>(data, manifest.end);
 						}
 						if constexpr (check_version(version, {72})) {
-							exchange_unit_floating<FloatingS64>(data, manifest.duration);
+							exchange_unit_floater<FloaterS64>(data, manifest.duration);
 						}
 					}
 				);
@@ -9993,10 +9993,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								},
 								[] (auto & data, auto & manifest) {
 									if constexpr (check_version(version, {72})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.x);
 									}
 									if constexpr (check_version(version, {72})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.y);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.y);
 									}
 									if constexpr (check_version(version, {72})) {
 										exchange_unit_bit<IntegerU32>(data, manifest.curve);
@@ -10302,13 +10302,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				exchange_unit_integer<IntegerS16>(data, play_mode_setting_manifest.continuous.loop.maximum_value);
 			}
 			if constexpr (check_version(version, {72})) {
-				exchange_unit_floating<FloatingS32>(data, play_mode_setting_manifest.continuous.transition_duration.value);
+				exchange_unit_floater<FloaterS32>(data, play_mode_setting_manifest.continuous.transition_duration.value);
 			}
 			if constexpr (check_version(version, {72})) {
-				exchange_unit_floating<FloatingS32>(data, play_mode_setting_manifest.continuous.transition_duration.minimum_value);
+				exchange_unit_floater<FloaterS32>(data, play_mode_setting_manifest.continuous.transition_duration.minimum_value);
 			}
 			if constexpr (check_version(version, {72})) {
-				exchange_unit_floating<FloatingS32>(data, play_mode_setting_manifest.continuous.transition_duration.maximum_value);
+				exchange_unit_floater<FloaterS32>(data, play_mode_setting_manifest.continuous.transition_duration.maximum_value);
 			}
 			if constexpr (check_version(version, {72})) {
 				exchange_unit_integer<IntegerU16>(data, play_type_setting_manifest.random.avoid_repeat);
@@ -10488,10 +10488,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 											},
 											[] (auto & data, auto & manifest) {
 												if constexpr (check_version(version, {72})) {
-													exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+													exchange_unit_floater<FloaterS32>(data, manifest.position.x);
 												}
 												if constexpr (check_version(version, {72})) {
-													exchange_unit_floating<FloatingS32>(data, manifest.position.y);
+													exchange_unit_floater<FloaterS32>(data, manifest.position.y);
 												}
 												if constexpr (check_version(version, {72})) {
 													exchange_unit_bit<IntegerU32>(data, manifest.curve);
@@ -10565,7 +10565,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 							exchange_unit_id(data, manifest.name);
 						}
 						if constexpr (check_version(version, {72})) {
-							exchange_unit_floating<FloatingS64>(data, manifest.time);
+							exchange_unit_floater<FloaterS64>(data, manifest.time);
 						}
 						if constexpr (check_version(version, {72, 140})) {
 							exchange_unit_constant(data, 0_iu32);
@@ -10710,7 +10710,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					},
 					[] (auto & data, auto & manifest) {
 						if constexpr (check_version(version, {72})) {
-							exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+							exchange_unit_floater<FloaterS32>(data, manifest.position.x);
 						}
 						if constexpr (check_version(version, {72})) {
 							exchange_unit_id(data, manifest.position.y);
@@ -10730,16 +10730,16 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		) -> Void {
 			exchange_unit_id(data, manifest.id);
 			if constexpr (check_version(version, {72})) {
-				exchange_unit_floating<FloatingS32>(data, manifest.range_default);
+				exchange_unit_floater<FloaterS32>(data, manifest.range_default);
 			}
 			if constexpr (check_version(version, {112})) {
 				exchange_unit_bit<IntegerU32>(data, manifest.interpolation_mode);
 			}
 			if constexpr (check_version(version, {112})) {
-				exchange_unit_floating<FloatingS32>(data, manifest.interpolation_attack);
+				exchange_unit_floater<FloaterS32>(data, manifest.interpolation_attack);
 			}
 			if constexpr (check_version(version, {112})) {
-				exchange_unit_floating<FloatingS32>(data, manifest.interpolation_release);
+				exchange_unit_floater<FloaterS32>(data, manifest.interpolation_release);
 			}
 			if constexpr (check_version(version, {112})) {
 				exchange_unit_bit<IntegerU8>(data, manifest.bind_to_built_in_parameter);
@@ -10753,22 +10753,22 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 		) -> Void {
 			exchange_unit_id(data, manifest.id);
 			if constexpr (check_version(version, {140})) {
-				exchange_unit_floating<FloatingS32>(data, manifest.u1);
+				exchange_unit_floater<FloaterS32>(data, manifest.u1);
 			}
 			if constexpr (check_version(version, {140})) {
-				exchange_unit_floating<FloatingS32>(data, manifest.u2);
+				exchange_unit_floater<FloaterS32>(data, manifest.u2);
 			}
 			if constexpr (check_version(version, {140})) {
-				exchange_unit_floating<FloatingS32>(data, manifest.u3);
+				exchange_unit_floater<FloaterS32>(data, manifest.u3);
 			}
 			if constexpr (check_version(version, {140})) {
-				exchange_unit_floating<FloatingS32>(data, manifest.u4);
+				exchange_unit_floater<FloaterS32>(data, manifest.u4);
 			}
 			if constexpr (check_version(version, {140})) {
-				exchange_unit_floating<FloatingS32>(data, manifest.u5);
+				exchange_unit_floater<FloaterS32>(data, manifest.u5);
 			}
 			if constexpr (check_version(version, {140})) {
-				exchange_unit_floating<FloatingS32>(data, manifest.u6);
+				exchange_unit_floater<FloaterS32>(data, manifest.u6);
 			}
 			return;
 		}
@@ -10791,7 +10791,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					},
 					[] (auto & data, auto & manifest) {
 						if constexpr (check_version(version, {72, 128})) {
-							exchange_unit_floating<FloatingS32>(data, manifest.value);
+							exchange_unit_floater<FloaterS32>(data, manifest.value);
 						}
 					}
 				);
@@ -10809,7 +10809,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 					},
 					[] (auto & data, auto & manifest) {
 						if constexpr (check_version(version, {128})) {
-							exchange_unit_floating<FloatingS32>(data, manifest.value);
+							exchange_unit_floater<FloaterS32>(data, manifest.value);
 						}
 					}
 				);
@@ -11060,13 +11060,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						exchange_unit_bit<IntegerU8>(data, property_manifest.seek_type);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.seek_value.value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.seek_value.value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.seek_value.minimum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.seek_value.minimum_value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.seek_value.maximum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.seek_value.maximum_value);
 					}
 					if constexpr (check_version(version, {72})) {
 						exchange_unit_bit<IntegerU8>(
@@ -11124,13 +11124,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						exchange_unit_bit<IntegerU8>(data, property_manifest.apply_mode);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.minimum_value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.maximum_value);
 					}
 					if constexpr (check_version(version, {72})) {
 						process_section_sub_of_exception_list();
@@ -11164,13 +11164,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						exchange_unit_bit<IntegerU8>(data, property_manifest.apply_mode);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.minimum_value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.maximum_value);
 					}
 					if constexpr (check_version(version, {72})) {
 						process_section_sub_of_exception_list();
@@ -11204,13 +11204,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						exchange_unit_bit<IntegerU8>(data, property_manifest.apply_mode);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.minimum_value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.maximum_value);
 					}
 					if constexpr (check_version(version, {72})) {
 						process_section_sub_of_exception_list();
@@ -11244,13 +11244,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						exchange_unit_bit<IntegerU8>(data, property_manifest.apply_mode);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.minimum_value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.maximum_value);
 					}
 					if constexpr (check_version(version, {72})) {
 						process_section_sub_of_exception_list();
@@ -11284,13 +11284,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						exchange_unit_bit<IntegerU8>(data, property_manifest.apply_mode);
 					}
 					if constexpr (check_version(version, {112})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.value);
 					}
 					if constexpr (check_version(version, {112})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.minimum_value);
 					}
 					if constexpr (check_version(version, {112})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.maximum_value);
 					}
 					if constexpr (check_version(version, {112})) {
 						process_section_sub_of_exception_list();
@@ -11355,13 +11355,13 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 						exchange_unit_bit<IntegerU8>(data, property_manifest.apply_mode);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.minimum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.minimum_value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, property_manifest.value.maximum_value);
+						exchange_unit_floater<FloaterS32>(data, property_manifest.value.maximum_value);
 					}
 					if constexpr (check_version(version, {72})) {
 						process_section_sub_of_exception_list();
@@ -11584,19 +11584,19 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				exchange_unit_bit<IntegerU8>(data, manifest.cone.enable);
 				if (manifest.cone.enable) {
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, manifest.cone.inner_angle);
+						exchange_unit_floater<FloaterS32>(data, manifest.cone.inner_angle);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, manifest.cone.outer_angle);
+						exchange_unit_floater<FloaterS32>(data, manifest.cone.outer_angle);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, manifest.cone.maximum_value);
+						exchange_unit_floater<FloaterS32>(data, manifest.cone.maximum_value);
 					}
 					if constexpr (check_version(version, {72})) {
-						exchange_unit_floating<FloatingS32>(data, manifest.cone.low_pass_filter);
+						exchange_unit_floater<FloaterS32>(data, manifest.cone.low_pass_filter);
 					}
 					if constexpr (check_version(version, {112})) {
-						exchange_unit_floating<FloatingS32>(data, manifest.cone.high_pass_filter);
+						exchange_unit_floater<FloaterS32>(data, manifest.cone.high_pass_filter);
 					}
 				}
 			}
@@ -11661,10 +11661,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								},
 								[] (auto & data, auto & manifest) {
 									if constexpr (check_version(version, {72})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.x);
 									}
 									if constexpr (check_version(version, {72})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.y);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.y);
 									}
 									if constexpr (check_version(version, {72})) {
 										exchange_unit_bit<IntegerU32>(data, manifest.curve);
@@ -12750,7 +12750,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				process_section_sub(data, manifest.stinger);
 			}
 			if constexpr (check_version(version, {72})) {
-				exchange_unit_floating<FloatingS64>(data, manifest.playback_setting.duration);
+				exchange_unit_floater<FloaterS64>(data, manifest.playback_setting.duration);
 			}
 			if constexpr (check_version(version, {72})) {
 				process_section_sub(data, manifest.playback_setting.cue);
@@ -13088,7 +13088,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 				exchange_unit_bit<IntegerU16>(data, manifest.voice_filter_behavior);
 			}
 			if constexpr (check_version(version, {72})) {
-				exchange_unit_floating<FloatingS32>(data, manifest.volume_threshold);
+				exchange_unit_floater<FloaterS32>(data, manifest.volume_threshold);
 			}
 			if constexpr (check_version(version, {72})) {
 				exchange_unit_integer<IntegerU16>(data, manifest.maximum_voice_instance);
@@ -13252,10 +13252,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								},
 								[] (auto & data, auto & manifest) {
 									if constexpr (check_version(version, {72, 112})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.x);
 									}
 									if constexpr (check_version(version, {72, 112})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.y);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.y);
 									}
 									if constexpr (check_version(version, {72, 112})) {
 										exchange_unit_bit<IntegerU32>(data, manifest.curve);
@@ -13298,10 +13298,10 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 								},
 								[] (auto & data, auto & manifest) {
 									if constexpr (check_version(version, {112})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.x);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.x);
 									}
 									if constexpr (check_version(version, {112})) {
-										exchange_unit_floating<FloatingS32>(data, manifest.position.y);
+										exchange_unit_floater<FloaterS32>(data, manifest.position.y);
 									}
 									if constexpr (check_version(version, {112})) {
 										exchange_unit_bit<IntegerU32>(data, manifest.curve);

@@ -5,11 +5,7 @@ namespace TwinStar.Script.Shell {
 	export function callback(
 		argument: Array<string>,
 	): Array<string> {
-		let result = CoreX.Miscellaneous.callback(argument);
-		if (result[0].length !== 0) {
-			throw new Error(`callback invoke failed : ${result[0]}`);
-		}
-		return result.slice(1);
+		return CoreX.Miscellaneous.callback(argument);
 	}
 
 	// ------------------------------------------------
@@ -51,22 +47,14 @@ namespace TwinStar.Script.Shell {
 		return result[0];
 	}
 
-	export function windows_cli_open_file_dialog(
-		pick_folder: boolean,
-		multiple: boolean,
-	): Array<string> {
-		let result = callback(['open_file_dialog', `${pick_folder}`, `${multiple}`]);
-		return result;
-	}
-
 	// ------------------------------------------------
 
-	export function gui_output_notify(
+	export function gui_output_message(
 		type: 'v' | 'i' | 'w' | 'e' | 's' | 't',
 		title: string,
 		description: Array<string>,
 	): void {
-		let result = callback(['output_notify', type, title, ...description]);
+		let result = callback(['output_message', type, title, ...description]);
 		return;
 	}
 
@@ -76,9 +64,9 @@ namespace TwinStar.Script.Shell {
 		return;
 	}
 
-	export function gui_input_confirm(
+	export function gui_input_confirmation(
 	): string | null {
-		let result = callback(['input_confirm']);
+		let result = callback(['input_confirmation']);
 		return result[0].length === 0 ? null : result[0];
 	}
 
@@ -111,6 +99,14 @@ namespace TwinStar.Script.Shell {
 	): string | null {
 		let result = callback(['input_option', ...option]);
 		return result[0].length === 0 ? null : result[0];
+	}
+
+	export function gui_push_notification(
+		title: string,
+		description: string,
+	): void {
+		let result = callback(['push_notification', title, description]);
+		return;
 	}
 
 	// ------------------------------------------------

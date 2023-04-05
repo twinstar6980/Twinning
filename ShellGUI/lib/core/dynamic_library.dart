@@ -28,20 +28,22 @@ class DynamicLibrary extends Library {
   // ----------------
 
   @override
-  ffi.Pointer<Interface.Size>
+  ffi.Pointer<Interface.String>
   version(
+    ffi.Pointer<ffi.Pointer<Interface.Size>> number,
   ) {
-    return this._symbol.version.asFunction<Interface.version>()();
+    return this._symbol.version.asFunction<Interface.version>()(number);
   }
 
   @override
   ffi.Pointer<Interface.String>
   execute(
-    ffi.Pointer<Interface.Callback>   callback,
-    ffi.Pointer<Interface.String>     script,
-    ffi.Pointer<Interface.StringList> argument,
+    ffi.Pointer<ffi.Pointer<Interface.Callback>> callback,
+    ffi.Pointer<ffi.Pointer<Interface.String>> script,
+    ffi.Pointer<ffi.Pointer<Interface.StringList>> argument,
+    ffi.Pointer<ffi.Pointer<Interface.String>> result,
   ) {
-    return this._symbol.execute.asFunction<Interface.execute>()(callback, script, argument);
+    return this._symbol.execute.asFunction<Interface.execute>()(callback, script, argument, result);
   }
 
   @override

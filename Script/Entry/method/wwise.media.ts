@@ -16,9 +16,9 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 		g_executor_method.push(
 			Executor.method_of({
 				id: 'wwise.media.decode',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					ripe_file: Executor.RequireArgument<string>;
@@ -34,43 +34,43 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 					let tool_ww2ogg_code_book_file: string;
 					{
 						ripe_file = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'ripe_file'),
+							Executor.query_argument_name(this.id, 'ripe_file'),
 							a.ripe_file,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_file(value)),
 						);
 						raw_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'raw_file'),
+							Executor.query_argument_name(this.id, 'raw_file'),
 							a.raw_file,
 							(value) => (value),
 							() => (ripe_file.replace(/((\.wem))?$/i, '.wav')),
-							...Executor.argument_requester_for_path('file', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						tool_ffmpeg_program_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'tool_ffmpeg_program_file'),
+							Executor.query_argument_name(this.id, 'tool_ffmpeg_program_file'),
 							a.tool_ffmpeg_program_file,
 							(value) => (HomeDirectory.of(value)),
 							null,
-							...Executor.argument_requester_for_path('file', [true]),
+							(initial) => (Console.path('file', [true], null, null, initial)),
 						);
 						tool_ww2ogg_program_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'tool_ww2ogg_program_file'),
+							Executor.query_argument_name(this.id, 'tool_ww2ogg_program_file'),
 							a.tool_ww2ogg_program_file,
 							(value) => (HomeDirectory.of(value)),
 							null,
-							...Executor.argument_requester_for_path('file', [true]),
+							(initial) => (Console.path('file', [true], null, null, initial)),
 						);
 						tool_ww2ogg_code_book_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'tool_ww2ogg_code_book_file'),
+							Executor.query_argument_name(this.id, 'tool_ww2ogg_code_book_file'),
 							a.tool_ww2ogg_code_book_file,
 							(value) => (HomeDirectory.of(value)),
 							null,
-							...Executor.argument_requester_for_path('file', [true]),
+							(initial) => (Console.path('file', [true], null, null, initial)),
 						);
 					}
 					let temporary_directpry = HomeDirectory.new_temporary();
 					CoreX.Tool.Wwise.Media.decode_fs(ripe_file, raw_file, tool_ffmpeg_program_file, tool_ww2ogg_program_file, tool_ww2ogg_code_book_file, temporary_directpry, {});
-					Console.notify('s', los(`执行成功`), [`${raw_file}`]);
+					Console.message('s', los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -87,9 +87,9 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 		g_executor_method_of_batch.push(
 			Executor.method_of({
 				id: 'wwise.media.decode.batch',
-				descriptor(
+				name(
 				) {
-					return Executor.query_method_description(this.id);
+					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CFSA & {
 					ripe_file_directory: Executor.RequireArgument<string>;
@@ -105,38 +105,38 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 					let tool_ww2ogg_code_book_file: string;
 					{
 						ripe_file_directory = Executor.require_argument(
-							...Executor.query_argument_message(this.id, 'ripe_file_directory'),
+							Executor.query_argument_name(this.id, 'ripe_file_directory'),
 							a.ripe_file_directory,
 							(value) => (value),
 							(value) => (CoreX.FileSystem.exist_directory(value)),
 						);
 						raw_file_directory = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'raw_file_directory'),
+							Executor.query_argument_name(this.id, 'raw_file_directory'),
 							a.raw_file_directory,
 							(value) => (value),
 							() => (ripe_file_directory.replace(/$/i, '.decode')),
-							...Executor.argument_requester_for_path('directory', [false, a.fs_tactic_if_exist]),
+							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
 						);
 						tool_ffmpeg_program_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'tool_ffmpeg_program_file'),
+							Executor.query_argument_name(this.id, 'tool_ffmpeg_program_file'),
 							a.tool_ffmpeg_program_file,
 							(value) => (HomeDirectory.of(value)),
 							null,
-							...Executor.argument_requester_for_path('file', [true]),
+							(initial) => (Console.path('file', [true], null, null, initial)),
 						);
 						tool_ww2ogg_program_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'tool_ww2ogg_program_file'),
+							Executor.query_argument_name(this.id, 'tool_ww2ogg_program_file'),
 							a.tool_ww2ogg_program_file,
 							(value) => (HomeDirectory.of(value)),
 							null,
-							...Executor.argument_requester_for_path('file', [true]),
+							(initial) => (Console.path('file', [true], null, null, initial)),
 						);
 						tool_ww2ogg_code_book_file = Executor.request_argument(
-							...Executor.query_argument_message(this.id, 'tool_ww2ogg_code_book_file'),
+							Executor.query_argument_name(this.id, 'tool_ww2ogg_code_book_file'),
 							a.tool_ww2ogg_code_book_file,
 							(value) => (HomeDirectory.of(value)),
 							null,
-							...Executor.argument_requester_for_path('file', [true]),
+							(initial) => (Console.path('file', [true], null, null, initial)),
 						);
 					}
 					let temporary_directpry = HomeDirectory.new_temporary();
@@ -149,7 +149,7 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 							CoreX.Tool.Wwise.Media.decode_fs(ripe_file, raw_file, tool_ffmpeg_program_file, tool_ww2ogg_program_file, tool_ww2ogg_code_book_file, temporary_directpry, {});
 						},
 					);
-					Console.notify('s', los(`执行成功`), [`${raw_file_directory}`]);
+					Console.message('s', los(`执行成功`), [`${raw_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
