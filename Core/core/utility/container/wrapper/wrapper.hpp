@@ -55,11 +55,11 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			Wrapper const & that
-		) -> Wrapper& = default;
+		) -> Wrapper & = default;
 
 		constexpr auto operator = (
 			Wrapper && that
-		) -> Wrapper& = default;
+		) -> Wrapper & = default;
 
 		#pragma endregion
 
@@ -70,7 +70,7 @@ namespace TwinStar::Core {
 			&& (IsConstructible<Value, Argument && ...>)
 		constexpr auto set (
 			Argument && ... argument
-		) -> Value& {
+		) -> Value & {
 			restruct(thiz.m_value, as_forward<Argument>(argument) ...);
 			return thiz.m_value;
 		}
@@ -78,12 +78,12 @@ namespace TwinStar::Core {
 		// ----------------
 
 		constexpr auto get (
-		) -> Value& {
+		) -> Value & {
 			return thiz.m_value;
 		}
 
 		constexpr auto get (
-		) const -> Value const& {
+		) const -> Value const & {
 			return thiz.m_value;
 		}
 

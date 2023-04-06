@@ -187,7 +187,7 @@ namespace TwinStar::Core::Trait {
 		CategoryConstraint<IsValid<It>>
 	inline constexpr auto as_lvalue (
 		It && it
-	) -> AsUnmakeReference<It>& {
+	) -> AsUnmakeReference<It> & {
 		return static_cast<AsUnmakeReference<It> &>(it);
 	}
 
@@ -195,7 +195,7 @@ namespace TwinStar::Core::Trait {
 		CategoryConstraint<IsValid<It>>
 	inline constexpr auto as_rvalue (
 		It && it
-	) -> AsUnmakeReference<It>&& {
+	) -> AsUnmakeReference<It> && {
 		return static_cast<AsUnmakeReference<It> &&>(it);
 	}
 
@@ -205,7 +205,7 @@ namespace TwinStar::Core::Trait {
 		CategoryConstraint<IsInstance<It>>
 	inline constexpr auto as_variable (
 		It & it
-	) -> AsPure<It>& {
+	) -> AsPure<It> & {
 		return const_cast<AsPure<It> &>(it);
 	}
 
@@ -213,7 +213,7 @@ namespace TwinStar::Core::Trait {
 		CategoryConstraint<IsInstance<It>>
 	inline constexpr auto as_constant (
 		It & it
-	) -> AsPure<It> const& {
+	) -> AsPure<It> const & {
 		return static_cast<AsPure<It> const &>(it);
 	}
 
@@ -221,7 +221,7 @@ namespace TwinStar::Core::Trait {
 		CategoryConstraint<IsInstance<It>>
 	inline constexpr auto as_moveable (
 		It & it
-	) -> AsPure<It>&& {
+	) -> AsPure<It> && {
 		return static_cast<AsPure<It> &&>(it);
 	}
 
@@ -231,7 +231,7 @@ namespace TwinStar::Core::Trait {
 		CategoryConstraint<IsValid<It>>
 	inline constexpr auto as_forward (
 		AsUnmakeReference<It> & it
-	) -> It&& {
+	) -> It && {
 		return static_cast<It &&>(it);
 	}
 
@@ -239,7 +239,7 @@ namespace TwinStar::Core::Trait {
 		CategoryConstraint<IsValid<It>>
 	inline constexpr auto as_forward (
 		AsUnmakeReference<It> && it
-	) -> It&& {
+	) -> It && {
 		return static_cast<It &&>(it);
 	}
 
@@ -249,7 +249,7 @@ namespace TwinStar::Core::Trait {
 		CategoryConstraint<IsPureInstance<That> && IsPureInstance<It>>
 	inline auto self_cast (
 		It & it
-	) -> That& {
+	) -> That & {
 		return reinterpret_cast<That &>(it);
 	}
 
@@ -257,7 +257,7 @@ namespace TwinStar::Core::Trait {
 		CategoryConstraint<IsPureInstance<That> && IsPureInstance<It>>
 	inline auto self_cast (
 		It const & it
-	) -> That const& {
+	) -> That const & {
 		return reinterpret_cast<That const &>(it);
 	}
 
@@ -265,7 +265,7 @@ namespace TwinStar::Core::Trait {
 		CategoryConstraint<IsPureInstance<That> && IsPureInstance<It>>
 	inline auto self_cast (
 		It && it
-	) -> That&& {
+	) -> That && {
 		return reinterpret_cast<That &&>(it);
 	}
 

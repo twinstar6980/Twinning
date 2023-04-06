@@ -5,11 +5,11 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 	// encode
 	// decode
 
-	type Config = {
+	type Configuration = {
 	};
 
 	export function _injector(
-		config: Config,
+		configuration: Configuration,
 	) {
 		g_executor_method.push(
 			Executor.method_of({

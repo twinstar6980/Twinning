@@ -210,7 +210,7 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 				switch (format) {
 					case 'rgb_etc1_a_palette': {
 						assert_test(option.rgb_etc1_a_palette !== null, `option is null`);
-						data_size = CoreX.Tool.Image.Texture.compute_data_size(size, 'rgb_etc1') + CoreX.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.compute_data_size_with_palette(size, option.rgb_etc1_a_palette.palette.length);
+						data_size = CoreX.Tool.Image.Texture.compute_data_size(size, 'rgb_etc1') + CoreX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.compute_data_size_with_palette(size, option.rgb_etc1_a_palette.palette.length);
 						break;
 					}
 				}
@@ -235,7 +235,7 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 					case 'rgb_etc1_a_palette': {
 						assert_test(option.rgb_etc1_a_palette !== null, `option is null`);
 						CoreX.Tool.Image.Texture.encode(data, image, 'rgb_etc1');
-						CoreX.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.encode_with_palette(data, image, option.rgb_etc1_a_palette.palette);
+						CoreX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.encode_with_palette(data, image, option.rgb_etc1_a_palette.palette);
 						break;
 					}
 				}
@@ -261,7 +261,7 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 				switch (format) {
 					case 'rgb_etc1_a_palette': {
 						CoreX.Tool.Image.Texture.decode(data, image, 'rgb_etc1');
-						CoreX.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.decode_with_palette(data, image);
+						CoreX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.decode_with_palette(data, image);
 						break;
 					}
 				}
@@ -289,7 +289,7 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 		};
 		if (format === 'rgb_etc1_a_palette') {
 			option.rgb_etc1_a_palette = {
-				palette: CoreX.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.evaluate_palette(image_view),
+				palette: CoreX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.evaluate_palette(image_view),
 			};
 		}
 		let data_size = compute_data_size(padded_image_size, format, option);

@@ -58,15 +58,21 @@ namespace TwinStar::WindowsExplorerExtension {
 			_In_opt_ IShellItemArray *            psiItemArray,
 			_Outptr_result_nullonfailure_ PWSTR * ppszInfotip
 		) override {
-			*ppszInfotip = nullptr;
-			return E_NOTIMPL;
+			try {
+				*ppszInfotip = nullptr;
+				return E_NOTIMPL;
+			}
+			CATCH_RETURN()
 		}
 
 		virtual IFACEMETHODIMP GetCanonicalName (
 			_Out_ GUID * pguidCommandName
 		) override {
-			*pguidCommandName = GUID_NULL;
-			return S_OK;
+			try {
+				*pguidCommandName = GUID_NULL;
+				return S_OK;
+			}
+			CATCH_RETURN()
 		}
 
 		virtual IFACEMETHODIMP GetState (
@@ -76,6 +82,16 @@ namespace TwinStar::WindowsExplorerExtension {
 		) override {
 			try {
 				*pCmdState = thiz.state(psiItemArray);
+				return S_OK;
+			}
+			CATCH_RETURN()
+		}
+
+		virtual IFACEMETHODIMP GetFlags (
+			_Out_ EXPCMDFLAGS * pFlags
+		) override {
+			try {
+				*pFlags = thiz.flags();
 				return S_OK;
 			}
 			CATCH_RETURN()
@@ -92,21 +108,14 @@ namespace TwinStar::WindowsExplorerExtension {
 			CATCH_RETURN()
 		}
 
-		virtual IFACEMETHODIMP GetFlags (
-			_Out_ EXPCMDFLAGS * pFlags
-		) override {
-			try {
-				*pFlags = thiz.flags();
-				return S_OK;
-			}
-			CATCH_RETURN()
-		}
-
 		virtual IFACEMETHODIMP EnumSubCommands (
 			_COM_Outptr_ IEnumExplorerCommand ** ppEnum
 		) override {
-			*ppEnum = nullptr;
-			return E_NOTIMPL;
+			try {
+				*ppEnum = nullptr;
+				return E_NOTIMPL;
+			}
+			CATCH_RETURN()
 		}
 
 		// ----------------

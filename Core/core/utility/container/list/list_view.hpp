@@ -67,17 +67,17 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			ListView const & that
-		) -> ListView& = default;
+		) -> ListView & = default;
 
 		constexpr auto operator = (
 			ListView && that
-		) -> ListView& = default;
+		) -> ListView & = default;
 
 		// ----------------
 
 		constexpr auto operator [] (
 			Size const & index
-		) const -> QElement& {
+		) const -> QElement & {
 			return thiz.at(index);
 		}
 
@@ -180,18 +180,18 @@ namespace TwinStar::Core {
 
 		constexpr auto at (
 			Size const & index
-		) const -> QElement& {
+		) const -> QElement & {
 			assert_test(index < thiz.end_index());
 			return thiz.m_data.dereference(index);
 		}
 
 		constexpr auto first (
-		) const -> QElement& {
+		) const -> QElement & {
 			return thiz.at(thiz.first_index());
 		}
 
 		constexpr auto last (
-		) const -> QElement& {
+		) const -> QElement & {
 			return thiz.at(thiz.last_index());
 		}
 

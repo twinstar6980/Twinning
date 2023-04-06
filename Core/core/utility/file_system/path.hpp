@@ -51,11 +51,11 @@ namespace TwinStar::Core {
 
 		auto operator = (
 			Path const & that
-		) -> Path& = default;
+		) -> Path & = default;
 
 		auto operator = (
 			Path && that
-		) -> Path& = default;
+		) -> Path & = default;
 
 		// ----------------
 
@@ -115,14 +115,14 @@ namespace TwinStar::Core {
 
 		auto operator /= (
 			String const & that
-		) -> Path& {
+		) -> Path & {
 			thiz.m_sub_path.append(that);
 			return thiz;
 		}
 
 		auto operator /= (
 			String && that
-		) -> Path& {
+		) -> Path & {
 			thiz.m_sub_path.append(as_moveable(that));
 			return thiz;
 		}
@@ -131,7 +131,7 @@ namespace TwinStar::Core {
 
 		auto operator /= (
 			Path const & that
-		) -> Path& {
+		) -> Path & {
 			assert_test(!that.m_root && !that.m_absolute);
 			thiz.m_sub_path.append_list(that.m_sub_path);
 			return thiz;
@@ -139,7 +139,7 @@ namespace TwinStar::Core {
 
 		auto operator /= (
 			Path && that
-		) -> Path& {
+		) -> Path & {
 			assert_test(!that.m_root && !that.m_absolute);
 			thiz.m_sub_path.append_list(make_moveable_range_of(that.m_sub_path));
 			return thiz;
@@ -150,17 +150,17 @@ namespace TwinStar::Core {
 		#pragma region value
 
 		auto root (
-		) const -> Optional<String> const& {
+		) const -> Optional<String> const & {
 			return thiz.m_root;
 		}
 
 		auto absolute (
-		) const -> Boolean const& {
+		) const -> Boolean const & {
 			return thiz.m_absolute;
 		}
 
 		auto sub_path (
-		) const -> List<String> const& {
+		) const -> List<String> const & {
 			return thiz.m_sub_path;
 		}
 

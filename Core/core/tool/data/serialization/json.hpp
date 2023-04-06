@@ -291,7 +291,7 @@ namespace TwinStar::Core::Tool::Data::Serialization::JSON {
 					CLOSE_LOOP_ARRAY:
 						array.assign(
 							value_list,
-							[] (auto & element) -> auto&& {
+							[] (auto & element) -> auto && {
 								return as_moveable(element);
 							}
 						);
@@ -366,7 +366,7 @@ namespace TwinStar::Core::Tool::Data::Serialization::JSON {
 					TCLOSE_LOOP_OBJEC:
 						object.assign(
 							value_list,
-							[] (auto & element) -> auto&& {
+							[] (auto & element) -> auto && {
 								return as_moveable(element);
 							}
 						);

@@ -39,11 +39,11 @@ namespace TwinStar::Core {
 
 		auto operator = (
 			Any const & that
-		) -> Any& = default;
+		) -> Any & = default;
 
 		auto operator = (
 			Any && that
-		) -> Any& = default;
+		) -> Any & = default;
 
 		#pragma endregion
 
@@ -74,7 +74,7 @@ namespace TwinStar::Core {
 			&& (IsConstructible<ValueObject, Argument && ...>)
 		auto set (
 			Argument && ... argument
-		) -> ValueObject& {
+		) -> ValueObject & {
 			thiz.m_value.emplace<ValueObject>(as_forward<Argument>(argument) ...);
 			return *std::any_cast<ValueObject>(&thiz.m_value);
 		}
@@ -84,7 +84,7 @@ namespace TwinStar::Core {
 		template <typename ValueObject> requires
 			CategoryConstraint<IsPureInstance<ValueObject>>
 		auto get (
-		) -> ValueObject& {
+		) -> ValueObject & {
 			assert_test(thiz.is<ValueObject>());
 			return *std::any_cast<ValueObject>(&thiz.m_value);
 		}
@@ -92,7 +92,7 @@ namespace TwinStar::Core {
 		template <typename ValueObject> requires
 			CategoryConstraint<IsPureInstance<ValueObject>>
 		auto get (
-		) const -> ValueObject const& {
+		) const -> ValueObject const & {
 			assert_test(thiz.is<ValueObject>());
 			return *std::any_cast<ValueObject>(&thiz.m_value);
 		}

@@ -5,14 +5,14 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 	// encode *
 	// decode *
 
-	type Config = {
+	type Configuration = {
 		version_platform: Executor.RequestArgument<string, false>;
 		version_variant_64: Executor.RequestArgument<boolean, false>;
 		encode_buffer_size: Executor.RequestArgument<string, false>;
 	};
 
 	export function _injector(
-		config: Config,
+		configuration: Configuration,
 	) {
 		g_executor_method.push(
 			Executor.method_of({
@@ -76,9 +76,9 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 					...Entry.k_cfsa,
 					manifest_file: undefined!,
 					data_file: '?default',
-					version_platform: config.version_platform,
-					version_variant_64: config.version_variant_64,
-					buffer_size: config.encode_buffer_size,
+					version_platform: configuration.version_platform,
+					version_variant_64: configuration.version_variant_64,
+					buffer_size: configuration.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.particle)(\.json)$/i]]),
 				input_forwarder: 'manifest_file',
@@ -135,8 +135,8 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 					...Entry.k_cfsa,
 					data_file: undefined!,
 					manifest_file: '?default',
-					version_platform: config.version_platform,
-					version_variant_64: config.version_variant_64,
+					version_platform: configuration.version_platform,
+					version_variant_64: configuration.version_variant_64,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.xml)(\.compiled)$/i]]),
 				input_forwarder: 'data_file',
@@ -213,9 +213,9 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 					...Entry.k_cfsa,
 					manifest_file_directory: undefined!,
 					data_file_directory: '?default',
-					version_platform: config.version_platform,
-					version_variant_64: config.version_variant_64,
-					buffer_size: config.encode_buffer_size,
+					version_platform: configuration.version_platform,
+					version_variant_64: configuration.version_variant_64,
+					buffer_size: configuration.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'manifest_file_directory',
@@ -280,8 +280,8 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 					...Entry.k_cfsa,
 					data_file_directory: undefined!,
 					manifest_file_directory: '?default',
-					version_platform: config.version_platform,
-					version_variant_64: config.version_variant_64,
+					version_platform: configuration.version_platform,
+					version_variant_64: configuration.version_variant_64,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'data_file_directory',

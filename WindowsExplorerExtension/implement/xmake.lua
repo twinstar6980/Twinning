@@ -4,7 +4,6 @@ target('implement', function()
 	set_group('source')
 	set_kind('shared')
 	add_headerfiles(
-		'./version.hpp',
 		'./common.hpp',
 		'./language.hpp',
 		'./base_command.hpp',

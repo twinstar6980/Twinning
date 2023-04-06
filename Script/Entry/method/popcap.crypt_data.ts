@@ -5,13 +5,13 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 	// encrypt
 	// decrypt
 
-	type Config = {
+	type Configuration = {
 		limit: Executor.RequestArgument<bigint, false>;
 		key: Executor.RequestArgument<string, false>;
 	};
 
 	export function _injector(
-		config: Config,
+		configuration: Configuration,
 	) {
 		g_executor_method.push(
 			Executor.method_of({
@@ -66,8 +66,8 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 					...Entry.k_cfsa,
 					plain_file: undefined!,
 					cipher_file: '?default',
-					limit: config.limit,
-					key: config.key,
+					limit: configuration.limit,
+					key: configuration.key,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),
 				input_forwarder: 'plain_file',
@@ -124,8 +124,8 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 					...Entry.k_cfsa,
 					cipher_file: undefined!,
 					plain_file: '?default',
-					limit: config.limit,
-					key: config.key,
+					limit: configuration.limit,
+					key: configuration.key,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.cdat)$/i]]),
 				input_forwarder: 'cipher_file',
@@ -192,8 +192,8 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 					...Entry.k_cfsa,
 					plain_file_directory: undefined!,
 					cipher_file_directory: '?default',
-					limit: config.limit,
-					key: config.key,
+					limit: configuration.limit,
+					key: configuration.key,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'plain_file_directory',
@@ -258,8 +258,8 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 					...Entry.k_cfsa,
 					cipher_file_directory: undefined!,
 					plain_file_directory: '?default',
-					limit: config.limit,
-					key: config.key,
+					limit: configuration.limit,
+					key: configuration.key,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'cipher_file_directory',

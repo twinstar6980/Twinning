@@ -60,11 +60,11 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			BasicStringView const & that
-		) -> BasicStringView& = default;
+		) -> BasicStringView & = default;
 
 		constexpr auto operator = (
 			BasicStringView && that
-		) -> BasicStringView& = default;
+		) -> BasicStringView & = default;
 
 		// ----------------
 
@@ -138,8 +138,8 @@ namespace TwinStar::Core {
 			auto prime = 1099511628211_iu64;
 			auto result = offset;
 			for (auto & element : thiz) {
-				result *= prime;
 				result ^= cbw<IntegerU64>(element);
+				result *= prime;
 			}
 			return result;
 		}

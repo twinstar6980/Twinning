@@ -4,11 +4,11 @@ namespace TwinStar.Script.Entry.method.pvz2.text_table {
 
 	// convert
 
-	type Config = {
+	type Configuration = {
 	};
 
 	export function _injector(
-		config: Config,
+		configuration: Configuration,
 	) {
 		g_executor_method.push(
 			Executor.method_of({

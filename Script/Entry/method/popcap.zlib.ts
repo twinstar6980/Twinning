@@ -5,12 +5,12 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 	// compress *
 	// uncompress *
 
-	type Config = {
+	type Configuration = {
 		version_variant_64: Executor.RequestArgument<boolean, false>;
 	};
 
 	export function _injector(
-		config: Config,
+		configuration: Configuration,
 	) {
 		g_executor_method.push(
 			Executor.method_of({
@@ -56,7 +56,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 					...Entry.k_cfsa,
 					raw_file: undefined!,
 					ripe_file: '?default',
-					version_variant_64: config.version_variant_64,
+					version_variant_64: configuration.version_variant_64,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),
 				input_forwarder: 'raw_file',
@@ -104,7 +104,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 					...Entry.k_cfsa,
 					ripe_file: undefined!,
 					raw_file: '?default',
-					version_variant_64: config.version_variant_64,
+					version_variant_64: configuration.version_variant_64,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),
 				input_forwarder: 'ripe_file',
@@ -162,7 +162,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 					...Entry.k_cfsa,
 					raw_file_directory: undefined!,
 					ripe_file_directory: '?default',
-					version_variant_64: config.version_variant_64,
+					version_variant_64: configuration.version_variant_64,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'raw_file_directory',
@@ -218,7 +218,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 					...Entry.k_cfsa,
 					ripe_file_directory: undefined!,
 					raw_file_directory: '?default',
-					version_variant_64: config.version_variant_64,
+					version_variant_64: configuration.version_variant_64,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'ripe_file_directory',

@@ -82,29 +82,29 @@ namespace TwinStar::Core::JSON {
 
 		auto operator = (
 			Value const & that
-		) -> Value& = default;
+		) -> Value & = default;
 
 		auto operator = (
 			Value && that
-		) -> Value& = default;
+		) -> Value & = default;
 
 		// ----------------
 
 		auto operator [] (
 			Size const & index
-		) -> Value& {
+		) -> Value & {
 			return thiz.get_array()[index];
 		}
 
 		auto operator [] (
 			Size const & index
-		) const -> Value const& {
+		) const -> Value const & {
 			return thiz.get_array()[index];
 		}
 
 		auto operator () (
 			Size const & index
-		) -> Value& {
+		) -> Value & {
 			return thiz.get_array()(index);
 		}
 
@@ -112,19 +112,19 @@ namespace TwinStar::Core::JSON {
 
 		auto operator [] (
 			String const & key
-		) -> Value& {
+		) -> Value & {
 			return thiz.get_object()[key];
 		}
 
 		auto operator [] (
 			String const & key
-		) const -> Value const& {
+		) const -> Value const & {
 			return thiz.get_object()[key];
 		}
 
 		auto operator () (
 			String const & key
-		) -> Value& {
+		) -> Value & {
 			return thiz.get_object()(key);
 		}
 
@@ -133,19 +133,19 @@ namespace TwinStar::Core::JSON {
 
 		auto operator [] (
 			CStringView const & key
-		) -> Value& {
+		) -> Value & {
 			return thiz.get_object()[key];
 		}
 
 		auto operator [] (
 			CStringView const & key
-		) const -> Value const& {
+		) const -> Value const & {
 			return thiz.get_object()[key];
 		}
 
 		auto operator () (
 			CStringView const & key
-		) -> Value& {
+		) -> Value & {
 			return thiz.get_object()(key);
 		}
 
@@ -189,7 +189,7 @@ namespace TwinStar::Core::JSON {
 			CategoryConstraint<IsValid<Argument ...>>
 		auto set_null (
 			Argument && ... argument
-		) -> Null& {
+		) -> Null & {
 			return thiz.set<Null>(as_forward<Argument>(argument) ...);
 		}
 
@@ -197,7 +197,7 @@ namespace TwinStar::Core::JSON {
 			CategoryConstraint<IsValid<Argument ...>>
 		auto set_boolean (
 			Argument && ... argument
-		) -> Boolean& {
+		) -> Boolean & {
 			return thiz.set<Boolean>(as_forward<Argument>(argument) ...);
 		}
 
@@ -205,7 +205,7 @@ namespace TwinStar::Core::JSON {
 			CategoryConstraint<IsValid<Argument ...>>
 		auto set_number (
 			Argument && ... argument
-		) -> Number& {
+		) -> Number & {
 			return thiz.set<Number>(as_forward<Argument>(argument) ...);
 		}
 
@@ -213,7 +213,7 @@ namespace TwinStar::Core::JSON {
 			CategoryConstraint<IsValid<Argument ...>>
 		auto set_string (
 			Argument && ... argument
-		) -> String& {
+		) -> String & {
 			return thiz.set<String>(as_forward<Argument>(argument) ...);
 		}
 
@@ -221,7 +221,7 @@ namespace TwinStar::Core::JSON {
 			CategoryConstraint<IsValid<Argument ...>>
 		auto set_array (
 			Argument && ... argument
-		) -> Array& {
+		) -> Array & {
 			return thiz.set<Array>(as_forward<Argument>(argument) ...);
 		}
 
@@ -229,71 +229,71 @@ namespace TwinStar::Core::JSON {
 			CategoryConstraint<IsValid<Argument ...>>
 		auto set_object (
 			Argument && ... argument
-		) -> Object& {
+		) -> Object & {
 			return thiz.set<Object>(as_forward<Argument>(argument) ...);
 		}
 
 		// ----------------
 
 		auto get_null (
-		) -> Null& {
+		) -> Null & {
 			return thiz.get<Null>();
 		}
 
 		auto get_boolean (
-		) -> Boolean& {
+		) -> Boolean & {
 			return thiz.get<Boolean>();
 		}
 
 		auto get_number (
-		) -> Number& {
+		) -> Number & {
 			return thiz.get<Number>();
 		}
 
 		auto get_string (
-		) -> String& {
+		) -> String & {
 			return thiz.get<String>();
 		}
 
 		auto get_array (
-		) -> Array& {
+		) -> Array & {
 			return thiz.get<Array>();
 		}
 
 		auto get_object (
-		) -> Object& {
+		) -> Object & {
 			return thiz.get<Object>();
 		}
 
 		// ----------------
 
 		auto get_null (
-		) const -> Null const& {
+		) const -> Null const & {
 			return thiz.get<Null>();
 		}
 
 		auto get_boolean (
-		) const -> Boolean const& {
+		) const -> Boolean const & {
 			return thiz.get<Boolean>();
 		}
 
 		auto get_number (
-		) const -> Number const& {
+		) const -> Number const & {
 			return thiz.get<Number>();
 		}
 
 		auto get_string (
-		) const -> String const& {
+		) const -> String const & {
 			return thiz.get<String>();
 		}
 
 		auto get_array (
-		) const -> Array const& {
+		) const -> Array const & {
 			return thiz.get<Array>();
 		}
 
 		auto get_object (
-		) const -> Object const& {
+		) const -> Object const & {
 			return thiz.get<Object>();
 		}
 

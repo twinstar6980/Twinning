@@ -1,10 +1,8 @@
 # TwinStar ToolKit
 
-`TwinStar ToolKit` | `双子星工具箱` 。
+`TwinStar ToolKit` aka `twins` 。
 
-一款帮助我们创作 PvZ-2 MOD 的工具。
-
-by TwinStar ( aka TwinKleS or SmallPC or 一路上海外 ) .
+本工具主要用于处理 PopCap 游戏（特别是 PvZ-1 、PvZ-2 ）中的资源文件，以使玩家能够更加容易地对这些游戏进行 MOD 创作。
 
 ## 开源说明
 

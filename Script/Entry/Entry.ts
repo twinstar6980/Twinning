@@ -74,7 +74,7 @@ namespace TwinStar.Script.Entry {
 
 	// ------------------------------------------------
 
-	type Config = {
+	type Configuration = {
 		language: string;
 		cli_disable_virtual_terminal_sequence: boolean;
 		pause_when_finish: boolean;
@@ -88,27 +88,27 @@ namespace TwinStar.Script.Entry {
 	};
 
 	export function _injector(
-		config: Config,
+		configuration: Configuration,
 	) {
 		// set language
-		Language.push_table(config.language, CoreX.JSON.read_fs_js(HomeDirectory.of(`~/script/Language/${config.language}.json`)) as unknown as Language.Map);
-		Language.set_target(config.language);
+		Language.push_table(configuration.language, CoreX.JSON.read_fs_js(HomeDirectory.of(`~/script/Language/${configuration.language}.json`)) as unknown as Language.Map);
+		Language.set_target(configuration.language);
 		// cli disable virtual-terminal-sequence
-		Console.cli_disable_virtual_terminal_sequence = config.cli_disable_virtual_terminal_sequence;
+		Console.cli_disable_virtual_terminal_sequence = configuration.cli_disable_virtual_terminal_sequence;
 		// set byte stream endian
-		Core.Miscellaneous.g_byte_stream_use_big_endian.value = config.byte_stream_use_big_endian;
+		Core.Miscellaneous.g_byte_stream_use_big_endian.value = configuration.byte_stream_use_big_endian;
 		// set common buffer size
-		CoreX.g_common_buffer.allocate(Core.Size.value(parse_size_string(config.common_buffer_size)));
+		CoreX.g_common_buffer.allocate(Core.Size.value(parse_size_string(configuration.common_buffer_size)));
 		// set json format
-		CoreX.JSON.g_format.disable_trailing_comma = config.json_format.disable_trailing_comma;
-		CoreX.JSON.g_format.disable_array_wrap_line = config.json_format.disable_array_wrap_line;
+		CoreX.JSON.g_format.disable_trailing_comma = configuration.json_format.disable_trailing_comma;
+		CoreX.JSON.g_format.disable_array_wrap_line = configuration.json_format.disable_array_wrap_line;
 	}
 
 	export function _entry(
-		config: Config,
+		configuration: Configuration,
 		argument: Array<string>,
 	) {
-		g_thread_manager.resize(Number(config.thread_limit));
+		g_thread_manager.resize(Number(configuration.thread_limit));
 		let timer = new Timer();
 		timer.start();
 		let raw_command = [...argument];
@@ -156,7 +156,7 @@ namespace TwinStar.Script.Entry {
 		Console.message('s', los('entry:all_command_finish'), [
 			los('entry:all_command_duration', (timer.duration() / 1000).toFixed(3)),
 		]);
-		if (config.pause_when_finish) {
+		if (configuration.pause_when_finish) {
 			Console.pause();
 		}
 		return;

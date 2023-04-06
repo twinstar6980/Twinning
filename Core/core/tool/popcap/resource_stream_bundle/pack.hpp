@@ -527,14 +527,10 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 								texture_information_structure.size_height = cbw<IntegerU32>(resource_additional_manifest.size.height);
 								texture_information_structure.format = cbw<IntegerU32>(resource_additional_manifest.format);
 								texture_information_structure.row_byte_count = cbw<IntegerU32>(resource_additional_manifest.row_byte_count);
-								if constexpr (check_version(version, {}, {1, 2})) {
-									if (resource_additional_manifest.format == 0x93_i || resource_additional_manifest.format == 0x96_i) {
-										texture_information_structure.alpha_size = cbw<IntegerU32>(FileSystem::size_file(make_formatted_path(resource_directory) / resource_manifest.key) - cbw<Size>(resource_additional_manifest.size.area() / 2_i));
-									} else {
-										texture_information_structure.alpha_size = cbw<IntegerU32>(k_none_size);
-									}
+								if constexpr (check_version(version, {4}, {1})) {
+									texture_information_structure.additional_byte_count = cbw<IntegerU32>(resource_additional_manifest.additional_byte_count);
 								}
-								if constexpr (check_version(version, {}, {2})) {
+								if constexpr (check_version(version, {4}, {2})) {
 									texture_information_structure.scale = cbw<IntegerU32>(resource_additional_manifest.scale);
 								}
 								packet_resource_additional_manifest.index = cbw<Integer>(texture_resource_index);
@@ -813,11 +809,14 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 								assert_test(cbw<Integer>(texture_information_structure.size_width) == packet_resource_additional_manifest.size.width);
 								assert_test(cbw<Integer>(texture_information_structure.size_height) == packet_resource_additional_manifest.size.height);
 								resource_additional_manifest.size = packet_resource_additional_manifest.size;
-								if constexpr (check_version(version, {}, {2})) {
-									resource_additional_manifest.scale = cbw<Integer>(texture_information_structure.scale);
-								}
 								resource_additional_manifest.format = cbw<Integer>(texture_information_structure.format);
 								resource_additional_manifest.row_byte_count = cbw<Integer>(texture_information_structure.row_byte_count);
+								if constexpr (check_version(version, {4}, {1})) {
+									resource_additional_manifest.additional_byte_count = cbw<Integer>(texture_information_structure.additional_byte_count);
+								}
+								if constexpr (check_version(version, {4}, {2})) {
+									resource_additional_manifest.scale = cbw<Integer>(texture_information_structure.scale);
+								}
 								break;
 							}
 						}

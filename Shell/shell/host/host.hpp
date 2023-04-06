@@ -34,11 +34,11 @@ namespace TwinStar::Shell {
 
 		auto operator = (
 			Host const & that
-		) -> Host& = delete;
+		) -> Host & = delete;
 
 		auto operator = (
 			Host && that
-		) -> Host& = delete;
+		) -> Host & = delete;
 
 		#pragma endregion
 

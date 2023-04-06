@@ -6,11 +6,11 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 	// scale
 	// scale_rate
 
-	type Config = {
+	type Configuration = {
 	};
 
 	export function _injector(
-		config: Config,
+		configuration: Configuration,
 	) {
 		g_executor_method.push(
 			Executor.method_of({

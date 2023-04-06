@@ -108,11 +108,11 @@ namespace TwinStar::Core::JavaScript {
 
 		auto operator = (
 			Runtime const & that
-		) -> Runtime& = delete;
+		) -> Runtime & = delete;
 
 		auto operator = (
 			Runtime && that
-		) -> Runtime& {
+		) -> Runtime & {
 			thiz.m_runtime = that.m_runtime;
 			thiz.m_is_holder = that.m_is_holder;
 			that.m_runtime = k_null_pointer;
@@ -223,11 +223,11 @@ namespace TwinStar::Core::JavaScript {
 
 		auto operator = (
 			Context const & that
-		) -> Context& = delete;
+		) -> Context & = delete;
 
 		auto operator = (
 			Context && that
-		) -> Context& {
+		) -> Context & {
 			thiz.m_context = that.m_context;
 			thiz.m_is_holder = that.m_is_holder;
 			that.m_context = k_null_pointer;
@@ -408,7 +408,7 @@ namespace TwinStar::Core::JavaScript {
 
 		auto operator = (
 			Value const & that
-		) -> Value& {
+		) -> Value & {
 			thiz._reset_value();
 			thiz.m_context = that.m_context;
 			thiz.m_value = quickjs::JS_DupValue(as_variable(that)._context(), as_variable(that)._value());
@@ -417,7 +417,7 @@ namespace TwinStar::Core::JavaScript {
 
 		auto operator = (
 			Value && that
-		) -> Value& {
+		) -> Value & {
 			thiz._reset_value();
 			thiz.m_context = that.m_context;
 			thiz.m_value = that._release_value();
@@ -1084,7 +1084,7 @@ namespace TwinStar::Core::JavaScript {
 		auto to (
 			That &&       that,
 			Option && ... option
-		) -> That&& {
+		) -> That && {
 			assert_test(thiz.m_context);
 			ValueAdapter<AsPure<That>>::to(thiz, as_forward<That>(that), as_forward<Option>(option) ...);
 			return as_forward<That>(that);

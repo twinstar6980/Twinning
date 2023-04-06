@@ -286,12 +286,12 @@ namespace TwinStar::Core::JavaScript {
 			This & thix,
 			That & that
 		) -> Void {
-			if (thix.is_number()) {
-				that.set_floater(thix.get_number());
-			} else if (thix.is_bigint()) {
+			if (thix.is_bigint()) {
 				that.set_integer(thix.get_bigint());
+			} else if (thix.is_number()) {
+				that.set_floater(thix.get_number());
 			} else {
-				assert_fail(R"(/* thix type is number or bigint */)");
+				assert_fail(R"(/* thix type is bigint or number */)");
 			}
 			return;
 		}

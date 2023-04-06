@@ -5,12 +5,12 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 	// encode
 	// decode
 
-	type Config = {
+	type Configuration = {
 		version_compress_texture_data: Executor.RequestArgument<boolean, false>;
 	};
 
 	export function _injector(
-		config: Config,
+		configuration: Configuration,
 	) {
 		g_executor_method.push(
 			Executor.method_of({
@@ -66,7 +66,7 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 					image_file: undefined!,
 					data_file: '?default',
 					format: '?input',
-					version_compress_texture_data: config.version_compress_texture_data,
+					version_compress_texture_data: configuration.version_compress_texture_data,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.png)$/i]]),
 				input_forwarder: 'image_file',
@@ -114,7 +114,7 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 					...Entry.k_cfsa,
 					data_file: undefined!,
 					image_file: '?default',
-					version_compress_texture_data: config.version_compress_texture_data,
+					version_compress_texture_data: configuration.version_compress_texture_data,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.tex)$/i]]),
 				input_forwarder: 'data_file',
@@ -182,7 +182,7 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 					image_file_directory: undefined!,
 					data_file_directory: '?default',
 					format: '?input',
-					version_compress_texture_data: config.version_compress_texture_data,
+					version_compress_texture_data: configuration.version_compress_texture_data,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'image_file_directory',
@@ -238,7 +238,7 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 					...Entry.k_cfsa,
 					data_file_directory: undefined!,
 					image_file_directory: '?default',
-					version_compress_texture_data: config.version_compress_texture_data,
+					version_compress_texture_data: configuration.version_compress_texture_data,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'data_file_directory',

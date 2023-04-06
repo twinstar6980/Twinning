@@ -2008,9 +2008,9 @@ namespace TwinStar.Script.CoreX {
 
 				export type VersionNumber = typeof VersionNumberE[number];
 
-				export const VersionaAditionalTextureInformationForPVZ2ChineseAndroidE = [0n, 1n, 2n] as const;
+				export const VersionaExtendedTextureInformationForPVZ2CNE = [0n, 1n, 2n, 3n] as const;
 
-				export type VersionaAditionalTextureInformationForPVZ2ChineseAndroid = typeof VersionaAditionalTextureInformationForPVZ2ChineseAndroidE[number];
+				export type VersionaExtendedTextureInformationForPVZ2CN = typeof VersionaExtendedTextureInformationForPVZ2CNE[number];
 
 				export function pack_fs(
 					data_file: string,
@@ -2134,7 +2134,7 @@ namespace TwinStar.Script.CoreX {
 
 			}
 
-			export namespace PvZ2ChineseAndroidAlphaPaletteTexture {
+			export namespace PvZ2CNAlphaPaletteTexture {
 
 				// ------------------------------------------------
 
@@ -2212,7 +2212,7 @@ namespace TwinStar.Script.CoreX {
 						}
 					}
 					data.set_position(Core.Size.value(data.position().value + BigInt(palette_data.p())));
-					Core.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.Encode.process_image(data, image, Core.Image.ColorList.value(palette));
+					Core.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.Encode.process_image(data, image, Core.Image.ColorList.value(palette));
 					return;
 				}
 
@@ -2232,7 +2232,7 @@ namespace TwinStar.Script.CoreX {
 						}
 					}
 					data.set_position(Core.Size.value(data.position().value + BigInt(palette_data.p())));
-					Core.Tool.Miscellaneous.PvZ2ChineseAndroidAlphaPaletteTexture.Decode.process_image(data, image, Core.Image.ColorList.value(palette));
+					Core.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.Decode.process_image(data, image, Core.Image.ColorList.value(palette));
 					return;
 				}
 

@@ -48,11 +48,11 @@ namespace TwinStar::Shell::Core {
 
 		auto operator = (
 			LibraryLoader const & that
-		) -> LibraryLoader& = delete;
+		) -> LibraryLoader & = delete;
 
 		auto operator = (
 			LibraryLoader && that
-		) -> LibraryLoader& = delete;
+		) -> LibraryLoader & = delete;
 
 		#pragma endregion
 

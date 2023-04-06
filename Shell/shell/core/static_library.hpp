@@ -56,11 +56,11 @@ namespace TwinStar::Shell::Core {
 
 		auto operator = (
 			StaticLibrary const & that
-		) -> StaticLibrary& = delete;
+		) -> StaticLibrary & = delete;
 
 		auto operator = (
 			StaticLibrary && that
-		) -> StaticLibrary& = delete;
+		) -> StaticLibrary & = delete;
 
 		#pragma endregion
 
@@ -68,7 +68,7 @@ namespace TwinStar::Shell::Core {
 
 		virtual auto version (
 			Interface::Size * * number
-		) -> Interface::String* override {
+		) -> Interface::String * override {
 			return thiz.m_symbol.version(number);
 		}
 
@@ -77,12 +77,12 @@ namespace TwinStar::Shell::Core {
 			Interface::String * *     script,
 			Interface::StringList * * argument,
 			Interface::String * *     result
-		) -> Interface::String* override {
+		) -> Interface::String * override {
 			return thiz.m_symbol.execute(callback, script, argument, result);
 		}
 
 		virtual auto prepare (
-		) -> Interface::String* override {
+		) -> Interface::String * override {
 			return thiz.m_symbol.prepare();
 		}
 

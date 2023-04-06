@@ -8,7 +8,7 @@ Windows Explorer 扩展，将工具集成至 Windows Explorer 右键菜单中。
 
 * 要求
 	
-	* [xmake 2.7.7+](https://xmake.io/#/)
+	* [xmake 2.7.8+](https://xmake.io/#/)
 	
 	* [MSVC 19.35+ with MSVC-STL and Windows-SDK for Windows](https://visualstudio.microsoft.com/downloads/)
 	

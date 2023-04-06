@@ -5,13 +5,13 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 	// encode *
 	// decode *
 
-	type Config = {
+	type Configuration = {
 		version_number: Executor.RequestArgument<bigint, false>;
 		encode_buffer_size: Executor.RequestArgument<string, false>;
 	};
 
 	export function _injector(
-		config: Config,
+		configuration: Configuration,
 	) {
 		g_executor_method.push(
 			Executor.method_of({
@@ -68,8 +68,8 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 					...Entry.k_cfsa,
 					bundle_directory: undefined!,
 					data_file: '?default',
-					version_number: config.version_number,
-					buffer_size: config.encode_buffer_size,
+					version_number: configuration.version_number,
+					buffer_size: configuration.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', /.+(\.bnk)(\.bundle)$/i]]),
 				input_forwarder: 'bundle_directory',
@@ -119,7 +119,7 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 					...Entry.k_cfsa,
 					data_file: undefined!,
 					bundle_directory: '?default',
-					version_number: config.version_number,
+					version_number: configuration.version_number,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.bnk)$/i]]),
 				input_forwarder: 'data_file',
@@ -189,8 +189,8 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 					...Entry.k_cfsa,
 					bundle_directory_directory: undefined!,
 					data_file_directory: '?default',
-					version_number: config.version_number,
-					buffer_size: config.encode_buffer_size,
+					version_number: configuration.version_number,
+					buffer_size: configuration.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'bundle_directory_directory',
@@ -248,7 +248,7 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 					...Entry.k_cfsa,
 					data_file_directory: undefined!,
 					bundle_directory_directory: '?default',
-					version_number: config.version_number,
+					version_number: configuration.version_number,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'data_file_directory',

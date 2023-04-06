@@ -51,11 +51,11 @@ namespace TwinStar::Shell {
 
 		auto operator = (
 			CLIHost const & that
-		) -> CLIHost& = delete;
+		) -> CLIHost & = delete;
 
 		auto operator = (
 			CLIHost && that
-		) -> CLIHost& = delete;
+		) -> CLIHost & = delete;
 
 		#pragma endregion
 

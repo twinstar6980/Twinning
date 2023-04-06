@@ -62,11 +62,11 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			BasicCharacterListView const & that
-		) -> BasicCharacterListView& = default;
+		) -> BasicCharacterListView & = default;
 
 		constexpr auto operator = (
 			BasicCharacterListView && that
-		) -> BasicCharacterListView& = default;
+		) -> BasicCharacterListView & = default;
 
 		// ----------------
 
@@ -180,17 +180,17 @@ namespace TwinStar::Core {
 
 		auto operator = (
 			BasicCharacterList const & that
-		) -> BasicCharacterList& = default;
+		) -> BasicCharacterList & = default;
 
 		auto operator = (
 			BasicCharacterList && that
-		) -> BasicCharacterList& = default;
+		) -> BasicCharacterList & = default;
 
 		// ----------------
 
 		auto operator = (
 			CView const & that
-		) -> BasicCharacterList& {
+		) -> BasicCharacterList & {
 			thiz.assign(that);
 			return thiz;
 		}
@@ -210,12 +210,12 @@ namespace TwinStar::Core {
 		#pragma region view
 
 		auto as_view (
-		) -> VView const& {
+		) -> VView const & {
 			return self_cast<VView>(thiz);
 		}
 
 		auto as_view (
-		) const -> CView const& {
+		) const -> CView const & {
 			return self_cast<CView>(thiz);
 		}
 
@@ -339,17 +339,17 @@ namespace TwinStar::Core {
 
 		auto operator = (
 			BasicCharacterArray const & that
-		) -> BasicCharacterArray& = default;
+		) -> BasicCharacterArray & = default;
 
 		auto operator = (
 			BasicCharacterArray && that
-		) -> BasicCharacterArray& = default;
+		) -> BasicCharacterArray & = default;
 
 		// ----------------
 
 		auto operator = (
 			CView const & that
-		) -> BasicCharacterArray& {
+		) -> BasicCharacterArray & {
 			thiz.assign(that);
 			return thiz;
 		}
@@ -369,12 +369,12 @@ namespace TwinStar::Core {
 		#pragma region view
 
 		auto as_view (
-		) -> VView const& {
+		) -> VView const & {
 			return self_cast<VView>(thiz);
 		}
 
 		auto as_view (
-		) const -> CView const& {
+		) const -> CView const & {
 			return self_cast<CView>(thiz);
 		}
 
@@ -499,11 +499,11 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			BasicStaticCharacterArray const & that
-		) -> BasicStaticCharacterArray& = default;
+		) -> BasicStaticCharacterArray & = default;
 
 		constexpr auto operator = (
 			BasicStaticCharacterArray && that
-		) -> BasicStaticCharacterArray& = default;
+		) -> BasicStaticCharacterArray & = default;
 
 		// ----------------
 

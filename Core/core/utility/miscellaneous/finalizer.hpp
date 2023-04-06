@@ -55,11 +55,11 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			Finalizer const & that
-		) -> Finalizer& = delete;
+		) -> Finalizer & = delete;
 
 		constexpr auto operator = (
 			Finalizer && that
-		) -> Finalizer& = delete;
+		) -> Finalizer & = delete;
 
 		#pragma endregion
 

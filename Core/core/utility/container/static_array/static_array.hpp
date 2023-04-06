@@ -93,14 +93,14 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			StaticArray const & that
-		) -> StaticArray& {
+		) -> StaticArray & {
 			Range::assign_from(thiz, that);
 			return thiz;
 		}
 
 		constexpr auto operator = (
 			StaticArray && that
-		) -> StaticArray& {
+		) -> StaticArray & {
 			Range::assign_from(thiz, make_moveable_range_of(that));
 			return thiz;
 		}
@@ -109,13 +109,13 @@ namespace TwinStar::Core {
 
 		constexpr auto operator [] (
 			Size const & index
-		) -> VElement& {
+		) -> VElement & {
 			return thiz.at(index);
 		}
 
 		constexpr auto operator [] (
 			Size const & index
-		) const -> CElement& {
+		) const -> CElement & {
 			return thiz.at(index);
 		}
 
@@ -200,18 +200,18 @@ namespace TwinStar::Core {
 
 		constexpr auto at (
 			Size const & index
-		) -> VElement& {
+		) -> VElement & {
 			assert_test(index < thiz.end_index());
 			return thiz.m_data[index.value];
 		}
 
 		constexpr auto first (
-		) -> VElement& {
+		) -> VElement & {
 			return thiz.at(thiz.first_index());
 		}
 
 		constexpr auto last (
-		) -> VElement& {
+		) -> VElement & {
 			return thiz.at(thiz.last_index());
 		}
 
@@ -219,18 +219,18 @@ namespace TwinStar::Core {
 
 		constexpr auto at (
 			Size const & index
-		) const -> CElement& {
+		) const -> CElement & {
 			assert_test(index < thiz.end_index());
 			return thiz.m_data[index.value];
 		}
 
 		constexpr auto first (
-		) const -> CElement& {
+		) const -> CElement & {
 			return thiz.at(thiz.first_index());
 		}
 
 		constexpr auto last (
-		) const -> CElement& {
+		) const -> CElement & {
 			return thiz.at(thiz.last_index());
 		}
 

@@ -94,14 +94,14 @@ namespace TwinStar::Core {
 
 		auto operator = (
 			List const & that
-		) -> List& {
+		) -> List & {
 			thiz.assign(that);
 			return thiz;
 		}
 
 		auto operator = (
 			List && that
-		) -> List& {
+		) -> List & {
 			thiz.bind(that);
 			that.unbind();
 			return thiz;
@@ -111,7 +111,7 @@ namespace TwinStar::Core {
 
 		auto operator = (
 			CView const & that
-		) -> List& {
+		) -> List & {
 			thiz.assign(that);
 			return thiz;
 		}
@@ -120,13 +120,13 @@ namespace TwinStar::Core {
 
 		auto operator [] (
 			Size const & index
-		) -> VElement& {
+		) -> VElement & {
 			return thiz.at(index);
 		}
 
 		auto operator [] (
 			Size const & index
-		) const -> CElement& {
+		) const -> CElement & {
 			return thiz.at(index);
 		}
 
@@ -134,7 +134,7 @@ namespace TwinStar::Core {
 
 		auto operator () (
 			Size const & index
-		) -> VElement& {
+		) -> VElement & {
 			return thiz.at_force(index);
 		}
 
@@ -153,12 +153,12 @@ namespace TwinStar::Core {
 		#pragma region view
 
 		auto as_view (
-		) -> VView const& {
+		) -> VView const & {
 			return self_cast<VView>(thiz);
 		}
 
 		auto as_view (
-		) const -> CView const& {
+		) const -> CView const & {
 			return self_cast<CView>(thiz);
 		}
 
@@ -256,17 +256,17 @@ namespace TwinStar::Core {
 
 		auto at (
 			Size const & index
-		) -> VElement& {
+		) -> VElement & {
 			return thiz.as_view().at(index);
 		}
 
 		auto first (
-		) -> VElement& {
+		) -> VElement & {
 			return thiz.as_view().first();
 		}
 
 		auto last (
-		) -> VElement& {
+		) -> VElement & {
 			return thiz.as_view().last();
 		}
 
@@ -274,17 +274,17 @@ namespace TwinStar::Core {
 
 		auto at (
 			Size const & index
-		) const -> CElement& {
+		) const -> CElement & {
 			return thiz.as_view().at(index);
 		}
 
 		auto first (
-		) const -> CElement& {
+		) const -> CElement & {
 			return thiz.as_view().first();
 		}
 
 		auto last (
-		) const -> CElement& {
+		) const -> CElement & {
 			return thiz.as_view().last();
 		}
 
@@ -535,7 +535,7 @@ namespace TwinStar::Core {
 		auto insert (
 			Size const &    position,
 			Argument && ... argument
-		) -> VElement& {
+		) -> VElement & {
 			thiz.insert_space(position, 1_sz);
 			restruct(thiz.at(position), as_forward<Argument>(argument) ...);
 			return thiz.at(position);
@@ -561,7 +561,7 @@ namespace TwinStar::Core {
 			&& (IsConstructible<Element, Argument && ...>)
 		auto prepend (
 			Argument && ... argument
-		) -> VElement& {
+		) -> VElement & {
 			return thiz.insert(thiz.begin_index(), as_forward<Argument>(argument) ...);
 		}
 
@@ -581,7 +581,7 @@ namespace TwinStar::Core {
 			&& (IsConstructible<Element, Argument && ...>)
 		auto append (
 			Argument && ... argument
-		) -> VElement& {
+		) -> VElement & {
 			return thiz.insert(thiz.end_index(), as_forward<Argument>(argument) ...);
 		}
 
@@ -634,7 +634,7 @@ namespace TwinStar::Core {
 
 		auto at_force (
 			Size const & index
-		) -> VElement& {
+		) -> VElement & {
 			if (index >= thiz.end_index()) {
 				auto new_size = index + k_next_index;
 				if (new_size > thiz.capacity()) {

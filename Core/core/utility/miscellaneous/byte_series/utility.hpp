@@ -35,7 +35,7 @@ namespace TwinStar::Core {
 	inline auto byte_nth_of (
 		It &         it,
 		Size const & index
-	) -> AsConstantIf<Byte, IsCInstance<It>>& {
+	) -> AsConstantIf<Byte, IsCInstance<It>> & {
 		return cast_pointer<Byte>(make_pointer(&it))[index];
 	}
 

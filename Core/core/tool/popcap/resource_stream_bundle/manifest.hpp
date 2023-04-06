@@ -40,14 +40,26 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {3}, {2}))
+		template <typename _> requires (check_version(version, {4}, {1, 2}))
 		M_record_of_map(
 			M_wrap(TextureResourceAdditional_<_>),
 			M_wrap(
 				(Size2<Integer>) size,
 				(Integer) format,
 				(Integer) row_byte_count,
+				(Integer) additional_byte_count,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {4}, {2}))
+		M_record_of_map(
+			M_wrap(TextureResourceAdditional_<_>),
+			M_wrap(
+				(Size2<Integer>) size,
 				(Integer) scale,
+				(Integer) format,
+				(Integer) row_byte_count,
+				(Integer) additional_byte_count,
 			),
 		);
 

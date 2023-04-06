@@ -8,7 +8,7 @@
 
 * 要求
 	
-	* [xmake 2.7.7+](https://xmake.io/#/)
+	* [xmake 2.7.8+](https://xmake.io/#/)
 	
 	* [MSVC 19.35+ with MSVC-STL and Windows-SDK for Windows](https://visualstudio.microsoft.com/downloads/)
 	
@@ -16,7 +16,7 @@
 	
 	* [Clang 16.0+ with libc++ and POSIX for Macintosh](https://llvm.org/)
 	
-	* [NDK 25.1+ for Android](https://developer.android.com/ndk/downloads)
+	* [NDK 25.2+ for Android](https://developer.android.com/ndk/downloads)
 	
 	* [Clang 16.0+ with libc++ and POSIX for iPhone](https://llvm.org/)
 

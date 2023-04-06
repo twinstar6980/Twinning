@@ -5,7 +5,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 	// encode
 	// decode
 
-	type Config = {
+	type Configuration = {
 		use_raw_packet: Executor.RequestArgument<boolean, false>;
 		version_number: Executor.RequestArgument<bigint, false>;
 		encode_buffer_size: Executor.RequestArgument<string, false>;
@@ -13,7 +13,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 	};
 
 	export function _injector(
-		config: Config,
+		configuration: Configuration,
 	) {
 		g_executor_method.push(
 			Executor.method_of({
@@ -88,9 +88,9 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 					before_file: undefined!,
 					after_file: '?input',
 					patch_file: '?default',
-					use_raw_packet: config.use_raw_packet,
-					version_number: config.version_number,
-					buffer_size: config.encode_buffer_size,
+					use_raw_packet: configuration.use_raw_packet,
+					version_number: configuration.version_number,
+					buffer_size: configuration.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.rsb)$/i]]),
 				input_forwarder: 'before_file',
@@ -166,9 +166,9 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 					before_file: undefined!,
 					patch_file: '?input',
 					after_file: '?default',
-					use_raw_packet: config.use_raw_packet,
-					version_number: config.version_number,
-					buffer_size: config.decode_buffer_size,
+					use_raw_packet: configuration.use_raw_packet,
+					version_number: configuration.version_number,
+					buffer_size: configuration.decode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.rsb)$/i]]),
 				input_forwarder: 'before_file',

@@ -13183,7 +13183,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 							auto & unknown_manifest = manifest.template set_of_type<Manifest::HierarchyType::Constant::unknown()>();
 							unknown_manifest.type = cbw<Integer>(type);
 							unknown_manifest.data = item_data.forward_view(item_data.reserve());
-							M_log("warning : unknown hierarchy type {}"_sf(type));
+							M_log(mss("warning : unknown hierarchy type {}"_sf(type)));
 						}
 						assert_test(item_data.full());
 					}

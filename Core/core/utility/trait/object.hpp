@@ -84,7 +84,7 @@ namespace TwinStar::Core::Trait {
 		&& (IsDerivedFrom<Derived, Base>)
 	inline constexpr auto up_cast (
 		Derived & it
-	) -> Base& {
+	) -> Base & {
 		return static_cast<Base &>(it);
 	}
 
@@ -93,7 +93,7 @@ namespace TwinStar::Core::Trait {
 		&& (IsDerivedFrom<Derived, Base>)
 	inline constexpr auto up_cast (
 		Derived const & it
-	) -> Base const& {
+	) -> Base const & {
 		return static_cast<Base const &>(it);
 	}
 
@@ -102,7 +102,7 @@ namespace TwinStar::Core::Trait {
 		&& (IsDerivedFrom<Derived, Base>)
 	inline constexpr auto up_cast (
 		Derived && it
-	) -> Base&& {
+	) -> Base && {
 		return static_cast<Base &&>(it);
 	}
 
@@ -113,7 +113,7 @@ namespace TwinStar::Core::Trait {
 		&& (IsDerivedFrom<Derived, Base>)
 	inline constexpr auto down_cast (
 		Base & it
-	) -> Derived& {
+	) -> Derived & {
 		return static_cast<Derived &>(it);
 	}
 
@@ -122,7 +122,7 @@ namespace TwinStar::Core::Trait {
 		&& (IsDerivedFrom<Derived, Base>)
 	inline constexpr auto down_cast (
 		Base const & it
-	) -> Derived const& {
+	) -> Derived const & {
 		return static_cast<Derived const &>(it);
 	}
 
@@ -131,7 +131,7 @@ namespace TwinStar::Core::Trait {
 		&& (IsDerivedFrom<Derived, Base>)
 	inline constexpr auto down_cast (
 		Base && it
-	) -> Derived&& {
+	) -> Derived && {
 		return static_cast<Derived &&>(it);
 	}
 

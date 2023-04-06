@@ -4,14 +4,14 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 
 	// decode *
 
-	type Config = {
+	type Configuration = {
 		tool_ffmpeg_program_file: Executor.RequestArgument<string, false>;
 		tool_ww2ogg_program_file: Executor.RequestArgument<string, false>;
 		tool_ww2ogg_code_book_file: Executor.RequestArgument<string, false>;
 	};
 
 	export function _injector(
-		config: Config,
+		configuration: Configuration,
 	) {
 		g_executor_method.push(
 			Executor.method_of({
@@ -76,9 +76,9 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 					...Entry.k_cfsa,
 					ripe_file: undefined!,
 					raw_file: '?default',
-					tool_ffmpeg_program_file: config.tool_ffmpeg_program_file,
-					tool_ww2ogg_program_file: config.tool_ww2ogg_program_file,
-					tool_ww2ogg_code_book_file: config.tool_ww2ogg_code_book_file,
+					tool_ffmpeg_program_file: configuration.tool_ffmpeg_program_file,
+					tool_ww2ogg_program_file: configuration.tool_ww2ogg_program_file,
+					tool_ww2ogg_code_book_file: configuration.tool_ww2ogg_code_book_file,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.wem)$/i]]),
 				input_forwarder: 'ripe_file',
@@ -155,9 +155,9 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 					...Entry.k_cfsa,
 					ripe_file_directory: undefined!,
 					raw_file_directory: '?default',
-					tool_ffmpeg_program_file: config.tool_ffmpeg_program_file,
-					tool_ww2ogg_program_file: config.tool_ww2ogg_program_file,
-					tool_ww2ogg_code_book_file: config.tool_ww2ogg_code_book_file,
+					tool_ffmpeg_program_file: configuration.tool_ffmpeg_program_file,
+					tool_ww2ogg_program_file: configuration.tool_ww2ogg_program_file,
+					tool_ww2ogg_code_book_file: configuration.tool_ww2ogg_code_book_file,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'ripe_file_directory',

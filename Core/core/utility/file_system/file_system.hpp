@@ -31,7 +31,7 @@ namespace TwinStar::Core::FileSystem {
 		#if defined M_system_windows
 		inline auto make_regular_path (
 			Path & original
-		) -> Path& {
+		) -> Path & {
 			for (auto & element : as_variable(original.sub_path())) {
 				if (!element.empty()) {
 					if (element.last() == ' '_c) {
@@ -137,11 +137,11 @@ namespace TwinStar::Core::FileSystem {
 
 			auto operator = (
 				FileHandler const & that
-			) -> FileHandler& = delete;
+			) -> FileHandler & = delete;
 
 			auto operator = (
 				FileHandler && that
-			) -> FileHandler& = delete;
+			) -> FileHandler & = delete;
 
 			#pragma endregion
 

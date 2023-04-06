@@ -9,7 +9,7 @@
 		public _base {\
 	public:\
 		_name##_base () :\
-			_base{MethodInvokeCommandConfigTable::_id} {\
+			_base{MethodInvokeCommandConfigurationTable::_id} {\
 		}\
 	};
 
@@ -18,17 +18,17 @@
 		public VisibleCommand<_base> {\
 	public:\
 		_name##_base () :\
-			VisibleCommand{L###_id, MethodInvokeCommandConfigTable::_id} {\
+			VisibleCommand{L###_id, MethodInvokeCommandConfigurationTable::_id} {\
 		}\
 	};
 
 namespace TwinStar::WindowsExplorerExtension {
 
-	#pragma region config
+	#pragma region configuration
 
-	namespace MethodInvokeCommandConfigTable {
+	namespace MethodInvokeCommandConfigurationTable {
 
-		inline auto const main = MethodInvokeCommandConfig{
+		inline auto const main = MethodInvokeCommandConfiguration{
 			.id = L"main",
 			.type = std::nullopt,
 			.rule = std::nullopt,
@@ -38,7 +38,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		// ----------------
 
-		inline auto const launch = MethodInvokeCommandConfig{
+		inline auto const launch = MethodInvokeCommandConfiguration{
 			.id = L"launch",
 			.type = std::nullopt,
 			.rule = std::nullopt,
@@ -46,7 +46,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			.argument = LR"({})",
 		};
 
-		inline auto const js = GroupMethodInvokeCommandConfig{
+		inline auto const js = GroupMethodInvokeCommandConfiguration{
 			.id = L"js",
 			.item = {
 				{
@@ -62,7 +62,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const json = GroupMethodInvokeCommandConfig{
+		inline auto const json = GroupMethodInvokeCommandConfiguration{
 			.id = L"json",
 			.item = {
 				{
@@ -100,7 +100,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const data = GroupMethodInvokeCommandConfig{
+		inline auto const data = GroupMethodInvokeCommandConfiguration{
 			.id = L"data",
 			.item = {
 				{
@@ -244,7 +244,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const image = GroupMethodInvokeCommandConfig{
+		inline auto const image = GroupMethodInvokeCommandConfiguration{
 			.id = L"image",
 			.item = {
 				{
@@ -298,7 +298,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const wwise_media = GroupMethodInvokeCommandConfig{
+		inline auto const wwise_media = GroupMethodInvokeCommandConfiguration{
 			.id = L"wwise.media",
 			.item = {
 				{
@@ -322,7 +322,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const wwise_sound_bank = GroupMethodInvokeCommandConfig{
+		inline auto const wwise_sound_bank = GroupMethodInvokeCommandConfiguration{
 			.id = L"wwise.sound_bank",
 			.item = {
 				{
@@ -360,7 +360,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const marmalade_dzip = GroupMethodInvokeCommandConfig{
+		inline auto const marmalade_dzip = GroupMethodInvokeCommandConfiguration{
 			.id = L"marmalade.dzip",
 			.item = {
 				{
@@ -391,7 +391,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_zlib = GroupMethodInvokeCommandConfig{
+		inline auto const popcap_zlib = GroupMethodInvokeCommandConfiguration{
 			.id = L"popcap.zlib",
 			.item = {
 				{
@@ -459,7 +459,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_crypt_data = GroupMethodInvokeCommandConfig{
+		inline auto const popcap_crypt_data = GroupMethodInvokeCommandConfiguration{
 			.id = L"popcap.crypt_data",
 			.item = {
 				{
@@ -497,7 +497,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_reflection_object_notation = GroupMethodInvokeCommandConfig{
+		inline auto const popcap_reflection_object_notation = GroupMethodInvokeCommandConfiguration{
 			.id = L"popcap.reflection_object_notation",
 			.item = {
 				{
@@ -603,7 +603,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_texture = GroupMethodInvokeCommandConfig{
+		inline auto const popcap_texture = GroupMethodInvokeCommandConfiguration{
 			.id = L"popcap.texture",
 			.item = {
 				{
@@ -701,7 +701,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_u_texture = GroupMethodInvokeCommandConfig{
+		inline auto const popcap_u_texture = GroupMethodInvokeCommandConfiguration{
 			.id = L"popcap.u_texture",
 			.item = {
 				{
@@ -739,7 +739,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_sexy_texture = GroupMethodInvokeCommandConfig{
+		inline auto const popcap_sexy_texture = GroupMethodInvokeCommandConfiguration{
 			.id = L"popcap.sexy_texture",
 			.item = {
 				{
@@ -777,7 +777,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_animation = GroupMethodInvokeCommandConfig{
+		inline auto const popcap_animation = GroupMethodInvokeCommandConfiguration{
 			.id = L"popcap.animation",
 			.item = {
 				{
@@ -905,7 +905,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_re_animation = GroupMethodInvokeCommandConfig{
+		inline auto const popcap_re_animation = GroupMethodInvokeCommandConfiguration{
 			.id = L"popcap.re_animation",
 			.item = {
 				{
@@ -1033,7 +1033,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_particle = GroupMethodInvokeCommandConfig{
+		inline auto const popcap_particle = GroupMethodInvokeCommandConfiguration{
 			.id = L"popcap.particle",
 			.item = {
 				{
@@ -1161,7 +1161,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_trail = GroupMethodInvokeCommandConfig{
+		inline auto const popcap_trail = GroupMethodInvokeCommandConfiguration{
 			.id = L"popcap.trail",
 			.item = {
 				{
@@ -1289,7 +1289,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_effect = GroupMethodInvokeCommandConfig{
+		inline auto const popcap_effect = GroupMethodInvokeCommandConfiguration{
 			.id = L"popcap.effect",
 			.item = {
 				{
@@ -1327,7 +1327,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_character_font_widget_2 = GroupMethodInvokeCommandConfig{
+		inline auto const popcap_character_font_widget_2 = GroupMethodInvokeCommandConfiguration{
 			.id = L"popcap.character_font_widget_2",
 			.item = {
 				{
@@ -1365,7 +1365,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_package = GroupMethodInvokeCommandConfig{
+		inline auto const popcap_package = GroupMethodInvokeCommandConfiguration{
 			.id = L"popcap.package",
 			.item = {
 				{
@@ -1404,7 +1404,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_resource_stream_group = GroupMethodInvokeCommandConfig{
+		inline auto const popcap_resource_stream_group = GroupMethodInvokeCommandConfiguration{
 			.id = L"popcap.resource_stream_group",
 			.item = {
 				{
@@ -1427,7 +1427,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_resource_stream_bundle = GroupMethodInvokeCommandConfig{
+		inline auto const popcap_resource_stream_bundle = GroupMethodInvokeCommandConfiguration{
 			.id = L"popcap.resource_stream_bundle",
 			.item = {
 				{
@@ -1466,7 +1466,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const popcap_resource_stream_bundle_patch = GroupMethodInvokeCommandConfig{
+		inline auto const popcap_resource_stream_bundle_patch = GroupMethodInvokeCommandConfiguration{
 			.id = L"popcap.resource_stream_bundle_patch",
 			.item = {
 				{
@@ -1489,7 +1489,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const pvz2_text_table = GroupMethodInvokeCommandConfig{
+		inline auto const pvz2_text_table = GroupMethodInvokeCommandConfiguration{
 			.id = L"pvz2.text_table",
 			.item = {
 				{
@@ -1519,7 +1519,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			},
 		};
 
-		inline auto const pvz2_remote_android_helper = GroupMethodInvokeCommandConfig{
+		inline auto const pvz2_remote_android_helper = GroupMethodInvokeCommandConfiguration{
 			.id = L"pvz2.remote_android_helper",
 			.item = {
 				{

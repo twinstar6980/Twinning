@@ -78,17 +78,17 @@ namespace TwinStar::Core {
 
 		auto operator = (
 			Map const & that
-		) -> Map& = default;
+		) -> Map & = default;
 
 		auto operator = (
 			Map && that
-		) -> Map& = default;
+		) -> Map & = default;
 
 		// ----------------
 
 		auto operator = (
 			CView const & that
-		) -> Map& {
+		) -> Map & {
 			thiz.as_list() = that.as_list();
 			return thiz;
 		}
@@ -99,7 +99,7 @@ namespace TwinStar::Core {
 			CategoryConstraint<IsPureInstance<KeyObject>>
 		auto operator [] (
 			KeyObject const & key
-		) -> VValue& {
+		) -> VValue & {
 			return thiz.query(key).value;
 		}
 
@@ -107,7 +107,7 @@ namespace TwinStar::Core {
 			CategoryConstraint<IsPureInstance<KeyObject>>
 		auto operator [] (
 			KeyObject const & key
-		) const -> CValue& {
+		) const -> CValue & {
 			return thiz.query(key).value;
 		}
 
@@ -117,7 +117,7 @@ namespace TwinStar::Core {
 			CategoryConstraint<IsPureInstance<KeyObject>>
 		auto operator () (
 			KeyObject const & key
-		) -> VValue& {
+		) -> VValue & {
 			return thiz.query_force(key).value;
 		}
 
@@ -136,12 +136,12 @@ namespace TwinStar::Core {
 		#pragma region as list
 
 		auto as_list (
-		) -> List& {
+		) -> List & {
 			return self_cast<List>(thiz);
 		}
 
 		auto as_list (
-		) const -> List const& {
+		) const -> List const & {
 			return self_cast<List>(thiz);
 		}
 
@@ -150,12 +150,12 @@ namespace TwinStar::Core {
 		#pragma region view
 
 		auto as_view (
-		) -> VView const& {
+		) -> VView const & {
 			return self_cast<VView>(thiz);
 		}
 
 		auto as_view (
-		) const -> CView const& {
+		) const -> CView const & {
 			return self_cast<CView>(thiz);
 		}
 
@@ -237,7 +237,7 @@ namespace TwinStar::Core {
 			CategoryConstraint<IsPureInstance<KeyObject>>
 		auto query (
 			KeyObject const & key
-		) -> VElement& {
+		) -> VElement & {
 			return thiz.as_view().query(key);
 		}
 
@@ -255,7 +255,7 @@ namespace TwinStar::Core {
 			CategoryConstraint<IsPureInstance<KeyObject>>
 		auto query (
 			KeyObject const & key
-		) const -> CElement& {
+		) const -> CElement & {
 			return thiz.as_view().query(key);
 		}
 
@@ -415,7 +415,7 @@ namespace TwinStar::Core {
 			CategoryConstraint<IsPureInstance<KeyObject>>
 		auto query_force (
 			KeyObject const & key
-		) -> VElement& {
+		) -> VElement & {
 			if (auto index = thiz.find_key(key)) {
 				return thiz.at(index.get());
 			} else {

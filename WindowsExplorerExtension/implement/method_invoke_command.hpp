@@ -8,7 +8,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 	#pragma region config
 
-	struct MethodInvokeCommandConfig {
+	struct MethodInvokeCommandConfiguration {
 		std::wstring                id;
 		std::optional<bool>         type;
 		std::optional<std::wregex>  rule;
@@ -16,28 +16,28 @@ namespace TwinStar::WindowsExplorerExtension {
 		std::wstring                argument;
 	};
 
-	struct GroupMethodInvokeCommandConfig {
-		std::wstring                           id;
-		std::vector<MethodInvokeCommandConfig> item;
-		std::vector<std::size_t>               separator;
+	struct GroupMethodInvokeCommandConfiguration {
+		std::wstring                                  id;
+		std::vector<MethodInvokeCommandConfiguration> item;
+		std::vector<std::size_t>                      separator;
 	};
 
 	// ----------------
 
 	inline auto test_method_available (
-		MethodInvokeCommandConfig const & config,
-		std::wstring const &              input
+		MethodInvokeCommandConfiguration const & configuration,
+		std::wstring const &                     input
 	) -> bool {
 		auto result = true;
-		if (config.type) {
-			if (config.type.value()) {
+		if (configuration.type) {
+			if (configuration.type.value()) {
 				result &= std::filesystem::is_directory(std::filesystem::path{input});
 			} else {
 				result &= std::filesystem::is_regular_file(std::filesystem::path{input});
 			}
 		}
-		if (result && config.rule) {
-			result &= std::regex_search(input, config.rule.value());
+		if (result && configuration.rule) {
+			result &= std::regex_search(input, configuration.rule.value());
 		}
 		return result;
 	}
@@ -51,18 +51,18 @@ namespace TwinStar::WindowsExplorerExtension {
 
 	protected:
 
-		MethodInvokeCommandConfig const & m_config;
-		bool                              m_has_icon;
+		MethodInvokeCommandConfiguration const & m_configuration;
+		bool                                     m_has_icon;
 
 	public:
 
 		#pragma region structor
 
 		explicit MethodInvokeCommand (
-			MethodInvokeCommandConfig const & config,
-			bool const &                      has_icon = true
+			MethodInvokeCommandConfiguration const & configuration,
+			bool const &                             has_icon = true
 		):
-			m_config{config},
+			m_configuration{configuration},
 			m_has_icon{has_icon} {
 		}
 
@@ -72,7 +72,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		virtual auto title (
 		) -> LPCWSTR override {
-			return Language::query(std::format(L"method:{}", thiz.m_config.id)).data();
+			return Language::query(std::format(L"method:{}", thiz.m_configuration.id)).data();
 		}
 
 		virtual auto icon (
@@ -90,7 +90,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			auto available = std::ranges::all_of(
 				input_list,
 				[&] (auto & input) {
-					return test_method_available(thiz.m_config, input);
+					return test_method_available(thiz.m_configuration, input);
 				}
 			);
 			auto state = !available ? (ECS_DISABLED) : (ECS_ENABLED);
@@ -118,15 +118,15 @@ namespace TwinStar::WindowsExplorerExtension {
 				auto argument = std::vector<std::wstring>{};
 				argument.emplace_back(L"/C");
 				argument.emplace_back(launch_script);
-				auto argument_count_per_command = std::ptrdiff_t{1 + (!thiz.m_config.method.has_value() ? (0) : (2)) + 2};
+				auto argument_count_per_command = std::ptrdiff_t{1 + (!thiz.m_configuration.method.has_value() ? (0) : (2)) + 2};
 				for (auto & input : input_list) {
 					argument.emplace_back(input);
-					if (thiz.m_config.method.has_value()) {
+					if (thiz.m_configuration.method.has_value()) {
 						argument.emplace_back(L"-method");
-						argument.emplace_back(thiz.m_config.method.value());
+						argument.emplace_back(thiz.m_configuration.method.value());
 					}
 					argument.emplace_back(L"-argument");
-					argument.emplace_back(thiz.m_config.argument);
+					argument.emplace_back(thiz.m_configuration.argument);
 					if (launch_limit != 0) {
 						create_process(program, argument);
 						argument.erase(argument.end() - argument_count_per_command, argument.end());
@@ -159,7 +159,7 @@ namespace TwinStar::WindowsExplorerExtension {
 		#pragma region structor
 
 		explicit MethodInvokeCommandEnum (
-			GroupMethodInvokeCommandConfig const & config
+			GroupMethodInvokeCommandConfiguration const & config
 		) {
 			auto separator_index = std::size_t{0};
 			auto current_separator_section_count = std::size_t{0};
@@ -224,16 +224,16 @@ namespace TwinStar::WindowsExplorerExtension {
 
 	protected:
 
-		GroupMethodInvokeCommandConfig const & m_config;
+		GroupMethodInvokeCommandConfiguration const & m_configuration;
 
 	public:
 
 		#pragma region structor
 
 		explicit GroupMethodInvokeCommand (
-			GroupMethodInvokeCommandConfig const & config
+			GroupMethodInvokeCommandConfiguration const & configuration
 		):
-			m_config{config} {
+			m_configuration{configuration} {
 		}
 
 		#pragma endregion
@@ -244,7 +244,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			_COM_Outptr_ IEnumExplorerCommand ** ppEnum
 		) override {
 			*ppEnum = nullptr;
-			auto e = Make<MethodInvokeCommandEnum>(thiz.m_config);
+			auto e = Make<MethodInvokeCommandEnum>(thiz.m_configuration);
 			return e->QueryInterface(IID_PPV_ARGS(ppEnum));
 		}
 
@@ -252,7 +252,7 @@ namespace TwinStar::WindowsExplorerExtension {
 
 		virtual auto title (
 		) -> LPCWSTR override {
-			return Language::query(std::format(L"method:{}", thiz.m_config.id)).data();
+			return Language::query(std::format(L"method:{}", thiz.m_configuration.id)).data();
 		}
 
 		virtual auto icon (
@@ -268,7 +268,7 @@ namespace TwinStar::WindowsExplorerExtension {
 			auto hidden_group_when_unavailable = get_register_value_dword(k_register_key_parent, k_register_key_path, L"hidden_group_when_unavailable").value_or(0) != 0;
 			auto input_list = get_shell_item_file_path(selection);
 			auto available = std::ranges::any_of(
-				thiz.m_config.item,
+				thiz.m_configuration.item,
 				[&] (auto & config) {
 					return std::ranges::all_of(
 						input_list,

@@ -56,23 +56,23 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			NumberIterator const & that
-		) -> NumberIterator& = default;
+		) -> NumberIterator & = default;
 
 		constexpr auto operator = (
 			NumberIterator && that
-		) -> NumberIterator& = default;
+		) -> NumberIterator & = default;
 
 		// ----------------
 
 		constexpr auto operator * (
-		) const -> Number const& {
+		) const -> Number const & {
 			return thiz.m_value;
 		}
 
 		// ----------------
 
 		constexpr auto operator ++ (
-		) -> NumberIterator& {
+		) -> NumberIterator & {
 			thiz.m_value += thiz.m_step;
 			return thiz;
 		}

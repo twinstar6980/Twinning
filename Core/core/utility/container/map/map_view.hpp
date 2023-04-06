@@ -68,11 +68,11 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			MapView const & that
-		) -> MapView& = default;
+		) -> MapView & = default;
 
 		constexpr auto operator = (
 			MapView && that
-		) -> MapView& = default;
+		) -> MapView & = default;
 
 		// ----------------
 
@@ -80,7 +80,7 @@ namespace TwinStar::Core {
 			CategoryConstraint<IsPureInstance<KeyObject>>
 		constexpr auto operator [] (
 			KeyObject const & key
-		) const -> QValue& {
+		) const -> QValue & {
 			return thiz.query(key).value;
 		}
 
@@ -101,12 +101,12 @@ namespace TwinStar::Core {
 		#pragma region as list
 
 		auto as_list (
-		) -> ListView& {
+		) -> ListView & {
 			return self_cast<ListView>(thiz);
 		}
 
 		auto as_list (
-		) const -> ListView const& {
+		) const -> ListView const & {
 			return self_cast<ListView>(thiz);
 		}
 
@@ -189,7 +189,7 @@ namespace TwinStar::Core {
 			CategoryConstraint<IsPureInstance<KeyObject>>
 		constexpr auto query (
 			KeyObject const & key
-		) const -> QElement& {
+		) const -> QElement & {
 			auto index = thiz.find_key(key);
 			assert_test(index);
 			return thiz.at(index.get());

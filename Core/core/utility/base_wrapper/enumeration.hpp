@@ -53,23 +53,23 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			EnumerationWrapper const & that
-		) -> EnumerationWrapper& = default;
+		) -> EnumerationWrapper & = default;
 
 		constexpr auto operator = (
 			EnumerationWrapper && that
-		) -> EnumerationWrapper& = default;
+		) -> EnumerationWrapper & = default;
 
 		#pragma endregion
 
 		#pragma region underlying
 
 		auto as_underlying (
-		) -> Underlying& {
+		) -> Underlying & {
 			return self_cast<Underlying>(thiz);
 		}
 
 		auto as_underlying (
-		) const -> Underlying const& {
+		) const -> Underlying const & {
 			return self_cast<Underlying>(thiz);
 		}
 

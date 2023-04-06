@@ -42,8 +42,8 @@ namespace TwinStar::Shell {
 		auto prime = std::uint64_t{1099511628211ull};
 		auto result = offset;
 		for (auto & element : string) {
-			result *= prime;
 			result ^= static_cast<std::uint8_t>(element);
+			result *= prime;
 		}
 		return result;
 	}

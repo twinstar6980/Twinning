@@ -70,11 +70,11 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			NumberRange const & that
-		) -> NumberRange& = default;
+		) -> NumberRange & = default;
 
 		constexpr auto operator = (
 			NumberRange && that
-		) -> NumberRange& = default;
+		) -> NumberRange & = default;
 
 		#pragma endregion
 

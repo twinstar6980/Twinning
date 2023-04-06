@@ -65,11 +65,11 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			BaseWrapper const & that
-		) -> BaseWrapper& = default;
+		) -> BaseWrapper & = default;
 
 		constexpr auto operator = (
 			BaseWrapper && that
-		) -> BaseWrapper& = default;
+		) -> BaseWrapper & = default;
 
 		#pragma endregion
 

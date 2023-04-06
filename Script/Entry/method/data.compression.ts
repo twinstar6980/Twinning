@@ -13,12 +13,12 @@ namespace TwinStar.Script.Entry.method.data.compression {
 	// lzma.compress
 	// lzma.uncompress
 
-	type Config = {
+	type Configuration = {
 		uncompress_buffer_size: Executor.RequestArgument<string, false>;
 	};
 
 	export function _injector(
-		config: Config,
+		configuration: Configuration,
 	) {
 		g_executor_method.push(
 			Executor.method_of({
@@ -102,7 +102,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 					...Entry.k_cfsa,
 					ripe_file: undefined!,
 					raw_file: '?default',
-					buffer_size: config.uncompress_buffer_size,
+					buffer_size: configuration.uncompress_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),
 				input_forwarder: 'ripe_file',
@@ -188,7 +188,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 					...Entry.k_cfsa,
 					ripe_file: undefined!,
 					raw_file: '?default',
-					buffer_size: config.uncompress_buffer_size,
+					buffer_size: configuration.uncompress_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),
 				input_forwarder: 'ripe_file',
@@ -274,7 +274,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 					...Entry.k_cfsa,
 					ripe_file: undefined!,
 					raw_file: '?default',
-					buffer_size: config.uncompress_buffer_size,
+					buffer_size: configuration.uncompress_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),
 				input_forwarder: 'ripe_file',
@@ -360,7 +360,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 					...Entry.k_cfsa,
 					ripe_file: undefined!,
 					raw_file: '?default',
-					buffer_size: config.uncompress_buffer_size,
+					buffer_size: configuration.uncompress_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),
 				input_forwarder: 'ripe_file',
@@ -446,7 +446,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 					...Entry.k_cfsa,
 					ripe_file: undefined!,
 					raw_file: '?default',
-					buffer_size: config.uncompress_buffer_size,
+					buffer_size: configuration.uncompress_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),
 				input_forwarder: 'ripe_file',

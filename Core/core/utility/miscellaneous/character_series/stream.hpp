@@ -67,11 +67,11 @@ namespace TwinStar::Core {
 
 		auto operator = (
 			CharacterStreamView const & that
-		) -> CharacterStreamView& = default;
+		) -> CharacterStreamView & = default;
 
 		auto operator = (
 			CharacterStreamView && that
-		) -> CharacterStreamView& = default;
+		) -> CharacterStreamView & = default;
 
 		// ----------------
 
@@ -155,13 +155,13 @@ namespace TwinStar::Core {
 		#pragma region method cast
 
 		auto as_input_stream (
-		) -> IStream& requires
+		) -> IStream & requires
 			(method == StreamMethod::Constant::io()) {
 			return self_cast<IStream>(thiz);
 		}
 
 		auto as_output_stream (
-		) -> OStream& requires
+		) -> OStream & requires
 			(method == StreamMethod::Constant::io()) {
 			return self_cast<OStream>(thiz);
 		}

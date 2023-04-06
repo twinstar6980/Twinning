@@ -5,13 +5,13 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_group {
 	// pack
 	// unpack
 
-	type Config = {
+	type Configuration = {
 		version_number: Executor.RequestArgument<bigint, false>;
 		pack_buffer_size: Executor.RequestArgument<string, false>;
 	};
 
 	export function _injector(
-		config: Config,
+		configuration: Configuration,
 	) {
 		g_executor_method.push(
 			Executor.method_of({
@@ -68,8 +68,8 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_group {
 					...Entry.k_cfsa,
 					bundle_directory: undefined!,
 					data_file: '?default',
-					version_number: config.version_number,
-					buffer_size: config.pack_buffer_size,
+					version_number: configuration.version_number,
+					buffer_size: configuration.pack_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', /.+(\.rsg)(\.bundle)$/i]]),
 				input_forwarder: 'bundle_directory',
@@ -119,7 +119,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_group {
 					...Entry.k_cfsa,
 					data_file: undefined!,
 					bundle_directory: '?default',
-					version_number: config.version_number,
+					version_number: configuration.version_number,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.rsg)$/i]]),
 				input_forwarder: 'data_file',

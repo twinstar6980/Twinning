@@ -68,17 +68,17 @@ namespace TwinStar::Core {
 
 		auto operator = (
 			BasicString const & that
-		) -> BasicString& = default;
+		) -> BasicString & = default;
 
 		auto operator = (
 			BasicString && that
-		) -> BasicString& = default;
+		) -> BasicString & = default;
 
 		// ----------------
 
 		auto operator = (
 			CView const & that
-		) -> BasicString& {
+		) -> BasicString & {
 			thiz.assign(that);
 			return thiz;
 		}
@@ -98,12 +98,12 @@ namespace TwinStar::Core {
 		#pragma region view
 
 		auto as_view (
-		) -> View const& {
+		) -> View const & {
 			return self_cast<View>(thiz);
 		}
 
 		auto as_view (
-		) const -> CView const& {
+		) const -> CView const & {
 			return self_cast<CView>(thiz);
 		}
 
@@ -262,7 +262,7 @@ namespace TwinStar::Core {
 		friend auto operator += (
 			BasicString & thix,
 			CView const & that
-		) -> BasicString& {
+		) -> BasicString & {
 			thix.append_list(that);
 			return thix;
 		}

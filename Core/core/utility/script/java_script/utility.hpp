@@ -153,11 +153,11 @@ namespace TwinStar::Core::JavaScript {
 
 		auto operator = (
 			NativeClassBuilder const & that
-		) -> NativeClassBuilder& = delete;
+		) -> NativeClassBuilder & = delete;
 
 		auto operator = (
 			NativeClassBuilder && that
-		) -> NativeClassBuilder& = default;
+		) -> NativeClassBuilder & = default;
 
 		#pragma endregion
 
@@ -177,7 +177,7 @@ namespace TwinStar::Core::JavaScript {
 			&& (IsGlobalFunction<decltype(function)>)
 			&& (IsSame<typename CallableTraitOf<function>::Result, NativeValueHandler<Class>>)
 		auto set_constructor (
-		) -> NativeClassBuilder& {
+		) -> NativeClassBuilder & {
 			thiz.m_constructor = thiz.m_proto.new_value(NativeConstructorWrapper<function>{thiz.whole_name()});
 			quickjs::JS_SetConstructor(thiz.m_constructor._context(), thiz.m_constructor._value(), thiz.m_proto._value());
 			thiz.m_parent.define_object_property(
@@ -193,7 +193,7 @@ namespace TwinStar::Core::JavaScript {
 			&& (IsSame<typename CallableTraitOf<function>::Result, NativeValueHandler<Class>>)
 		auto add_constructor (
 			String const & name
-		) -> NativeClassBuilder& {
+		) -> NativeClassBuilder & {
 			thiz.m_constructor.define_object_property(
 				name,
 				thiz.m_constructor.new_value(NativeFunctionWrapper<function, false>{name})
@@ -210,7 +210,7 @@ namespace TwinStar::Core::JavaScript {
 			&& (IsGlobalFunction<decltype(function)>)
 		auto add_static_function (
 			String const & name
-		) -> NativeClassBuilder& {
+		) -> NativeClassBuilder & {
 			thiz.m_constructor.define_object_property(
 				name,
 				thiz.m_constructor.new_value(NativeFunctionWrapper<function, false>{name})
@@ -224,7 +224,7 @@ namespace TwinStar::Core::JavaScript {
 			&& (IsSame<AsPure<typename CallableTraitOf<function>::Argument::template Element<1_ixz>>, NativeValueHandler<Class>>)
 		auto add_member_function (
 			String const & name
-		) -> NativeClassBuilder& {
+		) -> NativeClassBuilder & {
 			thiz.m_proto.define_object_property(
 				name,
 				thiz.m_proto.new_value(NativeFunctionWrapper<function, true>{name})
@@ -244,7 +244,7 @@ namespace TwinStar::Core::JavaScript {
 			&& (CallableTraitOf<setter>::Argument::size == 2_szz && IsSame<AsPure<typename CallableTraitOf<setter>::Argument::template Element<1_ixz>>, NativeValueHandler<Class>> && IsVoid<typename CallableTraitOf<setter>::Result>)
 		auto add_getter_setter (
 			String const & name
-		) -> NativeClassBuilder& {
+		) -> NativeClassBuilder & {
 			thiz.m_proto.define_object_property(
 				name,
 				thiz.m_proto.new_value(NativeFunctionWrapper<getter, true>{name}),
@@ -259,7 +259,7 @@ namespace TwinStar::Core::JavaScript {
 			&& (CallableTraitOf<getter>::Argument::size == 1_szz && IsSame<AsPure<typename CallableTraitOf<getter>::Argument::template Element<1_ixz>>, NativeValueHandler<Class>> && !IsVoid<typename CallableTraitOf<getter>::Result>)
 		auto add_getter (
 			String const & name
-		) -> NativeClassBuilder& {
+		) -> NativeClassBuilder & {
 			thiz.m_proto.define_object_property(
 				name,
 				thiz.m_proto.new_value(NativeFunctionWrapper<getter, true>{name}),
@@ -281,7 +281,7 @@ namespace TwinStar::Core::JavaScript {
 			&& (IsConstructible<Class, Argument ...>)
 		auto add_constructor_allocate_proxy (
 			String const & name
-		) -> NativeClassBuilder& {
+		) -> NativeClassBuilder & {
 			return thiz.template add_constructor<&proxy_native_function_allocate_by_handler<Class, Argument ...>>(name);
 		}
 
@@ -292,7 +292,7 @@ namespace TwinStar::Core::JavaScript {
 			&& (IsGlobalFunction<decltype(function)>)
 		auto add_static_function_proxy (
 			String const & name
-		) -> NativeClassBuilder& {
+		) -> NativeClassBuilder & {
 			return thiz.template add_static_function<&proxy_native_function_by_handler<function>>(name);
 		}
 
@@ -302,7 +302,7 @@ namespace TwinStar::Core::JavaScript {
 			&& (IsDerivedFrom<Class, typename CallableTraitOf<function>::Class>)
 		auto add_member_function_proxy (
 			String const & name
-		) -> NativeClassBuilder& {
+		) -> NativeClassBuilder & {
 			return thiz.template add_member_function<&proxy_native_function_by_handler<&normalized_member_function<function, Class>>>(name);
 		}
 
@@ -312,7 +312,7 @@ namespace TwinStar::Core::JavaScript {
 			&& (IsSame<AsPure<typename CallableTraitOf<function>::Argument::template Element<1_ixz>>, Class>)
 		auto add_member_function_imitate_proxy (
 			String const & name
-		) -> NativeClassBuilder& {
+		) -> NativeClassBuilder & {
 			return thiz.template add_member_function<&proxy_native_function_by_handler<function>>(name);
 		}
 
@@ -373,11 +373,11 @@ namespace TwinStar::Core::JavaScript {
 
 		auto operator = (
 			NativeSpaceBuilder const & that
-		) -> NativeSpaceBuilder& = delete;
+		) -> NativeSpaceBuilder & = delete;
 
 		auto operator = (
 			NativeSpaceBuilder && that
-		) -> NativeSpaceBuilder& = default;
+		) -> NativeSpaceBuilder & = default;
 
 		#pragma endregion
 
@@ -409,7 +409,7 @@ namespace TwinStar::Core::JavaScript {
 		auto add_variable (
 			String const & name,
 			Value &&       value
-		) -> NativeSpaceBuilder& {
+		) -> NativeSpaceBuilder & {
 			thiz.m_object.define_object_property(name, as_moveable(value));
 			return thiz;
 		}
@@ -419,7 +419,7 @@ namespace TwinStar::Core::JavaScript {
 			&& (IsGlobalFunction<decltype(function)>)
 		auto add_function (
 			String const & name
-		) -> NativeSpaceBuilder& {
+		) -> NativeSpaceBuilder & {
 			return thiz.add_variable(name, thiz.m_object.new_value(NativeFunctionWrapper<function, false>{name}));
 		}
 
@@ -430,7 +430,7 @@ namespace TwinStar::Core::JavaScript {
 			&& (IsGlobalFunction<decltype(function)>)
 		auto add_function_proxy (
 			String const & name
-		) -> NativeSpaceBuilder& {
+		) -> NativeSpaceBuilder & {
 			return thiz.add_function<&proxy_native_function_by_handler<function>>(name);
 		}
 

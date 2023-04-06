@@ -7,6 +7,7 @@ namespace TwinStar::Core::Tool::Data::Hash::FNV {
 	M_enumeration(
 		M_wrap(Mode),
 		M_wrap(
+			m_0,
 			m_1,
 			m_1a,
 		),
@@ -59,8 +60,16 @@ namespace TwinStar::Core::Tool::Data::Hash::FNV {
 			typename Parameter<bit_count>::Value & value
 		) -> Void {
 			using Parameter = Parameter<bit_count>;
-			value = Parameter::offset;
+			if constexpr (mode == Mode::Constant::m_0()) {
+				value = mbw<typename Parameter::Value>(0);
+			} else {
+				value = Parameter::offset;
+			}
 			for (auto & element : data) {
+				if constexpr (mode == Mode::Constant::m_0()) {
+					value *= Parameter::prime;
+					value ^= cbw<typename Parameter::Value>(element);
+				}
 				if constexpr (mode == Mode::Constant::m_1()) {
 					value *= Parameter::prime;
 					value ^= cbw<typename Parameter::Value>(element);
@@ -80,6 +89,7 @@ namespace TwinStar::Core::Tool::Data::Hash::FNV {
 			BitCount const &      bit_count
 		) -> Void {
 			Generalization::match<ValuePackage<
+				Mode::Constant::m_0(),
 				Mode::Constant::m_1(),
 				Mode::Constant::m_1a()
 			>>(

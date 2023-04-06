@@ -2,11 +2,11 @@ namespace TwinStar.Script.Entry.method.expand {
 
 	// ------------------------------------------------
 
-	type Config = {
+	type Configuration = {
 	};
 
 	export function _injector(
-		config: Config,
+		configuration: Configuration,
 	) {
 		g_executor_method.push(
 		);

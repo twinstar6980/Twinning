@@ -4,37 +4,14 @@
 
 namespace std {
 
-	#pragma region iostream
-
-	inline auto operator << (
-		std::ostream &                      thix,
-		TwinStar::Core::CStringView const & that
-	) -> std::ostream& {
-		for (auto & element : that) {
-			thix << element.value;
-		}
-		return thix;
-	}
-
-	#pragma endregion
-
 	#pragma region hash
-
-	template <>
-	struct hash<TwinStar::Core::IntegerU32> {
-		auto operator () (
-			TwinStar::Core::IntegerU32 const & it
-		) const noexcept -> std::size_t {
-			return it.value;
-		}
-	};
 
 	template <>
 	struct hash<TwinStar::Core::CStringView> {
 		auto operator () (
 			TwinStar::Core::CStringView const & it
 		) const noexcept -> std::size_t {
-			return it.hash().value;
+			return std::hash<std::string_view>{}(TwinStar::Core::make_std_string_view(it));
 		}
 	};
 
@@ -43,7 +20,7 @@ namespace std {
 		auto operator () (
 			TwinStar::Core::VStringView const & it
 		) const noexcept -> std::size_t {
-			return it.hash().value;
+			return std::hash<std::string_view>{}(TwinStar::Core::make_std_string_view(it));
 		}
 	};
 
@@ -52,7 +29,7 @@ namespace std {
 		auto operator () (
 			TwinStar::Core::String const & it
 		) const noexcept -> std::size_t {
-			return it.hash().value;
+			return std::hash<std::string_view>{}(TwinStar::Core::make_std_string_view(it));
 		}
 	};
 

@@ -58,11 +58,11 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			RangeWrapper const & that
-		) -> RangeWrapper& = default;
+		) -> RangeWrapper & = default;
 
 		constexpr auto operator = (
 			RangeWrapper && that
-		) -> RangeWrapper& = default;
+		) -> RangeWrapper & = default;
 
 		#pragma endregion
 

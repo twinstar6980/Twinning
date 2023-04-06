@@ -59,11 +59,11 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			OptionalView const & that
-		) -> OptionalView& = default;
+		) -> OptionalView & = default;
 
 		constexpr auto operator = (
 			OptionalView && that
-		) -> OptionalView& = default;
+		) -> OptionalView & = default;
 
 		// ----------------
 
@@ -95,7 +95,7 @@ namespace TwinStar::Core {
 
 		constexpr auto set (
 			QValue & value
-		) -> QValue& {
+		) -> QValue & {
 			thiz.m_has = k_true;
 			thiz.m_value = make_pointer(&value);
 			return thiz.m_value.dereference();
@@ -104,7 +104,7 @@ namespace TwinStar::Core {
 		// ----------------
 
 		constexpr auto get (
-		) const -> QValue& {
+		) const -> QValue & {
 			assert_test(thiz.has());
 			return thiz.m_value.dereference();
 		}

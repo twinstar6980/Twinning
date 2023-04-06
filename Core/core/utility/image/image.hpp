@@ -74,17 +74,17 @@ namespace TwinStar::Core::Image {
 
 		auto operator = (
 			BasicImage const & that
-		) -> BasicImage& = default;
+		) -> BasicImage & = default;
 
 		auto operator = (
 			BasicImage && that
-		) -> BasicImage& = default;
+		) -> BasicImage & = default;
 
 		// ----------------
 
 		auto operator = (
 			CView const & that
-		) -> BasicImage& {
+		) -> BasicImage & {
 			thiz.assign(that);
 			return thiz;
 		}
@@ -93,25 +93,25 @@ namespace TwinStar::Core::Image {
 
 		auto operator [] (
 			Size const & y
-		) -> VPixelRow const& {
+		) -> VPixelRow const & {
 			return thiz.as_view()[y];
 		}
 
 		auto operator [] (
 			Size const & y
-		) const -> CPixelRow const& {
+		) const -> CPixelRow const & {
 			return thiz.as_view()[y];
 		}
 
 		auto operator [] (
 			ImagePosition const & position
-		) -> Pixel& {
+		) -> Pixel & {
 			return thiz.as_view()[position];
 		}
 
 		auto operator [] (
 			ImagePosition const & position
-		) const -> Pixel const& {
+		) const -> Pixel const & {
 			return thiz.as_view()[position];
 		}
 
@@ -130,12 +130,12 @@ namespace TwinStar::Core::Image {
 		#pragma region view
 
 		auto as_view (
-		) -> VView const& {
+		) -> VView const & {
 			return self_cast<VView>(thiz);
 		}
 
 		auto as_view (
-		) const -> CView const& {
+		) const -> CView const & {
 			return self_cast<CView>(thiz);
 		}
 
@@ -156,12 +156,12 @@ namespace TwinStar::Core::Image {
 		#pragma region data & size
 
 		auto data (
-		) -> CListView<VPixelRow> const& {
+		) -> CListView<VPixelRow> const & {
 			return thiz.as_view().data();
 		}
 
 		auto data (
-		) const -> CListView<CPixelRow> const& {
+		) const -> CListView<CPixelRow> const & {
 			return thiz.as_view().data();
 		}
 

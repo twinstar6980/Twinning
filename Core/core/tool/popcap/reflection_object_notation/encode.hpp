@@ -674,7 +674,7 @@ namespace TwinStar::Core::Tool::PopCap::ReflectionObjectNotation {
 					}
 					object.assign(
 						member_list,
-						[] (auto & element) -> auto&& {
+						[] (auto & element) -> auto && {
 							return as_moveable(element);
 						}
 					);

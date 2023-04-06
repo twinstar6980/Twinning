@@ -55,11 +55,11 @@ namespace TwinStar::Core {
 
 		auto operator = (
 			Exception const & that
-		) -> Exception& = default;
+		) -> Exception & = default;
 
 		auto operator = (
 			Exception && that
-		) -> Exception& = default;
+		) -> Exception & = default;
 
 		#pragma endregion
 

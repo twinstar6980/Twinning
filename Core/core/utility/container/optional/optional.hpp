@@ -56,11 +56,11 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			Optional const & that
-		) -> Optional& = default;
+		) -> Optional & = default;
 
 		constexpr auto operator = (
 			Optional && that
-		) -> Optional& = default;
+		) -> Optional & = default;
 
 		// ----------------
 
@@ -94,7 +94,7 @@ namespace TwinStar::Core {
 			&& (IsConstructible<Value, Argument && ...>)
 		constexpr auto set (
 			Argument && ... argument
-		) -> Value& {
+		) -> Value & {
 			thiz.m_value.emplace(as_forward<Argument>(argument) ...);
 			return thiz.m_value.value();
 		}
@@ -102,13 +102,13 @@ namespace TwinStar::Core {
 		// ----------------
 
 		constexpr auto get (
-		) -> Value& {
+		) -> Value & {
 			assert_test(thiz.has());
 			return thiz.m_value.value();
 		}
 
 		constexpr auto get (
-		) const -> Value const& {
+		) const -> Value const & {
 			assert_test(thiz.has());
 			return thiz.m_value.value();
 		}

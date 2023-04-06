@@ -73,8 +73,8 @@
 
 // ----------------
 
-// NOTE : M_map_0 with a va, because need support M_xxx(_x) == M_map(_m, _x) if _x is empty va and it passing by M_wrap(...), this case can't use ## to fix dot
-// NOTE : use __VA_OPT__(, __VA_ARGS__) replace ##__VA_ARGS__ can fix this error, but resharper will show error highlight
+// NOTE : M_map_0 will be triggered if empty va is passed
+// NOTE : ignore the item 1 to support trailing comma style
 #define M_map_0(_m,     ...) 
 #define M_map_1(_m, _1, ...) 
 #define M_map_2(_m, _1, ...) _m(_1) M_map_1(_m, ##__VA_ARGS__)
@@ -173,9 +173,6 @@
 // ----------------
 
 #define M_log(...)\
-	std::cerr << (__VA_ARGS__) << "\n"
-
-#define M_log_no_line(...)\
-	std::cerr << (__VA_ARGS__)
+	std::cerr << (__VA_ARGS__) << "\n" << std::flush
 
 #pragma endregion

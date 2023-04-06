@@ -35,11 +35,11 @@ namespace TwinStar::Shell::Core {
 
 		auto operator = (
 			Library const & that
-		) -> Library& = delete;
+		) -> Library & = delete;
 
 		auto operator = (
 			Library && that
-		) -> Library& = delete;
+		) -> Library & = delete;
 
 		#pragma endregion
 
@@ -47,17 +47,17 @@ namespace TwinStar::Shell::Core {
 
 		virtual auto version (
 			Interface::Size * * number
-		) -> Interface::String* = 0;
+		) -> Interface::String * = 0;
 
 		virtual auto execute (
 			Interface::Callback * *   callback,
 			Interface::String * *     script,
 			Interface::StringList * * argument,
 			Interface::String * *     result
-		) -> Interface::String* = 0;
+		) -> Interface::String * = 0;
 
 		virtual auto prepare (
-		) -> Interface::String* = 0;
+		) -> Interface::String * = 0;
 
 		#pragma endregion
 

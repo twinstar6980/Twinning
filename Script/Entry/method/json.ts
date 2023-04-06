@@ -4,13 +4,13 @@ namespace TwinStar.Script.Entry.method.json {
 
 	// format *
 
-	type Config = {
+	type Configuration = {
 		disable_trailing_comma: Executor.RequestArgument<boolean, true>;
 		disable_array_wrap_line: Executor.RequestArgument<boolean, true>;
 	};
 
 	export function _injector(
-		config: Config,
+		configuration: Configuration,
 	) {
 		g_executor_method.push(
 			Executor.method_of({
@@ -66,8 +66,8 @@ namespace TwinStar.Script.Entry.method.json {
 					...Entry.k_cfsa,
 					source_file: undefined!,
 					destination_file: '?default',
-					disable_trailing_comma: config.disable_trailing_comma,
-					disable_array_wrap_line: config.disable_array_wrap_line,
+					disable_trailing_comma: configuration.disable_trailing_comma,
+					disable_array_wrap_line: configuration.disable_array_wrap_line,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.json)$/i]]),
 				input_forwarder: 'source_file',
@@ -135,8 +135,8 @@ namespace TwinStar.Script.Entry.method.json {
 					...Entry.k_cfsa,
 					source_file_directory: undefined!,
 					destination_file_directory: '?default',
-					disable_trailing_comma: config.disable_trailing_comma,
-					disable_array_wrap_line: config.disable_array_wrap_line,
+					disable_trailing_comma: configuration.disable_trailing_comma,
+					disable_array_wrap_line: configuration.disable_array_wrap_line,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'source_file_directory',

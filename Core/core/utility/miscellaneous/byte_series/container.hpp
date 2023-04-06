@@ -62,11 +62,11 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			BasicByteListView const & that
-		) -> BasicByteListView& = default;
+		) -> BasicByteListView & = default;
 
 		constexpr auto operator = (
 			BasicByteListView && that
-		) -> BasicByteListView& = default;
+		) -> BasicByteListView & = default;
 
 		// ----------------
 
@@ -180,17 +180,17 @@ namespace TwinStar::Core {
 
 		auto operator = (
 			BasicByteList const & that
-		) -> BasicByteList& = default;
+		) -> BasicByteList & = default;
 
 		auto operator = (
 			BasicByteList && that
-		) -> BasicByteList& = default;
+		) -> BasicByteList & = default;
 
 		// ----------------
 
 		auto operator = (
 			CView const & that
-		) -> BasicByteList& {
+		) -> BasicByteList & {
 			thiz.assign(that);
 			return thiz;
 		}
@@ -210,12 +210,12 @@ namespace TwinStar::Core {
 		#pragma region view
 
 		auto as_view (
-		) -> VView const& {
+		) -> VView const & {
 			return self_cast<VView>(thiz);
 		}
 
 		auto as_view (
-		) const -> CView const& {
+		) const -> CView const & {
 			return self_cast<CView>(thiz);
 		}
 
@@ -339,17 +339,17 @@ namespace TwinStar::Core {
 
 		auto operator = (
 			BasicByteArray const & that
-		) -> BasicByteArray& = default;
+		) -> BasicByteArray & = default;
 
 		auto operator = (
 			BasicByteArray && that
-		) -> BasicByteArray& = default;
+		) -> BasicByteArray & = default;
 
 		// ----------------
 
 		auto operator = (
 			CView const & that
-		) -> BasicByteArray& {
+		) -> BasicByteArray & {
 			thiz.assign(that);
 			return thiz;
 		}
@@ -369,12 +369,12 @@ namespace TwinStar::Core {
 		#pragma region view
 
 		auto as_view (
-		) -> VView const& {
+		) -> VView const & {
 			return self_cast<VView>(thiz);
 		}
 
 		auto as_view (
-		) const -> CView const& {
+		) const -> CView const & {
 			return self_cast<CView>(thiz);
 		}
 
@@ -499,11 +499,11 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			BasicStaticByteArray const & that
-		) -> BasicStaticByteArray& = default;
+		) -> BasicStaticByteArray & = default;
 
 		constexpr auto operator = (
 			BasicStaticByteArray && that
-		) -> BasicStaticByteArray& = default;
+		) -> BasicStaticByteArray & = default;
 
 		// ----------------
 

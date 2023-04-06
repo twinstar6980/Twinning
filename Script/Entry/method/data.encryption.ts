@@ -6,11 +6,11 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 	// rijndael.encrypt
 	// rijndael.decrypt
 
-	type Config = {
+	type Configuration = {
 	};
 
 	export function _injector(
-		config: Config,
+		configuration: Configuration,
 	) {
 		g_executor_method.push(
 			Executor.method_of({

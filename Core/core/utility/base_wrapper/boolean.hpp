@@ -54,11 +54,11 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			BooleanWrapper const & that
-		) -> BooleanWrapper& = default;
+		) -> BooleanWrapper & = default;
 
 		constexpr auto operator = (
 			BooleanWrapper && that
-		) -> BooleanWrapper& = default;
+		) -> BooleanWrapper & = default;
 
 		// ----------------
 

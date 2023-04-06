@@ -16,8 +16,6 @@ namespace TwinStar::Core::Interface {
 
 	// ----------------
 
-	using Void = void;
-
 	struct Size {
 		Type<decltype(sizeof(0))> value;
 	};
@@ -49,7 +47,7 @@ namespace TwinStar::Core::Interface {
 	#endif
 	extern auto version (
 		Size * * number
-	) -> String*;
+	) -> String *;
 
 	#if defined M_interface_implement
 	M_symbol_export
@@ -59,12 +57,12 @@ namespace TwinStar::Core::Interface {
 		String * *     script,
 		StringList * * argument,
 		String * *     result
-	) -> String*;
+	) -> String *;
 
 	#if defined M_interface_implement
 	M_symbol_export
 	#endif
 	extern auto prepare (
-	) -> String*;
+	) -> String *;
 
 }

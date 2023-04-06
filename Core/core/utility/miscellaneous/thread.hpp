@@ -39,11 +39,11 @@ namespace TwinStar::Core {
 
 		auto operator = (
 			Thread const & that
-		) -> Thread& = delete;
+		) -> Thread & = delete;
 
 		auto operator = (
 			Thread && that
-		) -> Thread& = default;
+		) -> Thread & = default;
 
 		#pragma endregion
 

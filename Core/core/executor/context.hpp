@@ -63,23 +63,23 @@ namespace TwinStar::Core::Executor {
 
 		auto operator = (
 			Context const & that
-		) -> Context& = delete;
+		) -> Context & = delete;
 
 		auto operator = (
 			Context && that
-		) -> Context& = default;
+		) -> Context & = default;
 
 		#pragma endregion
 
 		#pragma region runtime & context
 
 		auto runtime (
-		) -> JavaScript::Runtime& {
+		) -> JavaScript::Runtime & {
 			return thiz.m_runtime;
 		}
 
 		auto context (
-		) -> JavaScript::Context& {
+		) -> JavaScript::Context & {
 			return thiz.m_context;
 		}
 

@@ -10,8 +10,8 @@ namespace TwinStar::Core {
 	M_enumeration(
 		M_wrap(NumberVariantType),
 		M_wrap(
-			floater,
 			integer,
+			floater,
 		),
 	);
 
@@ -20,7 +20,7 @@ namespace TwinStar::Core {
 	#pragma region type
 
 	class NumberVariant :
-		public EnumerableVariant<NumberVariantType, Floater, Integer> {
+		public EnumerableVariant<NumberVariantType, Integer, Floater> {
 
 	public:
 
@@ -52,66 +52,66 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			NumberVariant const & that
-		) -> NumberVariant& = default;
+		) -> NumberVariant & = default;
 
 		constexpr auto operator = (
 			NumberVariant && that
-		) -> NumberVariant& = default;
+		) -> NumberVariant & = default;
 
 		#pragma endregion
 
 		#pragma region value
-
-		constexpr auto is_floater (
-		) const -> Boolean {
-			return thiz.is<Floater>();
-		}
 
 		constexpr auto is_integer (
 		) const -> Boolean {
 			return thiz.is<Integer>();
 		}
 
-		// ----------------
-
-		template <typename ... Argument> requires
-			CategoryConstraint<IsValid<Argument ...>>
-		constexpr auto set_floater (
-			Argument && ... argument
-		) -> Floater& {
-			return thiz.set<Floater>(as_forward<Argument>(argument) ...);
+		constexpr auto is_floater (
+		) const -> Boolean {
+			return thiz.is<Floater>();
 		}
+
+		// ----------------
 
 		template <typename ... Argument> requires
 			CategoryConstraint<IsValid<Argument ...>>
 		constexpr auto set_integer (
 			Argument && ... argument
-		) -> Integer& {
+		) -> Integer & {
 			return thiz.set<Integer>(as_forward<Argument>(argument) ...);
 		}
 
-		// ----------------
-
-		constexpr auto get_floater (
-		) -> Floater& {
-			return thiz.get<Floater>();
-		}
-
-		constexpr auto get_integer (
-		) -> Integer& {
-			return thiz.get<Integer>();
+		template <typename ... Argument> requires
+			CategoryConstraint<IsValid<Argument ...>>
+		constexpr auto set_floater (
+			Argument && ... argument
+		) -> Floater & {
+			return thiz.set<Floater>(as_forward<Argument>(argument) ...);
 		}
 
 		// ----------------
 
+		constexpr auto get_integer (
+		) -> Integer & {
+			return thiz.get<Integer>();
+		}
+
 		constexpr auto get_floater (
-		) const -> Floater const& {
+		) -> Floater & {
 			return thiz.get<Floater>();
 		}
 
+		// ----------------
+
 		constexpr auto get_integer (
-		) const -> Integer const& {
+		) const -> Integer const & {
 			return thiz.get<Integer>();
+		}
+
+		constexpr auto get_floater (
+		) const -> Floater const & {
+			return thiz.get<Floater>();
 		}
 
 		#pragma endregion

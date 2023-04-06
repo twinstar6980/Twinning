@@ -79,8 +79,8 @@ namespace TwinStar::Core {
 		auto prime = ZIntegerU64{1099511628211ull};
 		auto result = offset;
 		for (auto index = 1_ixz; index < string.size(); ++index) {
-			result *= prime;
 			result ^= static_cast<ZIntegerU8>(string[index]);
+			result *= prime;
 		}
 		return result;
 	}

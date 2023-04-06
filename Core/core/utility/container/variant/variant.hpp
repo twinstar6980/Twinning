@@ -57,11 +57,11 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			Variant const & that
-		) -> Variant& = default;
+		) -> Variant & = default;
 
 		constexpr auto operator = (
 			Variant && that
-		) -> Variant& = default;
+		) -> Variant & = default;
 
 		#pragma endregion
 
@@ -83,7 +83,7 @@ namespace TwinStar::Core {
 			&& (IsConstructible<ValueObject, Argument && ...>)
 		constexpr auto set (
 			Argument && ... argument
-		) -> ValueObject& {
+		) -> ValueObject & {
 			thiz.m_value.template emplace<ValueObject>(as_forward<Argument>(argument) ...);
 			return std::get<ValueObject>(thiz.m_value);
 		}
@@ -94,7 +94,7 @@ namespace TwinStar::Core {
 			CategoryConstraint<IsPureInstance<ValueObject>>
 			&& (IsSame<ValueObject, TValue ...>)
 		constexpr auto get (
-		) -> ValueObject& {
+		) -> ValueObject & {
 			assert_test(thiz.template is<ValueObject>());
 			return std::get<ValueObject>(thiz.m_value);
 		}
@@ -103,7 +103,7 @@ namespace TwinStar::Core {
 			CategoryConstraint<IsPureInstance<ValueObject>>
 			&& (IsSame<ValueObject, TValue ...>)
 		constexpr auto get (
-		) const -> ValueObject const& {
+		) const -> ValueObject const & {
 			assert_test(thiz.template is<ValueObject>());
 			return std::get<ValueObject>(thiz.m_value);
 		}
@@ -139,7 +139,7 @@ namespace TwinStar::Core {
 			&& (IsConstructible<AsSelect<index.value, TValue ...>, Argument && ...>)
 		constexpr auto set_of_index (
 			Argument && ... argument
-		) -> AsSelect<index.value, TValue ...>& {
+		) -> AsSelect<index.value, TValue ...> & {
 			return thiz.template set<AsSelect<index.value, TValue ...>>(as_forward<Argument>(argument) ...);
 		}
 
@@ -150,7 +150,7 @@ namespace TwinStar::Core {
 			&& (IsSameV<index, Size>)
 			&& (index.value < sizeof...(TValue))
 		constexpr auto get_of_index (
-		) -> AsSelect<index.value, TValue ...>& {
+		) -> AsSelect<index.value, TValue ...> & {
 			return thiz.template get<AsSelect<index.value, TValue ...>>();
 		}
 
@@ -159,7 +159,7 @@ namespace TwinStar::Core {
 			&& (IsSameV<index, Size>)
 			&& (index.value < sizeof...(TValue))
 		constexpr auto get_of_index (
-		) const -> AsSelect<index.value, TValue ...> const& {
+		) const -> AsSelect<index.value, TValue ...> const & {
 			return thiz.template get<AsSelect<index.value, TValue ...>>();
 		}
 

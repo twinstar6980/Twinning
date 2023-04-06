@@ -796,12 +796,12 @@ namespace TwinStar::Core::StringParser {
 		Boolean const &        disable_sign_when_positive = k_false
 	) -> Void {
 		switch (value.type().value) {
-			case NumberVariantType::Constant::floater().value : {
-				write_number(stream, value.get_floater(), disable_sign_when_positive);
-				break;
-			}
 			case NumberVariantType::Constant::integer().value : {
 				write_number(stream, value.get_integer(), disable_sign_when_positive);
+				break;
+			}
+			case NumberVariantType::Constant::floater().value : {
+				write_number(stream, value.get_floater(), disable_sign_when_positive);
 				break;
 			}
 		}

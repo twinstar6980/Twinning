@@ -56,11 +56,11 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			Tuple const & that
-		) -> Tuple& = default;
+		) -> Tuple & = default;
 
 		constexpr auto operator = (
 			Tuple && that
-		) -> Tuple& = default;
+		) -> Tuple & = default;
 
 		#pragma endregion
 
@@ -89,7 +89,7 @@ namespace TwinStar::Core {
 			&& (IsConstructible<AsSelect<index.value, TValue ...>, Argument && ...>)
 		constexpr auto set (
 			Argument && ... argument
-		) -> AsSelect<index.value, TValue ...>& {
+		) -> AsSelect<index.value, TValue ...> & {
 			restruct(thiz.template get<index>(), as_forward<Argument>(argument) ...);
 			return std::get<index.value>(thiz.m_value);
 		}
@@ -101,7 +101,7 @@ namespace TwinStar::Core {
 			&& (IsSameV<index, Size>)
 			&& (index.value < sizeof...(TValue))
 		constexpr auto get (
-		) -> AsSelect<index.value, TValue ...>& {
+		) -> AsSelect<index.value, TValue ...> & {
 			return std::get<index.value>(thiz.m_value);
 		}
 
@@ -110,7 +110,7 @@ namespace TwinStar::Core {
 			&& (IsSameV<index, Size>)
 			&& (index.value < sizeof...(TValue))
 		constexpr auto get (
-		) const -> AsSelect<index.value, TValue ...> const& {
+		) const -> AsSelect<index.value, TValue ...> const & {
 			return std::get<index.value>(thiz.m_value);
 		}
 

@@ -21,7 +21,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundlePatch {
 
 		// ----------------
 
-		inline static constexpr auto package_version = ResourceStreamBundle::Version{.number = 4_i, .additional_texture_information_for_pvz_2_chinese_android = 0_i};
+		inline static constexpr auto package_version = ResourceStreamBundle::Version{.number = 4_i, .extended_texture_information_for_pvz2_cn = 0_i};
 
 		static auto read_package_information_structure (
 			IByteStreamView &                                               data,

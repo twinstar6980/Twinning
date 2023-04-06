@@ -107,11 +107,11 @@ namespace TwinStar::Core::XML {
 
 		auto operator = (
 			Node const & that
-		) -> Node& = default;
+		) -> Node & = default;
 
 		auto operator = (
 			Node && that
-		) -> Node& = default;
+		) -> Node & = default;
 
 		#pragma endregion
 
@@ -138,7 +138,7 @@ namespace TwinStar::Core::XML {
 			CategoryConstraint<IsValid<Argument ...>>
 		auto set_element (
 			Argument && ... argument
-		) -> Element& {
+		) -> Element & {
 			return thiz.set<Element>(as_forward<Argument>(argument) ...);
 		}
 
@@ -146,7 +146,7 @@ namespace TwinStar::Core::XML {
 			CategoryConstraint<IsValid<Argument ...>>
 		auto set_text (
 			Argument && ... argument
-		) -> Text& {
+		) -> Text & {
 			return thiz.set<Text>(as_forward<Argument>(argument) ...);
 		}
 
@@ -154,41 +154,41 @@ namespace TwinStar::Core::XML {
 			CategoryConstraint<IsValid<Argument ...>>
 		auto set_comment (
 			Argument && ... argument
-		) -> Comment& {
+		) -> Comment & {
 			return thiz.set<Comment>(as_forward<Argument>(argument) ...);
 		}
 
 		// ----------------
 
 		auto get_element (
-		) -> Element& {
+		) -> Element & {
 			return thiz.get<Element>();
 		}
 
 		auto get_text (
-		) -> Text& {
+		) -> Text & {
 			return thiz.get<Text>();
 		}
 
 		auto get_comment (
-		) -> Comment& {
+		) -> Comment & {
 			return thiz.get<Comment>();
 		}
 
 		// ----------------
 
 		auto get_element (
-		) const -> Element const& {
+		) const -> Element const & {
 			return thiz.get<Element>();
 		}
 
 		auto get_text (
-		) const -> Text const& {
+		) const -> Text const & {
 			return thiz.get<Text>();
 		}
 
 		auto get_comment (
-		) const -> Comment const& {
+		) const -> Comment const & {
 			return thiz.get<Comment>();
 		}
 

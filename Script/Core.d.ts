@@ -1,6 +1,6 @@
 /**
- * JS interface of Core
- * @version 46
+ * JavaScript interface of Core
+ * @version 47
  */
 declare namespace TwinStar.Core {
 
@@ -1476,7 +1476,7 @@ declare namespace TwinStar.Core {
 
 						// ------------------------------------------------
 
-						static Value: 'm_1' | 'm_1a';
+						static Value: 'm_0' | 'm_1' | 'm_1a';
 
 						static value(it: typeof Mode.Value): Mode;
 
@@ -4259,7 +4259,7 @@ declare namespace TwinStar.Core {
 
 					static Value: {
 						number: 3n | 4n;
-						additional_texture_information_for_pvz_2_chinese_android: 0n | 1n | 2n;
+						extended_texture_information_for_pvz2_cn: 0n | 1n | 2n | 3n;
 					};
 
 					static value(it: typeof Version.Value): Version;
@@ -4292,12 +4292,14 @@ declare namespace TwinStar.Core {
 						type TextureResourceAdditional = {
 							/** 尺寸 */
 							size: [bigint, bigint];
+							/** 缩放。当 version.extended_texture_information_for_pvz2_cn > 2 时存在 */
+							scale: undefined | bigint;
 							/** 格式 */
 							format: bigint;
 							/** 行字节数 */
 							row_byte_count: bigint;
-							/** 缩放。当 version.additional_texture_information_for_pvz_2_chinese_android == 2 时存在 */
-							scale: undefined | bigint;
+							/** 附加字节数。当 version.extended_texture_information_for_pvz2_cn > 1 时存在 */
+							additional_byte_count: undefined | bigint;
 						};
 
 						/** 资源附加 */
@@ -4581,8 +4583,8 @@ declare namespace TwinStar.Core {
 
 			}
 
-			/** PvZ-2中文安卓版中的alpha调色板纹理 */
-			namespace PvZ2ChineseAndroidAlphaPaletteTexture {
+			/** PvZ-2中国版中的alpha调色板纹理 */
+			namespace PvZ2CNAlphaPaletteTexture {
 
 				/** 编码 */
 				namespace Encode {

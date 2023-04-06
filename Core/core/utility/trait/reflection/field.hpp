@@ -40,7 +40,7 @@ namespace TwinStar::Core::Trait::Reflection {
 		// ----------------
 
 		static constexpr auto value_of (
-		) -> auto&& requires
+		) -> auto && requires
 			(is_static) {
 			return *(Field<t_name, t_value>::value);
 		}
@@ -49,7 +49,7 @@ namespace TwinStar::Core::Trait::Reflection {
 			AutoConstraint // TODO : check type
 		static constexpr auto value_of (
 			Class && thix
-		) -> auto&& requires
+		) -> auto && requires
 			(!is_static) {
 			return as_forward<Class>(thix).*(Field<t_name, t_value>::value);
 		}

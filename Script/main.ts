@@ -2,13 +2,13 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 55;
+	export const k_version = 56;
 
 	// ------------------------------------------------
 
 	export function assert_test(
 		condition: boolean,
-		message: string = `assertion failed`,
+		message: string = ``,
 	): asserts condition {
 		if (!condition) {
 			let error = new Error(message);
@@ -177,11 +177,11 @@ namespace TwinStar.Script {
 			entry: null | string;
 		};
 
-		export type Config = Record<string, Core.JSON.JS_Value>;
+		export type Configuration = Record<string, Core.JSON.JS_Value>;
 
-		export type Injector = (config: null | Config) => void;
+		export type Injector = (configuration: null | Configuration) => void;
 
-		export type Entry = (config: null | Config, argument: Array<string>) => void;
+		export type Entry = (configuration: null | Configuration, argument: Array<string>) => void;
 
 		export type EvaluateResult = undefined | {
 			injector?: Injector;
@@ -193,30 +193,30 @@ namespace TwinStar.Script {
 		export function load(
 			manifest: Manifest,
 			directory: string,
-		): [Entry, null | Config] | null {
+		): [Entry, null | Configuration] | null {
 			assert_test(Detail.exist_directory(directory), `directory is not found : <${directory}>`);
-			let entry: [Entry, null | Config] | null = null;
+			let entry: [Entry, null | Configuration] | null = null;
 			assert_test(manifest.entry === null || manifest.module.includes(manifest.entry), `entry module is invalid : <${manifest.entry}>`);
 			for (let module of manifest.module) {
 				let script_name = `script/${module}.js`;
 				let script_file = `${directory}/${module}.js`;
-				let config_file = `${directory}/${module}.json`;
+				let configuration_file = `${directory}/${module}.json`;
 				assert_test(Detail.exist_file(script_file), `module script file not found : <${module}>`);
-				let config: null | Config = null;
-				if (Detail.exist_file(config_file)) {
-					let raw_module_config = Detail.read_json(config_file);
-					assert_test(raw_module_config !== null && typeof raw_module_config === 'object' && (raw_module_config as Object).constructor.name === 'Object', `module config must be object : <${module}>`);
-					config = raw_module_config as Config;
+				let configuration: null | Configuration = null;
+				if (Detail.exist_file(configuration_file)) {
+					let raw_module_configuration = Detail.read_json(configuration_file);
+					assert_test(raw_module_configuration !== null && typeof raw_module_configuration === 'object' && (raw_module_configuration as Object).constructor.name === 'Object', `module configuration must be object : <${module}>`);
+					configuration = raw_module_configuration as Configuration;
 				}
 				let evaluate_result = Detail.evaluate(script_file, script_name) as EvaluateResult;
 				if (evaluate_result !== undefined) {
 					if (evaluate_result.injector !== undefined) {
-						evaluate_result.injector(config);
+						evaluate_result.injector(configuration);
 					}
 				}
 				if (module === manifest.entry) {
 					assert_test(evaluate_result !== undefined && evaluate_result.entry !== undefined, `module is loaded, but entry function is not found : <${module}>`);
-					entry = [evaluate_result.entry as Entry, config];
+					entry = [evaluate_result.entry as Entry, configuration];
 				}
 			}
 			return entry;

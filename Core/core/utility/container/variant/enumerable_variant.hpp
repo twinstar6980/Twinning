@@ -53,11 +53,11 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			EnumerableVariant const & that
-		) -> EnumerableVariant& = default;
+		) -> EnumerableVariant & = default;
 
 		constexpr auto operator = (
 			EnumerableVariant && that
-		) -> EnumerableVariant& = default;
+		) -> EnumerableVariant & = default;
 
 		#pragma endregion
 
@@ -90,7 +90,7 @@ namespace TwinStar::Core {
 			&& (IsConstructible<AsSelect<static_cast<ZSize>(type.value), TValue ...>, Argument && ...>)
 		constexpr auto set_of_type (
 			Argument && ... argument
-		) -> AsSelect<static_cast<ZSize>(type.value), TValue ...>& {
+		) -> AsSelect<static_cast<ZSize>(type.value), TValue ...> & {
 			return thiz.template set<AsSelect<static_cast<ZSize>(type.value), TValue ...>>(as_forward<Argument>(argument) ...);
 		}
 
@@ -101,7 +101,7 @@ namespace TwinStar::Core {
 			&& (IsSameV<type, Enumeration>)
 			&& (static_cast<ZSize>(type.value) < sizeof...(TValue))
 		constexpr auto get_of_type (
-		) -> AsSelect<static_cast<ZSize>(type.value), TValue ...>& {
+		) -> AsSelect<static_cast<ZSize>(type.value), TValue ...> & {
 			return thiz.template get<AsSelect<static_cast<ZSize>(type.value), TValue ...>>();
 		}
 
@@ -110,7 +110,7 @@ namespace TwinStar::Core {
 			&& (IsSameV<type, Enumeration>)
 			&& (static_cast<ZSize>(type.value) < sizeof...(TValue))
 		constexpr auto get_of_type (
-		) const -> AsSelect<static_cast<ZSize>(type.value), TValue ...> const& {
+		) const -> AsSelect<static_cast<ZSize>(type.value), TValue ...> const & {
 			return thiz.template get<AsSelect<static_cast<ZSize>(type.value), TValue ...>>();
 		}
 

@@ -57,24 +57,24 @@ namespace TwinStar::Core::Image {
 
 		auto operator = (
 			BasicImageView const & that
-		) -> BasicImageView& = default;
+		) -> BasicImageView & = default;
 
 		auto operator = (
 			BasicImageView && that
-		) -> BasicImageView& = default;
+		) -> BasicImageView & = default;
 
 		// ----------------
 
 		auto operator [] (
 			Size const & y
-		) const -> QPixelRow const& {
+		) const -> QPixelRow const & {
 			assert_test(y < thiz.size().height);
 			return thiz.m_data[y];
 		}
 
 		auto operator [] (
 			ImagePosition const & position
-		) const -> QPixel& {
+		) const -> QPixel & {
 			assert_test(position.y < thiz.size().height);
 			assert_test(position.x < thiz.size().width);
 			return thiz.m_data[position.y][position.x];
@@ -114,7 +114,7 @@ namespace TwinStar::Core::Image {
 		#pragma region data & size
 
 		auto data (
-		) const -> CListView<QPixelRow> const& {
+		) const -> CListView<QPixelRow> const & {
 			return thiz.m_data;
 		}
 

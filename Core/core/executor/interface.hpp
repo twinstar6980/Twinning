@@ -39,7 +39,7 @@
 #include "core/tool/popcap/resource_stream_bundle/pack.hpp"
 #include "core/tool/popcap/resource_stream_bundle_patch/encode.hpp"
 #include "core/tool/miscellaneous/xbox_tiled_texture/encode.hpp"
-#include "core/tool/miscellaneous/pvz2_chinese_android_alpha_palette_texture/encode.hpp"
+#include "core/tool/miscellaneous/pvz2_cn_alpha_palette_texture/encode.hpp"
 
 namespace TwinStar::Core::Executor::Interface {
 
@@ -139,7 +139,7 @@ namespace TwinStar::Core::Executor::Interface {
 			constexpr auto & getter = normalized_lambda<
 				[] (
 				JavaScript::NativeValueHandler<Class> & thix
-			) -> Class& {
+			) -> Class & {
 					return thix.value();
 				}
 			>;
@@ -170,7 +170,7 @@ namespace TwinStar::Core::Executor::Interface {
 		CategoryConstraint<IsPureInstance<Version> && IsPureInstance<VersionPackage> && IsPureInstance<Class>>
 	inline auto define_variant_class_version_method (
 		JavaScript::NativeClassBuilder<Class> & builder
-	) -> JavaScript::NativeClassBuilder<Class>& {
+	) -> JavaScript::NativeClassBuilder<Class> & {
 		constexpr auto & json_constructor = JavaScript::proxy_native_function_by_handler<
 			&normalized_lambda<
 				[] (
@@ -342,7 +342,7 @@ namespace TwinStar::Core::Executor::Interface {
 				&normalized_lambda<
 					[] (
 					JavaScript::NativeValueHandler<ByteArray> & that
-				) -> ByteArray&& {
+				) -> ByteArray && {
 						return as_moveable(that.value());
 					}
 				>
@@ -1486,13 +1486,15 @@ namespace TwinStar::Core::Executor::Interface {
 						typename Manifest<VersionPackage::element<1_ixz>>::Package,
 						typename Manifest<VersionPackage::element<2_ixz>>::Package,
 						typename Manifest<VersionPackage::element<3_ixz>>::Package,
-						typename Manifest<VersionPackage::element<4_ixz>>::Package
+						typename Manifest<VersionPackage::element<4_ixz>>::Package,
+						typename Manifest<VersionPackage::element<5_ixz>>::Package
 					>;
 					using PackageDescriptionOptional = Variant<
 						Optional<typename Description<VersionPackage::element<1_ixz>>::Package>,
 						Optional<typename Description<VersionPackage::element<2_ixz>>::Package>,
 						Optional<typename Description<VersionPackage::element<3_ixz>>::Package>,
-						Optional<typename Description<VersionPackage::element<4_ixz>>::Package>
+						Optional<typename Description<VersionPackage::element<4_ixz>>::Package>,
+						Optional<typename Description<VersionPackage::element<5_ixz>>::Package>
 					>;
 					auto s_ResourceStreamBundle = s_PopCap.add_space("ResourceStreamBundle"_s);
 					define_generic_class<Version>(s_ResourceStreamBundle, "Version"_s);
@@ -1596,11 +1598,11 @@ namespace TwinStar::Core::Executor::Interface {
 						.add_function_proxy<&stp<&Tool::Miscellaneous::XboxTiledTexture::Decode::do_process_image>>("process_image"_s);
 				}
 				{
-					auto s_PvZ2ChineseAndroidAlphaPaletteTexture = s_Miscellaneous.add_space("PvZ2ChineseAndroidAlphaPaletteTexture"_s);
-					s_PvZ2ChineseAndroidAlphaPaletteTexture.add_space("Encode"_s)
-						.add_function_proxy<&stp<&Tool::Miscellaneous::PvZ2ChineseAndroidAlphaPaletteTexture::Encode::do_process_image>>("process_image"_s);
-					s_PvZ2ChineseAndroidAlphaPaletteTexture.add_space("Decode"_s)
-						.add_function_proxy<&stp<&Tool::Miscellaneous::PvZ2ChineseAndroidAlphaPaletteTexture::Decode::do_process_image>>("process_image"_s);
+					auto s_PvZ2CNAlphaPaletteTexture = s_Miscellaneous.add_space("PvZ2CNAlphaPaletteTexture"_s);
+					s_PvZ2CNAlphaPaletteTexture.add_space("Encode"_s)
+						.add_function_proxy<&stp<&Tool::Miscellaneous::PvZ2CNAlphaPaletteTexture::Encode::do_process_image>>("process_image"_s);
+					s_PvZ2CNAlphaPaletteTexture.add_space("Decode"_s)
+						.add_function_proxy<&stp<&Tool::Miscellaneous::PvZ2CNAlphaPaletteTexture::Decode::do_process_image>>("process_image"_s);
 				}
 			}
 		}
@@ -1720,7 +1722,7 @@ namespace TwinStar::Core::Executor::Interface {
 					&normalized_lambda<
 						[] (
 						JavaScript::NativeValueHandler<VCharacterListView> & it
-					) -> VStringView& {
+					) -> VStringView & {
 							// NOTE : return StringView is cheap
 							return down_cast<VStringView>(it.value());
 						}

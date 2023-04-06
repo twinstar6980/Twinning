@@ -199,7 +199,7 @@ namespace TwinStar::Core {
 	inline constexpr auto operator += (
 		It &       thix,
 		It const & that
-	) -> It& {
+	) -> It & {
 		thix.value += that.value;
 		return thix;
 	}
@@ -210,7 +210,7 @@ namespace TwinStar::Core {
 	inline constexpr auto operator -= (
 		It &       thix,
 		It const & that
-	) -> It& {
+	) -> It & {
 		thix.value -= that.value;
 		return thix;
 	}
@@ -221,7 +221,7 @@ namespace TwinStar::Core {
 	inline constexpr auto operator *= (
 		It &       thix,
 		It const & that
-	) -> It& {
+	) -> It & {
 		thix.value *= that.value;
 		return thix;
 	}
@@ -232,7 +232,7 @@ namespace TwinStar::Core {
 	inline constexpr auto operator /= (
 		It &       thix,
 		It const & that
-	) -> It& {
+	) -> It & {
 		thix.value /= that.value;
 		return thix;
 	}
@@ -243,7 +243,7 @@ namespace TwinStar::Core {
 	inline constexpr auto operator %= (
 		It &       thix,
 		It const & that
-	) -> It& {
+	) -> It & {
 		thix.value %= that.value;
 		return thix;
 	}
@@ -255,7 +255,7 @@ namespace TwinStar::Core {
 		&& (IsIntegerWrapper<It>)
 	inline constexpr auto operator ++ (
 		It & thix
-	) -> It& {
+	) -> It & {
 		++thix.value;
 		return thix;
 	}
@@ -265,7 +265,7 @@ namespace TwinStar::Core {
 		&& (IsIntegerWrapper<It>)
 	inline constexpr auto operator -- (
 		It & thix
-	) -> It& {
+	) -> It & {
 		--thix.value;
 		return thix;
 	}
@@ -363,7 +363,7 @@ namespace TwinStar::Core {
 	inline constexpr auto operator |= (
 		It &       thix,
 		It const & that
-	) -> It& {
+	) -> It & {
 		thix.value |= that.value;
 		return thix;
 	}
@@ -374,7 +374,7 @@ namespace TwinStar::Core {
 	inline constexpr auto operator &= (
 		It &       thix,
 		It const & that
-	) -> It& {
+	) -> It & {
 		thix.value &= that.value;
 		return thix;
 	}
@@ -385,7 +385,7 @@ namespace TwinStar::Core {
 	inline constexpr auto operator ^= (
 		It &       thix,
 		It const & that
-	) -> It& {
+	) -> It & {
 		thix.value ^= that.value;
 		return thix;
 	}
@@ -397,7 +397,7 @@ namespace TwinStar::Core {
 	inline constexpr auto operator <<= (
 		It &         thix,
 		Size const & size
-	) -> It& {
+	) -> It & {
 		thix.value <<= size.value;
 		return thix;
 	}
@@ -409,7 +409,7 @@ namespace TwinStar::Core {
 	inline constexpr auto operator >>= (
 		It &         thix,
 		Size const & size
-	) -> It& {
+	) -> It & {
 		thix.value >>= size.value;
 		return thix;
 	}

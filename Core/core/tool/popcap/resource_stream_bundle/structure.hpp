@@ -181,7 +181,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3}, {0}))
+		&& (check_version(t_version, {3}, {0, 1}))
 	M_record_of_data(
 		M_wrap(TextureResourceInformation<t_version>),
 		M_wrap(
@@ -194,7 +194,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3}, {1}))
+		&& (check_version(t_version, {4}, {1, 2}))
 	M_record_of_data(
 		M_wrap(TextureResourceInformation<t_version>),
 		M_wrap(
@@ -202,13 +202,13 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 			(IntegerU32) size_height,
 			(IntegerU32) row_byte_count,
 			(IntegerU32) format,
-			(IntegerU32) alpha_size,
+			(IntegerU32) additional_byte_count,
 		),
 	);
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3}, {2}))
+		&& (check_version(t_version, {4}, {2, 3}))
 	M_record_of_data(
 		M_wrap(TextureResourceInformation<t_version>),
 		M_wrap(
@@ -216,8 +216,23 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 			(IntegerU32) size_height,
 			(IntegerU32) row_byte_count,
 			(IntegerU32) format,
-			(IntegerU32) alpha_size,
+			(IntegerU32) additional_byte_count,
 			(IntegerU32) scale,
+		),
+	);
+
+	template <auto t_version> requires
+		CategoryConstraint<>
+		&& (check_version(t_version, {4}, {3}))
+	M_record_of_data(
+		M_wrap(TextureResourceInformation<t_version>),
+		M_wrap(
+			(IntegerU32) size_width,
+			(IntegerU32) size_height,
+			(IntegerU32) row_byte_count,
+			(IntegerU32) format,
+			(IntegerU32) scale,
+			(IntegerU32) additional_byte_count,
 		),
 	);
 

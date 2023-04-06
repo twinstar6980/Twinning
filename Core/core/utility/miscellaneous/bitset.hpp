@@ -60,11 +60,11 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			BitSet const & that
-		) -> BitSet& = default;
+		) -> BitSet & = default;
 
 		constexpr auto operator = (
 			BitSet && that
-		) -> BitSet& = default;
+		) -> BitSet & = default;
 
 		#pragma endregion
 

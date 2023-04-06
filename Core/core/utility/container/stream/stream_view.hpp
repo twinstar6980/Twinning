@@ -74,11 +74,11 @@ namespace TwinStar::Core {
 
 		auto operator = (
 			StreamView const & that
-		) -> StreamView& = default;
+		) -> StreamView & = default;
 
 		auto operator = (
 			StreamView && that
-		) -> StreamView& = default;
+		) -> StreamView & = default;
 
 		// ----------------
 
@@ -250,13 +250,13 @@ namespace TwinStar::Core {
 		// ----------------
 
 		auto current (
-		) -> QElement& {
+		) -> QElement & {
 			assert_test(!thiz.full());
 			return thiz.m_view[thiz.m_position];
 		}
 
 		auto next (
-		) -> QElement& {
+		) -> QElement & {
 			auto & current = thiz.current();
 			thiz.forward();
 			return current;
@@ -359,13 +359,13 @@ namespace TwinStar::Core {
 		#pragma region method cast
 
 		auto as_input_stream (
-		) -> IStream& requires
+		) -> IStream & requires
 			(method == StreamMethod::Constant::io()) {
 			return self_cast<IStream>(thiz);
 		}
 
 		auto as_output_stream (
-		) -> OStream& requires
+		) -> OStream & requires
 			(method == StreamMethod::Constant::io()) {
 			return self_cast<OStream>(thiz);
 		}

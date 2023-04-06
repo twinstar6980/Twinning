@@ -93,14 +93,14 @@ namespace TwinStar::Core {
 
 		auto operator = (
 			Array const & that
-		) -> Array& {
+		) -> Array & {
 			thiz.assign(that);
 			return thiz;
 		}
 
 		auto operator = (
 			Array && that
-		) -> Array& {
+		) -> Array & {
 			thiz.bind(that);
 			that.unbind();
 			return thiz;
@@ -110,7 +110,7 @@ namespace TwinStar::Core {
 
 		auto operator = (
 			CView const & that
-		) -> Array& {
+		) -> Array & {
 			thiz.assign(that);
 			return thiz;
 		}
@@ -119,13 +119,13 @@ namespace TwinStar::Core {
 
 		auto operator [] (
 			Size const & index
-		) -> VElement& {
+		) -> VElement & {
 			return thiz.at(index);
 		}
 
 		auto operator [] (
 			Size const & index
-		) const -> CElement& {
+		) const -> CElement & {
 			return thiz.at(index);
 		}
 
@@ -133,7 +133,7 @@ namespace TwinStar::Core {
 
 		auto operator () (
 			Size const & index
-		) -> VElement& {
+		) -> VElement & {
 			return thiz.at_force(index);
 		}
 
@@ -152,12 +152,12 @@ namespace TwinStar::Core {
 		#pragma region view
 
 		auto as_view (
-		) -> VView const& {
+		) -> VView const & {
 			return self_cast<VView>(thiz);
 		}
 
 		auto as_view (
-		) const -> CView const& {
+		) const -> CView const & {
 			return self_cast<CView>(thiz);
 		}
 
@@ -255,17 +255,17 @@ namespace TwinStar::Core {
 
 		auto at (
 			Size const & index
-		) -> VElement& {
+		) -> VElement & {
 			return thiz.as_view().at(index);
 		}
 
 		auto first (
-		) -> VElement& {
+		) -> VElement & {
 			return thiz.as_view().first();
 		}
 
 		auto last (
-		) -> VElement& {
+		) -> VElement & {
 			return thiz.as_view().last();
 		}
 
@@ -273,17 +273,17 @@ namespace TwinStar::Core {
 
 		auto at (
 			Size const & index
-		) const -> CElement& {
+		) const -> CElement & {
 			return thiz.as_view().at(index);
 		}
 
 		auto first (
-		) const -> CElement& {
+		) const -> CElement & {
 			return thiz.as_view().first();
 		}
 
 		auto last (
-		) const -> CElement& {
+		) const -> CElement & {
 			return thiz.as_view().last();
 		}
 
@@ -453,7 +453,7 @@ namespace TwinStar::Core {
 
 		auto at_force (
 			Size const & index
-		) -> VElement& {
+		) -> VElement & {
 			if (index >= thiz.end_index()) {
 				thiz.allocate_retain(index + k_next_index);
 			}

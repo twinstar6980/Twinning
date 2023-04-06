@@ -16,7 +16,7 @@ namespace TwinStar::Core::Interface {
 	M_symbol_export
 	extern auto version (
 		Size * * number
-	) -> String* {
+	) -> String * {
 		thread_local auto exception_handler = Core::String{};
 		thread_local auto number_handler = Core::Size{};
 		restruct(exception_handler);
@@ -44,7 +44,7 @@ namespace TwinStar::Core::Interface {
 		String * *     script,
 		StringList * * argument,
 		String * *     result
-	) -> String* {
+	) -> String * {
 		thread_local auto exception_handler = Core::String{};
 		thread_local auto result_handler = Core::String{};
 		restruct(exception_handler);
@@ -71,7 +71,7 @@ namespace TwinStar::Core::Interface {
 
 	M_symbol_export
 	extern auto prepare (
-	) -> String* {
+	) -> String * {
 		thread_local auto exception_handler = Core::String{};
 		restruct(exception_handler);
 		#if defined M_build_release

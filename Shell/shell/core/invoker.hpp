@@ -43,7 +43,7 @@ namespace TwinStar::Shell::Core {
 				[&callback, &callback_exception_handler, &callback_result_handler] (
 				Interface::StringList * * argument,
 				Interface::StringList * * result
-			) -> Interface::String* {
+			) -> Interface::String * {
 					Converter::destruct_string(callback_exception_handler);
 					Converter::destruct_string_list(callback_result_handler);
 					*result = &callback_result_handler;

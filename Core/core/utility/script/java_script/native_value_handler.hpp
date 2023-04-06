@@ -66,18 +66,18 @@ namespace TwinStar::Core::JavaScript {
 
 		auto operator = (
 			NativeValueHandler const & that
-		) -> NativeValueHandler& = default;
+		) -> NativeValueHandler & = default;
 
 		auto operator = (
 			NativeValueHandler && that
-		) -> NativeValueHandler& = default;
+		) -> NativeValueHandler & = default;
 
 		#pragma endregion
 
 		#pragma region value
 
 		auto value (
-		) -> Value& {
+		) -> Value & {
 			assert_test(!thiz.m_value.template is<Null>());
 			if (thiz.m_value.template is<Pointer<Value>>()) {
 				return *thiz.m_value.template get<Pointer<Value>>();

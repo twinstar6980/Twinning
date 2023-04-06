@@ -5,13 +5,13 @@ namespace TwinStar.Script.Entry.method.data.differentiation {
 	// vcdiff.encode
 	// vcdiff.decode
 
-	type Config = {
+	type Configuration = {
 		encode_buffer_size: Executor.RequestArgument<string, false>;
 		decode_buffer_size: Executor.RequestArgument<string, false>;
 	};
 
 	export function _injector(
-		config: Config,
+		configuration: Configuration,
 	) {
 		g_executor_method.push(
 			Executor.method_of({
@@ -67,7 +67,7 @@ namespace TwinStar.Script.Entry.method.data.differentiation {
 					before_file: undefined!,
 					after_file: '?input',
 					patch_file: '?default',
-					buffer_size: config.encode_buffer_size,
+					buffer_size: configuration.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),
 				input_forwarder: 'before_file',
@@ -125,7 +125,7 @@ namespace TwinStar.Script.Entry.method.data.differentiation {
 					before_file: undefined!,
 					patch_file: '?input',
 					after_file: '?default',
-					buffer_size: config.decode_buffer_size,
+					buffer_size: configuration.decode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),
 				input_forwarder: 'before_file',

@@ -1,5 +1,7 @@
 #pragma once
 
+#define M_version 27
+
 #pragma warning(push)
 #pragma warning(disable:4191)
 #pragma warning(disable:4265)
@@ -14,14 +16,12 @@
 #pragma warning(disable:5204)
 #pragma warning(disable:5220)
 
-#include "implement/version.hpp"
 #include <string>
 #include <regex>
 #include <optional>
 #include <array>
 #include <vector>
 #include <unordered_map>
-#include <codecvt>
 #include <filesystem>
 #include <Windows.h>
 #include <ShObjIdl_core.h>
@@ -49,34 +49,6 @@ using Microsoft::WRL::InProc;
 	static_assert(true)
 
 namespace TwinStar::WindowsExplorerExtension {
-
-	template <typename T>
-	using X = T;
-
-	// ----------------
-
-	inline auto get_environment_variable (
-		std::wstring const & name
-	) -> std::optional<std::wstring> {
-		auto state_d = DWORD{};
-		state_d = GetEnvironmentVariableW(name.data(), nullptr, 0);
-		if (state_d == 0) {
-			if (GetLastError() != ERROR_ENVVAR_NOT_FOUND) {
-				throw std::runtime_error{std::format("^ GetEnvironmentVariableW : {}", GetLastError())};
-			}
-		}
-		auto value = std::optional<std::wstring>{};
-		if (state_d != 0) {
-			auto & buffer = value.emplace();
-			buffer.resize(state_d);
-			state_d = GetEnvironmentVariableW(name.data(), buffer.data(), static_cast<DWORD>(buffer.size()));
-			assert_test(state_d == buffer.size() - 1);
-			buffer.resize(buffer.size() - 1);
-		}
-		return value;
-	}
-
-	// ----------------
 
 	inline auto get_register_value_dword (
 		HKEY const &         key_parent,
@@ -237,7 +209,7 @@ namespace TwinStar::WindowsExplorerExtension {
 		assert_test(state_h == S_OK);
 		result.reserve(count);
 		for (auto i = DWORD{0}; i < count; ++i) {
-			auto item = X<IShellItem *>{};
+			auto item = std::add_pointer_t<IShellItem>{};
 			state_h = selection->GetItemAt(i, &item);
 			assert_test(state_h == S_OK);
 			auto name = LPWSTR{};

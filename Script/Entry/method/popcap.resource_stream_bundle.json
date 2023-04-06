@@ -1,49 +1,15 @@
 {
 	"mode": "?input",
 	"version_number": "?input",
-	"version_additional_texture_information_for_pvz_2_chinese_android": "?input",
-	"pack_buffer_size": "1.0g",
+	"version_extended_texture_information_for_pvz2_cn": "?input",
+	"pack_buffer_size": "1.25g",
 	"resource_convert_option": {
 		"json": "?input",
 		"json_crypt": "?input",
 		"json_crypt_key": "?input",
 		"image": "?input",
 		"image_texture_format_map_list": {
-			"pvz2_iphone": [
-				{
-					"index": 0,
-					"format": "argb_8888",
-				},
-				{
-					"index": 30,
-					"format": "rgba_pvrtc4",
-				},
-				{
-					"index": 148,
-					"format": "rgb_pvrtc4_a_8",
-				},
-			],
-			"pvz2_android": [
-				{
-					"index": 0,
-					"format": "rgba_8888_o",
-				},
-				{
-					"index": 147,
-					"format": "rgb_etc1_a_8",
-				},
-			],
-			"pvz2_android_chinese": [
-				{
-					"index": 0,
-					"format": "rgba_8888_o",
-				},
-				{
-					"index": 147,
-					"format": "rgb_etc1_a_palette",
-				},
-			],
-			"pvz1_iphone": [
+			"iphone": [
 				{
 					"index": 0,
 					"format": "argb_8888",
@@ -71,6 +37,58 @@
 				{
 					"index": 23,
 					"format": "rgba_5551_tiled",
+				},
+				{
+					"index": 30,
+					"format": "rgba_pvrtc4",
+				},
+				{
+					"index": 148,
+					"format": "rgb_pvrtc4_a_8",
+				},
+			],
+			"android": [
+				{
+					"index": 0,
+					"format": "rgba_8888_o",
+				},
+				{
+					"index": 1,
+					"format": "rgba_4444",
+				},
+				{
+					"index": 2,
+					"format": "rgb_565",
+				},
+				{
+					"index": 3,
+					"format": "rgba_5551",
+				},
+				{
+					"index": 21,
+					"format": "rgba_4444_tiled",
+				},
+				{
+					"index": 22,
+					"format": "rgb_565_tiled",
+				},
+				{
+					"index": 23,
+					"format": "rgba_5551_tiled",
+				},
+				{
+					"index": 147,
+					"format": "rgb_etc1_a_8",
+				},
+			],
+			"android_pvz2_cn": [
+				{
+					"index": 0,
+					"format": "rgba_8888_o",
+				},
+				{
+					"index": 147,
+					"format": "rgb_etc1_a_palette",
 				},
 			],
 		},

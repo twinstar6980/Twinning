@@ -57,11 +57,11 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			WrapperView const & that
-		) -> WrapperView& = default;
+		) -> WrapperView & = default;
 
 		constexpr auto operator = (
 			WrapperView && that
-		) -> WrapperView& = default;
+		) -> WrapperView & = default;
 
 		#pragma endregion
 
@@ -69,7 +69,7 @@ namespace TwinStar::Core {
 
 		constexpr auto set (
 			QValue & value
-		) -> QValue& {
+		) -> QValue & {
 			thiz.m_value = make_pointer(&value);
 			return thiz.m_value.dereference();
 		}
@@ -77,7 +77,7 @@ namespace TwinStar::Core {
 		// ----------------
 
 		constexpr auto get (
-		) const -> QValue& {
+		) const -> QValue & {
 			return thiz.m_value.dereference();
 		}
 

@@ -50,18 +50,18 @@ namespace TwinStar::Core {
 
 		constexpr auto operator = (
 			PointerWrapper const & that
-		) -> PointerWrapper& = default;
+		) -> PointerWrapper & = default;
 
 		constexpr auto operator = (
 			PointerWrapper && that
-		) -> PointerWrapper& = default;
+		) -> PointerWrapper & = default;
 
 		// ----------------
 
 		template <typename TargetObject = Target> requires
 			CategoryConstraint<IsInstance<TargetObject>>
 		constexpr auto operator * (
-		) const -> TargetObject& {
+		) const -> TargetObject & {
 			return thiz.template dereference<TargetObject>();
 		}
 
@@ -69,7 +69,7 @@ namespace TwinStar::Core {
 			CategoryConstraint<IsInstance<TargetObject>>
 		constexpr auto operator [] (
 			Size const & index
-		) const -> TargetObject& {
+		) const -> TargetObject & {
 			return thiz.template dereference<TargetObject>(index);
 		}
 
@@ -92,7 +92,7 @@ namespace TwinStar::Core {
 		template <typename TargetObject = Target> requires
 			CategoryConstraint<IsInstance<TargetObject>>
 		constexpr auto dereference (
-		) const -> TargetObject& {
+		) const -> TargetObject & {
 			return *static_cast<ZPointer<TargetObject>>(thiz.value);
 		}
 
@@ -100,7 +100,7 @@ namespace TwinStar::Core {
 			CategoryConstraint<IsInstance<TargetObject>>
 		constexpr auto dereference (
 			Size const & index
-		) const -> TargetObject& {
+		) const -> TargetObject & {
 			return *static_cast<ZPointer<TargetObject>>(thiz.value + index.value);
 		}
 
@@ -199,7 +199,7 @@ namespace TwinStar::Core {
 	inline constexpr auto operator += (
 		It &         thix,
 		Size const & size
-	) -> It& {
+	) -> It & {
 		thix.value += size;
 		return thix;
 	}
@@ -210,7 +210,7 @@ namespace TwinStar::Core {
 	inline constexpr auto operator -= (
 		It &         thix,
 		Size const & size
-	) -> It& {
+	) -> It & {
 		thix.value -= size;
 		return thix;
 	}
@@ -222,7 +222,7 @@ namespace TwinStar::Core {
 		&& (IsPointerWrapper<It>)
 	inline constexpr auto operator ++ (
 		It & thix
-	) -> It& {
+	) -> It & {
 		++thix.value;
 		return thix;
 	}
@@ -232,7 +232,7 @@ namespace TwinStar::Core {
 		&& (IsPointerWrapper<It>)
 	inline constexpr auto operator -- (
 		It & thix
-	) -> It& {
+	) -> It & {
 		--thix.value;
 		return thix;
 	}
@@ -299,7 +299,7 @@ namespace TwinStar::Core {
 		CategoryConstraint<IsPointable<Target>>
 	inline auto as_variable_pointer (
 		PointerWrapper<Target> & it
-	) -> PointerWrapper<AsUnmakeConstant<Target>>& {
+	) -> PointerWrapper<AsUnmakeConstant<Target>> & {
 		return self_cast<PointerWrapper<AsUnmakeConstant<Target>>>(it);
 	}
 
@@ -307,7 +307,7 @@ namespace TwinStar::Core {
 		CategoryConstraint<IsPointable<Target>>
 	inline auto as_variable_pointer (
 		PointerWrapper<Target> const & it
-	) -> PointerWrapper<AsUnmakeConstant<Target>> const& {
+	) -> PointerWrapper<AsUnmakeConstant<Target>> const & {
 		return self_cast<PointerWrapper<AsUnmakeConstant<Target>>>(it);
 	}
 
@@ -317,7 +317,7 @@ namespace TwinStar::Core {
 		CategoryConstraint<IsPointable<Target>>
 	inline auto as_constant_pointer (
 		PointerWrapper<Target> & it
-	) -> PointerWrapper<AsMakeConstant<Target>>& {
+	) -> PointerWrapper<AsMakeConstant<Target>> & {
 		return self_cast<PointerWrapper<AsMakeConstant<Target>>>(it);
 	}
 
@@ -325,7 +325,7 @@ namespace TwinStar::Core {
 		CategoryConstraint<IsPointable<Target>>
 	inline auto as_constant_pointer (
 		PointerWrapper<Target> const & it
-	) -> PointerWrapper<AsMakeConstant<Target>> const& {
+	) -> PointerWrapper<AsMakeConstant<Target>> const & {
 		return self_cast<PointerWrapper<AsMakeConstant<Target>>>(it);
 	}
 
