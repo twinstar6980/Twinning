@@ -11,7 +11,7 @@ namespace Helper.Utility {
 		#region convert
 
 		public static Matrix ConvertFromStandard (
-			List<Floating> source
+			List<Floater> source
 		) {
 			var result = new Matrix();
 			switch (source.Count) {
@@ -30,7 +30,7 @@ namespace Helper.Utility {
 		}
 
 		public static Matrix ConvertFromVariant (
-			List<Floating> source
+			List<Floater> source
 		) {
 			var result = new Matrix();
 			switch (source.Count) {

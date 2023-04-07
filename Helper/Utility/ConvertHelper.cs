@@ -9,7 +9,7 @@ namespace Helper.Utility {
 
 		#region opacity
 
-		public static Floating BooleanToFloatingOfOpacity (
+		public static Floater BooleanToFloaterOfOpacity (
 			Boolean state
 		) {
 			return !state ? 0.5 : 1.0;

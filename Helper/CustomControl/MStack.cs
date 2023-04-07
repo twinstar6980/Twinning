@@ -17,8 +17,8 @@ namespace Helper.CustomControl {
 			var isHorizontal = this.Orientation == Orientation.Horizontal;
 			var childSpacing = this.Spacing;
 			var totalSpacing = childSpacing * Math.Max(0, this.Children.Count - 1);
-			var totalWeight = (Floating)0.0;
-			var perSpace = (Floating)0.0;
+			var totalWeight = (Floater)0.0;
+			var perSpace = (Floater)0.0;
 			if (isHorizontal) {
 				desiredSize.Width += totalSpacing;
 			} else {
@@ -26,7 +26,7 @@ namespace Helper.CustomControl {
 			}
 			foreach (var child in this.Children) {
 				var childWeight = MStack.GetWeight(child);
-				if (!Floating.IsNaN(childWeight)) {
+				if (!Floater.IsNaN(childWeight)) {
 					totalWeight += childWeight;
 					continue;
 				}
@@ -51,7 +51,7 @@ namespace Helper.CustomControl {
 			//Debug.WriteLine($"per {perSpace}");
 			foreach (var child in this.Children) {
 				var childWeight = MStack.GetWeight(child);
-				if (Floating.IsNaN(childWeight)) {
+				if (Floater.IsNaN(childWeight)) {
 					continue;
 				}
 				var childSpace = perSpace * childWeight;
@@ -79,8 +79,8 @@ namespace Helper.CustomControl {
 			var isHorizontal = this.Orientation == Orientation.Horizontal;
 			var childSpacing = this.Spacing;
 			var totalSpacing = childSpacing * Math.Max(0, this.Children.Count - 1);
-			var totalWeight = (Floating)0.0;
-			var perSpace = (Floating)0.0;
+			var totalWeight = (Floater)0.0;
+			var perSpace = (Floater)0.0;
 			if (isHorizontal) {
 				desiredSize.Width += totalSpacing;
 			} else {
@@ -88,7 +88,7 @@ namespace Helper.CustomControl {
 			}
 			foreach (var child in this.Children) {
 				var childWeight = MStack.GetWeight(child);
-				if (!Floating.IsNaN(childWeight)) {
+				if (!Floater.IsNaN(childWeight)) {
 					totalWeight += childWeight;
 					continue;
 				}
@@ -110,7 +110,7 @@ namespace Helper.CustomControl {
 			foreach (var child in this.Children) {
 				var childSize = new Windows.Foundation.Size();
 				var childWeight = MStack.GetWeight(child);
-				if (Floating.IsNaN(childWeight)) {
+				if (Floater.IsNaN(childWeight)) {
 					if (isHorizontal) {
 						childSize.Width = child.DesiredSize.Width;
 						childSize.Height = finalSize.Height;
@@ -159,22 +159,22 @@ namespace Helper.CustomControl {
 		// ----------------
 
 		public static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(
-			nameof(MStack.Spacing), typeof(Floating), typeof(MStack),
+			nameof(MStack.Spacing), typeof(Floater), typeof(MStack),
 			new PropertyMetadata(0.0, (o, e) => {
 				((MStack)o).InvalidateMeasure();
 			})
 		);
 
-		public Floating Spacing {
-			get => (Floating)this.GetValue(MStack.SpacingProperty);
+		public Floater Spacing {
+			get => (Floater)this.GetValue(MStack.SpacingProperty);
 			set => this.SetValue(MStack.SpacingProperty, value);
 		}
 
 		// ----------------
 
 		public static readonly DependencyProperty WeightProperty = DependencyProperty.RegisterAttached(
-			"Weight", typeof(Floating), typeof(MStack),
-			new PropertyMetadata(Floating.NaN, (element, args) => {
+			"Weight", typeof(Floater), typeof(MStack),
+			new PropertyMetadata(Floater.NaN, (element, args) => {
 				var parent = ((FrameworkElement)element).Parent;
 				if (parent != null) {
 					((MStack)parent).InvalidateMeasure();
@@ -184,12 +184,12 @@ namespace Helper.CustomControl {
 
 		public static void SetWeight (
 			DependencyObject element,
-			Floating         value
+			Floater          value
 		) => element.SetValue(MStack.WeightProperty, value);
 
-		public static Floating GetWeight (
+		public static Floater GetWeight (
 			DependencyObject element
-		) => (Floating)element.GetValue(MStack.WeightProperty);
+		) => (Floater)element.GetValue(MStack.WeightProperty);
 
 		#endregion
 

@@ -9,13 +9,15 @@ namespace Helper.Core {
 
 		#region interface
 
-		public abstract Interface.Size* Version (
+		public abstract Interface.String* Version (
+			Interface.Size** number
 		);
 
 		public abstract Interface.String* Execute (
-			Interface.Callback*   callback,
-			Interface.String*     script,
-			Interface.StringList* argument
+			Interface.Callback**   callback,
+			Interface.String**     script,
+			Interface.StringList** argument,
+			Interface.String**     result
 		);
 
 		public abstract Interface.String* Prepare (

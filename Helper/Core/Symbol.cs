@@ -14,9 +14,9 @@ namespace Helper.Core {
 	}
 
 	public class SymbolNameTable {
-		public const String version = "?version@Interface@Core@TwinStar@@YAPEBUSize@123@XZ";
-		public const String execute = "?execute@Interface@Core@TwinStar@@YAPEBUString@123@PEBUCallback@123@PEBU4123@PEBUStringList@123@@Z";
-		public const String prepare = "?prepare@Interface@Core@TwinStar@@YAPEBUString@123@XZ";
+		public const String version = "?version@Interface@Core@TwinStar@@YAPEAUString@123@PEAPEAUSize@123@@Z";
+		public const String execute = "?execute@Interface@Core@TwinStar@@YAPEAUString@123@PEAPEAUCallback@123@PEAPEAU4123@PEAPEAUStringList@123@1@Z";
+		public const String prepare = "?prepare@Interface@Core@TwinStar@@YAPEAUString@123@XZ";
 	}
 
 	#endregion

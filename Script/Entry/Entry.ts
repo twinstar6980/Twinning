@@ -85,6 +85,9 @@ namespace TwinStar.Script.Entry {
 			disable_trailing_comma: boolean;
 			disable_array_wrap_line: boolean;
 		};
+		common_file_system_argument: {
+			fs_tactic_if_exist: string,
+		},
 	};
 
 	export function _injector(
@@ -102,6 +105,8 @@ namespace TwinStar.Script.Entry {
 		// set json format
 		CoreX.JSON.g_format.disable_trailing_comma = configuration.json_format.disable_trailing_comma;
 		CoreX.JSON.g_format.disable_array_wrap_line = configuration.json_format.disable_array_wrap_line;
+		// set common file system argument
+		k_common_file_system_argument.fs_tactic_if_exist = configuration.common_file_system_argument.fs_tactic_if_exist as any;
 	}
 
 	export function _entry(

@@ -37,17 +37,19 @@ namespace Helper.Core {
 
 		#region interface
 
-		public override Interface.Size* Version (
+		public override Interface.String* Version (
+			Interface.Size** number
 		) {
-			return this.mSymbol.version();
+			return this.mSymbol.version(number);
 		}
 
 		public override Interface.String* Execute (
-			Interface.Callback*   callback,
-			Interface.String*     script,
-			Interface.StringList* argument
+			Interface.Callback**   callback,
+			Interface.String**     script,
+			Interface.StringList** argument,
+			Interface.String**     result
 		) {
-			return this.mSymbol.execute(callback, script, argument);
+			return this.mSymbol.execute(callback, script, argument, result);
 		}
 
 		public override Interface.String* Prepare (

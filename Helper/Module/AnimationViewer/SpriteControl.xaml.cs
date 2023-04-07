@@ -252,9 +252,9 @@ namespace Helper.Module.AnimationViewer {
 
 		// ----------------
 
-		private Double mSpeed = 1.0;
+		private Floater mSpeed = 1.0;
 
-		public Double Speed {
+		public Floater Speed {
 			get {
 				return this.mSpeed;
 			}

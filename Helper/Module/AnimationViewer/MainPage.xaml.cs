@@ -46,11 +46,11 @@ namespace Helper.Module.AnimationViewer {
 
 		// ----------------
 
-		public Floating StageScale { get; set; } = 1.0;
+		public Floater StageScale { get; set; } = 1.0;
 
-		public Floating StagePositionX { get; set; } = 0.0;
+		public Floater StagePositionX { get; set; } = 0.0;
 
-		public Floating StagePositionY { get; set; } = 0.0;
+		public Floater StagePositionY { get; set; } = 0.0;
 
 		// ----------------
 
@@ -78,7 +78,7 @@ namespace Helper.Module.AnimationViewer {
 
 		public Size? WorkingSpriteIndex { get; set; } = null;
 
-		public Floating? WorkingSpriteFrameRate { get; set; } = null;
+		public Floater? WorkingSpriteFrameRate { get; set; } = null;
 
 		public AnimationHelper.FrameRange? WorkingSpriteFrameRange { get; set; } = null;
 
@@ -269,7 +269,7 @@ namespace Helper.Module.AnimationViewer {
 				sliderAnimation.KeyFrames.Add(
 					new DiscreteObjectKeyFrame() {
 						KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(i)),
-						Value = (Floating)(i + 1),
+						Value = (Floater)(i + 1),
 					}
 				);
 			}
@@ -728,9 +728,9 @@ namespace Helper.Module.AnimationViewer {
 
 		#region working frame rate
 
-		public Floating uWorkingSpriteFrameRateIcon_Opacity {
+		public Floater uWorkingSpriteFrameRateIcon_Opacity {
 			get {
-				return ConvertHelper.BooleanToFloatingOfOpacity(this.Working);
+				return ConvertHelper.BooleanToFloaterOfOpacity(this.Working);
 			}
 		}
 
@@ -755,10 +755,10 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public Floating uWorkingSpriteFrameRate_Value {
+		public Floater uWorkingSpriteFrameRate_Value {
 			get {
 				return !this.Working
-					? Floating.NaN
+					? Floater.NaN
 					: this.WorkingSpriteFrameRate.Value;
 			}
 		}
@@ -768,7 +768,7 @@ namespace Helper.Module.AnimationViewer {
 			NumberBoxValueChangedEventArgs args
 		) {
 			Debug.Assert(this.Loaded);
-			if (Floating.IsNaN(args.NewValue)) {
+			if (Floater.IsNaN(args.NewValue)) {
 				if (this.Working) {
 					this.NotifyPropertyChanged(
 						nameof(this.uWorkingSpriteFrameRate_Value)
@@ -788,9 +788,9 @@ namespace Helper.Module.AnimationViewer {
 
 		#region working frame range
 
-		public Floating uWorkingSpriteFrameRangeIcon_Opacity {
+		public Floater uWorkingSpriteFrameRangeIcon_Opacity {
 			get {
-				return ConvertHelper.BooleanToFloatingOfOpacity(this.Working);
+				return ConvertHelper.BooleanToFloaterOfOpacity(this.Working);
 			}
 		}
 
@@ -802,26 +802,26 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public Floating uWorkingSpriteFrameRangeBegin_Minimum {
+		public Floater uWorkingSpriteFrameRangeBegin_Minimum {
 			get {
 				return !this.Working
-					? Floating.NaN
+					? Floater.NaN
 					: 1.0;
 			}
 		}
 
-		public Floating uWorkingSpriteFrameRangeBegin_Maximum {
+		public Floater uWorkingSpriteFrameRangeBegin_Maximum {
 			get {
 				return !this.Working
-					? Floating.NaN
+					? Floater.NaN
 					: AnimationHelper.SelectSprite(this.Animation, this.WorkingSpriteIndex.Value).Frame.Count;
 			}
 		}
 
-		public Floating uWorkingSpriteFrameRangeBegin_Value {
+		public Floater uWorkingSpriteFrameRangeBegin_Value {
 			get {
 				return !this.Working
-					? Floating.NaN
+					? Floater.NaN
 					: this.WorkingSpriteFrameRange.Start + 1;
 			}
 		}
@@ -831,7 +831,7 @@ namespace Helper.Module.AnimationViewer {
 			NumberBoxValueChangedEventArgs args
 		) {
 			Debug.Assert(this.Loaded);
-			if (Floating.IsNaN(args.NewValue)) {
+			if (Floater.IsNaN(args.NewValue)) {
 				if (this.Working) {
 					this.NotifyPropertyChanged(
 						nameof(this.uWorkingSpriteFrameRangeBegin_Value)
@@ -861,26 +861,26 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public Floating uWorkingSpriteFrameRangeEnd_Minimum {
+		public Floater uWorkingSpriteFrameRangeEnd_Minimum {
 			get {
 				return !this.Working
-					? Floating.NaN
+					? Floater.NaN
 					: 1.0;
 			}
 		}
 
-		public Floating uWorkingSpriteFrameRangeEnd_Maximum {
+		public Floater uWorkingSpriteFrameRangeEnd_Maximum {
 			get {
 				return !this.Working
-					? Floating.NaN
+					? Floater.NaN
 					: AnimationHelper.SelectSprite(this.Animation, this.WorkingSpriteIndex.Value).Frame.Count;
 			}
 		}
 
-		public Floating uWorkingSpriteFrameRangeEnd_Value {
+		public Floater uWorkingSpriteFrameRangeEnd_Value {
 			get {
 				return !this.Working
-					? Floating.NaN
+					? Floater.NaN
 					: this.WorkingSpriteFrameRange.Start + this.WorkingSpriteFrameRange.Duration;
 			}
 		}
@@ -890,7 +890,7 @@ namespace Helper.Module.AnimationViewer {
 			NumberBoxValueChangedEventArgs args
 		) {
 			Debug.Assert(this.Loaded);
-			if (Floating.IsNaN(args.NewValue)) {
+			if (Floater.IsNaN(args.NewValue)) {
 				if (this.Working) {
 					this.NotifyPropertyChanged(
 						nameof(this.uWorkingSpriteFrameRangeEnd_Value)
@@ -917,9 +917,9 @@ namespace Helper.Module.AnimationViewer {
 
 		#region working frame range label
 
-		public Floating uWorkingSpriteFrameRangeLabelIcon_Opacity {
+		public Floater uWorkingSpriteFrameRangeLabelIcon_Opacity {
 			get {
-				return ConvertHelper.BooleanToFloatingOfOpacity(this.Working);
+				return ConvertHelper.BooleanToFloaterOfOpacity(this.Working);
 			}
 		}
 
@@ -989,7 +989,7 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public Floating uWorkingSpriteFrameProgress_Minimum {
+		public Floater uWorkingSpriteFrameProgress_Minimum {
 			get {
 				return !this.Working
 					? 0.0
@@ -997,7 +997,7 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public Floating uWorkingSpriteFrameProgress_Maximum {
+		public Floater uWorkingSpriteFrameProgress_Maximum {
 			get {
 				return !this.Working
 					? 0.0
@@ -1165,9 +1165,9 @@ namespace Helper.Module.AnimationViewer {
 
 		#region plant custom layer
 
-		public Floating uPlantCustomLayerIcon_Opacity {
+		public Floater uPlantCustomLayerIcon_Opacity {
 			get {
-				return ConvertHelper.BooleanToFloatingOfOpacity(this.Loaded);
+				return ConvertHelper.BooleanToFloaterOfOpacity(this.Loaded);
 			}
 		}
 
@@ -1229,9 +1229,9 @@ namespace Helper.Module.AnimationViewer {
 
 		#region zombie state layer
 
-		public Floating uZombieStateLayerIcon_Opacity {
+		public Floater uZombieStateLayerIcon_Opacity {
 			get {
-				return ConvertHelper.BooleanToFloatingOfOpacity(this.Loaded);
+				return ConvertHelper.BooleanToFloaterOfOpacity(this.Loaded);
 			}
 		}
 
@@ -1293,9 +1293,9 @@ namespace Helper.Module.AnimationViewer {
 
 		#region zombie ground swatch layer
 
-		public Floating uZombieGroundSwatchLayerIcon_Opacity {
+		public Floater uZombieGroundSwatchLayerIcon_Opacity {
 			get {
-				return ConvertHelper.BooleanToFloatingOfOpacity(this.Loaded);
+				return ConvertHelper.BooleanToFloaterOfOpacity(this.Loaded);
 			}
 		}
 
@@ -1496,7 +1496,7 @@ namespace Helper.Module.AnimationViewer {
 
 		#region view
 
-		public Floating uRoot_Opacity {
+		public Floater uRoot_Opacity {
 			get {
 				if (this.Index == null) {
 					return 0.0;

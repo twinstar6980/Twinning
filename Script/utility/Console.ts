@@ -126,14 +126,20 @@ namespace TwinStar.Script.Console {
 
 	function cli_basic_input<Value>(
 		leading: string,
+		messager: () => void,
 		filter: Check.CheckerX<string>,
 		converter: (value: string) => Value,
 		nullable: boolean | null,
 		checker: Check.CheckerX<Value> | null,
 		initial: Value | null | undefined = undefined,
 	): Value | null {
+		let first_input = true;
 		return basic_input_with_checker(
 			() => {
+				if (first_input) {
+					first_input = false;
+					messager();
+				}
 				cli_set_message_text_attribute('t');
 				cli_basic_output(`${leading} `, true, 0, false);
 				let input = Shell.cli_input();
@@ -269,6 +275,9 @@ namespace TwinStar.Script.Console {
 		if (Shell.is_cli) {
 			result = cli_basic_input(
 				leading,
+				() => {
+					return;
+				},
 				(value) => {
 					let regexp_check_result = Check.enumeration_checker_x(['n', 'y'])(value);
 					if (regexp_check_result !== null) {
@@ -327,6 +336,9 @@ namespace TwinStar.Script.Console {
 		if (Shell.is_cli) {
 			result = cli_basic_input(
 				leading,
+				() => {
+					return;
+				},
 				(value) => {
 					let regexp_check_result = Check.regexp_checker_x(/^([+-])?([\d]+)([.][\d]+)?$/)(value);
 					if (regexp_check_result !== null) {
@@ -385,6 +397,9 @@ namespace TwinStar.Script.Console {
 		if (Shell.is_cli) {
 			result = cli_basic_input(
 				leading,
+				() => {
+					return;
+				},
 				(value) => {
 					let regexp_check_result = Check.regexp_checker_x(/^([+-])?([\d]+)$/)(value);
 					if (regexp_check_result !== null) {
@@ -443,6 +458,9 @@ namespace TwinStar.Script.Console {
 		if (Shell.is_cli) {
 			result = cli_basic_input(
 				leading,
+				() => {
+					return;
+				},
 				(value) => {
 					let regexp_check_result = Check.regexp_checker_x(/^([\d]+)([.][\d]+)?([bkmg])$/)(value);
 					if (regexp_check_result !== null) {
@@ -463,7 +481,7 @@ namespace TwinStar.Script.Console {
 				},
 				leading,
 				(value) => {
-					return `333 ${value}`;
+					return value;
 				},
 				converter,
 				nullable,
@@ -501,6 +519,9 @@ namespace TwinStar.Script.Console {
 		if (Shell.is_cli) {
 			result = cli_basic_input(
 				leading,
+				() => {
+					return;
+				},
 				(value) => {
 					return null;
 				},
@@ -683,6 +704,9 @@ namespace TwinStar.Script.Console {
 		if (Shell.is_cli) {
 			result = cli_basic_input(
 				leading,
+				() => {
+					return;
+				},
 				(value) => {
 					return null;
 				},
@@ -752,11 +776,14 @@ namespace TwinStar.Script.Console {
 			}
 		});
 		if (Shell.is_cli) {
-			option_message.forEach((e) => {
-				cli_basic_output(e, false, 1, true);
-			});
 			result = cli_basic_input(
 				leading,
+				() => {
+					option_message.forEach((e) => {
+						cli_basic_output(e, false, 1, true);
+					});
+					return;
+				},
 				(value) => {
 					let regexp_check_result = Check.regexp_checker_x(/^([+-])?([\d]+)$/)(value);
 					if (regexp_check_result !== null) {

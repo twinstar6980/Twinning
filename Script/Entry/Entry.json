@@ -9,4 +9,7 @@
 		"disable_trailing_comma": false,
 		"disable_array_wrap_line": false,
 	},
+	"common_file_system_argument": {
+		"fs_tactic_if_exist": "none",
+	},
 }

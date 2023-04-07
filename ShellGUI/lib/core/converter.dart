@@ -44,11 +44,7 @@ class Converter {
   parseString(
     Interface.String structure,
   ) {
-    if (structure.data == ffi.nullptr) {
-      return '';
-    } else {
-      return structure.data.cast<ffi.Utf8>().toDartString(length: parseSize(structure.size));
-    }
+    return structure.data == ffi.nullptr ? '' : structure.data.cast<ffi.Utf8>().toDartString(length: parseSize(structure.size));
   }
 
   static

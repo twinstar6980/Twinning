@@ -71,16 +71,21 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
   ) async {
     assert(this._running);
     var result = List<String>.empty(growable: true);
-    switch (argument[0]) {
+    assert(argument.length >= 1);
+    var method = argument[0];
+    switch (method) {
       case 'name': {
+        assert(argument.length == 1);
         result.add('gui');
         break;
       }
       case 'version': {
+        assert(argument.length == 1);
         result.add('${kApplicationVersion}');
         break;
       }
       case 'system': {
+        assert(argument.length == 1);
         var name = () {
           if (Platform.isWindows) {
             return 'windows';
@@ -103,6 +108,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'output_message': {
+        assert(argument.length >= 3);
         var type = MessageTypeExtension.fromString(argument[1]);
         var title = argument[2];
         var description = argument.sublist(3);
@@ -123,6 +129,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'input_pause': {
+        assert(argument.length == 1);
         var completer = Completer<dynamic>();
         this._inputBarContent = PauseInputBarContent(
           completer: completer,
@@ -135,6 +142,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'input_confirmation': {
+        assert(argument.length == 1);
         var completer = Completer<Boolean?>();
         this._inputBarContent = ConfirmationInputBarContent(
           completer: completer,
@@ -150,6 +158,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'input_number': {
+        assert(argument.length == 1);
         var completer = Completer<Floater?>();
         this._inputBarContent = NumberInputBarContent(
           completer: completer,
@@ -163,6 +172,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'input_integer': {
+        assert(argument.length == 1);
         var completer = Completer<Integer?>();
         this._inputBarContent = IntegerInputBarContent(
           completer: completer,
@@ -176,6 +186,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'input_size': {
+        assert(argument.length == 1);
         var completer = Completer<String?>();
         this._inputBarContent = SizeInputBarContent(
           completer: completer,
@@ -189,6 +200,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'input_string': {
+        assert(argument.length == 1);
         var completer = Completer<String?>();
         this._inputBarContent = StringInputBarContent(
           completer: completer,
@@ -202,6 +214,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'input_option': {
+        assert(argument.length >= 1);
         var option = argument.sublist(1);
         var completer = Completer<Integer?>();
         this._inputBarContent = OptionInputBarContent(
@@ -290,7 +303,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         var additionalArgument = command.additionalArgument!;
         command.set(null);
         var state = await this._launch(additionalArgument);
-        if (setting.data.mBehaviorAfterCommandSucceed && !state) {
+        if (setting.data.mBehaviorAfterCommandSucceed && state) {
           exitApp();
         }
       }();

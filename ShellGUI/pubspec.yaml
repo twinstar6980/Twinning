@@ -1,5 +1,5 @@
 name: shell_gui
-version: 5.0.0+5
+version: 6.0.0+6
 publish_to: 'none'
 environment:
   sdk: '>=2.19.6 <3.0.0'

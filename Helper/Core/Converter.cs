@@ -29,7 +29,7 @@ namespace Helper.Core {
 		public static String ParseString (
 			ref Interface.String structure
 		) {
-			return Encoding.UTF8.GetString((Byte*)structure.data, (Size)Converter.ParseSize(ref structure.size));
+			return structure.data == null ? "" : Encoding.UTF8.GetString((Byte*)structure.data, (Size)Converter.ParseSize(ref structure.size));
 		}
 
 		public static Interface.String CreateString (
@@ -76,14 +76,14 @@ namespace Helper.Core {
 
 		// ----------------
 
-		public static delegate* <Interface.StringList*, Interface.StringList*> ParseCallback (
+		public static delegate* <Interface.String*, Interface.StringList**, Interface.StringList**> ParseCallback (
 			ref Interface.Callback structure
 		) {
 			return structure.value;
 		}
 
 		public static Interface.Callback CreateCallback (
-			delegate* <Interface.StringList*, Interface.StringList*> value
+			delegate* <Interface.String*, Interface.StringList**, Interface.StringList**> value
 		) {
 			return new Interface.Callback {
 				value = value,

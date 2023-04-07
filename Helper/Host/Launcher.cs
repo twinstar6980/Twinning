@@ -9,7 +9,7 @@ namespace Helper {
 
 		#region function
 
-		public static String? Launch (
+		public static String Launch (
 			Host         host,
 			Library      core,
 			String       script,

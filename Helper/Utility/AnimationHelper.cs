@@ -39,7 +39,7 @@ namespace Helper.Utility {
 
 		#region utility
 
-		public const Floating BasicOffset = 0.001;
+		public const Floater BasicOffset = 0.001;
 
 		// ----------------
 

@@ -35,18 +35,20 @@ namespace Helper.Core {
 
 		[StructLayout(LayoutKind.Sequential)]
 		public struct Callback {
-			public delegate* <StringList*, StringList*> value;
+			public delegate* <String*, StringList**, StringList**> value;
 		}
 
 		// ----------------
 
-		public delegate Size* version (
+		public delegate String* version (
+			Size** number
 		);
 
 		public delegate String* execute (
-			Callback*   callback,
-			String*     script,
-			StringList* argument
+			Callback**   callback,
+			String**     script,
+			StringList** argument,
+			String**     result
 		);
 
 		public delegate String* prepare (

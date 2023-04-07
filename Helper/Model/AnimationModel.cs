@@ -10,8 +10,8 @@ namespace Helper {
 		#region type
 
 		public record Rectangle {
-			public required List<Floating> Position;
-			public required List<Floating> Size;
+			public required List<Floater> Position;
+			public required List<Floater> Size;
 		}
 
 		public record LayerRemove {
@@ -19,21 +19,21 @@ namespace Helper {
 		}
 
 		public record LayerAppend {
-			public required Integer  Index;
-			public required String?  Name;
-			public required Integer  Resource;
-			public required Boolean  Sprite;
-			public required Boolean  Additive;
-			public required Integer  PreloadFrame;
-			public required Floating TimeScale;
+			public required Integer Index;
+			public required String? Name;
+			public required Integer Resource;
+			public required Boolean Sprite;
+			public required Boolean Additive;
+			public required Integer PreloadFrame;
+			public required Floater TimeScale;
 		}
 
 		public record LayerChange {
-			public required Integer         Index;
-			public required List<Floating>  Transform;
-			public required List<Floating>? Color;
-			public required Integer?        SpriteFrameNumber;
-			public required Rectangle?      SourceRectangle;
+			public required Integer        Index;
+			public required List<Floater>  Transform;
+			public required List<Floater>? Color;
+			public required Integer?       SpriteFrameNumber;
+			public required Rectangle?     SourceRectangle;
 		}
 
 		public record Frame {
@@ -47,24 +47,24 @@ namespace Helper {
 
 		public record Sprite {
 			public required String        Name;
-			public required Floating      FrameRate;
+			public required Floater       FrameRate;
 			public required List<Integer> WorkArea;
 			public required List<Frame>   Frame;
 		}
 
 		public record Image {
-			public required String         Name;
-			public required List<Integer>  Size;
-			public required List<Floating> Transform;
+			public required String        Name;
+			public required List<Integer> Size;
+			public required List<Floater> Transform;
 		}
 
 		public record Animation {
-			public required Integer        FrameRate;
-			public required List<Floating> Position;
-			public required List<Floating> Size;
-			public required List<Image>    Image;
-			public required List<Sprite>   Sprite;
-			public required Sprite?        MainSprite;
+			public required Integer       FrameRate;
+			public required List<Floater> Position;
+			public required List<Floater> Size;
+			public required List<Image>   Image;
+			public required List<Sprite>  Sprite;
+			public required Sprite?       MainSprite;
 		}
 
 		#endregion
