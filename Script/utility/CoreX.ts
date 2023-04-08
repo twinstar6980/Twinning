@@ -633,13 +633,17 @@ namespace TwinStar.Script.CoreX {
 
 				export namespace Rijndael {
 
-					export const ModeE = ['ecb', 'cbc', 'cfb'] as const;
+					const ModeX = ['ecb', 'cbc', 'cfb'] as const;
 
-					export type Mode = typeof ModeE[number];
+					const BlockSizeX = [16n, 24n, 32n] as const;
 
-					export const BlockSizeE = [16n, 24n, 32n] as const;
+					export type Mode = typeof ModeX[number];
 
-					export type BlockSize = typeof BlockSizeE[number];
+					export const ModeE = ModeX as unknown as Mode[];
+
+					export type BlockSize = typeof BlockSizeX[number];
+
+					export const BlockSizeE = BlockSizeX as unknown as BlockSize[];
 
 					export function encrypt_fs(
 						plain_file: string,
@@ -685,25 +689,35 @@ namespace TwinStar.Script.CoreX {
 
 				export namespace Deflate {
 
-					export const LevelE = [0n, 1n, 2n, 3n, 4n, 5n, 6n, 7n, 8n, 9n] as const;
+					const LevelX = [0n, 1n, 2n, 3n, 4n, 5n, 6n, 7n, 8n, 9n] as const;
 
-					export type Level = typeof LevelE[number];
+					const WindowBitsX = [8n, 9n, 10n, 11n, 12n, 13n, 14n, 15n] as const;
 
-					export const WindowBitsE = [8n, 9n, 10n, 11n, 12n, 13n, 14n, 15n] as const;
+					const MemoryLevelX = [1n, 2n, 3n, 4n, 5n, 6n, 7n, 8n, 9n] as const;
 
-					export type WindowBits = typeof WindowBitsE[number];
+					const StrategyX = ['default_mode', 'filtered', 'huffman_only', 'rle', 'fixed'] as const;
 
-					export const MemoryLevelE = [1n, 2n, 3n, 4n, 5n, 6n, 7n, 8n, 9n] as const;
+					const WrapperTypeX = ['none', 'zlib', 'gzip'] as const;
 
-					export type MemoryLevel = typeof MemoryLevelE[number];
+					export type Level = typeof LevelX[number];
 
-					export const StrategyE = ['default_mode', 'filtered', 'huffman_only', 'rle', 'fixed'] as const;
+					export const LevelE = LevelX as unknown as Level[];
 
-					export type Strategy = typeof StrategyE[number];
+					export type WindowBits = typeof WindowBitsX[number];
 
-					export const WrapperTypeE = ['none', 'zlib', 'gzip'] as const;
+					export const WindowBitsE = WindowBitsX as unknown as WindowBits[];
 
-					export type WrapperType = typeof WrapperTypeE[number];
+					export type MemoryLevel = typeof MemoryLevelX[number];
+
+					export const MemoryLevelE = MemoryLevelX as unknown as MemoryLevel[];
+
+					export type Strategy = typeof StrategyX[number];
+
+					export const StrategyE = StrategyX as unknown as Strategy[];
+
+					export type WrapperType = typeof WrapperTypeX[number];
+
+					export const WrapperTypeE = WrapperTypeX as unknown as WrapperType[];
 
 					export function compress_fs(
 						raw_file: string,
@@ -746,9 +760,11 @@ namespace TwinStar.Script.CoreX {
 
 				export namespace BZip2 {
 
-					export const BlockSizeE = [1n, 2n, 3n, 4n, 5n, 6n, 7n, 8n, 9n] as const;
+					const BlockSizeX = [1n, 2n, 3n, 4n, 5n, 6n, 7n, 8n, 9n] as const;
 
-					export type BlockSize = typeof BlockSizeE[number];
+					export type BlockSize = typeof BlockSizeX[number];
+
+					export const BlockSizeE = BlockSizeX as unknown as BlockSize[];
 
 					export function compress_fs(
 						raw_file: string,
@@ -784,9 +800,11 @@ namespace TwinStar.Script.CoreX {
 
 				export namespace Lzma {
 
-					export const LevelE = [0n, 1n, 2n, 3n, 4n, 5n, 6n, 7n, 8n, 9n] as const;
+					const LevelX = [0n, 1n, 2n, 3n, 4n, 5n, 6n, 7n, 8n, 9n] as const;
 
-					export type Level = typeof LevelE[number];
+					export type Level = typeof LevelX[number];
+
+					export const LevelE = LevelX as unknown as Level[];
 
 					export function compress_fs(
 						raw_file: string,
@@ -948,7 +966,7 @@ namespace TwinStar.Script.CoreX {
 
 				// ------------------------------------------------
 
-				export const FormatE = [
+				const FormatX = [
 					'a_8',
 					'rgb_332',
 					'rgb_565',
@@ -967,9 +985,7 @@ namespace TwinStar.Script.CoreX {
 					'rgba_8888_o',
 				] as const;
 
-				export type Format = typeof FormatE[number];
-
-				export const CompressionE = [
+				const CompressionX = [
 					'rgb_etc1',
 					'rgb_etc2',
 					'rgba_etc2',
@@ -977,14 +993,22 @@ namespace TwinStar.Script.CoreX {
 					'rgba_pvrtc4',
 				] as const;
 
-				export type Compression = typeof CompressionE[number];
-
-				export const CompositeFormatE = [
-					...FormatE,
-					...CompressionE,
+				const CompositeFormatX = [
+					...FormatX,
+					...CompressionX,
 				] as const;
 
-				export type CompositeFormat = typeof CompositeFormatE[number];
+				export type Format = typeof FormatX[number];
+
+				export const FormatE = FormatX as unknown as Format[];
+
+				export type Compression = typeof CompressionX[number];
+
+				export const CompressionE = CompressionX as unknown as Compression[];
+
+				export type CompositeFormat = typeof CompositeFormatX[number];
+
+				export const CompositeFormatE = CompositeFormatX as unknown as CompositeFormat[];
 
 				// ------------------------------------------------
 
@@ -1254,9 +1278,9 @@ namespace TwinStar.Script.CoreX {
 
 			export namespace SoundBank {
 
-				export const VersionNumberE = [72n, 88n, 112n, 113n, 118n, 120n, 125n, 128n, 132n, 134n, 135n, 140n, 145n] as const;
+				export type VersionNumber = typeof Core.Tool.Wwise.SoundBank.Version.Value.number;
 
-				export type VersionNumber = typeof VersionNumberE[number];
+				export const VersionNumberE = [72n, 88n, 112n, 113n, 118n, 120n, 125n, 128n, 132n, 134n, 135n, 140n, 145n] as VersionNumber[];
 
 				// TODO
 				export function detect_version(
@@ -1313,9 +1337,9 @@ namespace TwinStar.Script.CoreX {
 
 			export namespace DZip {
 
-				export const VersionNumberE = [70n] as const;
+				export type VersionNumber = typeof Core.Tool.Marmalade.DZip.Version.Value.number;
 
-				export type VersionNumber = typeof VersionNumberE[number];
+				export const VersionNumberE = [0n] as VersionNumber[];
 
 				export function pack_fs(
 					data_file: string,
@@ -1359,9 +1383,9 @@ namespace TwinStar.Script.CoreX {
 
 			export namespace ZLib {
 
-				export const VersionVariant64E = [false, true] as const;
+				export type VersionVariant64 = typeof Core.Tool.PopCap.ZLib.Version.Value.variant_64;
 
-				export type VersionVariant64 = typeof VersionVariant64E[number];
+				export const VersionVariant64E = [false, true] as VersionVariant64[];
 
 				export function compress_fs(
 					raw_file: string,
@@ -1448,13 +1472,13 @@ namespace TwinStar.Script.CoreX {
 
 			export namespace ReflectionObjectNotation {
 
-				export const VersionNumberE = [1n] as const;
+				export type VersionNumber = typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value.number;
 
-				export type VersionNumber = typeof VersionNumberE[number];
+				export const VersionNumberE = [1n] as VersionNumber[];
 
-				export const VersionNativeStringEncodingUseUTF8E = [false, true] as const;
+				export type VersionNativeStringEncodingUseUTF8 = typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value.native_string_encoding_use_utf8;
 
-				export type VersionNativeStringEncodingUseUTF8 = typeof VersionNativeStringEncodingUseUTF8E[number];
+				export const VersionNativeStringEncodingUseUTF8E = [false, true] as VersionNativeStringEncodingUseUTF8[];
 
 				export function encode_fs(
 					data_file: string,
@@ -1570,18 +1594,23 @@ namespace TwinStar.Script.CoreX {
 
 			export namespace UTexture {
 
-				export const VersionCompressTextureDataE = [false, true] as const;
+				export type VersionCompressTextureData = typeof Core.Tool.PopCap.UTexture.Version.Value.compress_texture_data;
 
-				export type VersionCompressTextureData = typeof VersionCompressTextureDataE[number];
+				export const VersionCompressTextureDataE = [false, true] as VersionCompressTextureData[];
+
+				export type Format = [
+					'rgba_8888_o',
+					'rgba_4444',
+					'rgba_5551',
+					'rgb_565',
+				][number];
 
 				export const FormatE = [
 					'rgba_8888_o',
 					'rgba_4444',
 					'rgba_5551',
 					'rgb_565',
-				] as const;
-
-				export type Format = typeof FormatE[number];
+				] as Format[];
 
 				export function encode_fs(
 					data_file: string,
@@ -1622,9 +1651,21 @@ namespace TwinStar.Script.CoreX {
 
 			export namespace SexyTexture {
 
-				export const VersionNumberE = [0n] as const;
+				export type VersionNumber = typeof Core.Tool.PopCap.SexyTexture.Version.Value.number;
 
-				export type VersionNumber = typeof VersionNumberE[number];
+				export const VersionNumberE = [0n] as VersionNumber[];
+
+				export type Format = [
+					'argb_8888',
+					'argb_4444',
+					'argb_1555',
+					'rgb_565',
+					'rgba_8888_o',
+					'rgba_4444',
+					'rgba_5551',
+					// 'xrgb_8888',
+					'la_88',
+				][number];
 
 				export const FormatE = [
 					'argb_8888',
@@ -1636,9 +1677,7 @@ namespace TwinStar.Script.CoreX {
 					'rgba_5551',
 					// 'xrgb_8888',
 					'la_88',
-				] as const;
-
-				export type Format = typeof FormatE[number];
+				] as Format[];
 
 				export function encode_fs(
 					data_file: string,
@@ -1680,9 +1719,9 @@ namespace TwinStar.Script.CoreX {
 
 			export namespace Animation {
 
-				export const VersionNumberE = [1n, 2n, 3n, 4n, 5n, 6n] as const;
+				export type VersionNumber = typeof Core.Tool.PopCap.Animation.Version.Value.number;
 
-				export type VersionNumber = typeof VersionNumberE[number];
+				export const VersionNumberE = [1n, 2n, 3n, 4n, 5n, 6n] as VersionNumber[];
 
 				export function encode_fs(
 					data_file: string,
@@ -1718,13 +1757,13 @@ namespace TwinStar.Script.CoreX {
 
 			export namespace ReAnimation {
 
-				export const VersionPlatformE = ['desktop', 'mobile', 'television'] as const;
+				export type VersionPlatform = typeof Core.Tool.PopCap.ReAnimation.Version.Value.platform;
 
-				export type VersionPlatform4 = typeof VersionPlatformE[number];
+				export const VersionPlatformE = ['desktop', 'mobile', 'television'] as VersionPlatform[];
 
-				export const VersionVariant64E = [false, true] as const;
+				export type VersionVariant64 = typeof Core.Tool.PopCap.ReAnimation.Version.Value.variant_64;
 
-				export type VersionVariant64 = typeof VersionVariant64E[number];
+				export const VersionVariant64E = [false, true] as VersionVariant64[];
 
 				export function encode_fs(
 					data_file: string,
@@ -1760,13 +1799,13 @@ namespace TwinStar.Script.CoreX {
 
 			export namespace Particle {
 
-				export const VersionPlatformE = ['desktop', 'mobile', 'television'] as const;
+				export type VersionPlatform = typeof Core.Tool.PopCap.Particle.Version.Value.platform;
 
-				export type VersionPlatform4 = typeof VersionPlatformE[number];
+				export const VersionPlatformE = ['desktop', 'mobile', 'television'] as VersionPlatform[];
 
-				export const VersionVariant64E = [false, true] as const;
+				export type VersionVariant64 = typeof Core.Tool.PopCap.Particle.Version.Value.variant_64;
 
-				export type VersionVariant64 = typeof VersionVariant64E[number];
+				export const VersionVariant64E = [false, true] as VersionVariant64[];
 
 				export function encode_fs(
 					data_file: string,
@@ -1802,13 +1841,13 @@ namespace TwinStar.Script.CoreX {
 
 			export namespace Trail {
 
-				export const VersionPlatformE = ['desktop', 'mobile', 'television'] as const;
+				export type VersionPlatform = typeof Core.Tool.PopCap.Trail.Version.Value.platform;
 
-				export type VersionPlatform4 = typeof VersionPlatformE[number];
+				export const VersionPlatformE = ['desktop', 'mobile', 'television'] as VersionPlatform[];
 
-				export const VersionVariant64E = [false, true] as const;
+				export type VersionVariant64 = typeof Core.Tool.PopCap.Trail.Version.Value.variant_64;
 
-				export type VersionVariant64 = typeof VersionVariant64E[number];
+				export const VersionVariant64E = [false, true] as VersionVariant64[];
 
 				export function encode_fs(
 					data_file: string,
@@ -1844,9 +1883,9 @@ namespace TwinStar.Script.CoreX {
 
 			export namespace Effect {
 
-				export const VersionNumberE = [1n] as const;
+				export type VersionNumber = typeof Core.Tool.PopCap.Effect.Version.Value.number;
 
-				export type VersionNumber = typeof VersionNumberE[number];
+				export const VersionNumberE = [1n] as VersionNumber[];
 
 				export function encode_fs(
 					data_file: string,
@@ -1916,13 +1955,13 @@ namespace TwinStar.Script.CoreX {
 
 			export namespace Package {
 
-				export const VersionNumberE = [0n] as const;
+				export type VersionNumber = typeof Core.Tool.PopCap.Package.Version.Value.number;
 
-				export type VersionNumber = typeof VersionNumberE[number];
+				export const VersionNumberE = [0n] as VersionNumber[];
 
-				export const VersionCompressResourceDataE = [false, true] as const;
+				export type VersionCompressResourceData = typeof Core.Tool.PopCap.Package.Version.Value.compress_resource_data;
 
-				export type VersionCompressResourceData = typeof VersionCompressResourceDataE[number];
+				export const VersionCompressResourceDataE = [false, true] as VersionCompressResourceData[];
 
 				export function pack_fs(
 					data_file: string,
@@ -1962,9 +2001,9 @@ namespace TwinStar.Script.CoreX {
 
 			export namespace ResourceStreamGroup {
 
-				export const VersionNumberE = [3n, 4n] as const;
+				export type VersionNumber = typeof Core.Tool.PopCap.ResourceStreamGroup.Version.Value.number;
 
-				export type VersionNumber = typeof VersionNumberE[number];
+				export const VersionNumberE = [3n, 4n] as VersionNumber[];
 
 				export function pack_fs(
 					data_file: string,
@@ -2004,13 +2043,13 @@ namespace TwinStar.Script.CoreX {
 
 			export namespace ResourceStreamBundle {
 
-				export const VersionNumberE = [3n, 4n] as const;
+				export type VersionNumber = typeof Core.Tool.PopCap.ResourceStreamBundle.Version.Value.number;
 
-				export type VersionNumber = typeof VersionNumberE[number];
+				export const VersionNumberE = [3n, 4n] as VersionNumber[];
 
-				export const VersionaExtendedTextureInformationForPVZ2CNE = [0n, 1n, 2n, 3n] as const;
+				export type VersionaExtendedTextureInformationForPVZ2CN = typeof Core.Tool.PopCap.ResourceStreamBundle.Version.Value.extended_texture_information_for_pvz2_cn;
 
-				export type VersionaExtendedTextureInformationForPVZ2CN = typeof VersionaExtendedTextureInformationForPVZ2CNE[number];
+				export const VersionaExtendedTextureInformationForPVZ2CNE = [0n, 1n, 2n, 3n] as VersionaExtendedTextureInformationForPVZ2CN[];
 
 				export function pack_fs(
 					data_file: string,
@@ -2060,9 +2099,9 @@ namespace TwinStar.Script.CoreX {
 
 			export namespace ResourceStreamBundlePatch {
 
-				export const VersionNumberE = [1n] as const;
+				export type VersionNumber = typeof Core.Tool.PopCap.ResourceStreamBundlePatch.Version.Value.number;
 
-				export type VersionNumber = typeof VersionNumberE[number];
+				export const VersionNumberE = [1n] as VersionNumber[];
 
 				export function encode_fs(
 					before_file: string,

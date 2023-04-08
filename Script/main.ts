@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 57;
+	export const k_version = 58;
 
 	// ------------------------------------------------
 
@@ -252,13 +252,13 @@ namespace TwinStar.Script {
 			let timer_end = Date.now();
 			// 执行模块入口函数
 			try {
-				Console.message('s', los('main:module_load_finish'), [
+				Console.success(los('main:module_load_finish'), [
 					los('main:module_load_duration', ((timer_end - timer_begin) / 1000).toFixed(3)),
 				]);
 				HomeDirectory.initialize();
 				entry?.[0](entry[1], argument.slice(1));
 			} catch (error: any) {
-				Console.message_error(error);
+				Console.error_of(error);
 				Console.pause();
 			}
 			// 释放资源

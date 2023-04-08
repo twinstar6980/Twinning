@@ -50,7 +50,7 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 						);
 					}
 					CoreX.Tool.PopCap.CharacterFontWidget2.encode_fs(data_file, manifest_file, {}, buffer_size);
-					Console.message('s', los(`执行成功`), [`${data_file}`]);
+					Console.success(los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -89,7 +89,7 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 						);
 					}
 					CoreX.Tool.PopCap.CharacterFontWidget2.decode_fs(data_file, manifest_file, {});
-					Console.message('s', los(`执行成功`), [`${manifest_file}`]);
+					Console.success(los(`执行成功`), [`${manifest_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -147,7 +147,7 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 							CoreX.Tool.PopCap.CharacterFontWidget2.encode_fs(data_file, manifest_file, {}, data_buffer.view());
 						},
 					);
-					Console.message('s', los(`执行成功`), [`${data_file_directory}`]);
+					Console.success(los(`执行成功`), [`${data_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -194,7 +194,7 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 							CoreX.Tool.PopCap.CharacterFontWidget2.decode_fs(data_file, manifest_file, {});
 						},
 					);
-					Console.message('s', los(`执行成功`), [`${manifest_file_directory}`]);
+					Console.success(los(`执行成功`), [`${manifest_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

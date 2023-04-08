@@ -45,11 +45,11 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 							a.format,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Support.PopCap.Texture.Encode.FormatE.map((e) => ([e])), null, null, initial)),
+							(initial) => (Console.option(Console.option_string(Support.PopCap.Texture.Encode.FormatE), null, null, initial)),
 						);
 					}
 					Support.PopCap.Texture.Encode.encode_fs(image_file, data_file, format as any);
-					Console.message('s', los(`执行成功`), [`${data_file}`]);
+					Console.success(los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -97,7 +97,7 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 							a.format,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Support.PopCap.Texture.Encode.FormatE.map((e) => ([e])), null, null, initial)),
+							(initial) => (Console.option(Console.option_string(Support.PopCap.Texture.Encode.FormatE), null, null, initial)),
 						);
 						image_width = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'image_width'),
@@ -115,7 +115,7 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 						);
 					}
 					Support.PopCap.Texture.Encode.decode_fs(data_file, image_file, [image_width, image_height], format as any);
-					Console.message('s', los(`执行成功`), [`${image_file}`]);
+					Console.success(los(`执行成功`), [`${image_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

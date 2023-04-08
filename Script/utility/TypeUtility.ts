@@ -194,6 +194,18 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
+	export function unquote(
+		source: string,
+	): string {
+		let destination = source;
+		if (destination.startsWith('"') && destination.endsWith('"')) {
+			destination = destination.substring(1, destination.length - 1);
+		}
+		return destination;
+	}
+
+	// ------------------------------------------------
+
 	export function normalize_string_line_feed(
 		source: string,
 	): string {

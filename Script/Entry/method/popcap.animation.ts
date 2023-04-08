@@ -53,7 +53,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.Animation.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Animation.VersionNumberE), null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -64,7 +64,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 						);
 					}
 					CoreX.Tool.PopCap.Animation.encode_fs(data_file, manifest_file, { number: version_number as any }, buffer_size);
-					Console.message('s', los(`执行成功`), [`${data_file}`]);
+					Console.success(los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -109,11 +109,11 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.Animation.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Animation.VersionNumberE), null, null, initial)),
 						);
 					}
 					CoreX.Tool.PopCap.Animation.decode_fs(data_file, manifest_file, { number: version_number as any });
-					Console.message('s', los(`执行成功`), [`${manifest_file}`]);
+					Console.success(los(`执行成功`), [`${manifest_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -155,7 +155,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					Support.PopCap.Animation.Convert.Flash.From.from_fsh(raw, ripe_directory);
 					Support.PopCap.Animation.Convert.Flash.SourceManager.create_fsh(ripe_directory, raw);
 					Support.PopCap.Animation.Convert.Flash.create_xfl_content_file(ripe_directory);
-					Console.message('s', los(`执行成功`), [`${ripe_directory}`]);
+					Console.success(los(`执行成功`), [`${ripe_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -193,7 +193,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 						);
 					}
 					Support.PopCap.Animation.Convert.Flash.To.to_fs(raw_file, ripe_directory);
-					Console.message('s', los(`执行成功`), [`${raw_file}`]);
+					Console.success(los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -231,7 +231,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 						);
 					}
 					Support.PopCap.Animation.Convert.Flash.SourceManager.resize_fs(target_directory, resolution);
-					Console.message('s', los(`执行成功`), [`${target_directory}`]);
+					Console.success(los(`执行成功`), [`${target_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -269,7 +269,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 						.forEach((e) => {
 							CoreX.FileSystem.create_hard_link(`${media_directory}/${e}`, `${target_directory}/../${e}`);
 						});
-					Console.message('s', los(`执行成功`), [`${target_directory}`]);
+					Console.success(los(`执行成功`), [`${target_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -315,7 +315,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.Animation.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Animation.VersionNumberE), null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -335,7 +335,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							CoreX.Tool.PopCap.Animation.encode_fs(data_file, manifest_file, { number: version_number as any }, data_buffer.view());
 						},
 					);
-					Console.message('s', los(`执行成功`), [`${data_file_directory}`]);
+					Console.success(los(`执行成功`), [`${data_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -380,7 +380,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.Animation.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Animation.VersionNumberE), null, null, initial)),
 						);
 					}
 					simple_batch_execute(
@@ -392,7 +392,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							CoreX.Tool.PopCap.Animation.decode_fs(data_file, manifest_file, { number: version_number as any });
 						},
 					);
-					Console.message('s', los(`执行成功`), [`${manifest_file_directory}`]);
+					Console.success(los(`执行成功`), [`${manifest_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -442,7 +442,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							Support.PopCap.Animation.Convert.Flash.create_xfl_content_file(ripe_directory);
 						},
 					);
-					Console.message('s', los(`执行成功`), [`${ripe_directory_directory}`]);
+					Console.success(los(`执行成功`), [`${ripe_directory_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -488,7 +488,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							Support.PopCap.Animation.Convert.Flash.To.to_fs(raw_file, ripe_directory);
 						},
 					);
-					Console.message('s', los(`执行成功`), [`${raw_file_directory}`]);
+					Console.success(los(`执行成功`), [`${raw_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -533,7 +533,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							Support.PopCap.Animation.Convert.Flash.SourceManager.resize_fs(target_directory, resolution);
 						},
 					);
-					Console.message('s', los(`执行成功`), [`${target_directory_directory}`]);
+					Console.success(los(`执行成功`), [`${target_directory_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -578,7 +578,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 								});
 						},
 					);
-					Console.message('s', los(`执行成功`), [`${target_directory_directory}`]);
+					Console.success(los(`执行成功`), [`${target_directory_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

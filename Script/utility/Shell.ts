@@ -94,6 +94,12 @@ namespace TwinStar.Script.Shell {
 		return result[0].length === 0 ? null : result[0];
 	}
 
+	export function gui_input_path(
+	): string | null {
+		let result = callback(['input_path']);
+		return result[0].length === 0 ? null : result[0];
+	}
+
 	export function gui_input_option(
 		option: Array<string>,
 	): string | null {

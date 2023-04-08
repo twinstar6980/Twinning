@@ -2,13 +2,15 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 
 	// ------------------------------------------------
 
-	const ResourceStreamBundlePackAndUnpackModeE = [
+	const ResourceStreamBundlePackAndUnpackModeX = [
 		'group',
 		'subgroup',
 		'resource',
 	] as const;
 
-	type ResourceStreamBundlePackAndUnpackMode = typeof ResourceStreamBundlePackAndUnpackModeE[number];
+	type ResourceStreamBundlePackAndUnpackMode = typeof ResourceStreamBundlePackAndUnpackModeX[number];
+
+	const ResourceStreamBundlePackAndUnpackModeE = ResourceStreamBundlePackAndUnpackModeX as unknown as ResourceStreamBundlePackAndUnpackMode[];
 
 	function make_resource_stream_bundle_package_relative_path(
 		mode: ResourceStreamBundlePackAndUnpackMode,
@@ -133,9 +135,9 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 							(value) => (value),
 							null,
 							(initial) => (Console.option([
-								[ResourceStreamBundlePackAndUnpackModeE[0], los(`群组：按群+子群树形结构导入，资源与子包均导入自group/<群名>/<子群名>目录`)],
-								[ResourceStreamBundlePackAndUnpackModeE[1], los(`子群：按子群树形结构导入，资源与子包均导入自subgroup/<子群名>目录`)],
-								[ResourceStreamBundlePackAndUnpackModeE[2], los(`资源：所有资源导入自resource目录，所有子包导入自packet目录`)],
+								[ResourceStreamBundlePackAndUnpackModeE[0], '1', los(`群组：按群+子群树形结构导入，资源与子包均导入自group/<群名>/<子群名>目录`)],
+								[ResourceStreamBundlePackAndUnpackModeE[1], '2', los(`子群：按子群树形结构导入，资源与子包均导入自subgroup/<子群名>目录`)],
+								[ResourceStreamBundlePackAndUnpackModeE[2], '3', los(`资源：所有资源导入自resource目录，所有子包导入自packet目录`)],
 							], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
@@ -143,14 +145,14 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ResourceStreamBundle.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ResourceStreamBundle.VersionNumberE), null, null, initial)),
 						);
 						version_extended_texture_information_for_pvz2_cn = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_extended_texture_information_for_pvz2_cn'),
 							a.version_extended_texture_information_for_pvz2_cn,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ResourceStreamBundle.VersionaExtendedTextureInformationForPVZ2CNE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ResourceStreamBundle.VersionaExtendedTextureInformationForPVZ2CNE), null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -181,7 +183,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 					let packet_file = !input_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
 					let new_packet_file = !output_new_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
 					CoreX.Tool.PopCap.ResourceStreamBundle.pack_fs(data_file, manifest_file, description_file, resource_directory, packet_file, new_packet_file, { number: version_number as any, extended_texture_information_for_pvz2_cn: version_extended_texture_information_for_pvz2_cn as any }, buffer_size);
-					Console.message('s', los(`执行成功`), [`${data_file}`]);
+					Console.success(los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -239,9 +241,9 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 							(value) => (value),
 							null,
 							(initial) => (Console.option([
-								[ResourceStreamBundlePackAndUnpackModeE[0], los(`群组：按群+子群树形结构导出，资源与子包均导出至group/<群名>/<子群名>目录`)],
-								[ResourceStreamBundlePackAndUnpackModeE[1], los(`子群：按子群树形结构导出，资源与子包均导出至subgroup/<子群名>目录`)],
-								[ResourceStreamBundlePackAndUnpackModeE[2], los(`资源：所有资源导出至resource目录，所有子包导出至packet目录`)],
+								[ResourceStreamBundlePackAndUnpackModeE[0], '1', los(`群组：按群+子群树形结构导入，资源与子包均导入自group/<群名>/<子群名>目录`)],
+								[ResourceStreamBundlePackAndUnpackModeE[1], '2', los(`子群：按子群树形结构导入，资源与子包均导入自subgroup/<子群名>目录`)],
+								[ResourceStreamBundlePackAndUnpackModeE[2], '3', los(`资源：所有资源导入自resource目录，所有子包导入自packet目录`)],
 							], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
@@ -249,14 +251,14 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ResourceStreamBundle.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ResourceStreamBundle.VersionNumberE), null, null, initial)),
 						);
 						version_extended_texture_information_for_pvz2_cn = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_extended_texture_information_for_pvz2_cn'),
 							a.version_extended_texture_information_for_pvz2_cn,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ResourceStreamBundle.VersionaExtendedTextureInformationForPVZ2CNE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ResourceStreamBundle.VersionaExtendedTextureInformationForPVZ2CNE), null, null, initial)),
 						);
 						output_resource = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'output_resource'),
@@ -279,7 +281,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 					let resource_directory = !output_resource ? null : `${bundle_directory}/${relative_path.resource_directory}`;
 					let packet_file = !output_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
 					CoreX.Tool.PopCap.ResourceStreamBundle.unpack_fs(data_file, manifest_file, description_file, resource_directory, packet_file, { number: version_number as any, extended_texture_information_for_pvz2_cn: version_extended_texture_information_for_pvz2_cn as any });
-					Console.message('s', los(`执行成功`), [`${bundle_directory}`]);
+					Console.success(los(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -327,14 +329,14 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ResourceStreamBundle.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ResourceStreamBundle.VersionNumberE), null, null, initial)),
 						);
 						version_extended_texture_information_for_pvz2_cn = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_extended_texture_information_for_pvz2_cn'),
 							a.version_extended_texture_information_for_pvz2_cn,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ResourceStreamBundle.VersionaExtendedTextureInformationForPVZ2CNE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ResourceStreamBundle.VersionaExtendedTextureInformationForPVZ2CNE), null, null, initial)),
 						);
 						let convert_directory = `${bundle_directory}/convert`;
 						{
@@ -399,7 +401,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 										a.option.image_texture_format_map_name,
 										(value) => (value),
 										null,
-										(initial) => (Console.option(map_name_list.map((e) => ([e])), null, null, initial)),
+										(initial) => (Console.option(Console.option_string(map_name_list), null, null, initial)),
 									);
 									option.image.texture_format_map = a.option.image_texture_format_map_list[texture_format_map_name];
 								}
@@ -504,7 +506,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 						option,
 						{ number: version_number as any, extended_texture_information_for_pvz2_cn: version_extended_texture_information_for_pvz2_cn as any },
 					);
-					Console.message('s', los(`执行成功`), [`${bundle_directory}`]);
+					Console.success(los(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -544,7 +546,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 						);
 					}
 					Support.PopCap.ResourceStreamBundle.Repair.repair_package_fs(raw_file, ripe_file);
-					Console.message('s', los(`执行成功`), [`${ripe_file}`]);
+					Console.success(los(`执行成功`), [`${ripe_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

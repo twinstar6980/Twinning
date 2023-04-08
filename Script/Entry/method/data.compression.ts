@@ -49,7 +49,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 						);
 					}
 					CoreX.Tool.Data.Compression.Deflate.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', 'none');
-					Console.message('s', los(`执行成功`), [`${ripe_file}`]);
+					Console.success(los(`执行成功`), [`${ripe_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -96,7 +96,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 						);
 					}
 					CoreX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'none', buffer_size);
-					Console.message('s', los(`执行成功`), [`${raw_file}`]);
+					Console.success(los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -135,7 +135,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 						);
 					}
 					CoreX.Tool.Data.Compression.Deflate.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', 'zlib');
-					Console.message('s', los(`执行成功`), [`${ripe_file}`]);
+					Console.success(los(`执行成功`), [`${ripe_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -182,7 +182,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 						);
 					}
 					CoreX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'zlib', buffer_size);
-					Console.message('s', los(`执行成功`), [`${raw_file}`]);
+					Console.success(los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -221,7 +221,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 						);
 					}
 					CoreX.Tool.Data.Compression.Deflate.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', 'gzip');
-					Console.message('s', los(`执行成功`), [`${ripe_file}`]);
+					Console.success(los(`执行成功`), [`${ripe_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -268,7 +268,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 						);
 					}
 					CoreX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'gzip', buffer_size);
-					Console.message('s', los(`执行成功`), [`${raw_file}`]);
+					Console.success(los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -307,7 +307,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 						);
 					}
 					CoreX.Tool.Data.Compression.BZip2.compress_fs(raw_file, ripe_file, 9n);
-					Console.message('s', los(`执行成功`), [`${ripe_file}`]);
+					Console.success(los(`执行成功`), [`${ripe_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -354,7 +354,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 						);
 					}
 					CoreX.Tool.Data.Compression.BZip2.uncompress_fs(ripe_file, raw_file, buffer_size);
-					Console.message('s', los(`执行成功`), [`${raw_file}`]);
+					Console.success(los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -393,7 +393,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 						);
 					}
 					CoreX.Tool.Data.Compression.Lzma.compress_fs(raw_file, ripe_file, 9n);
-					Console.message('s', los(`执行成功`), [`${ripe_file}`]);
+					Console.success(los(`执行成功`), [`${ripe_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -440,7 +440,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 						);
 					}
 					CoreX.Tool.Data.Compression.Lzma.uncompress_fs(ripe_file, raw_file, buffer_size);
-					Console.message('s', los(`执行成功`), [`${raw_file}`]);
+					Console.success(los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

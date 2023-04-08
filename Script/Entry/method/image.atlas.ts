@@ -50,7 +50,7 @@ namespace TwinStar.Script.Entry.method.image.atlas {
 						);
 					}
 					Support.Atlas.Pack.pack_fs(manifest_file, atlas_file, sprite_directory);
-					Console.message('s', los(`执行成功`), [`${atlas_file}`]);
+					Console.success(los(`执行成功`), [`${atlas_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -98,7 +98,7 @@ namespace TwinStar.Script.Entry.method.image.atlas {
 						);
 					}
 					Support.Atlas.Pack.unpack_fs(manifest_file, atlas_file, sprite_directory);
-					Console.message('s', los(`执行成功`), [`${sprite_directory}`]);
+					Console.success(los(`执行成功`), [`${sprite_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -146,7 +146,7 @@ namespace TwinStar.Script.Entry.method.image.atlas {
 						);
 					}
 					Support.Atlas.Pack.pack_automatic_fs(manifest_file, atlas_file, sprite_directory);
-					Console.message('s', los(`执行成功`), [`${atlas_file}`]);
+					Console.success(los(`执行成功`), [`${atlas_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

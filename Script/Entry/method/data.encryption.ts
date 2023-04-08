@@ -50,7 +50,7 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 						);
 					}
 					CoreX.Tool.Data.Encryption.XOR.encrypt_fs(plain_file, cipher_file, [key]);
-					Console.message('s', los(`执行成功`), [`${cipher_file}`]);
+					Console.success(los(`执行成功`), [`${cipher_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -100,14 +100,14 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 							a.mode,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(CoreX.Tool.Data.Encryption.Rijndael.ModeE.map((e) => ([e])), null, null, initial)),
+							(initial) => (Console.option(Console.option_string(CoreX.Tool.Data.Encryption.Rijndael.ModeE), null, null, initial)),
 						);
 						block_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'block_size'),
 							a.block_size,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(CoreX.Tool.Data.Encryption.Rijndael.BlockSizeE.map((e) => ([e])), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.Data.Encryption.Rijndael.BlockSizeE), null, null, initial)),
 						);
 						key = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'key'),
@@ -130,7 +130,7 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 						}
 					}
 					CoreX.Tool.Data.Encryption.Rijndael.encrypt_fs(plain_file, cipher_file, mode as any, block_size as any, BigInt(key.length) as CoreX.Tool.Data.Encryption.Rijndael.BlockSize, key, iv);
-					Console.message('s', los(`执行成功`), [`${cipher_file}`]);
+					Console.success(los(`执行成功`), [`${cipher_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -183,14 +183,14 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 							a.mode,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(CoreX.Tool.Data.Encryption.Rijndael.ModeE.map((e) => ([e])), null, null, initial)),
+							(initial) => (Console.option(Console.option_string(CoreX.Tool.Data.Encryption.Rijndael.ModeE), null, null, initial)),
 						);
 						block_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'block_size'),
 							a.block_size,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(CoreX.Tool.Data.Encryption.Rijndael.BlockSizeE.map((e) => ([e])), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.Data.Encryption.Rijndael.BlockSizeE), null, null, initial)),
 						);
 						key = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'key'),
@@ -213,7 +213,7 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 						}
 					}
 					CoreX.Tool.Data.Encryption.Rijndael.decrypt_fs(cipher_file, plain_file, mode as any, block_size as any, BigInt(key.length) as CoreX.Tool.Data.Encryption.Rijndael.BlockSize, key, iv);
-					Console.message('s', los(`执行成功`), [`${plain_file}`]);
+					Console.success(los(`执行成功`), [`${plain_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

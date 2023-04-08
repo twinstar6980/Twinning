@@ -70,7 +70,7 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 					}
 					let temporary_directpry = HomeDirectory.new_temporary();
 					CoreX.Tool.Wwise.Media.decode_fs(ripe_file, raw_file, tool_ffmpeg_program_file, tool_ww2ogg_program_file, tool_ww2ogg_code_book_file, temporary_directpry, {});
-					Console.message('s', los(`执行成功`), [`${raw_file}`]);
+					Console.success(los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -149,7 +149,7 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 							CoreX.Tool.Wwise.Media.decode_fs(ripe_file, raw_file, tool_ffmpeg_program_file, tool_ww2ogg_program_file, tool_ww2ogg_code_book_file, temporary_directpry, {});
 						},
 					);
-					Console.message('s', los(`执行成功`), [`${raw_file_directory}`]);
+					Console.success(los(`执行成功`), [`${raw_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

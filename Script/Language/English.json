@@ -103,11 +103,10 @@
 	// Executable/ComputeWwiseShortID
 	"executable.compute_wwise_short_id:please_input_string": "Please enter the wwise id string",
 	// Executable/ExtractRSBFromPvZ2CHSAPKDirectory
-	"executable.extract_rsb_from_pvz2_cn_apk_directory:select_input_directory": "Select the directory of an extracted APK that is to be deeper extracted by this tool",
-	"executable.extract_rsb_from_pvz2_cn_apk_directory:select_output_directory": "Select output directory",
+	"executable.extract_rsb_from_pvz2_cn_apk_directory:provide_input_directory": "Provide the directory of an extracted APK that is to be deeper extracted by this tool",
+	"executable.extract_rsb_from_pvz2_cn_apk_directory:provide_output_directory": "Provide output directory",
 	"executable.extract_rsb_from_pvz2_cn_apk_directory:input_directory": "Input path: {}",
 	"executable.extract_rsb_from_pvz2_cn_apk_directory:output_directory": "Output path: {}",
-	"executable.extract_rsb_from_pvz2_cn_apk_directory:cancle": "Operation cancelled",
 	"executable.extract_rsb_from_pvz2_cn_apk_directory:extract_start": "Extraction started",
 	"executable.extract_rsb_from_pvz2_cn_apk_directory:extract_finish": "Extraction finished",
 	// Entry/method/js

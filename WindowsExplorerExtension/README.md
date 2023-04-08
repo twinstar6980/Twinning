@@ -2,7 +2,7 @@
 
 Windows Explorer 扩展，将工具集成至 Windows Explorer 右键菜单中。
 
-本项目是面向 `Windows` 的 `C++` 项目，依赖 `Shell` 与 `Script` 的实现。
+本项目是面向 `Windows` 的 `C++` 项目，依赖 `Script` 的实现。
 
 ## 项目开发
 

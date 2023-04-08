@@ -49,7 +49,7 @@ namespace TwinStar.Script.Entry.method.popcap.effect {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.Effect.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Effect.VersionNumberE), null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -60,7 +60,7 @@ namespace TwinStar.Script.Entry.method.popcap.effect {
 						);
 					}
 					CoreX.Tool.PopCap.Effect.encode_fs(data_file, manifest_file, { number: version_number as any }, buffer_size);
-					Console.message('s', los(`执行成功`), [`${data_file}`]);
+					Console.success(los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -105,11 +105,11 @@ namespace TwinStar.Script.Entry.method.popcap.effect {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.Effect.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Effect.VersionNumberE), null, null, initial)),
 						);
 					}
 					CoreX.Tool.PopCap.Effect.decode_fs(data_file, manifest_file, { number: version_number as any });
-					Console.message('s', los(`执行成功`), [`${manifest_file}`]);
+					Console.success(los(`执行成功`), [`${manifest_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -157,7 +157,7 @@ namespace TwinStar.Script.Entry.method.popcap.effect {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.Effect.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Effect.VersionNumberE), null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -177,7 +177,7 @@ namespace TwinStar.Script.Entry.method.popcap.effect {
 							CoreX.Tool.PopCap.Effect.encode_fs(data_file, manifest_file, { number: version_number as any }, data_buffer.view());
 						},
 					);
-					Console.message('s', los(`执行成功`), [`${data_file_directory}`]);
+					Console.success(los(`执行成功`), [`${data_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -222,7 +222,7 @@ namespace TwinStar.Script.Entry.method.popcap.effect {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.Effect.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Effect.VersionNumberE), null, null, initial)),
 						);
 					}
 					simple_batch_execute(
@@ -234,7 +234,7 @@ namespace TwinStar.Script.Entry.method.popcap.effect {
 							CoreX.Tool.PopCap.Effect.decode_fs(data_file, manifest_file, { number: version_number as any });
 						},
 					);
-					Console.message('s', los(`执行成功`), [`${manifest_file_directory}`]);
+					Console.success(los(`执行成功`), [`${manifest_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

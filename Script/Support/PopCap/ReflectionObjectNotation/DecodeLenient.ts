@@ -265,7 +265,7 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 				let actual_size = { value: undefined! };
 				let content = read_utf8_string(data, length, actual_size);
 				if (actual_size.value !== Number(size)) {
-					Console.message('w', `data:${data.p().toString(16)}h : invalid utf-8 string size : except ${size} but actual ${actual_size.value}`, []);
+					Console.warning(`data:${data.p().toString(16)}h : invalid utf-8 string size : except ${size} but actual ${actual_size.value}`, []);
 				}
 				value = content;
 				break;
@@ -276,7 +276,7 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 				let actual_size = { value: undefined! };
 				let content = read_utf8_string(data, length, actual_size);
 				if (actual_size.value !== Number(size)) {
-					Console.message('w', `data:${data.p().toString(16)}h : invalid utf-8 string size : except ${size} but actual ${actual_size.value}`, []);
+					Console.warning(`data:${data.p().toString(16)}h : invalid utf-8 string size : except ${size} but actual ${actual_size.value}`, []);
 				}
 				value = content;
 				unicode_string_index.push(value);
@@ -302,7 +302,7 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 						let sheet_actual_size = { value: undefined! };
 						let sheet_content = read_utf8_string(data, sheet_length, sheet_actual_size);
 						if (sheet_actual_size.value !== Number(sheet_size)) {
-							Console.message('w', `data:${data.p().toString(16)}h : invalid utf-8 string size : except ${sheet_size} but actual ${sheet_actual_size.value}`, []);
+							Console.warning(`data:${data.p().toString(16)}h : invalid utf-8 string size : except ${sheet_size} but actual ${sheet_actual_size.value}`, []);
 						}
 						let uid_middle = read_pb_varint_unsigned(data);
 						let uid_first = read_pb_varint_unsigned(data);
@@ -316,14 +316,14 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 						let sheet_actual_size = { value: undefined! };
 						let sheet_content = read_utf8_string(data, sheet_length, sheet_actual_size);
 						if (sheet_actual_size.value !== Number(sheet_size)) {
-							Console.message('w', `data:${data.p().toString(16)}h : invalid utf-8 string size : except ${sheet_size} but actual ${sheet_actual_size.value}`, []);
+							Console.warning(`data:${data.p().toString(16)}h : invalid utf-8 string size : except ${sheet_size} but actual ${sheet_actual_size.value}`, []);
 						}
 						let alias_length = read_pb_varint_unsigned(data);
 						let alias_size = read_pb_varint_unsigned(data);
 						let alias_actual_size = { value: undefined! };
 						let alias_content = read_utf8_string(data, alias_length, alias_actual_size);
 						if (alias_actual_size.value !== Number(alias_size)) {
-							Console.message('w', `data:${data.p().toString(16)}h : invalid utf-8 string size : except ${alias_size} but actual ${alias_actual_size.value}`, []);
+							Console.warning(`data:${data.p().toString(16)}h : invalid utf-8 string size : except ${alias_size} but actual ${alias_actual_size.value}`, []);
 						}
 						value = `RTID(${alias_content}@${sheet_content})`;
 						break;
@@ -353,7 +353,7 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 					value.push(element_value);
 				}
 				if (value.length !== Number(size)) {
-					Console.message('w', `data:${data.p().toString(16)}h : invalid array size : except ${size} but actual ${value.length}`, []);
+					Console.warning(`data:${data.p().toString(16)}h : invalid array size : except ${size} but actual ${value.length}`, []);
 				}
 				break;
 			}
@@ -383,14 +383,14 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 		version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
 	): Core.JSON.JS_Value {
 		if (data.u32() !== 0x4E4F5452n) {
-			Console.message('w', `data:${data.p().toString(16)}h : invalid magic`, []);
+			Console.warning(`data:${data.p().toString(16)}h : invalid magic`, []);
 		}
 		if (data.u32() !== version.number) {
-			Console.message('w', `data:${data.p().toString(16)}h : invalid version`, []);
+			Console.warning(`data:${data.p().toString(16)}h : invalid version`, []);
 		}
 		let value = decode_unit(data, [], [], 0x85n, version);
 		if (data.u32() !== 0x454E4F44n) {
-			Console.message('w', `data:${data.p().toString(16)}h : invalid done`, []);
+			Console.warning(`data:${data.p().toString(16)}h : invalid done`, []);
 		}
 		return value;
 	}

@@ -106,7 +106,7 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.Repair {
 		// test zlib ripe
 		if (((resource_data_section_store_mode & 0b10n) && !test_zlib_ripe(data, generic_resource_data_section_offset, generic_resource_data_section_size, generic_resource_data_section_size_original)) ||
 			((resource_data_section_store_mode & 0b01n) && !test_zlib_ripe(data, texture_resource_data_section_offset, texture_resource_data_section_size, texture_resource_data_section_size_original))) {
-			Console.message('w', los('support.popcap.resource_stream_bundle.repair:invalid_zlib'), [
+			Console.warning(los('support.popcap.resource_stream_bundle.repair:invalid_zlib'), [
 				`generic offset=${generic_resource_data_section_offset.toString(16)} size=${generic_resource_data_section_size.toString(16)}`,
 				`texture offset=${texture_resource_data_section_offset.toString(16)} size=${texture_resource_data_section_size.toString(16)}`,
 			]);
@@ -194,7 +194,7 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.Repair {
 		let progress = new TextGenerator.Progress('fraction', false, 20, Number(subgroup_information_section_block_count));
 		for (let subgroup_index = 0; subgroup_index < subgroup_information_section_block_count; ++subgroup_index) {
 			progress.increase();
-			Console.message('i', `${progress}`, []);
+			Console.information(`${progress}`, []);
 			let view = new ByteListView(data, Number(subgroup_information_section_offset) + Number(subgroup_information_section_block_size) * subgroup_index);
 			let pool_view = new ByteListView(data, Number(subgroup_pool_information_section_offset) + Number(subgroup_pool_information_section_block_size) * subgroup_index);
 			// id
@@ -234,7 +234,7 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.Repair {
 			view.u32(0x84, BigInt(actual_packet_size));
 			if (actual_packet_size === 0 || Number(offset) + actual_packet_size > data.byteLength) {
 				// replace packet information for invalid packet
-				Console.message('w', los('support.popcap.resource_stream_bundle.repair:invalid_packet'), [
+				Console.warning(los('support.popcap.resource_stream_bundle.repair:invalid_packet'), [
 					`subgroup index=${subgroup_index} offset=${offset.toString(16)} size=${actual_packet_size.toString(16)}`,
 				]);
 				view.u32(0x80, BigInt(data.byteLength));
@@ -308,7 +308,7 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.Repair {
 				// test zlib ripe
 				if (((resource_data_section_store_mode & 0b10n) && !test_zlib_ripe(data, offset + generic_resource_data_section_offset, generic_resource_data_section_size, generic_resource_data_section_size_original)) ||
 					((resource_data_section_store_mode & 0b01n) && !test_zlib_ripe(data, offset + texture_resource_data_section_offset, texture_resource_data_section_size, texture_resource_data_section_size_original))) {
-					Console.message('w', los('support.popcap.resource_stream_bundle.repair:invalid_zlib'), [
+					Console.warning(los('support.popcap.resource_stream_bundle.repair:invalid_zlib'), [
 						`generic offset=${generic_resource_data_section_offset.toString(16)} size=${generic_resource_data_section_size.toString(16)}`,
 						`texture offset=${texture_resource_data_section_offset.toString(16)} size=${texture_resource_data_section_size.toString(16)}`,
 					]);

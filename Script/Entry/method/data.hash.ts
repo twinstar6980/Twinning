@@ -30,7 +30,7 @@ namespace TwinStar.Script.Entry.method.data.hash {
 						);
 					}
 					let result = CoreX.Tool.Data.Hash.MD5.hash_fs(target_file);
-					Console.message('s', los(`执行成功`), [`${result.toString(16)}`]);
+					Console.success(los(`执行成功`), [`${result.toString(16)}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

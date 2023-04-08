@@ -68,10 +68,10 @@ namespace TwinStar.Script.Executor {
 			selected_method = target_method;
 		} else {
 			if (command.input === null) {
-				Console.message('i', los('executor.command:no_input'), [
+				Console.information(los('executor.command:no_input'), [
 				]);
 				let input_value = Console.string(null, null);
-				Console.message('i', los('executor.command:should_disable_filter_or_not'), [
+				Console.information(los('executor.command:should_disable_filter_or_not'), [
 				]);
 				let input_disable_filter = Console.confirmation(null, null);
 				command.input = {
@@ -79,19 +79,21 @@ namespace TwinStar.Script.Executor {
 					disable_filter: input_disable_filter,
 				};
 			}
-			let method_state: Array<boolean> = [];
-			for (let i in method) {
-				method_state[i] = command.input.disable_filter || method[i].input_filter(command.input.value);
+			let valid_method: Array<[bigint, Method]> = [];
+			for (let index in method) {
+				if (command.input.disable_filter || method[index].input_filter(command.input.value)) {
+					valid_method.push([BigInt(index) + 1n, method[index]]);
+				}
 			}
-			if (!method_state.includes(true)) {
-				Console.message('w', los('executor.command:no_method_so_pass'), [
+			if (valid_method.length === 0) {
+				Console.warning(los('executor.command:no_method_so_pass'), [
 				]);
 				selected_method = null;
 			} else {
-				Console.message('i', los('executor.command:select_method'), [
+				Console.information(los('executor.command:select_method'), [
 					los('executor.command:input_null_to_pass'),
 				]);
-				selected_method = Console.option(method_state.map((e, i) => (e ? [method[i], `${method[i].name()}`] : null)), true, null);
+				selected_method = Console.option(valid_method.map((e) => ([e[1], `${e[0]}`, e[1].name()])), true, null);
 			}
 		}
 		if (selected_method !== null) {

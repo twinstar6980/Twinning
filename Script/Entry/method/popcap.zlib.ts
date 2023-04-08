@@ -50,7 +50,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 						);
 					}
 					CoreX.Tool.PopCap.ZLib.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', { variant_64: version_variant_64 });
-					Console.message('s', los(`执行成功`), [`${ripe_file}`]);
+					Console.success(los(`执行成功`), [`${ripe_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -98,7 +98,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 						);
 					}
 					CoreX.Tool.PopCap.ZLib.uncompress_fs(ripe_file, raw_file, 15n, { variant_64: version_variant_64 });
-					Console.message('s', los(`执行成功`), [`${raw_file}`]);
+					Console.success(los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -156,7 +156,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 							CoreX.Tool.PopCap.ZLib.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', { variant_64: version_variant_64 });
 						},
 					);
-					Console.message('s', los(`执行成功`), [`${ripe_file_directory}`]);
+					Console.success(los(`执行成功`), [`${ripe_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -212,7 +212,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 							CoreX.Tool.PopCap.ZLib.uncompress_fs(ripe_file, raw_file, 15n, { variant_64: version_variant_64 });
 						},
 					);
-					Console.message('s', los(`执行成功`), [`${raw_file_directory}`]);
+					Console.success(los(`执行成功`), [`${raw_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

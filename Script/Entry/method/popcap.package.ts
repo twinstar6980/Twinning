@@ -54,7 +54,7 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.Package.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Package.VersionNumberE), null, null, initial)),
 						);
 						version_compress_resource_data = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_compress_resource_data'),
@@ -74,7 +74,7 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.PopCap.Package.pack_fs(data_file, manifest_file, resource_directory, { number: version_number as any, compress_resource_data: version_compress_resource_data }, buffer_size);
-					Console.message('s', los(`执行成功`), [`${data_file}`]);
+					Console.success(los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -122,7 +122,7 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.Package.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Package.VersionNumberE), null, null, initial)),
 						);
 						version_compress_resource_data = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_compress_resource_data'),
@@ -135,7 +135,7 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.PopCap.Package.unpack_fs(data_file, manifest_file, resource_directory, { number: version_number as any, compress_resource_data: version_compress_resource_data });
-					Console.message('s', los(`执行成功`), [`${bundle_directory}`]);
+					Console.success(los(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -182,7 +182,7 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.Package.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Package.VersionNumberE), null, null, initial)),
 						);
 						version_compress_resource_data = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_compress_resource_data'),
@@ -194,7 +194,7 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 					}
 					let data = Support.PopCap.Package.PackAutomatic.pack(resource_directory, version_number as any, version_compress_resource_data);
 					CoreX.FileSystem.write_file(data_file, data[0].view().sub(Core.Size.value(0n), data[1]));
-					Console.message('s', los(`执行成功`), [`${data_file}`]);
+					Console.success(los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -234,7 +234,7 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 						);
 					}
 					CoreX.Tool.Data.Encryption.XOR.encrypt_fs(plain_file, cipher_file, [0xF7n]);
-					Console.message('s', los(`执行成功`), [`${cipher_file}`]);
+					Console.success(los(`执行成功`), [`${cipher_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

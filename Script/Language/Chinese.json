@@ -98,16 +98,15 @@
 	"子群：按子群树形结构导出，资源与子包均导出至subgroup/<子群名>目录": null,
 	"资源：所有资源导出至resource目录，所有子包导出至packet目录": null,
 	// Executable/JSShell
-	"executable.js_shell:interaction_start": "JS交互模式已开启",
+	"executable.js_shell:input_start": "JS交互模式已开启",
 	"executable.js_shell:input_description": "输入为空则完成一轮输入，若一轮输入为空则结束交互",
 	// Executable/ComputeWwiseShortID
 	"executable.compute_wwise_short_id:please_input_string": "请输入 Wwise ID 字符串",
 	// Executable/ExtractRSBFromPvZ2CHSAPKDirectory
-	"executable.extract_rsb_from_pvz2_cn_apk_directory:select_input_directory": "请选择需要提取的 APK 解压所得的目录",
-	"executable.extract_rsb_from_pvz2_cn_apk_directory:select_output_directory": "请选择输出目录",
+	"executable.extract_rsb_from_pvz2_cn_apk_directory:provide_input_directory": "请提供需要提取的 APK 解压所得的目录",
+	"executable.extract_rsb_from_pvz2_cn_apk_directory:provide_output_directory": "请提供输出目录",
 	"executable.extract_rsb_from_pvz2_cn_apk_directory:input_directory": "输入目录：{}",
 	"executable.extract_rsb_from_pvz2_cn_apk_directory:output_directory": "输出目录：{}",
-	"executable.extract_rsb_from_pvz2_cn_apk_directory:cancle": "已取消操作",
 	"executable.extract_rsb_from_pvz2_cn_apk_directory:extract_start": "提取开始",
 	"executable.extract_rsb_from_pvz2_cn_apk_directory:extract_finish": "提取完成",
 	// Entry/method/js

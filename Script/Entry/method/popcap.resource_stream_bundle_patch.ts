@@ -70,7 +70,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ResourceStreamBundlePatch.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ResourceStreamBundlePatch.VersionNumberE), null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -81,7 +81,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 						);
 					}
 					CoreX.Tool.PopCap.ResourceStreamBundlePatch.encode_fs(before_file, after_file, patch_file, use_raw_packet, { number: version_number as any }, buffer_size);
-					Console.message('s', los(`执行成功`), [`${patch_file}`]);
+					Console.success(los(`执行成功`), [`${patch_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -148,7 +148,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ResourceStreamBundlePatch.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ResourceStreamBundlePatch.VersionNumberE), null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -159,7 +159,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 						);
 					}
 					CoreX.Tool.PopCap.ResourceStreamBundlePatch.decode_fs(before_file, after_file, patch_file, use_raw_packet, { number: version_number as any }, buffer_size);
-					Console.message('s', los(`执行成功`), [`${after_file}`]);
+					Console.success(los(`执行成功`), [`${after_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

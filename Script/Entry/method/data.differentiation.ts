@@ -60,7 +60,7 @@ namespace TwinStar.Script.Entry.method.data.differentiation {
 						);
 					}
 					CoreX.Tool.Data.Differentiation.VCDiff.encode_fs(before_file, after_file, patch_file, false, buffer_size);
-					Console.message('s', los(`执行成功`), [`${patch_file}`]);
+					Console.success(los(`执行成功`), [`${patch_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -118,7 +118,7 @@ namespace TwinStar.Script.Entry.method.data.differentiation {
 						);
 					}
 					CoreX.Tool.Data.Differentiation.VCDiff.decode_fs(before_file, after_file, patch_file, 0x7FFFFFFFn, buffer_size);
-					Console.message('s', los(`执行成功`), [`${after_file}`]);
+					Console.success(los(`执行成功`), [`${after_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

@@ -37,7 +37,7 @@ namespace TwinStar.Script.Entry.method.pvz2.text_table {
 							a.destination_version,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Support.PvZ2.TextTable.VersionE.map((e) => ([e])), null, null, initial)),
+							(initial) => (Console.option(Console.option_string(Support.PvZ2.TextTable.VersionE), null, null, initial)),
 						);
 						destination_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'destination_file'),
@@ -48,7 +48,7 @@ namespace TwinStar.Script.Entry.method.pvz2.text_table {
 						);
 					}
 					Support.PvZ2.TextTable.convert_fs(source_file, destination_file, null, destination_version as any);
-					Console.message('s', los(`执行成功`), [`${destination_file}`]);
+					Console.success(los(`执行成功`), [`${destination_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

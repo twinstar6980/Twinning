@@ -35,11 +35,11 @@ namespace TwinStar.Script.Entry.method.pvz2.remote_android_helper {
 							a.action,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Support.PvZ2.RemoteAndroidHelper.ActionE.map((e) => ([e])), null, null, initial)),
+							(initial) => (Console.option(Console.option_string(Support.PvZ2.RemoteAndroidHelper.ActionE), null, null, initial)),
 						);
 					}
 					Support.PvZ2.RemoteAndroidHelper.execute(project_directory, action as any);
-					Console.message('s', los(`执行成功`), [`${project_directory}`]);
+					Console.success(los(`执行成功`), [`${project_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

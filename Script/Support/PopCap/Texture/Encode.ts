@@ -2,7 +2,7 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 
 	// ------------------------------------------------
 
-	export const BasicFormatE = [
+	const BasicFormatX = [
 		'a_8',
 		'rgb_332',
 		'rgb_565',
@@ -29,7 +29,7 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 		'rgba_pvrtc4',
 	] as const;
 
-	export const SpecialFormatE = [
+	const SpecialFormatX = [
 		'a_8_tiled',
 		'rgb_332_tiled',
 		'rgb_565_tiled',
@@ -49,20 +49,26 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 		'rgb_etc1_a_palette',
 	] as const;
 
-	export const FormatE = [
-		...BasicFormatE,
-		...SpecialFormatE,
+	const FormatX = [
+		...BasicFormatX,
+		...SpecialFormatX,
 	] as const;
 
-	export type BasicFormat = typeof BasicFormatE[number];
+	export type BasicFormat = typeof BasicFormatX[number];
 
-	export type SpecialFormat = typeof SpecialFormatE[number];
+	export const BasicFormatE = BasicFormatX as unknown as BasicFormat[];
 
-	export type Format = typeof FormatE[number];
+	export type SpecialFormat = typeof SpecialFormatX[number];
+
+	export const SpecialFormatE = SpecialFormatX as unknown as SpecialFormat[];
+
+	export type Format = typeof FormatX[number];
+
+	export const FormatE = FormatX as unknown as Format[];
 
 	// ------------------------------------------------
 
-	const k_basic_format: Record<BasicFormat, Array<CoreX.Tool.Image.Texture.CompositeFormat>> =  {
+	const k_basic_format: Record<BasicFormat, Array<CoreX.Tool.Image.Texture.CompositeFormat>> = {
 		a_8: [
 			'a_8',
 		],

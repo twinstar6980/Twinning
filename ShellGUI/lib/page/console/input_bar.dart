@@ -76,7 +76,7 @@ class BusyInputBarContent extends StatelessWidget {
   const BusyInputBarContent({
     super.key,
     required this.icon,
-    required this.child,
+    required this.children,
     required this.completer,
     required this.getCompleterValue,
   });
@@ -84,7 +84,7 @@ class BusyInputBarContent extends StatelessWidget {
   // ----------------
 
   final IconData           icon;
-  final Widget             child;
+  final List<Widget>       children;
   final Completer<dynamic> completer;
   final dynamic Function() getCompleterValue;
 
@@ -97,7 +97,9 @@ class BusyInputBarContent extends StatelessWidget {
       onSubmit: () {
         this.completer.complete(this.getCompleterValue());
       },
-      child: this.child,
+      child: Row(
+        children: this.children,
+      ),
     );
   }
 
@@ -129,7 +131,9 @@ class _PauseInputBarContentState extends State<PauseInputBarContent> {
       completer: this.widget.completer,
       getCompleterValue: () => null,
       icon: Icons.pause,
-      child: const Text('Pause ...'),
+      children: const [
+        Text('Pause ...'),
+      ],
     );
   }
 
@@ -165,49 +169,47 @@ class _ConfirmationInputBarContentState extends State<ConfirmationInputBarConten
       completer: this.widget.completer,
       getCompleterValue: () => this._value,
       icon: Icons.check_circle_outline_outlined,
-      child: Row(
-        children: [
-          ...[false].map((e) {
-            return Expanded(
-              child: (this._value ?? !e) == e
-                  ? FilledButton.tonal(
-                      onPressed: () {
-                        this._value = null;
-                        this.setState(() {});
-                      },
-                      child: Text(!e ? 'No' : 'Yes'),
-                    )
-                  : OutlinedButton(
-                      onPressed: () {
-                        this._value = e;
-                        this.setState(() {});
-                      },
-                      child: Text(!e ? 'No' : 'Yes'),
-                    ),
-            );
-          }),
-          const SizedBox(width: 8),
-          ...[true].map((e) {
-            return Expanded(
-              child: (this._value ?? !e) == e
-                  ? FilledButton.tonal(
-                      onPressed: () {
-                        this._value = null;
-                        this.setState(() {});
-                      },
-                      child: Text(!e ? 'No' : 'Yes'),
-                    )
-                  : OutlinedButton(
-                      onPressed: () {
-                        this._value = e;
-                        this.setState(() {});
-                      },
-                      child: Text(!e ? 'No' : 'Yes'),
-                    ),
-            );
-          }),
-        ],
-      ),
+      children: [
+        ...[false].map((e) {
+          return Expanded(
+            child: (this._value ?? !e) == e
+                ? FilledButton.tonal(
+                    onPressed: () {
+                      this._value = null;
+                      this.setState(() {});
+                    },
+                    child: Text(!e ? 'No' : 'Yes'),
+                  )
+                : OutlinedButton(
+                    onPressed: () {
+                      this._value = e;
+                      this.setState(() {});
+                    },
+                    child: Text(!e ? 'No' : 'Yes'),
+                  ),
+          );
+        }),
+        const SizedBox(width: 8),
+        ...[true].map((e) {
+          return Expanded(
+            child: (this._value ?? !e) == e
+                ? FilledButton.tonal(
+                    onPressed: () {
+                      this._value = null;
+                      this.setState(() {});
+                    },
+                    child: Text(!e ? 'No' : 'Yes'),
+                  )
+                : OutlinedButton(
+                    onPressed: () {
+                      this._value = e;
+                      this.setState(() {});
+                    },
+                    child: Text(!e ? 'No' : 'Yes'),
+                  ),
+          );
+        }),
+      ],
     );
   }
 
@@ -243,27 +245,31 @@ class _NumberInputBarContentState extends State<NumberInputBarContent> {
       completer: this.widget.completer,
       getCompleterValue: () => this._value,
       icon: Icons.numbers,
-      child: TextField(
-        keyboardType: const TextInputType.numberWithOptions(
-          signed: true,
-          decimal: true,
+      children: [
+        Expanded(
+          child: TextField(
+            keyboardType: const TextInputType.numberWithOptions(
+              signed: true,
+              decimal: true,
+            ),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'^([+-])?([\d]*)([.][\d]*)?$')),
+            ],
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              hintText: 'Number ...',
+            ),
+            onChanged: (value) {
+              try {
+                this._value = Floater.parse(value);
+              } catch (e) {
+                this._value = null;
+              }
+              this.setState(() {});
+            },
+          ),
         ),
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp(r'^([+-])?([\d]*)([.][\d]*)?$')),
-        ],
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-          hintText: 'Number ...',
-        ),
-        onChanged: (value) {
-          try {
-            this._value = Floater.parse(value);
-          } catch (e) {
-            this._value = null;
-          }
-          this.setState(() {});
-        },
-      ),
+      ],
     );
   }
 
@@ -299,27 +305,31 @@ class _IntegerInputBarContentState extends State<IntegerInputBarContent> {
       completer: this.widget.completer,
       getCompleterValue: () => this._value,
       icon: Icons.numbers,
-      child: TextField(
-        keyboardType: const TextInputType.numberWithOptions(
-          signed: true,
-          decimal: false,
+      children: [
+        Expanded(
+          child: TextField(
+            keyboardType: const TextInputType.numberWithOptions(
+              signed: true,
+              decimal: false,
+            ),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'^([+-])?([\d]*)$')),
+            ],
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              hintText: 'Integer ...',
+            ),
+            onChanged: (value) {
+              try {
+                this._value = Integer.parse(value);
+              } catch (e) {
+                this._value = null;
+              }
+              this.setState(() {});
+            },
+          ),
         ),
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp(r'^([+-])?([\d]*)$')),
-        ],
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-          hintText: 'Integer ...',
-        ),
-        onChanged: (value) {
-          try {
-            this._value = Integer.parse(value);
-          } catch (e) {
-            this._value = null;
-          }
-          this.setState(() {});
-        },
-      ),
+      ],
     );
   }
 
@@ -356,66 +366,64 @@ class _SizeInputBarContentState extends State<SizeInputBarContent> {
       completer: this.widget.completer,
       getCompleterValue: () => this._value == null ? null : '${this._value!}${['', 'b', 'k', 'm', 'g'][this._unit]}',
       icon: Icons.memory_outlined,
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              keyboardType: const TextInputType.numberWithOptions(
-                signed: false,
-                decimal: false,
-              ),
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^([\d]*)([.][\d]*)?$')),
-              ],
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Size ...',
-              ),
-              onChanged: (value) {
-                try {
-                  this._value = Floater.parse(value);
-                } catch (e) {
-                  this._value = null;
-                }
-                this.setState(() {});
-              },
+      children: [
+        Expanded(
+          child: TextField(
+            keyboardType: const TextInputType.numberWithOptions(
+              signed: false,
+              decimal: false,
             ),
-          ),
-          SizedBox(
-            width: 48,
-            child: DropdownButton<Integer>(
-              value: this._unit,
-              items: const [
-                DropdownMenuItem(
-                  value: 1,
-                  child: Center(child: Text('b')),
-                ),
-                DropdownMenuItem(
-                  value: 2,
-                  child: Center(child: Text('k')),
-                ),
-                DropdownMenuItem(
-                  value: 3,
-                  child: Center(child: Text('m')),
-                ),
-                DropdownMenuItem(
-                  value: 4,
-                  child: Center(child: Text('g')),
-                ),
-              ],
-              underline: Container(),
-              alignment: AlignmentDirectional.center,
-              isExpanded: true,
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              onChanged: (value) {
-                value!;
-                this._unit = value;
-                this.setState(() {});
-              },
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'^([\d]*)([.][\d]*)?$')),
+            ],
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              hintText: 'Size ...',
             ),
+            onChanged: (value) {
+              try {
+                this._value = Floater.parse(value);
+              } catch (e) {
+                this._value = null;
+              }
+              this.setState(() {});
+            },
           ),
-        ],
-      ),
+        ),
+        SizedBox(
+          width: 48,
+          child: DropdownButton<Integer>(
+            value: this._unit,
+            items: const [
+              DropdownMenuItem(
+                value: 1,
+                child: Center(child: Text('b')),
+              ),
+              DropdownMenuItem(
+                value: 2,
+                child: Center(child: Text('k')),
+              ),
+              DropdownMenuItem(
+                value: 3,
+                child: Center(child: Text('m')),
+              ),
+              DropdownMenuItem(
+                value: 4,
+                child: Center(child: Text('g')),
+              ),
+            ],
+            underline: Container(),
+            alignment: AlignmentDirectional.center,
+            isExpanded: true,
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            onChanged: (value) {
+              value!;
+              this._unit = value;
+              this.setState(() {});
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -451,16 +459,69 @@ class _StringInputBarContentState extends State<StringInputBarContent> {
       completer: this.widget.completer,
       getCompleterValue: () => this._value,
       icon: Icons.text_fields,
-      child: TextField(
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-          hintText: 'String ...',
+      children: [
+        Expanded(
+          child: TextField(
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              hintText: 'String ...',
+            ),
+            onChanged: (value) {
+              this._value = value.isEmpty ? null : value;
+              this.setState(() {});
+            },
+          ),
         ),
-        onChanged: (value) {
-          this._value = value.isEmpty ? null : value;
-          this.setState(() {});
-        },
-      ),
+      ],
+    );
+  }
+
+}
+
+// ----------------
+
+class PathInputBarContent extends StatefulWidget {
+
+  const PathInputBarContent({
+    super.key,
+    required this.completer,
+  });
+
+  @override
+  State<PathInputBarContent> createState() => _PathInputBarContentState();
+
+  // ----------------
+
+  final Completer<String?> completer;
+
+}
+
+class _PathInputBarContentState extends State<PathInputBarContent> {
+
+  String? _value;
+
+  // ----------------
+
+  @override
+  Widget build(BuildContext context) {
+    return BusyInputBarContent(
+      completer: this.widget.completer,
+      getCompleterValue: () => this._value,
+      icon: Icons.text_fields,
+      children: [
+        Expanded(
+          child: TextField(
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              hintText: 'Path ...',
+            ),
+            onChanged: (value) {
+              this._value = value.isEmpty ? null : value;
+              this.setState(() {});
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -509,19 +570,23 @@ class _OptionInputBarContentState extends State<OptionInputBarContent> {
       completer: this.widget.completer,
       getCompleterValue: () => this._value,
       icon: Icons.menu,
-      child: DropdownButton<Integer>(
-        value: this._value,
-        hint: const Text('Option ...'),
-        items: itemList,
-        underline: Container(),
-        isExpanded: true,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        onChanged: (value) {
-          value!;
-          this._value = value == -1 ? null : value;
-          this.setState(() {});
-        },
-      ),
+      children: [
+        Expanded(
+          child: DropdownButton<Integer>(
+            value: this._value,
+            hint: const Text('Option ...'),
+            items: itemList,
+            underline: Container(),
+            isExpanded: true,
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            onChanged: (value) {
+              value!;
+              this._value = value == -1 ? null : value;
+              this.setState(() {});
+            },
+          ),
+        ),
+      ],
     );
   }
 

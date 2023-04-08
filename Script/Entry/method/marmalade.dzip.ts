@@ -50,7 +50,7 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.Marmalade.DZip.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.Marmalade.DZip.VersionNumberE), null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -63,7 +63,7 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.Marmalade.DZip.pack_fs(data_file, manifest_file, resource_directory, { number: version_number as any }, buffer_size);
-					Console.message('s', los(`执行成功`), [`${data_file}`]);
+					Console.success(los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -108,13 +108,13 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.Marmalade.DZip.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.Marmalade.DZip.VersionNumberE), null, null, initial)),
 						);
 					}
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.Marmalade.DZip.unpack_fs(data_file, manifest_file, resource_directory, { number: version_number as any });
-					Console.message('s', los(`执行成功`), [`${bundle_directory}`]);
+					Console.success(los(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -158,12 +158,12 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.Marmalade.DZip.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.Marmalade.DZip.VersionNumberE), null, null, initial)),
 						);
 					}
 					let data = Support.Marmalade.DZip.PackAutomatic.pack(resource_directory, version_number as any);
 					CoreX.FileSystem.write_file(data_file, data[0].view().sub(Core.Size.value(0n), data[1]));
-					Console.message('s', los(`执行成功`), [`${data_file}`]);
+					Console.success(los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

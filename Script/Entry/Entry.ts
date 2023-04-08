@@ -54,17 +54,17 @@ namespace TwinStar.Script.Entry {
 			item_list = item_list.filter((e) => (filter[1]!.test(e)));
 		}
 		if (item_list.length === 0) {
-			Console.message('w', los('entry:batch_no_item'), [
+			Console.warning(los('entry:batch_no_item'), [
 			]);
 		} else {
 			let progress = new TextGenerator.Progress('fraction', false, 40, item_list.length);
 			for (let item of item_list) {
 				progress.increase();
-				Console.message('i', `${progress}`, [`${item}`]);
+				Console.information(`${progress}`, [`${item}`]);
 				try {
 					worker(item);
 				} catch (e: any) {
-					Console.message_error(e);
+					Console.error_of(e);
 					Console.pause();
 				}
 			}
@@ -86,8 +86,8 @@ namespace TwinStar.Script.Entry {
 			disable_array_wrap_line: boolean;
 		};
 		common_file_system_argument: {
-			fs_tactic_if_exist: string,
-		},
+			fs_tactic_if_exist: string;
+		};
 	};
 
 	export function _injector(
@@ -118,7 +118,7 @@ namespace TwinStar.Script.Entry {
 		timer.start();
 		let raw_command = [...argument];
 		if (raw_command.length === 0) {
-			Console.message('i', los('entry:input_command'), [
+			Console.information(los('entry:input_command'), [
 				los('entry:input_finish_if_null'),
 			]);
 			while (true) {
@@ -126,21 +126,18 @@ namespace TwinStar.Script.Entry {
 				if (input === null) {
 					break;
 				}
-				if (input.startsWith('"') && input.endsWith('"')) {
-					input = input.substring(1, input.length - 1);
-				}
-				raw_command.push(input);
+				raw_command.push(unquote(input));
 			}
 		}
 		let command = Executor.parse(raw_command);
 		let method = [...g_executor_method, ...g_executor_method_of_batch];
-		Console.message('i', los('entry:all_command_parse'), [
+		Console.information(los('entry:all_command_parse'), [
 			los('entry:all_command_count', command.length),
 		]);
 		let progress = new TextGenerator.Progress('fraction', true, 40, command.length);
 		for (let item of command) {
 			progress.increase();
-			Console.message('i', los('entry:all_command_finish', progress), [
+			Console.information(los('entry:all_command_finish', progress), [
 				`${item.input === null ? '?' : item.input.value}${item.method === null ? '' : ` | ${item.method}`}`,
 			]);
 			let current_exception = null;
@@ -153,12 +150,12 @@ namespace TwinStar.Script.Entry {
 			}
 			current_timer.stop();
 			if (current_exception !== null) {
-				Console.message_error(current_exception);
+				Console.error_of(current_exception);
 				Console.pause();
 			}
 		}
 		timer.stop();
-		Console.message('s', los('entry:all_command_finish'), [
+		Console.success(los('entry:all_command_finish'), [
 			los('entry:all_command_duration', (timer.duration() / 1000).toFixed(3)),
 		]);
 		if (configuration.pause_when_finish) {

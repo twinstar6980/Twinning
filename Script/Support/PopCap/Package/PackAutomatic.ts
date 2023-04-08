@@ -23,14 +23,14 @@ namespace TwinStar.Script.Support.PopCap.Package.PackAutomatic {
 			data_size_bound += (1 + 1 + resource.length + 4 + 4 + 8) + (Number(resource_size) + 16); // resource information + resource data
 		}
 		data_size_bound += 1; // list done flag
-		Console.message('i', los('support.popcap.package.pack_automatic:start'), [
+		Console.information(los('support.popcap.package.pack_automatic:start'), [
 			los('support.popcap.package.pack_automatic:total', resource_list.length),
 		]);
 		let data = Core.ByteArray.allocate(Core.Size.value(BigInt(data_size_bound)));
 		let stream = Core.ByteStreamView.watch(data.view());
 		let manifest = Core.Tool.PopCap.Package.Manifest.Package.json(Core.JSON.Value.value(manifest_js), version_c);
 		Core.Tool.PopCap.Package.Pack.process_package(stream, manifest, Core.Path.value(resource_directory), version_c);
-		Console.message('s', los('support.popcap.package.pack_automatic:finish'), [
+		Console.success(los('support.popcap.package.pack_automatic:finish'), [
 		]);
 		return [data, stream.position()];
 	}

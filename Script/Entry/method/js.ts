@@ -30,7 +30,7 @@ namespace TwinStar.Script.Entry.method.js {
 						);
 					}
 					let result = CoreX.Miscellaneous.evaluate_fs(script_file);
-					Console.message('s', los(`执行成功`), [`${result}`]);
+					Console.success(los(`执行成功`), [`${result}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

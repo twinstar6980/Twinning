@@ -3,7 +3,7 @@ namespace TwinStar.Script.Executable.JSShell {
 
 	export function execute(
 	): void {
-		Console.message('i', los('executable.js_shell:input_start'), [
+		Console.information(los('executable.js_shell:input_start'), [
 			los('executable.js_shell:input_description'),
 		]);
 		while (true) {
@@ -20,9 +20,9 @@ namespace TwinStar.Script.Executable.JSShell {
 			}
 			try {
 				let result = CoreX.Miscellaneous.evaluate(script);
-				Console.message('s', `> ${result}`, []);
+				Console.success(`> ${result}`, []);
 			} catch (e: any) {
-				Console.message_error(e);
+				Console.error_of(e);
 			}
 		}
 		return;

@@ -2,13 +2,15 @@ namespace TwinStar.Script.Support.PvZ2.TextTable {
 
 	// ------------------------------------------------
 
-	export const VersionE = [
+	const VersionX = [
 		'text',      // 文本形式，早期版本（6.?及之前）
 		'json_map',  // JSON键值对形式，中期版本
 		'json_list', // JSON数组形式，当前版本
 	] as const;
 
-	export type Version = typeof VersionE[number];
+	export type Version = typeof VersionX[number];
+
+	export const VersionE = VersionX as unknown as Version[];
 
 	// ------------------------------------------------
 

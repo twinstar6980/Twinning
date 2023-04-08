@@ -60,7 +60,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 						);
 					}
 					CoreX.Tool.PopCap.CryptData.encrypt_fs(plain_file, cipher_file, limit, key, {});
-					Console.message('s', los(`执行成功`), [`${cipher_file}`]);
+					Console.success(los(`执行成功`), [`${cipher_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -118,7 +118,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 						);
 					}
 					CoreX.Tool.PopCap.CryptData.decrypt_fs(cipher_file, plain_file, limit, key, {});
-					Console.message('s', los(`执行成功`), [`${plain_file}`]);
+					Console.success(los(`执行成功`), [`${plain_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -186,7 +186,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 							CoreX.Tool.PopCap.CryptData.encrypt_fs(plain_file, cipher_file, limit, key, {});
 						},
 					);
-					Console.message('s', los(`执行成功`), [`${cipher_file_directory}`]);
+					Console.success(los(`执行成功`), [`${cipher_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -252,7 +252,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 							CoreX.Tool.PopCap.CryptData.decrypt_fs(cipher_file, plain_file, limit, key, {});
 						},
 					);
-					Console.message('s', los(`执行成功`), [`${plain_file_directory}`]);
+					Console.success(los(`执行成功`), [`${plain_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

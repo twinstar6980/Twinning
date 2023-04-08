@@ -213,6 +213,20 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         await Future.delayed(const Duration(milliseconds: 100));
         break;
       }
+      case 'input_path': {
+        assert(argument.length == 1);
+        var completer = Completer<String?>();
+        this._inputBarContent = PathInputBarContent(
+          completer: completer,
+        );
+        this.setState(() {});
+        var input = await completer.future;
+        result.add(input == null ? '' : (input.toString()));
+        this._inputBarContent = const IdleInputBarContent();
+        this.setState(() {});
+        await Future.delayed(const Duration(milliseconds: 100));
+        break;
+      }
       case 'input_option': {
         assert(argument.length >= 1);
         var option = argument.sublist(1);

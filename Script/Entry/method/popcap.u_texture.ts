@@ -48,7 +48,7 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 							a.format,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(CoreX.Tool.PopCap.UTexture.FormatE.map((e) => ([e])), null, null, initial)),
+							(initial) => (Console.option(Console.option_string(CoreX.Tool.PopCap.UTexture.FormatE), null, null, initial)),
 						);
 						version_compress_texture_data = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_compress_texture_data'),
@@ -59,7 +59,7 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 						);
 					}
 					CoreX.Tool.PopCap.UTexture.encode_fs(data_file, image_file, format as any, { compress_texture_data: version_compress_texture_data });
-					Console.message('s', los(`执行成功`), [`${data_file}`]);
+					Console.success(los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -108,7 +108,7 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 						);
 					}
 					CoreX.Tool.PopCap.UTexture.decode_fs(data_file, image_file, { compress_texture_data: version_compress_texture_data });
-					Console.message('s', los(`执行成功`), [`${image_file}`]);
+					Console.success(los(`执行成功`), [`${image_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -156,7 +156,7 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 							a.format,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(CoreX.Tool.PopCap.UTexture.FormatE.map((e) => ([e])), null, null, initial)),
+							(initial) => (Console.option(Console.option_string(CoreX.Tool.PopCap.UTexture.FormatE), null, null, initial)),
 						);
 						version_compress_texture_data = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_compress_texture_data'),
@@ -175,7 +175,7 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 							CoreX.Tool.PopCap.UTexture.encode_fs(data_file, image_file, format as any, { compress_texture_data: version_compress_texture_data });
 						},
 					);
-					Console.message('s', los(`执行成功`), [`${data_file_directory}`]);
+					Console.success(los(`执行成功`), [`${data_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -232,7 +232,7 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 							CoreX.Tool.PopCap.UTexture.decode_fs(data_file, image_file, { compress_texture_data: version_compress_texture_data });
 						},
 					);
-					Console.message('s', los(`执行成功`), [`${image_file_directory}`]);
+					Console.success(los(`执行成功`), [`${image_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

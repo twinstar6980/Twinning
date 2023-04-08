@@ -49,7 +49,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_group {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ResourceStreamGroup.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ResourceStreamGroup.VersionNumberE), null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -62,7 +62,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_group {
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.PopCap.ResourceStreamGroup.pack_fs(data_file, manifest_file, resource_directory, { number: version_number as any }, buffer_size);
-					Console.message('s', los(`执行成功`), [`${data_file}`]);
+					Console.success(los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -107,13 +107,13 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_group {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ResourceStreamGroup.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ResourceStreamGroup.VersionNumberE), null, null, initial)),
 						);
 					}
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.PopCap.ResourceStreamGroup.unpack_fs(data_file, manifest_file, resource_directory, { number: version_number as any });
-					Console.message('s', los(`执行成功`), [`${bundle_directory}`]);
+					Console.success(los(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

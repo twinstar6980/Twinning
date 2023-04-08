@@ -58,7 +58,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE), null, null, initial)),
 						);
 						version_native_string_encoding_use_utf8 = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_native_string_encoding_use_utf8'),
@@ -76,7 +76,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 						);
 					}
 					CoreX.Tool.PopCap.ReflectionObjectNotation.encode_fs(data_file, value_file, true, true, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, buffer_size);
-					Console.message('s', los(`执行成功`), [`${data_file}`]);
+					Console.success(los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -124,7 +124,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE), null, null, initial)),
 						);
 						version_native_string_encoding_use_utf8 = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_native_string_encoding_use_utf8'),
@@ -135,7 +135,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 						);
 					}
 					CoreX.Tool.PopCap.ReflectionObjectNotation.decode_fs(data_file, value_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 });
-					Console.message('s', los(`执行成功`), [`${value_file}`]);
+					Console.success(los(`执行成功`), [`${value_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -184,7 +184,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 						);
 					}
 					CoreX.Tool.PopCap.ReflectionObjectNotation.encrypt_fs(plain_file, cipher_file, key);
-					Console.message('s', los(`执行成功`), [`${cipher_file}`]);
+					Console.success(los(`执行成功`), [`${cipher_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -232,7 +232,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 						);
 					}
 					CoreX.Tool.PopCap.ReflectionObjectNotation.decrypt_fs(cipher_file, plain_file, key);
-					Console.message('s', los(`执行成功`), [`${plain_file}`]);
+					Console.success(los(`执行成功`), [`${plain_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -282,7 +282,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE), null, null, initial)),
 						);
 						version_native_string_encoding_use_utf8 = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_native_string_encoding_use_utf8'),
@@ -307,7 +307,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 						);
 					}
 					CoreX.Tool.PopCap.ReflectionObjectNotation.encode_then_encrypt_fs(data_file, value_file, true, true, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key, buffer_size);
-					Console.message('s', los(`执行成功`), [`${data_file}`]);
+					Console.success(los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -358,7 +358,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE), null, null, initial)),
 						);
 						version_native_string_encoding_use_utf8 = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_native_string_encoding_use_utf8'),
@@ -376,7 +376,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 						);
 					}
 					CoreX.Tool.PopCap.ReflectionObjectNotation.decrypt_then_decode_fs(data_file, value_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key);
-					Console.message('s', los(`执行成功`), [`${value_file}`]);
+					Console.success(los(`执行成功`), [`${value_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -424,7 +424,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE), null, null, initial)),
 						);
 						version_native_string_encoding_use_utf8 = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_native_string_encoding_use_utf8'),
@@ -435,7 +435,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 						);
 					}
 					Support.PopCap.ReflectionObjectNotation.DecodeLenient.decode_whole_fs(data_file, value_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 });
-					Console.message('s', los(`执行成功`), [`${value_file}`]);
+					Console.success(los(`执行成功`), [`${value_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -486,7 +486,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE), null, null, initial)),
 						);
 						version_native_string_encoding_use_utf8 = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_native_string_encoding_use_utf8'),
@@ -513,7 +513,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							CoreX.Tool.PopCap.ReflectionObjectNotation.encode_fs(data_file, value_file, true, true, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, data_buffer.view());
 						},
 					);
-					Console.message('s', los(`执行成功`), [`${data_file_directory}`]);
+					Console.success(los(`执行成功`), [`${data_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -561,7 +561,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE), null, null, initial)),
 						);
 						version_native_string_encoding_use_utf8 = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_native_string_encoding_use_utf8'),
@@ -580,7 +580,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							CoreX.Tool.PopCap.ReflectionObjectNotation.decode_fs(data_file, value_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 });
 						},
 					);
-					Console.message('s', los(`执行成功`), [`${value_file_directory}`]);
+					Console.success(los(`执行成功`), [`${value_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -637,7 +637,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							CoreX.Tool.PopCap.ReflectionObjectNotation.encrypt_fs(plain_file, cipher_file, key);
 						},
 					);
-					Console.message('s', los(`执行成功`), [`${cipher_file_directory}`]);
+					Console.success(los(`执行成功`), [`${cipher_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -693,7 +693,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							CoreX.Tool.PopCap.ReflectionObjectNotation.decrypt_fs(cipher_file, plain_file, key);
 						},
 					);
-					Console.message('s', los(`执行成功`), [`${plain_file_directory}`]);
+					Console.success(los(`执行成功`), [`${plain_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -743,7 +743,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE), null, null, initial)),
 						);
 						version_native_string_encoding_use_utf8 = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_native_string_encoding_use_utf8'),
@@ -777,7 +777,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							CoreX.Tool.PopCap.ReflectionObjectNotation.encode_then_encrypt_fs(data_file, value_file, true, true, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key, data_buffer.view());
 						},
 					);
-					Console.message('s', los(`执行成功`), [`${data_file_directory}`]);
+					Console.success(los(`执行成功`), [`${data_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -828,7 +828,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.generate_discretized_integer_option(CoreX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE), null, null, initial)),
 						);
 						version_native_string_encoding_use_utf8 = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_native_string_encoding_use_utf8'),
@@ -854,7 +854,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							CoreX.Tool.PopCap.ReflectionObjectNotation.decrypt_then_decode_fs(data_file, value_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key);
 						},
 					);
-					Console.message('s', los(`执行成功`), [`${value_file_directory}`]);
+					Console.success(los(`执行成功`), [`${value_file_directory}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,

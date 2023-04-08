@@ -59,7 +59,7 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 						);
 					}
 					CoreX.Tool.Image.Transformation.flip_fs(source_file, destination_file, horizontal, vertical);
-					Console.message('s', los(`执行成功`), [`${destination_file}`]);
+					Console.success(los(`执行成功`), [`${destination_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -117,7 +117,7 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 						);
 					}
 					CoreX.Tool.Image.Transformation.scale_fs(source_file, destination_file, [width, height]);
-					Console.message('s', los(`执行成功`), [`${destination_file}`]);
+					Console.success(los(`执行成功`), [`${destination_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
@@ -166,7 +166,7 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 						);
 					}
 					CoreX.Tool.Image.Transformation.scale_rate_fs(source_file, destination_file, size_rate);
-					Console.message('s', los(`执行成功`), [`${destination_file}`]);
+					Console.success(los(`执行成功`), [`${destination_file}`]);
 				},
 				default_argument: {
 					...Entry.k_cfsa,
