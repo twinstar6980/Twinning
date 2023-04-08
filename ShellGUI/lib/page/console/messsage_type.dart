@@ -6,29 +6,13 @@ import 'package:flutter/material.dart';
 // ----------------
 
 enum MessageType {
-  verbose,
+  verbosity,
   information,
   warning,
   error,
   success,
   input,
-}
-
-extension MessageTypeExtension on MessageType {
-
-  Color
-  color(
-    ThemeData theme,
-  ) {
-    return [
-      theme.colorScheme.onSurface,
-      Colors.blue,
-      Colors.yellow,
-      Colors.red,
-      Colors.green,
-      Colors.purple,
-    ][index];
-  }
+  ;
 
   static
   MessageType
@@ -38,7 +22,7 @@ extension MessageTypeExtension on MessageType {
     late MessageType value;
     switch (name) {
       case 'v': {
-        value = MessageType.verbose;
+        value = MessageType.verbosity;
         break;
       }
       case 'i': {
@@ -66,6 +50,20 @@ extension MessageTypeExtension on MessageType {
       }
     }
     return value;
+  }
+
+  Color
+  color(
+    ThemeData theme,
+  ) {
+    return [
+      theme.colorScheme.onSurface,
+      Colors.blue,
+      Colors.yellow,
+      Colors.red,
+      Colors.green,
+      Colors.purple,
+    ][index];
   }
 
 }

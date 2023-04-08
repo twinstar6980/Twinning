@@ -17,7 +17,7 @@ namespace TwinStar.Script.Entry.method.js {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					script_file: Executor.RequireArgument<string>;
 				}) {
 					let script_file: string;
@@ -33,7 +33,7 @@ namespace TwinStar.Script.Entry.method.js {
 					Console.success(los(`执行成功`), [`${result}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					script_file: undefined!,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.js)$/i]]),

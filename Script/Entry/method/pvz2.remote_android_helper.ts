@@ -17,7 +17,7 @@ namespace TwinStar.Script.Entry.method.pvz2.remote_android_helper {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					project_directory: Executor.RequireArgument<string>;
 					action: Executor.RequestArgument<string, false>;
 				}) {
@@ -42,7 +42,7 @@ namespace TwinStar.Script.Entry.method.pvz2.remote_android_helper {
 					Console.success(los(`执行成功`), [`${project_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					project_directory: undefined!,
 					action: '?input',
 				},

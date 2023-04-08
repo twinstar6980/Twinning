@@ -18,7 +18,7 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					image_file: Executor.RequireArgument<string>;
 					data_file: Executor.RequestArgument<string, true>;
 					format: Executor.RequestArgument<string, false>;
@@ -38,7 +38,7 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 							a.data_file,
 							(value) => (value),
 							() => (image_file.replace(/((\.png))?$/i, '.ptx')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						format = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'format'),
@@ -52,7 +52,7 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 					Console.success(los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					image_file: undefined!,
 					data_file: '?default',
 					format: '?input',
@@ -66,7 +66,7 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					data_file: Executor.RequireArgument<string>;
 					image_file: Executor.RequestArgument<string, true>;
 					format: Executor.RequestArgument<string, false>;
@@ -90,7 +90,7 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 							a.image_file,
 							(value) => (value),
 							() => (data_file.replace(/((\.ptx))?$/i, '.png')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						format = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'format'),
@@ -118,7 +118,7 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 					Console.success(los(`执行成功`), [`${image_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					data_file: undefined!,
 					image_file: '?default',
 					format: '?input',

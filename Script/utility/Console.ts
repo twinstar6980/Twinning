@@ -70,8 +70,7 @@ namespace TwinStar.Script.Console {
 	function basic_input_with_checker<Value>(
 		inputer: () => string | null,
 		echoer: (value: string | null) => void,
-		filter: Check.CheckerX<string>,
-		converter: (value: string) => Value,
+		converter: (value: string) => string | [Value],
 		nullable: boolean | null,
 		checker: Check.CheckerX<Value> | null,
 		initial: Value | null | undefined,
@@ -98,9 +97,11 @@ namespace TwinStar.Script.Console {
 			if (input === null) {
 				state = nullable ? null : los('console:not_nullable');
 			} else {
-				state = filter(input);
-				if (state === null) {
-					result = converter(input);
+				let convert_result = converter(input);
+				if (typeof convert_result === 'string') {
+					state = convert_result;
+				} else {
+					result = convert_result[0];
 					state = checker === null ? null : checker(result);
 				}
 			}
@@ -127,8 +128,7 @@ namespace TwinStar.Script.Console {
 	function cli_basic_input<Value>(
 		leading: string,
 		messager: () => void,
-		filter: Check.CheckerX<string>,
-		converter: (value: string) => Value,
+		converter: (value: string) => string | [Value],
 		nullable: boolean | null,
 		checker: Check.CheckerX<Value> | null,
 		initial: Value | null | undefined = undefined,
@@ -149,7 +149,6 @@ namespace TwinStar.Script.Console {
 			(value) => {
 				return;
 			},
-			filter,
 			converter,
 			nullable,
 			checker,
@@ -172,7 +171,7 @@ namespace TwinStar.Script.Console {
 		inputer: () => string | null,
 		leading: string,
 		echoer: (value: string) => string,
-		converter: (value: string) => Value,
+		converter: (value: string) => string | [Value],
 		nullable: boolean | null,
 		checker: Check.CheckerX<Value> | null,
 		initial: Value | null | undefined = undefined,
@@ -182,9 +181,6 @@ namespace TwinStar.Script.Console {
 			(value) => {
 				gui_basic_output('t', `${leading} ${value === null ? '' : echoer(value)}`, []);
 				return;
-			},
-			(value) => {
-				return null;
 			},
 			converter,
 			nullable,
@@ -302,23 +298,20 @@ namespace TwinStar.Script.Console {
 		checker: Check.CheckerX<boolean> | null,
 		initial?: boolean | null,
 	): boolean | null {
-		let result: boolean | null;
+		let result: boolean | null = undefined as any;
 		let leading = 'C';
-		let converter = (value: string) => {
-			return parse_confirmation_string(value);
+		let converter = (value: string): string | [boolean] => {
+			let regexp_check_result = Check.enumeration_checker_x(['n', 'y'])(value);
+			if (regexp_check_result !== null) {
+				return los('console:confirmation_format_error');
+			}
+			return [parse_confirmation_string(value)];
 		};
 		if (Shell.is_cli) {
 			result = cli_basic_input(
 				leading,
 				() => {
 					return;
-				},
-				(value) => {
-					let regexp_check_result = Check.enumeration_checker_x(['n', 'y'])(value);
-					if (regexp_check_result !== null) {
-						return los('console:confirmation_format_error');
-					}
-					return null;
 				},
 				converter,
 				nullable,
@@ -341,7 +334,7 @@ namespace TwinStar.Script.Console {
 				initial,
 			);
 		}
-		return result!;
+		return result;
 	}
 
 	// ------------------------------------------------
@@ -363,23 +356,20 @@ namespace TwinStar.Script.Console {
 		checker: Check.CheckerX<number> | null,
 		initial?: number | null,
 	): number | null {
-		let result: number | null;
+		let result: number | null = undefined as any;
 		let leading = 'N';
-		let converter = (value: string) => {
-			return Number(value);
+		let converter = (value: string): string | [number] => {
+			let regexp_check_result = Check.regexp_checker_x(/^([+-])?([\d]+)([.][\d]+)?$/)(value);
+			if (regexp_check_result !== null) {
+				return los('console:number_format_error', regexp_check_result);
+			}
+			return [Number(value)];
 		};
 		if (Shell.is_cli) {
 			result = cli_basic_input(
 				leading,
 				() => {
 					return;
-				},
-				(value) => {
-					let regexp_check_result = Check.regexp_checker_x(/^([+-])?([\d]+)([.][\d]+)?$/)(value);
-					if (regexp_check_result !== null) {
-						return los('console:number_format_error', regexp_check_result);
-					}
-					return null;
 				},
 				converter,
 				nullable,
@@ -402,7 +392,7 @@ namespace TwinStar.Script.Console {
 				initial,
 			);
 		}
-		return result!;
+		return result;
 	}
 
 	// ------------------------------------------------
@@ -424,23 +414,20 @@ namespace TwinStar.Script.Console {
 		checker: Check.CheckerX<bigint> | null,
 		initial?: bigint | null,
 	): bigint | null {
-		let result: bigint | null;
+		let result: bigint | null = undefined as any;
 		let leading = 'I';
-		let converter = (value: string) => {
-			return BigInt(value);
+		let converter = (value: string): string | [bigint] => {
+			let regexp_check_result = Check.regexp_checker_x(/^([+-])?([\d]+)$/)(value);
+			if (regexp_check_result !== null) {
+				return los('console:integer_format_error', regexp_check_result);
+			}
+			return [BigInt(value)];
 		};
 		if (Shell.is_cli) {
 			result = cli_basic_input(
 				leading,
 				() => {
 					return;
-				},
-				(value) => {
-					let regexp_check_result = Check.regexp_checker_x(/^([+-])?([\d]+)$/)(value);
-					if (regexp_check_result !== null) {
-						return los('console:integer_format_error', regexp_check_result);
-					}
-					return null;
 				},
 				converter,
 				nullable,
@@ -463,7 +450,7 @@ namespace TwinStar.Script.Console {
 				initial,
 			);
 		}
-		return result!;
+		return result;
 	}
 
 	// ------------------------------------------------
@@ -485,23 +472,20 @@ namespace TwinStar.Script.Console {
 		checker: Check.CheckerX<bigint> | null,
 		initial?: bigint | null,
 	): bigint | null {
-		let result: bigint | null;
+		let result: bigint | null = undefined as any;
 		let leading = 'Z';
-		let converter = (value: string) => {
-			return parse_size_string(value);
+		let converter = (value: string): string | [bigint] => {
+			let regexp_check_result = Check.regexp_checker_x(/^([\d]+)([.][\d]+)?([bkmg])$/)(value);
+			if (regexp_check_result !== null) {
+				return los('console:size_format_error', regexp_check_result);
+			}
+			return [parse_size_string(value)];
 		};
 		if (Shell.is_cli) {
 			result = cli_basic_input(
 				leading,
 				() => {
 					return;
-				},
-				(value) => {
-					let regexp_check_result = Check.regexp_checker_x(/^([\d]+)([.][\d]+)?([bkmg])$/)(value);
-					if (regexp_check_result !== null) {
-						return los('console:size_format_error', regexp_check_result);
-					}
-					return null;
 				},
 				converter,
 				nullable,
@@ -524,7 +508,7 @@ namespace TwinStar.Script.Console {
 				initial,
 			);
 		}
-		return result!;
+		return result;
 	}
 
 	// ------------------------------------------------
@@ -546,19 +530,16 @@ namespace TwinStar.Script.Console {
 		checker: Check.CheckerX<string> | null,
 		initial?: string | null,
 	): string | null {
-		let result: string | null;
+		let result: string | null = undefined as any;
 		let leading = 'S';
-		let converter = (value: string) => {
-			return value;
+		let converter = (value: string): string | [string] => {
+			return [value];
 		};
 		if (Shell.is_cli) {
 			result = cli_basic_input(
 				leading,
 				() => {
 					return;
-				},
-				(value) => {
-					return null;
 				},
 				converter,
 				nullable,
@@ -581,14 +562,14 @@ namespace TwinStar.Script.Console {
 				initial,
 			);
 		}
-		return result!;
+		return result;
 	}
 
 	// ------------------------------------------------
 
 	export function path(
 		type: 'any' | 'file' | 'directory',
-		rule: [null] | [false, 'none' | 'trash' | 'delete' | 'override'] | [true],
+		rule: ['any'] | ['in'] | ['out', 'none' | 'trash' | 'delete' | 'override'],
 		nullable: null,
 		checker: Check.CheckerX<string> | null,
 		initial?: string,
@@ -596,7 +577,7 @@ namespace TwinStar.Script.Console {
 
 	export function path(
 		type: 'any' | 'file' | 'directory',
-		rule: [null] | [false, 'none' | 'trash' | 'delete' | 'override'] | [true],
+		rule: ['any'] | ['in'] | ['out', 'none' | 'trash' | 'delete' | 'override'],
 		nullable: boolean,
 		checker: Check.CheckerX<string> | null,
 		initial?: string | null,
@@ -604,91 +585,108 @@ namespace TwinStar.Script.Console {
 
 	export function path(
 		type: 'any' | 'file' | 'directory',
-		rule: [null] | [false, 'none' | 'trash' | 'delete' | 'override'] | [true],
+		rule: ['any'] | ['in'] | ['out', 'none' | 'trash' | 'delete' | 'override'],
 		nullable: boolean | null,
 		checker: Check.CheckerX<string> | null,
 		initial?: string | null,
 	): string | null {
-		let result: string | null;
+		let result: string | null = undefined as any;
 		let leading = 'P';
 		let state_data = {
 			last_value: null as string | null,
-			tactic_if_exist: 'none' as 'none' | 'trash' | 'delete' | 'override',
+			tactic_if_out_exist: 'none' as 'none' | 'trash' | 'delete' | 'override',
 		};
-		if (rule[0] === false) {
-			state_data.tactic_if_exist = rule[1];
+		if (rule[0] === 'out') {
+			state_data.tactic_if_out_exist = rule[1];
 		}
-		let converter = (value: string) => {
-			if (value.length > 0 && value[0] === ':') {
-				assert_test(value.length === 2, `command name is too long`);
-				switch (value[1]) {
-					case 't': {
-						assert_test(rule[0] === false, `trash command precondition failed`);
-						assert_test(state_data.last_value !== null, `last_value is undefined`);
-						state_data.tactic_if_exist = 'trash';
-						value = state_data.last_value;
-						break;
-					}
-					case 'd': {
-						assert_test(rule[0] === false, `delete command precondition failed`);
-						assert_test(state_data.last_value !== null, `last_value is undefined`);
-						state_data.tactic_if_exist = 'delete';
-						value = state_data.last_value;
+		let converter = (value: string): string | [string] => {
+			let result: string;
+			if (value.length >= 1 && value[0] === ':') {
+				switch (value.substring(1)) {
+					case 'p': {
+						if (rule[0] !== 'in') {
+							return los('console:path_command_need_in');
+						}
+						let pick_result = Console.pick_path(type);
+						if (pick_result === null) {
+							return los('console:path_command_pick_cancel');
+						}
+						result = pick_result;
+						cli_basic_output(`${result}`, false, 1, true);
 						break;
 					}
 					case 'o': {
-						assert_test(rule[0] === false, `override command precondition failed`);
-						assert_test(state_data.last_value !== null, `last_value is undefined`);
-						state_data.tactic_if_exist = 'override';
-						value = state_data.last_value;
+						if (rule[0] !== 'out') {
+							return los('console:path_command_need_out');
+						}
+						if (state_data.last_value === null) {
+							return los('console:path_command_need_last_value');
+						}
+						state_data.tactic_if_out_exist = 'override';
+						result = state_data.last_value;
 						break;
 					}
-					case 's': {
-						assert_test(rule[0] === true, `select command precondition failed`);
-						assert_test(ShellExtension.select_path_avaliable(), `select command not avaliable`);
-						let pick_folder: boolean;
-						switch (type) {
-							case 'any': {
-								information(los('console:path_select_file_or_directory'), []);
-								pick_folder = confirmation(null, null);
-								break;
-							}
-							case 'file': {
-								pick_folder = false;
-								break;
-							}
-							case 'directory': {
-								pick_folder = true;
-								break;
-							}
+					case 'd': {
+						if (rule[0] !== 'out') {
+							return los('console:path_command_need_out');
 						}
-						let selected = ShellExtension.select_path(pick_folder, false, '/');
-						if (selected.length === 0) {
-							value = '';
-						} else {
-							value = selected[0];
+						if (state_data.last_value === null) {
+							return los('console:path_command_need_last_value');
 						}
+						state_data.tactic_if_out_exist = 'delete';
+						result = state_data.last_value;
+						break;
+					}
+					case 't': {
+						if (rule[0] !== 'out') {
+							return los('console:path_command_need_out');
+						}
+						if (state_data.last_value === null) {
+							return los('console:path_command_need_last_value');
+						}
+						state_data.tactic_if_out_exist = 'trash';
+						result = state_data.last_value;
 						break;
 					}
 					default: {
-						assert_test(false, `command name is invalid`);
+						return los('console:path_command_invalid');
 					}
 				}
 			} else {
-				value = unquote(value);
+				result = unquote(value);
 			}
-			return value;
+			return [result];
 		};
 		let common_checker = (value: string) => {
 			state_data.last_value = value;
-			if (rule[0] === null) {
+			if (rule[0] === 'any') {
 				result = null;
 			}
-			if (rule[0] === false) {
+			if (rule[0] === 'in') {
+				if (!CoreX.FileSystem.exist(value)) {
+					result = los('console:path_not_exist');
+				} else {
+					switch (type) {
+						case 'any': {
+							result = null;
+							break;
+						}
+						case 'file': {
+							result = CoreX.FileSystem.exist_file(value) ? null : los('console:path_is_exist_not_file');
+							break;
+						}
+						case 'directory': {
+							result = CoreX.FileSystem.exist_directory(value) ? null : los('console:path_is_exist_not_directory');
+							break;
+						}
+					}
+				}
+			}
+			if (rule[0] === 'out') {
 				if (!CoreX.FileSystem.exist(value)) {
 					result = null;
 				} else {
-					switch (state_data.tactic_if_exist) {
+					switch (state_data.tactic_if_out_exist) {
 						case 'none': {
 							result = los('console:path_is_exist');
 							break;
@@ -713,26 +711,6 @@ namespace TwinStar.Script.Console {
 					}
 				}
 			}
-			if (rule[0] === true) {
-				if (!CoreX.FileSystem.exist(value)) {
-					result = los('console:path_not_exist');
-				} else {
-					switch (type) {
-						case 'any': {
-							result = null;
-							break;
-						}
-						case 'file': {
-							result = CoreX.FileSystem.exist_file(value) ? null : los('console:path_is_exist_not_file');
-							break;
-						}
-						case 'directory': {
-							result = CoreX.FileSystem.exist_directory(value) ? null : los('console:path_is_exist_not_directory');
-							break;
-						}
-					}
-				}
-			}
 			if (result !== null) {
 				return result;
 			}
@@ -744,9 +722,6 @@ namespace TwinStar.Script.Console {
 				() => {
 					return;
 				},
-				(value) => {
-					return null;
-				},
 				converter,
 				nullable,
 				common_checker,
@@ -756,7 +731,7 @@ namespace TwinStar.Script.Console {
 		if (Shell.is_gui) {
 			result = gui_basic_input(
 				() => {
-					return Shell.gui_input_path();
+					return Shell.gui_input_path(type, rule[0] === 'any' ? rule[0] : `${rule[0]}put`);
 				},
 				leading,
 				(value) => {
@@ -768,7 +743,7 @@ namespace TwinStar.Script.Console {
 				initial,
 			);
 		}
-		return result!;
+		return result;
 	}
 
 	// ------------------------------------------------
@@ -793,7 +768,7 @@ namespace TwinStar.Script.Console {
 		checker: Check.CheckerX<Value> | null,
 		initial?: Value | null,
 	): Value | null {
-		let result: Value | null;
+		let result: Value | null = undefined as any;
 		let leading = 'O';
 		let maximum_key_length = Math.max(...option.map((e) => (e[1].length)));
 		let message = option.map((e, i) => (`${make_prefix_padded_string(e[1], ' ', maximum_key_length)}. ${e[2]}`));
@@ -811,11 +786,7 @@ namespace TwinStar.Script.Console {
 					if (item === undefined) {
 						return los('console:option_invalid');
 					}
-					return null;
-				},
-				(value) => {
-					let item = option.find((e) => (e[1] === value))!;
-					return item[0];
+					return [item[0]];
 				},
 				nullable,
 				checker,
@@ -833,14 +804,14 @@ namespace TwinStar.Script.Console {
 				},
 				(value) => {
 					let item = option[Number(value) - 1];
-					return item[0];
+					return [item[0]];
 				},
 				nullable,
 				checker,
 				initial,
 			);
 		}
-		return result!;
+		return result;
 	}
 
 	// ------------------------------------------------
@@ -873,6 +844,41 @@ namespace TwinStar.Script.Console {
 			destination.push([value[index], `${index + 1}`, `${value[index]}`]);
 		}
 		return destination;
+	}
+
+	// ------------------------------------------------
+
+	export function pick_path(
+		type: 'any' | 'file' | 'directory',
+	): string | null {
+		let result: string | null = undefined as any;
+		let actual_type: 'file' | 'directory';
+		if (type !== 'any') {
+			actual_type = type;
+		} else {
+			information(los('console:pick_path_type'), []);
+			actual_type = option(option_string(['file', 'directory']), null, null);
+		}
+		if (Shell.is_cli) {
+			result = Shell.cli_pick_path(actual_type);
+		}
+		if (Shell.is_gui) {
+			result = Shell.gui_pick_path(actual_type);
+		}
+		return result;
+	}
+
+	export function push_notification(
+		title: string,
+		description: string,
+	): void {
+		if (Shell.is_cli && (Shell.is_windows || Shell.is_linux || Shell.is_macintosh)) {
+			Shell.cli_push_notification(title, description);
+		}
+		if (Shell.is_gui && (Shell.is_windows || Shell.is_linux || Shell.is_macintosh || Shell.is_android)) {
+			Shell.gui_push_notification(title, description);
+		}
+		return;
 	}
 
 	// ------------------------------------------------

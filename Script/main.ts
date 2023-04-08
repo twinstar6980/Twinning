@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 58;
+	export const k_version = 59;
 
 	// ------------------------------------------------
 
@@ -118,11 +118,6 @@ namespace TwinStar.Script {
 		export function temporary(
 		): string {
 			return of(`~/temporary`);
-		}
-
-		export function shell_extension(
-		): string {
-			return of(`~/shell_extension`);
 		}
 
 		// ------------------------------------------------
@@ -287,7 +282,6 @@ TwinStar.Script.Main.g_module_manifest = {
 		`utility/ByteListView`,
 		`utility/CoreX`,
 		`utility/Shell`,
-		`utility/ShellExtension`,
 		`utility/ThreadManager`,
 		`utility/ProcessHelper`,
 		`utility/Console`,

@@ -18,7 +18,7 @@ namespace TwinStar.Script.Entry.method.data.encoding {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					raw_file: Executor.RequireArgument<string>;
 					ripe_file: Executor.RequestArgument<string, true>;
 				}) {
@@ -36,14 +36,14 @@ namespace TwinStar.Script.Entry.method.data.encoding {
 							a.ripe_file,
 							(value) => (value),
 							() => (raw_file.replace(/()?$/i, '.bin')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
 					CoreX.Tool.Data.Encoding.Base64.encode_fs(raw_file, ripe_file);
 					Console.success(los(`执行成功`), [`${ripe_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					raw_file: undefined!,
 					ripe_file: '?default',
 				},
@@ -56,7 +56,7 @@ namespace TwinStar.Script.Entry.method.data.encoding {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					ripe_file: Executor.RequireArgument<string>;
 					raw_file: Executor.RequestArgument<string, true>;
 				}) {
@@ -74,14 +74,14 @@ namespace TwinStar.Script.Entry.method.data.encoding {
 							a.raw_file,
 							(value) => (value),
 							() => (ripe_file.replace(/()?$/i, '.bin')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
 					CoreX.Tool.Data.Encoding.Base64.decode_fs(ripe_file, raw_file);
 					Console.success(los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					ripe_file: undefined!,
 					raw_file: '?default',
 				},

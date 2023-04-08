@@ -17,7 +17,7 @@ namespace TwinStar.Script.Entry.method.pvz2.text_table {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					source_file: Executor.RequireArgument<string>;
 					destination_version: Executor.RequestArgument<string, false>;
 					destination_file: Executor.RequestArgument<string, true>;
@@ -44,14 +44,14 @@ namespace TwinStar.Script.Entry.method.pvz2.text_table {
 							a.destination_file,
 							(value) => (value),
 							() => (source_file.replace(/((\.(txt|json)))?$/i, `.convert.${{ 'text': 'txt', 'json_map': 'json', 'json_list': 'json' }[destination_version]}`)),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
 					Support.PvZ2.TextTable.convert_fs(source_file, destination_file, null, destination_version as any);
 					Console.success(los(`执行成功`), [`${destination_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					source_file: undefined!,
 					destination_version: '?input',
 					destination_file: '?default',

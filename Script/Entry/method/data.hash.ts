@@ -17,7 +17,7 @@ namespace TwinStar.Script.Entry.method.data.hash {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					target_file: Executor.RequireArgument<string>;
 				}) {
 					let target_file: string;
@@ -33,7 +33,7 @@ namespace TwinStar.Script.Entry.method.data.hash {
 					Console.success(los(`执行成功`), [`${result.toString(16)}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					target_file: undefined!,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),

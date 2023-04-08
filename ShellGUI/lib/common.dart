@@ -20,7 +20,7 @@ typedef Map<K, V> = core.Map<K, V>;
 
 const kApplicationName = 'TwinStar ToolKit - Shell GUI';
 
-const kApplicationVersion = 7;
+const kApplicationVersion = 8;
 
 // ----------------
 
@@ -46,6 +46,42 @@ normalizeLibraryPath(
     return '${path}';
   }
 }
+
+// ----------------
+
+enum FileObjectType {
+  any,
+  file,
+  directory,
+  ;
+
+  static
+  FileObjectType
+  formString(
+    String name,
+  ) {
+    return values.firstWhere((element) => element.name == name);
+  }
+
+}
+
+enum FileRequestRule {
+  any,
+  input,
+  output,
+  ;
+
+  static
+  FileRequestRule
+  formString(
+    String name,
+  ) {
+    return values.firstWhere((element) => element.name == name);
+  }
+
+}
+
+// ----------------
 
 extension BooleanStringExtension on Boolean {
 

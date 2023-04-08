@@ -27,7 +27,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					raw_file: Executor.RequireArgument<string>;
 					ripe_file: Executor.RequestArgument<string, true>;
 				}) {
@@ -45,14 +45,14 @@ namespace TwinStar.Script.Entry.method.data.compression {
 							a.ripe_file,
 							(value) => (value),
 							() => (raw_file.replace(/()?$/i, '.bin')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
 					CoreX.Tool.Data.Compression.Deflate.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', 'none');
 					Console.success(los(`执行成功`), [`${ripe_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					raw_file: undefined!,
 					ripe_file: '?default',
 				},
@@ -65,7 +65,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					ripe_file: Executor.RequireArgument<string>;
 					raw_file: Executor.RequestArgument<string, true>;
 					buffer_size: Executor.RequestArgument<string, false>;
@@ -85,7 +85,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 							a.raw_file,
 							(value) => (value),
 							() => (ripe_file.replace(/()?$/i, '.bin')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -99,7 +99,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 					Console.success(los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					ripe_file: undefined!,
 					raw_file: '?default',
 					buffer_size: configuration.uncompress_buffer_size,
@@ -113,7 +113,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					raw_file: Executor.RequireArgument<string>;
 					ripe_file: Executor.RequestArgument<string, true>;
 				}) {
@@ -131,14 +131,14 @@ namespace TwinStar.Script.Entry.method.data.compression {
 							a.ripe_file,
 							(value) => (value),
 							() => (raw_file.replace(/()?$/i, '.bin')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
 					CoreX.Tool.Data.Compression.Deflate.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', 'zlib');
 					Console.success(los(`执行成功`), [`${ripe_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					raw_file: undefined!,
 					ripe_file: '?default',
 				},
@@ -151,7 +151,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					ripe_file: Executor.RequireArgument<string>;
 					raw_file: Executor.RequestArgument<string, true>;
 					buffer_size: Executor.RequestArgument<string, false>;
@@ -171,7 +171,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 							a.raw_file,
 							(value) => (value),
 							() => (ripe_file.replace(/()?$/i, '.bin')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -185,7 +185,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 					Console.success(los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					ripe_file: undefined!,
 					raw_file: '?default',
 					buffer_size: configuration.uncompress_buffer_size,
@@ -199,7 +199,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					raw_file: Executor.RequireArgument<string>;
 					ripe_file: Executor.RequestArgument<string, true>;
 				}) {
@@ -217,14 +217,14 @@ namespace TwinStar.Script.Entry.method.data.compression {
 							a.ripe_file,
 							(value) => (value),
 							() => (raw_file.replace(/()?$/i, '.bin')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
 					CoreX.Tool.Data.Compression.Deflate.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', 'gzip');
 					Console.success(los(`执行成功`), [`${ripe_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					raw_file: undefined!,
 					ripe_file: '?default',
 				},
@@ -237,7 +237,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					ripe_file: Executor.RequireArgument<string>;
 					raw_file: Executor.RequestArgument<string, true>;
 					buffer_size: Executor.RequestArgument<string, false>;
@@ -257,7 +257,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 							a.raw_file,
 							(value) => (value),
 							() => (ripe_file.replace(/()?$/i, '.bin')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -271,7 +271,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 					Console.success(los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					ripe_file: undefined!,
 					raw_file: '?default',
 					buffer_size: configuration.uncompress_buffer_size,
@@ -285,7 +285,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					raw_file: Executor.RequireArgument<string>;
 					ripe_file: Executor.RequestArgument<string, true>;
 				}) {
@@ -303,14 +303,14 @@ namespace TwinStar.Script.Entry.method.data.compression {
 							a.ripe_file,
 							(value) => (value),
 							() => (raw_file.replace(/()?$/i, '.bin')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
 					CoreX.Tool.Data.Compression.BZip2.compress_fs(raw_file, ripe_file, 9n);
 					Console.success(los(`执行成功`), [`${ripe_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					raw_file: undefined!,
 					ripe_file: '?default',
 				},
@@ -323,7 +323,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					ripe_file: Executor.RequireArgument<string>;
 					raw_file: Executor.RequestArgument<string, true>;
 					buffer_size: Executor.RequestArgument<string, false>;
@@ -343,7 +343,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 							a.raw_file,
 							(value) => (value),
 							() => (ripe_file.replace(/()?$/i, '.bin')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -357,7 +357,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 					Console.success(los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					ripe_file: undefined!,
 					raw_file: '?default',
 					buffer_size: configuration.uncompress_buffer_size,
@@ -371,7 +371,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					raw_file: Executor.RequireArgument<string>;
 					ripe_file: Executor.RequestArgument<string, true>;
 				}) {
@@ -389,14 +389,14 @@ namespace TwinStar.Script.Entry.method.data.compression {
 							a.ripe_file,
 							(value) => (value),
 							() => (raw_file.replace(/()?$/i, '.bin')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
 					CoreX.Tool.Data.Compression.Lzma.compress_fs(raw_file, ripe_file, 9n);
 					Console.success(los(`执行成功`), [`${ripe_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					raw_file: undefined!,
 					ripe_file: '?default',
 				},
@@ -409,7 +409,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					ripe_file: Executor.RequireArgument<string>;
 					raw_file: Executor.RequestArgument<string, true>;
 					buffer_size: Executor.RequestArgument<string, false>;
@@ -429,7 +429,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 							a.raw_file,
 							(value) => (value),
 							() => (ripe_file.replace(/()?$/i, '.bin')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -443,7 +443,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 					Console.success(los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					ripe_file: undefined!,
 					raw_file: '?default',
 					buffer_size: configuration.uncompress_buffer_size,

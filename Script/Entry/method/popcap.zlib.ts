@@ -19,7 +19,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					raw_file: Executor.RequireArgument<string>;
 					ripe_file: Executor.RequestArgument<string, true>;
 					version_variant_64: Executor.RequestArgument<boolean, false>;
@@ -39,7 +39,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 							a.ripe_file,
 							(value) => (value),
 							() => (raw_file.replace(/()?$/i, '.bin')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_variant_64 = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_variant_64'),
@@ -53,7 +53,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 					Console.success(los(`执行成功`), [`${ripe_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					raw_file: undefined!,
 					ripe_file: '?default',
 					version_variant_64: configuration.version_variant_64,
@@ -67,7 +67,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					ripe_file: Executor.RequireArgument<string>;
 					raw_file: Executor.RequestArgument<string, true>;
 					version_variant_64: Executor.RequestArgument<boolean, false>;
@@ -87,7 +87,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 							a.raw_file,
 							(value) => (value),
 							() => (ripe_file.replace(/()?$/i, '.bin')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_variant_64 = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_variant_64'),
@@ -101,7 +101,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 					Console.success(los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					ripe_file: undefined!,
 					raw_file: '?default',
 					version_variant_64: configuration.version_variant_64,
@@ -117,7 +117,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					raw_file_directory: Executor.RequireArgument<string>;
 					ripe_file_directory: Executor.RequestArgument<string, true>;
 					version_variant_64: Executor.RequestArgument<boolean, false>;
@@ -137,7 +137,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 							a.ripe_file_directory,
 							(value) => (value),
 							() => (raw_file_directory.replace(/$/i, '.compress')),
-							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_variant_64 = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_variant_64'),
@@ -159,7 +159,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 					Console.success(los(`执行成功`), [`${ripe_file_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					raw_file_directory: undefined!,
 					ripe_file_directory: '?default',
 					version_variant_64: configuration.version_variant_64,
@@ -173,7 +173,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					ripe_file_directory: Executor.RequireArgument<string>;
 					raw_file_directory: Executor.RequestArgument<string, true>;
 					version_variant_64: Executor.RequestArgument<boolean, false>;
@@ -193,7 +193,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 							a.raw_file_directory,
 							(value) => (value),
 							() => (ripe_file_directory.replace(/$/i, '.uncompress')),
-							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_variant_64 = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_variant_64'),
@@ -215,7 +215,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 					Console.success(los(`执行成功`), [`${raw_file_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					ripe_file_directory: undefined!,
 					raw_file_directory: '?default',
 					version_variant_64: configuration.version_variant_64,

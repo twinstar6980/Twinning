@@ -21,7 +21,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					manifest_file: Executor.RequireArgument<string>;
 					data_file: Executor.RequestArgument<string, true>;
 					version_platform: Executor.RequestArgument<string, false>;
@@ -45,7 +45,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 							a.data_file,
 							(value) => (value),
 							() => (manifest_file.replace(/((\.trail)(\.json))?$/i, '.trail.compiled')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_platform = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_platform'),
@@ -73,7 +73,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 					Console.success(los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					manifest_file: undefined!,
 					data_file: '?default',
 					version_platform: configuration.version_platform,
@@ -89,7 +89,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					data_file: Executor.RequireArgument<string>;
 					manifest_file: Executor.RequestArgument<string, true>;
 					version_platform: Executor.RequestArgument<string, false>;
@@ -111,7 +111,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 							a.manifest_file,
 							(value) => (value),
 							() => (data_file.replace(/((\.trail)(\.compiled))?$/i, '.trail.json')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_platform = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_platform'),
@@ -132,7 +132,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 					Console.success(los(`执行成功`), [`${manifest_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					data_file: undefined!,
 					manifest_file: '?default',
 					version_platform: configuration.version_platform,
@@ -149,7 +149,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					manifest_file_directory: Executor.RequireArgument<string>;
 					data_file_directory: Executor.RequestArgument<string, true>;
 					version_platform: Executor.RequestArgument<string, false>;
@@ -173,7 +173,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 							a.data_file_directory,
 							(value) => (value),
 							() => (manifest_file_directory.replace(/$/i, '.encode')),
-							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_platform = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_platform'),
@@ -210,7 +210,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 					Console.success(los(`执行成功`), [`${data_file_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					manifest_file_directory: undefined!,
 					data_file_directory: '?default',
 					version_platform: configuration.version_platform,
@@ -226,7 +226,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					data_file_directory: Executor.RequireArgument<string>;
 					manifest_file_directory: Executor.RequestArgument<string, true>;
 					version_platform: Executor.RequestArgument<string, false>;
@@ -248,7 +248,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 							a.manifest_file_directory,
 							(value) => (value),
 							() => (data_file_directory.replace(/$/i, '.decode')),
-							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_platform = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_platform'),
@@ -277,7 +277,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 					Console.success(los(`执行成功`), [`${manifest_file_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					data_file_directory: undefined!,
 					manifest_file_directory: '?default',
 					version_platform: configuration.version_platform,

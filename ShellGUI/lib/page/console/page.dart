@@ -1,4 +1,4 @@
-// ignore_for_file: unused_import
+// ignore_for_file: unused_import, unnecessary_cast, dead_code
 
 import '/common.dart';
 import 'dart:async';
@@ -6,8 +6,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:file_picker/file_picker.dart';
 import '/setting.dart';
 import '/command.dart';
+import '/notification_helper.dart';
 import '/page/console/output_bar.dart';
 import '/page/console/action_bar.dart';
 import '/page/console/launch_bar.dart';
@@ -109,7 +111,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
       }
       case 'output_message': {
         assert(argument.length >= 3);
-        var type = MessageTypeExtension.fromString(argument[1]);
+        var type = MessageType.fromString(argument[1]);
         var title = argument[2];
         var description = argument.sublist(3);
         this._outputBarListItem.add(
@@ -214,10 +216,14 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'input_path': {
-        assert(argument.length == 1);
+        assert(argument.length == 3);
+        var type = FileObjectType.formString(argument[1]);
+        var rule = FileRequestRule.formString(argument[2]);
         var completer = Completer<String?>();
         this._inputBarContent = PathInputBarContent(
           completer: completer,
+          type: type,
+          rule: rule,
         );
         this.setState(() {});
         var input = await completer.future;
@@ -241,6 +247,42 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         this._inputBarContent = const IdleInputBarContent();
         this.setState(() {});
         await Future.delayed(const Duration(milliseconds: 100));
+        break;
+      }
+      case 'pick_path': {
+        if (!(Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+          throw Exception('unavailable method');
+        }
+        assert(argument.length == 2);
+        var type = FileObjectType.formString(argument[1]);
+        var selection = null as String?;
+        switch (type) {
+          case FileObjectType.any: {
+            throw Exception('path type should not be any');
+            break;
+          }
+          case FileObjectType.file: {
+            var pickResult = await FilePicker.platform.pickFiles(allowMultiple: false);
+            selection = pickResult?.files.single.path;
+            break;
+          }
+          case FileObjectType.directory: {
+            var pickResult = await FilePicker.platform.getDirectoryPath();
+            selection = pickResult;
+            break;
+          }
+        }
+        result.add(selection == null ? '' : ('${selection}'));
+        break;
+      }
+      case 'push_notification': {
+        if (!(Platform.isWindows || Platform.isLinux || Platform.isMacOS || Platform.isAndroid)) {
+          throw Exception('unavailable method');
+        }
+        assert(argument.length == 3);
+        var title = argument[1];
+        var description = argument[2];
+        await NotificationHelper.push(title, description);
         break;
       }
       default: {

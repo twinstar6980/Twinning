@@ -7,6 +7,7 @@ target('shell', function()
 		'./common.hpp',
 		'./third/system/windows.hpp',
 		'./third/system/posix.hpp',
+		'./third/tinyfiledialogs.hpp',
 		'./utility/macro.hpp',
 		'./utility/exception.hpp',
 		'./utility/string.hpp',
@@ -14,6 +15,7 @@ target('shell', function()
 		'./utility/library.hpp',
 		'./utility/interaction.hpp',
 		'./utility/miscellaneous.hpp',
+		'./utility/system/windows.hpp',
 		'./core/interface.hpp',
 		'./core/symbol.hpp',
 		'./core/converter.hpp',
@@ -39,10 +41,24 @@ target('shell', function()
 		'_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING',
 		{ private = true }
 	)
+	if m.system:is('windows', 'linux', 'macintosh') then
+		add_deps(
+			'third.tinyfiledialogs',
+			{}
+		)
+	end
 	if m.system:is('windows') then
 		add_files(
 			'./resource/windows/application.manifest',
 			{}
+		)
+		add_links(
+			'User32',
+			'Shell32',
+			'comctl32',
+			'Comdlg32',
+			'Ole32',
+			{ private = true }
 		)
 	end
 	on_load(function(target)

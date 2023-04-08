@@ -97,7 +97,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					bundle_directory: Executor.RequireArgument<string>;
 					data_file: Executor.RequestArgument<string, true>;
 					mode: Executor.RequestArgument<string, false>;
@@ -127,7 +127,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 							a.data_file,
 							(value) => (value),
 							() => (bundle_directory.replace(/((\.rsb)(\.bundle))?$/i, '.rsb')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						mode = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'mode'),
@@ -186,7 +186,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 					Console.success(los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					bundle_directory: undefined!,
 					data_file: '?default',
 					mode: configuration.mode,
@@ -205,7 +205,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					data_file: Executor.RequireArgument<string>;
 					bundle_directory: Executor.RequestArgument<string, true>;
 					mode: Executor.RequestArgument<string, false>;
@@ -233,7 +233,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 							a.bundle_directory,
 							(value) => (value),
 							() => (data_file.replace(/((\.rsb))?$/i, '.rsb.bundle')),
-							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						mode = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'mode'),
@@ -284,7 +284,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 					Console.success(los(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					data_file: undefined!,
 					bundle_directory: '?default',
 					mode: configuration.mode,
@@ -302,7 +302,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					bundle_directory: Executor.RequestArgument<string, true>;
 					version_number: Executor.RequestArgument<bigint, false>;
 					version_extended_texture_information_for_pvz2_cn: Executor.RequestArgument<bigint, false>;
@@ -509,7 +509,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 					Console.success(los(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					bundle_directory: undefined!,
 					version_number: configuration.version_number,
 					version_extended_texture_information_for_pvz2_cn: configuration.version_extended_texture_information_for_pvz2_cn,
@@ -524,7 +524,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					raw_file: Executor.RequireArgument<string>;
 					ripe_file: Executor.RequestArgument<string, true>;
 				}) {
@@ -542,14 +542,14 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 							a.ripe_file,
 							(value) => (value),
 							() => (raw_file.replace(/((\.rsb))?$/i, '.repair.rsb')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
 					Support.PopCap.ResourceStreamBundle.Repair.repair_package_fs(raw_file, ripe_file);
 					Console.success(los(`执行成功`), [`${ripe_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					raw_file: undefined!,
 					ripe_file: '?default',
 				},

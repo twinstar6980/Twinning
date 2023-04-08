@@ -80,7 +80,34 @@ namespace TwinStar.Script.PathUtility {
 	}
 
 	// ------------------------------------------------
-	// TODO
+
+	// TODO !!!
+	export function is_dangerous(
+		target: string,
+	): boolean {
+		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\//.test(target)
+			|| /^\/$/.test(target)
+			|| /^\/(home)$/.test(target)
+			|| /^\/(Windows)/.test(target)
+			|| /^\/(Windows.old)/.test(target)
+			|| /^\/(Documents and Settings)$/.test(target)
+			|| /^\/(PerfLogs)$/.test(target)
+			|| /^\/(Program Files)$/.test(target)
+			|| /^\/(Program Files (x86))$/.test(target)
+			|| /^\/(ProgramData)$/.test(target)
+			|| /^\/(Recovery)$/.test(target)
+			|| /^\/(System Volume Information)$/.test(target)
+			|| /^\/(Users)$/.test(target)
+			|| /^\/(appverifUI.dll)$/.test(target)
+			|| /^\/(hiberfil.sys)$/.test(target)
+			|| /^\/(swapfile.sys)$/.test(target)
+			|| /^\/(pagefile.sys)$/.test(target)
+			|| /^\/(vfcompat.dll)$/.test(target)
+			|| /^\/()$/.test(target)
+			|| /^\/()$/.test(target)
+			|| /^\/()$/.test(target)
+			|| /^\/()$/.test(target);
+	}
 
 	export function is_android_fuse_object(
 		target: string,

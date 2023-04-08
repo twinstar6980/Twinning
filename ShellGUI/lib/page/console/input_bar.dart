@@ -1,9 +1,11 @@
-// ignore_for_file: unused_import
+// ignore_for_file: unused_import, unnecessary_cast
 
 import '/common.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:async/async.dart';
+import 'package:file_picker/file_picker.dart';
 
 // ----------------
 
@@ -237,6 +239,8 @@ class _NumberInputBarContentState extends State<NumberInputBarContent> {
 
   Floater? _value;
 
+  final TextEditingController _controller = TextEditingController(text: '');
+
   // ----------------
 
   @override
@@ -259,6 +263,7 @@ class _NumberInputBarContentState extends State<NumberInputBarContent> {
               border: InputBorder.none,
               hintText: 'Number ...',
             ),
+            controller: this._controller,
             onChanged: (value) {
               try {
                 this._value = Floater.parse(value);
@@ -297,6 +302,8 @@ class _IntegerInputBarContentState extends State<IntegerInputBarContent> {
 
   Integer? _value;
 
+  final TextEditingController _controller = TextEditingController(text: '');
+
   // ----------------
 
   @override
@@ -319,6 +326,7 @@ class _IntegerInputBarContentState extends State<IntegerInputBarContent> {
               border: InputBorder.none,
               hintText: 'Integer ...',
             ),
+            controller: this._controller,
             onChanged: (value) {
               try {
                 this._value = Integer.parse(value);
@@ -358,6 +366,8 @@ class _SizeInputBarContentState extends State<SizeInputBarContent> {
   Floater? _value;
   Integer  _unit = 3;
 
+  final TextEditingController _controller = TextEditingController(text: '');
+
   // ----------------
 
   @override
@@ -380,6 +390,7 @@ class _SizeInputBarContentState extends State<SizeInputBarContent> {
               border: InputBorder.none,
               hintText: 'Size ...',
             ),
+            controller: this._controller,
             onChanged: (value) {
               try {
                 this._value = Floater.parse(value);
@@ -451,6 +462,8 @@ class _StringInputBarContentState extends State<StringInputBarContent> {
 
   String? _value;
 
+  final TextEditingController _controller = TextEditingController(text: '');
+
   // ----------------
 
   @override
@@ -466,6 +479,7 @@ class _StringInputBarContentState extends State<StringInputBarContent> {
               border: InputBorder.none,
               hintText: 'String ...',
             ),
+            controller: this._controller,
             onChanged: (value) {
               this._value = value.isEmpty ? null : value;
               this.setState(() {});
@@ -485,6 +499,8 @@ class PathInputBarContent extends StatefulWidget {
   const PathInputBarContent({
     super.key,
     required this.completer,
+    required this.type,
+    required this.rule,
   });
 
   @override
@@ -493,12 +509,16 @@ class PathInputBarContent extends StatefulWidget {
   // ----------------
 
   final Completer<String?> completer;
+  final FileObjectType     type;
+  final FileRequestRule    rule;
 
 }
 
 class _PathInputBarContentState extends State<PathInputBarContent> {
 
   String? _value;
+
+  final TextEditingController _controller = TextEditingController(text: '');
 
   // ----------------
 
@@ -511,15 +531,87 @@ class _PathInputBarContentState extends State<PathInputBarContent> {
       children: [
         Expanded(
           child: TextField(
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               border: InputBorder.none,
-              hintText: 'Path ...',
+              hintText: 'Path ... ( ${this.widget.type.name} for ${this.widget.rule.name} ) ',
             ),
+            controller: this._controller,
             onChanged: (value) {
               this._value = value.isEmpty ? null : value;
               this.setState(() {});
             },
           ),
+        ),
+        this.widget.rule != FileRequestRule.output
+        ? const SizedBox()
+        : IconButton(
+          onPressed: () async {
+            this._value = ':o';
+            this._controller.text = this._value ?? '';
+            this.setState(() {});
+          },
+          icon: const Icon(Icons.adjust_outlined),
+        ),
+        this.widget.rule != FileRequestRule.output
+        ? const SizedBox()
+        : IconButton(
+          onPressed: () async {
+            this._value = ':d';
+            this._controller.text = this._value ?? '';
+            this.setState(() {});
+          },
+          icon: const Icon(Icons.remove_circle_outline),
+        ),
+        IconButton(
+          onPressed: () async {
+            var selection = null as String?;
+            var actualType = this.widget.type as FileObjectType?;
+            if (actualType == FileObjectType.any) {
+              actualType = await showDialog<FileObjectType>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('File Object Type'),
+                  content: null,
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, FileObjectType.file),
+                      child: const Text('FILE'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, FileObjectType.directory),
+                      child: const Text('DIRECTORY'),
+                    ),
+                  ],
+                ),
+              );
+            }
+            switch (actualType) {
+              case null: {
+                selection = null;
+                break;
+              }
+              case FileObjectType.any: {
+                selection = null;
+                break;
+              }
+              case FileObjectType.file: {
+                var pickResult = await FilePicker.platform.pickFiles(allowMultiple: false);
+                selection = pickResult?.files.single.path;
+                break;
+              }
+              case FileObjectType.directory: {
+                var pickResult = await FilePicker.platform.getDirectoryPath();
+                selection = pickResult;
+                break;
+              }
+            }
+            if (selection != null) {
+              this._value = selection;
+              this._controller.text = this._value ?? '';
+            }
+            this.setState(() {});
+          },
+          icon: const Icon(Icons.outbond_outlined),
         ),
       ],
     );

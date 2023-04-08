@@ -19,7 +19,7 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					source_file: Executor.RequireArgument<string>;
 					destination_file: Executor.RequestArgument<string, true>;
 					horizontal: Executor.RequestArgument<boolean, false>;
@@ -41,7 +41,7 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 							a.destination_file,
 							(value) => (value),
 							() => (source_file.replace(/((\.png))?$/i, '.flip.png')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						horizontal = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'horizontal'),
@@ -62,7 +62,7 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 					Console.success(los(`执行成功`), [`${destination_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					source_file: undefined!,
 					destination_file: '?default',
 					horizontal: '?input',
@@ -77,7 +77,7 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					source_file: Executor.RequireArgument<string>;
 					destination_file: Executor.RequestArgument<string, true>;
 					width: Executor.RequestArgument<bigint, false>;
@@ -99,7 +99,7 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 							a.destination_file,
 							(value) => (value),
 							() => (source_file.replace(/((\.png))?$/i, '.scale.png')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						width = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'width'),
@@ -120,7 +120,7 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 					Console.success(los(`执行成功`), [`${destination_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					source_file: undefined!,
 					destination_file: '?default',
 					width: '?input',
@@ -135,7 +135,7 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					source_file: Executor.RequireArgument<string>;
 					destination_file: Executor.RequestArgument<string, true>;
 					size_rate: Executor.RequestArgument<number, false>;
@@ -155,7 +155,7 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 							a.destination_file,
 							(value) => (value),
 							() => (source_file.replace(/((\.png))?$/i, '.scale.png')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						size_rate = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'size_rate'),
@@ -169,7 +169,7 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 					Console.success(los(`执行成功`), [`${destination_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					source_file: undefined!,
 					destination_file: '?default',
 					size_rate: '?input',

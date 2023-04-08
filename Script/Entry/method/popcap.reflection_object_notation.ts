@@ -27,7 +27,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					value_file: Executor.RequireArgument<string>;
 					data_file: Executor.RequestArgument<string, true>;
 					version_number: Executor.RequestArgument<bigint, false>;
@@ -51,7 +51,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							a.data_file,
 							(value) => (value),
 							() => (value_file.replace(/((\.json))?$/i, '.rton')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_number'),
@@ -79,7 +79,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					Console.success(los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					value_file: undefined!,
 					data_file: '?default',
 					version_number: configuration.version_number,
@@ -95,7 +95,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					data_file: Executor.RequireArgument<string>;
 					value_file: Executor.RequestArgument<string, true>;
 					version_number: Executor.RequestArgument<bigint, false>;
@@ -117,7 +117,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							a.value_file,
 							(value) => (value),
 							() => (data_file.replace(/((\.rton))?$/i, '.json')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_number'),
@@ -138,7 +138,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					Console.success(los(`执行成功`), [`${value_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					data_file: undefined!,
 					value_file: '?default',
 					version_number: configuration.version_number,
@@ -153,7 +153,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					plain_file: Executor.RequireArgument<string>;
 					cipher_file: Executor.RequestArgument<string, true>;
 					key: Executor.RequestArgument<string, false>;
@@ -173,7 +173,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							a.cipher_file,
 							(value) => (value),
 							() => (plain_file.replace(/((\.rton))?$/i, '.cipher.rton')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						key = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'key'),
@@ -187,7 +187,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					Console.success(los(`执行成功`), [`${cipher_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					plain_file: undefined!,
 					cipher_file: '?default',
 					key: configuration.key,
@@ -201,7 +201,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					cipher_file: Executor.RequireArgument<string>;
 					plain_file: Executor.RequestArgument<string, true>;
 					key: Executor.RequestArgument<string, false>;
@@ -221,7 +221,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							a.plain_file,
 							(value) => (value),
 							() => (cipher_file.replace(/((\.rton))?$/i, '.plain.rton')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						key = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'key'),
@@ -235,7 +235,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					Console.success(los(`执行成功`), [`${plain_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					cipher_file: undefined!,
 					plain_file: '?default',
 					key: configuration.key,
@@ -249,7 +249,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					value_file: Executor.RequireArgument<string>;
 					data_file: Executor.RequestArgument<string, true>;
 					version_number: Executor.RequestArgument<bigint, false>;
@@ -275,7 +275,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							a.data_file,
 							(value) => (value),
 							() => (value_file.replace(/((\.json))?$/i, '.rton')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_number'),
@@ -310,7 +310,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					Console.success(los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					value_file: undefined!,
 					data_file: '?default',
 					version_number: configuration.version_number,
@@ -327,7 +327,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					data_file: Executor.RequireArgument<string>;
 					value_file: Executor.RequestArgument<string, true>;
 					version_number: Executor.RequestArgument<bigint, false>;
@@ -351,7 +351,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							a.value_file,
 							(value) => (value),
 							() => (data_file.replace(/((\.rton))?$/i, '.json')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_number'),
@@ -379,7 +379,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					Console.success(los(`执行成功`), [`${value_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					data_file: undefined!,
 					value_file: '?default',
 					version_number: configuration.version_number,
@@ -395,7 +395,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					data_file: Executor.RequireArgument<string>;
 					value_file: Executor.RequestArgument<string, true>;
 					version_number: Executor.RequestArgument<bigint, false>;
@@ -417,7 +417,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							a.value_file,
 							(value) => (value),
 							() => (data_file.replace(/((\.rton))?$/i, '.json')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_number'),
@@ -438,7 +438,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					Console.success(los(`执行成功`), [`${value_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					data_file: undefined!,
 					value_file: '?default',
 					version_number: configuration.version_number,
@@ -455,7 +455,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					value_file_directory: Executor.RequireArgument<string>;
 					data_file_directory: Executor.RequestArgument<string, true>;
 					version_number: Executor.RequestArgument<bigint, false>;
@@ -479,7 +479,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							a.data_file_directory,
 							(value) => (value),
 							() => (value_file_directory.replace(/$/i, '.encode')),
-							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_number'),
@@ -516,7 +516,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					Console.success(los(`执行成功`), [`${data_file_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					value_file_directory: undefined!,
 					data_file_directory: '?default',
 					version_number: configuration.version_number,
@@ -532,7 +532,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					data_file_directory: Executor.RequireArgument<string>;
 					value_file_directory: Executor.RequestArgument<string, true>;
 					version_number: Executor.RequestArgument<bigint, false>;
@@ -554,7 +554,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							a.value_file_directory,
 							(value) => (value),
 							() => (data_file_directory.replace(/$/i, '.decode')),
-							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_number'),
@@ -583,7 +583,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					Console.success(los(`执行成功`), [`${value_file_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					data_file_directory: undefined!,
 					value_file_directory: '?default',
 					version_number: configuration.version_number,
@@ -598,7 +598,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					plain_file_directory: Executor.RequireArgument<string>;
 					cipher_file_directory: Executor.RequestArgument<string, true>;
 					key: Executor.RequestArgument<string, false>;
@@ -618,7 +618,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							a.cipher_file_directory,
 							(value) => (value),
 							() => (plain_file_directory.replace(/$/i, '.encrypt')),
-							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						key = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'key'),
@@ -640,7 +640,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					Console.success(los(`执行成功`), [`${cipher_file_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					plain_file_directory: undefined!,
 					cipher_file_directory: '?default',
 					key: configuration.key,
@@ -654,7 +654,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					cipher_file_directory: Executor.RequireArgument<string>;
 					plain_file_directory: Executor.RequestArgument<string, true>;
 					key: Executor.RequestArgument<string, false>;
@@ -674,7 +674,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							a.plain_file_directory,
 							(value) => (value),
 							() => (cipher_file_directory.replace(/$/i, '.decrypt')),
-							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						key = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'key'),
@@ -696,7 +696,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					Console.success(los(`执行成功`), [`${plain_file_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					cipher_file_directory: undefined!,
 					plain_file_directory: '?default',
 					key: configuration.key,
@@ -710,7 +710,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					value_file_directory: Executor.RequireArgument<string>;
 					data_file_directory: Executor.RequestArgument<string, true>;
 					version_number: Executor.RequestArgument<bigint, false>;
@@ -736,7 +736,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							a.data_file_directory,
 							(value) => (value),
 							() => (value_file_directory.replace(/$/i, '.encode_then_encrypt')),
-							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_number'),
@@ -780,7 +780,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					Console.success(los(`执行成功`), [`${data_file_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					value_file_directory: undefined!,
 					data_file_directory: '?default',
 					version_number: configuration.version_number,
@@ -797,7 +797,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					data_file_directory: Executor.RequireArgument<string>;
 					value_file_directory: Executor.RequestArgument<string, true>;
 					version_number: Executor.RequestArgument<bigint, false>;
@@ -821,7 +821,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							a.value_file_directory,
 							(value) => (value),
 							() => (data_file_directory.replace(/$/i, '.decrypt_then_decode')),
-							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_number'),
@@ -857,7 +857,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					Console.success(los(`执行成功`), [`${value_file_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					data_file_directory: undefined!,
 					value_file_directory: '?default',
 					version_number: configuration.version_number,

@@ -19,7 +19,7 @@ namespace TwinStar.Script.Entry.method.json {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					source_file: Executor.RequireArgument<string>;
 					destination_file: Executor.RequestArgument<string, true>;
 					disable_trailing_comma: Executor.RequestArgument<boolean, true>;
@@ -41,7 +41,7 @@ namespace TwinStar.Script.Entry.method.json {
 							a.destination_file,
 							(value) => (value),
 							() => (source_file.replace(/((\.json))?$/i, '.format.json')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						disable_trailing_comma = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'disable_trailing_comma'),
@@ -63,7 +63,7 @@ namespace TwinStar.Script.Entry.method.json {
 					Console.success(los(`执行成功`), [`${destination_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					source_file: undefined!,
 					destination_file: '?default',
 					disable_trailing_comma: configuration.disable_trailing_comma,
@@ -80,7 +80,7 @@ namespace TwinStar.Script.Entry.method.json {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					source_file_directory: Executor.RequireArgument<string>;
 					destination_file_directory: Executor.RequestArgument<string, true>;
 					disable_trailing_comma: Executor.RequestArgument<boolean, true>;
@@ -102,7 +102,7 @@ namespace TwinStar.Script.Entry.method.json {
 							a.destination_file_directory,
 							(value) => (value),
 							() => (source_file_directory.replace(/$/i, '.format')),
-							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						disable_trailing_comma = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'disable_trailing_comma'),
@@ -132,7 +132,7 @@ namespace TwinStar.Script.Entry.method.json {
 					Console.success(los(`执行成功`), [`${destination_file_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					source_file_directory: undefined!,
 					destination_file_directory: '?default',
 					disable_trailing_comma: configuration.disable_trailing_comma,

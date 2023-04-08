@@ -8,21 +8,13 @@ namespace TwinStar.Script.Entry {
 
 	// ------------------------------------------------
 
-	export type CommonFileSystemArgument = {
-		fs_tactic_if_exist: 'none' | 'trash' | 'delete' | 'override';
+	export type CommonArgument = {
+		path_tactic_if_out_exist: 'none' | 'trash' | 'delete' | 'override';
 	};
 
-	export const k_common_file_system_argument: CommonFileSystemArgument = {
-		fs_tactic_if_exist: 'none',
+	export const k_common_argument: CommonArgument = {
+		path_tactic_if_out_exist: 'none',
 	};
-
-	// ------------------------------------------------
-
-	/** @see {@link CommonFileSystemArgument} */
-	export type CFSA = CommonFileSystemArgument;
-
-	/** @see {@link k_common_file_system_argument} */
-	export const k_cfsa = k_common_file_system_argument;
 
 	// ------------------------------------------------
 
@@ -31,7 +23,7 @@ namespace TwinStar.Script.Entry {
 	): (path: string) => boolean {
 		return (path) => {
 			for (let e of filter) {
-				if (!CoreX.FileSystem[e[0] === 'file' ? 'exist_file' : e[0] === 'directory' ? 'exist_directory' : 'exist'](path)) {
+				if (!CoreX.FileSystem[({ any: 'exist', file: 'exist_file', directory: 'exist_directory' } as const)[e[0]]](path)) {
 					continue;
 				}
 				if (e[1] === null || e[1].test(path)) {
@@ -49,7 +41,7 @@ namespace TwinStar.Script.Entry {
 		filter: ['any' | 'file' | 'directory', null | RegExp],
 		worker: (item: string) => void,
 	): void {
-		let item_list = CoreX.FileSystem[filter[0] === 'file' ? 'list_file' : filter[0] === 'directory' ? 'list_directory' : 'list'](parent);
+		let item_list = CoreX.FileSystem[({ any: 'list', file: 'list_file', directory: 'list_directory' } as const)[filter[0]]](parent);
 		if (filter[1] !== null) {
 			item_list = item_list.filter((e) => (filter[1]!.test(e)));
 		}
@@ -78,6 +70,7 @@ namespace TwinStar.Script.Entry {
 		language: string;
 		cli_disable_virtual_terminal_sequence: boolean;
 		pause_when_finish: boolean;
+		notification_time_limit: null | bigint;
 		thread_limit: bigint;
 		byte_stream_use_big_endian: boolean;
 		common_buffer_size: string;
@@ -85,8 +78,8 @@ namespace TwinStar.Script.Entry {
 			disable_trailing_comma: boolean;
 			disable_array_wrap_line: boolean;
 		};
-		common_file_system_argument: {
-			fs_tactic_if_exist: string;
+		method_common_argument: {
+			path_tactic_if_out_exist: string;
 		};
 	};
 
@@ -105,8 +98,8 @@ namespace TwinStar.Script.Entry {
 		// set json format
 		CoreX.JSON.g_format.disable_trailing_comma = configuration.json_format.disable_trailing_comma;
 		CoreX.JSON.g_format.disable_array_wrap_line = configuration.json_format.disable_array_wrap_line;
-		// set common file system argument
-		k_common_file_system_argument.fs_tactic_if_exist = configuration.common_file_system_argument.fs_tactic_if_exist as any;
+		// set method common argument
+		k_common_argument.path_tactic_if_out_exist = configuration.method_common_argument.path_tactic_if_out_exist as any;
 	}
 
 	export function _entry(
@@ -149,6 +142,9 @@ namespace TwinStar.Script.Entry {
 				current_exception = e;
 			}
 			current_timer.stop();
+			if (configuration.notification_time_limit !== null && configuration.notification_time_limit <= current_timer.duration()) {
+				Console.push_notification(los('entry:current_command_finish'), los('entry:duration', (current_timer.duration() / 1000).toFixed(3)));
+			}
 			if (current_exception !== null) {
 				Console.error_of(current_exception);
 				Console.pause();
@@ -156,7 +152,7 @@ namespace TwinStar.Script.Entry {
 		}
 		timer.stop();
 		Console.success(los('entry:all_command_finish'), [
-			los('entry:all_command_duration', (timer.duration() / 1000).toFixed(3)),
+			los('entry:duration', (timer.duration() / 1000).toFixed(3)),
 		]);
 		if (configuration.pause_when_finish) {
 			Console.pause();

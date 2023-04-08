@@ -20,7 +20,7 @@ namespace TwinStar.Script.Entry.method.data.differentiation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					before_file: Executor.RequireArgument<string>;
 					after_file: Executor.RequestArgument<string, false>;
 					patch_file: Executor.RequestArgument<string, true>;
@@ -42,14 +42,14 @@ namespace TwinStar.Script.Entry.method.data.differentiation {
 							a.after_file,
 							(value) => (value),
 							null,
-							(initial) => (Console.path('file', [true], null, null, initial)),
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						patch_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'patch_file'),
 							a.patch_file,
 							(value) => (value),
 							() => (after_file.replace(/()?$/i, '.patch.bin')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -63,7 +63,7 @@ namespace TwinStar.Script.Entry.method.data.differentiation {
 					Console.success(los(`执行成功`), [`${patch_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					before_file: undefined!,
 					after_file: '?input',
 					patch_file: '?default',
@@ -78,7 +78,7 @@ namespace TwinStar.Script.Entry.method.data.differentiation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					before_file: Executor.RequireArgument<string>;
 					patch_file: Executor.RequestArgument<string, false>;
 					after_file: Executor.RequestArgument<string, true>;
@@ -100,14 +100,14 @@ namespace TwinStar.Script.Entry.method.data.differentiation {
 							a.patch_file,
 							(value) => (value),
 							null,
-							(initial) => (Console.path('file', [true], null, null, initial)),
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						after_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'after_file'),
 							a.after_file,
 							(value) => (value),
 							() => (patch_file.replace(/()?$/i, '.after.bin')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -121,7 +121,7 @@ namespace TwinStar.Script.Entry.method.data.differentiation {
 					Console.success(los(`执行成功`), [`${after_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					before_file: undefined!,
 					patch_file: '?input',
 					after_file: '?default',

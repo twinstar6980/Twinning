@@ -7,4 +7,5 @@ linter:
     unnecessary_string_interpolations: false
     prefer_single_quotes: true
     prefer_function_declarations_over_variables: false
+    prefer_is_empty: false
     # require_trailing_commas: true

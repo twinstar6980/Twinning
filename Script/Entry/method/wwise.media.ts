@@ -20,7 +20,7 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					ripe_file: Executor.RequireArgument<string>;
 					raw_file: Executor.RequestArgument<string, true>;
 					tool_ffmpeg_program_file: Executor.RequestArgument<string, false>;
@@ -44,28 +44,28 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 							a.raw_file,
 							(value) => (value),
 							() => (ripe_file.replace(/((\.wem))?$/i, '.wav')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						tool_ffmpeg_program_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'tool_ffmpeg_program_file'),
 							a.tool_ffmpeg_program_file,
 							(value) => (HomeDirectory.of(value)),
 							null,
-							(initial) => (Console.path('file', [true], null, null, initial)),
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						tool_ww2ogg_program_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'tool_ww2ogg_program_file'),
 							a.tool_ww2ogg_program_file,
 							(value) => (HomeDirectory.of(value)),
 							null,
-							(initial) => (Console.path('file', [true], null, null, initial)),
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						tool_ww2ogg_code_book_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'tool_ww2ogg_code_book_file'),
 							a.tool_ww2ogg_code_book_file,
 							(value) => (HomeDirectory.of(value)),
 							null,
-							(initial) => (Console.path('file', [true], null, null, initial)),
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 					}
 					let temporary_directpry = HomeDirectory.new_temporary();
@@ -73,7 +73,7 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 					Console.success(los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					ripe_file: undefined!,
 					raw_file: '?default',
 					tool_ffmpeg_program_file: configuration.tool_ffmpeg_program_file,
@@ -91,7 +91,7 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					ripe_file_directory: Executor.RequireArgument<string>;
 					raw_file_directory: Executor.RequestArgument<string, true>;
 					tool_ffmpeg_program_file: Executor.RequestArgument<string, false>;
@@ -115,28 +115,28 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 							a.raw_file_directory,
 							(value) => (value),
 							() => (ripe_file_directory.replace(/$/i, '.decode')),
-							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						tool_ffmpeg_program_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'tool_ffmpeg_program_file'),
 							a.tool_ffmpeg_program_file,
 							(value) => (HomeDirectory.of(value)),
 							null,
-							(initial) => (Console.path('file', [true], null, null, initial)),
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						tool_ww2ogg_program_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'tool_ww2ogg_program_file'),
 							a.tool_ww2ogg_program_file,
 							(value) => (HomeDirectory.of(value)),
 							null,
-							(initial) => (Console.path('file', [true], null, null, initial)),
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						tool_ww2ogg_code_book_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'tool_ww2ogg_code_book_file'),
 							a.tool_ww2ogg_code_book_file,
 							(value) => (HomeDirectory.of(value)),
 							null,
-							(initial) => (Console.path('file', [true], null, null, initial)),
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 					}
 					let temporary_directpry = HomeDirectory.new_temporary();
@@ -152,7 +152,7 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 					Console.success(los(`执行成功`), [`${raw_file_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					ripe_file_directory: undefined!,
 					raw_file_directory: '?default',
 					tool_ffmpeg_program_file: configuration.tool_ffmpeg_program_file,

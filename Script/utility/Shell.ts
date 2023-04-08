@@ -47,6 +47,21 @@ namespace TwinStar.Script.Shell {
 		return result[0];
 	}
 
+	export function cli_pick_path(
+		type: 'file' | 'directory',
+	): string | null {
+		let result = callback(['pick_path', type]);
+		return result[0].length === 0 ? null : result[0];
+	}
+
+	export function cli_push_notification(
+		title: string,
+		description: string,
+	): void {
+		let result = callback(['push_notification', title, description]);
+		return;
+	}
+
 	// ------------------------------------------------
 
 	export function gui_output_message(
@@ -95,8 +110,10 @@ namespace TwinStar.Script.Shell {
 	}
 
 	export function gui_input_path(
+		type: 'any' | 'file' | 'directory',
+		rule: 'any' | 'input' | 'output',
 	): string | null {
-		let result = callback(['input_path']);
+		let result = callback(['input_path', type, rule]);
 		return result[0].length === 0 ? null : result[0];
 	}
 
@@ -104,6 +121,13 @@ namespace TwinStar.Script.Shell {
 		option: Array<string>,
 	): string | null {
 		let result = callback(['input_option', ...option]);
+		return result[0].length === 0 ? null : result[0];
+	}
+
+	export function gui_pick_path(
+		type: 'file' | 'directory',
+	): string | null {
+		let result = callback(['pick_path', type]);
 		return result[0].length === 0 ? null : result[0];
 	}
 

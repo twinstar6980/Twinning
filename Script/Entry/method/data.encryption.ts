@@ -19,7 +19,7 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					plain_file: Executor.RequireArgument<string>;
 					cipher_file: Executor.RequestArgument<string, true>;
 					key: Executor.RequestArgument<bigint, false>;
@@ -39,7 +39,7 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 							a.cipher_file,
 							(value) => (value),
 							() => (plain_file.replace(/()?$/i, '.bin')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						key = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'key'),
@@ -53,7 +53,7 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 					Console.success(los(`执行成功`), [`${cipher_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					plain_file: undefined!,
 					cipher_file: '?default',
 					key: '?input',
@@ -67,7 +67,7 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					plain_file: Executor.RequireArgument<string>;
 					cipher_file: Executor.RequestArgument<string, true>;
 					mode: Executor.RequestArgument<string, false>;
@@ -93,7 +93,7 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 							a.cipher_file,
 							(value) => (value),
 							() => (plain_file.replace(/()?$/i, '.bin')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						mode = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'mode'),
@@ -133,7 +133,7 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 					Console.success(los(`执行成功`), [`${cipher_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					plain_file: undefined!,
 					cipher_file: '?default',
 					mode: '?input',
@@ -150,7 +150,7 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					cipher_file: Executor.RequireArgument<string>;
 					plain_file: Executor.RequestArgument<string, true>;
 					mode: Executor.RequestArgument<string, false>;
@@ -176,7 +176,7 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 							a.plain_file,
 							(value) => (value),
 							() => (cipher_file.replace(/()?$/i, '.bin')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						mode = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'mode'),
@@ -216,7 +216,7 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 					Console.success(los(`执行成功`), [`${plain_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					cipher_file: undefined!,
 					plain_file: '?default',
 					mode: '?input',

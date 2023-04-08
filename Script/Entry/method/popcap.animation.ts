@@ -24,7 +24,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					manifest_file: Executor.RequireArgument<string>;
 					data_file: Executor.RequestArgument<string, true>;
 					version_number: Executor.RequestArgument<bigint, false>;
@@ -46,7 +46,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							a.data_file,
 							(value) => (value),
 							() => (manifest_file.replace(/((\.pam)(\.json))?$/i, '.pam')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_number'),
@@ -67,7 +67,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					Console.success(los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					manifest_file: undefined!,
 					data_file: '?default',
 					version_number: configuration.version_number,
@@ -82,7 +82,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					data_file: Executor.RequireArgument<string>;
 					manifest_file: Executor.RequestArgument<string, true>;
 					version_number: Executor.RequestArgument<bigint, false>;
@@ -102,7 +102,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							a.manifest_file,
 							(value) => (value),
 							() => (data_file.replace(/((\.pam))?$/i, '.pam.json')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_number'),
@@ -116,7 +116,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					Console.success(los(`执行成功`), [`${manifest_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					data_file: undefined!,
 					manifest_file: '?default',
 					version_number: configuration.version_number,
@@ -130,7 +130,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					raw_file: Executor.RequireArgument<string>;
 					ripe_directory: Executor.RequestArgument<string, true>;
 				}) {
@@ -148,7 +148,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							a.ripe_directory,
 							(value) => (value),
 							() => (raw_file.replace(/((\.pam)(\.json))?$/i, '.pam.xfl')),
-							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
 					let raw = CoreX.JSON.read_fs_js<Core.Tool.PopCap.Animation.Manifest.JS_N.Animation>(raw_file);
@@ -158,7 +158,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					Console.success(los(`执行成功`), [`${ripe_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					raw_file: undefined!,
 					ripe_directory: '?default',
 				},
@@ -171,7 +171,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					ripe_directory: Executor.RequireArgument<string>;
 					raw_file: Executor.RequestArgument<string, true>;
 				}) {
@@ -189,14 +189,14 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							a.raw_file,
 							(value) => (value),
 							() => (ripe_directory.replace(/((\.pam)(\.xfl))?$/i, '.pam.json')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
 					Support.PopCap.Animation.Convert.Flash.To.to_fs(raw_file, ripe_directory);
 					Console.success(los(`执行成功`), [`${raw_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					ripe_directory: undefined!,
 					raw_file: '?default',
 				},
@@ -209,7 +209,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					target_directory: Executor.RequireArgument<string>;
 					resolution: Executor.RequestArgument<bigint, false>;
 				}) {
@@ -234,7 +234,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					Console.success(los(`执行成功`), [`${target_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					target_directory: undefined!,
 					resolution: '?input',
 				},
@@ -247,7 +247,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					target_directory: Executor.RequireArgument<string>;
 				}) {
 					let target_directory: string;
@@ -272,7 +272,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					Console.success(los(`执行成功`), [`${target_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					target_directory: undefined!,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', /.+(\.pam)(\.xfl)$/i]]),
@@ -286,7 +286,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					manifest_file_directory: Executor.RequireArgument<string>;
 					data_file_directory: Executor.RequestArgument<string, true>;
 					version_number: Executor.RequestArgument<bigint, false>;
@@ -308,7 +308,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							a.data_file_directory,
 							(value) => (value),
 							() => (manifest_file_directory.replace(/$/i, '.encode')),
-							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_number'),
@@ -338,7 +338,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					Console.success(los(`执行成功`), [`${data_file_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					manifest_file_directory: undefined!,
 					data_file_directory: '?default',
 					version_number: configuration.version_number,
@@ -353,7 +353,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					data_file_directory: Executor.RequireArgument<string>;
 					manifest_file_directory: Executor.RequestArgument<string, true>;
 					version_number: Executor.RequestArgument<bigint, false>;
@@ -373,7 +373,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							a.manifest_file_directory,
 							(value) => (value),
 							() => (data_file_directory.replace(/$/i, '.decode')),
-							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_number'),
@@ -395,7 +395,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					Console.success(los(`执行成功`), [`${manifest_file_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					data_file_directory: undefined!,
 					manifest_file_directory: '?default',
 					version_number: configuration.version_number,
@@ -409,7 +409,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					raw_file_directory: Executor.RequireArgument<string>;
 					ripe_directory_directory: Executor.RequestArgument<string, true>;
 				}) {
@@ -427,7 +427,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							a.ripe_directory_directory,
 							(value) => (value),
 							() => (raw_file_directory.replace(/$/i, '.convert_flash_from')),
-							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
 					simple_batch_execute(
@@ -445,7 +445,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					Console.success(los(`执行成功`), [`${ripe_directory_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					raw_file_directory: undefined!,
 					ripe_directory_directory: '?default',
 				},
@@ -458,7 +458,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					ripe_directory_directory: Executor.RequireArgument<string>;
 					raw_file_directory: Executor.RequestArgument<string, true>;
 				}) {
@@ -476,7 +476,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							a.raw_file_directory,
 							(value) => (value),
 							() => (ripe_directory_directory.replace(/$/i, '.convert_flash_to')),
-							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
 					simple_batch_execute(
@@ -491,7 +491,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					Console.success(los(`执行成功`), [`${raw_file_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					ripe_directory_directory: undefined!,
 					raw_file_directory: '?default',
 				},
@@ -504,7 +504,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					target_directory_directory: Executor.RequireArgument<string>;
 					resolution: Executor.RequestArgument<bigint, false>;
 				}) {
@@ -536,7 +536,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					Console.success(los(`执行成功`), [`${target_directory_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					target_directory_directory: undefined!,
 					resolution: '?input',
 				},
@@ -549,7 +549,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					target_directory_directory: Executor.RequireArgument<string>;
 				}) {
 					let target_directory_directory: string;
@@ -581,7 +581,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					Console.success(los(`执行成功`), [`${target_directory_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					target_directory_directory: undefined!,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),

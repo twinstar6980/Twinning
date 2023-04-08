@@ -20,7 +20,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					plain_file: Executor.RequireArgument<string>;
 					cipher_file: Executor.RequestArgument<string, true>;
 					limit: Executor.RequestArgument<bigint, false>;
@@ -42,7 +42,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 							a.cipher_file,
 							(value) => (value),
 							() => (plain_file.replace(/()?$/i, '.cdat')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						limit = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'limit'),
@@ -63,7 +63,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 					Console.success(los(`执行成功`), [`${cipher_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					plain_file: undefined!,
 					cipher_file: '?default',
 					limit: configuration.limit,
@@ -78,7 +78,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					cipher_file: Executor.RequireArgument<string>;
 					plain_file: Executor.RequestArgument<string, true>;
 					limit: Executor.RequestArgument<bigint, false>;
@@ -100,7 +100,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 							a.plain_file,
 							(value) => (value),
 							() => (cipher_file.replace(/((\.cdat))?$/i, '')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						limit = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'limit'),
@@ -121,7 +121,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 					Console.success(los(`执行成功`), [`${plain_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					cipher_file: undefined!,
 					plain_file: '?default',
 					limit: configuration.limit,
@@ -138,7 +138,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					plain_file_directory: Executor.RequireArgument<string>;
 					cipher_file_directory: Executor.RequestArgument<string, true>;
 					limit: Executor.RequestArgument<bigint, false>;
@@ -160,7 +160,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 							a.cipher_file_directory,
 							(value) => (value),
 							() => (plain_file_directory.replace(/$/i, '.encrypt')),
-							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						limit = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'limit'),
@@ -189,7 +189,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 					Console.success(los(`执行成功`), [`${cipher_file_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					plain_file_directory: undefined!,
 					cipher_file_directory: '?default',
 					limit: configuration.limit,
@@ -204,7 +204,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					cipher_file_directory: Executor.RequireArgument<string>;
 					plain_file_directory: Executor.RequestArgument<string, true>;
 					limit: Executor.RequestArgument<bigint, false>;
@@ -226,7 +226,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 							a.plain_file_directory,
 							(value) => (value),
 							() => (cipher_file_directory.replace(/$/i, '.decrypt')),
-							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						limit = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'limit'),
@@ -255,7 +255,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 					Console.success(los(`执行成功`), [`${plain_file_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					cipher_file_directory: undefined!,
 					plain_file_directory: '?default',
 					limit: configuration.limit,

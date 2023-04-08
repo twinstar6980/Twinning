@@ -2,6 +2,7 @@
 	"language": "Chinese",
 	"cli_disable_virtual_terminal_sequence": false,
 	"pause_when_finish": true,
+	"notification_time_limit": 15000,
 	"thread_limit": 0,
 	"byte_stream_use_big_endian": false,
 	"common_buffer_size": "64.0m",
@@ -9,7 +10,7 @@
 		"disable_trailing_comma": false,
 		"disable_array_wrap_line": false,
 	},
-	"common_file_system_argument": {
-		"fs_tactic_if_exist": "none",
+	"method_common_argument": {
+		"path_tactic_if_out_exist": "none",
 	},
 }

@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';
 import '/application.dart';
 import '/platform_method.dart';
+import '/notification_helper.dart';
 
 // ----------------
 
@@ -20,6 +21,7 @@ main(
     await windowManager.waitUntilReadyToShow();
     await windowManager.show();
   }
+  await NotificationHelper.initialize();
   var command = argument.isEmpty ? null : argument.sublist(1);
   if (Platform.isAndroid) {
     var methodArgument = <String, dynamic>{};

@@ -21,7 +21,7 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					bundle_directory: Executor.RequireArgument<string>;
 					data_file: Executor.RequestArgument<string, true>;
 					version_number: Executor.RequestArgument<bigint, false>;
@@ -43,7 +43,7 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 							a.data_file,
 							(value) => (value),
 							() => (bundle_directory.replace(/((\.dz)(\.bundle))?$/i, '.dz')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_number'),
@@ -66,7 +66,7 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 					Console.success(los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					bundle_directory: undefined!,
 					data_file: '?default',
 					version_number: configuration.version_number,
@@ -81,7 +81,7 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					data_file: Executor.RequireArgument<string>;
 					bundle_directory: Executor.RequestArgument<string, true>;
 					version_number: Executor.RequestArgument<bigint, false>;
@@ -101,7 +101,7 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 							a.bundle_directory,
 							(value) => (value),
 							() => (data_file.replace(/((\.dz))?$/i, '.dz.bundle')),
-							(initial) => (Console.path('directory', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_number'),
@@ -117,7 +117,7 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 					Console.success(los(`执行成功`), [`${bundle_directory}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					data_file: undefined!,
 					bundle_directory: '?default',
 					version_number: configuration.version_number,
@@ -131,7 +131,7 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 				) {
 					return Executor.query_method_name(this.id);
 				},
-				worker(a: Entry.CFSA & {
+				worker(a: Entry.CommonArgument & {
 					resource_directory: Executor.RequireArgument<string>;
 					data_file: Executor.RequestArgument<string, true>;
 					version_number: Executor.RequestArgument<bigint, false>;
@@ -151,7 +151,7 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 							a.data_file,
 							(value) => (value),
 							() => (resource_directory.replace(/((\.dz)(\.resource))?$/i, '.dz')),
-							(initial) => (Console.path('file', [false, a.fs_tactic_if_exist], null, null, initial)),
+							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_number'),
@@ -166,7 +166,7 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 					Console.success(los(`执行成功`), [`${data_file}`]);
 				},
 				default_argument: {
-					...Entry.k_cfsa,
+					...Entry.k_common_argument,
 					resource_directory: undefined!,
 					data_file: '?default',
 					version_number: configuration.version_number,
