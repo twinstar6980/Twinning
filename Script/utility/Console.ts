@@ -773,12 +773,12 @@ namespace TwinStar.Script.Console {
 		let maximum_key_length = Math.max(...option.map((e) => (e[1].length)));
 		let message = option.map((e, i) => (`${make_prefix_padded_string(e[1], ' ', maximum_key_length)}. ${e[2]}`));
 		if (Shell.is_cli) {
-			for (let item of message) {
-				cli_basic_output(item, false, 1, true);
-			}
 			result = cli_basic_input(
 				leading,
 				() => {
+					for (let item of message) {
+						cli_basic_output(item, false, 1, true);
+					}
 					return;
 				},
 				(value) => {

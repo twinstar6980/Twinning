@@ -8,28 +8,35 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 	}>;
 
 	export type Option = {
-		json: null | {
+		rton: null | {
 			directory: string;
-			//version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
+			version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
 			crypt: null | {
 				key: string;
 			};
 		},
-		image: null | {
+		ptx: null | {
 			directory: string;
 			texture_format_map: TextureFormatMap;
 			atlas: null | {
 				resize: boolean;
 			};
-			sprite: null | {};
+			sprite: null | {
+			};
 		},
-		animation: null | {
+		pam: null | {
 			directory: string;
-			//version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
-			json: null | {};
-			flash: null | {};
+			version: typeof Core.Tool.PopCap.Animation.Version.Value,
+			json: null | {
+			};
+			flash: null | {
+			};
 		},
-		audio: null | {
+		bnk: null | {
+			directory: string;
+			version: typeof Core.Tool.Wwise.SoundBank.Version.Value,
+		},
+		wem: null | {
 			directory: string;
 			tool: {
 				ffmpeg_program: string;
@@ -124,8 +131,12 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 				tree: PathUtility.Tree,
 			) => {
 				for (let name in tree) {
-					//CoreX.FileSystem.rename(`${parent}/${name.toUpperCase()}`, `${parent}/${name}`);
-					PathUtility.safe_rename(`${parent}/${name.toUpperCase()}`, `${parent}/${name}`);
+					try {
+						//CoreX.FileSystem.rename(`${parent}/${name.toUpperCase()}`, `${parent}/${name}`);
+						PathUtility.safe_rename(`${parent}/${name.toUpperCase()}`, `${parent}/${name}`);
+					} catch (e) {
+						Console.error_of(e);
+					}
 					if (tree[name] !== null) {
 						rename_tree(`${parent}/${name}`, tree[name]!);
 					}
@@ -139,28 +150,28 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 		let audio_temporary_directory = HomeDirectory.new_temporary();
 		iterate_manifest(true)((group, subgroup, resource) => {
 			let path = resource[1].path;
-			if (option.json !== null && path.endsWith('.rton')) {
+			if (option.rton !== null && path.endsWith('.rton')) {
 				Console.verbosity(`  ${path}`, []);
 				try {
-					if (option.json.crypt !== null) {
+					if (option.rton.crypt !== null) {
 						CoreX.Tool.PopCap.ReflectionObjectNotation.decrypt_then_decode_fs(
 							`${resource_directory}/${path}`,
-							`${option.json.directory}/${path.slice(0, -4)}json`,
-							{ number: 1n, native_string_encoding_use_utf8: true },
-							option.json.crypt.key,
+							`${option.rton.directory}/${path.slice(0, -4)}json`,
+							option.rton.version,
+							option.rton.crypt.key,
 						);
 					} else {
 						CoreX.Tool.PopCap.ReflectionObjectNotation.decode_fs(
 							`${resource_directory}/${path}`,
-							`${option.json.directory}/${path.slice(0, -4)}json`,
-							{ number: 1n, native_string_encoding_use_utf8: true },
+							`${option.rton.directory}/${path.slice(0, -4)}json`,
+							option.rton.version,
 						);
 					}
 				} catch (e: any) {
 					Console.error_of(e);
 				}
 			}
-			if (option.image !== null && resource[1].expand[0] === 'atlas') {
+			if (option.ptx !== null && resource[1].expand[0] === 'atlas') {
 				Console.verbosity(`  ${path}`, []);
 				try {
 					assert_test(resource[2].additional.type === 'texture', `invalid image resource`);
@@ -168,7 +179,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 					let texture_information_source = resource[2].additional.value;
 					let size = atlas_image_information.size;
 					let actual_size = texture_information_source.size;
-					let texture_format = option.image.texture_format_map.find((e) => (e.index === texture_information_source.format));
+					let texture_format = option.ptx.texture_format_map.find((e) => (e.index === texture_information_source.format));
 					assert_test(texture_format !== undefined, `unknown texture format : ${texture_information_source.format}`);
 					Console.verbosity(`    size : [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] of [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ] , format : ${texture_format.format}`, []);
 					let data = CoreX.FileSystem.read_file(`${resource_directory}/${path}.ptx`);
@@ -176,57 +187,70 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 					let image = Core.Image.Image.allocate(Core.Image.ImageSize.value(actual_size));
 					let image_view = image.view();
 					Support.PopCap.Texture.Encode.decode(stream, image_view, texture_format.format);
-					if (option.image.atlas !== null) {
+					if (option.ptx.atlas !== null) {
 						let atlas_view = image_view;
-						if (option.image.atlas.resize) {
+						if (option.ptx.atlas.resize) {
 							atlas_view = atlas_view.sub(Core.Image.ImagePosition.value([0n, 0n]), Core.Image.ImageSize.value(size));
 						}
-						CoreX.Image.File.PNG.write_fs(`${option.image.directory}/${path}.png`, atlas_view);
+						CoreX.Image.File.PNG.write_fs(`${option.ptx.directory}/${path}.png`, atlas_view);
 					}
-					if (option.image.sprite !== null) {
+					if (option.ptx.sprite !== null) {
 						Support.Atlas.Pack.unpack_fsh({
 							size: atlas_image_information.size,
 							sprite: record_transform(atlas_image_information.sprite, (k, v) => ([v.path, { position: v.position, size: v.size }])),
-						}, image_view, option.image.directory);
+						}, image_view, option.ptx.directory);
 					}
 				} catch (e: any) {
 					Console.error_of(e);
 				}
 			}
-			if (option.animation !== null && path.endsWith('.pam')) {
+			if (option.pam !== null && path.endsWith('.pam')) {
 				Console.verbosity(`  ${path}`, []);
 				try {
 					let raw_file = `${path}.json`;
 					let flash_directory = `${path}.xfl`;
 					let data = CoreX.FileSystem.read_file(`${resource_directory}/${path}`);
 					let stream = Core.ByteStreamView.watch(data.view());
-					let version_c = Core.Tool.PopCap.Animation.Version.value({ number: 6n });
+					let version_c = Core.Tool.PopCap.Animation.Version.value(option.pam.version);
 					let information = Core.Tool.PopCap.Animation.Manifest.Animation.default();
 					Core.Tool.PopCap.Animation.Decode.process_animation(stream, information, version_c);
 					let information_json = information.get_json(version_c);
 					let information_js = information_json.value;
-					if (option.animation.json !== null) {
-						CoreX.JSON.write_fs(`${option.animation.directory}/${raw_file}`, information_json);
+					if (option.pam.json !== null) {
+						CoreX.JSON.write_fs(`${option.pam.directory}/${raw_file}`, information_json);
 					}
-					if (option.animation.flash !== null) {
+					if (option.pam.flash !== null) {
 						let flash_package = Support.PopCap.Animation.Convert.Flash.From.from(information_js as any);
-						Support.PopCap.Animation.Convert.Flash.save_flash_package(`${option.animation.directory}/${flash_directory}`, flash_package);
-						Support.PopCap.Animation.Convert.Flash.SourceManager.create_fsh(`${option.animation.directory}/${flash_directory}`, information_js as any);
-						Support.PopCap.Animation.Convert.Flash.create_xfl_content_file(`${option.animation.directory}/${flash_directory}`);
+						Support.PopCap.Animation.Convert.Flash.save_flash_package(`${option.pam.directory}/${flash_directory}`, flash_package);
+						Support.PopCap.Animation.Convert.Flash.SourceManager.create_fsh(`${option.pam.directory}/${flash_directory}`, information_js as any);
+						Support.PopCap.Animation.Convert.Flash.create_xfl_content_file(`${option.pam.directory}/${flash_directory}`);
 					}
 				} catch (e: any) {
 					Console.error_of(e);
 				}
 			}
-			if (option.audio !== null && path.endsWith('.wem')) {
+			if (option.bnk !== null && path.endsWith('.bnk')) {
+				Console.verbosity(`  ${path}`, []);
+				try {
+					CoreX.Tool.Wwise.SoundBank.decode_fs(
+						`${resource_directory}/${path}`,
+						`${option.bnk.directory}/${path}.bundle/manifest.json`,
+						`${option.bnk.directory}/${path}.bundle/embedded_media`,
+						option.bnk.version,
+					);
+				} catch (e: any) {
+					Console.error_of(e);
+				}
+			}
+			if (option.wem !== null && path.endsWith('.wem')) {
 				Console.verbosity(`  ${path}`, []);
 				try {
 					CoreX.Tool.Wwise.Media.decode_fs(
 						`${resource_directory}/${path}`,
-						`${option.audio.directory}/${path.slice(0, -3)}wav`,
-						option.audio.tool.ffmpeg_program,
-						option.audio.tool.ww2ogg_program,
-						option.audio.tool.ww2ogg_code_book,
+						`${option.wem.directory}/${path.slice(0, -3)}wav`,
+						option.wem.tool.ffmpeg_program,
+						option.wem.tool.ww2ogg_program,
+						option.wem.tool.ww2ogg_code_book,
 						audio_temporary_directory,
 						{},
 					);

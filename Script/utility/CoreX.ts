@@ -1282,19 +1282,6 @@ namespace TwinStar.Script.CoreX {
 
 				export const VersionNumberE = [72n, 88n, 112n, 113n, 118n, 120n, 125n, 128n, 132n, 134n, 135n, 140n, 145n] as VersionNumber[];
 
-				// TODO
-				export function detect_version(
-					data: ArrayBuffer,
-				): typeof Core.Tool.Wwise.SoundBank.Version.Value {
-					let version: typeof Core.Tool.Wwise.SoundBank.Version.Value = {
-						number: undefined!,
-					};
-					let view = new DataView(data);
-					version.number = BigInt(view.getUint32(0x0)) as any;
-					assert_test([88n, 112n, 140n].includes(version.number));
-					return version;
-				}
-
 				export function encode_fs(
 					data_file: string,
 					manifest_file: string,

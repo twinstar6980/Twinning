@@ -52,20 +52,25 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 	// ------------------------------------------------
 
 	type ResourceConvertOption = {
-		json: Executor.RequestArgument<boolean, false>;
-		json_crypt: Executor.RequestArgument<boolean, false>;
-		json_crypt_key: Executor.RequestArgument<string, false>;
-		image: Executor.RequestArgument<boolean, false>;
-		image_texture_format_map_list: Record<string, Support.PvZ2.ResourceStreamBundle.ResourceConvert.TextureFormatMap>;
-		image_texture_format_map_name: Executor.RequestArgument<string, false>;
-		image_atlas: Executor.RequestArgument<boolean, false>;
-		image_atlas_resize: Executor.RequestArgument<boolean, false>;
-		image_sprite: Executor.RequestArgument<boolean, false>;
-		animation: Executor.RequestArgument<boolean, false>;
-		animation_json: Executor.RequestArgument<boolean, false>;
-		animation_flash: Executor.RequestArgument<boolean, false>;
-		audio: Executor.RequestArgument<boolean, false>;
-		audio_tool: {
+		rton: Executor.RequestArgument<boolean, false>;
+		rton_version_number: Executor.RequestArgument<bigint, false>;
+		rton_version_native_string_encoding_use_utf8: Executor.RequestArgument<boolean, false>;
+		rton_crypt: Executor.RequestArgument<boolean, false>;
+		rton_crypt_key: Executor.RequestArgument<string, false>;
+		ptx: Executor.RequestArgument<boolean, false>;
+		ptx_texture_format_map_list: Record<string, Support.PvZ2.ResourceStreamBundle.ResourceConvert.TextureFormatMap>;
+		ptx_texture_format_map_name: Executor.RequestArgument<string, false>;
+		ptx_atlas: Executor.RequestArgument<boolean, false>;
+		ptx_atlas_resize: Executor.RequestArgument<boolean, false>;
+		ptx_sprite: Executor.RequestArgument<boolean, false>;
+		pam: Executor.RequestArgument<boolean, false>;
+		pam_version_number: Executor.RequestArgument<bigint, false>;
+		pam_json: Executor.RequestArgument<boolean, false>;
+		pam_flash: Executor.RequestArgument<boolean, false>;
+		bnk: Executor.RequestArgument<boolean, false>;
+		bnk_version_number: Executor.RequestArgument<bigint, false>;
+		wem: Executor.RequestArgument<boolean, false>;
+		wem_tool: {
 			ffmpeg_program: string;
 			ww2ogg_program: string;
 			ww2ogg_code_book: string;
@@ -312,10 +317,11 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 					let version_number: bigint;
 					let version_extended_texture_information_for_pvz2_cn: bigint;
 					let option: Support.PvZ2.ResourceStreamBundle.ResourceConvert.Option = {
-						json: null,
-						image: null,
-						animation: null,
-						audio: null,
+						rton: null,
+						ptx: null,
+						pam: null,
+						bnk: null,
+						wem: null,
 					};
 					{
 						bundle_directory = Executor.require_argument(
@@ -340,23 +346,41 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 						);
 						let convert_directory = `${bundle_directory}/convert`;
 						{
-							let json: boolean;
-							json = Executor.request_argument(
-								Executor.query_argument_name(this.id, 'option_json'),
-								a.option.json,
+							let rton: boolean;
+							rton = Executor.request_argument(
+								Executor.query_argument_name(this.id, 'option_rton'),
+								a.option.rton,
 								(value) => (value),
 								null,
 								(initial) => (Console.confirmation(null, null, initial)),
 							);
-							if (json) {
-								option.json = {
+							if (rton) {
+								option.rton = {
 									directory: convert_directory,
+									version: {
+										number: undefined!,
+										native_string_encoding_use_utf8: undefined!,
+									},
 									crypt: null,
 								};
+								option.rton.version.number = Executor.request_argument(
+									Executor.query_argument_name(this.id, 'option_rton_version_number'),
+									a.option.rton_version_number,
+									(value) => (value),
+									null,
+									(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE), null, null, initial)),
+								) as any;
+								option.rton.version.native_string_encoding_use_utf8 = Executor.request_argument(
+									Executor.query_argument_name(this.id, 'option_rton_version_native_string_encoding_use_utf8'),
+									a.option.rton_version_native_string_encoding_use_utf8,
+									(value) => (value),
+									null,
+									(initial) => (Console.confirmation(null, null, initial)),
+								);
 								let crypt: boolean;
 								crypt = Executor.request_argument(
-									Executor.query_argument_name(this.id, 'option_json_crypt'),
-									a.option.json_crypt,
+									Executor.query_argument_name(this.id, 'option_rton_crypt'),
+									a.option.rton_crypt,
 									(value) => (value),
 									null,
 									(initial) => (Console.confirmation(null, null, initial)),
@@ -364,59 +388,59 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 								if (crypt) {
 									let key: string;
 									key = Executor.request_argument(
-										Executor.query_argument_name(this.id, 'option_json_crypt_key'),
-										a.option.json_crypt_key,
+										Executor.query_argument_name(this.id, 'option_rton_crypt_key'),
+										a.option.rton_crypt_key,
 										(value) => (value),
 										null,
 										(initial) => (Console.string(null, null, initial)),
 									);
-									option.json.crypt = {
+									option.rton.crypt = {
 										key: key,
 									};
 								}
 							}
 						}
 						{
-							let image: boolean;
-							image = Executor.request_argument(
-								Executor.query_argument_name(this.id, 'option_image'),
-								a.option.image,
+							let ptx: boolean;
+							ptx = Executor.request_argument(
+								Executor.query_argument_name(this.id, 'option_ptx'),
+								a.option.ptx,
 								(value) => (value),
 								null,
 								(initial) => (Console.confirmation(null, null, initial)),
 							);
-							if (image) {
-								option.image = {
+							if (ptx) {
+								option.ptx = {
 									directory: convert_directory,
 									texture_format_map: null!,
 									atlas: null,
 									sprite: null,
 								};
 								{
-									let map_name_list = Object.keys(a.option.image_texture_format_map_list);
+									let map_name_list = Object.keys(a.option.ptx_texture_format_map_list);
 									assert_test(map_name_list.length !== 0, `texture format map list is empty`);
 									let texture_format_map_name: string;
 									texture_format_map_name = Executor.request_argument(
-										Executor.query_argument_name(this.id, 'option_image_texture_format_map_name'),
-										a.option.image_texture_format_map_name,
+										Executor.query_argument_name(this.id, 'option_ptx_texture_format_map_name'),
+										a.option.ptx_texture_format_map_name,
 										(value) => (value),
 										null,
 										(initial) => (Console.option(Console.option_string(map_name_list), null, null, initial)),
 									);
-									option.image.texture_format_map = a.option.image_texture_format_map_list[texture_format_map_name];
+									option.ptx.texture_format_map = a.option.ptx_texture_format_map_list[texture_format_map_name];
 								}
 								let atlas: boolean;
 								atlas = Executor.request_argument(
-									Executor.query_argument_name(this.id, 'option_image_atlas'),
-									a.option.image_atlas,
+									Executor.query_argument_name(this.id, 'option_ptx_atlas'),
+									a.option.ptx_atlas,
 									(value) => (value),
 									null,
 									(initial) => (Console.confirmation(null, null, initial)),
 								);
 								let sprite: boolean;
 								sprite = Executor.request_argument(
-									Executor.query_argument_name(this.id, 'option_image_sprite'),
-									a.option.image_sprite,
+									Executor.query_argument_name(this.id, 'option_ptx_sprite'),
+									a.option.ptx_sprite,
 									(value) => (value),
 									null,
 									(initial) => (Console.confirmation(null, null, initial)),
@@ -424,76 +448,111 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 								if (atlas) {
 									let resize: boolean;
 									resize = Executor.request_argument(
-										Executor.query_argument_name(this.id, 'option_image_atlas_resize'),
-										a.option.image_atlas_resize,
+										Executor.query_argument_name(this.id, 'option_ptx_atlas_resize'),
+										a.option.ptx_atlas_resize,
 										(value) => (value),
 										null,
 										(initial) => (Console.confirmation(null, null, initial)),
 									);
-									option.image.atlas = {
+									option.ptx.atlas = {
 										resize: resize,
 									};
 								}
 								if (sprite) {
-									option.image.sprite = {};
+									option.ptx.sprite = {};
 								}
 							}
 						}
 						{
-							let animation: boolean;
-							animation = Executor.request_argument(
-								Executor.query_argument_name(this.id, 'option_animation'),
-								a.option.animation,
+							let pam: boolean;
+							pam = Executor.request_argument(
+								Executor.query_argument_name(this.id, 'option_pam'),
+								a.option.pam,
 								(value) => (value),
 								null,
 								(initial) => (Console.confirmation(null, null, initial)),
 							);
-							if (animation) {
-								option.animation = {
+							if (pam) {
+								option.pam = {
 									directory: convert_directory,
+									version: {
+										number: undefined!,
+									},
 									json: null,
 									flash: null,
 								};
+								option.pam.version.number = Executor.request_argument(
+									Executor.query_argument_name(this.id, 'option_pam_version_number'),
+									a.option.pam_version_number,
+									(value) => (value),
+									null,
+									(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Animation.VersionNumberE), null, null, initial)),
+								) as any;
 								let json: boolean;
 								json = Executor.request_argument(
-									Executor.query_argument_name(this.id, 'option_animation_json'),
-									a.option.animation_json,
+									Executor.query_argument_name(this.id, 'option_pam_json'),
+									a.option.pam_json,
 									(value) => (value),
 									null,
 									(initial) => (Console.confirmation(null, null, initial)),
 								);
 								let flash: boolean;
 								flash = Executor.request_argument(
-									Executor.query_argument_name(this.id, 'option_animation_flash'),
-									a.option.animation_flash,
+									Executor.query_argument_name(this.id, 'option_pam_flash'),
+									a.option.pam_flash,
 									(value) => (value),
 									null,
 									(initial) => (Console.confirmation(null, null, initial)),
 								);
 								if (json) {
-									option.animation.json = {};
+									option.pam.json = {};
 								}
 								if (flash) {
-									option.animation.flash = {};
+									option.pam.flash = {};
 								}
 							}
 						}
 						{
-							let audio: boolean;
-							audio = Executor.request_argument(
-								Executor.query_argument_name(this.id, 'option_audio'),
-								a.option.audio,
+							let bnk: boolean;
+							bnk = Executor.request_argument(
+								Executor.query_argument_name(this.id, 'option_bnk'),
+								a.option.bnk,
 								(value) => (value),
 								null,
 								(initial) => (Console.confirmation(null, null, initial)),
 							);
-							if (audio) {
-								option.audio = {
+							if (bnk) {
+								option.bnk = {
+									directory: convert_directory,
+									version: {
+										number: undefined!,
+									},
+								};
+								option.bnk.version.number = Executor.request_argument(
+									Executor.query_argument_name(this.id, 'option_bnk_version_number'),
+									a.option.bnk_version_number,
+									(value) => (value),
+									null,
+									(initial) => (Console.option(Console.option_integer(CoreX.Tool.Wwise.SoundBank.VersionNumberE), null, null, initial)),
+								) as any;
+							}
+						}
+						{
+							let wem: boolean;
+							wem = Executor.request_argument(
+								Executor.query_argument_name(this.id, 'option_wem'),
+								a.option.wem,
+								(value) => (value),
+								null,
+								(initial) => (Console.confirmation(null, null, initial)),
+							);
+							if (wem) {
+								option.wem = {
 									directory: convert_directory,
 									tool: {
-										ffmpeg_program: HomeDirectory.of(a.option.audio_tool.ffmpeg_program),
-										ww2ogg_program: HomeDirectory.of(a.option.audio_tool.ww2ogg_program),
-										ww2ogg_code_book: HomeDirectory.of(a.option.audio_tool.ww2ogg_code_book),
+										ffmpeg_program: HomeDirectory.of(a.option.wem_tool.ffmpeg_program),
+										ww2ogg_program: HomeDirectory.of(a.option.wem_tool.ww2ogg_program),
+										ww2ogg_code_book: HomeDirectory.of(a.option.wem_tool.ww2ogg_code_book),
 									},
 								};
 							}

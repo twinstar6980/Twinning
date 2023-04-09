@@ -198,7 +198,10 @@ namespace TwinStar.Script {
 		source: string,
 	): string {
 		let destination = source;
-		if (destination.startsWith('"') && destination.endsWith('"')) {
+		if (false) {
+		} else if (destination.startsWith(`'`) && destination.endsWith(`'`)) {
+			destination = destination.substring(1, destination.length - 1);
+		} else if (destination.startsWith(`"`) && destination.endsWith(`"`)) {
 			destination = destination.substring(1, destination.length - 1);
 		}
 		return destination;

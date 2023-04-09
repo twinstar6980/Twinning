@@ -115,11 +115,11 @@ namespace TwinStar.Script.Entry {
 				los('entry:input_finish_if_null'),
 			]);
 			while (true) {
-				let input = Console.string(true, null);
+				let input = Console.path('any', ['in'], true, null);
 				if (input === null) {
 					break;
 				}
-				raw_command.push(unquote(input));
+				raw_command.push(input);
 			}
 		}
 		let command = Executor.parse(raw_command);
