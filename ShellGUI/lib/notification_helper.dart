@@ -54,8 +54,8 @@ class NotificationHelper {
         description,
         const NotificationDetails(
           android: AndroidNotificationDetails(
-            'com.twinstar.toolkit.shell_gui.notification_channel',
-            kApplicationName,
+            'com.twinstar.toolkit.shell_gui.notification_channel.main',
+            'Main',
           ),
         ),
       );
