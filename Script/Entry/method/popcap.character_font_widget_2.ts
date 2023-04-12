@@ -6,7 +6,7 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 	// decode *
 
 	type Configuration = {
-		encode_buffer_size: Executor.RequestArgument<string, false>;
+		encode_buffer_size: Executor.Argument<string, false>;
 	};
 
 	export function _injector(
@@ -20,19 +20,20 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					manifest_file: Executor.RequireArgument<string>;
-					data_file: Executor.RequestArgument<string, true>;
-					buffer_size: Executor.RequestArgument<string, false>;
+					manifest_file: Executor.Argument<string, false>;
+					data_file: Executor.Argument<string, true>;
+					buffer_size: Executor.Argument<string, false>;
 				}) {
 					let manifest_file: string;
 					let data_file: string;
 					let buffer_size: bigint;
 					{
-						manifest_file = Executor.require_argument(
+						manifest_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'manifest_file'),
 							a.manifest_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						data_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file'),
@@ -50,7 +51,7 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 						);
 					}
 					CoreX.Tool.PopCap.CharacterFontWidget2.encode_fs(data_file, manifest_file, {}, buffer_size);
-					Console.success(los(`执行成功`), [`${data_file}`]);
+					return [`${data_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -68,17 +69,18 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					data_file: Executor.RequireArgument<string>;
-					manifest_file: Executor.RequestArgument<string, true>;
+					data_file: Executor.Argument<string, false>;
+					manifest_file: Executor.Argument<string, true>;
 				}) {
 					let data_file: string;
 					let manifest_file: string;
 					{
-						data_file = Executor.require_argument(
+						data_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						manifest_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'manifest_file'),
@@ -89,7 +91,7 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 						);
 					}
 					CoreX.Tool.PopCap.CharacterFontWidget2.decode_fs(data_file, manifest_file, {});
-					Console.success(los(`执行成功`), [`${manifest_file}`]);
+					return [`${manifest_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -108,19 +110,20 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					manifest_file_directory: Executor.RequireArgument<string>;
-					data_file_directory: Executor.RequestArgument<string, true>;
-					buffer_size: Executor.RequestArgument<string, false>;
+					manifest_file_directory: Executor.Argument<string, false>;
+					data_file_directory: Executor.Argument<string, true>;
+					buffer_size: Executor.Argument<string, false>;
 				}) {
 					let manifest_file_directory: string;
 					let data_file_directory: string;
 					let buffer_size: bigint;
 					{
-						manifest_file_directory = Executor.require_argument(
+						manifest_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'manifest_file_directory'),
 							a.manifest_file_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						data_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file_directory'),
@@ -147,7 +150,7 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 							CoreX.Tool.PopCap.CharacterFontWidget2.encode_fs(data_file, manifest_file, {}, data_buffer.view());
 						},
 					);
-					Console.success(los(`执行成功`), [`${data_file_directory}`]);
+					return [`${data_file_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -165,17 +168,18 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					data_file_directory: Executor.RequireArgument<string>;
-					manifest_file_directory: Executor.RequestArgument<string, true>;
+					data_file_directory: Executor.Argument<string, false>;
+					manifest_file_directory: Executor.Argument<string, true>;
 				}) {
 					let data_file_directory: string;
 					let manifest_file_directory: string;
 					{
-						data_file_directory = Executor.require_argument(
+						data_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file_directory'),
 							a.data_file_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						manifest_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'manifest_file_directory'),
@@ -194,7 +198,7 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 							CoreX.Tool.PopCap.CharacterFontWidget2.decode_fs(data_file, manifest_file, {});
 						},
 					);
-					Console.success(los(`执行成功`), [`${manifest_file_directory}`]);
+					return [`${manifest_file_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,

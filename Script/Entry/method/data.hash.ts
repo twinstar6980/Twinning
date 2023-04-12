@@ -18,19 +18,20 @@ namespace TwinStar.Script.Entry.method.data.hash {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					target_file: Executor.RequireArgument<string>;
+					target_file: Executor.Argument<string, false>;
 				}) {
 					let target_file: string;
 					{
-						target_file = Executor.require_argument(
+						target_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'target_file'),
 							a.target_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 					}
 					let result = CoreX.Tool.Data.Hash.MD5.hash_fs(target_file);
-					Console.success(los(`执行成功`), [`${result.toString(16)}`]);
+					return [`${result.toString(16)}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,

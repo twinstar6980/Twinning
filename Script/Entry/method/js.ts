@@ -18,19 +18,20 @@ namespace TwinStar.Script.Entry.method.js {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					script_file: Executor.RequireArgument<string>;
+					script_file: Executor.Argument<string, false>;
 				}) {
 					let script_file: string;
 					{
-						script_file = Executor.require_argument(
+						script_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'script_file'),
 							a.script_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 					}
 					let result = CoreX.Miscellaneous.evaluate_fs(script_file);
-					Console.success(los(`执行成功`), [`${result}`]);
+					return [`${result}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,

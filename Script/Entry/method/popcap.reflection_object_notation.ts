@@ -11,10 +11,10 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 	// decode_lenient
 
 	type Configuration = {
-		version_number: Executor.RequestArgument<bigint, false>;
-		version_native_string_encoding_use_utf8: Executor.RequestArgument<boolean, false>;
-		key: Executor.RequestArgument<string, false>;
-		encode_buffer_size: Executor.RequestArgument<string, false>;
+		version_number: Executor.Argument<bigint, false>;
+		version_native_string_encoding_use_utf8: Executor.Argument<boolean, false>;
+		key: Executor.Argument<string, false>;
+		encode_buffer_size: Executor.Argument<string, false>;
 	};
 
 	export function _injector(
@@ -28,11 +28,11 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					value_file: Executor.RequireArgument<string>;
-					data_file: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
-					version_native_string_encoding_use_utf8: Executor.RequestArgument<boolean, false>;
-					buffer_size: Executor.RequestArgument<string, false>;
+					value_file: Executor.Argument<string, false>;
+					data_file: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
+					version_native_string_encoding_use_utf8: Executor.Argument<boolean, false>;
+					buffer_size: Executor.Argument<string, false>;
 				}) {
 					let value_file: string;
 					let data_file: string;
@@ -40,11 +40,12 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					let version_native_string_encoding_use_utf8: boolean;
 					let buffer_size: bigint;
 					{
-						value_file = Executor.require_argument(
+						value_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'value_file'),
 							a.value_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						data_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file'),
@@ -76,7 +77,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 						);
 					}
 					CoreX.Tool.PopCap.ReflectionObjectNotation.encode_fs(data_file, value_file, true, true, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, buffer_size);
-					Console.success(los(`执行成功`), [`${data_file}`]);
+					return [`${data_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -96,21 +97,22 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					data_file: Executor.RequireArgument<string>;
-					value_file: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
-					version_native_string_encoding_use_utf8: Executor.RequestArgument<boolean, false>;
+					data_file: Executor.Argument<string, false>;
+					value_file: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
+					version_native_string_encoding_use_utf8: Executor.Argument<boolean, false>;
 				}) {
 					let data_file: string;
 					let value_file: string;
 					let version_number: bigint;
 					let version_native_string_encoding_use_utf8: boolean;
 					{
-						data_file = Executor.require_argument(
+						data_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						value_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'value_file'),
@@ -135,7 +137,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 						);
 					}
 					CoreX.Tool.PopCap.ReflectionObjectNotation.decode_fs(data_file, value_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 });
-					Console.success(los(`执行成功`), [`${value_file}`]);
+					return [`${value_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -154,19 +156,20 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					plain_file: Executor.RequireArgument<string>;
-					cipher_file: Executor.RequestArgument<string, true>;
-					key: Executor.RequestArgument<string, false>;
+					plain_file: Executor.Argument<string, false>;
+					cipher_file: Executor.Argument<string, true>;
+					key: Executor.Argument<string, false>;
 				}) {
 					let plain_file: string;
 					let cipher_file: string;
 					let key: string;
 					{
-						plain_file = Executor.require_argument(
+						plain_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'plain_file'),
 							a.plain_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						cipher_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'cipher_file'),
@@ -184,7 +187,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 						);
 					}
 					CoreX.Tool.PopCap.ReflectionObjectNotation.encrypt_fs(plain_file, cipher_file, key);
-					Console.success(los(`执行成功`), [`${cipher_file}`]);
+					return [`${cipher_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -202,19 +205,20 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					cipher_file: Executor.RequireArgument<string>;
-					plain_file: Executor.RequestArgument<string, true>;
-					key: Executor.RequestArgument<string, false>;
+					cipher_file: Executor.Argument<string, false>;
+					plain_file: Executor.Argument<string, true>;
+					key: Executor.Argument<string, false>;
 				}) {
 					let cipher_file: string;
 					let plain_file: string;
 					let key: string;
 					{
-						cipher_file = Executor.require_argument(
+						cipher_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'cipher_file'),
 							a.cipher_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						plain_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'plain_file'),
@@ -232,7 +236,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 						);
 					}
 					CoreX.Tool.PopCap.ReflectionObjectNotation.decrypt_fs(cipher_file, plain_file, key);
-					Console.success(los(`执行成功`), [`${plain_file}`]);
+					return [`${plain_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -250,12 +254,12 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					value_file: Executor.RequireArgument<string>;
-					data_file: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
-					version_native_string_encoding_use_utf8: Executor.RequestArgument<boolean, false>;
-					key: Executor.RequestArgument<string, false>;
-					buffer_size: Executor.RequestArgument<string, false>;
+					value_file: Executor.Argument<string, false>;
+					data_file: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
+					version_native_string_encoding_use_utf8: Executor.Argument<boolean, false>;
+					key: Executor.Argument<string, false>;
+					buffer_size: Executor.Argument<string, false>;
 				}) {
 					let value_file: string;
 					let data_file: string;
@@ -264,11 +268,12 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					let key: string;
 					let buffer_size: bigint;
 					{
-						value_file = Executor.require_argument(
+						value_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'value_file'),
 							a.value_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						data_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file'),
@@ -307,7 +312,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 						);
 					}
 					CoreX.Tool.PopCap.ReflectionObjectNotation.encode_then_encrypt_fs(data_file, value_file, true, true, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key, buffer_size);
-					Console.success(los(`执行成功`), [`${data_file}`]);
+					return [`${data_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -328,11 +333,11 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					data_file: Executor.RequireArgument<string>;
-					value_file: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
-					version_native_string_encoding_use_utf8: Executor.RequestArgument<boolean, false>;
-					key: Executor.RequestArgument<string, false>;
+					data_file: Executor.Argument<string, false>;
+					value_file: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
+					version_native_string_encoding_use_utf8: Executor.Argument<boolean, false>;
+					key: Executor.Argument<string, false>;
 				}) {
 					let data_file: string;
 					let value_file: string;
@@ -340,11 +345,12 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					let version_native_string_encoding_use_utf8: boolean;
 					let key: string;
 					{
-						data_file = Executor.require_argument(
+						data_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						value_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'value_file'),
@@ -376,7 +382,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 						);
 					}
 					CoreX.Tool.PopCap.ReflectionObjectNotation.decrypt_then_decode_fs(data_file, value_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key);
-					Console.success(los(`执行成功`), [`${value_file}`]);
+					return [`${value_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -396,21 +402,22 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					data_file: Executor.RequireArgument<string>;
-					value_file: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
-					version_native_string_encoding_use_utf8: Executor.RequestArgument<boolean, false>;
+					data_file: Executor.Argument<string, false>;
+					value_file: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
+					version_native_string_encoding_use_utf8: Executor.Argument<boolean, false>;
 				}) {
 					let data_file: string;
 					let value_file: string;
 					let version_number: bigint;
 					let version_native_string_encoding_use_utf8: boolean;
 					{
-						data_file = Executor.require_argument(
+						data_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						value_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'value_file'),
@@ -435,7 +442,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 						);
 					}
 					Support.PopCap.ReflectionObjectNotation.DecodeLenient.decode_whole_fs(data_file, value_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 });
-					Console.success(los(`执行成功`), [`${value_file}`]);
+					return [`${value_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -456,11 +463,11 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					value_file_directory: Executor.RequireArgument<string>;
-					data_file_directory: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
-					version_native_string_encoding_use_utf8: Executor.RequestArgument<boolean, false>;
-					buffer_size: Executor.RequestArgument<string, false>;
+					value_file_directory: Executor.Argument<string, false>;
+					data_file_directory: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
+					version_native_string_encoding_use_utf8: Executor.Argument<boolean, false>;
+					buffer_size: Executor.Argument<string, false>;
 				}) {
 					let value_file_directory: string;
 					let data_file_directory: string;
@@ -468,11 +475,12 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					let version_native_string_encoding_use_utf8: boolean;
 					let buffer_size: bigint;
 					{
-						value_file_directory = Executor.require_argument(
+						value_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'value_file_directory'),
 							a.value_file_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						data_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file_directory'),
@@ -513,7 +521,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							CoreX.Tool.PopCap.ReflectionObjectNotation.encode_fs(data_file, value_file, true, true, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, data_buffer.view());
 						},
 					);
-					Console.success(los(`执行成功`), [`${data_file_directory}`]);
+					return [`${data_file_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -533,21 +541,22 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					data_file_directory: Executor.RequireArgument<string>;
-					value_file_directory: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
-					version_native_string_encoding_use_utf8: Executor.RequestArgument<boolean, false>;
+					data_file_directory: Executor.Argument<string, false>;
+					value_file_directory: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
+					version_native_string_encoding_use_utf8: Executor.Argument<boolean, false>;
 				}) {
 					let data_file_directory: string;
 					let value_file_directory: string;
 					let version_number: bigint;
 					let version_native_string_encoding_use_utf8: boolean;
 					{
-						data_file_directory = Executor.require_argument(
+						data_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file_directory'),
 							a.data_file_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						value_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'value_file_directory'),
@@ -580,7 +589,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							CoreX.Tool.PopCap.ReflectionObjectNotation.decode_fs(data_file, value_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 });
 						},
 					);
-					Console.success(los(`执行成功`), [`${value_file_directory}`]);
+					return [`${value_file_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -599,19 +608,20 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					plain_file_directory: Executor.RequireArgument<string>;
-					cipher_file_directory: Executor.RequestArgument<string, true>;
-					key: Executor.RequestArgument<string, false>;
+					plain_file_directory: Executor.Argument<string, false>;
+					cipher_file_directory: Executor.Argument<string, true>;
+					key: Executor.Argument<string, false>;
 				}) {
 					let plain_file_directory: string;
 					let cipher_file_directory: string;
 					let key: string;
 					{
-						plain_file_directory = Executor.require_argument(
+						plain_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'plain_file_directory'),
 							a.plain_file_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						cipher_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'cipher_file_directory'),
@@ -637,7 +647,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							CoreX.Tool.PopCap.ReflectionObjectNotation.encrypt_fs(plain_file, cipher_file, key);
 						},
 					);
-					Console.success(los(`执行成功`), [`${cipher_file_directory}`]);
+					return [`${cipher_file_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -655,19 +665,20 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					cipher_file_directory: Executor.RequireArgument<string>;
-					plain_file_directory: Executor.RequestArgument<string, true>;
-					key: Executor.RequestArgument<string, false>;
+					cipher_file_directory: Executor.Argument<string, false>;
+					plain_file_directory: Executor.Argument<string, true>;
+					key: Executor.Argument<string, false>;
 				}) {
 					let cipher_file_directory: string;
 					let plain_file_directory: string;
 					let key: string;
 					{
-						cipher_file_directory = Executor.require_argument(
+						cipher_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'cipher_file_directory'),
 							a.cipher_file_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						plain_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'plain_file_directory'),
@@ -693,7 +704,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							CoreX.Tool.PopCap.ReflectionObjectNotation.decrypt_fs(cipher_file, plain_file, key);
 						},
 					);
-					Console.success(los(`执行成功`), [`${plain_file_directory}`]);
+					return [`${plain_file_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -711,12 +722,12 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					value_file_directory: Executor.RequireArgument<string>;
-					data_file_directory: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
-					version_native_string_encoding_use_utf8: Executor.RequestArgument<boolean, false>;
-					key: Executor.RequestArgument<string, false>;
-					buffer_size: Executor.RequestArgument<string, false>;
+					value_file_directory: Executor.Argument<string, false>;
+					data_file_directory: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
+					version_native_string_encoding_use_utf8: Executor.Argument<boolean, false>;
+					key: Executor.Argument<string, false>;
+					buffer_size: Executor.Argument<string, false>;
 				}) {
 					let value_file_directory: string;
 					let data_file_directory: string;
@@ -725,11 +736,12 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					let key: string;
 					let buffer_size: bigint;
 					{
-						value_file_directory = Executor.require_argument(
+						value_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'value_file_directory'),
 							a.value_file_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						data_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file_directory'),
@@ -777,7 +789,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							CoreX.Tool.PopCap.ReflectionObjectNotation.encode_then_encrypt_fs(data_file, value_file, true, true, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key, data_buffer.view());
 						},
 					);
-					Console.success(los(`执行成功`), [`${data_file_directory}`]);
+					return [`${data_file_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -798,11 +810,11 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					data_file_directory: Executor.RequireArgument<string>;
-					value_file_directory: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
-					version_native_string_encoding_use_utf8: Executor.RequestArgument<boolean, false>;
-					key: Executor.RequestArgument<string, false>;
+					data_file_directory: Executor.Argument<string, false>;
+					value_file_directory: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
+					version_native_string_encoding_use_utf8: Executor.Argument<boolean, false>;
+					key: Executor.Argument<string, false>;
 				}) {
 					let data_file_directory: string;
 					let value_file_directory: string;
@@ -810,11 +822,12 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 					let version_native_string_encoding_use_utf8: boolean;
 					let key: string;
 					{
-						data_file_directory = Executor.require_argument(
+						data_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file_directory'),
 							a.data_file_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						value_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'value_file_directory'),
@@ -854,7 +867,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							CoreX.Tool.PopCap.ReflectionObjectNotation.decrypt_then_decode_fs(data_file, value_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key);
 						},
 					);
-					Console.success(los(`执行成功`), [`${value_file_directory}`]);
+					return [`${value_file_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,

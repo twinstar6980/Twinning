@@ -130,24 +130,12 @@ namespace TwinStar.Script.Entry {
 		let progress = new TextGenerator.Progress('fraction', true, 40, command.length);
 		for (let item of command) {
 			progress.increase();
-			Console.information(los('entry:all_command_finish', progress), [
+			Console.information(los('entry:current_command_execute', progress), [
 				`${item.input === null ? '?' : item.input.value}${item.method === null ? '' : ` | ${item.method}`}`,
 			]);
-			let current_exception = null;
-			let current_timer = new Timer();
-			current_timer.start();
-			try {
-				Executor.execute(item, method);
-			} catch (e: any) {
-				current_exception = e;
-			}
-			current_timer.stop();
-			if (configuration.notification_time_limit !== null && configuration.notification_time_limit <= current_timer.duration()) {
-				Console.push_notification(los('entry:current_command_finish'), los('entry:duration', (current_timer.duration() / 1000).toFixed(3)));
-			}
-			if (current_exception !== null) {
-				Console.error_of(current_exception);
-				Console.pause();
+			let state = Executor.execute(item, method);
+			if (configuration.notification_time_limit !== null && configuration.notification_time_limit <= state[1]) {
+				Console.push_notification(los('entry:current_command_finish'), los('entry:duration', (state[1] / 1000).toFixed(3)));
 			}
 		}
 		timer.stop();

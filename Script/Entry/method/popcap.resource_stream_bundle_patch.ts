@@ -6,10 +6,10 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 	// decode
 
 	type Configuration = {
-		use_raw_packet: Executor.RequestArgument<boolean, false>;
-		version_number: Executor.RequestArgument<bigint, false>;
-		encode_buffer_size: Executor.RequestArgument<string, false>;
-		decode_buffer_size: Executor.RequestArgument<string, false>;
+		use_raw_packet: Executor.Argument<boolean, false>;
+		version_number: Executor.Argument<bigint, false>;
+		encode_buffer_size: Executor.Argument<string, false>;
+		decode_buffer_size: Executor.Argument<string, false>;
 	};
 
 	export function _injector(
@@ -23,12 +23,12 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					before_file: Executor.RequireArgument<string>;
-					after_file: Executor.RequestArgument<string, false>;
-					patch_file: Executor.RequestArgument<string, true>;
-					use_raw_packet: Executor.RequestArgument<boolean, false>;
-					version_number: Executor.RequestArgument<bigint, false>;
-					buffer_size: Executor.RequestArgument<string, false>;
+					before_file: Executor.Argument<string, false>;
+					after_file: Executor.Argument<string, false>;
+					patch_file: Executor.Argument<string, true>;
+					use_raw_packet: Executor.Argument<boolean, false>;
+					version_number: Executor.Argument<bigint, false>;
+					buffer_size: Executor.Argument<string, false>;
 				}) {
 					let before_file: string;
 					let after_file: string;
@@ -37,11 +37,12 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 					let version_number: bigint;
 					let buffer_size: bigint;
 					{
-						before_file = Executor.require_argument(
+						before_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'before_file'),
 							a.before_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						after_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'after_file'),
@@ -81,7 +82,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 						);
 					}
 					CoreX.Tool.PopCap.ResourceStreamBundlePatch.encode_fs(before_file, after_file, patch_file, use_raw_packet, { number: version_number as any }, buffer_size);
-					Console.success(los(`执行成功`), [`${patch_file}`]);
+					return [`${patch_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -102,12 +103,12 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					before_file: Executor.RequireArgument<string>;
-					patch_file: Executor.RequestArgument<string, false>;
-					after_file: Executor.RequestArgument<string, true>;
-					use_raw_packet: Executor.RequestArgument<boolean, false>;
-					version_number: Executor.RequestArgument<bigint, false>;
-					buffer_size: Executor.RequestArgument<string, false>;
+					before_file: Executor.Argument<string, false>;
+					patch_file: Executor.Argument<string, false>;
+					after_file: Executor.Argument<string, true>;
+					use_raw_packet: Executor.Argument<boolean, false>;
+					version_number: Executor.Argument<bigint, false>;
+					buffer_size: Executor.Argument<string, false>;
 				}) {
 					let before_file: string;
 					let patch_file: string;
@@ -116,11 +117,12 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 					let version_number: bigint;
 					let buffer_size: bigint;
 					{
-						before_file = Executor.require_argument(
+						before_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'before_file'),
 							a.before_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						patch_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'patch_file'),
@@ -159,7 +161,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 						);
 					}
 					CoreX.Tool.PopCap.ResourceStreamBundlePatch.decode_fs(before_file, after_file, patch_file, use_raw_packet, { number: version_number as any }, buffer_size);
-					Console.success(los(`执行成功`), [`${after_file}`]);
+					return [`${after_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,

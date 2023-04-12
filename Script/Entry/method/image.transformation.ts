@@ -20,21 +20,22 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					source_file: Executor.RequireArgument<string>;
-					destination_file: Executor.RequestArgument<string, true>;
-					horizontal: Executor.RequestArgument<boolean, false>;
-					vertical: Executor.RequestArgument<boolean, false>;
+					source_file: Executor.Argument<string, false>;
+					destination_file: Executor.Argument<string, true>;
+					horizontal: Executor.Argument<boolean, false>;
+					vertical: Executor.Argument<boolean, false>;
 				}) {
 					let source_file: string;
 					let destination_file: string;
 					let horizontal: boolean;
 					let vertical: boolean;
 					{
-						source_file = Executor.require_argument(
+						source_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'source_file'),
 							a.source_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						destination_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'destination_file'),
@@ -59,7 +60,7 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 						);
 					}
 					CoreX.Tool.Image.Transformation.flip_fs(source_file, destination_file, horizontal, vertical);
-					Console.success(los(`执行成功`), [`${destination_file}`]);
+					return [`${destination_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -78,21 +79,22 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					source_file: Executor.RequireArgument<string>;
-					destination_file: Executor.RequestArgument<string, true>;
-					width: Executor.RequestArgument<bigint, false>;
-					height: Executor.RequestArgument<bigint, false>;
+					source_file: Executor.Argument<string, false>;
+					destination_file: Executor.Argument<string, true>;
+					width: Executor.Argument<bigint, false>;
+					height: Executor.Argument<bigint, false>;
 				}) {
 					let source_file: string;
 					let destination_file: string;
 					let width: bigint;
 					let height: bigint;
 					{
-						source_file = Executor.require_argument(
+						source_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'source_file'),
 							a.source_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						destination_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'destination_file'),
@@ -117,7 +119,7 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 						);
 					}
 					CoreX.Tool.Image.Transformation.scale_fs(source_file, destination_file, [width, height]);
-					Console.success(los(`执行成功`), [`${destination_file}`]);
+					return [`${destination_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -136,19 +138,20 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					source_file: Executor.RequireArgument<string>;
-					destination_file: Executor.RequestArgument<string, true>;
-					size_rate: Executor.RequestArgument<number, false>;
+					source_file: Executor.Argument<string, false>;
+					destination_file: Executor.Argument<string, true>;
+					size_rate: Executor.Argument<number, false>;
 				}) {
 					let source_file: string;
 					let destination_file: string;
 					let size_rate: number;
 					{
-						source_file = Executor.require_argument(
+						source_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'source_file'),
 							a.source_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						destination_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'destination_file'),
@@ -166,7 +169,7 @@ namespace TwinStar.Script.Entry.method.image.transformation {
 						);
 					}
 					CoreX.Tool.Image.Transformation.scale_rate_fs(source_file, destination_file, size_rate);
-					Console.success(los(`执行成功`), [`${destination_file}`]);
+					return [`${destination_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,

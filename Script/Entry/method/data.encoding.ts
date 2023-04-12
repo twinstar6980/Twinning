@@ -19,17 +19,18 @@ namespace TwinStar.Script.Entry.method.data.encoding {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					raw_file: Executor.RequireArgument<string>;
-					ripe_file: Executor.RequestArgument<string, true>;
+					raw_file: Executor.Argument<string, false>;
+					ripe_file: Executor.Argument<string, true>;
 				}) {
 					let raw_file: string;
 					let ripe_file: string;
 					{
-						raw_file = Executor.require_argument(
+						raw_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'raw_file'),
 							a.raw_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						ripe_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'ripe_file'),
@@ -40,7 +41,7 @@ namespace TwinStar.Script.Entry.method.data.encoding {
 						);
 					}
 					CoreX.Tool.Data.Encoding.Base64.encode_fs(raw_file, ripe_file);
-					Console.success(los(`执行成功`), [`${ripe_file}`]);
+					return [`${ripe_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -57,17 +58,18 @@ namespace TwinStar.Script.Entry.method.data.encoding {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					ripe_file: Executor.RequireArgument<string>;
-					raw_file: Executor.RequestArgument<string, true>;
+					ripe_file: Executor.Argument<string, false>;
+					raw_file: Executor.Argument<string, true>;
 				}) {
 					let ripe_file: string;
 					let raw_file: string;
 					{
-						ripe_file = Executor.require_argument(
+						ripe_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'ripe_file'),
 							a.ripe_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						raw_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'raw_file'),
@@ -78,7 +80,7 @@ namespace TwinStar.Script.Entry.method.data.encoding {
 						);
 					}
 					CoreX.Tool.Data.Encoding.Base64.decode_fs(ripe_file, raw_file);
-					Console.success(los(`执行成功`), [`${raw_file}`]);
+					return [`${raw_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,

@@ -20,19 +20,20 @@ namespace TwinStar.Script.Entry.method.image.atlas {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					manifest_file: Executor.RequireArgument<string>;
-					sprite_directory: Executor.RequestArgument<string, true>;
-					atlas_file: Executor.RequestArgument<string, true>;
+					manifest_file: Executor.Argument<string, false>;
+					sprite_directory: Executor.Argument<string, true>;
+					atlas_file: Executor.Argument<string, true>;
 				}) {
 					let manifest_file: string;
 					let sprite_directory: string;
 					let atlas_file: string;
 					{
-						manifest_file = Executor.require_argument(
+						manifest_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'manifest_file'),
 							a.manifest_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						sprite_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'sprite_directory'),
@@ -50,7 +51,7 @@ namespace TwinStar.Script.Entry.method.image.atlas {
 						);
 					}
 					Support.Atlas.Pack.pack_fs(manifest_file, atlas_file, sprite_directory);
-					Console.success(los(`执行成功`), [`${atlas_file}`]);
+					return [`${atlas_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -68,19 +69,20 @@ namespace TwinStar.Script.Entry.method.image.atlas {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					manifest_file: Executor.RequireArgument<string>;
-					atlas_file: Executor.RequestArgument<string, true>;
-					sprite_directory: Executor.RequestArgument<string, true>;
+					manifest_file: Executor.Argument<string, false>;
+					atlas_file: Executor.Argument<string, true>;
+					sprite_directory: Executor.Argument<string, true>;
 				}) {
 					let manifest_file: string;
 					let atlas_file: string;
 					let sprite_directory: string;
 					{
-						manifest_file = Executor.require_argument(
+						manifest_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'manifest_file'),
 							a.manifest_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						atlas_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'atlas_file'),
@@ -98,7 +100,7 @@ namespace TwinStar.Script.Entry.method.image.atlas {
 						);
 					}
 					Support.Atlas.Pack.unpack_fs(manifest_file, atlas_file, sprite_directory);
-					Console.success(los(`执行成功`), [`${sprite_directory}`]);
+					return [`${sprite_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -116,19 +118,20 @@ namespace TwinStar.Script.Entry.method.image.atlas {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					sprite_directory: Executor.RequireArgument<string>;
-					manifest_file: Executor.RequestArgument<string, true>;
-					atlas_file: Executor.RequestArgument<string, true>;
+					sprite_directory: Executor.Argument<string, false>;
+					manifest_file: Executor.Argument<string, true>;
+					atlas_file: Executor.Argument<string, true>;
 				}) {
 					let sprite_directory: string;
 					let manifest_file: string;
 					let atlas_file: string;
 					{
-						sprite_directory = Executor.require_argument(
+						sprite_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'sprite_directory'),
 							a.sprite_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						manifest_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'manifest_file'),
@@ -146,7 +149,7 @@ namespace TwinStar.Script.Entry.method.image.atlas {
 						);
 					}
 					Support.Atlas.Pack.pack_automatic_fs(manifest_file, atlas_file, sprite_directory);
-					Console.success(los(`执行成功`), [`${atlas_file}`]);
+					return [`${atlas_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,

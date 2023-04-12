@@ -5,9 +5,9 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 	// decode *
 
 	type Configuration = {
-		tool_ffmpeg_program_file: Executor.RequestArgument<string, false>;
-		tool_ww2ogg_program_file: Executor.RequestArgument<string, false>;
-		tool_ww2ogg_code_book_file: Executor.RequestArgument<string, false>;
+		tool_ffmpeg_program_file: Executor.Argument<string, false>;
+		tool_ww2ogg_program_file: Executor.Argument<string, false>;
+		tool_ww2ogg_code_book_file: Executor.Argument<string, false>;
 	};
 
 	export function _injector(
@@ -21,11 +21,11 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					ripe_file: Executor.RequireArgument<string>;
-					raw_file: Executor.RequestArgument<string, true>;
-					tool_ffmpeg_program_file: Executor.RequestArgument<string, false>;
-					tool_ww2ogg_program_file: Executor.RequestArgument<string, false>;
-					tool_ww2ogg_code_book_file: Executor.RequestArgument<string, false>;
+					ripe_file: Executor.Argument<string, false>;
+					raw_file: Executor.Argument<string, true>;
+					tool_ffmpeg_program_file: Executor.Argument<string, false>;
+					tool_ww2ogg_program_file: Executor.Argument<string, false>;
+					tool_ww2ogg_code_book_file: Executor.Argument<string, false>;
 				}) {
 					let ripe_file: string;
 					let raw_file: string;
@@ -33,11 +33,12 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 					let tool_ww2ogg_program_file: string;
 					let tool_ww2ogg_code_book_file: string;
 					{
-						ripe_file = Executor.require_argument(
+						ripe_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'ripe_file'),
 							a.ripe_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						raw_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'raw_file'),
@@ -70,7 +71,7 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 					}
 					let temporary_directpry = HomeDirectory.new_temporary();
 					CoreX.Tool.Wwise.Media.decode_fs(ripe_file, raw_file, tool_ffmpeg_program_file, tool_ww2ogg_program_file, tool_ww2ogg_code_book_file, temporary_directpry, {});
-					Console.success(los(`执行成功`), [`${raw_file}`]);
+					return [`${raw_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -92,11 +93,11 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					ripe_file_directory: Executor.RequireArgument<string>;
-					raw_file_directory: Executor.RequestArgument<string, true>;
-					tool_ffmpeg_program_file: Executor.RequestArgument<string, false>;
-					tool_ww2ogg_program_file: Executor.RequestArgument<string, false>;
-					tool_ww2ogg_code_book_file: Executor.RequestArgument<string, false>;
+					ripe_file_directory: Executor.Argument<string, false>;
+					raw_file_directory: Executor.Argument<string, true>;
+					tool_ffmpeg_program_file: Executor.Argument<string, false>;
+					tool_ww2ogg_program_file: Executor.Argument<string, false>;
+					tool_ww2ogg_code_book_file: Executor.Argument<string, false>;
 				}) {
 					let ripe_file_directory: string;
 					let raw_file_directory: string;
@@ -104,11 +105,12 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 					let tool_ww2ogg_program_file: string;
 					let tool_ww2ogg_code_book_file: string;
 					{
-						ripe_file_directory = Executor.require_argument(
+						ripe_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'ripe_file_directory'),
 							a.ripe_file_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						raw_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'raw_file_directory'),
@@ -149,7 +151,7 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 							CoreX.Tool.Wwise.Media.decode_fs(ripe_file, raw_file, tool_ffmpeg_program_file, tool_ww2ogg_program_file, tool_ww2ogg_code_book_file, temporary_directpry, {});
 						},
 					);
-					Console.success(los(`执行成功`), [`${raw_file_directory}`]);
+					return [`${raw_file_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,

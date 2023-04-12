@@ -7,8 +7,8 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 	// pack_automatic
 
 	type Configuration = {
-		version_number: Executor.RequestArgument<bigint, false>;
-		pack_buffer_size: Executor.RequestArgument<string, false>;
+		version_number: Executor.Argument<bigint, false>;
+		pack_buffer_size: Executor.Argument<string, false>;
 	};
 
 	export function _injector(
@@ -22,21 +22,22 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					bundle_directory: Executor.RequireArgument<string>;
-					data_file: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
-					buffer_size: Executor.RequestArgument<string, false>;
+					bundle_directory: Executor.Argument<string, false>;
+					data_file: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
+					buffer_size: Executor.Argument<string, false>;
 				}) {
 					let bundle_directory: string;
 					let data_file: string;
 					let version_number: bigint;
 					let buffer_size: bigint;
 					{
-						bundle_directory = Executor.require_argument(
+						bundle_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'bundle_directory'),
 							a.bundle_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						data_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file'),
@@ -63,7 +64,7 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.Marmalade.DZip.pack_fs(data_file, manifest_file, resource_directory, { number: version_number as any }, buffer_size);
-					Console.success(los(`执行成功`), [`${data_file}`]);
+					return [`${data_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -82,19 +83,20 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					data_file: Executor.RequireArgument<string>;
-					bundle_directory: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
+					data_file: Executor.Argument<string, false>;
+					bundle_directory: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
 				}) {
 					let data_file: string;
 					let bundle_directory: string;
 					let version_number: bigint;
 					{
-						data_file = Executor.require_argument(
+						data_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						bundle_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'bundle_directory'),
@@ -114,7 +116,7 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.Marmalade.DZip.unpack_fs(data_file, manifest_file, resource_directory, { number: version_number as any });
-					Console.success(los(`执行成功`), [`${bundle_directory}`]);
+					return [`${bundle_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -132,19 +134,20 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					resource_directory: Executor.RequireArgument<string>;
-					data_file: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
+					resource_directory: Executor.Argument<string, false>;
+					data_file: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
 				}) {
 					let resource_directory: string;
 					let data_file: string;
 					let version_number: bigint;
 					{
-						resource_directory = Executor.require_argument(
+						resource_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'resource_directory'),
 							a.resource_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						data_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file'),
@@ -163,7 +166,7 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 					}
 					let data = Support.Marmalade.DZip.PackAutomatic.pack(resource_directory, version_number as any);
 					CoreX.FileSystem.write_file(data_file, data[0].view().sub(Core.Size.value(0n), data[1]));
-					Console.success(los(`执行成功`), [`${data_file}`]);
+					return [`${data_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,

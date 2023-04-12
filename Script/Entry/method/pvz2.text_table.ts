@@ -18,19 +18,20 @@ namespace TwinStar.Script.Entry.method.pvz2.text_table {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					source_file: Executor.RequireArgument<string>;
-					destination_version: Executor.RequestArgument<string, false>;
-					destination_file: Executor.RequestArgument<string, true>;
+					source_file: Executor.Argument<string, false>;
+					destination_version: Executor.Argument<string, false>;
+					destination_file: Executor.Argument<string, true>;
 				}) {
 					let source_file: string;
 					let destination_version: string;
 					let destination_file: string;
 					{
-						source_file = Executor.require_argument(
+						source_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'source_file'),
 							a.source_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						destination_version = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'destination_version'),
@@ -48,7 +49,7 @@ namespace TwinStar.Script.Entry.method.pvz2.text_table {
 						);
 					}
 					Support.PvZ2.TextTable.convert_fs(source_file, destination_file, null, destination_version as any);
-					Console.success(los(`执行成功`), [`${destination_file}`]);
+					return [`${destination_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,

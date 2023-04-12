@@ -10,8 +10,8 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 	// convert.flash.link_media *
 
 	type Configuration = {
-		version_number: Executor.RequestArgument<bigint, false>;
-		encode_buffer_size: Executor.RequestArgument<string, false>;
+		version_number: Executor.Argument<bigint, false>;
+		encode_buffer_size: Executor.Argument<string, false>;
 	};
 
 	export function _injector(
@@ -25,21 +25,22 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					manifest_file: Executor.RequireArgument<string>;
-					data_file: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
-					buffer_size: Executor.RequestArgument<string, false>;
+					manifest_file: Executor.Argument<string, false>;
+					data_file: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
+					buffer_size: Executor.Argument<string, false>;
 				}) {
 					let manifest_file: string;
 					let data_file: string;
 					let version_number: bigint;
 					let buffer_size: bigint;
 					{
-						manifest_file = Executor.require_argument(
+						manifest_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'manifest_file'),
 							a.manifest_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						data_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file'),
@@ -64,7 +65,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 						);
 					}
 					CoreX.Tool.PopCap.Animation.encode_fs(data_file, manifest_file, { number: version_number as any }, buffer_size);
-					Console.success(los(`执行成功`), [`${data_file}`]);
+					return [`${data_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -83,19 +84,20 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					data_file: Executor.RequireArgument<string>;
-					manifest_file: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
+					data_file: Executor.Argument<string, false>;
+					manifest_file: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
 				}) {
 					let data_file: string;
 					let manifest_file: string;
 					let version_number: bigint;
 					{
-						data_file = Executor.require_argument(
+						data_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						manifest_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'manifest_file'),
@@ -113,7 +115,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 						);
 					}
 					CoreX.Tool.PopCap.Animation.decode_fs(data_file, manifest_file, { number: version_number as any });
-					Console.success(los(`执行成功`), [`${manifest_file}`]);
+					return [`${manifest_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -131,17 +133,18 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					raw_file: Executor.RequireArgument<string>;
-					ripe_directory: Executor.RequestArgument<string, true>;
+					raw_file: Executor.Argument<string, false>;
+					ripe_directory: Executor.Argument<string, true>;
 				}) {
 					let raw_file: string;
 					let ripe_directory: string;
 					{
-						raw_file = Executor.require_argument(
+						raw_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'raw_file'),
 							a.raw_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						ripe_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'ripe_directory'),
@@ -155,7 +158,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					Support.PopCap.Animation.Convert.Flash.From.from_fsh(raw, ripe_directory);
 					Support.PopCap.Animation.Convert.Flash.SourceManager.create_fsh(ripe_directory, raw);
 					Support.PopCap.Animation.Convert.Flash.create_xfl_content_file(ripe_directory);
-					Console.success(los(`执行成功`), [`${ripe_directory}`]);
+					return [`${ripe_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -172,17 +175,18 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					ripe_directory: Executor.RequireArgument<string>;
-					raw_file: Executor.RequestArgument<string, true>;
+					ripe_directory: Executor.Argument<string, false>;
+					raw_file: Executor.Argument<string, true>;
 				}) {
 					let ripe_directory: string;
 					let raw_file: string;
 					{
-						ripe_directory = Executor.require_argument(
+						ripe_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'ripe_directory'),
 							a.ripe_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						raw_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'raw_file'),
@@ -193,7 +197,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 						);
 					}
 					Support.PopCap.Animation.Convert.Flash.To.to_fs(raw_file, ripe_directory);
-					Console.success(los(`执行成功`), [`${raw_file}`]);
+					return [`${raw_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -210,17 +214,18 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					target_directory: Executor.RequireArgument<string>;
-					resolution: Executor.RequestArgument<bigint, false>;
+					target_directory: Executor.Argument<string, false>;
+					resolution: Executor.Argument<bigint, false>;
 				}) {
 					let target_directory: string;
 					let resolution: bigint;
 					{
-						target_directory = Executor.require_argument(
+						target_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'target_directory'),
 							a.target_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						resolution = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'resolution'),
@@ -231,7 +236,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 						);
 					}
 					Support.PopCap.Animation.Convert.Flash.SourceManager.resize_fs(target_directory, resolution);
-					Console.success(los(`执行成功`), [`${target_directory}`]);
+					return [`${target_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -248,15 +253,16 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					target_directory: Executor.RequireArgument<string>;
+					target_directory: Executor.Argument<string, false>;
 				}) {
 					let target_directory: string;
 					{
-						target_directory = Executor.require_argument(
+						target_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'target_directory'),
 							a.target_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 					}
 					let media_directory = `${target_directory}/LIBRARY/media`;
@@ -269,7 +275,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 						.forEach((e) => {
 							CoreX.FileSystem.create_hard_link(`${media_directory}/${e}`, `${target_directory}/../${e}`);
 						});
-					Console.success(los(`执行成功`), [`${target_directory}`]);
+					return [`${target_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -287,21 +293,22 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					manifest_file_directory: Executor.RequireArgument<string>;
-					data_file_directory: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
-					buffer_size: Executor.RequestArgument<string, false>;
+					manifest_file_directory: Executor.Argument<string, false>;
+					data_file_directory: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
+					buffer_size: Executor.Argument<string, false>;
 				}) {
 					let manifest_file_directory: string;
 					let data_file_directory: string;
 					let version_number: bigint;
 					let buffer_size: bigint;
 					{
-						manifest_file_directory = Executor.require_argument(
+						manifest_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'manifest_file_directory'),
 							a.manifest_file_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						data_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file_directory'),
@@ -335,7 +342,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							CoreX.Tool.PopCap.Animation.encode_fs(data_file, manifest_file, { number: version_number as any }, data_buffer.view());
 						},
 					);
-					Console.success(los(`执行成功`), [`${data_file_directory}`]);
+					return [`${data_file_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -354,19 +361,20 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					data_file_directory: Executor.RequireArgument<string>;
-					manifest_file_directory: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
+					data_file_directory: Executor.Argument<string, false>;
+					manifest_file_directory: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
 				}) {
 					let data_file_directory: string;
 					let manifest_file_directory: string;
 					let version_number: bigint;
 					{
-						data_file_directory = Executor.require_argument(
+						data_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file_directory'),
 							a.data_file_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						manifest_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'manifest_file_directory'),
@@ -392,7 +400,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							CoreX.Tool.PopCap.Animation.decode_fs(data_file, manifest_file, { number: version_number as any });
 						},
 					);
-					Console.success(los(`执行成功`), [`${manifest_file_directory}`]);
+					return [`${manifest_file_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -410,17 +418,18 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					raw_file_directory: Executor.RequireArgument<string>;
-					ripe_directory_directory: Executor.RequestArgument<string, true>;
+					raw_file_directory: Executor.Argument<string, false>;
+					ripe_directory_directory: Executor.Argument<string, true>;
 				}) {
 					let raw_file_directory: string;
 					let ripe_directory_directory: string;
 					{
-						raw_file_directory = Executor.require_argument(
+						raw_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'raw_file_directory'),
 							a.raw_file_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						ripe_directory_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'ripe_directory_directory'),
@@ -442,7 +451,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							Support.PopCap.Animation.Convert.Flash.create_xfl_content_file(ripe_directory);
 						},
 					);
-					Console.success(los(`执行成功`), [`${ripe_directory_directory}`]);
+					return [`${ripe_directory_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -459,17 +468,18 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					ripe_directory_directory: Executor.RequireArgument<string>;
-					raw_file_directory: Executor.RequestArgument<string, true>;
+					ripe_directory_directory: Executor.Argument<string, false>;
+					raw_file_directory: Executor.Argument<string, true>;
 				}) {
 					let ripe_directory_directory: string;
 					let raw_file_directory: string;
 					{
-						ripe_directory_directory = Executor.require_argument(
+						ripe_directory_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'ripe_directory_directory'),
 							a.ripe_directory_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						raw_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'raw_file_directory'),
@@ -488,7 +498,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							Support.PopCap.Animation.Convert.Flash.To.to_fs(raw_file, ripe_directory);
 						},
 					);
-					Console.success(los(`执行成功`), [`${raw_file_directory}`]);
+					return [`${raw_file_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -505,17 +515,18 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					target_directory_directory: Executor.RequireArgument<string>;
-					resolution: Executor.RequestArgument<bigint, false>;
+					target_directory_directory: Executor.Argument<string, false>;
+					resolution: Executor.Argument<bigint, false>;
 				}) {
 					let target_directory_directory: string;
 					let resolution: bigint;
 					{
-						target_directory_directory = Executor.require_argument(
+						target_directory_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'target_directory_directory'),
 							a.target_directory_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						resolution = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'resolution'),
@@ -533,7 +544,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							Support.PopCap.Animation.Convert.Flash.SourceManager.resize_fs(target_directory, resolution);
 						},
 					);
-					Console.success(los(`执行成功`), [`${target_directory_directory}`]);
+					return [`${target_directory_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -550,15 +561,16 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					target_directory_directory: Executor.RequireArgument<string>;
+					target_directory_directory: Executor.Argument<string, false>;
 				}) {
 					let target_directory_directory: string;
 					{
-						target_directory_directory = Executor.require_argument(
+						target_directory_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'target_directory_directory'),
 							a.target_directory_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 					}
 					simple_batch_execute(
@@ -578,7 +590,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 								});
 						},
 					);
-					Console.success(los(`执行成功`), [`${target_directory_directory}`]);
+					return [`${target_directory_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,

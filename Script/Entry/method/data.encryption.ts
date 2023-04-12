@@ -20,19 +20,20 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					plain_file: Executor.RequireArgument<string>;
-					cipher_file: Executor.RequestArgument<string, true>;
-					key: Executor.RequestArgument<bigint, false>;
+					plain_file: Executor.Argument<string, false>;
+					cipher_file: Executor.Argument<string, true>;
+					key: Executor.Argument<bigint, false>;
 				}) {
 					let plain_file: string;
 					let cipher_file: string;
 					let key: bigint;
 					{
-						plain_file = Executor.require_argument(
+						plain_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'plain_file'),
 							a.plain_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						cipher_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'cipher_file'),
@@ -50,7 +51,7 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 						);
 					}
 					CoreX.Tool.Data.Encryption.XOR.encrypt_fs(plain_file, cipher_file, [key]);
-					Console.success(los(`执行成功`), [`${cipher_file}`]);
+					return [`${cipher_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -68,12 +69,12 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					plain_file: Executor.RequireArgument<string>;
-					cipher_file: Executor.RequestArgument<string, true>;
-					mode: Executor.RequestArgument<string, false>;
-					block_size: Executor.RequestArgument<bigint, false>;
-					key: Executor.RequestArgument<string, false>;
-					iv: Executor.RequestArgument<string, false>;
+					plain_file: Executor.Argument<string, false>;
+					cipher_file: Executor.Argument<string, true>;
+					mode: Executor.Argument<string, false>;
+					block_size: Executor.Argument<bigint, false>;
+					key: Executor.Argument<string, false>;
+					iv: Executor.Argument<string, false>;
 				}) {
 					let plain_file: string;
 					let cipher_file: string;
@@ -82,11 +83,12 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 					let key: string;
 					let iv: string;
 					{
-						plain_file = Executor.require_argument(
+						plain_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'plain_file'),
 							a.plain_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						cipher_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'cipher_file'),
@@ -130,7 +132,7 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 						}
 					}
 					CoreX.Tool.Data.Encryption.Rijndael.encrypt_fs(plain_file, cipher_file, mode as any, block_size as any, BigInt(key.length) as CoreX.Tool.Data.Encryption.Rijndael.BlockSize, key, iv);
-					Console.success(los(`执行成功`), [`${cipher_file}`]);
+					return [`${cipher_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -151,12 +153,12 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					cipher_file: Executor.RequireArgument<string>;
-					plain_file: Executor.RequestArgument<string, true>;
-					mode: Executor.RequestArgument<string, false>;
-					block_size: Executor.RequestArgument<bigint, false>;
-					key: Executor.RequestArgument<string, false>;
-					iv: Executor.RequestArgument<string, false>;
+					cipher_file: Executor.Argument<string, false>;
+					plain_file: Executor.Argument<string, true>;
+					mode: Executor.Argument<string, false>;
+					block_size: Executor.Argument<bigint, false>;
+					key: Executor.Argument<string, false>;
+					iv: Executor.Argument<string, false>;
 				}) {
 					let cipher_file: string;
 					let plain_file: string;
@@ -165,11 +167,12 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 					let key: string;
 					let iv: string;
 					{
-						cipher_file = Executor.require_argument(
+						cipher_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'cipher_file'),
 							a.cipher_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						plain_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'plain_file'),
@@ -213,7 +216,7 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 						}
 					}
 					CoreX.Tool.Data.Encryption.Rijndael.decrypt_fs(cipher_file, plain_file, mode as any, block_size as any, BigInt(key.length) as CoreX.Tool.Data.Encryption.Rijndael.BlockSize, key, iv);
-					Console.success(los(`执行成功`), [`${plain_file}`]);
+					return [`${plain_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,

@@ -6,8 +6,8 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 	// decode *
 
 	type Configuration = {
-		version_number: Executor.RequestArgument<bigint, false>;
-		encode_buffer_size: Executor.RequestArgument<string, false>;
+		version_number: Executor.Argument<bigint, false>;
+		encode_buffer_size: Executor.Argument<string, false>;
 	};
 
 	export function _injector(
@@ -21,21 +21,22 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					bundle_directory: Executor.RequireArgument<string>;
-					data_file: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
-					buffer_size: Executor.RequestArgument<string, false>;
+					bundle_directory: Executor.Argument<string, false>;
+					data_file: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
+					buffer_size: Executor.Argument<string, false>;
 				}) {
 					let bundle_directory: string;
 					let data_file: string;
 					let version_number: bigint;
 					let buffer_size: bigint;
 					{
-						bundle_directory = Executor.require_argument(
+						bundle_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'bundle_directory'),
 							a.bundle_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						data_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file'),
@@ -62,7 +63,7 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let embedded_media_directory = `${bundle_directory}/embedded_media`;
 					CoreX.Tool.Wwise.SoundBank.encode_fs(data_file, manifest_file, embedded_media_directory, { number: version_number as any }, buffer_size);
-					Console.success(los(`执行成功`), [`${data_file}`]);
+					return [`${data_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -81,19 +82,20 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					data_file: Executor.RequireArgument<string>;
-					bundle_directory: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
+					data_file: Executor.Argument<string, false>;
+					bundle_directory: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
 				}) {
 					let data_file: string;
 					let bundle_directory: string;
 					let version_number: bigint;
 					{
-						data_file = Executor.require_argument(
+						data_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						bundle_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'bundle_directory'),
@@ -113,7 +115,7 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let embedded_media_directory = `${bundle_directory}/embedded_media`;
 					CoreX.Tool.Wwise.SoundBank.decode_fs(data_file, manifest_file, embedded_media_directory, { number: version_number as any });
-					Console.success(los(`执行成功`), [`${bundle_directory}`]);
+					return [`${bundle_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -133,21 +135,22 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					bundle_directory_directory: Executor.RequireArgument<string>;
-					data_file_directory: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
-					buffer_size: Executor.RequestArgument<string, false>;
+					bundle_directory_directory: Executor.Argument<string, false>;
+					data_file_directory: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
+					buffer_size: Executor.Argument<string, false>;
 				}) {
 					let bundle_directory_directory: string;
 					let data_file_directory: string;
 					let version_number: bigint;
 					let buffer_size: bigint;
 					{
-						bundle_directory_directory = Executor.require_argument(
+						bundle_directory_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'bundle_directory_directory'),
 							a.bundle_directory_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						data_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file_directory'),
@@ -183,7 +186,7 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 							CoreX.Tool.Wwise.SoundBank.encode_fs(data_file, manifest_file, embedded_media_directory, { number: version_number as any }, data_buffer.view());
 						},
 					);
-					Console.success(los(`执行成功`), [`${data_file_directory}`]);
+					return [`${data_file_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -202,19 +205,20 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					data_file_directory: Executor.RequireArgument<string>;
-					bundle_directory_directory: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
+					data_file_directory: Executor.Argument<string, false>;
+					bundle_directory_directory: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
 				}) {
 					let data_file_directory: string;
 					let bundle_directory_directory: string;
 					let version_number: bigint;
 					{
-						data_file_directory = Executor.require_argument(
+						data_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file_directory'),
 							a.data_file_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						bundle_directory_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'bundle_directory_directory'),
@@ -242,7 +246,7 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 							CoreX.Tool.Wwise.SoundBank.decode_fs(data_file, manifest_file, embedded_media_directory, { number: version_number as any });
 						},
 					);
-					Console.success(los(`执行成功`), [`${bundle_directory_directory}`]);
+					return [`${bundle_directory_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,

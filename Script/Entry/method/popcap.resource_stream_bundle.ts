@@ -16,9 +16,9 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 		mode: ResourceStreamBundlePackAndUnpackMode,
 	) {
 		let result: {
-			resource_directory: Executor.RequireArgument<string>;
-			packet_file: Executor.RequireArgument<string>;
-			packet_manifest_file: Executor.RequireArgument<string>;
+			resource_directory: Executor.Argument<string, false>;
+			packet_file: Executor.Argument<string, false>;
+			packet_manifest_file: Executor.Argument<string, false>;
 		};
 		switch (mode) {
 			case 'group': {
@@ -52,24 +52,24 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 	// ------------------------------------------------
 
 	type ResourceConvertOption = {
-		rton: Executor.RequestArgument<boolean, false>;
-		rton_version_number: Executor.RequestArgument<bigint, false>;
-		rton_version_native_string_encoding_use_utf8: Executor.RequestArgument<boolean, false>;
-		rton_crypt: Executor.RequestArgument<boolean, false>;
-		rton_crypt_key: Executor.RequestArgument<string, false>;
-		ptx: Executor.RequestArgument<boolean, false>;
+		rton: Executor.Argument<boolean, false>;
+		rton_version_number: Executor.Argument<bigint, false>;
+		rton_version_native_string_encoding_use_utf8: Executor.Argument<boolean, false>;
+		rton_crypt: Executor.Argument<boolean, false>;
+		rton_crypt_key: Executor.Argument<string, false>;
+		ptx: Executor.Argument<boolean, false>;
 		ptx_texture_format_map_list: Record<string, Support.PvZ2.ResourceStreamBundle.ResourceConvert.TextureFormatMap>;
-		ptx_texture_format_map_name: Executor.RequestArgument<string, false>;
-		ptx_atlas: Executor.RequestArgument<boolean, false>;
-		ptx_atlas_resize: Executor.RequestArgument<boolean, false>;
-		ptx_sprite: Executor.RequestArgument<boolean, false>;
-		pam: Executor.RequestArgument<boolean, false>;
-		pam_version_number: Executor.RequestArgument<bigint, false>;
-		pam_json: Executor.RequestArgument<boolean, false>;
-		pam_flash: Executor.RequestArgument<boolean, false>;
-		bnk: Executor.RequestArgument<boolean, false>;
-		bnk_version_number: Executor.RequestArgument<bigint, false>;
-		wem: Executor.RequestArgument<boolean, false>;
+		ptx_texture_format_map_name: Executor.Argument<string, false>;
+		ptx_atlas: Executor.Argument<boolean, false>;
+		ptx_atlas_resize: Executor.Argument<boolean, false>;
+		ptx_sprite: Executor.Argument<boolean, false>;
+		pam: Executor.Argument<boolean, false>;
+		pam_version_number: Executor.Argument<bigint, false>;
+		pam_json: Executor.Argument<boolean, false>;
+		pam_flash: Executor.Argument<boolean, false>;
+		bnk: Executor.Argument<boolean, false>;
+		bnk_version_number: Executor.Argument<bigint, false>;
+		wem: Executor.Argument<boolean, false>;
 		wem_tool: {
 			ffmpeg_program: string;
 			ww2ogg_program: string;
@@ -85,10 +85,10 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 	// repair
 
 	type Configuration = {
-		mode: Executor.RequestArgument<string, false>;
-		version_number: Executor.RequestArgument<bigint, false>;
-		version_extended_texture_information_for_pvz2_cn: Executor.RequestArgument<bigint, false>;
-		pack_buffer_size: Executor.RequestArgument<string, false>;
+		mode: Executor.Argument<string, false>;
+		version_number: Executor.Argument<bigint, false>;
+		version_extended_texture_information_for_pvz2_cn: Executor.Argument<bigint, false>;
+		pack_buffer_size: Executor.Argument<string, false>;
 		resource_convert_option: ResourceConvertOption;
 	};
 
@@ -103,14 +103,14 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					bundle_directory: Executor.RequireArgument<string>;
-					data_file: Executor.RequestArgument<string, true>;
-					mode: Executor.RequestArgument<string, false>;
-					version_number: Executor.RequestArgument<bigint, false>;
-					version_extended_texture_information_for_pvz2_cn: Executor.RequestArgument<bigint, false>;
-					buffer_size: Executor.RequestArgument<string, false>;
-					input_packet: Executor.RequestArgument<boolean, false>;
-					output_new_packet: Executor.RequestArgument<boolean, false>;
+					bundle_directory: Executor.Argument<string, false>;
+					data_file: Executor.Argument<string, true>;
+					mode: Executor.Argument<string, false>;
+					version_number: Executor.Argument<bigint, false>;
+					version_extended_texture_information_for_pvz2_cn: Executor.Argument<bigint, false>;
+					buffer_size: Executor.Argument<string, false>;
+					input_packet: Executor.Argument<boolean, false>;
+					output_new_packet: Executor.Argument<boolean, false>;
 				}) {
 					let bundle_directory: string;
 					let data_file: string;
@@ -121,11 +121,12 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 					let input_packet: boolean;
 					let output_new_packet: boolean;
 					{
-						bundle_directory = Executor.require_argument(
+						bundle_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'bundle_directory'),
 							a.bundle_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						data_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file'),
@@ -188,7 +189,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 					let packet_file = !input_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
 					let new_packet_file = !output_new_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
 					CoreX.Tool.PopCap.ResourceStreamBundle.pack_fs(data_file, manifest_file, description_file, resource_directory, packet_file, new_packet_file, { number: version_number as any, extended_texture_information_for_pvz2_cn: version_extended_texture_information_for_pvz2_cn as any }, buffer_size);
-					Console.success(los(`执行成功`), [`${data_file}`]);
+					return [`${data_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -211,13 +212,13 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					data_file: Executor.RequireArgument<string>;
-					bundle_directory: Executor.RequestArgument<string, true>;
-					mode: Executor.RequestArgument<string, false>;
-					version_number: Executor.RequestArgument<bigint, false>;
-					version_extended_texture_information_for_pvz2_cn: Executor.RequestArgument<bigint, false>;
-					output_resource: Executor.RequestArgument<boolean, false>;
-					output_packet: Executor.RequestArgument<boolean, false>;
+					data_file: Executor.Argument<string, false>;
+					bundle_directory: Executor.Argument<string, true>;
+					mode: Executor.Argument<string, false>;
+					version_number: Executor.Argument<bigint, false>;
+					version_extended_texture_information_for_pvz2_cn: Executor.Argument<bigint, false>;
+					output_resource: Executor.Argument<boolean, false>;
+					output_packet: Executor.Argument<boolean, false>;
 				}) {
 					let data_file: string;
 					let bundle_directory: string;
@@ -227,11 +228,12 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 					let output_resource: boolean;
 					let output_packet: boolean;
 					{
-						data_file = Executor.require_argument(
+						data_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						bundle_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'bundle_directory'),
@@ -286,7 +288,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 					let resource_directory = !output_resource ? null : `${bundle_directory}/${relative_path.resource_directory}`;
 					let packet_file = !output_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
 					CoreX.Tool.PopCap.ResourceStreamBundle.unpack_fs(data_file, manifest_file, description_file, resource_directory, packet_file, { number: version_number as any, extended_texture_information_for_pvz2_cn: version_extended_texture_information_for_pvz2_cn as any });
-					Console.success(los(`执行成功`), [`${bundle_directory}`]);
+					return [`${bundle_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -308,9 +310,9 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					bundle_directory: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
-					version_extended_texture_information_for_pvz2_cn: Executor.RequestArgument<bigint, false>;
+					bundle_directory: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
+					version_extended_texture_information_for_pvz2_cn: Executor.Argument<bigint, false>;
 					option: ResourceConvertOption;
 				}) {
 					let bundle_directory: string;
@@ -324,11 +326,12 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 						wem: null,
 					};
 					{
-						bundle_directory = Executor.require_argument(
+						bundle_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'bundle_directory'),
 							a.bundle_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_number'),
@@ -565,7 +568,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 						option,
 						{ number: version_number as any, extended_texture_information_for_pvz2_cn: version_extended_texture_information_for_pvz2_cn as any },
 					);
-					Console.success(los(`执行成功`), [`${bundle_directory}`]);
+					return [`${bundle_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -584,17 +587,18 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					raw_file: Executor.RequireArgument<string>;
-					ripe_file: Executor.RequestArgument<string, true>;
+					raw_file: Executor.Argument<string, false>;
+					ripe_file: Executor.Argument<string, true>;
 				}) {
 					let raw_file: string;
 					let ripe_file: string;
 					{
-						raw_file = Executor.require_argument(
+						raw_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'raw_file'),
 							a.raw_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						ripe_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'ripe_file'),
@@ -605,7 +609,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 						);
 					}
 					Support.PopCap.ResourceStreamBundle.Repair.repair_package_fs(raw_file, ripe_file);
-					Console.success(los(`执行成功`), [`${ripe_file}`]);
+					return [`${ripe_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,

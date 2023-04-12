@@ -6,8 +6,8 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 	// decrypt
 
 	type Configuration = {
-		limit: Executor.RequestArgument<bigint, false>;
-		key: Executor.RequestArgument<string, false>;
+		limit: Executor.Argument<bigint, false>;
+		key: Executor.Argument<string, false>;
 	};
 
 	export function _injector(
@@ -21,21 +21,22 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					plain_file: Executor.RequireArgument<string>;
-					cipher_file: Executor.RequestArgument<string, true>;
-					limit: Executor.RequestArgument<bigint, false>;
-					key: Executor.RequestArgument<string, false>;
+					plain_file: Executor.Argument<string, false>;
+					cipher_file: Executor.Argument<string, true>;
+					limit: Executor.Argument<bigint, false>;
+					key: Executor.Argument<string, false>;
 				}) {
 					let plain_file: string;
 					let cipher_file: string;
 					let limit: bigint;
 					let key: string;
 					{
-						plain_file = Executor.require_argument(
+						plain_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'plain_file'),
 							a.plain_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						cipher_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'cipher_file'),
@@ -60,7 +61,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 						);
 					}
 					CoreX.Tool.PopCap.CryptData.encrypt_fs(plain_file, cipher_file, limit, key, {});
-					Console.success(los(`执行成功`), [`${cipher_file}`]);
+					return [`${cipher_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -79,21 +80,22 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					cipher_file: Executor.RequireArgument<string>;
-					plain_file: Executor.RequestArgument<string, true>;
-					limit: Executor.RequestArgument<bigint, false>;
-					key: Executor.RequestArgument<string, false>;
+					cipher_file: Executor.Argument<string, false>;
+					plain_file: Executor.Argument<string, true>;
+					limit: Executor.Argument<bigint, false>;
+					key: Executor.Argument<string, false>;
 				}) {
 					let cipher_file: string;
 					let plain_file: string;
 					let limit: bigint;
 					let key: string;
 					{
-						cipher_file = Executor.require_argument(
+						cipher_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'cipher_file'),
 							a.cipher_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						plain_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'plain_file'),
@@ -118,7 +120,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 						);
 					}
 					CoreX.Tool.PopCap.CryptData.decrypt_fs(cipher_file, plain_file, limit, key, {});
-					Console.success(los(`执行成功`), [`${plain_file}`]);
+					return [`${plain_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -139,21 +141,22 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					plain_file_directory: Executor.RequireArgument<string>;
-					cipher_file_directory: Executor.RequestArgument<string, true>;
-					limit: Executor.RequestArgument<bigint, false>;
-					key: Executor.RequestArgument<string, false>;
+					plain_file_directory: Executor.Argument<string, false>;
+					cipher_file_directory: Executor.Argument<string, true>;
+					limit: Executor.Argument<bigint, false>;
+					key: Executor.Argument<string, false>;
 				}) {
 					let plain_file_directory: string;
 					let cipher_file_directory: string;
 					let limit: bigint;
 					let key: string;
 					{
-						plain_file_directory = Executor.require_argument(
+						plain_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'plain_file_directory'),
 							a.plain_file_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						cipher_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'cipher_file_directory'),
@@ -186,7 +189,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 							CoreX.Tool.PopCap.CryptData.encrypt_fs(plain_file, cipher_file, limit, key, {});
 						},
 					);
-					Console.success(los(`执行成功`), [`${cipher_file_directory}`]);
+					return [`${cipher_file_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -205,21 +208,22 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					cipher_file_directory: Executor.RequireArgument<string>;
-					plain_file_directory: Executor.RequestArgument<string, true>;
-					limit: Executor.RequestArgument<bigint, false>;
-					key: Executor.RequestArgument<string, false>;
+					cipher_file_directory: Executor.Argument<string, false>;
+					plain_file_directory: Executor.Argument<string, true>;
+					limit: Executor.Argument<bigint, false>;
+					key: Executor.Argument<string, false>;
 				}) {
 					let cipher_file_directory: string;
 					let plain_file_directory: string;
 					let limit: bigint;
 					let key: string;
 					{
-						cipher_file_directory = Executor.require_argument(
+						cipher_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'cipher_file_directory'),
 							a.cipher_file_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						plain_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'plain_file_directory'),
@@ -252,7 +256,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 							CoreX.Tool.PopCap.CryptData.decrypt_fs(cipher_file, plain_file, limit, key, {});
 						},
 					);
-					Console.success(los(`执行成功`), [`${plain_file_directory}`]);
+					return [`${plain_file_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,

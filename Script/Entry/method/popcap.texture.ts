@@ -19,19 +19,20 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					image_file: Executor.RequireArgument<string>;
-					data_file: Executor.RequestArgument<string, true>;
-					format: Executor.RequestArgument<string, false>;
+					image_file: Executor.Argument<string, false>;
+					data_file: Executor.Argument<string, true>;
+					format: Executor.Argument<string, false>;
 				}) {
 					let image_file: string;
 					let data_file: string;
 					let format: string;
 					{
-						image_file = Executor.require_argument(
+						image_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'image_file'),
 							a.image_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						data_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file'),
@@ -49,7 +50,7 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 						);
 					}
 					Support.PopCap.Texture.Encode.encode_fs(image_file, data_file, format as any);
-					Console.success(los(`执行成功`), [`${data_file}`]);
+					return [`${data_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -67,11 +68,11 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					data_file: Executor.RequireArgument<string>;
-					image_file: Executor.RequestArgument<string, true>;
-					format: Executor.RequestArgument<string, false>;
-					image_width: Executor.RequestArgument<bigint, false>;
-					image_height: Executor.RequestArgument<bigint, false>;
+					data_file: Executor.Argument<string, false>;
+					image_file: Executor.Argument<string, true>;
+					format: Executor.Argument<string, false>;
+					image_width: Executor.Argument<bigint, false>;
+					image_height: Executor.Argument<bigint, false>;
 				}) {
 					let data_file: string;
 					let image_file: string;
@@ -79,11 +80,12 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 					let image_width: bigint;
 					let image_height: bigint;
 					{
-						data_file = Executor.require_argument(
+						data_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						image_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'image_file'),
@@ -115,7 +117,7 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 						);
 					}
 					Support.PopCap.Texture.Encode.decode_fs(data_file, image_file, [image_width, image_height], format as any);
-					Console.success(los(`执行成功`), [`${image_file}`]);
+					return [`${image_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,

@@ -8,9 +8,9 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 	// encrypt
 
 	type Configuration = {
-		version_number: Executor.RequestArgument<bigint, false>;
-		version_compress_resource_data: Executor.RequestArgument<boolean, false>;
-		pack_buffer_size: Executor.RequestArgument<string, false>;
+		version_number: Executor.Argument<bigint, false>;
+		version_compress_resource_data: Executor.Argument<boolean, false>;
+		pack_buffer_size: Executor.Argument<string, false>;
 	};
 
 	export function _injector(
@@ -24,11 +24,11 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					bundle_directory: Executor.RequireArgument<string>;
-					data_file: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
-					version_compress_resource_data: Executor.RequestArgument<boolean, false>;
-					buffer_size: Executor.RequestArgument<string, false>;
+					bundle_directory: Executor.Argument<string, false>;
+					data_file: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
+					version_compress_resource_data: Executor.Argument<boolean, false>;
+					buffer_size: Executor.Argument<string, false>;
 				}) {
 					let bundle_directory: string;
 					let data_file: string;
@@ -36,11 +36,12 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 					let version_compress_resource_data: boolean;
 					let buffer_size: bigint;
 					{
-						bundle_directory = Executor.require_argument(
+						bundle_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'bundle_directory'),
 							a.bundle_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						data_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file'),
@@ -74,7 +75,7 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.PopCap.Package.pack_fs(data_file, manifest_file, resource_directory, { number: version_number as any, compress_resource_data: version_compress_resource_data }, buffer_size);
-					Console.success(los(`执行成功`), [`${data_file}`]);
+					return [`${data_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -94,21 +95,22 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					data_file: Executor.RequireArgument<string>;
-					bundle_directory: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
-					version_compress_resource_data: Executor.RequestArgument<boolean, false>;
+					data_file: Executor.Argument<string, false>;
+					bundle_directory: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
+					version_compress_resource_data: Executor.Argument<boolean, false>;
 				}) {
 					let data_file: string;
 					let bundle_directory: string;
 					let version_number: bigint;
 					let version_compress_resource_data: boolean;
 					{
-						data_file = Executor.require_argument(
+						data_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						bundle_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'bundle_directory'),
@@ -135,7 +137,7 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					CoreX.Tool.PopCap.Package.unpack_fs(data_file, manifest_file, resource_directory, { number: version_number as any, compress_resource_data: version_compress_resource_data });
-					Console.success(los(`执行成功`), [`${bundle_directory}`]);
+					return [`${bundle_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -154,21 +156,22 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					resource_directory: Executor.RequireArgument<string>;
-					data_file: Executor.RequestArgument<string, true>;
-					version_number: Executor.RequestArgument<bigint, false>;
-					version_compress_resource_data: Executor.RequestArgument<boolean, false>;
+					resource_directory: Executor.Argument<string, false>;
+					data_file: Executor.Argument<string, true>;
+					version_number: Executor.Argument<bigint, false>;
+					version_compress_resource_data: Executor.Argument<boolean, false>;
 				}) {
 					let resource_directory: string;
 					let data_file: string;
 					let version_number: bigint;
 					let version_compress_resource_data: boolean;
 					{
-						resource_directory = Executor.require_argument(
+						resource_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'resource_directory'),
 							a.resource_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						data_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file'),
@@ -194,7 +197,7 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 					}
 					let data = Support.PopCap.Package.PackAutomatic.pack(resource_directory, version_number as any, version_compress_resource_data);
 					CoreX.FileSystem.write_file(data_file, data[0].view().sub(Core.Size.value(0n), data[1]));
-					Console.success(los(`执行成功`), [`${data_file}`]);
+					return [`${data_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -213,17 +216,18 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					plain_file: Executor.RequireArgument<string>;
-					cipher_file: Executor.RequestArgument<string, true>;
+					plain_file: Executor.Argument<string, false>;
+					cipher_file: Executor.Argument<string, true>;
 				}) {
 					let plain_file: string;
 					let cipher_file: string;
 					{
-						plain_file = Executor.require_argument(
+						plain_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'plain_file'),
 							a.plain_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						cipher_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'cipher_file'),
@@ -234,7 +238,7 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 						);
 					}
 					CoreX.Tool.Data.Encryption.XOR.encrypt_fs(plain_file, cipher_file, [0xF7n]);
-					Console.success(los(`执行成功`), [`${cipher_file}`]);
+					return [`${cipher_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,

@@ -6,7 +6,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 	// uncompress *
 
 	type Configuration = {
-		version_variant_64: Executor.RequestArgument<boolean, false>;
+		version_variant_64: Executor.Argument<boolean, false>;
 	};
 
 	export function _injector(
@@ -20,19 +20,20 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					raw_file: Executor.RequireArgument<string>;
-					ripe_file: Executor.RequestArgument<string, true>;
-					version_variant_64: Executor.RequestArgument<boolean, false>;
+					raw_file: Executor.Argument<string, false>;
+					ripe_file: Executor.Argument<string, true>;
+					version_variant_64: Executor.Argument<boolean, false>;
 				}) {
 					let raw_file: string;
 					let ripe_file: string;
 					let version_variant_64: boolean;
 					{
-						raw_file = Executor.require_argument(
+						raw_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'raw_file'),
 							a.raw_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						ripe_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'ripe_file'),
@@ -50,7 +51,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 						);
 					}
 					CoreX.Tool.PopCap.ZLib.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', { variant_64: version_variant_64 });
-					Console.success(los(`执行成功`), [`${ripe_file}`]);
+					return [`${ripe_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -68,19 +69,20 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					ripe_file: Executor.RequireArgument<string>;
-					raw_file: Executor.RequestArgument<string, true>;
-					version_variant_64: Executor.RequestArgument<boolean, false>;
+					ripe_file: Executor.Argument<string, false>;
+					raw_file: Executor.Argument<string, true>;
+					version_variant_64: Executor.Argument<boolean, false>;
 				}) {
 					let ripe_file: string;
 					let raw_file: string;
 					let version_variant_64: boolean;
 					{
-						ripe_file = Executor.require_argument(
+						ripe_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'ripe_file'),
 							a.ripe_file,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_file(value)),
+							null,
+							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						raw_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'raw_file'),
@@ -98,7 +100,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 						);
 					}
 					CoreX.Tool.PopCap.ZLib.uncompress_fs(ripe_file, raw_file, 15n, { variant_64: version_variant_64 });
-					Console.success(los(`执行成功`), [`${raw_file}`]);
+					return [`${raw_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -118,19 +120,20 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					raw_file_directory: Executor.RequireArgument<string>;
-					ripe_file_directory: Executor.RequestArgument<string, true>;
-					version_variant_64: Executor.RequestArgument<boolean, false>;
+					raw_file_directory: Executor.Argument<string, false>;
+					ripe_file_directory: Executor.Argument<string, true>;
+					version_variant_64: Executor.Argument<boolean, false>;
 				}) {
 					let raw_file_directory: string;
 					let ripe_file_directory: string;
 					let version_variant_64: boolean;
 					{
-						raw_file_directory = Executor.require_argument(
+						raw_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'raw_file_directory'),
 							a.raw_file_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						ripe_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'ripe_file_directory'),
@@ -156,7 +159,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 							CoreX.Tool.PopCap.ZLib.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', { variant_64: version_variant_64 });
 						},
 					);
-					Console.success(los(`执行成功`), [`${ripe_file_directory}`]);
+					return [`${ripe_file_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
@@ -174,19 +177,20 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					ripe_file_directory: Executor.RequireArgument<string>;
-					raw_file_directory: Executor.RequestArgument<string, true>;
-					version_variant_64: Executor.RequestArgument<boolean, false>;
+					ripe_file_directory: Executor.Argument<string, false>;
+					raw_file_directory: Executor.Argument<string, true>;
+					version_variant_64: Executor.Argument<boolean, false>;
 				}) {
 					let ripe_file_directory: string;
 					let raw_file_directory: string;
 					let version_variant_64: boolean;
 					{
-						ripe_file_directory = Executor.require_argument(
+						ripe_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'ripe_file_directory'),
 							a.ripe_file_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						raw_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'raw_file_directory'),
@@ -212,7 +216,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 							CoreX.Tool.PopCap.ZLib.uncompress_fs(ripe_file, raw_file, 15n, { variant_64: version_variant_64 });
 						},
 					);
-					Console.success(los(`执行成功`), [`${raw_file_directory}`]);
+					return [`${raw_file_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,

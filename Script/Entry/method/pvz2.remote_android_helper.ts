@@ -18,17 +18,18 @@ namespace TwinStar.Script.Entry.method.pvz2.remote_android_helper {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					project_directory: Executor.RequireArgument<string>;
-					action: Executor.RequestArgument<string, false>;
+					project_directory: Executor.Argument<string, false>;
+					action: Executor.Argument<string, false>;
 				}) {
 					let project_directory: string;
 					let action: string;
 					{
-						project_directory = Executor.require_argument(
+						project_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'project_directory'),
 							a.project_directory,
 							(value) => (value),
-							(value) => (CoreX.FileSystem.exist_directory(value)),
+							null,
+							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
 						action = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'action'),
@@ -39,7 +40,7 @@ namespace TwinStar.Script.Entry.method.pvz2.remote_android_helper {
 						);
 					}
 					Support.PvZ2.RemoteAndroidHelper.execute(project_directory, action as any);
-					Console.success(los(`执行成功`), [`${project_directory}`]);
+					return [`${project_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
