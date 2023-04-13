@@ -90,6 +90,7 @@
 	"entry:all_command_count": "共 {} 条",
 	"entry:all_command_finish": "所有命令已执行",
 	"entry:current_command_execute": "命令执行中：{}",
+	"entry:current_command_finish": "命令执行完成",
 	"entry:duration": "用时 {} s",
 	"entry:batch_no_item": "无可处理项目",
 	// Entry/method/*

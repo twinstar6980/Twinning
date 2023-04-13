@@ -30,3 +30,6 @@ end
 includes('./core')
 
 includes('./test')
+if m.system:is('windows', 'linux', 'macintosh') then
+	includes('../Shell/third/tinyfiledialogs')
+end

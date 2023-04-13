@@ -1,6 +1,6 @@
 #pragma once
 
-#define M_version 47
+#define M_version 48
 
 #include <version>
 #include <iostream>

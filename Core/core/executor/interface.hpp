@@ -234,12 +234,12 @@ namespace TwinStar::Core::Executor::Interface {
 
 	// NOTE
 	// 为了简化接口，对部分类型进行提升
-	// (V|C)StringView          -> String
-	// (C)ByteListView          -> VByteListView            : ByteListView
-	// (I|O)ByteStreamView      -> IOByteStreamView         : ByteStreamView
-	// (C)CharacterListView     -> VCharacterListView       : CharacterListView
-	// (I|O)CharacterStreamView -> IOCharacterStreamView    : CharacterStreamView
-	// Image::(C)ImageView      -> Image::VImageView        : Image::ImageView
+	// (V|C)StringView          -> String                : String
+	// (C)ByteListView          -> VByteListView         : ByteListView
+	// (I|O)ByteStreamView      -> IOByteStreamView      : ByteStreamView
+	// (C)CharacterListView     -> VCharacterListView    : CharacterListView
+	// (I|O)CharacterStreamView -> IOCharacterStreamView : CharacterStreamView
+	// Image::(C)ImageView      -> Image::VImageView     : Image::ImageView
 
 	namespace Detail {
 

@@ -250,13 +250,12 @@ namespace TwinStar::Core::Tool::Data::Serialization::JSON {
 					}
 					case '[' : {
 						auto & array = value.set_array();
-						auto   value_list = std::list<Array::Element>{};
-						auto   array_size = k_none_size;
+						auto   item_list = std::list<Array::Element>{};
 						auto   has_comma = k_false;
-						while (k_true) {
+						for (auto need_more_item = k_true; need_more_item;) {
 							switch (data.read_of().value) {
 								case ']' : {
-									goto CLOSE_LOOP_ARRAY;
+									need_more_item = k_false;
 									break;
 								}
 								case ',' : {
@@ -277,36 +276,36 @@ namespace TwinStar::Core::Tool::Data::Serialization::JSON {
 									break;
 								}
 								default : {
-									if (!has_comma && array_size != k_none_size) {
+									if (has_comma && item_list.empty()) {
+										throw SyntaxException{mss("invalid comma before array's first element"_sf())};
+									}
+									if (!has_comma && !item_list.empty()) {
 										throw SyntaxException{mss("need comma between array's element"_sf())};
 									}
 									data.backward();
-									value_list.emplace_back();
-									process_value(data, value_list.back());
-									++array_size;
+									item_list.emplace_back();
+									process_value(data, item_list.back());
 									has_comma = k_false;
 								}
 							}
 						}
-					CLOSE_LOOP_ARRAY:
 						array.assign(
-							value_list,
+							item_list,
 							[] (auto & element) -> auto && {
 								return as_moveable(element);
 							}
 						);
-						value_list.clear();
+						item_list.clear();
 						break;
 					}
 					case '{' : {
 						auto & object = value.set_object();
-						auto   value_list = std::list<Object::Element>{};
-						auto   object_size = k_none_size;
+						auto   item_list = std::list<Object::Element>{};
 						auto   has_comma = k_false;
-						while (k_true) {
+						for (auto need_more_item = k_true; need_more_item;) {
 							switch (data.read_of().value) {
 								case '}' : {
-									goto TCLOSE_LOOP_OBJEC;
+									need_more_item = k_false;
 									break;
 								}
 								case ',' : {
@@ -327,22 +326,25 @@ namespace TwinStar::Core::Tool::Data::Serialization::JSON {
 									break;
 								}
 								default : {
-									if (!has_comma && object_size != k_none_size) {
+									if (has_comma && item_list.empty()) {
+										throw SyntaxException{mss("invalid comma before object's first member"_sf())};
+									}
+									if (!has_comma && !item_list.empty()) {
 										throw SyntaxException{mss("need comma between object's member"_sf())};
 									}
 									data.backward();
-									value_list.emplace_back();
+									item_list.emplace_back();
 									if (data.read_of() != '\"'_c) {
 										throw SyntaxException{mss("key must be string"_sf())};
 									}
 									buffer_stream.backward_to_begin();
 									StringParser::read_escape_utf8_string_until(data, buffer_stream, '"'_c);
 									data.forward();
-									value_list.back().key = String{buffer_stream.stream_view()};
-									while (k_true) {
+									item_list.back().key = String{buffer_stream.stream_view()};
+									for (auto need_more_space = k_true; need_more_space;) {
 										switch (data.read_of().value) {
 											case ':' : {
-												goto CLOSE_LOOP_MEMBER;
+												need_more_space = k_false;
 												break;
 											}
 											case ' ' :
@@ -356,21 +358,18 @@ namespace TwinStar::Core::Tool::Data::Serialization::JSON {
 											}
 										}
 									}
-								CLOSE_LOOP_MEMBER:
-									process_value(data, value_list.back().value);
-									++object_size;
+									process_value(data, item_list.back().value);
 									has_comma = k_false;
 								}
 							}
 						}
-					TCLOSE_LOOP_OBJEC:
 						object.assign(
-							value_list,
+							item_list,
 							[] (auto & element) -> auto && {
 								return as_moveable(element);
 							}
 						);
-						value_list.clear();
+						item_list.clear();
 						break;
 					}
 					default : {

@@ -90,6 +90,7 @@
 	"entry:all_command_count": "{} in total",
 	"entry:all_command_finish": "All commands executed",
 	"entry:current_command_execute": "Command executing: {}",
+	"entry:current_command_finish": "Command executed",
 	"entry:duration": "Time spent: {} s",
 	"entry:batch_no_item": "No processable items",
 	// Entry/method/*

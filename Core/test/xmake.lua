@@ -23,13 +23,22 @@ target('test', function()
 		'core',
 		{}
 	)
+	if m.system:is('windows', 'linux', 'macintosh') then
+		add_deps(
+			'third.tinyfiledialogs',
+			{}
+		)
+	end
 	if m.system:is('windows') then
 		add_files(
 			m.root .. '/../Shell/shell/resource/windows/application.manifest',
 			{}
 		)
 		add_links(
+			'ComDlg32',
 			'Ole32',
+			'User32',
+			'shell32',
 			{ private = true }
 		)
 	end
@@ -41,7 +50,7 @@ target('test', function()
 		custom.apply_import_vld_if_can(target)
 	end)
 	set_runargs(
-		'_',
+		'/TwinStar.ToolKit/core',
 		'?/TwinStar.ToolKit/script/main.js',
 		'/TwinStar.ToolKit',
 		{ private = true }

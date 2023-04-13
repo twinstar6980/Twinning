@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Core
- * @version 47
+ * @version 48
  */
 declare namespace TwinStar.Core {
 
@@ -89,7 +89,7 @@ declare namespace TwinStar.Core {
 
 		// ------------------------------------------------
 
-		private _IntegerS;
+		private IntegerU32;
 
 		// ------------------------------------------------
 
