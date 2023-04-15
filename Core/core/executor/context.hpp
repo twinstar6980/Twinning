@@ -148,6 +148,15 @@ namespace TwinStar::Core::Executor {
 
 		#pragma endregion
 
+		#pragma region environment
+
+		auto query_byte_stream_use_big_endian (
+		) -> Boolean & {
+			return g_byte_stream_use_big_endian;
+		}
+
+		#pragma endregion
+
 	};
 
 	#pragma endregion

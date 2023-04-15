@@ -18,6 +18,7 @@ namespace TwinStar.Script {
 		) {
 			return () => {
 				let item = this.m_pool[index];
+				item.context.query_byte_stream_use_big_endian().value = Core.Miscellaneous.g_context.query_byte_stream_use_big_endian().value;
 				item.result = [false, undefined];
 				try {
 					let result = executor();

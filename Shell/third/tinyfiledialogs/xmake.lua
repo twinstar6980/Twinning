@@ -13,6 +13,15 @@ target('third.tinyfiledialogs', function()
 		'./tinyfiledialogs.c',
 		{}
 	)
+	if m.system:is('windows') then
+		add_links(
+			'ComDlg32',
+			'Ole32',
+			'User32',
+			'shell32',
+			{ private = true }
+		)
+	end
 	on_load(function(target)
 		import('custom')
 		custom.apply_compiler_option_basic(target)

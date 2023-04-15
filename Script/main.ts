@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 62;
+	export const k_version = 63;
 
 	// ------------------------------------------------
 
@@ -340,7 +340,6 @@ TwinStar.Script.Main.g_module_manifest = {
 		`Entry/method/popcap.resource_stream_bundle_patch`,
 		`Entry/method/pvz2.text_table`,
 		`Entry/method/pvz2.remote_android_helper`,
-		`Entry/method/expand`,
 	],
 	entry: `Entry/Entry`,
 };

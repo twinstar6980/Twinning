@@ -53,10 +53,6 @@ target('shell', function()
 			{}
 		)
 		add_links(
-			'ComDlg32',
-			'Ole32',
-			'User32',
-			'shell32',
 			{ private = true }
 		)
 	end

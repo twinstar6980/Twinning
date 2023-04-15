@@ -2,7 +2,6 @@
 
 #include "core/utility/data/json/value.hpp"
 #include "core/utility/container/wrapper/wrapper.hpp"
-#include "core/utility/string/parser.hpp"
 #include "core/utility/miscellaneous/dimension.hpp"
 
 namespace TwinStar::Core::JSON {
@@ -309,10 +308,10 @@ namespace TwinStar::Core::JSON {
 			This &       thix,
 			That const & that
 		) -> Void {
-			if (that.has()) {
-				thix.from(that.get());
-			} else {
+			if (!that.has()) {
 				thix.set_null();
+			} else {
+				thix.from(that.get());
 			}
 			return;
 		}
@@ -321,10 +320,10 @@ namespace TwinStar::Core::JSON {
 			This const & thix,
 			That &       that
 		) -> Void {
-			if (!thix.is_null()) {
-				thix.to(that.set());
-			} else {
+			if (thix.is_null()) {
 				that.reset();
+			} else {
+				thix.to(that.set());
 			}
 			return;
 		}

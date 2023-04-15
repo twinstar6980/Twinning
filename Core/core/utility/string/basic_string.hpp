@@ -251,8 +251,8 @@ namespace TwinStar::Core {
 		friend auto operator + (
 			CView const & thix,
 			CView const & that
-		) -> BasicString<Element> {
-			auto result = BasicString<Element>{thix.size() + that.size()};
+		) -> BasicString {
+			auto result = BasicString{thix.size() + that.size()};
 			result.append_list(thix);
 			result.append_list(that);
 			return result;

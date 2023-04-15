@@ -92,7 +92,7 @@ namespace TwinStar.Script.Entry {
 		// cli disable virtual-terminal-sequence
 		Console.cli_disable_virtual_terminal_sequence = configuration.cli_disable_virtual_terminal_sequence;
 		// set byte stream endian
-		Core.Miscellaneous.g_byte_stream_use_big_endian.value = configuration.byte_stream_use_big_endian;
+		Core.Miscellaneous.g_context.query_byte_stream_use_big_endian().value = configuration.byte_stream_use_big_endian;
 		// set common buffer size
 		CoreX.g_common_buffer.allocate(Core.Size.value(parse_size_string(configuration.common_buffer_size)));
 		// set json format

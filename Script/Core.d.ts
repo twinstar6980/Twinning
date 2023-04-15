@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Core
- * @version 48
+ * @version 49
  */
 declare namespace TwinStar.Core {
 
@@ -89,7 +89,7 @@ declare namespace TwinStar.Core {
 
 		// ------------------------------------------------
 
-		private IntegerU32;
+		private _IntegerU32;
 
 		// ------------------------------------------------
 
@@ -4633,7 +4633,7 @@ declare namespace TwinStar.Core {
 
 		// ------------------------------------------------
 
-		/** 上下文 */
+		/** 线程 */
 		class Thread {
 
 			// ------------------------------------------------
@@ -4751,6 +4751,15 @@ declare namespace TwinStar.Core {
 
 			// ------------------------------------------------
 
+			/**
+			 * 字节流读写数据时是否使用大端序，默认为false
+			 * @returns 引用变量
+			 */
+			query_byte_stream_use_big_endian(
+			): Boolean;
+
+			// ------------------------------------------------
+
 		}
 
 		// ------------------------------------------------
@@ -4794,11 +4803,8 @@ declare namespace TwinStar.Core {
 		/** 版本编号 */
 		const g_version: Size;
 
-		/** 当前上下文对象 */
+		/** 主上下文 */
 		const g_context: Context;
-
-		/** 字节流读写数据时是否使用大端序，默认为false */
-		const g_byte_stream_use_big_endian: Boolean;
 
 		// ------------------------------------------------
 

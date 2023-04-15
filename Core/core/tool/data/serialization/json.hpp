@@ -203,7 +203,7 @@ namespace TwinStar::Core::Tool::Data::Serialization::JSON {
 						if (data.read_of() == 'u'_c && data.read_of() == 'l'_c && data.read_of() == 'l'_c) {
 							value.set_null();
 						} else {
-							throw SyntaxException{mss("invalid null value"_sf())};
+							throw SyntaxException{data.position().value, mss("invalid null value"_sf())};
 						}
 						break;
 					}
@@ -211,7 +211,7 @@ namespace TwinStar::Core::Tool::Data::Serialization::JSON {
 						if (data.read_of() == 'a'_c && data.read_of() == 'l'_c && data.read_of() == 's'_c && data.read_of() == 'e'_c) {
 							value.set_boolean(k_false);
 						} else {
-							throw SyntaxException{mss("invalid false value"_sf())};
+							throw SyntaxException{data.position().value, mss("invalid false value"_sf())};
 						}
 						break;
 					}
@@ -219,7 +219,7 @@ namespace TwinStar::Core::Tool::Data::Serialization::JSON {
 						if (data.read_of() == 'r'_c && data.read_of() == 'u'_c && data.read_of() == 'e'_c) {
 							value.set_boolean(k_true);
 						} else {
-							throw SyntaxException{mss("invalid true value"_sf())};
+							throw SyntaxException{data.position().value, mss("invalid true value"_sf())};
 						}
 						break;
 					}
@@ -255,12 +255,15 @@ namespace TwinStar::Core::Tool::Data::Serialization::JSON {
 						for (auto need_more_item = k_true; need_more_item;) {
 							switch (data.read_of().value) {
 								case ']' : {
+									if (has_comma && item_list.empty()) {
+										throw SyntaxException{data.position().value, mss("invalid comma on empty array"_sf())};
+									}
 									need_more_item = k_false;
 									break;
 								}
 								case ',' : {
 									if (has_comma) {
-										throw SyntaxException{mss("too many comma on array"_sf())};
+										throw SyntaxException{data.position().value, mss("too many comma on array"_sf())};
 									}
 									has_comma = k_true;
 									break;
@@ -277,10 +280,10 @@ namespace TwinStar::Core::Tool::Data::Serialization::JSON {
 								}
 								default : {
 									if (has_comma && item_list.empty()) {
-										throw SyntaxException{mss("invalid comma before array's first element"_sf())};
+										throw SyntaxException{data.position().value, mss("invalid comma before array's first element"_sf())};
 									}
 									if (!has_comma && !item_list.empty()) {
-										throw SyntaxException{mss("need comma between array's element"_sf())};
+										throw SyntaxException{data.position().value, mss("need comma between array's element"_sf())};
 									}
 									data.backward();
 									item_list.emplace_back();
@@ -305,12 +308,15 @@ namespace TwinStar::Core::Tool::Data::Serialization::JSON {
 						for (auto need_more_item = k_true; need_more_item;) {
 							switch (data.read_of().value) {
 								case '}' : {
+									if (has_comma && item_list.empty()) {
+										throw SyntaxException{data.position().value, mss("invalid comma on empty object"_sf())};
+									}
 									need_more_item = k_false;
 									break;
 								}
 								case ',' : {
 									if (has_comma) {
-										throw SyntaxException{mss("too many comma on object"_sf())};
+										throw SyntaxException{data.position().value, mss("too many comma on object"_sf())};
 									}
 									has_comma = k_true;
 									break;
@@ -327,15 +333,15 @@ namespace TwinStar::Core::Tool::Data::Serialization::JSON {
 								}
 								default : {
 									if (has_comma && item_list.empty()) {
-										throw SyntaxException{mss("invalid comma before object's first member"_sf())};
+										throw SyntaxException{data.position().value, mss("invalid comma before object's first member"_sf())};
 									}
 									if (!has_comma && !item_list.empty()) {
-										throw SyntaxException{mss("need comma between object's member"_sf())};
+										throw SyntaxException{data.position().value, mss("need comma between object's member"_sf())};
 									}
 									data.backward();
 									item_list.emplace_back();
 									if (data.read_of() != '\"'_c) {
-										throw SyntaxException{mss("key must be string"_sf())};
+										throw SyntaxException{data.position().value, mss("key must be string"_sf())};
 									}
 									buffer_stream.backward_to_begin();
 									StringParser::read_escape_utf8_string_until(data, buffer_stream, '"'_c);
@@ -354,7 +360,7 @@ namespace TwinStar::Core::Tool::Data::Serialization::JSON {
 												break;
 											}
 											default : {
-												throw SyntaxException{mss("key's next non-space character must be ':'"_sf())};
+												throw SyntaxException{data.position().value, mss("key's next non-space character must be ':'"_sf())};
 											}
 										}
 									}
@@ -373,7 +379,7 @@ namespace TwinStar::Core::Tool::Data::Serialization::JSON {
 						break;
 					}
 					default : {
-						throw SyntaxException{mss("invalid character {:02X}h"_sf(character))};
+						throw SyntaxException{data.position().value, mss("invalid character {:02X}h"_sf(character))};
 					}
 				}
 				break;

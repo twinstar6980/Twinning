@@ -1665,7 +1665,16 @@ namespace TwinStar::Core::Executor::Interface {
 							return thix.value().execute(thread.value(), executor);
 						}
 					>
-				>("execute"_s);
+				>("execute"_s)
+				.add_member_function<
+					&normalized_lambda<
+						[] (
+						JavaScript::NativeValueHandler<Context> & thix
+					) -> JavaScript::NativeValueHandler<Boolean> {
+							return JavaScript::NativeValueHandler<Boolean>::new_reference(thix.value().query_byte_stream_use_big_endian());
+						}
+					>
+				>("query_byte_stream_use_big_endian"_s);
 			s_Miscellaneous
 				.add_function_proxy<
 					&normalized_lambda<
@@ -1730,8 +1739,6 @@ namespace TwinStar::Core::Executor::Interface {
 				>("cast_CharacterListView_to_JS_String"_s);
 			s_Miscellaneous.add_variable("g_version"_s, context.context().new_value(JavaScript::NativeValueHandler<Size>::new_instance_allocate(mbw<Size>(M_version))));
 			s_Miscellaneous.add_variable("g_context"_s, context.context().new_value(JavaScript::NativeValueHandler<Context>::new_reference(context)));
-			// TODO : can not access the value at other thread
-			s_Miscellaneous.add_variable("g_byte_stream_use_big_endian"_s, context.context().new_value(JavaScript::NativeValueHandler<Boolean>::new_reference(g_byte_stream_use_big_endian)));
 		}
 		return;
 		#if defined M_compiler_msvc

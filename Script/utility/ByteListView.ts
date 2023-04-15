@@ -18,7 +18,7 @@ namespace TwinStar.Script {
 			size?: number,
 		) {
 			this.m_view = new DataView(data, offset, size);
-			this.m_endian_little = !Core.Miscellaneous.g_byte_stream_use_big_endian.value;
+			this.m_endian_little = !Core.Miscellaneous.g_context.query_byte_stream_use_big_endian().value;
 		}
 
 		// ------------------------------------------------

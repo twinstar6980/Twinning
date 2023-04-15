@@ -68,7 +68,7 @@ namespace TwinStar::Core {
 			std::source_location const & location = M_current_source_location
 		) :
 			Exception{"Unnamed", {}, location} {
-			thiz.m_description.emplace_back(message);
+			thiz.m_description.emplace_back(fmt::format("message : {}", message));
 		}
 
 	};
@@ -113,10 +113,12 @@ namespace TwinStar::Core {
 			std::source_location const & location = M_current_source_location
 		) :
 			Exception{"Assertion", {}, location} {
-			thiz.m_description.emplace_back(expression);
+			thiz.m_description.emplace_back(fmt::format("expression : {}", expression));
 		}
 
 	};
+
+	// ----------------
 
 	class InvocationException :
 		public Exception {
@@ -129,11 +131,13 @@ namespace TwinStar::Core {
 			std::source_location const & location = M_current_source_location
 		) :
 			Exception{"Invocation", {}, location} {
-			thiz.m_description.emplace_back(target);
-			thiz.m_description.emplace_back(message);
+			thiz.m_description.emplace_back(fmt::format("target  : {}", target));
+			thiz.m_description.emplace_back(fmt::format("message : {}", message));
 		}
 
 	};
+
+	// ----------------
 
 	class SyntaxException :
 		public Exception {
@@ -141,11 +145,13 @@ namespace TwinStar::Core {
 	public:
 
 		explicit SyntaxException (
+			std::size_t const &          position,
 			std::string const &          message,
 			std::source_location const & location = M_current_source_location
 		) :
 			Exception{"Syntax", {}, location} {
-			thiz.m_description.emplace_back(message);
+			thiz.m_description.emplace_back(fmt::format("position : {:X}h", position));
+			thiz.m_description.emplace_back(fmt::format("message  : {}", message));
 		}
 
 	};
@@ -162,8 +168,8 @@ namespace TwinStar::Core {
 			std::source_location const & location = M_current_source_location
 		) :
 			Exception{"Standard", {}, location} {
-			thiz.m_description.emplace_back(typeid(exception).name());
-			thiz.m_description.emplace_back(exception.what());
+			thiz.m_description.emplace_back(fmt::format("type    : {}", typeid(exception).name()));
+			thiz.m_description.emplace_back(fmt::format("message : {}", exception.what()));
 		}
 
 	};
@@ -178,8 +184,8 @@ namespace TwinStar::Core {
 			std::source_location const & location = M_current_source_location
 		) :
 			Exception{"Standard.System", {}, location} {
-			thiz.m_description.emplace_back(typeid(exception).name());
-			thiz.m_description.emplace_back(Detail::string_encoding_native_to_utf8(exception.code().message()));
+			thiz.m_description.emplace_back(fmt::format("type    : {}", typeid(exception).name()));
+			thiz.m_description.emplace_back(fmt::format("message : {}", Detail::string_encoding_native_to_utf8(exception.code().message())));
 		}
 
 	};
@@ -196,10 +202,10 @@ namespace TwinStar::Core {
 			Exception{"Standard.FileSystem", {}, location} {
 			auto path_1 = exception.path1().generic_u8string();
 			auto path_2 = exception.path2().generic_u8string();
-			thiz.m_description.emplace_back(typeid(exception).name());
-			thiz.m_description.emplace_back(Detail::string_encoding_native_to_utf8(exception.code().message()));
-			thiz.m_description.emplace_back(reinterpret_cast<std::string &>(path_1));
-			thiz.m_description.emplace_back(reinterpret_cast<std::string &>(path_2));
+			thiz.m_description.emplace_back(fmt::format("type    : {}", typeid(exception).name()));
+			thiz.m_description.emplace_back(fmt::format("message : {}", Detail::string_encoding_native_to_utf8(exception.code().message())));
+			thiz.m_description.emplace_back(fmt::format("path_1  : {}", reinterpret_cast<std::string &>(path_1)));
+			thiz.m_description.emplace_back(fmt::format("path_2  : {}", reinterpret_cast<std::string &>(path_2)));
 		}
 
 	};
