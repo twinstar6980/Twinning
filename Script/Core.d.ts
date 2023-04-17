@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Core
- * @version 49
+ * @version 50
  */
 declare namespace TwinStar.Core {
 
@@ -4704,11 +4704,13 @@ declare namespace TwinStar.Core {
 			 * 执行脚本
 			 * @param script 脚本
 			 * @param name 名称
+			 * @param is_module 是否为模块
 			 * @returns 计算值
 			 */
 			evaluate(
 				script: CCharacterListView,
 				name: String,
+				is_module: Boolean,
 			): any;
 
 			/**
@@ -4752,7 +4754,14 @@ declare namespace TwinStar.Core {
 			// ------------------------------------------------
 
 			/**
-			 * 字节流读写数据时是否使用大端序，默认为false
+			 * 模块加载时的主目录，默认为null，全局作用域
+			 * @returns 引用变量
+			 */
+			query_module_home(
+			): PathOptional;
+
+			/**
+			 * 字节流读写数据时是否使用大端序，默认为false，线程作用域
 			 * @returns 引用变量
 			 */
 			query_byte_stream_use_big_endian(

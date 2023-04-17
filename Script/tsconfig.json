@@ -4,6 +4,11 @@
 		"lib": [
 			"ES2021",
 		],
+		"module": "ES2022",
+		"baseUrl": ".",
+		"paths": {
+			"~/*": ["./*"],
+		},
 		"outDir": "./.build",
 		"declaration": false,
 		"esModuleInterop": true,

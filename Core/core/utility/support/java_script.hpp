@@ -65,8 +65,8 @@ namespace TwinStar::Core::JavaScript {
 			This &       thix,
 			That const & that
 		) -> Void {
-			assert_test(Detail::g_class_id<TValue> != Detail::k_invalid_class_id);
-			auto thix_value = quickjs::JS_NewObjectClass(thix._context(), static_cast<int>(Detail::g_class_id<TValue>));
+			assert_test(Detail::g_native_class_id<TValue> != Detail::k_invalid_native_class_id);
+			auto thix_value = quickjs::JS_NewObjectClass(thix._context(), static_cast<int>(Detail::g_native_class_id<TValue>));
 			auto thix_opaque = new That{that};
 			quickjs::JS_SetOpaque(thix_value, thix_opaque);
 			thix._rebind_value(thix_value);
@@ -77,8 +77,8 @@ namespace TwinStar::Core::JavaScript {
 			This &  thix,
 			That && that
 		) -> Void {
-			assert_test(Detail::g_class_id<TValue> != Detail::k_invalid_class_id);
-			auto thix_value = quickjs::JS_NewObjectClass(thix._context(), static_cast<int>(Detail::g_class_id<TValue>));
+			assert_test(Detail::g_native_class_id<TValue> != Detail::k_invalid_native_class_id);
+			auto thix_value = quickjs::JS_NewObjectClass(thix._context(), static_cast<int>(Detail::g_native_class_id<TValue>));
 			auto thix_opaque = new That{as_moveable(that)};
 			quickjs::JS_SetOpaque(thix_value, thix_opaque);
 			thix._rebind_value(thix_value);
@@ -89,9 +89,9 @@ namespace TwinStar::Core::JavaScript {
 			This & thix,
 			That & that
 		) -> Void {
-			assert_test(Detail::g_class_id<TValue> != Detail::k_invalid_class_id);
+			assert_test(Detail::g_native_class_id<TValue> != Detail::k_invalid_native_class_id);
 			auto thix_value = thix._value();
-			auto thix_opaque = quickjs::JS_GetOpaque(thix_value, Detail::g_class_id<TValue>);
+			auto thix_opaque = quickjs::JS_GetOpaque(thix_value, Detail::g_native_class_id<TValue>);
 			assert_test(thix_opaque != nullptr);
 			that = *static_cast<That *>(thix_opaque);
 			return;

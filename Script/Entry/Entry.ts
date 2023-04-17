@@ -87,7 +87,7 @@ namespace TwinStar.Script.Entry {
 		configuration: Configuration,
 	) {
 		// set language
-		Language.push_table(configuration.language, CoreX.JSON.read_fs_js(HomeDirectory.of(`~/script/Language/${configuration.language}.json`)) as unknown as Language.Map);
+		Language.push_table(configuration.language, CoreX.JSON.read_fs_js(Home.of(`~/script/Language/${configuration.language}.json`)) as unknown as Language.Map);
 		Language.set_target(configuration.language);
 		// cli disable virtual-terminal-sequence
 		Console.cli_disable_virtual_terminal_sequence = configuration.cli_disable_virtual_terminal_sequence;

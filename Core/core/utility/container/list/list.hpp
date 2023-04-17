@@ -604,7 +604,7 @@ namespace TwinStar::Core {
 		) -> Void {
 			assert_test(begin + size <= thiz.end_index());
 			auto move_size = thiz.size() - (begin + size);
-			Range::assign_from(thiz.sub(begin, move_size), make_moveable_range(thiz.sub(begin + size, move_size)));
+			Range::assign_from(thiz.sub(begin, move_size), make_moveable_range_of(thiz.sub(begin + size, move_size)));
 			Range::restruct(thiz.tail(size));
 			thiz.m_size -= size;
 			return;

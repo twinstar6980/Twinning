@@ -15,6 +15,7 @@ namespace TwinStar::Core::Executor {
 		JavaScript::Context m_context;
 		Callback            m_callback;
 		Boolean             m_busy;
+		Optional<Path>      m_module_home;
 
 	public:
 
@@ -45,6 +46,7 @@ namespace TwinStar::Core::Executor {
 			m_context{m_runtime.new_context()},
 			m_callback{callback},
 			m_busy{k_false} {
+			thiz.m_runtime.set_module_loader(thiz.m_module_home);
 		}
 
 		Context (
@@ -89,10 +91,11 @@ namespace TwinStar::Core::Executor {
 
 		auto evaluate (
 			CStringView const & script,
-			String const &      name
+			String const &      name,
+			Boolean const &     is_module
 		) -> JavaScript::Value {
 			auto guard = std::lock_guard{JavaScript::g_mutex};
-			return thiz.m_context.evaluate(script, name);
+			return thiz.m_context.evaluate(script, name, is_module);
 		}
 
 		auto callback (
@@ -149,6 +152,13 @@ namespace TwinStar::Core::Executor {
 		#pragma endregion
 
 		#pragma region environment
+
+		auto query_module_home (
+		) -> Optional<Path> & {
+			return thiz.m_module_home;
+		}
+
+		// ----------------
 
 		auto query_byte_stream_use_big_endian (
 		) -> Boolean & {

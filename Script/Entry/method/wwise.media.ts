@@ -50,26 +50,26 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 						tool_ffmpeg_program_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'tool_ffmpeg_program_file'),
 							a.tool_ffmpeg_program_file,
-							(value) => (HomeDirectory.of(value)),
+							(value) => (Home.of(value)),
 							null,
 							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						tool_ww2ogg_program_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'tool_ww2ogg_program_file'),
 							a.tool_ww2ogg_program_file,
-							(value) => (HomeDirectory.of(value)),
+							(value) => (Home.of(value)),
 							null,
 							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						tool_ww2ogg_code_book_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'tool_ww2ogg_code_book_file'),
 							a.tool_ww2ogg_code_book_file,
-							(value) => (HomeDirectory.of(value)),
+							(value) => (Home.of(value)),
 							null,
 							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 					}
-					let temporary_directpry = HomeDirectory.new_temporary();
+					let temporary_directpry = Home.new_temporary();
 					CoreX.Tool.Wwise.Media.decode_fs(ripe_file, raw_file, tool_ffmpeg_program_file, tool_ww2ogg_program_file, tool_ww2ogg_code_book_file, temporary_directpry, {});
 					return [`${raw_file}`];
 				},
@@ -122,26 +122,26 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 						tool_ffmpeg_program_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'tool_ffmpeg_program_file'),
 							a.tool_ffmpeg_program_file,
-							(value) => (HomeDirectory.of(value)),
+							(value) => (Home.of(value)),
 							null,
 							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						tool_ww2ogg_program_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'tool_ww2ogg_program_file'),
 							a.tool_ww2ogg_program_file,
-							(value) => (HomeDirectory.of(value)),
+							(value) => (Home.of(value)),
 							null,
 							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 						tool_ww2ogg_code_book_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'tool_ww2ogg_code_book_file'),
 							a.tool_ww2ogg_code_book_file,
-							(value) => (HomeDirectory.of(value)),
+							(value) => (Home.of(value)),
 							null,
 							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 					}
-					let temporary_directpry = HomeDirectory.new_temporary();
+					let temporary_directpry = Home.new_temporary();
 					simple_batch_execute(
 						ripe_file_directory,
 						['file', /.+(\.wem)$/i],

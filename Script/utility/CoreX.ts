@@ -2276,18 +2276,19 @@ namespace TwinStar.Script.CoreX {
 
 		export function evaluate(
 			script: string,
-			name: string = '<!evaluate>',
+			name: string,
+			is_module: boolean,
 		): any {
 			let script_s = Core.String.value(script);
-			return Core.Miscellaneous.g_context.evaluate(Core.Miscellaneous.cast_String_to_CharacterListView(script_s), Core.String.value(name));
+			return Core.Miscellaneous.g_context.evaluate(Core.Miscellaneous.cast_String_to_CharacterListView(script_s), Core.String.value(name), Core.Boolean.value(is_module));
 		}
 
 		export function evaluate_fs(
 			script_file: string,
-			name: string = script_file,
+			is_module: boolean,
 		): any {
 			let script = FileSystem.read_file(script_file);
-			return Core.Miscellaneous.g_context.evaluate(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(script.view()), Core.String.value(name));
+			return Core.Miscellaneous.g_context.evaluate(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(script.view()), Core.String.value(script_file), Core.Boolean.value(is_module));
 		}
 
 		export function callback(

@@ -17,7 +17,7 @@ namespace TwinStar::Core::Executor {
 		auto guard = std::lock_guard{JavaScript::g_mutex};
 		auto context = Context{callback};
 		Interface::inject(context);
-		auto result = context.context().evaluate(script).call(make_list<JavaScript::Value>(context.context().new_value(argument)));
+		auto result = context.context().evaluate(script, "<main>"_s, k_false).call(make_list<JavaScript::Value>(context.context().new_value(argument)));
 		if (result.is_exception()) {
 			throw JavaScript::ExecutionException{as_lvalue(context.context().query_exception())};
 		}

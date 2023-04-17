@@ -30,7 +30,7 @@ namespace TwinStar.Script.Entry.method.js {
 							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 					}
-					let result = CoreX.Miscellaneous.evaluate_fs(script_file);
+					let result = CoreX.Miscellaneous.evaluate_fs(script_file, false);
 					return [`${result}`];
 				},
 				default_argument: {

@@ -1621,9 +1621,10 @@ namespace TwinStar::Core::Executor::Interface {
 						[] (
 						JavaScript::NativeValueHandler<Context> &            thix,
 						JavaScript::NativeValueHandler<VCharacterListView> & script,
-						JavaScript::NativeValueHandler<String> &             name
+						JavaScript::NativeValueHandler<String> &             name,
+						JavaScript::NativeValueHandler<Boolean> &            is_module
 					) -> JavaScript::Value {
-							return thix.value().evaluate(down_cast<VStringView>(script.value()), name.value());
+							return thix.value().evaluate(down_cast<VStringView>(script.value()), name.value(), is_module.value());
 						}
 					>
 				>("evaluate"_s)
@@ -1666,6 +1667,15 @@ namespace TwinStar::Core::Executor::Interface {
 						}
 					>
 				>("execute"_s)
+				.add_member_function<
+					&normalized_lambda<
+						[] (
+						JavaScript::NativeValueHandler<Context> & thix
+					) -> JavaScript::NativeValueHandler<Optional<Path>> {
+							return JavaScript::NativeValueHandler<Optional<Path>>::new_reference(thix.value().query_module_home());
+						}
+					>
+				>("query_module_home"_s)
 				.add_member_function<
 					&normalized_lambda<
 						[] (

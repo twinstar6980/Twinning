@@ -138,6 +138,17 @@ namespace TwinStar::Core::JavaScript {
 
 		#pragma endregion
 
+		#pragma region module
+
+		auto reset_module_loader (
+		) -> Void;
+
+		auto set_module_loader (
+			Optional<Path> & home
+		) -> Void;
+
+		#pragma endregion
+
 		#pragma region class
 
 		template <typename Class> requires
@@ -301,7 +312,8 @@ namespace TwinStar::Core::JavaScript {
 
 		auto evaluate (
 			CStringView const & script,
-			String const &      name = "<evaluate>"_s
+			String const &      name,
+			Boolean const &     is_module
 		) -> Value;
 
 		#pragma endregion
@@ -719,7 +731,7 @@ namespace TwinStar::Core::JavaScript {
 					data.size().value,
 					!is_holder
 					? nullptr
-					: [] (quickjs::JSRuntime * rt, void * opaque, void * ptr) -> auto {
+					: [] (quickjs::JSRuntime * rt, void * opaque, void * ptr) -> void {
 						delete[] static_cast<uint8_t *>(ptr);
 						return;
 					},
@@ -1112,11 +1124,67 @@ namespace TwinStar::Core::JavaScript {
 
 	namespace Detail {
 
-		inline constexpr auto k_invalid_class_id = quickjs::JSClassID{0};
+		inline constexpr auto k_invalid_native_class_id = quickjs::JSClassID{0};
 
 		template <typename Class> requires
 			CategoryConstraint<IsPureInstance<Class>>
-		inline auto g_class_id = quickjs::JSClassID{k_invalid_class_id};
+		inline auto g_native_class_id = quickjs::JSClassID{k_invalid_native_class_id};
+
+		// ----------------
+
+		inline auto custom_module_loader (
+			quickjs::JSContext * ctx,
+			char const *         module_name,
+			void *               opaque
+		) -> quickjs::JSModuleDef * {
+			auto path = Path{};
+			if (module_name[0] == '~') {
+				auto & home = *static_cast<Optional<Path> *>(opaque);
+				if (!home.has()) {
+					quickjs::JS_ThrowReferenceError(ctx, "could not load module '%s': home path not set", module_name);
+					return nullptr;
+				}
+				if (module_name[1] != '/') {
+					quickjs::JS_ThrowReferenceError(ctx, "could not load module '%s': path invalid", module_name);
+					return nullptr;
+				}
+				path = home.get() / Path{make_string(module_name + 2)};
+			} else {
+				path = Path{make_string(module_name)};
+			}
+			if (!FileSystem::exist_file(path)) {
+				quickjs::JS_ThrowReferenceError(ctx, "could not load module '%s': file not found", module_name);
+				return nullptr;
+			}
+			auto data = FileSystem::read_file(path);
+			data.expand(1_sz);
+			data.last() = k_null_byte;
+			auto value = quickjs::JS_Eval(
+				ctx,
+				cast_pointer<char>(data.begin()).value,
+				data.size().value - 1,
+				module_name,
+				quickjs::JS_EVAL_FLAG_STRICT_ | quickjs::JS_EVAL_TYPE_MODULE_ | quickjs::JS_EVAL_FLAG_COMPILE_ONLY_
+			);
+			if (quickjs::JS_IsException(value)) {
+				return nullptr;
+			}
+			auto result = static_cast<quickjs::JSModuleDef *>(JS_VALUE_GET_PTR(value));
+			quickjs::JS_FreeValue(ctx, value);
+			return result;
+		}
+
+		// ----------------
+
+		template <typename Class> requires
+			CategoryConstraint<IsPureInstance<Class>>
+		inline auto free_native_value_handler (
+			quickjs::JSRuntime * rt,
+			quickjs::JSValue     obj
+		) -> void {
+			delete static_cast<NativeValueHandler<Class> *>(quickjs::JS_GetOpaque(obj, Detail::g_native_class_id<Class>));
+			return;
+		}
 
 		// ----------------
 
@@ -1199,7 +1267,9 @@ namespace TwinStar::Core::JavaScript {
 							error.message = message;
 							error.stack = error.stack.substring(error.stack.indexOf('\n') + 1);
 							return error;
-						})"_sv
+						})"_sv,
+						"<unnamed>"_s,
+						k_false
 					).call(
 						make_list<Value>(
 							Value::new_instance_of(ctx, message)
@@ -1225,23 +1295,46 @@ namespace TwinStar::Core::JavaScript {
 
 	// ----------------
 
+	inline auto Runtime::reset_module_loader (
+	) -> Void {
+		quickjs::JS_SetModuleLoaderFunc(
+			thiz._runtime(),
+			nullptr,
+			nullptr,
+			nullptr
+		);
+		return;
+	}
+
+	inline auto Runtime::set_module_loader (
+		Optional<Path> & home
+	) -> Void {
+		quickjs::JS_SetModuleLoaderFunc(
+			thiz._runtime(),
+			nullptr,
+			&Detail::custom_module_loader,
+			&home
+		);
+		return;
+	}
+
+	// ----------------
+
 	template <typename Class> requires
 		CategoryConstraint<IsPureInstance<Class>>
 	inline auto Runtime::register_class (
 		String const & name
 	) -> Void {
+		auto name_null_terminated = make_null_terminated_string(name);
 		auto definition = quickjs::JSClassDef{
-			cast_pointer<char>(make_null_terminated_string(name).begin()).value,
-			[] (quickjs::JSRuntime * rt, quickjs::JSValue obj) -> void {
-				delete static_cast<NativeValueHandler<Class> *>(quickjs::JS_GetOpaque(obj, Detail::g_class_id<Class>));
-				return;
-			},
-			nullptr,
-			nullptr,
-			nullptr
+			.class_name = cast_pointer<char>(name_null_terminated.begin()).value,
+			.finalizer = &Detail::free_native_value_handler<Class>,
+			.gc_mark = nullptr,
+			.call = nullptr,
+			.exotic = nullptr,
 		};
-		quickjs::JS_NewClassID(&Detail::g_class_id<Class>);
-		quickjs::JS_NewClass(thiz._runtime(), Detail::g_class_id<Class>, &definition);
+		quickjs::JS_NewClassID(&Detail::g_native_class_id<Class>);
+		quickjs::JS_NewClass(thiz._runtime(), Detail::g_native_class_id<Class>, &definition);
 		return;
 	}
 
@@ -1266,7 +1359,7 @@ namespace TwinStar::Core::JavaScript {
 		CategoryConstraint<IsPureInstance<Class>>
 	inline auto Context::get_class_proto (
 	) -> Value {
-		return Value::new_instance(thiz._context(), quickjs::JS_GetClassProto(thiz._context(), Detail::g_class_id<Class>));
+		return Value::new_instance(thiz._context(), quickjs::JS_GetClassProto(thiz._context(), Detail::g_native_class_id<Class>));
 	}
 
 	template <typename Class> requires
@@ -1274,7 +1367,7 @@ namespace TwinStar::Core::JavaScript {
 	inline auto Context::set_class_proto (
 		Value && value
 	) -> Void {
-		quickjs::JS_SetClassProto(thiz._context(), Detail::g_class_id<Class>, value._release_value());
+		quickjs::JS_SetClassProto(thiz._context(), Detail::g_native_class_id<Class>, value._release_value());
 		return;
 	}
 
@@ -1301,7 +1394,8 @@ namespace TwinStar::Core::JavaScript {
 
 	inline auto Context::evaluate (
 		CStringView const & script,
-		String const &      name
+		String const &      name,
+		Boolean const &     is_module
 	) -> Value {
 		return Value::new_instance(
 			thiz._context(),
@@ -1310,7 +1404,7 @@ namespace TwinStar::Core::JavaScript {
 				cast_pointer<char>(make_null_terminated_string(script).begin()).value,
 				script.size().value,
 				cast_pointer<char>(make_null_terminated_string(name).begin()).value,
-				quickjs::JS_EVAL_FLAG_STRICT_
+				quickjs::JS_EVAL_FLAG_STRICT_ | (!is_module ? (quickjs::JS_EVAL_TYPE_GLOBAL_) : (quickjs::JS_EVAL_TYPE_MODULE_))
 			)
 		);
 	}

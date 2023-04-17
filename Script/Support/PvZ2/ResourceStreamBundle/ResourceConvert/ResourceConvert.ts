@@ -147,7 +147,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 		}
 		Console.information(los('support.pvz2.resource_stream_bundle.resource_convert:convert_resource'), [
 		]);
-		let audio_temporary_directory = HomeDirectory.new_temporary();
+		let audio_temporary_directory = Home.new_temporary();
 		iterate_manifest(true)((group, subgroup, resource) => {
 			let path = resource[1].path;
 			if (option.rton !== null && path.endsWith('.rton')) {

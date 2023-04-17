@@ -48,6 +48,8 @@ namespace TwinStar::Core::Third::quickjs {
 
 	using JSPropertyEnum = ::JSPropertyEnum;
 
+	using JSModuleDef = ::JSModuleDef;
+
 	inline constexpr auto JS_NewRuntime = ::JS_NewRuntime;
 
 	inline constexpr auto JS_FreeRuntime = ::JS_FreeRuntime;
@@ -61,6 +63,8 @@ namespace TwinStar::Core::Third::quickjs {
 	inline constexpr auto JS_GetGlobalObject = ::JS_GetGlobalObject;
 
 	inline constexpr auto JS_GetException = ::JS_GetException;
+
+	inline constexpr auto JS_SetModuleLoaderFunc = ::JS_SetModuleLoaderFunc;
 
 	inline constexpr auto JS_FreeValue = ::JS_FreeValue;
 
@@ -164,15 +168,11 @@ namespace TwinStar::Core::Third::quickjs {
 
 	inline constexpr auto JS_Eval = ::JS_Eval;
 
-	inline constexpr auto JS_EvalFunction = ::JS_EvalFunction;
-
-	inline constexpr auto JS_ReadObject = ::JS_ReadObject;
-
-	inline constexpr auto JS_WriteObject = ::JS_WriteObject;
-
 	inline constexpr auto JS_SetConstructor = ::JS_SetConstructor;
 
 	inline constexpr auto JS_Throw = ::JS_Throw;
+
+	inline constexpr auto JS_ThrowReferenceError = ::JS_ThrowReferenceError;
 
 	inline constexpr auto JS_UNINITIALIZED_ = ::JSValue{JS_UNINITIALIZED};
 
@@ -192,6 +192,12 @@ namespace TwinStar::Core::Third::quickjs {
 
 	inline constexpr auto JS_GPN_STRING_MASK_ = int{JS_GPN_STRING_MASK};
 
+	inline constexpr auto JS_EVAL_TYPE_GLOBAL_ = int{JS_EVAL_TYPE_GLOBAL};
+
+	inline constexpr auto JS_EVAL_TYPE_MODULE_ = int{JS_EVAL_TYPE_MODULE};
+
 	inline constexpr auto JS_EVAL_FLAG_STRICT_ = int{JS_EVAL_FLAG_STRICT};
+
+	inline constexpr auto JS_EVAL_FLAG_COMPILE_ONLY_ = int{JS_EVAL_FLAG_COMPILE_ONLY};
 
 }

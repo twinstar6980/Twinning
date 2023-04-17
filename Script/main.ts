@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 63;
+	export const k_version = 64;
 
 	// ------------------------------------------------
 
@@ -62,7 +62,7 @@ namespace TwinStar.Script {
 			name: string,
 		): any {
 			let script = Core.FileSystem.read_file(Core.Path.value(script_file));
-			return Core.Miscellaneous.g_context.evaluate(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(script.view()), Core.String.value(name));
+			return Core.Miscellaneous.g_context.evaluate(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(script.view()), Core.String.value(name), Core.Boolean.value(false));
 		}
 
 		// ------------------------------------------------
@@ -86,7 +86,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export namespace HomeDirectory {
+	export namespace Home {
 
 		// ------------------------------------------------
 
@@ -95,7 +95,7 @@ namespace TwinStar.Script {
 		export function of(
 			format: string,
 		): string {
-			return format.replaceAll(/^~(?=[\\\/])/g, path);
+			return format.replaceAll(/^~(?=[/])/g, path);
 		}
 
 		// ------------------------------------------------
@@ -235,29 +235,31 @@ namespace TwinStar.Script {
 			Detail.notify(`TwinStar.ToolKit ~ Core:${Core.Miscellaneous.g_version.value} & Shell:${Core.Miscellaneous.g_context.callback(Core.StringList.value(['name'])).value[0]}:${Core.Miscellaneous.g_context.callback(Core.StringList.value(['version'])).value[0]} & Script:${k_version} ~ ${Core.Miscellaneous.g_context.callback(Core.StringList.value(['system'])).value[0]}`);
 			assert_test(argument.length >= 1, `argument too few`);
 			// 获取主目录
-			let home_directory = argument[0];
-			home_directory = home_directory.replaceAll(`\\`, '/');
-			if (/^\.{1,2}[\/]/.test(home_directory)) {
-				home_directory = `${Detail.get_working_directory()}/${home_directory}`;
+			let home_path = argument[0];
+			home_path = home_path.replaceAll(`\\`, '/');
+			if (/^\.{1,2}[\/]/.test(home_path)) {
+				home_path = `${Detail.get_working_directory()}/${home_path}`;
 			}
-			HomeDirectory.path = home_directory;
+			Home.path = home_path;
+			// 设置模块主目录（ES）
+			Core.Miscellaneous.g_context.query_module_home().value = Home.script();
 			// 加载子模块
 			let timer_begin = Date.now();
-			let entry = ModuleLoader.load(g_module_manifest, HomeDirectory.script());
+			let entry = ModuleLoader.load(g_module_manifest, Home.script());
 			let timer_end = Date.now();
 			// 执行模块入口函数
 			try {
 				Console.success(los('main:module_load_finish'), [
 					los('main:module_load_duration', ((timer_end - timer_begin) / 1000).toFixed(3)),
 				]);
-				HomeDirectory.initialize();
+				Home.initialize();
 				entry?.[0](entry[1], argument.slice(1));
 			} catch (error: any) {
 				Console.error_of(error);
 				Console.pause();
 			}
 			// 释放资源
-			HomeDirectory.deinitialize();
+			Home.deinitialize();
 			g_thread_manager.resize(0);
 			return '';
 		}

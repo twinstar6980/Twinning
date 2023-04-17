@@ -493,7 +493,9 @@ namespace TwinStar::Core::JavaScript {
 					}
 					let message = parse_error_message(error);
 					return [message[0], ...message[1]];
-				})"_sv
+				})"_sv,
+				"<unnamed>"_s,
+				k_false
 			).call(
 				make_list<Value>(
 					exception

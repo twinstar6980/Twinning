@@ -44,7 +44,7 @@ namespace TwinStar.Script.Support.PvZ2.RemoteAndroidHelper {
 		project_directory: string,
 		action: Action,
 	): void {
-		let local_temporary_directory = HomeDirectory.new_temporary();
+		let local_temporary_directory = Home.new_temporary();
 		let application = collect_application_information();
 		if (application === null) {
 			return;

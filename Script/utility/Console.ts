@@ -692,7 +692,7 @@ namespace TwinStar.Script.Console {
 							break;
 						}
 						case 'trash': {
-							HomeDirectory.new_trash(value);
+							Home.new_trash(value);
 							warning(los('console:path_is_exist_but_trash'), []);
 							result = null;
 							break;

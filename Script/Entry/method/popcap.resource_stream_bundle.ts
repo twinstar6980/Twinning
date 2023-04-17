@@ -553,9 +553,9 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 								option.wem = {
 									directory: convert_directory,
 									tool: {
-										ffmpeg_program: HomeDirectory.of(a.option.wem_tool.ffmpeg_program),
-										ww2ogg_program: HomeDirectory.of(a.option.wem_tool.ww2ogg_program),
-										ww2ogg_code_book: HomeDirectory.of(a.option.wem_tool.ww2ogg_code_book),
+										ffmpeg_program: Home.of(a.option.wem_tool.ffmpeg_program),
+										ww2ogg_program: Home.of(a.option.wem_tool.ww2ogg_program),
+										ww2ogg_code_book: Home.of(a.option.wem_tool.ww2ogg_code_book),
 									},
 								};
 							}

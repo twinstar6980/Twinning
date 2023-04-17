@@ -21,7 +21,7 @@ namespace TwinStar::Core::Interface::Implement {
 		String &                   result
 	) -> Void {
 		auto script_value = String{};
-		if (script.size() >= 1_sz && script.first() == '?'_c) {
+		if (script.size() >= 1_sz && script.first() == '@'_c) {
 			auto script_data = FileSystem::read_file(Path{String{script.tail(script.size() - 1_sz)}});
 			script_value.bind(from_byte_view<Character>(script_data.view()));
 			script_data.unbind();
