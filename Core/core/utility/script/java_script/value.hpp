@@ -5,22 +5,14 @@
 #include "core/utility/miscellaneous/byte_series/container.hpp"
 #include "core/utility/string/string.hpp"
 #include "core/utility/data/json/value.hpp"
-#include "core/utility/script/java_script/native_value_handler.hpp"
 #include "core/utility/script/java_script/value_adapter.hpp"
 #include "core/third/quickjs.hpp"
-#include <mutex>
 
 namespace TwinStar::Core::JavaScript {
 
 	#pragma region namespace alias
 
 	namespace quickjs = Third::quickjs;
-
-	#pragma endregion
-
-	#pragma region global mutex
-
-	inline auto g_mutex = std::mutex{};
 
 	#pragma endregion
 
@@ -35,6 +27,25 @@ namespace TwinStar::Core::JavaScript {
 	#pragma endregion
 
 	#pragma region type
+
+	class ExecutionException :
+		public Exception {
+
+	public:
+
+		explicit ExecutionException (
+			Value & exception
+		);
+
+	};
+
+	// ----------------
+
+	using ClassFinalizer = AsGlobalFunction<Void, Runtime &, Value &>;
+
+	using NativeFunction = AsGlobalFunction<Void, Context &, Value &, List<Value> &, Value &>;
+
+	// ----------------
 
 	class Runtime {
 
@@ -138,12 +149,33 @@ namespace TwinStar::Core::JavaScript {
 
 		#pragma endregion
 
-		#pragma region module
+		#pragma region job
 
-		auto reset_module_loader (
+		auto has_pending_job (
+		) -> Boolean;
+
+		auto execute_pending_job (
+			Context & context
 		) -> Void;
 
-		auto set_module_loader (
+		#pragma endregion
+
+		#pragma region promise
+
+		auto disable_promise_rejection_tracker (
+		) -> Void;
+
+		auto enable_promise_rejection_tracker (
+		) -> Void;
+
+		#pragma endregion
+
+		#pragma region module
+
+		auto disable_module_loader (
+		) -> Void;
+
+		auto enable_module_loader (
 			Optional<Path> & home
 		) -> Void;
 
@@ -151,11 +183,12 @@ namespace TwinStar::Core::JavaScript {
 
 		#pragma region class
 
-		template <typename Class> requires
-			CategoryConstraint<IsPureInstance<Class>>
+		template <auto finalizer> requires
+			CategoryConstraint<>
+			&& (IsSameV<finalizer, ClassFinalizer>)
 		auto register_class (
 			String const & name
-		) -> Void;
+		) -> Integer;
 
 		#pragma endregion
 
@@ -279,35 +312,6 @@ namespace TwinStar::Core::JavaScript {
 
 		#pragma endregion
 
-		#pragma region class
-
-		template <typename Class> requires
-			CategoryConstraint<IsPureInstance<Class>>
-		auto get_class_proto (
-		) -> Value;
-
-		template <typename Class> requires
-			CategoryConstraint<IsPureInstance<Class>>
-		auto set_class_proto (
-			Value && value
-		) -> Void;
-
-		#pragma endregion
-
-		#pragma region special
-
-		auto global_object (
-		) -> Value;
-
-		auto query_exception (
-		) -> Value;
-
-		auto throw_exception (
-			Value && value
-		) -> Void;
-
-		#pragma endregion
-
 		#pragma region evaluate
 
 		auto evaluate (
@@ -315,6 +319,37 @@ namespace TwinStar::Core::JavaScript {
 			String const &      name,
 			Boolean const &     is_module
 		) -> Value;
+
+		#pragma endregion
+
+		#pragma region global
+
+		auto global_object (
+		) -> Value;
+
+		#pragma endregion
+
+		#pragma region exception
+
+		auto throw_exception (
+			Value && value
+		) -> Void;
+
+		auto catch_exception (
+		) -> Value;
+
+		#pragma endregion
+
+		#pragma region class
+
+		auto get_class_proto (
+			Integer const & id
+		) -> Value;
+
+		auto set_class_proto (
+			Integer const & id,
+			Value &&        value
+		) -> Void;
 
 		#pragma endregion
 
@@ -353,6 +388,12 @@ namespace TwinStar::Core::JavaScript {
 
 		#pragma region create
 
+		static auto new_orphan (
+			quickjs::JSValue const & value
+		) -> Value {
+			return Value{value};
+		}
+
 		static auto new_reference (
 			ZPointer<quickjs::JSContext> const & context,
 			quickjs::JSValue const &             value
@@ -369,14 +410,23 @@ namespace TwinStar::Core::JavaScript {
 
 		// ----------------
 
-		template <typename ... Argument> requires
-			CategoryConstraint<IsValid<Argument ...>>
 		static auto new_instance_of (
-			ZPointer<quickjs::JSContext> const & context,
-			Argument && ...                      argument
+			ZPointer<quickjs::JSContext> const & context
 		) -> Value {
 			auto result = new_instance(context);
-			result.from(as_forward<Argument>(argument) ...);
+			result.set_undefined();
+			return result;
+		}
+
+		template <typename That, typename ... Option> requires
+			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
+		static auto new_instance_of (
+			ZPointer<quickjs::JSContext> const & context,
+			That &&                              that,
+			Option && ...                        option
+		) -> Value {
+			auto result = new_instance(context);
+			result.from(as_forward<That>(that), as_forward<Option>(option) ...);
 			return result;
 		}
 
@@ -403,7 +453,7 @@ namespace TwinStar::Core::JavaScript {
 		) :
 			Value{} {
 			thiz.m_context = that.m_context;
-			thiz.m_value = quickjs::JS_DupValue(as_variable(that)._context(), as_variable(that)._value());
+			thiz.m_value = !that.m_context.has() ? (as_variable(that)._value()) : (quickjs::JS_DupValue(as_variable(that)._context(), as_variable(that)._value()));
 		}
 
 		Value (
@@ -411,7 +461,7 @@ namespace TwinStar::Core::JavaScript {
 		) :
 			Value{} {
 			thiz.m_context = that.m_context;
-			thiz.m_value = that._release_value();
+			thiz.m_value = !that.m_context.has() ? (as_variable(that)._value()) : (that._release_value());
 		}
 
 		#pragma endregion
@@ -423,7 +473,7 @@ namespace TwinStar::Core::JavaScript {
 		) -> Value & {
 			thiz._reset_value();
 			thiz.m_context = that.m_context;
-			thiz.m_value = quickjs::JS_DupValue(as_variable(that)._context(), as_variable(that)._value());
+			thiz.m_value = !that.m_context.has() ? (as_variable(that)._value()) : (quickjs::JS_DupValue(as_variable(that)._context(), as_variable(that)._value()));
 			return thiz;
 		}
 
@@ -432,7 +482,7 @@ namespace TwinStar::Core::JavaScript {
 		) -> Value & {
 			thiz._reset_value();
 			thiz.m_context = that.m_context;
-			thiz.m_value = that._release_value();
+			thiz.m_value = !that.m_context.has() ? (as_variable(that)._value()) : (that._release_value());
 			return thiz;
 		}
 
@@ -476,7 +526,7 @@ namespace TwinStar::Core::JavaScript {
 		auto _rebind_value (
 			quickjs::JSValue const & new_value
 		) -> Void {
-			if (thiz.m_context) {
+			if (thiz.m_context.has()) {
 				quickjs::JS_FreeValue(thiz._context(), thiz._value());
 			}
 			thiz.m_value = new_value;
@@ -741,21 +791,12 @@ namespace TwinStar::Core::JavaScript {
 			);
 		}
 
-		template <auto function, auto forward_object> requires
-			CategoryConstraint<>
-			&& (IsGlobalFunction<decltype(function)>)
-			&& (IsSameV<forward_object, ZBoolean>)
-			&& (!forward_object || CallableTraitOf<function>::Argument::size > 0_szz)
-		auto set_object_of_native_function (
-			String const & name
-		) -> Void;
-
 		template <auto function> requires
 			CategoryConstraint<>
-			&& (IsGlobalFunction<decltype(function)>)
-			&& (IsNativeValueHandler<typename CallableTraitOf<function>::Result>)
-		auto set_object_of_native_constructor (
-			String const & name
+			&& (IsSameV<function, NativeFunction>)
+		auto set_object_of_native_function (
+			String const &  name,
+			Boolean const & is_constructor
 		) -> Void;
 
 		#pragma endregion
@@ -1056,7 +1097,11 @@ namespace TwinStar::Core::JavaScript {
 					return as_variable(element)._value();
 				}
 			);
-			return thiz.new_instance(thiz._context(), quickjs::JS_Call(thiz._context(), thiz._value(), quickjs::JS_UNDEFINED_, static_cast<int>(argument.size().value), argument_value.begin().value));
+			auto result = thiz.new_instance(thiz._context(), quickjs::JS_Call(thiz._context(), thiz._value(), quickjs::JS_UNDEFINED_, static_cast<int>(argument.size().value), argument_value.begin().value));
+			if (result.is_exception()) {
+				throw ExecutionException{as_lvalue(thiz.context().catch_exception())};
+			}
+			return result;
 		}
 
 		auto call_method (
@@ -1072,7 +1117,11 @@ namespace TwinStar::Core::JavaScript {
 					return as_variable(element)._value();
 				}
 			);
-			return thiz.new_instance(thiz._context(), quickjs::JS_Call(thiz._context(), function._value(), thiz._value(), static_cast<int>(argument.size().value), argument_value.begin().value));
+			auto result = thiz.new_instance(thiz._context(), quickjs::JS_Call(thiz._context(), function._value(), thiz._value(), static_cast<int>(argument.size().value), argument_value.begin().value));
+			if (result.is_exception()) {
+				throw ExecutionException{as_lvalue(thiz.context().catch_exception())};
+			}
+			return result;
 		}
 
 		#pragma endregion
@@ -1124,11 +1173,16 @@ namespace TwinStar::Core::JavaScript {
 
 	namespace Detail {
 
-		inline constexpr auto k_invalid_native_class_id = quickjs::JSClassID{0};
-
-		template <typename Class> requires
-			CategoryConstraint<IsPureInstance<Class>>
-		inline auto g_native_class_id = quickjs::JSClassID{k_invalid_native_class_id};
+		inline auto custom_promise_rejection_tracker (
+			quickjs::JSContext * ctx,
+			quickjs::JSValue     promise,
+			quickjs::JSValue     reason,
+			quickjs::BOOL        is_handled,
+			void *               opaque
+		) -> void {
+			// TODO
+			return;
+		}
 
 		// ----------------
 
@@ -1169,90 +1223,60 @@ namespace TwinStar::Core::JavaScript {
 			if (quickjs::JS_IsException(value)) {
 				return nullptr;
 			}
-			auto result = static_cast<quickjs::JSModuleDef *>(JS_VALUE_GET_PTR(value));
+			auto definition = static_cast<quickjs::JSModuleDef *>(JS_VALUE_GET_PTR(value));
 			quickjs::JS_FreeValue(ctx, value);
-			return result;
+			auto meta = quickjs::JS_GetImportMeta(ctx, definition);
+			if (quickjs::JS_IsException(meta)) {
+				quickjs::JS_ThrowReferenceError(ctx, "could not load module '%s': could not meta", module_name);
+				return nullptr;
+			}
+			auto meta_name_atom = quickjs::JS_NewAtomLen(ctx, "name", std::strlen("name"));
+			quickjs::JS_DefinePropertyValue(ctx, meta, meta_name_atom, quickjs::JS_NewStringLen(ctx, module_name, std::strlen(module_name)), quickjs::JS_PROP_C_W_E_);
+			quickjs::JS_FreeAtom(ctx, meta_name_atom);
+			quickjs::JS_FreeValue(ctx, meta);
+			return definition;
 		}
 
 		// ----------------
 
-		template <typename Class> requires
-			CategoryConstraint<IsPureInstance<Class>>
-		inline auto free_native_value_handler (
+		template <auto finalizer> requires
+			CategoryConstraint<>
+			&& (IsSameV<finalizer, ClassFinalizer>)
+		inline auto proxy_class_finalizer (
 			quickjs::JSRuntime * rt,
 			quickjs::JSValue     obj
 		) -> void {
-			delete static_cast<NativeValueHandler<Class> *>(quickjs::JS_GetOpaque(obj, Detail::g_native_class_id<Class>));
+			auto runtime = Runtime::new_reference(rt);
+			auto object = Value::new_orphan(obj);
+			finalizer(runtime, object);
 			return;
 		}
 
 		// ----------------
 
-		template <auto function, typename ... Argument> requires
-			NoneConstraint
-		inline auto call_native_function_inner (
-			Argument && ... argument
-		) -> typename CallableTraitOf<function>::Result {
-			auto finalizer = make_finalizer(
-				[] {
-					g_mutex.unlock();
-				},
-				[] {
-					g_mutex.lock();
-				}
-			);
-			return function(as_forward<Argument>(argument) ...);
-		}
-
-		template <auto function, auto forward_object> requires
-			NoneConstraint
-		inline auto call_native_function (
-			quickjs::JSContext * const & context,
-			quickjs::JSValue const &     object,
-			quickjs::JSValue * const &   argument
-		) -> typename CallableTraitOf<function>::Result {
-			return [&] <auto ... index> (ValuePackage<index ...>) -> typename CallableTraitOf<function>::Result {
-				if constexpr (!forward_object) {
-					using Argument = typename CallableTraitOf<function>::Argument;
-					return call_native_function_inner<function>(
-						as_forward<typename Argument::template Element<index>>(Value::new_reference(context, argument[index]).template to_of<AsPure<typename Argument::template Element<index>>>()) ...
-					);
-				} else {
-					using Class = AsPure<typename CallableTraitOf<function>::Argument::template Element<1_ixz>>;
-					using Argument = AsTypePackageRemoveHead<typename CallableTraitOf<function>::Argument, 1_szz>;
-					return call_native_function_inner<function>(
-						as_lvalue(Value::new_reference(context, object).to_of<Class>()),
-						as_forward<typename Argument::template Element<index>>(Value::new_reference(context, argument[index]).template to_of<AsPure<typename Argument::template Element<index>>>()) ...
-					);
-				}
-			}(AsValuePackageOfIndex<CallableTraitOf<function>::Argument::size - (!forward_object ? (0) : (1))>{});
-		}
-
-		// ----------------
-
-		template <auto function, auto forward_object> requires
+		template <auto function> requires
 			CategoryConstraint<>
-			&& (IsGlobalFunction<decltype(function)>)
-			&& (IsSameV<forward_object, ZBoolean>)
+			&& (IsSameV<function, NativeFunction>)
 		inline auto proxy_native_function (
 			quickjs::JSContext * ctx,
 			quickjs::JSValue     this_val,
 			int                  argc,
 			quickjs::JSValue *   argv
 		) -> quickjs::JSValue {
-			auto result = quickjs::JSValue{};
+			auto result_value = quickjs::JSValue{};
 			#if defined M_build_release
 			try {
 			#endif
-				if constexpr (IsVoid<typename CallableTraitOf<function>::Result>) {
-					call_native_function<function, forward_object>(ctx, this_val, argv);
-					result = quickjs::JS_UNDEFINED_;
-				} else {
-					auto && native_result = call_native_function<function, forward_object>(ctx, this_val, argv);
-					auto    result_wrapper = Value::new_instance(ctx);
-					result_wrapper.from(as_forward<decltype(native_result)>(native_result));
-					result = result_wrapper._release_value();
+				auto context = Context::new_reference(ctx);
+				auto object = Value::new_reference(ctx, this_val);
+				auto argument = List<Value>{};
+				argument.allocate_full(mbw<Size>(argc));
+				for (auto index = 0; index < argc; ++index) {
+					argument[mbw<Size>(index)] = Value::new_reference(ctx, argv[index]);
 				}
+				auto result = Value::new_instance(ctx);
+				function(context, object, argument, result);
+				result_value = result._release_value();
 			#if defined M_build_release
 			} catch (...) {
 				auto exception = parse_current_exception();
@@ -1276,10 +1300,10 @@ namespace TwinStar::Core::JavaScript {
 						)
 					)
 				);
-				result = quickjs::JS_EXCEPTION_;
+				result_value = quickjs::JS_EXCEPTION_;
 			}
 			#endif
-			return result;
+			return result_value;
 		}
 
 	}
@@ -1288,6 +1312,65 @@ namespace TwinStar::Core::JavaScript {
 
 	#pragma region type method implement
 
+	inline ExecutionException::ExecutionException (
+		Value & exception
+	) :
+		Exception{"JavaScript.Execution", {}, std::source_location{}} {
+		auto exception_message = exception.context().evaluate(
+			R"((error) => {
+				function split_error_stack(
+					string,
+				) {
+					let list;
+					if (string === undefined) {
+						list = [`@ ?`];
+					} else {
+						list = string.split('\n').slice(0, -1).map((e) => {
+							let result;
+							let regexp_result = /    at (.*) \((.*)\)/.exec(e);
+							if (regexp_result !== null) {
+								result = `@ ${regexp_result[2] === 'native' ? ('<native>:?') : (regexp_result[2])} ${regexp_result[1]}`;
+							} else {
+								result = '@ ?';
+							}
+							return result;
+						});
+					}
+					return list;
+				}
+				function parse_error_message(
+					error,
+				) {
+					let title = '';
+					let description = [];
+					if (error instanceof Error) {
+						if (error.name === 'NativeError') {
+							title = `${error.name}`;
+							description.push(...error.message.split('\n'));
+						} else {
+							title = `${error.name}: ${error.message}`;
+						}
+						description.push(...split_error_stack(error.stack));
+					} else {
+						title = `${error}`;
+					}
+					return [title, description];
+				}
+				let message = parse_error_message(error);
+				return [message[0], ...message[1]];
+			})"_sv,
+			"<unnamed>"_s,
+			k_false
+		).call(
+			make_list<Value>(
+				exception
+			)
+		);
+		thiz.m_description.emplace_back(mss(catenate_string<String>(exception_message.to_of<List<String>>(), '\n'_c)));
+	}
+
+	// ----------------
+
 	inline auto Runtime::new_context (
 	) -> Context {
 		return Context::new_instance(thiz._runtime());
@@ -1295,7 +1378,49 @@ namespace TwinStar::Core::JavaScript {
 
 	// ----------------
 
-	inline auto Runtime::reset_module_loader (
+	inline auto Runtime::has_pending_job (
+	) -> Boolean {
+		return mbw<Boolean>(quickjs::JS_IsJobPending(thiz._runtime()));
+	}
+
+	inline auto Runtime::execute_pending_job (
+		Context & context
+	) -> Void {
+		auto context_pointer = ZPointer<quickjs::JSContext>{};
+		auto count = quickjs::JS_ExecutePendingJob(thiz._runtime(), &context_pointer);
+		assert_test(count != 0);
+		context = Context::new_reference(context_pointer);
+		if (count < 0) {
+			throw ExecutionException{as_lvalue(Value::new_instance(context_pointer, quickjs::JS_GetException(context_pointer)))};
+		}
+		return;
+	}
+
+	// ----------------
+
+	inline auto Runtime::disable_promise_rejection_tracker (
+	) -> Void {
+		quickjs::JS_SetHostPromiseRejectionTracker(
+			thiz._runtime(),
+			nullptr,
+			nullptr
+		);
+		return;
+	}
+
+	inline auto Runtime::enable_promise_rejection_tracker (
+	) -> Void {
+		quickjs::JS_SetHostPromiseRejectionTracker(
+			thiz._runtime(),
+			&Detail::custom_promise_rejection_tracker,
+			nullptr
+		);
+		return;
+	}
+
+	// ----------------
+
+	inline auto Runtime::disable_module_loader (
 	) -> Void {
 		quickjs::JS_SetModuleLoaderFunc(
 			thiz._runtime(),
@@ -1306,7 +1431,7 @@ namespace TwinStar::Core::JavaScript {
 		return;
 	}
 
-	inline auto Runtime::set_module_loader (
+	inline auto Runtime::enable_module_loader (
 		Optional<Path> & home
 	) -> Void {
 		quickjs::JS_SetModuleLoaderFunc(
@@ -1320,29 +1445,32 @@ namespace TwinStar::Core::JavaScript {
 
 	// ----------------
 
-	template <typename Class> requires
-		CategoryConstraint<IsPureInstance<Class>>
+	template <auto finalizer> requires
+		CategoryConstraint<>
+		&& (IsSameV<finalizer, ClassFinalizer>)
 	inline auto Runtime::register_class (
 		String const & name
-	) -> Void {
+	) -> Integer {
 		auto name_null_terminated = make_null_terminated_string(name);
 		auto definition = quickjs::JSClassDef{
 			.class_name = cast_pointer<char>(name_null_terminated.begin()).value,
-			.finalizer = &Detail::free_native_value_handler<Class>,
+			.finalizer = &Detail::proxy_class_finalizer<finalizer>,
 			.gc_mark = nullptr,
 			.call = nullptr,
 			.exotic = nullptr,
 		};
-		quickjs::JS_NewClassID(&Detail::g_native_class_id<Class>);
-		quickjs::JS_NewClass(thiz._runtime(), Detail::g_native_class_id<Class>, &definition);
-		return;
+		auto id = uint32_t{0};
+		quickjs::JS_NewClassID(&id);
+		auto result = quickjs::JS_NewClass(thiz._runtime(), id, &definition);
+		assert_test(result == 0);
+		return mbw<Integer>(id);
 	}
 
 	// ----------------
 
 	inline auto Context::new_value (
 	) -> Value {
-		return Value::new_instance(thiz._context());
+		return Value::new_instance_of(thiz._context());
 	}
 
 	template <typename ValueObject> requires
@@ -1350,44 +1478,7 @@ namespace TwinStar::Core::JavaScript {
 	inline auto Context::new_value (
 		ValueObject && value
 	) -> Value {
-		return Value::new_instance_of(thiz._context(), value);
-	}
-
-	// ----------------
-
-	template <typename Class> requires
-		CategoryConstraint<IsPureInstance<Class>>
-	inline auto Context::get_class_proto (
-	) -> Value {
-		return Value::new_instance(thiz._context(), quickjs::JS_GetClassProto(thiz._context(), Detail::g_native_class_id<Class>));
-	}
-
-	template <typename Class> requires
-		CategoryConstraint<IsPureInstance<Class>>
-	inline auto Context::set_class_proto (
-		Value && value
-	) -> Void {
-		quickjs::JS_SetClassProto(thiz._context(), Detail::g_native_class_id<Class>, value._release_value());
-		return;
-	}
-
-	// ----------------
-
-	inline auto Context::global_object (
-	) -> Value {
-		return Value::new_instance(thiz._context(), quickjs::JS_GetGlobalObject(thiz._context()));
-	}
-
-	inline auto Context::query_exception (
-	) -> Value {
-		return Value::new_instance(thiz._context(), quickjs::JS_GetException(thiz._context()));
-	}
-
-	inline auto Context::throw_exception (
-		Value && value
-	) -> Void {
-		quickjs::JS_Throw(thiz._context(), value._release_value());
-		return;
+		return Value::new_instance_of(thiz._context(), as_forward<ValueObject>(value));
 	}
 
 	// ----------------
@@ -1397,54 +1488,72 @@ namespace TwinStar::Core::JavaScript {
 		String const &      name,
 		Boolean const &     is_module
 	) -> Value {
-		return Value::new_instance(
+		auto result = quickjs::JS_Eval(
 			thiz._context(),
-			quickjs::JS_Eval(
-				thiz._context(),
-				cast_pointer<char>(make_null_terminated_string(script).begin()).value,
-				script.size().value,
-				cast_pointer<char>(make_null_terminated_string(name).begin()).value,
-				quickjs::JS_EVAL_FLAG_STRICT_ | (!is_module ? (quickjs::JS_EVAL_TYPE_GLOBAL_) : (quickjs::JS_EVAL_TYPE_MODULE_))
-			)
+			cast_pointer<char>(make_null_terminated_string(script).begin()).value,
+			script.size().value,
+			cast_pointer<char>(make_null_terminated_string(name).begin()).value,
+			quickjs::JS_EVAL_FLAG_STRICT_ | (!is_module ? (quickjs::JS_EVAL_TYPE_GLOBAL_) : (quickjs::JS_EVAL_TYPE_MODULE_))
 		);
+		if (quickjs::JS_IsException(result)) {
+			throw ExecutionException{as_lvalue(Value::new_instance(thiz._context(), quickjs::JS_GetException(thiz._context())))};
+		}
+		return Value::new_instance(thiz._context(), result);
 	}
 
 	// ----------------
 
-	template <auto function, auto forward_object> requires
-		CategoryConstraint<>
-		&& (IsGlobalFunction<decltype(function)>)
-		&& (IsSameV<forward_object, ZBoolean>)
-		&& (!forward_object || CallableTraitOf<function>::Argument::size > 0_szz)
-	inline auto Value::set_object_of_native_function (
-		String const & name
-	) -> Void {
-		return thiz._rebind_value(
-			quickjs::JS_NewCFunction2(
-				thiz._context(),
-				&Detail::proxy_native_function<function, forward_object>,
-				cast_pointer<char>(make_null_terminated_string(name).begin()).value,
-				CallableTraitOf<function>::Argument::size,
-				quickjs::JS_CFUNC_generic_,
-				0
-			)
-		);
+	inline auto Context::global_object (
+	) -> Value {
+		return Value::new_instance(thiz._context(), quickjs::JS_GetGlobalObject(thiz._context()));
 	}
+
+	// ----------------
+
+	inline auto Context::throw_exception (
+		Value && value
+	) -> Void {
+		quickjs::JS_Throw(thiz._context(), value._release_value());
+		return;
+	}
+
+	inline auto Context::catch_exception (
+	) -> Value {
+		return Value::new_instance(thiz._context(), quickjs::JS_GetException(thiz._context()));
+	}
+
+	// ----------------
+
+	inline auto Context::get_class_proto (
+		Integer const & id
+	) -> Value {
+		return Value::new_instance(thiz._context(), quickjs::JS_GetClassProto(thiz._context(), static_cast<quickjs::JSClassID>(id.value)));
+	}
+
+	inline auto Context::set_class_proto (
+		Integer const & id,
+		Value &&        value
+	) -> Void {
+		quickjs::JS_SetClassProto(thiz._context(), static_cast<quickjs::JSClassID>(id.value), value._release_value());
+		return;
+	}
+
+	// ----------------
 
 	template <auto function> requires
 		CategoryConstraint<>
-		&& (IsGlobalFunction<decltype(function)>)
-		&& (IsNativeValueHandler<typename CallableTraitOf<function>::Result>)
-	inline auto Value::set_object_of_native_constructor (
-		String const & name
+		&& (IsSameV<function, NativeFunction>)
+	inline auto Value::set_object_of_native_function (
+		String const &  name,
+		Boolean const & is_constructor
 	) -> Void {
 		return thiz._rebind_value(
 			quickjs::JS_NewCFunction2(
 				thiz._context(),
-				&Detail::proxy_native_function<function, false>,
+				&Detail::proxy_native_function<function>,
 				cast_pointer<char>(make_null_terminated_string(name).begin()).value,
-				CallableTraitOf<function>::Argument::size,
-				quickjs::JS_CFUNC_constructor_,
+				0,
+				!is_constructor ? (quickjs::JS_CFUNC_generic_) : (quickjs::JS_CFUNC_constructor_),
 				0
 			)
 		);

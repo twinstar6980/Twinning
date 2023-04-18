@@ -1,10 +1,216 @@
 #pragma once
 
 #include "core/utility/script/java_script/value.hpp"
+#include <mutex>
 
 namespace TwinStar::Core::JavaScript {
 
+	#pragma region global mutex
+
+	inline auto g_mutex = std::mutex{};
+
+	#pragma endregion
+
+	#pragma region native value
+
+	template <typename TValue> requires
+		CategoryConstraint<IsPureInstance<TValue>>
+	class NativeValueHandler {
+
+	public:
+
+		using Value = TValue;
+
+	protected:
+
+		Variant<Null, Pointer<Value>, std::shared_ptr<Value>> m_value{};
+
+	protected:
+
+		#pragma region structor
+
+		explicit NativeValueHandler (
+			Pointer<Value> const & value,
+			Boolean const &        is_holder
+		) :
+			NativeValueHandler{} {
+			if (is_holder) {
+				thiz.m_value.template set<std::shared_ptr<Value>>(value.value);
+			} else {
+				thiz.m_value.template set<Pointer<Value>>(value);
+			}
+		}
+
+		#pragma endregion
+
+	public:
+
+		#pragma region structor
+
+		~NativeValueHandler (
+		) = default;
+
+		// ----------------
+
+		NativeValueHandler (
+		) = default;
+
+		NativeValueHandler (
+			NativeValueHandler const & that
+		) = default;
+
+		NativeValueHandler (
+			NativeValueHandler && that
+		) = default;
+
+		#pragma endregion
+
+		#pragma region operator
+
+		auto operator = (
+			NativeValueHandler const & that
+		) -> NativeValueHandler & = default;
+
+		auto operator = (
+			NativeValueHandler && that
+		) -> NativeValueHandler & = default;
+
+		#pragma endregion
+
+		#pragma region value
+
+		auto value (
+		) -> Value & {
+			assert_test(!thiz.m_value.template is<Null>());
+			if (thiz.m_value.template is<Pointer<Value>>()) {
+				return *thiz.m_value.template get<Pointer<Value>>();
+			} else if (thiz.m_value.template is<std::shared_ptr<Value>>()) {
+				return *thiz.m_value.template get<std::shared_ptr<Value>>();
+			} else {
+				throw ImpossibleException{};
+			}
+		}
+
+		#pragma endregion
+
+	public:
+
+		#pragma region create
+
+		static auto new_instance (
+			Value & value
+		) -> NativeValueHandler {
+			return NativeValueHandler{make_pointer(&value), k_true};
+		}
+
+		static auto new_reference (
+			Value & value
+		) -> NativeValueHandler {
+			return NativeValueHandler{make_pointer(&value), k_false};
+		}
+
+		template <typename ... Argument> requires
+			CategoryConstraint<IsValid<Argument ...>>
+			&& (IsConstructible<Value, Argument && ...>)
+		static auto new_instance_allocate (
+			Argument && ... argument
+		) -> NativeValueHandler {
+			return new_instance(*allocate_instance<Value>(as_forward<Argument>(argument) ...));
+		}
+
+		#pragma endregion
+
+	};
+
+	// ----------------
+
+	template <typename It>
+	concept IsNativeValueHandler = IsTemplateInstanceOfT<It, NativeValueHandler>;
+
+	#pragma endregion
+
 	#pragma region native function
+
+	namespace Detail {
+
+		template <auto function, typename ... Argument> requires
+			NoneConstraint
+		inline auto call_native_function_wrapper_inner (
+			Argument && ... argument
+		) -> typename CallableTraitOf<function>::Result {
+			auto finalizer = make_finalizer(
+				[] {
+					g_mutex.unlock();
+				},
+				[] {
+					g_mutex.lock();
+				}
+			);
+			return function(as_forward<Argument>(argument) ...);
+		}
+
+		template <auto function, auto forward_object> requires
+			NoneConstraint
+		inline auto call_native_function_wrapper (
+			Context &     context,
+			Value &       object,
+			List<Value> & argument
+		) -> typename CallableTraitOf<function>::Result {
+			return [&] <auto ... index> (ValuePackage<index ...>) -> typename CallableTraitOf<function>::Result {
+				if constexpr (!forward_object) {
+					using Argument = typename CallableTraitOf<function>::Argument;
+					return call_native_function_wrapper_inner<function>(
+						as_forward<typename Argument::template Element<index>>(argument[mbw<Size>(index)].template to_of<AsPure<typename Argument::template Element<index>>>()) ...
+					);
+				} else {
+					using Class = AsPure<typename CallableTraitOf<function>::Argument::template Element<1_ixz>>;
+					using Argument = AsTypePackageRemoveHead<typename CallableTraitOf<function>::Argument, 1_szz>;
+					return call_native_function_wrapper_inner<function>(
+						as_lvalue(object.to_of<Class>()),
+						as_forward<typename Argument::template Element<index>>(argument[mbw<Size>(index)].template to_of<AsPure<typename Argument::template Element<index>>>()) ...
+					);
+				}
+			}(AsValuePackageOfIndex<CallableTraitOf<function>::Argument::size - (!forward_object ? (0) : (1))>{});
+		}
+
+		template <auto function, auto forward_object> requires
+			CategoryConstraint<>
+			&& (IsGlobalFunction<decltype(function)>)
+			&& (IsSameV<forward_object, ZBoolean>)
+		inline auto proxy_native_function_wrapper (
+			Context &     context,
+			Value &       object,
+			List<Value> & argument,
+			Value &       result
+		) -> void {
+			if constexpr (IsVoid<typename CallableTraitOf<function>::Result>) {
+				call_native_function_wrapper<function, forward_object>(context, object, argument);
+				result.set_undefined();
+			} else {
+				auto && native_result = call_native_function_wrapper<function, forward_object>(context, object, argument);
+				result.from(as_forward<decltype(native_result)>(native_result));
+			}
+			return;
+		}
+
+		template <auto function, auto forward_object> requires
+			CategoryConstraint<>
+			&& (IsGlobalFunction<decltype(function)>)
+			&& (IsSameV<forward_object, ZBoolean>)
+		inline constexpr auto make_proxy_native_function_wrapper (
+		) -> auto {
+			return &proxy_native_function_wrapper<function, forward_object>;
+		}
+
+	}
+
+	template <auto function, auto forward_object> requires
+		CategoryConstraint<>
+		&& (IsGlobalFunction<decltype(function)>)
+		&& (IsSameV<forward_object, ZBoolean>)
+	inline constexpr auto & proxy_native_function_wrapper = *Detail::make_proxy_native_function_wrapper<function, forward_object>();
+
+	// ----------------
 
 	namespace Detail {
 
@@ -67,22 +273,23 @@ namespace TwinStar::Core::JavaScript {
 
 	// ----------------
 
-	template <auto t_function, auto t_forward_object> requires
+	M_enumeration(
+		M_wrap(NativeFunctionWrapperType),
+		M_wrap(
+			function,
+			method,
+			constructor,
+		),
+	);
+
+	template <auto t_function, auto t_type> requires
 		CategoryConstraint<>
 		&& (IsGlobalFunction<decltype(t_function)>)
-		&& (IsSameV<t_forward_object, ZBoolean>)
-		&& (!t_forward_object || CallableTraitOf<t_function>::Argument::size > 0_szz)
+		&& (IsSameV<t_type, NativeFunctionWrapperType>)
+		&& ((t_type == NativeFunctionWrapperType::Constant::function()) ||
+			(t_type == NativeFunctionWrapperType::Constant::method() && CallableTraitOf<t_function>::Argument::size > 0_szz) ||
+			(t_type == NativeFunctionWrapperType::Constant::constructor() && IsValid<typename CallableTraitOf<t_function>::Result>))
 	struct NativeFunctionWrapper {
-
-		String name;
-
-	};
-
-	template <auto t_function> requires
-		CategoryConstraint<>
-		&& (IsGlobalFunction<decltype(t_function)>)
-		&& (IsNativeValueHandler<typename CallableTraitOf<t_function>::Result>)
-	struct NativeConstructorWrapper {
 
 		String name;
 
@@ -91,6 +298,30 @@ namespace TwinStar::Core::JavaScript {
 	#pragma endregion
 
 	#pragma region native class
+
+	namespace Detail {
+
+		inline constexpr auto k_invalid_native_class_id = Integer{0};
+
+		template <typename Class> requires
+			CategoryConstraint<IsPureInstance<Class>>
+		inline auto g_native_class_id = Integer{0};
+
+		// ----------------
+
+		template <typename Class> requires
+			CategoryConstraint<IsPureInstance<Class>>
+		inline auto free_native_class (
+			Runtime & rt,
+			Value &   obj
+		) -> Void {
+			delete static_cast<NativeValueHandler<Class> *>(quickjs::JS_GetOpaque(obj._value(), static_cast<quickjs::JSClassID>(g_native_class_id<Class>.value)));
+			return;
+		}
+
+	}
+
+	// ----------------
 
 	template <typename TClass> requires
 		CategoryConstraint<IsPureInstance<TClass>>
@@ -140,11 +371,12 @@ namespace TwinStar::Core::JavaScript {
 			m_proto{},
 			m_constructor{},
 			m_parent{} {
+			assert_test(Detail::g_native_class_id<Class> == Detail::k_invalid_native_class_id);
 			thiz.m_parent = Value{parent};
-			thiz.m_parent.context().runtime().template register_class<Class>(name);
+			Detail::g_native_class_id<Class> = thiz.m_parent.context().runtime().template register_class<&Detail::free_native_class<Class>>(name);
 			thiz.m_proto = thiz.m_parent.new_value();
 			thiz.m_proto.set_object_of_object();
-			thiz.m_parent.context().template set_class_proto<Class>(Value{thiz.m_proto});
+			thiz.m_parent.context().set_class_proto(Detail::g_native_class_id<Class>, Value{thiz.m_proto});
 		}
 
 		#pragma endregion
@@ -178,7 +410,7 @@ namespace TwinStar::Core::JavaScript {
 			&& (IsSame<typename CallableTraitOf<function>::Result, NativeValueHandler<Class>>)
 		auto set_constructor (
 		) -> NativeClassBuilder & {
-			thiz.m_constructor = thiz.m_proto.new_value(NativeConstructorWrapper<function>{thiz.whole_name()});
+			thiz.m_constructor = thiz.m_proto.new_value(NativeFunctionWrapper<function, NativeFunctionWrapperType::Constant::constructor()>{thiz.whole_name()});
 			quickjs::JS_SetConstructor(thiz.m_constructor._context(), thiz.m_constructor._value(), thiz.m_proto._value());
 			thiz.m_parent.define_object_property(
 				thiz.m_name,
@@ -196,7 +428,7 @@ namespace TwinStar::Core::JavaScript {
 		) -> NativeClassBuilder & {
 			thiz.m_constructor.define_object_property(
 				name,
-				thiz.m_constructor.new_value(NativeFunctionWrapper<function, false>{name})
+				thiz.m_constructor.new_value(NativeFunctionWrapper<function, NativeFunctionWrapperType::Constant::function()>{name})
 			);
 			return thiz;
 		}
@@ -213,7 +445,7 @@ namespace TwinStar::Core::JavaScript {
 		) -> NativeClassBuilder & {
 			thiz.m_constructor.define_object_property(
 				name,
-				thiz.m_constructor.new_value(NativeFunctionWrapper<function, false>{name})
+				thiz.m_constructor.new_value(NativeFunctionWrapper<function, NativeFunctionWrapperType::Constant::function()>{name})
 			);
 			return thiz;
 		}
@@ -227,7 +459,7 @@ namespace TwinStar::Core::JavaScript {
 		) -> NativeClassBuilder & {
 			thiz.m_proto.define_object_property(
 				name,
-				thiz.m_proto.new_value(NativeFunctionWrapper<function, true>{name})
+				thiz.m_proto.new_value(NativeFunctionWrapper<function, NativeFunctionWrapperType::Constant::method()>{name})
 			);
 			return thiz;
 		}
@@ -247,8 +479,8 @@ namespace TwinStar::Core::JavaScript {
 		) -> NativeClassBuilder & {
 			thiz.m_proto.define_object_property(
 				name,
-				thiz.m_proto.new_value(NativeFunctionWrapper<getter, true>{name}),
-				thiz.m_proto.new_value(NativeFunctionWrapper<setter, true>{name})
+				thiz.m_proto.new_value(NativeFunctionWrapper<getter, NativeFunctionWrapperType::Constant::method()>{name}),
+				thiz.m_proto.new_value(NativeFunctionWrapper<setter, NativeFunctionWrapperType::Constant::method()>{name})
 			);
 			return thiz;
 		}
@@ -262,7 +494,7 @@ namespace TwinStar::Core::JavaScript {
 		) -> NativeClassBuilder & {
 			thiz.m_proto.define_object_property(
 				name,
-				thiz.m_proto.new_value(NativeFunctionWrapper<getter, true>{name}),
+				thiz.m_proto.new_value(NativeFunctionWrapper<getter, NativeFunctionWrapperType::Constant::method()>{name}),
 				[&] {
 					auto it = thiz.m_proto.new_value();
 					it.set_undefined();
@@ -420,7 +652,7 @@ namespace TwinStar::Core::JavaScript {
 		auto add_function (
 			String const & name
 		) -> NativeSpaceBuilder & {
-			return thiz.add_variable(name, thiz.m_object.new_value(NativeFunctionWrapper<function, false>{name}));
+			return thiz.add_variable(name, thiz.m_object.new_value(NativeFunctionWrapper<function, NativeFunctionWrapperType::Constant::function()>{name}));
 		}
 
 		// ----------------
@@ -435,74 +667,6 @@ namespace TwinStar::Core::JavaScript {
 		}
 
 		#pragma endregion
-
-	};
-
-	#pragma endregion
-
-	#pragma region exception
-
-	class ExecutionException :
-		public Exception {
-
-	public:
-
-		explicit ExecutionException (
-			Value & exception
-		) :
-			Exception{"JavaScript.Execution", {}, std::source_location{}} {
-			auto exception_message = exception.context().evaluate(
-				R"((error) => {
-					function split_error_stack(
-						string,
-					) {
-						let list;
-						if (string === undefined) {
-							list = [`@ ?`];
-						} else {
-							list = string.split('\n').slice(0, -1).map((e) => {
-								let result;
-								let regexp_result = /    at (.*) \((.*)\)/.exec(e);
-								if (regexp_result !== null) {
-									result = `@ ${regexp_result[2] === 'native' ? ('<native>:?') : (regexp_result[2])} ${regexp_result[1]}`;
-								} else {
-									result = '@ ?';
-								}
-								return result;
-							});
-						}
-						return list;
-					}
-					function parse_error_message(
-						error,
-					) {
-						let title = '';
-						let description = [];
-						if (error instanceof Error) {
-							if (error.name === 'NativeError') {
-								title = `${error.name}`;
-								description.push(...error.message.split('\n'));
-							} else {
-								title = `${error.name}: ${error.message}`;
-							}
-							description.push(...split_error_stack(error.stack));
-						} else {
-							title = `${error}`;
-						}
-						return [title, description];
-					}
-					let message = parse_error_message(error);
-					return [message[0], ...message[1]];
-				})"_sv,
-				"<unnamed>"_s,
-				k_false
-			).call(
-				make_list<Value>(
-					exception
-				)
-			);
-			thiz.m_description.emplace_back(mss(catenate_string<String>(exception_message.to_of<List<String>>(), '\n'_c)));
-		}
 
 	};
 

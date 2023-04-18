@@ -46,7 +46,8 @@ namespace TwinStar::Core::Executor {
 			m_context{m_runtime.new_context()},
 			m_callback{callback},
 			m_busy{k_false} {
-			thiz.m_runtime.set_module_loader(thiz.m_module_home);
+			thiz.m_runtime.enable_promise_rejection_tracker();
+			thiz.m_runtime.enable_module_loader(thiz.m_module_home);
 		}
 
 		Context (

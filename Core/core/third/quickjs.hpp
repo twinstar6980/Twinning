@@ -17,13 +17,16 @@
 #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
 #pragma clang diagnostic ignored "-Wcast-function-type"
 #pragma clang diagnostic ignored "-Wnewline-eof"
+#pragma clang diagnostic ignored "-Wimplicit-int-conversion"
 #pragma clang diagnostic ignored "-Wimplicit-int-float-conversion"
 #endif
 
 #if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
+#include "third/quickjs/cutils.h"
 #include "third/quickjs/quickjs.h"
 #endif
 #if defined M_compiler_msvc
+#include "third/quickjs.c_smile/cutils.h"
 #include "third/quickjs.c_smile/quickjs.h"
 #endif
 
@@ -35,6 +38,8 @@
 #endif
 
 namespace TwinStar::Core::Third::quickjs {
+
+	using BOOL = ::BOOL;
 
 	using JSRuntime = ::JSRuntime;
 
@@ -60,11 +65,19 @@ namespace TwinStar::Core::Third::quickjs {
 
 	inline constexpr auto JS_GetRuntime = ::JS_GetRuntime;
 
-	inline constexpr auto JS_GetGlobalObject = ::JS_GetGlobalObject;
+	inline constexpr auto JS_SetHostPromiseRejectionTracker = ::JS_SetHostPromiseRejectionTracker;
+
+	inline constexpr auto JS_SetModuleLoaderFunc = ::JS_SetModuleLoaderFunc;
+
+	inline constexpr auto JS_GetImportMeta = ::JS_GetImportMeta;
+
+	inline constexpr auto JS_IsJobPending = ::JS_IsJobPending;
+
+	inline constexpr auto JS_ExecutePendingJob = ::JS_ExecutePendingJob;
 
 	inline constexpr auto JS_GetException = ::JS_GetException;
 
-	inline constexpr auto JS_SetModuleLoaderFunc = ::JS_SetModuleLoaderFunc;
+	inline constexpr auto JS_GetGlobalObject = ::JS_GetGlobalObject;
 
 	inline constexpr auto JS_FreeValue = ::JS_FreeValue;
 

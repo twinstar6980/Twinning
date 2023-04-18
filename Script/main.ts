@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 64;
+	export const k_version = 65;
 
 	// ------------------------------------------------
 
@@ -67,7 +67,7 @@ namespace TwinStar.Script {
 
 		// ------------------------------------------------
 
-		export function notify(
+		export function output(
 			message: string,
 		): void {
 			var shell_name = Core.Miscellaneous.g_context.callback(Core.StringList.value(['name'])).value[0];
@@ -229,10 +229,12 @@ namespace TwinStar.Script {
 
 		export let g_module_manifest: ModuleLoader.Manifest = undefined!;
 
-		export function main(
+		// ------------------------------------------------
+
+		export async function internal(
 			argument: Array<string>,
-		): string {
-			Detail.notify(`TwinStar.ToolKit ~ Core:${Core.Miscellaneous.g_version.value} & Shell:${Core.Miscellaneous.g_context.callback(Core.StringList.value(['name'])).value[0]}:${Core.Miscellaneous.g_context.callback(Core.StringList.value(['version'])).value[0]} & Script:${k_version} ~ ${Core.Miscellaneous.g_context.callback(Core.StringList.value(['system'])).value[0]}`);
+		): Promise<string> {
+			Detail.output(`TwinStar.ToolKit ~ Core:${Core.Miscellaneous.g_version.value} & Shell:${Core.Miscellaneous.g_context.callback(Core.StringList.value(['name'])).value[0]}:${Core.Miscellaneous.g_context.callback(Core.StringList.value(['version'])).value[0]} & Script:${k_version} ~ ${Core.Miscellaneous.g_context.callback(Core.StringList.value(['system'])).value[0]}`);
 			assert_test(argument.length >= 1, `argument too few`);
 			// 获取主目录
 			let home_path = argument[0];
@@ -262,6 +264,26 @@ namespace TwinStar.Script {
 			Home.deinitialize();
 			g_thread_manager.resize(0);
 			return '';
+		}
+
+		export function external(
+			data: {
+				argument: Array<string>;
+				result: string | undefined;
+				error: any | undefined;
+			},
+		): void {
+			data.result = '';
+			internal(data.argument)
+				.then(
+					(value) => {
+						data.result = value;
+					},
+					(reason) => {
+						data.error = reason;
+					},
+				);
+			return;
 		}
 
 		// ------------------------------------------------
@@ -346,4 +368,4 @@ TwinStar.Script.Main.g_module_manifest = {
 	entry: `Entry/Entry`,
 };
 
-(TwinStar.Script.Main.main);
+(TwinStar.Script.Main.external);

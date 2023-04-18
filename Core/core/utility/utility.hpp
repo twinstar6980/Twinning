@@ -100,7 +100,6 @@
 
 #include "core/utility/process/process.hpp"
 
-#include "core/utility/script/java_script/native_value_handler.hpp"
 #include "core/utility/script/java_script/value_adapter.hpp"
 #include "core/utility/script/java_script/value.hpp"
 #include "core/utility/script/java_script/utility.hpp"

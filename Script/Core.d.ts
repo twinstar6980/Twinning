@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Core
- * @version 50
+ * @version 51
  */
 declare namespace TwinStar.Core {
 
@@ -4714,7 +4714,7 @@ declare namespace TwinStar.Core {
 			): any;
 
 			/**
-			 * 调用回调函数，由外壳程序提供
+			 * 调用回调函数，由外壳程序提供，只应在主线程中调用
 			 * @param argument 参数
 			 * @returns 结果
 			 */
@@ -4823,9 +4823,17 @@ declare namespace TwinStar.Core {
 
 	/** 主函数 */
 	type JS_MainFunction = (
-		argument: Array<string>,
-	) => string;
+		data: {
+			argument: Array<string>;
+			result: string | undefined;
+			error: any | undefined;
+		},
+	) => void;
 
 	// ------------------------------------------------
 
+}
+
+interface ImportMeta {
+	name: string;
 }

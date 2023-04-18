@@ -66,7 +66,7 @@ namespace TwinStar::Core::JavaScript {
 			That const & that
 		) -> Void {
 			assert_test(Detail::g_native_class_id<TValue> != Detail::k_invalid_native_class_id);
-			auto thix_value = quickjs::JS_NewObjectClass(thix._context(), static_cast<int>(Detail::g_native_class_id<TValue>));
+			auto thix_value = quickjs::JS_NewObjectClass(thix._context(), static_cast<int>(Detail::g_native_class_id<TValue>.value));
 			auto thix_opaque = new That{that};
 			quickjs::JS_SetOpaque(thix_value, thix_opaque);
 			thix._rebind_value(thix_value);
@@ -78,7 +78,7 @@ namespace TwinStar::Core::JavaScript {
 			That && that
 		) -> Void {
 			assert_test(Detail::g_native_class_id<TValue> != Detail::k_invalid_native_class_id);
-			auto thix_value = quickjs::JS_NewObjectClass(thix._context(), static_cast<int>(Detail::g_native_class_id<TValue>));
+			auto thix_value = quickjs::JS_NewObjectClass(thix._context(), static_cast<int>(Detail::g_native_class_id<TValue>.value));
 			auto thix_opaque = new That{as_moveable(that)};
 			quickjs::JS_SetOpaque(thix_value, thix_opaque);
 			thix._rebind_value(thix_value);
@@ -91,7 +91,7 @@ namespace TwinStar::Core::JavaScript {
 		) -> Void {
 			assert_test(Detail::g_native_class_id<TValue> != Detail::k_invalid_native_class_id);
 			auto thix_value = thix._value();
-			auto thix_opaque = quickjs::JS_GetOpaque(thix_value, Detail::g_native_class_id<TValue>);
+			auto thix_opaque = quickjs::JS_GetOpaque(thix_value, static_cast<quickjs::JSClassID>(Detail::g_native_class_id<TValue>.value));
 			assert_test(thix_opaque != nullptr);
 			that = *static_cast<That *>(thix_opaque);
 			return;
@@ -99,15 +99,13 @@ namespace TwinStar::Core::JavaScript {
 
 	};
 
-	// ----------------
-
-	template <auto t_function, auto t_forward_object> requires
+	template <auto t_function, auto t_type> requires
 		AutoConstraint
-	struct ValueAdapter<NativeFunctionWrapper<t_function, t_forward_object>> {
+	struct ValueAdapter<NativeFunctionWrapper<t_function, t_type>> {
 
 		using This = Value;
 
-		using That = NativeFunctionWrapper<t_function, t_forward_object>;
+		using That = NativeFunctionWrapper<t_function, t_type>;
 
 		// ----------------
 
@@ -115,27 +113,15 @@ namespace TwinStar::Core::JavaScript {
 			This &       thix,
 			That const & that
 		) -> Void {
-			thix.set_object_of_native_function<t_function, t_forward_object>(that.name);
-			return;
-		}
-
-	};
-
-	template <auto t_function> requires
-		AutoConstraint
-	struct ValueAdapter<NativeConstructorWrapper<t_function>> {
-
-		using This = Value;
-
-		using That = NativeConstructorWrapper<t_function>;
-
-		// ----------------
-
-		static auto from (
-			This &       thix,
-			That const & that
-		) -> Void {
-			thix.set_object_of_native_constructor<t_function>(that.name);
+			if constexpr (t_type == NativeFunctionWrapperType::Constant::function()) {
+				thix.set_object_of_native_function<&proxy_native_function_wrapper<t_function, false>>(that.name, k_false);
+			}
+			if constexpr (t_type == NativeFunctionWrapperType::Constant::method()) {
+				thix.set_object_of_native_function<&proxy_native_function_wrapper<t_function, true>>(that.name, k_false);
+			}
+			if constexpr (t_type == NativeFunctionWrapperType::Constant::constructor()) {
+				thix.set_object_of_native_function<&proxy_native_function_wrapper<t_function, false>>(that.name, k_true);
+			}
 			return;
 		}
 

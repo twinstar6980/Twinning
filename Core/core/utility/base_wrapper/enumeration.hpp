@@ -115,11 +115,11 @@ namespace TwinStar::Core {
 
 // ----------------
 
-#define M_enumeration(_type, _name, _)\
+#define M_enumeration(_type, _item, _)\
 	struct _type :\
 		EnumerationWrapper<decltype([]{\
 			enum class Type : ZIntegerU8 {\
-				M_map(M_enumeration_item, _name)\
+				M_map(M_enumeration_item, _item)\
 			};\
 			return declare<Type>();\
 		}())> {\
@@ -127,12 +127,12 @@ namespace TwinStar::Core {
 		struct Reflection {\
 			using Type = typename EnumerationWrapper<typename _type::Value>::Value;\
 			using EnumerationValue = AsTypePackageRemoveTail<TypePackage<\
-				M_map(M_enumeration_item_reflection, _name)\
+				M_map(M_enumeration_item_reflection, _item)\
 				None\
 			>, 1_szz>;\
 		};\
 		struct Constant {\
 			using Type = _type;\
-			M_map(M_enumeration_item_getter, _name)\
+			M_map(M_enumeration_item_getter, _item)\
 		};\
 	}
