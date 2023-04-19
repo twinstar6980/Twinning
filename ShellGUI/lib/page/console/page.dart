@@ -76,14 +76,16 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
     assert(argument.length >= 1);
     var method = argument[0];
     switch (method) {
-      case 'name': {
-        assert(argument.length == 1);
-        result.add('gui');
-        break;
-      }
       case 'version': {
         assert(argument.length == 1);
-        result.add('${kApplicationVersion}');
+        var number = kApplicationVersion;
+        result.add('${number}');
+        break;
+      }
+      case 'host': {
+        assert(argument.length == 1);
+        var name = 'gui';
+        result.add(name);
         break;
       }
       case 'system': {
@@ -106,6 +108,12 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
           }
           throw Exception();
         }();
+        result.add(name);
+        break;
+      }
+      case 'architecture': {
+        assert(argument.length == 1);
+        var name = 'unknown';
         result.add(name);
         break;
       }

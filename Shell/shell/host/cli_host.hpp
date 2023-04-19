@@ -87,22 +87,28 @@ namespace TwinStar::Shell {
 			assert_test(argument.size() >= 1);
 			auto method = argument[0];
 			switch (hash_string(method)) {
-				case hash_string("name"sv) : {
-					assert_test(argument.size() == 1);
-					auto name = thiz.name();
-					result.emplace_back(std::move(name));
-					break;
-				}
 				case hash_string("version"sv) : {
 					assert_test(argument.size() == 1);
-					auto version = thiz.version();
-					result.emplace_back(std::to_string(version));
+					auto number = thiz.version();
+					result.emplace_back(std::to_string(number));
+					break;
+				}
+				case hash_string("host"sv) : {
+					assert_test(argument.size() == 1);
+					auto name = thiz.host();
+					result.emplace_back(std::move(name));
 					break;
 				}
 				case hash_string("system"sv) : {
 					assert_test(argument.size() == 1);
-					auto system = thiz.system();
-					result.emplace_back(std::move(system));
+					auto name = thiz.system();
+					result.emplace_back(std::move(name));
+					break;
+				}
+				case hash_string("architecture"sv) : {
+					assert_test(argument.size() == 1);
+					auto name = thiz.architecture();
+					result.emplace_back(std::move(name));
 					break;
 				}
 				case hash_string("output"sv) : {
@@ -142,19 +148,24 @@ namespace TwinStar::Shell {
 
 		#pragma region execute implement
 
-		auto name (
-		) -> std::string {
-			return "cli"s;
-		}
-
 		auto version (
 		) -> std::size_t {
 			return std::size_t{M_version};
 		}
 
+		auto host (
+		) -> std::string {
+			return std::string{"cli"};
+		}
+
 		auto system (
 		) -> std::string {
 			return std::string{M_system};
+		}
+
+		auto architecture (
+		) -> std::string {
+			return std::string{M_architecture};
 		}
 
 		// ----------------

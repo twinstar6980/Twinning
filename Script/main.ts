@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 65;
+	export const k_version = 66;
 
 	// ------------------------------------------------
 
@@ -70,11 +70,11 @@ namespace TwinStar.Script {
 		export function output(
 			message: string,
 		): void {
-			var shell_name = Core.Miscellaneous.g_context.callback(Core.StringList.value(['name'])).value[0];
-			if (shell_name === 'cli') {
+			var host = Core.Miscellaneous.g_context.callback(Core.StringList.value(['host'])).value[0];
+			if (host === 'cli') {
 				Core.Miscellaneous.g_context.callback(Core.StringList.value(['output', `● ${message}\n`]));
 			}
-			if (shell_name === 'gui') {
+			if (host === 'gui') {
 				Core.Miscellaneous.g_context.callback(Core.StringList.value(['output_message', 'v', `${message}`]));
 			}
 			return;
@@ -234,7 +234,7 @@ namespace TwinStar.Script {
 		export async function internal(
 			argument: Array<string>,
 		): Promise<string> {
-			Detail.output(`TwinStar.ToolKit ~ Core:${Core.Miscellaneous.g_version.value} & Shell:${Core.Miscellaneous.g_context.callback(Core.StringList.value(['name'])).value[0]}:${Core.Miscellaneous.g_context.callback(Core.StringList.value(['version'])).value[0]} & Script:${k_version} ~ ${Core.Miscellaneous.g_context.callback(Core.StringList.value(['system'])).value[0]}`);
+			Detail.output(`TwinStar.ToolKit ~ Core:${Core.Miscellaneous.g_version.value} & Shell:${Core.Miscellaneous.g_context.callback(Core.StringList.value(['host'])).value[0]}:${Core.Miscellaneous.g_context.callback(Core.StringList.value(['version'])).value[0]} & Script:${k_version} ~ ${Core.Miscellaneous.g_context.callback(Core.StringList.value(['system'])).value[0]} & ${Core.Miscellaneous.g_context.callback(Core.StringList.value(['architecture'])).value[0]}`);
 			assert_test(argument.length >= 1, `argument too few`);
 			// 获取主目录
 			let home_path = argument[0];

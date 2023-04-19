@@ -14,6 +14,17 @@ function create_m()
 				return false
 			end,
 		},
+		architecture = {
+			name = nil,
+			is = function(self, ...)
+				for key, value in pairs({ ... }) do
+					if value == self.name then
+						return true
+					end
+				end
+				return false
+			end,
+		},
 		compiler = {
 			name = nil,
 			is = function(self, ...)
@@ -58,6 +69,19 @@ function make_m()
 	if is_os('ios') then
 		m.system.name = 'iphone'
 	end
+	m.architecture.name = 'unknown'
+	if is_arch('x86', 'i386') then
+		m.architecture.name = 'x86_32'
+	end
+	if is_arch('x86_64', 'x64') then
+		m.architecture.name = 'x86_64'
+	end
+	if is_arch('arm', 'armv7', 'armeabi', 'armeabi-v7a') then
+		m.architecture.name = 'arm_32'
+	end
+	if is_arch('arm64', 'arm64-v8a') then
+		m.architecture.name = 'arm_64'
+	end
 	m.compiler.name = 'unknown'
 	if is_os('windows') then
 		m.compiler.name = 'msvc'
@@ -89,15 +113,15 @@ function load_m(target)
 	local m = create_m()
 	m.root = m_list[1]
 	m.system.name = m_list[2]
-	m.compiler.name = m_list[3]
-	m.build.name = m_list[4]
+	m.architecture.name = m_list[3]
+	m.compiler.name = m_list[4]
+	m.build.name = m_list[5]
 	return m
 end
 
 function apply_common_setting()
 	m = make_m()
-	--print('x: %s.%s.%s', m.system.name, m.compiler.name, m.build.name)
-	set_values('m', m.root, m.system.name, m.compiler.name, m.build.name)
+	set_values('m', m.root, m.system.name, m.architecture.name, m.compiler.name, m.build.name)
 	set_policy("check.auto_ignore_flags", false)
 	set_policy("build.warning", true)
 	if m.system:is('linux') then
@@ -113,6 +137,8 @@ function apply_condition_definition_basic(target)
 		'defines',
 		'M_system_' .. m.system.name,
 		'M_system="' .. m.system.name .. '"',
+		'M_architecture_' .. m.architecture.name,
+		'M_architecture="' .. m.architecture.name .. '"',
 		'M_compiler_' .. m.compiler.name,
 		'M_compiler="' .. m.compiler.name .. '"',
 		'M_build_' .. m.build.name,
@@ -228,7 +254,7 @@ end
 
 function apply_import_vld_if_can(target)
 	local m = load_m(target)
-	if m.system:is('windows') and m.compiler:is('msvc') and m.build:is('debug') then
+	if m.system:is('windows') and m.architecture:is('x86_64') and m.compiler:is('msvc') and m.build:is('debug') then
 		local vld_root = 'C:/Program Files (x86)/Visual Leak Detector'
 		if os.exists(vld_root) then
 			target:add(
