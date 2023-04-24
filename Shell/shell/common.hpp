@@ -1,6 +1,6 @@
 #pragma once
 
-#define M_version 27
+#define M_version 28
 
 #include <cstring>
 #include <string_view>

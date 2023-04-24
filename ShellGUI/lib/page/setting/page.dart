@@ -211,7 +211,7 @@ class _SettingPageState extends State<SettingPage> {
                 ListTile(
                   dense: true,
                   title: Text(
-                    'ToolKit',
+                    'Command',
                     style: theme.textTheme.titleSmall!.copyWith(color: theme.colorScheme.primary),
                   ),
                 ),
@@ -224,7 +224,7 @@ class _SettingPageState extends State<SettingPage> {
                       children: [
                         Expanded(child: Container()),
                         Text(
-                          setting.data.mCore.isEmpty ? '?' : '~',
+                          setting.data.mCore.isEmpty ? '?' : '!',
                           style: theme.textTheme.bodyMedium,
                         ),
                       ],
@@ -269,7 +269,7 @@ class _SettingPageState extends State<SettingPage> {
                       children: [
                         Expanded(child: Container()),
                         Text(
-                          setting.data.mScript.isEmpty ? '?' : '~',
+                          setting.data.mScript.isEmpty ? '?' : '!',
                           style: theme.textTheme.bodyMedium,
                         ),
                       ],
@@ -408,7 +408,7 @@ class _SettingPageState extends State<SettingPage> {
                   Expanded(child: Container()),
                   OutlinedButton(
                     onPressed: () {
-                      setting.reset();
+                      setting.set(Setting.init());
                     },
                     child: const Text('Reset'),
                   ),

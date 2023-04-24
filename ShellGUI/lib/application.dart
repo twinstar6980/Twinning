@@ -20,12 +20,14 @@ class Application extends StatelessWidget {
 
   const Application({
     super.key,
+    required this.setting,
     required this.command,
   });
 
   // ----------------
 
-  final List<String>? command;
+  final Setting  setting;
+  final Command? command;
 
   // ----------------
 
@@ -33,7 +35,7 @@ class Application extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: SettingProvider()),
+        ChangeNotifierProvider.value(value: SettingProvider(this.setting)),
         ChangeNotifierProvider.value(value: CommandProvider(this.command)),
       ],
       child: Consumer<SettingProvider>(
@@ -47,7 +49,7 @@ class Application extends StatelessWidget {
                 colorSchemeSeed: !setting.data.mThemeColorInheritFromSystem ? setting.data.mThemeColorLight : null,
                 colorScheme: setting.data.mThemeColorInheritFromSystem ? lightDynamic : null,
                 scaffoldBackgroundColor: setting.data.mThemeColorInheritFromSystem ? lightDynamic?.background : null,
-                fontFamily: 'Noto Sans Mono CJK SC',
+                fontFamily: 'NotoSansMonoCJKsc-VF',
                 appBarTheme: AppBarTheme(
                   centerTitle: false,
                   elevation: 4,
@@ -61,7 +63,7 @@ class Application extends StatelessWidget {
                 colorSchemeSeed: !setting.data.mThemeColorInheritFromSystem ? setting.data.mThemeColorDark : null,
                 colorScheme: setting.data.mThemeColorInheritFromSystem ? darkDynamic : null,
                 scaffoldBackgroundColor: setting.data.mThemeColorInheritFromSystem ? darkDynamic?.background : null,
-                fontFamily: 'Noto Sans Mono CJK SC',
+                fontFamily: 'NotoSansMonoCJKsc-VF',
                 appBarTheme: AppBarTheme(
                   centerTitle: false,
                   elevation: 4,

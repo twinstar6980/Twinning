@@ -41,7 +41,7 @@ namespace TwinStar::Shell::Core {
 
 		explicit StaticLibrary (
 			std::nullptr_t _
-		):
+		) :
 			m_symbol{} {
 			thiz.m_symbol = {
 				.version = &Interface::version,

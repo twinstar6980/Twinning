@@ -32,21 +32,29 @@
 
 * 命令行参数
 	
-	`[<ignore> <additional-argument>...]`
+	`<core> <script> <argument>...`
 	
-	* `<ignore>`
+	* `<core>`
 		
-		第一参数作为命令启动模式的标识，其值被忽略。
+		第一参数为核心文件路径。
 	
-	* `<additional-argument>...`
+	* `<script>`
 		
-		剩余参数作为传给核心处理逻辑的附加参数。
+		第二参数是传给核心处理逻辑的脚本。该参数是一段表示 JS 脚本的字符串，或以 `@` 为首字符作为标识的脚本文件路径。
 	
-	若不传入命令行参数，则直接启动应用。
+	* `<argument>...`
+		
+		剩余参数作为传给核心处理逻辑的参数。
+	
+	`-additional <argument>...`
+	
+	若首个命令行参数为 `-additional` ，则以应用设置中设定的默认命令启动应用，`<argument>...` 为附加参数。
 	
 	若传入命令行参数，则应用将在命令执行完毕且成功后自动退出（可以在应用设置内禁用此行为）。
 	
-	> 不支持通过命令行指定核心路径、脚本，必须先在应用设置内正确设定它们的值。
+	若不传入命令行参数，则直接启动应用，用户可以手动执行默认命令（可以在应用设置内设定默认命令）。
+	
+	> `Android` 与 `iPhone` 无法直接传入命令行参数；`Android` 可以通过 `Intent` 传入命令行参数 `action = "com.twinstar.toolkit.shell_gui.action.LAUNCH", extra = { "command": Array<String> }` 。
 
 * 关于 Android 平台的必要说明
 	

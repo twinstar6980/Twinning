@@ -14,8 +14,8 @@ namespace TwinStar::Shell {
 		static auto map = std::unordered_map<std::thread::id, Function>{};
 		//
 		auto thread_id = std::this_thread::get_id();
-		auto item_pair = map.try_emplace(thread_id, function);
-		assert_test(item_pair.second);
+		map.erase(thread_id);
+		map.emplace(thread_id, function);
 		return [] (Argument ... argument) -> Result {
 			auto thread_id = std::this_thread::get_id();
 			return map.at(thread_id)(std::forward<Argument>(argument) ...);

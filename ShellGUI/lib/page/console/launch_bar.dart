@@ -14,7 +14,7 @@ class LaunchBarContent extends StatelessWidget {
 
   // ----------------
 
-  final Future<Void> Function(List<String>) onLaunch;
+  final Future<Void> Function() onLaunch;
 
   // ----------------
 
@@ -25,7 +25,7 @@ class LaunchBarContent extends StatelessWidget {
         Expanded(
           child: OutlinedButton(
             onPressed: () {
-              this.onLaunch([]);
+              this.onLaunch();
             },
             child: const Text('Launch'),
           ),

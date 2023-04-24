@@ -16,7 +16,7 @@
 	
 	* [Clang 16.0+ with libc++ and POSIX for Macintosh](https://llvm.org/)
 	
-	* [NDK 25.2+ for Android](https://developer.android.com/ndk/downloads)
+	* [Clang 14.0+ with libc++ and POSIX for Android (NDK 25.2+)](https://developer.android.com/ndk/downloads)
 	
 	* [Clang 16.0+ with libc++ and POSIX for iPhone](https://llvm.org/)
 
@@ -54,7 +54,7 @@
 	
 	* `<script>`
 		
-		第二参数是传给核心处理逻辑的脚本。该参数是一段表示 JS 脚本的字符串，或以 `?` 为首字符作为标识的脚本文件路径。
+		第二参数是传给核心处理逻辑的脚本。该参数是一段表示 JS 脚本的字符串，或以 `@` 为首字符作为标识的脚本文件路径。
 	
 	* `<argument>...`
 		

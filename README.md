@@ -26,9 +26,13 @@
 	
 	脚本，控制工具的运行流程。
 
-* `Windows Explorer Extension`
+* `Forwarder For Windows`
 	
-	Windows Explorer 扩展，将工具集成至 Windows Explorer 右键菜单中。
+	转发器，使用户可以通过 Windows Explorer 右键菜单将文件转发至工具。
+
+* `Forwarder For Android`
+	
+	转发器，使用户可以通过 Android 文件分享功能将文件转发至工具。
 
 * `Helper`
 	
@@ -36,7 +40,7 @@
 
 ## 平台支持
 
-* 操作系统：`Windows 7+` 、`Linux ?` 、`Macintosh 13.1~` 、`Android 9~` 、`iPhone 16.2~` 。
+* 操作系统：`Windows 7+` 、`Linux ~` 、`Macintosh 12~` 、`Android 9+` 、`iPhone 16~` 。
 
 * 处理器架构：`x86 32|64` 、`arm 32|64` 。
 

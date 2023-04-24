@@ -2,7 +2,7 @@
 
 脚本，控制工具的运行流程。
 
-本项目是跨平台的 `TypeScript` 项目，依赖 `Core` 、`Shell` 、`ShellGUI` 的实现。
+本项目是跨平台的 `TypeScript` 项目，依赖 `Core` 、`Shell` 、`Shell GUI` 的实现。
 
 ## 项目开发
 

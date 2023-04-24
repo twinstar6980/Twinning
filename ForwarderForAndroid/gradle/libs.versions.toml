@@ -1,0 +1,12 @@
+[versions]
+com-android-application = "8.1.0-beta01"
+org-jetbrains-kotlin-android = "1.8.0"
+
+[libraries]
+
+[plugins]
+com-android-application = { id = "com.android.application", version.ref = "com-android-application" }
+org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }
+
+[bundles]
+

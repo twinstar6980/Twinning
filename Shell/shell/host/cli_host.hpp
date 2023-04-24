@@ -43,7 +43,7 @@ namespace TwinStar::Shell {
 
 		explicit CLIHost (
 			std::nullptr_t _
-		):
+		) :
 			m_running{false} {
 		}
 

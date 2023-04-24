@@ -20,12 +20,12 @@ typedef Map<K, V> = core.Map<K, V>;
 
 const kApplicationName = 'TwinStar ToolKit - Shell GUI';
 
-const kApplicationVersion = 10;
+const kApplicationVersion = 11;
 
 // ----------------
 
 Void
-exitApp(
+exitApplication(
 ) {
   if (Platform.isAndroid) {
     SystemNavigator.pop();

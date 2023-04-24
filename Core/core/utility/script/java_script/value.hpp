@@ -187,8 +187,9 @@ namespace TwinStar::Core::JavaScript {
 			CategoryConstraint<>
 			&& (IsSameV<finalizer, ClassFinalizer>)
 		auto register_class (
+			Integer &      id,
 			String const & name
-		) -> Integer;
+		) -> Void;
 
 		#pragma endregion
 
@@ -1449,8 +1450,9 @@ namespace TwinStar::Core::JavaScript {
 		CategoryConstraint<>
 		&& (IsSameV<finalizer, ClassFinalizer>)
 	inline auto Runtime::register_class (
+		Integer &      id,
 		String const & name
-	) -> Integer {
+	) -> Void {
 		auto name_null_terminated = make_null_terminated_string(name);
 		auto definition = quickjs::JSClassDef{
 			.class_name = cast_pointer<char>(name_null_terminated.begin()).value,
@@ -1459,11 +1461,12 @@ namespace TwinStar::Core::JavaScript {
 			.call = nullptr,
 			.exotic = nullptr,
 		};
-		auto id = uint32_t{0};
-		quickjs::JS_NewClassID(&id);
-		auto result = quickjs::JS_NewClass(thiz._runtime(), id, &definition);
+		auto id_value = static_cast<quickjs::JSClassID>(id.value);
+		quickjs::JS_NewClassID(&id_value);
+		id.value = static_cast<ZInteger>(id_value);
+		auto result = quickjs::JS_NewClass(thiz._runtime(), id_value, &definition);
 		assert_test(result == 0);
-		return mbw<Integer>(id);
+		return;
 	}
 
 	// ----------------

@@ -1,26 +1,37 @@
 // ignore_for_file: unused_import
 
 import '/common.dart';
-import 'dart:io';
-import 'dart:convert';
 import 'package:flutter/widgets.dart';
-import 'package:path_provider/path_provider.dart';
 
 // ----------------
 
-class CommandProvider with ChangeNotifier {
+class Command {
 
-  List<String>? additionalArgument;
-
-  CommandProvider(
-    List<String>? command,
-  ) {
-    this.set(command);
-  }
+  String       core;
+  String       script;
+  List<String> argument;
 
   // ----------------
 
-  Future<Void>
+  Command(
+    this.core,
+    this.script,
+    this.argument,
+  );
+
+}
+
+class CommandProvider with ChangeNotifier {
+
+  Command? data;
+
+  CommandProvider(
+    this.data,
+  );
+
+  // ----------------
+
+  Void
   notify(
   ) async {
     this.notifyListeners();
@@ -29,13 +40,10 @@ class CommandProvider with ChangeNotifier {
 
   Void
   set(
-    List<String>? command,
+    Command? data,
   ) {
-    if (command == null) {
-      this.additionalArgument = null;
-    } else {
-      this.additionalArgument = command.sublist(0);
-    }
+    this.data = data;
+    this.notify();
     return;
   }
 

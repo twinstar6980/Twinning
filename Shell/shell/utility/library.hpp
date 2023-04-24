@@ -30,7 +30,7 @@ namespace TwinStar::Shell::Core {
 		// ----------------
 
 		LibraryLoader (
-		):
+		) :
 			m_handle{} {
 		}
 

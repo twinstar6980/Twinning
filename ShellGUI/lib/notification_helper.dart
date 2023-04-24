@@ -49,7 +49,7 @@ class NotificationHelper {
     }
     if (Platform.isAndroid) {
       await _flutterLocalNotificationsPlugin!.show(
-        DateTime.now().millisecondsSinceEpoch % 0x100000000,
+        DateTime.now().millisecondsSinceEpoch % 0x80000000,
         title,
         description,
         const NotificationDetails(

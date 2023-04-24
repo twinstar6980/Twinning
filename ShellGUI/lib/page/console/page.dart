@@ -304,12 +304,11 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
 
   Future<Boolean>
   _launch(
-    List<String> additionalArgument,
+    Command command,
   ) async {
     var exception = null as String?;
     var result = null as String?;
-    var setting = Provider.of<SettingProvider>(context, listen: false);
-    var actualCorePath = setting.data.mCore;
+    var actualCorePath = command.core;
     try {
       if (Platform.isAndroid) {
         var directory = await getApplicationSupportDirectory();
@@ -326,7 +325,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         }
         originalCoreFile.copySync(actualCorePath);
       }
-      result = await Launcher.launch(this, actualCorePath, setting.data.mScript, [...setting.data.mArgument, ...additionalArgument]);
+      result = await Launcher.launch(this, actualCorePath, command.script, command.argument);
     } catch (e) {
       exception = e.toString();
     }
@@ -356,19 +355,31 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
     return exception == null;
   }
 
+  Future<Boolean>
+  _launchDefault(
+  ) async {
+    var setting = Provider.of<SettingProvider>(context, listen: false);
+    var command = Command(
+      setting.data.mCore,
+      setting.data.mScript,
+      setting.data.mArgument,
+    );
+    return this._launch(command);
+  }
+
   // ----------------
 
   @override
   Widget build(BuildContext context) {
     var setting = Provider.of<SettingProvider>(context);
     var command = Provider.of<CommandProvider>(context);
-    if (setting.loaded && command.additionalArgument != null) {
+    if (command.data != null) {
       () async {
-        var additionalArgument = command.additionalArgument!;
+        var commandData = command.data!;
         command.set(null);
-        var state = await this._launch(additionalArgument);
+        var state = await this._launch(commandData);
         if (setting.data.mBehaviorAfterCommandSucceed && state) {
-          exitApp();
+          exitApplication();
         }
       }();
     }
@@ -389,7 +400,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
           ),
           const SizedBox(height: 8),
           ActionBar(
-            content: this._running ? this._inputBarContent! : LaunchBarContent(onLaunch: this._launch),
+            content: this._running ? this._inputBarContent! : LaunchBarContent(onLaunch: this._launchDefault),
           ),
           const SizedBox(height: 8),
         ],

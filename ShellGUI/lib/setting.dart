@@ -54,7 +54,7 @@ class Setting {
   Void
   fromJson(
     Map<String, dynamic> json,
-    Setting   data,
+    Setting              data,
   ) {
     data.mThemeMode = ThemeMode.values.byName(json['theme_mode'] as String);
     data.mThemeColorInheritFromSystem = json['theme_color_inherit_from_system'] as Boolean;
@@ -72,7 +72,7 @@ class Setting {
   Void
   toJson(
     Map<String, dynamic> json,
-    Setting   data,
+    Setting              data,
   ) {
     json['theme_mode'] = data.mThemeMode.name;
     json['theme_color_inherit_from_system'] = data.mThemeColorInheritFromSystem;
@@ -121,50 +121,27 @@ class Setting {
 
 class SettingProvider with ChangeNotifier {
 
-  Setting _data;
-  Boolean _loaded;
+  Setting data;
 
   SettingProvider(
-  ) : this._data = Setting.init(),
-      this._loaded = false {
-    () async {
-      late Setting data;
-      try {
-        data = await Setting.load();
-      } catch (e) {
-        data = Setting.init();
-        await Setting.save(data);
-      }
-      this._data = data;
-      this._loaded = true;
-      this.notifyListeners();
-    }();
-  }
-
-  Setting
-  get data {
-    return this._data;
-  }
-
-  Boolean
-  get loaded {
-    return this._loaded;
-  }
+    this.data,
+  );
 
   // ----------------
 
-  Future<Void>
+  Void
   notify(
   ) async {
     this.notifyListeners();
-    Setting.save(this._data);
+    Setting.save(this.data);
     return;
   }
 
-  Future<Void>
-  reset(
+  Void
+  set(
+    Setting data,
   ) async {
-    this._data = Setting.init();
+    this.data = data;
     this.notify();
     return;
   }

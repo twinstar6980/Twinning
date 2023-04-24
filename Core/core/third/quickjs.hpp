@@ -25,7 +25,7 @@
 #include "third/quickjs/cutils.h"
 #include "third/quickjs/quickjs.h"
 #endif
-#if defined M_compiler_msvc
+#if defined M_system_windows
 #include "third/quickjs.c_smile/cutils.h"
 #include "third/quickjs.c_smile/quickjs.h"
 #endif

@@ -16,7 +16,7 @@
 	
 	* [Clang 16.0+ with libc++ and POSIX for Macintosh](https://llvm.org/)
 	
-	* [NDK 25.2+ for Android](https://developer.android.com/ndk/downloads)
+	* [Clang 14.0+ with libc++ and POSIX for Android (NDK 25.2+)](https://developer.android.com/ndk/downloads)
 	
 	* [Clang 16.0+ with libc++ and POSIX for iPhone](https://llvm.org/)
 

@@ -371,11 +371,10 @@ namespace TwinStar::Core::JavaScript {
 			m_proto{},
 			m_constructor{},
 			m_parent{} {
-			assert_test(Detail::g_native_class_id<Class> == Detail::k_invalid_native_class_id);
 			thiz.m_parent = Value{parent};
-			Detail::g_native_class_id<Class> = thiz.m_parent.context().runtime().template register_class<&Detail::free_native_class<Class>>(name);
 			thiz.m_proto = thiz.m_parent.new_value();
 			thiz.m_proto.set_object_of_object();
+			thiz.m_parent.context().runtime().template register_class<&Detail::free_native_class<Class>>(Detail::g_native_class_id<Class>, name);
 			thiz.m_parent.context().set_class_proto(Detail::g_native_class_id<Class>, Value{thiz.m_proto});
 		}
 
