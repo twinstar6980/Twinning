@@ -490,7 +490,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 					subgroup_id_structure.value = cbw<IntegerU32>(global_subgroup_index);
 					subgroup_information_structure.id = string_block_fixed_128_from_string(subgroup_manifest.key);
 					subgroup_information_structure.index = cbw<IntegerU32>(global_subgroup_index);
-					subgroup_information_structure.texture_resource_begin_index = cbw<IntegerU32>(global_texture_resource_index);
+					subgroup_information_structure.texture_resource_begin = cbw<IntegerU32>(global_texture_resource_index);
 					subgroup_information_structure.texture_resource_count = cbw<IntegerU32>(k_none_size);
 					subgroup_pool_information_structure.id = string_block_fixed_128_from_string(subgroup_manifest.key + k_suffix_of_automation_pool);
 					subgroup_pool_information_structure.unknown_1 = 1_iu32;
@@ -805,7 +805,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 							case ResourceType::Constant::texture().value : {
 								auto & packet_resource_additional_manifest = packet_resource_manifest.value.additional.template get_of_type<ResourceType::Constant::texture()>();
 								auto & resource_additional_manifest = resource_manifest.value.additional.template set_of_type<ResourceType::Constant::texture()>();
-								auto & texture_information_structure = information_structure.texture_resource_information[cbw<Size>(subgroup_information_structure.texture_resource_begin_index) + cbw<Size>(packet_resource_additional_manifest.index)];
+								auto & texture_information_structure = information_structure.texture_resource_information[cbw<Size>(subgroup_information_structure.texture_resource_begin) + cbw<Size>(packet_resource_additional_manifest.index)];
 								assert_test(cbw<Integer>(texture_information_structure.size_width) == packet_resource_additional_manifest.size.width);
 								assert_test(cbw<Integer>(texture_information_structure.size_height) == packet_resource_additional_manifest.size.height);
 								resource_additional_manifest.size = packet_resource_additional_manifest.size;

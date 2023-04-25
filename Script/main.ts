@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 67;
+	export const k_version = 68;
 
 	// ------------------------------------------------
 
@@ -322,7 +322,7 @@ TwinStar.Script.Main.g_module_manifest = {
 		`Support/PopCap/Animation/Convert/Flash/To`,
 		`Support/PopCap/Animation/Convert/Flash/SourceManager`,
 		`Support/PopCap/Package/PackAutomatic`,
-		`Support/PopCap/ResourceStreamBundle/Repair`,
+		`Support/PopCap/ResourceStreamBundle/UnpackLenient`,
 		`Support/PvZ2/JSONGenericGetter/JSONGenericGetter`,
 		`Support/PvZ2/ResourceStreamBundle/ResourceManifest/Convert`,
 		`Support/PvZ2/ResourceStreamBundle/ResourceManifest/ResourceManifest`,

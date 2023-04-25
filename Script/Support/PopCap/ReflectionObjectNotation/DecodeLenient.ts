@@ -113,7 +113,7 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 
 	// ------------------------------------------------
 
-	export function decode_unit(
+	export function process_unit(
 		data: ByteStreamView,
 		native_string_index: Array<string>,
 		unicode_string_index: Array<string>,
@@ -349,7 +349,7 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 					if (value_type_identifier == 0xFEn) {
 						break;
 					}
-					let element_value = decode_unit(data, native_string_index, unicode_string_index, value_type_identifier, version);
+					let element_value = process_unit(data, native_string_index, unicode_string_index, value_type_identifier, version);
 					value.push(element_value);
 				}
 				if (value.length !== Number(size)) {
@@ -364,9 +364,9 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 					if (key_type_identifier == 0xFFn) {
 						break;
 					}
-					let member_key = decode_unit(data, native_string_index, unicode_string_index, key_type_identifier, version);
+					let member_key = process_unit(data, native_string_index, unicode_string_index, key_type_identifier, version);
 					let value_type_identifier = data.u8();
-					let member_value = decode_unit(data, native_string_index, unicode_string_index, value_type_identifier, version);
+					let member_value = process_unit(data, native_string_index, unicode_string_index, value_type_identifier, version);
 					value[member_key as string] = member_value;
 				}
 				break;
@@ -378,7 +378,7 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 		return value;
 	}
 
-	export function decode_whole(
+	export function process_whole(
 		data: ByteStreamView,
 		version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
 	): Core.JSON.JS_Value {
@@ -388,7 +388,7 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 		if (data.u32() !== version.number) {
 			Console.warning(`data:${data.p().toString(16)}h : invalid version`, []);
 		}
-		let value = decode_unit(data, [], [], 0x85n, version);
+		let value = process_unit(data, [], [], 0x85n, version);
 		if (data.u32() !== 0x454E4F44n) {
 			Console.warning(`data:${data.p().toString(16)}h : invalid done`, []);
 		}
@@ -397,13 +397,13 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 
 	// ------------------------------------------------
 
-	export function decode_whole_fs(
+	export function process_whole_fs(
 		data_file: string,
 		value_file: string,
 		version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
 	): void {
 		let data = CoreX.FileSystem.read_file(data_file);
-		let value = decode_whole(new ByteStreamView(data.view().value, 0x0), version);
+		let value = process_whole(new ByteStreamView(data.view().value), version);
 		CoreX.JSON.write_fs_js(value_file, value);
 		return;
 	}

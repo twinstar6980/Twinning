@@ -14,7 +14,7 @@ namespace TwinStar.Script {
 
 		constructor(
 			data: ArrayBuffer,
-			offset: number,
+			offset?: number,
 			size?: number,
 		) {
 			this.m_view = new DataView(data, offset, size);
@@ -231,7 +231,7 @@ namespace TwinStar.Script {
 
 		constructor(
 			data: ArrayBuffer,
-			offset: number,
+			offset?: number,
 			size?: number,
 		) {
 			this.m_view = new ByteListView(data, offset, size);

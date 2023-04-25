@@ -38,9 +38,9 @@
 	"support.popcap.package.pack_automatic:start": "Packing started",
 	"support.popcap.package.pack_automatic:total": "{} resource file(s) in total",
 	"support.popcap.package.pack_automatic:finish": "Packing finished",
-	// Support/PopCap/ResourceStreamBundle/Repair
-	"support.popcap.resource_stream_bundle.repair:invalid_zlib": "检测到ZLib异常，现截断数据",
-	"support.popcap.resource_stream_bundle.repair:invalid_packet": "检测到Packet异常，现以空Packet替换",
+	// Support/PopCap/ResourceStreamBundle/UnpackLenient
+	"support.popcap.resource_stream_bundle.unpack_lenient:unknown_group_id": "Group ID is unknown",
+	"support.popcap.resource_stream_bundle.unpack_lenient:unknown_subgroup_id": "Subgroup ID is unknown",
 	// Support/PvZ2/ResourceStreamBundle/ResourceConvert
 	"support.pvz2.resource_stream_bundle.resource_convert:reset_resource_path_case": "Restoring file path case...",
 	"support.pvz2.resource_stream_bundle.resource_convert:convert_resource": "Converting resources...",
@@ -738,9 +738,9 @@
 	"method:popcap.resource_stream_bundle.resource_convert$option_bnk_version_number:name": "BNK version number",
 	"method:popcap.resource_stream_bundle.resource_convert$option_wem:name": "Extract WEM",
 	// 
-	"method:popcap.resource_stream_bundle.repair:name": "PopCap Resource-Stream-Bundle Repair",
-	"method:popcap.resource_stream_bundle.repair$raw_file:name": "Original file",
-	"method:popcap.resource_stream_bundle.repair$ripe_file:name": "Finished file",
+	"method:popcap.resource_stream_bundle.unpack_lenient:name": "PopCap Resource-Stream-Bundle Unpack by lenient",
+	"method:popcap.resource_stream_bundle.unpack_lenient$data_file:name": "Data file",
+	"method:popcap.resource_stream_bundle.unpack_lenient$bundle_directory:name": "Bundle directory",
 	// Entry/method/popcap.resource_stream_bundle_patch
 	"method:popcap.resource_stream_bundle_patch.encode:name": "PopCap Resource-Stream-Bundle-Patch Encode",
 	"method:popcap.resource_stream_bundle_patch.encode$before_file:name": "Before file",

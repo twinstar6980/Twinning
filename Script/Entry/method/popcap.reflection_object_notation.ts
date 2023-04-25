@@ -441,7 +441,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 							(initial) => (Console.confirmation(null, null, initial)),
 						);
 					}
-					Support.PopCap.ReflectionObjectNotation.DecodeLenient.decode_whole_fs(data_file, value_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 });
+					Support.PopCap.ReflectionObjectNotation.DecodeLenient.process_whole_fs(data_file, value_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 });
 					return [`${value_file}`];
 				},
 				default_argument: {

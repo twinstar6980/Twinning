@@ -151,7 +151,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 			(IntegerU32) texture_resource_data_section_size_original,
 			(PaddingBlock<20_sz>) unused_1,
 			(IntegerU32) texture_resource_count,
-			(IntegerU32) texture_resource_begin_index,
+			(IntegerU32) texture_resource_begin,
 		),
 	);
 

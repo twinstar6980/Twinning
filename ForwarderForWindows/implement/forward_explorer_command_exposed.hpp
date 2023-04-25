@@ -1126,10 +1126,10 @@ namespace TwinStar::ForwarderForWindows::Exposed {
 					.argument = LR"({})",
 				},
 				{
-					.id = L"popcap.resource_stream_bundle.repair",
+					.id = L"popcap.resource_stream_bundle.unpack_lenient",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.rsb)$)", std::wregex::icase},
-					.method = L"popcap.resource_stream_bundle.repair",
+					.method = L"popcap.resource_stream_bundle.unpack_lenient",
 					.argument = LR"({})",
 				},
 			},

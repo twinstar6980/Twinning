@@ -82,7 +82,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 	// pack
 	// unpack
 	// resource_convert
-	// repair
+	// unpack_lenient
 
 	type Configuration = {
 		mode: Executor.Argument<string, false>;
@@ -581,43 +581,46 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 				input_forwarder: 'bundle_directory',
 			}),
 			Executor.method_of({
-				id: 'popcap.resource_stream_bundle.repair',
+				id: 'popcap.resource_stream_bundle.unpack_lenient',
 				name(
 				) {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					raw_file: Executor.Argument<string, false>;
-					ripe_file: Executor.Argument<string, true>;
+					data_file: Executor.Argument<string, false>;
+					bundle_directory: Executor.Argument<string, true>;
 				}) {
-					let raw_file: string;
-					let ripe_file: string;
+					let data_file: string;
+					let bundle_directory: string;
 					{
-						raw_file = Executor.request_argument(
-							Executor.query_argument_name(this.id, 'raw_file'),
-							a.raw_file,
+						data_file = Executor.request_argument(
+							Executor.query_argument_name(this.id, 'data_file'),
+							a.data_file,
 							(value) => (value),
 							null,
 							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
-						ripe_file = Executor.request_argument(
-							Executor.query_argument_name(this.id, 'ripe_file'),
-							a.ripe_file,
+						bundle_directory = Executor.request_argument(
+							Executor.query_argument_name(this.id, 'bundle_directory'),
+							a.bundle_directory,
 							(value) => (value),
-							() => (raw_file.replace(/((\.rsb))?$/i, '.repair.rsb')),
-							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
+							() => (data_file.replace(/((\.rsb))?$/i, '.rsb.bundle')),
+							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
-					Support.PopCap.ResourceStreamBundle.Repair.repair_package_fs(raw_file, ripe_file);
-					return [`${ripe_file}`];
+					let manifest_file = `${bundle_directory}/manifest.json`;
+					let description_file = `${bundle_directory}/description.json`;
+					let resource_directory = `${bundle_directory}/resource`;
+					Support.PopCap.ResourceStreamBundle.UnpackLenient.process_package_fs(data_file, manifest_file, description_file, resource_directory);
+					return [`${bundle_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
-					raw_file: undefined!,
-					ripe_file: '?default',
+					data_file: undefined!,
+					bundle_directory: '?default',
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.rsb)$/i]]),
-				input_forwarder: 'raw_file',
+				input_forwarder: 'data_file',
 			}),
 		);
 		g_executor_method_of_batch.push(

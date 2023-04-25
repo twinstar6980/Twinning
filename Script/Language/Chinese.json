@@ -38,9 +38,9 @@
 	"support.popcap.package.pack_automatic:start": "打包开始",
 	"support.popcap.package.pack_automatic:total": "共 {} 个资源文件",
 	"support.popcap.package.pack_automatic:finish": "打包完成",
-	// Support/PopCap/ResourceStreamBundle/Repair
-	"support.popcap.resource_stream_bundle.repair:invalid_zlib": "检测到ZLib异常，现截断数据",
-	"support.popcap.resource_stream_bundle.repair:invalid_packet": "检测到Packet异常，现以空Packet替换",
+	// Support/PopCap/ResourceStreamBundle/UnpackLenient
+	"support.popcap.resource_stream_bundle.unpack_lenient:unknown_group_id": "群ID未知",
+	"support.popcap.resource_stream_bundle.unpack_lenient:unknown_subgroup_id": "子群ID未知",
 	// Support/PvZ2/ResourceStreamBundle/ResourceConvert
 	"support.pvz2.resource_stream_bundle.resource_convert:reset_resource_path_case": "恢复文件路径大小写 ...",
 	"support.pvz2.resource_stream_bundle.resource_convert:convert_resource": "转换资源 ...",
@@ -738,9 +738,9 @@
 	"method:popcap.resource_stream_bundle.resource_convert$option_bnk_version_number:name": "BNK版本编号",
 	"method:popcap.resource_stream_bundle.resource_convert$option_wem:name": "提取WEM",
 	// 
-	"method:popcap.resource_stream_bundle.repair:name": "PopCap Resource-Stream-Bundle 修复",
-	"method:popcap.resource_stream_bundle.repair$raw_file:name": "原始文件",
-	"method:popcap.resource_stream_bundle.repair$ripe_file:name": "成品文件",
+	"method:popcap.resource_stream_bundle.unpack_lenient:name": "PopCap Resource-Stream-Bundle 宽松解包",
+	"method:popcap.resource_stream_bundle.unpack_lenient$data_file:name": "数据文件",
+	"method:popcap.resource_stream_bundle.unpack_lenient$bundle_directory:name": "捆绑目录",
 	// Entry/method/popcap.resource_stream_bundle_patch
 	"method:popcap.resource_stream_bundle_patch.encode:name": "PopCap Resource-Stream-Bundle-Patch 编码",
 	"method:popcap.resource_stream_bundle_patch.encode$before_file:name": "变动前文件",
