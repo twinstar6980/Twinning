@@ -30,6 +30,10 @@
 	
 	转发器，使用户可以通过 Windows Explorer 右键菜单将文件转发至工具。
 
+* `Forwarder For Macintosh`
+	
+	转发器，使用户可以通过 Macintosh Finder 右键菜单将文件转发至工具。
+
 * `Forwarder For Android`
 	
 	转发器，使用户可以通过 Android 文件分享功能将文件转发至工具。
