@@ -144,7 +144,7 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 					let subgroup_information = {
 						offset: Number(subgroup_information_data.u32(0x80)),
 						size: Number(subgroup_information_data.u32(0x84)),
-						index: Number(subgroup_information_data.u32(0x88)),
+						pool: Number(subgroup_information_data.u32(0x88)),
 						resource_data_store_mode: Number(subgroup_information_data.u32(0x8C)),
 						information_size: Number(subgroup_information_data.u32(0x90)),
 						generic_resource_data_offset: Number(subgroup_information_data.u32(0x94)),
@@ -163,10 +163,10 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 						texture_resource_data_size: Number(subgroup_pool_information_data.u32(0x84)),
 					};
 					subgroup_information.texture_resource_data_size_original = subgroup_pool_information.texture_resource_data_size;
-					let subgroup_id = subgroup_id_map[subgroup_information.index];
+					let subgroup_id = subgroup_id_map[simple_subgroup_information.index];
 					if (subgroup_id === undefined) {
 						Console.warning(los('support.popcap.resource_stream_bundle.unpack_lenient:unknown_subgroup_id'), []);
-						subgroup_id = `<unknown>:${subgroup_information.index}`;
+						subgroup_id = `<unknown>:${simple_subgroup_information.index}`;
 					}
 					let subgroup_manifest: Core.Tool.PopCap.ResourceStreamBundle.Manifest.JS_N.Subgroup = {
 						category: [null, null],

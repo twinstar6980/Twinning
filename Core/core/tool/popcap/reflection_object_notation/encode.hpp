@@ -130,7 +130,7 @@ namespace TwinStar::Core::Tool::PopCap::ReflectionObjectNotation {
 				return make_optional_of(RTIDTypeIdentifier{RTIDTypeIdentifier::Value::null});
 			}
 			auto at_position = Range::find_index(content, '@'_c);
-			if (!at_position) {
+			if (!at_position.has()) {
 				return k_null_optional;
 			}
 			// TODO : should test the content is number or not ?
@@ -208,7 +208,7 @@ namespace TwinStar::Core::Tool::PopCap::ReflectionObjectNotation {
 			JSON::String const &                              value,
 			Optional<std::unordered_map<CStringView, Size>> & native_string_index
 		) -> Void {
-			if (!native_string_index) {
+			if (!native_string_index.has()) {
 				data.write(TypeIdentifier{TypeIdentifier::Value::string_native});
 				if constexpr (check_version(version, {}, {false})) {
 					ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(StringParser::compute_utf8_string_length(value)));
@@ -246,7 +246,7 @@ namespace TwinStar::Core::Tool::PopCap::ReflectionObjectNotation {
 		) -> Void {
 			auto is_rtid = k_false;
 			if (enable_rtid) {
-				if (auto rtid_type = analysis_rtid(value)) {
+				if (auto rtid_type = analysis_rtid(value); rtid_type.has()) {
 					is_rtid = k_true;
 					data.write(TypeIdentifier{TypeIdentifier::Value::string_rtid});
 					data.write(rtid_type.get());

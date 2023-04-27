@@ -27,24 +27,31 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3}))
+		&& (check_version(t_version, {1}))
 	M_record_of_data(
 		M_wrap(Header<t_version>),
 		M_wrap(
-			(PaddingBlock<8_sz>) unused_1,
+			(IntegerU32) unknown_1,
+			(ConstantBlock<0x00000000_iu32>) unknown_2,
 			(IntegerU32) resource_data_section_store_mode,
 			(IntegerU32) information_section_size,
 			(IntegerU32) generic_resource_data_section_offset,
 			(IntegerU32) generic_resource_data_section_size,
 			(IntegerU32) generic_resource_data_section_size_original,
-			(PaddingBlock<4_sz>) unused_2,
+			(ConstantBlock<0x00000000_iu32>) unknown_8,
 			(IntegerU32) texture_resource_data_section_offset,
 			(IntegerU32) texture_resource_data_section_size,
 			(IntegerU32) texture_resource_data_section_size_original,
-			(PaddingBlock<20_sz>) unused_3,
+			(ConstantBlock<0x00000000_iu32>) unknown_12,
+			(ConstantBlock<0x00000000_iu32>) unknown_13,
+			(ConstantBlock<0x00000000_iu32>) unknown_14,
+			(ConstantBlock<0x00000000_iu32>) unknown_15,
+			(ConstantBlock<0x00000000_iu32>) unknown_16,
 			(IntegerU32) resource_information_section_size,
 			(IntegerU32) resource_information_section_offset,
-			(PaddingBlock<12_sz>) unused_4,
+			(ConstantBlock<0x00000000_iu32>) unknown_19,
+			(ConstantBlock<0x00000000_iu32>) unknown_20,
+			(ConstantBlock<0x00000000_iu32>) unknown_21,
 		),
 	);
 
@@ -55,7 +62,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3}))
+		&& (check_version(t_version, {1}))
 	M_record_of_data(
 		M_wrap(ResourceBasicInformation<t_version>),
 		M_wrap(
@@ -72,7 +79,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3}))
+		&& (check_version(t_version, {1}))
 	M_record_of_data(
 		M_wrap(GenericResourceAdditionalInformation<t_version>),
 		M_wrap(
@@ -86,12 +93,13 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3}))
+		&& (check_version(t_version, {1}))
 	M_record_of_data(
 		M_wrap(TextureResourceAdditionalInformation<t_version>),
 		M_wrap(
 			(IntegerU32) index,
-			(PaddingBlock<8_sz>) unused_1,
+			(ConstantBlock<0x00000000_iu32>) unknown_2,
+			(ConstantBlock<0x00000000_iu32>) unknown_3,
 			(IntegerU32) size_width,
 			(IntegerU32) size_height,
 		),
@@ -105,7 +113,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3}))
+		&& (check_version(t_version, {1}))
 	struct ResourceInformation<t_version> :
 		ResourceBasicInformation<t_version> {
 		EnumerableVariant<ResourceType, GenericResourceAdditionalInformation<t_version>, TextureResourceAdditionalInformation<t_version>> additional;
@@ -118,7 +126,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3}))
+		&& (check_version(t_version, {1}))
 	M_record_of_data(
 		M_wrap(Information<t_version>),
 		M_wrap(
@@ -136,7 +144,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup::Structure {
 
 	template <auto t_version> requires
 		CategoryConstraint<>
-		&& (check_version(t_version, {3}))
+		&& (check_version(t_version, {1}))
 	struct ResourceTypeFlag<t_version> {
 		inline static constexpr auto generic = IntegerU32{0x00000000_iu32};
 		inline static constexpr auto texture = IntegerU32{0x00000001_iu32};

@@ -149,7 +149,7 @@ namespace TwinStar::Core::Tool::PopCap::Package {
 				resource_manifest.value.time = cbw<Integer>(resource_information_structure.time);
 				auto resource_data = package_data.forward_view(cbw<Size>(resource_information_structure.size));
 				if constexpr (check_version(version, {}, {false})) {
-					if (resource_directory) {
+					if (resource_directory.has()) {
 						FileSystem::write_file(resource_directory.get() / resource_manifest.key, resource_data);
 					}
 				}
@@ -159,7 +159,7 @@ namespace TwinStar::Core::Tool::PopCap::Package {
 					auto resource_data_original_stream = OByteStreamView{resource_data_original};
 					Data::Compression::Deflate::Uncompress::do_process_whole(resource_data_stream, resource_data_original_stream, 15_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
 					assert_test(resource_data_stream.full() && resource_data_original_stream.full());
-					if (resource_directory) {
+					if (resource_directory.has()) {
 						FileSystem::write_file(resource_directory.get() / resource_manifest.key, resource_data_original);
 					}
 				}

@@ -416,12 +416,8 @@ namespace TwinStar::Core {
 		auto query_force (
 			KeyObject const & key
 		) -> VElement & {
-			if (auto index = thiz.find_key(key)) {
-				return thiz.at(index.get());
-			} else {
-				thiz.append(key, Value{});
-				return thiz.last();
-			}
+			auto index = thiz.find_key(key);
+			return index.has() ? (thiz.at(index.get())) : (thiz.append(key, Value{}));
 		}
 
 		#pragma endregion

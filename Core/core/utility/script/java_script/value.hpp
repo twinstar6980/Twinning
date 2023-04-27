@@ -594,43 +594,43 @@ namespace TwinStar::Core::JavaScript {
 
 		auto is_undefined (
 		) -> Boolean {
-			assert_test(thiz.m_context);
+			assert_test(thiz.m_context.has());
 			return mbw<Boolean>(quickjs::JS_IsUndefined(thiz._value()));
 		}
 
 		auto is_null (
 		) -> Boolean {
-			assert_test(thiz.m_context);
+			assert_test(thiz.m_context.has());
 			return mbw<Boolean>(quickjs::JS_IsNull(thiz._value()));
 		}
 
 		auto is_boolean (
 		) -> Boolean {
-			assert_test(thiz.m_context);
+			assert_test(thiz.m_context.has());
 			return mbw<Boolean>(quickjs::JS_IsBool(thiz._value()));
 		}
 
 		auto is_bigint (
 		) -> Boolean {
-			assert_test(thiz.m_context);
+			assert_test(thiz.m_context.has());
 			return mbw<Boolean>(quickjs::JS_IsBigInt(thiz._context(), thiz._value()));
 		}
 
 		auto is_number (
 		) -> Boolean {
-			assert_test(thiz.m_context);
+			assert_test(thiz.m_context.has());
 			return mbw<Boolean>(quickjs::JS_IsNumber(thiz._value()));
 		}
 
 		auto is_string (
 		) -> Boolean {
-			assert_test(thiz.m_context);
+			assert_test(thiz.m_context.has());
 			return mbw<Boolean>(quickjs::JS_IsString(thiz._value()));
 		}
 
 		auto is_object (
 		) -> Boolean {
-			assert_test(thiz.m_context);
+			assert_test(thiz.m_context.has());
 			return mbw<Boolean>(quickjs::JS_IsObject(thiz._value()));
 		}
 
@@ -638,7 +638,7 @@ namespace TwinStar::Core::JavaScript {
 
 		auto is_exception (
 		) -> Boolean {
-			assert_test(thiz.m_context);
+			assert_test(thiz.m_context.has());
 			return mbw<Boolean>(quickjs::JS_IsException(thiz._value()));
 		}
 
@@ -1135,7 +1135,7 @@ namespace TwinStar::Core::JavaScript {
 			That &&       that,
 			Option && ... option
 		) -> Void {
-			assert_test(thiz.m_context);
+			assert_test(thiz.m_context.has());
 			thiz.set_uninitialized();
 			ValueAdapter<AsPure<That>>::from(thiz, as_forward<That>(that), as_forward<Option>(option) ...);
 			return;
@@ -1147,7 +1147,7 @@ namespace TwinStar::Core::JavaScript {
 			That &&       that,
 			Option && ... option
 		) -> That && {
-			assert_test(thiz.m_context);
+			assert_test(thiz.m_context.has());
 			ValueAdapter<AsPure<That>>::to(thiz, as_forward<That>(that), as_forward<Option>(option) ...);
 			return as_forward<That>(that);
 		}

@@ -62,16 +62,6 @@ namespace TwinStar::Core {
 			Optional && that
 		) -> Optional & = default;
 
-		// ----------------
-
-		explicit constexpr operator Boolean () const {
-			return thiz.has();
-		}
-
-		explicit constexpr operator ZBoolean () const {
-			return thiz.has();
-		}
-
 		#pragma endregion
 
 		#pragma region value

@@ -27,106 +27,6 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 
 		inline static auto const k_suffix_of_automation_pool = CStringView{"_AutoPool"_sv};
 
-		static auto make_original_group_id_upper (
-			CStringView const & standard_id,
-			Boolean &           is_composite,
-			String &            original_id
-		) -> Void {
-			is_composite = !Range::end_with(standard_id, k_suffix_of_composite_shell_upper);
-			if (is_composite) {
-				original_id = standard_id;
-			} else {
-				original_id = standard_id.head(standard_id.size() - k_suffix_of_composite_shell_upper.size());
-			}
-			return;
-		}
-
-		static auto make_original_group_id (
-			CStringView const & standard_id,
-			Boolean &           is_composite,
-			String &            original_id
-		) -> Void {
-			is_composite = !Range::end_with(standard_id, k_suffix_of_composite_shell);
-			if (is_composite) {
-				original_id = standard_id;
-			} else {
-				original_id = standard_id.head(standard_id.size() - k_suffix_of_composite_shell.size());
-			}
-			return;
-		}
-
-		static auto make_standard_group_id (
-			CStringView const & group_id,
-			Boolean const &     is_composite
-		) -> String {
-			auto standard_id = String{group_id};
-			if (!is_composite) {
-				standard_id.append_list(k_suffix_of_composite_shell);
-			}
-			return standard_id;
-		}
-
-		// ----------------
-
-		static auto string_block_fixed_128_from_string (
-			CStringView const & block
-		) -> StringBlockFixed128 {
-			assert_test(block.size() < 128_sz);
-			return StringBlockFixed128{block};
-		}
-
-		static auto string_block_fixed_128_to_string (
-			StringBlockFixed128 const & string
-		) -> String {
-			auto size = k_none_size;
-			for (auto & element : string) {
-				if (element == CharacterType::k_null) {
-					break;
-				}
-				++size;
-			}
-			assert_test(size < 128_sz);
-			return String{string.begin(), size};
-		}
-
-		// ----------------
-
-		static auto subgroup_category_from_data (
-			SubgroupCategory & value,
-			IntegerU32 const & resolution_data,
-			IntegerU32 const & locale_data
-		) -> Void {
-			if (resolution_data == 0x00000000_iu32) {
-				value.resolution.reset();
-			} else {
-				value.resolution.set(cbw<Integer>(resolution_data));
-			}
-			if (locale_data == 0x00000000_iu32) {
-				value.locale.reset();
-			} else {
-				value.locale.set().from(fourcc_from_integer(locale_data));
-			}
-			return;
-		}
-
-		static auto subgroup_category_to_data (
-			SubgroupCategory const & value,
-			IntegerU32 &             resolution_data,
-			IntegerU32 &             locale_data
-		) -> Void {
-			if (!value.resolution) {
-				resolution_data = 0x00000000_iu32;
-			} else {
-				resolution_data = cbw<IntegerU32>(value.resolution.get());
-			}
-			if (!value.locale) {
-				locale_data = 0x00000000_iu32;
-			} else {
-				locale_data = fourcc_to_integer(value.locale.get().to_of<FourCC>());
-			}
-			return;
-		}
-
 	};
 
 	template <auto version> requires (check_version(version, {}, {}))
@@ -147,19 +47,18 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 
 		using Common::k_suffix_of_automation_pool;
 
-		using Common::make_original_group_id_upper;
+		// ----------------
 
-		using Common::make_original_group_id;
-
-		using Common::make_standard_group_id;
-
-		using Common::string_block_fixed_128_from_string;
-
-		using Common::string_block_fixed_128_to_string;
-
-		using Common::subgroup_category_from_data;
-
-		using Common::subgroup_category_to_data;
+		static auto make_standard_group_id (
+			CStringView const & group_id,
+			Boolean const &     is_composite
+		) -> String {
+			auto standard_id = String{group_id};
+			if (!is_composite) {
+				standard_id.append_list(k_suffix_of_composite_shell);
+			}
+			return standard_id;
+		}
 
 		// ----------------
 
@@ -203,7 +102,20 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 				for (auto & subgroup_index : SizeRange{group_description.value.subgroup.size()}) {
 					auto & subgroup_description = group_description.value.subgroup.at(subgroup_index);
 					auto & subgroup_description_information_structure = group_description_information_structure.subgroup_information[subgroup_index];
-					subgroup_category_to_data(subgroup_description.value.category, subgroup_description_information_structure.resolution, subgroup_description_information_structure.locale);
+					if constexpr (check_version(version, {1}, {})) {
+						if (!subgroup_description.value.category.resolution.has()) {
+							subgroup_description_information_structure.resolution = 0x00000000_iu32;
+						} else {
+							subgroup_description_information_structure.resolution = cbw<IntegerU32>(subgroup_description.value.category.resolution.get());
+						}
+					}
+					if constexpr (check_version(version, {3}, {})) {
+						if (!subgroup_description.value.category.locale.has()) {
+							subgroup_description_information_structure.locale = 0x00000000_iu32;
+						} else {
+							subgroup_description_information_structure.locale = fourcc_to_integer(subgroup_description.value.category.locale.get().template to_of<FourCC>());
+						}
+					}
 					subgroup_description_information_structure.id_offset = set_string(subgroup_description.key);
 					subgroup_description_information_structure.resource_count = cbw<IntegerU32>(subgroup_description.value.resource.size());
 					subgroup_description_information_structure.resource_information.allocate_full(subgroup_description.value.resource.size());
@@ -243,7 +155,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 						}
 						resource_detail_description_information_structure.property_information_count = cbw<IntegerU32>(resource_detail_description_information_structure.property_information.size());
 						resource_information_data_size += bs_static_size<Structure::ResourceBasicDetailDescriptionInformation<version>>();
-						if (resource_detail_description_information_structure.image_property_information) {
+						if (resource_detail_description_information_structure.image_property_information.has()) {
 							resource_detail_description_information_structure.image_property_information_offset = cbw<IntegerU32>(resource_information_data_size);
 							resource_information_data_size += bs_static_size<Structure::ResourceImagePropertyDetailDescriptionInformation<version>>();
 						} else {
@@ -401,6 +313,12 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 				};
 			}
 			auto information_structure = Structure::Information<version>{};
+			if constexpr (check_version(version, {1, 3}, {})) {
+				information_structure.header.unknown_1 = 1_iu32;
+			}
+			if constexpr (check_version(version, {3}, {})) {
+				information_structure.header.unknown_1 = 0_iu32;
+			}
 			auto global_group_count = k_none_size;
 			auto global_subgroup_count = k_none_size;
 			auto global_resource_count = k_none_size;
@@ -447,7 +365,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 				package_data.write_space(k_null_byte, compute_padding_size(package_data.position(), k_padding_unit_size));
 				information_structure.header.information_without_description_section_size = cbw<IntegerU32>(package_data.position());
 			}
-			if (package_description) {
+			if (package_description.has()) {
 				process_package_description(package_data, information_structure.header, package_description.get());
 			} else {
 				information_structure.header.description_group_section_offset = cbw<IntegerU32>(k_none_size);
@@ -485,15 +403,26 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 					auto & subgroup_pool_information_structure = information_structure.subgroup_pool_information[global_subgroup_index];
 					auto   packet_package_manifest = typename ResourceStreamGroup::Manifest<packet_version>::Package{};
 					simple_subgroup_information_structure.index = cbw<IntegerU32>(global_subgroup_index);
-					subgroup_category_to_data(subgroup_manifest.value.category, simple_subgroup_information_structure.resolution, simple_subgroup_information_structure.locale);
+					if constexpr (check_version(version, {1}, {})) {
+						if (!subgroup_manifest.value.category.resolution.has()) {
+							simple_subgroup_information_structure.resolution = 0x00000000_iu32;
+						} else {
+							simple_subgroup_information_structure.resolution = cbw<IntegerU32>(subgroup_manifest.value.category.resolution.get());
+						}
+					}
+					if constexpr (check_version(version, {3}, {})) {
+						if (!subgroup_manifest.value.category.locale.has()) {
+							simple_subgroup_information_structure.locale = 0x00000000_iu32;
+						} else {
+							simple_subgroup_information_structure.locale = fourcc_to_integer(subgroup_manifest.value.category.locale.get().template to_of<FourCC>());
+						}
+					}
 					subgroup_id_structure.key = subgroup_manifest.key;
 					subgroup_id_structure.value = cbw<IntegerU32>(global_subgroup_index);
 					subgroup_information_structure.id = string_block_fixed_128_from_string(subgroup_manifest.key);
-					subgroup_information_structure.index = cbw<IntegerU32>(global_subgroup_index);
-					subgroup_information_structure.texture_resource_begin = cbw<IntegerU32>(global_texture_resource_index);
-					subgroup_information_structure.texture_resource_count = cbw<IntegerU32>(k_none_size);
+					subgroup_information_structure.pool = cbw<IntegerU32>(global_subgroup_index);
 					subgroup_pool_information_structure.id = string_block_fixed_128_from_string(subgroup_manifest.key + k_suffix_of_automation_pool);
-					subgroup_pool_information_structure.unknown_1 = 1_iu32;
+					subgroup_pool_information_structure.unknown_4 = 1_iu32;
 					packet_package_manifest.resource_data_section_store_mode = subgroup_manifest.value.resource_data_section_store_mode;
 					packet_package_manifest.resource.allocate_full(subgroup_manifest.value.resource.size());
 					auto make_formatted_path =
@@ -502,8 +431,8 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 					) -> auto {
 						return Path{format_string(path_format.to_string(), group_manifest.key, subgroup_manifest.key)};
 					};
-					auto generic_resource_index = k_begin_index;
-					auto texture_resource_index = k_begin_index;
+					auto texture_resource_begin = global_texture_resource_index;
+					auto texture_resource_count = k_none_size;
 					for (auto & resource_index : SizeRange{subgroup_manifest.value.resource.size()}) {
 						auto & resource_manifest = subgroup_manifest.value.resource.at(resource_index);
 						auto & resource_path_structure = information_structure.resource_path.at(global_resource_index);
@@ -515,7 +444,6 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 							case ResourceType::Constant::generic().value : {
 								auto & resource_additional_manifest = resource_manifest.value.additional.template get_of_type<ResourceType::Constant::generic()>();
 								auto & packet_resource_additional_manifest = packet_resource_manifest.value.additional.template set_of_type<ResourceType::Constant::generic()>();
-								++generic_resource_index;
 								++global_generic_resource_index;
 								break;
 							}
@@ -533,10 +461,9 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 								if constexpr (check_version(version, {4}, {2})) {
 									texture_information_structure.scale = cbw<IntegerU32>(resource_additional_manifest.scale);
 								}
-								packet_resource_additional_manifest.index = cbw<Integer>(texture_resource_index);
+								packet_resource_additional_manifest.index = cbw<Integer>(texture_resource_count);
 								packet_resource_additional_manifest.size = resource_additional_manifest.size;
-								++subgroup_information_structure.texture_resource_count;
-								++texture_resource_index;
+								++texture_resource_count;
 								++global_texture_resource_index;
 								break;
 							}
@@ -546,7 +473,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 					auto packet_data = OByteStreamView{package_data.reserve_view()};
 					auto use_legacy_packet = k_false;
 					auto packet_header_structure = ResourceStreamGroup::Structure::Header<packet_version>{};
-					if (packet_file) {
+					if (packet_file.has()) {
 						if (FileSystem::exist_file(make_formatted_path(packet_file.get()))) {
 							auto legacy_packet_size = FileSystem::read_stream_file(make_formatted_path(packet_file.get()), packet_data);
 							auto legacy_packet_stream = IByteStreamView{packet_data.prev_view(legacy_packet_size)};
@@ -558,7 +485,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 					}
 					if (!use_legacy_packet) {
 						ResourceStreamGroup::Pack<packet_version>::do_process_package(packet_data, packet_package_manifest, make_formatted_path(resource_directory));
-						if (new_packet_file) {
+						if (new_packet_file.has()) {
 							FileSystem::write_file(make_formatted_path(new_packet_file.get()), packet_data.stream_view());
 						}
 						auto legacy_packet_stream = IByteStreamView{packet_data.stream_view(), bs_static_size<ResourceStreamGroup::Structure::MagicIdentifier>() + bs_static_size<ResourceStreamGroup::Structure::VersionNumber>()};
@@ -577,6 +504,16 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 					subgroup_information_structure.texture_resource_data_section_size_original = packet_header_structure.texture_resource_data_section_size_original;
 					subgroup_pool_information_structure.texture_resource_data_section_offset = packet_header_structure.generic_resource_data_section_offset + packet_header_structure.generic_resource_data_section_size_original;
 					subgroup_pool_information_structure.texture_resource_data_section_size = packet_header_structure.texture_resource_data_section_size_original;
+					if constexpr (check_version(version, {1, 3}, {})) {
+						subgroup_pool_information_structure.texture_resource_begin = cbw<IntegerU32>(texture_resource_begin);
+						subgroup_pool_information_structure.texture_resource_count = cbw<IntegerU32>(texture_resource_count);
+					}
+					if constexpr (check_version(version, {3}, {})) {
+						subgroup_information_structure.texture_resource_begin = cbw<IntegerU32>(texture_resource_begin);
+						subgroup_information_structure.texture_resource_count = cbw<IntegerU32>(texture_resource_count);
+						subgroup_pool_information_structure.texture_resource_begin = 0_iu32;
+						subgroup_pool_information_structure.texture_resource_count = 0_iu32;
+					}
 					package_data.forward(packet_data.position());
 					++global_subgroup_index;
 				}
@@ -632,19 +569,35 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 
 		using Common::k_suffix_of_automation_pool;
 
-		using Common::make_original_group_id_upper;
+		// ----------------
 
-		using Common::make_original_group_id;
+		static auto make_original_group_id_upper (
+			CStringView const & standard_id,
+			Boolean &           is_composite,
+			String &            original_id
+		) -> Void {
+			is_composite = !Range::end_with(standard_id, k_suffix_of_composite_shell_upper);
+			if (is_composite) {
+				original_id = standard_id;
+			} else {
+				original_id = standard_id.head(standard_id.size() - k_suffix_of_composite_shell_upper.size());
+			}
+			return;
+		}
 
-		using Common::make_standard_group_id;
-
-		using Common::string_block_fixed_128_from_string;
-
-		using Common::string_block_fixed_128_to_string;
-
-		using Common::subgroup_category_from_data;
-
-		using Common::subgroup_category_to_data;
+		static auto make_original_group_id (
+			CStringView const & standard_id,
+			Boolean &           is_composite,
+			String &            original_id
+		) -> Void {
+			is_composite = !Range::end_with(standard_id, k_suffix_of_composite_shell);
+			if (is_composite) {
+				original_id = standard_id;
+			} else {
+				original_id = standard_id.head(standard_id.size() - k_suffix_of_composite_shell.size());
+			}
+			return;
+		}
 
 		// ----------------
 
@@ -675,7 +628,20 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 					auto & subgroup_description_information_structure = group_description_information_structure.subgroup_information[subgroup_index];
 					auto & subgroup_description = group_description.value.subgroup.at(subgroup_index);
 					subgroup_description.key = get_string(subgroup_description_information_structure.id_offset);
-					subgroup_category_from_data(subgroup_description.value.category, subgroup_description_information_structure.resolution, subgroup_description_information_structure.locale);
+					if constexpr (check_version(version, {1}, {})) {
+						if (subgroup_description_information_structure.resolution == 0x00000000_iu32) {
+							subgroup_description.value.category.resolution.reset();
+						} else {
+							subgroup_description.value.category.resolution.set(cbw<Integer>(subgroup_description_information_structure.resolution));
+						}
+					}
+					if constexpr (check_version(version, {3}, {})) {
+						if (subgroup_description_information_structure.locale == 0x00000000_iu32) {
+							subgroup_description.value.category.locale.reset();
+						} else {
+							subgroup_description.value.category.locale.set().from(fourcc_from_integer(subgroup_description_information_structure.locale));
+						}
+					}
 					subgroup_description.value.resource.allocate_full(subgroup_description_information_structure.resource_information.size());
 					for (auto & resource_index : SizeRange{subgroup_description_information_structure.resource_information.size()}) {
 						auto & resource_description_information_structure = subgroup_description_information_structure.resource_information[resource_index];
@@ -685,8 +651,8 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 						resource_description.key = get_string(resource_detail_description_information_structure.id_offset);
 						resource_description.value.path = Path{String{get_string(resource_detail_description_information_structure.path_offset)}};
 						resource_description.value.type = cbw<Integer>(resource_detail_description_information_structure.type);
-						resource_description.value.property.allocate(resource_detail_description_information_structure.property_information.size() + (resource_detail_description_information_structure.image_property_information ? (11_sz) : (0_sz)));
-						if (resource_detail_description_information_structure.image_property_information) {
+						resource_description.value.property.allocate(resource_detail_description_information_structure.property_information.size() + (!resource_detail_description_information_structure.image_property_information.has() ? (0_sz) : (11_sz)));
+						if (resource_detail_description_information_structure.image_property_information.has()) {
 							auto & resource_image_property_detail_description_information_structure = resource_detail_description_information_structure.image_property_information.get();
 							resource_description.value.property("type"_sv).from(cbw<Integer>(resource_image_property_detail_description_information_structure.type), k_true);
 							resource_description.value.property("flag"_sv).from(cbw<Integer>(resource_image_property_detail_description_information_structure.flag), k_true);
@@ -725,6 +691,12 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 			auto information_structure = Structure::Information<version>{};
 			{
 				package_data.read(information_structure.header);
+				if constexpr (check_version(version, {1, 3}, {})) {
+					assert_test(information_structure.header.unknown_1 == 1_iu32);
+				}
+				if constexpr (check_version(version, {3}, {})) {
+					assert_test(information_structure.header.unknown_1 == 0_iu32);
+				}
 				assert_test(cbw<Size>(information_structure.header.group_information_section_block_size) == bs_static_size<Structure::GroupInformation<version>>());
 				assert_test(cbw<Size>(information_structure.header.subgroup_information_section_block_size) == bs_static_size<Structure::SubgroupInformation<version>>());
 				assert_test(cbw<Size>(information_structure.header.subgroup_pool_information_section_block_size) == bs_static_size<Structure::SubgroupPoolInformation<version>>());
@@ -773,9 +745,23 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 				for (auto & subgroup_index : SizeRange{cbw<Size>(group_information_structure.subgroup_count)}) {
 					auto & simple_subgroup_information_structure = group_information_structure.subgroup_information[subgroup_index];
 					auto & subgroup_information_structure = information_structure.subgroup_information[cbw<Size>(simple_subgroup_information_structure.index)];
+					auto & subgroup_pool_information_structure = information_structure.subgroup_pool_information[cbw<Size>(subgroup_information_structure.pool)];
 					auto & subgroup_manifest = group_manifest.value.subgroup.at(subgroup_index);
 					subgroup_manifest.key = subgroup_id_list[cbw<Size>(simple_subgroup_information_structure.index)];
-					subgroup_category_from_data(subgroup_manifest.value.category, simple_subgroup_information_structure.resolution, simple_subgroup_information_structure.locale);
+					if constexpr (check_version(version, {1}, {})) {
+						if (simple_subgroup_information_structure.resolution == 0x00000000_iu32) {
+							subgroup_manifest.value.category.resolution.reset();
+						} else {
+							subgroup_manifest.value.category.resolution.set(cbw<Integer>(simple_subgroup_information_structure.resolution));
+						}
+					}
+					if constexpr (check_version(version, {3}, {})) {
+						if (simple_subgroup_information_structure.locale == 0x00000000_iu32) {
+							subgroup_manifest.value.category.locale.reset();
+						} else {
+							subgroup_manifest.value.category.locale.set().from(fourcc_from_integer(simple_subgroup_information_structure.locale));
+						}
+					}
 					auto make_formatted_path =
 						[&] (
 						Path const & path_format
@@ -785,13 +771,25 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 					auto packet_data = package_data.sub_view(cbw<Size>(subgroup_information_structure.offset), cbw<Size>(subgroup_information_structure.size));
 					auto packet_stream = IByteStreamView{packet_data};
 					auto packet_package_manifest = typename ResourceStreamGroup::Manifest<packet_version>::Package{};
-					ResourceStreamGroup::Unpack<packet_version>::do_process_package(packet_stream, packet_package_manifest, resource_directory ? (make_optional_of(make_formatted_path(resource_directory.get()))) : (k_null_optional));
+					ResourceStreamGroup::Unpack<packet_version>::do_process_package(packet_stream, packet_package_manifest, !resource_directory.has() ? (k_null_optional) : (make_optional_of(make_formatted_path(resource_directory.get()))));
 					assert_test(packet_stream.full());
-					if (packet_file) {
+					if (packet_file.has()) {
 						FileSystem::write_file(make_formatted_path(packet_file.get()), packet_data);
 					}
 					subgroup_manifest.value.resource_data_section_store_mode = packet_package_manifest.resource_data_section_store_mode;
 					subgroup_manifest.value.resource.allocate_full(packet_package_manifest.resource.size());
+					auto texture_resource_begin = Size{};
+					auto texture_resource_count = Size{};
+					if constexpr (check_version(version, {1, 3}, {})) {
+						texture_resource_begin = cbw<Size>(subgroup_pool_information_structure.texture_resource_begin);
+						texture_resource_count = cbw<Size>(subgroup_pool_information_structure.texture_resource_count);
+					}
+					if constexpr (check_version(version, {3}, {})) {
+						texture_resource_begin = cbw<Size>(subgroup_information_structure.texture_resource_begin);
+						texture_resource_count = cbw<Size>(subgroup_information_structure.texture_resource_count);
+						assert_test(subgroup_pool_information_structure.texture_resource_begin == 0_iu32);
+						assert_test(subgroup_pool_information_structure.texture_resource_count == 0_iu32);
+					}
 					for (auto & resource_index : SizeRange{packet_package_manifest.resource.size()}) {
 						auto & packet_resource_manifest = packet_package_manifest.resource.at(resource_index);
 						auto & resource_manifest = subgroup_manifest.value.resource.at(resource_index);
@@ -805,7 +803,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 							case ResourceType::Constant::texture().value : {
 								auto & packet_resource_additional_manifest = packet_resource_manifest.value.additional.template get_of_type<ResourceType::Constant::texture()>();
 								auto & resource_additional_manifest = resource_manifest.value.additional.template set_of_type<ResourceType::Constant::texture()>();
-								auto & texture_information_structure = information_structure.texture_resource_information[cbw<Size>(subgroup_information_structure.texture_resource_begin) + cbw<Size>(packet_resource_additional_manifest.index)];
+								auto & texture_information_structure = information_structure.texture_resource_information[texture_resource_begin + cbw<Size>(packet_resource_additional_manifest.index)];
 								assert_test(cbw<Integer>(texture_information_structure.size_width) == packet_resource_additional_manifest.size.width);
 								assert_test(cbw<Integer>(texture_information_structure.size_height) == packet_resource_additional_manifest.size.height);
 								resource_additional_manifest.size = packet_resource_additional_manifest.size;

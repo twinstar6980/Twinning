@@ -12,6 +12,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup {
 	);
 
 	using VersionPackage = ValuePackage<
+		Version{.number = 1_i},
 		Version{.number = 3_i},
 		Version{.number = 4_i}
 	>;

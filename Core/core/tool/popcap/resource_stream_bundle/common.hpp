@@ -6,13 +6,13 @@
 
 namespace TwinStar::Core::Tool::PopCap::ResourceStream {
 
-	#pragma region
+	#pragma region padding unit
 
 	inline constexpr auto k_padding_unit_size = Size{0x1000_sz};
 
 	#pragma endregion
 
-	#pragma region
+	#pragma region resource type
 
 	M_enumeration(
 		M_wrap(ResourceType),
@@ -24,7 +24,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStream {
 
 	#pragma endregion
 
-	#pragma region
+	#pragma region resource data section store mode
 
 	M_record_of_list(
 		M_wrap(ResourceDataSectionStoreMode),
@@ -33,6 +33,8 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStream {
 			(Boolean) compress_texture,
 		),
 	);
+
+	// ----------------
 
 	inline constexpr auto k_resource_data_section_store_mode_flag_count = Size{2_sz};
 
@@ -63,25 +65,36 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStream {
 
 	#pragma endregion
 
-	#pragma region
-
-	M_record_of_list(
-		M_wrap(SubgroupCategory),
-		M_wrap(
-			(Optional<Integer>) resolution,
-			(Optional<String>) locale,
-		),
-	);
-
-	#pragma endregion
-
-	#pragma region
+	#pragma region string block fixed 128
 
 	using StringBlockFixed128 = StaticArray<Character, 128_sz>;
 
+	// ----------------
+
+	static auto string_block_fixed_128_from_string (
+		CStringView const & block
+	) -> StringBlockFixed128 {
+		assert_test(block.size() < 128_sz);
+		return StringBlockFixed128{block};
+	}
+
+	static auto string_block_fixed_128_to_string (
+		StringBlockFixed128 const & string
+	) -> String {
+		auto size = k_none_size;
+		for (auto & element : string) {
+			if (element == CharacterType::k_null) {
+				break;
+			}
+			++size;
+		}
+		assert_test(size < 128_sz);
+		return String{string.begin(), size};
+	}
+
 	#pragma endregion
 
-	#pragma region
+	#pragma region compiled map data
 
 	namespace CompiledMapData {
 
@@ -145,7 +158,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStream {
 					}
 				}
 				auto character_index = k_begin_index;
-				if (work_option[index]) {
+				if (work_option[index].has()) {
 					character_index += work_option[index].get().inherit_length;
 					work_option[index].reset();
 				}
@@ -180,7 +193,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStream {
 					auto & element = map.at(index);
 					auto   current_string_has_child = Array<Boolean>{element.key.size() + 1_sz};
 					for (auto & index_1 : SizeRange{index + k_next_index, map.size()}) {
-						if (!work_option[index_1]) {
+						if (!work_option[index_1].has()) {
 							auto common_size = Range::common_size(element.key, map.at(index_1).key);
 							if (!current_string_has_child[common_size] && common_size >= work_option[index].get().inherit_length) {
 								current_string_has_child[common_size] = k_true;
@@ -194,7 +207,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStream {
 						}
 					}
 					auto character_index = k_begin_index;
-					if (work_option[index]) {
+					if (work_option[index].has()) {
 						character_index += work_option[index].get().inherit_length;
 						auto current_position = stream.position();
 						stream.set_position(work_option[index].get().parent_offset * k_block_size);
@@ -237,7 +250,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStream {
 					}
 					stream.set_position(string_begin_position);
 				}
-				if (auto & parent_string = parent_string_list[stream.position() / k_block_size]) {
+				if (auto & parent_string = parent_string_list[stream.position() / k_block_size]; parent_string.has()) {
 					element.key.allocate(parent_string.get().size() + string_length_in_next_stream);
 					element.key.append_list(parent_string.get());
 					parent_string.reset();

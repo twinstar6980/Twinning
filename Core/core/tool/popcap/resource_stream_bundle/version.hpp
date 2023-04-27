@@ -13,6 +13,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 	);
 
 	using VersionPackage = ValuePackage<
+		Version{.number = 1_i, .extended_texture_information_for_pvz2_cn = 0_i},
 		Version{.number = 3_i, .extended_texture_information_for_pvz2_cn = 0_i},
 		Version{.number = 4_i, .extended_texture_information_for_pvz2_cn = 0_i},
 		Version{.number = 4_i, .extended_texture_information_for_pvz2_cn = 1_i},

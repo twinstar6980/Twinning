@@ -73,6 +73,12 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup {
 				package_data.write_space(k_null_byte, compute_padding_size(package_data.position(), k_padding_unit_size));
 			}
 			auto information_structure = Structure::Information<version>{};
+			if constexpr (check_version(version, {1, 3})) {
+				information_structure.header.unknown_1 = 1_iu32;
+			}
+			if constexpr (check_version(version, {3})) {
+				information_structure.header.unknown_1 = 0_iu32;
+			}
 			information_structure.header.information_section_size = cbw<IntegerU32>(package_data.position());
 			information_structure.header.resource_data_section_store_mode = resource_data_section_store_mode_to_data(package_manifest.resource_data_section_store_mode);
 			information_structure.resource_information.allocate_full(package_manifest.resource.size());
@@ -204,6 +210,12 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup {
 			auto information_structure = Structure::Information<version>{};
 			{
 				package_data.read(information_structure.header);
+				if constexpr (check_version(version, {1, 3})) {
+					assert_test(information_structure.header.unknown_1 == 1_iu32);
+				}
+				if constexpr (check_version(version, {3})) {
+					assert_test(information_structure.header.unknown_1 == 0_iu32);
+				}
 				CompiledMapData::decode(information_structure.resource_information, as_lvalue(IByteStreamView{package_data.sub_view(cbw<Size>(information_structure.header.resource_information_section_offset), cbw<Size>(information_structure.header.resource_information_section_size))}));
 			}
 			package_manifest.resource_data_section_store_mode = resource_data_section_store_mode_from_data(information_structure.header.resource_data_section_store_mode);
@@ -266,7 +278,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamGroup {
 						}
 					}
 					auto resource_data = resource_data_section_view.sub(cbw<Size>(resource_information_structure.value.offset), cbw<Size>(resource_information_structure.value.size));
-					if (resource_directory) {
+					if (resource_directory.has()) {
 						FileSystem::write_file(resource_directory.get() / resource_manifest.key, resource_data);
 					}
 				}

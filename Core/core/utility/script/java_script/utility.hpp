@@ -396,7 +396,7 @@ namespace TwinStar::Core::JavaScript {
 
 		auto whole_name (
 		) -> String {
-			return !thiz.m_parent_name ? (thiz.m_name) : ("{}::{}"_sf(thiz.m_parent_name.get(), thiz.m_name));
+			return !thiz.m_parent_name.has() ? (thiz.m_name) : ("{}::{}"_sf(thiz.m_parent_name.get(), thiz.m_name));
 		}
 
 		#pragma endregion
@@ -616,7 +616,7 @@ namespace TwinStar::Core::JavaScript {
 
 		auto whole_name (
 		) -> String {
-			return !thiz.m_parent_name ? (thiz.m_name) : ("{}::{}"_sf(thiz.m_parent_name.get(), thiz.m_name));
+			return !thiz.m_parent_name.has() ? (thiz.m_name) : ("{}::{}"_sf(thiz.m_parent_name.get(), thiz.m_name));
 		}
 
 		#pragma endregion

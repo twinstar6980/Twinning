@@ -191,7 +191,7 @@ namespace TwinStar::Core {
 			KeyObject const & key
 		) const -> QElement & {
 			auto index = thiz.find_key(key);
-			assert_test(index);
+			assert_test(index.has());
 			return thiz.at(index.get());
 		}
 
@@ -201,11 +201,7 @@ namespace TwinStar::Core {
 			KeyObject const & key
 		) const -> OptionalView<Element, constant> {
 			auto index = thiz.find_key(key);
-			if (index) {
-				return OptionalView<Element, constant>{thiz.at(index.get())};
-			} else {
-				return k_null_optional;
-			}
+			return !index.has() ? (k_null_optional) : (OptionalView<Element, constant>{thiz.at(index.get())});
 		}
 
 		#pragma endregion

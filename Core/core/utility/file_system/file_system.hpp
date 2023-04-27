@@ -279,7 +279,7 @@ namespace TwinStar::Core::FileSystem {
 				assert_test(exist_directory(target));
 			}
 			auto result = k_none_size;
-			if (!depth || current_depth < depth.get()) {
+			if (!depth.has() || current_depth < depth.get()) {
 				for (auto & entry : std::filesystem::directory_iterator{make_std_path(target)}) {
 					auto name = make_string(self_cast<std::string>(entry.path().filename().generic_u8string()));
 					auto type = get_type(entry.status().type());
@@ -318,7 +318,7 @@ namespace TwinStar::Core::FileSystem {
 				assert_test(exist_directory(target));
 				result.allocate(count<filter>(target, depth));
 			}
-			if (!depth || current_depth < depth.get()) {
+			if (!depth.has() || current_depth < depth.get()) {
 				for (auto & entry : std::filesystem::directory_iterator{make_std_path(target)}) {
 					auto name = make_string(self_cast<std::string>(entry.path().filename().generic_u8string()));
 					auto type = get_type(entry.status().type());

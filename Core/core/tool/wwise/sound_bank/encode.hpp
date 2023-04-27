@@ -13042,7 +13042,7 @@ namespace TwinStar::Core::Tool::Wwise::SoundBank {
 							assert_test(data_size == 0_i);
 						} else {
 							auto item_data = data_data.sub_view(cbw<Size>(data_offset), cbw<Size>(data_size));
-							if (embedded_media_directory) {
+							if (embedded_media_directory.has()) {
 								FileSystem::write_file(embedded_media_directory.get() / "{}.wem"_sf(manifest), item_data);
 							}
 						}

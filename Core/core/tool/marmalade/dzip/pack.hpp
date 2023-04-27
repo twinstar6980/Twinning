@@ -61,7 +61,7 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 					auto & resource_information_structure = information_structure.resource_information[resource_index];
 					auto   resource_directory_string = resource_manifest.key.parent().to_string(CharacterType::PathSeparator::windows);
 					information_structure.resource_file.append(resource_manifest.key.name());
-					if (auto index = Range::find_index(information_structure.resource_directory, resource_directory_string)) {
+					if (auto index = Range::find_index(information_structure.resource_directory, resource_directory_string); index.has()) {
 					} else {
 						information_structure.resource_directory.append(resource_directory_string);
 					}
@@ -126,7 +126,7 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 				auto   resource_path = resource_directory / resource_manifest.key;
 				auto   resource_directory_string = resource_manifest.key.parent().to_string(CharacterType::PathSeparator::windows);
 				information_structure.resource_file.append(resource_manifest.key.name());
-				if (auto index = Range::find_index(information_structure.resource_directory, resource_directory_string)) {
+				if (auto index = Range::find_index(information_structure.resource_directory, resource_directory_string); index.has()) {
 					resource_information_structure.directory_index = cbw<IntegerU16>(index.get());
 				} else {
 					information_structure.resource_directory.append(resource_directory_string);
@@ -383,7 +383,7 @@ namespace TwinStar::Core::Tool::Marmalade::DZip {
 					package_data_end_position = maximum(package_data_end_position, package_data.position());
 				}
 				assert_test(!chunk_data_list.empty() && Range::all_of(chunk_data_list.tail(chunk_data_list.size() - 1_sz), [&] (auto & element) { return element == chunk_data_list.first(); }));
-				if (resource_directory) {
+				if (resource_directory.has()) {
 					FileSystem::write_file(resource_directory.get() / resource_manifest.key, chunk_data_list.first());
 				}
 			}

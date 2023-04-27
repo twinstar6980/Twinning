@@ -612,36 +612,34 @@ namespace TwinStar::Core {
 
 	// ----------------
 
-	template <auto t_size> requires
+	template <auto t_value> requires
 		AutoConstraint
-	struct ByteStreamAdapter<PaddingBlock<t_size>> {
+	struct ByteStreamAdapter<ConstantBlock<t_value>> {
 
 		using ThisI = IByteStreamView;
 
 		using ThisO = OByteStreamView;
 
-		using That = PaddingBlock<t_size>;
+		using That = ConstantBlock<t_value>;
 
 		// ----------------
 
 		static constexpr auto static_size (
 		) -> Size {
-			return t_size;
+			return bs_static_size<AsUnmakeConstant<decltype(t_value)>>();
 		}
 
 		static constexpr auto size (
 			That const & that
 		) -> Size {
-			return t_size;
+			return bs_size(t_value);
 		}
 
 		static auto write (
 			ThisO &      thix,
 			That const & that
 		) -> Void {
-			for (auto & index : SizeRange{t_size}) {
-				thix.write_constant(k_null_byte);
-			}
+			thix.write_constant(t_value);
 			return;
 		}
 
@@ -649,9 +647,7 @@ namespace TwinStar::Core {
 			ThisI & thix,
 			That &  that
 		) -> Void {
-			for (auto & index : SizeRange{t_size}) {
-				thix.read_constant(k_null_byte);
-			}
+			thix.read_constant(t_value);
 			return;
 		}
 

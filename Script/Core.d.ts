@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Core
- * @version 51
+ * @version 54
  */
 declare namespace TwinStar.Core {
 
@@ -4103,7 +4103,7 @@ declare namespace TwinStar.Core {
 					// ------------------------------------------------
 
 					static Value: {
-						number: 3n | 4n;
+						number: 1n | 3n | 4n;
 					};
 
 					static value(it: typeof Version.Value): Version;
@@ -4258,7 +4258,7 @@ declare namespace TwinStar.Core {
 					// ------------------------------------------------
 
 					static Value: {
-						number: 3n | 4n;
+						number: 1n | 3n | 4n;
 						extended_texture_information_for_pvz2_cn: 0n | 1n | 2n | 3n;
 					};
 
@@ -4292,13 +4292,13 @@ declare namespace TwinStar.Core {
 						type TextureResourceAdditional = {
 							/** 尺寸 */
 							size: [bigint, bigint];
-							/** 缩放。当 version.extended_texture_information_for_pvz2_cn > 2 时存在 */
+							/** 缩放。当 version.extended_texture_information_for_pvz2_cn >= 2 时存在 */
 							scale: undefined | bigint;
 							/** 格式 */
 							format: bigint;
 							/** 行字节数 */
 							row_byte_count: bigint;
-							/** 附加字节数。当 version.extended_texture_information_for_pvz2_cn > 1 时存在 */
+							/** 附加字节数。当 version.extended_texture_information_for_pvz2_cn >= 1 时存在 */
 							additional_byte_count: undefined | bigint;
 						};
 
@@ -4325,7 +4325,12 @@ declare namespace TwinStar.Core {
 						];
 
 						/** 子群类别 */
-						type SubgroupCategory = [null | bigint, null | string];
+						type SubgroupCategory = [
+							/** 分辨率。当 version.number >= 1 时存在 */
+							null | bigint,
+							/** 区域。当 version.number >= 3 时存在 */
+							null | string,
+						];
 
 						/** 子群 */
 						type Subgroup = {

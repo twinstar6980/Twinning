@@ -1435,7 +1435,8 @@ namespace TwinStar::Core::Executor::Interface {
 					using Tool::PopCap::ResourceStreamGroup::Manifest;
 					using PackageManifest = Variant<
 						typename Manifest<VersionPackage::element<1_ixz>>::Package,
-						typename Manifest<VersionPackage::element<2_ixz>>::Package
+						typename Manifest<VersionPackage::element<2_ixz>>::Package,
+						typename Manifest<VersionPackage::element<3_ixz>>::Package
 					>;
 					auto s_ResourceStreamGroup = s_PopCap.add_space("ResourceStreamGroup"_s);
 					define_generic_class<Version>(s_ResourceStreamGroup, "Version"_s);
@@ -1487,14 +1488,16 @@ namespace TwinStar::Core::Executor::Interface {
 						typename Manifest<VersionPackage::element<2_ixz>>::Package,
 						typename Manifest<VersionPackage::element<3_ixz>>::Package,
 						typename Manifest<VersionPackage::element<4_ixz>>::Package,
-						typename Manifest<VersionPackage::element<5_ixz>>::Package
+						typename Manifest<VersionPackage::element<5_ixz>>::Package,
+						typename Manifest<VersionPackage::element<6_ixz>>::Package
 					>;
 					using PackageDescriptionOptional = Variant<
 						Optional<typename Description<VersionPackage::element<1_ixz>>::Package>,
 						Optional<typename Description<VersionPackage::element<2_ixz>>::Package>,
 						Optional<typename Description<VersionPackage::element<3_ixz>>::Package>,
 						Optional<typename Description<VersionPackage::element<4_ixz>>::Package>,
-						Optional<typename Description<VersionPackage::element<5_ixz>>::Package>
+						Optional<typename Description<VersionPackage::element<5_ixz>>::Package>,
+						Optional<typename Description<VersionPackage::element<6_ixz>>::Package>
 					>;
 					auto s_ResourceStreamBundle = s_PopCap.add_space("ResourceStreamBundle"_s);
 					define_generic_class<Version>(s_ResourceStreamBundle, "Version"_s);

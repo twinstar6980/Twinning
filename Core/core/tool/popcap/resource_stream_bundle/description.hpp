@@ -16,7 +16,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 
 		using Resource = Resource_<>;
 
-		template <typename _> requires (check_version(version, {3}, {}))
+		template <typename _> requires (check_version(version, {1}, {}))
 		M_record_of_map(
 			M_wrap(Resource_<_>),
 			M_wrap(
@@ -31,11 +31,35 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 		#pragma region group
 
 		template <typename = None>
+		struct SubgroupCategory_;
+
+		using SubgroupCategory = SubgroupCategory_<>;
+
+		template <typename _> requires (check_version(version, {1, 3}, {}))
+		M_record_of_list(
+			M_wrap(SubgroupCategory_<_>),
+			M_wrap(
+				(Optional<Integer>) resolution,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {3}, {}))
+		M_record_of_list(
+			M_wrap(SubgroupCategory_<_>),
+			M_wrap(
+				(Optional<Integer>) resolution,
+				(Optional<String>) locale,
+			),
+		);
+
+		// ----------------
+
+		template <typename = None>
 		struct Subgroup_;
 
 		using Subgroup = Subgroup_<>;
 
-		template <typename _> requires (check_version(version, {3}, {}))
+		template <typename _> requires (check_version(version, {1}, {}))
 		M_record_of_map(
 			M_wrap(Subgroup_<_>),
 			M_wrap(
@@ -51,7 +75,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 
 		using Group = Group_<>;
 
-		template <typename _> requires (check_version(version, {3}, {}))
+		template <typename _> requires (check_version(version, {1}, {}))
 		M_record_of_map(
 			M_wrap(Group_<_>),
 			M_wrap(
@@ -69,7 +93,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 
 		using Package = Package_<>;
 
-		template <typename _> requires (check_version(version, {3}, {}))
+		template <typename _> requires (check_version(version, {1}, {}))
 		M_record_of_map(
 			M_wrap(Package_<_>),
 			M_wrap(

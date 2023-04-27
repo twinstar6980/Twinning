@@ -1990,7 +1990,7 @@ namespace TwinStar.Script.CoreX {
 
 				export type VersionNumber = typeof Core.Tool.PopCap.ResourceStreamGroup.Version.Value.number;
 
-				export const VersionNumberE = [3n, 4n] as VersionNumber[];
+				export const VersionNumberE = [1n, 3n, 4n] as VersionNumber[];
 
 				export function pack_fs(
 					data_file: string,
@@ -2032,7 +2032,7 @@ namespace TwinStar.Script.CoreX {
 
 				export type VersionNumber = typeof Core.Tool.PopCap.ResourceStreamBundle.Version.Value.number;
 
-				export const VersionNumberE = [3n, 4n] as VersionNumber[];
+				export const VersionNumberE = [1n, 3n, 4n] as VersionNumber[];
 
 				export type VersionaExtendedTextureInformationForPVZ2CN = typeof Core.Tool.PopCap.ResourceStreamBundle.Version.Value.extended_texture_information_for_pvz2_cn;
 
