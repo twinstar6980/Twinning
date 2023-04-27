@@ -1874,6 +1874,10 @@ namespace TwinStar.Script.CoreX {
 
 				export const VersionNumberE = [1n] as VersionNumber[];
 
+				export type VersionVariant = typeof Core.Tool.PopCap.Effect.Version.Value.variant;
+
+				export const VersionVariantE = [1n, 2n, 3n] as VersionVariant[];
+
 				export function encode_fs(
 					data_file: string,
 					manifest_file: string,

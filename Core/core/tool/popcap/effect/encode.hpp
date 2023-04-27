@@ -6,7 +6,7 @@
 
 namespace TwinStar::Core::Tool::PopCap::Effect {
 
-	template <auto version> requires (check_version(version, {}))
+	template <auto version> requires (check_version(version, {}, {}))
 	struct EncodeCommon {
 
 	protected:
@@ -25,7 +25,7 @@ namespace TwinStar::Core::Tool::PopCap::Effect {
 
 	};
 
-	template <auto version> requires (check_version(version, {}))
+	template <auto version> requires (check_version(version, {}, {}))
 	struct Encode :
 		EncodeCommon<version> {
 
@@ -80,6 +80,9 @@ namespace TwinStar::Core::Tool::PopCap::Effect {
 		) -> Void {
 			exchange_unit_integer(block_data, block_manifest.unknown_1);
 			exchange_unit_integer(block_data, block_manifest.unknown_2);
+			if constexpr (check_version(version, {}, {1, 2})) {
+				exchange_unit_integer(block_data, block_manifest.unknown_3);
+			}
 			return;
 		}
 
@@ -142,8 +145,10 @@ namespace TwinStar::Core::Tool::PopCap::Effect {
 			OByteStreamView &                 block_data,
 			typename Manifest::Block7 const & block_manifest
 		) -> Void {
-			exchange_unit_integer(block_data, block_manifest.unknown_1);
-			exchange_unit_integer(block_data, block_manifest.unknown_2);
+			if constexpr (check_version(version, {}, {3})) {
+				exchange_unit_integer(block_data, block_manifest.unknown_1);
+				exchange_unit_integer(block_data, block_manifest.unknown_2);
+			}
 			return;
 		}
 
@@ -153,9 +158,11 @@ namespace TwinStar::Core::Tool::PopCap::Effect {
 		) -> Void {
 			exchange_unit_integer(block_data, block_manifest.unknown_1);
 			exchange_unit_integer(block_data, block_manifest.unknown_2);
+			if constexpr (check_version(version, {}, {3})) {
+				exchange_unit_integer(block_data, block_manifest.unknown_4);
+				exchange_unit_integer(block_data, block_manifest.unknown_5);
+			}
 			exchange_unit_integer(block_data, block_manifest.unknown_3);
-			exchange_unit_integer(block_data, block_manifest.unknown_4);
-			exchange_unit_integer(block_data, block_manifest.unknown_5);
 			return;
 		}
 
@@ -187,25 +194,56 @@ namespace TwinStar::Core::Tool::PopCap::Effect {
 		) -> Void {
 			effect_data.write_constant(k_magic_identifier);
 			effect_data.write_constant(cbw<VersionNumber>(version.number));
-			auto section_information_data = OByteStreamView{effect_data.forward_view(bs_static_size<List<IntegerU32>>(3_sz) * 8_sz)};
+			auto section_count = k_none_size;
+			if constexpr (check_version(version, {}, {1, 3})) {
+				section_count = 7_sz;
+			}
+			if constexpr (check_version(version, {}, {3})) {
+				section_count = 8_sz;
+			}
+			auto section_information_data = OByteStreamView{effect_data.forward_view(bs_static_size<List<IntegerU32>>(3_sz) * section_count)};
 			auto string_chunk_offset_data = OByteStreamView{effect_data.forward_view(bs_static_size<IntegerU32>())};
 			auto section_list_data = OByteStreamView{effect_data.view(), effect_data.position()};
-			process_section(section_information_data, section_list_data, effect_manifest.block_1, 1_ix, bs_static_size<List<IntegerU32>>(6_sz));
-			process_section(section_information_data, section_list_data, effect_manifest.block_5, 5_ix, bs_static_size<List<IntegerU32>>(7_sz));
-			process_section(section_information_data, section_list_data, effect_manifest.block_6, 6_ix, bs_static_size<List<IntegerU32>>(5_sz));
-			process_section(section_information_data, section_list_data, effect_manifest.block_2, 2_ix, bs_static_size<List<IntegerU32>>(2_sz));
+			if constexpr (check_version(version, {}, {1})) {
+				process_section(section_information_data, section_list_data, effect_manifest.block_1, 1_ix, bs_static_size<List<IntegerU32>>(6_sz));
+			}
+			if constexpr (check_version(version, {}, {1})) {
+				process_section(section_information_data, section_list_data, effect_manifest.block_5, 5_ix, bs_static_size<List<IntegerU32>>(7_sz));
+			}
+			if constexpr (check_version(version, {}, {1})) {
+				process_section(section_information_data, section_list_data, effect_manifest.block_6, 6_ix, bs_static_size<List<IntegerU32>>(5_sz));
+			}
+			if constexpr (check_version(version, {}, {1, 2})) {
+				process_section(section_information_data, section_list_data, effect_manifest.block_2, 2_ix, bs_static_size<List<IntegerU32>>(3_sz));
+			}
+			if constexpr (check_version(version, {}, {2})) {
+				process_section(section_information_data, section_list_data, effect_manifest.block_2, 2_ix, bs_static_size<List<IntegerU32>>(2_sz));
+			}
 			auto section_information_offset_3 = section_information_data.position();
 			auto section_list_offset_3 = section_list_data.position();
-			process_section(section_information_data, section_list_data, effect_manifest.block_3, 3_ix, bs_static_size<List<IntegerU32>>(3_sz), VOptionalView<OByteStreamView>{});
-			process_section(section_information_data, section_list_data, effect_manifest.block_4, 4_ix, bs_static_size<List<IntegerU32>>(5_sz));
-			process_section(section_information_data, section_list_data, effect_manifest.block_7, 7_ix, bs_static_size<List<IntegerU32>>(2_sz));
-			process_section(section_information_data, section_list_data, effect_manifest.block_8, 8_ix, bs_static_size<List<IntegerU32>>(5_sz));
+			if constexpr (check_version(version, {}, {1})) {
+				process_section(section_information_data, section_list_data, effect_manifest.block_3, 3_ix, bs_static_size<List<IntegerU32>>(3_sz), VOptionalView<OByteStreamView>{});
+			}
+			if constexpr (check_version(version, {}, {1})) {
+				process_section(section_information_data, section_list_data, effect_manifest.block_4, 4_ix, bs_static_size<List<IntegerU32>>(5_sz));
+			}
+			if constexpr (check_version(version, {}, {3})) {
+				process_section(section_information_data, section_list_data, effect_manifest.block_7, 7_ix, bs_static_size<List<IntegerU32>>(2_sz));
+			}
+			if constexpr (check_version(version, {}, {1, 3})) {
+				process_section(section_information_data, section_list_data, effect_manifest.block_8, 7_ix, bs_static_size<List<IntegerU32>>(3_sz));
+			}
+			if constexpr (check_version(version, {}, {3})) {
+				process_section(section_information_data, section_list_data, effect_manifest.block_8, 8_ix, bs_static_size<List<IntegerU32>>(5_sz));
+			}
 			effect_data.set_position(section_list_data.position());
 			exchange_unit_integer(string_chunk_offset_data, cbw<Integer>(effect_data.position()));
 			auto string_chunk_data = OByteStreamView{effect_data.reserve_view()};
-			section_information_data.set_position(section_information_offset_3);
-			section_list_data.set_position(section_list_offset_3);
-			process_section(section_information_data, section_list_data, effect_manifest.block_3, 3_ix, bs_static_size<List<IntegerU32>>(3_sz), VOptionalView<OByteStreamView>{string_chunk_data});
+			if constexpr (check_version(version, {}, {1})) {
+				section_information_data.set_position(section_information_offset_3);
+				section_list_data.set_position(section_list_offset_3);
+				process_section(section_information_data, section_list_data, effect_manifest.block_3, 3_ix, bs_static_size<List<IntegerU32>>(3_sz), VOptionalView<OByteStreamView>{string_chunk_data});
+			}
 			effect_data.forward(string_chunk_data.position());
 			return;
 		}
@@ -222,7 +260,7 @@ namespace TwinStar::Core::Tool::PopCap::Effect {
 
 	};
 
-	template <auto version> requires (check_version(version, {}))
+	template <auto version> requires (check_version(version, {}, {}))
 	struct Decode :
 		EncodeCommon<version> {
 
@@ -277,6 +315,9 @@ namespace TwinStar::Core::Tool::PopCap::Effect {
 		) -> Void {
 			exchange_unit_integer(block_data, block_manifest.unknown_1);
 			exchange_unit_integer(block_data, block_manifest.unknown_2);
+			if constexpr (check_version(version, {}, {1, 2})) {
+				exchange_unit_integer(block_data, block_manifest.unknown_3);
+			}
 			return;
 		}
 
@@ -340,8 +381,10 @@ namespace TwinStar::Core::Tool::PopCap::Effect {
 			IByteStreamView &           block_data,
 			typename Manifest::Block7 & block_manifest
 		) -> Void {
-			exchange_unit_integer(block_data, block_manifest.unknown_1);
-			exchange_unit_integer(block_data, block_manifest.unknown_2);
+			if constexpr (check_version(version, {}, {3})) {
+				exchange_unit_integer(block_data, block_manifest.unknown_1);
+				exchange_unit_integer(block_data, block_manifest.unknown_2);
+			}
 			return;
 		}
 
@@ -351,9 +394,11 @@ namespace TwinStar::Core::Tool::PopCap::Effect {
 		) -> Void {
 			exchange_unit_integer(block_data, block_manifest.unknown_1);
 			exchange_unit_integer(block_data, block_manifest.unknown_2);
+			if constexpr (check_version(version, {}, {3})) {
+				exchange_unit_integer(block_data, block_manifest.unknown_4);
+				exchange_unit_integer(block_data, block_manifest.unknown_5);
+			}
 			exchange_unit_integer(block_data, block_manifest.unknown_3);
-			exchange_unit_integer(block_data, block_manifest.unknown_4);
-			exchange_unit_integer(block_data, block_manifest.unknown_5);
 			return;
 		}
 
@@ -391,21 +436,50 @@ namespace TwinStar::Core::Tool::PopCap::Effect {
 		) -> Void {
 			effect_data.read_constant(k_magic_identifier);
 			effect_data.read_constant(cbw<VersionNumber>(version.number));
-			auto section_information_data = IByteStreamView{effect_data.forward_view(bs_static_size<List<IntegerU32>>(3_sz) * 8_sz)};
+			auto section_count = k_none_size;
+			if constexpr (check_version(version, {}, {1, 3})) {
+				section_count = 7_sz;
+			}
+			if constexpr (check_version(version, {}, {3})) {
+				section_count = 8_sz;
+			}
+			auto section_information_data = IByteStreamView{effect_data.forward_view(bs_static_size<List<IntegerU32>>(3_sz) * section_count)};
 			auto string_chunk_offset = Integer{};
 			exchange_unit_integer(effect_data, string_chunk_offset);
 			effect_data.set_position(cbw<Size>(string_chunk_offset));
 			auto section_list_data = IByteStreamView{effect_data.stream_view()};
 			auto string_chunk_data = IByteStreamView{effect_data.reserve_view()};
 			auto string_chunk_size = Size{};
-			process_section(section_information_data, section_list_data, effect_manifest.block_1, 1_ix, bs_static_size<List<IntegerU32>>(6_sz));
-			process_section(section_information_data, section_list_data, effect_manifest.block_5, 5_ix, bs_static_size<List<IntegerU32>>(7_sz));
-			process_section(section_information_data, section_list_data, effect_manifest.block_6, 6_ix, bs_static_size<List<IntegerU32>>(5_sz));
-			process_section(section_information_data, section_list_data, effect_manifest.block_2, 2_ix, bs_static_size<List<IntegerU32>>(2_sz));
-			process_section(section_information_data, section_list_data, effect_manifest.block_3, 3_ix, bs_static_size<List<IntegerU32>>(3_sz), string_chunk_data, string_chunk_size);
-			process_section(section_information_data, section_list_data, effect_manifest.block_4, 4_ix, bs_static_size<List<IntegerU32>>(5_sz));
-			process_section(section_information_data, section_list_data, effect_manifest.block_7, 7_ix, bs_static_size<List<IntegerU32>>(2_sz));
-			process_section(section_information_data, section_list_data, effect_manifest.block_8, 8_ix, bs_static_size<List<IntegerU32>>(5_sz));
+			if constexpr (check_version(version, {}, {1})) {
+				process_section(section_information_data, section_list_data, effect_manifest.block_1, 1_ix, bs_static_size<List<IntegerU32>>(6_sz));
+			}
+			if constexpr (check_version(version, {}, {1})) {
+				process_section(section_information_data, section_list_data, effect_manifest.block_5, 5_ix, bs_static_size<List<IntegerU32>>(7_sz));
+			}
+			if constexpr (check_version(version, {}, {1})) {
+				process_section(section_information_data, section_list_data, effect_manifest.block_6, 6_ix, bs_static_size<List<IntegerU32>>(5_sz));
+			}
+			if constexpr (check_version(version, {}, {1, 2})) {
+				process_section(section_information_data, section_list_data, effect_manifest.block_2, 2_ix, bs_static_size<List<IntegerU32>>(3_sz));
+			}
+			if constexpr (check_version(version, {}, {2})) {
+				process_section(section_information_data, section_list_data, effect_manifest.block_2, 2_ix, bs_static_size<List<IntegerU32>>(2_sz));
+			}
+			if constexpr (check_version(version, {}, {1})) {
+				process_section(section_information_data, section_list_data, effect_manifest.block_3, 3_ix, bs_static_size<List<IntegerU32>>(3_sz), string_chunk_data, string_chunk_size);
+			}
+			if constexpr (check_version(version, {}, {1})) {
+				process_section(section_information_data, section_list_data, effect_manifest.block_4, 4_ix, bs_static_size<List<IntegerU32>>(5_sz));
+			}
+			if constexpr (check_version(version, {}, {3})) {
+				process_section(section_information_data, section_list_data, effect_manifest.block_7, 7_ix, bs_static_size<List<IntegerU32>>(2_sz));
+			}
+			if constexpr (check_version(version, {}, {1, 3})) {
+				process_section(section_information_data, section_list_data, effect_manifest.block_8, 7_ix, bs_static_size<List<IntegerU32>>(3_sz));
+			}
+			if constexpr (check_version(version, {}, {3})) {
+				process_section(section_information_data, section_list_data, effect_manifest.block_8, 8_ix, bs_static_size<List<IntegerU32>>(5_sz));
+			}
 			effect_data.forward(string_chunk_size);
 			return;
 		}

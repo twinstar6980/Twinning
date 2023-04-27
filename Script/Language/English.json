@@ -627,23 +627,27 @@
 	"method:popcap.effect.encode$manifest_file:name": "Manifest file",
 	"method:popcap.effect.encode$data_file:name": "Data file",
 	"method:popcap.effect.encode$version_number:name": "Version number",
+	"method:popcap.effect.encode$version_variant:name": "Version variant",
 	"method:popcap.effect.encode$buffer_size:name": "Buffer memory size",
 	// 
 	"method:popcap.effect.decode:name": "PopCap Effect Decode",
 	"method:popcap.effect.decode$data_file:name": "Data file",
 	"method:popcap.effect.decode$manifest_file:name": "Manifest file",
 	"method:popcap.effect.decode$version_number:name": "Version number",
+	"method:popcap.effect.decode$version_variant:name": "Version variant",
 	// 
 	"method:popcap.effect.encode.batch:name": "[BATCH] PopCap Effect Encode",
 	"method:popcap.effect.encode.batch$manifest_file_directory:name": "Manifest file directory",
 	"method:popcap.effect.encode.batch$data_file_directory:name": "Data file directory",
 	"method:popcap.effect.encode.batch$version_number:name": "Version number",
+	"method:popcap.effect.encode.batch$version_variant:name": "Version variant",
 	"method:popcap.effect.encode.batch$buffer_size:name": "Buffer memory size",
 	// 
 	"method:popcap.effect.decode.batch:name": "[BATCH] PopCap Effect Decode",
 	"method:popcap.effect.decode.batch$data_file_directory:name": "Data file directory",
 	"method:popcap.effect.decode.batch$manifest_file_directory:name": "Manifest file directory",
 	"method:popcap.effect.decode.batch$version_number:name": "Version number",
+	"method:popcap.effect.decode.batch$version_variant:name": "Version variant",
 	// Entry/method/popcap.character_font_widget_2
 	"method:popcap.character_font_widget_2.encode:name": "PopCap Character-Font-Widget-2 Encode",
 	"method:popcap.character_font_widget_2.encode$manifest_file:name": "Manifest file",

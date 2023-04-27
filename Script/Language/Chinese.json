@@ -627,23 +627,27 @@
 	"method:popcap.effect.encode$manifest_file:name": "清单文件",
 	"method:popcap.effect.encode$data_file:name": "数据文件",
 	"method:popcap.effect.encode$version_number:name": "版本编号",
+	"method:popcap.effect.encode$version_variant:name": "版本变体",
 	"method:popcap.effect.encode$buffer_size:name": "内存缓冲区大小",
 	// 
 	"method:popcap.effect.decode:name": "PopCap Effect 解码",
 	"method:popcap.effect.decode$data_file:name": "数据文件",
 	"method:popcap.effect.decode$manifest_file:name": "清单文件",
 	"method:popcap.effect.decode$version_number:name": "版本编号",
+	"method:popcap.effect.decode$version_variant:name": "版本变体",
 	// 
 	"method:popcap.effect.encode.batch:name": "[批处理] PopCap Effect 编码",
 	"method:popcap.effect.encode.batch$manifest_file_directory:name": "清单文件目录",
 	"method:popcap.effect.encode.batch$data_file_directory:name": "数据文件目录",
 	"method:popcap.effect.encode.batch$version_number:name": "版本编号",
+	"method:popcap.effect.encode.batch$version_variant:name": "版本变体",
 	"method:popcap.effect.encode.batch$buffer_size:name": "内存缓冲区大小",
 	// 
 	"method:popcap.effect.decode.batch:name": "[批处理] PopCap Effect 解码",
 	"method:popcap.effect.decode.batch$data_file_directory:name": "数据文件目录",
 	"method:popcap.effect.decode.batch$manifest_file_directory:name": "清单文件目录",
 	"method:popcap.effect.decode.batch$version_number:name": "版本编号",
+	"method:popcap.effect.decode.batch$version_variant:name": "版本变体",
 	// Entry/method/popcap.character_font_widget_2
 	"method:popcap.character_font_widget_2.encode:name": "PopCap Character-Font-Widget-2 编码",
 	"method:popcap.character_font_widget_2.encode$manifest_file:name": "清单文件",

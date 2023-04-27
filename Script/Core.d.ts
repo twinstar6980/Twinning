@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Core
- * @version 54
+ * @version 55
  */
 declare namespace TwinStar.Core {
 
@@ -3782,6 +3782,7 @@ declare namespace TwinStar.Core {
 
 					static Value: {
 						number: 1n;
+						variant: 1n | 2n | 3n;
 					};
 
 					static value(it: typeof Version.Value): Version;

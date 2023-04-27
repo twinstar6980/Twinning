@@ -1296,7 +1296,9 @@ namespace TwinStar::Core::Executor::Interface {
 					using Tool::PopCap::Effect::VersionPackage;
 					using Tool::PopCap::Effect::Manifest;
 					using EffectManifest = Variant<
-						typename Manifest<VersionPackage::element<1_ixz>>::Effect
+						typename Manifest<VersionPackage::element<1_ixz>>::Effect,
+						typename Manifest<VersionPackage::element<2_ixz>>::Effect,
+						typename Manifest<VersionPackage::element<3_ixz>>::Effect
 					>;
 					auto s_Effect = s_PopCap.add_space("Effect"_s);
 					define_generic_class<Version>(s_Effect, "Version"_s);

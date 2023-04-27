@@ -7,6 +7,7 @@ namespace TwinStar.Script.Entry.method.popcap.effect {
 
 	type Configuration = {
 		version_number: Executor.Argument<bigint, false>;
+		version_variant: Executor.Argument<bigint, false>;
 		encode_buffer_size: Executor.Argument<string, false>;
 	};
 
@@ -24,11 +25,13 @@ namespace TwinStar.Script.Entry.method.popcap.effect {
 					manifest_file: Executor.Argument<string, false>;
 					data_file: Executor.Argument<string, true>;
 					version_number: Executor.Argument<bigint, false>;
+					version_variant: Executor.Argument<bigint, false>;
 					buffer_size: Executor.Argument<string, false>;
 				}) {
 					let manifest_file: string;
 					let data_file: string;
 					let version_number: bigint;
+					let version_variant: bigint;
 					let buffer_size: bigint;
 					{
 						manifest_file = Executor.request_argument(
@@ -52,6 +55,13 @@ namespace TwinStar.Script.Entry.method.popcap.effect {
 							null,
 							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Effect.VersionNumberE), null, null, initial)),
 						);
+						version_variant = Executor.request_argument(
+							Executor.query_argument_name(this.id, 'version_variant'),
+							a.version_variant,
+							(value) => (value),
+							null,
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Effect.VersionVariantE), null, null, initial)),
+						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
 							a.buffer_size,
@@ -60,7 +70,7 @@ namespace TwinStar.Script.Entry.method.popcap.effect {
 							(initial) => (Console.size(null, null, initial)),
 						);
 					}
-					CoreX.Tool.PopCap.Effect.encode_fs(data_file, manifest_file, { number: version_number as any }, buffer_size);
+					CoreX.Tool.PopCap.Effect.encode_fs(data_file, manifest_file, { number: version_number as any, variant: version_variant as any }, buffer_size);
 					return [`${data_file}`];
 				},
 				default_argument: {
@@ -68,6 +78,7 @@ namespace TwinStar.Script.Entry.method.popcap.effect {
 					manifest_file: undefined!,
 					data_file: '?default',
 					version_number: configuration.version_number,
+					version_variant: configuration.version_variant,
 					buffer_size: configuration.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.popfx)(\.json)$/i]]),
@@ -83,10 +94,12 @@ namespace TwinStar.Script.Entry.method.popcap.effect {
 					data_file: Executor.Argument<string, false>;
 					manifest_file: Executor.Argument<string, true>;
 					version_number: Executor.Argument<bigint, false>;
+					version_variant: Executor.Argument<bigint, false>;
 				}) {
 					let data_file: string;
 					let manifest_file: string;
 					let version_number: bigint;
+					let version_variant: bigint;
 					{
 						data_file = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file'),
@@ -109,8 +122,15 @@ namespace TwinStar.Script.Entry.method.popcap.effect {
 							null,
 							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Effect.VersionNumberE), null, null, initial)),
 						);
+						version_variant = Executor.request_argument(
+							Executor.query_argument_name(this.id, 'version_variant'),
+							a.version_variant,
+							(value) => (value),
+							null,
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Effect.VersionVariantE), null, null, initial)),
+						);
 					}
-					CoreX.Tool.PopCap.Effect.decode_fs(data_file, manifest_file, { number: version_number as any });
+					CoreX.Tool.PopCap.Effect.decode_fs(data_file, manifest_file, { number: version_number as any, variant: version_variant as any });
 					return [`${manifest_file}`];
 				},
 				default_argument: {
@@ -118,6 +138,7 @@ namespace TwinStar.Script.Entry.method.popcap.effect {
 					data_file: undefined!,
 					manifest_file: '?default',
 					version_number: configuration.version_number,
+					version_variant: configuration.version_variant,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.popfx)$/i]]),
 				input_forwarder: 'data_file',
@@ -134,11 +155,13 @@ namespace TwinStar.Script.Entry.method.popcap.effect {
 					manifest_file_directory: Executor.Argument<string, false>;
 					data_file_directory: Executor.Argument<string, true>;
 					version_number: Executor.Argument<bigint, false>;
+					version_variant: Executor.Argument<bigint, false>;
 					buffer_size: Executor.Argument<string, false>;
 				}) {
 					let manifest_file_directory: string;
 					let data_file_directory: string;
 					let version_number: bigint;
+					let version_variant: bigint;
 					let buffer_size: bigint;
 					{
 						manifest_file_directory = Executor.request_argument(
@@ -162,6 +185,13 @@ namespace TwinStar.Script.Entry.method.popcap.effect {
 							null,
 							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Effect.VersionNumberE), null, null, initial)),
 						);
+						version_variant = Executor.request_argument(
+							Executor.query_argument_name(this.id, 'version_variant'),
+							a.version_variant,
+							(value) => (value),
+							null,
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Effect.VersionVariantE), null, null, initial)),
+						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
 							a.buffer_size,
@@ -177,7 +207,7 @@ namespace TwinStar.Script.Entry.method.popcap.effect {
 						(item) => {
 							let manifest_file = `${manifest_file_directory}/${item}`;
 							let data_file = `${data_file_directory}/${item.slice(0, -5)}`;
-							CoreX.Tool.PopCap.Effect.encode_fs(data_file, manifest_file, { number: version_number as any }, data_buffer.view());
+							CoreX.Tool.PopCap.Effect.encode_fs(data_file, manifest_file, { number: version_number as any, variant: version_variant as any }, data_buffer.view());
 						},
 					);
 					return [`${data_file_directory}`];
@@ -187,6 +217,7 @@ namespace TwinStar.Script.Entry.method.popcap.effect {
 					manifest_file_directory: undefined!,
 					data_file_directory: '?default',
 					version_number: configuration.version_number,
+					version_variant: configuration.version_variant,
 					buffer_size: configuration.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
@@ -202,10 +233,12 @@ namespace TwinStar.Script.Entry.method.popcap.effect {
 					data_file_directory: Executor.Argument<string, false>;
 					manifest_file_directory: Executor.Argument<string, true>;
 					version_number: Executor.Argument<bigint, false>;
+					version_variant: Executor.Argument<bigint, false>;
 				}) {
 					let data_file_directory: string;
 					let manifest_file_directory: string;
 					let version_number: bigint;
+					let version_variant: bigint;
 					{
 						data_file_directory = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'data_file_directory'),
@@ -228,6 +261,13 @@ namespace TwinStar.Script.Entry.method.popcap.effect {
 							null,
 							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Effect.VersionNumberE), null, null, initial)),
 						);
+						version_variant = Executor.request_argument(
+							Executor.query_argument_name(this.id, 'version_variant'),
+							a.version_variant,
+							(value) => (value),
+							null,
+							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Effect.VersionVariantE), null, null, initial)),
+						);
 					}
 					simple_batch_execute(
 						data_file_directory,
@@ -235,7 +275,7 @@ namespace TwinStar.Script.Entry.method.popcap.effect {
 						(item) => {
 							let data_file = `${data_file_directory}/${item}`;
 							let manifest_file = `${manifest_file_directory}/${item}.json`;
-							CoreX.Tool.PopCap.Effect.decode_fs(data_file, manifest_file, { number: version_number as any });
+							CoreX.Tool.PopCap.Effect.decode_fs(data_file, manifest_file, { number: version_number as any, variant: version_variant as any });
 						},
 					);
 					return [`${manifest_file_directory}`];
@@ -245,6 +285,7 @@ namespace TwinStar.Script.Entry.method.popcap.effect {
 					data_file_directory: undefined!,
 					manifest_file_directory: '?default',
 					version_number: configuration.version_number,
+					version_variant: configuration.version_variant,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'data_file_directory',
