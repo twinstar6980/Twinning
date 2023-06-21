@@ -90,7 +90,7 @@ namespace TwinStar::Core::FileSystem {
 
 		protected:
 
-			Pointer<std::FILE> m_value;
+			Pointer<std::FILE> m_value{};
 
 		protected:
 

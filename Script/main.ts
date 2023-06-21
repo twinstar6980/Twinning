@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 70;
+	export const k_version = 71;
 
 	// ------------------------------------------------
 
@@ -44,7 +44,7 @@ namespace TwinStar.Script {
 			let data = Core.FileSystem.read_file(Core.Path.value(file));
 			let stream = Core.CharacterStreamView.watch(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(data.view()));
 			let json = Core.JSON.Value.default<ConstraintT>();
-			Core.Tool.Data.Serialization.JSON.Read.process_whole(stream, json);
+			Core.Tool.Data.Serialization.JSON.Read.process(stream, json);
 			return json.value;
 		}
 
@@ -341,8 +341,8 @@ TwinStar.Script.Main.g_module_manifest = {
 		`Entry/method/data.encryption`,
 		`Entry/method/data.compression`,
 		`Entry/method/data.differentiation`,
-		`Entry/method/image.transformation`,
-		`Entry/method/image.atlas`,
+		`Entry/method/texture.transformation`,
+		`Entry/method/texture.atlas`,
 		`Entry/method/wwise.media`,
 		`Entry/method/wwise.sound_bank`,
 		`Entry/method/marmalade.dzip`,
@@ -356,7 +356,8 @@ TwinStar.Script.Main.g_module_manifest = {
 		`Entry/method/popcap.re_animation`,
 		`Entry/method/popcap.particle`,
 		`Entry/method/popcap.trail`,
-		`Entry/method/popcap.effect`,
+		`Entry/method/popcap.particle_effect`,
+		`Entry/method/popcap.render_effect`,
 		`Entry/method/popcap.character_font_widget_2`,
 		`Entry/method/popcap.package`,
 		`Entry/method/popcap.resource_stream_group`,

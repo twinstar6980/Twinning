@@ -3,7 +3,7 @@ The code is 100% compatible C C++
 (just comment out << extern "C" >> in the header file) */
 
 /*_________
- /         \ tinyfiledialogs.c v3.10 [Mar 27, 2023] zlib licence
+ /         \ tinyfiledialogs.c v3.13.2 [May 31, 2023] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2023 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -99,7 +99,7 @@ Thanks for contributions, bug corrections & thorough testing to:
 #endif
 #define LOW_MULTIPLE_FILES 32
 
-char tinyfd_version[8] = "3.10";
+char tinyfd_version[8] = "3.13.2";
 
 /******************************************************************************************************/
 /**************************************** UTF-8 on Windows ********************************************/
@@ -138,9 +138,9 @@ but and return 0 for console mode, 1 for graphic mode.
 tinyfd_response is then filled with the retain solution.
 possible values for tinyfd_response are (all lowercase)
 for graphic mode:
-  windows_wchar windows applescript kdialog zenity zenity3 matedialog
-  shellementary qarma yad python2-tkinter python3-tkinter python-dbus
-  perl-dbus gxmessage gmessage xmessage xdialog gdialog
+  windows_wchar windows applescript kdialog zenity zenity3 yad matedialog
+  shellementary qarma python2-tkinter python3-tkinter python-dbus
+  perl-dbus gxmessage gmessage xmessage xdialog gdialog dunst
 for console mode:
   dialog whiptail basicinput no_solution */
 
@@ -157,7 +157,7 @@ char tinyfd_needs[] = "\
       \\|\
 \ntiny file dialogs on Windows needs:\
 \n   a graphic display\
-\nor dialog.exe (curses console mode)\
+\nor dialog.exe (curses console mode  ** Disabled by default **)\
 \nor a console for basic input";
 #else
 char tinyfd_needs[] = "\
@@ -171,9 +171,11 @@ char tinyfd_needs[] = "\
 \n   applescript or kdialog or yad or Xdialog\
 \nor zenity (or matedialog or shellementary or qarma)\
 \nor python (2 or 3) + tkinter + python-dbus (optional)\
-\nor dialog (opens console if needed) ** Disabled by default **/\
+\nor dialog (opens console if needed) ** Disabled by default **\
 \nor xterm + bash (opens console for basic input)\
-\nor existing console for basic input";
+\nor existing console for basic input\
+\nand the command 'which' to detect any of the above.";
+
 #endif
 
 #ifdef _MSC_VER
@@ -3331,7 +3333,7 @@ static char * getVersion( char const * aExecutable ) /*version must be first num
         pclose( lIn ) ;
 
 	lTmp += strcspn(lTmp,"0123456789");
-	/* printf("lTmp:%s\n", lTmp); */
+	 /* printf("lTmp:%s\n", lTmp); */
 	return lTmp ;
 }
 
@@ -3571,7 +3573,7 @@ static char * terminalName(void)
                 {
                         strcpy(lTerminalName , "" ) ;
                 }
-                /* bad: koi rxterm guake tilda vala-terminal qterminal
+                /* bad: koi rxterm guake tilda vala-terminal qterminal kgx
                 aterm Terminal terminology sakura lilyterm weston-terminal
                 roxterm termit xvt rxvt mrxvt urxvt */
         }
@@ -3806,6 +3808,55 @@ static int osascriptPresent(void)
 }
 
 
+static int dunstifyPresent(void)
+{
+    static int lDunstifyPresent = -1 ;
+	static char lBuff[MAX_PATH_OR_CMD] ;
+	FILE * lIn ;
+	char * lTmp ;
+
+    if ( lDunstifyPresent < 0 )
+    {
+        lDunstifyPresent = detectPresence( "dunstify" ) ;
+        if ( lDunstifyPresent )
+        {
+            lIn = popen( "dunstify -s" , "r" ) ;
+            lTmp = fgets( lBuff , sizeof( lBuff ) , lIn ) ;
+            pclose( lIn ) ;
+            /* printf("lTmp:%s\n", lTmp); */
+            lDunstifyPresent = strstr(lTmp,"name:dunst\n") ? 1 : 0 ;
+            if (tinyfd_verbose) printf("lDunstifyPresent %d\n", lDunstifyPresent);
+        }
+    }
+    return lDunstifyPresent && graphicMode( ) ;
+}
+
+
+static int dunstPresent(void)
+{
+    static int lDunstPresent = -1 ;
+	static char lBuff[MAX_PATH_OR_CMD] ;
+	FILE * lIn ;
+	char * lTmp ;
+
+    if ( lDunstPresent < 0 )
+    {
+        lDunstPresent = detectPresence( "dunst" ) ;
+        if ( lDunstPresent )
+        {
+            lIn = popen( "ps -e | grep dunst | grep -v grep" , "r" ) ; /* add "| wc -l" to receive the number of lines */
+            lTmp = fgets( lBuff , sizeof( lBuff ) , lIn ) ;
+            pclose( lIn ) ;
+            /* if ( lTmp ) printf("lTmp:%s\n", lTmp); */
+            if ( lTmp ) lDunstPresent = 1 ;
+            else lDunstPresent = 0 ;
+            if (tinyfd_verbose) printf("lDunstPresent %d\n", lDunstPresent);
+        }
+    }
+    return lDunstPresent && graphicMode( ) ;
+}
+
+
 int tfd_qarmaPresent(void)
 {
         static int lQarmaPresent = -1 ;
@@ -4026,14 +4077,13 @@ static int python3Present(void)
 static int python2Present(void)
 {
 	static int lPython2Present = -1 ;
-	int i;
 
 	if ( lPython2Present < 0 )
 	{
 		lPython2Present = 0 ;
 		strcpy(gPython2Name , "python2" ) ;
 		if ( detectPresence(gPython2Name) ) lPython2Present = 1;
-		else
+		/*else
 		{
 			for ( i = 9 ; i >= 0 ; i -- )
 			{
@@ -4044,7 +4094,7 @@ static int python2Present(void)
 					break;
 				}
 			}
-		}
+		}*/
 		if (tinyfd_verbose) printf("lPython2Present %d\n", lPython2Present) ;
 		if (tinyfd_verbose) printf("gPython2Name %s\n", gPython2Name) ;
 	}
@@ -4088,7 +4138,7 @@ static int tkinter2Present(void)
 			sprintf( lPythonCommand , "%s %s" , gPython2Name , lPythonParams ) ;
 			lTkinter2Present = tryCommand(lPythonCommand) ;
 		}
-		if (tinyfd_verbose) printf("lTkinter2Present %d\n", lTkinter2Present) ;
+		if (tinyfd_verbose) printf("lTkinter2Present %d graphicMode %d \n", lTkinter2Present, graphicMode() ) ;
 	}
 	return lTkinter2Present && graphicMode() && !(tfd_isDarwin() && getenv("SSH_TTY") );
 }
@@ -4162,7 +4212,7 @@ void tinyfd_beep(void)
         else if ( speakertestPresent() )
         {
                 /*strcpy( lDialogString , "timeout -k .3 .3 speaker-test --frequency 440 --test sine > /dev/tty" ) ;*/
-                strcpy( lDialogString , "( speaker-test -t sine -f 440 > /dev/tty )& pid=$!;sleep .4; kill -9 $pid" ) ; /*.3 was too short for mac g3*/
+                strcpy( lDialogString , "( speaker-test -t sine -f 440 > /dev/tty )& pid=$!;sleep .5; kill -9 $pid" ) ; /*.3 was too short for mac g3*/
         }
         else if (beepexePresent())
         {
@@ -4516,7 +4566,7 @@ int tinyfd_messageBox(
             strcat(lDialogString, "\"");
          }
 
-         strcat(lDialogString, " --icon-name=dialog-");
+         strcat(lDialogString, " --image=dialog-");
          if (aIconType && (!strcmp("question", aIconType)
             || !strcmp("error", aIconType)
             || !strcmp("warning", aIconType)))
@@ -5095,7 +5145,7 @@ my \\$notificationsObject = \\$notificationsService->get_object('/org/freedeskto
                                         printf("\n%s\n",aMessage);
                                 }
                                 printf("y/n: "); fflush(stdout);
-                                lChar = tolower( getchar() ) ;
+                                lChar = (char) tolower( getchar() ) ;
                                 printf("\n\n");
                         }
                         while ( lChar != 'y' && lChar != 'n' );
@@ -5110,7 +5160,7 @@ my \\$notificationsObject = \\$notificationsService->get_object('/org/freedeskto
                                         printf("\n%s\n",aMessage);
                                 }
                                 printf("[O]kay/[C]ancel: "); fflush(stdout);
-                                lChar = tolower( getchar() ) ;
+                                lChar = (char) tolower( getchar() ) ;
                                 printf("\n\n");
                         }
                         while ( lChar != 'o' && lChar != 'c' );
@@ -5125,7 +5175,7 @@ my \\$notificationsObject = \\$notificationsService->get_object('/org/freedeskto
                                         printf("\n%s\n",aMessage);
                                 }
                                 printf("[Y]es/[N]o/[C]ancel: "); fflush(stdout);
-                                lChar = tolower( getchar() ) ;
+                                lChar = (char) tolower( getchar() ) ;
                                 printf("\n\n");
                         }
                         while ( lChar != 'y' && lChar != 'n' && lChar != 'c' );
@@ -5190,9 +5240,9 @@ int tinyfd_notifyPopup(
         char const * aMessage , /* NULL or ""  may contain \n and \t */
         char const * aIconType ) /* "info" "warning" "error" */
 {
-    char lBuff[MAX_PATH_OR_CMD];
+        char lBuff[MAX_PATH_OR_CMD];
         char * lDialogString = NULL ;
-    char * lpDialogString ;
+        char * lpDialogString ;
         FILE * lIn ;
         size_t lTitleLen ;
         size_t lMessageLen ;
@@ -5200,19 +5250,34 @@ int tinyfd_notifyPopup(
 		if (tfd_quoteDetected(aTitle)) return tinyfd_notifyPopup("INVALID TITLE WITH QUOTES", aMessage, aIconType);
 		if (tfd_quoteDetected(aMessage)) return tinyfd_notifyPopup(aTitle, "INVALID MESSAGE WITH QUOTES", aIconType);
 
-        if ( getenv("SSH_TTY") )
+        if ( getenv("SSH_TTY") && !dunstifyPresent() && !dunstPresent() )
         {
-                return tinyfd_messageBox(aTitle, aMessage, "ok", aIconType, 0);
+            return tinyfd_messageBox(aTitle, aMessage, "ok", aIconType, 0);
         }
 
         lTitleLen =  aTitle ? strlen(aTitle) : 0 ;
         lMessageLen =  aMessage ? strlen(aMessage) : 0 ;
         if ( !aTitle || strcmp(aTitle,"tinyfd_query") )
         {
-                lDialogString = (char *) malloc( MAX_PATH_OR_CMD + lTitleLen + lMessageLen );
+            lDialogString = (char *) malloc( MAX_PATH_OR_CMD + lTitleLen + lMessageLen );
         }
 
-        if ( osascriptPresent( ) )
+        if ( getenv("SSH_TTY") )
+        {
+            if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dunst");return 1;}
+            strcpy( lDialogString , "notify-send \"" ) ;
+            if ( aTitle && strlen(aTitle) )
+            {
+                strcat( lDialogString , aTitle ) ;
+                strcat( lDialogString , "\" \"" ) ;
+            }
+            if ( aMessage && strlen(aMessage) )
+            {
+                strcat(lDialogString, aMessage) ;
+            }
+            strcat( lDialogString , "\"" ) ;
+        }
+        else if ( osascriptPresent( ) )
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return 1;}
 
@@ -5260,48 +5325,41 @@ int tinyfd_notifyPopup(
                 }
                 strcat( lDialogString , " \" 5" ) ;
         }
-        else if ( (tfd_zenity3Present()>=5) )
+        else if ( tfd_yadPresent() )
         {
-                /* zenity 2.32 & 3.14 has the notification but with a bug: it doesnt return from it */
-                /* zenity 3.8 show the notification as an alert ok cancel box */
-                if ( tfd_zenity3Present()>=5 )
-                {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return 1;}
-                        strcpy( lDialogString , "zenity" ) ;
-                }
+            if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"yad");return 1;}
+            strcpy( lDialogString , "yad --notification");
 
-                strcat( lDialogString , " --notification");
+            if ( aIconType && strlen( aIconType ) )
+            {
+                    strcat( lDialogString , " --image=\"");
+                    strcat( lDialogString , aIconType ) ;
+                    strcat( lDialogString , "\"" ) ;
+            }
 
-                if ( aIconType && strlen( aIconType ) )
-                {
-                        strcat( lDialogString , " --window-icon '");
-                        strcat( lDialogString , aIconType ) ;
-                        strcat( lDialogString , "'" ) ;
-                }
-
-                strcat( lDialogString , " --text \"" ) ;
-                if ( aTitle && strlen(aTitle) )
-                {
-                        strcat(lDialogString, aTitle) ;
-                        strcat(lDialogString, "\n") ;
-                }
-                if ( aMessage && strlen( aMessage ) )
-                {
-                        strcat( lDialogString , aMessage ) ;
-                }
-                strcat( lDialogString , " \"" ) ;
+            strcat( lDialogString , " --text=\"" ) ;
+            if ( aTitle && strlen(aTitle) )
+            {
+                    strcat(lDialogString, aTitle) ;
+                    strcat(lDialogString, "\n") ;
+            }
+            if ( aMessage && strlen( aMessage ) )
+            {
+                    strcat( lDialogString , aMessage ) ;
+            }
+            strcat( lDialogString , " \"" ) ;
         }
         else if ( perlPresent() >= 2 )
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"perl-dbus");return 1;}
 
-				strcpy( lDialogString , "perl -e \"use Net::DBus;\
+                strcpy( lDialogString , "perl -e \"use Net::DBus;\
 my \\$sessionBus = Net::DBus->session;\
 my \\$notificationsService = \\$sessionBus->get_service('org.freedesktop.Notifications');\
 my \\$notificationsObject = \\$notificationsService->get_object('/org/freedesktop/Notifications',\
 'org.freedesktop.Notifications');");
 
-				sprintf( lDialogString + strlen(lDialogString) ,
+                sprintf( lDialogString + strlen(lDialogString) ,
 "my \\$notificationId;\\$notificationId = \\$notificationsObject->Notify(shift, 0, '%s', '%s', '%s', [], {}, -1);\" ",
 aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
         }
@@ -5332,32 +5390,59 @@ aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
         }
         else if ( notifysendPresent() )
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"notifysend");return 1;}
-                strcpy( lDialogString , "notify-send" ) ;
-                if ( aIconType && strlen(aIconType) )
+            if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"notifysend");return 1;}
+            strcpy( lDialogString , "notify-send" ) ;
+            if ( aIconType && strlen(aIconType) )
+            {
+                    strcat( lDialogString , " -i '" ) ;
+                    strcat( lDialogString , aIconType ) ;
+                    strcat( lDialogString , "'" ) ;
+            }
+            strcat( lDialogString , " \"" ) ;
+            if ( aTitle && strlen(aTitle) )
+            {
+                    strcat(lDialogString, aTitle) ;
+                    strcat( lDialogString , " | " ) ;
+            }
+            if ( aMessage && strlen(aMessage) )
+            {
+                tfd_replaceSubStr( aMessage , "\n\t" , " |  " , lBuff ) ;
+                tfd_replaceSubStr( aMessage , "\n" , " | " , lBuff ) ;
+                tfd_replaceSubStr( aMessage , "\t" , "  " , lBuff ) ;
+                strcat(lDialogString, lBuff) ;
+            }
+            strcat( lDialogString , "\"" ) ;
+        }
+        else if ( (tfd_zenity3Present()>=5) )
+        {
+                /* zenity 2.32 & 3.14 has the notification but with a bug: it doesnt return from it */
+                /* zenity 3.8 show the notification as an alert ok cancel box */
+                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return 1;}
+                strcpy( lDialogString , "zenity --notification");
+
+                if ( aIconType && strlen( aIconType ) )
                 {
-                        strcat( lDialogString , " -i '" ) ;
+                        strcat( lDialogString , " --window-icon '");
                         strcat( lDialogString , aIconType ) ;
                         strcat( lDialogString , "'" ) ;
                 }
-        strcat( lDialogString , " \"" ) ;
+
+                strcat( lDialogString , " --text \"" ) ;
                 if ( aTitle && strlen(aTitle) )
                 {
                         strcat(lDialogString, aTitle) ;
-                        strcat( lDialogString , " | " ) ;
+                        strcat(lDialogString, "\n") ;
                 }
-                if ( aMessage && strlen(aMessage) )
+                if ( aMessage && strlen( aMessage ) )
                 {
-            tfd_replaceSubStr( aMessage , "\n\t" , " |  " , lBuff ) ;
-            tfd_replaceSubStr( aMessage , "\n" , " | " , lBuff ) ;
-            tfd_replaceSubStr( aMessage , "\t" , "  " , lBuff ) ;
-                        strcat(lDialogString, lBuff) ;
+                        strcat( lDialogString , aMessage ) ;
                 }
-                strcat( lDialogString , "\"" ) ;
+                strcat( lDialogString , " \"" ) ;
         }
         else
         {
-                return tinyfd_messageBox(aTitle, aMessage, "ok", aIconType, 0);
+            if (lDialogString) free(lDialogString);
+            return tinyfd_messageBox(aTitle, aMessage, "ok", aIconType, 0);
         }
 
         if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
@@ -6129,7 +6214,7 @@ char * tinyfd_saveFileDialog(
         else if (tfd_yadPresent())
         {
            if (aTitle && !strcmp(aTitle, "tinyfd_query")) { strcpy(tinyfd_response, "yad"); return (char*)1; }
-           strcpy(lDialogString, "yad --file-selection --save --confirm-overwrite");
+           strcpy(lDialogString, "yad --file --save --confirm-overwrite");
            if (aTitle && strlen(aTitle))
            {
               strcat(lDialogString, " --title=\"");
@@ -6648,7 +6733,7 @@ char * tinyfd_openFileDialog(
         else if (tfd_yadPresent())
         {
            if (aTitle && !strcmp(aTitle, "tinyfd_query")) { strcpy(tinyfd_response, "yad"); return (char*)1; }
-           strcpy(lDialogString, "yad --file-selection");
+           strcpy(lDialogString, "yad --file");
            if (aAllowMultipleSelects)
            {
               strcat(lDialogString, " --multiple");
@@ -6923,11 +7008,12 @@ frontmost of process \\\"Python\\\" to true' ''');");
                 p += strlen( p );
         }
     pclose( lIn ) ;
-    if ( lBuff[strlen( lBuff ) -1] == '\n' )
+
+    if ( strlen( lBuff ) && lBuff[strlen( lBuff ) -1] == '\n' )
     {
         lBuff[strlen( lBuff ) -1] = '\0' ;
     }
-    /* printf( "lBuff: %s\n" , lBuff ) ; */
+    /* printf( "strlen lBuff: %d\n" , strlen( lBuff ) ) ; */
         if ( lWasKdialog && aAllowMultipleSelects )
         {
                 p = lBuff ;
@@ -7082,7 +7168,7 @@ char * tinyfd_selectFolderDialog(
         else if (tfd_yadPresent())
         {
            if (aTitle && !strcmp(aTitle, "tinyfd_query")) { strcpy(tinyfd_response, "yad"); return (char*)1; }
-           strcpy(lDialogString, "yad --file-selection --directory");
+           strcpy(lDialogString, "yad --file --directory");
            if (aTitle && strlen(aTitle))
            {
               strcat(lDialogString, " --title=\"");

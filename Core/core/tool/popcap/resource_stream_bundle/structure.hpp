@@ -2,7 +2,7 @@
 
 #include "core/utility/utility.hpp"
 #include "core/tool/popcap/resource_stream_bundle/version.hpp"
-#include "core/tool/popcap/resource_stream_bundle/common.hpp"
+#include "core/tool/popcap/resource_stream_bundle/shared.hpp"
 
 namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 
@@ -233,7 +233,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 		M_wrap(
 			(IntegerU32) size_width,
 			(IntegerU32) size_height,
-			(IntegerU32) row_byte_count,
+			(IntegerU32) pitch,
 			(IntegerU32) format,
 		),
 	);
@@ -246,7 +246,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 		M_wrap(
 			(IntegerU32) size_width,
 			(IntegerU32) size_height,
-			(IntegerU32) row_byte_count,
+			(IntegerU32) pitch,
 			(IntegerU32) format,
 			(IntegerU32) additional_byte_count,
 		),
@@ -260,7 +260,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 		M_wrap(
 			(IntegerU32) size_width,
 			(IntegerU32) size_height,
-			(IntegerU32) row_byte_count,
+			(IntegerU32) pitch,
 			(IntegerU32) format,
 			(IntegerU32) additional_byte_count,
 			(IntegerU32) scale,
@@ -275,7 +275,7 @@ namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle::Structure {
 		M_wrap(
 			(IntegerU32) size_width,
 			(IntegerU32) size_height,
-			(IntegerU32) row_byte_count,
+			(IntegerU32) pitch,
 			(IntegerU32) format,
 			(IntegerU32) scale,
 			(IntegerU32) additional_byte_count,

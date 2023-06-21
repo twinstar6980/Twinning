@@ -2,7 +2,6 @@
 
 #include "core/utility/utility.hpp"
 #include "core/tool/marmalade/dzip/version.hpp"
-#include "core/tool/data/compression/lzma.hpp"
 
 namespace TwinStar::Core::Tool::Marmalade::DZip::Structure {
 

@@ -8,7 +8,7 @@
   xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
   xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
   IgnorableNamespaces="rescap uap uap10 com desktop4 desktop5">
-  <Identity Name="TwinStar.ToolKit.ForwarderForWindows" Publisher="CN=TwinStar" Version="29.1.0.0" ProcessorArchitecture="x64" />
+  <Identity Name="TwinStar.ToolKit.ForwarderForWindows" Publisher="CN=TwinStar" Version="30.1.0.0" ProcessorArchitecture="x64" />
   <Properties>
     <DisplayName>TwinStar ToolKit - Forwarder</DisplayName>
     <PublisherDisplayName>TwinStar</PublisherDisplayName>
@@ -36,7 +36,7 @@
               <desktop5:Verb Id="02JSGroup" Clsid="314F8A42-AC6F-4192-8F9A-D2DF1C9F0546" />
               <desktop5:Verb Id="03JSONGroup" Clsid="D60FB9DD-7677-4742-A2BC-C9049E268CBA" />
               <desktop5:Verb Id="04DataGroup" Clsid="1DAED04B-CD51-45DA-91E4-F15DC831C7D5" />
-              <desktop5:Verb Id="05ImageGroup" Clsid="2BEEB70E-8211-4DB4-B6BF-8D6FDAB791BF" />
+              <desktop5:Verb Id="05TextureGroup" Clsid="2BEEB70E-8211-4DB4-B6BF-8D6FDAB791BF" />
               <desktop5:Verb Id="06WwiseMediaGroup" Clsid="C9A257AC-8048-4257-85AD-CE68CACD7922" />
               <desktop5:Verb Id="07WwiseSoundBankGroup" Clsid="8B32AE59-795E-4F2D-B3B8-A4558CF9488F" />
               <desktop5:Verb Id="08MarmaladeDZipGroup" Clsid="164D100A-5228-429D-A926-EFF742D00E9D" />
@@ -50,21 +50,22 @@
               <desktop5:Verb Id="16PopCapReAnimationGroup" Clsid="E2D6187D-7E0E-4089-82F2-768A6EE7D4D1" />
               <desktop5:Verb Id="17PopCapParticleGroup" Clsid="0DD08DF0-3B5D-5273-99AA-1A3766355ED1" />
               <desktop5:Verb Id="18PopCapTrailGroup" Clsid="8532B3AF-4E59-149E-A324-BABC012C38F2" />
-              <desktop5:Verb Id="19PopCapEffectGroup" Clsid="A29DEC4C-30C3-1C40-63C2-AD34D4F828AF" />
-              <desktop5:Verb Id="20PopCapCharacterFontWidget2Group" Clsid="3AB6C4D5-C386-E654-C646-54D42FF58065" />
-              <desktop5:Verb Id="21PopCapPackageGroup" Clsid="64DBC2C3-402F-42AA-B8BF-B43B3280F813" />
-              <desktop5:Verb Id="22PopCapResourceStreamGroupGroup" Clsid="95E74A50-81DC-48BA-A24B-E0AD30C75139" />
-              <desktop5:Verb Id="23PopCapResourceStreamBundleGroup" Clsid="BCF8438E-67D1-4B7B-8649-78C46FAB4CFE" />
-              <desktop5:Verb Id="24PopCapResourceStreamBundlePatchGroup" Clsid="C83A33D4-B96D-4002-9D76-4DB88AF589C0" />
-              <desktop5:Verb Id="25PvZ2TextTableGroup" Clsid="3F961602-866A-4305-8031-42597990C6AB" />
-              <desktop5:Verb Id="26PvZ2RemoteAndroidHelperGroup" Clsid="CD04E4D3-2224-14FC-C9DD-66D746408D62" />
+              <desktop5:Verb Id="19PopCapParticleEffectGroup" Clsid="868631C7-7B6D-A8F1-2C74-F55F98373DD3" />
+              <desktop5:Verb Id="20PopCapRenderEffectGroup" Clsid="A29DEC4C-30C3-1C40-63C2-AD34D4F828AF" />
+              <desktop5:Verb Id="21PopCapCharacterFontWidget2Group" Clsid="3AB6C4D5-C386-E654-C646-54D42FF58065" />
+              <desktop5:Verb Id="22PopCapPackageGroup" Clsid="64DBC2C3-402F-42AA-B8BF-B43B3280F813" />
+              <desktop5:Verb Id="23PopCapResourceStreamGroupGroup" Clsid="95E74A50-81DC-48BA-A24B-E0AD30C75139" />
+              <desktop5:Verb Id="24PopCapResourceStreamBundleGroup" Clsid="BCF8438E-67D1-4B7B-8649-78C46FAB4CFE" />
+              <desktop5:Verb Id="25PopCapResourceStreamBundlePatchGroup" Clsid="C83A33D4-B96D-4002-9D76-4DB88AF589C0" />
+              <desktop5:Verb Id="26PvZ2TextTableGroup" Clsid="3F961602-866A-4305-8031-42597990C6AB" />
+              <desktop5:Verb Id="27PvZ2RemoteAndroidHelperGroup" Clsid="CD04E4D3-2224-14FC-C9DD-66D746408D62" />
             </desktop5:ItemType>
             <desktop5:ItemType Type="Directory">
               <desktop5:Verb Id="01Launch" Clsid="A918A8A8-1436-43C5-99C1-9420D0D56D40" />
               <desktop5:Verb Id="02JSGroup" Clsid="314F8A42-AC6F-4192-8F9A-D2DF1C9F0546" />
               <desktop5:Verb Id="03JSONGroup" Clsid="D60FB9DD-7677-4742-A2BC-C9049E268CBA" />
               <desktop5:Verb Id="04DataGroup" Clsid="1DAED04B-CD51-45DA-91E4-F15DC831C7D5" />
-              <desktop5:Verb Id="05ImageGroup" Clsid="2BEEB70E-8211-4DB4-B6BF-8D6FDAB791BF" />
+              <desktop5:Verb Id="05TextureGroup" Clsid="2BEEB70E-8211-4DB4-B6BF-8D6FDAB791BF" />
               <desktop5:Verb Id="06WwiseMediaGroup" Clsid="C9A257AC-8048-4257-85AD-CE68CACD7922" />
               <desktop5:Verb Id="07WwiseSoundBankGroup" Clsid="8B32AE59-795E-4F2D-B3B8-A4558CF9488F" />
               <desktop5:Verb Id="08MarmaladeDZipGroup" Clsid="164D100A-5228-429D-A926-EFF742D00E9D" />
@@ -78,14 +79,15 @@
               <desktop5:Verb Id="16PopCapReAnimationGroup" Clsid="E2D6187D-7E0E-4089-82F2-768A6EE7D4D1" />
               <desktop5:Verb Id="17PopCapParticleGroup" Clsid="0DD08DF0-3B5D-5273-99AA-1A3766355ED1" />
               <desktop5:Verb Id="18PopCapTrailGroup" Clsid="8532B3AF-4E59-149E-A324-BABC012C38F2" />
-              <desktop5:Verb Id="19PopCapEffectGroup" Clsid="A29DEC4C-30C3-1C40-63C2-AD34D4F828AF" />
-              <desktop5:Verb Id="20PopCapCharacterFontWidget2Group" Clsid="3AB6C4D5-C386-E654-C646-54D42FF58065" />
-              <desktop5:Verb Id="21PopCapPackageGroup" Clsid="64DBC2C3-402F-42AA-B8BF-B43B3280F813" />
-              <desktop5:Verb Id="22PopCapResourceStreamGroupGroup" Clsid="95E74A50-81DC-48BA-A24B-E0AD30C75139" />
-              <desktop5:Verb Id="23PopCapResourceStreamBundleGroup" Clsid="BCF8438E-67D1-4B7B-8649-78C46FAB4CFE" />
-              <desktop5:Verb Id="24PopCapResourceStreamBundlePatchGroup" Clsid="C83A33D4-B96D-4002-9D76-4DB88AF589C0" />
-              <desktop5:Verb Id="25PvZ2TextTableGroup" Clsid="3F961602-866A-4305-8031-42597990C6AB" />
-              <desktop5:Verb Id="26PvZ2RemoteAndroidHelperGroup" Clsid="CD04E4D3-2224-14FC-C9DD-66D746408D62" />
+              <desktop5:Verb Id="19PopCapParticleEffectGroup" Clsid="868631C7-7B6D-A8F1-2C74-F55F98373DD3" />
+              <desktop5:Verb Id="20PopCapRenderEffectGroup" Clsid="A29DEC4C-30C3-1C40-63C2-AD34D4F828AF" />
+              <desktop5:Verb Id="21PopCapCharacterFontWidget2Group" Clsid="3AB6C4D5-C386-E654-C646-54D42FF58065" />
+              <desktop5:Verb Id="22PopCapPackageGroup" Clsid="64DBC2C3-402F-42AA-B8BF-B43B3280F813" />
+              <desktop5:Verb Id="23PopCapResourceStreamGroupGroup" Clsid="95E74A50-81DC-48BA-A24B-E0AD30C75139" />
+              <desktop5:Verb Id="24PopCapResourceStreamBundleGroup" Clsid="BCF8438E-67D1-4B7B-8649-78C46FAB4CFE" />
+              <desktop5:Verb Id="25PopCapResourceStreamBundlePatchGroup" Clsid="C83A33D4-B96D-4002-9D76-4DB88AF589C0" />
+              <desktop5:Verb Id="26PvZ2TextTableGroup" Clsid="3F961602-866A-4305-8031-42597990C6AB" />
+              <desktop5:Verb Id="27PvZ2RemoteAndroidHelperGroup" Clsid="CD04E4D3-2224-14FC-C9DD-66D746408D62" />
             </desktop5:ItemType>
           </desktop4:FileExplorerContextMenus>
         </desktop4:Extension>
@@ -144,6 +146,9 @@
             </com:SurrogateServer>
             <com:SurrogateServer>
               <com:Class Id="8532B3AF-4E59-149E-A324-BABC012C38F2" Path="Asset\Library\implement.dll" ThreadingModel="STA" />
+            </com:SurrogateServer>
+            <com:SurrogateServer>
+              <com:Class Id="868631C7-7B6D-A8F1-2C74-F55F98373DD3" Path="Asset\Library\implement.dll" ThreadingModel="STA" />
             </com:SurrogateServer>
             <com:SurrogateServer>
               <com:Class Id="A29DEC4C-30C3-1C40-63C2-AD34D4F828AF" Path="Asset\Library\implement.dll" ThreadingModel="STA" />

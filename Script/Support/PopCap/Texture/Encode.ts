@@ -68,7 +68,7 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 
 	// ------------------------------------------------
 
-	const k_basic_format: Record<BasicFormat, Array<CoreX.Tool.Image.Texture.CompositeFormat>> = {
+	const k_basic_format: Record<BasicFormat, Array<CoreX.Tool.Texture.Encoding.CompositeFormat>> = {
 		a_8: [
 			'a_8',
 		],
@@ -208,15 +208,15 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 	): bigint {
 		let data_size = 0n;
 		if (BasicFormatE.includes(format as BasicFormat)) {
-			data_size = CoreX.Tool.Image.Texture.compute_data_size_n(size, k_basic_format[format as BasicFormat]);
+			data_size = CoreX.Tool.Texture.Encoding.compute_data_size_n(size, k_basic_format[format as BasicFormat]);
 		} else {
 			if (format.endsWith('_tiled')) {
-				data_size = CoreX.Tool.Image.Texture.compute_data_size_n(size, k_basic_format[format.slice(0, -6) as BasicFormat]);
+				data_size = CoreX.Tool.Texture.Encoding.compute_data_size_n(size, k_basic_format[format.slice(0, -6) as BasicFormat]);
 			} else {
 				switch (format) {
 					case 'rgb_etc1_a_palette': {
 						assert_test(option.rgb_etc1_a_palette !== null, `option is null`);
-						data_size = CoreX.Tool.Image.Texture.compute_data_size(size, 'rgb_etc1') + CoreX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.compute_data_size_with_palette(size, option.rgb_etc1_a_palette.palette.length);
+						data_size = CoreX.Tool.Texture.Encoding.compute_data_size(size, 'rgb_etc1') + CoreX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.compute_data_size_with_palette(size, option.rgb_etc1_a_palette.palette.length);
 						break;
 					}
 				}
@@ -232,15 +232,15 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 		option: EncodeOption,
 	): void {
 		if (BasicFormatE.includes(format as BasicFormat)) {
-			CoreX.Tool.Image.Texture.encode_n(data, image, k_basic_format[format as BasicFormat]);
+			CoreX.Tool.Texture.Encoding.encode_n(data, image, k_basic_format[format as BasicFormat]);
 		} else {
 			if (format.endsWith('_tiled')) {
-				CoreX.Tool.Miscellaneous.XboxTiledTexture.encode(data, image, k_basic_format[format.slice(0, -6) as BasicFormat][0] as typeof Core.Tool.Image.Texture.Format.Value);
+				CoreX.Tool.Miscellaneous.XboxTiledTexture.encode(data, image, k_basic_format[format.slice(0, -6) as BasicFormat][0] as typeof Core.Tool.Texture.Encoding.Format.Value);
 			} else {
 				switch (format) {
 					case 'rgb_etc1_a_palette': {
 						assert_test(option.rgb_etc1_a_palette !== null, `option is null`);
-						CoreX.Tool.Image.Texture.encode(data, image, 'rgb_etc1');
+						CoreX.Tool.Texture.Encoding.encode(data, image, 'rgb_etc1');
 						CoreX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.encode_with_palette(data, image, option.rgb_etc1_a_palette.palette);
 						break;
 					}
@@ -259,14 +259,14 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 			image.fill(Core.Image.Pixel.value([0xFFn, 0xFFn, 0xFFn, 0xFFn]));
 		}
 		if (BasicFormatE.includes(format as BasicFormat)) {
-			CoreX.Tool.Image.Texture.decode_n(data, image, k_basic_format[format as BasicFormat]);
+			CoreX.Tool.Texture.Encoding.decode_n(data, image, k_basic_format[format as BasicFormat]);
 		} else {
 			if (format.endsWith('_tiled')) {
-				CoreX.Tool.Miscellaneous.XboxTiledTexture.decode(data, image, k_basic_format[format.slice(0, -6) as BasicFormat][0] as typeof Core.Tool.Image.Texture.Format.Value);
+				CoreX.Tool.Miscellaneous.XboxTiledTexture.decode(data, image, k_basic_format[format.slice(0, -6) as BasicFormat][0] as typeof Core.Tool.Texture.Encoding.Format.Value);
 			} else {
 				switch (format) {
 					case 'rgb_etc1_a_palette': {
-						CoreX.Tool.Image.Texture.decode(data, image, 'rgb_etc1');
+						CoreX.Tool.Texture.Encoding.decode(data, image, 'rgb_etc1');
 						CoreX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.decode_with_palette(data, image);
 						break;
 					}

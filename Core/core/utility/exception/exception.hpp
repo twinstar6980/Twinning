@@ -13,9 +13,9 @@ namespace TwinStar::Core {
 
 	protected:
 
-		std::string              m_title;
-		std::vector<std::string> m_description;
-		std::source_location     m_location;
+		std::string              m_title{};
+		std::vector<std::string> m_description{};
+		std::source_location     m_location{};
 
 	public:
 

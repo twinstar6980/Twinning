@@ -16,8 +16,8 @@ namespace TwinStar::Core {
 
 		// ----------------
 
-		Key   key;
-		Value value;
+		Key   key{};
+		Value value{};
 
 		// ----------------
 

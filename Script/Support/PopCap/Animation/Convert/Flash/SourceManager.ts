@@ -19,7 +19,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.SourceManager {
 
 	function create_one(
 		index: number,
-		image: Core.Tool.PopCap.Animation.Manifest.JS_N.Image,
+		image: Core.Tool.PopCap.Animation.Definition.JS_N.Image,
 		resolution: bigint,
 	): Core.XML.JS_Element {
 		return XML.create_element('DOMSymbolItem', {
@@ -56,7 +56,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.SourceManager {
 	}
 
 	export function create(
-		animation: Core.Tool.PopCap.Animation.Manifest.JS_N.Animation,
+		animation: Core.Tool.PopCap.Animation.Definition.JS_N.Animation,
 		resolution: bigint,
 	): Array<Core.XML.JS_Element> {
 		return animation.image.map((e, i) => (create_one(i, e, resolution)));
@@ -105,7 +105,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.SourceManager {
 
 	export function create_fsh(
 		directory: string,
-		data: Core.Tool.PopCap.Animation.Manifest.JS_N.Animation,
+		data: Core.Tool.PopCap.Animation.Definition.JS_N.Animation,
 		resolution: bigint = k_standard_resolution,
 	): void {
 		create(data, resolution).forEach((e, i) => {

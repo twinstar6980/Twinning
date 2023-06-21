@@ -2,44 +2,80 @@
 
 #include "core/utility/utility.hpp"
 #include "core/executor/context.hpp"
-#include "core/tool/data/hash/fnv.hpp"
-#include "core/tool/data/hash/md5.hpp"
-#include "core/tool/data/encoding/base64.hpp"
-#include "core/tool/data/encryption/xor.hpp"
-#include "core/tool/data/encryption/rijndael.hpp"
-#include "core/tool/data/compression/deflate.hpp"
-#include "core/tool/data/compression/bzip2.hpp"
-#include "core/tool/data/compression/lzma.hpp"
-#include "core/tool/data/differentiation/vcdiff.hpp"
-#include "core/tool/data/serialization/json.hpp"
-#include "core/tool/data/serialization/xml.hpp"
-#include "core/tool/image/transformation/transform.hpp"
-#include "core/tool/image/texture/encode.hpp"
-#include "core/tool/image/texture/compression/etc1.hpp"
-#include "core/tool/image/texture/compression/etc2.hpp"
-#include "core/tool/image/texture/compression/pvrtc4.hpp"
-#include "core/tool/image/file/png.hpp"
-#include "core/tool/wwise/media/encode.hpp"
+#include "core/tool/data/hash/fnv/hash.hpp"
+#include "core/tool/data/hash/md5/hash.hpp"
+#include "core/tool/data/encoding/base64/encode.hpp"
+#include "core/tool/data/encoding/base64/decode.hpp"
+#include "core/tool/data/encryption/xor/encrypt.hpp"
+#include "core/tool/data/encryption/rijndael/encrypt.hpp"
+#include "core/tool/data/encryption/rijndael/decrypt.hpp"
+#include "core/tool/data/compression/deflate/compress.hpp"
+#include "core/tool/data/compression/deflate/uncompress.hpp"
+#include "core/tool/data/compression/bzip2/compress.hpp"
+#include "core/tool/data/compression/bzip2/uncompress.hpp"
+#include "core/tool/data/compression/lzma/compress.hpp"
+#include "core/tool/data/compression/lzma/uncompress.hpp"
+#include "core/tool/data/differentiation/vcdiff/encode.hpp"
+#include "core/tool/data/differentiation/vcdiff/decode.hpp"
+#include "core/tool/data/serialization/json/write.hpp"
+#include "core/tool/data/serialization/json/read.hpp"
+#include "core/tool/data/serialization/xml/write.hpp"
+#include "core/tool/data/serialization/xml/read.hpp"
+#include "core/tool/texture/transformation/flip.hpp"
+#include "core/tool/texture/transformation/scale.hpp"
+#include "core/tool/texture/encoding/encode.hpp"
+#include "core/tool/texture/encoding/decode.hpp"
+#include "core/tool/texture/compression/etc1/compress.hpp"
+#include "core/tool/texture/compression/etc1/uncompress.hpp"
+#include "core/tool/texture/compression/etc2/compress.hpp"
+#include "core/tool/texture/compression/etc2/uncompress.hpp"
+#include "core/tool/texture/compression/pvrtc4/compress.hpp"
+#include "core/tool/texture/compression/pvrtc4/uncompress.hpp"
+#include "core/tool/texture/file/png/write.hpp"
+#include "core/tool/texture/file/png/read.hpp"
+#include "core/tool/wwise/media/decode.hpp"
 #include "core/tool/wwise/sound_bank/encode.hpp"
+#include "core/tool/wwise/sound_bank/decode.hpp"
 #include "core/tool/marmalade/dzip/pack.hpp"
+#include "core/tool/marmalade/dzip/unpack.hpp"
 #include "core/tool/popcap/zlib/compress.hpp"
+#include "core/tool/popcap/zlib/uncompress.hpp"
 #include "core/tool/popcap/crypt_data/encrypt.hpp"
+#include "core/tool/popcap/crypt_data/decrypt.hpp"
 #include "core/tool/popcap/reflection_object_notation/encode.hpp"
-#include "core/tool/popcap/reflection_object_notation/encrypt.hpp"
+#include "core/tool/popcap/reflection_object_notation/decode.hpp"
 #include "core/tool/popcap/u_texture/encode.hpp"
+#include "core/tool/popcap/u_texture/decode.hpp"
 #include "core/tool/popcap/sexy_texture/encode.hpp"
+#include "core/tool/popcap/sexy_texture/decode.hpp"
 #include "core/tool/popcap/animation/encode.hpp"
+#include "core/tool/popcap/animation/decode.hpp"
 #include "core/tool/popcap/re_animation/encode.hpp"
+#include "core/tool/popcap/re_animation/decode.hpp"
 #include "core/tool/popcap/particle/encode.hpp"
+#include "core/tool/popcap/particle/decode.hpp"
 #include "core/tool/popcap/trail/encode.hpp"
-#include "core/tool/popcap/effect/encode.hpp"
+#include "core/tool/popcap/trail/decode.hpp"
+#include "core/tool/popcap/render_effect/encode.hpp"
+#include "core/tool/popcap/render_effect/decode.hpp"
+#include "core/tool/popcap/particle_effect/encode.hpp"
+#include "core/tool/popcap/particle_effect/decode.hpp"
 #include "core/tool/popcap/character_font_widget_2/encode.hpp"
+#include "core/tool/popcap/character_font_widget_2/decode.hpp"
 #include "core/tool/popcap/package/pack.hpp"
+#include "core/tool/popcap/package/unpack.hpp"
 #include "core/tool/popcap/resource_stream_group/pack.hpp"
+#include "core/tool/popcap/resource_stream_group/unpack.hpp"
 #include "core/tool/popcap/resource_stream_bundle/pack.hpp"
+#include "core/tool/popcap/resource_stream_bundle/unpack.hpp"
 #include "core/tool/popcap/resource_stream_bundle_patch/encode.hpp"
+#include "core/tool/popcap/resource_stream_bundle_patch/decode.hpp"
 #include "core/tool/miscellaneous/xbox_tiled_texture/encode.hpp"
+#include "core/tool/miscellaneous/xbox_tiled_texture/decode.hpp"
 #include "core/tool/miscellaneous/pvz2_cn_alpha_palette_texture/encode.hpp"
+#include "core/tool/miscellaneous/pvz2_cn_alpha_palette_texture/decode.hpp"
+#include "core/tool/miscellaneous/pvz2_cn_crypt_data/encrypt.hpp"
+#include "core/tool/miscellaneous/pvz2_cn_crypt_data/decrypt.hpp"
 
 namespace TwinStar::Core::Executor::Interface {
 
@@ -465,12 +501,12 @@ namespace TwinStar::Core::Executor::Interface {
 						define_generic_class<Tool::Data::Hash::FNV::Mode>(s_FNV, "Mode"_s);
 						define_generic_class<Tool::Data::Hash::FNV::BitCount>(s_FNV, "BitCount"_s);
 						s_FNV.add_space("Hash"_s)
-							.add_function_proxy<&stp<Tool::Data::Hash::FNV::Hash::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<Tool::Data::Hash::FNV::Hash::process>>("process"_s);
 					}
 					{
 						auto s_MD5 = s_Hash.add_space("MD5"_s);
 						s_MD5.add_space("Hash"_s)
-							.add_function_proxy<&stp<&Tool::Data::Hash::MD5::Hash::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Hash::MD5::Hash::process>>("process"_s);
 					}
 				}
 				{
@@ -478,11 +514,11 @@ namespace TwinStar::Core::Executor::Interface {
 					{
 						auto s_Base64 = s_Encoding.add_space("Base64"_s);
 						s_Base64.add_space("Encode"_s)
-							.add_function_proxy<&stp<&Tool::Data::Encoding::Base64::Encode::do_compute_size>>("compute_size"_s)
-							.add_function_proxy<&stp<&Tool::Data::Encoding::Base64::Encode::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Encoding::Base64::Encode::process>>("process"_s)
+							.add_function_proxy<&stp<&Tool::Data::Encoding::Base64::Encode::estimate>>("estimate"_s);
 						s_Base64.add_space("Decode"_s)
-							.add_function_proxy<&stp<&Tool::Data::Encoding::Base64::Decode::do_compute_size>>("compute_size"_s)
-							.add_function_proxy<&stp<&Tool::Data::Encoding::Base64::Decode::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Encoding::Base64::Decode::process>>("process"_s)
+							.add_function_proxy<&stp<&Tool::Data::Encoding::Base64::Decode::estimate>>("estimate"_s);
 					}
 				}
 				{
@@ -490,15 +526,15 @@ namespace TwinStar::Core::Executor::Interface {
 					{
 						auto s_XOR = s_Encryption.add_space("XOR"_s);
 						s_XOR.add_space("Encrypt"_s)
-							.add_function_proxy<&stp<&Tool::Data::Encryption::XOR::Encrypt::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Encryption::XOR::Encrypt::process>>("process"_s);
 					}
 					{
 						auto s_Rijndael = s_Encryption.add_space("Rijndael"_s);
 						define_generic_class<Tool::Data::Encryption::Rijndael::Mode>(s_Rijndael, "Mode"_s);
 						s_Rijndael.add_space("Encrypt"_s)
-							.add_function_proxy<&stp<&Tool::Data::Encryption::Rijndael::Encrypt::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Encryption::Rijndael::Encrypt::process>>("process"_s);
 						s_Rijndael.add_space("Decrypt"_s)
-							.add_function_proxy<&stp<&Tool::Data::Encryption::Rijndael::Decrypt::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Encryption::Rijndael::Decrypt::process>>("process"_s);
 					}
 				}
 				{
@@ -508,24 +544,24 @@ namespace TwinStar::Core::Executor::Interface {
 						define_generic_class<Tool::Data::Compression::Deflate::Strategy>(s_Deflate, "Strategy"_s);
 						define_generic_class<Tool::Data::Compression::Deflate::Wrapper>(s_Deflate, "Wrapper"_s);
 						s_Deflate.add_space("Compress"_s)
-							.add_function_proxy<&stp<&Tool::Data::Compression::Deflate::Compress::do_compute_size_bound>>("compute_size_bound"_s)
-							.add_function_proxy<&stp<&Tool::Data::Compression::Deflate::Compress::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Compression::Deflate::Compress::process>>("process"_s)
+							.add_function_proxy<&stp<&Tool::Data::Compression::Deflate::Compress::estimate>>("estimate"_s);
 						s_Deflate.add_space("Uncompress"_s)
-							.add_function_proxy<&stp<&Tool::Data::Compression::Deflate::Uncompress::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Compression::Deflate::Uncompress::process>>("process"_s);
 					}
 					{
 						auto s_BZip2 = s_Compression.add_space("BZip2"_s);
 						s_BZip2.add_space("Compress"_s)
-							.add_function_proxy<&stp<&Tool::Data::Compression::BZip2::Compress::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Compression::BZip2::Compress::process>>("process"_s);
 						s_BZip2.add_space("Uncompress"_s)
-							.add_function_proxy<&stp<&Tool::Data::Compression::BZip2::Uncompress::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Compression::BZip2::Uncompress::process>>("process"_s);
 					}
 					{
 						auto s_Lzma = s_Compression.add_space("Lzma"_s);
 						s_Lzma.add_space("Compress"_s)
-							.add_function_proxy<&stp<&Tool::Data::Compression::Lzma::Compress::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Compression::Lzma::Compress::process>>("process"_s);
 						s_Lzma.add_space("Uncompress"_s)
-							.add_function_proxy<&stp<&Tool::Data::Compression::Lzma::Uncompress::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Compression::Lzma::Uncompress::process>>("process"_s);
 					}
 				}
 				{
@@ -533,9 +569,9 @@ namespace TwinStar::Core::Executor::Interface {
 					{
 						auto s_VCDiff = s_Differentiation.add_space("VCDiff"_s);
 						s_VCDiff.add_space("Encode"_s)
-							.add_function_proxy<&stp<&Tool::Data::Differentiation::VCDiff::Encode::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Differentiation::VCDiff::Encode::process>>("process"_s);
 						s_VCDiff.add_space("Decode"_s)
-							.add_function_proxy<&stp<&Tool::Data::Differentiation::VCDiff::Decode::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Differentiation::VCDiff::Decode::process>>("process"_s);
 					}
 				}
 				{
@@ -543,96 +579,70 @@ namespace TwinStar::Core::Executor::Interface {
 					{
 						auto s_JSON = s_Serialization.add_space("JSON"_s);
 						s_JSON.add_space("Write"_s)
-							.add_function_proxy<&stp<&Tool::Data::Serialization::JSON::Write::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Serialization::JSON::Write::process>>("process"_s);
 						s_JSON.add_space("Read"_s)
-							.add_function_proxy<&stp<&Tool::Data::Serialization::JSON::Read::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Serialization::JSON::Read::process>>("process"_s);
 					}
 					{
 						auto s_XML = s_Serialization.add_space("XML"_s);
 						s_XML.add_space("Write"_s)
-							.add_function_proxy<&stp<&Tool::Data::Serialization::XML::Write::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Serialization::XML::Write::process>>("process"_s);
 						s_XML.add_space("Read"_s)
-							.add_function_proxy<&stp<&Tool::Data::Serialization::XML::Read::do_process_whole>>("process_whole"_s);
+							.add_function_proxy<&stp<&Tool::Data::Serialization::XML::Read::process>>("process"_s);
 					}
 				}
 			}
-			// Image
+			// Texture
 			{
-				auto s_Image = s_Tool.add_space("Image"_s);
+				auto s_Texture = s_Tool.add_space("Texture"_s);
 				{
-					auto s_Transformation = s_Image.add_space("Transformation"_s);
+					auto s_Transformation = s_Texture.add_space("Transformation"_s);
 					s_Transformation.add_space("Flip"_s)
-						.add_function_proxy<&stp<&Tool::Image::Transformation::Flip::do_process_image>>("process_image"_s);
+						.add_function_proxy<&stp<&Tool::Texture::Transformation::Flip::process>>("process"_s);
 					s_Transformation.add_space("Scale"_s)
-						.add_function_proxy<&stp<&Tool::Image::Transformation::Scale::do_process_image>>("process_image"_s);
+						.add_function_proxy<&stp<&Tool::Texture::Transformation::Scale::process>>("process"_s);
 				}
 				{
-					auto s_Texture = s_Image.add_space("Texture"_s);
-					define_generic_class<Tool::Image::Texture::Format>(s_Texture, "Format"_s);
-					s_Texture.add_space("Encode"_s)
-						.add_function_proxy<&stp<&normalized_lambda<
-							[] (
-							OByteStreamView &                    data,
-							Image::CImageView const &            image,
-							Tool::Image::Texture::Format const & format
-						) -> Void {
-								Generalization::match<Tool::Image::Texture::FormatPackage>(
-									format,
-									[&] <auto index, auto format> (ValuePackage<index>, ValuePackage<format>) {
-										Tool::Image::Texture::Encode<format>::do_process_image(data, image);
-									}
-								);
-							}
-						>>>("process_image"_s);
-					s_Texture.add_space("Decode"_s)
-						.add_function_proxy<&stp<&normalized_lambda<
-							[] (
-							IByteStreamView &                    data,
-							Image::VImageView const &            image,
-							Tool::Image::Texture::Format const & format
-						) -> Void {
-								Generalization::match<Tool::Image::Texture::FormatPackage>(
-									format,
-									[&] <auto index, auto format> (ValuePackage<index>, ValuePackage<format>) {
-										Tool::Image::Texture::Decode<format>::do_process_image(data, image);
-									}
-								);
-							}
-						>>>("process_image"_s);
+					auto s_Encoding = s_Texture.add_space("Encoding"_s);
+					define_generic_class<Tool::Texture::Encoding::Format>(s_Encoding, "Format"_s);
+					s_Encoding.add_space("Encode"_s)
+						.add_function_proxy<&stp<&Tool::Texture::Encoding::Encode::process>>("process"_s);
+					s_Encoding.add_space("Decode"_s)
+						.add_function_proxy<&stp<&Tool::Texture::Encoding::Decode::process>>("process"_s);
+				}
+				{
+					auto s_Compression = s_Texture.add_space("Compression"_s);
 					{
-						auto s_Compression = s_Texture.add_space("Compression"_s);
-						{
-							auto s_ETC1 = s_Compression.add_space("ETC1"_s);
-							s_ETC1.add_space("Compress"_s)
-								.add_function_proxy<&stp<&Tool::Image::Texture::Compression::ETC1::Compress::do_process_image>>("process_image"_s);
-							s_ETC1.add_space("Uncompress"_s)
-								.add_function_proxy<&stp<&Tool::Image::Texture::Compression::ETC1::Uncompress::do_process_image>>("process_image"_s);
-						}
-						{
-							auto s_ETC2 = s_Compression.add_space("ETC2"_s);
-							s_ETC2.add_space("Compress"_s)
-								.add_function_proxy<&stp<&Tool::Image::Texture::Compression::ETC2::Compress::do_process_image>>("process_image"_s);
-							s_ETC2.add_space("Uncompress"_s)
-								.add_function_proxy<&stp<&Tool::Image::Texture::Compression::ETC2::Uncompress::do_process_image>>("process_image"_s);
-						}
-						{
-							auto s_PVRTC4 = s_Compression.add_space("PVRTC4"_s);
-							s_PVRTC4.add_space("Compress"_s)
-								.add_function_proxy<&stp<&Tool::Image::Texture::Compression::PVRTC4::Compress::do_process_image>>("process_image"_s);
-							s_PVRTC4.add_space("Uncompress"_s)
-								.add_function_proxy<&stp<&Tool::Image::Texture::Compression::PVRTC4::Uncompress::do_process_image>>("process_image"_s);
-						}
+						auto s_ETC1 = s_Compression.add_space("ETC1"_s);
+						s_ETC1.add_space("Compress"_s)
+							.add_function_proxy<&stp<&Tool::Texture::Compression::ETC1::Compress::process>>("process"_s);
+						s_ETC1.add_space("Uncompress"_s)
+							.add_function_proxy<&stp<&Tool::Texture::Compression::ETC1::Uncompress::process>>("process"_s);
+					}
+					{
+						auto s_ETC2 = s_Compression.add_space("ETC2"_s);
+						s_ETC2.add_space("Compress"_s)
+							.add_function_proxy<&stp<&Tool::Texture::Compression::ETC2::Compress::process>>("process"_s);
+						s_ETC2.add_space("Uncompress"_s)
+							.add_function_proxy<&stp<&Tool::Texture::Compression::ETC2::Uncompress::process>>("process"_s);
+					}
+					{
+						auto s_PVRTC4 = s_Compression.add_space("PVRTC4"_s);
+						s_PVRTC4.add_space("Compress"_s)
+							.add_function_proxy<&stp<&Tool::Texture::Compression::PVRTC4::Compress::process>>("process"_s);
+						s_PVRTC4.add_space("Uncompress"_s)
+							.add_function_proxy<&stp<&Tool::Texture::Compression::PVRTC4::Uncompress::process>>("process"_s);
 					}
 				}
 				{
-					auto s_File = s_Image.add_space("File"_s);
+					auto s_File = s_Texture.add_space("File"_s);
 					{
 						auto s_PNG = s_File.add_space("PNG"_s);
 						s_PNG.add_space("Write"_s)
-							.add_function_proxy<&stp<&Tool::Image::File::PNG::Write::do_process_image>>("process_image"_s);
+							.add_function_proxy<&stp<&Tool::Texture::File::PNG::Write::process>>("process"_s);
 						s_PNG.add_space("Read"_s)
-							.add_function_proxy<&stp<&Tool::Image::File::PNG::Read::do_compute_image_size>>("compute_image_size"_s)
-							.add_function_proxy<&stp<&Tool::Image::File::PNG::Read::do_process_image>>("process_image"_s);
+							.add_function_proxy<&stp<&Tool::Texture::File::PNG::Read::process>>("process"_s)
+							.add_function_proxy<&stp<&Tool::Texture::File::PNG::Read::estimate>>("estimate"_s);
 					}
 				}
 			}
@@ -658,70 +668,70 @@ namespace TwinStar::Core::Executor::Interface {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::Wwise::Media::Decode<version>::do_process_media(ripe, raw, ffmpeg_program, ww2ogg_program, ww2ogg_code_book, temporary_directory);
+										Tool::Wwise::Media::Decode<version>::process(ripe, raw, ffmpeg_program, ww2ogg_program, ww2ogg_code_book, temporary_directory);
 									}
 								);
 							}
-						>>>("process_media"_s);
+						>>>("process"_s);
 				}
 				{
 					using Tool::Wwise::SoundBank::Version;
 					using Tool::Wwise::SoundBank::VersionPackage;
-					using Tool::Wwise::SoundBank::Manifest;
-					using SoundBankManifest = Variant<
-						typename Manifest<VersionPackage::element<1_ixz>>::SoundBank,
-						typename Manifest<VersionPackage::element<2_ixz>>::SoundBank,
-						typename Manifest<VersionPackage::element<3_ixz>>::SoundBank,
-						typename Manifest<VersionPackage::element<4_ixz>>::SoundBank,
-						typename Manifest<VersionPackage::element<5_ixz>>::SoundBank,
-						typename Manifest<VersionPackage::element<6_ixz>>::SoundBank,
-						typename Manifest<VersionPackage::element<7_ixz>>::SoundBank,
-						typename Manifest<VersionPackage::element<8_ixz>>::SoundBank,
-						typename Manifest<VersionPackage::element<9_ixz>>::SoundBank,
-						typename Manifest<VersionPackage::element<10_ixz>>::SoundBank,
-						typename Manifest<VersionPackage::element<11_ixz>>::SoundBank,
-						typename Manifest<VersionPackage::element<12_ixz>>::SoundBank,
-						typename Manifest<VersionPackage::element<13_ixz>>::SoundBank
+					using Tool::Wwise::SoundBank::Definition;
+					using SoundBankDefinition = Variant<
+						typename Definition<VersionPackage::element<1_ixz>>::SoundBank,
+						typename Definition<VersionPackage::element<2_ixz>>::SoundBank,
+						typename Definition<VersionPackage::element<3_ixz>>::SoundBank,
+						typename Definition<VersionPackage::element<4_ixz>>::SoundBank,
+						typename Definition<VersionPackage::element<5_ixz>>::SoundBank,
+						typename Definition<VersionPackage::element<6_ixz>>::SoundBank,
+						typename Definition<VersionPackage::element<7_ixz>>::SoundBank,
+						typename Definition<VersionPackage::element<8_ixz>>::SoundBank,
+						typename Definition<VersionPackage::element<9_ixz>>::SoundBank,
+						typename Definition<VersionPackage::element<10_ixz>>::SoundBank,
+						typename Definition<VersionPackage::element<11_ixz>>::SoundBank,
+						typename Definition<VersionPackage::element<12_ixz>>::SoundBank,
+						typename Definition<VersionPackage::element<13_ixz>>::SoundBank
 					>;
 					auto s_SoundBank = s_Wwise.add_space("SoundBank"_s);
 					define_generic_class<Version>(s_SoundBank, "Version"_s);
 					{
-						auto s_Manifest = s_SoundBank.add_space("Manifest"_s);
-						auto c_SoundBank = define_generic_class<SoundBankManifest, GCDF::generic_mask>(s_Manifest, "SoundBank"_s);
+						auto s_Definition = s_SoundBank.add_space("Definition"_s);
+						auto c_SoundBank = define_generic_class<SoundBankDefinition, GCDF::generic_mask>(s_Definition, "SoundBank"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_SoundBank);
 					}
 					s_SoundBank.add_space("Encode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							OByteStreamView &         sound_bank_data,
-							SoundBankManifest const & sound_bank_manifest,
-							Path const &              embedded_media_directory,
-							Version const &           version
+							OByteStreamView &           data,
+							SoundBankDefinition const & definition,
+							Path const &                embedded_media_directory,
+							Version const &             version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::Wwise::SoundBank::Encode<version>::do_process_sound_bank(sound_bank_data, sound_bank_manifest.template get_of_index<mbw<Size>(index)>(), embedded_media_directory);
+										Tool::Wwise::SoundBank::Encode<version>::process(data, definition.template get_of_index<mbw<Size>(index)>(), embedded_media_directory);
 									}
 								);
 							}
-						>>>("process_sound_bank"_s);
+						>>>("process"_s);
 					s_SoundBank.add_space("Decode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							IByteStreamView &      sound_bank_data,
-							SoundBankManifest &    sound_bank_manifest,
+							IByteStreamView &      data,
+							SoundBankDefinition &  definition,
 							Optional<Path> const & embedded_media_directory,
 							Version const &        version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::Wwise::SoundBank::Decode<version>::do_process_sound_bank(sound_bank_data, sound_bank_manifest.template set_of_index<mbw<Size>(index)>(), embedded_media_directory);
+										Tool::Wwise::SoundBank::Decode<version>::process(data, definition.template set_of_index<mbw<Size>(index)>(), embedded_media_directory);
 									}
 								);
 							}
-						>>>("process_sound_bank"_s);
+						>>>("process"_s);
 				}
 			}
 			// Marmalade
@@ -730,49 +740,49 @@ namespace TwinStar::Core::Executor::Interface {
 				{
 					using Tool::Marmalade::DZip::Version;
 					using Tool::Marmalade::DZip::VersionPackage;
-					using Tool::Marmalade::DZip::Manifest;
-					using PackageManifest = Variant<
-						typename Manifest<VersionPackage::element<1_ixz>>::Package
+					using Tool::Marmalade::DZip::Definition;
+					using PackageDefinition = Variant<
+						typename Definition<VersionPackage::element<1_ixz>>::Package
 					>;
 					auto s_DZip = s_Marmalade.add_space("DZip"_s);
 					define_generic_class<Version>(s_DZip, "Version"_s);
 					{
-						auto s_Manifest = s_DZip.add_space("Manifest"_s);
-						auto c_Package = define_generic_class<PackageManifest, GCDF::generic_mask>(s_Manifest, "Package"_s);
+						auto s_Definition = s_DZip.add_space("Definition"_s);
+						auto c_Package = define_generic_class<PackageDefinition, GCDF::generic_mask>(s_Definition, "Package"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Package);
 					}
 					s_DZip.add_space("Pack"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							OByteStreamView &       package_data,
-							PackageManifest const & package_manifest,
-							Path const &            resource_directory,
-							Version const &         version
+							OByteStreamView &         data,
+							PackageDefinition const & definition,
+							Path const &              resource_directory,
+							Version const &           version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::Marmalade::DZip::Pack<version>::do_process_package(package_data, package_manifest.template get_of_index<mbw<Size>(index)>(), resource_directory);
+										Tool::Marmalade::DZip::Pack<version>::process(data, definition.template get_of_index<mbw<Size>(index)>(), resource_directory);
 									}
 								);
 							}
-						>>>("process_package"_s);
+						>>>("process"_s);
 					s_DZip.add_space("Unpack"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							IByteStreamView &      package_data,
-							PackageManifest &      package_manifest,
+							IByteStreamView &      data,
+							PackageDefinition &    definition,
 							Optional<Path> const & resource_directory,
 							Version const &        version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::Marmalade::DZip::Unpack<version>::do_process_package(package_data, package_manifest.template set_of_index<mbw<Size>(index)>(), resource_directory);
+										Tool::Marmalade::DZip::Unpack<version>::process(data, definition.template set_of_index<mbw<Size>(index)>(), resource_directory);
 									}
 								);
 							}
-						>>>("process_package"_s);
+						>>>("process"_s);
 				}
 			}
 			// PopCap
@@ -786,22 +796,6 @@ namespace TwinStar::Core::Executor::Interface {
 					s_ZLib.add_space("Compress"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							Size const &    raw_size,
-							Size &          ripe_size_bound,
-							Size const &    window_bits,
-							Size const &    memory_level,
-							Version const & version
-						) -> Void {
-								Generalization::match<VersionPackage>(
-									version,
-									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ZLib::Compress<version>::do_compute_size_bound(raw_size, ripe_size_bound, window_bits, memory_level);
-									}
-								);
-							}
-						>>>("compute_size_bound"_s)
-						.add_function_proxy<&stp<&normalized_lambda<
-							[] (
 							IByteStreamView &                                  raw,
 							OByteStreamView &                                  ripe,
 							Size const &                                       level,
@@ -813,26 +807,28 @@ namespace TwinStar::Core::Executor::Interface {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ZLib::Compress<version>::do_process_whole(raw, ripe, level, window_bits, memory_level, strategy);
+										Tool::PopCap::ZLib::Compress<version>::process(raw, ripe, level, window_bits, memory_level, strategy);
 									}
 								);
 							}
-						>>>("process_whole"_s);
-					s_ZLib.add_space("Uncompress"_s)
+						>>>("process"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							CByteListView const & ripe,
-							Size &                raw_size,
-							Version const &       version
+							Size const &    raw_size,
+							Size &          ripe_size_bound,
+							Size const &    window_bits,
+							Size const &    memory_level,
+							Version const & version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ZLib::Uncompress<version>::do_compute_size(ripe, raw_size);
+										Tool::PopCap::ZLib::Compress<version>::estimate(raw_size, ripe_size_bound, window_bits, memory_level);
 									}
 								);
 							}
-						>>>("compute_size"_s)
+						>>>("estimate"_s);
+					s_ZLib.add_space("Uncompress"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							IByteStreamView & ripe,
@@ -843,11 +839,25 @@ namespace TwinStar::Core::Executor::Interface {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ZLib::Uncompress<version>::do_process_whole(ripe, raw, window_bits);
+										Tool::PopCap::ZLib::Uncompress<version>::process(ripe, raw, window_bits);
 									}
 								);
 							}
-						>>>("process_whole"_s);
+						>>>("process"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							CByteListView const & ripe,
+							Size &                raw_size,
+							Version const &       version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::ZLib::Uncompress<version>::estimate(ripe, raw_size);
+									}
+								);
+							}
+						>>>("estimate"_s);
 				}
 				{
 					using Tool::PopCap::CryptData::Version;
@@ -855,21 +865,6 @@ namespace TwinStar::Core::Executor::Interface {
 					auto s_CryptData = s_PopCap.add_space("CryptData"_s);
 					define_generic_class<Version>(s_CryptData, "Version"_s);
 					s_CryptData.add_space("Encrypt"_s)
-						.add_function_proxy<&stp<&normalized_lambda<
-							[] (
-							Size const &    plain_size,
-							Size &          cipher_size,
-							Size const &    limit,
-							Version const & version
-						) -> Void {
-								Generalization::match<VersionPackage>(
-									version,
-									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::CryptData::Encrypt<version>::do_compute_size(plain_size, cipher_size, limit);
-									}
-								);
-							}
-						>>>("compute_size"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							IByteStreamView & plain,
@@ -881,27 +876,27 @@ namespace TwinStar::Core::Executor::Interface {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::CryptData::Encrypt<version>::do_process_whole(plain, cipher, limit, key);
+										Tool::PopCap::CryptData::Encrypt<version>::process(plain, cipher, limit, key);
 									}
 								);
 							}
-						>>>("process_whole"_s);
-					s_CryptData.add_space("Decrypt"_s)
+						>>>("process"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							CByteListView const & cipher,
-							Size &                plain_size,
-							Size const &          limit,
-							Version const &       version
+							Size const &    plain_size,
+							Size &          cipher_size,
+							Size const &    limit,
+							Version const & version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::CryptData::Decrypt<version>::do_compute_size(cipher, plain_size, limit);
+										Tool::PopCap::CryptData::Encrypt<version>::estimate(plain_size, cipher_size, limit);
 									}
 								);
 							}
-						>>>("compute_size"_s)
+						>>>("estimate"_s);
+					s_CryptData.add_space("Decrypt"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							IByteStreamView & cipher,
@@ -913,11 +908,26 @@ namespace TwinStar::Core::Executor::Interface {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::CryptData::Decrypt<version>::do_process_whole(cipher, plain, limit, key);
+										Tool::PopCap::CryptData::Decrypt<version>::process(cipher, plain, limit, key);
 									}
 								);
 							}
-						>>>("process_whole"_s);
+						>>>("process"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							CByteListView const & cipher,
+							Size &                plain_size,
+							Size const &          limit,
+							Version const &       version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::CryptData::Decrypt<version>::estimate(cipher, plain_size, limit);
+									}
+								);
+							}
+						>>>("estimate"_s);
 				}
 				{
 					using Tool::PopCap::ReflectionObjectNotation::Version;
@@ -928,7 +938,7 @@ namespace TwinStar::Core::Executor::Interface {
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							OByteStreamView &   data,
-							JSON::Value const & value,
+							JSON::Value const & definition,
 							Boolean const &     enable_string_index,
 							Boolean const &     enable_rtid,
 							Version const &     version
@@ -936,32 +946,26 @@ namespace TwinStar::Core::Executor::Interface {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ReflectionObjectNotation::Encode<version>::do_process_whole(data, value, enable_string_index, enable_rtid);
+										Tool::PopCap::ReflectionObjectNotation::Encode<version>::process(data, definition, enable_string_index, enable_rtid);
 									}
 								);
 							}
-						>>>("process_whole"_s);
+						>>>("process"_s);
 					s_ReflectionObjectNotation.add_space("Decode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							IByteStreamView & data,
-							JSON::Value &     value,
+							JSON::Value &     definition,
 							Version const &   version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ReflectionObjectNotation::Decode<version>::do_process_whole(data, value);
+										Tool::PopCap::ReflectionObjectNotation::Decode<version>::process(data, definition);
 									}
 								);
 							}
-						>>>("process_whole"_s);
-					s_ReflectionObjectNotation.add_space("Encrypt"_s)
-						.add_function_proxy<&stp<&Tool::PopCap::ReflectionObjectNotation::Encrypt::do_compute_size>>("compute_size"_s)
-						.add_function_proxy<&stp<&Tool::PopCap::ReflectionObjectNotation::Encrypt::do_process_whole>>("process_whole"_s);
-					s_ReflectionObjectNotation.add_space("Decrypt"_s)
-						.add_function_proxy<&stp<&Tool::PopCap::ReflectionObjectNotation::Decrypt::do_compute_size>>("compute_size"_s)
-						.add_function_proxy<&stp<&Tool::PopCap::ReflectionObjectNotation::Decrypt::do_process_whole>>("process_whole"_s);
+						>>>("process"_s);
 				}
 				{
 					using Tool::PopCap::UTexture::Version;
@@ -971,49 +975,35 @@ namespace TwinStar::Core::Executor::Interface {
 					s_UTexture.add_space("Encode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							Size &                               data_size_bound,
-							Image::ImageSize const &             image_size,
-							Tool::Image::Texture::Format const & format,
-							Version const &                      version
+							OByteStreamView &                       data,
+							Image::CImageView const &               image,
+							Tool::Texture::Encoding::Format const & format,
+							Version const &                         version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::UTexture::Encode<version>::do_compute_data_size_bound(data_size_bound, image_size, format);
+										Tool::PopCap::UTexture::Encode<version>::process(data, image, format);
 									}
 								);
 							}
-						>>>("compute_data_size_bound"_s)
+						>>>("process"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							OByteStreamView &                    data,
-							Image::CImageView const &            image,
-							Tool::Image::Texture::Format const & format,
-							Version const &                      version
+							Size &                                  data_size_bound,
+							Image::ImageSize const &                image_size,
+							Tool::Texture::Encoding::Format const & format,
+							Version const &                         version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::UTexture::Encode<version>::do_process_image(data, image, format);
+										Tool::PopCap::UTexture::Encode<version>::estimate(data_size_bound, image_size, format);
 									}
 								);
 							}
-						>>>("process_image"_s);
+						>>>("estimate"_s);
 					s_UTexture.add_space("Decode"_s)
-						.add_function_proxy<&stp<&normalized_lambda<
-							[] (
-							CByteListView &    data,
-							Image::ImageSize & image_size,
-							Version const &    version
-						) -> Void {
-								Generalization::match<VersionPackage>(
-									version,
-									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::UTexture::Decode<version>::do_compute_image_size(data, image_size);
-									}
-								);
-							}
-						>>>("compute_image_size"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							IByteStreamView &         data,
@@ -1023,11 +1013,25 @@ namespace TwinStar::Core::Executor::Interface {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::UTexture::Decode<version>::do_process_image(data, image);
+										Tool::PopCap::UTexture::Decode<version>::process(data, image);
 									}
 								);
 							}
-						>>>("process_image"_s);
+						>>>("process"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							CByteListView &    data,
+							Image::ImageSize & image_size,
+							Version const &    version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::UTexture::Decode<version>::estimate(data, image_size);
+									}
+								);
+							}
+						>>>("estimate"_s);
 				}
 				{
 					using Tool::PopCap::SexyTexture::Version;
@@ -1037,51 +1041,37 @@ namespace TwinStar::Core::Executor::Interface {
 					s_SexyTexture.add_space("Encode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							Size &                               data_size_bound,
-							Image::ImageSize const &             image_size,
-							Tool::Image::Texture::Format const & format,
-							Boolean const &                      compress_texture_data,
-							Version const &                      version
+							OByteStreamView &                       data,
+							Image::CImageView const &               image,
+							Tool::Texture::Encoding::Format const & format,
+							Boolean const &                         compress_texture_data,
+							Version const &                         version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::SexyTexture::Encode<version>::do_compute_data_size_bound(data_size_bound, image_size, format, compress_texture_data);
+										Tool::PopCap::SexyTexture::Encode<version>::process(data, image, format, compress_texture_data);
 									}
 								);
 							}
-						>>>("compute_data_size_bound"_s)
+						>>>("process"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							OByteStreamView &                    data,
-							Image::CImageView const &            image,
-							Tool::Image::Texture::Format const & format,
-							Boolean const &                      compress_texture_data,
-							Version const &                      version
+							Size &                                  data_size_bound,
+							Image::ImageSize const &                image_size,
+							Tool::Texture::Encoding::Format const & format,
+							Boolean const &                         compress_texture_data,
+							Version const &                         version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::SexyTexture::Encode<version>::do_process_image(data, image, format, compress_texture_data);
+										Tool::PopCap::SexyTexture::Encode<version>::estimate(data_size_bound, image_size, format, compress_texture_data);
 									}
 								);
 							}
-						>>>("process_image"_s);
+						>>>("estimate"_s);
 					s_SexyTexture.add_space("Decode"_s)
-						.add_function_proxy<&stp<&normalized_lambda<
-							[] (
-							CByteListView &    data,
-							Image::ImageSize & image_size,
-							Version const &    version
-						) -> Void {
-								Generalization::match<VersionPackage>(
-									version,
-									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::SexyTexture::Decode<version>::do_compute_image_size(data, image_size);
-									}
-								);
-							}
-						>>>("compute_image_size"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
 							IByteStreamView &         data,
@@ -1091,407 +1081,466 @@ namespace TwinStar::Core::Executor::Interface {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::SexyTexture::Decode<version>::do_process_image(data, image);
+										Tool::PopCap::SexyTexture::Decode<version>::process(data, image);
 									}
 								);
 							}
-						>>>("process_image"_s);
-				}
-				{
-					using Tool::PopCap::Animation::Version;
-					using Tool::PopCap::Animation::VersionPackage;
-					using Tool::PopCap::Animation::Manifest;
-					using AnimationManifest = Variant<
-						typename Manifest<VersionPackage::element<1_ixz>>::Animation,
-						typename Manifest<VersionPackage::element<2_ixz>>::Animation,
-						typename Manifest<VersionPackage::element<3_ixz>>::Animation,
-						typename Manifest<VersionPackage::element<4_ixz>>::Animation,
-						typename Manifest<VersionPackage::element<5_ixz>>::Animation,
-						typename Manifest<VersionPackage::element<6_ixz>>::Animation
-					>;
-					auto s_Animation = s_PopCap.add_space("Animation"_s);
-					define_generic_class<Version>(s_Animation, "Version"_s);
-					{
-						auto s_Manifest = s_Animation.add_space("Manifest"_s);
-						auto c_Animation = define_generic_class<AnimationManifest, GCDF::generic_mask>(s_Manifest, "Animation"_s);
-						define_variant_class_version_method<Version, VersionPackage>(c_Animation);
-					}
-					s_Animation.add_space("Encode"_s)
+						>>>("process"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							OByteStreamView &         animation_data,
-							AnimationManifest const & animation_manifest,
-							Version const &           version
-						) -> Void {
-								Generalization::match<VersionPackage>(
-									version,
-									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::Animation::Encode<version>::do_process_animation(animation_data, animation_manifest.template get_of_index<mbw<Size>(index)>());
-									}
-								);
-							}
-						>>>("process_animation"_s);
-					s_Animation.add_space("Decode"_s)
-						.add_function_proxy<&stp<&normalized_lambda<
-							[] (
-							IByteStreamView &   animation_data,
-							AnimationManifest & animation_manifest,
-							Version const &     version
-						) -> Void {
-								Generalization::match<VersionPackage>(
-									version,
-									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::Animation::Decode<version>::do_process_animation(animation_data, animation_manifest.template set_of_index<mbw<Size>(index)>());
-									}
-								);
-							}
-						>>>("process_animation"_s);
-				}
-				{
-					using Tool::PopCap::ReAnimation::Version;
-					using Tool::PopCap::ReAnimation::VersionPackage;
-					using Tool::PopCap::ReAnimation::Manifest;
-					using AnimationManifest = Variant<
-						typename Manifest<VersionPackage::element<1_ixz>>::Animation,
-						typename Manifest<VersionPackage::element<2_ixz>>::Animation,
-						typename Manifest<VersionPackage::element<3_ixz>>::Animation,
-						typename Manifest<VersionPackage::element<4_ixz>>::Animation
-					>;
-					auto s_ReAnimation = s_PopCap.add_space("ReAnimation"_s);
-					define_generic_class<Version>(s_ReAnimation, "Version"_s);
-					{
-						auto s_Manifest = s_ReAnimation.add_space("Manifest"_s);
-						auto c_Animation = define_generic_class<AnimationManifest, GCDF::generic_mask>(s_Manifest, "Animation"_s);
-						define_variant_class_version_method<Version, VersionPackage>(c_Animation);
-					}
-					s_ReAnimation.add_space("Encode"_s)
-						.add_function_proxy<&stp<&normalized_lambda<
-							[] (
-							OByteStreamView &         animation_data,
-							AnimationManifest const & animation_manifest,
-							Version const &           version
-						) -> Void {
-								Generalization::match<VersionPackage>(
-									version,
-									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ReAnimation::Encode<version>::do_process_animation(animation_data, animation_manifest.template get_of_index<mbw<Size>(index)>());
-									}
-								);
-							}
-						>>>("process_animation"_s);
-					s_ReAnimation.add_space("Decode"_s)
-						.add_function_proxy<&stp<&normalized_lambda<
-							[] (
-							IByteStreamView &   animation_data,
-							AnimationManifest & animation_manifest,
-							Version const &     version
-						) -> Void {
-								Generalization::match<VersionPackage>(
-									version,
-									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ReAnimation::Decode<version>::do_process_animation(animation_data, animation_manifest.template set_of_index<mbw<Size>(index)>());
-									}
-								);
-							}
-						>>>("process_animation"_s);
-				}
-				{
-					using Tool::PopCap::Particle::Version;
-					using Tool::PopCap::Particle::VersionPackage;
-					using Tool::PopCap::Particle::Manifest;
-					using ParticleManifest = Variant<
-						typename Manifest<VersionPackage::element<1_ixz>>::Particle,
-						typename Manifest<VersionPackage::element<2_ixz>>::Particle,
-						typename Manifest<VersionPackage::element<3_ixz>>::Particle,
-						typename Manifest<VersionPackage::element<4_ixz>>::Particle
-					>;
-					auto s_Particle = s_PopCap.add_space("Particle"_s);
-					define_generic_class<Version>(s_Particle, "Version"_s);
-					{
-						auto s_Manifest = s_Particle.add_space("Manifest"_s);
-						auto c_Particle = define_generic_class<ParticleManifest, GCDF::generic_mask>(s_Manifest, "Particle"_s);
-						define_variant_class_version_method<Version, VersionPackage>(c_Particle);
-					}
-					s_Particle.add_space("Encode"_s)
-						.add_function_proxy<&stp<&normalized_lambda<
-							[] (
-							OByteStreamView &        particle_data,
-							ParticleManifest const & particle_manifest,
-							Version const &          version
-						) -> Void {
-								Generalization::match<VersionPackage>(
-									version,
-									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::Particle::Encode<version>::do_process_particle(particle_data, particle_manifest.template get_of_index<mbw<Size>(index)>());
-									}
-								);
-							}
-						>>>("process_particle"_s);
-					s_Particle.add_space("Decode"_s)
-						.add_function_proxy<&stp<&normalized_lambda<
-							[] (
-							IByteStreamView &  particle_data,
-							ParticleManifest & particle_manifest,
+							CByteListView &    data,
+							Image::ImageSize & image_size,
 							Version const &    version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::Particle::Decode<version>::do_process_particle(particle_data, particle_manifest.template set_of_index<mbw<Size>(index)>());
+										Tool::PopCap::SexyTexture::Decode<version>::estimate(data, image_size);
 									}
 								);
 							}
-						>>>("process_particle"_s);
+						>>>("estimate"_s);
 				}
 				{
-					using Tool::PopCap::Trail::Version;
-					using Tool::PopCap::Trail::VersionPackage;
-					using Tool::PopCap::Trail::Manifest;
-					using TrailManifest = Variant<
-						typename Manifest<VersionPackage::element<1_ixz>>::Trail,
-						typename Manifest<VersionPackage::element<2_ixz>>::Trail,
-						typename Manifest<VersionPackage::element<3_ixz>>::Trail,
-						typename Manifest<VersionPackage::element<4_ixz>>::Trail
+					using Tool::PopCap::Animation::Version;
+					using Tool::PopCap::Animation::VersionPackage;
+					using Tool::PopCap::Animation::Definition;
+					using AnimationDefinition = Variant<
+						typename Definition<VersionPackage::element<1_ixz>>::Animation,
+						typename Definition<VersionPackage::element<2_ixz>>::Animation,
+						typename Definition<VersionPackage::element<3_ixz>>::Animation,
+						typename Definition<VersionPackage::element<4_ixz>>::Animation,
+						typename Definition<VersionPackage::element<5_ixz>>::Animation,
+						typename Definition<VersionPackage::element<6_ixz>>::Animation
 					>;
-					auto s_Trail = s_PopCap.add_space("Trail"_s);
-					define_generic_class<Version>(s_Trail, "Version"_s);
+					auto s_Animation = s_PopCap.add_space("Animation"_s);
+					define_generic_class<Version>(s_Animation, "Version"_s);
 					{
-						auto s_Manifest = s_Trail.add_space("Manifest"_s);
-						auto c_Trail = define_generic_class<TrailManifest, GCDF::generic_mask>(s_Manifest, "Trail"_s);
-						define_variant_class_version_method<Version, VersionPackage>(c_Trail);
+						auto s_Definition = s_Animation.add_space("Definition"_s);
+						auto c_Animation = define_generic_class<AnimationDefinition, GCDF::generic_mask>(s_Definition, "Animation"_s);
+						define_variant_class_version_method<Version, VersionPackage>(c_Animation);
 					}
-					s_Trail.add_space("Encode"_s)
+					s_Animation.add_space("Encode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							OByteStreamView &     trail_data,
-							TrailManifest const & trail_manifest,
+							OByteStreamView &           data,
+							AnimationDefinition const & definition,
+							Version const &             version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::Animation::Encode<version>::process(data, definition.template get_of_index<mbw<Size>(index)>());
+									}
+								);
+							}
+						>>>("process"_s);
+					s_Animation.add_space("Decode"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							IByteStreamView &     data,
+							AnimationDefinition & definition,
 							Version const &       version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::Trail::Encode<version>::do_process_trail(trail_data, trail_manifest.template get_of_index<mbw<Size>(index)>());
+										Tool::PopCap::Animation::Decode<version>::process(data, definition.template set_of_index<mbw<Size>(index)>());
 									}
 								);
 							}
-						>>>("process_trail"_s);
-					s_Trail.add_space("Decode"_s)
-						.add_function_proxy<&stp<&normalized_lambda<
-							[] (
-							IByteStreamView & trail_data,
-							TrailManifest &   trail_manifest,
-							Version const &   version
-						) -> Void {
-								Generalization::match<VersionPackage>(
-									version,
-									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::Trail::Decode<version>::do_process_trail(trail_data, trail_manifest.template set_of_index<mbw<Size>(index)>());
-									}
-								);
-							}
-						>>>("process_trail"_s);
+						>>>("process"_s);
 				}
 				{
-					using Tool::PopCap::Effect::Version;
-					using Tool::PopCap::Effect::VersionPackage;
-					using Tool::PopCap::Effect::Manifest;
-					using EffectManifest = Variant<
-						typename Manifest<VersionPackage::element<1_ixz>>::Effect,
-						typename Manifest<VersionPackage::element<2_ixz>>::Effect,
-						typename Manifest<VersionPackage::element<3_ixz>>::Effect
+					using Tool::PopCap::ReAnimation::Version;
+					using Tool::PopCap::ReAnimation::VersionPackage;
+					using Tool::PopCap::ReAnimation::Definition;
+					using AnimationDefinition = Variant<
+						typename Definition<VersionPackage::element<1_ixz>>::Animation,
+						typename Definition<VersionPackage::element<2_ixz>>::Animation,
+						typename Definition<VersionPackage::element<3_ixz>>::Animation,
+						typename Definition<VersionPackage::element<4_ixz>>::Animation
 					>;
-					auto s_Effect = s_PopCap.add_space("Effect"_s);
-					define_generic_class<Version>(s_Effect, "Version"_s);
+					auto s_ReAnimation = s_PopCap.add_space("ReAnimation"_s);
+					define_generic_class<Version>(s_ReAnimation, "Version"_s);
 					{
-						auto s_Manifest = s_Effect.add_space("Manifest"_s);
-						auto c_Effect = define_generic_class<EffectManifest, GCDF::generic_mask>(s_Manifest, "Effect"_s);
-						define_variant_class_version_method<Version, VersionPackage>(c_Effect);
+						auto s_Definition = s_ReAnimation.add_space("Definition"_s);
+						auto c_Animation = define_generic_class<AnimationDefinition, GCDF::generic_mask>(s_Definition, "Animation"_s);
+						define_variant_class_version_method<Version, VersionPackage>(c_Animation);
 					}
-					s_Effect.add_space("Encode"_s)
+					s_ReAnimation.add_space("Encode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							OByteStreamView &      effect_data,
-							EffectManifest const & effect_manifest,
-							Version const &        version
+							OByteStreamView &           data,
+							AnimationDefinition const & definition,
+							Version const &             version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::Effect::Encode<version>::do_process_effect(effect_data, effect_manifest.template get_of_index<mbw<Size>(index)>());
+										Tool::PopCap::ReAnimation::Encode<version>::process(data, definition.template get_of_index<mbw<Size>(index)>());
 									}
 								);
 							}
-						>>>("process_effect"_s);
-					s_Effect.add_space("Decode"_s)
+						>>>("process"_s);
+					s_ReAnimation.add_space("Decode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							IByteStreamView & effect_data,
-							EffectManifest &  effect_manifest,
-							Version const &   version
+							IByteStreamView &     data,
+							AnimationDefinition & definition,
+							Version const &       version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::Effect::Decode<version>::do_process_effect(effect_data, effect_manifest.template set_of_index<mbw<Size>(index)>());
+										Tool::PopCap::ReAnimation::Decode<version>::process(data, definition.template set_of_index<mbw<Size>(index)>());
 									}
 								);
 							}
-						>>>("process_effect"_s);
+						>>>("process"_s);
 				}
 				{
-					using Tool::PopCap::CharacterFontWidget2::Version;
-					using Tool::PopCap::CharacterFontWidget2::VersionPackage;
-					using Tool::PopCap::CharacterFontWidget2::Manifest;
-					using FontWidgetManifest = Variant<
-						typename Manifest<VersionPackage::element<1_ixz>>::FontWidget
+					using Tool::PopCap::Particle::Version;
+					using Tool::PopCap::Particle::VersionPackage;
+					using Tool::PopCap::Particle::Definition;
+					using ParticleDefinition = Variant<
+						typename Definition<VersionPackage::element<1_ixz>>::Particle,
+						typename Definition<VersionPackage::element<2_ixz>>::Particle,
+						typename Definition<VersionPackage::element<3_ixz>>::Particle,
+						typename Definition<VersionPackage::element<4_ixz>>::Particle
 					>;
-					auto s_CharacterFontWidget2 = s_PopCap.add_space("CharacterFontWidget2"_s);
-					define_generic_class<Version>(s_CharacterFontWidget2, "Version"_s);
+					auto s_Particle = s_PopCap.add_space("Particle"_s);
+					define_generic_class<Version>(s_Particle, "Version"_s);
 					{
-						auto s_Manifest = s_CharacterFontWidget2.add_space("Manifest"_s);
-						auto c_FontWidget = define_generic_class<FontWidgetManifest, GCDF::generic_mask>(s_Manifest, "FontWidget"_s);
-						define_variant_class_version_method<Version, VersionPackage>(c_FontWidget);
+						auto s_Definition = s_Particle.add_space("Definition"_s);
+						auto c_Particle = define_generic_class<ParticleDefinition, GCDF::generic_mask>(s_Definition, "Particle"_s);
+						define_variant_class_version_method<Version, VersionPackage>(c_Particle);
 					}
-					s_CharacterFontWidget2.add_space("Encode"_s)
+					s_Particle.add_space("Encode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							OByteStreamView &          font_widget_data,
-							FontWidgetManifest const & font_widget_manifest,
+							OByteStreamView &          data,
+							ParticleDefinition const & definition,
 							Version const &            version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::CharacterFontWidget2::Encode<version>::do_process_font_widget(font_widget_data, font_widget_manifest.template get_of_index<mbw<Size>(index)>());
+										Tool::PopCap::Particle::Encode<version>::process(data, definition.template get_of_index<mbw<Size>(index)>());
 									}
 								);
 							}
-						>>>("process_font_widget"_s);
-					s_CharacterFontWidget2.add_space("Decode"_s)
+						>>>("process"_s);
+					s_Particle.add_space("Decode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							IByteStreamView &    font_widget_data,
-							FontWidgetManifest & font_widget_manifest,
+							IByteStreamView &    data,
+							ParticleDefinition & definition,
 							Version const &      version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::CharacterFontWidget2::Decode<version>::do_process_font_widget(font_widget_data, font_widget_manifest.template set_of_index<mbw<Size>(index)>());
+										Tool::PopCap::Particle::Decode<version>::process(data, definition.template set_of_index<mbw<Size>(index)>());
 									}
 								);
 							}
-						>>>("process_font_widget"_s);
+						>>>("process"_s);
+				}
+				{
+					using Tool::PopCap::Trail::Version;
+					using Tool::PopCap::Trail::VersionPackage;
+					using Tool::PopCap::Trail::Definition;
+					using TrailDefinition = Variant<
+						typename Definition<VersionPackage::element<1_ixz>>::Trail,
+						typename Definition<VersionPackage::element<2_ixz>>::Trail,
+						typename Definition<VersionPackage::element<3_ixz>>::Trail,
+						typename Definition<VersionPackage::element<4_ixz>>::Trail
+					>;
+					auto s_Trail = s_PopCap.add_space("Trail"_s);
+					define_generic_class<Version>(s_Trail, "Version"_s);
+					{
+						auto s_Definition = s_Trail.add_space("Definition"_s);
+						auto c_Trail = define_generic_class<TrailDefinition, GCDF::generic_mask>(s_Definition, "Trail"_s);
+						define_variant_class_version_method<Version, VersionPackage>(c_Trail);
+					}
+					s_Trail.add_space("Encode"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							OByteStreamView &       data,
+							TrailDefinition const & definition,
+							Version const &         version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::Trail::Encode<version>::process(data, definition.template get_of_index<mbw<Size>(index)>());
+									}
+								);
+							}
+						>>>("process"_s);
+					s_Trail.add_space("Decode"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							IByteStreamView & data,
+							TrailDefinition & definition,
+							Version const &   version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::Trail::Decode<version>::process(data, definition.template set_of_index<mbw<Size>(index)>());
+									}
+								);
+							}
+						>>>("process"_s);
+				}
+				{
+					using Tool::PopCap::RenderEffect::Version;
+					using Tool::PopCap::RenderEffect::VersionPackage;
+					using Tool::PopCap::RenderEffect::Definition;
+					using EffectDefinition = Variant<
+						typename Definition<VersionPackage::element<1_ixz>>::Effect,
+						typename Definition<VersionPackage::element<2_ixz>>::Effect,
+						typename Definition<VersionPackage::element<3_ixz>>::Effect
+					>;
+					auto s_RenderEffect = s_PopCap.add_space("RenderEffect"_s);
+					define_generic_class<Version>(s_RenderEffect, "Version"_s);
+					{
+						auto s_Definition = s_RenderEffect.add_space("Definition"_s);
+						auto c_Effect = define_generic_class<EffectDefinition, GCDF::generic_mask>(s_Definition, "Effect"_s);
+						define_variant_class_version_method<Version, VersionPackage>(c_Effect);
+					}
+					s_RenderEffect.add_space("Encode"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							OByteStreamView &        data,
+							EffectDefinition const & definition,
+							Version const &          version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::RenderEffect::Encode<version>::process(data, definition.template get_of_index<mbw<Size>(index)>());
+									}
+								);
+							}
+						>>>("process"_s);
+					s_RenderEffect.add_space("Decode"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							IByteStreamView &  data,
+							EffectDefinition & definition,
+							Version const &    version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::RenderEffect::Decode<version>::process(data, definition.template set_of_index<mbw<Size>(index)>());
+									}
+								);
+							}
+						>>>("process"_s);
+				}
+				{
+					using Tool::PopCap::ParticleEffect::Version;
+					using Tool::PopCap::ParticleEffect::VersionPackage;
+					using Tool::PopCap::ParticleEffect::Definition;
+					using EffectDefinition = Variant<
+						typename Definition<VersionPackage::element<1_ixz>>::Effect
+					>;
+					auto s_ParticleEffect = s_PopCap.add_space("ParticleEffect"_s);
+					define_generic_class<Version>(s_ParticleEffect, "Version"_s);
+					{
+						auto s_Definition = s_ParticleEffect.add_space("Definition"_s);
+						auto c_Effect = define_generic_class<EffectDefinition, GCDF::generic_mask>(s_Definition, "Effect"_s);
+						define_variant_class_version_method<Version, VersionPackage>(c_Effect);
+					}
+					s_ParticleEffect.add_space("Encode"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							OByteStreamView &        data,
+							EffectDefinition const & definition,
+							Version const &          version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::ParticleEffect::Encode<version>::process(data, definition.template get_of_index<mbw<Size>(index)>());
+									}
+								);
+							}
+						>>>("process"_s);
+					s_ParticleEffect.add_space("Decode"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							IByteStreamView &  data,
+							EffectDefinition & definition,
+							Version const &    version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::ParticleEffect::Decode<version>::process(data, definition.template set_of_index<mbw<Size>(index)>());
+									}
+								);
+							}
+						>>>("process"_s);
+				}
+				{
+					using Tool::PopCap::CharacterFontWidget2::Version;
+					using Tool::PopCap::CharacterFontWidget2::VersionPackage;
+					using Tool::PopCap::CharacterFontWidget2::Definition;
+					using FontWidgetDefinition = Variant<
+						typename Definition<VersionPackage::element<1_ixz>>::FontWidget
+					>;
+					auto s_CharacterFontWidget2 = s_PopCap.add_space("CharacterFontWidget2"_s);
+					define_generic_class<Version>(s_CharacterFontWidget2, "Version"_s);
+					{
+						auto s_Definition = s_CharacterFontWidget2.add_space("Definition"_s);
+						auto c_FontWidget = define_generic_class<FontWidgetDefinition, GCDF::generic_mask>(s_Definition, "FontWidget"_s);
+						define_variant_class_version_method<Version, VersionPackage>(c_FontWidget);
+					}
+					s_CharacterFontWidget2.add_space("Encode"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							OByteStreamView &            data,
+							FontWidgetDefinition const & definition,
+							Version const &              version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::CharacterFontWidget2::Encode<version>::process(data, definition.template get_of_index<mbw<Size>(index)>());
+									}
+								);
+							}
+						>>>("process"_s);
+					s_CharacterFontWidget2.add_space("Decode"_s)
+						.add_function_proxy<&stp<&normalized_lambda<
+							[] (
+							IByteStreamView &      data,
+							FontWidgetDefinition & definition,
+							Version const &        version
+						) -> Void {
+								Generalization::match<VersionPackage>(
+									version,
+									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
+										Tool::PopCap::CharacterFontWidget2::Decode<version>::process(data, definition.template set_of_index<mbw<Size>(index)>());
+									}
+								);
+							}
+						>>>("process"_s);
 				}
 				{
 					using Tool::PopCap::Package::Version;
 					using Tool::PopCap::Package::VersionPackage;
-					using Tool::PopCap::Package::Manifest;
-					using PackageManifest = Variant<
-						typename Manifest<VersionPackage::element<1_ixz>>::Package,
-						typename Manifest<VersionPackage::element<2_ixz>>::Package
+					using Tool::PopCap::Package::Definition;
+					using PackageDefinition = Variant<
+						typename Definition<VersionPackage::element<1_ixz>>::Package,
+						typename Definition<VersionPackage::element<2_ixz>>::Package
 					>;
 					auto s_Package = s_PopCap.add_space("Package"_s);
 					define_generic_class<Version>(s_Package, "Version"_s);
 					{
-						auto s_Manifest = s_Package.add_space("Manifest"_s);
-						auto c_Package = define_generic_class<PackageManifest, GCDF::generic_mask>(s_Manifest, "Package"_s);
+						auto s_Definition = s_Package.add_space("Definition"_s);
+						auto c_Package = define_generic_class<PackageDefinition, GCDF::generic_mask>(s_Definition, "Package"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Package);
 					}
 					s_Package.add_space("Pack"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							OByteStreamView &       package_data,
-							PackageManifest const & package_manifest,
-							Path const &            resource_directory,
-							Version const &         version
+							OByteStreamView &         data,
+							PackageDefinition const & definition,
+							Path const &              resource_directory,
+							Version const &           version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::Package::Pack<version>::do_process_package(package_data, package_manifest.template get_of_index<mbw<Size>(index)>(), resource_directory);
+										Tool::PopCap::Package::Pack<version>::process(data, definition.template get_of_index<mbw<Size>(index)>(), resource_directory);
 									}
 								);
 							}
-						>>>("process_package"_s);
+						>>>("process"_s);
 					s_Package.add_space("Unpack"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							IByteStreamView &      package_data,
-							PackageManifest &      package_manifest,
+							IByteStreamView &      data,
+							PackageDefinition &    definition,
 							Optional<Path> const & resource_directory,
 							Version const &        version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::Package::Unpack<version>::do_process_package(package_data, package_manifest.template set_of_index<mbw<Size>(index)>(), resource_directory);
+										Tool::PopCap::Package::Unpack<version>::process(data, definition.template set_of_index<mbw<Size>(index)>(), resource_directory);
 									}
 								);
 							}
-						>>>("process_package"_s);
+						>>>("process"_s);
 				}
 				{
 					using Tool::PopCap::ResourceStreamGroup::Version;
 					using Tool::PopCap::ResourceStreamGroup::VersionPackage;
-					using Tool::PopCap::ResourceStreamGroup::Manifest;
-					using PackageManifest = Variant<
-						typename Manifest<VersionPackage::element<1_ixz>>::Package,
-						typename Manifest<VersionPackage::element<2_ixz>>::Package,
-						typename Manifest<VersionPackage::element<3_ixz>>::Package
+					using Tool::PopCap::ResourceStreamGroup::Definition;
+					using PackageDefinition = Variant<
+						typename Definition<VersionPackage::element<1_ixz>>::Package,
+						typename Definition<VersionPackage::element<2_ixz>>::Package,
+						typename Definition<VersionPackage::element<3_ixz>>::Package
 					>;
 					auto s_ResourceStreamGroup = s_PopCap.add_space("ResourceStreamGroup"_s);
 					define_generic_class<Version>(s_ResourceStreamGroup, "Version"_s);
 					{
-						auto s_Manifest = s_ResourceStreamGroup.add_space("Manifest"_s);
-						auto c_Package = define_generic_class<PackageManifest, GCDF::generic_mask>(s_Manifest, "Package"_s);
+						auto s_Definition = s_ResourceStreamGroup.add_space("Definition"_s);
+						auto c_Package = define_generic_class<PackageDefinition, GCDF::generic_mask>(s_Definition, "Package"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Package);
 					}
 					s_ResourceStreamGroup.add_space("Pack"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							OByteStreamView &       package_data,
-							PackageManifest const & package_manifest,
-							Path const &            resource_directory,
-							Version const &         version
+							OByteStreamView &         data,
+							PackageDefinition const & definition,
+							Path const &              resource_directory,
+							Version const &           version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ResourceStreamGroup::Pack<version>::do_process_package(package_data, package_manifest.template get_of_index<mbw<Size>(index)>(), resource_directory);
+										Tool::PopCap::ResourceStreamGroup::Pack<version>::process(data, definition.template get_of_index<mbw<Size>(index)>(), resource_directory);
 									}
 								);
 							}
-						>>>("process_package"_s);
+						>>>("process"_s);
 					s_ResourceStreamGroup.add_space("Unpack"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							IByteStreamView &      package_data,
-							PackageManifest &      package_manifest,
+							IByteStreamView &      data,
+							PackageDefinition &    definition,
 							Optional<Path> const & resource_directory,
 							Version const &        version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ResourceStreamGroup::Unpack<version>::do_process_package(package_data, package_manifest.template set_of_index<mbw<Size>(index)>(), resource_directory);
+										Tool::PopCap::ResourceStreamGroup::Unpack<version>::process(data, definition.template set_of_index<mbw<Size>(index)>(), resource_directory);
 									}
 								);
 							}
-						>>>("process_package"_s);
+						>>>("process"_s);
 				}
 				{
 					using Tool::PopCap::ResourceStreamBundle::Version;
 					using Tool::PopCap::ResourceStreamBundle::VersionPackage;
-					using Tool::PopCap::ResourceStreamBundle::Manifest;
+					using Tool::PopCap::ResourceStreamBundle::Definition;
 					using Tool::PopCap::ResourceStreamBundle::Description;
-					using PackageManifest = Variant<
-						typename Manifest<VersionPackage::element<1_ixz>>::Package,
-						typename Manifest<VersionPackage::element<2_ixz>>::Package,
-						typename Manifest<VersionPackage::element<3_ixz>>::Package,
-						typename Manifest<VersionPackage::element<4_ixz>>::Package,
-						typename Manifest<VersionPackage::element<5_ixz>>::Package,
-						typename Manifest<VersionPackage::element<6_ixz>>::Package
+					using PackageDefinition = Variant<
+						typename Definition<VersionPackage::element<1_ixz>>::Package,
+						typename Definition<VersionPackage::element<2_ixz>>::Package,
+						typename Definition<VersionPackage::element<3_ixz>>::Package,
+						typename Definition<VersionPackage::element<4_ixz>>::Package,
+						typename Definition<VersionPackage::element<5_ixz>>::Package,
+						typename Definition<VersionPackage::element<6_ixz>>::Package
 					>;
 					using PackageDescriptionOptional = Variant<
 						Optional<typename Description<VersionPackage::element<1_ixz>>::Package>,
@@ -1504,8 +1553,8 @@ namespace TwinStar::Core::Executor::Interface {
 					auto s_ResourceStreamBundle = s_PopCap.add_space("ResourceStreamBundle"_s);
 					define_generic_class<Version>(s_ResourceStreamBundle, "Version"_s);
 					{
-						auto s_Manifest = s_ResourceStreamBundle.add_space("Manifest"_s);
-						auto c_Package = define_generic_class<PackageManifest, GCDF::generic_mask>(s_Manifest, "Package"_s);
+						auto s_Definition = s_ResourceStreamBundle.add_space("Definition"_s);
+						auto c_Package = define_generic_class<PackageDefinition, GCDF::generic_mask>(s_Definition, "Package"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Package);
 					}
 					{
@@ -1516,9 +1565,9 @@ namespace TwinStar::Core::Executor::Interface {
 					s_ResourceStreamBundle.add_space("Pack"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							OByteStreamView &                  package_data,
-							PackageManifest const &            package_manifest,
-							PackageDescriptionOptional const & package_description,
+							OByteStreamView &                  data,
+							PackageDefinition const &          definition,
+							PackageDescriptionOptional const & description,
 							Path const &                       resource_directory,
 							Optional<Path> const &             packet_file,
 							Optional<Path> const &             new_packet_file,
@@ -1527,17 +1576,17 @@ namespace TwinStar::Core::Executor::Interface {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ResourceStreamBundle::Pack<version>::do_process_package(package_data, package_manifest.template get_of_index<mbw<Size>(index)>(), package_description.template get_of_index<mbw<Size>(index)>(), resource_directory, packet_file, new_packet_file);
+										Tool::PopCap::ResourceStreamBundle::Pack<version>::process(data, definition.template get_of_index<mbw<Size>(index)>(), description.template get_of_index<mbw<Size>(index)>(), resource_directory, packet_file, new_packet_file);
 									}
 								);
 							}
-						>>>("process_package"_s);
+						>>>("process"_s);
 					s_ResourceStreamBundle.add_space("Unpack"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
-							IByteStreamView &            package_data,
-							PackageManifest &            package_manifest,
-							PackageDescriptionOptional & package_description,
+							IByteStreamView &            data,
+							PackageDefinition &          definition,
+							PackageDescriptionOptional & description,
 							Optional<Path> const &       resource_directory,
 							Optional<Path> const &       packet_file,
 							Version const &              version
@@ -1545,11 +1594,11 @@ namespace TwinStar::Core::Executor::Interface {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ResourceStreamBundle::Unpack<version>::do_process_package(package_data, package_manifest.template set_of_index<mbw<Size>(index)>(), package_description.template set_of_index<mbw<Size>(index)>(), resource_directory, packet_file);
+										Tool::PopCap::ResourceStreamBundle::Unpack<version>::process(data, definition.template set_of_index<mbw<Size>(index)>(), description.template set_of_index<mbw<Size>(index)>(), resource_directory, packet_file);
 									}
 								);
 							}
-						>>>("process_package"_s);
+						>>>("process"_s);
 				}
 				{
 					using Tool::PopCap::ResourceStreamBundlePatch::Version;
@@ -1568,11 +1617,11 @@ namespace TwinStar::Core::Executor::Interface {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ResourceStreamBundlePatch::Encode<version>::do_process_whole(before, after, patch, use_raw_packet);
+										Tool::PopCap::ResourceStreamBundlePatch::Encode<version>::process(before, after, patch, use_raw_packet);
 									}
 								);
 							}
-						>>>("process_whole"_s);
+						>>>("process"_s);
 					s_ResourceStreamBundlePatch.add_space("Decode"_s)
 						.add_function_proxy<&stp<&normalized_lambda<
 							[] (
@@ -1585,11 +1634,11 @@ namespace TwinStar::Core::Executor::Interface {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ResourceStreamBundlePatch::Decode<version>::do_process_whole(before, after, patch, use_raw_packet);
+										Tool::PopCap::ResourceStreamBundlePatch::Decode<version>::process(before, after, patch, use_raw_packet);
 									}
 								);
 							}
-						>>>("process_whole"_s);
+						>>>("process"_s);
 				}
 			}
 			// Miscellaneous
@@ -1598,16 +1647,25 @@ namespace TwinStar::Core::Executor::Interface {
 				{
 					auto s_XboxTiledTexture = s_Miscellaneous.add_space("XboxTiledTexture"_s);
 					s_XboxTiledTexture.add_space("Encode"_s)
-						.add_function_proxy<&stp<&Tool::Miscellaneous::XboxTiledTexture::Encode::do_process_image>>("process_image"_s);
+						.add_function_proxy<&stp<&Tool::Miscellaneous::XboxTiledTexture::Encode::process>>("process"_s);
 					s_XboxTiledTexture.add_space("Decode"_s)
-						.add_function_proxy<&stp<&Tool::Miscellaneous::XboxTiledTexture::Decode::do_process_image>>("process_image"_s);
+						.add_function_proxy<&stp<&Tool::Miscellaneous::XboxTiledTexture::Decode::process>>("process"_s);
 				}
 				{
 					auto s_PvZ2CNAlphaPaletteTexture = s_Miscellaneous.add_space("PvZ2CNAlphaPaletteTexture"_s);
 					s_PvZ2CNAlphaPaletteTexture.add_space("Encode"_s)
-						.add_function_proxy<&stp<&Tool::Miscellaneous::PvZ2CNAlphaPaletteTexture::Encode::do_process_image>>("process_image"_s);
+						.add_function_proxy<&stp<&Tool::Miscellaneous::PvZ2CNAlphaPaletteTexture::Encode::process>>("process"_s);
 					s_PvZ2CNAlphaPaletteTexture.add_space("Decode"_s)
-						.add_function_proxy<&stp<&Tool::Miscellaneous::PvZ2CNAlphaPaletteTexture::Decode::do_process_image>>("process_image"_s);
+						.add_function_proxy<&stp<&Tool::Miscellaneous::PvZ2CNAlphaPaletteTexture::Decode::process>>("process"_s);
+				}
+				{
+					auto s_PvZ2CNCryptData = s_Miscellaneous.add_space("PvZ2CNCryptData"_s);
+					s_PvZ2CNCryptData.add_space("Encrypt"_s)
+						.add_function_proxy<&stp<&Tool::Miscellaneous::PvZ2CNCryptData::Encrypt::process>>("process"_s)
+						.add_function_proxy<&stp<&Tool::Miscellaneous::PvZ2CNCryptData::Encrypt::estimate>>("estimate"_s);
+					s_PvZ2CNCryptData.add_space("Decrypt"_s)
+						.add_function_proxy<&stp<&Tool::Miscellaneous::PvZ2CNCryptData::Decrypt::process>>("process"_s)
+						.add_function_proxy<&stp<&Tool::Miscellaneous::PvZ2CNCryptData::Decrypt::estimate>>("estimate"_s);
 				}
 			}
 		}

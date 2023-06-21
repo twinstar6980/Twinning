@@ -1,32 +1,32 @@
 #pragma once
 
 #include "core/utility/container/list/list_view.hpp"
-#include "core/utility/container/stream/stream_method.hpp"
+#include "core/utility/container/stream/stream_mode.hpp"
 
 namespace TwinStar::Core {
 
 	#pragma region type
 
-	template <typename TElement, auto t_method, template <typename, auto> typename TMListView = ListView> requires
+	template <typename TElement, auto t_mode, template <typename, auto> typename TMListView = ListView> requires
 		CategoryConstraint<IsPureInstance<TElement>>
-		&& (IsSameV<t_method, StreamMethod>)
+		&& (IsSameV<t_mode, StreamMode>)
 	class StreamView {
 
 	private:
 
-		using IOStream = StreamView<TElement, StreamMethod::Constant::io(), TMListView>;
+		using IOStream = StreamView<TElement, StreamMode::Constant::io(), TMListView>;
 
-		using IStream = StreamView<TElement, StreamMethod::Constant::i(), TMListView>;
+		using IStream = StreamView<TElement, StreamMode::Constant::i(), TMListView>;
 
-		using OStream = StreamView<TElement, StreamMethod::Constant::o(), TMListView>;
+		using OStream = StreamView<TElement, StreamMode::Constant::o(), TMListView>;
 
 	public:
 
 		using Element = TElement;
 
-		inline static constexpr auto method = StreamMethod{t_method};
+		inline static constexpr auto mode = StreamMode{t_mode};
 
-		using ListView = TMListView<Element, t_method == StreamMethod::Constant::i()>;
+		using ListView = TMListView<Element, t_mode == StreamMode::Constant::i()>;
 
 		using QElement = typename ListView::QElement;
 
@@ -35,7 +35,7 @@ namespace TwinStar::Core {
 	protected:
 
 		ListView m_view{};
-		Size     m_position{k_begin_index};
+		Size     m_position{};
 
 	public:
 
@@ -83,12 +83,12 @@ namespace TwinStar::Core {
 		// ----------------
 
 		implicit operator IStream & () requires
-			(method == StreamMethod::Constant::io()) {
+			(mode == StreamMode::Constant::io()) {
 			return thiz.as_input_stream();
 		}
 
 		implicit operator OStream & () requires
-			(method == StreamMethod::Constant::io()) {
+			(mode == StreamMode::Constant::io()) {
 			return thiz.as_output_stream();
 		}
 
@@ -279,7 +279,7 @@ namespace TwinStar::Core {
 		auto write (
 			Element const & value
 		) -> Void requires
-			(method == StreamMethod::Constant::o() || method == StreamMethod::Constant::io()) {
+			(mode == StreamMode::Constant::o() || mode == StreamMode::Constant::io()) {
 			assert_test(!thiz.full());
 			thiz.next() = value;
 			return;
@@ -288,7 +288,7 @@ namespace TwinStar::Core {
 		auto read (
 			Element & value
 		) -> Void requires
-			(method == StreamMethod::Constant::i() || method == StreamMethod::Constant::io()) {
+			(mode == StreamMode::Constant::i() || mode == StreamMode::Constant::io()) {
 			assert_test(!thiz.full());
 			value = thiz.next();
 			return;
@@ -299,7 +299,7 @@ namespace TwinStar::Core {
 		auto write_constant (
 			Element const & value
 		) -> Void requires
-			(method == StreamMethod::Constant::o() || method == StreamMethod::Constant::io()) {
+			(mode == StreamMode::Constant::o() || mode == StreamMode::Constant::io()) {
 			thiz.write(value);
 			return;
 		}
@@ -307,7 +307,7 @@ namespace TwinStar::Core {
 		auto read_constant (
 			Element const & value
 		) -> Void requires
-			(method == StreamMethod::Constant::i() || method == StreamMethod::Constant::io()) {
+			(mode == StreamMode::Constant::i() || mode == StreamMode::Constant::io()) {
 			auto temporary_value = Element{};
 			thiz.read(temporary_value);
 			assert_test(temporary_value == value);
@@ -318,7 +318,7 @@ namespace TwinStar::Core {
 
 		auto read_of (
 		) -> Element requires
-			(method == StreamMethod::Constant::i() || method == StreamMethod::Constant::io()) {
+			(mode == StreamMode::Constant::i() || mode == StreamMode::Constant::io()) {
 			auto value = Element{};
 			thiz.read(value);
 			return value;
@@ -332,7 +332,7 @@ namespace TwinStar::Core {
 			Element const & value,
 			Size const &    size
 		) -> Void requires
-			(method == StreamMethod::Constant::o() || method == StreamMethod::Constant::io()) {
+			(mode == StreamMode::Constant::o() || mode == StreamMode::Constant::io()) {
 			assert_test(size <= thiz.reserve());
 			auto space = thiz.forward_view(size);
 			for (auto & element : space) {
@@ -345,7 +345,7 @@ namespace TwinStar::Core {
 			Element const & value,
 			Size const &    size
 		) -> Void requires
-			(method == StreamMethod::Constant::i() || method == StreamMethod::Constant::io()) {
+			(mode == StreamMode::Constant::i() || mode == StreamMode::Constant::io()) {
 			assert_test(size <= thiz.reserve());
 			auto space = thiz.forward_view(size);
 			for (auto & element : space) {
@@ -360,13 +360,13 @@ namespace TwinStar::Core {
 
 		auto as_input_stream (
 		) -> IStream & requires
-			(method == StreamMethod::Constant::io()) {
+			(mode == StreamMode::Constant::io()) {
 			return self_cast<IStream>(thiz);
 		}
 
 		auto as_output_stream (
 		) -> OStream & requires
-			(method == StreamMethod::Constant::io()) {
+			(mode == StreamMode::Constant::io()) {
 			return self_cast<OStream>(thiz);
 		}
 
@@ -380,15 +380,15 @@ namespace TwinStar::Core {
 
 	template <typename Element, template <typename, auto> typename ListView = ListView> requires
 		AutoConstraint
-	using IOStreamView = StreamView<Element, StreamMethod::Constant::io(), ListView>;
+	using IOStreamView = StreamView<Element, StreamMode::Constant::io(), ListView>;
 
 	template <typename Element, template <typename, auto> typename ListView = ListView> requires
 		AutoConstraint
-	using IStreamView = StreamView<Element, StreamMethod::Constant::i(), ListView>;
+	using IStreamView = StreamView<Element, StreamMode::Constant::i(), ListView>;
 
 	template <typename Element, template <typename, auto> typename ListView = ListView> requires
 		AutoConstraint
-	using OStreamView = StreamView<Element, StreamMethod::Constant::o(), ListView>;
+	using OStreamView = StreamView<Element, StreamMode::Constant::o(), ListView>;
 
 	#pragma endregion
 

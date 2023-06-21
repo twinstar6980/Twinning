@@ -60,9 +60,9 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 							(initial) => (Console.size(null, null, initial)),
 						);
 					}
-					let manifest_file = `${bundle_directory}/manifest.json`;
+					let definition_file = `${bundle_directory}/definition.json`;
 					let embedded_media_directory = `${bundle_directory}/embedded_media`;
-					CoreX.Tool.Wwise.SoundBank.encode_fs(data_file, manifest_file, embedded_media_directory, { number: version_number as any }, buffer_size);
+					CoreX.Tool.Wwise.SoundBank.encode_fs(data_file, definition_file, embedded_media_directory, { number: version_number as any }, buffer_size);
 					return [`${data_file}`];
 				},
 				default_argument: {
@@ -112,9 +112,9 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 							(initial) => (Console.option(Console.option_integer(CoreX.Tool.Wwise.SoundBank.VersionNumberE), null, null, initial)),
 						);
 					}
-					let manifest_file = `${bundle_directory}/manifest.json`;
+					let definition_file = `${bundle_directory}/definition.json`;
 					let embedded_media_directory = `${bundle_directory}/embedded_media`;
-					CoreX.Tool.Wwise.SoundBank.decode_fs(data_file, manifest_file, embedded_media_directory, { number: version_number as any });
+					CoreX.Tool.Wwise.SoundBank.decode_fs(data_file, definition_file, embedded_media_directory, { number: version_number as any });
 					return [`${bundle_directory}`];
 				},
 				default_argument: {
@@ -181,9 +181,9 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 						(item) => {
 							let bundle_directory = `${bundle_directory_directory}/${item}`;
 							let data_file = `${data_file_directory}/${item.slice(0, -7)}`;
-							let manifest_file = `${bundle_directory}/manifest.json`;
+							let definition_file = `${bundle_directory}/definition.json`;
 							let embedded_media_directory = `${bundle_directory}/embedded_media`;
-							CoreX.Tool.Wwise.SoundBank.encode_fs(data_file, manifest_file, embedded_media_directory, { number: version_number as any }, data_buffer.view());
+							CoreX.Tool.Wwise.SoundBank.encode_fs(data_file, definition_file, embedded_media_directory, { number: version_number as any }, data_buffer.view());
 						},
 					);
 					return [`${data_file_directory}`];
@@ -241,9 +241,9 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 						(item) => {
 							let data_file = `${data_file_directory}/${item}`;
 							let bundle_directory = `${bundle_directory_directory}/${item}.bundle`;
-							let manifest_file = `${bundle_directory}/manifest.json`;
+							let definition_file = `${bundle_directory}/definition.json`;
 							let embedded_media_directory = `${bundle_directory}/embedded_media`;
-							CoreX.Tool.Wwise.SoundBank.decode_fs(data_file, manifest_file, embedded_media_directory, { number: version_number as any });
+							CoreX.Tool.Wwise.SoundBank.decode_fs(data_file, definition_file, embedded_media_directory, { number: version_number as any });
 						},
 					);
 					return [`${bundle_directory_directory}`];

@@ -25,19 +25,19 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					manifest_file: Executor.Argument<string, false>;
+					definition_file: Executor.Argument<string, false>;
 					data_file: Executor.Argument<string, true>;
 					version_number: Executor.Argument<bigint, false>;
 					buffer_size: Executor.Argument<string, false>;
 				}) {
-					let manifest_file: string;
+					let definition_file: string;
 					let data_file: string;
 					let version_number: bigint;
 					let buffer_size: bigint;
 					{
-						manifest_file = Executor.request_argument(
-							Executor.query_argument_name(this.id, 'manifest_file'),
-							a.manifest_file,
+						definition_file = Executor.request_argument(
+							Executor.query_argument_name(this.id, 'definition_file'),
+							a.definition_file,
 							(value) => (value),
 							null,
 							(initial) => (Console.path('file', ['in'], null, null, initial)),
@@ -46,7 +46,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							Executor.query_argument_name(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
-							() => (manifest_file.replace(/((\.pam)(\.json))?$/i, '.pam')),
+							() => (definition_file.replace(/((\.pam)(\.json))?$/i, '.pam')),
 							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
@@ -64,18 +64,18 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							(initial) => (Console.size(null, null, initial)),
 						);
 					}
-					CoreX.Tool.PopCap.Animation.encode_fs(data_file, manifest_file, { number: version_number as any }, buffer_size);
+					CoreX.Tool.PopCap.Animation.encode_fs(data_file, definition_file, { number: version_number as any }, buffer_size);
 					return [`${data_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
-					manifest_file: undefined!,
+					definition_file: undefined!,
 					data_file: '?default',
 					version_number: configuration.version_number,
 					buffer_size: configuration.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.pam)(\.json)$/i]]),
-				input_forwarder: 'manifest_file',
+				input_forwarder: 'definition_file',
 			}),
 			Executor.method_of({
 				id: 'popcap.animation.decode',
@@ -85,11 +85,11 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				},
 				worker(a: Entry.CommonArgument & {
 					data_file: Executor.Argument<string, false>;
-					manifest_file: Executor.Argument<string, true>;
+					definition_file: Executor.Argument<string, true>;
 					version_number: Executor.Argument<bigint, false>;
 				}) {
 					let data_file: string;
-					let manifest_file: string;
+					let definition_file: string;
 					let version_number: bigint;
 					{
 						data_file = Executor.request_argument(
@@ -99,9 +99,9 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							null,
 							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
-						manifest_file = Executor.request_argument(
-							Executor.query_argument_name(this.id, 'manifest_file'),
-							a.manifest_file,
+						definition_file = Executor.request_argument(
+							Executor.query_argument_name(this.id, 'definition_file'),
+							a.definition_file,
 							(value) => (value),
 							() => (data_file.replace(/((\.pam))?$/i, '.pam.json')),
 							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
@@ -114,13 +114,13 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Animation.VersionNumberE), null, null, initial)),
 						);
 					}
-					CoreX.Tool.PopCap.Animation.decode_fs(data_file, manifest_file, { number: version_number as any });
-					return [`${manifest_file}`];
+					CoreX.Tool.PopCap.Animation.decode_fs(data_file, definition_file, { number: version_number as any });
+					return [`${definition_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
 					data_file: undefined!,
-					manifest_file: '?default',
+					definition_file: '?default',
 					version_number: configuration.version_number,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.pam)$/i]]),
@@ -154,7 +154,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
-					let raw = CoreX.JSON.read_fs_js<Core.Tool.PopCap.Animation.Manifest.JS_N.Animation>(raw_file);
+					let raw = CoreX.JSON.read_fs_js<Core.Tool.PopCap.Animation.Definition.JS_N.Animation>(raw_file);
 					Support.PopCap.Animation.Convert.Flash.From.from_fsh(raw, ripe_directory);
 					Support.PopCap.Animation.Convert.Flash.SourceManager.create_fsh(ripe_directory, raw);
 					Support.PopCap.Animation.Convert.Flash.create_xfl_content_file(ripe_directory);
@@ -293,19 +293,19 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					manifest_file_directory: Executor.Argument<string, false>;
+					definition_file_directory: Executor.Argument<string, false>;
 					data_file_directory: Executor.Argument<string, true>;
 					version_number: Executor.Argument<bigint, false>;
 					buffer_size: Executor.Argument<string, false>;
 				}) {
-					let manifest_file_directory: string;
+					let definition_file_directory: string;
 					let data_file_directory: string;
 					let version_number: bigint;
 					let buffer_size: bigint;
 					{
-						manifest_file_directory = Executor.request_argument(
-							Executor.query_argument_name(this.id, 'manifest_file_directory'),
-							a.manifest_file_directory,
+						definition_file_directory = Executor.request_argument(
+							Executor.query_argument_name(this.id, 'definition_file_directory'),
+							a.definition_file_directory,
 							(value) => (value),
 							null,
 							(initial) => (Console.path('directory', ['in'], null, null, initial)),
@@ -314,7 +314,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							Executor.query_argument_name(this.id, 'data_file_directory'),
 							a.data_file_directory,
 							(value) => (value),
-							() => (manifest_file_directory.replace(/$/i, '.encode')),
+							() => (definition_file_directory.replace(/$/i, '.encode')),
 							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_number = Executor.request_argument(
@@ -334,25 +334,25 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					}
 					let data_buffer = Core.ByteArray.allocate(Core.Size.value(buffer_size));
 					simple_batch_execute(
-						manifest_file_directory,
+						definition_file_directory,
 						['file', /.+(\.pam)(\.json)$/i],
 						(item) => {
-							let manifest_file = `${manifest_file_directory}/${item}`;
+							let definition_file = `${definition_file_directory}/${item}`;
 							let data_file = `${data_file_directory}/${item.slice(0, -5)}`;
-							CoreX.Tool.PopCap.Animation.encode_fs(data_file, manifest_file, { number: version_number as any }, data_buffer.view());
+							CoreX.Tool.PopCap.Animation.encode_fs(data_file, definition_file, { number: version_number as any }, data_buffer.view());
 						},
 					);
 					return [`${data_file_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
-					manifest_file_directory: undefined!,
+					definition_file_directory: undefined!,
 					data_file_directory: '?default',
 					version_number: configuration.version_number,
 					buffer_size: configuration.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
-				input_forwarder: 'manifest_file_directory',
+				input_forwarder: 'definition_file_directory',
 			}),
 			Executor.method_of({
 				id: 'popcap.animation.decode.batch',
@@ -362,11 +362,11 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				},
 				worker(a: Entry.CommonArgument & {
 					data_file_directory: Executor.Argument<string, false>;
-					manifest_file_directory: Executor.Argument<string, true>;
+					definition_file_directory: Executor.Argument<string, true>;
 					version_number: Executor.Argument<bigint, false>;
 				}) {
 					let data_file_directory: string;
-					let manifest_file_directory: string;
+					let definition_file_directory: string;
 					let version_number: bigint;
 					{
 						data_file_directory = Executor.request_argument(
@@ -376,9 +376,9 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							null,
 							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
-						manifest_file_directory = Executor.request_argument(
-							Executor.query_argument_name(this.id, 'manifest_file_directory'),
-							a.manifest_file_directory,
+						definition_file_directory = Executor.request_argument(
+							Executor.query_argument_name(this.id, 'definition_file_directory'),
+							a.definition_file_directory,
 							(value) => (value),
 							() => (data_file_directory.replace(/$/i, '.decode')),
 							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
@@ -396,16 +396,16 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 						['file', /.+(\.pam)$/i],
 						(item) => {
 							let data_file = `${data_file_directory}/${item}`;
-							let manifest_file = `${manifest_file_directory}/${item}.json`;
-							CoreX.Tool.PopCap.Animation.decode_fs(data_file, manifest_file, { number: version_number as any });
+							let definition_file = `${definition_file_directory}/${item}.json`;
+							CoreX.Tool.PopCap.Animation.decode_fs(data_file, definition_file, { number: version_number as any });
 						},
 					);
-					return [`${manifest_file_directory}`];
+					return [`${definition_file_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
 					data_file_directory: undefined!,
-					manifest_file_directory: '?default',
+					definition_file_directory: '?default',
 					version_number: configuration.version_number,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
@@ -445,7 +445,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 						(item) => {
 							let raw_file = `${raw_file_directory}/${item}`;
 							let ripe_directory = `${ripe_directory_directory}/${item.slice(0, -5)}.xfl`;
-							let raw = CoreX.JSON.read_fs_js<Core.Tool.PopCap.Animation.Manifest.JS_N.Animation>(raw_file);
+							let raw = CoreX.JSON.read_fs_js<Core.Tool.PopCap.Animation.Definition.JS_N.Animation>(raw_file);
 							Support.PopCap.Animation.Convert.Flash.From.from_fsh(raw, ripe_directory);
 							Support.PopCap.Animation.Convert.Flash.SourceManager.create_fsh(ripe_directory, raw);
 							Support.PopCap.Animation.Convert.Flash.create_xfl_content_file(ripe_directory);

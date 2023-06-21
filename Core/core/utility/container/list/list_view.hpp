@@ -28,8 +28,8 @@ namespace TwinStar::Core {
 
 	protected:
 
-		QIterator m_data{k_null_pointer};
-		Size      m_size{k_none_size};
+		QIterator m_data{};
+		Size      m_size{};
 
 	public:
 

@@ -211,14 +211,14 @@ namespace TwinStar::Shell {
 			#if defined M_system_linux || defined M_system_macintosh
 			switch (hash_string(type)) {
 				case hash_string("file"sv) : {
-					auto selection_raw = Third::tinyfiledialogs::tinyfd_selectFolderDialog("", nullptr);
+					auto selection_raw = Third::tinyfiledialogs::tinyfd_openFileDialog("", nullptr, 0, nullptr, nullptr, false);
 					if (selection_raw != nullptr) {
 						selection.emplace(selection_raw);
 					}
 					break;
 				}
 				case hash_string("directory"sv) : {
-					auto selection_raw = Third::tinyfiledialogs::tinyfd_openFileDialog("", nullptr, 0, nullptr, nullptr, false);
+					auto selection_raw = Third::tinyfiledialogs::tinyfd_selectFolderDialog("", nullptr);
 					if (selection_raw != nullptr) {
 						selection.emplace(selection_raw);
 					}

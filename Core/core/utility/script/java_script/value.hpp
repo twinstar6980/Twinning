@@ -51,8 +51,8 @@ namespace TwinStar::Core::JavaScript {
 
 	protected:
 
-		Pointer<quickjs::JSRuntime> m_runtime;
-		Boolean                     m_is_holder;
+		Pointer<quickjs::JSRuntime> m_runtime{};
+		Boolean                     m_is_holder{};
 
 	protected:
 
@@ -199,8 +199,8 @@ namespace TwinStar::Core::JavaScript {
 
 	protected:
 
-		Pointer<quickjs::JSContext> m_context;
-		Boolean                     m_is_holder;
+		Pointer<quickjs::JSContext> m_context{};
+		Boolean                     m_is_holder{};
 
 	protected:
 
@@ -360,8 +360,8 @@ namespace TwinStar::Core::JavaScript {
 
 	protected:
 
-		Optional<ZPointer<quickjs::JSContext>> m_context;
-		quickjs::JSValue                       m_value;
+		Optional<ZPointer<quickjs::JSContext>> m_context{};
+		quickjs::JSValue                       m_value{};
 
 	protected:
 

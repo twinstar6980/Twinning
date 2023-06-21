@@ -22,21 +22,21 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					manifest_file: Executor.Argument<string, false>;
+					definition_file: Executor.Argument<string, false>;
 					data_file: Executor.Argument<string, true>;
 					version_platform: Executor.Argument<string, false>;
 					version_variant_64: Executor.Argument<boolean, false>;
 					buffer_size: Executor.Argument<string, false>;
 				}) {
-					let manifest_file: string;
+					let definition_file: string;
 					let data_file: string;
 					let version_platform: string;
 					let version_variant_64: boolean;
 					let buffer_size: bigint;
 					{
-						manifest_file = Executor.request_argument(
-							Executor.query_argument_name(this.id, 'manifest_file'),
-							a.manifest_file,
+						definition_file = Executor.request_argument(
+							Executor.query_argument_name(this.id, 'definition_file'),
+							a.definition_file,
 							(value) => (value),
 							null,
 							(initial) => (Console.path('file', ['in'], null, null, initial)),
@@ -45,7 +45,7 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 							Executor.query_argument_name(this.id, 'data_file'),
 							a.data_file,
 							(value) => (value),
-							() => (manifest_file.replace(/((\.particle)(\.json))?$/i, '.xml.compiled')),
+							() => (definition_file.replace(/((\.particle)(\.json))?$/i, '.xml.compiled')),
 							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_platform = Executor.request_argument(
@@ -70,19 +70,19 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 							(initial) => (Console.size(null, null, initial)),
 						);
 					}
-					CoreX.Tool.PopCap.Particle.encode_fs(data_file, manifest_file, { platform: version_platform as any, variant_64: version_variant_64 }, buffer_size);
+					CoreX.Tool.PopCap.Particle.encode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 }, buffer_size);
 					return [`${data_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
-					manifest_file: undefined!,
+					definition_file: undefined!,
 					data_file: '?default',
 					version_platform: configuration.version_platform,
 					version_variant_64: configuration.version_variant_64,
 					buffer_size: configuration.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.particle)(\.json)$/i]]),
-				input_forwarder: 'manifest_file',
+				input_forwarder: 'definition_file',
 			}),
 			Executor.method_of({
 				id: 'popcap.particle.decode',
@@ -92,12 +92,12 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 				},
 				worker(a: Entry.CommonArgument & {
 					data_file: Executor.Argument<string, false>;
-					manifest_file: Executor.Argument<string, true>;
+					definition_file: Executor.Argument<string, true>;
 					version_platform: Executor.Argument<string, false>;
 					version_variant_64: Executor.Argument<boolean, false>;
 				}) {
 					let data_file: string;
-					let manifest_file: string;
+					let definition_file: string;
 					let version_platform: string;
 					let version_variant_64: boolean;
 					{
@@ -108,9 +108,9 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 							null,
 							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
-						manifest_file = Executor.request_argument(
-							Executor.query_argument_name(this.id, 'manifest_file'),
-							a.manifest_file,
+						definition_file = Executor.request_argument(
+							Executor.query_argument_name(this.id, 'definition_file'),
+							a.definition_file,
 							(value) => (value),
 							() => (data_file.replace(/((\.xml)(\.compiled))?$/i, '.particle.json')),
 							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
@@ -130,13 +130,13 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 							(initial) => (Console.confirmation(null, null, initial)),
 						);
 					}
-					CoreX.Tool.PopCap.Particle.decode_fs(data_file, manifest_file, { platform: version_platform as any, variant_64: version_variant_64 });
-					return [`${manifest_file}`];
+					CoreX.Tool.PopCap.Particle.decode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 });
+					return [`${definition_file}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
 					data_file: undefined!,
-					manifest_file: '?default',
+					definition_file: '?default',
 					version_platform: configuration.version_platform,
 					version_variant_64: configuration.version_variant_64,
 				},
@@ -152,21 +152,21 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 					return Executor.query_method_name(this.id);
 				},
 				worker(a: Entry.CommonArgument & {
-					manifest_file_directory: Executor.Argument<string, false>;
+					definition_file_directory: Executor.Argument<string, false>;
 					data_file_directory: Executor.Argument<string, true>;
 					version_platform: Executor.Argument<string, false>;
 					version_variant_64: Executor.Argument<boolean, false>;
 					buffer_size: Executor.Argument<string, false>;
 				}) {
-					let manifest_file_directory: string;
+					let definition_file_directory: string;
 					let data_file_directory: string;
 					let version_platform: string;
 					let version_variant_64: boolean;
 					let buffer_size: bigint;
 					{
-						manifest_file_directory = Executor.request_argument(
-							Executor.query_argument_name(this.id, 'manifest_file_directory'),
-							a.manifest_file_directory,
+						definition_file_directory = Executor.request_argument(
+							Executor.query_argument_name(this.id, 'definition_file_directory'),
+							a.definition_file_directory,
 							(value) => (value),
 							null,
 							(initial) => (Console.path('directory', ['in'], null, null, initial)),
@@ -175,7 +175,7 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 							Executor.query_argument_name(this.id, 'data_file_directory'),
 							a.data_file_directory,
 							(value) => (value),
-							() => (manifest_file_directory.replace(/$/i, '.encode')),
+							() => (definition_file_directory.replace(/$/i, '.encode')),
 							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 						version_platform = Executor.request_argument(
@@ -202,26 +202,26 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 					}
 					let data_buffer = Core.ByteArray.allocate(Core.Size.value(buffer_size));
 					simple_batch_execute(
-						manifest_file_directory,
+						definition_file_directory,
 						['file', /.+(\.particle)(\.json)$/i],
 						(item) => {
-							let manifest_file = `${manifest_file_directory}/${item}`;
+							let definition_file = `${definition_file_directory}/${item}`;
 							let data_file = `${data_file_directory}/${item.slice(0, -14)}.xml.compiled`;
-							CoreX.Tool.PopCap.Particle.encode_fs(data_file, manifest_file, { platform: version_platform as any, variant_64: version_variant_64 }, data_buffer.view());
+							CoreX.Tool.PopCap.Particle.encode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 }, data_buffer.view());
 						},
 					);
 					return [`${data_file_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
-					manifest_file_directory: undefined!,
+					definition_file_directory: undefined!,
 					data_file_directory: '?default',
 					version_platform: configuration.version_platform,
 					version_variant_64: configuration.version_variant_64,
 					buffer_size: configuration.encode_buffer_size,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
-				input_forwarder: 'manifest_file_directory',
+				input_forwarder: 'definition_file_directory',
 			}),
 			Executor.method_of({
 				id: 'popcap.particle.decode.batch',
@@ -231,12 +231,12 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 				},
 				worker(a: Entry.CommonArgument & {
 					data_file_directory: Executor.Argument<string, false>;
-					manifest_file_directory: Executor.Argument<string, true>;
+					definition_file_directory: Executor.Argument<string, true>;
 					version_platform: Executor.Argument<string, false>;
 					version_variant_64: Executor.Argument<boolean, false>;
 				}) {
 					let data_file_directory: string;
-					let manifest_file_directory: string;
+					let definition_file_directory: string;
 					let version_platform: string;
 					let version_variant_64: boolean;
 					{
@@ -247,9 +247,9 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 							null,
 							(initial) => (Console.path('directory', ['in'], null, null, initial)),
 						);
-						manifest_file_directory = Executor.request_argument(
-							Executor.query_argument_name(this.id, 'manifest_file_directory'),
-							a.manifest_file_directory,
+						definition_file_directory = Executor.request_argument(
+							Executor.query_argument_name(this.id, 'definition_file_directory'),
+							a.definition_file_directory,
 							(value) => (value),
 							() => (data_file_directory.replace(/$/i, '.decode')),
 							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
@@ -274,16 +274,16 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 						['file', /.+(\.xml)(\.compiled)$/i],
 						(item) => {
 							let data_file = `${data_file_directory}/${item}`;
-							let manifest_file = `${manifest_file_directory}/${item.slice(0, -13)}.particle.json`;
-							CoreX.Tool.PopCap.Particle.decode_fs(data_file, manifest_file, { platform: version_platform as any, variant_64: version_variant_64 });
+							let definition_file = `${definition_file_directory}/${item.slice(0, -13)}.particle.json`;
+							CoreX.Tool.PopCap.Particle.decode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 });
 						},
 					);
-					return [`${manifest_file_directory}`];
+					return [`${definition_file_directory}`];
 				},
 				default_argument: {
 					...Entry.k_common_argument,
 					data_file_directory: undefined!,
-					manifest_file_directory: '?default',
+					definition_file_directory: '?default',
 					version_platform: configuration.version_platform,
 					version_variant_64: configuration.version_variant_64,
 				},

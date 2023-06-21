@@ -4,7 +4,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 
 	function make_image_document(
 		index: number,
-		image: Core.Tool.PopCap.Animation.Manifest.JS_N.Image,
+		image: Core.Tool.PopCap.Animation.Definition.JS_N.Image,
 	): Core.XML.JS_Element {
 		assert_test(image.transform.length === 6);
 		return XML.create_element('DOMSymbolItem', {
@@ -51,8 +51,8 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 
 	function make_sprite_document(
 		index: number | 'main',
-		sprite: Core.Tool.PopCap.Animation.Manifest.JS_N.Sprite,
-		sub_sprite: Array<Core.Tool.PopCap.Animation.Manifest.JS_N.Sprite>,
+		sprite: Core.Tool.PopCap.Animation.Definition.JS_N.Sprite,
+		sub_sprite: Array<Core.Tool.PopCap.Animation.Definition.JS_N.Sprite>,
 	): Core.XML.JS_Element {
 		let model: Record<number, {
 			state: null | boolean;
@@ -182,7 +182,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 	}
 
 	function make_main_document(
-		animation: Core.Tool.PopCap.Animation.Manifest.JS_N.Animation,
+		animation: Core.Tool.PopCap.Animation.Definition.JS_N.Animation,
 	): Core.XML.JS_Element {
 		assert_test(animation.main_sprite !== null);
 		let prev_end = {
@@ -334,7 +334,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 	}
 
 	export function from(
-		animation: Core.Tool.PopCap.Animation.Manifest.JS_N.Animation,
+		animation: Core.Tool.PopCap.Animation.Definition.JS_N.Animation,
 	): FlashPackage {
 		assert_test(animation.main_sprite !== null);
 		return {
@@ -363,7 +363,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 	// ------------------------------------------------
 
 	export function from_fsh(
-		raw: Core.Tool.PopCap.Animation.Manifest.JS_N.Animation,
+		raw: Core.Tool.PopCap.Animation.Definition.JS_N.Animation,
 		ripe_directory: string,
 	): void {
 		let ripe = from(raw);
@@ -375,7 +375,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 		raw_file: string,
 		ripe_directory: string,
 	): void {
-		let raw = CoreX.JSON.read_fs_js<Core.Tool.PopCap.Animation.Manifest.JS_N.Animation>(raw_file);
+		let raw = CoreX.JSON.read_fs_js<Core.Tool.PopCap.Animation.Definition.JS_N.Animation>(raw_file);
 		let ripe = from(raw);
 		save_flash_package(ripe_directory, ripe);
 		return;

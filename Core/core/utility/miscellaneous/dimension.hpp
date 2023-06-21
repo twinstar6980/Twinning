@@ -14,7 +14,7 @@ namespace TwinStar::Core {
 
 		// ----------------
 
-		XValue x;
+		XValue x{};
 
 		// ----------------
 
@@ -35,8 +35,8 @@ namespace TwinStar::Core {
 
 		// ----------------
 
-		XValue x;
-		YValue y;
+		XValue x{};
+		YValue y{};
 
 		// ----------------
 
@@ -59,9 +59,9 @@ namespace TwinStar::Core {
 
 		// ----------------
 
-		XValue x;
-		YValue y;
-		ZValue z;
+		XValue x{};
+		YValue y{};
+		ZValue z{};
 
 		// ----------------
 
@@ -82,7 +82,7 @@ namespace TwinStar::Core {
 
 		// ----------------
 
-		XValue width;
+		XValue width{};
 
 		// ----------------
 
@@ -112,8 +112,8 @@ namespace TwinStar::Core {
 
 		// ----------------
 
-		XValue width;
-		YValue height;
+		XValue width{};
+		YValue height{};
 
 		// ----------------
 
@@ -146,9 +146,9 @@ namespace TwinStar::Core {
 
 		// ----------------
 
-		XValue width;
-		YValue height;
-		ZValue depth;
+		XValue width{};
+		YValue height{};
+		ZValue depth{};
 
 		// ----------------
 

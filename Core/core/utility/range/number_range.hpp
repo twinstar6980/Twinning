@@ -20,9 +20,9 @@ namespace TwinStar::Core {
 
 	protected:
 
-		Number m_begin;
-		Number m_end;
-		Number m_step;
+		Number m_begin{};
+		Number m_end{};
+		Number m_step{};
 
 	public:
 

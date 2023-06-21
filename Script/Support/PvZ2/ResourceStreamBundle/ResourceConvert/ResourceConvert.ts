@@ -48,7 +48,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 
 	export function convert(
 		resource_directory: string,
-		package_manifest: Core.Tool.PopCap.ResourceStreamBundle.Manifest.JS_N.Package,
+		package_definition: Core.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Package,
 		resource_manifest: ResourceManifest.Package,
 		option: Option,
 	): void {
@@ -61,13 +61,13 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 			}
 			return null;
 		};
-		let iterate_manifest = (show_group_progress: boolean) => (worker: (
-			group: [string, ResourceManifest.Group, Core.Tool.PopCap.ResourceStreamBundle.Manifest.JS_N.Group],
-			subgroup: [string, ResourceManifest.Subgroup, Core.Tool.PopCap.ResourceStreamBundle.Manifest.JS_N.Subgroup],
-			resource: [string, ResourceManifest.Resource, Core.Tool.PopCap.ResourceStreamBundle.Manifest.JS_N.Resource],
+		let iterate_resource = (show_group_progress: boolean) => (worker: (
+			group: [string, ResourceManifest.Group, Core.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Group],
+			subgroup: [string, ResourceManifest.Subgroup, Core.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Subgroup],
+			resource: [string, ResourceManifest.Resource, Core.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Resource],
 		) => void): void => {
-			let group_progress = new TextGenerator.Progress('fraction', false, 40, Object.keys(package_manifest.group).length);
-			for (let package_group_id in package_manifest.group) {
+			let group_progress = new TextGenerator.Progress('fraction', false, 40, Object.keys(package_definition.group).length);
+			for (let package_group_id in package_definition.group) {
 				group_progress.increase();
 				if (show_group_progress) {
 					Console.information(`${group_progress} - ${package_group_id}`, []);
@@ -75,7 +75,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 				if (/__MANIFESTGROUP__(.+)?/.test(package_group_id)) {
 					continue;
 				}
-				let package_group = package_manifest.group[package_group_id];
+				let package_group = package_definition.group[package_group_id];
 				let group_id = find_key_ignore_case(resource_manifest.group, package_group_id);
 				if (group_id === null) {
 					Console.warning(`group not found in resource manifest : ${package_group_id}`, []);
@@ -123,7 +123,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 			Console.information(los('support.pvz2.resource_stream_bundle.resource_convert:reset_resource_path_case'), [
 			]);
 			let resource_path_list: Array<string> = [];
-			iterate_manifest(false)((group, subgroup, resource) => {
+			iterate_resource(false)((group, subgroup, resource) => {
 				resource_path_list.push(`${resource[1].path}${(resource[1].expand[0] === 'atlas' ? '.ptx' : '')}`);
 			});
 			let rename_tree = (
@@ -148,7 +148,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 		Console.information(los('support.pvz2.resource_stream_bundle.resource_convert:convert_resource'), [
 		]);
 		let audio_temporary_directory = Home.new_temporary();
-		iterate_manifest(true)((group, subgroup, resource) => {
+		iterate_resource(true)((group, subgroup, resource) => {
 			let path = resource[1].path;
 			if (option.rton !== null && path.endsWith('.rton')) {
 				Console.verbosity(`  ${path}`, []);
@@ -212,17 +212,17 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 					let data = CoreX.FileSystem.read_file(`${resource_directory}/${path}`);
 					let stream = Core.ByteStreamView.watch(data.view());
 					let version_c = Core.Tool.PopCap.Animation.Version.value(option.pam.version);
-					let information = Core.Tool.PopCap.Animation.Manifest.Animation.default();
-					Core.Tool.PopCap.Animation.Decode.process_animation(stream, information, version_c);
-					let information_json = information.get_json(version_c);
-					let information_js = information_json.value;
+					let definition = Core.Tool.PopCap.Animation.Definition.Animation.default();
+					Core.Tool.PopCap.Animation.Decode.process(stream, definition, version_c);
+					let definition_json = definition.get_json(version_c);
+					let definition_js = definition_json.value;
 					if (option.pam.json !== null) {
-						CoreX.JSON.write_fs(`${option.pam.directory}/${raw_file}`, information_json);
+						CoreX.JSON.write_fs(`${option.pam.directory}/${raw_file}`, definition_json);
 					}
 					if (option.pam.flash !== null) {
-						let flash_package = Support.PopCap.Animation.Convert.Flash.From.from(information_js as any);
+						let flash_package = Support.PopCap.Animation.Convert.Flash.From.from(definition_js as any);
 						Support.PopCap.Animation.Convert.Flash.save_flash_package(`${option.pam.directory}/${flash_directory}`, flash_package);
-						Support.PopCap.Animation.Convert.Flash.SourceManager.create_fsh(`${option.pam.directory}/${flash_directory}`, information_js as any);
+						Support.PopCap.Animation.Convert.Flash.SourceManager.create_fsh(`${option.pam.directory}/${flash_directory}`, definition_js as any);
 						Support.PopCap.Animation.Convert.Flash.create_xfl_content_file(`${option.pam.directory}/${flash_directory}`);
 					}
 				} catch (e: any) {
@@ -234,7 +234,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 				try {
 					CoreX.Tool.Wwise.SoundBank.decode_fs(
 						`${resource_directory}/${path}`,
-						`${option.bnk.directory}/${path}.bundle/manifest.json`,
+						`${option.bnk.directory}/${path}.bundle/definition.json`,
 						`${option.bnk.directory}/${path}.bundle/embedded_media`,
 						option.bnk.version,
 					);
@@ -264,34 +264,34 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 
 	export function convert_fs(
 		resource_directory: string,
-		package_manifest_file: string,
+		package_definition_file: string,
 		resource_manifest_file: string,
 		option: Option,
 		version: typeof Core.Tool.PopCap.ResourceStreamBundle.Version.Value,
 	): void {
 		let version_c = Core.Tool.PopCap.ResourceStreamBundle.Version.value(version);
-		let package_manifest = CoreX.JSON.read_fs_js<Core.Tool.PopCap.ResourceStreamBundle.Manifest.JS_N.Package>(package_manifest_file);
+		let package_definition = CoreX.JSON.read_fs_js<Core.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Package>(package_definition_file);
 		Console.information(los('support.pvz2.resource_stream_bundle.resource_convert:extract_resource_manifest'), [
 		]);
 		let official_resource_manifest: OfficialResourceManifest.Package;
 		{
-			let group_id = Object.keys(package_manifest.group).filter((e) => (/__MANIFESTGROUP__(.+)?/.test(e)));
-			assert_test(group_id.length === 1, `package must has only one manifest group`);
-			let group = package_manifest.group[group_id[0]];
-			assert_test(!group.composite, `manifest should not be a composite group`);
+			let group_id = Object.keys(package_definition.group).filter((e) => (/__MANIFESTGROUP__(.+)?/.test(e)));
+			assert_test(group_id.length === 1, `package must has only one MANIFEST group`);
+			let group = package_definition.group[group_id[0]];
+			assert_test(!group.composite, `MANIFEST should not be a composite group`);
 			let subgroup_id = Object.keys(group.subgroup);
-			assert_test(subgroup_id.length === 1, `manifest subgroup must has only one subgroup`);
-			assert_test(subgroup_id[0] === group_id[0], `manifest subgroup id must equal group id`);
+			assert_test(subgroup_id.length === 1, `MANIFEST subgroup must has only one subgroup`);
+			assert_test(subgroup_id[0] === group_id[0], `MANIFEST subgroup id must equal group id`);
 			let subgroup = group.subgroup[subgroup_id[0]];
 			let resource_path_list = Object.keys(subgroup.resource);
-			assert_test(resource_path_list.length === 1, `manifest subgroup must has one only resource`);
+			assert_test(resource_path_list.length === 1, `MANIFEST subgroup must has one only resource`);
 			let resource_path = resource_path_list[0];
 			let resource = subgroup.resource[resource_path];
-			assert_test(/properties\/resources(_.+)?\.rton/i.test(resource_path), `manifest resource path invalid`);
+			assert_test(/properties\/resources(_.+)?\.rton/i.test(resource_path), `MANIFEST resource path invalid`);
 			let rton = CoreX.FileSystem.read_file(resource_directory + '/' + resource_path);
 			let rton_stream = Core.ByteStreamView.watch(rton.view());
 			let json = Core.JSON.Value.default<OfficialResourceManifest.Package>();
-			Core.Tool.PopCap.ReflectionObjectNotation.Decode.process_whole(
+			Core.Tool.PopCap.ReflectionObjectNotation.Decode.process(
 				rton_stream,
 				json,
 				Core.Tool.PopCap.ReflectionObjectNotation.Version.value({ number: 1n, native_string_encoding_use_utf8: true }),
@@ -304,7 +304,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 		CoreX.JSON.write_fs(resource_manifest_file, Core.JSON.Value.value(resource_manifest));
 		convert(
 			resource_directory,
-			package_manifest,
+			package_definition,
 			resource_manifest,
 			option,
 		);

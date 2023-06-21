@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Core
- * @version 55
+ * @version 56
  */
 declare namespace TwinStar.Core {
 
@@ -1525,7 +1525,7 @@ declare namespace TwinStar.Core {
 						 * @param mode 模式
 						 * @param bit_count 位数
 						 */
-						function process_whole(
+						function process(
 							data: CByteListView,
 							value: ByteArray,
 							mode: Mode,
@@ -1547,7 +1547,7 @@ declare namespace TwinStar.Core {
 						 * @param data 数据
 						 * @param value 散列值
 						 */
-						function process_whole(
+						function process(
 							data: CByteListView,
 							value: ByteArray,
 						): Void;
@@ -1568,23 +1568,23 @@ declare namespace TwinStar.Core {
 					namespace Encode {
 
 						/**
-						 * 计算成品数据尺寸
-						 * @param raw_size 原始数据尺寸
-						 * @param ripe_size 成品数据尺寸
-						 */
-						function compute_size(
-							raw_size: Size,
-							ripe_size: Size,
-						): Void;
-
-						/**
 						 * 编码
 						 * @param raw 原始数据
 						 * @param ripe 成品数据
 						 */
-						function process_whole(
+						function process(
 							raw: IByteStreamView,
 							ripe: OCharacterStreamView,
+						): Void;
+
+						/**
+						 * 计算成品数据尺寸
+						 * @param raw_size 原始数据尺寸
+						 * @param ripe_size 成品数据尺寸
+						 */
+						function estimate(
+							raw_size: Size,
+							ripe_size: Size,
 						): Void;
 
 					}
@@ -1593,23 +1593,23 @@ declare namespace TwinStar.Core {
 					namespace Decode {
 
 						/**
-						 * 计算原始数据尺寸
-						 * @param ripe 成品数据
-						 * @param raw_size 原始数据尺寸
-						 */
-						function compute_size(
-							ripe: CCharacterListView,
-							raw_size: Size,
-						): Void;
-
-						/**
 						 * 解码
 						 * @param ripe 成品数据
 						 * @param raw 原始数据
 						 */
-						function process_whole(
+						function process(
 							ripe: ICharacterStreamView,
 							raw: OByteStreamView,
+						): Void;
+
+						/**
+						 * 计算原始数据尺寸
+						 * @param ripe 成品数据
+						 * @param raw_size 原始数据尺寸
+						 */
+						function estimate(
+							ripe: CCharacterListView,
+							raw_size: Size,
 						): Void;
 
 					}
@@ -1633,10 +1633,10 @@ declare namespace TwinStar.Core {
 						 * @param cipher 密文数据
 						 * @param key 密钥
 						 */
-						function process_whole(
+						function process(
 							plain: IByteStreamView,
 							cipher: OByteStreamView,
-							key: ByteListView,
+							key: CByteListView,
 						): Void;
 
 					}
@@ -1686,7 +1686,7 @@ declare namespace TwinStar.Core {
 						 * @param key 密钥，尺寸必须与key_size一致
 						 * @param iv 初始向量，当模式为cbc或cfb时有效，此时尺寸必须与block_size一致
 						 */
-						function process_whole(
+						function process(
 							plain: IByteStreamView,
 							cipher: OByteStreamView,
 							mode: Mode,
@@ -1711,7 +1711,7 @@ declare namespace TwinStar.Core {
 						 * @param key 密钥，尺寸必须与key_size一致
 						 * @param iv 初始向量，当模式为cbc或cfb时有效，此时尺寸必须与block_size一致
 						 */
-						function process_whole(
+						function process(
 							cipher: IByteStreamView,
 							plain: OByteStreamView,
 							mode: Mode,
@@ -1791,22 +1791,6 @@ declare namespace TwinStar.Core {
 					namespace Compress {
 
 						/**
-						 * 计算成品数据尺寸上限
-						 * @param raw_size 原始数据尺寸
-						 * @param ripe_size_bound 成品数据尺寸上限
-						 * @param window_bits 窗口尺寸(8~15)
-						 * @param memory_level 内存级别(1~9)
-						 * @param wrapper 封装
-						 */
-						function compute_size_bound(
-							raw_size: Size,
-							ripe_size_bound: Size,
-							window_bits: Size,
-							memory_level: Size,
-							wrapper: Wrapper,
-						): Void;
-
-						/**
 						 * 压缩
 						 * @param raw 原始数据
 						 * @param ripe 成品数据
@@ -1816,13 +1800,29 @@ declare namespace TwinStar.Core {
 						 * @param strategy 策略
 						 * @param wrapper 封装
 						 */
-						function process_whole(
+						function process(
 							raw: IByteStreamView,
 							ripe: OByteStreamView,
 							level: Size,
 							window_bits: Size,
 							memory_level: Size,
 							strategy: Strategy,
+							wrapper: Wrapper,
+						): Void;
+
+						/**
+						 * 计算成品数据尺寸上限
+						 * @param raw_size 原始数据尺寸
+						 * @param ripe_size_bound 成品数据尺寸上限
+						 * @param window_bits 窗口尺寸(8~15)
+						 * @param memory_level 内存级别(1~9)
+						 * @param wrapper 封装
+						 */
+						function estimate(
+							raw_size: Size,
+							ripe_size_bound: Size,
+							window_bits: Size,
+							memory_level: Size,
 							wrapper: Wrapper,
 						): Void;
 
@@ -1838,7 +1838,7 @@ declare namespace TwinStar.Core {
 						 * @param window_bits 窗口尺寸(8~15)
 						 * @param wrapper 封装
 						 */
-						function process_whole(
+						function process(
 							ripe: IByteStreamView,
 							raw: OByteStreamView,
 							window_bits: Size,
@@ -1862,7 +1862,7 @@ declare namespace TwinStar.Core {
 						 * @param block_size 块尺寸(1~9)
 						 * @param work_factor 工作因子(0~250，0==30)
 						 */
-						function process_whole(
+						function process(
 							raw: IByteStreamView,
 							ripe: OByteStreamView,
 							block_size: Size,
@@ -1880,7 +1880,7 @@ declare namespace TwinStar.Core {
 						 * @param raw 原始数据
 						 * @param small 是否使用少量内存
 						 */
-						function process_whole(
+						function process(
 							ripe: IByteStreamView,
 							raw: OByteStreamView,
 							small: Boolean,
@@ -1902,7 +1902,7 @@ declare namespace TwinStar.Core {
 						 * @param ripe 成品数据
 						 * @param level 压缩级别(0~9)
 						 */
-						function process_whole(
+						function process(
 							raw: IByteStreamView,
 							ripe: OByteStreamView,
 							level: Size,
@@ -1918,7 +1918,7 @@ declare namespace TwinStar.Core {
 						 * @param ripe 成品数据
 						 * @param raw 原始数据
 						 */
-						function process_whole(
+						function process(
 							ripe: IByteStreamView,
 							raw: OByteStreamView,
 						): Void;
@@ -1945,7 +1945,7 @@ declare namespace TwinStar.Core {
 						 * @param patch 补丁数据
 						 * @param interleaved 使用交叉模式生成差异数据
 						 */
-						function process_whole(
+						function process(
 							before: IByteStreamView,
 							after: IByteStreamView,
 							patch: OByteStreamView,
@@ -1964,7 +1964,7 @@ declare namespace TwinStar.Core {
 						 * @param patch 补丁数据
 						 * @param maximum_window_size 最大窗口尺寸
 						 */
-						function process_whole(
+						function process(
 							before: IByteStreamView,
 							after: OByteStreamView,
 							patch: IByteStreamView,
@@ -1993,9 +1993,9 @@ declare namespace TwinStar.Core {
 						 * @param disable_trailing_comma 禁用尾随逗号
 						 * @param disable_array_wrap_line 禁用数组元素换行
 						 */
-						function process_whole<Constraint extends Core.JSON.JS_Value>(
+						function process(
 							data: OCharacterStreamView,
-							value: Core.JSON.Value<Constraint>,
+							value: Core.JSON.Value,
 							disable_trailing_comma: Boolean,
 							disable_array_wrap_line: Boolean,
 						): Void;
@@ -2010,9 +2010,9 @@ declare namespace TwinStar.Core {
 						 * @param data 数据
 						 * @param value 值
 						 */
-						function process_whole<Constraint extends Core.JSON.JS_Value>(
+						function process(
 							data: ICharacterStreamView,
-							value: Core.JSON.Value<Constraint>,
+							value: Core.JSON.Value,
 						): Void;
 
 					}
@@ -2030,7 +2030,7 @@ declare namespace TwinStar.Core {
 						 * @param data 数据
 						 * @param value 值
 						 */
-						function process_whole(
+						function process(
 							data: String,
 							value: Core.XML.Node,
 						): Void;
@@ -2045,7 +2045,7 @@ declare namespace TwinStar.Core {
 						 * @param data 数据
 						 * @param value 值
 						 */
-						function process_whole(
+						function process(
 							data: String,
 							value: Core.XML.Node,
 						): Void;
@@ -2058,26 +2058,8 @@ declare namespace TwinStar.Core {
 
 		}
 
-		/** 图像 */
-		namespace Image {
-
-			type ImageSize = Core.Image.ImageSize;
-
-			type ImagePosition = Core.Image.ImagePosition;
-
-			type Color = Core.Image.Color;
-
-			type ColorList = Core.Image.ColorList;
-
-			type Pixel = Core.Image.Pixel;
-
-			type CImageView = Core.Image.CImageView;
-
-			type VImageView = Core.Image.VImageView;
-
-			type Image = Core.Image.Image;
-
-			// ------------------------------------------------
+		/** 纹理 */
+		namespace Texture {
 
 			/** 变换 */
 			namespace Transformation {
@@ -2091,7 +2073,7 @@ declare namespace TwinStar.Core {
 					 * @param horizontal 水平翻转
 					 * @param vertical 垂直翻转
 					 */
-					function process_image(
+					function process(
 						target: Image.VImageView,
 						horizontal: Boolean,
 						vertical: Boolean,
@@ -2107,7 +2089,7 @@ declare namespace TwinStar.Core {
 					 * @param source 来源
 					 * @param destination 目的
 					 */
-					function process_image(
+					function process(
 						source: Image.CImageView,
 						destination: Image.VImageView,
 					): Void;
@@ -2116,10 +2098,8 @@ declare namespace TwinStar.Core {
 
 			}
 
-			/** 纹理 */
-			namespace Texture {
-
-				// ------------------------------------------------
+			/** 编码 */
+			namespace Encoding {
 
 				/** 格式 */
 				class Format {
@@ -2157,7 +2137,7 @@ declare namespace TwinStar.Core {
 					 * @param image 图像
 					 * @param format 格式
 					 */
-					function process_image(
+					function process(
 						data: OByteStreamView,
 						image: Image.CImageView,
 						format: Format,
@@ -2174,7 +2154,7 @@ declare namespace TwinStar.Core {
 					 * @param image 图像
 					 * @param format 格式
 					 */
-					function process_image(
+					function process(
 						data: IByteStreamView,
 						image: Image.VImageView,
 						format: Format,
@@ -2182,127 +2162,123 @@ declare namespace TwinStar.Core {
 
 				}
 
-				// ------------------------------------------------
+			}
 
-				/** 压缩 */
-				namespace Compression {
+			/** 压缩 */
+			namespace Compression {
 
-					/** ETC1 */
-					namespace ETC1 {
+				/** ETC1 */
+				namespace ETC1 {
 
-						/** 压缩 */
-						namespace Compress {
+					/** 压缩 */
+					namespace Compress {
 
-							/**
-							 * 压缩
-							 * @param data 数据
-							 * @param image 图像
-							 */
-							function process_image(
-								data: OByteStreamView,
-								image: Image.CImageView,
-							): Void;
-
-						}
-
-						/** 解压 */
-						namespace Uncompress {
-
-							/**
-							 * 解压
-							 * @param data 数据
-							 * @param image 图像
-							 */
-							function process_image(
-								data: IByteStreamView,
-								image: Image.VImageView,
-							): Void;
-
-						}
+						/**
+						 * 压缩
+						 * @param data 数据
+						 * @param image 图像
+						 */
+						function process(
+							data: OByteStreamView,
+							image: Image.CImageView,
+						): Void;
 
 					}
 
-					/** ETC2 */
-					namespace ETC2 {
+					/** 解压 */
+					namespace Uncompress {
 
-						/** 压缩 */
-						namespace Compress {
-
-							/**
-							 * 压缩
-							 * @param data 数据
-							 * @param image 图像
-							 * @param with_alpha 是否携带alpha通道
-							 */
-							function process_image(
-								data: OByteStreamView,
-								image: Image.CImageView,
-								with_alpha: Boolean,
-							): Void;
-
-						}
-
-						/** 解压 */
-						namespace Uncompress {
-
-							/**
-							 * 解压
-							 * @param data 数据
-							 * @param image 图像
-							 * @param with_alpha 是否携带alpha通道
-							 */
-							function process_image(
-								data: IByteStreamView,
-								image: Image.VImageView,
-								with_alpha: Boolean,
-							): Void;
-
-						}
-
-					}
-
-					/** PVRTC4 */
-					namespace PVRTC4 {
-
-						/** 压缩 */
-						namespace Compress {
-
-							/**
-							 * 压缩
-							 * @param data 数据
-							 * @param image 图像
-							 * @param with_alpha 是否携带alpha通道
-							 */
-							function process_image(
-								data: OByteStreamView,
-								image: Image.CImageView,
-								with_alpha: Boolean,
-							): Void;
-
-						}
-
-						/** 解压 */
-						namespace Uncompress {
-
-							/**
-							 * 解压
-							 * @param data 数据
-							 * @param image 图像
-							 * @param with_alpha 是否携带alpha通道
-							 */
-							function process_image(
-								data: IByteStreamView,
-								image: Image.VImageView,
-								with_alpha: Boolean,
-							): Void;
-
-						}
+						/**
+						 * 解压
+						 * @param data 数据
+						 * @param image 图像
+						 */
+						function process(
+							data: IByteStreamView,
+							image: Image.VImageView,
+						): Void;
 
 					}
 
 				}
 
-				// ------------------------------------------------
+				/** ETC2 */
+				namespace ETC2 {
+
+					/** 压缩 */
+					namespace Compress {
+
+						/**
+						 * 压缩
+						 * @param data 数据
+						 * @param image 图像
+						 * @param with_alpha 是否携带alpha通道
+						 */
+						function process(
+							data: OByteStreamView,
+							image: Image.CImageView,
+							with_alpha: Boolean,
+						): Void;
+
+					}
+
+					/** 解压 */
+					namespace Uncompress {
+
+						/**
+						 * 解压
+						 * @param data 数据
+						 * @param image 图像
+						 * @param with_alpha 是否携带alpha通道
+						 */
+						function process(
+							data: IByteStreamView,
+							image: Image.VImageView,
+							with_alpha: Boolean,
+						): Void;
+
+					}
+
+				}
+
+				/** PVRTC4 */
+				namespace PVRTC4 {
+
+					/** 压缩 */
+					namespace Compress {
+
+						/**
+						 * 压缩
+						 * @param data 数据
+						 * @param image 图像
+						 * @param with_alpha 是否携带alpha通道
+						 */
+						function process(
+							data: OByteStreamView,
+							image: Image.CImageView,
+							with_alpha: Boolean,
+						): Void;
+
+					}
+
+					/** 解压 */
+					namespace Uncompress {
+
+						/**
+						 * 解压
+						 * @param data 数据
+						 * @param image 图像
+						 * @param with_alpha 是否携带alpha通道
+						 */
+						function process(
+							data: IByteStreamView,
+							image: Image.VImageView,
+							with_alpha: Boolean,
+						): Void;
+
+					}
+
+				}
 
 			}
 
@@ -2320,9 +2296,9 @@ declare namespace TwinStar.Core {
 						 * @param data 数据
 						 * @param image 图像
 						 */
-						function process_image(
+						function process(
 							data: OByteStreamView,
-							image: CImageView,
+							image: Image.CImageView,
 						): Void;
 
 					}
@@ -2331,23 +2307,23 @@ declare namespace TwinStar.Core {
 					namespace Read {
 
 						/**
-						 * 计算图像尺寸
-						 * @param data 数据
-						 * @param image_size 图像尺寸
-						 */
-						function compute_image_size(
-							data: CByteListView,
-							image_size: Image.ImageSize,
-						): Void;
-
-						/**
 						 * 读
 						 * @param data 数据
 						 * @param image 图像
 						 */
-						function process_image(
+						function process(
 							data: IByteStreamView,
-							image: VImageView,
+							image: Image.VImageView,
+						): Void;
+
+						/**
+						 * 计算图像尺寸
+						 * @param data 数据
+						 * @param image_size 图像尺寸
+						 */
+						function estimate(
+							data: CByteListView,
+							image_size: Image.ImageSize,
 						): Void;
 
 					}
@@ -2405,7 +2381,7 @@ declare namespace TwinStar.Core {
 					 * @param temporary_directory 临时文件目录
 					 * @param version 版本
 					 */
-					function process_media(
+					function process(
 						ripe: CByteListView,
 						raw: ByteArray,
 						ffmpeg_program: Path,
@@ -2451,8 +2427,8 @@ declare namespace TwinStar.Core {
 
 				}
 
-				/** 清单 */
-				namespace Manifest {
+				/** 定义 */
+				namespace Definition {
 
 					namespace JS_N {
 
@@ -2471,7 +2447,7 @@ declare namespace TwinStar.Core {
 
 						// ------------------------------------------------
 
-						private _Tool_Wwise_SoundBank_Manifest_SoundBank;
+						private _Tool_Wwise_SoundBank_Definition_SoundBank;
 
 						// ------------------------------------------------
 
@@ -2498,14 +2474,14 @@ declare namespace TwinStar.Core {
 
 					/**
 					 * 编码
-					 * @param sound_bank_data 声音库数据
-					 * @param sound_bank_manifest 声音库清单
+					 * @param data 数据
+					 * @param definition 定义
 					 * @param embedded_media_directory 内嵌媒体目录
 					 * @param version 版本
 					 */
-					function process_sound_bank(
-						sound_bank_data: OByteStreamView,
-						sound_bank_manifest: Manifest.SoundBank,
+					function process(
+						data: OByteStreamView,
+						definition: Definition.SoundBank,
 						embedded_media_directory: Path,
 						version: Version,
 					): Void;
@@ -2517,14 +2493,14 @@ declare namespace TwinStar.Core {
 
 					/**
 					 * 解码
-					 * @param sound_bank_data 声音库数据
-					 * @param sound_bank_manifest 声音库清单
+					 * @param data 数据
+					 * @param definition 定义
 					 * @param embedded_media_directory 内嵌媒体目录
 					 * @param version 版本
 					 */
-					function process_sound_bank(
-						sound_bank_data: IByteStreamView,
-						sound_bank_manifest: Manifest.SoundBank,
+					function process(
+						data: IByteStreamView,
+						definition: Definition.SoundBank,
 						embedded_media_directory: PathOptional,
 						version: Version,
 					): Void;
@@ -2570,8 +2546,8 @@ declare namespace TwinStar.Core {
 
 				}
 
-				/** 清单 */
-				namespace Manifest {
+				/** 定义 */
+				namespace Definition {
 
 					namespace JS_N {
 
@@ -2600,7 +2576,7 @@ declare namespace TwinStar.Core {
 
 						// ------------------------------------------------
 
-						private _Tool_Marmalade_DZip_Manifest_Package;
+						private _Tool_Marmalade_DZip_Definition_Package;
 
 						// ------------------------------------------------
 
@@ -2627,14 +2603,14 @@ declare namespace TwinStar.Core {
 
 					/**
 					 * 打包
-					 * @param package_data 包
-					 * @param package_manifest 清单
+					 * @param data 数据
+					 * @param definition 定义
 					 * @param resource_directory 资源目录
 					 * @param version 版本
 					 */
-					function process_package(
-						package_data: OByteStreamView,
-						package_manifest: Manifest.Package,
+					function process(
+						data: OByteStreamView,
+						definition: Definition.Package,
 						resource_directory: Path,
 						version: Version,
 					): Void;
@@ -2646,14 +2622,14 @@ declare namespace TwinStar.Core {
 
 					/**
 					 * 解包
-					 * @param package_data 包
-					 * @param package_manifest 清单
+					 * @param data 数据
+					 * @param definition 定义
 					 * @param resource_directory 资源目录
 					 * @param version 版本
 					 */
-					function process_package(
-						package_data: IByteStreamView,
-						package_manifest: Manifest.Package,
+					function process(
+						data: IByteStreamView,
+						definition: Definition.Package,
 						resource_directory: PathOptional,
 						version: Version,
 					): Void;
@@ -2703,22 +2679,6 @@ declare namespace TwinStar.Core {
 				namespace Compress {
 
 					/**
-					 * 计算成品数据尺寸上限
-					 * @param raw_size 原始数据尺寸
-					 * @param ripe_size_bound 成品数据尺寸上限
-					 * @param window_bits 窗口尺寸(8~15)
-					 * @param memory_level 内存级别(1~9)
-					 * @param version 版本
-					 */
-					function compute_size_bound(
-						raw_size: Size,
-						ripe_size_bound: Size,
-						window_bits: Size,
-						memory_level: Size,
-						version: Version,
-					): Void;
-
-					/**
 					 * 压缩
 					 * @param raw 原始数据
 					 * @param ripe 成品数据
@@ -2728,7 +2688,7 @@ declare namespace TwinStar.Core {
 					 * @param strategy 策略
 					 * @param version 版本
 					 */
-					function process_whole(
+					function process(
 						raw: IByteStreamView,
 						ripe: OByteStreamView,
 						level: Size,
@@ -2738,22 +2698,26 @@ declare namespace TwinStar.Core {
 						version: Version,
 					): Void;
 
+					/**
+					 * 计算成品数据尺寸上限
+					 * @param raw_size 原始数据尺寸
+					 * @param ripe_size_bound 成品数据尺寸上限
+					 * @param window_bits 窗口尺寸(8~15)
+					 * @param memory_level 内存级别(1~9)
+					 * @param version 版本
+					 */
+					function estimate(
+						raw_size: Size,
+						ripe_size_bound: Size,
+						window_bits: Size,
+						memory_level: Size,
+						version: Version,
+					): Void;
+
 				}
 
 				/** 解压 */
 				namespace Uncompress {
-
-					/**
-					 * 计算原始数据尺寸
-					 * @param ripe 成品数据
-					 * @param raw_size 原始数据尺寸
-					 * @param version 版本
-					 */
-					function compute_size(
-						ripe: CByteListView,
-						raw_size: Size,
-						version: Version,
-					): Void;
 
 					/**
 					 * 解压
@@ -2762,10 +2726,22 @@ declare namespace TwinStar.Core {
 					 * @param window_bits 窗口尺寸(8~15)
 					 * @param version 版本
 					 */
-					function process_whole(
+					function process(
 						ripe: IByteStreamView,
 						raw: OByteStreamView,
 						window_bits: Size,
+						version: Version,
+					): Void;
+
+					/**
+					 * 计算原始数据尺寸
+					 * @param ripe 成品数据
+					 * @param raw_size 原始数据尺寸
+					 * @param version 版本
+					 */
+					function estimate(
+						ripe: CByteListView,
+						raw_size: Size,
 						version: Version,
 					): Void;
 
@@ -2808,20 +2784,6 @@ declare namespace TwinStar.Core {
 				namespace Encrypt {
 
 					/**
-					 * 计算密文数据尺寸
-					 * @param plain_size 明文数据尺寸
-					 * @param cipher_size 密文数据尺寸
-					 * @param limit 限度
-					 * @param version 版本
-					 */
-					function compute_size(
-						plain_size: Size,
-						cipher_size: Size,
-						limit: Size,
-						version: Version,
-					): Void;
-
-					/**
 					 * 加密
 					 * @param plain 明文数据
 					 * @param cipher 密文数据
@@ -2829,11 +2791,25 @@ declare namespace TwinStar.Core {
 					 * @param key 密钥
 					 * @param version 版本
 					 */
-					function process_whole(
+					function process(
 						plain: IByteStreamView,
 						cipher: OByteStreamView,
 						limit: Size,
 						key: String,
+						version: Version,
+					): Void;
+
+					/**
+					 * 计算密文数据尺寸
+					 * @param plain_size 明文数据尺寸
+					 * @param cipher_size 密文数据尺寸
+					 * @param limit 限度
+					 * @param version 版本
+					 */
+					function estimate(
+						plain_size: Size,
+						cipher_size: Size,
+						limit: Size,
 						version: Version,
 					): Void;
 
@@ -2843,20 +2819,6 @@ declare namespace TwinStar.Core {
 				namespace Decrypt {
 
 					/**
-					 * 计算明文数据尺寸
-					 * @param cipher 密文数据
-					 * @param plain_size 明文数据尺寸
-					 * @param limit 限度
-					 * @param version 版本
-					 */
-					function compute_size(
-						cipher: CByteListView,
-						plain_size: Size,
-						limit: Size,
-						version: Version,
-					): Void;
-
-					/**
 					 * 解密
 					 * @param cipher 密文数据
 					 * @param plain 明文数据
@@ -2864,11 +2826,25 @@ declare namespace TwinStar.Core {
 					 * @param key 密钥
 					 * @param version 版本
 					 */
-					function process_whole(
+					function process(
 						cipher: IByteStreamView,
 						plain: OByteStreamView,
 						limit: Size,
 						key: String,
+						version: Version,
+					): Void;
+
+					/**
+					 * 计算明文数据尺寸
+					 * @param cipher 密文数据
+					 * @param plain_size 明文数据尺寸
+					 * @param limit 限度
+					 * @param version 版本
+					 */
+					function estimate(
+						cipher: CByteListView,
+						plain_size: Size,
+						limit: Size,
 						version: Version,
 					): Void;
 
@@ -2878,6 +2854,9 @@ declare namespace TwinStar.Core {
 
 			/** ReflectionObjectNotation */
 			namespace ReflectionObjectNotation {
+
+				/** ReflectionObjectNotation所能存储的JSON值类型 */
+				type JS_ValidValue = boolean | number | bigint | string | JS_ValidValue[] | { [key: string]: JS_ValidValue; };
 
 				/** 版本 */
 				class Version {
@@ -2909,23 +2888,20 @@ declare namespace TwinStar.Core {
 
 				}
 
-				/** ReflectionObjectNotation所能存储的JSON值类型 */
-				type JS_ValidValue = boolean | number | bigint | string | JS_ValidValue[] | { [key: string]: JS_ValidValue; };
-
 				/** 编码 */
 				namespace Encode {
 
 					/**
 					 * 编码
 					 * @param data 数据
-					 * @param value 值
+					 * @param definition 定义
 					 * @param enable_string_index 启用字符串索引，若是，确保同一字符串只会明文编码一次，之后只使用索引值，可减少编码出的数据的尺寸
 					 * @param enable_rtid 启用rtid，若是，符合RTID格式的字符串将编码为0x83系列的值单元
 					 * @param version 版本
 					 */
-					function process_whole(
+					function process(
 						data: OByteStreamView,
-						value: JSON.Value<JS_ValidValue>,
+						definition: JSON.Value<JS_ValidValue>,
 						enable_string_index: Boolean,
 						enable_rtid: Boolean,
 						version: Version,
@@ -2939,67 +2915,13 @@ declare namespace TwinStar.Core {
 					/**
 					 * 解码
 					 * @param data 数据
-					 * @param value 值
+					 * @param definition 定义
 					 * @param version 版本
 					 */
-					function process_whole(
+					function process(
 						data: IByteStreamView,
-						value: JSON.Value<JS_ValidValue>,
+						definition: JSON.Value<JS_ValidValue>,
 						version: Version,
-					): Void;
-
-				}
-
-				/** 加密 */
-				namespace Encrypt {
-
-					/**
-					 * 计算密文数据的尺寸
-					 * @param plain_size 明文数据尺寸
-					 * @param cipher_size 密文数据的尺寸
-					 */
-					function compute_size(
-						plain_size: Size,
-						cipher_size: Size,
-					): Void;
-
-					/**
-					 * 加密
-					 * @param plain 明文数据
-					 * @param cipher 密文数据
-					 * @param key 密钥
-					 */
-					function process_whole(
-						plain: IByteStreamView,
-						cipher: OByteStreamView,
-						key: String,
-					): Void;
-
-				}
-
-				/** 解密 */
-				namespace Decrypt {
-
-					/**
-					 * 计算明文数据的尺寸
-					 * @param cipher_size 密文数据尺寸
-					 * @param plain_size 明文数据的尺寸
-					 */
-					function compute_size(
-						cipher_size: Size,
-						plain_size: Size,
-					): Void;
-
-					/**
-					 * 解密
-					 * @param cipher 密文数据
-					 * @param plain 明文数据
-					 * @param key 密钥
-					 */
-					function process_whole(
-						cipher: IByteStreamView,
-						plain: OByteStreamView,
-						key: String,
 					): Void;
 
 				}
@@ -3042,30 +2964,30 @@ declare namespace TwinStar.Core {
 				namespace Encode {
 
 					/**
-					 * 计算数据尺寸上限
-					 * @param data_size_bound 数据尺寸上限
-					 * @param image_size 图像尺寸
-					 * @param format 格式
-					 * @param version 版本
-					 */
-					function compute_data_size_bound(
-						data_size_bound: Size,
-						image_size: Image.ImageSize,
-						format: Image.Texture.Format,
-						version: Version,
-					): Void;
-
-					/**
 					 * 编码
 					 * @param data 数据
 					 * @param image 图像
 					 * @param format 格式
 					 * @param version 版本
 					 */
-					function process_image(
+					function process(
 						data: OByteStreamView,
 						image: Image.CImageView,
-						format: Image.Texture.Format,
+						format: Texture.Encoding.Format,
+						version: Version,
+					): Void;
+
+					/**
+					 * 计算数据尺寸上限
+					 * @param data_size_bound 数据尺寸上限
+					 * @param image_size 图像尺寸
+					 * @param format 格式
+					 * @param version 版本
+					 */
+					function estimate(
+						data_size_bound: Size,
+						image_size: Image.ImageSize,
+						format: Texture.Encoding.Format,
 						version: Version,
 					): Void;
 
@@ -3075,26 +2997,26 @@ declare namespace TwinStar.Core {
 				namespace Decode {
 
 					/**
-					 * 计算图像尺寸
-					 * @param data 数据
-					 * @param image_size 图像尺寸
-					 * @param version 版本
-					 */
-					function compute_image_size(
-						data: CByteListView,
-						image_size: Image.ImageSize,
-						version: Version,
-					): Void;
-
-					/**
 					 * 解码
 					 * @param data 数据
 					 * @param image 图像
 					 * @param version 版本
 					 */
-					function process_image(
+					function process(
 						data: IByteStreamView,
 						image: Image.VImageView,
+						version: Version,
+					): Void;
+
+					/**
+					 * 计算图像尺寸
+					 * @param data 数据
+					 * @param image_size 图像尺寸
+					 * @param version 版本
+					 */
+					function estimate(
+						data: CByteListView,
+						image_size: Image.ImageSize,
 						version: Version,
 					): Void;
 
@@ -3138,22 +3060,6 @@ declare namespace TwinStar.Core {
 				namespace Encode {
 
 					/**
-					 * 计算数据尺寸上限
-					 * @param data_size_bound 数据尺寸上限
-					 * @param image_size 图像尺寸
-					 * @param format 格式
-					 * @param compress_texture_data 压缩纹理数据
-					 * @param version 版本
-					 */
-					function compute_data_size_bound(
-						data_size_bound: Size,
-						image_size: Image.ImageSize,
-						format: Image.Texture.Format,
-						compress_texture_data: Boolean,
-						version: Version,
-					): Void;
-
-					/**
 					 * 编码
 					 * @param data 数据
 					 * @param image 图像
@@ -3161,10 +3067,26 @@ declare namespace TwinStar.Core {
 					 * @param compress_texture_data 压缩纹理数据
 					 * @param version 版本
 					 */
-					function process_image(
+					function process(
 						data: OByteStreamView,
 						image: Image.CImageView,
-						format: Image.Texture.Format,
+						format: Texture.Encoding.Format,
+						compress_texture_data: Boolean,
+						version: Version,
+					): Void;
+
+					/**
+					 * 计算数据尺寸上限
+					 * @param data_size_bound 数据尺寸上限
+					 * @param image_size 图像尺寸
+					 * @param format 格式
+					 * @param compress_texture_data 压缩纹理数据
+					 * @param version 版本
+					 */
+					function estimate(
+						data_size_bound: Size,
+						image_size: Image.ImageSize,
+						format: Texture.Encoding.Format,
 						compress_texture_data: Boolean,
 						version: Version,
 					): Void;
@@ -3175,26 +3097,26 @@ declare namespace TwinStar.Core {
 				namespace Decode {
 
 					/**
-					 * 计算图像尺寸
-					 * @param data 数据
-					 * @param image_size 图像尺寸
-					 * @param version 版本
-					 */
-					function compute_image_size(
-						data: CByteListView,
-						image_size: Image.ImageSize,
-						version: Version,
-					): Void;
-
-					/**
 					 * 解码
 					 * @param data 数据
 					 * @param image 图像
 					 * @param version 版本
 					 */
-					function process_image(
+					function process(
 						data: IByteStreamView,
 						image: Image.VImageView,
+						version: Version,
+					): Void;
+
+					/**
+					 * 计算图像尺寸
+					 * @param data 数据
+					 * @param image_size 图像尺寸
+					 * @param version 版本
+					 */
+					function estimate(
+						data: CByteListView,
+						image_size: Image.ImageSize,
 						version: Version,
 					): Void;
 
@@ -3234,8 +3156,8 @@ declare namespace TwinStar.Core {
 
 				}
 
-				/** 清单 */
-				namespace Manifest {
+				/** 定义 */
+				namespace Definition {
 
 					namespace JS_N {
 
@@ -3375,7 +3297,7 @@ declare namespace TwinStar.Core {
 
 						// ------------------------------------------------
 
-						private _Tool_PopCap_Animation_Manifest_Animation;
+						private _Tool_PopCap_Animation_Definition_Animation;
 
 						// ------------------------------------------------
 
@@ -3402,13 +3324,13 @@ declare namespace TwinStar.Core {
 
 					/**
 					 * 编码
-					 * @param animation_data 动画数据
-					 * @param animation_manifest 动画清单
+					 * @param data 数据
+					 * @param definition 定义
 					 * @param version 版本
 					 */
-					function process_animation(
-						animation_data: OByteStreamView,
-						animation_manifest: Manifest.Animation,
+					function process(
+						data: OByteStreamView,
+						definition: Definition.Animation,
 						version: Version,
 					): Void;
 
@@ -3419,13 +3341,13 @@ declare namespace TwinStar.Core {
 
 					/**
 					 * 解码
-					 * @param animation_data 动画数据
-					 * @param animation_manifest 动画清单
+					 * @param data 数据
+					 * @param definition 定义
 					 * @param version 版本
 					 */
-					function process_animation(
-						animation_data: IByteStreamView,
-						animation_manifest: Manifest.Animation,
+					function process(
+						data: IByteStreamView,
+						definition: Definition.Animation,
 						version: Version,
 					): Void;
 
@@ -3466,8 +3388,8 @@ declare namespace TwinStar.Core {
 
 				}
 
-				/** 清单 */
-				namespace Manifest {
+				/** 定义 */
+				namespace Definition {
 
 					namespace JS_N {
 
@@ -3498,7 +3420,7 @@ declare namespace TwinStar.Core {
 
 						// ------------------------------------------------
 
-						private _Tool_PopCap_ReAnimation_Manifest_Animation;
+						private _Tool_PopCap_ReAnimation_Definition_Animation;
 
 						// ------------------------------------------------
 
@@ -3525,13 +3447,13 @@ declare namespace TwinStar.Core {
 
 					/**
 					 * 编码
-					 * @param animation_data 动画数据
-					 * @param animation_manifest 动画清单
+					 * @param data 数据
+					 * @param definition 定义
 					 * @param version 版本
 					 */
-					function process_animation(
-						animation_data: OByteStreamView,
-						animation_manifest: Manifest.Animation,
+					function process(
+						data: OByteStreamView,
+						definition: Definition.Animation,
 						version: Version,
 					): Void;
 
@@ -3542,13 +3464,13 @@ declare namespace TwinStar.Core {
 
 					/**
 					 * 解码
-					 * @param animation_data 动画数据
-					 * @param animation_manifest 动画清单
+					 * @param data 数据
+					 * @param definition 定义
 					 * @param version 版本
 					 */
-					function process_animation(
-						animation_data: IByteStreamView,
-						animation_manifest: Manifest.Animation,
+					function process(
+						data: IByteStreamView,
+						definition: Definition.Animation,
 						version: Version,
 					): Void;
 
@@ -3589,8 +3511,8 @@ declare namespace TwinStar.Core {
 
 				}
 
-				/** 清单 */
-				namespace Manifest {
+				/** 定义 */
+				namespace Definition {
 
 					namespace JS_N {
 
@@ -3601,7 +3523,7 @@ declare namespace TwinStar.Core {
 
 						// ------------------------------------------------
 
-						private _Tool_PopCap_Particle_Manifest_Particle;
+						private _Tool_PopCap_Particle_Definition_Particle;
 
 						// ------------------------------------------------
 
@@ -3628,13 +3550,13 @@ declare namespace TwinStar.Core {
 
 					/**
 					 * 编码
-					 * @param particle_data 粒子数据
-					 * @param particle_manifest 粒子清单
+					 * @param data 数据
+					 * @param definition 定义
 					 * @param version 版本
 					 */
-					function process_particle(
-						particle_data: OByteStreamView,
-						particle_manifest: Manifest.Particle,
+					function process(
+						data: OByteStreamView,
+						definition: Definition.Particle,
 						version: Version,
 					): Void;
 
@@ -3645,13 +3567,13 @@ declare namespace TwinStar.Core {
 
 					/**
 					 * 解码
-					 * @param particle_data 粒子数据
-					 * @param particle_manifest 粒子清单
+					 * @param data 数据
+					 * @param definition 定义
 					 * @param version 版本
 					 */
-					function process_particle(
-						particle_data: IByteStreamView,
-						particle_manifest: Manifest.Particle,
+					function process(
+						data: IByteStreamView,
+						definition: Definition.Particle,
 						version: Version,
 					): Void;
 
@@ -3692,8 +3614,8 @@ declare namespace TwinStar.Core {
 
 				}
 
-				/** 清单 */
-				namespace Manifest {
+				/** 定义 */
+				namespace Definition {
 
 					namespace JS_N {
 
@@ -3704,7 +3626,7 @@ declare namespace TwinStar.Core {
 
 						// ------------------------------------------------
 
-						private _Tool_PopCap_Trail_Manifest_Trail;
+						private _Tool_PopCap_Trail_Definition_Trail;
 
 						// ------------------------------------------------
 
@@ -3731,13 +3653,13 @@ declare namespace TwinStar.Core {
 
 					/**
 					 * 编码
-					 * @param trail_data 拖尾数据
-					 * @param trail_manifest 拖尾清单
+					 * @param data 数据
+					 * @param definition 定义
 					 * @param version 版本
 					 */
-					function process_trail(
-						trail_data: OByteStreamView,
-						trail_manifest: Manifest.Trail,
+					function process(
+						data: OByteStreamView,
+						definition: Definition.Trail,
 						version: Version,
 					): Void;
 
@@ -3748,13 +3670,13 @@ declare namespace TwinStar.Core {
 
 					/**
 					 * 解码
-					 * @param trail_data 拖尾数据
-					 * @param trail_manifest 拖尾清单
+					 * @param data 数据
+					 * @param definition 定义
 					 * @param version 版本
 					 */
-					function process_trail(
-						trail_data: IByteStreamView,
-						trail_manifest: Manifest.Trail,
+					function process(
+						data: IByteStreamView,
+						definition: Definition.Trail,
 						version: Version,
 					): Void;
 
@@ -3762,15 +3684,15 @@ declare namespace TwinStar.Core {
 
 			}
 
-			/** Effect */
-			namespace Effect {
+			/** RenderEffect */
+			namespace RenderEffect {
 
 				/** 版本 */
 				class Version {
 
 					// ------------------------------------------------
 
-					private _Tool_PopCap_Effect_Version;
+					private _Tool_PopCap_RenderEffect_Version;
 
 					// ------------------------------------------------
 
@@ -3795,8 +3717,8 @@ declare namespace TwinStar.Core {
 
 				}
 
-				/** 清单 */
-				namespace Manifest {
+				/** 定义 */
+				namespace Definition {
 
 					namespace JS_N {
 
@@ -3807,7 +3729,7 @@ declare namespace TwinStar.Core {
 
 						// ------------------------------------------------
 
-						private _Tool_PopCap_Effect_Manifest_Effect;
+						private _Tool_PopCap_RenderEffect_Definition_Effect;
 
 						// ------------------------------------------------
 
@@ -3834,13 +3756,13 @@ declare namespace TwinStar.Core {
 
 					/**
 					 * 编码
-					 * @param effect_data 效果数据
-					 * @param effect_manifest 效果清单
+					 * @param data 数据
+					 * @param definition 定义
 					 * @param version 版本
 					 */
-					function process_effect(
-						effect_data: OByteStreamView,
-						effect_manifest: Manifest.Effect,
+					function process(
+						data: OByteStreamView,
+						definition: Definition.Effect,
 						version: Version,
 					): Void;
 
@@ -3851,13 +3773,115 @@ declare namespace TwinStar.Core {
 
 					/**
 					 * 解码
-					 * @param effect_data 效果数据
-					 * @param effect_manifest 效果清单
+					 * @param data 数据
+					 * @param definition 定义
 					 * @param version 版本
 					 */
-					function process_effect(
-						effect_data: IByteStreamView,
-						effect_manifest: Manifest.Effect,
+					function process(
+						data: IByteStreamView,
+						definition: Definition.Effect,
+						version: Version,
+					): Void;
+
+				}
+
+			}
+
+			/** ParticleEffect */
+			namespace ParticleEffect {
+
+				/** 版本 */
+				class Version {
+
+					// ------------------------------------------------
+
+					private _Tool_PopCap_ParticleEffect_Version;
+
+					// ------------------------------------------------
+
+					static default(): Version;
+
+					static copy(it: Version): Version;
+
+					// ------------------------------------------------
+
+					static Value: {
+						number: 1n;
+					};
+
+					static value(it: typeof Version.Value): Version;
+
+					get value(): typeof Version.Value;
+
+					set value(it: typeof Version.Value);
+
+					// ------------------------------------------------
+
+				}
+
+				/** 定义 */
+				namespace Definition {
+
+					namespace JS_N {
+
+					}
+
+					/** 效果 */
+					class Effect {
+
+						// ------------------------------------------------
+
+						private _Tool_PopCap_ParticleEffect_Definition_Effect;
+
+						// ------------------------------------------------
+
+						static default(): Effect;
+
+						static copy(it: Effect): Effect;
+
+						// ------------------------------------------------
+
+						static json(it: JSON.Value<undefined>, version: Version): Effect;
+
+						get_json(version: Version): JSON.Value<undefined>;
+
+						set_json(it: JSON.Value<undefined>, version: Version): Void;
+
+						// ------------------------------------------------
+
+					}
+
+				}
+
+				/** 编码 */
+				namespace Encode {
+
+					/**
+					 * 编码
+					 * @param data 数据
+					 * @param definition 定义
+					 * @param version 版本
+					 */
+					function process(
+						data: OByteStreamView,
+						definition: Definition.Effect,
+						version: Version,
+					): Void;
+
+				}
+
+				/** 解码 */
+				namespace Decode {
+
+					/**
+					 * 解码
+					 * @param data 数据
+					 * @param definition 定义
+					 * @param version 版本
+					 */
+					function process(
+						data: IByteStreamView,
+						definition: Definition.Effect,
 						version: Version,
 					): Void;
 
@@ -3896,8 +3920,8 @@ declare namespace TwinStar.Core {
 
 				}
 
-				/** 清单 */
-				namespace Manifest {
+				/** 定义 */
+				namespace Definition {
 
 					namespace JS_N {
 
@@ -3908,7 +3932,7 @@ declare namespace TwinStar.Core {
 
 						// ------------------------------------------------
 
-						private _Tool_PopCap_CharacterFontWidget2_Manifest_FontWidget;
+						private _Tool_PopCap_CharacterFontWidget2_Definition_FontWidget;
 
 						// ------------------------------------------------
 
@@ -3935,13 +3959,13 @@ declare namespace TwinStar.Core {
 
 					/**
 					 * 编码
-					 * @param font_widget_data 字体部件数据
-					 * @param font_widget_manifest 字体部件清单
+					 * @param data 数据
+					 * @param definition 定义
 					 * @param version 版本
 					 */
-					function process_font_widget(
-						font_widget_data: OByteStreamView,
-						font_widget_manifest: Manifest.FontWidget,
+					function process(
+						data: OByteStreamView,
+						definition: Definition.FontWidget,
 						version: Version,
 					): Void;
 
@@ -3952,13 +3976,13 @@ declare namespace TwinStar.Core {
 
 					/**
 					 * 解码
-					 * @param font_widget_data 字体部件数据
-					 * @param font_widget_manifest 字体部件清单
+					 * @param data 数据
+					 * @param definition 定义
 					 * @param version 版本
 					 */
-					function process_font_widget(
-						font_widget_data: IByteStreamView,
-						font_widget_manifest: Manifest.FontWidget,
+					function process(
+						data: IByteStreamView,
+						definition: Definition.FontWidget,
 						version: Version,
 					): Void;
 
@@ -3999,8 +4023,8 @@ declare namespace TwinStar.Core {
 
 				}
 
-				/** 清单 */
-				namespace Manifest {
+				/** 定义 */
+				namespace Definition {
 
 					namespace JS_N {
 
@@ -4023,7 +4047,7 @@ declare namespace TwinStar.Core {
 
 						// ------------------------------------------------
 
-						private _Tool_PopCap_Package_Manifest_Package;
+						private _Tool_PopCap_Definition_Package;
 
 						// ------------------------------------------------
 
@@ -4050,14 +4074,14 @@ declare namespace TwinStar.Core {
 
 					/**
 					 * 打包
-					 * @param package_data 包数据
-					 * @param package_manifest 包清单
+					 * @param data 数据
+					 * @param definition 定义
 					 * @param resource_directory 资源目录
 					 * @param version 版本
 					 */
-					function process_package(
-						package_data: OByteStreamView,
-						package_manifest: Manifest.Package,
+					function process(
+						data: OByteStreamView,
+						definition: Definition.Package,
 						resource_directory: Path,
 						version: Version,
 					): Void;
@@ -4069,14 +4093,14 @@ declare namespace TwinStar.Core {
 
 					/**
 					 * 解包
-					 * @param package_data 包数据
-					 * @param package_manifest 包清单
+					 * @param data 数据
+					 * @param definition 定义
 					 * @param resource_directory 资源目录
 					 * @param version 版本
 					 */
-					function process_package(
-						package_data: IByteStreamView,
-						package_manifest: Manifest.Package,
+					function process(
+						data: IByteStreamView,
+						definition: Definition.Package,
 						resource_directory: PathOptional,
 						version: Version,
 					): Void;
@@ -4117,8 +4141,8 @@ declare namespace TwinStar.Core {
 
 				}
 
-				/** 清单 */
-				namespace Manifest {
+				/** 定义 */
+				namespace Definition {
 
 					namespace JS_N {
 
@@ -4178,7 +4202,7 @@ declare namespace TwinStar.Core {
 
 						// ------------------------------------------------
 
-						private _Tool_PopCap_ResourceStreamGroup_Manifest_Package;
+						private _Tool_PopCap_ResourceStreamGroup_Definition_Package;
 
 						// ------------------------------------------------
 
@@ -4205,14 +4229,14 @@ declare namespace TwinStar.Core {
 
 					/**
 					 * 打包
-					 * @param package_data 包数据
-					 * @param package_manifest 包清单
+					 * @param data 数据
+					 * @param definition 定义
 					 * @param resource_directory 资源目录
 					 * @param version 版本
 					 */
-					function process_package(
-						package_data: OByteStreamView,
-						package_manifest: Manifest.Package,
+					function process(
+						data: OByteStreamView,
+						definition: Definition.Package,
 						resource_directory: Path,
 						version: Version,
 					): Void;
@@ -4224,14 +4248,14 @@ declare namespace TwinStar.Core {
 
 					/**
 					 * 解包
-					 * @param package_data 包数据
-					 * @param package_manifest 包清单
+					 * @param data 数据
+					 * @param definition 定义
 					 * @param resource_directory 资源目录
 					 * @param version 版本
 					 */
-					function process_package(
-						package_data: IByteStreamView,
-						package_manifest: Manifest.Package,
+					function process(
+						data: IByteStreamView,
+						definition: Definition.Package,
 						resource_directory: PathOptional,
 						version: Version,
 					): Void;
@@ -4273,8 +4297,8 @@ declare namespace TwinStar.Core {
 
 				}
 
-				/** 清单 */
-				namespace Manifest {
+				/** 定义 */
+				namespace Definition {
 
 					namespace JS_N {
 
@@ -4298,7 +4322,7 @@ declare namespace TwinStar.Core {
 							/** 格式 */
 							format: bigint;
 							/** 行字节数 */
-							row_byte_count: bigint;
+							pitch: bigint;
 							/** 附加字节数。当 version.extended_texture_information_for_pvz2_cn >= 1 时存在 */
 							additional_byte_count: undefined | bigint;
 						};
@@ -4364,7 +4388,7 @@ declare namespace TwinStar.Core {
 
 						// ------------------------------------------------
 
-						private _Tool_PopCap_ResourceStreamBundle_Manifest_Package;
+						private _Tool_PopCap_ResourceStreamBundle_Definition_Package;
 
 						// ------------------------------------------------
 
@@ -4424,18 +4448,18 @@ declare namespace TwinStar.Core {
 
 					/**
 					 * 打包
-					 * @param package_data 包数据
-					 * @param package_manifest 包清单
-					 * @param package_description 包详单
+					 * @param data 数据
+					 * @param definition 定义
+					 * @param description 描述
 					 * @param resource_directory 资源目录
 					 * @param packet_file 子包文件
 					 * @param new_packet_file 新生成子包文件
 					 * @param version 版本
 					 */
-					function process_package(
-						package_data: OByteStreamView,
-						package_manifest: Manifest.Package,
-						package_description: Description.PackageOptional,
+					function process(
+						data: OByteStreamView,
+						definition: Definition.Package,
+						description: Description.PackageOptional,
 						resource_directory: Path,
 						packet_file: PathOptional,
 						new_packet_file: PathOptional,
@@ -4449,17 +4473,17 @@ declare namespace TwinStar.Core {
 
 					/**
 					 * 解包
-					 * @param package_data 包数据
-					 * @param package_manifest 包清单
-					 * @param package_description 包详单
+					 * @param data 数据
+					 * @param definition 定义
+					 * @param description 描述
 					 * @param resource_directory 资源目录
 					 * @param packet_file 子包文件
 					 * @param version 版本
 					 */
-					function process_package(
-						package_data: IByteStreamView,
-						package_manifest: Manifest.Package,
-						package_description: Description.PackageOptional,
+					function process(
+						data: IByteStreamView,
+						definition: Definition.Package,
+						description: Description.PackageOptional,
 						resource_directory: PathOptional,
 						packet_file: PathOptional,
 						version: Version,
@@ -4512,7 +4536,7 @@ declare namespace TwinStar.Core {
 					 * @param use_raw_packet 使用原始子包
 					 * @param version 版本
 					 */
-					function process_whole(
+					function process(
 						before: IByteStreamView,
 						after: IByteStreamView,
 						patch: OByteStreamView,
@@ -4533,7 +4557,7 @@ declare namespace TwinStar.Core {
 					 * @param use_raw_packet 使用原始子包
 					 * @param version 版本
 					 */
-					function process_whole(
+					function process(
 						before: IByteStreamView,
 						after: OByteStreamView,
 						patch: IByteStreamView,
@@ -4562,10 +4586,10 @@ declare namespace TwinStar.Core {
 					 * @param image 图像
 					 * @param format 格式
 					 */
-					function process_image(
+					function process(
 						data: OByteStreamView,
 						image: Image.CImageView,
-						format: Image.Texture.Format,
+						format: Texture.Encoding.Format,
 					): Void;
 
 				}
@@ -4579,10 +4603,10 @@ declare namespace TwinStar.Core {
 					 * @param image 图像
 					 * @param format 格式
 					 */
-					function process_image(
+					function process(
 						data: IByteStreamView,
 						image: Image.VImageView,
-						format: Image.Texture.Format,
+						format: Texture.Encoding.Format,
 					): Void;
 
 				}
@@ -4601,7 +4625,7 @@ declare namespace TwinStar.Core {
 					 * @param image 图像
 					 * @param palette 调色板
 					 */
-					function process_image(
+					function process(
 						data: OByteStreamView,
 						image: Image.CImageView,
 						palette: Image.ColorList,
@@ -4618,10 +4642,69 @@ declare namespace TwinStar.Core {
 					 * @param image 图像
 					 * @param palette 调色板
 					 */
-					function process_image(
+					function process(
 						data: IByteStreamView,
 						image: Image.VImageView,
 						palette: Image.ColorList,
+					): Void;
+
+				}
+
+			}
+
+			/** PvZ-2中国版中的加密数据 */
+			namespace PvZ2CNCryptData {
+
+				/** 加密 */
+				namespace Encrypt {
+
+					/**
+					 * 加密
+					 * @param plain 明文数据
+					 * @param cipher 密文数据
+					 * @param key 密钥
+					 */
+					function process(
+						plain: IByteStreamView,
+						cipher: OByteStreamView,
+						key: String,
+					): Void;
+
+					/**
+					 * 计算密文数据的尺寸
+					 * @param plain_size 明文数据尺寸
+					 * @param cipher_size 密文数据的尺寸
+					 */
+					function estimate(
+						plain_size: Size,
+						cipher_size: Size,
+					): Void;
+
+				}
+
+				/** 解密 */
+				namespace Decrypt {
+
+					/**
+					 * 解密
+					 * @param cipher 密文数据
+					 * @param plain 明文数据
+					 * @param key 密钥
+					 */
+					function process(
+						cipher: IByteStreamView,
+						plain: OByteStreamView,
+						key: String,
+					): Void;
+
+					/**
+					 * 计算明文数据的尺寸
+					 * @param cipher_size 密文数据尺寸
+					 * @param plain_size 明文数据的尺寸
+					 */
+					function estimate(
+						cipher_size: Size,
+						plain_size: Size,
 					): Void;
 
 				}

@@ -33,9 +33,9 @@ namespace TwinStar::Core {
 
 	protected:
 
-		Iterator m_data{k_null_pointer};
-		Size     m_size{k_none_size};
-		Size     m_capacity{k_none_size};
+		Iterator m_data{};
+		Size     m_size{};
+		Size     m_capacity{};
 
 	public:
 

@@ -8,9 +8,9 @@
 
 * 要求
 	
-	* [xmake 2.7.8+](https://xmake.io/#/)
+	* [xmake 2.7.9](https://xmake.io/#/)
 	
-	* [MSVC 19.35+ with MSVC-STL and Windows-SDK for Windows](https://visualstudio.microsoft.com/downloads/)
+	* [MSVC 19.36 with MSVC-STL and Windows-SDK for Windows](https://visualstudio.microsoft.com/downloads/)
 	
 	* [vcpkg](https://vcpkg.io)
 
@@ -32,9 +32,9 @@
 
 ## 第三方库使用
 
-| 库                                                                   | 用途                           |
-|:--------------------------------------------------------------------:|:------------------------------:|
-| [wil](https://github.com/microsoft/wil)                              | Windows API                    |
+| 库                                                                         | 用途                           |
+|:--------------------------------------------------------------------------:|:------------------------------:|
+| [wil](https://github.com/microsoft/wil)                                    | Windows API                    |
 
 ## 说明
 

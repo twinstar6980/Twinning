@@ -14,10 +14,10 @@ namespace TwinStar::Core::Image {
 
 		// ----------------
 
-		Color red;
-		Color green;
-		Color blue;
-		Color alpha;
+		Color red{};
+		Color green{};
+		Color blue{};
+		Color alpha{};
 
 		// ----------------
 

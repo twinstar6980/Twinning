@@ -232,49 +232,49 @@ namespace TwinStar::ForwarderForWindows::Exposed {
 			},
 		};
 
-		inline auto const image = GroupForwardExplorerCommandConfiguration{
-			.id = L"image",
+		inline auto const texture = GroupForwardExplorerCommandConfiguration{
+			.id = L"texture",
 			.item = {
 				{
-					.id = L"image.transformation.flip",
+					.id = L"texture.transformation.flip",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
-					.method = L"image.transformation.flip",
+					.method = L"texture.transformation.flip",
 					.argument = LR"({})",
 				},
 				{
-					.id = L"image.transformation.scale",
+					.id = L"texture.transformation.scale",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
-					.method = L"image.transformation.scale",
+					.method = L"texture.transformation.scale",
 					.argument = LR"({})",
 				},
 				{
-					.id = L"image.transformation.scale_rate",
+					.id = L"texture.transformation.scale_rate",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.png)$)", std::wregex::icase},
-					.method = L"image.transformation.scale_rate",
+					.method = L"texture.transformation.scale_rate",
 					.argument = LR"({})",
 				},
 				{
-					.id = L"image.atlas.pack",
+					.id = L"texture.atlas.pack",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.atlas)(\.json)$)", std::wregex::icase},
-					.method = L"image.atlas.pack",
+					.method = L"texture.atlas.pack",
 					.argument = LR"({})",
 				},
 				{
-					.id = L"image.atlas.unpack",
+					.id = L"texture.atlas.unpack",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.atlas)(\.json)$)", std::wregex::icase},
-					.method = L"image.atlas.unpack",
+					.method = L"texture.atlas.unpack",
 					.argument = LR"({})",
 				},
 				{
-					.id = L"image.atlas.pack_automatic",
+					.id = L"texture.atlas.pack_automatic",
 					.type = true,
 					.rule = std::wregex{LR"(.+(\.sprite)$)", std::wregex::icase},
-					.method = L"image.atlas.pack_automatic",
+					.method = L"texture.atlas.pack_automatic",
 					.argument = LR"({})",
 				},
 			},
@@ -963,35 +963,73 @@ namespace TwinStar::ForwarderForWindows::Exposed {
 			},
 		};
 
-		inline auto const popcap_effect = GroupForwardExplorerCommandConfiguration{
-			.id = L"popcap.effect",
+		inline auto const popcap_particle_effect = GroupForwardExplorerCommandConfiguration{
+			.id = L"popcap.particle_effect",
 			.item = {
 				{
-					.id = L"popcap.effect.encode",
+					.id = L"popcap.particle_effect.encode",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.ppf)(\.json)$)", std::wregex::icase},
+					.method = L"popcap.particle_effect.encode",
+					.argument = LR"({})",
+				},
+				{
+					.id = L"popcap.particle_effect.decode",
+					.type = false,
+					.rule = std::wregex{LR"(.+(\.ppf)$)", std::wregex::icase},
+					.method = L"popcap.particle_effect.decode",
+					.argument = LR"({})",
+				},
+				{
+					.id = L"popcap.particle_effect.encode.batch",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.particle_effect.encode.batch",
+					.argument = LR"({})",
+				},
+				{
+					.id = L"popcap.particle_effect.decode.batch",
+					.type = true,
+					.rule = std::nullopt,
+					.method = L"popcap.particle_effect.decode.batch",
+					.argument = LR"({})",
+				},
+			},
+			.separator = {
+				2,
+				2,
+			},
+		};
+
+		inline auto const popcap_render_effect = GroupForwardExplorerCommandConfiguration{
+			.id = L"popcap.render_effect",
+			.item = {
+				{
+					.id = L"popcap.render_effect.encode",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.popfx)(\.json)$)", std::wregex::icase},
-					.method = L"popcap.effect.encode",
+					.method = L"popcap.render_effect.encode",
 					.argument = LR"({})",
 				},
 				{
-					.id = L"popcap.effect.decode",
+					.id = L"popcap.render_effect.decode",
 					.type = false,
 					.rule = std::wregex{LR"(.+(\.popfx)$)", std::wregex::icase},
-					.method = L"popcap.effect.decode",
+					.method = L"popcap.render_effect.decode",
 					.argument = LR"({})",
 				},
 				{
-					.id = L"popcap.effect.encode.batch",
+					.id = L"popcap.render_effect.encode.batch",
 					.type = true,
 					.rule = std::nullopt,
-					.method = L"popcap.effect.encode.batch",
+					.method = L"popcap.render_effect.encode.batch",
 					.argument = LR"({})",
 				},
 				{
-					.id = L"popcap.effect.decode.batch",
+					.id = L"popcap.render_effect.decode.batch",
 					.type = true,
 					.rule = std::nullopt,
-					.method = L"popcap.effect.decode.batch",
+					.method = L"popcap.render_effect.decode.batch",
 					.argument = LR"({})",
 				},
 			},
@@ -1273,7 +1311,7 @@ namespace TwinStar::ForwarderForWindows::Exposed {
 
 	M_define_exposed_visible_forward_command("1DAED04B-CD51-45DA-91E4-F15DC831C7D5", GroupForwardExplorerCommand, Data, data);
 
-	M_define_exposed_visible_forward_command("2BEEB70E-8211-4DB4-B6BF-8D6FDAB791BF", GroupForwardExplorerCommand, Image, image);
+	M_define_exposed_visible_forward_command("2BEEB70E-8211-4DB4-B6BF-8D6FDAB791BF", GroupForwardExplorerCommand, Texture, texture);
 
 	M_define_exposed_visible_forward_command("C9A257AC-8048-4257-85AD-CE68CACD7922", GroupForwardExplorerCommand, WwiseMedia, wwise_media);
 
@@ -1301,7 +1339,9 @@ namespace TwinStar::ForwarderForWindows::Exposed {
 
 	M_define_exposed_visible_forward_command("8532B3AF-4E59-149E-A324-BABC012C38F2", GroupForwardExplorerCommand, PopCapTrail, popcap_trail);
 
-	M_define_exposed_visible_forward_command("A29DEC4C-30C3-1C40-63C2-AD34D4F828AF", GroupForwardExplorerCommand, PopCapEffect, popcap_effect);
+	M_define_exposed_visible_forward_command("868631C7-7B6D-A8F1-2C74-F55F98373DD3", GroupForwardExplorerCommand, PopCapParticleEffect, popcap_particle_effect);
+
+	M_define_exposed_visible_forward_command("A29DEC4C-30C3-1C40-63C2-AD34D4F828AF", GroupForwardExplorerCommand, PopCapRenderEffect, popcap_render_effect);
 
 	M_define_exposed_visible_forward_command("3AB6C4D5-C386-E654-C646-54D42FF58065", GroupForwardExplorerCommand, PopCapCharacterFontWidget2, popcap_character_font_widget_2);
 

@@ -1,482 +1,132 @@
 #pragma once
 
 #include "core/utility/utility.hpp"
-#include "core/tool/popcap/character_font_widget_2/version.hpp"
-#include "core/tool/popcap/character_font_widget_2/manifest.hpp"
+#include "core/tool/popcap/character_font_widget_2/common.hpp"
+#include "core/tool/common/byte_stream.hpp"
 
 namespace TwinStar::Core::Tool::PopCap::CharacterFontWidget2 {
 
 	template <auto version> requires (check_version(version))
-	struct EncodeCommon {
-
-	protected:
-
-		using Manifest = Manifest<version>;
-
-	};
-
-	template <auto version> requires (check_version(version))
 	struct Encode :
-		EncodeCommon<version> {
+		Common<version>,
+		CommonByteStreamExchangeForOutput {
 
-	protected:
+		using Common = Common<version>;
 
-		using Common = EncodeCommon<version>;
-
-		using typename Common::Manifest;
-
-		// ----------------
-
-		static auto exchange_unit_character_16 (
-			OByteStreamView & data,
-			Unicode const &   value
-		) -> Void {
-			data.write(cbw<Character16>(value));
-			return;
-		}
-
-		static auto exchange_unit_boolean_8 (
-			OByteStreamView & data,
-			Boolean const &   value
-		) -> Void {
-			data.write(cbw<Boolean8>(value));
-			return;
-		}
-
-		static auto exchange_unit_integer_32 (
-			OByteStreamView & data,
-			Integer const &   value
-		) -> Void {
-			data.write(cbw<IntegerS32>(value));
-			return;
-		}
-
-		static auto exchange_unit_integer_16 (
-			OByteStreamView & data,
-			Integer const &   value
-		) -> Void {
-			data.write(cbw<IntegerS16>(value));
-			return;
-		}
-
-		static auto exchange_unit_floater_64 (
-			OByteStreamView & data,
-			Floater const &   value
-		) -> Void {
-			data.write(cbw<FloaterS64>(value));
-			return;
-		}
-
-		static auto exchange_unit_string_32 (
-			OByteStreamView & data,
-			String const &    value
-		) -> Void {
-			data.write(self_cast<StringBlock32>(value));
-			return;
-		}
-
-		static auto exchange_unit_hash_128 (
-			OByteStreamView & data,
-			ByteList const &  value
-		) -> Void {
-			assert_test(value.size() == 16_sz);
-			data.write(value);
-			return;
-		}
-
-		template <typename Element, typename Parser> requires
-			CategoryConstraint<IsPureInstance<Element> && IsPureInstance<Parser>>
-			&& (IsGenericCallable<Parser>)
-		static auto exchange_unit_list_32 (
-			OByteStreamView &     data,
-			List<Element> const & value,
-			Parser const &        parser
-		) -> Void {
-			data.write(cbw<IntegerU32>(value.size()));
-			for (auto & element : value) {
-				parser(data, element);
-			}
-			return;
-		}
+		using typename Common::Definition;
 
 		// ----------------
 
-		static auto process_character_item (
-			OByteStreamView &                        character_item_data,
-			typename Manifest::CharacterItem const & character_item_manifest
+		static auto exchange_character_item (
+			OByteStreamView &                          data,
+			typename Definition::CharacterItem const & value
 		) -> Void {
-			exchange_unit_character_16(character_item_data, character_item_manifest.index);
-			exchange_unit_character_16(character_item_data, character_item_manifest.value);
+			exchange_unicode_fixed<Character16>(data, value.index);
+			exchange_unicode_fixed<Character16>(data, value.value);
 			return;
 		}
 
-		static auto process_font_kerning (
-			OByteStreamView &                      font_kerning_data,
-			typename Manifest::FontKerning const & font_kerning_manifest
+		static auto exchange_font_kerning (
+			OByteStreamView &                        data,
+			typename Definition::FontKerning const & value
 		) -> Void {
-			exchange_unit_integer_16(font_kerning_data, font_kerning_manifest.offset);
-			exchange_unit_character_16(font_kerning_data, font_kerning_manifest.index);
+			exchange_integer_fixed<IntegerU16>(data, value.offset);
+			exchange_unicode_fixed<Character16>(data, value.index);
 			return;
 		}
 
-		static auto process_font_character (
-			OByteStreamView &                        font_character_data,
-			typename Manifest::FontCharacter const & font_character_manifest
+		static auto exchange_font_character (
+			OByteStreamView &                          data,
+			typename Definition::FontCharacter const & value
 		) -> Void {
-			exchange_unit_character_16(font_character_data, font_character_manifest.index);
-			exchange_unit_integer_32(font_character_data, font_character_manifest.image_rect_x);
-			exchange_unit_integer_32(font_character_data, font_character_manifest.image_rect_y);
-			exchange_unit_integer_32(font_character_data, font_character_manifest.image_rect_width);
-			exchange_unit_integer_32(font_character_data, font_character_manifest.image_rect_height);
-			exchange_unit_integer_32(font_character_data, font_character_manifest.image_offset_x);
-			exchange_unit_integer_32(font_character_data, font_character_manifest.image_offset_y);
-			exchange_unit_integer_16(font_character_data, font_character_manifest.kerning_count);
-			exchange_unit_integer_16(font_character_data, font_character_manifest.kerning_first);
-			exchange_unit_integer_32(font_character_data, font_character_manifest.width);
-			exchange_unit_integer_32(font_character_data, font_character_manifest.order);
+			exchange_unicode_fixed<Character16>(data, value.index);
+			exchange_integer_fixed<IntegerS32>(data, value.image_rect_x);
+			exchange_integer_fixed<IntegerS32>(data, value.image_rect_y);
+			exchange_integer_fixed<IntegerS32>(data, value.image_rect_width);
+			exchange_integer_fixed<IntegerS32>(data, value.image_rect_height);
+			exchange_integer_fixed<IntegerS32>(data, value.image_offset_x);
+			exchange_integer_fixed<IntegerS32>(data, value.image_offset_y);
+			exchange_integer_fixed<IntegerU16>(data, value.kerning_count);
+			exchange_integer_fixed<IntegerU16>(data, value.kerning_first);
+			exchange_integer_fixed<IntegerS32>(data, value.width);
+			exchange_integer_fixed<IntegerS32>(data, value.order);
 			return;
 		}
 
-		static auto process_font_layer (
-			OByteStreamView &                    font_layer_data,
-			typename Manifest::FontLayer const & font_layer_manifest
+		static auto exchange_font_layer (
+			OByteStreamView &                      data,
+			typename Definition::FontLayer const & value
 		) -> Void {
-			exchange_unit_string_32(font_layer_data, font_layer_manifest.name);
-			exchange_unit_list_32(
-				font_layer_data,
-				font_layer_manifest.tag_require,
-				[] (auto & data, auto & manifest) {
-					exchange_unit_string_32(data, manifest);
-				}
-			);
-			exchange_unit_list_32(
-				font_layer_data,
-				font_layer_manifest.tag_exclude,
-				[] (auto & data, auto & manifest) {
-					exchange_unit_string_32(data, manifest);
-				}
-			);
-			exchange_unit_list_32(
-				font_layer_data,
-				font_layer_manifest.kerning,
-				[] (auto & data, auto & manifest) {
-					process_font_kerning(data, manifest);
-				}
-			);
-			exchange_unit_list_32(
-				font_layer_data,
-				font_layer_manifest.character,
-				[] (auto & data, auto & manifest) {
-					process_font_character(data, manifest);
-				}
-			);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.multiply_red);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.multiply_green);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.multiply_blue);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.multiply_alpha);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.add_red);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.add_green);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.add_blue);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.add_alpha);
-			exchange_unit_string_32(font_layer_data, font_layer_manifest.image_file);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.draw_mode);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.offset_x);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.offset_y);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.spacing);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.minimum_point_size);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.maximum_point_size);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.point_size);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.ascent);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.ascent_padding);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.height);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.default_height);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.line_spacing_offset);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.base_order);
+			exchange_string_block<IntegerU32>(data, value.name);
+			exchange_list(data, value.tag_require, &exchange_size_fixed<IntegerU32>, &exchange_string_block<IntegerU32>);
+			exchange_list(data, value.tag_exclude, &exchange_size_fixed<IntegerU32>, &exchange_string_block<IntegerU32>);
+			exchange_list(data, value.kerning, &exchange_size_fixed<IntegerU32>, &exchange_font_kerning);
+			exchange_list(data, value.character, &exchange_size_fixed<IntegerU32>, &exchange_font_character);
+			exchange_integer_fixed<IntegerS32>(data, value.multiply_red);
+			exchange_integer_fixed<IntegerS32>(data, value.multiply_green);
+			exchange_integer_fixed<IntegerS32>(data, value.multiply_blue);
+			exchange_integer_fixed<IntegerS32>(data, value.multiply_alpha);
+			exchange_integer_fixed<IntegerS32>(data, value.add_red);
+			exchange_integer_fixed<IntegerS32>(data, value.add_green);
+			exchange_integer_fixed<IntegerS32>(data, value.add_blue);
+			exchange_integer_fixed<IntegerS32>(data, value.add_alpha);
+			exchange_string_block<IntegerU32>(data, value.image_file);
+			exchange_integer_fixed<IntegerS32>(data, value.draw_mode);
+			exchange_integer_fixed<IntegerS32>(data, value.offset_x);
+			exchange_integer_fixed<IntegerS32>(data, value.offset_y);
+			exchange_integer_fixed<IntegerS32>(data, value.spacing);
+			exchange_integer_fixed<IntegerS32>(data, value.minimum_point_size);
+			exchange_integer_fixed<IntegerS32>(data, value.maximum_point_size);
+			exchange_integer_fixed<IntegerS32>(data, value.point_size);
+			exchange_integer_fixed<IntegerS32>(data, value.ascent);
+			exchange_integer_fixed<IntegerS32>(data, value.ascent_padding);
+			exchange_integer_fixed<IntegerS32>(data, value.height);
+			exchange_integer_fixed<IntegerS32>(data, value.default_height);
+			exchange_integer_fixed<IntegerS32>(data, value.line_spacing_offset);
+			exchange_integer_fixed<IntegerS32>(data, value.base_order);
 			return;
 		}
 
-		static auto process_font_widget (
-			OByteStreamView &                     font_widget_data,
-			typename Manifest::FontWidget const & font_widget_manifest
+		static auto exchange_font_widget (
+			OByteStreamView &                       data,
+			typename Definition::FontWidget const & value
 		) -> Void {
-			exchange_unit_hash_128(font_widget_data, font_widget_manifest.source_hash);
-			exchange_unit_integer_32(font_widget_data, font_widget_manifest.ascent);
-			exchange_unit_integer_32(font_widget_data, font_widget_manifest.ascent_padding);
-			exchange_unit_integer_32(font_widget_data, font_widget_manifest.height);
-			exchange_unit_integer_32(font_widget_data, font_widget_manifest.line_sepacing_offset);
-			exchange_unit_boolean_8(font_widget_data, font_widget_manifest.initialized);
-			exchange_unit_integer_32(font_widget_data, font_widget_manifest.default_point_size);
-			exchange_unit_list_32(
-				font_widget_data,
-				font_widget_manifest.character,
-				[] (auto & data, auto & manifest) {
-					process_character_item(data, manifest);
-				}
-			);
-			exchange_unit_list_32(
-				font_widget_data,
-				font_widget_manifest.layer,
-				[] (auto & data, auto & manifest) {
-					process_font_layer(data, manifest);
-				}
-			);
-			exchange_unit_string_32(font_widget_data, font_widget_manifest.source_file);
-			exchange_unit_string_32(font_widget_data, font_widget_manifest.error_header);
-			exchange_unit_integer_32(font_widget_data, font_widget_manifest.point_size);
-			exchange_unit_list_32(
-				font_widget_data,
-				font_widget_manifest.tag,
-				[] (auto & data, auto & manifest) {
-					exchange_unit_string_32(data, manifest);
-				}
-			);
-			exchange_unit_floater_64(font_widget_data, font_widget_manifest.scale);
-			exchange_unit_boolean_8(font_widget_data, font_widget_manifest.force_scaled_image_white);
-			exchange_unit_boolean_8(font_widget_data, font_widget_manifest.activate_all_layer);
-			return;
-		}
-
-	public:
-
-		static auto do_process_font_widget (
-			OByteStreamView &                     font_widget_data_,
-			typename Manifest::FontWidget const & font_widget_manifest
-		) -> Void {
-			M_use_zps_of(font_widget_data);
-			return process_font_widget(font_widget_data, font_widget_manifest);
-		}
-
-	};
-
-	template <auto version> requires (check_version(version))
-	struct Decode :
-		EncodeCommon<version> {
-
-	protected:
-
-		using Common = EncodeCommon<version>;
-
-		using typename Common::Manifest;
-
-		// ----------------
-
-		static auto exchange_unit_character_16 (
-			IByteStreamView & data,
-			Unicode &         value
-		) -> Void {
-			value = cbw<Unicode>(data.read_of<Character16>());
-			return;
-		}
-
-		static auto exchange_unit_boolean_8 (
-			IByteStreamView & data,
-			Boolean &         value
-		) -> Void {
-			value = cbw<Boolean>(data.read_of<Boolean8>());
-			return;
-		}
-
-		static auto exchange_unit_integer_32 (
-			IByteStreamView & data,
-			Integer &         value
-		) -> Void {
-			value = cbw<Integer>(data.read_of<IntegerS32>());
-			return;
-		}
-
-		static auto exchange_unit_integer_16 (
-			IByteStreamView & data,
-			Integer &         value
-		) -> Void {
-			value = cbw<Integer>(data.read_of<IntegerS16>());
-			return;
-		}
-
-		static auto exchange_unit_floater_64 (
-			IByteStreamView & data,
-			Floater &         value
-		) -> Void {
-			value = cbw<Floater>(data.read_of<FloaterS64>());
-			return;
-		}
-
-		static auto exchange_unit_string_32 (
-			IByteStreamView & data,
-			String &          value
-		) -> Void {
-			data.read(self_cast<StringBlock32>(value));
-			return;
-		}
-
-		static auto exchange_unit_hash_128 (
-			IByteStreamView & data,
-			ByteList &        value
-		) -> Void {
-			data.read(value, 16_sz);
-			return;
-		}
-
-		template <typename Element, typename Parser> requires
-			CategoryConstraint<IsPureInstance<Element> && IsPureInstance<Parser>>
-			&& (IsGenericCallable<Parser>)
-		static auto exchange_unit_list_32 (
-			IByteStreamView & data,
-			List<Element> &   value,
-			Parser const &    parser
-		) -> Void {
-			value.allocate_full(cbw<Size>(data.read_of<IntegerU32>()));
-			for (auto & element : value) {
-				parser(data, element);
-			}
+			exchange_integer_fixed<IntegerS32>(data, value.ascent);
+			exchange_integer_fixed<IntegerS32>(data, value.ascent_padding);
+			exchange_integer_fixed<IntegerS32>(data, value.height);
+			exchange_integer_fixed<IntegerS32>(data, value.line_sepacing_offset);
+			exchange_boolean_fixed<Boolean8>(data, value.initialized);
+			exchange_integer_fixed<IntegerS32>(data, value.default_point_size);
+			exchange_list(data, value.character, &exchange_size_fixed<IntegerU32>, &exchange_character_item);
+			exchange_list(data, value.layer, &exchange_size_fixed<IntegerU32>, &exchange_font_layer);
+			exchange_string_block<IntegerU32>(data, value.source_file);
+			exchange_string_block<IntegerU32>(data, value.error_header);
+			exchange_integer_fixed<IntegerS32>(data, value.point_size);
+			exchange_list(data, value.tag, &exchange_size_fixed<IntegerU32>, &exchange_string_block<IntegerU32>);
+			exchange_floater_fixed<FloaterS64>(data, value.scale);
+			exchange_boolean_fixed<Boolean8>(data, value.force_scaled_image_white);
+			exchange_boolean_fixed<Boolean8>(data, value.activate_all_layer);
 			return;
 		}
 
 		// ----------------
 
-		static auto process_character_item (
-			IByteStreamView &                  character_item_data,
-			typename Manifest::CharacterItem & character_item_manifest
+		static auto process_whole (
+			OByteStreamView &                       data,
+			typename Definition::FontWidget const & definition
 		) -> Void {
-			exchange_unit_character_16(character_item_data, character_item_manifest.index);
-			exchange_unit_character_16(character_item_data, character_item_manifest.value);
+			exchange_font_widget(data, definition);
 			return;
 		}
 
-		static auto process_font_kerning (
-			IByteStreamView &                font_kerning_data,
-			typename Manifest::FontKerning & font_kerning_manifest
-		) -> Void {
-			exchange_unit_integer_16(font_kerning_data, font_kerning_manifest.offset);
-			exchange_unit_character_16(font_kerning_data, font_kerning_manifest.index);
-			return;
-		}
+		// ----------------
 
-		static auto process_font_character (
-			IByteStreamView &                  font_character_data,
-			typename Manifest::FontCharacter & font_character_manifest
+		static auto process (
+			OByteStreamView &                       data_,
+			typename Definition::FontWidget const & definition
 		) -> Void {
-			exchange_unit_character_16(font_character_data, font_character_manifest.index);
-			exchange_unit_integer_32(font_character_data, font_character_manifest.image_rect_x);
-			exchange_unit_integer_32(font_character_data, font_character_manifest.image_rect_y);
-			exchange_unit_integer_32(font_character_data, font_character_manifest.image_rect_width);
-			exchange_unit_integer_32(font_character_data, font_character_manifest.image_rect_height);
-			exchange_unit_integer_32(font_character_data, font_character_manifest.image_offset_x);
-			exchange_unit_integer_32(font_character_data, font_character_manifest.image_offset_y);
-			exchange_unit_integer_16(font_character_data, font_character_manifest.kerning_count);
-			exchange_unit_integer_16(font_character_data, font_character_manifest.kerning_first);
-			exchange_unit_integer_32(font_character_data, font_character_manifest.width);
-			exchange_unit_integer_32(font_character_data, font_character_manifest.order);
-			return;
-		}
-
-		static auto process_font_layer (
-			IByteStreamView &              font_layer_data,
-			typename Manifest::FontLayer & font_layer_manifest
-		) -> Void {
-			exchange_unit_string_32(font_layer_data, font_layer_manifest.name);
-			exchange_unit_list_32(
-				font_layer_data,
-				font_layer_manifest.tag_require,
-				[] (auto & data, auto & manifest) {
-					exchange_unit_string_32(data, manifest);
-				}
-			);
-			exchange_unit_list_32(
-				font_layer_data,
-				font_layer_manifest.tag_exclude,
-				[] (auto & data, auto & manifest) {
-					exchange_unit_string_32(data, manifest);
-				}
-			);
-			exchange_unit_list_32(
-				font_layer_data,
-				font_layer_manifest.kerning,
-				[] (auto & data, auto & manifest) {
-					process_font_kerning(data, manifest);
-				}
-			);
-			exchange_unit_list_32(
-				font_layer_data,
-				font_layer_manifest.character,
-				[] (auto & data, auto & manifest) {
-					process_font_character(data, manifest);
-				}
-			);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.multiply_red);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.multiply_green);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.multiply_blue);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.multiply_alpha);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.add_red);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.add_green);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.add_blue);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.add_alpha);
-			exchange_unit_string_32(font_layer_data, font_layer_manifest.image_file);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.draw_mode);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.offset_x);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.offset_y);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.spacing);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.minimum_point_size);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.maximum_point_size);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.point_size);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.ascent);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.ascent_padding);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.height);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.default_height);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.line_spacing_offset);
-			exchange_unit_integer_32(font_layer_data, font_layer_manifest.base_order);
-			return;
-		}
-
-		static auto process_font_widget (
-			IByteStreamView &               font_widget_data,
-			typename Manifest::FontWidget & font_widget_manifest
-		) -> Void {
-			exchange_unit_hash_128(font_widget_data, font_widget_manifest.source_hash);
-			exchange_unit_integer_32(font_widget_data, font_widget_manifest.ascent);
-			exchange_unit_integer_32(font_widget_data, font_widget_manifest.ascent_padding);
-			exchange_unit_integer_32(font_widget_data, font_widget_manifest.height);
-			exchange_unit_integer_32(font_widget_data, font_widget_manifest.line_sepacing_offset);
-			exchange_unit_boolean_8(font_widget_data, font_widget_manifest.initialized);
-			exchange_unit_integer_32(font_widget_data, font_widget_manifest.default_point_size);
-			exchange_unit_list_32(
-				font_widget_data,
-				font_widget_manifest.character,
-				[] (auto & data, auto & manifest) {
-					process_character_item(data, manifest);
-				}
-			);
-			exchange_unit_list_32(
-				font_widget_data,
-				font_widget_manifest.layer,
-				[] (auto & data, auto & manifest) {
-					process_font_layer(data, manifest);
-				}
-			);
-			exchange_unit_string_32(font_widget_data, font_widget_manifest.source_file);
-			exchange_unit_string_32(font_widget_data, font_widget_manifest.error_header);
-			exchange_unit_integer_32(font_widget_data, font_widget_manifest.point_size);
-			exchange_unit_list_32(
-				font_widget_data,
-				font_widget_manifest.tag,
-				[] (auto & data, auto & manifest) {
-					exchange_unit_string_32(data, manifest);
-				}
-			);
-			exchange_unit_floater_64(font_widget_data, font_widget_manifest.scale);
-			exchange_unit_boolean_8(font_widget_data, font_widget_manifest.force_scaled_image_white);
-			exchange_unit_boolean_8(font_widget_data, font_widget_manifest.activate_all_layer);
-			return;
-		}
-
-	public:
-
-		static auto do_process_font_widget (
-			IByteStreamView &               font_widget_data_,
-			typename Manifest::FontWidget & font_widget_manifest
-		) -> Void {
-			M_use_zps_of(font_widget_data);
-			restruct(font_widget_manifest);
-			return process_font_widget(font_widget_data, font_widget_manifest);
+			M_use_zps_of(data);
+			return process_whole(data, definition);
 		}
 
 	};

@@ -291,7 +291,7 @@ namespace TwinStar::Core::JavaScript {
 			(t_type == NativeFunctionWrapperType::Constant::constructor() && IsValid<typename CallableTraitOf<t_function>::Result>))
 	struct NativeFunctionWrapper {
 
-		String name;
+		String name{};
 
 	};
 
@@ -333,11 +333,11 @@ namespace TwinStar::Core::JavaScript {
 
 	protected:
 
-		Optional<String> m_parent_name;
-		String           m_name;
-		Value            m_proto;
-		Value            m_constructor;
-		Value            m_parent;
+		Optional<String> m_parent_name{};
+		String           m_name{};
+		Value            m_proto{};
+		Value            m_constructor{};
+		Value            m_parent{};
 
 	public:
 
@@ -559,9 +559,9 @@ namespace TwinStar::Core::JavaScript {
 
 	protected:
 
-		Optional<String> m_parent_name;
-		String           m_name;
-		Value            m_object;
+		Optional<String> m_parent_name{};
+		String           m_name{};
+		Value            m_object{};
 
 	public:
 

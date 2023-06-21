@@ -52,7 +52,7 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 			if (size !== 0) {
 				let ripe_stream = Core.ByteStreamView.watch(Core.ByteListView.value(ripe.sub(0, ripe.size())));
 				let raw_stream = Core.ByteStreamView.watch(Core.ByteListView.value(raw.sub(0, raw.size())));
-				Core.Tool.Data.Compression.Deflate.Uncompress.process_whole(ripe_stream, raw_stream, Core.Size.value(15n), Core.Tool.Data.Compression.Deflate.Wrapper.value('zlib'));
+				Core.Tool.Data.Compression.Deflate.Uncompress.process(ripe_stream, raw_stream, Core.Size.value(15n), Core.Tool.Data.Compression.Deflate.Wrapper.value('zlib'));
 			}
 		}
 		for (let item in list) {
@@ -66,10 +66,10 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 
 	export function process_package(
 		package_data: ByteListView,
-		package_manifest: Core.Tool.PopCap.ResourceStreamBundle.Manifest.JS_N.Package,
+		package_definition: Core.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Package,
 		resource_directory: string,
 	): void {
-		package_manifest.group = {};
+		package_definition.group = {};
 		let package_header = {
 			information_size: Number(package_data.u32(0x0C)),
 			resource_path_size: Number(package_data.u32(0x10)),
@@ -123,15 +123,15 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 				Console.warning(los('support.popcap.resource_stream_bundle.unpack_lenient:unknown_group_id'), []);
 				group_id = `<unknown>:${group_index}`;
 			}
-			let group_manifest: Core.Tool.PopCap.ResourceStreamBundle.Manifest.JS_N.Group = {
+			let group_definition: Core.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Group = {
 				composite: true,
 				subgroup: {},
 			};
 			if (group_id.endsWith('_COMPOSITESHELL')) {
 				group_id = group_id.substring(0, group_id.length - '_COMPOSITESHELL'.length);
-				group_manifest.composite = false;
+				group_definition.composite = false;
 			}
-			package_manifest.group[group_id] = group_manifest;
+			package_definition.group[group_id] = group_definition;
 			for (let subgroup_index = 0; subgroup_index < subgroup_count; ++subgroup_index) {
 				try {
 					let simple_subgroup_information_data = new ByteListView(group_information_data.sub(0x80 + 0x10 * subgroup_index, 0x10));
@@ -168,20 +168,20 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 						Console.warning(los('support.popcap.resource_stream_bundle.unpack_lenient:unknown_subgroup_id'), []);
 						subgroup_id = `<unknown>:${simple_subgroup_information.index}`;
 					}
-					let subgroup_manifest: Core.Tool.PopCap.ResourceStreamBundle.Manifest.JS_N.Subgroup = {
+					let subgroup_definition: Core.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Subgroup = {
 						category: [null, null],
 						resource: {},
 						resource_data_section_store_mode: [false, false],
 					};
-					group_manifest.subgroup[subgroup_id] = subgroup_manifest;
-					subgroup_manifest.category[0] = simple_subgroup_information.resolution === 0 ? null : BigInt(simple_subgroup_information.resolution);
-					subgroup_manifest.category[1] = simple_subgroup_information.locale === 0 ? null :
+					group_definition.subgroup[subgroup_id] = subgroup_definition;
+					subgroup_definition.category[0] = simple_subgroup_information.resolution === 0 ? null : BigInt(simple_subgroup_information.resolution);
+					subgroup_definition.category[1] = simple_subgroup_information.locale === 0 ? null :
 						String.fromCharCode((simple_subgroup_information.locale & 0xFF000000) >> 24) +
 						String.fromCharCode((simple_subgroup_information.locale & 0x00FF0000) >> 16) +
 						String.fromCharCode((simple_subgroup_information.locale & 0x0000FF00) >> 8) +
 						String.fromCharCode((simple_subgroup_information.locale & 0x000000FF) >> 0);
-					subgroup_manifest.resource_data_section_store_mode[0] = (subgroup_information.resource_data_store_mode & 0b10) !== 0;
-					subgroup_manifest.resource_data_section_store_mode[1] = (subgroup_information.resource_data_store_mode & 0b01) !== 0;
+					subgroup_definition.resource_data_section_store_mode[0] = (subgroup_information.resource_data_store_mode & 0b10) !== 0;
+					subgroup_definition.resource_data_section_store_mode[1] = (subgroup_information.resource_data_store_mode & 0b01) !== 0;
 					Console.verbosity(`${group_index}.${subgroup_index} ${simple_subgroup_information.index} ${group_id}.${subgroup_id} ${subgroup_information.offset.toString(16)}`, []);
 					let packet_data = new ByteListView(package_data.sub(subgroup_information.offset, package_data.size() - subgroup_information.offset));
 					let packet_header = {
@@ -225,12 +225,12 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 					);
 					for (let packet_resource_path in packet_resource_information_list) {
 						let packet_resource_information = packet_resource_information_list[packet_resource_path];
-						let resource_manifest: Core.Tool.PopCap.ResourceStreamBundle.Manifest.JS_N.Resource = {
+						let resource_definition: Core.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Resource = {
 							additional: undefined!,
 						};
-						subgroup_manifest.resource[PathUtility.regularize(packet_resource_path)] = resource_manifest;
+						subgroup_definition.resource[PathUtility.regularize(packet_resource_path)] = resource_definition;
 						if (packet_resource_information.type === 0) {
-							resource_manifest.additional = {
+							resource_definition.additional = {
 								type: 'generic',
 								value: {
 								},
@@ -239,7 +239,7 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 						if (packet_resource_information.type === 1) {
 							let texture_index = subgroup_information.texture_resource_begin + packet_resource_information.additional!.index;
 							let texture_information_data = new ByteListView(package_data.sub(package_header.texture_resource_information_offset + package_header.texture_resource_information_block_size * texture_index, package_header.texture_resource_information_block_size));
-							resource_manifest.additional = {
+							resource_definition.additional = {
 								type: 'texture',
 								value: {
 									size: [
@@ -276,16 +276,26 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 
 	// ------------------------------------------------
 
-	export function process_package_fs(
+	export function process(
+		data: ByteListView,
+		definition: Core.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Package,
+		resource_directory: string,
+	): void {
+		return process_package(data, definition, resource_directory);
+	}
+
+	// ------------------------------------------------
+
+	export function process_fs(
 		data_file: string,
-		manifest_file: string,
+		definition_file: string,
 		description_file: string,
 		resource_directory: string,
 	): void {
 		let data = CoreX.FileSystem.read_file(data_file);
-		let manifest = {} as Core.Tool.PopCap.ResourceStreamBundle.Manifest.JS_N.Package;
-		process_package(new ByteListView(data.view().value), manifest, resource_directory);
-		CoreX.JSON.write_fs_js(manifest_file, manifest);
+		let definition = {} as Core.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Package;
+		process(new ByteListView(data.view().value), definition, resource_directory);
+		CoreX.JSON.write_fs_js(definition_file, definition);
 		CoreX.JSON.write_fs_js(description_file, null);
 		return;
 	}

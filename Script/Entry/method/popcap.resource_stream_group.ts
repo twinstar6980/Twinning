@@ -60,9 +60,9 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_group {
 							(initial) => (Console.size(null, null, initial)),
 						);
 					}
-					let manifest_file = `${bundle_directory}/manifest.json`;
+					let definition_file = `${bundle_directory}/definition.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					CoreX.Tool.PopCap.ResourceStreamGroup.pack_fs(data_file, manifest_file, resource_directory, { number: version_number as any }, buffer_size);
+					CoreX.Tool.PopCap.ResourceStreamGroup.pack_fs(data_file, definition_file, resource_directory, { number: version_number as any }, buffer_size);
 					return [`${data_file}`];
 				},
 				default_argument: {
@@ -112,9 +112,9 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_group {
 							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ResourceStreamGroup.VersionNumberE), null, null, initial)),
 						);
 					}
-					let manifest_file = `${bundle_directory}/manifest.json`;
+					let definition_file = `${bundle_directory}/definition.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					CoreX.Tool.PopCap.ResourceStreamGroup.unpack_fs(data_file, manifest_file, resource_directory, { number: version_number as any });
+					CoreX.Tool.PopCap.ResourceStreamGroup.unpack_fs(data_file, definition_file, resource_directory, { number: version_number as any });
 					return [`${bundle_directory}`];
 				},
 				default_argument: {

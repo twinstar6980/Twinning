@@ -9,27 +9,27 @@ namespace TwinStar::Core {
 
 	#pragma region type
 
-	template <auto t_method> requires
+	template <auto t_mode> requires
 		CategoryConstraint<>
-		&& (IsSameV<t_method, StreamMethod>)
+		&& (IsSameV<t_mode, StreamMode>)
 	class CharacterStreamView :
-		public StreamView<Character, t_method, BasicCharacterListView> {
+		public StreamView<Character, t_mode, BasicCharacterListView> {
 
 	private:
 
-		using StreamView = StreamView<Character, t_method, BasicCharacterListView>;
+		using StreamView = StreamView<Character, t_mode, BasicCharacterListView>;
 
-		using IOStream = CharacterStreamView<StreamMethod::Constant::io()>;
+		using IOStream = CharacterStreamView<StreamMode::Constant::io()>;
 
-		using IStream = CharacterStreamView<StreamMethod::Constant::i()>;
+		using IStream = CharacterStreamView<StreamMode::Constant::i()>;
 
-		using OStream = CharacterStreamView<StreamMethod::Constant::o()>;
+		using OStream = CharacterStreamView<StreamMode::Constant::o()>;
 
 	public:
 
 		using typename StreamView::Element;
 
-		using StreamView::method;
+		using StreamView::mode;
 
 		using typename StreamView::ListView;
 
@@ -76,12 +76,12 @@ namespace TwinStar::Core {
 		// ----------------
 
 		implicit operator IStream & () requires
-			(method == StreamMethod::Constant::io()) {
+			(mode == StreamMode::Constant::io()) {
 			return thiz.as_input_stream();
 		}
 
 		implicit operator OStream & () requires
-			(method == StreamMethod::Constant::io()) {
+			(mode == StreamMode::Constant::io()) {
 			return thiz.as_output_stream();
 		}
 
@@ -95,7 +95,7 @@ namespace TwinStar::Core {
 			That &&       that,
 			Option && ... option
 		) -> Void requires
-			(method == StreamMethod::Constant::o() || method == StreamMethod::Constant::io()) {
+			(mode == StreamMode::Constant::o() || mode == StreamMode::Constant::io()) {
 			CharacterStreamAdapter<AsPure<That>>::write(thiz, as_forward<That>(that), as_forward<Option>(option) ...);
 			return;
 		}
@@ -106,7 +106,7 @@ namespace TwinStar::Core {
 			That &&       that,
 			Option && ... option
 		) -> Void requires
-			(method == StreamMethod::Constant::i() || method == StreamMethod::Constant::io()) {
+			(mode == StreamMode::Constant::i() || mode == StreamMode::Constant::io()) {
 			CharacterStreamAdapter<AsPure<That>>::read(thiz, as_forward<That>(that), as_forward<Option>(option) ...);
 			return;
 		}
@@ -119,7 +119,7 @@ namespace TwinStar::Core {
 			That const &  that,
 			Option && ... option
 		) -> Void requires
-			(method == StreamMethod::Constant::o() || method == StreamMethod::Constant::io()) {
+			(mode == StreamMode::Constant::o() || mode == StreamMode::Constant::io()) {
 			thiz.write(that, as_forward<Option>(option) ...);
 			return;
 		}
@@ -130,7 +130,7 @@ namespace TwinStar::Core {
 			That const &  that,
 			Option && ... option
 		) -> Void requires
-			(method == StreamMethod::Constant::i() || method == StreamMethod::Constant::io()) {
+			(mode == StreamMode::Constant::i() || mode == StreamMode::Constant::io()) {
 			auto temporary_that = That{};
 			thiz.read(temporary_that, as_forward<Option>(option) ...);
 			assert_test(temporary_that == that);
@@ -144,7 +144,7 @@ namespace TwinStar::Core {
 		auto read_of (
 			Option && ... option
 		) -> That requires
-			(method == StreamMethod::Constant::i() || method == StreamMethod::Constant::io()) {
+			(mode == StreamMode::Constant::i() || mode == StreamMode::Constant::io()) {
 			auto that = That{};
 			thiz.read(that, as_forward<Option>(option) ...);
 			return that;
@@ -156,13 +156,13 @@ namespace TwinStar::Core {
 
 		auto as_input_stream (
 		) -> IStream & requires
-			(method == StreamMethod::Constant::io()) {
+			(mode == StreamMode::Constant::io()) {
 			return self_cast<IStream>(thiz);
 		}
 
 		auto as_output_stream (
 		) -> OStream & requires
-			(method == StreamMethod::Constant::io()) {
+			(mode == StreamMode::Constant::io()) {
 			return self_cast<OStream>(thiz);
 		}
 
@@ -174,11 +174,11 @@ namespace TwinStar::Core {
 
 	#pragma region alias
 
-	using IOCharacterStreamView = CharacterStreamView<StreamMethod::Constant::io()>;
+	using IOCharacterStreamView = CharacterStreamView<StreamMode::Constant::io()>;
 
-	using ICharacterStreamView = CharacterStreamView<StreamMethod::Constant::i()>;
+	using ICharacterStreamView = CharacterStreamView<StreamMode::Constant::i()>;
 
-	using OCharacterStreamView = CharacterStreamView<StreamMethod::Constant::o()>;
+	using OCharacterStreamView = CharacterStreamView<StreamMode::Constant::o()>;
 
 	#pragma endregion
 

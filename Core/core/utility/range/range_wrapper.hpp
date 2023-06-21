@@ -19,8 +19,8 @@ namespace TwinStar::Core {
 
 	protected:
 
-		Iterator m_begin;
-		Iterator m_end;
+		Iterator m_begin{};
+		Iterator m_end{};
 
 	public:
 

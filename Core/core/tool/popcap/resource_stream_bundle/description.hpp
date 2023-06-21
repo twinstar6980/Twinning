@@ -2,7 +2,7 @@
 
 #include "core/utility/utility.hpp"
 #include "core/tool/popcap/resource_stream_bundle/version.hpp"
-#include "core/tool/popcap/resource_stream_bundle/common.hpp"
+#include "core/tool/popcap/resource_stream_bundle/shared.hpp"
 
 namespace TwinStar::Core::Tool::PopCap::ResourceStreamBundle {
 

@@ -34,6 +34,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
+    namespace "com.twinstar.toolkit.shell_gui"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 

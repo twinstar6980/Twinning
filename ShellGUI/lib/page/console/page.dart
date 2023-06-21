@@ -48,7 +48,6 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
   start(
   ) async {
     assert(!this._running);
-    this._outputBarListItem.clear();
     this._inputBarContent = const IdleInputBarContent();
     this.setState(() {});
     this._running = true;
@@ -310,6 +309,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
     var result = null as String?;
     var actualCorePath = command.core;
     try {
+      this._outputBarListItem.clear();
       if (Platform.isAndroid) {
         var directory = await getApplicationSupportDirectory();
         var originalCorePath = actualCorePath;

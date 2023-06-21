@@ -4,6 +4,8 @@
 
 namespace TwinStar::Core::Tool::WaveStructure {
 
+	#pragma region type
+
 	M_record_of_data(
 		M_wrap(ChunkSign),
 		M_wrap(
@@ -77,5 +79,7 @@ namespace TwinStar::Core::Tool::WaveStructure {
 		}
 
 	}
+
+	#pragma endregion
 
 }

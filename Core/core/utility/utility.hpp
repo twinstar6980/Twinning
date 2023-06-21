@@ -55,7 +55,7 @@
 #include "core/utility/container/map/map.hpp"
 #include "core/utility/container/array/array.hpp"
 #include "core/utility/container/static_array/static_array.hpp"
-#include "core/utility/container/stream/stream_method.hpp"
+#include "core/utility/container/stream/stream_mode.hpp"
 #include "core/utility/container/stream/stream_view.hpp"
 
 #include "core/utility/miscellaneous/record.hpp"
@@ -104,7 +104,7 @@
 #include "core/utility/script/java_script/value.hpp"
 #include "core/utility/script/java_script/utility.hpp"
 
-#include "core/utility/miscellaneous/bitset.hpp"
+#include "core/utility/miscellaneous/bit_set.hpp"
 #include "core/utility/miscellaneous/kv_pair.hpp"
 #include "core/utility/miscellaneous/dimension.hpp"
 #include "core/utility/miscellaneous/constant_block.hpp"

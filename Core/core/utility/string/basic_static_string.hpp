@@ -16,7 +16,7 @@ namespace TwinStar::Core {
 
 		// ----------------
 
-		ZArray<Element, t_size.value> data;
+		ZArray<Element, t_size.value> data{};
 
 		// ----------------
 

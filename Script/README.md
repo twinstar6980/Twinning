@@ -8,9 +8,9 @@
 
 * 要求
 	
-	* [Node.js 18.12+](https://nodejs.org/)
+	* [Node.js 18.12](https://nodejs.org/)
 	
-	* [TypeScript 4.9+](https://www.typescriptlang.org/)
+	* [TypeScript 4.9](https://www.typescriptlang.org/)
 	
 	* [PowerShell](https://learn.microsoft.com/powershell/)
 

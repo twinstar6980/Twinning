@@ -22,7 +22,7 @@ namespace TwinStar::Core {
 
 	struct StringFormatter {
 
-		CStringView format;
+		CStringView format{};
 
 		// ----------------
 

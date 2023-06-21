@@ -86,7 +86,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 	function parse_sprite_document(
 		x_DOMSymbolItem: Core.XML.JS_Element,
 		index: number | 'main',
-	): Array<Core.Tool.PopCap.Animation.Manifest.JS_N.Frame> {
+	): Array<Core.Tool.PopCap.Animation.Definition.JS_N.Frame> {
 		let model: {
 			index: bigint;
 			resource: bigint;
@@ -95,7 +95,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 			frame_duration: bigint;
 			color: Color;
 		} | null = null;
-		let result: Array<Core.Tool.PopCap.Animation.Manifest.JS_N.Frame> = new Array(0);
+		let result: Array<Core.Tool.PopCap.Animation.Definition.JS_N.Frame> = new Array(0);
 		assert_test(x_DOMSymbolItem.name === 'DOMSymbolItem');
 		assert_test(x_DOMSymbolItem.attribute.name === (index === 'main' ? `main_sprite` : `sprite/sprite_${index + 1}`));
 		let x_timeline_list = XML.find_child_element(x_DOMSymbolItem, 'timeline');
@@ -141,7 +141,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 			x_DOMFrame_list.forEach((x_DOMFrame) => {
 				let frame_index = BigInt(x_DOMFrame.attribute.index);
 				let frame_duration = BigInt(defined_or(x_DOMFrame.attribute.duration, '1'));
-				let transform: Core.Tool.PopCap.Animation.Manifest.JS_N.VariantTransform;
+				let transform: Core.Tool.PopCap.Animation.Definition.JS_N.VariantTransform;
 				let color: Color;
 				let x_elements_list = XML.find_child_element(x_DOMFrame, 'elements');
 				if (x_elements_list.length === 0) {
@@ -238,7 +238,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 
 	export function to(
 		flash: FlashPackage,
-	): Core.Tool.PopCap.Animation.Manifest.JS_N.Animation {
+	): Core.Tool.PopCap.Animation.Definition.JS_N.Animation {
 		let x_DOMDocument = flash.document;
 		assert_test(x_DOMDocument.name === 'DOMDocument');
 		{

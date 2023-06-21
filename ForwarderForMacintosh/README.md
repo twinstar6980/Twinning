@@ -8,7 +8,7 @@
 
 * 要求
 	
-	* [Xcode 14](https://developer.apple.com/xcode/)
+	* [Xcode 14.3](https://developer.apple.com/xcode/)
 
 * 开发
 	
@@ -19,5 +19,8 @@
 	> 具体参阅 [Xcode 文档](https://developer.apple.com/documentation/xcode) 。
 
 ## 第三方库使用
+
+| 库                                                                         | 用途                           |
+|:--------------------------------------------------------------------------:|:------------------------------:|
 
 ## 说明

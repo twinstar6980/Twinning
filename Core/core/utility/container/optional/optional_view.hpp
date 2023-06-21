@@ -21,8 +21,8 @@ namespace TwinStar::Core {
 
 	protected:
 
-		Boolean         m_has{k_false};
-		Pointer<QValue> m_value{k_null_pointer};
+		Boolean         m_has{};
+		Pointer<QValue> m_value{};
 
 	public:
 

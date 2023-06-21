@@ -17,8 +17,8 @@ namespace TwinStar::Core {
 
 	protected:
 
-		Number m_value;
-		Number m_step;
+		Number m_value{};
+		Number m_step{};
 
 	public:
 

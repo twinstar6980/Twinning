@@ -92,13 +92,13 @@ namespace TwinStar.Script.Support.PvZ2.RemoteAndroidHelper {
 				Console.information(los('support.pvz2.remote_android_helper:pull'), [remote.main_package]);
 				ADBHelper.pull(local_temporary.main_package, remote.main_package);
 				Console.information(los('support.pvz2.remote_android_helper:unpack'), [local_temporary.main_package]);
-				CoreX.Tool.PopCap.ResourceStreamBundle.unpack_fs(local_temporary.main_package, `${local.main_package}/manifest.json`, `${local.main_package}/description.json`, `${local.main_package}/group/{0}/{1}/resource`, `${local.main_package}/group/{0}/{1}/packet.rsg`, { number: 4n, extended_texture_information_for_pvz2_cn: 0n });
+				CoreX.Tool.PopCap.ResourceStreamBundle.unpack_fs(local_temporary.main_package, `${local.main_package}/definition.json`, `${local.main_package}/description.json`, `${local.main_package}/group/{0}/{1}/resource`, `${local.main_package}/group/{0}/{1}/packet.rsg`, { number: 4n, extended_texture_information_for_pvz2_cn: 0n });
 				Console.success(los('support.pvz2.remote_android_helper:finish'), [local.main_package]);
 				break;
 			}
 			case 'push_main_package': {
 				Console.information(los('support.pvz2.remote_android_helper:pack'), [local.main_package]);
-				CoreX.Tool.PopCap.ResourceStreamBundle.pack_fs(local_temporary.main_package, `${local.main_package}/manifest.json`, `${local.main_package}/description.json`, `${local.main_package}/group/{0}/{1}/resource`, `${local.main_package}/group/{0}/{1}/packet.rsg`, `${local.main_package}/group/{0}/{1}/packet.rsg`, { number: 4n, extended_texture_information_for_pvz2_cn: 0n }, 1024n << 20n);
+				CoreX.Tool.PopCap.ResourceStreamBundle.pack_fs(local_temporary.main_package, `${local.main_package}/definition.json`, `${local.main_package}/description.json`, `${local.main_package}/group/{0}/{1}/resource`, `${local.main_package}/group/{0}/{1}/packet.rsg`, `${local.main_package}/group/{0}/{1}/packet.rsg`, { number: 4n, extended_texture_information_for_pvz2_cn: 0n }, 1024n << 20n);
 				Console.information(los('support.pvz2.remote_android_helper:push'), [local_temporary.main_package]);
 				ADBHelper.push_secure(remote.main_package, local_temporary.main_package, application);
 				Console.success(los('support.pvz2.remote_android_helper:finish'), [remote.main_package]);

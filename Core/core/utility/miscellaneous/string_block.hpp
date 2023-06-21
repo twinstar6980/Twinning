@@ -15,7 +15,7 @@ namespace TwinStar::Core {
 
 		// ----------------
 
-		String value;
+		String value{};
 
 	};
 

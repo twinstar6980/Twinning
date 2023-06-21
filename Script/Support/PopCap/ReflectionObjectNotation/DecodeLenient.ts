@@ -388,23 +388,32 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 		if (data.u32() !== version.number) {
 			Console.warning(`data:${data.p().toString(16)}h : invalid version`, []);
 		}
-		let value = process_unit(data, [], [], 0x85n, version);
+		let definition = process_unit(data, [], [], 0x85n, version);
 		if (data.u32() !== 0x454E4F44n) {
 			Console.warning(`data:${data.p().toString(16)}h : invalid done`, []);
 		}
-		return value;
+		return definition;
 	}
 
 	// ------------------------------------------------
 
-	export function process_whole_fs(
+	export function process(
+		data: ByteStreamView,
+		version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
+	): Core.JSON.JS_Value {
+		return process_whole(data, version);
+	}
+
+	// ------------------------------------------------
+
+	export function process_fs(
 		data_file: string,
-		value_file: string,
+		definition_file: string,
 		version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
 	): void {
 		let data = CoreX.FileSystem.read_file(data_file);
-		let value = process_whole(new ByteStreamView(data.view().value), version);
-		CoreX.JSON.write_fs_js(value_file, value);
+		let definition = process(new ByteStreamView(data.view().value), version);
+		CoreX.JSON.write_fs_js(definition_file, definition);
 		return;
 	}
 

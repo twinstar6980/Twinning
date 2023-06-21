@@ -8,17 +8,17 @@
 
 * 要求
 	
-	* [xmake 2.7.8+](https://xmake.io/#/)
+	* [xmake 2.7.9](https://xmake.io/#/)
 	
-	* [MSVC 19.35+ with MSVC-STL and Windows-SDK for Windows](https://visualstudio.microsoft.com/downloads/)
+	* [MSVC 19.36 with MSVC-STL and Windows-SDK for Windows](https://visualstudio.microsoft.com/downloads/)
 	
-	* [Clang 16.0+ with libstdc++ and POSIX for Linux](https://llvm.org/)
+	* [Clang 16.0 with libstdc++ and POSIX for Linux](https://llvm.org/)
 	
-	* [Clang 16.0+ with libc++ and POSIX for Macintosh](https://llvm.org/)
+	* [Clang 16.0 with libc++ and POSIX for Macintosh](https://llvm.org/)
 	
-	* [Clang 14.0+ with libc++ and POSIX for Android (NDK 25.2+)](https://developer.android.com/ndk/downloads)
+	* [Clang 14.0 with libc++ and POSIX for Android (NDK 25.2)](https://developer.android.com/ndk/downloads)
 	
-	* [Clang 16.0+ with libc++ and POSIX for iPhone](https://llvm.org/)
+	* [Clang 16.0 with libc++ and POSIX for iPhone](https://llvm.org/)
 
 * 开发
 	
@@ -38,9 +38,9 @@
 
 ## 第三方库使用
 
-| 库                                                                       | 用途                           |
-|:------------------------------------------------------------------------:|:------------------------------:|
-| [tinyfiledialogs 3.10](https://sourceforge.net/projects/tinyfiledialogs) | 系统 UI 功能                   |
+| 库                                                                         | 用途                           |
+|:--------------------------------------------------------------------------:|:------------------------------:|
+| [tinyfiledialogs 3.13.2](https://sourceforge.net/projects/tinyfiledialogs) | 系统 UI 功能                   |
 
 ## 说明
 

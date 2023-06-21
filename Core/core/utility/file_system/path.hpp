@@ -12,9 +12,9 @@ namespace TwinStar::Core {
 
 	protected:
 
-		Optional<String> m_root;
-		Boolean          m_absolute;
-		List<String>     m_sub_path;
+		Optional<String> m_root{};
+		Boolean          m_absolute{};
+		List<String>     m_sub_path{};
 
 	public:
 

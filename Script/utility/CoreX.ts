@@ -25,7 +25,7 @@ namespace TwinStar.Script.CoreX {
 		): Core.JSON.Value<ConstraintT> {
 			let data_stream = Core.CharacterStreamView.watch(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(Core.ByteListView.value(data)));
 			let value = Core.JSON.Value.default<ConstraintT>();
-			Core.Tool.Data.Serialization.JSON.Read.process_whole(data_stream, value);
+			Core.Tool.Data.Serialization.JSON.Read.process(data_stream, value);
 			return value;
 		}
 
@@ -39,7 +39,7 @@ namespace TwinStar.Script.CoreX {
 			let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 			let data_buffer_view = data_buffer instanceof Core.CharacterListView ? data_buffer : Core.Miscellaneous.cast_ByteListView_to_CharacterListView(data_buffer_if!.view());
 			let data_stream = Core.CharacterStreamView.watch(data_buffer_view);
-			Core.Tool.Data.Serialization.JSON.Write.process_whole(data_stream, value, Core.Boolean.value(disable_trailing_comma), Core.Boolean.value(disable_array_wrap_line));
+			Core.Tool.Data.Serialization.JSON.Write.process(data_stream, value, Core.Boolean.value(disable_trailing_comma), Core.Boolean.value(disable_array_wrap_line));
 			return Core.Miscellaneous.cast_CharacterListView_to_ByteListView(data_stream.stream_view()).value;
 		}
 
@@ -150,7 +150,7 @@ namespace TwinStar.Script.CoreX {
 			let data_byte = FileSystem.read_file(data_file);
 			let data = Core.Miscellaneous.cast_moveable_ByteArray_to_String(data_byte);
 			let value = Core.XML.Node.default();
-			Core.Tool.Data.Serialization.XML.Read.process_whole(data, value);
+			Core.Tool.Data.Serialization.XML.Read.process(data, value);
 			return value;
 		}
 
@@ -159,7 +159,7 @@ namespace TwinStar.Script.CoreX {
 			value: Core.XML.Node,
 		): void {
 			let data = Core.String.default();
-			Core.Tool.Data.Serialization.XML.Write.process_whole(data, value);
+			Core.Tool.Data.Serialization.XML.Write.process(data, value);
 			let data_byte = Core.Miscellaneous.cast_moveable_String_to_ByteArray(data);
 			FileSystem.write_file(data_file, data_byte.view());
 			return;
@@ -214,7 +214,7 @@ namespace TwinStar.Script.CoreX {
 					data: Core.ByteListView,
 				): ImageSize {
 					let size = Core.Image.ImageSize.default();
-					Core.Tool.Image.File.PNG.Read.compute_image_size(data, size);
+					Core.Tool.Texture.File.PNG.Read.estimate(data, size);
 					return size.value;
 				}
 
@@ -222,14 +222,14 @@ namespace TwinStar.Script.CoreX {
 					data: Core.ByteStreamView,
 					image: Core.Image.VImageView,
 				): void {
-					return Core.Tool.Image.File.PNG.Read.process_image(data, image);
+					return Core.Tool.Texture.File.PNG.Read.process(data, image);
 				}
 
 				export function write(
 					data: Core.ByteStreamView,
 					image: Core.Image.CImageView,
 				): void {
-					return Core.Tool.Image.File.PNG.Write.process_image(data, image);
+					return Core.Tool.Texture.File.PNG.Write.process(data, image);
 				}
 
 				// ------------------------------------------------
@@ -537,7 +537,7 @@ namespace TwinStar.Script.CoreX {
 					): bigint {
 						let data = FileSystem.read_file(data_file);
 						let value = Core.ByteArray.default();
-						Core.Tool.Data.Hash.MD5.Hash.process_whole(data.view(), value);
+						Core.Tool.Data.Hash.MD5.Hash.process(data.view(), value);
 						return integer_from_byte_le(value.value);
 					}
 
@@ -552,7 +552,7 @@ namespace TwinStar.Script.CoreX {
 					): bigint {
 						let data = FileSystem.read_file(data_file);
 						let value = Core.ByteArray.default();
-						Core.Tool.Data.Hash.FNV.Hash.process_whole(data.view(), value, Core.Tool.Data.Hash.FNV.Mode.value(mode), Core.Tool.Data.Hash.FNV.BitCount.value(bit_count));
+						Core.Tool.Data.Hash.FNV.Hash.process(data.view(), value, Core.Tool.Data.Hash.FNV.Mode.value(mode), Core.Tool.Data.Hash.FNV.BitCount.value(bit_count));
 						return integer_from_byte_le(value.value);
 					}
 
@@ -563,7 +563,7 @@ namespace TwinStar.Script.CoreX {
 					): bigint {
 						let data = Core.Miscellaneous.cast_moveable_String_to_ByteArray(Core.String.value(data_string));
 						let value = Core.ByteArray.default();
-						Core.Tool.Data.Hash.FNV.Hash.process_whole(data.view(), value, Core.Tool.Data.Hash.FNV.Mode.value(mode), Core.Tool.Data.Hash.FNV.BitCount.value(bit_count));
+						Core.Tool.Data.Hash.FNV.Hash.process(data.view(), value, Core.Tool.Data.Hash.FNV.Mode.value(mode), Core.Tool.Data.Hash.FNV.BitCount.value(bit_count));
 						return integer_from_byte_le(value.value);
 					}
 
@@ -581,11 +581,11 @@ namespace TwinStar.Script.CoreX {
 					): void {
 						let raw_data = FileSystem.read_file(raw_file);
 						let ripe_size = Core.Size.default();
-						Core.Tool.Data.Encoding.Base64.Encode.compute_size(raw_data.size(), ripe_size);
+						Core.Tool.Data.Encoding.Base64.Encode.estimate(raw_data.size(), ripe_size);
 						let ripe_data = Core.ByteArray.allocate(ripe_size);
 						let raw_stream = Core.ByteStreamView.watch(raw_data.view());
 						let ripe_stream = Core.CharacterStreamView.watch(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(ripe_data.view()));
-						Core.Tool.Data.Encoding.Base64.Encode.process_whole(raw_stream, ripe_stream);
+						Core.Tool.Data.Encoding.Base64.Encode.process(raw_stream, ripe_stream);
 						FileSystem.write_file(ripe_file, Core.Miscellaneous.cast_CharacterListView_to_ByteListView(ripe_stream.stream_view()));
 						return;
 					}
@@ -597,10 +597,10 @@ namespace TwinStar.Script.CoreX {
 						let ripe_data = FileSystem.read_file(ripe_file);
 						let ripe_stream = Core.CharacterStreamView.watch(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(ripe_data.view()));
 						let raw_size = Core.Size.default();
-						Core.Tool.Data.Encoding.Base64.Decode.compute_size(ripe_stream.view(), raw_size);
+						Core.Tool.Data.Encoding.Base64.Decode.estimate(ripe_stream.view(), raw_size);
 						let raw_data = Core.ByteArray.allocate(raw_size);
 						let raw_stream = Core.ByteStreamView.watch(raw_data.view());
-						Core.Tool.Data.Encoding.Base64.Decode.process_whole(ripe_stream, raw_stream);
+						Core.Tool.Data.Encoding.Base64.Decode.process(ripe_stream, raw_stream);
 						FileSystem.write_file(raw_file, raw_stream.stream_view());
 						return;
 					}
@@ -624,7 +624,7 @@ namespace TwinStar.Script.CoreX {
 						let cipher_data = Core.ByteArray.allocate(plain_data.size());
 						let plain_stream = Core.ByteStreamView.watch(plain_data.view());
 						let cipher_stream = Core.ByteStreamView.watch(cipher_data.view());
-						Core.Tool.Data.Encryption.XOR.Encrypt.process_whole(plain_stream, cipher_stream, key_c.view());
+						Core.Tool.Data.Encryption.XOR.Encrypt.process(plain_stream, cipher_stream, key_c.view());
 						FileSystem.write_file(cipher_file, cipher_stream.stream_view());
 						return;
 					}
@@ -658,7 +658,7 @@ namespace TwinStar.Script.CoreX {
 						let cipher_data = Core.ByteArray.allocate(plain_data.size());
 						let plain_stream = Core.ByteStreamView.watch(plain_data.view());
 						let cipher_stream = Core.ByteStreamView.watch(cipher_data.view());
-						Core.Tool.Data.Encryption.Rijndael.Encrypt.process_whole(plain_stream, cipher_stream, Core.Tool.Data.Encryption.Rijndael.Mode.value(mode), Core.Size.value(block_size), Core.Size.value(key_size), Core.String.value(key), Core.String.value(iv));
+						Core.Tool.Data.Encryption.Rijndael.Encrypt.process(plain_stream, cipher_stream, Core.Tool.Data.Encryption.Rijndael.Mode.value(mode), Core.Size.value(block_size), Core.Size.value(key_size), Core.String.value(key), Core.String.value(iv));
 						FileSystem.write_file(cipher_file, cipher_stream.stream_view());
 						return;
 					}
@@ -676,7 +676,7 @@ namespace TwinStar.Script.CoreX {
 						let plain_data = Core.ByteArray.allocate(cipher_data.size());
 						let cipher_stream = Core.ByteStreamView.watch(cipher_data.view());
 						let plain_stream = Core.ByteStreamView.watch(plain_data.view());
-						Core.Tool.Data.Encryption.Rijndael.Decrypt.process_whole(cipher_stream, plain_stream, Core.Tool.Data.Encryption.Rijndael.Mode.value(mode), Core.Size.value(block_size), Core.Size.value(key_size), Core.String.value(key), Core.String.value(iv));
+						Core.Tool.Data.Encryption.Rijndael.Decrypt.process(cipher_stream, plain_stream, Core.Tool.Data.Encryption.Rijndael.Mode.value(mode), Core.Size.value(block_size), Core.Size.value(key_size), Core.String.value(key), Core.String.value(iv));
 						FileSystem.write_file(plain_file, plain_stream.stream_view());
 						return;
 					}
@@ -730,11 +730,11 @@ namespace TwinStar.Script.CoreX {
 					): void {
 						let raw_data = FileSystem.read_file(raw_file);
 						let ripe_size_bound = Core.Size.default();
-						Core.Tool.Data.Compression.Deflate.Compress.compute_size_bound(raw_data.size(), ripe_size_bound, Core.Size.value(window_bits), Core.Size.value(memory_level), Core.Tool.Data.Compression.Deflate.Wrapper.value(wrapper));
+						Core.Tool.Data.Compression.Deflate.Compress.estimate(raw_data.size(), ripe_size_bound, Core.Size.value(window_bits), Core.Size.value(memory_level), Core.Tool.Data.Compression.Deflate.Wrapper.value(wrapper));
 						let ripe_data = Core.ByteArray.allocate(ripe_size_bound);
 						let raw_stream = Core.ByteStreamView.watch(raw_data.view());
 						let ripe_stream = Core.ByteStreamView.watch(ripe_data.view());
-						Core.Tool.Data.Compression.Deflate.Compress.process_whole(raw_stream, ripe_stream, Core.Size.value(level), Core.Size.value(window_bits), Core.Size.value(memory_level), Core.Tool.Data.Compression.Deflate.Strategy.value(strategy), Core.Tool.Data.Compression.Deflate.Wrapper.value(wrapper));
+						Core.Tool.Data.Compression.Deflate.Compress.process(raw_stream, ripe_stream, Core.Size.value(level), Core.Size.value(window_bits), Core.Size.value(memory_level), Core.Tool.Data.Compression.Deflate.Strategy.value(strategy), Core.Tool.Data.Compression.Deflate.Wrapper.value(wrapper));
 						FileSystem.write_file(ripe_file, ripe_stream.stream_view());
 						return;
 					}
@@ -751,7 +751,7 @@ namespace TwinStar.Script.CoreX {
 						let ripe_data = FileSystem.read_file(ripe_file);
 						let ripe_stream = Core.ByteStreamView.watch(ripe_data.view());
 						let raw_stream = Core.ByteStreamView.watch(raw_data_buffer_view);
-						Core.Tool.Data.Compression.Deflate.Uncompress.process_whole(ripe_stream, raw_stream, Core.Size.value(window_bits), Core.Tool.Data.Compression.Deflate.Wrapper.value(wrapper));
+						Core.Tool.Data.Compression.Deflate.Uncompress.process(ripe_stream, raw_stream, Core.Size.value(window_bits), Core.Tool.Data.Compression.Deflate.Wrapper.value(wrapper));
 						FileSystem.write_file(raw_file, raw_stream.stream_view());
 						return;
 					}
@@ -776,7 +776,7 @@ namespace TwinStar.Script.CoreX {
 						let ripe_data = Core.ByteArray.allocate(ripe_size_bound);
 						let raw_stream = Core.ByteStreamView.watch(raw_data.view());
 						let ripe_stream = Core.ByteStreamView.watch(ripe_data.view());
-						Core.Tool.Data.Compression.BZip2.Compress.process_whole(raw_stream, ripe_stream, Core.Size.value(block_size), Core.Size.value(0n));
+						Core.Tool.Data.Compression.BZip2.Compress.process(raw_stream, ripe_stream, Core.Size.value(block_size), Core.Size.value(0n));
 						FileSystem.write_file(ripe_file, ripe_stream.stream_view());
 						return;
 					}
@@ -791,7 +791,7 @@ namespace TwinStar.Script.CoreX {
 						let ripe_data = FileSystem.read_file(ripe_file);
 						let ripe_stream = Core.ByteStreamView.watch(ripe_data.view());
 						let raw_stream = Core.ByteStreamView.watch(raw_data_buffer_view);
-						Core.Tool.Data.Compression.BZip2.Uncompress.process_whole(ripe_stream, raw_stream, Core.Boolean.value(false));
+						Core.Tool.Data.Compression.BZip2.Uncompress.process(ripe_stream, raw_stream, Core.Boolean.value(false));
 						FileSystem.write_file(raw_file, raw_stream.stream_view());
 						return;
 					}
@@ -816,7 +816,7 @@ namespace TwinStar.Script.CoreX {
 						let ripe_data = Core.ByteArray.allocate(ripe_size_bound);
 						let raw_stream = Core.ByteStreamView.watch(raw_data.view());
 						let ripe_stream = Core.ByteStreamView.watch(ripe_data.view());
-						Core.Tool.Data.Compression.Lzma.Compress.process_whole(raw_stream, ripe_stream, Core.Size.value(level));
+						Core.Tool.Data.Compression.Lzma.Compress.process(raw_stream, ripe_stream, Core.Size.value(level));
 						FileSystem.write_file(ripe_file, ripe_stream.stream_view());
 						return;
 					}
@@ -831,7 +831,7 @@ namespace TwinStar.Script.CoreX {
 						let ripe_data = FileSystem.read_file(ripe_file);
 						let ripe_stream = Core.ByteStreamView.watch(ripe_data.view());
 						let raw_stream = Core.ByteStreamView.watch(raw_data_buffer_view);
-						Core.Tool.Data.Compression.Lzma.Uncompress.process_whole(ripe_stream, raw_stream);
+						Core.Tool.Data.Compression.Lzma.Uncompress.process(ripe_stream, raw_stream);
 						FileSystem.write_file(raw_file, raw_stream.stream_view());
 						return;
 					}
@@ -857,7 +857,7 @@ namespace TwinStar.Script.CoreX {
 						let before_stream = Core.ByteStreamView.watch(before_data.view());
 						let after_stream = Core.ByteStreamView.watch(after_data.view());
 						let patch_stream = Core.ByteStreamView.watch(patch_data.view());
-						Core.Tool.Data.Differentiation.VCDiff.Encode.process_whole(before_stream, after_stream, patch_stream, Core.Boolean.value(interleaved));
+						Core.Tool.Data.Differentiation.VCDiff.Encode.process(before_stream, after_stream, patch_stream, Core.Boolean.value(interleaved));
 						FileSystem.write_file(patch_file, patch_stream.stream_view());
 						return;
 					}
@@ -875,7 +875,7 @@ namespace TwinStar.Script.CoreX {
 						let before_stream = Core.ByteStreamView.watch(before_data.view());
 						let after_stream = Core.ByteStreamView.watch(after_data.view());
 						let patch_stream = Core.ByteStreamView.watch(patch_data.view());
-						Core.Tool.Data.Differentiation.VCDiff.Decode.process_whole(before_stream, after_stream, patch_stream, Core.Size.value(maximum_window_size));
+						Core.Tool.Data.Differentiation.VCDiff.Decode.process(before_stream, after_stream, patch_stream, Core.Size.value(maximum_window_size));
 						FileSystem.write_file(after_file, after_stream.stream_view());
 						return;
 					}
@@ -886,19 +886,7 @@ namespace TwinStar.Script.CoreX {
 
 		}
 
-		export namespace Image {
-
-			export type ImageSize = CoreX.Image.ImageSize;
-
-			export type ImagePosition = CoreX.Image.ImagePosition;
-
-			export type Color = CoreX.Image.Color;
-
-			export type ColorList = CoreX.Image.ColorList;
-
-			export type Pixel = CoreX.Image.Pixel;
-
-			// ------------------------------------------------
+		export namespace Texture {
 
 			export namespace Transformation {
 
@@ -907,14 +895,14 @@ namespace TwinStar.Script.CoreX {
 					horizontal: boolean,
 					vertical: boolean,
 				): void {
-					return Core.Tool.Image.Transformation.Flip.process_image(target, Core.Boolean.value(horizontal), Core.Boolean.value(vertical));
+					return Core.Tool.Texture.Transformation.Flip.process(target, Core.Boolean.value(horizontal), Core.Boolean.value(vertical));
 				}
 
 				export function scale(
 					source: Core.Image.CImageView,
 					destination: Core.Image.VImageView,
 				): void {
-					return Core.Tool.Image.Transformation.Scale.process_image(source, destination);
+					return Core.Tool.Texture.Transformation.Scale.process(source, destination);
 				}
 
 				// ------------------------------------------------
@@ -935,7 +923,7 @@ namespace TwinStar.Script.CoreX {
 				export function scale_fs(
 					source_file: string,
 					destination_file: string,
-					size: ImageSize,
+					size: Image.ImageSize,
 				): void {
 					let source = CoreX.Image.File.PNG.read_fs_of(source_file);
 					let destination = Core.Image.Image.allocate(Core.Image.ImageSize.value(size));
@@ -962,7 +950,7 @@ namespace TwinStar.Script.CoreX {
 
 			}
 
-			export namespace Texture {
+			export namespace Encoding {
 
 				// ------------------------------------------------
 
@@ -1147,27 +1135,27 @@ namespace TwinStar.Script.CoreX {
 						case 'al_88':
 						case 'rgb_888_o':
 						case 'rgba_8888_o': {
-							Core.Tool.Image.Texture.Encode.process_image(data, image, Core.Tool.Image.Texture.Format.value(format));
+							Core.Tool.Texture.Encoding.Encode.process(data, image, Core.Tool.Texture.Encoding.Format.value(format));
 							break;
 						}
 						case 'rgb_etc1': {
-							Core.Tool.Image.Texture.Compression.ETC1.Compress.process_image(data, image);
+							Core.Tool.Texture.Compression.ETC1.Compress.process(data, image);
 							break;
 						}
 						case 'rgb_etc2': {
-							Core.Tool.Image.Texture.Compression.ETC2.Compress.process_image(data, image, Core.Boolean.value(false));
+							Core.Tool.Texture.Compression.ETC2.Compress.process(data, image, Core.Boolean.value(false));
 							break;
 						}
 						case 'rgba_etc2': {
-							Core.Tool.Image.Texture.Compression.ETC2.Compress.process_image(data, image, Core.Boolean.value(true));
+							Core.Tool.Texture.Compression.ETC2.Compress.process(data, image, Core.Boolean.value(true));
 							break;
 						}
 						case 'rgb_pvrtc4': {
-							Core.Tool.Image.Texture.Compression.PVRTC4.Compress.process_image(data, image, Core.Boolean.value(false));
+							Core.Tool.Texture.Compression.PVRTC4.Compress.process(data, image, Core.Boolean.value(false));
 							break;
 						}
 						case 'rgba_pvrtc4': {
-							Core.Tool.Image.Texture.Compression.PVRTC4.Compress.process_image(data, image, Core.Boolean.value(true));
+							Core.Tool.Texture.Compression.PVRTC4.Compress.process(data, image, Core.Boolean.value(true));
 							break;
 						}
 					}
@@ -1196,27 +1184,27 @@ namespace TwinStar.Script.CoreX {
 						case 'al_88':
 						case 'rgb_888_o':
 						case 'rgba_8888_o': {
-							Core.Tool.Image.Texture.Decode.process_image(data, image, Core.Tool.Image.Texture.Format.value(format));
+							Core.Tool.Texture.Encoding.Decode.process(data, image, Core.Tool.Texture.Encoding.Format.value(format));
 							break;
 						}
 						case 'rgb_etc1': {
-							Core.Tool.Image.Texture.Compression.ETC1.Uncompress.process_image(data, image);
+							Core.Tool.Texture.Compression.ETC1.Uncompress.process(data, image);
 							break;
 						}
 						case 'rgb_etc2': {
-							Core.Tool.Image.Texture.Compression.ETC2.Uncompress.process_image(data, image, Core.Boolean.value(false));
+							Core.Tool.Texture.Compression.ETC2.Uncompress.process(data, image, Core.Boolean.value(false));
 							break;
 						}
 						case 'rgba_etc2': {
-							Core.Tool.Image.Texture.Compression.ETC2.Uncompress.process_image(data, image, Core.Boolean.value(true));
+							Core.Tool.Texture.Compression.ETC2.Uncompress.process(data, image, Core.Boolean.value(true));
 							break;
 						}
 						case 'rgb_pvrtc4': {
-							Core.Tool.Image.Texture.Compression.PVRTC4.Uncompress.process_image(data, image, Core.Boolean.value(false));
+							Core.Tool.Texture.Compression.PVRTC4.Uncompress.process(data, image, Core.Boolean.value(false));
 							break;
 						}
 						case 'rgba_pvrtc4': {
-							Core.Tool.Image.Texture.Compression.PVRTC4.Uncompress.process_image(data, image, Core.Boolean.value(true));
+							Core.Tool.Texture.Compression.PVRTC4.Uncompress.process(data, image, Core.Boolean.value(true));
 							break;
 						}
 					}
@@ -1269,7 +1257,7 @@ namespace TwinStar.Script.CoreX {
 					let version_c = Core.Tool.Wwise.Media.Version.value(version);
 					let ripe_data = FileSystem.read_file(ripe_file);
 					let raw_data = Core.ByteArray.default();
-					Core.Tool.Wwise.Media.Decode.process_media(ripe_data.view(), raw_data, Core.Path.value(ffmpeg_program_file), Core.Path.value(ww2ogg_program_file), Core.Path.value(ww2ogg_code_book_file), Core.Path.value(temporary_directory), version_c);
+					Core.Tool.Wwise.Media.Decode.process(ripe_data.view(), raw_data, Core.Path.value(ffmpeg_program_file), Core.Path.value(ww2ogg_program_file), Core.Path.value(ww2ogg_code_book_file), Core.Path.value(temporary_directory), version_c);
 					FileSystem.write_file(raw_file, raw_data.view());
 					return;
 				}
@@ -1284,7 +1272,7 @@ namespace TwinStar.Script.CoreX {
 
 				export function encode_fs(
 					data_file: string,
-					manifest_file: string,
+					definition_file: string,
 					embedded_media_directory: string,
 					version: typeof Core.Tool.Wwise.SoundBank.Version.Value,
 					data_buffer: Core.ByteListView | bigint,
@@ -1293,25 +1281,25 @@ namespace TwinStar.Script.CoreX {
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
 					let stream = Core.ByteStreamView.watch(data_buffer_view);
-					let manifest = Core.Tool.Wwise.SoundBank.Manifest.SoundBank.json(JSON.read_fs(manifest_file), version_c);
-					Core.Tool.Wwise.SoundBank.Encode.process_sound_bank(stream, manifest, Core.Path.value(embedded_media_directory), version_c);
+					let definition = Core.Tool.Wwise.SoundBank.Definition.SoundBank.json(JSON.read_fs(definition_file), version_c);
+					Core.Tool.Wwise.SoundBank.Encode.process(stream, definition, Core.Path.value(embedded_media_directory), version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
 					return;
 				}
 
 				export function decode_fs(
 					data_file: string,
-					manifest_file: null | string,
+					definition_file: null | string,
 					embedded_media_directory: null | string,
 					version: typeof Core.Tool.Wwise.SoundBank.Version.Value,
 				): void {
 					let version_c = Core.Tool.Wwise.SoundBank.Version.value(version);
 					let data = FileSystem.read_file(data_file);
 					let stream = Core.ByteStreamView.watch(data.view());
-					let manifest = Core.Tool.Wwise.SoundBank.Manifest.SoundBank.default();
-					Core.Tool.Wwise.SoundBank.Decode.process_sound_bank(stream, manifest, Core.PathOptional.value(embedded_media_directory), version_c);
-					if (manifest_file !== null) {
-						JSON.write_fs(manifest_file, manifest.get_json(version_c));
+					let definition = Core.Tool.Wwise.SoundBank.Definition.SoundBank.default();
+					Core.Tool.Wwise.SoundBank.Decode.process(stream, definition, Core.PathOptional.value(embedded_media_directory), version_c);
+					if (definition_file !== null) {
+						JSON.write_fs(definition_file, definition.get_json(version_c));
 					}
 					return;
 				}
@@ -1330,7 +1318,7 @@ namespace TwinStar.Script.CoreX {
 
 				export function pack_fs(
 					data_file: string,
-					manifest_file: string,
+					definition_file: string,
 					resource_directory: string,
 					version: typeof Core.Tool.Marmalade.DZip.Version.Value,
 					data_buffer: Core.ByteListView | bigint,
@@ -1339,25 +1327,25 @@ namespace TwinStar.Script.CoreX {
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
 					let stream = Core.ByteStreamView.watch(data_buffer_view);
-					let manifest = Core.Tool.Marmalade.DZip.Manifest.Package.json(JSON.read_fs(manifest_file), version_c);
-					Core.Tool.Marmalade.DZip.Pack.process_package(stream, manifest, Core.Path.value(resource_directory), version_c);
+					let definition = Core.Tool.Marmalade.DZip.Definition.Package.json(JSON.read_fs(definition_file), version_c);
+					Core.Tool.Marmalade.DZip.Pack.process(stream, definition, Core.Path.value(resource_directory), version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
 					return;
 				}
 
 				export function unpack_fs(
 					data_file: string,
-					manifest_file: null | string,
+					definition_file: null | string,
 					resource_directory: null | string,
 					version: typeof Core.Tool.Marmalade.DZip.Version.Value,
 				): void {
 					let version_c = Core.Tool.Marmalade.DZip.Version.value(version);
 					let data = FileSystem.read_file(data_file);
 					let stream = Core.ByteStreamView.watch(data.view());
-					let manifest = Core.Tool.Marmalade.DZip.Manifest.Package.default();
-					Core.Tool.Marmalade.DZip.Unpack.process_package(stream, manifest, Core.PathOptional.value(resource_directory), version_c);
-					if (manifest_file !== null) {
-						JSON.write_fs(manifest_file, manifest.get_json(version_c));
+					let definition = Core.Tool.Marmalade.DZip.Definition.Package.default();
+					Core.Tool.Marmalade.DZip.Unpack.process(stream, definition, Core.PathOptional.value(resource_directory), version_c);
+					if (definition_file !== null) {
+						JSON.write_fs(definition_file, definition.get_json(version_c));
 					}
 					return;
 				}
@@ -1386,11 +1374,11 @@ namespace TwinStar.Script.CoreX {
 					let version_c = Core.Tool.PopCap.ZLib.Version.value(version);
 					let raw_data = FileSystem.read_file(raw_file);
 					let ripe_size_bound = Core.Size.default();
-					Core.Tool.PopCap.ZLib.Compress.compute_size_bound(raw_data.size(), ripe_size_bound, Core.Size.value(window_bits), Core.Size.value(memory_level), version_c);
+					Core.Tool.PopCap.ZLib.Compress.estimate(raw_data.size(), ripe_size_bound, Core.Size.value(window_bits), Core.Size.value(memory_level), version_c);
 					let ripe_data = Core.ByteArray.allocate(ripe_size_bound);
 					let raw_stream = Core.ByteStreamView.watch(raw_data.view());
 					let ripe_stream = Core.ByteStreamView.watch(ripe_data.view());
-					Core.Tool.PopCap.ZLib.Compress.process_whole(raw_stream, ripe_stream, Core.Size.value(level), Core.Size.value(window_bits), Core.Size.value(memory_level), Core.Tool.Data.Compression.Deflate.Strategy.value(strategy), version_c);
+					Core.Tool.PopCap.ZLib.Compress.process(raw_stream, ripe_stream, Core.Size.value(level), Core.Size.value(window_bits), Core.Size.value(memory_level), Core.Tool.Data.Compression.Deflate.Strategy.value(strategy), version_c);
 					FileSystem.write_file(ripe_file, ripe_stream.stream_view());
 					return;
 				}
@@ -1404,11 +1392,11 @@ namespace TwinStar.Script.CoreX {
 					let version_c = Core.Tool.PopCap.ZLib.Version.value(version);
 					let ripe_data = FileSystem.read_file(ripe_file);
 					let raw_size = Core.Size.default();
-					Core.Tool.PopCap.ZLib.Uncompress.compute_size(ripe_data.view(), raw_size, version_c);
+					Core.Tool.PopCap.ZLib.Uncompress.estimate(ripe_data.view(), raw_size, version_c);
 					let raw_data = Core.ByteArray.allocate(raw_size);
 					let ripe_stream = Core.ByteStreamView.watch(ripe_data.view());
 					let raw_stream = Core.ByteStreamView.watch(raw_data.view());
-					Core.Tool.PopCap.ZLib.Uncompress.process_whole(ripe_stream, raw_stream, Core.Size.value(window_bits), version_c);
+					Core.Tool.PopCap.ZLib.Uncompress.process(ripe_stream, raw_stream, Core.Size.value(window_bits), version_c);
 					FileSystem.write_file(raw_file, raw_stream.stream_view());
 					return;
 				}
@@ -1427,11 +1415,11 @@ namespace TwinStar.Script.CoreX {
 					let version_c = Core.Tool.PopCap.CryptData.Version.value(version);
 					let plain_data = FileSystem.read_file(plain_file);
 					let cipher_size = Core.Size.default();
-					Core.Tool.PopCap.CryptData.Encrypt.compute_size(plain_data.size(), cipher_size, Core.Size.value(limit), version_c);
+					Core.Tool.PopCap.CryptData.Encrypt.estimate(plain_data.size(), cipher_size, Core.Size.value(limit), version_c);
 					let cipher_data = Core.ByteArray.allocate(cipher_size);
 					let plain_stream = Core.ByteStreamView.watch(plain_data.view());
 					let cipher_stream = Core.ByteStreamView.watch(cipher_data.view());
-					Core.Tool.PopCap.CryptData.Encrypt.process_whole(plain_stream, cipher_stream, Core.Size.value(limit), Core.String.value(key), version_c);
+					Core.Tool.PopCap.CryptData.Encrypt.process(plain_stream, cipher_stream, Core.Size.value(limit), Core.String.value(key), version_c);
 					FileSystem.write_file(cipher_file, cipher_stream.stream_view());
 					return;
 				}
@@ -1446,11 +1434,11 @@ namespace TwinStar.Script.CoreX {
 					let version_c = Core.Tool.PopCap.CryptData.Version.value(version);
 					let cipher_data = FileSystem.read_file(cipher_file);
 					let plain_size = Core.Size.default();
-					Core.Tool.PopCap.CryptData.Decrypt.compute_size(cipher_data.view(), plain_size, Core.Size.value(limit), version_c);
+					Core.Tool.PopCap.CryptData.Decrypt.estimate(cipher_data.view(), plain_size, Core.Size.value(limit), version_c);
 					let plain_data = Core.ByteArray.allocate(plain_size);
 					let cipher_stream = Core.ByteStreamView.watch(cipher_data.view());
 					let plain_stream = Core.ByteStreamView.watch(plain_data.view());
-					Core.Tool.PopCap.CryptData.Decrypt.process_whole(cipher_stream, plain_stream, Core.Size.value(limit), Core.String.value(key), version_c);
+					Core.Tool.PopCap.CryptData.Decrypt.process(cipher_stream, plain_stream, Core.Size.value(limit), Core.String.value(key), version_c);
 					FileSystem.write_file(plain_file, plain_stream.stream_view());
 					return;
 				}
@@ -1469,7 +1457,7 @@ namespace TwinStar.Script.CoreX {
 
 				export function encode_fs(
 					data_file: string,
-					value_file: string,
+					definition_file: string,
 					enable_string_index: boolean,
 					enable_rtid: boolean,
 					version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
@@ -1478,24 +1466,24 @@ namespace TwinStar.Script.CoreX {
 					let version_c = Core.Tool.PopCap.ReflectionObjectNotation.Version.value(version);
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
-					let value = JSON.read_fs<Core.Tool.PopCap.ReflectionObjectNotation.JS_ValidValue>(value_file);
+					let definition = JSON.read_fs<Core.Tool.PopCap.ReflectionObjectNotation.JS_ValidValue>(definition_file);
 					let stream = Core.ByteStreamView.watch(data_buffer_view);
-					Core.Tool.PopCap.ReflectionObjectNotation.Encode.process_whole(stream, value, Core.Boolean.value(enable_string_index), Core.Boolean.value(enable_rtid), version_c);
+					Core.Tool.PopCap.ReflectionObjectNotation.Encode.process(stream, definition, Core.Boolean.value(enable_string_index), Core.Boolean.value(enable_rtid), version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
 					return;
 				}
 
 				export function decode_fs(
 					data_file: string,
-					value_file: string,
+					definition_file: string,
 					version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
 				): void {
 					let version_c = Core.Tool.PopCap.ReflectionObjectNotation.Version.value(version);
 					let data = FileSystem.read_file(data_file);
 					let stream = Core.ByteStreamView.watch(data.view());
-					let value = Core.JSON.Value.default<Core.Tool.PopCap.ReflectionObjectNotation.JS_ValidValue>();
-					Core.Tool.PopCap.ReflectionObjectNotation.Decode.process_whole(stream, value, version_c);
-					JSON.write_fs(value_file, value);
+					let definition = Core.JSON.Value.default<Core.Tool.PopCap.ReflectionObjectNotation.JS_ValidValue>();
+					Core.Tool.PopCap.ReflectionObjectNotation.Decode.process(stream, definition, version_c);
+					JSON.write_fs(definition_file, definition);
 					return;
 				}
 
@@ -1506,11 +1494,11 @@ namespace TwinStar.Script.CoreX {
 				): void {
 					let plain_data = FileSystem.read_file(plain_file);
 					let cipher_size = Core.Size.default();
-					Core.Tool.PopCap.ReflectionObjectNotation.Encrypt.compute_size(plain_data.size(), cipher_size);
+					Core.Tool.Miscellaneous.PvZ2CNCryptData.Encrypt.estimate(plain_data.size(), cipher_size);
 					let cipher_data = Core.ByteArray.allocate(cipher_size);
 					let plain_stream = Core.ByteStreamView.watch(plain_data.view());
 					let cipher_stream = Core.ByteStreamView.watch(cipher_data.view());
-					Core.Tool.PopCap.ReflectionObjectNotation.Encrypt.process_whole(plain_stream, cipher_stream, Core.String.value(key));
+					Core.Tool.Miscellaneous.PvZ2CNCryptData.Encrypt.process(plain_stream, cipher_stream, Core.String.value(key));
 					FileSystem.write_file(cipher_file, cipher_stream.stream_view());
 					return;
 				}
@@ -1522,18 +1510,18 @@ namespace TwinStar.Script.CoreX {
 				): void {
 					let cipher_data = FileSystem.read_file(cipher_file);
 					let plain_size = Core.Size.default();
-					Core.Tool.PopCap.ReflectionObjectNotation.Decrypt.compute_size(cipher_data.size(), plain_size);
+					Core.Tool.Miscellaneous.PvZ2CNCryptData.Decrypt.estimate(cipher_data.size(), plain_size);
 					let plain_data = Core.ByteArray.allocate(plain_size);
 					let cipher_stream = Core.ByteStreamView.watch(cipher_data.view());
 					let plain_stream = Core.ByteStreamView.watch(plain_data.view());
-					Core.Tool.PopCap.ReflectionObjectNotation.Decrypt.process_whole(cipher_stream, plain_stream, Core.String.value(key));
+					Core.Tool.Miscellaneous.PvZ2CNCryptData.Decrypt.process(cipher_stream, plain_stream, Core.String.value(key));
 					FileSystem.write_file(plain_file, plain_stream.stream_view());
 					return;
 				}
 
 				export function encode_then_encrypt_fs(
 					data_file: string,
-					value_file: string,
+					definition_file: string,
 					enable_string_index: boolean,
 					enable_rtid: boolean,
 					version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
@@ -1543,37 +1531,37 @@ namespace TwinStar.Script.CoreX {
 					let version_c = Core.Tool.PopCap.ReflectionObjectNotation.Version.value(version);
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
-					let value = JSON.read_fs<Core.Tool.PopCap.ReflectionObjectNotation.JS_ValidValue>(value_file);
+					let definition = JSON.read_fs<Core.Tool.PopCap.ReflectionObjectNotation.JS_ValidValue>(definition_file);
 					let data_stream = Core.ByteStreamView.watch(data_buffer_view);
-					Core.Tool.PopCap.ReflectionObjectNotation.Encode.process_whole(data_stream, value, Core.Boolean.value(enable_string_index), Core.Boolean.value(enable_rtid), version_c);
+					Core.Tool.PopCap.ReflectionObjectNotation.Encode.process(data_stream, definition, Core.Boolean.value(enable_string_index), Core.Boolean.value(enable_rtid), version_c);
 					let plain_stream = Core.ByteStreamView.watch(data_stream.stream_view());
 					let cipher_size = Core.Size.default();
-					Core.Tool.PopCap.ReflectionObjectNotation.Encrypt.compute_size(plain_stream.size(), cipher_size);
+					Core.Tool.Miscellaneous.PvZ2CNCryptData.Encrypt.estimate(plain_stream.size(), cipher_size);
 					let cipher_data = Core.ByteArray.allocate(cipher_size);
 					let cipher_stream = Core.ByteStreamView.watch(cipher_data.view());
-					Core.Tool.PopCap.ReflectionObjectNotation.Encrypt.process_whole(plain_stream, cipher_stream, Core.String.value(key));
+					Core.Tool.Miscellaneous.PvZ2CNCryptData.Encrypt.process(plain_stream, cipher_stream, Core.String.value(key));
 					FileSystem.write_file(data_file, cipher_stream.stream_view());
 					return;
 				}
 
 				export function decrypt_then_decode_fs(
 					data_file: string,
-					value_file: string,
+					definition_file: string,
 					version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
 					key: string,
 				): void {
 					let version_c = Core.Tool.PopCap.ReflectionObjectNotation.Version.value(version);
 					let cipher_data = FileSystem.read_file(data_file);
 					let plain_size = Core.Size.default();
-					Core.Tool.PopCap.ReflectionObjectNotation.Decrypt.compute_size(cipher_data.size(), plain_size);
+					Core.Tool.Miscellaneous.PvZ2CNCryptData.Decrypt.estimate(cipher_data.size(), plain_size);
 					let plain_data = Core.ByteArray.allocate(plain_size);
 					let cipher_stream = Core.ByteStreamView.watch(cipher_data.view());
 					let plain_stream = Core.ByteStreamView.watch(plain_data.view());
-					Core.Tool.PopCap.ReflectionObjectNotation.Decrypt.process_whole(cipher_stream, plain_stream, Core.String.value(key));
+					Core.Tool.Miscellaneous.PvZ2CNCryptData.Decrypt.process(cipher_stream, plain_stream, Core.String.value(key));
 					let data_stream = Core.ByteStreamView.watch(plain_stream.stream_view());
-					let value = Core.JSON.Value.default<Core.Tool.PopCap.ReflectionObjectNotation.JS_ValidValue>();
-					Core.Tool.PopCap.ReflectionObjectNotation.Decode.process_whole(data_stream, value, version_c);
-					JSON.write_fs(value_file, value);
+					let definition = Core.JSON.Value.default<Core.Tool.PopCap.ReflectionObjectNotation.JS_ValidValue>();
+					Core.Tool.PopCap.ReflectionObjectNotation.Decode.process(data_stream, definition, version_c);
+					JSON.write_fs(definition_file, definition);
 					return;
 				}
 
@@ -1609,10 +1597,10 @@ namespace TwinStar.Script.CoreX {
 					let image = CoreX.Image.File.PNG.read_fs_of(image_file);
 					let image_view = image.view();
 					let data_size_bound = Core.Size.default();
-					Core.Tool.PopCap.UTexture.Encode.compute_data_size_bound(data_size_bound, image.size(), Core.Tool.Image.Texture.Format.value(format), version_c);
+					Core.Tool.PopCap.UTexture.Encode.estimate(data_size_bound, image.size(), Core.Tool.Texture.Encoding.Format.value(format), version_c);
 					let data = Core.ByteArray.allocate(data_size_bound);
 					let stream = Core.ByteStreamView.watch(data.view());
-					Core.Tool.PopCap.UTexture.Encode.process_image(stream, image_view, Core.Tool.Image.Texture.Format.value(format), version_c);
+					Core.Tool.PopCap.UTexture.Encode.process(stream, image_view, Core.Tool.Texture.Encoding.Format.value(format), version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
 					return;
 				}
@@ -1626,10 +1614,10 @@ namespace TwinStar.Script.CoreX {
 					let data = FileSystem.read_file(data_file);
 					let stream = Core.ByteStreamView.watch(data.view());
 					let image_size = Core.Image.ImageSize.default();
-					Core.Tool.PopCap.UTexture.Decode.compute_image_size(data.view(), image_size, version_c);
+					Core.Tool.PopCap.UTexture.Decode.estimate(data.view(), image_size, version_c);
 					let image = Core.Image.Image.allocate(image_size);
 					let image_view = image.view();
-					Core.Tool.PopCap.UTexture.Decode.process_image(stream, image_view, version_c);
+					Core.Tool.PopCap.UTexture.Decode.process(stream, image_view, version_c);
 					CoreX.Image.File.PNG.write_fs(image_file, image_view);
 					return;
 				}
@@ -1677,10 +1665,10 @@ namespace TwinStar.Script.CoreX {
 					let image = CoreX.Image.File.PNG.read_fs_of(image_file);
 					let image_view = image.view();
 					let data_size_bound = Core.Size.default();
-					Core.Tool.PopCap.SexyTexture.Encode.compute_data_size_bound(data_size_bound, image.size(), Core.Tool.Image.Texture.Format.value(format), Core.Boolean.value(compress_texture_data), version_c);
+					Core.Tool.PopCap.SexyTexture.Encode.estimate(data_size_bound, image.size(), Core.Tool.Texture.Encoding.Format.value(format), Core.Boolean.value(compress_texture_data), version_c);
 					let data = Core.ByteArray.allocate(data_size_bound);
 					let stream = Core.ByteStreamView.watch(data.view());
-					Core.Tool.PopCap.SexyTexture.Encode.process_image(stream, image_view, Core.Tool.Image.Texture.Format.value(format), Core.Boolean.value(compress_texture_data), version_c);
+					Core.Tool.PopCap.SexyTexture.Encode.process(stream, image_view, Core.Tool.Texture.Encoding.Format.value(format), Core.Boolean.value(compress_texture_data), version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
 					return;
 				}
@@ -1694,10 +1682,10 @@ namespace TwinStar.Script.CoreX {
 					let data = FileSystem.read_file(data_file);
 					let stream = Core.ByteStreamView.watch(data.view());
 					let image_size = Core.Image.ImageSize.default();
-					Core.Tool.PopCap.SexyTexture.Decode.compute_image_size(data.view(), image_size, version_c);
+					Core.Tool.PopCap.SexyTexture.Decode.estimate(data.view(), image_size, version_c);
 					let image = Core.Image.Image.allocate(image_size);
 					let image_view = image.view();
-					Core.Tool.PopCap.SexyTexture.Decode.process_image(stream, image_view, version_c);
+					Core.Tool.PopCap.SexyTexture.Decode.process(stream, image_view, version_c);
 					CoreX.Image.File.PNG.write_fs(image_file, image_view);
 					return;
 				}
@@ -1712,7 +1700,7 @@ namespace TwinStar.Script.CoreX {
 
 				export function encode_fs(
 					data_file: string,
-					manifest_file: string,
+					definition_file: string,
 					version: typeof Core.Tool.PopCap.Animation.Version.Value,
 					data_buffer: Core.ByteListView | bigint,
 				): void {
@@ -1720,23 +1708,23 @@ namespace TwinStar.Script.CoreX {
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
 					let stream = Core.ByteStreamView.watch(data_buffer_view);
-					let manifest = Core.Tool.PopCap.Animation.Manifest.Animation.json(JSON.read_fs(manifest_file), version_c);
-					Core.Tool.PopCap.Animation.Encode.process_animation(stream, manifest, version_c);
+					let definition = Core.Tool.PopCap.Animation.Definition.Animation.json(JSON.read_fs(definition_file), version_c);
+					Core.Tool.PopCap.Animation.Encode.process(stream, definition, version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
 					return;
 				}
 
 				export function decode_fs(
 					data_file: string,
-					manifest_file: string,
+					definition_file: string,
 					version: typeof Core.Tool.PopCap.Animation.Version.Value,
 				): void {
 					let version_c = Core.Tool.PopCap.Animation.Version.value(version);
 					let data = FileSystem.read_file(data_file);
 					let stream = Core.ByteStreamView.watch(data.view());
-					let manifest = Core.Tool.PopCap.Animation.Manifest.Animation.default();
-					Core.Tool.PopCap.Animation.Decode.process_animation(stream, manifest, version_c);
-					JSON.write_fs(manifest_file, manifest.get_json(version_c));
+					let definition = Core.Tool.PopCap.Animation.Definition.Animation.default();
+					Core.Tool.PopCap.Animation.Decode.process(stream, definition, version_c);
+					JSON.write_fs(definition_file, definition.get_json(version_c));
 					return;
 				}
 
@@ -1754,7 +1742,7 @@ namespace TwinStar.Script.CoreX {
 
 				export function encode_fs(
 					data_file: string,
-					manifest_file: string,
+					definition_file: string,
 					version: typeof Core.Tool.PopCap.ReAnimation.Version.Value,
 					data_buffer: Core.ByteListView | bigint,
 				): void {
@@ -1762,23 +1750,23 @@ namespace TwinStar.Script.CoreX {
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
 					let stream = Core.ByteStreamView.watch(data_buffer_view);
-					let manifest = Core.Tool.PopCap.ReAnimation.Manifest.Animation.json(JSON.read_fs(manifest_file), version_c);
-					Core.Tool.PopCap.ReAnimation.Encode.process_animation(stream, manifest, version_c);
+					let definition = Core.Tool.PopCap.ReAnimation.Definition.Animation.json(JSON.read_fs(definition_file), version_c);
+					Core.Tool.PopCap.ReAnimation.Encode.process(stream, definition, version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
 					return;
 				}
 
 				export function decode_fs(
 					data_file: string,
-					manifest_file: string,
+					definition_file: string,
 					version: typeof Core.Tool.PopCap.ReAnimation.Version.Value,
 				): void {
 					let version_c = Core.Tool.PopCap.ReAnimation.Version.value(version);
 					let data = FileSystem.read_file(data_file);
 					let stream = Core.ByteStreamView.watch(data.view());
-					let manifest = Core.Tool.PopCap.ReAnimation.Manifest.Animation.default();
-					Core.Tool.PopCap.ReAnimation.Decode.process_animation(stream, manifest, version_c);
-					JSON.write_fs(manifest_file, manifest.get_json(version_c));
+					let definition = Core.Tool.PopCap.ReAnimation.Definition.Animation.default();
+					Core.Tool.PopCap.ReAnimation.Decode.process(stream, definition, version_c);
+					JSON.write_fs(definition_file, definition.get_json(version_c));
 					return;
 				}
 
@@ -1796,7 +1784,7 @@ namespace TwinStar.Script.CoreX {
 
 				export function encode_fs(
 					data_file: string,
-					manifest_file: string,
+					definition_file: string,
 					version: typeof Core.Tool.PopCap.Particle.Version.Value,
 					data_buffer: Core.ByteListView | bigint,
 				): void {
@@ -1804,23 +1792,23 @@ namespace TwinStar.Script.CoreX {
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
 					let stream = Core.ByteStreamView.watch(data_buffer_view);
-					let manifest = Core.Tool.PopCap.Particle.Manifest.Particle.json(JSON.read_fs(manifest_file), version_c);
-					Core.Tool.PopCap.Particle.Encode.process_particle(stream, manifest, version_c);
+					let definition = Core.Tool.PopCap.Particle.Definition.Particle.json(JSON.read_fs(definition_file), version_c);
+					Core.Tool.PopCap.Particle.Encode.process(stream, definition, version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
 					return;
 				}
 
 				export function decode_fs(
 					data_file: string,
-					manifest_file: string,
+					definition_file: string,
 					version: typeof Core.Tool.PopCap.Particle.Version.Value,
 				): void {
 					let version_c = Core.Tool.PopCap.Particle.Version.value(version);
 					let data = FileSystem.read_file(data_file);
 					let stream = Core.ByteStreamView.watch(data.view());
-					let manifest = Core.Tool.PopCap.Particle.Manifest.Particle.default();
-					Core.Tool.PopCap.Particle.Decode.process_particle(stream, manifest, version_c);
-					JSON.write_fs(manifest_file, manifest.get_json(version_c));
+					let definition = Core.Tool.PopCap.Particle.Definition.Particle.default();
+					Core.Tool.PopCap.Particle.Decode.process(stream, definition, version_c);
+					JSON.write_fs(definition_file, definition.get_json(version_c));
 					return;
 				}
 
@@ -1838,7 +1826,7 @@ namespace TwinStar.Script.CoreX {
 
 				export function encode_fs(
 					data_file: string,
-					manifest_file: string,
+					definition_file: string,
 					version: typeof Core.Tool.PopCap.Trail.Version.Value,
 					data_buffer: Core.ByteListView | bigint,
 				): void {
@@ -1846,65 +1834,103 @@ namespace TwinStar.Script.CoreX {
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
 					let stream = Core.ByteStreamView.watch(data_buffer_view);
-					let manifest = Core.Tool.PopCap.Trail.Manifest.Trail.json(JSON.read_fs(manifest_file), version_c);
-					Core.Tool.PopCap.Trail.Encode.process_trail(stream, manifest, version_c);
+					let definition = Core.Tool.PopCap.Trail.Definition.Trail.json(JSON.read_fs(definition_file), version_c);
+					Core.Tool.PopCap.Trail.Encode.process(stream, definition, version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
 					return;
 				}
 
 				export function decode_fs(
 					data_file: string,
-					manifest_file: string,
+					definition_file: string,
 					version: typeof Core.Tool.PopCap.Trail.Version.Value,
 				): void {
 					let version_c = Core.Tool.PopCap.Trail.Version.value(version);
 					let data = FileSystem.read_file(data_file);
 					let stream = Core.ByteStreamView.watch(data.view());
-					let manifest = Core.Tool.PopCap.Trail.Manifest.Trail.default();
-					Core.Tool.PopCap.Trail.Decode.process_trail(stream, manifest, version_c);
-					JSON.write_fs(manifest_file, manifest.get_json(version_c));
+					let definition = Core.Tool.PopCap.Trail.Definition.Trail.default();
+					Core.Tool.PopCap.Trail.Decode.process(stream, definition, version_c);
+					JSON.write_fs(definition_file, definition.get_json(version_c));
 					return;
 				}
 
 			}
 
-			export namespace Effect {
+			export namespace RenderEffect {
 
-				export type VersionNumber = typeof Core.Tool.PopCap.Effect.Version.Value.number;
+				export type VersionNumber = typeof Core.Tool.PopCap.RenderEffect.Version.Value.number;
 
 				export const VersionNumberE = [1n] as VersionNumber[];
 
-				export type VersionVariant = typeof Core.Tool.PopCap.Effect.Version.Value.variant;
+				export type VersionVariant = typeof Core.Tool.PopCap.RenderEffect.Version.Value.variant;
 
 				export const VersionVariantE = [1n, 2n, 3n] as VersionVariant[];
 
 				export function encode_fs(
 					data_file: string,
-					manifest_file: string,
-					version: typeof Core.Tool.PopCap.Effect.Version.Value,
+					definition_file: string,
+					version: typeof Core.Tool.PopCap.RenderEffect.Version.Value,
 					data_buffer: Core.ByteListView | bigint,
 				): void {
-					let version_c = Core.Tool.PopCap.Effect.Version.value(version);
+					let version_c = Core.Tool.PopCap.RenderEffect.Version.value(version);
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
 					let stream = Core.ByteStreamView.watch(data_buffer_view);
-					let manifest = Core.Tool.PopCap.Effect.Manifest.Effect.json(JSON.read_fs(manifest_file), version_c);
-					Core.Tool.PopCap.Effect.Encode.process_effect(stream, manifest, version_c);
+					let definition = Core.Tool.PopCap.RenderEffect.Definition.Effect.json(JSON.read_fs(definition_file), version_c);
+					Core.Tool.PopCap.RenderEffect.Encode.process(stream, definition, version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
 					return;
 				}
 
 				export function decode_fs(
 					data_file: string,
-					manifest_file: string,
-					version: typeof Core.Tool.PopCap.Effect.Version.Value,
+					definition_file: string,
+					version: typeof Core.Tool.PopCap.RenderEffect.Version.Value,
 				): void {
-					let version_c = Core.Tool.PopCap.Effect.Version.value(version);
+					let version_c = Core.Tool.PopCap.RenderEffect.Version.value(version);
 					let data = FileSystem.read_file(data_file);
 					let stream = Core.ByteStreamView.watch(data.view());
-					let manifest = Core.Tool.PopCap.Effect.Manifest.Effect.default();
-					Core.Tool.PopCap.Effect.Decode.process_effect(stream, manifest, version_c);
-					JSON.write_fs(manifest_file, manifest.get_json(version_c));
+					let definition = Core.Tool.PopCap.RenderEffect.Definition.Effect.default();
+					Core.Tool.PopCap.RenderEffect.Decode.process(stream, definition, version_c);
+					JSON.write_fs(definition_file, definition.get_json(version_c));
+					return;
+				}
+
+			}
+
+			export namespace ParticleEffect {
+
+				export type VersionNumber = typeof Core.Tool.PopCap.ParticleEffect.Version.Value.number;
+
+				export const VersionNumberE = [1n] as VersionNumber[];
+
+				export function encode_fs(
+					data_file: string,
+					definition_file: string,
+					version: typeof Core.Tool.PopCap.ParticleEffect.Version.Value,
+					data_buffer: Core.ByteListView | bigint,
+				): void {
+					let version_c = Core.Tool.PopCap.ParticleEffect.Version.value(version);
+					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
+					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
+					let stream = Core.ByteStreamView.watch(data_buffer_view);
+					let definition = Core.Tool.PopCap.ParticleEffect.Definition.Effect.json(JSON.read_fs(definition_file), version_c);
+					Core.Tool.PopCap.ParticleEffect.Encode.process(stream, definition, version_c);
+					FileSystem.write_file(data_file, stream.stream_view());
+					return;
+				}
+
+				export function decode_fs(
+					data_file: string,
+					definition_file: string,
+					version: typeof Core.Tool.PopCap.ParticleEffect.Version.Value,
+				): void {
+					let version_c = Core.Tool.PopCap.ParticleEffect.Version.value(version);
+					let data = FileSystem.read_file(data_file);
+					let stream = Core.ByteStreamView.watch(data.view());
+					let definition = Core.Tool.PopCap.ParticleEffect.Definition.Effect.default();
+					Core.Tool.PopCap.ParticleEffect.Decode.process(stream, definition, version_c);
+					JSON.write_fs(definition_file, definition.get_json(version_c));
 					return;
 				}
 
@@ -1914,7 +1940,7 @@ namespace TwinStar.Script.CoreX {
 
 				export function encode_fs(
 					data_file: string,
-					manifest_file: string,
+					definition_file: string,
 					version: typeof Core.Tool.PopCap.CharacterFontWidget2.Version.Value,
 					data_buffer: Core.ByteListView | bigint,
 				): void {
@@ -1922,23 +1948,25 @@ namespace TwinStar.Script.CoreX {
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
 					let stream = Core.ByteStreamView.watch(data_buffer_view);
-					let manifest = Core.Tool.PopCap.CharacterFontWidget2.Manifest.FontWidget.json(JSON.read_fs(manifest_file), version_c);
-					Core.Tool.PopCap.CharacterFontWidget2.Encode.process_font_widget(stream, manifest, version_c);
+					let definition = Core.Tool.PopCap.CharacterFontWidget2.Definition.FontWidget.json(JSON.read_fs(definition_file), version_c);
+					stream.set_position(Core.Size.value(16n));
+					Core.Tool.PopCap.CharacterFontWidget2.Encode.process(stream, definition, version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
 					return;
 				}
 
 				export function decode_fs(
 					data_file: string,
-					manifest_file: string,
+					definition_file: string,
 					version: typeof Core.Tool.PopCap.CharacterFontWidget2.Version.Value,
 				): void {
 					let version_c = Core.Tool.PopCap.CharacterFontWidget2.Version.value(version);
 					let data = FileSystem.read_file(data_file);
 					let stream = Core.ByteStreamView.watch(data.view());
-					let manifest = Core.Tool.PopCap.CharacterFontWidget2.Manifest.FontWidget.default();
-					Core.Tool.PopCap.CharacterFontWidget2.Decode.process_font_widget(stream, manifest, version_c);
-					JSON.write_fs(manifest_file, manifest.get_json(version_c));
+					let definition = Core.Tool.PopCap.CharacterFontWidget2.Definition.FontWidget.default();
+					stream.set_position(Core.Size.value(16n));
+					Core.Tool.PopCap.CharacterFontWidget2.Decode.process(stream, definition, version_c);
+					JSON.write_fs(definition_file, definition.get_json(version_c));
 					return;
 				}
 
@@ -1956,7 +1984,7 @@ namespace TwinStar.Script.CoreX {
 
 				export function pack_fs(
 					data_file: string,
-					manifest_file: string,
+					definition_file: string,
 					resource_directory: string,
 					version: typeof Core.Tool.PopCap.Package.Version.Value,
 					data_buffer: Core.ByteListView | bigint,
@@ -1965,25 +1993,25 @@ namespace TwinStar.Script.CoreX {
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
 					let stream = Core.ByteStreamView.watch(data_buffer_view);
-					let manifest = Core.Tool.PopCap.Package.Manifest.Package.json(JSON.read_fs(manifest_file), version_c);
-					Core.Tool.PopCap.Package.Pack.process_package(stream, manifest, Core.Path.value(resource_directory), version_c);
+					let definition = Core.Tool.PopCap.Package.Definition.Package.json(JSON.read_fs(definition_file), version_c);
+					Core.Tool.PopCap.Package.Pack.process(stream, definition, Core.Path.value(resource_directory), version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
 					return;
 				}
 
 				export function unpack_fs(
 					data_file: string,
-					manifest_file: null | string,
+					definition_file: null | string,
 					resource_directory: null | string,
 					version: typeof Core.Tool.PopCap.Package.Version.Value,
 				): void {
 					let version_c = Core.Tool.PopCap.Package.Version.value(version);
 					let data = FileSystem.read_file(data_file);
 					let stream = Core.ByteStreamView.watch(data.view());
-					let manifest = Core.Tool.PopCap.Package.Manifest.Package.default();
-					Core.Tool.PopCap.Package.Unpack.process_package(stream, manifest, Core.PathOptional.value(resource_directory), version_c);
-					if (manifest_file !== null) {
-						JSON.write_fs(manifest_file, manifest.get_json(version_c));
+					let definition = Core.Tool.PopCap.Package.Definition.Package.default();
+					Core.Tool.PopCap.Package.Unpack.process(stream, definition, Core.PathOptional.value(resource_directory), version_c);
+					if (definition_file !== null) {
+						JSON.write_fs(definition_file, definition.get_json(version_c));
 					}
 					return;
 				}
@@ -1998,7 +2026,7 @@ namespace TwinStar.Script.CoreX {
 
 				export function pack_fs(
 					data_file: string,
-					manifest_file: string,
+					definition_file: string,
 					resource_directory: string,
 					version: typeof Core.Tool.PopCap.ResourceStreamGroup.Version.Value,
 					data_buffer: Core.ByteListView | bigint,
@@ -2007,25 +2035,25 @@ namespace TwinStar.Script.CoreX {
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
 					let stream = Core.ByteStreamView.watch(data_buffer_view);
-					let manifest = Core.Tool.PopCap.ResourceStreamGroup.Manifest.Package.json(JSON.read_fs(manifest_file), version_c);
-					Core.Tool.PopCap.ResourceStreamGroup.Pack.process_package(stream, manifest, Core.Path.value(resource_directory), version_c);
+					let definition = Core.Tool.PopCap.ResourceStreamGroup.Definition.Package.json(JSON.read_fs(definition_file), version_c);
+					Core.Tool.PopCap.ResourceStreamGroup.Pack.process(stream, definition, Core.Path.value(resource_directory), version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
 					return;
 				}
 
 				export function unpack_fs(
 					data_file: string,
-					manifest_file: null | string,
+					definition_file: null | string,
 					resource_directory: null | string,
 					version: typeof Core.Tool.PopCap.ResourceStreamGroup.Version.Value,
 				): void {
 					let version_c = Core.Tool.PopCap.ResourceStreamGroup.Version.value(version);
 					let data = FileSystem.read_file(data_file);
 					let stream = Core.ByteStreamView.watch(data.view());
-					let manifest = Core.Tool.PopCap.ResourceStreamGroup.Manifest.Package.default();
-					Core.Tool.PopCap.ResourceStreamGroup.Unpack.process_package(stream, manifest, Core.PathOptional.value(resource_directory), version_c);
-					if (manifest_file !== null) {
-						JSON.write_fs(manifest_file, manifest.get_json(version_c));
+					let definition = Core.Tool.PopCap.ResourceStreamGroup.Definition.Package.default();
+					Core.Tool.PopCap.ResourceStreamGroup.Unpack.process(stream, definition, Core.PathOptional.value(resource_directory), version_c);
+					if (definition_file !== null) {
+						JSON.write_fs(definition_file, definition.get_json(version_c));
 					}
 					return;
 				}
@@ -2044,7 +2072,7 @@ namespace TwinStar.Script.CoreX {
 
 				export function pack_fs(
 					data_file: string,
-					manifest_file: string,
+					definition_file: string,
 					description_file: string,
 					resource_directory: string,
 					packet_file: null | string,
@@ -2056,16 +2084,16 @@ namespace TwinStar.Script.CoreX {
 					let data_buffer_if = typeof data_buffer === 'bigint' ? Core.ByteArray.allocate(Core.Size.value(data_buffer)) : null;
 					let data_buffer_view = data_buffer instanceof Core.ByteListView ? data_buffer : data_buffer_if!.view();
 					let stream = Core.ByteStreamView.watch(data_buffer_view);
-					let manifest = Core.Tool.PopCap.ResourceStreamBundle.Manifest.Package.json(JSON.read_fs(manifest_file), version_c);
+					let definition = Core.Tool.PopCap.ResourceStreamBundle.Definition.Package.json(JSON.read_fs(definition_file), version_c);
 					let description = Core.Tool.PopCap.ResourceStreamBundle.Description.PackageOptional.json(JSON.read_fs(description_file), version_c);
-					Core.Tool.PopCap.ResourceStreamBundle.Pack.process_package(stream, manifest, description, Core.Path.value(resource_directory), Core.PathOptional.value(packet_file), Core.PathOptional.value(new_packet_file), version_c);
+					Core.Tool.PopCap.ResourceStreamBundle.Pack.process(stream, definition, description, Core.Path.value(resource_directory), Core.PathOptional.value(packet_file), Core.PathOptional.value(new_packet_file), version_c);
 					FileSystem.write_file(data_file, stream.stream_view());
 					return;
 				}
 
 				export function unpack_fs(
 					data_file: string,
-					manifest_file: null | string,
+					definition_file: null | string,
 					description_file: null | string,
 					resource_directory: null | string,
 					packet_file: null | string,
@@ -2074,11 +2102,11 @@ namespace TwinStar.Script.CoreX {
 					let version_c = Core.Tool.PopCap.ResourceStreamBundle.Version.value(version);
 					let data = FileSystem.read_file(data_file);
 					let stream = Core.ByteStreamView.watch(data.view());
-					let manifest = Core.Tool.PopCap.ResourceStreamBundle.Manifest.Package.default();
+					let definition = Core.Tool.PopCap.ResourceStreamBundle.Definition.Package.default();
 					let description = Core.Tool.PopCap.ResourceStreamBundle.Description.PackageOptional.default();
-					Core.Tool.PopCap.ResourceStreamBundle.Unpack.process_package(stream, manifest, description, Core.PathOptional.value(resource_directory), Core.PathOptional.value(packet_file), version_c);
-					if (manifest_file !== null) {
-						JSON.write_fs(manifest_file, manifest.get_json(version_c));
+					Core.Tool.PopCap.ResourceStreamBundle.Unpack.process(stream, definition, description, Core.PathOptional.value(resource_directory), Core.PathOptional.value(packet_file), version_c);
+					if (definition_file !== null) {
+						JSON.write_fs(definition_file, definition.get_json(version_c));
 					}
 					if (description_file !== null) {
 						JSON.write_fs(description_file, description.get_json(version_c));
@@ -2109,7 +2137,7 @@ namespace TwinStar.Script.CoreX {
 					let before_stream = Core.ByteStreamView.watch(before_data.view());
 					let after_stream = Core.ByteStreamView.watch(after_data.view());
 					let patch_stream = Core.ByteStreamView.watch(patch_data.view());
-					Core.Tool.PopCap.ResourceStreamBundlePatch.Encode.process_whole(before_stream, after_stream, patch_stream, Core.Boolean.value(use_raw_packet), version_c);
+					Core.Tool.PopCap.ResourceStreamBundlePatch.Encode.process(before_stream, after_stream, patch_stream, Core.Boolean.value(use_raw_packet), version_c);
 					FileSystem.write_file(patch_file, patch_stream.stream_view());
 					return;
 				}
@@ -2129,7 +2157,7 @@ namespace TwinStar.Script.CoreX {
 					let before_stream = Core.ByteStreamView.watch(before_data.view());
 					let after_stream = Core.ByteStreamView.watch(after_data.view());
 					let patch_stream = Core.ByteStreamView.watch(patch_data.view());
-					Core.Tool.PopCap.ResourceStreamBundlePatch.Decode.process_whole(before_stream, after_stream, patch_stream, Core.Boolean.value(use_raw_packet), version_c);
+					Core.Tool.PopCap.ResourceStreamBundlePatch.Decode.process(before_stream, after_stream, patch_stream, Core.Boolean.value(use_raw_packet), version_c);
 					FileSystem.write_file(after_file, after_stream.stream_view());
 					return;
 				}
@@ -2147,17 +2175,17 @@ namespace TwinStar.Script.CoreX {
 				export function encode(
 					data: Core.OByteStreamView,
 					image: Core.Image.CImageView,
-					format: Image.Texture.Format,
+					format: Texture.Encoding.Format,
 				): void {
-					return Core.Tool.Miscellaneous.XboxTiledTexture.Encode.process_image(data, image, Core.Tool.Image.Texture.Format.value(format));
+					return Core.Tool.Miscellaneous.XboxTiledTexture.Encode.process(data, image, Core.Tool.Texture.Encoding.Format.value(format));
 				}
 
 				export function decode(
 					data: Core.IByteStreamView,
 					image: Core.Image.VImageView,
-					format: Image.Texture.Format,
+					format: Texture.Encoding.Format,
 				): void {
-					return Core.Tool.Miscellaneous.XboxTiledTexture.Decode.process_image(data, image, Core.Tool.Image.Texture.Format.value(format));
+					return Core.Tool.Miscellaneous.XboxTiledTexture.Decode.process(data, image, Core.Tool.Texture.Encoding.Format.value(format));
 				}
 
 				// ------------------------------------------------
@@ -2203,7 +2231,7 @@ namespace TwinStar.Script.CoreX {
 					let image_size = image.size().value;
 					let image_data = Core.ByteArray.allocate(Core.Size.value(image_size[0] * image_size[1] * 8n / 8n));
 					let image_stream = Core.ByteStreamView.watch(image_data.view());
-					Image.Texture.encode(image_stream, image, 'a_8');
+					Texture.Encoding.encode(image_stream, image, 'a_8');
 					let alpha_count: Record<number, number> = {};
 					for (let e of new Uint8Array(image_stream.stream_view().value)) {
 						let alpha_4 = (e >> 4) & ~(~0 << 4);
@@ -2242,7 +2270,7 @@ namespace TwinStar.Script.CoreX {
 						}
 					}
 					data.set_position(Core.Size.value(data.position().value + BigInt(palette_data.p())));
-					Core.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.Encode.process_image(data, image, Core.Image.ColorList.value(palette));
+					Core.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.Encode.process(data, image, Core.Image.ColorList.value(palette));
 					return;
 				}
 
@@ -2262,7 +2290,7 @@ namespace TwinStar.Script.CoreX {
 						}
 					}
 					data.set_position(Core.Size.value(data.position().value + BigInt(palette_data.p())));
-					Core.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.Decode.process_image(data, image, Core.Image.ColorList.value(palette));
+					Core.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.Decode.process(data, image, Core.Image.ColorList.value(palette));
 					return;
 				}
 
