@@ -283,9 +283,6 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'push_notification': {
-        if (!(Platform.isWindows || Platform.isLinux || Platform.isMacOS || Platform.isAndroid)) {
-          throw Exception('unavailable method');
-        }
         assert(argument.length == 3);
         var title = argument[1];
         var description = argument[2];

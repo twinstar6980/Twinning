@@ -15,7 +15,7 @@ namespace TwinStar.Script.Console {
 
 	// ------------------------------------------------
 
-	export let cli_disable_virtual_terminal_sequence = false;
+	export let disable_cli_virtual_terminal_sequence = false;
 
 	const k_cli_message_text_attribute: Record<MessageType, VirtualTerminalSequence.TextAttribute> = {
 		v: {
@@ -59,7 +59,7 @@ namespace TwinStar.Script.Console {
 	function cli_set_message_text_attribute(
 		type: MessageType,
 	): void {
-		if (!cli_disable_virtual_terminal_sequence) {
+		if (!disable_cli_virtual_terminal_sequence) {
 			Shell.cli_output(VirtualTerminalSequence.text_attribute(k_cli_message_text_attribute[type]));
 		}
 		return;
@@ -868,14 +868,19 @@ namespace TwinStar.Script.Console {
 		return result;
 	}
 
+	export let disable_notification = false;
+
 	export function push_notification(
 		title: string,
 		description: string,
 	): void {
-		if (Shell.is_cli && (Shell.is_windows || Shell.is_linux || Shell.is_macintosh)) {
+		if (disable_notification) {
+			return;
+		}
+		if (Shell.is_cli) {
 			Shell.cli_push_notification(title, description);
 		}
-		if (Shell.is_gui && (Shell.is_windows || Shell.is_linux || Shell.is_macintosh || Shell.is_android)) {
+		if (Shell.is_gui) {
 			Shell.gui_push_notification(title, description);
 		}
 		return;

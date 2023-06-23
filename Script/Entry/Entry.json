@@ -1,6 +1,7 @@
 {
 	"language": "Chinese",
-	"cli_disable_virtual_terminal_sequence": false,
+	"disable_cli_virtual_terminal_sequence": false,
+	"disable_notification": false,
 	"pause_when_finish": true,
 	"notification_time_limit": 15000,
 	"thread_limit": 0,

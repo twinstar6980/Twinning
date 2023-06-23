@@ -68,7 +68,8 @@ namespace TwinStar.Script.Entry {
 
 	type Configuration = {
 		language: string;
-		cli_disable_virtual_terminal_sequence: boolean;
+		disable_cli_virtual_terminal_sequence: boolean;
+		disable_notification: boolean;
 		pause_when_finish: boolean;
 		notification_time_limit: null | bigint;
 		thread_limit: bigint;
@@ -89,8 +90,9 @@ namespace TwinStar.Script.Entry {
 		// set language
 		Language.push_table(configuration.language, CoreX.JSON.read_fs_js(Home.of(`~/script/Language/${configuration.language}.json`)) as unknown as Language.Map);
 		Language.set_target(configuration.language);
-		// cli disable virtual-terminal-sequence
-		Console.cli_disable_virtual_terminal_sequence = configuration.cli_disable_virtual_terminal_sequence;
+		// set console feature
+		Console.disable_cli_virtual_terminal_sequence = configuration.disable_cli_virtual_terminal_sequence;
+		Console.disable_notification = configuration.disable_notification;
 		// set byte stream endian
 		Core.Miscellaneous.g_context.query_byte_stream_use_big_endian().value = configuration.byte_stream_use_big_endian;
 		// set common buffer size

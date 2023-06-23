@@ -1,5 +1,5 @@
 name: shell_gui
-version: 12.0.0+12
+version: 13.0.0+13
 publish_to: 'none'
 environment:
   sdk: '>=3.0.5 <4.0.0'
@@ -23,6 +23,8 @@ dev_dependencies:
   msix: ^3.6.6
 flutter:
   uses-material-design: true
+  assets:
+    - asset/
   fonts:
     - family: NotoSansMonoCJKsc-VF
       fonts:

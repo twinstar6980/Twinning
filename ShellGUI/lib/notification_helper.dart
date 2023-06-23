@@ -19,16 +19,19 @@ class NotificationHelper {
   Future<Void>
   initialize(
   ) async {
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    if (Platform.isWindows) {
       await localNotifier.setup(
         appName: kApplicationName,
         shortcutPolicy: ShortcutPolicy.requireCreate,
       );
     }
-    if (Platform.isAndroid) {
+    if (Platform.isLinux || Platform.isMacOS || Platform.isAndroid || Platform.isIOS) {
       _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-      var initializationSettings = const InitializationSettings(
-        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+      var initializationSettings = InitializationSettings(
+        android: const AndroidInitializationSettings('@mipmap/ic_launcher'),
+        iOS: const DarwinInitializationSettings(),
+        macOS: const DarwinInitializationSettings(),
+        linux: LinuxInitializationSettings(defaultActionName: '', defaultIcon: AssetsLinuxIcon('asset/logo.png')),
       );
       await _flutterLocalNotificationsPlugin!.initialize(initializationSettings, onDidReceiveNotificationResponse: null);
     }
@@ -41,13 +44,13 @@ class NotificationHelper {
     String title,
     String description,
   ) async {
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    if (Platform.isWindows) {
       await LocalNotification(
         title: title,
         body: description,
       ).show();
     }
-    if (Platform.isAndroid) {
+    if (Platform.isLinux || Platform.isMacOS || Platform.isAndroid || Platform.isIOS) {
       await _flutterLocalNotificationsPlugin!.show(
         DateTime.now().millisecondsSinceEpoch % 0x80000000,
         title,
@@ -56,6 +59,12 @@ class NotificationHelper {
           android: AndroidNotificationDetails(
             'com.twinstar.toolkit.shell_gui.notification_channel.main',
             'Main',
+          ),
+          iOS: DarwinNotificationDetails(
+          ),
+          macOS: DarwinNotificationDetails(
+          ),
+          linux: LinuxNotificationDetails(
           ),
         ),
       );
