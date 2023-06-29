@@ -35,7 +35,7 @@ namespace TwinStar.Script.Support.PvZ2.TextTable {
 					source_map = source_variant;
 					actual_source_version = 'json_map';
 				}
-			} catch (e: any) {
+			} catch (e) {
 				actual_source_version = 'text';
 			}
 		} else {

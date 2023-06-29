@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 72;
+	export const k_version = 73;
 
 	// ------------------------------------------------
 
@@ -256,8 +256,8 @@ namespace TwinStar.Script {
 				]);
 				Home.initialize();
 				entry?.[0](entry[1], argument.slice(1));
-			} catch (error: any) {
-				Console.error_of(error);
+			} catch (e) {
+				Console.error_of(e);
 				Console.pause();
 			}
 			// 释放资源

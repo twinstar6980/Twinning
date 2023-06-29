@@ -74,7 +74,7 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 					return [`${raw_file}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					ripe_file: undefined!,
 					raw_file: '?default',
 					tool_ffmpeg_program_file: configuration.tool_ffmpeg_program_file,
@@ -154,7 +154,7 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 					return [`${raw_file_directory}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					ripe_file_directory: undefined!,
 					raw_file_directory: '?default',
 					tool_ffmpeg_program_file: configuration.tool_ffmpeg_program_file,

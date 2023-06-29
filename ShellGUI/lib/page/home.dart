@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '/page/console/page.dart';
 import '/page/setting/page.dart';
-import '/platform_method.dart';
+import '/common/platform_method.dart';
 import '/command.dart';
 
 // ----------------

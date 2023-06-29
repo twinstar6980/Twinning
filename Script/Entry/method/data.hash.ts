@@ -34,7 +34,7 @@ namespace TwinStar.Script.Entry.method.data.hash {
 					return [`${result.toString(16)}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					target_file: undefined!,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),

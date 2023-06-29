@@ -68,7 +68,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return [`${data_file}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					definition_file: undefined!,
 					data_file: '?default',
 					version_number: configuration.version_number,
@@ -118,7 +118,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return [`${definition_file}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					data_file: undefined!,
 					definition_file: '?default',
 					version_number: configuration.version_number,
@@ -161,7 +161,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return [`${ripe_directory}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					raw_file: undefined!,
 					ripe_directory: '?default',
 				},
@@ -200,7 +200,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return [`${raw_file}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					ripe_directory: undefined!,
 					raw_file: '?default',
 				},
@@ -239,7 +239,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return [`${target_directory}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					target_directory: undefined!,
 					resolution: '?input',
 				},
@@ -278,7 +278,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return [`${target_directory}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					target_directory: undefined!,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', /.+(\.pam)(\.xfl)$/i]]),
@@ -345,7 +345,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return [`${data_file_directory}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					definition_file_directory: undefined!,
 					data_file_directory: '?default',
 					version_number: configuration.version_number,
@@ -403,7 +403,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return [`${definition_file_directory}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					data_file_directory: undefined!,
 					definition_file_directory: '?default',
 					version_number: configuration.version_number,
@@ -454,7 +454,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return [`${ripe_directory_directory}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					raw_file_directory: undefined!,
 					ripe_directory_directory: '?default',
 				},
@@ -501,7 +501,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return [`${raw_file_directory}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					ripe_directory_directory: undefined!,
 					raw_file_directory: '?default',
 				},
@@ -547,7 +547,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return [`${target_directory_directory}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					target_directory_directory: undefined!,
 					resolution: '?input',
 				},
@@ -593,7 +593,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 					return [`${target_directory_directory}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					target_directory_directory: undefined!,
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),

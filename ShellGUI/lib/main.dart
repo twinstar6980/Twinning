@@ -7,8 +7,9 @@ import 'package:window_manager/window_manager.dart';
 import '/application.dart';
 import '/setting.dart';
 import '/command.dart';
-import '/platform_method.dart';
-import '/notification_helper.dart';
+import '/common/platform_method.dart';
+import '/common/notification_helper.dart';
+import '/common/path_picker.dart';
 
 // ----------------
 
@@ -30,12 +31,13 @@ main(
   } catch (e) {
     await Setting.save(setting);
   }
+  PathPicker.fallbackDirectory = setting.mFallbackDirectoryForInvisibleFile;
   var commandSource = <String>[];
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
     commandSource = argument;
   }
   if (Platform.isAndroid) {
-    commandSource = (await gPlatformMethod!.invokeMethod('getCommand', <String, dynamic>{}) as List<Object?>).map((e) => e as String).toList();
+    commandSource = await PlatformMethod.getCommand(setting.mFallbackDirectoryForInvisibleFile);
   }
   var command = null as Command?;
   if (commandSource.isNotEmpty) {

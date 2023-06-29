@@ -43,7 +43,7 @@ namespace TwinStar.Script.Entry.method.pvz2.remote_android_helper {
 					return [`${project_directory}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					project_directory: undefined!,
 					action: '?input',
 				},

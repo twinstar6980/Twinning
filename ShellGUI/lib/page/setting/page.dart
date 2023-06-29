@@ -1,9 +1,13 @@
-// ignore_for_file: unused_import
+// ignore_for_file: unused_import, avoid_init_to_null
 
 import '/common.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '/setting.dart';
+import '/common/platform_method.dart';
+import '/common/permission_helper.dart';
+import '/common/path_picker.dart';
 
 // ----------------
 
@@ -21,6 +25,20 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
+
+  String? _applicationSharedDirectory = null;
+
+  Boolean _hasStoragePermission = false;
+
+  @override
+  void initState() {
+    super.initState();
+    (() async {
+      this._applicationSharedDirectory = await queryApplicationSharedDirectory();
+      this._hasStoragePermission = await PermissionHelper.checkStoragePermission();
+    })();
+    return;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +60,10 @@ class _SettingPageState extends State<SettingPage> {
                   ),
                 ),
                 ListTile(
-                  leading: const Icon(Icons.auto_mode),
+                  leading: const Icon(Icons.auto_mode_outlined),
                   title: const Text('Theme Mode'),
                   trailing: SizedBox(
-                    width: 64,
+                    width: 96,
                     child: Row(
                       children: [
                         Expanded(child: Container()),
@@ -90,10 +108,10 @@ class _SettingPageState extends State<SettingPage> {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.color_lens),
+                  leading: const Icon(Icons.color_lens_outlined),
                   title: const Text('Theme Color'),
                   trailing: SizedBox(
-                    width: 64,
+                    width: 96,
                     child: Row(
                       children: [
                         Expanded(child: Container()),
@@ -167,10 +185,10 @@ class _SettingPageState extends State<SettingPage> {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.text_increase),
+                  leading: const Icon(Icons.text_increase_outlined),
                   title: const Text('Font Size'),
                   trailing: SizedBox(
-                    width: 64,
+                    width: 96,
                     child: Row(
                       children: [
                         Expanded(child: Container()),
@@ -216,10 +234,10 @@ class _SettingPageState extends State<SettingPage> {
                   ),
                 ),
                 ListTile(
-                  leading: const Icon(Icons.data_usage),
+                  leading: const Icon(Icons.data_usage_outlined),
                   title: const Text('Core'),
                   trailing: SizedBox(
-                    width: 64,
+                    width: 96,
                     child: Row(
                       children: [
                         Expanded(child: Container()),
@@ -239,6 +257,7 @@ class _SettingPageState extends State<SettingPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             TextFormField(
+                              maxLines: null,
                               decoration: const InputDecoration(
                                 isDense: true,
                               ),
@@ -261,10 +280,10 @@ class _SettingPageState extends State<SettingPage> {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.data_object),
+                  leading: const Icon(Icons.data_object_outlined),
                   title: const Text('Script'),
                   trailing: SizedBox(
-                    width: 64,
+                    width: 96,
                     child: Row(
                       children: [
                         Expanded(child: Container()),
@@ -284,6 +303,7 @@ class _SettingPageState extends State<SettingPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             TextFormField(
+                              maxLines: null,
                               decoration: const InputDecoration(
                                 isDense: true,
                               ),
@@ -306,10 +326,10 @@ class _SettingPageState extends State<SettingPage> {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.list),
+                  leading: const Icon(Icons.list_outlined),
                   title: const Text('Argument'),
                   trailing: SizedBox(
-                    width: 64,
+                    width: 96,
                     child: Row(
                       children: [
                         Expanded(child: Container()),
@@ -356,10 +376,17 @@ class _SettingPageState extends State<SettingPage> {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.exit_to_app),
+                  dense: true,
+                  title: Text(
+                    'Miscellaneous',
+                    style: theme.textTheme.titleSmall!.copyWith(color: theme.colorScheme.primary),
+                  ),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.exit_to_app_outlined),
                   title: const Text('Behavior After Command Succeed'),
                   trailing: SizedBox(
-                    width: 64,
+                    width: 96,
                     child: Row(
                       children: [
                         Expanded(child: Container()),
@@ -401,6 +428,119 @@ class _SettingPageState extends State<SettingPage> {
                         ],
                       ),
                     );
+                  },
+                ),
+                ListTile(
+                  enabled: Platform.isAndroid || Platform.isIOS,
+                  leading: const Icon(Icons.folder_copy_outlined),
+                  title: const Text('Fallback Directory For Invisible File'),
+                  trailing: SizedBox(
+                    width: 96,
+                    child: Row(
+                      children: [
+                        Expanded(child: Container()),
+                        Text(
+                          !Directory(setting.data.mFallbackDirectoryForInvisibleFile).existsSync() ? 'Invalid' : 'Valid',
+                          style: theme.textTheme.bodyMedium?.copyWith(color: Platform.isAndroid || Platform.isIOS ? null : theme.disabledColor),
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () async {
+                    showDialog<String>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Fallback Directory For Invisible File'),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextFormField(
+                              maxLines: null,
+                              decoration: const InputDecoration(
+                                isDense: true,
+                              ),
+                              initialValue: setting.data.mFallbackDirectoryForInvisibleFile,
+                              onChanged: (value) {
+                                setting.data.mFallbackDirectoryForInvisibleFile = value;
+                                setting.notify();
+                              },
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'OK'),
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  enabled: this._applicationSharedDirectory != null,
+                  leading: const Icon(Icons.folder_special_outlined),
+                  title: const Text('Shared Directory'),
+                  trailing: SizedBox(
+                    width: 96,
+                    child: Row(
+                      children: [
+                        Expanded(child: Container()),
+                        Text(
+                          this._applicationSharedDirectory == null ? 'Unavailable' : 'Available',
+                          style: theme.textTheme.bodyMedium?.copyWith(color: this._applicationSharedDirectory != null ? null : theme.disabledColor),
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+                    showDialog<String>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Shared Directory'),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextFormField(
+                              readOnly: true,
+                              maxLines: 1,
+                              decoration: const InputDecoration(
+                                isDense: true,
+                                border: OutlineInputBorder(),
+                              ),
+                              initialValue: this._applicationSharedDirectory,
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'OK'),
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  enabled: Platform.isAndroid,
+                  leading: const Icon(Icons.storage_outlined),
+                  title: const Text('Storage Permission'),
+                  trailing: SizedBox(
+                    width: 96,
+                    child: Row(
+                      children: [
+                        Expanded(child: Container()),
+                        Text(
+                          !this._hasStoragePermission ? 'Denied' : 'Granted',
+                          style: theme.textTheme.bodyMedium?.copyWith(color: Platform.isAndroid ? null : theme.disabledColor),
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () async {
+                    this._hasStoragePermission = await PermissionHelper.requestStoragePermission();
+                    this.setState(() {});
                   },
                 ),
                 const SizedBox(height: 16),

@@ -44,7 +44,7 @@ namespace TwinStar.Script.Entry.method.data.encoding {
 					return [`${ripe_file}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					raw_file: undefined!,
 					ripe_file: '?default',
 				},
@@ -83,7 +83,7 @@ namespace TwinStar.Script.Entry.method.data.encoding {
 					return [`${raw_file}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					ripe_file: undefined!,
 					raw_file: '?default',
 				},

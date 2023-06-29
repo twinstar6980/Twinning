@@ -5,11 +5,13 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:path/path.dart' as p_path;
 import 'package:path_provider/path_provider.dart';
-import 'package:file_picker/file_picker.dart';
 import '/setting.dart';
 import '/command.dart';
-import '/notification_helper.dart';
+import '/common/platform_method.dart';
+import '/common/notification_helper.dart';
+import '/common/path_picker.dart';
 import '/page/console/output_bar.dart';
 import '/page/console/action_bar.dart';
 import '/page/console/launch_bar.dart';
@@ -44,7 +46,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
   Boolean _running = false;
 
   @override
-  Future<void>
+  Future<Void>
   start(
   ) async {
     assert(!this._running);
@@ -55,7 +57,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
   }
 
   @override
-  Future<void>
+  Future<Void>
   finish(
   ) async {
     assert(this._running);
@@ -257,9 +259,6 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'pick_path': {
-        if (!(Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
-          throw Exception('unavailable method');
-        }
         assert(argument.length == 2);
         var type = FileObjectType.formString(argument[1]);
         var selection = null as String?;
@@ -269,13 +268,11 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
             break;
           }
           case FileObjectType.file: {
-            var pickResult = await FilePicker.platform.pickFiles(allowMultiple: false);
-            selection = pickResult?.files.single.path;
+            selection = await PathPicker.pickFile();
             break;
           }
           case FileObjectType.directory: {
-            var pickResult = await FilePicker.platform.getDirectoryPath();
-            selection = pickResult;
+            selection = await PathPicker.pickDirectory();
             break;
           }
         }
@@ -310,7 +307,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
       if (Platform.isAndroid) {
         var directory = await getApplicationSupportDirectory();
         var originalCorePath = actualCorePath;
-        actualCorePath = '${directory.path}/core';
+        actualCorePath = p_path.join(directory.path, 'core');
         var originalCoreFile = File(originalCorePath);
         if (!originalCoreFile.existsSync()) {
           throw Exception('core file not found');

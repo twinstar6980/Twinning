@@ -1,8 +1,10 @@
-// ignore_for_file: unused_import
+// ignore_for_file: unused_import, unnecessary_cast
 
 import 'dart:core' as core;
 import 'dart:io';
+import 'dart:async';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 
 // ----------------
 
@@ -20,7 +22,7 @@ typedef Map<K, V> = core.Map<K, V>;
 
 const kApplicationName = 'TwinStar ToolKit - Shell GUI';
 
-const kApplicationVersion = 13;
+const kApplicationVersion = 14;
 
 // ----------------
 
@@ -36,15 +38,30 @@ exitApplication(
 
 // ----------------
 
+Future<String?>
+queryApplicationSharedDirectory(
+) async {
+  var result = null as String?;
+  if (Platform.isAndroid) {
+    result = (await getExternalStorageDirectory())!.path;
+  }
+  if (Platform.isIOS) {
+    result = (await getApplicationDocumentsDirectory()).path;
+  }
+  return result;
+}
+
+// ----------------
+
 String
 normalizeLibraryPath(
   String path,
 ) {
+  var result = path;
   if (Platform.isWindows) {
-    return '${path}.';
-  } else {
-    return '${path}';
+    path += '.';
   }
+  return result;
 }
 
 // ----------------

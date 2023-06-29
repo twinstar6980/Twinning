@@ -64,7 +64,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 					return [`${cipher_file}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					plain_file: undefined!,
 					cipher_file: '?default',
 					limit: configuration.limit,
@@ -123,7 +123,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 					return [`${plain_file}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					cipher_file: undefined!,
 					plain_file: '?default',
 					limit: configuration.limit,
@@ -192,7 +192,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 					return [`${cipher_file_directory}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					plain_file_directory: undefined!,
 					cipher_file_directory: '?default',
 					limit: configuration.limit,
@@ -259,7 +259,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 					return [`${plain_file_directory}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					cipher_file_directory: undefined!,
 					plain_file_directory: '?default',
 					limit: configuration.limit,

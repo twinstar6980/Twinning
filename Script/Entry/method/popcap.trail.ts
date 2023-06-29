@@ -74,7 +74,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 					return [`${data_file}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					definition_file: undefined!,
 					data_file: '?default',
 					version_platform: configuration.version_platform,
@@ -134,7 +134,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 					return [`${definition_file}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					data_file: undefined!,
 					definition_file: '?default',
 					version_platform: configuration.version_platform,
@@ -213,7 +213,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 					return [`${data_file_directory}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					definition_file_directory: undefined!,
 					data_file_directory: '?default',
 					version_platform: configuration.version_platform,
@@ -281,7 +281,7 @@ namespace TwinStar.Script.Entry.method.popcap.trail {
 					return [`${definition_file_directory}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					data_file_directory: undefined!,
 					definition_file_directory: '?default',
 					version_platform: configuration.version_platform,

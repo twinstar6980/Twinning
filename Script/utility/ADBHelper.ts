@@ -116,8 +116,8 @@ namespace TwinStar.Script.ADBHelper {
 		result.version_name = match[1];
 		match = /userId=([0-9]+)/.exec(shell_result);
 		assert_test(match !== null);
-		let userIDNumber = BigInt(match[1]);
-		result.user = `u${userIDNumber / 100000n}_a${userIDNumber - 10000n}`;
+		let user_number = BigInt(match[1]);
+		result.user = `u${user_number / 100000n}_a${user_number - 10000n}`;
 		return result;
 	}
 

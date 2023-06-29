@@ -12,7 +12,7 @@ namespace TwinStar.Script.Entry {
 		path_tactic_if_out_exist: 'none' | 'trash' | 'delete' | 'override';
 	};
 
-	export const k_common_argument: CommonArgument = {
+	export const g_common_argument: CommonArgument = {
 		path_tactic_if_out_exist: 'none',
 	};
 
@@ -55,7 +55,7 @@ namespace TwinStar.Script.Entry {
 				Console.information(`${progress}`, [`${item}`]);
 				try {
 					worker(item);
-				} catch (e: any) {
+				} catch (e) {
 					Console.error_of(e);
 					Console.pause();
 				}
@@ -70,9 +70,6 @@ namespace TwinStar.Script.Entry {
 		language: string;
 		disable_cli_virtual_terminal_sequence: boolean;
 		disable_notification: boolean;
-		pause_when_finish: boolean;
-		notification_time_limit: null | bigint;
-		thread_limit: bigint;
 		byte_stream_use_big_endian: boolean;
 		common_buffer_size: string;
 		json_format: {
@@ -82,26 +79,29 @@ namespace TwinStar.Script.Entry {
 		method_common_argument: {
 			path_tactic_if_out_exist: string;
 		};
+		thread_limit: bigint;
+		notification_time_limit: null | bigint;
+		pause_when_finish: boolean;
 	};
 
 	export function _injector(
 		configuration: Configuration,
 	) {
-		// set language
+		// language
 		Language.push_table(configuration.language, CoreX.JSON.read_fs_js(Home.of(`~/script/Language/${configuration.language}.json`)) as unknown as Language.Map);
 		Language.set_target(configuration.language);
-		// set console feature
-		Console.disable_cli_virtual_terminal_sequence = configuration.disable_cli_virtual_terminal_sequence;
-		Console.disable_notification = configuration.disable_notification;
-		// set byte stream endian
+		// console feature
+		Console.g_disable_cli_virtual_terminal_sequence = configuration.disable_cli_virtual_terminal_sequence;
+		Console.g_disable_notification = configuration.disable_notification;
+		// byte stream endian
 		Core.Miscellaneous.g_context.query_byte_stream_use_big_endian().value = configuration.byte_stream_use_big_endian;
-		// set common buffer size
+		// common buffer size
 		CoreX.g_common_buffer.allocate(Core.Size.value(parse_size_string(configuration.common_buffer_size)));
-		// set json format
+		// json format
 		CoreX.JSON.g_format.disable_trailing_comma = configuration.json_format.disable_trailing_comma;
 		CoreX.JSON.g_format.disable_array_wrap_line = configuration.json_format.disable_array_wrap_line;
-		// set method common argument
-		k_common_argument.path_tactic_if_out_exist = configuration.method_common_argument.path_tactic_if_out_exist as any;
+		// method common argument
+		g_common_argument.path_tactic_if_out_exist = configuration.method_common_argument.path_tactic_if_out_exist as any;
 	}
 
 	export function _entry(

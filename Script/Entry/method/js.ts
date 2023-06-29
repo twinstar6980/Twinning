@@ -34,7 +34,7 @@ namespace TwinStar.Script.Entry.method.js {
 					return [`${result}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					script_file: undefined!,
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.js)$/i]]),

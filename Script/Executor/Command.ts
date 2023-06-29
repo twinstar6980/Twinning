@@ -120,7 +120,7 @@ namespace TwinStar.Script.Executor {
 				let message = selected_method.worker(argument);
 				result = [true, message];
 			}
-		} catch (e: any) {
+		} catch (e) {
 			result = [false, e];
 		}
 		timer.stop();

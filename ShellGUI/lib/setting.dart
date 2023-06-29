@@ -3,9 +3,9 @@
 import '/common.dart';
 import 'dart:io';
 import 'dart:convert';
-import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import '/common/path_picker.dart';
 
 // ----------------
 
@@ -20,6 +20,7 @@ class Setting {
   String       mScript;
   List<String> mArgument;
   Boolean      mBehaviorAfterCommandSucceed;
+  String       mFallbackDirectoryForInvisibleFile;
 
   // ----------------
 
@@ -33,6 +34,7 @@ class Setting {
     this.mScript,
     this.mArgument,
     this.mBehaviorAfterCommandSucceed,
+    this.mFallbackDirectoryForInvisibleFile,
   );
 
   Setting.init(
@@ -46,6 +48,7 @@ class Setting {
     '',
     [],
     true,
+    '',
   );
 
   // ----------------
@@ -65,6 +68,7 @@ class Setting {
     data.mScript = json['script'] as String;
     data.mArgument = (json['argument'] as List<dynamic>).map((e) => e as String).toList();
     data.mBehaviorAfterCommandSucceed = json['behavior_after_command_succeed'] as Boolean;
+    data.mFallbackDirectoryForInvisibleFile = json['fallback_directory_for_invisible_file'] as String;
     return;
   }
 
@@ -83,6 +87,7 @@ class Setting {
     json['script'] = data.mScript;
     json['argument'] = data.mArgument;
     json['behavior_after_command_succeed'] = data.mBehaviorAfterCommandSucceed;
+    json['fallback_directory_for_invisible_file'] = data.mFallbackDirectoryForInvisibleFile;
     return;
   }
 
@@ -133,6 +138,7 @@ class SettingProvider with ChangeNotifier {
   notify(
   ) async {
     this.notifyListeners();
+    PathPicker.fallbackDirectory = this.data.mFallbackDirectoryForInvisibleFile;
     Setting.save(this.data);
     return;
   }

@@ -64,7 +64,7 @@ namespace TwinStar.Script.Entry.method.data.differentiation {
 					return [`${patch_file}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					before_file: undefined!,
 					after_file: '?input',
 					patch_file: '?default',
@@ -123,7 +123,7 @@ namespace TwinStar.Script.Entry.method.data.differentiation {
 					return [`${after_file}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					before_file: undefined!,
 					patch_file: '?input',
 					after_file: '?default',

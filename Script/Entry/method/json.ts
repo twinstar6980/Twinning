@@ -64,7 +64,7 @@ namespace TwinStar.Script.Entry.method.json {
 					return [`${destination_file}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					source_file: undefined!,
 					destination_file: '?default',
 					disable_trailing_comma: configuration.disable_trailing_comma,
@@ -134,7 +134,7 @@ namespace TwinStar.Script.Entry.method.json {
 					return [`${destination_file_directory}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					source_file_directory: undefined!,
 					destination_file_directory: '?default',
 					disable_trailing_comma: configuration.disable_trailing_comma,

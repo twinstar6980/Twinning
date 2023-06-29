@@ -167,7 +167,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 							option.rton.version,
 						);
 					}
-				} catch (e: any) {
+				} catch (e) {
 					Console.error_of(e);
 				}
 			}
@@ -200,7 +200,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 							sprite: record_transform(atlas_image_information.sprite, (k, v) => ([v.path, { position: v.position, size: v.size }])),
 						}, image_view, option.ptx.directory);
 					}
-				} catch (e: any) {
+				} catch (e) {
 					Console.error_of(e);
 				}
 			}
@@ -225,7 +225,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 						Support.PopCap.Animation.Convert.Flash.SourceManager.create_fsh(`${option.pam.directory}/${flash_directory}`, definition_js as any);
 						Support.PopCap.Animation.Convert.Flash.create_xfl_content_file(`${option.pam.directory}/${flash_directory}`);
 					}
-				} catch (e: any) {
+				} catch (e) {
 					Console.error_of(e);
 				}
 			}
@@ -238,7 +238,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 						`${option.bnk.directory}/${path}.bundle/embedded_media`,
 						option.bnk.version,
 					);
-				} catch (e: any) {
+				} catch (e) {
 					Console.error_of(e);
 				}
 			}
@@ -254,7 +254,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 						audio_temporary_directory,
 						{},
 					);
-				} catch (e: any) {
+				} catch (e) {
 					Console.error_of(e);
 				}
 			}

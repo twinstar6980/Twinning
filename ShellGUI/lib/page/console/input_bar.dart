@@ -3,10 +3,11 @@
 import '/common.dart';
 import 'dart:io';
 import 'dart:async';
+import 'package:async/async.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:async/async.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:provider/provider.dart';
+import '/common/path_picker.dart';
 
 // ----------------
 
@@ -46,7 +47,7 @@ class InputBarContent extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         IconButton(
-          icon: const Icon(Icons.done),
+          icon: const Icon(Icons.done_outlined),
           onPressed: this.onSubmit,
         ),
       ],
@@ -561,60 +562,56 @@ class _PathInputBarContentState extends State<PathInputBarContent> {
             this._controller.text = this._value ?? '';
             this.setState(() {});
           },
-          icon: const Icon(Icons.remove_circle_outline),
+          icon: const Icon(Icons.remove_circle_outline_outlined),
         ),
         IconButton(
           icon: const Icon(Icons.outbond_outlined),
-          onPressed: !(Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-            ? null
-            : () async {
-              var selection = null as String?;
-              var actualType = this.widget.type as FileObjectType?;
-              if (actualType == FileObjectType.any) {
-                actualType = await showDialog<FileObjectType>(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('File Object Type'),
-                    content: null,
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, FileObjectType.file),
-                        child: const Text('FILE'),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, FileObjectType.directory),
-                        child: const Text('DIRECTORY'),
-                      ),
-                    ],
-                  ),
-                );
+          onPressed: () async {
+            var selection = null as String?;
+            var actualType = this.widget.type as FileObjectType?;
+            if (actualType == FileObjectType.any) {
+              actualType = await showDialog<FileObjectType>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('File Object Type'),
+                  content: null,
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, FileObjectType.file),
+                      child: const Text('FILE'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, FileObjectType.directory),
+                      child: const Text('DIRECTORY'),
+                    ),
+                  ],
+                ),
+              );
+            }
+            switch (actualType) {
+              case null: {
+                selection = null;
+                break;
               }
-              switch (actualType) {
-                case null: {
-                  selection = null;
-                  break;
-                }
-                case FileObjectType.any: {
-                  selection = null;
-                  break;
-                }
-                case FileObjectType.file: {
-                  var pickResult = await FilePicker.platform.pickFiles(allowMultiple: false);
-                  selection = pickResult?.files.single.path;
-                  break;
-                }
-                case FileObjectType.directory: {
-                  var pickResult = await FilePicker.platform.getDirectoryPath();
-                  selection = pickResult;
-                  break;
-                }
+              case FileObjectType.any: {
+                selection = null;
+                break;
               }
-              if (selection != null) {
-                this._value = selection;
-                this._controller.text = this._value ?? '';
+              case FileObjectType.file: {
+                selection = await PathPicker.pickFile();
+                break;
               }
-              this.setState(() {});
-            },
+              case FileObjectType.directory: {
+                selection = await PathPicker.pickDirectory();
+                break;
+              }
+            }
+            if (selection != null) {
+              this._value = selection;
+              this._controller.text = this._value ?? '';
+            }
+            this.setState(() {});
+          },
         ),
       ],
     );

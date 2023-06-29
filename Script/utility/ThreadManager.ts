@@ -23,7 +23,7 @@ namespace TwinStar.Script {
 				try {
 					let result = executor();
 					item.result = [false, result];
-				} catch (e: any) {
+				} catch (e) {
 					item.result = [true, e];
 				}
 			};

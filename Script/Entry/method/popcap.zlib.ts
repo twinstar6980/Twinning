@@ -54,7 +54,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 					return [`${ripe_file}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					raw_file: undefined!,
 					ripe_file: '?default',
 					version_variant_64: configuration.version_variant_64,
@@ -103,7 +103,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 					return [`${raw_file}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					ripe_file: undefined!,
 					raw_file: '?default',
 					version_variant_64: configuration.version_variant_64,
@@ -162,7 +162,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 					return [`${ripe_file_directory}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					raw_file_directory: undefined!,
 					ripe_file_directory: '?default',
 					version_variant_64: configuration.version_variant_64,
@@ -219,7 +219,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 					return [`${raw_file_directory}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					ripe_file_directory: undefined!,
 					raw_file_directory: '?default',
 					version_variant_64: configuration.version_variant_64,

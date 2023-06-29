@@ -8,9 +8,9 @@
 
 * 要求
 	
-	* [Node.js 18.12](https://nodejs.org/)
+	* [Node.js 20.3](https://nodejs.org/)
 	
-	* [TypeScript 4.9](https://www.typescriptlang.org/)
+	* [TypeScript 5.1](https://www.typescriptlang.org/)
 	
 	* [PowerShell](https://learn.microsoft.com/powershell/)
 
@@ -26,7 +26,7 @@
 
 ## 第三方库使用
 
-| 库 | 用途 |
-|:--:|:----:|
+| 库                                                                         | 用途                           |
+|:--------------------------------------------------------------------------:|:------------------------------:|
 
 ## 说明

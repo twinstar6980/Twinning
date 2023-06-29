@@ -67,7 +67,7 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 					return [`${data_file}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					bundle_directory: undefined!,
 					data_file: '?default',
 					version_number: configuration.version_number,
@@ -119,7 +119,7 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 					return [`${bundle_directory}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					data_file: undefined!,
 					bundle_directory: '?default',
 					version_number: configuration.version_number,
@@ -169,7 +169,7 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 					return [`${data_file}`];
 				},
 				default_argument: {
-					...Entry.k_common_argument,
+					...Entry.g_common_argument,
 					resource_directory: undefined!,
 					data_file: '?default',
 					version_number: configuration.version_number,
