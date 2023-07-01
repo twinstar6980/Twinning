@@ -169,13 +169,27 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 				XML.create_element_node('DOMTimeline', {
 					name: index === 'main' ? `main_sprite` : `sprite_${index + 1}`,
 				}, [
-					XML.create_element_node('layers', {}, Object.keys(frame_node_list).reverse().map((layer_index) => (
+					XML.create_element_node('layers', {}, [
+						...Object.keys(frame_node_list).reverse().map((layer_index) => (
+							XML.create_element_node('DOMLayer', {
+								name: `${Number(layer_index) + 1}`,
+							}, [
+								XML.create_element_node('frames', {}, frame_node_list[Number(layer_index)]),
+							])
+						)),
 						XML.create_element_node('DOMLayer', {
-							name: `${Number(layer_index) + 1}`,
+							name: `${0}`,
 						}, [
-							XML.create_element_node('frames', {}, frame_node_list[Number(layer_index)]),
-						])
-					))),
+							XML.create_element_node('frames', {}, [
+								XML.create_element_node('DOMFrame', {
+									index: `0`,
+									duration: `${sprite.frame.length}`,
+								}, [
+									XML.create_element_node('elements', {}, []),
+								]),
+							]),
+						]),
+					]),
 				]),
 			]),
 		]);
@@ -247,13 +261,17 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 			flow_node.push(XML.create_element_node('DOMFrame', {
 				index: `${prev_end.flow + 1}`,
 				duration: `${animation.main_sprite.frame.length - (prev_end.flow + 1)}`,
-			}, []));
+			}, [
+				XML.create_element_node('elements', {}, []),
+			]));
 		}
 		if (prev_end.command + 1 < animation.main_sprite.frame.length) {
 			command_node.push(XML.create_element_node('DOMFrame', {
 				index: `${prev_end.command + 1}`,
 				duration: `${animation.main_sprite.frame.length - (prev_end.command + 1)}`,
-			}, []));
+			}, [
+				XML.create_element_node('elements', {}, []),
+			]));
 		}
 		return XML.create_element('DOMDocument', {
 			...k_xmlns_attribute,
@@ -265,7 +283,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 			XML.create_element_node('folders', {},
 				['media', 'source', 'image', 'sprite'].map((e) => (XML.create_element_node('DOMFolderItem', {
 					name: `${e}`,
-					isExpanded: `true`,
+					isExpanded: `false`,
 				}, [])))
 			),
 			XML.create_element_node('media', {}, animation.image.map((e) => (

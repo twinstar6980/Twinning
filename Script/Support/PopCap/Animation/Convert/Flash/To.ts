@@ -95,7 +95,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 			frame_duration: bigint;
 			color: Color;
 		} | null = null;
-		let result: Array<Core.Tool.PopCap.Animation.Definition.JS_N.Frame> = new Array(0);
+		let result: Array<Core.Tool.PopCap.Animation.Definition.JS_N.Frame>;
 		assert_test(x_DOMSymbolItem.name === 'DOMSymbolItem');
 		assert_test(x_DOMSymbolItem.attribute.name === (index === 'main' ? `main_sprite` : `sprite/sprite_${index + 1}`));
 		let x_timeline_list = XML.find_child_element(x_DOMSymbolItem, 'timeline');
@@ -109,11 +109,25 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 		assert_test(x_layers_list.length === 1);
 		let x_layers = x_layers_list[0];
 		let x_DOMLayer_list = XML.find_child_element(x_layers, 'DOMLayer');
-		x_DOMLayer_list.reverse();
-		let layer_count = 0;
-		let get_frame_at = (index: number) => {
-			if (result[index] === undefined) {
-				result[index] = {
+		assert_test(x_DOMLayer_list.length >= 1);
+		{
+			let x_DOMLayer = x_DOMLayer_list[x_DOMLayer_list.length - 1];
+			let x_frames_list = XML.find_child_element(x_DOMLayer, 'frames');
+			assert_test(x_frames_list.length === 1);
+			let x_frames = x_frames_list[0];
+			let x_DOMFrame_list = XML.find_child_element(x_frames, 'DOMFrame');
+			assert_test(x_DOMFrame_list.length === 1);
+			let x_DOMFrame = x_DOMFrame_list[0];
+			let frame_index = BigInt(x_DOMFrame.attribute.index);
+			let frame_duration = BigInt(defined_or(x_DOMFrame.attribute.duration, '1'));
+			assert_test(frame_index === 0n && frame_duration > 0n);
+			let x_elements_list = XML.find_child_element(x_DOMFrame, 'elements');
+			assert_test(x_elements_list.length === 1);
+			let x_elements = x_elements_list[0];
+			assert_test(x_elements.child.length === 0);
+			result = new Array(Number(frame_duration) + 1);
+			for (let i = 0; i < result.length; ++i) {
+				result[i] = {
 					label: null,
 					stop: false,
 					command: [],
@@ -122,8 +136,10 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 					change: [],
 				};
 			}
-			return result[index];
-		};
+		}
+		x_DOMLayer_list.pop();
+		x_DOMLayer_list.reverse();
+		let layer_count = 0;
 		x_DOMLayer_list.forEach((x_DOMLayer) => {
 			let x_frames_list = XML.find_child_element(x_DOMLayer, 'frames');
 			assert_test(x_frames_list.length === 1);
@@ -131,7 +147,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 			let x_DOMFrame_list = XML.find_child_element(x_frames, 'DOMFrame');
 			let colse_current_model_if_need = () => {
 				if (model !== null) {
-					let target_frame = get_frame_at(Number(model.frame_start + model.frame_duration));
+					let target_frame = result[Number(model.frame_start + model.frame_duration)];
 					target_frame.remove.push({
 						index: model.index,
 					});
@@ -184,7 +200,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 					let x_Color = x_Color_list[0];
 					color = parse_color(x_Color);
 				}
-				let target_frame = get_frame_at(Number(frame_index));
+				let target_frame = result[Number(frame_index)];
 				if (model === null) {
 					model = {
 						index: BigInt(layer_count),
@@ -221,18 +237,6 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 			});
 			colse_current_model_if_need();
 		});
-		for (let i = 0; i < result.length; ++i) {
-			if (result[i] === undefined) {
-				result[i] = {
-					label: null,
-					stop: false,
-					command: [],
-					remove: [],
-					append: [],
-					change: [],
-				};
-			}
-		}
 		return result.slice(0, -1);
 	}
 
@@ -333,7 +337,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 				// TODO : check
 			}
 		}
-		let frame_rate = BigInt(x_DOMDocument.attribute.frameRate);
+		let frame_rate = BigInt(defined_or(x_DOMDocument.attribute.frameRate, '24'));
 		let width = Number(x_DOMDocument.attribute.width);
 		let height = Number(x_DOMDocument.attribute.height);
 		return {
