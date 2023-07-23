@@ -17,8 +17,8 @@ import '/page/console/action_bar.dart';
 import '/page/console/launch_bar.dart';
 import '/page/console/input_bar.dart';
 import '/page/console/messsage_type.dart';
-import '/host/host.dart';
-import '/host/launcher.dart';
+import '/bridge/host.dart';
+import '/bridge/launcher.dart';
 
 // ----------------
 
@@ -301,25 +301,25 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
   ) async {
     var exception = null as String?;
     var result = null as String?;
-    var actualCorePath = command.core;
+    var actualKernelPath = command.kernel;
     try {
       this._outputBarListItem.clear();
       if (Platform.isAndroid) {
         var directory = await getApplicationSupportDirectory();
-        var originalCorePath = actualCorePath;
-        actualCorePath = p_path.join(directory.path, 'core');
-        var originalCoreFile = File(originalCorePath);
-        if (!originalCoreFile.existsSync()) {
-          throw Exception('core file not found');
+        var originalKernelPath = actualKernelPath;
+        actualKernelPath = p_path.join(directory.path, 'kernel');
+        var originalKernelFile = File(originalKernelPath);
+        if (!originalKernelFile.existsSync()) {
+          throw Exception('kernel file not found');
         }
-        var actualCoreFile = File(actualCorePath);
-        // NOTE : will crash if actualCoreFile already exist before copy
-        if (actualCoreFile.existsSync()) {
-          actualCoreFile.deleteSync(recursive: true);
+        var actualKernelFile = File(actualKernelPath);
+        // NOTE : will crash if actualKernelFile already exist before copy
+        if (actualKernelFile.existsSync()) {
+          actualKernelFile.deleteSync(recursive: true);
         }
-        originalCoreFile.copySync(actualCorePath);
+        originalKernelFile.copySync(actualKernelPath);
       }
-      result = await Launcher.launch(this, actualCorePath, command.script, command.argument);
+      result = await Launcher.launch(this, actualKernelPath, command.script, command.argument);
     } catch (e) {
       exception = e.toString();
     }
@@ -354,7 +354,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
   ) async {
     var setting = Provider.of<SettingProvider>(context, listen: false);
     var command = Command(
-      setting.data.mCore,
+      setting.data.mKernel,
       setting.data.mScript,
       setting.data.mArgument,
     );

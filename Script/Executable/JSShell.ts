@@ -19,7 +19,7 @@ namespace TwinStar.Script.Executable.JSShell {
 				break;
 			}
 			try {
-				let result = CoreX.Miscellaneous.evaluate(script, '<unnamed>', false);
+				let result = KernelX.Miscellaneous.evaluate(script, '<unnamed>', false);
 				Console.success(`> ${result}`, []);
 			} catch (e) {
 				Console.error_of(e);

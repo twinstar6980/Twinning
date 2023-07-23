@@ -13,7 +13,7 @@ namespace TwinStar.Script.ADBHelper {
 	): string {
 		let adb_path = ProcessHelper.search_path(`adb`);
 		assert_test(adb_path !== null, `can not found adb path from PATH environment`);
-		let execute_result = ProcessHelper.execute(adb_path, argument, CoreX.Process.list_environment_variable());
+		let execute_result = ProcessHelper.execute(adb_path, argument, KernelX.Process.list_environment_variable());
 		if (execute_result.code !== 0n) {
 			throw new Error(`adb execute failed : ${execute_result.code}\n${execute_result.error}`);
 		} else {
@@ -32,12 +32,12 @@ namespace TwinStar.Script.ADBHelper {
 		source: string | Array<string>,
 	): void {
 		if (typeof source === 'string') {
-			CoreX.FileSystem.remove(destination);
+			KernelX.FileSystem.remove(destination);
 			execute([`pull`, source, destination]);
 		} else {
-			if (!CoreX.FileSystem.exist_directory(destination)) {
-				CoreX.FileSystem.remove(destination);
-				CoreX.FileSystem.create_directory(destination);
+			if (!KernelX.FileSystem.exist_directory(destination)) {
+				KernelX.FileSystem.remove(destination);
+				KernelX.FileSystem.create_directory(destination);
 			}
 			execute([`pull`, ...source, destination]);
 		}

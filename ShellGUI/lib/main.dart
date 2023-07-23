@@ -43,12 +43,12 @@ main(
   if (commandSource.isNotEmpty) {
     command = Command('', '', []);
     if (commandSource[0] == '-additional') {
-      command.core = setting.mCore.substring(0);
+      command.kernel = setting.mKernel.substring(0);
       command.script = setting.mScript.substring(0);
       command.argument = setting.mArgument.sublist(0);
       command.argument.addAll(commandSource.sublist(1));
     } else {
-      command.core = commandSource.elementAt(0);
+      command.kernel = commandSource.elementAt(0);
       command.script = commandSource.elementAt(1);
       command.argument = commandSource.sublist(2);
     }

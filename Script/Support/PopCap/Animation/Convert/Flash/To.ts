@@ -3,7 +3,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 	// ------------------------------------------------
 
 	function parse_transform_origin(
-		x_Matrix: Core.XML.JS_Element,
+		x_Matrix: Kernel.XML.JS_Element,
 	): [number, number] {
 		return [
 			Number(defined_or(x_Matrix.attribute.x, '0')),
@@ -12,7 +12,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 	}
 
 	function parse_transform(
-		x_Matrix: Core.XML.JS_Element,
+		x_Matrix: Kernel.XML.JS_Element,
 	): Transform {
 		return [
 			Number(defined_or(x_Matrix.attribute.a, '1')),
@@ -25,7 +25,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 	}
 
 	function parse_color(
-		x_Matrix: Core.XML.JS_Element,
+		x_Matrix: Kernel.XML.JS_Element,
 	): Color {
 		let compute = (multiplier_s: string | undefined, offset_s: string | undefined) => (Math.max(0, Math.min(255, Number(defined_or(multiplier_s, '1')) * 255 + Number(defined_or(offset_s, '0')))) / 255);
 		return [
@@ -37,7 +37,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 	}
 
 	function parse_image_document(
-		x_DOMSymbolItem: Core.XML.JS_Element,
+		x_DOMSymbolItem: Kernel.XML.JS_Element,
 		index: number,
 	): Transform {
 		assert_test(x_DOMSymbolItem.name === 'DOMSymbolItem');
@@ -84,9 +84,9 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 	}
 
 	function parse_sprite_document(
-		x_DOMSymbolItem: Core.XML.JS_Element,
+		x_DOMSymbolItem: Kernel.XML.JS_Element,
 		index: number | 'main',
-	): Array<Core.Tool.PopCap.Animation.Definition.JS_N.Frame> {
+	): Array<Kernel.Tool.PopCap.Animation.Definition.JS_N.Frame> {
 		let model: {
 			index: bigint;
 			resource: bigint;
@@ -95,7 +95,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 			frame_duration: bigint;
 			color: Color;
 		} | null = null;
-		let result: Array<Core.Tool.PopCap.Animation.Definition.JS_N.Frame>;
+		let result: Array<Kernel.Tool.PopCap.Animation.Definition.JS_N.Frame>;
 		assert_test(x_DOMSymbolItem.name === 'DOMSymbolItem');
 		assert_test(x_DOMSymbolItem.attribute.name === (index === 'main' ? `main_sprite` : `sprite/sprite_${index + 1}`));
 		let x_timeline_list = XML.find_child_element(x_DOMSymbolItem, 'timeline');
@@ -157,7 +157,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 			x_DOMFrame_list.forEach((x_DOMFrame) => {
 				let frame_index = BigInt(x_DOMFrame.attribute.index);
 				let frame_duration = BigInt(defined_or(x_DOMFrame.attribute.duration, '1'));
-				let transform: Core.Tool.PopCap.Animation.Definition.JS_N.VariantTransform;
+				let transform: Kernel.Tool.PopCap.Animation.Definition.JS_N.VariantTransform;
 				let color: Color;
 				let x_elements_list = XML.find_child_element(x_DOMFrame, 'elements');
 				if (x_elements_list.length === 0) {
@@ -242,7 +242,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 
 	export function to(
 		flash: FlashPackage,
-	): Core.Tool.PopCap.Animation.Definition.JS_N.Animation {
+	): Kernel.Tool.PopCap.Animation.Definition.JS_N.Animation {
 		let x_DOMDocument = flash.document;
 		assert_test(x_DOMDocument.name === 'DOMDocument');
 		{
@@ -360,7 +360,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 		ripe: FlashPackage,
 	): void {
 		let raw = to(ripe);
-		CoreX.JSON.write_fs_js(raw_file, raw);
+		KernelX.JSON.write_fs_js(raw_file, raw);
 		return;
 	}
 

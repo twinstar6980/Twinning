@@ -50,15 +50,15 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 		} else {
 			raw = new ByteListView(new ArrayBuffer(size));
 			if (size !== 0) {
-				let ripe_stream = Core.ByteStreamView.watch(Core.ByteListView.value(ripe.sub(0, ripe.size())));
-				let raw_stream = Core.ByteStreamView.watch(Core.ByteListView.value(raw.sub(0, raw.size())));
-				Core.Tool.Data.Compression.Deflate.Uncompress.process(ripe_stream, raw_stream, Core.Size.value(15n), Core.Tool.Data.Compression.Deflate.Wrapper.value('zlib'));
+				let ripe_stream = Kernel.ByteStreamView.watch(Kernel.ByteListView.value(ripe.sub(0, ripe.size())));
+				let raw_stream = Kernel.ByteStreamView.watch(Kernel.ByteListView.value(raw.sub(0, raw.size())));
+				Kernel.Tool.Data.Compression.Deflate.Uncompress.process(ripe_stream, raw_stream, Kernel.Size.value(15n), Kernel.Tool.Data.Compression.Deflate.Wrapper.value('zlib'));
 			}
 		}
 		for (let item in list) {
 			let item_information = list[item];
 			if (item_information.type === type) {
-				CoreX.FileSystem.write_file(`${directory}/${item}`, raw.sub(item_information.offset, item_information.size));
+				KernelX.FileSystem.write_file(`${directory}/${item}`, raw.sub(item_information.offset, item_information.size));
 			}
 		}
 		return;
@@ -66,7 +66,7 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 
 	export function process_package(
 		package_data: ByteListView,
-		package_definition: Core.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Package,
+		package_definition: Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Package,
 		resource_directory: string,
 	): void {
 		package_definition.group = {};
@@ -84,16 +84,16 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 			group_information_block_size: Number(package_data.u32(0x3C)),
 			group_id_size: Number(package_data.u32(0x40)),
 			group_id_offset: Number(package_data.u32(0x44)),
-			subgroup_pool_information_block_count: Number(package_data.u32(0x48)),
-			subgroup_pool_information_offset: Number(package_data.u32(0x4C)),
-			subgroup_pool_information_block_size: Number(package_data.u32(0x50)),
+			pool_information_block_count: Number(package_data.u32(0x48)),
+			pool_information_offset: Number(package_data.u32(0x4C)),
+			pool_information_block_size: Number(package_data.u32(0x50)),
 			texture_resource_information_block_count: Number(package_data.u32(0x54)),
 			texture_resource_information_offset: Number(package_data.u32(0x58)),
 			texture_resource_information_block_size: Number(package_data.u32(0x5C)),
-			description_group_offset: Number(package_data.u32(0x60)),
-			description_resource_offset: Number(package_data.u32(0x64)),
-			description_string_offset: Number(package_data.u32(0x68)),
-			information_without_description_size: Number(package_data.u32(0x6C)),
+			manifest_group_information_offset: Number(package_data.u32(0x60)),
+			manifest_resource_information_offset: Number(package_data.u32(0x64)),
+			manifest_string_information_offset: Number(package_data.u32(0x68)),
+			information_without_manifest_size: Number(package_data.u32(0x6C)),
 		};
 		let group_id_list = decode_compiled_map(
 			new ByteListView(package_data.sub(package_header.group_id_offset, package_header.group_id_size)),
@@ -123,7 +123,7 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 				Console.warning(los('support.popcap.resource_stream_bundle.unpack_lenient:unknown_group_id'), []);
 				group_id = `<unknown>:${group_index}`;
 			}
-			let group_definition: Core.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Group = {
+			let group_definition: Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Group = {
 				composite: true,
 				subgroup: {},
 			};
@@ -150,25 +150,26 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 						generic_resource_data_offset: Number(subgroup_information_data.u32(0x94)),
 						generic_resource_data_size: Number(subgroup_information_data.u32(0x98)),
 						generic_resource_data_size_original: Number(subgroup_information_data.u32(0x9C)),
-						generic_resource_data_size_original_1: Number(subgroup_information_data.u32(0xA0)),
+						generic_resource_data_size_pool: Number(subgroup_information_data.u32(0xA0)),
 						texture_resource_data_offset: Number(subgroup_information_data.u32(0xA4)),
 						texture_resource_data_size: Number(subgroup_information_data.u32(0xA8)),
 						texture_resource_data_size_original: Number(subgroup_information_data.u32(0xAC)),
+						texture_resource_data_size_pool: Number(subgroup_information_data.u32(0xB0)),
 						texture_resource_count: Number(subgroup_information_data.u32(0xC4)),
 						texture_resource_begin: Number(subgroup_information_data.u32(0xC8)),
 					};
-					let subgroup_pool_information_data = new ByteListView(package_data.sub(package_header.subgroup_pool_information_offset + package_header.subgroup_pool_information_block_size * simple_subgroup_information.index, package_header.subgroup_pool_information_block_size), 0);
-					let subgroup_pool_information = {
-						texture_resource_data_offset: Number(subgroup_pool_information_data.u32(0x80)),
-						texture_resource_data_size: Number(subgroup_pool_information_data.u32(0x84)),
+					let pool_information_data = new ByteListView(package_data.sub(package_header.pool_information_offset + package_header.pool_information_block_size * subgroup_information.pool, package_header.pool_information_block_size), 0);
+					let pool_information = {
+						texture_resource_data_offset: Number(pool_information_data.u32(0x80)),
+						texture_resource_data_size: Number(pool_information_data.u32(0x84)),
 					};
-					subgroup_information.texture_resource_data_size_original = subgroup_pool_information.texture_resource_data_size;
+					subgroup_information.texture_resource_data_size_original = pool_information.texture_resource_data_size;
 					let subgroup_id = subgroup_id_map[simple_subgroup_information.index];
 					if (subgroup_id === undefined) {
 						Console.warning(los('support.popcap.resource_stream_bundle.unpack_lenient:unknown_subgroup_id'), []);
 						subgroup_id = `<unknown>:${simple_subgroup_information.index}`;
 					}
-					let subgroup_definition: Core.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Subgroup = {
+					let subgroup_definition: Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Subgroup = {
 						category: [null, null],
 						resource: {},
 						resource_data_section_store_mode: [false, false],
@@ -225,7 +226,7 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 					);
 					for (let packet_resource_path in packet_resource_information_list) {
 						let packet_resource_information = packet_resource_information_list[packet_resource_path];
-						let resource_definition: Core.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Resource = {
+						let resource_definition: Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Resource = {
 							additional: undefined!,
 						};
 						subgroup_definition.resource[PathUtility.regularize(packet_resource_path)] = resource_definition;
@@ -278,7 +279,7 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 
 	export function process(
 		data: ByteListView,
-		definition: Core.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Package,
+		definition: Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Package,
 		resource_directory: string,
 	): void {
 		return process_package(data, definition, resource_directory);
@@ -289,14 +290,14 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 	export function process_fs(
 		data_file: string,
 		definition_file: string,
-		description_file: string,
+		manifest_file: string,
 		resource_directory: string,
 	): void {
-		let data = CoreX.FileSystem.read_file(data_file);
-		let definition = {} as Core.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Package;
+		let data = KernelX.FileSystem.read_file(data_file);
+		let definition = {} as Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Package;
 		process(new ByteListView(data.view().value), definition, resource_directory);
-		CoreX.JSON.write_fs_js(definition_file, definition);
-		CoreX.JSON.write_fs_js(description_file, null);
+		KernelX.JSON.write_fs_js(definition_file, definition);
+		KernelX.JSON.write_fs_js(manifest_file, null);
 		return;
 	}
 

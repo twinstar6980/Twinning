@@ -52,7 +52,7 @@ namespace TwinStar.Script.Entry.method.popcap.sexy_texture {
 							a.format,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_string(CoreX.Tool.PopCap.SexyTexture.FormatE), null, null, initial)),
+							(initial) => (Console.option(Console.option_string(KernelX.Tool.PopCap.SexyTexture.FormatE), null, null, initial)),
 						);
 						compress_texture_data = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'compress_texture_data'),
@@ -66,10 +66,10 @@ namespace TwinStar.Script.Entry.method.popcap.sexy_texture {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.SexyTexture.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.PopCap.SexyTexture.VersionNumberE), null, null, initial)),
 						);
 					}
-					CoreX.Tool.PopCap.SexyTexture.encode_fs(data_file, image_file, format as any, compress_texture_data, { number: version_number as any });
+					KernelX.Tool.PopCap.SexyTexture.encode_fs(data_file, image_file, format as any, compress_texture_data, { number: version_number as any });
 					return [`${data_file}`];
 				},
 				default_argument: {
@@ -117,10 +117,10 @@ namespace TwinStar.Script.Entry.method.popcap.sexy_texture {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.SexyTexture.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.PopCap.SexyTexture.VersionNumberE), null, null, initial)),
 						);
 					}
-					CoreX.Tool.PopCap.SexyTexture.decode_fs(data_file, image_file, { number: version_number as any });
+					KernelX.Tool.PopCap.SexyTexture.decode_fs(data_file, image_file, { number: version_number as any });
 					return [`${image_file}`];
 				},
 				default_argument: {
@@ -172,7 +172,7 @@ namespace TwinStar.Script.Entry.method.popcap.sexy_texture {
 							a.format,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_string(CoreX.Tool.PopCap.SexyTexture.FormatE), null, null, initial)),
+							(initial) => (Console.option(Console.option_string(KernelX.Tool.PopCap.SexyTexture.FormatE), null, null, initial)),
 						);
 						compress_texture_data = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'compress_texture_data'),
@@ -186,7 +186,7 @@ namespace TwinStar.Script.Entry.method.popcap.sexy_texture {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.SexyTexture.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.PopCap.SexyTexture.VersionNumberE), null, null, initial)),
 						);
 					}
 					simple_batch_execute(
@@ -195,7 +195,7 @@ namespace TwinStar.Script.Entry.method.popcap.sexy_texture {
 						(item) => {
 							let image_file = `${image_file_directory}/${item}`;
 							let data_file = `${data_file_directory}/${item.slice(0, -4)}.tex`;
-							CoreX.Tool.PopCap.SexyTexture.encode_fs(data_file, image_file, format as any, compress_texture_data, { number: version_number as any });
+							KernelX.Tool.PopCap.SexyTexture.encode_fs(data_file, image_file, format as any, compress_texture_data, { number: version_number as any });
 						},
 					);
 					return [`${data_file_directory}`];
@@ -245,7 +245,7 @@ namespace TwinStar.Script.Entry.method.popcap.sexy_texture {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.SexyTexture.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.PopCap.SexyTexture.VersionNumberE), null, null, initial)),
 						);
 					}
 					simple_batch_execute(
@@ -254,7 +254,7 @@ namespace TwinStar.Script.Entry.method.popcap.sexy_texture {
 						(item) => {
 							let data_file = `${data_file_directory}/${item}`;
 							let image_file = `${image_file_directory}/${item.slice(0, -4)}.png`;
-							CoreX.Tool.PopCap.SexyTexture.decode_fs(data_file, image_file, { number: version_number as any });
+							KernelX.Tool.PopCap.SexyTexture.decode_fs(data_file, image_file, { number: version_number as any });
 						},
 					);
 					return [`${image_file_directory}`];

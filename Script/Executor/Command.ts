@@ -6,7 +6,7 @@ namespace TwinStar.Script.Executor {
 		/** 需要应用的功能，若未指定，则需由用户选择 */
 		method: string | null;
 		/** 传递给所应用功能工作函数的参数 */
-		argument: Record<string, Core.JSON.JS_Value>;
+		argument: Record<string, Kernel.JSON.JS_Value>;
 		/** 附加输入 */
 		input: null | {
 			/** 输入值 */
@@ -48,7 +48,7 @@ namespace TwinStar.Script.Executor {
 			}
 			if (index < raw_command.length && raw_command[index] === '-argument') {
 				++index;
-				let argument = CoreX.JSON.read_s_js(raw_command[index++]);
+				let argument = KernelX.JSON.read_s_js(raw_command[index++]);
 				assert_test(argument !== null && typeof argument === 'object' && (argument as Object).constructor.name === 'Object' && !(argument instanceof Array), `argument must be a object`);
 				command.argument = argument;
 			}

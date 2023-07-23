@@ -60,7 +60,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 							(initial) => (Console.string(null, null, initial)),
 						);
 					}
-					CoreX.Tool.PopCap.CryptData.encrypt_fs(plain_file, cipher_file, limit, key, {});
+					KernelX.Tool.PopCap.CryptData.encrypt_fs(plain_file, cipher_file, limit, key, {});
 					return [`${cipher_file}`];
 				},
 				default_argument: {
@@ -119,7 +119,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 							(initial) => (Console.string(null, null, initial)),
 						);
 					}
-					CoreX.Tool.PopCap.CryptData.decrypt_fs(cipher_file, plain_file, limit, key, {});
+					KernelX.Tool.PopCap.CryptData.decrypt_fs(cipher_file, plain_file, limit, key, {});
 					return [`${plain_file}`];
 				},
 				default_argument: {
@@ -186,7 +186,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 						(item) => {
 							let plain_file = `${plain_file_directory}/${item}`;
 							let cipher_file = `${cipher_file_directory}/${item}.cdat`;
-							CoreX.Tool.PopCap.CryptData.encrypt_fs(plain_file, cipher_file, limit, key, {});
+							KernelX.Tool.PopCap.CryptData.encrypt_fs(plain_file, cipher_file, limit, key, {});
 						},
 					);
 					return [`${cipher_file_directory}`];
@@ -253,7 +253,7 @@ namespace TwinStar.Script.Entry.method.popcap.crypt_data {
 						(item) => {
 							let cipher_file = `${cipher_file_directory}/${item}`;
 							let plain_file = `${plain_file_directory}/${item.slice(0, -5)}`;
-							CoreX.Tool.PopCap.CryptData.decrypt_fs(cipher_file, plain_file, limit, key, {});
+							KernelX.Tool.PopCap.CryptData.decrypt_fs(cipher_file, plain_file, limit, key, {});
 						},
 					);
 					return [`${plain_file_directory}`];

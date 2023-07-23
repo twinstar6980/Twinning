@@ -22,7 +22,7 @@ typedef Map<K, V> = core.Map<K, V>;
 
 const kApplicationName = 'TwinStar ToolKit - Shell GUI';
 
-const kApplicationVersion = 14;
+const kApplicationVersion = 15;
 
 // ----------------
 
@@ -59,7 +59,7 @@ normalizeLibraryPath(
 ) {
   var result = path;
   if (Platform.isWindows) {
-    path += '.';
+    result += '.';
   }
   return result;
 }

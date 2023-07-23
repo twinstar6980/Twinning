@@ -2,7 +2,7 @@
 
 外壳，提供图形界面。
 
-本项目是跨平台的 `Flutter` 项目，依赖 `Core` 的实现。
+本项目是跨平台的 `Flutter` 项目，依赖 `Kernel` 的实现。
 
 ## 项目开发
 
@@ -32,19 +32,19 @@
 
 * 命令行参数
 	
-	`<core> <script> <argument>...`
+	`<kernel> <script> <argument>...`
 	
-	* `<core>`
+	* `<kernel>`
 		
-		第一参数为核心文件路径。
+		第一参数为内核文件路径。
 	
 	* `<script>`
 		
-		第二参数是传给核心处理逻辑的脚本文件路径。也可以 `$` 为首字符标识，指示字符串的余下内容作为 JS 脚本。
+		第二参数是传给内核处理逻辑的脚本文件路径。也可以 `$` 为首字符标识，指示字符串的余下内容作为 JS 脚本。
 	
 	* `<argument>...`
 		
-		剩余参数作为传给核心处理逻辑的参数。
+		剩余参数作为传给内核处理逻辑的参数。
 	
 	`-additional <argument>...`
 	
@@ -60,7 +60,7 @@
 	
 	对于 `Android 7+` 系统，存在动态库加载限制，应用只能加载 `default_library_paths` 与 `permitted_paths` 中的库文件，并且对于后者必须指定绝对路径而不允许只指定库名。
 	
-	因此，为了实现动态加载 Core 库文件的目的，应用会在每次运行时将指定的 Core 路径复制至 `/data/user/<user>/<package>/files` 中（这是 `permitted_paths` 中的一项，但不确定是否可用于大多数设备与系统）；并且在应用打包时也必须包含与 Core 编译时所用版本一致的 `libc++_shared.so` 文件。
+	因此，为了实现动态加载 Kernel 库文件的目的，应用会在每次运行时将指定的库文件复制至 `/data/user/<user>/<package>/files` 中（这是 `permitted_paths` 中的一项，但不确定是否可用于大多数设备与系统）；并且在应用打包时也必须包含与 Kernel 编译时所用版本一致的 `libc++_shared.so` 文件。
 	
 	> 当前项目中包含的 libc++_shared.so 版本为 NDK r25c 。
 	

@@ -50,7 +50,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 							(initial) => (Console.confirmation(null, null, initial)),
 						);
 					}
-					CoreX.Tool.PopCap.ZLib.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', { variant_64: version_variant_64 });
+					KernelX.Tool.PopCap.ZLib.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', { variant_64: version_variant_64 });
 					return [`${ripe_file}`];
 				},
 				default_argument: {
@@ -99,7 +99,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 							(initial) => (Console.confirmation(null, null, initial)),
 						);
 					}
-					CoreX.Tool.PopCap.ZLib.uncompress_fs(ripe_file, raw_file, 15n, { variant_64: version_variant_64 });
+					KernelX.Tool.PopCap.ZLib.uncompress_fs(ripe_file, raw_file, 15n, { variant_64: version_variant_64 });
 					return [`${raw_file}`];
 				},
 				default_argument: {
@@ -156,7 +156,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 						(item) => {
 							let raw_file = `${raw_file_directory}/${item}`;
 							let ripe_file = `${ripe_file_directory}/${item}`;
-							CoreX.Tool.PopCap.ZLib.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', { variant_64: version_variant_64 });
+							KernelX.Tool.PopCap.ZLib.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', { variant_64: version_variant_64 });
 						},
 					);
 					return [`${ripe_file_directory}`];
@@ -213,7 +213,7 @@ namespace TwinStar.Script.Entry.method.popcap.zlib {
 						(item) => {
 							let ripe_file = `${ripe_file_directory}/${item}`;
 							let raw_file = `${raw_file_directory}/${item}`;
-							CoreX.Tool.PopCap.ZLib.uncompress_fs(ripe_file, raw_file, 15n, { variant_64: version_variant_64 });
+							KernelX.Tool.PopCap.ZLib.uncompress_fs(ripe_file, raw_file, 15n, { variant_64: version_variant_64 });
 						},
 					);
 					return [`${raw_file_directory}`];

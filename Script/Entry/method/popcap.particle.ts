@@ -53,7 +53,7 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 							a.version_platform,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_string(CoreX.Tool.PopCap.Particle.VersionPlatformE), null, null, initial)),
+							(initial) => (Console.option(Console.option_string(KernelX.Tool.PopCap.Particle.VersionPlatformE), null, null, initial)),
 						);
 						version_variant_64 = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_variant_64'),
@@ -70,7 +70,7 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 							(initial) => (Console.size(null, null, initial)),
 						);
 					}
-					CoreX.Tool.PopCap.Particle.encode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 }, buffer_size);
+					KernelX.Tool.PopCap.Particle.encode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 }, buffer_size);
 					return [`${data_file}`];
 				},
 				default_argument: {
@@ -120,7 +120,7 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 							a.version_platform,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_string(CoreX.Tool.PopCap.Particle.VersionPlatformE), null, null, initial)),
+							(initial) => (Console.option(Console.option_string(KernelX.Tool.PopCap.Particle.VersionPlatformE), null, null, initial)),
 						);
 						version_variant_64 = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_variant_64'),
@@ -130,7 +130,7 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 							(initial) => (Console.confirmation(null, null, initial)),
 						);
 					}
-					CoreX.Tool.PopCap.Particle.decode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 });
+					KernelX.Tool.PopCap.Particle.decode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 });
 					return [`${definition_file}`];
 				},
 				default_argument: {
@@ -183,7 +183,7 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 							a.version_platform,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_string(CoreX.Tool.PopCap.Particle.VersionPlatformE), null, null, initial)),
+							(initial) => (Console.option(Console.option_string(KernelX.Tool.PopCap.Particle.VersionPlatformE), null, null, initial)),
 						);
 						version_variant_64 = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_variant_64'),
@@ -200,14 +200,14 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 							(initial) => (Console.size(null, null, initial)),
 						);
 					}
-					let data_buffer = Core.ByteArray.allocate(Core.Size.value(buffer_size));
+					let data_buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					simple_batch_execute(
 						definition_file_directory,
 						['file', /.+(\.particle)(\.json)$/i],
 						(item) => {
 							let definition_file = `${definition_file_directory}/${item}`;
 							let data_file = `${data_file_directory}/${item.slice(0, -14)}.xml.compiled`;
-							CoreX.Tool.PopCap.Particle.encode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 }, data_buffer.view());
+							KernelX.Tool.PopCap.Particle.encode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 }, data_buffer.view());
 						},
 					);
 					return [`${data_file_directory}`];
@@ -259,7 +259,7 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 							a.version_platform,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_string(CoreX.Tool.PopCap.Particle.VersionPlatformE), null, null, initial)),
+							(initial) => (Console.option(Console.option_string(KernelX.Tool.PopCap.Particle.VersionPlatformE), null, null, initial)),
 						);
 						version_variant_64 = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_variant_64'),
@@ -275,7 +275,7 @@ namespace TwinStar.Script.Entry.method.popcap.particle {
 						(item) => {
 							let data_file = `${data_file_directory}/${item}`;
 							let definition_file = `${definition_file_directory}/${item.slice(0, -13)}.particle.json`;
-							CoreX.Tool.PopCap.Particle.decode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 });
+							KernelX.Tool.PopCap.Particle.decode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 });
 						},
 					);
 					return [`${definition_file_directory}`];

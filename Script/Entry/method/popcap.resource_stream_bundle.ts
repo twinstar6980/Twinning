@@ -151,14 +151,14 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ResourceStreamBundle.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.PopCap.ResourceStreamBundle.VersionNumberE), null, null, initial)),
 						);
 						version_extended_texture_information_for_pvz2_cn = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_extended_texture_information_for_pvz2_cn'),
 							a.version_extended_texture_information_for_pvz2_cn,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ResourceStreamBundle.VersionaExtendedTextureInformationForPVZ2CNE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.PopCap.ResourceStreamBundle.VersionaExtendedTextureInformationForPVZ2CNE), null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -184,11 +184,11 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 					}
 					let relative_path = make_resource_stream_bundle_package_relative_path(mode as any);
 					let definition_file = `${bundle_directory}/definition.json`;
-					let description_file = `${bundle_directory}/description.json`;
+					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/${relative_path.resource_directory}`;
 					let packet_file = !input_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
 					let new_packet_file = !output_new_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
-					CoreX.Tool.PopCap.ResourceStreamBundle.pack_fs(data_file, definition_file, description_file, resource_directory, packet_file, new_packet_file, { number: version_number as any, extended_texture_information_for_pvz2_cn: version_extended_texture_information_for_pvz2_cn as any }, buffer_size);
+					KernelX.Tool.PopCap.ResourceStreamBundle.pack_fs(data_file, definition_file, manifest_file, resource_directory, packet_file, new_packet_file, { number: version_number as any, extended_texture_information_for_pvz2_cn: version_extended_texture_information_for_pvz2_cn as any }, buffer_size);
 					return [`${data_file}`];
 				},
 				default_argument: {
@@ -258,14 +258,14 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ResourceStreamBundle.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.PopCap.ResourceStreamBundle.VersionNumberE), null, null, initial)),
 						);
 						version_extended_texture_information_for_pvz2_cn = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_extended_texture_information_for_pvz2_cn'),
 							a.version_extended_texture_information_for_pvz2_cn,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ResourceStreamBundle.VersionaExtendedTextureInformationForPVZ2CNE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.PopCap.ResourceStreamBundle.VersionaExtendedTextureInformationForPVZ2CNE), null, null, initial)),
 						);
 						output_resource = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'output_resource'),
@@ -284,10 +284,10 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 					}
 					let relative_path = make_resource_stream_bundle_package_relative_path(mode as any);
 					let definition_file = `${bundle_directory}/definition.json`;
-					let description_file = `${bundle_directory}/description.json`;
+					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = !output_resource ? null : `${bundle_directory}/${relative_path.resource_directory}`;
 					let packet_file = !output_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
-					CoreX.Tool.PopCap.ResourceStreamBundle.unpack_fs(data_file, definition_file, description_file, resource_directory, packet_file, { number: version_number as any, extended_texture_information_for_pvz2_cn: version_extended_texture_information_for_pvz2_cn as any });
+					KernelX.Tool.PopCap.ResourceStreamBundle.unpack_fs(data_file, definition_file, manifest_file, resource_directory, packet_file, { number: version_number as any, extended_texture_information_for_pvz2_cn: version_extended_texture_information_for_pvz2_cn as any });
 					return [`${bundle_directory}`];
 				},
 				default_argument: {
@@ -338,14 +338,14 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ResourceStreamBundle.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.PopCap.ResourceStreamBundle.VersionNumberE), null, null, initial)),
 						);
 						version_extended_texture_information_for_pvz2_cn = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_extended_texture_information_for_pvz2_cn'),
 							a.version_extended_texture_information_for_pvz2_cn,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ResourceStreamBundle.VersionaExtendedTextureInformationForPVZ2CNE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.PopCap.ResourceStreamBundle.VersionaExtendedTextureInformationForPVZ2CNE), null, null, initial)),
 						);
 						let convert_directory = `${bundle_directory}/convert`;
 						{
@@ -371,7 +371,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 									a.option.rton_version_number,
 									(value) => (value),
 									null,
-									(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE), null, null, initial)),
+									(initial) => (Console.option(Console.option_integer(KernelX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE), null, null, initial)),
 								) as any;
 								option.rton.version.native_string_encoding_use_utf8 = Executor.request_argument(
 									Executor.query_argument_name(this.id, 'option_rton_version_native_string_encoding_use_utf8'),
@@ -489,7 +489,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 									a.option.pam_version_number,
 									(value) => (value),
 									null,
-									(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Animation.VersionNumberE), null, null, initial)),
+									(initial) => (Console.option(Console.option_integer(KernelX.Tool.PopCap.Animation.VersionNumberE), null, null, initial)),
 								) as any;
 								let json: boolean;
 								json = Executor.request_argument(
@@ -536,7 +536,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 									a.option.bnk_version_number,
 									(value) => (value),
 									null,
-									(initial) => (Console.option(Console.option_integer(CoreX.Tool.Wwise.SoundBank.VersionNumberE), null, null, initial)),
+									(initial) => (Console.option(Console.option_integer(KernelX.Tool.Wwise.SoundBank.VersionNumberE), null, null, initial)),
 								) as any;
 							}
 						}
@@ -609,9 +609,9 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 						);
 					}
 					let definition_file = `${bundle_directory}/definition.json`;
-					let description_file = `${bundle_directory}/description.json`;
+					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					Support.PopCap.ResourceStreamBundle.UnpackLenient.process_fs(data_file, definition_file, description_file, resource_directory);
+					Support.PopCap.ResourceStreamBundle.UnpackLenient.process_fs(data_file, definition_file, manifest_file, resource_directory);
 					return [`${bundle_directory}`];
 				},
 				default_argument: {

@@ -50,7 +50,7 @@ namespace TwinStar.Script.Entry.method.popcap.particle_effect {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ParticleEffect.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.PopCap.ParticleEffect.VersionNumberE), null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -60,7 +60,7 @@ namespace TwinStar.Script.Entry.method.popcap.particle_effect {
 							(initial) => (Console.size(null, null, initial)),
 						);
 					}
-					CoreX.Tool.PopCap.ParticleEffect.encode_fs(data_file, definition_file, { number: version_number as any }, buffer_size);
+					KernelX.Tool.PopCap.ParticleEffect.encode_fs(data_file, definition_file, { number: version_number as any }, buffer_size);
 					return [`${data_file}`];
 				},
 				default_argument: {
@@ -107,10 +107,10 @@ namespace TwinStar.Script.Entry.method.popcap.particle_effect {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ParticleEffect.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.PopCap.ParticleEffect.VersionNumberE), null, null, initial)),
 						);
 					}
-					CoreX.Tool.PopCap.ParticleEffect.decode_fs(data_file, definition_file, { number: version_number as any });
+					KernelX.Tool.PopCap.ParticleEffect.decode_fs(data_file, definition_file, { number: version_number as any });
 					return [`${definition_file}`];
 				},
 				default_argument: {
@@ -160,7 +160,7 @@ namespace TwinStar.Script.Entry.method.popcap.particle_effect {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ParticleEffect.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.PopCap.ParticleEffect.VersionNumberE), null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -170,14 +170,14 @@ namespace TwinStar.Script.Entry.method.popcap.particle_effect {
 							(initial) => (Console.size(null, null, initial)),
 						);
 					}
-					let data_buffer = Core.ByteArray.allocate(Core.Size.value(buffer_size));
+					let data_buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					simple_batch_execute(
 						definition_file_directory,
 						['file', /.+(\.ppf)(\.json)$/i],
 						(item) => {
 							let definition_file = `${definition_file_directory}/${item}`;
 							let data_file = `${data_file_directory}/${item.slice(0, -5)}`;
-							CoreX.Tool.PopCap.ParticleEffect.encode_fs(data_file, definition_file, { number: version_number as any }, data_buffer.view());
+							KernelX.Tool.PopCap.ParticleEffect.encode_fs(data_file, definition_file, { number: version_number as any }, data_buffer.view());
 						},
 					);
 					return [`${data_file_directory}`];
@@ -226,7 +226,7 @@ namespace TwinStar.Script.Entry.method.popcap.particle_effect {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ParticleEffect.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.PopCap.ParticleEffect.VersionNumberE), null, null, initial)),
 						);
 					}
 					simple_batch_execute(
@@ -235,7 +235,7 @@ namespace TwinStar.Script.Entry.method.popcap.particle_effect {
 						(item) => {
 							let data_file = `${data_file_directory}/${item}`;
 							let definition_file = `${definition_file_directory}/${item}.json`;
-							CoreX.Tool.PopCap.ParticleEffect.decode_fs(data_file, definition_file, { number: version_number as any });
+							KernelX.Tool.PopCap.ParticleEffect.decode_fs(data_file, definition_file, { number: version_number as any });
 						},
 					);
 					return [`${definition_file_directory}`];

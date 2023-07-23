@@ -30,7 +30,7 @@ namespace TwinStar.Script.Entry.method.data.hash {
 							(initial) => (Console.path('file', ['in'], null, null, initial)),
 						);
 					}
-					let result = CoreX.Tool.Data.Hash.MD5.hash_fs(target_file);
+					let result = KernelX.Tool.Data.Hash.MD5.hash_fs(target_file);
 					return [`${result.toString(16)}`];
 				},
 				default_argument: {

@@ -51,7 +51,7 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.Marmalade.DZip.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.Marmalade.DZip.VersionNumberE), null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -63,7 +63,7 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 					}
 					let definition_file = `${bundle_directory}/definition.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					CoreX.Tool.Marmalade.DZip.pack_fs(data_file, definition_file, resource_directory, { number: version_number as any }, buffer_size);
+					KernelX.Tool.Marmalade.DZip.pack_fs(data_file, definition_file, resource_directory, { number: version_number as any }, buffer_size);
 					return [`${data_file}`];
 				},
 				default_argument: {
@@ -110,12 +110,12 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.Marmalade.DZip.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.Marmalade.DZip.VersionNumberE), null, null, initial)),
 						);
 					}
 					let definition_file = `${bundle_directory}/definition.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					CoreX.Tool.Marmalade.DZip.unpack_fs(data_file, definition_file, resource_directory, { number: version_number as any });
+					KernelX.Tool.Marmalade.DZip.unpack_fs(data_file, definition_file, resource_directory, { number: version_number as any });
 					return [`${bundle_directory}`];
 				},
 				default_argument: {
@@ -161,11 +161,11 @@ namespace TwinStar.Script.Entry.method.marmalade.dzip {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.Marmalade.DZip.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.Marmalade.DZip.VersionNumberE), null, null, initial)),
 						);
 					}
 					let data = Support.Marmalade.DZip.PackAutomatic.pack(resource_directory, version_number as any);
-					CoreX.FileSystem.write_file(data_file, data[0].view().sub(Core.Size.value(0n), data[1]));
+					KernelX.FileSystem.write_file(data_file, data[0].view().sub(Kernel.Size.value(0n), data[1]));
 					return [`${data_file}`];
 				},
 				default_argument: {

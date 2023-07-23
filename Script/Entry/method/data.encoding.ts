@@ -40,7 +40,7 @@ namespace TwinStar.Script.Entry.method.data.encoding {
 							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
-					CoreX.Tool.Data.Encoding.Base64.encode_fs(raw_file, ripe_file);
+					KernelX.Tool.Data.Encoding.Base64.encode_fs(raw_file, ripe_file);
 					return [`${ripe_file}`];
 				},
 				default_argument: {
@@ -79,7 +79,7 @@ namespace TwinStar.Script.Entry.method.data.encoding {
 							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
-					CoreX.Tool.Data.Encoding.Base64.decode_fs(ripe_file, raw_file);
+					KernelX.Tool.Data.Encoding.Base64.decode_fs(ripe_file, raw_file);
 					return [`${raw_file}`];
 				},
 				default_argument: {

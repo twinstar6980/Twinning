@@ -50,7 +50,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_group {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ResourceStreamGroup.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.PopCap.ResourceStreamGroup.VersionNumberE), null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -62,7 +62,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_group {
 					}
 					let definition_file = `${bundle_directory}/definition.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					CoreX.Tool.PopCap.ResourceStreamGroup.pack_fs(data_file, definition_file, resource_directory, { number: version_number as any }, buffer_size);
+					KernelX.Tool.PopCap.ResourceStreamGroup.pack_fs(data_file, definition_file, resource_directory, { number: version_number as any }, buffer_size);
 					return [`${data_file}`];
 				},
 				default_argument: {
@@ -109,12 +109,12 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_group {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.ResourceStreamGroup.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.PopCap.ResourceStreamGroup.VersionNumberE), null, null, initial)),
 						);
 					}
 					let definition_file = `${bundle_directory}/definition.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					CoreX.Tool.PopCap.ResourceStreamGroup.unpack_fs(data_file, definition_file, resource_directory, { number: version_number as any });
+					KernelX.Tool.PopCap.ResourceStreamGroup.unpack_fs(data_file, definition_file, resource_directory, { number: version_number as any });
 					return [`${bundle_directory}`];
 				},
 				default_argument: {

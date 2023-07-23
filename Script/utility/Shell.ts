@@ -5,7 +5,7 @@ namespace TwinStar.Script.Shell {
 	export function callback(
 		argument: Array<string>,
 	): Array<string> {
-		return CoreX.Miscellaneous.callback(argument);
+		return KernelX.Miscellaneous.callback(argument);
 	}
 
 	// ------------------------------------------------

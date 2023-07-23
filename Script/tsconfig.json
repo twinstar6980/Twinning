@@ -18,7 +18,7 @@
 		"newLine": "lf",
 	},
 	"include": [
-		"./Core.d.ts",
+		"./Kernel.d.ts",
 		"./**/*",
 	],
 	"exclude": [

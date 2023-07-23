@@ -4,8 +4,8 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 
 	function make_image_document(
 		index: number,
-		image: Core.Tool.PopCap.Animation.Definition.JS_N.Image,
-	): Core.XML.JS_Element {
+		image: Kernel.Tool.PopCap.Animation.Definition.JS_N.Image,
+	): Kernel.XML.JS_Element {
 		assert_test(image.transform.length === 6);
 		return XML.create_element('DOMSymbolItem', {
 			...k_xmlns_attribute,
@@ -51,9 +51,9 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 
 	function make_sprite_document(
 		index: number | 'main',
-		sprite: Core.Tool.PopCap.Animation.Definition.JS_N.Sprite,
-		sub_sprite: Array<Core.Tool.PopCap.Animation.Definition.JS_N.Sprite>,
-	): Core.XML.JS_Element {
+		sprite: Kernel.Tool.PopCap.Animation.Definition.JS_N.Sprite,
+		sub_sprite: Array<Kernel.Tool.PopCap.Animation.Definition.JS_N.Sprite>,
+	): Kernel.XML.JS_Element {
 		let model: Record<number, {
 			state: null | boolean;
 			resource: bigint;
@@ -63,7 +63,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 			frame_start: bigint;
 			frame_duration: bigint;
 		}> = {};
-		let frame_node_list: Record<number, Array<Core.XML.JS_Node>> = {};
+		let frame_node_list: Record<number, Array<Kernel.XML.JS_Node>> = {};
 		sprite.frame.forEach((frame, frame_index) => {
 			for (let e of frame.remove) {
 				model[Number(e.index)].state = false;
@@ -103,7 +103,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 				let frame_node = frame_node_list[layer_index];
 				if (layer.state !== null) {
 					if (frame_node.length > 0) {
-						(frame_node[frame_node.length - 1].value as Core.XML.JS_Element).attribute.duration = `${layer.frame_duration}`;
+						(frame_node[frame_node.length - 1].value as Kernel.XML.JS_Element).attribute.duration = `${layer.frame_duration}`;
 					}
 				}
 				if (layer.state === true) {
@@ -157,7 +157,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 		for (let layer_index in model) {
 			let layer = model[layer_index];
 			let frame_node = frame_node_list[layer_index];
-			(frame_node[frame_node.length - 1].value as Core.XML.JS_Element).attribute.duration = `${layer.frame_duration}`;
+			(frame_node[frame_node.length - 1].value as Kernel.XML.JS_Element).attribute.duration = `${layer.frame_duration}`;
 			delete model[layer_index];
 		}
 		return XML.create_element('DOMSymbolItem', {
@@ -196,15 +196,15 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 	}
 
 	function make_main_document(
-		animation: Core.Tool.PopCap.Animation.Definition.JS_N.Animation,
-	): Core.XML.JS_Element {
+		animation: Kernel.Tool.PopCap.Animation.Definition.JS_N.Animation,
+	): Kernel.XML.JS_Element {
 		assert_test(animation.main_sprite !== null);
 		let prev_end = {
 			flow: -1,
 			command: -1,
 		};
-		let flow_node: Array<Core.XML.JS_Node> = [];
-		let command_node: Array<Core.XML.JS_Node> = [];
+		let flow_node: Array<Kernel.XML.JS_Node> = [];
+		let command_node: Array<Kernel.XML.JS_Node> = [];
 		animation.main_sprite.frame.forEach((frame, frame_index) => {
 			if (frame.label !== null || frame.stop) {
 				if (prev_end.flow + 1 < frame_index) {
@@ -220,7 +220,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 				}, [
 					XML.create_element_node('elements', {}, []),
 				]);
-				let node_element = node.value as Core.XML.JS_Element;
+				let node_element = node.value as Kernel.XML.JS_Element;
 				if (frame.label !== null) {
 					node_element.attribute['name'] = `${frame.label}`;
 					node_element.attribute['labelType'] = `name`;
@@ -352,7 +352,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 	}
 
 	export function from(
-		animation: Core.Tool.PopCap.Animation.Definition.JS_N.Animation,
+		animation: Kernel.Tool.PopCap.Animation.Definition.JS_N.Animation,
 	): FlashPackage {
 		assert_test(animation.main_sprite !== null);
 		return {
@@ -381,7 +381,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 	// ------------------------------------------------
 
 	export function from_fsh(
-		raw: Core.Tool.PopCap.Animation.Definition.JS_N.Animation,
+		raw: Kernel.Tool.PopCap.Animation.Definition.JS_N.Animation,
 		ripe_directory: string,
 	): void {
 		let ripe = from(raw);
@@ -393,7 +393,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 		raw_file: string,
 		ripe_directory: string,
 	): void {
-		let raw = CoreX.JSON.read_fs_js<Core.Tool.PopCap.Animation.Definition.JS_N.Animation>(raw_file);
+		let raw = KernelX.JSON.read_fs_js<Kernel.Tool.PopCap.Animation.Definition.JS_N.Animation>(raw_file);
 		let ripe = from(raw);
 		save_flash_package(ripe_directory, ripe);
 		return;

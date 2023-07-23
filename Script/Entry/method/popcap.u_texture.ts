@@ -49,7 +49,7 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 							a.format,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_string(CoreX.Tool.PopCap.UTexture.FormatE), null, null, initial)),
+							(initial) => (Console.option(Console.option_string(KernelX.Tool.PopCap.UTexture.FormatE), null, null, initial)),
 						);
 						version_compress_texture_data = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_compress_texture_data'),
@@ -59,7 +59,7 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 							(initial) => (Console.confirmation(null, null, initial)),
 						);
 					}
-					CoreX.Tool.PopCap.UTexture.encode_fs(data_file, image_file, format as any, { compress_texture_data: version_compress_texture_data });
+					KernelX.Tool.PopCap.UTexture.encode_fs(data_file, image_file, format as any, { compress_texture_data: version_compress_texture_data });
 					return [`${data_file}`];
 				},
 				default_argument: {
@@ -109,7 +109,7 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 							(initial) => (Console.confirmation(null, null, initial)),
 						);
 					}
-					CoreX.Tool.PopCap.UTexture.decode_fs(data_file, image_file, { compress_texture_data: version_compress_texture_data });
+					KernelX.Tool.PopCap.UTexture.decode_fs(data_file, image_file, { compress_texture_data: version_compress_texture_data });
 					return [`${image_file}`];
 				},
 				default_argument: {
@@ -159,7 +159,7 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 							a.format,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_string(CoreX.Tool.PopCap.UTexture.FormatE), null, null, initial)),
+							(initial) => (Console.option(Console.option_string(KernelX.Tool.PopCap.UTexture.FormatE), null, null, initial)),
 						);
 						version_compress_texture_data = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'version_compress_texture_data'),
@@ -175,7 +175,7 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 						(item) => {
 							let image_file = `${image_file_directory}/${item}`;
 							let data_file = `${data_file_directory}/${item.slice(0, -4)}.tex`;
-							CoreX.Tool.PopCap.UTexture.encode_fs(data_file, image_file, format as any, { compress_texture_data: version_compress_texture_data });
+							KernelX.Tool.PopCap.UTexture.encode_fs(data_file, image_file, format as any, { compress_texture_data: version_compress_texture_data });
 						},
 					);
 					return [`${data_file_directory}`];
@@ -233,7 +233,7 @@ namespace TwinStar.Script.Entry.method.popcap.u_texture {
 						(item) => {
 							let data_file = `${data_file_directory}/${item}`;
 							let image_file = `${image_file_directory}/${item.slice(0, -4)}.png`;
-							CoreX.Tool.PopCap.UTexture.decode_fs(data_file, image_file, { compress_texture_data: version_compress_texture_data });
+							KernelX.Tool.PopCap.UTexture.decode_fs(data_file, image_file, { compress_texture_data: version_compress_texture_data });
 						},
 					);
 					return [`${image_file_directory}`];

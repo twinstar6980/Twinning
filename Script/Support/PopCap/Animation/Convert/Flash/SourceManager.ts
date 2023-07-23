@@ -19,9 +19,9 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.SourceManager {
 
 	function create_one(
 		index: number,
-		image: Core.Tool.PopCap.Animation.Definition.JS_N.Image,
+		image: Kernel.Tool.PopCap.Animation.Definition.JS_N.Image,
 		resolution: bigint,
-	): Core.XML.JS_Element {
+	): Kernel.XML.JS_Element {
 		return XML.create_element('DOMSymbolItem', {
 			...k_xmlns_attribute,
 			name: `source/source_${index + 1}`,
@@ -56,16 +56,16 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.SourceManager {
 	}
 
 	export function create(
-		animation: Core.Tool.PopCap.Animation.Definition.JS_N.Animation,
+		animation: Kernel.Tool.PopCap.Animation.Definition.JS_N.Animation,
 		resolution: bigint,
-	): Array<Core.XML.JS_Element> {
+	): Array<Kernel.XML.JS_Element> {
 		return animation.image.map((e, i) => (create_one(i, e, resolution)));
 	}
 
 	// ------------------------------------------------
 
 	function resize_one(
-		document: Core.XML.JS_Node,
+		document: Kernel.XML.JS_Node,
 		resolution: bigint,
 	): void {
 		let scale_matrix = XML.find_child_element(
@@ -78,7 +78,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.SourceManager {
 									XML.find_child_element(
 										XML.find_child_element(
 											XML.find_child_element(
-												document.value as Core.XML.JS_Element, 'timeline'
+												document.value as Kernel.XML.JS_Element, 'timeline'
 											)[0], 'DOMTimeline'
 										)[0], 'layers'
 									)[0], 'DOMLayer'
@@ -94,7 +94,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.SourceManager {
 	}
 
 	export function resize(
-		document: Array<Core.XML.JS_Node>,
+		document: Array<Kernel.XML.JS_Node>,
 		resolution: bigint,
 	): void {
 		document.forEach((e, i) => (resize_one(e, resolution)));
@@ -105,11 +105,11 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.SourceManager {
 
 	export function create_fsh(
 		directory: string,
-		data: Core.Tool.PopCap.Animation.Definition.JS_N.Animation,
+		data: Kernel.Tool.PopCap.Animation.Definition.JS_N.Animation,
 		resolution: bigint = k_standard_resolution,
 	): void {
 		create(data, resolution).forEach((e, i) => {
-			CoreX.XML.write_fs_js(`${directory}/LIBRARY/source/source_${i + 1}.xml`, XML.wrap_element(e));
+			KernelX.XML.write_fs_js(`${directory}/LIBRARY/source/source_${i + 1}.xml`, XML.wrap_element(e));
 		});
 		return;
 	}
@@ -118,11 +118,11 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.SourceManager {
 		directory: string,
 		resolution: bigint,
 	): void {
-		let extra = CoreX.JSON.read_fs_js<ExtraInformation>(`${directory}/extra.json`);
-		let document = extra.image.map((e, i) => (CoreX.XML.read_fs_js(`${directory}/LIBRARY/source/source_${i + 1}.xml`)));
+		let extra = KernelX.JSON.read_fs_js<ExtraInformation>(`${directory}/extra.json`);
+		let document = extra.image.map((e, i) => (KernelX.XML.read_fs_js(`${directory}/LIBRARY/source/source_${i + 1}.xml`)));
 		resize(document, resolution);
 		document.forEach((e, i) => {
-			CoreX.XML.write_fs_js(`${directory}/LIBRARY/source/source_${i + 1}.xml`, e);
+			KernelX.XML.write_fs_js(`${directory}/LIBRARY/source/source_${i + 1}.xml`, e);
 		});
 		return;
 	}

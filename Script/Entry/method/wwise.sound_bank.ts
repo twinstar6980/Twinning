@@ -50,7 +50,7 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.Wwise.SoundBank.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.Wwise.SoundBank.VersionNumberE), null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -62,7 +62,7 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 					}
 					let definition_file = `${bundle_directory}/definition.json`;
 					let embedded_media_directory = `${bundle_directory}/embedded_media`;
-					CoreX.Tool.Wwise.SoundBank.encode_fs(data_file, definition_file, embedded_media_directory, { number: version_number as any }, buffer_size);
+					KernelX.Tool.Wwise.SoundBank.encode_fs(data_file, definition_file, embedded_media_directory, { number: version_number as any }, buffer_size);
 					return [`${data_file}`];
 				},
 				default_argument: {
@@ -109,12 +109,12 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.Wwise.SoundBank.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.Wwise.SoundBank.VersionNumberE), null, null, initial)),
 						);
 					}
 					let definition_file = `${bundle_directory}/definition.json`;
 					let embedded_media_directory = `${bundle_directory}/embedded_media`;
-					CoreX.Tool.Wwise.SoundBank.decode_fs(data_file, definition_file, embedded_media_directory, { number: version_number as any });
+					KernelX.Tool.Wwise.SoundBank.decode_fs(data_file, definition_file, embedded_media_directory, { number: version_number as any });
 					return [`${bundle_directory}`];
 				},
 				default_argument: {
@@ -164,7 +164,7 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.Wwise.SoundBank.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.Wwise.SoundBank.VersionNumberE), null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -174,7 +174,7 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 							(initial) => (Console.size(null, null, initial)),
 						);
 					}
-					let data_buffer = Core.ByteArray.allocate(Core.Size.value(buffer_size));
+					let data_buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					simple_batch_execute(
 						bundle_directory_directory,
 						['directory', /.+(\.bnk)(\.bundle)$/i],
@@ -183,7 +183,7 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 							let data_file = `${data_file_directory}/${item.slice(0, -7)}`;
 							let definition_file = `${bundle_directory}/definition.json`;
 							let embedded_media_directory = `${bundle_directory}/embedded_media`;
-							CoreX.Tool.Wwise.SoundBank.encode_fs(data_file, definition_file, embedded_media_directory, { number: version_number as any }, data_buffer.view());
+							KernelX.Tool.Wwise.SoundBank.encode_fs(data_file, definition_file, embedded_media_directory, { number: version_number as any }, data_buffer.view());
 						},
 					);
 					return [`${data_file_directory}`];
@@ -232,7 +232,7 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.Wwise.SoundBank.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.Wwise.SoundBank.VersionNumberE), null, null, initial)),
 						);
 					}
 					simple_batch_execute(
@@ -243,7 +243,7 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 							let bundle_directory = `${bundle_directory_directory}/${item}.bundle`;
 							let definition_file = `${bundle_directory}/definition.json`;
 							let embedded_media_directory = `${bundle_directory}/embedded_media`;
-							CoreX.Tool.Wwise.SoundBank.decode_fs(data_file, definition_file, embedded_media_directory, { number: version_number as any });
+							KernelX.Tool.Wwise.SoundBank.decode_fs(data_file, definition_file, embedded_media_directory, { number: version_number as any });
 						},
 					);
 					return [`${bundle_directory_directory}`];

@@ -132,10 +132,10 @@ namespace TwinStar.Script.PathUtility {
 		destination: string,
 	): void {
 		if (Shell.is_android && is_android_fuse_object(destination) && source.toLowerCase() === destination.toLowerCase()) {
-			CoreX.FileSystem.rename(source, source + '!');
-			CoreX.FileSystem.rename(source + '!', destination);
+			KernelX.FileSystem.rename(source, source + '!');
+			KernelX.FileSystem.rename(source + '!', destination);
 		} else {
-			CoreX.FileSystem.rename(source, destination);
+			KernelX.FileSystem.rename(source, destination);
 		}
 		return;
 	}

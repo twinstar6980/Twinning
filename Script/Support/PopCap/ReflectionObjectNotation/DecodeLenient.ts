@@ -118,9 +118,9 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 		native_string_index: Array<string>,
 		unicode_string_index: Array<string>,
 		type_identifier: bigint,
-		version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
-	): Core.JSON.JS_Value {
-		let value: Core.JSON.JS_Value;
+		version: typeof Kernel.Tool.PopCap.ReflectionObjectNotation.Version.Value,
+	): Kernel.JSON.JS_Value {
+		let value: Kernel.JSON.JS_Value;
 		switch (type_identifier) {
 			case 0x00n: {
 				value = false;
@@ -380,8 +380,8 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 
 	export function process_whole(
 		data: ByteStreamView,
-		version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
-	): Core.JSON.JS_Value {
+		version: typeof Kernel.Tool.PopCap.ReflectionObjectNotation.Version.Value,
+	): Kernel.JSON.JS_Value {
 		if (data.u32() !== 0x4E4F5452n) {
 			Console.warning(`data:${data.p().toString(16)}h : invalid magic`, []);
 		}
@@ -399,8 +399,8 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 
 	export function process(
 		data: ByteStreamView,
-		version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
-	): Core.JSON.JS_Value {
+		version: typeof Kernel.Tool.PopCap.ReflectionObjectNotation.Version.Value,
+	): Kernel.JSON.JS_Value {
 		return process_whole(data, version);
 	}
 
@@ -409,11 +409,11 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 	export function process_fs(
 		data_file: string,
 		definition_file: string,
-		version: typeof Core.Tool.PopCap.ReflectionObjectNotation.Version.Value,
+		version: typeof Kernel.Tool.PopCap.ReflectionObjectNotation.Version.Value,
 	): void {
-		let data = CoreX.FileSystem.read_file(data_file);
+		let data = KernelX.FileSystem.read_file(data_file);
 		let definition = process(new ByteStreamView(data.view().value), version);
-		CoreX.JSON.write_fs_js(definition_file, definition);
+		KernelX.JSON.write_fs_js(definition_file, definition);
 		return;
 	}
 

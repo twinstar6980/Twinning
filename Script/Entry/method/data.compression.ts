@@ -49,7 +49,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
-					CoreX.Tool.Data.Compression.Deflate.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', 'none');
+					KernelX.Tool.Data.Compression.Deflate.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', 'none');
 					return [`${ripe_file}`];
 				},
 				default_argument: {
@@ -97,7 +97,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 							(initial) => (Console.size(null, null, initial)),
 						);
 					}
-					CoreX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'none', buffer_size);
+					KernelX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'none', buffer_size);
 					return [`${raw_file}`];
 				},
 				default_argument: {
@@ -137,7 +137,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
-					CoreX.Tool.Data.Compression.Deflate.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', 'zlib');
+					KernelX.Tool.Data.Compression.Deflate.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', 'zlib');
 					return [`${ripe_file}`];
 				},
 				default_argument: {
@@ -185,7 +185,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 							(initial) => (Console.size(null, null, initial)),
 						);
 					}
-					CoreX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'zlib', buffer_size);
+					KernelX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'zlib', buffer_size);
 					return [`${raw_file}`];
 				},
 				default_argument: {
@@ -225,7 +225,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
-					CoreX.Tool.Data.Compression.Deflate.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', 'gzip');
+					KernelX.Tool.Data.Compression.Deflate.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', 'gzip');
 					return [`${ripe_file}`];
 				},
 				default_argument: {
@@ -273,7 +273,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 							(initial) => (Console.size(null, null, initial)),
 						);
 					}
-					CoreX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'gzip', buffer_size);
+					KernelX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'gzip', buffer_size);
 					return [`${raw_file}`];
 				},
 				default_argument: {
@@ -313,7 +313,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
-					CoreX.Tool.Data.Compression.BZip2.compress_fs(raw_file, ripe_file, 9n);
+					KernelX.Tool.Data.Compression.BZip2.compress_fs(raw_file, ripe_file, 9n);
 					return [`${ripe_file}`];
 				},
 				default_argument: {
@@ -361,7 +361,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 							(initial) => (Console.size(null, null, initial)),
 						);
 					}
-					CoreX.Tool.Data.Compression.BZip2.uncompress_fs(ripe_file, raw_file, buffer_size);
+					KernelX.Tool.Data.Compression.BZip2.uncompress_fs(ripe_file, raw_file, buffer_size);
 					return [`${raw_file}`];
 				},
 				default_argument: {
@@ -401,7 +401,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
-					CoreX.Tool.Data.Compression.Lzma.compress_fs(raw_file, ripe_file, 9n);
+					KernelX.Tool.Data.Compression.Lzma.compress_fs(raw_file, ripe_file, 9n);
 					return [`${ripe_file}`];
 				},
 				default_argument: {
@@ -449,7 +449,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 							(initial) => (Console.size(null, null, initial)),
 						);
 					}
-					CoreX.Tool.Data.Compression.Lzma.uncompress_fs(ripe_file, raw_file, buffer_size);
+					KernelX.Tool.Data.Compression.Lzma.uncompress_fs(ripe_file, raw_file, buffer_size);
 					return [`${raw_file}`];
 				},
 				default_argument: {

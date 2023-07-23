@@ -59,7 +59,7 @@ namespace TwinStar.Script.Entry.method.texture.transformation {
 							(initial) => (Console.confirmation(null, null, initial)),
 						);
 					}
-					CoreX.Tool.Texture.Transformation.flip_fs(source_file, destination_file, horizontal, vertical);
+					KernelX.Tool.Texture.Transformation.flip_fs(source_file, destination_file, horizontal, vertical);
 					return [`${destination_file}`];
 				},
 				default_argument: {
@@ -118,7 +118,7 @@ namespace TwinStar.Script.Entry.method.texture.transformation {
 							(initial) => (Console.integer(null, (value) => ((0n < value) ? null : los(`尺寸应大于零`)), initial)),
 						);
 					}
-					CoreX.Tool.Texture.Transformation.scale_fs(source_file, destination_file, [width, height]);
+					KernelX.Tool.Texture.Transformation.scale_fs(source_file, destination_file, [width, height]);
 					return [`${destination_file}`];
 				},
 				default_argument: {
@@ -168,7 +168,7 @@ namespace TwinStar.Script.Entry.method.texture.transformation {
 							(initial) => (Console.number(null, (value) => ((0.0 < value) ? null : los(`比例应大于零`)), initial)),
 						);
 					}
-					CoreX.Tool.Texture.Transformation.scale_rate_fs(source_file, destination_file, size_rate);
+					KernelX.Tool.Texture.Transformation.scale_rate_fs(source_file, destination_file, size_rate);
 					return [`${destination_file}`];
 				},
 				default_argument: {

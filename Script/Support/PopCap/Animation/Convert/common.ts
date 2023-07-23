@@ -21,7 +21,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert {
 	}
 
 	export function compute_standard_transform_from_variant(
-		transform: Core.Tool.PopCap.Animation.Definition.JS_N.VariantTransform,
+		transform: Kernel.Tool.PopCap.Animation.Definition.JS_N.VariantTransform,
 	): Transform {
 		let result: Transform;
 		if (transform.length === 2) {
@@ -51,7 +51,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert {
 
 	export function compute_variant_transform_from_standard(
 		data: Transform,
-	): Core.Tool.PopCap.Animation.Definition.JS_N.VariantTransform {
+	): Kernel.Tool.PopCap.Animation.Definition.JS_N.VariantTransform {
 		if (data[0] === data[3] && data[1] === -data[2]) {
 			if (data[0] === 1.0 && data[1] === 0.0) {
 				return [data[4], data[5]];

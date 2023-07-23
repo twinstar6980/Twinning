@@ -50,7 +50,7 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 							(initial) => (Console.integer(null, (value) => (0x00n <= value && value <= 0xFFn ? null : los(`范围溢出`)), initial)),
 						);
 					}
-					CoreX.Tool.Data.Encryption.XOR.encrypt_fs(plain_file, cipher_file, [key]);
+					KernelX.Tool.Data.Encryption.XOR.encrypt_fs(plain_file, cipher_file, [key]);
 					return [`${cipher_file}`];
 				},
 				default_argument: {
@@ -102,21 +102,21 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 							a.mode,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_string(CoreX.Tool.Data.Encryption.Rijndael.ModeE), null, null, initial)),
+							(initial) => (Console.option(Console.option_string(KernelX.Tool.Data.Encryption.Rijndael.ModeE), null, null, initial)),
 						);
 						block_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'block_size'),
 							a.block_size,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.Data.Encryption.Rijndael.BlockSizeE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.Data.Encryption.Rijndael.BlockSizeE), null, null, initial)),
 						);
 						key = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'key'),
 							a.key,
 							(value) => (value),
 							null,
-							(initial) => (Console.string(null, (value) => (CoreX.Tool.Data.Encryption.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : los(`密钥长度非法`)), initial)),
+							(initial) => (Console.string(null, (value) => (KernelX.Tool.Data.Encryption.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : los(`密钥长度非法`)), initial)),
 						);
 						if (mode === 'cbc' || mode === 'cfb') {
 							iv = Executor.request_argument(
@@ -131,7 +131,7 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 							iv = '';
 						}
 					}
-					CoreX.Tool.Data.Encryption.Rijndael.encrypt_fs(plain_file, cipher_file, mode as any, block_size as any, BigInt(key.length) as CoreX.Tool.Data.Encryption.Rijndael.BlockSize, key, iv);
+					KernelX.Tool.Data.Encryption.Rijndael.encrypt_fs(plain_file, cipher_file, mode as any, block_size as any, BigInt(key.length) as KernelX.Tool.Data.Encryption.Rijndael.BlockSize, key, iv);
 					return [`${cipher_file}`];
 				},
 				default_argument: {
@@ -186,21 +186,21 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 							a.mode,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_string(CoreX.Tool.Data.Encryption.Rijndael.ModeE), null, null, initial)),
+							(initial) => (Console.option(Console.option_string(KernelX.Tool.Data.Encryption.Rijndael.ModeE), null, null, initial)),
 						);
 						block_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'block_size'),
 							a.block_size,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.Data.Encryption.Rijndael.BlockSizeE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.Data.Encryption.Rijndael.BlockSizeE), null, null, initial)),
 						);
 						key = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'key'),
 							a.key,
 							(value) => (value),
 							null,
-							(initial) => (Console.string(null, (value) => (CoreX.Tool.Data.Encryption.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : los(`密钥长度非法`)), initial)),
+							(initial) => (Console.string(null, (value) => (KernelX.Tool.Data.Encryption.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : los(`密钥长度非法`)), initial)),
 						);
 						if (mode === 'cbc' || mode === 'cfb') {
 							iv = Executor.request_argument(
@@ -215,7 +215,7 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 							iv = '';
 						}
 					}
-					CoreX.Tool.Data.Encryption.Rijndael.decrypt_fs(cipher_file, plain_file, mode as any, block_size as any, BigInt(key.length) as CoreX.Tool.Data.Encryption.Rijndael.BlockSize, key, iv);
+					KernelX.Tool.Data.Encryption.Rijndael.decrypt_fs(cipher_file, plain_file, mode as any, block_size as any, BigInt(key.length) as KernelX.Tool.Data.Encryption.Rijndael.BlockSize, key, iv);
 					return [`${plain_file}`];
 				},
 				default_argument: {

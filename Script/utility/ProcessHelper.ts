@@ -33,18 +33,18 @@ namespace TwinStar.Script.ProcessHelper {
 	): null | string {
 		let result: null | string = null;
 		let item_delimiter = Shell.is_windows ? ';' : ':';
-		let path_environment = CoreX.Process.get_environment_variable('PATH');
+		let path_environment = KernelX.Process.get_environment_variable('PATH');
 		assert_test(path_environment !== null, `environment PATH not found`);
 		let path_list = path_environment.split(item_delimiter);
 		let path_extension_list = [''];
 		if (Shell.is_windows) {
-			let path_extension_environment = CoreX.Process.get_environment_variable('PATHEXT');
+			let path_extension_environment = KernelX.Process.get_environment_variable('PATHEXT');
 			assert_test(path_extension_environment !== null, `environment PATHEXT not found`);
 			path_extension_list.push(...path_extension_environment.split(item_delimiter).map((e) => (e.toLowerCase())));
 		}
 		for (let path of path_list) {
 			let path_prefix = `${path}/${name}`;
-			let path_extension = path_extension_list.find((e) => (CoreX.FileSystem.exist_file(`${path_prefix}${e}`)));
+			let path_extension = path_extension_list.find((e) => (KernelX.FileSystem.exist_file(`${path_prefix}${e}`)));
 			if (path_extension !== undefined) {
 				result = `${path_prefix}${path_extension}`;
 				break;
@@ -71,13 +71,13 @@ namespace TwinStar.Script.ProcessHelper {
 		let input = `${temporary_directory}/input`;
 		let output = `${temporary_directory}/output`;
 		let error = `${temporary_directory}/error`;
-		CoreX.FileSystem.write_file(input, Core.Miscellaneous.cast_moveable_String_to_ByteArray(Core.String.value(input_data)));
-		CoreX.FileSystem.create_file(output);
-		CoreX.FileSystem.create_file(error);
-		let code = CoreX.Process.spawn_process(program, argument, environment, input, output, error);
+		KernelX.FileSystem.write_file(input, Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(input_data)));
+		KernelX.FileSystem.create_file(output);
+		KernelX.FileSystem.create_file(error);
+		let code = KernelX.Process.spawn_process(program, argument, environment, input, output, error);
 		let read_file = (path: string) => {
-			let data = CoreX.FileSystem.read_file(path);
-			let data_string = Core.Miscellaneous.cast_CharacterListView_to_JS_String(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(data.view()));
+			let data = KernelX.FileSystem.read_file(path);
+			let data_string = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(data.view()));
 			return normalize_string_line_feed(data_string);
 		};
 		return {

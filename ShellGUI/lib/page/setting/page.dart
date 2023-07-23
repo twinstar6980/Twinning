@@ -55,7 +55,7 @@ class _SettingPageState extends State<SettingPage> {
                 ListTile(
                   dense: true,
                   title: Text(
-                    'Customize',
+                    'Appearance',
                     style: theme.textTheme.titleSmall!.copyWith(color: theme.colorScheme.primary),
                   ),
                 ),
@@ -235,14 +235,14 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 ListTile(
                   leading: const Icon(Icons.data_usage_outlined),
-                  title: const Text('Core'),
+                  title: const Text('Kernel'),
                   trailing: SizedBox(
                     width: 96,
                     child: Row(
                       children: [
                         Expanded(child: Container()),
                         Text(
-                          setting.data.mCore.isEmpty ? '?' : '!',
+                          setting.data.mKernel.isEmpty ? '?' : '!',
                           style: theme.textTheme.bodyMedium,
                         ),
                       ],
@@ -252,7 +252,7 @@ class _SettingPageState extends State<SettingPage> {
                     showDialog<String>(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: const Text('Core'),
+                        title: const Text('Kernel'),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -261,9 +261,9 @@ class _SettingPageState extends State<SettingPage> {
                               decoration: const InputDecoration(
                                 isDense: true,
                               ),
-                              initialValue: setting.data.mCore,
+                              initialValue: setting.data.mKernel,
                               onChanged: (value) {
-                                setting.data.mCore = value;
+                                setting.data.mKernel = value;
                                 setting.notify();
                               },
                             ),

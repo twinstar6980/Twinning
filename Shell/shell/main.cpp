@@ -3,9 +3,9 @@
 #include "shell/common.hpp"
 #include "shell/utility/interaction.hpp"
 #include "shell/utility/miscellaneous.hpp"
-#include "shell/core/dynamic_library.hpp"
-#include "shell/host/cli_host.hpp"
-#include "shell/host/launcher.hpp"
+#include "shell/bridge/dynamic_library.hpp"
+#include "shell/bridge/cli_host.hpp"
+#include "shell/bridge/launcher.hpp"
 
 #if defined M_vld
 #include "vld.h"
@@ -17,12 +17,12 @@ M_declare_native_main_function {
 	try {
 		auto args = TwinStar::Shell::parse_raw_native_string(std::span{argv, static_cast<std::size_t>(argc)});
 		assert_test(args.size() >= 3);
-		auto core_path = args[1];
+		auto kernel = args[1];
 		auto script = args[2];
 		auto argument = std::vector<std::string>{args.begin() + 3, args.end()};
-		auto core = TwinStar::Shell::Core::DynamicLibrary{nullptr, core_path};
-		auto host = TwinStar::Shell::CLIHost{nullptr};
-		auto result = TwinStar::Shell::Launcher::launch(host, core, script, argument);
+		auto library = TwinStar::Shell::Bridge::DynamicLibrary{nullptr, kernel};
+		auto host = TwinStar::Shell::Bridge::CLIHost{nullptr};
+		auto result = TwinStar::Shell::Bridge::Launcher::launch(host, library, script, argument);
 		TwinStar::Shell::Interaction::error("SUCCEEDED");
 		TwinStar::Shell::Interaction::error("\n");
 		TwinStar::Shell::Interaction::error(result);

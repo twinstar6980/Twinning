@@ -18,7 +18,7 @@ namespace TwinStar.Script {
 			size?: number,
 		) {
 			this.m_view = new DataView(data, offset, size);
-			this.m_endian_little = !Core.Miscellaneous.g_context.query_byte_stream_use_big_endian().value;
+			this.m_endian_little = !Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value;
 		}
 
 		// ------------------------------------------------
@@ -32,7 +32,7 @@ namespace TwinStar.Script {
 			begin: number,
 			size: number,
 		): ArrayBuffer {
-			return Core.ByteListView.value(this.m_view.buffer).sub(Core.Size.value(BigInt(this.m_view.byteOffset + begin)), Core.Size.value(BigInt(size))).value;
+			return Kernel.ByteListView.value(this.m_view.buffer).sub(Kernel.Size.value(BigInt(this.m_view.byteOffset + begin)), Kernel.Size.value(BigInt(size))).value;
 		}
 
 		// ------------------------------------------------

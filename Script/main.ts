@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 74;
+	export const k_version = 75;
 
 	// ------------------------------------------------
 
@@ -27,24 +27,24 @@ namespace TwinStar.Script {
 		export function exist_file(
 			path: string,
 		): boolean {
-			return Core.FileSystem.exist_file(Core.Path.value(path)).value;
+			return Kernel.FileSystem.exist_file(Kernel.Path.value(path)).value;
 		}
 
 		export function exist_directory(
 			path: string,
 		): boolean {
-			return Core.FileSystem.exist_directory(Core.Path.value(path)).value;
+			return Kernel.FileSystem.exist_directory(Kernel.Path.value(path)).value;
 		}
 
 		// ------------------------------------------------
 
-		export function read_json<ConstraintT extends Core.JSON.JS_Value>(
+		export function read_json<ConstraintT extends Kernel.JSON.JS_Value>(
 			file: string,
 		): ConstraintT {
-			let data = Core.FileSystem.read_file(Core.Path.value(file));
-			let stream = Core.CharacterStreamView.watch(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(data.view()));
-			let json = Core.JSON.Value.default<ConstraintT>();
-			Core.Tool.Data.Serialization.JSON.Read.process(stream, json);
+			let data = Kernel.FileSystem.read_file(Kernel.Path.value(file));
+			let stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(data.view()));
+			let json = Kernel.JSON.Value.default<ConstraintT>();
+			Kernel.Tool.Data.Serialization.JSON.Read.process(stream, json);
 			return json.value;
 		}
 
@@ -52,7 +52,7 @@ namespace TwinStar.Script {
 
 		export function get_working_directory(
 		): string {
-			return Core.Process.get_working_directory().value;
+			return Kernel.Process.get_working_directory().value;
 		}
 
 		// ------------------------------------------------
@@ -61,8 +61,8 @@ namespace TwinStar.Script {
 			script_file: string,
 			name: string,
 		): any {
-			let script = Core.FileSystem.read_file(Core.Path.value(script_file));
-			return Core.Miscellaneous.g_context.evaluate(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(script.view()), Core.String.value(name), Core.Boolean.value(false));
+			let script = Kernel.FileSystem.read_file(Kernel.Path.value(script_file));
+			return Kernel.Miscellaneous.g_context.evaluate(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(script.view()), Kernel.String.value(name), Kernel.Boolean.value(false));
 		}
 
 		// ------------------------------------------------
@@ -70,12 +70,12 @@ namespace TwinStar.Script {
 		export function output(
 			message: string,
 		): void {
-			var host = Core.Miscellaneous.g_context.callback(Core.StringList.value(['host'])).value[0];
+			var host = Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['host'])).value[0];
 			if (host === 'cli') {
-				Core.Miscellaneous.g_context.callback(Core.StringList.value(['output', `● ${message}\n`]));
+				Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['output', `● ${message}\n`]));
 			}
 			if (host === 'gui') {
-				Core.Miscellaneous.g_context.callback(Core.StringList.value(['output_message', 'v', `${message}`]));
+				Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['output_message', 'v', `${message}`]));
 			}
 			return;
 		}
@@ -127,15 +127,15 @@ namespace TwinStar.Script {
 		): void {
 			// TODO : only allow if same drive
 			let trash_sub_direcotry = `${trash()}/${date_to_simple_string(new Date())}.${make_prefix_padded_string((Math.random() * 10000).toFixed(0), '0', 4)}`;
-			CoreX.FileSystem.create_directory(trash_sub_direcotry);
-			CoreX.FileSystem.rename(path, `${trash_sub_direcotry}/${PathUtility.name(path)}`);
+			KernelX.FileSystem.create_directory(trash_sub_direcotry);
+			KernelX.FileSystem.rename(path, `${trash_sub_direcotry}/${PathUtility.name(path)}`);
 			return;
 		}
 
 		export function new_temporary(
 		): string {
 			let temporary_sub_directory = `${temporary()}/${date_to_simple_string(new Date())}.${make_prefix_padded_string((Math.random() * 10000).toFixed(0), '0', 4)}`;
-			CoreX.FileSystem.create_directory(temporary_sub_directory);
+			KernelX.FileSystem.create_directory(temporary_sub_directory);
 			return temporary_sub_directory;
 		}
 
@@ -143,18 +143,18 @@ namespace TwinStar.Script {
 
 		export function initialize(
 		): void {
-			CoreX.FileSystem.create_directory(workspace());
-			CoreX.FileSystem.create_directory(trash());
-			CoreX.FileSystem.create_directory(temporary());
-			CoreX.Process.set_working_directory(workspace());
+			KernelX.FileSystem.create_directory(workspace());
+			KernelX.FileSystem.create_directory(trash());
+			KernelX.FileSystem.create_directory(temporary());
+			KernelX.Process.set_working_directory(workspace());
 			return;
 		}
 
 		export function deinitialize(
 		): void {
-			let temporary_sub_directory_list = CoreX.FileSystem.list(temporary());
+			let temporary_sub_directory_list = KernelX.FileSystem.list(temporary());
 			for (let temporary_sub_directory of temporary_sub_directory_list) {
-				CoreX.FileSystem.remove(`${temporary()}/${temporary_sub_directory}`);
+				KernelX.FileSystem.remove(`${temporary()}/${temporary_sub_directory}`);
 			}
 			return;
 		}
@@ -172,7 +172,7 @@ namespace TwinStar.Script {
 			entry: null | string;
 		};
 
-		export type Configuration = Record<string, Core.JSON.JS_Value>;
+		export type Configuration = Record<string, Kernel.JSON.JS_Value>;
 
 		export type Injector = (configuration: null | Configuration) => void;
 
@@ -234,7 +234,7 @@ namespace TwinStar.Script {
 		export async function internal(
 			argument: Array<string>,
 		): Promise<string> {
-			Detail.output(`TwinStar.ToolKit ~ Core:${Core.Miscellaneous.g_version.value} & Shell:${Core.Miscellaneous.g_context.callback(Core.StringList.value(['host'])).value[0]}:${Core.Miscellaneous.g_context.callback(Core.StringList.value(['version'])).value[0]} & Script:${k_version} ~ ${Core.Miscellaneous.g_context.callback(Core.StringList.value(['system'])).value[0]} & ${Core.Miscellaneous.g_context.callback(Core.StringList.value(['architecture'])).value[0]}`);
+			Detail.output(`TwinStar.ToolKit ~ Kernel:${Kernel.Miscellaneous.g_version.value} & Shell:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['host'])).value[0]}:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['version'])).value[0]} & Script:${k_version} ~ ${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['system'])).value[0]} & ${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['architecture'])).value[0]}`);
 			assert_test(argument.length >= 1, `argument too few`);
 			// 获取主目录
 			let home_path = argument[0];
@@ -244,7 +244,7 @@ namespace TwinStar.Script {
 			}
 			Home.path = home_path;
 			// 设置模块主目录（ES）
-			Core.Miscellaneous.g_context.query_module_home().value = Home.script();
+			Kernel.Miscellaneous.g_context.query_module_home().value = Home.script();
 			// 加载子模块
 			let timer_begin = Date.now();
 			let entry = ModuleLoader.load(g_module_manifest, Home.script());
@@ -304,7 +304,7 @@ TwinStar.Script.Main.g_module_manifest = {
 		`utility/VirtualTerminalSequence`,
 		`utility/XML`,
 		`utility/ByteListView`,
-		`utility/CoreX`,
+		`utility/KernelX`,
 		`utility/Shell`,
 		`utility/ThreadManager`,
 		`utility/ProcessHelper`,

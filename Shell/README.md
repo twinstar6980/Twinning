@@ -2,13 +2,13 @@
 
 外壳，提供命令行界面。
 
-本项目是跨平台的 `C++` 项目，依赖 `Core` 的实现。
+本项目是跨平台的 `C++` 项目，依赖 `Kernel` 的实现。
 
 ## 项目开发
 
 * 要求
 	
-	* [xmake 2.7.9](https://xmake.io/#/)
+	* [xmake 2.8.1](https://xmake.io/#/)
 	
 	* [MSVC 19.36 with MSVC-STL and Windows-SDK for Windows](https://visualstudio.microsoft.com/downloads/)
 	
@@ -46,18 +46,18 @@
 
 * 命令行参数
 	
-	`<core> <script> <argument>...`
+	`<kernel> <script> <argument>...`
 	
-	* `<core>`
+	* `<kernel>`
 		
-		第一参数为核心文件路径。
+		第一参数为内核文件路径。
 	
 	* `<script>`
 		
-		第二参数是传给核心处理逻辑的脚本文件路径。也可以 `$` 为首字符标识，指示字符串的余下内容作为 JS 脚本。
+		第二参数是传给内核处理逻辑的脚本文件路径。也可以 `$` 为首字符标识，指示字符串的余下内容作为 JS 脚本。
 	
 	* `<argument>...`
 		
-		剩余参数作为传给核心处理逻辑的参数。
+		剩余参数作为传给内核处理逻辑的参数。
 	
 	若执行过程无错误发生，则 main 函数返回值为 0 ，否则为 1 。

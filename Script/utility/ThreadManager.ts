@@ -5,8 +5,8 @@ namespace TwinStar.Script {
 	export class ThreadManager {
 
 		private m_pool: Array<{
-			thread: Core.Miscellaneous.Thread;
-			context: Core.Miscellaneous.Context;
+			thread: Kernel.Miscellaneous.Thread;
+			context: Kernel.Miscellaneous.Context;
 			result: [boolean, any];
 		}>;
 
@@ -18,7 +18,7 @@ namespace TwinStar.Script {
 		) {
 			return () => {
 				let item = this.m_pool[index];
-				item.context.query_byte_stream_use_big_endian().value = Core.Miscellaneous.g_context.query_byte_stream_use_big_endian().value;
+				item.context.query_byte_stream_use_big_endian().value = Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value;
 				item.result = [false, undefined];
 				try {
 					let result = executor();
@@ -70,7 +70,7 @@ namespace TwinStar.Script {
 		wait(
 		): void {
 			while (!this.m_pool.every((e, i) => (this.idle(i)))) {
-				Core.Miscellaneous.Thread.yield();
+				Kernel.Miscellaneous.Thread.yield();
 			}
 			return;
 		}
@@ -82,8 +82,8 @@ namespace TwinStar.Script {
 			this.m_pool = new Array(size);
 			for (let index = 0; index < size; ++index) {
 				this.m_pool[index] = {
-					thread: Core.Miscellaneous.Thread.default(),
-					context: Core.Miscellaneous.g_context.spawn(),
+					thread: Kernel.Miscellaneous.Thread.default(),
+					context: Kernel.Miscellaneous.g_context.spawn(),
 					result: [false, undefined],
 				};
 				if (initializer !== null) {
@@ -105,7 +105,7 @@ namespace TwinStar.Script {
 				index = this.m_pool.findIndex((e, i) => (this.idle(i)));
 				if (index === -1) {
 					index = null;
-					Core.Miscellaneous.Thread.yield();
+					Kernel.Miscellaneous.Thread.yield();
 				}
 			}
 			this.execute(index, executor);

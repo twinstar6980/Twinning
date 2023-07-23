@@ -7,14 +7,14 @@ import 'package:flutter/widgets.dart';
 
 class Command {
 
-  String       core;
+  String       kernel;
   String       script;
   List<String> argument;
 
   // ----------------
 
   Command(
-    this.core,
+    this.kernel,
     this.script,
     this.argument,
   );

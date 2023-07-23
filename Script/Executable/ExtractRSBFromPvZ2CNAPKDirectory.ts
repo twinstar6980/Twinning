@@ -15,7 +15,7 @@ namespace TwinStar.Script.Executable.ExtractRSBFromPvZ2CNAPKDirectory {
 		Entry.simple_batch_execute(input_directory, ['file', /.+\.rsb\.smf$/i], (item) => {
 			let input_file = `${input_directory}/${item}`;
 			let output_file = `${output_directory}/${item.slice(0, -4)}`;
-			CoreX.Tool.PopCap.ZLib.uncompress_fs(input_file, output_file, 15n, { variant_64: false });
+			KernelX.Tool.PopCap.ZLib.uncompress_fs(input_file, output_file, 15n, { variant_64: false });
 		});
 		Console.success(los('executable.extract_rsb_from_pvz2_cn_apk_directory:extract_finish'), [
 		]);

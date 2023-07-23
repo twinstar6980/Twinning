@@ -16,7 +16,7 @@ class Setting {
   Color        mThemeColorLight;
   Color        mThemeColorDark;
   Boolean      mUseLargerFontInConsole;
-  String       mCore;
+  String       mKernel;
   String       mScript;
   List<String> mArgument;
   Boolean      mBehaviorAfterCommandSucceed;
@@ -30,7 +30,7 @@ class Setting {
     this.mThemeColorLight,
     this.mThemeColorDark,
     this.mUseLargerFontInConsole,
-    this.mCore,
+    this.mKernel,
     this.mScript,
     this.mArgument,
     this.mBehaviorAfterCommandSucceed,
@@ -64,7 +64,7 @@ class Setting {
     data.mThemeColorLight = Color(json['theme_color_light'] as Integer);
     data.mThemeColorDark = Color(json['theme_color_dark'] as Integer);
     data.mUseLargerFontInConsole = json['use_larger_font_in_console'] as Boolean;
-    data.mCore = json['core'] as String;
+    data.mKernel = json['kernel'] as String;
     data.mScript = json['script'] as String;
     data.mArgument = (json['argument'] as List<dynamic>).map((e) => e as String).toList();
     data.mBehaviorAfterCommandSucceed = json['behavior_after_command_succeed'] as Boolean;
@@ -83,7 +83,7 @@ class Setting {
     json['theme_color_light'] = data.mThemeColorLight.value;
     json['theme_color_dark'] = data.mThemeColorDark.value;
     json['use_larger_font_in_console'] = data.mUseLargerFontInConsole;
-    json['core'] = data.mCore;
+    json['kernel'] = data.mKernel;
     json['script'] = data.mScript;
     json['argument'] = data.mArgument;
     json['behavior_after_command_succeed'] = data.mBehaviorAfterCommandSucceed;

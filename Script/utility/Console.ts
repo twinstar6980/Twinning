@@ -263,7 +263,7 @@ namespace TwinStar.Script.Console {
 			cli_set_message_text_attribute('t');
 			if (Shell.is_windows) {
 				cli_basic_output(`${leading} ${los('console:press_to_continue')} `, true, 0, false);
-				CoreX.Process.system_command(`pause > NUL`);
+				KernelX.Process.system_command(`pause > NUL`);
 				Shell.cli_output('\n');
 			}
 			if (Shell.is_linux || Shell.is_macintosh || Shell.is_android || Shell.is_iphone) {
@@ -663,7 +663,7 @@ namespace TwinStar.Script.Console {
 				result = null;
 			}
 			if (rule[0] === 'in') {
-				if (!CoreX.FileSystem.exist(value)) {
+				if (!KernelX.FileSystem.exist(value)) {
 					result = los('console:path_not_exist');
 				} else {
 					switch (type) {
@@ -672,18 +672,18 @@ namespace TwinStar.Script.Console {
 							break;
 						}
 						case 'file': {
-							result = CoreX.FileSystem.exist_file(value) ? null : los('console:path_is_exist_not_file');
+							result = KernelX.FileSystem.exist_file(value) ? null : los('console:path_is_exist_not_file');
 							break;
 						}
 						case 'directory': {
-							result = CoreX.FileSystem.exist_directory(value) ? null : los('console:path_is_exist_not_directory');
+							result = KernelX.FileSystem.exist_directory(value) ? null : los('console:path_is_exist_not_directory');
 							break;
 						}
 					}
 				}
 			}
 			if (rule[0] === 'out') {
-				if (!CoreX.FileSystem.exist(value)) {
+				if (!KernelX.FileSystem.exist(value)) {
 					result = null;
 				} else {
 					switch (state_data.tactic_if_out_exist) {
@@ -698,7 +698,7 @@ namespace TwinStar.Script.Console {
 							break;
 						}
 						case 'delete': {
-							CoreX.FileSystem.remove(value);
+							KernelX.FileSystem.remove(value);
 							warning(los('console:path_is_exist_but_delete'), []);
 							result = null;
 							break;

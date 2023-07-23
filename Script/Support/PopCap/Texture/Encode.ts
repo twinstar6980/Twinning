@@ -68,7 +68,7 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 
 	// ------------------------------------------------
 
-	const k_basic_format: Record<BasicFormat, Array<CoreX.Tool.Texture.Encoding.CompositeFormat>> = {
+	const k_basic_format: Record<BasicFormat, Array<KernelX.Tool.Texture.Encoding.CompositeFormat>> = {
 		a_8: [
 			'a_8',
 		],
@@ -150,7 +150,7 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 
 	type EncodeOption = {
 		rgb_etc1_a_palette: null | {
-			palette: CoreX.Image.ColorList;
+			palette: KernelX.Image.ColorList;
 		};
 	};
 
@@ -177,9 +177,9 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 	// ------------------------------------------------
 
 	export function compute_padded_image_size(
-		origin_size: CoreX.Image.ImageSize,
+		origin_size: KernelX.Image.ImageSize,
 		format: Format,
-	): CoreX.Image.ImageSize {
+	): KernelX.Image.ImageSize {
 		let compute = (t: bigint) => {
 			let r = 0b1n << 1n;
 			while (r < t) {
@@ -187,7 +187,7 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 			}
 			return r;
 		};
-		let padded_size: CoreX.Image.ImageSize;
+		let padded_size: KernelX.Image.ImageSize;
 		if (format.includes('etc1')) {
 			padded_size = [compute(origin_size[0]), compute(origin_size[1])];
 		} else if (format.includes('pvrtc')) {
@@ -202,21 +202,21 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 	}
 
 	export function compute_data_size(
-		size: CoreX.Image.ImageSize,
+		size: KernelX.Image.ImageSize,
 		format: Format,
 		option: EncodeOption,
 	): bigint {
 		let data_size = 0n;
 		if (BasicFormatE.includes(format as BasicFormat)) {
-			data_size = CoreX.Tool.Texture.Encoding.compute_data_size_n(size, k_basic_format[format as BasicFormat]);
+			data_size = KernelX.Tool.Texture.Encoding.compute_data_size_n(size, k_basic_format[format as BasicFormat]);
 		} else {
 			if (format.endsWith('_tiled')) {
-				data_size = CoreX.Tool.Texture.Encoding.compute_data_size_n(size, k_basic_format[format.slice(0, -6) as BasicFormat]);
+				data_size = KernelX.Tool.Texture.Encoding.compute_data_size_n(size, k_basic_format[format.slice(0, -6) as BasicFormat]);
 			} else {
 				switch (format) {
 					case 'rgb_etc1_a_palette': {
 						assert_test(option.rgb_etc1_a_palette !== null, `option is null`);
-						data_size = CoreX.Tool.Texture.Encoding.compute_data_size(size, 'rgb_etc1') + CoreX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.compute_data_size_with_palette(size, option.rgb_etc1_a_palette.palette.length);
+						data_size = KernelX.Tool.Texture.Encoding.compute_data_size(size, 'rgb_etc1') + KernelX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.compute_data_size_with_palette(size, option.rgb_etc1_a_palette.palette.length);
 						break;
 					}
 				}
@@ -226,22 +226,22 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 	}
 
 	export function encode(
-		image: Core.Image.CImageView,
-		data: Core.OByteStreamView,
+		image: Kernel.Image.CImageView,
+		data: Kernel.OByteStreamView,
 		format: Format,
 		option: EncodeOption,
 	): void {
 		if (BasicFormatE.includes(format as BasicFormat)) {
-			CoreX.Tool.Texture.Encoding.encode_n(data, image, k_basic_format[format as BasicFormat]);
+			KernelX.Tool.Texture.Encoding.encode_n(data, image, k_basic_format[format as BasicFormat]);
 		} else {
 			if (format.endsWith('_tiled')) {
-				CoreX.Tool.Miscellaneous.XboxTiledTexture.encode(data, image, k_basic_format[format.slice(0, -6) as BasicFormat][0] as typeof Core.Tool.Texture.Encoding.Format.Value);
+				KernelX.Tool.Miscellaneous.XboxTiledTexture.encode(data, image, k_basic_format[format.slice(0, -6) as BasicFormat][0] as typeof Kernel.Tool.Texture.Encoding.Format.Value);
 			} else {
 				switch (format) {
 					case 'rgb_etc1_a_palette': {
 						assert_test(option.rgb_etc1_a_palette !== null, `option is null`);
-						CoreX.Tool.Texture.Encoding.encode(data, image, 'rgb_etc1');
-						CoreX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.encode_with_palette(data, image, option.rgb_etc1_a_palette.palette);
+						KernelX.Tool.Texture.Encoding.encode(data, image, 'rgb_etc1');
+						KernelX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.encode_with_palette(data, image, option.rgb_etc1_a_palette.palette);
 						break;
 					}
 				}
@@ -251,23 +251,23 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 	}
 
 	export function decode(
-		data: Core.IByteStreamView,
-		image: Core.Image.VImageView,
+		data: Kernel.IByteStreamView,
+		image: Kernel.Image.VImageView,
 		format: Format,
 	): void {
 		if (is_opacity_format(format)) {
-			image.fill(Core.Image.Pixel.value([0xFFn, 0xFFn, 0xFFn, 0xFFn]));
+			image.fill(Kernel.Image.Pixel.value([0xFFn, 0xFFn, 0xFFn, 0xFFn]));
 		}
 		if (BasicFormatE.includes(format as BasicFormat)) {
-			CoreX.Tool.Texture.Encoding.decode_n(data, image, k_basic_format[format as BasicFormat]);
+			KernelX.Tool.Texture.Encoding.decode_n(data, image, k_basic_format[format as BasicFormat]);
 		} else {
 			if (format.endsWith('_tiled')) {
-				CoreX.Tool.Miscellaneous.XboxTiledTexture.decode(data, image, k_basic_format[format.slice(0, -6) as BasicFormat][0] as typeof Core.Tool.Texture.Encoding.Format.Value);
+				KernelX.Tool.Miscellaneous.XboxTiledTexture.decode(data, image, k_basic_format[format.slice(0, -6) as BasicFormat][0] as typeof Kernel.Tool.Texture.Encoding.Format.Value);
 			} else {
 				switch (format) {
 					case 'rgb_etc1_a_palette': {
-						CoreX.Tool.Texture.Encoding.decode(data, image, 'rgb_etc1');
-						CoreX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.decode_with_palette(data, image);
+						KernelX.Tool.Texture.Encoding.decode(data, image, 'rgb_etc1');
+						KernelX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.decode_with_palette(data, image);
 						break;
 					}
 				}
@@ -283,42 +283,42 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encode {
 		data_file: string,
 		format: Format,
 	): void {
-		let image_data = CoreX.FileSystem.read_file(image_file);
-		let image_stream = Core.ByteStreamView.watch(image_data.view());
-		let image_size = CoreX.Image.File.PNG.size(image_stream.view());
+		let image_data = KernelX.FileSystem.read_file(image_file);
+		let image_stream = Kernel.ByteStreamView.watch(image_data.view());
+		let image_size = KernelX.Image.File.PNG.size(image_stream.view());
 		let padded_image_size = compute_padded_image_size(image_size, format);
-		let image = Core.Image.Image.allocate(Core.Image.ImageSize.value(padded_image_size));
+		let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(padded_image_size));
 		let image_view = image.view();
-		CoreX.Image.File.PNG.read(image_stream, image_view.sub(Core.Image.ImagePosition.value([0n, 0n]), Core.Image.ImageSize.value(image_size)));
+		KernelX.Image.File.PNG.read(image_stream, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
 		let option: EncodeOption = {
 			rgb_etc1_a_palette: null,
 		};
 		if (format === 'rgb_etc1_a_palette') {
 			option.rgb_etc1_a_palette = {
-				palette: CoreX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.evaluate_palette(image_view),
+				palette: KernelX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.evaluate_palette(image_view),
 			};
 		}
 		let data_size = compute_data_size(padded_image_size, format, option);
-		let data = Core.ByteArray.allocate(Core.Size.value(data_size));
-		let stream = Core.ByteStreamView.watch(data.view());
+		let data = Kernel.ByteArray.allocate(Kernel.Size.value(data_size));
+		let stream = Kernel.ByteStreamView.watch(data.view());
 		encode(image_view, stream, format, option);
-		CoreX.FileSystem.write_file(data_file, stream.stream_view());
+		KernelX.FileSystem.write_file(data_file, stream.stream_view());
 		return;
 	}
 
 	export function decode_fs(
 		data_file: string,
 		image_file: string,
-		image_size: CoreX.Image.ImageSize,
+		image_size: KernelX.Image.ImageSize,
 		format: Format,
 	): void {
-		let data = CoreX.FileSystem.read_file(data_file);
-		let stream = Core.ByteStreamView.watch(data.view());
+		let data = KernelX.FileSystem.read_file(data_file);
+		let stream = Kernel.ByteStreamView.watch(data.view());
 		let padded_image_size = compute_padded_image_size(image_size, format);
-		let image = Core.Image.Image.allocate(Core.Image.ImageSize.value(padded_image_size));
+		let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(padded_image_size));
 		let image_view = image.view();
 		decode(stream, image_view, format);
-		CoreX.Image.File.PNG.write_fs(image_file, image_view.sub(Core.Image.ImagePosition.value([0n, 0n]), Core.Image.ImageSize.value(image_size)));
+		KernelX.Image.File.PNG.write_fs(image_file, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
 		return;
 	}
 

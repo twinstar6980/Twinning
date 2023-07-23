@@ -33,11 +33,11 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash {
 
 	export type FlashPackage = {
 		extra: ExtraInformation;
-		document: Core.XML.JS_Element;
+		document: Kernel.XML.JS_Element;
 		library: {
-			image: Array<Core.XML.JS_Element>;
-			sprite: Array<Core.XML.JS_Element>;
-			main_sprite: Core.XML.JS_Element;
+			image: Array<Kernel.XML.JS_Element>;
+			sprite: Array<Kernel.XML.JS_Element>;
+			main_sprite: Kernel.XML.JS_Element;
 		};
 	};
 
@@ -45,27 +45,27 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash {
 		directory: string,
 		data: FlashPackage,
 	): void {
-		CoreX.JSON.write_fs_js(`${directory}/extra.json`, data.extra);
-		CoreX.XML.write_fs_js(`${directory}/DOMDocument.xml`, XML.wrap_element(data.document));
+		KernelX.JSON.write_fs_js(`${directory}/extra.json`, data.extra);
+		KernelX.XML.write_fs_js(`${directory}/DOMDocument.xml`, XML.wrap_element(data.document));
 		data.library.image.forEach((e, i) => {
-			CoreX.XML.write_fs_js(`${directory}/LIBRARY/image/image_${i + 1}.xml`, XML.wrap_element(e));
+			KernelX.XML.write_fs_js(`${directory}/LIBRARY/image/image_${i + 1}.xml`, XML.wrap_element(e));
 		});
 		data.library.sprite.forEach((e, i) => {
-			CoreX.XML.write_fs_js(`${directory}/LIBRARY/sprite/sprite_${i + 1}.xml`, XML.wrap_element(e));
+			KernelX.XML.write_fs_js(`${directory}/LIBRARY/sprite/sprite_${i + 1}.xml`, XML.wrap_element(e));
 		});
-		CoreX.XML.write_fs_js(`${directory}/LIBRARY/main_sprite.xml`, XML.wrap_element(data.library.main_sprite));
+		KernelX.XML.write_fs_js(`${directory}/LIBRARY/main_sprite.xml`, XML.wrap_element(data.library.main_sprite));
 		return;
 	}
 
 	export function load_flash_package(
 		directory: string,
 	): FlashPackage {
-		let extra = CoreX.JSON.read_fs_js<ExtraInformation>(`${directory}/extra.json`);
-		let document = CoreX.XML.read_fs_js(`${directory}/DOMDocument.xml`).value as Core.XML.JS_Element;
+		let extra = KernelX.JSON.read_fs_js<ExtraInformation>(`${directory}/extra.json`);
+		let document = KernelX.XML.read_fs_js(`${directory}/DOMDocument.xml`).value as Kernel.XML.JS_Element;
 		let library = {
-			image: extra.image.map((e, i) => (CoreX.XML.read_fs_js(`${directory}/LIBRARY/image/image_${i + 1}.xml`).value as Core.XML.JS_Element)),
-			sprite: extra.sprite.map((e, i) => (CoreX.XML.read_fs_js(`${directory}/LIBRARY/sprite/sprite_${i + 1}.xml`).value as Core.XML.JS_Element)),
-			main_sprite: CoreX.XML.read_fs_js(`${directory}/LIBRARY/main_sprite.xml`).value as Core.XML.JS_Element,
+			image: extra.image.map((e, i) => (KernelX.XML.read_fs_js(`${directory}/LIBRARY/image/image_${i + 1}.xml`).value as Kernel.XML.JS_Element)),
+			sprite: extra.sprite.map((e, i) => (KernelX.XML.read_fs_js(`${directory}/LIBRARY/sprite/sprite_${i + 1}.xml`).value as Kernel.XML.JS_Element)),
+			main_sprite: KernelX.XML.read_fs_js(`${directory}/LIBRARY/main_sprite.xml`).value as Kernel.XML.JS_Element,
 		};
 		return {
 			extra,
@@ -79,7 +79,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash {
 	export function create_xfl_content_file(
 		directory: string,
 	): void {
-		CoreX.FileSystem.write_file(`${directory}/main.xfl`, Core.Miscellaneous.cast_moveable_String_to_ByteArray(Core.String.value(k_xfl_content)));
+		KernelX.FileSystem.write_file(`${directory}/main.xfl`, Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(k_xfl_content)));
 		return;
 	}
 

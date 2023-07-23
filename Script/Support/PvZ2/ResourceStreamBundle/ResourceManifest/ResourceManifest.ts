@@ -62,7 +62,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceManifest {
 	export type Subgroup = {
 		category: SubgroupCategory;
 		resource: Record<string, Resource>;
-		//resource_data_sectionn_store_mode: Core.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.ResourceDataSectionStoreMode;
+		//resource_data_sectionn_store_mode: Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.ResourceDataSectionStoreMode;
 	};
 
 	// ------------------------------------------------

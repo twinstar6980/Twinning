@@ -48,19 +48,19 @@ namespace TwinStar.Script.Entry.method.json {
 							Executor.query_argument_name(this.id, 'disable_trailing_comma'),
 							a.disable_trailing_comma,
 							(value) => (value),
-							() => (CoreX.JSON.g_format.disable_trailing_comma),
+							() => (KernelX.JSON.g_format.disable_trailing_comma),
 							(initial) => (Console.confirmation(null, null, initial)),
 						);
 						disable_array_wrap_line = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'disable_array_wrap_line'),
 							a.disable_array_wrap_line,
 							(value) => (value),
-							() => (CoreX.JSON.g_format.disable_array_wrap_line),
+							() => (KernelX.JSON.g_format.disable_array_wrap_line),
 							(initial) => (Console.confirmation(null, null, initial)),
 						);
 					}
-					let json = CoreX.JSON.read_fs(source_file);
-					CoreX.JSON.write_fs(destination_file, json, disable_trailing_comma, disable_array_wrap_line);
+					let json = KernelX.JSON.read_fs(source_file);
+					KernelX.JSON.write_fs(destination_file, json, disable_trailing_comma, disable_array_wrap_line);
 					return [`${destination_file}`];
 				},
 				default_argument: {
@@ -110,14 +110,14 @@ namespace TwinStar.Script.Entry.method.json {
 							Executor.query_argument_name(this.id, 'disable_trailing_comma'),
 							a.disable_trailing_comma,
 							(value) => (value),
-							() => (CoreX.JSON.g_format.disable_trailing_comma),
+							() => (KernelX.JSON.g_format.disable_trailing_comma),
 							(initial) => (Console.confirmation(null, null, initial)),
 						);
 						disable_array_wrap_line = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'disable_array_wrap_line'),
 							a.disable_array_wrap_line,
 							(value) => (value),
-							() => (CoreX.JSON.g_format.disable_array_wrap_line),
+							() => (KernelX.JSON.g_format.disable_array_wrap_line),
 							(initial) => (Console.confirmation(null, null, initial)),
 						);
 					}
@@ -127,8 +127,8 @@ namespace TwinStar.Script.Entry.method.json {
 						(item) => {
 							let source_file = `${source_file_directory}/${item}`;
 							let destination_file = `${destination_file_directory}/${item}`;
-							let json = CoreX.JSON.read_fs(source_file);
-							CoreX.JSON.write_fs(destination_file, json, disable_trailing_comma, disable_array_wrap_line);
+							let json = KernelX.JSON.read_fs(source_file);
+							KernelX.JSON.write_fs(destination_file, json, disable_trailing_comma, disable_array_wrap_line);
 						},
 					);
 					return [`${destination_file_directory}`];

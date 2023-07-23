@@ -92,13 +92,13 @@ namespace TwinStar.Script.Support.PvZ2.RemoteAndroidHelper {
 				Console.information(los('support.pvz2.remote_android_helper:pull'), [remote.main_package]);
 				ADBHelper.pull(local_temporary.main_package, remote.main_package);
 				Console.information(los('support.pvz2.remote_android_helper:unpack'), [local_temporary.main_package]);
-				CoreX.Tool.PopCap.ResourceStreamBundle.unpack_fs(local_temporary.main_package, `${local.main_package}/definition.json`, `${local.main_package}/description.json`, `${local.main_package}/group/{0}/{1}/resource`, `${local.main_package}/group/{0}/{1}/packet.rsg`, { number: 4n, extended_texture_information_for_pvz2_cn: 0n });
+				KernelX.Tool.PopCap.ResourceStreamBundle.unpack_fs(local_temporary.main_package, `${local.main_package}/definition.json`, `${local.main_package}/manifest.json`, `${local.main_package}/group/{0}/{1}/resource`, `${local.main_package}/group/{0}/{1}/packet.rsg`, { number: 4n, extended_texture_information_for_pvz2_cn: 0n });
 				Console.success(los('support.pvz2.remote_android_helper:finish'), [local.main_package]);
 				break;
 			}
 			case 'push_main_package': {
 				Console.information(los('support.pvz2.remote_android_helper:pack'), [local.main_package]);
-				CoreX.Tool.PopCap.ResourceStreamBundle.pack_fs(local_temporary.main_package, `${local.main_package}/definition.json`, `${local.main_package}/description.json`, `${local.main_package}/group/{0}/{1}/resource`, `${local.main_package}/group/{0}/{1}/packet.rsg`, `${local.main_package}/group/{0}/{1}/packet.rsg`, { number: 4n, extended_texture_information_for_pvz2_cn: 0n }, 1024n << 20n);
+				KernelX.Tool.PopCap.ResourceStreamBundle.pack_fs(local_temporary.main_package, `${local.main_package}/definition.json`, `${local.main_package}/manifest.json`, `${local.main_package}/group/{0}/{1}/resource`, `${local.main_package}/group/{0}/{1}/packet.rsg`, `${local.main_package}/group/{0}/{1}/packet.rsg`, { number: 4n, extended_texture_information_for_pvz2_cn: 0n }, 1024n << 20n);
 				Console.information(los('support.pvz2.remote_android_helper:push'), [local_temporary.main_package]);
 				ADBHelper.push_secure(remote.main_package, local_temporary.main_package, application);
 				Console.success(los('support.pvz2.remote_android_helper:finish'), [remote.main_package]);
@@ -108,13 +108,13 @@ namespace TwinStar.Script.Support.PvZ2.RemoteAndroidHelper {
 				Console.information(los('support.pvz2.remote_android_helper:pull'), [remote.local_profile]);
 				ADBHelper.pull(local_temporary.local_profile, remote.local_profile);
 				Console.information(los('support.pvz2.remote_android_helper:decode'), [local_temporary.local_profile]);
-				CoreX.Tool.PopCap.ReflectionObjectNotation.decode_fs(local_temporary.local_profile, local.local_profile, { number: 1n, native_string_encoding_use_utf8: true });
+				KernelX.Tool.PopCap.ReflectionObjectNotation.decode_fs(local_temporary.local_profile, local.local_profile, { number: 1n, native_string_encoding_use_utf8: true });
 				Console.success(los('support.pvz2.remote_android_helper:finish'), [local.local_profile]);
 				break;
 			}
 			case 'push_local_profile': {
 				Console.information(los('support.pvz2.remote_android_helper:encode'), [local.local_profile]);
-				CoreX.Tool.PopCap.ReflectionObjectNotation.encode_fs(local_temporary.local_profile, local.local_profile, true, true, { number: 1n, native_string_encoding_use_utf8: true }, 1n << 20n);
+				KernelX.Tool.PopCap.ReflectionObjectNotation.encode_fs(local_temporary.local_profile, local.local_profile, true, true, { number: 1n, native_string_encoding_use_utf8: true }, 1n << 20n);
 				Console.information(los('support.pvz2.remote_android_helper:push'), [local_temporary.local_profile]);
 				ADBHelper.push_secure(remote.local_profile, local_temporary.local_profile, application);
 				Console.success(los('support.pvz2.remote_android_helper:finish'), [remote.local_profile]);
@@ -124,13 +124,13 @@ namespace TwinStar.Script.Support.PvZ2.RemoteAndroidHelper {
 				Console.information(los('support.pvz2.remote_android_helper:pull'), [remote.player_profile]);
 				ADBHelper.pull(local_temporary.player_profile, remote.player_profile);
 				Console.information(los('support.pvz2.remote_android_helper:decode'), [local_temporary.player_profile]);
-				CoreX.Tool.PopCap.ReflectionObjectNotation.decode_fs(local_temporary.player_profile, local.player_profile, { number: 1n, native_string_encoding_use_utf8: true });
+				KernelX.Tool.PopCap.ReflectionObjectNotation.decode_fs(local_temporary.player_profile, local.player_profile, { number: 1n, native_string_encoding_use_utf8: true });
 				Console.success(los('support.pvz2.remote_android_helper:finish'), [local.player_profile]);
 				break;
 			}
 			case 'push_player_profile': {
 				Console.information(los('support.pvz2.remote_android_helper:encode'), [local.player_profile]);
-				CoreX.Tool.PopCap.ReflectionObjectNotation.encode_fs(local_temporary.player_profile, local.player_profile, true, true, { number: 1n, native_string_encoding_use_utf8: true }, 1n << 20n);
+				KernelX.Tool.PopCap.ReflectionObjectNotation.encode_fs(local_temporary.player_profile, local.player_profile, true, true, { number: 1n, native_string_encoding_use_utf8: true }, 1n << 20n);
 				Console.information(los('support.pvz2.remote_android_helper:push'), [local_temporary.player_profile]);
 				ADBHelper.push_secure(remote.player_profile, local_temporary.player_profile, application);
 				Console.success(los('support.pvz2.remote_android_helper:finish'), [remote.player_profile]);
@@ -140,29 +140,29 @@ namespace TwinStar.Script.Support.PvZ2.RemoteAndroidHelper {
 				Console.information(los('support.pvz2.remote_android_helper:pull'), [remote.content_delivery]);
 				ADBHelper.pull(local_temporary.content_delivery, remote.content_delivery);
 				Console.information(los('support.pvz2.remote_android_helper:decode'), [local_temporary.content_delivery]);
-				let sub_directory_list = CoreX.FileSystem.list_directory(local_temporary.content_delivery, 1n);
-				let sub_file_list = CoreX.FileSystem.list_file(local_temporary.content_delivery, 1n);
+				let sub_directory_list = KernelX.FileSystem.list_directory(local_temporary.content_delivery, 1n);
+				let sub_file_list = KernelX.FileSystem.list_file(local_temporary.content_delivery, 1n);
 				for (let sub_file of sub_file_list) {
 					let json_name = sub_file.replace(/\.rton$/i, '.json');
-					CoreX.Tool.PopCap.ReflectionObjectNotation.decode_fs(`${local_temporary.content_delivery}/${sub_file}`, `${local.content_delivery}/${json_name}`, { number: 1n, native_string_encoding_use_utf8: true });
+					KernelX.Tool.PopCap.ReflectionObjectNotation.decode_fs(`${local_temporary.content_delivery}/${sub_file}`, `${local.content_delivery}/${json_name}`, { number: 1n, native_string_encoding_use_utf8: true });
 				}
 				for (let sub_directory of sub_directory_list) {
-					CoreX.FileSystem.copy(`${local_temporary.content_delivery}/${sub_directory}`, `${local.content_delivery}/${sub_directory}`);
+					KernelX.FileSystem.copy(`${local_temporary.content_delivery}/${sub_directory}`, `${local.content_delivery}/${sub_directory}`);
 				}
 				Console.success(los('support.pvz2.remote_android_helper:finish'), [local.content_delivery]);
 				break;
 			}
 			case 'push_content_delivery': {
 				Console.information(los('support.pvz2.remote_android_helper:encode'), [local.content_delivery]);
-				let buffer = Core.ByteArray.allocate(Core.Size.value(16n << 20n));
-				let sub_directory_list = CoreX.FileSystem.list_directory(local.content_delivery, 1n);
-				let sub_file_list = CoreX.FileSystem.list_file(local.content_delivery, 1n);
+				let buffer = Kernel.ByteArray.allocate(Kernel.Size.value(16n << 20n));
+				let sub_directory_list = KernelX.FileSystem.list_directory(local.content_delivery, 1n);
+				let sub_file_list = KernelX.FileSystem.list_file(local.content_delivery, 1n);
 				for (let sub_file of sub_file_list) {
 					let rton_name = sub_file.replace(/(?<!(cdn_config|forceupdateconfig))\.json$/i, '.rton');
-					CoreX.Tool.PopCap.ReflectionObjectNotation.encode_fs(`${local_temporary.content_delivery}/${rton_name}`, `${local.content_delivery}/${sub_file}`, true, true, { number: 1n, native_string_encoding_use_utf8: true }, buffer.view());
+					KernelX.Tool.PopCap.ReflectionObjectNotation.encode_fs(`${local_temporary.content_delivery}/${rton_name}`, `${local.content_delivery}/${sub_file}`, true, true, { number: 1n, native_string_encoding_use_utf8: true }, buffer.view());
 				}
 				for (let sub_directory of sub_directory_list) {
-					CoreX.FileSystem.copy(`${local.content_delivery}/${sub_directory}`, `${local_temporary.content_delivery}/${sub_directory}`);
+					KernelX.FileSystem.copy(`${local.content_delivery}/${sub_directory}`, `${local_temporary.content_delivery}/${sub_directory}`);
 				}
 				Console.information(los('support.pvz2.remote_android_helper:push'), [local_temporary.content_delivery]);
 				ADBHelper.push_secure(remote.content_delivery, local_temporary.content_delivery, application);

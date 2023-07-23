@@ -25,7 +25,7 @@ namespace TwinStar.Script.Support.PvZ2.TextTable {
 		let source_list: Array<string> | null = null;
 		if (source_version === null) {
 			try {
-				let source = CoreX.JSON.read(source_data).value as any;
+				let source = KernelX.JSON.read(source_data).value as any;
 				let source_variant = source?.objects[0]?.objdata?.LocStringValues;
 				assert_test(typeof source_variant === 'object', `invalid source`);
 				if (source_variant instanceof Array) {
@@ -43,7 +43,7 @@ namespace TwinStar.Script.Support.PvZ2.TextTable {
 		}
 		switch (actual_source_version) {
 			case 'text': {
-				let source_text = Core.Miscellaneous.cast_CharacterListView_to_JS_String(Core.Miscellaneous.cast_ByteListView_to_CharacterListView(Core.ByteListView.value(source_data)));
+				let source_text = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(Kernel.ByteListView.value(source_data)));
 				let key_regexp = /^\[.+\]$/gm;
 				let value_regexp = /(.|[\n\r])*?(?=[\n\r]*?(\[|$))/gy;
 				let key_match: RegExpExecArray | null;
@@ -58,7 +58,7 @@ namespace TwinStar.Script.Support.PvZ2.TextTable {
 			}
 			case 'json_map': {
 				if (source_map === null) {
-					let source = CoreX.JSON.read(source_data).value as any;
+					let source = KernelX.JSON.read(source_data).value as any;
 					source_map = source?.objects[0]?.objdata?.LocStringValues as Record<string, string>;
 					assert_test(typeof source_map === 'object' && (source_map as Object).constructor.name === 'Object', `invalid source`);
 				}
@@ -70,7 +70,7 @@ namespace TwinStar.Script.Support.PvZ2.TextTable {
 			}
 			case 'json_list': {
 				if (source_list === null) {
-					let source = CoreX.JSON.read(source_data).value as any;
+					let source = KernelX.JSON.read(source_data).value as any;
 					source_list = source?.objects[0]?.objdata?.LocStringValues as Array<string>;
 					assert_test(typeof source_list === 'object' && (source_map as Object).constructor.name === 'Array', `invalid source`);
 				}
@@ -91,7 +91,7 @@ namespace TwinStar.Script.Support.PvZ2.TextTable {
 				for (let key in string_map) {
 					destination_text.push(`[${key}]\n${string_map[key]}\n`);
 				}
-				destination_data = Core.Miscellaneous.cast_moveable_String_to_ByteArray(Core.String.value(destination_text.join('\n'))).release();
+				destination_data = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(destination_text.join('\n'))).release();
 				break;
 			}
 			case 'json_map': {
@@ -109,7 +109,7 @@ namespace TwinStar.Script.Support.PvZ2.TextTable {
 						}
 					]
 				};
-				destination_data = Core.ByteArray.value(CoreX.JSON.write_js(destination)).release();
+				destination_data = Kernel.ByteArray.value(KernelX.JSON.write_js(destination)).release();
 				break;
 			}
 			case 'json_list': {
@@ -134,7 +134,7 @@ namespace TwinStar.Script.Support.PvZ2.TextTable {
 						}
 					]
 				};
-				destination_data = Core.ByteArray.value(CoreX.JSON.write_js(destination)).release();
+				destination_data = Kernel.ByteArray.value(KernelX.JSON.write_js(destination)).release();
 				break;
 			}
 		}
@@ -149,9 +149,9 @@ namespace TwinStar.Script.Support.PvZ2.TextTable {
 		source_version: Version | null,
 		destination_version: Version,
 	): void {
-		let source_data = CoreX.FileSystem.read_file(source_file);
+		let source_data = KernelX.FileSystem.read_file(source_file);
 		let destination_data = convert(source_data.value, source_version, destination_version);
-		CoreX.FileSystem.write_file(destination_file, destination_data);
+		KernelX.FileSystem.write_file(destination_file, destination_data);
 		return;
 	}
 

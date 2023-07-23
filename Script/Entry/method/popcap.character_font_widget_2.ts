@@ -50,7 +50,7 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 							(initial) => (Console.size(null, null, initial)),
 						);
 					}
-					CoreX.Tool.PopCap.CharacterFontWidget2.encode_fs(data_file, definition_file, {}, buffer_size);
+					KernelX.Tool.PopCap.CharacterFontWidget2.encode_fs(data_file, definition_file, {}, buffer_size);
 					return [`${data_file}`];
 				},
 				default_argument: {
@@ -90,7 +90,7 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 							(initial) => (Console.path('file', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
-					CoreX.Tool.PopCap.CharacterFontWidget2.decode_fs(data_file, definition_file, {});
+					KernelX.Tool.PopCap.CharacterFontWidget2.decode_fs(data_file, definition_file, {});
 					return [`${definition_file}`];
 				},
 				default_argument: {
@@ -140,14 +140,14 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 							(initial) => (Console.size(null, null, initial)),
 						);
 					}
-					let data_buffer = Core.ByteArray.allocate(Core.Size.value(buffer_size));
+					let data_buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					simple_batch_execute(
 						definition_file_directory,
 						['file', /.+(\.cfw2)(\.json)$/i],
 						(item) => {
 							let definition_file = `${definition_file_directory}/${item}`;
 							let data_file = `${data_file_directory}/${item.slice(0, -5)}`;
-							CoreX.Tool.PopCap.CharacterFontWidget2.encode_fs(data_file, definition_file, {}, data_buffer.view());
+							KernelX.Tool.PopCap.CharacterFontWidget2.encode_fs(data_file, definition_file, {}, data_buffer.view());
 						},
 					);
 					return [`${data_file_directory}`];
@@ -195,7 +195,7 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 						(item) => {
 							let data_file = `${data_file_directory}/${item}`;
 							let definition_file = `${definition_file_directory}/${item}.json`;
-							CoreX.Tool.PopCap.CharacterFontWidget2.decode_fs(data_file, definition_file, {});
+							KernelX.Tool.PopCap.CharacterFontWidget2.decode_fs(data_file, definition_file, {});
 						},
 					);
 					return [`${definition_file_directory}`];

@@ -16,16 +16,16 @@ target('shell', function()
 		'./utility/interaction.hpp',
 		'./utility/miscellaneous.hpp',
 		'./utility/system/windows.hpp',
-		'./core/interface.hpp',
-		'./core/symbol.hpp',
-		'./core/converter.hpp',
-		'./core/library.hpp',
-		'./core/invoker.hpp',
-		'./core/static_library.hpp',
-		'./core/dynamic_library.hpp',
-		'./host/host.hpp',
-		'./host/launcher.hpp',
-		'./host/cli_host.hpp',
+		'./bridge/interface.hpp',
+		'./bridge/symbol.hpp',
+		'./bridge/converter.hpp',
+		'./bridge/library.hpp',
+		'./bridge/invoker.hpp',
+		'./bridge/static_library.hpp',
+		'./bridge/dynamic_library.hpp',
+		'./bridge/host.hpp',
+		'./bridge/launcher.hpp',
+		'./bridge/cli_host.hpp',
 		{ install = false }
 	)
 	add_files(
@@ -34,7 +34,7 @@ target('shell', function()
 	)
 	add_includedirs(
 		m.root .. '',
-		m.root .. '/../Core',
+		m.root .. '/../Kernel',
 		{ private = true }
 	)
 	add_defines(

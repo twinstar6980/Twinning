@@ -54,7 +54,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Animation.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.PopCap.Animation.VersionNumberE), null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -64,7 +64,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							(initial) => (Console.size(null, null, initial)),
 						);
 					}
-					CoreX.Tool.PopCap.Animation.encode_fs(data_file, definition_file, { number: version_number as any }, buffer_size);
+					KernelX.Tool.PopCap.Animation.encode_fs(data_file, definition_file, { number: version_number as any }, buffer_size);
 					return [`${data_file}`];
 				},
 				default_argument: {
@@ -111,10 +111,10 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Animation.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.PopCap.Animation.VersionNumberE), null, null, initial)),
 						);
 					}
-					CoreX.Tool.PopCap.Animation.decode_fs(data_file, definition_file, { number: version_number as any });
+					KernelX.Tool.PopCap.Animation.decode_fs(data_file, definition_file, { number: version_number as any });
 					return [`${definition_file}`];
 				},
 				default_argument: {
@@ -154,7 +154,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							(initial) => (Console.path('directory', ['out', a.path_tactic_if_out_exist], null, null, initial)),
 						);
 					}
-					let raw = CoreX.JSON.read_fs_js<Core.Tool.PopCap.Animation.Definition.JS_N.Animation>(raw_file);
+					let raw = KernelX.JSON.read_fs_js<Kernel.Tool.PopCap.Animation.Definition.JS_N.Animation>(raw_file);
 					Support.PopCap.Animation.Convert.Flash.From.from_fsh(raw, ripe_directory);
 					Support.PopCap.Animation.Convert.Flash.SourceManager.create_fsh(ripe_directory, raw);
 					Support.PopCap.Animation.Convert.Flash.create_xfl_content_file(ripe_directory);
@@ -266,14 +266,14 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 						);
 					}
 					let media_directory = `${target_directory}/LIBRARY/media`;
-					if (CoreX.FileSystem.exist(media_directory)) {
-						CoreX.FileSystem.remove(media_directory);
+					if (KernelX.FileSystem.exist(media_directory)) {
+						KernelX.FileSystem.remove(media_directory);
 					}
-					CoreX.FileSystem.create_directory(media_directory);
-					CoreX.FileSystem.list_file(`${target_directory}/..`, 1n)
+					KernelX.FileSystem.create_directory(media_directory);
+					KernelX.FileSystem.list_file(`${target_directory}/..`, 1n)
 						.filter((e) => (/.+(\.png)$/i.test(e)))
 						.forEach((e) => {
-							CoreX.FileSystem.create_hard_link(`${media_directory}/${e}`, `${target_directory}/../${e}`);
+							KernelX.FileSystem.create_hard_link(`${media_directory}/${e}`, `${target_directory}/../${e}`);
 						});
 					return [`${target_directory}`];
 				},
@@ -322,7 +322,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Animation.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.PopCap.Animation.VersionNumberE), null, null, initial)),
 						);
 						buffer_size = Executor.request_argument(
 							Executor.query_argument_name(this.id, 'buffer_size'),
@@ -332,14 +332,14 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							(initial) => (Console.size(null, null, initial)),
 						);
 					}
-					let data_buffer = Core.ByteArray.allocate(Core.Size.value(buffer_size));
+					let data_buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					simple_batch_execute(
 						definition_file_directory,
 						['file', /.+(\.pam)(\.json)$/i],
 						(item) => {
 							let definition_file = `${definition_file_directory}/${item}`;
 							let data_file = `${data_file_directory}/${item.slice(0, -5)}`;
-							CoreX.Tool.PopCap.Animation.encode_fs(data_file, definition_file, { number: version_number as any }, data_buffer.view());
+							KernelX.Tool.PopCap.Animation.encode_fs(data_file, definition_file, { number: version_number as any }, data_buffer.view());
 						},
 					);
 					return [`${data_file_directory}`];
@@ -388,7 +388,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 							a.version_number,
 							(value) => (value),
 							null,
-							(initial) => (Console.option(Console.option_integer(CoreX.Tool.PopCap.Animation.VersionNumberE), null, null, initial)),
+							(initial) => (Console.option(Console.option_integer(KernelX.Tool.PopCap.Animation.VersionNumberE), null, null, initial)),
 						);
 					}
 					simple_batch_execute(
@@ -397,7 +397,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 						(item) => {
 							let data_file = `${data_file_directory}/${item}`;
 							let definition_file = `${definition_file_directory}/${item}.json`;
-							CoreX.Tool.PopCap.Animation.decode_fs(data_file, definition_file, { number: version_number as any });
+							KernelX.Tool.PopCap.Animation.decode_fs(data_file, definition_file, { number: version_number as any });
 						},
 					);
 					return [`${definition_file_directory}`];
@@ -445,7 +445,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 						(item) => {
 							let raw_file = `${raw_file_directory}/${item}`;
 							let ripe_directory = `${ripe_directory_directory}/${item.slice(0, -5)}.xfl`;
-							let raw = CoreX.JSON.read_fs_js<Core.Tool.PopCap.Animation.Definition.JS_N.Animation>(raw_file);
+							let raw = KernelX.JSON.read_fs_js<Kernel.Tool.PopCap.Animation.Definition.JS_N.Animation>(raw_file);
 							Support.PopCap.Animation.Convert.Flash.From.from_fsh(raw, ripe_directory);
 							Support.PopCap.Animation.Convert.Flash.SourceManager.create_fsh(ripe_directory, raw);
 							Support.PopCap.Animation.Convert.Flash.create_xfl_content_file(ripe_directory);
@@ -579,14 +579,14 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 						(item) => {
 							let target_directory = `${target_directory_directory}/${item}`;
 							let media_directory = `${target_directory}/LIBRARY/media`;
-							if (CoreX.FileSystem.exist(media_directory)) {
-								CoreX.FileSystem.remove(media_directory);
+							if (KernelX.FileSystem.exist(media_directory)) {
+								KernelX.FileSystem.remove(media_directory);
 							}
-							CoreX.FileSystem.create_directory(media_directory);
-							CoreX.FileSystem.list_file(`${target_directory}/..`, 1n)
+							KernelX.FileSystem.create_directory(media_directory);
+							KernelX.FileSystem.list_file(`${target_directory}/..`, 1n)
 								.filter((e) => (/.+(\.png)$/i.test(e)))
 								.forEach((e) => {
-									CoreX.FileSystem.create_hard_link(`${media_directory}/${e}`, `${target_directory}/../${e}`);
+									KernelX.FileSystem.create_hard_link(`${media_directory}/${e}`, `${target_directory}/../${e}`);
 								});
 						},
 					);

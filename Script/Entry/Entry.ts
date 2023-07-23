@@ -23,7 +23,7 @@ namespace TwinStar.Script.Entry {
 	): (path: string) => boolean {
 		return (path) => {
 			for (let e of filter) {
-				if (!CoreX.FileSystem[({ any: 'exist', file: 'exist_file', directory: 'exist_directory' } as const)[e[0]]](path)) {
+				if (!KernelX.FileSystem[({ any: 'exist', file: 'exist_file', directory: 'exist_directory' } as const)[e[0]]](path)) {
 					continue;
 				}
 				if (e[1] === null || e[1].test(path)) {
@@ -41,7 +41,7 @@ namespace TwinStar.Script.Entry {
 		filter: ['any' | 'file' | 'directory', null | RegExp],
 		worker: (item: string) => void,
 	): void {
-		let item_list = CoreX.FileSystem[({ any: 'list', file: 'list_file', directory: 'list_directory' } as const)[filter[0]]](parent);
+		let item_list = KernelX.FileSystem[({ any: 'list', file: 'list_file', directory: 'list_directory' } as const)[filter[0]]](parent);
 		if (filter[1] !== null) {
 			item_list = item_list.filter((e) => (filter[1]!.test(e)));
 		}
@@ -88,18 +88,18 @@ namespace TwinStar.Script.Entry {
 		configuration: Configuration,
 	) {
 		// language
-		Language.push_table(configuration.language, CoreX.JSON.read_fs_js(Home.of(`~/script/Language/${configuration.language}.json`)) as unknown as Language.Map);
+		Language.push_table(configuration.language, KernelX.JSON.read_fs_js(Home.of(`~/script/Language/${configuration.language}.json`)) as unknown as Language.Map);
 		Language.set_target(configuration.language);
 		// console feature
 		Console.g_disable_cli_virtual_terminal_sequence = configuration.disable_cli_virtual_terminal_sequence;
 		Console.g_disable_notification = configuration.disable_notification;
 		// byte stream endian
-		Core.Miscellaneous.g_context.query_byte_stream_use_big_endian().value = configuration.byte_stream_use_big_endian;
+		Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value = configuration.byte_stream_use_big_endian;
 		// common buffer size
-		CoreX.g_common_buffer.allocate(Core.Size.value(parse_size_string(configuration.common_buffer_size)));
+		KernelX.g_common_buffer.allocate(Kernel.Size.value(parse_size_string(configuration.common_buffer_size)));
 		// json format
-		CoreX.JSON.g_format.disable_trailing_comma = configuration.json_format.disable_trailing_comma;
-		CoreX.JSON.g_format.disable_array_wrap_line = configuration.json_format.disable_array_wrap_line;
+		KernelX.JSON.g_format.disable_trailing_comma = configuration.json_format.disable_trailing_comma;
+		KernelX.JSON.g_format.disable_array_wrap_line = configuration.json_format.disable_array_wrap_line;
 		// method common argument
 		g_common_argument.path_tactic_if_out_exist = configuration.method_common_argument.path_tactic_if_out_exist as any;
 	}

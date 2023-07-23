@@ -8,7 +8,7 @@
 
 * 要求
 	
-	* [xmake 2.7.9](https://xmake.io/#/)
+	* [xmake 2.8.1](https://xmake.io/#/)
 	
 	* [MSVC 19.36 with MSVC-STL and Windows-SDK for Windows](https://visualstudio.microsoft.com/downloads/)
 	
