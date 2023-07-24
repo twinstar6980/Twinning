@@ -24,7 +24,8 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 		Version{.number = 134_i},
 		Version{.number = 135_i},
 		Version{.number = 140_i},
-		Version{.number = 145_i}
+		Version{.number = 145_i},
+		Version{.number = 150_i}
 	>;
 
 	// ----------------

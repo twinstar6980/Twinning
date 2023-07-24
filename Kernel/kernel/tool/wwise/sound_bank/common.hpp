@@ -89,7 +89,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {118})) {
+				if constexpr (check_version(version, {118, 150})) {
 					using Type = TypePackage<
 						// delay
 						TypePackage<ValuePackage<15_e>, TypePackage<Integer>, ValuePackage<0_i>>,
@@ -97,6 +97,17 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<16_e>, TypePackage<Integer>, ValuePackage<0_i>>,
 						// probability
 						TypePackage<ValuePackage<17_e>, TypePackage<Floater>, ValuePackage<100.0_f>>
+					>;
+					return declare<Type>();
+				}
+				if constexpr (check_version(version, {150})) {
+					using Type = TypePackage<
+						// delay
+						TypePackage<ValuePackage<57_e>, TypePackage<Integer>, ValuePackage<0_i>>,
+						// fade_time
+						TypePackage<ValuePackage<58_e>, TypePackage<Integer>, ValuePackage<0_i>>,
+						// probability
+						TypePackage<ValuePackage<59_e>, TypePackage<Floater>, ValuePackage<100.0_f>>
 					>;
 					return declare<Type>();
 				}
@@ -140,7 +151,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<ModulatorCommonPropertyType> {
 			using Attribute = decltype([] {
-				if constexpr (check_version(version, {112})) {
+				if constexpr (check_version(version, {112, 150})) {
 					using Type = TypePackage<
 						// scope,
 						TypePackage<ValuePackage<0_e>, TypePackage<Enumerated>, ValuePackage<0_e>>,
@@ -180,6 +191,51 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<17_e>, TypePackage<Integer>, ValuePackage<1_i>>,
 						// playback_rate,
 						TypePackage<ValuePackage<18_e>, TypePackage<Floater>, ValuePackage<1.0_f>>,
+						// stop_playback,
+						TypePackage<ValuePackage<1_e>, TypePackage<Boolean>, ValuePackage<k_true>>
+					>;
+					return declare<Type>();
+				}
+				if constexpr (check_version(version, {150})) {
+					using Type = TypePackage<
+						// scope,
+						TypePackage<ValuePackage<0_e>, TypePackage<Enumerated>, ValuePackage<0_e>>,
+						// trigger_on,
+						TypePackage<ValuePackage<16_e>, TypePackage<Enumerated>, ValuePackage<0_e>>,
+						// depth,
+						TypePackage<ValuePackage<2_e>, TypePackage<Floater>, ValuePackage<100.0_f>>,
+						// frequency,
+						TypePackage<ValuePackage<4_e>, TypePackage<Floater>, ValuePackage<1.0_f>>,
+						// waveform,
+						TypePackage<ValuePackage<5_e>, TypePackage<Enumerated>, ValuePackage<0_e>>,
+						// smoothing,
+						TypePackage<ValuePackage<6_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// pulse_width_modulation,
+						TypePackage<ValuePackage<7_e>, TypePackage<Floater>, ValuePackage<50.0_f>>,
+						// attack,
+						TypePackage<ValuePackage<3_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// initial_phase_offset,
+						TypePackage<ValuePackage<8_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// attack_time,
+						TypePackage<ValuePackage<10_e>, TypePackage<Floater>, ValuePackage<0.2_f>>,
+						// attack_curve,
+						TypePackage<ValuePackage<11_e>, TypePackage<Floater>, ValuePackage<50.0_f>>,
+						// decay_time,
+						TypePackage<ValuePackage<12_e>, TypePackage<Floater>, ValuePackage<0.2_f>>,
+						// sustain_level,
+						TypePackage<ValuePackage<13_e>, TypePackage<Floater>, ValuePackage<100.0_f>>,
+						// release_time,
+						TypePackage<ValuePackage<15_e>, TypePackage<Floater>, ValuePackage<0.5_f>>,
+						// sustain_time,
+						TypePackage<ValuePackage<14_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// initial_delay,
+						TypePackage<ValuePackage<20_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// duration,
+						TypePackage<ValuePackage<17_e>, TypePackage<Floater>, ValuePackage<1.0_f>>,
+						// loop,
+						TypePackage<ValuePackage<18_e>, TypePackage<Integer>, ValuePackage<1_i>>,
+						// playback_rate,
+						TypePackage<ValuePackage<19_e>, TypePackage<Floater>, ValuePackage<1.0_f>>,
 						// stop_playback,
 						TypePackage<ValuePackage<1_e>, TypePackage<Boolean>, ValuePackage<k_true>>
 					>;
@@ -485,7 +541,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140}))
+		template <typename _> requires (check_version(version, {140, 150}))
 		M_enumeration(
 			M_wrap(AudioCommonPropertyType_<_>),
 			M_wrap(
@@ -544,6 +600,67 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 				playback_loop,
 				playback_speed,
 				mixer_id,
+			),
+		);
+
+		template <typename _> requires (check_version(version, {150}))
+		M_enumeration(
+			M_wrap(AudioCommonPropertyType_<_>),
+			M_wrap(
+				bus_volume,
+				output_bus_volume,
+				output_bus_low_pass_filter,
+				output_bus_high_pass_filter,
+				voice_volume,
+				voice_pitch,
+				voice_low_pass_filter,
+				voice_high_pass_filter,
+				voice_volume_make_up_gain,
+				game_defined_auxiliary_send_volume,
+				game_defined_auxiliary_send_low_pass_filter,
+				game_defined_auxiliary_send_high_pass_filter,
+				user_defined_auxiliary_send_volume_0,
+				user_defined_auxiliary_send_volume_1,
+				user_defined_auxiliary_send_volume_2,
+				user_defined_auxiliary_send_volume_3,
+				user_defined_auxiliary_send_low_pass_filter_0,
+				user_defined_auxiliary_send_low_pass_filter_1,
+				user_defined_auxiliary_send_low_pass_filter_2,
+				user_defined_auxiliary_send_low_pass_filter_3,
+				user_defined_auxiliary_send_high_pass_filter_0,
+				user_defined_auxiliary_send_high_pass_filter_1,
+				user_defined_auxiliary_send_high_pass_filter_2,
+				user_defined_auxiliary_send_high_pass_filter_3,
+				early_reflection_auxiliary_send_volume,
+				positioning_center_percent,
+				positioning_speaker_panning_x,
+				positioning_speaker_panning_y,
+				positioning_speaker_panning_z,
+				positioning_listener_routing_speaker_panning_division_spatialization_mix,
+				positioning_listener_routing_attenuation_id,
+				hdr_threshold,
+				hdr_ratio,
+				hdr_release_time,
+				hdr_window_tap_output_game_parameter_id,
+				hdr_window_tap_output_game_parameter_minimum,
+				hdr_window_tap_output_game_parameter_maximum,
+				hdr_envelope_tracking_active_range,
+				midi_note_tracking_root_note,
+				midi_event_play_on,
+				midi_transformation_transposition,
+				midi_transformation_velocity_offset,
+				midi_filter_key_range_minimum,
+				midi_filter_key_range_maximum,
+				midi_filter_velocity_minimum,
+				midi_filter_velocity_maximum,
+				midi_filter_channel,
+				midi_clip_tempo_source,
+				midi_target_id,
+				playback_priority_value,
+				playback_priority_offset_at_maximum_distance,
+				playback_initial_delay,
+				playback_loop,
+				playback_speed,
 			),
 		);
 
@@ -1167,7 +1284,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {140})) {
+				if constexpr (check_version(version, {140, 150})) {
 					using Type = TypePackage<
 						// bus_volume,
 						TypePackage<ValuePackage<5_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
@@ -1279,6 +1396,119 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<54_e>, TypePackage<Floater>, ValuePackage<1.0_f>>,
 						// mixer_id,
 						TypePackage<ValuePackage<57_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>
+					>;
+					return declare<Type>();
+				}
+				if constexpr (check_version(version, {150})) {
+					using Type = TypePackage<
+						// bus_volume,
+						TypePackage<ValuePackage<4_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// output_bus_volume,
+						TypePackage<ValuePackage<13_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// output_bus_low_pass_filter,
+						TypePackage<ValuePackage<15_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// output_bus_high_pass_filter,
+						TypePackage<ValuePackage<14_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// voice_volume,
+						TypePackage<ValuePackage<0_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// voice_pitch,
+						TypePackage<ValuePackage<1_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// voice_low_pass_filter,
+						TypePackage<ValuePackage<2_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// voice_high_pass_filter,
+						TypePackage<ValuePackage<3_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// voice_volume_make_up_gain,
+						TypePackage<ValuePackage<5_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// game_defined_auxiliary_send_volume,
+						TypePackage<ValuePackage<12_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// game_defined_auxiliary_send_low_pass_filter,
+						TypePackage<ValuePackage<24_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// game_defined_auxiliary_send_high_pass_filter,
+						TypePackage<ValuePackage<25_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// user_defined_auxiliary_send_volume_0,
+						TypePackage<ValuePackage<8_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// user_defined_auxiliary_send_volume_1,
+						TypePackage<ValuePackage<9_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// user_defined_auxiliary_send_volume_2,
+						TypePackage<ValuePackage<10_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// user_defined_auxiliary_send_volume_3,
+						TypePackage<ValuePackage<11_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// user_defined_auxiliary_send_low_pass_filter_0,
+						TypePackage<ValuePackage<16_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// user_defined_auxiliary_send_low_pass_filter_1,
+						TypePackage<ValuePackage<17_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// user_defined_auxiliary_send_low_pass_filter_2,
+						TypePackage<ValuePackage<18_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// user_defined_auxiliary_send_low_pass_filter_3,
+						TypePackage<ValuePackage<19_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// user_defined_auxiliary_send_high_pass_filter_0,
+						TypePackage<ValuePackage<20_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// user_defined_auxiliary_send_high_pass_filter_1,
+						TypePackage<ValuePackage<21_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// user_defined_auxiliary_send_high_pass_filter_2,
+						TypePackage<ValuePackage<22_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// user_defined_auxiliary_send_high_pass_filter_3,
+						TypePackage<ValuePackage<23_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// early_reflection_auxiliary_send_volume,
+						TypePackage<ValuePackage<26_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// positioning_center_percent,
+						TypePackage<ValuePackage<41_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// positioning_speaker_panning_x,
+						TypePackage<ValuePackage<35_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// positioning_speaker_panning_y,
+						TypePackage<ValuePackage<36_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// positioning_speaker_panning_z,
+						TypePackage<ValuePackage<37_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// positioning_listener_routing_speaker_panning_division_spatialization_mix,
+						TypePackage<ValuePackage<42_e>, TypePackage<Floater>, ValuePackage<100.0_f>>,
+						// positioning_listener_routing_attenuation_id,
+						TypePackage<ValuePackage<85_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// hdr_threshold,
+						TypePackage<ValuePackage<27_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// hdr_ratio,
+						TypePackage<ValuePackage<28_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// hdr_release_time,
+						TypePackage<ValuePackage<29_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// hdr_window_tap_output_game_parameter_id,
+						TypePackage<ValuePackage<61_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// hdr_window_tap_output_game_parameter_minimum,
+						TypePackage<ValuePackage<62_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// hdr_window_tap_output_game_parameter_maximum,
+						TypePackage<ValuePackage<63_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// hdr_envelope_tracking_active_range,
+						TypePackage<ValuePackage<30_e>, TypePackage<Floater>, ValuePackage<12.0_f>>,
+						// midi_note_tracking_root_note,
+						TypePackage<ValuePackage<75_e>, TypePackage<Integer>, ValuePackage<60_i>>,
+						// midi_event_play_on,
+						TypePackage<ValuePackage<76_e>, TypePackage<Enumerated>, ValuePackage<0_e>>,
+						// midi_transformation_transposition,
+						TypePackage<ValuePackage<31_e>, TypePackage<Integer>, ValuePackage<0_i>>,
+						// midi_transformation_velocity_offset,
+						TypePackage<ValuePackage<32_e>, TypePackage<Integer>, ValuePackage<0_i>>,
+						// midi_filter_key_range_minimum,
+						TypePackage<ValuePackage<77_e>, TypePackage<Integer>, ValuePackage<0_i>>,
+						// midi_filter_key_range_maximum,
+						TypePackage<ValuePackage<78_e>, TypePackage<Integer>, ValuePackage<127_i>>,
+						// midi_filter_velocity_minimum,
+						TypePackage<ValuePackage<79_e>, TypePackage<Integer>, ValuePackage<0_i>>,
+						// midi_filter_velocity_maximum,
+						TypePackage<ValuePackage<80_e>, TypePackage<Integer>, ValuePackage<127_i>>,
+						// midi_filter_channel,
+						TypePackage<ValuePackage<81_e>, TypePackage<Integer>, ValuePackage<65535_i>>,
+						// midi_clip_tempo_source,
+						TypePackage<ValuePackage<82_e>, TypePackage<Enumerated>, ValuePackage<0_e>>,
+						// midi_target_id,
+						TypePackage<ValuePackage<83_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// playback_priority_value,
+						TypePackage<ValuePackage<6_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// playback_priority_offset_at_maximum_distance,
+						TypePackage<ValuePackage<56_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// playback_initial_delay,
+						TypePackage<ValuePackage<34_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
+						// playback_loop,
+						TypePackage<ValuePackage<84_e>, TypePackage<Integer>, ValuePackage<0_i>>,
+						// playback_speed,
+						TypePackage<ValuePackage<33_e>, TypePackage<Floater>, ValuePackage<1.0_f>>
 					>;
 					return declare<Type>();
 				}
@@ -1805,9 +2035,9 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 			using Index = decltype([] {
 				if constexpr (check_version(version, {112})) {
 					using Type = ValuePackage<
-						// note_off,
-						0_e,
 						// note_on,
+						0_e,
+						// note_off,
 						2_e
 					>;
 					return declare<Type>();

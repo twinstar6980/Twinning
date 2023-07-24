@@ -1268,7 +1268,7 @@ namespace TwinStar.Script.KernelX {
 
 				export type VersionNumber = typeof Kernel.Tool.Wwise.SoundBank.Version.Value.number;
 
-				export const VersionNumberE = [72n, 88n, 112n, 113n, 118n, 120n, 125n, 128n, 132n, 134n, 135n, 140n, 145n] as VersionNumber[];
+				export const VersionNumberE = [72n, 88n, 112n, 113n, 118n, 120n, 125n, 128n, 132n, 134n, 135n, 140n, 145n, 150n] as VersionNumber[];
 
 				export function encode_fs(
 					data_file: string,

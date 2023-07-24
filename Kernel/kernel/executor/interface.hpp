@@ -691,7 +691,8 @@ namespace TwinStar::Kernel::Executor::Interface {
 						typename Definition<VersionPackage::element<10_ixz>>::SoundBank,
 						typename Definition<VersionPackage::element<11_ixz>>::SoundBank,
 						typename Definition<VersionPackage::element<12_ixz>>::SoundBank,
-						typename Definition<VersionPackage::element<13_ixz>>::SoundBank
+						typename Definition<VersionPackage::element<13_ixz>>::SoundBank,
+						typename Definition<VersionPackage::element<14_ixz>>::SoundBank
 					>;
 					auto s_SoundBank = s_Wwise.add_space("SoundBank"_s);
 					define_generic_class<Version>(s_SoundBank, "Version"_s);

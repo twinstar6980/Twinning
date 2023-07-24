@@ -469,7 +469,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 			typename Definition::AudioMixerSetting &           value
 		) -> Void {
 			using CPTC = typename AudioCommonPropertyType::Constant;
-			if constexpr (check_version(version, {112})) {
+			if constexpr (check_version(version, {112, 150})) {
 				convert_common_property<CPTC::mixer_id()>(map, value.id);
 			}
 			return;
@@ -889,7 +889,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 			typename Definition::AudioMixerSetting & mixer_value,
 			Boolean &                                mixer_override
 		) -> Void {
-			if constexpr (check_version(version, {112})) {
+			if constexpr (check_version(version, {112, 150})) {
 				exchange_bit_multi<IntegerU8>(
 					data,
 					mixer_override
@@ -1453,7 +1453,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 					effect_value.item,
 					[&] (auto & data, auto & value) {
 						exchange_size_fixed<IntegerU8>(data, value);
-						if constexpr (check_version(version, {72})) {
+						if constexpr (check_version(version, {72, 150})) {
 							if (value > 0_sz) {
 								exchange_bit_multi<IntegerU8>(
 									data,
@@ -1465,6 +1465,11 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 								);
 							}
 						}
+						if constexpr (check_version(version, {150})) {
+							if (value > 0_sz) {
+								exchange_bit_multi<IntegerU8>(data, effect_value.bypass);
+							}
+						}
 					},
 					[] (auto & data, auto & value) {
 						if constexpr (check_version(version, {72})) {
@@ -1473,13 +1478,16 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 						if constexpr (check_version(version, {72})) {
 							exchange_id(data, value.id);
 						}
-						if constexpr (check_version(version, {72})) {
+						if constexpr (check_version(version, {72, 150})) {
 							// TODO : in typical, render = 1 -> mode = 0 & u2 = 1, render = 0 -> mode = 1 & u2 = 0
 							// TODO : if render, mode value will be changed ?
 							exchange_bit_multi<IntegerU8>(data, value.use_share_set);
 						}
-						if constexpr (check_version(version, {72})) {
+						if constexpr (check_version(version, {72, 150})) {
 							exchange_bit_multi<IntegerU8>(data, value.u1);
+						}
+						if constexpr (check_version(version, {150})) {
+							exchange_bit_multi<IntegerU8>(data, value.bypass, value.use_share_set);
 						}
 					}
 				);
@@ -3745,10 +3753,10 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 			if constexpr (check_version(version, {72})) {
 				exchange_section_sub(data, value.effect);
 			}
-			if constexpr (check_version(version, {112})) {
+			if constexpr (check_version(version, {112, 150})) {
 				exchange_id(data, value.mixer);
 			}
-			if constexpr (check_version(version, {112})) {
+			if constexpr (check_version(version, {112, 150})) {
 				exchange_raw_constant(data, 0_iu16);
 			}
 			if constexpr (check_version(version, {140})) {
@@ -3784,7 +3792,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 			if constexpr (check_version(version, {140})) {
 				exchange_section_sub(data, value.metadata, value.override_metadata);
 			}
-			if constexpr (check_version(version, {112})) {
+			if constexpr (check_version(version, {112, 150})) {
 				exchange_section_sub(data, value.mixer, value.override_mixer);
 			}
 			if constexpr (check_version(version, {72})) {
@@ -3844,7 +3852,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 						if constexpr (check_version(version, {72, 128})) {
 							load_common_property(common_property, value.motion);
 						}
-						if constexpr (check_version(version, {112})) {
+						if constexpr (check_version(version, {112, 150})) {
 							load_common_property(common_property, value.mixer);
 						}
 					}
@@ -3885,7 +3893,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 			if constexpr (check_version(version, {140})) {
 				exchange_section_sub(data, value.metadata, value.override_metadata);
 			}
-			if constexpr (check_version(version, {112})) {
+			if constexpr (check_version(version, {112, 150})) {
 				exchange_section_sub(data, value.mixer, value.override_mixer);
 			}
 			if constexpr (check_version(version, {72})) {
@@ -3942,7 +3950,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 						if constexpr (check_version(version, {72, 128})) {
 							load_common_property(common_property, value.motion);
 						}
-						if constexpr (check_version(version, {112})) {
+						if constexpr (check_version(version, {112, 150})) {
 							load_common_property(common_property, value.mixer);
 						}
 					}
@@ -3992,7 +4000,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 			if constexpr (check_version(version, {140})) {
 				exchange_section_sub(data, value.metadata, value.override_metadata);
 			}
-			if constexpr (check_version(version, {112})) {
+			if constexpr (check_version(version, {112, 150})) {
 				exchange_section_sub(data, value.mixer, value.override_mixer);
 			}
 			if constexpr (check_version(version, {72})) {
@@ -4049,7 +4057,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 						if constexpr (check_version(version, {72, 128})) {
 							load_common_property(common_property, value.motion);
 						}
-						if constexpr (check_version(version, {112})) {
+						if constexpr (check_version(version, {112, 150})) {
 							load_common_property(common_property, value.mixer);
 						}
 					}
@@ -4105,7 +4113,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 			if constexpr (check_version(version, {140})) {
 				exchange_section_sub(data, value.metadata, value.override_metadata);
 			}
-			if constexpr (check_version(version, {112})) {
+			if constexpr (check_version(version, {112, 150})) {
 				exchange_section_sub(data, value.mixer, value.override_mixer);
 			}
 			if constexpr (check_version(version, {72})) {
@@ -4162,7 +4170,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 						if constexpr (check_version(version, {72, 128})) {
 							load_common_property(common_property, value.motion);
 						}
-						if constexpr (check_version(version, {112})) {
+						if constexpr (check_version(version, {112, 150})) {
 							load_common_property(common_property, value.mixer);
 						}
 					}
@@ -4212,7 +4220,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 			if constexpr (check_version(version, {140})) {
 				exchange_section_sub(data, value.metadata, value.override_metadata);
 			}
-			if constexpr (check_version(version, {112})) {
+			if constexpr (check_version(version, {112, 150})) {
 				exchange_section_sub(data, value.mixer, value.override_mixer);
 			}
 			if constexpr (check_version(version, {72})) {
@@ -4266,7 +4274,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 						if constexpr (check_version(version, {72, 128})) {
 							load_common_property(common_property, value.motion);
 						}
-						if constexpr (check_version(version, {112})) {
+						if constexpr (check_version(version, {112, 150})) {
 							load_common_property(common_property, value.mixer);
 						}
 					}
@@ -4319,7 +4327,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 			if constexpr (check_version(version, {140})) {
 				exchange_section_sub(data, value.metadata, value.override_metadata);
 			}
-			if constexpr (check_version(version, {112})) {
+			if constexpr (check_version(version, {112, 150})) {
 				exchange_section_sub(data, value.mixer, value.override_mixer);
 			}
 			if constexpr (check_version(version, {72})) {
@@ -4370,7 +4378,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 						if constexpr (check_version(version, {72, 128})) {
 							load_common_property(common_property, value.motion);
 						}
-						if constexpr (check_version(version, {112})) {
+						if constexpr (check_version(version, {112, 150})) {
 							load_common_property(common_property, value.mixer);
 						}
 					}
@@ -4426,7 +4434,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 			if constexpr (check_version(version, {140})) {
 				exchange_section_sub(data, value.metadata, value.override_metadata);
 			}
-			if constexpr (check_version(version, {112})) {
+			if constexpr (check_version(version, {112, 150})) {
 				exchange_section_sub(data, value.mixer, value.override_mixer);
 			}
 			if constexpr (check_version(version, {72})) {
@@ -4480,7 +4488,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 						if constexpr (check_version(version, {72, 128})) {
 							load_common_property(common_property, value.motion);
 						}
-						if constexpr (check_version(version, {112})) {
+						if constexpr (check_version(version, {112, 150})) {
 							load_common_property(common_property, value.mixer);
 						}
 					}
@@ -4539,7 +4547,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 			if constexpr (check_version(version, {140})) {
 				exchange_section_sub(data, value.metadata, value.override_metadata);
 			}
-			if constexpr (check_version(version, {112})) {
+			if constexpr (check_version(version, {112, 150})) {
 				exchange_section_sub(data, value.mixer, value.override_mixer);
 			}
 			if constexpr (check_version(version, {72})) {
@@ -4593,7 +4601,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 						if constexpr (check_version(version, {72, 128})) {
 							load_common_property(common_property, value.motion);
 						}
-						if constexpr (check_version(version, {112})) {
+						if constexpr (check_version(version, {112, 150})) {
 							load_common_property(common_property, value.mixer);
 						}
 					}
@@ -4652,7 +4660,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 			if constexpr (check_version(version, {140})) {
 				exchange_section_sub(data, value.metadata, value.override_metadata);
 			}
-			if constexpr (check_version(version, {112})) {
+			if constexpr (check_version(version, {112, 150})) {
 				exchange_section_sub(data, value.mixer, value.override_mixer);
 			}
 			if constexpr (check_version(version, {72})) {
@@ -4706,7 +4714,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 						if constexpr (check_version(version, {72, 128})) {
 							load_common_property(common_property, value.motion);
 						}
-						if constexpr (check_version(version, {112})) {
+						if constexpr (check_version(version, {112, 150})) {
 							load_common_property(common_property, value.mixer);
 						}
 					}

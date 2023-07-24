@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 57
+ * @version 58
  */
 declare namespace TwinStar.Kernel {
 
@@ -2414,7 +2414,7 @@ declare namespace TwinStar.Kernel {
 					// ------------------------------------------------
 
 					static Value: {
-						number: 72n | 88n | 112n | 113n | 118n | 120n | 125n | 128n | 132n | 134n | 135n | 140n | 145n;
+						number: 72n | 88n | 112n | 113n | 118n | 120n | 125n | 128n | 132n | 134n | 135n | 140n | 145n | 150n;
 					};
 
 					static value(it: typeof Version.Value): Version;
