@@ -74,8 +74,8 @@ class _SettingPageState extends State<SettingPage> {
                       ],
                     ),
                   ),
-                  onTap: () {
-                    showDialog<String>(
+                  onTap: () async {
+                    await showDialog<String>(
                       context: context,
                       builder: (context) => AlertDialog(
                         title: const Text('Theme Mode'),
@@ -127,8 +127,8 @@ class _SettingPageState extends State<SettingPage> {
                       ],
                     ),
                   ),
-                  onTap: () {
-                    showDialog<String>(
+                  onTap: () async {
+                    await showDialog<String>(
                       context: context,
                       builder: (context) => AlertDialog(
                         title: const Text('Theme Color'),
@@ -193,14 +193,14 @@ class _SettingPageState extends State<SettingPage> {
                       children: [
                         Expanded(child: Container()),
                         Text(
-                          !setting.data.mUseLargerFontInConsole ? 'Regular' : 'Larger',
+                          !setting.data.mFontSizeUseLargerInConsole ? 'Regular' : 'Larger',
                           style: theme.textTheme.bodyMedium,
                         ),
                       ],
                     ),
                   ),
-                  onTap: () {
-                    showDialog<String>(
+                  onTap: () async {
+                    await showDialog<String>(
                       context: context,
                       builder: (context) => AlertDialog(
                         title: const Text('Font Size'),
@@ -212,9 +212,9 @@ class _SettingPageState extends State<SettingPage> {
                                 title: Text(!e ? 'Regular' : 'Larger'),
                                 leading: Radio<Boolean>(
                                   value: e,
-                                  groupValue: setting.data.mUseLargerFontInConsole,
+                                  groupValue: setting.data.mFontSizeUseLargerInConsole,
                                   onChanged: (value) {
-                                    setting.data.mUseLargerFontInConsole = value!;
+                                    setting.data.mFontSizeUseLargerInConsole = value!;
                                     setting.notify();
                                   },
                                 ),
@@ -242,14 +242,14 @@ class _SettingPageState extends State<SettingPage> {
                       children: [
                         Expanded(child: Container()),
                         Text(
-                          setting.data.mKernel.isEmpty ? '?' : '!',
+                          setting.data.mCommandKernel.isEmpty ? '?' : '!',
                           style: theme.textTheme.bodyMedium,
                         ),
                       ],
                     ),
                   ),
                   onTap: () async {
-                    showDialog<String>(
+                    await showDialog<String>(
                       context: context,
                       builder: (context) => AlertDialog(
                         title: const Text('Kernel'),
@@ -261,9 +261,9 @@ class _SettingPageState extends State<SettingPage> {
                               decoration: const InputDecoration(
                                 isDense: true,
                               ),
-                              initialValue: setting.data.mKernel,
+                              initialValue: setting.data.mCommandKernel,
                               onChanged: (value) {
-                                setting.data.mKernel = value;
+                                setting.data.mCommandKernel = value;
                                 setting.notify();
                               },
                             ),
@@ -288,14 +288,14 @@ class _SettingPageState extends State<SettingPage> {
                       children: [
                         Expanded(child: Container()),
                         Text(
-                          setting.data.mScript.isEmpty ? '?' : '!',
+                          setting.data.mCommandScript.isEmpty ? '?' : '!',
                           style: theme.textTheme.bodyMedium,
                         ),
                       ],
                     ),
                   ),
-                  onTap: () {
-                    showDialog<String>(
+                  onTap: () async {
+                    await showDialog<String>(
                       context: context,
                       builder: (context) => AlertDialog(
                         title: const Text('Script'),
@@ -307,9 +307,9 @@ class _SettingPageState extends State<SettingPage> {
                               decoration: const InputDecoration(
                                 isDense: true,
                               ),
-                              initialValue: setting.data.mScript,
+                              initialValue: setting.data.mCommandScript,
                               onChanged: (value) {
-                                setting.data.mScript = value;
+                                setting.data.mCommandScript = value;
                                 setting.notify();
                               },
                             ),
@@ -326,7 +326,7 @@ class _SettingPageState extends State<SettingPage> {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.list_outlined),
+                  leading: const Icon(Icons.list_alt_outlined),
                   title: const Text('Argument'),
                   trailing: SizedBox(
                     width: 96,
@@ -334,14 +334,14 @@ class _SettingPageState extends State<SettingPage> {
                       children: [
                         Expanded(child: Container()),
                         Text(
-                          '${setting.data.mArgument.length}',
+                          '${setting.data.mCommandArgument.length}',
                           style: theme.textTheme.bodyMedium,
                         ),
                       ],
                     ),
                   ),
-                  onTap: () {
-                    showDialog<String>(
+                  onTap: () async {
+                    await showDialog<String>(
                       context: context,
                       builder: (context) => AlertDialog(
                         title: const Text('Argument'),
@@ -353,13 +353,13 @@ class _SettingPageState extends State<SettingPage> {
                               decoration: const InputDecoration(
                                 isDense: true,
                               ),
-                              initialValue: setting.data.mArgument.join('\n') + (setting.data.mArgument.isNotEmpty && setting.data.mArgument.last.isEmpty ? '\n' : ''),
+                              initialValue: setting.data.mCommandArgument.join('\n') + (setting.data.mCommandArgument.isNotEmpty && setting.data.mCommandArgument.last.isEmpty ? '\n' : ''),
                               onChanged: (value) {
                                 var valueList = value.split('\n');
                                 if (valueList.isNotEmpty && valueList.last.isEmpty) {
                                   valueList.removeLast();
                                 }
-                                setting.data.mArgument = valueList;
+                                setting.data.mCommandArgument = valueList;
                                 setting.notify();
                               },
                             ),
@@ -397,8 +397,8 @@ class _SettingPageState extends State<SettingPage> {
                       ],
                     ),
                   ),
-                  onTap: () {
-                    showDialog<String>(
+                  onTap: () async {
+                    await showDialog<String>(
                       context: context,
                       builder: (context) => AlertDialog(
                         title: const Text('Behavior After Command Succeed'),
@@ -431,7 +431,6 @@ class _SettingPageState extends State<SettingPage> {
                   },
                 ),
                 ListTile(
-                  enabled: Platform.isAndroid || Platform.isIOS,
                   leading: const Icon(Icons.folder_copy_outlined),
                   title: const Text('Fallback Directory For Invisible File'),
                   trailing: SizedBox(
@@ -441,13 +440,13 @@ class _SettingPageState extends State<SettingPage> {
                         Expanded(child: Container()),
                         Text(
                           !Directory(setting.data.mFallbackDirectoryForInvisibleFile).existsSync() ? 'Invalid' : 'Valid',
-                          style: theme.textTheme.bodyMedium?.copyWith(color: Platform.isAndroid || Platform.isIOS ? null : theme.disabledColor),
+                          style: theme.textTheme.bodyMedium,
                         ),
                       ],
                     ),
                   ),
                   onTap: () async {
-                    showDialog<String>(
+                    await showDialog<String>(
                       context: context,
                       builder: (context) => AlertDialog(
                         title: const Text('Fallback Directory For Invisible File'),
@@ -478,7 +477,6 @@ class _SettingPageState extends State<SettingPage> {
                   },
                 ),
                 ListTile(
-                  enabled: this._applicationSharedDirectory != null,
                   leading: const Icon(Icons.folder_special_outlined),
                   title: const Text('Shared Directory'),
                   trailing: SizedBox(
@@ -488,13 +486,13 @@ class _SettingPageState extends State<SettingPage> {
                         Expanded(child: Container()),
                         Text(
                           this._applicationSharedDirectory == null ? 'Unavailable' : 'Available',
-                          style: theme.textTheme.bodyMedium?.copyWith(color: this._applicationSharedDirectory != null ? null : theme.disabledColor),
+                          style: theme.textTheme.bodyMedium,
                         ),
                       ],
                     ),
                   ),
-                  onTap: () {
-                    showDialog<String>(
+                  onTap: () async {
+                    await showDialog<String>(
                       context: context,
                       builder: (context) => AlertDialog(
                         title: const Text('Shared Directory'),
@@ -523,7 +521,6 @@ class _SettingPageState extends State<SettingPage> {
                   },
                 ),
                 ListTile(
-                  enabled: Platform.isAndroid,
                   leading: const Icon(Icons.storage_outlined),
                   title: const Text('Storage Permission'),
                   trailing: SizedBox(
@@ -533,7 +530,7 @@ class _SettingPageState extends State<SettingPage> {
                         Expanded(child: Container()),
                         Text(
                           !this._hasStoragePermission ? 'Denied' : 'Granted',
-                          style: theme.textTheme.bodyMedium?.copyWith(color: Platform.isAndroid ? null : theme.disabledColor),
+                          style: theme.textTheme.bodyMedium,
                         ),
                       ],
                     ),

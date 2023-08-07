@@ -43,9 +43,9 @@ main(
   if (commandSource.isNotEmpty) {
     command = Command('', '', []);
     if (commandSource[0] == '-additional') {
-      command.kernel = setting.mKernel.substring(0);
-      command.script = setting.mScript.substring(0);
-      command.argument = setting.mArgument.sublist(0);
+      command.kernel = setting.mCommandKernel.substring(0);
+      command.script = setting.mCommandScript.substring(0);
+      command.argument = setting.mCommandArgument.sublist(0);
       command.argument.addAll(commandSource.sublist(1));
     } else {
       command.kernel = commandSource.elementAt(0);

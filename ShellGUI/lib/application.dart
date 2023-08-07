@@ -52,9 +52,9 @@ class Application extends StatelessWidget {
                 fontFamily: 'NotoSansMonoCJKsc-VF',
                 appBarTheme: AppBarTheme(
                   centerTitle: false,
-                  elevation: 4,
-                  scrolledUnderElevation: 4,
-                  shadowColor: darkDynamic?.shadow,
+                  elevation: 3,
+                  scrolledUnderElevation: 3,
+                  shadowColor: lightDynamic?.shadow,
                 ),
               ),
               darkTheme: ThemeData(
@@ -66,8 +66,8 @@ class Application extends StatelessWidget {
                 fontFamily: 'NotoSansMonoCJKsc-VF',
                 appBarTheme: AppBarTheme(
                   centerTitle: false,
-                  elevation: 4,
-                  scrolledUnderElevation: 4,
+                  elevation: 3,
+                  scrolledUnderElevation: 3,
                   shadowColor: darkDynamic?.shadow,
                 ),
               ),

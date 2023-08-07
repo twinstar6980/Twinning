@@ -15,10 +15,10 @@ class Setting {
   Boolean      mThemeColorInheritFromSystem;
   Color        mThemeColorLight;
   Color        mThemeColorDark;
-  Boolean      mUseLargerFontInConsole;
-  String       mKernel;
-  String       mScript;
-  List<String> mArgument;
+  Boolean      mFontSizeUseLargerInConsole;
+  String       mCommandKernel;
+  String       mCommandScript;
+  List<String> mCommandArgument;
   Boolean      mBehaviorAfterCommandSucceed;
   String       mFallbackDirectoryForInvisibleFile;
 
@@ -29,10 +29,10 @@ class Setting {
     this.mThemeColorInheritFromSystem,
     this.mThemeColorLight,
     this.mThemeColorDark,
-    this.mUseLargerFontInConsole,
-    this.mKernel,
-    this.mScript,
-    this.mArgument,
+    this.mFontSizeUseLargerInConsole,
+    this.mCommandKernel,
+    this.mCommandScript,
+    this.mCommandArgument,
     this.mBehaviorAfterCommandSucceed,
     this.mFallbackDirectoryForInvisibleFile,
   );
@@ -63,10 +63,10 @@ class Setting {
     data.mThemeColorInheritFromSystem = json['theme_color_inherit_from_system'] as Boolean;
     data.mThemeColorLight = Color(json['theme_color_light'] as Integer);
     data.mThemeColorDark = Color(json['theme_color_dark'] as Integer);
-    data.mUseLargerFontInConsole = json['use_larger_font_in_console'] as Boolean;
-    data.mKernel = json['kernel'] as String;
-    data.mScript = json['script'] as String;
-    data.mArgument = (json['argument'] as List<dynamic>).map((e) => e as String).toList();
+    data.mFontSizeUseLargerInConsole = json['font_size_use_larger_in_console'] as Boolean;
+    data.mCommandKernel = json['command_kernel'] as String;
+    data.mCommandScript = json['command_script'] as String;
+    data.mCommandArgument = (json['command_argument'] as List<dynamic>).map((e) => e as String).toList();
     data.mBehaviorAfterCommandSucceed = json['behavior_after_command_succeed'] as Boolean;
     data.mFallbackDirectoryForInvisibleFile = json['fallback_directory_for_invisible_file'] as String;
     return;
@@ -82,10 +82,10 @@ class Setting {
     json['theme_color_inherit_from_system'] = data.mThemeColorInheritFromSystem;
     json['theme_color_light'] = data.mThemeColorLight.value;
     json['theme_color_dark'] = data.mThemeColorDark.value;
-    json['use_larger_font_in_console'] = data.mUseLargerFontInConsole;
-    json['kernel'] = data.mKernel;
-    json['script'] = data.mScript;
-    json['argument'] = data.mArgument;
+    json['font_size_use_larger_in_console'] = data.mFontSizeUseLargerInConsole;
+    json['command_kernel'] = data.mCommandKernel;
+    json['command_script'] = data.mCommandScript;
+    json['command_argument'] = data.mCommandArgument;
     json['behavior_after_command_succeed'] = data.mBehaviorAfterCommandSucceed;
     json['fallback_directory_for_invisible_file'] = data.mFallbackDirectoryForInvisibleFile;
     return;
@@ -97,8 +97,7 @@ class Setting {
   Future<Setting>
   load(
   ) async {
-    var directory = await getApplicationSupportDirectory();
-    var file = File('${directory.path}/setting.json');
+    var file = File('${await queryApplicationSharedDirectory()}/setting.json');
     file.create();
     var text = await file.readAsString();
     var json = jsonDecode(text);
@@ -112,8 +111,7 @@ class Setting {
   save(
     Setting data,
   ) async {
-    var directory = await getApplicationSupportDirectory();
-    var file = File('${directory.path}/setting.json');
+    var file = File('${await queryApplicationSharedDirectory()}/setting.json');
     file.create();
     var json = <String, dynamic>{};
     Setting.toJson(json, data);

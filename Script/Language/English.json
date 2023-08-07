@@ -179,7 +179,7 @@
 	"method:data.compression.zlib.compress$raw_file:name": "Original file",
 	"method:data.compression.zlib.compress$ripe_file:name": "Finished file",
 	// 
-	"method:data.compression.zlib.uncompress:name": "ZLib Compress",
+	"method:data.compression.zlib.uncompress:name": "ZLib Uncompress",
 	"method:data.compression.zlib.uncompress$ripe_file:name": "Original file",
 	"method:data.compression.zlib.uncompress$raw_file:name": "Finished file",
 	"method:data.compression.zlib.uncompress$buffer_size:name": "Buffer memory size",

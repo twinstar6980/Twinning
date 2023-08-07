@@ -133,10 +133,12 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
             description: description,
           ),
         );
+        var shouldScrollToEnd = this._outputBarListScrollController.position.pixels == this._outputBarListScrollController.position.maxScrollExtent;
         this.setState(() {});
-        Future.delayed(const Duration(milliseconds: 100), () {
+        await WidgetsBinding.instance.endOfFrame;
+        if (shouldScrollToEnd) {
           this._outputBarListScrollController.jumpTo(this._outputBarListScrollController.position.maxScrollExtent);
-        });
+        }
         break;
       }
       case 'input_pause': {
@@ -149,7 +151,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         await completer.future;
         this._inputBarContent = const IdleInputBarContent();
         this.setState(() {});
-        await Future.delayed(const Duration(milliseconds: 100));
+        await WidgetsBinding.instance.endOfFrame;
         break;
       }
       case 'input_confirmation': {
@@ -160,12 +162,10 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         );
         this.setState(() {});
         var input = await completer.future;
-        result.add(
-          input == null ? '' : (!input ? 'n' : 'y'),
-        );
+        result.add(input == null ? '' : (!input ? 'n' : 'y'));
         this._inputBarContent = const IdleInputBarContent();
         this.setState(() {});
-        await Future.delayed(const Duration(milliseconds: 100));
+        await WidgetsBinding.instance.endOfFrame;
         break;
       }
       case 'input_number': {
@@ -179,7 +179,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         result.add(input == null ? '' : (input == 0.0 ? '0.0' : (input < 0.0 ? '-${-input}' : '+${input}')));
         this._inputBarContent = const IdleInputBarContent();
         this.setState(() {});
-        await Future.delayed(const Duration(milliseconds: 100));
+        await WidgetsBinding.instance.endOfFrame;
         break;
       }
       case 'input_integer': {
@@ -193,7 +193,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         result.add(input == null ? '' : (input == 0 ? '0' : (input < 0 ? '-${-input}' : '+${input}')));
         this._inputBarContent = const IdleInputBarContent();
         this.setState(() {});
-        await Future.delayed(const Duration(milliseconds: 100));
+        await WidgetsBinding.instance.endOfFrame;
         break;
       }
       case 'input_size': {
@@ -207,7 +207,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         result.add(input == null ? '' : (input.toString()));
         this._inputBarContent = const IdleInputBarContent();
         this.setState(() {});
-        await Future.delayed(const Duration(milliseconds: 100));
+        await WidgetsBinding.instance.endOfFrame;
         break;
       }
       case 'input_string': {
@@ -221,7 +221,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         result.add(input == null ? '' : (input.toString()));
         this._inputBarContent = const IdleInputBarContent();
         this.setState(() {});
-        await Future.delayed(const Duration(milliseconds: 100));
+        await WidgetsBinding.instance.endOfFrame;
         break;
       }
       case 'input_path': {
@@ -239,7 +239,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         result.add(input == null ? '' : (input.toString()));
         this._inputBarContent = const IdleInputBarContent();
         this.setState(() {});
-        await Future.delayed(const Duration(milliseconds: 100));
+        await WidgetsBinding.instance.endOfFrame;
         break;
       }
       case 'input_option': {
@@ -255,7 +255,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         result.add(input == null ? '' : ('${input}'));
         this._inputBarContent = const IdleInputBarContent();
         this.setState(() {});
-        await Future.delayed(const Duration(milliseconds: 100));
+        await WidgetsBinding.instance.endOfFrame;
         break;
       }
       case 'pick_path': {
@@ -343,9 +343,11 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         ),
       );
     }
-    await Future.delayed(const Duration(milliseconds: 100));
-    this._outputBarListScrollController.jumpTo(this._outputBarListScrollController.position.maxScrollExtent);
     this.setState(() {});
+    await WidgetsBinding.instance.endOfFrame;
+    while (this._outputBarListScrollController.position.pixels != this._outputBarListScrollController.position.maxScrollExtent) {
+      await this._outputBarListScrollController.animateTo(this._outputBarListScrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 100), curve: Curves.easeOut);
+    }
     return exception == null;
   }
 
@@ -354,9 +356,9 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
   ) async {
     var setting = Provider.of<SettingProvider>(context, listen: false);
     var command = Command(
-      setting.data.mKernel,
-      setting.data.mScript,
-      setting.data.mArgument,
+      setting.data.mCommandKernel,
+      setting.data.mCommandScript,
+      setting.data.mCommandArgument,
     );
     return this._launch(command);
   }
@@ -382,9 +384,13 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
       child: Column(
         children: [
           Expanded(
-            child: ListView(
+            child: Scrollbar(
+              interactive: true,
               controller: this._outputBarListScrollController,
-              children: [...this._outputBarListItem],
+              child: ListView(
+                controller: this._outputBarListScrollController,
+                children: [...this._outputBarListItem],
+              ),
             ),
           ),
           const SizedBox(height: 8),
