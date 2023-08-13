@@ -35,7 +35,7 @@ namespace TwinStar.Script.Entry.method.data.hash {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					target_file: undefined!,
+					target_file: '?input',
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),
 				input_forwarder: 'target_file',

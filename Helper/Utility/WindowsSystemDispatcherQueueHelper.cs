@@ -15,10 +15,7 @@ namespace Helper.Utility {
 
 		public void EnsureWindowsSystemDispatcherQueueController (
 		) {
-			if (Windows.System.DispatcherQueue.GetForCurrentThread() != null) {
-				return;
-			}
-			if (this.mDispatcherQueueController == null) {
+			if (Windows.System.DispatcherQueue.GetForCurrentThread() is null && this.mDispatcherQueueController is null) {
 				var options = new ExternalLibrary.CoreMessaging.DispatcherQueueOptions {
 					dwSize = Marshal.SizeOf(typeof(ExternalLibrary.CoreMessaging.DispatcherQueueOptions)),
 					threadType = 2, // DQTYPE_THREAD_CURRENT

@@ -20,23 +20,36 @@
 			<SolidColorBrush x:Key="TabViewBorderBrush" Color="{ThemeResource DividerStrokeColorDefault}" />
 			<Thickness x:Key="BorderThickness">1</Thickness>
 			<x:Double x:Key="DividerThickness">1</x:Double>
+			<x:Double x:Key="MiniIconSize">13</x:Double>
 			<x:Double x:Key="SmallIconSize">17</x:Double>
 			<x:Double x:Key="MediumIconSize">19</x:Double>
 			<x:Double x:Key="LargeIconSize">21</x:Double>
 			<Style TargetType="FontIcon">
 				<Setter Property="FontFamily" Value="{StaticResource SymbolThemeFontFamily}" />
 			</Style>
-			<Style TargetType="TextBox">
+			<Style TargetType="ToggleButton" BasedOn="{StaticResource DefaultToggleButtonStyle}">
 				<Setter Property="BorderBrush" Value="{ThemeResource ControlStrokeColorDefault}" />
-				<Setter Property="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
+			</Style>
+			<Style TargetType="AutoSuggestBox" BasedOn="{StaticResource DefaultAutoSuggestBoxStyle}">
+				<Setter Property="BorderBrush" Value="{ThemeResource ControlStrokeColorDefault}" />
+			</Style>
+			<Style TargetType="TextBox" BasedOn="{StaticResource DefaultTextBoxStyle}">
+				<Setter Property="BorderBrush" Value="{ThemeResource ControlStrokeColorDefault}" />
 			</Style>
 			<Style TargetType="NumberBox">
 				<Setter Property="BorderBrush" Value="{ThemeResource ControlStrokeColorDefault}" />
 			</Style>
-			<Style TargetType="ToggleButton">
-				<Setter Property="BorderBrush" Value="{ThemeResource ControlStrokeColorDefault}" />
-				<Setter Property="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
+			<Style x:Key="SmallSquareButton" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+				<Setter Property="Width" Value="32" />
+				<Setter Property="Height" Value="32" />
+				<Setter Property="Padding" Value="5,5,5,6" />
 			</Style>
+			<Style x:Key="SmallSquareToggleButton" TargetType="ToggleButton" BasedOn="{StaticResource DefaultToggleButtonStyle}">
+				<Setter Property="Width" Value="32" />
+				<Setter Property="Height" Value="32" />
+				<Setter Property="Padding" Value="5,5,5,6" />
+			</Style>
+			<my:FontIconConverter x:Key="FontIconConverter" />
 		</ResourceDictionary>
 	</Application.Resources>
 </Application>

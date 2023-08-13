@@ -789,7 +789,7 @@
 	"method:pvz2.text_table.convert$destination_version:name": "目的版本",
 	"method:pvz2.text_table.convert$destination_file:name": "目的文件",
 	// Entry/method/pvz2.remote_android_helper
-	"method:pvz2.remote_android_helper.launch:name": "PvZ-2 远程安卓辅助",
+	"method:pvz2.remote_android_helper.launch:name": "PvZ-2 Remote-Android-Helper 启动",
 	"method:pvz2.remote_android_helper.launch$project_directory:name": "项目目录",
 	"method:pvz2.remote_android_helper.launch$action:name": "操作",
 	// Entry/method/expand

@@ -14,10 +14,10 @@ namespace Helper.CustomControl {
 			Windows.Foundation.Size availableSize
 		) {
 			var parentPadding = this.Padding;
-			var parentSpace = new Windows.Foundation.Size(Math.Max(0.0, availableSize.Width - parentPadding.Left - parentPadding.Right), Math.Max(0.0, availableSize.Height - parentPadding.Top - parentPadding.Bottom));
+			var parentSpace = new Windows.Foundation.Size(Math.Max(0.0, availableSize.Width - (parentPadding.Left + parentPadding.Right)), Math.Max(0.0, availableSize.Height - (parentPadding.Top + parentPadding.Bottom)));
 			var desiredSize = this.MeasureWithoutPadding(parentSpace);
-			desiredSize.Width = Math.Min(availableSize.Width, desiredSize.Width + parentPadding.Left + parentPadding.Right);
-			desiredSize.Height = Math.Min(availableSize.Height, desiredSize.Height + parentPadding.Top + parentPadding.Bottom);
+			desiredSize.Width = Math.Min(availableSize.Width, Math.Max(0.0, desiredSize.Width + (parentPadding.Left + parentPadding.Right)));
+			desiredSize.Height = Math.Min(availableSize.Height, Math.Max(0.0, desiredSize.Height + (parentPadding.Top + parentPadding.Bottom)));
 			return desiredSize;
 		}
 
@@ -25,7 +25,7 @@ namespace Helper.CustomControl {
 			Windows.Foundation.Size finalSize
 		) {
 			var parentPadding = this.Padding;
-			var parentSpace = new Windows.Foundation.Size(Math.Max(0.0, finalSize.Width - parentPadding.Left - parentPadding.Right), Math.Max(0.0, finalSize.Height - parentPadding.Top - parentPadding.Bottom));
+			var parentSpace = new Windows.Foundation.Size(Math.Max(0.0, finalSize.Width - (parentPadding.Left + parentPadding.Right)), Math.Max(0.0, finalSize.Height - (parentPadding.Top + parentPadding.Bottom)));
 			var currentOffset = new Point(parentPadding.Left, parentPadding.Top);
 			this.ArrangeWithoutPadding(currentOffset, parentSpace);
 			return finalSize;
@@ -47,14 +47,14 @@ namespace Helper.CustomControl {
 		#region property
 
 		public static readonly DependencyProperty PaddingProperty = DependencyProperty.Register(
-			nameof(MPanel.Padding), typeof(Thickness), typeof(MStack),
-			new PropertyMetadata(new Thickness(0.0), (o, e) => {
-				((MPanel)o).InvalidateMeasure();
-			})
+			nameof(MPanel.Padding),
+			typeof(Thickness),
+			typeof(MPanel),
+			new PropertyMetadata(new Thickness(0.0), (o, e) => { (o as MPanel)!.InvalidateMeasure(); })
 		);
 
 		public Thickness Padding {
-			get => (Thickness)this.GetValue(MPanel.PaddingProperty);
+			get => this.GetValue(MPanel.PaddingProperty) as Thickness? ?? throw new NullReferenceException();
 			set => this.SetValue(MPanel.PaddingProperty, value);
 		}
 

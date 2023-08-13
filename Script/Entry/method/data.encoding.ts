@@ -45,7 +45,7 @@ namespace TwinStar.Script.Entry.method.data.encoding {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					raw_file: undefined!,
+					raw_file: '?input',
 					ripe_file: '?default',
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),
@@ -84,7 +84,7 @@ namespace TwinStar.Script.Entry.method.data.encoding {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					ripe_file: undefined!,
+					ripe_file: '?input',
 					raw_file: '?default',
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),

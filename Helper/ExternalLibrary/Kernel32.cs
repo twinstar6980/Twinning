@@ -5,7 +5,7 @@ namespace Helper.ExternalLibrary {
 
 	public static class Kernel32 {
 
-		#region library
+		#region symbol
 
 		[DllImport("Kernel32.dll")]
 		public static extern IntPtr LoadLibrary (

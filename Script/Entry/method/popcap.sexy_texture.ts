@@ -74,7 +74,7 @@ namespace TwinStar.Script.Entry.method.popcap.sexy_texture {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					image_file: undefined!,
+					image_file: '?input',
 					data_file: '?default',
 					format: '?input',
 					compress_texture_data: configuration.encode_compress_texture_data,
@@ -125,7 +125,7 @@ namespace TwinStar.Script.Entry.method.popcap.sexy_texture {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					data_file: undefined!,
+					data_file: '?input',
 					image_file: '?default',
 					version_number: configuration.version_number,
 				},
@@ -202,7 +202,7 @@ namespace TwinStar.Script.Entry.method.popcap.sexy_texture {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					image_file_directory: undefined!,
+					image_file_directory: '?input',
 					data_file_directory: '?default',
 					format: '?input',
 					compress_texture_data: configuration.encode_compress_texture_data,
@@ -261,7 +261,7 @@ namespace TwinStar.Script.Entry.method.popcap.sexy_texture {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					data_file_directory: undefined!,
+					data_file_directory: '?input',
 					image_file_directory: '?default',
 					version_number: configuration.version_number,
 				},

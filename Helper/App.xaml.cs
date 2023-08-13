@@ -20,9 +20,11 @@ namespace Helper {
 		protected override void OnLaunched (
 			LaunchActivatedEventArgs args
 		) {
+			Setting.Initialize();
 			var window = WindowHelper.TrackWindow(new Module.MainWindow());
+			Setting.AppearanceThemeMode = Setting.AppearanceThemeMode;
 			window.Activate();
-			ThemeHelper.Initialize();
+			return;
 		}
 
 		#endregion

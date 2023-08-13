@@ -193,7 +193,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					bundle_directory: undefined!,
+					bundle_directory: '?input',
 					data_file: '?default',
 					mode: configuration.mode,
 					version_number: configuration.version_number,
@@ -292,7 +292,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					data_file: undefined!,
+					data_file: '?input',
 					bundle_directory: '?default',
 					mode: configuration.mode,
 					version_number: configuration.version_number,
@@ -572,7 +572,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					bundle_directory: undefined!,
+					bundle_directory: '?input',
 					version_number: configuration.version_number,
 					version_extended_texture_information_for_pvz2_cn: configuration.version_extended_texture_information_for_pvz2_cn,
 					option: configuration.resource_convert_option,
@@ -616,7 +616,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					data_file: undefined!,
+					data_file: '?input',
 					bundle_directory: '?default',
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.rsb)$/i]]),

@@ -53,7 +53,7 @@ namespace TwinStar.Script.Entry.method.pvz2.text_table {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					source_file: undefined!,
+					source_file: '?input',
 					destination_version: '?input',
 					destination_file: '?default',
 				},

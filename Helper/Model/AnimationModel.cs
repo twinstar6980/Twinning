@@ -14,6 +14,8 @@ namespace Helper {
 			public required List<Floater> Size;
 		}
 
+		// ----------------
+
 		public record LayerRemove {
 			public required Integer Index;
 		}
@@ -44,6 +46,8 @@ namespace Helper {
 			public required List<LayerAppend>  Append;
 			public required List<LayerChange>  Change;
 		}
+
+		// ----------------
 
 		public record Sprite {
 			public required String        Name;

@@ -67,7 +67,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_group {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					bundle_directory: undefined!,
+					bundle_directory: '?input',
 					data_file: '?default',
 					version_number: configuration.version_number,
 					buffer_size: configuration.pack_buffer_size,
@@ -119,7 +119,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_group {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					data_file: undefined!,
+					data_file: '?input',
 					bundle_directory: '?default',
 					version_number: configuration.version_number,
 				},

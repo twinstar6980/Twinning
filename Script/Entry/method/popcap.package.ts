@@ -79,7 +79,7 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					bundle_directory: undefined!,
+					bundle_directory: '?input',
 					data_file: '?default',
 					version_number: configuration.version_number,
 					version_compress_resource_data: configuration.version_compress_resource_data,
@@ -141,7 +141,7 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					data_file: undefined!,
+					data_file: '?input',
 					bundle_directory: '?default',
 					version_number: configuration.version_number,
 					version_compress_resource_data: configuration.version_compress_resource_data,
@@ -201,7 +201,7 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					resource_directory: undefined!,
+					resource_directory: '?input',
 					data_file: '?default',
 					version_number: configuration.version_number,
 					version_compress_resource_data: configuration.version_compress_resource_data,
@@ -242,7 +242,7 @@ namespace TwinStar.Script.Entry.method.popcap.package_ {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					plain_file: undefined!,
+					plain_file: '?input',
 					cipher_file: '?default',
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.pak)$/i]]),

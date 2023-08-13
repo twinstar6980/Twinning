@@ -10,19 +10,49 @@ namespace Helper.Utility {
 		#region opacity
 
 		public static Floater BooleanToFloaterOfOpacity (
-			Boolean state
+			Boolean value
 		) {
-			return !state ? 0.5 : 1.0;
+			return value switch {
+				false => 0.5,
+				true  => 1.0,
+			};
 		}
 
 		#endregion
 
 		#region switch
 
-		public static String BooleanToSwitchString (
-			Boolean state
+		public static String BooleanToLowerCaseString (
+			Boolean value
 		) {
-			return !state ? "Off" : "On";
+			return value switch {
+				false => "false",
+				true  => "true",
+			};
+		}
+
+		public static String BooleanToSwitchString (
+			Boolean value
+		) {
+			return value switch {
+				false => "Off",
+				true  => "On",
+			};
+		}
+
+		#endregion
+
+		#region theme
+
+		public static String ThemeToString (
+			ElementTheme value
+		) {
+			return value switch {
+				ElementTheme.Default => "System",
+				ElementTheme.Light   => "Light",
+				ElementTheme.Dark    => "Dark",
+				_                    => throw new ArgumentOutOfRangeException(nameof(value), value, null),
+			};
 		}
 
 		#endregion

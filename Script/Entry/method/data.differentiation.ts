@@ -65,7 +65,7 @@ namespace TwinStar.Script.Entry.method.data.differentiation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					before_file: undefined!,
+					before_file: '?input',
 					after_file: '?input',
 					patch_file: '?default',
 					buffer_size: configuration.encode_buffer_size,
@@ -124,7 +124,7 @@ namespace TwinStar.Script.Entry.method.data.differentiation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					before_file: undefined!,
+					before_file: '?input',
 					patch_file: '?input',
 					after_file: '?default',
 					buffer_size: configuration.decode_buffer_size,

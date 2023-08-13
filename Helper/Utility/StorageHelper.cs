@@ -11,20 +11,49 @@ namespace Helper.Utility {
 
 	public static class StorageHelper {
 
+		#region exist
+
+		public static Boolean ExistFile (
+			String path
+		) {
+			return File.Exists(path);
+		}
+
+		public static Boolean ExistDirectory (
+			String path
+		) {
+			return Directory.Exists(path);
+		}
+
+		#endregion
+
+		#region list
+
+		public static List<String> ListFile (
+			String parent,
+			Size   depth,
+			String pattern
+		) {
+			var parentFullName = new DirectoryInfo(parent).FullName;
+			return Directory.EnumerateFiles(parent, pattern, new EnumerationOptions() { MaxRecursionDepth = depth }).Select((value) => (value[(parentFullName.Length + 1)..])).ToList();
+		}
+
+		#endregion
+
 		#region text
 
 		public static async Task WriteFileText (
 			String path,
 			String content
 		) {
-			await System.IO.File.WriteAllTextAsync(path, content);
+			await File.WriteAllTextAsync(path, content);
 			return;
 		}
 
 		public static async Task<String> ReadFileText (
 			String path
 		) {
-			return await System.IO.File.ReadAllTextAsync(path);
+			return await File.ReadAllTextAsync(path);
 		}
 
 		#endregion
@@ -34,7 +63,7 @@ namespace Helper.Utility {
 		public static async Task<WriteableBitmap> ReadFileImage (
 			String path
 		) {
-			var data = await System.IO.File.ReadAllBytesAsync(path);
+			var data = await File.ReadAllBytesAsync(path);
 			var stream = data.AsBuffer().AsStream().AsRandomAccessStream();
 			var decoder = await BitmapDecoder.CreateAsync(stream);
 			var image = new WriteableBitmap((Size)decoder.PixelWidth, (Size)decoder.PixelHeight);
@@ -49,7 +78,7 @@ namespace Helper.Utility {
 
 		public static async Task<String?> PickFile (
 			Window rootWindow,
-			String filter
+			String filter = "*"
 		) {
 			var picker = new FileOpenPicker() {
 				FileTypeFilter = { filter },

@@ -54,7 +54,7 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					image_file: undefined!,
+					image_file: '?input',
 					data_file: '?default',
 					format: '?input',
 				},
@@ -121,7 +121,7 @@ namespace TwinStar.Script.Entry.method.popcap.texture {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					data_file: undefined!,
+					data_file: '?input',
 					image_file: '?default',
 					format: '?input',
 					image_width: '?input',

@@ -55,7 +55,7 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					plain_file: undefined!,
+					plain_file: '?input',
 					cipher_file: '?default',
 					key: '?input',
 				},
@@ -136,7 +136,7 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					plain_file: undefined!,
+					plain_file: '?input',
 					cipher_file: '?default',
 					mode: '?input',
 					block_size: '?input',
@@ -220,7 +220,7 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					cipher_file: undefined!,
+					cipher_file: '?input',
 					plain_file: '?default',
 					mode: '?input',
 					block_size: '?input',

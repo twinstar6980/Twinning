@@ -64,7 +64,7 @@ namespace TwinStar.Script.Entry.method.texture.transformation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					source_file: undefined!,
+					source_file: '?input',
 					destination_file: '?default',
 					horizontal: '?input',
 					vertical: '?input',
@@ -123,7 +123,7 @@ namespace TwinStar.Script.Entry.method.texture.transformation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					source_file: undefined!,
+					source_file: '?input',
 					destination_file: '?default',
 					width: '?input',
 					height: '?input',
@@ -173,7 +173,7 @@ namespace TwinStar.Script.Entry.method.texture.transformation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					source_file: undefined!,
+					source_file: '?input',
 					destination_file: '?default',
 					size_rate: '?input',
 				},

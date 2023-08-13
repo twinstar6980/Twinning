@@ -9,29 +9,26 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="my:MHeaderBar">
 					<my:MStack
-						HorizontalAlignment="Stretch" Width="NaN"
-						VerticalAlignment="Stretch" Height="NaN"
 						Padding="16,8"
 						Orientation="Horizontal" Spacing="12"
 					>
 						<FontIcon
 							my:MStack.Weight="NaN"
-							HorizontalAlignment="Center" Width="32"
-							VerticalAlignment="Center" Height="NaN"
-							FontSize="{StaticResource LargeIconSize}"
+							HorizontalAlignment="Center" VerticalAlignment="Center"
+							Width="32" Height="22"
 							Glyph="{TemplateBinding Icon}"
+							FontSize="{StaticResource LargeIconSize}"
 						/>
 						<TextBlock
 							my:MStack.Weight="1"
-							HorizontalAlignment="Left" Width="NaN"
-							VerticalAlignment="Center" Height="NaN"
+							HorizontalAlignment="Left" VerticalAlignment="Center"
 							Text="{TemplateBinding Title}"
 							Style="{ThemeResource BodyStrongTextBlockStyle}"
+							MaxLines="1" TextTrimming="CharacterEllipsis"
 						/>
 						<ContentPresenter
 							my:MStack.Weight="NaN"
-							HorizontalAlignment="Right" Width="NaN"
-							VerticalAlignment="Center" Height="NaN"
+							HorizontalAlignment="Right" VerticalAlignment="Center"
 							Content="{TemplateBinding Action}"
 						/>
 					</my:MStack>

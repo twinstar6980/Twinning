@@ -75,7 +75,7 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					ripe_file: undefined!,
+					ripe_file: '?input',
 					raw_file: '?default',
 					tool_ffmpeg_program_file: configuration.tool_ffmpeg_program_file,
 					tool_ww2ogg_program_file: configuration.tool_ww2ogg_program_file,
@@ -155,7 +155,7 @@ namespace TwinStar.Script.Entry.method.wwise.media {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					ripe_file_directory: undefined!,
+					ripe_file_directory: '?input',
 					raw_file_directory: '?default',
 					tool_ffmpeg_program_file: configuration.tool_ffmpeg_program_file,
 					tool_ww2ogg_program_file: configuration.tool_ww2ogg_program_file,

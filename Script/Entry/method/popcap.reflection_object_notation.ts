@@ -81,7 +81,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					definition_file: undefined!,
+					definition_file: '?input',
 					data_file: '?default',
 					version_number: configuration.version_number,
 					version_native_string_encoding_use_utf8: configuration.version_native_string_encoding_use_utf8,
@@ -141,7 +141,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					data_file: undefined!,
+					data_file: '?input',
 					definition_file: '?default',
 					version_number: configuration.version_number,
 					version_native_string_encoding_use_utf8: configuration.version_native_string_encoding_use_utf8,
@@ -191,7 +191,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					plain_file: undefined!,
+					plain_file: '?input',
 					cipher_file: '?default',
 					key: configuration.key,
 				},
@@ -240,7 +240,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					cipher_file: undefined!,
+					cipher_file: '?input',
 					plain_file: '?default',
 					key: configuration.key,
 				},
@@ -316,7 +316,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					definition_file: undefined!,
+					definition_file: '?input',
 					data_file: '?default',
 					version_number: configuration.version_number,
 					version_native_string_encoding_use_utf8: configuration.version_native_string_encoding_use_utf8,
@@ -386,7 +386,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					data_file: undefined!,
+					data_file: '?input',
 					definition_file: '?default',
 					version_number: configuration.version_number,
 					version_native_string_encoding_use_utf8: configuration.version_native_string_encoding_use_utf8,
@@ -446,7 +446,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					data_file: undefined!,
+					data_file: '?input',
 					definition_file: '?default',
 					version_number: configuration.version_number,
 					version_native_string_encoding_use_utf8: configuration.version_native_string_encoding_use_utf8,
@@ -525,7 +525,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					definition_file_directory: undefined!,
+					definition_file_directory: '?input',
 					data_file_directory: '?default',
 					version_number: configuration.version_number,
 					version_native_string_encoding_use_utf8: configuration.version_native_string_encoding_use_utf8,
@@ -593,7 +593,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					data_file_directory: undefined!,
+					data_file_directory: '?input',
 					definition_file_directory: '?default',
 					version_number: configuration.version_number,
 					version_native_string_encoding_use_utf8: configuration.version_native_string_encoding_use_utf8,
@@ -651,7 +651,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					plain_file_directory: undefined!,
+					plain_file_directory: '?input',
 					cipher_file_directory: '?default',
 					key: configuration.key,
 				},
@@ -708,7 +708,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					cipher_file_directory: undefined!,
+					cipher_file_directory: '?input',
 					plain_file_directory: '?default',
 					key: configuration.key,
 				},
@@ -793,7 +793,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					definition_file_directory: undefined!,
+					definition_file_directory: '?input',
 					data_file_directory: '?default',
 					version_number: configuration.version_number,
 					version_native_string_encoding_use_utf8: configuration.version_native_string_encoding_use_utf8,
@@ -871,7 +871,7 @@ namespace TwinStar.Script.Entry.method.popcap.reflection_object_notation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					data_file_directory: undefined!,
+					data_file_directory: '?input',
 					definition_file_directory: '?default',
 					version_number: configuration.version_number,
 					version_native_string_encoding_use_utf8: configuration.version_native_string_encoding_use_utf8,

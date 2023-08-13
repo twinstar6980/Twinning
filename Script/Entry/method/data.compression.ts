@@ -54,7 +54,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					raw_file: undefined!,
+					raw_file: '?input',
 					ripe_file: '?default',
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),
@@ -102,7 +102,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					ripe_file: undefined!,
+					ripe_file: '?input',
 					raw_file: '?default',
 					buffer_size: configuration.uncompress_buffer_size,
 				},
@@ -142,7 +142,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					raw_file: undefined!,
+					raw_file: '?input',
 					ripe_file: '?default',
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),
@@ -190,7 +190,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					ripe_file: undefined!,
+					ripe_file: '?input',
 					raw_file: '?default',
 					buffer_size: configuration.uncompress_buffer_size,
 				},
@@ -230,7 +230,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					raw_file: undefined!,
+					raw_file: '?input',
 					ripe_file: '?default',
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),
@@ -278,7 +278,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					ripe_file: undefined!,
+					ripe_file: '?input',
 					raw_file: '?default',
 					buffer_size: configuration.uncompress_buffer_size,
 				},
@@ -318,7 +318,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					raw_file: undefined!,
+					raw_file: '?input',
 					ripe_file: '?default',
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),
@@ -366,7 +366,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					ripe_file: undefined!,
+					ripe_file: '?input',
 					raw_file: '?default',
 					buffer_size: configuration.uncompress_buffer_size,
 				},
@@ -406,7 +406,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					raw_file: undefined!,
+					raw_file: '?input',
 					ripe_file: '?default',
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', null]]),
@@ -454,7 +454,7 @@ namespace TwinStar.Script.Entry.method.data.compression {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					ripe_file: undefined!,
+					ripe_file: '?input',
 					raw_file: '?default',
 					buffer_size: configuration.uncompress_buffer_size,
 				},

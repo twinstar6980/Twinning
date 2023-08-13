@@ -7,7 +7,7 @@ namespace Helper.ExternalLibrary {
 
 	public static class CoreMessaging {
 
-		#region library
+		#region symbol
 
 		[StructLayout(LayoutKind.Sequential)]
 		public struct DispatcherQueueOptions {

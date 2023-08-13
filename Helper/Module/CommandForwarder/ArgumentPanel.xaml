@@ -1,0 +1,48 @@
+<UserControl
+	x:Class="Helper.Module.CommandForwarder.ArgumentPanel"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:local="using:Helper"
+	xmlns:localCommandForwarder="using:Helper.Module.CommandForwarder"
+	xmlns:my="using:Helper.CustomControl"
+	mc:Ignorable="d"
+	x:DefaultBindMode="OneWay"
+>
+	<ItemsRepeater
+		ItemsSource="{x:Bind Controller.uItem_ItemsSource}"
+	>
+		<ItemsRepeater.Layout>
+			<StackLayout Orientation="Vertical" Spacing="8" />
+		</ItemsRepeater.Layout>
+		<ItemsRepeater.ItemTemplate>
+			<DataTemplate x:DataType="localCommandForwarder:ArgumentPanelItemController">
+				<my:MStack Orientation="Horizontal" Spacing="8">
+					<TextBox
+						my:MStack.Weight="NaN"
+						HorizontalAlignment="Stretch" VerticalAlignment="Top"
+						Width="208" Height="NaN"
+						Text="{x:Bind uTitle_Text}"
+						IsReadOnly="True"
+					/>
+					<ToggleButton
+						my:MStack.Weight="NaN"
+						Style="{StaticResource SmallSquareToggleButton}"
+						IsChecked="{x:Bind uActive_IsChecked}"
+						Click="{x:Bind uActive_OnClick}"
+						Content="{x:Bind uActive_Content}"
+					/>
+					<localCommandForwarder:ValuePanel
+						my:MStack.Weight="1"
+						HorizontalAlignment="Stretch" VerticalAlignment="Top"
+						Type="{x:Bind uValue_Type}"
+						Value="{x:Bind uValue_Value}"
+						Option="{x:Bind uValue_Option}"
+						Stamp="{x:Bind uValue_Stamp}"
+					/>
+				</my:MStack>
+			</DataTemplate>
+		</ItemsRepeater.ItemTemplate>
+	</ItemsRepeater>
+</UserControl>

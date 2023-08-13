@@ -69,7 +69,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					definition_file: undefined!,
+					definition_file: '?input',
 					data_file: '?default',
 					version_number: configuration.version_number,
 					buffer_size: configuration.encode_buffer_size,
@@ -119,7 +119,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					data_file: undefined!,
+					data_file: '?input',
 					definition_file: '?default',
 					version_number: configuration.version_number,
 				},
@@ -162,7 +162,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					raw_file: undefined!,
+					raw_file: '?input',
 					ripe_directory: '?default',
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.pam)(\.json)$/i]]),
@@ -201,7 +201,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					ripe_directory: undefined!,
+					ripe_directory: '?input',
 					raw_file: '?default',
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', /.+(\.pam)(\.xfl)$/i]]),
@@ -240,7 +240,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					target_directory: undefined!,
+					target_directory: '?input',
 					resolution: '?input',
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', /.+(\.pam)(\.xfl)$/i]]),
@@ -279,7 +279,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					target_directory: undefined!,
+					target_directory: '?input',
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', /.+(\.pam)(\.xfl)$/i]]),
 				input_forwarder: 'target_directory',
@@ -346,7 +346,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					definition_file_directory: undefined!,
+					definition_file_directory: '?input',
 					data_file_directory: '?default',
 					version_number: configuration.version_number,
 					buffer_size: configuration.encode_buffer_size,
@@ -404,7 +404,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					data_file_directory: undefined!,
+					data_file_directory: '?input',
 					definition_file_directory: '?default',
 					version_number: configuration.version_number,
 				},
@@ -455,7 +455,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					raw_file_directory: undefined!,
+					raw_file_directory: '?input',
 					ripe_directory_directory: '?default',
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
@@ -502,7 +502,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					ripe_directory_directory: undefined!,
+					ripe_directory_directory: '?input',
 					raw_file_directory: '?default',
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
@@ -548,7 +548,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					target_directory_directory: undefined!,
+					target_directory_directory: '?input',
 					resolution: '?input',
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
@@ -594,7 +594,7 @@ namespace TwinStar.Script.Entry.method.popcap.animation {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					target_directory_directory: undefined!,
+					target_directory_directory: '?input',
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),
 				input_forwarder: 'target_directory_directory',

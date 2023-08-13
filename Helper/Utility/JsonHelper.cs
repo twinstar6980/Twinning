@@ -12,7 +12,9 @@ namespace Helper.Utility {
 
 		#region serialize
 
-		private static readonly JsonSerializerSettings JsonSerializerSettings = new () {
+		private static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings() {
+			NullValueHandling = NullValueHandling.Include,
+			MissingMemberHandling = MissingMemberHandling.Error,
 			Converters = new List<JsonConverter>() {
 				new StringEnumConverter() {
 					NamingStrategy = new SnakeCaseNamingStrategy(),
@@ -26,15 +28,16 @@ namespace Helper.Utility {
 		// ----------------
 
 		public static String Serialize<TValue> (
-			TValue value
+			TValue  value,
+			Boolean indented = true
 		) {
-			return JsonConvert.SerializeObject(value, Formatting.Indented, JsonHelper.JsonSerializerSettings);
+			return JsonConvert.SerializeObject(value, indented ? Formatting.Indented : Formatting.None, JsonHelper.JsonSerializerSettings);
 		}
 
 		public static TValue Deserialize<TValue> (
 			String text
 		) {
-			return JsonConvert.DeserializeObject<TValue>(text, JsonHelper.JsonSerializerSettings) ?? throw new Exception("");
+			return JsonConvert.DeserializeObject<TValue>(text, JsonHelper.JsonSerializerSettings) ?? throw new Exception();
 		}
 
 		#endregion

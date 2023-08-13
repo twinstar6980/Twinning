@@ -3,8 +3,10 @@
 
 global using System;
 global using System.Collections.Generic;
+global using System.Collections.ObjectModel;
 global using System.IO;
 global using System.Linq;
+global using System.Text;
 global using System.Diagnostics;
 global using System.Diagnostics.CodeAnalysis;
 global using System.Threading.Tasks;
@@ -13,6 +15,8 @@ global using System.Runtime.CompilerServices;
 global using System.Runtime.InteropServices;
 global using Microsoft.UI.Xaml;
 global using Microsoft.UI.Xaml.Controls;
+global using Microsoft.UI.Xaml.Controls.Primitives;
+global using CommunityToolkit.WinUI;
 global using Boolean = System.Boolean;
 global using Integer = System.Int64;
 global using Floater = System.Double;

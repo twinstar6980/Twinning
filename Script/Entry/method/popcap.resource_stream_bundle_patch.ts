@@ -86,7 +86,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					before_file: undefined!,
+					before_file: '?input',
 					after_file: '?input',
 					patch_file: '?default',
 					use_raw_packet: configuration.use_raw_packet,
@@ -165,7 +165,7 @@ namespace TwinStar.Script.Entry.method.popcap.resource_stream_bundle_patch {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					before_file: undefined!,
+					before_file: '?input',
 					patch_file: '?input',
 					after_file: '?default',
 					use_raw_packet: configuration.use_raw_packet,

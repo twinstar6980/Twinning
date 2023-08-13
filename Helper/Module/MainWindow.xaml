@@ -5,46 +5,53 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:local="using:Helper"
+	xmlns:localModule="using:Helper.Module"
 	xmlns:my="using:Helper.CustomControl"
 	mc:Ignorable="d"
+	x:DefaultBindMode="OneWay"
 >
-	<my:MBox
-		HorizontalAlignment="Stretch" Width="NaN"
-		VerticalAlignment="Stretch" Height="NaN"
-		Padding="0"
-		Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-	>
+	<my:MBox Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 		<TabView
 			x:Name="uTab" x:FieldModifier="public"
-			HorizontalAlignment="Stretch" Width="NaN"
-			VerticalAlignment="Stretch" Height="NaN"
+			HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
 			IsAddTabButtonVisible="False"
-			TabCloseRequested="{x:Bind uTab_OnTabCloseRequested, Mode=OneTime}"
-			Loaded="{x:Bind uTab_OnLoaded, Mode=OneTime}"
+			TabItemsSource="{x:Bind Controller.uTab_TabItemsSource}"
+			SelectedItem="{x:Bind Controller.uTab_SelectedItem}"
+			TabCloseRequested="{x:Bind Controller.uTab_OnTabCloseRequested}"
 		>
+			<TabView.TabItemTemplate>
+				<DataTemplate x:DataType="localModule:TabItemController">
+					<TabViewItem
+						Header="{x:Bind uRoot_Header}"
+						IconSource="{x:Bind uRoot_IconSource}"
+						IsClosable="{x:Bind uRoot_IsCloseable}"
+						Content="{x:Bind uRoot_Content}"
+					/>
+				</DataTemplate>
+			</TabView.TabItemTemplate>
 			<TabView.TabStripHeader>
-				<my:MStack
-					HorizontalAlignment="Stretch" Width="NaN"
-					VerticalAlignment="Stretch" Height="NaN"
-					Padding="16,4,4,4"
-					Orientation="Horizontal" Spacing="8"
-				>
+				<my:MStack Padding="16,4,4,4" Orientation="Horizontal" Spacing="8">
 					<ImageIcon
-						HorizontalAlignment="Stretch" Width="22"
-						VerticalAlignment="Bottom" Height="22"
+						HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
+						Width="22" Height="22"
 						Source="/Asset/logo.png"
 					/>
 				</my:MStack>
 			</TabView.TabStripHeader>
 			<TabView.TabStripFooter>
-				<my:MStack
-					HorizontalAlignment="Stretch" Width="NaN" MinWidth="160"
-					VerticalAlignment="Stretch" Height="NaN"
-					Padding="4,4,16,4"
-					Orientation="Horizontal" Spacing="8"
-				>
-				</my:MStack>
+				<my:MBox MinWidth="160" />
 			</TabView.TabStripFooter>
 		</TabView>
+		<InfoBar
+			HorizontalAlignment="Center" VerticalAlignment="Bottom"
+			Margin="{x:Bind Controller.uTip_Margin}"
+			IsOpen="{x:Bind Controller.uTip_IsOpen}"
+			Severity="{x:Bind Controller.uTip_Severity}"
+			Title="{x:Bind Controller.uTip_Title}"
+		>
+			<InfoBar.Transitions>
+				<ContentThemeTransition />
+			</InfoBar.Transitions>
+		</InfoBar>
 	</my:MBox>
 </Window>

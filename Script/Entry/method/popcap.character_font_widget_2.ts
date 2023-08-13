@@ -55,7 +55,7 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					definition_file: undefined!,
+					definition_file: '?input',
 					data_file: '?default',
 					buffer_size: configuration.encode_buffer_size,
 				},
@@ -95,7 +95,7 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					data_file: undefined!,
+					data_file: '?input',
 					definition_file: '?default',
 				},
 				input_filter: Entry.file_system_path_test_generator([['file', /.+(\.cfw2)$/i]]),
@@ -154,7 +154,7 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					definition_file_directory: undefined!,
+					definition_file_directory: '?input',
 					data_file_directory: '?default',
 					buffer_size: configuration.encode_buffer_size,
 				},
@@ -202,7 +202,7 @@ namespace TwinStar.Script.Entry.method.popcap.character_font_widget_2 {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					data_file_directory: undefined!,
+					data_file_directory: '?input',
 					definition_file_directory: '?default',
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', null]]),

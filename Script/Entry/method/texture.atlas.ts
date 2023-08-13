@@ -55,7 +55,7 @@ namespace TwinStar.Script.Entry.method.texture.atlas {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					definition_file: undefined!,
+					definition_file: '?input',
 					sprite_directory: '?default',
 					atlas_file: '?default',
 				},
@@ -104,7 +104,7 @@ namespace TwinStar.Script.Entry.method.texture.atlas {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					definition_file: undefined!,
+					definition_file: '?input',
 					atlas_file: '?default',
 					sprite_directory: '?default',
 				},
@@ -153,7 +153,7 @@ namespace TwinStar.Script.Entry.method.texture.atlas {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					sprite_directory: undefined!,
+					sprite_directory: '?input',
 					definition_file: '?default',
 					atlas_file: '?default',
 				},

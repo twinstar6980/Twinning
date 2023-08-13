@@ -14,11 +14,12 @@ namespace Helper.Module.HomeSetting {
 		) {
 			this.InitializeComponent();
 			this.Controller = new MainPageController() { View = this };
+			this.Controller.Update();
 		}
 
 		// ----------------
 
-		private MainPageController Controller { get; }
+		public MainPageController Controller { get; }
 
 		#endregion
 
@@ -28,95 +29,250 @@ namespace Helper.Module.HomeSetting {
 
 		#region data
 
-		public required MainPage View;
+		public MainPage View { get; init; } = default!;
 
 		#endregion
 
-		#region module
+		#region update
 
-		public List<ModuleItemController> uModuleList_ItemsSource {
-			get {
-				return new List<ModuleItemController>(Enumerable.Range(1, ModuleInformationConstant.Value.Count - 1).Select(i => new ModuleItemController() { Host = this, Index = i }));
-			}
+		public async void Update (
+		) {
+			return;
 		}
 
 		#endregion
 
-		#region customize setting
+		#region appearance
 
-		public List<Tuple<ElementTheme, String>> uThemeComboBox_ItemsSource {
+		public String uAppearanceThemeModeBar_Description {
 			get {
-				return new List<Tuple<ElementTheme, String>> {
-					new (ElementTheme.Default, "System"),
-					new (ElementTheme.Light, "Light"),
-					new (ElementTheme.Dark, "Dark"),
-				};
+				return ConvertHelper.ThemeToString(Setting.AppearanceThemeMode);
 			}
 		}
 
-		public Size uThemeComboBox_SelectedIndex {
+		public List<String> uAppearanceThemeModeRadio_ItemsSource {
 			get {
-				return (Size)ThemeHelper.RootTheme;
+				return new[] { ElementTheme.Default, ElementTheme.Light, ElementTheme.Dark }.Select((value) => (ConvertHelper.ThemeToString(value))).ToList();
 			}
 		}
 
-		public void uThemeComboBox_OnSelectionChanged (
+		public Size uAppearanceThemeModeRadio_SelectedIndex {
+			get {
+				return (Size)Setting.AppearanceThemeMode;
+			}
+		}
+
+		public async void uAppearanceThemeModeRadio_OnSelectionChanged (
 			Object                    sender,
-			SelectionChangedEventArgs e
+			SelectionChangedEventArgs args
 		) {
-			var selectedValue = (ElementTheme)((ComboBox)sender).SelectedValue;
-			ThemeHelper.RootTheme = selectedValue;
+			if (sender is not RadioButtons senders) { return; }
+			if (senders.SelectedIndex == -1) {
+				return;
+			}
+			var newValue = (ElementTheme)senders.SelectedIndex;
+			Setting.AppearanceThemeMode = newValue;
+			this.NotifyPropertyChanged(
+				nameof(this.uAppearanceThemeModeBar_Description),
+				nameof(this.uAppearanceThemeModeRadio_SelectedIndex)
+			);
+			return;
 		}
 
 		#endregion
 
-	}
+		#region command forwarder
 
-	public class ModuleItemController : CustomController {
-
-		#region data
-
-		public required MainPageController Host;
-
-		public required Size Index;
-
-		#endregion
-
-		#region view
-
-		public String uIcon_Glyph {
-			get {
-				var model = ModuleInformationConstant.Value[this.Index];
-				return $"{model.Icon}";
-			}
-		}
-
-		// ----------------
-
-		public String uTitle_Text {
-			get {
-				var model = ModuleInformationConstant.Value[this.Index];
-				return $"{model.Title}";
-			}
-		}
-
-		// ----------------
-
-		public String uDescription_Text {
-			get {
-				var model = ModuleInformationConstant.Value[this.Index];
-				return $"{model.Description}";
-			}
-		}
-
-		// ----------------
-
-		public async void uCreate_OnClick (
+		public async void uCommandForwarderOpen_OnClick (
 			Object          sender,
-			RoutedEventArgs e
+			RoutedEventArgs args
 		) {
-			var model = ModuleInformationConstant.Value[this.Index];
-			MainWindow.Instance.PushTabItem(model.Type, true);
+			if (sender is not Button senders) { return; }
+			MainWindow.Instance.Controller.PushTabItem(ModuleType.CommandForwarder, true);
+			return;
+		}
+
+		// ----------------
+
+		public String uCommandForwarderLaunchScriptBar_Description {
+			get {
+				return Setting.CommandForwarderLaunchScript;
+			}
+		}
+
+		public String uCommandForwarderLaunchScriptText_Text {
+			get {
+				return Setting.CommandForwarderLaunchScript;
+			}
+		}
+
+		public async void uCommandForwarderLaunchScriptText_OnTextChanged (
+			Object               sender,
+			TextChangedEventArgs args
+		) {
+			if (sender is not TextBox senders) { return; }
+			Setting.CommandForwarderLaunchScript = senders.Text;
+			this.NotifyPropertyChanged(
+				nameof(this.uCommandForwarderLaunchScriptBar_Description),
+				nameof(this.uCommandForwarderLaunchScriptText_Text)
+			);
+			return;
+		}
+
+		public async void uCommandForwarderLaunchScriptSelect_OnClick (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			if (sender is not Button senders) { return; }
+			var newValue = await StorageHelper.PickFile(WindowHelper.GetWindowForElement(this.View) ?? throw new Exception());
+			if (newValue is not null) {
+				Setting.CommandForwarderLaunchScript = newValue;
+				this.NotifyPropertyChanged(
+					nameof(this.uCommandForwarderLaunchScriptBar_Description),
+					nameof(this.uCommandForwarderLaunchScriptText_Text)
+				);
+			}
+			return;
+		}
+
+		// ----------------
+
+		public String uCommandForwarderMethodConfigurationBar_Description {
+			get {
+				return Setting.CommandForwarderMethodConfiguration;
+			}
+		}
+
+		public String uCommandForwarderMethodConfigurationText_Text {
+			get {
+				return Setting.CommandForwarderMethodConfiguration;
+			}
+		}
+
+		public async void uCommandForwarderMethodConfigurationText_OnTextChanged (
+			Object               sender,
+			TextChangedEventArgs args
+		) {
+			if (sender is not TextBox senders) { return; }
+			Setting.CommandForwarderMethodConfiguration = senders.Text;
+			this.NotifyPropertyChanged(
+				nameof(this.uCommandForwarderMethodConfigurationBar_Description),
+				nameof(this.uCommandForwarderMethodConfigurationText_Text)
+			);
+			return;
+		}
+
+		public async void uCommandForwarderMethodConfigurationSelect_OnClick (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			if (sender is not Button senders) { return; }
+			var newValue = await StorageHelper.PickFile(WindowHelper.GetWindowForElement(this.View) ?? throw new Exception());
+			if (newValue is not null) {
+				Setting.CommandForwarderMethodConfiguration = newValue;
+				this.NotifyPropertyChanged(
+					nameof(this.uCommandForwarderMethodConfigurationBar_Description),
+					nameof(this.uCommandForwarderMethodConfigurationText_Text)
+				);
+			}
+			return;
+		}
+
+		#endregion
+
+		#region animation viewer
+
+		public async void uAnimationViewerOpen_OnClick (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			if (sender is not Button senders) { return; }
+			MainWindow.Instance.Controller.PushTabItem(ModuleType.AnimationViewer, true);
+			return;
+		}
+
+		// ----------------
+
+		public String uAnimationViewerAutomaticPlayBar_Description {
+			get {
+				return ConvertHelper.BooleanToSwitchString(Setting.AnimationViewerAutomaticPlay);
+			}
+		}
+
+		public Boolean uAnimationViewerAutomaticPlaySwitch_IsOn {
+			get {
+				return Setting.AnimationViewerAutomaticPlay;
+			}
+		}
+
+		public async void uAnimationViewerAutomaticPlaySwitch_OnToggled (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			if (sender is not ToggleSwitch senders) { return; }
+			var newValue = senders.IsOn;
+			Setting.AnimationViewerAutomaticPlay = newValue;
+			this.NotifyPropertyChanged(
+				nameof(this.uAnimationViewerAutomaticPlayBar_Description),
+				nameof(this.uAnimationViewerAutomaticPlaySwitch_IsOn)
+			);
+			return;
+		}
+
+		// ----------------
+
+		public String uAnimationViewerRepeatPlayBar_Description {
+			get {
+				return ConvertHelper.BooleanToSwitchString(Setting.AnimationViewerRepeatPlay);
+			}
+		}
+
+		public Boolean uAnimationViewerRepeatPlaySwitch_IsOn {
+			get {
+				return Setting.AnimationViewerRepeatPlay;
+			}
+		}
+
+		public async void uAnimationViewerRepeatPlaySwitch_OnToggled (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			if (sender is not ToggleSwitch senders) { return; }
+			var newValue = senders.IsOn;
+			Setting.AnimationViewerRepeatPlay = newValue;
+			this.NotifyPropertyChanged(
+				nameof(this.uAnimationViewerRepeatPlayBar_Description),
+				nameof(this.uAnimationViewerRepeatPlaySwitch_IsOn)
+			);
+			return;
+		}
+
+		// ----------------
+
+		public String uAnimationViewerRemainFrameRateBar_Description {
+			get {
+				return ConvertHelper.BooleanToSwitchString(Setting.AnimationViewerRemainFrameRate);
+			}
+		}
+
+		public Boolean uAnimationViewerRemainFrameRateSwitch_IsOn {
+			get {
+				return Setting.AnimationViewerRemainFrameRate;
+			}
+		}
+
+		public async void uAnimationViewerRemainFrameRateSwitch_OnToggled (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			if (sender is not ToggleSwitch senders) { return; }
+			var newValue = senders.IsOn;
+			Setting.AnimationViewerRemainFrameRate = newValue;
+			this.NotifyPropertyChanged(
+				nameof(this.uAnimationViewerRemainFrameRateBar_Description),
+				nameof(this.uAnimationViewerRemainFrameRateSwitch_IsOn)
+			);
+			return;
 		}
 
 		#endregion

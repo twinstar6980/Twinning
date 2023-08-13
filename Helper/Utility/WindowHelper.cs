@@ -9,19 +9,14 @@ namespace Helper.Utility {
 
 		#region utility
 
-		public static List<Window> ActiveWindow { get; } = new ();
+		public static List<Window> ActiveWindow { get; } = new List<Window>();
 
 		// ----------------
 
 		public static Window TrackWindow (
 			Window window
 		) {
-			window.Closed += (
-				sender,
-				args
-			) => {
-				WindowHelper.ActiveWindow.Remove(window);
-			};
+			window.Closed += (sender, args) => { WindowHelper.ActiveWindow.Remove(window); };
 			WindowHelper.ActiveWindow.Add(window);
 			return window;
 		}
@@ -31,14 +26,7 @@ namespace Helper.Utility {
 		public static Window? GetWindowForElement (
 			UIElement element
 		) {
-			if (element.XamlRoot != null) {
-				foreach (var window in WindowHelper.ActiveWindow) {
-					if (element.XamlRoot == window.Content.XamlRoot) {
-						return window;
-					}
-				}
-			}
-			return null;
+			return WindowHelper.ActiveWindow.Find((value) => (value.Content.XamlRoot == element.XamlRoot));
 		}
 
 		#endregion

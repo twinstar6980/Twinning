@@ -6,5 +6,6 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:local="using:Helper"
 	mc:Ignorable="d"
+	x:DefaultBindMode="OneWay"
 >
 </UserControl>

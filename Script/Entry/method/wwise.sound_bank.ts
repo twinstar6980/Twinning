@@ -67,7 +67,7 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					bundle_directory: undefined!,
+					bundle_directory: '?input',
 					data_file: '?default',
 					version_number: configuration.version_number,
 					buffer_size: configuration.encode_buffer_size,
@@ -119,7 +119,7 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					data_file: undefined!,
+					data_file: '?input',
 					bundle_directory: '?default',
 					version_number: configuration.version_number,
 				},
@@ -190,7 +190,7 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					bundle_directory_directory: undefined!,
+					bundle_directory_directory: '?input',
 					data_file_directory: '?default',
 					version_number: configuration.version_number,
 					buffer_size: configuration.encode_buffer_size,
@@ -250,7 +250,7 @@ namespace TwinStar.Script.Entry.method.wwise.sound_bank {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					data_file_directory: undefined!,
+					data_file_directory: '?input',
 					bundle_directory_directory: '?default',
 					version_number: configuration.version_number,
 				},

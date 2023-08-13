@@ -789,7 +789,7 @@
 	"method:pvz2.text_table.convert$destination_version:name": "Destination version",
 	"method:pvz2.text_table.convert$destination_file:name": "Destination file",
 	// Entry/method/pvz2.remote_android_helper
-	"method:pvz2.remote_android_helper.launch:name": "PvZ-2 Remote-Android-Helper",
+	"method:pvz2.remote_android_helper.launch:name": "PvZ-2 Remote-Android-Helper Launch",
 	"method:pvz2.remote_android_helper.launch$project_directory:name": "Project directory",
 	"method:pvz2.remote_android_helper.launch$action:name": "Action",
 	// Entry/method/expand

@@ -44,7 +44,7 @@ namespace TwinStar.Script.Entry.method.pvz2.remote_android_helper {
 				},
 				default_argument: {
 					...Entry.g_common_argument,
-					project_directory: undefined!,
+					project_directory: '?input',
 					action: '?input',
 				},
 				input_filter: Entry.file_system_path_test_generator([['directory', /.+(\.pvz2_remote_android_helper_project)$/i]]),

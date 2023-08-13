@@ -42,7 +42,7 @@ namespace Helper.Utility {
 				this.mMicaController.SetSystemBackdropConfiguration(this.mSystemBackdropConfiguration);
 				this.mWindow.Activated += this.Window_Activated;
 				this.mWindow.Closed += this.Window_Closed;
-				((FrameworkElement)this.mWindow.Content).ActualThemeChanged += this.Window_ThemeChanged;
+				(this.mWindow.Content as FrameworkElement)!.ActualThemeChanged += this.Window_ThemeChanged;
 				this.SetConfigurationSourceTheme();
 				return true;
 			} else {
@@ -52,12 +52,12 @@ namespace Helper.Utility {
 
 		private void SetConfigurationSourceTheme (
 		) {
-			if (this.mSystemBackdropConfiguration != null) {
-				this.mSystemBackdropConfiguration.Theme = ((FrameworkElement)this.mWindow.Content).ActualTheme switch {
-					ElementTheme.Dark => SystemBackdropTheme.Dark,
-					ElementTheme.Light => SystemBackdropTheme.Light,
+			if (this.mSystemBackdropConfiguration is not null) {
+				this.mSystemBackdropConfiguration.Theme = (this.mWindow.Content as FrameworkElement)!.ActualTheme switch {
 					ElementTheme.Default => SystemBackdropTheme.Default,
-					_ => throw new ArgumentOutOfRangeException(),
+					ElementTheme.Light   => SystemBackdropTheme.Light,
+					ElementTheme.Dark    => SystemBackdropTheme.Dark,
+					_                    => throw new ArgumentOutOfRangeException(),
 				};
 			}
 			return;
@@ -69,7 +69,7 @@ namespace Helper.Utility {
 			Object                   sender,
 			WindowActivatedEventArgs args
 		) {
-			if (this.mSystemBackdropConfiguration != null) {
+			if (this.mSystemBackdropConfiguration is not null) {
 				this.mSystemBackdropConfiguration.IsInputActive = args.WindowActivationState != WindowActivationState.Deactivated;
 			}
 			return;
@@ -79,7 +79,7 @@ namespace Helper.Utility {
 			Object          sender,
 			WindowEventArgs args
 		) {
-			if (this.mMicaController != null) {
+			if (this.mMicaController is not null) {
 				this.mMicaController.Dispose();
 				this.mMicaController = null;
 			}
@@ -92,7 +92,7 @@ namespace Helper.Utility {
 			FrameworkElement sender,
 			Object           args
 		) {
-			if (this.mSystemBackdropConfiguration != null) {
+			if (this.mSystemBackdropConfiguration is not null) {
 				this.SetConfigurationSourceTheme();
 			}
 			return;

@@ -113,7 +113,6 @@ namespace TwinStar.Script.Executor {
 				}
 				for (let key in selected_method.default_argument) {
 					if (argument[key] === undefined) {
-						assert_test(selected_method.default_argument[key] !== undefined, `argument <${key}> is required`);
 						argument[key] = selected_method.default_argument[key];
 					}
 				}

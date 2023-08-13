@@ -10,7 +10,7 @@ namespace Helper.Utility {
 
 	public static class AnimationHelper {
 
-		#region load from storage
+		#region load
 
 		public static async Task<AnimationModel.Animation> LoadAnimation (
 			String file
@@ -26,7 +26,7 @@ namespace Helper.Utility {
 			var imageSourceList = new List<BitmapSource?>(animation.Image.Count);
 			foreach (var image in animation.Image) {
 				var file = $"{directory}/{image.Name.Split('|')[0]}.png";
-				var source = (BitmapSource?)null;
+				var source = default(BitmapSource);
 				if (File.Exists(file)) {
 					source = await StorageHelper.ReadFileImage(file);
 				}
@@ -47,14 +47,11 @@ namespace Helper.Utility {
 			AnimationModel.Animation animation,
 			Size                     index
 		) {
-			var result = (AnimationModel.Sprite)null!;
+			var result = default(AnimationModel.Sprite);
 			if (0 <= index && index < animation.Sprite.Count) {
 				result = animation.Sprite[index];
 			} else if (index == animation.Sprite.Count) {
-				if (animation.MainSprite == null) {
-					throw new Exception();
-				}
-				result = animation.MainSprite;
+				result = animation.MainSprite ?? throw new Exception();
 			} else {
 				throw new ArgumentException();
 			}
@@ -63,7 +60,7 @@ namespace Helper.Utility {
 
 		#endregion
 
-		#region create ui
+		#region create
 
 		public record SpriteUI {
 			public required Canvas     Canvas;
@@ -105,7 +102,7 @@ namespace Helper.Utility {
 				var keyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(frameIndex));
 				foreach (var remove in frame.Remove) {
 					var layer = layerList[remove.Index];
-					if (layer == null) {
+					if (layer is null) {
 						continue;
 					}
 					layer.Visibility.KeyFrames.Add(
@@ -116,8 +113,7 @@ namespace Helper.Utility {
 					);
 				}
 				foreach (var append in frame.Append) {
-					if ((!append.Sprite && !imageFilter[(Size)append.Resource]) ||
-						(append.Sprite && !spriteFilter[(Size)append.Resource])) {
+					if ((!append.Sprite && !imageFilter[(Size)append.Resource]) || (append.Sprite && !spriteFilter[(Size)append.Resource])) {
 						layerList.Add(append.Index, null);
 						continue;
 					}
@@ -189,7 +185,7 @@ namespace Helper.Utility {
 				}
 				foreach (var change in frame.Change) {
 					var layer = layerList[change.Index];
-					if (layer == null) {
+					if (layer is null) {
 						continue;
 					}
 					var transform = TransformHelper.ConvertFromVariant(change.Transform);
@@ -199,7 +195,7 @@ namespace Helper.Utility {
 							Value = transform,
 						}
 					);
-					if (change.Color != null) {
+					if (change.Color is not null) {
 						layer.ColorAlpha.KeyFrames.Add(
 							new DiscreteObjectKeyFrame() {
 								KeyTime = keyTime,
@@ -219,7 +215,7 @@ namespace Helper.Utility {
 				++frameIndex;
 			}
 			foreach (var layer in layerList) {
-				if (layer.Value == null) {
+				if (layer.Value is null) {
 					continue;
 				}
 				ui.Canvas.Children.Add(layer.Value.Canvas);
