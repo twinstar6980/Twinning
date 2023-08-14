@@ -13,9 +13,8 @@ target('implement', function()
 	)
 	add_files(
 		'./dllmain.cpp',
-		'./resource/source.def',
-		'./resource/application.manifest',
-		'./resource/application.rc',
+		'./resource/library.def',
+		'./resource/resource.rc',
 		{}
 	)
 	add_includedirs(

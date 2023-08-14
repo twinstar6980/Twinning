@@ -33,7 +33,7 @@ class MessageOutputBar extends StatelessWidget {
     var titleTextStyle = !setting.data.mFontSizeUseLargerInConsole ? theme.textTheme.titleSmall! : theme.textTheme.titleMedium!;
     var descriptionTextStyle = !setting.data.mFontSizeUseLargerInConsole ? theme.textTheme.bodySmall! : theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.secondary);
     return Card(
-      margin: EdgeInsets.zero,
+      margin: const EdgeInsets.fromLTRB(1, 0, 1, 0),
       elevation: 1,
       color: Color.alphaBlend(typeColor.withOpacity(0.025), theme.colorScheme.surface),
       child: Container(

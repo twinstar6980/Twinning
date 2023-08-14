@@ -1,6 +1,6 @@
 #pragma once
 
-#define M_version 30
+#define M_version 31
 
 #pragma warning(push)
 #pragma warning(disable:4191)
@@ -188,6 +188,22 @@ namespace TwinStar::ForwarderForWindows {
 		);
 		assert_test(state_b);
 		return;
+	}
+
+	// ----------------
+
+	inline auto get_file_long_path (
+		std::wstring const & short_path
+	) -> std::wstring {
+		auto state_d = DWORD{};
+		state_d = GetLongPathNameW(short_path.data(), nullptr, 0);
+		assert_test(state_d != 0);
+		auto result = std::wstring{};
+		result.resize(state_d);
+		state_d = GetLongPathNameW(short_path.data(), result.data(), static_cast<DWORD>(result.size()));
+		assert_test(state_d == result.size() - 1);
+		result.resize(result.size() - 1);
+		return result;
 	}
 
 	// ----------------

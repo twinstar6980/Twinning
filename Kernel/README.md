@@ -47,7 +47,7 @@
 | [Rijndael](#)                                                              | Rijndael 加密与解密            |
 | [zlib 1.2.13](https://github.com/madler/zlib)                              | ZLib 压缩与解压                |
 | [bzip2 1.0.8](https://sourceware.org/bzip2/)                               | BZip2 压缩与解压               |
-| [lzma 22.01](https://www.7-zip.org/sdk.html)                               | Lzma 压缩与解压                |
+| [lzma 23.01](https://www.7-zip.org/sdk.html)                               | Lzma 压缩与解压                |
 | [open-vcdiff 0.8.4](https://github.com/google/open-vcdiff)                 | VCDiff 差异分析                |
 | [avir 3.0](https://github.com/avaneev/avir)                                | 图像缩放                       |
 | [ETCPACK 2.74](https://github.com/Ericsson/ETCPACK)                        | ETC1 解压                      |

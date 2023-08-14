@@ -123,9 +123,11 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         var type = MessageType.fromString(argument[1]);
         var title = argument[2];
         var description = argument.sublist(3);
-        this._outputBarListItem.add(
-          const SizedBox(height: 8),
-        );
+        if (this._outputBarListItem.isNotEmpty) {
+          this._outputBarListItem.add(
+            const SizedBox(height: 8),
+          );
+        }
         this._outputBarListItem.add(
           MessageOutputBar(
             type: type,
@@ -323,9 +325,11 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
     } catch (e) {
       exception = e.toString();
     }
-    this._outputBarListItem.add(
-      const SizedBox(height: 8),
-    );
+    if (this._outputBarListItem.isNotEmpty) {
+      this._outputBarListItem.add(
+        const SizedBox(height: 8),
+      );
+    }
     if (exception == null) {
       this._outputBarListItem.add(
         MessageOutputBar(
@@ -388,12 +392,12 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
               interactive: true,
               controller: this._outputBarListScrollController,
               child: ListView(
+                padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
                 controller: this._outputBarListScrollController,
                 children: [...this._outputBarListItem],
               ),
             ),
           ),
-          const SizedBox(height: 8),
           LinearProgressIndicator(
             minHeight: 1,
             value: this._running ? null : 0.0,

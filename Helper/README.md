@@ -8,11 +8,10 @@
 
 * 要求
 	
-	* [Visual Studio 17.6](https://visualstudio.microsoft.com/downloads/)
+	* [Visual Studio 17.7](https://visualstudio.microsoft.com/downloads/)
 
 ## 第三方库使用
 
-| 库                                                                         | 用途                           |
-|:--------------------------------------------------------------------------:|:------------------------------:|
+> 参见 [Helper.csproj](./Helper.csproj) 。
 
 ## 说明

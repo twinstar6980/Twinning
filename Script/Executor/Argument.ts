@@ -12,7 +12,11 @@ namespace TwinStar.Script.Executor {
 		given_converter: (value: Given) => Result,
 		default_generator: (() => Result) | null,
 		input_generator: (initial?: Result) => Result,
+		skip_value: Result | undefined = undefined,
 	): Result {
+		if (skip_value !== undefined) {
+			return skip_value;
+		}
 		let initial: Result | undefined;
 		if (given === '?input') {
 			Console.information(los('executor.argument:input', name), [

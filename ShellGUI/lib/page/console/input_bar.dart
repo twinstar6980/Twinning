@@ -38,7 +38,7 @@ class InputBarContent extends StatelessWidget {
               this.icon,
               size: 18,
             ),
-            onPressed: () {},
+            onPressed: () async {},
           ),
         ),
         const SizedBox(width: 4),
@@ -178,14 +178,14 @@ class _ConfirmationInputBarContentState extends State<ConfirmationInputBarConten
           return Expanded(
             child: (this._value ?? !e) == e
                 ? FilledButton.tonal(
-                    onPressed: () {
+                    onPressed: () async {
                       this._value = null;
                       this.setState(() {});
                     },
                     child: Text(!e ? 'No' : 'Yes'),
                   )
-                : OutlinedButton(
-                    onPressed: () {
+                : TextButton(
+                    onPressed: () async {
                       this._value = e;
                       this.setState(() {});
                     },
@@ -198,14 +198,14 @@ class _ConfirmationInputBarContentState extends State<ConfirmationInputBarConten
           return Expanded(
             child: (this._value ?? !e) == e
                 ? FilledButton.tonal(
-                    onPressed: () {
+                    onPressed: () async {
                       this._value = null;
                       this.setState(() {});
                     },
                     child: Text(!e ? 'No' : 'Yes'),
                   )
-                : OutlinedButton(
-                    onPressed: () {
+                : TextButton(
+                    onPressed: () async {
                       this._value = e;
                       this.setState(() {});
                     },

@@ -185,7 +185,7 @@ namespace Helper.Module.CommandForwarder {
 		public String uConfirmationValue_Text {
 			get {
 				if (this.Type is not MethodConfigurationModel.ArgumentType.Confirmation || this.Option is not null || this.Value is not { Value: not null }) { return ""; }
-				return ConvertHelper.BooleanToLowerCaseString(this.Value.OfConfirmation);
+				return ConvertHelper.BooleanToConfirmationStringLower(this.Value.OfConfirmation);
 			}
 		}
 
@@ -375,7 +375,7 @@ namespace Helper.Module.CommandForwarder {
 		public List<Tuple<Object, String>> uEnumerationValue_ItemsSource {
 			get {
 				if (this.Type is null || this.Option is null || this.Value is null) { return new List<Tuple<Object, String>>(); }
-				return this.Option.Select((value) => (new Tuple<Object, String>(value, value is Boolean valueBoolean ? ConvertHelper.BooleanToLowerCaseString(valueBoolean) : value.ToString() ?? throw new Exception()))).ToList();
+				return this.Option.Select((value) => (new Tuple<Object, String>(value, value is Boolean valueBoolean ? ConvertHelper.BooleanToConfirmationStringLower(valueBoolean) : value.ToString() ?? throw new Exception()))).ToList();
 			}
 		}
 

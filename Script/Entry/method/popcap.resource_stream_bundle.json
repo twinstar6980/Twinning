@@ -4,6 +4,7 @@
 	"version_extended_texture_information_for_pvz2_cn": "?input",
 	"pack_buffer_size": "1.25g",
 	"resource_convert_option": {
+		"recase_path": "?input",
 		"rton": "?input",
 		"rton_version_number": 1,
 		"rton_version_native_string_encoding_use_utf8": "?input",
@@ -105,10 +106,8 @@
 		"bnk": "?input",
 		"bnk_version_number": "?input",
 		"wem": "?input",
-		"wem_tool": {
-			"ffmpeg_program": "~/external/ffmpeg/ffmpeg",
-			"ww2ogg_program": "~/external/ww2ogg/ww2ogg",
-			"ww2ogg_code_book": "~/external/ww2ogg/packed_codebooks_aoTuV_603.bin",
-		},
+		"wem_tool_ffmpeg_program_file": "~/external/ffmpeg/ffmpeg",
+		"wem_tool_ww2ogg_program_file": "~/external/ww2ogg/ww2ogg",
+		"wem_tool_ww2ogg_code_book_file": "~/external/ww2ogg/packed_codebooks_aoTuV_603.bin",
 	},
 }

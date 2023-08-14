@@ -8,6 +8,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 	}>;
 
 	export type Option = {
+		recase_path: boolean,
 		rton: null | {
 			directory: string;
 			version: typeof Kernel.Tool.PopCap.ReflectionObjectNotation.Version.Value,
@@ -119,8 +120,8 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 			}
 			return;
 		};
-		{
-			Console.information(los('support.pvz2.resource_stream_bundle.resource_convert:reset_resource_path_case'), [
+		if (option.recase_path) {
+			Console.information(los('support.pvz2.resource_stream_bundle.resource_convert:recase_resource_path'), [
 			]);
 			let resource_path_list: Array<string> = [];
 			iterate_resource(false)((group, subgroup, resource) => {

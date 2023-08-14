@@ -544,7 +544,7 @@ class _SettingPageState extends State<SettingPage> {
                 Row(children: [
                   Expanded(child: Container()),
                   OutlinedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       setting.set(Setting.init());
                     },
                     child: const Text('Reset'),

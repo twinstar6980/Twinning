@@ -26,18 +26,19 @@ namespace TwinStar::ForwarderForWindows {
 
 	inline auto test_forward_available (
 		ForwardExplorerCommandConfiguration const & configuration,
-		std::wstring const &                        input
+		std::wstring const &                        input_short,
+		std::wstring const &                        input_long
 	) -> bool {
 		auto result = true;
 		if (configuration.type) {
 			if (!configuration.type.value()) {
-				result &= std::filesystem::is_regular_file(std::filesystem::path{input});
+				result &= std::filesystem::is_regular_file(std::filesystem::path{input_short});
 			} else {
-				result &= std::filesystem::is_directory(std::filesystem::path{input});
+				result &= std::filesystem::is_directory(std::filesystem::path{input_short});
 			}
 		}
 		if (result && configuration.rule) {
-			result &= std::regex_search(input, configuration.rule.value());
+			result &= std::regex_search(input_long, configuration.rule.value());
 		}
 		return result;
 	}
@@ -96,7 +97,7 @@ namespace TwinStar::ForwarderForWindows {
 			auto available = std::ranges::all_of(
 				input_list,
 				[&] (auto & input) {
-					return test_forward_available(thiz.m_configuration, input);
+					return test_forward_available(thiz.m_configuration, input, get_file_long_path(input));
 				}
 			);
 			auto state = !available ? (ECS_DISABLED) : (ECS_ENABLED);
@@ -126,7 +127,7 @@ namespace TwinStar::ForwarderForWindows {
 				argument.emplace_back(script);
 				auto argument_count_per_command = std::ptrdiff_t{1 + (!thiz.m_configuration.method.has_value() ? (0) : (2)) + 2};
 				for (auto & input : input_list) {
-					argument.emplace_back(input);
+					argument.emplace_back(get_file_long_path(input));
 					if (thiz.m_configuration.method.has_value()) {
 						argument.emplace_back(L"-method");
 						argument.emplace_back(thiz.m_configuration.method.value());
@@ -240,7 +241,7 @@ namespace TwinStar::ForwarderForWindows {
 					return std::ranges::all_of(
 						input_list,
 						[&] (auto & input) {
-							return test_forward_available(configuration, input);
+							return test_forward_available(configuration, input, get_file_long_path(input));
 						}
 					);
 				}

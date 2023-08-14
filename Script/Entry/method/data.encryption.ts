@@ -118,18 +118,14 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 							null,
 							(initial) => (Console.string(null, (value) => (KernelX.Tool.Data.Encryption.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : los(`密钥长度非法`)), initial)),
 						);
-						if (mode === 'cbc' || mode === 'cfb') {
-							iv = Executor.request_argument(
-								Executor.query_argument_name(this.id, 'iv'),
-								a.iv,
-								(value) => (value),
-								null,
-								(initial) => (Console.string(null, (value) => (value.length === Number(block_size) ? null : los(`长度不匹配`)), initial)),
-								
-							);
-						} else {
-							iv = '';
-						}
+						iv = Executor.request_argument(
+							Executor.query_argument_name(this.id, 'iv'),
+							a.iv,
+							(value) => (value),
+							null,
+							(initial) => (Console.string(null, (value) => (value.length === Number(block_size) ? null : los(`长度不匹配`)), initial)),
+							(mode === 'cbc' || mode === 'cfb') ? undefined : '',
+						);
 					}
 					KernelX.Tool.Data.Encryption.Rijndael.encrypt_fs(plain_file, cipher_file, mode as any, block_size as any, BigInt(key.length) as KernelX.Tool.Data.Encryption.Rijndael.BlockSize, key, iv);
 					return [`${cipher_file}`];
@@ -202,18 +198,14 @@ namespace TwinStar.Script.Entry.method.data.encryption {
 							null,
 							(initial) => (Console.string(null, (value) => (KernelX.Tool.Data.Encryption.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : los(`密钥长度非法`)), initial)),
 						);
-						if (mode === 'cbc' || mode === 'cfb') {
-							iv = Executor.request_argument(
-								Executor.query_argument_name(this.id, 'iv'),
-								a.iv,
-								(value) => (value),
-								null,
-								(initial) => (Console.string(null, (value) => (value.length === Number(block_size) ? null : los(`长度不匹配`)), initial)),
-								
-							);
-						} else {
-							iv = '';
-						}
+						iv = Executor.request_argument(
+							Executor.query_argument_name(this.id, 'iv'),
+							a.iv,
+							(value) => (value),
+							null,
+							(initial) => (Console.string(null, (value) => (value.length === Number(block_size) ? null : los(`长度不匹配`)), initial)),
+							(mode === 'cbc' || mode === 'cfb') ? undefined : '',
+						);
 					}
 					KernelX.Tool.Data.Encryption.Rijndael.decrypt_fs(cipher_file, plain_file, mode as any, block_size as any, BigInt(key.length) as KernelX.Tool.Data.Encryption.Rijndael.BlockSize, key, iv);
 					return [`${plain_file}`];

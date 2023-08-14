@@ -207,17 +207,6 @@ namespace Helper.Module.CommandForwarder {
 
 		#endregion
 
-		public List<String> GenerateCommand (
-		) {
-			return new List<String>() {
-				"?",
-				"-method",
-				this.ItemModel.Id,
-				"-argument",
-				MethodConfigurationHelper.MakeArgumentValueString(this.ItemModel.Argument, this.Argument),
-			};
-		}
-
 		#region view
 
 		public String uTitle_Text {
@@ -267,6 +256,21 @@ namespace Helper.Module.CommandForwarder {
 			get {
 				return UniqueStamp.Create();
 			}
+		}
+
+		#endregion
+
+		#region command
+
+		public List<String> GenerateCommand (
+		) {
+			return new List<String>() {
+				"?",
+				"-method",
+				this.ItemModel.Id,
+				"-argument",
+				MethodConfigurationHelper.MakeArgumentValueString(this.ItemModel.Argument, this.Argument),
+			};
 		}
 
 		#endregion

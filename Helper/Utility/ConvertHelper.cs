@@ -7,7 +7,7 @@ namespace Helper.Utility {
 
 	public static class ConvertHelper {
 
-		#region opacity
+		#region boolean
 
 		public static Floater BooleanToFloaterOfOpacity (
 			Boolean value
@@ -18,16 +18,21 @@ namespace Helper.Utility {
 			};
 		}
 
-		#endregion
-
-		#region switch
-
-		public static String BooleanToLowerCaseString (
+		public static String BooleanToStringLower (
 			Boolean value
 		) {
 			return value switch {
 				false => "false",
 				true  => "true",
+			};
+		}
+
+		public static String BooleanToConfirmationStringLower (
+			Boolean value
+		) {
+			return value switch {
+				false => "no",
+				true  => "yes",
 			};
 		}
 
