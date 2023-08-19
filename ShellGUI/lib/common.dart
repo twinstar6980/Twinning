@@ -22,7 +22,7 @@ typedef Map<K, V> = core.Map<K, V>;
 
 const kApplicationName = 'TwinStar ToolKit - Shell GUI';
 
-const kApplicationVersion = 17;
+const kApplicationVersion = 18;
 
 // ----------------
 
@@ -49,7 +49,7 @@ queryApplicationSharedDirectory(
     result = (await getApplicationSupportDirectory()).path;
   }
   if (Platform.isMacOS) {
-    result = (await getApplicationDocumentsDirectory()).path;
+    result = (await getApplicationSupportDirectory()).path;
   }
   if (Platform.isAndroid) {
     result = (await getExternalStorageDirectory())!.path;

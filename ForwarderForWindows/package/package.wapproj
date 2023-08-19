@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '15.0'">
+    <VisualStudioVersion>15.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup>
+    <WapProjPath Condition="'$(WapProjPath)'==''">$(MSBuildExtensionsPath)\Microsoft\DesktopBridge\</WapProjPath>
+  </PropertyGroup>
+  <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.props" />
+  <PropertyGroup>
+    <ProjectGuid>af6e6195-dc58-47fe-99b7-e516fb959785</ProjectGuid>
+    <TargetPlatformVersion>10.0.22621.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <DefaultLanguage>zh-CN</DefaultLanguage>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+    <NoWarn>$(NoWarn);NU1702</NoWarn>
+    <EntryPointProjectUniqueName>..\main\main.vcxproj</EntryPointProjectUniqueName>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <PackageCertificateThumbprint>315E4F64A239C38ED3696FAC664F80527C45E9B2</PackageCertificateThumbprint>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+    <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+    <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <AppxBundle>Never</AppxBundle>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <AppxBundle>Never</AppxBundle>
+  </PropertyGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+  </ItemGroup>
+  <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Asset\Library\extension.dll" />
+    <Content Include="Asset\Logo\Square150x150Logo.scale-100.png" />
+    <Content Include="Asset\Logo\Square150x150Logo.scale-200.png" />
+    <Content Include="Asset\Logo\Square150x150Logo.scale-400.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.altform-lightunplated_targetsize-16.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.altform-lightunplated_targetsize-256.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.altform-unplated_targetsize-16.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.altform-unplated_targetsize-256.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.altform-unplated_targetsize-48.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.scale-100.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.scale-200.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.scale-400.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.targetsize-16.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.targetsize-256.png" />
+    <Content Include="Asset\Logo\Square44x44Logo.targetsize-48.png" />
+    <Content Include="Asset\Logo\StoreLogo.scale-100.png" />
+    <Content Include="Asset\Logo\StoreLogo.scale-200.png" />
+    <Content Include="Asset\Logo\StoreLogo.scale-400.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\main\main.vcxproj" />
+  </ItemGroup>
+</Project>

@@ -7,31 +7,32 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F87101F829F7ACCD00F98BB4 /* mainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87101F729F7ACCD00F98BB4 /* mainApp.swift */; };
-		F87101FC29F7ACCE00F98BB4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F87101FB29F7ACCE00F98BB4 /* Assets.xcassets */; };
-		F871020B29F7AD2F00F98BB4 /* FinderSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = F871020A29F7AD2F00F98BB4 /* FinderSync.swift */; };
-		F871021029F7AD2F00F98BB4 /* implement.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F871020829F7AD2F00F98BB4 /* implement.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		F871021529F7B6D600F98BB4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F87101FB29F7ACCE00F98BB4 /* Assets.xcassets */; };
+		F8C2AC072A8F72110027DB8F /* mainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C2AC062A8F72110027DB8F /* mainApp.swift */; };
+		F8C2AC0B2A8F72120027DB8F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8C2AC0A2A8F72120027DB8F /* Assets.xcassets */; };
+		F8C2AC1F2A8F72860027DB8F /* extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F8C2AC172A8F72860027DB8F /* extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F8C2AC252A8F733A0027DB8F /* ForwardFinderSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C2AC242A8F733A0027DB8F /* ForwardFinderSync.swift */; };
+		F8C2AC272A8F735D0027DB8F /* common.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C2AC262A8F735D0027DB8F /* common.swift */; };
+		F8C2AC292A8F73820027DB8F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8C2AC282A8F73820027DB8F /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		F871020E29F7AD2F00F98BB4 /* PBXContainerItemProxy */ = {
+		F8C2AC1D2A8F72860027DB8F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = F87101EA29F7AC8900F98BB4 /* Project object */;
+			containerPortal = F8C2ABF72A8F71F40027DB8F /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = F871020729F7AD2F00F98BB4;
-			remoteInfo = implement;
+			remoteGlobalIDString = F8C2AC162A8F72860027DB8F;
+			remoteInfo = extension;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		F871021429F7AD2F00F98BB4 /* Embed Foundation Extensions */ = {
+		F8C2AC232A8F72860027DB8F /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				F871021029F7AD2F00F98BB4 /* implement.appex in Embed Foundation Extensions */,
+				F8C2AC1F2A8F72860027DB8F /* extension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -39,25 +40,27 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		F87101F429F7ACCC00F98BB4 /* main.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = main.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		F87101F729F7ACCD00F98BB4 /* mainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mainApp.swift; sourceTree = "<group>"; usesTabs = 1; };
-		F87101FB29F7ACCE00F98BB4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		F871020029F7ACCE00F98BB4 /* main.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = main.entitlements; sourceTree = "<group>"; };
-		F871020829F7AD2F00F98BB4 /* implement.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = implement.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		F871020A29F7AD2F00F98BB4 /* FinderSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinderSync.swift; sourceTree = "<group>"; usesTabs = 1; };
-		F871020C29F7AD2F00F98BB4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F871020D29F7AD2F00F98BB4 /* implement.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = implement.entitlements; sourceTree = "<group>"; };
+		F8C2AC032A8F72110027DB8F /* main.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = main.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F8C2AC062A8F72110027DB8F /* mainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mainApp.swift; sourceTree = "<group>"; usesTabs = 1; };
+		F8C2AC0A2A8F72120027DB8F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F8C2AC0F2A8F72120027DB8F /* main.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = main.entitlements; sourceTree = "<group>"; };
+		F8C2AC172A8F72860027DB8F /* extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = extension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		F8C2AC1B2A8F72860027DB8F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F8C2AC1C2A8F72860027DB8F /* extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = extension.entitlements; sourceTree = "<group>"; };
+		F8C2AC242A8F733A0027DB8F /* ForwardFinderSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwardFinderSync.swift; sourceTree = "<group>"; usesTabs = 1; };
+		F8C2AC262A8F735D0027DB8F /* common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = common.swift; sourceTree = "<group>"; };
+		F8C2AC282A8F73820027DB8F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		F87101F129F7ACCC00F98BB4 /* Frameworks */ = {
+		F8C2AC002A8F72110027DB8F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F871020529F7AD2F00F98BB4 /* Frameworks */ = {
+		F8C2AC142A8F72860027DB8F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -67,102 +70,105 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		F87101E929F7AC8900F98BB4 = {
+		F8C2ABF62A8F71F40027DB8F = {
 			isa = PBXGroup;
 			children = (
-				F87101F629F7ACCD00F98BB4 /* main */,
-				F871020929F7AD2F00F98BB4 /* implement */,
-				F87101F529F7ACCC00F98BB4 /* Products */,
+				F8C2AC052A8F72110027DB8F /* main */,
+				F8C2AC182A8F72860027DB8F /* extension */,
+				F8C2AC042A8F72110027DB8F /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		F87101F529F7ACCC00F98BB4 /* Products */ = {
+		F8C2AC042A8F72110027DB8F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F87101F429F7ACCC00F98BB4 /* main.app */,
-				F871020829F7AD2F00F98BB4 /* implement.appex */,
+				F8C2AC032A8F72110027DB8F /* main.app */,
+				F8C2AC172A8F72860027DB8F /* extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		F87101F629F7ACCD00F98BB4 /* main */ = {
+		F8C2AC052A8F72110027DB8F /* main */ = {
 			isa = PBXGroup;
 			children = (
-				F87101F729F7ACCD00F98BB4 /* mainApp.swift */,
-				F87101FB29F7ACCE00F98BB4 /* Assets.xcassets */,
-				F871020029F7ACCE00F98BB4 /* main.entitlements */,
+				F8C2AC062A8F72110027DB8F /* mainApp.swift */,
+				F8C2AC0A2A8F72120027DB8F /* Assets.xcassets */,
+				F8C2AC0F2A8F72120027DB8F /* main.entitlements */,
 			);
 			path = main;
 			sourceTree = "<group>";
 		};
-		F871020929F7AD2F00F98BB4 /* implement */ = {
+		F8C2AC182A8F72860027DB8F /* extension */ = {
 			isa = PBXGroup;
 			children = (
-				F871020A29F7AD2F00F98BB4 /* FinderSync.swift */,
-				F871020C29F7AD2F00F98BB4 /* Info.plist */,
-				F871020D29F7AD2F00F98BB4 /* implement.entitlements */,
+				F8C2AC1B2A8F72860027DB8F /* Info.plist */,
+				F8C2AC1C2A8F72860027DB8F /* extension.entitlements */,
+				F8C2AC242A8F733A0027DB8F /* ForwardFinderSync.swift */,
+				F8C2AC262A8F735D0027DB8F /* common.swift */,
+				F8C2AC282A8F73820027DB8F /* Assets.xcassets */,
 			);
-			path = implement;
+			path = extension;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F87101F329F7ACCC00F98BB4 /* main */ = {
+		F8C2AC022A8F72110027DB8F /* main */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F871020129F7ACCE00F98BB4 /* Build configuration list for PBXNativeTarget "main" */;
+			buildConfigurationList = F8C2AC102A8F72120027DB8F /* Build configuration list for PBXNativeTarget "main" */;
 			buildPhases = (
-				F87101F029F7ACCC00F98BB4 /* Sources */,
-				F87101F129F7ACCC00F98BB4 /* Frameworks */,
-				F87101F229F7ACCC00F98BB4 /* Resources */,
-				F871021429F7AD2F00F98BB4 /* Embed Foundation Extensions */,
+				F8C2ABFF2A8F72110027DB8F /* Sources */,
+				F8C2AC002A8F72110027DB8F /* Frameworks */,
+				F8C2AC012A8F72110027DB8F /* Resources */,
+				F8C2AC232A8F72860027DB8F /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				F871020F29F7AD2F00F98BB4 /* PBXTargetDependency */,
+				F8C2AC1E2A8F72860027DB8F /* PBXTargetDependency */,
 			);
 			name = main;
 			productName = main;
-			productReference = F87101F429F7ACCC00F98BB4 /* main.app */;
+			productReference = F8C2AC032A8F72110027DB8F /* main.app */;
 			productType = "com.apple.product-type.application";
 		};
-		F871020729F7AD2F00F98BB4 /* implement */ = {
+		F8C2AC162A8F72860027DB8F /* extension */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F871021129F7AD2F00F98BB4 /* Build configuration list for PBXNativeTarget "implement" */;
+			buildConfigurationList = F8C2AC202A8F72860027DB8F /* Build configuration list for PBXNativeTarget "extension" */;
 			buildPhases = (
-				F871020429F7AD2F00F98BB4 /* Sources */,
-				F871020529F7AD2F00F98BB4 /* Frameworks */,
-				F871020629F7AD2F00F98BB4 /* Resources */,
+				F8C2AC132A8F72860027DB8F /* Sources */,
+				F8C2AC142A8F72860027DB8F /* Frameworks */,
+				F8C2AC152A8F72860027DB8F /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = implement;
-			productName = implement;
-			productReference = F871020829F7AD2F00F98BB4 /* implement.appex */;
+			name = extension;
+			productName = extension;
+			productReference = F8C2AC172A8F72860027DB8F /* extension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		F87101EA29F7AC8900F98BB4 /* Project object */ = {
+		F8C2ABF72A8F71F40027DB8F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1430;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
-					F87101F329F7ACCC00F98BB4 = {
-						CreatedOnToolsVersion = 14.3;
+					F8C2AC022A8F72110027DB8F = {
+						CreatedOnToolsVersion = 14.3.1;
 					};
-					F871020729F7AD2F00F98BB4 = {
-						CreatedOnToolsVersion = 14.3;
+					F8C2AC162A8F72860027DB8F = {
+						CreatedOnToolsVersion = 14.3.1;
+						LastSwiftMigration = 1430;
 					};
 				};
 			};
-			buildConfigurationList = F87101ED29F7AC8900F98BB4 /* Build configuration list for PBXProject "ForwarderForMacintosh" */;
+			buildConfigurationList = F8C2ABFA2A8F71F40027DB8F /* Build configuration list for PBXProject "ForwarderForMacintosh" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -170,82 +176,84 @@
 				en,
 				Base,
 			);
-			mainGroup = F87101E929F7AC8900F98BB4;
-			productRefGroup = F87101F529F7ACCC00F98BB4 /* Products */;
+			mainGroup = F8C2ABF62A8F71F40027DB8F;
+			productRefGroup = F8C2AC042A8F72110027DB8F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F87101F329F7ACCC00F98BB4 /* main */,
-				F871020729F7AD2F00F98BB4 /* implement */,
+				F8C2AC022A8F72110027DB8F /* main */,
+				F8C2AC162A8F72860027DB8F /* extension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		F87101F229F7ACCC00F98BB4 /* Resources */ = {
+		F8C2AC012A8F72110027DB8F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F87101FC29F7ACCE00F98BB4 /* Assets.xcassets in Resources */,
+				F8C2AC0B2A8F72120027DB8F /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F871020629F7AD2F00F98BB4 /* Resources */ = {
+		F8C2AC152A8F72860027DB8F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F871021529F7B6D600F98BB4 /* Assets.xcassets in Resources */,
+				F8C2AC292A8F73820027DB8F /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		F87101F029F7ACCC00F98BB4 /* Sources */ = {
+		F8C2ABFF2A8F72110027DB8F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F87101F829F7ACCD00F98BB4 /* mainApp.swift in Sources */,
+				F8C2AC072A8F72110027DB8F /* mainApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F871020429F7AD2F00F98BB4 /* Sources */ = {
+		F8C2AC132A8F72860027DB8F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F871020B29F7AD2F00F98BB4 /* FinderSync.swift in Sources */,
+				F8C2AC272A8F735D0027DB8F /* common.swift in Sources */,
+				F8C2AC252A8F733A0027DB8F /* ForwardFinderSync.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		F871020F29F7AD2F00F98BB4 /* PBXTargetDependency */ = {
+		F8C2AC1E2A8F72860027DB8F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F871020729F7AD2F00F98BB4 /* implement */;
-			targetProxy = F871020E29F7AD2F00F98BB4 /* PBXContainerItemProxy */;
+			target = F8C2AC162A8F72860027DB8F /* extension */;
+			targetProxy = F8C2AC1D2A8F72860027DB8F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		F87101EE29F7AC8900F98BB4 /* Debug */ = {
+		F8C2ABFB2A8F71F40027DB8F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 			};
 			name = Debug;
 		};
-		F87101EF29F7AC8900F98BB4 /* Release */ = {
+		F8C2ABFC2A8F71F40027DB8F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 			};
 			name = Release;
 		};
-		F871020229F7ACCE00F98BB4 /* Debug */ = {
+		F8C2AC112A8F72120027DB8F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -278,7 +286,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_ASSET_PATHS = "";
 				ENABLE_PREVIEWS = YES;
@@ -299,14 +307,14 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "TwinStar ToolKit - Forwarder\n//  mainApp.swift\n//  main\n//\n//  Created by TwinStar on 2023/4/25.\n//\nTwinStar ToolKit - Forwarder For Macintosh";
+				INFOPLIST_KEY_CFBundleDisplayName = "TwinStar ToolKit - Forwarder";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -320,12 +328,13 @@
 			};
 			name = Debug;
 		};
-		F871020329F7ACCE00F98BB4 /* Release */ = {
+		F8C2AC122A8F72120027DB8F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -358,7 +367,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -373,14 +382,14 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "TwinStar ToolKit - Forwarder\n//  mainApp.swift\n//  main\n//\n//  Created by TwinStar on 2023/4/25.\n//\nTwinStar ToolKit - Forwarder For Macintosh";
+				INFOPLIST_KEY_CFBundleDisplayName = "TwinStar ToolKit - Forwarder";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.twinstar.toolkit.forwarder-for-macintosh";
@@ -393,7 +402,7 @@
 			};
 			name = Release;
 		};
-		F871021229F7AD2F00F98BB4 /* Debug */ = {
+		F8C2AC212A8F72860027DB8F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -425,11 +434,11 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_ENTITLEMENTS = implement/implement.entitlements;
+				CODE_SIGN_ENTITLEMENTS = extension/extension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -448,8 +457,9 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = implement/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = implement;
+				INFOPLIST_FILE = extension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = extension;
+				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -457,11 +467,11 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.twinstar.toolkit.forwarder-for-macintosh.implement";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.twinstar.toolkit.forwarder-for-macintosh.extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -472,7 +482,7 @@
 			};
 			name = Debug;
 		};
-		F871021329F7AD2F00F98BB4 /* Release */ = {
+		F8C2AC222A8F72860027DB8F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -504,11 +514,11 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_ENTITLEMENTS = implement/implement.entitlements;
+				CODE_SIGN_ENTITLEMENTS = extension/extension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -521,8 +531,9 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = implement/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = implement;
+				INFOPLIST_FILE = extension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = extension;
+				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -530,10 +541,10 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.twinstar.toolkit.forwarder-for-macintosh.implement";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.twinstar.toolkit.forwarder-for-macintosh.extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -547,34 +558,34 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F87101ED29F7AC8900F98BB4 /* Build configuration list for PBXProject "ForwarderForMacintosh" */ = {
+		F8C2ABFA2A8F71F40027DB8F /* Build configuration list for PBXProject "ForwarderForMacintosh" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				F87101EE29F7AC8900F98BB4 /* Debug */,
-				F87101EF29F7AC8900F98BB4 /* Release */,
+				F8C2ABFB2A8F71F40027DB8F /* Debug */,
+				F8C2ABFC2A8F71F40027DB8F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F871020129F7ACCE00F98BB4 /* Build configuration list for PBXNativeTarget "main" */ = {
+		F8C2AC102A8F72120027DB8F /* Build configuration list for PBXNativeTarget "main" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				F871020229F7ACCE00F98BB4 /* Debug */,
-				F871020329F7ACCE00F98BB4 /* Release */,
+				F8C2AC112A8F72120027DB8F /* Debug */,
+				F8C2AC122A8F72120027DB8F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F871021129F7AD2F00F98BB4 /* Build configuration list for PBXNativeTarget "implement" */ = {
+		F8C2AC202A8F72860027DB8F /* Build configuration list for PBXNativeTarget "extension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				F871021229F7AD2F00F98BB4 /* Debug */,
-				F871021329F7AD2F00F98BB4 /* Release */,
+				F8C2AC212A8F72860027DB8F /* Debug */,
+				F8C2AC222A8F72860027DB8F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = F87101EA29F7AC8900F98BB4 /* Project object */;
+	rootObject = F8C2ABF72A8F71F40027DB8F /* Project object */;
 }
