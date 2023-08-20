@@ -2,6 +2,7 @@
 // ReSharper disable CheckNamespace MemberHidesStaticFromOuterClass
 
 using Helper;
+using Newtonsoft.Json;
 
 namespace Helper {
 
@@ -102,6 +103,7 @@ namespace Helper {
 			Path,
 		}
 
+		[JsonObject(ItemRequired = Required.AllowNull)]
 		public class ArgumentConfiguration {
 			public String        Id      = default!;
 			public String        Name    = default!;
@@ -110,12 +112,14 @@ namespace Helper {
 			public Object?       Initial = default!;
 		}
 
+		[JsonObject(ItemRequired = Required.AllowNull)]
 		public class MethodConfiguration {
 			public String                      Id       = default!;
 			public String                      Name     = default!;
 			public List<ArgumentConfiguration> Argument = default!;
 		}
 
+		[JsonObject(ItemRequired = Required.AllowNull)]
 		public class MethodGroupConfiguration {
 			public String                    Id   = default!;
 			public String                    Name = default!;
@@ -124,8 +128,32 @@ namespace Helper {
 
 		// ----------------
 
+		[JsonObject(ItemRequired = Required.AllowNull)]
+		public class QuickOptionFilterConfiguration {
+			public Boolean? Type = default!;
+			public String?  Name = default!;
+		}
+
+		[JsonObject(ItemRequired = Required.AllowNull)]
+		public class QuickOptionConfiguration {
+			public String                         Name     = default!;
+			public QuickOptionFilterConfiguration Filter   = default!;
+			public String?                        Method   = default!;
+			public Object                         Argument = default!;
+		}
+
+		[JsonObject(ItemRequired = Required.AllowNull)]
+		public class QuickOptionGroupConfiguration {
+			public String                         Name = default!;
+			public List<QuickOptionConfiguration> Item = default!;
+		}
+
+		// ----------------
+
+		[JsonObject(ItemRequired = Required.AllowNull)]
 		public class Configuration {
-			public List<MethodGroupConfiguration> Group = default!;
+			public List<MethodGroupConfiguration>      Group       = default!;
+			public List<QuickOptionGroupConfiguration> QuickOption = default!;
 		}
 
 		#endregion

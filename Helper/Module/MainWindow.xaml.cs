@@ -12,6 +12,8 @@ namespace Helper.Module {
 		#region life
 
 		public MainWindow (
+			ModuleType initialTab          = ModuleType.HomeSetting,
+			Object?    initialTabParameter = null
 		) {
 			MainWindow.Instance = this;
 			this.InitializeComponent();
@@ -21,7 +23,7 @@ namespace Helper.Module {
 				(this.Content as Panel)!.Background = null;
 			}
 			this.Controller = new MainWindowController() { View = this };
-			this.Controller.Update();
+			this.Controller.Initialize(initialTab, initialTabParameter);
 		}
 
 		// ----------------
@@ -46,11 +48,13 @@ namespace Helper.Module {
 
 		#endregion
 
-		#region update
+		#region initialize
 
-		public async void Update (
+		public void Initialize (
+			ModuleType initialTabType,
+			Object?    initialTabParameter = null
 		) {
-			this.PushTabItem(ModuleType.HomeSetting, false);
+			this.PushTabItem(initialTabType, initialTabParameter, false);
 			return;
 		}
 
@@ -75,6 +79,7 @@ namespace Helper.Module {
 
 		public void PushTabItem (
 			ModuleType type,
+			Object?    parameter,
 			Boolean    isClosable
 		) {
 			var model = ModuleInformationConstant.Value[(Size)type];
@@ -85,7 +90,7 @@ namespace Helper.Module {
 					},
 				},
 			};
-			frame.Navigate(model.Page);
+			frame.Navigate(model.Page, parameter);
 			this.uTab_TabItemsSource.Add(new TabItemController() { Host = this, Model = model, IsCloseable = isClosable, Frame = frame });
 			this.uTab_SelectedItem = this.uTab_TabItemsSource.Last();
 			this.View.DispatcherQueue.EnqueueAsync(

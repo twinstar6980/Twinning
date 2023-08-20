@@ -2,6 +2,7 @@
 // ReSharper disable CheckNamespace MemberHidesStaticFromOuterClass
 
 using Helper;
+using Newtonsoft.Json;
 
 namespace Helper {
 
@@ -9,6 +10,7 @@ namespace Helper {
 
 		#region type
 
+		[JsonObject(ItemRequired = Required.AllowNull)]
 		public record Rectangle {
 			public required List<Floater> Position;
 			public required List<Floater> Size;
@@ -16,10 +18,12 @@ namespace Helper {
 
 		// ----------------
 
+		[JsonObject(ItemRequired = Required.AllowNull)]
 		public record LayerRemove {
 			public required Integer Index;
 		}
 
+		[JsonObject(ItemRequired = Required.AllowNull)]
 		public record LayerAppend {
 			public required Integer Index;
 			public required String? Name;
@@ -30,6 +34,7 @@ namespace Helper {
 			public required Floater TimeScale;
 		}
 
+		[JsonObject(ItemRequired = Required.AllowNull)]
 		public record LayerChange {
 			public required Integer        Index;
 			public required List<Floater>  Transform;
@@ -38,6 +43,7 @@ namespace Helper {
 			public required Rectangle?     SourceRectangle;
 		}
 
+		[JsonObject(ItemRequired = Required.AllowNull)]
 		public record Frame {
 			public required String?            Label;
 			public required Boolean            Stop;
@@ -49,6 +55,7 @@ namespace Helper {
 
 		// ----------------
 
+		[JsonObject(ItemRequired = Required.AllowNull)]
 		public record Sprite {
 			public required String        Name;
 			public required Floater       FrameRate;
@@ -56,12 +63,14 @@ namespace Helper {
 			public required List<Frame>   Frame;
 		}
 
+		[JsonObject(ItemRequired = Required.AllowNull)]
 		public record Image {
 			public required String        Name;
 			public required List<Integer> Size;
 			public required List<Floater> Transform;
 		}
 
+		[JsonObject(ItemRequired = Required.AllowNull)]
 		public record Animation {
 			public required Integer       FrameRate;
 			public required List<Floater> Position;

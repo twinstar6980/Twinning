@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Windows.Globalization.NumberFormatting;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Navigation;
 using DecimalFormatter = Windows.Globalization.NumberFormatting.DecimalFormatter;
 using IncrementNumberRounder = Windows.Globalization.NumberFormatting.IncrementNumberRounder;
 using FluentIconGlyph = Helper.CustomControl.FluentIconGlyph;
@@ -23,7 +24,16 @@ namespace Helper.Module.AnimationViewer {
 		) {
 			this.InitializeComponent();
 			this.Controller = new MainPageController() { View = this };
-			this.Controller.Update();
+			this.Controller.Initialize();
+		}
+
+		// ----------------
+
+		protected override void OnNavigatedTo (
+			NavigationEventArgs args
+		) {
+			base.OnNavigatedTo(args);
+			return;
 		}
 
 		// ----------------
@@ -96,9 +106,9 @@ namespace Helper.Module.AnimationViewer {
 
 		#endregion
 
-		#region update
+		#region initialize
 
-		public async void Update (
+		public void Initialize (
 		) {
 			this.AutomaticPlay = Setting.AnimationViewerAutomaticPlay;
 			this.RepeatPlay = Setting.AnimationViewerRepeatPlay;
@@ -608,7 +618,7 @@ namespace Helper.Module.AnimationViewer {
 			if (isPlaying) {
 				this.View.uSprite.State = SpriteControl.StateType.Paused;
 			}
-			var animationFile = await StorageHelper.PickFile(WindowHelper.GetWindowForElement(this.View) ?? throw new Exception(), ".json");
+			var animationFile = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View) ?? throw new Exception(), ".json");
 			if (animationFile != null) {
 				var imageDirectory = Path.GetDirectoryName(animationFile) ?? throw new Exception();
 				if (this.Loaded) {
@@ -660,7 +670,7 @@ namespace Helper.Module.AnimationViewer {
 			if (isPlaying) {
 				this.View.uSprite.State = SpriteControl.StateType.Paused;
 			}
-			var imageDirectory = await StorageHelper.PickDirectory(WindowHelper.GetWindowForElement(this.View) ?? throw new Exception());
+			var imageDirectory = await StorageHelper.PickDirectory(WindowHelper.GetForElement(this.View) ?? throw new Exception());
 			if (imageDirectory != null) {
 				var animationFile = this.AnimationFile;
 				if (this.Loaded) {
@@ -1089,7 +1099,7 @@ namespace Helper.Module.AnimationViewer {
 			RangeBaseValueChangedEventArgs args
 		) {
 			if (sender is not Slider senders) { return; }
-			if (args.NewValue != 0.0) {
+			if (!Floater.IsNaN(args.NewValue) && args.NewValue != 0.0) {
 				Debug.Assert(this.Loaded && this.Working);
 				Debug.Assert(this.View.uSprite.State != SpriteControl.StateType.Idle);
 				if (this.uWorkingSpriteFrameProgress__Changeable) {

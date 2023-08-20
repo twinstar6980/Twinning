@@ -3,6 +3,7 @@
 
 using Helper;
 using Helper.Utility;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Globalization.NumberFormatting;
 
 namespace Helper.Module.CommandForwarder {
@@ -223,7 +224,13 @@ namespace Helper.Module.CommandForwarder {
 		) {
 			if (sender is not NumberBox senders) { return; }
 			if (this.Type is not MethodConfigurationModel.ArgumentType.Number || this.Option is not null || this.Value is not { Value: not null }) { return; }
-			this.Value.OfNumber = senders.Value;
+			if (Floater.IsNaN(args.NewValue)) {
+				this.NotifyPropertyChanged(
+					nameof(this.uNumberValue_Value)
+				);
+			} else {
+				this.Value.OfNumber = args.NewValue;
+			}
 			return;
 		}
 
@@ -248,7 +255,13 @@ namespace Helper.Module.CommandForwarder {
 		) {
 			if (sender is not NumberBox senders) { return; }
 			if (this.Type is not MethodConfigurationModel.ArgumentType.Integer || this.Option is not null || this.Value is not { Value: not null }) { return; }
-			this.Value.OfInteger = (Integer)senders.Value;
+			if (Floater.IsNaN(args.NewValue)) {
+				this.NotifyPropertyChanged(
+					nameof(this.uIntegerValue_Value)
+				);
+			} else {
+				this.Value.OfInteger = (Integer)args.NewValue;
+			}
 			return;
 		}
 
@@ -273,7 +286,13 @@ namespace Helper.Module.CommandForwarder {
 		) {
 			if (sender is not NumberBox senders) { return; }
 			if (this.Type is not MethodConfigurationModel.ArgumentType.Size || this.Option is not null || this.Value is not { Value: not null }) { return; }
-			this.Value.OfSize.Value = senders.Value;
+			if (Floater.IsNaN(args.NewValue)) {
+				this.NotifyPropertyChanged(
+					nameof(this.uSizeValue_Value)
+				);
+			} else {
+				this.Value.OfSize.Value = args.NewValue;
+			}
 			return;
 		}
 
@@ -338,13 +357,41 @@ namespace Helper.Module.CommandForwarder {
 			return;
 		}
 
+		public async void uPathValue_OnDragOver (
+			Object        sender,
+			DragEventArgs args
+		) {
+			if (sender is not TextBox senders) { return; }
+			if (this.Type is not MethodConfigurationModel.ArgumentType.Path || this.Option is not null || this.Value is not { Value: not null }) { return; }
+			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
+				args.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Link;
+			}
+			return;
+		}
+
+		public async void uPathValue_OnDrop (
+			Object        sender,
+			DragEventArgs args
+		) {
+			if (sender is not TextBox senders) { return; }
+			if (this.Type is not MethodConfigurationModel.ArgumentType.Path || this.Option is not null || this.Value is not { Value: not null }) { return; }
+			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
+				var newValue = (await args.DataView.GetStorageItemsAsync())[0].Path;
+				this.Value.OfPath = newValue;
+				this.NotifyPropertyChanged(
+					nameof(this.uPathValue_Text)
+				);
+			}
+			return;
+		}
+
 		public async void uPathPickFile_OnClick (
 			Object          sender,
 			RoutedEventArgs args
 		) {
 			if (sender is not MenuFlyoutItem senders) { return; }
 			if (this.Type is not MethodConfigurationModel.ArgumentType.Path || this.Option is not null || this.Value is not { Value: not null }) { return; }
-			var newValue = await StorageHelper.PickFile(WindowHelper.GetWindowForElement(this.View) ?? throw new Exception());
+			var newValue = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View) ?? throw new Exception());
 			if (newValue is not null) {
 				this.Value.OfPath = newValue;
 				this.NotifyPropertyChanged(
@@ -360,7 +407,7 @@ namespace Helper.Module.CommandForwarder {
 		) {
 			if (sender is not MenuFlyoutItem senders) { return; }
 			if (this.Type is not MethodConfigurationModel.ArgumentType.Path || this.Option is not null || this.Value is not { Value: not null }) { return; }
-			var newValue = await StorageHelper.PickDirectory(WindowHelper.GetWindowForElement(this.View) ?? throw new Exception());
+			var newValue = await StorageHelper.PickDirectory(WindowHelper.GetForElement(this.View) ?? throw new Exception());
 			if (newValue is not null) {
 				this.Value.OfPath = newValue;
 				this.NotifyPropertyChanged(

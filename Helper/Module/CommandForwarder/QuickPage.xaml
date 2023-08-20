@@ -1,0 +1,82 @@
+<Page
+	x:Class="Helper.Module.CommandForwarder.QuickPage"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:local="using:Helper"
+	xmlns:localCommandForwarder="using:Helper.Module.CommandForwarder"
+	xmlns:my="using:Helper.CustomControl"
+	mc:Ignorable="d"
+	x:DefaultBindMode="OneWay"
+>
+	<Grid Padding="8,4" ColumnSpacing="4">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="1*" />
+		</Grid.ColumnDefinitions>
+		<my:MStack
+			Grid.Column="0"
+			Padding="0,-4,0,0"
+			Orientation="Vertical" Spacing="0"
+		>
+			<my:MHeaderBar
+				my:MStack.Weight="NaN"
+				Icon="{StaticResource FluentIconGlyph.FavoriteStar}"
+				Title="Option"
+			>
+				<my:MHeaderBar.Action>
+					<my:MStack Orientation="Horizontal" Spacing="8">
+						<TeachingTip
+							x:Name="uInputTip" x:FieldModifier="public"
+							Target="{x:Bind uInputCount}"
+							Subtitle="{x:Bind Controller.uInputTip_Subtitle}"
+							PreferredPlacement="BottomLeft" IsLightDismissEnabled="True"
+						/>
+						<Button
+							x:Name="uInputCount" x:FieldModifier="public"
+							HorizontalAlignment="Stretch" VerticalAlignment="Center"
+							Content="{x:Bind Controller.uInputCount_Content}"
+							Click="{x:Bind Controller.uInputCount_OnClick}"
+						/>
+						<ToggleButton
+							HorizontalAlignment="Stretch" VerticalAlignment="Center"
+							IsChecked="{x:Bind Controller.uParallel_IsChecked}"
+							Click="{x:Bind Controller.uParallel_OnClick}"
+						>
+							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Shuffle}" />
+						</ToggleButton>
+						<ToggleButton
+							HorizontalAlignment="Stretch" VerticalAlignment="Center"
+							IsChecked="{x:Bind Controller.uFilter_IsChecked}"
+							Click="{x:Bind Controller.uFilter_OnClick}"
+						>
+							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Filter}" />
+						</ToggleButton>
+					</my:MStack>
+				</my:MHeaderBar.Action>
+			</my:MHeaderBar>
+			<my:MDivider Height="{StaticResource DividerThickness}" />
+			<TreeView
+				my:MStack.Weight="1"
+				SelectionMode="None" CanDragItems="False" CanReorderItems="False"
+				ItemsSource="{x:Bind Controller.uOption_ItemsSource}"
+				ItemInvoked="{x:Bind Controller.uOption_OnItemInvoked}"
+			>
+				<TreeView.ItemTemplateSelector>
+					<localCommandForwarder:QuickOptionItemTemplateSelector>
+						<localCommandForwarder:QuickOptionItemTemplateSelector.GroupTemplate>
+							<DataTemplate x:DataType="localCommandForwarder:QuickOptionGroupItemController">
+								<TreeViewItem Visibility="{x:Bind uRoot_Visibility}" Content="{x:Bind uRoot_Content}" ItemsSource="{x:Bind uRoot_ItemsSource}" HasUnrealizedChildren="True" IsExpanded="True" />
+							</DataTemplate>
+						</localCommandForwarder:QuickOptionItemTemplateSelector.GroupTemplate>
+						<localCommandForwarder:QuickOptionItemTemplateSelector.ItemTemplate>
+							<DataTemplate x:DataType="localCommandForwarder:QuickOptionItemItemController">
+								<TreeViewItem Visibility="{x:Bind uRoot_Visibility}" Content="{x:Bind uRoot_Content}" />
+							</DataTemplate>
+						</localCommandForwarder:QuickOptionItemTemplateSelector.ItemTemplate>
+					</localCommandForwarder:QuickOptionItemTemplateSelector>
+				</TreeView.ItemTemplateSelector>
+			</TreeView>
+		</my:MStack>
+	</Grid>
+</Page>

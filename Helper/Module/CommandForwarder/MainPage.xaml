@@ -23,13 +23,12 @@
 		>
 			<my:MHeaderBar
 				my:MStack.Weight="NaN"
-				Icon="{StaticResource FluentIconGlyph.ShowBcc}"
+				Icon="{StaticResource FluentIconGlyph.Relationship}"
 				Title="Method"
 			>
 				<my:MHeaderBar.Action>
 					<my:MStack Orientation="Horizontal" Spacing="8">
 						<Button
-							my:MStack.Weight="NaN"
 							HorizontalAlignment="Stretch" VerticalAlignment="Center"
 							IsEnabled="False" Opacity="0"
 						>
@@ -49,7 +48,7 @@
 					<localCommandForwarder:AvailableMethodItemTemplateSelector>
 						<localCommandForwarder:AvailableMethodItemTemplateSelector.GroupTemplate>
 							<DataTemplate x:DataType="localCommandForwarder:AvailableMethodGroupItemController">
-								<TreeViewItem Content="{x:Bind uRoot_Content}" ItemsSource="{x:Bind uRoot_ItemsSource}" IsExpanded="True" />
+								<TreeViewItem Content="{x:Bind uRoot_Content}" ItemsSource="{x:Bind uRoot_ItemsSource}" HasUnrealizedChildren="True" IsExpanded="True" />
 							</DataTemplate>
 						</localCommandForwarder:AvailableMethodItemTemplateSelector.GroupTemplate>
 						<localCommandForwarder:AvailableMethodItemTemplateSelector.ItemTemplate>
@@ -75,7 +74,6 @@
 				<my:MHeaderBar.Action>
 					<my:MStack Orientation="Horizontal" Spacing="8">
 						<Button
-							my:MStack.Weight="NaN"
 							HorizontalAlignment="Stretch" VerticalAlignment="Center"
 							Click="{x:Bind Controller.uRunAllSelectedMethod_OnClick}"
 						>

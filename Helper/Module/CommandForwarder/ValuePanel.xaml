@@ -88,6 +88,7 @@
 									<NumberBox
 										my:MStack.Weight="1"
 										NumberFormatter="{x:Bind Controller.uSizeValue_NumberFormatter}"
+										Minimum="0.0"
 										Value="{x:Bind Controller.uSizeValue_Value}"
 										ValueChanged="{x:Bind Controller.uSizeValue_OnValueChanged}"
 										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
@@ -131,6 +132,9 @@
 										Text="{x:Bind Controller.uPathValue_Text}"
 										TextChanged="{x:Bind Controller.uPathValue_OnTextChanged}"
 										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
+										AllowDrop="True"
+										DragOver="{x:Bind Controller.uPathValue_OnDragOver}"
+										Drop="{x:Bind Controller.uPathValue_OnDrop}"
 									/>
 									<DropDownButton
 										my:MStack.Weight="NaN"

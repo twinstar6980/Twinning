@@ -21,9 +21,27 @@ namespace Helper {
 			LaunchActivatedEventArgs args
 		) {
 			Setting.Initialize();
-			var window = WindowHelper.TrackWindow(new Module.MainWindow());
-			Setting.AppearanceThemeMode = Setting.AppearanceThemeMode;
-			window.Activate();
+			var window = default(Window);
+			var argument = Environment.GetCommandLineArgs()[1..];
+			if (argument.Length == 0) {
+				window = new Module.MainWindow();
+			} else {
+				switch (argument[0]) {
+					case "forward": {
+						window = new Module.MainWindow(Module.ModuleType.CommandForwarderQuick, argument[1..].ToList());
+						WindowHelper.Resize(window, Setting.CommandForwarderQuickWindowSizeWidth, Setting.CommandForwarderQuickWindowSizeHeight);
+						WindowHelper.AlwaysOnTop(window, true);
+						break;
+					}
+					default: throw new Exception("invalid command");
+				}
+			}
+			if (window is not null) {
+				WindowHelper.Track(window);
+				Setting.AppearanceThemeMode = Setting.AppearanceThemeMode;
+				WindowHelper.Center(window);
+				window.Activate();
+			}
 			return;
 		}
 

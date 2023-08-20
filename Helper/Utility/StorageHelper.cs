@@ -56,6 +56,12 @@ namespace Helper.Utility {
 			return await File.ReadAllTextAsync(path);
 		}
 
+		public static String ReadFileTextSync (
+			String path
+		) {
+			return File.ReadAllText(path);
+		}
+
 		#endregion
 
 		#region image

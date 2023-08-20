@@ -11,6 +11,7 @@ namespace Helper.Module {
 	public enum ModuleType {
 		HomeSetting,
 		CommandForwarder,
+		CommandForwarderQuick,
 		AnimationViewer,
 	}
 
@@ -37,9 +38,15 @@ namespace Helper.Module {
 			},
 			new ModuleInformation {
 				Type = ModuleType.CommandForwarder,
-				Icon = FluentIconGlyph.CommandPrompt,
+				Icon = FluentIconGlyph.Send,
 				Title = "Command Forwarder",
 				Page = typeof(CommandForwarder.MainPage),
+			},
+			new ModuleInformation {
+				Type = ModuleType.CommandForwarderQuick,
+				Icon = FluentIconGlyph.Send,
+				Title = "Command Forwarder - Quick",
+				Page = typeof(CommandForwarder.QuickPage),
 			},
 			new ModuleInformation {
 				Type = ModuleType.AnimationViewer,

@@ -14,7 +14,6 @@ namespace Helper.Utility {
 
 		private static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings() {
 			NullValueHandling = NullValueHandling.Include,
-			MissingMemberHandling = MissingMemberHandling.Error,
 			Converters = new List<JsonConverter>() {
 				new StringEnumConverter() {
 					NamingStrategy = new SnakeCaseNamingStrategy(),

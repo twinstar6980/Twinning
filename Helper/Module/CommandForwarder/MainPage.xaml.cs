@@ -14,7 +14,7 @@ namespace Helper.Module.CommandForwarder {
 		) {
 			this.InitializeComponent();
 			this.Controller = new MainPageController() { View = this };
-			this.Controller.Update();
+			this.Controller.Initialize();
 		}
 
 		// ----------------
@@ -37,25 +37,26 @@ namespace Helper.Module.CommandForwarder {
 
 		#endregion
 
-		#region update
+		#region initialize
 
-		public async void Update (
+		public void Initialize (
 		) {
 			try {
-				this.Configuration = JsonHelper.Deserialize<MethodConfigurationModel.Configuration>(await StorageHelper.ReadFileText(Setting.CommandForwarderMethodConfiguration));
+				this.Configuration = JsonHelper.Deserialize<MethodConfigurationModel.Configuration>(StorageHelper.ReadFileTextSync(Setting.CommandForwarderMethodConfiguration));
 			} catch (Exception e) {
 				MainWindow.Instance.Controller.PublishTip(92, InfoBarSeverity.Error, "Failed to load method configuration.");
 				this.Configuration = new MethodConfigurationModel.Configuration() {
 					Group = new List<MethodConfigurationModel.MethodGroupConfiguration>(),
+					QuickOption = new List<MethodConfigurationModel.QuickOptionGroupConfiguration>(),
 				};
 			}
-			this.uAvailableMethod_ItemsSource = this.Configuration.Group.Select((value) => (new AvailableMethodGroupItemController() {
+			this.uAvailableMethod_ItemsSource = this.Configuration.Group.Select((group) => (new AvailableMethodGroupItemController() {
 				Host = this,
-				GroupModel = value,
-				Children = value.Item.Select((valueItem) => (new AvailableMethodItemItemController() {
+				GroupModel = group,
+				Children = group.Item.Select((item) => (new AvailableMethodItemItemController() {
 					Host = this,
-					GroupModel = value,
-					ItemModel = valueItem,
+					GroupModel = group,
+					ItemModel = item,
 				})).ToList(),
 			})).ToList();
 			return;

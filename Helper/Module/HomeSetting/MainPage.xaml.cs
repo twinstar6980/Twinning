@@ -3,6 +3,8 @@
 
 using Helper;
 using Helper.Utility;
+using Microsoft.UI.Xaml.Navigation;
+using Windows.Globalization.NumberFormatting;
 
 namespace Helper.Module.HomeSetting {
 
@@ -14,7 +16,16 @@ namespace Helper.Module.HomeSetting {
 		) {
 			this.InitializeComponent();
 			this.Controller = new MainPageController() { View = this };
-			this.Controller.Update();
+			this.Controller.Initialize();
+		}
+
+		// ----------------
+
+		protected override void OnNavigatedTo (
+			NavigationEventArgs args
+		) {
+			base.OnNavigatedTo(args);
+			return;
 		}
 
 		// ----------------
@@ -33,9 +44,9 @@ namespace Helper.Module.HomeSetting {
 
 		#endregion
 
-		#region update
+		#region initialize
 
-		public async void Update (
+		public void Initialize (
 		) {
 			return;
 		}
@@ -88,7 +99,7 @@ namespace Helper.Module.HomeSetting {
 			RoutedEventArgs args
 		) {
 			if (sender is not Button senders) { return; }
-			MainWindow.Instance.Controller.PushTabItem(ModuleType.CommandForwarder, true);
+			MainWindow.Instance.Controller.PushTabItem(ModuleType.CommandForwarder, null, true);
 			return;
 		}
 
@@ -124,7 +135,7 @@ namespace Helper.Module.HomeSetting {
 			RoutedEventArgs args
 		) {
 			if (sender is not Button senders) { return; }
-			var newValue = await StorageHelper.PickFile(WindowHelper.GetWindowForElement(this.View) ?? throw new Exception());
+			var newValue = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View) ?? throw new Exception());
 			if (newValue is not null) {
 				Setting.CommandForwarderLaunchScript = newValue;
 				this.NotifyPropertyChanged(
@@ -167,7 +178,7 @@ namespace Helper.Module.HomeSetting {
 			RoutedEventArgs args
 		) {
 			if (sender is not Button senders) { return; }
-			var newValue = await StorageHelper.PickFile(WindowHelper.GetWindowForElement(this.View) ?? throw new Exception());
+			var newValue = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View) ?? throw new Exception());
 			if (newValue is not null) {
 				Setting.CommandForwarderMethodConfiguration = newValue;
 				this.NotifyPropertyChanged(
@@ -175,6 +186,68 @@ namespace Helper.Module.HomeSetting {
 					nameof(this.uCommandForwarderMethodConfigurationText_Text)
 				);
 			}
+			return;
+		}
+
+		// ----------------
+
+		public String uCommandForwarderQuickWindowSizeBar_Description {
+			get {
+				return $"{Setting.CommandForwarderQuickWindowSizeWidth} x {Setting.CommandForwarderQuickWindowSizeHeight}";
+			}
+		}
+
+		public INumberFormatter2 uCommandForwarderQuickWindowSizeText_NumberFormatter {
+			get {
+				return new DecimalFormatter() { FractionDigits = 0 };
+			}
+		}
+
+		public Floater uCommandForwarderQuickWindowSizeWidthText_Value {
+			get {
+				return Setting.CommandForwarderQuickWindowSizeWidth;
+			}
+		}
+
+		public async void uCommandForwarderQuickWindowSizeWidthText_OnValueChanged (
+			Object                         sender,
+			NumberBoxValueChangedEventArgs args
+		) {
+			if (sender is not NumberBox senders) { return; }
+			if (Floater.IsNaN(args.NewValue)) {
+				this.NotifyPropertyChanged(
+					nameof(this.uCommandForwarderQuickWindowSizeWidthText_Value)
+				);
+			} else {
+				Setting.CommandForwarderQuickWindowSizeWidth = (Size)args.NewValue;
+			}
+			this.NotifyPropertyChanged(
+				nameof(this.uCommandForwarderQuickWindowSizeBar_Description)
+			);
+			return;
+		}
+
+		public Floater uCommandForwarderQuickWindowSizeHeightText_Value {
+			get {
+				return Setting.CommandForwarderQuickWindowSizeHeight;
+			}
+		}
+
+		public async void uCommandForwarderQuickWindowSizeHeightText_OnValueChanged (
+			Object                         sender,
+			NumberBoxValueChangedEventArgs args
+		) {
+			if (sender is not NumberBox senders) { return; }
+			if (Floater.IsNaN(args.NewValue)) {
+				this.NotifyPropertyChanged(
+					nameof(this.uCommandForwarderQuickWindowSizeHeightText_Value)
+				);
+			} else {
+				Setting.CommandForwarderQuickWindowSizeHeight = (Size)args.NewValue;
+			}
+			this.NotifyPropertyChanged(
+				nameof(this.uCommandForwarderQuickWindowSizeBar_Description)
+			);
 			return;
 		}
 
@@ -187,7 +260,7 @@ namespace Helper.Module.HomeSetting {
 			RoutedEventArgs args
 		) {
 			if (sender is not Button senders) { return; }
-			MainWindow.Instance.Controller.PushTabItem(ModuleType.AnimationViewer, true);
+			MainWindow.Instance.Controller.PushTabItem(ModuleType.AnimationViewer, null, true);
 			return;
 		}
 

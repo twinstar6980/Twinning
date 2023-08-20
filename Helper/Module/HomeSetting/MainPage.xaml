@@ -52,7 +52,7 @@
 						BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
 						Click="{x:Bind Controller.uCommandForwarderOpen_OnClick}"
 					>
-						<FontIcon FontSize="86" Glyph="{StaticResource FluentIconGlyph.CommandPrompt}" />
+						<FontIcon FontSize="86" Glyph="{StaticResource FluentIconGlyph.Send}" />
 					</Button>
 					<my:MStack
 						my:MStack.Weight="1"
@@ -101,6 +101,34 @@
 									>
 										<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.OpenFile}" />
 									</Button>
+								</my:MStack>
+							</my:MExpandBar.Action>
+						</my:MExpandBar>
+						<my:MExpandBar
+							Icon="{StaticResource FluentIconGlyph.FullScreen}"
+							Title="Quick Window Size"
+							Description="{x:Bind Controller.uCommandForwarderQuickWindowSizeBar_Description}"
+						>
+							<my:MExpandBar.Action>
+								<my:MStack Orientation="Horizontal" Spacing="12">
+									<NumberBox
+										my:MStack.Weight="1"
+										HorizontalAlignment="Stretch" VerticalAlignment="Center"
+										SpinButtonPlacementMode="Inline"
+										NumberFormatter="{x:Bind Controller.uCommandForwarderQuickWindowSizeText_NumberFormatter}"
+										Minimum="0" SmallChange="80" LargeChange="80"
+										Value="{x:Bind Controller.uCommandForwarderQuickWindowSizeWidthText_Value}"
+										ValueChanged="{x:Bind Controller.uCommandForwarderQuickWindowSizeWidthText_OnValueChanged}"
+									/>
+									<NumberBox
+										my:MStack.Weight="1"
+										HorizontalAlignment="Stretch" VerticalAlignment="Center"
+										SpinButtonPlacementMode="Inline"
+										NumberFormatter="{x:Bind Controller.uCommandForwarderQuickWindowSizeText_NumberFormatter}"
+										Minimum="0" SmallChange="80" LargeChange="80"
+										Value="{x:Bind Controller.uCommandForwarderQuickWindowSizeHeightText_Value}"
+										ValueChanged="{x:Bind Controller.uCommandForwarderQuickWindowSizeHeightText_OnValueChanged}"
+									/>
 								</my:MStack>
 							</my:MExpandBar.Action>
 						</my:MExpandBar>

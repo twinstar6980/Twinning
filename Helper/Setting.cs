@@ -13,6 +13,14 @@ namespace Helper {
 
 		public static void Initialize (
 		) {
+			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.AppearanceThemeMode), ElementTheme.Default.ToString());
+			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.CommandForwarderLaunchScript), "");
+			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.CommandForwarderMethodConfiguration), "");
+			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.CommandForwarderQuickWindowSizeWidth), 480.ToString());
+			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.CommandForwarderQuickWindowSizeHeight), 960.ToString());
+			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.AnimationViewerAutomaticPlay), true.ToString());
+			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.AnimationViewerRepeatPlay), true.ToString());
+			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.AnimationViewerRemainFrameRate), true.ToString());
 			Setting.AppearanceThemeMode = Setting.AppearanceThemeMode;
 			return;
 		}
@@ -23,7 +31,7 @@ namespace Helper {
 
 		public static ElementTheme AppearanceThemeMode {
 			get {
-				return Enum.Parse<ElementTheme>(ApplicationData.Current.LocalSettings.Values[nameof(Setting.AppearanceThemeMode)]?.ToString() ?? ElementTheme.Default.ToString());
+				return ApplicationData.Current.LocalSettings.Values[nameof(Setting.AppearanceThemeMode)]?.ToString() is String value ? Enum.Parse<ElementTheme>(value) : throw new Exception();
 			}
 			set {
 				ThemeHelper.RootTheme = value;
@@ -35,29 +43,39 @@ namespace Helper {
 		// ----------------
 
 		public static String CommandForwarderLaunchScript {
-			get => ApplicationData.Current.LocalSettings.Values[nameof(Setting.CommandForwarderLaunchScript)]?.ToString() is String value ? value : String.Empty;
+			get => ApplicationData.Current.LocalSettings.Values[nameof(Setting.CommandForwarderLaunchScript)]?.ToString() is String value ? value : throw new Exception();
 			set => ApplicationData.Current.LocalSettings.Values[nameof(Setting.CommandForwarderLaunchScript)] = value;
 		}
 
 		public static String CommandForwarderMethodConfiguration {
-			get => ApplicationData.Current.LocalSettings.Values[nameof(Setting.CommandForwarderMethodConfiguration)]?.ToString() is String value ? value : String.Empty;
+			get => ApplicationData.Current.LocalSettings.Values[nameof(Setting.CommandForwarderMethodConfiguration)]?.ToString() is String value ? value : throw new Exception();
 			set => ApplicationData.Current.LocalSettings.Values[nameof(Setting.CommandForwarderMethodConfiguration)] = value;
+		}
+
+		public static Size CommandForwarderQuickWindowSizeWidth {
+			get => ApplicationData.Current.LocalSettings.Values[nameof(Setting.CommandForwarderQuickWindowSizeWidth)]?.ToString() is String value ? Size.Parse(value) : throw new Exception();
+			set => ApplicationData.Current.LocalSettings.Values[nameof(Setting.CommandForwarderQuickWindowSizeWidth)] = value;
+		}
+
+		public static Size CommandForwarderQuickWindowSizeHeight {
+			get => ApplicationData.Current.LocalSettings.Values[nameof(Setting.CommandForwarderQuickWindowSizeHeight)]?.ToString() is String value ? Size.Parse(value) : throw new Exception();
+			set => ApplicationData.Current.LocalSettings.Values[nameof(Setting.CommandForwarderQuickWindowSizeHeight)] = value;
 		}
 
 		// ----------------
 
 		public static Boolean AnimationViewerAutomaticPlay {
-			get => ApplicationData.Current.LocalSettings.Values[nameof(Setting.AnimationViewerAutomaticPlay)]?.ToString() is String value ? Boolean.Parse(value) : true;
+			get => ApplicationData.Current.LocalSettings.Values[nameof(Setting.AnimationViewerAutomaticPlay)]?.ToString() is String value ? Boolean.Parse(value) : throw new Exception();
 			set => ApplicationData.Current.LocalSettings.Values[nameof(Setting.AnimationViewerAutomaticPlay)] = value.ToString();
 		}
 
 		public static Boolean AnimationViewerRepeatPlay {
-			get => ApplicationData.Current.LocalSettings.Values[nameof(Setting.AnimationViewerRepeatPlay)]?.ToString() is String value ? Boolean.Parse(value) : true;
+			get => ApplicationData.Current.LocalSettings.Values[nameof(Setting.AnimationViewerRepeatPlay)]?.ToString() is String value ? Boolean.Parse(value) : throw new Exception();
 			set => ApplicationData.Current.LocalSettings.Values[nameof(Setting.AnimationViewerRepeatPlay)] = value.ToString();
 		}
 
 		public static Boolean AnimationViewerRemainFrameRate {
-			get => ApplicationData.Current.LocalSettings.Values[nameof(Setting.AnimationViewerRemainFrameRate)]?.ToString() is String value ? Boolean.Parse(value) : true;
+			get => ApplicationData.Current.LocalSettings.Values[nameof(Setting.AnimationViewerRemainFrameRate)]?.ToString() is String value ? Boolean.Parse(value) : throw new Exception();
 			set => ApplicationData.Current.LocalSettings.Values[nameof(Setting.AnimationViewerRemainFrameRate)] = value.ToString();
 		}
 
