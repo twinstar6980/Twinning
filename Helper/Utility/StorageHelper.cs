@@ -11,7 +11,23 @@ namespace Helper.Utility {
 
 	public static class StorageHelper {
 
+		#region path
+
+		public static String GetPathName (
+			String path
+		) {
+			return Path.GetFileName(path);
+		}
+
+		#endregion
+
 		#region exist
+
+		public static Boolean Exist (
+			String path
+		) {
+			return File.Exists(path) || Directory.Exists(path);
+		}
 
 		public static Boolean ExistFile (
 			String path

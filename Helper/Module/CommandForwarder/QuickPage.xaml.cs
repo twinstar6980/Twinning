@@ -3,6 +3,8 @@
 
 using Helper;
 using Helper.Utility;
+using Helper.CustomControl;
+using Windows.ApplicationModel.DataTransfer;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace Helper.Module.CommandForwarder {
@@ -24,7 +26,7 @@ namespace Helper.Module.CommandForwarder {
 			NavigationEventArgs args
 		) {
 			if (args.Parameter is List<String> parameter) {
-				this.Controller.Input = parameter;
+				this.Controller.AppendInput(parameter);
 				this.Controller.RefreshInput();
 				this.Controller.RefreshFilter();
 			}
@@ -48,15 +50,19 @@ namespace Helper.Module.CommandForwarder {
 
 		// ----------------
 
-		public MethodConfigurationModel.Configuration Configuration { get; set; } = null!;
+		public MethodConfigurationModel.Configuration Configuration { get; set; } = default!;
 
 		// ----------------
 
-		public List<String>? Input { get; set; } = null;
+		public List<String> Input { get; set; } = new List<String>();
 
-		public Boolean Filter { get; set; } = true;
+		public Boolean RemainInput { get; set; } = false;
 
-		public Boolean Parallel { get; set; } = false;
+		public Boolean ParallelExecute { get; set; } = false;
+
+		public Boolean EnableFilter { get; set; } = true;
+
+		public Boolean AutomaticClose { get; set; } = true;
 
 		#endregion
 
@@ -64,9 +70,6 @@ namespace Helper.Module.CommandForwarder {
 
 		public void Initialize (
 		) {
-			this.Input = null;
-			this.Filter = true;
-			this.Parallel = false;
 			try {
 				this.Configuration = JsonHelper.Deserialize<MethodConfigurationModel.Configuration>(StorageHelper.ReadFileTextSync(Setting.CommandForwarderMethodConfiguration));
 			} catch (Exception e) {
@@ -96,25 +99,58 @@ namespace Helper.Module.CommandForwarder {
 		) {
 			var state = true;
 			state &= filter.Type switch {
-				null  => true,
+				null  => StorageHelper.Exist(input),
 				false => StorageHelper.ExistFile(input),
 				true  => StorageHelper.ExistDirectory(input),
 			};
-			state &= filter.Name is null || Regex.IsMatch(input, filter.Name);
+			state &= filter.Name is null || Regex.IsMatch(input, filter.Name, RegexOptions.IgnoreCase);
 			return state;
+		}
+
+		public async void AppendInput (
+			List<String> list
+		) {
+			foreach (var item in list) {
+				if (this.Input.Contains(item)) {
+					continue;
+				}
+				this.Input.Add(item);
+				this.uInput_ItemsSource.Add(new QuickInputItemController() { Host = this, Path = item });
+			}
+			return;
+		}
+
+		public async void RemoveInput (
+			List<String> list
+		) {
+			foreach (var item in list) {
+				if (!this.Input.Contains(item)) {
+					continue;
+				}
+				this.Input.Remove(item);
+				this.uInput_ItemsSource.Remove(this.uInput_ItemsSource.First(value => (value.Path == item)));
+			}
+			return;
+		}
+
+		public async void ClearInput (
+		) {
+			this.Input.Clear();
+			this.uInput_ItemsSource.Clear();
+			return;
 		}
 
 		public async void RefreshInput (
 		) {
-			this.NotifyPropertyChanged(
-				nameof(this.uInputCount_Content),
-				nameof(this.uInputTip_Subtitle)
-			);
 			foreach (var group in this.uOption_ItemsSource) {
 				foreach (var item in group.Children) {
-					item.Available = this.Input is not null && this.Input.All((inputItem) => (this.CheckInput(inputItem, item.ItemModel.Filter)));
+					item.Available = this.Input.Count != 0 && this.Input.All((inputItem) => (this.CheckInput(inputItem, item.ItemModel.Filter)));
 				}
 			}
+			this.NotifyPropertyChanged(
+				nameof(this.uRequireInputTip_Visibility),
+				nameof(this.uInputCount_Content)
+			);
 			return;
 		}
 
@@ -129,69 +165,182 @@ namespace Helper.Module.CommandForwarder {
 			return;
 		}
 
+		public void Forward (
+			String? method,
+			Object? argument
+		) {
+			if (!StorageHelper.ExistFile(Setting.CommandForwarderLaunchScript)) {
+				MainWindow.Instance.Controller.PublishTip(16, InfoBarSeverity.Error, "Invalid path of launch script.");
+				return;
+			}
+			var processArgument = new List<String>();
+			foreach (var input in this.Input) {
+				processArgument.Add(input);
+				if (method is not null) {
+					processArgument.Add("-method");
+					processArgument.Add(method);
+				}
+				if (argument is not null) {
+					processArgument.Add("-argument");
+					processArgument.Add(JsonHelper.Serialize(argument, false));
+				}
+				if (this.ParallelExecute) {
+					ProcessHelper.CreateProcessForCommandScript(Setting.CommandForwarderLaunchScript, processArgument).Wait(0);
+					processArgument.Clear();
+				}
+			}
+			if (!this.ParallelExecute) {
+				ProcessHelper.CreateProcessForCommandScript(Setting.CommandForwarderLaunchScript, processArgument).Wait(0);
+			}
+			if (this.AutomaticClose) {
+				MainWindow.Instance.Close();
+				return;
+			}
+			if (!this.RemainInput) {
+				this.ClearInput();
+				this.RefreshInput();
+				this.RefreshFilter();
+			}
+			return;
+		}
+
+		#endregion
+
+		#region page
+
+		public async void uPage_OnDragOver (
+			Object        sender,
+			DragEventArgs args
+		) {
+			if (sender is not Page senders) { return; }
+			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
+				args.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Link;
+			}
+			return;
+		}
+
+		public async void uPage_OnDrop (
+			Object        sender,
+			DragEventArgs args
+		) {
+			if (sender is not Page senders) { return; }
+			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
+				var item = await args.DataView.GetStorageItemsAsync();
+				this.AppendInput(item.Select((value) => (value.Path)).ToList());
+				this.RefreshInput();
+				this.RefreshFilter();
+			}
+			return;
+		}
+
+		#endregion
+
+		#region require input tip
+
+		public Boolean uRequireInputTip_Visibility {
+			get {
+				return this.Input.Count == 0;
+			}
+		}
+
 		#endregion
 
 		#region setting
 
-		public String uInputCount_Content {
+		public Boolean uAutomaticClose_Visibility {
 			get {
-				if (this.Input is null) {
-					return "";
-				}
-				return $"{this.Input.Count} - Input";
+				return this.AutomaticClose;
 			}
 		}
 
-		public async void uInputCount_OnClick (
+		public async void uAutomaticClose_OnClick (
 			Object          sender,
 			RoutedEventArgs args
 		) {
 			if (sender is not Button senders) { return; }
-			if (this.Input is null) { return; }
-			this.View.uInputTip.IsOpen = true;
-			return;
-		}
-
-		public String uInputTip_Subtitle {
-			get {
-				if (this.Input is null) {
-					return "";
-				}
-				return String.Join('\n', this.Input);
-			}
-		}
-
-		// ----------------
-
-		public Boolean uParallel_IsChecked {
-			get {
-				return this.Parallel;
-			}
-		}
-
-		public async void uParallel_OnClick (
-			Object          sender,
-			RoutedEventArgs args
-		) {
-			if (sender is not ToggleButton senders) { return; }
-			this.Parallel = senders.IsChecked!.Value;
+			this.AutomaticClose = false;
+			this.NotifyPropertyChanged(
+				nameof(this.uAutomaticClose_Visibility)
+			);
 			return;
 		}
 
 		// ----------------
 
-		public Boolean uFilter_IsChecked {
+		public Boolean uRemainInput_IsChecked {
 			get {
-				return this.Filter;
+				return this.RemainInput;
 			}
 		}
 
-		public async void uFilter_OnClick (
+		public async void uRemainInput_OnClick (
 			Object          sender,
 			RoutedEventArgs args
 		) {
 			if (sender is not ToggleButton senders) { return; }
-			this.Filter = senders.IsChecked!.Value;
+			this.RemainInput = senders.IsChecked!.Value;
+			return;
+		}
+
+		// ----------------
+
+		public Boolean uParallelExecute_IsChecked {
+			get {
+				return this.ParallelExecute;
+			}
+		}
+
+		public async void uParallelExecute_OnClick (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			if (sender is not ToggleButton senders) { return; }
+			this.ParallelExecute = senders.IsChecked!.Value;
+			return;
+		}
+
+		// ----------------
+
+		public Boolean uEnableFilter_IsChecked {
+			get {
+				return this.EnableFilter;
+			}
+		}
+
+		public async void uEnableFilter_OnClick (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			if (sender is not ToggleButton senders) { return; }
+			this.EnableFilter = senders.IsChecked!.Value;
+			this.RefreshFilter();
+			return;
+		}
+
+		#endregion
+
+		#region input
+
+		public String uInputCount_Content {
+			get {
+				return $"{this.Input.Count}";
+			}
+		}
+
+		// ----------------
+
+		public ObservableCollection<QuickInputItemController> uInput_ItemsSource { get; } = new ObservableCollection<QuickInputItemController>();
+
+		public async void uInput_OnItemClick (
+			Object             sender,
+			ItemClickEventArgs args
+		) {
+			if (sender is not ListView senders) { return; }
+			if (args.ClickedItem is not QuickInputItemController item) {
+				return;
+			}
+			this.RemoveInput(new List<String>() { item.Path });
+			this.RefreshInput();
 			this.RefreshFilter();
 			return;
 		}
@@ -200,40 +349,63 @@ namespace Helper.Module.CommandForwarder {
 
 		#region option
 
-		public List<QuickOptionGroupItemController> uOption_ItemsSource { get; set; } = null!;
+		public List<QuickOptionGroupItemController> uOption_ItemsSource { get; set; } = default!;
 
 		public async void uOption_OnItemInvoked (
 			TreeView                     sender,
 			TreeViewItemInvokedEventArgs args
 		) {
 			if (sender is not TreeView senders) { return; }
-			Debug.Assert(this.Input is not null);
-			if (args.InvokedItem is QuickOptionItemItemController selectedItem) {
-				if (!StorageHelper.ExistFile(Setting.CommandForwarderLaunchScript)) {
-					MainWindow.Instance.Controller.PublishTip(16, InfoBarSeverity.Error, "Invalid path of launch script.");
-					return;
-				}
-				var configuration = selectedItem.ItemModel;
-				var argument = new List<String>();
-				foreach (var input in this.Input) {
-					argument.Add(input);
-					if (configuration.Method is not null) {
-						argument.Add("-method");
-						argument.Add(configuration.Method);
-					}
-					argument.Add("-argument");
-					argument.Add(JsonHelper.Serialize(configuration.Argument));
-					if (this.Parallel) {
-						ProcessHelper.CreateProcessForCommandScript(Setting.CommandForwarderLaunchScript, argument).Wait(0);
-						argument.Clear();
-					}
-				}
-				if (!this.Parallel) {
-					ProcessHelper.CreateProcessForCommandScript(Setting.CommandForwarderLaunchScript, argument).Wait(0);
-				}
-				MainWindow.Instance.Close();
+			if (args.InvokedItem is QuickOptionGroupItemController groupItem) {
+				var node = senders.RootNodes.ToList().Find((value) => (value.Content == groupItem)) ?? throw new Exception();
+				node.IsExpanded = !node.IsExpanded;
+			}
+			if (args.InvokedItem is QuickOptionItemItemController itemItem) {
+				this.Forward(itemItem.ItemModel.Method, null);
 			}
 			return;
+		}
+
+		#endregion
+
+	}
+
+	public class QuickInputItemController : CustomController {
+
+		#region data
+
+		public QuickPageController Host { get; init; } = default!;
+
+		// ----------------
+
+		public String Path { get; set; } = default!;
+
+		#endregion
+
+		#region view
+
+		public String uRoot_ToolTip {
+			get {
+				return this.Path;
+			}
+		}
+
+		public String uIcon_Glyph {
+			get {
+				if (StorageHelper.ExistFile(this.Path)) {
+					return FluentIconGlyph.Document;
+				}
+				if (StorageHelper.ExistDirectory(this.Path)) {
+					return FluentIconGlyph.Folder;
+				}
+				return FluentIconGlyph.StatusCircleBlock;
+			}
+		}
+
+		public String uName_Text {
+			get {
+				return StorageHelper.GetPathName(this.Path);
+			}
 		}
 
 		#endregion
@@ -245,6 +417,8 @@ namespace Helper.Module.CommandForwarder {
 		public DataTemplate? GroupTemplate { get; set; }
 
 		public DataTemplate? ItemTemplate { get; set; }
+
+		public DataTemplate? PresetTemplate { get; set; }
 
 		// ----------------
 
@@ -268,9 +442,11 @@ namespace Helper.Module.CommandForwarder {
 
 		// ----------------
 
-		public MethodConfigurationModel.QuickOptionGroupConfiguration GroupModel { get; init; } = default!;
+		public MethodConfigurationModel.QuickOptionGroupConfiguration GroupModel { get; set; } = default!;
 
-		public List<QuickOptionItemItemController> Children { get; init; } = default!;
+		// ----------------
+
+		public List<QuickOptionItemItemController> Children { get; set; } = default!;
 
 		#endregion
 
@@ -278,19 +454,25 @@ namespace Helper.Module.CommandForwarder {
 
 		public Boolean uRoot_Visibility {
 			get {
-				return !this.Host.Filter || this.Children.Any((value) => (value.Available));
-			}
-		}
-
-		public String uRoot_Content {
-			get {
-				return this.GroupModel.Name;
+				return this.Host.Input.Count != 0 && (!this.Host.EnableFilter || this.Children.Any((value) => (value.Available)));
 			}
 		}
 
 		public List<QuickOptionItemItemController> uRoot_ItemsSource {
 			get {
 				return this.Children;
+			}
+		}
+
+		public String uIcon_Glyph {
+			get {
+				return FluentIconGlyph.FindGlyph(this.GroupModel.Icon);
+			}
+		}
+
+		public String uName_Text {
+			get {
+				return this.GroupModel.Name;
 			}
 		}
 
@@ -306,7 +488,7 @@ namespace Helper.Module.CommandForwarder {
 
 		// ----------------
 
-		public MethodConfigurationModel.QuickOptionConfiguration ItemModel { get; init; } = default!;
+		public MethodConfigurationModel.QuickOptionConfiguration ItemModel { get; set; } = default!;
 
 		// ----------------
 
@@ -318,13 +500,47 @@ namespace Helper.Module.CommandForwarder {
 
 		public Boolean uRoot_Visibility {
 			get {
-				return !this.Host.Filter || this.Available;
+				return this.Host.Input.Count != 0 && (!this.Host.EnableFilter || this.Available);
 			}
 		}
 
-		public String uRoot_Content {
+		public String uIcon_Glyph {
+			get {
+				return FluentIconGlyph.FindGlyph(this.ItemModel.Icon);
+			}
+		}
+
+		public String uName_Text {
 			get {
 				return this.ItemModel.Name;
+			}
+		}
+
+		public String uPresetCount_Text {
+			get {
+				return $"{this.ItemModel.Preset.FindAll((value) => (value is not null)).Count}";
+			}
+		}
+
+		public MenuFlyout uPreset_Flyout {
+			get {
+				var menu = new MenuFlyout() {
+					Placement = FlyoutPlacementMode.BottomEdgeAlignedRight,
+				};
+				foreach (var preset in this.ItemModel.Preset) {
+					var item = default(MenuFlyoutItemBase);
+					if (preset is null) {
+						item = new MenuFlyoutSeparator() {
+						};
+					} else {
+						item = new MenuFlyoutItem() {
+							Text = preset.Name,
+						};
+						(item as MenuFlyoutItem)!.Click += (sender, args) => { this.Host.Forward(this.ItemModel.Method, preset.Argument); };
+					}
+					menu.Items.Add(item);
+				}
+				return menu;
 			}
 		}
 

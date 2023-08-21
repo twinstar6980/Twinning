@@ -3,6 +3,7 @@
 
 using Helper;
 using Helper.Utility;
+using Helper.CustomControl;
 
 namespace Helper.Module.CommandForwarder {
 
@@ -33,7 +34,7 @@ namespace Helper.Module.CommandForwarder {
 
 		// ----------------
 
-		public MethodConfigurationModel.Configuration Configuration { get; set; } = null!;
+		public MethodConfigurationModel.Configuration Configuration { get; set; } = default!;
 
 		#endregion
 
@@ -66,19 +67,23 @@ namespace Helper.Module.CommandForwarder {
 
 		#region available method
 
-		public List<AvailableMethodGroupItemController> uAvailableMethod_ItemsSource { get; set; } = null!;
+		public List<AvailableMethodGroupItemController> uAvailableMethod_ItemsSource { get; set; } = default!;
 
 		public async void uAvailableMethod_OnItemInvoked (
 			TreeView                     sender,
 			TreeViewItemInvokedEventArgs args
 		) {
 			if (sender is not TreeView senders) { return; }
-			if (args.InvokedItem is AvailableMethodItemItemController selectedItem) {
+			if (args.InvokedItem is AvailableMethodGroupItemController groupItem) {
+				var node = senders.RootNodes.ToList().Find((value) => (value.Content == groupItem)) ?? throw new Exception();
+				node.IsExpanded = !node.IsExpanded;
+			}
+			if (args.InvokedItem is AvailableMethodItemItemController itemItem) {
 				this.uSelectedMethod_ItemsSource.Add(new SelectedMethodItemController() {
 					Host = this,
-					GroupModel = selectedItem.GroupModel,
-					ItemModel = selectedItem.ItemModel,
-					Argument = MethodConfigurationHelper.MakeArgumentValueDefault(selectedItem.ItemModel.Argument),
+					GroupModel = itemItem.GroupModel,
+					ItemModel = itemItem.ItemModel,
+					Argument = MethodConfigurationHelper.MakeArgumentValueDefault(itemItem.ItemModel.Argument),
 				});
 				await Task.Delay(TimeSpan.FromMilliseconds(100));
 				this.View.uSelectedMethodScrollViewer.ScrollToVerticalOffset((this.View.uSelectedMethodScrollViewer.Content as FrameworkElement)!.ActualHeight);
@@ -90,7 +95,7 @@ namespace Helper.Module.CommandForwarder {
 
 		#region selected method
 
-		public ObservableCollection<SelectedMethodItemController> uSelectedMethod_ItemsSource { get; set; } = new ObservableCollection<SelectedMethodItemController>();
+		public ObservableCollection<SelectedMethodItemController> uSelectedMethod_ItemsSource { get; } = new ObservableCollection<SelectedMethodItemController>();
 
 		// ----------------
 
@@ -140,23 +145,31 @@ namespace Helper.Module.CommandForwarder {
 
 		// ----------------
 
-		public MethodConfigurationModel.MethodGroupConfiguration GroupModel { get; init; } = default!;
+		public MethodConfigurationModel.MethodGroupConfiguration GroupModel { get; set; } = default!;
 
-		public List<AvailableMethodItemItemController> Children { get; init; } = default!;
+		// ----------------
+
+		public List<AvailableMethodItemItemController> Children { get; set; } = default!;
 
 		#endregion
 
 		#region view
 
-		public String uRoot_Content {
-			get {
-				return this.GroupModel.Name;
-			}
-		}
-
 		public List<AvailableMethodItemItemController> uRoot_ItemsSource {
 			get {
 				return this.Children;
+			}
+		}
+
+		public String uIcon_Glyph {
+			get {
+				return FluentIconGlyph.FindGlyph(this.GroupModel.Icon);
+			}
+		}
+
+		public String uName_Text {
+			get {
+				return this.GroupModel.Name;
 			}
 		}
 
@@ -172,15 +185,21 @@ namespace Helper.Module.CommandForwarder {
 
 		// ----------------
 
-		public MethodConfigurationModel.MethodGroupConfiguration GroupModel { get; init; } = default!;
+		public MethodConfigurationModel.MethodGroupConfiguration GroupModel { get; set; } = default!;
 
-		public MethodConfigurationModel.MethodConfiguration ItemModel { get; init; } = default!;
+		public MethodConfigurationModel.MethodConfiguration ItemModel { get; set; } = default!;
 
 		#endregion
 
 		#region view
 
-		public String uRoot_Content {
+		public String uIcon_Glyph {
+			get {
+				return FluentIconGlyph.FindGlyph(this.ItemModel.Icon);
+			}
+		}
+
+		public String uName_Text {
 			get {
 				return this.ItemModel.Name;
 			}
@@ -198,13 +217,13 @@ namespace Helper.Module.CommandForwarder {
 
 		// ----------------
 
-		public MethodConfigurationModel.MethodGroupConfiguration GroupModel { get; init; } = default!;
+		public MethodConfigurationModel.MethodGroupConfiguration GroupModel { get; set; } = default!;
 
-		public MethodConfigurationModel.MethodConfiguration ItemModel { get; init; } = default!;
+		public MethodConfigurationModel.MethodConfiguration ItemModel { get; set; } = default!;
 
 		// ----------------
 
-		public List<MethodConfigurationModel.ArgumentValue> Argument { get; init; } = default!;
+		public List<MethodConfigurationModel.ArgumentValue> Argument { get; set; } = default!;
 
 		#endregion
 

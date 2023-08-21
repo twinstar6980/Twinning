@@ -84,7 +84,7 @@ namespace Helper.Module.AnimationViewer {
 		[MemberNotNullWhen(true, nameof(SpriteControl.Storyboard))]
 		public new Boolean Loaded {
 			get {
-				return this.Canvas != null;
+				return this.Canvas is not null;
 			}
 		}
 

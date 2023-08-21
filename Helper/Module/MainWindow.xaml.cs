@@ -17,6 +17,7 @@ namespace Helper.Module {
 		) {
 			MainWindow.Instance = this;
 			this.InitializeComponent();
+			this.Title = "TwinStar ToolKit - Helper";
 			this.ExtendsContentIntoTitleBar = true;
 			this.SetTitleBar(this.uTab.TabStripFooter as UIElement);
 			if (new BackdropHelper(this).TryApplyMica()) {
@@ -154,11 +155,11 @@ namespace Helper.Module {
 
 		// ----------------
 
-		public ModuleInformation Model { get; init; } = default!;
+		public ModuleInformation Model { get; set; } = default!;
 
-		public Boolean IsCloseable { get; init; } = default!;
+		public Boolean IsCloseable { get; set; } = default!;
 
-		public Frame Frame { get; init; } = default!;
+		public Frame Frame { get; set; } = default!;
 
 		#endregion
 

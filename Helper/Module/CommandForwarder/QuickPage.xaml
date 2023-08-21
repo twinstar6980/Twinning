@@ -9,6 +9,9 @@
 	xmlns:my="using:Helper.CustomControl"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
+	AllowDrop="True"
+	DragOver="{x:Bind Controller.uPage_OnDragOver}"
+	Drop="{x:Bind Controller.uPage_OnDrop}"
 >
 	<Grid Padding="8,4" ColumnSpacing="4">
 		<Grid.ColumnDefinitions>
@@ -21,34 +24,67 @@
 		>
 			<my:MHeaderBar
 				my:MStack.Weight="NaN"
-				Icon="{StaticResource FluentIconGlyph.FavoriteStar}"
+				Icon="{StaticResource FluentIconGlyph.Bookmarks}"
 				Title="Option"
 			>
 				<my:MHeaderBar.Action>
 					<my:MStack Orientation="Horizontal" Spacing="8">
-						<TeachingTip
-							x:Name="uInputTip" x:FieldModifier="public"
-							Target="{x:Bind uInputCount}"
-							Subtitle="{x:Bind Controller.uInputTip_Subtitle}"
-							PreferredPlacement="BottomLeft" IsLightDismissEnabled="True"
-						/>
 						<Button
-							x:Name="uInputCount" x:FieldModifier="public"
 							HorizontalAlignment="Stretch" VerticalAlignment="Center"
-							Content="{x:Bind Controller.uInputCount_Content}"
-							Click="{x:Bind Controller.uInputCount_OnClick}"
-						/>
+						>
+							<my:MStack Orientation="Horizontal" Spacing="8">
+								<TextBlock VerticalAlignment="Center" Text="{x:Bind Controller.uInputCount_Content}" />
+								<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Attach}" />
+							</my:MStack>
+							<Button.Flyout>
+								<Flyout Placement="Bottom">
+									<Flyout.FlyoutPresenterStyle>
+										<Style TargetType="FlyoutPresenter" BasedOn="{StaticResource DefaultFlyoutPresenterStyle}">
+											<Setter Property="Padding" Value="{ThemeResource MenuFlyoutPresenterThemePadding}" />
+											<Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
+											<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+											<Setter Property="ScrollViewer.VerticalScrollMode" Value="Auto" />
+											<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+											<Setter Property="ScrollViewer.IsHorizontalRailEnabled" Value="False" />
+											<Setter Property="ScrollViewer.IsVerticalRailEnabled" Value="False" />
+										</Style>
+									</Flyout.FlyoutPresenterStyle>
+									<ListView
+										Padding="0,0"
+										SelectionMode="None" IsItemClickEnabled="True"
+										ItemsSource="{x:Bind Controller.uInput_ItemsSource}"
+										ItemClick="{x:Bind Controller.uInput_OnItemClick}"
+									>
+										<ListView.ItemTemplate>
+											<DataTemplate x:DataType="localCommandForwarder:QuickInputItemController">
+												<my:MStack Orientation="Horizontal" Spacing="8" ToolTipService.ToolTip="{x:Bind uRoot_ToolTip}">
+													<FontIcon Margin="0,0,4,0" FontSize="{StaticResource SmallIconSize}" Glyph="{x:Bind uIcon_Glyph}" />
+													<TextBlock my:MStack.Weight="1" VerticalAlignment="Center" Text="{x:Bind uName_Text}" />
+												</my:MStack>
+											</DataTemplate>
+										</ListView.ItemTemplate>
+									</ListView>
+								</Flyout>
+							</Button.Flyout>
+						</Button>
 						<ToggleButton
 							HorizontalAlignment="Stretch" VerticalAlignment="Center"
-							IsChecked="{x:Bind Controller.uParallel_IsChecked}"
-							Click="{x:Bind Controller.uParallel_OnClick}"
+							IsChecked="{x:Bind Controller.uRemainInput_IsChecked}"
+							Click="{x:Bind Controller.uRemainInput_OnClick}"
+						>
+							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Pin}" />
+						</ToggleButton>
+						<ToggleButton
+							HorizontalAlignment="Stretch" VerticalAlignment="Center"
+							IsChecked="{x:Bind Controller.uParallelExecute_IsChecked}"
+							Click="{x:Bind Controller.uParallelExecute_OnClick}"
 						>
 							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Shuffle}" />
 						</ToggleButton>
 						<ToggleButton
 							HorizontalAlignment="Stretch" VerticalAlignment="Center"
-							IsChecked="{x:Bind Controller.uFilter_IsChecked}"
-							Click="{x:Bind Controller.uFilter_OnClick}"
+							IsChecked="{x:Bind Controller.uEnableFilter_IsChecked}"
+							Click="{x:Bind Controller.uEnableFilter_OnClick}"
 						>
 							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Filter}" />
 						</ToggleButton>
@@ -56,27 +92,79 @@
 				</my:MHeaderBar.Action>
 			</my:MHeaderBar>
 			<my:MDivider Height="{StaticResource DividerThickness}" />
-			<TreeView
-				my:MStack.Weight="1"
-				SelectionMode="None" CanDragItems="False" CanReorderItems="False"
-				ItemsSource="{x:Bind Controller.uOption_ItemsSource}"
-				ItemInvoked="{x:Bind Controller.uOption_OnItemInvoked}"
-			>
-				<TreeView.ItemTemplateSelector>
-					<localCommandForwarder:QuickOptionItemTemplateSelector>
-						<localCommandForwarder:QuickOptionItemTemplateSelector.GroupTemplate>
-							<DataTemplate x:DataType="localCommandForwarder:QuickOptionGroupItemController">
-								<TreeViewItem Visibility="{x:Bind uRoot_Visibility}" Content="{x:Bind uRoot_Content}" ItemsSource="{x:Bind uRoot_ItemsSource}" HasUnrealizedChildren="True" IsExpanded="True" />
-							</DataTemplate>
-						</localCommandForwarder:QuickOptionItemTemplateSelector.GroupTemplate>
-						<localCommandForwarder:QuickOptionItemTemplateSelector.ItemTemplate>
-							<DataTemplate x:DataType="localCommandForwarder:QuickOptionItemItemController">
-								<TreeViewItem Visibility="{x:Bind uRoot_Visibility}" Content="{x:Bind uRoot_Content}" />
-							</DataTemplate>
-						</localCommandForwarder:QuickOptionItemTemplateSelector.ItemTemplate>
-					</localCommandForwarder:QuickOptionItemTemplateSelector>
-				</TreeView.ItemTemplateSelector>
-			</TreeView>
+			<my:MBox my:MStack.Weight="1" Padding="0">
+				<TreeView
+					SelectionMode="None" CanDragItems="False" CanReorderItems="False"
+					ItemsSource="{x:Bind Controller.uOption_ItemsSource}"
+					ItemInvoked="{x:Bind Controller.uOption_OnItemInvoked}"
+				>
+					<TreeView.ItemTemplateSelector>
+						<localCommandForwarder:QuickOptionItemTemplateSelector>
+							<localCommandForwarder:QuickOptionItemTemplateSelector.GroupTemplate>
+								<DataTemplate x:DataType="localCommandForwarder:QuickOptionGroupItemController">
+									<TreeViewItem Visibility="{x:Bind uRoot_Visibility}" ItemsSource="{x:Bind uRoot_ItemsSource}" HasUnrealizedChildren="True" IsExpanded="True">
+										<my:MStack Padding="0,0,16,0" Orientation="Horizontal" Spacing="8">
+											<FontIcon Margin="0,0,4,0" FontSize="{StaticResource SmallIconSize}" Glyph="{x:Bind uIcon_Glyph}" />
+											<TextBlock
+												HorizontalAlignment="Left" VerticalAlignment="Center"
+												Text="{x:Bind uName_Text}"
+											/>
+											<my:MBox my:MStack.Weight="1" />
+											<Button
+												HorizontalAlignment="Right" VerticalAlignment="Center"
+												Content=" "
+												IsEnabled="False" Opacity="0"
+											/>
+										</my:MStack>
+									</TreeViewItem>
+								</DataTemplate>
+							</localCommandForwarder:QuickOptionItemTemplateSelector.GroupTemplate>
+							<localCommandForwarder:QuickOptionItemTemplateSelector.ItemTemplate>
+								<DataTemplate x:DataType="localCommandForwarder:QuickOptionItemItemController">
+									<TreeViewItem Visibility="{x:Bind uRoot_Visibility}">
+										<my:MStack Padding="0,0,16,0" Orientation="Horizontal" Spacing="8">
+											<FontIcon Margin="0,0,4,0" FontSize="{StaticResource SmallIconSize}" Glyph="{x:Bind uIcon_Glyph}" />
+											<TextBlock
+												HorizontalAlignment="Left" VerticalAlignment="Center"
+												Text="{x:Bind uName_Text}"
+											/>
+											<my:MBox my:MStack.Weight="1" />
+											<Button
+												HorizontalAlignment="Right" VerticalAlignment="Center"
+												Flyout="{x:Bind uPreset_Flyout}"
+											>
+												<my:MStack Orientation="Horizontal" Spacing="8">
+													<TextBlock
+														HorizontalAlignment="Left" VerticalAlignment="Center"
+														Text="{x:Bind uPresetCount_Text}"
+													/>
+													<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.LightningBolt}" />
+												</my:MStack>
+											</Button>
+										</my:MStack>
+									</TreeViewItem>
+								</DataTemplate>
+							</localCommandForwarder:QuickOptionItemTemplateSelector.ItemTemplate>
+						</localCommandForwarder:QuickOptionItemTemplateSelector>
+					</TreeView.ItemTemplateSelector>
+				</TreeView>
+				<my:MStack
+					HorizontalAlignment="Center" VerticalAlignment="Center"
+					Orientation="Vertical" Spacing="16"
+					Visibility="{x:Bind Controller.uRequireInputTip_Visibility}"
+				>
+					<FontIcon FontSize="48" Glyph="{StaticResource FluentIconGlyph.Error}"/>
+					<TextBlock HorizontalAlignment="Center" Style="{StaticResource SubtitleTextBlockStyle}" Text="Drag File On Here" />
+				</my:MStack>
+			</my:MBox>
+			<my:MDivider Height="{StaticResource DividerThickness}" Visibility="{x:Bind Controller.uAutomaticClose_Visibility}" />
+			<Button
+				HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+				Margin="0,4,0,0"
+				Content="Suppress Automatic Close"
+				Visibility="{x:Bind Controller.uAutomaticClose_Visibility}"
+				Click="{x:Bind Controller.uAutomaticClose_OnClick}"
+			/>
 		</my:MStack>
 	</Grid>
 </Page>

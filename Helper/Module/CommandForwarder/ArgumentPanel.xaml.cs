@@ -119,9 +119,9 @@ namespace Helper.Module.CommandForwarder {
 
 		// ----------------
 
-		public MethodConfigurationModel.ArgumentConfiguration Configuration { get; init; } = default!;
+		public MethodConfigurationModel.ArgumentConfiguration Configuration { get; set; } = default!;
 
-		public MethodConfigurationModel.ArgumentValue Value { get; init; } = default!;
+		public MethodConfigurationModel.ArgumentValue Value { get; set; } = default!;
 
 		#endregion
 

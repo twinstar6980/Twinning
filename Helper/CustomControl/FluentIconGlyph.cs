@@ -1415,6 +1415,16 @@ namespace Helper.CustomControl {
 
 		#endregion
 
+		#region utility
+
+		public static String FindGlyph (
+			String name
+		) {
+			return typeof(FluentIconGlyph).GetField(name)?.GetRawConstantValue()?.ToString() ?? throw new Exception();
+		}
+
+		#endregion
+
 	}
 
 }

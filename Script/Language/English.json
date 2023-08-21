@@ -121,6 +121,7 @@
 	// Entry/method/js
 	"method:js.execute:name": "JS Execute",
 	"method:js.execute$script_file:name": "Script file",
+	"method:js.execute$is_module:name": "Run as module",
 	// Entry/method/json
 	"method:json.format:name": "JSON Format",
 	"method:json.format$source_file:name": "Source file",

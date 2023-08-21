@@ -12,11 +12,11 @@
 >
 	<Grid Padding="8,4" ColumnSpacing="4">
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="1*" MinWidth="208" MaxWidth="312" />
+			<ColumnDefinition Width="1*" MinWidth="208" MaxWidth="352" />
 			<ColumnDefinition Width="1" />
 			<ColumnDefinition Width="3*" MinWidth="880" />
 			<ColumnDefinition Width="1" />
-			<ColumnDefinition Width="1*" MinWidth="208" MaxWidth="312" />
+			<ColumnDefinition Width="1*" MinWidth="208" MaxWidth="352" />
 		</Grid.ColumnDefinitions>
 		<my:MStack
 			Grid.Column="0"

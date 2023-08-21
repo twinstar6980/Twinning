@@ -116,6 +116,7 @@ namespace Helper {
 		public class MethodConfiguration {
 			public String                      Id       = default!;
 			public String                      Name     = default!;
+			public String                      Icon     = default!;
 			public List<ArgumentConfiguration> Argument = default!;
 		}
 
@@ -123,6 +124,7 @@ namespace Helper {
 		public class MethodGroupConfiguration {
 			public String                    Id   = default!;
 			public String                    Name = default!;
+			public String                    Icon = default!;
 			public List<MethodConfiguration> Item = default!;
 		}
 
@@ -135,16 +137,24 @@ namespace Helper {
 		}
 
 		[JsonObject(ItemRequired = Required.AllowNull)]
+		public class QuickOptionPresetConfiguration {
+			public String Name     = default!;
+			public Object Argument = default!;
+		}
+
+		[JsonObject(ItemRequired = Required.AllowNull)]
 		public class QuickOptionConfiguration {
-			public String                         Name     = default!;
-			public QuickOptionFilterConfiguration Filter   = default!;
-			public String?                        Method   = default!;
-			public Object                         Argument = default!;
+			public String                                Name   = default!;
+			public String                                Icon   = default!;
+			public QuickOptionFilterConfiguration        Filter = default!;
+			public String?                               Method = default!;
+			public List<QuickOptionPresetConfiguration?> Preset = default!;
 		}
 
 		[JsonObject(ItemRequired = Required.AllowNull)]
 		public class QuickOptionGroupConfiguration {
 			public String                         Name = default!;
+			public String                         Icon = default!;
 			public List<QuickOptionConfiguration> Item = default!;
 		}
 

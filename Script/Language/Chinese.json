@@ -121,6 +121,7 @@
 	// Entry/method/js
 	"method:js.execute:name": "JS 执行",
 	"method:js.execute$script_file:name": "脚本文件",
+	"method:js.execute$is_module:name": "作为模块运行",
 	// Entry/method/json
 	"method:json.format:name": "JSON 格式化",
 	"method:json.format$source_file:name": "来源文件",

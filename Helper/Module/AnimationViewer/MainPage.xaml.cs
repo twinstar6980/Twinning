@@ -60,11 +60,11 @@ namespace Helper.Module.AnimationViewer {
 
 		// ----------------
 
-		public Boolean AutomaticPlay { get; set; } = true;
+		public Boolean AutomaticPlay { get; set; } = default!;
 
-		public Boolean RepeatPlay { get; set; } = true;
+		public Boolean RepeatPlay { get; set; } = default!;
 
-		public Boolean RemainFrameRate { get; set; } = true;
+		public Boolean RemainFrameRate { get; set; } = default!;
 
 		// ----------------
 
@@ -135,7 +135,7 @@ namespace Helper.Module.AnimationViewer {
 		[MemberNotNullWhen(true, nameof(MainPageController.ZombieGroundSwatchLayerName))]
 		public Boolean Loaded {
 			get {
-				return this.Animation != null;
+				return this.Animation is not null;
 			}
 		}
 
@@ -155,7 +155,7 @@ namespace Helper.Module.AnimationViewer {
 		[MemberNotNullWhen(true, nameof(MainPageController.WorkingSpritePaused))]
 		public Boolean Working {
 			get {
-				return this.Loaded && this.WorkingSpriteIndex != null;
+				return this.Loaded && this.WorkingSpriteIndex is not null;
 			}
 		}
 
@@ -199,7 +199,7 @@ namespace Helper.Module.AnimationViewer {
 			);
 			this.View.uImageList.SelectAll();
 			this.View.uSpriteList.SelectAll();
-			if (this.Animation.MainSprite != null) {
+			if (this.Animation.MainSprite is not null) {
 				this.View.uMainSpriteList.SelectAll();
 			}
 			this.NotifyPropertyChanged(
@@ -223,7 +223,7 @@ namespace Helper.Module.AnimationViewer {
 			Debug.Assert(this.Loaded && !this.Working);
 			this.View.uImageList.DeselectRange(new ItemIndexRange(0, (USize)this.Animation.Image.Count));
 			this.View.uSpriteList.DeselectRange(new ItemIndexRange(0, (USize)this.Animation.Sprite.Count));
-			if (this.Animation.MainSprite != null) {
+			if (this.Animation.MainSprite is not null) {
 				this.View.uMainSpriteList.DeselectRange(new ItemIndexRange(0, 1));
 			}
 			this.AnimationFile = null;
@@ -280,7 +280,7 @@ namespace Helper.Module.AnimationViewer {
 			var currentFrameLabel = new List<Tuple<String, Size>>();
 			for (var frameIndex = 0; frameIndex < workingSprite.Frame.Count; ++frameIndex) {
 				var frame = workingSprite.Frame[frameIndex];
-				if (frame.Label != null) {
+				if (frame.Label is not null) {
 					currentFrameLabel.Add(new Tuple<String, Size>(frame.Label, frameIndex));
 				}
 				if (frame.Stop) {
@@ -619,7 +619,7 @@ namespace Helper.Module.AnimationViewer {
 				this.View.uSprite.State = SpriteControl.StateType.Paused;
 			}
 			var animationFile = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View) ?? throw new Exception(), ".json");
-			if (animationFile != null) {
+			if (animationFile is not null) {
 				var imageDirectory = Path.GetDirectoryName(animationFile) ?? throw new Exception();
 				if (this.Loaded) {
 					if (this.Working) {
@@ -671,7 +671,7 @@ namespace Helper.Module.AnimationViewer {
 				this.View.uSprite.State = SpriteControl.StateType.Paused;
 			}
 			var imageDirectory = await StorageHelper.PickDirectory(WindowHelper.GetForElement(this.View) ?? throw new Exception());
-			if (imageDirectory != null) {
+			if (imageDirectory is not null) {
 				var animationFile = this.AnimationFile;
 				if (this.Loaded) {
 					if (this.Working) {
@@ -774,7 +774,7 @@ namespace Helper.Module.AnimationViewer {
 
 		public Boolean uMainSpriteList_IsEnabled {
 			get {
-				return this.Loaded && this.Animation.MainSprite != null;
+				return this.Loaded && this.Animation.MainSprite is not null;
 			}
 		}
 
@@ -790,7 +790,7 @@ namespace Helper.Module.AnimationViewer {
 					: new List<MainSpriteItemController>() {
 						new MainSpriteItemController {
 							Host = this,
-							Index = this.Animation.MainSprite == null ? null : this.Animation.Sprite.Count,
+							Index = this.Animation.MainSprite is null ? null : this.Animation.Sprite.Count,
 						},
 					};
 			}
@@ -1480,7 +1480,7 @@ namespace Helper.Module.AnimationViewer {
 
 		// ----------------
 
-		public Size Index { get; init; } = default!;
+		public Size Index { get; set; } = default!;
 
 		#endregion
 
@@ -1510,7 +1510,7 @@ namespace Helper.Module.AnimationViewer {
 			get {
 				Debug.Assert(this.Host.Loaded);
 				var source = this.Host.ImageSource[this.Index];
-				if (source != null) {
+				if (source is not null) {
 					return new Image() {
 						Width = 32, Height = 32,
 						Source = source,
@@ -1538,7 +1538,7 @@ namespace Helper.Module.AnimationViewer {
 
 		// ----------------
 
-		public Size Index { get; init; } = default!;
+		public Size Index { get; set; } = default!;
 
 		#endregion
 
@@ -1572,7 +1572,7 @@ namespace Helper.Module.AnimationViewer {
 				if (model.Frame.Count == 1 && model.Frame[0].Append.Count == 1 && model.Frame[0].Change.Count == 1 && !model.Frame[0].Append[0].Sprite) {
 					source = this.Host.ImageSource[(Size)model.Frame[0].Append[0].Resource];
 				}
-				if (source != null) {
+				if (source is not null) {
 					return new Image() {
 						Width = 32, Height = 32,
 						Source = source,
@@ -1626,7 +1626,7 @@ namespace Helper.Module.AnimationViewer {
 
 		// ----------------
 
-		public Size? Index { get; init; } = default!;
+		public Size? Index { get; set; } = default!;
 
 		#endregion
 
@@ -1634,7 +1634,7 @@ namespace Helper.Module.AnimationViewer {
 
 		public Floater uRoot_Opacity {
 			get {
-				if (this.Index == null) {
+				if (this.Index is null) {
 					return 0.0;
 				} else {
 					Debug.Assert(this.Host.Loaded);
@@ -1647,7 +1647,7 @@ namespace Helper.Module.AnimationViewer {
 
 		public String uTitle_Text {
 			get {
-				if (this.Index == null) {
+				if (this.Index is null) {
 					return "";
 				} else {
 					Debug.Assert(this.Host.Loaded);
@@ -1661,7 +1661,7 @@ namespace Helper.Module.AnimationViewer {
 
 		public String uDescription_Text {
 			get {
-				if (this.Index == null) {
+				if (this.Index is null) {
 					return "";
 				} else {
 					Debug.Assert(this.Host.Loaded);
@@ -1688,7 +1688,7 @@ namespace Helper.Module.AnimationViewer {
 
 		public Boolean uToggle_IsChecked {
 			get {
-				if (this.Index == null) {
+				if (this.Index is null) {
 					return false;
 				} else {
 					Debug.Assert(this.Host.Loaded);
@@ -1702,7 +1702,7 @@ namespace Helper.Module.AnimationViewer {
 			RoutedEventArgs args
 		) {
 			if (sender is not ToggleButton senders) { return; }
-			if (this.Index == null) {
+			if (this.Index is null) {
 			} else {
 				Debug.Assert(this.Host.Loaded);
 				var lastWorkingSpriteIndex = this.Host.WorkingSpriteIndex;
