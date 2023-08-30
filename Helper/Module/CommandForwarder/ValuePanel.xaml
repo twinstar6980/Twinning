@@ -17,10 +17,11 @@
 					<VisualState.Setters>
 						<Setter Target="uAction.Content">
 							<Setter.Value>
-								<my:MStack Orientation="Horizontal" Spacing="8">
+								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
 									<Button
-										my:MStack.Weight="1"
-										HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										VerticalAlignment="Stretch"
+										HorizontalContentAlignment="Left"
 										IsEnabled="False"
 									/>
 								</my:MStack>
@@ -32,14 +33,15 @@
 					<VisualState.Setters>
 						<Setter Target="uAction.Content">
 							<Setter.Value>
-								<my:MStack Orientation="Horizontal" Spacing="8">
+								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
 									<Button
-										my:MStack.Weight="1"
-										HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										VerticalAlignment="Stretch"
+										HorizontalContentAlignment="Left"
 										Click="{x:Bind Controller.uConfirmationValue_OnClick}"
 										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
 									>
-										<TextBlock Text="{x:Bind Controller.uConfirmationValue_Text}" />
+										<TextBlock Style="{StaticResource BodyTextBlockStyle}" TextWrapping="NoWrap" Text="{x:Bind Controller.uConfirmationValue_Text}" />
 									</Button>
 								</my:MStack>
 							</Setter.Value>
@@ -50,10 +52,12 @@
 					<VisualState.Setters>
 						<Setter Target="uAction.Content">
 							<Setter.Value>
-								<my:MStack Orientation="Horizontal" Spacing="8">
+								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
 									<NumberBox
-										my:MStack.Weight="1"
+										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										VerticalAlignment="Stretch"
 										NumberFormatter="{x:Bind Controller.uNumberValue_NumberFormatter}"
+										SmallChange="1.0" LargeChange="10.0" SpinButtonPlacementMode="Inline"
 										Value="{x:Bind Controller.uNumberValue_Value}"
 										ValueChanged="{x:Bind Controller.uNumberValue_OnValueChanged}"
 										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
@@ -67,10 +71,12 @@
 					<VisualState.Setters>
 						<Setter Target="uAction.Content">
 							<Setter.Value>
-								<my:MStack Orientation="Horizontal" Spacing="8">
+								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
 									<NumberBox
-										my:MStack.Weight="1"
+										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										VerticalAlignment="Stretch"
 										NumberFormatter="{x:Bind Controller.uIntegerValue_NumberFormatter}"
+										SmallChange="1" LargeChange="10" SpinButtonPlacementMode="Inline"
 										Value="{x:Bind Controller.uIntegerValue_Value}"
 										ValueChanged="{x:Bind Controller.uIntegerValue_OnValueChanged}"
 										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
@@ -84,18 +90,20 @@
 					<VisualState.Setters>
 						<Setter Target="uAction.Content">
 							<Setter.Value>
-								<my:MStack Orientation="Horizontal" Spacing="8">
+								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
 									<NumberBox
-										my:MStack.Weight="1"
-										NumberFormatter="{x:Bind Controller.uSizeValue_NumberFormatter}"
-										Minimum="0.0"
+										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										VerticalAlignment="Stretch"
+										NumberFormatter="{x:Bind Controller.uSizeValue_NumberFormatter}" Minimum="0.0"
+										SmallChange="1.0" LargeChange="10.0" SpinButtonPlacementMode="Inline"
 										Value="{x:Bind Controller.uSizeValue_Value}"
 										ValueChanged="{x:Bind Controller.uSizeValue_OnValueChanged}"
 										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
 									/>
 									<ComboBox
-										my:MStack.Weight="NaN"
-										Width="64"
+										Width="68" Height="NaN"
+										VerticalAlignment="Stretch"
+										HorizontalContentAlignment="Center"
 										ItemsSource="{x:Bind Controller.uSizeUnit_ItemsSource}"
 										SelectedItem="{x:Bind Controller.uSizeUnit_SelectedItem}"
 										SelectionChanged="{x:Bind Controller.uSizeUnit_OnSelectionChanged}"
@@ -110,9 +118,10 @@
 					<VisualState.Setters>
 						<Setter Target="uAction.Content">
 							<Setter.Value>
-								<my:MStack Orientation="Horizontal" Spacing="8">
+								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
 									<TextBox
-										my:MStack.Weight="1"
+										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										VerticalAlignment="Stretch"
 										Text="{x:Bind Controller.uStringValue_Text}"
 										TextChanged="{x:Bind Controller.uStringValue_OnTextChanged}"
 										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
@@ -126,9 +135,10 @@
 					<VisualState.Setters>
 						<Setter Target="uAction.Content">
 							<Setter.Value>
-								<my:MStack Orientation="Horizontal" Spacing="8">
+								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
 									<TextBox
-										my:MStack.Weight="1"
+										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										VerticalAlignment="Stretch"
 										Text="{x:Bind Controller.uPathValue_Text}"
 										TextChanged="{x:Bind Controller.uPathValue_OnTextChanged}"
 										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
@@ -137,18 +147,27 @@
 										Drop="{x:Bind Controller.uPathValue_OnDrop}"
 									/>
 									<DropDownButton
-										my:MStack.Weight="NaN"
-										Width="64"
-										HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
+										Width="68" Height="NaN"
+										VerticalAlignment="Stretch"
+										HorizontalContentAlignment="Center"
 										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
+										Padding="6,0,13,0"
 									>
 										<DropDownButton.Flyout>
-											<MenuFlyout Placement="Bottom">
-												<MenuFlyoutItem Text="File" Click="{x:Bind Controller.uPathPickFile_OnClick}" />
-												<MenuFlyoutItem Text="Directory" Click="{x:Bind Controller.uPathPickDirectory_OnClick}" />
+											<MenuFlyout Placement="BottomEdgeAlignedRight">
+												<MenuFlyoutItem Text="File" Click="{x:Bind Controller.uPathPickFile_OnClick}">
+													<MenuFlyoutItem.Icon>
+														<FontIcon FontSize="{StaticResource MiniIconSize}" Glyph="{StaticResource FluentIconGlyph.Document}" />
+													</MenuFlyoutItem.Icon>
+												</MenuFlyoutItem>
+												<MenuFlyoutItem Text="Directory" Click="{x:Bind Controller.uPathPickDirectory_OnClick}">
+													<MenuFlyoutItem.Icon>
+														<FontIcon FontSize="{StaticResource MiniIconSize}" Glyph="{StaticResource FluentIconGlyph.Folder}" />
+													</MenuFlyoutItem.Icon>
+												</MenuFlyoutItem>
 											</MenuFlyout>
 										</DropDownButton.Flyout>
-										<FontIcon FontSize="{StaticResource MiniIconSize}" Glyph="{StaticResource FluentIconGlyph.Go}" />
+										<FontIcon FontSize="{StaticResource SmallIconSize}" Glyph="{StaticResource FluentIconGlyph.Link}" />
 									</DropDownButton>
 								</my:MStack>
 							</Setter.Value>
@@ -159,10 +178,11 @@
 					<VisualState.Setters>
 						<Setter Target="uAction.Content">
 							<Setter.Value>
-								<my:MStack Orientation="Horizontal" Spacing="8">
+								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
 									<ComboBox
-										my:MStack.Weight="1"
-										HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
+										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										VerticalAlignment="Stretch"
+										HorizontalContentAlignment="Left"
 										ItemsSource="{x:Bind Controller.uEnumerationValue_ItemsSource}"
 										SelectedValuePath="Item1" DisplayMemberPath="Item2"
 										SelectedValue="{x:Bind Controller.uEnumerationValue_SelectedValue}"

@@ -26,7 +26,7 @@ namespace Helper.Module.CommandForwarder {
 			NavigationEventArgs args
 		) {
 			if (args.Parameter is List<String> parameter) {
-				this.Controller.AppendInput(parameter);
+				this.Controller.AppendInput(parameter.Select(StorageHelper.Normalize).ToList());
 				this.Controller.RefreshInput();
 				this.Controller.RefreshFilter();
 			}
@@ -50,7 +50,7 @@ namespace Helper.Module.CommandForwarder {
 
 		// ----------------
 
-		public MethodConfigurationModel.Configuration Configuration { get; set; } = default!;
+		public CommandConfigurationModel.Configuration Configuration { get; set; } = default!;
 
 		// ----------------
 
@@ -59,6 +59,8 @@ namespace Helper.Module.CommandForwarder {
 		public Boolean RemainInput { get; set; } = false;
 
 		public Boolean ParallelExecute { get; set; } = false;
+
+		public Boolean EnableBatch { get; set; } = false;
 
 		public Boolean EnableFilter { get; set; } = true;
 
@@ -71,12 +73,12 @@ namespace Helper.Module.CommandForwarder {
 		public void Initialize (
 		) {
 			try {
-				this.Configuration = JsonHelper.Deserialize<MethodConfigurationModel.Configuration>(StorageHelper.ReadFileTextSync(Setting.CommandForwarderMethodConfiguration));
+				this.Configuration = JsonHelper.Deserialize<CommandConfigurationModel.Configuration>(StorageHelper.ReadFileTextSync(Setting.CommandForwarderCommandConfiguration));
 			} catch (Exception e) {
-				MainWindow.Instance.Controller.PublishTip(16, InfoBarSeverity.Error, "Failed to load method configuration.");
-				this.Configuration = new MethodConfigurationModel.Configuration() {
-					Group = new List<MethodConfigurationModel.MethodGroupConfiguration>(),
-					QuickOption = new List<MethodConfigurationModel.QuickOptionGroupConfiguration>(),
+				MainWindow.Instance.Controller.PublishTip(InfoBarSeverity.Error, "Failed to load command configuration.", e.ToString());
+				this.Configuration = new CommandConfigurationModel.Configuration() {
+					Method = new List<CommandConfigurationModel.MethodGroupConfiguration>(),
+					QuickOption = new List<CommandConfigurationModel.QuickOptionGroupConfiguration>(),
 				};
 			}
 			this.uOption_ItemsSource = this.Configuration.QuickOption.Select((group) => (new QuickOptionGroupItemController() {
@@ -85,27 +87,14 @@ namespace Helper.Module.CommandForwarder {
 				Children = group.Item.Select((item) => (new QuickOptionItemItemController() {
 					Host = this,
 					ItemModel = item,
-					Available = false,
+					TypeMatched = false,
+					NameMatched = false,
 				})).ToList(),
 			})).ToList();
 			return;
 		}
 
 		// ----------------
-
-		public Boolean CheckInput (
-			String                                                  input,
-			MethodConfigurationModel.QuickOptionFilterConfiguration filter
-		) {
-			var state = true;
-			state &= filter.Type switch {
-				null  => StorageHelper.Exist(input),
-				false => StorageHelper.ExistFile(input),
-				true  => StorageHelper.ExistDirectory(input),
-			};
-			state &= filter.Name is null || Regex.IsMatch(input, filter.Name, RegexOptions.IgnoreCase);
-			return state;
-		}
 
 		public async void AppendInput (
 			List<String> list
@@ -144,7 +133,18 @@ namespace Helper.Module.CommandForwarder {
 		) {
 			foreach (var group in this.uOption_ItemsSource) {
 				foreach (var item in group.Children) {
-					item.Available = this.Input.Count != 0 && this.Input.All((inputItem) => (this.CheckInput(inputItem, item.ItemModel.Filter)));
+					if (this.EnableBatch) {
+						item.TypeMatched = item.ItemModel.Batchable && this.Input.All((input) => (StorageHelper.ExistDirectory(input)));
+						item.NameMatched = true;
+					} else {
+						item.TypeMatched = this.Input.All((input) => (item.ItemModel.Filter.Type switch {
+							CommandConfigurationModel.QuickOptionFilterFileObjectType.Any       => StorageHelper.Exist(input),
+							CommandConfigurationModel.QuickOptionFilterFileObjectType.File      => StorageHelper.ExistFile(input),
+							CommandConfigurationModel.QuickOptionFilterFileObjectType.Directory => StorageHelper.ExistDirectory(input),
+							_                                                                   => throw new ArgumentOutOfRangeException(),
+						}));
+						item.NameMatched = this.Input.All((input) => (Regex.IsMatch(input, item.ItemModel.Filter.Name, RegexOptions.IgnoreCase)));
+					}
 				}
 			}
 			this.NotifyPropertyChanged(
@@ -158,9 +158,14 @@ namespace Helper.Module.CommandForwarder {
 		) {
 			foreach (var group in this.uOption_ItemsSource) {
 				foreach (var item in group.Children) {
-					item.NotifyPropertyChanged(nameof(item.uRoot_Visibility));
+					item.NotifyPropertyChanged(
+						nameof(item.uRoot_Visibility),
+						nameof(item.uRoot_IsEnabled)
+					);
 				}
-				group.NotifyPropertyChanged(nameof(group.uRoot_Visibility));
+				group.NotifyPropertyChanged(
+					nameof(group.uRoot_Visibility)
+				);
 			}
 			return;
 		}
@@ -169,31 +174,32 @@ namespace Helper.Module.CommandForwarder {
 			String? method,
 			Object? argument
 		) {
-			if (!StorageHelper.ExistFile(Setting.CommandForwarderLaunchScript)) {
-				MainWindow.Instance.Controller.PublishTip(16, InfoBarSeverity.Error, "Invalid path of launch script.");
+			try {
+				var processArgument = new List<String>();
+				foreach (var input in this.Input) {
+					processArgument.Add(input);
+					if (method is not null) {
+						processArgument.Add("-method");
+						processArgument.Add($"{method}{(!this.EnableBatch ? "" : ".batch")}");
+					}
+					if (argument is not null) {
+						processArgument.Add("-argument");
+						processArgument.Add(JsonHelper.Serialize(argument, false));
+					}
+					if (this.ParallelExecute) {
+						ProcessHelper.CreateProcessForCommandScript(Setting.CommandForwarderLaunchScript, processArgument).Wait(0);
+						processArgument.Clear();
+					}
+				}
+				if (!this.ParallelExecute) {
+					ProcessHelper.CreateProcessForCommandScript(Setting.CommandForwarderLaunchScript, processArgument).Wait(0);
+				}
+			} catch (Exception e) {
+				MainWindow.Instance.Controller.PublishTip(InfoBarSeverity.Error, "Failed to create process.", e.ToString());
 				return;
 			}
-			var processArgument = new List<String>();
-			foreach (var input in this.Input) {
-				processArgument.Add(input);
-				if (method is not null) {
-					processArgument.Add("-method");
-					processArgument.Add(method);
-				}
-				if (argument is not null) {
-					processArgument.Add("-argument");
-					processArgument.Add(JsonHelper.Serialize(argument, false));
-				}
-				if (this.ParallelExecute) {
-					ProcessHelper.CreateProcessForCommandScript(Setting.CommandForwarderLaunchScript, processArgument).Wait(0);
-					processArgument.Clear();
-				}
-			}
-			if (!this.ParallelExecute) {
-				ProcessHelper.CreateProcessForCommandScript(Setting.CommandForwarderLaunchScript, processArgument).Wait(0);
-			}
 			if (this.AutomaticClose) {
-				MainWindow.Instance.Close();
+				WindowHelper.GetForElement(this.View).Close();
 				return;
 			}
 			if (!this.RemainInput) {
@@ -226,7 +232,7 @@ namespace Helper.Module.CommandForwarder {
 			if (sender is not Page senders) { return; }
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				var item = await args.DataView.GetStorageItemsAsync();
-				this.AppendInput(item.Select((value) => (value.Path)).ToList());
+				this.AppendInput(item.Select((value) => (StorageHelper.Normalize(value.Path))).ToList());
 				this.RefreshInput();
 				this.RefreshFilter();
 			}
@@ -296,6 +302,25 @@ namespace Helper.Module.CommandForwarder {
 		) {
 			if (sender is not ToggleButton senders) { return; }
 			this.ParallelExecute = senders.IsChecked!.Value;
+			return;
+		}
+
+		// ----------------
+
+		public Boolean uEnableBatch_IsChecked {
+			get {
+				return this.EnableBatch;
+			}
+		}
+
+		public async void uEnableBatch_OnClick (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			if (sender is not ToggleButton senders) { return; }
+			this.EnableBatch = senders.IsChecked!.Value;
+			this.RefreshInput();
+			this.RefreshFilter();
 			return;
 		}
 
@@ -418,8 +443,6 @@ namespace Helper.Module.CommandForwarder {
 
 		public DataTemplate? ItemTemplate { get; set; }
 
-		public DataTemplate? PresetTemplate { get; set; }
-
 		// ----------------
 
 		protected override DataTemplate? SelectTemplateCore (
@@ -442,7 +465,7 @@ namespace Helper.Module.CommandForwarder {
 
 		// ----------------
 
-		public MethodConfigurationModel.QuickOptionGroupConfiguration GroupModel { get; set; } = default!;
+		public CommandConfigurationModel.QuickOptionGroupConfiguration GroupModel { get; set; } = default!;
 
 		// ----------------
 
@@ -454,7 +477,7 @@ namespace Helper.Module.CommandForwarder {
 
 		public Boolean uRoot_Visibility {
 			get {
-				return this.Host.Input.Count != 0 && (!this.Host.EnableFilter || this.Children.Any((value) => (value.Available)));
+				return this.Host.Input.Count != 0 && (!this.Host.EnableFilter || this.Children.Any((value) => (value.TypeMatched && value.NameMatched)));
 			}
 		}
 
@@ -488,11 +511,13 @@ namespace Helper.Module.CommandForwarder {
 
 		// ----------------
 
-		public MethodConfigurationModel.QuickOptionConfiguration ItemModel { get; set; } = default!;
+		public CommandConfigurationModel.QuickOptionConfiguration ItemModel { get; set; } = default!;
 
 		// ----------------
 
-		public Boolean Available { get; set; } = default!;
+		public Boolean TypeMatched { get; set; } = default!;
+
+		public Boolean NameMatched { get; set; } = default!;
 
 		#endregion
 
@@ -500,7 +525,13 @@ namespace Helper.Module.CommandForwarder {
 
 		public Boolean uRoot_Visibility {
 			get {
-				return this.Host.Input.Count != 0 && (!this.Host.EnableFilter || this.Available);
+				return this.Host.Input.Count != 0 && (!this.Host.EnableFilter || (this.TypeMatched && this.NameMatched));
+			}
+		}
+
+		public Boolean uRoot_IsEnabled {
+			get {
+				return this.Host.Input.Count != 0 && (this.TypeMatched && (!this.Host.EnableFilter || (this.NameMatched)));
 			}
 		}
 
@@ -518,7 +549,7 @@ namespace Helper.Module.CommandForwarder {
 
 		public String uPresetCount_Text {
 			get {
-				return $"{this.ItemModel.Preset.FindAll((value) => (value is not null)).Count}";
+				return $"{this.ItemModel.Preset.Count((value) => (value is not null))}";
 			}
 		}
 
@@ -536,7 +567,10 @@ namespace Helper.Module.CommandForwarder {
 						item = new MenuFlyoutItem() {
 							Text = preset.Name,
 						};
-						(item as MenuFlyoutItem)!.Click += (sender, args) => { this.Host.Forward(this.ItemModel.Method, preset.Argument); };
+						(item as MenuFlyoutItem)!.Click += (sender, args) => {
+							this.Host.Forward(this.ItemModel.Method, preset.Argument);
+							return;
+						};
 					}
 					menu.Items.Add(item);
 				}

@@ -9,7 +9,16 @@ namespace Helper.Utility {
 
 		#region boolean
 
-		public static Floater BooleanToFloaterOfOpacity (
+		public static Floater BooleanToFloaterOfOpacityVisibility (
+			Boolean value
+		) {
+			return value switch {
+				false => 0.0,
+				true  => 1.0,
+			};
+		}
+
+		public static Floater BooleanToFloaterOfOpacityEnabled (
 			Boolean value
 		) {
 			return value switch {

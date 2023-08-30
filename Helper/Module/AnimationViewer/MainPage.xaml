@@ -9,29 +9,28 @@
 	xmlns:my="using:Helper.CustomControl"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
+	AllowDrop="True"
+	DragOver="{x:Bind Controller.uPage_OnDragOver}"
+	Drop="{x:Bind Controller.uPage_OnDrop}"
 >
 	<Grid Padding="8,4" ColumnSpacing="4">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="1*" MinWidth="208" MaxWidth="352" />
 			<ColumnDefinition Width="1" />
-			<ColumnDefinition Width="3*" MinWidth="880" />
+			<ColumnDefinition Width="3*" MinWidth="896" />
 			<ColumnDefinition Width="1" />
 			<ColumnDefinition Width="1*" MinWidth="208" MaxWidth="352" />
 		</Grid.ColumnDefinitions>
-		<my:MStack
-			Grid.Column="0"
-			Padding="0,-4,0,0"
-			Orientation="Vertical" Spacing="0"
-		>
+		<my:MStack Grid.Column="0" Padding="0,-4,0,0" VerticalAlignment="Stretch" Orientation="Vertical" Spacing="0">
 			<my:MHeaderBar
-				my:MStack.Weight="NaN"
+				HorizontalAlignment="Stretch"
 				Icon="{StaticResource FluentIconGlyph.Picture}"
 				Title="Image"
 			>
 				<my:MHeaderBar.Action>
-					<my:MStack Orientation="Horizontal" Spacing="8">
+					<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
 						<Button
-							HorizontalAlignment="Stretch" VerticalAlignment="Center"
+							VerticalAlignment="Center"
 							IsEnabled="False" Opacity="0"
 						>
 							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="" />
@@ -42,8 +41,9 @@
 			<my:MDivider Height="{StaticResource DividerThickness}" />
 			<ListView
 				x:Name="uImageList" x:FieldModifier="public"
-				my:MStack.Weight="1"
 				Padding="0,2,0,-2"
+				my:MStack.Weight="1" VerticalAlignment="Stretch"
+				HorizontalAlignment="Stretch"
 				SelectionMode="Extended" IsItemClickEnabled="True"
 				IsEnabled="{x:Bind Controller.uImageList_IsEnabled}"
 				ItemsSource="{x:Bind Controller.uImageList_ItemsSource}"
@@ -52,32 +52,10 @@
 				<ListView.ItemTemplate>
 					<DataTemplate x:DataType="localModuleAnimationViewer:ImageItemController">
 						<my:MStack Padding="0,8,4,8" Orientation="Horizontal" Spacing="12">
-							<Viewbox
-								my:MStack.Weight="NaN"
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
-								Width="32" Height="32"
-								Stretch="None"
-								Child="{x:Bind uPreview_Content}"
-							/>
-							<my:MStack
-								my:MStack.Weight="1"
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
-								Padding="0"
-								Orientation="Vertical" Spacing="0"
-							>
-								<TextBlock
-									my:MStack.Weight="NaN"
-									Text="{x:Bind uTitle_Text}"
-									TextWrapping="NoWrap"
-									Style="{ThemeResource BodyTextBlockStyle}"
-								/>
-								<TextBlock
-									my:MStack.Weight="NaN"
-									Text="{x:Bind uDescription_Text}"
-									TextWrapping="NoWrap"
-									Style="{ThemeResource CaptionTextBlockStyle}"
-									Foreground="{ThemeResource TextFillColorSecondary}"
-								/>
+							<Viewbox Width="32" Height="32" VerticalAlignment="Center" Stretch="None" Child="{x:Bind uPreview_Content}" />
+							<my:MStack Padding="0" my:MStack.Weight="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Orientation="Vertical" Spacing="0">
+								<TextBlock HorizontalAlignment="Stretch" Style="{ThemeResource BodyTextBlockStyle}" TextWrapping="NoWrap" Text="{x:Bind uTitle_Text}" />
+								<TextBlock HorizontalAlignment="Stretch" Style="{ThemeResource CaptionTextBlockStyle}" TextWrapping="NoWrap" Text="{x:Bind uDescription_Text}" Foreground="{ThemeResource TextFillColorSecondary}" />
 							</my:MStack>
 						</my:MStack>
 					</DataTemplate>
@@ -85,20 +63,16 @@
 			</ListView>
 		</my:MStack>
 		<my:MDivider Grid.Column="1" Width="{StaticResource DividerThickness}" />
-		<my:MStack
-			Grid.Column="2"
-			Padding="0,-4,0,0"
-			Orientation="Vertical" Spacing="0"
-		>
+		<my:MStack Grid.Column="2" Padding="0,-4,0,0" VerticalAlignment="Stretch" Orientation="Vertical" Spacing="0">
 			<my:MHeaderBar
-				my:MStack.Weight="NaN"
+				HorizontalAlignment="Stretch"
 				Icon="{StaticResource FluentIconGlyph.FitPage}"
 				Title="Stage"
 			>
 				<my:MHeaderBar.Action>
-					<my:MStack Orientation="Horizontal" Spacing="8">
+					<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
 						<Button
-							HorizontalAlignment="Stretch" VerticalAlignment="Center"
+							VerticalAlignment="Center"
 							IsEnabled="{x:Bind Controller.uClearSource_IsEnabled}"
 							Click="{x:Bind Controller.uClearSource_OnClick}"
 						>
@@ -108,13 +82,11 @@
 				</my:MHeaderBar.Action>
 			</my:MHeaderBar>
 			<my:MDivider Height="{StaticResource DividerThickness}" />
-			<my:MBox
-				my:MStack.Weight="1"
-				Padding="0"
-			>
+			<my:MBox Padding="0,0" my:MStack.Weight="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 				<ScrollViewer
-					HorizontalScrollMode="Enabled" VerticalScrollMode="Enabled"
-					HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"
+					HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+					HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Visible"
+					VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Visible"
 					ZoomMode="Enabled" MinZoomFactor="0.1" MaxZoomFactor="50.0"
 					ViewChanged="{x:Bind Controller.uStage_OnViewChanged}"
 					SizeChanged="{x:Bind Controller.uStage_OnViewChanged}"
@@ -123,38 +95,34 @@
 						x:Name="uSprite" x:FieldModifier="public"
 					/>
 				</ScrollViewer>
-				<my:MBox Padding="16">
-					<my:MStack
-						HorizontalAlignment="Right" VerticalAlignment="Top"
-						Padding="0"
-						Orientation="Vertical" Spacing="8"
-					>
-						<my:MStack Padding="0" Orientation="Horizontal" Spacing="8">
+				<my:MBox Padding="16" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+					<my:MStack Padding="0,0" HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Vertical" Spacing="8">
+						<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
 							<TextBox
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
 								Width="240" Height="NaN"
+								VerticalAlignment="Center"
 								PlaceholderText="Animation File" IsReadOnly="True"
 								IsEnabled="{x:Bind Controller.uAnimationFile_IsEnabled}"
 								Text="{x:Bind Controller.uAnimationFile_Text}"
 							/>
 							<Button
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
+								VerticalAlignment="Center"
 								IsEnabled="{x:Bind Controller.uSelectAnimationFile_IsEnabled}"
 								Click="{x:Bind Controller.uSelectAnimationFile_OnClick}"
 							>
 								<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.OpenFile}" />
 							</Button>
 						</my:MStack>
-						<my:MStack Padding="0" Orientation="Horizontal" Spacing="8">
+						<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
 							<TextBox
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
 								Width="240" Height="NaN"
+								VerticalAlignment="Center"
 								PlaceholderText="Image Directory" IsReadOnly="True"
 								IsEnabled="{x:Bind Controller.uImageDirectory_IsEnabled}"
 								Text="{x:Bind Controller.uImageDirectory_Text}"
 							/>
 							<Button
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
+								VerticalAlignment="Center"
 								IsEnabled="{x:Bind Controller.uSelectImageDirectory_IsEnabled}"
 								Click="{x:Bind Controller.uSelectImageDirectory_OnClick}"
 							>
@@ -162,104 +130,51 @@
 							</Button>
 						</my:MStack>
 					</my:MStack>
-					<my:MStack
-						HorizontalAlignment="Left" VerticalAlignment="Bottom"
-						Padding="0"
-						Orientation="Vertical" Spacing="8"
-					>
-						<my:MStack Padding="0" Orientation="Horizontal" Spacing="8">
-							<FontIcon
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
-								Width="32" Height="32"
-								Glyph="{StaticResource FluentIconGlyph.ScrollUpDown}"
-								FontSize="{StaticResource MediumIconSize}"
-							>
+					<my:MStack Padding="0,0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Orientation="Vertical" Spacing="8">
+						<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
+							<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.ScrollUpDown}">
 								<FontIcon.RenderTransform>
 									<RotateTransform CenterX="16" CenterY="16" Angle="90" />
 								</FontIcon.RenderTransform>
 							</FontIcon>
-							<TextBox
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
-								Width="94" Height="NaN"
-								IsReadOnly="True"
-								Text="{x:Bind Controller.uStagePositionX_Text}"
-							/>
+							<TextBox Width="94" Height="NaN" VerticalAlignment="Center" Text="{x:Bind Controller.uStagePositionX_Text}" IsReadOnly="True" />
 						</my:MStack>
-						<my:MStack Padding="0" Orientation="Horizontal" Spacing="8">
-							<FontIcon
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
-								Width="32" Height="32"
-								Glyph="{StaticResource FluentIconGlyph.ScrollUpDown}"
-								FontSize="{StaticResource MediumIconSize}"
-							>
+						<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
+							<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.ScrollUpDown}">
 								<FontIcon.RenderTransform>
 									<RotateTransform CenterX="16" CenterY="16" Angle="0" />
 								</FontIcon.RenderTransform>
 							</FontIcon>
-							<TextBox
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
-								Width="94" Height="NaN"
-								IsReadOnly="True"
-								Text="{x:Bind Controller.uStagePositionY_Text}"
-							/>
+							<TextBox Width="94" Height="NaN" VerticalAlignment="Center" Text="{x:Bind Controller.uStagePositionY_Text}" IsReadOnly="True" />
 						</my:MStack>
-						<my:MStack Padding="0" Orientation="Horizontal" Spacing="8">
-							<FontIcon
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
-								Width="32" Height="32"
-								FontSize="{StaticResource MediumIconSize}"
-								Glyph="{x:Bind Controller.uStageScaleIcon_Glyph}"
-							>
+						<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
+							<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{x:Bind Controller.uStageScaleIcon_Glyph}">
 								<FontIcon.RenderTransform>
 									<RotateTransform CenterX="16" CenterY="16" Angle="0" />
 								</FontIcon.RenderTransform>
 							</FontIcon>
-							<TextBox
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
-								Width="94" Height="NaN"
-								IsReadOnly="True"
-								Text="{x:Bind Controller.uStageScale_Text}"
-							/>
+							<TextBox Width="94" Height="NaN" VerticalAlignment="Center" Text="{x:Bind Controller.uStageScale_Text}" IsReadOnly="True" />
 						</my:MStack>
 					</my:MStack>
-					<my:MStack
-						HorizontalAlignment="Right" VerticalAlignment="Bottom"
-						Padding="0"
-						Orientation="Vertical" Spacing="8"
-					>
-						<my:MStack Padding="0" Orientation="Horizontal" Spacing="8">
-							<FontIcon
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
-								Width="32" Height="32"
-								Glyph="{StaticResource FluentIconGlyph.TiltDown}"
-								FontSize="{StaticResource MediumIconSize}"
-								Opacity="{x:Bind Controller.uZombieGroundSwatchLayerIcon_Opacity}"
-							/>
+					<my:MStack Padding="0,0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Vertical" Spacing="8">
+						<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
+							<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.TiltDown}" Opacity="{x:Bind Controller.uZombieGroundSwatchLayerIcon_Opacity}" />
 							<ToggleButton
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
-								HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
 								Width="136" Height="NaN"
+								VerticalAlignment="Center"
+								HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
+								Content="Swatch"
 								IsEnabled="{x:Bind Controller.uZombieGroundSwatchLayer_IsEnabled}"
 								IsChecked="{x:Bind Controller.uZombieGroundSwatchLayer_IsChecked}"
 								Click="{x:Bind Controller.uZombieGroundSwatchLayer_OnClick}"
-							>
-								<TextBlock
-									Text="Swatch"
-								/>
-							</ToggleButton>
-						</my:MStack>
-						<my:MStack Padding="0" Orientation="Horizontal" Spacing="8">
-							<FontIcon
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
-								Width="32" Height="32"
-								FontSize="{StaticResource MediumIconSize}"
-								Glyph="{StaticResource FluentIconGlyph.Eyedropper}"
-								Opacity="{x:Bind Controller.uZombieStateLayerIcon_Opacity}"
 							/>
+						</my:MStack>
+						<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
+							<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Eyedropper}" Opacity="{x:Bind Controller.uZombieStateLayerIcon_Opacity}" />
 							<ComboBox
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
-								HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
 								Width="136" Height="NaN"
+								VerticalAlignment="Center"
+								HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
 								PlaceholderText="State"
 								IsEnabled="{x:Bind Controller.uZombieStateLayer_IsEnabled}"
 								ItemsSource="{x:Bind Controller.uZombieStateLayer_ItemsSource}"
@@ -267,18 +182,12 @@
 								SelectionChanged="{x:Bind Controller.uZombieStateLayer_OnSelectionChanged}"
 							/>
 						</my:MStack>
-						<my:MStack Padding="0" Orientation="Horizontal" Spacing="8">
-							<FontIcon
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
-								Width="32" Height="32"
-								Glyph="{StaticResource FluentIconGlyph.EmojiTabCelebrationObjects}"
-								FontSize="{StaticResource MediumIconSize}"
-								Opacity="{x:Bind Controller.uPlantCustomLayerIcon_Opacity}"
-							/>
+						<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
+							<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.EmojiTabCelebrationObjects}" Opacity="{x:Bind Controller.uPlantCustomLayerIcon_Opacity}" />
 							<ComboBox
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
-								HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
 								Width="136" Height="NaN"
+								VerticalAlignment="Center"
+								HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
 								PlaceholderText="Custom"
 								IsEnabled="{x:Bind Controller.uPlantCustomLayer_IsEnabled}"
 								ItemsSource="{x:Bind Controller.uPlantCustomLayer_ItemsSource}"
@@ -286,35 +195,23 @@
 								SelectionChanged="{x:Bind Controller.uPlantCustomLayer_OnSelectionChanged}"
 							/>
 						</my:MStack>
-						<my:MStack Padding="0" Orientation="Horizontal" Spacing="8">
-							<FontIcon
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
-								Width="32" Height="32"
-								Glyph="{StaticResource FluentIconGlyph.FitPage}"
-								FontSize="{StaticResource MediumIconSize}"
-							/>
+						<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
+							<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.FitPage}" />
 							<ToggleButton
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
-								HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
 								Width="136" Height="NaN"
+								VerticalAlignment="Center"
+								HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
+								Content="Boundary"
 								IsChecked="{x:Bind Controller.uShowSpriteBoundary_IsChecked}"
 								Click="{x:Bind Controller.uShowSpriteBoundary_OnClick}"
-							>
-								<TextBlock
-									Text="Boundary"
-								/>
-							</ToggleButton>
+							/>
 						</my:MStack>
 					</my:MStack>
 				</my:MBox>
 			</my:MBox>
 			<my:MDivider Height="{StaticResource DividerThickness}" />
-			<my:MStack
-				my:MStack.Weight="NaN"
-				Padding="16,8"
-				Orientation="Vertical" Spacing="8"
-			>
-				<my:MStack Padding="0,-8" Orientation="Horizontal" Spacing="0">
+			<my:MStack Padding="16,8" HorizontalAlignment="Stretch" Orientation="Vertical" Spacing="8">
+				<my:MStack Padding="0,-8" HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="0">
 					<Slider
 						x:Name="uWorkingSpriteFrameProgress" x:FieldModifier="public"
 						my:MStack.Weight="1"
@@ -325,140 +222,101 @@
 						ValueChanged="{x:Bind Controller.uWorkingSpriteFrameProgress_OnValueChanged}"
 					/>
 				</my:MStack>
-				<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="0">
-					<my:MStack
-						my:MStack.Weight="1"
-						HorizontalAlignment="Left" VerticalAlignment="Stretch"
-						Padding="0"
-						Orientation="Horizontal" Spacing="8"
-					>
-						<FontIcon
-							HorizontalAlignment="Stretch" VerticalAlignment="Center"
-							Width="32" Height="32"
-							Glyph="{StaticResource FluentIconGlyph.Play}"
-							FontSize="{StaticResource MediumIconSize}"
-						/>
+				<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="0">
+					<my:MStack Padding="0,0" my:MStack.Weight="1" HorizontalAlignment="Left" VerticalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
+						<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Play}" />
 						<ToggleButton
-							HorizontalAlignment="Stretch" VerticalAlignment="Center"
-							Width="NaN" Height="NaN"
+							VerticalAlignment="Center"
 							IsChecked="{x:Bind Controller.uAutomaticPlay_IsChecked}"
 							Click="{x:Bind Controller.uAutomaticPlay_OnClick}"
 						>
 							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.RightArrowKeyTime2}" />
 						</ToggleButton>
 						<ToggleButton
-							HorizontalAlignment="Stretch" VerticalAlignment="Center"
-							Width="NaN" Height="NaN"
+							VerticalAlignment="Center"
 							IsChecked="{x:Bind Controller.uRepeatPlay_IsChecked}"
 							Click="{x:Bind Controller.uRepeatPlay_OnClick}"
 						>
 							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.RepeatAll}" />
 						</ToggleButton>
-						<FontIcon
-							HorizontalAlignment="Stretch" VerticalAlignment="Center"
-							Width="32" Height="32"
-							Glyph="{StaticResource FluentIconGlyph.SpeedMedium}"
-							FontSize="{StaticResource MediumIconSize}"
-							Opacity="{x:Bind Controller.uWorkingSpriteFrameRateIcon_Opacity}"
-						/>
+						<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.SpeedMedium}" />
 						<ToggleButton
-							HorizontalAlignment="Stretch" VerticalAlignment="Center"
-							Width="NaN" Height="NaN"
+							VerticalAlignment="Center"
 							IsChecked="{x:Bind Controller.uRemainFrameRate_IsChecked}"
 							Click="{x:Bind Controller.uRemainFrameRate_OnClick}"
 						>
 							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Pinned}" />
 						</ToggleButton>
 						<NumberBox
-							HorizontalAlignment="Stretch" VerticalAlignment="Center"
 							Width="64" Height="NaN"
+							VerticalAlignment="Center"
 							PlaceholderText="Rate"
-							Minimum="0.1" Maximum="360.0"
 							IsEnabled="{x:Bind Controller.uWorkingSpriteFrameRate_IsEnabled}"
-							NumberFormatter="{x:Bind Controller.uWorkingSpriteFrameRate_NumberFormatter}"
+							NumberFormatter="{x:Bind Controller.uWorkingSpriteFrameRate_NumberFormatter}" Minimum="0.1" Maximum="360.0"
+							SmallChange="1.0" LargeChange="15.0" SpinButtonPlacementMode="Hidden"
 							Value="{x:Bind Controller.uWorkingSpriteFrameRate_Value}"
 							ValueChanged="{x:Bind Controller.uWorkingSpriteFrameRate_OnValueChanged}"
 						/>
 					</my:MStack>
-					<my:MStack
-						my:MStack.Weight="NaN"
-						HorizontalAlignment="Center" VerticalAlignment="Stretch"
-						Padding="0"
-						Orientation="Horizontal" Spacing="8"
-					>
+					<my:MStack Padding="0,0" my:MStack.Weight="NaN" HorizontalAlignment="Center" VerticalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
 						<Button
-							HorizontalAlignment="Stretch" VerticalAlignment="Center"
 							Width="48" Height="NaN"
+							VerticalAlignment="Center"
 							IsEnabled="{x:Bind Controller.uWorkingSpritePrev_IsEnabled}"
 							Click="{x:Bind Controller.uWorkingSpritePrev_OnClick}"
 						>
 							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.LeftArrowKeyTime0}"/>
 						</Button>
 						<Button
-							HorizontalAlignment="Stretch" VerticalAlignment="Center"
 							Width="48" Height="NaN"
+							VerticalAlignment="Center"
 							IsEnabled="{x:Bind Controller.uWorkingSpritePause_IsEnabled}"
 							Click="{x:Bind Controller.uWorkingSpritePause_OnClick}"
 						>
 							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{x:Bind Controller.uWorkingSpritePauseIcon_Glyph}"/>
 						</Button>
 						<Button
-							HorizontalAlignment="Stretch" VerticalAlignment="Center"
 							Width="48" Height="NaN"
+							VerticalAlignment="Center"
 							IsEnabled="{x:Bind Controller.uWorkingSpriteNext_IsEnabled}"
 							Click="{x:Bind Controller.uWorkingSpriteNext_OnClick}"
 						>
 							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.RightArrowKeyTime0}"/>
 						</Button>
 					</my:MStack>
-					<my:MStack
-						my:MStack.Weight="1"
-						HorizontalAlignment="Right" VerticalAlignment="Stretch"
-						Padding="0"
-						Orientation="Horizontal" Spacing="8"
-					>
-						<FontIcon
-							HorizontalAlignment="Stretch" VerticalAlignment="Center"
-							Width="32" Height="32"
-							Glyph="{StaticResource FluentIconGlyph.Tag}"
-							FontSize="{StaticResource MediumIconSize}"
-							Opacity="{x:Bind Controller.uWorkingSpriteFrameRangeLabelIcon_Opacity}"
-						/>
+					<my:MStack Padding="0,0" my:MStack.Weight="1" HorizontalAlignment="Right" VerticalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
+						<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Tag}" Opacity="{x:Bind Controller.uWorkingSpriteFrameRangeLabelIcon_Opacity}" />
 						<ComboBox
-							HorizontalAlignment="Stretch" VerticalAlignment="Center"
 							Width="108" Height="NaN"
+							VerticalAlignment="Center"
 							PlaceholderText="Label"
 							IsEnabled="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_IsEnabled}"
 							ItemsSource="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_ItemsSource}"
 							SelectedItem="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_SelectedItem}"
 							SelectionChanged="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_OnSelectionChanged}"
 						/>
-						<FontIcon
-							HorizontalAlignment="Stretch" VerticalAlignment="Center"
-							Width="32" Height="32"
-							Glyph="{StaticResource FluentIconGlyph.ScrollMode}"
-							FontSize="{StaticResource MediumIconSize}"
-							Opacity="{x:Bind Controller.uWorkingSpriteFrameRangeIcon_Opacity}"
-						>
+						<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.ScrollMode}" Opacity="{x:Bind Controller.uWorkingSpriteFrameRangeIcon_Opacity}">
 							<FontIcon.RenderTransform>
 								<RotateTransform CenterX="16" CenterY="16" Angle="90" />
 							</FontIcon.RenderTransform>
 						</FontIcon>
 						<NumberBox
-							HorizontalAlignment="Stretch" VerticalAlignment="Center"
 							Width="64" Height="NaN"
+							VerticalAlignment="Center"
 							PlaceholderText="Begin"
 							IsEnabled="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_IsEnabled}"
-							Minimum="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_Minimum}" Maximum="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_Maximum}"
+							NumberFormatter="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_NumberFormatter}" Minimum="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_Minimum}" Maximum="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_Maximum}"
+							SmallChange="1" LargeChange="10" SpinButtonPlacementMode="Hidden"
 							Value="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_Value}"
 							ValueChanged="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_OnValueChanged}"
 						/>
 						<NumberBox
-							HorizontalAlignment="Stretch" VerticalAlignment="Center"
 							Width="64" Height="NaN"
+							VerticalAlignment="Center"
 							PlaceholderText="End"
 							IsEnabled="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_IsEnabled}"
-							Minimum="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_Minimum}" Maximum="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_Maximum}"
+							NumberFormatter="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_NumberFormatter}" Minimum="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_Minimum}" Maximum="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_Maximum}"
+							SmallChange="1" LargeChange="10" SpinButtonPlacementMode="Hidden"
 							Value="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_Value}"
 							ValueChanged="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_OnValueChanged}"
 						/>
@@ -467,20 +325,16 @@
 			</my:MStack>
 		</my:MStack>
 		<my:MDivider Grid.Column="3" Width="{StaticResource DividerThickness}" />
-		<my:MStack
-			Grid.Column="4"
-			Padding="0,-4,0,0"
-			Orientation="Vertical" Spacing="0"
-		>
+		<my:MStack Grid.Column="4" Padding="0,-4,0,0" VerticalAlignment="Stretch" Orientation="Vertical" Spacing="0">
 			<my:MHeaderBar
-				my:MStack.Weight="NaN"
+				HorizontalAlignment="Stretch"
 				Icon="{StaticResource FluentIconGlyph.Tiles}"
 				Title="Sprite"
 			>
 				<my:MHeaderBar.Action>
-					<my:MStack Orientation="Horizontal" Spacing="8">
+					<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
 						<Button
-							HorizontalAlignment="Stretch" VerticalAlignment="Center"
+							VerticalAlignment="Center"
 							IsEnabled="False" Opacity="0"
 						>
 							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="" />
@@ -491,8 +345,9 @@
 			<my:MDivider Height="{StaticResource DividerThickness}" />
 			<ListView
 				x:Name="uSpriteList" x:FieldModifier="public"
-				my:MStack.Weight="1"
 				Padding="0,2,0,2"
+				my:MStack.Weight="1" VerticalAlignment="Stretch"
+				HorizontalAlignment="Stretch"
 				SelectionMode="Extended" IsItemClickEnabled="True"
 				IsEnabled="{x:Bind Controller.uSpriteList_IsEnabled}"
 				ItemsSource="{x:Bind Controller.uSpriteList_ItemsSource}"
@@ -501,38 +356,14 @@
 				<ListView.ItemTemplate>
 					<DataTemplate x:DataType="localModuleAnimationViewer:SpriteItemController">
 						<my:MStack Padding="0,8,4,8" Orientation="Horizontal" Spacing="12">
-							<Viewbox
-								my:MStack.Weight="NaN"
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
-								Width="32" Height="32"
-								Stretch="None"
-								Child="{x:Bind uPreview_Content}"
-							/>
-							<my:MStack
-								my:MStack.Weight="1"
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
-								Padding="0"
-								Orientation="Vertical" Spacing="0"
-							>
-								<TextBlock
-									my:MStack.Weight="NaN"
-									Text="{x:Bind uTitle_Text}"
-									TextWrapping="NoWrap"
-									Style="{ThemeResource BodyTextBlockStyle}"
-								/>
-								<TextBlock
-									my:MStack.Weight="NaN"
-									Text="{x:Bind uDescription_Text}"
-									TextWrapping="NoWrap"
-									Style="{ThemeResource CaptionTextBlockStyle}"
-									Foreground="{ThemeResource TextFillColorSecondary}"
-								/>
+							<Viewbox Width="32" Height="32" VerticalAlignment="Center" Stretch="None" Child="{x:Bind uPreview_Content}" />
+							<my:MStack Padding="0" my:MStack.Weight="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Orientation="Vertical" Spacing="0">
+								<TextBlock HorizontalAlignment="Stretch" Style="{ThemeResource BodyTextBlockStyle}" TextWrapping="NoWrap" Text="{x:Bind uTitle_Text}" />
+								<TextBlock HorizontalAlignment="Stretch" Style="{ThemeResource CaptionTextBlockStyle}" TextWrapping="NoWrap" Text="{x:Bind uDescription_Text}" Foreground="{ThemeResource TextFillColorSecondary}" />
 							</my:MStack>
 							<ToggleButton
-								my:MStack.Weight="NaN"
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
-								Width="32" Height="32"
-								Padding="0"
+								VerticalAlignment="Center"
+								Style="{StaticResource SmallSquareToggleButton}"
 								IsChecked="{x:Bind uToggle_IsChecked}"
 								Click="{x:Bind uToggle_OnClick}"
 							>
@@ -545,8 +376,8 @@
 			<my:MDivider Height="{StaticResource DividerThickness}" />
 			<ListView
 				x:Name="uMainSpriteList" x:FieldModifier="public"
-				my:MStack.Weight="NaN"
 				Padding="0,2,0,-2"
+				HorizontalAlignment="Stretch"
 				SelectionMode="Extended" IsItemClickEnabled="True"
 				IsEnabled="{x:Bind Controller.uMainSpriteList_IsEnabled}"
 				ItemsSource="{x:Bind Controller.uMainSpriteList_ItemsSource}"
@@ -555,38 +386,14 @@
 				<ListView.ItemTemplate>
 					<DataTemplate x:DataType="localModuleAnimationViewer:MainSpriteItemController">
 						<my:MStack Padding="0,8,4,8" Orientation="Horizontal" Spacing="12" Opacity="{x:Bind uRoot_Opacity}">
-							<Viewbox
-								my:MStack.Weight="NaN"
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
-								Width="32" Height="32"
-								Stretch="None"
-								Child="{x:Bind uPreview_Content}"
-							/>
-							<my:MStack
-								my:MStack.Weight="1"
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
-								Padding="0"
-								Orientation="Vertical" Spacing="0"
-							>
-								<TextBlock
-									my:MStack.Weight="NaN"
-									Text="{x:Bind uTitle_Text}"
-									TextWrapping="NoWrap"
-									Style="{ThemeResource BodyTextBlockStyle}"
-								/>
-								<TextBlock
-									my:MStack.Weight="NaN"
-									Text="{x:Bind uDescription_Text}"
-									TextWrapping="NoWrap"
-									Style="{ThemeResource CaptionTextBlockStyle}"
-									Foreground="{ThemeResource TextFillColorSecondary}"
-								/>
+							<Viewbox Width="32" Height="32" VerticalAlignment="Center" Stretch="None" Child="{x:Bind uPreview_Content}" />
+							<my:MStack Padding="0" my:MStack.Weight="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Orientation="Vertical" Spacing="0">
+								<TextBlock HorizontalAlignment="Stretch" Style="{ThemeResource BodyTextBlockStyle}" TextWrapping="NoWrap" Text="{x:Bind uTitle_Text}" />
+								<TextBlock HorizontalAlignment="Stretch" Style="{ThemeResource CaptionTextBlockStyle}" TextWrapping="NoWrap" Text="{x:Bind uDescription_Text}" Foreground="{ThemeResource TextFillColorSecondary}" />
 							</my:MStack>
 							<ToggleButton
-								my:MStack.Weight="NaN"
-								HorizontalAlignment="Stretch" VerticalAlignment="Center"
-								Width="32" Height="32"
-								Padding="0"
+								VerticalAlignment="Center"
+								Style="{StaticResource SmallSquareToggleButton}"
 								IsChecked="{x:Bind uToggle_IsChecked}"
 								Click="{x:Bind uToggle_OnClick}"
 							>

@@ -109,37 +109,44 @@ namespace Helper.Module {
 
 		#region tip
 
-		public Thickness uTip_Margin { get; set; } = new Thickness(0);
-
 		public Boolean uTip_IsOpen { get; set; } = false;
 
 		public InfoBarSeverity uTip_Severity { get; set; } = InfoBarSeverity.Informational;
 
 		public String uTip_Title { get; set; } = "";
 
+		public String uTip_Message { get; set; } = "";
+
 		// ----------------
 
+		public Size uTip__DelayCount { get; set; } = 0;
+
 		public async void PublishTip (
-			Floater         position,
 			InfoBarSeverity severity,
 			String          title,
+			String          message,
 			Size            duration = 4000
 		) {
-			this.uTip_Margin = new Thickness(0, 0, 0, position);
-			this.uTip_IsOpen = true;
+			this.uTip_IsOpen = false;
 			this.uTip_Severity = severity;
 			this.uTip_Title = title;
+			this.uTip_Message = message;
 			this.NotifyPropertyChanged(
-				nameof(this.uTip_Margin),
 				nameof(this.uTip_IsOpen),
 				nameof(this.uTip_Severity),
-				nameof(this.uTip_Title)
+				nameof(this.uTip_Title),
+				nameof(this.uTip_Message)
 			);
+			await Task.Delay(TimeSpan.FromMilliseconds(100));
+			this.uTip_IsOpen = true;
+			this.NotifyPropertyChanged(nameof(this.uTip_IsOpen));
+			this.uTip__DelayCount++;
 			await Task.Delay(TimeSpan.FromMilliseconds(duration));
-			this.uTip_IsOpen = false;
-			this.NotifyPropertyChanged(
-				nameof(this.uTip_IsOpen)
-			);
+			this.uTip__DelayCount--;
+			if (this.uTip__DelayCount == 0) {
+				this.uTip_IsOpen = false;
+				this.NotifyPropertyChanged(nameof(this.uTip_IsOpen));
+			}
 			return;
 		}
 

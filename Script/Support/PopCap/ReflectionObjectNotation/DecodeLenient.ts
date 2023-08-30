@@ -86,15 +86,13 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 		let value = ``;
 		let character_size = { value: undefined! };
 		let count = 0;
-		while (true) {
+		while (count < Number(size)) {
 			let character = read_utf8_character(data, character_size);
 			value += String.fromCodePoint(Number(character));
 			count += character_size.value;
-			if (count === Number(size)) {
-				break;
-			} else if (count > Number(size)) {
-				throw new Error(`data:${data.p().toString(16)}h : utf-8 string too long`);
-			}
+		}
+		if (count > Number(size)) {
+			throw new Error(`data:${data.p().toString(16)}h : utf-8 string too long`);
 		}
 		return value;
 	}

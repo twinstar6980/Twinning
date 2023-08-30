@@ -1,4 +1,4 @@
-/** 提供JS交互模式命令行 */
+// 提供JS交互模式命令行
 namespace TwinStar.Script.Executable.JSShell {
 
 	export function execute(

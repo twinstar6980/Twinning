@@ -569,7 +569,7 @@ namespace TwinStar.Script.Console {
 
 	export function path(
 		type: 'any' | 'file' | 'directory',
-		rule: ['any'] | ['in'] | ['out', 'none' | 'trash' | 'delete' | 'override'],
+		rule: ['any'] | ['input'] | ['output', 'none' | 'trash' | 'delete' | 'override'],
 		nullable: null,
 		checker: Check.CheckerX<string> | null,
 		initial?: string,
@@ -577,7 +577,7 @@ namespace TwinStar.Script.Console {
 
 	export function path(
 		type: 'any' | 'file' | 'directory',
-		rule: ['any'] | ['in'] | ['out', 'none' | 'trash' | 'delete' | 'override'],
+		rule: ['any'] | ['input'] | ['output', 'none' | 'trash' | 'delete' | 'override'],
 		nullable: boolean,
 		checker: Check.CheckerX<string> | null,
 		initial?: string | null,
@@ -585,7 +585,7 @@ namespace TwinStar.Script.Console {
 
 	export function path(
 		type: 'any' | 'file' | 'directory',
-		rule: ['any'] | ['in'] | ['out', 'none' | 'trash' | 'delete' | 'override'],
+		rule: ['any'] | ['input'] | ['output', 'none' | 'trash' | 'delete' | 'override'],
 		nullable: boolean | null,
 		checker: Check.CheckerX<string> | null,
 		initial?: string | null,
@@ -596,7 +596,7 @@ namespace TwinStar.Script.Console {
 			last_value: null as string | null,
 			tactic_if_out_exist: 'none' as 'none' | 'trash' | 'delete' | 'override',
 		};
-		if (rule[0] === 'out') {
+		if (rule[0] === 'output') {
 			state_data.tactic_if_out_exist = rule[1];
 		}
 		let converter = (value: string): string | [string] => {
@@ -604,8 +604,8 @@ namespace TwinStar.Script.Console {
 			if (value.length >= 1 && value[0] === ':') {
 				switch (value.substring(1)) {
 					case 'p': {
-						if (rule[0] !== 'in') {
-							return los('console:path_command_need_in');
+						if (rule[0] !== 'input') {
+							return los('console:path_command_need_input');
 						}
 						let pick_result = Console.pick_path(type);
 						if (pick_result === null) {
@@ -616,8 +616,8 @@ namespace TwinStar.Script.Console {
 						break;
 					}
 					case 'o': {
-						if (rule[0] !== 'out') {
-							return los('console:path_command_need_out');
+						if (rule[0] !== 'output') {
+							return los('console:path_command_need_output');
 						}
 						if (state_data.last_value === null) {
 							return los('console:path_command_need_last_value');
@@ -627,8 +627,8 @@ namespace TwinStar.Script.Console {
 						break;
 					}
 					case 'd': {
-						if (rule[0] !== 'out') {
-							return los('console:path_command_need_out');
+						if (rule[0] !== 'output') {
+							return los('console:path_command_need_output');
 						}
 						if (state_data.last_value === null) {
 							return los('console:path_command_need_last_value');
@@ -638,8 +638,8 @@ namespace TwinStar.Script.Console {
 						break;
 					}
 					case 't': {
-						if (rule[0] !== 'out') {
-							return los('console:path_command_need_out');
+						if (rule[0] !== 'output') {
+							return los('console:path_command_need_output');
 						}
 						if (state_data.last_value === null) {
 							return los('console:path_command_need_last_value');
@@ -662,7 +662,7 @@ namespace TwinStar.Script.Console {
 			if (rule[0] === 'any') {
 				result = null;
 			}
-			if (rule[0] === 'in') {
+			if (rule[0] === 'input') {
 				if (!KernelX.FileSystem.exist(value)) {
 					result = los('console:path_not_exist');
 				} else {
@@ -682,7 +682,7 @@ namespace TwinStar.Script.Console {
 					}
 				}
 			}
-			if (rule[0] === 'out') {
+			if (rule[0] === 'output') {
 				if (!KernelX.FileSystem.exist(value)) {
 					result = null;
 				} else {
@@ -731,7 +731,7 @@ namespace TwinStar.Script.Console {
 		if (Shell.is_gui) {
 			result = gui_basic_input(
 				() => {
-					return Shell.gui_input_path(type, rule[0] === 'any' ? rule[0] : `${rule[0]}put`);
+					return Shell.gui_input_path(type, rule[0]);
 				},
 				leading,
 				(value) => {
@@ -816,12 +816,22 @@ namespace TwinStar.Script.Console {
 
 	// ------------------------------------------------
 
-	export function option_boolean<Value extends boolean>(
+	export function option_confirmation<Value extends boolean>(
 		value: Array<Value>,
 	): Array<[Value, string, string]> {
 		let destination: Array<[Value, string, string]> = [];
 		for (let index = 0; index < value.length; ++index) {
 			destination.push([value[index], `${value[index] === false ? 'n' : 'y'}`, ``]);
+		}
+		return destination;
+	}
+
+	export function option_number<Value extends number>(
+		value: Array<Value>,
+	): Array<[Value, string, string]> {
+		let destination: Array<[Value, string, string]> = [];
+		for (let index = 0; index < value.length; ++index) {
+			destination.push([value[index], `${value[index]}`, ``]);
 		}
 		return destination;
 	}

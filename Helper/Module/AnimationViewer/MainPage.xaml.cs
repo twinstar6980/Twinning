@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Windows.Globalization.NumberFormatting;
+using Windows.ApplicationModel.DataTransfer;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using DecimalFormatter = Windows.Globalization.NumberFormatting.DecimalFormatter;
@@ -170,7 +171,7 @@ namespace Helper.Module.AnimationViewer {
 			try {
 				animationData = await AnimationHelper.LoadAnimation(animationFile);
 			} catch (Exception e) {
-				MainWindow.Instance.Controller.PublishTip(92, InfoBarSeverity.Error, "Failed to load animation.");
+				MainWindow.Instance.Controller.PublishTip(InfoBarSeverity.Error, "Failed to load animation.", e.ToString());
 				return;
 			}
 			this.AnimationFile = animationFile;
@@ -332,7 +333,6 @@ namespace Helper.Module.AnimationViewer {
 			this.View.uSprite.FrameRange = this.WorkingSpriteFrameRange;
 			this.View.uSprite.CurrentTime = TimeSpan.FromSeconds(this.WorkingSpriteFrameRange.Start);
 			this.NotifyPropertyChanged(
-				nameof(this.uWorkingSpriteFrameRateIcon_Opacity),
 				nameof(this.uWorkingSpriteFrameRate_IsEnabled),
 				nameof(this.uWorkingSpriteFrameRate_Value),
 				nameof(this.uWorkingSpriteFrameRangeIcon_Opacity),
@@ -377,7 +377,6 @@ namespace Helper.Module.AnimationViewer {
 			this.WorkingSpriteFrameRangeLabelInformation = null;
 			this.WorkingSpritePaused = null;
 			this.NotifyPropertyChanged(
-				nameof(this.uWorkingSpriteFrameRateIcon_Opacity),
 				nameof(this.uWorkingSpriteFrameRate_IsEnabled),
 				nameof(this.uWorkingSpriteFrameRate_Value),
 				nameof(this.uWorkingSpriteFrameRangeIcon_Opacity),
@@ -430,6 +429,49 @@ namespace Helper.Module.AnimationViewer {
 				nameof(this.uWorkingSpriteFrameProgress_Maximum),
 				nameof(this.uWorkingSpritePauseIcon_Glyph)
 			);
+			return;
+		}
+
+		#endregion
+
+		#region page
+
+		public async void uPage_OnDragOver (
+			Object        sender,
+			DragEventArgs args
+		) {
+			if (sender is not Page senders) { return; }
+			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
+				args.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Link;
+			}
+			return;
+		}
+
+		public async void uPage_OnDrop (
+			Object        sender,
+			DragEventArgs args
+		) {
+			if (sender is not Page senders) { return; }
+			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
+				var item = await args.DataView.GetStorageItemsAsync();
+				if (item.Count != 1) {
+					MainWindow.Instance.Controller.PublishTip(InfoBarSeverity.Error, "Source is multiply.", "");
+					return;
+				}
+				var animationFile = StorageHelper.Normalize(item[0].Path);
+				if (!StorageHelper.ExistFile(animationFile)) {
+					MainWindow.Instance.Controller.PublishTip(InfoBarSeverity.Error, "Source is not a file.", "");
+					return;
+				}
+				var imageDirectory = StorageHelper.GetPathParent(animationFile) ?? throw new Exception();
+				if (this.Loaded) {
+					if (this.Working) {
+						await this.UnloadWorkingSprite();
+					}
+					await this.Unload();
+				}
+				await this.Load(animationFile, imageDirectory);
+			}
 			return;
 		}
 
@@ -618,9 +660,9 @@ namespace Helper.Module.AnimationViewer {
 			if (isPlaying) {
 				this.View.uSprite.State = SpriteControl.StateType.Paused;
 			}
-			var animationFile = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View) ?? throw new Exception(), ".json");
+			var animationFile = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View), ".json");
 			if (animationFile is not null) {
-				var imageDirectory = Path.GetDirectoryName(animationFile) ?? throw new Exception();
+				var imageDirectory = StorageHelper.GetPathParent(animationFile) ?? throw new Exception();
 				if (this.Loaded) {
 					if (this.Working) {
 						await this.UnloadWorkingSprite();
@@ -670,7 +712,7 @@ namespace Helper.Module.AnimationViewer {
 			if (isPlaying) {
 				this.View.uSprite.State = SpriteControl.StateType.Paused;
 			}
-			var imageDirectory = await StorageHelper.PickDirectory(WindowHelper.GetForElement(this.View) ?? throw new Exception());
+			var imageDirectory = await StorageHelper.PickDirectory(WindowHelper.GetForElement(this.View));
 			if (imageDirectory is not null) {
 				var animationFile = this.AnimationFile;
 				if (this.Loaded) {
@@ -809,14 +851,6 @@ namespace Helper.Module.AnimationViewer {
 
 		#region working frame rate
 
-		public Floater uWorkingSpriteFrameRateIcon_Opacity {
-			get {
-				return ConvertHelper.BooleanToFloaterOfOpacity(this.Working);
-			}
-		}
-
-		// ----------------
-
 		public Boolean uWorkingSpriteFrameRate_IsEnabled {
 			get {
 				return this.Working;
@@ -850,13 +884,7 @@ namespace Helper.Module.AnimationViewer {
 		) {
 			if (sender is not NumberBox senders) { return; }
 			Debug.Assert(this.Loaded);
-			if (Floater.IsNaN(args.NewValue)) {
-				if (this.Working) {
-					this.NotifyPropertyChanged(
-						nameof(this.uWorkingSpriteFrameRate_Value)
-					);
-				}
-			} else {
+			if (!Floater.IsNaN(args.NewValue)) {
 				Debug.Assert(this.Working);
 				var newValue = args.NewValue;
 				if (newValue != this.WorkingSpriteFrameRate) {
@@ -864,6 +892,9 @@ namespace Helper.Module.AnimationViewer {
 					this.WorkingSpriteFrameRate = newValue;
 				}
 			}
+			this.NotifyPropertyChanged(
+				nameof(this.uWorkingSpriteFrameRate_Value)
+			);
 			return;
 		}
 
@@ -873,7 +904,7 @@ namespace Helper.Module.AnimationViewer {
 
 		public Floater uWorkingSpriteFrameRangeIcon_Opacity {
 			get {
-				return ConvertHelper.BooleanToFloaterOfOpacity(this.Working);
+				return ConvertHelper.BooleanToFloaterOfOpacityEnabled(this.Working);
 			}
 		}
 
@@ -882,6 +913,12 @@ namespace Helper.Module.AnimationViewer {
 		public Boolean uWorkingSpriteFrameRangeBegin_IsEnabled {
 			get {
 				return this.Working;
+			}
+		}
+
+		public DecimalFormatter uWorkingSpriteFrameRangeBegin_NumberFormatter {
+			get {
+				return new DecimalFormatter() { IntegerDigits = 1, FractionDigits = 0 };
 			}
 		}
 
@@ -915,13 +952,7 @@ namespace Helper.Module.AnimationViewer {
 		) {
 			if (sender is not NumberBox senders) { return; }
 			Debug.Assert(this.Loaded);
-			if (Floater.IsNaN(args.NewValue)) {
-				if (this.Working) {
-					this.NotifyPropertyChanged(
-						nameof(this.uWorkingSpriteFrameRangeBegin_Value)
-					);
-				}
-			} else {
+			if (!Floater.IsNaN(args.NewValue)) {
 				Debug.Assert(this.Working);
 				var newBegin = (Size)args.NewValue - 1;
 				var newRange = new AnimationHelper.FrameRange() {
@@ -935,6 +966,9 @@ namespace Helper.Module.AnimationViewer {
 					await this.UpdateWorkingSpriteFrameRange(newRange);
 				}
 			}
+			this.NotifyPropertyChanged(
+				nameof(this.uWorkingSpriteFrameRangeBegin_Value)
+			);
 			return;
 		}
 
@@ -943,6 +977,12 @@ namespace Helper.Module.AnimationViewer {
 		public Boolean uWorkingSpriteFrameRangeEnd_IsEnabled {
 			get {
 				return this.Working;
+			}
+		}
+
+		public DecimalFormatter uWorkingSpriteFrameRangeEnd_NumberFormatter {
+			get {
+				return new DecimalFormatter() { IntegerDigits = 1, FractionDigits = 0 };
 			}
 		}
 
@@ -976,13 +1016,7 @@ namespace Helper.Module.AnimationViewer {
 		) {
 			if (sender is not NumberBox senders) { return; }
 			Debug.Assert(this.Loaded);
-			if (Floater.IsNaN(args.NewValue)) {
-				if (this.Working) {
-					this.NotifyPropertyChanged(
-						nameof(this.uWorkingSpriteFrameRangeEnd_Value)
-					);
-				}
-			} else {
+			if (!Floater.IsNaN(args.NewValue)) {
 				Debug.Assert(this.Working);
 				var newEnd = (Size)args.NewValue - 1;
 				var newRange = new AnimationHelper.FrameRange() {
@@ -997,6 +1031,9 @@ namespace Helper.Module.AnimationViewer {
 					await this.UpdateWorkingSpriteFrameRange(newRange);
 				}
 			}
+			this.NotifyPropertyChanged(
+				nameof(this.uWorkingSpriteFrameRangeEnd_Value)
+			);
 			return;
 		}
 
@@ -1006,7 +1043,7 @@ namespace Helper.Module.AnimationViewer {
 
 		public Floater uWorkingSpriteFrameRangeLabelIcon_Opacity {
 			get {
-				return ConvertHelper.BooleanToFloaterOfOpacity(this.Working);
+				return ConvertHelper.BooleanToFloaterOfOpacityEnabled(this.Working);
 			}
 		}
 
@@ -1269,7 +1306,7 @@ namespace Helper.Module.AnimationViewer {
 
 		public Floater uPlantCustomLayerIcon_Opacity {
 			get {
-				return ConvertHelper.BooleanToFloaterOfOpacity(this.Loaded);
+				return ConvertHelper.BooleanToFloaterOfOpacityEnabled(this.Loaded);
 			}
 		}
 
@@ -1345,7 +1382,7 @@ namespace Helper.Module.AnimationViewer {
 
 		public Floater uZombieStateLayerIcon_Opacity {
 			get {
-				return ConvertHelper.BooleanToFloaterOfOpacity(this.Loaded);
+				return ConvertHelper.BooleanToFloaterOfOpacityEnabled(this.Loaded);
 			}
 		}
 
@@ -1421,7 +1458,7 @@ namespace Helper.Module.AnimationViewer {
 
 		public Floater uZombieGroundSwatchLayerIcon_Opacity {
 			get {
-				return ConvertHelper.BooleanToFloaterOfOpacity(this.Loaded);
+				return ConvertHelper.BooleanToFloaterOfOpacityEnabled(this.Loaded);
 			}
 		}
 

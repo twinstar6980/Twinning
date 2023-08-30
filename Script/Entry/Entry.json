@@ -8,10 +8,7 @@
 		"disable_trailing_comma": false,
 		"disable_array_wrap_line": false,
 	},
-	"method_common_argument": {
-		"path_tactic_if_out_exist": "none",
-	},
 	"thread_limit": 0,
-	"notification_time_limit": 15000,
+	"notification_time_limit": 20000,
 	"pause_when_finish": true,
 }

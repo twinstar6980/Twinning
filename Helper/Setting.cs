@@ -15,7 +15,7 @@ namespace Helper {
 		) {
 			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.AppearanceThemeMode), ElementTheme.Default.ToString());
 			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.CommandForwarderLaunchScript), "");
-			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.CommandForwarderMethodConfiguration), "");
+			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.CommandForwarderCommandConfiguration), "");
 			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.CommandForwarderQuickWindowSizeWidth), 480.ToString());
 			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.CommandForwarderQuickWindowSizeHeight), 960.ToString());
 			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.AnimationViewerAutomaticPlay), true.ToString());
@@ -47,9 +47,9 @@ namespace Helper {
 			set => ApplicationData.Current.LocalSettings.Values[nameof(Setting.CommandForwarderLaunchScript)] = value;
 		}
 
-		public static String CommandForwarderMethodConfiguration {
-			get => ApplicationData.Current.LocalSettings.Values[nameof(Setting.CommandForwarderMethodConfiguration)]?.ToString() is String value ? value : throw new Exception();
-			set => ApplicationData.Current.LocalSettings.Values[nameof(Setting.CommandForwarderMethodConfiguration)] = value;
+		public static String CommandForwarderCommandConfiguration {
+			get => ApplicationData.Current.LocalSettings.Values[nameof(Setting.CommandForwarderCommandConfiguration)]?.ToString() is String value ? value : throw new Exception();
+			set => ApplicationData.Current.LocalSettings.Values[nameof(Setting.CommandForwarderCommandConfiguration)] = value;
 		}
 
 		public static Size CommandForwarderQuickWindowSizeWidth {

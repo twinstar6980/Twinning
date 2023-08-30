@@ -18,24 +18,18 @@
 		</ItemsRepeater.Layout>
 		<ItemsRepeater.ItemTemplate>
 			<DataTemplate x:DataType="localCommandForwarder:ArgumentPanelItemController">
-				<my:MStack Orientation="Horizontal" Spacing="8">
-					<TextBox
-						my:MStack.Weight="NaN"
-						HorizontalAlignment="Stretch" VerticalAlignment="Top"
-						Width="208" Height="NaN"
-						Text="{x:Bind uTitle_Text}"
-						IsReadOnly="True"
-					/>
+				<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
+					<TextBox Width="208" Height="NaN" VerticalAlignment="Top" IsReadOnly="True" Text="{x:Bind uTitle_Text}" />
 					<ToggleButton
-						my:MStack.Weight="NaN"
+						VerticalAlignment="Top"
 						Style="{StaticResource SmallSquareToggleButton}"
 						IsChecked="{x:Bind uActive_IsChecked}"
 						Click="{x:Bind uActive_OnClick}"
 						Content="{x:Bind uActive_Content}"
 					/>
 					<localCommandForwarder:ValuePanel
-						my:MStack.Weight="1"
-						HorizontalAlignment="Stretch" VerticalAlignment="Top"
+						my:MStack.Weight="1" HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
 						Type="{x:Bind uValue_Type}"
 						Value="{x:Bind uValue_Value}"
 						Option="{x:Bind uValue_Option}"

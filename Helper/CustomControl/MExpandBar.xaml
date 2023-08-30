@@ -13,38 +13,13 @@
 						HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
 					>
 						<Expander.Header>
-							<my:MStack
-								Width="NaN" Height="{ThemeResource ExpanderMinHeight}"
-								Padding="0,0"
-								Orientation="Horizontal" Spacing="16"
-							>
-								<FontIcon
-									my:MStack.Weight="NaN"
-									HorizontalAlignment="Center" VerticalAlignment="Center"
-									Width="22" Height="22"
-									Glyph="{TemplateBinding Icon}"
-									FontSize="{StaticResource LargeIconSize}"
-								/>
-								<TextBlock
-									my:MStack.Weight="1"
-									HorizontalAlignment="Left" VerticalAlignment="Center"
-									Text="{TemplateBinding Title}"
-									Style="{ThemeResource BodyStrongTextBlockStyle}"
-									MaxLines="1" TextTrimming="CharacterEllipsis"
-								/>
-								<TextBlock
-									my:MStack.Weight="1"
-									HorizontalAlignment="Right" VerticalAlignment="Center"
-									Text="{TemplateBinding Description}"
-									Style="{ThemeResource BodyTextBlockStyle}"
-									MaxLines="1" TextTrimming="CharacterEllipsis"
-								/>
+							<my:MStack Height="{ThemeResource ExpanderMinHeight}" Padding="0,0" Orientation="Horizontal" Spacing="16">
+								<FontIcon Width="22" Height="22" VerticalAlignment="Center" FontSize="{StaticResource LargeIconSize}" Glyph="{TemplateBinding Icon}" />
+								<TextBlock my:MStack.Weight="1" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{ThemeResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" Text="{TemplateBinding Title}" />
+								<TextBlock my:MStack.Weight="1" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{ThemeResource BodyTextBlockStyle}" TextWrapping="NoWrap" Text="{TemplateBinding Description}" />
 							</my:MStack>
 						</Expander.Header>
-						<ContentPresenter
-							Padding="38,0"
-							Content="{TemplateBinding Action}"
-						/>
+						<ContentPresenter Padding="38,0,44,0" Content="{TemplateBinding Action}" />
 					</Expander>
 				</ControlTemplate>
 			</Setter.Value>

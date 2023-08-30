@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 80;
+	export const k_version = 81;
 
 	// ------------------------------------------------
 
@@ -163,58 +163,38 @@ namespace TwinStar.Script {
 
 	}
 
-	export namespace ModuleLoader {
+	export namespace PartitionLoader {
 
 		// ------------------------------------------------
-
-		export type Manifest = {
-			module: Array<string>;
-			entry: null | string;
-		};
 
 		export type Configuration = Record<string, Kernel.JSON.JS_Value>;
 
 		export type Injector = (configuration: null | Configuration) => void;
 
-		export type Entry = (configuration: null | Configuration, argument: Array<string>) => void;
-
-		export type EvaluateResult = undefined | {
-			injector?: Injector;
-			entry?: Entry;
-		};
-
 		// ------------------------------------------------
 
 		export function load(
-			manifest: Manifest,
+			partition_list: Array<string>,
 			directory: string,
-		): [Entry, null | Configuration] | null {
+		): void {
 			assert_test(Detail.exist_directory(directory), `directory is not found : <${directory}>`);
-			let entry: [Entry, null | Configuration] | null = null;
-			assert_test(manifest.entry === null || manifest.module.includes(manifest.entry), `entry module is invalid : <${manifest.entry}>`);
-			for (let module of manifest.module) {
-				let script_name = `script/${module}.js`;
-				let script_file = `${directory}/${module}.js`;
-				let configuration_file = `${directory}/${module}.json`;
-				assert_test(Detail.exist_file(script_file), `module script file not found : <${module}>`);
+			for (let partition of partition_list) {
+				let script_name = `script/${partition}.js`;
+				let script_file = `${directory}/${partition}.js`;
+				let configuration_file = `${directory}/${partition}.json`;
+				assert_test(Detail.exist_file(script_file), `partition script file not found : <${partition}>`);
 				let configuration: null | Configuration = null;
 				if (Detail.exist_file(configuration_file)) {
-					let raw_module_configuration = Detail.read_json(configuration_file);
-					assert_test(raw_module_configuration !== null && typeof raw_module_configuration === 'object' && (raw_module_configuration as Object).constructor.name === 'Object', `module configuration must be object : <${module}>`);
-					configuration = raw_module_configuration as Configuration;
+					let raw_configuration = Detail.read_json(configuration_file);
+					assert_test(raw_configuration !== null && typeof raw_configuration === 'object' && (raw_configuration as Object).constructor.name === 'Object', `partition configuration must be object : <${partition}>`);
+					configuration = raw_configuration as Configuration;
 				}
-				let evaluate_result = Detail.evaluate(script_file, script_name) as EvaluateResult;
-				if (evaluate_result !== undefined) {
-					if (evaluate_result.injector !== undefined) {
-						evaluate_result.injector(configuration);
-					}
-				}
-				if (module === manifest.entry) {
-					assert_test(evaluate_result !== undefined && evaluate_result.entry !== undefined, `module is loaded, but entry function is not found : <${module}>`);
-					entry = [evaluate_result.entry as Entry, configuration];
+				let injector = Detail.evaluate(script_file, script_name) as undefined | Injector;
+				if (injector !== undefined) {
+					injector(configuration);
 				}
 			}
-			return entry;
+			return;
 		}
 
 		// ------------------------------------------------
@@ -227,35 +207,104 @@ namespace TwinStar.Script {
 
 		// ------------------------------------------------
 
-		export let g_module_manifest: ModuleLoader.Manifest = undefined!;
+		let g_partition_list: Array<string> = [
+			`utility/Timer`,
+			`utility/TypeUtility`,
+			`utility/PathUtility`,
+			`utility/Check`,
+			`utility/TextGenerator`,
+			`utility/VirtualTerminalSequence`,
+			`utility/XML`,
+			`utility/ByteListView`,
+			`utility/KernelX`,
+			`utility/Shell`,
+			`utility/ThreadManager`,
+			`utility/ProcessHelper`,
+			`utility/Console`,
+			`utility/ADBHelper`,
+			`Language/Language`,
+			`Support/Atlas/Pack`,
+			`Support/Atlas/PackAutomatic`,
+			`Support/Marmalade/DZip/PackAutomatic`,
+			`Support/PopCap/ReflectionObjectNotation/DecodeLenient`,
+			`Support/PopCap/Texture/Encode`,
+			`Support/PopCap/Animation/Convert/common`,
+			`Support/PopCap/Animation/Convert/Flash/common`,
+			`Support/PopCap/Animation/Convert/Flash/From`,
+			`Support/PopCap/Animation/Convert/Flash/To`,
+			`Support/PopCap/Animation/Convert/Flash/SourceManager`,
+			`Support/PopCap/Package/PackAutomatic`,
+			`Support/PopCap/ResourceStreamBundle/UnpackLenient`,
+			`Support/PvZ2/JSONGenericGetter/JSONGenericGetter`,
+			`Support/PvZ2/ResourceStreamBundle/ResourceManifest/Convert`,
+			`Support/PvZ2/ResourceStreamBundle/ResourceManifest/ResourceManifest`,
+			`Support/PvZ2/ResourceStreamBundle/ResourceManifest/OfficialResourceManifest`,
+			`Support/PvZ2/ResourceStreamBundle/ResourceConvert/ResourceConvert`,
+			`Support/PvZ2/TextTable/Convert`,
+			`Support/PvZ2/RemoteAndroidHelper`,
+			`Executor/Generic`,
+			`Executor/Typical`,
+			`Executor/Implement/js`,
+			`Executor/Implement/data.hash`,
+			`Executor/Implement/data.encoding`,
+			`Executor/Implement/data.encryption`,
+			`Executor/Implement/data.compression`,
+			`Executor/Implement/data.differentiation`,
+			`Executor/Implement/text.json`,
+			`Executor/Implement/text.xml`,
+			`Executor/Implement/texture.transformation`,
+			`Executor/Implement/texture.atlas`,
+			`Executor/Implement/wwise.media`,
+			`Executor/Implement/wwise.sound_bank`,
+			`Executor/Implement/marmalade.dzip`,
+			`Executor/Implement/popcap.zlib`,
+			`Executor/Implement/popcap.crypt_data`,
+			`Executor/Implement/popcap.reflection_object_notation`,
+			`Executor/Implement/popcap.texture`,
+			`Executor/Implement/popcap.u_texture`,
+			`Executor/Implement/popcap.sexy_texture`,
+			`Executor/Implement/popcap.animation`,
+			`Executor/Implement/popcap.re_animation`,
+			`Executor/Implement/popcap.particle`,
+			`Executor/Implement/popcap.trail`,
+			`Executor/Implement/popcap.particle_effect`,
+			`Executor/Implement/popcap.render_effect`,
+			`Executor/Implement/popcap.character_font_widget_2`,
+			`Executor/Implement/popcap.package`,
+			`Executor/Implement/popcap.resource_stream_group`,
+			`Executor/Implement/popcap.resource_stream_bundle`,
+			`Executor/Implement/popcap.resource_stream_bundle_patch`,
+			`Executor/Implement/pvz2.text_table`,
+			`Executor/Implement/pvz2.remote_android_helper`,
+			`Entry/Entry`,
+		];
 
 		// ------------------------------------------------
 
-		export async function internal(
+		async function internal(
 			argument: Array<string>,
 		): Promise<string> {
 			Detail.output(`TwinStar.ToolKit ~ Kernel:${Kernel.Miscellaneous.g_version.value} & Shell:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['host'])).value[0]}:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['version'])).value[0]} & Script:${k_version} ~ ${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['system'])).value[0]} & ${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['architecture'])).value[0]}`);
 			assert_test(argument.length >= 1, `argument too few`);
 			// 获取主目录
-			let home_path = argument[0];
-			home_path = home_path.replaceAll(`\\`, '/');
+			let home_path = argument[0].replaceAll(`\\`, '/');
 			if (/^\.{1,2}[\/]/.test(home_path)) {
 				home_path = `${Detail.get_working_directory()}/${home_path}`;
 			}
 			Home.path = home_path;
 			// 设置模块主目录（ES）
 			Kernel.Miscellaneous.g_context.query_module_home().value = Home.script();
-			// 加载子模块
+			// 加载脚本分区
 			let timer_begin = Date.now();
-			let entry = ModuleLoader.load(g_module_manifest, Home.script());
+			PartitionLoader.load(g_partition_list, Home.script());
 			let timer_end = Date.now();
 			// 执行模块入口函数
 			try {
-				Console.success(los('main:module_load_finish'), [
-					los('main:module_load_duration', ((timer_end - timer_begin) / 1000).toFixed(3)),
+				Console.success(los('main:partition_load_finish'), [
+					los('main:partition_load_duration', ((timer_end - timer_begin) / 1000).toFixed(3)),
 				]);
 				Home.initialize();
-				entry?.[0](entry[1], argument.slice(1));
+				Entry.entry(argument.slice(1));
 			} catch (e) {
 				Console.error_of(e);
 				Console.pause();
@@ -294,79 +343,4 @@ namespace TwinStar.Script {
 
 }
 
-TwinStar.Script.Main.g_module_manifest = {
-	module: [
-		`utility/Timer`,
-		`utility/TypeUtility`,
-		`utility/PathUtility`,
-		`utility/Check`,
-		`utility/TextGenerator`,
-		`utility/VirtualTerminalSequence`,
-		`utility/XML`,
-		`utility/ByteListView`,
-		`utility/KernelX`,
-		`utility/Shell`,
-		`utility/ThreadManager`,
-		`utility/ProcessHelper`,
-		`utility/Console`,
-		`utility/ADBHelper`,
-		`Language/Language`,
-		`Support/Atlas/Pack`,
-		`Support/Atlas/PackAutomatic`,
-		`Support/Marmalade/DZip/PackAutomatic`,
-		`Support/PopCap/ReflectionObjectNotation/DecodeLenient`,
-		`Support/PopCap/Texture/Encode`,
-		`Support/PopCap/Animation/Convert/common`,
-		`Support/PopCap/Animation/Convert/Flash/common`,
-		`Support/PopCap/Animation/Convert/Flash/From`,
-		`Support/PopCap/Animation/Convert/Flash/To`,
-		`Support/PopCap/Animation/Convert/Flash/SourceManager`,
-		`Support/PopCap/Package/PackAutomatic`,
-		`Support/PopCap/ResourceStreamBundle/UnpackLenient`,
-		`Support/PvZ2/JSONGenericGetter/JSONGenericGetter`,
-		`Support/PvZ2/ResourceStreamBundle/ResourceManifest/Convert`,
-		`Support/PvZ2/ResourceStreamBundle/ResourceManifest/ResourceManifest`,
-		`Support/PvZ2/ResourceStreamBundle/ResourceManifest/OfficialResourceManifest`,
-		`Support/PvZ2/ResourceStreamBundle/ResourceConvert/ResourceConvert`,
-		`Support/PvZ2/TextTable/Convert`,
-		`Support/PvZ2/RemoteAndroidHelper`,
-		`Executor/Method`,
-		`Executor/Argument`,
-		`Executor/Command`,
-		`Entry/Entry`,
-		`Entry/method/js`,
-		`Entry/method/json`,
-		`Entry/method/data.hash`,
-		`Entry/method/data.encoding`,
-		`Entry/method/data.encryption`,
-		`Entry/method/data.compression`,
-		`Entry/method/data.differentiation`,
-		`Entry/method/texture.transformation`,
-		`Entry/method/texture.atlas`,
-		`Entry/method/wwise.media`,
-		`Entry/method/wwise.sound_bank`,
-		`Entry/method/marmalade.dzip`,
-		`Entry/method/popcap.zlib`,
-		`Entry/method/popcap.crypt_data`,
-		`Entry/method/popcap.reflection_object_notation`,
-		`Entry/method/popcap.texture`,
-		`Entry/method/popcap.u_texture`,
-		`Entry/method/popcap.sexy_texture`,
-		`Entry/method/popcap.animation`,
-		`Entry/method/popcap.re_animation`,
-		`Entry/method/popcap.particle`,
-		`Entry/method/popcap.trail`,
-		`Entry/method/popcap.particle_effect`,
-		`Entry/method/popcap.render_effect`,
-		`Entry/method/popcap.character_font_widget_2`,
-		`Entry/method/popcap.package`,
-		`Entry/method/popcap.resource_stream_group`,
-		`Entry/method/popcap.resource_stream_bundle`,
-		`Entry/method/popcap.resource_stream_bundle_patch`,
-		`Entry/method/pvz2.text_table`,
-		`Entry/method/pvz2.remote_android_helper`,
-	],
-	entry: `Entry/Entry`,
-};
-
-(TwinStar.Script.Main.external);
+TwinStar.Script.Main.external;

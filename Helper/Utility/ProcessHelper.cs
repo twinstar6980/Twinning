@@ -91,6 +91,9 @@ namespace Helper.Utility {
 			String       script,
 			List<String> argument
 		) {
+			if (!StorageHelper.ExistFile(script)) {
+				throw new FileNotFoundException($"Could not find file '{script}'.", script);
+			}
 			var processProgram = "C:\\Windows\\System32\\cmd.exe";
 			var processArgument = new List<String>();
 			processArgument.Add("/C");

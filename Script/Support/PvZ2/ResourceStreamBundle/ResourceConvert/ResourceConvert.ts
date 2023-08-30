@@ -268,28 +268,27 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceConvert {
 		package_definition_file: string,
 		resource_manifest_file: string,
 		option: Option,
-		version: typeof Kernel.Tool.PopCap.ResourceStreamBundle.Version.Value,
 	): void {
-		let version_c = Kernel.Tool.PopCap.ResourceStreamBundle.Version.value(version);
 		let package_definition = KernelX.JSON.read_fs_js<Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Package>(package_definition_file);
 		Console.information(los('support.pvz2.resource_stream_bundle.resource_convert:extract_resource_manifest'), [
 		]);
 		let official_resource_manifest: OfficialResourceManifest.Package;
 		{
-			let group_id = Object.keys(package_definition.group).filter((e) => (/^__MANIFESTGROUP__(.+)?$/.test(e)));
-			assert_test(group_id.length === 1, `package must has only one MANIFEST group`);
-			let group = package_definition.group[group_id[0]];
+			let group_id_list = Object.keys(package_definition.group).filter((value) => (/^__MANIFESTGROUP__(.+)?$/i.test(value)));
+			assert_test(group_id_list.length === 1, `package must has only one MANIFEST group`);
+			let group_id = group_id_list[0];
+			let group = package_definition.group[group_id];
 			assert_test(!group.composite, `MANIFEST should not be a composite group`);
-			let subgroup_id = Object.keys(group.subgroup);
-			assert_test(subgroup_id.length === 1, `MANIFEST subgroup must has only one subgroup`);
-			assert_test(subgroup_id[0] === group_id[0], `MANIFEST subgroup id must equal group id`);
-			let subgroup = group.subgroup[subgroup_id[0]];
-			let resource_path_list = Object.keys(subgroup.resource);
-			assert_test(resource_path_list.length === 1, `MANIFEST subgroup must has one only resource`);
+			let subgroup_id_list = Object.keys(group.subgroup);
+			assert_test(subgroup_id_list.length === 1, `MANIFEST subgroup must has only one subgroup`);
+			let subgroup_id = subgroup_id_list[0];
+			assert_test(subgroup_id === group_id, `MANIFEST subgroup id must equal group id`);
+			let subgroup = group.subgroup[subgroup_id];
+			let resource_path_list = Object.keys(subgroup.resource).filter((value) => (/^properties\/resources(.+)?\.rton$/i.test(value)));
+			assert_test(resource_path_list.length === 1, `MANIFEST subgroup must contains resources rton file`);
 			let resource_path = resource_path_list[0];
 			let resource = subgroup.resource[resource_path];
-			assert_test(/^properties\/resources(.+)?\.rton$/i.test(resource_path), `MANIFEST resource path invalid`);
-			let rton = KernelX.FileSystem.read_file(resource_directory + '/' + resource_path);
+			let rton = KernelX.FileSystem.read_file(`${resource_directory}/${resource_path}`);
 			let rton_stream = Kernel.ByteStreamView.watch(rton.view());
 			let json = Kernel.JSON.Value.default<OfficialResourceManifest.Package>();
 			Kernel.Tool.PopCap.ReflectionObjectNotation.Decode.process(

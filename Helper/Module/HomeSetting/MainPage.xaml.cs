@@ -135,7 +135,7 @@ namespace Helper.Module.HomeSetting {
 			RoutedEventArgs args
 		) {
 			if (sender is not Button senders) { return; }
-			var newValue = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View) ?? throw new Exception());
+			var newValue = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View));
 			if (newValue is not null) {
 				Setting.CommandForwarderLaunchScript = newValue;
 				this.NotifyPropertyChanged(
@@ -148,42 +148,42 @@ namespace Helper.Module.HomeSetting {
 
 		// ----------------
 
-		public String uCommandForwarderMethodConfigurationBar_Description {
+		public String uCommandForwarderCommandConfigurationBar_Description {
 			get {
-				return Setting.CommandForwarderMethodConfiguration;
+				return Setting.CommandForwarderCommandConfiguration;
 			}
 		}
 
-		public String uCommandForwarderMethodConfigurationText_Text {
+		public String uCommandForwarderCommandConfigurationText_Text {
 			get {
-				return Setting.CommandForwarderMethodConfiguration;
+				return Setting.CommandForwarderCommandConfiguration;
 			}
 		}
 
-		public async void uCommandForwarderMethodConfigurationText_OnTextChanged (
+		public async void uCommandForwarderCommandConfigurationText_OnTextChanged (
 			Object               sender,
 			TextChangedEventArgs args
 		) {
 			if (sender is not TextBox senders) { return; }
-			Setting.CommandForwarderMethodConfiguration = senders.Text;
+			Setting.CommandForwarderCommandConfiguration = senders.Text;
 			this.NotifyPropertyChanged(
-				nameof(this.uCommandForwarderMethodConfigurationBar_Description),
-				nameof(this.uCommandForwarderMethodConfigurationText_Text)
+				nameof(this.uCommandForwarderCommandConfigurationBar_Description),
+				nameof(this.uCommandForwarderCommandConfigurationText_Text)
 			);
 			return;
 		}
 
-		public async void uCommandForwarderMethodConfigurationSelect_OnClick (
+		public async void uCommandForwarderCommandConfigurationSelect_OnClick (
 			Object          sender,
 			RoutedEventArgs args
 		) {
 			if (sender is not Button senders) { return; }
-			var newValue = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View) ?? throw new Exception());
+			var newValue = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View));
 			if (newValue is not null) {
-				Setting.CommandForwarderMethodConfiguration = newValue;
+				Setting.CommandForwarderCommandConfiguration = newValue;
 				this.NotifyPropertyChanged(
-					nameof(this.uCommandForwarderMethodConfigurationBar_Description),
-					nameof(this.uCommandForwarderMethodConfigurationText_Text)
+					nameof(this.uCommandForwarderCommandConfigurationBar_Description),
+					nameof(this.uCommandForwarderCommandConfigurationText_Text)
 				);
 			}
 			return;
@@ -197,9 +197,9 @@ namespace Helper.Module.HomeSetting {
 			}
 		}
 
-		public INumberFormatter2 uCommandForwarderQuickWindowSizeText_NumberFormatter {
+		public DecimalFormatter uCommandForwarderQuickWindowSizeText_NumberFormatter {
 			get {
-				return new DecimalFormatter() { FractionDigits = 0 };
+				return new DecimalFormatter() { IntegerDigits = 1, FractionDigits = 0 };
 			}
 		}
 
@@ -222,7 +222,8 @@ namespace Helper.Module.HomeSetting {
 				Setting.CommandForwarderQuickWindowSizeWidth = (Size)args.NewValue;
 			}
 			this.NotifyPropertyChanged(
-				nameof(this.uCommandForwarderQuickWindowSizeBar_Description)
+				nameof(this.uCommandForwarderQuickWindowSizeBar_Description),
+				nameof(this.uCommandForwarderQuickWindowSizeWidthText_Value)
 			);
 			return;
 		}
@@ -246,7 +247,8 @@ namespace Helper.Module.HomeSetting {
 				Setting.CommandForwarderQuickWindowSizeHeight = (Size)args.NewValue;
 			}
 			this.NotifyPropertyChanged(
-				nameof(this.uCommandForwarderQuickWindowSizeBar_Description)
+				nameof(this.uCommandForwarderQuickWindowSizeBar_Description),
+				nameof(this.uCommandForwarderQuickWindowSizeHeightText_Value)
 			);
 			return;
 		}

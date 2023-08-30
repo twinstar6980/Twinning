@@ -36,13 +36,13 @@ namespace Helper.Module.CommandForwarder {
 
 		public static readonly DependencyProperty TypeProperty = DependencyProperty.Register(
 			nameof(ValuePanel.Type),
-			typeof(MethodConfigurationModel.ArgumentType),
+			typeof(CommandConfigurationModel.ArgumentType),
 			typeof(ValuePanel),
 			new PropertyMetadata(null)
 		);
 
-		public MethodConfigurationModel.ArgumentType? Type {
-			get => this.GetValue(ValuePanel.TypeProperty) as MethodConfigurationModel.ArgumentType?;
+		public CommandConfigurationModel.ArgumentType? Type {
+			get => this.GetValue(ValuePanel.TypeProperty) as CommandConfigurationModel.ArgumentType?;
 			set => this.SetValue(ValuePanel.TypeProperty, value);
 		}
 
@@ -64,13 +64,13 @@ namespace Helper.Module.CommandForwarder {
 
 		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
 			nameof(ValuePanel.Value),
-			typeof(MethodConfigurationModel.ArgumentValue),
+			typeof(CommandConfigurationModel.ArgumentValue),
 			typeof(ValuePanel),
 			new PropertyMetadata(null)
 		);
 
-		public MethodConfigurationModel.ArgumentValue? Value {
-			get => this.GetValue(ValuePanel.ValueProperty) as MethodConfigurationModel.ArgumentValue;
+		public CommandConfigurationModel.ArgumentValue? Value {
+			get => this.GetValue(ValuePanel.ValueProperty) as CommandConfigurationModel.ArgumentValue;
 			set => this.SetValue(ValuePanel.ValueProperty, value);
 		}
 
@@ -103,11 +103,11 @@ namespace Helper.Module.CommandForwarder {
 
 		// ----------------
 
-		public MethodConfigurationModel.ArgumentType? Type => this.View.Type;
+		public CommandConfigurationModel.ArgumentType? Type => this.View.Type;
 
 		public List<Object>? Option => this.View.Option;
 
-		public MethodConfigurationModel.ArgumentValue? Value => this.View.Value;
+		public CommandConfigurationModel.ArgumentValue? Value => this.View.Value;
 
 		#endregion
 
@@ -126,38 +126,38 @@ namespace Helper.Module.CommandForwarder {
 					);
 				} else {
 					switch (this.Type) {
-						case MethodConfigurationModel.ArgumentType.Confirmation: {
+						case CommandConfigurationModel.ArgumentType.Confirmation: {
 							this.NotifyPropertyChanged(
 								nameof(this.uConfirmationValue_Text)
 							);
 							break;
 						}
-						case MethodConfigurationModel.ArgumentType.Number: {
+						case CommandConfigurationModel.ArgumentType.Number: {
 							this.NotifyPropertyChanged(
 								nameof(this.uNumberValue_Value)
 							);
 							break;
 						}
-						case MethodConfigurationModel.ArgumentType.Integer: {
+						case CommandConfigurationModel.ArgumentType.Integer: {
 							this.NotifyPropertyChanged(
 								nameof(this.uIntegerValue_Value)
 							);
 							break;
 						}
-						case MethodConfigurationModel.ArgumentType.Size: {
+						case CommandConfigurationModel.ArgumentType.Size: {
 							this.NotifyPropertyChanged(
 								nameof(this.uSizeValue_Value),
 								nameof(this.uSizeUnit_SelectedItem)
 							);
 							break;
 						}
-						case MethodConfigurationModel.ArgumentType.String: {
+						case CommandConfigurationModel.ArgumentType.String: {
 							this.NotifyPropertyChanged(
 								nameof(this.uStringValue_Text)
 							);
 							break;
 						}
-						case MethodConfigurationModel.ArgumentType.Path: {
+						case CommandConfigurationModel.ArgumentType.Path: {
 							this.NotifyPropertyChanged(
 								nameof(this.uPathValue_Text)
 							);
@@ -185,7 +185,7 @@ namespace Helper.Module.CommandForwarder {
 
 		public String uConfirmationValue_Text {
 			get {
-				if (this.Type is not MethodConfigurationModel.ArgumentType.Confirmation || this.Option is not null || this.Value is not { Value: not null }) { return ""; }
+				if (this.Type is not CommandConfigurationModel.ArgumentType.Confirmation || this.Option is not null || this.Value is not { Value: not null }) { return ""; }
 				return ConvertHelper.BooleanToConfirmationStringLower(this.Value.OfConfirmation);
 			}
 		}
@@ -195,7 +195,7 @@ namespace Helper.Module.CommandForwarder {
 			RoutedEventArgs args
 		) {
 			if (sender is not Button senders) { return; }
-			if (this.Type is not MethodConfigurationModel.ArgumentType.Confirmation || this.Option is not null || this.Value is not { Value: not null }) { return; }
+			if (this.Type is not CommandConfigurationModel.ArgumentType.Confirmation || this.Option is not null || this.Value is not { Value: not null }) { return; }
 			this.Value.OfConfirmation = !this.Value.OfConfirmation;
 			this.NotifyPropertyChanged(
 				nameof(this.uConfirmationValue_Text)
@@ -205,15 +205,15 @@ namespace Helper.Module.CommandForwarder {
 
 		// ----------------
 
-		public INumberFormatter2 uNumberValue_NumberFormatter {
+		public DecimalFormatter uNumberValue_NumberFormatter {
 			get {
-				return new DecimalFormatter() { FractionDigits = 1 };
+				return new DecimalFormatter() { IntegerDigits = 1, FractionDigits = 1 };
 			}
 		}
 
 		public Floater uNumberValue_Value {
 			get {
-				if (this.Type is not MethodConfigurationModel.ArgumentType.Number || this.Option is not null || this.Value is not { Value: not null }) { return Floater.NaN; }
+				if (this.Type is not CommandConfigurationModel.ArgumentType.Number || this.Option is not null || this.Value is not { Value: not null }) { return Floater.NaN; }
 				return this.Value.OfNumber;
 			}
 		}
@@ -223,28 +223,27 @@ namespace Helper.Module.CommandForwarder {
 			NumberBoxValueChangedEventArgs args
 		) {
 			if (sender is not NumberBox senders) { return; }
-			if (this.Type is not MethodConfigurationModel.ArgumentType.Number || this.Option is not null || this.Value is not { Value: not null }) { return; }
-			if (Floater.IsNaN(args.NewValue)) {
-				this.NotifyPropertyChanged(
-					nameof(this.uNumberValue_Value)
-				);
-			} else {
+			if (this.Type is not CommandConfigurationModel.ArgumentType.Number || this.Option is not null || this.Value is not { Value: not null }) { return; }
+			if (!Floater.IsNaN(args.NewValue)) {
 				this.Value.OfNumber = args.NewValue;
 			}
+			this.NotifyPropertyChanged(
+				nameof(this.uNumberValue_Value)
+			);
 			return;
 		}
 
 		// ----------------
 
-		public INumberFormatter2 uIntegerValue_NumberFormatter {
+		public DecimalFormatter uIntegerValue_NumberFormatter {
 			get {
-				return new DecimalFormatter() { FractionDigits = 0 };
+				return new DecimalFormatter() { IntegerDigits = 1, FractionDigits = 0 };
 			}
 		}
 
 		public Floater uIntegerValue_Value {
 			get {
-				if (this.Type is not MethodConfigurationModel.ArgumentType.Integer || this.Option is not null || this.Value is not { Value: not null }) { return Floater.NaN; }
+				if (this.Type is not CommandConfigurationModel.ArgumentType.Integer || this.Option is not null || this.Value is not { Value: not null }) { return Floater.NaN; }
 				return (Floater)this.Value.OfInteger;
 			}
 		}
@@ -254,28 +253,27 @@ namespace Helper.Module.CommandForwarder {
 			NumberBoxValueChangedEventArgs args
 		) {
 			if (sender is not NumberBox senders) { return; }
-			if (this.Type is not MethodConfigurationModel.ArgumentType.Integer || this.Option is not null || this.Value is not { Value: not null }) { return; }
-			if (Floater.IsNaN(args.NewValue)) {
-				this.NotifyPropertyChanged(
-					nameof(this.uIntegerValue_Value)
-				);
-			} else {
+			if (this.Type is not CommandConfigurationModel.ArgumentType.Integer || this.Option is not null || this.Value is not { Value: not null }) { return; }
+			if (!Floater.IsNaN(args.NewValue)) {
 				this.Value.OfInteger = (Integer)args.NewValue;
 			}
+			this.NotifyPropertyChanged(
+				nameof(this.uIntegerValue_Value)
+			);
 			return;
 		}
 
 		// ----------------
 
-		public INumberFormatter2 uSizeValue_NumberFormatter {
+		public DecimalFormatter uSizeValue_NumberFormatter {
 			get {
-				return new DecimalFormatter() { FractionDigits = 1 };
+				return new DecimalFormatter() { IntegerDigits = 1, FractionDigits = 1 };
 			}
 		}
 
 		public Floater uSizeValue_Value {
 			get {
-				if (this.Type is not MethodConfigurationModel.ArgumentType.Size || this.Option is not null || this.Value is not { Value: not null }) { return Floater.NaN; }
+				if (this.Type is not CommandConfigurationModel.ArgumentType.Size || this.Option is not null || this.Value is not { Value: not null }) { return Floater.NaN; }
 				return this.Value.OfSize.Value;
 			}
 		}
@@ -285,26 +283,25 @@ namespace Helper.Module.CommandForwarder {
 			NumberBoxValueChangedEventArgs args
 		) {
 			if (sender is not NumberBox senders) { return; }
-			if (this.Type is not MethodConfigurationModel.ArgumentType.Size || this.Option is not null || this.Value is not { Value: not null }) { return; }
-			if (Floater.IsNaN(args.NewValue)) {
-				this.NotifyPropertyChanged(
-					nameof(this.uSizeValue_Value)
-				);
-			} else {
+			if (this.Type is not CommandConfigurationModel.ArgumentType.Size || this.Option is not null || this.Value is not { Value: not null }) { return; }
+			if (!Floater.IsNaN(args.NewValue)) {
 				this.Value.OfSize.Value = args.NewValue;
 			}
+			this.NotifyPropertyChanged(
+				nameof(this.uSizeValue_Value)
+			);
 			return;
 		}
 
-		public List<MethodConfigurationModel.SizeUnit> uSizeUnit_ItemsSource {
+		public List<CommandConfigurationModel.SizeUnit> uSizeUnit_ItemsSource {
 			get {
-				return new List<MethodConfigurationModel.SizeUnit>() { MethodConfigurationModel.SizeUnit.B, MethodConfigurationModel.SizeUnit.K, MethodConfigurationModel.SizeUnit.M, MethodConfigurationModel.SizeUnit.G };
+				return new List<CommandConfigurationModel.SizeUnit>() { CommandConfigurationModel.SizeUnit.B, CommandConfigurationModel.SizeUnit.K, CommandConfigurationModel.SizeUnit.M, CommandConfigurationModel.SizeUnit.G };
 			}
 		}
 
-		public MethodConfigurationModel.SizeUnit uSizeUnit_SelectedItem {
+		public CommandConfigurationModel.SizeUnit uSizeUnit_SelectedItem {
 			get {
-				if (this.Type is not MethodConfigurationModel.ArgumentType.Size || this.Option is not null || this.Value is not { Value: not null }) { return MethodConfigurationModel.SizeUnit.B; }
+				if (this.Type is not CommandConfigurationModel.ArgumentType.Size || this.Option is not null || this.Value is not { Value: not null }) { return CommandConfigurationModel.SizeUnit.B; }
 				return this.Value.OfSize.Unit;
 			}
 		}
@@ -314,8 +311,8 @@ namespace Helper.Module.CommandForwarder {
 			SelectionChangedEventArgs args
 		) {
 			if (sender is not ComboBox senders) { return; }
-			if (this.Type is not MethodConfigurationModel.ArgumentType.Size || this.Option is not null || this.Value is not { Value: not null }) { return; }
-			this.Value.OfSize.Unit = senders.SelectedItem as MethodConfigurationModel.SizeUnit? ?? throw new Exception();
+			if (this.Type is not CommandConfigurationModel.ArgumentType.Size || this.Option is not null || this.Value is not { Value: not null }) { return; }
+			this.Value.OfSize.Unit = senders.SelectedItem as CommandConfigurationModel.SizeUnit? ?? throw new Exception();
 			return;
 		}
 
@@ -323,7 +320,7 @@ namespace Helper.Module.CommandForwarder {
 
 		public String uStringValue_Text {
 			get {
-				if (this.Type is not MethodConfigurationModel.ArgumentType.String || this.Option is not null || this.Value is not { Value: not null }) { return ""; }
+				if (this.Type is not CommandConfigurationModel.ArgumentType.String || this.Option is not null || this.Value is not { Value: not null }) { return ""; }
 				return this.Value.OfString;
 			}
 		}
@@ -333,8 +330,11 @@ namespace Helper.Module.CommandForwarder {
 			TextChangedEventArgs args
 		) {
 			if (sender is not TextBox senders) { return; }
-			if (this.Type is not MethodConfigurationModel.ArgumentType.String || this.Option is not null || this.Value is not { Value: not null }) { return; }
+			if (this.Type is not CommandConfigurationModel.ArgumentType.String || this.Option is not null || this.Value is not { Value: not null }) { return; }
 			this.Value.OfString = senders.Text;
+			this.NotifyPropertyChanged(
+				nameof(this.uStringValue_Text)
+			);
 			return;
 		}
 
@@ -342,8 +342,8 @@ namespace Helper.Module.CommandForwarder {
 
 		public String uPathValue_Text {
 			get {
-				if (this.Type is not MethodConfigurationModel.ArgumentType.Path || this.Option is not null || this.Value is not { Value: not null }) { return ""; }
-				return this.Value.OfPath;
+				if (this.Type is not CommandConfigurationModel.ArgumentType.Path || this.Option is not null || this.Value is not { Value: not null }) { return ""; }
+				return this.Value.OfPath.Value;
 			}
 		}
 
@@ -352,8 +352,11 @@ namespace Helper.Module.CommandForwarder {
 			TextChangedEventArgs args
 		) {
 			if (sender is not TextBox senders) { return; }
-			if (this.Type is not MethodConfigurationModel.ArgumentType.Path || this.Option is not null || this.Value is not { Value: not null }) { return; }
-			this.Value.OfPath = senders.Text;
+			if (this.Type is not CommandConfigurationModel.ArgumentType.Path || this.Option is not null || this.Value is not { Value: not null }) { return; }
+			this.Value.OfPath.Value = senders.Text;
+			this.NotifyPropertyChanged(
+				nameof(this.uPathValue_Text)
+			);
 			return;
 		}
 
@@ -362,7 +365,7 @@ namespace Helper.Module.CommandForwarder {
 			DragEventArgs args
 		) {
 			if (sender is not TextBox senders) { return; }
-			if (this.Type is not MethodConfigurationModel.ArgumentType.Path || this.Option is not null || this.Value is not { Value: not null }) { return; }
+			if (this.Type is not CommandConfigurationModel.ArgumentType.Path || this.Option is not null || this.Value is not { Value: not null }) { return; }
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Link;
 			}
@@ -374,10 +377,10 @@ namespace Helper.Module.CommandForwarder {
 			DragEventArgs args
 		) {
 			if (sender is not TextBox senders) { return; }
-			if (this.Type is not MethodConfigurationModel.ArgumentType.Path || this.Option is not null || this.Value is not { Value: not null }) { return; }
+			if (this.Type is not CommandConfigurationModel.ArgumentType.Path || this.Option is not null || this.Value is not { Value: not null }) { return; }
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
-				var newValue = (await args.DataView.GetStorageItemsAsync())[0].Path;
-				this.Value.OfPath = newValue;
+				var newValue = StorageHelper.Normalize((await args.DataView.GetStorageItemsAsync())[0].Path);
+				this.Value.OfPath.Value = newValue;
 				this.NotifyPropertyChanged(
 					nameof(this.uPathValue_Text)
 				);
@@ -390,10 +393,10 @@ namespace Helper.Module.CommandForwarder {
 			RoutedEventArgs args
 		) {
 			if (sender is not MenuFlyoutItem senders) { return; }
-			if (this.Type is not MethodConfigurationModel.ArgumentType.Path || this.Option is not null || this.Value is not { Value: not null }) { return; }
-			var newValue = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View) ?? throw new Exception());
+			if (this.Type is not CommandConfigurationModel.ArgumentType.Path || this.Option is not null || this.Value is not { Value: not null }) { return; }
+			var newValue = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View));
 			if (newValue is not null) {
-				this.Value.OfPath = newValue;
+				this.Value.OfPath.Value = newValue;
 				this.NotifyPropertyChanged(
 					nameof(this.uPathValue_Text)
 				);
@@ -406,10 +409,10 @@ namespace Helper.Module.CommandForwarder {
 			RoutedEventArgs args
 		) {
 			if (sender is not MenuFlyoutItem senders) { return; }
-			if (this.Type is not MethodConfigurationModel.ArgumentType.Path || this.Option is not null || this.Value is not { Value: not null }) { return; }
-			var newValue = await StorageHelper.PickDirectory(WindowHelper.GetForElement(this.View) ?? throw new Exception());
+			if (this.Type is not CommandConfigurationModel.ArgumentType.Path || this.Option is not null || this.Value is not { Value: not null }) { return; }
+			var newValue = await StorageHelper.PickDirectory(WindowHelper.GetForElement(this.View));
 			if (newValue is not null) {
-				this.Value.OfPath = newValue;
+				this.Value.OfPath.Value = newValue;
 				this.NotifyPropertyChanged(
 					nameof(this.uPathValue_Text)
 				);
@@ -422,7 +425,7 @@ namespace Helper.Module.CommandForwarder {
 		public List<Tuple<Object, String>> uEnumerationValue_ItemsSource {
 			get {
 				if (this.Type is null || this.Option is null || this.Value is null) { return new List<Tuple<Object, String>>(); }
-				return this.Option.Select((value) => (new Tuple<Object, String>(value, value is Boolean valueBoolean ? ConvertHelper.BooleanToConfirmationStringLower(valueBoolean) : value.ToString() ?? throw new Exception()))).ToList();
+				return this.Option.Select((value) => (new Tuple<Object, String>(value, CommandConfigurationHelper.MakeArgumentValueString(value)))).ToList();
 			}
 		}
 
@@ -440,6 +443,9 @@ namespace Helper.Module.CommandForwarder {
 			if (sender is not ComboBox senders) { return; }
 			if (this.Type is null || this.Option is null || this.Value is null) { return; }
 			this.Value.Value = senders.SelectedValue;
+			this.NotifyPropertyChanged(
+				nameof(this.uEnumerationValue_SelectedValue)
+			);
 			return;
 		}
 

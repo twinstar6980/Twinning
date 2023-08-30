@@ -10,24 +10,22 @@
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
 >
-	<ScrollViewer Padding="16,0" HorizontalScrollMode="Disabled" VerticalScrollMode="Enabled">
-		<my:MStack Padding="48,48" Orientation="Vertical" Spacing="32">
-			<my:MStack Orientation="Vertical" Spacing="12">
-				<TextBlock
-					Margin="3,0,0,0"
-					Text="Appearance"
-					Style="{ThemeResource SubtitleTextBlockStyle}"
-				/>
-				<my:MStack Orientation="Vertical" Spacing="2">
+	<ScrollViewer Padding="16,0" VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Visible">
+		<my:MStack Padding="48,48" HorizontalAlignment="Stretch" Orientation="Vertical" Spacing="32">
+			<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Vertical" Spacing="12">
+				<TextBlock Margin="3,0,0,0" HorizontalAlignment="Stretch" Style="{ThemeResource SubtitleTextBlockStyle}" TextWrapping="NoWrap" Text="Appearance" />
+				<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Vertical" Spacing="2">
 					<my:MExpandBar
+						HorizontalAlignment="Stretch"
 						Icon="{StaticResource FluentIconGlyph.BlueLight}"
 						Title="Theme Mode"
 						Description="{x:Bind Controller.uAppearanceThemeModeBar_Description}"
 					>
 						<my:MExpandBar.Action>
-							<my:MStack Orientation="Horizontal" Spacing="12">
+							<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="12">
 								<RadioButtons
-									my:MStack.Weight="NaN"
+									my:MStack.Weight="1" HorizontalAlignment="Stretch"
+									VerticalAlignment="Center"
 									MaxColumns="3"
 									ItemsSource="{x:Bind Controller.uAppearanceThemeModeRadio_ItemsSource}"
 									SelectedIndex="{x:Bind Controller.uAppearanceThemeModeRadio_SelectedIndex}"
@@ -38,42 +36,34 @@
 					</my:MExpandBar>
 				</my:MStack>
 			</my:MStack>
-			<my:MStack Orientation="Vertical" Spacing="12">
-				<TextBlock
-					Margin="3,0,0,0"
-					Text="Command Forwarder"
-					Style="{ThemeResource SubtitleTextBlockStyle}"
-				/>
-				<my:MStack Orientation="Horizontal" Spacing="4">
+			<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Vertical" Spacing="12">
+				<TextBlock Margin="3,0,0,0" HorizontalAlignment="Stretch" Style="{ThemeResource SubtitleTextBlockStyle}" TextWrapping="NoWrap" Text="Command Forwarder" />
+				<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="4">
 					<Button
-						my:MStack.Weight="NaN"
-						HorizontalAlignment="Stretch" VerticalAlignment="Top"
 						Width="154" Height="154"
+						VerticalAlignment="Top"
 						BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
 						Click="{x:Bind Controller.uCommandForwarderOpen_OnClick}"
 					>
 						<FontIcon FontSize="86" Glyph="{StaticResource FluentIconGlyph.Send}" />
 					</Button>
-					<my:MStack
-						my:MStack.Weight="1"
-						Orientation="Vertical" Spacing="2"
-					>
+					<my:MStack my:MStack.Weight="1" Padding="0,0" HorizontalAlignment="Stretch" Orientation="Vertical" Spacing="2">
 						<my:MExpandBar
+							HorizontalAlignment="Stretch"
 							Icon="{StaticResource FluentIconGlyph.Flow}"
 							Title="Launch Script"
 							Description="{x:Bind Controller.uCommandForwarderLaunchScriptBar_Description}"
 						>
 							<my:MExpandBar.Action>
-								<my:MStack Orientation="Horizontal" Spacing="12">
+								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="12">
 									<TextBox
-										my:MStack.Weight="1"
-										HorizontalAlignment="Stretch" VerticalAlignment="Center"
+										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										VerticalAlignment="Center"
 										Text="{x:Bind Controller.uCommandForwarderLaunchScriptText_Text}"
 										TextChanged="{x:Bind Controller.uCommandForwarderLaunchScriptText_OnTextChanged}"
 									/>
 									<Button
-										my:MStack.Weight="NaN"
-										HorizontalAlignment="Stretch" VerticalAlignment="Center"
+										VerticalAlignment="Center"
 										Click="{x:Bind Controller.uCommandForwarderLaunchScriptSelect_OnClick}"
 									>
 										<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.OpenFile}" />
@@ -82,22 +72,22 @@
 							</my:MExpandBar.Action>
 						</my:MExpandBar>
 						<my:MExpandBar
+							HorizontalAlignment="Stretch"
 							Icon="{StaticResource FluentIconGlyph.KeyboardLeftHanded}"
-							Title="Method Configuration"
-							Description="{x:Bind Controller.uCommandForwarderMethodConfigurationBar_Description}"
+							Title="Command Configuration"
+							Description="{x:Bind Controller.uCommandForwarderCommandConfigurationBar_Description}"
 						>
 							<my:MExpandBar.Action>
-								<my:MStack Orientation="Horizontal" Spacing="12">
+								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="12">
 									<TextBox
-										my:MStack.Weight="1"
-										HorizontalAlignment="Stretch" VerticalAlignment="Center"
-										Text="{x:Bind Controller.uCommandForwarderMethodConfigurationText_Text}"
-										TextChanged="{x:Bind Controller.uCommandForwarderMethodConfigurationText_OnTextChanged}"
+										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										VerticalAlignment="Center"
+										Text="{x:Bind Controller.uCommandForwarderCommandConfigurationText_Text}"
+										TextChanged="{x:Bind Controller.uCommandForwarderCommandConfigurationText_OnTextChanged}"
 									/>
 									<Button
-										my:MStack.Weight="NaN"
-										HorizontalAlignment="Stretch" VerticalAlignment="Center"
-										Click="{x:Bind Controller.uCommandForwarderMethodConfigurationSelect_OnClick}"
+										VerticalAlignment="Center"
+										Click="{x:Bind Controller.uCommandForwarderCommandConfigurationSelect_OnClick}"
 									>
 										<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.OpenFile}" />
 									</Button>
@@ -105,27 +95,26 @@
 							</my:MExpandBar.Action>
 						</my:MExpandBar>
 						<my:MExpandBar
+							HorizontalAlignment="Stretch"
 							Icon="{StaticResource FluentIconGlyph.FullScreen}"
 							Title="Quick Window Size"
 							Description="{x:Bind Controller.uCommandForwarderQuickWindowSizeBar_Description}"
 						>
 							<my:MExpandBar.Action>
-								<my:MStack Orientation="Horizontal" Spacing="12">
+								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="12">
 									<NumberBox
-										my:MStack.Weight="1"
-										HorizontalAlignment="Stretch" VerticalAlignment="Center"
-										SpinButtonPlacementMode="Inline"
-										NumberFormatter="{x:Bind Controller.uCommandForwarderQuickWindowSizeText_NumberFormatter}"
-										Minimum="0" SmallChange="80" LargeChange="80"
+										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										VerticalAlignment="Center"
+										NumberFormatter="{x:Bind Controller.uCommandForwarderQuickWindowSizeText_NumberFormatter}" Minimum="0"
+										SmallChange="80" LargeChange="80" SpinButtonPlacementMode="Inline"
 										Value="{x:Bind Controller.uCommandForwarderQuickWindowSizeWidthText_Value}"
 										ValueChanged="{x:Bind Controller.uCommandForwarderQuickWindowSizeWidthText_OnValueChanged}"
 									/>
 									<NumberBox
-										my:MStack.Weight="1"
-										HorizontalAlignment="Stretch" VerticalAlignment="Center"
-										SpinButtonPlacementMode="Inline"
-										NumberFormatter="{x:Bind Controller.uCommandForwarderQuickWindowSizeText_NumberFormatter}"
-										Minimum="0" SmallChange="80" LargeChange="80"
+										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										VerticalAlignment="Center"
+										NumberFormatter="{x:Bind Controller.uCommandForwarderQuickWindowSizeText_NumberFormatter}" Minimum="0"
+										SmallChange="80" LargeChange="80" SpinButtonPlacementMode="Inline"
 										Value="{x:Bind Controller.uCommandForwarderQuickWindowSizeHeightText_Value}"
 										ValueChanged="{x:Bind Controller.uCommandForwarderQuickWindowSizeHeightText_OnValueChanged}"
 									/>
@@ -135,36 +124,29 @@
 					</my:MStack>
 				</my:MStack>
 			</my:MStack>
-			<my:MStack Orientation="Vertical" Spacing="12">
-				<TextBlock
-					Margin="3,0,0,0"
-					Text="Animation Viewer"
-					Style="{ThemeResource SubtitleTextBlockStyle}"
-				/>
-				<my:MStack Orientation="Horizontal" Spacing="4">
+			<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Vertical" Spacing="12">
+				<TextBlock Margin="3,0,0,0" HorizontalAlignment="Stretch" Style="{ThemeResource SubtitleTextBlockStyle}" TextWrapping="NoWrap" Text="Animation Viewer" />
+				<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="4">
 					<Button
-						my:MStack.Weight="NaN"
-						HorizontalAlignment="Stretch" VerticalAlignment="Top"
 						Width="154" Height="154"
+						VerticalAlignment="Top"
 						BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
 						Click="{x:Bind Controller.uAnimationViewerOpen_OnClick}"
 					>
 						<FontIcon FontSize="86" Glyph="{StaticResource FluentIconGlyph.HomeGroup}" />
 					</Button>
-					<my:MStack
-						my:MStack.Weight="1"
-						Orientation="Vertical" Spacing="2"
-					>
+					<my:MStack my:MStack.Weight="1" Padding="0,0" HorizontalAlignment="Stretch" Orientation="Vertical" Spacing="2">
 						<my:MExpandBar
+							HorizontalAlignment="Stretch"
 							Icon="{StaticResource FluentIconGlyph.RightArrowKeyTime2}"
 							Title="Automatic Play"
 							Description="{x:Bind Controller.uAnimationViewerAutomaticPlayBar_Description}"
 						>
 							<my:MExpandBar.Action>
-								<my:MStack Orientation="Horizontal" Spacing="12">
+								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="12">
 									<ToggleSwitch
-										my:MStack.Weight="NaN"
-										HorizontalAlignment="Stretch" VerticalAlignment="Center"
+										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										VerticalAlignment="Center"
 										IsOn="{x:Bind Controller.uAnimationViewerAutomaticPlaySwitch_IsOn}"
 										Toggled="{x:Bind Controller.uAnimationViewerAutomaticPlaySwitch_OnToggled}"
 									/>
@@ -172,15 +154,16 @@
 							</my:MExpandBar.Action>
 						</my:MExpandBar>
 						<my:MExpandBar
+							HorizontalAlignment="Stretch"
 							Icon="{StaticResource FluentIconGlyph.RepeatAll}"
 							Title="Repeat Play"
 							Description="{x:Bind Controller.uAnimationViewerRepeatPlayBar_Description}"
 						>
 							<my:MExpandBar.Action>
-								<my:MStack Orientation="Horizontal" Spacing="12">
+								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="12">
 									<ToggleSwitch
-										my:MStack.Weight="NaN"
-										HorizontalAlignment="Stretch" VerticalAlignment="Center"
+										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										VerticalAlignment="Center"
 										IsOn="{x:Bind Controller.uAnimationViewerRepeatPlaySwitch_IsOn}"
 										Toggled="{x:Bind Controller.uAnimationViewerRepeatPlaySwitch_OnToggled}"
 									/>
@@ -188,15 +171,16 @@
 							</my:MExpandBar.Action>
 						</my:MExpandBar>
 						<my:MExpandBar
+							HorizontalAlignment="Stretch"
 							Icon="{StaticResource FluentIconGlyph.Pinned}"
 							Title="Remain Frame Rate"
 							Description="{x:Bind Controller.uAnimationViewerRemainFrameRateBar_Description}"
 						>
 							<my:MExpandBar.Action>
-								<my:MStack Orientation="Horizontal" Spacing="12">
+								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="12">
 									<ToggleSwitch
-										my:MStack.Weight="NaN"
-										HorizontalAlignment="Stretch" VerticalAlignment="Center"
+										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										VerticalAlignment="Center"
 										IsOn="{x:Bind Controller.uAnimationViewerRemainFrameRateSwitch_IsOn}"
 										Toggled="{x:Bind Controller.uAnimationViewerRemainFrameRateSwitch_OnToggled}"
 									/>

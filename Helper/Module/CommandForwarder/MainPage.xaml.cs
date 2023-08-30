@@ -34,7 +34,7 @@ namespace Helper.Module.CommandForwarder {
 
 		// ----------------
 
-		public MethodConfigurationModel.Configuration Configuration { get; set; } = default!;
+		public CommandConfigurationModel.Configuration Configuration { get; set; } = default!;
 
 		#endregion
 
@@ -43,15 +43,15 @@ namespace Helper.Module.CommandForwarder {
 		public void Initialize (
 		) {
 			try {
-				this.Configuration = JsonHelper.Deserialize<MethodConfigurationModel.Configuration>(StorageHelper.ReadFileTextSync(Setting.CommandForwarderMethodConfiguration));
+				this.Configuration = JsonHelper.Deserialize<CommandConfigurationModel.Configuration>(StorageHelper.ReadFileTextSync(Setting.CommandForwarderCommandConfiguration));
 			} catch (Exception e) {
-				MainWindow.Instance.Controller.PublishTip(92, InfoBarSeverity.Error, "Failed to load method configuration.");
-				this.Configuration = new MethodConfigurationModel.Configuration() {
-					Group = new List<MethodConfigurationModel.MethodGroupConfiguration>(),
-					QuickOption = new List<MethodConfigurationModel.QuickOptionGroupConfiguration>(),
+				MainWindow.Instance.Controller.PublishTip(InfoBarSeverity.Error, "Failed to load command configuration.", e.ToString());
+				this.Configuration = new CommandConfigurationModel.Configuration() {
+					Method = new List<CommandConfigurationModel.MethodGroupConfiguration>(),
+					QuickOption = new List<CommandConfigurationModel.QuickOptionGroupConfiguration>(),
 				};
 			}
-			this.uAvailableMethod_ItemsSource = this.Configuration.Group.Select((group) => (new AvailableMethodGroupItemController() {
+			this.uAvailableMethod_ItemsSource = this.Configuration.Method.Select((group) => (new AvailableMethodGroupItemController() {
 				Host = this,
 				GroupModel = group,
 				Children = group.Item.Select((item) => (new AvailableMethodItemItemController() {
@@ -83,7 +83,8 @@ namespace Helper.Module.CommandForwarder {
 					Host = this,
 					GroupModel = itemItem.GroupModel,
 					ItemModel = itemItem.ItemModel,
-					Argument = MethodConfigurationHelper.MakeArgumentValueDefault(itemItem.ItemModel.Argument),
+					Argument = CommandConfigurationHelper.MakeArgumentValueDefault(itemItem.ItemModel.Argument),
+					EnableBatch = false,
 				});
 				await Task.Delay(TimeSpan.FromMilliseconds(100));
 				this.View.uSelectedMethodScrollViewer.ScrollToVerticalOffset((this.View.uSelectedMethodScrollViewer.Content as FrameworkElement)!.ActualHeight);
@@ -99,17 +100,49 @@ namespace Helper.Module.CommandForwarder {
 
 		// ----------------
 
-		public async void uRunAllSelectedMethod_OnClick (
+		public async void uRunWithAllSelectedMethodByParallel_OnClick (
 			Object          sender,
 			RoutedEventArgs args
 		) {
 			if (sender is not Button senders) { return; }
-			if (!StorageHelper.ExistFile(Setting.CommandForwarderLaunchScript)) {
-				MainWindow.Instance.Controller.PublishTip(92, InfoBarSeverity.Error, "Invalid path of launch script.");
+			try {
+				foreach (var item in this.uSelectedMethod_ItemsSource) {
+					ProcessHelper.CreateProcessForCommandScript(Setting.CommandForwarderLaunchScript, item.GenerateCommand()).Wait(0);
+				}
+			} catch (Exception e) {
+				MainWindow.Instance.Controller.PublishTip(InfoBarSeverity.Error, "Failed to create process.", e.ToString());
 				return;
 			}
-			var command = this.uSelectedMethod_ItemsSource.SelectMany((value) => (value.GenerateCommand())).ToList();
-			ProcessHelper.CreateProcessForCommandScript(Setting.CommandForwarderLaunchScript, command).Wait(0);
+			return;
+		}
+
+		public async void uRunWithAllSelectedMethodBySequence_OnClick (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			if (sender is not Button senders) { return; }
+			try {
+				if (this.uSelectedMethod_ItemsSource.Count != 0) {
+					ProcessHelper.CreateProcessForCommandScript(Setting.CommandForwarderLaunchScript, this.uSelectedMethod_ItemsSource.SelectMany((item) => (item.GenerateCommand())).ToList()).Wait(0);
+				}
+			} catch (Exception e) {
+				MainWindow.Instance.Controller.PublishTip(InfoBarSeverity.Error, "Failed to create process.", e.ToString());
+				return;
+			}
+			return;
+		}
+
+		public async void uRunWithoutAnySelectedMethod_OnClick (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			if (sender is not Button senders) { return; }
+			try {
+				ProcessHelper.CreateProcessForCommandScript(Setting.CommandForwarderLaunchScript, new List<String>()).Wait(0);
+			} catch (Exception e) {
+				MainWindow.Instance.Controller.PublishTip(InfoBarSeverity.Error, "Failed to create process.", e.ToString());
+				return;
+			}
 			return;
 		}
 
@@ -145,7 +178,7 @@ namespace Helper.Module.CommandForwarder {
 
 		// ----------------
 
-		public MethodConfigurationModel.MethodGroupConfiguration GroupModel { get; set; } = default!;
+		public CommandConfigurationModel.MethodGroupConfiguration GroupModel { get; set; } = default!;
 
 		// ----------------
 
@@ -185,9 +218,9 @@ namespace Helper.Module.CommandForwarder {
 
 		// ----------------
 
-		public MethodConfigurationModel.MethodGroupConfiguration GroupModel { get; set; } = default!;
+		public CommandConfigurationModel.MethodGroupConfiguration GroupModel { get; set; } = default!;
 
-		public MethodConfigurationModel.MethodConfiguration ItemModel { get; set; } = default!;
+		public CommandConfigurationModel.MethodConfiguration ItemModel { get; set; } = default!;
 
 		#endregion
 
@@ -205,6 +238,12 @@ namespace Helper.Module.CommandForwarder {
 			}
 		}
 
+		public Floater uBatch_Opacity {
+			get {
+				return ConvertHelper.BooleanToFloaterOfOpacityVisibility(this.ItemModel.Batchable is not null);
+			}
+		}
+
 		#endregion
 
 	}
@@ -217,13 +256,15 @@ namespace Helper.Module.CommandForwarder {
 
 		// ----------------
 
-		public MethodConfigurationModel.MethodGroupConfiguration GroupModel { get; set; } = default!;
+		public CommandConfigurationModel.MethodGroupConfiguration GroupModel { get; set; } = default!;
 
-		public MethodConfigurationModel.MethodConfiguration ItemModel { get; set; } = default!;
+		public CommandConfigurationModel.MethodConfiguration ItemModel { get; set; } = default!;
+
+		public Boolean EnableBatch { get; set; } = default!;
 
 		// ----------------
 
-		public List<MethodConfigurationModel.ArgumentValue> Argument { get; set; } = default!;
+		public List<CommandConfigurationModel.ArgumentValue> Argument { get; set; } = default!;
 
 		#endregion
 
@@ -235,6 +276,44 @@ namespace Helper.Module.CommandForwarder {
 			}
 		}
 
+		public Boolean uBatch_IsEnabled {
+			get {
+				return this.ItemModel.Batchable is not null;
+			}
+		}
+
+		public Boolean uBatch_IsChecked {
+			get {
+				return this.EnableBatch;
+			}
+		}
+
+		public async void uBatch_OnClick (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			if (sender is not ToggleButton senders) { return; }
+			this.EnableBatch = senders.IsChecked!.Value;
+			this.NotifyPropertyChanged(
+				nameof(this.uBatch_IsChecked)
+			);
+			return;
+		}
+
+		public async void uRun_OnClick (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			if (sender is not Button senders) { return; }
+			try {
+				ProcessHelper.CreateProcessForCommandScript(Setting.CommandForwarderLaunchScript, this.GenerateCommand()).Wait(0);
+			} catch (Exception e) {
+				MainWindow.Instance.Controller.PublishTip(InfoBarSeverity.Error, "Failed to create process.", e.ToString());
+				return;
+			}
+			return;
+		}
+
 		public async void uRemove_OnClick (
 			Object          sender,
 			RoutedEventArgs args
@@ -244,29 +323,15 @@ namespace Helper.Module.CommandForwarder {
 			return;
 		}
 
-		public async void uRun_OnClick (
-			Object          sender,
-			RoutedEventArgs args
-		) {
-			if (sender is not Button senders) { return; }
-			if (!StorageHelper.ExistFile(Setting.CommandForwarderLaunchScript)) {
-				MainWindow.Instance.Controller.PublishTip(92, InfoBarSeverity.Error, "Invalid path of launch script.");
-				return;
-			}
-			var command = this.GenerateCommand();
-			ProcessHelper.CreateProcessForCommandScript(Setting.CommandForwarderLaunchScript, command).Wait(0);
-			return;
-		}
-
 		// ----------------
 
-		public List<MethodConfigurationModel.ArgumentConfiguration> uArgumentPanel_Configuration {
+		public List<CommandConfigurationModel.ArgumentConfiguration> uArgumentPanel_Configuration {
 			get {
 				return this.ItemModel.Argument;
 			}
 		}
 
-		public List<MethodConfigurationModel.ArgumentValue> uArgumentPanel_Value {
+		public List<CommandConfigurationModel.ArgumentValue> uArgumentPanel_Value {
 			get {
 				return this.Argument;
 			}
@@ -287,9 +352,9 @@ namespace Helper.Module.CommandForwarder {
 			return new List<String>() {
 				"?",
 				"-method",
-				this.ItemModel.Id,
+				$"{this.ItemModel.Id}{(!this.EnableBatch ? "" : ".batch")}",
 				"-argument",
-				MethodConfigurationHelper.MakeArgumentValueString(this.ItemModel.Argument, this.Argument),
+				CommandConfigurationHelper.MakeArgumentObjectString(this.ItemModel.Argument, this.Argument),
 			};
 		}
 

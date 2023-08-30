@@ -26,13 +26,13 @@ namespace Helper.Module.CommandForwarder {
 
 		public static readonly DependencyProperty ConfigurationProperty = DependencyProperty.Register(
 			nameof(ArgumentPanel.Configuration),
-			typeof(List<MethodConfigurationModel.ArgumentConfiguration>),
+			typeof(List<CommandConfigurationModel.ArgumentConfiguration>),
 			typeof(ArgumentPanel),
 			new PropertyMetadata(null)
 		);
 
-		public List<MethodConfigurationModel.ArgumentConfiguration>? Configuration {
-			get => this.GetValue(ArgumentPanel.ConfigurationProperty) as List<MethodConfigurationModel.ArgumentConfiguration>;
+		public List<CommandConfigurationModel.ArgumentConfiguration>? Configuration {
+			get => this.GetValue(ArgumentPanel.ConfigurationProperty) as List<CommandConfigurationModel.ArgumentConfiguration>;
 			set => this.SetValue(ArgumentPanel.ConfigurationProperty, value);
 		}
 
@@ -40,13 +40,13 @@ namespace Helper.Module.CommandForwarder {
 
 		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
 			nameof(ArgumentPanel.Value),
-			typeof(List<MethodConfigurationModel.ArgumentValue>),
+			typeof(List<CommandConfigurationModel.ArgumentValue>),
 			typeof(ArgumentPanel),
 			new PropertyMetadata(null)
 		);
 
-		public List<MethodConfigurationModel.ArgumentValue>? Value {
-			get => this.GetValue(ArgumentPanel.ValueProperty) as List<MethodConfigurationModel.ArgumentValue>;
+		public List<CommandConfigurationModel.ArgumentValue>? Value {
+			get => this.GetValue(ArgumentPanel.ValueProperty) as List<CommandConfigurationModel.ArgumentValue>;
 			set => this.SetValue(ArgumentPanel.ValueProperty, value);
 		}
 
@@ -78,9 +78,9 @@ namespace Helper.Module.CommandForwarder {
 
 		// ----------------
 
-		public List<MethodConfigurationModel.ArgumentConfiguration>? Configuration => this.View.Configuration;
+		public List<CommandConfigurationModel.ArgumentConfiguration>? Configuration => this.View.Configuration;
 
-		public List<MethodConfigurationModel.ArgumentValue>? Value => this.View.Value;
+		public List<CommandConfigurationModel.ArgumentValue>? Value => this.View.Value;
 
 		#endregion
 
@@ -119,9 +119,9 @@ namespace Helper.Module.CommandForwarder {
 
 		// ----------------
 
-		public MethodConfigurationModel.ArgumentConfiguration Configuration { get; set; } = default!;
+		public CommandConfigurationModel.ArgumentConfiguration Configuration { get; set; } = default!;
 
-		public MethodConfigurationModel.ArgumentValue Value { get; set; } = default!;
+		public CommandConfigurationModel.ArgumentValue Value { get; set; } = default!;
 
 		#endregion
 
@@ -147,7 +147,7 @@ namespace Helper.Module.CommandForwarder {
 		) {
 			if (sender is not ToggleButton senders) { return; }
 			var newValue = senders.IsChecked!.Value;
-			this.Value.Value = !newValue ? null : this.Configuration.Option is not null ? this.Configuration.Option[0] : MethodConfigurationHelper.MakeArgumentValueDefault(this.Configuration.Type);
+			this.Value.Value = !newValue ? null : this.Configuration.Option is not null ? this.Configuration.Option[0] : CommandConfigurationHelper.MakeArgumentValueDefault(this.Configuration.Type);
 			this.NotifyPropertyChanged(
 				nameof(this.uValue_Stamp)
 			);
@@ -157,26 +157,26 @@ namespace Helper.Module.CommandForwarder {
 		public String uActive_Content {
 			get {
 				return this.Configuration.Type switch {
-					MethodConfigurationModel.ArgumentType.Confirmation => "C",
-					MethodConfigurationModel.ArgumentType.Number       => "N",
-					MethodConfigurationModel.ArgumentType.Integer      => "I",
-					MethodConfigurationModel.ArgumentType.Size         => "Z",
-					MethodConfigurationModel.ArgumentType.String       => "S",
-					MethodConfigurationModel.ArgumentType.Path         => "P",
-					_                                                  => throw new ArgumentOutOfRangeException(),
+					CommandConfigurationModel.ArgumentType.Confirmation => "C",
+					CommandConfigurationModel.ArgumentType.Number       => "N",
+					CommandConfigurationModel.ArgumentType.Integer      => "I",
+					CommandConfigurationModel.ArgumentType.Size         => "Z",
+					CommandConfigurationModel.ArgumentType.String       => "S",
+					CommandConfigurationModel.ArgumentType.Path         => "P",
+					_                                                   => throw new ArgumentOutOfRangeException(),
 				};
 			}
 		}
 
 		// ----------------
 
-		public MethodConfigurationModel.ArgumentType uValue_Type {
+		public CommandConfigurationModel.ArgumentType uValue_Type {
 			get {
 				return this.Configuration.Type;
 			}
 		}
 
-		public MethodConfigurationModel.ArgumentValue uValue_Value {
+		public CommandConfigurationModel.ArgumentValue uValue_Value {
 			get {
 				return this.Value;
 			}
@@ -184,7 +184,7 @@ namespace Helper.Module.CommandForwarder {
 
 		public List<Object>? uValue_Option {
 			get {
-				return this.Configuration.Option?.Select((value) => (MethodConfigurationHelper.MakeArgumentValueDefault(this.Configuration.Type, value) ?? throw new Exception())).ToList();
+				return this.Configuration.Option?.Select((value) => (CommandConfigurationHelper.MakeArgumentValueDefault(this.Configuration.Type, value) ?? throw new Exception())).ToList();
 			}
 		}
 

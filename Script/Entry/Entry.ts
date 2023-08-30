@@ -2,40 +2,6 @@ namespace TwinStar.Script.Entry {
 
 	// ------------------------------------------------
 
-	export const g_executor_method: Array<Executor.Method> = [];
-
-	export const g_executor_method_of_batch: Array<Executor.Method> = [];
-
-	// ------------------------------------------------
-
-	export type CommonArgument = {
-		path_tactic_if_out_exist: 'none' | 'trash' | 'delete' | 'override';
-	};
-
-	export const g_common_argument: CommonArgument = {
-		path_tactic_if_out_exist: 'none',
-	};
-
-	// ------------------------------------------------
-
-	export function file_system_path_test_generator(
-		filter: Array<['any' | 'file' | 'directory', null | RegExp]>,
-	): (path: string) => boolean {
-		return (path) => {
-			for (let e of filter) {
-				if (!KernelX.FileSystem[({ any: 'exist', file: 'exist_file', directory: 'exist_directory' } as const)[e[0]]](path)) {
-					continue;
-				}
-				if (e[1] === null || e[1].test(path)) {
-					return true;
-				}
-			}
-			return false;
-		};
-	}
-
-	// ------------------------------------------------
-
 	export function simple_batch_execute(
 		parent: string,
 		filter: ['any' | 'file' | 'directory', null | RegExp],
@@ -66,7 +32,7 @@ namespace TwinStar.Script.Entry {
 
 	// ------------------------------------------------
 
-	type Configuration = {
+	export type Configuration = {
 		language: string;
 		disable_cli_virtual_terminal_sequence: boolean;
 		disable_notification: boolean;
@@ -84,9 +50,10 @@ namespace TwinStar.Script.Entry {
 		pause_when_finish: boolean;
 	};
 
-	export function _injector(
+	export function injector(
 		configuration: Configuration,
-	) {
+	): void {
+		g_configuration = configuration;
 		// language
 		Language.push_table(configuration.language, KernelX.JSON.read_fs_js(Home.of(`~/script/Language/${configuration.language}.json`)) as unknown as Language.Map);
 		Language.set_target(configuration.language);
@@ -100,14 +67,17 @@ namespace TwinStar.Script.Entry {
 		// json format
 		KernelX.JSON.g_format.disable_trailing_comma = configuration.json_format.disable_trailing_comma;
 		KernelX.JSON.g_format.disable_array_wrap_line = configuration.json_format.disable_array_wrap_line;
-		// method common argument
-		g_common_argument.path_tactic_if_out_exist = configuration.method_common_argument.path_tactic_if_out_exist as any;
+		return;
 	}
 
-	export function _entry(
-		configuration: Configuration,
+	// ------------------------------------------------
+
+	let g_configuration: Configuration = undefined!;
+
+	export function entry(
 		argument: Array<string>,
-	) {
+	): void {
+		let configuration = g_configuration;
 		g_thread_manager.resize(Number(configuration.thread_limit));
 		let timer = new Timer();
 		timer.start();
@@ -117,7 +87,7 @@ namespace TwinStar.Script.Entry {
 				los('entry:input_finish_if_null'),
 			]);
 			while (true) {
-				let input = Console.path('any', ['in'], true, null);
+				let input = Console.path('any', ['input'], true, null);
 				if (input === null) {
 					break;
 				}
@@ -125,7 +95,7 @@ namespace TwinStar.Script.Entry {
 			}
 		}
 		let command = Executor.parse(raw_command);
-		let method = [...g_executor_method, ...g_executor_method_of_batch];
+		let method = [...Executor.g_method, ...Executor.g_method_batch];
 		Console.information(los('entry:all_command_parse'), [
 			los('entry:all_command_count', command.length),
 		]);
@@ -154,7 +124,4 @@ namespace TwinStar.Script.Entry {
 
 }
 
-({
-	injector: TwinStar.Script.Entry._injector,
-	entry: TwinStar.Script.Entry._entry,
-});
+TwinStar.Script.Entry.injector;

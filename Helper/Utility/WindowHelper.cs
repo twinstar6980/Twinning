@@ -2,7 +2,6 @@
 // ReSharper disable
 
 using Helper;
-using Windows.Graphics;
 
 namespace Helper.Utility {
 
@@ -24,21 +23,12 @@ namespace Helper.Utility {
 
 		// ----------------
 
-		public static void Move (
-			Window window,
-			Size   x,
-			Size   y
-		) {
-			window.AppWindow.Move(new PointInt32(x, y));
-			return;
-		}
-
 		public static void Resize (
 			Window window,
 			Size   width,
 			Size   height
 		) {
-			window.AppWindow.Resize(new SizeInt32(width, height));
+			WinUIEx.WindowExtensions.SetWindowSize(window, width, height);
 			return;
 		}
 
@@ -59,10 +49,10 @@ namespace Helper.Utility {
 
 		// ----------------
 
-		public static Window? GetForElement (
+		public static Window GetForElement (
 			UIElement element
 		) {
-			return WindowHelper.Active.Find((value) => (value.Content.XamlRoot == element.XamlRoot));
+			return WindowHelper.Active.Find((value) => (value.Content.XamlRoot == element.XamlRoot)) ?? throw new Exception("Could not get window.");
 		}
 
 		#endregion

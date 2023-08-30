@@ -13,10 +13,26 @@ namespace Helper.Utility {
 
 		#region path
 
+		public static String Normalize (
+			String path
+		) {
+			return path.Replace('\\', '/');
+		}
+
+		// ----------------
+
+		public static String? GetPathParent (
+			String path
+		) {
+			var parent = Path.GetDirectoryName(path);
+			return parent is null ? null : StorageHelper.Normalize(parent);
+		}
+
 		public static String GetPathName (
 			String path
 		) {
-			return Path.GetFileName(path);
+			var name = Path.GetFileName(path);
+			return StorageHelper.Normalize(name);
 		}
 
 		#endregion
@@ -108,7 +124,7 @@ namespace Helper.Utility {
 			var handle = WinRT.Interop.WindowNative.GetWindowHandle(rootWindow);
 			WinRT.Interop.InitializeWithWindow.Initialize(picker, handle);
 			var target = await picker.PickSingleFileAsync();
-			return target?.Path;
+			return target is null ? null : StorageHelper.Normalize(target.Path);
 		}
 
 		public static async Task<String?> PickDirectory (
@@ -119,7 +135,7 @@ namespace Helper.Utility {
 			var handle = WinRT.Interop.WindowNative.GetWindowHandle(rootWindow);
 			WinRT.Interop.InitializeWithWindow.Initialize(picker, handle);
 			var target = await picker.PickSingleFolderAsync();
-			return target?.Path;
+			return target is null ? null : StorageHelper.Normalize(target.Path);
 		}
 
 		#endregion
