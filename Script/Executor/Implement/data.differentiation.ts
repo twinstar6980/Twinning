@@ -50,8 +50,7 @@ namespace TwinStar.Script.Executor.Implement.data.differentiation {
 						default: configuration.encode_buffer_size,
 					}),
 				],
-				worker: (argument) => {
-					let { after_file, patch_file, before_file, buffer_size } = argument;
+				worker: ({ after_file, patch_file, before_file, buffer_size }) => {
 					KernelX.Tool.Data.Differentiation.VCDiff.encode_fs(before_file, after_file, patch_file, false, buffer_size);
 					return;
 				},
@@ -94,8 +93,7 @@ namespace TwinStar.Script.Executor.Implement.data.differentiation {
 						default: configuration.decode_buffer_size,
 					}),
 				],
-				worker: (argument) => {
-					let { patch_file, after_file, before_file, buffer_size } = argument;
+				worker: ({ patch_file, after_file, before_file, buffer_size }) => {
 					KernelX.Tool.Data.Differentiation.VCDiff.decode_fs(before_file, after_file, patch_file, 0x7FFFFFFFn, buffer_size);
 					return;
 				},

@@ -33,8 +33,7 @@ namespace TwinStar.Script.Executor.Implement.data.encoding {
 						default: '?automatic',
 					}),
 				],
-				worker: (argument) => {
-					let { raw_file, ripe_file } = argument;
+				worker: ({ raw_file, ripe_file }) => {
 					KernelX.Tool.Data.Encoding.Base64.encode_fs(raw_file, ripe_file);
 					return;
 				},
@@ -81,8 +80,7 @@ namespace TwinStar.Script.Executor.Implement.data.encoding {
 						default: '?automatic',
 					}),
 				],
-				worker: (argument) => {
-					let { ripe_file, raw_file } = argument;
+				worker: ({ ripe_file, raw_file }) => {
 					KernelX.Tool.Data.Encoding.Base64.decode_fs(ripe_file, raw_file);
 					return;
 				},

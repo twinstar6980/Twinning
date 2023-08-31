@@ -48,8 +48,7 @@ namespace TwinStar.Script.Executor.Implement.text.json {
 						default: configuration.disable_array_wrap_line,
 					}),
 				],
-				worker: (argument) => {
-					let { source_file, destination_file, disable_trailing_comma, disable_array_wrap_line } = argument;
+				worker: ({ source_file, destination_file, disable_trailing_comma, disable_array_wrap_line }) => {
 					let data = KernelX.JSON.read_fs(source_file);
 					KernelX.JSON.write_fs(destination_file, data, disable_trailing_comma, disable_array_wrap_line);
 					return;

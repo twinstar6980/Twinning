@@ -234,7 +234,6 @@ namespace TwinStar.Script.Executor {
 			id: `${source.id}${!batch ? '' : '.batch'}`,
 			name: () => (`${!batch ? '' : '[*] '}${los(`executor.implement:${source.id}`)}`),
 			worker: (given_argument: Record<string, any>) => {
-				Console.information(`${batch}`, []);
 				let final_argument = {} as Record<string, any>;
 				for (let argument_index in source.argument) {
 					let argument = source.argument[argument_index];

@@ -72,6 +72,10 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceManifest.Con
 									JSONGenericGetter.integer(source_resource.x, 0n),
 									JSONGenericGetter.integer(source_resource.y, 0n),
 								],
+								layout: [
+									JSONGenericGetter.integer(source_resource.cols, 1n),
+									JSONGenericGetter.integer(source_resource.rows, 1n),
+								],
 							};
 						} else {
 							destination_subgroup.resource[source_resource.id] = {
@@ -158,13 +162,17 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceManifest.Con
 							let destination_sprite_resource: OfficialResourceManifest.ResourceBase & OfficialResourceManifest.SpriteImageResourceInformation = {
 								slot: slot_of(sprite_resource_id),
 								id: sprite_resource_id,
-								path: PathUtility.split(source_sprite_resource.path),
+								path: !use_array_style_path ? PathUtility.to_windows_style(source_sprite_resource.path) : PathUtility.split(source_sprite_resource.path),
 								type: 'Image',
 								parent: resource_id,
 								ax: source_sprite_resource.position[0],
 								ay: source_sprite_resource.position[1],
 								aw: source_sprite_resource.size[0],
 								ah: source_sprite_resource.size[1],
+								x: source_sprite_resource.offset[0],
+								y: source_sprite_resource.offset[1],
+								cols: source_sprite_resource.layout[0],
+								rows: source_sprite_resource.layout[1],
 							};
 							destination_subgroup.resources.push(destination_sprite_resource);
 						}

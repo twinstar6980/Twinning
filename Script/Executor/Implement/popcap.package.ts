@@ -60,8 +60,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						default: configuration.pack_buffer_size,
 					}),
 				],
-				worker: (argument) => {
-					let { bundle_directory, data_file, version_number, version_compress_resource_data, buffer_size } = argument;
+				worker: ({ bundle_directory, data_file, version_number, version_compress_resource_data, buffer_size }) => {
 					let definition_file = `${bundle_directory}/definition.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					KernelX.Tool.PopCap.Package.pack_fs(data_file, definition_file, resource_directory, { number: version_number as any, compress_resource_data: version_compress_resource_data }, buffer_size);
@@ -87,8 +86,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						item_mapper: (argument: {}, value) => (value.replace(/(\.pak\.bundle)?$/i, '.pak')),
 					}),
 				],
-				batch_worker: (argument, temporary: { buffer: Kernel.ByteArray; }) => {
-					let { bundle_directory, data_file, version_number, version_compress_resource_data, buffer_size } = argument;
+				batch_worker: ({ bundle_directory, data_file, version_number, version_compress_resource_data, buffer_size }, temporary: { buffer: Kernel.ByteArray; }) => {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
@@ -134,8 +132,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						default: configuration.version_compress_resource_data,
 					}),
 				],
-				worker: (argument) => {
-					let { data_file, bundle_directory, version_number, version_compress_resource_data } = argument;
+				worker: ({ data_file, bundle_directory, version_number, version_compress_resource_data }) => {
 					let definition_file = `${bundle_directory}/definition.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					KernelX.Tool.PopCap.Package.unpack_fs(data_file, definition_file, resource_directory, { number: version_number as any, compress_resource_data: version_compress_resource_data });
@@ -199,8 +196,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						default: configuration.version_compress_resource_data,
 					}),
 				],
-				worker: (argument) => {
-					let { resource_directory, data_file, version_number, version_compress_resource_data } = argument;
+				worker: ({ resource_directory, data_file, version_number, version_compress_resource_data }) => {
 					let data = Support.PopCap.Package.PackAutomatic.pack(resource_directory, version_number as any, version_compress_resource_data);
 					KernelX.FileSystem.write_file(data_file, data[0].view().sub(Kernel.Size.value(0n), data[1]));
 					return;
@@ -229,8 +225,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						default: '?automatic',
 					}),
 				],
-				worker: (argument) => {
-					let { plain_file, cipher_file } = argument;
+				worker: ({ plain_file, cipher_file }) => {
 					KernelX.Tool.Data.Encryption.XOR.encrypt_fs(plain_file, cipher_file, [0xF7n]);
 					return;
 				},

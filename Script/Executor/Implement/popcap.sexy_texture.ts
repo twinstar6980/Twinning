@@ -58,8 +58,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.sexy_texture {
 						default: configuration.encode_compress_texture_data,
 					}),
 				],
-				worker: (argument) => {
-					let { image_file, data_file, version_number, format, compress_texture_data } = argument;
+				worker: ({ image_file, data_file, version_number, format, compress_texture_data }) => {
 					KernelX.Tool.PopCap.SexyTexture.encode_fs(data_file, image_file, format as any, compress_texture_data, { number: version_number as any });
 					return;
 				},
@@ -114,8 +113,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.sexy_texture {
 						default: configuration.version_number,
 					}),
 				],
-				worker: (argument) => {
-					let { data_file, image_file, version_number } = argument;
+				worker: ({ data_file, image_file, version_number }) => {
 					KernelX.Tool.PopCap.SexyTexture.decode_fs(data_file, image_file, { number: version_number as any });
 					return;
 				},

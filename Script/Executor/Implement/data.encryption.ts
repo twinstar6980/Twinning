@@ -42,8 +42,7 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						default: '?input',
 					}),
 				],
-				worker: (argument) => {
-					let { plain_file, cipher_file, key } = argument;
+				worker: ({ plain_file, cipher_file, key }) => {
 					KernelX.Tool.Data.Encryption.XOR.encrypt_fs(plain_file, cipher_file, [key]);
 					return;
 				},
@@ -122,8 +121,7 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						default: '?input',
 					}),
 				],
-				worker: (argument) => {
-					let { plain_file, cipher_file, mode, block_size, key, iv } = argument;
+				worker: ({ plain_file, cipher_file, mode, block_size, key, iv }) => {
 					KernelX.Tool.Data.Encryption.Rijndael.encrypt_fs(plain_file, cipher_file, mode as any, block_size as any, BigInt(key.length) as any, key, iv);
 					return;
 				},
@@ -202,8 +200,7 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						default: '?input',
 					}),
 				],
-				worker: (argument) => {
-					let { cipher_file, plain_file, mode, block_size, key, iv } = argument;
+				worker: ({ cipher_file, plain_file, mode, block_size, key, iv }) => {
 					KernelX.Tool.Data.Encryption.Rijndael.decrypt_fs(cipher_file, plain_file, mode as any, block_size as any, BigInt(key.length) as any, key, iv);
 					return;
 				},

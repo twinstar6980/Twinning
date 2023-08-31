@@ -59,8 +59,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.render_effect {
 						default: configuration.encode_buffer_size,
 					}),
 				],
-				worker: (argument) => {
-					let { definition_file, data_file, version_number, version_variant, buffer_size } = argument;
+				worker: ({ definition_file, data_file, version_number, version_variant, buffer_size }) => {
 					KernelX.Tool.PopCap.RenderEffect.encode_fs(data_file, definition_file, { number: version_number as any, variant: version_variant as any }, buffer_size);
 					return;
 				},
@@ -84,8 +83,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.render_effect {
 						item_mapper: (argument: {}, value) => (value.replace(/(\.popfx\.json)?$/i, '.popfx')),
 					}),
 				],
-				batch_worker: (argument, temporary: { buffer: Kernel.ByteArray; }) => {
-					let { definition_file, data_file, version_number, version_variant, buffer_size } = argument;
+				batch_worker: ({ definition_file, data_file, version_number, version_variant, buffer_size }, temporary: { buffer: Kernel.ByteArray; }) => {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
@@ -130,8 +128,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.render_effect {
 						default: configuration.version_variant,
 					}),
 				],
-				worker: (argument) => {
-					let { data_file, definition_file, version_number, version_variant } = argument;
+				worker: ({ data_file, definition_file, version_number, version_variant }) => {
 					KernelX.Tool.PopCap.RenderEffect.decode_fs(data_file, definition_file, { number: version_number as any, variant: version_variant as any });
 					return;
 				},

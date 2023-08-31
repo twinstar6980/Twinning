@@ -5,13 +5,19 @@ namespace TwinStar.Script.PathUtility {
 	export function regularize(
 		target: string,
 	): string {
+		return to_posix_style(target);
+	}
+
+	export function to_posix_style(
+		target: string,
+	): string {
 		return target.replaceAll('\\', '/');
 	}
 
 	export function to_windows_style(
 		target: string,
 	): string {
-		return target.replaceAll('\\', '/');
+		return target.replaceAll('/', '\\');
 	}
 
 	// ------------------------------------------------

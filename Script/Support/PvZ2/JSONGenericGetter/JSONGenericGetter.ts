@@ -67,14 +67,10 @@ namespace TwinStar.Script.Support.PvZ2.JSONGenericGetter {
 			return source ? 1n : 0n;
 		}
 		if (typeof source === 'number') {
-			if (Number.isInteger(source)) {
-				return BigInt(source);
-			} else {
-				return BigInt(source.toFixed(0));
-			}
+			return BigInt(Number.isInteger(source) ? source : source.toFixed(0));
 		}
 		if (typeof source === 'string') {
-			return BigInt(source);
+			return BigInt(Number.parseFloat(source).toFixed(0));
 		}
 		assert_test(false, `type error`);
 	}

@@ -50,8 +50,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.particle_effect {
 						default: configuration.encode_buffer_size,
 					}),
 				],
-				worker: (argument) => {
-					let { definition_file, data_file, version_number, buffer_size } = argument;
+				worker: ({ definition_file, data_file, version_number, buffer_size }) => {
 					KernelX.Tool.PopCap.ParticleEffect.encode_fs(data_file, definition_file, { number: version_number as any }, buffer_size);
 					return;
 				},
@@ -75,8 +74,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.particle_effect {
 						item_mapper: (argument: {}, value) => (value.replace(/(\.ppf\.json)?$/i, '.ppf')),
 					}),
 				],
-				batch_worker: (argument, temporary: { buffer: Kernel.ByteArray; }) => {
-					let { definition_file, data_file, version_number, buffer_size } = argument;
+				batch_worker: ({ definition_file, data_file, version_number, buffer_size }, temporary: { buffer: Kernel.ByteArray; }) => {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
@@ -113,8 +111,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.particle_effect {
 						default: configuration.version_number,
 					}),
 				],
-				worker: (argument) => {
-					let { data_file, definition_file, version_number } = argument;
+				worker: ({ data_file, definition_file, version_number }) => {
 					KernelX.Tool.PopCap.ParticleEffect.decode_fs(data_file, definition_file, { number: version_number as any });
 					return;
 				},

@@ -31,8 +31,7 @@ namespace TwinStar.Script.Executor.Implement.js {
 						default: '?input',
 					}),
 				],
-				worker: (argument) => {
-					let { script_file, is_module } = argument;
+				worker: ({ script_file, is_module }) => {
 					let result = KernelX.Miscellaneous.evaluate_fs(script_file, is_module);
 					return;
 				},

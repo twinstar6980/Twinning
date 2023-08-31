@@ -51,8 +51,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.crypt_data {
 						default: configuration.key,
 					}),
 				],
-				worker: (argument) => {
-					let { plain_file, cipher_file, limit, key } = argument;
+				worker: ({ plain_file, cipher_file, limit, key }) => {
 					KernelX.Tool.PopCap.CryptData.encrypt_fs(plain_file, cipher_file, limit, key, {});
 					return;
 				},
@@ -115,8 +114,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.crypt_data {
 						default: configuration.key,
 					}),
 				],
-				worker: (argument) => {
-					let { cipher_file, plain_file, limit, key } = argument;
+				worker: ({ cipher_file, plain_file, limit, key }) => {
 					KernelX.Tool.PopCap.CryptData.decrypt_fs(cipher_file, plain_file, limit, key, {});
 					return;
 				},

@@ -40,8 +40,7 @@ namespace TwinStar.Script.Executor.Implement.pvz2.text_table {
 						default: '?automatic',
 					}),
 				],
-				worker: (argument) => {
-					let { source_file, destination_version, destination_file } = argument;
+				worker: ({ source_file, destination_version, destination_file }) => {
 					Support.PvZ2.TextTable.convert_fs(source_file, destination_file, null, destination_version as any);
 					return;
 				},

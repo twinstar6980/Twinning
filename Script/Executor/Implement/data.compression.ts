@@ -42,8 +42,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						default: '?automatic',
 					}),
 				],
-				worker: (argument) => {
-					let { raw_file, ripe_file } = argument;
+				worker: ({ raw_file, ripe_file }) => {
 					KernelX.Tool.Data.Compression.Deflate.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', 'none');
 					return;
 				},
@@ -97,8 +96,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						default: configuration.uncompress_buffer_size,
 					}),
 				],
-				worker: (argument) => {
-					let { ripe_file, raw_file, buffer_size } = argument;
+				worker: ({ ripe_file, raw_file, buffer_size }) => {
 					KernelX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'none', buffer_size);
 					return;
 				},
@@ -122,8 +120,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],
-				batch_worker: (argument, temporary: { buffer: Kernel.ByteArray; }) => {
-					let { ripe_file, raw_file, buffer_size } = argument;
+				batch_worker: ({ ripe_file, raw_file, buffer_size }, temporary: { buffer: Kernel.ByteArray; }) => {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
@@ -152,8 +149,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						default: '?automatic',
 					}),
 				],
-				worker: (argument) => {
-					let { raw_file, ripe_file } = argument;
+				worker: ({ raw_file, ripe_file }) => {
 					KernelX.Tool.Data.Compression.Deflate.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', 'zlib');
 					return;
 				},
@@ -207,8 +203,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						default: configuration.uncompress_buffer_size,
 					}),
 				],
-				worker: (argument) => {
-					let { ripe_file, raw_file, buffer_size } = argument;
+				worker: ({ ripe_file, raw_file, buffer_size }) => {
 					KernelX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'zlib', buffer_size);
 					return;
 				},
@@ -232,8 +227,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],
-				batch_worker: (argument, temporary: { buffer: Kernel.ByteArray; }) => {
-					let { ripe_file, raw_file, buffer_size } = argument;
+				batch_worker: ({ ripe_file, raw_file, buffer_size }, temporary: { buffer: Kernel.ByteArray; }) => {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
@@ -262,8 +256,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						default: '?automatic',
 					}),
 				],
-				worker: (argument) => {
-					let { raw_file, ripe_file } = argument;
+				worker: ({ raw_file, ripe_file }) => {
 					KernelX.Tool.Data.Compression.Deflate.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', 'gzip');
 					return;
 				},
@@ -317,8 +310,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						default: configuration.uncompress_buffer_size,
 					}),
 				],
-				worker: (argument) => {
-					let { ripe_file, raw_file, buffer_size } = argument;
+				worker: ({ ripe_file, raw_file, buffer_size }) => {
 					KernelX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'gzip', buffer_size);
 					return;
 				},
@@ -342,8 +334,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],
-				batch_worker: (argument, temporary: { buffer: Kernel.ByteArray; }) => {
-					let { ripe_file, raw_file, buffer_size } = argument;
+				batch_worker: ({ ripe_file, raw_file, buffer_size }, temporary: { buffer: Kernel.ByteArray; }) => {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
@@ -372,8 +363,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						default: '?automatic',
 					}),
 				],
-				worker: (argument) => {
-					let { raw_file, ripe_file } = argument;
+				worker: ({ raw_file, ripe_file }) => {
 					KernelX.Tool.Data.Compression.BZip2.compress_fs(raw_file, ripe_file, 9n);
 					return;
 				},
@@ -427,8 +417,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						default: configuration.uncompress_buffer_size,
 					}),
 				],
-				worker: (argument) => {
-					let { ripe_file, raw_file, buffer_size } = argument;
+				worker: ({ ripe_file, raw_file, buffer_size }) => {
 					KernelX.Tool.Data.Compression.BZip2.uncompress_fs(ripe_file, raw_file, buffer_size);
 					return;
 				},
@@ -452,8 +441,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],
-				batch_worker: (argument, temporary: { buffer: Kernel.ByteArray; }) => {
-					let { ripe_file, raw_file, buffer_size } = argument;
+				batch_worker: ({ ripe_file, raw_file, buffer_size }, temporary: { buffer: Kernel.ByteArray; }) => {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
@@ -482,8 +470,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						default: '?automatic',
 					}),
 				],
-				worker: (argument) => {
-					let { raw_file, ripe_file } = argument;
+				worker: ({ raw_file, ripe_file }) => {
 					KernelX.Tool.Data.Compression.Lzma.compress_fs(raw_file, ripe_file, 9n);
 					return;
 				},
@@ -537,8 +524,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						default: configuration.uncompress_buffer_size,
 					}),
 				],
-				worker: (argument) => {
-					let { ripe_file, raw_file, buffer_size } = argument;
+				worker: ({ ripe_file, raw_file, buffer_size }) => {
 					KernelX.Tool.Data.Compression.Lzma.uncompress_fs(ripe_file, raw_file, buffer_size);
 					return;
 				},
@@ -562,8 +548,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],
-				batch_worker: (argument, temporary: { buffer: Kernel.ByteArray; }) => {
-					let { ripe_file, raw_file, buffer_size } = argument;
+				batch_worker: ({ ripe_file, raw_file, buffer_size }, temporary: { buffer: Kernel.ByteArray; }) => {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}

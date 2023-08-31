@@ -22,6 +22,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceStreamBundle.ResourceManifest {
 		position: [bigint, bigint];
 		size: [bigint, bigint];
 		offset: [bigint, bigint];
+		layout: [bigint, bigint];
 	};
 
 	export type AtlasImageResourceInformation = {

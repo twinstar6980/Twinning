@@ -64,8 +64,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						default: configuration.encode_buffer_size,
 					}),
 				],
-				worker: (argument) => {
-					let { definition_file, data_file, version_number, version_native_string_encoding_use_utf8, buffer_size } = argument;
+				worker: ({ definition_file, data_file, version_number, version_native_string_encoding_use_utf8, buffer_size }) => {
 					KernelX.Tool.PopCap.ReflectionObjectNotation.encode_fs(data_file, definition_file, true, true, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, buffer_size);
 					return;
 				},
@@ -89,8 +88,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						item_mapper: (argument: {}, value) => (value.replace(/(\.json)?$/i, '.rton')),
 					}),
 				],
-				batch_worker: (argument, temporary: { buffer: Kernel.ByteArray; }) => {
-					let { definition_file, data_file, version_number, version_native_string_encoding_use_utf8, buffer_size } = argument;
+				batch_worker: ({ definition_file, data_file, version_number, version_native_string_encoding_use_utf8, buffer_size }, temporary: { buffer: Kernel.ByteArray; }) => {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
@@ -134,8 +132,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						default: configuration.version_native_string_encoding_use_utf8,
 					}),
 				],
-				worker: (argument) => {
-					let { data_file, definition_file, version_number, version_native_string_encoding_use_utf8 } = argument;
+				worker: ({ data_file, definition_file, version_number, version_native_string_encoding_use_utf8 }) => {
 					KernelX.Tool.PopCap.ReflectionObjectNotation.decode_fs(data_file, definition_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 });
 					return;
 				},
@@ -190,8 +187,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						default: configuration.key,
 					}),
 				],
-				worker: (argument) => {
-					let { plain_file, cipher_file, key } = argument;
+				worker: ({ plain_file, cipher_file, key }) => {
 					KernelX.Tool.PopCap.ReflectionObjectNotation.encrypt_fs(plain_file, cipher_file, key);
 					return;
 				},
@@ -246,8 +242,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						default: '?input',
 					}),
 				],
-				worker: (argument) => {
-					let { cipher_file, plain_file, key } = argument;
+				worker: ({ cipher_file, plain_file, key }) => {
 					KernelX.Tool.PopCap.ReflectionObjectNotation.decrypt_fs(cipher_file, plain_file, key);
 					return;
 				},
@@ -324,8 +319,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						default: configuration.encode_buffer_size,
 					}),
 				],
-				worker: (argument) => {
-					let { definition_file, data_file, version_number, version_native_string_encoding_use_utf8, key, buffer_size } = argument;
+				worker: ({ definition_file, data_file, version_number, version_native_string_encoding_use_utf8, key, buffer_size }) => {
 					KernelX.Tool.PopCap.ReflectionObjectNotation.encode_then_encrypt_fs(data_file, definition_file, true, true, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key, buffer_size);
 					return;
 				},
@@ -349,8 +343,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						item_mapper: (argument: {}, value) => (value.replace(/(\.json)?$/i, '.rton')),
 					}),
 				],
-				batch_worker: (argument, temporary: { buffer: Kernel.ByteArray; }) => {
-					let { definition_file, data_file, version_number, version_native_string_encoding_use_utf8, key, buffer_size } = argument;
+				batch_worker: ({ definition_file, data_file, version_number, version_native_string_encoding_use_utf8, key, buffer_size }, temporary: { buffer: Kernel.ByteArray; }) => {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
@@ -402,8 +395,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						default: configuration.key,
 					}),
 				],
-				worker: (argument) => {
-					let { data_file, definition_file, version_number, version_native_string_encoding_use_utf8, key } = argument;
+				worker: ({ data_file, definition_file, version_number, version_native_string_encoding_use_utf8, key }) => {
 					KernelX.Tool.PopCap.ReflectionObjectNotation.decrypt_then_decode_fs(data_file, definition_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key);
 					return;
 				},
@@ -465,8 +457,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						default: configuration.version_native_string_encoding_use_utf8,
 					}),
 				],
-				worker: (argument) => {
-					let { data_file, definition_file, version_number, version_native_string_encoding_use_utf8 } = argument;
+				worker: ({ data_file, definition_file, version_number, version_native_string_encoding_use_utf8 }) => {
 					Support.PopCap.ReflectionObjectNotation.DecodeLenient.process_fs(data_file, definition_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 });
 					return;
 				},

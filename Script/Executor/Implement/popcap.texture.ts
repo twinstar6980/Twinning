@@ -41,8 +41,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.texture {
 						default: '?input',
 					}),
 				],
-				worker: (argument) => {
-					let { image_file, data_file, format } = argument;
+				worker: ({ image_file, data_file, format }) => {
 					Support.PopCap.Texture.Encode.encode_fs(image_file, data_file, format as any);
 					return;
 				},
@@ -94,8 +93,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.texture {
 						default: '?input',
 					}),
 				],
-				worker: (argument) => {
-					let { data_file, image_file, format, image_width, image_height } = argument;
+				worker: ({ data_file, image_file, format, image_width, image_height }) => {
 					Support.PopCap.Texture.Encode.decode_fs(data_file, image_file, [image_width, image_height], format as any);
 					return;
 				},

@@ -41,8 +41,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.zlib {
 						default: '?input',
 					}),
 				],
-				worker: (argument) => {
-					let { raw_file, ripe_file, version_variant_64 } = argument;
+				worker: ({ raw_file, ripe_file, version_variant_64 }) => {
 					KernelX.Tool.PopCap.ZLib.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', { variant_64: version_variant_64 });
 					return;
 				},
@@ -96,8 +95,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.zlib {
 						default: '?input',
 					}),
 				],
-				worker: (argument) => {
-					let { ripe_file, raw_file, version_variant_64 } = argument;
+				worker: ({ ripe_file, raw_file, version_variant_64 }) => {
 					KernelX.Tool.PopCap.ZLib.uncompress_fs(ripe_file, raw_file, 15n, { variant_64: version_variant_64 });
 					return;
 				},

@@ -50,8 +50,7 @@ namespace TwinStar.Script.Executor.Implement.wwise.sound_bank {
 						default: configuration.encode_buffer_size,
 					}),
 				],
-				worker: (argument) => {
-					let { bundle_directory, data_file, version_number, buffer_size } = argument;
+				worker: ({ bundle_directory, data_file, version_number, buffer_size }) => {
 					let definition_file = `${bundle_directory}/definition.json`;
 					let embedded_media_directory = `${bundle_directory}/embedded_media`;
 					KernelX.Tool.Wwise.SoundBank.encode_fs(data_file, definition_file, embedded_media_directory, { number: version_number as any }, buffer_size);
@@ -77,8 +76,7 @@ namespace TwinStar.Script.Executor.Implement.wwise.sound_bank {
 						item_mapper: (argument: {}, value) => (value.replace(/(\.bnk\.bundle)?$/i, '.bnk')),
 					}),
 				],
-				batch_worker: (argument, temporary: { buffer: Kernel.ByteArray; }) => {
-					let { bundle_directory, data_file, version_number, buffer_size } = argument;
+				batch_worker: ({ bundle_directory, data_file, version_number, buffer_size }, temporary: { buffer: Kernel.ByteArray; }) => {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
@@ -117,8 +115,7 @@ namespace TwinStar.Script.Executor.Implement.wwise.sound_bank {
 						default: configuration.version_number,
 					}),
 				],
-				worker: (argument) => {
-					let { data_file, bundle_directory, version_number } = argument;
+				worker: ({ data_file, bundle_directory, version_number }) => {
 					let definition_file = `${bundle_directory}/definition.json`;
 					let embedded_media_directory = `${bundle_directory}/embedded_media`;
 					KernelX.Tool.Wwise.SoundBank.decode_fs(data_file, definition_file, embedded_media_directory, { number: version_number as any });

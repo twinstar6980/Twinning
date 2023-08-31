@@ -213,6 +213,18 @@
 	"executor.implement:texture.transformation.scale_rate:source_file": "来源文件",
 	"executor.implement:texture.transformation.scale_rate:destination_file": "目的文件",
 	"executor.implement:texture.transformation.scale_rate:size_rate": "尺寸比例",
+	// Executor/Implement/texture.encoding
+	"executor.implement:texture.encoding.encode": "Texture 编码",
+	"executor.implement:texture.encoding.encode:image_file": "图像文件",
+	"executor.implement:texture.encoding.encode:data_file": "数据文件",
+	"executor.implement:texture.encoding.encode:format": "纹理格式",
+	// 
+	"executor.implement:texture.encoding.decode": "Texture 解码",
+	"executor.implement:texture.encoding.decode:data_file": "数据文件",
+	"executor.implement:texture.encoding.decode:image_file": "图像文件",
+	"executor.implement:texture.encoding.decode:format": "纹理格式",
+	"executor.implement:texture.encoding.decode:image_width": "图像宽度",
+	"executor.implement:texture.encoding.decode:image_height": "图像高度",
 	// Executor/Implement/texture.atlas
 	"executor.implement:texture.atlas.pack": "Texture 图集打包",
 	"executor.implement:texture.atlas.pack:definition_file": "定义文件",
@@ -563,6 +575,15 @@
 	"executor.implement:pvz2.text_table.convert:source_file": "来源文件",
 	"executor.implement:pvz2.text_table.convert:destination_version": "目的版本",
 	"executor.implement:pvz2.text_table.convert:destination_file": "目的文件",
+	// Executor/Implement/pvz2.resource_manifest
+	"executor.implement:pvz2.resource_manifest.convert.from": "PvZ-2 Resource-Manifest 转换自官方数据",
+	"executor.implement:pvz2.resource_manifest.convert.from:raw_file": "原始文件",
+	"executor.implement:pvz2.resource_manifest.convert.from:ripe_file": "成品文件",
+	// 
+	"executor.implement:pvz2.resource_manifest.convert.to": "PvZ-2 Resource-Manifest 转换至官方数据",
+	"executor.implement:pvz2.resource_manifest.convert.to:ripe_file": "成品文件",
+	"executor.implement:pvz2.resource_manifest.convert.to:raw_file": "原始文件",
+	"executor.implement:pvz2.resource_manifest.convert.to:use_array_style_path": "使用数组式路径",
 	// Executor/Implement/pvz2.remote_android_helper
 	"executor.implement:pvz2.remote_android_helper.launch": "PvZ-2 Remote-Android-Helper 启动",
 	"executor.implement:pvz2.remote_android_helper.launch:project_directory": "项目目录",

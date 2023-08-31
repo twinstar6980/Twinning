@@ -51,8 +51,7 @@ namespace TwinStar.Script.Executor.Implement.marmalade.dzip {
 						default: configuration.pack_buffer_size,
 					}),
 				],
-				worker: (argument) => {
-					let { bundle_directory, data_file, version_number, buffer_size } = argument;
+				worker: ({ bundle_directory, data_file, version_number, buffer_size }) => {
 					let definition_file = `${bundle_directory}/definition.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					KernelX.Tool.Marmalade.DZip.pack_fs(data_file, definition_file, resource_directory, { number: version_number as any }, buffer_size);
@@ -78,8 +77,7 @@ namespace TwinStar.Script.Executor.Implement.marmalade.dzip {
 						item_mapper: (argument: {}, value) => (value.replace(/(\.dz\.bundle)?$/i, '.dz')),
 					}),
 				],
-				batch_worker: (argument, temporary: { buffer: Kernel.ByteArray; }) => {
-					let { bundle_directory, data_file, version_number, buffer_size } = argument;
+				batch_worker: ({ bundle_directory, data_file, version_number, buffer_size }, temporary: { buffer: Kernel.ByteArray; }) => {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
@@ -118,8 +116,7 @@ namespace TwinStar.Script.Executor.Implement.marmalade.dzip {
 						default: configuration.version_number,
 					}),
 				],
-				worker: (argument) => {
-					let { data_file, bundle_directory, version_number } = argument;
+				worker: ({ data_file, bundle_directory, version_number }) => {
 					let definition_file = `${bundle_directory}/definition.json`;
 					let resource_directory = `${bundle_directory}/resource`;
 					KernelX.Tool.Marmalade.DZip.unpack_fs(data_file, definition_file, resource_directory, { number: version_number as any });
@@ -176,8 +173,7 @@ namespace TwinStar.Script.Executor.Implement.marmalade.dzip {
 						default: configuration.version_number,
 					}),
 				],
-				worker: (argument) => {
-					let { resource_directory, data_file, version_number } = argument;
+				worker: ({ resource_directory, data_file, version_number }) => {
 					let data = Support.Marmalade.DZip.PackAutomatic.pack(resource_directory, version_number as any);
 					KernelX.FileSystem.write_file(data_file, data[0].view().sub(Kernel.Size.value(0n), data[1]));
 					return;

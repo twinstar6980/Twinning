@@ -1100,15 +1100,43 @@ namespace TwinStar.Script.KernelX {
 					return size[0] * size[1] * get_bpp(format) / 8n;
 				}
 
-				export function compute_data_size_n(
-					size: Image.ImageSize,
-					format: Array<CompositeFormat>,
-				): bigint {
-					let data_size = 0n;
-					for (let e of format) {
-						data_size += compute_data_size(size, e);
+				export function compute_padded_image_size(
+					origin_size: KernelX.Image.ImageSize,
+					format: CompositeFormat,
+				): KernelX.Image.ImageSize {
+					let compute = (t: bigint) => {
+						let r = 0b1n << 1n;
+						while (r < t) {
+							r <<= 1n;
+						}
+						return r;
+					};
+					let padded_size: KernelX.Image.ImageSize;
+					if (format.includes('etc1')) {
+						padded_size = [compute(origin_size[0]), compute(origin_size[1])];
+					} else if (format.includes('pvrtc')) {
+						let padded_width = compute(origin_size[0]);
+						let padded_height = compute(origin_size[1]);
+						let maximum_size = padded_width > padded_height ? padded_width : padded_height;
+						padded_size = [maximum_size, maximum_size];
+					} else {
+						padded_size = [origin_size[0], origin_size[1]];
 					}
-					return data_size;
+					return padded_size;
+				}
+
+				export function is_opacity_format(
+					format: CompositeFormat,
+				): boolean {
+					return [
+						'rgb_332',
+						'rgb_565',
+						'l_8',
+						'rgb_888_o',
+						'rgb_etc1',
+						'rgb_etc2',
+						'rgb_pvrtc4',
+					].includes(format);
 				}
 
 				// ------------------------------------------------
@@ -1213,25 +1241,42 @@ namespace TwinStar.Script.KernelX {
 
 				// ------------------------------------------------
 
-				export function encode_n(
-					data: Kernel.OByteStreamView,
-					image: Kernel.Image.CImageView,
-					format: Array<CompositeFormat>,
+				export function encode_fs(
+					image_file: string,
+					data_file: string,
+					format: CompositeFormat,
 				): void {
-					for (let e of format) {
-						encode(data, image, e);
-					}
+					let image_data = KernelX.FileSystem.read_file(image_file);
+					let image_stream = Kernel.ByteStreamView.watch(image_data.view());
+					let image_size = KernelX.Image.File.PNG.size(image_stream.view());
+					let padded_image_size = compute_padded_image_size(image_size, format);
+					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(padded_image_size));
+					let image_view = image.view();
+					KernelX.Image.File.PNG.read(image_stream, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
+					let data_size = compute_data_size(padded_image_size, format);
+					let data = Kernel.ByteArray.allocate(Kernel.Size.value(data_size));
+					let stream = Kernel.ByteStreamView.watch(data.view());
+					encode(stream, image_view, format);
+					KernelX.FileSystem.write_file(data_file, stream.stream_view());
 					return;
 				}
 
-				export function decode_n(
-					data: Kernel.IByteStreamView,
-					image: Kernel.Image.VImageView,
-					format: Array<CompositeFormat>,
+				export function decode_fs(
+					data_file: string,
+					image_file: string,
+					image_size: KernelX.Image.ImageSize,
+					format: CompositeFormat,
 				): void {
-					for (let e of format) {
-						decode(data, image, e);
+					let data = KernelX.FileSystem.read_file(data_file);
+					let stream = Kernel.ByteStreamView.watch(data.view());
+					let padded_image_size = compute_padded_image_size(image_size, format);
+					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(padded_image_size));
+					let image_view = image.view();
+					if (is_opacity_format(format)) {
+						image_view.fill(Kernel.Image.Pixel.value([0xFFn, 0xFFn, 0xFFn, 0xFFn]));
 					}
+					decode(stream, image_view, format);
+					KernelX.Image.File.PNG.write_fs(image_file, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
 					return;
 				}
 

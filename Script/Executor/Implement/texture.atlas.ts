@@ -42,8 +42,7 @@ namespace TwinStar.Script.Executor.Implement.texture.atlas {
 						default: '?automatic',
 					}),
 				],
-				worker: (argument) => {
-					let { definition_file, sprite_directory, atlas_file } = argument;
+				worker: ({ definition_file, sprite_directory, atlas_file }) => {
 					Support.Atlas.Pack.pack_fs(definition_file, atlas_file, sprite_directory);
 					return;
 				},
@@ -79,8 +78,7 @@ namespace TwinStar.Script.Executor.Implement.texture.atlas {
 						default: '?automatic',
 					}),
 				],
-				worker: (argument) => {
-					let { definition_file, atlas_file, sprite_directory } = argument;
+				worker: ({ definition_file, atlas_file, sprite_directory }) => {
 					Support.Atlas.Pack.unpack_fs(definition_file, atlas_file, sprite_directory);
 					return;
 				},
@@ -116,8 +114,7 @@ namespace TwinStar.Script.Executor.Implement.texture.atlas {
 						default: '?automatic',
 					}),
 				],
-				worker: (argument) => {
-					let { sprite_directory, atlas_file, definition_file } = argument;
+				worker: ({ sprite_directory, atlas_file, definition_file }) => {
 					Support.Atlas.Pack.pack_automatic_fs(definition_file, atlas_file, sprite_directory);
 					return;
 				},

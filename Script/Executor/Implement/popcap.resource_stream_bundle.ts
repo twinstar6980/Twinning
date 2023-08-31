@@ -161,8 +161,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 						default: configuration.pack_buffer_size,
 					}),
 				],
-				worker: (argument) => {
-					let { bundle_directory, data_file, version_number, version_extended_texture_information_for_pvz2_cn, layout_mode, input_packet, output_new_packet, buffer_size } = argument;
+				worker: ({ bundle_directory, data_file, version_number, version_extended_texture_information_for_pvz2_cn, layout_mode, input_packet, output_new_packet, buffer_size }) => {
 					let relative_path = make_resource_stream_bundle_package_relative_path(layout_mode as any);
 					let definition_file = `${bundle_directory}/definition.json`;
 					let manifest_file = `${bundle_directory}/manifest.json`;
@@ -192,8 +191,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 						item_mapper: (argument: {}, value) => (value.replace(/(\.rsb\.bundle)?$/i, '.rsb')),
 					}),
 				],
-				batch_worker: (argument, temporary: { buffer: Kernel.ByteArray; }) => {
-					let { bundle_directory, data_file, version_number, version_extended_texture_information_for_pvz2_cn, layout_mode, input_packet, output_new_packet, buffer_size } = argument;
+				batch_worker: ({ bundle_directory, data_file, version_number, version_extended_texture_information_for_pvz2_cn, layout_mode, input_packet, output_new_packet, buffer_size }, temporary: { buffer: Kernel.ByteArray; }) => {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
@@ -266,8 +264,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 						default: '?input',
 					}),
 				],
-				worker: (argument) => {
-					let { data_file, bundle_directory, version_number, version_extended_texture_information_for_pvz2_cn, layout_mode, output_resource, output_packet } = argument;
+				worker: ({ data_file, bundle_directory, version_number, version_extended_texture_information_for_pvz2_cn, layout_mode, output_resource, output_packet }) => {
 					let relative_path = make_resource_stream_bundle_package_relative_path(layout_mode as any);
 					let definition_file = `${bundle_directory}/definition.json`;
 					let manifest_file = `${bundle_directory}/manifest.json`;
@@ -466,31 +463,30 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 						default: configuration.resource_convert_option.wem_tool_ww2ogg_code_book_file,
 					}),
 				],
-				worker: (argument) => {
-					let {
-						bundle_directory,
-						option_recase_path,
-						option_rton,
-						option_rton_version_number,
-						option_rton_version_native_string_encoding_use_utf8,
-						option_rton_crypt,
-						option_rton_crypt_key,
-						option_ptx,
-						option_ptx_texture_format_map_name,
-						option_ptx_atlas,
-						option_ptx_atlas_resize,
-						option_ptx_sprite,
-						option_pam,
-						option_pam_version_number,
-						option_pam_json,
-						option_pam_flash,
-						option_bnk,
-						option_bnk_version_number,
-						option_wem,
-						option_wem_tool_ffmpeg_program_file,
-						option_wem_tool_ww2ogg_program_file,
-						option_wem_tool_ww2ogg_code_book_file,
-					} = argument;
+				worker: ({
+					bundle_directory,
+					option_recase_path,
+					option_rton,
+					option_rton_version_number,
+					option_rton_version_native_string_encoding_use_utf8,
+					option_rton_crypt,
+					option_rton_crypt_key,
+					option_ptx,
+					option_ptx_texture_format_map_name,
+					option_ptx_atlas,
+					option_ptx_atlas_resize,
+					option_ptx_sprite,
+					option_pam,
+					option_pam_version_number,
+					option_pam_json,
+					option_pam_flash,
+					option_bnk,
+					option_bnk_version_number,
+					option_wem,
+					option_wem_tool_ffmpeg_program_file,
+					option_wem_tool_ww2ogg_program_file,
+					option_wem_tool_ww2ogg_code_book_file,
+				}) => {
 					let convert_directory = `${bundle_directory}/convert`;
 					let option: Support.PvZ2.ResourceStreamBundle.ResourceConvert.Option = {
 						recase_path: option_recase_path,
@@ -580,8 +576,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 						default: '?automatic',
 					}),
 				],
-				worker: (argument) => {
-					let { data_file, bundle_directory } = argument;
+				worker: ({ data_file, bundle_directory }) => {
 					let definition_file = `${bundle_directory}/definition.json`;
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;

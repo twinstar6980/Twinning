@@ -6,8 +6,8 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle_patch
 	// decode
 
 	export type Configuration = {
-		use_raw_packet: TypicalArgumentExpression<boolean>;
 		version_number: TypicalArgumentExpression<bigint>;
+		use_raw_packet: TypicalArgumentExpression<boolean>;
 		encode_buffer_size: TypicalArgumentExpression<string>;
 		decode_buffer_size: TypicalArgumentExpression<string>;
 	};
@@ -67,8 +67,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle_patch
 						default: configuration.encode_buffer_size,
 					}),
 				],
-				worker: (argument) => {
-					let { after_file, patch_file, before_file, version_number, use_raw_packet, buffer_size } = argument;
+				worker: ({ after_file, patch_file, before_file, version_number, use_raw_packet, buffer_size }) => {
 					KernelX.Tool.PopCap.ResourceStreamBundlePatch.encode_fs(before_file, after_file, patch_file, use_raw_packet, { number: version_number as any }, buffer_size);
 					return;
 				},
@@ -126,8 +125,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle_patch
 						default: configuration.decode_buffer_size,
 					}),
 				],
-				worker: (argument) => {
-					let { patch_file, after_file, before_file, version_number, use_raw_packet, buffer_size } = argument;
+				worker: ({ patch_file, after_file, before_file, version_number, use_raw_packet, buffer_size }) => {
 					KernelX.Tool.PopCap.ResourceStreamBundlePatch.decode_fs(before_file, after_file, patch_file, use_raw_packet, { number: version_number as any }, buffer_size);
 					return;
 				},

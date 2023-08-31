@@ -41,8 +41,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.character_font_widget_2 {
 						default: configuration.encode_buffer_size,
 					}),
 				],
-				worker: (argument) => {
-					let { definition_file, data_file, buffer_size } = argument;
+				worker: ({ definition_file, data_file, buffer_size }) => {
 					KernelX.Tool.PopCap.CharacterFontWidget2.encode_fs(data_file, definition_file, {}, buffer_size);
 					return;
 				},
@@ -66,8 +65,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.character_font_widget_2 {
 						item_mapper: (argument: {}, value) => (value.replace(/(\.cfw2\.json)?$/i, '.cfw2')),
 					}),
 				],
-				batch_worker: (argument, temporary: { buffer: Kernel.ByteArray; }) => {
-					let { definition_file, data_file, buffer_size } = argument;
+				batch_worker: ({ definition_file, data_file, buffer_size }, temporary: { buffer: Kernel.ByteArray; }) => {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
@@ -96,8 +94,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.character_font_widget_2 {
 						default: '?automatic',
 					}),
 				],
-				worker: (argument) => {
-					let { data_file, definition_file } = argument;
+				worker: ({ data_file, definition_file }) => {
 					KernelX.Tool.PopCap.CharacterFontWidget2.decode_fs(data_file, definition_file, {});
 					return;
 				},

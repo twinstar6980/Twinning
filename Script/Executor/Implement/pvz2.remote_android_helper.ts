@@ -32,8 +32,7 @@ namespace TwinStar.Script.Executor.Implement.pvz2.remote_android_helper {
 						default: '?input',
 					}),
 				],
-				worker: (argument) => {
-					let { project_directory, action } = argument;
+				worker: ({ project_directory, action }) => {
 					Support.PvZ2.RemoteAndroidHelper.execute(project_directory, action as any);
 					return;
 				},

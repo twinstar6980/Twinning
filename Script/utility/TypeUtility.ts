@@ -272,4 +272,12 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
+	export function string_data_maybe_utf16(
+		source: ArrayBuffer,
+	): boolean {
+		return source.byteLength >= 2 && [0xFFFE, 0xFEFF].includes(new DataView(source).getUint16(0, true));
+	}
+
+	// ------------------------------------------------
+
 }

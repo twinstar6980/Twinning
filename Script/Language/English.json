@@ -213,6 +213,18 @@
 	"executor.implement:texture.transformation.scale_rate:source_file": "Source file",
 	"executor.implement:texture.transformation.scale_rate:destination_file": "Destination file",
 	"executor.implement:texture.transformation.scale_rate:size_rate": "Size rate",
+	// Executor/Implement/texture.encoding
+	"executor.implement:texture.encoding.encode": "Texture Encode",
+	"executor.implement:texture.encoding.encode:image_file": "Image file",
+	"executor.implement:texture.encoding.encode:data_file": "Data file",
+	"executor.implement:texture.encoding.encode:format": "Texture format",
+	// 
+	"executor.implement:texture.encoding.decode": "Texture Decode",
+	"executor.implement:texture.encoding.decode:data_file": "Data file",
+	"executor.implement:texture.encoding.decode:image_file": "Image file",
+	"executor.implement:texture.encoding.decode:format": "Texture format",
+	"executor.implement:texture.encoding.decode:image_width": "Image width",
+	"executor.implement:texture.encoding.decode:image_height": "Image height",
 	// Executor/Implement/texture.atlas
 	"executor.implement:texture.atlas.pack": "Texture Atlas Pack",
 	"executor.implement:texture.atlas.pack:definition_file": "Definition file",
@@ -563,6 +575,15 @@
 	"executor.implement:pvz2.text_table.convert:source_file": "Source file",
 	"executor.implement:pvz2.text_table.convert:destination_version": "Destination version",
 	"executor.implement:pvz2.text_table.convert:destination_file": "Destination file",
+	// Executor/Implement/pvz2.resource_manifest
+	"executor.implement:pvz2.resource_manifest.convert.from": "PvZ-2 Resource-Manifest Convert from official data",
+	"executor.implement:pvz2.resource_manifest.convert.from:raw_file": "Original file",
+	"executor.implement:pvz2.resource_manifest.convert.from:ripe_file": "Finished file",
+	// 
+	"executor.implement:pvz2.resource_manifest.convert.to": "PvZ-2 Resource-Manifest Convert to official data",
+	"executor.implement:pvz2.resource_manifest.convert.to:ripe_file": "Finished file",
+	"executor.implement:pvz2.resource_manifest.convert.to:raw_file": "Original file",
+	"executor.implement:pvz2.resource_manifest.convert.to:use_array_style_path": "Use array style path",
 	// Executor/Implement/pvz2.remote_android_helper
 	"executor.implement:pvz2.remote_android_helper.launch": "PvZ-2 Remote-Android-Helper Launch",
 	"executor.implement:pvz2.remote_android_helper.launch:project_directory": "Project directory",

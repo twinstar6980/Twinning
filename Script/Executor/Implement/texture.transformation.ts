@@ -48,8 +48,7 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 						default: '?input',
 					}),
 				],
-				worker: (argument) => {
-					let { source_file, destination_file, horizontal, vertical } = argument;
+				worker: ({ source_file, destination_file, horizontal, vertical }) => {
 					KernelX.Tool.Texture.Transformation.flip_fs(source_file, destination_file, horizontal, vertical);
 					return;
 				},
@@ -112,8 +111,7 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 						default: '?input',
 					}),
 				],
-				worker: (argument) => {
-					let { source_file, destination_file, size_width, size_height } = argument;
+				worker: ({ source_file, destination_file, size_width, size_height }) => {
 					KernelX.Tool.Texture.Transformation.scale_fs(source_file, destination_file, [size_width, size_height]);
 					return;
 				},
@@ -168,8 +166,7 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 						default: '?input',
 					}),
 				],
-				worker: (argument) => {
-					let { source_file, destination_file, size_rate } = argument;
+				worker: ({ source_file, destination_file, size_rate }) => {
 					KernelX.Tool.Texture.Transformation.scale_rate_fs(source_file, destination_file, size_rate);
 					return;
 				},

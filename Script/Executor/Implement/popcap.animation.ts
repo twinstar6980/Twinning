@@ -54,8 +54,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						default: configuration.encode_buffer_size,
 					}),
 				],
-				worker: (argument) => {
-					let { definition_file, data_file, version_number, buffer_size } = argument;
+				worker: ({ definition_file, data_file, version_number, buffer_size }) => {
 					KernelX.Tool.PopCap.Animation.encode_fs(data_file, definition_file, { number: version_number as any }, buffer_size);
 					return;
 				},
@@ -79,8 +78,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						item_mapper: (argument: {}, value) => (value.replace(/(\.pam\.json)?$/i, '.pam')),
 					}),
 				],
-				batch_worker: (argument, temporary: { buffer: Kernel.ByteArray; }) => {
-					let { definition_file, data_file, version_number, buffer_size } = argument;
+				batch_worker: ({ definition_file, data_file, version_number, buffer_size }, temporary: { buffer: Kernel.ByteArray; }) => {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
@@ -117,8 +115,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						default: configuration.version_number,
 					}),
 				],
-				worker: (argument) => {
-					let { data_file, definition_file, version_number } = argument;
+				worker: ({ data_file, definition_file, version_number }) => {
 					KernelX.Tool.PopCap.Animation.decode_fs(data_file, definition_file, { number: version_number as any });
 					return;
 				},
@@ -165,8 +162,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						default: '?automatic',
 					}),
 				],
-				worker: (argument) => {
-					let { raw_file, ripe_directory } = argument;
+				worker: ({ raw_file, ripe_directory }) => {
 					let raw = KernelX.JSON.read_fs_js<Kernel.Tool.PopCap.Animation.Definition.JS_N.Animation>(raw_file);
 					Support.PopCap.Animation.Convert.Flash.From.from_fsh(raw, ripe_directory);
 					Support.PopCap.Animation.Convert.Flash.SourceManager.create_fsh(ripe_directory, raw);
@@ -216,8 +212,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						default: '?automatic',
 					}),
 				],
-				worker: (argument) => {
-					let { ripe_directory, raw_file } = argument;
+				worker: ({ ripe_directory, raw_file }) => {
 					Support.PopCap.Animation.Convert.Flash.To.to_fs(raw_file, ripe_directory);
 					return;
 				},
@@ -264,8 +259,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						default: '?input',
 					}),
 				],
-				worker: (argument) => {
-					let { target_directory, resolution } = argument;
+				worker: ({ target_directory, resolution }) => {
 					Support.PopCap.Animation.Convert.Flash.SourceManager.resize_fs(target_directory, resolution);
 					return;
 				},
@@ -295,8 +289,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						default: '?input',
 					}),
 				],
-				worker: (argument) => {
-					let { target_directory } = argument;
+				worker: ({ target_directory }) => {
 					let media_directory = `${target_directory}/LIBRARY/media`;
 					if (KernelX.FileSystem.exist(media_directory)) {
 						KernelX.FileSystem.remove(media_directory);

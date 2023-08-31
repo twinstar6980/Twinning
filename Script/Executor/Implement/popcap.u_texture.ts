@@ -49,8 +49,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.u_texture {
 						default: '?input',
 					}),
 				],
-				worker: (argument) => {
-					let { image_file, data_file, version_compress_texture_data, format } = argument;
+				worker: ({ image_file, data_file, version_compress_texture_data, format }) => {
 					KernelX.Tool.PopCap.UTexture.encode_fs(data_file, image_file, format as any, { compress_texture_data: version_compress_texture_data });
 					return;
 				},
@@ -104,8 +103,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.u_texture {
 						default: configuration.version_compress_texture_data,
 					}),
 				],
-				worker: (argument) => {
-					let { data_file, image_file, version_compress_texture_data } = argument;
+				worker: ({ data_file, image_file, version_compress_texture_data }) => {
 					KernelX.Tool.PopCap.UTexture.decode_fs(data_file, image_file, { compress_texture_data: version_compress_texture_data });
 					return;
 				},

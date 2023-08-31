@@ -43,6 +43,7 @@ namespace TwinStar.Script.Support.PvZ2.TextTable {
 		}
 		switch (actual_source_version) {
 			case 'text': {
+				assert_test(!string_data_maybe_utf16(source_data), `invalid charset UTF-16`);
 				let source_text = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(Kernel.ByteListView.value(source_data)));
 				let key_regexp = /^\[.+\]$/gm;
 				let value_regexp = /(.|[\n\r])*?(?=[\n\r]*?(\[|$))/gy;

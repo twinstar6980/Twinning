@@ -58,8 +58,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.re_animation {
 						default: configuration.encode_buffer_size,
 					}),
 				],
-				worker: (argument) => {
-					let { definition_file, data_file, version_platform, version_variant_64, buffer_size } = argument;
+				worker: ({ definition_file, data_file, version_platform, version_variant_64, buffer_size }) => {
 					KernelX.Tool.PopCap.ReAnimation.encode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 }, buffer_size);
 					return;
 				},
@@ -83,8 +82,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.re_animation {
 						item_mapper: (argument: {}, value) => (value.replace(/(\.reanim\.json)?$/i, '.reanim.compiled')),
 					}),
 				],
-				batch_worker: (argument, temporary: { buffer: Kernel.ByteArray; }) => {
-					let { definition_file, data_file, version_platform, version_variant_64, buffer_size } = argument;
+				batch_worker: ({ definition_file, data_file, version_platform, version_variant_64, buffer_size }, temporary: { buffer: Kernel.ByteArray; }) => {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
@@ -128,8 +126,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.re_animation {
 						default: configuration.version_variant_64,
 					}),
 				],
-				worker: (argument) => {
-					let { data_file, definition_file, version_platform, version_variant_64 } = argument;
+				worker: ({ data_file, definition_file, version_platform, version_variant_64 }) => {
 					KernelX.Tool.PopCap.ReAnimation.decode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 });
 					return;
 				},

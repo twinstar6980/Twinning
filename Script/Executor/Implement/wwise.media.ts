@@ -59,8 +59,7 @@ namespace TwinStar.Script.Executor.Implement.wwise.media {
 						default: configuration.tool_ww2ogg_code_book_file,
 					}),
 				],
-				worker: (argument) => {
-					let { ripe_file, raw_file, tool_ffmpeg_program_file, tool_ww2ogg_program_file, tool_ww2ogg_code_book_file } = argument;
+				worker: ({ ripe_file, raw_file, tool_ffmpeg_program_file, tool_ww2ogg_program_file, tool_ww2ogg_code_book_file }) => {
 					let temporary_directpry = Home.new_temporary();
 					KernelX.Tool.Wwise.Media.decode_fs(ripe_file, raw_file, tool_ffmpeg_program_file, tool_ww2ogg_program_file, tool_ww2ogg_code_book_file, temporary_directpry, {});
 					return;

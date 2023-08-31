@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 81;
+	export const k_version = 82;
 
 	// ------------------------------------------------
 
@@ -253,6 +253,7 @@ namespace TwinStar.Script {
 			`Executor/Implement/text.json`,
 			`Executor/Implement/text.xml`,
 			`Executor/Implement/texture.transformation`,
+			`Executor/Implement/texture.encoding`,
 			`Executor/Implement/texture.atlas`,
 			`Executor/Implement/wwise.media`,
 			`Executor/Implement/wwise.sound_bank`,
@@ -275,6 +276,7 @@ namespace TwinStar.Script {
 			`Executor/Implement/popcap.resource_stream_bundle`,
 			`Executor/Implement/popcap.resource_stream_bundle_patch`,
 			`Executor/Implement/pvz2.text_table`,
+			`Executor/Implement/pvz2.resource_manifest`,
 			`Executor/Implement/pvz2.remote_android_helper`,
 			`Entry/Entry`,
 		];

@@ -32,8 +32,7 @@ namespace TwinStar.Script.Executor.Implement.text.xml {
 						default: '?automatic',
 					}),
 				],
-				worker: (argument) => {
-					let { source_file, destination_file } = argument;
+				worker: ({ source_file, destination_file }) => {
 					let data = KernelX.XML.read_fs(source_file);
 					KernelX.XML.write_fs(destination_file, data);
 					return;
