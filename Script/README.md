@@ -8,9 +8,7 @@
 
 * 要求
 	
-	* [Node.js 20.3](https://nodejs.org/)
-	
-	* [TypeScript 5.1](https://www.typescriptlang.org/)
+	* [TypeScript 5.2](https://www.typescriptlang.org/)
 	
 	* [PowerShell](https://learn.microsoft.com/powershell/)
 

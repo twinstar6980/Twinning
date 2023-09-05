@@ -13,6 +13,12 @@ namespace TwinStar::Kernel::Tool::PopCap::ParticleEffect {
 
 		// ----------------
 
+		using MagicIdentifier = StaticByteArray<5_sz>;
+
+		inline static constexpr auto k_magic_identifier = MagicIdentifier{{0x04_b, 'P'_b, 'P'_b, 'F'_b, '1'_b}};
+
+		// ----------------
+
 		using VersionNumber = IntegerU32;
 
 	};

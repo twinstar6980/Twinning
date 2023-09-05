@@ -2,7 +2,7 @@
 
 转发器，使用户可以通过 Android 文件分享功能将文件转发至工具。
 
-本项目是面向 `Android` 的 `Kotlin` 项目，依赖 `Shell GUI` 、`Script` 的实现。
+本项目是面向 `Android` 的 `Kotlin` 项目，依赖 `Shell GUI` 的实现。
 
 ## 项目开发
 

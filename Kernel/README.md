@@ -2,15 +2,15 @@
 
 内核，负责内部功能的实现。
 
-本项目是跨平台的 `C++` 项目，不依赖其他模块。
+本项目是跨平台的 `C++` 项目，不依赖其他模块的实现。
 
 ## 项目开发
 
 * 要求
 	
-	* [xmake 2.8.1](https://xmake.io/#/)
+	* [xmake 2.8](https://xmake.io/#/)
 	
-	* [MSVC 19.36 with MSVC-STL and Windows-SDK for Windows](https://visualstudio.microsoft.com/downloads/)
+	* [MSVC 19.37 with MSVC-STL and Windows-SDK for Windows](https://visualstudio.microsoft.com/downloads/)
 	
 	* [Clang 16.0 with libstdc++ and POSIX for Linux](https://llvm.org/)
 	
@@ -45,7 +45,7 @@
 | [tinyxml2 9.0.0](https://github.com/leethomason/tinyxml2)                  | XML 读写                       |
 | [md5 1.0](https://github.com/JieweiWei/md5)                                | MD5 哈希计算                   |
 | [Rijndael](#)                                                              | Rijndael 加密与解密            |
-| [zlib 1.2.13](https://github.com/madler/zlib)                              | ZLib 压缩与解压                |
+| [zlib 1.3](https://github.com/madler/zlib)                                 | ZLib 压缩与解压                |
 | [bzip2 1.0.8](https://sourceware.org/bzip2/)                               | BZip2 压缩与解压               |
 | [lzma 23.01](https://www.7-zip.org/sdk.html)                               | Lzma 压缩与解压                |
 | [open-vcdiff 0.8.4](https://github.com/google/open-vcdiff)                 | VCDiff 差异分析                |

@@ -2,7 +2,7 @@
 
 转发器，使用户可以通过 Macintosh Finder 右键菜单将文件转发至工具。
 
-本项目是面向 `Macintosh` 的 `Swift` 项目，依赖 `Script` 的实现。
+本项目是面向 `Macintosh` 的 `Swift` 项目，不依赖其他模块的实现。
 
 ## 项目开发
 
