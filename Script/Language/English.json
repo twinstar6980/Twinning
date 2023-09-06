@@ -85,7 +85,7 @@
 	"executor.typical:argument_automatic": "Argument generated: {}",
 	"executor.typical:argument_automatic_failed": "Argument can not generated: {}",
 	"executor.typical:argument_input": "Argument need input: {}",
-	"executor.typical:batch_no_item": "No processable items",
+	"executor.typical:batch_result": "Batch processing done, total {} items, valid {} items, failed {} items",
 	// Executor/Implement/*
 	"范围溢出": "Out of range",
 	"密钥长度非法": "Illegal key length",

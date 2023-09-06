@@ -85,7 +85,7 @@
 	"executor.typical:argument_automatic": "参数已生成：{}",
 	"executor.typical:argument_automatic_failed": "参数未生成：{}",
 	"executor.typical:argument_input": "参数需输入：{}",
-	"executor.typical:batch_no_item": "无可处理项目",
+	"executor.typical:batch_result": "批处理完成，总计 {} 项，有效 {} 项，失败 {} 项",
 	// Executor/Implement/*
 	"范围溢出": "范围溢出",
 	"密钥长度非法": "密钥长度非法",

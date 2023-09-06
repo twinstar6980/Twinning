@@ -541,17 +541,6 @@ class _SettingPageState extends State<SettingPage> {
                   },
                 ),
                 const SizedBox(height: 16),
-                Row(children: [
-                  Expanded(child: Container()),
-                  OutlinedButton(
-                    onPressed: () async {
-                      setting.set(Setting.init());
-                    },
-                    child: const Text('Reset'),
-                  ),
-                  Expanded(child: Container()),
-                ]),
-                const SizedBox(height: 8),
               ],
             ),
           ),

@@ -8,10 +8,11 @@ namespace TwinStar.Script.Executor {
 		Value: Value;
 		GivenValue: GivenValue;
 		id: ID;
-		given_converter: null | ((argument: any, given: GivenValue) => Value);
-		automatic_generator: null | ((argument: any) => null | Value);
-		input_generator: ((argument: any, initial: Value) => Value);
-		condition: null | ((argument: any) => null | Value);
+		initial_echoer: (value: Value) => string;
+		given_converter: (argument: any, given: GivenValue) => Value;
+		automatic_generator: (argument: any) => null | Value;
+		input_generator: (argument: any, initial: Value) => Value;
+		condition: (argument: any) => null | Value;
 		default: TypicalArgumentExpression<GivenValue>;
 	};
 
@@ -43,10 +44,11 @@ namespace TwinStar.Script.Executor {
 	): TypicalArgument<ID, boolean, boolean> {
 		return {
 			id: object.id,
+			initial_echoer: (value) => (make_confirmation_string(value)),
 			given_converter: (argument, given) => (given),
-			automatic_generator: object.automatic,
+			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
 			input_generator: (argument, initial) => (Console.confirmation(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
-			condition: object.condition,
+			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
 			default: object.default,
 		} as TypicalArgument<ID, boolean, boolean>;
 	}
@@ -63,10 +65,11 @@ namespace TwinStar.Script.Executor {
 	): TypicalArgument<ID, number, number> {
 		return {
 			id: object.id,
+			initial_echoer: (value) => (make_number_string(value)),
 			given_converter: (argument, given) => (given),
-			automatic_generator: object.automatic,
+			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
 			input_generator: (argument, initial) => (object.option === null ? Console.number(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.option(Console.option_number(object.option), null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
-			condition: object.condition,
+			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
 			default: object.default,
 		} as TypicalArgument<ID, number, number>;
 	}
@@ -83,10 +86,11 @@ namespace TwinStar.Script.Executor {
 	): TypicalArgument<ID, bigint, bigint> {
 		return {
 			id: object.id,
+			initial_echoer: (value) => (make_integer_string(value)),
 			given_converter: (argument, given) => (given),
-			automatic_generator: object.automatic,
+			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
 			input_generator: (argument, initial) => (object.option === null ? Console.integer(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.option(Console.option_integer(object.option), null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
-			condition: object.condition,
+			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
 			default: object.default,
 		} as TypicalArgument<ID, bigint, bigint>;
 	}
@@ -102,10 +106,11 @@ namespace TwinStar.Script.Executor {
 	): TypicalArgument<ID, bigint, string> {
 		return {
 			id: object.id,
+			initial_echoer: (value) => (make_size_string(value)),
 			given_converter: (argument, given) => (parse_size_string(given)),
-			automatic_generator: object.automatic,
+			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
 			input_generator: (argument, initial) => (Console.size(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
-			condition: object.condition,
+			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
 			default: object.default,
 		} as TypicalArgument<ID, bigint, string>;
 	}
@@ -122,10 +127,11 @@ namespace TwinStar.Script.Executor {
 	): TypicalArgument<ID, string, string> {
 		return {
 			id: object.id,
+			initial_echoer: (value) => (value),
 			given_converter: (argument, given) => (given),
-			automatic_generator: object.automatic,
+			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
 			input_generator: (argument, initial) => (object.option === null ? Console.string(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.option(Console.option_string(object.option), null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
-			condition: object.condition,
+			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
 			default: object.default,
 		} as TypicalArgument<ID, string, string>;
 	}
@@ -142,10 +148,11 @@ namespace TwinStar.Script.Executor {
 	): TypicalArgument<ID, string, string> {
 		return {
 			id: object.id,
-			given_converter: (argument, given) => (Home.of(given)),
-			automatic_generator: object.automatic,
+			initial_echoer: (value) => (value),
+			given_converter: (argument, given) => (PathUtility.regularize(given)),
+			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
 			input_generator: (argument, initial) => (Console.path(object.rule[0], [object.rule[1], 'none'] as any, null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
-			condition: object.condition,
+			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
 			default: object.default,
 		} as TypicalArgument<ID, string, string>;
 	}
@@ -163,10 +170,11 @@ namespace TwinStar.Script.Executor {
 	): TypicalBatchArgument<ID> {
 		return {
 			id: object.id,
-			given_converter: (argument, given) => (Home.of(given)),
-			automatic_generator: object.automatic,
+			initial_echoer: (value) => (value),
+			given_converter: (argument, given) => (PathUtility.regularize(given)),
+			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
 			input_generator: (argument, initial) => (Console.path('directory', [object.rule, 'none'] as any, null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
-			condition: object.condition,
+			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
 			default: object.default,
 			item_mapper: object.item_mapper,
 		} as TypicalBatchArgument<ID>;
@@ -192,36 +200,30 @@ namespace TwinStar.Script.Executor {
 	export function request_typical_argument<Given, Result>(
 		name: string,
 		given: Given | '?automatic' | '?input',
+		initial_echoer: (value: Result) => string,
 		given_converter: (given: Given) => Result,
 		automatic_generator: () => null | Result,
 		input_generator: (initial?: Result) => Result,
 		skip_value: null | Result = null,
 	): Result {
 		if (skip_value !== null) {
-			Console.information(los('executor.typical:argument_skipped', name), [
-			]);
+			Console.information(los('executor.typical:argument_skipped', name), []);
 			return skip_value;
 		}
 		let initial: Result | undefined = undefined;
 		if (given === '?input') {
-			Console.information(los('executor.typical:argument_input', name), [
-			]);
+			Console.information(los('executor.typical:argument_input', name), []);
 		} else if (given === '?automatic') {
 			let automatic_value = automatic_generator();
 			if (automatic_value === null) {
-				Console.information(los('executor.typical:argument_automatic_failed', name), [
-				]);
+				Console.information(los('executor.typical:argument_automatic_failed', name), []);
 			} else {
 				initial = automatic_value;
-				Console.information(los('executor.typical:argument_automatic', name), [
-					`${initial}`,
-				]);
+				Console.information(los('executor.typical:argument_automatic', name), [initial_echoer(initial!)]);
 			}
 		} else {
 			initial = given_converter(given);
-			Console.information(los('executor.typical:argument_given', name), [
-				`${initial}`,
-			]);
+			Console.information(los('executor.typical:argument_given', name), [initial_echoer(initial!)]);
 		}
 		return input_generator(initial);
 	}
@@ -234,6 +236,8 @@ namespace TwinStar.Script.Executor {
 			id: `${source.id}${!batch ? '' : '.batch'}`,
 			name: () => (`${!batch ? '' : '[*] '}${los(`executor.implement:${source.id}`)}`),
 			worker: (given_argument: Record<string, any>) => {
+				let state = false;
+				let timer = new Timer();
 				let final_argument = {} as Record<string, any>;
 				for (let argument_index in source.argument) {
 					let argument = source.argument[argument_index];
@@ -244,44 +248,52 @@ namespace TwinStar.Script.Executor {
 					final_argument[argument.id] = request_typical_argument(
 						`${batch_argument === undefined ? '' : '[*] '}${los(`executor.implement:${source.id}:${argument.id}`)}`,
 						given_argument[argument.id],
-						(given) => (argument.given_converter === null ? given : argument.given_converter(final_argument, given)),
-						() => (argument.automatic_generator === null ? null : argument.automatic_generator(final_argument)),
+						argument.initial_echoer,
+						(given) => (argument.given_converter(final_argument, given)),
+						() => (argument.automatic_generator(final_argument)),
 						(initial) => (argument.input_generator(final_argument, initial)),
-						argument.condition === null ? null : argument.condition(final_argument),
+						argument.condition(final_argument),
 					);
 				}
 				if (!batch) {
-					source.worker(final_argument as any);
+					timer.start();
+					try {
+						source.worker(final_argument as any);
+						state = true;
+					} catch (e) {
+					}
+					timer.stop();
 				} else {
 					assert_test(source.batch_argument !== null);
-					let item_list = KernelX.FileSystem[({ any: 'list', file: 'list_file', directory: 'list_directory' } as const)[source.filter[0]]](final_argument[source.argument[0].id]).filter((value) => (source.filter[1]!.test(value)));;
-					if (item_list.length === 0) {
-						Console.warning(los('executor.typical:batch_no_item'), [
-						]);
-					} else {
-						let progress = new TextGenerator.Progress('fraction', false, 40, item_list.length);
-						let temporary = {};
-						for (let item of item_list) {
-							progress.increase();
-							Console.information(`${progress}`, [`${item}`]);
-							try {
-								let item_argument = { ...final_argument };
-								for (let batch_argument of source.batch_argument) {
-									item_argument[batch_argument.id] += '/' + batch_argument.item_mapper(final_argument, item);
-								}
-								if (source.batch_worker === null) {
-									source.worker(item_argument as any);
-								} else {
-									source.batch_worker(item_argument as any, temporary);
-								}
-							} catch (e) {
-								Console.error_of(e);
-								Console.pause();
+					timer.start();
+					let all_item = KernelX.FileSystem[({ any: 'list', file: 'list_file', directory: 'list_directory' } as const)[source.filter[0]]](final_argument[source.argument[0].id]);
+					let valid_item = all_item.filter((value) => (source.filter[1]!.test(value)));
+					let failed_item = [] as Array<string>;
+					let progress = new TextGenerator.Progress('fraction', false, 40, valid_item.length);
+					let temporary = {};
+					for (let item of valid_item) {
+						progress.increase();
+						Console.information(`${progress}`, [`${item}`]);
+						try {
+							let item_argument = { ...final_argument };
+							for (let batch_argument of source.batch_argument) {
+								item_argument[batch_argument.id] += '/' + batch_argument.item_mapper(final_argument, item);
 							}
+							if (source.batch_worker === null) {
+								source.worker(item_argument as any);
+							} else {
+								source.batch_worker(item_argument as any, temporary);
+							}
+						} catch (e) {
+							failed_item.push(item);
+							Console.error_of(e);
 						}
 					}
+					timer.stop();
+					Console.warning(los('executor.typical:batch_result', all_item.length, valid_item.length, failed_item.length), failed_item);
+					state = true;
 				}
-				return;
+				return [state, timer.duration()];
 			},
 			default_argument: record_from_array(source.argument, (index, element) => ([element.id, element.default])) as typeof source.GivenArgument,
 			input_filter: (input) => {

@@ -9,8 +9,8 @@ namespace TwinStar.Script.Executor {
 		id: string;
 		/** 名称函数；返回对函数的名称文本 */
 		name(): string;
-		/** 工作函数；根据参数执行的事务 */
-		worker(argument: Argument): void;
+		/** 工作函数；根据参数执行的事务，返回结束状态与有效用时 */
+		worker(argument: Argument): [boolean, number];
 		/** 默认参数；当命令所提供参数未包含所需参数时，提供默认值，若其中属性值为undefined，则表示命令所提供参数必须包含此值 */
 		default_argument: Argument;
 		/** 输入过滤函数；根据输入值判断此功能是否可进入待选表 */
@@ -77,80 +77,73 @@ namespace TwinStar.Script.Executor {
 	export function execute(
 		command: Command,
 		method: Array<Method>,
-	): [null | boolean, number] {
-		let result = [undefined!, undefined!] as [null | boolean, any];
-		let timer = new Timer();
-		timer.start();
-		try {
-			let selected_method: Method | null;
-			if (command.method !== null) {
-				let target_method = method.find((e) => (e.id === command.method));
-				if (target_method === undefined) {
-					selected_method = null;
-					result = [null, los('executor.generic:method_invalid')];
-				} else {
-					selected_method = target_method;
-				}
+	): null | [boolean, number] {
+		let state = undefined! as [boolean, number] | string;
+		let selected_method: Method | null;
+		if (command.method !== null) {
+			let target_method = method.find((e) => (e.id === command.method));
+			if (target_method === undefined) {
+				selected_method = null;
+				state = los('executor.generic:method_invalid');
 			} else {
-				if (command.input === null) {
-					Console.information(los('executor.generic:no_input'), [
-					]);
-					let input_value = Console.string(null, null);
-					Console.information(los('executor.generic:should_disable_filter_or_not'), [
-					]);
-					let input_disable_filter = Console.confirmation(null, null);
-					command.input = {
-						value: input_value,
-						disable_filter: input_disable_filter,
-					};
-				}
-				let valid_method: Array<[bigint, Method]> = [];
-				for (let index in method) {
-					if (command.input.disable_filter || method[index].input_filter(command.input.value)) {
-						valid_method.push([BigInt(index) + 1n, method[index]]);
-					}
-				}
-				if (valid_method.length === 0) {
-					selected_method = null;
-					result = [null, los('executor.generic:method_unavaliable')];
-				} else {
-					Console.information(los('executor.generic:method_select'), [
-						los('executor.generic:input_null_to_pass'),
-					]);
-					selected_method = Console.option(valid_method.map((e) => ([e[1], `${e[0]}`, e[1].name()])), true, null);
-					if (selected_method === null) {
-						result = [null, los('executor.generic:method_unselect')];
-					}
+				selected_method = target_method;
+			}
+		} else {
+			if (command.input === null) {
+				Console.information(los('executor.generic:no_input'), [
+				]);
+				let input_value = Console.string(null, null);
+				Console.information(los('executor.generic:should_disable_filter_or_not'), [
+				]);
+				let input_disable_filter = Console.confirmation(null, null);
+				command.input = {
+					value: input_value,
+					disable_filter: input_disable_filter,
+				};
+			}
+			let valid_method: Array<[bigint, Method]> = [];
+			for (let index in method) {
+				if (command.input.disable_filter || method[index].input_filter(command.input.value)) {
+					valid_method.push([BigInt(index) + 1n, method[index]]);
 				}
 			}
-			if (selected_method !== null) {
-				let argument = { ...command.argument };
-				if (command.input !== null) {
-					argument[selected_method.input_forwarder] = command.input.value;
+			if (valid_method.length === 0) {
+				selected_method = null;
+				state = los('executor.generic:method_unavaliable');
+			} else {
+				Console.information(los('executor.generic:method_select'), [
+					los('executor.generic:input_null_to_pass'),
+				]);
+				selected_method = Console.option(valid_method.map((e) => ([e[1], `${e[0]}`, e[1].name()])), true, null);
+				if (selected_method === null) {
+					state = los('executor.generic:method_unselect');
 				}
-				for (let key in selected_method.default_argument) {
-					if (argument[key] === undefined) {
-						argument[key] = selected_method.default_argument[key];
-					}
-				}
-				selected_method.worker(argument);
-				result = [true, null];
 			}
-		} catch (e) {
-			result = [false, e];
 		}
-		timer.stop();
-		if (result[0] === null) {
-			Console.warning(los('executor.generic:finish_skipped'), [result[1] as string]);
+		if (selected_method !== null) {
+			let argument = { ...command.argument };
+			if (command.input !== null) {
+				argument[selected_method.input_forwarder] = command.input.value;
+			}
+			for (let key in selected_method.default_argument) {
+				if (argument[key] === undefined) {
+					argument[key] = selected_method.default_argument[key];
+				}
+			}
+			state = selected_method.worker(argument);
 		}
-		if (result[0] === false) {
-			Console.error(los('executor.generic:finish_failed'), [los('executor.generic:duration', (timer.duration() / 1000).toFixed(3))]);
-			Console.error_of(result[1]);
+		if (typeof state === 'string') {
+			Console.warning(los('executor.generic:finish_skipped'), [state]);
+		} else {
+			if (state[0] === false) {
+				Console.error(los('executor.generic:finish_failed'), [los('executor.generic:duration', (state[1] / 1000).toFixed(3))]);
+				Console.error_of(state[1]);
+			}
+			if (state[0] === true) {
+				Console.success(los('executor.generic:finish_succeed'), [los('executor.generic:duration', (state[1] / 1000).toFixed(3))]);
+			}
 		}
-		if (result[0] === true) {
-			Console.success(los('executor.generic:finish_succeed'), [los('executor.generic:duration', (timer.duration() / 1000).toFixed(3))]);
-		}
-		return [result[0], timer.duration()];
+		return typeof state === 'string' ? null : state;
 	}
 
 	// ------------------------------------------------

@@ -599,6 +599,9 @@ namespace TwinStar.Script.Console {
 		if (rule[0] === 'output') {
 			state_data.tactic_if_out_exist = rule[1];
 		}
+		if (initial !== undefined && initial !== null) {
+			initial = Home.of(PathUtility.regularize(initial));
+		}
 		let converter = (value: string): string | [string] => {
 			let result: string;
 			if (value.length >= 1 && value[0] === ':') {
@@ -612,7 +615,7 @@ namespace TwinStar.Script.Console {
 							return los('console:path_command_pick_cancel');
 						}
 						result = pick_result;
-						cli_basic_output(`${result}`, false, 1, true);
+						message(`t`, `P ${result}`, []);
 						break;
 					}
 					case 'o': {
@@ -653,7 +656,7 @@ namespace TwinStar.Script.Console {
 					}
 				}
 			} else {
-				result = unquote(value);
+				result = Home.of(PathUtility.regularize(unquote(value)));
 			}
 			return [result];
 		};

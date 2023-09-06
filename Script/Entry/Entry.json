@@ -9,6 +9,6 @@
 		"disable_array_wrap_line": false,
 	},
 	"thread_limit": 0,
-	"notification_time_limit": 20000,
+	"notification_time_limit": 15000,
 	"pause_when_finish": true,
 }

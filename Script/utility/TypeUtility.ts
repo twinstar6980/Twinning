@@ -146,6 +146,12 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
+	export function make_confirmation_string(
+		value: boolean,
+	): string {
+		return !value ? 'n' : 'y';
+	}
+
 	export function parse_confirmation_string(
 		string: string,
 	): boolean {
@@ -156,6 +162,39 @@ namespace TwinStar.Script {
 			return true;
 		}
 		assert_test(false, `invalid confirmation string`);
+	}
+
+	export function make_integer_string(
+		value: bigint,
+	): string {
+		return `${value > 0.0 ? '+' : ''}${value}`;
+	}
+
+	export function make_number_string(
+		value: number,
+	): string {
+		return `${value > 0.0 ? '+' : ''}${value}${Number.isInteger(value) ? '.0' : ''}`;
+	}
+
+	export function make_size_string(
+		value: bigint,
+	): string {
+		assert_test(value >= 0n);
+		let value_part = Number(value);
+		let unit_level = 0;
+		if (value_part >= 1024) {
+			value_part /= 1024;
+			unit_level += 1;
+		}
+		if (value_part >= 1024) {
+			value_part /= 1024;
+			unit_level += 1;
+		}
+		if (value_part >= 1024) {
+			value_part /= 1024;
+			unit_level += 1;
+		}
+		return `${value_part.toFixed(1)}${['b', 'k', 'm', 'g'][unit_level]}`;
 	}
 
 	export function parse_size_string(

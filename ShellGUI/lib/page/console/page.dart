@@ -357,12 +357,13 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
 
   Future<Boolean>
   _launchDefault(
+    List<String> additionalArgument,
   ) async {
     var setting = Provider.of<SettingProvider>(context, listen: false);
     var command = Command(
       setting.data.mCommandKernel,
       setting.data.mCommandScript,
-      setting.data.mCommandArgument,
+      setting.data.mCommandArgument + additionalArgument,
     );
     return this._launch(command);
   }

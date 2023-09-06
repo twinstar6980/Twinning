@@ -79,8 +79,6 @@ namespace TwinStar.Script.Entry {
 	): void {
 		let configuration = g_configuration;
 		g_thread_manager.resize(Number(configuration.thread_limit));
-		let timer = new Timer();
-		timer.start();
 		let raw_command = [...argument];
 		if (raw_command.length === 0) {
 			Console.information(los('entry:input_command'), [
@@ -99,6 +97,7 @@ namespace TwinStar.Script.Entry {
 		Console.information(los('entry:all_command_parse'), [
 			los('entry:all_command_count', command.length),
 		]);
+		let duration = 0;
 		let progress = new TextGenerator.Progress('fraction', true, 40, command.length);
 		for (let item of command) {
 			progress.increase();
@@ -106,13 +105,15 @@ namespace TwinStar.Script.Entry {
 				`${item.input === null ? '?' : item.input.value}${item.method === null ? '' : ` | ${item.method}`}`,
 			]);
 			let state = Executor.execute(item, method);
-			if (configuration.notification_time_limit !== null && configuration.notification_time_limit <= state[1]) {
-				Console.push_notification(los('entry:current_command_finish'), los('entry:duration', (state[1] / 1000).toFixed(3)));
+			if (state !== null) {
+				duration += state[1];
+				if (configuration.notification_time_limit !== null && configuration.notification_time_limit <= state[1]) {
+					Console.push_notification(los('entry:current_command_finish'), los('entry:duration', (state[1] / 1000).toFixed(3)));
+				}
 			}
 		}
-		timer.stop();
 		Console.success(los('entry:all_command_finish'), [
-			los('entry:duration', (timer.duration() / 1000).toFixed(3)),
+			los('entry:duration', (duration / 1000).toFixed(3)),
 		]);
 		if (configuration.pause_when_finish) {
 			Console.pause();

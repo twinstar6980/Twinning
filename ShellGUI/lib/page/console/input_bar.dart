@@ -533,9 +533,9 @@ class _PathInputBarContentState extends State<PathInputBarContent> {
       children: [
         Expanded(
           child: TextField(
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               border: InputBorder.none,
-              hintText: 'Path ... ( ${this.widget.type.name} for ${this.widget.rule.name} ) ',
+              hintText: 'Path ...',
             ),
             controller: this._controller,
             onChanged: (value) {
@@ -544,67 +544,53 @@ class _PathInputBarContentState extends State<PathInputBarContent> {
             },
           ),
         ),
-        this.widget.rule != FileRequestRule.output
+        !(this.widget.rule == FileRequestRule.output)
         ? const SizedBox()
-        : IconButton(
-          onPressed: () async {
-            this._value = ':o';
-            this._controller.text = this._value ?? '';
-            this.setState(() {});
-          },
+        : PopupMenuButton(
+          offset: const Offset(0, -112),
           icon: const Icon(Icons.adjust_outlined),
-        ),
-        this.widget.rule != FileRequestRule.output
-        ? const SizedBox()
-        : IconButton(
-          onPressed: () async {
-            this._value = ':d';
+          tooltip: '',
+          itemBuilder: (context) => [
+            const PopupMenuItem(
+              value: ':o',
+              child: Text('override'),
+            ),
+            const PopupMenuItem(
+              value: ':d',
+              child: Text('delete'),
+            ),
+            const PopupMenuItem(
+              value: ':t',
+              child: Text('trash'),
+            ),
+          ],
+          onSelected: (value) async {
+            this._value = value;
             this._controller.text = this._value ?? '';
             this.setState(() {});
           },
-          icon: const Icon(Icons.remove_circle_outline_outlined),
         ),
-        IconButton(
+        PopupMenuButton(
+          offset: const Offset(0, -64),
           icon: const Icon(Icons.outbond_outlined),
-          onPressed: () async {
+          tooltip: '',
+          itemBuilder: (context) => [
+            const PopupMenuItem(
+              value: FileObjectType.file,
+              child: Text('file'),
+            ),
+            const PopupMenuItem(
+              value: FileObjectType.directory,
+              child: Text('directory'),
+            ),
+          ],
+          onSelected: (value) async {
             var selection = null as String?;
-            var actualType = this.widget.type as FileObjectType?;
-            if (actualType == FileObjectType.any) {
-              actualType = await showDialog<FileObjectType>(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('File Object Type'),
-                  content: null,
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, FileObjectType.file),
-                      child: const Text('FILE'),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, FileObjectType.directory),
-                      child: const Text('DIRECTORY'),
-                    ),
-                  ],
-                ),
-              );
+            if (value == FileObjectType.file) {
+              selection = await PathPicker.pickFile();
             }
-            switch (actualType) {
-              case null: {
-                selection = null;
-                break;
-              }
-              case FileObjectType.any: {
-                selection = null;
-                break;
-              }
-              case FileObjectType.file: {
-                selection = await PathPicker.pickFile();
-                break;
-              }
-              case FileObjectType.directory: {
-                selection = await PathPicker.pickDirectory();
-                break;
-              }
+            if (value == FileObjectType.directory) {
+              selection = await PathPicker.pickDirectory();
             }
             if (selection != null) {
               this._value = selection;
