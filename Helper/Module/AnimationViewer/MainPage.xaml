@@ -99,7 +99,7 @@
 					<my:MStack Padding="0,0" HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Vertical" Spacing="8">
 						<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
 							<TextBox
-								Width="240" Height="NaN"
+								Width="262" Height="NaN"
 								VerticalAlignment="Center"
 								PlaceholderText="Animation File" IsReadOnly="True"
 								IsEnabled="{x:Bind Controller.uAnimationFile_IsEnabled}"
@@ -107,7 +107,6 @@
 							/>
 							<Button
 								VerticalAlignment="Center"
-								IsEnabled="{x:Bind Controller.uSelectAnimationFile_IsEnabled}"
 								Click="{x:Bind Controller.uSelectAnimationFile_OnClick}"
 							>
 								<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.OpenFile}" />
@@ -115,7 +114,7 @@
 						</my:MStack>
 						<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
 							<TextBox
-								Width="240" Height="NaN"
+								Width="262" Height="NaN"
 								VerticalAlignment="Center"
 								PlaceholderText="Image Directory" IsReadOnly="True"
 								IsEnabled="{x:Bind Controller.uImageDirectory_IsEnabled}"
@@ -158,9 +157,9 @@
 					</my:MStack>
 					<my:MStack Padding="0,0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Vertical" Spacing="8">
 						<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
-							<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.TiltDown}" Opacity="{x:Bind Controller.uZombieGroundSwatchLayerIcon_Opacity}" />
+							<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.GenericScan}" Opacity="{x:Bind Controller.uZombieGroundSwatchLayerIcon_Opacity}" />
 							<ToggleButton
-								Width="136" Height="NaN"
+								Width="130" Height="NaN"
 								VerticalAlignment="Center"
 								HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
 								Content="Swatch"
@@ -172,7 +171,7 @@
 						<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
 							<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Eyedropper}" Opacity="{x:Bind Controller.uZombieStateLayerIcon_Opacity}" />
 							<ComboBox
-								Width="136" Height="NaN"
+								Width="130" Height="NaN"
 								VerticalAlignment="Center"
 								HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
 								PlaceholderText="State"
@@ -185,7 +184,7 @@
 						<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
 							<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.EmojiTabCelebrationObjects}" Opacity="{x:Bind Controller.uPlantCustomLayerIcon_Opacity}" />
 							<ComboBox
-								Width="136" Height="NaN"
+								Width="130" Height="NaN"
 								VerticalAlignment="Center"
 								HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
 								PlaceholderText="Custom"
@@ -196,9 +195,32 @@
 							/>
 						</my:MStack>
 						<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
+							<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.MapLayers}" />
+							<SplitButton
+								Width="130" Height="NaN"
+								VerticalAlignment="Center"
+								HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
+								Content="Filter"
+								Click="{x:Bind Controller.uSpriteFilterRule_OnClick}"
+							>
+								<SplitButton.Flyout>
+									<Flyout FlyoutPresenterStyle="{StaticResource CompatFlyoutPresenterStyle}">
+										<my:MStack Width="130" Orientation="Vertical" Spacing="8">
+											<TextBox
+												HorizontalAlignment="Stretch"
+												PlaceholderText="Rule"
+												Text="{x:Bind Controller.uSpriteFilterRuleText_Text}"
+												TextChanged="{x:Bind Controller.uSpriteFilterRuleText_OnTextChanged}"
+											/>
+										</my:MStack>
+									</Flyout>
+								</SplitButton.Flyout>
+							</SplitButton>
+						</my:MStack>
+						<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
 							<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.FitPage}" />
 							<ToggleButton
-								Width="136" Height="NaN"
+								Width="130" Height="NaN"
 								VerticalAlignment="Center"
 								HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
 								Content="Boundary"
@@ -222,9 +244,16 @@
 						ValueChanged="{x:Bind Controller.uWorkingSpriteFrameProgress_OnValueChanged}"
 					/>
 				</my:MStack>
-				<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="0">
+				<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="16">
 					<my:MStack Padding="0,0" my:MStack.Weight="1" HorizontalAlignment="Left" VerticalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
 						<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Play}" />
+						<ToggleButton
+							VerticalAlignment="Center"
+							IsChecked="{x:Bind Controller.uImmediateSelect_IsChecked}"
+							Click="{x:Bind Controller.uImmediateSelect_OnClick}"
+						>
+							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Touch}" />
+						</ToggleButton>
 						<ToggleButton
 							VerticalAlignment="Center"
 							IsChecked="{x:Bind Controller.uAutomaticPlay_IsChecked}"
@@ -239,7 +268,6 @@
 						>
 							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.RepeatAll}" />
 						</ToggleButton>
-						<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.SpeedMedium}" />
 						<ToggleButton
 							VerticalAlignment="Center"
 							IsChecked="{x:Bind Controller.uRemainFrameRate_IsChecked}"
@@ -247,6 +275,7 @@
 						>
 							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Pinned}" />
 						</ToggleButton>
+						<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.SpeedMedium}" Opacity="{x:Bind Controller.uWorkingSpriteFrameRateIcon_Opacity}" />
 						<NumberBox
 							Width="64" Height="NaN"
 							VerticalAlignment="Center"
@@ -262,8 +291,8 @@
 						<Button
 							Width="48" Height="NaN"
 							VerticalAlignment="Center"
-							IsEnabled="{x:Bind Controller.uWorkingSpritePrev_IsEnabled}"
-							Click="{x:Bind Controller.uWorkingSpritePrev_OnClick}"
+							IsEnabled="{x:Bind Controller.uWorkingSpritePrevious_IsEnabled}"
+							Click="{x:Bind Controller.uWorkingSpritePrevious_OnClick}"
 						>
 							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.LeftArrowKeyTime0}"/>
 						</Button>
@@ -285,16 +314,6 @@
 						</Button>
 					</my:MStack>
 					<my:MStack Padding="0,0" my:MStack.Weight="1" HorizontalAlignment="Right" VerticalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
-						<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Tag}" Opacity="{x:Bind Controller.uWorkingSpriteFrameRangeLabelIcon_Opacity}" />
-						<ComboBox
-							Width="108" Height="NaN"
-							VerticalAlignment="Center"
-							PlaceholderText="Label"
-							IsEnabled="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_IsEnabled}"
-							ItemsSource="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_ItemsSource}"
-							SelectedItem="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_SelectedItem}"
-							SelectionChanged="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_OnSelectionChanged}"
-						/>
 						<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.ScrollMode}" Opacity="{x:Bind Controller.uWorkingSpriteFrameRangeIcon_Opacity}">
 							<FontIcon.RenderTransform>
 								<RotateTransform CenterX="16" CenterY="16" Angle="90" />
@@ -319,6 +338,16 @@
 							SmallChange="1" LargeChange="10" SpinButtonPlacementMode="Hidden"
 							Value="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_Value}"
 							ValueChanged="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_OnValueChanged}"
+						/>
+						<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Tag}" Opacity="{x:Bind Controller.uWorkingSpriteFrameRangeLabelIcon_Opacity}" />
+						<ComboBox
+							Width="130" Height="NaN"
+							VerticalAlignment="Center"
+							PlaceholderText="Label"
+							IsEnabled="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_IsEnabled}"
+							ItemsSource="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_ItemsSource}"
+							SelectedItem="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_SelectedItem}"
+							SelectionChanged="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_OnSelectionChanged}"
 						/>
 					</my:MStack>
 				</my:MStack>

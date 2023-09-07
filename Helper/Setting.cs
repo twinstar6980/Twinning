@@ -18,9 +18,12 @@ namespace Helper {
 			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.CommandForwarderCommandConfiguration), "");
 			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.CommandForwarderQuickWindowSizeWidth), 480.ToString());
 			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.CommandForwarderQuickWindowSizeHeight), 960.ToString());
+			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.AnimationViewerImmediateSelect), true.ToString());
 			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.AnimationViewerAutomaticPlay), true.ToString());
 			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.AnimationViewerRepeatPlay), true.ToString());
 			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.AnimationViewerRemainFrameRate), true.ToString());
+			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.AnimationViewerShowSpriteBoundary), false.ToString());
+			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.AnimationViewerSpriteFilterRule), "");
 			Setting.AppearanceThemeMode = Setting.AppearanceThemeMode;
 			return;
 		}
@@ -64,6 +67,11 @@ namespace Helper {
 
 		// ----------------
 
+		public static Boolean AnimationViewerImmediateSelect {
+			get => ApplicationData.Current.LocalSettings.Values[nameof(Setting.AnimationViewerImmediateSelect)]?.ToString() is String value ? Boolean.Parse(value) : throw new Exception();
+			set => ApplicationData.Current.LocalSettings.Values[nameof(Setting.AnimationViewerImmediateSelect)] = value.ToString();
+		}
+
 		public static Boolean AnimationViewerAutomaticPlay {
 			get => ApplicationData.Current.LocalSettings.Values[nameof(Setting.AnimationViewerAutomaticPlay)]?.ToString() is String value ? Boolean.Parse(value) : throw new Exception();
 			set => ApplicationData.Current.LocalSettings.Values[nameof(Setting.AnimationViewerAutomaticPlay)] = value.ToString();
@@ -77,6 +85,16 @@ namespace Helper {
 		public static Boolean AnimationViewerRemainFrameRate {
 			get => ApplicationData.Current.LocalSettings.Values[nameof(Setting.AnimationViewerRemainFrameRate)]?.ToString() is String value ? Boolean.Parse(value) : throw new Exception();
 			set => ApplicationData.Current.LocalSettings.Values[nameof(Setting.AnimationViewerRemainFrameRate)] = value.ToString();
+		}
+
+		public static Boolean AnimationViewerShowSpriteBoundary {
+			get => ApplicationData.Current.LocalSettings.Values[nameof(Setting.AnimationViewerShowSpriteBoundary)]?.ToString() is String value ? Boolean.Parse(value) : throw new Exception();
+			set => ApplicationData.Current.LocalSettings.Values[nameof(Setting.AnimationViewerShowSpriteBoundary)] = value.ToString();
+		}
+
+		public static String AnimationViewerSpriteFilterRule {
+			get => ApplicationData.Current.LocalSettings.Values[nameof(Setting.AnimationViewerSpriteFilterRule)]?.ToString() is String value ? value : throw new Exception();
+			set => ApplicationData.Current.LocalSettings.Values[nameof(Setting.AnimationViewerSpriteFilterRule)] = value;
 		}
 
 		#endregion

@@ -268,6 +268,34 @@ namespace Helper.Module.HomeSetting {
 
 		// ----------------
 
+		public String uAnimationViewerImmediateSelectBar_Description {
+			get {
+				return ConvertHelper.BooleanToSwitchString(Setting.AnimationViewerImmediateSelect);
+			}
+		}
+
+		public Boolean uAnimationViewerImmediateSelectSwitch_IsOn {
+			get {
+				return Setting.AnimationViewerImmediateSelect;
+			}
+		}
+
+		public async void uAnimationViewerImmediateSelectSwitch_OnToggled (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			if (sender is not ToggleSwitch senders) { return; }
+			var newValue = senders.IsOn;
+			Setting.AnimationViewerImmediateSelect = newValue;
+			this.NotifyPropertyChanged(
+				nameof(this.uAnimationViewerImmediateSelectBar_Description),
+				nameof(this.uAnimationViewerImmediateSelectSwitch_IsOn)
+			);
+			return;
+		}
+
+		// ----------------
+
 		public String uAnimationViewerAutomaticPlayBar_Description {
 			get {
 				return ConvertHelper.BooleanToSwitchString(Setting.AnimationViewerAutomaticPlay);
@@ -346,6 +374,61 @@ namespace Helper.Module.HomeSetting {
 			this.NotifyPropertyChanged(
 				nameof(this.uAnimationViewerRemainFrameRateBar_Description),
 				nameof(this.uAnimationViewerRemainFrameRateSwitch_IsOn)
+			);
+			return;
+		}
+
+		// ----------------
+
+		public String uAnimationViewerShowSpriteBoundaryBar_Description {
+			get {
+				return ConvertHelper.BooleanToSwitchString(Setting.AnimationViewerShowSpriteBoundary);
+			}
+		}
+
+		public Boolean uAnimationViewerShowSpriteBoundarySwitch_IsOn {
+			get {
+				return Setting.AnimationViewerShowSpriteBoundary;
+			}
+		}
+
+		public async void uAnimationViewerShowSpriteBoundarySwitch_OnToggled (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			if (sender is not ToggleSwitch senders) { return; }
+			var newValue = senders.IsOn;
+			Setting.AnimationViewerShowSpriteBoundary = newValue;
+			this.NotifyPropertyChanged(
+				nameof(this.uAnimationViewerShowSpriteBoundaryBar_Description),
+				nameof(this.uAnimationViewerShowSpriteBoundarySwitch_IsOn)
+			);
+			return;
+		}
+
+		// ----------------
+
+		public String uAnimationViewerSpriteFilterRuleBar_Description {
+			get {
+				return Setting.AnimationViewerSpriteFilterRule;
+			}
+		}
+
+		public String uAnimationViewerSpriteFilterRuleText_Text {
+			get {
+				return Setting.AnimationViewerSpriteFilterRule;
+			}
+		}
+
+		public async void uAnimationViewerSpriteFilterRuleText_OnTextChanged (
+			Object               sender,
+			TextChangedEventArgs args
+		) {
+			if (sender is not TextBox senders) { return; }
+			Setting.AnimationViewerSpriteFilterRule = senders.Text;
+			this.NotifyPropertyChanged(
+				nameof(this.uAnimationViewerSpriteFilterRuleBar_Description),
+				nameof(this.uAnimationViewerSpriteFilterRuleText_Text)
 			);
 			return;
 		}

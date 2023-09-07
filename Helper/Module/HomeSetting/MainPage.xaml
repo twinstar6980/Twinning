@@ -138,6 +138,23 @@
 					<my:MStack my:MStack.Weight="1" Padding="0,0" HorizontalAlignment="Stretch" Orientation="Vertical" Spacing="2">
 						<my:MExpandBar
 							HorizontalAlignment="Stretch"
+							Icon="{StaticResource FluentIconGlyph.Touch}"
+							Title="Immediate Select"
+							Description="{x:Bind Controller.uAnimationViewerImmediateSelectBar_Description}"
+						>
+							<my:MExpandBar.Action>
+								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="12">
+									<ToggleSwitch
+										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										VerticalAlignment="Center"
+										IsOn="{x:Bind Controller.uAnimationViewerImmediateSelectSwitch_IsOn}"
+										Toggled="{x:Bind Controller.uAnimationViewerImmediateSelectSwitch_OnToggled}"
+									/>
+								</my:MStack>
+							</my:MExpandBar.Action>
+						</my:MExpandBar>
+						<my:MExpandBar
+							HorizontalAlignment="Stretch"
 							Icon="{StaticResource FluentIconGlyph.RightArrowKeyTime2}"
 							Title="Automatic Play"
 							Description="{x:Bind Controller.uAnimationViewerAutomaticPlayBar_Description}"
@@ -183,6 +200,40 @@
 										VerticalAlignment="Center"
 										IsOn="{x:Bind Controller.uAnimationViewerRemainFrameRateSwitch_IsOn}"
 										Toggled="{x:Bind Controller.uAnimationViewerRemainFrameRateSwitch_OnToggled}"
+									/>
+								</my:MStack>
+							</my:MExpandBar.Action>
+						</my:MExpandBar>
+						<my:MExpandBar
+							HorizontalAlignment="Stretch"
+							Icon="{StaticResource FluentIconGlyph.FitPage}"
+							Title="Show Sprite Boundary"
+							Description="{x:Bind Controller.uAnimationViewerShowSpriteBoundaryBar_Description}"
+						>
+							<my:MExpandBar.Action>
+								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="12">
+									<ToggleSwitch
+										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										VerticalAlignment="Center"
+										IsOn="{x:Bind Controller.uAnimationViewerShowSpriteBoundarySwitch_IsOn}"
+										Toggled="{x:Bind Controller.uAnimationViewerShowSpriteBoundarySwitch_OnToggled}"
+									/>
+								</my:MStack>
+							</my:MExpandBar.Action>
+						</my:MExpandBar>
+						<my:MExpandBar
+							HorizontalAlignment="Stretch"
+							Icon="{StaticResource FluentIconGlyph.MapLayers}"
+							Title="Sprite Filter Rule"
+							Description="{x:Bind Controller.uAnimationViewerSpriteFilterRuleBar_Description}"
+						>
+							<my:MExpandBar.Action>
+								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="12">
+									<TextBox
+										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										VerticalAlignment="Center"
+										Text="{x:Bind Controller.uAnimationViewerSpriteFilterRuleText_Text}"
+										TextChanged="{x:Bind Controller.uAnimationViewerSpriteFilterRuleText_OnTextChanged}"
 									/>
 								</my:MStack>
 							</my:MExpandBar.Action>

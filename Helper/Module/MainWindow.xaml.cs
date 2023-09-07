@@ -72,7 +72,7 @@ namespace Helper.Module {
 			TabViewTabCloseRequestedEventArgs args
 		) {
 			if (sender is not TabView senders) { return; }
-			this.uTab_TabItemsSource.RemoveAt(this.uTab_TabItemsSource.Count - 1);
+			this.uTab_TabItemsSource.Remove(args.Item as TabItemController ?? throw new NullReferenceException());
 			return;
 		}
 

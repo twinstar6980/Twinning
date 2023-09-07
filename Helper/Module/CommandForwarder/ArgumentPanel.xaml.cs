@@ -91,8 +91,8 @@ namespace Helper.Module.CommandForwarder {
 			this.uItem_ItemsSource = new List<ArgumentPanelItemController>();
 			if (this.Configuration is not null && this.Value is not null) {
 				Debug.Assert(this.Value.Count == this.Configuration.Count);
-				for (var i = 0; i < this.Configuration.Count; i++) {
-					this.uItem_ItemsSource.Add(new ArgumentPanelItemController() { Host = this, Configuration = this.Configuration[i], Value = this.Value[i] });
+				for (var index = 0; index < this.Configuration.Count; ++index) {
+					this.uItem_ItemsSource.Add(new ArgumentPanelItemController() { Host = this, Configuration = this.Configuration[index], Value = this.Value[index] });
 				}
 			}
 			this.NotifyPropertyChanged(

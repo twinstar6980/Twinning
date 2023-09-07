@@ -39,7 +39,7 @@
 				</my:MStack>
 			</TabView.TabStripHeader>
 			<TabView.TabStripFooter>
-				<my:MBox MinWidth="160" />
+				<my:MBox MinWidth="180" />
 			</TabView.TabStripFooter>
 		</TabView>
 		<InfoBar
