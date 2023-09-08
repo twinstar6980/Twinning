@@ -22,12 +22,11 @@
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundle>Never</AppxBundle>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <ApplicationIcon>Asset\logo.ico</ApplicationIcon>
     <ApplicationManifest>App.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="Asset\logo.ico" />
-    <Content Include="Asset\logo.png" />
+    <Content Include="Asset\Logo.ico" />
+    <Content Include="Asset\Logo.png" />
     <Content Include="Asset\Logo\Square150x150Logo.scale-100.png" />
     <Content Include="Asset\Logo\Square150x150Logo.scale-200.png" />
     <Content Include="Asset\Logo\Square150x150Logo.scale-400.png" />

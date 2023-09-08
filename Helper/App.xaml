@@ -51,7 +51,7 @@
 				<Setter Property="BorderBrush" Value="{ThemeResource ControlStrokeColorDefault}" />
 			</Style>
 			<Style x:Key="CompatFlyoutPresenterStyle" TargetType="FlyoutPresenter" BasedOn="{StaticResource DefaultFlyoutPresenterStyle}">
-				<Setter Property="Padding" Value="{ThemeResource MenuFlyoutPresenterThemePadding}" />
+				<Setter Property="Padding" Value="1" />
 				<Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
 				<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
 				<Setter Property="ScrollViewer.VerticalScrollMode" Value="Auto" />

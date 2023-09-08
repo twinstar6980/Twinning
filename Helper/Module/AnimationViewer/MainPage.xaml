@@ -102,12 +102,12 @@
 								Width="262" Height="NaN"
 								VerticalAlignment="Center"
 								PlaceholderText="Animation File" IsReadOnly="True"
-								IsEnabled="{x:Bind Controller.uAnimationFile_IsEnabled}"
-								Text="{x:Bind Controller.uAnimationFile_Text}"
+								IsEnabled="{x:Bind Controller.uAnimationFileSource_IsEnabled}"
+								Text="{x:Bind Controller.uAnimationFileSource_Text}"
 							/>
 							<Button
 								VerticalAlignment="Center"
-								Click="{x:Bind Controller.uSelectAnimationFile_OnClick}"
+								Click="{x:Bind Controller.uSelectAnimationFileSource_OnClick}"
 							>
 								<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.OpenFile}" />
 							</Button>
@@ -117,13 +117,13 @@
 								Width="262" Height="NaN"
 								VerticalAlignment="Center"
 								PlaceholderText="Image Directory" IsReadOnly="True"
-								IsEnabled="{x:Bind Controller.uImageDirectory_IsEnabled}"
-								Text="{x:Bind Controller.uImageDirectory_Text}"
+								IsEnabled="{x:Bind Controller.uImageDirectorySource_IsEnabled}"
+								Text="{x:Bind Controller.uImageDirectorySource_Text}"
 							/>
 							<Button
 								VerticalAlignment="Center"
-								IsEnabled="{x:Bind Controller.uSelectImageDirectory_IsEnabled}"
-								Click="{x:Bind Controller.uSelectImageDirectory_OnClick}"
+								IsEnabled="{x:Bind Controller.uSelectImageDirectorySource_IsEnabled}"
+								Click="{x:Bind Controller.uSelectImageDirectorySource_OnClick}"
 							>
 								<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.OpenFolderHorizontal}" />
 							</Button>
@@ -299,10 +299,10 @@
 						<Button
 							Width="48" Height="NaN"
 							VerticalAlignment="Center"
-							IsEnabled="{x:Bind Controller.uWorkingSpritePause_IsEnabled}"
-							Click="{x:Bind Controller.uWorkingSpritePause_OnClick}"
+							IsEnabled="{x:Bind Controller.uWorkingSpriteState_IsEnabled}"
+							Click="{x:Bind Controller.uWorkingSpriteState_OnClick}"
 						>
-							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{x:Bind Controller.uWorkingSpritePauseIcon_Glyph}"/>
+							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{x:Bind Controller.uWorkingSpriteStateIcon_Glyph}"/>
 						</Button>
 						<Button
 							Width="48" Height="NaN"

@@ -25,10 +25,8 @@ namespace Helper.Module.CommandForwarder {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			if (args.Parameter is List<String> parameter) {
-				this.Controller.AppendInput(parameter.Select(StorageHelper.Normalize).ToList());
-				this.Controller.RefreshInput();
-				this.Controller.RefreshFilter();
+			if (args.Parameter is List<String> option) {
+				this.Controller.ApplyCommandOption(option);
 			}
 			base.OnNavigatedTo(args);
 			return;
@@ -91,6 +89,32 @@ namespace Helper.Module.CommandForwarder {
 					NameMatched = false,
 				})).ToList(),
 			})).ToList();
+			return;
+		}
+
+		public async void ApplyCommandOption (
+			List<String> optionView
+		) {
+			while (!this.View.IsLoaded) {
+				await Task.Delay(TimeSpan.FromMilliseconds(50));
+			}
+			var optionInput = default(List<String>?);
+			try {
+				var option = new CommandLineReader(optionView);
+				if (option.Ensure("-Input")) {
+					optionInput = option.NextStringList();
+				}
+				if (!option.Done()) {
+					throw new Exception($"Too many option : {String.Join(' ', option.NextStringList())}");
+				}
+			} catch (Exception e) {
+				MainWindow.Instance.Controller.PublishTip(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
+			}
+			if (optionInput is not null) {
+				this.AppendInput(optionInput.Select(StorageHelper.Normalize).ToList());
+				this.RefreshInput();
+				this.RefreshFilter();
+			}
 			return;
 		}
 

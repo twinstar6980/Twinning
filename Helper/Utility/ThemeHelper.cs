@@ -12,7 +12,7 @@ namespace Helper.Utility {
 
 		public static ElementTheme RootTheme {
 			get {
-				foreach (var window in WindowHelper.Active) {
+				foreach (var window in WindowHelper.Current) {
 					if (window.Content is FrameworkElement rootElement) {
 						return rootElement.RequestedTheme;
 					}
@@ -20,7 +20,7 @@ namespace Helper.Utility {
 				return ElementTheme.Default;
 			}
 			set {
-				foreach (var window in WindowHelper.Active) {
+				foreach (var window in WindowHelper.Current) {
 					if (window.Content is FrameworkElement rootElement) {
 						rootElement.RequestedTheme = value;
 					}

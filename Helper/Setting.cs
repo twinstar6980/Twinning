@@ -16,8 +16,6 @@ namespace Helper {
 			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.AppearanceThemeMode), ElementTheme.Default.ToString());
 			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.CommandForwarderLaunchScript), "");
 			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.CommandForwarderCommandConfiguration), "");
-			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.CommandForwarderQuickWindowSizeWidth), 480.ToString());
-			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.CommandForwarderQuickWindowSizeHeight), 960.ToString());
 			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.AnimationViewerImmediateSelect), true.ToString());
 			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.AnimationViewerAutomaticPlay), true.ToString());
 			ApplicationData.Current.LocalSettings.Values.TryAdd(nameof(Setting.AnimationViewerRepeatPlay), true.ToString());
@@ -53,16 +51,6 @@ namespace Helper {
 		public static String CommandForwarderCommandConfiguration {
 			get => ApplicationData.Current.LocalSettings.Values[nameof(Setting.CommandForwarderCommandConfiguration)]?.ToString() is String value ? value : throw new Exception();
 			set => ApplicationData.Current.LocalSettings.Values[nameof(Setting.CommandForwarderCommandConfiguration)] = value;
-		}
-
-		public static Size CommandForwarderQuickWindowSizeWidth {
-			get => ApplicationData.Current.LocalSettings.Values[nameof(Setting.CommandForwarderQuickWindowSizeWidth)]?.ToString() is String value ? Size.Parse(value) : throw new Exception();
-			set => ApplicationData.Current.LocalSettings.Values[nameof(Setting.CommandForwarderQuickWindowSizeWidth)] = value;
-		}
-
-		public static Size CommandForwarderQuickWindowSizeHeight {
-			get => ApplicationData.Current.LocalSettings.Values[nameof(Setting.CommandForwarderQuickWindowSizeHeight)]?.ToString() is String value ? Size.Parse(value) : throw new Exception();
-			set => ApplicationData.Current.LocalSettings.Values[nameof(Setting.CommandForwarderQuickWindowSizeHeight)] = value;
 		}
 
 		// ----------------

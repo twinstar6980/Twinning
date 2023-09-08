@@ -55,14 +55,20 @@ namespace Helper.Utility {
 		// ----------------
 
 		public static String EncodeCommandLineString (
-			String       program,
+			String?      program,
 			List<String> argument
 		) {
 			var destination = new StringBuilder();
-			ProcessHelper.EncodeCommandLineProgramString(program, destination);
+			if (program is not null) {
+				ProcessHelper.EncodeCommandLineProgramString(program, destination);
+			}
+			var first = true;
 			foreach (var element in argument) {
-				destination.Append(' ');
+				if (program is not null || !first) {
+					destination.Append(' ');
+				}
 				ProcessHelper.EncodeCommandLineArgumentString(element, destination);
+				first = false;
 			}
 			return destination.ToString();
 		}

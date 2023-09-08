@@ -9,10 +9,10 @@ namespace Helper.Module {
 	#region type
 
 	public enum ModuleType {
-		HomeSetting,
+		ApplicationSetting,
 		CommandForwarder,
-		CommandForwarderQuick,
 		AnimationViewer,
+		CommandForwarderQuick,
 	}
 
 	#endregion
@@ -31,10 +31,10 @@ namespace Helper.Module {
 	public static class ModuleInformationConstant {
 		public static readonly List<ModuleInformation> Value = new List<ModuleInformation> {
 			new ModuleInformation {
-				Type = ModuleType.HomeSetting,
+				Type = ModuleType.ApplicationSetting,
 				Icon = FluentIconGlyph.OEM,
-				Title = "Home & Setting",
-				Page = typeof(HomeSetting.MainPage),
+				Title = "Application Setting",
+				Page = typeof(ApplicationSetting.MainPage),
 			},
 			new ModuleInformation {
 				Type = ModuleType.CommandForwarder,
@@ -43,16 +43,16 @@ namespace Helper.Module {
 				Page = typeof(CommandForwarder.MainPage),
 			},
 			new ModuleInformation {
-				Type = ModuleType.CommandForwarderQuick,
-				Icon = FluentIconGlyph.Send,
-				Title = "Command Forwarder - Quick",
-				Page = typeof(CommandForwarder.QuickPage),
-			},
-			new ModuleInformation {
 				Type = ModuleType.AnimationViewer,
 				Icon = FluentIconGlyph.HomeGroup,
 				Title = "Animation Viewer",
 				Page = typeof(AnimationViewer.MainPage),
+			},
+			new ModuleInformation {
+				Type = ModuleType.CommandForwarderQuick,
+				Icon = FluentIconGlyph.Send,
+				Title = "Command Forwarder - Quick",
+				Page = typeof(CommandForwarder.QuickPage),
 			},
 		};
 	}

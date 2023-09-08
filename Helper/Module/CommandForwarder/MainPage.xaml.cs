@@ -4,6 +4,7 @@
 using Helper;
 using Helper.Utility;
 using Helper.CustomControl;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace Helper.Module.CommandForwarder {
 
@@ -16,6 +17,18 @@ namespace Helper.Module.CommandForwarder {
 			this.InitializeComponent();
 			this.Controller = new MainPageController() { View = this };
 			this.Controller.Initialize();
+		}
+
+		// ----------------
+
+		protected override void OnNavigatedTo (
+			NavigationEventArgs args
+		) {
+			if (args.Parameter is List<String> option) {
+				this.Controller.ApplyCommandOption(option);
+			}
+			base.OnNavigatedTo(args);
+			return;
 		}
 
 		// ----------------
@@ -60,6 +73,23 @@ namespace Helper.Module.CommandForwarder {
 					ItemModel = item,
 				})).ToList(),
 			})).ToList();
+			return;
+		}
+
+		public async void ApplyCommandOption (
+			List<String> optionView
+		) {
+			while (!this.View.IsLoaded) {
+				await Task.Delay(TimeSpan.FromMilliseconds(50));
+			}
+			try {
+				var option = new CommandLineReader(optionView);
+				if (!option.Done()) {
+					throw new Exception($"Too many option : {String.Join(' ', option.NextStringList())}");
+				}
+			} catch (Exception e) {
+				MainWindow.Instance.Controller.PublishTip(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
+			}
 			return;
 		}
 

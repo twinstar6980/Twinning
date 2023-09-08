@@ -12,19 +12,13 @@ namespace Helper.Module {
 		#region life
 
 		public MainWindow (
-			ModuleType initialTab          = ModuleType.HomeSetting,
-			Object?    initialTabParameter = null
 		) {
 			MainWindow.Instance = this;
 			this.InitializeComponent();
-			this.Title = "TwinStar ToolKit - Helper";
 			this.ExtendsContentIntoTitleBar = true;
 			this.SetTitleBar(this.uTab.TabStripFooter as UIElement);
-			if (new BackdropHelper(this).TryApplyMica()) {
-				(this.Content as Panel)!.Background = null;
-			}
 			this.Controller = new MainWindowController() { View = this };
-			this.Controller.Initialize(initialTab, initialTabParameter);
+			this.Controller.Initialize();
 		}
 
 		// ----------------
@@ -52,10 +46,36 @@ namespace Helper.Module {
 		#region initialize
 
 		public void Initialize (
-			ModuleType initialTabType,
-			Object?    initialTabParameter = null
 		) {
-			this.PushTabItem(initialTabType, initialTabParameter, false);
+			return;
+		}
+
+		// ----------------
+
+		public void PushTabItem (
+			ModuleType    type,
+			List<String>? option,
+			Boolean       isClosable
+		) {
+			var model = ModuleInformationConstant.Value[(Size)type];
+			var frame = new Frame() {
+				ContentTransitions = new TransitionCollection() {
+					new NavigationThemeTransition() {
+						DefaultNavigationTransitionInfo = new DrillInNavigationTransitionInfo(),
+					},
+				},
+			};
+			frame.Navigate(model.Page, option);
+			this.uTab_TabItemsSource.Add(new TabItemController() { Host = this, Model = model, IsCloseable = isClosable, Frame = frame });
+			this.uTab_SelectedItem = this.uTab_TabItemsSource.Last();
+			this.View.DispatcherQueue.EnqueueAsync(
+				async Task () => {
+					await Task.Delay(40);
+					this.NotifyPropertyChanged(
+						nameof(this.uTab_SelectedItem)
+					);
+				}
+			);
 			return;
 		}
 
@@ -73,35 +93,6 @@ namespace Helper.Module {
 		) {
 			if (sender is not TabView senders) { return; }
 			this.uTab_TabItemsSource.Remove(args.Item as TabItemController ?? throw new NullReferenceException());
-			return;
-		}
-
-		// ----------------
-
-		public void PushTabItem (
-			ModuleType type,
-			Object?    parameter,
-			Boolean    isClosable
-		) {
-			var model = ModuleInformationConstant.Value[(Size)type];
-			var frame = new Frame() {
-				ContentTransitions = new TransitionCollection() {
-					new NavigationThemeTransition() {
-						DefaultNavigationTransitionInfo = new DrillInNavigationTransitionInfo(),
-					},
-				},
-			};
-			frame.Navigate(model.Page, parameter);
-			this.uTab_TabItemsSource.Add(new TabItemController() { Host = this, Model = model, IsCloseable = isClosable, Frame = frame });
-			this.uTab_SelectedItem = this.uTab_TabItemsSource.Last();
-			this.View.DispatcherQueue.EnqueueAsync(
-				async Task () => {
-					await Task.Delay(40);
-					this.NotifyPropertyChanged(
-						nameof(this.uTab_SelectedItem)
-					);
-				}
-			);
 			return;
 		}
 

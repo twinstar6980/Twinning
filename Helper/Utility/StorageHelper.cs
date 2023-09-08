@@ -121,8 +121,7 @@ namespace Helper.Utility {
 			var picker = new FileOpenPicker() {
 				FileTypeFilter = { filter },
 			};
-			var handle = WinRT.Interop.WindowNative.GetWindowHandle(rootWindow);
-			WinRT.Interop.InitializeWithWindow.Initialize(picker, handle);
+			WinRT.Interop.InitializeWithWindow.Initialize(picker, WindowHelper.Handle(rootWindow));
 			var target = await picker.PickSingleFileAsync();
 			return target is null ? null : StorageHelper.Normalize(target.Path);
 		}
@@ -132,8 +131,7 @@ namespace Helper.Utility {
 		) {
 			var picker = new FolderPicker() {
 			};
-			var handle = WinRT.Interop.WindowNative.GetWindowHandle(rootWindow);
-			WinRT.Interop.InitializeWithWindow.Initialize(picker, handle);
+			WinRT.Interop.InitializeWithWindow.Initialize(picker, WindowHelper.Handle(rootWindow));
 			var target = await picker.PickSingleFolderAsync();
 			return target is null ? null : StorageHelper.Normalize(target.Path);
 		}

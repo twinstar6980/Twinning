@@ -34,12 +34,12 @@
 					<ImageIcon
 						Width="22" Height="22"
 						VerticalAlignment="Bottom"
-						Source="/Asset/logo.png"
+						Source="/Asset/Logo.png"
 					/>
 				</my:MStack>
 			</TabView.TabStripHeader>
 			<TabView.TabStripFooter>
-				<my:MBox MinWidth="180" />
+				<my:MBox MinWidth="180" MinHeight="40" />
 			</TabView.TabStripFooter>
 		</TabView>
 		<InfoBar
