@@ -98,39 +98,54 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export function record_from_array<ElementT extends any, KeyT extends string, ValueT extends any>(
-		array: Array<ElementT>,
-		mapper: (index: number, element: ElementT) => [KeyT, ValueT],
-	): Record<KeyT, ValueT> {
-		let record: Record<KeyT, ValueT> = {} as any;
-		for (let index in array) {
-			let [key, value] = mapper(Number(index), array[index]);
-			record[key] = value;
+	export function record_from_array<Element extends any, Key extends string, Value extends any>(
+		source: Array<Element>,
+		mapper: (index: number, element: Element) => [Key, Value],
+	): Record<Key, Value> {
+		let destination: Record<Key, Value> = {} as any;
+		for (let index in source) {
+			let [key, value] = mapper(Number(index), source[index]);
+			destination[key] = value;
 		}
-		return record;
+		return destination;
 	}
 
-	export function record_to_array<KeyT extends string, ValueT extends any, ElementT extends any>(
-		record: Record<KeyT, ValueT>,
-		mapper: (key: string, value: ValueT) => ElementT,
-	): Array<ElementT> {
-		let array: Array<ElementT> = [];
-		for (let key in record) {
-			array.push(mapper(key, record[key]));
+	export function record_to_array<Key extends string, Value extends any, Element extends any>(
+		source: Record<Key, Value>,
+		mapper: (key: string, value: Value) => Element,
+	): Array<Element> {
+		let destination: Array<Element> = [];
+		for (let key in source) {
+			destination.push(mapper(key, source[key]));
 		}
-		return array;
+		return destination;
 	}
 
-	export function record_transform<KeyT extends string, ValueT extends any, NewKeyT extends string, NewValueT extends any>(
-		record: Record<KeyT, ValueT>,
-		mapper: (key: string, value: ValueT) => [NewKeyT, NewValueT],
-	): Record<NewKeyT, NewValueT> {
-		let new_record: Record<NewKeyT, NewValueT> = {} as any;
-		for (let key in record) {
-			let [new_key, new_value] = mapper(key, record[key]);
-			new_record[new_key] = new_value;
+	export function record_transform<Key extends string, Value extends any, NewKey extends string, NewValue extends any>(
+		source: Record<Key, Value>,
+		mapper: (key: string, value: Value) => [NewKey, NewValue],
+	): Record<NewKey, NewValue> {
+		let destination: Record<NewKey, NewValue> = {} as any;
+		for (let key in source) {
+			let [new_key, new_value] = mapper(key, source[key]);
+			destination[new_key] = new_value;
 		}
-		return new_record;
+		return destination;
+	}
+
+	// ------------------------------------------------
+
+	export function object_without_undefined<T extends Object>(
+		source: T,
+	): T {
+		let destination: T = {} as any;
+		for (let key in source) {
+			let value = source[key];
+			if (value !== undefined) {
+				destination[key] = value;
+			}
+		}
+		return destination;
 	}
 
 	// ------------------------------------------------
@@ -167,7 +182,7 @@ namespace TwinStar.Script {
 	export function make_integer_string(
 		value: bigint,
 	): string {
-		return `${value > 0.0 ? '+' : ''}${value}`;
+		return `${value > 0n ? '+' : ''}${value}`;
 	}
 
 	export function make_number_string(
@@ -182,16 +197,16 @@ namespace TwinStar.Script {
 		assert_test(value >= 0n);
 		let value_part = Number(value);
 		let unit_level = 0;
-		if (value_part >= 1024) {
-			value_part /= 1024;
+		if (value_part >= 1024.0) {
+			value_part /= 1024.0;
 			unit_level += 1;
 		}
-		if (value_part >= 1024) {
-			value_part /= 1024;
+		if (value_part >= 1024.0) {
+			value_part /= 1024.0;
 			unit_level += 1;
 		}
-		if (value_part >= 1024) {
-			value_part /= 1024;
+		if (value_part >= 1024.0) {
+			value_part /= 1024.0;
 			unit_level += 1;
 		}
 		return `${value_part.toFixed(1)}${['b', 'k', 'm', 'g'][unit_level]}`;
@@ -211,11 +226,11 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export function date_to_simple_string(
-		date: Date,
+	export function make_date_simple_string(
+		value: Date,
 	): string {
 		let p = (source: number, maximum_length: number) => (make_prefix_padded_string(source, '0', maximum_length));
-		return `${p(date.getFullYear() % 100, 2)}-${p(date.getMonth() + 1, 2)}-${p(date.getDate(), 2)}.${p(date.getHours(), 2)}-${p(date.getMinutes(), 2)}-${p(date.getSeconds(), 2)}.${p(date.getMilliseconds(), 3)}`;
+		return `${p(value.getFullYear() % 100, 2)}-${p(value.getMonth() + 1, 2)}-${p(value.getDate(), 2)}.${p(value.getHours(), 2)}-${p(value.getMinutes(), 2)}-${p(value.getSeconds(), 2)}.${p(value.getMilliseconds(), 3)}`;
 	}
 
 	// ------------------------------------------------

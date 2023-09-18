@@ -1,5 +1,3 @@
-// ignore_for_file: unused_import, unnecessary_cast
-
 import 'dart:core' as core;
 import 'dart:io';
 import 'dart:async';
@@ -15,14 +13,19 @@ typedef Integer = core.int;
 typedef Floater = core.double;
 typedef String = core.String;
 typedef List<E> = core.List<E>;
-typedef Set<E> = core.Set<E>;
 typedef Map<K, V> = core.Map<K, V>;
 
 // ----------------
 
 const kApplicationName = 'TwinStar ToolKit - Shell GUI';
 
-const kApplicationVersion = 20;
+const kApplicationVersion = 21;
+
+// ----------------
+
+List<String> gPrimaryFontFamliy = [];
+
+List<String> gConsoleFontFamliy = [];
 
 // ----------------
 
@@ -86,7 +89,7 @@ enum FileObjectType {
   formString(
     String name,
   ) {
-    return values.firstWhere((element) => element.name == name);
+    return values.firstWhere((element) => (element.name == name));
   }
 
 }
@@ -102,7 +105,7 @@ enum FileRequestRule {
   formString(
     String name,
   ) {
-    return values.firstWhere((element) => element.name == name);
+    return values.firstWhere((element) => (element.name == name));
   }
 
 }

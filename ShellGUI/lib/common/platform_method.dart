@@ -1,5 +1,3 @@
-// ignore_for_file: unused_import, unused_local_variable
-
 import '/common.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
@@ -8,12 +6,14 @@ import 'package:flutter/services.dart';
 
 class PlatformMethod {
 
-  static final MethodChannel? _channel = () {
+  static MethodChannel? _channel = () {
     if (Platform.isAndroid) {
       return const MethodChannel('com.twinstar.toolkit.shell_gui.flutter_method_channel');
     }
     return null;
   }();
+
+  // ----------------
 
   static
   Future<Boolean>
@@ -36,7 +36,7 @@ class PlatformMethod {
   getCommand(
     String? fallbackDirectory,
   ) async {
-    var result = (await _channel!.invokeMethod('getCommand', <String, dynamic>{ 'fallbackDirectory': fallbackDirectory }) as List<Object?>).map((e) => e as String).toList();
+    var result = (await _channel!.invokeMethod('getCommand', <String, dynamic>{ 'fallbackDirectory': fallbackDirectory }) as List<Object?>).cast<String>();
     return result;
   }
 

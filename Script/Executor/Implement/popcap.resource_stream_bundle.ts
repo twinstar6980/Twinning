@@ -59,7 +59,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 		rton_crypt: TypicalArgumentExpression<boolean>;
 		rton_crypt_key: TypicalArgumentExpression<string>;
 		ptx: TypicalArgumentExpression<boolean>;
-		ptx_texture_format_map_list: Record<string, Support.PvZ2.ResourceStreamBundle.ResourceConvert.TextureFormatMap>;
+		ptx_texture_format_map_list: Record<string, Support.PvZ2.ResourceConvert.TextureFormatMap>;
 		ptx_texture_format_map_name: TypicalArgumentExpression<string>;
 		ptx_atlas: TypicalArgumentExpression<boolean>;
 		ptx_atlas_resize: TypicalArgumentExpression<boolean>;
@@ -488,7 +488,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 					option_wem_tool_ww2ogg_code_book_file,
 				}) => {
 					let convert_directory = `${bundle_directory}/convert`;
-					let option: Support.PvZ2.ResourceStreamBundle.ResourceConvert.Option = {
+					let option: Support.PvZ2.ResourceConvert.Option = {
 						recase_path: option_recase_path,
 						rton: !option_rton ? null : {
 							directory: convert_directory,
@@ -534,7 +534,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 							},
 						},
 					};
-					Support.PvZ2.ResourceStreamBundle.ResourceConvert.convert_fs(
+					Support.PvZ2.ResourceConvert.convert_fs(
 						`${bundle_directory}/resource`,
 						`${bundle_directory}/definition.json`,
 						`${bundle_directory}/resource_manifest.json`,

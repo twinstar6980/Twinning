@@ -297,9 +297,11 @@ namespace Helper.Module.AnimationViewer {
 			String imageDirectorySource
 		) {
 			Debug.Assert(!this.Loaded && !this.Working);
-			var animationData = default(AnimationModel.Animation);
+			var animationData = default(AnimationModel.Animation?);
+			var imageSourceData = default(List<BitmapSource?>?);
 			try {
 				animationData = await AnimationHelper.LoadAnimation(animationFileSource);
+				imageSourceData = await AnimationHelper.LoadImageSource(imageDirectorySource, animationData);
 			} catch (Exception e) {
 				MainWindow.Instance.Controller.PublishTip(InfoBarSeverity.Error, "Failed to load animation.", e.ToString());
 				return;
@@ -307,7 +309,7 @@ namespace Helper.Module.AnimationViewer {
 			this.AnimationFileSource = animationFileSource;
 			this.ImageDirectorySource = imageDirectorySource;
 			this.Animation = animationData;
-			this.ImageSource = await AnimationHelper.LoadImageSource(imageDirectorySource, this.Animation);
+			this.ImageSource = imageSourceData;
 			this.ImageFilter = Enumerable.Range(0, this.Animation.Image.Count).Select((index) => (false)).ToList();
 			this.SpriteFilter = Enumerable.Range(0, this.Animation.Sprite.Count).Select((index) => (false)).ToList();
 			this.PlantCustomLayerName = this.Animation.Sprite.Select((value) => (value.Name)).Where((value) => (value.StartsWith("custom_"))).ToList();
@@ -571,19 +573,20 @@ namespace Helper.Module.AnimationViewer {
 				await this.Unload();
 			}
 			await this.Load(animationFileSource, imageDirectorySource);
-			Debug.Assert(this.Loaded);
-			await this.ApplySpriteFilterRule();
-			if (this.ImmediateSelect && this.Animation.MainSprite is not null) {
-				await this.LoadWorkingSprite(spriteIndex ?? this.Animation.Sprite.Count, spriteFrameRange, spriteFrameRate, spriteInitialState, null);
+			if (this.Loaded) {
+				await this.ApplySpriteFilterRule();
+				if (this.ImmediateSelect && this.Animation.MainSprite is not null) {
+					await this.LoadWorkingSprite(spriteIndex ?? this.Animation.Sprite.Count, spriteFrameRange, spriteFrameRate, spriteInitialState, null);
+				}
+				App.AppendRecentJumpList($"Animation Viewer - {Regex.Replace(StorageHelper.GetPathName(animationFileSource), @"(\.pam\.json)$", "", RegexOptions.IgnoreCase)}", new List<String>() {
+					"-ModuleType",
+					ModuleType.AnimationViewer.ToString(),
+					"-ModuleOption",
+					"-Source",
+					animationFileSource,
+					imageDirectorySource,
+				});
 			}
-			App.AppendRecentJumpList($"Animation Viewer - {Regex.Replace(StorageHelper.GetPathName(animationFileSource), @"(\.pam\.json)$", "")}", new List<String>() {
-				"-ModuleType",
-				ModuleType.AnimationViewer.ToString(),
-				"-ModuleOption",
-				"-Source",
-				animationFileSource,
-				imageDirectorySource,
-			});
 			return;
 		}
 

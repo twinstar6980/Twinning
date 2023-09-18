@@ -41,7 +41,7 @@ class MainActivity: FlutterActivity() {
 				if (resultCode == RESULT_OK) {
 					uri = data?.data
 				}
-				var path = uri?.let { parsePathOfContentProviderUri(it, this.fallbackDirectoryWhenPickFile) ?: uri.toString() }
+				var path = uri?.let { this.parsePathOfContentProviderUri(it, this.fallbackDirectoryWhenPickFile) ?: uri.toString() }
 				this.methodResult.success(path)
 			}
 			else -> {
@@ -109,7 +109,7 @@ class MainActivity: FlutterActivity() {
 	}
 
 	private fun getCommand(fallbackDirectory: String?): Unit {
-		this.methodResult.success(this.command.map { if (!it.startsWith("content://")) (it) else (parsePathOfContentProviderUri(Uri.parse(it), fallbackDirectory) ?: it) })
+		this.methodResult.success(this.command.map { if (!it.startsWith("content://")) (it) else (this.parsePathOfContentProviderUri(Uri.parse(it), fallbackDirectory) ?: it) })
 		return
 	}
 
@@ -188,10 +188,10 @@ class MainActivity: FlutterActivity() {
 			}
 		}
 		if (result == null && fallbackDirectory != null) {
-			var fallbackName = queryDatabaseOfContentProviderUri(uri, OpenableColumns.DISPLAY_NAME)
+			var fallbackName = this.queryDatabaseOfContentProviderUri(uri, OpenableColumns.DISPLAY_NAME) ?: uri.lastPathSegment
 			if (fallbackName != null) {
 				var fallbackFile = "${fallbackDirectory}/${fallbackName}"
-				if (copyFileOfContentProviderUri(uri, fallbackFile)) {
+				if (this.copyFileOfContentProviderUri(uri, fallbackFile)) {
 					result = fallbackFile
 				}
 			}

@@ -1,13 +1,7 @@
-// ignore_for_file: unused_import
-
 import '/common.dart';
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '/page/console/page.dart';
 import '/page/setting/page.dart';
-import '/common/platform_method.dart';
-import '/command.dart';
+import 'package:flutter/material.dart';
 
 // ----------------
 
@@ -18,7 +12,7 @@ class HomePage extends StatefulWidget {
   });
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  createState() => _HomePageState();
 
   // ----------------
 
@@ -26,22 +20,23 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  final List<Widget> _page = [const ConsolePage(), const SettingPage()];
+  List<Widget> _page = [const ConsolePage(), const SettingPage()];
 
   Integer _pageIndex = 0;
-  
+
   Void
   _pageIndexSet(
-    Integer index,
+    Integer value,
   ) {
-    this._pageIndex = index;
+    this._pageIndex = value;
     this.setState(() {});
+    return;
   }
 
   // ----------------
 
   @override
-  Widget build(BuildContext context) {
+  build(context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(kApplicationName),

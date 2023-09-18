@@ -1,24 +1,21 @@
-// ignore_for_file: unused_import, unnecessary_cast, dead_code
-
 import '/common.dart';
+import '/common/notification_helper.dart';
+import '/common/path_picker.dart';
+import '/setting.dart';
+import '/command.dart';
+import '/bridge/host.dart';
+import '/bridge/launcher.dart';
+import '/page/console/action_bar.dart';
+import '/page/console/messsage_type.dart';
+import '/page/console/output_bar.dart';
+import '/page/console/input_bar.dart';
+import '/page/console/launch_bar.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:path/path.dart' as p_path;
 import 'package:path_provider/path_provider.dart';
-import '/setting.dart';
-import '/command.dart';
-import '/common/platform_method.dart';
-import '/common/notification_helper.dart';
-import '/common/path_picker.dart';
-import '/page/console/output_bar.dart';
-import '/page/console/action_bar.dart';
-import '/page/console/launch_bar.dart';
-import '/page/console/input_bar.dart';
-import '/page/console/messsage_type.dart';
-import '/bridge/host.dart';
-import '/bridge/launcher.dart';
 
 // ----------------
 
@@ -29,7 +26,7 @@ class ConsolePage extends StatefulWidget {
   });
 
   @override
-  State<ConsolePage> createState() => _ConsolePageState();
+  createState() => _ConsolePageState();
 
   // ----------------
 
@@ -37,18 +34,16 @@ class ConsolePage extends StatefulWidget {
 
 class _ConsolePageState extends State<ConsolePage> implements Host {
 
-  final ScrollController _outputBarListScrollController = ScrollController();
-  final List<Widget>     _outputBarListItem = [];
-        Widget?          _inputBarContent;
+  ScrollController _outputBarListScrollController = ScrollController();
+  List<Widget>     _outputBarListItem = [];
+  Widget?          _inputBarContent;
 
   // ----------------
 
   Boolean _running = false;
 
   @override
-  Future<Void>
-  start(
-  ) async {
+  start() async {
     assert(!this._running);
     this._inputBarContent = const IdleInputBarContent();
     this.setState(() {});
@@ -57,23 +52,18 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
   }
 
   @override
-  Future<Void>
-  finish(
-  ) async {
+  finish() async {
     assert(this._running);
     this._inputBarContent = null;
     this.setState(() {});
     this._running = false;
     return;
   }
-  
+
   @override
-  Future<List<String>>
-  execute(
-    List<String> argument,
-  ) async {
+  execute(argument) async {
     assert(this._running);
-    var result = List<String>.empty(growable: true);
+    var result = <String>[];
     assert(argument.length >= 1);
     var method = argument[0];
     switch (method) {
@@ -267,7 +257,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         switch (type) {
           case FileObjectType.any: {
             throw Exception('path type should not be any');
-            break;
+            break; // ignore: dead_code
           }
           case FileObjectType.file: {
             selection = await PathPicker.pickFile();
@@ -294,7 +284,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
     }
     return result;
   }
-  
+
   // ----------------
 
   Future<Boolean>
@@ -371,7 +361,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
   // ----------------
 
   @override
-  Widget build(BuildContext context) {
+  build(context) {
     var setting = Provider.of<SettingProvider>(context);
     var command = Provider.of<CommandProvider>(context);
     if (command.data != null) {
@@ -379,7 +369,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         var commandData = command.data!;
         command.set(null);
         var state = await this._launch(commandData);
-        if (setting.data.mBehaviorAfterCommandSucceed && state) {
+        if (setting.data.mExitAfterCommandSucceed && state) {
           exitApplication();
         }
       }();

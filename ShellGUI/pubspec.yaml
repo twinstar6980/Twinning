@@ -1,5 +1,5 @@
 name: shell_gui
-version: 20.0.0+20
+version: 21.0.0+21
 publish_to: 'none'
 environment:
   sdk: '>=3.1.0 <4.0.0'
@@ -10,26 +10,22 @@ dependencies:
   async: ^2.11.0
   provider: ^6.0.5
   path: ^1.8.3
-  path_provider: ^2.1.0
-  window_manager: ^0.3.5
+  path_provider: ^2.1.1
+  window_manager: ^0.3.6
   dynamic_color: ^1.6.6
-  file_picker: ^5.3.4
+  file_picker: ^5.5.0
   local_notifier: ^0.1.5
   flutter_local_notifications: ^15.1.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.2
+  flutter_lints: ^2.0.3
   flutter_launcher_icons: ^0.13.1
   msix: ^3.16.1
 flutter:
   uses-material-design: true
   assets:
     - asset/
-  fonts:
-    - family: NotoSansMonoCJKsc-VF
-      fonts:
-        - asset: asset/font/NotoSansMonoCJKsc-VF.ttf
 flutter_icons:
   image_path: asset/logo.png
   android: true

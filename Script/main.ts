@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 83;
+	export const k_version = 84;
 
 	// ------------------------------------------------
 
@@ -126,7 +126,7 @@ namespace TwinStar.Script {
 			path: string,
 		): void {
 			// TODO : only allow if same drive
-			let trash_sub_direcotry = `${trash()}/${date_to_simple_string(new Date())}.${make_prefix_padded_string((Math.random() * 10000).toFixed(0), '0', 4)}`;
+			let trash_sub_direcotry = `${trash()}/${make_date_simple_string(new Date())}.${make_prefix_padded_string((Math.random() * 10000).toFixed(0), '0', 4)}`;
 			KernelX.FileSystem.create_directory(trash_sub_direcotry);
 			KernelX.FileSystem.rename(path, `${trash_sub_direcotry}/${PathUtility.name(path)}`);
 			return;
@@ -134,7 +134,7 @@ namespace TwinStar.Script {
 
 		export function new_temporary(
 		): string {
-			let temporary_sub_directory = `${temporary()}/${date_to_simple_string(new Date())}.${make_prefix_padded_string((Math.random() * 10000).toFixed(0), '0', 4)}`;
+			let temporary_sub_directory = `${temporary()}/${make_date_simple_string(new Date())}.${make_prefix_padded_string((Math.random() * 10000).toFixed(0), '0', 4)}`;
 			KernelX.FileSystem.create_directory(temporary_sub_directory);
 			return temporary_sub_directory;
 		}
@@ -227,7 +227,7 @@ namespace TwinStar.Script {
 			`Support/Atlas/PackAutomatic`,
 			`Support/Marmalade/DZip/PackAutomatic`,
 			`Support/PopCap/ReflectionObjectNotation/DecodeLenient`,
-			`Support/PopCap/Texture/Encode`,
+			`Support/PopCap/Texture/Encoding`,
 			`Support/PopCap/Animation/Convert/common`,
 			`Support/PopCap/Animation/Convert/Flash/common`,
 			`Support/PopCap/Animation/Convert/Flash/From`,
@@ -235,12 +235,15 @@ namespace TwinStar.Script {
 			`Support/PopCap/Animation/Convert/Flash/SourceManager`,
 			`Support/PopCap/Package/PackAutomatic`,
 			`Support/PopCap/ResourceStreamBundle/UnpackLenient`,
-			`Support/PvZ2/JSONGenericGetter/JSONGenericGetter`,
-			`Support/PvZ2/ResourceStreamBundle/ResourceManifest/Convert`,
-			`Support/PvZ2/ResourceStreamBundle/ResourceManifest/ResourceManifest`,
-			`Support/PvZ2/ResourceStreamBundle/ResourceManifest/OfficialResourceManifest`,
-			`Support/PvZ2/ResourceStreamBundle/ResourceConvert/ResourceConvert`,
 			`Support/PvZ2/TextTable/Convert`,
+			`Support/PvZ2/JSONGenericGetter`,
+			`Support/PvZ2/ResourceManifest/common`,
+			`Support/PvZ2/ResourceManifest/NewTypeObjectNotation/common`,
+			`Support/PvZ2/ResourceManifest/NewTypeObjectNotation/Decode`,
+			`Support/PvZ2/ResourceManifest/NewTypeObjectNotation/Encode`,
+			`Support/PvZ2/RegularResourceManifest/common`,
+			`Support/PvZ2/RegularResourceManifest/Convert`,
+			`Support/PvZ2/ResourceConvert`,
 			`Support/PvZ2/RemoteAndroidHelper`,
 			`Executor/Generic`,
 			`Executor/Typical`,

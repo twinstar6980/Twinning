@@ -1,10 +1,8 @@
-// ignore_for_file: unused_import
-
 import '/common.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '/page/console/messsage_type.dart';
 import '/setting.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // ----------------
 
@@ -26,12 +24,12 @@ class MessageOutputBar extends StatelessWidget {
   // ----------------
 
   @override
-  Widget build(BuildContext context) {
+  build(context) {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     var typeColor = this.type.color(theme);
-    var titleTextStyle = !setting.data.mFontSizeUseLargerInConsole ? theme.textTheme.titleSmall! : theme.textTheme.titleMedium!;
-    var descriptionTextStyle = !setting.data.mFontSizeUseLargerInConsole ? theme.textTheme.bodySmall! : theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.secondary);
+    var titleTextStyle = (!setting.data.mConsoleFontUseLargerSize ? theme.textTheme.titleSmall : theme.textTheme.titleMedium)!.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy);
+    var descriptionTextStyle = (!setting.data.mConsoleFontUseLargerSize ? theme.textTheme.bodySmall : theme.textTheme.bodyMedium)!.copyWith(color: theme.colorScheme.secondary, fontFamily: '', fontFamilyFallback: gConsoleFontFamliy);
     return Card(
       margin: const EdgeInsets.fromLTRB(1, 0, 1, 0),
       elevation: 1,
@@ -65,13 +63,15 @@ class MessageOutputBar extends StatelessWidget {
                       this.title,
                       style: titleTextStyle,
                     ),
-                    ...this.description.map((e) => (Container(
-                          padding: const EdgeInsets.fromLTRB(0, 4, 0, 0),
-                          child: Text(
-                            e,
-                            style: descriptionTextStyle,
-                          ),
-                        ))),
+                    ...this.description.map(
+                      (value) => Container(
+                        padding: const EdgeInsets.fromLTRB(0, 4, 0, 0),
+                        child: Text(
+                          value,
+                          style: descriptionTextStyle,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

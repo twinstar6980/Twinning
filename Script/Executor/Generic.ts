@@ -137,7 +137,6 @@ namespace TwinStar.Script.Executor {
 		} else {
 			if (state[0] === false) {
 				Console.error(los('executor.generic:finish_failed'), [los('executor.generic:duration', (state[1] / 1000).toFixed(3))]);
-				Console.error_of(state[1]);
 			}
 			if (state[0] === true) {
 				Console.success(los('executor.generic:finish_succeed'), [los('executor.generic:duration', (state[1] / 1000).toFixed(3))]);

@@ -10,8 +10,8 @@
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
 >
-	<ScrollViewer Padding="16,0" VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Visible">
-		<my:MStack Padding="48,48" HorizontalAlignment="Stretch" Orientation="Vertical" Spacing="32">
+	<ScrollViewer Padding="0" HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Visible">
+		<my:MStack Padding="64,48" HorizontalAlignment="Stretch" Orientation="Vertical" Spacing="32">
 			<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Vertical" Spacing="12">
 				<TextBlock Margin="3,0,0,0" HorizontalAlignment="Stretch" Style="{ThemeResource SubtitleTextBlockStyle}" TextWrapping="NoWrap" Text="Appearance" />
 				<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Vertical" Spacing="2">

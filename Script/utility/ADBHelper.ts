@@ -6,7 +6,7 @@ namespace TwinStar.Script.ADBHelper {
 
 	// ------------------------------------------------
 
-	export let g_run_shell_as_su: boolean = true;
+	export let g_shell_run_as_su: boolean = true;
 
 	export function execute(
 		argument: Array<string>,
@@ -24,7 +24,7 @@ namespace TwinStar.Script.ADBHelper {
 	export function shell(
 		command: string,
 	): string {
-		return execute([`shell`, `${g_run_shell_as_su ? 'su -c ' : ''}${command}`]);
+		return execute([`shell`, `${g_shell_run_as_su ? 'su -c ' : ''}${command}`]);
 	}
 
 	export function pull(

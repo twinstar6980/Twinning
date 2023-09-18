@@ -1,11 +1,7 @@
-// ignore_for_file: unused_import, unnecessary_import
-
 import '/common.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import '/common/path_picker.dart';
 
 // ----------------
 
@@ -15,11 +11,19 @@ class Setting {
   Boolean      mThemeColorInheritFromSystem;
   Color        mThemeColorLight;
   Color        mThemeColorDark;
-  Boolean      mFontSizeUseLargerInConsole;
+  List<String> mPrimaryFont;
+  List<String> mConsoleFont;
+  Boolean      mConsoleFontUseLargerSize;
+  Boolean      mWindowPositionAlignToCenter;
+  Integer      mWindowPositionX;
+  Integer      mWindowPositionY;
+  Boolean      mWindowSizeAdhereToDefault;
+  Integer      mWindowSizeWidth;
+  Integer      mWindowSizeHeight;
   String       mCommandKernel;
   String       mCommandScript;
   List<String> mCommandArgument;
-  Boolean      mBehaviorAfterCommandSucceed;
+  Boolean      mExitAfterCommandSucceed;
   String       mFallbackDirectoryForInvisibleFile;
 
   // ----------------
@@ -29,11 +33,19 @@ class Setting {
     this.mThemeColorInheritFromSystem,
     this.mThemeColorLight,
     this.mThemeColorDark,
-    this.mFontSizeUseLargerInConsole,
+    this.mPrimaryFont,
+    this.mConsoleFont,
+    this.mConsoleFontUseLargerSize,
+    this.mWindowPositionAlignToCenter,
+    this.mWindowPositionX,
+    this.mWindowPositionY,
+    this.mWindowSizeAdhereToDefault,
+    this.mWindowSizeWidth,
+    this.mWindowSizeHeight,
     this.mCommandKernel,
     this.mCommandScript,
     this.mCommandArgument,
-    this.mBehaviorAfterCommandSucceed,
+    this.mExitAfterCommandSucceed,
     this.mFallbackDirectoryForInvisibleFile,
   );
 
@@ -43,7 +55,15 @@ class Setting {
     true,
     const Color(0xff6750a4),
     const Color(0xff1750a4),
+    [],
+    [],
     false,
+    true,
+    0,
+    0,
+    true,
+    0,
+    0,
     '',
     '',
     [],
@@ -63,11 +83,19 @@ class Setting {
     data.mThemeColorInheritFromSystem = json['theme_color_inherit_from_system'] as Boolean;
     data.mThemeColorLight = Color(json['theme_color_light'] as Integer);
     data.mThemeColorDark = Color(json['theme_color_dark'] as Integer);
-    data.mFontSizeUseLargerInConsole = json['font_size_use_larger_in_console'] as Boolean;
+    data.mPrimaryFont = (json['primary_font'] as List<dynamic>).cast<String>();
+    data.mConsoleFont = (json['console_font'] as List<dynamic>).cast<String>();
+    data.mConsoleFontUseLargerSize = json['console_font_use_larger_size'] as Boolean;
+    data.mWindowPositionAlignToCenter = json['window_position_align_to_center'] as Boolean;
+    data.mWindowPositionX = json['window_position_x'] as Integer;
+    data.mWindowPositionY = json['window_position_y'] as Integer;
+    data.mWindowSizeAdhereToDefault = json['window_size_adhere_to_default'] as Boolean;
+    data.mWindowSizeWidth = json['window_size_width'] as Integer;
+    data.mWindowSizeHeight = json['window_size_height'] as Integer;
     data.mCommandKernel = json['command_kernel'] as String;
     data.mCommandScript = json['command_script'] as String;
-    data.mCommandArgument = (json['command_argument'] as List<dynamic>).map((e) => e as String).toList();
-    data.mBehaviorAfterCommandSucceed = json['behavior_after_command_succeed'] as Boolean;
+    data.mCommandArgument = (json['command_argument'] as List<dynamic>).cast<String>();
+    data.mExitAfterCommandSucceed = json['exit_after_command_succeed'] as Boolean;
     data.mFallbackDirectoryForInvisibleFile = json['fallback_directory_for_invisible_file'] as String;
     return;
   }
@@ -82,11 +110,19 @@ class Setting {
     json['theme_color_inherit_from_system'] = data.mThemeColorInheritFromSystem;
     json['theme_color_light'] = data.mThemeColorLight.value;
     json['theme_color_dark'] = data.mThemeColorDark.value;
-    json['font_size_use_larger_in_console'] = data.mFontSizeUseLargerInConsole;
+    json['primary_font'] = data.mPrimaryFont;
+    json['console_font'] = data.mConsoleFont;
+    json['console_font_use_larger_size'] = data.mConsoleFontUseLargerSize;
+    json['window_position_align_to_center'] = data.mWindowPositionAlignToCenter;
+    json['window_position_x'] = data.mWindowPositionX;
+    json['window_position_y'] = data.mWindowPositionY;
+    json['window_size_adhere_to_default'] = data.mWindowSizeAdhereToDefault;
+    json['window_size_width'] = data.mWindowSizeWidth;
+    json['window_size_height'] = data.mWindowSizeHeight;
     json['command_kernel'] = data.mCommandKernel;
     json['command_script'] = data.mCommandScript;
     json['command_argument'] = data.mCommandArgument;
-    json['behavior_after_command_succeed'] = data.mBehaviorAfterCommandSucceed;
+    json['exit_after_command_succeed'] = data.mExitAfterCommandSucceed;
     json['fallback_directory_for_invisible_file'] = data.mFallbackDirectoryForInvisibleFile;
     return;
   }
@@ -136,7 +172,6 @@ class SettingProvider with ChangeNotifier {
   notify(
   ) async {
     this.notifyListeners();
-    PathPicker.fallbackDirectory = this.data.mFallbackDirectoryForInvisibleFile;
     Setting.save(this.data);
     return;
   }

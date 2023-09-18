@@ -42,10 +42,12 @@
 	"support.popcap.resource_stream_bundle.unpack_lenient:unknown_group_id": "Group ID is unknown",
 	"support.popcap.resource_stream_bundle.unpack_lenient:unknown_subgroup_id": "Subgroup ID is unknown",
 	// Support/PvZ2/ResourceStreamBundle/ResourceConvert
-	"support.pvz2.resource_stream_bundle.resource_convert:recase_resource_path": "Recase resource path...",
-	"support.pvz2.resource_stream_bundle.resource_convert:convert_resource": "Converting resource...",
-	"support.pvz2.resource_stream_bundle.resource_convert:extract_resource_manifest": "Extracting resource manifest...",
-	"support.pvz2.resource_stream_bundle.resource_convert:parse_resource_manifest": "Parsing resource manifest...",
+	"support.pvz2.resource_convert:resource_manifest_found_single": "检测到资源清单存在",
+	"support.pvz2.resource_convert:resource_manifest_found_multi": "检测到资源清单存在多个，请选择目标清单",
+	"support.pvz2.resource_convert:extract_resource_manifest": "Extracting resource manifest...",
+	"support.pvz2.resource_convert:parse_resource_manifest": "Parsing resource manifest...",
+	"support.pvz2.resource_convert:recase_resource_path": "Recase resource path...",
+	"support.pvz2.resource_convert:convert_resource": "Converting resource...",
 	// Support/PvZ2/RemoteAndroidHelper
 	"support.pvz2.remote_android_helper:application_found_none": "检测到 PvZ-2 应用不存在",
 	"support.pvz2.remote_android_helper:application_found_single": "检测到 PvZ-2 应用存在",
@@ -576,14 +578,23 @@
 	"executor.implement:pvz2.text_table.convert:destination_version": "Destination version",
 	"executor.implement:pvz2.text_table.convert:destination_file": "Destination file",
 	// Executor/Implement/pvz2.resource_manifest
-	"executor.implement:pvz2.resource_manifest.convert.from": "PvZ-2 Resource-Manifest Convert from official data",
-	"executor.implement:pvz2.resource_manifest.convert.from:raw_file": "Original file",
-	"executor.implement:pvz2.resource_manifest.convert.from:ripe_file": "Finished file",
+	"executor.implement:pvz2.resource_manifest.new_type_object_notation.encode": "PopCap Resource-Manifest New-Type-Object-Notation Encode",
+	"executor.implement:pvz2.resource_manifest.new_type_object_notation.encode:definition_file": "Definition file",
+	"executor.implement:pvz2.resource_manifest.new_type_object_notation.encode:data_file": "Data file",
+	"executor.implement:pvz2.resource_manifest.new_type_object_notation.encode:buffer_size": "Buffer memory size",
 	// 
-	"executor.implement:pvz2.resource_manifest.convert.to": "PvZ-2 Resource-Manifest Convert to official data",
-	"executor.implement:pvz2.resource_manifest.convert.to:ripe_file": "Finished file",
-	"executor.implement:pvz2.resource_manifest.convert.to:raw_file": "Original file",
-	"executor.implement:pvz2.resource_manifest.convert.to:use_array_style_path": "Use array style path",
+	"executor.implement:pvz2.resource_manifest.new_type_object_notation.decode": "PopCap Resource-Manifest New-Type-Object-Notation Decode",
+	"executor.implement:pvz2.resource_manifest.new_type_object_notation.decode:data_file": "Data file",
+	"executor.implement:pvz2.resource_manifest.new_type_object_notation.decode:definition_file": "Definition file",
+	// 
+	"executor.implement:pvz2.resource_manifest.regular.from": "PvZ-2 Resource-Manifest Regular Convert from official data",
+	"executor.implement:pvz2.resource_manifest.regular.from:raw_file": "Original file",
+	"executor.implement:pvz2.resource_manifest.regular.from:ripe_file": "Finished file",
+	// 
+	"executor.implement:pvz2.resource_manifest.regular.to": "PvZ-2 Resource-Manifest Regular Convert to official data",
+	"executor.implement:pvz2.resource_manifest.regular.to:ripe_file": "Finished file",
+	"executor.implement:pvz2.resource_manifest.regular.to:raw_file": "Original file",
+	"executor.implement:pvz2.resource_manifest.regular.to:use_array_style_path": "Use array style path",
 	// Executor/Implement/pvz2.remote_android_helper
 	"executor.implement:pvz2.remote_android_helper.launch": "PvZ-2 Remote-Android-Helper Launch",
 	"executor.implement:pvz2.remote_android_helper.launch:project_directory": "Project directory",

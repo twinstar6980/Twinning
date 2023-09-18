@@ -261,6 +261,7 @@ namespace TwinStar.Script.Executor {
 						source.worker(final_argument as any);
 						state = true;
 					} catch (e) {
+						Console.error_of(e);
 					}
 					timer.stop();
 				} else {

@@ -52,9 +52,7 @@ namespace Helper.Module.CommandForwarder {
 
 		// ----------------
 
-		public List<String> Input { get; set; } = new List<String>();
-
-		public Boolean RemainInput { get; set; } = false;
+		public Boolean AutomaticClose { get; set; } = true;
 
 		public Boolean ParallelExecute { get; set; } = false;
 
@@ -62,7 +60,9 @@ namespace Helper.Module.CommandForwarder {
 
 		public Boolean EnableFilter { get; set; } = true;
 
-		public Boolean AutomaticClose { get; set; } = true;
+		public Boolean RemainInput { get; set; } = false;
+
+		public List<String> Input { get; set; } = new List<String>();
 
 		#endregion
 
@@ -98,9 +98,29 @@ namespace Helper.Module.CommandForwarder {
 			while (!this.View.IsLoaded) {
 				await Task.Delay(TimeSpan.FromMilliseconds(50));
 			}
+			var optionAutomaticClose = default(Boolean?);
+			var optionParallelExecute = default(Boolean?);
+			var optionEnableBatch = default(Boolean?);
+			var optionEnableFilter = default(Boolean?);
+			var optionRemainInput = default(Boolean?);
 			var optionInput = default(List<String>?);
 			try {
 				var option = new CommandLineReader(optionView);
+				if (option.Ensure("-AutomaticClose")) {
+					optionAutomaticClose = option.NextBoolean();
+				}
+				if (option.Ensure("-ParallelExecute")) {
+					optionParallelExecute = option.NextBoolean();
+				}
+				if (option.Ensure("-EnableBatch")) {
+					optionEnableBatch = option.NextBoolean();
+				}
+				if (option.Ensure("-EnableFilter")) {
+					optionEnableFilter = option.NextBoolean();
+				}
+				if (option.Ensure("-RemainInput")) {
+					optionRemainInput = option.NextBoolean();
+				}
 				if (option.Ensure("-Input")) {
 					optionInput = option.NextStringList();
 				}
@@ -110,8 +130,40 @@ namespace Helper.Module.CommandForwarder {
 			} catch (Exception e) {
 				MainWindow.Instance.Controller.PublishTip(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
 			}
+			if (optionAutomaticClose is not null) {
+				this.AutomaticClose = optionAutomaticClose.Value;
+				this.NotifyPropertyChanged(
+					nameof(this.uAutomaticClose_Visibility)
+				);
+			}
+			if (optionParallelExecute is not null) {
+				this.ParallelExecute = optionParallelExecute.Value;
+				this.NotifyPropertyChanged(
+					nameof(this.uParallelExecute_IsChecked)
+				);
+			}
+			if (optionEnableBatch is not null) {
+				this.EnableBatch = optionEnableBatch.Value;
+				this.NotifyPropertyChanged(
+					nameof(this.uEnableBatch_IsChecked)
+				);
+			}
+			if (optionEnableFilter is not null) {
+				this.EnableFilter = optionEnableFilter.Value;
+				this.NotifyPropertyChanged(
+					nameof(this.uEnableFilter_IsChecked)
+				);
+			}
+			if (optionRemainInput is not null) {
+				this.RemainInput = optionRemainInput.Value;
+				this.NotifyPropertyChanged(
+					nameof(this.uRemainInput_IsChecked)
+				);
+			}
 			if (optionInput is not null) {
 				this.AppendInput(optionInput.Select(StorageHelper.Normalize).ToList());
+			}
+			if (optionEnableBatch is not null || optionEnableFilter is not null || optionInput is not null) {
 				this.RefreshInput();
 				this.RefreshFilter();
 			}
@@ -297,23 +349,6 @@ namespace Helper.Module.CommandForwarder {
 
 		// ----------------
 
-		public Boolean uRemainInput_IsChecked {
-			get {
-				return this.RemainInput;
-			}
-		}
-
-		public async void uRemainInput_OnClick (
-			Object          sender,
-			RoutedEventArgs args
-		) {
-			if (sender is not ToggleButton senders) { return; }
-			this.RemainInput = senders.IsChecked!.Value;
-			return;
-		}
-
-		// ----------------
-
 		public Boolean uParallelExecute_IsChecked {
 			get {
 				return this.ParallelExecute;
@@ -363,6 +398,23 @@ namespace Helper.Module.CommandForwarder {
 			if (sender is not ToggleButton senders) { return; }
 			this.EnableFilter = senders.IsChecked!.Value;
 			this.RefreshFilter();
+			return;
+		}
+
+		// ----------------
+
+		public Boolean uRemainInput_IsChecked {
+			get {
+				return this.RemainInput;
+			}
+		}
+
+		public async void uRemainInput_OnClick (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			if (sender is not ToggleButton senders) { return; }
+			this.RemainInput = senders.IsChecked!.Value;
 			return;
 		}
 

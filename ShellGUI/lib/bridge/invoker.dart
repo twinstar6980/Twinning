@@ -1,11 +1,9 @@
-// ignore_for_file: unused_import, library_prefixes
-
 import '/common.dart';
-import 'dart:ffi' as ffi;
-import 'package:ffi/ffi.dart' as ffi;
-import '/bridge/interface.dart' as Interface;
+import '/bridge/interface.dart' as Interface; // ignore: library_prefixes
 import '/bridge/converter.dart';
 import '/bridge/library.dart';
+import 'dart:ffi' as ffi;
+import 'package:ffi/ffi.dart' as ffi;
 
 // ----------------
 

@@ -1,5 +1,3 @@
-// ignore_for_file: unused_import
-
 import '/common.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +11,7 @@ class LaunchBarContent extends StatefulWidget {
   });
 
   @override
-  State<LaunchBarContent> createState() => _LaunchBarContentState();
+  createState() => _LaunchBarContentState();
 
   // ----------------
 
@@ -23,18 +21,18 @@ class LaunchBarContent extends StatefulWidget {
 
 class _LaunchBarContentState extends State<LaunchBarContent> {
 
-  final List<String> additionalArgument = [];
+  List<String> _additionalArgument = [];
 
   // ----------------
 
   @override
-  Widget build(BuildContext context) {
+  build(context) {
     return Row(
       children: [
         Expanded(
           child: FilledButton.tonal(
             onPressed: () async {
-              this.widget.onLaunch(additionalArgument);
+              this.widget.onLaunch([]);
             },
             onLongPress: () async {
               var state = await showDialog<String>(
@@ -45,18 +43,20 @@ class _LaunchBarContentState extends State<LaunchBarContent> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextFormField(
-                        maxLines: null,
                         decoration: const InputDecoration(
                           isDense: true,
                         ),
+                        maxLines: null,
+                        keyboardType: TextInputType.multiline,
+                        inputFormatters: const [],
                         initialValue: '',
                         onChanged: (value) {
-                          var valueList = value.split('\n');
-                          if (valueList.isNotEmpty && valueList.last.isEmpty) {
-                            valueList.removeLast();
+                          var parsedValue = value.split('\n');
+                          if (parsedValue.isNotEmpty && parsedValue.last.isEmpty) {
+                            parsedValue.removeLast();
                           }
-                          additionalArgument.clear();
-                          additionalArgument.addAll(valueList);
+                          this._additionalArgument.clear();
+                          this._additionalArgument.addAll(parsedValue);
                         },
                       ),
                     ],
@@ -69,11 +69,10 @@ class _LaunchBarContentState extends State<LaunchBarContent> {
                   ],
                 ),
               );
-              if (state == null) {
-                additionalArgument.clear();
-              } else {
-                this.widget.onLaunch(additionalArgument);
+              if (state != null) {
+                this.widget.onLaunch(this._additionalArgument);
               }
+              this._additionalArgument.clear();
             },
             child: const Text('Launch'),
           ),

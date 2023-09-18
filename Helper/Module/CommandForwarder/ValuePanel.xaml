@@ -5,7 +5,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:local="using:Helper"
-	xmlns:localCommandForwarder="using:Helper.Module.CommandForwarder"
+	xmlns:localModuleCommandForwarder="using:Helper.Module.CommandForwarder"
 	xmlns:my="using:Helper.CustomControl"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"

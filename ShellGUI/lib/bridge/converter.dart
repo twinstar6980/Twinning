@@ -1,10 +1,8 @@
-// ignore_for_file: unused_import, library_prefixes
-
 import '/common.dart';
+import '/bridge/interface.dart' as Interface; // ignore: library_prefixes
 import 'dart:convert' as convert;
 import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart' as ffi;
-import '/bridge/interface.dart' as Interface;
 
 // ----------------
 
@@ -82,7 +80,7 @@ class Converter {
     Interface.StringList structure,
   ) {
     var count = parseSize(structure.size);
-    var result = List<String>.empty(growable: true);
+    var result = <String>[];
     for (var index = 0; index < count; ++index) {
       result.add(parseString(structure.data[index]));
     }

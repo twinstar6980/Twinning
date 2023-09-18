@@ -1,8 +1,6 @@
-// ignore_for_file: unused_import
-
-import '/common.dart';
-import 'package:flutter/material.dart';
+import '/common.dart'; // ignore: unused_import
 import '/page/console/messsage_type.dart';
+import 'package:flutter/material.dart';
 
 // ----------------
 
@@ -15,12 +13,12 @@ class ActionBar extends StatelessWidget {
 
   // ----------------
 
-  final Widget  content;
+  final Widget content;
 
   // ----------------
 
   @override
-  Widget build(BuildContext context) {
+  build(context) {
     var theme = Theme.of(context);
     var typeColor = MessageType.input.color(theme);
     return Card(

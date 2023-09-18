@@ -42,10 +42,12 @@
 	"support.popcap.resource_stream_bundle.unpack_lenient:unknown_group_id": "群ID未知",
 	"support.popcap.resource_stream_bundle.unpack_lenient:unknown_subgroup_id": "子群ID未知",
 	// Support/PvZ2/ResourceStreamBundle/ResourceConvert
-	"support.pvz2.resource_stream_bundle.resource_convert:recase_resource_path": "恢复资源路径大小写 ...",
-	"support.pvz2.resource_stream_bundle.resource_convert:convert_resource": "转换资源 ...",
-	"support.pvz2.resource_stream_bundle.resource_convert:extract_resource_manifest": "提取资源清单 ...",
-	"support.pvz2.resource_stream_bundle.resource_convert:parse_resource_manifest": "解析资源清单 ...",
+	"support.pvz2.resource_convert:resource_manifest_found_single": "检测到资源清单存在",
+	"support.pvz2.resource_convert:resource_manifest_found_multi": "检测到资源清单存在多个，请选择目标清单",
+	"support.pvz2.resource_convert:extract_resource_manifest": "提取资源清单 ...",
+	"support.pvz2.resource_convert:parse_resource_manifest": "解析资源清单 ...",
+	"support.pvz2.resource_convert:recase_resource_path": "恢复资源路径大小写 ...",
+	"support.pvz2.resource_convert:convert_resource": "转换资源 ...",
 	// Support/PvZ2/RemoteAndroidHelper
 	"support.pvz2.remote_android_helper:application_found_none": "检测到 PvZ-2 应用不存在",
 	"support.pvz2.remote_android_helper:application_found_single": "检测到 PvZ-2 应用存在",
@@ -576,14 +578,23 @@
 	"executor.implement:pvz2.text_table.convert:destination_version": "目的版本",
 	"executor.implement:pvz2.text_table.convert:destination_file": "目的文件",
 	// Executor/Implement/pvz2.resource_manifest
-	"executor.implement:pvz2.resource_manifest.convert.from": "PvZ-2 Resource-Manifest 转换自官方数据",
-	"executor.implement:pvz2.resource_manifest.convert.from:raw_file": "原始文件",
-	"executor.implement:pvz2.resource_manifest.convert.from:ripe_file": "成品文件",
+	"executor.implement:pvz2.resource_manifest.new_type_object_notation.encode": "PopCap Resource-Manifest New-Type-Object-Notation 编码",
+	"executor.implement:pvz2.resource_manifest.new_type_object_notation.encode:definition_file": "定义文件",
+	"executor.implement:pvz2.resource_manifest.new_type_object_notation.encode:data_file": "数据文件",
+	"executor.implement:pvz2.resource_manifest.new_type_object_notation.encode:buffer_size": "内存缓冲区大小",
 	// 
-	"executor.implement:pvz2.resource_manifest.convert.to": "PvZ-2 Resource-Manifest 转换至官方数据",
-	"executor.implement:pvz2.resource_manifest.convert.to:ripe_file": "成品文件",
-	"executor.implement:pvz2.resource_manifest.convert.to:raw_file": "原始文件",
-	"executor.implement:pvz2.resource_manifest.convert.to:use_array_style_path": "使用数组式路径",
+	"executor.implement:pvz2.resource_manifest.new_type_object_notation.decode": "PopCap Resource-Manifest New-Type-Object-Notation 解码",
+	"executor.implement:pvz2.resource_manifest.new_type_object_notation.decode:data_file": "数据文件",
+	"executor.implement:pvz2.resource_manifest.new_type_object_notation.decode:definition_file": "定义文件",
+	// 
+	"executor.implement:pvz2.resource_manifest.regular.from": "PvZ-2 Resource-Manifest Regular 转换自官方数据",
+	"executor.implement:pvz2.resource_manifest.regular.from:raw_file": "原始文件",
+	"executor.implement:pvz2.resource_manifest.regular.from:ripe_file": "成品文件",
+	// 
+	"executor.implement:pvz2.resource_manifest.regular.to": "PvZ-2 Resource-Manifest Regular 转换至官方数据",
+	"executor.implement:pvz2.resource_manifest.regular.to:ripe_file": "成品文件",
+	"executor.implement:pvz2.resource_manifest.regular.to:raw_file": "原始文件",
+	"executor.implement:pvz2.resource_manifest.regular.to:use_array_style_path": "使用数组式路径",
 	// Executor/Implement/pvz2.remote_android_helper
 	"executor.implement:pvz2.remote_android_helper.launch": "PvZ-2 Remote-Android-Helper 启动",
 	"executor.implement:pvz2.remote_android_helper.launch:project_directory": "项目目录",

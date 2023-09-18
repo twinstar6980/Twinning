@@ -1,13 +1,11 @@
-// ignore_for_file: unused_import, avoid_init_to_null
-
 import '/common.dart';
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '/setting.dart';
-import '/common/platform_method.dart';
 import '/common/permission_helper.dart';
 import '/common/path_picker.dart';
+import '/setting.dart';
+import 'dart:io';
+import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // ----------------
 
@@ -18,7 +16,7 @@ class SettingPage extends StatefulWidget {
   });
 
   @override
-  State<SettingPage> createState() => _SettingPageState();
+  createState() => _SettingPageState();
 
   // ----------------
 
@@ -30,8 +28,10 @@ class _SettingPageState extends State<SettingPage> {
 
   Boolean _hasStoragePermission = false;
 
+  // ----------------
+
   @override
-  void initState() {
+  initState() {
     super.initState();
     (() async {
       this._applicationSharedDirectory = await queryApplicationSharedDirectory();
@@ -41,7 +41,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  build(context) {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return Container(
@@ -63,7 +63,7 @@ class _SettingPageState extends State<SettingPage> {
                   leading: const Icon(Icons.auto_mode_outlined),
                   title: const Text('Theme Mode'),
                   trailing: SizedBox(
-                    width: 96,
+                    width: 120,
                     child: Row(
                       children: [
                         Expanded(child: Container()),
@@ -83,13 +83,14 @@ class _SettingPageState extends State<SettingPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             ...ThemeMode.values.map(
-                              (e) => ListTile(
-                                title: Text(['System', 'Light', 'Dark'][e.index]),
+                              (mode) => ListTile(
+                                title: Text(['System', 'Light', 'Dark'][mode.index]),
                                 leading: Radio<ThemeMode>(
-                                  value: e,
+                                  value: mode,
                                   groupValue: setting.data.mThemeMode,
                                   onChanged: (value) {
-                                    setting.data.mThemeMode = value!;
+                                    value!;
+                                    setting.data.mThemeMode = value;
                                     setting.notify();
                                   },
                                 ),
@@ -111,18 +112,27 @@ class _SettingPageState extends State<SettingPage> {
                   leading: const Icon(Icons.color_lens_outlined),
                   title: const Text('Theme Color'),
                   trailing: SizedBox(
-                    width: 96,
+                    width: 120,
                     child: Row(
                       children: [
                         Expanded(child: Container()),
-                        Icon(
-                          Icons.light_mode,
-                          color: setting.data.mThemeColorLight,
-                        ),
-                        const SizedBox(width: 8),
-                        Icon(
-                          Icons.dark_mode,
-                          color: setting.data.mThemeColorDark,
+                        setting.data.mThemeColorInheritFromSystem
+                        ? Text(
+                          'System',
+                          style: theme.textTheme.bodyMedium,
+                        )
+                        : Row(
+                          children: [
+                            Icon(
+                              Icons.light_mode,
+                              color: setting.data.mThemeColorLight,
+                            ),
+                            const SizedBox(width: 8),
+                            Icon(
+                              Icons.dark_mode,
+                              color: setting.data.mThemeColorDark,
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -148,27 +158,258 @@ class _SettingPageState extends State<SettingPage> {
                                 Text('Inherit From System', style: theme.textTheme.titleMedium),
                               ],
                             ),
-                            ...[0, 1].map(
-                              (e) => ListTile(
-                                title: TextFormField(
-                                  decoration: const InputDecoration(
-                                    isDense: true,
-                                  ),
-                                  initialValue: [setting.data.mThemeColorLight, setting.data.mThemeColorDark][e].withOpacity(0.0).value.toRadixString(16).padRight(6, '0'),
+                            const SizedBox(height: 8),
+                            ListTile(
+                              title: TextFormField(
+                                decoration: const InputDecoration(
+                                  isDense: true,
+                                ),
+                                maxLines: 1,
+                                keyboardType: TextInputType.text,
+                                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
+                                initialValue: setting.data.mThemeColorLight.withOpacity(0.0).value.toRadixString(16).padRight(6, '0'),
+                                onChanged: (value) {
+                                  var parsedValue = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withOpacity(1.0);
+                                  setting.data.mThemeColorLight = parsedValue;
+                                  setting.notify();
+                                },
+                              ),
+                              leading: const Icon(Icons.light_mode_outlined),
+                              trailing: Icon(Icons.circle, color: setting.data.mThemeColorLight),
+                            ),
+                            ListTile(
+                              title: TextFormField(
+                                decoration: const InputDecoration(
+                                  isDense: true,
+                                ),
+                                maxLines: 1,
+                                keyboardType: TextInputType.text,
+                                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
+                                initialValue: setting.data.mThemeColorDark.withOpacity(0.0).value.toRadixString(16).padRight(6, '0'),
+                                onChanged: (value) {
+                                  var parsedValue = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withOpacity(1.0);
+                                  setting.data.mThemeColorDark = parsedValue;
+                                  setting.notify();
+                                },
+                              ),
+                              leading: const Icon(Icons.dark_mode_outlined),
+                              trailing: Icon(Icons.circle, color: setting.data.mThemeColorDark),
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'OK'),
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.font_download_outlined),
+                  title: const Text('Primary Font'),
+                  trailing: SizedBox(
+                    width: 120,
+                    child: Row(
+                      children: [
+                        Expanded(child: Container()),
+                        Text(
+                          '${setting.data.mPrimaryFont.length}',
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () async {
+                    await showDialog<String>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Primary Font'),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextFormField(
+                              decoration: const InputDecoration(
+                                isDense: true,
+                              ),
+                              maxLines: null,
+                              keyboardType: TextInputType.multiline,
+                              inputFormatters: const [],
+                              initialValue: setting.data.mPrimaryFont.join('\n') + (setting.data.mPrimaryFont.isNotEmpty && setting.data.mPrimaryFont.last.isEmpty ? '\n' : ''),
+                              onChanged: (value) {
+                                var parsedValue = value.split('\n');
+                                if (parsedValue.isNotEmpty && parsedValue.last.isEmpty) {
+                                  parsedValue.removeLast();
+                                }
+                                setting.data.mPrimaryFont = parsedValue;
+                                setting.notify();
+                              },
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'OK'),
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.text_format_outlined),
+                  title: const Text('Console Font'),
+                  trailing: SizedBox(
+                    width: 120,
+                    child: Row(
+                      children: [
+                        Expanded(child: Container()),
+                        Text(
+                          !setting.data.mConsoleFontUseLargerSize ? 'Regular' : 'Larger',
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          '${setting.data.mConsoleFont.length}',
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () async {
+                    await showDialog<String>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Console Font'),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              children: [
+                                Switch(
+                                  value: setting.data.mConsoleFontUseLargerSize,
                                   onChanged: (value) {
-                                    var color = Color(value.isEmpty ? 0 : Integer.parse(value, radix: 16)).withOpacity(1.0);
-                                    if (e == 0) {
-                                      setting.data.mThemeColorLight = color;
-                                    } else {
-                                      setting.data.mThemeColorDark = color;
-                                    }
+                                    setting.data.mConsoleFontUseLargerSize = value;
                                     setting.notify();
                                   },
                                 ),
-                                leading: Icon([Icons.light_mode_outlined, Icons.dark_mode_outlined][e]),
-                                trailing: Icon(
-                                  Icons.circle,
-                                  color: [setting.data.mThemeColorLight, setting.data.mThemeColorDark][e],
+                                const SizedBox(width: 12),
+                                Text('Use Larger Size', style: theme.textTheme.titleMedium),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            TextFormField(
+                              decoration: const InputDecoration(
+                                isDense: true,
+                              ),
+                              maxLines: null,
+                              keyboardType: TextInputType.multiline,
+                              inputFormatters: const [],
+                              initialValue: setting.data.mConsoleFont.join('\n') + (setting.data.mConsoleFont.isNotEmpty && setting.data.mConsoleFont.last.isEmpty ? '\n' : ''),
+                              onChanged: (value) {
+                                var parsedValue = value.split('\n');
+                                if (parsedValue.isNotEmpty && parsedValue.last.isEmpty) {
+                                  parsedValue.removeLast();
+                                }
+                                setting.data.mConsoleFont = parsedValue;
+                                setting.notify();
+                              },
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'OK'),
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.pivot_table_chart_outlined),
+                  title: const Text('Window Position'),
+                  trailing: SizedBox(
+                    width: 120,
+                    child: Row(
+                      children: [
+                        Expanded(child: Container()),
+                        Text(
+                          setting.data.mWindowPositionAlignToCenter ? 'Center' : '${setting.data.mWindowPositionX}x${setting.data.mWindowPositionY}',
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () async {
+                    await showDialog<String>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Window Position'),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              children: [
+                                Switch(
+                                  value: setting.data.mWindowPositionAlignToCenter,
+                                  onChanged: (value) {
+                                    setting.data.mWindowPositionAlignToCenter = value;
+                                    setting.notify();
+                                  },
+                                ),
+                                const SizedBox(width: 12),
+                                Text('Align To Center', style: theme.textTheme.titleMedium),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            ListTile(
+                              title: TextFormField(
+                                decoration: const InputDecoration(
+                                  isDense: true,
+                                ),
+                                maxLines: 1,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
+                                initialValue: setting.data.mWindowPositionX.toString(),
+                                onChanged: (value) {
+                                  var parsedValue = Integer.tryParse(value) ?? 0;
+                                  setting.data.mWindowPositionX = parsedValue;
+                                  setting.notify();
+                                },
+                              ),
+                              leading: SizedBox(
+                                width: 16,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  child: Text('X', style: theme.textTheme.titleMedium),
+                                ),
+                              ),
+                            ),
+                            ListTile(
+                              title: TextFormField(
+                                decoration: const InputDecoration(
+                                  isDense: true,
+                                ),
+                                maxLines: 1,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
+                                initialValue: setting.data.mWindowPositionY.toString(),
+                                onChanged: (value) {
+                                  var parsedValue = Integer.tryParse(value) ?? 0;
+                                  setting.data.mWindowPositionY = parsedValue;
+                                  setting.notify();
+                                },
+                              ),
+                              leading: SizedBox(
+                                width: 16,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  child: Text('Y', style: theme.textTheme.titleMedium),
                                 ),
                               ),
                             ),
@@ -185,15 +426,15 @@ class _SettingPageState extends State<SettingPage> {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.text_increase_outlined),
-                  title: const Text('Font Size'),
+                  leading: const Icon(Icons.fit_screen_outlined),
+                  title: const Text('Window Size'),
                   trailing: SizedBox(
-                    width: 96,
+                    width: 120,
                     child: Row(
                       children: [
                         Expanded(child: Container()),
                         Text(
-                          !setting.data.mFontSizeUseLargerInConsole ? 'Regular' : 'Larger',
+                          setting.data.mWindowSizeAdhereToDefault ? 'Default' : '${setting.data.mWindowSizeWidth}x${setting.data.mWindowSizeHeight}',
                           style: theme.textTheme.bodyMedium,
                         ),
                       ],
@@ -203,25 +444,78 @@ class _SettingPageState extends State<SettingPage> {
                     await showDialog<String>(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: const Text('Font Size'),
+                        title: const Text('Window Size'),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            ...[false, true].map(
-                              (e) => ListTile(
-                                title: Text(!e ? 'Regular' : 'Larger'),
-                                leading: Radio<Boolean>(
-                                  value: e,
-                                  groupValue: setting.data.mFontSizeUseLargerInConsole,
+                            Row(
+                              children: [
+                                Switch(
+                                  value: setting.data.mWindowSizeAdhereToDefault,
                                   onChanged: (value) {
-                                    setting.data.mFontSizeUseLargerInConsole = value!;
+                                    setting.data.mWindowSizeAdhereToDefault = value;
                                     setting.notify();
                                   },
+                                ),
+                                const SizedBox(width: 12),
+                                Text('Adhere To Default', style: theme.textTheme.titleMedium),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            ListTile(
+                              title: TextFormField(
+                                decoration: const InputDecoration(
+                                  isDense: true,
+                                ),
+                                maxLines: 1,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
+                                initialValue: setting.data.mWindowSizeWidth.toString(),
+                                onChanged: (value) {
+                                  var parsedValue = Integer.tryParse(value) ?? 0;
+                                  setting.data.mWindowSizeWidth = parsedValue;
+                                  setting.notify();
+                                },
+                              ),
+                              leading: SizedBox(
+                                width: 16,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  child: Text('W', style: theme.textTheme.titleMedium),
+                                ),
+                              ),
+                            ),
+                            ListTile(
+                              title: TextFormField(
+                                decoration: const InputDecoration(
+                                  isDense: true,
+                                ),
+                                maxLines: 1,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
+                                initialValue: setting.data.mWindowSizeHeight.toString(),
+                                onChanged: (value) {
+                                  var parsedValue = Integer.tryParse(value) ?? 0;
+                                  setting.data.mWindowSizeHeight = parsedValue;
+                                  setting.notify();
+                                },
+                              ),
+                              leading: SizedBox(
+                                width: 16,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  child: Text('H', style: theme.textTheme.titleMedium),
                                 ),
                               ),
                             ),
                           ],
                         ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'OK'),
+                            child: const Text('OK'),
+                          ),
+                        ],
                       ),
                     );
                   },
@@ -237,7 +531,7 @@ class _SettingPageState extends State<SettingPage> {
                   leading: const Icon(Icons.data_usage_outlined),
                   title: const Text('Kernel'),
                   trailing: SizedBox(
-                    width: 96,
+                    width: 120,
                     child: Row(
                       children: [
                         Expanded(child: Container()),
@@ -257,10 +551,12 @@ class _SettingPageState extends State<SettingPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             TextFormField(
-                              maxLines: null,
                               decoration: const InputDecoration(
                                 isDense: true,
                               ),
+                              maxLines: null,
+                              keyboardType: TextInputType.text,
+                              inputFormatters: const [],
                               initialValue: setting.data.mCommandKernel,
                               onChanged: (value) {
                                 setting.data.mCommandKernel = value;
@@ -283,7 +579,7 @@ class _SettingPageState extends State<SettingPage> {
                   leading: const Icon(Icons.data_object_outlined),
                   title: const Text('Script'),
                   trailing: SizedBox(
-                    width: 96,
+                    width: 120,
                     child: Row(
                       children: [
                         Expanded(child: Container()),
@@ -303,10 +599,12 @@ class _SettingPageState extends State<SettingPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             TextFormField(
-                              maxLines: null,
                               decoration: const InputDecoration(
                                 isDense: true,
                               ),
+                              maxLines: null,
+                              keyboardType: TextInputType.text,
+                              inputFormatters: const [],
                               initialValue: setting.data.mCommandScript,
                               onChanged: (value) {
                                 setting.data.mCommandScript = value;
@@ -329,7 +627,7 @@ class _SettingPageState extends State<SettingPage> {
                   leading: const Icon(Icons.list_alt_outlined),
                   title: const Text('Argument'),
                   trailing: SizedBox(
-                    width: 96,
+                    width: 120,
                     child: Row(
                       children: [
                         Expanded(child: Container()),
@@ -349,17 +647,19 @@ class _SettingPageState extends State<SettingPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             TextFormField(
-                              maxLines: null,
                               decoration: const InputDecoration(
                                 isDense: true,
                               ),
+                              maxLines: null,
+                              keyboardType: TextInputType.multiline,
+                              inputFormatters: const [],
                               initialValue: setting.data.mCommandArgument.join('\n') + (setting.data.mCommandArgument.isNotEmpty && setting.data.mCommandArgument.last.isEmpty ? '\n' : ''),
                               onChanged: (value) {
-                                var valueList = value.split('\n');
-                                if (valueList.isNotEmpty && valueList.last.isEmpty) {
-                                  valueList.removeLast();
+                                var parsedValue = value.split('\n');
+                                if (parsedValue.isNotEmpty && parsedValue.last.isEmpty) {
+                                  parsedValue.removeLast();
                                 }
-                                setting.data.mCommandArgument = valueList;
+                                setting.data.mCommandArgument = parsedValue;
                                 setting.notify();
                               },
                             ),
@@ -384,14 +684,14 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 ListTile(
                   leading: const Icon(Icons.exit_to_app_outlined),
-                  title: const Text('Behavior After Command Succeed'),
+                  title: const Text('Exit After Command Succeed'),
                   trailing: SizedBox(
-                    width: 96,
+                    width: 120,
                     child: Row(
                       children: [
                         Expanded(child: Container()),
                         Text(
-                          !setting.data.mBehaviorAfterCommandSucceed ? 'Stay' : 'Exit',
+                          !setting.data.mExitAfterCommandSucceed ? 'Disabled' : 'Enabled',
                           style: theme.textTheme.bodyMedium,
                         ),
                       ],
@@ -401,22 +701,22 @@ class _SettingPageState extends State<SettingPage> {
                     await showDialog<String>(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: const Text('Behavior After Command Succeed'),
+                        title: const Text('Exit After Command Succeed'),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            ...[false, true].map(
-                              (e) => ListTile(
-                                title: Text(!e ? 'Stay' : 'Exit'),
-                                leading: Radio<Boolean>(
-                                  value: e,
-                                  groupValue: setting.data.mBehaviorAfterCommandSucceed,
+                            Row(
+                              children: [
+                                Switch(
+                                  value: setting.data.mExitAfterCommandSucceed,
                                   onChanged: (value) {
-                                    setting.data.mBehaviorAfterCommandSucceed = value!;
+                                    setting.data.mExitAfterCommandSucceed = value;
                                     setting.notify();
                                   },
                                 ),
-                              ),
+                                const SizedBox(width: 12),
+                                Text('Enable', style: theme.textTheme.titleMedium),
+                              ],
                             ),
                           ],
                         ),
@@ -434,7 +734,7 @@ class _SettingPageState extends State<SettingPage> {
                   leading: const Icon(Icons.folder_copy_outlined),
                   title: const Text('Fallback Directory For Invisible File'),
                   trailing: SizedBox(
-                    width: 96,
+                    width: 120,
                     child: Row(
                       children: [
                         Expanded(child: Container()),
@@ -454,12 +754,15 @@ class _SettingPageState extends State<SettingPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             TextFormField(
-                              maxLines: null,
                               decoration: const InputDecoration(
                                 isDense: true,
                               ),
+                              maxLines: null,
+                              keyboardType: TextInputType.text,
+                              inputFormatters: const [],
                               initialValue: setting.data.mFallbackDirectoryForInvisibleFile,
                               onChanged: (value) {
+                                PathPicker.fallbackDirectory = value;
                                 setting.data.mFallbackDirectoryForInvisibleFile = value;
                                 setting.notify();
                               },
@@ -480,7 +783,7 @@ class _SettingPageState extends State<SettingPage> {
                   leading: const Icon(Icons.folder_special_outlined),
                   title: const Text('Shared Directory'),
                   trailing: SizedBox(
-                    width: 96,
+                    width: 120,
                     child: Row(
                       children: [
                         Expanded(child: Container()),
@@ -500,13 +803,15 @@ class _SettingPageState extends State<SettingPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             TextFormField(
-                              readOnly: true,
-                              maxLines: 1,
                               decoration: const InputDecoration(
                                 isDense: true,
                                 border: OutlineInputBorder(),
                               ),
+                              maxLines: null,
+                              keyboardType: TextInputType.text,
+                              inputFormatters: const [],
                               initialValue: this._applicationSharedDirectory,
+                              readOnly: true,
                             ),
                           ],
                         ),
@@ -524,7 +829,7 @@ class _SettingPageState extends State<SettingPage> {
                   leading: const Icon(Icons.storage_outlined),
                   title: const Text('Storage Permission'),
                   trailing: SizedBox(
-                    width: 96,
+                    width: 120,
                     child: Row(
                       children: [
                         Expanded(child: Container()),

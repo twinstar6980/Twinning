@@ -1,5 +1,3 @@
-// ignore_for_file: unused_import
-
 import '/common.dart';
 import 'dart:io';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -9,7 +7,9 @@ import 'package:local_notifier/local_notifier.dart';
 
 class NotificationHelper {
 
-  static FlutterLocalNotificationsPlugin? _flutterLocalNotificationsPlugin;
+  static FlutterLocalNotificationsPlugin? _flutterLocalNotificationsPlugin = null;
+
+  // ----------------
 
   static
   Future<Void>
@@ -24,10 +24,17 @@ class NotificationHelper {
     if (Platform.isLinux || Platform.isMacOS || Platform.isAndroid || Platform.isIOS) {
       _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
       var initializationSettings = InitializationSettings(
-        android: const AndroidInitializationSettings('@mipmap/ic_launcher'),
-        iOS: const DarwinInitializationSettings(),
-        macOS: const DarwinInitializationSettings(),
-        linux: LinuxInitializationSettings(defaultActionName: '', defaultIcon: AssetsLinuxIcon('asset/logo.png')),
+        android: const AndroidInitializationSettings(
+          '@mipmap/ic_launcher',
+        ),
+        iOS: const DarwinInitializationSettings(
+        ),
+        macOS: const DarwinInitializationSettings(
+        ),
+        linux: LinuxInitializationSettings(
+          defaultActionName: '',
+          defaultIcon: AssetsLinuxIcon('asset/logo.png'),
+        ),
       );
       await _flutterLocalNotificationsPlugin!.initialize(initializationSettings, onDidReceiveNotificationResponse: null);
     }

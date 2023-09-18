@@ -3,6 +3,7 @@
 
 using Helper;
 using Windows.Graphics;
+using Microsoft.UI.Windowing;
 
 namespace Helper.Utility {
 
@@ -62,8 +63,8 @@ namespace Helper.Utility {
 			Size   x,
 			Size   y
 		) {
-			var rate = WinUIEx.HwndExtensions.GetDpiForWindow(WindowHelper.Handle(window)) / 96.0;
-			window.AppWindow.Move(new PointInt32((Int32)(x * rate), (Int32)(y * rate)));
+			var ratio = WinUIEx.HwndExtensions.GetDpiForWindow(WindowHelper.Handle(window)) / 96.0;
+			window.AppWindow.Move(new PointInt32((Int32)(x * ratio), (Int32)(y * ratio)));
 			return;
 		}
 
@@ -79,22 +80,22 @@ namespace Helper.Utility {
 			Size   width,
 			Size   height
 		) {
-			var rate = WinUIEx.HwndExtensions.GetDpiForWindow(WindowHelper.Handle(window)) / 96.0;
-			window.AppWindow.Resize(new SizeInt32((Int32)(width * rate), (Int32)(height * rate)));
+			var ratio = WinUIEx.HwndExtensions.GetDpiForWindow(WindowHelper.Handle(window)) / 96.0;
+			window.AppWindow.Resize(new SizeInt32((Int32)(width * ratio), (Int32)(height * ratio)));
 			return;
 		}
 
 		public static void Minimize (
 			Window window
 		) {
-			WinUIEx.WindowExtensions.Minimize(window);
+			(window.AppWindow.Presenter as OverlappedPresenter)!.Minimize();
 			return;
 		}
 
 		public static void Maximize (
 			Window window
 		) {
-			WinUIEx.WindowExtensions.Maximize(window);
+			(window.AppWindow.Presenter as OverlappedPresenter)!.Maximize();
 			return;
 		}
 
@@ -104,7 +105,7 @@ namespace Helper.Utility {
 			Window  window,
 			Boolean state
 		) {
-			WinUIEx.WindowExtensions.SetIsAlwaysOnTop(window, state);
+			(window.AppWindow.Presenter as OverlappedPresenter)!.IsAlwaysOnTop = state;
 			return;
 		}
 

@@ -34,7 +34,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.texture {
 					}),
 					typical_argument_string({
 						id: 'format',
-						option: Support.PopCap.Texture.Encode.FormatE,
+						option: Support.PopCap.Texture.Encoding.FormatE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -42,7 +42,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.texture {
 					}),
 				],
 				worker: ({ image_file, data_file, format }) => {
-					Support.PopCap.Texture.Encode.encode_fs(image_file, data_file, format as any);
+					Support.PopCap.Texture.Encoding.encode_fs(image_file, data_file, format as any);
 					return;
 				},
 				batch_argument: null,
@@ -70,7 +70,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.texture {
 					}),
 					typical_argument_string({
 						id: 'format',
-						option: Support.PopCap.Texture.Encode.FormatE,
+						option: Support.PopCap.Texture.Encoding.FormatE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -94,7 +94,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.texture {
 					}),
 				],
 				worker: ({ data_file, image_file, format, image_width, image_height }) => {
-					Support.PopCap.Texture.Encode.decode_fs(data_file, image_file, [image_width, image_height], format as any);
+					Support.PopCap.Texture.Encoding.decode_fs(data_file, image_file, [image_width, image_height], format as any);
 					return;
 				},
 				batch_argument: null,

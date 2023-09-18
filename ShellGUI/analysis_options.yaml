@@ -1,11 +1,14 @@
 include: package:flutter_lints/flutter.yaml
+analyzer:
+  errors:
+    unnecessary_cast: ignore
+    unnecessary_this: ignore
+    unnecessary_string_interpolations: ignore
+    unnecessary_brace_in_string_interps: ignore
+    avoid_init_to_null: ignore
+    prefer_final_fields: ignore
+    prefer_is_empty: ignore
+    empty_catches: ignore
 linter:
   rules:
-    lines_longer_than_80_chars: false
-    unnecessary_this: false
-    unnecessary_brace_in_string_interps: false
-    unnecessary_string_interpolations: false
     prefer_single_quotes: true
-    prefer_function_declarations_over_variables: false
-    prefer_is_empty: false
-    # require_trailing_commas: true

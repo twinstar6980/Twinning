@@ -1,16 +1,16 @@
-// ignore_for_file: unused_import, unnecessary_cast, avoid_init_to_null, empty_catches
-
 import '/common.dart';
+import '/common/platform_method.dart';
 import 'dart:io';
 import 'package:path/path.dart' as p_path;
 import 'package:file_picker/file_picker.dart';
-import '/common/platform_method.dart';
 
 // ----------------
 
 class PathPicker {
 
   static String fallbackDirectory = '';
+
+  // ----------------
 
   static
   Future<String?>

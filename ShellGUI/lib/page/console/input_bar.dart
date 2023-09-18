@@ -1,13 +1,8 @@
-// ignore_for_file: unused_import, unnecessary_cast
-
 import '/common.dart';
-import 'dart:io';
+import '/common/path_picker.dart';
 import 'dart:async';
-import 'package:async/async.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '/common/path_picker.dart';
 
 // ----------------
 
@@ -29,7 +24,7 @@ class InputBarContent extends StatelessWidget {
   // ----------------
 
   @override
-  Widget build(BuildContext context) {
+  build(context) {
     return Row(
       children: [
         IgnorePointer(
@@ -38,7 +33,8 @@ class InputBarContent extends StatelessWidget {
               this.icon,
               size: 18,
             ),
-            onPressed: () async {},
+            onPressed: () async {
+            },
           ),
         ),
         const SizedBox(width: 4),
@@ -64,8 +60,10 @@ class IdleInputBarContent extends StatelessWidget {
 
   // ----------------
 
+  // ----------------
+
   @override
-  Widget build(BuildContext context) {
+  build(context) {
     return const InputBarContent(
       icon: Icons.coffee_outlined,
       onSubmit: null,
@@ -89,13 +87,13 @@ class BusyInputBarContent extends StatelessWidget {
 
   final IconData           icon;
   final List<Widget>       children;
-  final Completer<dynamic> completer;
-  final dynamic Function() getCompleterValue;
+  final Completer<Object?> completer;
+  final Object? Function() getCompleterValue;
 
   // ----------------
 
   @override
-  Widget build(BuildContext context) {
+  build(context) {
     return InputBarContent(
       icon: this.icon,
       onSubmit: () {
@@ -119,21 +117,23 @@ class PauseInputBarContent extends StatefulWidget {
   });
 
   @override
-  State<PauseInputBarContent> createState() => _PauseInputBarContentState();
+  createState() => _PauseInputBarContentState();
 
   // ----------------
 
-  final Completer<dynamic> completer;
+  final Completer<Object?> completer;
 
 }
 
 class _PauseInputBarContentState extends State<PauseInputBarContent> {
 
+  // ----------------
+
   @override
-  Widget build(BuildContext context) {
+  build(context) {
     return BusyInputBarContent(
       completer: this.widget.completer,
-      getCompleterValue: () => null,
+      getCompleterValue: () => (null),
       icon: Icons.pause,
       children: const [
         Text('Pause ...'),
@@ -153,66 +153,66 @@ class ConfirmationInputBarContent extends StatefulWidget {
   });
 
   @override
-  State<ConfirmationInputBarContent> createState() => _ConfirmationInputBarContentState();
+  createState() => _ConfirmationInputBarContentState();
 
   // ----------------
 
-  final Completer<dynamic> completer;
+  final Completer<Boolean?> completer;
 
 }
 
 class _ConfirmationInputBarContentState extends State<ConfirmationInputBarContent> {
 
-  Boolean? _value;
+  Boolean? _value = null;
 
   // ----------------
 
   @override
-  Widget build(BuildContext context) {
+  build(context) {
     return BusyInputBarContent(
       completer: this.widget.completer,
-      getCompleterValue: () => this._value,
+      getCompleterValue: () => (this._value),
       icon: Icons.check_circle_outline_outlined,
       children: [
-        ...[false].map((e) {
-          return Expanded(
-            child: (this._value ?? !e) == e
-                ? FilledButton.tonal(
-                    onPressed: () async {
-                      this._value = null;
-                      this.setState(() {});
-                    },
-                    child: Text(!e ? 'No' : 'Yes'),
-                  )
-                : TextButton(
-                    onPressed: () async {
-                      this._value = e;
-                      this.setState(() {});
-                    },
-                    child: Text(!e ? 'No' : 'Yes'),
-                  ),
-          );
-        }),
+        ...[false].map(
+          (value) => Expanded(
+            child: (this._value ?? !value) == value
+              ? FilledButton.tonal(
+                onPressed: () async {
+                  this._value = null;
+                  this.setState(() {});
+                },
+                child: Text(!value ? 'No' : 'Yes'),
+              )
+              : TextButton(
+                onPressed: () async {
+                  this._value = value;
+                  this.setState(() {});
+                },
+                child: Text(!value ? 'No' : 'Yes'),
+              ),
+          ),
+        ),
         const SizedBox(width: 8),
-        ...[true].map((e) {
-          return Expanded(
-            child: (this._value ?? !e) == e
-                ? FilledButton.tonal(
-                    onPressed: () async {
-                      this._value = null;
-                      this.setState(() {});
-                    },
-                    child: Text(!e ? 'No' : 'Yes'),
-                  )
-                : TextButton(
-                    onPressed: () async {
-                      this._value = e;
-                      this.setState(() {});
-                    },
-                    child: Text(!e ? 'No' : 'Yes'),
-                  ),
-          );
-        }),
+        ...[true].map(
+          (value) => Expanded(
+            child: (this._value ?? !value) == value
+              ? FilledButton.tonal(
+                onPressed: () async {
+                  this._value = null;
+                  this.setState(() {});
+                },
+                child: Text(!value ? 'No' : 'Yes'),
+              )
+              : TextButton(
+                onPressed: () async {
+                  this._value = value;
+                  this.setState(() {});
+                },
+                child: Text(!value ? 'No' : 'Yes'),
+              ),
+          ),
+        ),
       ],
     );
   }
@@ -229,7 +229,7 @@ class NumberInputBarContent extends StatefulWidget {
   });
 
   @override
-  State<NumberInputBarContent> createState() => _NumberInputBarContentState();
+  createState() => _NumberInputBarContentState();
 
   // ----------------
 
@@ -239,39 +239,30 @@ class NumberInputBarContent extends StatefulWidget {
 
 class _NumberInputBarContentState extends State<NumberInputBarContent> {
 
-  Floater? _value;
+  Floater? _value = null;
 
-  final TextEditingController _controller = TextEditingController(text: '');
+  TextEditingController _controller = TextEditingController(text: '');
 
   // ----------------
 
   @override
-  Widget build(BuildContext context) {
+  build(context) {
     return BusyInputBarContent(
       completer: this.widget.completer,
-      getCompleterValue: () => this._value,
+      getCompleterValue: () => (this._value),
       icon: Icons.numbers,
       children: [
         Expanded(
           child: TextField(
-            keyboardType: const TextInputType.numberWithOptions(
-              signed: true,
-              decimal: true,
-            ),
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'^([+-])?([\d]*)([.][\d]*)?$')),
-            ],
             decoration: const InputDecoration(
               border: InputBorder.none,
               hintText: 'Number ...',
             ),
             controller: this._controller,
+            keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
+            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^([+-])?([\d]*)([.][\d]*)?$'))],
             onChanged: (value) {
-              try {
-                this._value = Floater.parse(value);
-              } catch (e) {
-                this._value = null;
-              }
+              this._value = value.isEmpty ? null : Floater.tryParse(value);
               this.setState(() {});
             },
           ),
@@ -292,7 +283,7 @@ class IntegerInputBarContent extends StatefulWidget {
   });
 
   @override
-  State<IntegerInputBarContent> createState() => _IntegerInputBarContentState();
+  createState() => _IntegerInputBarContentState();
 
   // ----------------
 
@@ -302,39 +293,30 @@ class IntegerInputBarContent extends StatefulWidget {
 
 class _IntegerInputBarContentState extends State<IntegerInputBarContent> {
 
-  Integer? _value;
+  Integer? _value = null;
 
-  final TextEditingController _controller = TextEditingController(text: '');
+  TextEditingController _controller = TextEditingController(text: '');
 
   // ----------------
 
   @override
-  Widget build(BuildContext context) {
+  build(context) {
     return BusyInputBarContent(
       completer: this.widget.completer,
-      getCompleterValue: () => this._value,
+      getCompleterValue: () => (this._value),
       icon: Icons.numbers,
       children: [
         Expanded(
           child: TextField(
-            keyboardType: const TextInputType.numberWithOptions(
-              signed: true,
-              decimal: false,
-            ),
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'^([+-])?([\d]*)$')),
-            ],
             decoration: const InputDecoration(
               border: InputBorder.none,
               hintText: 'Integer ...',
             ),
             controller: this._controller,
+            keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: false),
+            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^([+-])?([\d]*)$'))],
             onChanged: (value) {
-              try {
-                this._value = Integer.parse(value);
-              } catch (e) {
-                this._value = null;
-              }
+              this._value = value.isEmpty ? null : Integer.tryParse(value);
               this.setState(() {});
             },
           ),
@@ -355,7 +337,7 @@ class SizeInputBarContent extends StatefulWidget {
   });
 
   @override
-  State<SizeInputBarContent> createState() => _SizeInputBarContentState();
+  createState() => _SizeInputBarContentState();
 
   // ----------------
 
@@ -365,40 +347,31 @@ class SizeInputBarContent extends StatefulWidget {
 
 class _SizeInputBarContentState extends State<SizeInputBarContent> {
 
-  Floater? _value;
-  Integer  _unit = 3;
+  Floater? _value = null;
+  Integer  _unit  = 3;
 
-  final TextEditingController _controller = TextEditingController(text: '');
+  TextEditingController _controller = TextEditingController(text: '');
 
   // ----------------
 
   @override
-  Widget build(BuildContext context) {
+  build(context) {
     return BusyInputBarContent(
       completer: this.widget.completer,
-      getCompleterValue: () => this._value == null ? null : '${this._value!}${['', 'b', 'k', 'm', 'g'][this._unit]}',
+      getCompleterValue: () => (this._value == null ? null : '${this._value!}${['', 'b', 'k', 'm', 'g'][this._unit]}'),
       icon: Icons.memory_outlined,
       children: [
         Expanded(
           child: TextField(
-            keyboardType: const TextInputType.numberWithOptions(
-              signed: false,
-              decimal: false,
-            ),
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'^([\d]*)([.][\d]*)?$')),
-            ],
             decoration: const InputDecoration(
               border: InputBorder.none,
               hintText: 'Size ...',
             ),
             controller: this._controller,
+            keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: true),
+            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^([\d]*)([.][\d]*)?$'))],
             onChanged: (value) {
-              try {
-                this._value = Floater.parse(value);
-              } catch (e) {
-                this._value = null;
-              }
+              this._value = value.isEmpty ? null : Floater.tryParse(value);
               this.setState(() {});
             },
           ),
@@ -452,7 +425,7 @@ class StringInputBarContent extends StatefulWidget {
   });
 
   @override
-  State<StringInputBarContent> createState() => _StringInputBarContentState();
+  createState() => _StringInputBarContentState();
 
   // ----------------
 
@@ -462,17 +435,17 @@ class StringInputBarContent extends StatefulWidget {
 
 class _StringInputBarContentState extends State<StringInputBarContent> {
 
-  String? _value;
+  String? _value = null;
 
-  final TextEditingController _controller = TextEditingController(text: '');
+  TextEditingController _controller = TextEditingController(text: '');
 
   // ----------------
 
   @override
-  Widget build(BuildContext context) {
+  build(context) {
     return BusyInputBarContent(
       completer: this.widget.completer,
-      getCompleterValue: () => this._value,
+      getCompleterValue: () => (this._value),
       icon: Icons.text_fields,
       children: [
         Expanded(
@@ -482,6 +455,8 @@ class _StringInputBarContentState extends State<StringInputBarContent> {
               hintText: 'String ...',
             ),
             controller: this._controller,
+            keyboardType: TextInputType.text,
+            inputFormatters: const [],
             onChanged: (value) {
               this._value = value.isEmpty ? null : value;
               this.setState(() {});
@@ -506,7 +481,7 @@ class PathInputBarContent extends StatefulWidget {
   });
 
   @override
-  State<PathInputBarContent> createState() => _PathInputBarContentState();
+  createState() => _PathInputBarContentState();
 
   // ----------------
 
@@ -518,17 +493,17 @@ class PathInputBarContent extends StatefulWidget {
 
 class _PathInputBarContentState extends State<PathInputBarContent> {
 
-  String? _value;
+  String? _value = null;
 
-  final TextEditingController _controller = TextEditingController(text: '');
+  TextEditingController _controller = TextEditingController(text: '');
 
   // ----------------
 
   @override
-  Widget build(BuildContext context) {
+  build(context) {
     return BusyInputBarContent(
       completer: this.widget.completer,
-      getCompleterValue: () => this._value,
+      getCompleterValue: () => (this._value),
       icon: Icons.text_fields,
       children: [
         Expanded(
@@ -538,6 +513,8 @@ class _PathInputBarContentState extends State<PathInputBarContent> {
               hintText: 'Path ...',
             ),
             controller: this._controller,
+            keyboardType: TextInputType.text,
+            inputFormatters: const [],
             onChanged: (value) {
               this._value = value.isEmpty ? null : value;
               this.setState(() {});
@@ -550,16 +527,16 @@ class _PathInputBarContentState extends State<PathInputBarContent> {
           offset: const Offset(0, -112),
           icon: const Icon(Icons.adjust_outlined),
           tooltip: '',
-          itemBuilder: (context) => [
-            const PopupMenuItem(
+          itemBuilder: (context) => const [
+            PopupMenuItem(
               value: ':o',
               child: Text('override'),
             ),
-            const PopupMenuItem(
+            PopupMenuItem(
               value: ':d',
               child: Text('delete'),
             ),
-            const PopupMenuItem(
+            PopupMenuItem(
               value: ':t',
               child: Text('trash'),
             ),
@@ -574,12 +551,12 @@ class _PathInputBarContentState extends State<PathInputBarContent> {
           offset: const Offset(0, -64),
           icon: const Icon(Icons.outbond_outlined),
           tooltip: '',
-          itemBuilder: (context) => [
-            const PopupMenuItem(
+          itemBuilder: (context) => const [
+            PopupMenuItem(
               value: FileObjectType.file,
               child: Text('file'),
             ),
-            const PopupMenuItem(
+            PopupMenuItem(
               value: FileObjectType.directory,
               child: Text('directory'),
             ),
@@ -616,7 +593,7 @@ class OptionInputBarContent extends StatefulWidget {
   });
 
   @override
-  State<OptionInputBarContent> createState() => _OptionInputBarContentState();
+  createState() => _OptionInputBarContentState();
 
   // ----------------
 
@@ -627,26 +604,26 @@ class OptionInputBarContent extends StatefulWidget {
 
 class _OptionInputBarContentState extends State<OptionInputBarContent> {
 
-  Integer? _value;
+  Integer? _value = null;
 
   // ----------------
 
   @override
-  Widget build(BuildContext context) {
+  build(context) {
     List<DropdownMenuItem<Integer>> itemList = [];
     itemList.add(const DropdownMenuItem(
       value: -1,
       child: Text(''),
     ));
-    for (var i = 0; i < this.widget.option.length; ++i) {
+    for (var index = 0; index < this.widget.option.length; ++index) {
       itemList.add(DropdownMenuItem(
-        value: i + 1,
-        child: Text(this.widget.option[i]),
+        value: index + 1,
+        child: Text(this.widget.option[index]),
       ));
     }
     return BusyInputBarContent(
       completer: this.widget.completer,
-      getCompleterValue: () => this._value,
+      getCompleterValue: () => (this._value),
       icon: Icons.menu,
       children: [
         Expanded(
