@@ -51,7 +51,7 @@ namespace TwinStar::Kernel {
 	public:
 
 		explicit UnknownException (
-			std::source_location const & location = M_current_source_location
+			std::source_location const & location = std::source_location::current()
 		) :
 			Exception{"Unknown", {}, location} {
 		}
@@ -65,7 +65,7 @@ namespace TwinStar::Kernel {
 
 		explicit UnnamedException (
 			std::string const &          message,
-			std::source_location const & location = M_current_source_location
+			std::source_location const & location = std::source_location::current()
 		) :
 			Exception{"Unnamed", {}, location} {
 			thiz.m_description.emplace_back(fmt::format("message : {}", message));
@@ -81,7 +81,7 @@ namespace TwinStar::Kernel {
 	public:
 
 		explicit ImpossibleException (
-			std::source_location const & location = M_current_source_location
+			std::source_location const & location = std::source_location::current()
 		) :
 			Exception{"Impossible", {}, location} {
 		}
@@ -94,7 +94,7 @@ namespace TwinStar::Kernel {
 	public:
 
 		explicit IncompleteException (
-			std::source_location const & location = M_current_source_location
+			std::source_location const & location = std::source_location::current()
 		) :
 			Exception{"Incomplete", {}, location} {
 		}
@@ -110,7 +110,7 @@ namespace TwinStar::Kernel {
 
 		explicit AssertionException (
 			std::string const &          expression,
-			std::source_location const & location = M_current_source_location
+			std::source_location const & location = std::source_location::current()
 		) :
 			Exception{"Assertion", {}, location} {
 			thiz.m_description.emplace_back(fmt::format("expression : {}", expression));
@@ -128,7 +128,7 @@ namespace TwinStar::Kernel {
 		explicit InvocationException (
 			std::string const &          target,
 			std::string const &          message,
-			std::source_location const & location = M_current_source_location
+			std::source_location const & location = std::source_location::current()
 		) :
 			Exception{"Invocation", {}, location} {
 			thiz.m_description.emplace_back(fmt::format("target  : {}", target));
@@ -147,7 +147,7 @@ namespace TwinStar::Kernel {
 		explicit SyntaxException (
 			std::size_t const &          position,
 			std::string const &          message,
-			std::source_location const & location = M_current_source_location
+			std::source_location const & location = std::source_location::current()
 		) :
 			Exception{"Syntax", {}, location} {
 			thiz.m_description.emplace_back(fmt::format("position : {:X}h", position));
@@ -165,7 +165,7 @@ namespace TwinStar::Kernel {
 
 		explicit StandardException (
 			std::exception const &       exception,
-			std::source_location const & location = M_current_source_location
+			std::source_location const & location = std::source_location::current()
 		) :
 			Exception{"Standard", {}, location} {
 			thiz.m_description.emplace_back(fmt::format("type    : {}", typeid(exception).name()));
@@ -181,7 +181,7 @@ namespace TwinStar::Kernel {
 
 		explicit StandardSystemException (
 			std::system_error const &    exception,
-			std::source_location const & location = M_current_source_location
+			std::source_location const & location = std::source_location::current()
 		) :
 			Exception{"Standard.System", {}, location} {
 			thiz.m_description.emplace_back(fmt::format("type    : {}", typeid(exception).name()));
@@ -197,7 +197,7 @@ namespace TwinStar::Kernel {
 
 		explicit StandardFileSystemException (
 			std::filesystem::filesystem_error const & exception,
-			std::source_location const &              location = M_current_source_location
+			std::source_location const &              location = std::source_location::current()
 		) :
 			Exception{"Standard.FileSystem", {}, location} {
 			auto path_1 = exception.path1().generic_u8string();

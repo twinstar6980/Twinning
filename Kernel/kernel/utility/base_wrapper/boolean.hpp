@@ -86,9 +86,6 @@ namespace TwinStar::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsBooleanWrapper<It>)
-	#if defined M_compiler_clang // NOTE : avoid clang bug
-		&& (IsDerivedFrom<It, BooleanWrapper<typename It::Value>>)
-	#endif
 	inline constexpr auto operator == (
 		It const & thix,
 		It const & that
@@ -101,9 +98,6 @@ namespace TwinStar::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsBooleanWrapper<It>)
-	#if defined M_compiler_clang // NOTE : avoid clang bug
-		&& (IsDerivedFrom<It, BooleanWrapper<typename It::Value>>)
-	#endif
 	inline constexpr auto operator ! (
 		It const & thix
 	) -> It {

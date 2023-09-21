@@ -12,13 +12,13 @@
 	
 	* [MSVC 19.37 with MSVC-STL and Windows-SDK for Windows](https://visualstudio.microsoft.com/downloads/)
 	
-	* [Clang 16.0 with libstdc++ and POSIX for Linux](https://llvm.org/)
+	* [Clang 17.0 with libstdc++ and POSIX for Linux](https://llvm.org/)
 	
-	* [Clang 16.0 with libc++ and POSIX for Macintosh](https://llvm.org/)
+	* [Clang 17.0 with libc++ and POSIX for Macintosh](https://llvm.org/)
 	
-	* [Clang 14.0 with libc++ and POSIX for Android (NDK 25.2)](https://developer.android.com/ndk/downloads)
+	* [Clang 17.0 with libc++ and POSIX for Android (NDK 26.0)](https://developer.android.com/ndk/downloads)
 	
-	* [Clang 16.0 with libc++ and POSIX for iPhone](https://llvm.org/)
+	* [Clang 17.0 with libc++ and POSIX for iPhone](https://llvm.org/)
 
 * 开发
 	
@@ -40,7 +40,7 @@
 
 | 库                                                                         | 用途                           |
 |:--------------------------------------------------------------------------:|:------------------------------:|
-| [tinyfiledialogs 3.13.2](https://sourceforge.net/projects/tinyfiledialogs) | 系统 UI 功能                   |
+| [tinyfiledialogs 3.14.0](https://sourceforge.net/projects/tinyfiledialogs) | 系统 UI 功能                   |
 
 ## 说明
 

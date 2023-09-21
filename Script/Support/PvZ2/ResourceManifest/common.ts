@@ -4,16 +4,16 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest {
 
 	export type ResourceType = RegularResourceManifest.ResourceType;
 
-	export type GenericResourceInformation = {
+	export type GenericResourceAdditional = {
 	};
 
-	export type AtlasImageResourceInformation = {
+	export type AtlasImageResourceAdditional = {
 		atlas?: boolean;
 		width: bigint;
 		height: bigint;
 	};
 
-	export type SpriteImageResourceInformation = {
+	export type SpriteImageResourceAdditional = {
 		parent: string;
 		ax: bigint;
 		ay: bigint;
@@ -26,21 +26,21 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest {
 		aflag?: bigint;
 	};
 
-	export type SoundResourceInformation = {
+	export type SoundResourceAdditional = {
 		volume?: number,
 		pan?: number,
 	};
 
-	export type PopAnimResourceInformation = {
+	export type PopAnimResourceAdditional = {
 		scale?: undefined,
 		rasterizedScale?: undefined,
 	};
 
-	export type RenderEffectResourceInformation = {
+	export type RenderEffectResourceAdditional = {
 		srcpath?: Array<string>,
 	};
 
-	export type ResourceInformation = GenericResourceInformation | AtlasImageResourceInformation | SpriteImageResourceInformation | SoundResourceInformation | PopAnimResourceInformation | RenderEffectResourceInformation;
+	export type ResourceAdditional = GenericResourceAdditional | AtlasImageResourceAdditional | SpriteImageResourceAdditional | SoundResourceAdditional | PopAnimResourceAdditional | RenderEffectResourceAdditional;
 
 	export type ResourceBase = {
 		slot: bigint;
@@ -49,7 +49,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest {
 		type: ResourceType;
 	};
 
-	export type Resource = ResourceBase & ResourceInformation;
+	export type Resource = ResourceBase & ResourceAdditional;
 
 	// ------------------------------------------------
 
@@ -64,14 +64,14 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest {
 
 	export type SimpleGroupLocale = RegularResourceManifest.SubgroupLocale;
 
-	export type SimpleGroupInformation = {
+	export type SimpleGroupAdditional = {
 		res?: SimpleGroupResolution;
 		loc?: SimpleGroupLocale;
 		parent?: string;
 		resources: Array<Resource>;
 	};
 
-	export type CompositeGroupInformation = {
+	export type CompositeGroupAdditional = {
 		subgroups: Array<{
 			id: string;
 			res?: SimpleGroupResolution;
@@ -79,14 +79,14 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest {
 		}>;
 	};
 
-	export type GroupInformation = CompositeGroupInformation | SimpleGroupInformation;
+	export type GroupAdditional = CompositeGroupAdditional | SimpleGroupAdditional;
 
 	export type GroupBase = {
 		id: string;
 		type: GroupType;
 	};
 
-	export type Group = GroupBase & GroupInformation;
+	export type Group = GroupBase & GroupAdditional;
 
 	// ------------------------------------------------
 

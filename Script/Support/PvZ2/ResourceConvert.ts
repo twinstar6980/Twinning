@@ -125,7 +125,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 			]);
 			let resource_path_list: Array<string> = [];
 			iterate_resource(false)((group, subgroup, resource) => {
-				resource_path_list.push(`${resource[1].path}${(resource[1].expand[0] === 'atlas' ? '.ptx' : '')}`);
+				resource_path_list.push(`${resource[1].path}${(resource[1].additional.type === 'atlas' ? '.ptx' : '')}`);
 			});
 			let rename_tree = (
 				parent: string,
@@ -172,16 +172,16 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 					Console.error_of(e);
 				}
 			}
-			if (option.ptx !== null && resource[1].expand[0] === 'atlas') {
+			if (option.ptx !== null && resource[1].additional.type === 'atlas') {
 				Console.verbosity(`  ${path}`, []);
 				try {
 					assert_test(resource[2].additional.type === 'texture', `invalid image resource`);
-					let atlas_image_information = resource[1].expand[1];
-					let texture_information_source = resource[2].additional.value;
-					let size = atlas_image_information.size;
-					let actual_size = texture_information_source.size;
-					let texture_format = option.ptx.texture_format_map.find((e) => (e.index === texture_information_source.format));
-					assert_test(texture_format !== undefined, `unknown texture format : ${texture_information_source.format}`);
+					let atlas_image_additional = resource[1].additional.value;
+					let texture_additional_source = resource[2].additional.value;
+					let size = atlas_image_additional.size;
+					let actual_size = texture_additional_source.size;
+					let texture_format = option.ptx.texture_format_map.find((e) => (e.index === texture_additional_source.format));
+					assert_test(texture_format !== undefined, `unknown texture format : ${texture_additional_source.format}`);
 					Console.verbosity(`    size : [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] of [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ] , format : ${texture_format.format}`, []);
 					let data = KernelX.FileSystem.read_file(`${resource_directory}/${path}.ptx`);
 					let stream = Kernel.ByteStreamView.watch(data.view());
@@ -197,8 +197,8 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 					}
 					if (option.ptx.sprite !== null) {
 						Support.Atlas.Pack.unpack_fsh({
-							size: atlas_image_information.size,
-							sprite: record_transform(atlas_image_information.sprite, (k, v) => ([v.path, { position: v.position, size: v.size }])),
+							size: atlas_image_additional.size,
+							sprite: record_transform(atlas_image_additional.sprite, (key, value) => ([value.path, { position: value.position, size: value.size }])),
 						}, image_view, option.ptx.directory);
 					}
 				} catch (e) {

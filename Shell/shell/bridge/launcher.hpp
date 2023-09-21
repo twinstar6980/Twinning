@@ -20,10 +20,10 @@ namespace TwinStar::Shell::Bridge {
 			std::vector<std::string> const & argument
 		) -> std::string {
 			host.start();
-			Bridge::Invoker::version(library);
-			Bridge::Invoker::prepare(library);
+			Invoker::version(library);
+			Invoker::prepare(library);
 			auto callback = std::bind(&Host::execute, &host, std::placeholders::_1);
-			auto result = Bridge::Invoker::execute(library, callback, script, argument);
+			auto result = Invoker::execute(library, callback, script, argument);
 			host.finish();
 			return result;
 		}

@@ -78,20 +78,6 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle::Shared {
 		return StringBlockFixed128{block};
 	}
 
-	static auto string_block_fixed_128_to_string (
-		StringBlockFixed128 const & string
-	) -> String {
-		auto size = k_none_size;
-		for (auto & element : string) {
-			if (element == CharacterType::k_null) {
-				break;
-			}
-			++size;
-		}
-		assert_test(size < 128_sz);
-		return String{string.begin(), size};
-	}
-
 	#pragma endregion
 
 	#pragma region compiled map data

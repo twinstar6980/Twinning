@@ -18,13 +18,13 @@ namespace TwinStar.Script.Support.PvZ2.JSONGenericGetter {
 			return source;
 		}
 		if (typeof source === 'number') {
-			return source === 0;
+			return source !== 0;
 		}
 		if (typeof source === 'bigint') {
-			return source === 0n;
+			return source !== 0n;
 		}
 		if (typeof source === 'string') {
-			return source === '';
+			return source !== '';
 		}
 		assert_test(false, `type error`);
 	}

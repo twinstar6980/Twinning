@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 84;
+	export const k_version = 85;
 
 	// ------------------------------------------------
 
@@ -289,7 +289,7 @@ namespace TwinStar.Script {
 		async function internal(
 			argument: Array<string>,
 		): Promise<string> {
-			Detail.output(`TwinStar.ToolKit ~ Kernel:${Kernel.Miscellaneous.g_version.value} & Shell:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['host'])).value[0]}:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['version'])).value[0]} & Script:${k_version} ~ ${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['system'])).value[0]} & ${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['architecture'])).value[0]}`);
+			Detail.output(`TwinStar.ToolKit ~ Kernel:${Kernel.Miscellaneous.g_version.value} & Shell:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['host'])).value[0]}:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['version'])).value[0]} & Script:${k_version} ~ ${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['system'])).value[0]}`);
 			assert_test(argument.length >= 1, `argument too few`);
 			// 获取主目录
 			let home_path = argument[0].replaceAll(`\\`, '/');

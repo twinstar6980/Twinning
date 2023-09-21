@@ -5,6 +5,9 @@
 #endif
 #if defined M_compiler_clang
 #pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wsuggest-override"
+#pragma clang diagnostic ignored "-Wsuggest-destructor-override"
+#pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
 #endif
 
 #include "third/open_vcdiff/google/vcencoder.h"

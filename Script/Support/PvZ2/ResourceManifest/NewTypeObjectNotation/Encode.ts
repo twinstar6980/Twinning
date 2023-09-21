@@ -48,7 +48,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.En
 		write_integer(data, definition.slot_count);
 		write_integer(data, BigInt(definition.groups.length));
 		for (let groups_index = 0; groups_index < definition.groups.length; ++groups_index) {
-			let group: ResourceManifest.GroupBase & (ResourceManifest.CompositeGroupInformation & ResourceManifest.SimpleGroupInformation) = { ...definition.groups[groups_index] } as any;
+			let group: ResourceManifest.GroupBase & (ResourceManifest.CompositeGroupAdditional & ResourceManifest.SimpleGroupAdditional) = { ...definition.groups[groups_index] } as any;
 			group.subgroups = defined_or(group.subgroups, []);
 			group.resources = defined_or(group.resources, []);
 			let group_type_index = GroupTypeEnumeration.find((item) => (item.value === group.type))?.index!;
@@ -64,12 +64,12 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.En
 				write_string(data, group.parent);
 			}
 			for (let subgroups_index = 0; subgroups_index < group.subgroups.length; ++subgroups_index) {
-				let subgroup: ResourceManifest.CompositeGroupInformation['subgroups'][number] = group.subgroups[subgroups_index];
+				let subgroup: ResourceManifest.CompositeGroupAdditional['subgroups'][number] = group.subgroups[subgroups_index];
 				write_integer(data, defined_or(subgroup.res, 0n));
 				write_string(data, subgroup.id);
 			}
 			for (let resources_index = 0; resources_index < group.resources.length; ++resources_index) {
-				let resource: ResourceManifest.ResourceBase & (ResourceManifest.GenericResourceInformation & ResourceManifest.AtlasImageResourceInformation & ResourceManifest.SpriteImageResourceInformation) = { ...group.resources[resources_index] } as any;
+				let resource: ResourceManifest.ResourceBase & (ResourceManifest.GenericResourceAdditional & ResourceManifest.AtlasImageResourceAdditional & ResourceManifest.SpriteImageResourceAdditional) = { ...group.resources[resources_index] } as any;
 				if (resource.type !== 'Image' || resource.parent === undefined) {
 					resource.y = 0x7FFFFFFFn;
 				}

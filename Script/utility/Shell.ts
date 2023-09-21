@@ -10,13 +10,9 @@ namespace TwinStar.Script.Shell {
 
 	// ------------------------------------------------
 
-	export const version = BigInt(callback(['version'])[0]);
-
 	export const host = String(callback(['host'])[0]);
 
 	export const system = String(callback(['system'])[0]);
-
-	export const architecture = String(callback(['architecture'])[0]);
 
 	// ------------------------------------------------
 
@@ -33,14 +29,6 @@ namespace TwinStar.Script.Shell {
 	export const is_android = system === 'android';
 
 	export const is_iphone = system === 'iphone';
-
-	export const is_x86_32 = architecture === 'x86_32';
-
-	export const is_x86_64 = architecture === 'x86_64';
-
-	export const is_arm_32 = architecture === 'arm_32';
-
-	export const is_arm_64 = architecture === 'arm_64';
 
 	// ------------------------------------------------
 

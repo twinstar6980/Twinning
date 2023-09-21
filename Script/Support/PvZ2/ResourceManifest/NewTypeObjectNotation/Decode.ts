@@ -57,10 +57,10 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.De
 				id: undefined!,
 				type: undefined!,
 			};
-			let group_composite: ResourceManifest.CompositeGroupInformation = {
+			let group_composite: ResourceManifest.CompositeGroupAdditional = {
 				subgroups: [],
 			};
-			let group_simple: ResourceManifest.SimpleGroupInformation = {
+			let group_simple: ResourceManifest.SimpleGroupAdditional = {
 				res: undefined!,
 				parent: undefined!,
 				resources: [],
@@ -78,7 +78,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.De
 				group_simple.parent = read_string(data);
 			}
 			for (let subgroups_index = 0; subgroups_index < group_composite.subgroups.length; ++subgroups_index) {
-				let subgroup_base: ResourceManifest.CompositeGroupInformation['subgroups'][number] = {
+				let subgroup_base: ResourceManifest.CompositeGroupAdditional['subgroups'][number] = {
 					id: undefined!,
 					res: undefined!,
 				};
@@ -95,12 +95,12 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.De
 					path: undefined!,
 					type: undefined!,
 				};
-				let resource_atlas: ResourceManifest.AtlasImageResourceInformation = {
+				let resource_atlas: ResourceManifest.AtlasImageResourceAdditional = {
 					atlas: undefined!,
 					width: undefined!,
 					height: undefined!,
 				};
-				let resource_sprite: ResourceManifest.SpriteImageResourceInformation = {
+				let resource_sprite: ResourceManifest.SpriteImageResourceAdditional = {
 					parent: undefined!,
 					ax: undefined!,
 					ay: undefined!,

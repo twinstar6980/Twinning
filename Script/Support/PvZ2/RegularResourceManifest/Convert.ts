@@ -19,7 +19,7 @@ namespace TwinStar.Script.Support.PvZ2.RegularResourceManifest.Convert {
 					break;
 				}
 				case 'simple': {
-					let source_subgroup = source_group as ResourceManifest.SimpleGroupInformation;
+					let source_subgroup = source_group as ResourceManifest.SimpleGroupAdditional;
 					let destination_group: RegularResourceManifest.Group;
 					if (source_subgroup.parent === undefined) {
 						destination.group[source_group.id] = {
@@ -46,19 +46,22 @@ namespace TwinStar.Script.Support.PvZ2.RegularResourceManifest.Convert {
 							destination_subgroup.resource[source_resource.id] = {
 								path: destination_resource_path,
 								type: source_resource.type,
-								expand: ['atlas', {
-									size: [
-										JSONGenericGetter.integer(source_resource.width),
-										JSONGenericGetter.integer(source_resource.height),
-									],
-									sprite: {},
-								}],
+								additional: {
+									type: 'atlas',
+									value: {
+										size: [
+											JSONGenericGetter.integer(source_resource.width),
+											JSONGenericGetter.integer(source_resource.height),
+										],
+										sprite: {},
+									},
+								},
 							};
 						} else if ('parent' in source_resource) {
-							let atlas = destination_subgroup.resource[(source_resource as ResourceManifest.SpriteImageResourceInformation).parent];
+							let atlas = destination_subgroup.resource[(source_resource as ResourceManifest.SpriteImageResourceAdditional).parent];
 							assert_test(atlas !== undefined, `sprite's parent is not found : ${source_resource.parent}`);
-							assert_test(atlas.expand[0] === 'atlas', `sprite's expand type is not 'atlas' : ${source_resource.parent}`);
-							atlas.expand[1].sprite[source_resource.id] = {
+							assert_test(atlas.additional.type === 'atlas', `sprite's expand type is not 'atlas' : ${source_resource.parent}`);
+							atlas.additional.value.sprite[source_resource.id] = {
 								path: destination_resource_path,
 								position: [
 									JSONGenericGetter.integer(source_resource.ax),
@@ -81,7 +84,11 @@ namespace TwinStar.Script.Support.PvZ2.RegularResourceManifest.Convert {
 							destination_subgroup.resource[source_resource.id] = {
 								path: destination_resource_path,
 								type: source_resource.type,
-								expand: ['generic', {}],
+								additional: {
+									type: 'generic',
+									value: {
+									},
+								},
 							};
 						}
 					}
@@ -113,7 +120,7 @@ namespace TwinStar.Script.Support.PvZ2.RegularResourceManifest.Convert {
 		};
 		for (let group_id in source.group) {
 			let source_group = source.group[group_id];
-			let destination_group: (ResourceManifest.GroupBase & ResourceManifest.CompositeGroupInformation) | null = null;
+			let destination_group: (ResourceManifest.GroupBase & ResourceManifest.CompositeGroupAdditional) | null = null;
 			if (source_group.composite) {
 				destination_group = {
 					id: group_id,
@@ -124,7 +131,7 @@ namespace TwinStar.Script.Support.PvZ2.RegularResourceManifest.Convert {
 			}
 			for (let subgroup_id in source_group.subgroup) {
 				let source_subgroup = source_group.subgroup[subgroup_id];
-				let destination_subgroup: ResourceManifest.GroupBase & ResourceManifest.SimpleGroupInformation = {
+				let destination_subgroup: ResourceManifest.GroupBase & ResourceManifest.SimpleGroupAdditional = {
 					id: subgroup_id,
 					type: 'simple',
 				} as any;
@@ -153,13 +160,13 @@ namespace TwinStar.Script.Support.PvZ2.RegularResourceManifest.Convert {
 						type: source_resource.type,
 					} as ResourceManifest.Resource;
 					destination_subgroup.resources.push(destination_resource);
-					if (source_resource.expand[0] === 'atlas') {
-						(destination_resource as ResourceManifest.AtlasImageResourceInformation).atlas = true;
-						(destination_resource as ResourceManifest.AtlasImageResourceInformation).width = source_resource.expand[1].size[0];
-						(destination_resource as ResourceManifest.AtlasImageResourceInformation).height = source_resource.expand[1].size[1];
-						for (let sprite_resource_id in source_resource.expand[1].sprite) {
-							let source_sprite_resource = source_resource.expand[1].sprite[sprite_resource_id];
-							let destination_sprite_resource: ResourceManifest.ResourceBase & ResourceManifest.SpriteImageResourceInformation = {
+					if (source_resource.additional.type === 'atlas') {
+						(destination_resource as ResourceManifest.AtlasImageResourceAdditional).atlas = true;
+						(destination_resource as ResourceManifest.AtlasImageResourceAdditional).width = source_resource.additional.value.size[0];
+						(destination_resource as ResourceManifest.AtlasImageResourceAdditional).height = source_resource.additional.value.size[1];
+						for (let sprite_resource_id in source_resource.additional.value.sprite) {
+							let source_sprite_resource = source_resource.additional.value.sprite[sprite_resource_id];
+							let destination_sprite_resource: ResourceManifest.ResourceBase & ResourceManifest.SpriteImageResourceAdditional = {
 								slot: slot_of(sprite_resource_id),
 								id: sprite_resource_id,
 								path: !use_array_style_path ? PathUtility.to_windows_style(source_sprite_resource.path) : PathUtility.split(source_sprite_resource.path),

@@ -42,7 +42,7 @@ namespace TwinStar::Kernel {
 		explicit Exception (
 			std::string const &              title,
 			std::vector<std::string> const & description,
-			std::source_location const &     location = M_current_source_location
+			std::source_location const &     location = std::source_location::current()
 		) :
 			m_title{title},
 			m_description{description},

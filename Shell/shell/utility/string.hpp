@@ -50,46 +50,4 @@ namespace TwinStar::Shell {
 
 	#pragma endregion
 
-	#pragma region split
-
-	inline auto split_string (
-		std::string const & source,
-		char const &        delimiter
-	) -> std::vector<std::string> {
-		auto previous = std::size_t{0};
-		auto current = source.find_first_of(delimiter);
-		auto destination = std::vector<std::string>{};
-		while (current != std::string::npos) {
-			if (current > previous) {
-				destination.push_back(source.substr(previous, current - previous));
-			}
-			previous = current + 1;
-			current = source.find_first_of(delimiter, previous);
-		}
-		if (previous != source.size()) {
-			destination.push_back(source.substr(previous));
-		}
-		return destination;
-	}
-
-	#pragma endregion
-
-	#pragma region convert
-
-	inline auto string_to_boolean (
-		std::string const & string
-	) -> bool {
-		auto result = bool{};
-		if (string == "false"sv) {
-			result = false;
-		} else if (string == "true"sv) {
-			result = true;
-		} else {
-			throw std::runtime_error{"invalid string of boolean"};
-		}
-		return result;
-	}
-
-	#pragma endregion
-
 }

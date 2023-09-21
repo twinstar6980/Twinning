@@ -105,12 +105,6 @@ namespace TwinStar::Shell::Bridge {
 					result.emplace_back(std::move(name));
 					break;
 				}
-				case hash_string("architecture"sv) : {
-					assert_test(argument.size() == 1);
-					auto name = thiz.architecture();
-					result.emplace_back(std::move(name));
-					break;
-				}
 				case hash_string("output"sv) : {
 					assert_test(argument.size() == 2);
 					auto text = argument[1];
@@ -161,11 +155,6 @@ namespace TwinStar::Shell::Bridge {
 		auto system (
 		) -> std::string {
 			return std::string{M_system};
-		}
-
-		auto architecture (
-		) -> std::string {
-			return std::string{M_architecture};
 		}
 
 		// ----------------

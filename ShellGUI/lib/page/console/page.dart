@@ -102,12 +102,6 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         result.add(name);
         break;
       }
-      case 'architecture': {
-        assert(argument.length == 1);
-        var name = 'unknown';
-        result.add(name);
-        break;
-      }
       case 'output_message': {
         assert(argument.length >= 3);
         var type = MessageType.fromString(argument[1]);

@@ -26,10 +26,10 @@ namespace TwinStar.Script.Support.PvZ2.RegularResourceManifest {
 
 	export type ResourceType = typeof ResourceTypeE[number];
 
-	export type GenericResourceInformation = {
+	export type GenericResourceAdditional = {
 	};
 
-	export type SpriteImageResource = {
+	export type AtlasSpriteResource = {
 		path: string;
 		position: [bigint, bigint];
 		size: [bigint, bigint];
@@ -37,10 +37,17 @@ namespace TwinStar.Script.Support.PvZ2.RegularResourceManifest {
 		layout: [bigint, bigint];
 	};
 
-	export type AtlasImageResourceInformation = {
+	export type AtlasResourceAdditional = {
 		size: [bigint, bigint];
-		//format: TextureFormat;
-		sprite: Record<string, SpriteImageResource>;
+		sprite: Record<string, AtlasSpriteResource>;
+	};
+
+	export type ResourceAdditional = {
+		type: 'generic';
+		value: GenericResourceAdditional;
+	} | {
+		type: 'atlas';
+		value: AtlasResourceAdditional;
 	};
 
 	export type ResourceBase = {
@@ -49,7 +56,7 @@ namespace TwinStar.Script.Support.PvZ2.RegularResourceManifest {
 	};
 
 	export type Resource = ResourceBase & {
-		expand: ['generic', GenericResourceInformation] | ['atlas', AtlasImageResourceInformation];
+		additional: ResourceAdditional;
 	};
 
 	// ------------------------------------------------
@@ -63,7 +70,6 @@ namespace TwinStar.Script.Support.PvZ2.RegularResourceManifest {
 	export type Subgroup = {
 		category: SubgroupCategory;
 		resource: Record<string, Resource>;
-		//resource_data_sectionn_store_mode: Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.ResourceDataSectionStoreMode;
 	};
 
 	// ------------------------------------------------
@@ -76,8 +82,6 @@ namespace TwinStar.Script.Support.PvZ2.RegularResourceManifest {
 	// ------------------------------------------------
 
 	export type Package = {
-		//name: null | string;
-		//expand_texture_information: boolean;
 		group: Record<string, Group>;
 	};
 

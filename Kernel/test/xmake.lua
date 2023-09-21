@@ -15,10 +15,6 @@ target('test', function()
 		m.root .. '/../Shell',
 		{ private = true }
 	)
-	add_defines(
-		'_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING',
-		{ private = true }
-	)
 	add_deps(
 		'kernel',
 		{}

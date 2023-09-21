@@ -12,13 +12,13 @@
 	
 	* [MSVC 19.37 with MSVC-STL and Windows-SDK for Windows](https://visualstudio.microsoft.com/downloads/)
 	
-	* [Clang 16.0 with libstdc++ and POSIX for Linux](https://llvm.org/)
+	* [Clang 17.0 with libstdc++ and POSIX for Linux](https://llvm.org/)
 	
-	* [Clang 16.0 with libc++ and POSIX for Macintosh](https://llvm.org/)
+	* [Clang 17.0 with libc++ and POSIX for Macintosh](https://llvm.org/)
 	
-	* [Clang 14.0 with libc++ and POSIX for Android (NDK 25.2)](https://developer.android.com/ndk/downloads)
+	* [Clang 17.0 with libc++ and POSIX for Android (NDK 26.0)](https://developer.android.com/ndk/downloads)
 	
-	* [Clang 16.0 with libc++ and POSIX for iPhone](https://llvm.org/)
+	* [Clang 17.0 with libc++ and POSIX for iPhone](https://llvm.org/)
 
 * 开发
 	
@@ -70,7 +70,7 @@
 
 * 关于构建
 	
-	1. 由于项目中大量使用模板，并仅使用头文件进行代码组织，最终只有单个源文件被编译，这导致了较长的编译时间（clang 20m~ | msvc 80m~）与极高的内存占用（clang 12G~ | msvc 48G~），编译时需确保物理内存与交换内存充足，应考虑在未来使用 C++ Modules 进行重构（在其成熟之后）。
+	1. 由于项目中大量使用模板，并仅使用头文件进行代码组织，最终只有单个源文件被编译，这导致了较长的编译时间（clang 20m~ | msvc 120m~）与极高的内存占用（clang 12G~ | msvc 48G~），编译时需确保物理内存与交换内存充足，应考虑在未来使用 C++ Modules 进行重构（在其成熟之后）。
 	
 	2. 由于 GCC 的策略，需要添加 `-fpermissive` 选项以使 GCC 容许项目中的部分代码。
 	

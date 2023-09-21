@@ -37,10 +37,6 @@ target('shell', function()
 		m.root .. '/../Kernel',
 		{ private = true }
 	)
-	add_defines(
-		'_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING',
-		{ private = true }
-	)
 	if m.system:is('windows', 'linux', 'macintosh') then
 		add_deps(
 			'third.tinyfiledialogs',

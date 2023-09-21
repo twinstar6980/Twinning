@@ -187,8 +187,7 @@ namespace TwinStar::Kernel::JavaScript {
 				call_native_function_wrapper<function, forward_object>(context, object, argument);
 				result.set_undefined();
 			} else {
-				auto && native_result = call_native_function_wrapper<function, forward_object>(context, object, argument);
-				result.from(as_forward<decltype(native_result)>(native_result));
+				result.from(call_native_function_wrapper<function, forward_object>(context, object, argument));
 			}
 			return;
 		}

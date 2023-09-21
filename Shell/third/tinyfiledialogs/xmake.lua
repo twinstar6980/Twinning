@@ -1,5 +1,5 @@
 -- tinyfiledialogs
--- 3.13.2 b7221857534b14954a2835c7ef0ce007e68ba0e7
+-- 3.14.0 f439196f40c601c5fa917c5537fd6c99b2474ac9
 -- https://sourceforge.net/projects/tinyfiledialogs
 
 target('third.tinyfiledialogs', function()

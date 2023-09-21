@@ -152,10 +152,10 @@ function apply_compiler_option_basic(target)
 	if m.compiler:is('msvc') then
 		target:add(
 			'cxflags',
-			'-utf-8',
-			'-bigobj',
-			'-permissive-',
-			'-Zc:preprocessor',
+			'/utf-8',
+			'/bigobj',
+			'/permissive-',
+			'/Zc:preprocessor',
 			{ private = true }
 		)
 		target:add(
@@ -180,7 +180,7 @@ function apply_compiler_option_warning_disable(target)
 	if m.compiler:is('msvc') then
 		target:add(
 			'cxflags',
-			'-w',
+			'/w',
 			{ private = true }
 		)
 	end
@@ -199,22 +199,23 @@ function apply_compiler_option_warning_regular(target)
 	if m.compiler:is('msvc') then
 		target:add(
 			'cxflags',
-			'-Wall',
-			'-wd4820', -- like -Wpadded in clang, enable this warning will make compiler crashed
-			'-wd4100', -- unused parameter
-			'-wd4189', -- unused local variable
-			'-wd4458', -- shadow the member
-			'-wd4514', -- unused inline function is deleted
-			'-wd4710', -- inline function is not inlined
-			'-wd4711', -- non-inline function is inlined
-			'-wd4668', -- symbol not be defined to preprocessor macro
-			'-wd4061', -- switch case of enum not explicitly given
-			'-wd5264', -- 'const' variable is not used
-			'-wd5045', -- about spectre mitigation, enable this warning if compile with /Qspectre flag, see https://learn.microsoft.com/cpp/error-messages/compiler-warnings/c5045?view=msvc-170
-			'-wd4927', -- TODO
-			'-wd4065', -- TODO : switch only default case
-			'-wd4946', -- TODO : reinterpret_cast ...
-			'-wd5262', -- TODO : implicit fallthrough in switch (stl variant, remove this option if msvc fix this wrong)
+			'/Wall',
+			'/wd4820', -- like -Wpadded in clang, enable this warning will make compiler crashed
+			'/wd5045', -- about spectre mitigation, enable this warning if compile with /Qspectre flag
+			'/wd4100', -- unused parameter
+			'/wd4189', -- unused local variable
+			'/wd4514', -- unused inline function is deleted
+			'/wd4710', -- inline function is not inlined
+			'/wd4711', -- non-inline function is inlined
+			'/wd4668', -- symbol not be defined to preprocessor macro
+			'/wd4061', -- switch case of enum not explicitly given
+			'/wd4458', -- TODO : shadow the member
+			'/wd4946', -- TODO : reinterpret_cast used between related classes
+			{ private = true }
+		)
+		target:add(
+			'defines',
+			'_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING',
 			{ private = true }
 		)
 	end
@@ -233,6 +234,7 @@ function apply_compiler_option_warning_regular(target)
 			'-Wno-missing-field-initializers',
 			'-Wno-unused-parameter',
 			'-Wno-unused-variable',
+			'-Wno-unused-local-typedef',
 			'-Wno-missing-noreturn',
 			'-Wno-gnu-zero-variadic-macro-arguments',
 			'-Wno-ctad-maybe-unsupported',
@@ -241,12 +243,15 @@ function apply_compiler_option_warning_regular(target)
 			'-Wno-weak-vtables',
 			'-Wno-self-assign',
 			'-Wno-switch-enum',
+			'-Wno-covered-switch-default',
 			'-Wno-shadow-field',
 			'-Wno-shadow-field-in-constructor',
 			'-Wno-shadow-uncaptured-local',
 			'-Wno-unsafe-buffer-usage',
-			'-Wno-float-equal', -- TODO
-			'-Wno-gnu-line-marker', -- if using xmake ...
+			'-Wno-gnu-line-marker',
+			'-Wno-shadow', -- TODO : shadow the member
+			'-Wno-float-equal', -- TODO : float compare
+			'-Wno-deprecated-declarations', -- TODO : suppress codecvt warning
 			{ private = true }
 		)
 	end

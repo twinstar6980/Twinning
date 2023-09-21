@@ -1840,32 +1840,31 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		static auto exchange_section_sub (
+			IByteStreamView &                                     data,
+			typename Definition::MusicTransitionSettingItemFade & fade_value
+		) -> Void {
+			if constexpr (check_version(version, {72})) {
+				exchange_integer_fixed<IntegerU32>(data, fade_value.time);
+			}
+			if constexpr (check_version(version, {72})) {
+				exchange_integer_fixed<IntegerU32>(data, fade_value.curve);
+			}
+			if constexpr (check_version(version, {72})) {
+				exchange_integer_fixed<IntegerS32>(data, fade_value.offset);
+			}
+			return;
+		}
+
+		static auto exchange_section_sub (
 			IByteStreamView &                             data,
 			typename Definition::MusicTransitionSetting & transition_value
 		) -> Void {
-			constexpr auto exchange_section_sub_of_fade =
-				[] (
-				IByteStreamView &                                     data,
-				typename Definition::MusicTransitionSettingItemFade & value
-			) {
-				if constexpr (check_version(version, {72})) {
-					exchange_integer_fixed<IntegerU32>(data, value.time);
-				}
-				if constexpr (check_version(version, {72})) {
-					exchange_integer_fixed<IntegerU32>(data, value.curve);
-				}
-				if constexpr (check_version(version, {72})) {
-					exchange_integer_fixed<IntegerS32>(data, value.offset);
-				}
-				return;
-			};
 			if constexpr (check_version(version, {72})) {
 				exchange_list(
 					data,
 					transition_value.item,
 					&exchange_size_fixed<IntegerU32>,
-					// NOTE : avoid clang bug
-					[&exchange_section_sub_of_fade] (auto & data, auto & value) {
+					[] (auto & data, auto & value) {
 						if constexpr (check_version(version, {88})) {
 							exchange_raw_constant(data, 1_iu32);
 						}
@@ -1879,7 +1878,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 							exchange_id(data, value.destination.id);
 						}
 						if constexpr (check_version(version, {72})) {
-							exchange_section_sub_of_fade(data, value.source.fade_out);
+							exchange_section_sub(data, value.source.fade_out);
 						}
 						if constexpr (check_version(version, {72})) {
 							exchange_bit_multi<IntegerU32>(data, value.source.exit_source_at);
@@ -1894,7 +1893,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 							exchange_bit_multi<IntegerU8>(data, value.source.play_post_exit);
 						}
 						if constexpr (check_version(version, {72})) {
-							exchange_section_sub_of_fade(data, value.destination.fade_in);
+							exchange_section_sub(data, value.destination.fade_in);
 						}
 						if constexpr (check_version(version, {72})) {
 							exchange_id(data, value.destination.custom_cue_filter_match_target);
@@ -1933,10 +1932,10 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 									exchange_id(data, value.segment.id);
 								}
 								if constexpr (check_version(version, {72})) {
-									exchange_section_sub_of_fade(data, value.segment.fade_in);
+									exchange_section_sub(data, value.segment.fade_in);
 								}
 								if constexpr (check_version(version, {72})) {
-									exchange_section_sub_of_fade(data, value.segment.fade_out);
+									exchange_section_sub(data, value.segment.fade_out);
 								}
 								if constexpr (check_version(version, {72, 140})) {
 									exchange_bit_multi<IntegerU8, k_true>(data, value.segment.play_pre_entry);
@@ -1962,22 +1961,6 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 			IByteStreamView &                                  data,
 			typename Definition::MusicTrackTransitionSetting & transition_value
 		) -> Void {
-			constexpr auto exchange_section_sub_of_fade =
-				[] (
-				IByteStreamView &                                     data,
-				typename Definition::MusicTransitionSettingItemFade & value
-			) {
-				if constexpr (check_version(version, {112})) {
-					exchange_integer_fixed<IntegerU32>(data, value.time);
-				}
-				if constexpr (check_version(version, {112})) {
-					exchange_integer_fixed<IntegerU32>(data, value.curve);
-				}
-				if constexpr (check_version(version, {112})) {
-					exchange_integer_fixed<IntegerS32>(data, value.offset);
-				}
-				return;
-			};
 			if constexpr (check_version(version, {112})) {
 				exchange_raw_constant(data, 1_iu32);
 			}
@@ -1985,7 +1968,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 				exchange_id(data, transition_value.switcher);
 			}
 			if constexpr (check_version(version, {112})) {
-				exchange_section_sub_of_fade(data, transition_value.source.fade_out);
+				exchange_section_sub(data, transition_value.source.fade_out);
 			}
 			if constexpr (check_version(version, {112})) {
 				exchange_bit_multi<IntegerU32>(data, transition_value.source.exit_source_at);
@@ -1994,7 +1977,7 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 				exchange_id(data, transition_value.source.exit_source_at_custom_cue_match);
 			}
 			if constexpr (check_version(version, {112})) {
-				exchange_section_sub_of_fade(data, transition_value.destination.fade_in);
+				exchange_section_sub(data, transition_value.destination.fade_in);
 			}
 			return;
 		}
