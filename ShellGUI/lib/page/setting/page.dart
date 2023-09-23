@@ -36,6 +36,7 @@ class _SettingPageState extends State<SettingPage> {
     (() async {
       this._applicationSharedDirectory = await queryApplicationSharedDirectory();
       this._hasStoragePermission = await PermissionHelper.checkStoragePermission();
+      this.setState(() {});
     })();
     return;
   }
