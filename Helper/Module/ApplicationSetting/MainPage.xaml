@@ -177,6 +177,23 @@
 								</my:MStack>
 							</my:MExpandBar.Action>
 						</my:MExpandBar>
+						<my:MExpandBar
+							HorizontalAlignment="Stretch"
+							Icon="{StaticResource FluentIconGlyph.Font}"
+							Title="Message Font Family"
+							Description="{x:Bind Controller.uModdingWorkerMessageFontFamilyBar_Description}"
+						>
+							<my:MExpandBar.Action>
+								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="12">
+									<TextBox
+										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										VerticalAlignment="Center"
+										Text="{x:Bind Controller.uModdingWorkerMessageFontFamilyText_Text}"
+										TextChanged="{x:Bind Controller.uModdingWorkerMessageFontFamilyText_OnTextChanged}"
+									/>
+								</my:MStack>
+							</my:MExpandBar.Action>
+						</my:MExpandBar>
 					</my:MStack>
 				</my:MStack>
 			</my:MStack>

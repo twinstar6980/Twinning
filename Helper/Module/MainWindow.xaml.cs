@@ -92,7 +92,7 @@ namespace Helper.Module {
 		public async Task RemoveTabItem (
 			Page content
 		) {
-			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => (value.Frame.Content == content));
+			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => (Object.ReferenceEquals(value.Frame.Content, content)));
 			if (item is not null) {
 				await this.RemoveTabItem(item);
 			}

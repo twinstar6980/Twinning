@@ -135,7 +135,7 @@
 										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
 									/>
 									<ComboBox
-										Width="68" Height="NaN"
+										Width="64" Height="NaN"
 										VerticalAlignment="Stretch"
 										HorizontalContentAlignment="Center"
 										ItemsSource="{x:Bind Controller.uSizeUnit_ItemsSource}"
@@ -185,11 +185,10 @@
 										Drop="{x:Bind Controller.uPathValue_OnDrop}"
 									/>
 									<DropDownButton
-										Width="68" Height="NaN"
+										Width="64" Height="NaN"
 										VerticalAlignment="Stretch"
 										HorizontalContentAlignment="Center"
 										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
-										Padding="6,0,13,0"
 									>
 										<DropDownButton.Flyout>
 											<MenuFlyout Placement="TopEdgeAlignedRight">
@@ -213,11 +212,10 @@
 										<FontIcon FontSize="{StaticResource SmallIconSize}" Glyph="{StaticResource FluentIconGlyph.StorageOptical}" />
 									</DropDownButton>
 									<DropDownButton
-										Width="68" Height="NaN"
+										Width="64" Height="NaN"
 										VerticalAlignment="Stretch"
 										HorizontalContentAlignment="Center"
 										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
-										Padding="6,0,13,0"
 									>
 										<DropDownButton.Flyout>
 											<MenuFlyout Placement="TopEdgeAlignedRight">

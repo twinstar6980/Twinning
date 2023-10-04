@@ -358,6 +358,32 @@ namespace Helper.Module.ApplicationSetting {
 			return;
 		}
 
+		// ----------------
+
+		public String uModdingWorkerMessageFontFamilyBar_Description {
+			get {
+				return Setting.ModdingWorkerMessageFontFamily;
+			}
+		}
+
+		public String uModdingWorkerMessageFontFamilyText_Text {
+			get {
+				return Setting.ModdingWorkerMessageFontFamily;
+			}
+		}
+
+		public async void uModdingWorkerMessageFontFamilyText_OnTextChanged (
+			Object               sender,
+			TextChangedEventArgs args
+		) {
+			if (sender is not TextBox senders) { return; }
+			Setting.ModdingWorkerMessageFontFamily = senders.Text;
+			this.NotifyPropertyChanged(
+				nameof(this.uModdingWorkerMessageFontFamilyBar_Description)
+			);
+			return;
+		}
+
 		#endregion
 
 		#region resource forwarder

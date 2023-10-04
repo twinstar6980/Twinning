@@ -539,7 +539,7 @@ namespace Helper.Module.ModdingWorker {
 				switch (method) {
 					case "version": {
 						Debug.Assert(argument.Count == 1);
-						result.Add("15");
+						result.Add("16");
 						break;
 					}
 					case "host": {

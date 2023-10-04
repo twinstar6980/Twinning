@@ -182,21 +182,18 @@
 			CornerRadius="4"
 			BorderThickness="1"
 		>
-			<my:MStack Padding="16,8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical" Spacing="4">
-				<TextBlock FlowDirection="LeftToRight" HorizontalAlignment="Left" IsTextSelectionEnabled="True" Style="{ThemeResource BodyTextBlockStyle}" LineHeight="20" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorPrimaryBrush}" Text="{x:Bind Controller.uTitle_Text}" />
-				<ItemsRepeater
+			<my:MStack Padding="16,8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical" Spacing="0">
+				<TextBlock FlowDirection="LeftToRight" HorizontalAlignment="Left" IsTextSelectionEnabled="True" Style="{ThemeResource BodyTextBlockStyle}" FontFamily="{StaticResource ModdingWorkerMessageFontFamily}" LineHeight="20" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorPrimaryBrush}" Text="{x:Bind Controller.uTitle_Text}" />
+				<ItemsControl
 					HorizontalAlignment="Stretch"
 					ItemsSource="{x:Bind Controller.uDescription_ItemsSource}"
 				>
-					<ItemsRepeater.Layout>
-						<UniformGridLayout Orientation="Vertical" MinRowSpacing="4" />
-					</ItemsRepeater.Layout>
-					<ItemsRepeater.ItemTemplate>
+					<ItemsControl.ItemTemplate>
 						<DataTemplate x:DataType="localModuleModdingWorker:OutputBarDescriptionItemController">
-							<TextBlock FlowDirection="LeftToRight" HorizontalAlignment="Left" IsTextSelectionEnabled="True" Style="{ThemeResource BodyTextBlockStyle}" LineHeight="20" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind uText_Text}" />
+							<TextBlock FlowDirection="LeftToRight" Margin="0,4,0,0" HorizontalAlignment="Left" IsTextSelectionEnabled="True" Style="{ThemeResource BodyTextBlockStyle}" FontFamily="{StaticResource ModdingWorkerMessageFontFamily}" LineHeight="20" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind uText_Text}" />
 						</DataTemplate>
-					</ItemsRepeater.ItemTemplate>
-				</ItemsRepeater>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
 			</my:MStack>
 		</Border>
 		<my:MBox Width="45" />

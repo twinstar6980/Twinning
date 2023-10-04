@@ -14,6 +14,7 @@
 				<ResourceDictionary Source="/CustomControl/MHeaderBar.xaml" />
 				<ResourceDictionary Source="/CustomControl/MExpandBar.xaml" />
 			</ResourceDictionary.MergedDictionaries>
+			<x:String x:Key="ModdingWorkerMessageFontFamily"></x:String>
 			<SolidColorBrush x:Key="WindowCaptionBackground" Color="Transparent" />
 			<SolidColorBrush x:Key="WindowCaptionBackgroundDisabled" Color="Transparent" />
 			<SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected" Color="Transparent" />

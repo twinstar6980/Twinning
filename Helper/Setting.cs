@@ -4,6 +4,7 @@
 using Helper;
 using Helper.Utility;
 using Windows.Storage;
+using Microsoft.UI.Xaml.Media;
 
 namespace Helper {
 
@@ -21,6 +22,7 @@ namespace Helper {
 			Setting.InitializeValue(nameof(Setting.ModdingWorkerAutomaticScroll), true);
 			Setting.InitializeValue(nameof(Setting.ModdingWorkerImmediateLaunch), true);
 			Setting.InitializeValue(nameof(Setting.ModdingWorkerAlternativeLaunchScript), "");
+			Setting.InitializeValue(nameof(Setting.ModdingWorkerMessageFontFamily), "");
 			Setting.InitializeValue(nameof(Setting.ResourceForwarderOptionConfiguration), "");
 			Setting.InitializeValue(nameof(Setting.ResourceForwarderAutomaticClose), false);
 			Setting.InitializeValue(nameof(Setting.ResourceForwarderParallelExecute), false);
@@ -35,6 +37,7 @@ namespace Helper {
 			Setting.InitializeValue(nameof(Setting.AnimationViewerShowSpriteBoundary), false);
 			Setting.InitializeValue(nameof(Setting.AnimationViewerSpriteFilterRule), "");
 			Setting.AppearanceThemeMode = Setting.AppearanceThemeMode;
+			Setting.ModdingWorkerMessageFontFamily = Setting.ModdingWorkerMessageFontFamily;
 			return;
 		}
 
@@ -116,6 +119,17 @@ namespace Helper {
 		public static String ModdingWorkerAlternativeLaunchScript {
 			get => Setting.GetValue<String>(nameof(Setting.ModdingWorkerAlternativeLaunchScript));
 			set => Setting.SetValue<String>(nameof(Setting.ModdingWorkerAlternativeLaunchScript), value);
+		}
+
+		public static String ModdingWorkerMessageFontFamily {
+			get {
+				return Setting.GetValue<String>(nameof(Setting.ModdingWorkerMessageFontFamily));
+			}
+			set {
+				App.Instance.Resources[nameof(Setting.ModdingWorkerMessageFontFamily)] = value.Length == 0 ? FontFamily.XamlAutoFontFamily.Source : value;
+				Setting.SetValue<String>(nameof(Setting.ModdingWorkerMessageFontFamily), value);
+				return;
+			}
 		}
 
 		// ----------------
