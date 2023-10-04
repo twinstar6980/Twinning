@@ -5,15 +5,25 @@ using Helper;
 using Helper.Utility;
 using Helper.CustomControl;
 using Windows.UI.StartScreen;
+using Microsoft.Windows.AppNotifications;
 
 namespace Helper {
 
 	public partial class App : Application {
 
+		#region instance
+
+		public static App Instance { get; set; } = default!;
+
+		public static Module.MainWindow MainWindow { get; set; } = default!;
+
+		#endregion
+
 		#region life
 
 		public App (
 		) {
+			App.Instance = this;
 			this.InitializeComponent();
 		}
 
@@ -22,11 +32,12 @@ namespace Helper {
 		protected override void OnLaunched (
 			LaunchActivatedEventArgs args
 		) {
-			Setting.Initialize();
-			var applicationDirectory = StorageHelper.GetPathParent(Environment.GetCommandLineArgs()[0]);
+			this.UnhandledException += this.OnUnhandledException;
 			var window = default(Window);
 			try {
-				App.RegisterTaskJumpList();
+				Setting.Initialize();
+				this.RegisterTaskJumpList().Wait(0);
+				this.InitializeNotification();
 				var optionWindowPosition = default(Tuple<Integer, Integer>?);
 				var optionWindowSize = default(Tuple<Integer, Integer>?);
 				var optionWindowAlwaysOnTop = default(Boolean?);
@@ -34,6 +45,12 @@ namespace Helper {
 				var optionModuleOption = default(List<String>?);
 				{
 					var option = new CommandLineReader(Environment.GetCommandLineArgs()[1..].ToList());
+					if (option.Ensure("----AppNotificationActivated:")) {
+						// skip if launch by AppNotification
+					}
+					if (option.Ensure("-Embedding")) {
+						// skip if launch by AppNotification
+					}
 					if (option.Ensure("-WindowPosition")) {
 						optionWindowPosition = new Tuple<Integer, Integer>(
 							option.NextInteger(),
@@ -72,7 +89,8 @@ namespace Helper {
 				if (optionWindowPosition is null) {
 					WindowHelper.Center(window);
 				}
-				(window as Module.MainWindow)!.Controller.PushTabItem(optionModuleType ?? Module.ModuleType.ApplicationSetting, optionModuleOption ?? null, false);
+				(window as Module.MainWindow)!.Controller.InsertTabItem(optionModuleType ?? Module.ModuleType.ApplicationSetting, optionModuleOption ?? null).Wait(0);
+				App.MainWindow = (window as Module.MainWindow)!;
 			} catch (Exception e) {
 				window = new Window();
 				window.Content = new MBox() {
@@ -89,7 +107,7 @@ namespace Helper {
 			}
 			WindowHelper.Track(window);
 			WindowHelper.Title(window, "TwinStar ToolKit - Helper");
-			WindowHelper.Icon(window, $"{applicationDirectory}/Asset/Logo.ico");
+			WindowHelper.Icon(window, $"{StorageHelper.GetPathParent(Environment.GetCommandLineArgs()[0])}/Asset/Logo.ico");
 			Setting.AppearanceThemeMode = Setting.AppearanceThemeMode;
 			WindowHelper.ApplyMicaBackdrop(window);
 			WindowHelper.Activate(window);
@@ -98,7 +116,60 @@ namespace Helper {
 
 		// ----------------
 
-		public static async void RegisterTaskJumpList (
+		protected void OnUnhandledException (
+			Object                                        sender,
+			Microsoft.UI.Xaml.UnhandledExceptionEventArgs args
+		) {
+			try {
+				if (App.MainWindow is not null) {
+					_ = new ContentDialog() {
+						XamlRoot = App.MainWindow.Content.XamlRoot,
+						Title = "Unhandled Exception",
+						Content = args.Exception.ToString(),
+						CloseButtonText = "Cancel",
+						DefaultButton = ContentDialogButton.Close,
+					}.ShowAsync();
+					args.Handled = true;
+				}
+			} catch (Exception) {
+				// ignored
+			}
+			return;
+		}
+
+		// ----------------
+
+		private AppNotificationManager AppNotificationManager = default!;
+
+		private void NotificationManager_OnNotificationInvoked (
+			AppNotificationManager            sender,
+			AppNotificationActivatedEventArgs args
+		) {
+			Debug.WriteLine("NotificationManager_OnNotificationInvoked");
+			if (App.MainWindow is not null) {
+				WindowHelper.ShowAsForeground(App.MainWindow);
+			}
+			return;
+		}
+
+		private void InitializeNotification (
+		) {
+			this.AppNotificationManager = AppNotificationManager.Default;
+			this.AppNotificationManager.NotificationInvoked += this.NotificationManager_OnNotificationInvoked;
+			this.AppNotificationManager.Register();
+			return;
+		}
+
+		public void PushNotification (
+			AppNotification notification
+		) {
+			this.AppNotificationManager.Show(notification);
+			return;
+		}
+
+		// ----------------
+
+		public async Task RegisterTaskJumpList (
 		) {
 			if (!JumpList.IsSupported()) {
 				return;
@@ -112,7 +183,7 @@ namespace Helper {
 					index++;
 				}
 			}
-			foreach (var module in Module.ModuleInformationConstant.Value.ToArray()[..^1]) {
+			foreach (var module in Module.ModuleInformationConstant.Value) {
 				var item = JumpListItem.CreateWithArguments(ProcessHelper.EncodeCommandLineString(null, new List<String>() { "-ModuleType", module.Type.ToString() }), "");
 				item.Logo = new Uri("ms-appx:///Asset/Logo.png");
 				item.GroupName = "";
@@ -124,7 +195,7 @@ namespace Helper {
 			return;
 		}
 
-		public static async void AppendRecentJumpList (
+		public async Task AppendRecentJumpList (
 			String       title,
 			List<String> argument
 		) {

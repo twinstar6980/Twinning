@@ -14,17 +14,16 @@
 		<TabView
 			x:Name="uTab" x:FieldModifier="public"
 			HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-			IsAddTabButtonVisible="False"
 			TabItemsSource="{x:Bind Controller.uTab_TabItemsSource}"
 			SelectedItem="{x:Bind Controller.uTab_SelectedItem}"
 			TabCloseRequested="{x:Bind Controller.uTab_OnTabCloseRequested}"
+			AddTabButtonClick="{x:Bind Controller.uTab_OnAddTabButtonClick}"
 		>
 			<TabView.TabItemTemplate>
-				<DataTemplate x:DataType="localModule:TabItemController">
+				<DataTemplate x:DataType="localModule:MainWindowTabItemController">
 					<TabViewItem
 						Header="{x:Bind uRoot_Header}"
 						IconSource="{x:Bind uRoot_IconSource}"
-						IsClosable="{x:Bind uRoot_IsCloseable}"
 						Content="{x:Bind uRoot_Content}"
 					/>
 				</DataTemplate>
@@ -50,10 +49,7 @@
 			Severity="{x:Bind Controller.uTip_Severity}"
 			Title="{x:Bind Controller.uTip_Title}"
 			Message="{x:Bind Controller.uTip_Message}"
-		>
-			<InfoBar.Transitions>
-				<ContentThemeTransition />
-			</InfoBar.Transitions>
-		</InfoBar>
+			Transitions="{StaticResource ContentThemeTransitionCollection}"
+		/>
 	</my:MBox>
 </Window>

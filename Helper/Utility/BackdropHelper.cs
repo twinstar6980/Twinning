@@ -24,6 +24,9 @@ namespace Helper.Utility {
 			Window window
 		) {
 			this.mWindow = window;
+			this.mWindowsSystemDispatcherQueueHelper = null;
+			this.mSystemBackdropConfiguration = null;
+			this.mMicaController = null;
 		}
 
 		#endregion

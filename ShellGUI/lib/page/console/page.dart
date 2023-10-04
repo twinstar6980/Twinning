@@ -140,29 +140,15 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         await WidgetsBinding.instance.endOfFrame;
         break;
       }
-      case 'input_confirmation': {
+      case 'input_boolean': {
         assert(argument.length == 1);
         var completer = Completer<Boolean?>();
-        this._inputBarContent = ConfirmationInputBarContent(
+        this._inputBarContent = BooleanInputBarContent(
           completer: completer,
         );
         this.setState(() {});
         var input = await completer.future;
         result.add(input == null ? '' : (!input ? 'n' : 'y'));
-        this._inputBarContent = const IdleInputBarContent();
-        this.setState(() {});
-        await WidgetsBinding.instance.endOfFrame;
-        break;
-      }
-      case 'input_number': {
-        assert(argument.length == 1);
-        var completer = Completer<Floater?>();
-        this._inputBarContent = NumberInputBarContent(
-          completer: completer,
-        );
-        this.setState(() {});
-        var input = await completer.future;
-        result.add(input == null ? '' : (input == 0.0 ? '0.0' : (input < 0.0 ? '-${-input}' : '+${input}')));
         this._inputBarContent = const IdleInputBarContent();
         this.setState(() {});
         await WidgetsBinding.instance.endOfFrame;
@@ -177,6 +163,20 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         this.setState(() {});
         var input = await completer.future;
         result.add(input == null ? '' : (input == 0 ? '0' : (input < 0 ? '-${-input}' : '+${input}')));
+        this._inputBarContent = const IdleInputBarContent();
+        this.setState(() {});
+        await WidgetsBinding.instance.endOfFrame;
+        break;
+      }
+      case 'input_floater': {
+        assert(argument.length == 1);
+        var completer = Completer<Floater?>();
+        this._inputBarContent = FloaterInputBarContent(
+          completer: completer,
+        );
+        this.setState(() {});
+        var input = await completer.future;
+        result.add(input == null ? '' : (input == 0.0 ? '0.0' : (input < 0.0 ? '-${-input}' : '+${input}')));
         this._inputBarContent = const IdleInputBarContent();
         this.setState(() {});
         await WidgetsBinding.instance.endOfFrame;
@@ -211,14 +211,10 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'input_path': {
-        assert(argument.length == 3);
-        var type = FileObjectType.formString(argument[1]);
-        var rule = FileRequestRule.formString(argument[2]);
+        assert(argument.length == 1);
         var completer = Completer<String?>();
         this._inputBarContent = PathInputBarContent(
           completer: completer,
-          type: type,
-          rule: rule,
         );
         this.setState(() {});
         var input = await completer.future;
@@ -228,11 +224,11 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         await WidgetsBinding.instance.endOfFrame;
         break;
       }
-      case 'input_option': {
+      case 'input_enumeration': {
         assert(argument.length >= 1);
         var option = argument.sublist(1);
         var completer = Completer<Integer?>();
-        this._inputBarContent = OptionInputBarContent(
+        this._inputBarContent = EnumerationInputBarContent(
           completer: completer,
           option: option,
         );
@@ -285,29 +281,24 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
   _launch(
     Command command,
   ) async {
-    var exception = null as String?;
     var result = null as String?;
-    var actualKernelPath = command.kernel;
+    var exception = null as String?;
+    var temporaryKernel = null as String?;
     try {
       this._outputBarListItem.clear();
       if (Platform.isAndroid) {
-        var directory = await getApplicationSupportDirectory();
-        var originalKernelPath = actualKernelPath;
-        actualKernelPath = p_path.join(directory.path, 'kernel');
-        var originalKernelFile = File(originalKernelPath);
-        if (!originalKernelFile.existsSync()) {
-          throw Exception('kernel file not found');
-        }
-        var actualKernelFile = File(actualKernelPath);
-        // NOTE : will crash if actualKernelFile already exist before copy
-        if (actualKernelFile.existsSync()) {
-          actualKernelFile.deleteSync(recursive: true);
-        }
-        originalKernelFile.copySync(actualKernelPath);
+        temporaryKernel = p_path.join((await getApplicationCacheDirectory()).path, 'kernel');
+        File(command.kernel).copySync(temporaryKernel);
       }
-      result = await Launcher.launch(this, actualKernelPath, command.script, command.argument);
+      result = await Launcher.launch(this, temporaryKernel ?? command.kernel, command.script, command.argument);
     } catch (e) {
       exception = e.toString();
+    }
+    if (temporaryKernel != null) {
+      var temporaryKernelFile = File(temporaryKernel);
+      if (temporaryKernelFile.existsSync()) {
+        File(temporaryKernel).deleteSync();
+      }
     }
     if (this._outputBarListItem.isNotEmpty) {
       this._outputBarListItem.add(

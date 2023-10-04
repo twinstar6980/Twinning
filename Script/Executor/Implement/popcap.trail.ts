@@ -43,7 +43,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.trail {
 						condition: null,
 						default: configuration.version_platform,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'version_variant_64',
 						checker: null,
 						automatic: null,
@@ -118,7 +118,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.trail {
 						condition: null,
 						default: configuration.version_platform,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'version_variant_64',
 						checker: null,
 						automatic: null,

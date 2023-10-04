@@ -35,6 +35,13 @@ namespace Helper.Utility {
 			return StorageHelper.Normalize(name);
 		}
 
+		// ----------------
+
+		public static String GetTemporaryPath (
+		) {
+			return Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
+		}
+
 		#endregion
 
 		#region exist
@@ -55,6 +62,25 @@ namespace Helper.Utility {
 			String path
 		) {
 			return Directory.Exists(path);
+		}
+
+		#endregion
+
+		#region general
+
+		public static void CopyFile (
+			String source,
+			String destination
+		) {
+			File.Copy(source, destination, true);
+			return;
+		}
+
+		public static void RemoveFile (
+			String target
+		) {
+			File.Delete(target);
+			return;
 		}
 
 		#endregion

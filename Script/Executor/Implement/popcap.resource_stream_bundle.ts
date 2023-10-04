@@ -139,14 +139,14 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 						condition: null,
 						default: configuration.layout_mode,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'input_packet',
 						checker: null,
 						automatic: null,
 						condition: null,
 						default: '?input',
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'output_new_packet',
 						checker: null,
 						automatic: null,
@@ -249,14 +249,14 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 						condition: null,
 						default: configuration.layout_mode,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'output_resource',
 						checker: null,
 						automatic: null,
 						condition: null,
 						default: '?input',
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'output_packet',
 						checker: null,
 						automatic: null,
@@ -307,14 +307,14 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 						condition: null,
 						default: '?input',
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'option_recase_path',
 						checker: null,
 						automatic: null,
 						condition: null,
 						default: configuration.resource_convert_option.recase_path,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'option_rton',
 						checker: null,
 						automatic: null,
@@ -329,14 +329,14 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 						condition: (argument: { option_rton: boolean; }) => (argument.option_rton ? null : 0n),
 						default: configuration.resource_convert_option.rton_version_number,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'option_rton_version_native_string_encoding_use_utf8',
 						checker: null,
 						automatic: null,
 						condition: (argument: { option_rton: boolean; }) => (argument.option_rton ? null : false),
 						default: configuration.resource_convert_option.rton_version_native_string_encoding_use_utf8,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'option_rton_crypt',
 						checker: null,
 						automatic: null,
@@ -351,7 +351,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 						condition: (argument: { option_rton: boolean; option_rton_crypt: boolean; }) => (argument.option_rton && argument.option_rton_crypt ? null : ''),
 						default: configuration.resource_convert_option.rton_crypt_key,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'option_ptx',
 						checker: null,
 						automatic: null,
@@ -366,28 +366,28 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 						condition: (argument: { option_ptx: boolean; }) => (argument.option_ptx ? null : ''),
 						default: configuration.resource_convert_option.ptx_texture_format_map_name,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'option_ptx_atlas',
 						checker: null,
 						automatic: null,
 						condition: (argument: { option_ptx: boolean; }) => (argument.option_ptx ? null : false),
 						default: configuration.resource_convert_option.ptx_atlas,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'option_ptx_atlas_resize',
 						checker: null,
 						automatic: null,
 						condition: (argument: { option_ptx: boolean; option_ptx_atlas: boolean; }) => (argument.option_ptx && argument.option_ptx_atlas ? null : false),
 						default: configuration.resource_convert_option.ptx_atlas_resize,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'option_ptx_sprite',
 						checker: null,
 						automatic: null,
 						condition: (argument: { option_ptx: boolean; }) => (argument.option_ptx ? null : false),
 						default: configuration.resource_convert_option.ptx_sprite,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'option_pam',
 						checker: null,
 						automatic: null,
@@ -402,21 +402,21 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 						condition: (argument: { option_pam: boolean; }) => (argument.option_pam ? null : 0n),
 						default: configuration.resource_convert_option.pam_version_number,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'option_pam_json',
 						checker: null,
 						automatic: null,
 						condition: (argument: { option_pam: boolean; }) => (argument.option_pam ? null : false),
 						default: configuration.resource_convert_option.pam_json,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'option_pam_flash',
 						checker: null,
 						automatic: null,
 						condition: (argument: { option_pam: boolean; }) => (argument.option_pam ? null : false),
 						default: configuration.resource_convert_option.pam_flash,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'option_bnk',
 						checker: null,
 						automatic: null,
@@ -431,7 +431,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 						condition: (argument: { option_bnk: boolean; }) => (argument.option_bnk ? null : 0n),
 						default: configuration.resource_convert_option.bnk_version_number,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'option_wem',
 						checker: null,
 						automatic: null,

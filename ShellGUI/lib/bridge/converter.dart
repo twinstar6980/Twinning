@@ -51,12 +51,12 @@ class Converter {
     Interface.String structure,
     String           value,
   ) {
-    var value8 = convert.utf8.encode(value);
-    structure.data = ffi.calloc.allocate<Interface.Character>(value8.length);
-    var valueData = structure.data.cast<ffi.Uint8>().asTypedList(value8.length);
-    valueData.setAll(0, value8);
-    constructSize(structure.size, value8.length);
-    constructSize(structure.capacity, value8.length);
+    var data = convert.utf8.encode(value);
+    var size = data.length;
+    structure.data = ffi.calloc.allocate<Interface.Character>(size);
+    structure.data.cast<ffi.Uint8>().asTypedList(size).setAll(0, data);
+    constructSize(structure.size, size);
+    constructSize(structure.capacity, size);
     return;
   }
 
@@ -79,12 +79,12 @@ class Converter {
   parseStringList(
     Interface.StringList structure,
   ) {
-    var count = parseSize(structure.size);
-    var result = <String>[];
-    for (var index = 0; index < count; ++index) {
-      result.add(parseString(structure.data[index]));
+    var size = parseSize(structure.size);
+    var value = <String>[];
+    for (var index = 0; index < size; ++index) {
+      value.add(parseString(structure.data[index]));
     }
-    return result;
+    return value;
   }
 
   static
@@ -93,13 +93,13 @@ class Converter {
     Interface.StringList structure,
     List<String>         value,
   ) {
-    var count = value.length;
-    structure.data = ffi.calloc.allocate<Interface.String>(ffi.sizeOf<Interface.String>() * value.length);
-    for (var index = 0; index < count; ++index) {
+    var size = value.length;
+    structure.data = ffi.calloc.allocate<Interface.String>(ffi.sizeOf<Interface.String>() * size);
+    for (var index = 0; index < size; ++index) {
       constructString(structure.data.elementAt(index).ref, value[index]);
     }
-    constructSize(structure.size, count);
-    constructSize(structure.capacity, count);
+    constructSize(structure.size, size);
+    constructSize(structure.capacity, size);
     return;
   }
 
@@ -108,8 +108,8 @@ class Converter {
   destructStringList(
     Interface.StringList structure,
   ) {
-    var count = parseSize(structure.size);
-    for (var index = 0; index < count; ++index) {
+    var capacity = parseSize(structure.capacity);
+    for (var index = 0; index < capacity; ++index) {
       destructString(structure.data.elementAt(index).ref);
     }
     ffi.calloc.free(structure.data);

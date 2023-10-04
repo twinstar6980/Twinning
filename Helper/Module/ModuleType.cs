@@ -10,9 +10,10 @@ namespace Helper.Module {
 
 	public enum ModuleType {
 		ApplicationSetting,
-		CommandForwarder,
+		ModdingWorker,
+		ResourceForwarder,
+		CommandSender,
 		AnimationViewer,
-		CommandForwarderQuick,
 	}
 
 	#endregion
@@ -37,22 +38,28 @@ namespace Helper.Module {
 				Page = typeof(ApplicationSetting.MainPage),
 			},
 			new ModuleInformation {
-				Type = ModuleType.CommandForwarder,
+				Type = ModuleType.ModdingWorker,
+				Icon = FluentIconGlyph.ProvisioningPackage,
+				Title = "Modding Worker",
+				Page = typeof(ModdingWorker.MainPage),
+			},
+			new ModuleInformation {
+				Type = ModuleType.ResourceForwarder,
+				Icon = FluentIconGlyph.Share,
+				Title = "Resource Forwarder",
+				Page = typeof(ResourceForwarder.MainPage),
+			},
+			new ModuleInformation {
+				Type = ModuleType.CommandSender,
 				Icon = FluentIconGlyph.Send,
-				Title = "Command Forwarder",
-				Page = typeof(CommandForwarder.MainPage),
+				Title = "Command Sender",
+				Page = typeof(CommandSender.MainPage),
 			},
 			new ModuleInformation {
 				Type = ModuleType.AnimationViewer,
 				Icon = FluentIconGlyph.HomeGroup,
 				Title = "Animation Viewer",
 				Page = typeof(AnimationViewer.MainPage),
-			},
-			new ModuleInformation {
-				Type = ModuleType.CommandForwarderQuick,
-				Icon = FluentIconGlyph.Send,
-				Title = "Command Forwarder - Quick",
-				Page = typeof(CommandForwarder.QuickPage),
 			},
 		};
 	}

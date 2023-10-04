@@ -75,8 +75,8 @@ class Invoker {
       _callbackTarget = callback;
       _callbackExceptionHandler = ffi.calloc.call<Interface.String>();
       _callbackResultHandler = ffi.calloc.call<Interface.StringList>();
-      Converter.constructStringList(_callbackResultHandler!.ref, []);
       Converter.constructString(_callbackExceptionHandler!.ref, '');
+      Converter.constructStringList(_callbackResultHandler!.ref, []);
     }
     var callbackPointer = ffi.Pointer<ffi.Pointer<Interface.Callback>>.fromAddress(0);
     var scriptPointer = ffi.Pointer<ffi.Pointer<Interface.String>>.fromAddress(0);
@@ -113,8 +113,8 @@ class Invoker {
       ffi.calloc.free(resultPointer);
     }
     {
-      Converter.destructStringList(_callbackResultHandler!.ref);
       Converter.destructString(_callbackExceptionHandler!.ref);
+      Converter.destructStringList(_callbackResultHandler!.ref);
       ffi.calloc.free(_callbackExceptionHandler!);
       ffi.calloc.free(_callbackResultHandler!);
       _callbackTarget = null;

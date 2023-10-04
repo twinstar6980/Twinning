@@ -23,7 +23,7 @@ namespace TwinStar.Script.Executor.Implement.js {
 						condition: null,
 						default: '?input',
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'is_module',
 						checker: null,
 						automatic: null,

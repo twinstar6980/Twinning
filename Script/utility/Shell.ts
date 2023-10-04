@@ -18,7 +18,7 @@ namespace TwinStar.Script.Shell {
 
 	export const is_cli = host === 'cli';
 
-	export const is_gui = host === 'gui';
+	export const is_gui = host === 'gui' || host === 'helper'; // NOTE : helper is superset of gui
 
 	export const is_windows = system === 'windows';
 
@@ -77,21 +77,21 @@ namespace TwinStar.Script.Shell {
 		return;
 	}
 
-	export function gui_input_confirmation(
+	export function gui_input_boolean(
 	): string | null {
-		let result = callback(['input_confirmation']);
-		return result[0].length === 0 ? null : result[0];
-	}
-
-	export function gui_input_number(
-	): string | null {
-		let result = callback(['input_number']);
+		let result = callback(['input_boolean']);
 		return result[0].length === 0 ? null : result[0];
 	}
 
 	export function gui_input_integer(
 	): string | null {
 		let result = callback(['input_integer']);
+		return result[0].length === 0 ? null : result[0];
+	}
+
+	export function gui_input_floater(
+	): string | null {
+		let result = callback(['input_floater']);
 		return result[0].length === 0 ? null : result[0];
 	}
 
@@ -108,17 +108,15 @@ namespace TwinStar.Script.Shell {
 	}
 
 	export function gui_input_path(
-		type: 'any' | 'file' | 'directory',
-		rule: 'any' | 'input' | 'output',
 	): string | null {
-		let result = callback(['input_path', type, rule]);
+		let result = callback(['input_path']);
 		return result[0].length === 0 ? null : result[0];
 	}
 
-	export function gui_input_option(
+	export function gui_input_enumeration(
 		option: Array<string>,
 	): string | null {
-		let result = callback(['input_option', ...option]);
+		let result = callback(['input_enumeration', ...option]);
 		return result[0].length === 0 ? null : result[0];
 	}
 

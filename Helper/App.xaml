@@ -25,6 +25,12 @@
 			<x:Double x:Key="SmallIconSize">17</x:Double>
 			<x:Double x:Key="MediumIconSize">19</x:Double>
 			<x:Double x:Key="LargeIconSize">21</x:Double>
+			<TransitionCollection x:Key="ContentThemeTransitionCollection">
+				<ContentThemeTransition />
+			</TransitionCollection>
+			<TransitionCollection x:Key="PopupThemeTransitionCollection">
+				<PopupThemeTransition />
+			</TransitionCollection>
 			<Style TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
 				<Setter Property="VerticalAlignment" Value="Stretch" />
 				<Setter Property="HorizontalAlignment" Value="Stretch" />

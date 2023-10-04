@@ -56,23 +56,27 @@ class Launcher {
     var subEvent = StreamQueue<dynamic>(subPort);
     _mainSendPort = mainSendPort;
     mainSendPort.send(subPort.sendPort);
+    var result = null as String?;
+    var exception = null as String?;
     var kernel = await subEvent.next as String;
     var script = await subEvent.next as String;
     var argument = await subEvent.next as List<String>;
-    var result = null as String?;
-    var exception = null as String?;
+    var library = Library();
     try {
-      var library = Library(kernel);
+      library.open(kernel);
       Invoker.version(library);
       Invoker.prepare(library);
       result = Invoker.execute(library, _callbackProxy, script, argument);
     } catch (e) {
       exception = e.toString();
     }
+    if (library.state()) {
+      library.close();
+    }
     await subEvent.cancel();
     mainSendPort.send(null);
-    mainSendPort.send(exception);
     mainSendPort.send(result);
+    mainSendPort.send(exception);
     return;
   }
 
@@ -97,8 +101,8 @@ class Launcher {
     while (await mainEvent.hasNext) {
       var message = await mainEvent.next;
       if (message == null) {
-        exception = await mainEvent.next;
         result = await mainEvent.next;
+        exception = await mainEvent.next;
         break;
       }
       assert(message is List<int> && message.length == 4);

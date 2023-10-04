@@ -2,6 +2,7 @@
 // ReSharper disable InconsistentNaming VariableHidesOuterVariable AccessToModifiedClosure
 
 using Helper;
+using Helper.Utility;
 
 namespace Helper.Bridge {
 
@@ -14,12 +15,10 @@ namespace Helper.Bridge {
 		) {
 			var numberPointer = default(Interface.Size*);
 			{
-				fixed (Interface.Size* pointer = new Interface.Size[1]) {
-					*pointer = Converter.CreateSize(0);
-					numberPointer = pointer;
-				}
 			}
 			var exceptionPointer = library.Version(&numberPointer);
+			{
+			}
 			var number = Converter.ParseSize(ref *numberPointer);
 			if (exceptionPointer is not null) {
 				var exception = Converter.ParseString(ref *exceptionPointer);
@@ -40,46 +39,56 @@ namespace Helper.Bridge {
 				Interface.StringList** argument,
 				Interface.StringList** result
 			) => {
+				Converter.DestructString(ref *callbackExceptionHandler);
+				Converter.DestructStringList(ref *callbackResultHandler);
 				*result = callbackResultHandler;
 				try {
 					var argumentValue = Converter.ParseStringList(ref **argument);
 					var resultValue = callback(argumentValue);
-					*callbackResultHandler = Converter.CreateStringList(resultValue);
+					Converter.ConstructStringList(ref *callbackResultHandler, resultValue);
 					return null;
 				} catch (Exception e) {
 					var exceptionValue = e.ToString();
-					*callbackExceptionHandler = Converter.CreateString(exceptionValue);
+					Converter.ConstructString(ref *callbackExceptionHandler, exceptionValue);
 					return callbackExceptionHandler;
 				}
 			};
-			fixed (Interface.String* pointer = new Interface.String[1]) {
-				callbackExceptionHandler = pointer;
-				*callbackExceptionHandler = Converter.CreateString("");
-			}
-			fixed (Interface.StringList* pointer = new Interface.StringList[1]) {
-				callbackResultHandler = pointer;
-				*callbackResultHandler = Converter.CreateStringList(new List<String>());
+			var callbackProxyGuard = GCHandle.Alloc(callbackProxy);
+			{
+				callbackExceptionHandler = (Interface.String*)MemoryHelper.Alloc(sizeof(Interface.String));
+				callbackResultHandler = (Interface.StringList*)MemoryHelper.Alloc(sizeof(Interface.StringList));
+				Converter.ConstructString(ref *callbackExceptionHandler, "");
+				Converter.ConstructStringList(ref *callbackResultHandler, new List<String>());
 			}
 			var callbackPointer = default(Interface.Callback*);
 			var scriptPointer = default(Interface.String*);
 			var argumentPointer = default(Interface.StringList*);
 			var resultPointer = default(Interface.String*);
 			{
-				fixed (Interface.Callback* pointer = new Interface.Callback[1]) {
-					*pointer = Converter.CreateCallback((delegate* <Interface.String*, Interface.StringList**, Interface.StringList**>)Marshal.GetFunctionPointerForDelegate(callbackProxy));
-					callbackPointer = pointer;
-				}
-				fixed (Interface.String* pointer = new Interface.String[1]) {
-					*pointer = Converter.CreateString(script);
-					scriptPointer = pointer;
-				}
-				fixed (Interface.StringList* pointer = new Interface.StringList[1]) {
-					*pointer = Converter.CreateStringList(argument);
-					argumentPointer = pointer;
-				}
+				callbackPointer = (Interface.Callback*)MemoryHelper.Alloc(sizeof(Interface.Callback));
+				scriptPointer = (Interface.String*)MemoryHelper.Alloc(sizeof(Interface.String));
+				argumentPointer = (Interface.StringList*)MemoryHelper.Alloc(sizeof(Interface.StringList));
+				Converter.ConstructCallback(ref *callbackPointer, (delegate* <Interface.String*, Interface.StringList**, Interface.StringList**>)Marshal.GetFunctionPointerForDelegate(callbackProxy));
+				Converter.ConstructString(ref *scriptPointer, script);
+				Converter.ConstructStringList(ref *argumentPointer, argument);
 			}
 			var exceptionPointer = library.Execute(&callbackPointer, &scriptPointer, &argumentPointer, &resultPointer);
+			{
+				Converter.DestructCallback(ref *callbackPointer);
+				Converter.DestructString(ref *scriptPointer);
+				Converter.DestructStringList(ref *argumentPointer);
+				MemoryHelper.Free(callbackPointer);
+				MemoryHelper.Free(scriptPointer);
+				MemoryHelper.Free(argumentPointer);
+			}
 			var result = Converter.ParseString(ref *resultPointer);
+			{
+				Converter.DestructString(ref *callbackExceptionHandler);
+				Converter.DestructStringList(ref *callbackResultHandler);
+				MemoryHelper.Free(callbackExceptionHandler);
+				MemoryHelper.Free(callbackResultHandler);
+			}
+			callbackProxyGuard.Free();
 			if (exceptionPointer is not null) {
 				var exception = Converter.ParseString(ref *exceptionPointer);
 				throw new Exception(exception);
@@ -93,6 +102,8 @@ namespace Helper.Bridge {
 			{
 			}
 			var exceptionPointer = library.Prepare();
+			{
+			}
 			if (exceptionPointer is not null) {
 				var exception = Converter.ParseString(ref *exceptionPointer);
 				throw new Exception(exception);

@@ -33,14 +33,14 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 						condition: null,
 						default: '?automatic',
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'horizontal',
 						checker: null,
 						automatic: null,
 						condition: null,
 						default: '?input',
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'vertical',
 						checker: null,
 						automatic: null,
@@ -157,7 +157,7 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 						condition: null,
 						default: '?automatic',
 					}),
-					typical_argument_number({
+					typical_argument_floater({
 						id: 'size_rate',
 						option: null,
 						checker: (argument: {}, value) => ((0.0 < value) ? null : los(`比例应大于零`)),

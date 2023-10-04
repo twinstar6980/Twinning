@@ -84,6 +84,7 @@ namespace Helper.Utility {
 			var process = new Process();
 			process.StartInfo.FileName = program;
 			process.StartInfo.Arguments = ProcessHelper.EncodeCommandLineString(program, argument);
+			process.StartInfo.CreateNoWindow = true;
 			var stared = process.Start();
 			if (!stared) {
 				throw new Exception();

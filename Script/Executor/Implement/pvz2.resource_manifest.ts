@@ -8,8 +8,8 @@ namespace TwinStar.Script.Executor.Implement.pvz2.resource_manifest {
 	// regular.to
 
 	export type Configuration = {
-		official_use_array_style_path: TypicalArgumentExpression<boolean>;
 		new_type_object_notation_encode_buffer_size: TypicalArgumentExpression<string>;
+		official_use_array_style_path: TypicalArgumentExpression<boolean>;
 	};
 
 	export function injector(
@@ -129,7 +129,7 @@ namespace TwinStar.Script.Executor.Implement.pvz2.resource_manifest {
 						condition: null,
 						default: '?automatic',
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'use_array_style_path',
 						checker: null,
 						automatic: null,

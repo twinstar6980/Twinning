@@ -17,7 +17,7 @@ using FluentIconGlyph = Helper.CustomControl.FluentIconGlyph;
 
 namespace Helper.Module.AnimationViewer {
 
-	public sealed partial class MainPage : Page {
+	public sealed partial class MainPage : Page, ITabItemPage {
 
 		#region life
 
@@ -33,9 +33,7 @@ namespace Helper.Module.AnimationViewer {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			if (args.Parameter is List<String> option) {
-				this.Controller.ApplyCommandOption(option);
-			}
+			this.Controller.ApplyOption(args.Parameter as List<String>);
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -43,6 +41,15 @@ namespace Helper.Module.AnimationViewer {
 		// ----------------
 
 		private MainPageController Controller { get; }
+
+		#endregion
+
+		#region tab item page
+
+		public async Task<Boolean> OnTabItemCloseRequested (
+		) {
+			return await this.Controller.RequestClose();
+		}
 
 		#endregion
 
@@ -102,9 +109,9 @@ namespace Helper.Module.AnimationViewer {
 
 		// ----------------
 
-		public Boolean ShowSpriteBoundary { get; set; } = false;
+		public Boolean ShowSpriteBoundary { get; set; } = default!;
 
-		public String SpriteFilterRule { get; set; } = "";
+		public String SpriteFilterRule { get; set; } = default!;
 
 		public List<String>? PlantCustomLayerName { get; set; } = null;
 
@@ -138,11 +145,11 @@ namespace Helper.Module.AnimationViewer {
 			return;
 		}
 
-		public async void ApplyCommandOption (
-			List<String> optionView
+		public async void ApplyOption (
+			List<String>? optionView
 		) {
 			while (!this.View.IsLoaded) {
-				await Task.Delay(TimeSpan.FromMilliseconds(50));
+				await Task.Delay(40);
 			}
 			var optionImmediateSelect = default(Boolean?);
 			var optionAutomaticPlay = default(Boolean?);
@@ -200,7 +207,7 @@ namespace Helper.Module.AnimationViewer {
 					throw new Exception($"Too many option : {String.Join(' ', option.NextStringList())}");
 				}
 			} catch (Exception e) {
-				MainWindow.Instance.Controller.PublishTip(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
+				App.MainWindow.Controller.PublishTip(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
 			}
 			if (optionImmediateSelect is not null) {
 				this.ImmediateSelect = optionImmediateSelect.Value;
@@ -249,6 +256,11 @@ namespace Helper.Module.AnimationViewer {
 				);
 			}
 			return;
+		}
+
+		public async Task<Boolean> RequestClose (
+		) {
+			return true;
 		}
 
 		#endregion
@@ -303,7 +315,7 @@ namespace Helper.Module.AnimationViewer {
 				animationData = await AnimationHelper.LoadAnimation(animationFileSource);
 				imageSourceData = await AnimationHelper.LoadImageSource(imageDirectorySource, animationData);
 			} catch (Exception e) {
-				MainWindow.Instance.Controller.PublishTip(InfoBarSeverity.Error, "Failed to load animation.", e.ToString());
+				App.MainWindow.Controller.PublishTip(InfoBarSeverity.Error, "Failed to load animation.", e.ToString());
 				return;
 			}
 			this.AnimationFileSource = animationFileSource;
@@ -486,10 +498,10 @@ namespace Helper.Module.AnimationViewer {
 				nameof(this.uWorkingSpritePrevious_IsEnabled),
 				nameof(this.uWorkingSpriteNext_IsEnabled)
 			);
-			foreach (var item in (this.View.uSpriteList.ItemsSource as List<SpriteItemController>)!) {
+			foreach (var item in (this.View.uSpriteList.ItemsSource as List<MainPageSpriteItemController>)!) {
 				item.NotifyPropertyChanged(nameof(item.uToggle_IsChecked));
 			}
-			foreach (var item in (this.View.uMainSpriteList.ItemsSource as List<MainSpriteItemController>)!) {
+			foreach (var item in (this.View.uMainSpriteList.ItemsSource as List<MainPageMainSpriteItemController>)!) {
 				item.NotifyPropertyChanged(nameof(item.uToggle_IsChecked));
 			}
 			return;
@@ -528,10 +540,10 @@ namespace Helper.Module.AnimationViewer {
 				nameof(this.uWorkingSpritePrevious_IsEnabled),
 				nameof(this.uWorkingSpriteNext_IsEnabled)
 			);
-			foreach (var item in (this.View.uSpriteList.ItemsSource as List<SpriteItemController>)!) {
+			foreach (var item in (this.View.uSpriteList.ItemsSource as List<MainPageSpriteItemController>)!) {
 				item.NotifyPropertyChanged(nameof(item.uToggle_IsChecked));
 			}
-			foreach (var item in (this.View.uMainSpriteList.ItemsSource as List<MainSpriteItemController>)!) {
+			foreach (var item in (this.View.uMainSpriteList.ItemsSource as List<MainPageMainSpriteItemController>)!) {
 				item.NotifyPropertyChanged(nameof(item.uToggle_IsChecked));
 			}
 			this.View.uSprite.Unload();
@@ -578,7 +590,7 @@ namespace Helper.Module.AnimationViewer {
 				if (this.ImmediateSelect && this.Animation.MainSprite is not null) {
 					await this.LoadWorkingSprite(spriteIndex ?? this.Animation.Sprite.Count, spriteFrameRange, spriteFrameRate, spriteInitialState, null);
 				}
-				App.AppendRecentJumpList($"Animation Viewer - {Regex.Replace(StorageHelper.GetPathName(animationFileSource), @"(\.pam\.json)$", "", RegexOptions.IgnoreCase)}", new List<String>() {
+				await App.Instance.AppendRecentJumpList($"Animation Viewer - {Regex.Replace(StorageHelper.GetPathName(animationFileSource), @"(\.pam\.json)$", "", RegexOptions.IgnoreCase)}", new List<String>() {
 					"-ModuleType",
 					ModuleType.AnimationViewer.ToString(),
 					"-ModuleOption",
@@ -681,12 +693,12 @@ namespace Helper.Module.AnimationViewer {
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				var item = await args.DataView.GetStorageItemsAsync();
 				if (item.Count != 1) {
-					MainWindow.Instance.Controller.PublishTip(InfoBarSeverity.Error, "Source is multiply.", "");
+					App.MainWindow.Controller.PublishTip(InfoBarSeverity.Error, "Source is multiply.", "");
 					return;
 				}
 				var animationFile = StorageHelper.Normalize(item[0].Path);
 				if (!StorageHelper.ExistFile(animationFile)) {
-					MainWindow.Instance.Controller.PublishTip(InfoBarSeverity.Error, "Source is not a file.", "");
+					App.MainWindow.Controller.PublishTip(InfoBarSeverity.Error, "Source is not a file.", "");
 					return;
 				}
 				var imageDirectory = StorageHelper.GetPathParent(animationFile) ?? throw new Exception();
@@ -966,10 +978,10 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public List<ImageItemController> uImageList_ItemsSource {
+		public List<MainPageImageItemController> uImageList_ItemsSource {
 			get {
-				if (!this.Loaded) { return new List<ImageItemController>(); }
-				return new List<ImageItemController>(Enumerable.Range(0, this.Animation.Image.Count).Select((index) => (new ImageItemController() { Host = this, Index = index })));
+				if (!this.Loaded) { return new List<MainPageImageItemController>(); }
+				return new List<MainPageImageItemController>(Enumerable.Range(0, this.Animation.Image.Count).Select((index) => (new MainPageImageItemController() { Host = this, Index = index })));
 			}
 		}
 
@@ -981,11 +993,11 @@ namespace Helper.Module.AnimationViewer {
 			if (!this.Loaded) { return; }
 			if (this.SuppressFilterListSelectionChanged) { return; }
 			foreach (var item in args.AddedItems) {
-				var itemX = item as ImageItemController ?? throw new NullReferenceException();
+				var itemX = item as MainPageImageItemController ?? throw new NullReferenceException();
 				this.ImageFilter[itemX.Index] = true;
 			}
 			foreach (var item in args.RemovedItems) {
-				var itemX = item as ImageItemController ?? throw new NullReferenceException();
+				var itemX = item as MainPageImageItemController ?? throw new NullReferenceException();
 				this.ImageFilter[itemX.Index] = false;
 			}
 			this.SuppressApplyFilterChanged = true;
@@ -1016,10 +1028,10 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public List<SpriteItemController> uSpriteList_ItemsSource {
+		public List<MainPageSpriteItemController> uSpriteList_ItemsSource {
 			get {
-				if (!this.Loaded) { return new List<SpriteItemController>(); }
-				return new List<SpriteItemController>(Enumerable.Range(0, this.Animation.Sprite.Count).Select((index) => (new SpriteItemController() { Host = this, Index = index })));
+				if (!this.Loaded) { return new List<MainPageSpriteItemController>(); }
+				return new List<MainPageSpriteItemController>(Enumerable.Range(0, this.Animation.Sprite.Count).Select((index) => (new MainPageSpriteItemController() { Host = this, Index = index })));
 			}
 		}
 
@@ -1031,11 +1043,11 @@ namespace Helper.Module.AnimationViewer {
 			if (!this.Loaded) { return; }
 			if (this.SuppressFilterListSelectionChanged) { return; }
 			foreach (var item in args.AddedItems) {
-				var itemX = item as SpriteItemController ?? throw new NullReferenceException();
+				var itemX = item as MainPageSpriteItemController ?? throw new NullReferenceException();
 				this.SpriteFilter[itemX.Index] = true;
 			}
 			foreach (var item in args.RemovedItems) {
-				var itemX = item as SpriteItemController ?? throw new NullReferenceException();
+				var itemX = item as MainPageSpriteItemController ?? throw new NullReferenceException();
 				this.SpriteFilter[itemX.Index] = false;
 			}
 			this.SuppressApplyFilterChanged = true;
@@ -1066,10 +1078,10 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public List<MainSpriteItemController> uMainSpriteList_ItemsSource {
+		public List<MainPageMainSpriteItemController> uMainSpriteList_ItemsSource {
 			get {
-				if (!this.Loaded) { return new List<MainSpriteItemController>() { new MainSpriteItemController { Host = this, Index = null } }; }
-				return new List<MainSpriteItemController>() { new MainSpriteItemController { Host = this, Index = this.Animation.MainSprite is null ? null : this.Animation.Sprite.Count } };
+				if (!this.Loaded) { return new List<MainPageMainSpriteItemController>() { new MainPageMainSpriteItemController { Host = this, Index = null } }; }
+				return new List<MainPageMainSpriteItemController>() { new MainPageMainSpriteItemController { Host = this, Index = this.Animation.MainSprite is null ? null : this.Animation.Sprite.Count } };
 			}
 		}
 
@@ -1731,7 +1743,7 @@ namespace Helper.Module.AnimationViewer {
 
 	}
 
-	public class ImageItemController : CustomController {
+	public class MainPageImageItemController : CustomController {
 
 		#region data
 
@@ -1789,7 +1801,7 @@ namespace Helper.Module.AnimationViewer {
 
 	}
 
-	public class SpriteItemController : CustomController {
+	public class MainPageSpriteItemController : CustomController {
 
 		#region data
 
@@ -1877,7 +1889,7 @@ namespace Helper.Module.AnimationViewer {
 
 	}
 
-	public class MainSpriteItemController : CustomController {
+	public class MainPageMainSpriteItemController : CustomController {
 
 		#region data
 

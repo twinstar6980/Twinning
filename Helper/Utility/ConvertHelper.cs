@@ -27,15 +27,6 @@ namespace Helper.Utility {
 			};
 		}
 
-		public static String BooleanToStringLower (
-			Boolean value
-		) {
-			return value switch {
-				false => "false",
-				true  => "true",
-			};
-		}
-
 		public static String BooleanToConfirmationStringLower (
 			Boolean value
 		) {

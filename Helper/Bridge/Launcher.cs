@@ -16,12 +16,20 @@ namespace Helper.Bridge {
 			List<String> argument
 		) {
 			host.Start();
-			Invoker.Version(library);
-			Invoker.Prepare(library);
-			var callback = host.Execute;
-			var result = Invoker.Execute(library, callback, script, argument);
+			var result = default(String?);
+			var exception = default(Exception?);
+			try {
+				Invoker.Version(library);
+				Invoker.Prepare(library);
+				result = Invoker.Execute(library, host.Execute, script, argument);
+			} catch (Exception e) {
+				exception = e;
+			}
 			host.Finish();
-			return result;
+			if (exception is not null) {
+				throw exception;
+			}
+			return result!;
 		}
 
 		#endregion

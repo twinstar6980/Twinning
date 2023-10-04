@@ -95,7 +95,7 @@ namespace TwinStar.Script.Executor {
 				let input_value = Console.string(null, null);
 				Console.information(los('executor.generic:should_disable_filter_or_not'), [
 				]);
-				let input_disable_filter = Console.confirmation(null, null);
+				let input_disable_filter = Console.boolean(null, null);
 				command.input = {
 					value: input_value,
 					disable_filter: input_disable_filter,
@@ -114,7 +114,7 @@ namespace TwinStar.Script.Executor {
 				Console.information(los('executor.generic:method_select'), [
 					los('executor.generic:input_null_to_pass'),
 				]);
-				selected_method = Console.option(valid_method.map((e) => ([e[1], `${e[0]}`, e[1].name()])), true, null);
+				selected_method = Console.enumeration(valid_method.map((e) => ([e[1], `${e[0]}`, e[1].name()])), true, null);
 				if (selected_method === null) {
 					state = los('executor.generic:method_unselect');
 				}

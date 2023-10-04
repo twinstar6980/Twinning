@@ -52,7 +52,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle_patch
 						condition: null,
 						default: configuration.version_number,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'use_raw_packet',
 						checker: null,
 						automatic: null,
@@ -110,7 +110,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle_patch
 						condition: null,
 						default: configuration.version_number,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'use_raw_packet',
 						checker: null,
 						automatic: null,

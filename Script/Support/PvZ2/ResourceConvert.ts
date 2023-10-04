@@ -291,7 +291,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 				resource_path = resource_path_list[0];
 			} else {
 				Console.information(los('support.pvz2.resource_convert:resource_manifest_found_multi'), []);
-				resource_path = Console.option(Console.option_string(resource_path_list), null, null);
+				resource_path = Console.enumeration(Console.option_string(resource_path_list), null, null);
 			}
 			Console.information(los('support.pvz2.resource_convert:parse_resource_manifest'), []);
 			if (resource_path.toLowerCase().endsWith('rton')) {

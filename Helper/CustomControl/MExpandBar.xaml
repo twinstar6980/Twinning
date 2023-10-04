@@ -13,7 +13,7 @@
 						HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
 					>
 						<Expander.Header>
-							<my:MStack Height="{ThemeResource ExpanderMinHeight}" Padding="0,0" Orientation="Horizontal" Spacing="16">
+							<my:MStack Padding="0,0" Height="{ThemeResource ExpanderMinHeight}" Orientation="Horizontal" Spacing="16">
 								<FontIcon Width="22" Height="22" VerticalAlignment="Center" FontSize="{StaticResource LargeIconSize}" Glyph="{TemplateBinding Icon}" />
 								<TextBlock my:MStack.Weight="1" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{ThemeResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" Text="{TemplateBinding Title}" />
 								<TextBlock my:MStack.Weight="1" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{ThemeResource BodyTextBlockStyle}" TextWrapping="NoWrap" Text="{TemplateBinding Description}" />

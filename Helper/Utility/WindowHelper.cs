@@ -117,6 +117,16 @@ namespace Helper.Utility {
 			return WindowHelper.Current.Find((value) => (value.Content.XamlRoot == element.XamlRoot)) ?? throw new Exception("Could not get window.");
 		}
 
+		public static Boolean ShowAsForeground (
+			Window window
+		) {
+			var state = true;
+			var handle = WindowHelper.Handle(window);
+			state &= ExternalLibrary.User32.ShowWindow(handle, 0x00000009);
+			state &= ExternalLibrary.User32.SetForegroundWindow(handle);
+			return state;
+		}
+
 		public static Boolean ApplyMicaBackdrop (
 			Window window
 		) {

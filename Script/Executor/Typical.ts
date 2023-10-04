@@ -33,7 +33,7 @@ namespace TwinStar.Script.Executor {
 
 	// ------------------------------------------------
 
-	export function typical_argument_confirmation<ID extends string>(
+	export function typical_argument_boolean<ID extends string>(
 		object: {
 			id: ID;
 			checker: null | ((argument: any, value: boolean) => null | string);
@@ -44,34 +44,13 @@ namespace TwinStar.Script.Executor {
 	): TypicalArgument<ID, boolean, boolean> {
 		return {
 			id: object.id,
-			initial_echoer: (value) => (make_confirmation_string(value)),
+			initial_echoer: (value) => (make_confirmation_boolean_string(value)),
 			given_converter: (argument, given) => (given),
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
-			input_generator: (argument, initial) => (Console.confirmation(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
+			input_generator: (argument, initial) => (Console.boolean(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
 			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
 			default: object.default,
 		} as TypicalArgument<ID, boolean, boolean>;
-	}
-
-	export function typical_argument_number<ID extends string>(
-		object: {
-			id: ID;
-			option: null | Array<number>;
-			checker: null | ((argument: any, value: number) => null | string);
-			automatic: null | ((argument: any) => null | number);
-			condition: null | ((argument: any) => null | number);
-			default: TypicalArgumentExpression<number>;
-		},
-	): TypicalArgument<ID, number, number> {
-		return {
-			id: object.id,
-			initial_echoer: (value) => (make_number_string(value)),
-			given_converter: (argument, given) => (given),
-			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
-			input_generator: (argument, initial) => (object.option === null ? Console.number(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.option(Console.option_number(object.option), null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
-			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
-			default: object.default,
-		} as TypicalArgument<ID, number, number>;
 	}
 
 	export function typical_argument_integer<ID extends string>(
@@ -89,10 +68,31 @@ namespace TwinStar.Script.Executor {
 			initial_echoer: (value) => (make_integer_string(value)),
 			given_converter: (argument, given) => (given),
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
-			input_generator: (argument, initial) => (object.option === null ? Console.integer(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.option(Console.option_integer(object.option), null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
+			input_generator: (argument, initial) => (object.option === null ? Console.integer(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.enumeration(Console.option_integer(object.option), null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
 			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
 			default: object.default,
 		} as TypicalArgument<ID, bigint, bigint>;
+	}
+
+	export function typical_argument_floater<ID extends string>(
+		object: {
+			id: ID;
+			option: null | Array<number>;
+			checker: null | ((argument: any, value: number) => null | string);
+			automatic: null | ((argument: any) => null | number);
+			condition: null | ((argument: any) => null | number);
+			default: TypicalArgumentExpression<number>;
+		},
+	): TypicalArgument<ID, number, number> {
+		return {
+			id: object.id,
+			initial_echoer: (value) => (make_number_string(value)),
+			given_converter: (argument, given) => (given),
+			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
+			input_generator: (argument, initial) => (object.option === null ? Console.floater(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.enumeration(Console.option_floater(object.option), null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
+			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
+			default: object.default,
+		} as TypicalArgument<ID, number, number>;
 	}
 
 	export function typical_argument_size<ID extends string>(
@@ -130,7 +130,7 @@ namespace TwinStar.Script.Executor {
 			initial_echoer: (value) => (value),
 			given_converter: (argument, given) => (given),
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
-			input_generator: (argument, initial) => (object.option === null ? Console.string(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.option(Console.option_string(object.option), null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
+			input_generator: (argument, initial) => (object.option === null ? Console.string(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.enumeration(Console.option_string(object.option), null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
 			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
 			default: object.default,
 		} as TypicalArgument<ID, string, string>;

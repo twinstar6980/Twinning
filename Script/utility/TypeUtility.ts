@@ -161,13 +161,13 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export function make_confirmation_string(
+	export function make_confirmation_boolean_string(
 		value: boolean,
 	): string {
 		return !value ? 'n' : 'y';
 	}
 
-	export function parse_confirmation_string(
+	export function parse_confirmation_boolean_string(
 		string: string,
 	): boolean {
 		if (string === 'n') {
@@ -176,7 +176,7 @@ namespace TwinStar.Script {
 		if (string === 'y') {
 			return true;
 		}
-		assert_test(false, `invalid confirmation string`);
+		assert_test(false, `invalid confirmation boolean string`);
 	}
 
 	export function make_integer_string(
@@ -248,14 +248,14 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export function unquote(
+	export function unquote_string(
 		source: string,
 	): string {
 		let destination = source;
 		if (false) {
-		} else if (destination.startsWith(`'`) && destination.endsWith(`'`)) {
+		} else if (destination.length >= 2 && destination.startsWith(`'`) && destination.endsWith(`'`)) {
 			destination = destination.substring(1, destination.length - 1);
-		} else if (destination.startsWith(`"`) && destination.endsWith(`"`)) {
+		} else if (destination.length >= 2 && destination.startsWith(`"`) && destination.endsWith(`"`)) {
 			destination = destination.substring(1, destination.length - 1);
 		}
 		return destination;

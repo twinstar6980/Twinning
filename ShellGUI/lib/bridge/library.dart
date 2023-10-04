@@ -7,19 +7,45 @@ import 'dart:ffi' as ffi;
 
 class Library {
 
-  late SymbolTable        _symbol;
-  late ffi.DynamicLibrary _handle;
+  ffi.DynamicLibrary? _handle = null;
+  SymbolTable?        _symbol = null;
 
   // ----------------
 
-  Library(
+  Boolean
+  state(
+  ) {
+    return this._handle != null;
+  }
+
+  Void
+  open(
     String path,
   ) {
-    this._handle = ffi.DynamicLibrary.open(normalizeLibraryPath(path));
-    this._symbol = SymbolTable();
-    this._symbol.version = this._handle.lookup<ffi.NativeFunction<Interface.version>>(SymbolNameTable.version);
-    this._symbol.execute = this._handle.lookup<ffi.NativeFunction<Interface.execute>>(SymbolNameTable.execute);
-    this._symbol.prepare = this._handle.lookup<ffi.NativeFunction<Interface.prepare>>(SymbolNameTable.prepare);
+    assert(!this.state());
+    var handle = ffi.DynamicLibrary.open(normalizeLibraryPath(path));
+    var symbol = SymbolTable();
+    try {
+      symbol.version = handle.lookup<ffi.NativeFunction<Interface.version>>(SymbolNameTable.version);
+      symbol.execute = handle.lookup<ffi.NativeFunction<Interface.execute>>(SymbolNameTable.execute);
+      symbol.prepare = handle.lookup<ffi.NativeFunction<Interface.prepare>>(SymbolNameTable.prepare);
+    } catch (e) {
+      handle.close();
+      rethrow;
+    }
+    this._handle = handle;
+    this._symbol = symbol;
+    return;
+  }
+
+  Void
+  close(
+  ) {
+    assert(this.state());
+    this._handle!.close();
+    this._handle = null;
+    this._symbol = null;
+    return;
   }
 
   // ----------------
@@ -28,7 +54,8 @@ class Library {
   version(
     ffi.Pointer<ffi.Pointer<Interface.Size>> number,
   ) {
-    return this._symbol.version.asFunction<Interface.version>()(number);
+    assert(this.state());
+    return this._symbol!.version.asFunction<Interface.version>()(number);
   }
 
   ffi.Pointer<Interface.String>
@@ -38,13 +65,15 @@ class Library {
     ffi.Pointer<ffi.Pointer<Interface.StringList>> argument,
     ffi.Pointer<ffi.Pointer<Interface.String>>     result,
   ) {
-    return this._symbol.execute.asFunction<Interface.execute>()(callback, script, argument, result);
+    assert(this.state());
+    return this._symbol!.execute.asFunction<Interface.execute>()(callback, script, argument, result);
   }
 
   ffi.Pointer<Interface.String>
   prepare(
   ) {
-    return this._symbol.prepare.asFunction<Interface.prepare>()();
+    assert(this.state());
+    return this._symbol!.prepare.asFunction<Interface.prepare>()();
   }
 
 }

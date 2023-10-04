@@ -2,8 +2,8 @@
 // ReSharper disable
 
 using Helper;
-using Helper.Utility;
 using Microsoft.UI.Xaml.Media.Animation;
+using Windows.Foundation;
 
 namespace Helper.Module {
 
@@ -13,7 +13,6 @@ namespace Helper.Module {
 
 		public MainWindow (
 		) {
-			MainWindow.Instance = this;
 			this.InitializeComponent();
 			this.ExtendsContentIntoTitleBar = true;
 			this.SetTitleBar(this.uTab.TabStripFooter as UIElement);
@@ -24,12 +23,6 @@ namespace Helper.Module {
 		// ----------------
 
 		public MainWindowController Controller { get; }
-
-		#endregion
-
-		#region instance
-
-		public static MainWindow Instance { get; set; } = default!;
 
 		#endregion
 
@@ -52,10 +45,9 @@ namespace Helper.Module {
 
 		// ----------------
 
-		public void PushTabItem (
+		public async Task InsertTabItem (
 			ModuleType    type,
-			List<String>? option,
-			Boolean       isClosable
+			List<String>? option
 		) {
 			var model = ModuleInformationConstant.Value[(Size)type];
 			var frame = new Frame() {
@@ -66,16 +58,44 @@ namespace Helper.Module {
 				},
 			};
 			frame.Navigate(model.Page, option);
-			this.uTab_TabItemsSource.Add(new TabItemController() { Host = this, Model = model, IsCloseable = isClosable, Frame = frame });
+			this.uTab_TabItemsSource.Add(new MainWindowTabItemController() { Host = this, Model = model, Frame = frame });
 			this.uTab_SelectedItem = this.uTab_TabItemsSource.Last();
-			this.View.DispatcherQueue.EnqueueAsync(
-				async Task () => {
-					await Task.Delay(40);
-					this.NotifyPropertyChanged(
-						nameof(this.uTab_SelectedItem)
-					);
-				}
+			await Task.Delay(40);
+			this.NotifyPropertyChanged(
+				nameof(this.uTab_SelectedItem)
 			);
+			return;
+		}
+
+		public async Task RemoveTabItem (
+			MainWindowTabItemController item
+		) {
+			var lastSelectedItem = this.View.uTab.SelectedItem as MainWindowTabItemController;
+			this.uTab_SelectedItem = item;
+			this.NotifyPropertyChanged(
+				nameof(this.uTab_SelectedItem)
+			);
+			var state = await (item.Frame.Content as ITabItemPage)!.OnTabItemCloseRequested();
+			if (state) {
+				this.uTab_TabItemsSource.Remove(item);
+				if (this.uTab_TabItemsSource.Count == 0) {
+					this.View.Close();
+				}
+				this.uTab_SelectedItem = lastSelectedItem;
+				this.NotifyPropertyChanged(
+					nameof(this.uTab_SelectedItem)
+				);
+			}
+			return;
+		}
+
+		public async Task RemoveTabItem (
+			Page content
+		) {
+			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => (value.Frame.Content == content));
+			if (item is not null) {
+				await this.RemoveTabItem(item);
+			}
 			return;
 		}
 
@@ -83,16 +103,42 @@ namespace Helper.Module {
 
 		#region tab
 
-		public ObservableCollection<TabItemController> uTab_TabItemsSource { get; } = new ObservableCollection<TabItemController>();
+		public ObservableCollection<MainWindowTabItemController> uTab_TabItemsSource { get; } = new ObservableCollection<MainWindowTabItemController>();
 
-		public TabItemController? uTab_SelectedItem { get; set; } = null;
+		public MainWindowTabItemController? uTab_SelectedItem { get; set; } = null;
 
 		public async void uTab_OnTabCloseRequested (
 			TabView                           sender,
 			TabViewTabCloseRequestedEventArgs args
 		) {
 			if (sender is not TabView senders) { return; }
-			this.uTab_TabItemsSource.Remove(args.Item as TabItemController ?? throw new NullReferenceException());
+			await this.RemoveTabItem(args.Item as MainWindowTabItemController ?? throw new NullReferenceException());
+			return;
+		}
+
+		public async void uTab_OnAddTabButtonClick (
+			TabView sender,
+			Object  args
+		) {
+			if (sender is not TabView senders) { return; }
+			var menu = new MenuFlyout();
+			foreach (var module in ModuleInformationConstant.Value) {
+				var menuItem = new MenuFlyoutItem() {
+					Icon = new FontIcon() {
+						Glyph = module.Icon,
+					},
+					Text = module.Title,
+				};
+				menuItem.Click += async (_, _) => {
+					await this.InsertTabItem(module.Type, null);
+					return;
+				};
+				menu.Items.Add(menuItem);
+			}
+			menu.ShowAt(sender.TabStripFooter as UIElement, new FlyoutShowOptions() {
+				Placement = FlyoutPlacementMode.BottomEdgeAlignedLeft,
+				Position = new Point(-40.0, +40.0),
+			});
 			return;
 		}
 
@@ -128,11 +174,11 @@ namespace Helper.Module {
 				nameof(this.uTip_Title),
 				nameof(this.uTip_Message)
 			);
-			await Task.Delay(TimeSpan.FromMilliseconds(100));
+			await Task.Delay(80);
 			this.uTip_IsOpen = true;
 			this.NotifyPropertyChanged(nameof(this.uTip_IsOpen));
 			this.uTip__DelayCount++;
-			await Task.Delay(TimeSpan.FromMilliseconds(duration));
+			await Task.Delay(duration);
 			this.uTip__DelayCount--;
 			if (this.uTip__DelayCount == 0) {
 				this.uTip_IsOpen = false;
@@ -145,7 +191,7 @@ namespace Helper.Module {
 
 	}
 
-	public class TabItemController : CustomController {
+	public class MainWindowTabItemController : CustomController {
 
 		#region data
 
@@ -154,8 +200,6 @@ namespace Helper.Module {
 		// ----------------
 
 		public ModuleInformation Model { get; set; } = default!;
-
-		public Boolean IsCloseable { get; set; } = default!;
 
 		public Frame Frame { get; set; } = default!;
 
@@ -177,12 +221,6 @@ namespace Helper.Module {
 			}
 		}
 
-		public Boolean uRoot_IsCloseable {
-			get {
-				return this.IsCloseable;
-			}
-		}
-
 		public Frame uRoot_Content {
 			get {
 				return this.Frame;
@@ -190,6 +228,12 @@ namespace Helper.Module {
 		}
 
 		#endregion
+
+	}
+
+	public interface ITabItemPage {
+
+		Task<Boolean> OnTabItemCloseRequested ();
 
 	}
 

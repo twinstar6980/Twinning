@@ -49,7 +49,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						condition: null,
 						default: configuration.version_number,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'version_native_string_encoding_use_utf8',
 						checker: null,
 						automatic: null,
@@ -124,7 +124,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						condition: null,
 						default: configuration.version_number,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'version_native_string_encoding_use_utf8',
 						checker: null,
 						automatic: null,
@@ -296,7 +296,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						condition: null,
 						default: configuration.version_number,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'version_native_string_encoding_use_utf8',
 						checker: null,
 						automatic: null,
@@ -379,7 +379,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						condition: null,
 						default: configuration.version_number,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'version_native_string_encoding_use_utf8',
 						checker: null,
 						automatic: null,
@@ -449,7 +449,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						condition: null,
 						default: configuration.version_number,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'version_native_string_encoding_use_utf8',
 						checker: null,
 						automatic: null,

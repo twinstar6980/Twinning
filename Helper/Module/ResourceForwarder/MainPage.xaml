@@ -1,0 +1,145 @@
+<Page
+	x:Class="Helper.Module.ResourceForwarder.MainPage"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:local="using:Helper"
+	xmlns:localModuleResourceForwarder="using:Helper.Module.ResourceForwarder"
+	xmlns:my="using:Helper.CustomControl"
+	mc:Ignorable="d"
+	x:DefaultBindMode="OneWay"
+	AllowDrop="True"
+	DragOver="{x:Bind Controller.uPage_OnDragOver}"
+	Drop="{x:Bind Controller.uPage_OnDrop}"
+>
+	<my:MStack Padding="8,4" MinWidth="480" Orientation="Horizontal" Spacing="4">
+		<my:MStack Padding="0,-4,0,0" my:MStack.Weight="1" HorizontalAlignment="Stretch" MinWidth="464" VerticalAlignment="Stretch" Orientation="Vertical" Spacing="0">
+			<my:MHeaderBar
+				HorizontalAlignment="Stretch"
+				Icon="{StaticResource FluentIconGlyph.Bookmarks}"
+				Title="Option"
+			>
+				<my:MHeaderBar.Action>
+					<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
+						<Button
+							VerticalAlignment="Center"
+							Visibility="{x:Bind Controller.uAutomaticClose_Visibility}"
+							Click="{x:Bind Controller.uAutomaticClose_OnClick}"
+							Style="{ThemeResource AccentButtonStyle}"
+						>
+							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Important}" />
+						</Button>
+						<Button
+							VerticalAlignment="Center"
+						>
+							<Button.Flyout>
+								<Flyout Placement="Bottom" FlyoutPresenterStyle="{StaticResource CompatFlyoutPresenterStyle}">
+									<ListView
+										SelectionMode="None" IsItemClickEnabled="True"
+										ItemsSource="{x:Bind Controller.uInput_ItemsSource}"
+										ItemClick="{x:Bind Controller.uInput_OnItemClick}"
+									>
+										<ListView.ItemTemplate>
+											<DataTemplate x:DataType="localModuleResourceForwarder:MainPageInputItemController">
+												<my:MStack Padding="0,0,4,0" Orientation="Horizontal" Spacing="12" ToolTipService.ToolTip="{x:Bind uRoot_ToolTip}">
+													<FontIcon VerticalAlignment="Center" FontSize="{StaticResource SmallIconSize}" Glyph="{x:Bind uIcon_Glyph}" />
+													<TextBlock my:MStack.Weight="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="NoWrap" Text="{x:Bind uName_Text}" />
+												</my:MStack>
+											</DataTemplate>
+										</ListView.ItemTemplate>
+									</ListView>
+								</Flyout>
+							</Button.Flyout>
+							<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
+								<TextBlock VerticalAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="NoWrap" Text="{x:Bind Controller.uInputCount_Text}" />
+								<FontIcon VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Attach}" />
+							</my:MStack>
+						</Button>
+						<ToggleButton
+							VerticalAlignment="Center"
+							IsChecked="{x:Bind Controller.uRemainInput_IsChecked}"
+							Click="{x:Bind Controller.uRemainInput_OnClick}"
+						>
+							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Pin}" />
+						</ToggleButton>
+						<ToggleButton
+							VerticalAlignment="Center"
+							IsChecked="{x:Bind Controller.uEnableBatch_IsChecked}"
+							Click="{x:Bind Controller.uEnableBatch_OnClick}"
+						>
+							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.MapLayers}" />
+						</ToggleButton>
+						<ToggleButton
+							VerticalAlignment="Center"
+							IsChecked="{x:Bind Controller.uEnableFilter_IsChecked}"
+							Click="{x:Bind Controller.uEnableFilter_OnClick}"
+						>
+							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Filter}" />
+						</ToggleButton>
+						<ToggleButton
+							VerticalAlignment="Center"
+							IsChecked="{x:Bind Controller.uParallelExecute_IsChecked}"
+							Click="{x:Bind Controller.uParallelExecute_OnClick}"
+						>
+							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Shuffle}" />
+						</ToggleButton>
+					</my:MStack>
+				</my:MHeaderBar.Action>
+			</my:MHeaderBar>
+			<my:MDivider Height="{StaticResource DividerThickness}" />
+			<my:MBox Padding="0,0" my:MStack.Weight="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+				<TreeView
+					HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+					SelectionMode="None" CanDragItems="False" CanReorderItems="False"
+					ItemsSource="{x:Bind Controller.uOption_ItemsSource}"
+					ItemInvoked="{x:Bind Controller.uOption_OnItemInvoked}"
+				>
+					<TreeView.ItemTemplateSelector>
+						<localModuleResourceForwarder:MainPageOptionItemTemplateSelector>
+							<localModuleResourceForwarder:MainPageOptionItemTemplateSelector.GroupTemplate>
+								<DataTemplate x:DataType="localModuleResourceForwarder:MainPageOptionGroupItemController">
+									<TreeViewItem Visibility="{x:Bind uRoot_Visibility}" ItemsSource="{x:Bind uRoot_ItemsSource}" HasUnrealizedChildren="True" IsExpanded="True">
+										<my:MStack Padding="0,0,0,0" Orientation="Horizontal" Spacing="12">
+											<FontIcon VerticalAlignment="Center" FontSize="{StaticResource SmallIconSize}" Glyph="{x:Bind uIcon_Glyph}" />
+											<TextBlock my:MStack.Weight="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="NoWrap" Text="{x:Bind uName_Text}" />
+											<Button
+												Width="0" Height="NaN"
+												VerticalAlignment="Center"
+												Content=" "
+												IsEnabled="False" Opacity="0"
+											/>
+										</my:MStack>
+									</TreeViewItem>
+								</DataTemplate>
+							</localModuleResourceForwarder:MainPageOptionItemTemplateSelector.GroupTemplate>
+							<localModuleResourceForwarder:MainPageOptionItemTemplateSelector.ItemTemplate>
+								<DataTemplate x:DataType="localModuleResourceForwarder:MainPageOptionItemItemController">
+									<TreeViewItem Visibility="{x:Bind uRoot_Visibility}" IsEnabled="{x:Bind uRoot_IsEnabled}">
+										<my:MStack Padding="0,0,12,0" Orientation="Horizontal" Spacing="12">
+											<FontIcon VerticalAlignment="Center" FontSize="{StaticResource SmallIconSize}" Glyph="{x:Bind uIcon_Glyph}" />
+											<TextBlock my:MStack.Weight="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="NoWrap" Text="{x:Bind uName_Text}" />
+											<Button
+												VerticalAlignment="Center"
+												Flyout="{x:Bind uPreset_Flyout}"
+											>
+												<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
+													<TextBlock MinWidth="16" VerticalAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="NoWrap" Text="{x:Bind uPresetCount_Text}" TextAlignment="Right" />
+													<FontIcon VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.LightningBolt}" />
+												</my:MStack>
+											</Button>
+										</my:MStack>
+									</TreeViewItem>
+								</DataTemplate>
+							</localModuleResourceForwarder:MainPageOptionItemTemplateSelector.ItemTemplate>
+						</localModuleResourceForwarder:MainPageOptionItemTemplateSelector>
+					</TreeView.ItemTemplateSelector>
+				</TreeView>
+				<my:MStack HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Spacing="16" Visibility="{x:Bind Controller.uRequireInputTip_Visibility}">
+					<FontIcon HorizontalAlignment="Center" FontSize="48" Glyph="{StaticResource FluentIconGlyph.Error}"/>
+					<TextBlock HorizontalAlignment="Center" Style="{StaticResource SubtitleTextBlockStyle}" TextWrapping="NoWrap" Text="Drag File On Here" />
+				</my:MStack>
+			</my:MBox>
+		</my:MStack>
+	</my:MStack>
+</Page>

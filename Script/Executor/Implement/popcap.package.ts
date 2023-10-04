@@ -45,7 +45,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						condition: null,
 						default: configuration.version_number,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'version_compress_resource_data',
 						checker: null,
 						automatic: null,
@@ -124,7 +124,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						condition: null,
 						default: configuration.version_number,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'version_compress_resource_data',
 						checker: null,
 						automatic: null,
@@ -188,7 +188,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						condition: null,
 						default: configuration.version_number,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'version_compress_resource_data',
 						checker: null,
 						automatic: null,

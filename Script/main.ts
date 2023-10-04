@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 85;
+	export const k_version = 86;
 
 	// ------------------------------------------------
 
@@ -74,7 +74,7 @@ namespace TwinStar.Script {
 			if (host === 'cli') {
 				Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['output', `● ${message}\n`]));
 			}
-			if (host === 'gui') {
+			if (host === 'gui' || host === 'helper') {
 				Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['output_message', 'v', `${message}`]));
 			}
 			return;

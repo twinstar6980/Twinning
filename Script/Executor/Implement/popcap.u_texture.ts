@@ -33,7 +33,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.u_texture {
 						condition: null,
 						default: '?automatic',
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'version_compress_texture_data',
 						checker: null,
 						automatic: null,
@@ -95,7 +95,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.u_texture {
 						condition: null,
 						default: '?automatic',
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'version_compress_texture_data',
 						checker: null,
 						automatic: null,

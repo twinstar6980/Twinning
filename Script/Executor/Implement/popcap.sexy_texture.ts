@@ -50,7 +50,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.sexy_texture {
 						condition: null,
 						default: '?input',
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'compress_texture_data',
 						checker: null,
 						automatic: null,

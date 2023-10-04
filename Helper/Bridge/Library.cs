@@ -9,27 +9,49 @@ namespace Helper.Bridge {
 
 		#region structor
 
-		private SymbolTable mSymbol;
-		private IntPtr      mHandle;
+		private IntPtr? mHandle = null;
 
-		// ----------------
+		private SymbolTable? mSymbol = null;
 
-		~Library (
+		#endregion
+
+		#region state
+
+		public Boolean State (
 		) {
-			ExternalLibrary.Kernel32.FreeLibrary(this.mHandle);
+			return this.mHandle != null;
 		}
 
-		// ----------------
-
-		public Library (
+		public void Open (
 			String path
 		) {
-			this.mHandle = ExternalLibrary.Kernel32.LoadLibrary($"{path}.");
-			this.mSymbol = new SymbolTable() {
-				version = Marshal.GetDelegateForFunctionPointer<Interface.version>(ExternalLibrary.Kernel32.GetProcAddress(this.mHandle, SymbolNameTable.version)) ?? throw new NullReferenceException(),
-				execute = Marshal.GetDelegateForFunctionPointer<Interface.execute>(ExternalLibrary.Kernel32.GetProcAddress(this.mHandle, SymbolNameTable.execute)) ?? throw new NullReferenceException(),
-				prepare = Marshal.GetDelegateForFunctionPointer<Interface.prepare>(ExternalLibrary.Kernel32.GetProcAddress(this.mHandle, SymbolNameTable.prepare)) ?? throw new NullReferenceException(),
+			Debug.Assert(!this.State());
+			var handle = ExternalLibrary.Kernel32.LoadLibrary($"{path}.");
+			var symbol = new SymbolTable() {
+				version = null!,
+				execute = null!,
+				prepare = null!,
 			};
+			try {
+				symbol.version = Marshal.GetDelegateForFunctionPointer<Interface.version>(ExternalLibrary.Kernel32.GetProcAddress(handle, SymbolNameTable.version));
+				symbol.execute = Marshal.GetDelegateForFunctionPointer<Interface.execute>(ExternalLibrary.Kernel32.GetProcAddress(handle, SymbolNameTable.execute));
+				symbol.prepare = Marshal.GetDelegateForFunctionPointer<Interface.prepare>(ExternalLibrary.Kernel32.GetProcAddress(handle, SymbolNameTable.prepare));
+			} catch (Exception) {
+				ExternalLibrary.Kernel32.FreeLibrary(handle);
+				throw;
+			}
+			this.mHandle = handle;
+			this.mSymbol = symbol;
+			return;
+		}
+
+		public void Close (
+		) {
+			Debug.Assert(this.State());
+			ExternalLibrary.Kernel32.FreeLibrary(this.mHandle!.Value);
+			this.mHandle = null;
+			this.mSymbol = null;
+			return;
 		}
 
 		#endregion
@@ -39,7 +61,8 @@ namespace Helper.Bridge {
 		public Interface.String* Version (
 			Interface.Size** number
 		) {
-			return this.mSymbol.version(number);
+			Debug.Assert(this.State());
+			return this.mSymbol!.version(number);
 		}
 
 		public Interface.String* Execute (
@@ -48,12 +71,14 @@ namespace Helper.Bridge {
 			Interface.StringList** argument,
 			Interface.String**     result
 		) {
-			return this.mSymbol.execute(callback, script, argument, result);
+			Debug.Assert(this.State());
+			return this.mSymbol!.execute(callback, script, argument, result);
 		}
 
 		public Interface.String* Prepare (
 		) {
-			return this.mSymbol.prepare();
+			Debug.Assert(this.State());
+			return this.mSymbol!.prepare();
 		}
 
 		#endregion

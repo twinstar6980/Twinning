@@ -33,14 +33,14 @@ namespace TwinStar.Script.Executor.Implement.text.json {
 						condition: null,
 						default: '?automatic',
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'disable_trailing_comma',
 						checker: null,
 						automatic: (argument: {}) => (KernelX.JSON.g_format.disable_trailing_comma),
 						condition: null,
 						default: configuration.disable_trailing_comma,
 					}),
-					typical_argument_confirmation({
+					typical_argument_boolean({
 						id: 'disable_array_wrap_line',
 						checker: null,
 						automatic: (argument: {}) => (KernelX.JSON.g_format.disable_array_wrap_line),

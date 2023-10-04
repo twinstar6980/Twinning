@@ -16,9 +16,9 @@ namespace Helper.Utility {
 		// ----------------
 
 		public CommandLineReader (
-			List<String> view
+			List<String>? view
 		) {
-			this.mView = view;
+			this.mView = view ?? new List<String>();
 			this.mPosition = 0;
 		}
 

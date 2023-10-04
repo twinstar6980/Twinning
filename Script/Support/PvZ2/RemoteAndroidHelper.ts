@@ -32,7 +32,7 @@ namespace TwinStar.Script.Support.PvZ2.RemoteAndroidHelper {
 			id = id_list[0];
 		} else {
 			Console.information(los('support.pvz2.remote_android_helper:application_found_multi'), []);
-			id = Console.option(Console.option_string(id_list), null, null);
+			id = Console.enumeration(Console.option_string(id_list), null, null);
 		}
 		let information = ADBHelper.get_application_information(id);
 		return information;
