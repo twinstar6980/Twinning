@@ -87,7 +87,7 @@ namespace TwinStar.Script.Console {
 			if (state === null) {
 				return result;
 			}
-			warning(los('console:input_invalid_should_retry'), [`${state}`]);
+			warning(los('console:input_invalid_should_retry'), [state]);
 		}
 		while (true) {
 			let state: string | null;
@@ -108,7 +108,7 @@ namespace TwinStar.Script.Console {
 			if (state === null) {
 				break;
 			}
-			warning(los('console:input_invalid_should_retry'), [`${state}`]);
+			warning(los('console:input_invalid_should_retry'), [state]);
 		}
 		return result;
 	}
@@ -572,7 +572,7 @@ namespace TwinStar.Script.Console {
 
 	export function path(
 		type: 'any' | 'file' | 'directory',
-		rule: ['any'] | ['input'] | ['output', 'none' | 'trash' | 'delete' | 'override'],
+		rule: 'any' | 'input' | 'output',
 		nullable: null,
 		checker: Check.CheckerX<string> | null,
 		initial?: string,
@@ -580,7 +580,7 @@ namespace TwinStar.Script.Console {
 
 	export function path(
 		type: 'any' | 'file' | 'directory',
-		rule: ['any'] | ['input'] | ['output', 'none' | 'trash' | 'delete' | 'override'],
+		rule: 'any' | 'input' | 'output',
 		nullable: boolean,
 		checker: Check.CheckerX<string> | null,
 		initial?: string | null,
@@ -588,7 +588,7 @@ namespace TwinStar.Script.Console {
 
 	export function path(
 		type: 'any' | 'file' | 'directory',
-		rule: ['any'] | ['input'] | ['output', 'none' | 'trash' | 'delete' | 'override'],
+		rule: 'any' | 'input' | 'output',
 		nullable: boolean | null,
 		checker: Check.CheckerX<string> | null,
 		initial?: string | null,
@@ -597,11 +597,8 @@ namespace TwinStar.Script.Console {
 		let leading = 'Path';
 		let state_data = {
 			last_value: null as string | null,
-			tactic_if_out_exist: 'none' as 'none' | 'trash' | 'delete' | 'override',
+			allow_overwrite: false as boolean,
 		};
-		if (rule[0] === 'output') {
-			state_data.tactic_if_out_exist = rule[1];
-		}
 		if (initial !== undefined && initial !== null) {
 			initial = Home.of(PathUtility.regularize(initial));
 		}
@@ -610,48 +607,60 @@ namespace TwinStar.Script.Console {
 			if (value.length >= 1 && value[0] === ':') {
 				switch (value.substring(1)) {
 					case 'p': {
-						if (rule[0] !== 'input') {
-							return los('console:path_command_need_input');
-						}
 						let pick_result = Console.pick_path(type);
 						if (pick_result === null) {
 							return los('console:path_command_pick_cancel');
 						}
 						result = pick_result;
-						message(`t`, `P ${result}`, []);
+						message(`t`, leading, [result]);
 						break;
 					}
-					case 'o': {
-						if (rule[0] !== 'output') {
+					case 'g': {
+						if (rule !== 'output') {
 							return los('console:path_command_need_output');
 						}
 						if (state_data.last_value === null) {
 							return los('console:path_command_need_last_value');
 						}
-						state_data.tactic_if_out_exist = 'override';
+						result = PathUtility.generate_suffix_path(state_data.last_value);
+						warning(los('console:path_is_exist_but_generate'), [result]);
+						break;
+					}
+					case 'm': {
+						if (rule !== 'output') {
+							return los('console:path_command_need_output');
+						}
+						if (state_data.last_value === null) {
+							return los('console:path_command_need_last_value');
+						}
 						result = state_data.last_value;
+						let move_path = PathUtility.generate_suffix_path(result);
+						KernelX.FileSystem.rename(result, move_path);
+						warning(los('console:path_is_exist_but_move'), [move_path]);
 						break;
 					}
 					case 'd': {
-						if (rule[0] !== 'output') {
+						if (rule !== 'output') {
 							return los('console:path_command_need_output');
 						}
 						if (state_data.last_value === null) {
 							return los('console:path_command_need_last_value');
 						}
-						state_data.tactic_if_out_exist = 'delete';
 						result = state_data.last_value;
+						KernelX.FileSystem.remove(result);
+						warning(los('console:path_is_exist_but_delete'), []);
 						break;
 					}
-					case 't': {
-						if (rule[0] !== 'output') {
+					case 'o': {
+						if (rule !== 'output') {
 							return los('console:path_command_need_output');
 						}
 						if (state_data.last_value === null) {
 							return los('console:path_command_need_last_value');
 						}
-						state_data.tactic_if_out_exist = 'trash';
 						result = state_data.last_value;
+						state_data.allow_overwrite = true;
+						warning(los('console:path_is_exist_but_overwrite'), []);
 						break;
 					}
 					default: {
@@ -663,12 +672,12 @@ namespace TwinStar.Script.Console {
 			}
 			return [result];
 		};
-		let common_checker = (value: string) => {
-			state_data.last_value = value;
-			if (rule[0] === 'any') {
+		let checker_proxy = (value: string) => {
+			let result = null as null | string;
+			if (rule === 'any') {
 				result = null;
 			}
-			if (rule[0] === 'input') {
+			if (rule === 'input') {
 				if (!KernelX.FileSystem.exist(value)) {
 					result = los('console:path_not_exist');
 				} else {
@@ -688,35 +697,15 @@ namespace TwinStar.Script.Console {
 					}
 				}
 			}
-			if (rule[0] === 'output') {
+			if (rule === 'output') {
 				if (!KernelX.FileSystem.exist(value)) {
 					result = null;
 				} else {
-					switch (state_data.tactic_if_out_exist) {
-						case 'none': {
-							result = los('console:path_is_exist');
-							break;
-						}
-						case 'trash': {
-							Home.new_trash(value);
-							warning(los('console:path_is_exist_but_trash'), []);
-							result = null;
-							break;
-						}
-						case 'delete': {
-							KernelX.FileSystem.remove(value);
-							warning(los('console:path_is_exist_but_delete'), []);
-							result = null;
-							break;
-						}
-						case 'override': {
-							warning(los('console:path_is_exist_but_override'), []);
-							result = null;
-							break;
-						}
-					}
+					result = state_data.allow_overwrite ? null : los('console:path_is_exist');
 				}
 			}
+			state_data.last_value = value;
+			state_data.allow_overwrite = false;
 			if (result !== null) {
 				return result;
 			}
@@ -730,7 +719,7 @@ namespace TwinStar.Script.Console {
 				},
 				converter,
 				nullable,
-				common_checker,
+				checker_proxy,
 				initial,
 			);
 		}
@@ -745,7 +734,7 @@ namespace TwinStar.Script.Console {
 				},
 				converter,
 				nullable,
-				common_checker,
+				checker_proxy,
 				initial,
 			);
 		}

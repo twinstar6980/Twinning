@@ -518,55 +518,54 @@ class _PathInputBarContentState extends State<PathInputBarContent> {
           ),
         ),
         PopupMenuButton(
-          offset: const Offset(0, -112),
+          offset: const Offset(0, -272),
           icon: const Icon(Icons.adjust_outlined),
           tooltip: '',
-          itemBuilder: (context) => const [
+          itemBuilder: (context) => const <PopupMenuEntry>[
             PopupMenuItem(
-              value: ':o',
-              child: Text('override'),
+              value: ':g',
+              child: Text('Generate'),
+            ),
+            PopupMenuItem(
+              value: ':m',
+              child: Text('Move'),
             ),
             PopupMenuItem(
               value: ':d',
-              child: Text('delete'),
+              child: Text('Delete'),
             ),
             PopupMenuItem(
-              value: ':t',
-              child: Text('trash'),
+              value: ':o',
+              child: Text('Overwrite'),
             ),
-          ],
-          onSelected: (value) async {
-            this._value = value;
-            this._controller.text = this._value ?? '';
-            this.setState(() {});
-          },
-        ),
-        PopupMenuButton(
-          offset: const Offset(0, -64),
-          icon: const Icon(Icons.outbond_outlined),
-          tooltip: '',
-          itemBuilder: (context) => const [
+            PopupMenuDivider(
+            ),
             PopupMenuItem(
               value: FileObjectType.file,
-              child: Text('file'),
+              child: Text('File'),
             ),
             PopupMenuItem(
               value: FileObjectType.directory,
-              child: Text('directory'),
+              child: Text('Directory'),
             ),
           ],
           onSelected: (value) async {
-            var selection = null as String?;
-            if (value == FileObjectType.file) {
-              selection = await PathPicker.pickFile();
+            if (value is String) {
+              this._value = value;
             }
-            if (value == FileObjectType.directory) {
-              selection = await PathPicker.pickDirectory();
+            if (value is FileObjectType) {
+              var selection = null as String?;
+              if (value == FileObjectType.file) {
+                selection = await PathPicker.pickFile();
+              }
+              if (value == FileObjectType.directory) {
+                selection = await PathPicker.pickDirectory();
+              }
+              if (selection != null) {
+                this._value = selection;
+              }
             }
-            if (selection != null) {
-              this._value = selection;
-              this._controller.text = this._value ?? '';
-            }
+            this._controller.text = this._value ?? '';
             this.setState(() {});
           },
         ),

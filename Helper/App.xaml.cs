@@ -4,6 +4,7 @@
 using Helper;
 using Helper.Utility;
 using Helper.CustomControl;
+using Windows.ApplicationModel;
 using Windows.UI.StartScreen;
 using Microsoft.Windows.AppNotifications;
 
@@ -106,7 +107,7 @@ namespace Helper {
 				};
 			}
 			WindowHelper.Track(window);
-			WindowHelper.Title(window, "TwinStar ToolKit - Helper");
+			WindowHelper.Title(window, Package.Current.DisplayName);
 			WindowHelper.Icon(window, $"{StorageHelper.GetPathParent(Environment.GetCommandLineArgs()[0])}/Asset/Logo.ico");
 			Setting.AppearanceThemeMode = Setting.AppearanceThemeMode;
 			WindowHelper.ApplyMicaBackdrop(window);

@@ -36,7 +36,6 @@ namespace Helper {
 			Setting.InitializeValue(nameof(Setting.AnimationViewerRemainFrameRate), true);
 			Setting.InitializeValue(nameof(Setting.AnimationViewerShowSpriteBoundary), false);
 			Setting.InitializeValue(nameof(Setting.AnimationViewerSpriteFilterRule), "");
-			Setting.AppearanceThemeMode = Setting.AppearanceThemeMode;
 			Setting.ModdingWorkerMessageFontFamily = Setting.ModdingWorkerMessageFontFamily;
 			return;
 		}

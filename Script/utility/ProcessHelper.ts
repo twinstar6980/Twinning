@@ -80,11 +80,13 @@ namespace TwinStar.Script.ProcessHelper {
 			let data_string = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(data.view()));
 			return normalize_string_line_feed(data_string);
 		};
-		return {
+		let result = {
 			code: code,
 			output: read_file(output),
 			error: read_file(error),
 		};
+		KernelX.FileSystem.remove(temporary_directory);
+		return result;
 	}
 
 	// ------------------------------------------------

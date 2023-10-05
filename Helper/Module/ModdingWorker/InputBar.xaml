@@ -192,33 +192,27 @@
 									>
 										<DropDownButton.Flyout>
 											<MenuFlyout Placement="TopEdgeAlignedRight">
-												<MenuFlyoutItem Text="Override" Click="{x:Bind Controller.uPathOptionOverride_OnClick}">
+												<MenuFlyoutItem Text="Generate" Click="{x:Bind Controller.uPathCommandGenerate_OnClick}">
 													<MenuFlyoutItem.Icon>
-														<FontIcon FontSize="{StaticResource MiniIconSize}" Glyph="{StaticResource FluentIconGlyph.Save}" />
+														<FontIcon FontSize="{StaticResource MiniIconSize}" Glyph="{StaticResource FluentIconGlyph.Rename}" />
 													</MenuFlyoutItem.Icon>
 												</MenuFlyoutItem>
-												<MenuFlyoutItem Text="Delete" Click="{x:Bind Controller.uPathOptionDelete_OnClick}">
-													<MenuFlyoutItem.Icon>
-														<FontIcon FontSize="{StaticResource MiniIconSize}" Glyph="{StaticResource FluentIconGlyph.Delete}" />
-													</MenuFlyoutItem.Icon>
-												</MenuFlyoutItem>
-												<MenuFlyoutItem Text="Trash" Click="{x:Bind Controller.uPathOptionTrash_OnClick}">
+												<MenuFlyoutItem Text="Move" Click="{x:Bind Controller.uPathCommandMove_OnClick}">
 													<MenuFlyoutItem.Icon>
 														<FontIcon FontSize="{StaticResource MiniIconSize}" Glyph="{StaticResource FluentIconGlyph.MoveToFolder}" />
 													</MenuFlyoutItem.Icon>
 												</MenuFlyoutItem>
-											</MenuFlyout>
-										</DropDownButton.Flyout>
-										<FontIcon FontSize="{StaticResource SmallIconSize}" Glyph="{StaticResource FluentIconGlyph.StorageOptical}" />
-									</DropDownButton>
-									<DropDownButton
-										Width="64" Height="NaN"
-										VerticalAlignment="Stretch"
-										HorizontalContentAlignment="Center"
-										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
-									>
-										<DropDownButton.Flyout>
-											<MenuFlyout Placement="TopEdgeAlignedRight">
+												<MenuFlyoutItem Text="Delete" Click="{x:Bind Controller.uPathCommandDelete_OnClick}">
+													<MenuFlyoutItem.Icon>
+														<FontIcon FontSize="{StaticResource MiniIconSize}" Glyph="{StaticResource FluentIconGlyph.Delete}" />
+													</MenuFlyoutItem.Icon>
+												</MenuFlyoutItem>
+												<MenuFlyoutItem Text="Overwrite" Click="{x:Bind Controller.uPathCommandOverwrite_OnClick}">
+													<MenuFlyoutItem.Icon>
+														<FontIcon FontSize="{StaticResource MiniIconSize}" Glyph="{StaticResource FluentIconGlyph.Save}" />
+													</MenuFlyoutItem.Icon>
+												</MenuFlyoutItem>
+												<MenuFlyoutSeparator />
 												<MenuFlyoutItem Text="File" Click="{x:Bind Controller.uPathPickFile_OnClick}">
 													<MenuFlyoutItem.Icon>
 														<FontIcon FontSize="{StaticResource MiniIconSize}" Glyph="{StaticResource FluentIconGlyph.Document}" />
@@ -231,7 +225,7 @@
 												</MenuFlyoutItem>
 											</MenuFlyout>
 										</DropDownButton.Flyout>
-										<FontIcon FontSize="{StaticResource SmallIconSize}" Glyph="{StaticResource FluentIconGlyph.OpenInNewWindow}" />
+										<FontIcon FontSize="{StaticResource SmallIconSize}" Glyph="{StaticResource FluentIconGlyph.StorageOptical}" />
 									</DropDownButton>
 								</my:MStack>
 							</Setter.Value>

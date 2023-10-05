@@ -3,6 +3,7 @@
 
 using Helper;
 using Helper.Utility;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.DataTransfer;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.AppNotifications.Builder;
@@ -539,7 +540,7 @@ namespace Helper.Module.ModdingWorker {
 				switch (method) {
 					case "version": {
 						Debug.Assert(argument.Count == 1);
-						result.Add("16");
+						result.Add(Package.Current.Id.Version.Major.ToString());
 						break;
 					}
 					case "host": {

@@ -146,6 +146,18 @@ namespace TwinStar.Script.PathUtility {
 		return;
 	}
 
+	export function generate_suffix_path(
+		path: string,
+	): string {
+		let result = path;
+		let suffix = 0;
+		while (KernelX.FileSystem.exist(result)) {
+			result = `${path}.${suffix}`;
+			suffix += 1;
+		}
+		return result;
+	}
+
 	// ------------------------------------------------
 
 }

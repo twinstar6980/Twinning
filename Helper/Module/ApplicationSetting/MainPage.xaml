@@ -179,7 +179,7 @@
 						</my:MExpandBar>
 						<my:MExpandBar
 							HorizontalAlignment="Stretch"
-							Icon="{StaticResource FluentIconGlyph.Font}"
+							Icon="{StaticResource FluentIconGlyph.Characters}"
 							Title="Message Font Family"
 							Description="{x:Bind Controller.uModdingWorkerMessageFontFamilyBar_Description}"
 						>

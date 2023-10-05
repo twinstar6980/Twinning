@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 86;
+	export const k_version = 87;
 
 	// ------------------------------------------------
 
@@ -110,27 +110,12 @@ namespace TwinStar.Script {
 			return of(`~/workspace`);
 		}
 
-		export function trash(
-		): string {
-			return of(`~/trash`);
-		}
-
 		export function temporary(
 		): string {
 			return of(`~/temporary`);
 		}
 
 		// ------------------------------------------------
-
-		export function new_trash(
-			path: string,
-		): void {
-			// TODO : only allow if same drive
-			let trash_sub_direcotry = `${trash()}/${make_date_simple_string(new Date())}.${make_prefix_padded_string((Math.random() * 10000).toFixed(0), '0', 4)}`;
-			KernelX.FileSystem.create_directory(trash_sub_direcotry);
-			KernelX.FileSystem.rename(path, `${trash_sub_direcotry}/${PathUtility.name(path)}`);
-			return;
-		}
 
 		export function new_temporary(
 		): string {
@@ -144,7 +129,6 @@ namespace TwinStar.Script {
 		export function initialize(
 		): void {
 			KernelX.FileSystem.create_directory(workspace());
-			KernelX.FileSystem.create_directory(trash());
 			KernelX.FileSystem.create_directory(temporary());
 			KernelX.Process.set_working_directory(workspace());
 			return;
@@ -152,10 +136,6 @@ namespace TwinStar.Script {
 
 		export function deinitialize(
 		): void {
-			let temporary_sub_directory_list = KernelX.FileSystem.list(temporary());
-			for (let temporary_sub_directory of temporary_sub_directory_list) {
-				KernelX.FileSystem.remove(`${temporary()}/${temporary_sub_directory}`);
-			}
 			return;
 		}
 

@@ -151,7 +151,7 @@ namespace TwinStar.Script.Executor {
 			initial_echoer: (value) => (value),
 			given_converter: (argument, given) => (PathUtility.regularize(given)),
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
-			input_generator: (argument, initial) => (Console.path(object.rule[0], [object.rule[1], 'none'] as any, null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
+			input_generator: (argument, initial) => (Console.path(object.rule[0], object.rule[1], null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
 			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
 			default: object.default,
 		} as TypicalArgument<ID, string, string>;
@@ -173,7 +173,7 @@ namespace TwinStar.Script.Executor {
 			initial_echoer: (value) => (value),
 			given_converter: (argument, given) => (PathUtility.regularize(given)),
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
-			input_generator: (argument, initial) => (Console.path('directory', [object.rule, 'none'] as any, null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
+			input_generator: (argument, initial) => (Console.path('directory', object.rule, null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
 			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
 			default: object.default,
 			item_mapper: object.item_mapper,

@@ -44,7 +44,6 @@ namespace TwinStar.Script.Support.PvZ2.RemoteAndroidHelper {
 		project_directory: string,
 		action: Action,
 	): void {
-		let local_temporary_directory = Home.new_temporary();
 		let application = collect_application_information();
 		if (application === null) {
 			return;
@@ -73,6 +72,7 @@ namespace TwinStar.Script.Support.PvZ2.RemoteAndroidHelper {
 			player_profile: `${project_directory}/player.json`,
 			content_delivery: `${project_directory}/content_delivery`,
 		};
+		let local_temporary_directory = Home.new_temporary();
 		let local_temporary = {
 			main_package: `${local_temporary_directory}/main.rsb`,
 			local_profile: `${local_temporary_directory}/local.rton`,
@@ -176,6 +176,7 @@ namespace TwinStar.Script.Support.PvZ2.RemoteAndroidHelper {
 				break;
 			}
 		}
+		KernelX.FileSystem.remove(local_temporary_directory);
 		return;
 	}
 

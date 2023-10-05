@@ -2,7 +2,6 @@
 // ReSharper disable
 
 using Helper;
-using Windows.Storage;
 
 namespace Helper.Utility {
 

@@ -451,20 +451,33 @@ namespace Helper.Module.ModdingWorker {
 			return;
 		}
 
-		public async void uPathOptionOverride_OnClick (
+		public async void uPathCommandGenerate_OnClick (
 			Object          sender,
 			RoutedEventArgs args
 		) {
 			if (sender is not MenuFlyoutItem senders) { return; }
 			if (this.Type is not InputType.Path || this.Option is not null || this.Value is not { Data: null or PathExpression }) { return; }
-			this.Value.OfPath = new PathExpression() { Value = ":o" };
+			this.Value.OfPath = new PathExpression() { Value = ":g" };
 			this.NotifyPropertyChanged(
 				nameof(this.uPathValue_Text)
 			);
 			return;
 		}
 
-		public async void uPathOptionDelete_OnClick (
+		public async void uPathCommandMove_OnClick (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			if (sender is not MenuFlyoutItem senders) { return; }
+			if (this.Type is not InputType.Path || this.Option is not null || this.Value is not { Data: null or PathExpression }) { return; }
+			this.Value.OfPath = new PathExpression() { Value = ":m" };
+			this.NotifyPropertyChanged(
+				nameof(this.uPathValue_Text)
+			);
+			return;
+		}
+
+		public async void uPathCommandDelete_OnClick (
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -477,13 +490,13 @@ namespace Helper.Module.ModdingWorker {
 			return;
 		}
 
-		public async void uPathOptionTrash_OnClick (
+		public async void uPathCommandOverwrite_OnClick (
 			Object          sender,
 			RoutedEventArgs args
 		) {
 			if (sender is not MenuFlyoutItem senders) { return; }
 			if (this.Type is not InputType.Path || this.Option is not null || this.Value is not { Data: null or PathExpression }) { return; }
-			this.Value.OfPath = new PathExpression() { Value = ":t" };
+			this.Value.OfPath = new PathExpression() { Value = ":o" };
 			this.NotifyPropertyChanged(
 				nameof(this.uPathValue_Text)
 			);

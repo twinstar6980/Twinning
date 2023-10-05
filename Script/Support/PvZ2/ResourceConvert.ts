@@ -260,6 +260,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 				}
 			}
 		});
+		KernelX.FileSystem.remove(audio_temporary_directory);
 		return;
 	}
 

@@ -85,7 +85,7 @@ namespace TwinStar.Script.Entry {
 				los('entry:input_finish_if_null'),
 			]);
 			while (true) {
-				let input = Console.path('any', ['input'], true, null);
+				let input = Console.path('any', 'input', true, null);
 				if (input === null) {
 					break;
 				}

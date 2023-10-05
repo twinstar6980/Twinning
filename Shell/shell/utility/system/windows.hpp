@@ -58,6 +58,13 @@ namespace TwinStar::Shell::Windows {
 			selection_item_list->Release();
 		}
 		dialog->Release();
+		for (auto & path : result) {
+			for (auto & character : path) {
+				if (character == '\\') {
+					character = '/';
+				}
+			}
+		}
 		return result;
 	}
 
