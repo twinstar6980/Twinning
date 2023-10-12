@@ -5,23 +5,24 @@ import 'package:flutter/widgets.dart';
 
 class Command {
 
-  String       kernel;
-  String       script;
-  List<String> argument;
+  List<String>? mAdditionalArgument;
 
   // ----------------
 
   Command(
-    this.kernel,
-    this.script,
-    this.argument,
+    this.mAdditionalArgument,
+  );
+
+  Command.init(
+  ) : this(
+    null,
   );
 
 }
 
 class CommandProvider with ChangeNotifier {
 
-  Command? data;
+  Command data;
 
   CommandProvider(
     this.data,
@@ -38,7 +39,7 @@ class CommandProvider with ChangeNotifier {
 
   Void
   set(
-    Command? data,
+    Command data,
   ) {
     this.data = data;
     this.notify();

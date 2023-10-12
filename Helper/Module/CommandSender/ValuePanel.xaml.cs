@@ -378,8 +378,9 @@ namespace Helper.Module.CommandSender {
 		) {
 			if (sender is not TextBox senders) { return; }
 			if (this.Type is not ArgumentType.Path || this.Option is not null || this.Value is not { Data: PathExpression }) { return; }
+			args.Handled = true;
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
-				var newValue = StorageHelper.Normalize((await args.DataView.GetStorageItemsAsync())[0].Path);
+				var newValue = StorageHelper.Regularize((await args.DataView.GetStorageItemsAsync())[0].Path);
 				this.Value.OfPath.Value = newValue;
 				this.NotifyPropertyChanged(
 					nameof(this.uPathValue_Text)

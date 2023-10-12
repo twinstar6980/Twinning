@@ -13,33 +13,45 @@ namespace Helper.Utility {
 
 		#region path
 
-		public static String Normalize (
+		public static String Regularize (
+			String path
+		) {
+			return StorageHelper.ToPosixStyle(path);
+		}
+
+		public static String ToPosixStyle (
 			String path
 		) {
 			return path.Replace('\\', '/');
 		}
 
+		public static String ToWindowsStyle (
+			String path
+		) {
+			return path.Replace('/', '\\');
+		}
+
 		// ----------------
 
-		public static String? GetPathParent (
+		public static String? Parent (
 			String path
 		) {
 			var parent = Path.GetDirectoryName(path);
-			return parent is null ? null : StorageHelper.Normalize(parent);
+			return parent is null ? null : StorageHelper.Regularize(parent);
 		}
 
-		public static String GetPathName (
+		public static String Name (
 			String path
 		) {
 			var name = Path.GetFileName(path);
-			return StorageHelper.Normalize(name);
+			return StorageHelper.Regularize(name);
 		}
 
 		// ----------------
 
-		public static String GetTemporaryPath (
+		public static String Temporary (
 		) {
-			return Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
+			return StorageHelper.Regularize(Path.Combine(Path.GetTempPath(), Path.GetTempFileName()));
 		}
 
 		#endregion
@@ -114,6 +126,16 @@ namespace Helper.Utility {
 			return await File.ReadAllTextAsync(path);
 		}
 
+		// ----------------
+
+		public static void WriteFileTextSync (
+			String path,
+			String content
+		) {
+			File.WriteAllText(path, content);
+			return;
+		}
+
 		public static String ReadFileTextSync (
 			String path
 		) {
@@ -141,25 +163,25 @@ namespace Helper.Utility {
 		#region pick
 
 		public static async Task<String?> PickFile (
-			Window rootWindow,
+			Window host,
 			String filter = "*"
 		) {
 			var picker = new FileOpenPicker() {
 				FileTypeFilter = { filter },
 			};
-			WinRT.Interop.InitializeWithWindow.Initialize(picker, WindowHelper.Handle(rootWindow));
+			WinRT.Interop.InitializeWithWindow.Initialize(picker, WindowHelper.Handle(host));
 			var target = await picker.PickSingleFileAsync();
-			return target is null ? null : StorageHelper.Normalize(target.Path);
+			return target is null ? null : StorageHelper.Regularize(target.Path);
 		}
 
 		public static async Task<String?> PickDirectory (
-			Window rootWindow
+			Window host
 		) {
 			var picker = new FolderPicker() {
 			};
-			WinRT.Interop.InitializeWithWindow.Initialize(picker, WindowHelper.Handle(rootWindow));
+			WinRT.Interop.InitializeWithWindow.Initialize(picker, WindowHelper.Handle(host));
 			var target = await picker.PickSingleFolderAsync();
-			return target is null ? null : StorageHelper.Normalize(target.Path);
+			return target is null ? null : StorageHelper.Regularize(target.Path);
 		}
 
 		#endregion

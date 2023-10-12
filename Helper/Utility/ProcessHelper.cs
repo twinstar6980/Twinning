@@ -52,8 +52,6 @@ namespace Helper.Utility {
 			return;
 		}
 
-		// ----------------
-
 		public static String EncodeCommandLineString (
 			String?      program,
 			List<String> argument
@@ -73,6 +71,23 @@ namespace Helper.Utility {
 			return destination.ToString();
 		}
 
+		// ----------------
+
+		public static unsafe List<String> DecodeCommandLineString (
+			String ripe
+		) {
+			var count = 0;
+			var pointer = ExternalLibrary.Shell32.CommandLineToArgv(ripe, ref count);
+			if (pointer == IntPtr.Zero) {
+				throw new Exception();
+			}
+			var raw = new List<String>(count);
+			for (var index = 0; index < count; ++index) {
+				raw.Add(new String(((Character**)pointer)[index]));
+			}
+			return raw;
+		}
+
 		#endregion
 
 		#region create
@@ -82,8 +97,9 @@ namespace Helper.Utility {
 			List<String> argument
 		) {
 			var process = new Process();
+			process.StartInfo.UseShellExecute = false;
 			process.StartInfo.FileName = program;
-			process.StartInfo.Arguments = ProcessHelper.EncodeCommandLineString(program, argument);
+			process.StartInfo.Arguments = ProcessHelper.EncodeCommandLineString(null, argument);
 			process.StartInfo.CreateNoWindow = true;
 			var stared = process.Start();
 			if (!stared) {

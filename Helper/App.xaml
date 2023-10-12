@@ -12,7 +12,6 @@
 				<ResourceDictionary Source="/CustomControl/FluentIconGlyph.xaml" />
 				<ResourceDictionary Source="/CustomControl/MDivider.xaml" />
 				<ResourceDictionary Source="/CustomControl/MHeaderBar.xaml" />
-				<ResourceDictionary Source="/CustomControl/MExpandBar.xaml" />
 			</ResourceDictionary.MergedDictionaries>
 			<x:String x:Key="ModdingWorkerMessageFontFamily"></x:String>
 			<SolidColorBrush x:Key="WindowCaptionBackground" Color="Transparent" />
@@ -76,7 +75,6 @@
 				<Setter Property="Height" Value="32" />
 				<Setter Property="Padding" Value="5,5,5,6" />
 			</Style>
-			<my:FontIconConverter x:Key="FontIconConverter" />
 			<!-- fix the bug of TreeViewItem.IsEnabled, remove here if this issue has been fixed: https://github.com/microsoft/microsoft-ui-xaml/issues/8298 -->
 			<Style TargetType="TreeViewItem" BasedOn="{StaticResource DefaultListViewItemStyle}">
 				<Setter Property="Padding" Value="0" />

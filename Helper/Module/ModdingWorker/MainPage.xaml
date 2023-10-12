@@ -4,6 +4,8 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:community="using:CommunityToolkit.WinUI"
+	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:Helper"
 	xmlns:localModuleModdingWorker="using:Helper.Module.ModdingWorker"
 	xmlns:my="using:Helper.CustomControl"
@@ -24,12 +26,11 @@
 					<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
 						<Button
 							VerticalAlignment="Center"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Important}}"
 							Visibility="{x:Bind Controller.uAutomaticClose_Visibility}"
 							Click="{x:Bind Controller.uAutomaticClose_OnClick}"
 							Style="{ThemeResource AccentButtonStyle}"
-						>
-							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Important}" />
-						</Button>
+						/>
 						<Button
 							VerticalAlignment="Center"
 						>
@@ -51,11 +52,10 @@
 						</Button>
 						<ToggleButton
 							VerticalAlignment="Center"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.ScrollUpDown}}"
 							IsChecked="{x:Bind Controller.uAutomaticScroll_IsChecked}"
 							Click="{x:Bind Controller.uAutomaticScroll_OnClick}"
-						>
-							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.ScrollUpDown}" />
-						</ToggleButton>
+						/>
 					</my:MStack>
 				</my:MHeaderBar.Action>
 			</my:MHeaderBar>

@@ -3,25 +3,18 @@ import 'package:flutter/material.dart';
 
 // ----------------
 
-class LaunchBarContent extends StatefulWidget {
+class LaunchBarContent extends StatelessWidget {
 
   const LaunchBarContent({
     super.key,
+    required this.additionalArgument,
     required this.onLaunch,
   });
 
-  @override
-  createState() => _LaunchBarContentState();
-
   // ----------------
 
-  final Future<Void> Function(List<String>) onLaunch;
-
-}
-
-class _LaunchBarContentState extends State<LaunchBarContent> {
-
-  List<String> _additionalArgument = [];
+  final List<String>            additionalArgument;
+  final Future<Void> Function() onLaunch;
 
   // ----------------
 
@@ -32,10 +25,10 @@ class _LaunchBarContentState extends State<LaunchBarContent> {
         Expanded(
           child: FilledButton.tonal(
             onPressed: () async {
-              this.widget.onLaunch([]);
+              this.onLaunch();
             },
             onLongPress: () async {
-              var state = await showDialog<String>(
+              await showDialog<String>(
                 context: context,
                 builder: (context) => AlertDialog(
                   title: const Text('Additional Argument'),
@@ -49,14 +42,14 @@ class _LaunchBarContentState extends State<LaunchBarContent> {
                         maxLines: null,
                         keyboardType: TextInputType.multiline,
                         inputFormatters: const [],
-                        initialValue: '',
+                        initialValue: this.additionalArgument.join('\n') + (this.additionalArgument.isNotEmpty && this.additionalArgument.last.isEmpty ? '\n' : ''),
                         onChanged: (value) {
                           var parsedValue = value.split('\n');
                           if (parsedValue.isNotEmpty && parsedValue.last.isEmpty) {
                             parsedValue.removeLast();
                           }
-                          this._additionalArgument.clear();
-                          this._additionalArgument.addAll(parsedValue);
+                          this.additionalArgument.clear();
+                          this.additionalArgument.addAll(parsedValue);
                         },
                       ),
                     ],
@@ -69,10 +62,6 @@ class _LaunchBarContentState extends State<LaunchBarContent> {
                   ],
                 ),
               );
-              if (state != null) {
-                this.widget.onLaunch(this._additionalArgument);
-              }
-              this._additionalArgument.clear();
             },
             child: const Text('Launch'),
           ),

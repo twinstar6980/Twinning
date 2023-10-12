@@ -13,7 +13,7 @@ class ForwardActivity : Activity() {
 		super.onCreate(savedInstanceState)
 		val intent = this.intent
 		intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-		var command = mutableListOf<String>("-additional")
+		var command = mutableListOf<String>("-additional_argument")
 		if (intent.action == Intent.ACTION_SEND && intent.type != null) {
 			var uri = intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM)!! as Uri
 			command.addAll(listOf(uri).map { "${it}" })

@@ -4,6 +4,8 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:community="using:CommunityToolkit.WinUI"
+	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:Helper"
 	xmlns:localModuleCommandSender="using:Helper.Module.CommandSender"
 	xmlns:my="using:Helper.CustomControl"
@@ -24,10 +26,9 @@
 					<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
 						<Button
 							VerticalAlignment="Center"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph=' '}"
 							IsEnabled="False" Opacity="0"
-						>
-							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="" />
-						</Button>
+						/>
 					</my:MStack>
 				</my:MHeaderBar.Action>
 			</my:MHeaderBar>
@@ -89,22 +90,19 @@
 					<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
 						<Button
 							VerticalAlignment="Center"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Shuffle}}"
 							Click="{x:Bind Controller.uForwardWithSelectedMethodByParallel_OnClick}"
-						>
-							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Shuffle}" />
-						</Button>
+						/>
 						<Button
 							VerticalAlignment="Center"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RightArrowKeyTime4}}"
 							Click="{x:Bind Controller.uForwardWithSelectedMethodBySequence_OnClick}"
-						>
-							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.RightArrowKeyTime4}" />
-						</Button>
+						/>
 						<Button
 							VerticalAlignment="Center"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Go}}"
 							Click="{x:Bind Controller.uForwardWithoutSelectedMethod_OnClick}"
-						>
-							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Go}" />
-						</Button>
+						/>
 					</my:MStack>
 				</my:MHeaderBar.Action>
 			</my:MHeaderBar>
@@ -124,24 +122,21 @@
 									<TextBlock Margin="8,0,0,0" my:MStack.Weight="1" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Style="{ThemeResource SubtitleTextBlockStyle}" TextWrapping="NoWrap" Text="{x:Bind uTitle_Text}" />
 									<ToggleButton
 										VerticalAlignment="Bottom"
+										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.MapLayers}}"
 										IsEnabled="{x:Bind uBatch_IsEnabled}"
 										IsChecked="{x:Bind uBatch_IsChecked}"
 										Click="{x:Bind uBatch_OnClick}"
-									>
-										<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.MapLayers}" />
-									</ToggleButton>
+									/>
 									<Button
 										VerticalAlignment="Bottom"
+										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RightArrowKeyTime0}}"
 										Click="{x:Bind uForward_OnClick}"
-									>
-										<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.RightArrowKeyTime0}" />
-									</Button>
+									/>
 									<Button
 										VerticalAlignment="Bottom"
+										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Remove}}"
 										Click="{x:Bind uRemove_OnClick}"
-									>
-										<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Remove}" />
-									</Button>
+									/>
 								</my:MStack>
 								<my:MDivider Height="{StaticResource DividerThickness}" />
 								<localModuleCommandSender:ArgumentPanel

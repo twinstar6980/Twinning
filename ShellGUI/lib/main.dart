@@ -28,19 +28,12 @@ main(
     commandSource = argument;
   }
   if (Platform.isAndroid) {
-    commandSource = await PlatformMethod.getCommand(setting.mFallbackDirectoryForInvisibleFile);
+    commandSource = await PlatformMethod.getCommand(setting.mFallbackDirectory);
   }
-  var command = null as Command?;
+  var command = Command.init();
   if (commandSource.isNotEmpty) {
-    command = Command('', '', []);
-    if (commandSource[0] == '-additional') {
-      command.kernel = setting.mCommandKernel;
-      command.script = setting.mCommandScript;
-      command.argument = setting.mCommandArgument + commandSource.sublist(1);
-    } else {
-      command.kernel = commandSource.elementAt(0);
-      command.script = commandSource.elementAt(1);
-      command.argument = commandSource.sublist(2);
+    if (commandSource[0] == '-additional_argument') {
+      command.mAdditionalArgument = commandSource.sublist(1);
     }
   }
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
@@ -70,7 +63,7 @@ main(
       gConsoleFontFamliy.add(family);
     }
   }
-  PathPicker.fallbackDirectory = setting.mFallbackDirectoryForInvisibleFile;
+  PathPicker.fallbackDirectory = setting.mFallbackDirectory;
   runApp(Application(setting: setting, command: command));
   return;
 }

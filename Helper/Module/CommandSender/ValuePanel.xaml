@@ -4,6 +4,8 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:community="using:CommunityToolkit.WinUI"
+	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:Helper"
 	xmlns:localModuleCommandSender="using:Helper.Module.CommandSender"
 	xmlns:my="using:Helper.CustomControl"
@@ -150,24 +152,16 @@
 										Width="68" Height="NaN"
 										VerticalAlignment="Stretch"
 										HorizontalContentAlignment="Center"
+										Content="{community:FontIcon FontSize={StaticResource SmallIconSize}, Glyph={StaticResource FluentIconGlyph.OpenInNewWindow}}"
 										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
 										Padding="6,0,13,0"
 									>
 										<DropDownButton.Flyout>
 											<MenuFlyout Placement="BottomEdgeAlignedRight">
-												<MenuFlyoutItem Text="File" Click="{x:Bind Controller.uPathPickFile_OnClick}">
-													<MenuFlyoutItem.Icon>
-														<FontIcon FontSize="{StaticResource MiniIconSize}" Glyph="{StaticResource FluentIconGlyph.Document}" />
-													</MenuFlyoutItem.Icon>
-												</MenuFlyoutItem>
-												<MenuFlyoutItem Text="Directory" Click="{x:Bind Controller.uPathPickDirectory_OnClick}">
-													<MenuFlyoutItem.Icon>
-														<FontIcon FontSize="{StaticResource MiniIconSize}" Glyph="{StaticResource FluentIconGlyph.Folder}" />
-													</MenuFlyoutItem.Icon>
-												</MenuFlyoutItem>
+												<MenuFlyoutItem Text="File" Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Document}}" Click="{x:Bind Controller.uPathPickFile_OnClick}" />
+												<MenuFlyoutItem Text="Directory" Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Folder}}" Click="{x:Bind Controller.uPathPickDirectory_OnClick}" />
 											</MenuFlyout>
 										</DropDownButton.Flyout>
-										<FontIcon FontSize="{StaticResource SmallIconSize}" Glyph="{StaticResource FluentIconGlyph.OpenInNewWindow}" />
 									</DropDownButton>
 								</my:MStack>
 							</Setter.Value>

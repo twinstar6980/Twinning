@@ -2,6 +2,7 @@
 // ReSharper disable
 
 using Helper;
+using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -12,7 +13,7 @@ namespace Helper.Utility {
 
 		#region serialize
 
-		private static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings() {
+		private static readonly JsonSerializer Serializer = JsonSerializer.CreateDefault(new JsonSerializerSettings() {
 			NullValueHandling = NullValueHandling.Include,
 			Converters = new List<JsonConverter>() {
 				new StringEnumConverter() {
@@ -22,21 +23,29 @@ namespace Helper.Utility {
 			ContractResolver = new DefaultContractResolver() {
 				NamingStrategy = new SnakeCaseNamingStrategy(),
 			},
-		};
+		});
 
 		// ----------------
 
 		public static String Serialize<TValue> (
 			TValue  value,
-			Boolean indented = true
+			Boolean indented
 		) {
-			return JsonConvert.SerializeObject(value, indented ? Formatting.Indented : Formatting.None, JsonHelper.JsonSerializerSettings);
+			var text = new StringWriter(new StringBuilder(256), CultureInfo.InvariantCulture);
+			var writer = new JsonTextWriter(text) {
+				Indentation = 1,
+				IndentChar = '\t',
+			};
+			JsonHelper.Serializer.Formatting = indented ? Formatting.Indented : Formatting.None;
+			JsonHelper.Serializer.Serialize(writer, value);
+			return text.ToString() ?? throw new Exception();
 		}
 
 		public static TValue Deserialize<TValue> (
 			String text
 		) {
-			return JsonConvert.DeserializeObject<TValue>(text, JsonHelper.JsonSerializerSettings) ?? throw new Exception();
+			var reader = new JsonTextReader(new StringReader(text));
+			return JsonHelper.Serializer.Deserialize<TValue>(reader) ?? throw new Exception();
 		}
 
 		#endregion

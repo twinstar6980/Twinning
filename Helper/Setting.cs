@@ -1,205 +1,163 @@
 #pragma warning disable 0,
-// ReSharper disable
+// ReSharper disable MemberHidesStaticFromOuterClass
 
 using Helper;
 using Helper.Utility;
-using Windows.Storage;
+using Windows.ApplicationModel;
 using Microsoft.UI.Xaml.Media;
+using Newtonsoft.Json;
 
 namespace Helper {
 
 	public class Setting {
 
-		#region utility
+		#region data
 
-		public static void Initialize (
-		) {
-			Setting.InitializeValue(nameof(Setting.AppearanceThemeMode), ElementTheme.Default);
-			Setting.InitializeValue(nameof(Setting.ModdingWorkerKernel), "");
-			Setting.InitializeValue(nameof(Setting.ModdingWorkerScript), "");
-			Setting.InitializeValue(nameof(Setting.ModdingWorkerArgument), new List<String>());
-			Setting.InitializeValue(nameof(Setting.ModdingWorkerAutomaticClose), false);
-			Setting.InitializeValue(nameof(Setting.ModdingWorkerAutomaticScroll), true);
-			Setting.InitializeValue(nameof(Setting.ModdingWorkerImmediateLaunch), true);
-			Setting.InitializeValue(nameof(Setting.ModdingWorkerAlternativeLaunchScript), "");
-			Setting.InitializeValue(nameof(Setting.ModdingWorkerMessageFontFamily), "");
-			Setting.InitializeValue(nameof(Setting.ResourceForwarderOptionConfiguration), "");
-			Setting.InitializeValue(nameof(Setting.ResourceForwarderAutomaticClose), false);
-			Setting.InitializeValue(nameof(Setting.ResourceForwarderParallelExecute), false);
-			Setting.InitializeValue(nameof(Setting.ResourceForwarderEnableFilter), true);
-			Setting.InitializeValue(nameof(Setting.ResourceForwarderEnableBatch), false);
-			Setting.InitializeValue(nameof(Setting.ResourceForwarderRemainInput), false);
-			Setting.InitializeValue(nameof(Setting.CommandSenderMethodConfiguration), "");
-			Setting.InitializeValue(nameof(Setting.AnimationViewerImmediateSelect), true);
-			Setting.InitializeValue(nameof(Setting.AnimationViewerAutomaticPlay), true);
-			Setting.InitializeValue(nameof(Setting.AnimationViewerRepeatPlay), true);
-			Setting.InitializeValue(nameof(Setting.AnimationViewerRemainFrameRate), true);
-			Setting.InitializeValue(nameof(Setting.AnimationViewerShowSpriteBoundary), false);
-			Setting.InitializeValue(nameof(Setting.AnimationViewerSpriteFilterRule), "");
-			Setting.ModdingWorkerMessageFontFamily = Setting.ModdingWorkerMessageFontFamily;
-			return;
+		[JsonObject(ItemRequired = Required.AllowNull)]
+		public class ApplicationSettingData {
+			public required ElementTheme ThemeMode;
+		}
+
+		[JsonObject(ItemRequired = Required.AllowNull)]
+		public class ModdingWorkerSettingData {
+			public required String       Kernel;
+			public required String       Script;
+			public required List<String> Argument;
+			public required Boolean      AutomaticClose;
+			public required Boolean      AutomaticScroll;
+			public required Boolean      ImmediateLaunch;
+			public required String       AlternativeLaunchScript;
+			public required String       MessageFontFamily;
+		}
+
+		[JsonObject(ItemRequired = Required.AllowNull)]
+		public class ModuleLauncherSettingData {
+			public required List<Module.ModuleLauncher.JumperConfiguration> ModuleJumperConfiguration;
+			public required List<Module.ModuleLauncher.JumperConfiguration> PinnedJumperConfiguration;
+			public required List<Module.ModuleLauncher.JumperConfiguration> RecentJumperConfiguration;
+		}
+
+		[JsonObject(ItemRequired = Required.AllowNull)]
+		public class ResourceForwarderSettingData {
+			public required String  OptionConfiguration;
+			public required Boolean AutomaticClose;
+			public required Boolean ParallelExecute;
+			public required Boolean EnableFilter;
+			public required Boolean EnableBatch;
+			public required Boolean RemainInput;
+		}
+
+		[JsonObject(ItemRequired = Required.AllowNull)]
+		public class CommandSenderSettingData {
+			public required String MethodConfiguration;
+		}
+
+		[JsonObject(ItemRequired = Required.AllowNull)]
+		public class AnimationViewerSettingData {
+			public required Boolean ImmediateSelect;
+			public required Boolean AutomaticPlay;
+			public required Boolean RepeatPlay;
+			public required Boolean RemainFrameRate;
+			public required Boolean ShowSpriteBoundary;
+			public required String  SpriteFilterRule;
 		}
 
 		// ----------------
 
-		private static TValue GetValue<TValue> (
-			String key
-		) {
-			var value = ApplicationData.Current.LocalSettings.Values[key]?.ToString();
-			if (value is null) {
-				throw new Exception();
-			}
-			return JsonHelper.Deserialize<TValue>(value);
-		}
-
-		private static void SetValue<TValue> (
-			String key,
-			TValue value
-		) {
-			ApplicationData.Current.LocalSettings.Values[key] = JsonHelper.Serialize<TValue>(value, false);
-			return;
-		}
-
-		private static void InitializeValue<TValue> (
-			String key,
-			TValue value
-		) {
-			ApplicationData.Current.LocalSettings.Values.TryAdd(key, JsonHelper.Serialize<TValue>(value, false));
-			return;
+		[JsonObject(ItemRequired = Required.AllowNull)]
+		public class SettingData {
+			public required Integer                      Version;
+			public required ApplicationSettingData       Application;
+			public required ModuleLauncherSettingData    ModuleLauncher;
+			public required ModdingWorkerSettingData     ModdingWorker;
+			public required ResourceForwarderSettingData ResourceForwarder;
+			public required CommandSenderSettingData     CommandSender;
+			public required AnimationViewerSettingData   AnimationViewer;
 		}
 
 		#endregion
 
-		#region property
+		#region loader
 
-		public static ElementTheme AppearanceThemeMode {
-			get {
-				return Setting.GetValue<ElementTheme>(nameof(Setting.AppearanceThemeMode));
-			}
-			set {
-				ThemeHelper.RootTheme = value;
-				Setting.SetValue<ElementTheme>(nameof(Setting.AppearanceThemeMode), value);
-				return;
-			}
-		}
+		public static SettingData Data = null!;
+
+		public static readonly String File = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "Setting.json");
 
 		// ----------------
 
-		public static String ModdingWorkerKernel {
-			get => Setting.GetValue<String>(nameof(Setting.ModdingWorkerKernel));
-			set => Setting.SetValue<String>(nameof(Setting.ModdingWorkerKernel), value);
+		public static void Load (
+		) {
+			var text = StorageHelper.ReadFileTextSync(Setting.File);
+			Setting.Data = JsonHelper.Deserialize<SettingData>(text);
+			return;
 		}
 
-		public static String ModdingWorkerScript {
-			get => Setting.GetValue<String>(nameof(Setting.ModdingWorkerScript));
-			set => Setting.SetValue<String>(nameof(Setting.ModdingWorkerScript), value);
+		public static void Save (
+		) {
+			WindowHelper.Current.ForEach((item) => { WindowHelper.Theme(item, Setting.Data.Application.ThemeMode); });
+			App.Instance.RegisterShellJumpList().Wait(0);
+			App.Instance.Resources["ModdingWorkerMessageFontFamily"] = Setting.Data.ModdingWorker.MessageFontFamily.Length == 0 ? FontFamily.XamlAutoFontFamily.Source : Setting.Data.ModdingWorker.MessageFontFamily;
+			var text = JsonHelper.Serialize<SettingData>(Setting.Data, true);
+			StorageHelper.WriteFileTextSync(Setting.File, text);
+			return;
 		}
 
-		public static List<String> ModdingWorkerArgument {
-			get => Setting.GetValue<List<String>>(nameof(Setting.ModdingWorkerArgument));
-			set => Setting.SetValue<List<String>>(nameof(Setting.ModdingWorkerArgument), value);
-		}
-
-		public static Boolean ModdingWorkerAutomaticClose {
-			get => Setting.GetValue<Boolean>(nameof(Setting.ModdingWorkerAutomaticClose));
-			set => Setting.SetValue<Boolean>(nameof(Setting.ModdingWorkerAutomaticClose), value);
-		}
-
-		public static Boolean ModdingWorkerAutomaticScroll {
-			get => Setting.GetValue<Boolean>(nameof(Setting.ModdingWorkerAutomaticScroll));
-			set => Setting.SetValue<Boolean>(nameof(Setting.ModdingWorkerAutomaticScroll), value);
-		}
-
-		public static Boolean ModdingWorkerImmediateLaunch {
-			get => Setting.GetValue<Boolean>(nameof(Setting.ModdingWorkerImmediateLaunch));
-			set => Setting.SetValue<Boolean>(nameof(Setting.ModdingWorkerImmediateLaunch), value);
-		}
-
-		public static String ModdingWorkerAlternativeLaunchScript {
-			get => Setting.GetValue<String>(nameof(Setting.ModdingWorkerAlternativeLaunchScript));
-			set => Setting.SetValue<String>(nameof(Setting.ModdingWorkerAlternativeLaunchScript), value);
-		}
-
-		public static String ModdingWorkerMessageFontFamily {
-			get {
-				return Setting.GetValue<String>(nameof(Setting.ModdingWorkerMessageFontFamily));
+		public static void Initialize (
+		) {
+			try {
+				Setting.Load();
+				if (Setting.Data.Version != Package.Current.Id.Version.Major) {
+					throw new Exception();
+				}
+			} catch (Exception) {
+				Setting.Data = new SettingData() {
+					Version = Package.Current.Id.Version.Major,
+					Application = new ApplicationSettingData() {
+						ThemeMode = ElementTheme.Default,
+					},
+					ModuleLauncher = new ModuleLauncherSettingData() {
+						ModuleJumperConfiguration = new List<Module.ModuleLauncher.JumperConfiguration>(Module.ModuleInformationConstant.Value.Select((value) => (new Module.ModuleLauncher.JumperConfiguration() {
+							Title = value.Name,
+							ModuleType = value.Type,
+							ModuleOption = new List<String>(),
+							WindowOption = new List<String>(),
+						}))),
+						PinnedJumperConfiguration = new List<Module.ModuleLauncher.JumperConfiguration>(),
+						RecentJumperConfiguration = new List<Module.ModuleLauncher.JumperConfiguration>(),
+					},
+					ModdingWorker = new ModdingWorkerSettingData() {
+						Kernel = "",
+						Script = "",
+						Argument = new List<String>(),
+						AutomaticClose = false,
+						AutomaticScroll = true,
+						ImmediateLaunch = true,
+						AlternativeLaunchScript = "",
+						MessageFontFamily = "",
+					},
+					ResourceForwarder = new ResourceForwarderSettingData() {
+						OptionConfiguration = "",
+						AutomaticClose = false,
+						ParallelExecute = false,
+						EnableFilter = true,
+						EnableBatch = false,
+						RemainInput = false,
+					},
+					CommandSender = new CommandSenderSettingData() {
+						MethodConfiguration = "",
+					},
+					AnimationViewer = new AnimationViewerSettingData() {
+						ImmediateSelect = true,
+						AutomaticPlay = true,
+						RepeatPlay = true,
+						RemainFrameRate = true,
+						ShowSpriteBoundary = false,
+						SpriteFilterRule = "",
+					},
+				};
 			}
-			set {
-				App.Instance.Resources[nameof(Setting.ModdingWorkerMessageFontFamily)] = value.Length == 0 ? FontFamily.XamlAutoFontFamily.Source : value;
-				Setting.SetValue<String>(nameof(Setting.ModdingWorkerMessageFontFamily), value);
-				return;
-			}
-		}
-
-		// ----------------
-
-		public static String ResourceForwarderOptionConfiguration {
-			get => Setting.GetValue<String>(nameof(Setting.ResourceForwarderOptionConfiguration));
-			set => Setting.SetValue<String>(nameof(Setting.ResourceForwarderOptionConfiguration), value);
-		}
-
-		public static Boolean ResourceForwarderAutomaticClose {
-			get => Setting.GetValue<Boolean>(nameof(Setting.ResourceForwarderAutomaticClose));
-			set => Setting.SetValue<Boolean>(nameof(Setting.ResourceForwarderAutomaticClose), value);
-		}
-
-		public static Boolean ResourceForwarderParallelExecute {
-			get => Setting.GetValue<Boolean>(nameof(Setting.ResourceForwarderParallelExecute));
-			set => Setting.SetValue<Boolean>(nameof(Setting.ResourceForwarderParallelExecute), value);
-		}
-
-		public static Boolean ResourceForwarderEnableFilter {
-			get => Setting.GetValue<Boolean>(nameof(Setting.ResourceForwarderEnableFilter));
-			set => Setting.SetValue<Boolean>(nameof(Setting.ResourceForwarderEnableFilter), value);
-		}
-
-		public static Boolean ResourceForwarderEnableBatch {
-			get => Setting.GetValue<Boolean>(nameof(Setting.ResourceForwarderEnableBatch));
-			set => Setting.SetValue<Boolean>(nameof(Setting.ResourceForwarderEnableBatch), value);
-		}
-
-		public static Boolean ResourceForwarderRemainInput {
-			get => Setting.GetValue<Boolean>(nameof(Setting.ResourceForwarderRemainInput));
-			set => Setting.SetValue<Boolean>(nameof(Setting.ResourceForwarderRemainInput), value);
-		}
-
-		// ----------------
-
-		public static String CommandSenderMethodConfiguration {
-			get => Setting.GetValue<String>(nameof(Setting.CommandSenderMethodConfiguration));
-			set => Setting.SetValue<String>(nameof(Setting.CommandSenderMethodConfiguration), value);
-		}
-
-		// ----------------
-
-		public static Boolean AnimationViewerImmediateSelect {
-			get => Setting.GetValue<Boolean>(nameof(Setting.AnimationViewerImmediateSelect));
-			set => Setting.SetValue<Boolean>(nameof(Setting.AnimationViewerImmediateSelect), value);
-		}
-
-		public static Boolean AnimationViewerAutomaticPlay {
-			get => Setting.GetValue<Boolean>(nameof(Setting.AnimationViewerAutomaticPlay));
-			set => Setting.SetValue<Boolean>(nameof(Setting.AnimationViewerAutomaticPlay), value);
-		}
-
-		public static Boolean AnimationViewerRepeatPlay {
-			get => Setting.GetValue<Boolean>(nameof(Setting.AnimationViewerRepeatPlay));
-			set => Setting.SetValue<Boolean>(nameof(Setting.AnimationViewerRepeatPlay), value);
-		}
-
-		public static Boolean AnimationViewerRemainFrameRate {
-			get => Setting.GetValue<Boolean>(nameof(Setting.AnimationViewerRemainFrameRate));
-			set => Setting.SetValue<Boolean>(nameof(Setting.AnimationViewerRemainFrameRate), value);
-		}
-
-		public static Boolean AnimationViewerShowSpriteBoundary {
-			get => Setting.GetValue<Boolean>(nameof(Setting.AnimationViewerShowSpriteBoundary));
-			set => Setting.SetValue<Boolean>(nameof(Setting.AnimationViewerShowSpriteBoundary), value);
-		}
-
-		public static String AnimationViewerSpriteFilterRule {
-			get => Setting.GetValue<String>(nameof(Setting.AnimationViewerSpriteFilterRule));
-			set => Setting.SetValue<String>(nameof(Setting.AnimationViewerSpriteFilterRule), value);
+			Setting.Save();
+			return;
 		}
 
 		#endregion

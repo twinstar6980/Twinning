@@ -4,6 +4,8 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:community="using:CommunityToolkit.WinUI"
+	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:Helper"
 	xmlns:localModuleResourceForwarder="using:Helper.Module.ResourceForwarder"
 	xmlns:my="using:Helper.CustomControl"
@@ -24,12 +26,11 @@
 					<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
 						<Button
 							VerticalAlignment="Center"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Important}}"
 							Visibility="{x:Bind Controller.uAutomaticClose_Visibility}"
 							Click="{x:Bind Controller.uAutomaticClose_OnClick}"
 							Style="{ThemeResource AccentButtonStyle}"
-						>
-							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Important}" />
-						</Button>
+						/>
 						<Button
 							VerticalAlignment="Center"
 						>
@@ -58,32 +59,28 @@
 						</Button>
 						<ToggleButton
 							VerticalAlignment="Center"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Pin}}"
 							IsChecked="{x:Bind Controller.uRemainInput_IsChecked}"
 							Click="{x:Bind Controller.uRemainInput_OnClick}"
-						>
-							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Pin}" />
-						</ToggleButton>
+						/>
 						<ToggleButton
 							VerticalAlignment="Center"
 							IsChecked="{x:Bind Controller.uEnableBatch_IsChecked}"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.MapLayers}}"
 							Click="{x:Bind Controller.uEnableBatch_OnClick}"
-						>
-							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.MapLayers}" />
-						</ToggleButton>
+						/>
 						<ToggleButton
 							VerticalAlignment="Center"
 							IsChecked="{x:Bind Controller.uEnableFilter_IsChecked}"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Filter}}"
 							Click="{x:Bind Controller.uEnableFilter_OnClick}"
-						>
-							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Filter}" />
-						</ToggleButton>
+						/>
 						<ToggleButton
 							VerticalAlignment="Center"
 							IsChecked="{x:Bind Controller.uParallelExecute_IsChecked}"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Shuffle}}"
 							Click="{x:Bind Controller.uParallelExecute_OnClick}"
-						>
-							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Shuffle}" />
-						</ToggleButton>
+						/>
 					</my:MStack>
 				</my:MHeaderBar.Action>
 			</my:MHeaderBar>

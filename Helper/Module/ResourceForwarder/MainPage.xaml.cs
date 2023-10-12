@@ -77,13 +77,13 @@ namespace Helper.Module.ResourceForwarder {
 
 		public void Initialize (
 		) {
-			this.AutomaticClose = Setting.ResourceForwarderAutomaticClose;
-			this.ParallelExecute = Setting.ResourceForwarderParallelExecute;
-			this.EnableFilter = Setting.ResourceForwarderEnableFilter;
-			this.EnableBatch = Setting.ResourceForwarderEnableBatch;
-			this.RemainInput = Setting.ResourceForwarderRemainInput;
+			this.AutomaticClose = Setting.Data.ResourceForwarder.AutomaticClose;
+			this.ParallelExecute = Setting.Data.ResourceForwarder.ParallelExecute;
+			this.EnableFilter = Setting.Data.ResourceForwarder.EnableFilter;
+			this.EnableBatch = Setting.Data.ResourceForwarder.EnableBatch;
+			this.RemainInput = Setting.Data.ResourceForwarder.RemainInput;
 			try {
-				this.OptionConfiguration = JsonHelper.Deserialize<List<OptionGroupConfiguration>>(StorageHelper.ReadFileTextSync(Setting.ResourceForwarderOptionConfiguration));
+				this.OptionConfiguration = JsonHelper.Deserialize<List<OptionGroupConfiguration>>(StorageHelper.ReadFileTextSync(Setting.Data.ResourceForwarder.OptionConfiguration));
 			} catch (Exception e) {
 				App.MainWindow.Controller.PublishTip(InfoBarSeverity.Error, "Failed to load option configuration.", e.ToString());
 				this.OptionConfiguration = new List<OptionGroupConfiguration>();
@@ -170,7 +170,7 @@ namespace Helper.Module.ResourceForwarder {
 				);
 			}
 			if (optionInput is not null) {
-				await this.AppendInput(optionInput.Select(StorageHelper.Normalize).ToList());
+				await this.AppendInput(optionInput.Select(StorageHelper.Regularize).ToList());
 			}
 			if (optionEnableFilter is not null || optionEnableBatch is not null || optionInput is not null) {
 				await this.RefreshInput();
@@ -300,9 +300,10 @@ namespace Helper.Module.ResourceForwarder {
 			DragEventArgs args
 		) {
 			if (sender is not Page senders) { return; }
+			args.Handled = true;
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				var item = await args.DataView.GetStorageItemsAsync();
-				await this.AppendInput(item.Select((value) => (StorageHelper.Normalize(value.Path))).ToList());
+				await this.AppendInput(item.Select((value) => (StorageHelper.Regularize(value.Path))).ToList());
 				await this.RefreshInput();
 				await this.RefreshFilter();
 			}
@@ -499,7 +500,7 @@ namespace Helper.Module.ResourceForwarder {
 
 		public String uName_Text {
 			get {
-				return StorageHelper.GetPathName(this.Path);
+				return StorageHelper.Name(this.Path);
 			}
 		}
 

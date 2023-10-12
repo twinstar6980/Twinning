@@ -441,8 +441,9 @@ namespace Helper.Module.ModdingWorker {
 		) {
 			if (sender is not TextBox senders) { return; }
 			if (this.Type is not InputType.Path || this.Option is not null || this.Value is not { Data: null or PathExpression }) { return; }
+			args.Handled = true;
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
-				var newValue = StorageHelper.Normalize((await args.DataView.GetStorageItemsAsync())[0].Path);
+				var newValue = StorageHelper.Regularize((await args.DataView.GetStorageItemsAsync())[0].Path);
 				this.Value.OfPath = new PathExpression() { Value = newValue };
 				this.NotifyPropertyChanged(
 					nameof(this.uPathValue_Text)

@@ -34,6 +34,7 @@ class ConsolePage extends StatefulWidget {
 
 class _ConsolePageState extends State<ConsolePage> implements Host {
 
+  List<String>     _additionalArgument = [];
   ScrollController _outputBarListScrollController = ScrollController();
   List<Widget>     _outputBarListItem = [];
   Widget?          _inputBarContent;
@@ -279,8 +280,8 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
 
   Future<Boolean>
   _launch(
-    Command command,
   ) async {
+    var setting = Provider.of<SettingProvider>(context, listen: false);
     var result = null as String?;
     var exception = null as String?;
     var temporaryKernel = null as String?;
@@ -288,9 +289,9 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
       this._outputBarListItem.clear();
       if (Platform.isAndroid) {
         temporaryKernel = p_path.join((await getApplicationCacheDirectory()).path, 'kernel');
-        File(command.kernel).copySync(temporaryKernel);
+        File(setting.data.mConsoleKernel).copySync(temporaryKernel);
       }
-      result = await Launcher.launch(this, temporaryKernel ?? command.kernel, command.script, command.argument);
+      result = await Launcher.launch(this, temporaryKernel ?? setting.data.mConsoleKernel, setting.data.mConsoleScript, setting.data.mConsoleArgument + this._additionalArgument);
     } catch (e) {
       exception = e.toString();
     }
@@ -330,31 +331,19 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
     return exception == null;
   }
 
-  Future<Boolean>
-  _launchDefault(
-    List<String> additionalArgument,
-  ) async {
-    var setting = Provider.of<SettingProvider>(context, listen: false);
-    var command = Command(
-      setting.data.mCommandKernel,
-      setting.data.mCommandScript,
-      setting.data.mCommandArgument + additionalArgument,
-    );
-    return this._launch(command);
-  }
-
   // ----------------
 
   @override
   build(context) {
     var setting = Provider.of<SettingProvider>(context);
     var command = Provider.of<CommandProvider>(context);
-    if (command.data != null) {
+    if (command.data.mAdditionalArgument != null) {
       () async {
-        var commandData = command.data!;
-        command.set(null);
-        var state = await this._launch(commandData);
-        if (setting.data.mExitAfterCommandSucceed && state) {
+        this._additionalArgument.addAll(command.data.mAdditionalArgument!);
+        command.data.mAdditionalArgument = null;
+        command.notify();
+        var state = await this._launch();
+        if (setting.data.mAutomaticExit && state) {
           exitApplication();
         }
       }();
@@ -380,7 +369,12 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
           ),
           const SizedBox(height: 8),
           ActionBar(
-            content: this._running ? this._inputBarContent! : LaunchBarContent(onLaunch: this._launchDefault),
+            content: this._running
+              ? this._inputBarContent!
+              : LaunchBarContent(
+                additionalArgument: this._additionalArgument,
+                onLaunch: this._launch,
+              ),
           ),
           const SizedBox(height: 8),
         ],

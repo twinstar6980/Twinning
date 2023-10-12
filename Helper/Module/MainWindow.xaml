@@ -4,13 +4,18 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:community="using:CommunityToolkit.WinUI"
+	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:Helper"
 	xmlns:localModule="using:Helper.Module"
 	xmlns:my="using:Helper.CustomControl"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
 >
-	<my:MBox Padding="0,0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+	<Window.SystemBackdrop>
+		<MicaBackdrop Kind="Base" />
+	</Window.SystemBackdrop>
+	<my:MBox Padding="0,0">
 		<TabView
 			x:Name="uTab" x:FieldModifier="public"
 			HorizontalAlignment="Stretch" VerticalAlignment="Stretch"

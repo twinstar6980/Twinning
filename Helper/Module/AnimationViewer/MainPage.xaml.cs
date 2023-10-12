@@ -131,12 +131,12 @@ namespace Helper.Module.AnimationViewer {
 
 		public void Initialize (
 		) {
-			this.ImmediateSelect = Setting.AnimationViewerImmediateSelect;
-			this.AutomaticPlay = Setting.AnimationViewerAutomaticPlay;
-			this.RepeatPlay = Setting.AnimationViewerRepeatPlay;
-			this.RemainFrameRate = Setting.AnimationViewerRemainFrameRate;
-			this.ShowSpriteBoundary = Setting.AnimationViewerShowSpriteBoundary;
-			this.SpriteFilterRule = Setting.AnimationViewerSpriteFilterRule;
+			this.ImmediateSelect = Setting.Data.AnimationViewer.ImmediateSelect;
+			this.AutomaticPlay = Setting.Data.AnimationViewer.AutomaticPlay;
+			this.RepeatPlay = Setting.Data.AnimationViewer.RepeatPlay;
+			this.RemainFrameRate = Setting.Data.AnimationViewer.RemainFrameRate;
+			this.ShowSpriteBoundary = Setting.Data.AnimationViewer.ShowSpriteBoundary;
+			this.SpriteFilterRule = Setting.Data.AnimationViewer.SpriteFilterRule;
 			this.View.uSprite.HoldEnd = true;
 			this.View.uSprite.Repeat = true;
 			this.View.uSprite.ShowBoundary = this.ShowSpriteBoundary;
@@ -590,13 +590,15 @@ namespace Helper.Module.AnimationViewer {
 				if (this.ImmediateSelect && this.Animation.MainSprite is not null) {
 					await this.LoadWorkingSprite(spriteIndex ?? this.Animation.Sprite.Count, spriteFrameRange, spriteFrameRate, spriteInitialState, null);
 				}
-				await App.Instance.AppendRecentJumpList($"Animation Viewer - {Regex.Replace(StorageHelper.GetPathName(animationFileSource), @"(\.pam\.json)$", "", RegexOptions.IgnoreCase)}", new List<String>() {
-					"-ModuleType",
-					ModuleType.AnimationViewer.ToString(),
-					"-ModuleOption",
-					"-Source",
-					animationFileSource,
-					imageDirectorySource,
+				await App.Instance.AppendRecentJumperItem(new ModuleLauncher.JumperConfiguration() {
+					Title = StorageHelper.Name(animationFileSource),
+					ModuleType = ModuleType.AnimationViewer,
+					ModuleOption = new List<String>() {
+						"-Source",
+						animationFileSource,
+						imageDirectorySource,
+					},
+					WindowOption = new List<String>(),
 				});
 			}
 			return;
@@ -690,18 +692,19 @@ namespace Helper.Module.AnimationViewer {
 			DragEventArgs args
 		) {
 			if (sender is not Page senders) { return; }
+			args.Handled = true;
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				var item = await args.DataView.GetStorageItemsAsync();
 				if (item.Count != 1) {
 					App.MainWindow.Controller.PublishTip(InfoBarSeverity.Error, "Source is multiply.", "");
 					return;
 				}
-				var animationFile = StorageHelper.Normalize(item[0].Path);
+				var animationFile = StorageHelper.Regularize(item[0].Path);
 				if (!StorageHelper.ExistFile(animationFile)) {
 					App.MainWindow.Controller.PublishTip(InfoBarSeverity.Error, "Source is not a file.", "");
 					return;
 				}
-				var imageDirectory = StorageHelper.GetPathParent(animationFile) ?? throw new Exception();
+				var imageDirectory = StorageHelper.Parent(animationFile) ?? throw new Exception();
 				await this.ApplyLoad(animationFile, imageDirectory, null, null, null, null);
 			}
 			return;
@@ -910,7 +913,7 @@ namespace Helper.Module.AnimationViewer {
 			}
 			var animationFile = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View), ".json");
 			if (animationFile is not null) {
-				var imageDirectory = StorageHelper.GetPathParent(animationFile) ?? throw new Exception();
+				var imageDirectory = StorageHelper.Parent(animationFile) ?? throw new Exception();
 				await this.ApplyLoad(animationFile, imageDirectory, null, null, null, null);
 			} else {
 				if (isPlaying) {

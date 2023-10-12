@@ -17,16 +17,16 @@ namespace Helper.Utility {
 			Size size
 		) {
 			var data = ExternalLibrary.Kernel32.HeapAlloc(MemoryHelper.Heap, 0x00000008, (UIntPtr)size);
-			if (data == null) {
+			if (data == IntPtr.Zero) {
 				throw new OutOfMemoryException();
 			}
-			return data;
+			return (void*)data;
 		}
 
 		public static void Free (
 			void* data
 		) {
-			var state = ExternalLibrary.Kernel32.HeapFree(MemoryHelper.Heap, 0x00000000, data);
+			var state = ExternalLibrary.Kernel32.HeapFree(MemoryHelper.Heap, 0x00000000, (IntPtr)data);
 			if (state == false) {
 				throw new InvalidOperationException();
 			}

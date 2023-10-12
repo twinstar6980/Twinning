@@ -9,7 +9,7 @@ namespace Helper.Module {
 	#region type
 
 	public enum ModuleType {
-		ApplicationSetting,
+		ModuleLauncher,
 		ModdingWorker,
 		ResourceForwarder,
 		CommandSender,
@@ -23,45 +23,53 @@ namespace Helper.Module {
 	public class ModuleInformation {
 		public required ModuleType Type;
 		public required String     Icon;
-		public required String     Title;
+		public required String     Name;
 		public required Type       Page;
 	}
 
 	// ----------------
 
 	public static class ModuleInformationConstant {
-		public static readonly List<ModuleInformation> Value = new List<ModuleInformation> {
+
+		public static readonly List<ModuleInformation> Value = new List<ModuleInformation>() {
 			new ModuleInformation {
-				Type = ModuleType.ApplicationSetting,
+				Type = ModuleType.ModuleLauncher,
 				Icon = FluentIconGlyph.OEM,
-				Title = "Application Setting",
-				Page = typeof(ApplicationSetting.MainPage),
+				Name = "Module Launcher",
+				Page = typeof(ModuleLauncher.MainPage),
 			},
 			new ModuleInformation {
 				Type = ModuleType.ModdingWorker,
 				Icon = FluentIconGlyph.ProvisioningPackage,
-				Title = "Modding Worker",
+				Name = "Modding Worker",
 				Page = typeof(ModdingWorker.MainPage),
 			},
 			new ModuleInformation {
 				Type = ModuleType.ResourceForwarder,
 				Icon = FluentIconGlyph.Share,
-				Title = "Resource Forwarder",
+				Name = "Resource Forwarder",
 				Page = typeof(ResourceForwarder.MainPage),
 			},
 			new ModuleInformation {
 				Type = ModuleType.CommandSender,
 				Icon = FluentIconGlyph.Send,
-				Title = "Command Sender",
+				Name = "Command Sender",
 				Page = typeof(CommandSender.MainPage),
 			},
 			new ModuleInformation {
 				Type = ModuleType.AnimationViewer,
 				Icon = FluentIconGlyph.HomeGroup,
-				Title = "Animation Viewer",
+				Name = "Animation Viewer",
 				Page = typeof(AnimationViewer.MainPage),
 			},
 		};
+
+		public static ModuleInformation Query (
+			ModuleType type
+		) {
+			return ModuleInformationConstant.Value[(Size)type];
+		}
+
 	}
 
 	#endregion

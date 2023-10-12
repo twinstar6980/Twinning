@@ -20,11 +20,11 @@ class Setting {
   Boolean      mWindowSizeAdhereToDefault;
   Integer      mWindowSizeWidth;
   Integer      mWindowSizeHeight;
-  String       mCommandKernel;
-  String       mCommandScript;
-  List<String> mCommandArgument;
-  Boolean      mExitAfterCommandSucceed;
-  String       mFallbackDirectoryForInvisibleFile;
+  String       mConsoleKernel;
+  String       mConsoleScript;
+  List<String> mConsoleArgument;
+  Boolean      mAutomaticExit;
+  String       mFallbackDirectory;
 
   // ----------------
 
@@ -42,11 +42,11 @@ class Setting {
     this.mWindowSizeAdhereToDefault,
     this.mWindowSizeWidth,
     this.mWindowSizeHeight,
-    this.mCommandKernel,
-    this.mCommandScript,
-    this.mCommandArgument,
-    this.mExitAfterCommandSucceed,
-    this.mFallbackDirectoryForInvisibleFile,
+    this.mConsoleKernel,
+    this.mConsoleScript,
+    this.mConsoleArgument,
+    this.mAutomaticExit,
+    this.mFallbackDirectory,
   );
 
   Setting.init(
@@ -92,11 +92,11 @@ class Setting {
     data.mWindowSizeAdhereToDefault = json['window_size_adhere_to_default'] as Boolean;
     data.mWindowSizeWidth = json['window_size_width'] as Integer;
     data.mWindowSizeHeight = json['window_size_height'] as Integer;
-    data.mCommandKernel = json['command_kernel'] as String;
-    data.mCommandScript = json['command_script'] as String;
-    data.mCommandArgument = (json['command_argument'] as List<dynamic>).cast<String>();
-    data.mExitAfterCommandSucceed = json['exit_after_command_succeed'] as Boolean;
-    data.mFallbackDirectoryForInvisibleFile = json['fallback_directory_for_invisible_file'] as String;
+    data.mConsoleKernel = json['console_kernel'] as String;
+    data.mConsoleScript = json['console_script'] as String;
+    data.mConsoleArgument = (json['console_argument'] as List<dynamic>).cast<String>();
+    data.mAutomaticExit = json['automatic_exit'] as Boolean;
+    data.mFallbackDirectory = json['fallback_directory'] as String;
     return;
   }
 
@@ -119,11 +119,11 @@ class Setting {
     json['window_size_adhere_to_default'] = data.mWindowSizeAdhereToDefault;
     json['window_size_width'] = data.mWindowSizeWidth;
     json['window_size_height'] = data.mWindowSizeHeight;
-    json['command_kernel'] = data.mCommandKernel;
-    json['command_script'] = data.mCommandScript;
-    json['command_argument'] = data.mCommandArgument;
-    json['exit_after_command_succeed'] = data.mExitAfterCommandSucceed;
-    json['fallback_directory_for_invisible_file'] = data.mFallbackDirectoryForInvisibleFile;
+    json['console_kernel'] = data.mConsoleKernel;
+    json['console_script'] = data.mConsoleScript;
+    json['console_argument'] = data.mConsoleArgument;
+    json['automatic_exit'] = data.mAutomaticExit;
+    json['fallback_directory'] = data.mFallbackDirectory;
     return;
   }
 

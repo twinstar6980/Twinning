@@ -524,7 +524,7 @@ class _SettingPageState extends State<SettingPage> {
                 ListTile(
                   dense: true,
                   title: Text(
-                    'Command',
+                    'Console',
                     style: theme.textTheme.titleSmall!.copyWith(color: theme.colorScheme.primary),
                   ),
                 ),
@@ -537,7 +537,7 @@ class _SettingPageState extends State<SettingPage> {
                       children: [
                         Expanded(child: Container()),
                         Text(
-                          setting.data.mCommandKernel.isEmpty ? '?' : '!',
+                          setting.data.mConsoleKernel.isEmpty ? '?' : '!',
                           style: theme.textTheme.bodyMedium,
                         ),
                       ],
@@ -558,9 +558,9 @@ class _SettingPageState extends State<SettingPage> {
                               maxLines: null,
                               keyboardType: TextInputType.text,
                               inputFormatters: const [],
-                              initialValue: setting.data.mCommandKernel,
+                              initialValue: setting.data.mConsoleKernel,
                               onChanged: (value) {
-                                setting.data.mCommandKernel = value;
+                                setting.data.mConsoleKernel = value;
                                 setting.notify();
                               },
                             ),
@@ -585,7 +585,7 @@ class _SettingPageState extends State<SettingPage> {
                       children: [
                         Expanded(child: Container()),
                         Text(
-                          setting.data.mCommandScript.isEmpty ? '?' : '!',
+                          setting.data.mConsoleScript.isEmpty ? '?' : '!',
                           style: theme.textTheme.bodyMedium,
                         ),
                       ],
@@ -606,9 +606,9 @@ class _SettingPageState extends State<SettingPage> {
                               maxLines: null,
                               keyboardType: TextInputType.text,
                               inputFormatters: const [],
-                              initialValue: setting.data.mCommandScript,
+                              initialValue: setting.data.mConsoleScript,
                               onChanged: (value) {
-                                setting.data.mCommandScript = value;
+                                setting.data.mConsoleScript = value;
                                 setting.notify();
                               },
                             ),
@@ -633,7 +633,7 @@ class _SettingPageState extends State<SettingPage> {
                       children: [
                         Expanded(child: Container()),
                         Text(
-                          '${setting.data.mCommandArgument.length}',
+                          '${setting.data.mConsoleArgument.length}',
                           style: theme.textTheme.bodyMedium,
                         ),
                       ],
@@ -654,13 +654,13 @@ class _SettingPageState extends State<SettingPage> {
                               maxLines: null,
                               keyboardType: TextInputType.multiline,
                               inputFormatters: const [],
-                              initialValue: setting.data.mCommandArgument.join('\n') + (setting.data.mCommandArgument.isNotEmpty && setting.data.mCommandArgument.last.isEmpty ? '\n' : ''),
+                              initialValue: setting.data.mConsoleArgument.join('\n') + (setting.data.mConsoleArgument.isNotEmpty && setting.data.mConsoleArgument.last.isEmpty ? '\n' : ''),
                               onChanged: (value) {
                                 var parsedValue = value.split('\n');
                                 if (parsedValue.isNotEmpty && parsedValue.last.isEmpty) {
                                   parsedValue.removeLast();
                                 }
-                                setting.data.mCommandArgument = parsedValue;
+                                setting.data.mConsoleArgument = parsedValue;
                                 setting.notify();
                               },
                             ),
@@ -685,14 +685,14 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 ListTile(
                   leading: const Icon(Icons.exit_to_app_outlined),
-                  title: const Text('Exit After Command Succeed'),
+                  title: const Text('Automatic Exit'),
                   trailing: SizedBox(
                     width: 120,
                     child: Row(
                       children: [
                         Expanded(child: Container()),
                         Text(
-                          !setting.data.mExitAfterCommandSucceed ? 'Disabled' : 'Enabled',
+                          !setting.data.mAutomaticExit ? 'Disabled' : 'Enabled',
                           style: theme.textTheme.bodyMedium,
                         ),
                       ],
@@ -702,16 +702,16 @@ class _SettingPageState extends State<SettingPage> {
                     await showDialog<String>(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: const Text('Exit After Command Succeed'),
+                        title: const Text('Automatic Exit'),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Row(
                               children: [
                                 Switch(
-                                  value: setting.data.mExitAfterCommandSucceed,
+                                  value: setting.data.mAutomaticExit,
                                   onChanged: (value) {
-                                    setting.data.mExitAfterCommandSucceed = value;
+                                    setting.data.mAutomaticExit = value;
                                     setting.notify();
                                   },
                                 ),
@@ -733,14 +733,14 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 ListTile(
                   leading: const Icon(Icons.folder_copy_outlined),
-                  title: const Text('Fallback Directory For Invisible File'),
+                  title: const Text('Fallback Directory'),
                   trailing: SizedBox(
                     width: 120,
                     child: Row(
                       children: [
                         Expanded(child: Container()),
                         Text(
-                          !Directory(setting.data.mFallbackDirectoryForInvisibleFile).existsSync() ? 'Invalid' : 'Valid',
+                          !Directory(setting.data.mFallbackDirectory).existsSync() ? 'Invalid' : 'Valid',
                           style: theme.textTheme.bodyMedium,
                         ),
                       ],
@@ -750,7 +750,7 @@ class _SettingPageState extends State<SettingPage> {
                     await showDialog<String>(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: const Text('Fallback Directory For Invisible File'),
+                        title: const Text('Fallback Directory'),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -761,10 +761,10 @@ class _SettingPageState extends State<SettingPage> {
                               maxLines: null,
                               keyboardType: TextInputType.text,
                               inputFormatters: const [],
-                              initialValue: setting.data.mFallbackDirectoryForInvisibleFile,
+                              initialValue: setting.data.mFallbackDirectory,
                               onChanged: (value) {
                                 PathPicker.fallbackDirectory = value;
-                                setting.data.mFallbackDirectoryForInvisibleFile = value;
+                                setting.data.mFallbackDirectory = value;
                                 setting.notify();
                               },
                             ),

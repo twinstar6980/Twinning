@@ -63,7 +63,7 @@ namespace Helper.Module.CommandSender {
 		public void Initialize (
 		) {
 			try {
-				this.MethodConfiguration = JsonHelper.Deserialize<List<MethodGroupConfiguration>>(StorageHelper.ReadFileTextSync(Setting.CommandSenderMethodConfiguration));
+				this.MethodConfiguration = JsonHelper.Deserialize<List<MethodGroupConfiguration>>(StorageHelper.ReadFileTextSync(Setting.Data.CommandSender.MethodConfiguration));
 			} catch (Exception e) {
 				App.MainWindow.Controller.PublishTip(InfoBarSeverity.Error, "Failed to load method configuration.", e.ToString());
 				this.MethodConfiguration = new List<MethodGroupConfiguration>();
@@ -119,6 +119,7 @@ namespace Helper.Module.CommandSender {
 			DragEventArgs args
 		) {
 			if (sender is not Page senders) { return; }
+			args.Handled = true;
 			return;
 		}
 

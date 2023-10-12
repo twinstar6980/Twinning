@@ -111,6 +111,18 @@ namespace Helper.Utility {
 
 		// ----------------
 
+		public static void Theme (
+			Window       window,
+			ElementTheme theme
+		) {
+			if (window.Content is FrameworkElement content) {
+				content.RequestedTheme = theme;
+			}
+			return;
+		}
+
+		// ----------------
+
 		public static Window GetForElement (
 			UIElement element
 		) {
@@ -124,18 +136,6 @@ namespace Helper.Utility {
 			var handle = WindowHelper.Handle(window);
 			state &= ExternalLibrary.User32.ShowWindow(handle, 0x00000009);
 			state &= ExternalLibrary.User32.SetForegroundWindow(handle);
-			return state;
-		}
-
-		public static Boolean ApplyMicaBackdrop (
-			Window window
-		) {
-			var state = new BackdropHelper(window).TryApplyMica();
-			if (state) {
-				if (window.Content is Panel content) {
-					content.Background = null;
-				}
-			}
 			return state;
 		}
 

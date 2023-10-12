@@ -4,6 +4,8 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:community="using:CommunityToolkit.WinUI"
+	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:Helper"
 	xmlns:localModuleAnimationViewer="using:Helper.Module.AnimationViewer"
 	xmlns:my="using:Helper.CustomControl"
@@ -24,10 +26,9 @@
 					<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
 						<Button
 							VerticalAlignment="Center"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph=' '}"
 							IsEnabled="False" Opacity="0"
-						>
-							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="" />
-						</Button>
+						/>
 					</my:MStack>
 				</my:MHeaderBar.Action>
 			</my:MHeaderBar>
@@ -66,11 +67,10 @@
 					<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
 						<Button
 							VerticalAlignment="Center"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Clear}}"
 							IsEnabled="{x:Bind Controller.uClearSource_IsEnabled}"
 							Click="{x:Bind Controller.uClearSource_OnClick}"
-						>
-							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Clear}" />
-						</Button>
+						/>
 					</my:MStack>
 				</my:MHeaderBar.Action>
 			</my:MHeaderBar>
@@ -100,10 +100,9 @@
 							/>
 							<Button
 								VerticalAlignment="Center"
+								Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.OpenFile}}"
 								Click="{x:Bind Controller.uSelectAnimationFileSource_OnClick}"
-							>
-								<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.OpenFile}" />
-							</Button>
+							/>
 						</my:MStack>
 						<my:MStack Padding="0,0" HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
 							<TextBox
@@ -115,11 +114,10 @@
 							/>
 							<Button
 								VerticalAlignment="Center"
+								Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.OpenFolderHorizontal}}"
 								IsEnabled="{x:Bind Controller.uSelectImageDirectorySource_IsEnabled}"
 								Click="{x:Bind Controller.uSelectImageDirectorySource_OnClick}"
-							>
-								<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.OpenFolderHorizontal}" />
-							</Button>
+							/>
 						</my:MStack>
 					</my:MStack>
 					<my:MStack Padding="0,0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Orientation="Vertical" Spacing="8">
@@ -243,32 +241,28 @@
 						<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Play}" />
 						<ToggleButton
 							VerticalAlignment="Center"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Touch}}"
 							IsChecked="{x:Bind Controller.uImmediateSelect_IsChecked}"
 							Click="{x:Bind Controller.uImmediateSelect_OnClick}"
-						>
-							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Touch}" />
-						</ToggleButton>
+						/>
 						<ToggleButton
 							VerticalAlignment="Center"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RightArrowKeyTime2}}"
 							IsChecked="{x:Bind Controller.uAutomaticPlay_IsChecked}"
 							Click="{x:Bind Controller.uAutomaticPlay_OnClick}"
-						>
-							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.RightArrowKeyTime2}" />
-						</ToggleButton>
+						/>
 						<ToggleButton
 							VerticalAlignment="Center"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RepeatAll}}"
 							IsChecked="{x:Bind Controller.uRepeatPlay_IsChecked}"
 							Click="{x:Bind Controller.uRepeatPlay_OnClick}"
-						>
-							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.RepeatAll}" />
-						</ToggleButton>
+						/>
 						<ToggleButton
 							VerticalAlignment="Center"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Pinned}}"
 							IsChecked="{x:Bind Controller.uRemainFrameRate_IsChecked}"
 							Click="{x:Bind Controller.uRemainFrameRate_OnClick}"
-						>
-							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Pinned}" />
-						</ToggleButton>
+						/>
 						<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.SpeedMedium}" Opacity="{x:Bind Controller.uWorkingSpriteFrameRateIcon_Opacity}" />
 						<NumberBox
 							Width="64" Height="NaN"
@@ -285,11 +279,10 @@
 						<Button
 							Width="48" Height="NaN"
 							VerticalAlignment="Center"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.LeftArrowKeyTime0}}"
 							IsEnabled="{x:Bind Controller.uWorkingSpritePrevious_IsEnabled}"
 							Click="{x:Bind Controller.uWorkingSpritePrevious_OnClick}"
-						>
-							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.LeftArrowKeyTime0}"/>
-						</Button>
+						/>
 						<Button
 							Width="48" Height="NaN"
 							VerticalAlignment="Center"
@@ -301,11 +294,10 @@
 						<Button
 							Width="48" Height="NaN"
 							VerticalAlignment="Center"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RightArrowKeyTime0}}"
 							IsEnabled="{x:Bind Controller.uWorkingSpriteNext_IsEnabled}"
 							Click="{x:Bind Controller.uWorkingSpriteNext_OnClick}"
-						>
-							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.RightArrowKeyTime0}"/>
-						</Button>
+						/>
 					</my:MStack>
 					<my:MStack Padding="0,0" my:MStack.Weight="1" HorizontalAlignment="Right" VerticalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
 						<FontIcon Width="32" Height="32" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.ScrollMode}" Opacity="{x:Bind Controller.uWorkingSpriteFrameRangeIcon_Opacity}">
@@ -358,10 +350,9 @@
 					<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
 						<Button
 							VerticalAlignment="Center"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph=' '}"
 							IsEnabled="False" Opacity="0"
-						>
-							<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="" />
-						</Button>
+						/>
 					</my:MStack>
 				</my:MHeaderBar.Action>
 			</my:MHeaderBar>

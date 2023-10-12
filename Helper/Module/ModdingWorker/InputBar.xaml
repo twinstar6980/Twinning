@@ -4,6 +4,8 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:community="using:CommunityToolkit.WinUI"
+	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:Helper"
 	xmlns:localModuleModdingWorker="using:Helper.Module.ModdingWorker"
 	xmlns:my="using:Helper.CustomControl"
@@ -188,44 +190,20 @@
 										Width="64" Height="NaN"
 										VerticalAlignment="Stretch"
 										HorizontalContentAlignment="Center"
+										Content="{community:FontIcon FontSize={StaticResource SmallIconSize}, Glyph={StaticResource FluentIconGlyph.StorageOptical}}"
 										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
 									>
 										<DropDownButton.Flyout>
 											<MenuFlyout Placement="TopEdgeAlignedRight">
-												<MenuFlyoutItem Text="Generate" Click="{x:Bind Controller.uPathCommandGenerate_OnClick}">
-													<MenuFlyoutItem.Icon>
-														<FontIcon FontSize="{StaticResource MiniIconSize}" Glyph="{StaticResource FluentIconGlyph.Rename}" />
-													</MenuFlyoutItem.Icon>
-												</MenuFlyoutItem>
-												<MenuFlyoutItem Text="Move" Click="{x:Bind Controller.uPathCommandMove_OnClick}">
-													<MenuFlyoutItem.Icon>
-														<FontIcon FontSize="{StaticResource MiniIconSize}" Glyph="{StaticResource FluentIconGlyph.MoveToFolder}" />
-													</MenuFlyoutItem.Icon>
-												</MenuFlyoutItem>
-												<MenuFlyoutItem Text="Delete" Click="{x:Bind Controller.uPathCommandDelete_OnClick}">
-													<MenuFlyoutItem.Icon>
-														<FontIcon FontSize="{StaticResource MiniIconSize}" Glyph="{StaticResource FluentIconGlyph.Delete}" />
-													</MenuFlyoutItem.Icon>
-												</MenuFlyoutItem>
-												<MenuFlyoutItem Text="Overwrite" Click="{x:Bind Controller.uPathCommandOverwrite_OnClick}">
-													<MenuFlyoutItem.Icon>
-														<FontIcon FontSize="{StaticResource MiniIconSize}" Glyph="{StaticResource FluentIconGlyph.Save}" />
-													</MenuFlyoutItem.Icon>
-												</MenuFlyoutItem>
+												<MenuFlyoutItem Text="Generate" Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Rename}}" Click="{x:Bind Controller.uPathCommandGenerate_OnClick}" />
+												<MenuFlyoutItem Text="Move" Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.MoveToFolder}}" Click="{x:Bind Controller.uPathCommandMove_OnClick}" />
+												<MenuFlyoutItem Text="Delete" Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Delete}}" Click="{x:Bind Controller.uPathCommandDelete_OnClick}" />
+												<MenuFlyoutItem Text="Overwrite" Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Save}}" Click="{x:Bind Controller.uPathCommandOverwrite_OnClick}" />
 												<MenuFlyoutSeparator />
-												<MenuFlyoutItem Text="File" Click="{x:Bind Controller.uPathPickFile_OnClick}">
-													<MenuFlyoutItem.Icon>
-														<FontIcon FontSize="{StaticResource MiniIconSize}" Glyph="{StaticResource FluentIconGlyph.Document}" />
-													</MenuFlyoutItem.Icon>
-												</MenuFlyoutItem>
-												<MenuFlyoutItem Text="Directory" Click="{x:Bind Controller.uPathPickDirectory_OnClick}">
-													<MenuFlyoutItem.Icon>
-														<FontIcon FontSize="{StaticResource MiniIconSize}" Glyph="{StaticResource FluentIconGlyph.Folder}" />
-													</MenuFlyoutItem.Icon>
-												</MenuFlyoutItem>
+												<MenuFlyoutItem Text="File" Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Document}}" Click="{x:Bind Controller.uPathPickFile_OnClick}" />
+												<MenuFlyoutItem Text="Directory" Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Folder}}" Click="{x:Bind Controller.uPathPickDirectory_OnClick}" />
 											</MenuFlyout>
 										</DropDownButton.Flyout>
-										<FontIcon FontSize="{StaticResource SmallIconSize}" Glyph="{StaticResource FluentIconGlyph.StorageOptical}" />
 									</DropDownButton>
 								</my:MStack>
 							</Setter.Value>
@@ -263,10 +241,9 @@
 		/>
 		<Button
 			VerticalAlignment="Stretch"
+			Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Send}}"
 			IsEnabled="{x:Bind Controller.uSubmit_IsEnabled}"
 			Click="{x:Bind Controller.uSubmit_OnClick}"
-		>
-			<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Send}" />
-		</Button>
+		/>
 	</my:MStack>
 </UserControl>

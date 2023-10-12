@@ -4,6 +4,7 @@
 using Helper;
 using Microsoft.UI.Xaml.Media.Animation;
 using Windows.Foundation;
+using FluentIconGlyph = Helper.CustomControl.FluentIconGlyph;
 
 namespace Helper.Module {
 
@@ -49,7 +50,7 @@ namespace Helper.Module {
 			ModuleType    type,
 			List<String>? option
 		) {
-			var model = ModuleInformationConstant.Value[(Size)type];
+			var model = ModuleInformationConstant.Query(type);
 			var frame = new Frame() {
 				ContentTransitions = new TransitionCollection() {
 					new NavigationThemeTransition() {
@@ -122,19 +123,63 @@ namespace Helper.Module {
 		) {
 			if (sender is not TabView senders) { return; }
 			var menu = new MenuFlyout();
-			foreach (var module in ModuleInformationConstant.Value) {
+			foreach (var jumper in Setting.Data.ModuleLauncher.ModuleJumperConfiguration) {
+				var module = ModuleInformationConstant.Query(jumper.ModuleType);
 				var menuItem = new MenuFlyoutItem() {
 					Icon = new FontIcon() {
 						Glyph = module.Icon,
 					},
-					Text = module.Title,
+					Text = jumper.Title,
 				};
 				menuItem.Click += async (_, _) => {
-					await this.InsertTabItem(module.Type, null);
+					await this.InsertTabItem(jumper.ModuleType, jumper.ModuleOption);
 					return;
 				};
 				menu.Items.Add(menuItem);
 			}
+			menu.Items.Add(new MenuFlyoutSeparator());
+			var pinnedList = new MenuFlyoutSubItem() {
+				Icon = new FontIcon() {
+					Glyph = FluentIconGlyph.Pinned,
+				},
+				Text = "Pinned",
+			};
+			foreach (var jumper in Setting.Data.ModuleLauncher.PinnedJumperConfiguration) {
+				var module = ModuleInformationConstant.Query(jumper.ModuleType);
+				var menuItem = new MenuFlyoutItem() {
+					Icon = new FontIcon() {
+						Glyph = module.Icon,
+					},
+					Text = jumper.Title,
+				};
+				menuItem.Click += async (_, _) => {
+					await this.InsertTabItem(jumper.ModuleType, jumper.ModuleOption);
+					return;
+				};
+				pinnedList.Items.Add(menuItem);
+			}
+			menu.Items.Add(pinnedList);
+			var recentList = new MenuFlyoutSubItem() {
+				Icon = new FontIcon() {
+					Glyph = FluentIconGlyph.Recent,
+				},
+				Text = "Recent",
+			};
+			foreach (var jumper in Setting.Data.ModuleLauncher.RecentJumperConfiguration) {
+				var module = ModuleInformationConstant.Query(jumper.ModuleType);
+				var menuItem = new MenuFlyoutItem() {
+					Icon = new FontIcon() {
+						Glyph = module.Icon,
+					},
+					Text = jumper.Title,
+				};
+				menuItem.Click += async (_, _) => {
+					await this.InsertTabItem(jumper.ModuleType, jumper.ModuleOption);
+					return;
+				};
+				recentList.Items.Add(menuItem);
+			}
+			menu.Items.Add(recentList);
 			menu.ShowAt(sender.TabStripFooter as UIElement, new FlyoutShowOptions() {
 				Placement = FlyoutPlacementMode.BottomEdgeAlignedLeft,
 				Position = new Point(-40.0, +40.0),
@@ -209,7 +254,7 @@ namespace Helper.Module {
 
 		public String uRoot_Header {
 			get {
-				return this.Model.Title;
+				return this.Model.Name;
 			}
 		}
 

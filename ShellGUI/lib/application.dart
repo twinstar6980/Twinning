@@ -18,8 +18,8 @@ class Application extends StatelessWidget {
 
   // ----------------
 
-  final Setting  setting;
-  final Command? command;
+  final Setting setting;
+  final Command command;
 
   // ----------------
 

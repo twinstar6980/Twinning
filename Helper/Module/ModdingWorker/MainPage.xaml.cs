@@ -80,9 +80,9 @@ namespace Helper.Module.ModdingWorker {
 
 		public void Initialize (
 		) {
-			this.AutomaticClose = Setting.ModdingWorkerAutomaticClose;
-			this.AutomaticScroll = Setting.ModdingWorkerAutomaticScroll;
-			this.ImmediateLaunch = Setting.ModdingWorkerImmediateLaunch;
+			this.AutomaticClose = Setting.Data.ModdingWorker.AutomaticClose;
+			this.AutomaticScroll = Setting.Data.ModdingWorker.AutomaticScroll;
+			this.ImmediateLaunch = Setting.Data.ModdingWorker.ImmediateLaunch;
 			this.SessionHost = new HelperHost(this);
 			return;
 		}
@@ -151,7 +151,7 @@ namespace Helper.Module.ModdingWorker {
 				await new ContentDialog() {
 					XamlRoot = this.View.XamlRoot,
 					Title = "Session In Progress",
-					CloseButtonText = "Cancel",
+					CloseButtonText = "Close",
 					DefaultButton = ContentDialogButton.Close,
 				}.ShowAsync();
 				return false;
@@ -165,10 +165,10 @@ namespace Helper.Module.ModdingWorker {
 		) {
 			var result = default(String?);
 			var exception = default(Exception?);
-			var kernel = new String(Setting.ModdingWorkerKernel);
-			var script = new String(Setting.ModdingWorkerScript);
-			var argument = new List<String>(new[] { Setting.ModdingWorkerArgument, this.AdditionalArgument }.SelectMany((value) => (value)));
-			var temporaryKernel = StorageHelper.GetTemporaryPath();
+			var kernel = new String(Setting.Data.ModdingWorker.Kernel);
+			var script = new String(Setting.Data.ModdingWorker.Script);
+			var argument = new List<String>(new[] { Setting.Data.ModdingWorker.Argument, this.AdditionalArgument }.SelectMany((value) => (value)));
+			var temporaryKernel = StorageHelper.Temporary();
 			var library = new Bridge.Library();
 			this.SessionTask = new Task<String>(() => (Bridge.Launcher.Launch(this.SessionHost, library, script, argument)));
 			this.NotifyPropertyChanged(
@@ -284,9 +284,10 @@ namespace Helper.Module.ModdingWorker {
 			DragEventArgs args
 		) {
 			if (sender is not Page senders) { return; }
+			args.Handled = true;
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				var item = await args.DataView.GetStorageItemsAsync();
-				this.AdditionalArgument.AddRange(item.Select((value) => (StorageHelper.Normalize(value.Path))).ToList());
+				this.AdditionalArgument.AddRange(item.Select((value) => (StorageHelper.Regularize(value.Path))).ToList());
 				this.NotifyPropertyChanged(
 					nameof(this.uAdditionalArgumentCount_Text),
 					nameof(this.uAdditionalArgument_Text)

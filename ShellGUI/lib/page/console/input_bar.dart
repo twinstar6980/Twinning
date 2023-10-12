@@ -239,8 +239,7 @@ class IntegerInputBarContent extends StatefulWidget {
 
 class _IntegerInputBarContentState extends State<IntegerInputBarContent> {
 
-  Integer? _value = null;
-
+  Integer?              _value = null;
   TextEditingController _controller = TextEditingController(text: '');
 
   // ----------------
@@ -293,8 +292,7 @@ class FloaterInputBarContent extends StatefulWidget {
 
 class _FloaterInputBarContentState extends State<FloaterInputBarContent> {
 
-  Floater? _value = null;
-
+  Floater?              _value = null;
   TextEditingController _controller = TextEditingController(text: '');
 
   // ----------------
@@ -347,9 +345,8 @@ class SizeInputBarContent extends StatefulWidget {
 
 class _SizeInputBarContentState extends State<SizeInputBarContent> {
 
-  Floater? _value = null;
-  Integer  _unit  = 3;
-
+  Floater?              _value = null;
+  Integer               _unit  = 3;
   TextEditingController _controller = TextEditingController(text: '');
 
   // ----------------
@@ -435,8 +432,7 @@ class StringInputBarContent extends StatefulWidget {
 
 class _StringInputBarContentState extends State<StringInputBarContent> {
 
-  String? _value = null;
-
+  String?               _value = null;
   TextEditingController _controller = TextEditingController(text: '');
 
   // ----------------
@@ -489,8 +485,7 @@ class PathInputBarContent extends StatefulWidget {
 
 class _PathInputBarContentState extends State<PathInputBarContent> {
 
-  String? _value = null;
-
+  String?               _value = null;
   TextEditingController _controller = TextEditingController(text: '');
 
   // ----------------

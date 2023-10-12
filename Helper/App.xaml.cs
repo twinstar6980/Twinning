@@ -6,6 +6,7 @@ using Helper.Utility;
 using Helper.CustomControl;
 using Windows.ApplicationModel;
 using Windows.UI.StartScreen;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.Windows.AppNotifications;
 
 namespace Helper {
@@ -14,9 +15,11 @@ namespace Helper {
 
 		#region instance
 
-		public static App Instance { get; set; } = default!;
+		public static App Instance { get; private set; } = default!;
 
-		public static Module.MainWindow MainWindow { get; set; } = default!;
+		public static Module.MainWindow MainWindow { get; private set; } = default!;
+
+		public static String ProgramFile { get; private set; } = default!;
 
 		#endregion
 
@@ -36,8 +39,8 @@ namespace Helper {
 			this.UnhandledException += this.OnUnhandledException;
 			var window = default(Window);
 			try {
+				App.ProgramFile = StorageHelper.ToWindowsStyle(StorageHelper.Parent(Environment.GetCommandLineArgs()[0]) + "/Helper.exe");
 				Setting.Initialize();
-				this.RegisterTaskJumpList().Wait(0);
 				this.InitializeNotification();
 				var optionWindowPosition = default(Tuple<Integer, Integer>?);
 				var optionWindowSize = default(Tuple<Integer, Integer>?);
@@ -90,27 +93,28 @@ namespace Helper {
 				if (optionWindowPosition is null) {
 					WindowHelper.Center(window);
 				}
-				(window as Module.MainWindow)!.Controller.InsertTabItem(optionModuleType ?? Module.ModuleType.ApplicationSetting, optionModuleOption ?? null).Wait(0);
+				(window as Module.MainWindow)!.Controller.InsertTabItem(optionModuleType ?? Module.ModuleType.ModuleLauncher, optionModuleOption ?? null).Wait(0);
 				App.MainWindow = (window as Module.MainWindow)!;
 			} catch (Exception e) {
-				window = new Window();
-				window.Content = new MBox() {
-					Padding = new Thickness(16),
-					Children = {
-						new TextBlock() {
-							HorizontalAlignment = HorizontalAlignment.Center,
-							VerticalAlignment = VerticalAlignment.Center,
-							TextWrapping = TextWrapping.Wrap,
-							Text = e.ToString(),
+				window = new Window() {
+					SystemBackdrop = new MicaBackdrop(),
+					Content = new MBox() {
+						Padding = new Thickness(16),
+						Children = {
+							new TextBlock() {
+								HorizontalAlignment = HorizontalAlignment.Center,
+								VerticalAlignment = VerticalAlignment.Center,
+								TextWrapping = TextWrapping.Wrap,
+								Text = e.ToString(),
+							},
 						},
 					},
 				};
 			}
 			WindowHelper.Track(window);
 			WindowHelper.Title(window, Package.Current.DisplayName);
-			WindowHelper.Icon(window, $"{StorageHelper.GetPathParent(Environment.GetCommandLineArgs()[0])}/Asset/Logo.ico");
-			Setting.AppearanceThemeMode = Setting.AppearanceThemeMode;
-			WindowHelper.ApplyMicaBackdrop(window);
+			WindowHelper.Icon(window, $"{StorageHelper.Parent(App.ProgramFile)}/Asset/Logo.ico");
+			WindowHelper.Theme(window, Setting.Data.Application.ThemeMode);
 			WindowHelper.Activate(window);
 			return;
 		}
@@ -127,7 +131,7 @@ namespace Helper {
 						XamlRoot = App.MainWindow.Content.XamlRoot,
 						Title = "Unhandled Exception",
 						Content = args.Exception.ToString(),
-						CloseButtonText = "Cancel",
+						CloseButtonText = "Close",
 						DefaultButton = ContentDialogButton.Close,
 					}.ShowAsync();
 					args.Handled = true;
@@ -138,9 +142,11 @@ namespace Helper {
 			return;
 		}
 
-		// ----------------
+		#endregion
 
-		private AppNotificationManager AppNotificationManager = default!;
+		#region utility
+
+		private AppNotificationManager NotificationManager = default!;
 
 		private void NotificationManager_OnNotificationInvoked (
 			AppNotificationManager            sender,
@@ -155,71 +161,60 @@ namespace Helper {
 
 		private void InitializeNotification (
 		) {
-			this.AppNotificationManager = AppNotificationManager.Default;
-			this.AppNotificationManager.NotificationInvoked += this.NotificationManager_OnNotificationInvoked;
-			this.AppNotificationManager.Register();
+			this.NotificationManager = AppNotificationManager.Default;
+			this.NotificationManager.NotificationInvoked += this.NotificationManager_OnNotificationInvoked;
+			this.NotificationManager.Register();
 			return;
 		}
 
 		public void PushNotification (
 			AppNotification notification
 		) {
-			this.AppNotificationManager.Show(notification);
+			this.NotificationManager.Show(notification);
 			return;
 		}
 
 		// ----------------
 
-		public async Task RegisterTaskJumpList (
+		public async Task AppendRecentJumperItem (
+			Module.ModuleLauncher.JumperConfiguration configuration
 		) {
-			if (!JumpList.IsSupported()) {
-				return;
-			}
-			var list = await JumpList.LoadCurrentAsync();
-			for (var index = 0; index < list.Items.Count;) {
-				var item = list.Items[index];
-				if (item.GroupName == "") {
-					list.Items.RemoveAt(index);
-				} else {
-					index++;
-				}
-			}
-			foreach (var module in Module.ModuleInformationConstant.Value) {
-				var item = JumpListItem.CreateWithArguments(ProcessHelper.EncodeCommandLineString(null, new List<String>() { "-ModuleType", module.Type.ToString() }), "");
-				item.Logo = new Uri("ms-appx:///Asset/Logo.png");
-				item.GroupName = "";
-				item.DisplayName = module.Title;
-				item.Description = "";
-				list.Items.Add(item);
-			}
-			await list.SaveAsync();
+			Setting.Data.ModuleLauncher.RecentJumperConfiguration.RemoveAll((value) => (Module.ModuleLauncher.JumperConfiguration.Compare(value, configuration)));
+			Setting.Data.ModuleLauncher.RecentJumperConfiguration.Insert(0, configuration);
+			Setting.Save();
 			return;
 		}
 
-		public async Task AppendRecentJumpList (
-			String       title,
-			List<String> argument
+		public async Task RegisterShellJumpList (
 		) {
 			if (!JumpList.IsSupported()) {
 				return;
 			}
-			var argumentString = ProcessHelper.EncodeCommandLineString(null, argument);
 			var list = await JumpList.LoadCurrentAsync();
-			for (var index = 0; index < list.Items.Count;) {
-				var item = list.Items[index];
-				if (item.GroupName == "Recent" && item.Arguments == argumentString) {
-					list.Items.RemoveAt(index);
-				} else {
-					index++;
-				}
+			list.Items.Clear();
+			foreach (var jumper in Setting.Data.ModuleLauncher.ModuleJumperConfiguration) {
+				var item = JumpListItem.CreateWithArguments(ProcessHelper.EncodeCommandLineString(null, Module.ModuleLauncher.JumperConfiguration.GenerateArgument(jumper)), "");
+				item.Logo = new Uri("ms-appx:///Asset/Logo.png");
+				item.GroupName = "";
+				item.DisplayName = jumper.Title;
+				item.Description = "";
+				list.Items.Add(item);
 			}
-			{
-				var item = JumpListItem.CreateWithArguments(argumentString, "");
-				item.Logo = new Uri($"ms-appx:///Asset/Logo.png");
+			foreach (var jumper in Setting.Data.ModuleLauncher.PinnedJumperConfiguration) {
+				var item = JumpListItem.CreateWithArguments(ProcessHelper.EncodeCommandLineString(null, Module.ModuleLauncher.JumperConfiguration.GenerateArgument(jumper)), "");
+				item.Logo = new Uri("ms-appx:///Asset/Logo.png");
+				item.GroupName = "Pinned";
+				item.DisplayName = jumper.Title;
+				item.Description = "";
+				list.Items.Add(item);
+			}
+			foreach (var jumper in Setting.Data.ModuleLauncher.RecentJumperConfiguration) {
+				var item = JumpListItem.CreateWithArguments(ProcessHelper.EncodeCommandLineString(null, Module.ModuleLauncher.JumperConfiguration.GenerateArgument(jumper)), "");
+				item.Logo = new Uri("ms-appx:///Asset/Logo.png");
 				item.GroupName = "Recent";
-				item.DisplayName = title;
-				item.Description = argumentString;
-				list.Items.Insert(0, item);
+				item.DisplayName = jumper.Title;
+				item.Description = "";
+				list.Items.Add(item);
 			}
 			await list.SaveAsync();
 			return;

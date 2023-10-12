@@ -12,13 +12,13 @@ namespace Helper.Module.ModdingWorker {
 		) {
 			var state = true;
 			try {
-				if (Setting.ModdingWorkerAlternativeLaunchScript.Length == 0) {
+				if (Setting.Data.ModdingWorker.AlternativeLaunchScript.Length == 0) {
 					var option = new List<String>();
 					option.Add("-AdditionalArgument");
 					option.AddRange(argument);
 					await App.MainWindow.Controller.InsertTabItem(ModuleType.ModdingWorker, option);
 				} else {
-					ProcessHelper.CreateProcessForCommandScript(Setting.ModdingWorkerAlternativeLaunchScript, argument).Wait(0);
+					ProcessHelper.CreateProcessForCommandScript(Setting.Data.ModdingWorker.AlternativeLaunchScript, argument).Wait(0);
 				}
 			} catch (Exception e) {
 				App.MainWindow.Controller.PublishTip(InfoBarSeverity.Error, "Failed to forward.", e.ToString());
