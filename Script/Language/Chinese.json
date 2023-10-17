@@ -607,14 +607,14 @@
 	"executable.extract_rsb_from_pvz2_cn_apk_directory:input_directory": "输入目录：{}",
 	"executable.extract_rsb_from_pvz2_cn_apk_directory:output_directory": "输出目录：{}",
 	"executable.extract_rsb_from_pvz2_cn_apk_directory:extract_start": "提取开始",
-	"executable.extract_rsb_from_pvz2_cn_apk_directory:extract_finish": "提取完成",
+	"executable.extract_rsb_from_pvz2_cn_apk_directory:extract_finish": "提取完毕",
 	// Entry/Entry
 	"entry:input_command": "请依次输入命令参数",
 	"entry:input_finish_if_null": "输入为空则结束输入",
-	"entry:all_command_parse": "所有命令已解析",
+	"entry:all_command_parse": "所有命令解析完毕",
 	"entry:all_command_count": "共 {} 条",
-	"entry:all_command_finish": "所有命令已执行",
+	"entry:all_command_finish": "所有命令执行完毕",
 	"entry:current_command_execute": "命令执行中：{}",
-	"entry:current_command_finish": "命令执行完成",
+	"entry:current_command_finish": "命令执行完毕",
 	"entry:duration": "用时 {} s",
 }

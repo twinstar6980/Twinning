@@ -248,8 +248,8 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 										texture_information_data.u32(0x04),
 									],
 									format: texture_information_data.u32(0x0C),
-									row_byte_count: texture_information_data.u32(0x08),
-								} as any,
+									pitch: texture_information_data.u32(0x08),
+								},
 							};
 						}
 					}

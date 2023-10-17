@@ -221,9 +221,9 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 						KernelX.JSON.write_fs(`${option.pam.directory}/${raw_file}`, definition_json);
 					}
 					if (option.pam.flash !== null) {
-						let flash_package = Support.PopCap.Animation.Convert.Flash.From.from(definition_js as any);
+						let flash_package = Support.PopCap.Animation.Convert.Flash.From.from(definition_js);
 						Support.PopCap.Animation.Convert.Flash.save_flash_package(`${option.pam.directory}/${flash_directory}`, flash_package);
-						Support.PopCap.Animation.Convert.Flash.SourceManager.create_fsh(`${option.pam.directory}/${flash_directory}`, definition_js as any);
+						Support.PopCap.Animation.Convert.Flash.SourceManager.create_fsh(`${option.pam.directory}/${flash_directory}`, definition_js);
 						Support.PopCap.Animation.Convert.Flash.create_xfl_content_file(`${option.pam.directory}/${flash_directory}`);
 					}
 				} catch (e) {

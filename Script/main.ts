@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 87;
+	export const k_version = 88;
 
 	// ------------------------------------------------
 
@@ -131,11 +131,6 @@ namespace TwinStar.Script {
 			KernelX.FileSystem.create_directory(workspace());
 			KernelX.FileSystem.create_directory(temporary());
 			KernelX.Process.set_working_directory(workspace());
-			return;
-		}
-
-		export function deinitialize(
-		): void {
 			return;
 		}
 
@@ -295,7 +290,6 @@ namespace TwinStar.Script {
 				Console.pause();
 			}
 			// 释放资源
-			Home.deinitialize();
 			g_thread_manager.resize(0);
 			return '';
 		}

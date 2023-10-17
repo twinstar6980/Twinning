@@ -3255,11 +3255,11 @@ declare namespace TwinStar.Kernel {
 						/** 精灵 */
 						type Sprite = {
 							/** 名称。版本4开始存在 */
-							name: undefined | string;
+							name?: string;
 							/** 帧率。版本4开始存在 */
-							frame_rate: undefined | number;
+							frame_rate?: number;
 							/** 工作区间。版本5开始存在 */
-							work_area: undefined | [bigint, bigint];
+							work_area?: [bigint, bigint];
 							/** 帧 */
 							frame: Array<Frame>;
 						};
@@ -3269,7 +3269,7 @@ declare namespace TwinStar.Kernel {
 							/** 名称 */
 							name: string;
 							/** 尺寸。版本4开始存在 */
-							size: undefined | [bigint, bigint];
+							size?: [bigint, bigint];
 							/** 变换。版本1中为RotateTranslateTransform，之后为MatrixTranslateTransform */
 							transform: RotateTranslateTransform | MatrixTranslateTransform;
 						};
@@ -3307,11 +3307,11 @@ declare namespace TwinStar.Kernel {
 
 						// ------------------------------------------------
 
-						static json(it: JSON.Value<undefined>, version: Version): Animation;
+						static json(it: JSON.Value<JS_N.Animation>, version: Version): Animation;
 
-						get_json(version: Version): JSON.Value<undefined>;
+						get_json(version: Version): JSON.Value<JS_N.Animation>;
 
-						set_json(it: JSON.Value<undefined>, version: Version): Void;
+						set_json(it: JSON.Value<JS_N.Animation>, version: Version): Void;
 
 						// ------------------------------------------------
 
@@ -4318,13 +4318,13 @@ declare namespace TwinStar.Kernel {
 							/** 尺寸 */
 							size: [bigint, bigint];
 							/** 缩放。当 version.extended_texture_information_for_pvz2_cn >= 2 时存在 */
-							scale: undefined | bigint;
+							scale?: bigint;
 							/** 格式 */
 							format: bigint;
 							/** 行字节数 */
 							pitch: bigint;
 							/** 附加字节数。当 version.extended_texture_information_for_pvz2_cn >= 1 时存在 */
-							additional_byte_count: undefined | bigint;
+							additional_byte_count?: bigint;
 						};
 
 						/** 资源附加 */

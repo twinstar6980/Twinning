@@ -152,8 +152,8 @@ namespace TwinStar.Script.PathUtility {
 		let result = path;
 		let suffix = 0;
 		while (KernelX.FileSystem.exist(result)) {
-			result = `${path}.${suffix}`;
 			suffix += 1;
+			result = `${path}.${suffix}`;
 		}
 		return result;
 	}
