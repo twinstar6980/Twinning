@@ -17,14 +17,12 @@ namespace Helper.Module.ModuleLauncher {
 
 		// ----------------
 
-		public static Boolean Compare (
+		public static Boolean CompareForModule (
 			JumperConfiguration thix,
 			JumperConfiguration that
 		) {
-			return thix.Title.Equals(that.Title)
-				&& thix.ModuleType.Equals(that.ModuleType)
-				&& thix.ModuleOption.SequenceEqual(that.ModuleOption)
-				&& thix.WindowOption.SequenceEqual(that.WindowOption);
+			return thix.ModuleType.Equals(that.ModuleType)
+				&& thix.ModuleOption.SequenceEqual(that.ModuleOption);
 		}
 
 		public static List<String> GenerateArgument (

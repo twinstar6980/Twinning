@@ -235,13 +235,24 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export function integer_from_byte_le(
+	export function integer_from_byte(
 		byte_array: ArrayBuffer,
+		endian: 'little' | 'big' | 'current' = 'current',
 	): bigint {
 		let integer_array = new Uint8Array(byte_array);
 		let result = 0n;
-		for (let index in integer_array) {
-			result |= BigInt(integer_array[index]) << BigInt(8 * Number(index));
+		if (endian === 'current') {
+			endian = Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value ? 'big' : 'little';
+		}
+		if (endian === 'little') {
+			for (let index in integer_array) {
+				result = result | BigInt(integer_array[index]) << BigInt(8 * Number(index));
+			}
+		}
+		if (endian === 'big') {
+			for (let index in integer_array) {
+				result = result << 8n | BigInt(integer_array[index]);
+			}
 		}
 		return result;
 	}
@@ -285,7 +296,7 @@ namespace TwinStar.Script {
 	// ------------------------------------------------
 
 	export function split_error_stack(
-		string: string | undefined,
+		string: undefined | string,
 	): Array<string> {
 		let list: Array<string>;
 		if (string === undefined) {

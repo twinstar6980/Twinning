@@ -3287,7 +3287,7 @@ declare namespace TwinStar.Kernel {
 							/** 精灵 */
 							sprite: Array<Sprite>;
 							/** 主精灵。版本4开始为可选项 */
-							main_sprite: Sprite | null;
+							main_sprite: null | Sprite;
 						};
 
 					}
@@ -4914,8 +4914,8 @@ declare namespace TwinStar.Kernel {
 	type JS_MainFunction = (
 		data: {
 			argument: Array<string>;
-			result: string | undefined;
-			error: any | undefined;
+			result: undefined | string;
+			error: undefined | any;
 		},
 	) => void;
 

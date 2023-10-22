@@ -71,7 +71,7 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 		let value = ``;
 		let character_size = { value: undefined! };
 		size.value = 0;
-		for (let index = 0n; index < length; ++index) {
+		for (let index = 0n; index < length; index++) {
 			let character = read_utf8_character(data, character_size);
 			value += String.fromCodePoint(Number(character));
 			size.value += character_size.value;
@@ -102,7 +102,7 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 		length: bigint,
 	): string {
 		let value = ``;
-		for (let index = 0n; index < length; ++index) {
+		for (let index = 0n; index < length; index++) {
 			let character = data.u8();
 			value += String.fromCodePoint(Number(character));
 		}

@@ -80,7 +80,7 @@ namespace TwinStar::ForwarderForWindows {
 			}
 			destination.push_back(element);
 			if (element == L'\\') {
-				++current_backslash_count;
+				current_backslash_count += 1;
 			} else {
 				current_backslash_count = 0;
 			}
@@ -173,9 +173,9 @@ namespace TwinStar::ForwarderForWindows {
 		state_h = selection->GetCount(&count);
 		assert_test(state_h == S_OK);
 		result.reserve(count);
-		for (auto i = DWORD{0}; i < count; ++i) {
+		for (auto index = DWORD{0}; index < count; ++index) {
 			auto item = std::add_pointer_t<IShellItem>{};
-			state_h = selection->GetItemAt(i, &item);
+			state_h = selection->GetItemAt(index, &item);
 			assert_test(state_h == S_OK);
 			auto name = LPWSTR{};
 			state_h = item->GetDisplayName(SIGDN_FILESYSPATH, &name);

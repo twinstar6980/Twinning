@@ -53,7 +53,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 		resource_manifest: RegularResourceManifest.Package,
 		option: Option,
 	): void {
-		let find_key_ignore_case = <T>(map: Record<string, T>, key: string): string | null => {
+		let find_key_ignore_case = <T>(map: Record<string, T>, key: string): null | string => {
 			let key_lower = key.toLowerCase();
 			for (let key_in_map in map) {
 				if (key_in_map.toLowerCase() === key_lower) {
@@ -148,7 +148,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 		}
 		Console.information(los('support.pvz2.resource_convert:convert_resource'), [
 		]);
-		let audio_temporary_directory = Home.new_temporary();
+		let audio_temporary_directory = Home.new_temporary(null, 'directory');
 		iterate_resource(true)((group, subgroup, resource) => {
 			let path = resource[1].path;
 			if (option.rton !== null && path.endsWith('.rton')) {

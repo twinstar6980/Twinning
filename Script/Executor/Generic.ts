@@ -54,17 +54,17 @@ namespace TwinStar.Script.Executor {
 						disable_filter: false,
 					};
 					if (index < raw_command.length && raw_command[index] === '-disable_filter') {
-						++index;
+						index++;
 						command.input.disable_filter = true;
 					}
 				}
 			}
 			if (index < raw_command.length && raw_command[index] === '-method') {
-				++index;
+				index++;
 				command.method = raw_command[index++];
 			}
 			if (index < raw_command.length && raw_command[index] === '-argument') {
-				++index;
+				index++;
 				let argument = KernelX.JSON.read_s_js(raw_command[index++]);
 				assert_test(argument !== null && typeof argument === 'object' && (argument as Object).constructor.name === 'Object' && !(argument instanceof Array), `argument must be a object`);
 				command.argument = argument;
@@ -79,7 +79,7 @@ namespace TwinStar.Script.Executor {
 		method: Array<Method>,
 	): null | [boolean, number] {
 		let state = undefined! as [boolean, number] | string;
-		let selected_method: Method | null;
+		let selected_method: null | Method;
 		if (command.method !== null) {
 			let target_method = method.find((e) => (e.id === command.method));
 			if (target_method === undefined) {

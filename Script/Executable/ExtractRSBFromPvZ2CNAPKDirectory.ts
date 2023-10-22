@@ -6,7 +6,8 @@ namespace TwinStar.Script.Executable.ExtractRSBFromPvZ2CNAPKDirectory {
 		Console.information(los('executable.extract_rsb_from_pvz2_cn_apk_directory:provide_input_directory'), [
 		]);
 		let input_directory = Console.path('directory', 'input', null, null);
-		Console.information(los('executable.extract_rsb_from_pvz2_cn_apk_directory:provide_output_directory'), []);
+		Console.information(los('executable.extract_rsb_from_pvz2_cn_apk_directory:provide_output_directory'), [
+		]);
 		let output_directory = Console.path('directory', 'output', null, null);
 		Console.information(los('executable.extract_rsb_from_pvz2_cn_apk_directory:extract_start'), [
 			los('executable.extract_rsb_from_pvz2_cn_apk_directory:input_directory', input_directory),

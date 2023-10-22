@@ -33,7 +33,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.En
 		data.i32(BigInt(value.length));
 		let string_c = Kernel.String.value(value);
 		let string_view = new Uint8Array(Kernel.Miscellaneous.cast_CharacterListView_to_ByteListView(Kernel.Miscellaneous.cast_String_to_CharacterListView(string_c)).value);
-		for (let index = 0; index < string_view.length; ++index) {
+		for (let index = 0; index < string_view.length; index++) {
 			data.u8(BigInt(string_view[index]));
 		}
 		return;
@@ -47,7 +47,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.En
 	): void {
 		write_integer(data, definition.slot_count);
 		write_integer(data, BigInt(definition.groups.length));
-		for (let groups_index = 0; groups_index < definition.groups.length; ++groups_index) {
+		for (let groups_index = 0; groups_index < definition.groups.length; groups_index++) {
 			let group: ResourceManifest.GroupBase & (ResourceManifest.CompositeGroupAdditional & ResourceManifest.SimpleGroupAdditional) = { ...definition.groups[groups_index] } as any;
 			group.subgroups = defined_or(group.subgroups, []);
 			group.resources = defined_or(group.resources, []);
@@ -63,12 +63,12 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.En
 			if (group.parent !== undefined) {
 				write_string(data, group.parent);
 			}
-			for (let subgroups_index = 0; subgroups_index < group.subgroups.length; ++subgroups_index) {
+			for (let subgroups_index = 0; subgroups_index < group.subgroups.length; subgroups_index++) {
 				let subgroup: ResourceManifest.CompositeGroupAdditional['subgroups'][number] = group.subgroups[subgroups_index];
 				write_integer(data, defined_or(subgroup.res, 0n));
 				write_string(data, subgroup.id);
 			}
-			for (let resources_index = 0; resources_index < group.resources.length; ++resources_index) {
+			for (let resources_index = 0; resources_index < group.resources.length; resources_index++) {
 				let resource: ResourceManifest.ResourceBase & (ResourceManifest.GenericResourceAdditional & ResourceManifest.AtlasImageResourceAdditional & ResourceManifest.SpriteImageResourceAdditional) = { ...group.resources[resources_index] } as any;
 				if (resource.type !== 'Image' || resource.parent === undefined) {
 					resource.y = 0x7FFFFFFFn;

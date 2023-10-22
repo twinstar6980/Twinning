@@ -41,7 +41,7 @@ namespace TwinStar.Script.Executor.Implement.pvz2.text_table {
 					}),
 				],
 				worker: ({ source_file, destination_version, destination_file }) => {
-					Support.PvZ2.TextTable.Convert.convert_fs(source_file, destination_file, null, destination_version as any);
+					Support.PvZ2.TextTable.Convert.convert_fs(source_file, destination_file, 'automatic', destination_version as any);
 					return;
 				},
 				batch_argument: null,

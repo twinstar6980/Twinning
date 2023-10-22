@@ -81,7 +81,7 @@ class Converter {
   ) {
     var size = parseSize(structure.size);
     var value = <String>[];
-    for (var index = 0; index < size; ++index) {
+    for (var index = 0; index < size; index++) {
       value.add(parseString(structure.data[index]));
     }
     return value;
@@ -95,7 +95,7 @@ class Converter {
   ) {
     var size = value.length;
     structure.data = ffi.calloc.allocate<Interface.String>(ffi.sizeOf<Interface.String>() * size);
-    for (var index = 0; index < size; ++index) {
+    for (var index = 0; index < size; index++) {
       constructString(structure.data.elementAt(index).ref, value[index]);
     }
     constructSize(structure.size, size);
@@ -109,7 +109,7 @@ class Converter {
     Interface.StringList structure,
   ) {
     var capacity = parseSize(structure.capacity);
-    for (var index = 0; index < capacity; ++index) {
+    for (var index = 0; index < capacity; index++) {
       destructString(structure.data.elementAt(index).ref);
     }
     ffi.calloc.free(structure.data);

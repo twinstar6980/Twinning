@@ -51,13 +51,13 @@ main(
     await windowManager.show();
   }
   await NotificationHelper.initialize();
-  for (var index = 0; index < setting.mPrimaryFont.length; ++index) {
+  for (var index = 0; index < setting.mPrimaryFont.length; index++) {
     var family = await CustomFontHelper.loadFile(setting.mPrimaryFont[index]);
     if (family != null && !gPrimaryFontFamliy.contains(family)) {
       gPrimaryFontFamliy.add(family);
     }
   }
-  for (var index = 0; index < setting.mConsoleFont.length; ++index) {
+  for (var index = 0; index < setting.mConsoleFont.length; index++) {
     var family = await CustomFontHelper.loadFile(setting.mConsoleFont[index]);
     if (family != null && !gConsoleFontFamliy.contains(family)) {
       gConsoleFontFamliy.add(family);

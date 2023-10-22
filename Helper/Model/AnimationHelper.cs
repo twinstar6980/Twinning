@@ -213,7 +213,7 @@ namespace Helper {
 					}
 					layer.IsFirst = false;
 				}
-				++frameIndex;
+				frameIndex++;
 			}
 			foreach (var layer in layerList) {
 				if (layer.Value is null) {

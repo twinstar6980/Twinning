@@ -210,7 +210,7 @@ namespace TwinStar.Script.Executor {
 			Console.information(los('executor.typical:argument_skipped', name), []);
 			return skip_value;
 		}
-		let initial: Result | undefined = undefined;
+		let initial: undefined | Result = undefined;
 		if (given === '?input') {
 			Console.information(los('executor.typical:argument_input', name), []);
 		} else if (given === '?automatic') {

@@ -80,7 +80,7 @@ namespace TwinStar.Script {
 			initializer: null | (() => any) = null,
 		): void {
 			this.m_pool = new Array(size);
-			for (let index = 0; index < size; ++index) {
+			for (let index = 0; index < size; index++) {
 				this.m_pool[index] = {
 					thread: Kernel.Miscellaneous.Thread.default(),
 					context: Kernel.Miscellaneous.g_context.spawn(),

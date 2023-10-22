@@ -71,7 +71,7 @@ namespace Helper.Bridge {
 		) {
 			var size = (Size)Converter.ParseSize(ref structure.size);
 			var value = new List<String>(size);
-			for (var index = 0; index < size; ++index) {
+			for (var index = 0; index < size; index++) {
 				value.Add(Converter.ParseString(ref structure.data[index]));
 			}
 			return value;
@@ -83,7 +83,7 @@ namespace Helper.Bridge {
 		) {
 			var size = value.Count;
 			structure.data = (Interface.String*)MemoryHelper.Alloc(sizeof(Interface.String) * size);
-			for (var index = 0; index < size; ++index) {
+			for (var index = 0; index < size; index++) {
 				Converter.ConstructString(ref structure.data[index], value[index]);
 			}
 			Converter.ConstructSize(ref structure.size, (IntegerU64)size);
@@ -95,7 +95,7 @@ namespace Helper.Bridge {
 			ref Interface.StringList structure
 		) {
 			var size = (Size)Converter.ParseSize(ref structure.size);
-			for (var index = 0; index < size; ++index) {
+			for (var index = 0; index < size; index++) {
 				Converter.DestructString(ref structure.data[index]);
 			}
 			MemoryHelper.Free(structure.data);

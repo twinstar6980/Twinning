@@ -68,41 +68,36 @@ namespace TwinStar.Script.Console {
 	// ------------------------------------------------
 
 	function basic_input_with_checker<Value>(
-		inputer: () => string | null,
-		echoer: (value: string | null) => void,
-		converter: (value: string) => string | [Value],
-		nullable: boolean | null,
-		checker: Check.CheckerX<Value> | null,
-		initial: Value | null | undefined,
-	): Value | null {
-		let result: Value | null;
-		if (initial !== undefined) {
-			let state: string | null;
-			result = initial;
-			if (result === null) {
-				state = nullable ? null : los('console:not_nullable');
-			} else {
-				state = checker === null ? null : checker(result);
-			}
-			if (state === null) {
-				return result;
-			}
-			warning(los('console:input_invalid_should_retry'), [state]);
-		}
+		inputer: () => string,
+		echoer: (value: string) => void,
+		converter: (value: string) => string | [null | Value],
+		nullable: boolean,
+		checker: Check.CheckerX<Value>,
+		initial: undefined | null | Value,
+	): null | Value {
+		let result: null | Value;
 		while (true) {
-			let state: string | null;
-			let input = inputer();
-			echoer(input);
+			let state: null | string = null;
+			let input: null | string = null;
 			result = null;
-			if (input === null) {
-				state = nullable ? null : los('console:not_nullable');
+			if (initial !== undefined) {
+				result = initial;
+				initial = undefined;
 			} else {
+				input = inputer();
+				echoer(input);
 				let convert_result = converter(input);
 				if (typeof convert_result === 'string') {
 					state = convert_result;
 				} else {
 					result = convert_result[0];
-					state = checker === null ? null : checker(result);
+				}
+			}
+			if (state === null) {
+				if (result === null) {
+					state = nullable ? null : los('console:not_nullable');
+				} else {
+					state = checker(result);
 				}
 			}
 			if (state === null) {
@@ -128,11 +123,11 @@ namespace TwinStar.Script.Console {
 	function cli_basic_input<Value>(
 		leading: string,
 		messager: () => void,
-		converter: (value: string) => string | [Value],
-		nullable: boolean | null,
-		checker: Check.CheckerX<Value> | null,
-		initial: Value | null | undefined = undefined,
-	): Value | null {
+		converter: (value: string) => string | [null | Value],
+		nullable: null | boolean,
+		checker: null | Check.CheckerX<Value>,
+		initial: undefined | null | Value,
+	): null | Value {
 		let first_input = true;
 		return basic_input_with_checker(
 			() => {
@@ -144,15 +139,14 @@ namespace TwinStar.Script.Console {
 				cli_basic_output(leading, true, 0, true);
 				cli_set_message_text_attribute('v');
 				cli_basic_output('', false, 1, false);
-				let input = Shell.cli_input();
-				return input === '' ? null : input;
+				return Shell.cli_input();
 			},
 			(value) => {
 				return;
 			},
 			converter,
-			nullable,
-			checker,
+			nonnull_or(nullable, false),
+			nonnull_or(checker, () => (null)),
 			initial,
 		);
 	}
@@ -169,23 +163,23 @@ namespace TwinStar.Script.Console {
 	}
 
 	function gui_basic_input<Value>(
-		inputer: () => string | null,
+		inputer: () => string,
 		leading: string,
 		echoer: (value: string) => string,
-		converter: (value: string) => string | [Value],
-		nullable: boolean | null,
-		checker: Check.CheckerX<Value> | null,
-		initial: Value | null | undefined = undefined,
-	): Value | null {
+		converter: (value: string) => string | [null | Value],
+		nullable: null | boolean,
+		checker: null | Check.CheckerX<Value>,
+		initial: undefined | null | Value,
+	): null | Value {
 		return basic_input_with_checker(
 			inputer,
 			(value) => {
-				gui_basic_output('t', leading, [value === null ? '' : echoer(value)]);
+				gui_basic_output('t', leading, [echoer(value)]);
 				return;
 			},
 			converter,
-			nullable,
-			checker,
+			nonnull_or(nullable, false),
+			nonnull_or(checker, () => (null)),
 			initial,
 		);
 	}
@@ -204,7 +198,6 @@ namespace TwinStar.Script.Console {
 			for (let description_element of description) {
 				cli_basic_output(description_element, false, 1, true);
 			}
-			cli_set_message_text_attribute('v');
 		}
 		if (Shell.is_gui) {
 			gui_basic_output(type, title, description);
@@ -261,17 +254,14 @@ namespace TwinStar.Script.Console {
 	): void {
 		let leading = 'Pause';
 		if (Shell.is_cli) {
+			cli_set_message_text_attribute('t');
+			cli_basic_output(leading + ' ', true, 0, false);
+			cli_set_message_text_attribute('v');
 			if (Shell.is_windows) {
-				cli_set_message_text_attribute('t');
-				cli_basic_output(leading + ' ', true, 0, false);
-				cli_set_message_text_attribute('v');
 				KernelX.Process.system_command(`pause > NUL`);
 				Shell.cli_output('\n');
 			}
 			if (Shell.is_linux || Shell.is_macintosh || Shell.is_android || Shell.is_iphone) {
-				cli_set_message_text_attribute('t');
-				cli_basic_output(leading + ' ', true, 0, false);
-				cli_set_message_text_attribute('v');
 				Shell.cli_input();
 			}
 		}
@@ -286,24 +276,27 @@ namespace TwinStar.Script.Console {
 
 	export function boolean(
 		nullable: null,
-		checker: Check.CheckerX<boolean> | null,
+		checker: null | Check.CheckerX<boolean>,
 		initial?: boolean,
 	): boolean;
 
 	export function boolean(
 		nullable: boolean,
-		checker: Check.CheckerX<boolean> | null,
-		initial?: boolean | null,
-	): boolean | null;
+		checker: null | Check.CheckerX<boolean>,
+		initial?: null | boolean,
+	): null | boolean;
 
 	export function boolean(
-		nullable: boolean | null,
-		checker: Check.CheckerX<boolean> | null,
-		initial?: boolean | null,
-	): boolean | null {
-		let result: boolean | null = undefined as any;
+		nullable: null | boolean,
+		checker: null | Check.CheckerX<boolean>,
+		initial?: null | boolean,
+	): null | boolean {
+		let result: null | boolean = undefined!;
 		let leading = 'Boolean';
-		let converter = (value: string): string | [boolean] => {
+		let converter = (value: string): string | [null | boolean] => {
+			if (value === '') {
+				return [null];
+			}
 			let regexp_check_result = Check.enumeration_checker_x(['n', 'y'])(value);
 			if (regexp_check_result !== null) {
 				return los('console:boolean_format_error');
@@ -344,24 +337,27 @@ namespace TwinStar.Script.Console {
 
 	export function integer(
 		nullable: null,
-		checker: Check.CheckerX<bigint> | null,
+		checker: null | Check.CheckerX<bigint>,
 		initial?: bigint,
 	): bigint;
 
 	export function integer(
 		nullable: boolean,
-		checker: Check.CheckerX<bigint> | null,
-		initial?: bigint | null,
-	): bigint | null;
+		checker: null | Check.CheckerX<bigint>,
+		initial?: null | bigint,
+	): null | bigint;
 
 	export function integer(
-		nullable: boolean | null,
-		checker: Check.CheckerX<bigint> | null,
-		initial?: bigint | null,
-	): bigint | null {
-		let result: bigint | null = undefined as any;
+		nullable: null | boolean,
+		checker: null | Check.CheckerX<bigint>,
+		initial?: null | bigint,
+	): null | bigint {
+		let result: null | bigint = undefined!;
 		let leading = 'Integer';
-		let converter = (value: string): string | [bigint] => {
+		let converter = (value: string): string | [null | bigint] => {
+			if (value === '') {
+				return [null];
+			}
 			let regexp_check_result = Check.regexp_checker_x(/^([+-])?([\d]+)$/)(value);
 			if (regexp_check_result !== null) {
 				return los('console:integer_format_error', regexp_check_result);
@@ -402,24 +398,27 @@ namespace TwinStar.Script.Console {
 
 	export function floater(
 		nullable: null,
-		checker: Check.CheckerX<number> | null,
+		checker: null | Check.CheckerX<number>,
 		initial?: number,
 	): number;
 
 	export function floater(
 		nullable: boolean,
-		checker: Check.CheckerX<number> | null,
-		initial?: number | null,
-	): number | null;
+		checker: null | Check.CheckerX<number>,
+		initial?: null | number,
+	): null | number;
 
 	export function floater(
-		nullable: boolean | null,
-		checker: Check.CheckerX<number> | null,
-		initial?: number | null,
-	): number | null {
-		let result: number | null = undefined as any;
+		nullable: null | boolean,
+		checker: null | Check.CheckerX<number>,
+		initial?: null | number,
+	): null | number {
+		let result: null | number = undefined!;
 		let leading = 'Floater';
-		let converter = (value: string): string | [number] => {
+		let converter = (value: string): string | [null | number] => {
+			if (value === '') {
+				return [null];
+			}
 			let regexp_check_result = Check.regexp_checker_x(/^([+-])?([\d]+)([.][\d]+)?$/)(value);
 			if (regexp_check_result !== null) {
 				return los('console:floater_format_error', regexp_check_result);
@@ -460,24 +459,27 @@ namespace TwinStar.Script.Console {
 
 	export function size(
 		nullable: null,
-		checker: Check.CheckerX<bigint> | null,
+		checker: null | Check.CheckerX<bigint>,
 		initial?: bigint,
 	): bigint;
 
 	export function size(
 		nullable: boolean,
-		checker: Check.CheckerX<bigint> | null,
-		initial?: bigint | null,
-	): bigint | null;
+		checker: null | Check.CheckerX<bigint>,
+		initial?: null | bigint,
+	): null | bigint;
 
 	export function size(
-		nullable: boolean | null,
-		checker: Check.CheckerX<bigint> | null,
-		initial?: bigint | null,
-	): bigint | null {
-		let result: bigint | null = undefined as any;
+		nullable: null | boolean,
+		checker: null | Check.CheckerX<bigint>,
+		initial?: null | bigint,
+	): null | bigint {
+		let result: null | bigint = undefined!;
 		let leading = 'Size';
-		let converter = (value: string): string | [bigint] => {
+		let converter = (value: string): string | [null | bigint] => {
+			if (value === '') {
+				return [null];
+			}
 			let regexp_check_result = Check.regexp_checker_x(/^([\d]+)([.][\d]+)?([bkmg])$/)(value);
 			if (regexp_check_result !== null) {
 				return los('console:size_format_error', regexp_check_result);
@@ -518,25 +520,42 @@ namespace TwinStar.Script.Console {
 
 	export function string(
 		nullable: null,
-		checker: Check.CheckerX<string> | null,
+		checker: null | Check.CheckerX<string>,
 		initial?: string,
 	): string;
 
 	export function string(
 		nullable: boolean,
-		checker: Check.CheckerX<string> | null,
-		initial?: string | null,
-	): string | null;
+		checker: null | Check.CheckerX<string>,
+		initial?: null | string,
+	): null | string;
 
 	export function string(
-		nullable: boolean | null,
-		checker: Check.CheckerX<string> | null,
-		initial?: string | null,
-	): string | null {
-		let result: string | null = undefined as any;
+		nullable: null | boolean,
+		checker: null | Check.CheckerX<string>,
+		initial?: null | string,
+	): null | string {
+		let result: null | string = undefined!;
 		let leading = 'String';
-		let converter = (value: string): string | [string] => {
-			return [value];
+		let converter = (value: string): string | [null | string] => {
+			if (value === '') {
+				return [null];
+			}
+			let result: string;
+			if (value[0] !== ':') {
+				result = value;
+			} else {
+				switch (value[1]) {
+					case ':': {
+						result = value.substring(2);
+						break;
+					}
+					default: {
+						return los('console:input_command_invalid');
+					}
+				}
+			}
+			return [result];
 		};
 		if (Shell.is_cli) {
 			result = cli_basic_input(
@@ -574,7 +593,7 @@ namespace TwinStar.Script.Console {
 		type: 'any' | 'file' | 'directory',
 		rule: 'any' | 'input' | 'output',
 		nullable: null,
-		checker: Check.CheckerX<string> | null,
+		checker: null | Check.CheckerX<string>,
 		initial?: string,
 	): string;
 
@@ -582,32 +601,44 @@ namespace TwinStar.Script.Console {
 		type: 'any' | 'file' | 'directory',
 		rule: 'any' | 'input' | 'output',
 		nullable: boolean,
-		checker: Check.CheckerX<string> | null,
-		initial?: string | null,
-	): string | null;
+		checker: null | Check.CheckerX<string>,
+		initial?: null | string,
+	): null | string;
 
 	export function path(
 		type: 'any' | 'file' | 'directory',
 		rule: 'any' | 'input' | 'output',
-		nullable: boolean | null,
-		checker: Check.CheckerX<string> | null,
-		initial?: string | null,
-	): string | null {
-		let result: string | null = undefined as any;
+		nullable: null | boolean,
+		checker: null | Check.CheckerX<string>,
+		initial?: null | string,
+	): null | string {
+		let result: null | string = undefined!;
 		let leading = 'Path';
 		let state_data = {
-			last_value: null as string | null,
+			last_value: null as null | string,
 			allow_overwrite: false as boolean,
 		};
 		if (initial !== undefined && initial !== null) {
 			initial = Home.of(PathUtility.regularize(initial));
 		}
-		let converter = (value: string): string | [string] => {
+		let converter = (value: string): string | [null | string] => {
+			if (value === '') {
+				return [null];
+			}
 			let result: string;
-			if (value.length >= 1 && value[0] === ':') {
-				switch (value.substring(1)) {
+			if (value[0] !== ':') {
+				result = Home.of(PathUtility.regularize(unquote_string(value)));
+			} else {
+				switch (value[1]) {
+					case ':': {
+						result = Home.of(PathUtility.regularize(value.substring(2)));
+						break;
+					}
 					case 'p': {
-						let pick_result = Console.pick_path(type);
+						if (value.length > 2) {
+							return los('console:input_command_invalid');
+						}
+						let pick_result = pick_path(type);
 						if (pick_result === null) {
 							return los('console:path_command_pick_cancel');
 						}
@@ -619,56 +650,75 @@ namespace TwinStar.Script.Console {
 						if (rule !== 'output') {
 							return los('console:path_command_need_output');
 						}
-						if (state_data.last_value === null) {
-							return los('console:path_command_need_last_value');
+						if (value.length > 2) {
+							return los('console:input_command_invalid');
 						}
-						result = PathUtility.generate_suffix_path(state_data.last_value);
-						warning(los('console:path_is_exist_but_generate'), [result]);
+						if (state_data.last_value === null) {
+							return los('console:input_command_need_previous_input');
+						}
+						result = state_data.last_value;
+						if (KernelX.FileSystem.exist(result)) {
+							result = PathUtility.generate_suffix_path(result);
+							warning(los('console:path_is_exist_but_generate'), [result]);
+						}
 						break;
 					}
 					case 'm': {
 						if (rule !== 'output') {
 							return los('console:path_command_need_output');
 						}
+						if (value.length > 2) {
+							return los('console:input_command_invalid');
+						}
 						if (state_data.last_value === null) {
-							return los('console:path_command_need_last_value');
+							return los('console:input_command_need_previous_input');
 						}
 						result = state_data.last_value;
-						let move_path = PathUtility.generate_suffix_path(result);
-						KernelX.FileSystem.rename(result, move_path);
-						warning(los('console:path_is_exist_but_move'), [move_path]);
+						if (KernelX.FileSystem.exist(result)) {
+							let move_path = PathUtility.generate_suffix_path(result);
+							KernelX.FileSystem.rename(result, move_path);
+							warning(los('console:path_is_exist_but_move'), [move_path]);
+						}
 						break;
 					}
 					case 'd': {
 						if (rule !== 'output') {
 							return los('console:path_command_need_output');
 						}
+						if (value.length > 2) {
+							return los('console:input_command_invalid');
+						}
 						if (state_data.last_value === null) {
-							return los('console:path_command_need_last_value');
+							return los('console:input_command_need_previous_input');
 						}
 						result = state_data.last_value;
-						KernelX.FileSystem.remove(result);
-						warning(los('console:path_is_exist_but_delete'), []);
+						if (KernelX.FileSystem.exist(result)) {
+							KernelX.FileSystem.remove(result);
+							warning(los('console:path_is_exist_but_delete'), []);
+						}
 						break;
 					}
 					case 'o': {
 						if (rule !== 'output') {
 							return los('console:path_command_need_output');
 						}
+						if (value.length > 2) {
+							return los('console:input_command_invalid');
+						}
 						if (state_data.last_value === null) {
-							return los('console:path_command_need_last_value');
+							return los('console:input_command_need_previous_input');
 						}
 						result = state_data.last_value;
-						state_data.allow_overwrite = true;
-						warning(los('console:path_is_exist_but_overwrite'), []);
+						if (KernelX.FileSystem.exist(result)) {
+							state_data.allow_overwrite = true;
+							warning(los('console:path_is_exist_but_overwrite'), []);
+						}
 						break;
 					}
 					default: {
-						return los('console:path_command_invalid');
+						return los('console:input_command_invalid');
 					}
 				}
-			} else {
-				result = Home.of(PathUtility.regularize(unquote_string(value)));
 			}
 			return [result];
 		};
@@ -745,28 +795,38 @@ namespace TwinStar.Script.Console {
 
 	export function enumeration<Value>(
 		option: Array<[Value, string, string]>,
-		nullable: boolean | null,
-		checker: Check.CheckerX<Value> | null,
+		nullable: null | boolean,
+		checker: null | Check.CheckerX<Value>,
 		initial?: Value,
 	): Value;
 
 	export function enumeration<Value>(
 		option: Array<[Value, string, string]>,
-		nullable: boolean | null,
-		checker: Check.CheckerX<Value> | null,
-		initial?: Value | null,
-	): Value | null;
+		nullable: null | boolean,
+		checker: null | Check.CheckerX<Value>,
+		initial?: null | Value,
+	): null | Value;
 
 	export function enumeration<Value>(
 		option: Array<[Value, string, string]>,
-		nullable: boolean | null,
-		checker: Check.CheckerX<Value> | null,
-		initial?: Value | null,
-	): Value | null {
-		let result: Value | null = undefined as any;
+		nullable: null | boolean,
+		checker: null | Check.CheckerX<Value>,
+		initial?: null | Value,
+	): null | Value {
+		let result: null | Value = undefined!;
 		let leading = 'Enumeration';
 		let maximum_key_length = Math.max(...option.map((e) => (e[1].length)));
 		let message = option.map((value) => (`${make_prefix_padded_string(value[1], ' ', maximum_key_length)}. ${value[2]}`));
+		let converter = (value: string): string | [null | Value] => {
+			if (value === '') {
+				return [null];
+			}
+			let index = option.findIndex((e) => (e[1] === value));
+			if (index === -1) {
+				return los('console:option_invalid');
+			}
+			return [option[index][0]];
+		};
 		if (Shell.is_cli) {
 			result = cli_basic_input(
 				leading,
@@ -776,13 +836,7 @@ namespace TwinStar.Script.Console {
 					}
 					return;
 				},
-				(value) => {
-					let item = option.find((e) => (e[1] === value));
-					if (item === undefined) {
-						return los('console:option_invalid');
-					}
-					return [item[0]];
-				},
+				converter,
 				nullable,
 				checker,
 				initial,
@@ -791,16 +845,21 @@ namespace TwinStar.Script.Console {
 		if (Shell.is_gui) {
 			result = gui_basic_input(
 				() => {
-					return Shell.gui_input_enumeration(message);
+					let index = Shell.gui_input_enumeration(message);
+					return index === '' ? '' : option[Number(index) - 1][1];
 				},
 				leading,
 				(value) => {
-					return message[Number(value) - 1];
+					if (value === '') {
+						return '';
+					}
+					let index = option.findIndex((e) => (e[1] === value));
+					if (index === -1) {
+						return los('console:option_invalid');
+					}
+					return message[index];
 				},
-				(value) => {
-					let item = option[Number(value) - 1];
-					return [item[0]];
-				},
+				converter,
 				nullable,
 				checker,
 				initial,
@@ -815,7 +874,7 @@ namespace TwinStar.Script.Console {
 		value: Array<Value>,
 	): Array<[Value, string, string]> {
 		let destination: Array<[Value, string, string]> = [];
-		for (let index = 0; index < value.length; ++index) {
+		for (let index = 0; index < value.length; index++) {
 			destination.push([value[index], `${value[index] === false ? 'n' : 'y'}`, ``]);
 		}
 		return destination;
@@ -825,7 +884,7 @@ namespace TwinStar.Script.Console {
 		value: Array<Value>,
 	): Array<[Value, string, string]> {
 		let destination: Array<[Value, string, string]> = [];
-		for (let index = 0; index < value.length; ++index) {
+		for (let index = 0; index < value.length; index++) {
 			destination.push([value[index], `${value[index]}`, ``]);
 		}
 		return destination;
@@ -835,7 +894,7 @@ namespace TwinStar.Script.Console {
 		value: Array<Value>,
 	): Array<[Value, string, string]> {
 		let destination: Array<[Value, string, string]> = [];
-		for (let index = 0; index < value.length; ++index) {
+		for (let index = 0; index < value.length; index++) {
 			destination.push([value[index], `${value[index]}`, ``]);
 		}
 		return destination;
@@ -845,7 +904,7 @@ namespace TwinStar.Script.Console {
 		value: Array<Value>,
 	): Array<[Value, string, string]> {
 		let destination: Array<[Value, string, string]> = [];
-		for (let index = 0; index < value.length; ++index) {
+		for (let index = 0; index < value.length; index++) {
 			destination.push([value[index], `${index + 1}`, `${value[index]}`]);
 		}
 		return destination;
@@ -855,20 +914,20 @@ namespace TwinStar.Script.Console {
 
 	export function pick_path(
 		type: 'any' | 'file' | 'directory',
-	): string | null {
-		let result: string | null = undefined as any;
-		let actual_type: 'file' | 'directory';
-		if (type !== 'any') {
-			actual_type = type;
-		} else {
+	): null | string {
+		let result: null | string = undefined!;
+		if (type === 'any') {
 			information(los('console:pick_path_type'), []);
-			actual_type = enumeration(option_string(['file', 'directory']), null, null);
+			type = enumeration(option_string(['file', 'directory']), null, null);
 		}
 		if (Shell.is_cli) {
-			result = Shell.cli_pick_path(actual_type);
+			result = Shell.cli_pick_path(type);
 		}
 		if (Shell.is_gui) {
-			result = Shell.gui_pick_path(actual_type);
+			result = Shell.gui_pick_path(type);
+		}
+		if (result === '') {
+			result = null;
 		}
 		return result;
 	}

@@ -151,7 +151,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 				if (layer.state === false) {
 					delete model[layer_index];
 				}
-				++layer.frame_duration;
+				layer.frame_duration++;
 			}
 		});
 		for (let layer_index in model) {

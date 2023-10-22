@@ -52,7 +52,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.De
 		};
 		definition.slot_count = read_integer(data);
 		definition.groups.length = Number(read_integer(data));
-		for (let groups_index = 0; groups_index < definition.groups.length; ++groups_index) {
+		for (let groups_index = 0; groups_index < definition.groups.length; groups_index++) {
 			let group_base: ResourceManifest.GroupBase = {
 				id: undefined!,
 				type: undefined!,
@@ -77,7 +77,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.De
 			if (group_has_parent) {
 				group_simple.parent = read_string(data);
 			}
-			for (let subgroups_index = 0; subgroups_index < group_composite.subgroups.length; ++subgroups_index) {
+			for (let subgroups_index = 0; subgroups_index < group_composite.subgroups.length; subgroups_index++) {
 				let subgroup_base: ResourceManifest.CompositeGroupAdditional['subgroups'][number] = {
 					id: undefined!,
 					res: undefined!,
@@ -88,7 +88,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.De
 					...object_without_undefined(subgroup_base),
 				};
 			}
-			for (let resources_index = 0; resources_index < group_simple.resources.length; ++resources_index) {
+			for (let resources_index = 0; resources_index < group_simple.resources.length; resources_index++) {
 				let resource_base: ResourceManifest.ResourceBase = {
 					slot: undefined!,
 					id: undefined!,

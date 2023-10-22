@@ -55,8 +55,7 @@ namespace TwinStar.Script.Entry {
 	): void {
 		g_configuration = configuration;
 		// language
-		Language.push_table(configuration.language, KernelX.JSON.read_fs_js(Home.of(`~/script/Language/${configuration.language}.json`)) as unknown as Language.Map);
-		Language.set_target(configuration.language);
+		Language.imbue(KernelX.JSON.read_fs_js(Home.of(`~/script/Language/${configuration.language}.json`)) as unknown as Language.StringMap);
 		// console feature
 		Console.g_disable_cli_virtual_terminal_sequence = configuration.disable_cli_virtual_terminal_sequence;
 		Console.g_disable_notification = configuration.disable_notification;

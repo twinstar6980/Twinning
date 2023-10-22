@@ -60,7 +60,7 @@ namespace TwinStar.Script.Executor.Implement.wwise.media {
 					}),
 				],
 				worker: ({ ripe_file, raw_file, tool_ffmpeg_program_file, tool_ww2ogg_program_file, tool_ww2ogg_code_book_file }) => {
-					let temporary_directpry = Home.new_temporary();
+					let temporary_directpry = Home.new_temporary(null, 'directory');
 					KernelX.Tool.Wwise.Media.decode_fs(ripe_file, raw_file, tool_ffmpeg_program_file, tool_ww2ogg_program_file, tool_ww2ogg_code_book_file, temporary_directpry, {});
 					KernelX.FileSystem.remove(temporary_directpry);
 					return;

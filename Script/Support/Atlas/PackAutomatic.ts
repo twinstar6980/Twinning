@@ -129,7 +129,7 @@ namespace TwinStar.Script.Support.Atlas.PackAutomatic {
 		container: Box,
 		item_map: Record<string, Box>,
 		item_weighter: (a: Box) => number,
-	): Record<string, Rect> | null {
+	): null | Record<string, Rect> {
 		let space_list: Array<Rect> = [{ x: 0, y: 0, ...container }];
 		let item_list = record_to_array(item_map, (k, v) => ({ name: k, box: item_map[k] })).sort((a, b) => (item_weighter(a.box) > item_weighter(b.box) ? -1 : +1));
 		let result: Record<string, Rect> = {};
@@ -175,7 +175,7 @@ namespace TwinStar.Script.Support.Atlas.PackAutomatic {
 		item_weighter: (a: Box) => number,
 	): [Box, Record<string, Rect>] {
 		let container: Box = { w: 0, h: 0 };
-		let result: Record<string, Rect> | null;
+		let result: null | Record<string, Rect>;
 		let expand_step = 0;
 		while (true) {
 			result = pack(container, item_map, item_weighter);
@@ -183,7 +183,7 @@ namespace TwinStar.Script.Support.Atlas.PackAutomatic {
 				break;
 			}
 			container_expander(container, expand_step);
-			++expand_step;
+			expand_step++;
 		}
 		return [container, result];
 	}

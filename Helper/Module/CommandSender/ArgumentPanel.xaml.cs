@@ -91,7 +91,7 @@ namespace Helper.Module.CommandSender {
 			this.uItem_ItemsSource = new List<ArgumentPanelItemController>();
 			if (this.Configuration is not null && this.Value is not null) {
 				Debug.Assert(this.Value.Count == this.Configuration.Count);
-				for (var index = 0; index < this.Configuration.Count; ++index) {
+				for (var index = 0; index < this.Configuration.Count; index++) {
 					this.uItem_ItemsSource.Add(new ArgumentPanelItemController() { Host = this, Configuration = this.Configuration[index], Value = this.Value[index] });
 				}
 			}

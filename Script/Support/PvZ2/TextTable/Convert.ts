@@ -16,39 +16,36 @@ namespace TwinStar.Script.Support.PvZ2.TextTable.Convert {
 
 	export function convert(
 		source_data: ArrayBuffer,
-		source_version: Version | null,
+		source_version: Version | 'automatic',
 		destination_version: Version,
 	): ArrayBuffer {
 		let string_map: Record<string, string> = {};
-		let actual_source_version: Version;
-		let source_map: Record<string, string> | null = null;
-		let source_list: Array<string> | null = null;
-		if (source_version === null) {
+		let source_map: null | Record<string, string> = null;
+		let source_list: null | Array<string> = null;
+		if (source_version === 'automatic') {
 			try {
 				let source = KernelX.JSON.read(source_data).value as any;
 				let source_variant = source?.objects[0]?.objdata?.LocStringValues;
 				assert_test(typeof source_variant === 'object', `invalid source`);
 				if (source_variant instanceof Array) {
 					source_list = source_variant;
-					actual_source_version = 'json_list';
+					source_version = 'json_list';
 				} else {
 					source_map = source_variant;
-					actual_source_version = 'json_map';
+					source_version = 'json_map';
 				}
 			} catch (e) {
-				actual_source_version = 'text';
+				source_version = 'text';
 			}
-		} else {
-			actual_source_version = source_version;
 		}
-		switch (actual_source_version) {
+		switch (source_version) {
 			case 'text': {
 				assert_test(!string_data_maybe_utf16(source_data), `invalid charset UTF-16`);
 				let source_text = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(Kernel.ByteListView.value(source_data)));
 				let key_regexp = /^\[.+\]$/gm;
 				let value_regexp = /(.|[\n\r])*?(?=[\n\r]*?(\[|$))/gy;
-				let key_match: RegExpExecArray | null;
-				let value_match: RegExpExecArray | null;
+				let key_match: null | RegExpExecArray;
+				let value_match: null | RegExpExecArray;
 				while ((key_match = key_regexp.exec(source_text)) !== null) {
 					value_regexp.lastIndex = key_regexp.lastIndex + 1;
 					value_match = value_regexp.exec(source_text)!;
@@ -64,8 +61,9 @@ namespace TwinStar.Script.Support.PvZ2.TextTable.Convert {
 					assert_test(typeof source_map === 'object' && (source_map as Object).constructor.name === 'Object', `invalid source`);
 				}
 				for (let key in source_map) {
-					assert_test(typeof source_map[key] === 'string', `invalid map element`);
-					string_map[key] = source_map[key];
+					let value = source_map[key];
+					assert_test(typeof value === 'string', `invalid map element`);
+					string_map[key] = value;
 				}
 				break;
 			}
@@ -73,14 +71,14 @@ namespace TwinStar.Script.Support.PvZ2.TextTable.Convert {
 				if (source_list === null) {
 					let source = KernelX.JSON.read(source_data).value as any;
 					source_list = source?.objects[0]?.objdata?.LocStringValues as Array<string>;
-					assert_test(typeof source_list === 'object' && (source_map as Object).constructor.name === 'Array', `invalid source`);
+					assert_test(typeof source_list === 'object' && (source_list as Object).constructor.name === 'Array', `invalid source`);
 				}
 				assert_test(source_list.length % 2 === 0, `invalid list size`);
-				for (let i = 0; i < source_list.length; i += 2) {
-					let key = source_list[i + 0];
-					let value = source_list[i + 1];
+				for (let index = 0; index < source_list.length; index += 2) {
+					let key = source_list[index + 0];
+					let value = source_list[index + 1];
 					assert_test(typeof key === 'string' && typeof value === 'string', `invalid list element`);
-					string_map[source_list[i]] = source_list[i + 1];
+					string_map[key] = value;
 				}
 				break;
 			}
@@ -101,14 +99,14 @@ namespace TwinStar.Script.Support.PvZ2.TextTable.Convert {
 					"objects": [
 						{
 							"aliases": [
-								"LawnStringsData"
+								"LawnStringsData",
 							],
 							"objclass": "LawnStringsData",
 							"objdata": {
-								"LocStringValues": string_map
-							}
-						}
-					]
+								"LocStringValues": string_map,
+							},
+						},
+					],
 				};
 				destination_data = Kernel.ByteArray.value(KernelX.JSON.write_js(destination)).release();
 				break;
@@ -119,7 +117,7 @@ namespace TwinStar.Script.Support.PvZ2.TextTable.Convert {
 					"objects": [
 						{
 							"aliases": [
-								"LawnStringsData"
+								"LawnStringsData",
 							],
 							"objclass": "LawnStringsData",
 							"objdata": {
@@ -130,10 +128,10 @@ namespace TwinStar.Script.Support.PvZ2.TextTable.Convert {
 										destination_list.push(string_map[key]);
 									}
 									return destination_list;
-								})()
-							}
-						}
-					]
+								})(),
+							},
+						},
+					],
 				};
 				destination_data = Kernel.ByteArray.value(KernelX.JSON.write_js(destination)).release();
 				break;
@@ -147,7 +145,7 @@ namespace TwinStar.Script.Support.PvZ2.TextTable.Convert {
 	export function convert_fs(
 		source_file: string,
 		destination_file: string,
-		source_version: Version | null,
+		source_version: Version | 'automatic',
 		destination_version: Version,
 	): void {
 		let source_data = KernelX.FileSystem.read_file(source_file);

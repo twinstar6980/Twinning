@@ -152,7 +152,6 @@ namespace Helper {
 			AppNotificationManager            sender,
 			AppNotificationActivatedEventArgs args
 		) {
-			Debug.WriteLine("NotificationManager_OnNotificationInvoked");
 			if (App.MainWindow is not null) {
 				WindowHelper.ShowAsForeground(App.MainWindow);
 			}
@@ -175,15 +174,6 @@ namespace Helper {
 		}
 
 		// ----------------
-
-		public async Task AppendRecentJumperItem (
-			Module.ModuleLauncher.JumperConfiguration configuration
-		) {
-			Setting.Data.ModuleLauncher.RecentJumperConfiguration.RemoveAll((value) => (Module.ModuleLauncher.JumperConfiguration.Compare(value, configuration)));
-			Setting.Data.ModuleLauncher.RecentJumperConfiguration.Insert(0, configuration);
-			Setting.Save();
-			return;
-		}
 
 		public async Task RegisterShellJumpList (
 		) {
@@ -217,6 +207,26 @@ namespace Helper {
 				list.Items.Add(item);
 			}
 			await list.SaveAsync();
+			return;
+		}
+
+		// ----------------
+
+		public async Task AppendRecentJumperItem (
+			Module.ModuleLauncher.JumperConfiguration configuration
+		) {
+			var pinnedItem = Setting.Data.ModuleLauncher.PinnedJumperConfiguration.Find((value) => (Module.ModuleLauncher.JumperConfiguration.CompareForModule(value, configuration)));
+			if (pinnedItem is not null) {
+				return;
+			}
+			var recentItem = Setting.Data.ModuleLauncher.RecentJumperConfiguration.Find((value) => (Module.ModuleLauncher.JumperConfiguration.CompareForModule(value, configuration)));
+			if (recentItem is not null) {
+				Setting.Data.ModuleLauncher.RecentJumperConfiguration.Remove(recentItem);
+				Setting.Data.ModuleLauncher.RecentJumperConfiguration.Insert(0, recentItem);
+			} else {
+				Setting.Data.ModuleLauncher.RecentJumperConfiguration.Insert(0, configuration);
+			}
+			Setting.Save();
 			return;
 		}
 

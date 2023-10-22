@@ -603,7 +603,7 @@ class _EnumerationInputBarContentState extends State<EnumerationInputBarContent>
       value: -1,
       child: Text(''),
     ));
-    for (var index = 0; index < this.widget.option.length; ++index) {
+    for (var index = 0; index < this.widget.option.length; index++) {
       itemList.add(DropdownMenuItem(
         value: index + 1,
         child: Text(this.widget.option[index]),

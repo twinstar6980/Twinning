@@ -9,6 +9,8 @@
 	// utility/Console
 	"console:not_nullable": "Should not be null",
 	"console:input_invalid_should_retry": "Invalid input, please type again.",
+	"console:input_command_invalid": "Invalid command",
+	"console:input_command_need_previous_input": "Command need previous input",
 	"console:boolean_format_error": "Illegal boolean format. Should be \"n\" or \"y\"",
 	"console:integer_format_error": "Illegal integer format, {}",
 	"console:floater_format_error": "Illegal floater format, {}",
@@ -21,9 +23,7 @@
 	"console:path_not_exist": "Path specified doesn't exist",
 	"console:path_is_exist_not_file": "Path specified already exists, but not a file",
 	"console:path_is_exist_not_directory": "Path specified already exists, but not a directory",
-	"console:path_command_invalid": "Invalid command",
 	"console:path_command_need_output": "This command only available for output path",
-	"console:path_command_need_last_value": "Please input a path first",
 	"console:path_command_pick_cancel": "Pick has been cancel",
 	"console:option_invalid": "Input is not one of the options",
 	"console:pick_path_type": "Select the path type",

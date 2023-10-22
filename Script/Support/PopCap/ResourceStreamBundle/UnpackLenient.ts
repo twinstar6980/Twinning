@@ -115,7 +115,7 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 				return Number(stream.u32());
 			},
 		);
-		for (let group_index = 0; group_index < package_header.group_information_block_count; ++group_index) {
+		for (let group_index = 0; group_index < package_header.group_information_block_count; group_index++) {
 			let group_information_data = new ByteListView(package_data.sub(package_header.group_information_offset + package_header.group_information_block_size * group_index, package_header.group_information_block_size), 0);
 			let subgroup_count = Number(group_information_data.u32(0x480));
 			let group_id = group_id_map[group_index];
@@ -132,7 +132,7 @@ namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 				group_definition.composite = false;
 			}
 			package_definition.group[group_id] = group_definition;
-			for (let subgroup_index = 0; subgroup_index < subgroup_count; ++subgroup_index) {
+			for (let subgroup_index = 0; subgroup_index < subgroup_count; subgroup_index++) {
 				try {
 					let simple_subgroup_information_data = new ByteListView(group_information_data.sub(0x80 + 0x10 * subgroup_index, 0x10));
 					let simple_subgroup_information = {

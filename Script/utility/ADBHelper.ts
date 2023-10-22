@@ -104,7 +104,7 @@ namespace TwinStar.Script.ADBHelper {
 		id: string,
 	): ApplicationInformation {
 		let shell_result: string;
-		let match: RegExpMatchArray | null;
+		let match: null | RegExpMatchArray;
 		let result: ApplicationInformation = {} as any;
 		result.id = id;
 		shell_result = shell(`pm dump ${id}`);

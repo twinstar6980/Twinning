@@ -72,7 +72,7 @@ namespace TwinStar.Script.Support.PvZ2.RemoteAndroidHelper {
 			player_profile: `${project_directory}/player.json`,
 			content_delivery: `${project_directory}/content_delivery`,
 		};
-		let local_temporary_directory = Home.new_temporary();
+		let local_temporary_directory = Home.new_temporary(null, 'directory');
 		let local_temporary = {
 			main_package: `${local_temporary_directory}/main.rsb`,
 			local_profile: `${local_temporary_directory}/local.rton`,

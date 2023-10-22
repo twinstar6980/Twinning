@@ -9,6 +9,8 @@
 	// utility/Console
 	"console:not_nullable": "不可为空",
 	"console:input_invalid_should_retry": "输入无效，请重新输入",
+	"console:input_command_invalid": "指令无效",
+	"console:input_command_need_previous_input": "指令需要之前的输入",
 	"console:boolean_format_error": "布尔值格式非法，须为 n 或 y",
 	"console:integer_format_error": "整数格式非法，{}",
 	"console:floater_format_error": "浮点格式非法，{}",
@@ -21,9 +23,7 @@
 	"console:path_not_exist": "指定路径不存在",
 	"console:path_is_exist_not_file": "指定路径已存在，但不是文件",
 	"console:path_is_exist_not_directory": "指定路径已存在，但不是目录",
-	"console:path_command_invalid": "指令无效",
 	"console:path_command_need_output": "该指令只可用于输出路径",
-	"console:path_command_need_last_value": "请先输入一个路径",
 	"console:path_command_pick_cancel": "已取消选择",
 	"console:option_invalid": "输入项不在可选项中",
 	"console:pick_path_type": "请选择路径类型",

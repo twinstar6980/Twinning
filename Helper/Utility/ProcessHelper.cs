@@ -82,7 +82,7 @@ namespace Helper.Utility {
 				throw new Exception();
 			}
 			var raw = new List<String>(count);
-			for (var index = 0; index < count; ++index) {
+			for (var index = 0; index < count; index++) {
 				raw.Add(new String(((Character**)pointer)[index]));
 			}
 			return raw;

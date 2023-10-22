@@ -120,7 +120,7 @@ namespace TwinStar.Script.Support.PvZ2.RegularResourceManifest.Convert {
 		};
 		for (let group_id in source.group) {
 			let source_group = source.group[group_id];
-			let destination_group: (ResourceManifest.GroupBase & ResourceManifest.CompositeGroupAdditional) | null = null;
+			let destination_group: null | (ResourceManifest.GroupBase & ResourceManifest.CompositeGroupAdditional) = null;
 			if (source_group.composite) {
 				destination_group = {
 					id: group_id,

@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 88;
+	export const k_version = 89;
 
 	// ------------------------------------------------
 
@@ -95,7 +95,7 @@ namespace TwinStar.Script {
 		export function of(
 			format: string,
 		): string {
-			return format.replaceAll(/^~(?=[/])/g, path);
+			return format.replaceAll(/^~(?=([/]|$))/g, path);
 		}
 
 		// ------------------------------------------------
@@ -118,10 +118,18 @@ namespace TwinStar.Script {
 		// ------------------------------------------------
 
 		export function new_temporary(
+			name: null | string,
+			create: null | 'file' | 'directory',
 		): string {
-			let temporary_sub_directory = `${temporary()}/${make_date_simple_string(new Date())}.${make_prefix_padded_string((Math.random() * 10000).toFixed(0), '0', 4)}`;
-			KernelX.FileSystem.create_directory(temporary_sub_directory);
-			return temporary_sub_directory;
+			let temporary_name = name !== null ? name : make_date_simple_string(new Date());
+			let temporary_path = PathUtility.generate_suffix_path(`${temporary()}/${temporary_name}`);
+			if (create === 'file') {
+				KernelX.FileSystem.create_file(temporary_path);
+			}
+			if (create === 'directory') {
+				KernelX.FileSystem.create_directory(temporary_path);
+			}
+			return temporary_path;
 		}
 
 		// ------------------------------------------------
@@ -272,7 +280,7 @@ namespace TwinStar.Script {
 				home_path = `${Detail.get_working_directory()}/${home_path}`;
 			}
 			Home.path = home_path;
-			// 设置模块主目录（ES）
+			// 设置模块主目录
 			Kernel.Miscellaneous.g_context.query_module_home().value = Home.script();
 			// 加载脚本分区
 			let timer_begin = Date.now();
@@ -297,8 +305,8 @@ namespace TwinStar.Script {
 		export function external(
 			data: {
 				argument: Array<string>;
-				result: string | undefined;
-				error: any | undefined;
+				result: undefined | string;
+				error: undefined | any;
 			},
 		): void {
 			data.result = '';

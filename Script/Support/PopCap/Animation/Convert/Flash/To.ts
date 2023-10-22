@@ -27,7 +27,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 	function parse_color(
 		x_Matrix: Kernel.XML.JS_Element,
 	): Color {
-		let compute = (multiplier_s: string | undefined, offset_s: string | undefined) => (Math.max(0, Math.min(255, Number(defined_or(multiplier_s, '1')) * 255 + Number(defined_or(offset_s, '0')))) / 255);
+		let compute = (multiplier_s: undefined | string, offset_s: undefined | string) => (Math.max(0, Math.min(255, Number(defined_or(multiplier_s, '1')) * 255 + Number(defined_or(offset_s, '0')))) / 255);
 		return [
 			compute(x_Matrix.attribute.redMultiplier, x_Matrix.attribute.redOffset),
 			compute(x_Matrix.attribute.greenMultiplier, x_Matrix.attribute.greenOffset),
@@ -87,14 +87,14 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 		x_DOMSymbolItem: Kernel.XML.JS_Element,
 		index: number | 'main',
 	): Array<Kernel.Tool.PopCap.Animation.Definition.JS_N.Frame> {
-		let model: {
+		let model: null | {
 			index: bigint;
 			resource: bigint;
 			sprite: boolean;
 			frame_start: bigint;
 			frame_duration: bigint;
 			color: Color;
-		} | null = null;
+		} = null;
 		let result: Array<Kernel.Tool.PopCap.Animation.Definition.JS_N.Frame>;
 		assert_test(x_DOMSymbolItem.name === 'DOMSymbolItem');
 		assert_test(x_DOMSymbolItem.attribute.name === (index === 'main' ? `main_sprite` : `sprite/sprite_${index + 1}`));
@@ -126,8 +126,8 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 			let x_elements = x_elements_list[0];
 			assert_test(x_elements.child.length === 0);
 			result = new Array(Number(frame_duration) + 1);
-			for (let i = 0; i < result.length; ++i) {
-				result[i] = {
+			for (let index = 0; index < result.length; index++) {
+				result[index] = {
 					label: null,
 					stop: false,
 					command: [],
@@ -217,7 +217,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 						preload_frame: 0n,
 						time_scale: 1.0,
 					});
-					++layer_count;
+					layer_count++;
 				} else {
 					assert_test(current_instance.resource === model.resource && current_instance.sprite === model.sprite);
 				}

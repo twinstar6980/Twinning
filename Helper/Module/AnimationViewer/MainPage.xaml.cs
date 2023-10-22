@@ -422,7 +422,7 @@ namespace Helper.Module.AnimationViewer {
 			this.WorkingSpriteFrameRange = frameRange ?? new AnimationHelper.FrameRange() { Start = 0, Duration = workingSprite.Frame.Count };
 			this.WorkingSpriteFrameRangeLabelInformation = new List<Tuple<String, AnimationHelper.FrameRange>>();
 			var currentFrameLabel = new List<Tuple<String, Size>>();
-			for (var frameIndex = 0; frameIndex < workingSprite.Frame.Count; ++frameIndex) {
+			for (var frameIndex = 0; frameIndex < workingSprite.Frame.Count; frameIndex++) {
 				var frame = workingSprite.Frame[frameIndex];
 				if (frame.Label is not null) {
 					currentFrameLabel.Add(new Tuple<String, Size>(frame.Label, frameIndex));
@@ -442,7 +442,7 @@ namespace Helper.Module.AnimationViewer {
 			this.View.uSprite.Load(this.Animation, this.ImageSource, this.ImageFilter, this.SpriteFilter, index);
 			Debug.Assert(this.View.uSprite.Loaded);
 			var sliderAnimation = new ObjectAnimationUsingKeyFrames();
-			for (var frameIndex = 0; frameIndex < workingSprite.Frame.Count; ++frameIndex) {
+			for (var frameIndex = 0; frameIndex < workingSprite.Frame.Count; frameIndex++) {
 				sliderAnimation.KeyFrames.Add(
 					new DiscreteObjectKeyFrame() {
 						KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(frameIndex)),
@@ -591,7 +591,7 @@ namespace Helper.Module.AnimationViewer {
 					await this.LoadWorkingSprite(spriteIndex ?? this.Animation.Sprite.Count, spriteFrameRange, spriteFrameRate, spriteInitialState, null);
 				}
 				await App.Instance.AppendRecentJumperItem(new ModuleLauncher.JumperConfiguration() {
-					Title = StorageHelper.Name(animationFileSource),
+					Title = Regex.Replace(StorageHelper.Name(animationFileSource), @"(\.pam\.json)$", "", RegexOptions.IgnoreCase),
 					ModuleType = ModuleType.AnimationViewer,
 					ModuleOption = new List<String>() {
 						"-Source",
@@ -623,7 +623,7 @@ namespace Helper.Module.AnimationViewer {
 			}
 			this.SuppressFilterListSelectionChanged = true;
 			if (imageFilter is not null) {
-				for (var index = 0; index < imageFilter.Count; ++index) {
+				for (var index = 0; index < imageFilter.Count; index++) {
 					var state = imageFilter[index];
 					if (state is null || state.Value == this.ImageFilter[index]) {
 						continue;
@@ -637,7 +637,7 @@ namespace Helper.Module.AnimationViewer {
 				}
 			}
 			if (spriteFilter is not null) {
-				for (var index = 0; index < spriteFilter.Count; ++index) {
+				for (var index = 0; index < spriteFilter.Count; index++) {
 					var state = spriteFilter[index];
 					if (state is null || state.Value == this.SpriteFilter[index]) {
 						continue;

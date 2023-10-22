@@ -47,9 +47,9 @@ namespace TwinStar.Script.Shell {
 
 	export function cli_pick_path(
 		type: 'file' | 'directory',
-	): string | null {
+	): string {
 		let result = callback(['pick_path', type]);
-		return result[0].length === 0 ? null : result[0];
+		return result[0];
 	}
 
 	export function cli_push_notification(
@@ -78,53 +78,53 @@ namespace TwinStar.Script.Shell {
 	}
 
 	export function gui_input_boolean(
-	): string | null {
+	): string {
 		let result = callback(['input_boolean']);
-		return result[0].length === 0 ? null : result[0];
+		return result[0];
 	}
 
 	export function gui_input_integer(
-	): string | null {
+	): string {
 		let result = callback(['input_integer']);
-		return result[0].length === 0 ? null : result[0];
+		return result[0];
 	}
 
 	export function gui_input_floater(
-	): string | null {
+	): string {
 		let result = callback(['input_floater']);
-		return result[0].length === 0 ? null : result[0];
+		return result[0];
 	}
 
 	export function gui_input_size(
-	): string | null {
+	): string {
 		let result = callback(['input_size']);
-		return result[0].length === 0 ? null : result[0];
+		return result[0];
 	}
 
 	export function gui_input_string(
-	): string | null {
+	): string {
 		let result = callback(['input_string']);
-		return result[0].length === 0 ? null : result[0];
+		return result[0];
 	}
 
 	export function gui_input_path(
-	): string | null {
+	): string {
 		let result = callback(['input_path']);
-		return result[0].length === 0 ? null : result[0];
+		return result[0];
 	}
 
 	export function gui_input_enumeration(
 		option: Array<string>,
-	): string | null {
+	): string {
 		let result = callback(['input_enumeration', ...option]);
-		return result[0].length === 0 ? null : result[0];
+		return result[0];
 	}
 
 	export function gui_pick_path(
 		type: 'file' | 'directory',
-	): string | null {
+	): string {
 		let result = callback(['pick_path', type]);
-		return result[0].length === 0 ? null : result[0];
+		return result[0];
 	}
 
 	export function gui_push_notification(

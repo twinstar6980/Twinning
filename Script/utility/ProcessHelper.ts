@@ -67,7 +67,7 @@ namespace TwinStar.Script.ProcessHelper {
 		environment: Array<string>,
 		input_data: string = '',
 	): ExecuteResult {
-		let temporary_directory = Home.new_temporary();
+		let temporary_directory = Home.new_temporary(null, 'directory');
 		let input = `${temporary_directory}/input`;
 		let output = `${temporary_directory}/output`;
 		let error = `${temporary_directory}/error`;

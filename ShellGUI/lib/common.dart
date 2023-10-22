@@ -19,7 +19,7 @@ typedef Map<K, V> = core.Map<K, V>;
 
 const kApplicationName = 'TwinStar ToolKit - Shell GUI';
 
-const kApplicationVersion = 26;
+const kApplicationVersion = 27;
 
 // ----------------
 
