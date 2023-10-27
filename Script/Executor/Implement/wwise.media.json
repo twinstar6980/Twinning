@@ -1,5 +1,2 @@
 {
-	"tool_ffmpeg_program_file": "~/external/ffmpeg/ffmpeg",
-	"tool_ww2ogg_program_file": "~/external/ww2ogg/ww2ogg",
-	"tool_ww2ogg_code_book_file": "~/external/ww2ogg/packed_codebooks_aoTuV_603.bin",
 }

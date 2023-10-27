@@ -240,12 +240,14 @@
 	"executor.implement:texture.atlas.pack_automatic:atlas_file": "Atlas file",
 	"executor.implement:texture.atlas.pack_automatic:definition_file": "Definition file",
 	// Executor/Implement/wwise.media
+	"executor.implement:wwise.media.encode": "Wwise Media Encode",
+	"executor.implement:wwise.media.encode:raw_file": "Original File",
+	"executor.implement:wwise.media.encode:ripe_file": "Finished file",
+	"executor.implement:wwise.media.encode:format": "Audio format",
+	// 
 	"executor.implement:wwise.media.decode": "Wwise Media Decode",
 	"executor.implement:wwise.media.decode:ripe_file": "Finished file",
 	"executor.implement:wwise.media.decode:raw_file": "Original File",
-	"executor.implement:wwise.media.decode:tool_ffmpeg_program_file": "FFMPEG program file",
-	"executor.implement:wwise.media.decode:tool_ww2ogg_program_file": "WW2OGG program file",
-	"executor.implement:wwise.media.decode:tool_ww2ogg_code_book_file": "WW2OGG code-book file",
 	// Executor/Implement/wwise.sound_bank
 	"executor.implement:wwise.sound_bank.encode": "Wwise Sound-Bank Encode",
 	"executor.implement:wwise.sound_bank.encode:bundle_directory": "Bundle directory",
@@ -546,9 +548,6 @@
 	"executor.implement:popcap.resource_stream_bundle.resource_convert:option_bnk": "BNK : Extract",
 	"executor.implement:popcap.resource_stream_bundle.resource_convert:option_bnk_version_number": "BNK : Version number",
 	"executor.implement:popcap.resource_stream_bundle.resource_convert:option_wem": "WEM : Extract",
-	"executor.implement:popcap.resource_stream_bundle.resource_convert:option_wem_tool_ffmpeg_program_file": "WEM : FFMPEG program file",
-	"executor.implement:popcap.resource_stream_bundle.resource_convert:option_wem_tool_ww2ogg_program_file": "WEM : WW2OGG program file",
-	"executor.implement:popcap.resource_stream_bundle.resource_convert:option_wem_tool_ww2ogg_code_book_file": "WEM : WW2OGG code-book file",
 	// 
 	"executor.implement:popcap.resource_stream_bundle.unpack_lenient": "PopCap Resource-Stream-Bundle Unpack by lenient",
 	"executor.implement:popcap.resource_stream_bundle.unpack_lenient:data_file": "Data file",

@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 89;
+	export const k_version = 90;
 
 	// ------------------------------------------------
 
@@ -209,6 +209,8 @@ namespace TwinStar.Script {
 			`Support/Atlas/Pack`,
 			`Support/Atlas/PackAutomatic`,
 			`Support/Marmalade/DZip/PackAutomatic`,
+			`Support/Wwise/Media/Encode`,
+			`Support/Wwise/Media/Decode`,
 			`Support/PopCap/ReflectionObjectNotation/DecodeLenient`,
 			`Support/PopCap/Texture/Encoding`,
 			`Support/PopCap/Animation/Convert/common`,

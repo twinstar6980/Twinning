@@ -71,9 +71,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 		bnk: TypicalArgumentExpression<boolean>;
 		bnk_version_number: TypicalArgumentExpression<bigint>;
 		wem: TypicalArgumentExpression<boolean>;
-		wem_tool_ffmpeg_program_file: TypicalArgumentExpression<string>;
-		wem_tool_ww2ogg_program_file: TypicalArgumentExpression<string>;
-		wem_tool_ww2ogg_code_book_file: TypicalArgumentExpression<string>;
 	};
 
 	// ------------------------------------------------
@@ -438,30 +435,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 						condition: null,
 						default: configuration.resource_convert_option.wem,
 					}),
-					typical_argument_path({
-						id: 'option_wem_tool_ffmpeg_program_file',
-						rule: ['file', 'input'],
-						checker: null,
-						automatic: null,
-						condition: (argument: { option_wem: boolean; }) => (argument.option_wem ? null : ''),
-						default: configuration.resource_convert_option.wem_tool_ffmpeg_program_file,
-					}),
-					typical_argument_path({
-						id: 'option_wem_tool_ww2ogg_program_file',
-						rule: ['file', 'input'],
-						checker: null,
-						automatic: null,
-						condition: (argument: { option_wem: boolean; }) => (argument.option_wem ? null : ''),
-						default: configuration.resource_convert_option.wem_tool_ww2ogg_program_file,
-					}),
-					typical_argument_path({
-						id: 'option_wem_tool_ww2ogg_code_book_file',
-						rule: ['file', 'input'],
-						checker: null,
-						automatic: null,
-						condition: (argument: { option_wem: boolean; }) => (argument.option_wem ? null : ''),
-						default: configuration.resource_convert_option.wem_tool_ww2ogg_code_book_file,
-					}),
 				],
 				worker: ({
 					bundle_directory,
@@ -483,9 +456,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 					option_bnk,
 					option_bnk_version_number,
 					option_wem,
-					option_wem_tool_ffmpeg_program_file,
-					option_wem_tool_ww2ogg_program_file,
-					option_wem_tool_ww2ogg_code_book_file,
 				}) => {
 					let convert_directory = `${bundle_directory}/convert`;
 					let option: Support.PvZ2.ResourceConvert.Option = {
@@ -527,11 +497,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 						},
 						wem: !option_wem ? null : {
 							directory: convert_directory,
-							tool: {
-								ffmpeg_program: option_wem_tool_ffmpeg_program_file,
-								ww2ogg_program: option_wem_tool_ww2ogg_program_file,
-								ww2ogg_code_book: option_wem_tool_ww2ogg_code_book_file,
-							},
 						},
 					};
 					Support.PvZ2.ResourceConvert.convert_fs(

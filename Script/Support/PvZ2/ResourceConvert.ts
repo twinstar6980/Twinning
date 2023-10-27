@@ -39,11 +39,6 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 		},
 		wem: null | {
 			directory: string;
-			tool: {
-				ffmpeg_program: string;
-				ww2ogg_program: string;
-				ww2ogg_code_book: string;
-			};
 		},
 	};
 
@@ -148,7 +143,6 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 		}
 		Console.information(los('support.pvz2.resource_convert:convert_resource'), [
 		]);
-		let audio_temporary_directory = Home.new_temporary(null, 'directory');
 		iterate_resource(true)((group, subgroup, resource) => {
 			let path = resource[1].path;
 			if (option.rton !== null && path.endsWith('.rton')) {
@@ -246,21 +240,15 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 			if (option.wem !== null && path.endsWith('.wem')) {
 				Console.verbosity(`  ${path}`, []);
 				try {
-					KernelX.Tool.Wwise.Media.decode_fs(
+					Support.Wwise.Media.Decode.decode_fs(
 						`${resource_directory}/${path}`,
 						`${option.wem.directory}/${path.slice(0, -3)}wav`,
-						option.wem.tool.ffmpeg_program,
-						option.wem.tool.ww2ogg_program,
-						option.wem.tool.ww2ogg_code_book,
-						audio_temporary_directory,
-						{},
 					);
 				} catch (e) {
 					Console.error_of(e);
 				}
 			}
 		});
-		KernelX.FileSystem.remove(audio_temporary_directory);
 		return;
 	}
 

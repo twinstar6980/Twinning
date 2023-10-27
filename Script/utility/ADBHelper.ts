@@ -12,7 +12,7 @@ namespace TwinStar.Script.ADBHelper {
 		argument: Array<string>,
 	): string {
 		let adb_path = ProcessHelper.search_path(`adb`);
-		assert_test(adb_path !== null, `can not found adb path from PATH environment`);
+		assert_test(adb_path !== null, `can not found 'adb' program from PATH environment`);
 		let execute_result = ProcessHelper.execute(adb_path, argument, KernelX.Process.list_environment_variable());
 		if (execute_result.code !== 0n) {
 			throw new Error(`adb execute failed : ${execute_result.code}\n${execute_result.error}`);

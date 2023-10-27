@@ -22,14 +22,14 @@ namespace TwinStar.Script {
 
 		start(
 		): void {
-			assert_test(this.m_last_begin === null, `TwinStar.Timer.start : timer already start`);
+			assert_test(this.m_last_begin === null, `TwinStar.Timer.start : timer already startd`);
 			this.m_last_begin = Date.now();
 			return;
 		}
 
 		stop(
 		): void {
-			assert_test(this.m_last_begin !== null, `TwinStar.Timer.stop : timer no start`);
+			assert_test(this.m_last_begin !== null, `TwinStar.Timer.stop : timer not startd`);
 			this.m_duration += Date.now() - this.m_last_begin;
 			this.m_last_begin = null;
 			return;

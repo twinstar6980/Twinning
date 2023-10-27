@@ -1288,27 +1288,6 @@ namespace TwinStar.Script.KernelX {
 
 		export namespace Wwise {
 
-			export namespace Media {
-
-				export function decode_fs(
-					ripe_file: string,
-					raw_file: string,
-					ffmpeg_program_file: string,
-					ww2ogg_program_file: string,
-					ww2ogg_code_book_file: string,
-					temporary_directory: string,
-					version: typeof Kernel.Tool.Wwise.Media.Version.Value,
-				): void {
-					let version_c = Kernel.Tool.Wwise.Media.Version.value(version);
-					let ripe_data = FileSystem.read_file(ripe_file);
-					let raw_data = Kernel.ByteArray.default();
-					Kernel.Tool.Wwise.Media.Decode.process(ripe_data.view(), raw_data, Kernel.Path.value(ffmpeg_program_file), Kernel.Path.value(ww2ogg_program_file), Kernel.Path.value(ww2ogg_code_book_file), Kernel.Path.value(temporary_directory), version_c);
-					FileSystem.write_file(raw_file, raw_data.view());
-					return;
-				}
-
-			}
-
 			export namespace SoundBank {
 
 				export type VersionNumber = typeof Kernel.Tool.Wwise.SoundBank.Version.Value.number;

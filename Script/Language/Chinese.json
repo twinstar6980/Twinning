@@ -240,12 +240,14 @@
 	"executor.implement:texture.atlas.pack_automatic:atlas_file": "图集文件",
 	"executor.implement:texture.atlas.pack_automatic:definition_file": "定义文件",
 	// Executor/Implement/wwise.media
+	"executor.implement:wwise.media.encode": "Wwise Media 编码",
+	"executor.implement:wwise.media.encode:raw_file": "原始文件",
+	"executor.implement:wwise.media.encode:ripe_file": "成品文件",
+	"executor.implement:wwise.media.encode:format": "音频格式",
+	// 
 	"executor.implement:wwise.media.decode": "Wwise Media 解码",
 	"executor.implement:wwise.media.decode:ripe_file": "成品文件",
 	"executor.implement:wwise.media.decode:raw_file": "原始文件",
-	"executor.implement:wwise.media.decode:tool_ffmpeg_program_file": "FFMPEG程序文件",
-	"executor.implement:wwise.media.decode:tool_ww2ogg_program_file": "WW2OGG程序文件",
-	"executor.implement:wwise.media.decode:tool_ww2ogg_code_book_file": "WW2OGG代码本文件",
 	// Executor/Implement/wwise.sound_bank
 	"executor.implement:wwise.sound_bank.encode": "Wwise Sound-Bank 编码",
 	"executor.implement:wwise.sound_bank.encode:bundle_directory": "捆绑目录",
@@ -546,9 +548,6 @@
 	"executor.implement:popcap.resource_stream_bundle.resource_convert:option_bnk": "BNK：提取",
 	"executor.implement:popcap.resource_stream_bundle.resource_convert:option_bnk_version_number": "BNK：版本编号",
 	"executor.implement:popcap.resource_stream_bundle.resource_convert:option_wem": "WEM：提取",
-	"executor.implement:popcap.resource_stream_bundle.resource_convert:option_wem_tool_ffmpeg_program_file": "WEM：FFMPEG程序文件",
-	"executor.implement:popcap.resource_stream_bundle.resource_convert:option_wem_tool_ww2ogg_program_file": "WEM：WW2OGG程序文件",
-	"executor.implement:popcap.resource_stream_bundle.resource_convert:option_wem_tool_ww2ogg_code_book_file": "WEM：WW2OGG代码本文件",
 	// 
 	"executor.implement:popcap.resource_stream_bundle.unpack_lenient": "PopCap Resource-Stream-Bundle 宽松解包",
 	"executor.implement:popcap.resource_stream_bundle.unpack_lenient:data_file": "数据文件",
