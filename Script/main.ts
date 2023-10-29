@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 90;
+	export const k_version = 91;
 
 	// ------------------------------------------------
 
@@ -230,6 +230,7 @@ namespace TwinStar.Script {
 			`Support/PvZ2/RegularResourceManifest/Convert`,
 			`Support/PvZ2/ResourceConvert`,
 			`Support/PvZ2/RemoteAndroidHelper`,
+			`Support/Kairosoft/UserData/Recrypt`,
 			`Executor/Generic`,
 			`Executor/Typical`,
 			`Executor/Implement/js`,
@@ -266,6 +267,7 @@ namespace TwinStar.Script {
 			`Executor/Implement/pvz2.text_table`,
 			`Executor/Implement/pvz2.resource_manifest`,
 			`Executor/Implement/pvz2.remote_android_helper`,
+			`Executor/Implement/kairosoft.user_data`,
 			`Entry/Entry`,
 		];
 

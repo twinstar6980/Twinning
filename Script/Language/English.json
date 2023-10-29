@@ -595,6 +595,12 @@
 	"executor.implement:pvz2.remote_android_helper.launch": "PvZ-2 Remote-Android-Helper Launch",
 	"executor.implement:pvz2.remote_android_helper.launch:project_directory": "Project directory",
 	"executor.implement:pvz2.remote_android_helper.launch:action": "Action",
+	// Executor/Implement/kairosoft.user_data
+	"executor.implement:kairosoft.user_data.recrypt": "Kairosoft User-Data Recrypt",
+	"executor.implement:kairosoft.user_data.recrypt:old_directory": "Old data directory",
+	"executor.implement:kairosoft.user_data.recrypt:new_directory": "New data directory",
+	"executor.implement:kairosoft.user_data.recrypt:old_key": "Old key",
+	"executor.implement:kairosoft.user_data.recrypt:new_key": "New key",
 	// Executable/JSShell
 	"executable.js_shell:input_start": "JS Interation Mode enabled",
 	"executable.js_shell:input_description": "Enter empty string to finish one round of input, enter empty strings for an entire round to finish interation",
