@@ -194,7 +194,8 @@ namespace TwinStar::Kernel::Tool {
 				state_exchanger(data, value_state);
 				if (value_state) {
 					value.set();
-				} else {
+				}
+				else {
 					value.reset();
 				}
 			}

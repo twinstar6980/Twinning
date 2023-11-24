@@ -17,49 +17,49 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle::Shared {
 	M_enumeration(
 		M_wrap(ResourceType),
 		M_wrap(
-			generic,
+			general,
 			texture,
 		),
 	);
 
 	#pragma endregion
 
-	#pragma region resource data section store mode
+	#pragma region packet compression
 
-	M_record_of_list(
-		M_wrap(ResourceDataSectionStoreMode),
+	M_record_of_map(
+		M_wrap(PacketCompression),
 		M_wrap(
-			(Boolean) compress_generic,
-			(Boolean) compress_texture,
+			(Boolean) general,
+			(Boolean) texture,
 		),
 	);
 
 	// ----------------
 
-	inline constexpr auto k_resource_data_section_store_mode_flag_count = Size{2_sz};
+	inline constexpr auto k_packet_compression_flag_count = Size{2_sz};
 
-	namespace ResourceDataStoreModeFlag {
-		inline constexpr auto compress_texture = Size{1_ix};
-		inline constexpr auto compress_generic = Size{2_ix};
+	namespace PacketCompressionFlag {
+		inline constexpr auto texture = Size{1_ix};
+		inline constexpr auto general = Size{2_ix};
 	}
 
-	inline auto resource_data_section_store_mode_to_data (
-		ResourceDataSectionStoreMode const & value
+	inline auto packet_compression_to_data (
+		PacketCompression const & value
 	) -> IntegerU32 {
-		auto data_bit = BitSet<k_resource_data_section_store_mode_flag_count>{};
-		data_bit.set(ResourceDataStoreModeFlag::compress_generic, value.compress_generic);
-		data_bit.set(ResourceDataStoreModeFlag::compress_texture, value.compress_texture);
+		auto data_bit = BitSet<k_packet_compression_flag_count>{};
+		data_bit.set(PacketCompressionFlag::general, value.general);
+		data_bit.set(PacketCompressionFlag::texture, value.texture);
 		return cbw<IntegerU32>(data_bit.to_integer());
 	}
 
-	inline auto resource_data_section_store_mode_from_data (
+	inline auto packet_compression_from_data (
 		IntegerU32 const & data
-	) -> ResourceDataSectionStoreMode {
-		auto value = ResourceDataSectionStoreMode{};
-		auto data_bit = BitSet<k_resource_data_section_store_mode_flag_count>{};
+	) -> PacketCompression {
+		auto value = PacketCompression{};
+		auto data_bit = BitSet<k_packet_compression_flag_count>{};
 		data_bit.from_integer(cbw<IntegerU8>(data));
-		value.compress_generic = data_bit.get(ResourceDataStoreModeFlag::compress_generic);
-		value.compress_texture = data_bit.get(ResourceDataStoreModeFlag::compress_texture);
+		value.general = data_bit.get(PacketCompressionFlag::general);
+		value.texture = data_bit.get(PacketCompressionFlag::texture);
 		return value;
 	}
 
@@ -240,7 +240,8 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle::Shared {
 					element.key.allocate(parent_string.get().size() + string_length_in_next_stream);
 					element.key.append_list(parent_string.get());
 					parent_string.reset();
-				} else {
+				}
+				else {
 					element.key.allocate(string_length_in_next_stream);
 				}
 				while (k_true) {

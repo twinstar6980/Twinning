@@ -44,16 +44,19 @@ namespace TwinStar::Kernel::Tool::Data::Serialization::XML {
 						convert_node(raw_child, node_value.child.last());
 					}
 				}
-			} else if (auto raw_text = raw_node->ToText()) {
+			}
+			else if (auto raw_text = raw_node->ToText()) {
 				node.set_text();
 				auto & node_value = node.get_text();
 				node_value.value = make_string_view(raw_text->Value());
 				node_value.cdata = mbw<Boolean>(raw_text->CData());
-			} else if (auto raw_comment = raw_node->ToComment()) {
+			}
+			else if (auto raw_comment = raw_node->ToComment()) {
 				node.set_comment();
 				auto & node_value = node.get_comment();
 				node_value.value = make_string_view(raw_comment->Value());
-			} else {
+			}
+			else {
 				assert_fail(R"(/* node is valid */)");
 			}
 			return;

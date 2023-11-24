@@ -16,8 +16,7 @@ namespace Helper {
 		public static async Task<AnimationModel.Animation> LoadAnimation (
 			String file
 		) {
-			var text = await StorageHelper.ReadFileText(file);
-			return JsonHelper.Deserialize<AnimationModel.Animation>(text);
+			return await JsonHelper.DeserializeFile<AnimationModel.Animation>(file);
 		}
 
 		public static async Task<List<BitmapSource?>> LoadImageSource (
@@ -51,9 +50,11 @@ namespace Helper {
 			var result = default(AnimationModel.Sprite);
 			if (0 <= index && index < animation.Sprite.Count) {
 				result = animation.Sprite[index];
-			} else if (index == animation.Sprite.Count) {
+			}
+			else if (index == animation.Sprite.Count) {
 				result = animation.MainSprite ?? throw new Exception();
-			} else {
+			}
+			else {
 				throw new ArgumentException();
 			}
 			return result;
@@ -141,7 +142,8 @@ namespace Helper {
 								},
 							},
 						};
-					} else {
+					}
+					else {
 						var resource = animation.Sprite[(Size)append.Resource];
 						var resourceUI = AnimationHelper.CreateUI(
 							animation,
@@ -203,7 +205,8 @@ namespace Helper {
 								Value = change.Color[3],
 							}
 						);
-					} else if (layer.IsFirst) {
+					}
+					else if (layer.IsFirst) {
 						layer.ColorAlpha.KeyFrames.Add(
 							new DiscreteObjectKeyFrame() {
 								KeyTime = keyTime,

@@ -48,11 +48,22 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 		resource_manifest: RegularResourceManifest.Package,
 		option: Option,
 	): void {
-		let find_key_ignore_case = <T>(map: Record<string, T>, key: string): null | string => {
-			let key_lower = key.toLowerCase();
-			for (let key_in_map in map) {
-				if (key_in_map.toLowerCase() === key_lower) {
-					return key_in_map;
+		let find_item_by_id_ignore_case = <T>(list: Array<T>, value: string): null | T => {
+			let value_lower = value.toLowerCase();
+			for (let item of list) {
+				let item_value = (item as any)['id'] as string;
+				if (item_value.toLowerCase() === value_lower) {
+					return item;
+				}
+			}
+			return null;
+		};
+		let find_item_by_path_ignore_case = <T>(list: Array<T>, value: string): null | T => {
+			let value_lower = value.toLowerCase();
+			for (let item of list) {
+				let item_value = (item as any)['additional']['value']['path'] as string;
+				if (item_value.toLowerCase() === value_lower) {
+					return item;
 				}
 			}
 			return null;
@@ -63,52 +74,39 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 			resource: [string, RegularResourceManifest.Resource, Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Resource],
 		) => void): void => {
 			let group_progress = new TextGenerator.Progress('fraction', false, 40, Object.keys(package_definition.group).length);
-			for (let package_group_id in package_definition.group) {
+			for (let package_group of package_definition.group) {
 				group_progress.increase();
 				if (show_group_progress) {
-					Console.information(`${group_progress} - ${package_group_id}`, []);
+					Console.information(`${group_progress} - ${package_group.id}`, []);
 				}
-				if (/__MANIFESTGROUP__(.+)?/.test(package_group_id)) {
+				if (/__MANIFESTGROUP__(.+)?/.test(package_group.id)) {
 					continue;
 				}
-				let package_group = package_definition.group[package_group_id];
-				let group_id = find_key_ignore_case(resource_manifest.group, package_group_id);
-				if (group_id === null) {
-					Console.warning(`group not found in resource manifest : ${package_group_id}`, []);
+				let group = find_item_by_id_ignore_case(resource_manifest.group, package_group.id);
+				if (group === null) {
+					Console.warning(`group not found in resource manifest : ${package_group.id}`, []);
 					continue;
 				}
-				let group = resource_manifest.group[group_id];
-				for (let package_subgroup_id in package_group.subgroup) {
-					let package_subgroup = package_group.subgroup[package_subgroup_id];
-					let subgroup_id = find_key_ignore_case(group.subgroup, package_subgroup_id);
-					if (subgroup_id === null) {
-						Console.warning(`subgroup not found in resource manifest : ${package_subgroup_id}`, []);
+				for (let package_subgroup of package_group.subgroup) {
+					let subgroup = find_item_by_id_ignore_case(group.subgroup, package_subgroup.id);
+					if (subgroup === null) {
+						Console.warning(`subgroup not found in resource manifest : ${package_subgroup.id}`, []);
 						continue;
 					}
-					let subgroup = group.subgroup[subgroup_id];
-					for (let package_resource_path in package_subgroup.resource) {
-						let package_resource = package_subgroup.resource[package_resource_path];
-						let resource: null | RegularResourceManifest.Resource = null;
-						let resource_id = '';
-						for (let k in subgroup.resource) {
-							let resource_path = package_resource_path.toLowerCase();
-							if (resource_path.endsWith('.ptx')) {
-								resource_path = resource_path.slice(0, -4);
-							}
-							if (subgroup.resource[k].path.toLowerCase() === resource_path) {
-								resource_id = k;
-								resource = subgroup.resource[k];
-								break;
-							}
+					for (let package_resource of package_subgroup.resource) {
+						let resource_path = package_resource.path.toLowerCase();
+						if (resource_path.endsWith('.ptx')) {
+							resource_path = resource_path.slice(0, -4);
 						}
+						let resource = find_item_by_path_ignore_case(subgroup.resource, resource_path);
 						if (resource === null) {
-							Console.warning(`resource not found in resource manifest : ${package_resource_path}`, []);
+							Console.warning(`resource not found in resource manifest : ${resource_path}`, []);
 							continue;
 						}
 						worker(
-							[group_id, group, package_group],
-							[subgroup_id, subgroup, package_subgroup],
-							[resource_id, resource, package_resource],
+							[group.id, group, package_group],
+							[subgroup.id, subgroup, package_subgroup],
+							[resource.id, resource, package_resource],
 						);
 					}
 				}
@@ -120,7 +118,8 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 			]);
 			let resource_path_list: Array<string> = [];
 			iterate_resource(false)((group, subgroup, resource) => {
-				resource_path_list.push(`${resource[1].path}${(resource[1].additional.type === 'atlas' ? '.ptx' : '')}`);
+				assert_test(resource[1].additional.type !== 'dummy');
+				resource_path_list.push(`${resource[1].additional.value.path}${(resource[1].additional.type === 'texture' ? '.ptx' : '')}`);
 			});
 			let rename_tree = (
 				parent: string,
@@ -129,8 +128,9 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 				for (let name in tree) {
 					try {
 						//KernelX.FileSystem.rename(`${parent}/${name.toUpperCase()}`, `${parent}/${name}`);
-						PathUtility.safe_rename(`${parent}/${name.toUpperCase()}`, `${parent}/${name}`);
-					} catch (e) {
+						PathUtility.rename_secure(`${parent}/${name.toUpperCase()}`, `${parent}/${name}`);
+					}
+					catch (e) {
 						Console.error_of(e);
 					}
 					if (tree[name] !== null) {
@@ -144,7 +144,8 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 		Console.information(los('support.pvz2.resource_convert:convert_resource'), [
 		]);
 		iterate_resource(true)((group, subgroup, resource) => {
-			let path = resource[1].path;
+			assert_test(resource[1].additional.type !== 'dummy');
+			let path = resource[1].additional.value.path;
 			if (option.rton !== null && path.endsWith('.rton')) {
 				Console.verbosity(`  ${path}`, []);
 				try {
@@ -155,18 +156,20 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 							option.rton.version,
 							option.rton.crypt.key,
 						);
-					} else {
+					}
+					else {
 						KernelX.Tool.PopCap.ReflectionObjectNotation.decode_fs(
 							`${resource_directory}/${path}`,
 							`${option.rton.directory}/${path.slice(0, -4)}json`,
 							option.rton.version,
 						);
 					}
-				} catch (e) {
+				}
+				catch (e) {
 					Console.error_of(e);
 				}
 			}
-			if (option.ptx !== null && resource[1].additional.type === 'atlas') {
+			if (option.ptx !== null && resource[1].additional.type === 'texture') {
 				Console.verbosity(`  ${path}`, []);
 				try {
 					assert_test(resource[2].additional.type === 'texture', `invalid image resource`);
@@ -174,7 +177,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 					let texture_additional_source = resource[2].additional.value;
 					let size = atlas_image_additional.size;
 					let actual_size = texture_additional_source.size;
-					let texture_format = option.ptx.texture_format_map.find((e) => (e.index === texture_additional_source.format));
+					let texture_format = option.ptx.texture_format_map.find((value) => (value.index === texture_additional_source.format));
 					assert_test(texture_format !== undefined, `unknown texture format : ${texture_additional_source.format}`);
 					Console.verbosity(`    size : [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] of [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ] , format : ${texture_format.format}`, []);
 					let data = KernelX.FileSystem.read_file(`${resource_directory}/${path}.ptx`);
@@ -192,10 +195,11 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 					if (option.ptx.sprite !== null) {
 						Support.Atlas.Pack.unpack_fsh({
 							size: atlas_image_additional.size,
-							sprite: record_transform(atlas_image_additional.sprite, (key, value) => ([value.path, { position: value.position, size: value.size }])),
+							sprite: atlas_image_additional.sprite.map((value) => ({ name: value.path, position: value.position, size: value.size })),
 						}, image_view, option.ptx.directory);
 					}
-				} catch (e) {
+				}
+				catch (e) {
 					Console.error_of(e);
 				}
 			}
@@ -220,7 +224,8 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 						Support.PopCap.Animation.Convert.Flash.SourceManager.create_fsh(`${option.pam.directory}/${flash_directory}`, definition_js);
 						Support.PopCap.Animation.Convert.Flash.create_xfl_content_file(`${option.pam.directory}/${flash_directory}`);
 					}
-				} catch (e) {
+				}
+				catch (e) {
 					Console.error_of(e);
 				}
 			}
@@ -233,7 +238,8 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 						`${option.bnk.directory}/${path}.bundle/embedded_media`,
 						option.bnk.version,
 					);
-				} catch (e) {
+				}
+				catch (e) {
 					Console.error_of(e);
 				}
 			}
@@ -244,7 +250,8 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 						`${resource_directory}/${path}`,
 						`${option.wem.directory}/${path.slice(0, -3)}wav`,
 					);
-				} catch (e) {
+				}
+				catch (e) {
 					Console.error_of(e);
 				}
 			}
@@ -262,23 +269,21 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 		Console.information(los('support.pvz2.resource_convert:extract_resource_manifest'), []);
 		let resource_manifest: ResourceManifest.Package;
 		{
-			let group_id_list = Object.keys(package_definition.group).filter((value) => (/^__MANIFESTGROUP__(.+)?$/i.test(value)));
-			assert_test(group_id_list.length === 1, `package must has only one MANIFEST group`);
-			let group_id = group_id_list[0];
-			let group = package_definition.group[group_id];
-			assert_test(!group.composite, `MANIFEST should not be a composite group`);
-			let subgroup_id_list = Object.keys(group.subgroup);
-			assert_test(subgroup_id_list.length === 1, `MANIFEST subgroup must has only one subgroup`);
-			let subgroup_id = subgroup_id_list[0];
-			assert_test(subgroup_id === group_id, `MANIFEST subgroup id must equal group id`);
-			let subgroup = group.subgroup[subgroup_id];
-			let resource_path_list = Object.keys(subgroup.resource).filter((value) => (/^properties\/resources(.+)?\.(rton|newton)$/i.test(value)));
-			assert_test(resource_path_list.length !== 0, `MANIFEST subgroup must contains manifest file`);
+			let group_list = package_definition.group.filter((value) => (/^__MANIFESTGROUP__(.+)?$/i.test(value.id)));
+			assert_test(group_list.length === 1, `package must contain MANIFEST group`);
+			let group = group_list[0];
+			assert_test(group.subgroup.length === 1, `MANIFEST group must contain one subgroup`);
+			let subgroup = group.subgroup[0];
+			assert_test(subgroup.id === group.id, `MANIFEST subgroup id must equal group id`);
+			let resource_list = subgroup.resource.filter((value) => (/^properties\/resources(.+)?\.(rton|newton)$/i.test(value.path)));
+			assert_test(resource_list.length !== 0, `MANIFEST subgroup must contains manifest file`);
+			let resource_path_list = resource_list.map((value) => (value.path));
 			let resource_path: string;
-			if (resource_path_list.length === 1) {
+			if (resource_list.length === 1) {
 				Console.information(los('support.pvz2.resource_convert:resource_manifest_found_single'), [resource_path_list[0]]);
 				resource_path = resource_path_list[0];
-			} else {
+			}
+			else {
 				Console.information(los('support.pvz2.resource_convert:resource_manifest_found_multi'), []);
 				resource_path = Console.enumeration(Console.option_string(resource_path_list), null, null);
 			}

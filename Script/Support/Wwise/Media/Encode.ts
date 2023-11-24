@@ -178,11 +178,11 @@ namespace TwinStar.Script.Support.Wwise.Media.Encode {
 			return raw;
 		}
 		if (Shell.is_macintosh) {
-			// location at wine drive Z
+			// locate at wine drive Z
 			assert_test(raw.startsWith('/'));
 			return `Z:${raw}`;
 		}
-		assert_test(false);
+		assert_fail();
 	};
 
 	export function encode_fs(

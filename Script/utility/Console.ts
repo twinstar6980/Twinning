@@ -83,20 +83,23 @@ namespace TwinStar.Script.Console {
 			if (initial !== undefined) {
 				result = initial;
 				initial = undefined;
-			} else {
+			}
+			else {
 				input = inputer();
 				echoer(input);
 				let convert_result = converter(input);
 				if (typeof convert_result === 'string') {
 					state = convert_result;
-				} else {
+				}
+				else {
 					result = convert_result[0];
 				}
 			}
 			if (state === null) {
 				if (result === null) {
 					state = nullable ? null : los('console:not_nullable');
-				} else {
+				}
+				else {
 					state = checker(result);
 				}
 			}
@@ -544,7 +547,8 @@ namespace TwinStar.Script.Console {
 			let result: string;
 			if (value[0] !== ':') {
 				result = value;
-			} else {
+			}
+			else {
 				switch (value[1]) {
 					case ':': {
 						result = value.substring(2);
@@ -628,7 +632,8 @@ namespace TwinStar.Script.Console {
 			let result: string;
 			if (value[0] !== ':') {
 				result = Home.of(PathUtility.regularize(unquote_string(value)));
-			} else {
+			}
+			else {
 				switch (value[1]) {
 					case ':': {
 						result = Home.of(PathUtility.regularize(value.substring(2)));
@@ -722,43 +727,28 @@ namespace TwinStar.Script.Console {
 			}
 			return [result];
 		};
-		let checker_proxy = (value: string) => {
-			let result = null as null | string;
-			if (rule === 'any') {
-				result = null;
+		let checker_proxy = (value: string): null | string => {
+			if (value.length === 0) {
+				return los('console:path_is_empty');
 			}
 			if (rule === 'input') {
 				if (!KernelX.FileSystem.exist(value)) {
-					result = los('console:path_not_exist');
-				} else {
-					switch (type) {
-						case 'any': {
-							result = null;
-							break;
-						}
-						case 'file': {
-							result = KernelX.FileSystem.exist_file(value) ? null : los('console:path_is_exist_not_file');
-							break;
-						}
-						case 'directory': {
-							result = KernelX.FileSystem.exist_directory(value) ? null : los('console:path_is_exist_not_directory');
-							break;
-						}
-					}
+					return los('console:path_not_exist');
+				}
+				if (type === 'file' && !KernelX.FileSystem.exist_file(value)) {
+					return los('console:path_is_exist_not_file');
+				}
+				if (type === 'directory' && !KernelX.FileSystem.exist_directory(value)) {
+					return los('console:path_is_exist_not_directory');
 				}
 			}
 			if (rule === 'output') {
-				if (!KernelX.FileSystem.exist(value)) {
-					result = null;
-				} else {
-					result = state_data.allow_overwrite ? null : los('console:path_is_exist');
+				if (!state_data.allow_overwrite && KernelX.FileSystem.exist(value)) {
+					return los('console:path_is_exist');
 				}
 			}
 			state_data.last_value = value;
 			state_data.allow_overwrite = false;
-			if (result !== null) {
-				return result;
-			}
 			return checker === null ? null : checker(value);
 		};
 		if (Shell.is_cli) {
@@ -934,15 +924,10 @@ namespace TwinStar.Script.Console {
 
 	// ------------------------------------------------
 
-	export let g_disable_notification = false;
-
 	export function push_notification(
 		title: string,
 		description: string,
 	): void {
-		if (g_disable_notification) {
-			return;
-		}
 		if (Shell.is_cli) {
 			Shell.cli_push_notification(title, description);
 		}

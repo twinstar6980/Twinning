@@ -65,7 +65,8 @@ namespace TwinStar::Kernel::Tool::Texture::Compression::PVRTC4 {
 		) -> Void {
 			if (!with_alpha) {
 				process_image_rgb(data, image);
-			} else {
+			}
+			else {
 				process_image_rgba(data, image);
 			}
 			return;

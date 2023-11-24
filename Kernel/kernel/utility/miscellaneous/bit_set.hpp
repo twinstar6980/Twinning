@@ -17,15 +17,20 @@ namespace TwinStar::Kernel {
 		using BoundedInteger = decltype([] {
 			if constexpr (t_size <= 0_sz) {
 				return declare<Void>();
-			} else if constexpr (t_size <= 8_sz) {
+			}
+			else if constexpr (t_size <= 8_sz) {
 				return declare<IntegerU8>();
-			} else if constexpr (t_size <= 16_sz) {
+			}
+			else if constexpr (t_size <= 16_sz) {
 				return declare<IntegerU16>();
-			} else if constexpr (t_size <= 32_sz) {
+			}
+			else if constexpr (t_size <= 32_sz) {
 				return declare<IntegerU32>();
-			} else if constexpr (t_size <= 64_sz) {
+			}
+			else if constexpr (t_size <= 64_sz) {
 				return declare<IntegerU64>();
-			} else {
+			}
+			else {
 				return declare<Void>();
 			}
 		}());

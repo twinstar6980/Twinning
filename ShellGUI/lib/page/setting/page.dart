@@ -25,7 +25,6 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
 
   String? _applicationSharedDirectory = null;
-
   Boolean _hasStoragePermission = false;
 
   // ----------------
@@ -682,54 +681,6 @@ class _SettingPageState extends State<SettingPage> {
                     'Miscellaneous',
                     style: theme.textTheme.titleSmall!.copyWith(color: theme.colorScheme.primary),
                   ),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.exit_to_app_outlined),
-                  title: const Text('Automatic Exit'),
-                  trailing: SizedBox(
-                    width: 120,
-                    child: Row(
-                      children: [
-                        Expanded(child: Container()),
-                        Text(
-                          !setting.data.mAutomaticExit ? 'Disabled' : 'Enabled',
-                          style: theme.textTheme.bodyMedium,
-                        ),
-                      ],
-                    ),
-                  ),
-                  onTap: () async {
-                    await showDialog<String>(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text('Automatic Exit'),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Row(
-                              children: [
-                                Switch(
-                                  value: setting.data.mAutomaticExit,
-                                  onChanged: (value) {
-                                    setting.data.mAutomaticExit = value;
-                                    setting.notify();
-                                  },
-                                ),
-                                const SizedBox(width: 12),
-                                Text('Enable', style: theme.textTheme.titleMedium),
-                              ],
-                            ),
-                          ],
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context, 'OK'),
-                            child: const Text('OK'),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
                 ),
                 ListTile(
                   leading: const Icon(Icons.folder_copy_outlined),

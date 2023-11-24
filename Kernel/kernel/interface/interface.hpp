@@ -45,24 +45,11 @@ namespace TwinStar::Kernel::Interface {
 	#if defined M_interface_implement
 	M_symbol_export
 	#endif
-	extern auto version (
-		Size * * number
-	) -> String *;
-
-	#if defined M_interface_implement
-	M_symbol_export
-	#endif
 	extern auto execute (
 		Callback * *   callback,
 		String * *     script,
 		StringList * * argument,
 		String * *     result
-	) -> String *;
-
-	#if defined M_interface_implement
-	M_symbol_export
-	#endif
-	extern auto prepare (
 	) -> String *;
 
 }

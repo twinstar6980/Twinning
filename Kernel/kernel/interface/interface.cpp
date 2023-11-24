@@ -14,41 +14,16 @@ namespace TwinStar::Kernel::Interface {
 	#pragma region function
 
 	M_symbol_export
-	extern auto version (
-		Size * * number
-	) -> String * {
-		thread_local auto exception_handler = Kernel::String{};
-		thread_local auto number_handler = Kernel::Size{};
-		restruct(exception_handler);
-		restruct(number_handler);
-		*number = &self_cast<Size>(number_handler);
-		#if defined M_build_release
-		try {
-		#endif
-			Implement::version(
-				self_cast<Kernel::Size>(**number)
-			);
-			return nullptr;
-		#if defined M_build_release
-		} catch (...) {
-			auto exception_value = make_string(parse_current_exception().what());
-			exception_handler = as_moveable(exception_value);
-			return &self_cast<String>(exception_handler);
-		}
-		#endif
-	}
-
-	M_symbol_export
 	extern auto execute (
 		Callback * *   callback,
 		String * *     script,
 		StringList * * argument,
 		String * *     result
 	) -> String * {
-		thread_local auto exception_handler = Kernel::String{};
 		thread_local auto result_handler = Kernel::String{};
-		restruct(exception_handler);
+		thread_local auto exception_handler = Kernel::String{};
 		restruct(result_handler);
+		restruct(exception_handler);
 		*result = &self_cast<String>(result_handler);
 		#if defined M_build_release
 		try {
@@ -61,27 +36,8 @@ namespace TwinStar::Kernel::Interface {
 			);
 			return nullptr;
 		#if defined M_build_release
-		} catch (...) {
-			auto exception_value = make_string(parse_current_exception().what());
-			exception_handler = as_moveable(exception_value);
-			return &self_cast<String>(exception_handler);
 		}
-		#endif
-	}
-
-	M_symbol_export
-	extern auto prepare (
-	) -> String * {
-		thread_local auto exception_handler = Kernel::String{};
-		restruct(exception_handler);
-		#if defined M_build_release
-		try {
-		#endif
-			Implement::prepare(
-			);
-			return nullptr;
-		#if defined M_build_release
-		} catch (...) {
+		catch (...) {
 			auto exception_value = make_string(parse_current_exception().what());
 			exception_handler = as_moveable(exception_value);
 			return &self_cast<String>(exception_handler);

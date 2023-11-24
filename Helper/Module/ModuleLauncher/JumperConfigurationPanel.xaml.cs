@@ -6,7 +6,7 @@ using Helper.Utility;
 
 namespace Helper.Module.ModuleLauncher {
 
-	public sealed partial class JumperConfigurationPanel : UserControl {
+	public sealed partial class JumperConfigurationPanel : CustomControl {
 
 		#region life
 
@@ -18,7 +18,15 @@ namespace Helper.Module.ModuleLauncher {
 
 		// ----------------
 
-		public JumperConfigurationPanelController Controller { get; }
+		private JumperConfigurationPanelController Controller { get; }
+
+		// ----------------
+
+		protected override void StampUpdate (
+		) {
+			this.Controller.Update();
+			return;
+		}
 
 		#endregion
 
@@ -28,28 +36,17 @@ namespace Helper.Module.ModuleLauncher {
 			nameof(JumperConfigurationPanel.Configuration),
 			typeof(JumperConfiguration),
 			typeof(JumperConfigurationPanel),
-			new PropertyMetadata(new JumperConfiguration() { Title = "", WindowOption = new List<String>(), ModuleType = ModuleType.ModuleLauncher, ModuleOption = new List<String>() })
-		);
-
-		public JumperConfiguration Configuration {
-			get => this.GetValue(JumperConfigurationPanel.ConfigurationProperty) as JumperConfiguration ?? throw new NullReferenceException();
-			set => this.SetValue(JumperConfigurationPanel.ConfigurationProperty, value);
-		}
-
-		// ----------------
-
-		public static readonly DependencyProperty StampProperty = DependencyProperty.Register(
-			nameof(JumperConfigurationPanel.Stamp),
-			typeof(UniqueStamp),
-			typeof(JumperConfigurationPanel),
-			new PropertyMetadata(UniqueStamp.Default, (o, e) => {
-				(o as JumperConfigurationPanel)!.Controller.Update();
+			new PropertyMetadata(new JumperConfiguration() {
+				Title = "",
+				WindowOption = new List<String>(),
+				ModuleType = ModuleType.ModuleLauncher,
+				ModuleOption = new List<String>(),
 			})
 		);
 
-		public UniqueStamp Stamp {
-			get => this.GetValue(JumperConfigurationPanel.StampProperty) as UniqueStamp ?? throw new Exception();
-			set => this.SetValue(JumperConfigurationPanel.StampProperty, value);
+		public JumperConfiguration Configuration {
+			get => this.GetValue(JumperConfigurationPanel.ConfigurationProperty).AsClass<JumperConfiguration>();
+			set => this.SetValue(JumperConfigurationPanel.ConfigurationProperty, value);
 		}
 
 		#endregion
@@ -73,6 +70,10 @@ namespace Helper.Module.ModuleLauncher {
 		public async void Update (
 		) {
 			this.NotifyPropertyChanged(
+				nameof(this.uTitleText_Text),
+				nameof(this.uModuleTypeSelect_SelectedIndex),
+				nameof(this.uModuleOptionText_Text),
+				nameof(this.uWindowOptionText_Text)
 			);
 			return;
 		}
@@ -87,11 +88,11 @@ namespace Helper.Module.ModuleLauncher {
 			}
 		}
 
-		public async void uTitleText_OnTextChanged (
+		public async void uTitleText_TextChanged (
 			Object               sender,
 			TextChangedEventArgs args
 		) {
-			if (sender is not TextBox senders) { return; }
+			var senders = sender.AsClass<TextBox>();
 			this.Configuration.Title = senders.Text;
 			return;
 		}
@@ -112,11 +113,11 @@ namespace Helper.Module.ModuleLauncher {
 			}
 		}
 
-		public async void uModuleTypeSelect_OnSelectionChanged (
+		public async void uModuleTypeSelect_SelectionChanged (
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			if (sender is not ComboBox senders) { return; }
+			var senders = sender.AsClass<ComboBox>();
 			this.Configuration.ModuleType = (ModuleType)senders.SelectedIndex;
 			return;
 		}
@@ -127,20 +128,16 @@ namespace Helper.Module.ModuleLauncher {
 
 		public String uModuleOptionText_Text {
 			get {
-				return String.Join('\r', this.Configuration.ModuleOption);
+				return ConvertHelper.StringListToTextWithCr(this.Configuration.ModuleOption);
 			}
 		}
 
-		public async void uModuleOptionText_OnTextChanged (
+		public async void uModuleOptionText_TextChanged (
 			Object               sender,
 			TextChangedEventArgs args
 		) {
-			if (sender is not TextBox senders) { return; }
-			var parsedValue = senders.Text.Split('\r').ToList();
-			if (parsedValue.Count != 0 && parsedValue.Last().Length == 0) {
-				parsedValue.RemoveAt(parsedValue.Count - 1);
-			}
-			this.Configuration.ModuleOption = parsedValue;
+			var senders = sender.AsClass<TextBox>();
+			this.Configuration.ModuleOption = ConvertHelper.StringListFromTextWithCr(senders.Text);
 			return;
 		}
 
@@ -150,20 +147,16 @@ namespace Helper.Module.ModuleLauncher {
 
 		public String uWindowOptionText_Text {
 			get {
-				return String.Join('\r', this.Configuration.WindowOption);
+				return ConvertHelper.StringListToTextWithCr(this.Configuration.WindowOption);
 			}
 		}
 
-		public async void uWindowOptionText_OnTextChanged (
+		public async void uWindowOptionText_TextChanged (
 			Object               sender,
 			TextChangedEventArgs args
 		) {
-			if (sender is not TextBox senders) { return; }
-			var parsedValue = senders.Text.Split('\r').ToList();
-			if (parsedValue.Count != 0 && parsedValue.Last().Length == 0) {
-				parsedValue.RemoveAt(parsedValue.Count - 1);
-			}
-			this.Configuration.WindowOption = parsedValue;
+			var senders = sender.AsClass<TextBox>();
+			this.Configuration.WindowOption = ConvertHelper.StringListFromTextWithCr(senders.Text);
 			return;
 		}
 

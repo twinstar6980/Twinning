@@ -147,7 +147,8 @@ namespace TwinStar::Kernel::Trait {
 	) -> Void {
 		if (std::is_constant_evaluated()) {
 			it = AsUnmakeConstant<It>{as_forward<Argument>(argument) ...};
-		} else {
+		}
+		else {
 			new(&as_variable(it)) AsUnmakeConstant<It>{as_forward<Argument>(argument) ...};
 		}
 		return;
@@ -160,7 +161,8 @@ namespace TwinStar::Kernel::Trait {
 		It & it
 	) -> Void {
 		if (std::is_constant_evaluated()) {
-		} else {
+		}
+		else {
 			it.~It();
 		}
 		return;

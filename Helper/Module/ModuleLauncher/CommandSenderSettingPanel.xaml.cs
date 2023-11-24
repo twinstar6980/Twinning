@@ -6,7 +6,7 @@ using Helper.Utility;
 
 namespace Helper.Module.ModuleLauncher {
 
-	public sealed partial class CommandSenderSettingPanel : UserControl {
+	public sealed partial class CommandSenderSettingPanel : CustomControl {
 
 		#region life
 
@@ -18,7 +18,19 @@ namespace Helper.Module.ModuleLauncher {
 
 		// ----------------
 
-		public CommandSenderSettingPanelController Controller { get; }
+		private CommandSenderSettingPanelController Controller { get; }
+
+		// ----------------
+
+		protected override void StampUpdate (
+		) {
+			this.Controller.Update();
+			return;
+		}
+
+		#endregion
+
+		#region property
 
 		#endregion
 
@@ -32,6 +44,17 @@ namespace Helper.Module.ModuleLauncher {
 
 		#endregion
 
+		#region update
+
+		public async void Update (
+		) {
+			this.NotifyPropertyChanged(
+			);
+			return;
+		}
+
+		#endregion
+
 		#region method configuration
 
 		public String uMethodConfigurationText_Text {
@@ -40,23 +63,23 @@ namespace Helper.Module.ModuleLauncher {
 			}
 		}
 
-		public async void uMethodConfigurationText_OnTextChanged (
+		public async void uMethodConfigurationText_TextChanged (
 			Object               sender,
 			TextChangedEventArgs args
 		) {
-			if (sender is not TextBox senders) { return; }
+			var senders = sender.AsClass<TextBox>();
 			Setting.Data.CommandSender.MethodConfiguration = senders.Text;
 			return;
 		}
 
-		public async void uMethodConfigurationPick_OnClick (
+		public async void uMethodConfigurationPick_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
-			var newValue = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View));
-			if (newValue is not null) {
-				Setting.Data.CommandSender.MethodConfiguration = newValue;
+			var senders = sender.AsClass<Button>();
+			var value = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View));
+			if (value is not null) {
+				Setting.Data.CommandSender.MethodConfiguration = value;
 				this.NotifyPropertyChanged(
 					nameof(this.uMethodConfigurationText_Text)
 				);

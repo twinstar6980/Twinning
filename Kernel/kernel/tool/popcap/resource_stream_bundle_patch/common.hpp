@@ -94,7 +94,7 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 						make_initializer_list(
 							{
 								information_structure.header.information_section_size,
-								information_structure.header.generic_resource_data_section_offset + information_structure.header.generic_resource_data_section_size_original,
+								information_structure.header.general_resource_data_section_offset + information_structure.header.general_resource_data_section_size_original,
 								information_structure.header.texture_resource_data_section_offset + information_structure.header.texture_resource_data_section_size_original,
 							}
 						)
@@ -103,24 +103,26 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 			);
 			ripe.write(raw.sub_view(k_begin_index, cbw<Size>(information_structure.header.information_section_size)));
 			ripe.write_space(k_null_byte, compute_padding_size(ripe.position(), k_padding_unit_size));
-			auto resource_data_section_store_mode = resource_data_section_store_mode_from_data(information_structure.header.resource_data_section_store_mode);
+			auto resource_data_section_compression = packet_compression_from_data(information_structure.header.resource_data_section_compression);
 			{
-				information_structure.header.generic_resource_data_section_offset = cbw<IntegerU32>(ripe.position());
-				auto resource_data_section_view = raw.sub_view(cbw<Size>(information_structure.header.generic_resource_data_section_offset), cbw<Size>(information_structure.header.generic_resource_data_section_size_original));
-				if (!resource_data_section_store_mode.compress_generic) {
+				information_structure.header.general_resource_data_section_offset = cbw<IntegerU32>(ripe.position());
+				auto resource_data_section_view = raw.sub_view(cbw<Size>(information_structure.header.general_resource_data_section_offset), cbw<Size>(information_structure.header.general_resource_data_section_size_original));
+				if (!resource_data_section_compression.general) {
 					ripe.write(resource_data_section_view);
-				} else {
+				}
+				else {
 					Data::Compression::Deflate::Compress::process(as_lvalue(IByteStreamView{resource_data_section_view}), ripe, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
 					ripe.write_space(k_null_byte, compute_padding_size(ripe.position(), k_padding_unit_size));
 				}
-				information_structure.header.generic_resource_data_section_size = cbw<IntegerU32>(ripe.position()) - information_structure.header.generic_resource_data_section_offset;
+				information_structure.header.general_resource_data_section_size = cbw<IntegerU32>(ripe.position()) - information_structure.header.general_resource_data_section_offset;
 			}
 			{
 				information_structure.header.texture_resource_data_section_offset = cbw<IntegerU32>(ripe.position());
 				auto resource_data_section_view = raw.sub_view(cbw<Size>(information_structure.header.texture_resource_data_section_offset), cbw<Size>(information_structure.header.texture_resource_data_section_size_original));
-				if (!resource_data_section_store_mode.compress_texture || cbw<Size>(information_structure.header.texture_resource_data_section_size_original) == k_none_size) {
+				if (!resource_data_section_compression.texture || cbw<Size>(information_structure.header.texture_resource_data_section_size_original) == k_none_size) {
 					ripe.write(resource_data_section_view);
-				} else {
+				}
+				else {
 					Data::Compression::Deflate::Compress::process(as_lvalue(IByteStreamView{resource_data_section_view}), ripe, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
 					ripe.write_space(k_null_byte, compute_padding_size(ripe.position(), k_padding_unit_size));
 				}
@@ -147,7 +149,7 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 						make_initializer_list(
 							{
 								information_structure.header.information_section_size,
-								information_structure.header.generic_resource_data_section_offset + information_structure.header.generic_resource_data_section_size,
+								information_structure.header.general_resource_data_section_offset + information_structure.header.general_resource_data_section_size,
 								information_structure.header.texture_resource_data_section_offset + information_structure.header.texture_resource_data_section_size,
 							}
 						)
@@ -156,21 +158,23 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 			);
 			raw.write(ripe.sub_view(k_begin_index, cbw<Size>(information_structure.header.information_section_size)));
 			raw.write_space(k_null_byte, compute_padding_size(raw.position(), k_padding_unit_size));
-			auto resource_data_section_store_mode = resource_data_section_store_mode_from_data(information_structure.header.resource_data_section_store_mode);
+			auto resource_data_section_compression = packet_compression_from_data(information_structure.header.resource_data_section_compression);
 			{
-				auto resource_data_section_view = ripe.sub_view(cbw<Size>(information_structure.header.generic_resource_data_section_offset), cbw<Size>(information_structure.header.generic_resource_data_section_size));
-				if (!resource_data_section_store_mode.compress_generic) {
+				auto resource_data_section_view = ripe.sub_view(cbw<Size>(information_structure.header.general_resource_data_section_offset), cbw<Size>(information_structure.header.general_resource_data_section_size));
+				if (!resource_data_section_compression.general) {
 					raw.write(resource_data_section_view);
-				} else {
+				}
+				else {
 					Data::Compression::Deflate::Uncompress::process(as_lvalue(IByteStreamView{resource_data_section_view}), raw, 15_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
 				}
 				raw.write_space(k_null_byte, compute_padding_size(raw.position(), k_padding_unit_size));
 			}
 			{
 				auto resource_data_section_view = ripe.sub_view(cbw<Size>(information_structure.header.texture_resource_data_section_offset), cbw<Size>(information_structure.header.texture_resource_data_section_size));
-				if (!resource_data_section_store_mode.compress_texture || cbw<Size>(information_structure.header.texture_resource_data_section_size_original) == k_none_size) {
+				if (!resource_data_section_compression.texture || cbw<Size>(information_structure.header.texture_resource_data_section_size_original) == k_none_size) {
 					raw.write(resource_data_section_view);
-				} else {
+				}
+				else {
 					Data::Compression::Deflate::Uncompress::process(as_lvalue(IByteStreamView{resource_data_section_view}), raw, 15_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
 				}
 				raw.write_space(k_null_byte, compute_padding_size(raw.position(), k_padding_unit_size));

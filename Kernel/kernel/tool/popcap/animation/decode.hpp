@@ -60,7 +60,8 @@ namespace TwinStar::Kernel::Tool::PopCap::Animation {
 			auto value_long = RawLongValue{};
 			if (value_short != value_short_maximum) {
 				value_long = cbw<RawLongValue>(value_short);
-			} else {
+			}
+			else {
 				value_long = data.read_of<RawLongValue>();
 			}
 			value = cbw<Integer>(value_long);
@@ -85,7 +86,8 @@ namespace TwinStar::Kernel::Tool::PopCap::Animation {
 			auto value_long = RawLongValue{};
 			if (value_short != value_short_maximum) {
 				value_long = cbw<RawLongValue>(value_short);
-			} else {
+			}
+			else {
 				value_long = data.read_of<RawLongValue>();
 			}
 			value = cbw<Integer>(value_long);
@@ -131,27 +133,32 @@ namespace TwinStar::Kernel::Tool::PopCap::Animation {
 			}
 			if (flag.get(LayerAppendFlag::sprite)) {
 				value.sprite = k_true;
-			} else {
+			}
+			else {
 				value.sprite = k_false;
 			}
 			if (flag.get(LayerAppendFlag::additive)) {
 				value.additive = k_true;
-			} else {
+			}
+			else {
 				value.additive = k_false;
 			}
 			if (flag.get(LayerAppendFlag::preload_frame)) {
 				exchange_integer_fixed<IntegerS16>(data, value.preload_frame);
-			} else {
+			}
+			else {
 				value.preload_frame = 0_i;
 			}
 			if (flag.get(LayerAppendFlag::name)) {
 				exchange_string_block<IntegerU16>(data, value.name.set());
-			} else {
+			}
+			else {
 				value.name.reset();
 			}
 			if (flag.get(LayerAppendFlag::time_scale)) {
 				exchange_floater_with_rate<IntegerS32, ValueRate::time>(data, value.time_scale);
-			} else {
+			}
+			else {
 				value.time_scale = 1.0_f;
 			}
 			return;
@@ -203,7 +210,8 @@ namespace TwinStar::Kernel::Tool::PopCap::Animation {
 						exchange_floater_with_rate<IntegerS32, ValueRate::size>(data, value.y);
 					}
 				);
-			} else {
+			}
+			else {
 				exchange_variant_value(
 					data,
 					value.transform,
@@ -224,7 +232,8 @@ namespace TwinStar::Kernel::Tool::PopCap::Animation {
 						exchange_floater_with_rate<IntegerS16, ValueRate::size>(data, value.size.height);
 					}
 				);
-			} else {
+			}
+			else {
 				value.source_rectangle.reset();
 			}
 			if (flag.get(LayerChangeFlag::color)) {
@@ -238,7 +247,8 @@ namespace TwinStar::Kernel::Tool::PopCap::Animation {
 						exchange_floater_with_rate<IntegerU8, ValueRate::color>(data, value.alpha);
 					}
 				);
-			} else {
+			}
+			else {
 				value.color.reset();
 			}
 			if (flag.get(LayerChangeFlag::sprite_frame_number)) {
@@ -249,7 +259,8 @@ namespace TwinStar::Kernel::Tool::PopCap::Animation {
 						exchange_integer_fixed<IntegerS16>(data, value);
 					}
 				);
-			} else {
+			}
+			else {
 				value.sprite_frame_number.reset();
 			}
 			return;
@@ -265,27 +276,32 @@ namespace TwinStar::Kernel::Tool::PopCap::Animation {
 			flag.from_integer(cbw<IntegerU8>(flag_integer));
 			if (flag.get(FrameFlag::remove)) {
 				exchange_list(data, value.remove, &exchange_size_variant<IntegerU8, IntegerU16>, &exchange_layer_remove);
-			} else {
+			}
+			else {
 				value.remove.reset();
 			}
 			if (flag.get(FrameFlag::append)) {
 				exchange_list(data, value.append, &exchange_size_variant<IntegerU8, IntegerU16>, &exchange_layer_append);
-			} else {
+			}
+			else {
 				value.append.reset();
 			}
 			if (flag.get(FrameFlag::change)) {
 				exchange_list(data, value.change, &exchange_size_variant<IntegerU8, IntegerU16>, &exchange_layer_change);
-			} else {
+			}
+			else {
 				value.change.reset();
 			}
 			if (flag.get(FrameFlag::label)) {
 				exchange_string_block<IntegerU16>(data, value.label.set());
-			} else {
+			}
+			else {
 				value.label.reset();
 			}
 			if (flag.get(FrameFlag::stop)) {
 				value.stop = k_true;
-			} else {
+			}
+			else {
 				value.stop = k_false;
 			}
 			if (flag.get(FrameFlag::command)) {
@@ -298,7 +314,8 @@ namespace TwinStar::Kernel::Tool::PopCap::Animation {
 						exchange_string_block<IntegerU16>(data, value.argument);
 					}
 				);
-			} else {
+			}
+			else {
 				value.command.reset();
 			}
 			return;

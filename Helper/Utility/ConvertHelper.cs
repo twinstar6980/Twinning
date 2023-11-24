@@ -36,15 +36,6 @@ namespace Helper.Utility {
 			};
 		}
 
-		public static String BooleanToSwitchString (
-			Boolean value
-		) {
-			return value switch {
-				false => "Off",
-				true  => "On",
-			};
-		}
-
 		#endregion
 
 		#region theme
@@ -56,8 +47,28 @@ namespace Helper.Utility {
 				ElementTheme.Default => "System",
 				ElementTheme.Light   => "Light",
 				ElementTheme.Dark    => "Dark",
-				_                    => throw new ArgumentOutOfRangeException(nameof(value), value, null),
+				_                    => throw new ArgumentOutOfRangeException(),
 			};
+		}
+
+		#endregion
+
+		#region string list
+
+		public static String StringListToTextWithCr (
+			List<String> value
+		) {
+			return String.Join('\r', value) + (value.Count != 0 && value.Last().Length == 0 ? "\r" : "");
+		}
+
+		public static List<String> StringListFromTextWithCr (
+			String text
+		) {
+			var value = text.Split('\r').ToList();
+			if (value.Count != 0 && value.Last().Length == 0) {
+				value.RemoveAt(value.Count - 1);
+			}
+			return value;
 		}
 
 		#endregion

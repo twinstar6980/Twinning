@@ -8,148 +8,206 @@
 	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:Helper"
 	xmlns:localModuleCommandSender="using:Helper.Module.CommandSender"
-	xmlns:my="using:Helper.CustomControl"
+	xmlns:my="using:Helper.CommonControl"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
 	AllowDrop="True"
-	DragOver="{x:Bind Controller.uPage_OnDragOver}"
-	Drop="{x:Bind Controller.uPage_OnDrop}"
+	DragOver="{x:Bind Controller.uPage_DragOver}"
+	Drop="{x:Bind Controller.uPage_Drop}"
 >
-	<my:MStack Padding="8,4" MinWidth="960" Orientation="Horizontal" Spacing="4">
-		<my:MStack Padding="0,-4,0,0" Width="352" VerticalAlignment="Stretch" Orientation="Vertical" Spacing="0">
-			<my:MHeaderBar
+	<my:Stack
+		Padding="4,4"
+		MinWidth="960"
+		Orientation="Horizontal" Spacing="4"
+	>
+		<my:Stack
+			Padding="0,-4,0,0"
+			Width="352"
+			VerticalAlignment="Stretch"
+			Orientation="Vertical" Spacing="0"
+		>
+			<my:HeaderBar
 				HorizontalAlignment="Stretch"
 				Icon="{StaticResource FluentIconGlyph.Bookmarks}"
 				Title="Method"
 			>
-				<my:MHeaderBar.Action>
-					<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
-						<Button
-							VerticalAlignment="Center"
-							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph=' '}"
-							IsEnabled="False" Opacity="0"
-						/>
-					</my:MStack>
-				</my:MHeaderBar.Action>
-			</my:MHeaderBar>
-			<my:MDivider Height="{StaticResource DividerThickness}" />
+				<my:HeaderBar.Action>
+					<my:Stack
+						Padding="0,0"
+						Orientation="Horizontal" Spacing="8"
+					>
+					</my:Stack>
+				</my:HeaderBar.Action>
+			</my:HeaderBar>
+			<my:Divider Height="{StaticResource DividerThickness}" />
 			<TreeView
-				my:MStack.Weight="1" VerticalAlignment="Stretch"
+				my:Stack.Weight="1" VerticalAlignment="Stretch"
 				HorizontalAlignment="Stretch"
 				SelectionMode="None" CanDragItems="False" CanReorderItems="False"
-				ItemsSource="{x:Bind Controller.uAvailableMethod_ItemsSource}"
-				ItemInvoked="{x:Bind Controller.uAvailableMethod_OnItemInvoked}"
+				ItemsSource="{x:Bind Controller.uAvailableMethodList_ItemsSource}"
+				ItemInvoked="{x:Bind Controller.uAvailableMethodList_ItemInvoked}"
 			>
 				<TreeView.ItemTemplateSelector>
 					<localModuleCommandSender:MainPageAvailableMethodItemTemplateSelector>
 						<localModuleCommandSender:MainPageAvailableMethodItemTemplateSelector.GroupTemplate>
 							<DataTemplate x:DataType="localModuleCommandSender:MainPageAvailableMethodGroupItemController">
-								<TreeViewItem ItemsSource="{x:Bind uRoot_ItemsSource}" HasUnrealizedChildren="True" IsExpanded="True">
-									<my:MStack Padding="0,0,0,0" Orientation="Horizontal" Spacing="12">
-										<FontIcon VerticalAlignment="Center" FontSize="{StaticResource SmallIconSize}" Glyph="{x:Bind uIcon_Glyph}" />
-										<TextBlock my:MStack.Weight="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="NoWrap" Text="{x:Bind uName_Text}" />
-										<Button
-											Width="0" Height="NaN"
+								<TreeViewItem
+									ItemsSource="{x:Bind uRoot_ItemsSource}"
+									HasUnrealizedChildren="True" IsExpanded="True"
+								>
+									<my:Stack
+										Padding="0,0,12,0"
+										Height="32"
+										Orientation="Horizontal" Spacing="12"
+									>
+										<FontIcon
 											VerticalAlignment="Center"
-											Content=" "
-											IsEnabled="False" Opacity="0"
+											FontSize="{StaticResource SmallIconSize}"
+											Glyph="{x:Bind uIcon_Glyph}"
 										/>
-									</my:MStack>
+										<TextBlock
+											my:Stack.Weight="1" HorizontalAlignment="Stretch"
+											VerticalAlignment="Center"
+											Style="{StaticResource BodyTextBlockStyle}"
+											TextWrapping="NoWrap"
+											Text="{x:Bind uName_Text}"
+										/>
+									</my:Stack>
 								</TreeViewItem>
 							</DataTemplate>
 						</localModuleCommandSender:MainPageAvailableMethodItemTemplateSelector.GroupTemplate>
 						<localModuleCommandSender:MainPageAvailableMethodItemTemplateSelector.ItemTemplate>
 							<DataTemplate x:DataType="localModuleCommandSender:MainPageAvailableMethodItemItemController">
 								<TreeViewItem>
-									<my:MStack Padding="0,0,0,0" Orientation="Horizontal" Spacing="12">
-										<FontIcon VerticalAlignment="Center" FontSize="{StaticResource SmallIconSize}" Glyph="{x:Bind uIcon_Glyph}" />
-										<TextBlock my:MStack.Weight="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="NoWrap" Text="{x:Bind uName_Text}" />
-										<FontIcon FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.MapLayers}" Opacity="{x:Bind uBatch_Opacity}" />
-										<Button
-											Width="0" Height="NaN"
+									<my:Stack
+										Padding="0,0,12,0"
+										Height="32"
+										Orientation="Horizontal" Spacing="12"
+									>
+										<FontIcon
 											VerticalAlignment="Center"
-											Content=" "
-											IsEnabled="False" Opacity="0"
+											FontSize="{StaticResource SmallIconSize}"
+											Glyph="{x:Bind uIcon_Glyph}"
 										/>
-									</my:MStack>
+										<TextBlock
+											my:Stack.Weight="1" HorizontalAlignment="Stretch"
+											VerticalAlignment="Center"
+											Style="{StaticResource BodyTextBlockStyle}"
+											TextWrapping="NoWrap"
+											Text="{x:Bind uName_Text}"
+										/>
+										<FontIcon
+											FontSize="{StaticResource MediumIconSize}"
+											Glyph="{StaticResource FluentIconGlyph.MapLayers}"
+											Opacity="{x:Bind uBatch_Opacity}"
+										/>
+									</my:Stack>
 								</TreeViewItem>
 							</DataTemplate>
 						</localModuleCommandSender:MainPageAvailableMethodItemTemplateSelector.ItemTemplate>
 					</localModuleCommandSender:MainPageAvailableMethodItemTemplateSelector>
 				</TreeView.ItemTemplateSelector>
 			</TreeView>
-		</my:MStack>
-		<my:MDivider Width="{StaticResource DividerThickness}" />
-		<my:MStack Padding="0,-4,0,0" my:MStack.Weight="1" HorizontalAlignment="Stretch" MinWidth="583" VerticalAlignment="Stretch" Orientation="Vertical" Spacing="0">
-			<my:MHeaderBar
+		</my:Stack>
+		<my:Divider Width="{StaticResource DividerThickness}" />
+		<my:Stack
+			Padding="0,-4,0,0"
+			my:Stack.Weight="1" HorizontalAlignment="Stretch" MinWidth="591"
+			VerticalAlignment="Stretch"
+			Orientation="Vertical" Spacing="0"
+		>
+			<my:HeaderBar
 				HorizontalAlignment="Stretch"
 				Icon="{StaticResource FluentIconGlyph.GroupList}"
 				Title="Argument"
 			>
-				<my:MHeaderBar.Action>
-					<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
+				<my:HeaderBar.Action>
+					<my:Stack
+						Padding="0,0"
+						Orientation="Horizontal" Spacing="8"
+					>
 						<Button
 							VerticalAlignment="Center"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Shuffle}}"
-							Click="{x:Bind Controller.uForwardWithSelectedMethodByParallel_OnClick}"
+							Click="{x:Bind Controller.uSelectedMethodForwardByParallel_Click}"
 						/>
 						<Button
 							VerticalAlignment="Center"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RightArrowKeyTime4}}"
-							Click="{x:Bind Controller.uForwardWithSelectedMethodBySequence_OnClick}"
+							Click="{x:Bind Controller.uSelectedMethodForwardBySequence_Click}"
 						/>
 						<Button
 							VerticalAlignment="Center"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Go}}"
-							Click="{x:Bind Controller.uForwardWithoutSelectedMethod_OnClick}"
+							Click="{x:Bind Controller.uSelectedMethodForwardByNone_Click}"
 						/>
-					</my:MStack>
-				</my:MHeaderBar.Action>
-			</my:MHeaderBar>
-			<my:MDivider Height="{StaticResource DividerThickness}" />
-			<ScrollViewer x:Name="uSelectedMethodScrollViewer" x:FieldModifier="public" Padding="16,0" my:MStack.Weight="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Visible">
+					</my:Stack>
+				</my:HeaderBar.Action>
+			</my:HeaderBar>
+			<my:Divider Height="{StaticResource DividerThickness}" />
+			<ScrollViewer
+				x:Name="uSelectedMethodScrollViewer" x:FieldModifier="public"
+				Padding="16,0"
+				my:Stack.Weight="1" VerticalAlignment="Stretch"
+				HorizontalAlignment="Stretch"
+				VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Visible"
+			>
 				<ItemsRepeater
 					Margin="0,8,0,0"
-					ItemsSource="{x:Bind Controller.uSelectedMethod_ItemsSource}"
+					ItemsSource="{x:Bind Controller.uSelectedMethodList_ItemsSource}"
 				>
 					<ItemsRepeater.Layout>
 						<StackLayout Orientation="Vertical" Spacing="16" />
 					</ItemsRepeater.Layout>
 					<ItemsRepeater.ItemTemplate>
 						<DataTemplate x:DataType="localModuleCommandSender:MainPageSelectedMethodItemController">
-							<my:MStack Padding="0,0" Orientation="Vertical" Spacing="8">
-								<my:MStack HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="8">
-									<TextBlock Margin="8,0,0,0" my:MStack.Weight="1" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Style="{ThemeResource SubtitleTextBlockStyle}" TextWrapping="NoWrap" Text="{x:Bind uTitle_Text}" />
+							<my:Stack
+								Padding="0,0"
+								Orientation="Vertical" Spacing="8"
+							>
+								<my:Stack
+									Padding="0,0"
+									HorizontalAlignment="Stretch" Orientation="Horizontal"
+									Spacing="8"
+								>
+									<TextBlock
+										Margin="8,0,0,0"
+										my:Stack.Weight="1" HorizontalAlignment="Stretch"
+										VerticalAlignment="Bottom"
+										Style="{ThemeResource SubtitleTextBlockStyle}"
+										TextWrapping="NoWrap"
+										Text="{x:Bind uTitle_Text}"
+									/>
 									<ToggleButton
 										VerticalAlignment="Bottom"
 										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.MapLayers}}"
 										IsEnabled="{x:Bind uBatch_IsEnabled}"
 										IsChecked="{x:Bind uBatch_IsChecked}"
-										Click="{x:Bind uBatch_OnClick}"
+										Click="{x:Bind uBatch_Click}"
 									/>
 									<Button
 										VerticalAlignment="Bottom"
 										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RightArrowKeyTime0}}"
-										Click="{x:Bind uForward_OnClick}"
+										Click="{x:Bind uForward_Click}"
 									/>
 									<Button
 										VerticalAlignment="Bottom"
 										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Remove}}"
-										Click="{x:Bind uRemove_OnClick}"
+										Click="{x:Bind uRemove_Click}"
 									/>
-								</my:MStack>
-								<my:MDivider Height="{StaticResource DividerThickness}" />
+								</my:Stack>
+								<my:Divider Height="{StaticResource DividerThickness}" />
 								<localModuleCommandSender:ArgumentPanel
 									HorizontalAlignment="Stretch"
 									Configuration="{x:Bind uArgumentPanel_Configuration}"
 									Value="{x:Bind uArgumentPanel_Value}"
 									Stamp="{x:Bind uArgumentPanel_Stamp}"
 								/>
-							</my:MStack>
+							</my:Stack>
 						</DataTemplate>
 					</ItemsRepeater.ItemTemplate>
 				</ItemsRepeater>
 			</ScrollViewer>
-		</my:MStack>
-	</my:MStack>
+		</my:Stack>
+	</my:Stack>
 </Page>

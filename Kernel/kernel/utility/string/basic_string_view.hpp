@@ -123,7 +123,8 @@ namespace TwinStar::Kernel {
 			}
 			if (thiz.size() == that.size()) {
 				return StorageOrdering::equal;
-			} else {
+			}
+			else {
 				return thiz.size() > that.size() ? (StorageOrdering::greater) : (StorageOrdering::less);
 			}
 		}

@@ -69,7 +69,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.En
 				write_string(data, subgroup.id);
 			}
 			for (let resources_index = 0; resources_index < group.resources.length; resources_index++) {
-				let resource: ResourceManifest.ResourceBase & (ResourceManifest.GenericResourceAdditional & ResourceManifest.AtlasImageResourceAdditional & ResourceManifest.SpriteImageResourceAdditional) = { ...group.resources[resources_index] } as any;
+				let resource: ResourceManifest.ResourceBase & (ResourceManifest.GeneralResourceAdditional & ResourceManifest.AtlasImageResourceAdditional & ResourceManifest.SpriteImageResourceAdditional) = { ...group.resources[resources_index] } as any;
 				if (resource.type !== 'Image' || resource.parent === undefined) {
 					resource.y = 0x7FFFFFFFn;
 				}

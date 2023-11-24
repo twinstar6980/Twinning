@@ -125,7 +125,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 						option: KernelX.Tool.PopCap.ResourceStreamBundle.VersionaExtendedTextureInformationForPVZ2CNE,
 						checker: null,
 						automatic: null,
-						condition: (argument: { version_number: bigint; }) => (argument.version_number === 4n ? null : 0n),
+						condition: (argument: { version_number: bigint; }) => ([4n].includes(argument.version_number) ? null : 0n),
 						default: configuration.version_extended_texture_information_for_pvz2_cn,
 					}),
 					typical_argument_string({
@@ -235,7 +235,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 						option: KernelX.Tool.PopCap.ResourceStreamBundle.VersionaExtendedTextureInformationForPVZ2CNE,
 						checker: null,
 						automatic: null,
-						condition: (argument: { version_number: bigint; }) => (argument.version_number === 4n ? null : 0n),
+						condition: (argument: { version_number: bigint; }) => ([4n].includes(argument.version_number) ? null : 0n),
 						default: configuration.version_extended_texture_information_for_pvz2_cn,
 					}),
 					typical_argument_string({

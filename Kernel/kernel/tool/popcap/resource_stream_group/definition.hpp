@@ -12,13 +12,13 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamGroup {
 		#pragma region resource
 
 		template <typename = None>
-		struct GenericResourceAdditional_;
+		struct GeneralResourceAdditional_;
 
-		using GenericResourceAdditional = GenericResourceAdditional_<>;
+		using GeneralResourceAdditional = GeneralResourceAdditional_<>;
 
 		template <typename _> requires (check_version(version, {1}))
 		M_record_of_map(
-			M_wrap(GenericResourceAdditional_<_>),
+			M_wrap(GeneralResourceAdditional_<_>),
 			M_wrap(
 			),
 		);
@@ -50,7 +50,8 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamGroup {
 		M_record_of_map(
 			M_wrap(Resource_<_>),
 			M_wrap(
-				(EnumerableVariant<ResourceType, GenericResourceAdditional, TextureResourceAdditional>) additional,
+				(Path) path,
+				(EnumerableVariant<ResourceType, GeneralResourceAdditional, TextureResourceAdditional>) additional,
 			),
 		);
 
@@ -67,8 +68,8 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamGroup {
 		M_record_of_map(
 			M_wrap(Package_<_>),
 			M_wrap(
-				(Map<Path, Resource>) resource,
-				(ResourceDataSectionStoreMode) resource_data_section_store_mode,
+				(PacketCompression) compression,
+				(List<Resource>) resource,
 			),
 		);
 

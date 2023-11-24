@@ -79,7 +79,8 @@ namespace TwinStar::Kernel::Tool::PopCap::SexyTexture {
 			if (!compress_texture_data) {
 				texture_data_view = data.forward_view(texture_data_size);
 				compress_texture_data_size = k_none_size;
-			} else {
+			}
+			else {
 				texture_data_container.allocate(texture_data_size);
 				texture_data_view = texture_data_container.as_view();
 			}
@@ -117,7 +118,8 @@ namespace TwinStar::Kernel::Tool::PopCap::SexyTexture {
 			auto texture_data_size_bound = Size{};
 			if (!compress_texture_data) {
 				texture_data_size_bound = texture_data_size;
-			} else {
+			}
+			else {
 				Data::Compression::Deflate::Compress::estimate(texture_data_size, texture_data_size_bound, 15_sz, 9_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
 			}
 			data_size_bound += texture_data_size_bound;

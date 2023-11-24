@@ -93,11 +93,14 @@ namespace TwinStar::Kernel {
 		) const -> Size {
 			if constexpr (IsSame<decltype(thiz.m_end - thiz.m_begin), Size>) {
 				return thiz.m_end - thiz.m_begin;
-			} else if constexpr (IsIntegerWrapper<decltype(thiz.m_end - thiz.m_begin)>) {
+			}
+			else if constexpr (IsIntegerWrapper<decltype(thiz.m_end - thiz.m_begin)>) {
 				return cbw<Size>(thiz.m_end - thiz.m_begin);
-			} else if constexpr (IsBuiltinInteger<decltype(thiz.m_end - thiz.m_begin)>) {
+			}
+			else if constexpr (IsBuiltinInteger<decltype(thiz.m_end - thiz.m_begin)>) {
 				return mbw<Size>(thiz.m_end - thiz.m_begin);
-			} else {
+			}
+			else {
 				static_assert(k_static_assert_fail<TIterator>);
 				assert_fail("");
 			}
@@ -151,7 +154,8 @@ namespace TwinStar::Kernel {
 	) -> auto {
 		if constexpr (IsPointerWrapper<Iterator>) {
 			return make_range(std::make_reverse_iterator(end.value), std::make_reverse_iterator(begin.value));
-		} else {
+		}
+		else {
 			return make_range(std::make_reverse_iterator(end), std::make_reverse_iterator(begin));
 		}
 	}
@@ -186,7 +190,8 @@ namespace TwinStar::Kernel {
 	) -> auto {
 		if constexpr (IsPointerWrapper<Iterator>) {
 			return make_range(std::make_move_iterator(begin.value), std::make_move_iterator(end.value));
-		} else {
+		}
+		else {
 			return make_range(std::make_move_iterator(begin), std::make_move_iterator(end));
 		}
 	}

@@ -26,7 +26,7 @@ namespace TwinStar.Script.Support.PvZ2.JSONGenericGetter {
 		if (typeof source === 'string') {
 			return source !== '';
 		}
-		assert_test(false, `type error`);
+		assert_fail(`type error`);
 	}
 
 	export function number<T = never>(
@@ -49,7 +49,7 @@ namespace TwinStar.Script.Support.PvZ2.JSONGenericGetter {
 		if (typeof source === 'string') {
 			return Number.parseFloat(source);
 		}
-		assert_test(false, `type error`);
+		assert_fail(`type error`);
 	}
 
 	export function integer<T = never>(
@@ -72,7 +72,7 @@ namespace TwinStar.Script.Support.PvZ2.JSONGenericGetter {
 		if (typeof source === 'string') {
 			return BigInt(Number.parseFloat(source).toFixed(0));
 		}
-		assert_test(false, `type error`);
+		assert_fail(`type error`);
 	}
 
 	export function string<T = never>(
@@ -86,7 +86,7 @@ namespace TwinStar.Script.Support.PvZ2.JSONGenericGetter {
 		if (typeof source === 'string') {
 			return source;
 		}
-		assert_test(false, `type error`);
+		assert_fail(`type error`);
 	}
 
 	// ------------------------------------------------

@@ -24,7 +24,8 @@ namespace TwinStar::Kernel::Tool::Miscellaneous::PvZ2CNCryptData {
 			auto rijndael_data_size = compute_padded_size(plain_data.size(), k_crypt_block_size);
 			if (plain_data.size() == rijndael_data_size) {
 				rijndael_plain.set(plain_data);
-			} else {
+			}
+			else {
 				rijndael_plain_container.allocate(rijndael_data_size);
 				Range::assign_from(rijndael_plain_container.head(plain_data.size()), plain_data);
 				rijndael_plain.set(rijndael_plain_container);

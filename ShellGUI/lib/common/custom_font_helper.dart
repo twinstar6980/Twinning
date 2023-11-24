@@ -23,7 +23,8 @@ class CustomFontHelper {
         loader.addFont(Future.sync(() async => ((await File(path).readAsBytes()).buffer.asByteData())));
         await loader.load();
         _cachedFilePath.add(path);
-      } catch (e) {
+      }
+      catch (e) {
         return null;
       }
     }

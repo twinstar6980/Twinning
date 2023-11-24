@@ -30,7 +30,8 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert {
 				transform[1 - 1],
 				transform[2 - 1],
 			];
-		} else if (transform.length === 3) {
+		}
+		else if (transform.length === 3) {
 			let cos_value = Math.cos(transform[1 - 1]);
 			let sin_value = Math.sin(transform[1 - 1]);
 			result = [
@@ -41,10 +42,12 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert {
 				transform[2 - 1],
 				transform[3 - 1],
 			];
-		} else if (transform.length === 6) {
+		}
+		else if (transform.length === 6) {
 			result = [...transform];
-		} else {
-			assert_test(false, `invalid transform size`);
+		}
+		else {
+			assert_fail(`invalid transform size`);
 		}
 		return result;
 	}

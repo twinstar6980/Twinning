@@ -53,7 +53,7 @@ class MainActivity: FlutterActivity() {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 		when (requestCode) {
 			REQUEST_STORAGE_PERMISSION -> {
-				var state = grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED}
+				var state = grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }
 				this.methodResult.success(state)
 			}
 			else -> {
@@ -92,7 +92,8 @@ class MainActivity: FlutterActivity() {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
 			state = this.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
 					this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-		} else {
+		}
+		else {
 			state = Environment.isExternalStorageManager()
 		}
 		this.methodResult.success(state)
@@ -102,7 +103,8 @@ class MainActivity: FlutterActivity() {
 	private fun requestStoragePermission(): Unit {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
 			this.requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_STORAGE_PERMISSION)
-		} else {
+		}
+		else {
 			this.startActivityForResult(Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:${this.packageName}")), REQUEST_STORAGE_PERMISSION);
 		}
 		return
@@ -115,11 +117,11 @@ class MainActivity: FlutterActivity() {
 
 	private fun pickPath(typeIsDirectory: Boolean, fallbackDirectory: String?): Unit {
 		this.fallbackDirectoryWhenPickFile = fallbackDirectory
-		val intent = Intent(if (!typeIsDirectory) Intent.ACTION_GET_CONTENT else Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
-			putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+		val intent = Intent(if (!typeIsDirectory) (Intent.ACTION_GET_CONTENT) else (Intent.ACTION_OPEN_DOCUMENT_TREE)).also {
+			it.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
 			if (!typeIsDirectory) {
-				addCategory(Intent.CATEGORY_OPENABLE)
-				setType("*/*")
+				it.addCategory(Intent.CATEGORY_OPENABLE)
+				it.setType("*/*")
 			}
 		}
 		this.startActivityForResult(intent, REQUEST_PICK_PATH)
@@ -209,7 +211,8 @@ class MainActivity: FlutterActivity() {
 				}
 				cursor.close()
 			}
-		} catch (e: Exception) {
+		}
+		catch (e: Exception) {
 		}
 		return value
 	}
@@ -223,7 +226,8 @@ class MainActivity: FlutterActivity() {
 			input.close()
 			output.close()
 			state = true
-		} catch (e: Exception) {
+		}
+		catch (e: Exception) {
 		}
 		return state
 	}

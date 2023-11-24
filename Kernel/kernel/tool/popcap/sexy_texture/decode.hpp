@@ -95,7 +95,8 @@ namespace TwinStar::Kernel::Tool::PopCap::SexyTexture {
 			if (!compress_texture_data) {
 				texture_data_view = data.forward_view(texture_data_size);
 				assert_test(compress_texture_data_size == k_none_size);
-			} else {
+			}
+			else {
 				texture_data_container.allocate(texture_data_size);
 				texture_data_view = texture_data_container.as_view();
 			}

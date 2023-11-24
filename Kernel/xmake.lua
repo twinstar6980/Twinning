@@ -31,5 +31,5 @@ includes('./kernel')
 
 includes('./test')
 if m.system:is('windows', 'linux', 'macintosh') then
-	includes('../Shell/third/tinyfiledialogs')
+	includes('../ShellCLI/third/tinyfiledialogs')
 end

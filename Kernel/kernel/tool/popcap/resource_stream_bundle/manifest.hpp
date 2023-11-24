@@ -20,6 +20,7 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 		M_record_of_map(
 			M_wrap(Resource_<_>),
 			M_wrap(
+				(String) id,
 				(Path) path,
 				(Integer) type,
 				(Map<String, String>) property,
@@ -36,7 +37,7 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 		using SubgroupCategory = SubgroupCategory_<>;
 
 		template <typename _> requires (check_version(version, {1, 3}, {}))
-		M_record_of_list(
+		M_record_of_map(
 			M_wrap(SubgroupCategory_<_>),
 			M_wrap(
 				(Optional<Integer>) resolution,
@@ -44,7 +45,7 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 		);
 
 		template <typename _> requires (check_version(version, {3}, {}))
-		M_record_of_list(
+		M_record_of_map(
 			M_wrap(SubgroupCategory_<_>),
 			M_wrap(
 				(Optional<Integer>) resolution,
@@ -63,8 +64,9 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 		M_record_of_map(
 			M_wrap(Subgroup_<_>),
 			M_wrap(
+				(String) id,
 				(SubgroupCategory) category,
-				(Map<String, Resource>) resource,
+				(List<Resource>) resource,
 			),
 		);
 
@@ -79,8 +81,9 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 		M_record_of_map(
 			M_wrap(Group_<_>),
 			M_wrap(
+				(String) id,
 				(Boolean) composite,
-				(Map<String, Subgroup>) subgroup,
+				(List<Subgroup>) subgroup,
 			),
 		);
 
@@ -97,7 +100,7 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 		M_record_of_map(
 			M_wrap(Package_<_>),
 			M_wrap(
-				(Map<String, Group>) group,
+				(List<Group>) group,
 			),
 		);
 

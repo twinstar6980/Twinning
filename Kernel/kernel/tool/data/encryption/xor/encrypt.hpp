@@ -21,11 +21,13 @@ namespace TwinStar::Kernel::Tool::Data::Encryption::XOR {
 				while (!plain.full()) {
 					cipher.write(plain.read_of());
 				}
-			} else if (key.size() == 1_sz) {
+			}
+			else if (key.size() == 1_sz) {
 				while (!plain.full()) {
 					cipher.write(plain.read_of() ^ key.first());
 				}
-			} else {
+			}
+			else {
 				auto key_index = key.begin_index();
 				while (!plain.full()) {
 					cipher.write(plain.read_of() ^ key[key_index]);

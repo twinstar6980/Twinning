@@ -20,7 +20,8 @@ main(
   var setting = Setting.init();
   try {
     setting = await Setting.load();
-  } catch (e) {
+  }
+  catch (e) {
     await Setting.save(setting);
   }
   var commandSource = <String>[];

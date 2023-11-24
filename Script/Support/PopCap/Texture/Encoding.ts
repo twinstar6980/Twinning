@@ -56,12 +56,14 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encoding {
 		let padded_size: KernelX.Image.ImageSize;
 		if (format.includes('etc1')) {
 			padded_size = [compute(origin_size[0]), compute(origin_size[1])];
-		} else if (format.includes('pvrtc')) {
+		}
+		else if (format.includes('pvrtc')) {
 			let padded_width = compute(origin_size[0]);
 			let padded_height = compute(origin_size[1]);
 			let maximum_size = padded_width > padded_height ? padded_width : padded_height;
 			padded_size = [maximum_size, maximum_size];
-		} else {
+		}
+		else {
 			padded_size = [origin_size[0], origin_size[1]];
 		}
 		return padded_size;

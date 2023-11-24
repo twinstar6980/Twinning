@@ -8,7 +8,7 @@
 
 * 要求
 	
-	* [Flutter 3.13](https://docs.flutter.dev/get-started/install)
+	* [Flutter 3.16](https://docs.flutter.dev/get-started/install)
 
 * 开发
 	
@@ -46,10 +46,16 @@
 
 * 关于 Android 平台的必要说明
 	
-	对于 `Android 7+` 系统，存在动态库加载限制，应用只能加载 `default_library_paths` 与 `permitted_paths` 中的库文件，并且对于后者必须指定绝对路径而不允许只指定库名。
+	自 `Android 7+` 起，系统会对应用的动态库加载行为加以限制，应用只能加载 `default_library_paths` 与 `permitted_paths` 中的库文件，并且对于后者必须指定绝对路径而不允许只指定库名。
 	
-	因此，为了实现动态加载 Kernel 库文件的目的，应用会在每次运行时将指定的库文件复制至 `/data/user/<user>/<package>/cache` 中（该目录位于 `permitted_paths` 下，但不确定是否可用于大多数设备与系统）；并且在应用打包时也必须包含与 Kernel 编译时所用版本一致的 `libc++_shared.so` 文件。
+	因此，为了实现动态加载 Kernel 库文件的需求，应用会在每次运行时将指定的库文件复制至 `/data/user/<user>/<package>/cache` 中（该目录位于 `permitted_paths` 之中）；并且在应用打包时也必须包含一份 `libc++_shared.so` 文件。
 	
-	> 当前项目中包含的 libc++_shared.so 版本为 NDK 26.0 。
+	> 当前项目中包含的 libc++_shared.so 版本为 NDK 26.1 。
 	
 	> 具体参阅 [Android 文档](https://source.android.com/docs/core/architecture/vndk/linker-namespace) 。
+
+* 关于 iPhone 平台的必要说明
+	
+	第三方依赖项 `file_picker` 在 iPhone 上存在严重 BUG ：在用户通过应用内对话框选中目录后，该目录会被移动到 ShellGUI 的沙盒缓存目录内，而非进行复制缓存，致使原文档丢失。
+	
+	因此，为 iPhone 平台构建软件包时，必须修改 [pubspec.yaml](./pubspec.yaml) 中 `file_picker` 的依赖版本为 `5.3.2` 。

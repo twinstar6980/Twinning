@@ -56,7 +56,8 @@ namespace TwinStar::ForwarderForWindows {
 		for (auto & element : source) {
 			if (element == L'/') {
 				destination.push_back(L'\\');
-			} else {
+			}
+			else {
 				destination.push_back(element);
 			}
 		}
@@ -81,7 +82,8 @@ namespace TwinStar::ForwarderForWindows {
 			destination.push_back(element);
 			if (element == L'\\') {
 				current_backslash_count += 1;
-			} else {
+			}
+			else {
 				current_backslash_count = 0;
 			}
 		}

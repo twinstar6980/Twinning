@@ -37,7 +37,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
   List<String>     _additionalArgument = [];
   ScrollController _outputBarListScrollController = ScrollController();
   List<Widget>     _outputBarListItem = [];
-  Widget?          _inputBarContent;
+  Widget?          _inputBarContent = null;
 
   // ----------------
 
@@ -45,7 +45,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
 
   @override
   start() async {
-    assert(!this._running);
+    assertAlways(!this._running);
     this._inputBarContent = const IdleInputBarContent();
     this.setState(() {});
     this._running = true;
@@ -54,7 +54,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
 
   @override
   finish() async {
-    assert(this._running);
+    assertAlways(this._running);
     this._inputBarContent = null;
     this.setState(() {});
     this._running = false;
@@ -63,25 +63,25 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
 
   @override
   execute(argument) async {
-    assert(this._running);
+    assertAlways(this._running);
     var result = <String>[];
-    assert(argument.length >= 1);
+    assertAlways(argument.length >= 1);
     var method = argument[0];
     switch (method) {
       case 'version': {
-        assert(argument.length == 1);
+        assertAlways(argument.length == 1);
         var number = kApplicationVersion;
         result.add('${number}');
         break;
       }
       case 'host': {
-        assert(argument.length == 1);
+        assertAlways(argument.length == 1);
         var name = 'gui';
         result.add(name);
         break;
       }
       case 'system': {
-        assert(argument.length == 1);
+        assertAlways(argument.length == 1);
         var name = () {
           if (Platform.isWindows) {
             return 'windows';
@@ -104,7 +104,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'output_message': {
-        assert(argument.length >= 3);
+        assertAlways(argument.length >= 3);
         var type = MessageType.fromString(argument[1]);
         var title = argument[2];
         var description = argument.sublist(3);
@@ -129,7 +129,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'input_pause': {
-        assert(argument.length == 1);
+        assertAlways(argument.length == 1);
         var completer = Completer<dynamic>();
         this._inputBarContent = PauseInputBarContent(
           completer: completer,
@@ -142,7 +142,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'input_boolean': {
-        assert(argument.length == 1);
+        assertAlways(argument.length == 1);
         var completer = Completer<Boolean?>();
         this._inputBarContent = BooleanInputBarContent(
           completer: completer,
@@ -156,7 +156,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'input_integer': {
-        assert(argument.length == 1);
+        assertAlways(argument.length == 1);
         var completer = Completer<Integer?>();
         this._inputBarContent = IntegerInputBarContent(
           completer: completer,
@@ -170,7 +170,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'input_floater': {
-        assert(argument.length == 1);
+        assertAlways(argument.length == 1);
         var completer = Completer<Floater?>();
         this._inputBarContent = FloaterInputBarContent(
           completer: completer,
@@ -184,7 +184,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'input_size': {
-        assert(argument.length == 1);
+        assertAlways(argument.length == 1);
         var completer = Completer<String?>();
         this._inputBarContent = SizeInputBarContent(
           completer: completer,
@@ -198,7 +198,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'input_string': {
-        assert(argument.length == 1);
+        assertAlways(argument.length == 1);
         var completer = Completer<String?>();
         this._inputBarContent = StringInputBarContent(
           completer: completer,
@@ -212,7 +212,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'input_path': {
-        assert(argument.length == 1);
+        assertAlways(argument.length == 1);
         var completer = Completer<String?>();
         this._inputBarContent = PathInputBarContent(
           completer: completer,
@@ -226,7 +226,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'input_enumeration': {
-        assert(argument.length >= 1);
+        assertAlways(argument.length >= 1);
         var option = argument.sublist(1);
         var completer = Completer<Integer?>();
         this._inputBarContent = EnumerationInputBarContent(
@@ -242,7 +242,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'pick_path': {
-        assert(argument.length == 2);
+        assertAlways(argument.length == 2);
         var type = FileObjectType.formString(argument[1]);
         var selection = null as String?;
         switch (type) {
@@ -263,7 +263,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         break;
       }
       case 'push_notification': {
-        assert(argument.length == 3);
+        assertAlways(argument.length == 3);
         var title = argument[1];
         var description = argument[2];
         await NotificationHelper.push(title, description);
@@ -289,16 +289,17 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
       this._outputBarListItem.clear();
       if (Platform.isAndroid) {
         temporaryKernel = p_path.join((await getApplicationCacheDirectory()).path, 'kernel');
-        File(setting.data.mConsoleKernel).copySync(temporaryKernel);
+        await File(setting.data.mConsoleKernel).copy(temporaryKernel);
       }
       result = await Launcher.launch(this, temporaryKernel ?? setting.data.mConsoleKernel, setting.data.mConsoleScript, setting.data.mConsoleArgument + this._additionalArgument);
-    } catch (e) {
+    }
+    catch (e) {
       exception = e.toString();
     }
     if (temporaryKernel != null) {
       var temporaryKernelFile = File(temporaryKernel);
-      if (temporaryKernelFile.existsSync()) {
-        File(temporaryKernel).deleteSync();
+      if (await temporaryKernelFile.exists()) {
+        await temporaryKernelFile.delete();
       }
     }
     if (this._outputBarListItem.isNotEmpty) {
@@ -311,15 +312,16 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
         MessageOutputBar(
           type: MessageType.success,
           title: 'SUCCEEDED',
-          description:  [result!],
+          description: [result!],
         ),
       );
-    } else {
+    }
+    else {
       this._outputBarListItem.add(
         MessageOutputBar(
           type: MessageType.error,
           title: 'FAILED',
-          description:  [exception],
+          description: [exception],
         ),
       );
     }
@@ -335,17 +337,13 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
 
   @override
   build(context) {
-    var setting = Provider.of<SettingProvider>(context);
     var command = Provider.of<CommandProvider>(context);
     if (command.data.mAdditionalArgument != null) {
       () async {
         this._additionalArgument.addAll(command.data.mAdditionalArgument!);
         command.data.mAdditionalArgument = null;
         command.notify();
-        var state = await this._launch();
-        if (setting.data.mAutomaticExit && state) {
-          exitApplication();
-        }
+        await this._launch();
       }();
     }
     return Container(
@@ -381,5 +379,5 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
       ),
     );
   }
-  
+
 }

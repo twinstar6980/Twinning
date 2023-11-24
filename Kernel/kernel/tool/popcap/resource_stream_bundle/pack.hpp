@@ -58,7 +58,8 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 				auto iterator = string_map.find(string);
 				if (iterator != string_map.end()) {
 					result = (*iterator).second;
-				} else {
+				}
+				else {
 					result = string_manifest_information_data_size;
 					string_list.append(string);
 					string_map.emplace(std::make_pair(string, string_manifest_information_data_size));
@@ -70,60 +71,63 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 			group_manifest_information_structure_list.allocate_full(manifest.group.size());
 			constexpr auto image_property_key_list = make_static_array<CStringView>("type"_sv, "flag"_sv, "x"_sv, "y"_sv, "ax"_sv, "ay"_sv, "aw"_sv, "ah"_sv, "rows"_sv, "cols"_sv, "parent"_sv);
 			for (auto & group_index : SizeRange{manifest.group.size()}) {
-				auto & group_manifest = manifest.group.at(group_index);
+				auto & group_manifest = manifest.group[group_index];
 				auto & group_manifest_information_structure = group_manifest_information_structure_list[group_index];
-				group_manifest_information_structure.id_offset = set_string(make_standard_group_id(group_manifest.key, group_manifest.value.composite));
-				group_manifest_information_structure.subgroup_count = cbw<IntegerU32>(group_manifest.value.subgroup.size());
+				group_manifest_information_structure.id_offset = set_string(make_standard_group_id(group_manifest.id, group_manifest.composite));
+				group_manifest_information_structure.subgroup_count = cbw<IntegerU32>(group_manifest.subgroup.size());
 				group_manifest_information_structure.subgroup_information_size = cbw<IntegerU32>(bs_static_size<Structure::SubgroupBasicManifestInformation<version>>());
-				group_manifest_information_structure.subgroup_information.allocate_full(group_manifest.value.subgroup.size());
-				for (auto & subgroup_index : SizeRange{group_manifest.value.subgroup.size()}) {
-					auto & subgroup_manifest = group_manifest.value.subgroup.at(subgroup_index);
+				group_manifest_information_structure.subgroup_information.allocate_full(group_manifest.subgroup.size());
+				for (auto & subgroup_index : SizeRange{group_manifest.subgroup.size()}) {
+					auto & subgroup_manifest = group_manifest.subgroup[subgroup_index];
 					auto & subgroup_manifest_information_structure = group_manifest_information_structure.subgroup_information[subgroup_index];
 					if constexpr (check_version(version, {1}, {})) {
-						if (!subgroup_manifest.value.category.resolution.has()) {
+						if (!subgroup_manifest.category.resolution.has()) {
 							subgroup_manifest_information_structure.resolution = 0x00000000_iu32;
-						} else {
-							subgroup_manifest_information_structure.resolution = cbw<IntegerU32>(subgroup_manifest.value.category.resolution.get());
+						}
+						else {
+							subgroup_manifest_information_structure.resolution = cbw<IntegerU32>(subgroup_manifest.category.resolution.get());
 						}
 					}
 					if constexpr (check_version(version, {3}, {})) {
-						if (!subgroup_manifest.value.category.locale.has()) {
+						if (!subgroup_manifest.category.locale.has()) {
 							subgroup_manifest_information_structure.locale = 0x00000000_iu32;
-						} else {
-							subgroup_manifest_information_structure.locale = fourcc_to_integer(subgroup_manifest.value.category.locale.get().template to_of<FourCC>());
+						}
+						else {
+							subgroup_manifest_information_structure.locale = fourcc_to_integer(subgroup_manifest.category.locale.get().template to_of<FourCC>());
 						}
 					}
-					subgroup_manifest_information_structure.id_offset = set_string(subgroup_manifest.key);
-					subgroup_manifest_information_structure.resource_count = cbw<IntegerU32>(subgroup_manifest.value.resource.size());
-					subgroup_manifest_information_structure.resource_information.allocate_full(subgroup_manifest.value.resource.size());
-					for (auto & resource_index : SizeRange{subgroup_manifest.value.resource.size()}) {
-						auto & resource_manifest = subgroup_manifest.value.resource.at(resource_index);
+					subgroup_manifest_information_structure.id_offset = set_string(subgroup_manifest.id);
+					subgroup_manifest_information_structure.resource_count = cbw<IntegerU32>(subgroup_manifest.resource.size());
+					subgroup_manifest_information_structure.resource_information.allocate_full(subgroup_manifest.resource.size());
+					for (auto & resource_index : SizeRange{subgroup_manifest.resource.size()}) {
+						auto & resource_manifest = subgroup_manifest.resource[resource_index];
 						auto & resource_manifest_information_structure = subgroup_manifest_information_structure.resource_information[resource_index];
 						auto & resource_detail_manifest_information_structure = resource_detail_manifest_information_structure_list.append();
 						resource_manifest_information_structure.detail_offset = cbw<IntegerU32>(resource_manifest_information_data_size);
-						resource_detail_manifest_information_structure.id_offset = set_string(resource_manifest.key);
-						resource_detail_manifest_information_structure.path_offset = set_string(resource_manifest.value.path.to_string(CharacterType::PathSeparator::windows));
+						resource_detail_manifest_information_structure.id_offset = set_string(resource_manifest.id);
+						resource_detail_manifest_information_structure.path_offset = set_string(resource_manifest.path.to_string(CharacterType::PathSeparator::windows));
 						resource_detail_manifest_information_structure.header_size = cbw<IntegerU16>(bs_static_size<Structure::ResourceBasicDetailManifestInformation<version>>());
-						resource_detail_manifest_information_structure.type = cbw<IntegerU16>(resource_manifest.value.type);
+						resource_detail_manifest_information_structure.type = cbw<IntegerU16>(resource_manifest.type);
 						if (resource_detail_manifest_information_structure.type == 0_iu16) {
 							auto & resource_image_property_detail_manifest_information_structure = resource_detail_manifest_information_structure.image_property_information.set();
-							resource_image_property_detail_manifest_information_structure.type = cbw<IntegerU16>(resource_manifest.value.property["type"_sv].template to_of<Integer>());
-							resource_image_property_detail_manifest_information_structure.flag = cbw<IntegerU16>(resource_manifest.value.property["flag"_sv].template to_of<Integer>());
-							resource_image_property_detail_manifest_information_structure.x = cbw<IntegerU16>(resource_manifest.value.property["x"_sv].template to_of<Integer>());
-							resource_image_property_detail_manifest_information_structure.y = cbw<IntegerU16>(resource_manifest.value.property["y"_sv].template to_of<Integer>());
-							resource_image_property_detail_manifest_information_structure.ax = cbw<IntegerU16>(resource_manifest.value.property["ax"_sv].template to_of<Integer>());
-							resource_image_property_detail_manifest_information_structure.ay = cbw<IntegerU16>(resource_manifest.value.property["ay"_sv].template to_of<Integer>());
-							resource_image_property_detail_manifest_information_structure.aw = cbw<IntegerU16>(resource_manifest.value.property["aw"_sv].template to_of<Integer>());
-							resource_image_property_detail_manifest_information_structure.ah = cbw<IntegerU16>(resource_manifest.value.property["ah"_sv].template to_of<Integer>());
-							resource_image_property_detail_manifest_information_structure.rows = cbw<IntegerU16>(resource_manifest.value.property["rows"_sv].template to_of<Integer>());
-							resource_image_property_detail_manifest_information_structure.cols = cbw<IntegerU16>(resource_manifest.value.property["cols"_sv].template to_of<Integer>());
-							resource_image_property_detail_manifest_information_structure.parent_offset = set_string(resource_manifest.value.property["parent"_sv]);
-						} else {
+							resource_image_property_detail_manifest_information_structure.type = cbw<IntegerU16>(resource_manifest.property["type"_sv].template to_of<Integer>());
+							resource_image_property_detail_manifest_information_structure.flag = cbw<IntegerU16>(resource_manifest.property["flag"_sv].template to_of<Integer>());
+							resource_image_property_detail_manifest_information_structure.x = cbw<IntegerU16>(resource_manifest.property["x"_sv].template to_of<Integer>());
+							resource_image_property_detail_manifest_information_structure.y = cbw<IntegerU16>(resource_manifest.property["y"_sv].template to_of<Integer>());
+							resource_image_property_detail_manifest_information_structure.ax = cbw<IntegerU16>(resource_manifest.property["ax"_sv].template to_of<Integer>());
+							resource_image_property_detail_manifest_information_structure.ay = cbw<IntegerU16>(resource_manifest.property["ay"_sv].template to_of<Integer>());
+							resource_image_property_detail_manifest_information_structure.aw = cbw<IntegerU16>(resource_manifest.property["aw"_sv].template to_of<Integer>());
+							resource_image_property_detail_manifest_information_structure.ah = cbw<IntegerU16>(resource_manifest.property["ah"_sv].template to_of<Integer>());
+							resource_image_property_detail_manifest_information_structure.rows = cbw<IntegerU16>(resource_manifest.property["rows"_sv].template to_of<Integer>());
+							resource_image_property_detail_manifest_information_structure.cols = cbw<IntegerU16>(resource_manifest.property["cols"_sv].template to_of<Integer>());
+							resource_image_property_detail_manifest_information_structure.parent_offset = set_string(resource_manifest.property["parent"_sv]);
+						}
+						else {
 							resource_detail_manifest_information_structure.image_property_information.reset();
 						}
-						resource_detail_manifest_information_structure.property_information.allocate(resource_manifest.value.property.size());
-						for (auto & resource_property_index : SizeRange{resource_manifest.value.property.size()}) {
-							auto & resource_property_manifest = resource_manifest.value.property.at(resource_property_index);
+						resource_detail_manifest_information_structure.property_information.allocate(resource_manifest.property.size());
+						for (auto & resource_property_index : SizeRange{resource_manifest.property.size()}) {
+							auto & resource_property_manifest = resource_manifest.property.at(resource_property_index);
 							if (!(resource_detail_manifest_information_structure.type == 0_iu16 && Range::has(image_property_key_list, resource_property_manifest.key))) {
 								auto & resource_property_detail_information_structure = resource_detail_manifest_information_structure.property_information.append();
 								resource_property_detail_information_structure.key_offset = set_string(resource_property_manifest.key);
@@ -135,7 +139,8 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 						if (resource_detail_manifest_information_structure.image_property_information.has()) {
 							resource_detail_manifest_information_structure.image_property_information_offset = cbw<IntegerU32>(resource_manifest_information_data_size);
 							resource_manifest_information_data_size += bs_static_size<Structure::ResourceImagePropertyDetailManifestInformation<version>>();
-						} else {
+						}
+						else {
 							resource_detail_manifest_information_structure.image_property_information_offset = 0_iu32;
 						}
 						resource_detail_manifest_information_structure.property_information_offset = cbw<IntegerU32>(resource_manifest_information_data_size);
@@ -189,17 +194,17 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 				auto global_group_count = k_none_size;
 				auto global_subgroup_count = k_none_size;
 				auto global_resource_count = k_none_size;
-				auto global_generic_resource_count = k_none_size;
+				auto global_general_resource_count = k_none_size;
 				auto global_texture_resource_count = k_none_size;
 				global_group_count += definition.group.size();
-				for (auto & group : definition.group) {
-					global_subgroup_count += group.value.subgroup.size();
-					for (auto & subgroup : group.value.subgroup) {
-						global_resource_count += subgroup.value.resource.size();
-						for (auto & resource : subgroup.value.resource) {
-							switch (resource.value.additional.type().value) {
-								case ResourceType::Constant::generic().value : {
-									++global_generic_resource_count;
+				for (auto & group_definition : definition.group) {
+					global_subgroup_count += group_definition.subgroup.size();
+					for (auto & subgroup_definition : group_definition.subgroup) {
+						global_resource_count += subgroup_definition.resource.size();
+						for (auto & resource_definition : subgroup_definition.resource) {
+							switch (resource_definition.additional.type().value) {
+								case ResourceType::Constant::general().value : {
+									++global_general_resource_count;
 									break;
 								}
 								case ResourceType::Constant::texture().value : {
@@ -220,29 +225,29 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 				auto global_group_index = k_begin_index;
 				auto global_subgroup_index = k_begin_index;
 				auto global_resource_index = k_begin_index;
-				auto global_generic_resource_index = k_begin_index;
+				auto global_general_resource_index = k_begin_index;
 				auto global_texture_resource_index = k_begin_index;
 				for (auto & group_index : SizeRange{definition.group.size()}) {
-					auto & group_definition = definition.group.at(group_index);
+					auto & group_definition = definition.group[group_index];
 					auto & group_id_structure = information_structure.group_id.at(global_group_index);
-					auto   standard_group_id = make_standard_group_id(group_definition.key, group_definition.value.composite);
+					auto   standard_group_id = make_standard_group_id(group_definition.id, group_definition.composite);
 					group_id_structure.key = standard_group_id;
-					for (auto & subgroup_index : SizeRange{group_definition.value.subgroup.size()}) {
-						auto & subgroup_definition = group_definition.value.subgroup.at(subgroup_index);
+					for (auto & subgroup_index : SizeRange{group_definition.subgroup.size()}) {
+						auto & subgroup_definition = group_definition.subgroup[subgroup_index];
 						auto & subgroup_id_structure = information_structure.subgroup_id.at(global_subgroup_index);
-						subgroup_id_structure.key = subgroup_definition.key;
-						for (auto & resource_index : SizeRange{subgroup_definition.value.resource.size()}) {
-							auto & resource_definition = subgroup_definition.value.resource.at(resource_index);
+						subgroup_id_structure.key = subgroup_definition.id;
+						for (auto & resource_index : SizeRange{subgroup_definition.resource.size()}) {
+							auto & resource_definition = subgroup_definition.resource[resource_index];
 							auto & resource_path_structure = information_structure.resource_path.at(global_resource_index);
-							resource_path_structure.key = resource_definition.key.to_string(CharacterType::PathSeparator::windows);
-							switch (resource_definition.value.additional.type().value) {
-								case ResourceType::Constant::generic().value : {
-									auto & resource_additional_definition = resource_definition.value.additional.template get_of_type<ResourceType::Constant::generic()>();
-									++global_generic_resource_index;
+							resource_path_structure.key = resource_definition.path.to_string(CharacterType::PathSeparator::windows);
+							switch (resource_definition.additional.type().value) {
+								case ResourceType::Constant::general().value : {
+									auto & resource_additional_definition = resource_definition.additional.template get_of_type<ResourceType::Constant::general()>();
+									++global_general_resource_index;
 									break;
 								}
 								case ResourceType::Constant::texture().value : {
-									auto & resource_additional_definition = resource_definition.value.additional.template get_of_type<ResourceType::Constant::texture()>();
+									auto & resource_additional_definition = resource_definition.additional.template get_of_type<ResourceType::Constant::texture()>();
 									auto & texture_information_structure = information_structure.texture_resource_information[global_texture_resource_index];
 									++global_texture_resource_index;
 									break;
@@ -299,17 +304,17 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 			auto global_group_count = k_none_size;
 			auto global_subgroup_count = k_none_size;
 			auto global_resource_count = k_none_size;
-			auto global_generic_resource_count = k_none_size;
+			auto global_general_resource_count = k_none_size;
 			auto global_texture_resource_count = k_none_size;
 			global_group_count += definition.group.size();
 			for (auto & group_definition : definition.group) {
-				global_subgroup_count += group_definition.value.subgroup.size();
-				for (auto & subgroup_definition : group_definition.value.subgroup) {
-					global_resource_count += subgroup_definition.value.resource.size();
-					for (auto & resource_definition : subgroup_definition.value.resource) {
-						switch (resource_definition.value.additional.type().value) {
-							case ResourceType::Constant::generic().value : {
-								++global_generic_resource_count;
+				global_subgroup_count += group_definition.subgroup.size();
+				for (auto & subgroup_definition : group_definition.subgroup) {
+					global_resource_count += subgroup_definition.resource.size();
+					for (auto & resource_definition : subgroup_definition.resource) {
+						switch (resource_definition.additional.type().value) {
+							case ResourceType::Constant::general().value : {
+								++global_general_resource_count;
 								break;
 							}
 							case ResourceType::Constant::texture().value : {
@@ -344,7 +349,8 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 			}
 			if (manifest.has()) {
 				process_package_manifest(data, information_structure.header, manifest.get());
-			} else {
+			}
+			else {
 				information_structure.header.group_manifest_information_section_offset = cbw<IntegerU32>(k_none_size);
 				information_structure.header.resource_manifest_information_section_offset = cbw<IntegerU32>(k_none_size);
 				information_structure.header.string_manifest_information_section_offset = cbw<IntegerU32>(k_none_size);
@@ -361,19 +367,19 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 			auto global_group_index = k_begin_index;
 			auto global_subgroup_index = k_begin_index;
 			auto global_resource_index = k_begin_index;
-			auto global_generic_resource_index = k_begin_index;
+			auto global_general_resource_index = k_begin_index;
 			auto global_texture_resource_index = k_begin_index;
 			for (auto & group_index : SizeRange{definition.group.size()}) {
-				auto & group_definition = definition.group.at(group_index);
+				auto & group_definition = definition.group[group_index];
 				auto & group_id_structure = information_structure.group_id.at(global_group_index);
 				auto & group_information_structure = information_structure.group_information[global_group_index];
-				auto   standard_group_id = make_standard_group_id(group_definition.key, group_definition.value.composite);
+				auto   standard_group_id = make_standard_group_id(group_definition.id, group_definition.composite);
 				group_id_structure.key = standard_group_id;
 				group_id_structure.value = cbw<IntegerU32>(global_group_index);
 				group_information_structure.id = string_block_fixed_128_from_string(standard_group_id);
-				group_information_structure.subgroup_count = cbw<IntegerU32>(group_definition.value.subgroup.size());
-				for (auto & subgroup_index : SizeRange{group_definition.value.subgroup.size()}) {
-					auto & subgroup_definition = group_definition.value.subgroup.at(subgroup_index);
+				group_information_structure.subgroup_count = cbw<IntegerU32>(group_definition.subgroup.size());
+				for (auto & subgroup_index : SizeRange{group_definition.subgroup.size()}) {
+					auto & subgroup_definition = group_definition.subgroup[subgroup_index];
 					auto & simple_subgroup_information_structure = group_information_structure.subgroup_information[subgroup_index];
 					auto & subgroup_id_structure = information_structure.subgroup_id.at(global_subgroup_index);
 					auto & subgroup_information_structure = information_structure.subgroup_information[global_subgroup_index];
@@ -381,54 +387,56 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 					auto   packet_package_definition = typename ResourceStreamGroup::Definition<packet_version>::Package{};
 					simple_subgroup_information_structure.index = cbw<IntegerU32>(global_subgroup_index);
 					if constexpr (check_version(version, {1}, {})) {
-						if (!subgroup_definition.value.category.resolution.has()) {
+						if (!subgroup_definition.category.resolution.has()) {
 							simple_subgroup_information_structure.resolution = 0x00000000_iu32;
-						} else {
-							simple_subgroup_information_structure.resolution = cbw<IntegerU32>(subgroup_definition.value.category.resolution.get());
+						}
+						else {
+							simple_subgroup_information_structure.resolution = cbw<IntegerU32>(subgroup_definition.category.resolution.get());
 						}
 					}
 					if constexpr (check_version(version, {3}, {})) {
-						if (!subgroup_definition.value.category.locale.has()) {
+						if (!subgroup_definition.category.locale.has()) {
 							simple_subgroup_information_structure.locale = 0x00000000_iu32;
-						} else {
-							simple_subgroup_information_structure.locale = fourcc_to_integer(subgroup_definition.value.category.locale.get().template to_of<FourCC>());
+						}
+						else {
+							simple_subgroup_information_structure.locale = fourcc_to_integer(subgroup_definition.category.locale.get().template to_of<FourCC>());
 						}
 					}
-					subgroup_id_structure.key = subgroup_definition.key;
+					subgroup_id_structure.key = subgroup_definition.id;
 					subgroup_id_structure.value = cbw<IntegerU32>(global_subgroup_index);
-					subgroup_information_structure.id = string_block_fixed_128_from_string(subgroup_definition.key);
+					subgroup_information_structure.id = string_block_fixed_128_from_string(subgroup_definition.id);
 					subgroup_information_structure.pool = cbw<IntegerU32>(global_subgroup_index);
-					pool_information_structure.id = string_block_fixed_128_from_string(subgroup_definition.key + k_suffix_of_automation_pool);
+					pool_information_structure.id = string_block_fixed_128_from_string(subgroup_definition.id + k_suffix_of_automation_pool);
 					pool_information_structure.instance_count = 1_iu32;
 					pool_information_structure.flag = 0_iu32;
-					packet_package_definition.resource_data_section_store_mode = subgroup_definition.value.resource_data_section_store_mode;
-					packet_package_definition.resource.allocate_full(subgroup_definition.value.resource.size());
+					packet_package_definition.compression = subgroup_definition.compression;
+					packet_package_definition.resource.allocate_full(subgroup_definition.resource.size());
 					auto make_formatted_path =
 						[&] (
 						Path const & path_format
 					) -> auto {
-						return Path{format_string(path_format.to_string(), group_definition.key, subgroup_definition.key)};
+						return Path{format_string(path_format.to_string(), group_definition.id, subgroup_definition.id)};
 					};
 					auto texture_resource_begin = global_texture_resource_index;
 					auto texture_resource_count = k_none_size;
-					for (auto & resource_index : SizeRange{subgroup_definition.value.resource.size()}) {
-						auto & resource_definition = subgroup_definition.value.resource.at(resource_index);
+					for (auto & resource_index : SizeRange{subgroup_definition.resource.size()}) {
+						auto & resource_definition = subgroup_definition.resource[resource_index];
 						auto & resource_path_structure = information_structure.resource_path.at(global_resource_index);
-						auto & packet_resource_definition = packet_package_definition.resource.at(resource_index);
-						resource_path_structure.key = resource_definition.key.to_string(CharacterType::PathSeparator::windows);
+						auto & packet_resource_definition = packet_package_definition.resource[resource_index];
+						resource_path_structure.key = resource_definition.path.to_string(CharacterType::PathSeparator::windows);
 						resource_path_structure.value = cbw<IntegerU32>(global_subgroup_index);
-						packet_resource_definition.key = resource_definition.key;
-						switch (resource_definition.value.additional.type().value) {
-							case ResourceType::Constant::generic().value : {
-								auto & resource_additional_definition = resource_definition.value.additional.template get_of_type<ResourceType::Constant::generic()>();
-								auto & packet_resource_additional_definition = packet_resource_definition.value.additional.template set_of_type<ResourceType::Constant::generic()>();
-								++global_generic_resource_index;
+						packet_resource_definition.path = resource_definition.path;
+						switch (resource_definition.additional.type().value) {
+							case ResourceType::Constant::general().value : {
+								auto & resource_additional_definition = resource_definition.additional.template get_of_type<ResourceType::Constant::general()>();
+								auto & packet_resource_additional_definition = packet_resource_definition.additional.template set_of_type<ResourceType::Constant::general()>();
+								++global_general_resource_index;
 								break;
 							}
 							case ResourceType::Constant::texture().value : {
-								auto & resource_additional_definition = resource_definition.value.additional.template get_of_type<ResourceType::Constant::texture()>();
+								auto & resource_additional_definition = resource_definition.additional.template get_of_type<ResourceType::Constant::texture()>();
 								auto & texture_information_structure = information_structure.texture_resource_information[global_texture_resource_index];
-								auto & packet_resource_additional_definition = packet_resource_definition.value.additional.template set_of_type<ResourceType::Constant::texture()>();
+								auto & packet_resource_additional_definition = packet_resource_definition.additional.template set_of_type<ResourceType::Constant::texture()>();
 								texture_information_structure.size_width = cbw<IntegerU32>(resource_additional_definition.size.width);
 								texture_information_structure.size_height = cbw<IntegerU32>(resource_additional_definition.size.height);
 								texture_information_structure.format = cbw<IntegerU32>(resource_additional_definition.format);
@@ -471,17 +479,17 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 					}
 					subgroup_information_structure.offset = cbw<IntegerU32>(data.position());
 					subgroup_information_structure.size = cbw<IntegerU32>(packet_data.position());
-					subgroup_information_structure.resource_data_section_store_mode = packet_header_structure.resource_data_section_store_mode;
+					subgroup_information_structure.resource_data_section_compression = packet_header_structure.resource_data_section_compression;
 					subgroup_information_structure.information_section_size = packet_header_structure.information_section_size;
-					subgroup_information_structure.generic_resource_data_section_offset = packet_header_structure.generic_resource_data_section_offset;
-					subgroup_information_structure.generic_resource_data_section_size = packet_header_structure.generic_resource_data_section_size;
-					subgroup_information_structure.generic_resource_data_section_size_original = packet_header_structure.generic_resource_data_section_size_original;
-					subgroup_information_structure.generic_resource_data_section_size_pool = packet_header_structure.generic_resource_data_section_size_original;
+					subgroup_information_structure.general_resource_data_section_offset = packet_header_structure.general_resource_data_section_offset;
+					subgroup_information_structure.general_resource_data_section_size = packet_header_structure.general_resource_data_section_size;
+					subgroup_information_structure.general_resource_data_section_size_original = packet_header_structure.general_resource_data_section_size_original;
+					subgroup_information_structure.general_resource_data_section_size_pool = packet_header_structure.general_resource_data_section_size_original;
 					subgroup_information_structure.texture_resource_data_section_offset = packet_header_structure.texture_resource_data_section_offset;
 					subgroup_information_structure.texture_resource_data_section_size = packet_header_structure.texture_resource_data_section_size;
 					subgroup_information_structure.texture_resource_data_section_size_original = packet_header_structure.texture_resource_data_section_size_original;
 					subgroup_information_structure.texture_resource_data_section_size_pool = 0_iu32;
-					pool_information_structure.texture_resource_data_section_offset = packet_header_structure.generic_resource_data_section_offset + packet_header_structure.generic_resource_data_section_size_original;
+					pool_information_structure.texture_resource_data_section_offset = packet_header_structure.general_resource_data_section_offset + packet_header_structure.general_resource_data_section_size_original;
 					pool_information_structure.texture_resource_data_section_size = packet_header_structure.texture_resource_data_section_size_original;
 					if constexpr (check_version(version, {1, 3}, {})) {
 						pool_information_structure.texture_resource_begin = cbw<IntegerU32>(texture_resource_begin);

@@ -31,9 +31,9 @@ namespace TwinStar::Kernel::Tool::PopCap::Package {
 				auto information_structure = Structure::Information<version>{};
 				information_structure.resource_information.allocate_full(definition.resource.size());
 				for (auto & resource_index : SizeRange{definition.resource.size()}) {
-					auto & resource_definition = definition.resource.at(resource_index);
+					auto & resource_definition = definition.resource[resource_index];
 					auto & resource_information_structure = information_structure.resource_information[resource_index];
-					resource_information_structure.path = StringBlock8{resource_definition.key.to_string(CharacterType::PathSeparator::windows)};
+					resource_information_structure.path = StringBlock8{resource_definition.path.to_string(CharacterType::PathSeparator::windows)};
 				}
 				information_data.resource_information = OByteStreamView{
 					data.forward_view(
@@ -52,11 +52,11 @@ namespace TwinStar::Kernel::Tool::PopCap::Package {
 			auto information_structure = Structure::Information<version>{};
 			information_structure.resource_information.allocate_full(definition.resource.size());
 			for (auto & resource_index : SizeRange{definition.resource.size()}) {
-				auto & resource_definition = definition.resource.at(resource_index);
+				auto & resource_definition = definition.resource[resource_index];
 				auto & resource_information_structure = information_structure.resource_information[resource_index];
-				auto   resource_path = resource_directory / resource_definition.key;
-				resource_information_structure.path = StringBlock8{resource_definition.key.to_string(CharacterType::PathSeparator::windows)};
-				resource_information_structure.time = cbw<IntegerU64>(resource_definition.value.time);
+				auto   resource_path = resource_directory / resource_definition.path;
+				resource_information_structure.path = StringBlock8{resource_definition.path.to_string(CharacterType::PathSeparator::windows)};
+				resource_information_structure.time = cbw<IntegerU64>(resource_definition.time);
 				if constexpr (check_version(version, {}, {false})) {
 					auto resource_size = FileSystem::read_stream_file(resource_path, data);
 					resource_information_structure.size = cbw<IntegerU32>(resource_size);

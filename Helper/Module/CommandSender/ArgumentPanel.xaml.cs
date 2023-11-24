@@ -6,7 +6,7 @@ using Helper.Utility;
 
 namespace Helper.Module.CommandSender {
 
-	public sealed partial class ArgumentPanel : UserControl {
+	public sealed partial class ArgumentPanel : CustomControl {
 
 		#region life
 
@@ -20,6 +20,14 @@ namespace Helper.Module.CommandSender {
 
 		private ArgumentPanelController Controller { get; }
 
+		// ----------------
+
+		protected override void StampUpdate (
+		) {
+			this.Controller.Update();
+			return;
+		}
+
 		#endregion
 
 		#region property
@@ -28,11 +36,11 @@ namespace Helper.Module.CommandSender {
 			nameof(ArgumentPanel.Configuration),
 			typeof(List<ArgumentConfiguration>),
 			typeof(ArgumentPanel),
-			new PropertyMetadata(null)
+			new PropertyMetadata(new List<ArgumentConfiguration>())
 		);
 
-		public List<ArgumentConfiguration>? Configuration {
-			get => this.GetValue(ArgumentPanel.ConfigurationProperty) as List<ArgumentConfiguration>;
+		public List<ArgumentConfiguration> Configuration {
+			get => this.GetValue(ArgumentPanel.ConfigurationProperty).AsClass<List<ArgumentConfiguration>>();
 			set => this.SetValue(ArgumentPanel.ConfigurationProperty, value);
 		}
 
@@ -42,28 +50,12 @@ namespace Helper.Module.CommandSender {
 			nameof(ArgumentPanel.Value),
 			typeof(List<ArgumentValue>),
 			typeof(ArgumentPanel),
-			new PropertyMetadata(null)
+			new PropertyMetadata(new List<ArgumentValue>())
 		);
 
-		public List<ArgumentValue>? Value {
-			get => this.GetValue(ArgumentPanel.ValueProperty) as List<ArgumentValue>;
+		public List<ArgumentValue> Value {
+			get => this.GetValue(ArgumentPanel.ValueProperty).AsClass<List<ArgumentValue>>();
 			set => this.SetValue(ArgumentPanel.ValueProperty, value);
-		}
-
-		// ----------------
-
-		public static readonly DependencyProperty StampProperty = DependencyProperty.Register(
-			nameof(ArgumentPanel.Stamp),
-			typeof(UniqueStamp),
-			typeof(ArgumentPanel),
-			new PropertyMetadata(UniqueStamp.Default, (o, e) => {
-				(o as ArgumentPanel)!.Controller.Update();
-			})
-		);
-
-		public UniqueStamp Stamp {
-			get => this.GetValue(ArgumentPanel.StampProperty) as UniqueStamp ?? throw new Exception();
-			set => this.SetValue(ArgumentPanel.StampProperty, value);
 		}
 
 		#endregion
@@ -78,9 +70,9 @@ namespace Helper.Module.CommandSender {
 
 		// ----------------
 
-		public List<ArgumentConfiguration>? Configuration => this.View.Configuration;
+		public List<ArgumentConfiguration> Configuration => this.View.Configuration;
 
-		public List<ArgumentValue>? Value => this.View.Value;
+		public List<ArgumentValue> Value => this.View.Value;
 
 		#endregion
 
@@ -88,15 +80,10 @@ namespace Helper.Module.CommandSender {
 
 		public async void Update (
 		) {
-			this.uItem_ItemsSource = new List<ArgumentPanelItemController>();
-			if (this.Configuration is not null && this.Value is not null) {
-				Debug.Assert(this.Value.Count == this.Configuration.Count);
-				for (var index = 0; index < this.Configuration.Count; index++) {
-					this.uItem_ItemsSource.Add(new ArgumentPanelItemController() { Host = this, Configuration = this.Configuration[index], Value = this.Value[index] });
-				}
-			}
+			GF.AssertTest(this.Configuration.Count == this.Value.Count);
+			this.uList_ItemsSource = this.Configuration.Select((value, index) => (new ArgumentPanelItemController() { Host = this, Configuration = value, Value = this.Value[index] })).ToList();
 			this.NotifyPropertyChanged(
-				nameof(this.uItem_ItemsSource)
+				nameof(this.uList_ItemsSource)
 			);
 			return;
 		}
@@ -105,7 +92,7 @@ namespace Helper.Module.CommandSender {
 
 		#region item
 
-		public List<ArgumentPanelItemController> uItem_ItemsSource { get; set; } = new List<ArgumentPanelItemController>();
+		public List<ArgumentPanelItemController> uList_ItemsSource { get; set; } = new List<ArgumentPanelItemController>();
 
 		#endregion
 
@@ -141,13 +128,16 @@ namespace Helper.Module.CommandSender {
 			}
 		}
 
-		public async void uActive_OnClick (
+		public async void uActive_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			var newValue = senders.IsChecked!.Value;
-			this.Value.Data = !newValue ? null : this.Configuration.Option is not null ? this.Configuration.Option[0] : ConfigurationHelper.MakeArgumentValueDefault(this.Configuration.Type);
+			var senders = sender.AsClass<ToggleButton>();
+			this.Value.Data = !senders.IsChecked.AsNotNull()
+				? null
+				: this.Configuration.Option is not null
+					? this.Configuration.Option[0]
+					: ConfigurationHelper.MakeArgumentValueDefault(this.Configuration.Type);
 			this.NotifyPropertyChanged(
 				nameof(this.uValue_Stamp)
 			);
@@ -176,15 +166,15 @@ namespace Helper.Module.CommandSender {
 			}
 		}
 
-		public ArgumentValue uValue_Value {
+		public List<Object>? uValue_Option {
 			get {
-				return this.Value;
+				return this.Configuration.Option?.Select((value) => (ConfigurationHelper.MakeArgumentValueDefault(this.Configuration.Type, value).AsNotNull())).ToList();
 			}
 		}
 
-		public List<Object>? uValue_Option {
+		public ArgumentValue uValue_Value {
 			get {
-				return this.Configuration.Option?.Select((value) => (ConfigurationHelper.MakeArgumentValueDefault(this.Configuration.Type, value) ?? throw new Exception())).ToList();
+				return this.Value;
 			}
 		}
 

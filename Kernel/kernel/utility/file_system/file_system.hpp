@@ -63,23 +63,14 @@ namespace TwinStar::Kernel::FileSystem {
 			Path const & value
 		) -> std::filesystem::path {
 			auto string = make_regular_path(value).to_string();
-			#if defined M_system_android
-			if (!string.empty()) [[likely]]
-			{
-				return std::filesystem::path{make_std_string_view(string)};
-			} else [[unlikely]]
-			{
-				return std::filesystem::path{std::string_view{"."}};
-			}
-			#else
 			if (!string.empty()) [[likely]]
 			{
 				return std::filesystem::path{self_cast<std::u8string_view>(make_std_string_view(string))};
-			} else [[unlikely]]
+			}
+			else [[unlikely]]
 			{
 				return std::filesystem::path{std::u8string_view{u8"."}};
 			}
-			#endif
 		}
 
 		#pragma endregion
@@ -287,11 +278,13 @@ namespace TwinStar::Kernel::FileSystem {
 						if (type == ObjectType::Constant::file() || type == ObjectType::Constant::directory()) {
 							++result;
 						}
-					} else if constexpr (filter == FilterType::Constant::file()) {
+					}
+					if constexpr (filter == FilterType::Constant::file()) {
 						if (type == ObjectType::Constant::file()) {
 							++result;
 						}
-					} else if constexpr (filter == FilterType::Constant::directory()) {
+					}
+					if constexpr (filter == FilterType::Constant::directory()) {
 						if (type == ObjectType::Constant::directory()) {
 							++result;
 						}
@@ -326,11 +319,13 @@ namespace TwinStar::Kernel::FileSystem {
 						if (type == ObjectType::Constant::file() || type == ObjectType::Constant::directory()) {
 							result.append(current_target / name);
 						}
-					} else if constexpr (filter == FilterType::Constant::file()) {
+					}
+					if constexpr (filter == FilterType::Constant::file()) {
 						if (type == ObjectType::Constant::file()) {
 							result.append(current_target / name);
 						}
-					} else if constexpr (filter == FilterType::Constant::directory()) {
+					}
+					if constexpr (filter == FilterType::Constant::directory()) {
 						if (type == ObjectType::Constant::directory()) {
 							result.append(current_target / name);
 						}
@@ -417,7 +412,8 @@ namespace TwinStar::Kernel::FileSystem {
 		}
 		if (!is_directory) {
 			std::filesystem::create_symlink(Detail::make_std_path(object), Detail::make_std_path(target));
-		} else {
+		}
+		else {
 			std::filesystem::create_directory_symlink(Detail::make_std_path(object), Detail::make_std_path(target));
 		}
 		return;

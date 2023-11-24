@@ -81,7 +81,8 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 			information_section_patch_exist = information_section_after != information_section_before;
 			if (!information_section_patch_exist) {
 				information_section_patch_size = k_none_size;
-			} else {
+			}
+			else {
 				process_sub(information_section_before, information_section_after, patch, information_section_patch_size);
 			}
 			package_information.patch_exist = cbw<IntegerU32>(information_section_patch_exist);
@@ -107,8 +108,9 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 					auto   packet_before_ripe = IByteStreamView{before.sub_view(cbw<Size>(packet_before_subgroup_information.offset), cbw<Size>(packet_before_subgroup_information.size))};
 					if (!use_raw_packet) {
 						packet_before = packet_before_ripe.view();
-					} else {
-						auto packet_before_raw_size = cbw<Size>(packet_before_subgroup_information.information_section_size + packet_before_subgroup_information.generic_resource_data_section_size_original + packet_before_subgroup_information.texture_resource_data_section_size_original);
+					}
+					else {
+						auto packet_before_raw_size = cbw<Size>(packet_before_subgroup_information.information_section_size + packet_before_subgroup_information.general_resource_data_section_size_original + packet_before_subgroup_information.texture_resource_data_section_size_original);
 						if (packet_before_raw_size > packet_before_raw_container.size()) {
 							packet_before_raw_container.allocate(packet_before_raw_size);
 						}
@@ -125,8 +127,9 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 					auto packet_after_ripe = IByteStreamView{after.sub_view(cbw<Size>(packet_after_subgroup_information.offset), cbw<Size>(packet_after_subgroup_information.size))};
 					if (!use_raw_packet) {
 						packet_after = packet_after_ripe.view();
-					} else {
-						auto packet_after_raw_size = cbw<Size>(packet_after_subgroup_information.information_section_size + packet_after_subgroup_information.generic_resource_data_section_size_original + packet_after_subgroup_information.texture_resource_data_section_size_original);
+					}
+					else {
+						auto packet_after_raw_size = cbw<Size>(packet_after_subgroup_information.information_section_size + packet_after_subgroup_information.general_resource_data_section_size_original + packet_after_subgroup_information.texture_resource_data_section_size_original);
 						if (packet_after_raw_size > packet_after_raw_container.size()) {
 							packet_after_raw_container.allocate(packet_after_raw_size);
 						}
@@ -140,7 +143,8 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 				packet_patch_exist = packet_after != packet_before;
 				if (!packet_patch_exist) {
 					packet_patch_size = k_none_size;
-				} else {
+				}
+				else {
 					process_sub(packet_before, packet_after, patch, packet_patch_size);
 				}
 				Range::assign_from(packet_information.name.view().head(packet_name.size()), packet_name.view());

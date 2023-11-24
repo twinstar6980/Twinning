@@ -65,11 +65,11 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		private void Storyboard_OnCompleted (
+		private void Storyboard_Completed (
 			Object? sender,
 			Object  e
 		) {
-			Debug.Assert(this.Loaded);
+			GF.AssertTest(this.Loaded);
 			this.State = StateType.Idle;
 			if (this.Repeat) {
 				this.State = StateType.Playing;
@@ -97,7 +97,7 @@ namespace Helper.Module.AnimationViewer {
 			List<Boolean>            spriteFilter,
 			Size                     workingSpriteIndex
 		) {
-			Debug.Assert(!this.Loaded);
+			GF.AssertTest(!this.Loaded);
 			var workingSprite = AnimationHelper.SelectSprite(animation, workingSpriteIndex);
 			var ui = AnimationHelper.CreateUI(animation, imageSource, imageFilter, spriteFilter, workingSpriteIndex);
 			this.Width = animation.Size[0];
@@ -106,7 +106,7 @@ namespace Helper.Module.AnimationViewer {
 			this.Canvas = ui.Canvas;
 			this.Storyboard = ui.Storyboard;
 			this.Storyboard.RepeatBehavior = new RepeatBehavior(1.0);
-			this.Storyboard.Completed += this.Storyboard_OnCompleted;
+			this.Storyboard.Completed += this.Storyboard_Completed;
 			this.FrameRange = new AnimationHelper.FrameRange() {
 				Start = 0,
 				Duration = workingSprite.Frame.Count,
@@ -122,7 +122,7 @@ namespace Helper.Module.AnimationViewer {
 
 		public void Unload (
 		) {
-			Debug.Assert(this.Loaded);
+			GF.AssertTest(this.Loaded);
 			this.State = StateType.Idle;
 			this.Content = null;
 			this.Canvas = null;
@@ -145,11 +145,11 @@ namespace Helper.Module.AnimationViewer {
 
 		public StateType State {
 			get {
-				Debug.Assert(this.Loaded);
+				GF.AssertTest(this.Loaded);
 				return this.mState;
 			}
 			set {
-				Debug.Assert(this.Loaded);
+				GF.AssertTest(this.Loaded);
 				if (this.mState != value) {
 					switch (value) {
 						case StateType.Idle: {
@@ -161,7 +161,8 @@ namespace Helper.Module.AnimationViewer {
 								this.Storyboard.Stop();
 								this.Storyboard.Begin();
 								this.Storyboard.Seek(this.BasicTimeOffset);
-							} else {
+							}
+							else {
 								this.Storyboard.Resume();
 							}
 							break;
@@ -175,7 +176,7 @@ namespace Helper.Module.AnimationViewer {
 							this.Storyboard.Pause();
 							break;
 						}
-						default: throw new ArgumentOutOfRangeException(nameof(value), value, null);
+						default: throw new ArgumentOutOfRangeException();
 					}
 				}
 				this.mState = value;
@@ -191,11 +192,11 @@ namespace Helper.Module.AnimationViewer {
 
 		public AnimationHelper.FrameRange FrameRange {
 			get {
-				Debug.Assert(this.Loaded);
+				GF.AssertTest(this.Loaded);
 				return this.mFrameRange!;
 			}
 			set {
-				Debug.Assert(this.Loaded);
+				GF.AssertTest(this.Loaded);
 				this.Storyboard.BeginTime = -TimeSpan.FromSeconds(value.Start) / this.Speed;
 				this.Storyboard.Duration = new Duration(TimeSpan.FromSeconds(value.Start + value.Duration) - this.BasicTimeOffsetValue);
 				this.mFrameRange = value;
@@ -207,13 +208,13 @@ namespace Helper.Module.AnimationViewer {
 
 		public TimeSpan CurrentTime {
 			get {
-				Debug.Assert(this.Loaded);
-				Debug.Assert(this.State != StateType.Idle);
+				GF.AssertTest(this.Loaded);
+				GF.AssertTest(this.State != StateType.Idle);
 				return this.Storyboard.GetCurrentTime();
 			}
 			set {
-				Debug.Assert(this.Loaded);
-				Debug.Assert(this.State != StateType.Idle);
+				GF.AssertTest(this.Loaded);
+				GF.AssertTest(this.State != StateType.Idle);
 				this.Storyboard.Seek((-TimeSpan.FromSeconds(this.FrameRange.Start) + value) / this.Speed + this.BasicTimeOffset);
 				return;
 			}
@@ -286,8 +287,10 @@ namespace Helper.Module.AnimationViewer {
 			set {
 				if (this.Loaded) {
 					if (value) {
-						this.Canvas.Background = (AcrylicBrush)Application.Current.Resources["AcrylicInAppFillColorDefaultBrush"];
-					} else {
+						// TODO : incorrect if theme != system
+						this.Canvas.Background = this.FindResource("CardBackgroundFillColorDefaultBrush").AsClass<Brush>();
+					}
+					else {
 						this.Canvas.Background = null;
 					}
 				}

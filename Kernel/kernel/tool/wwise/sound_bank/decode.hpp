@@ -83,7 +83,8 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (IsSame<typename CurrentEnumerationAttribute::template Element<2_ixz>::template Element<1_ixz>, IDWrapper>) {
 					value = element.value.template get<1_ix>().template get<IDWrapper>().value;
 				}
-			} else {
+			}
+			else {
 				constexpr auto default_value = CurrentEnumerationAttribute::template Element<3_ixz>::template element<1_ixz>;
 				if constexpr (IsSame<typename CurrentEnumerationAttribute::template Element<2_ixz>::template Element<1_ixz>, Value>) {
 					value = default_value;
@@ -109,7 +110,8 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 			if (auto element_if = map.regular.query_if(type)) {
 				auto & element = element_if.get();
 				value.value = element.value.template get<1_ix>().template get<Value>();
-			} else {
+			}
+			else {
 				value.value = EnumerationAttribute<decltype(type)>::Attribute::template Element<static_cast<ZSize>(type.value)>::template Element<3_ixz>::template element<1_ixz>;
 			}
 			return;
@@ -126,14 +128,16 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 			if (auto element_if = map.regular.query_if(type)) {
 				auto & element = element_if.get();
 				value.value = element.value.template get<1_ix>().template get<Value>();
-			} else {
+			}
+			else {
 				value.value = EnumerationAttribute<decltype(type)>::Attribute::template Element<static_cast<ZSize>(type.value)>::template Element<3_ixz>::template element<1_ixz>;
 			}
 			if (auto element_if = map.randomizer.query_if(type)) {
 				auto & element = element_if.get();
 				value.minimum_value = element.value.template get<1_ix>().template get<Value>();
 				value.maximum_value = element.value.template get<2_ix>().template get<Value>();
-			} else {
+			}
+			else {
 				value.minimum_value = mbw<Value>(0);
 				value.maximum_value = mbw<Value>(0);
 			}
@@ -506,10 +510,12 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 					if constexpr (IsSame<CurrentValue, Boolean const>) {
 						assert_test(bit_set.get(current_index) == current_value);
 						++current_index;
-					} else if constexpr (IsSame<CurrentValue, Boolean>) {
+					}
+					else if constexpr (IsSame<CurrentValue, Boolean>) {
 						current_value = bit_set.get(current_index);
 						++current_index;
-					} else if constexpr (IsEnumerationWrapper<CurrentValue>) {
+					}
+					else if constexpr (IsEnumerationWrapper<CurrentValue>) {
 						auto index_value = Enumerated{};
 						for (auto & bit_index : SizeRange{EnumerationAttribute<CurrentValue>::size}) {
 							index_value |= cbw<Enumerated>(bit_set.get(current_index)) << bit_index;
@@ -546,7 +552,8 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 				auto length = data.read_of<RawSizeValue>();
 				if constexpr (!is_zeroed) {
 					data.read(value, cbw<Size>(length));
-				} else {
+				}
+				else {
 					assert_test(cbw<Size>(length) >= 1_sz);
 					data.read(value, cbw<Size>(length) - 1_sz);
 					self_cast<ICharacterStreamView>(data).read_constant(CharacterType::k_null);
@@ -4796,7 +4803,8 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 						if (value == 0_i) {
 							assert_test(data_offset == 1_ix);
 							assert_test(data_size == 0_sz);
-						} else {
+						}
+						else {
 							auto item_data = data_data.sub_view(data_offset, data_size);
 							if (embedded_media_directory.has()) {
 								FileSystem::write_file(embedded_media_directory.get() / "{}.wem"_sf(value), item_data);

@@ -36,6 +36,7 @@ namespace TwinStar::Kernel::Tool::Marmalade::DZip {
 		M_record_of_map(
 			M_wrap(Resource_<_>),
 			M_wrap(
+				(Path) path,
 				(List<Chunk>) chunk,
 			),
 		);
@@ -53,7 +54,7 @@ namespace TwinStar::Kernel::Tool::Marmalade::DZip {
 		M_record_of_map(
 			M_wrap(Package_<_>),
 			M_wrap(
-				(Map<Path, Resource>) resource,
+				(List<Resource>) resource,
 			),
 		);
 

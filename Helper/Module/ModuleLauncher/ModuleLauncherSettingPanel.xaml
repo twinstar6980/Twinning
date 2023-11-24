@@ -1,4 +1,4 @@
-<UserControl
+<local:CustomControl
 	x:Class="Helper.Module.ModuleLauncher.ModuleLauncherSettingPanel"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,10 +8,13 @@
 	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:Helper"
 	xmlns:localModuleModuleLauncher="using:Helper.Module.ModuleLauncher"
-	xmlns:my="using:Helper.CustomControl"
+	xmlns:my="using:Helper.CommonControl"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
 >
-	<my:MStack Padding="8,16" HorizontalAlignment="Stretch" Orientation="Vertical" Spacing="2">
-	</my:MStack>
-</UserControl>
+	<my:Stack
+		Padding="0,0"
+		Orientation="Vertical" Spacing="2"
+	>
+	</my:Stack>
+</local:CustomControl>

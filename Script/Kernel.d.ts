@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 60
+ * @version 61
  */
 declare namespace TwinStar.Kernel {
 
@@ -2337,64 +2337,6 @@ declare namespace TwinStar.Kernel {
 		/** Wwise */
 		namespace Wwise {
 
-			/** Media */
-			namespace Media {
-
-				/** 版本 */
-				class Version {
-
-					// ------------------------------------------------
-
-					private _Tool_Wwise_Media_Version;
-
-					// ------------------------------------------------
-
-					static default(): Version;
-
-					static copy(it: Version): Version;
-
-					// ------------------------------------------------
-
-					static Value: {
-					};
-
-					static value(it: typeof Version.Value): Version;
-
-					get value(): typeof Version.Value;
-
-					set value(it: typeof Version.Value);
-
-					// ------------------------------------------------
-
-				}
-
-				/** 解码 */
-				namespace Decode {
-
-					/**
-					 * 解码
-					 * @param ripe 已编码的音频数据
-					 * @param raw 解码后的音频数据
-					 * @param ffmpeg_program ffmpeg程序文件的路径，pcm、adpcm、aac、vorbis音频解码时需要调用该程序
-					 * @param ww2ogg_program ww2ogg程序文件的路径，vorbis音频解码时需要调用该程序
-					 * @param ww2ogg_code_book ww2ogg代码本文件的路径，vorbis音频解码时需要使用该文件
-					 * @param temporary_directory 临时文件目录
-					 * @param version 版本
-					 */
-					function process(
-						ripe: CByteListView,
-						raw: ByteArray,
-						ffmpeg_program: Path,
-						ww2ogg_program: Path,
-						ww2ogg_code_book: Path,
-						temporary_directory: Path,
-						version: Version,
-					): Void;
-
-				}
-
-			}
-
 			/** SoundBank */
 			namespace SoundBank {
 
@@ -2559,14 +2501,16 @@ declare namespace TwinStar.Kernel {
 
 						/** 资源 */
 						type Resource = {
-							/** 存储方式 */
+							/** 路径 */
+							path: string;
+							/** 数据块 */
 							chunk: Array<Chunk>;
 						};
 
 						/** 包 */
 						type Package = {
 							/** 资源 */
-							resource: Record<string, Resource>;
+							resource: Array<Resource>;
 						};
 
 					}
@@ -4030,6 +3974,8 @@ declare namespace TwinStar.Kernel {
 
 						/** 资源 */
 						type Resource = {
+							/** 路径 */
+							path: string;
 							/** 时间 */
 							time: bigint;
 						};
@@ -4037,7 +3983,7 @@ declare namespace TwinStar.Kernel {
 						/** 包 */
 						type Package = {
 							/** 资源 */
-							resource: Record<string, Resource>;
+							resource: Array<Resource>;
 						};
 
 					}
@@ -4148,13 +4094,13 @@ declare namespace TwinStar.Kernel {
 
 						/**
 						 * 资源类型
-						 * + generic 常规资源
+						 * + general 常规资源
 						 * + texture 纹理资源
 						 */
-						type ResourceType = 'generic' | 'texture';
+						type ResourceType = 'general' | 'texture';
 
 						/** 常规资源附加 */
-						type GenericResourceAdditional = {
+						type GeneralResourceAdditional = {
 						};
 
 						/** 纹理资源附加 */
@@ -4167,8 +4113,8 @@ declare namespace TwinStar.Kernel {
 
 						/** 资源附加 */
 						type ResourceAdditional = {
-							type: 'generic';
-							value: GenericResourceAdditional;
+							type: 'general';
+							value: GeneralResourceAdditional;
 						} | {
 							type: 'texture';
 							value: TextureResourceAdditional;
@@ -4176,23 +4122,26 @@ declare namespace TwinStar.Kernel {
 
 						/** 资源 */
 						type Resource = {
+							/** 路径 */
+							path: string;
+							/** 附加 */
 							additional: ResourceAdditional;
 						};
 
-						/** 资源数据段存储方式 */
-						type ResourceDataSectionStoreMode = [
+						/** 子包压缩 */
+						type PacketCompression = {
 							/** 以zlib压缩常规资源数据段 */
-							boolean,
+							general: boolean;
 							/** 以zlib压缩纹理资源数据段 */
-							boolean,
-						];
+							texture: boolean;
+						};
 
 						/** 包 */
 						type Package = {
+							/** 压缩 */
+							compression: PacketCompression;
 							/** 资源 */
-							resource: Record<string, Resource>;
-							/** 资源数据段存储方式 */
-							resource_data_section_store_mode: ResourceDataSectionStoreMode;
+							resource: Array<Resource>;
 						};
 
 					}
@@ -4304,13 +4253,13 @@ declare namespace TwinStar.Kernel {
 
 						/**
 						 * 资源类型
-						 * + generic 常规资源
+						 * + general 常规资源
 						 * + texture 纹理资源
 						 */
-						type ResourceType = 'generic' | 'texture';
+						type ResourceType = 'general' | 'texture';
 
 						/** 常规资源附加 */
-						type GenericResourceAdditional = {
+						type GeneralResourceAdditional = {
 						};
 
 						/** 纹理资源附加 */
@@ -4329,8 +4278,8 @@ declare namespace TwinStar.Kernel {
 
 						/** 资源附加 */
 						type ResourceAdditional = {
-							type: 'generic';
-							value: GenericResourceAdditional;
+							type: 'general';
+							value: GeneralResourceAdditional;
 						} | {
 							type: 'texture';
 							value: TextureResourceAdditional;
@@ -4338,47 +4287,54 @@ declare namespace TwinStar.Kernel {
 
 						/** 资源 */
 						type Resource = {
+							/** 路径 */
+							path: string;
+							/** 附加 */
 							additional: ResourceAdditional;
 						};
 
-						/** 资源数据段存储方式 */
-						type ResourceDataSectionStoreMode = [
+						/** 子包压缩 */
+						type PacketCompression = {
 							/** 以zlib压缩常规资源数据段 */
-							boolean,
+							general: boolean;
 							/** 以zlib压缩纹理资源数据段 */
-							boolean,
-						];
+							texture: boolean;
+						};
 
 						/** 子群类别 */
-						type SubgroupCategory = [
-							/** 分辨率。当 version.number >= 1 时存在 */
-							null | bigint,
+						type SubgroupCategory = {
+							/** 分辨率 */
+							resolution: null | bigint;
 							/** 区域。当 version.number >= 3 时存在 */
-							null | string,
-						];
+							locale?: null | string;
+						};
 
 						/** 子群 */
 						type Subgroup = {
+							/** ID */
+							id: string;
 							/** 类别 */
 							category: SubgroupCategory;
+							/** 压缩 */
+							compression: PacketCompression;
 							/** 资源 */
-							resource: Record<string, Resource>;
-							/** 资源数据段存储方式 */
-							resource_data_section_store_mode: ResourceDataSectionStoreMode;
+							resource: Array<Resource>;
 						};
 
 						/** 群 */
 						type Group = {
+							/** ID */
+							id: string;
 							/** 是否为复合群 */
 							composite: boolean;
 							/** 子群 */
-							subgroup: Record<string, Subgroup>;
+							subgroup: Array<Subgroup>;
 						};
 
 						/** 包 */
 						type Package = {
 							/** 群 */
-							group: Record<string, Group>;
+							group: Array<Group>;
 						};
 
 					}

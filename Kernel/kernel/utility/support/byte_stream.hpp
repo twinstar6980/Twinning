@@ -39,7 +39,8 @@ namespace TwinStar::Kernel {
 			if (g_byte_stream_use_big_endian != (std::endian::native == std::endian::little)) [[likely]]
 			{
 				std::memcpy(thix.current_pointer().value, &that, k_type_size<TValue>.value);
-			} else [[unlikely]]
+			}
+			else [[unlikely]]
 			{
 				auto that_reversed = reverse_endian(that);
 				std::memcpy(thix.current_pointer().value, &that_reversed, k_type_size<TValue>.value);
@@ -672,7 +673,8 @@ namespace TwinStar::Kernel {
 		) -> Size {
 			if constexpr (IsVoid<TLength>) {
 				return bs_size(that.value) + bs_static_size<Character>();
-			} else {
+			}
+			else {
 				return bs_static_size<TLength>() + bs_size(that.value);
 			}
 		}
@@ -684,7 +686,8 @@ namespace TwinStar::Kernel {
 			if constexpr (IsVoid<TLength>) {
 				StringParser::write_string_until(self_cast<OCharacterStreamView>(thix), that.value.as_view(), CharacterType::k_null);
 				self_cast<OCharacterStreamView>(thix).write_constant(CharacterType::k_null);
-			} else {
+			}
+			else {
 				thix.write(cbw<TLength>(that.value.size()));
 				thix.write(that.value);
 			}
@@ -700,7 +703,8 @@ namespace TwinStar::Kernel {
 				StringParser::read_string_until(self_cast<ICharacterStreamView>(thix), that_view, CharacterType::k_null);
 				self_cast<ICharacterStreamView>(thix).read_constant(CharacterType::k_null);
 				that.value = that_view;
-			} else {
+			}
+			else {
 				auto length = thix.read_of<TLength>();
 				thix.read(that.value, cbw<Size>(length));
 			}

@@ -497,7 +497,8 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 					if constexpr (IsSame<CurrentValue, Boolean>) {
 						bit_set.set(current_index, current_value);
 						++current_index;
-					} else if constexpr (IsEnumerationWrapper<CurrentValue>) {
+					}
+					else if constexpr (IsEnumerationWrapper<CurrentValue>) {
 						auto index_value = Enumerated{};
 						convert_enumeration_index(index_value, current_value);
 						for (auto & bit_index : SizeRange{EnumerationAttribute<CurrentValue>::size}) {
@@ -529,7 +530,8 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (!is_zeroed) {
 					data.write(cbw<RawSizeValue>(value.size()));
 					data.write(value);
-				} else {
+				}
+				else {
 					data.write(cbw<RawSizeValue>(value.size() + 1_sz));
 					data.write(value);
 					self_cast<OCharacterStreamView>(data).write_constant(CharacterType::k_null);
@@ -4787,7 +4789,8 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 						if (value == 0_i) {
 							data_offset = 1_ix;
 							data_size = 0_sz;
-						} else {
+						}
+						else {
 							data_data.write_space(k_null_byte, compute_padding_size(data_begin_position + data_data.position(), k_data_block_padding_size));
 							data_offset = data_data.position();
 							data_size = FileSystem::read_stream_file(embedded_media_directory / "{}.wem"_sf(value), data_data);

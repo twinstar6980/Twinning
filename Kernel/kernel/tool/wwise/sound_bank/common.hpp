@@ -3,6 +3,7 @@
 #include "kernel/utility/utility.hpp"
 #include "kernel/tool/wwise/sound_bank/version.hpp"
 #include "kernel/tool/wwise/sound_bank/definition.hpp"
+#include "kernel/tool/common/wave_structure.hpp"
 
 namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 

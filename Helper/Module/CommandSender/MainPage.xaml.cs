@@ -3,7 +3,7 @@
 
 using Helper;
 using Helper.Utility;
-using Helper.CustomControl;
+using Helper.CommonControl;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace Helper.Module.CommandSender {
@@ -24,7 +24,7 @@ namespace Helper.Module.CommandSender {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			this.Controller.ApplyOption(args.Parameter as List<String>);
+			this.Controller.ApplyOption(args.Parameter.AsClass<List<String>>());
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -37,7 +37,7 @@ namespace Helper.Module.CommandSender {
 
 		#region tab item page
 
-		public async Task<Boolean> OnTabItemCloseRequested (
+		public async Task<Boolean> TabItemPageRequestClose (
 		) {
 			return await this.Controller.RequestClose();
 		}
@@ -52,23 +52,20 @@ namespace Helper.Module.CommandSender {
 
 		public MainPage View { get; init; } = default!;
 
-		// ----------------
-
-		public List<MethodGroupConfiguration> MethodConfiguration { get; set; } = default!;
-
 		#endregion
 
 		#region initialize
 
 		public void Initialize (
 		) {
+			var methodConfiguration = new List<MethodGroupConfiguration>();
 			try {
-				this.MethodConfiguration = JsonHelper.Deserialize<List<MethodGroupConfiguration>>(StorageHelper.ReadFileTextSync(Setting.Data.CommandSender.MethodConfiguration));
-			} catch (Exception e) {
-				App.MainWindow.Controller.PublishTip(InfoBarSeverity.Error, "Failed to load method configuration.", e.ToString());
-				this.MethodConfiguration = new List<MethodGroupConfiguration>();
+				methodConfiguration = JsonHelper.DeserializeFileSync<List<MethodGroupConfiguration>>(Setting.Data.CommandSender.MethodConfiguration);
 			}
-			this.uAvailableMethod_ItemsSource = this.MethodConfiguration.Select((group) => (new MainPageAvailableMethodGroupItemController() {
+			catch (Exception e) {
+				App.MainWindow.PublishTip(InfoBarSeverity.Error, "Failed to load method configuration.", e.ToString());
+			}
+			this.uAvailableMethodList_ItemsSource = methodConfiguration.Select((group) => (new MainPageAvailableMethodGroupItemController() {
 				Host = this,
 				GroupModel = group,
 				Children = group.Item.Select((item) => (new MainPageAvailableMethodItemItemController() {
@@ -81,18 +78,17 @@ namespace Helper.Module.CommandSender {
 		}
 
 		public async void ApplyOption (
-			List<String>? optionView
+			List<String> optionView
 		) {
-			while (!this.View.IsLoaded) {
-				await Task.Delay(40);
-			}
+			await ControlHelper.WaitUntilLoaded(this.View);
 			try {
 				var option = new CommandLineReader(optionView);
 				if (!option.Done()) {
 					throw new Exception($"Too many option : {String.Join(' ', option.NextStringList())}");
 				}
-			} catch (Exception e) {
-				App.MainWindow.Controller.PublishTip(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
+			}
+			catch (Exception e) {
+				App.MainWindow.PublishTip(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
 			}
 			return;
 		}
@@ -106,20 +102,19 @@ namespace Helper.Module.CommandSender {
 
 		#region page
 
-		public async void uPage_OnDragOver (
+		public async void uPage_DragOver (
 			Object        sender,
 			DragEventArgs args
 		) {
-			if (sender is not Page senders) { return; }
+			var senders = sender.AsClass<Page>();
 			return;
 		}
 
-		public async void uPage_OnDrop (
+		public async void uPage_Drop (
 			Object        sender,
 			DragEventArgs args
 		) {
-			if (sender is not Page senders) { return; }
-			args.Handled = true;
+			var senders = sender.AsClass<Page>();
 			return;
 		}
 
@@ -127,19 +122,19 @@ namespace Helper.Module.CommandSender {
 
 		#region available method
 
-		public List<MainPageAvailableMethodGroupItemController> uAvailableMethod_ItemsSource { get; set; } = default!;
+		public List<MainPageAvailableMethodGroupItemController> uAvailableMethodList_ItemsSource { get; set; } = default!;
 
-		public async void uAvailableMethod_OnItemInvoked (
+		public async void uAvailableMethodList_ItemInvoked (
 			TreeView                     sender,
 			TreeViewItemInvokedEventArgs args
 		) {
-			if (sender is not TreeView senders) { return; }
+			var senders = sender.AsClass<TreeView>();
 			if (args.InvokedItem is MainPageAvailableMethodGroupItemController groupItem) {
-				var node = senders.RootNodes.ToList().Find((value) => (value.Content == groupItem)) ?? throw new Exception();
+				var node = senders.RootNodes.ToList().Find((value) => (Object.ReferenceEquals(value.Content, groupItem))).AsNotNull();
 				node.IsExpanded = !node.IsExpanded;
 			}
 			if (args.InvokedItem is MainPageAvailableMethodItemItemController itemItem) {
-				this.uSelectedMethod_ItemsSource.Add(new MainPageSelectedMethodItemController() {
+				this.uSelectedMethodList_ItemsSource.Add(new MainPageSelectedMethodItemController() {
 					Host = this,
 					GroupModel = itemItem.GroupModel,
 					ItemModel = itemItem.ItemModel,
@@ -156,33 +151,33 @@ namespace Helper.Module.CommandSender {
 
 		#region selected method
 
-		public ObservableCollection<MainPageSelectedMethodItemController> uSelectedMethod_ItemsSource { get; } = new ObservableCollection<MainPageSelectedMethodItemController>();
+		public ObservableCollection<MainPageSelectedMethodItemController> uSelectedMethodList_ItemsSource { get; } = new ObservableCollection<MainPageSelectedMethodItemController>();
 
 		// ----------------
 
-		public async void uForwardWithSelectedMethodByParallel_OnClick (
+		public async void uSelectedMethodForwardByParallel_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
-			await ModdingWorker.ForwardHelper.Forward(this.uSelectedMethod_ItemsSource.Select((value) => (value.GenerateCommand())).ToList(), true);
+			var senders = sender.AsClass<Button>();
+			await ModdingWorker.ForwardHelper.Forward(this.uSelectedMethodList_ItemsSource.Select((value) => (value.GenerateCommand())).ToList(), true);
 			return;
 		}
 
-		public async void uForwardWithSelectedMethodBySequence_OnClick (
+		public async void uSelectedMethodForwardBySequence_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
-			await ModdingWorker.ForwardHelper.Forward(this.uSelectedMethod_ItemsSource.Select((value) => (value.GenerateCommand())).ToList(), false);
+			var senders = sender.AsClass<Button>();
+			await ModdingWorker.ForwardHelper.Forward(this.uSelectedMethodList_ItemsSource.Select((value) => (value.GenerateCommand())).ToList(), false);
 			return;
 		}
 
-		public async void uForwardWithoutSelectedMethod_OnClick (
+		public async void uSelectedMethodForwardByNone_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
+			var senders = sender.AsClass<Button>();
 			await ModdingWorker.ForwardHelper.Forward(new List<String>());
 			return;
 		}
@@ -329,33 +324,33 @@ namespace Helper.Module.CommandSender {
 			}
 		}
 
-		public async void uBatch_OnClick (
+		public async void uBatch_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			this.EnableBatch = senders.IsChecked!.Value;
+			var senders = sender.AsClass<ToggleButton>();
+			this.EnableBatch = senders.IsChecked.AsNotNull();
 			this.NotifyPropertyChanged(
 				nameof(this.uBatch_IsChecked)
 			);
 			return;
 		}
 
-		public async void uForward_OnClick (
+		public async void uForward_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
+			var senders = sender.AsClass<Button>();
 			await ModdingWorker.ForwardHelper.Forward(this.GenerateCommand());
 			return;
 		}
 
-		public async void uRemove_OnClick (
+		public async void uRemove_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
-			this.Host.uSelectedMethod_ItemsSource.Remove(this);
+			var senders = sender.AsClass<Button>();
+			this.Host.uSelectedMethodList_ItemsSource.Remove(this);
 			return;
 		}
 

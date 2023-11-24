@@ -2,6 +2,7 @@
 // ReSharper disable
 
 using Helper;
+using Helper.Utility;
 
 namespace Helper.Module.CommandSender {
 
@@ -30,9 +31,7 @@ namespace Helper.Module.CommandSender {
 		public static SizeExpression Parse (
 			String expression
 		) {
-			if (expression.Length < 2) {
-				throw new Exception();
-			}
+			GF.AssertTest(expression.Length >= 2);
 			return new SizeExpression() {
 				Unit = expression[^1] switch {
 					'b' => SizeUnit.B,
@@ -81,37 +80,37 @@ namespace Helper.Module.CommandSender {
 
 	public class ArgumentValue {
 
-		public Object? Data = default!;
+		public Object? Data = null;
 
 		// ----------------
 
 		public Boolean OfBoolean {
-			get => this.Data as Boolean? ?? throw new Exception();
+			get => this.Data.AsStruct<Boolean>();
 			set => this.Data = value;
 		}
 
 		public Integer OfInteger {
-			get => this.Data as Integer? ?? throw new Exception();
+			get => this.Data.AsStruct<Integer>();
 			set => this.Data = value;
 		}
 
 		public Floater OfFloater {
-			get => this.Data as Floater? ?? throw new Exception();
+			get => this.Data.AsStruct<Floater>();
 			set => this.Data = value;
 		}
 
 		public SizeExpression OfSize {
-			get => this.Data as SizeExpression ?? throw new Exception();
+			get => this.Data.AsClass<SizeExpression>();
 			set => this.Data = value;
 		}
 
 		public String OfString {
-			get => this.Data as String ?? throw new Exception();
+			get => this.Data.AsClass<String>();
 			set => this.Data = value;
 		}
 
 		public PathExpression OfPath {
-			get => this.Data as PathExpression ?? throw new Exception();
+			get => this.Data.AsClass<PathExpression>();
 			set => this.Data = value;
 		}
 

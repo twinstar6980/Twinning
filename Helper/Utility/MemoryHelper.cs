@@ -13,13 +13,11 @@ namespace Helper.Utility {
 
 		// ----------------
 
-		public static void* Alloc (
+		public static void* Allocate (
 			Size size
 		) {
 			var data = ExternalLibrary.Kernel32.HeapAlloc(MemoryHelper.Heap, 0x00000008, (UIntPtr)size);
-			if (data == IntPtr.Zero) {
-				throw new OutOfMemoryException();
-			}
+			GF.AssertTest(data != IntPtr.Zero);
 			return (void*)data;
 		}
 
@@ -27,9 +25,24 @@ namespace Helper.Utility {
 			void* data
 		) {
 			var state = ExternalLibrary.Kernel32.HeapFree(MemoryHelper.Heap, 0x00000000, (IntPtr)data);
-			if (state == false) {
-				throw new InvalidOperationException();
-			}
+			GF.AssertTest(state);
+			return;
+		}
+
+		// ----------------
+
+		public static T* Allocate<T> (
+			Size size = 1
+		)
+			where T : unmanaged {
+			return (T*)MemoryHelper.Allocate(size * sizeof(T));
+		}
+
+		public static void Free<T> (
+			T* data
+		)
+			where T : unmanaged {
+			MemoryHelper.Free((void*)data);
 			return;
 		}
 
@@ -46,7 +59,8 @@ namespace Helper.Utility {
 				for (; size != 0; size--) {
 					*destinationPointer++ = *sourcePointer++;
 				}
-			} else if (sourcePointer < destinationPointer) {
+			}
+			else if (sourcePointer < destinationPointer) {
 				for (sourcePointer += size, destinationPointer += size; size != 0; size--) {
 					*--destinationPointer = *--sourcePointer;
 				}

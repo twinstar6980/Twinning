@@ -219,15 +219,20 @@ namespace TwinStar::Kernel {
 		auto destination = Exception{};
 		try {
 			std::rethrow_exception(std::current_exception());
-		} catch (Exception & source) {
+		}
+		catch (Exception & source) {
 			destination = source;
-		} catch (std::filesystem::filesystem_error & source) {
+		}
+		catch (std::filesystem::filesystem_error & source) {
 			destination = static_cast<Exception>(StandardFileSystemException{source});
-		} catch (std::system_error & source) {
+		}
+		catch (std::system_error & source) {
 			destination = static_cast<Exception>(StandardSystemException{source});
-		} catch (std::exception & source) {
+		}
+		catch (std::exception & source) {
 			destination = static_cast<Exception>(StandardException{source});
-		} catch (...) {
+		}
+		catch (...) {
 			destination = static_cast<Exception>(UnknownException{});
 		}
 		return destination;

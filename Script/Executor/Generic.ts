@@ -85,10 +85,12 @@ namespace TwinStar.Script.Executor {
 			if (target_method === undefined) {
 				selected_method = null;
 				state = los('executor.generic:method_invalid');
-			} else {
+			}
+			else {
 				selected_method = target_method;
 			}
-		} else {
+		}
+		else {
 			if (command.input === null) {
 				Console.information(los('executor.generic:no_input'), [
 				]);
@@ -109,14 +111,15 @@ namespace TwinStar.Script.Executor {
 			}
 			if (valid_method.length === 0) {
 				selected_method = null;
-				state = los('executor.generic:method_unavaliable');
-			} else {
+				state = los('executor.generic:method_unavailable');
+			}
+			else {
 				Console.information(los('executor.generic:method_select'), [
-					los('executor.generic:input_null_to_pass'),
+					los('executor.generic:method_select_null_to_skip'),
 				]);
 				selected_method = Console.enumeration(valid_method.map((e) => ([e[1], `${e[0]}`, e[1].name()])), true, null);
 				if (selected_method === null) {
-					state = los('executor.generic:method_unselect');
+					state = los('executor.generic:method_select_null');
 				}
 			}
 		}
@@ -134,12 +137,13 @@ namespace TwinStar.Script.Executor {
 		}
 		if (typeof state === 'string') {
 			Console.warning(los('executor.generic:finish_skipped'), [state]);
-		} else {
+		}
+		else {
 			if (state[0] === false) {
 				Console.error(los('executor.generic:finish_failed'), [los('executor.generic:duration', (state[1] / 1000).toFixed(3))]);
 			}
 			if (state[0] === true) {
-				Console.success(los('executor.generic:finish_succeed'), [los('executor.generic:duration', (state[1] / 1000).toFixed(3))]);
+				Console.success(los('executor.generic:finish_succeeded'), [los('executor.generic:duration', (state[1] / 1000).toFixed(3))]);
 			}
 		}
 		return typeof state === 'string' ? null : state;

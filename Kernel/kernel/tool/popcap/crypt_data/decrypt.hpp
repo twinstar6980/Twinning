@@ -33,7 +33,8 @@ namespace TwinStar::Kernel::Tool::PopCap::CryptData {
 				assert_test(plain_data_size >= limit);
 				Data::Encryption::XOR::Encrypt::process(as_lvalue(IByteStreamView{cipher.forward_view(limit)}), plain, to_byte_view(key.as_view()));
 				plain.write(cipher.forward_view(plain_data_size - limit));
-			} else {
+			}
+			else {
 				plain.write(cipher.forward_view(cipher.reserve()));
 			}
 			return;
@@ -55,7 +56,8 @@ namespace TwinStar::Kernel::Tool::PopCap::CryptData {
 				auto plain_data_size = cbw<Size>(header.plain_size);
 				assert_test(plain_data_size >= limit);
 				plain_size += plain_data_size;
-			} else {
+			}
+			else {
 				plain_size += cipher.size();
 			}
 			return;

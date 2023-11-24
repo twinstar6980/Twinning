@@ -1,7 +1,6 @@
 {
-	"language": "Chinese",
+	"language": "English",
 	"disable_cli_virtual_terminal_sequence": false,
-	"disable_notification": false,
 	"byte_stream_use_big_endian": false,
 	"common_buffer_size": "64.0m",
 	"json_format": {
@@ -9,6 +8,5 @@
 		"disable_array_wrap_line": false,
 	},
 	"thread_limit": 0,
-	"notification_time_limit": 15000,
-	"pause_when_finish": true,
+	"command_notification_time_limit": 15000,
 }

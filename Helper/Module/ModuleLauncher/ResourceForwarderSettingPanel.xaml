@@ -1,4 +1,4 @@
-<UserControl
+<local:CustomControl
 	x:Class="Helper.Module.ModuleLauncher.ResourceForwarderSettingPanel"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,121 +8,142 @@
 	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:Helper"
 	xmlns:localModuleModuleLauncher="using:Helper.Module.ModuleLauncher"
-	xmlns:my="using:Helper.CustomControl"
+	xmlns:my="using:Helper.CommonControl"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
 >
-	<my:MStack Padding="8,16" HorizontalAlignment="Stretch" Orientation="Vertical" Spacing="2">
-		<localModuleModuleLauncher:SettingItemPanel
+	<my:Stack
+		Padding="0,0"
+		Orientation="Vertical" Spacing="2"
+	>
+		<my:SettingItem
 			HorizontalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.Bookmarks}"
 			Title="Option Configuration"
 		>
-			<localModuleModuleLauncher:SettingItemPanel.Action>
-				<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
+			<my:SettingItem.Action>
+				<my:Stack
+					Padding="0,0"
+					Orientation="Horizontal" Spacing="8"
+				>
 					<TextBox
-						my:MStack.Weight="1" HorizontalAlignment="Stretch"
-						VerticalAlignment="Center"
+						my:Stack.Weight="1" HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
 						Text="{x:Bind Controller.uOptionConfigurationText_Text}"
-						TextChanged="{x:Bind Controller.uOptionConfigurationText_OnTextChanged}"
+						TextChanged="{x:Bind Controller.uOptionConfigurationText_TextChanged}"
 					/>
 					<Button
-						VerticalAlignment="Center"
+						VerticalAlignment="Top"
 						Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.OpenInNewWindow}}"
-						Click="{x:Bind Controller.uOptionConfigurationPick_OnClick}"
+						Click="{x:Bind Controller.uOptionConfigurationPick_Click}"
 					/>
-				</my:MStack>
-			</localModuleModuleLauncher:SettingItemPanel.Action>
-		</localModuleModuleLauncher:SettingItemPanel>
-		<localModuleModuleLauncher:SettingItemPanel
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+		<my:SettingItem
 			HorizontalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.Important}"
 			Title="Automatic Close"
 		>
-			<localModuleModuleLauncher:SettingItemPanel.Action>
-				<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
+			<my:SettingItem.Action>
+				<my:Stack
+					Padding="0,0"
+					Orientation="Horizontal" Spacing="8"
+				>
 					<ToggleButton
-						my:MStack.Weight="1" HorizontalAlignment="Stretch"
-						VerticalAlignment="Center"
+						my:Stack.Weight="1" HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
 						HorizontalContentAlignment="Left"
 						Content="Enable"
 						IsChecked="{x:Bind Controller.uAutomaticCloseToggle_IsChecked}"
-						Click="{x:Bind Controller.uAutomaticCloseToggle_OnClick}"
+						Click="{x:Bind Controller.uAutomaticCloseToggle_Click}"
 					/>
-				</my:MStack>
-			</localModuleModuleLauncher:SettingItemPanel.Action>
-		</localModuleModuleLauncher:SettingItemPanel>
-		<localModuleModuleLauncher:SettingItemPanel
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+		<my:SettingItem
 			HorizontalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.Shuffle}"
 			Title="Parallel Execute"
 		>
-			<localModuleModuleLauncher:SettingItemPanel.Action>
-				<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
+			<my:SettingItem.Action>
+				<my:Stack
+					Padding="0,0"
+					Orientation="Horizontal" Spacing="8"
+				>
 					<ToggleButton
-						my:MStack.Weight="1" HorizontalAlignment="Stretch"
-						VerticalAlignment="Center"
+						my:Stack.Weight="1" HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
 						HorizontalContentAlignment="Left"
 						Content="Enable"
 						IsChecked="{x:Bind Controller.uParallelExecuteToggle_IsChecked}"
-						Click="{x:Bind Controller.uParallelExecuteToggle_OnClick}"
+						Click="{x:Bind Controller.uParallelExecuteToggle_Click}"
 					/>
-				</my:MStack>
-			</localModuleModuleLauncher:SettingItemPanel.Action>
-		</localModuleModuleLauncher:SettingItemPanel>
-		<localModuleModuleLauncher:SettingItemPanel
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+		<my:SettingItem
 			HorizontalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.Filter}"
 			Title="Enable Filter"
 		>
-			<localModuleModuleLauncher:SettingItemPanel.Action>
-				<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
+			<my:SettingItem.Action>
+				<my:Stack
+					Padding="0,0"
+					Orientation="Horizontal" Spacing="8"
+				>
 					<ToggleButton
-						my:MStack.Weight="1" HorizontalAlignment="Stretch"
-						VerticalAlignment="Center"
+						my:Stack.Weight="1" HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
 						HorizontalContentAlignment="Left"
 						Content="Enable"
 						IsChecked="{x:Bind Controller.uEnableFilterToggle_IsChecked}"
-						Click="{x:Bind Controller.uEnableFilterToggle_OnClick}"
+						Click="{x:Bind Controller.uEnableFilterToggle_Click}"
 					/>
-				</my:MStack>
-			</localModuleModuleLauncher:SettingItemPanel.Action>
-		</localModuleModuleLauncher:SettingItemPanel>
-		<localModuleModuleLauncher:SettingItemPanel
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+		<my:SettingItem
 			HorizontalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.MapLayers}"
 			Title="Enable Batch"
 		>
-			<localModuleModuleLauncher:SettingItemPanel.Action>
-				<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
+			<my:SettingItem.Action>
+				<my:Stack
+					Padding="0,0"
+					Orientation="Horizontal" Spacing="8"
+				>
 					<ToggleButton
-						my:MStack.Weight="1" HorizontalAlignment="Stretch"
-						VerticalAlignment="Center"
+						my:Stack.Weight="1" HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
 						HorizontalContentAlignment="Left"
 						Content="Enable"
 						IsChecked="{x:Bind Controller.uEnableBatchToggle_IsChecked}"
-						Click="{x:Bind Controller.uEnableBatchToggle_OnClick}"
+						Click="{x:Bind Controller.uEnableBatchToggle_Click}"
 					/>
-				</my:MStack>
-			</localModuleModuleLauncher:SettingItemPanel.Action>
-		</localModuleModuleLauncher:SettingItemPanel>
-		<localModuleModuleLauncher:SettingItemPanel
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+		<my:SettingItem
 			HorizontalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.Pin}"
 			Title="Remain Input"
 		>
-			<localModuleModuleLauncher:SettingItemPanel.Action>
-				<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
+			<my:SettingItem.Action>
+				<my:Stack
+					Padding="0,0"
+					Orientation="Horizontal" Spacing="8"
+				>
 					<ToggleButton
-						my:MStack.Weight="1" HorizontalAlignment="Stretch"
-						VerticalAlignment="Center"
+						my:Stack.Weight="1" HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
 						HorizontalContentAlignment="Left"
 						Content="Enable"
 						IsChecked="{x:Bind Controller.uRemainInputToggle_IsChecked}"
-						Click="{x:Bind Controller.uRemainInputToggle_OnClick}"
+						Click="{x:Bind Controller.uRemainInputToggle_Click}"
 					/>
-				</my:MStack>
-			</localModuleModuleLauncher:SettingItemPanel.Action>
-		</localModuleModuleLauncher:SettingItemPanel>
-	</my:MStack>
-</UserControl>
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+	</my:Stack>
+</local:CustomControl>

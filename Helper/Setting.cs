@@ -23,7 +23,6 @@ namespace Helper {
 			public required String       Kernel;
 			public required String       Script;
 			public required List<String> Argument;
-			public required Boolean      AutomaticClose;
 			public required Boolean      AutomaticScroll;
 			public required Boolean      ImmediateLaunch;
 			public required String       AlternativeLaunchScript;
@@ -87,8 +86,7 @@ namespace Helper {
 
 		public static void Load (
 		) {
-			var text = StorageHelper.ReadFileTextSync(Setting.File);
-			Setting.Data = JsonHelper.Deserialize<SettingData>(text);
+			Setting.Data = JsonHelper.DeserializeFileSync<SettingData>(Setting.File);
 			return;
 		}
 
@@ -97,8 +95,7 @@ namespace Helper {
 			WindowHelper.Current.ForEach((item) => { WindowHelper.Theme(item, Setting.Data.Application.ThemeMode); });
 			App.Instance.RegisterShellJumpList().Wait(0);
 			App.Instance.Resources["ModdingWorkerMessageFontFamily"] = Setting.Data.ModdingWorker.MessageFontFamily.Length == 0 ? FontFamily.XamlAutoFontFamily.Source : Setting.Data.ModdingWorker.MessageFontFamily;
-			var text = JsonHelper.Serialize<SettingData>(Setting.Data, true);
-			StorageHelper.WriteFileTextSync(Setting.File, text);
+			JsonHelper.SerializeFileSync<SettingData>(Setting.File, Setting.Data);
 			return;
 		}
 
@@ -109,7 +106,8 @@ namespace Helper {
 				if (Setting.Data.Version != Package.Current.Id.Version.Major) {
 					throw new Exception();
 				}
-			} catch (Exception) {
+			}
+			catch (Exception) {
 				Setting.Data = new SettingData() {
 					Version = Package.Current.Id.Version.Major,
 					Application = new ApplicationSettingData() {
@@ -129,7 +127,6 @@ namespace Helper {
 						Kernel = "",
 						Script = "",
 						Argument = new List<String>(),
-						AutomaticClose = false,
 						AutomaticScroll = true,
 						ImmediateLaunch = true,
 						AlternativeLaunchScript = "",

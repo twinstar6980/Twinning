@@ -87,7 +87,8 @@ namespace TwinStar::Kernel::Tool::PopCap::ParticleEffect {
 			if (value.point.empty()) {
 				initial_time.reset();
 				initial_value.reset();
-			} else {
+			}
+			else {
 				if (value.point.first().time == 0.0_f) {
 					initial_time.set(value.point.first().time);
 				}
@@ -98,19 +99,23 @@ namespace TwinStar::Kernel::Tool::PopCap::ParticleEffect {
 			flag.set(1_ix, count > 1_sz && value.control);
 			if (!initial_time.has()) {
 				flag.set(2_ix, k_false);
-			} else if (initial_time.get() == 0.0_f) {
+			}
+			else if (initial_time.get() == 0.0_f) {
 				flag.set(2_ix, k_true);
 			}
 			if (!initial_value.has()) {
 				flag.set(3_ix, k_false);
 				flag.set(4_ix, k_false);
-			} else if (initial_value.get() == 0.0_f) {
+			}
+			else if (initial_value.get() == 0.0_f) {
 				flag.set(3_ix, k_true);
 				flag.set(4_ix, k_false);
-			} else if (initial_value.get() == 1.0_f) {
+			}
+			else if (initial_value.get() == 1.0_f) {
 				flag.set(3_ix, k_false);
 				flag.set(4_ix, k_true);
-			} else if (initial_value.get() == 2.0_f) {
+			}
+			else if (initial_value.get() == 2.0_f) {
 				flag.set(3_ix, k_true);
 				flag.set(4_ix, k_true);
 			}

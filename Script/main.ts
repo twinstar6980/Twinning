@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 91;
+	export const k_version = 92;
 
 	// ------------------------------------------------
 
@@ -16,6 +16,12 @@ namespace TwinStar.Script {
 			throw error;
 		}
 		return;
+	}
+
+	export function assert_fail(
+		message: string = ``,
+	): never {
+		assert_test(false, message);
 	}
 
 	// ------------------------------------------------
@@ -204,7 +210,7 @@ namespace TwinStar.Script {
 			`utility/ThreadManager`,
 			`utility/ProcessHelper`,
 			`utility/Console`,
-			`utility/ADBHelper`,
+			`utility/AndroidHelper`,
 			`Language/Language`,
 			`Support/Atlas/Pack`,
 			`Support/Atlas/PackAutomatic`,
@@ -228,8 +234,8 @@ namespace TwinStar.Script {
 			`Support/PvZ2/ResourceManifest/NewTypeObjectNotation/Encode`,
 			`Support/PvZ2/RegularResourceManifest/common`,
 			`Support/PvZ2/RegularResourceManifest/Convert`,
+			`Support/PvZ2/RemoteProject/Execute`,
 			`Support/PvZ2/ResourceConvert`,
-			`Support/PvZ2/RemoteAndroidHelper`,
 			`Support/Kairosoft/UserData/Recrypt`,
 			`Executor/Generic`,
 			`Executor/Typical`,
@@ -266,7 +272,7 @@ namespace TwinStar.Script {
 			`Executor/Implement/popcap.resource_stream_bundle_patch`,
 			`Executor/Implement/pvz2.text_table`,
 			`Executor/Implement/pvz2.resource_manifest`,
-			`Executor/Implement/pvz2.remote_android_helper`,
+			`Executor/Implement/pvz2.remote_project`,
 			`Executor/Implement/kairosoft.user_data`,
 			`Entry/Entry`,
 		];
@@ -290,20 +296,23 @@ namespace TwinStar.Script {
 			let timer_begin = Date.now();
 			PartitionLoader.load(g_partition_list, Home.script());
 			let timer_end = Date.now();
+			let result = '';
 			// 执行模块入口函数
 			try {
 				Console.success(los('main:partition_load_finish'), [
 					los('main:partition_load_duration', ((timer_end - timer_begin) / 1000).toFixed(3)),
 				]);
 				Home.initialize();
-				Entry.entry(argument.slice(1));
-			} catch (e) {
+				let command_count = Entry.entry(argument.slice(1));
+				result = `${command_count.skipped},${command_count.failed},${command_count.succeeded}`;
+			}
+			catch (e) {
 				Console.error_of(e);
-				Console.pause();
+				throw '';
 			}
 			// 释放资源
 			g_thread_manager.resize(0);
-			return '';
+			return result;
 		}
 
 		export function external(

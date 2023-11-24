@@ -23,7 +23,8 @@ namespace TwinStar::Kernel::Trait::Generalization {
 				[] <typename CurrentPackage> (CurrentPackage) {
 					if constexpr (IsTypePackage<CurrentPackage>) {
 						return TypePackage<typename CurrentPackage::template Element<element_index>>{};
-					} else {
+					}
+					else {
 						return ValuePackage<CurrentPackage::template element<element_index>>{};
 					}
 				}(Package{}) ...
@@ -55,7 +56,8 @@ namespace TwinStar::Kernel::Trait::Generalization {
 				[] <typename CurrentPackage> (CurrentPackage) {
 					if constexpr (IsTypePackage<CurrentPackage>) {
 						return TypePackage<typename CurrentPackage::template Element<element_index>>{};
-					} else {
+					}
+					else {
 						return ValuePackage<CurrentPackage::template element<element_index>>{};
 					}
 				}(Package{}) ...,

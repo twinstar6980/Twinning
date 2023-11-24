@@ -17,7 +17,8 @@ namespace Helper.Utility {
 			foreach (var element in source) {
 				if (element == '/') {
 					destination.Append('\\');
-				} else {
+				}
+				else {
 					destination.Append(element);
 				}
 			}
@@ -41,7 +42,8 @@ namespace Helper.Utility {
 				destination.Append(element);
 				if (element == '\\') {
 					currentBackslashCount += 1;
-				} else {
+				}
+				else {
 					currentBackslashCount = 0;
 				}
 			}
@@ -71,23 +73,6 @@ namespace Helper.Utility {
 			return destination.ToString();
 		}
 
-		// ----------------
-
-		public static unsafe List<String> DecodeCommandLineString (
-			String ripe
-		) {
-			var count = 0;
-			var pointer = ExternalLibrary.Shell32.CommandLineToArgv(ripe, ref count);
-			if (pointer == IntPtr.Zero) {
-				throw new Exception();
-			}
-			var raw = new List<String>(count);
-			for (var index = 0; index < count; index++) {
-				raw.Add(new String(((Character**)pointer)[index]));
-			}
-			return raw;
-		}
-
 		#endregion
 
 		#region create
@@ -101,10 +86,8 @@ namespace Helper.Utility {
 			process.StartInfo.FileName = program;
 			process.StartInfo.Arguments = ProcessHelper.EncodeCommandLineString(null, argument);
 			process.StartInfo.CreateNoWindow = true;
-			var stared = process.Start();
-			if (!stared) {
-				throw new Exception();
-			}
+			var state = process.Start();
+			GF.AssertTest(state);
 			return process.WaitForExitAsync();
 		}
 

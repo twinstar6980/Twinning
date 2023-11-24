@@ -35,9 +35,11 @@ namespace TwinStar.Script.Support.Atlas.PackAutomatic {
 		let b_area = b.w * b.h;
 		if (a_area === b_area) {
 			return 0;
-		} else if (a_area < b_area) {
+		}
+		else if (a_area < b_area) {
 			return -1;
-		} else {
+		}
+		else {
 			return +1;
 		}
 	}
@@ -95,10 +97,12 @@ namespace TwinStar.Script.Support.Atlas.PackAutomatic {
 			if (square) {
 				it.w = Math.max(it.w, 1) * 2;
 				it.h = Math.max(it.h, 1) * 2;
-			} else {
+			}
+			else {
 				if (step % 2 === 0) {
 					it.h = Math.max(it.h, 1) * 2;
-				} else {
+				}
+				else {
 					it.w = Math.max(it.w, 1) * 2;
 				}
 			}
@@ -113,10 +117,12 @@ namespace TwinStar.Script.Support.Atlas.PackAutomatic {
 			if (square) {
 				it.w += expand_value;
 				it.h += expand_value;
-			} else {
+			}
+			else {
 				if (step % 2 === 0) {
 					it.w += expand_value;
-				} else {
+				}
+				else {
 					it.h += expand_value;
 				}
 			}
@@ -131,11 +137,11 @@ namespace TwinStar.Script.Support.Atlas.PackAutomatic {
 		item_weighter: (a: Box) => number,
 	): null | Record<string, Rect> {
 		let space_list: Array<Rect> = [{ x: 0, y: 0, ...container }];
-		let item_list = record_to_array(item_map, (k, v) => ({ name: k, box: item_map[k] })).sort((a, b) => (item_weighter(a.box) > item_weighter(b.box) ? -1 : +1));
+		let item_list = record_to_array(item_map, (key, value) => ({ name: key, box: item_map[key] })).sort((a, b) => (item_weighter(a.box) > item_weighter(b.box) ? -1 : +1));
 		let result: Record<string, Rect> = {};
 		for (let item of item_list) {
 			let box = item.box;
-			let space_index = space_list.findIndex((e) => (box_is_fit(box, e)));
+			let space_index = space_list.findIndex((value) => (box_is_fit(box, value)));
 			if (space_index === -1) {
 				return null;
 			}
@@ -201,7 +207,7 @@ namespace TwinStar.Script.Support.Atlas.PackAutomatic {
 		],
 	): [Box, Record<string, Rect>] {
 		assert_test(item_weighter.length !== 0, `item_weighter list must be not empty`);
-		let candidate = item_weighter.map((e) => (pack_automatic(item_map, container_expander, e)));
+		let candidate = item_weighter.map((value) => (pack_automatic(item_map, container_expander, value)));
 		let best = candidate[0];
 		for (let e of candidate.slice(1)) {
 			if (box_area(e[0]) < box_area(best[0])) {

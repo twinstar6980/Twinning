@@ -42,13 +42,13 @@ namespace TwinStar::Kernel::Tool::PopCap::Package {
 			definition.resource.allocate_full(information_structure.resource_information.size());
 			for (auto & resource_index : SizeRange{information_structure.resource_information.size()}) {
 				auto & resource_information_structure = information_structure.resource_information[resource_index];
-				auto & resource_definition = definition.resource.at(resource_index);
-				resource_definition.key = Path{resource_information_structure.path.value};
-				resource_definition.value.time = cbw<Integer>(resource_information_structure.time);
+				auto & resource_definition = definition.resource[resource_index];
+				resource_definition.path = Path{resource_information_structure.path.value};
+				resource_definition.time = cbw<Integer>(resource_information_structure.time);
 				auto resource_data = data.forward_view(cbw<Size>(resource_information_structure.size));
 				if constexpr (check_version(version, {}, {false})) {
 					if (resource_directory.has()) {
-						FileSystem::write_file(resource_directory.get() / resource_definition.key, resource_data);
+						FileSystem::write_file(resource_directory.get() / resource_definition.path, resource_data);
 					}
 				}
 				if constexpr (check_version(version, {}, {true})) {
@@ -58,7 +58,7 @@ namespace TwinStar::Kernel::Tool::PopCap::Package {
 					Data::Compression::Deflate::Uncompress::process(resource_data_stream, resource_data_original_stream, 15_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
 					assert_test(resource_data_stream.full() && resource_data_original_stream.full());
 					if (resource_directory.has()) {
-						FileSystem::write_file(resource_directory.get() / resource_definition.key, resource_data_original);
+						FileSystem::write_file(resource_directory.get() / resource_definition.path, resource_data_original);
 					}
 				}
 			}

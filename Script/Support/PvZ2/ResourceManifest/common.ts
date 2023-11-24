@@ -4,7 +4,10 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest {
 
 	export type ResourceType = RegularResourceManifest.ResourceType;
 
-	export type GenericResourceAdditional = {
+	export type DummyResourceAdditional = {
+	};
+
+	export type GeneralResourceAdditional = {
 	};
 
 	export type AtlasImageResourceAdditional = {
@@ -21,8 +24,8 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest {
 		ah: bigint;
 		x?: bigint;
 		y?: bigint;
-		cols?: bigint;
 		rows?: bigint;
+		cols?: bigint;
 		aflag?: bigint;
 	};
 
@@ -40,7 +43,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest {
 		srcpath?: Array<string>,
 	};
 
-	export type ResourceAdditional = GenericResourceAdditional | AtlasImageResourceAdditional | SpriteImageResourceAdditional | SoundResourceAdditional | PopAnimResourceAdditional | RenderEffectResourceAdditional;
+	export type ResourceAdditional = DummyResourceAdditional | GeneralResourceAdditional | AtlasImageResourceAdditional | SpriteImageResourceAdditional | SoundResourceAdditional | PopAnimResourceAdditional | RenderEffectResourceAdditional;
 
 	export type ResourceBase = {
 		slot: bigint;
@@ -60,13 +63,9 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest {
 
 	export type GroupType = typeof GroupTypeE[number];
 
-	export type SimpleGroupResolution = RegularResourceManifest.SubgroupResolution;
-
-	export type SimpleGroupLocale = RegularResourceManifest.SubgroupLocale;
-
 	export type SimpleGroupAdditional = {
-		res?: SimpleGroupResolution;
-		loc?: SimpleGroupLocale;
+		res?: bigint;
+		loc?: string;
 		parent?: string;
 		resources: Array<Resource>;
 	};
@@ -74,8 +73,8 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest {
 	export type CompositeGroupAdditional = {
 		subgroups: Array<{
 			id: string;
-			res?: SimpleGroupResolution;
-			loc?: SimpleGroupLocale;
+			res?: bigint;
+			loc?: string;
 		}>;
 	};
 

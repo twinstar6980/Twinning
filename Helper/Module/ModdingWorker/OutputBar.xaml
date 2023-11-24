@@ -1,4 +1,4 @@
-<UserControl
+<local:CustomControl
 	x:Class="Helper.Module.ModdingWorker.OutputBar"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,7 +8,7 @@
 	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:Helper"
 	xmlns:localModuleModdingWorker="using:Helper.Module.ModdingWorker"
-	xmlns:my="using:Helper.CustomControl"
+	xmlns:my="using:Helper.CommonControl"
 	xmlns:ui="using:Windows.UI"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
@@ -35,7 +35,12 @@
 			</ResourceDictionary.ThemeDictionaries>
 		</ResourceDictionary>
 	</UserControl.Resources>
-	<my:MStack x:Name="uRoot" Margin="0,0,6,0" Padding="16,0" Orientation="Horizontal" Spacing="0">
+	<my:Stack
+		x:Name="uRoot"
+		Margin="0,0,6,0"
+		Padding="16,0"
+		Orientation="Horizontal" Spacing="0"
+	>
 		<VisualStateManager.VisualStateGroups>
 			<VisualStateGroup x:Name="TypeStateGroup">
 				<VisualState x:Name="VerbosityState">
@@ -174,30 +179,60 @@
 			CornerRadius="8"
 			Opacity="0.8"
 		>
-			<FontIcon x:Name="uIcon" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
+			<FontIcon
+				x:Name="uIcon"
+				HorizontalAlignment="Center" VerticalAlignment="Center"
+				FontSize="16"
+				Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
+			/>
 		</Border>
 		<Border
 			x:Name="uCard"
-			my:MStack.Weight="6" HorizontalAlignment="Left"
+			my:Stack.Weight="6" HorizontalAlignment="Left"
 			VerticalAlignment="Stretch"
 			Background="{ThemeResource SystemFillColorAttentionBackgroundBrush}"
 			CornerRadius="4"
 			BorderThickness="1"
 		>
-			<my:MStack Padding="16,8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical" Spacing="0">
-				<TextBlock FlowDirection="LeftToRight" HorizontalAlignment="Left" IsTextSelectionEnabled="True" Style="{ThemeResource BodyTextBlockStyle}" FontFamily="{StaticResource ModdingWorkerMessageFontFamily}" LineHeight="20" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorPrimaryBrush}" Text="{x:Bind Controller.uTitle_Text}" />
+			<my:Stack
+				Padding="16,8"
+				HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+				Orientation="Vertical" Spacing="0"
+			>
+				<TextBlock
+					FlowDirection="LeftToRight"
+					HorizontalAlignment="Left"
+					IsTextSelectionEnabled="True"
+					Style="{ThemeResource BodyTextBlockStyle}"
+					FontFamily="{StaticResource ModdingWorkerMessageFontFamily}"
+					LineHeight="20"
+					TextWrapping="Wrap"
+					Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+					Text="{x:Bind Controller.uTitle_Text}"
+				/>
 				<ItemsControl
 					HorizontalAlignment="Stretch"
 					ItemsSource="{x:Bind Controller.uDescription_ItemsSource}"
 				>
 					<ItemsControl.ItemTemplate>
 						<DataTemplate x:DataType="localModuleModdingWorker:OutputBarDescriptionItemController">
-							<TextBlock FlowDirection="LeftToRight" Margin="0,4,0,0" HorizontalAlignment="Left" IsTextSelectionEnabled="True" Style="{ThemeResource BodyTextBlockStyle}" FontFamily="{StaticResource ModdingWorkerMessageFontFamily}" LineHeight="20" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind uText_Text}" />
+							<TextBlock
+								FlowDirection="LeftToRight"
+								Margin="0,4,0,0"
+								HorizontalAlignment="Left"
+								IsTextSelectionEnabled="True"
+								Style="{ThemeResource BodyTextBlockStyle}"
+								FontFamily="{StaticResource ModdingWorkerMessageFontFamily}"
+								LineHeight="20"
+								TextWrapping="Wrap"
+								Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+								Text="{x:Bind uText_Text}"
+							/>
 						</DataTemplate>
 					</ItemsControl.ItemTemplate>
 				</ItemsControl>
-			</my:MStack>
+			</my:Stack>
 		</Border>
-		<my:MBox Width="45" />
-	</my:MStack>
-</UserControl>
+		<my:Box Width="45" />
+	</my:Stack>
+</local:CustomControl>

@@ -8,7 +8,7 @@
 
 * 要求
 	
-	* [Visual Studio 17.7](https://visualstudio.microsoft.com/downloads/)
+	* [Visual Studio 17.8](https://visualstudio.microsoft.com/downloads/)
 
 ## 第三方库使用
 

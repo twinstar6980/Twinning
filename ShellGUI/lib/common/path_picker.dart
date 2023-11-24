@@ -32,7 +32,8 @@ class PathPicker {
             var fallbackFile = p_path.join(fallbackDirectory, selection.files.single.name);
             File(selection.files.single.path!).renameSync(fallbackFile);
             result = fallbackFile;
-          } catch (e) {
+          }
+          catch (e) {
           }
           FilePicker.platform.clearTemporaryFiles();
         }

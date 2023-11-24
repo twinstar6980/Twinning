@@ -1,4 +1,4 @@
-<UserControl
+<local:CustomControl
 	x:Class="Helper.Module.CommandSender.ArgumentPanel"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,37 +8,45 @@
 	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:Helper"
 	xmlns:localModuleCommandSender="using:Helper.Module.CommandSender"
-	xmlns:my="using:Helper.CustomControl"
+	xmlns:my="using:Helper.CommonControl"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
 >
 	<ItemsRepeater
-		ItemsSource="{x:Bind Controller.uItem_ItemsSource}"
+		ItemsSource="{x:Bind Controller.uList_ItemsSource}"
 	>
 		<ItemsRepeater.Layout>
 			<StackLayout Orientation="Vertical" Spacing="8" />
 		</ItemsRepeater.Layout>
 		<ItemsRepeater.ItemTemplate>
 			<DataTemplate x:DataType="localModuleCommandSender:ArgumentPanelItemController">
-				<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
-					<TextBox Width="208" Height="NaN" VerticalAlignment="Top" IsReadOnly="True" Text="{x:Bind uTitle_Text}" />
+				<my:Stack
+					Padding="0,0"
+					Orientation="Horizontal" Spacing="8"
+				>
+					<TextBox
+						Width="208" Height="NaN"
+						VerticalAlignment="Top"
+						Text="{x:Bind uTitle_Text}"
+						IsReadOnly="True"
+					/>
 					<ToggleButton
 						VerticalAlignment="Top"
 						Style="{StaticResource SmallSquareToggleButton}"
 						IsChecked="{x:Bind uActive_IsChecked}"
-						Click="{x:Bind uActive_OnClick}"
+						Click="{x:Bind uActive_Click}"
 						Content="{x:Bind uActive_Content}"
 					/>
 					<localModuleCommandSender:ValuePanel
-						my:MStack.Weight="1" HorizontalAlignment="Stretch"
+						my:Stack.Weight="1" HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
 						Type="{x:Bind uValue_Type}"
-						Value="{x:Bind uValue_Value}"
 						Option="{x:Bind uValue_Option}"
+						Value="{x:Bind uValue_Value}"
 						Stamp="{x:Bind uValue_Stamp}"
 					/>
-				</my:MStack>
+				</my:Stack>
 			</DataTemplate>
 		</ItemsRepeater.ItemTemplate>
 	</ItemsRepeater>
-</UserControl>
+</local:CustomControl>

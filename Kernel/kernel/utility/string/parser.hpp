@@ -47,14 +47,16 @@ namespace TwinStar::Kernel::StringParser {
 				stream.write(CharacterType::to_number_hex_upper(cbw<IntegerU8>(clip_bit(character, 25_ix, 4_sz))));
 				stream.write(CharacterType::to_number_hex_upper(cbw<IntegerU8>(clip_bit(character, 21_ix, 4_sz))));
 				stream.write(CharacterType::to_number_hex_upper(cbw<IntegerU8>(clip_bit(character, 17_ix, 4_sz))));
-			} else {
+			}
+			else {
 				stream.write('u'_c);
 			}
 			stream.write(CharacterType::to_number_hex_upper(cbw<IntegerU8>(clip_bit(character, 13_ix, 4_sz))));
 			stream.write(CharacterType::to_number_hex_upper(cbw<IntegerU8>(clip_bit(character, 9_ix, 4_sz))));
 			stream.write(CharacterType::to_number_hex_upper(cbw<IntegerU8>(clip_bit(character, 5_ix, 4_sz))));
 			stream.write(CharacterType::to_number_hex_upper(cbw<IntegerU8>(clip_bit(character, 1_ix, 4_sz))));
-		} else {
+		}
+		else {
 			switch (character.value) {
 				case '\\' : {
 					stream.write('\\'_c);
@@ -228,16 +230,20 @@ namespace TwinStar::Kernel::StringParser {
 		if (character < 0x80_u) {
 			stream.write(self_cast<Character>(cbw<Character8>(character)));
 			extra_size = 0_sz;
-		} else if (character < 0x800_u) {
+		}
+		else if (character < 0x800_u) {
 			stream.write(self_cast<Character>(0b110'00000_c8 | cbw<Character8>(clip_bit(character, 6_sz * 1_sz, 6_sz))));
 			extra_size = 1_sz;
-		} else if (character < 0x10000_u) {
+		}
+		else if (character < 0x10000_u) {
 			stream.write(self_cast<Character>(0b1110'0000_c8 | cbw<Character8>(clip_bit(character, 6_sz * 2_sz, 6_sz))));
 			extra_size = 2_sz;
-		} else if (character < 0x110000_u) {
+		}
+		else if (character < 0x110000_u) {
 			stream.write(self_cast<Character>(0b11110'000_c8 | cbw<Character8>(clip_bit(character, 6_sz * 3_sz, 6_sz))));
 			extra_size = 3_sz;
-		} else {
+		}
+		else {
 			assert_fail(R"(/* unicode character is valid */)");
 		}
 		while (extra_size > 0_sz) {
@@ -256,18 +262,23 @@ namespace TwinStar::Kernel::StringParser {
 		if (current < 0b1'0000000_c8) {
 			character = cbw<Unicode>(current);
 			extra_size = 0_sz;
-		} else if (current < 0b11'000000_c8) {
+		}
+		else if (current < 0b11'000000_c8) {
 			assert_fail(R"(/* first utf-8 character is valid */)");
-		} else if (current < 0b111'00000_c8) {
+		}
+		else if (current < 0b111'00000_c8) {
 			character = cbw<Unicode>(current & 0b000'11111_c8);
 			extra_size = 1_sz;
-		} else if (current < 0b1111'0000_c8) {
+		}
+		else if (current < 0b1111'0000_c8) {
 			character = cbw<Unicode>(current & 0b0000'1111_c8);
 			extra_size = 2_sz;
-		} else if (current < 0b11111'000_c8) {
+		}
+		else if (current < 0b11111'000_c8) {
 			character = cbw<Unicode>(current & 0b00000'111_c8);
 			extra_size = 3_sz;
-		} else {
+		}
+		else {
 			assert_fail(R"(/* first utf-8 character is valid */)");
 		}
 		while (extra_size > 0_sz) {
@@ -287,15 +298,20 @@ namespace TwinStar::Kernel::StringParser {
 		auto extra_size = Size{};
 		if (character < 0b1'0000000_c8) {
 			extra_size = 0_sz;
-		} else if (character < 0b11'000000_c8) {
+		}
+		else if (character < 0b11'000000_c8) {
 			assert_fail(R"(/* first utf-8 character is valid */)");
-		} else if (character < 0b111'00000_c8) {
+		}
+		else if (character < 0b111'00000_c8) {
 			extra_size = 1_sz;
-		} else if (character < 0b1111'0000_c8) {
+		}
+		else if (character < 0b1111'0000_c8) {
 			extra_size = 2_sz;
-		} else if (character < 0b11111'000_c8) {
+		}
+		else if (character < 0b11111'000_c8) {
 			extra_size = 3_sz;
-		} else {
+		}
+		else {
 			assert_fail(R"(/* first utf-8 character is valid */)");
 		}
 		return extra_size;
@@ -491,7 +507,8 @@ namespace TwinStar::Kernel::StringParser {
 			if (CharacterType::is_control(current) || current == CharacterType::k_escape_slash || current == end_identifier) {
 				stream.write(CharacterType::k_escape_slash);
 				write_escape_character(stream, cbw<Unicode>(current));
-			} else {
+			}
+			else {
 				auto extra_size = compute_utf8_character_extra_size(self_cast<Character8>(current));
 				stream.write(current);
 				while (extra_size > 0_sz) {
@@ -522,7 +539,8 @@ namespace TwinStar::Kernel::StringParser {
 				auto escape_character = Unicode{};
 				read_escape_character(stream, escape_character);
 				write_utf8_character(string, escape_character);
-			} else {
+			}
+			else {
 				auto extra_size = compute_utf8_character_extra_size(self_cast<Character8>(current));
 				string.write(current);
 				while (extra_size > 0_sz) {
@@ -638,13 +656,15 @@ namespace TwinStar::Kernel::StringParser {
 			assert_test(stream.read_of<Character>() == 'u'_c);
 			assert_test(stream.read_of<Character>() == 'e'_c);
 			value = k_true;
-		} else if (first == 'f'_c) {
+		}
+		else if (first == 'f'_c) {
 			assert_test(stream.read_of<Character>() == 'a'_c);
 			assert_test(stream.read_of<Character>() == 'l'_c);
 			assert_test(stream.read_of<Character>() == 's'_c);
 			assert_test(stream.read_of<Character>() == 'e'_c);
 			value = k_false;
-		} else {
+		}
+		else {
 			assert_fail(R"(first == /* valid */)");
 		}
 		return;
@@ -676,8 +696,10 @@ namespace TwinStar::Kernel::StringParser {
 		current = stream.read_of();
 		if (current == '+'_c) {
 			++valid_begin;
-		} else if (current == '-'_c) {
-		} else {
+		}
+		else if (current == '-'_c) {
+		}
+		else {
 			assert_test(CharacterType::is_number_dec(current));
 		}
 		while (!stream.full()) {
@@ -735,8 +757,10 @@ namespace TwinStar::Kernel::StringParser {
 		current = stream.read_of();
 		if (current == '+'_c) {
 			++valid_begin;
-		} else if (current == '-'_c) {
-		} else {
+		}
+		else if (current == '-'_c) {
+		}
+		else {
 			assert_test(CharacterType::is_number_dec(current));
 		}
 		while (!stream.full()) {
@@ -819,8 +843,10 @@ namespace TwinStar::Kernel::StringParser {
 		current = stream.read_of();
 		if (current == '+'_c) {
 			++valid_begin;
-		} else if (current == '-'_c) {
-		} else {
+		}
+		else if (current == '-'_c) {
+		}
+		else {
 			assert_test(CharacterType::is_number_dec(current));
 		}
 		while (!stream.full()) {
@@ -869,7 +895,8 @@ namespace TwinStar::Kernel::StringParser {
 		auto parse_result = mscharconv::from_chars_result{};
 		if (!is_floater) {
 			parse_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_integer().value, 10);
-		} else {
+		}
+		else {
 			parse_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_floater().value, !is_scientific ? (mscharconv::chars_format::fixed) : (mscharconv::chars_format::scientific));
 		}
 		assert_test(parse_result.ec == std::errc{});

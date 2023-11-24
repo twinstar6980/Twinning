@@ -2,9 +2,11 @@
 // ReSharper disable
 
 using Helper;
+using Helper.Utility;
 using Microsoft.UI.Xaml.Media.Animation;
 using Windows.Foundation;
-using FluentIconGlyph = Helper.CustomControl.FluentIconGlyph;
+using Microsoft.UI.Xaml.Input;
+using FluentIconGlyph = Helper.CommonControl.FluentIconGlyph;
 
 namespace Helper.Module {
 
@@ -16,14 +18,32 @@ namespace Helper.Module {
 		) {
 			this.InitializeComponent();
 			this.ExtendsContentIntoTitleBar = true;
-			this.SetTitleBar(this.uTab.TabStripFooter as UIElement);
+			this.SetTitleBar(this.uTab.TabStripFooter.AsClass<UIElement>());
 			this.Controller = new MainWindowController() { View = this };
 			this.Controller.Initialize();
 		}
 
 		// ----------------
 
-		public MainWindowController Controller { get; }
+		private MainWindowController Controller { get; }
+
+		// ----------------
+
+		public async Task InsertTabItem (
+			ModuleType   type,
+			List<String> option
+		) => await this.Controller.InsertTabItem(type, option);
+
+		public async Task RemoveTabItem (
+			Page content
+		) => await this.Controller.RemoveTabItem(content);
+
+		public async void PublishTip (
+			InfoBarSeverity severity,
+			String          title,
+			String          message,
+			Size            duration = 4000
+		) => this.Controller.PublishTip(severity, title, message, duration);
 
 		#endregion
 
@@ -47,8 +67,8 @@ namespace Helper.Module {
 		// ----------------
 
 		public async Task InsertTabItem (
-			ModuleType    type,
-			List<String>? option
+			ModuleType   type,
+			List<String> option
 		) {
 			var model = ModuleInformationConstant.Query(type);
 			var frame = new Frame() {
@@ -60,33 +80,24 @@ namespace Helper.Module {
 			};
 			frame.Navigate(model.Page, option);
 			this.uTab_TabItemsSource.Add(new MainWindowTabItemController() { Host = this, Model = model, Frame = frame });
-			this.uTab_SelectedItem = this.uTab_TabItemsSource.Last();
 			await Task.Delay(40);
-			this.NotifyPropertyChanged(
-				nameof(this.uTab_SelectedItem)
-			);
+			this.View.uTab.SelectedItem = this.uTab_TabItemsSource.Last();
 			return;
 		}
 
 		public async Task RemoveTabItem (
 			MainWindowTabItemController item
 		) {
-			var lastSelectedItem = this.View.uTab.SelectedItem as MainWindowTabItemController;
-			this.uTab_SelectedItem = item;
-			this.NotifyPropertyChanged(
-				nameof(this.uTab_SelectedItem)
-			);
-			var state = await (item.Frame.Content as ITabItemPage)!.OnTabItemCloseRequested();
+			var lastSelectedItem = this.View.uTab.SelectedItem;
+			this.View.uTab.SelectedItem = item;
+			var state = await item.Frame.Content.AsClass<ITabItemPage>().TabItemPageRequestClose();
 			if (state) {
 				this.uTab_TabItemsSource.Remove(item);
 				if (this.uTab_TabItemsSource.Count == 0) {
 					this.View.Close();
 				}
-				this.uTab_SelectedItem = lastSelectedItem;
-				this.NotifyPropertyChanged(
-					nameof(this.uTab_SelectedItem)
-				);
 			}
+			this.View.uTab.SelectedItem = lastSelectedItem;
 			return;
 		}
 
@@ -100,108 +111,7 @@ namespace Helper.Module {
 			return;
 		}
 
-		#endregion
-
-		#region tab
-
-		public ObservableCollection<MainWindowTabItemController> uTab_TabItemsSource { get; } = new ObservableCollection<MainWindowTabItemController>();
-
-		public MainWindowTabItemController? uTab_SelectedItem { get; set; } = null;
-
-		public async void uTab_OnTabCloseRequested (
-			TabView                           sender,
-			TabViewTabCloseRequestedEventArgs args
-		) {
-			if (sender is not TabView senders) { return; }
-			await this.RemoveTabItem(args.Item as MainWindowTabItemController ?? throw new NullReferenceException());
-			return;
-		}
-
-		public async void uTab_OnAddTabButtonClick (
-			TabView sender,
-			Object  args
-		) {
-			if (sender is not TabView senders) { return; }
-			var menu = new MenuFlyout();
-			foreach (var jumper in Setting.Data.ModuleLauncher.ModuleJumperConfiguration) {
-				var module = ModuleInformationConstant.Query(jumper.ModuleType);
-				var menuItem = new MenuFlyoutItem() {
-					Icon = new FontIcon() {
-						Glyph = module.Icon,
-					},
-					Text = jumper.Title,
-				};
-				menuItem.Click += async (_, _) => {
-					await this.InsertTabItem(jumper.ModuleType, jumper.ModuleOption);
-					return;
-				};
-				menu.Items.Add(menuItem);
-			}
-			menu.Items.Add(new MenuFlyoutSeparator());
-			var pinnedList = new MenuFlyoutSubItem() {
-				Icon = new FontIcon() {
-					Glyph = FluentIconGlyph.Pinned,
-				},
-				Text = "Pinned",
-			};
-			foreach (var jumper in Setting.Data.ModuleLauncher.PinnedJumperConfiguration) {
-				var module = ModuleInformationConstant.Query(jumper.ModuleType);
-				var menuItem = new MenuFlyoutItem() {
-					Icon = new FontIcon() {
-						Glyph = module.Icon,
-					},
-					Text = jumper.Title,
-				};
-				menuItem.Click += async (_, _) => {
-					await this.InsertTabItem(jumper.ModuleType, jumper.ModuleOption);
-					return;
-				};
-				pinnedList.Items.Add(menuItem);
-			}
-			menu.Items.Add(pinnedList);
-			var recentList = new MenuFlyoutSubItem() {
-				Icon = new FontIcon() {
-					Glyph = FluentIconGlyph.Recent,
-				},
-				Text = "Recent",
-			};
-			foreach (var jumper in Setting.Data.ModuleLauncher.RecentJumperConfiguration) {
-				var module = ModuleInformationConstant.Query(jumper.ModuleType);
-				var menuItem = new MenuFlyoutItem() {
-					Icon = new FontIcon() {
-						Glyph = module.Icon,
-					},
-					Text = jumper.Title,
-				};
-				menuItem.Click += async (_, _) => {
-					await this.InsertTabItem(jumper.ModuleType, jumper.ModuleOption);
-					return;
-				};
-				recentList.Items.Add(menuItem);
-			}
-			menu.Items.Add(recentList);
-			menu.ShowAt(sender.TabStripFooter as UIElement, new FlyoutShowOptions() {
-				Placement = FlyoutPlacementMode.BottomEdgeAlignedLeft,
-				Position = new Point(-40.0, +40.0),
-			});
-			return;
-		}
-
-		#endregion
-
-		#region tip
-
-		public Boolean uTip_IsOpen { get; set; } = false;
-
-		public InfoBarSeverity uTip_Severity { get; set; } = InfoBarSeverity.Informational;
-
-		public String uTip_Title { get; set; } = "";
-
-		public String uTip_Message { get; set; } = "";
-
 		// ----------------
-
-		public Size uTip__DelayCount { get; set; } = 0;
 
 		public async void PublishTip (
 			InfoBarSeverity severity,
@@ -221,16 +131,123 @@ namespace Helper.Module {
 			);
 			await Task.Delay(80);
 			this.uTip_IsOpen = true;
-			this.NotifyPropertyChanged(nameof(this.uTip_IsOpen));
-			this.uTip__DelayCount++;
+			this.NotifyPropertyChanged(
+				nameof(this.uTip_IsOpen)
+			);
+			this.uTip_vDelayCount++;
 			await Task.Delay(duration);
-			this.uTip__DelayCount--;
-			if (this.uTip__DelayCount == 0) {
+			this.uTip_vDelayCount--;
+			if (this.uTip_vDelayCount == 0) {
 				this.uTip_IsOpen = false;
-				this.NotifyPropertyChanged(nameof(this.uTip_IsOpen));
+				this.NotifyPropertyChanged(
+					nameof(this.uTip_IsOpen)
+				);
 			}
 			return;
 		}
+
+		#endregion
+
+		#region tab
+
+		public ObservableCollection<MainWindowTabItemController> uTab_TabItemsSource { get; } = new ObservableCollection<MainWindowTabItemController>();
+
+		public async void uTab_TabCloseRequested (
+			TabView                           sender,
+			TabViewTabCloseRequestedEventArgs args
+		) {
+			var senders = sender.AsClass<TabView>();
+			await this.RemoveTabItem(args.Item.AsClass<MainWindowTabItemController>());
+			return;
+		}
+
+		public async void uTab_AddTabButtonClick (
+			TabView sender,
+			Object  args
+		) {
+			var senders = sender.AsClass<TabView>();
+			var menu = new MenuFlyout();
+			foreach (var jumper in Setting.Data.ModuleLauncher.ModuleJumperConfiguration) {
+				var module = ModuleInformationConstant.Query(jumper.ModuleType);
+				var menuItem = new MenuFlyoutItem() {
+					Icon = new FontIcon() { Glyph = module.Icon },
+					Text = jumper.Title,
+				};
+				menuItem.Click += async (_, _) => {
+					await this.InsertTabItem(jumper.ModuleType, jumper.ModuleOption);
+					return;
+				};
+				menu.Items.Add(menuItem);
+			}
+			menu.Items.Add(new MenuFlyoutSeparator());
+			var pinnedList = new MenuFlyoutSubItem() {
+				Icon = new FontIcon() { Glyph = FluentIconGlyph.Pinned },
+				Text = "Pinned",
+			};
+			foreach (var jumper in Setting.Data.ModuleLauncher.PinnedJumperConfiguration) {
+				var module = ModuleInformationConstant.Query(jumper.ModuleType);
+				var menuItem = new MenuFlyoutItem() {
+					Icon = new FontIcon() { Glyph = module.Icon },
+					Text = jumper.Title,
+				};
+				menuItem.Click += async (_, _) => {
+					await this.InsertTabItem(jumper.ModuleType, jumper.ModuleOption);
+					return;
+				};
+				pinnedList.Items.Add(menuItem);
+			}
+			menu.Items.Add(pinnedList);
+			var recentList = new MenuFlyoutSubItem() {
+				Icon = new FontIcon() { Glyph = FluentIconGlyph.Recent },
+				Text = "Recent",
+			};
+			foreach (var jumper in Setting.Data.ModuleLauncher.RecentJumperConfiguration) {
+				var module = ModuleInformationConstant.Query(jumper.ModuleType);
+				var menuItem = new MenuFlyoutItem() {
+					Icon = new FontIcon() { Glyph = module.Icon },
+					Text = jumper.Title,
+				};
+				menuItem.Click += async (_, _) => {
+					await this.InsertTabItem(jumper.ModuleType, jumper.ModuleOption);
+					return;
+				};
+				recentList.Items.Add(menuItem);
+			}
+			menu.Items.Add(recentList);
+			menu.ShowAt(sender.TabStripFooter.AsClass<UIElement>(), new FlyoutShowOptions() {
+				Placement = FlyoutPlacementMode.BottomEdgeAlignedLeft,
+				Position = new Point(-40.0, +40.0),
+			});
+			return;
+		}
+
+		// ----------------
+
+		public async void uTabKeyboardControlW_OnInvoked (
+			KeyboardAccelerator                 sender,
+			KeyboardAcceleratorInvokedEventArgs args
+		) {
+			var senders = sender.AsClass<KeyboardAccelerator>();
+			args.Handled = true;
+			await this.RemoveTabItem(this.View.uTab.SelectedItem.AsClass<MainWindowTabItemController>());
+			return;
+		}
+
+		#endregion
+
+		#region tip
+
+		public Boolean uTip_IsOpen { get; set; } = false;
+
+		public InfoBarSeverity uTip_Severity { get; set; } = InfoBarSeverity.Informational;
+
+		public String uTip_Title { get; set; } = "";
+
+		public String uTip_Message { get; set; } = "";
+
+		// ----------------
+
+		public Size uTip_vDelayCount { get; set; } = 0;
 
 		#endregion
 
@@ -260,9 +277,7 @@ namespace Helper.Module {
 
 		public FontIconSource uRoot_IconSource {
 			get {
-				return new FontIconSource() {
-					Glyph = this.Model.Icon,
-				};
+				return new FontIconSource() { Glyph = this.Model.Icon };
 			}
 		}
 
@@ -278,7 +293,8 @@ namespace Helper.Module {
 
 	public interface ITabItemPage {
 
-		Task<Boolean> OnTabItemCloseRequested ();
+		Task<Boolean> TabItemPageRequestClose (
+		);
 
 	}
 

@@ -23,7 +23,6 @@ class Setting {
   String       mConsoleKernel;
   String       mConsoleScript;
   List<String> mConsoleArgument;
-  Boolean      mAutomaticExit;
   String       mFallbackDirectory;
 
   // ----------------
@@ -45,7 +44,6 @@ class Setting {
     this.mConsoleKernel,
     this.mConsoleScript,
     this.mConsoleArgument,
-    this.mAutomaticExit,
     this.mFallbackDirectory,
   );
 
@@ -67,7 +65,6 @@ class Setting {
     '',
     '',
     [],
-    true,
     '',
   );
 
@@ -95,7 +92,6 @@ class Setting {
     data.mConsoleKernel = json['console_kernel'] as String;
     data.mConsoleScript = json['console_script'] as String;
     data.mConsoleArgument = (json['console_argument'] as List<dynamic>).cast<String>();
-    data.mAutomaticExit = json['automatic_exit'] as Boolean;
     data.mFallbackDirectory = json['fallback_directory'] as String;
     return;
   }
@@ -122,7 +118,6 @@ class Setting {
     json['console_kernel'] = data.mConsoleKernel;
     json['console_script'] = data.mConsoleScript;
     json['console_argument'] = data.mConsoleArgument;
-    json['automatic_exit'] = data.mAutomaticExit;
     json['fallback_directory'] = data.mFallbackDirectory;
     return;
   }
@@ -161,6 +156,8 @@ class Setting {
 class SettingProvider with ChangeNotifier {
 
   Setting data;
+
+  // ----------------
 
   SettingProvider(
     this.data,

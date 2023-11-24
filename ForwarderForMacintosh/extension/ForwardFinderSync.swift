@@ -52,7 +52,8 @@ class ForwardFinderSync: FIFinderSync {
 			let script = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first! + "/forward.sh"
 			let argument = FIFinderSyncController.default().selectedItemURLs()!.map { (selection) -> String in return selection.path }
 			try createProcess(program: script, argument: argument)
-		} catch {
+		}
+		catch {
 		}
 		return
 	}

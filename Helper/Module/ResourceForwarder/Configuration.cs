@@ -2,6 +2,7 @@
 // ReSharper disable CheckNamespace MemberHidesStaticFromOuterClass
 
 using Helper;
+using Helper.Utility;
 using Newtonsoft.Json;
 
 namespace Helper.Module.ResourceForwarder {

@@ -310,7 +310,8 @@ namespace TwinStar::Kernel::JSON {
 		) -> Void {
 			if (!that.has()) {
 				thix.set_null();
-			} else {
+			}
+			else {
 				thix.from(that.get());
 			}
 			return;
@@ -322,7 +323,8 @@ namespace TwinStar::Kernel::JSON {
 		) -> Void {
 			if (thix.is_null()) {
 				that.reset();
-			} else {
+			}
+			else {
 				thix.to(that.set());
 			}
 			return;

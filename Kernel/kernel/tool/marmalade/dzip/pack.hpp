@@ -44,16 +44,17 @@ namespace TwinStar::Kernel::Tool::Marmalade::DZip {
 				information_structure.resource_directory.append(""_sv);
 				auto global_chunk_index = k_begin_index;
 				for (auto & resource_index : SizeRange{definition.resource.size()}) {
-					auto & resource_definition = definition.resource.at(resource_index);
+					auto & resource_definition = definition.resource[resource_index];
 					auto & resource_information_structure = information_structure.resource_information[resource_index];
-					auto   resource_directory_string = resource_definition.key.parent().to_string(CharacterType::PathSeparator::windows);
-					information_structure.resource_file.append(resource_definition.key.name());
+					auto   resource_directory_string = resource_definition.path.parent().to_string(CharacterType::PathSeparator::windows);
+					information_structure.resource_file.append(resource_definition.path.name());
 					if (auto index = Range::find_index(information_structure.resource_directory, resource_directory_string); index.has()) {
-					} else {
+					}
+					else {
 						information_structure.resource_directory.append(resource_directory_string);
 					}
-					resource_information_structure.chunk_index.allocate_full(cbw<Size>(resource_definition.value.chunk.size()));
-					for (auto & chunk_index : SizeRange{resource_definition.value.chunk.size()}) {
+					resource_information_structure.chunk_index.allocate_full(cbw<Size>(resource_definition.chunk.size()));
+					for (auto & chunk_index : SizeRange{resource_definition.chunk.size()}) {
 						information_structure.chunk_information.append();
 						++global_chunk_index;
 					}
@@ -108,21 +109,22 @@ namespace TwinStar::Kernel::Tool::Marmalade::DZip {
 			information_structure.resource_directory.append(""_sv);
 			auto global_chunk_index = k_begin_index;
 			for (auto & resource_index : SizeRange{definition.resource.size()}) {
-				auto & resource_definition = definition.resource.at(resource_index);
+				auto & resource_definition = definition.resource[resource_index];
 				auto & resource_information_structure = information_structure.resource_information[resource_index];
-				auto   resource_path = resource_directory / resource_definition.key;
-				auto   resource_directory_string = resource_definition.key.parent().to_string(CharacterType::PathSeparator::windows);
-				information_structure.resource_file.append(resource_definition.key.name());
+				auto   resource_path = resource_directory / resource_definition.path;
+				auto   resource_directory_string = resource_definition.path.parent().to_string(CharacterType::PathSeparator::windows);
+				information_structure.resource_file.append(resource_definition.path.name());
 				if (auto index = Range::find_index(information_structure.resource_directory, resource_directory_string); index.has()) {
 					resource_information_structure.directory_index = cbw<IntegerU16>(index.get());
-				} else {
+				}
+				else {
 					information_structure.resource_directory.append(resource_directory_string);
 					resource_information_structure.directory_index = cbw<IntegerU16>(information_structure.resource_directory.last_index());
 				}
-				resource_information_structure.chunk_index.allocate_full(cbw<Size>(resource_definition.value.chunk.size()));
-				for (auto & chunk_index : SizeRange{resource_definition.value.chunk.size()}) {
+				resource_information_structure.chunk_index.allocate_full(cbw<Size>(resource_definition.chunk.size()));
+				for (auto & chunk_index : SizeRange{resource_definition.chunk.size()}) {
 					resource_information_structure.chunk_index[chunk_index] = cbw<IntegerU16>(global_chunk_index);
-					auto & chunk_definition = resource_definition.value.chunk.at(chunk_index);
+					auto & chunk_definition = resource_definition.chunk[chunk_index];
 					auto & chunk_information_structure = information_structure.chunk_information.append();
 					auto   chunk_flag = BitSet<Structure::ChunkFlag<version>::k_count>{};
 					switch (chunk_definition.flag.hash().value) {

@@ -3,7 +3,6 @@
 
 using Helper;
 using Helper.Utility;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace Helper.Module.ModuleLauncher {
@@ -24,20 +23,20 @@ namespace Helper.Module.ModuleLauncher {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			this.Controller.ApplyOption(args.Parameter as List<String>);
+			this.Controller.ApplyOption(args.Parameter.AsClass<List<String>>());
 			base.OnNavigatedTo(args);
 			return;
 		}
 
 		// ----------------
 
-		public MainPageController Controller { get; }
+		private MainPageController Controller { get; }
 
 		#endregion
 
 		#region tab item page
 
-		public async Task<Boolean> OnTabItemCloseRequested (
+		public async Task<Boolean> TabItemPageRequestClose (
 		) {
 			return await this.Controller.RequestClose();
 		}
@@ -58,25 +57,24 @@ namespace Helper.Module.ModuleLauncher {
 
 		public void Initialize (
 		) {
-			this.uModuleJumperList_ItemsSource = new List<MainPageJumperItemController>(Setting.Data.ModuleLauncher.ModuleJumperConfiguration.Select((value) => (new MainPageJumperItemController() { Host = this, Configuration = value })));
-			this.uPinnedJumperList_ItemsSource = new ObservableCollection<MainPageJumperItemController>(Setting.Data.ModuleLauncher.PinnedJumperConfiguration.Select((value) => (new MainPageJumperItemController() { Host = this, Configuration = value })));
-			this.uRecentJumperList_ItemsSource = new ObservableCollection<MainPageJumperItemController>(Setting.Data.ModuleLauncher.RecentJumperConfiguration.Select((value) => (new MainPageJumperItemController() { Host = this, Configuration = value })));
+			this.uModuleJumperList_ItemsSource = Setting.Data.ModuleLauncher.ModuleJumperConfiguration.Select((value) => (new MainPageJumperItemController() { Host = this, Configuration = value })).ToList();
+			this.uPinnedJumperList_ItemsSource = Setting.Data.ModuleLauncher.PinnedJumperConfiguration.Select((value) => (new MainPageJumperItemController() { Host = this, Configuration = value })).ToObservableCollection();
+			this.uRecentJumperList_ItemsSource = Setting.Data.ModuleLauncher.RecentJumperConfiguration.Select((value) => (new MainPageJumperItemController() { Host = this, Configuration = value })).ToObservableCollection();
 			return;
 		}
 
 		public async void ApplyOption (
-			List<String>? optionView
+			List<String> optionView
 		) {
-			while (!this.View.IsLoaded) {
-				await Task.Delay(40);
-			}
+			await ControlHelper.WaitUntilLoaded(this.View);
 			try {
 				var option = new CommandLineReader(optionView);
 				if (!option.Done()) {
 					throw new Exception($"Too many option : {String.Join(' ', option.NextStringList())}");
 				}
-			} catch (Exception e) {
-				App.MainWindow.Controller.PublishTip(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
+			}
+			catch (Exception e) {
+				App.MainWindow.PublishTip(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
 			}
 			return;
 		}
@@ -90,20 +88,19 @@ namespace Helper.Module.ModuleLauncher {
 
 		#region page
 
-		public async void uPage_OnDragOver (
+		public async void uPage_DragOver (
 			Object        sender,
 			DragEventArgs args
 		) {
-			if (sender is not Page senders) { return; }
+			var senders = sender.AsClass<Page>();
 			return;
 		}
 
-		public async void uPage_OnDrop (
+		public async void uPage_Drop (
 			Object        sender,
 			DragEventArgs args
 		) {
-			if (sender is not Page senders) { return; }
-			args.Handled = true;
+			var senders = sender.AsClass<Page>();
 			return;
 		}
 
@@ -111,21 +108,21 @@ namespace Helper.Module.ModuleLauncher {
 
 		#region application setting
 
-		public async void uOpenApplicationProgramFile_OnClick (
+		public async void uOpenApplicationProgramFile_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not HyperlinkButton senders) { return; }
-			await Windows.System.Launcher.LaunchFolderPathAsync(StorageHelper.ToWindowsStyle(StorageHelper.Parent(App.ProgramFile)!));
+			var senders = sender.AsClass<HyperlinkButton>();
+			await StorageHelper.RevealDirectory(StorageHelper.Parent(App.ProgramFile).AsNotNull());
 			return;
 		}
 
-		public async void uOpenApplicationSettingFile_OnClick (
+		public async void uOpenApplicationSettingFile_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not HyperlinkButton senders) { return; }
-			await Windows.System.Launcher.LaunchFolderPathAsync(StorageHelper.ToWindowsStyle(StorageHelper.Parent(Setting.File)!));
+			var senders = sender.AsClass<HyperlinkButton>();
+			await StorageHelper.RevealDirectory(StorageHelper.Parent(Setting.File).AsNotNull());
 			return;
 		}
 
@@ -133,7 +130,7 @@ namespace Helper.Module.ModuleLauncher {
 
 		public List<String> uApplicationThemeMode_ItemsSource {
 			get {
-				return new[] { ElementTheme.Default, ElementTheme.Light, ElementTheme.Dark }.Select((value) => (ConvertHelper.ThemeToString(value))).ToList();
+				return Enum.GetValues<ElementTheme>().Select(ConvertHelper.ThemeToString).ToList();
 			}
 		}
 
@@ -143,20 +140,19 @@ namespace Helper.Module.ModuleLauncher {
 			}
 		}
 
-		public async void uApplicationThemeMode_OnSelectionChanged (
+		public async void uApplicationThemeMode_SelectionChanged (
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			if (sender is not ComboBox senders) { return; }
-			var newValue = (ElementTheme)senders.SelectedIndex;
-			Setting.Data.Application.ThemeMode = newValue;
+			var senders = sender.AsClass<ComboBox>();
+			Setting.Data.Application.ThemeMode = (ElementTheme)senders.SelectedIndex;
 			Setting.Save();
 			return;
 		}
 
 		#endregion
 
-		#region jumper list
+		#region jumper
 
 		public List<MainPageJumperItemController> uModuleJumperList_ItemsSource { get; set; } = default!;
 
@@ -164,11 +160,11 @@ namespace Helper.Module.ModuleLauncher {
 
 		public ObservableCollection<MainPageJumperItemController> uPinnedJumperList_ItemsSource { get; set; } = default!;
 
-		public async void uAddPinnedJumperItem_OnClick (
+		public async void uAddPinnedJumperItem_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
+			var senders = sender.AsClass<Button>();
 			Setting.Data.ModuleLauncher.PinnedJumperConfiguration.Add(new JumperConfiguration() {
 				Title = "Untitled",
 				ModuleType = ModuleType.ModuleLauncher,
@@ -184,11 +180,11 @@ namespace Helper.Module.ModuleLauncher {
 
 		public ObservableCollection<MainPageJumperItemController> uRecentJumperList_ItemsSource { get; set; } = default!;
 
-		public async void uClearRecentJumperItem_OnClick (
+		public async void uClearRecentJumperItem_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
+			var senders = sender.AsClass<Button>();
 			Setting.Data.ModuleLauncher.RecentJumperConfiguration.Clear();
 			this.uRecentJumperList_ItemsSource.Clear();
 			Setting.Save();
@@ -227,88 +223,70 @@ namespace Helper.Module.ModuleLauncher {
 
 		// ----------------
 
-		public async void uOpenAsTab_OnClick (
+		public async void uOpenAsTab_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
+			var senders = sender.AsClass<Button>();
 			JumperConfiguration.Launch(this.Configuration, false);
 			return;
 		}
 
-		public async void uOpenAsWindow_OnClick (
+		public async void uOpenAsWindow_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
+			var senders = sender.AsClass<Button>();
 			JumperConfiguration.Launch(this.Configuration, true);
 			return;
 		}
 
-		public async void uEdit_OnClick (
+		public async void uEdit_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
-			await new ContentDialog() {
-				XamlRoot = this.Host.View.XamlRoot,
-				Resources = new ResourceDictionary() {
-					new KeyValuePair<Object, Object>("ContentDialogMinWidth", 720.0),
-					new KeyValuePair<Object, Object>("ContentDialogMaxWidth", 720.0),
-					new KeyValuePair<Object, Object>("ContentDialogMinHeight", 640.0),
-					new KeyValuePair<Object, Object>("ContentDialogMaxHeight", 640.0),
-				},
-				Title = "Jumper Configuration",
-				Content = new ScrollViewer() {
-					IsTabStop = true,
-					Padding = new Thickness(12, 0, 12, 0),
-					VerticalScrollMode = ScrollMode.Enabled,
-					VerticalScrollBarVisibility = ScrollBarVisibility.Visible,
-					Content = new JumperConfigurationPanel() {
-						Configuration = this.Configuration,
-						Stamp = UniqueStamp.Default,
-					},
-				},
-				CloseButtonText = "Close",
-				DefaultButton = ContentDialogButton.Close,
-			}.ShowAsync();
+			var senders = sender.AsClass<Button>();
+			await ControlHelper.ShowDialogFixedSize(this.Host.View, "Jumper Configuration", new JumperConfigurationPanel() {
+				Configuration = this.Configuration,
+				Stamp = UniqueStamp.Create(),
+			});
+			Setting.Save();
 			this.NotifyPropertyChanged(
 				nameof(this.uIcon_Glyph),
 				nameof(this.uTitle_Text)
 			);
-			Setting.Save();
 			return;
 		}
 
 		// ----------------
 
-		public async void uPinnedRemove_OnClick (
+		public async void uPinnedRemove_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
+			var senders = sender.AsClass<Button>();
 			Setting.Data.ModuleLauncher.PinnedJumperConfiguration.Remove(this.Configuration);
 			this.Host.uPinnedJumperList_ItemsSource.Remove(this);
 			Setting.Save();
 			return;
 		}
 
-		public async void uRecentRemove_OnClick (
+		public async void uRecentRemove_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
+			var senders = sender.AsClass<Button>();
 			Setting.Data.ModuleLauncher.RecentJumperConfiguration.Remove(this.Configuration);
 			this.Host.uRecentJumperList_ItemsSource.Remove(this);
 			Setting.Save();
 			return;
 		}
 
-		public async void uRecentPin_OnClick (
+		public async void uRecentPin_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
+			var senders = sender.AsClass<Button>();
 			Setting.Data.ModuleLauncher.RecentJumperConfiguration.Remove(this.Configuration);
 			Setting.Data.ModuleLauncher.PinnedJumperConfiguration.Add(this.Configuration);
 			this.Host.uPinnedJumperList_ItemsSource.Add(new MainPageJumperItemController() { Host = this.Host, Configuration = this.Configuration });
@@ -319,38 +297,19 @@ namespace Helper.Module.ModuleLauncher {
 
 		// ----------------
 
-		public async void uModuleSetting_OnClick (
+		public async void uModuleSetting_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
-			var page = this.Configuration.ModuleType switch {
-				ModuleType.ModuleLauncher    => new ModuleLauncherSettingPanel() as FrameworkElement,
+			var senders = sender.AsClass<Button>();
+			await ControlHelper.ShowDialogFixedSize(this.Host.View, "Module Setting", this.Configuration.ModuleType switch {
+				ModuleType.ModuleLauncher    => new ModuleLauncherSettingPanel(),
 				ModuleType.ModdingWorker     => new ModdingWorkerSettingPanel(),
 				ModuleType.ResourceForwarder => new ResourceForwarderSettingPanel(),
 				ModuleType.CommandSender     => new CommandSenderSettingPanel(),
 				ModuleType.AnimationViewer   => new AnimationViewerSettingPanel(),
 				_                            => throw new ArgumentOutOfRangeException(),
-			};
-			await new ContentDialog() {
-				XamlRoot = this.Host.View.XamlRoot,
-				Resources = new ResourceDictionary() {
-					new KeyValuePair<Object, Object>("ContentDialogMinWidth", 720.0),
-					new KeyValuePair<Object, Object>("ContentDialogMaxWidth", 720.0),
-					new KeyValuePair<Object, Object>("ContentDialogMinHeight", 640.0),
-					new KeyValuePair<Object, Object>("ContentDialogMaxHeight", 640.0),
-				},
-				Title = "Module Setting",
-				Content = new ScrollViewer() {
-					IsTabStop = true,
-					Padding = new Thickness(12, 0, 12, 0),
-					VerticalScrollMode = ScrollMode.Enabled,
-					VerticalScrollBarVisibility = ScrollBarVisibility.Visible,
-					Content = page,
-				},
-				CloseButtonText = "Close",
-				DefaultButton = ContentDialogButton.Close,
-			}.ShowAsync();
+			});
 			Setting.Save();
 			return;
 		}

@@ -78,7 +78,8 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 			if (!information_section_patch_exist) {
 				assert_test(information_section_patch_size == k_none_size);
 				after.write(information_section_before);
-			} else {
+			}
+			else {
 				process_sub(information_section_before, after, patch, information_section_patch_size);
 			}
 			read_package_information_structure(as_lvalue(IByteStreamView{after.view()}), information_section_after_structure);
@@ -106,8 +107,9 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 					auto   packet_before_ripe = IByteStreamView{before.sub_view(cbw<Size>(packet_before_subgroup_information.offset), cbw<Size>(packet_before_subgroup_information.size))};
 					if (!use_raw_packet) {
 						packet_before = packet_before_ripe.view();
-					} else {
-						auto packet_before_raw_size = cbw<Size>(packet_before_subgroup_information.information_section_size + packet_before_subgroup_information.generic_resource_data_section_size_original + packet_before_subgroup_information.texture_resource_data_section_size_original);
+					}
+					else {
+						auto packet_before_raw_size = cbw<Size>(packet_before_subgroup_information.information_section_size + packet_before_subgroup_information.general_resource_data_section_size_original + packet_before_subgroup_information.texture_resource_data_section_size_original);
 						if (packet_before_raw_size > packet_before_raw_container.size()) {
 							packet_before_raw_container.allocate(packet_before_raw_size);
 						}
@@ -123,8 +125,9 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 				if (!packet_patch_exist) {
 					assert_test(packet_patch_size == k_none_size);
 					packet_after = packet_before;
-				} else {
-					auto packet_after_raw_size = cbw<Size>(packet_after_subgroup_information.information_section_size + packet_after_subgroup_information.generic_resource_data_section_size_original + packet_after_subgroup_information.texture_resource_data_section_size_original);
+				}
+				else {
+					auto packet_after_raw_size = cbw<Size>(packet_after_subgroup_information.information_section_size + packet_after_subgroup_information.general_resource_data_section_size_original + packet_after_subgroup_information.texture_resource_data_section_size_original);
 					if (packet_after_raw_size > packet_after_raw_container.size()) {
 						packet_after_raw_container.allocate(packet_after_raw_size);
 					}
@@ -134,7 +137,8 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 				}
 				if (!use_raw_packet) {
 					after.write(packet_after);
-				} else {
+				}
+				else {
 					auto packet_after_raw = IByteStreamView{packet_after};
 					auto packet_after_ripe = OByteStreamView{after.reserve_view()};
 					auto packet_after_information_structure = compress_packet(packet_after_raw, packet_after_ripe);
@@ -144,13 +148,13 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 						make_initializer_list(
 							{
 								packet_after_information_structure.header.information_section_size,
-								packet_after_information_structure.header.generic_resource_data_section_offset + packet_after_information_structure.header.generic_resource_data_section_size,
+								packet_after_information_structure.header.general_resource_data_section_offset + packet_after_information_structure.header.general_resource_data_section_size,
 								packet_after_information_structure.header.texture_resource_data_section_offset + packet_after_information_structure.header.texture_resource_data_section_size,
 							}
 						)
 					);
-					packet_after_subgroup_information.generic_resource_data_section_offset = packet_after_information_structure.header.generic_resource_data_section_offset;
-					packet_after_subgroup_information.generic_resource_data_section_size = packet_after_information_structure.header.generic_resource_data_section_size;
+					packet_after_subgroup_information.general_resource_data_section_offset = packet_after_information_structure.header.general_resource_data_section_offset;
+					packet_after_subgroup_information.general_resource_data_section_size = packet_after_information_structure.header.general_resource_data_section_size;
 					packet_after_subgroup_information.texture_resource_data_section_offset = packet_after_information_structure.header.texture_resource_data_section_offset;
 					packet_after_subgroup_information.texture_resource_data_section_size = packet_after_information_structure.header.texture_resource_data_section_size;
 					after.forward(packet_after_ripe.position());

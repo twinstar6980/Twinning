@@ -213,15 +213,18 @@ namespace TwinStar.Script.Executor {
 		let initial: undefined | Result = undefined;
 		if (given === '?input') {
 			Console.information(los('executor.typical:argument_input', name), []);
-		} else if (given === '?automatic') {
+		}
+		else if (given === '?automatic') {
 			let automatic_value = automatic_generator();
 			if (automatic_value === null) {
 				Console.information(los('executor.typical:argument_automatic_failed', name), []);
-			} else {
+			}
+			else {
 				initial = automatic_value;
 				Console.information(los('executor.typical:argument_automatic', name), [initial_echoer(initial!)]);
 			}
-		} else {
+		}
+		else {
 			initial = given_converter(given);
 			Console.information(los('executor.typical:argument_given', name), [initial_echoer(initial!)]);
 		}
@@ -260,11 +263,13 @@ namespace TwinStar.Script.Executor {
 					try {
 						source.worker(final_argument as any);
 						state = true;
-					} catch (e) {
+					}
+					catch (e) {
 						Console.error_of(e);
 					}
 					timer.stop();
-				} else {
+				}
+				else {
 					assert_test(source.batch_argument !== null);
 					timer.start();
 					let all_item = KernelX.FileSystem[({ any: 'list', file: 'list_file', directory: 'list_directory' } as const)[source.filter[0]]](final_argument[source.argument[0].id]);
@@ -282,10 +287,12 @@ namespace TwinStar.Script.Executor {
 							}
 							if (source.batch_worker === null) {
 								source.worker(item_argument as any);
-							} else {
+							}
+							else {
 								source.batch_worker(item_argument as any, temporary);
 							}
-						} catch (e) {
+						}
+						catch (e) {
 							failed_item.push(item);
 							Console.error_of(e);
 						}
@@ -302,7 +309,8 @@ namespace TwinStar.Script.Executor {
 				if (!batch) {
 					state &&= KernelX.FileSystem[({ any: 'exist', file: 'exist_file', directory: 'exist_directory' } as const)[source.filter[0]]](input);
 					state &&= source.filter[1].test(input);
-				} else {
+				}
+				else {
 					state &&= KernelX.FileSystem.exist_directory(input);
 				}
 				return state;

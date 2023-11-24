@@ -36,12 +36,14 @@ namespace TwinStar::Kernel::Tool::Miscellaneous::PvZ2CNAlphaPaletteTexture {
 				if (bit_reserve > bit_count) {
 					index_data.current() |= index_value << (bit_reserve - bit_count);
 					bit_reserve -= bit_count;
-				} else {
+				}
+				else {
 					if (bit_reserve == bit_count) {
 						index_data.current() |= index_value << (bit_reserve - bit_count);
 						index_data.forward();
 						bit_reserve = k_type_bit_count<Byte>;
-					} else {
+					}
+					else {
 						auto first_block_size = bit_reserve;
 						auto second_block_size = bit_count - first_block_size;
 						auto first_block = clip_bit(index_value, second_block_size, first_block_size);

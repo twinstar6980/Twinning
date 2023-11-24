@@ -8,7 +8,7 @@ using Windows.Globalization.NumberFormatting;
 
 namespace Helper.Module.CommandSender {
 
-	public sealed partial class ValuePanel : UserControl {
+	public sealed partial class ValuePanel : CustomControl {
 
 		#region life
 
@@ -24,9 +24,10 @@ namespace Helper.Module.CommandSender {
 
 		// ----------------
 
-		private void UpdateVisualState (
+		protected override void StampUpdate (
 		) {
-			VisualStateManager.GoToState(this, $"{(this.Option is not null ? "Enumeration" : this.Type is null ? "Null" : this.Type)}State", false);
+			VisualStateManager.GoToState(this, $"{(this.Type is null ? "Null" : this.Option is null ? this.Type : "Enumeration")}State", false);
+			this.Controller.Update();
 			return;
 		}
 
@@ -42,7 +43,7 @@ namespace Helper.Module.CommandSender {
 		);
 
 		public ArgumentType? Type {
-			get => this.GetValue(ValuePanel.TypeProperty) as ArgumentType?;
+			get => this.GetValue(ValuePanel.TypeProperty).AsStructOrNull<ArgumentType>();
 			set => this.SetValue(ValuePanel.TypeProperty, value);
 		}
 
@@ -56,7 +57,7 @@ namespace Helper.Module.CommandSender {
 		);
 
 		public List<Object>? Option {
-			get => this.GetValue(ValuePanel.OptionProperty) as List<Object>;
+			get => this.GetValue(ValuePanel.OptionProperty).AsClassOrNull<List<Object>>();
 			set => this.SetValue(ValuePanel.OptionProperty, value);
 		}
 
@@ -66,29 +67,12 @@ namespace Helper.Module.CommandSender {
 			nameof(ValuePanel.Value),
 			typeof(ArgumentValue),
 			typeof(ValuePanel),
-			new PropertyMetadata(null)
+			new PropertyMetadata(new ArgumentValue() { Data = null })
 		);
 
-		public ArgumentValue? Value {
-			get => this.GetValue(ValuePanel.ValueProperty) as ArgumentValue;
+		public ArgumentValue Value {
+			get => this.GetValue(ValuePanel.ValueProperty).AsClass<ArgumentValue>();
 			set => this.SetValue(ValuePanel.ValueProperty, value);
-		}
-
-		// ----------------
-
-		public static readonly DependencyProperty StampProperty = DependencyProperty.Register(
-			nameof(ValuePanel.Stamp),
-			typeof(UniqueStamp),
-			typeof(ValuePanel),
-			new PropertyMetadata(UniqueStamp.Default, (o, e) => {
-				(o as ValuePanel)!.UpdateVisualState();
-				(o as ValuePanel)!.Controller.Update();
-			})
-		);
-
-		public UniqueStamp Stamp {
-			get => this.GetValue(ValuePanel.StampProperty) as UniqueStamp ?? throw new Exception();
-			set => this.SetValue(ValuePanel.StampProperty, value);
 		}
 
 		#endregion
@@ -107,7 +91,7 @@ namespace Helper.Module.CommandSender {
 
 		public List<Object>? Option => this.View.Option;
 
-		public ArgumentValue? Value => this.View.Value;
+		public ArgumentValue Value => this.View.Value;
 
 		#endregion
 
@@ -115,16 +99,11 @@ namespace Helper.Module.CommandSender {
 
 		public async void Update (
 		) {
-			if (this.Type is not null && this.Value is not null) {
+			if (this.Type is not null) {
 				this.NotifyPropertyChanged(
 					nameof(this.uAction_IsEnabled)
 				);
-				if (this.Option is not null) {
-					this.NotifyPropertyChanged(
-						nameof(this.uEnumerationValue_ItemsSource),
-						nameof(this.uEnumerationValue_SelectedValue)
-					);
-				} else {
+				if (this.Option is null) {
 					switch (this.Type) {
 						case ArgumentType.Boolean: {
 							this.NotifyPropertyChanged(
@@ -166,36 +145,50 @@ namespace Helper.Module.CommandSender {
 						default: throw new ArgumentOutOfRangeException();
 					}
 				}
+				else {
+					this.NotifyPropertyChanged(
+						nameof(this.uEnumerationValue_ItemsSource),
+						nameof(this.uEnumerationValue_SelectedValue)
+					);
+				}
 			}
 			return;
 		}
 
 		#endregion
 
-		#region action
+		#region common
 
 		public Boolean uAction_IsEnabled {
 			get {
-				if (this.Value is not { Data: not null }) { return false; }
+				if (this.Value.Data is null) {
+					return false;
+				}
 				return true;
 			}
 		}
 
-		// ----------------
+		#endregion
+
+		#region boolean
 
 		public String uBooleanValue_Text {
 			get {
-				if (this.Type is not ArgumentType.Boolean || this.Option is not null || this.Value is not { Data: Boolean }) { return ""; }
+				if (this.Type is not ArgumentType.Boolean || this.Option is not null || this.Value.Data is null) {
+					return " ";
+				}
 				return ConvertHelper.BooleanToConfirmationStringLower(this.Value.OfBoolean);
 			}
 		}
 
-		public async void uBooleanValue_OnClick (
+		public async void uBooleanValue_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
-			if (this.Type is not ArgumentType.Boolean || this.Option is not null || this.Value is not { Data: Boolean }) { return; }
+			var senders = sender.AsClass<Button>();
+			if (this.Type is not ArgumentType.Boolean || this.Option is not null || this.Value.Data is null) {
+				return;
+			}
 			this.Value.OfBoolean = !this.Value.OfBoolean;
 			this.NotifyPropertyChanged(
 				nameof(this.uBooleanValue_Text)
@@ -203,7 +196,9 @@ namespace Helper.Module.CommandSender {
 			return;
 		}
 
-		// ----------------
+		#endregion
+
+		#region integer
 
 		public DecimalFormatter uIntegerValue_NumberFormatter {
 			get {
@@ -213,18 +208,22 @@ namespace Helper.Module.CommandSender {
 
 		public Floater uIntegerValue_Value {
 			get {
-				if (this.Type is not ArgumentType.Integer || this.Option is not null || this.Value is not { Data: Integer }) { return Floater.NaN; }
+				if (this.Type is not ArgumentType.Integer || this.Option is not null || this.Value.Data is null) {
+					return Floater.NaN;
+				}
 				return (Floater)this.Value.OfInteger;
 			}
 		}
 
-		public async void uIntegerValue_OnValueChanged (
+		public async void uIntegerValue_ValueChanged (
 			NumberBox                      sender,
 			NumberBoxValueChangedEventArgs args
 		) {
-			if (sender is not NumberBox senders) { return; }
-			if (this.Type is not ArgumentType.Integer || this.Option is not null || this.Value is not { Data: Integer }) { return; }
-			if (!Floater.IsNaN(args.NewValue)) {
+			var senders = sender.AsClass<NumberBox>();
+			if (this.Type is not ArgumentType.Integer || this.Option is not null || this.Value.Data is null) {
+				return;
+			}
+			if (!Floater.IsNaN(args.NewValue) && (Integer.MinValue < args.NewValue && args.NewValue < Integer.MaxValue)) {
 				this.Value.OfInteger = (Integer)args.NewValue;
 			}
 			this.NotifyPropertyChanged(
@@ -233,7 +232,9 @@ namespace Helper.Module.CommandSender {
 			return;
 		}
 
-		// ----------------
+		#endregion
+
+		#region floater
 
 		public DecimalFormatter uFloaterValue_NumberFormatter {
 			get {
@@ -243,17 +244,21 @@ namespace Helper.Module.CommandSender {
 
 		public Floater uFloaterValue_Value {
 			get {
-				if (this.Type is not ArgumentType.Floater || this.Option is not null || this.Value is not { Data: Floater }) { return Floater.NaN; }
+				if (this.Type is not ArgumentType.Floater || this.Option is not null || this.Value.Data is null) {
+					return Floater.NaN;
+				}
 				return this.Value.OfFloater;
 			}
 		}
 
-		public async void uFloaterValue_OnValueChanged (
+		public async void uFloaterValue_ValueChanged (
 			NumberBox                      sender,
 			NumberBoxValueChangedEventArgs args
 		) {
-			if (sender is not NumberBox senders) { return; }
-			if (this.Type is not ArgumentType.Floater || this.Option is not null || this.Value is not { Data: Floater }) { return; }
+			var senders = sender.AsClass<NumberBox>();
+			if (this.Type is not ArgumentType.Floater || this.Option is not null || this.Value.Data is null) {
+				return;
+			}
 			if (!Floater.IsNaN(args.NewValue)) {
 				this.Value.OfFloater = args.NewValue;
 			}
@@ -263,7 +268,9 @@ namespace Helper.Module.CommandSender {
 			return;
 		}
 
-		// ----------------
+		#endregion
+
+		#region size
 
 		public DecimalFormatter uSizeValue_NumberFormatter {
 			get {
@@ -273,17 +280,21 @@ namespace Helper.Module.CommandSender {
 
 		public Floater uSizeValue_Value {
 			get {
-				if (this.Type is not ArgumentType.Size || this.Option is not null || this.Value is not { Data: SizeExpression }) { return Floater.NaN; }
+				if (this.Type is not ArgumentType.Size || this.Option is not null || this.Value.Data is null) {
+					return Floater.NaN;
+				}
 				return this.Value.OfSize.Value;
 			}
 		}
 
-		public async void uSizeValue_OnValueChanged (
+		public async void uSizeValue_ValueChanged (
 			NumberBox                      sender,
 			NumberBoxValueChangedEventArgs args
 		) {
-			if (sender is not NumberBox senders) { return; }
-			if (this.Type is not ArgumentType.Size || this.Option is not null || this.Value is not { Data: SizeExpression }) { return; }
+			var senders = sender.AsClass<NumberBox>();
+			if (this.Type is not ArgumentType.Size || this.Option is not null || this.Value.Data is null) {
+				return;
+			}
 			if (!Floater.IsNaN(args.NewValue)) {
 				this.Value.OfSize.Value = args.NewValue;
 			}
@@ -293,6 +304,8 @@ namespace Helper.Module.CommandSender {
 			return;
 		}
 
+		// ----------------
+
 		public List<SizeUnit> uSizeUnit_ItemsSource {
 			get {
 				return new List<SizeUnit>() { SizeUnit.B, SizeUnit.K, SizeUnit.M, SizeUnit.G };
@@ -301,119 +314,101 @@ namespace Helper.Module.CommandSender {
 
 		public SizeUnit uSizeUnit_SelectedItem {
 			get {
-				if (this.Type is not ArgumentType.Size || this.Option is not null || this.Value is not { Data: SizeExpression }) { return SizeUnit.B; }
+				if (this.Type is not ArgumentType.Size || this.Option is not null || this.Value.Data is null) {
+					return SizeUnit.M;
+				}
 				return this.Value.OfSize.Unit;
 			}
 		}
 
-		public async void uSizeUnit_OnSelectionChanged (
+		public async void uSizeUnit_SelectionChanged (
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			if (sender is not ComboBox senders) { return; }
-			if (this.Type is not ArgumentType.Size || this.Option is not null || this.Value is not { Data: SizeExpression }) { return; }
-			this.Value.OfSize.Unit = senders.SelectedItem as SizeUnit? ?? throw new Exception();
+			var senders = sender.AsClass<ComboBox>();
+			if (this.Type is not ArgumentType.Size || this.Option is not null || this.Value.Data is null) {
+				return;
+			}
+			this.Value.OfSize.Unit = senders.SelectedItem.AsStruct<SizeUnit>();
 			return;
 		}
 
-		// ----------------
+		#endregion
+
+		#region string
 
 		public String uStringValue_Text {
 			get {
-				if (this.Type is not ArgumentType.String || this.Option is not null || this.Value is not { Data: String }) { return ""; }
+				if (this.Type is not ArgumentType.String || this.Option is not null || this.Value.Data is null) {
+					return "";
+				}
 				return this.Value.OfString;
 			}
 		}
 
-		public async void uStringValue_OnTextChanged (
+		public async void uStringValue_TextChanged (
 			Object               sender,
 			TextChangedEventArgs args
 		) {
-			if (sender is not TextBox senders) { return; }
-			if (this.Type is not ArgumentType.String || this.Option is not null || this.Value is not { Data: String }) { return; }
+			var senders = sender.AsClass<TextBox>();
+			if (this.Type is not ArgumentType.String || this.Option is not null || this.Value.Data is null) {
+				return;
+			}
 			this.Value.OfString = senders.Text;
-			this.NotifyPropertyChanged(
-				nameof(this.uStringValue_Text)
-			);
 			return;
 		}
 
-		// ----------------
+		#endregion
+
+		#region path
 
 		public String uPathValue_Text {
 			get {
-				if (this.Type is not ArgumentType.Path || this.Option is not null || this.Value is not { Data: PathExpression }) { return ""; }
+				if (this.Type is not ArgumentType.Path || this.Option is not null || this.Value.Data is null) {
+					return "";
+				}
 				return this.Value.OfPath.Value;
 			}
 		}
 
-		public async void uPathValue_OnTextChanged (
+		public async void uPathValue_TextChanged (
 			Object               sender,
 			TextChangedEventArgs args
 		) {
-			if (sender is not TextBox senders) { return; }
-			if (this.Type is not ArgumentType.Path || this.Option is not null || this.Value is not { Data: PathExpression }) { return; }
+			var senders = sender.AsClass<TextBox>();
+			if (this.Type is not ArgumentType.Path || this.Option is not null || this.Value.Data is null) {
+				return;
+			}
 			this.Value.OfPath.Value = senders.Text;
-			this.NotifyPropertyChanged(
-				nameof(this.uPathValue_Text)
-			);
 			return;
 		}
 
-		public async void uPathValue_OnDragOver (
+		public async void uPathValue_DragOver (
 			Object        sender,
 			DragEventArgs args
 		) {
-			if (sender is not TextBox senders) { return; }
-			if (this.Type is not ArgumentType.Path || this.Option is not null || this.Value is not { Data: PathExpression }) { return; }
+			var senders = sender.AsClass<TextBox>();
+			if (this.Type is not ArgumentType.Path || this.Option is not null || this.Value.Data is null) {
+				return;
+			}
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Link;
 			}
 			return;
 		}
 
-		public async void uPathValue_OnDrop (
+		public async void uPathValue_Drop (
 			Object        sender,
 			DragEventArgs args
 		) {
-			if (sender is not TextBox senders) { return; }
-			if (this.Type is not ArgumentType.Path || this.Option is not null || this.Value is not { Data: PathExpression }) { return; }
-			args.Handled = true;
+			var senders = sender.AsClass<TextBox>();
+			if (this.Type is not ArgumentType.Path || this.Option is not null || this.Value.Data is null) {
+				return;
+			}
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
-				var newValue = StorageHelper.Regularize((await args.DataView.GetStorageItemsAsync())[0].Path);
-				this.Value.OfPath.Value = newValue;
-				this.NotifyPropertyChanged(
-					nameof(this.uPathValue_Text)
-				);
-			}
-			return;
-		}
-
-		public async void uPathPickFile_OnClick (
-			Object          sender,
-			RoutedEventArgs args
-		) {
-			if (sender is not MenuFlyoutItem senders) { return; }
-			if (this.Type is not ArgumentType.Path || this.Option is not null || this.Value is not { Data: PathExpression }) { return; }
-			var newValue = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View));
-			if (newValue is not null) {
-				this.Value.OfPath.Value = newValue;
-				this.NotifyPropertyChanged(
-					nameof(this.uPathValue_Text)
-				);
-			}
-			return;
-		}
-
-		public async void uPathPickDirectory_OnClick (
-			Object          sender,
-			RoutedEventArgs args
-		) {
-			if (sender is not MenuFlyoutItem senders) { return; }
-			if (this.Type is not ArgumentType.Path || this.Option is not null || this.Value is not { Data: PathExpression }) { return; }
-			var newValue = await StorageHelper.PickDirectory(WindowHelper.GetForElement(this.View));
-			if (newValue is not null) {
-				this.Value.OfPath.Value = newValue;
+				args.Handled = true;
+				var data = await args.DataView.GetStorageItemsAsync();
+				this.Value.OfPath.Value = StorageHelper.Regularize(data[0].Path);
 				this.NotifyPropertyChanged(
 					nameof(this.uPathValue_Text)
 				);
@@ -423,30 +418,73 @@ namespace Helper.Module.CommandSender {
 
 		// ----------------
 
+		public async void uPathPickFile_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			if (this.Type is not ArgumentType.Path || this.Option is not null || this.Value.Data is null) {
+				return;
+			}
+			var value = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View));
+			if (value is not null) {
+				this.Value.OfPath.Value = value;
+				this.NotifyPropertyChanged(
+					nameof(this.uPathValue_Text)
+				);
+			}
+			return;
+		}
+
+		public async void uPathPickDirectory_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			if (this.Type is not ArgumentType.Path || this.Option is not null || this.Value.Data is null) {
+				return;
+			}
+			var value = await StorageHelper.PickDirectory(WindowHelper.GetForElement(this.View));
+			if (value is not null) {
+				this.Value.OfPath.Value = value;
+				this.NotifyPropertyChanged(
+					nameof(this.uPathValue_Text)
+				);
+			}
+			return;
+		}
+
+		#endregion
+
+		#region enumeration
+
 		public List<Tuple<Object, String>> uEnumerationValue_ItemsSource {
 			get {
-				if (this.Type is null || this.Option is null || this.Value is null) { return new List<Tuple<Object, String>>(); }
+				if (this.Type is null || this.Option is null || this.Value.Data is null) {
+					return new List<Tuple<Object, String>>();
+				}
 				return this.Option.Select((value) => (new Tuple<Object, String>(value, ConfigurationHelper.MakeArgumentValueString(value)))).ToList();
 			}
 		}
 
 		public Object? uEnumerationValue_SelectedValue {
 			get {
-				if (this.Type is null || this.Option is null || this.Value is null) { return null; }
+				if (this.Type is null || this.Option is null || this.Value.Data is null) {
+					return null;
+				}
 				return this.Value.Data;
 			}
 		}
 
-		public async void uEnumerationValue_OnSelectionChanged (
+		public async void uEnumerationValue_SelectionChanged (
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			if (sender is not ComboBox senders) { return; }
-			if (this.Type is null || this.Option is null || this.Value is null) { return; }
+			var senders = sender.AsClass<ComboBox>();
+			if (this.Type is null || this.Option is null || this.Value.Data is null) {
+				return;
+			}
 			this.Value.Data = senders.SelectedValue;
-			this.NotifyPropertyChanged(
-				nameof(this.uEnumerationValue_SelectedValue)
-			);
 			return;
 		}
 

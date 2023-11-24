@@ -35,15 +35,20 @@ namespace TwinStar::Kernel::Range {
 	) -> Size {
 		if constexpr (Detail::IsHasSizeMethodRange<Range>) {
 			return range.size();
-		} else if constexpr (Detail::IsHasBuiltinSizeMethodRange<Range>) {
+		}
+		else if constexpr (Detail::IsHasBuiltinSizeMethodRange<Range>) {
 			return mbw<Size>(range.size());
-		} else if constexpr (IsSame<decltype(range.end() - range.begin()), Size>) {
+		}
+		else if constexpr (IsSame<decltype(range.end() - range.begin()), Size>) {
 			return range.end() - range.begin();
-		} else if constexpr (IsIntegerWrapper<decltype(range.end() - range.begin())>) {
+		}
+		else if constexpr (IsIntegerWrapper<decltype(range.end() - range.begin())>) {
 			return cbw<Size>(range.end() - range.begin());
-		} else if constexpr (IsBuiltinInteger<decltype(range.end() - range.begin())>) {
+		}
+		else if constexpr (IsBuiltinInteger<decltype(range.end() - range.begin())>) {
 			return mbw<Size>(range.end() - range.begin());
-		} else {
+		}
+		else {
 			static_assert(k_static_assert_fail<Range>);
 			assert_fail("");
 		}

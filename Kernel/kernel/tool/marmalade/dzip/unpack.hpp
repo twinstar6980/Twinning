@@ -52,13 +52,13 @@ namespace TwinStar::Kernel::Tool::Marmalade::DZip {
 			auto package_data_end_position = data.position();
 			for (auto & resource_index : SizeRange{information_structure.resource_information.size()}) {
 				auto & resource_information_structure = information_structure.resource_information[resource_index];
-				auto & resource_definition = definition.resource.at(resource_index);
-				resource_definition.key = Path{information_structure.resource_directory[cbw<Size>(resource_information_structure.directory_index)]} / information_structure.resource_file[resource_index];
-				resource_definition.value.chunk.allocate_full(resource_information_structure.chunk_index.size());
+				auto & resource_definition = definition.resource[resource_index];
+				resource_definition.path = Path{information_structure.resource_directory[cbw<Size>(resource_information_structure.directory_index)]} / information_structure.resource_file[resource_index];
+				resource_definition.chunk.allocate_full(resource_information_structure.chunk_index.size());
 				auto chunk_data_list = Array<ByteArray>{resource_information_structure.chunk_index.size()};
 				for (auto & chunk_index : SizeRange{resource_information_structure.chunk_index.size()}) {
 					auto & chunk_information_structure = information_structure.chunk_information[cbw<Size>(resource_information_structure.chunk_index[chunk_index])];
-					auto & chunk_definition = resource_definition.value.chunk[chunk_index];
+					auto & chunk_definition = resource_definition.chunk[chunk_index];
 					auto & chunk_data = chunk_data_list[chunk_index];
 					data.set_position(cbw<Size>(chunk_information_structure.offset));
 					chunk_data.allocate(cbw<Size>(chunk_information_structure.size_uncompressed));
@@ -139,7 +139,7 @@ namespace TwinStar::Kernel::Tool::Marmalade::DZip {
 				}
 				assert_test(!chunk_data_list.empty() && Range::all_of(chunk_data_list.tail(chunk_data_list.size() - 1_sz), [&] (auto & element) { return element == chunk_data_list.first(); }));
 				if (resource_directory.has()) {
-					FileSystem::write_file(resource_directory.get() / resource_definition.key, chunk_data_list.first());
+					FileSystem::write_file(resource_directory.get() / resource_definition.path, chunk_data_list.first());
 				}
 			}
 			data.set_position(package_data_end_position);

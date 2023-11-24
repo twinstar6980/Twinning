@@ -6,7 +6,7 @@ using Helper.Utility;
 
 namespace Helper.Module.ModuleLauncher {
 
-	public sealed partial class ModdingWorkerSettingPanel : UserControl {
+	public sealed partial class ModdingWorkerSettingPanel : CustomControl {
 
 		#region life
 
@@ -18,7 +18,19 @@ namespace Helper.Module.ModuleLauncher {
 
 		// ----------------
 
-		public ModdingWorkerSettingPanelController Controller { get; }
+		private ModdingWorkerSettingPanelController Controller { get; }
+
+		// ----------------
+
+		protected override void StampUpdate (
+		) {
+			this.Controller.Update();
+			return;
+		}
+
+		#endregion
+
+		#region property
 
 		#endregion
 
@@ -32,6 +44,17 @@ namespace Helper.Module.ModuleLauncher {
 
 		#endregion
 
+		#region update
+
+		public async void Update (
+		) {
+			this.NotifyPropertyChanged(
+			);
+			return;
+		}
+
+		#endregion
+
 		#region kernel
 
 		public String uKernelText_Text {
@@ -40,11 +63,11 @@ namespace Helper.Module.ModuleLauncher {
 			}
 		}
 
-		public async void uKernelText_OnTextChanged (
+		public async void uKernelText_TextChanged (
 			Object               sender,
 			TextChangedEventArgs args
 		) {
-			if (sender is not TextBox senders) { return; }
+			var senders = sender.AsClass<TextBox>();
 			Setting.Data.ModdingWorker.Kernel = senders.Text;
 			return;
 		}
@@ -59,11 +82,11 @@ namespace Helper.Module.ModuleLauncher {
 			}
 		}
 
-		public async void uScriptText_OnTextChanged (
+		public async void uScriptText_TextChanged (
 			Object               sender,
 			TextChangedEventArgs args
 		) {
-			if (sender is not TextBox senders) { return; }
+			var senders = sender.AsClass<TextBox>();
 			Setting.Data.ModdingWorker.Script = senders.Text;
 			return;
 		}
@@ -74,40 +97,16 @@ namespace Helper.Module.ModuleLauncher {
 
 		public String uArgumentText_Text {
 			get {
-				return String.Join('\r', Setting.Data.ModdingWorker.Argument);
+				return ConvertHelper.StringListToTextWithCr(Setting.Data.ModdingWorker.Argument);
 			}
 		}
 
-		public async void uArgumentText_OnTextChanged (
+		public async void uArgumentText_TextChanged (
 			Object               sender,
 			TextChangedEventArgs args
 		) {
-			if (sender is not TextBox senders) { return; }
-			var parsedValue = senders.Text.Split('\r').ToList();
-			if (parsedValue.Count != 0 && parsedValue.Last().Length == 0) {
-				parsedValue.RemoveAt(parsedValue.Count - 1);
-			}
-			Setting.Data.ModdingWorker.Argument = parsedValue;
-			return;
-		}
-
-		#endregion
-
-		#region automatic close
-
-		public Boolean uAutomaticCloseToggle_IsChecked {
-			get {
-				return Setting.Data.ModdingWorker.AutomaticClose;
-			}
-		}
-
-		public async void uAutomaticCloseToggle_OnClick (
-			Object          sender,
-			RoutedEventArgs args
-		) {
-			if (sender is not ToggleButton senders) { return; }
-			var newValue = senders.IsChecked!.Value;
-			Setting.Data.ModdingWorker.AutomaticClose = newValue;
+			var senders = sender.AsClass<TextBox>();
+			Setting.Data.ModdingWorker.Argument = ConvertHelper.StringListFromTextWithCr(senders.Text);
 			return;
 		}
 
@@ -121,13 +120,12 @@ namespace Helper.Module.ModuleLauncher {
 			}
 		}
 
-		public async void uAutomaticScrollToggle_OnClick (
+		public async void uAutomaticScrollToggle_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			var newValue = senders.IsChecked!.Value;
-			Setting.Data.ModdingWorker.AutomaticScroll = newValue;
+			var senders = sender.AsClass<ToggleButton>();
+			Setting.Data.ModdingWorker.AutomaticScroll = senders.IsChecked.AsNotNull();
 			return;
 		}
 
@@ -141,13 +139,12 @@ namespace Helper.Module.ModuleLauncher {
 			}
 		}
 
-		public async void uImmediateLaunchToggle_OnClick (
+		public async void uImmediateLaunchToggle_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			var newValue = senders.IsChecked!.Value;
-			Setting.Data.ModdingWorker.ImmediateLaunch = newValue;
+			var senders = sender.AsClass<ToggleButton>();
+			Setting.Data.ModdingWorker.ImmediateLaunch = senders.IsChecked.AsNotNull();
 			return;
 		}
 
@@ -161,23 +158,23 @@ namespace Helper.Module.ModuleLauncher {
 			}
 		}
 
-		public async void uAlternativeLaunchScriptText_OnTextChanged (
+		public async void uAlternativeLaunchScriptText_TextChanged (
 			Object               sender,
 			TextChangedEventArgs args
 		) {
-			if (sender is not TextBox senders) { return; }
+			var senders = sender.AsClass<TextBox>();
 			Setting.Data.ModdingWorker.AlternativeLaunchScript = senders.Text;
 			return;
 		}
 
-		public async void uAlternativeLaunchScriptPick_OnClick (
+		public async void uAlternativeLaunchScriptPick_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
-			var newValue = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View));
-			if (newValue is not null) {
-				Setting.Data.ModdingWorker.AlternativeLaunchScript = newValue;
+			var senders = sender.AsClass<Button>();
+			var value = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View));
+			if (value is not null) {
+				Setting.Data.ModdingWorker.AlternativeLaunchScript = value;
 				this.NotifyPropertyChanged(
 					nameof(this.uAlternativeLaunchScriptText_Text)
 				);
@@ -195,11 +192,11 @@ namespace Helper.Module.ModuleLauncher {
 			}
 		}
 
-		public async void uMessageFontFamilyText_OnTextChanged (
+		public async void uMessageFontFamilyText_TextChanged (
 			Object               sender,
 			TextChangedEventArgs args
 		) {
-			if (sender is not TextBox senders) { return; }
+			var senders = sender.AsClass<TextBox>();
 			Setting.Data.ModdingWorker.MessageFontFamily = senders.Text;
 			return;
 		}

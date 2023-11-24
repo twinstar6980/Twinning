@@ -2,6 +2,7 @@
 // ReSharper disable CheckNamespace
 
 using Helper;
+using Helper.Utility;
 
 namespace Helper.Bridge {
 

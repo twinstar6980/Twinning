@@ -153,12 +153,12 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle::Structure {
 			(IntegerU32) offset,
 			(IntegerU32) size,
 			(IntegerU32) pool,
-			(IntegerU32) resource_data_section_store_mode,
+			(IntegerU32) resource_data_section_compression,
 			(IntegerU32) information_section_size,
-			(IntegerU32) generic_resource_data_section_offset,
-			(IntegerU32) generic_resource_data_section_size,
-			(IntegerU32) generic_resource_data_section_size_original,
-			(IntegerU32) generic_resource_data_section_size_pool,
+			(IntegerU32) general_resource_data_section_offset,
+			(IntegerU32) general_resource_data_section_size,
+			(IntegerU32) general_resource_data_section_size_original,
+			(IntegerU32) general_resource_data_section_size_pool,
 			(IntegerU32) texture_resource_data_section_offset,
 			(IntegerU32) texture_resource_data_section_size,
 			(IntegerU32) texture_resource_data_section_size_original,
@@ -180,12 +180,12 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle::Structure {
 			(IntegerU32) offset,
 			(IntegerU32) size,
 			(IntegerU32) pool,
-			(IntegerU32) resource_data_section_store_mode,
+			(IntegerU32) resource_data_section_compression,
 			(IntegerU32) information_section_size,
-			(IntegerU32) generic_resource_data_section_offset,
-			(IntegerU32) generic_resource_data_section_size,
-			(IntegerU32) generic_resource_data_section_size_original,
-			(IntegerU32) generic_resource_data_section_size_pool,
+			(IntegerU32) general_resource_data_section_offset,
+			(IntegerU32) general_resource_data_section_size,
+			(IntegerU32) general_resource_data_section_size_original,
+			(IntegerU32) general_resource_data_section_size_pool,
 			(IntegerU32) texture_resource_data_section_offset,
 			(IntegerU32) texture_resource_data_section_size,
 			(IntegerU32) texture_resource_data_section_size_original,
@@ -537,7 +537,8 @@ namespace TwinStar::Kernel {
 			if (that.image_property_information_offset != 0_iu32) {
 				assert_test(cbw<Size>(that.image_property_information_offset) == thix.position());
 				thix.read(that.image_property_information.set());
-			} else {
+			}
+			else {
 				that.image_property_information.reset();
 			}
 			assert_test(cbw<Size>(that.property_information_offset) == thix.position());

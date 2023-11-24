@@ -6,7 +6,7 @@ using Helper.Utility;
 
 namespace Helper.Module.ModuleLauncher {
 
-	public sealed partial class ModuleLauncherSettingPanel : UserControl {
+	public sealed partial class ModuleLauncherSettingPanel : CustomControl {
 
 		#region life
 
@@ -18,7 +18,19 @@ namespace Helper.Module.ModuleLauncher {
 
 		// ----------------
 
-		public ModuleLauncherSettingPanelController Controller { get; }
+		private ModuleLauncherSettingPanelController Controller { get; }
+
+		// ----------------
+
+		protected override void StampUpdate (
+		) {
+			this.Controller.Update();
+			return;
+		}
+
+		#endregion
+
+		#region property
 
 		#endregion
 
@@ -29,6 +41,17 @@ namespace Helper.Module.ModuleLauncher {
 		#region data
 
 		public ModuleLauncherSettingPanel View { get; init; } = default!;
+
+		#endregion
+
+		#region update
+
+		public async void Update (
+		) {
+			this.NotifyPropertyChanged(
+			);
+			return;
+		}
 
 		#endregion
 

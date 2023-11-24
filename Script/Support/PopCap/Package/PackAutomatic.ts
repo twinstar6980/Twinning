@@ -10,15 +10,16 @@ namespace TwinStar.Script.Support.PopCap.Package.PackAutomatic {
 		let version_c = Kernel.Tool.PopCap.Package.Version.value({ number: version_number, compress_resource_data: version_compress_resource_data });
 		let resource_list = KernelX.FileSystem.list_file(resource_directory);
 		let definition_js: Kernel.Tool.PopCap.Package.Definition.JS_N.Package = {
-			resource: {},
+			resource: [],
 		};
 		let data_size_bound = 0;
 		data_size_bound += 4; // magic identifier
 		data_size_bound += 8; // version number
 		for (let resource of resource_list) {
-			definition_js.resource[resource] = {
+			definition_js.resource.push({
+				path: resource,
 				time: 0n,
-			};
+			});
 			let resource_size = KernelX.FileSystem.size_file(`${resource_directory}/${resource}`);
 			data_size_bound += (1 + 1 + resource.length + 4 + 4 + 8) + (Number(resource_size) + 16); // resource information + resource data
 		}

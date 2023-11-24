@@ -36,7 +36,8 @@ namespace TwinStar::Kernel::JavaScript {
 			NativeValueHandler{} {
 			if (is_holder) {
 				thiz.m_value.template set<std::shared_ptr<Value>>(value.value);
-			} else {
+			}
+			else {
 				thiz.m_value.template set<Pointer<Value>>(value);
 			}
 		}
@@ -84,9 +85,11 @@ namespace TwinStar::Kernel::JavaScript {
 			assert_test(!thiz.m_value.template is<Null>());
 			if (thiz.m_value.template is<Pointer<Value>>()) {
 				return *thiz.m_value.template get<Pointer<Value>>();
-			} else if (thiz.m_value.template is<std::shared_ptr<Value>>()) {
+			}
+			else if (thiz.m_value.template is<std::shared_ptr<Value>>()) {
 				return *thiz.m_value.template get<std::shared_ptr<Value>>();
-			} else {
+			}
+			else {
 				throw ImpossibleException{};
 			}
 		}
@@ -162,7 +165,8 @@ namespace TwinStar::Kernel::JavaScript {
 					return call_native_function_wrapper_inner<function>(
 						as_forward<typename Argument::template Element<index>>(argument[mbw<Size>(index)].template to_of<AsPure<typename Argument::template Element<index>>>()) ...
 					);
-				} else {
+				}
+				else {
 					using Class = AsPure<typename CallableTraitOf<function>::Argument::template Element<1_ixz>>;
 					using Argument = AsTypePackageRemoveHead<typename CallableTraitOf<function>::Argument, 1_szz>;
 					return call_native_function_wrapper_inner<function>(
@@ -186,7 +190,8 @@ namespace TwinStar::Kernel::JavaScript {
 			if constexpr (IsVoid<typename CallableTraitOf<function>::Result>) {
 				call_native_function_wrapper<function, forward_object>(context, object, argument);
 				result.set_undefined();
-			} else {
+			}
+			else {
 				result.from(call_native_function_wrapper<function, forward_object>(context, object, argument));
 			}
 			return;
@@ -221,9 +226,11 @@ namespace TwinStar::Kernel::JavaScript {
 			using Result = typename CallableTraitOf<function>::Result;
 			if constexpr (IsVoid<Result>) {
 				return function(as_forward<Argument>(argument.value()) ...);
-			} else if constexpr (IsInstance<Result>) {
+			}
+			else if constexpr (IsInstance<Result>) {
 				return NativeValueHandler<Result>::new_instance_allocate(function(as_forward<Argument>(argument.value()) ...));
-			} else {
+			}
+			else {
 				return NativeValueHandler<AsPure<Result>>::new_reference(function(as_forward<Argument>(argument.value()) ...));
 			}
 		}

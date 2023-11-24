@@ -16,9 +16,9 @@ namespace Helper.Utility {
 		// ----------------
 
 		public CommandLineReader (
-			List<String>? view
+			List<String> view
 		) {
-			this.mView = view ?? new List<String>();
+			this.mView = view;
 			this.mPosition = 0;
 		}
 
@@ -31,7 +31,7 @@ namespace Helper.Utility {
 			return !(0 <= this.mPosition && this.mPosition < this.mView.Count);
 		}
 
-		public Boolean Ensure (
+		public Boolean Check (
 			String name
 		) {
 			var result = false;
@@ -61,9 +61,7 @@ namespace Helper.Utility {
 
 		public String NextString (
 		) {
-			if (this.Done()) {
-				throw new Exception();
-			}
+			GF.AssertTest(!this.Done());
 			var result = this.mView[this.mPosition];
 			this.mPosition++;
 			return result;

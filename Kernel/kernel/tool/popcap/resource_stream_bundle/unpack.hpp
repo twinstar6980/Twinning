@@ -34,7 +34,8 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 			is_composite = !Range::end_with(standard_id, k_suffix_of_composite_shell_upper);
 			if (is_composite) {
 				original_id = standard_id;
-			} else {
+			}
+			else {
 				original_id = standard_id.head(standard_id.size() - k_suffix_of_composite_shell_upper.size());
 			}
 			return;
@@ -48,7 +49,8 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 			is_composite = !Range::end_with(standard_id, k_suffix_of_composite_shell);
 			if (is_composite) {
 				original_id = standard_id;
-			} else {
+			}
+			else {
 				original_id = standard_id.head(standard_id.size() - k_suffix_of_composite_shell.size());
 			}
 			return;
@@ -77,53 +79,55 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 			while (!group_manifest_information_data.full()) {
 				auto   group_manifest_information_structure = group_manifest_information_data.read_of<Structure::GroupManifestInformation<version>>();
 				auto & group_manifest = manifest.group.append();
-				make_original_group_id(get_string(group_manifest_information_structure.id_offset), group_manifest.value.composite, group_manifest.key);
-				group_manifest.value.subgroup.allocate_full(group_manifest_information_structure.subgroup_information.size());
+				make_original_group_id(get_string(group_manifest_information_structure.id_offset), group_manifest.composite, group_manifest.id);
+				group_manifest.subgroup.allocate_full(group_manifest_information_structure.subgroup_information.size());
 				for (auto & subgroup_index : SizeRange{group_manifest_information_structure.subgroup_information.size()}) {
 					auto & subgroup_manifest_information_structure = group_manifest_information_structure.subgroup_information[subgroup_index];
-					auto & subgroup_manifest = group_manifest.value.subgroup.at(subgroup_index);
-					subgroup_manifest.key = get_string(subgroup_manifest_information_structure.id_offset);
+					auto & subgroup_manifest = group_manifest.subgroup[subgroup_index];
+					subgroup_manifest.id = get_string(subgroup_manifest_information_structure.id_offset);
 					if constexpr (check_version(version, {1}, {})) {
 						if (subgroup_manifest_information_structure.resolution == 0x00000000_iu32) {
-							subgroup_manifest.value.category.resolution.reset();
-						} else {
-							subgroup_manifest.value.category.resolution.set(cbw<Integer>(subgroup_manifest_information_structure.resolution));
+							subgroup_manifest.category.resolution.reset();
+						}
+						else {
+							subgroup_manifest.category.resolution.set(cbw<Integer>(subgroup_manifest_information_structure.resolution));
 						}
 					}
 					if constexpr (check_version(version, {3}, {})) {
 						if (subgroup_manifest_information_structure.locale == 0x00000000_iu32) {
-							subgroup_manifest.value.category.locale.reset();
-						} else {
-							subgroup_manifest.value.category.locale.set().from(fourcc_from_integer(subgroup_manifest_information_structure.locale));
+							subgroup_manifest.category.locale.reset();
+						}
+						else {
+							subgroup_manifest.category.locale.set().from(fourcc_from_integer(subgroup_manifest_information_structure.locale));
 						}
 					}
-					subgroup_manifest.value.resource.allocate_full(subgroup_manifest_information_structure.resource_information.size());
+					subgroup_manifest.resource.allocate_full(subgroup_manifest_information_structure.resource_information.size());
 					for (auto & resource_index : SizeRange{subgroup_manifest_information_structure.resource_information.size()}) {
 						auto & resource_manifest_information_structure = subgroup_manifest_information_structure.resource_information[resource_index];
-						auto & resource_manifest = subgroup_manifest.value.resource.at(resource_index);
+						auto & resource_manifest = subgroup_manifest.resource[resource_index];
 						resource_manifest_information_data.set_position(cbw<Size>(resource_manifest_information_structure.detail_offset));
 						auto resource_detail_manifest_information_structure = resource_manifest_information_data.read_of<Structure::ResourceDetailManifestInformation<version>>();
-						resource_manifest.key = get_string(resource_detail_manifest_information_structure.id_offset);
-						resource_manifest.value.path = Path{String{get_string(resource_detail_manifest_information_structure.path_offset)}};
-						resource_manifest.value.type = cbw<Integer>(resource_detail_manifest_information_structure.type);
-						resource_manifest.value.property.allocate(resource_detail_manifest_information_structure.property_information.size() + (!resource_detail_manifest_information_structure.image_property_information.has() ? (0_sz) : (11_sz)));
+						resource_manifest.id = get_string(resource_detail_manifest_information_structure.id_offset);
+						resource_manifest.path = Path{String{get_string(resource_detail_manifest_information_structure.path_offset)}};
+						resource_manifest.type = cbw<Integer>(resource_detail_manifest_information_structure.type);
+						resource_manifest.property.allocate(resource_detail_manifest_information_structure.property_information.size() + (!resource_detail_manifest_information_structure.image_property_information.has() ? (0_sz) : (11_sz)));
 						if (resource_detail_manifest_information_structure.image_property_information.has()) {
 							auto & resource_image_property_detail_manifest_information_structure = resource_detail_manifest_information_structure.image_property_information.get();
-							resource_manifest.value.property("type"_sv).from(cbw<Integer>(resource_image_property_detail_manifest_information_structure.type), k_true);
-							resource_manifest.value.property("flag"_sv).from(cbw<Integer>(resource_image_property_detail_manifest_information_structure.flag), k_true);
-							resource_manifest.value.property("x"_sv).from(cbw<Integer>(resource_image_property_detail_manifest_information_structure.x), k_true);
-							resource_manifest.value.property("y"_sv).from(cbw<Integer>(resource_image_property_detail_manifest_information_structure.y), k_true);
-							resource_manifest.value.property("ax"_sv).from(cbw<Integer>(resource_image_property_detail_manifest_information_structure.ax), k_true);
-							resource_manifest.value.property("ay"_sv).from(cbw<Integer>(resource_image_property_detail_manifest_information_structure.ay), k_true);
-							resource_manifest.value.property("aw"_sv).from(cbw<Integer>(resource_image_property_detail_manifest_information_structure.aw), k_true);
-							resource_manifest.value.property("ah"_sv).from(cbw<Integer>(resource_image_property_detail_manifest_information_structure.ah), k_true);
-							resource_manifest.value.property("rows"_sv).from(cbw<Integer>(resource_image_property_detail_manifest_information_structure.rows), k_true);
-							resource_manifest.value.property("cols"_sv).from(cbw<Integer>(resource_image_property_detail_manifest_information_structure.cols), k_true);
-							resource_manifest.value.property("parent"_sv) = get_string(resource_image_property_detail_manifest_information_structure.parent_offset);
+							resource_manifest.property("type"_sv).from(cbw<Integer>(resource_image_property_detail_manifest_information_structure.type), k_true);
+							resource_manifest.property("flag"_sv).from(cbw<Integer>(resource_image_property_detail_manifest_information_structure.flag), k_true);
+							resource_manifest.property("x"_sv).from(cbw<Integer>(resource_image_property_detail_manifest_information_structure.x), k_true);
+							resource_manifest.property("y"_sv).from(cbw<Integer>(resource_image_property_detail_manifest_information_structure.y), k_true);
+							resource_manifest.property("ax"_sv).from(cbw<Integer>(resource_image_property_detail_manifest_information_structure.ax), k_true);
+							resource_manifest.property("ay"_sv).from(cbw<Integer>(resource_image_property_detail_manifest_information_structure.ay), k_true);
+							resource_manifest.property("aw"_sv).from(cbw<Integer>(resource_image_property_detail_manifest_information_structure.aw), k_true);
+							resource_manifest.property("ah"_sv).from(cbw<Integer>(resource_image_property_detail_manifest_information_structure.ah), k_true);
+							resource_manifest.property("rows"_sv).from(cbw<Integer>(resource_image_property_detail_manifest_information_structure.rows), k_true);
+							resource_manifest.property("cols"_sv).from(cbw<Integer>(resource_image_property_detail_manifest_information_structure.cols), k_true);
+							resource_manifest.property("parent"_sv) = get_string(resource_image_property_detail_manifest_information_structure.parent_offset);
 						}
 						for (auto & resource_property_index : SizeRange{resource_detail_manifest_information_structure.property_information.size()}) {
 							auto & resource_property_detail_information_manifest_structure = resource_detail_manifest_information_structure.property_information[resource_property_index];
-							auto & resource_property_manifest = resource_manifest.value.property.append();
+							auto & resource_property_manifest = resource_manifest.property.append();
 							resource_property_manifest.key = get_string(resource_property_detail_information_manifest_structure.key_offset);
 							resource_property_manifest.value = get_string(resource_property_detail_information_manifest_structure.value_offset);
 						}
@@ -194,37 +198,39 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 			auto package_data_end_position = cbw<Size>(information_structure.header.information_section_size);
 			for (auto & group_index : SizeRange{information_structure.group_information.size()}) {
 				auto & group_information_structure = information_structure.group_information[group_index];
-				auto & group_definition = definition.group.at(group_index);
-				make_original_group_id_upper(group_id_list[group_index], group_definition.value.composite, group_definition.key);
-				group_definition.value.subgroup.allocate_full(cbw<Size>(group_information_structure.subgroup_count));
+				auto & group_definition = definition.group[group_index];
+				make_original_group_id_upper(group_id_list[group_index], group_definition.composite, group_definition.id);
+				group_definition.subgroup.allocate_full(cbw<Size>(group_information_structure.subgroup_count));
 				for (auto & subgroup_index : SizeRange{cbw<Size>(group_information_structure.subgroup_count)}) {
 					auto & simple_subgroup_information_structure = group_information_structure.subgroup_information[subgroup_index];
 					auto & subgroup_information_structure = information_structure.subgroup_information[cbw<Size>(simple_subgroup_information_structure.index)];
 					auto & pool_information_structure = information_structure.pool_information[cbw<Size>(subgroup_information_structure.pool)];
-					auto & subgroup_definition = group_definition.value.subgroup.at(subgroup_index);
-					assert_test(subgroup_information_structure.generic_resource_data_section_size_pool == subgroup_information_structure.generic_resource_data_section_size_original);
+					auto & subgroup_definition = group_definition.subgroup[subgroup_index];
+					assert_test(subgroup_information_structure.general_resource_data_section_size_pool == subgroup_information_structure.general_resource_data_section_size_original);
 					assert_test(subgroup_information_structure.texture_resource_data_section_size_pool == 0_iu32);
 					assert_test(pool_information_structure.flag == 0_iu32);
-					subgroup_definition.key = subgroup_id_list[cbw<Size>(simple_subgroup_information_structure.index)];
+					subgroup_definition.id = subgroup_id_list[cbw<Size>(simple_subgroup_information_structure.index)];
 					if constexpr (check_version(version, {1}, {})) {
 						if (simple_subgroup_information_structure.resolution == 0x00000000_iu32) {
-							subgroup_definition.value.category.resolution.reset();
-						} else {
-							subgroup_definition.value.category.resolution.set(cbw<Integer>(simple_subgroup_information_structure.resolution));
+							subgroup_definition.category.resolution.reset();
+						}
+						else {
+							subgroup_definition.category.resolution.set(cbw<Integer>(simple_subgroup_information_structure.resolution));
 						}
 					}
 					if constexpr (check_version(version, {3}, {})) {
 						if (simple_subgroup_information_structure.locale == 0x00000000_iu32) {
-							subgroup_definition.value.category.locale.reset();
-						} else {
-							subgroup_definition.value.category.locale.set().from(fourcc_from_integer(simple_subgroup_information_structure.locale));
+							subgroup_definition.category.locale.reset();
+						}
+						else {
+							subgroup_definition.category.locale.set().from(fourcc_from_integer(simple_subgroup_information_structure.locale));
 						}
 					}
 					auto make_formatted_path =
 						[&] (
 						Path const & path_format
 					) -> auto {
-						return Path{format_string(path_format.to_string(), group_definition.key, subgroup_definition.key)};
+						return Path{format_string(path_format.to_string(), group_definition.id, subgroup_definition.id)};
 					};
 					auto packet_data = data.sub_view(cbw<Size>(subgroup_information_structure.offset), cbw<Size>(subgroup_information_structure.size));
 					auto packet_stream = IByteStreamView{packet_data};
@@ -234,8 +240,8 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 					if (packet_file.has()) {
 						FileSystem::write_file(make_formatted_path(packet_file.get()), packet_data);
 					}
-					subgroup_definition.value.resource_data_section_store_mode = packet_package_definition.resource_data_section_store_mode;
-					subgroup_definition.value.resource.allocate_full(packet_package_definition.resource.size());
+					subgroup_definition.compression = packet_package_definition.compression;
+					subgroup_definition.resource.allocate_full(packet_package_definition.resource.size());
 					auto texture_resource_begin = Size{};
 					auto texture_resource_count = Size{};
 					if constexpr (check_version(version, {1, 3}, {})) {
@@ -249,18 +255,18 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 						assert_test(pool_information_structure.texture_resource_count == 0_iu32);
 					}
 					for (auto & resource_index : SizeRange{packet_package_definition.resource.size()}) {
-						auto & packet_resource_definition = packet_package_definition.resource.at(resource_index);
-						auto & resource_definition = subgroup_definition.value.resource.at(resource_index);
-						resource_definition.key = packet_resource_definition.key;
-						switch (packet_resource_definition.value.additional.type().value) {
-							case ResourceType::Constant::generic().value : {
-								auto & packet_resource_additional_definition = packet_resource_definition.value.additional.template get_of_type<ResourceType::Constant::generic()>();
-								auto & resource_additional_definition = resource_definition.value.additional.template set_of_type<ResourceType::Constant::generic()>();
+						auto & packet_resource_definition = packet_package_definition.resource[resource_index];
+						auto & resource_definition = subgroup_definition.resource[resource_index];
+						resource_definition.path = packet_resource_definition.path;
+						switch (packet_resource_definition.additional.type().value) {
+							case ResourceType::Constant::general().value : {
+								auto & packet_resource_additional_definition = packet_resource_definition.additional.template get_of_type<ResourceType::Constant::general()>();
+								auto & resource_additional_definition = resource_definition.additional.template set_of_type<ResourceType::Constant::general()>();
 								break;
 							}
 							case ResourceType::Constant::texture().value : {
-								auto & packet_resource_additional_definition = packet_resource_definition.value.additional.template get_of_type<ResourceType::Constant::texture()>();
-								auto & resource_additional_definition = resource_definition.value.additional.template set_of_type<ResourceType::Constant::texture()>();
+								auto & packet_resource_additional_definition = packet_resource_definition.additional.template get_of_type<ResourceType::Constant::texture()>();
+								auto & resource_additional_definition = resource_definition.additional.template set_of_type<ResourceType::Constant::texture()>();
 								auto & texture_information_structure = information_structure.texture_resource_information[texture_resource_begin + cbw<Size>(packet_resource_additional_definition.index)];
 								assert_test(cbw<Integer>(texture_information_structure.size_width) == packet_resource_additional_definition.size.width);
 								assert_test(cbw<Integer>(texture_information_structure.size_height) == packet_resource_additional_definition.size.height);

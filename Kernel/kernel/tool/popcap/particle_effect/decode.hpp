@@ -95,16 +95,20 @@ namespace TwinStar::Kernel::Tool::PopCap::ParticleEffect {
 			value.control = count > 1_sz && flag.get(1_ix);
 			if (!flag.get(2_ix)) {
 				initial_time.reset();
-			} else if (flag.get(2_ix)) {
+			}
+			else if (flag.get(2_ix)) {
 				initial_time.set(0.0_f);
 			}
 			if (!flag.get(3_ix) && !flag.get(4_ix)) {
 				initial_value.reset();
-			} else if (flag.get(3_ix) && !flag.get(4_ix)) {
+			}
+			else if (flag.get(3_ix) && !flag.get(4_ix)) {
 				initial_value.set(0.0_f);
-			} else if (!flag.get(3_ix) && flag.get(4_ix)) {
+			}
+			else if (!flag.get(3_ix) && flag.get(4_ix)) {
 				initial_value.set(1.0_f);
-			} else if (flag.get(3_ix) && flag.get(4_ix)) {
+			}
+			else if (flag.get(3_ix) && flag.get(4_ix)) {
 				initial_value.set(2.0_f);
 			}
 			assert_test(!flag.get(5_ix));
@@ -146,7 +150,8 @@ namespace TwinStar::Kernel::Tool::PopCap::ParticleEffect {
 			exchange_size_fixed<IntegerU16>(data, count);
 			if (count > 1_sz) {
 				exchange_boolean_fixed<Boolean8>(data, value.control);
-			} else {
+			}
+			else {
 				value.control = k_false;
 			}
 			exchange_list(

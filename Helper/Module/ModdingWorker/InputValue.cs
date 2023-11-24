@@ -2,6 +2,7 @@
 // ReSharper disable
 
 using Helper;
+using Helper.Utility;
 
 namespace Helper.Module.ModdingWorker {
 
@@ -30,9 +31,7 @@ namespace Helper.Module.ModdingWorker {
 		public static SizeExpression Parse (
 			String expression
 		) {
-			if (expression.Length < 2) {
-				throw new Exception();
-			}
+			GF.AssertTest(expression.Length >= 2);
 			return new SizeExpression() {
 				Unit = expression[^1] switch {
 					'b' => SizeUnit.B,
@@ -104,42 +103,42 @@ namespace Helper.Module.ModdingWorker {
 
 	public class InputValue {
 
-		public Object? Data = default!;
+		public Object? Data = null;
 
 		// ----------------
 
 		public Boolean? OfBoolean {
-			get => this.Data as Boolean?;
+			get => this.Data.AsStructOrNull<Boolean>();
 			set => this.Data = value;
 		}
 
 		public Integer? OfInteger {
-			get => this.Data as Integer?;
+			get => this.Data.AsStructOrNull<Integer>();
 			set => this.Data = value;
 		}
 
 		public Floater? OfFloater {
-			get => this.Data as Floater?;
+			get => this.Data.AsStructOrNull<Floater>();
 			set => this.Data = value;
 		}
 
 		public SizeExpression? OfSize {
-			get => this.Data as SizeExpression;
+			get => this.Data.AsClassOrNull<SizeExpression>();
 			set => this.Data = value;
 		}
 
 		public String? OfString {
-			get => this.Data as String;
+			get => this.Data.AsClassOrNull<String>();
 			set => this.Data = value;
 		}
 
 		public PathExpression? OfPath {
-			get => this.Data as PathExpression;
+			get => this.Data.AsClassOrNull<PathExpression>();
 			set => this.Data = value;
 		}
 
 		public EnumerationExpression? OfEnumeration {
-			get => this.Data as EnumerationExpression;
+			get => this.Data.AsClassOrNull<EnumerationExpression>();
 			set => this.Data = value;
 		}
 

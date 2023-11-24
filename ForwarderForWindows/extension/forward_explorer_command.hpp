@@ -96,7 +96,8 @@ namespace TwinStar::ForwarderForWindows {
 				argument.emplace_back(get_roaming_app_data_directory_path() + L"\\TwinStar.ToolKit.ForwarderForWindows\\forward.cmd");
 				argument.append_range(get_shell_item_file_path(psiItemArray));
 				create_process(program, argument);
-			} catch (...) {
+			}
+			catch (...) {
 			}
 			return S_OK;
 		}

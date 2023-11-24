@@ -1,4 +1,4 @@
-<UserControl
+<local:CustomControl
 	x:Class="Helper.Module.ModuleLauncher.AnimationViewerSettingPanel"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,116 +8,137 @@
 	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:Helper"
 	xmlns:localModuleModuleLauncher="using:Helper.Module.ModuleLauncher"
-	xmlns:my="using:Helper.CustomControl"
+	xmlns:my="using:Helper.CommonControl"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
 >
-	<my:MStack Padding="8,16" HorizontalAlignment="Stretch" Orientation="Vertical" Spacing="2">
-		<localModuleModuleLauncher:SettingItemPanel
+	<my:Stack
+		Padding="0,0"
+		Orientation="Vertical" Spacing="2"
+	>
+		<my:SettingItem
 			HorizontalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.Touch}"
 			Title="Immediate Select"
 		>
-			<localModuleModuleLauncher:SettingItemPanel.Action>
-				<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
+			<my:SettingItem.Action>
+				<my:Stack
+					Padding="0,0"
+					Orientation="Horizontal" Spacing="8"
+				>
 					<ToggleButton
-						my:MStack.Weight="1" HorizontalAlignment="Stretch"
-						VerticalAlignment="Center"
+						my:Stack.Weight="1" HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
 						HorizontalContentAlignment="Left"
 						Content="Enable"
 						IsChecked="{x:Bind Controller.uImmediateSelectToggle_IsChecked}"
-						Click="{x:Bind Controller.uImmediateSelectToggle_OnClick}"
+						Click="{x:Bind Controller.uImmediateSelectToggle_Click}"
 					/>
-				</my:MStack>
-			</localModuleModuleLauncher:SettingItemPanel.Action>
-		</localModuleModuleLauncher:SettingItemPanel>
-		<localModuleModuleLauncher:SettingItemPanel
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+		<my:SettingItem
 			HorizontalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.RightArrowKeyTime2}"
 			Title="Automatic Play"
 		>
-			<localModuleModuleLauncher:SettingItemPanel.Action>
-				<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
+			<my:SettingItem.Action>
+				<my:Stack
+					Padding="0,0"
+					Orientation="Horizontal" Spacing="8"
+				>
 					<ToggleButton
-						my:MStack.Weight="1" HorizontalAlignment="Stretch"
-						VerticalAlignment="Center"
+						my:Stack.Weight="1" HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
 						HorizontalContentAlignment="Left"
 						Content="Enable"
 						IsChecked="{x:Bind Controller.uAutomaticPlayToggle_IsChecked}"
-						Click="{x:Bind Controller.uAutomaticPlayToggle_OnClick}"
+						Click="{x:Bind Controller.uAutomaticPlayToggle_Click}"
 					/>
-				</my:MStack>
-			</localModuleModuleLauncher:SettingItemPanel.Action>
-		</localModuleModuleLauncher:SettingItemPanel>
-		<localModuleModuleLauncher:SettingItemPanel
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+		<my:SettingItem
 			HorizontalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.RepeatAll}"
 			Title="Repeat Play"
 		>
-			<localModuleModuleLauncher:SettingItemPanel.Action>
-				<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
+			<my:SettingItem.Action>
+				<my:Stack
+					Padding="0,0"
+					Orientation="Horizontal" Spacing="8"
+				>
 					<ToggleButton
-						my:MStack.Weight="1" HorizontalAlignment="Stretch"
-						VerticalAlignment="Center"
+						my:Stack.Weight="1" HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
 						HorizontalContentAlignment="Left"
 						Content="Enable"
 						IsChecked="{x:Bind Controller.uRepeatPlayToggle_IsChecked}"
-						Click="{x:Bind Controller.uRepeatPlayToggle_OnClick}"
+						Click="{x:Bind Controller.uRepeatPlayToggle_Click}"
 					/>
-				</my:MStack>
-			</localModuleModuleLauncher:SettingItemPanel.Action>
-		</localModuleModuleLauncher:SettingItemPanel>
-		<localModuleModuleLauncher:SettingItemPanel
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+		<my:SettingItem
 			HorizontalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.Pinned}"
 			Title="Remain Frame Rate"
 		>
-			<localModuleModuleLauncher:SettingItemPanel.Action>
-				<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
+			<my:SettingItem.Action>
+				<my:Stack
+					Padding="0,0"
+					Orientation="Horizontal" Spacing="8"
+				>
 					<ToggleButton
-						my:MStack.Weight="1" HorizontalAlignment="Stretch"
-						VerticalAlignment="Center"
+						my:Stack.Weight="1" HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
 						HorizontalContentAlignment="Left"
 						Content="Enable"
 						IsChecked="{x:Bind Controller.uRemainFrameRateToggle_IsChecked}"
-						Click="{x:Bind Controller.uRemainFrameRateToggle_OnClick}"
+						Click="{x:Bind Controller.uRemainFrameRateToggle_Click}"
 					/>
-				</my:MStack>
-			</localModuleModuleLauncher:SettingItemPanel.Action>
-		</localModuleModuleLauncher:SettingItemPanel>
-		<localModuleModuleLauncher:SettingItemPanel
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+		<my:SettingItem
 			HorizontalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.FitPage}"
 			Title="Show Sprite Boundary"
 		>
-			<localModuleModuleLauncher:SettingItemPanel.Action>
-				<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
+			<my:SettingItem.Action>
+				<my:Stack
+					Padding="0,0"
+					Orientation="Horizontal" Spacing="8"
+				>
 					<ToggleButton
-						my:MStack.Weight="1" HorizontalAlignment="Stretch"
-						VerticalAlignment="Center"
+						my:Stack.Weight="1" HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
 						HorizontalContentAlignment="Left"
 						Content="Enable"
 						IsChecked="{x:Bind Controller.uShowSpriteBoundaryToggle_IsChecked}"
-						Click="{x:Bind Controller.uShowSpriteBoundaryToggle_OnClick}"
+						Click="{x:Bind Controller.uShowSpriteBoundaryToggle_Click}"
 					/>
-				</my:MStack>
-			</localModuleModuleLauncher:SettingItemPanel.Action>
-		</localModuleModuleLauncher:SettingItemPanel>
-		<localModuleModuleLauncher:SettingItemPanel
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+		<my:SettingItem
 			HorizontalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.MapLayers}"
 			Title="Sprite Filter Rule"
 		>
-			<localModuleModuleLauncher:SettingItemPanel.Action>
-				<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
+			<my:SettingItem.Action>
+				<my:Stack
+					Padding="0,0"
+					Orientation="Horizontal" Spacing="8"
+				>
 					<TextBox
-						my:MStack.Weight="1" HorizontalAlignment="Stretch"
-						VerticalAlignment="Center"
+						my:Stack.Weight="1" HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
 						Text="{x:Bind Controller.uSpriteFilterRuleText_Text}"
-						TextChanged="{x:Bind Controller.uSpriteFilterRuleText_OnTextChanged}"
+						TextChanged="{x:Bind Controller.uSpriteFilterRuleText_TextChanged}"
 					/>
-				</my:MStack>
-			</localModuleModuleLauncher:SettingItemPanel.Action>
-		</localModuleModuleLauncher:SettingItemPanel>
-	</my:MStack>
-</UserControl>
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+	</my:Stack>
+</local:CustomControl>

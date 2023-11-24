@@ -44,8 +44,9 @@ namespace TwinStar::Kernel::Process {
 				}
 				destination.append(element);
 				if (element == '\\'_c) {
-					++current_backslash_count;
-				} else {
+					current_backslash_count += 1_sz;
+				}
+				else {
 					current_backslash_count = k_none_size;
 				}
 			}
@@ -136,7 +137,8 @@ namespace TwinStar::Kernel::Process {
 		if (state_d == 0) {
 			assert_test(GetLastError() == ERROR_ENVVAR_NOT_FOUND);
 			value.reset();
-		} else {
+		}
+		else {
 			auto buffer = Array<Character16>{mbw<Size>(state_d)};
 			state_d = GetEnvironmentVariableW(cast_pointer<WCHAR>(name_16.begin()).value, cast_pointer<WCHAR>(buffer.begin()).value, static_cast<DWORD>(buffer.size().value));
 			assert_test(state_d == static_cast<DWORD>((buffer.size() - 1_sz).value));
@@ -147,7 +149,8 @@ namespace TwinStar::Kernel::Process {
 		auto value_if = getenv(cast_pointer<char>(make_null_terminated_string(name).begin()).value);
 		if (value_if == nullptr) {
 			value.reset();
-		} else {
+		}
+		else {
 			value.set(make_string_view(value_if));
 		}
 		#endif
@@ -163,7 +166,8 @@ namespace TwinStar::Kernel::Process {
 		auto name_16 = make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<CBasicStringView<Character8>>(name)));
 		if (!value.has()) {
 			state_b = SetEnvironmentVariableW(cast_pointer<WCHAR>(name_16.begin()).value, nullptr);
-		} else {
+		}
+		else {
 			auto value_16 = make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<CBasicStringView<Character8>>(value.get())));
 			state_b = SetEnvironmentVariableW(cast_pointer<WCHAR>(name_16.begin()).value, cast_pointer<WCHAR>(value_16.begin()).value);
 		}
@@ -173,7 +177,8 @@ namespace TwinStar::Kernel::Process {
 		auto state_i = int{};
 		if (!value.has()) {
 			state_i = unsetenv(cast_pointer<char>(make_null_terminated_string(name).begin()).value);
-		} else {
+		}
+		else {
 			state_i = setenv(cast_pointer<char>(make_null_terminated_string(name).begin()).value, cast_pointer<char>(make_null_terminated_string(value.get()).begin()).value, 1);
 		}
 		assert_test(state_i == 0);

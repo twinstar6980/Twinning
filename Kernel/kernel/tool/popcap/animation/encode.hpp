@@ -58,7 +58,8 @@ namespace TwinStar::Kernel::Tool::PopCap::Animation {
 			auto value_long = cbw<RawLongValue>(value);
 			if (value_long < cbw<RawLongValue>(value_short_maximum)) {
 				data.write(cbw<RawShortValue>(value_long));
-			} else {
+			}
+			else {
 				data.write(value_short_maximum);
 				data.write(value_long);
 			}
@@ -83,7 +84,8 @@ namespace TwinStar::Kernel::Tool::PopCap::Animation {
 			if (value_long < cbw<RawLongValue>(value_short_maximum)) {
 				value_short_with_flag |= cbw<RawShortValue>(value_long);
 				data.write(value_short_with_flag);
-			} else {
+			}
+			else {
 				value_short_with_flag |= value_short_maximum;
 				data.write(value_short_with_flag);
 				data.write(value_long);

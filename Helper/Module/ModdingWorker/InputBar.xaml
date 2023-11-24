@@ -1,4 +1,4 @@
-<UserControl
+<local:CustomControl
 	x:Class="Helper.Module.ModdingWorker.InputBar"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,26 +8,34 @@
 	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:Helper"
 	xmlns:localModuleModdingWorker="using:Helper.Module.ModdingWorker"
-	xmlns:my="using:Helper.CustomControl"
+	xmlns:my="using:Helper.CommonControl"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
 >
-	<my:MStack Padding="16,0" Orientation="Horizontal" Spacing="8">
+	<my:Stack Padding="16,0" Orientation="Horizontal" Spacing="8">
 		<VisualStateManager.VisualStateGroups>
 			<VisualStateGroup x:Name="TypeStateGroup">
 				<VisualState x:Name="IdleState">
 					<VisualState.Setters>
 						<Setter Target="uAction.Content">
 							<Setter.Value>
-								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
-									<FontIcon Margin="7,0,11,0" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.More}" />
+								<my:Stack
+									Padding="0,0"
+									Orientation="Horizontal" Spacing="8"
+								>
+									<FontIcon
+										Margin="7,0,11,0"
+										VerticalAlignment="Center"
+										FontSize="{StaticResource MediumIconSize}"
+										Glyph="{StaticResource FluentIconGlyph.More}"
+									/>
 									<Button
-										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										my:Stack.Weight="1" HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
 										HorizontalContentAlignment="Left"
 										IsEnabled="False"
 									/>
-								</my:MStack>
+								</my:Stack>
 							</Setter.Value>
 						</Setter>
 					</VisualState.Setters>
@@ -36,15 +44,23 @@
 					<VisualState.Setters>
 						<Setter Target="uAction.Content">
 							<Setter.Value>
-								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
-									<FontIcon Margin="7,0,11,0" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Pause}" />
+								<my:Stack
+									Padding="0,0"
+									Orientation="Horizontal" Spacing="8"
+								>
+									<FontIcon
+										Margin="7,0,11,0"
+										VerticalAlignment="Center"
+										FontSize="{StaticResource MediumIconSize}"
+										Glyph="{StaticResource FluentIconGlyph.Pause}"
+									/>
 									<TextBox
-										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										my:Stack.Weight="1" HorizontalAlignment="Stretch"
 										VerticalAlignment="Center"
 										PlaceholderText="Pause ..."
 										IsReadOnly="True"
 									/>
-								</my:MStack>
+								</my:Stack>
 							</Setter.Value>
 						</Setter>
 					</VisualState.Setters>
@@ -53,27 +69,31 @@
 					<VisualState.Setters>
 						<Setter Target="uAction.Content">
 							<Setter.Value>
-								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
-									<FontIcon Margin="7,0,11,0" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Completed}" />
+								<my:Stack
+									Padding="0,0"
+									Orientation="Horizontal" Spacing="8"
+								>
+									<FontIcon
+										Margin="7,0,11,0"
+										VerticalAlignment="Center"
+										FontSize="{StaticResource MediumIconSize}"
+										Glyph="{StaticResource FluentIconGlyph.Completed}"
+									/>
 									<ToggleButton
-										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										my:Stack.Weight="1" HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
+										Content="No"
 										IsChecked="{x:Bind Controller.uBooleanNoValue_IsChecked}"
-										Click="{x:Bind Controller.uBooleanNoValue_OnClick}"
-										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
-									>
-										<TextBlock Style="{StaticResource BodyTextBlockStyle}" TextWrapping="NoWrap" Text="No" />
-									</ToggleButton>
+										Click="{x:Bind Controller.uBooleanNoValue_Click}"
+									/>
 									<ToggleButton
-										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										my:Stack.Weight="1" HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
+										Content="Yes"
 										IsChecked="{x:Bind Controller.uBooleanYesValue_IsChecked}"
-										Click="{x:Bind Controller.uBooleanYesValue_OnClick}"
-										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
-									>
-										<TextBlock Style="{StaticResource BodyTextBlockStyle}" TextWrapping="NoWrap" Text="Yes" />
-									</ToggleButton>
-								</my:MStack>
+										Click="{x:Bind Controller.uBooleanYesValue_Click}"
+									/>
+								</my:Stack>
 							</Setter.Value>
 						</Setter>
 					</VisualState.Setters>
@@ -82,19 +102,26 @@
 					<VisualState.Setters>
 						<Setter Target="uAction.Content">
 							<Setter.Value>
-								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
-									<FontIcon Margin="7,0,11,0" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Dial12}" />
+								<my:Stack
+									Padding="0,0"
+									Orientation="Horizontal" Spacing="8"
+								>
+									<FontIcon
+										Margin="7,0,11,0"
+										VerticalAlignment="Center"
+										FontSize="{StaticResource MediumIconSize}"
+										Glyph="{StaticResource FluentIconGlyph.Dial12}"
+									/>
 									<NumberBox
-										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										my:Stack.Weight="1" HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
 										PlaceholderText="Integer ..."
+										SpinButtonPlacementMode="Inline"
 										NumberFormatter="{x:Bind Controller.uIntegerValue_NumberFormatter}"
-										SmallChange="1" LargeChange="10" SpinButtonPlacementMode="Inline"
 										Value="{x:Bind Controller.uIntegerValue_Value}"
-										ValueChanged="{x:Bind Controller.uIntegerValue_OnValueChanged}"
-										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
+										ValueChanged="{x:Bind Controller.uIntegerValue_ValueChanged}"
 									/>
-								</my:MStack>
+								</my:Stack>
 							</Setter.Value>
 						</Setter>
 					</VisualState.Setters>
@@ -103,19 +130,26 @@
 					<VisualState.Setters>
 						<Setter Target="uAction.Content">
 							<Setter.Value>
-								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
-									<FontIcon Margin="7,0,11,0" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Dial12}" />
+								<my:Stack
+									Padding="0,0"
+									Orientation="Horizontal" Spacing="8"
+								>
+									<FontIcon
+										Margin="7,0,11,0"
+										VerticalAlignment="Center"
+										FontSize="{StaticResource MediumIconSize}"
+										Glyph="{StaticResource FluentIconGlyph.Dial12}"
+									/>
 									<NumberBox
-										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										my:Stack.Weight="1" HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
 										PlaceholderText="Floater ..."
+										SpinButtonPlacementMode="Inline"
 										NumberFormatter="{x:Bind Controller.uFloaterValue_NumberFormatter}"
-										SmallChange="1.0" LargeChange="10.0" SpinButtonPlacementMode="Inline"
 										Value="{x:Bind Controller.uFloaterValue_Value}"
-										ValueChanged="{x:Bind Controller.uFloaterValue_OnValueChanged}"
-										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
+										ValueChanged="{x:Bind Controller.uFloaterValue_ValueChanged}"
 									/>
-								</my:MStack>
+								</my:Stack>
 							</Setter.Value>
 						</Setter>
 					</VisualState.Setters>
@@ -124,17 +158,25 @@
 					<VisualState.Setters>
 						<Setter Target="uAction.Content">
 							<Setter.Value>
-								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
-									<FontIcon Margin="7,0,11,0" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Component}" />
+								<my:Stack
+									Padding="0,0"
+									Orientation="Horizontal" Spacing="8"
+								>
+									<FontIcon
+										Margin="7,0,11,0"
+										VerticalAlignment="Center"
+										FontSize="{StaticResource MediumIconSize}"
+										Glyph="{StaticResource FluentIconGlyph.Component}"
+									/>
 									<NumberBox
-										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										my:Stack.Weight="1" HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
 										PlaceholderText="Size ..."
-										NumberFormatter="{x:Bind Controller.uSizeValue_NumberFormatter}" Minimum="0.0"
-										SmallChange="1.0" LargeChange="10.0" SpinButtonPlacementMode="Inline"
+										SpinButtonPlacementMode="Inline"
+										NumberFormatter="{x:Bind Controller.uSizeValue_NumberFormatter}"
+										Minimum="0.0"
 										Value="{x:Bind Controller.uSizeValue_Value}"
-										ValueChanged="{x:Bind Controller.uSizeValue_OnValueChanged}"
-										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
+										ValueChanged="{x:Bind Controller.uSizeValue_ValueChanged}"
 									/>
 									<ComboBox
 										Width="64" Height="NaN"
@@ -142,10 +184,9 @@
 										HorizontalContentAlignment="Center"
 										ItemsSource="{x:Bind Controller.uSizeUnit_ItemsSource}"
 										SelectedItem="{x:Bind Controller.uSizeUnit_SelectedItem}"
-										SelectionChanged="{x:Bind Controller.uSizeUnit_OnSelectionChanged}"
-										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
+										SelectionChanged="{x:Bind Controller.uSizeUnit_SelectionChanged}"
 									/>
-								</my:MStack>
+								</my:Stack>
 							</Setter.Value>
 						</Setter>
 					</VisualState.Setters>
@@ -154,17 +195,24 @@
 					<VisualState.Setters>
 						<Setter Target="uAction.Content">
 							<Setter.Value>
-								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
-									<FontIcon Margin="7,0,11,0" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.HalfAlpha}" />
+								<my:Stack
+									Padding="0,0"
+									Orientation="Horizontal" Spacing="8"
+								>
+									<FontIcon
+										Margin="7,0,11,0"
+										VerticalAlignment="Center"
+										FontSize="{StaticResource MediumIconSize}"
+										Glyph="{StaticResource FluentIconGlyph.HalfAlpha}"
+									/>
 									<TextBox
-										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										my:Stack.Weight="1" HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
 										PlaceholderText="String ..."
 										Text="{x:Bind Controller.uStringValue_Text}"
-										TextChanged="{x:Bind Controller.uStringValue_OnTextChanged}"
-										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
+										TextChanged="{x:Bind Controller.uStringValue_TextChanged}"
 									/>
-								</my:MStack>
+								</my:Stack>
 							</Setter.Value>
 						</Setter>
 					</VisualState.Setters>
@@ -173,39 +221,69 @@
 					<VisualState.Setters>
 						<Setter Target="uAction.Content">
 							<Setter.Value>
-								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
-									<FontIcon Margin="7,0,11,0" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.Link}" />
+								<my:Stack
+									Padding="0,0"
+									Orientation="Horizontal" Spacing="8"
+								>
+									<FontIcon
+										Margin="7,0,11,0"
+										VerticalAlignment="Center"
+										FontSize="{StaticResource MediumIconSize}"
+										Glyph="{StaticResource FluentIconGlyph.Link}"
+									/>
 									<TextBox
-										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										my:Stack.Weight="1" HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
 										PlaceholderText="Path ..."
 										Text="{x:Bind Controller.uPathValue_Text}"
-										TextChanged="{x:Bind Controller.uPathValue_OnTextChanged}"
-										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
+										TextChanged="{x:Bind Controller.uPathValue_TextChanged}"
 										AllowDrop="True"
-										DragOver="{x:Bind Controller.uPathValue_OnDragOver}"
-										Drop="{x:Bind Controller.uPathValue_OnDrop}"
+										DragOver="{x:Bind Controller.uPathValue_DragOver}"
+										Drop="{x:Bind Controller.uPathValue_Drop}"
 									/>
 									<DropDownButton
 										Width="64" Height="NaN"
 										VerticalAlignment="Stretch"
 										HorizontalContentAlignment="Center"
 										Content="{community:FontIcon FontSize={StaticResource SmallIconSize}, Glyph={StaticResource FluentIconGlyph.StorageOptical}}"
-										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
 									>
 										<DropDownButton.Flyout>
 											<MenuFlyout Placement="TopEdgeAlignedRight">
-												<MenuFlyoutItem Text="Generate" Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Rename}}" Click="{x:Bind Controller.uPathCommandGenerate_OnClick}" />
-												<MenuFlyoutItem Text="Move" Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.MoveToFolder}}" Click="{x:Bind Controller.uPathCommandMove_OnClick}" />
-												<MenuFlyoutItem Text="Delete" Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Delete}}" Click="{x:Bind Controller.uPathCommandDelete_OnClick}" />
-												<MenuFlyoutItem Text="Overwrite" Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Save}}" Click="{x:Bind Controller.uPathCommandOverwrite_OnClick}" />
+												<MenuFlyoutItem
+													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Rename}}"
+													Text="Generate"
+													Click="{x:Bind Controller.uPathCommandGenerate_Click}"
+												/>
+												<MenuFlyoutItem
+													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.OpenPaneMirrored}}"
+													Text="Move"
+													Click="{x:Bind Controller.uPathCommandMove_Click}"
+												/>
+												<MenuFlyoutItem
+													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Delete}}"
+													Text="Delete"
+													Click="{x:Bind Controller.uPathCommandDelete_Click}"
+												/>
+												<MenuFlyoutItem
+													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Save}}"
+													Text="Overwrite"
+													Click="{x:Bind Controller.uPathCommandOverwrite_Click}"
+												/>
 												<MenuFlyoutSeparator />
-												<MenuFlyoutItem Text="File" Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Document}}" Click="{x:Bind Controller.uPathPickFile_OnClick}" />
-												<MenuFlyoutItem Text="Directory" Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Folder}}" Click="{x:Bind Controller.uPathPickDirectory_OnClick}" />
+												<MenuFlyoutItem
+													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Document}}"
+													Text="File"
+													Click="{x:Bind Controller.uPathPickFile_Click}"
+												/>
+												<MenuFlyoutItem
+													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Folder}}"
+													Text="Directory"
+													Click="{x:Bind Controller.uPathPickDirectory_Click}"
+												/>
 											</MenuFlyout>
 										</DropDownButton.Flyout>
 									</DropDownButton>
-								</my:MStack>
+								</my:Stack>
 							</Setter.Value>
 						</Setter>
 					</VisualState.Setters>
@@ -214,19 +292,26 @@
 					<VisualState.Setters>
 						<Setter Target="uAction.Content">
 							<Setter.Value>
-								<my:MStack Padding="0,0" Orientation="Horizontal" Spacing="8">
-									<FontIcon Margin="7,0,11,0" VerticalAlignment="Center" FontSize="{StaticResource MediumIconSize}" Glyph="{StaticResource FluentIconGlyph.BulletedList}" />
+								<my:Stack
+									Padding="0,0"
+									Orientation="Horizontal" Spacing="8"
+								>
+									<FontIcon
+										Margin="7,0,11,0"
+										VerticalAlignment="Center"
+										FontSize="{StaticResource MediumIconSize}"
+										Glyph="{StaticResource FluentIconGlyph.BulletedList}"
+									/>
 									<ComboBox
-										my:MStack.Weight="1" HorizontalAlignment="Stretch"
+										my:Stack.Weight="1" HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
 										HorizontalContentAlignment="Left"
 										PlaceholderText="Enumeration ..."
 										ItemsSource="{x:Bind Controller.uEnumerationValue_ItemsSource}"
 										SelectedIndex="{x:Bind Controller.uEnumerationValue_SelectedIndex}"
-										SelectionChanged="{x:Bind Controller.uEnumerationValue_OnSelectionChanged}"
-										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
+										SelectionChanged="{x:Bind Controller.uEnumerationValue_SelectionChanged}"
 									/>
-								</my:MStack>
+								</my:Stack>
 							</Setter.Value>
 						</Setter>
 					</VisualState.Setters>
@@ -235,7 +320,7 @@
 		</VisualStateManager.VisualStateGroups>
 		<ContentPresenter
 			x:Name="uAction"
-			my:MStack.Weight="1" HorizontalAlignment="Stretch"
+			my:Stack.Weight="1" HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			ContentTransitions="{StaticResource PopupThemeTransitionCollection}"
 		/>
@@ -243,7 +328,7 @@
 			VerticalAlignment="Stretch"
 			Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Send}}"
 			IsEnabled="{x:Bind Controller.uSubmit_IsEnabled}"
-			Click="{x:Bind Controller.uSubmit_OnClick}"
+			Click="{x:Bind Controller.uSubmit_Click}"
 		/>
-	</my:MStack>
-</UserControl>
+	</my:Stack>
+</local:CustomControl>

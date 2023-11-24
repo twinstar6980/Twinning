@@ -3,7 +3,7 @@
 
 using Helper;
 using Helper.Utility;
-using Helper.CustomControl;
+using Helper.CommonControl;
 using Windows.ApplicationModel.DataTransfer;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -25,7 +25,7 @@ namespace Helper.Module.ResourceForwarder {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			this.Controller.ApplyOption(args.Parameter as List<String>);
+			this.Controller.ApplyOption(args.Parameter.AsClass<List<String>>());
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -38,7 +38,7 @@ namespace Helper.Module.ResourceForwarder {
 
 		#region tab item page
 
-		public async Task<Boolean> OnTabItemCloseRequested (
+		public async Task<Boolean> TabItemPageRequestClose (
 		) {
 			return await this.Controller.RequestClose();
 		}
@@ -52,10 +52,6 @@ namespace Helper.Module.ResourceForwarder {
 		#region data
 
 		public MainPage View { get; init; } = default!;
-
-		// ----------------
-
-		public List<OptionGroupConfiguration> OptionConfiguration { get; set; } = default!;
 
 		// ----------------
 
@@ -82,13 +78,14 @@ namespace Helper.Module.ResourceForwarder {
 			this.EnableFilter = Setting.Data.ResourceForwarder.EnableFilter;
 			this.EnableBatch = Setting.Data.ResourceForwarder.EnableBatch;
 			this.RemainInput = Setting.Data.ResourceForwarder.RemainInput;
+			var optionConfiguration = new List<OptionGroupConfiguration>();
 			try {
-				this.OptionConfiguration = JsonHelper.Deserialize<List<OptionGroupConfiguration>>(StorageHelper.ReadFileTextSync(Setting.Data.ResourceForwarder.OptionConfiguration));
-			} catch (Exception e) {
-				App.MainWindow.Controller.PublishTip(InfoBarSeverity.Error, "Failed to load option configuration.", e.ToString());
-				this.OptionConfiguration = new List<OptionGroupConfiguration>();
+				optionConfiguration = JsonHelper.DeserializeFileSync<List<OptionGroupConfiguration>>(Setting.Data.ResourceForwarder.OptionConfiguration);
 			}
-			this.uOption_ItemsSource = this.OptionConfiguration.Select((group) => (new MainPageOptionGroupItemController() {
+			catch (Exception e) {
+				App.MainWindow.PublishTip(InfoBarSeverity.Error, "Failed to load option configuration.", e.ToString());
+			}
+			this.uOptionList_ItemsSource = optionConfiguration.Select((group) => (new MainPageOptionGroupItemController() {
 				Host = this,
 				GroupModel = group,
 				Children = group.Item.Select((item) => (new MainPageOptionItemItemController() {
@@ -102,11 +99,9 @@ namespace Helper.Module.ResourceForwarder {
 		}
 
 		public async void ApplyOption (
-			List<String>? optionView
+			List<String> optionView
 		) {
-			while (!this.View.IsLoaded) {
-				await Task.Delay(40);
-			}
+			await ControlHelper.WaitUntilLoaded(this.View);
 			var optionAutomaticClose = default(Boolean?);
 			var optionParallelExecute = default(Boolean?);
 			var optionEnableFilter = default(Boolean?);
@@ -115,29 +110,30 @@ namespace Helper.Module.ResourceForwarder {
 			var optionInput = default(List<String>?);
 			try {
 				var option = new CommandLineReader(optionView);
-				if (option.Ensure("-AutomaticClose")) {
+				if (option.Check("-AutomaticClose")) {
 					optionAutomaticClose = option.NextBoolean();
 				}
-				if (option.Ensure("-ParallelExecute")) {
+				if (option.Check("-ParallelExecute")) {
 					optionParallelExecute = option.NextBoolean();
 				}
-				if (option.Ensure("-EnableFilter")) {
+				if (option.Check("-EnableFilter")) {
 					optionEnableFilter = option.NextBoolean();
 				}
-				if (option.Ensure("-EnableBatch")) {
+				if (option.Check("-EnableBatch")) {
 					optionEnableBatch = option.NextBoolean();
 				}
-				if (option.Ensure("-RemainInput")) {
+				if (option.Check("-RemainInput")) {
 					optionRemainInput = option.NextBoolean();
 				}
-				if (option.Ensure("-Input")) {
+				if (option.Check("-Input")) {
 					optionInput = option.NextStringList();
 				}
 				if (!option.Done()) {
 					throw new Exception($"Too many option : {String.Join(' ', option.NextStringList())}");
 				}
-			} catch (Exception e) {
-				App.MainWindow.Controller.PublishTip(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
+			}
+			catch (Exception e) {
+				App.MainWindow.PublishTip(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
 			}
 			if (optionAutomaticClose is not null) {
 				this.AutomaticClose = optionAutomaticClose.Value;
@@ -194,7 +190,7 @@ namespace Helper.Module.ResourceForwarder {
 					continue;
 				}
 				this.Input.Add(item);
-				this.uInput_ItemsSource.Add(new MainPageInputItemController() { Host = this, Path = item });
+				this.uInputList_ItemsSource.Add(new MainPageInputItemController() { Host = this, Path = item });
 			}
 			return;
 		}
@@ -207,7 +203,7 @@ namespace Helper.Module.ResourceForwarder {
 					continue;
 				}
 				this.Input.Remove(item);
-				this.uInput_ItemsSource.Remove(this.uInput_ItemsSource.First(value => (value.Path == item)));
+				this.uInputList_ItemsSource.Remove(this.uInputList_ItemsSource.First((value) => (value.Path == item)));
 			}
 			return;
 		}
@@ -215,18 +211,19 @@ namespace Helper.Module.ResourceForwarder {
 		public async Task ClearInput (
 		) {
 			this.Input.Clear();
-			this.uInput_ItemsSource.Clear();
+			this.uInputList_ItemsSource.Clear();
 			return;
 		}
 
 		public async Task RefreshInput (
 		) {
-			foreach (var group in this.uOption_ItemsSource) {
+			foreach (var group in this.uOptionList_ItemsSource) {
 				foreach (var item in group.Children) {
 					if (this.EnableBatch) {
 						item.TypeMatched = item.ItemModel.Batchable && this.Input.All((input) => (StorageHelper.ExistDirectory(input)));
 						item.NameMatched = true;
-					} else {
+					}
+					else {
 						item.TypeMatched = this.Input.All((input) => (item.ItemModel.Filter.Type switch {
 							OptionFilterFileObjectType.Any       => StorageHelper.Exist(input),
 							OptionFilterFileObjectType.File      => StorageHelper.ExistFile(input),
@@ -246,7 +243,7 @@ namespace Helper.Module.ResourceForwarder {
 
 		public async Task RefreshFilter (
 		) {
-			foreach (var group in this.uOption_ItemsSource) {
+			foreach (var group in this.uOptionList_ItemsSource) {
 				foreach (var item in group.Children) {
 					item.NotifyPropertyChanged(
 						nameof(item.uRoot_Visibility),
@@ -269,7 +266,7 @@ namespace Helper.Module.ResourceForwarder {
 				return;
 			}
 			if (this.AutomaticClose) {
-				await App.MainWindow.Controller.RemoveTabItem(this.View);
+				await App.MainWindow.RemoveTabItem(this.View);
 				return;
 			}
 			if (!this.RemainInput) {
@@ -284,26 +281,26 @@ namespace Helper.Module.ResourceForwarder {
 
 		#region page
 
-		public async void uPage_OnDragOver (
+		public async void uPage_DragOver (
 			Object        sender,
 			DragEventArgs args
 		) {
-			if (sender is not Page senders) { return; }
+			var senders = sender.AsClass<Page>();
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Link;
 			}
 			return;
 		}
 
-		public async void uPage_OnDrop (
+		public async void uPage_Drop (
 			Object        sender,
 			DragEventArgs args
 		) {
-			if (sender is not Page senders) { return; }
-			args.Handled = true;
+			var senders = sender.AsClass<Page>();
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
-				var item = await args.DataView.GetStorageItemsAsync();
-				await this.AppendInput(item.Select((value) => (StorageHelper.Regularize(value.Path))).ToList());
+				args.Handled = true;
+				var data = await args.DataView.GetStorageItemsAsync();
+				await this.AppendInput(data.Select((value) => (StorageHelper.Regularize(value.Path))).ToList());
 				await this.RefreshInput();
 				await this.RefreshFilter();
 			}
@@ -330,11 +327,11 @@ namespace Helper.Module.ResourceForwarder {
 			}
 		}
 
-		public async void uAutomaticClose_OnClick (
+		public async void uAutomaticClose_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
+			var senders = sender.AsClass<Button>();
 			this.AutomaticClose = false;
 			this.NotifyPropertyChanged(
 				nameof(this.uAutomaticClose_Visibility)
@@ -350,12 +347,12 @@ namespace Helper.Module.ResourceForwarder {
 			}
 		}
 
-		public async void uParallelExecute_OnClick (
+		public async void uParallelExecute_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			this.ParallelExecute = senders.IsChecked!.Value;
+			var senders = sender.AsClass<ToggleButton>();
+			this.ParallelExecute = senders.IsChecked.AsNotNull();
 			return;
 		}
 
@@ -367,12 +364,12 @@ namespace Helper.Module.ResourceForwarder {
 			}
 		}
 
-		public async void uEnableFilter_OnClick (
+		public async void uEnableFilter_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			this.EnableFilter = senders.IsChecked!.Value;
+			var senders = sender.AsClass<ToggleButton>();
+			this.EnableFilter = senders.IsChecked.AsNotNull();
 			await this.RefreshFilter();
 			return;
 		}
@@ -385,12 +382,12 @@ namespace Helper.Module.ResourceForwarder {
 			}
 		}
 
-		public async void uEnableBatch_OnClick (
+		public async void uEnableBatch_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			this.EnableBatch = senders.IsChecked!.Value;
+			var senders = sender.AsClass<ToggleButton>();
+			this.EnableBatch = senders.IsChecked.AsNotNull();
 			await this.RefreshInput();
 			await this.RefreshFilter();
 			return;
@@ -404,12 +401,12 @@ namespace Helper.Module.ResourceForwarder {
 			}
 		}
 
-		public async void uRemainInput_OnClick (
+		public async void uRemainInput_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			this.RemainInput = senders.IsChecked!.Value;
+			var senders = sender.AsClass<ToggleButton>();
+			this.RemainInput = senders.IsChecked.AsNotNull();
 			return;
 		}
 
@@ -419,22 +416,20 @@ namespace Helper.Module.ResourceForwarder {
 
 		public String uInputCount_Text {
 			get {
-				return $"{this.Input.Count}";
+				return this.Input.Count.ToString();
 			}
 		}
 
 		// ----------------
 
-		public ObservableCollection<MainPageInputItemController> uInput_ItemsSource { get; } = new ObservableCollection<MainPageInputItemController>();
+		public ObservableCollection<MainPageInputItemController> uInputList_ItemsSource { get; } = new ObservableCollection<MainPageInputItemController>();
 
-		public async void uInput_OnItemClick (
+		public async void uInputList_ItemClick (
 			Object             sender,
 			ItemClickEventArgs args
 		) {
-			if (sender is not ListView senders) { return; }
-			if (args.ClickedItem is not MainPageInputItemController item) {
-				return;
-			}
+			var senders = sender.AsClass<ListView>();
+			var item = args.ClickedItem.AsClass<MainPageInputItemController>();
 			await this.RemoveInput(new List<String>() { item.Path });
 			await this.RefreshInput();
 			await this.RefreshFilter();
@@ -445,15 +440,15 @@ namespace Helper.Module.ResourceForwarder {
 
 		#region option
 
-		public List<MainPageOptionGroupItemController> uOption_ItemsSource { get; set; } = default!;
+		public List<MainPageOptionGroupItemController> uOptionList_ItemsSource { get; set; } = default!;
 
-		public async void uOption_OnItemInvoked (
+		public async void uOptionList_ItemInvoked (
 			TreeView                     sender,
 			TreeViewItemInvokedEventArgs args
 		) {
-			if (sender is not TreeView senders) { return; }
+			var senders = sender.AsClass<TreeView>();
 			if (args.InvokedItem is MainPageOptionGroupItemController groupItem) {
-				var node = senders.RootNodes.ToList().Find((value) => (value.Content == groupItem)) ?? throw new Exception();
+				var node = senders.RootNodes.ToList().Find((value) => (Object.ReferenceEquals(value.Content, groupItem))).AsNotNull();
 				node.IsExpanded = !node.IsExpanded;
 			}
 			if (args.InvokedItem is MainPageOptionItemItemController itemItem) {
@@ -620,7 +615,7 @@ namespace Helper.Module.ResourceForwarder {
 
 		public String uPresetCount_Text {
 			get {
-				return $"{this.ItemModel.Preset.Count((value) => (value is not null))}";
+				return this.ItemModel.Preset.Count(GF.NotNull).ToString();
 			}
 		}
 
@@ -634,11 +629,12 @@ namespace Helper.Module.ResourceForwarder {
 					if (preset is null) {
 						menuItem = new MenuFlyoutSeparator() {
 						};
-					} else {
+					}
+					else {
 						menuItem = new MenuFlyoutItem() {
 							Text = preset.Name,
 						};
-						(menuItem as MenuFlyoutItem)!.Click += async (_, _) => {
+						menuItem.AsClass<MenuFlyoutItem>().Click += async (_, _) => {
 							await this.Host.Forward(this.ItemModel.Method, preset.Argument);
 							return;
 						};

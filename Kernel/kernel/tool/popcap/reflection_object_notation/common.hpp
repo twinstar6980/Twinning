@@ -132,7 +132,8 @@ namespace TwinStar::Kernel::Tool::PopCap::ReflectionObjectNotation {
 			// TODO : should test the content is number or not ?
 			if (Range::count(content.head(at_position.get()), '.'_c) == 2_sz) {
 				return make_optional_of(RTIDTypeIdentifier{RTIDTypeIdentifier::Value::uid});
-			} else {
+			}
+			else {
 				return make_optional_of(RTIDTypeIdentifier{RTIDTypeIdentifier::Value::alias});
 			}
 		}

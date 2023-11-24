@@ -3,13 +3,14 @@ namespace TwinStar.Script.Support.Atlas.Pack {
 	// ------------------------------------------------
 
 	export type SpriteDefinition = {
+		name: string;
 		position: [bigint, bigint];
 		size: [bigint, bigint];
 	};
 
 	export type AtlasDefinition = {
 		size: [bigint, bigint];
-		sprite: Record<string, SpriteDefinition>;
+		sprite: Array<SpriteDefinition>;
 	};
 
 	// ------------------------------------------------
@@ -19,9 +20,8 @@ namespace TwinStar.Script.Support.Atlas.Pack {
 		atlas: Kernel.Image.ImageView,
 		sprite_directory: string,
 	): void {
-		for (let sprite_name in definition.sprite) {
-			let e = definition.sprite[sprite_name];
-			KernelX.Image.File.PNG.read_fs(`${sprite_directory}/${sprite_name}.png`, atlas.sub(Kernel.Image.ImagePosition.value(e.position), Kernel.Image.ImageSize.value(e.size)));
+		for (let sprite_definition of definition.sprite) {
+			KernelX.Image.File.PNG.read_fs(`${sprite_directory}/${sprite_definition.name}.png`, atlas.sub(Kernel.Image.ImagePosition.value(sprite_definition.position), Kernel.Image.ImageSize.value(sprite_definition.size)));
 		}
 		return;
 	}
@@ -31,9 +31,8 @@ namespace TwinStar.Script.Support.Atlas.Pack {
 		atlas: Kernel.Image.CImageView,
 		sprite_directory: string,
 	): void {
-		for (let sprite_name in definition.sprite) {
-			let e = definition.sprite[sprite_name];
-			KernelX.Image.File.PNG.write_fs(`${sprite_directory}/${sprite_name}.png`, atlas.sub(Kernel.Image.ImagePosition.value(e.position), Kernel.Image.ImageSize.value(e.size)));
+		for (let sprite_definition of definition.sprite) {
+			KernelX.Image.File.PNG.write_fs(`${sprite_directory}/${sprite_definition.name}.png`, atlas.sub(Kernel.Image.ImagePosition.value(sprite_definition.position), Kernel.Image.ImageSize.value(sprite_definition.size)));
 		}
 		return;
 	}
@@ -50,18 +49,19 @@ namespace TwinStar.Script.Support.Atlas.Pack {
 		let [atlas_box, sprite_rect] = PackAutomatic.pack_automatic_best(sprite_box, expand_value === 'exponent_of_2' ? PackAutomatic.expander_exponent_of_2_generator(false) : PackAutomatic.expander_fixed_generator(false, expand_value));
 		let definition: AtlasDefinition = {
 			size: [BigInt(atlas_box.w), BigInt(atlas_box.h)],
-			sprite: {},
+			sprite: [],
 		};
 		let atlas = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(definition.size));
 		let atlas_view = atlas.view();
 		for (let sprite_file in sprite_rect) {
 			let rect = sprite_rect[sprite_file];
-			let sprite_information: SpriteDefinition = {
+			let sprite_definition: SpriteDefinition = {
+				name: sprite_file,
 				position: [BigInt(rect.x), BigInt(rect.y)],
 				size: [BigInt(rect.w), BigInt(rect.h)],
 			};
-			definition.sprite[sprite_file] = sprite_information;
-			let sprite = atlas_view.sub(Kernel.Image.ImagePosition.value(sprite_information.position), Kernel.Image.ImageSize.value(sprite_information.size));
+			definition.sprite.push(sprite_definition);
+			let sprite = atlas_view.sub(Kernel.Image.ImagePosition.value(sprite_definition.position), Kernel.Image.ImageSize.value(sprite_definition.size));
 			KernelX.Image.File.PNG.read_fs(`${sprite_directory}/${sprite_file}.png`, sprite);
 		}
 		return [definition, atlas];

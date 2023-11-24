@@ -76,7 +76,8 @@ namespace TwinStar.Script.PathUtility {
 				let is_name = parseInt(index) === path.length - 1;
 				if (current[element] === undefined) {
 					current[element] = is_name ? null : {};
-				} else {
+				}
+				else {
 					assert_test(current[element] !== null && !is_name);
 				}
 				current = current[element]!;
@@ -87,60 +88,46 @@ namespace TwinStar.Script.PathUtility {
 
 	// ------------------------------------------------
 
-	// TODO !!!
+	const dangerous_path_rule = [
+		/^\/((storage\/emulated\/[0-9]+)|(sdcard))\//,
+		/^\/$/,
+		/^\/(home)$/,
+		/^\/(Windows)/,
+		/^\/(Windows.old)/,
+		/^\/(Documents and Settings)$/,
+		/^\/(PerfLogs)$/,
+		/^\/(Program Files)$/,
+		/^\/(Program Files (x86))$/,
+		/^\/(ProgramData)$/,
+		/^\/(Recovery)$/,
+		/^\/(System Volume Information)$/,
+		/^\/(Users)$/,
+		/^\/(appverifUI.dll)$/,
+		/^\/(hiberfil.sys)$/,
+		/^\/(swapfile.sys)$/,
+		/^\/(pagefile.sys)$/,
+		/^\/(vfcompat.dll)$/,
+		/^\/()$/,
+		/^\/()$/,
+		/^\/()$/,
+		/^\/()$/,
+	];
+
 	export function is_dangerous(
 		target: string,
 	): boolean {
-		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\//.test(target)
-			|| /^\/$/.test(target)
-			|| /^\/(home)$/.test(target)
-			|| /^\/(Windows)/.test(target)
-			|| /^\/(Windows.old)/.test(target)
-			|| /^\/(Documents and Settings)$/.test(target)
-			|| /^\/(PerfLogs)$/.test(target)
-			|| /^\/(Program Files)$/.test(target)
-			|| /^\/(Program Files (x86))$/.test(target)
-			|| /^\/(ProgramData)$/.test(target)
-			|| /^\/(Recovery)$/.test(target)
-			|| /^\/(System Volume Information)$/.test(target)
-			|| /^\/(Users)$/.test(target)
-			|| /^\/(appverifUI.dll)$/.test(target)
-			|| /^\/(hiberfil.sys)$/.test(target)
-			|| /^\/(swapfile.sys)$/.test(target)
-			|| /^\/(pagefile.sys)$/.test(target)
-			|| /^\/(vfcompat.dll)$/.test(target)
-			|| /^\/()$/.test(target)
-			|| /^\/()$/.test(target)
-			|| /^\/()$/.test(target)
-			|| /^\/()$/.test(target);
+		return dangerous_path_rule.every((value) => (!value.test(target)));
 	}
 
-	export function is_android_fuse_object(
-		target: string,
-	): boolean {
-		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\//.test(target);
-	}
-
-	export function is_android_fuse_ext_data_object(
-		target: string,
-	): boolean {
-		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\/Android\/data\//.test(target);
-	}
-
-	export function is_android_fuse_ext_obb_object(
-		target: string,
-	): boolean {
-		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\/Android\/obb\//.test(target);
-	}
-
-	export function safe_rename(
+	export function rename_secure(
 		source: string,
 		destination: string,
 	): void {
-		if (Shell.is_android && is_android_fuse_object(destination) && source.toLowerCase() === destination.toLowerCase()) {
+		if (Shell.is_android && AndroidHelper.fs_is_fuse_path(destination) && source.toLowerCase() === destination.toLowerCase()) {
 			KernelX.FileSystem.rename(source, source + '!');
 			KernelX.FileSystem.rename(source + '!', destination);
-		} else {
+		}
+		else {
 			KernelX.FileSystem.rename(source, destination);
 		}
 		return;
@@ -148,12 +135,13 @@ namespace TwinStar.Script.PathUtility {
 
 	export function generate_suffix_path(
 		path: string,
+		infix: string = '.',
 	): string {
 		let result = path;
 		let suffix = 0;
 		while (KernelX.FileSystem.exist(result)) {
 			suffix += 1;
-			result = `${path}.${suffix}`;
+			result = `${path}${infix}${suffix}`;
 		}
 		return result;
 	}

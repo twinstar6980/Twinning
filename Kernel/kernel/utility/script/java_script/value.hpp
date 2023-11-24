@@ -1204,7 +1204,8 @@ namespace TwinStar::Kernel::JavaScript {
 					return nullptr;
 				}
 				path = home.get() / Path{make_string(module_name + 2)};
-			} else {
+			}
+			else {
 				path = Path{make_string(module_name)};
 			}
 			if (!FileSystem::exist_file(path)) {
@@ -1279,7 +1280,8 @@ namespace TwinStar::Kernel::JavaScript {
 				function(context, object, argument, result);
 				result_value = result._release_value();
 			#if defined M_build_release
-			} catch (...) {
+			}
+			catch (...) {
 				auto exception = parse_current_exception();
 				auto message_std = exception.what();
 				auto message = make_string_view(message_std);
@@ -1325,13 +1327,15 @@ namespace TwinStar::Kernel::JavaScript {
 					let list;
 					if (string === undefined) {
 						list = [`@ ?`];
-					} else {
+					}
+					else {
 						list = string.split('\n').slice(0, -1).map((e) => {
 							let result;
 							let regexp_result = /    at (.*) \((.*)\)/.exec(e);
 							if (regexp_result !== null) {
 								result = `@ ${regexp_result[2] === 'native' ? ('<native>:?') : (regexp_result[2])} ${regexp_result[1]}`;
-							} else {
+							}
+							else {
 								result = '@ ?';
 							}
 							return result;
@@ -1348,11 +1352,13 @@ namespace TwinStar::Kernel::JavaScript {
 						if (error.name === 'NativeError') {
 							title = `${error.name}`;
 							description.push(...error.message.split('\n'));
-						} else {
+						}
+						else {
 							title = `${error.name}: ${error.message}`;
 						}
 						description.push(...split_error_stack(error.stack));
-					} else {
+					}
+					else {
 						title = `${error}`;
 					}
 					return [title, description];

@@ -2,12 +2,11 @@
 // ReSharper disable
 
 using Helper;
-using Helper.CustomControl;
 using Helper.Utility;
 
 namespace Helper.Module.ModuleLauncher {
 
-	public sealed partial class ResourceForwarderSettingPanel : UserControl {
+	public sealed partial class ResourceForwarderSettingPanel : CustomControl {
 
 		#region life
 
@@ -19,7 +18,19 @@ namespace Helper.Module.ModuleLauncher {
 
 		// ----------------
 
-		public ResourceForwarderSettingPanelController Controller { get; }
+		private ResourceForwarderSettingPanelController Controller { get; }
+
+		// ----------------
+
+		protected override void StampUpdate (
+		) {
+			this.Controller.Update();
+			return;
+		}
+
+		#endregion
+
+		#region property
 
 		#endregion
 
@@ -33,6 +44,17 @@ namespace Helper.Module.ModuleLauncher {
 
 		#endregion
 
+		#region update
+
+		public async void Update (
+		) {
+			this.NotifyPropertyChanged(
+			);
+			return;
+		}
+
+		#endregion
+
 		#region option configuration
 
 		public String uOptionConfigurationText_Text {
@@ -41,23 +63,23 @@ namespace Helper.Module.ModuleLauncher {
 			}
 		}
 
-		public async void uOptionConfigurationText_OnTextChanged (
+		public async void uOptionConfigurationText_TextChanged (
 			Object               sender,
 			TextChangedEventArgs args
 		) {
-			if (sender is not TextBox senders) { return; }
+			var senders = sender.AsClass<TextBox>();
 			Setting.Data.ResourceForwarder.OptionConfiguration = senders.Text;
 			return;
 		}
 
-		public async void uOptionConfigurationPick_OnClick (
+		public async void uOptionConfigurationPick_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
-			var newValue = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View));
-			if (newValue is not null) {
-				Setting.Data.ResourceForwarder.OptionConfiguration = newValue;
+			var senders = sender.AsClass<Button>();
+			var value = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View));
+			if (value is not null) {
+				Setting.Data.ResourceForwarder.OptionConfiguration = value;
 				this.NotifyPropertyChanged(
 					nameof(this.uOptionConfigurationText_Text)
 				);
@@ -75,13 +97,12 @@ namespace Helper.Module.ModuleLauncher {
 			}
 		}
 
-		public async void uAutomaticCloseToggle_OnClick (
+		public async void uAutomaticCloseToggle_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			var newValue = senders.IsChecked!.Value;
-			Setting.Data.ResourceForwarder.AutomaticClose = newValue;
+			var senders = sender.AsClass<ToggleButton>();
+			Setting.Data.ResourceForwarder.AutomaticClose = senders.IsChecked.AsNotNull();
 			return;
 		}
 
@@ -95,13 +116,12 @@ namespace Helper.Module.ModuleLauncher {
 			}
 		}
 
-		public async void uParallelExecuteToggle_OnClick (
+		public async void uParallelExecuteToggle_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			var newValue = senders.IsChecked!.Value;
-			Setting.Data.ResourceForwarder.ParallelExecute = newValue;
+			var senders = sender.AsClass<ToggleButton>();
+			Setting.Data.ResourceForwarder.ParallelExecute = senders.IsChecked.AsNotNull();
 			return;
 		}
 
@@ -115,13 +135,12 @@ namespace Helper.Module.ModuleLauncher {
 			}
 		}
 
-		public async void uEnableFilterToggle_OnClick (
+		public async void uEnableFilterToggle_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			var newValue = senders.IsChecked!.Value;
-			Setting.Data.ResourceForwarder.EnableFilter = newValue;
+			var senders = sender.AsClass<ToggleButton>();
+			Setting.Data.ResourceForwarder.EnableFilter = senders.IsChecked.AsNotNull();
 			return;
 		}
 
@@ -135,13 +154,12 @@ namespace Helper.Module.ModuleLauncher {
 			}
 		}
 
-		public async void uEnableBatchToggle_OnClick (
+		public async void uEnableBatchToggle_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			var newValue = senders.IsChecked!.Value;
-			Setting.Data.ResourceForwarder.EnableBatch = newValue;
+			var senders = sender.AsClass<ToggleButton>();
+			Setting.Data.ResourceForwarder.EnableBatch = senders.IsChecked.AsNotNull();
 			return;
 		}
 
@@ -155,13 +173,12 @@ namespace Helper.Module.ModuleLauncher {
 			}
 		}
 
-		public async void uRemainInputToggle_OnClick (
+		public async void uRemainInputToggle_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			var newValue = senders.IsChecked!.Value;
-			Setting.Data.ResourceForwarder.RemainInput = newValue;
+			var senders = sender.AsClass<ToggleButton>();
+			Setting.Data.ResourceForwarder.RemainInput = senders.IsChecked.AsNotNull();
 			return;
 		}
 

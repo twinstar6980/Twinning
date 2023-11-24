@@ -176,7 +176,7 @@ namespace TwinStar.Script {
 		if (string === 'y') {
 			return true;
 		}
-		assert_test(false, `invalid confirmation boolean string`);
+		assert_fail(`invalid confirmation boolean string`);
 	}
 
 	export function make_integer_string(
@@ -264,9 +264,11 @@ namespace TwinStar.Script {
 	): string {
 		let destination = source;
 		if (false) {
-		} else if (destination.length >= 2 && destination.startsWith(`'`) && destination.endsWith(`'`)) {
+		}
+		else if (destination.length >= 2 && destination.startsWith(`'`) && destination.endsWith(`'`)) {
 			destination = destination.substring(1, destination.length - 1);
-		} else if (destination.length >= 2 && destination.startsWith(`"`) && destination.endsWith(`"`)) {
+		}
+		else if (destination.length >= 2 && destination.startsWith(`"`) && destination.endsWith(`"`)) {
 			destination = destination.substring(1, destination.length - 1);
 		}
 		return destination;
@@ -301,13 +303,15 @@ namespace TwinStar.Script {
 		let list: Array<string>;
 		if (string === undefined) {
 			list = [`@ ?`];
-		} else {
+		}
+		else {
 			list = string.split('\n').slice(0, -1).map((e) => {
 				let result: string;
 				let regexp_result = /    at (.*) \((.*)\)/.exec(e);
 				if (regexp_result !== null) {
 					result = `@ ${regexp_result[2] === 'native' ? ('<native>:?') : (regexp_result[2])} ${regexp_result[1]}`;
-				} else {
+				}
+				else {
 					result = '@ ?';
 				}
 				return result;
@@ -325,11 +329,13 @@ namespace TwinStar.Script {
 			if (error.name === 'NativeError') {
 				title = `${error.name}`;
 				description.push(...error.message.split('\n'));
-			} else {
+			}
+			else {
 				title = `${error.name}: ${error.message}`;
 			}
 			description.push(...split_error_stack(error.stack));
-		} else {
+		}
+		else {
 			title = `${error}`;
 		}
 		return [title, description];

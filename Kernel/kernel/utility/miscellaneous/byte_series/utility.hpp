@@ -57,7 +57,8 @@ namespace TwinStar::Kernel {
 	) -> It {
 		if constexpr (k_type_size<It> == 1_sz) {
 			return it;
-		} else {
+		}
+		else {
 			union {
 				It                        value;
 				ZArray<ZByte, sizeof(It)> byte;

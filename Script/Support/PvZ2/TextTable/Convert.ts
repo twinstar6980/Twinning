@@ -30,11 +30,13 @@ namespace TwinStar.Script.Support.PvZ2.TextTable.Convert {
 				if (source_variant instanceof Array) {
 					source_list = source_variant;
 					source_version = 'json_list';
-				} else {
+				}
+				else {
 					source_map = source_variant;
 					source_version = 'json_map';
 				}
-			} catch (e) {
+			}
+			catch (e) {
 				source_version = 'text';
 			}
 		}

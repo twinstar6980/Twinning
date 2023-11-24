@@ -6,7 +6,7 @@ using Helper.Utility;
 
 namespace Helper.Module.ModdingWorker {
 
-	public sealed partial class OutputBar : UserControl {
+	public sealed partial class OutputBar : CustomControl {
 
 		#region life
 
@@ -22,9 +22,10 @@ namespace Helper.Module.ModdingWorker {
 
 		// ----------------
 
-		private void UpdateVisualState (
+		protected override void StampUpdate (
 		) {
 			VisualStateManager.GoToState(this, $"{this.Type}State", false);
+			this.Controller.Update();
 			return;
 		}
 
@@ -40,7 +41,7 @@ namespace Helper.Module.ModdingWorker {
 		);
 
 		public MessageType Type {
-			get => this.GetValue(OutputBar.TypeProperty) as MessageType? ?? throw new NullReferenceException();
+			get => this.GetValue(OutputBar.TypeProperty).AsStruct<MessageType>();
 			set => this.SetValue(OutputBar.TypeProperty, value);
 		}
 
@@ -54,7 +55,7 @@ namespace Helper.Module.ModdingWorker {
 		);
 
 		public String Title {
-			get => this.GetValue(OutputBar.TitleProperty) as String ?? throw new NullReferenceException();
+			get => this.GetValue(OutputBar.TitleProperty).AsClass<String>();
 			set => this.SetValue(OutputBar.TitleProperty, value);
 		}
 
@@ -68,25 +69,8 @@ namespace Helper.Module.ModdingWorker {
 		);
 
 		public List<String> Description {
-			get => this.GetValue(OutputBar.DescriptionProperty) as List<String> ?? throw new NullReferenceException();
+			get => this.GetValue(OutputBar.DescriptionProperty).AsClass<List<String>>();
 			set => this.SetValue(OutputBar.DescriptionProperty, value);
-		}
-
-		// ----------------
-
-		public static readonly DependencyProperty StampProperty = DependencyProperty.Register(
-			nameof(OutputBar.Stamp),
-			typeof(UniqueStamp),
-			typeof(OutputBar),
-			new PropertyMetadata(UniqueStamp.Default, (o, e) => {
-				(o as OutputBar)!.UpdateVisualState();
-				(o as OutputBar)!.Controller.Update();
-			})
-		);
-
-		public UniqueStamp Stamp {
-			get => this.GetValue(OutputBar.StampProperty) as UniqueStamp ?? throw new Exception();
-			set => this.SetValue(OutputBar.StampProperty, value);
 		}
 
 		#endregion

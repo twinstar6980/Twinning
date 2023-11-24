@@ -54,7 +54,8 @@ namespace TwinStar::Kernel::Tool::PopCap::ReflectionObjectNotation {
 			if (value.is_integer()) {
 				data.write(TypeIdentifier{TypeIdentifier::Value::integer_variable_length_signed_64});
 				ProtocolBufferVariableLengthInteger::encode_s64(data, up_cast<IntegerS64>(value.get_integer()));
-			} else {
+			}
+			else {
 				data.write(TypeIdentifier{TypeIdentifier::Value::floater_signed_64});
 				data.write(up_cast<FloaterS64>(value.get_floater()));
 			}
@@ -76,11 +77,13 @@ namespace TwinStar::Kernel::Tool::PopCap::ReflectionObjectNotation {
 					ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>(value.size()));
 					StringParser::write_utf8_string(self_cast<OCharacterStreamView>(data), value.as_view(), as_lvalue(Size{}));
 				}
-			} else {
+			}
+			else {
 				if (auto indexed_string = native_string_index.get().find(value); indexed_string != native_string_index.get().end()) {
 					data.write(TypeIdentifier{TypeIdentifier::Value::string_native_indexed});
 					ProtocolBufferVariableLengthInteger::encode_u32(data, cbw<IntegerU32>((*indexed_string).second));
-				} else {
+				}
+				else {
 					native_string_index.get()[value] = mbw<Size>(native_string_index.get().size());
 					data.write(TypeIdentifier{TypeIdentifier::Value::string_native_indexing});
 					if constexpr (check_version(version, {}, {false})) {

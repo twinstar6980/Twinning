@@ -1,7 +1,6 @@
 import 'dart:core' as core;
 import 'dart:io';
 import 'dart:async';
-import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
 // ----------------
@@ -19,7 +18,7 @@ typedef Map<K, V> = core.Map<K, V>;
 
 const kApplicationName = 'TwinStar ToolKit - Shell GUI';
 
-const kApplicationVersion = 27;
+const kApplicationVersion = 28;
 
 // ----------------
 
@@ -30,13 +29,13 @@ List<String> gConsoleFontFamliy = [];
 // ----------------
 
 Void
-exitApplication(
+assertAlways(
+  Boolean condition,
 ) {
-  if (Platform.isAndroid) {
-    SystemNavigator.pop();
-  } else {
-    exit(0);
+  if (!condition) {
+    throw core.AssertionError();
   }
+  return;
 }
 
 // ----------------

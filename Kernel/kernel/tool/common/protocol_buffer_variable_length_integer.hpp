@@ -88,7 +88,8 @@ namespace TwinStar::Kernel::Tool::ProtocolBufferVariableLengthInteger {
 			auto byte = stream.read_of();
 			if ((byte & k_b) != k_z) {
 				value |= cbw<IntegerU32>(byte & k_x) << shift_count;
-			} else {
+			}
+			else {
 				value |= cbw<IntegerU32>(byte) << shift_count;
 				break;
 			}
@@ -104,7 +105,8 @@ namespace TwinStar::Kernel::Tool::ProtocolBufferVariableLengthInteger {
 			auto byte = stream.read_of();
 			if ((byte & k_b) != k_z) {
 				value |= cbw<IntegerU64>(byte & k_x) << shift_count;
-			} else {
+			}
+			else {
 				value |= cbw<IntegerU64>(byte) << shift_count;
 				break;
 			}

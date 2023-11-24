@@ -1,15 +1,13 @@
 import java.util.Properties
-import java.io.FileInputStream
 
 plugins {
 	alias(libs.plugins.com.android.application)
 	alias(libs.plugins.org.jetbrains.kotlin.android)
 }
 
-val keystoreProperties = Properties()
-val keystorePropertiesFile = rootProject.file("keystore.properties")
-assert(keystorePropertiesFile.exists())
-keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+val keystoreProperties = Properties().also {
+	it.load(rootProject.file("keystore.properties").inputStream())
+}
 
 android {
 	namespace = "com.twinstar.toolkit.forwarder_for_android"
@@ -28,9 +26,9 @@ android {
 	defaultConfig {
 		applicationId = "com.twinstar.toolkit.forwarder_for_android"
 		minSdk = 28
-		targetSdk = 33
-		versionCode = 3
-		versionName = "3.0.0"
+		targetSdk = 34
+		versionCode = 4
+		versionName = "4.0.0"
 		
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 	}

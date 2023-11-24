@@ -5,6 +5,7 @@
 #endif
 #if defined M_compiler_clang
 #pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wreserved-macro-identifier"
 #endif
 
 #include "third/etcpak/ProcessRGB.hpp"

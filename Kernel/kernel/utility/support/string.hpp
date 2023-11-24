@@ -167,9 +167,11 @@ namespace TwinStar::Kernel {
 		) -> Void {
 			if (thix == "true"_sv) {
 				that = k_true;
-			} else if (thix == "false"_sv) {
+			}
+			else if (thix == "false"_sv) {
 				that = k_false;
-			} else {
+			}
+			else {
 				assert_fail(R"(thix == "true"_sv || thix == "false"_sv)");
 			}
 			return;

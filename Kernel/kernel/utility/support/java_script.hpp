@@ -262,7 +262,8 @@ namespace TwinStar::Kernel::JavaScript {
 		) -> Void {
 			if (that.is_integer()) {
 				thix.set_bigint(that.get_integer());
-			} else {
+			}
+			else {
 				thix.set_number(that.get_floater());
 			}
 			return;
@@ -274,9 +275,11 @@ namespace TwinStar::Kernel::JavaScript {
 		) -> Void {
 			if (thix.is_bigint()) {
 				that.set_integer(thix.get_bigint());
-			} else if (thix.is_number()) {
+			}
+			else if (thix.is_number()) {
 				that.set_floater(thix.get_number());
-			} else {
+			}
+			else {
 				assert_fail(R"(/* thix type is bigint or number */)");
 			}
 			return;
@@ -449,7 +452,8 @@ namespace TwinStar::Kernel::JavaScript {
 		) -> Void {
 			if (!that.has()) {
 				thix.set_null(k_null);
-			} else {
+			}
+			else {
 				thix.from(that.get());
 			}
 			return;
@@ -461,7 +465,8 @@ namespace TwinStar::Kernel::JavaScript {
 		) -> Void {
 			if (thix.is_null()) {
 				that.reset();
-			} else {
+			}
+			else {
 				that.set();
 				thix.to(that.get());
 			}
@@ -1241,17 +1246,23 @@ namespace TwinStar::Kernel::JavaScript {
 			using namespace JSON;
 			if (thix.is_null()) {
 				thix.to(that.set_null());
-			} else if (thix.is_boolean()) {
+			}
+			else if (thix.is_boolean()) {
 				thix.to(that.set_boolean());
-			} else if (thix.is_number() || thix.is_bigint()) {
+			}
+			else if (thix.is_number() || thix.is_bigint()) {
 				thix.to(that.set_number());
-			} else if (thix.is_string()) {
+			}
+			else if (thix.is_string()) {
 				thix.to(that.set_string());
-			} else if (thix.is_object_of_array()) {
+			}
+			else if (thix.is_object_of_array()) {
 				thix.to(that.set_array());
-			} else if (thix.is_object_of_object()) {
+			}
+			else if (thix.is_object_of_object()) {
 				thix.to(that.set_object());
-			} else {
+			}
+			else {
 				assert_fail(R"(/* thix type is valid */)");
 			}
 			return;

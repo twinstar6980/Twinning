@@ -16,13 +16,13 @@ namespace Helper.Module.CommandSender {
 			Object value
 		) {
 			return value switch {
-				Boolean valueValue        => ConvertHelper.BooleanToConfirmationStringLower(valueValue),
-				Integer valueValue        => valueValue.ToString(),
-				Floater valueValue        => valueValue.ToString(CultureInfo.InvariantCulture) ?? throw new Exception(),
-				SizeExpression valueValue => valueValue.ToString(),
-				String valueValue         => valueValue.ToString(),
-				PathExpression valueValue => valueValue.ToString(),
-				_                         => throw new Exception(),
+				Boolean values        => ConvertHelper.BooleanToConfirmationStringLower(values),
+				Integer values        => values.ToString(),
+				Floater values        => values.ToString(CultureInfo.InvariantCulture).AsNotNull(),
+				SizeExpression values => values.ToString(),
+				String values         => values,
+				PathExpression values => values.ToString(),
+				_                     => throw new ArgumentOutOfRangeException(),
 			};
 		}
 
@@ -32,13 +32,13 @@ namespace Helper.Module.CommandSender {
 			Object value
 		) {
 			return value switch {
-				Boolean valueValue        => valueValue,
-				Integer valueValue        => valueValue,
-				Floater valueValue        => valueValue,
-				SizeExpression valueValue => valueValue.ToString(),
-				String valueValue         => valueValue,
-				PathExpression valueValue => valueValue.ToString(),
-				_                         => throw new Exception(),
+				Boolean values        => values,
+				Integer values        => values,
+				Floater values        => values,
+				SizeExpression values => values.ToString(),
+				String values         => values,
+				PathExpression values => values.ToString(),
+				_                     => throw new ArgumentOutOfRangeException(),
 			};
 		}
 
@@ -54,7 +54,7 @@ namespace Helper.Module.CommandSender {
 				ArgumentType.Size    => new SizeExpression(),
 				ArgumentType.String  => (String)"",
 				ArgumentType.Path    => new PathExpression(),
-				_                    => throw new Exception(),
+				_                    => throw new ArgumentOutOfRangeException(),
 			};
 		}
 
@@ -69,16 +69,14 @@ namespace Helper.Module.CommandSender {
 				ArgumentType.Size    => initial is String initialValue ? SizeExpression.Parse(initialValue) : null,
 				ArgumentType.String  => initial as String,
 				ArgumentType.Path    => initial is String initialValue ? PathExpression.Parse(initialValue) : null,
-				_                    => throw new Exception(),
+				_                    => throw new ArgumentOutOfRangeException(),
 			};
 		}
 
 		public static List<ArgumentValue> MakeArgumentValueDefault (
 			List<ArgumentConfiguration> configuration
 		) {
-			return configuration.Select((value) => (new ArgumentValue() {
-				Data = ConfigurationHelper.MakeArgumentValueDefault(value.Type, value.Initial),
-			})).ToList();
+			return configuration.Select((value) => (new ArgumentValue() { Data = ConfigurationHelper.MakeArgumentValueDefault(value.Type, value.Initial) })).ToList();
 		}
 
 		// ----------------
@@ -87,19 +85,16 @@ namespace Helper.Module.CommandSender {
 			List<ArgumentConfiguration> configuration,
 			List<ArgumentValue>         value
 		) {
-			Debug.Assert(configuration.Count == value.Count);
+			GF.AssertTest(configuration.Count == value.Count);
 			var json = new JObject();
 			for (var index = 0; index < configuration.Count; index++) {
 				var itemConfiguration = configuration[index];
 				var itemValue = value[index];
 				if (itemValue.Data is not null) {
-					json.Add(
-						itemConfiguration.Id,
-						new JValue(ConfigurationHelper.MakeArgumentValueExpression(itemValue.Data))
-					);
+					json.Add(itemConfiguration.Id, new JValue(ConfigurationHelper.MakeArgumentValueExpression(itemValue.Data)));
 				}
 			}
-			return JsonHelper.Serialize(json, false);
+			return JsonHelper.SerializeText(json, false);
 		}
 
 		#endregion

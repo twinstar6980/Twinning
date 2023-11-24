@@ -16,16 +16,16 @@ class ForwardActivity : Activity() {
 		var command = mutableListOf<String>("-additional_argument")
 		if (intent.action == Intent.ACTION_SEND && intent.type != null) {
 			var uri = intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM)!! as Uri
-			command.addAll(listOf(uri).map { "${it}" })
+			command.add(uri.toString())
 		}
 		if (intent.action == Intent.ACTION_SEND_MULTIPLE && intent.type != null) {
 			var uri = intent.getParcelableArrayListExtra<Parcelable>(Intent.EXTRA_STREAM)!! as List<Uri>
-			command.addAll(uri.map { "${it}" })
+			command.addAll(uri.map { it.toString() })
 		}
-		val forwardIntent = Intent().apply {
-			setComponent(ComponentName(TARGET_PACKAGE_NAME, "${TARGET_PACKAGE_NAME}.MainActivity"))
-			setAction("${TARGET_PACKAGE_NAME}.action.LAUNCH")
-			putExtra("command", command.toTypedArray())
+		val forwardIntent = Intent().also {
+			it.setComponent(ComponentName(TARGET_PACKAGE_NAME, "${TARGET_PACKAGE_NAME}.MainActivity"))
+			it.setAction("${TARGET_PACKAGE_NAME}.action.LAUNCH")
+			it.putExtra("command", command.toTypedArray())
 		}
 		this.startActivity(forwardIntent)
 		this.finish()

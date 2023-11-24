@@ -29,7 +29,8 @@ struct mainApp: App {
 				try FileManager.default.setAttributes([.posixPermissions: NSNumber(0o744)], ofItemAtPath: scriptFile)
 			}
 			NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: dataDirectory)
-		} catch {
+		}
+		catch {
 			self.error = true
 		}
 		return

@@ -2,7 +2,8 @@
 // ReSharper disable
 
 using Helper;
-using Helper.CustomControl;
+using Helper.Utility;
+using FluentIconGlyph = Helper.CommonControl.FluentIconGlyph;
 
 namespace Helper.Module {
 
@@ -14,6 +15,7 @@ namespace Helper.Module {
 		ResourceForwarder,
 		CommandSender,
 		AnimationViewer,
+		PackageBuilder,
 	}
 
 	#endregion

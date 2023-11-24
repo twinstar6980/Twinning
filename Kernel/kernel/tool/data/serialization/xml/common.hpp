@@ -91,7 +91,8 @@ namespace TwinStar::Kernel::Tool::Data::Serialization::XML {
 			assert_test(buffer_size > 0_sz);
 			if (printer_imitator._buffer._mem == printer_imitator._buffer._pool) {
 				result.assign(CStringView{buffer_data, buffer_size - 1_sz});
-			} else {
+			}
+			else {
 				printer_imitator._buffer._mem = printer_imitator._buffer._pool;
 				printer_imitator._buffer._size = 0;
 				printer_imitator._buffer._allocated = 20;

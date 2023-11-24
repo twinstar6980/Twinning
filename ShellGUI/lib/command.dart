@@ -24,6 +24,8 @@ class CommandProvider with ChangeNotifier {
 
   Command data;
 
+  // ----------------
+
   CommandProvider(
     this.data,
   );

@@ -121,7 +121,8 @@ namespace TwinStar::Kernel::Tool::Data::Compression::Deflate {
 			}
 			if (window_bits == 15_sz && memory_level == 8_sz) {
 				ripe_size_bound = wrap_size + (raw_size + (raw_size >> 12_sz) + (raw_size >> 14_sz) + (raw_size >> 25_sz) + 13_sz - 6_sz);
-			} else {
+			}
+			else {
 				ripe_size_bound = wrap_size + (raw_size + ((raw_size + 7_sz) >> 3_sz) + ((raw_size + 63_sz) >> 6_sz) + 5_sz);
 			}
 			return;

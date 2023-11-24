@@ -8,22 +8,27 @@
 	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:Helper"
 	xmlns:localModule="using:Helper.Module"
-	xmlns:my="using:Helper.CustomControl"
+	xmlns:my="using:Helper.CommonControl"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
 >
 	<Window.SystemBackdrop>
 		<MicaBackdrop Kind="Base" />
 	</Window.SystemBackdrop>
-	<my:MBox Padding="0,0">
+	<my:Box Padding="0,0">
 		<TabView
 			x:Name="uTab" x:FieldModifier="public"
 			HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
 			TabItemsSource="{x:Bind Controller.uTab_TabItemsSource}"
-			SelectedItem="{x:Bind Controller.uTab_SelectedItem}"
-			TabCloseRequested="{x:Bind Controller.uTab_OnTabCloseRequested}"
-			AddTabButtonClick="{x:Bind Controller.uTab_OnAddTabButtonClick}"
+			TabCloseRequested="{x:Bind Controller.uTab_TabCloseRequested}"
+			AddTabButtonClick="{x:Bind Controller.uTab_AddTabButtonClick}"
 		>
+			<TabView.KeyboardAccelerators>
+				<KeyboardAccelerator
+					Modifiers="Control" Key="W"
+					Invoked="{x:Bind Controller.uTabKeyboardControlW_OnInvoked}"
+				/>
+			</TabView.KeyboardAccelerators>
 			<TabView.TabItemTemplate>
 				<DataTemplate x:DataType="localModule:MainWindowTabItemController">
 					<TabViewItem
@@ -34,16 +39,21 @@
 				</DataTemplate>
 			</TabView.TabItemTemplate>
 			<TabView.TabStripHeader>
-				<my:MStack Padding="16,4,4,4" Orientation="Horizontal" Spacing="8">
+				<my:Stack
+					Padding="16,4,4,4"
+					Orientation="Horizontal" Spacing="8"
+				>
 					<ImageIcon
 						Width="22" Height="22"
 						VerticalAlignment="Bottom"
 						Source="/Asset/Logo.png"
 					/>
-				</my:MStack>
+				</my:Stack>
 			</TabView.TabStripHeader>
 			<TabView.TabStripFooter>
-				<my:MBox MinWidth="180" MinHeight="40" />
+				<my:Box
+					MinWidth="180" MinHeight="40"
+				/>
 			</TabView.TabStripFooter>
 		</TabView>
 		<InfoBar
@@ -56,5 +66,5 @@
 			Message="{x:Bind Controller.uTip_Message}"
 			Transitions="{StaticResource ContentThemeTransitionCollection}"
 		/>
-	</my:MBox>
+	</my:Box>
 </Window>

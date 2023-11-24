@@ -1,5 +1,5 @@
 [versions]
-com-android-application = "8.1.2"
+com-android-application = "8.1.4"
 org-jetbrains-kotlin-android = "1.8.0"
 
 [libraries]

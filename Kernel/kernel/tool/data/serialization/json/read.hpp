@@ -37,7 +37,8 @@ namespace TwinStar::Kernel::Tool::Data::Serialization::JSON {
 					case 'n' : {
 						if (data.read_of() == 'u'_c && data.read_of() == 'l'_c && data.read_of() == 'l'_c) {
 							value.set_null();
-						} else {
+						}
+						else {
 							throw SyntaxException{data.position().value, mss("invalid null value"_sf())};
 						}
 						break;
@@ -45,7 +46,8 @@ namespace TwinStar::Kernel::Tool::Data::Serialization::JSON {
 					case 'f' : {
 						if (data.read_of() == 'a'_c && data.read_of() == 'l'_c && data.read_of() == 's'_c && data.read_of() == 'e'_c) {
 							value.set_boolean(k_false);
-						} else {
+						}
+						else {
 							throw SyntaxException{data.position().value, mss("invalid false value"_sf())};
 						}
 						break;
@@ -53,7 +55,8 @@ namespace TwinStar::Kernel::Tool::Data::Serialization::JSON {
 					case 't' : {
 						if (data.read_of() == 'r'_c && data.read_of() == 'u'_c && data.read_of() == 'e'_c) {
 							value.set_boolean(k_true);
-						} else {
+						}
+						else {
 							throw SyntaxException{data.position().value, mss("invalid true value"_sf())};
 						}
 						break;

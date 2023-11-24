@@ -3,7 +3,6 @@
 
 using Helper;
 using Helper.Utility;
-using Helper.CustomControl;
 using Windows.ApplicationModel;
 using Windows.UI.StartScreen;
 using Microsoft.UI.Xaml.Media;
@@ -49,31 +48,31 @@ namespace Helper {
 				var optionModuleOption = default(List<String>?);
 				{
 					var option = new CommandLineReader(Environment.GetCommandLineArgs()[1..].ToList());
-					if (option.Ensure("----AppNotificationActivated:")) {
+					if (option.Check("----AppNotificationActivated:")) {
 						// skip if launch by AppNotification
 					}
-					if (option.Ensure("-Embedding")) {
+					if (option.Check("-Embedding")) {
 						// skip if launch by AppNotification
 					}
-					if (option.Ensure("-WindowPosition")) {
+					if (option.Check("-WindowPosition")) {
 						optionWindowPosition = new Tuple<Integer, Integer>(
 							option.NextInteger(),
 							option.NextInteger()
 						);
 					}
-					if (option.Ensure("-WindowSize")) {
+					if (option.Check("-WindowSize")) {
 						optionWindowSize = new Tuple<Integer, Integer>(
 							option.NextInteger(),
 							option.NextInteger()
 						);
 					}
-					if (option.Ensure("-WindowAlwaysOnTop")) {
+					if (option.Check("-WindowAlwaysOnTop")) {
 						optionWindowAlwaysOnTop = option.NextBoolean();
 					}
-					if (option.Ensure("-ModuleType")) {
+					if (option.Check("-ModuleType")) {
 						optionModuleType = option.NextEnumeration<Module.ModuleType>();
 					}
-					if (option.Ensure("-ModuleOption")) {
+					if (option.Check("-ModuleOption")) {
 						optionModuleOption = option.NextStringList();
 					}
 					if (!option.Done()) {
@@ -93,12 +92,14 @@ namespace Helper {
 				if (optionWindowPosition is null) {
 					WindowHelper.Center(window);
 				}
-				(window as Module.MainWindow)!.Controller.InsertTabItem(optionModuleType ?? Module.ModuleType.ModuleLauncher, optionModuleOption ?? null).Wait(0);
-				App.MainWindow = (window as Module.MainWindow)!;
-			} catch (Exception e) {
+				window.AsClass<Module.MainWindow>().InsertTabItem(optionModuleType ?? Module.ModuleType.ModuleLauncher, optionModuleOption ?? new List<String>()).Wait(0);
+				App.MainWindow = window.AsClass<Module.MainWindow>();
+			}
+			catch (Exception e) {
 				window = new Window() {
+					ExtendsContentIntoTitleBar = true,
 					SystemBackdrop = new MicaBackdrop(),
-					Content = new MBox() {
+					Content = new CommonControl.Box() {
 						Padding = new Thickness(16),
 						Children = {
 							new TextBlock() {
@@ -126,17 +127,13 @@ namespace Helper {
 			Microsoft.UI.Xaml.UnhandledExceptionEventArgs args
 		) {
 			try {
+				// ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
 				if (App.MainWindow is not null) {
-					_ = new ContentDialog() {
-						XamlRoot = App.MainWindow.Content.XamlRoot,
-						Title = "Unhandled Exception",
-						Content = args.Exception.ToString(),
-						CloseButtonText = "Close",
-						DefaultButton = ContentDialogButton.Close,
-					}.ShowAsync();
+					ControlHelper.ShowDialogSimple(App.MainWindow.Content, "Unhandled Exception", args.Exception.ToString()).Wait(0);
 					args.Handled = true;
 				}
-			} catch (Exception) {
+			}
+			catch (Exception) {
 				// ignored
 			}
 			return;
@@ -148,10 +145,11 @@ namespace Helper {
 
 		private AppNotificationManager NotificationManager = default!;
 
-		private void NotificationManager_OnNotificationInvoked (
+		private void NotificationManager_NotificationInvoked (
 			AppNotificationManager            sender,
 			AppNotificationActivatedEventArgs args
 		) {
+			// ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
 			if (App.MainWindow is not null) {
 				WindowHelper.ShowAsForeground(App.MainWindow);
 			}
@@ -161,7 +159,7 @@ namespace Helper {
 		private void InitializeNotification (
 		) {
 			this.NotificationManager = AppNotificationManager.Default;
-			this.NotificationManager.NotificationInvoked += this.NotificationManager_OnNotificationInvoked;
+			this.NotificationManager.NotificationInvoked += this.NotificationManager_NotificationInvoked;
 			this.NotificationManager.Register();
 			return;
 		}
@@ -223,7 +221,8 @@ namespace Helper {
 			if (recentItem is not null) {
 				Setting.Data.ModuleLauncher.RecentJumperConfiguration.Remove(recentItem);
 				Setting.Data.ModuleLauncher.RecentJumperConfiguration.Insert(0, recentItem);
-			} else {
+			}
+			else {
 				Setting.Data.ModuleLauncher.RecentJumperConfiguration.Insert(0, configuration);
 			}
 			Setting.Save();
@@ -231,6 +230,122 @@ namespace Helper {
 		}
 
 		#endregion
+
+	}
+
+	// Global-Function
+	public static class GF {
+
+		public static void AssertTest (
+			[DoesNotReturnIf(false)] Boolean condition,
+			String?                          message = null
+		) {
+			if (!condition) {
+				throw new Exception("Assertion failed" + (message is null ? "" : $" : {message}"));
+			}
+			return;
+		}
+
+		public static void AssertFail (
+			String? message = null
+		) {
+			GF.AssertTest(false, message);
+			return;
+		}
+
+		// ----------------
+
+		public static T ReturnSelf<T> (
+			this T target
+		) {
+			return target;
+		}
+
+		// ----------------
+
+		public static String ToString<T> (
+			this T target
+		)
+			where T : notnull {
+			return target.ToString().AsNotNull();
+		}
+
+		// ----------------
+
+		public static Boolean IsNull<T> (
+			[NotNullWhen(false)] this T? target
+		) {
+			return target is null;
+		}
+
+		public static Boolean NotNull<T> (
+			[NotNullWhen(true)] this T? target
+		) {
+			return target is not null;
+		}
+
+		// ----------------
+
+		// TODO
+		public static T AsNotNullX<T> (
+			[NotNull] this T? target
+		) {
+			return target ?? throw new NullReferenceException();
+		}
+
+		public static T AsNotNull<T> (
+			[NotNull] this T? target
+		)
+			where T : struct {
+			return target ?? throw new NullReferenceException();
+		}
+
+		public static T AsNotNull<T> (
+			[NotNull] this T? target
+		)
+			where T : class {
+			return target ?? throw new NullReferenceException();
+		}
+
+		// ----------------
+
+		public static T AsStruct<T> (
+			this Object? target
+		)
+			where T : struct {
+			return target as T? ?? throw new NullReferenceException();
+		}
+
+		public static T AsClass<T> (
+			this Object? target
+		)
+			where T : class {
+			return target as T ?? throw new NullReferenceException();
+		}
+
+		// ----------------
+
+		public static T? AsStructOrNull<T> (
+			this Object? target
+		)
+			where T : struct {
+			return target as T?;
+		}
+
+		public static T? AsClassOrNull<T> (
+			this Object? target
+		)
+			where T : class {
+			return target as T;
+		}
+
+		// ----------------
+
+		public static ObservableCollection<TSource> ToObservableCollection<TSource> (
+			this IEnumerable<TSource> source
+		) {
+			return new ObservableCollection<TSource>(source);
+		}
 
 	}
 

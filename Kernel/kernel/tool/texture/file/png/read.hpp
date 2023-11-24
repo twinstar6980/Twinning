@@ -71,9 +71,11 @@ namespace TwinStar::Kernel::Tool::Texture::File::PNG {
 			auto png_file_gamma = double{};
 			if (Third::libpng::png_get_sRGB(png_struct, png_info, &png_file_srgb_intent) != 0) {
 				Third::libpng::png_set_gamma(png_struct, Third::libpng::PNG_DEFAULT_sRGB_, Third::libpng::PNG_DEFAULT_sRGB_);
-			} else if (Third::libpng::png_get_gAMA(png_struct, png_info, &png_file_gamma) != 0) {
+			}
+			else if (Third::libpng::png_get_gAMA(png_struct, png_info, &png_file_gamma) != 0) {
 				Third::libpng::png_set_gamma(png_struct, Third::libpng::PNG_DEFAULT_sRGB_, png_file_gamma);
-			} else {
+			}
+			else {
 				Third::libpng::png_set_gamma(png_struct, Third::libpng::PNG_DEFAULT_sRGB_, 0.45455);
 			}
 			for (auto & row : image.data()) {

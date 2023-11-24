@@ -24,7 +24,7 @@ namespace Helper.Utility {
 					result.OffsetY = source[5];
 					break;
 				}
-				default: throw new ArgumentException($"invalid standard transform");
+				default: throw new ArgumentOutOfRangeException();
 			}
 			return result;
 		}
@@ -63,7 +63,7 @@ namespace Helper.Utility {
 					result.OffsetY = source[5];
 					break;
 				}
-				default: throw new ArgumentException($"invalid variant transform");
+				default: throw new ArgumentOutOfRangeException();
 			}
 			return result;
 		}

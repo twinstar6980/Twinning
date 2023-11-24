@@ -39,12 +39,13 @@ namespace Helper.Module.ModuleLauncher {
 
 		public static void Launch (
 			JumperConfiguration configuration,
-			Boolean             asNewWindow
+			Boolean             forNewWindow
 		) {
-			if (asNewWindow) {
+			if (forNewWindow) {
 				ProcessHelper.CreateProcess(App.ProgramFile, JumperConfiguration.GenerateArgument(configuration)).Wait(0);
-			} else {
-				App.MainWindow.Controller.InsertTabItem(configuration.ModuleType, configuration.ModuleOption).Wait(0);
+			}
+			else {
+				App.MainWindow.InsertTabItem(configuration.ModuleType, configuration.ModuleOption).Wait(0);
 			}
 			return;
 		}

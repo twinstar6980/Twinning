@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using DecimalFormatter = Windows.Globalization.NumberFormatting.DecimalFormatter;
 using IncrementNumberRounder = Windows.Globalization.NumberFormatting.IncrementNumberRounder;
-using FluentIconGlyph = Helper.CustomControl.FluentIconGlyph;
+using FluentIconGlyph = Helper.CommonControl.FluentIconGlyph;
 
 namespace Helper.Module.AnimationViewer {
 
@@ -33,7 +33,7 @@ namespace Helper.Module.AnimationViewer {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			this.Controller.ApplyOption(args.Parameter as List<String>);
+			this.Controller.ApplyOption(args.Parameter.AsClass<List<String>>());
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -46,7 +46,7 @@ namespace Helper.Module.AnimationViewer {
 
 		#region tab item page
 
-		public async Task<Boolean> OnTabItemCloseRequested (
+		public async Task<Boolean> TabItemPageRequestClose (
 		) {
 			return await this.Controller.RequestClose();
 		}
@@ -140,17 +140,15 @@ namespace Helper.Module.AnimationViewer {
 			this.View.uSprite.HoldEnd = true;
 			this.View.uSprite.Repeat = true;
 			this.View.uSprite.ShowBoundary = this.ShowSpriteBoundary;
-			this.View.uWorkingSpriteFrameProgress.AddHandler(UIElement.PointerPressedEvent, new PointerEventHandler(this.uWorkingSpriteFrameProgress_OnPointerPressed), true);
-			this.View.uWorkingSpriteFrameProgress.AddHandler(UIElement.PointerReleasedEvent, new PointerEventHandler(this.uWorkingSpriteFrameProgress_OnPointerReleased), true);
+			this.View.uWorkingSpriteFrameProgress.AddHandler(UIElement.PointerPressedEvent, new PointerEventHandler(this.uWorkingSpriteFrameProgress_PointerPressed), true);
+			this.View.uWorkingSpriteFrameProgress.AddHandler(UIElement.PointerReleasedEvent, new PointerEventHandler(this.uWorkingSpriteFrameProgress_PointerReleased), true);
 			return;
 		}
 
 		public async void ApplyOption (
-			List<String>? optionView
+			List<String> optionView
 		) {
-			while (!this.View.IsLoaded) {
-				await Task.Delay(40);
-			}
+			await ControlHelper.WaitUntilLoaded(this.View);
 			var optionImmediateSelect = default(Boolean?);
 			var optionAutomaticPlay = default(Boolean?);
 			var optionRepeatPlay = default(Boolean?);
@@ -164,50 +162,51 @@ namespace Helper.Module.AnimationViewer {
 			var optionWorkingSpriteState = default(Boolean?);
 			try {
 				var option = new CommandLineReader(optionView);
-				if (option.Ensure("-ImmediateSelect")) {
+				if (option.Check("-ImmediateSelect")) {
 					optionImmediateSelect = option.NextBoolean();
 				}
-				if (option.Ensure("-AutomaticPlay")) {
+				if (option.Check("-AutomaticPlay")) {
 					optionAutomaticPlay = option.NextBoolean();
 				}
-				if (option.Ensure("-RepeatPlay")) {
+				if (option.Check("-RepeatPlay")) {
 					optionRepeatPlay = option.NextBoolean();
 				}
-				if (option.Ensure("-RemainFrameRate")) {
+				if (option.Check("-RemainFrameRate")) {
 					optionRemainFrameRate = option.NextBoolean();
 				}
-				if (option.Ensure("-ShowSpriteBoundary")) {
+				if (option.Check("-ShowSpriteBoundary")) {
 					optionShowSpriteBoundary = option.NextBoolean();
 				}
-				if (option.Ensure("-SpriteFilterRule")) {
+				if (option.Check("-SpriteFilterRule")) {
 					optionSpriteFilterRule = option.NextString();
 				}
-				if (option.Ensure("-Source")) {
+				if (option.Check("-Source")) {
 					optionSource = new Tuple<String, String>(
 						option.NextString(),
 						option.NextString()
 					);
 				}
-				if (option.Ensure("-WorkingSpriteIndex")) {
+				if (option.Check("-WorkingSpriteIndex")) {
 					optionWorkingSpriteIndex = option.NextInteger();
 				}
-				if (option.Ensure("-WorkingSpriteFrameRange")) {
+				if (option.Check("-WorkingSpriteFrameRange")) {
 					optionWorkingSpriteFrameRange = new Tuple<Integer, Integer>(
 						option.NextInteger(),
 						option.NextInteger()
 					);
 				}
-				if (option.Ensure("-WorkingSpriteFrameRate")) {
+				if (option.Check("-WorkingSpriteFrameRate")) {
 					optionWorkingSpriteFrameRate = option.NextFloater();
 				}
-				if (option.Ensure("-WorkingSpriteState")) {
+				if (option.Check("-WorkingSpriteState")) {
 					optionWorkingSpriteState = option.NextBoolean();
 				}
 				if (!option.Done()) {
 					throw new Exception($"Too many option : {String.Join(' ', option.NextStringList())}");
 				}
-			} catch (Exception e) {
-				App.MainWindow.Controller.PublishTip(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
+			}
+			catch (Exception e) {
+				App.MainWindow.PublishTip(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
 			}
 			if (optionImmediateSelect is not null) {
 				this.ImmediateSelect = optionImmediateSelect.Value;
@@ -308,14 +307,15 @@ namespace Helper.Module.AnimationViewer {
 			String animationFileSource,
 			String imageDirectorySource
 		) {
-			Debug.Assert(!this.Loaded && !this.Working);
+			GF.AssertTest(!this.Loaded && !this.Working);
 			var animationData = default(AnimationModel.Animation?);
 			var imageSourceData = default(List<BitmapSource?>?);
 			try {
 				animationData = await AnimationHelper.LoadAnimation(animationFileSource);
 				imageSourceData = await AnimationHelper.LoadImageSource(imageDirectorySource, animationData);
-			} catch (Exception e) {
-				App.MainWindow.Controller.PublishTip(InfoBarSeverity.Error, "Failed to load animation.", e.ToString());
+			}
+			catch (Exception e) {
+				App.MainWindow.PublishTip(InfoBarSeverity.Error, "Failed to load animation.", e.ToString());
 				return;
 			}
 			this.AnimationFileSource = animationFileSource;
@@ -333,7 +333,7 @@ namespace Helper.Module.AnimationViewer {
 				nameof(this.uAnimationFileSource_Text),
 				nameof(this.uImageDirectorySource_IsEnabled),
 				nameof(this.uImageDirectorySource_Text),
-				nameof(this.uSelectImageDirectorySource_IsEnabled),
+				nameof(this.uImageDirectorySourcePick_IsEnabled),
 				nameof(this.uImageList_IsEnabled),
 				nameof(this.uImageList_ItemsSource),
 				nameof(this.uSpriteList_IsEnabled),
@@ -364,7 +364,7 @@ namespace Helper.Module.AnimationViewer {
 
 		public async Task Unload (
 		) {
-			Debug.Assert(this.Loaded && !this.Working);
+			GF.AssertTest(this.Loaded && !this.Working);
 			this.View.uImageList.DeselectRange(new ItemIndexRange(0, (USize)this.Animation.Image.Count));
 			this.View.uSpriteList.DeselectRange(new ItemIndexRange(0, (USize)this.Animation.Sprite.Count));
 			if (this.Animation.MainSprite is not null) {
@@ -385,7 +385,7 @@ namespace Helper.Module.AnimationViewer {
 				nameof(this.uAnimationFileSource_Text),
 				nameof(this.uImageDirectorySource_IsEnabled),
 				nameof(this.uImageDirectorySource_Text),
-				nameof(this.uSelectImageDirectorySource_IsEnabled),
+				nameof(this.uImageDirectorySourcePick_IsEnabled),
 				nameof(this.uImageList_IsEnabled),
 				nameof(this.uImageList_ItemsSource),
 				nameof(this.uSpriteList_IsEnabled),
@@ -416,7 +416,7 @@ namespace Helper.Module.AnimationViewer {
 			Boolean?                    initialState,
 			TimeSpan?                   initialTime
 		) {
-			Debug.Assert(this.Loaded && !this.Working);
+			GF.AssertTest(this.Loaded && !this.Working);
 			var workingSprite = AnimationHelper.SelectSprite(this.Animation, index);
 			this.WorkingSpriteIndex = index;
 			this.WorkingSpriteFrameRange = frameRange ?? new AnimationHelper.FrameRange() { Start = 0, Duration = workingSprite.Frame.Count };
@@ -440,7 +440,7 @@ namespace Helper.Module.AnimationViewer {
 			this.WorkingSpriteFrameRate = frameRate ?? workingSprite.FrameRate;
 			this.WorkingSpriteState = initialState ?? this.AutomaticPlay;
 			this.View.uSprite.Load(this.Animation, this.ImageSource, this.ImageFilter, this.SpriteFilter, index);
-			Debug.Assert(this.View.uSprite.Loaded);
+			GF.AssertTest(this.View.uSprite.Loaded);
 			var sliderAnimation = new ObjectAnimationUsingKeyFrames();
 			for (var frameIndex = 0; frameIndex < workingSprite.Frame.Count; frameIndex++) {
 				sliderAnimation.KeyFrames.Add(
@@ -509,7 +509,7 @@ namespace Helper.Module.AnimationViewer {
 
 		public async Task UnloadWorkingSprite (
 		) {
-			Debug.Assert(this.Loaded && this.Working);
+			GF.AssertTest(this.Loaded && this.Working);
 			this.WorkingSpriteIndex = null;
 			this.WorkingSpriteFrameRange = null;
 			this.WorkingSpriteFrameRangeLabelInformation = null;
@@ -553,7 +553,7 @@ namespace Helper.Module.AnimationViewer {
 		public async Task UpdateWorkingSpriteFrameRange (
 			AnimationHelper.FrameRange frameRange
 		) {
-			Debug.Assert(this.Loaded && this.Working);
+			GF.AssertTest(this.Loaded && this.Working);
 			this.WorkingSpriteFrameRange = frameRange;
 			this.View.uSprite.FrameRange = frameRange;
 			this.View.uSprite.CurrentTime = TimeSpan.FromSeconds(frameRange.Start);
@@ -608,7 +608,7 @@ namespace Helper.Module.AnimationViewer {
 			List<Boolean?>? imageFilter,
 			List<Boolean?>? spriteFilter
 		) {
-			Debug.Assert(this.Loaded);
+			GF.AssertTest(this.Loaded);
 			if (this.SuppressApplyFilterChanged) {
 				return;
 			}
@@ -631,7 +631,8 @@ namespace Helper.Module.AnimationViewer {
 					this.ImageFilter[index] = state.Value;
 					if (state.Value) {
 						this.View.uImageList.SelectRange(new ItemIndexRange(index, 1));
-					} else {
+					}
+					else {
 						this.View.uImageList.DeselectRange(new ItemIndexRange(index, 1));
 					}
 				}
@@ -645,7 +646,8 @@ namespace Helper.Module.AnimationViewer {
 					this.SpriteFilter[index] = state.Value;
 					if (state.Value) {
 						this.View.uSpriteList.SelectRange(new ItemIndexRange(index, 1));
-					} else {
+					}
+					else {
 						this.View.uSpriteList.DeselectRange(new ItemIndexRange(index, 1));
 					}
 				}
@@ -665,7 +667,7 @@ namespace Helper.Module.AnimationViewer {
 
 		public async Task ApplySpriteFilterRule (
 		) {
-			Debug.Assert(this.Loaded);
+			GF.AssertTest(this.Loaded);
 			if (this.SpriteFilterRule.Length != 0) {
 				await this.ApplyFilter(null, this.Animation.Sprite.Select((value) => ((Boolean?)!Regex.IsMatch(value.Name, this.SpriteFilterRule))).ToList());
 			}
@@ -676,32 +678,32 @@ namespace Helper.Module.AnimationViewer {
 
 		#region page
 
-		public async void uPage_OnDragOver (
+		public async void uPage_DragOver (
 			Object        sender,
 			DragEventArgs args
 		) {
-			if (sender is not Page senders) { return; }
+			var senders = sender.AsClass<Page>();
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Link;
 			}
 			return;
 		}
 
-		public async void uPage_OnDrop (
+		public async void uPage_Drop (
 			Object        sender,
 			DragEventArgs args
 		) {
-			if (sender is not Page senders) { return; }
-			args.Handled = true;
+			var senders = sender.AsClass<Page>();
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
+				args.Handled = true;
 				var item = await args.DataView.GetStorageItemsAsync();
 				if (item.Count != 1) {
-					App.MainWindow.Controller.PublishTip(InfoBarSeverity.Error, "Source is multiply.", "");
+					App.MainWindow.PublishTip(InfoBarSeverity.Error, "Source is multiply.", "");
 					return;
 				}
 				var animationFile = StorageHelper.Regularize(item[0].Path);
 				if (!StorageHelper.ExistFile(animationFile)) {
-					App.MainWindow.Controller.PublishTip(InfoBarSeverity.Error, "Source is not a file.", "");
+					App.MainWindow.PublishTip(InfoBarSeverity.Error, "Source is not a file.", "");
 					return;
 				}
 				var imageDirectory = StorageHelper.Parent(animationFile) ?? throw new Exception();
@@ -720,15 +722,11 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		// ----------------
-
 		public String uStagePositionY_Text {
 			get {
 				return $"{this.StagePositionY:F0}";
 			}
 		}
-
-		// ----------------
 
 		public String uStageScale_Text {
 			get {
@@ -736,16 +734,16 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		// ----------------
-
 		public String uStageScaleIcon_Glyph {
 			get {
 				var valueLose = (Size)Math.Round(this.StageScale * 100.0);
 				if (valueLose < 100) {
 					return FluentIconGlyph.BackToWindow;
-				} else if (valueLose > 100) {
+				}
+				else if (valueLose > 100) {
 					return FluentIconGlyph.FullScreen;
-				} else {
+				}
+				else {
 					return FluentIconGlyph.Reshare;
 				}
 			}
@@ -753,17 +751,14 @@ namespace Helper.Module.AnimationViewer {
 
 		// ----------------
 
-		public async void uStage_OnViewChanged (
+		public async void uStage_ViewChanged (
 			Object sender,
 			Object args
 		) {
-			if (sender is not ScrollViewer senders) { return; }
-			var newScale = senders.ZoomFactor;
-			var newPositionX = (senders.HorizontalOffset + senders.ActualWidth / 2) / senders.ZoomFactor;
-			var newPositionY = (senders.VerticalOffset + senders.ActualHeight / 2) / senders.ZoomFactor;
-			this.StageScale = newScale;
-			this.StagePositionX = newPositionX;
-			this.StagePositionY = newPositionY;
+			var senders = sender.AsClass<ScrollViewer>();
+			this.StageScale = senders.ZoomFactor;
+			this.StagePositionX = (senders.HorizontalOffset + senders.ActualWidth / 2) / senders.ZoomFactor;
+			this.StagePositionY = (senders.VerticalOffset + senders.ActualHeight / 2) / senders.ZoomFactor;
 			this.NotifyPropertyChanged(
 				nameof(this.uStagePositionX_Text),
 				nameof(this.uStagePositionY_Text),
@@ -783,16 +778,12 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public async void uImmediateSelect_OnClick (
+		public async void uImmediateSelect_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			var newValue = senders.IsChecked!.Value;
-			this.ImmediateSelect = newValue;
-			this.NotifyPropertyChanged(
-				nameof(this.uImmediateSelect_IsChecked)
-			);
+			var senders = sender.AsClass<ToggleButton>();
+			this.ImmediateSelect = senders.IsChecked.AsNotNull();
 			return;
 		}
 
@@ -804,16 +795,12 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public async void uAutomaticPlay_OnClick (
+		public async void uAutomaticPlay_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			var newValue = senders.IsChecked!.Value;
-			this.AutomaticPlay = newValue;
-			this.NotifyPropertyChanged(
-				nameof(this.uAutomaticPlay_IsChecked)
-			);
+			var senders = sender.AsClass<ToggleButton>();
+			this.AutomaticPlay = senders.IsChecked.AsNotNull();
 			return;
 		}
 
@@ -825,17 +812,13 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public async void uRepeatPlay_OnClick (
+		public async void uRepeatPlay_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			var newValue = senders.IsChecked!.Value;
-			this.RepeatPlay = newValue;
-			this.View.uSprite.Repeat = newValue;
-			this.NotifyPropertyChanged(
-				nameof(this.uRepeatPlay_IsChecked)
-			);
+			var senders = sender.AsClass<ToggleButton>();
+			this.RepeatPlay = senders.IsChecked.AsNotNull();
+			this.View.uSprite.Repeat = this.RepeatPlay;
 			return;
 		}
 
@@ -847,16 +830,12 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public async void uRemainFrameRate_OnClick (
+		public async void uRemainFrameRate_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			var newValue = senders.IsChecked!.Value;
-			this.RemainFrameRate = newValue;
-			this.NotifyPropertyChanged(
-				nameof(this.uRemainFrameRate_IsChecked)
-			);
+			var senders = sender.AsClass<ToggleButton>();
+			this.RemainFrameRate = senders.IsChecked.AsNotNull();
 			return;
 		}
 
@@ -871,11 +850,11 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public async void uClearSource_OnClick (
+		public async void uClearSource_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
+			var senders = sender.AsClass<Button>();
 			if (!this.Loaded) { return; }
 			if (this.Working) {
 				await this.UnloadWorkingSprite();
@@ -900,13 +879,11 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		// ----------------
-
-		public async void uSelectAnimationFileSource_OnClick (
+		public async void uAnimationFileSourcePick_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
+			var senders = sender.AsClass<Button>();
 			var isPlaying = this.Working && this.View.uSprite.State == SpriteControl.StateType.Playing;
 			if (isPlaying) {
 				this.View.uSprite.State = SpriteControl.StateType.Paused;
@@ -915,7 +892,8 @@ namespace Helper.Module.AnimationViewer {
 			if (animationFile is not null) {
 				var imageDirectory = StorageHelper.Parent(animationFile) ?? throw new Exception();
 				await this.ApplyLoad(animationFile, imageDirectory, null, null, null, null);
-			} else {
+			}
+			else {
 				if (isPlaying) {
 					this.View.uSprite.State = SpriteControl.StateType.Playing;
 				}
@@ -939,20 +917,18 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		// ----------------
-
-		public Boolean uSelectImageDirectorySource_IsEnabled {
+		public Boolean uImageDirectorySourcePick_IsEnabled {
 			get {
 				if (!this.Loaded) { return false; }
 				return true;
 			}
 		}
 
-		public async void uSelectImageDirectorySource_OnClick (
+		public async void uImageDirectorySourcePick_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
+			var senders = sender.AsClass<Button>();
 			if (!this.Loaded) { return; }
 			var isPlaying = this.Working && this.View.uSprite.State == SpriteControl.StateType.Playing;
 			if (isPlaying) {
@@ -962,7 +938,8 @@ namespace Helper.Module.AnimationViewer {
 			if (imageDirectory is not null) {
 				var animationFile = this.AnimationFileSource;
 				await this.ApplyLoad(animationFile, imageDirectory, null, null, null, null);
-			} else {
+			}
+			else {
 				if (isPlaying) {
 					this.View.uSprite.State = SpriteControl.StateType.Playing;
 				}
@@ -984,24 +961,22 @@ namespace Helper.Module.AnimationViewer {
 		public List<MainPageImageItemController> uImageList_ItemsSource {
 			get {
 				if (!this.Loaded) { return new List<MainPageImageItemController>(); }
-				return new List<MainPageImageItemController>(Enumerable.Range(0, this.Animation.Image.Count).Select((index) => (new MainPageImageItemController() { Host = this, Index = index })));
+				return this.Animation.Image.Select((value, index) => (new MainPageImageItemController() { Host = this, Index = index })).ToList();
 			}
 		}
 
-		public async void uImageList_OnSelectionChanged (
+		public async void uImageList_SelectionChanged (
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			if (sender is not ListView senders) { return; }
+			var senders = sender.AsClass<ListView>();
 			if (!this.Loaded) { return; }
 			if (this.SuppressFilterListSelectionChanged) { return; }
-			foreach (var item in args.AddedItems) {
-				var itemX = item as MainPageImageItemController ?? throw new NullReferenceException();
-				this.ImageFilter[itemX.Index] = true;
+			foreach (var item in args.AddedItems.Select(GF.AsClass<MainPageImageItemController>)) {
+				this.ImageFilter[item.Index] = true;
 			}
-			foreach (var item in args.RemovedItems) {
-				var itemX = item as MainPageImageItemController ?? throw new NullReferenceException();
-				this.ImageFilter[itemX.Index] = false;
+			foreach (var item in args.RemovedItems.Select(GF.AsClass<MainPageImageItemController>)) {
+				this.ImageFilter[item.Index] = false;
 			}
 			this.SuppressApplyFilterChanged = true;
 			this.NotifyPropertyChanged(
@@ -1034,24 +1009,22 @@ namespace Helper.Module.AnimationViewer {
 		public List<MainPageSpriteItemController> uSpriteList_ItemsSource {
 			get {
 				if (!this.Loaded) { return new List<MainPageSpriteItemController>(); }
-				return new List<MainPageSpriteItemController>(Enumerable.Range(0, this.Animation.Sprite.Count).Select((index) => (new MainPageSpriteItemController() { Host = this, Index = index })));
+				return this.Animation.Sprite.Select((value, index) => (new MainPageSpriteItemController() { Host = this, Index = index })).ToList();
 			}
 		}
 
-		public async void uSpriteList_OnSelectionChanged (
+		public async void uSpriteList_SelectionChanged (
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			if (sender is not ListView senders) { return; }
+			var senders = sender.AsClass<ListView>();
 			if (!this.Loaded) { return; }
 			if (this.SuppressFilterListSelectionChanged) { return; }
-			foreach (var item in args.AddedItems) {
-				var itemX = item as MainPageSpriteItemController ?? throw new NullReferenceException();
-				this.SpriteFilter[itemX.Index] = true;
+			foreach (var item in args.AddedItems.Select(GF.AsClass<MainPageSpriteItemController>)) {
+				this.SpriteFilter[item.Index] = true;
 			}
-			foreach (var item in args.RemovedItems) {
-				var itemX = item as MainPageSpriteItemController ?? throw new NullReferenceException();
-				this.SpriteFilter[itemX.Index] = false;
+			foreach (var item in args.RemovedItems.Select(GF.AsClass<MainPageSpriteItemController>)) {
+				this.SpriteFilter[item.Index] = false;
 			}
 			this.SuppressApplyFilterChanged = true;
 			this.NotifyPropertyChanged(
@@ -1088,12 +1061,15 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public async void uMainSpriteList_OnSelectionChanged (
+		public async void uMainSpriteList_SelectionChanged (
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			if (sender is not ListView senders) { return; }
+			var senders = sender.AsClass<ListView>();
 			if (!this.Loaded) { return; }
+			if (senders.SelectedItems.Count == 0) {
+				senders.SelectAll();
+			}
 			return;
 		}
 
@@ -1144,11 +1120,11 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public async void uWorkingSpriteFrameRangeBegin_OnValueChanged (
+		public async void uWorkingSpriteFrameRangeBegin_ValueChanged (
 			NumberBox                      sender,
 			NumberBoxValueChangedEventArgs args
 		) {
-			if (sender is not NumberBox senders) { return; }
+			var senders = sender.AsClass<NumberBox>();
 			if (!this.Working) { return; }
 			if (!Floater.IsNaN(args.NewValue)) {
 				var newBegin = (Size)args.NewValue - 1;
@@ -1205,11 +1181,11 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public async void uWorkingSpriteFrameRangeEnd_OnValueChanged (
+		public async void uWorkingSpriteFrameRangeEnd_ValueChanged (
 			NumberBox                      sender,
 			NumberBoxValueChangedEventArgs args
 		) {
-			if (sender is not NumberBox senders) { return; }
+			var senders = sender.AsClass<NumberBox>();
 			if (!this.Working) { return; }
 			if (!Floater.IsNaN(args.NewValue)) {
 				var newEnd = (Size)args.NewValue - 1;
@@ -1270,14 +1246,14 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public async void uWorkingSpriteFrameRangeLabel_OnSelectionChanged (
+		public async void uWorkingSpriteFrameRangeLabel_SelectionChanged (
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			if (sender is not ComboBox senders) { return; }
+			var senders = sender.AsClass<ComboBox>();
 			if (!this.Working) { return; }
 			if (args.AddedItems.Count == 1) {
-				var newLabel = args.AddedItems[0] as String ?? throw new NullReferenceException();
+				var newLabel = args.AddedItems[0].AsClass<String>();
 				var newRange = new AnimationHelper.FrameRange() {
 					Start = 0,
 					Duration = AnimationHelper.SelectSprite(this.Animation, this.WorkingSpriteIndex.Value).Frame.Count,
@@ -1332,11 +1308,11 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public async void uWorkingSpriteFrameRate_OnValueChanged (
+		public async void uWorkingSpriteFrameRate_ValueChanged (
 			NumberBox                      sender,
 			NumberBoxValueChangedEventArgs args
 		) {
-			if (sender is not NumberBox senders) { return; }
+			var senders = sender.AsClass<NumberBox>();
 			if (!this.Working) { return; }
 			if (!Floater.IsNaN(args.NewValue)) {
 				var newValue = args.NewValue;
@@ -1376,14 +1352,14 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public async void uWorkingSpriteFrameProgress_OnValueChanged (
+		public async void uWorkingSpriteFrameProgress_ValueChanged (
 			Object                         sender,
 			RangeBaseValueChangedEventArgs args
 		) {
-			if (sender is not Slider senders) { return; }
+			var senders = sender.AsClass<Slider>();
 			if (!this.Working) { return; }
 			if (!Floater.IsNaN(args.NewValue) && args.NewValue != 0.0) {
-				Debug.Assert(this.View.uSprite.State != SpriteControl.StateType.Idle);
+				GF.AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
 				if (this.uWorkingSpriteFrameProgress__Changeable) {
 					this.View.uSprite.CurrentTime = TimeSpan.FromSeconds(args.NewValue - 1.0);
 				}
@@ -1397,13 +1373,13 @@ namespace Helper.Module.AnimationViewer {
 
 		public Boolean uWorkingSpriteFrameProgress__ChangingWhenPlaying = false;
 
-		public async void uWorkingSpriteFrameProgress_OnPointerPressed (
+		public async void uWorkingSpriteFrameProgress_PointerPressed (
 			Object                 sender,
 			PointerRoutedEventArgs args
 		) {
-			if (sender is not Slider senders) { return; }
+			var senders = sender.AsClass<Slider>();
 			if (!this.Working) { return; }
-			Debug.Assert(this.View.uSprite.State != SpriteControl.StateType.Idle);
+			GF.AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
 			this.uWorkingSpriteFrameProgress__Changeable = true;
 			this.uWorkingSpriteFrameProgress__ChangingWhenPlaying = this.WorkingSpriteState.Value;
 			if (this.uWorkingSpriteFrameProgress__ChangingWhenPlaying) {
@@ -1416,13 +1392,13 @@ namespace Helper.Module.AnimationViewer {
 			return;
 		}
 
-		public async void uWorkingSpriteFrameProgress_OnPointerReleased (
+		public async void uWorkingSpriteFrameProgress_PointerReleased (
 			Object                 sender,
 			PointerRoutedEventArgs args
 		) {
-			if (sender is not Slider senders) { return; }
+			var senders = sender.AsClass<Slider>();
 			if (!this.Working) { return; }
-			Debug.Assert(this.View.uSprite.State != SpriteControl.StateType.Idle);
+			GF.AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
 			if (this.uWorkingSpriteFrameProgress__ChangingWhenPlaying) {
 				this.View.uSprite.State = SpriteControl.StateType.Playing;
 				this.WorkingSpriteState = true;
@@ -1446,13 +1422,13 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public async void uWorkingSpriteState_OnClick (
+		public async void uWorkingSpriteState_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
+			var senders = sender.AsClass<Button>();
 			if (!this.Working) { return; }
-			Debug.Assert(this.View.uSprite.State != SpriteControl.StateType.Idle);
+			GF.AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
 			var newState = this.View.uSprite.State != SpriteControl.StateType.Playing;
 			this.View.uSprite.State = !newState ? SpriteControl.StateType.Paused : SpriteControl.StateType.Playing;
 			this.WorkingSpriteState = newState;
@@ -1480,13 +1456,13 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public async void uWorkingSpritePrevious_OnClick (
+		public async void uWorkingSpritePrevious_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
+			var senders = sender.AsClass<Button>();
 			if (!this.Working) { return; }
-			Debug.Assert(this.View.uSprite.State != SpriteControl.StateType.Idle);
+			GF.AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
 			var newTime = this.View.uSprite.CurrentTime - TimeSpan.FromSeconds(1.0);
 			var beginTime = TimeSpan.FromSeconds(this.WorkingSpriteFrameRange.Start);
 			if (newTime < beginTime) {
@@ -1505,13 +1481,13 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public async void uWorkingSpriteNext_OnClick (
+		public async void uWorkingSpriteNext_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
+			var senders = sender.AsClass<Button>();
 			if (!this.Working) { return; }
-			Debug.Assert(this.View.uSprite.State != SpriteControl.StateType.Idle);
+			GF.AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
 			var newTime = this.View.uSprite.CurrentTime + TimeSpan.FromSeconds(1.0);
 			var endTime = TimeSpan.FromSeconds(this.WorkingSpriteFrameRange.Start + this.WorkingSpriteFrameRange.Duration - 1.0);
 			if (newTime > endTime) {
@@ -1531,17 +1507,13 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public async void uShowSpriteBoundary_OnClick (
+		public async void uShowSpriteBoundary_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			var newValue = senders.IsChecked!.Value;
-			this.ShowSpriteBoundary = newValue;
+			var senders = sender.AsClass<ToggleButton>();
+			this.ShowSpriteBoundary = senders.IsChecked.AsNotNull();
 			this.View.uSprite.ShowBoundary = this.ShowSpriteBoundary;
-			this.NotifyPropertyChanged(
-				nameof(this.uShowSpriteBoundary_IsChecked)
-			);
 			return;
 		}
 
@@ -1549,11 +1521,11 @@ namespace Helper.Module.AnimationViewer {
 
 		#region sprite filter rule
 
-		public async void uSpriteFilterRule_OnClick (
+		public async void uSpriteFilterRule_Click (
 			SplitButton               sender,
 			SplitButtonClickEventArgs args
 		) {
-			if (sender is not SplitButton senders) { return; }
+			var senders = sender.AsClass<SplitButton>();
 			if (!this.Loaded) { return; }
 			await this.ApplySpriteFilterRule();
 			return;
@@ -1567,16 +1539,12 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public async void uSpriteFilterRuleText_OnTextChanged (
+		public async void uSpriteFilterRuleText_TextChanged (
 			Object               sender,
 			TextChangedEventArgs args
 		) {
-			if (sender is not TextBox senders) { return; }
-			var newValue = senders.Text;
-			this.SpriteFilterRule = newValue;
-			this.NotifyPropertyChanged(
-				nameof(this.uSpriteFilterRuleText_Text)
-			);
+			var senders = sender.AsClass<TextBox>();
+			this.SpriteFilterRule = senders.Text;
 			return;
 		}
 
@@ -1625,14 +1593,14 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public async void uPlantCustomLayer_OnSelectionChanged (
+		public async void uPlantCustomLayer_SelectionChanged (
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			if (sender is not ComboBox senders) { return; }
+			var senders = sender.AsClass<ComboBox>();
 			if (!this.Loaded || this.PlantCustomLayerName.Count == 0) { return; }
 			if (args.AddedItems.Count == 1) {
-				var targetLayer = $"custom_{args.AddedItems[0] as String ?? throw new NullReferenceException()}";
+				var targetLayer = $"custom_{args.AddedItems[0].AsClass<String>()}";
 				await this.ApplyFilter(null, this.Animation.Sprite.Select((value) => (!this.PlantCustomLayerName.Contains(value.Name) ? (Boolean?)null : value.Name == targetLayer)).ToList());
 				this.NotifyPropertyChanged(
 					nameof(this.uPlantCustomLayer_SelectedItem)
@@ -1684,14 +1652,14 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public async void uZombieStateLayer_OnSelectionChanged (
+		public async void uZombieStateLayer_SelectionChanged (
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			if (sender is not ComboBox senders) { return; }
+			var senders = sender.AsClass<ComboBox>();
 			if (!this.Loaded || this.ZombieStateLayerName.Count == 0) { return; }
 			if (args.AddedItems.Count == 1) {
-				var targetLayer = args.AddedItems[0] as String ?? throw new NullReferenceException();
+				var targetLayer = args.AddedItems[0].AsClass<String>();
 				await this.ApplyFilter(null, this.Animation.Sprite.Select((value) => (!this.ZombieStateLayerName.Contains(value.Name) ? (Boolean?)null : value.Name == targetLayer)).ToList());
 				this.NotifyPropertyChanged(
 					nameof(this.uZombieStateLayer_SelectedItem)
@@ -1728,13 +1696,13 @@ namespace Helper.Module.AnimationViewer {
 			}
 		}
 
-		public async void uZombieGroundSwatchLayer_OnClick (
+		public async void uZombieGroundSwatchLayer_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
+			var senders = sender.AsClass<ToggleButton>();
 			if (!this.Loaded || this.ZombieGroundSwatchLayerName.Count == 0) { return; }
-			var newValue = senders.IsChecked!.Value;
+			var newValue = senders.IsChecked.AsNotNull();
 			await this.ApplyFilter(null, this.Animation.Sprite.Select((value) => (!this.ZombieGroundSwatchLayerName.Contains(value.Name) ? (Boolean?)null : newValue)).ToList());
 			this.NotifyPropertyChanged(
 				nameof(this.uZombieGroundSwatchLayer_IsChecked)
@@ -1762,34 +1730,31 @@ namespace Helper.Module.AnimationViewer {
 
 		public String uTitle_Text {
 			get {
-				Debug.Assert(this.Host.Loaded);
+				GF.AssertTest(this.Host.Loaded);
 				var model = this.Host.Animation.Image[this.Index];
 				return $"{model.Name.Split('|')[0]}";
 			}
 		}
 
-		// ----------------
-
 		public String uDescription_Text {
 			get {
-				Debug.Assert(this.Host.Loaded);
+				GF.AssertTest(this.Host.Loaded);
 				var model = this.Host.Animation.Image[this.Index];
 				return $"{model.Size[0]} x {model.Size[1]}";
 			}
 		}
 
-		// ----------------
-
 		public UIElement uPreview_Content {
 			get {
-				Debug.Assert(this.Host.Loaded);
+				GF.AssertTest(this.Host.Loaded);
 				var source = this.Host.ImageSource[this.Index];
 				if (source is not null) {
 					return new Image() {
 						Width = 32, Height = 32,
 						Source = source,
 					};
-				} else {
+				}
+				else {
 					return new FontIcon() {
 						Width = 32, Height = 32,
 						FontSize = 20,
@@ -1820,29 +1785,25 @@ namespace Helper.Module.AnimationViewer {
 
 		public String uTitle_Text {
 			get {
-				Debug.Assert(this.Host.Loaded);
+				GF.AssertTest(this.Host.Loaded);
 				var model = this.Host.Animation.Sprite[this.Index];
 				return $"{model.Name}";
 			}
 		}
 
-		// ----------------
-
 		public String uDescription_Text {
 			get {
-				Debug.Assert(this.Host.Loaded);
+				GF.AssertTest(this.Host.Loaded);
 				var model = this.Host.Animation.Sprite[this.Index];
 				return $"{model.FrameRate:F0} - {model.Frame.Count}";
 			}
 		}
 
-		// ----------------
-
 		public UIElement uPreview_Content {
 			get {
-				Debug.Assert(this.Host.Loaded);
+				GF.AssertTest(this.Host.Loaded);
 				var model = this.Host.Animation.Sprite[this.Index];
-				var source = (ImageSource?)null;
+				var source = default(ImageSource?);
 				if (model.Frame.Count == 1 && model.Frame[0].Append.Count == 1 && model.Frame[0].Change.Count == 1 && !model.Frame[0].Append[0].Sprite) {
 					source = this.Host.ImageSource[(Size)model.Frame[0].Append[0].Resource];
 				}
@@ -1851,7 +1812,8 @@ namespace Helper.Module.AnimationViewer {
 						Width = 32, Height = 32,
 						Source = source,
 					};
-				} else {
+				}
+				else {
 					return new FontIcon() {
 						Width = 32, Height = 32,
 						FontSize = 20,
@@ -1866,17 +1828,17 @@ namespace Helper.Module.AnimationViewer {
 
 		public Boolean uToggle_IsChecked {
 			get {
-				Debug.Assert(this.Host.Loaded);
+				GF.AssertTest(this.Host.Loaded);
 				return this.Index == this.Host.WorkingSpriteIndex;
 			}
 		}
 
-		public async void uToggle_OnClick (
+		public async void uToggle_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			Debug.Assert(this.Host.Loaded);
+			var senders = sender.AsClass<ToggleButton>();
+			GF.AssertTest(this.Host.Loaded);
 			var lastWorkingSpriteIndex = this.Host.WorkingSpriteIndex;
 			var lastWorkingSpriteFrameRate = this.Host.WorkingSpriteFrameRate;
 			if (this.Host.Working) {
@@ -1910,8 +1872,9 @@ namespace Helper.Module.AnimationViewer {
 			get {
 				if (this.Index is null) {
 					return 0.0;
-				} else {
-					Debug.Assert(this.Host.Loaded);
+				}
+				else {
+					GF.AssertTest(this.Host.Loaded);
 					return 1.0;
 				}
 			}
@@ -1923,29 +1886,27 @@ namespace Helper.Module.AnimationViewer {
 			get {
 				if (this.Index is null) {
 					return "";
-				} else {
-					Debug.Assert(this.Host.Loaded);
+				}
+				else {
+					GF.AssertTest(this.Host.Loaded);
 					var model = this.Host.Animation.MainSprite!;
 					return $"{model.Name}";
 				}
 			}
 		}
 
-		// ----------------
-
 		public String uDescription_Text {
 			get {
 				if (this.Index is null) {
 					return "";
-				} else {
-					Debug.Assert(this.Host.Loaded);
+				}
+				else {
+					GF.AssertTest(this.Host.Loaded);
 					var model = this.Host.Animation.MainSprite!;
 					return $"{model.FrameRate:F0} - {model.Frame.Count}";
 				}
 			}
 		}
-
-		// ----------------
 
 		public UIElement uPreview_Content {
 			get {
@@ -1964,21 +1925,23 @@ namespace Helper.Module.AnimationViewer {
 			get {
 				if (this.Index is null) {
 					return false;
-				} else {
-					Debug.Assert(this.Host.Loaded);
+				}
+				else {
+					GF.AssertTest(this.Host.Loaded);
 					return this.Index == this.Host.WorkingSpriteIndex;
 				}
 			}
 		}
 
-		public async void uToggle_OnClick (
+		public async void uToggle_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
+			var senders = sender.AsClass<ToggleButton>();
 			if (this.Index is null) {
-			} else {
-				Debug.Assert(this.Host.Loaded);
+			}
+			else {
+				GF.AssertTest(this.Host.Loaded);
 				var lastWorkingSpriteIndex = this.Host.WorkingSpriteIndex;
 				var lastWorkingSpriteFrameRate = this.Host.WorkingSpriteFrameRate;
 				if (this.Host.Working) {

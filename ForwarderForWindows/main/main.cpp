@@ -38,7 +38,8 @@ auto wmain (
 			std::fclose(file);
 		}
 		ShellExecuteW(nullptr, L"open", data_directory.wstring().data(), nullptr, nullptr, SW_NORMAL);
-	} catch (...) {
+	}
+	catch (...) {
 		error = true;
 	}
 	std::println(std::cout, "{}", !error ? "succeeded" : "failed");

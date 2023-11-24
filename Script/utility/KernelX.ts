@@ -1114,12 +1114,14 @@ namespace TwinStar.Script.KernelX {
 					let padded_size: KernelX.Image.ImageSize;
 					if (format.includes('etc1')) {
 						padded_size = [compute(origin_size[0]), compute(origin_size[1])];
-					} else if (format.includes('pvrtc')) {
+					}
+					else if (format.includes('pvrtc')) {
 						let padded_width = compute(origin_size[0]);
 						let padded_height = compute(origin_size[1]);
 						let maximum_size = padded_width > padded_height ? padded_width : padded_height;
 						padded_size = [maximum_size, maximum_size];
-					} else {
+					}
+					else {
 						padded_size = [origin_size[0], origin_size[1]];
 					}
 					return padded_size;
@@ -2229,11 +2231,14 @@ namespace TwinStar.Script.KernelX {
 					let bit_count: BitCount;
 					if (value_count <= 0b10) {
 						bit_count = 1;
-					} else if (value_count <= 0b100) {
+					}
+					else if (value_count <= 0b100) {
 						bit_count = 2;
-					} else if (value_count <= 0b1000) {
+					}
+					else if (value_count <= 0b1000) {
 						bit_count = 3;
-					} else {
+					}
+					else {
 						bit_count = 4;
 					}
 					return bit_count;
@@ -2287,7 +2292,8 @@ namespace TwinStar.Script.KernelX {
 					let bit_count = compute_bit_count(palette.length);
 					if (bit_count === 1) {
 						palette_data.u8(0n);
-					} else {
+					}
+					else {
 						palette_data.u8(BigInt(palette.length));
 						for (let e of palette) {
 							palette_data.u8(e);
@@ -2307,7 +2313,8 @@ namespace TwinStar.Script.KernelX {
 					let palette: KernelX.Image.ColorList;
 					if (index_count === 0n) {
 						palette = [0b0000n, 0b1111n];
-					} else {
+					}
+					else {
 						palette = [];
 						for (let index = 0n; index < index_count; index++) {
 							palette.push(palette_data.u8());

@@ -36,7 +36,6 @@ class Application extends StatelessWidget {
             return MaterialApp(
               title: kApplicationName,
               theme: ThemeData(
-                useMaterial3: true,
                 brightness: Brightness.light,
                 colorScheme: setting.data.mThemeColorInheritFromSystem ? lightDynamic : null,
                 colorSchemeSeed: !setting.data.mThemeColorInheritFromSystem ? setting.data.mThemeColorLight : null,
@@ -51,7 +50,6 @@ class Application extends StatelessWidget {
                 ),
               ),
               darkTheme: ThemeData(
-                useMaterial3: true,
                 brightness: Brightness.dark,
                 colorScheme: setting.data.mThemeColorInheritFromSystem ? darkDynamic : null,
                 colorSchemeSeed: !setting.data.mThemeColorInheritFromSystem ? setting.data.mThemeColorDark : null,

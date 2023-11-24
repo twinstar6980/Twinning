@@ -47,7 +47,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.trail {
 						id: 'version_variant_64',
 						checker: null,
 						automatic: null,
-						condition: (argument: { version_platform: string; }) => (argument.version_platform === 'mobile' ? null : false),
+						condition: (argument: { version_platform: string; }) => (['mobile'].includes(argument.version_platform) ? null : false),
 						default: configuration.version_variant_64,
 					}),
 					typical_argument_size({
@@ -122,7 +122,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.trail {
 						id: 'version_variant_64',
 						checker: null,
 						automatic: null,
-						condition: (argument: { version_platform: string; }) => (argument.version_platform === 'mobile' ? null : false),
+						condition: (argument: { version_platform: string; }) => (['mobile'].includes(argument.version_platform) ? null : false),
 						default: configuration.version_variant_64,
 					}),
 				],

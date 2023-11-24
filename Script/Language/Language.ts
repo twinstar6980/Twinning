@@ -35,10 +35,12 @@ namespace TwinStar.Script.Language {
 				result += `${argumant[argument_index]}`;
 				argument_index++;
 				index++;
-			} else if (format[index] === '{' && format[index + 1] === '{') {
+			}
+			else if (format[index] === '{' && format[index + 1] === '{') {
 				result += character;
 				index++;
-			} else {
+			}
+			else {
 				result += character;
 			}
 		}

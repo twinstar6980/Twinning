@@ -72,7 +72,8 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 		let x_matrix_list = XML.find_child_element(x_DOMSymbolInstance, 'matrix');
 		if (x_matrix_list.length === 0) {
 			transform = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0];
-		} else {
+		}
+		else {
 			assert_test(x_matrix_list.length === 1);
 			let x_matrix = x_matrix_list[0];
 			let x_Matrix_list = XML.find_child_element(x_matrix, 'Matrix');
@@ -181,7 +182,8 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 				let x_matrix_list = XML.find_child_element(x_DOMSymbolInstance, 'matrix');
 				if (x_matrix_list.length === 0) {
 					transform = [0.0, 0.0];
-				} else {
+				}
+				else {
 					assert_test(x_matrix_list.length === 1);
 					let x_matrix = x_matrix_list[0];
 					let x_Matrix_list = XML.find_child_element(x_matrix, 'Matrix');
@@ -192,7 +194,8 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 				let x_color_list = XML.find_child_element(x_DOMSymbolInstance, 'color');
 				if (x_color_list.length === 0) {
 					color = [...k_initial_color];
-				} else {
+				}
+				else {
 					assert_test(x_color_list.length === 1);
 					let x_color = x_color_list[0];
 					let x_Color_list = XML.find_child_element(x_color, 'Color');
@@ -218,7 +221,8 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 						time_scale: 1.0,
 					});
 					layer_count++;
-				} else {
+				}
+				else {
 					assert_test(current_instance.resource === model.resource && current_instance.sprite === model.sprite);
 				}
 				model.frame_start = frame_index;

@@ -18,7 +18,7 @@ namespace Helper.Utility {
 		public static void Track (
 			Window window
 		) {
-			window.Closed += (sender, args) => { WindowHelper.Current.Remove(window); };
+			window.Closed += (_, _) => { WindowHelper.Current.Remove(window); };
 			WindowHelper.Current.Add(window);
 			return;
 		}
@@ -88,14 +88,14 @@ namespace Helper.Utility {
 		public static void Minimize (
 			Window window
 		) {
-			(window.AppWindow.Presenter as OverlappedPresenter)!.Minimize();
+			window.AppWindow.Presenter.AsClass<OverlappedPresenter>().Minimize();
 			return;
 		}
 
 		public static void Maximize (
 			Window window
 		) {
-			(window.AppWindow.Presenter as OverlappedPresenter)!.Maximize();
+			window.AppWindow.Presenter.AsClass<OverlappedPresenter>().Maximize();
 			return;
 		}
 
@@ -105,7 +105,7 @@ namespace Helper.Utility {
 			Window  window,
 			Boolean state
 		) {
-			(window.AppWindow.Presenter as OverlappedPresenter)!.IsAlwaysOnTop = state;
+			window.AppWindow.Presenter.AsClass<OverlappedPresenter>().IsAlwaysOnTop = state;
 			return;
 		}
 
@@ -126,7 +126,7 @@ namespace Helper.Utility {
 		public static Window GetForElement (
 			UIElement element
 		) {
-			return WindowHelper.Current.Find((value) => (value.Content.XamlRoot == element.XamlRoot)) ?? throw new Exception("Could not get window.");
+			return WindowHelper.Current.Find((value) => (Object.ReferenceEquals(value.Content.XamlRoot, element.XamlRoot))) ?? throw new Exception("Could not get window.");
 		}
 
 		public static Boolean ShowAsForeground (

@@ -216,11 +216,14 @@ namespace TwinStar::Kernel::CharacterType {
 	) -> IntegerU8 {
 		if (is_alpha_hex_lower(character)) {
 			return 0xa_iu8 + cbw<IntegerU8>(character - 'a'_c);
-		} else if (is_alpha_hex_upper(character)) {
+		}
+		else if (is_alpha_hex_upper(character)) {
 			return 0xA_iu8 + cbw<IntegerU8>(character - 'A'_c);
-		} else if (is_number_dec(character)) {
+		}
+		else if (is_number_dec(character)) {
 			return 0x0_iu8 + cbw<IntegerU8>(character - '0'_c);
-		} else {
+		}
+		else {
 			assert_fail(R"(/* number is valid */)");
 		}
 	}
@@ -231,7 +234,8 @@ namespace TwinStar::Kernel::CharacterType {
 		assert_test(number < 0x10_iu8);
 		if (number >= 0xa_iu8) {
 			return 'a'_c + cbw<Character>(number - 0xa_iu8);
-		} else {
+		}
+		else {
 			return '0'_c + cbw<Character>(number);
 		}
 	}
@@ -242,7 +246,8 @@ namespace TwinStar::Kernel::CharacterType {
 		assert_test(number < 0x10_iu8);
 		if (number >= 0xA_iu8) {
 			return 'A'_c + cbw<Character>(number - 0xA_iu8);
-		} else {
+		}
+		else {
 			return '0'_c + cbw<Character>(number);
 		}
 	}

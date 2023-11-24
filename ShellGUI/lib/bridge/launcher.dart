@@ -15,7 +15,7 @@ import 'package:async/async.dart';
 class Launcher {
 
   static
-  late isolate.SendPort _mainSendPort;
+  isolate.SendPort? _mainSendPort = null;
 
   static
   List<String>
@@ -23,12 +23,12 @@ class Launcher {
     List<String> argument,
   ) {
     var state = ffi.calloc<ffi.Bool>();
+    state.value = false;
     var argumentStructure = ffi.calloc<Interface.StringList>();
     var resultStructure = ffi.calloc<Interface.StringList>();
     var exceptionStructure = ffi.calloc<Interface.String>();
-    state.value = false;
     Converter.constructStringList(argumentStructure.ref, argument);
-    _mainSendPort.send([state.address, argumentStructure.address, resultStructure.address, exceptionStructure.address]);
+    _mainSendPort!.send([state.address, argumentStructure.address, resultStructure.address, exceptionStructure.address]);
     while (!state.value) {
       sleep(const Duration(milliseconds: 10));
     }
@@ -42,7 +42,7 @@ class Launcher {
     ffi.calloc.free(exceptionStructure);
     ffi.calloc.free(state);
     if (exception.isNotEmpty) {
-      throw exception;
+      throw exception.substring(1);
     }
     return result;
   }
@@ -52,31 +52,31 @@ class Launcher {
   _sub(
     isolate.SendPort mainSendPort,
   ) async {
-    var subPort = isolate.ReceivePort();
-    var subEvent = StreamQueue<dynamic>(subPort);
     _mainSendPort = mainSendPort;
-    mainSendPort.send(subPort.sendPort);
+    var subReceivePort = isolate.ReceivePort();
+    var subStreamQueue = StreamQueue<dynamic>(subReceivePort);
+    mainSendPort.send(subReceivePort.sendPort);
     var result = null as String?;
     var exception = null as String?;
-    var kernel = await subEvent.next as String;
-    var script = await subEvent.next as String;
-    var argument = await subEvent.next as List<String>;
+    var subEvent = await subStreamQueue.next as List<dynamic>;
+    var kernel = subEvent[0] as String;
+    var script = subEvent[1] as String;
+    var argument = subEvent[2] as List<String>;
     var library = Library();
     try {
       library.open(kernel);
-      Invoker.version(library);
-      Invoker.prepare(library);
       result = Invoker.execute(library, _callbackProxy, script, argument);
-    } catch (e) {
+    }
+    catch (e) {
       exception = e.toString();
     }
     if (library.state()) {
       library.close();
     }
-    await subEvent.cancel();
+    await subStreamQueue.cancel();
     mainSendPort.send(null);
-    mainSendPort.send(result);
-    mainSendPort.send(exception);
+    mainSendPort.send([result, exception]);
+    _mainSendPort = null;
     return;
   }
 
@@ -88,40 +88,42 @@ class Launcher {
     String       script,
     List<String> argument,
   ) async {
-    await host.start();
-    var mainPort = isolate.ReceivePort();
-    var mainEvent = StreamQueue<dynamic>(mainPort);
-    await isolate.Isolate.spawn(_sub, mainPort.sendPort);
-    var subSendPort = await mainEvent.next as isolate.SendPort;
-    subSendPort.send(library);
-    subSendPort.send(script);
-    subSendPort.send(argument);
+    var mainReceivePort = isolate.ReceivePort();
+    var mainStreamQueue = StreamQueue<dynamic>(mainReceivePort);
+    await isolate.Isolate.spawn(_sub, mainReceivePort.sendPort);
+    var subSendPort = await mainStreamQueue.next as isolate.SendPort;
     var result = null as String?;
     var exception = null as String?;
-    while (await mainEvent.hasNext) {
-      var message = await mainEvent.next;
-      if (message == null) {
-        result = await mainEvent.next;
-        exception = await mainEvent.next;
+    await host.start();
+    subSendPort.send([library, script, argument]);
+    while (await mainStreamQueue.hasNext) {
+      var mainEvent = await mainStreamQueue.next as List<dynamic>?;
+      if (mainEvent == null) {
+        mainEvent = await mainStreamQueue.next as List<dynamic>;
+        result = mainEvent[0];
+        exception = mainEvent[1];
         break;
       }
-      assert(message is List<int> && message.length == 4);
-      var callbackState = ffi.Pointer<ffi.Bool>.fromAddress(message[0]);
-      var callbackArgumentStructure = ffi.Pointer<Interface.StringList>.fromAddress(message[1]);
-      var callbackResultStructure = ffi.Pointer<Interface.StringList>.fromAddress(message[2]);
-      var callbackExceptionStructure = ffi.Pointer<Interface.String>.fromAddress(message[3]);
-      try {
-        var callbackResult = await host.execute(Converter.parseStringList(callbackArgumentStructure.ref));
-        Converter.constructStringList(callbackResultStructure.ref, callbackResult);
-        Converter.constructString(callbackExceptionStructure.ref, '');
-      } catch (e) {
-        Converter.constructStringList(callbackResultStructure.ref, []);
-        Converter.constructString(callbackExceptionStructure.ref, e.toString());
+      else {
+        var callbackState = ffi.Pointer<ffi.Bool>.fromAddress(mainEvent[0]);
+        var callbackArgumentStructure = ffi.Pointer<Interface.StringList>.fromAddress(mainEvent[1]);
+        var callbackResultStructure = ffi.Pointer<Interface.StringList>.fromAddress(mainEvent[2]);
+        var callbackExceptionStructure = ffi.Pointer<Interface.String>.fromAddress(mainEvent[3]);
+        try {
+          var callbackResult = await host.execute(Converter.parseStringList(callbackArgumentStructure.ref));
+          Converter.constructStringList(callbackResultStructure.ref, callbackResult);
+          Converter.constructString(callbackExceptionStructure.ref, '');
+        }
+        catch (e) {
+          var callbackException = e.toString();
+          Converter.constructStringList(callbackResultStructure.ref, []);
+          Converter.constructString(callbackExceptionStructure.ref, '!${callbackException}');
+        }
+        callbackState.value = true;
       }
-      callbackState.value = true;
     }
-    await mainEvent.cancel();
     await host.finish();
+    await mainStreamQueue.cancel();
     if (exception != null) {
       throw exception;
     }

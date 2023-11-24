@@ -2,6 +2,7 @@
 // ReSharper disable CheckNamespace
 
 using Helper;
+using Helper.Utility;
 
 namespace Helper.Bridge {
 
@@ -15,14 +16,13 @@ namespace Helper.Bridge {
 			String       script,
 			List<String> argument
 		) {
-			host.Start();
 			var result = default(String?);
 			var exception = default(Exception?);
+			host.Start();
 			try {
-				Invoker.Version(library);
-				Invoker.Prepare(library);
 				result = Invoker.Execute(library, host.Execute, script, argument);
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				exception = e;
 			}
 			host.Finish();

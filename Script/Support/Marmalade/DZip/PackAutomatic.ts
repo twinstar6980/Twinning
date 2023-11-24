@@ -9,7 +9,7 @@ namespace TwinStar.Script.Support.Marmalade.DZip.PackAutomatic {
 		let version_c = Kernel.Tool.Marmalade.DZip.Version.value({ number: version_number });
 		let resource_list = KernelX.FileSystem.list_file(resource_directory);
 		let definition_js: Kernel.Tool.Marmalade.DZip.Definition.JS_N.Package = {
-			resource: {},
+			resource: [],
 		};
 		let data_size_bound = 0;
 		data_size_bound += 4; // magic identifier
@@ -17,9 +17,10 @@ namespace TwinStar.Script.Support.Marmalade.DZip.PackAutomatic {
 		data_size_bound += 4; // chunk setting
 		data_size_bound += 1; // empty string
 		for (let resource of resource_list) {
-			definition_js.resource[resource] = {
+			definition_js.resource.push({
+				path: resource,
 				chunk: [{ flag: 'copy_coded' }],
-			};
+			});
 			let resource_size = KernelX.FileSystem.size_file(`${resource_directory}/${resource}`);
 			data_size_bound += (2 + resource.length) + 6 + 16 + Number(resource_size); // path string + resource information + chunk information + resource data
 		}

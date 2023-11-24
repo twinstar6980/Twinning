@@ -19,6 +19,7 @@ namespace TwinStar::Kernel::Tool::PopCap::Package {
 		M_record_of_map(
 			M_wrap(Resource_<_>),
 			M_wrap(
+				(Path) path,
 				(Integer) time,
 			),
 		);
@@ -36,7 +37,7 @@ namespace TwinStar::Kernel::Tool::PopCap::Package {
 		M_record_of_map(
 			M_wrap(Package_<_>),
 			M_wrap(
-				(Map<Path, Resource>) resource,
+				(List<Resource>) resource,
 			),
 		);
 

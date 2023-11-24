@@ -2,6 +2,7 @@
 // ReSharper disable InconsistentNaming
 
 using Helper;
+using Helper.Utility;
 
 namespace Helper.Bridge {
 
@@ -40,18 +41,11 @@ namespace Helper.Bridge {
 
 		// ----------------
 
-		public delegate String* version (
-			Size** number
-		);
-
 		public delegate String* execute (
 			Callback**   callback,
 			String**     script,
 			StringList** argument,
 			String**     result
-		);
-
-		public delegate String* prepare (
 		);
 
 		#endregion

@@ -22,7 +22,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.De
 				break;
 			}
 			default: {
-				assert_test(false, `invalid boolean integer`);
+				assert_fail(`invalid boolean integer`);
 			}
 		}
 		return value;
@@ -108,8 +108,8 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.De
 					ah: undefined!,
 					x: undefined!,
 					y: undefined!,
-					cols: undefined!,
 					rows: undefined!,
+					cols: undefined!,
 					aflag: undefined!,
 				};
 				let resource_type_index = read_enumeration(data);

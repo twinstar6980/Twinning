@@ -33,7 +33,6 @@
 #include "kernel/tool/texture/compression/pvrtc4/uncompress.hpp"
 #include "kernel/tool/texture/file/png/write.hpp"
 #include "kernel/tool/texture/file/png/read.hpp"
-#include "kernel/tool/wwise/media/decode.hpp"
 #include "kernel/tool/wwise/sound_bank/encode.hpp"
 #include "kernel/tool/wwise/sound_bank/decode.hpp"
 #include "kernel/tool/marmalade/dzip/pack.hpp"
@@ -181,7 +180,8 @@ namespace TwinStar::Kernel::Executor::Interface {
 			>;
 			if constexpr (!(flag * GCDF::value_setter)) {
 				builder.template add_getter<&getter>("value"_s);
-			} else {
+			}
+			else {
 				constexpr auto & setter = normalized_lambda<
 					[] (
 					JavaScript::NativeValueHandler<Class> & thix,
@@ -314,7 +314,8 @@ namespace TwinStar::Kernel::Executor::Interface {
 		) -> auto {
 			if constexpr ((IsSame<AsPromotion<AsPure<typename CallableTraitOf<function>::Argument::template Element<index>>>, AsPure<typename CallableTraitOf<function>::Argument::template Element<index>>> && ...)) {
 				return function;
-			} else {
+			}
+			else {
 				return &proxy_global_function<function, AsPromotion<AsPure<typename CallableTraitOf<function>::Argument::template Element<index>>> & ...>;
 			}
 		}
@@ -649,31 +650,6 @@ namespace TwinStar::Kernel::Executor::Interface {
 			// Wwise
 			{
 				auto s_Wwise = s_Tool.add_space("Wwise"_s);
-				{
-					using Tool::Wwise::Media::Version;
-					using Tool::Wwise::Media::VersionPackage;
-					auto s_Media = s_Wwise.add_space("Media"_s);
-					define_generic_class<Version>(s_Media, "Version"_s);
-					s_Media.add_space("Decode"_s)
-						.add_function_proxy<&stp<&normalized_lambda<
-							[] (
-							CByteListView const & ripe,
-							ByteArray &           raw,
-							Path const &          ffmpeg_program,
-							Path const &          ww2ogg_program,
-							Path const &          ww2ogg_code_book,
-							Path const &          temporary_directory,
-							Version const &       version
-						) -> Void {
-								Generalization::match<VersionPackage>(
-									version,
-									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::Wwise::Media::Decode<version>::process(ripe, raw, ffmpeg_program, ww2ogg_program, ww2ogg_code_book, temporary_directory);
-									}
-								);
-							}
-						>>>("process"_s);
-				}
 				{
 					using Tool::Wwise::SoundBank::Version;
 					using Tool::Wwise::SoundBank::VersionPackage;

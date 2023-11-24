@@ -32,18 +32,9 @@ final class Callback extends ffi.Struct {
 // ----------------
 
 // ignore: camel_case_types
-typedef version = ffi.Pointer<String> Function(
-  ffi.Pointer<ffi.Pointer<Size>> number,
-);
-
-// ignore: camel_case_types
 typedef execute = ffi.Pointer<String> Function(
   ffi.Pointer<ffi.Pointer<Callback>>   callback,
   ffi.Pointer<ffi.Pointer<String>>     script,
   ffi.Pointer<ffi.Pointer<StringList>> argument,
   ffi.Pointer<ffi.Pointer<String>>     result,
-);
-
-// ignore: camel_case_types
-typedef prepare = ffi.Pointer<String> Function(
 );

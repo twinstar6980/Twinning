@@ -5,6 +5,7 @@ using Helper;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Storage.Pickers;
 using Windows.Graphics.Imaging;
+using Windows.Storage;
 using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace Helper.Utility {
@@ -54,31 +55,95 @@ namespace Helper.Utility {
 			return StorageHelper.Regularize(Path.Combine(Path.GetTempPath(), Path.GetTempFileName()));
 		}
 
-		#endregion
+		// ----------------
 
-		#region exist
+		private static readonly Character[] InvalidPathNameCharacter = Path.GetInvalidFileNameChars();
 
-		public static Boolean Exist (
-			String path
+		public static Boolean CheckName (
+			String name
 		) {
-			return File.Exists(path) || Directory.Exists(path);
-		}
-
-		public static Boolean ExistFile (
-			String path
-		) {
-			return File.Exists(path);
-		}
-
-		public static Boolean ExistDirectory (
-			String path
-		) {
-			return Directory.Exists(path);
+			if (name == "") {
+				return false;
+			}
+			if (name[0] == ' ' || name.Last() == ' ' || name.Last() == '.') {
+				return false;
+			}
+			return name.All((value) => (!StorageHelper.InvalidPathNameCharacter.Contains(value)));
 		}
 
 		#endregion
 
 		#region general
+
+		public static Boolean Exist (
+			String target
+		) {
+			return File.Exists(target) || Directory.Exists(target);
+		}
+
+		public static Boolean ExistFile (
+			String target
+		) {
+			return File.Exists(target);
+		}
+
+		public static Boolean ExistDirectory (
+			String target
+		) {
+			return Directory.Exists(target);
+		}
+
+		// ----------------
+
+		public static void CreateFile (
+			String target
+		) {
+			File.Create(target).Close();
+			return;
+		}
+
+		public static void CreateDirectory (
+			String target
+		) {
+			Directory.CreateDirectory(target);
+			return;
+		}
+
+		// ----------------
+
+		public static void RemoveFile (
+			String target
+		) {
+			File.Delete(target);
+			return;
+		}
+
+		public static void RemoveDirectory (
+			String target
+		) {
+			Directory.Delete(target, true);
+			return;
+		}
+
+		// ----------------
+
+		public static void RenameFile (
+			String source,
+			String destination
+		) {
+			File.Move(source, destination);
+			return;
+		}
+
+		public static void RenameDirectory (
+			String source,
+			String destination
+		) {
+			Directory.Move(source, destination);
+			return;
+		}
+
+		// ----------------
 
 		public static void CopyFile (
 			String source,
@@ -88,24 +153,40 @@ namespace Helper.Utility {
 			return;
 		}
 
-		public static void RemoveFile (
-			String target
+		public static void CopyDirectory (
+			String source,
+			String destination
 		) {
-			File.Delete(target);
+			if (!Directory.Exists(destination)) {
+				Directory.CreateDirectory(destination);
+			}
+			foreach (var item in Directory.GetFiles(source)) {
+				StorageHelper.CopyFile(item, $"{destination}/{StorageHelper.Name(item)}");
+			}
+			foreach (var item in Directory.GetDirectories(source)) {
+				StorageHelper.CopyDirectory(item, $"{destination}/{StorageHelper.Name(item)}");
+			}
 			return;
 		}
 
-		#endregion
-
-		#region list
+		// ----------------
 
 		public static List<String> ListFile (
-			String parent,
+			String target,
 			Size   depth,
-			String pattern
+			String pattern = "*"
 		) {
-			var parentFullName = new DirectoryInfo(parent).FullName;
-			return Directory.EnumerateFiles(parent, pattern, new EnumerationOptions() { MaxRecursionDepth = depth }).Select((value) => (value[(parentFullName.Length + 1)..])).ToList();
+			var parentFullName = new DirectoryInfo(target).FullName;
+			return Directory.EnumerateFiles(target, pattern, new EnumerationOptions() { MaxRecursionDepth = depth }).Select((value) => (value[(parentFullName.Length + 1)..])).ToList();
+		}
+
+		public static List<String> ListDirectory (
+			String target,
+			Size   depth,
+			String pattern = "*"
+		) {
+			var parentFullName = new DirectoryInfo(target).FullName;
+			return Directory.EnumerateDirectories(target, pattern, new EnumerationOptions() { MaxRecursionDepth = depth }).Select((value) => (value[(parentFullName.Length + 1)..])).ToList();
 		}
 
 		#endregion
@@ -113,33 +194,33 @@ namespace Helper.Utility {
 		#region text
 
 		public static async Task WriteFileText (
-			String path,
-			String content
+			String target,
+			String text
 		) {
-			await File.WriteAllTextAsync(path, content);
+			await File.WriteAllTextAsync(target, text);
 			return;
 		}
 
 		public static async Task<String> ReadFileText (
-			String path
+			String target
 		) {
-			return await File.ReadAllTextAsync(path);
+			return await File.ReadAllTextAsync(target);
 		}
 
 		// ----------------
 
 		public static void WriteFileTextSync (
-			String path,
+			String target,
 			String content
 		) {
-			File.WriteAllText(path, content);
+			File.WriteAllText(target, content);
 			return;
 		}
 
 		public static String ReadFileTextSync (
-			String path
+			String target
 		) {
-			return File.ReadAllText(path);
+			return File.ReadAllText(target);
 		}
 
 		#endregion
@@ -147,9 +228,9 @@ namespace Helper.Utility {
 		#region image
 
 		public static async Task<WriteableBitmap> ReadFileImage (
-			String path
+			String target
 		) {
-			var data = await File.ReadAllBytesAsync(path);
+			var data = await File.ReadAllBytesAsync(target);
 			var stream = data.AsBuffer().AsStream().AsRandomAccessStream();
 			var decoder = await BitmapDecoder.CreateAsync(stream);
 			var image = new WriteableBitmap((Size)decoder.PixelWidth, (Size)decoder.PixelHeight);
@@ -160,7 +241,23 @@ namespace Helper.Utility {
 
 		#endregion
 
-		#region pick
+		#region shell
+
+		public static async Task RevealFile (
+			String target
+		) {
+			await Windows.System.Launcher.LaunchFileAsync(await StorageFile.GetFileFromPathAsync(StorageHelper.ToWindowsStyle(target)));
+			return;
+		}
+
+		public static async Task RevealDirectory (
+			String target
+		) {
+			await Windows.System.Launcher.LaunchFolderAsync(await StorageFolder.GetFolderFromPathAsync(StorageHelper.ToWindowsStyle(target)));
+			return;
+		}
+
+		// ----------------
 
 		public static async Task<String?> PickFile (
 			Window host,

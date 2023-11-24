@@ -23,7 +23,8 @@ namespace TwinStar::Kernel::Tool::Data::Hash::FNV {
 			using Parameter = Parameter<bit_count>;
 			if constexpr (mode == Mode::Constant::m_0()) {
 				value = mbw<typename Parameter::Value>(0);
-			} else {
+			}
+			if constexpr (mode == Mode::Constant::m_1() || mode == Mode::Constant::m_1a()) {
 				value = Parameter::offset;
 			}
 			for (auto & element : data) {

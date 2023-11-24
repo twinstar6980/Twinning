@@ -33,11 +33,11 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamGroup::Structure {
 		M_wrap(
 			(IntegerU32) unknown_1,
 			(ConstantBlock<0x00000000_iu32>) unknown_2,
-			(IntegerU32) resource_data_section_store_mode,
+			(IntegerU32) resource_data_section_compression,
 			(IntegerU32) information_section_size,
-			(IntegerU32) generic_resource_data_section_offset,
-			(IntegerU32) generic_resource_data_section_size,
-			(IntegerU32) generic_resource_data_section_size_original,
+			(IntegerU32) general_resource_data_section_offset,
+			(IntegerU32) general_resource_data_section_size,
+			(IntegerU32) general_resource_data_section_size_original,
 			(ConstantBlock<0x00000000_iu32>) unknown_8,
 			(IntegerU32) texture_resource_data_section_offset,
 			(IntegerU32) texture_resource_data_section_size,
@@ -75,13 +75,13 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamGroup::Structure {
 	// ----------------
 
 	template <auto t_version>
-	struct GenericResourceAdditionalInformation;
+	struct GeneralResourceAdditionalInformation;
 
 	template <auto t_version> requires
 		CategoryConstraint<>
 		&& (check_version(t_version, {1}))
 	M_record_of_data(
-		M_wrap(GenericResourceAdditionalInformation<t_version>),
+		M_wrap(GeneralResourceAdditionalInformation<t_version>),
 		M_wrap(
 		),
 	);
@@ -116,7 +116,7 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamGroup::Structure {
 		&& (check_version(t_version, {1}))
 	struct ResourceInformation<t_version> :
 		ResourceBasicInformation<t_version> {
-		EnumerableVariant<ResourceType, GenericResourceAdditionalInformation<t_version>, TextureResourceAdditionalInformation<t_version>> additional;
+		EnumerableVariant<ResourceType, GeneralResourceAdditionalInformation<t_version>, TextureResourceAdditionalInformation<t_version>> additional;
 	};
 
 	// ----------------
@@ -146,7 +146,7 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamGroup::Structure {
 		CategoryConstraint<>
 		&& (check_version(t_version, {1}))
 	struct ResourceTypeFlag<t_version> {
-		inline static constexpr auto generic = IntegerU32{0x00000000_iu32};
+		inline static constexpr auto general = IntegerU32{0x00000000_iu32};
 		inline static constexpr auto texture = IntegerU32{0x00000001_iu32};
 	};
 
@@ -174,11 +174,13 @@ namespace TwinStar::Kernel {
 			using namespace Tool::PopCap::ResourceStreamGroup::Structure;
 			auto size = k_none_size;
 			size += bs_size(up_cast<ResourceBasicInformation<t_version>>(that));
-			if (that.type == ResourceTypeFlag<t_version>::generic) {
-				size += bs_size(that.additional.template get<GenericResourceAdditionalInformation<t_version>>());
-			} else if (that.type == ResourceTypeFlag<t_version>::texture) {
+			if (that.type == ResourceTypeFlag<t_version>::general) {
+				size += bs_size(that.additional.template get<GeneralResourceAdditionalInformation<t_version>>());
+			}
+			else if (that.type == ResourceTypeFlag<t_version>::texture) {
 				size += bs_size(that.additional.template get<TextureResourceAdditionalInformation<t_version>>());
-			} else {
+			}
+			else {
 				assert_fail(R"(that.type == /* valid */)");
 			}
 			return size;
@@ -190,11 +192,13 @@ namespace TwinStar::Kernel {
 		) -> Void {
 			using namespace Tool::PopCap::ResourceStreamGroup::Structure;
 			thix.write(up_cast<ResourceBasicInformation<t_version>>(that));
-			if (that.type == ResourceTypeFlag<t_version>::generic) {
-				thix.write(that.additional.template get<GenericResourceAdditionalInformation<t_version>>());
-			} else if (that.type == ResourceTypeFlag<t_version>::texture) {
+			if (that.type == ResourceTypeFlag<t_version>::general) {
+				thix.write(that.additional.template get<GeneralResourceAdditionalInformation<t_version>>());
+			}
+			else if (that.type == ResourceTypeFlag<t_version>::texture) {
 				thix.write(that.additional.template get<TextureResourceAdditionalInformation<t_version>>());
-			} else {
+			}
+			else {
 				assert_fail(R"(that.type == /* valid */)");
 			}
 			return;
@@ -206,11 +210,13 @@ namespace TwinStar::Kernel {
 		) -> Void {
 			using namespace Tool::PopCap::ResourceStreamGroup::Structure;
 			thix.read(up_cast<ResourceBasicInformation<t_version>>(that));
-			if (that.type == ResourceTypeFlag<t_version>::generic) {
-				thix.read(that.additional.template set<GenericResourceAdditionalInformation<t_version>>());
-			} else if (that.type == ResourceTypeFlag<t_version>::texture) {
+			if (that.type == ResourceTypeFlag<t_version>::general) {
+				thix.read(that.additional.template set<GeneralResourceAdditionalInformation<t_version>>());
+			}
+			else if (that.type == ResourceTypeFlag<t_version>::texture) {
 				thix.read(that.additional.template set<TextureResourceAdditionalInformation<t_version>>());
-			} else {
+			}
+			else {
 				assert_fail(R"(that.type == /* valid */)");
 			}
 			return;

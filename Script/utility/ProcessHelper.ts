@@ -68,12 +68,21 @@ namespace TwinStar.Script.ProcessHelper {
 		input_data: string = '',
 	): ExecuteResult {
 		let temporary_directory = Home.new_temporary(null, 'directory');
+		let temporary_directory_fallback: null | string = null;
 		let input = `${temporary_directory}/input`;
 		let output = `${temporary_directory}/output`;
 		let error = `${temporary_directory}/error`;
 		KernelX.FileSystem.write_file(input, Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(input_data)));
-		KernelX.FileSystem.create_file(output);
-		KernelX.FileSystem.create_file(error);
+		if (Shell.is_android && Shell.is_gui) {
+			temporary_directory_fallback = `${AndroidHelper.k_remote_temporary_directory}/${PathUtility.name(temporary_directory)}`;
+			output = `${temporary_directory_fallback}/output`;
+			error = `${temporary_directory_fallback}/error`;
+			assert_test(KernelX.Process.system_command(`su -c "mkdir -p -m 777 ${temporary_directory_fallback} ; touch ${output} ; chmod 777 ${output} ; touch ${error} ; chmod 777 ${error}"`) === 0n);
+		}
+		else {
+			KernelX.FileSystem.create_file(output);
+			KernelX.FileSystem.create_file(error);
+		}
 		let code = KernelX.Process.spawn_process(program, argument, environment, input, output, error);
 		let read_file = (path: string) => {
 			let data = KernelX.FileSystem.read_file(path);
@@ -86,6 +95,10 @@ namespace TwinStar.Script.ProcessHelper {
 			error: read_file(error),
 		};
 		KernelX.FileSystem.remove(temporary_directory);
+		if (Shell.is_android && Shell.is_gui) {
+			assert_test(temporary_directory_fallback !== null);
+			assert_test(KernelX.Process.system_command(`su -c "rm -rf ${temporary_directory_fallback}"`) === 0n);
+		}
 		return result;
 	}
 

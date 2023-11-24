@@ -6,7 +6,7 @@ using Helper.Utility;
 
 namespace Helper.Module.ModuleLauncher {
 
-	public sealed partial class AnimationViewerSettingPanel : UserControl {
+	public sealed partial class AnimationViewerSettingPanel : CustomControl {
 
 		#region life
 
@@ -18,7 +18,19 @@ namespace Helper.Module.ModuleLauncher {
 
 		// ----------------
 
-		public AnimationViewerSettingPanelController Controller { get; }
+		private AnimationViewerSettingPanelController Controller { get; }
+
+		// ----------------
+
+		protected override void StampUpdate (
+		) {
+			this.Controller.Update();
+			return;
+		}
+
+		#endregion
+
+		#region property
 
 		#endregion
 
@@ -32,6 +44,17 @@ namespace Helper.Module.ModuleLauncher {
 
 		#endregion
 
+		#region update
+
+		public async void Update (
+		) {
+			this.NotifyPropertyChanged(
+			);
+			return;
+		}
+
+		#endregion
+
 		#region immediate select
 
 		public Boolean uImmediateSelectToggle_IsChecked {
@@ -40,13 +63,12 @@ namespace Helper.Module.ModuleLauncher {
 			}
 		}
 
-		public async void uImmediateSelectToggle_OnClick (
+		public async void uImmediateSelectToggle_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			var newValue = senders.IsChecked!.Value;
-			Setting.Data.AnimationViewer.ImmediateSelect = newValue;
+			var senders = sender.AsClass<ToggleButton>();
+			Setting.Data.AnimationViewer.ImmediateSelect = senders.IsChecked.AsNotNull();
 			return;
 		}
 
@@ -60,13 +82,12 @@ namespace Helper.Module.ModuleLauncher {
 			}
 		}
 
-		public async void uAutomaticPlayToggle_OnClick (
+		public async void uAutomaticPlayToggle_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			var newValue = senders.IsChecked!.Value;
-			Setting.Data.AnimationViewer.AutomaticPlay = newValue;
+			var senders = sender.AsClass<ToggleButton>();
+			Setting.Data.AnimationViewer.AutomaticPlay = senders.IsChecked.AsNotNull();
 			return;
 		}
 
@@ -80,13 +101,12 @@ namespace Helper.Module.ModuleLauncher {
 			}
 		}
 
-		public async void uRepeatPlayToggle_OnClick (
+		public async void uRepeatPlayToggle_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			var newValue = senders.IsChecked!.Value;
-			Setting.Data.AnimationViewer.RepeatPlay = newValue;
+			var senders = sender.AsClass<ToggleButton>();
+			Setting.Data.AnimationViewer.RepeatPlay = senders.IsChecked.AsNotNull();
 			return;
 		}
 
@@ -100,13 +120,12 @@ namespace Helper.Module.ModuleLauncher {
 			}
 		}
 
-		public async void uRemainFrameRateToggle_OnClick (
+		public async void uRemainFrameRateToggle_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			var newValue = senders.IsChecked!.Value;
-			Setting.Data.AnimationViewer.RemainFrameRate = newValue;
+			var senders = sender.AsClass<ToggleButton>();
+			Setting.Data.AnimationViewer.RemainFrameRate = senders.IsChecked.AsNotNull();
 			return;
 		}
 
@@ -120,13 +139,12 @@ namespace Helper.Module.ModuleLauncher {
 			}
 		}
 
-		public async void uShowSpriteBoundaryToggle_OnClick (
+		public async void uShowSpriteBoundaryToggle_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			var newValue = senders.IsChecked!.Value;
-			Setting.Data.AnimationViewer.ShowSpriteBoundary = newValue;
+			var senders = sender.AsClass<ToggleButton>();
+			Setting.Data.AnimationViewer.ShowSpriteBoundary = senders.IsChecked.AsNotNull();
 			return;
 		}
 
@@ -140,11 +158,11 @@ namespace Helper.Module.ModuleLauncher {
 			}
 		}
 
-		public async void uSpriteFilterRuleText_OnTextChanged (
+		public async void uSpriteFilterRuleText_TextChanged (
 			Object               sender,
 			TextChangedEventArgs args
 		) {
-			if (sender is not TextBox senders) { return; }
+			var senders = sender.AsClass<TextBox>();
 			Setting.Data.AnimationViewer.SpriteFilterRule = senders.Text;
 			return;
 		}

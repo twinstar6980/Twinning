@@ -10,7 +10,8 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 			let byte = data.u8();
 			if ((byte & 0b10000000n) != 0b00000000n) {
 				value |= (byte & 0b01111111n) << shitf_count;
-			} else {
+			}
+			else {
 				value |= (byte) << shitf_count;
 				break;
 			}
@@ -37,18 +38,23 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 		if (current < 0b10000000n) {
 			value = current;
 			extra_size = 0;
-		} else if (current < 0b11000000n) {
+		}
+		else if (current < 0b11000000n) {
 			throw new Error(`data:${data.p().toString(16)}h : invalid utf-8 first character`);
-		} else if (current < 0b11100000n) {
+		}
+		else if (current < 0b11100000n) {
 			value = current & 0b00011111n;
 			extra_size = 1;
-		} else if (current < 0b11110000n) {
+		}
+		else if (current < 0b11110000n) {
 			value = current & 0b00001111n;
 			extra_size = 2;
-		} else if (current < 0b11111000n) {
+		}
+		else if (current < 0b11111000n) {
 			value = current & 0b00000111n;
 			extra_size = 3;
-		} else {
+		}
+		else {
 			throw new Error(`data:${data.p().toString(16)}h : invalid utf-8 first character`);
 		}
 		size.value = 1 + extra_size;
@@ -231,7 +237,8 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 				let content: string;
 				if (!version.native_string_encoding_use_utf8) {
 					content = read_eascii_string(data, size);
-				} else {
+				}
+				else {
 					content = read_utf8_string_by_size(data, size);
 				}
 				value = content;
@@ -242,7 +249,8 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 				let content: string;
 				if (!version.native_string_encoding_use_utf8) {
 					content = read_eascii_string(data, size);
-				} else {
+				}
+				else {
 					content = read_utf8_string_by_size(data, size);
 				}
 				value = content;

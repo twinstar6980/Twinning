@@ -21,8 +21,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   List<Widget> _page = [const ConsolePage(), const SettingPage()];
-
-  Integer _pageIndex = 0;
+  Integer      _pageIndex = 0;
 
   Void
   _pageIndexSet(

@@ -45,7 +45,7 @@ namespace Helper.Bridge {
 		) {
 			var data = Encoding.UTF8.GetBytes(value.ToCharArray());
 			var size = data.Length;
-			structure.data = (Interface.Character*)MemoryHelper.Alloc(sizeof(Interface.Character) * size);
+			structure.data = MemoryHelper.Allocate<Interface.Character>(size);
 			fixed (Byte* dataPointer = data) {
 				MemoryHelper.Copy(dataPointer, structure.data, size);
 			}
@@ -82,7 +82,7 @@ namespace Helper.Bridge {
 			List<String>             value
 		) {
 			var size = value.Count;
-			structure.data = (Interface.String*)MemoryHelper.Alloc(sizeof(Interface.String) * size);
+			structure.data = MemoryHelper.Allocate<Interface.String>(size);
 			for (var index = 0; index < size; index++) {
 				Converter.ConstructString(ref structure.data[index], value[index]);
 			}

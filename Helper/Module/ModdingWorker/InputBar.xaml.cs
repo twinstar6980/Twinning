@@ -8,7 +8,7 @@ using Windows.Globalization.NumberFormatting;
 
 namespace Helper.Module.ModdingWorker {
 
-	public sealed partial class InputBar : UserControl {
+	public sealed partial class InputBar : CustomControl {
 
 		#region life
 
@@ -24,9 +24,10 @@ namespace Helper.Module.ModdingWorker {
 
 		// ----------------
 
-		private void UpdateVisualState (
+		protected override void StampUpdate (
 		) {
 			VisualStateManager.GoToState(this, $"{(this.Type is null ? "Idle" : this.Type)}State", false);
+			this.Controller.Update();
 			return;
 		}
 
@@ -42,7 +43,7 @@ namespace Helper.Module.ModdingWorker {
 		);
 
 		public InputType? Type {
-			get => this.GetValue(InputBar.TypeProperty) as InputType?;
+			get => this.GetValue(InputBar.TypeProperty).AsStructOrNull<InputType>();
 			set => this.SetValue(InputBar.TypeProperty, value);
 		}
 
@@ -56,7 +57,7 @@ namespace Helper.Module.ModdingWorker {
 		);
 
 		public Object? Option {
-			get => this.GetValue(InputBar.OptionProperty) as Object;
+			get => this.GetValue(InputBar.OptionProperty).AsClassOrNull<Object>();
 			set => this.SetValue(InputBar.OptionProperty, value);
 		}
 
@@ -66,43 +67,23 @@ namespace Helper.Module.ModdingWorker {
 			nameof(InputBar.Value),
 			typeof(InputValue),
 			typeof(InputBar),
-			new PropertyMetadata(null)
+			new PropertyMetadata(new InputValue() { Data = null })
 		);
 
-		public InputValue? Value {
-			get => this.GetValue(InputBar.ValueProperty) as InputValue;
+		public InputValue Value {
+			get => this.GetValue(InputBar.ValueProperty).AsClass<InputValue>();
 			set => this.SetValue(InputBar.ValueProperty, value);
 		}
 
 		// ----------------
 
-		public delegate void ValueSubmittedEventHandler (Object? value);
+		public delegate void ValueSubmittedEventHandler (
+		);
 
 		public event ValueSubmittedEventHandler? ValueSubmitted;
 
-		public void DoValueSubmitted (
-			Object? value
-		) {
-			this.ValueSubmitted?.Invoke(value);
-			return;
-		}
-
-		// ----------------
-
-		public static readonly DependencyProperty StampProperty = DependencyProperty.Register(
-			nameof(InputBar.Stamp),
-			typeof(UniqueStamp),
-			typeof(InputBar),
-			new PropertyMetadata(UniqueStamp.Default, (o, e) => {
-				(o as InputBar)!.UpdateVisualState();
-				(o as InputBar)!.Controller.Update();
-			})
-		);
-
-		public UniqueStamp Stamp {
-			get => this.GetValue(InputBar.StampProperty) as UniqueStamp ?? throw new Exception();
-			set => this.SetValue(InputBar.StampProperty, value);
-		}
+		public void OnValueSubmitted (
+		) => this.ValueSubmitted?.Invoke();
 
 		#endregion
 
@@ -120,7 +101,7 @@ namespace Helper.Module.ModdingWorker {
 
 		public Object? Option => this.View.Option;
 
-		public InputValue? Value => this.View.Value;
+		public InputValue Value => this.View.Value;
 
 		#endregion
 
@@ -129,7 +110,6 @@ namespace Helper.Module.ModdingWorker {
 		public async void Update (
 		) {
 			this.NotifyPropertyChanged(
-				nameof(this.uAction_IsEnabled),
 				nameof(this.uSubmit_IsEnabled)
 			);
 			switch (this.Type) {
@@ -197,77 +177,96 @@ namespace Helper.Module.ModdingWorker {
 
 		#endregion
 
-		#region action
+		#region common
 
 		public Boolean uSubmit_IsEnabled {
 			get {
-				if (this.Type is null || this.Value is null) { return false; }
+				if (this.Type is null) {
+					return false;
+				}
 				return true;
 			}
 		}
 
-		public async void uSubmit_OnClick (
+		public async void uSubmit_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not Button senders) { return; }
-			if (this.Type is null || this.Value is null) { return; }
-			this.View.DoValueSubmitted(this.Value);
+			var senders = sender.AsClass<Button>();
+			if (this.Type is null) {
+				return;
+			}
+			this.View.OnValueSubmitted();
 			return;
 		}
 
-		public Boolean uAction_IsEnabled {
-			get {
-				if (this.Type is null) { return false; }
-				return true;
-			}
-		}
+		#endregion
 
-		// ----------------
+		#region boolean
 
 		public Boolean uBooleanNoValue_IsChecked {
 			get {
-				if (this.Type is not InputType.Boolean || this.Option is not null || this.Value is not { Data: null or Boolean }) { return false; }
+				if (this.Type is not InputType.Boolean) {
+					return false;
+				}
 				return this.Value.OfBoolean is null ? false : this.Value.OfBoolean == false;
 			}
 		}
 
-		public async void uBooleanNoValue_OnClick (
+		public async void uBooleanNoValue_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not ToggleButton senders) { return; }
-			if (this.Type is not InputType.Boolean || this.Option is not null || this.Value is not { Data: null or Boolean }) { return; }
-			this.Value.OfBoolean = !senders.IsChecked!.Value ? null : false;
-			this.NotifyPropertyChanged(
-				nameof(this.uBooleanNoValue_IsChecked),
-				nameof(this.uBooleanYesValue_IsChecked)
-			);
-			return;
-		}
-
-		public Boolean uBooleanYesValue_IsChecked {
-			get {
-				if (this.Type is not InputType.Boolean || this.Option is not null || this.Value is not { Data: null or Boolean }) { return false; }
-				return this.Value.OfBoolean is null ? false : this.Value.OfBoolean == true;
+			var senders = sender.AsClass<ToggleButton>();
+			if (this.Type is not InputType.Boolean) {
+				return;
 			}
-		}
-
-		public async void uBooleanYesValue_OnClick (
-			Object          sender,
-			RoutedEventArgs args
-		) {
-			if (sender is not ToggleButton senders) { return; }
-			if (this.Type is not InputType.Boolean || this.Option is not null || this.Value is not { Data: null or Boolean }) { return; }
-			this.Value.OfBoolean = !senders.IsChecked!.Value ? null : true;
+			if (!senders.IsChecked.AsNotNull()) {
+				this.Value.OfBoolean = null;
+			}
+			else {
+				this.Value.OfBoolean = false;
+			}
 			this.NotifyPropertyChanged(
-				nameof(this.uBooleanNoValue_IsChecked),
 				nameof(this.uBooleanYesValue_IsChecked)
 			);
 			return;
 		}
 
 		// ----------------
+
+		public Boolean uBooleanYesValue_IsChecked {
+			get {
+				if (this.Type is not InputType.Boolean) {
+					return false;
+				}
+				return this.Value.OfBoolean is null ? false : this.Value.OfBoolean == true;
+			}
+		}
+
+		public async void uBooleanYesValue_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<ToggleButton>();
+			if (this.Type is not InputType.Boolean) {
+				return;
+			}
+			if (!senders.IsChecked.AsNotNull()) {
+				this.Value.OfBoolean = null;
+			}
+			else {
+				this.Value.OfBoolean = true;
+			}
+			this.NotifyPropertyChanged(
+				nameof(this.uBooleanNoValue_IsChecked)
+			);
+			return;
+		}
+
+		#endregion
+
+		#region integer
 
 		public DecimalFormatter uIntegerValue_NumberFormatter {
 			get {
@@ -277,25 +276,36 @@ namespace Helper.Module.ModdingWorker {
 
 		public Floater uIntegerValue_Value {
 			get {
-				if (this.Type is not InputType.Integer || this.Option is not null || this.Value is not { Data: null or Integer }) { return Floater.NaN; }
+				if (this.Type is not InputType.Integer) {
+					return Floater.NaN;
+				}
 				return this.Value.OfInteger is null ? Floater.NaN : (Floater)this.Value.OfInteger;
 			}
 		}
 
-		public async void uIntegerValue_OnValueChanged (
+		public async void uIntegerValue_ValueChanged (
 			NumberBox                      sender,
 			NumberBoxValueChangedEventArgs args
 		) {
-			if (sender is not NumberBox senders) { return; }
-			if (this.Type is not InputType.Integer || this.Option is not null || this.Value is not { Data: null or Integer }) { return; }
-			this.Value.OfInteger = Floater.IsNaN(args.NewValue) ? null : (Integer)args.NewValue;
+			var senders = sender.AsClass<NumberBox>();
+			if (this.Type is not InputType.Integer) {
+				return;
+			}
+			if (Floater.IsNaN(args.NewValue) || !(Integer.MinValue < args.NewValue && args.NewValue < Integer.MaxValue)) {
+				this.Value.OfInteger = null;
+			}
+			else {
+				this.Value.OfInteger = (Integer)args.NewValue;
+			}
 			this.NotifyPropertyChanged(
 				nameof(this.uIntegerValue_Value)
 			);
 			return;
 		}
 
-		// ----------------
+		#endregion
+
+		#region floater
 
 		public DecimalFormatter uFloaterValue_NumberFormatter {
 			get {
@@ -305,25 +315,36 @@ namespace Helper.Module.ModdingWorker {
 
 		public Floater uFloaterValue_Value {
 			get {
-				if (this.Type is not InputType.Floater || this.Option is not null || this.Value is not { Data: null or Floater }) { return Floater.NaN; }
+				if (this.Type is not InputType.Floater) {
+					return Floater.NaN;
+				}
 				return this.Value.OfFloater is null ? Floater.NaN : (Floater)this.Value.OfFloater;
 			}
 		}
 
-		public async void uFloaterValue_OnValueChanged (
+		public async void uFloaterValue_ValueChanged (
 			NumberBox                      sender,
 			NumberBoxValueChangedEventArgs args
 		) {
-			if (sender is not NumberBox senders) { return; }
-			if (this.Type is not InputType.Floater || this.Option is not null || this.Value is not { Data: null or Floater }) { return; }
-			this.Value.OfFloater = Floater.IsNaN(args.NewValue) ? null : args.NewValue;
+			var senders = sender.AsClass<NumberBox>();
+			if (this.Type is not InputType.Floater) {
+				return;
+			}
+			if (Floater.IsNaN(args.NewValue)) {
+				this.Value.OfFloater = null;
+			}
+			else {
+				this.Value.OfFloater = args.NewValue;
+			}
 			this.NotifyPropertyChanged(
 				nameof(this.uFloaterValue_Value)
 			);
 			return;
 		}
 
-		// ----------------
+		#endregion
+
+		#region size
 
 		public DecimalFormatter uSizeValue_NumberFormatter {
 			get {
@@ -333,25 +354,34 @@ namespace Helper.Module.ModdingWorker {
 
 		public Floater uSizeValue_Value {
 			get {
-				if (this.Type is not InputType.Size || this.Option is not null || this.Value is not { Data: null or SizeExpression }) { return Floater.NaN; }
+				if (this.Type is not InputType.Size) {
+					return Floater.NaN;
+				}
 				return this.Value.OfSize is null ? Floater.NaN : this.Value.OfSize.Value;
 			}
 		}
 
-		public async void uSizeValue_OnValueChanged (
+		public async void uSizeValue_ValueChanged (
 			NumberBox                      sender,
 			NumberBoxValueChangedEventArgs args
 		) {
-			if (sender is not NumberBox senders) { return; }
-			if (this.Type is not InputType.Size || this.Option is not null || this.Value is not { Data: null or SizeExpression }) { return; }
-			this.Value.OfSize = Floater.IsNaN(args.NewValue) ? null : new SizeExpression() { Value = args.NewValue, Unit = this.uSizeUnit__Value };
+			var senders = sender.AsClass<NumberBox>();
+			if (this.Type is not InputType.Size) {
+				return;
+			}
+			if (Floater.IsNaN(args.NewValue)) {
+				this.Value.OfSize = null;
+			}
+			else {
+				this.Value.OfSize = new SizeExpression() { Value = args.NewValue, Unit = this.uSizeUnit_SelectedItem };
+			}
 			this.NotifyPropertyChanged(
 				nameof(this.uSizeValue_Value)
 			);
 			return;
 		}
 
-		public SizeUnit uSizeUnit__Value = SizeUnit.M;
+		// ----------------
 
 		public List<SizeUnit> uSizeUnit_ItemsSource {
 			get {
@@ -359,92 +389,109 @@ namespace Helper.Module.ModdingWorker {
 			}
 		}
 
-		public SizeUnit uSizeUnit_SelectedItem {
-			get {
-				if (this.Type is not InputType.Size || this.Option is not null || this.Value is not { Data: null or SizeExpression }) { return SizeUnit.B; }
-				return this.uSizeUnit__Value;
-			}
-		}
+		public SizeUnit uSizeUnit_SelectedItem { get; set; } = SizeUnit.M;
 
-		public async void uSizeUnit_OnSelectionChanged (
+		public async void uSizeUnit_SelectionChanged (
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			if (sender is not ComboBox senders) { return; }
-			if (this.Type is not InputType.Size || this.Option is not null || this.Value is not { Data: null or SizeExpression }) { return; }
-			this.uSizeUnit__Value = senders.SelectedItem as SizeUnit? ?? throw new Exception();
+			var senders = sender.AsClass<ComboBox>();
+			if (this.Type is not InputType.Size) {
+				return;
+			}
+			this.uSizeUnit_SelectedItem = senders.SelectedItem.AsStruct<SizeUnit>();
 			if (this.Value.OfSize is not null) {
-				this.Value.OfSize.Unit = this.uSizeUnit__Value;
+				this.Value.OfSize.Unit = this.uSizeUnit_SelectedItem;
 			}
 			return;
 		}
 
-		// ----------------
+		#endregion
+
+		#region string
 
 		public String uStringValue_Text {
 			get {
-				if (this.Type is not InputType.String || this.Option is not null || this.Value is not { Data: null or String }) { return ""; }
+				if (this.Type is not InputType.String) {
+					return "";
+				}
 				return this.Value.OfString is null ? "" : this.Value.OfString;
 			}
 		}
 
-		public async void uStringValue_OnTextChanged (
+		public async void uStringValue_TextChanged (
 			Object               sender,
 			TextChangedEventArgs args
 		) {
-			if (sender is not TextBox senders) { return; }
-			if (this.Type is not InputType.String || this.Option is not null || this.Value is not { Data: null or String }) { return; }
-			this.Value.OfString = senders.Text.Length == 0 ? null : senders.Text;
-			this.NotifyPropertyChanged(
-				nameof(this.uStringValue_Text)
-			);
+			var senders = sender.AsClass<TextBox>();
+			if (this.Type is not InputType.String) {
+				return;
+			}
+			if (senders.Text.Length == 0) {
+				this.Value.OfString = null;
+			}
+			else {
+				this.Value.OfString = senders.Text;
+			}
 			return;
 		}
 
-		// ----------------
+		#endregion
+
+		#region path
 
 		public String uPathValue_Text {
 			get {
-				if (this.Type is not InputType.Path || this.Option is not null || this.Value is not { Data: null or PathExpression }) { return ""; }
+				if (this.Type is not InputType.Path) {
+					return "";
+				}
 				return this.Value.OfPath is null ? "" : this.Value.OfPath.Value;
 			}
 		}
 
-		public async void uPathValue_OnTextChanged (
+		public async void uPathValue_TextChanged (
 			Object               sender,
 			TextChangedEventArgs args
 		) {
-			if (sender is not TextBox senders) { return; }
-			if (this.Type is not InputType.Path || this.Option is not null || this.Value is not { Data: null or PathExpression }) { return; }
-			this.Value.OfPath = senders.Text.Length == 0 ? null : new PathExpression() { Value = senders.Text };
-			this.NotifyPropertyChanged(
-				nameof(this.uPathValue_Text)
-			);
+			var senders = sender.AsClass<TextBox>();
+			if (this.Type is not InputType.Path) {
+				return;
+			}
+			if (senders.Text.Length == 0) {
+				this.Value.OfPath = null;
+			}
+			else {
+				this.Value.OfPath = new PathExpression() { Value = senders.Text };
+			}
 			return;
 		}
 
-		public async void uPathValue_OnDragOver (
+		public async void uPathValue_DragOver (
 			Object        sender,
 			DragEventArgs args
 		) {
-			if (sender is not TextBox senders) { return; }
-			if (this.Type is not InputType.Path || this.Option is not null || this.Value is not { Data: null or PathExpression }) { return; }
+			var senders = sender.AsClass<TextBox>();
+			if (this.Type is not InputType.Path) {
+				return;
+			}
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Link;
 			}
 			return;
 		}
 
-		public async void uPathValue_OnDrop (
+		public async void uPathValue_Drop (
 			Object        sender,
 			DragEventArgs args
 		) {
-			if (sender is not TextBox senders) { return; }
-			if (this.Type is not InputType.Path || this.Option is not null || this.Value is not { Data: null or PathExpression }) { return; }
-			args.Handled = true;
+			var senders = sender.AsClass<TextBox>();
+			if (this.Type is not InputType.Path) {
+				return;
+			}
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
-				var newValue = StorageHelper.Regularize((await args.DataView.GetStorageItemsAsync())[0].Path);
-				this.Value.OfPath = new PathExpression() { Value = newValue };
+				args.Handled = true;
+				var data = await args.DataView.GetStorageItemsAsync();
+				this.Value.OfPath = new PathExpression() { Value = StorageHelper.Regularize(data[0].Path) };
 				this.NotifyPropertyChanged(
 					nameof(this.uPathValue_Text)
 				);
@@ -452,12 +499,16 @@ namespace Helper.Module.ModdingWorker {
 			return;
 		}
 
-		public async void uPathCommandGenerate_OnClick (
+		// ----------------
+
+		public async void uPathCommandGenerate_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not MenuFlyoutItem senders) { return; }
-			if (this.Type is not InputType.Path || this.Option is not null || this.Value is not { Data: null or PathExpression }) { return; }
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			if (this.Type is not InputType.Path) {
+				return;
+			}
 			this.Value.OfPath = new PathExpression() { Value = ":g" };
 			this.NotifyPropertyChanged(
 				nameof(this.uPathValue_Text)
@@ -465,12 +516,14 @@ namespace Helper.Module.ModdingWorker {
 			return;
 		}
 
-		public async void uPathCommandMove_OnClick (
+		public async void uPathCommandMove_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not MenuFlyoutItem senders) { return; }
-			if (this.Type is not InputType.Path || this.Option is not null || this.Value is not { Data: null or PathExpression }) { return; }
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			if (this.Type is not InputType.Path) {
+				return;
+			}
 			this.Value.OfPath = new PathExpression() { Value = ":m" };
 			this.NotifyPropertyChanged(
 				nameof(this.uPathValue_Text)
@@ -478,12 +531,14 @@ namespace Helper.Module.ModdingWorker {
 			return;
 		}
 
-		public async void uPathCommandDelete_OnClick (
+		public async void uPathCommandDelete_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not MenuFlyoutItem senders) { return; }
-			if (this.Type is not InputType.Path || this.Option is not null || this.Value is not { Data: null or PathExpression }) { return; }
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			if (this.Type is not InputType.Path) {
+				return;
+			}
 			this.Value.OfPath = new PathExpression() { Value = ":d" };
 			this.NotifyPropertyChanged(
 				nameof(this.uPathValue_Text)
@@ -491,12 +546,14 @@ namespace Helper.Module.ModdingWorker {
 			return;
 		}
 
-		public async void uPathCommandOverwrite_OnClick (
+		public async void uPathCommandOverwrite_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			if (sender is not MenuFlyoutItem senders) { return; }
-			if (this.Type is not InputType.Path || this.Option is not null || this.Value is not { Data: null or PathExpression }) { return; }
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			if (this.Type is not InputType.Path) {
+				return;
+			}
 			this.Value.OfPath = new PathExpression() { Value = ":o" };
 			this.NotifyPropertyChanged(
 				nameof(this.uPathValue_Text)
@@ -504,67 +561,87 @@ namespace Helper.Module.ModdingWorker {
 			return;
 		}
 
-		public async void uPathPickFile_OnClick (
-			Object          sender,
-			RoutedEventArgs args
-		) {
-			if (sender is not MenuFlyoutItem senders) { return; }
-			if (this.Type is not InputType.Path || this.Option is not null || this.Value is not { Data: null or PathExpression }) { return; }
-			var newValue = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View));
-			if (newValue is not null) {
-				this.Value.OfPath = new PathExpression() { Value = newValue };
-				this.NotifyPropertyChanged(
-					nameof(this.uPathValue_Text)
-				);
-			}
-			return;
-		}
-
-		public async void uPathPickDirectory_OnClick (
-			Object          sender,
-			RoutedEventArgs args
-		) {
-			if (sender is not MenuFlyoutItem senders) { return; }
-			if (this.Type is not InputType.Path || this.Option is not null || this.Value is not { Data: null or PathExpression }) { return; }
-			var newValue = await StorageHelper.PickDirectory(WindowHelper.GetForElement(this.View));
-			if (newValue is not null) {
-				this.Value.OfPath = new PathExpression() { Value = newValue };
-				this.NotifyPropertyChanged(
-					nameof(this.uPathValue_Text)
-				);
-			}
-			return;
-		}
-
 		// ----------------
+
+		public async void uPathPickFile_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			if (this.Type is not InputType.Path) {
+				return;
+			}
+			var value = await StorageHelper.PickFile(WindowHelper.GetForElement(this.View));
+			if (value is not null) {
+				this.Value.OfPath = new PathExpression() { Value = value };
+				this.NotifyPropertyChanged(
+					nameof(this.uPathValue_Text)
+				);
+			}
+			return;
+		}
+
+		public async void uPathPickDirectory_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			if (this.Type is not InputType.Path) {
+				return;
+			}
+			var value = await StorageHelper.PickDirectory(WindowHelper.GetForElement(this.View));
+			if (value is not null) {
+				this.Value.OfPath = new PathExpression() { Value = value };
+				this.NotifyPropertyChanged(
+					nameof(this.uPathValue_Text)
+				);
+			}
+			return;
+		}
+
+		#endregion
+
+		#region enumeration
 
 		public List<String> uEnumerationValue_ItemsSource {
 			get {
-				if (this.Type is not InputType.Enumeration || this.Option is not List<String> || this.Value is not { Data: null or EnumerationExpression }) { return new List<String>(); }
+				if (this.Type is not InputType.Enumeration) {
+					return new List<String>();
+				}
+				var option = this.Option.AsClass<List<String>>();
 				var result = new List<String>();
 				result.Add("\0");
-				result.AddRange((this.Option as List<String>)!);
+				result.AddRange(option);
 				return result;
 			}
 		}
 
 		public Size uEnumerationValue_SelectedIndex {
 			get {
-				if (this.Type is not InputType.Enumeration || this.Option is null || this.Value is not { Data: null or EnumerationExpression }) { return -1; }
+				if (this.Type is not InputType.Enumeration) {
+					return -1;
+				}
 				return this.Value.OfEnumeration is null ? -1 : this.Value.OfEnumeration.Value;
 			}
 		}
 
-		public async void uEnumerationValue_OnSelectionChanged (
+		public async void uEnumerationValue_SelectionChanged (
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			if (sender is not ComboBox senders) { return; }
-			if (this.Type is not InputType.Enumeration || this.Option is null || this.Value is not { Data: null or EnumerationExpression }) { return; }
-			this.Value.OfEnumeration = senders.SelectedIndex == -1 || senders.SelectedIndex == 0 ? null : new EnumerationExpression() { Value = senders.SelectedIndex };
-			this.NotifyPropertyChanged(
-				nameof(this.uEnumerationValue_SelectedIndex)
-			);
+			var senders = sender.AsClass<ComboBox>();
+			if (this.Type is not InputType.Enumeration) {
+				return;
+			}
+			if (senders.SelectedIndex == -1 || senders.SelectedIndex == 0) {
+				this.Value.OfEnumeration = null;
+				this.NotifyPropertyChanged(
+					nameof(this.uEnumerationValue_SelectedIndex)
+				);
+			}
+			else {
+				this.Value.OfEnumeration = new EnumerationExpression() { Value = senders.SelectedIndex };
+			}
 			return;
 		}
 
