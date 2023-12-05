@@ -188,8 +188,10 @@
 	"executor.implement:text.json.format": "JSON 格式化",
 	"executor.implement:text.json.format:source_file": "来源文件",
 	"executor.implement:text.json.format:destination_file": "目的文件",
-	"executor.implement:text.json.format:disable_trailing_comma": "禁用尾随逗号",
-	"executor.implement:text.json.format:disable_array_wrap_line": "禁用数组换行",
+	"executor.implement:text.json.format:disable_array_trailing_comma": "禁用数组尾随逗号",
+	"executor.implement:text.json.format:disable_array_line_breaking": "禁用数组换行",
+	"executor.implement:text.json.format:disable_object_trailing_comma": "禁用对象尾随逗号",
+	"executor.implement:text.json.format:disable_object_line_breaking": "禁用对象换行",
 	// Executor/Implement/text.xml
 	"executor.implement:text.xml.format": "XML 格式化",
 	"executor.implement:text.xml.format:source_file": "来源文件",
@@ -590,6 +592,25 @@
 	"executor.implement:pvz2.resource_manifest.regular.to:ripe_file": "成品文件",
 	"executor.implement:pvz2.resource_manifest.regular.to:raw_file": "原始文件",
 	"executor.implement:pvz2.resource_manifest.regular.to:use_array_style_path": "使用数组式路径",
+	// Executor/Implement/pvz2.package_project
+	"executor.implement:pvz2.package_project.compile": "PvZ-2 Package-Project 编译",
+	"executor.implement:pvz2.package_project.compile:project_directory": "项目目录",
+	"executor.implement:pvz2.package_project.compile:target_scope": "目标域",
+	"executor.implement:pvz2.package_project.compile:target_package": "目标包",
+	"executor.implement:pvz2.package_project.compile:buffer_size": "内存缓冲区大小",
+	// 
+	"executor.implement:pvz2.package_project.link": "PvZ-2 Package-Project 链接",
+	"executor.implement:pvz2.package_project.link:project_directory": "项目目录",
+	"executor.implement:pvz2.package_project.link:target_package": "目标包",
+	"executor.implement:pvz2.package_project.link:remake_manifest": "重构清单",
+	"executor.implement:pvz2.package_project.link:buffer_size": "内存缓冲区大小",
+	// 
+	"executor.implement:pvz2.package_project.parse": "PvZ-2 Package-Project 解析",
+	"executor.implement:pvz2.package_project.parse:project_directory": "项目目录",
+	"executor.implement:pvz2.package_project.parse:package_directory": "包目录",
+	"executor.implement:pvz2.package_project.parse:package_name": "包名称",
+	"executor.implement:pvz2.package_project.parse:package_version_number": "包版本编号",
+	"executor.implement:pvz2.package_project.parse:package_version_extended_texture_information_for_pvz2_cn": "包用于PvZ-2中国版的纹理信息扩展版本",
 	// Executor/Implement/pvz2.remote_project
 	"executor.implement:pvz2.remote_project.execute": "PvZ-2 Remote-Project 执行",
 	"executor.implement:pvz2.remote_project.execute:project_directory": "项目目录",

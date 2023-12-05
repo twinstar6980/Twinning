@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 61
+ * @version 62
  */
 declare namespace TwinStar.Kernel {
 
@@ -1990,14 +1990,18 @@ declare namespace TwinStar.Kernel {
 						 * 写
 						 * @param data 数据
 						 * @param value 值
-						 * @param disable_trailing_comma 禁用尾随逗号
-						 * @param disable_array_wrap_line 禁用数组元素换行
+						 * @param disable_array_trailing_comma 禁用数组尾随逗号
+						 * @param disable_array_line_breaking 禁用数组换行
+						 * @param disable_object_trailing_comma 禁用对象尾随逗号
+						 * @param disable_object_line_breaking 禁用对象换行
 						 */
 						function process(
 							data: OCharacterStreamView,
 							value: Kernel.JSON.Value,
-							disable_trailing_comma: Boolean,
-							disable_array_wrap_line: Boolean,
+							disable_array_trailing_comma: Boolean,
+							disable_array_line_breaking: Boolean,
+							disable_object_trailing_comma: Boolean,
+							disable_object_line_breaking: Boolean,
 						): Void;
 
 					}
@@ -4266,14 +4270,14 @@ declare namespace TwinStar.Kernel {
 						type TextureResourceAdditional = {
 							/** 尺寸 */
 							size: [bigint, bigint];
-							/** 缩放。当 version.extended_texture_information_for_pvz2_cn >= 2 时存在 */
-							scale?: bigint;
 							/** 格式 */
 							format: bigint;
 							/** 行字节数 */
 							pitch: bigint;
 							/** 附加字节数。当 version.extended_texture_information_for_pvz2_cn >= 1 时存在 */
 							additional_byte_count?: bigint;
+							/** 缩放。当 version.extended_texture_information_for_pvz2_cn >= 2 时存在 */
+							scale?: bigint;
 						};
 
 						/** 资源附加 */

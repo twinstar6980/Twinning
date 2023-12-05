@@ -188,8 +188,10 @@
 	"executor.implement:text.json.format": "Định dạng JSON",
 	"executor.implement:text.json.format:source_file": "Tệp nguồn",
 	"executor.implement:text.json.format:destination_file": "Tệp đích",
-	"executor.implement:text.json.format:disable_trailing_comma": "Tắt dấu phẩy ở cuối",
-	"executor.implement:text.json.format:disable_array_wrap_line": "Tắt dòng bọc mảng",
+	"executor.implement:text.json.format:disable_array_trailing_comma": "Disable array trailing comma",
+	"executor.implement:text.json.format:disable_array_line_breaking": "Disable array line breaking",
+	"executor.implement:text.json.format:disable_object_trailing_comma": "Disable object trailing comma",
+	"executor.implement:text.json.format:disable_object_line_breaking": "Disable object line breaking",
 	// Executor/Implement/text.xml
 	"executor.implement:text.xml.format": "Định dạng XML",
 	"executor.implement:text.xml.format:source_file": "Tệp nguồn",
@@ -590,6 +592,25 @@
 	"executor.implement:pvz2.resource_manifest.regular.to:ripe_file": "Tệp ra",
 	"executor.implement:pvz2.resource_manifest.regular.to:raw_file": "Tệp gốc",
 	"executor.implement:pvz2.resource_manifest.regular.to:use_array_style_path": "Dùng đường dẫn kiểu mảng",
+	// Executor/Implement/pvz2.package_project
+	"executor.implement:pvz2.package_project.compile": "PvZ-2 Package-Project Compile",
+	"executor.implement:pvz2.package_project.compile:project_directory": "Project directory",
+	"executor.implement:pvz2.package_project.compile:target_scope": "Target scope",
+	"executor.implement:pvz2.package_project.compile:target_package": "Target package",
+	"executor.implement:pvz2.package_project.compile:buffer_size": "Buffer memory size",
+	// 
+	"executor.implement:pvz2.package_project.link": "PvZ-2 Package-Project Link",
+	"executor.implement:pvz2.package_project.link:project_directory": "Project directory",
+	"executor.implement:pvz2.package_project.link:target_package": "Target package",
+	"executor.implement:pvz2.package_project.link:remake_manifest": "Remake manifest",
+	"executor.implement:pvz2.package_project.link:buffer_size": "Buffer memory size",
+	// 
+	"executor.implement:pvz2.package_project.parse": "PvZ-2 Package-Project Parse",
+	"executor.implement:pvz2.package_project.parse:project_directory": "Project directory",
+	"executor.implement:pvz2.package_project.parse:package_directory": "Package directory",
+	"executor.implement:pvz2.package_project.parse:package_name": "Package name",
+	"executor.implement:pvz2.package_project.parse:package_version_number": "Package version number",
+	"executor.implement:pvz2.package_project.parse:package_version_extended_texture_information_for_pvz2_cn": "Package extended version of texture information for PvZ-2 CN version",
 	// Executor/Implement/pvz2.remote_project
 	"executor.implement:pvz2.remote_project.execute": "PvZ-2 Remote-Project Execute",
 	"executor.implement:pvz2.remote_project.execute:project_directory": "Project directory",

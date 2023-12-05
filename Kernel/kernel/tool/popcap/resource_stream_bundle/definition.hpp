@@ -56,10 +56,10 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 			M_wrap(TextureResourceAdditional_<_>),
 			M_wrap(
 				(Size2<Integer>) size,
-				(Integer) scale,
 				(Integer) format,
 				(Integer) pitch,
 				(Integer) additional_byte_count,
+				(Integer) scale,
 			),
 		);
 

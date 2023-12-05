@@ -48,6 +48,10 @@ namespace TwinStar.Script.Shell {
 	export function cli_pick_path(
 		type: 'file' | 'directory',
 	): string {
+		if (is_android || is_iphone) {
+			// unsupported, silently fail
+			return '';
+		}
 		let result = callback(['pick_path', type]);
 		return result[0];
 	}
@@ -56,6 +60,10 @@ namespace TwinStar.Script.Shell {
 		title: string,
 		description: string,
 	): void {
+		if (is_android || is_iphone) {
+			// unsupported, silently fail
+			return;
+		}
 		let result = callback(['push_notification', title, description]);
 		return;
 	}

@@ -5,8 +5,10 @@ namespace TwinStar.Script.Executor.Implement.text.json {
 	// format *
 
 	export type Configuration = {
-		disable_trailing_comma: TypicalArgumentExpression<boolean>;
-		disable_array_wrap_line: TypicalArgumentExpression<boolean>;
+		disable_array_trailing_comma: TypicalArgumentExpression<boolean>;
+		disable_array_line_breaking: TypicalArgumentExpression<boolean>;
+		disable_object_trailing_comma: TypicalArgumentExpression<boolean>;
+		disable_object_line_breaking: TypicalArgumentExpression<boolean>;
 	};
 
 	export function injector(
@@ -34,23 +36,37 @@ namespace TwinStar.Script.Executor.Implement.text.json {
 						default: '?automatic',
 					}),
 					typical_argument_boolean({
-						id: 'disable_trailing_comma',
+						id: 'disable_array_trailing_comma',
 						checker: null,
-						automatic: (argument: {}) => (KernelX.JSON.g_format.disable_trailing_comma),
+						automatic: (argument: {}) => (KernelX.JSON.g_format.disable_array_trailing_comma),
 						condition: null,
-						default: configuration.disable_trailing_comma,
+						default: configuration.disable_array_trailing_comma,
 					}),
 					typical_argument_boolean({
-						id: 'disable_array_wrap_line',
+						id: 'disable_array_line_breaking',
 						checker: null,
-						automatic: (argument: {}) => (KernelX.JSON.g_format.disable_array_wrap_line),
+						automatic: (argument: {}) => (KernelX.JSON.g_format.disable_array_line_breaking),
 						condition: null,
-						default: configuration.disable_array_wrap_line,
+						default: configuration.disable_array_line_breaking,
+					}),
+					typical_argument_boolean({
+						id: 'disable_object_trailing_comma',
+						checker: null,
+						automatic: (argument: {}) => (KernelX.JSON.g_format.disable_object_trailing_comma),
+						condition: null,
+						default: configuration.disable_object_trailing_comma,
+					}),
+					typical_argument_boolean({
+						id: 'disable_object_line_breaking',
+						checker: null,
+						automatic: (argument: {}) => (KernelX.JSON.g_format.disable_object_line_breaking),
+						condition: null,
+						default: configuration.disable_object_line_breaking,
 					}),
 				],
-				worker: ({ source_file, destination_file, disable_trailing_comma, disable_array_wrap_line }) => {
+				worker: ({ source_file, destination_file, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking }) => {
 					let data = KernelX.JSON.read_fs(source_file);
-					KernelX.JSON.write_fs(destination_file, data, disable_trailing_comma, disable_array_wrap_line);
+					KernelX.JSON.write_fs(destination_file, data, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking);
 					return;
 				},
 				batch_argument: [

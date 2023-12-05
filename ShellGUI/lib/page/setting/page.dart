@@ -237,12 +237,9 @@ class _SettingPageState extends State<SettingPage> {
                               maxLines: null,
                               keyboardType: TextInputType.multiline,
                               inputFormatters: const [],
-                              initialValue: setting.data.mPrimaryFont.join('\n') + (setting.data.mPrimaryFont.isNotEmpty && setting.data.mPrimaryFont.last.isEmpty ? '\n' : ''),
+                              initialValue: convertStringListToTextWithLine(setting.data.mPrimaryFont),
                               onChanged: (value) {
-                                var parsedValue = value.split('\n');
-                                if (parsedValue.isNotEmpty && parsedValue.last.isEmpty) {
-                                  parsedValue.removeLast();
-                                }
+                                var parsedValue = convertStringListFromTextWithLine(value);
                                 setting.data.mPrimaryFont = parsedValue;
                                 setting.notify();
                               },
@@ -308,12 +305,9 @@ class _SettingPageState extends State<SettingPage> {
                               maxLines: null,
                               keyboardType: TextInputType.multiline,
                               inputFormatters: const [],
-                              initialValue: setting.data.mConsoleFont.join('\n') + (setting.data.mConsoleFont.isNotEmpty && setting.data.mConsoleFont.last.isEmpty ? '\n' : ''),
+                              initialValue: convertStringListToTextWithLine(setting.data.mConsoleFont),
                               onChanged: (value) {
-                                var parsedValue = value.split('\n');
-                                if (parsedValue.isNotEmpty && parsedValue.last.isEmpty) {
-                                  parsedValue.removeLast();
-                                }
+                                var parsedValue = convertStringListFromTextWithLine(value);
                                 setting.data.mConsoleFont = parsedValue;
                                 setting.notify();
                               },
@@ -653,12 +647,9 @@ class _SettingPageState extends State<SettingPage> {
                               maxLines: null,
                               keyboardType: TextInputType.multiline,
                               inputFormatters: const [],
-                              initialValue: setting.data.mConsoleArgument.join('\n') + (setting.data.mConsoleArgument.isNotEmpty && setting.data.mConsoleArgument.last.isEmpty ? '\n' : ''),
+                              initialValue: convertStringListToTextWithLine(setting.data.mConsoleArgument),
                               onChanged: (value) {
-                                var parsedValue = value.split('\n');
-                                if (parsedValue.isNotEmpty && parsedValue.last.isEmpty) {
-                                  parsedValue.removeLast();
-                                }
+                                var parsedValue = convertStringListFromTextWithLine(value);
                                 setting.data.mConsoleArgument = parsedValue;
                                 setting.notify();
                               },

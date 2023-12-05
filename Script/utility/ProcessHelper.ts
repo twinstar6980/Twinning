@@ -9,7 +9,7 @@ namespace TwinStar.Script.ProcessHelper {
 			list,
 			(index, element) => {
 				let split_index = element.indexOf('=');
-				return [element.substring(0, split_index), element.substring(split_index + 1, undefined)];
+				return [element.slice(0, split_index), element.slice(split_index + 1)];
 			},
 		);
 	}

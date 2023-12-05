@@ -264,7 +264,7 @@ namespace TwinStar.Script.AndroidHelper {
 	): Array<string> {
 		let shell_result: string;
 		shell_result = shell(`pm list packages`);
-		let id = split_string_by_line_feed(shell_result).map((e) => (e.substring(8))).filter((e) => (rule.test(e)));
+		let id = split_string_by_line_feed(shell_result).map((value) => (value.slice(8))).filter((value) => (rule.test(value)));
 		return id;
 	}
 

@@ -11,11 +11,15 @@ namespace TwinStar.Script.KernelX {
 		// ------------------------------------------------
 
 		export const g_format: {
-			disable_trailing_comma: boolean;
-			disable_array_wrap_line: boolean;
+			disable_array_trailing_comma: boolean;
+			disable_array_line_breaking: boolean;
+			disable_object_trailing_comma: boolean;
+			disable_object_line_breaking: boolean;
 		} = {
-			disable_trailing_comma: false,
-			disable_array_wrap_line: false,
+			disable_array_trailing_comma: false,
+			disable_array_line_breaking: false,
+			disable_object_trailing_comma: false,
+			disable_object_line_breaking: false,
 		};
 
 		// ------------------------------------------------
@@ -32,14 +36,16 @@ namespace TwinStar.Script.KernelX {
 		/** NOTE : result is a view of buffer */
 		export function write<ConstraintT extends Kernel.JSON.JS_Value>(
 			value: Kernel.JSON.Value<ConstraintT>,
-			disable_trailing_comma: boolean = g_format.disable_trailing_comma,
-			disable_array_wrap_line: boolean = g_format.disable_array_wrap_line,
+			disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
+			disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
+			disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
+			disable_object_line_breaking: boolean = g_format.disable_object_line_breaking,
 			data_buffer: Kernel.CharacterListView | bigint = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
 		): ArrayBuffer {
 			let data_buffer_if = typeof data_buffer === 'bigint' ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
 			let data_buffer_view = data_buffer instanceof Kernel.CharacterListView ? data_buffer : Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(data_buffer_if!.view());
 			let data_stream = Kernel.CharacterStreamView.watch(data_buffer_view);
-			Kernel.Tool.Data.Serialization.JSON.Write.process(data_stream, value, Kernel.Boolean.value(disable_trailing_comma), Kernel.Boolean.value(disable_array_wrap_line));
+			Kernel.Tool.Data.Serialization.JSON.Write.process(data_stream, value, Kernel.Boolean.value(disable_array_trailing_comma), Kernel.Boolean.value(disable_array_line_breaking), Kernel.Boolean.value(disable_object_trailing_comma), Kernel.Boolean.value(disable_object_line_breaking));
 			return Kernel.Miscellaneous.cast_CharacterListView_to_ByteListView(data_stream.stream_view()).value;
 		}
 
@@ -54,11 +60,13 @@ namespace TwinStar.Script.KernelX {
 
 		export function write_s<ConstraintT extends Kernel.JSON.JS_Value>(
 			value: Kernel.JSON.Value<ConstraintT>,
-			disable_trailing_comma: boolean = g_format.disable_trailing_comma,
-			disable_array_wrap_line: boolean = g_format.disable_array_wrap_line,
+			disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
+			disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
+			disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
+			disable_object_line_breaking: boolean = g_format.disable_object_line_breaking,
 			data_buffer: Kernel.CharacterListView | bigint = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
 		): string {
-			let data = write(value, disable_trailing_comma, disable_array_wrap_line, data_buffer);
+			let data = write(value, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
 			return Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(Kernel.ByteListView.value(data)));
 		}
 
@@ -74,11 +82,13 @@ namespace TwinStar.Script.KernelX {
 		export function write_fs<ConstraintT extends Kernel.JSON.JS_Value>(
 			data_file: string,
 			value: Kernel.JSON.Value<ConstraintT>,
-			disable_trailing_comma: boolean = g_format.disable_trailing_comma,
-			disable_array_wrap_line: boolean = g_format.disable_array_wrap_line,
+			disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
+			disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
+			disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
+			disable_object_line_breaking: boolean = g_format.disable_object_line_breaking,
 			data_buffer: Kernel.CharacterListView | bigint = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
 		): void {
-			let data = write(value, disable_trailing_comma, disable_array_wrap_line, data_buffer);
+			let data = write(value, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
 			FileSystem.write_file(data_file, data);
 			return;
 		}
@@ -94,11 +104,13 @@ namespace TwinStar.Script.KernelX {
 		/** NOTE : result is a view of buffer */
 		export function write_js<ConstraintT extends Kernel.JSON.JS_Value>(
 			value: ConstraintT,
-			disable_trailing_comma: boolean = g_format.disable_trailing_comma,
-			disable_array_wrap_line: boolean = g_format.disable_array_wrap_line,
+			disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
+			disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
+			disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
+			disable_object_line_breaking: boolean = g_format.disable_object_line_breaking,
 			data_buffer: Kernel.CharacterListView | bigint = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
 		): ArrayBuffer {
-			return write(Kernel.JSON.Value.value<ConstraintT>(value), disable_trailing_comma, disable_array_wrap_line, data_buffer);
+			return write(Kernel.JSON.Value.value<ConstraintT>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
 		}
 
 		// ------------------------------------------------
@@ -111,11 +123,13 @@ namespace TwinStar.Script.KernelX {
 
 		export function write_s_js<ConstraintT extends Kernel.JSON.JS_Value>(
 			value: ConstraintT,
-			disable_trailing_comma: boolean = g_format.disable_trailing_comma,
-			disable_array_wrap_line: boolean = g_format.disable_array_wrap_line,
+			disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
+			disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
+			disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
+			disable_object_line_breaking: boolean = g_format.disable_object_line_breaking,
 			data_buffer: Kernel.CharacterListView | bigint = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
 		): string {
-			return write_s(Kernel.JSON.Value.value<ConstraintT>(value), disable_trailing_comma, disable_array_wrap_line, data_buffer);
+			return write_s(Kernel.JSON.Value.value<ConstraintT>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
 		}
 
 		// ------------------------------------------------
@@ -129,11 +143,13 @@ namespace TwinStar.Script.KernelX {
 		export function write_fs_js<ConstraintT extends Kernel.JSON.JS_Value>(
 			data_file: string,
 			value: ConstraintT,
-			disable_trailing_comma: boolean = g_format.disable_trailing_comma,
-			disable_array_wrap_line: boolean = g_format.disable_array_wrap_line,
+			disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
+			disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
+			disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
+			disable_object_line_breaking: boolean = g_format.disable_object_line_breaking,
 			data_buffer: Kernel.CharacterListView | bigint = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
 		): void {
-			return write_fs(data_file, Kernel.JSON.Value.value<ConstraintT>(value), disable_trailing_comma, disable_array_wrap_line, data_buffer);
+			return write_fs(data_file, Kernel.JSON.Value.value<ConstraintT>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
 		}
 
 		// ------------------------------------------------

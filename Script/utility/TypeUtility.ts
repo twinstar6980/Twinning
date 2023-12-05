@@ -135,17 +135,16 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export function object_without_undefined<T extends Object>(
+	export function object_clear_undefined<T extends Object>(
 		source: T,
 	): T {
-		let destination: T = {} as any;
 		for (let key in source) {
 			let value = source[key];
-			if (value !== undefined) {
-				destination[key] = value;
+			if (value === undefined) {
+				delete source[key];
 			}
 		}
-		return destination;
+		return source;
 	}
 
 	// ------------------------------------------------
@@ -266,10 +265,10 @@ namespace TwinStar.Script {
 		if (false) {
 		}
 		else if (destination.length >= 2 && destination.startsWith(`'`) && destination.endsWith(`'`)) {
-			destination = destination.substring(1, destination.length - 1);
+			destination = destination.slice(1, -1);
 		}
 		else if (destination.length >= 2 && destination.startsWith(`"`) && destination.endsWith(`"`)) {
-			destination = destination.substring(1, destination.length - 1);
+			destination = destination.slice(1, -1);
 		}
 		return destination;
 	}

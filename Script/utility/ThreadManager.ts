@@ -70,7 +70,7 @@ namespace TwinStar.Script {
 
 		wait(
 		): void {
-			while (!this.m_pool.every((e, i) => (this.idle(i)))) {
+			while (!this.m_pool.every((value, index) => (this.idle(index)))) {
 				Kernel.Miscellaneous.Thread.yield();
 			}
 			return;
@@ -103,7 +103,7 @@ namespace TwinStar.Script {
 			assert_test(this.m_pool.length !== 0, `thread pool is empty`);
 			let index = null;
 			while (index === null) {
-				index = this.m_pool.findIndex((e, i) => (this.idle(i)));
+				index = this.m_pool.findIndex((value, index) => (this.idle(index)));
 				if (index === -1) {
 					index = null;
 					Kernel.Miscellaneous.Thread.yield();

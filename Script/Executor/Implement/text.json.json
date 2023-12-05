@@ -1,4 +1,6 @@
 {
-	"disable_trailing_comma": "?automatic",
-	"disable_array_wrap_line": "?automatic",
+	"disable_array_trailing_comma": "?automatic",
+	"disable_array_line_breaking": "?automatic",
+	"disable_object_trailing_comma": "?automatic",
+	"disable_object_line_breaking": "?automatic",
 }

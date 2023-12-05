@@ -1,0 +1,136 @@
+<local:CustomControl
+	x:Class="Helper.Module.PackageBuilder.TextureResourcePropertyPanel"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:community="using:CommunityToolkit.WinUI"
+	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
+	xmlns:local="using:Helper"
+	xmlns:localModulePackageBuilder="using:Helper.Module.PackageBuilder"
+	xmlns:my="using:Helper.CommonControl"
+	mc:Ignorable="d"
+	x:DefaultBindMode="OneWay"
+>
+	<my:Stack
+		Padding="0,0"
+		Orientation="Vertical" Spacing="2"
+	>
+		<my:SettingItem
+			HorizontalAlignment="Stretch"
+			Icon="{StaticResource FluentIconGlyph.StorageOptical}"
+			Title="Path"
+		>
+			<my:SettingItem.Action>
+				<my:Stack
+					Padding="0,0"
+					Orientation="Horizontal" Spacing="8"
+				>
+					<TextBox
+						my:Stack.Weight="1" HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
+						Text="{x:Bind Controller.uPath_Text}"
+						TextChanged="{x:Bind Controller.uPath_TextChanged}"
+					/>
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+		<my:SettingItem
+			HorizontalAlignment="Stretch"
+			Icon="{StaticResource FluentIconGlyph.TiltDown}"
+			Title="Format"
+		>
+			<my:SettingItem.Action>
+				<my:Stack
+					Padding="0,0"
+					Orientation="Horizontal" Spacing="8"
+				>
+					<NumberBox
+						my:Stack.Weight="1" HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
+						SpinButtonPlacementMode="Hidden"
+						NumberFormatter="{x:Bind Controller.uFormat_NumberFormatter}"
+						Minimum="0" Maximum="4294967295"
+						Value="{x:Bind Controller.uFormat_Value}"
+						ValueChanged="{x:Bind Controller.uFormat_ValueChanged}"
+					/>
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+		<my:SettingItem
+			HorizontalAlignment="Stretch"
+			Icon="{StaticResource FluentIconGlyph.GenericScan}"
+			Title="Pitch"
+		>
+			<my:SettingItem.Action>
+				<my:Stack
+					Padding="0,0"
+					Orientation="Horizontal" Spacing="8"
+				>
+					<NumberBox
+						my:Stack.Weight="1" HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
+						SpinButtonPlacementMode="Hidden"
+						NumberFormatter="{x:Bind Controller.uPitch_NumberFormatter}"
+						Minimum="0" Maximum="4294967295"
+						Value="{x:Bind Controller.uPitch_Value}"
+						ValueChanged="{x:Bind Controller.uPitch_ValueChanged}"
+					/>
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+		<my:SettingItem
+			HorizontalAlignment="Stretch"
+			Icon="{StaticResource FluentIconGlyph.DockRight}"
+			Title="Additional Byte Count"
+		>
+			<my:SettingItem.Action>
+				<my:Stack
+					Padding="0,0"
+					Orientation="Horizontal" Spacing="8"
+				>
+					<NumberBox
+						my:Stack.Weight="1" HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
+						SpinButtonPlacementMode="Hidden"
+						NumberFormatter="{x:Bind Controller.uAdditionalByteCount_NumberFormatter}"
+						Minimum="0" Maximum="4294967295"
+						Value="{x:Bind Controller.uAdditionalByteCount_Value}"
+						ValueChanged="{x:Bind Controller.uAdditionalByteCount_ValueChanged}"
+					/>
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+		<my:SettingItem
+			HorizontalAlignment="Stretch"
+			Icon="{StaticResource FluentIconGlyph.FullScreen}"
+			Title="Size"
+		>
+			<my:SettingItem.Action>
+				<my:Stack
+					Padding="0,0"
+					Orientation="Horizontal" Spacing="8"
+				>
+					<NumberBox
+						my:Stack.Weight="1" HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
+						SpinButtonPlacementMode="Hidden"
+						NumberFormatter="{x:Bind Controller.uSizeWidth_NumberFormatter}"
+						Minimum="0" Maximum="4294967295"
+						Value="{x:Bind Controller.uSizeWidth_Value}"
+						ValueChanged="{x:Bind Controller.uSizeWidth_ValueChanged}"
+					/>
+					<NumberBox
+						my:Stack.Weight="1" HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
+						SpinButtonPlacementMode="Hidden"
+						NumberFormatter="{x:Bind Controller.uSizeHeight_NumberFormatter}"
+						Minimum="0" Maximum="4294967295"
+						Value="{x:Bind Controller.uSizeHeight_Value}"
+						ValueChanged="{x:Bind Controller.uSizeHeight_ValueChanged}"
+					/>
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+	</my:Stack>
+</local:CustomControl>

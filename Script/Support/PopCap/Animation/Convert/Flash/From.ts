@@ -293,19 +293,19 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 				}, [])
 			))),
 			XML.create_element_node('symbols', {}, [
-				...animation.image.map((e, i) => (
+				...animation.image.map((value, index) => (
 					XML.create_element_node('Include', {
-						href: `source/source_${i + 1}.xml`,
+						href: `source/source_${index + 1}.xml`,
 					}, [])
 				)),
-				...animation.image.map((e, i) => (
+				...animation.image.map((value, index) => (
 					XML.create_element_node('Include', {
-						href: `image/image_${i + 1}.xml`,
+						href: `image/image_${index + 1}.xml`,
 					}, [])
 				)),
-				...animation.sprite.map((e, i) => (
+				...animation.sprite.map((value, index) => (
 					XML.create_element_node('Include', {
-						href: `sprite/sprite_${i + 1}.xml`,
+						href: `sprite/sprite_${index + 1}.xml`,
 					}, [])
 				)),
 				XML.create_element_node('Include', {
@@ -371,8 +371,8 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 			},
 			document: make_main_document(animation),
 			library: {
-				image: animation.image.map((e, i) => (make_image_document(i, e))),
-				sprite: animation.sprite.map((e, i) => (make_sprite_document(i, e, animation.sprite))),
+				image: animation.image.map((value, index) => (make_image_document(index, value))),
+				sprite: animation.sprite.map((value, index) => (make_sprite_document(index, value, animation.sprite))),
 				main_sprite: make_sprite_document('main', animation.main_sprite, animation.sprite),
 			},
 		};

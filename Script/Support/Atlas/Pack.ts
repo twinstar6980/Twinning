@@ -41,10 +41,10 @@ namespace TwinStar.Script.Support.Atlas.Pack {
 		sprite_directory: string,
 		expand_value: number | 'exponent_of_2' = 'exponent_of_2',
 	): [AtlasDefinition, Kernel.Image.Image] {
-		let sprite_file_list = KernelX.FileSystem.list_file(sprite_directory).filter((e) => (/.+(\.png)/i.test(e))).map((e) => (e.substring(0, e.length - 4)));
-		let sprite_box = record_from_array(sprite_file_list, (i, e) => {
-			let size = KernelX.Image.File.PNG.size_fs(`${sprite_directory}/${e}.png`);
-			return [e, { w: Number(size[0]), h: Number(size[1]) }];
+		let sprite_file_list = KernelX.FileSystem.list_file(sprite_directory).filter((value) => (/.+(\.png)/i.test(value))).map((value) => (value.slice(0, -4)));
+		let sprite_box = record_from_array(sprite_file_list, (index, value) => {
+			let size = KernelX.Image.File.PNG.size_fs(`${sprite_directory}/${value}.png`);
+			return [value, { w: Number(size[0]), h: Number(size[1]) }];
 		});
 		let [atlas_box, sprite_rect] = PackAutomatic.pack_automatic_best(sprite_box, expand_value === 'exponent_of_2' ? PackAutomatic.expander_exponent_of_2_generator(false) : PackAutomatic.expander_fixed_generator(false, expand_value));
 		let definition: AtlasDefinition = {

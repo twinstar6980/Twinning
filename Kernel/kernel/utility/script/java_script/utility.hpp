@@ -535,19 +535,9 @@ namespace TwinStar::Kernel::JavaScript {
 
 		template <auto function> requires
 			CategoryConstraint<>
-			&& (IsMemberFunction<decltype(function)>)
-			&& (IsDerivedFrom<Class, typename CallableTraitOf<function>::Class>)
-		auto add_member_function_proxy (
-			String const & name
-		) -> NativeClassBuilder & {
-			return thiz.template add_member_function<&proxy_native_function_by_handler<&normalized_member_function<function, Class>>>(name);
-		}
-
-		template <auto function> requires
-			CategoryConstraint<>
 			&& (IsGlobalFunction<decltype(function)>)
 			&& (IsSame<AsPure<typename CallableTraitOf<function>::Argument::template Element<1_ixz>>, Class>)
-		auto add_member_function_imitate_proxy (
+		auto add_member_function_proxy (
 			String const & name
 		) -> NativeClassBuilder & {
 			return thiz.template add_member_function<&proxy_native_function_by_handler<function>>(name);

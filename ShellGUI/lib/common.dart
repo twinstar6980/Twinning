@@ -18,7 +18,7 @@ typedef Map<K, V> = core.Map<K, V>;
 
 const kApplicationName = 'TwinStar ToolKit - Shell GUI';
 
-const kApplicationVersion = 28;
+const kApplicationVersion = 29;
 
 // ----------------
 
@@ -73,6 +73,26 @@ normalizeLibraryPath(
     result += '.';
   }
   return result;
+}
+
+// ----------------
+
+String
+convertStringListToTextWithLine (
+  List<String> value
+) {
+  return value.join('\n') + (value.isNotEmpty && value.last.isEmpty ? '\n' : '');
+}
+
+List<String>
+convertStringListFromTextWithLine (
+  String text
+) {
+  var value = text.split('\n').map((value) => (!value.endsWith('\r') ? value : value.substring(0, value.length - 1))).toList();
+  if (value.isNotEmpty && value.last.isEmpty) {
+    value.removeLast();
+  }
+  return value;
 }
 
 // ----------------

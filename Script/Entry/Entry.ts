@@ -25,7 +25,6 @@ namespace TwinStar.Script.Entry {
 				}
 				catch (e) {
 					Console.error_of(e);
-					Console.pause();
 				}
 			}
 		}
@@ -40,8 +39,10 @@ namespace TwinStar.Script.Entry {
 		byte_stream_use_big_endian: boolean;
 		common_buffer_size: string;
 		json_format: {
-			disable_trailing_comma: boolean;
-			disable_array_wrap_line: boolean;
+			disable_array_trailing_comma: boolean;
+			disable_array_line_breaking: boolean;
+			disable_object_trailing_comma: boolean;
+			disable_object_line_breaking: boolean;
 		};
 		thread_limit: bigint;
 		command_notification_time_limit: null | bigint;
@@ -60,8 +61,10 @@ namespace TwinStar.Script.Entry {
 		// common buffer size
 		KernelX.g_common_buffer.allocate(Kernel.Size.value(parse_size_string(configuration.common_buffer_size)));
 		// json format
-		KernelX.JSON.g_format.disable_trailing_comma = configuration.json_format.disable_trailing_comma;
-		KernelX.JSON.g_format.disable_array_wrap_line = configuration.json_format.disable_array_wrap_line;
+		KernelX.JSON.g_format.disable_array_trailing_comma = configuration.json_format.disable_array_trailing_comma;
+		KernelX.JSON.g_format.disable_array_line_breaking = configuration.json_format.disable_array_line_breaking;
+		KernelX.JSON.g_format.disable_object_trailing_comma = configuration.json_format.disable_object_trailing_comma;
+		KernelX.JSON.g_format.disable_object_line_breaking = configuration.json_format.disable_object_line_breaking;
 		return;
 	}
 
@@ -71,11 +74,7 @@ namespace TwinStar.Script.Entry {
 
 	export function entry(
 		argument: Array<string>,
-	): {
-		skipped: bigint;
-		failed: bigint;
-		succeeded: bigint;
-	} {
+	): string {
 		let configuration = g_configuration;
 		g_thread_manager.resize(Number(configuration.thread_limit));
 		let raw_command = [...argument];
@@ -98,11 +97,7 @@ namespace TwinStar.Script.Entry {
 		]);
 		let duration = 0;
 		let progress = new TextGenerator.Progress('fraction', true, 40, command.length);
-		let command_count = {
-			skipped: 0n,
-			failed: 0n,
-			succeeded: 0n,
-		};
+		let command_log = '';
 		for (let item of command) {
 			progress.increase();
 			Console.information(los('entry:current_command_execute', progress), [
@@ -110,17 +105,15 @@ namespace TwinStar.Script.Entry {
 			]);
 			let state = Executor.execute(item, method);
 			if (state === null) {
-				command_count.skipped++;
+				command_log += '~';
 			}
 			else {
 				if (state[0] === false) {
-					command_count.failed++;
+					command_log += 'f';
 				}
 				if (state[0] === true) {
-					command_count.succeeded++;
+					command_log += 's';
 				}
-			}
-			if (state !== null) {
 				duration += state[1];
 				if (configuration.command_notification_time_limit !== null && configuration.command_notification_time_limit <= state[1]) {
 					Console.push_notification(los('entry:current_command_finish'), los('entry:duration', (state[1] / 1000).toFixed(3)));
@@ -130,7 +123,7 @@ namespace TwinStar.Script.Entry {
 		Console.success(los('entry:all_command_finish'), [
 			los('entry:duration', (duration / 1000).toFixed(3)),
 		]);
-		return command_count;
+		return command_log;
 	}
 
 	// ------------------------------------------------

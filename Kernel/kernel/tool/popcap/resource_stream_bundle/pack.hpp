@@ -439,8 +439,8 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 								auto & packet_resource_additional_definition = packet_resource_definition.additional.template set_of_type<ResourceType::Constant::texture()>();
 								texture_information_structure.size_width = cbw<IntegerU32>(resource_additional_definition.size.width);
 								texture_information_structure.size_height = cbw<IntegerU32>(resource_additional_definition.size.height);
-								texture_information_structure.format = cbw<IntegerU32>(resource_additional_definition.format);
 								texture_information_structure.pitch = cbw<IntegerU32>(resource_additional_definition.pitch);
+								texture_information_structure.format = cbw<IntegerU32>(resource_additional_definition.format);
 								if constexpr (check_version(version, {4}, {1})) {
 									texture_information_structure.additional_byte_count = cbw<IntegerU32>(resource_additional_definition.additional_byte_count);
 								}

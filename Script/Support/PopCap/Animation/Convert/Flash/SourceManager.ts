@@ -55,11 +55,11 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.SourceManager {
 		]);
 	}
 
-	export function create(
+	function create(
 		animation: Kernel.Tool.PopCap.Animation.Definition.JS_N.Animation,
 		resolution: bigint,
 	): Array<Kernel.XML.JS_Element> {
-		return animation.image.map((e, i) => (create_one(i, e, resolution)));
+		return animation.image.map((value, index) => (create_one(index, value, resolution)));
 	}
 
 	// ------------------------------------------------
@@ -93,11 +93,11 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.SourceManager {
 		return;
 	}
 
-	export function resize(
+	function resize(
 		document: Array<Kernel.XML.JS_Node>,
 		resolution: bigint,
 	): void {
-		document.forEach((e, i) => (resize_one(e, resolution)));
+		document.forEach((value, index) => (resize_one(value, resolution)));
 		return;
 	}
 
@@ -108,8 +108,8 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.SourceManager {
 		data: Kernel.Tool.PopCap.Animation.Definition.JS_N.Animation,
 		resolution: bigint = k_standard_resolution,
 	): void {
-		create(data, resolution).forEach((e, i) => {
-			KernelX.XML.write_fs_js(`${directory}/LIBRARY/source/source_${i + 1}.xml`, XML.wrap_element(e));
+		create(data, resolution).forEach((value, index) => {
+			KernelX.XML.write_fs_js(`${directory}/LIBRARY/source/source_${index + 1}.xml`, XML.wrap_element(value));
 		});
 		return;
 	}
@@ -119,10 +119,10 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.SourceManager {
 		resolution: bigint,
 	): void {
 		let extra = KernelX.JSON.read_fs_js<ExtraInformation>(`${directory}/extra.json`);
-		let document = extra.image.map((e, i) => (KernelX.XML.read_fs_js(`${directory}/LIBRARY/source/source_${i + 1}.xml`)));
+		let document = extra.image.map((value, index) => (KernelX.XML.read_fs_js(`${directory}/LIBRARY/source/source_${index + 1}.xml`)));
 		resize(document, resolution);
-		document.forEach((e, i) => {
-			KernelX.XML.write_fs_js(`${directory}/LIBRARY/source/source_${i + 1}.xml`, e);
+		document.forEach((value, index) => {
+			KernelX.XML.write_fs_js(`${directory}/LIBRARY/source/source_${index + 1}.xml`, value);
 		});
 		return;
 	}

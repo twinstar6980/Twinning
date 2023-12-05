@@ -139,7 +139,7 @@ namespace Helper.Module.ModdingWorker {
 				);
 			}
 			if (this.ImmediateLaunch) {
-				this.LaunchSession().Wait(0);
+				await this.LaunchSession();
 			}
 			return;
 		}
@@ -352,7 +352,7 @@ namespace Helper.Module.ModdingWorker {
 		) {
 			var senders = sender.AsClass<Button>();
 			if (this.SessionTask is null) {
-				this.LaunchSession().Wait(0);
+				await this.LaunchSession();
 			}
 			return;
 		}

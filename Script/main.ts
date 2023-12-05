@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 92;
+	export const k_version = 93;
 
 	// ------------------------------------------------
 
@@ -234,6 +234,13 @@ namespace TwinStar.Script {
 			`Support/PvZ2/ResourceManifest/NewTypeObjectNotation/Encode`,
 			`Support/PvZ2/RegularResourceManifest/common`,
 			`Support/PvZ2/RegularResourceManifest/Convert`,
+			`Support/PvZ2/PackageProject/common`,
+			`Support/PvZ2/PackageProject/Setting`,
+			`Support/PvZ2/PackageProject/Diagnose`,
+			`Support/PvZ2/PackageProject/Transpile`,
+			`Support/PvZ2/PackageProject/Compile`,
+			`Support/PvZ2/PackageProject/Link`,
+			`Support/PvZ2/PackageProject/Parse`,
 			`Support/PvZ2/RemoteProject/Execute`,
 			`Support/PvZ2/ResourceConvert`,
 			`Support/Kairosoft/UserData/Recrypt`,
@@ -272,6 +279,7 @@ namespace TwinStar.Script {
 			`Executor/Implement/popcap.resource_stream_bundle_patch`,
 			`Executor/Implement/pvz2.text_table`,
 			`Executor/Implement/pvz2.resource_manifest`,
+			`Executor/Implement/pvz2.package_project`,
 			`Executor/Implement/pvz2.remote_project`,
 			`Executor/Implement/kairosoft.user_data`,
 			`Entry/Entry`,
@@ -303,8 +311,7 @@ namespace TwinStar.Script {
 					los('main:partition_load_duration', ((timer_end - timer_begin) / 1000).toFixed(3)),
 				]);
 				Home.initialize();
-				let command_count = Entry.entry(argument.slice(1));
-				result = `${command_count.skipped},${command_count.failed},${command_count.succeeded}`;
+				result = Entry.entry(argument.slice(1));
 			}
 			catch (e) {
 				Console.error_of(e);

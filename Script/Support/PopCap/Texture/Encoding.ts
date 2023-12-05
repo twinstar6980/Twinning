@@ -23,7 +23,7 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encoding {
 
 	// ------------------------------------------------
 
-	type EncodeOption = {
+	export type EncodeOption = {
 		rgb_etc1_a_palette: null | {
 			palette: KernelX.Image.ColorList;
 		};
@@ -112,6 +112,43 @@ namespace TwinStar.Script.Support.PopCap.Texture.Encoding {
 			}
 		}
 		return data_size;
+	}
+
+	export function get_bpp_for_pitch(
+		format: Format,
+	): bigint {
+		let result = 0n;
+		switch (format) {
+			case 'rgba_8888_o':
+			case 'argb_8888':
+			case 'rgba_4444':
+			case 'rgb_565':
+			case 'rgba_5551': {
+				result += KernelX.Tool.Texture.Encoding.get_bpp(format);
+				break;
+			}
+			case 'rgba_4444_tiled':
+			case 'rgb_565_tiled':
+			case 'rgba_5551_tiled': {
+				result += KernelX.Tool.Texture.Encoding.get_bpp(format.slice(0, -6) as KernelX.Tool.Texture.Encoding.CompositeFormat);
+				break;
+			}
+			case 'rgba_pvrtc4': {
+				result += KernelX.Tool.Texture.Encoding.get_bpp('rgba_pvrtc4');
+				break;
+			}
+			case 'rgb_pvrtc4_a_8': {
+				// TODO
+				result += KernelX.Tool.Texture.Encoding.get_bpp('rgb_pvrtc4');
+				break;
+			}
+			case 'rgb_etc1_a_8':
+			case 'rgb_etc1_a_palette': {
+				result += KernelX.Tool.Texture.Encoding.get_bpp('rgba_8888_o');
+				break;
+			}
+		}
+		return result;
 	}
 
 	// ------------------------------------------------

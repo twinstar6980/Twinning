@@ -47,11 +47,11 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash {
 	): void {
 		KernelX.JSON.write_fs_js(`${directory}/extra.json`, data.extra);
 		KernelX.XML.write_fs_js(`${directory}/DOMDocument.xml`, XML.wrap_element(data.document));
-		data.library.image.forEach((e, i) => {
-			KernelX.XML.write_fs_js(`${directory}/LIBRARY/image/image_${i + 1}.xml`, XML.wrap_element(e));
+		data.library.image.forEach((value, index) => {
+			KernelX.XML.write_fs_js(`${directory}/LIBRARY/image/image_${index + 1}.xml`, XML.wrap_element(value));
 		});
-		data.library.sprite.forEach((e, i) => {
-			KernelX.XML.write_fs_js(`${directory}/LIBRARY/sprite/sprite_${i + 1}.xml`, XML.wrap_element(e));
+		data.library.sprite.forEach((value, index) => {
+			KernelX.XML.write_fs_js(`${directory}/LIBRARY/sprite/sprite_${index + 1}.xml`, XML.wrap_element(value));
 		});
 		KernelX.XML.write_fs_js(`${directory}/LIBRARY/main_sprite.xml`, XML.wrap_element(data.library.main_sprite));
 		return;
@@ -63,8 +63,8 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash {
 		let extra = KernelX.JSON.read_fs_js<ExtraInformation>(`${directory}/extra.json`);
 		let document = KernelX.XML.read_fs_js(`${directory}/DOMDocument.xml`).value as Kernel.XML.JS_Element;
 		let library = {
-			image: extra.image.map((e, i) => (KernelX.XML.read_fs_js(`${directory}/LIBRARY/image/image_${i + 1}.xml`).value as Kernel.XML.JS_Element)),
-			sprite: extra.sprite.map((e, i) => (KernelX.XML.read_fs_js(`${directory}/LIBRARY/sprite/sprite_${i + 1}.xml`).value as Kernel.XML.JS_Element)),
+			image: extra.image.map((value, index) => (KernelX.XML.read_fs_js(`${directory}/LIBRARY/image/image_${index + 1}.xml`).value as Kernel.XML.JS_Element)),
+			sprite: extra.sprite.map((value, index) => (KernelX.XML.read_fs_js(`${directory}/LIBRARY/sprite/sprite_${index + 1}.xml`).value as Kernel.XML.JS_Element)),
 			main_sprite: KernelX.XML.read_fs_js(`${directory}/LIBRARY/main_sprite.xml`).value as Kernel.XML.JS_Element,
 		};
 		return {

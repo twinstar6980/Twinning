@@ -348,10 +348,10 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 			frame_rate: frame_rate,
 			position: flash.extra.position,
 			size: [width, height],
-			image: flash.extra.image.map((e, i) => ({ name: e.name, size: e.size, transform: parse_image_document(flash.library.image[i], i) })),
-			sprite: flash.extra.sprite.map((e, i) => {
-				let frame = parse_sprite_document(flash.library.sprite[i], i);
-				return { name: e.name, frame_rate: Number(frame_rate), work_area: [0n, BigInt(frame.length - 1)], frame: frame };
+			image: flash.extra.image.map((value, index) => ({ name: value.name, size: value.size, transform: parse_image_document(flash.library.image[index], index) })),
+			sprite: flash.extra.sprite.map((value, index) => {
+				let frame = parse_sprite_document(flash.library.sprite[index], index);
+				return { name: value.name, frame_rate: Number(frame_rate), work_area: [0n, BigInt(frame.length - 1)], frame: frame };
 			}),
 			main_sprite: { name: flash.extra.main_sprite!.name, frame_rate: Number(frame_rate), work_area: [0n, BigInt(main_sprite_frame.length - 1)], frame: main_sprite_frame },
 		};

@@ -16,8 +16,10 @@ namespace TwinStar::Kernel::Tool::Data::Serialization::JSON {
 		static auto process_value (
 			OCharacterStreamView & data,
 			Value const &          value,
-			Boolean const &        disable_trailing_comma,
-			Boolean const &        disable_array_wrap_line,
+			Boolean const &        disable_array_trailing_comma,
+			Boolean const &        disable_array_line_breaking,
+			Boolean const &        disable_object_trailing_comma,
+			Boolean const &        disable_object_line_breaking,
 			Size const &           indent_level
 		) -> Void {
 			switch (value.type().value) {
@@ -42,18 +44,16 @@ namespace TwinStar::Kernel::Tool::Data::Serialization::JSON {
 				case ValueType::Constant::array().value : {
 					auto & array = value.get_array();
 					data.write('['_c);
-					auto write_space =
-						[&] (
-					) -> auto {
-						data.write(!disable_array_wrap_line ? ('\n'_c) : (' '_c));
-						return;
-					};
-					auto write_indent =
+					auto write_line =
 						[&] (
 						Boolean const & is_inner
 					) -> auto {
-						if (!disable_array_wrap_line) {
-							StringParser::write_character_repeat(data, '\t'_c, is_inner ? (indent_level + 1_sz) : (indent_level));
+						if (!disable_array_line_breaking) {
+							data.write('\n'_c);
+							StringParser::write_character_repeat(data, '\t'_c, indent_level + (is_inner ? (1_sz) : (0_sz)));
+						}
+						else {
+							data.write(' '_c);
 						}
 						return;
 					};
@@ -62,42 +62,39 @@ namespace TwinStar::Kernel::Tool::Data::Serialization::JSON {
 							[&] (
 							Array::Element const & element
 						) -> auto {
-							write_indent(k_true);
-							process_value(data, element, disable_trailing_comma, disable_array_wrap_line, indent_level + 1_sz);
+							write_line(k_true);
+							process_value(data, element, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, indent_level + (!disable_array_line_breaking ? (1_sz) : (0_sz)));
 							return;
 						};
-						write_space();
 						for (auto & element : array.head(array.size() - 1_sz)) {
 							write_element(element);
 							data.write(','_c);
-							write_space();
 						}
 						{
 							write_element(array.last());
-							if (!disable_trailing_comma && !disable_array_wrap_line) {
+							if (!disable_array_trailing_comma) {
 								data.write(','_c);
 							}
 						}
 					}
-					write_space();
-					write_indent(k_false);
+					write_line(k_false);
 					data.write(']'_c);
 					break;
 				}
 				case ValueType::Constant::object().value : {
 					auto & object = value.get_object();
 					data.write('{'_c);
-					auto write_space =
-						[&] (
-					) -> auto {
-						data.write('\n'_c);
-						return;
-					};
-					auto write_indent =
+					auto write_line =
 						[&] (
 						Boolean const & is_inner
 					) -> auto {
-						StringParser::write_character_repeat(data, '\t'_c, is_inner ? (indent_level + 1_sz) : (indent_level));
+						if (!disable_object_line_breaking) {
+							data.write('\n'_c);
+							StringParser::write_character_repeat(data, '\t'_c, indent_level + (is_inner ? (1_sz) : (0_sz)));
+						}
+						else {
+							data.write(' '_c);
+						}
 						return;
 					};
 					if (!object.empty()) {
@@ -105,30 +102,27 @@ namespace TwinStar::Kernel::Tool::Data::Serialization::JSON {
 							[&] (
 							Object::Element const & member
 						) -> auto {
-							write_indent(k_true);
+							write_line(k_true);
 							data.write('"'_c);
 							StringParser::write_escape_utf8_string_until(data, as_lvalue(ICharacterStreamView{member.key}), '"'_c);
 							data.write('"'_c);
 							data.write(':'_c);
 							data.write(' '_c);
-							process_value(data, member.value, disable_trailing_comma, disable_array_wrap_line, indent_level + 1_sz);
+							process_value(data, member.value, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, indent_level + (!disable_object_line_breaking ? (1_sz) : (0_sz)));
 							return;
 						};
-						write_space();
 						for (auto & element : object.head(object.size() - 1_sz)) {
 							write_member(element);
 							data.write(','_c);
-							write_space();
 						}
 						{
 							write_member(object.last());
-							if (!disable_trailing_comma) {
+							if (!disable_object_trailing_comma) {
 								data.write(','_c);
 							}
 						}
 					}
-					write_space();
-					write_indent(k_false);
+					write_line(k_false);
 					data.write('}'_c);
 					break;
 				}
@@ -139,10 +133,12 @@ namespace TwinStar::Kernel::Tool::Data::Serialization::JSON {
 		static auto process_whole (
 			OCharacterStreamView & data,
 			Value const &          value,
-			Boolean const &        disable_trailing_comma,
-			Boolean const &        disable_array_wrap_line
+			Boolean const &        disable_array_trailing_comma,
+			Boolean const &        disable_array_line_breaking,
+			Boolean const &        disable_object_trailing_comma,
+			Boolean const &        disable_object_line_breaking
 		) -> Void {
-			process_value(data, value, disable_trailing_comma, disable_array_wrap_line, k_begin_index);
+			process_value(data, value, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, k_begin_index);
 			return;
 		}
 
@@ -151,11 +147,13 @@ namespace TwinStar::Kernel::Tool::Data::Serialization::JSON {
 		static auto process (
 			OCharacterStreamView & data_,
 			Value const &          value,
-			Boolean const &        disable_trailing_comma,
-			Boolean const &        disable_array_wrap_line
+			Boolean const &        disable_array_trailing_comma,
+			Boolean const &        disable_array_line_breaking,
+			Boolean const &        disable_object_trailing_comma,
+			Boolean const &        disable_object_line_breaking
 		) -> Void {
 			M_use_zps_of(data);
-			return process_whole(data, value, disable_trailing_comma, disable_array_wrap_line);
+			return process_whole(data, value, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking);
 		}
 
 	};

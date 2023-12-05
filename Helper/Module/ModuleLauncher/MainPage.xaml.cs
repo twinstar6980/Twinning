@@ -308,6 +308,7 @@ namespace Helper.Module.ModuleLauncher {
 				ModuleType.ResourceForwarder => new ResourceForwarderSettingPanel(),
 				ModuleType.CommandSender     => new CommandSenderSettingPanel(),
 				ModuleType.AnimationViewer   => new AnimationViewerSettingPanel(),
+				ModuleType.PackageBuilder    => new PackageBuilderSettingPanel(),
 				_                            => throw new ArgumentOutOfRangeException(),
 			});
 			Setting.Save();

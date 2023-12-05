@@ -26,7 +26,7 @@ namespace Helper.Bridge {
 
 		public Boolean State (
 		) {
-			return this.mHandle != null;
+			return this.mHandle is not null;
 		}
 
 		public void Open (
@@ -52,7 +52,8 @@ namespace Helper.Bridge {
 		public void Close (
 		) {
 			GF.AssertTest(this.State());
-			ExternalLibrary.Kernel32.FreeLibrary(this.mHandle!.Value);
+			var result = ExternalLibrary.Kernel32.FreeLibrary(this.mHandle.AsNotNull());
+			GF.AssertTest(result);
 			this.mHandle = null;
 			this.mSymbol = null;
 			return;
@@ -69,7 +70,7 @@ namespace Helper.Bridge {
 			Interface.String**     result
 		) {
 			GF.AssertTest(this.State());
-			return this.mSymbol!.execute(callback, script, argument, result);
+			return this.mSymbol.AsNotNull().execute(callback, script, argument, result);
 		}
 
 		#endregion

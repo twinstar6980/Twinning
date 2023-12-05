@@ -64,6 +64,12 @@ namespace Helper.Module {
 				Name = "Animation Viewer",
 				Page = typeof(AnimationViewer.MainPage),
 			},
+			new ModuleInformation {
+				Type = ModuleType.PackageBuilder,
+				Icon = FluentIconGlyph.DialShape3,
+				Name = "Package Builder",
+				Page = typeof(PackageBuilder.MainPage),
+			},
 		};
 
 		public static ModuleInformation Query (

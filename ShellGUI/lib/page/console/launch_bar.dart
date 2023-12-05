@@ -42,12 +42,9 @@ class LaunchBarContent extends StatelessWidget {
                         maxLines: null,
                         keyboardType: TextInputType.multiline,
                         inputFormatters: const [],
-                        initialValue: this.additionalArgument.join('\n') + (this.additionalArgument.isNotEmpty && this.additionalArgument.last.isEmpty ? '\n' : ''),
+                        initialValue: convertStringListToTextWithLine(this.additionalArgument),
                         onChanged: (value) {
-                          var parsedValue = value.split('\n');
-                          if (parsedValue.isNotEmpty && parsedValue.last.isEmpty) {
-                            parsedValue.removeLast();
-                          }
+                          var parsedValue = convertStringListFromTextWithLine(value);
                           this.additionalArgument.clear();
                           this.additionalArgument.addAll(parsedValue);
                         },

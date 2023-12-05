@@ -551,7 +551,7 @@ namespace TwinStar.Script.Console {
 			else {
 				switch (value[1]) {
 					case ':': {
-						result = value.substring(2);
+						result = value.slice(2);
 						break;
 					}
 					default: {
@@ -624,6 +624,7 @@ namespace TwinStar.Script.Console {
 		};
 		if (initial !== undefined && initial !== null) {
 			initial = Home.of(PathUtility.regularize(initial));
+			state_data.last_value = initial;
 		}
 		let converter = (value: string): string | [null | string] => {
 			if (value === '') {
@@ -636,7 +637,7 @@ namespace TwinStar.Script.Console {
 			else {
 				switch (value[1]) {
 					case ':': {
-						result = Home.of(PathUtility.regularize(value.substring(2)));
+						result = Home.of(PathUtility.regularize(value.slice(2)));
 						break;
 					}
 					case 'p': {
