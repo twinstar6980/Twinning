@@ -5,15 +5,16 @@ namespace TwinStar.Script.Executor.Implement.data.hash {
 	// md5 *
 
 	export type Configuration = {
+		method: TypicalMethodConfigurationGroup;
 	};
 
 	export function injector(
 		configuration: Configuration,
 	): void {
-		push_typical_method('data.hash', [
+		push_typical_method(configuration.method, 'data.hash', [
 			typical_method({
 				id: 'md5',
-				filter: ['file', /()$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'target_file',
@@ -21,7 +22,6 @@ namespace TwinStar.Script.Executor.Implement.data.hash {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 				],
 				worker: ({ target_file }) => {
@@ -36,7 +36,6 @@ namespace TwinStar.Script.Executor.Implement.data.hash {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 				],

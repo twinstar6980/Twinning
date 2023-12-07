@@ -1,4 +1,30 @@
 {
-	"version_number": 0,
-	"encode_compress_texture_data": "?input",
+	"method": {
+		"encode": {
+			"filter": "(\\.png)$",
+			"argument": {
+				"image_file": "?input",
+				"data_file": "?automatic",
+				"version_number": 0,
+				"format": "?input",
+				"compress_texture_data": "?input",
+			},
+			"batch_argument": {
+				"image_file": "?input",
+				"data_file": "?automatic",
+			},
+		},
+		"decode": {
+			"filter": "(\\.tex)$",
+			"argument": {
+				"data_file": "?input",
+				"image_file": "?automatic",
+				"version_number": 0,
+			},
+			"batch_argument": {
+				"data_file": "?input",
+				"image_file": "?automatic",
+			},
+		},
+	},
 }

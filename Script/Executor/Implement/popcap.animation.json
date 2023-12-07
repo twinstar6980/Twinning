@@ -1,4 +1,70 @@
 {
-	"version_number": "?input",
-	"encode_buffer_size": "8.0m",
+	"method": {
+		"encode": {
+			"filter": "(\\.pam\\.json)$",
+			"argument": {
+				"definition_file": "?input",
+				"data_file": "?automatic",
+				"version_number": "?input",
+				"buffer_size": "8.0m",
+			},
+			"batch_argument": {
+				"definition_file": "?input",
+				"data_file": "?automatic",
+			},
+		},
+		"decode": {
+			"filter": "(\\.pam)$",
+			"argument": {
+				"data_file": "?input",
+				"definition_file": "?automatic",
+				"version_number": "?input",
+			},
+			"batch_argument": {
+				"data_file": "?input",
+				"definition_file": "?automatic",
+			},
+		},
+		"convert.flash.from": {
+			"filter": "(\\.pam\\.json)$",
+			"argument": {
+				"raw_file": "?input",
+				"ripe_directory": "?automatic",
+			},
+			"batch_argument": {
+				"raw_file": "?input",
+				"ripe_directory": "?automatic",
+			},
+		},
+		"convert.flash.to": {
+			"filter": "(\\.pam\\.xfl)$",
+			"argument": {
+				"ripe_directory": "?input",
+				"raw_file": "?automatic",
+			},
+			"batch_argument": {
+				"ripe_directory": "?input",
+				"raw_file": "?automatic",
+			},
+		},
+		"convert.flash.resize": {
+			"filter": "(\\.pam\\.xfl)$",
+			"argument": {
+				"target_directory": "?input",
+				"resolution": "?input",
+			},
+			"batch_argument": {
+				"target_directory": "?input",
+			},
+		},
+		"convert.flash.link_media": {
+			"filter": "(\\.pam\\.xfl)$",
+			"argument": {
+				"target_directory": "?input",
+			},
+			"batch_argument": {
+				"target_directory": "?input",
+			},
+		},
+	},
 }

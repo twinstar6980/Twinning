@@ -1,2 +1,15 @@
 {
+	"method": {
+		"format": {
+			"filter": "(\\.xml)$",
+			"argument": {
+				"source_file": "?input",
+				"destination_file": "?automatic",
+			},
+			"batch_argument": {
+				"source_file": "?input",
+				"destination_file": "?automatic",
+			},
+		},
+	},
 }

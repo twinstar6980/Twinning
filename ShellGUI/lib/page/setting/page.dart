@@ -56,7 +56,7 @@ class _SettingPageState extends State<SettingPage> {
                   dense: true,
                   title: Text(
                     'Appearance',
-                    style: theme.textTheme.titleSmall!.copyWith(color: theme.colorScheme.primary),
+                    style: theme.textTheme.titleSmall?.copyWith(color: theme.colorScheme.primary),
                   ),
                 ),
                 ListTile(
@@ -518,7 +518,7 @@ class _SettingPageState extends State<SettingPage> {
                   dense: true,
                   title: Text(
                     'Console',
-                    style: theme.textTheme.titleSmall!.copyWith(color: theme.colorScheme.primary),
+                    style: theme.textTheme.titleSmall?.copyWith(color: theme.colorScheme.primary),
                   ),
                 ),
                 ListTile(
@@ -670,7 +670,7 @@ class _SettingPageState extends State<SettingPage> {
                   dense: true,
                   title: Text(
                     'Miscellaneous',
-                    style: theme.textTheme.titleSmall!.copyWith(color: theme.colorScheme.primary),
+                    style: theme.textTheme.titleSmall?.copyWith(color: theme.colorScheme.primary),
                   ),
                 ),
                 ListTile(

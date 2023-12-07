@@ -6,18 +6,16 @@ namespace TwinStar.Script.Executor.Implement.popcap.trail {
 	// decode *
 
 	export type Configuration = {
-		version_platform: TypicalArgumentExpression<string>;
-		version_variant_64: TypicalArgumentExpression<boolean>;
-		encode_buffer_size: TypicalArgumentExpression<string>;
+		method: TypicalMethodConfigurationGroup;
 	};
 
 	export function injector(
 		configuration: Configuration,
 	): void {
-		push_typical_method('popcap.trail', [
+		push_typical_method(configuration.method, 'popcap.trail', [
 			typical_method({
 				id: 'encode',
-				filter: ['file', /(\.trail\.json)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'definition_file',
@@ -25,7 +23,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.trail {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'data_file',
@@ -33,7 +30,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.trail {
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file.replace(/(\.trail\.json)?$/i, '.trail.compiled')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_string({
 						id: 'version_platform',
@@ -41,21 +37,18 @@ namespace TwinStar.Script.Executor.Implement.popcap.trail {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_platform,
 					}),
 					typical_argument_boolean({
 						id: 'version_variant_64',
 						checker: null,
 						automatic: null,
 						condition: (argument: { version_platform: string; }) => (['mobile'].includes(argument.version_platform) ? null : false),
-						default: configuration.version_variant_64,
 					}),
 					typical_argument_size({
 						id: 'buffer_size',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.encode_buffer_size,
 					}),
 				],
 				worker: ({ definition_file, data_file, version_platform, version_variant_64, buffer_size }) => {
@@ -69,7 +62,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.trail {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -78,7 +70,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.trail {
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file + '.encode'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.trail\.json)?$/i, '.trail.compiled')),
 					}),
 				],
@@ -92,7 +83,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.trail {
 			}),
 			typical_method({
 				id: 'decode',
-				filter: ['file', /(\.trail\.compiled)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'data_file',
@@ -100,7 +91,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.trail {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'definition_file',
@@ -108,7 +98,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.trail {
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.trail\.compiled)?$/i, '.trail.json')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_string({
 						id: 'version_platform',
@@ -116,14 +105,12 @@ namespace TwinStar.Script.Executor.Implement.popcap.trail {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_platform,
 					}),
 					typical_argument_boolean({
 						id: 'version_variant_64',
 						checker: null,
 						automatic: null,
 						condition: (argument: { version_platform: string; }) => (['mobile'].includes(argument.version_platform) ? null : false),
-						default: configuration.version_variant_64,
 					}),
 				],
 				worker: ({ data_file, definition_file, version_platform, version_variant_64 }) => {
@@ -137,7 +124,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.trail {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -146,7 +132,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.trail {
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file + '.decode'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.trail\.compiled)?$/i, '.trail.json')),
 					}),
 				],

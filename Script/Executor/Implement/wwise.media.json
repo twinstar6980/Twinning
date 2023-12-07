@@ -1,2 +1,27 @@
 {
+	"method": {
+		"encode": {
+			"filter": "(\\.wav)$",
+			"argument": {
+				"raw_file": "?input",
+				"ripe_file": "?automatic",
+				"format": "?input",
+			},
+			"batch_argument": {
+				"raw_file": "?input",
+				"ripe_file": "?automatic",
+			},
+		},
+		"decode": {
+			"filter": "(\\.wem)$",
+			"argument": {
+				"ripe_file": "?input",
+				"raw_file": "?automatic",
+			},
+			"batch_argument": {
+				"ripe_file": "?input",
+				"raw_file": "?automatic",
+			},
+		},
+	},
 }

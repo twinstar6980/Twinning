@@ -1,2 +1,26 @@
 {
+	"method": {
+		"base64.encode": {
+			"filter": "()$",
+			"argument": {
+				"raw_file": "?input",
+				"ripe_file": "?automatic",
+			},
+			"batch_argument": {
+				"raw_file": "?input",
+				"ripe_file": "?automatic",
+			},
+		},
+		"base64.decode": {
+			"filter": "()$",
+			"argument": {
+				"ripe_file": "?input",
+				"raw_file": "?automatic",
+			},
+			"batch_argument": {
+				"ripe_file": "?input",
+				"raw_file": "?automatic",
+			},
+		},
+	},
 }

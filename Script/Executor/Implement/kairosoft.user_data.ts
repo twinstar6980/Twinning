@@ -5,15 +5,16 @@ namespace TwinStar.Script.Executor.Implement.kairosoft.user_data {
 	// recrypt *
 
 	export type Configuration = {
+		method: TypicalMethodConfigurationGroup;
 	};
 
 	export function injector(
 		configuration: Configuration,
 	): void {
-		push_typical_method('kairosoft.user_data', [
+		push_typical_method(configuration.method, 'kairosoft.user_data', [
 			typical_method({
 				id: 'recrypt',
-				filter: ['directory', /()$/i],
+				filter: 'directory',
 				argument: [
 					typical_argument_path({
 						id: 'old_directory',
@@ -21,7 +22,6 @@ namespace TwinStar.Script.Executor.Implement.kairosoft.user_data {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'new_directory',
@@ -29,7 +29,6 @@ namespace TwinStar.Script.Executor.Implement.kairosoft.user_data {
 						checker: null,
 						automatic: (argument: { old_directory: string; }) => (argument.old_directory.replace(/()?$/i, '.recrypt')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_string({
 						id: 'old_key',
@@ -37,7 +36,6 @@ namespace TwinStar.Script.Executor.Implement.kairosoft.user_data {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_string({
 						id: 'new_key',
@@ -45,7 +43,6 @@ namespace TwinStar.Script.Executor.Implement.kairosoft.user_data {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 				],
 				worker: ({ old_directory, new_directory, old_key, new_key }) => {

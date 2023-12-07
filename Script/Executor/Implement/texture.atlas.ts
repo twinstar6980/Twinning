@@ -7,15 +7,16 @@ namespace TwinStar.Script.Executor.Implement.texture.atlas {
 	// pack_automatic
 
 	export type Configuration = {
+		method: TypicalMethodConfigurationGroup;
 	};
 
 	export function injector(
 		configuration: Configuration,
 	): void {
-		push_typical_method('texture.atlas', [
+		push_typical_method(configuration.method, 'texture.atlas', [
 			typical_method({
 				id: 'pack',
-				filter: ['file', /(\.atlas\.json)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'definition_file',
@@ -23,7 +24,6 @@ namespace TwinStar.Script.Executor.Implement.texture.atlas {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'sprite_directory',
@@ -31,7 +31,6 @@ namespace TwinStar.Script.Executor.Implement.texture.atlas {
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file.replace(/(\.atlas\.json)?$/i, '.sprite')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_path({
 						id: 'atlas_file',
@@ -39,7 +38,6 @@ namespace TwinStar.Script.Executor.Implement.texture.atlas {
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file.replace(/(\.atlas\.json)?$/i, '.atlas.png')),
 						condition: null,
-						default: '?automatic',
 					}),
 				],
 				worker: ({ definition_file, sprite_directory, atlas_file }) => {
@@ -51,7 +49,7 @@ namespace TwinStar.Script.Executor.Implement.texture.atlas {
 			}),
 			typical_method({
 				id: 'unpack',
-				filter: ['file', /(\.atlas\.json)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'definition_file',
@@ -59,7 +57,6 @@ namespace TwinStar.Script.Executor.Implement.texture.atlas {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'atlas_file',
@@ -67,7 +64,6 @@ namespace TwinStar.Script.Executor.Implement.texture.atlas {
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file.replace(/(\.atlas\.json)?$/i, '.atlas.png')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_path({
 						id: 'sprite_directory',
@@ -75,7 +71,6 @@ namespace TwinStar.Script.Executor.Implement.texture.atlas {
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file.replace(/(\.atlas\.json)?$/i, '.sprite')),
 						condition: null,
-						default: '?automatic',
 					}),
 				],
 				worker: ({ definition_file, atlas_file, sprite_directory }) => {
@@ -87,7 +82,7 @@ namespace TwinStar.Script.Executor.Implement.texture.atlas {
 			}),
 			typical_method({
 				id: 'pack_automatic',
-				filter: ['directory', /(\.sprite)$/i],
+				filter: 'directory',
 				argument: [
 					typical_argument_path({
 						id: 'sprite_directory',
@@ -95,7 +90,6 @@ namespace TwinStar.Script.Executor.Implement.texture.atlas {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'atlas_file',
@@ -103,7 +97,6 @@ namespace TwinStar.Script.Executor.Implement.texture.atlas {
 						checker: null,
 						automatic: (argument: { sprite_directory: string; }) => (argument.sprite_directory.replace(/(\.sprite)?$/i, '.atlas.png')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_path({
 						id: 'definition_file',
@@ -111,7 +104,6 @@ namespace TwinStar.Script.Executor.Implement.texture.atlas {
 						checker: null,
 						automatic: (argument: { sprite_directory: string; }) => (argument.sprite_directory.replace(/(\.sprite)?$/i, '.atlas.json')),
 						condition: null,
-						default: '?automatic',
 					}),
 				],
 				worker: ({ sprite_directory, atlas_file, definition_file }) => {

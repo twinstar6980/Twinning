@@ -6,15 +6,16 @@ namespace TwinStar.Script.Executor.Implement.texture.encoding {
 	// decode
 
 	export type Configuration = {
+		method: TypicalMethodConfigurationGroup;
 	};
 
 	export function injector(
 		configuration: Configuration,
 	): void {
-		push_typical_method('texture.encoding', [
+		push_typical_method(configuration.method, 'texture.encoding', [
 			typical_method({
 				id: 'encode',
-				filter: ['file', /(\.png)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'image_file',
@@ -22,7 +23,6 @@ namespace TwinStar.Script.Executor.Implement.texture.encoding {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'data_file',
@@ -30,7 +30,6 @@ namespace TwinStar.Script.Executor.Implement.texture.encoding {
 						checker: null,
 						automatic: (argument: { image_file: string; }) => (argument.image_file.replace(/(\.png)?$/i, '.bin')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_string({
 						id: 'format',
@@ -38,7 +37,6 @@ namespace TwinStar.Script.Executor.Implement.texture.encoding {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 				],
 				worker: ({ image_file, data_file, format }) => {
@@ -50,7 +48,7 @@ namespace TwinStar.Script.Executor.Implement.texture.encoding {
 			}),
 			typical_method({
 				id: 'decode',
-				filter: ['file', /(\.bin)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'data_file',
@@ -58,7 +56,6 @@ namespace TwinStar.Script.Executor.Implement.texture.encoding {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'image_file',
@@ -66,7 +63,6 @@ namespace TwinStar.Script.Executor.Implement.texture.encoding {
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.bin)?$/i, '.png')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_string({
 						id: 'format',
@@ -74,7 +70,6 @@ namespace TwinStar.Script.Executor.Implement.texture.encoding {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_integer({
 						id: 'image_width',
@@ -82,7 +77,6 @@ namespace TwinStar.Script.Executor.Implement.texture.encoding {
 						checker: (argument: {}, value) => ((0n < value) ? null : los(`尺寸应大于零`)),
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_integer({
 						id: 'image_height',
@@ -90,7 +84,6 @@ namespace TwinStar.Script.Executor.Implement.texture.encoding {
 						checker: (argument: {}, value) => ((0n < value) ? null : los(`尺寸应大于零`)),
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 				],
 				worker: ({ data_file, image_file, format, image_width, image_height }) => {

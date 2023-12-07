@@ -1,2 +1,42 @@
 {
+	"method": {
+		"flip": {
+			"filter": "(\\.png)$",
+			"argument": {
+				"source_file": "?input",
+				"destination_file": "?automatic",
+				"horizontal": "?input",
+				"vertical": "?input",
+			},
+			"batch_argument": {
+				"source_file": "?input",
+				"destination_file": "?automatic",
+			},
+		},
+		"scale": {
+			"filter": "(\\.png)$",
+			"argument": {
+				"source_file": "?input",
+				"destination_file": "?automatic",
+				"size_width": "?input",
+				"size_height": "?input",
+			},
+			"batch_argument": {
+				"source_file": "?input",
+				"destination_file": "?automatic",
+			},
+		},
+		"scale_rate": {
+			"filter": "(\\.png)$",
+			"argument": {
+				"source_file": "?input",
+				"destination_file": "?automatic",
+				"size_rate": "?input",
+			},
+			"batch_argument": {
+				"source_file": "?input",
+				"destination_file": "?automatic",
+			},
+		},
+	},
 }

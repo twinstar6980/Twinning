@@ -1,2 +1,46 @@
 {
+	"method": {
+		"xor.encrypt": {
+			"filter": "()$",
+			"argument": {
+				"plain_file": "?input",
+				"cipher_file": "?automatic",
+				"key": "?input",
+			},
+			"batch_argument": {
+				"plain_file": "?input",
+				"cipher_file": "?automatic",
+			},
+		},
+		"rijndael.encrypt": {
+			"filter": "()$",
+			"argument": {
+				"plain_file": "?input",
+				"cipher_file": "?automatic",
+				"mode": "?input",
+				"block_size": "?input",
+				"key": "?input",
+				"iv": "?input",
+			},
+			"batch_argument": {
+				"plain_file": "?input",
+				"cipher_file": "?automatic",
+			},
+		},
+		"rijndael.decrypt": {
+			"filter": "()$",
+			"argument": {
+				"cipher_file": "?input",
+				"plain_file": "?automatic",
+				"mode": "?input",
+				"block_size": "?input",
+				"key": "?input",
+				"iv": "?input",
+			},
+			"batch_argument": {
+				"cipher_file": "?input",
+				"plain_file": "?automatic",
+			},
+		},
+	},
 }

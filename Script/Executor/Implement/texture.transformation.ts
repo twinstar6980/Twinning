@@ -7,15 +7,16 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 	// scale_rate *
 
 	export type Configuration = {
+		method: TypicalMethodConfigurationGroup;
 	};
 
 	export function injector(
 		configuration: Configuration,
 	): void {
-		push_typical_method('texture.transformation', [
+		push_typical_method(configuration.method, 'texture.transformation', [
 			typical_method({
 				id: 'flip',
-				filter: ['file', /(\.png)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'source_file',
@@ -23,7 +24,6 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'destination_file',
@@ -31,21 +31,18 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 						checker: null,
 						automatic: (argument: { source_file: string; }) => (argument.source_file.replace(/(\.png)?$/i, '.flip.png')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_boolean({
 						id: 'horizontal',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_boolean({
 						id: 'vertical',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 				],
 				worker: ({ source_file, destination_file, horizontal, vertical }) => {
@@ -59,7 +56,6 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -68,7 +64,6 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 						checker: null,
 						automatic: (argument: { source_file: string; }) => (argument.source_file + '.scale'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.png)?$/i, '.png')),
 					}),
 				],
@@ -76,7 +71,7 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 			}),
 			typical_method({
 				id: 'scale',
-				filter: ['file', /(\.png)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'source_file',
@@ -84,7 +79,6 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'destination_file',
@@ -92,7 +86,6 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 						checker: null,
 						automatic: (argument: { source_file: string; }) => (argument.source_file.replace(/(\.png)?$/i, '.scale.png')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_integer({
 						id: 'size_width',
@@ -100,7 +93,6 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 						checker: (argument: {}, value) => ((0n < value) ? null : los(`尺寸应大于零`)),
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_integer({
 						id: 'size_height',
@@ -108,7 +100,6 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 						checker: (argument: {}, value) => ((0n < value) ? null : los(`尺寸应大于零`)),
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 				],
 				worker: ({ source_file, destination_file, size_width, size_height }) => {
@@ -122,7 +113,6 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -131,7 +121,6 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 						checker: null,
 						automatic: (argument: { source_file: string; }) => (argument.source_file + '.scale'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.png)?$/i, '.png')),
 					}),
 				],
@@ -139,7 +128,7 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 			}),
 			typical_method({
 				id: 'scale_rate',
-				filter: ['file', /(\.png)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'source_file',
@@ -147,7 +136,6 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'destination_file',
@@ -155,7 +143,6 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 						checker: null,
 						automatic: (argument: { source_file: string; }) => (argument.source_file.replace(/(\.png)?$/i, '.scale.png')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_floater({
 						id: 'size_rate',
@@ -163,7 +150,6 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 						checker: (argument: {}, value) => ((0.0 < value) ? null : los(`比例应大于零`)),
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 				],
 				worker: ({ source_file, destination_file, size_rate }) => {
@@ -177,7 +163,6 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -186,7 +171,6 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 						checker: null,
 						automatic: (argument: { source_file: string; }) => (argument.source_file + '.scale'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.png)?$/i, '.png')),
 					}),
 				],

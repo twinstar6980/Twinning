@@ -59,6 +59,7 @@
 										VerticalAlignment="Center"
 										PlaceholderText="Pause ..."
 										IsReadOnly="True"
+										FontFamily="{StaticResource ModdingWorkerMessageFontFamily}"
 									/>
 								</my:Stack>
 							</Setter.Value>
@@ -85,6 +86,7 @@
 										Content="No"
 										IsChecked="{x:Bind Controller.uBooleanNoValue_IsChecked}"
 										Click="{x:Bind Controller.uBooleanNoValue_Click}"
+										FontFamily="{StaticResource ModdingWorkerMessageFontFamily}"
 									/>
 									<ToggleButton
 										my:Stack.Weight="1" HorizontalAlignment="Stretch"
@@ -92,6 +94,7 @@
 										Content="Yes"
 										IsChecked="{x:Bind Controller.uBooleanYesValue_IsChecked}"
 										Click="{x:Bind Controller.uBooleanYesValue_Click}"
+										FontFamily="{StaticResource ModdingWorkerMessageFontFamily}"
 									/>
 								</my:Stack>
 							</Setter.Value>
@@ -120,6 +123,7 @@
 										NumberFormatter="{x:Bind Controller.uIntegerValue_NumberFormatter}"
 										Value="{x:Bind Controller.uIntegerValue_Value}"
 										ValueChanged="{x:Bind Controller.uIntegerValue_ValueChanged}"
+										FontFamily="{StaticResource ModdingWorkerMessageFontFamily}"
 									/>
 								</my:Stack>
 							</Setter.Value>
@@ -148,6 +152,7 @@
 										NumberFormatter="{x:Bind Controller.uFloaterValue_NumberFormatter}"
 										Value="{x:Bind Controller.uFloaterValue_Value}"
 										ValueChanged="{x:Bind Controller.uFloaterValue_ValueChanged}"
+										FontFamily="{StaticResource ModdingWorkerMessageFontFamily}"
 									/>
 								</my:Stack>
 							</Setter.Value>
@@ -177,6 +182,7 @@
 										Minimum="0.0"
 										Value="{x:Bind Controller.uSizeValue_Value}"
 										ValueChanged="{x:Bind Controller.uSizeValue_ValueChanged}"
+										FontFamily="{StaticResource ModdingWorkerMessageFontFamily}"
 									/>
 									<ComboBox
 										Width="64" Height="NaN"
@@ -185,6 +191,7 @@
 										ItemsSource="{x:Bind Controller.uSizeUnit_ItemsSource}"
 										SelectedItem="{x:Bind Controller.uSizeUnit_SelectedItem}"
 										SelectionChanged="{x:Bind Controller.uSizeUnit_SelectionChanged}"
+										FontFamily="{StaticResource ModdingWorkerMessageFontFamily}"
 									/>
 								</my:Stack>
 							</Setter.Value>
@@ -211,6 +218,7 @@
 										PlaceholderText="String ..."
 										Text="{x:Bind Controller.uStringValue_Text}"
 										TextChanged="{x:Bind Controller.uStringValue_TextChanged}"
+										FontFamily="{StaticResource ModdingWorkerMessageFontFamily}"
 									/>
 								</my:Stack>
 							</Setter.Value>
@@ -240,6 +248,7 @@
 										AllowDrop="True"
 										DragOver="{x:Bind Controller.uPathValue_DragOver}"
 										Drop="{x:Bind Controller.uPathValue_Drop}"
+										FontFamily="{StaticResource ModdingWorkerMessageFontFamily}"
 									/>
 									<DropDownButton
 										Width="64" Height="NaN"
@@ -253,32 +262,38 @@
 													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Rename}}"
 													Text="Generate"
 													Click="{x:Bind Controller.uPathCommandGenerate_Click}"
+													FontFamily="{StaticResource ModdingWorkerMessageFontFamily}"
 												/>
 												<MenuFlyoutItem
 													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.OpenPaneMirrored}}"
 													Text="Move"
 													Click="{x:Bind Controller.uPathCommandMove_Click}"
+													FontFamily="{StaticResource ModdingWorkerMessageFontFamily}"
 												/>
 												<MenuFlyoutItem
 													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Delete}}"
 													Text="Delete"
 													Click="{x:Bind Controller.uPathCommandDelete_Click}"
+													FontFamily="{StaticResource ModdingWorkerMessageFontFamily}"
 												/>
 												<MenuFlyoutItem
 													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Save}}"
 													Text="Overwrite"
 													Click="{x:Bind Controller.uPathCommandOverwrite_Click}"
+													FontFamily="{StaticResource ModdingWorkerMessageFontFamily}"
 												/>
 												<MenuFlyoutSeparator />
 												<MenuFlyoutItem
 													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Document}}"
 													Text="File"
 													Click="{x:Bind Controller.uPathPickFile_Click}"
+													FontFamily="{StaticResource ModdingWorkerMessageFontFamily}"
 												/>
 												<MenuFlyoutItem
 													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Folder}}"
 													Text="Directory"
 													Click="{x:Bind Controller.uPathPickDirectory_Click}"
+													FontFamily="{StaticResource ModdingWorkerMessageFontFamily}"
 												/>
 											</MenuFlyout>
 										</DropDownButton.Flyout>
@@ -310,6 +325,7 @@
 										ItemsSource="{x:Bind Controller.uEnumerationValue_ItemsSource}"
 										SelectedIndex="{x:Bind Controller.uEnumerationValue_SelectedIndex}"
 										SelectionChanged="{x:Bind Controller.uEnumerationValue_SelectionChanged}"
+										FontFamily="{StaticResource ModdingWorkerMessageFontFamily}"
 									/>
 								</my:Stack>
 							</Setter.Value>

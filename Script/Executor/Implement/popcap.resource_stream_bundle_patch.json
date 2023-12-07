@@ -1,6 +1,28 @@
 {
-	"version_number": 1,
-	"use_raw_packet": "?input",
-	"encode_buffer_size": "1024.0m",
-	"decode_buffer_size": "1024.0m",
+	"method": {
+		"encode": {
+			"filter": "(\\.rsb)$",
+			"argument": {
+				"after_file": "?input",
+				"patch_file": "?automatic",
+				"before_file": "?input",
+				"version_number": 1,
+				"use_raw_packet": "?input",
+				"buffer_size": "1024.0m",
+			},
+			"batch_argument": null,
+		},
+		"decode": {
+			"filter": "(\\.rsbpatch)$",
+			"argument": {
+				"patch_file": "?input",
+				"after_file": "?automatic",
+				"before_file": "?input",
+				"version_number": 1,
+				"use_raw_packet": "?input",
+				"buffer_size": "1024.0m",
+			},
+			"batch_argument": null,
+		},
+	},
 }

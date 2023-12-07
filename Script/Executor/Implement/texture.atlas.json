@@ -1,2 +1,31 @@
 {
+	"method": {
+		"pack": {
+			"filter": "(\\.atlas\\.json)$",
+			"argument": {
+				"definition_file": "?input",
+				"sprite_directory": "?automatic",
+				"atlas_file": "?automatic",
+			},
+			"batch_argument": null,
+		},
+		"unpack": {
+			"filter": "(\\.atlas\\.json)$",
+			"argument": {
+				"definition_file": "?input",
+				"atlas_file": "?automatic",
+				"sprite_directory": "?automatic",
+			},
+			"batch_argument": null,
+		},
+		"pack_automatic": {
+			"filter": "(\\.sprite)$",
+			"argument": {
+				"sprite_directory": "?input",
+				"atlas_file": "?automatic",
+				"definition_file": "?automatic",
+			},
+			"batch_argument": null,
+		},
+	},
 }

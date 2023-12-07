@@ -6,18 +6,16 @@ namespace TwinStar.Script.Executor.Implement.popcap.render_effect {
 	// decode *
 
 	export type Configuration = {
-		version_number: TypicalArgumentExpression<bigint>;
-		version_variant: TypicalArgumentExpression<bigint>;
-		encode_buffer_size: TypicalArgumentExpression<string>;
+		method: TypicalMethodConfigurationGroup;
 	};
 
 	export function injector(
 		configuration: Configuration,
 	): void {
-		push_typical_method('popcap.render_effect', [
+		push_typical_method(configuration.method, 'popcap.render_effect', [
 			typical_method({
 				id: 'encode',
-				filter: ['file', /(\.popfx\.json)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'definition_file',
@@ -25,7 +23,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.render_effect {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'data_file',
@@ -33,7 +30,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.render_effect {
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file.replace(/(\.popfx\.json)?$/i, '.popfx')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_integer({
 						id: 'version_number',
@@ -41,7 +37,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.render_effect {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_number,
 					}),
 					typical_argument_integer({
 						id: 'version_variant',
@@ -49,14 +44,12 @@ namespace TwinStar.Script.Executor.Implement.popcap.render_effect {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_variant,
 					}),
 					typical_argument_size({
 						id: 'buffer_size',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.encode_buffer_size,
 					}),
 				],
 				worker: ({ definition_file, data_file, version_number, version_variant, buffer_size }) => {
@@ -70,7 +63,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.render_effect {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -79,7 +71,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.render_effect {
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file + '.encode'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.popfx\.json)?$/i, '.popfx')),
 					}),
 				],
@@ -93,7 +84,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.render_effect {
 			}),
 			typical_method({
 				id: 'decode',
-				filter: ['file', /(\.popfx)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'data_file',
@@ -101,7 +92,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.render_effect {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'definition_file',
@@ -109,7 +99,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.render_effect {
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.popfx)?$/i, '.popfx.json')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_integer({
 						id: 'version_number',
@@ -117,7 +106,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.render_effect {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_number,
 					}),
 					typical_argument_integer({
 						id: 'version_variant',
@@ -125,7 +113,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.render_effect {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_variant,
 					}),
 				],
 				worker: ({ data_file, definition_file, version_number, version_variant }) => {
@@ -139,7 +126,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.render_effect {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -148,7 +134,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.render_effect {
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file + '.decode'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.popfx)?$/i, '.popfx.json')),
 					}),
 				],

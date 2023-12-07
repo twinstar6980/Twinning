@@ -10,17 +10,16 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 	// convert.flash.link_media *
 
 	export type Configuration = {
-		version_number: TypicalArgumentExpression<bigint>;
-		encode_buffer_size: TypicalArgumentExpression<string>;
+		method: TypicalMethodConfigurationGroup;
 	};
 
 	export function injector(
 		configuration: Configuration,
 	): void {
-		push_typical_method('popcap.animation', [
+		push_typical_method(configuration.method, 'popcap.animation', [
 			typical_method({
 				id: 'encode',
-				filter: ['file', /(\.pam\.json)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'definition_file',
@@ -28,7 +27,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'data_file',
@@ -36,7 +34,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file.replace(/(\.pam\.json)?$/i, '.pam')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_integer({
 						id: 'version_number',
@@ -44,14 +41,12 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_number,
 					}),
 					typical_argument_size({
 						id: 'buffer_size',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.encode_buffer_size,
 					}),
 				],
 				worker: ({ definition_file, data_file, version_number, buffer_size }) => {
@@ -65,7 +60,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -74,7 +68,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file + '.encode'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.pam\.json)?$/i, '.pam')),
 					}),
 				],
@@ -88,7 +81,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 			}),
 			typical_method({
 				id: 'decode',
-				filter: ['file', /(\.pam)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'data_file',
@@ -96,7 +89,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'definition_file',
@@ -104,7 +96,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.pam)?$/i, '.pam.json')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_integer({
 						id: 'version_number',
@@ -112,7 +103,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_number,
 					}),
 				],
 				worker: ({ data_file, definition_file, version_number }) => {
@@ -126,7 +116,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -135,7 +124,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file + '.decode'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.pam)?$/i, '.pam.json')),
 					}),
 				],
@@ -143,7 +131,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 			}),
 			typical_method({
 				id: 'convert.flash.from',
-				filter: ['file', /(\.pam\.json)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'raw_file',
@@ -151,7 +139,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'ripe_directory',
@@ -159,7 +146,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file.replace(/(\.pam\.json)?$/i, '.pam.xfl')),
 						condition: null,
-						default: '?automatic',
 					}),
 				],
 				worker: ({ raw_file, ripe_directory }) => {
@@ -176,7 +162,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -185,7 +170,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file + '.convert_flash_from'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.pam\.json)?$/i, '.pam.xfl')),
 					}),
 				],
@@ -193,7 +177,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 			}),
 			typical_method({
 				id: 'convert.flash.to',
-				filter: ['directory', /(\.pam\.xfl)$/i],
+				filter: 'directory',
 				argument: [
 					typical_argument_path({
 						id: 'ripe_directory',
@@ -201,7 +185,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'raw_file',
@@ -209,7 +192,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						checker: null,
 						automatic: (argument: { ripe_directory: string; }) => (argument.ripe_directory.replace(/(\.pam\.xfl)?$/i, '.pam.json')),
 						condition: null,
-						default: '?automatic',
 					}),
 				],
 				worker: ({ ripe_directory, raw_file }) => {
@@ -223,7 +205,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -232,7 +213,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						checker: null,
 						automatic: (argument: { ripe_directory: string; }) => (argument.ripe_directory + '.convert_flash_to'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.pam\.xfl)?$/i, '.pam.json')),
 					}),
 				],
@@ -240,7 +220,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 			}),
 			typical_method({
 				id: 'convert.flash.resize',
-				filter: ['directory', /(\.pam\.xfl)$/i],
+				filter: 'directory',
 				argument: [
 					typical_argument_path({
 						id: 'target_directory',
@@ -248,7 +228,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_integer({
 						id: 'resolution',
@@ -256,7 +235,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						checker: (argument, value) => (value > 0n ? null : los(`分辨率应大于零`)),
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 				],
 				worker: ({ target_directory, resolution }) => {
@@ -270,7 +248,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 				],
@@ -278,7 +255,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 			}),
 			typical_method({
 				id: 'convert.flash.link_media',
-				filter: ['directory', /(\.pam\.xfl)$/i],
+				filter: 'directory',
 				argument: [
 					typical_argument_path({
 						id: 'target_directory',
@@ -286,7 +263,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 				],
 				worker: ({ target_directory }) => {
@@ -309,7 +285,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 				],

@@ -1,6 +1,19 @@
 {
-	"disable_array_trailing_comma": "?automatic",
-	"disable_array_line_breaking": "?automatic",
-	"disable_object_trailing_comma": "?automatic",
-	"disable_object_line_breaking": "?automatic",
+	"method": {
+		"format": {
+			"filter": "(\\.json)$",
+			"argument": {
+				"source_file": "?input",
+				"destination_file": "?automatic",
+				"disable_array_trailing_comma": "?automatic",
+				"disable_array_line_breaking": "?automatic",
+				"disable_object_trailing_comma": "?automatic",
+				"disable_object_line_breaking": "?automatic",
+			},
+			"batch_argument": {
+				"source_file": "?input",
+				"destination_file": "?automatic",
+			},
+		},
+	},
 }

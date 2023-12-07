@@ -6,16 +6,16 @@ namespace TwinStar.Script.Executor.Implement.popcap.character_font_widget_2 {
 	// decode *
 
 	export type Configuration = {
-		encode_buffer_size: TypicalArgumentExpression<string>;
+		method: TypicalMethodConfigurationGroup;
 	};
 
 	export function injector(
 		configuration: Configuration,
 	): void {
-		push_typical_method('popcap.character_font_widget_2', [
+		push_typical_method(configuration.method, 'popcap.character_font_widget_2', [
 			typical_method({
 				id: 'encode',
-				filter: ['file', /(\.cfw2\.json)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'definition_file',
@@ -23,7 +23,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.character_font_widget_2 {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'data_file',
@@ -31,14 +30,12 @@ namespace TwinStar.Script.Executor.Implement.popcap.character_font_widget_2 {
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file.replace(/(\.cfw2\.json)?$/i, '.cfw2')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_size({
 						id: 'buffer_size',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.encode_buffer_size,
 					}),
 				],
 				worker: ({ definition_file, data_file, buffer_size }) => {
@@ -52,7 +49,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.character_font_widget_2 {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -61,7 +57,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.character_font_widget_2 {
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file + '.encode'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.cfw2\.json)?$/i, '.cfw2')),
 					}),
 				],
@@ -75,7 +70,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.character_font_widget_2 {
 			}),
 			typical_method({
 				id: 'decode',
-				filter: ['file', /(\.cfw2)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'data_file',
@@ -83,7 +78,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.character_font_widget_2 {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'definition_file',
@@ -91,7 +85,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.character_font_widget_2 {
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.cfw2)?$/i, '.cfw2.json')),
 						condition: null,
-						default: '?automatic',
 					}),
 				],
 				worker: ({ data_file, definition_file }) => {
@@ -105,7 +98,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.character_font_widget_2 {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -114,7 +106,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.character_font_widget_2 {
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file + '.decode'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.cfw2)?$/i, '.cfw2.json')),
 					}),
 				],

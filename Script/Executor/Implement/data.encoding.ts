@@ -6,15 +6,16 @@ namespace TwinStar.Script.Executor.Implement.data.encoding {
 	// base64.decode *
 
 	export type Configuration = {
+		method: TypicalMethodConfigurationGroup;
 	};
 
 	export function injector(
 		configuration: Configuration,
 	): void {
-		push_typical_method('data.encoding', [
+		push_typical_method(configuration.method, 'data.encoding', [
 			typical_method({
 				id: 'base64.encode',
-				filter: ['file', /()$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'raw_file',
@@ -22,7 +23,6 @@ namespace TwinStar.Script.Executor.Implement.data.encoding {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'ripe_file',
@@ -30,7 +30,6 @@ namespace TwinStar.Script.Executor.Implement.data.encoding {
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file.replace(/()?$/i, '.bin')),
 						condition: null,
-						default: '?automatic',
 					}),
 				],
 				worker: ({ raw_file, ripe_file }) => {
@@ -44,7 +43,6 @@ namespace TwinStar.Script.Executor.Implement.data.encoding {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -53,7 +51,6 @@ namespace TwinStar.Script.Executor.Implement.data.encoding {
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file + '.encode'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],
@@ -61,7 +58,7 @@ namespace TwinStar.Script.Executor.Implement.data.encoding {
 			}),
 			typical_method({
 				id: 'base64.decode',
-				filter: ['file', /()$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'ripe_file',
@@ -69,7 +66,6 @@ namespace TwinStar.Script.Executor.Implement.data.encoding {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'raw_file',
@@ -77,7 +73,6 @@ namespace TwinStar.Script.Executor.Implement.data.encoding {
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file.replace(/()?$/i, '.bin')),
 						condition: null,
-						default: '?automatic',
 					}),
 				],
 				worker: ({ ripe_file, raw_file }) => {
@@ -91,7 +86,6 @@ namespace TwinStar.Script.Executor.Implement.data.encoding {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -100,7 +94,6 @@ namespace TwinStar.Script.Executor.Implement.data.encoding {
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file + '.decode'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],

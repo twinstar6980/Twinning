@@ -6,17 +6,16 @@ namespace TwinStar.Script.Executor.Implement.data.differentiation {
 	// vcdiff.decode
 
 	export type Configuration = {
-		encode_buffer_size: TypicalArgumentExpression<string>;
-		decode_buffer_size: TypicalArgumentExpression<string>;
+		method: TypicalMethodConfigurationGroup;
 	};
 
 	export function injector(
 		configuration: Configuration,
 	): void {
-		push_typical_method('data.differentiation', [
+		push_typical_method(configuration.method, 'data.differentiation', [
 			typical_method({
 				id: 'vcdiff.encode',
-				filter: ['file', /()$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'after_file',
@@ -24,7 +23,6 @@ namespace TwinStar.Script.Executor.Implement.data.differentiation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'patch_file',
@@ -32,7 +30,6 @@ namespace TwinStar.Script.Executor.Implement.data.differentiation {
 						checker: null,
 						automatic: (argument: { after_file: string; }) => (argument.after_file.replace(/()?$/i, '.patch.bin')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_path({
 						id: 'before_file',
@@ -40,14 +37,12 @@ namespace TwinStar.Script.Executor.Implement.data.differentiation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_size({
 						id: 'buffer_size',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.encode_buffer_size,
 					}),
 				],
 				worker: ({ after_file, patch_file, before_file, buffer_size }) => {
@@ -59,7 +54,7 @@ namespace TwinStar.Script.Executor.Implement.data.differentiation {
 			}),
 			typical_method({
 				id: 'vcdiff.decode',
-				filter: ['file', /()$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'patch_file',
@@ -67,7 +62,6 @@ namespace TwinStar.Script.Executor.Implement.data.differentiation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'after_file',
@@ -75,7 +69,6 @@ namespace TwinStar.Script.Executor.Implement.data.differentiation {
 						checker: null,
 						automatic: (argument: { patch_file: string; }) => (argument.patch_file.replace(/()?$/i, '.after.bin')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_path({
 						id: 'before_file',
@@ -83,14 +76,12 @@ namespace TwinStar.Script.Executor.Implement.data.differentiation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_size({
 						id: 'buffer_size',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.decode_buffer_size,
 					}),
 				],
 				worker: ({ patch_file, after_file, before_file, buffer_size }) => {

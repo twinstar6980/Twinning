@@ -14,16 +14,16 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 	// lzma.uncompress *
 
 	export type Configuration = {
-		uncompress_buffer_size: TypicalArgumentExpression<string>;
+		method: TypicalMethodConfigurationGroup;
 	};
 
 	export function injector(
 		configuration: Configuration,
 	): void {
-		push_typical_method('data.compression', [
+		push_typical_method(configuration.method, 'data.compression', [
 			typical_method({
 				id: 'deflate.compress',
-				filter: ['file', /()$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'raw_file',
@@ -31,7 +31,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'ripe_file',
@@ -39,7 +38,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file.replace(/()?$/i, '.bin')),
 						condition: null,
-						default: '?automatic',
 					}),
 				],
 				worker: ({ raw_file, ripe_file }) => {
@@ -53,7 +51,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -62,7 +59,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file + '.compress'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],
@@ -70,7 +66,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 			}),
 			typical_method({
 				id: 'deflate.uncompress',
-				filter: ['file', /()$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'ripe_file',
@@ -78,7 +74,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'raw_file',
@@ -86,14 +81,12 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file.replace(/()?$/i, '.bin')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_size({
 						id: 'buffer_size',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.uncompress_buffer_size,
 					}),
 				],
 				worker: ({ ripe_file, raw_file, buffer_size }) => {
@@ -107,7 +100,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -116,7 +108,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file + '.uncompress'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],
@@ -130,7 +121,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 			}),
 			typical_method({
 				id: 'zlib.compress',
-				filter: ['file', /()$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'raw_file',
@@ -138,7 +129,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'ripe_file',
@@ -146,7 +136,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file.replace(/()?$/i, '.bin')),
 						condition: null,
-						default: '?automatic',
 					}),
 				],
 				worker: ({ raw_file, ripe_file }) => {
@@ -160,7 +149,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -169,7 +157,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file + '.compress'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],
@@ -177,7 +164,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 			}),
 			typical_method({
 				id: 'zlib.uncompress',
-				filter: ['file', /()$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'ripe_file',
@@ -185,7 +172,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'raw_file',
@@ -193,14 +179,12 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file.replace(/()?$/i, '.bin')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_size({
 						id: 'buffer_size',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.uncompress_buffer_size,
 					}),
 				],
 				worker: ({ ripe_file, raw_file, buffer_size }) => {
@@ -214,7 +198,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -223,7 +206,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file + '.uncompress'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],
@@ -237,7 +219,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 			}),
 			typical_method({
 				id: 'gzip.compress',
-				filter: ['file', /()$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'raw_file',
@@ -245,7 +227,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'ripe_file',
@@ -253,7 +234,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file.replace(/()?$/i, '.bin')),
 						condition: null,
-						default: '?automatic',
 					}),
 				],
 				worker: ({ raw_file, ripe_file }) => {
@@ -267,7 +247,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -276,7 +255,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file + '.compress'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],
@@ -284,7 +262,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 			}),
 			typical_method({
 				id: 'gzip.uncompress',
-				filter: ['file', /()$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'ripe_file',
@@ -292,7 +270,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'raw_file',
@@ -300,14 +277,12 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file.replace(/()?$/i, '.bin')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_size({
 						id: 'buffer_size',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.uncompress_buffer_size,
 					}),
 				],
 				worker: ({ ripe_file, raw_file, buffer_size }) => {
@@ -321,7 +296,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -330,7 +304,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file + '.uncompress'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],
@@ -344,7 +317,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 			}),
 			typical_method({
 				id: 'bzip2.compress',
-				filter: ['file', /()$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'raw_file',
@@ -352,7 +325,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'ripe_file',
@@ -360,7 +332,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file.replace(/()?$/i, '.bin')),
 						condition: null,
-						default: '?automatic',
 					}),
 				],
 				worker: ({ raw_file, ripe_file }) => {
@@ -374,7 +345,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -383,7 +353,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file + '.compress'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],
@@ -391,7 +360,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 			}),
 			typical_method({
 				id: 'bzip2.uncompress',
-				filter: ['file', /()$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'ripe_file',
@@ -399,7 +368,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'raw_file',
@@ -407,14 +375,12 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file.replace(/()?$/i, '.bin')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_size({
 						id: 'buffer_size',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.uncompress_buffer_size,
 					}),
 				],
 				worker: ({ ripe_file, raw_file, buffer_size }) => {
@@ -428,7 +394,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -437,7 +402,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file + '.uncompress'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],
@@ -451,7 +415,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 			}),
 			typical_method({
 				id: 'lzma.compress',
-				filter: ['file', /()$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'raw_file',
@@ -459,7 +423,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'ripe_file',
@@ -467,7 +430,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file.replace(/()?$/i, '.bin')),
 						condition: null,
-						default: '?automatic',
 					}),
 				],
 				worker: ({ raw_file, ripe_file }) => {
@@ -481,7 +443,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -490,7 +451,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file + '.compress'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],
@@ -498,7 +458,7 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 			}),
 			typical_method({
 				id: 'lzma.uncompress',
-				filter: ['file', /()$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'ripe_file',
@@ -506,7 +466,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'raw_file',
@@ -514,14 +473,12 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file.replace(/()?$/i, '.bin')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_size({
 						id: 'buffer_size',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.uncompress_buffer_size,
 					}),
 				],
 				worker: ({ ripe_file, raw_file, buffer_size }) => {
@@ -535,7 +492,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -544,7 +500,6 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file + '.uncompress'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],

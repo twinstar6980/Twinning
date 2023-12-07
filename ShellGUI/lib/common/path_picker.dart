@@ -18,7 +18,7 @@ class PathPicker {
   ) async {
     var result = null as String?;
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      var selection = await FilePicker.platform.pickFiles(allowMultiple: false);
+      var selection = await FilePicker.platform.pickFiles(allowMultiple: false, lockParentWindow: true);
       result = selection?.files.single.path?.replaceAll('\\', '/');
     }
     if (Platform.isAndroid) {
@@ -48,7 +48,7 @@ class PathPicker {
   ) async {
     var result = null as String?;
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      var selection = await FilePicker.platform.getDirectoryPath();
+      var selection = await FilePicker.platform.getDirectoryPath(lockParentWindow: true);
       result = selection?.replaceAll('\\', '/');
     }
     if (Platform.isAndroid) {

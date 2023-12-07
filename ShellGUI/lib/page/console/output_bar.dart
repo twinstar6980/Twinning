@@ -28,8 +28,8 @@ class MessageOutputBar extends StatelessWidget {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     var typeColor = this.type.color(theme);
-    var titleTextStyle = (!setting.data.mConsoleFontUseLargerSize ? theme.textTheme.titleSmall : theme.textTheme.titleMedium)!.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy);
-    var descriptionTextStyle = (!setting.data.mConsoleFontUseLargerSize ? theme.textTheme.bodySmall : theme.textTheme.bodyMedium)!.copyWith(color: theme.colorScheme.secondary, fontFamily: '', fontFamilyFallback: gConsoleFontFamliy);
+    var titleTextStyle = (!setting.data.mConsoleFontUseLargerSize ? theme.textTheme.titleSmall : theme.textTheme.titleMedium)?.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy);
+    var descriptionTextStyle = (!setting.data.mConsoleFontUseLargerSize ? theme.textTheme.bodySmall : theme.textTheme.bodyMedium)?.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy, color: theme.colorScheme.secondary);
     return Card(
       margin: const EdgeInsets.fromLTRB(1, 0, 1, 0),
       elevation: 1,

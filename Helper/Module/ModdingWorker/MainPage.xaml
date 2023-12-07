@@ -63,6 +63,7 @@
 										TextWrapping="Wrap" AcceptsReturn="True"
 										Text="{x:Bind Controller.uAdditionalArgument_Text}"
 										TextChanged="{x:Bind Controller.uAdditionalArgument_TextChanged}"
+										FontFamily="{StaticResource ModdingWorkerMessageFontFamily}"
 									/>
 								</Flyout>
 							</Button.Flyout>

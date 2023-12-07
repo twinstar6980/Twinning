@@ -5,15 +5,16 @@ namespace TwinStar.Script.Executor.Implement.js {
 	// execute *
 
 	export type Configuration = {
+		method: TypicalMethodConfigurationGroup;
 	};
 
 	export function injector(
 		configuration: Configuration,
 	): void {
-		push_typical_method('js', [
+		push_typical_method(configuration.method, 'js', [
 			typical_method({
 				id: 'execute',
-				filter: ['file', /(\.js)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'script_file',
@@ -21,14 +22,12 @@ namespace TwinStar.Script.Executor.Implement.js {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_boolean({
 						id: 'is_module',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 				],
 				worker: ({ script_file, is_module }) => {
@@ -42,7 +41,6 @@ namespace TwinStar.Script.Executor.Implement.js {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 				],

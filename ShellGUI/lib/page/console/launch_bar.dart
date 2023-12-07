@@ -20,6 +20,7 @@ class LaunchBarContent extends StatelessWidget {
 
   @override
   build(context) {
+    var theme = Theme.of(context);
     return Row(
       children: [
         Expanded(
@@ -36,6 +37,7 @@ class LaunchBarContent extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextFormField(
+                        style: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy),
                         decoration: const InputDecoration(
                           isDense: true,
                         ),

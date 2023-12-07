@@ -7,15 +7,16 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 	// rijndael.decrypt *
 
 	export type Configuration = {
+		method: TypicalMethodConfigurationGroup;
 	};
 
 	export function injector(
 		configuration: Configuration,
 	): void {
-		push_typical_method('data.encryption', [
+		push_typical_method(configuration.method, 'data.encryption', [
 			typical_method({
 				id: 'xor.encrypt',
-				filter: ['file', /()$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'plain_file',
@@ -23,7 +24,6 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'cipher_file',
@@ -31,7 +31,6 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						checker: null,
 						automatic: (argument: { plain_file: string; }) => (argument.plain_file.replace(/()?$/i, '.bin')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_integer({
 						id: 'key',
@@ -39,7 +38,6 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						checker: (argument: {}, value) => (0x00n <= value && value <= 0xFFn ? null : los(`范围溢出`)),
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 				],
 				worker: ({ plain_file, cipher_file, key }) => {
@@ -53,7 +51,6 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -62,7 +59,6 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						checker: null,
 						automatic: (argument: { plain_file: string; }) => (argument.plain_file + '.encrypt'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],
@@ -70,7 +66,7 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 			}),
 			typical_method({
 				id: 'rijndael.encrypt',
-				filter: ['file', /()$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'plain_file',
@@ -78,7 +74,6 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'cipher_file',
@@ -86,7 +81,6 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						checker: null,
 						automatic: (argument: { plain_file: string; }) => (argument.plain_file.replace(/()?$/i, '.bin')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_string({
 						id: 'mode',
@@ -94,7 +88,6 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_integer({
 						id: 'block_size',
@@ -102,7 +95,6 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_string({
 						id: 'key',
@@ -110,7 +102,6 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						checker: (argument: {}, value) => (KernelX.Tool.Data.Encryption.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : los(`密钥长度非法`)),
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_string({
 						id: 'iv',
@@ -118,7 +109,6 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						checker: (argument: { block_size: bigint; }, value) => (value.length === Number(argument.block_size) ? null : los(`长度不匹配`)),
 						automatic: null,
 						condition: (argument: { mode: string; }) => (['cbc', 'cfb'].includes(argument.mode) ? null : ''),
-						default: '?input',
 					}),
 				],
 				worker: ({ plain_file, cipher_file, mode, block_size, key, iv }) => {
@@ -132,7 +122,6 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -141,7 +130,6 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						checker: null,
 						automatic: (argument: { plain_file: string; }) => (argument.plain_file + '.encrypt'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],
@@ -149,7 +137,7 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 			}),
 			typical_method({
 				id: 'rijndael.decrypt',
-				filter: ['file', /()$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'cipher_file',
@@ -157,7 +145,6 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'plain_file',
@@ -165,7 +152,6 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						checker: null,
 						automatic: (argument: { cipher_file: string; }) => (argument.cipher_file.replace(/()?$/i, '.bin')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_string({
 						id: 'mode',
@@ -173,7 +159,6 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_integer({
 						id: 'block_size',
@@ -181,7 +166,6 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_string({
 						id: 'key',
@@ -189,7 +173,6 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						checker: (argument: {}, value) => (KernelX.Tool.Data.Encryption.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : los(`密钥长度非法`)),
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_string({
 						id: 'iv',
@@ -197,7 +180,6 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						checker: (argument: { block_size: bigint; }, value) => (value.length === Number(argument.block_size) ? null : los(`长度不匹配`)),
 						automatic: null,
 						condition: (argument: { mode: string; }) => (['cbc', 'cfb'].includes(argument.mode) ? null : ''),
-						default: '?input',
 					}),
 				],
 				worker: ({ cipher_file, plain_file, mode, block_size, key, iv }) => {
@@ -211,7 +193,6 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -220,7 +201,6 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						checker: null,
 						automatic: (argument: { cipher_file: string; }) => (argument.cipher_file + '.decrypt'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],

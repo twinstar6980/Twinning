@@ -1,4 +1,24 @@
 {
-	"encode_buffer_size": "1024.0m",
-	"decode_buffer_size": "1024.0m",
+	"method": {
+		"vcdiff.encode": {
+			"filter": "()$",
+			"argument": {
+				"after_file": "?input",
+				"patch_file": "?automatic",
+				"before_file": "?input",
+				"buffer_size": "1024.0m",
+			},
+			"batch_argument": null,
+		},
+		"vcdiff.decode": {
+			"filter": "()$",
+			"argument": {
+				"patch_file": "?input",
+				"after_file": "?automatic",
+				"before_file": "?input",
+				"buffer_size": "1024.0m",
+			},
+			"batch_argument": null,
+		},
+	},
 }

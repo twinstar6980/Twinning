@@ -1,2 +1,14 @@
 {
+	"method": {
+		"execute": {
+			"filter": "(\\.js)$",
+			"argument": {
+				"script_file": "?input",
+				"is_module": "?input",
+			},
+			"batch_argument": {
+				"script_file": "?input",
+			},
+		},
+	},
 }

@@ -5,15 +5,16 @@ namespace TwinStar.Script.Executor.Implement.text.xml {
 	// format *
 
 	export type Configuration = {
+		method: TypicalMethodConfigurationGroup;
 	};
 
 	export function injector(
 		configuration: Configuration,
 	): void {
-		push_typical_method('text.xml', [
+		push_typical_method(configuration.method, 'text.xml', [
 			typical_method({
 				id: 'format',
-				filter: ['file', /(\.xml)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'source_file',
@@ -21,7 +22,6 @@ namespace TwinStar.Script.Executor.Implement.text.xml {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'destination_file',
@@ -29,7 +29,6 @@ namespace TwinStar.Script.Executor.Implement.text.xml {
 						checker: null,
 						automatic: (argument: { source_file: string; }) => (argument.source_file.replace(/(\.xml)?$/i, '.format.xml')),
 						condition: null,
-						default: '?automatic',
 					}),
 				],
 				worker: ({ source_file, destination_file }) => {
@@ -44,7 +43,6 @@ namespace TwinStar.Script.Executor.Implement.text.xml {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -53,7 +51,6 @@ namespace TwinStar.Script.Executor.Implement.text.xml {
 						checker: null,
 						automatic: (argument: { source_file: string; }) => (argument.source_file + '.format'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.xml)?$/i, '.xml')),
 					}),
 				],

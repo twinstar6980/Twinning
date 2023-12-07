@@ -35,7 +35,8 @@ namespace TwinStar.Script.Entry {
 
 	export type Configuration = {
 		language: string;
-		disable_cli_virtual_terminal_sequence: boolean;
+		console_cli_disable_virtual_terminal_sequence: boolean;
+		executor_typical_method_disable_name_filter: boolean;
 		byte_stream_use_big_endian: boolean;
 		common_buffer_size: string;
 		json_format: {
@@ -54,11 +55,13 @@ namespace TwinStar.Script.Entry {
 		g_configuration = configuration;
 		// language
 		Language.imbue(KernelX.JSON.read_fs_js(Home.of(`~/script/Language/${configuration.language}.json`)) as unknown as Language.StringMap);
-		// console feature
-		Console.g_disable_cli_virtual_terminal_sequence = configuration.disable_cli_virtual_terminal_sequence;
-		// byte stream endian
+		// console
+		Console.g_cli_disable_virtual_terminal_sequence = configuration.console_cli_disable_virtual_terminal_sequence;
+		// executor
+		Executor.g_typical_method_disable_name_filter = configuration.executor_typical_method_disable_name_filter;
+		// byte stream
 		Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value = configuration.byte_stream_use_big_endian;
-		// common buffer size
+		// common buffer
 		KernelX.g_common_buffer.allocate(Kernel.Size.value(parse_size_string(configuration.common_buffer_size)));
 		// json format
 		KernelX.JSON.g_format.disable_array_trailing_comma = configuration.json_format.disable_array_trailing_comma;
@@ -91,7 +94,6 @@ namespace TwinStar.Script.Entry {
 			}
 		}
 		let command = Executor.parse(raw_command);
-		let method = [...Executor.g_method, ...Executor.g_method_batch];
 		Console.information(los('entry:all_command_parse'), [
 			los('entry:all_command_count', command.length),
 		]);
@@ -103,7 +105,7 @@ namespace TwinStar.Script.Entry {
 			Console.information(los('entry:current_command_execute', progress), [
 				`${item.input === null ? '?' : item.input.value}${item.method === null ? '' : ` | ${item.method}`}`,
 			]);
-			let state = Executor.execute(item, method);
+			let state = Executor.execute(item, Executor.g_method, Executor.g_method_batch);
 			if (state === null) {
 				command_log += '~';
 			}

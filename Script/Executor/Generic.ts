@@ -77,11 +77,15 @@ namespace TwinStar.Script.Executor {
 	export function execute(
 		command: Command,
 		method: Array<Method>,
+		fallback_method: Array<Method>,
 	): null | [boolean, number] {
-		let state = undefined! as [boolean, number] | string;
+		let state: [boolean, number] | string = undefined!;
 		let selected_method: null | Method;
 		if (command.method !== null) {
-			let target_method = method.find((e) => (e.id === command.method));
+			let target_method = method.find((value) => (value.id === command.method));
+			if (target_method === undefined) {
+				target_method = fallback_method.find((value) => (value.id === command.method));
+			}
 			if (target_method === undefined) {
 				selected_method = null;
 				state = los('executor.generic:method_invalid');
@@ -117,9 +121,26 @@ namespace TwinStar.Script.Executor {
 				Console.information(los('executor.generic:method_select'), [
 					los('executor.generic:method_select_null_to_skip'),
 				]);
-				selected_method = Console.enumeration(valid_method.map((e) => ([e[1], `${e[0]}`, e[1].name()])), true, null);
+				selected_method = Console.enumeration(valid_method.map((value) => ([value[1], `${value[0]}`, value[1].name()])), true, null);
 				if (selected_method === null) {
 					state = los('executor.generic:method_select_null');
+				}
+			}
+			if (selected_method === null) {
+				valid_method = [];
+				for (let index in fallback_method) {
+					if (command.input.disable_filter || fallback_method[index].input_filter(command.input.value)) {
+						valid_method.push([BigInt(index) + 1n, fallback_method[index]]);
+					}
+				}
+				if (valid_method.length !== 0) {
+					Console.information(los('executor.generic:method_select'), [
+						los('executor.generic:method_select_null_to_skip'),
+					]);
+					selected_method = Console.enumeration(valid_method.map((value) => ([value[1], `${value[0]}`, value[1].name()])), true, null);
+					if (selected_method !== null) {
+						state = undefined!;
+					}
 				}
 			}
 		}

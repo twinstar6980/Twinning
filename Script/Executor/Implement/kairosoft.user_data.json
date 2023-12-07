@@ -1,2 +1,14 @@
 {
+	"method": {
+		"recrypt": {
+			"filter": "()$",
+			"argument": {
+				"old_directory": "?input",
+				"new_directory": "?automatic",
+				"old_key": "?input",
+				"new_key": "?input",
+			},
+			"batch_argument": null,
+		},
+	},
 }

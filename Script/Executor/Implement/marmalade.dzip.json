@@ -1,4 +1,38 @@
 {
-	"version_number": 0,
-	"pack_buffer_size": "256.0m",
+	"method": {
+		"pack": {
+			"filter": "(\\.dz\\.bundle)$",
+			"argument": {
+				"bundle_directory": "?input",
+				"data_file": "?automatic",
+				"version_number": 0,
+				"buffer_size": "256.0m",
+			},
+			"batch_argument": {
+				"bundle_directory": "?input",
+				"data_file": "?automatic",
+			},
+		},
+		"unpack": {
+			"filter": "(\\.dz)$",
+			"argument": {
+				"data_file": "?input",
+				"bundle_directory": "?automatic",
+				"version_number": 0,
+			},
+			"batch_argument": {
+				"data_file": "?input",
+				"bundle_directory": "?automatic",
+			},
+		},
+		"pack_automatic": {
+			"filter": "()$",
+			"argument": {
+				"resource_directory": "?input",
+				"data_file": "?automatic",
+				"version_number": 0,
+			},
+			"batch_argument": null,
+		},
+	},
 }

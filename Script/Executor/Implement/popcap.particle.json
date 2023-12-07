@@ -1,5 +1,31 @@
 {
-	"version_platform": "?input",
-	"version_variant_64": "?input",
-	"encode_buffer_size": "8.0m",
+	"method": {
+		"encode": {
+			"filter": "(\\.particle\\.json)$",
+			"argument": {
+				"definition_file": "?input",
+				"data_file": "?automatic",
+				"version_platform": "?input",
+				"version_variant_64": "?input",
+				"buffer_size": "8.0m",
+			},
+			"batch_argument": {
+				"definition_file": "?input",
+				"data_file": "?automatic",
+			},
+		},
+		"decode": {
+			"filter": "(\\.xml\\.compiled)$",
+			"argument": {
+				"data_file": "?input",
+				"definition_file": "?automatic",
+				"version_platform": "?input",
+				"version_variant_64": "?input",
+			},
+			"batch_argument": {
+				"data_file": "?input",
+				"definition_file": "?automatic",
+			},
+		},
+	},
 }

@@ -11,19 +11,16 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 	// decode_lenient *
 
 	export type Configuration = {
-		version_number: TypicalArgumentExpression<bigint>;
-		version_native_string_encoding_use_utf8: TypicalArgumentExpression<boolean>;
-		key: TypicalArgumentExpression<string>;
-		encode_buffer_size: TypicalArgumentExpression<string>;
+		method: TypicalMethodConfigurationGroup;
 	};
 
 	export function injector(
 		configuration: Configuration,
 	): void {
-		push_typical_method('popcap.reflection_object_notation', [
+		push_typical_method(configuration.method, 'popcap.reflection_object_notation', [
 			typical_method({
 				id: 'encode',
-				filter: ['file', /(\.json)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'definition_file',
@@ -31,7 +28,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'data_file',
@@ -39,7 +35,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file.replace(/(\.json)?$/i, '.rton')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_integer({
 						id: 'version_number',
@@ -47,21 +42,18 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_number,
 					}),
 					typical_argument_boolean({
 						id: 'version_native_string_encoding_use_utf8',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_native_string_encoding_use_utf8,
 					}),
 					typical_argument_size({
 						id: 'buffer_size',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.encode_buffer_size,
 					}),
 				],
 				worker: ({ definition_file, data_file, version_number, version_native_string_encoding_use_utf8, buffer_size }) => {
@@ -75,7 +67,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -84,7 +75,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file + '.encode'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.json)?$/i, '.rton')),
 					}),
 				],
@@ -98,7 +88,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 			}),
 			typical_method({
 				id: 'decode',
-				filter: ['file', /(\.rton)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'data_file',
@@ -106,7 +96,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'definition_file',
@@ -114,7 +103,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.rton)?$/i, '.json')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_integer({
 						id: 'version_number',
@@ -122,14 +110,12 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_number,
 					}),
 					typical_argument_boolean({
 						id: 'version_native_string_encoding_use_utf8',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_native_string_encoding_use_utf8,
 					}),
 				],
 				worker: ({ data_file, definition_file, version_number, version_native_string_encoding_use_utf8 }) => {
@@ -143,7 +129,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -152,7 +137,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file + '.decode'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.rton)?$/i, '.json')),
 					}),
 				],
@@ -160,7 +144,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 			}),
 			typical_method({
 				id: 'encrypt',
-				filter: ['file', /(\.rton)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'plain_file',
@@ -168,7 +152,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'cipher_file',
@@ -176,7 +159,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: (argument: { plain_file: string; }) => (argument.plain_file.replace(/(\.rton)?$/i, '.cipher.rton')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_string({
 						id: 'key',
@@ -184,7 +166,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.key,
 					}),
 				],
 				worker: ({ plain_file, cipher_file, key }) => {
@@ -198,7 +179,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -207,7 +187,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: (argument: { plain_file: string; }) => (argument.plain_file + '.encrypt'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.rton)?$/i, '.rton')),
 					}),
 				],
@@ -215,7 +194,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 			}),
 			typical_method({
 				id: 'decrypt',
-				filter: ['file', /(\.rton)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'cipher_file',
@@ -223,7 +202,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'plain_file',
@@ -231,7 +209,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: (argument: { cipher_file: string; }) => (argument.cipher_file.replace(/(\.rton)?$/i, '.plain.rton')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_string({
 						id: 'key',
@@ -239,7 +216,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 				],
 				worker: ({ cipher_file, plain_file, key }) => {
@@ -253,7 +229,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -262,7 +237,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: (argument: { cipher_file: string; }) => (argument.cipher_file + '.decrypt'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.rton)?$/i, '.rton')),
 					}),
 				],
@@ -270,7 +244,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 			}),
 			typical_method({
 				id: 'encode_then_encrypt',
-				filter: ['file', /(\.json)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'definition_file',
@@ -278,7 +252,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'data_file',
@@ -286,7 +259,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file.replace(/(\.json)?$/i, '.rton')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_integer({
 						id: 'version_number',
@@ -294,14 +266,12 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_number,
 					}),
 					typical_argument_boolean({
 						id: 'version_native_string_encoding_use_utf8',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_native_string_encoding_use_utf8,
 					}),
 					typical_argument_string({
 						id: 'key',
@@ -309,14 +279,12 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.key,
 					}),
 					typical_argument_size({
 						id: 'buffer_size',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.encode_buffer_size,
 					}),
 				],
 				worker: ({ definition_file, data_file, version_number, version_native_string_encoding_use_utf8, key, buffer_size }) => {
@@ -330,7 +298,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -339,7 +306,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file + '.encode_then_encrypt'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.json)?$/i, '.rton')),
 					}),
 				],
@@ -353,7 +319,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 			}),
 			typical_method({
 				id: 'decrypt_then_decode',
-				filter: ['file', /(\.rton)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'data_file',
@@ -361,7 +327,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'definition_file',
@@ -369,7 +334,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.rton)?$/i, '.json')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_integer({
 						id: 'version_number',
@@ -377,14 +341,12 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_number,
 					}),
 					typical_argument_boolean({
 						id: 'version_native_string_encoding_use_utf8',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_native_string_encoding_use_utf8,
 					}),
 					typical_argument_string({
 						id: 'key',
@@ -392,7 +354,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.key,
 					}),
 				],
 				worker: ({ data_file, definition_file, version_number, version_native_string_encoding_use_utf8, key }) => {
@@ -406,7 +367,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -415,7 +375,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file + '.decrypt_then_decode'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.rton)?$/i, '.json')),
 					}),
 				],
@@ -423,7 +382,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 			}),
 			typical_method({
 				id: 'decode_lenient',
-				filter: ['file', /(\.rton)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'data_file',
@@ -431,7 +390,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'definition_file',
@@ -439,7 +397,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.rton)?$/i, '.json')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_integer({
 						id: 'version_number',
@@ -447,14 +404,12 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_number,
 					}),
 					typical_argument_boolean({
 						id: 'version_native_string_encoding_use_utf8',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_native_string_encoding_use_utf8,
 					}),
 				],
 				worker: ({ data_file, definition_file, version_number, version_native_string_encoding_use_utf8 }) => {
@@ -468,7 +423,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -477,7 +431,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file + '.decode_lenient'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.rton)?$/i, '.json')),
 					}),
 				],

@@ -1,2 +1,13 @@
 {
+	"method": {
+		"convert": {
+			"filter": "(\\.(txt|json))$",
+			"argument": {
+				"source_file": "?input",
+				"destination_version": "?input",
+				"destination_file": "?automatic",
+			},
+			"batch_argument": null,
+		},
+	},
 }

@@ -1,6 +1,35 @@
 {
-	"compile_buffer_size": "8.0m",
-	"link_buffer_size": "1024.0m",
-	"parse_package_version_number": "?input",
-	"parse_package_version_extended_texture_information_for_pvz2_cn": "?input",
+	"method": {
+		"compile": {
+			"filter": "(\\.pvz2_package_project)$",
+			"argument": {
+				"project_directory": "?input",
+				"target_scope": "?input",
+				"target_package": "?input",
+				"buffer_size": "8.0m",
+			},
+			"batch_argument": null,
+		},
+		"link": {
+			"filter": "(\\.pvz2_package_project)$",
+			"argument": {
+				"project_directory": "?input",
+				"target_package": "?input",
+				"remake_manifest": "?input",
+				"buffer_size": "1024.0m",
+			},
+			"batch_argument": null,
+		},
+		"parse": {
+			"filter": "(\\.pvz2_package_project)$",
+			"argument": {
+				"project_directory": "?input",
+				"package_directory": "?input",
+				"package_name": "?automatic",
+				"package_version_number": "?input",
+				"package_version_extended_texture_information_for_pvz2_cn": "?input",
+			},
+			"batch_argument": null,
+		},
+	},
 }

@@ -6,17 +6,16 @@ namespace TwinStar.Script.Executor.Implement.wwise.sound_bank {
 	// decode *
 
 	export type Configuration = {
-		version_number: TypicalArgumentExpression<bigint>;
-		encode_buffer_size: TypicalArgumentExpression<string>;
+		method: TypicalMethodConfigurationGroup;
 	};
 
 	export function injector(
 		configuration: Configuration,
 	): void {
-		push_typical_method('wwise.sound_bank', [
+		push_typical_method(configuration.method, 'wwise.sound_bank', [
 			typical_method({
 				id: 'encode',
-				filter: ['directory', /(\.bnk\.bundle)$/i],
+				filter: 'directory',
 				argument: [
 					typical_argument_path({
 						id: 'bundle_directory',
@@ -24,7 +23,6 @@ namespace TwinStar.Script.Executor.Implement.wwise.sound_bank {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'data_file',
@@ -32,7 +30,6 @@ namespace TwinStar.Script.Executor.Implement.wwise.sound_bank {
 						checker: null,
 						automatic: (argument: { bundle_directory: string; }) => (argument.bundle_directory.replace(/(\.bnk\.bundle)?$/i, '.bnk')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_integer({
 						id: 'version_number',
@@ -40,14 +37,12 @@ namespace TwinStar.Script.Executor.Implement.wwise.sound_bank {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_number,
 					}),
 					typical_argument_size({
 						id: 'buffer_size',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.encode_buffer_size,
 					}),
 				],
 				worker: ({ bundle_directory, data_file, version_number, buffer_size }) => {
@@ -63,7 +58,6 @@ namespace TwinStar.Script.Executor.Implement.wwise.sound_bank {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -72,7 +66,6 @@ namespace TwinStar.Script.Executor.Implement.wwise.sound_bank {
 						checker: null,
 						automatic: (argument: { bundle_directory: string; }) => (argument.bundle_directory + '.pack'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.bnk\.bundle)?$/i, '.bnk')),
 					}),
 				],
@@ -88,7 +81,7 @@ namespace TwinStar.Script.Executor.Implement.wwise.sound_bank {
 			}),
 			typical_method({
 				id: 'decode',
-				filter: ['file', /(\.bnk)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'data_file',
@@ -96,7 +89,6 @@ namespace TwinStar.Script.Executor.Implement.wwise.sound_bank {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'bundle_directory',
@@ -104,7 +96,6 @@ namespace TwinStar.Script.Executor.Implement.wwise.sound_bank {
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.bnk)?$/i, '.bnk.bundle')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_integer({
 						id: 'version_number',
@@ -112,7 +103,6 @@ namespace TwinStar.Script.Executor.Implement.wwise.sound_bank {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_number,
 					}),
 				],
 				worker: ({ data_file, bundle_directory, version_number }) => {
@@ -128,7 +118,6 @@ namespace TwinStar.Script.Executor.Implement.wwise.sound_bank {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -137,7 +126,6 @@ namespace TwinStar.Script.Executor.Implement.wwise.sound_bank {
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file + '.unpack'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.bnk)?$/i, '.bnk.bundle')),
 					}),
 				],

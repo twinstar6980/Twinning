@@ -1,4 +1,30 @@
 {
-	"limit": 256,
-	"key": "AS23DSREPLKL335KO4439032N8345NF",
+	"method": {
+		"encrypt": {
+			"filter": "()$",
+			"argument": {
+				"plain_file": "?input",
+				"cipher_file": "?automatic",
+				"limit": 256,
+				"key": "AS23DSREPLKL335KO4439032N8345NF",
+			},
+			"batch_argument": {
+				"plain_file": "?input",
+				"cipher_file": "?automatic",
+			},
+		},
+		"decrypt": {
+			"filter": "(\\.cdat)$",
+			"argument": {
+				"cipher_file": "?input",
+				"plain_file": "?automatic",
+				"limit": 256,
+				"key": "AS23DSREPLKL335KO4439032N8345NF",
+			},
+			"batch_argument": {
+				"cipher_file": "?input",
+				"plain_file": "?automatic",
+			},
+		},
+	},
 }

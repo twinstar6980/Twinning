@@ -1,2 +1,13 @@
 {
+	"method": {
+		"md5": {
+			"filter": "()$",
+			"argument": {
+				"target_file": "?input",
+			},
+			"batch_argument": {
+				"target_file": "?input",
+			},
+		},
+	},
 }

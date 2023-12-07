@@ -6,15 +6,16 @@ namespace TwinStar.Script.Executor.Implement.wwise.media {
 	// decode *
 
 	export type Configuration = {
+		method: TypicalMethodConfigurationGroup;
 	};
 
 	export function injector(
 		configuration: Configuration,
 	): void {
-		push_typical_method('wwise.media', [
+		push_typical_method(configuration.method, 'wwise.media', [
 			typical_method({
 				id: 'encode',
-				filter: ['file', /(\.wav)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'raw_file',
@@ -22,7 +23,6 @@ namespace TwinStar.Script.Executor.Implement.wwise.media {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'ripe_file',
@@ -30,7 +30,6 @@ namespace TwinStar.Script.Executor.Implement.wwise.media {
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file.replace(/(\.wav)?$/i, '.wem')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_string({
 						id: 'format',
@@ -38,7 +37,6 @@ namespace TwinStar.Script.Executor.Implement.wwise.media {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 				],
 				worker: ({ raw_file, ripe_file, format }) => {
@@ -52,7 +50,6 @@ namespace TwinStar.Script.Executor.Implement.wwise.media {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -61,7 +58,6 @@ namespace TwinStar.Script.Executor.Implement.wwise.media {
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file + '.encode'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.wav)?$/i, '.wem')),
 					}),
 				],
@@ -69,7 +65,7 @@ namespace TwinStar.Script.Executor.Implement.wwise.media {
 			}),
 			typical_method({
 				id: 'decode',
-				filter: ['file', /(\.wem)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'ripe_file',
@@ -77,7 +73,6 @@ namespace TwinStar.Script.Executor.Implement.wwise.media {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'raw_file',
@@ -85,7 +80,6 @@ namespace TwinStar.Script.Executor.Implement.wwise.media {
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file.replace(/(\.wem)?$/i, '.wav')),
 						condition: null,
-						default: '?automatic',
 					}),
 				],
 				worker: ({ ripe_file, raw_file }) => {
@@ -99,7 +93,6 @@ namespace TwinStar.Script.Executor.Implement.wwise.media {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -108,7 +101,6 @@ namespace TwinStar.Script.Executor.Implement.wwise.media {
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file + '.decode'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.wem)?$/i, '.wav')),
 					}),
 				],

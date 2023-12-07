@@ -1,4 +1,29 @@
 {
-	"version_number": 1,
-	"encode_buffer_size": "8.0m",
+	"method": {
+		"encode": {
+			"filter": "(\\.ppf\\.json)$",
+			"argument": {
+				"definition_file": "?input",
+				"data_file": "?automatic",
+				"version_number": 1,
+				"buffer_size": "8.0m",
+			},
+			"batch_argument": {
+				"definition_file": "?input",
+				"data_file": "?automatic",
+			},
+		},
+		"decode": {
+			"filter": "(\\.ppf)$",
+			"argument": {
+				"data_file": "?input",
+				"definition_file": "?automatic",
+				"version_number": 1,
+			},
+			"batch_argument": {
+				"data_file": "?input",
+				"definition_file": "?automatic",
+			},
+		},
+	},
 }

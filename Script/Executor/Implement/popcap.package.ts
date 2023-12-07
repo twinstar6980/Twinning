@@ -8,18 +8,16 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 	// encrypt *
 
 	export type Configuration = {
-		version_number: TypicalArgumentExpression<bigint>;
-		version_compress_resource_data: TypicalArgumentExpression<boolean>;
-		pack_buffer_size: TypicalArgumentExpression<string>;
+		method: TypicalMethodConfigurationGroup;
 	};
 
 	export function injector(
 		configuration: Configuration,
 	): void {
-		push_typical_method('popcap.package', [
+		push_typical_method(configuration.method, 'popcap.package', [
 			typical_method({
 				id: 'pack',
-				filter: ['directory', /(\.pak\.bundle)$/i],
+				filter: 'directory',
 				argument: [
 					typical_argument_path({
 						id: 'bundle_directory',
@@ -27,7 +25,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'data_file',
@@ -35,7 +32,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						checker: null,
 						automatic: (argument: { bundle_directory: string; }) => (argument.bundle_directory.replace(/(\.pak\.bundle)?$/i, '.pak')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_integer({
 						id: 'version_number',
@@ -43,21 +39,18 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_number,
 					}),
 					typical_argument_boolean({
 						id: 'version_compress_resource_data',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_compress_resource_data,
 					}),
 					typical_argument_size({
 						id: 'buffer_size',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.pack_buffer_size,
 					}),
 				],
 				worker: ({ bundle_directory, data_file, version_number, version_compress_resource_data, buffer_size }) => {
@@ -73,7 +66,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -82,7 +74,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						checker: null,
 						automatic: (argument: { bundle_directory: string; }) => (argument.bundle_directory + '.pack'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.pak\.bundle)?$/i, '.pak')),
 					}),
 				],
@@ -98,7 +89,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 			}),
 			typical_method({
 				id: 'unpack',
-				filter: ['file', /(\.pak)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'data_file',
@@ -106,7 +97,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'bundle_directory',
@@ -114,7 +104,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.pak)?$/i, '.pak.bundle')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_integer({
 						id: 'version_number',
@@ -122,14 +111,12 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_number,
 					}),
 					typical_argument_boolean({
 						id: 'version_compress_resource_data',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_compress_resource_data,
 					}),
 				],
 				worker: ({ data_file, bundle_directory, version_number, version_compress_resource_data }) => {
@@ -145,7 +132,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -154,7 +140,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file + '.unpack'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.pak)?$/i, '.pak.bundle')),
 					}),
 				],
@@ -162,7 +147,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 			}),
 			typical_method({
 				id: 'pack_automatic',
-				filter: ['directory', /()$/i],
+				filter: 'directory',
 				argument: [
 					typical_argument_path({
 						id: 'resource_directory',
@@ -170,7 +155,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'data_file',
@@ -178,7 +162,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						checker: null,
 						automatic: (argument: { resource_directory: string; }) => (argument.resource_directory.replace(/()?$/i, '.pak')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_integer({
 						id: 'version_number',
@@ -186,14 +169,12 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_number,
 					}),
 					typical_argument_boolean({
 						id: 'version_compress_resource_data',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_compress_resource_data,
 					}),
 				],
 				worker: ({ resource_directory, data_file, version_number, version_compress_resource_data }) => {
@@ -206,7 +187,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 			}),
 			typical_method({
 				id: 'encrypt',
-				filter: ['file', /(\.pak)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'plain_file',
@@ -214,7 +195,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'cipher_file',
@@ -222,7 +202,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						checker: null,
 						automatic: (argument: { plain_file: string; }) => (argument.plain_file.replace(/(\.pak)?$/i, '.cipher.pak')),
 						condition: null,
-						default: '?automatic',
 					}),
 				],
 				worker: ({ plain_file, cipher_file }) => {
@@ -236,7 +215,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -245,7 +223,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.package_ {
 						checker: null,
 						automatic: (argument: { plain_file: string; }) => (argument.plain_file + '.encrypt'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.pak)?$/i, '.pak')),
 					}),
 				],

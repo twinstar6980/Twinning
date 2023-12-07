@@ -1,2 +1,13 @@
 {
+	"method": {
+		"execute": {
+			"filter": "(\\.pvz2_remote_project)$",
+			"argument": {
+				"project_directory": "?input",
+				"action": "?input",
+				"target": "?input",
+			},
+			"batch_argument": null,
+		},
+	},
 }

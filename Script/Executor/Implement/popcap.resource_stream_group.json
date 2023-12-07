@@ -1,5 +1,30 @@
 
 {
-	"version_number": "?input",
-	"pack_buffer_size": "256.0m",
+	"method": {
+		"pack": {
+			"filter": "(\\.rsg\\.bundle)$",
+			"argument": {
+				"bundle_directory": "?input",
+				"data_file": "?automatic",
+				"version_number": "?input",
+				"buffer_size": "256.0m",
+			},
+			"batch_argument": {
+				"bundle_directory": "?input",
+				"data_file": "?automatic",
+			},
+		},
+		"unpack": {
+			"filter": "(\\.rsg)$",
+			"argument": {
+				"data_file": "?input",
+				"bundle_directory": "?automatic",
+				"version_number": "?input",
+			},
+			"batch_argument": {
+				"data_file": "?input",
+				"bundle_directory": "?automatic",
+			},
+		},
+	},
 }

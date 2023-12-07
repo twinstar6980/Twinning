@@ -2,6 +2,10 @@ namespace TwinStar.Script.Executor {
 
 	// ------------------------------------------------
 
+	export let g_typical_method_disable_name_filter: boolean = false;
+
+	// ------------------------------------------------
+
 	export type TypicalArgumentExpression<Value> = Value | '?automatic' | '?input';
 
 	export type TypicalArgument<ID extends string, Value extends any, GivenValue extends any> = {
@@ -39,7 +43,6 @@ namespace TwinStar.Script.Executor {
 			checker: null | ((argument: any, value: boolean) => null | string);
 			automatic: null | ((argument: any) => null | boolean);
 			condition: null | ((argument: any) => null | boolean);
-			default: TypicalArgumentExpression<boolean>;
 		},
 	): TypicalArgument<ID, boolean, boolean> {
 		return {
@@ -49,7 +52,7 @@ namespace TwinStar.Script.Executor {
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
 			input_generator: (argument, initial) => (Console.boolean(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
 			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
-			default: object.default,
+			default: '?input',
 		} as TypicalArgument<ID, boolean, boolean>;
 	}
 
@@ -60,7 +63,6 @@ namespace TwinStar.Script.Executor {
 			checker: null | ((argument: any, value: bigint) => null | string);
 			automatic: null | ((argument: any) => null | bigint);
 			condition: null | ((argument: any) => null | bigint);
-			default: TypicalArgumentExpression<bigint>;
 		},
 	): TypicalArgument<ID, bigint, bigint> {
 		return {
@@ -70,7 +72,7 @@ namespace TwinStar.Script.Executor {
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
 			input_generator: (argument, initial) => (object.option === null ? Console.integer(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.enumeration(Console.option_integer(object.option), null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
 			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
-			default: object.default,
+			default: '?input',
 		} as TypicalArgument<ID, bigint, bigint>;
 	}
 
@@ -81,7 +83,6 @@ namespace TwinStar.Script.Executor {
 			checker: null | ((argument: any, value: number) => null | string);
 			automatic: null | ((argument: any) => null | number);
 			condition: null | ((argument: any) => null | number);
-			default: TypicalArgumentExpression<number>;
 		},
 	): TypicalArgument<ID, number, number> {
 		return {
@@ -91,7 +92,7 @@ namespace TwinStar.Script.Executor {
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
 			input_generator: (argument, initial) => (object.option === null ? Console.floater(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.enumeration(Console.option_floater(object.option), null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
 			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
-			default: object.default,
+			default: '?input',
 		} as TypicalArgument<ID, number, number>;
 	}
 
@@ -101,7 +102,6 @@ namespace TwinStar.Script.Executor {
 			checker: null | ((argument: any, value: bigint) => null | string);
 			automatic: null | ((argument: any) => null | bigint);
 			condition: null | ((argument: any) => null | bigint);
-			default: TypicalArgumentExpression<string>;
 		},
 	): TypicalArgument<ID, bigint, string> {
 		return {
@@ -111,7 +111,7 @@ namespace TwinStar.Script.Executor {
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
 			input_generator: (argument, initial) => (Console.size(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
 			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
-			default: object.default,
+			default: '?input',
 		} as TypicalArgument<ID, bigint, string>;
 	}
 
@@ -122,7 +122,6 @@ namespace TwinStar.Script.Executor {
 			checker: null | ((argument: any, value: string) => null | string);
 			automatic: null | ((argument: any) => null | string);
 			condition: null | ((argument: any) => null | string);
-			default: TypicalArgumentExpression<string>;
 		},
 	): TypicalArgument<ID, string, string> {
 		return {
@@ -132,7 +131,7 @@ namespace TwinStar.Script.Executor {
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
 			input_generator: (argument, initial) => (object.option === null ? Console.string(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.enumeration(Console.option_string(object.option), null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
 			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
-			default: object.default,
+			default: '?input',
 		} as TypicalArgument<ID, string, string>;
 	}
 
@@ -143,7 +142,6 @@ namespace TwinStar.Script.Executor {
 			checker: null | ((argument: any, value: string) => null | string);
 			automatic: null | ((argument: any) => null | string);
 			condition: null | ((argument: any) => null | string);
-			default: TypicalArgumentExpression<string>;
 		},
 	): TypicalArgument<ID, string, string> {
 		return {
@@ -153,7 +151,7 @@ namespace TwinStar.Script.Executor {
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
 			input_generator: (argument, initial) => (Console.path(object.rule[0], object.rule[1], null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
 			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
-			default: object.default,
+			default: '?input',
 		} as TypicalArgument<ID, string, string>;
 	}
 
@@ -164,7 +162,6 @@ namespace TwinStar.Script.Executor {
 			checker: null | ((argument: any, value: string) => null | string);
 			automatic: null | ((argument: any) => null | string);
 			condition: null | ((argument: any) => null | string);
-			default: TypicalArgumentExpression<string>;
 			item_mapper: (argument: any, value: string) => string;
 		},
 	): TypicalBatchArgument<ID> {
@@ -175,7 +172,7 @@ namespace TwinStar.Script.Executor {
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
 			input_generator: (argument, initial) => (Console.path('directory', object.rule, null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
 			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
-			default: object.default,
+			default: '?input',
 			item_mapper: object.item_mapper,
 		} as TypicalBatchArgument<ID>;
 	}
@@ -185,14 +182,21 @@ namespace TwinStar.Script.Executor {
 	export function typical_method<ID extends string, Argument extends Array<TypicalArgument<string, any, any>>, BatchArgument extends Array<TypicalBatchArgument<string>>>(
 		object: {
 			id: ID;
-			filter: ['any' | 'file' | 'directory', RegExp];
+			filter: 'any' | 'file' | 'directory';
 			argument: Argument;
 			worker: (argument: { [Element in Argument[number]as Element['id']]: Element['Value'] }) => void;
 			batch_argument: null | BatchArgument;
 			batch_worker: null | ((argument: { [Element in Argument[number]as Element['id']]: Element['Value'] }, temporary: any) => void);
 		},
 	): TypicalMethod<ID, Argument, BatchArgument> {
-		return object as TypicalMethod<ID, Argument, BatchArgument>;
+		return {
+			id: object.id,
+			filter: [object.filter, /()/],
+			argument: object.argument,
+			worker: object.worker,
+			batch_argument: object.batch_argument,
+			batch_worker: object.batch_worker,
+		} as TypicalMethod<ID, Argument, BatchArgument>;
 	}
 
 	// ------------------------------------------------
@@ -308,7 +312,9 @@ namespace TwinStar.Script.Executor {
 				let state = true;
 				if (!batch) {
 					state &&= KernelX.FileSystem[({ any: 'exist', file: 'exist_file', directory: 'exist_directory' } as const)[source.filter[0]]](input);
-					state &&= source.filter[1].test(input);
+					if (!g_typical_method_disable_name_filter) {
+						state &&= source.filter[1].test(input);
+					}
 				}
 				else {
 					state &&= KernelX.FileSystem.exist_directory(input);
@@ -321,11 +327,32 @@ namespace TwinStar.Script.Executor {
 
 	// ------------------------------------------------
 
+	export type TypicalMethodConfiguration = {
+		filter: string;
+		argument: Record<string, TypicalArgumentExpression<any>>;
+		batch_argument: Record<string, TypicalArgumentExpression<any>>;
+	};
+
+	export type TypicalMethodConfigurationGroup = Record<string, TypicalMethodConfiguration>;
+
 	export function push_typical_method(
+		configuration: TypicalMethodConfigurationGroup,
 		group_id: string,
 		list: Array<TypicalMethod<string, any, any>>,
 	): void {
 		for (let item of list) {
+			let item_configuration = configuration[item.id];
+			item.filter[1] = new RegExp(item_configuration.filter, 'i');
+			{
+				for (let argument of item.argument) {
+					argument.default = item_configuration.argument[argument.id];
+				}
+			}
+			if (item.batch_argument !== null) {
+				for (let argument of item.batch_argument) {
+					argument.default = item_configuration.batch_argument[argument.id];
+				}
+			}
 			item.id = `${group_id}.${item.id}`;
 			g_method.push(convert_typical_method(item, false));
 			if (item.batch_argument !== null) {

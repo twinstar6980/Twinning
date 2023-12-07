@@ -61,6 +61,10 @@ namespace Helper {
 			public required String  SpriteFilterRule;
 		}
 
+		[JsonObject(ItemRequired = Required.AllowNull)]
+		public class PackageBuilderSettingData {
+		}
+
 		// ----------------
 
 		[JsonObject(ItemRequired = Required.AllowNull)]
@@ -72,6 +76,7 @@ namespace Helper {
 			public required ResourceForwarderSettingData ResourceForwarder;
 			public required CommandSenderSettingData     CommandSender;
 			public required AnimationViewerSettingData   AnimationViewer;
+			public required PackageBuilderSettingData    PackageBuilder;
 		}
 
 		#endregion
@@ -150,6 +155,8 @@ namespace Helper {
 						RemainFrameRate = true,
 						ShowSpriteBoundary = false,
 						SpriteFilterRule = "",
+					},
+					PackageBuilder = new PackageBuilderSettingData() {
 					},
 				};
 			}

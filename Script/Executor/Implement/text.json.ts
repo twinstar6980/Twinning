@@ -5,19 +5,16 @@ namespace TwinStar.Script.Executor.Implement.text.json {
 	// format *
 
 	export type Configuration = {
-		disable_array_trailing_comma: TypicalArgumentExpression<boolean>;
-		disable_array_line_breaking: TypicalArgumentExpression<boolean>;
-		disable_object_trailing_comma: TypicalArgumentExpression<boolean>;
-		disable_object_line_breaking: TypicalArgumentExpression<boolean>;
+		method: TypicalMethodConfigurationGroup;
 	};
 
 	export function injector(
 		configuration: Configuration,
 	): void {
-		push_typical_method('text.json', [
+		push_typical_method(configuration.method, 'text.json', [
 			typical_method({
 				id: 'format',
-				filter: ['file', /(\.json)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'source_file',
@@ -25,7 +22,6 @@ namespace TwinStar.Script.Executor.Implement.text.json {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'destination_file',
@@ -33,35 +29,30 @@ namespace TwinStar.Script.Executor.Implement.text.json {
 						checker: null,
 						automatic: (argument: { source_file: string; }) => (argument.source_file.replace(/(\.json)?$/i, '.format.json')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_boolean({
 						id: 'disable_array_trailing_comma',
 						checker: null,
 						automatic: (argument: {}) => (KernelX.JSON.g_format.disable_array_trailing_comma),
 						condition: null,
-						default: configuration.disable_array_trailing_comma,
 					}),
 					typical_argument_boolean({
 						id: 'disable_array_line_breaking',
 						checker: null,
 						automatic: (argument: {}) => (KernelX.JSON.g_format.disable_array_line_breaking),
 						condition: null,
-						default: configuration.disable_array_line_breaking,
 					}),
 					typical_argument_boolean({
 						id: 'disable_object_trailing_comma',
 						checker: null,
 						automatic: (argument: {}) => (KernelX.JSON.g_format.disable_object_trailing_comma),
 						condition: null,
-						default: configuration.disable_object_trailing_comma,
 					}),
 					typical_argument_boolean({
 						id: 'disable_object_line_breaking',
 						checker: null,
 						automatic: (argument: {}) => (KernelX.JSON.g_format.disable_object_line_breaking),
 						condition: null,
-						default: configuration.disable_object_line_breaking,
 					}),
 				],
 				worker: ({ source_file, destination_file, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking }) => {
@@ -76,7 +67,6 @@ namespace TwinStar.Script.Executor.Implement.text.json {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -85,7 +75,6 @@ namespace TwinStar.Script.Executor.Implement.text.json {
 						checker: null,
 						automatic: (argument: { source_file: string; }) => (argument.source_file + '.format'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.json)?$/i, '.json')),
 					}),
 				],

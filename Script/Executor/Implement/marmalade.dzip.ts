@@ -7,17 +7,16 @@ namespace TwinStar.Script.Executor.Implement.marmalade.dzip {
 	// pack_automatic
 
 	export type Configuration = {
-		version_number: TypicalArgumentExpression<bigint>;
-		pack_buffer_size: TypicalArgumentExpression<string>;
+		method: TypicalMethodConfigurationGroup;
 	};
 
 	export function injector(
 		configuration: Configuration,
 	): void {
-		push_typical_method('marmalade.dzip', [
+		push_typical_method(configuration.method, 'marmalade.dzip', [
 			typical_method({
 				id: 'pack',
-				filter: ['directory', /(\.dz\.bundle)$/i],
+				filter: 'directory',
 				argument: [
 					typical_argument_path({
 						id: 'bundle_directory',
@@ -25,7 +24,6 @@ namespace TwinStar.Script.Executor.Implement.marmalade.dzip {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'data_file',
@@ -33,7 +31,6 @@ namespace TwinStar.Script.Executor.Implement.marmalade.dzip {
 						checker: null,
 						automatic: (argument: { bundle_directory: string; }) => (argument.bundle_directory.replace(/(\.dz\.bundle)?$/i, '.dz')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_integer({
 						id: 'version_number',
@@ -41,14 +38,12 @@ namespace TwinStar.Script.Executor.Implement.marmalade.dzip {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_number,
 					}),
 					typical_argument_size({
 						id: 'buffer_size',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.pack_buffer_size,
 					}),
 				],
 				worker: ({ bundle_directory, data_file, version_number, buffer_size }) => {
@@ -64,7 +59,6 @@ namespace TwinStar.Script.Executor.Implement.marmalade.dzip {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -73,7 +67,6 @@ namespace TwinStar.Script.Executor.Implement.marmalade.dzip {
 						checker: null,
 						automatic: (argument: { bundle_directory: string; }) => (argument.bundle_directory + '.pack'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.dz\.bundle)?$/i, '.dz')),
 					}),
 				],
@@ -89,7 +82,7 @@ namespace TwinStar.Script.Executor.Implement.marmalade.dzip {
 			}),
 			typical_method({
 				id: 'unpack',
-				filter: ['file', /(\.dz)$/i],
+				filter: 'file',
 				argument: [
 					typical_argument_path({
 						id: 'data_file',
@@ -97,7 +90,6 @@ namespace TwinStar.Script.Executor.Implement.marmalade.dzip {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'bundle_directory',
@@ -105,7 +97,6 @@ namespace TwinStar.Script.Executor.Implement.marmalade.dzip {
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.dz)?$/i, '.dz.bundle')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_integer({
 						id: 'version_number',
@@ -113,7 +104,6 @@ namespace TwinStar.Script.Executor.Implement.marmalade.dzip {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_number,
 					}),
 				],
 				worker: ({ data_file, bundle_directory, version_number }) => {
@@ -129,7 +119,6 @@ namespace TwinStar.Script.Executor.Implement.marmalade.dzip {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
@@ -138,7 +127,6 @@ namespace TwinStar.Script.Executor.Implement.marmalade.dzip {
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file + '.unpack'),
 						condition: null,
-						default: '?automatic',
 						item_mapper: (argument: {}, value) => (value.replace(/(\.dz)?$/i, '.dz.bundle')),
 					}),
 				],
@@ -146,7 +134,7 @@ namespace TwinStar.Script.Executor.Implement.marmalade.dzip {
 			}),
 			typical_method({
 				id: 'pack_automatic',
-				filter: ['directory', /()$/i],
+				filter: 'directory',
 				argument: [
 					typical_argument_path({
 						id: 'resource_directory',
@@ -154,7 +142,6 @@ namespace TwinStar.Script.Executor.Implement.marmalade.dzip {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'data_file',
@@ -162,7 +149,6 @@ namespace TwinStar.Script.Executor.Implement.marmalade.dzip {
 						checker: null,
 						automatic: (argument: { resource_directory: string; }) => (argument.resource_directory.replace(/()?$/i, '.dz')),
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_integer({
 						id: 'version_number',
@@ -170,7 +156,6 @@ namespace TwinStar.Script.Executor.Implement.marmalade.dzip {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.version_number,
 					}),
 				],
 				worker: ({ resource_directory, data_file, version_number }) => {

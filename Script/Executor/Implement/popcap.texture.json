@@ -1,2 +1,24 @@
 {
+	"method": {
+		"encode": {
+			"filter": "(\\.png)$",
+			"argument": {
+				"image_file": "?input",
+				"data_file": "?automatic",
+				"format": "?input",
+			},
+			"batch_argument": null,
+		},
+		"decode": {
+			"filter": "(\\.ptx)$",
+			"argument": {
+				"data_file": "?input",
+				"image_file": "?automatic",
+				"format": "?input",
+				"image_width": "?input",
+				"image_height": "?input",
+			},
+			"batch_argument": null,
+		},
+	},
 }

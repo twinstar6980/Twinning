@@ -7,19 +7,16 @@ namespace TwinStar.Script.Executor.Implement.pvz2.package_project {
 	// parse
 
 	export type Configuration = {
-		compile_buffer_size: TypicalArgumentExpression<string>;
-		link_buffer_size: TypicalArgumentExpression<string>;
-		parse_package_version_number: TypicalArgumentExpression<bigint>;
-		parse_package_version_extended_texture_information_for_pvz2_cn: TypicalArgumentExpression<bigint>;
+		method: TypicalMethodConfigurationGroup;
 	};
 
 	export function injector(
 		configuration: Configuration,
 	): void {
-		push_typical_method('pvz2.package_project', [
+		push_typical_method(configuration.method, 'pvz2.package_project', [
 			typical_method({
 				id: 'compile',
-				filter: ['directory', /(\.pvz2_package_project)$/i],
+				filter: 'directory',
 				argument: [
 					typical_argument_path({
 						id: 'project_directory',
@@ -27,7 +24,6 @@ namespace TwinStar.Script.Executor.Implement.pvz2.package_project {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_string({
 						id: 'target_scope',
@@ -35,7 +31,6 @@ namespace TwinStar.Script.Executor.Implement.pvz2.package_project {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_string({
 						id: 'target_package',
@@ -43,14 +38,12 @@ namespace TwinStar.Script.Executor.Implement.pvz2.package_project {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_size({
 						id: 'buffer_size',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.compile_buffer_size,
 					}),
 				],
 				worker: ({ project_directory, target_scope, target_package, buffer_size }) => {
@@ -64,7 +57,7 @@ namespace TwinStar.Script.Executor.Implement.pvz2.package_project {
 			}),
 			typical_method({
 				id: 'link',
-				filter: ['directory', /(\.pvz2_package_project)$/i],
+				filter: 'directory',
 				argument: [
 					typical_argument_path({
 						id: 'project_directory',
@@ -72,7 +65,6 @@ namespace TwinStar.Script.Executor.Implement.pvz2.package_project {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_string({
 						id: 'target_package',
@@ -80,21 +72,18 @@ namespace TwinStar.Script.Executor.Implement.pvz2.package_project {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_boolean({
 						id: 'remake_manifest',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_size({
 						id: 'buffer_size',
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.link_buffer_size,
 					}),
 				],
 				worker: ({ project_directory, target_package, remake_manifest, buffer_size }) => {
@@ -107,7 +96,7 @@ namespace TwinStar.Script.Executor.Implement.pvz2.package_project {
 			}),
 			typical_method({
 				id: 'parse',
-				filter: ['directory', /(\.pvz2_package_project)$/i],
+				filter: 'directory',
 				argument: [
 					typical_argument_path({
 						id: 'project_directory',
@@ -115,7 +104,6 @@ namespace TwinStar.Script.Executor.Implement.pvz2.package_project {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_path({
 						id: 'package_directory',
@@ -123,7 +111,6 @@ namespace TwinStar.Script.Executor.Implement.pvz2.package_project {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: '?input',
 					}),
 					typical_argument_string({
 						id: 'package_name',
@@ -131,7 +118,6 @@ namespace TwinStar.Script.Executor.Implement.pvz2.package_project {
 						checker: null,
 						automatic: (argument: { package_directory: string; }) => (PathUtility.name(argument.package_directory).replace(/(\.rsb\.bundle)?$/i, '')) ,
 						condition: null,
-						default: '?automatic',
 					}),
 					typical_argument_integer({
 						id: 'package_version_number',
@@ -139,7 +125,6 @@ namespace TwinStar.Script.Executor.Implement.pvz2.package_project {
 						checker: null,
 						automatic: null,
 						condition: null,
-						default: configuration.parse_package_version_number,
 					}),
 					typical_argument_integer({
 						id: 'package_version_extended_texture_information_for_pvz2_cn',
@@ -147,7 +132,6 @@ namespace TwinStar.Script.Executor.Implement.pvz2.package_project {
 						checker: null,
 						automatic: null,
 						condition: (argument: { package_version_number: bigint; }) => ([4n].includes(argument.package_version_number) ? null : 0n),
-						default: configuration.parse_package_version_extended_texture_information_for_pvz2_cn,
 					}),
 				],
 				worker: ({ project_directory, package_directory, package_name, package_version_number, package_version_extended_texture_information_for_pvz2_cn }) => {

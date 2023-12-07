@@ -1,5 +1,31 @@
 {
-	"version_number": 1,
-	"version_variant": "?input",
-	"encode_buffer_size": "8.0m",
+	"method": {
+		"encode": {
+			"filter": "(\\.popfx\\.json)$",
+			"argument": {
+				"definition_file": "?input",
+				"data_file": "?automatic",
+				"version_number": 1,
+				"version_variant": "?input",
+				"buffer_size": "8.0m",
+			},
+			"batch_argument": {
+				"definition_file": "?input",
+				"data_file": "?automatic",
+			},
+		},
+		"decode": {
+			"filter": "(\\.popfx)$",
+			"argument": {
+				"data_file": "?input",
+				"definition_file": "?automatic",
+				"version_number": 1,
+				"version_variant": "?input",
+			},
+			"batch_argument": {
+				"data_file": "?input",
+				"definition_file": "?automatic",
+			},
+		},
+	},
 }

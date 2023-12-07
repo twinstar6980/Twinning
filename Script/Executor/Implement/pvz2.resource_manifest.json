@@ -1,4 +1,38 @@
 {
-	"new_type_object_notation_encode_buffer_size": "64.0m",
-	"official_use_array_style_path": "?input",
+	"method": {
+		"new_type_object_notation.encode": {
+			"filter": "(\\.json)$",
+			"argument": {
+				"definition_file": "?input",
+				"data_file": "?automatic",
+				"buffer_size": "64.0m",
+			},
+			"batch_argument": null,
+		},
+		"new_type_object_notation.decode": {
+			"filter": "(\\.newton)$",
+			"argument": {
+				"data_file": "?input",
+				"definition_file": "?automatic",
+			},
+			"batch_argument": null,
+		},
+		"regular.from": {
+			"filter": "(\\.json)$",
+			"argument": {
+				"raw_file": "?input",
+				"ripe_file": "?automatic",
+			},
+			"batch_argument": null,
+		},
+		"regular.to": {
+			"filter": "(\\.json)$",
+			"argument": {
+				"ripe_file": "?input",
+				"raw_file": "?automatic",
+				"use_array_style_path": "?input",
+			},
+			"batch_argument": null,
+		},
+	},
 }

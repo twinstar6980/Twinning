@@ -1,4 +1,29 @@
 {
-	"version_number": "?input",
-	"encode_buffer_size": "64.0m",
+	"method": {
+		"encode": {
+			"filter": "(\\.bnk\\.bundle)$",
+			"argument": {
+				"bundle_directory": "?input",
+				"data_file": "?automatic",
+				"version_number": "?input",
+				"buffer_size": "64.0m",
+			},
+			"batch_argument": {
+				"bundle_directory": "?input",
+				"data_file": "?automatic",
+			},
+		},
+		"decode": {
+			"filter": "(\\.bnk)$",
+			"argument": {
+				"data_file": "?input",
+				"bundle_directory": "?automatic",
+				"version_number": "?input",
+			},
+			"batch_argument": {
+				"data_file": "?input",
+				"bundle_directory": "?automatic",
+			},
+		},
+	},
 }
