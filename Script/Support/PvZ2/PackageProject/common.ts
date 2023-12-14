@@ -2,7 +2,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject {
 
 	// ------------------------------------------------
 
-	export const k_version = 1n;
+	export const k_version = 2n;
 
 	// ------------------------------------------------
 
@@ -107,7 +107,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject {
 		name: string,
 	): null | string {
 		let result = list.find((value) => (value.name === name));
-		return result === undefined ? null : result.value;
+		return result === undefined ? null : parse_variable_string(result.value, list);
 	}
 
 	export function parse_variable_string(
@@ -116,7 +116,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject {
 	): string {
 		let result = '';
 		let variable_name: null | string = null;
-		format = format.slice(0, not_equal_or(format.indexOf('~'), -1, undefined));
+		format = format.slice(0, not_or(format.indexOf('~'), -1, undefined));
 		for (let index = 0; index < format.length; index++) {
 			let character = format[index];
 			if (character === '{') {
@@ -174,47 +174,60 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject {
 
 	// ------------------------------------------------
 
-	export function child_name_filter(
-		value: string,
-	): boolean {
-		return value.length !== 0 && !value.startsWith('.');
-	}
-
-	export function generate_child_list(
+	export function list_scope_child_name(
 		parent_directory: string,
 		child_scope: Scope,
 	): Array<string> {
-		return (child_scope.length !== 0 ? [child_scope[0]] : KernelX.FileSystem.list_directory(parent_directory, 1n)).filter(child_name_filter);
+		return (child_scope.length !== 0 ? [child_scope[0]] : KernelX.FileSystem.list_directory(parent_directory, 1n)).filter((value) => (value.length !== 0 && !value.startsWith('.')));
 	}
 
-	export function generate_child_path(
+	export function make_scope_root_path(
+		project_directory: string,
+		part_name?: string,
+		group_name?: string,
+		resource_name?: string,
+	): string {
+		let result = project_directory;
+		if (part_name !== undefined) {
+			result += `/${part_name}`;
+		}
+		if (group_name !== undefined) {
+			result += `/${group_name}`;
+		}
+		if (resource_name !== undefined) {
+			result += `/${resource_name}`;
+		}
+		return result;
+	}
+
+	export function make_scope_child_path(
 		parent_directory: string,
 		child_name: string,
 	): string {
 		return `${parent_directory}/${child_name}`;
 	}
 
-	export function generate_setting_path(
+	export function make_scope_setting_path(
 		root_directory: string,
 	): string {
 		return `${root_directory}/setting.json`;
 	}
 
-	export function generate_build_package_state_path(
+	export function make_build_package_state_path(
 		project_directory: string,
 		package_name: string,
 	): string {
 		return `${project_directory}/.build/${package_name}/state.json`;
 	}
 
-	export function generate_build_package_bundle_path(
+	export function make_build_package_bundle_path(
 		project_directory: string,
 		package_name: string,
 	): string {
 		return `${project_directory}/.build/${package_name}/package.rsb.bundle`;
 	}
 
-	export function generate_build_package_bundle_packet_path(
+	export function make_build_package_bundle_packet_path(
 		project_directory: string,
 		package_name: string,
 		group_name: string,
@@ -223,7 +236,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject {
 		return `${project_directory}/.build/${package_name}/package.rsb.bundle/packet/${make_subgroup_name(group_name, subgroup_category)}.rsg`;
 	}
 
-	export function generate_build_package_bundle_resource_path(
+	export function make_build_package_bundle_resource_path(
 		project_directory: string,
 		package_name: string,
 		resource_path: string,
@@ -231,7 +244,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject {
 		return `${project_directory}/.build/${package_name}/package.rsb.bundle/resource/${resource_path}`;
 	}
 
-	export function generate_build_package_data_path(
+	export function make_build_package_data_path(
 		project_directory: string,
 		package_name: string,
 	): string {
@@ -244,7 +257,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject {
 		project_directory: string,
 	): void {
 		try {
-			let version_file = generate_child_path(project_directory, 'version.txt');
+			let version_file = make_scope_child_path(project_directory, 'version.txt');
 			let version_data = KernelX.FileSystem.read_file(version_file);
 			let version_text = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(version_data.view()));
 			assert_test(version_text === k_version.toString());

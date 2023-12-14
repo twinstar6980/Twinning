@@ -91,13 +91,15 @@ namespace Helper.Module {
 			var lastSelectedItem = this.View.uTab.SelectedItem;
 			this.View.uTab.SelectedItem = item;
 			var state = await item.Frame.Content.AsClass<ITabItemPage>().TabItemPageRequestClose();
-			if (state) {
+			if (!state) {
+				this.View.uTab.SelectedItem = lastSelectedItem;
+			}
+			else {
 				this.uTab_TabItemsSource.Remove(item);
 				if (this.uTab_TabItemsSource.Count == 0) {
 					this.View.Close();
 				}
 			}
-			this.View.uTab.SelectedItem = lastSelectedItem;
 			return;
 		}
 

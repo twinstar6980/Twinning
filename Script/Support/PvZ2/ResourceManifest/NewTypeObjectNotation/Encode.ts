@@ -49,12 +49,12 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.En
 		write_integer(data, BigInt(definition.groups.length));
 		for (let groups_index = 0; groups_index < definition.groups.length; groups_index++) {
 			let group: ResourceManifest.GroupBase & (ResourceManifest.CompositeGroupAdditional & ResourceManifest.SimpleGroupAdditional) = { ...definition.groups[groups_index] } as any;
-			group.subgroups = defined_or(group.subgroups, []);
-			group.resources = defined_or(group.resources, []);
+			group.subgroups = not_undefined_or(group.subgroups, []);
+			group.resources = not_undefined_or(group.resources, []);
 			let group_type_index = GroupTypeEnumeration.find((item) => (item.value === group.type))?.index!;
 			assert_test(group.type !== undefined, `unknown group type value ${group.type}`);
 			write_enumeration(data, group_type_index);
-			write_integer(data, defined_or(group.res, 0n));
+			write_integer(data, not_undefined_or(group.res, 0n));
 			write_integer(data, BigInt(group.subgroups.length));
 			write_integer(data, BigInt(group.resources.length));
 			write_boolean(data, true);
@@ -65,7 +65,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.En
 			}
 			for (let subgroups_index = 0; subgroups_index < group.subgroups.length; subgroups_index++) {
 				let subgroup: ResourceManifest.CompositeGroupAdditional['subgroups'][number] = group.subgroups[subgroups_index];
-				write_integer(data, defined_or(subgroup.res, 0n));
+				write_integer(data, not_undefined_or(subgroup.res, 0n));
 				write_string(data, subgroup.id);
 			}
 			for (let resources_index = 0; resources_index < group.resources.length; resources_index++) {
@@ -77,22 +77,22 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.En
 				assert_test(resource.type !== undefined, `unknown resource type value ${resource_type_index}`);
 				write_enumeration(data, resource_type_index);
 				write_integer(data, resource.slot);
-				write_integer(data, defined_or(resource.width, 0n));
-				write_integer(data, defined_or(resource.height, 0n));
-				write_integer(data, defined_or(resource.x, 0n));
-				write_integer(data, defined_or(resource.y, 0n));
-				write_integer(data, defined_or(resource.ax, 0n));
-				write_integer(data, defined_or(resource.ay, 0n));
-				write_integer(data, defined_or(resource.aw, 0n));
-				write_integer(data, defined_or(resource.ah, 0n));
-				write_integer(data, defined_or(resource.cols, 1n));
-				write_integer(data, defined_or(resource.rows, 1n));
-				write_boolean(data, defined_or(resource.atlas, false));
+				write_integer(data, not_undefined_or(resource.width, 0n));
+				write_integer(data, not_undefined_or(resource.height, 0n));
+				write_integer(data, not_undefined_or(resource.x, 0n));
+				write_integer(data, not_undefined_or(resource.y, 0n));
+				write_integer(data, not_undefined_or(resource.ax, 0n));
+				write_integer(data, not_undefined_or(resource.ay, 0n));
+				write_integer(data, not_undefined_or(resource.aw, 0n));
+				write_integer(data, not_undefined_or(resource.ah, 0n));
+				write_integer(data, not_undefined_or(resource.cols, 1n));
+				write_integer(data, not_undefined_or(resource.rows, 1n));
+				write_boolean(data, not_undefined_or(resource.atlas, false));
 				write_boolean(data, true);
 				write_boolean(data, true);
 				write_boolean(data, resource.parent !== undefined);
 				write_string(data, resource.id);
-				write_string(data, typeof resource.path === 'string' ? resource.path : resource.path.join('\\'));
+				write_string(data, is_string(resource.path) ? resource.path : resource.path.join('\\'));
 				if (resource.parent !== undefined) {
 					write_string(data, resource.parent);
 				}
@@ -108,7 +108,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.En
 		definition_file: string,
 		data_buffer: Kernel.ByteListView | bigint,
 	): void {
-		let data_buffer_if = typeof data_buffer === 'bigint' ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
+		let data_buffer_if = is_bigint(data_buffer) ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
 		let data_buffer_view = data_buffer instanceof Kernel.ByteListView ? data_buffer : data_buffer_if!.view();
 		let definition = KernelX.JSON.read_fs_js<ResourceManifest.Package>(definition_file);
 		let stream = new ByteStreamView(data_buffer_view.value);

@@ -38,15 +38,15 @@ namespace TwinStar.Script.Support.PvZ2.RegularResourceManifest.Convert {
 					let destination_subgroup: RegularResourceManifest.Subgroup = {
 						id: source_group.id,
 						category: {
-							resolution: not_equal_or(JSONGenericGetter.integer(source_subgroup.res, 0n), 0n, null),
-							locale: not_equal_or(JSONGenericGetter.string(source_subgroup.loc, ''), '', null),
+							resolution: not_or(JSONGenericGetter.integer(source_subgroup.res, 0n), 0n, null),
+							locale: not_or(JSONGenericGetter.string(source_subgroup.loc, ''), '', null),
 						},
 						resource: [],
 					};
 					destination_group.subgroup.push(destination_subgroup);
 					for (let source_resource of source_subgroup.resources) {
-						let destination_resource_path = typeof source_resource.path === 'string' ? PathUtility.regularize(source_resource.path) : PathUtility.catenate(source_resource.path);
-						if (source_resource.path === '!program' || source_resource.path[0] === '!program') {
+						let destination_resource_path = is_string(source_resource.path) ? PathUtility.regularize(source_resource.path) : PathUtility.catenate(source_resource.path);
+						if (destination_resource_path === '!program') {
 							destination_subgroup.resource.push({
 								id: source_resource.id,
 								additional: {

@@ -81,6 +81,26 @@
 						>
 							<Button.Flyout>
 								<MenuFlyout Placement="BottomEdgeAlignedRight">
+									<MenuFlyoutSubItem
+										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.RepeatAll}}"
+										Text="Transpile"
+									>
+										<MenuFlyoutItem
+											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.More}}"
+											Text="Custom"
+											Click="{x:Bind Controller.uProjectActionTranspileCustom_Click}"
+										/>
+										<MenuFlyoutItem
+											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Previous}}"
+											Text="Generalize"
+											Click="{x:Bind Controller.uProjectActionTranspileGeneralize_Click}"
+										/>
+										<MenuFlyoutItem
+											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Next}}"
+											Text="Specialize"
+											Click="{x:Bind Controller.uProjectActionTranspileSpecialize_Click}"
+										/>
+									</MenuFlyoutSubItem>
 									<MenuFlyoutItem
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Process}}"
 										Text="Compile"
@@ -158,25 +178,6 @@
 						IsEnabled="{x:Bind Controller.uLoadedAction_IsEnabled}"
 					/>
 				</my:Stack>
-				<!--<my:Stack
-					Padding="0,0"
-					VerticalAlignment="Top"
-					Orientation="Horizontal" Spacing="8"
-				>
-					<Button
-						my:Stack.Weight="1" HorizontalAlignment="Stretch"
-						VerticalAlignment="Center"
-						Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.OpenLocal}}"
-						Click="{x:Bind Controller.uProjectOpen_Click}"
-					/>
-					<Button
-						my:Stack.Weight="1" HorizontalAlignment="Stretch"
-						VerticalAlignment="Center"
-						Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Clear}}"
-						Click="{x:Bind Controller.uProjectClose_Click}"
-						IsEnabled="{x:Bind Controller.uLoadedAction_IsEnabled}"
-					/>
-				</my:Stack>-->
 			</my:Stack>
 			<my:Divider Height="{StaticResource DividerThickness}" />
 			<my:HeaderBar
@@ -336,6 +337,26 @@
 						>
 							<Button.Flyout>
 								<MenuFlyout Placement="BottomEdgeAlignedRight">
+									<MenuFlyoutSubItem
+										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.RepeatAll}}"
+										Text="Transpile"
+									>
+										<MenuFlyoutItem
+											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.More}}"
+											Text="Custom"
+											Click="{x:Bind Controller.uPartActionTranspileCustom_Click}"
+										/>
+										<MenuFlyoutItem
+											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Previous}}"
+											Text="Generalize"
+											Click="{x:Bind Controller.uPartActionTranspileGeneralize_Click}"
+										/>
+										<MenuFlyoutItem
+											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Next}}"
+											Text="Specialize"
+											Click="{x:Bind Controller.uPartActionTranspileSpecialize_Click}"
+										/>
+									</MenuFlyoutSubItem>
 									<MenuFlyoutItem
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Process}}"
 										Text="Compile"
@@ -436,6 +457,26 @@
 										Click="{x:Bind uActionVariable_Click}"
 									/>
 									<MenuFlyoutSeparator />
+									<MenuFlyoutSubItem
+										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.RepeatAll}}"
+										Text="Transpile"
+									>
+										<MenuFlyoutItem
+											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.More}}"
+											Text="Custom"
+											Click="{x:Bind uActionTranspileCustom_Click}"
+										/>
+										<MenuFlyoutItem
+											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Previous}}"
+											Text="Generalize"
+											Click="{x:Bind uActionTranspileGeneralize_Click}"
+										/>
+										<MenuFlyoutItem
+											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Next}}"
+											Text="Specialize"
+											Click="{x:Bind uActionTranspileSpecialize_Click}"
+										/>
+									</MenuFlyoutSubItem>
 									<MenuFlyoutItem
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Process}}"
 										Text="Compile"
@@ -509,6 +550,26 @@
 						>
 							<Button.Flyout>
 								<MenuFlyout Placement="BottomEdgeAlignedRight">
+									<MenuFlyoutSubItem
+										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.RepeatAll}}"
+										Text="Transpile"
+									>
+										<MenuFlyoutItem
+											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.More}}"
+											Text="Custom"
+											Click="{x:Bind Controller.uGroupActionTranspileCustom_Click}"
+										/>
+										<MenuFlyoutItem
+											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Previous}}"
+											Text="Generalize"
+											Click="{x:Bind Controller.uGroupActionTranspileGeneralize_Click}"
+										/>
+										<MenuFlyoutItem
+											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Next}}"
+											Text="Specialize"
+											Click="{x:Bind Controller.uGroupActionTranspileSpecialize_Click}"
+										/>
+									</MenuFlyoutSubItem>
 									<MenuFlyoutItem
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Process}}"
 										Text="Compile"
@@ -642,6 +703,26 @@
 										Click="{x:Bind uActionVariable_Click}"
 									/>
 									<MenuFlyoutSeparator />
+									<MenuFlyoutSubItem
+										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.RepeatAll}}"
+										Text="Transpile"
+									>
+										<MenuFlyoutItem
+											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.More}}"
+											Text="Custom"
+											Click="{x:Bind uActionTranspileCustom_Click}"
+										/>
+										<MenuFlyoutItem
+											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Previous}}"
+											Text="Generalize"
+											Click="{x:Bind uActionTranspileGeneralize_Click}"
+										/>
+										<MenuFlyoutItem
+											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Next}}"
+											Text="Specialize"
+											Click="{x:Bind uActionTranspileSpecialize_Click}"
+										/>
+									</MenuFlyoutSubItem>
 									<MenuFlyoutItem
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Process}}"
 										Text="Compile"
@@ -712,6 +793,26 @@
 						>
 							<Button.Flyout>
 								<MenuFlyout Placement="BottomEdgeAlignedRight">
+									<MenuFlyoutSubItem
+										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.RepeatAll}}"
+										Text="Transpile"
+									>
+										<MenuFlyoutItem
+											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.More}}"
+											Text="Custom"
+											Click="{x:Bind Controller.uResourceActionTranspileCustom_Click}"
+										/>
+										<MenuFlyoutItem
+											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Previous}}"
+											Text="Generalize"
+											Click="{x:Bind Controller.uResourceActionTranspileGeneralize_Click}"
+										/>
+										<MenuFlyoutItem
+											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Next}}"
+											Text="Specialize"
+											Click="{x:Bind Controller.uResourceActionTranspileSpecialize_Click}"
+										/>
+									</MenuFlyoutSubItem>
 									<MenuFlyoutItem
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Process}}"
 										Text="Compile"
@@ -963,6 +1064,26 @@
 										Click="{x:Bind uActionVariable_Click}"
 									/>
 									<MenuFlyoutSeparator />
+									<MenuFlyoutSubItem
+										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.RepeatAll}}"
+										Text="Transpile"
+									>
+										<MenuFlyoutItem
+											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.More}}"
+											Text="Custom"
+											Click="{x:Bind uActionTranspileCustom_Click}"
+										/>
+										<MenuFlyoutItem
+											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Previous}}"
+											Text="Generalize"
+											Click="{x:Bind uActionTranspileGeneralize_Click}"
+										/>
+										<MenuFlyoutItem
+											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Next}}"
+											Text="Specialize"
+											Click="{x:Bind uActionTranspileSpecialize_Click}"
+										/>
+									</MenuFlyoutSubItem>
 									<MenuFlyoutItem
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Process}}"
 										Text="Compile"

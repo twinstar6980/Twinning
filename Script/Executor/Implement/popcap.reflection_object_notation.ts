@@ -6,8 +6,8 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 	// decode *
 	// encrypt *
 	// decrypt *
-	// encode_then_encrypt *
-	// decrypt_then_decode *
+	// encode_cipher *
+	// decode_cipher *
 	// decode_lenient *
 
 	export type Configuration = {
@@ -169,7 +169,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 					}),
 				],
 				worker: ({ plain_file, cipher_file, key }) => {
-					KernelX.Tool.PopCap.ReflectionObjectNotation.encrypt_fs(plain_file, cipher_file, key);
+					KernelX.Tool.Miscellaneous.PvZ2CNCryptData.encrypt_fs(plain_file, cipher_file, key);
 					return;
 				},
 				batch_argument: [
@@ -219,7 +219,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 					}),
 				],
 				worker: ({ cipher_file, plain_file, key }) => {
-					KernelX.Tool.PopCap.ReflectionObjectNotation.decrypt_fs(cipher_file, plain_file, key);
+					KernelX.Tool.Miscellaneous.PvZ2CNCryptData.decrypt_fs(cipher_file, plain_file, key);
 					return;
 				},
 				batch_argument: [
@@ -243,7 +243,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 				batch_worker: null,
 			}),
 			typical_method({
-				id: 'encode_then_encrypt',
+				id: 'encode_cipher',
 				filter: 'file',
 				argument: [
 					typical_argument_path({
@@ -288,7 +288,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 					}),
 				],
 				worker: ({ definition_file, data_file, version_number, version_native_string_encoding_use_utf8, key, buffer_size }) => {
-					KernelX.Tool.PopCap.ReflectionObjectNotation.encode_then_encrypt_fs(data_file, definition_file, true, true, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key, buffer_size);
+					KernelX.Tool.PopCap.ReflectionObjectNotation.encode_cipher_fs(data_file, definition_file, true, true, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key, buffer_size);
 					return;
 				},
 				batch_argument: [
@@ -313,12 +313,12 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
-					KernelX.Tool.PopCap.ReflectionObjectNotation.encode_then_encrypt_fs(data_file, definition_file, true, true, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key, temporary.buffer.view());
+					KernelX.Tool.PopCap.ReflectionObjectNotation.encode_cipher_fs(data_file, definition_file, true, true, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key, temporary.buffer.view());
 					return;
 				},
 			}),
 			typical_method({
-				id: 'decrypt_then_decode',
+				id: 'decode_cipher',
 				filter: 'file',
 				argument: [
 					typical_argument_path({
@@ -357,7 +357,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 					}),
 				],
 				worker: ({ data_file, definition_file, version_number, version_native_string_encoding_use_utf8, key }) => {
-					KernelX.Tool.PopCap.ReflectionObjectNotation.decrypt_then_decode_fs(data_file, definition_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key);
+					KernelX.Tool.PopCap.ReflectionObjectNotation.decode_cipher_fs(data_file, definition_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key);
 					return;
 				},
 				batch_argument: [

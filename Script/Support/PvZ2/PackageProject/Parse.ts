@@ -10,6 +10,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Parse {
 					number: 1n,
 					native_string_encoding_use_utf8: true,
 				},
+				key: null,
 			},
 			{
 				name: 'basic:1.eascii',
@@ -17,6 +18,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Parse {
 					number: 1n,
 					native_string_encoding_use_utf8: false,
 				},
+				key: null,
 			},
 			{
 				name: 'basic:1.utf8',
@@ -24,6 +26,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Parse {
 					number: 1n,
 					native_string_encoding_use_utf8: true,
 				},
+				key: null,
 			},
 		],
 		ptx: [
@@ -38,9 +41,64 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Parse {
 				index: 147n,
 			},
 			{
+				name: 'basic:rgba_8888_o',
+				format: 'rgba_8888_o',
+				index: 0n,
+			},
+			{
 				name: 'basic:argb_8888',
 				format: 'argb_8888',
 				index: 0n,
+			},
+			{
+				name: 'basic:rgba_4444',
+				format: 'rgba_4444',
+				index: 1n,
+			},
+			{
+				name: 'basic:rgb_565',
+				format: 'rgb_565',
+				index: 2n,
+			},
+			{
+				name: 'basic:rgba_5551',
+				format: 'rgba_5551',
+				index: 3n,
+			},
+			{
+				name: 'basic:rgba_4444_tiled',
+				format: 'rgba_4444_tiled',
+				index: 21n,
+			},
+			{
+				name: 'basic:rgb_565_tiled',
+				format: 'rgb_565_tiled',
+				index: 22n,
+			},
+			{
+				name: 'basic:rgba_5551_tiled',
+				format: 'rgba_5551_tiled',
+				index: 23n,
+			},
+			{
+				name: 'basic:rgba_pvrtc4',
+				format: 'rgba_pvrtc4',
+				index: 30n,
+			},
+			{
+				name: 'basic:rgb_pvrtc4_a_8',
+				format: 'rgb_pvrtc4_a_8',
+				index: 148n,
+			},
+			{
+				name: 'basic:rgb_etc1_a_8',
+				format: 'rgb_etc1_a_8',
+				index: 147n,
+			},
+			{
+				name: 'basic:rgb_etc1_a_palette',
+				format: 'rgb_etc1_a_palette',
+				index: 147n,
 			},
 		],
 		pam: [
@@ -127,12 +185,12 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Parse {
 			return null;
 		};
 		Console.information(`Loading setting ...`, []);
-		let project_setting = KernelX.JSON.read_fs_js(`${project_directory}/setting.json`) as ProjectSetting;
-		let part_directory = PathUtility.generate_suffix_path(`${project_directory}/${package_name}`, '~');
+		let project_setting = KernelX.JSON.read_fs_js(make_scope_setting_path(project_directory)) as ProjectSetting;
+		let part_directory = PathUtility.generate_suffix_path(make_scope_child_path(project_directory, package_name), '~');
 		let part_setting: PartSetting = {
 			variable: [],
 		};
-		KernelX.JSON.write_fs_js(`${part_directory}/setting.json`, part_setting);
+		KernelX.JSON.write_fs_js(make_scope_setting_path(part_directory), part_setting);
 		package_name = PathUtility.name(part_directory);
 		let package_resource_directory = `${package_directory}/resource`;
 		let package_definition = KernelX.JSON.read_fs_js<Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Package>(`${package_directory}/definition.json`);
@@ -184,15 +242,19 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Parse {
 			resource_path = resource_path_list.find((value) => (value.endsWith('.newton')));
 			if (resource_path !== undefined) {
 				package_setting.manifest.type = 'external_newton';
-				ResourceManifest.NewTypeObjectNotation.Decode.process_fs(`${package_resource_directory}/${resource_path}`, `${package_resource_directory}/${resource_path}.json`);
-				package_manifest_official = KernelX.JSON.read_fs_js<ResourceManifest.Package>(`${package_resource_directory}/${resource_path}.json`);
+				let resource_data = KernelX.FileSystem.read_file(`${package_resource_directory}/${resource_path}`);
+				let resource_data_stream = new ByteStreamView(resource_data.view().value);
+				package_manifest_official = ResourceManifest.NewTypeObjectNotation.Decode.process(resource_data_stream);
 				break;
 			}
 			resource_path = resource_path_list.find((value) => (value.endsWith('.rton')));
 			if (resource_path !== undefined) {
 				package_setting.manifest.type = 'external_rton_with_string_path';
-				KernelX.Tool.PopCap.ReflectionObjectNotation.decode_fs(`${package_resource_directory}/${resource_path}`, `${package_resource_directory}/${resource_path}.json`, { number: 1n, native_string_encoding_use_utf8: true });
-				package_manifest_official = KernelX.JSON.read_fs_js<ResourceManifest.Package>(`${package_resource_directory}/${resource_path}.json`);
+				let resource_data = KernelX.FileSystem.read_file(`${package_resource_directory}/${resource_path}`);
+				let resource_data_stream = Kernel.ByteStreamView.watch(resource_data.view());
+				let resource_definition = Kernel.JSON.Value.default<Kernel.Tool.PopCap.ReflectionObjectNotation.JS_ValidValue>();
+				Kernel.Tool.PopCap.ReflectionObjectNotation.Decode.process(resource_data_stream, resource_definition, Kernel.Tool.PopCap.ReflectionObjectNotation.Version.value({ number: 1n, native_string_encoding_use_utf8: true }));
+				package_manifest_official = resource_definition.value as any;
 				break;
 			}
 		}
@@ -202,13 +264,13 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Parse {
 		let package_manifest = RegularResourceManifest.Convert.from_official(package_manifest_official);
 		Console.information(`Converting resource ...`, []);
 		for (let group_manifest of package_manifest.group) {
-			let group_directory = `${part_directory}/${group_manifest.id}`;
+			let group_directory = make_scope_child_path(part_directory, group_manifest.id);
 			let group_setting: GroupSetting = {
 				variable: [],
 			};
 			let group_definition = find_item_ignore_case(package_definition.group, 'id', group_manifest.id);
 			assert_test(group_definition !== null);
-			KernelX.JSON.write_fs_js(`${group_directory}/setting.json`, group_setting);
+			KernelX.JSON.write_fs_js(make_scope_setting_path(group_directory), group_setting);
 			for (let subgroup_manifest of group_manifest.subgroup) {
 				let subgroup_definition = find_item_ignore_case(group_definition.subgroup, 'id', subgroup_manifest.id);
 				assert_test(subgroup_definition !== null);
@@ -224,7 +286,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Parse {
 					}
 				}
 				for (let resource_manifest of subgroup_manifest.resource) {
-					let resource_directory = `${group_directory}/${resource_manifest.id}`;
+					let resource_directory = make_scope_child_path(group_directory, resource_manifest.id);
 					let resource_setting: null | ResourceSetting = null;
 					if (resource_manifest.additional.type === 'dummy') {
 						resource_setting = {
@@ -236,7 +298,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Parse {
 						};
 					}
 					if (resource_manifest.additional.type === 'general') {
-						let resource_definition = find_item_ignore_case(subgroup_definition.resource, 'path', `${resource_manifest.additional.value.path}`);
+						let resource_definition = find_item_ignore_case(subgroup_definition.resource, 'path', resource_manifest.additional.value.path);
 						assert_test(resource_definition !== null && resource_definition.additional.type === 'general');
 						resource_setting = {
 							category: subgroup_manifest.category,
@@ -247,10 +309,10 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Parse {
 							},
 							variable: [],
 						};
-						KernelX.FileSystem.copy(`${package_resource_directory}/${resource_definition.path}`, `${resource_directory}/data.bin`);
+						KernelX.FileSystem.copy(`${package_resource_directory}/${resource_definition.path}`, make_scope_child_path(resource_directory, 'source.bin'));
 					}
 					if (resource_manifest.additional.type === 'texture') {
-						let resource_definition = find_item_ignore_case(subgroup_definition.resource, 'path', `${resource_manifest.additional.value.path}.ptx`);
+						let resource_definition = find_item_ignore_case(subgroup_definition.resource, 'path', resource_manifest.additional.value.path + '.ptx');
 						assert_test(resource_definition !== null && resource_definition.additional.type === 'texture');
 						if (package_version.extended_texture_information_for_pvz2_cn >= 2n && resource_definition.additional.value.scale !== 100n) {
 							Console.warning(`texture scale is not supported in package project, expected 100 but scale is ${resource_definition.additional.value.scale}`, [resource_definition.path]);
@@ -268,19 +330,16 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Parse {
 							},
 							variable: [],
 						};
-						KernelX.FileSystem.copy(`${package_resource_directory}/${resource_definition.path}`, `${resource_directory}/data.ptx`);
+						KernelX.FileSystem.copy(`${package_resource_directory}/${resource_definition.path}`, make_scope_child_path(resource_directory, 'source.ptx'));
 					}
-					if (resource_setting === null) {
-						Console.error('invalid resource', []);
-						continue;
-					}
-					KernelX.JSON.write_fs_js(`${resource_directory}/setting.json`, resource_setting);
+					assert_test(resource_setting !== null);
+					KernelX.JSON.write_fs_js(make_scope_setting_path(resource_directory), resource_setting);
 				}
 			}
 		}
 		project_setting.package.push(package_setting);
 		Console.information(`Saving setting ...`, []);
-		KernelX.JSON.write_fs_js(`${project_directory}/setting.json`, project_setting);
+		KernelX.JSON.write_fs_js(make_scope_setting_path(project_directory), project_setting);
 		return;
 	}
 

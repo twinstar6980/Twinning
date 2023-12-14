@@ -51,7 +51,7 @@
 				"plain_file": "?automatic",
 			},
 		},
-		"encode_then_encrypt": {
+		"encode_cipher": {
 			"filter": "(\\.json)$",
 			"argument": {
 				"definition_file": "?input",
@@ -66,7 +66,7 @@
 				"data_file": "?automatic",
 			},
 		},
-		"decrypt_then_decode": {
+		"decode_cipher": {
 			"filter": "(\\.rton)$",
 			"argument": {
 				"data_file": "?input",

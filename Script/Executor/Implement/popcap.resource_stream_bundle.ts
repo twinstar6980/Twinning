@@ -58,7 +58,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
-		ptx_texture_format_map_list: Record<string, Support.PvZ2.ResourceConvert.TextureFormatMap>;
+		ptx_format_list: Record<string, Support.PvZ2.ResourceConvert.PTXFormatMap>;
 	};
 
 	export function injector(
@@ -247,6 +247,52 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 				batch_worker: null,
 			}),
 			typical_method({
+				id: 'unpack_lenient',
+				filter: 'file',
+				argument: [
+					typical_argument_path({
+						id: 'data_file',
+						rule: ['file', 'input'],
+						checker: null,
+						automatic: null,
+						condition: null,
+					}),
+					typical_argument_path({
+						id: 'bundle_directory',
+						rule: ['directory', 'output'],
+						checker: null,
+						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.rsb)?$/i, '.rsb.bundle')),
+						condition: null,
+					}),
+				],
+				worker: ({ data_file, bundle_directory }) => {
+					let definition_file = `${bundle_directory}/definition.json`;
+					let manifest_file = `${bundle_directory}/manifest.json`;
+					let resource_directory = `${bundle_directory}/resource`;
+					Support.PopCap.ResourceStreamBundle.UnpackLenient.process_fs(data_file, definition_file, manifest_file, resource_directory);
+					return;
+				},
+				batch_argument: [
+					typical_argument_batch({
+						id: 'data_file',
+						rule: 'input',
+						checker: null,
+						automatic: null,
+						condition: null,
+						item_mapper: (argument: {}, value) => (value),
+					}),
+					typical_argument_batch({
+						id: 'bundle_directory',
+						rule: 'output',
+						checker: null,
+						automatic: (argument: { data_file: string; }) => (argument.data_file + '.unpack_lenient'),
+						condition: null,
+						item_mapper: (argument: {}, value) => (value.replace(/(\.rsb)?$/i, '.rsb.bundle')),
+					}),
+				],
+				batch_worker: null,
+			}),
+			typical_method({
 				id: 'resource_convert',
 				filter: 'directory',
 				argument: [
@@ -302,8 +348,8 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 						condition: null,
 					}),
 					typical_argument_string({
-						id: 'option_ptx_texture_format_map_name',
-						option: Object.keys(configuration.ptx_texture_format_map_list),
+						id: 'option_ptx_format',
+						option: Object.keys(configuration.ptx_format_list),
 						checker: null,
 						automatic: null,
 						condition: (argument: { option_ptx: boolean; }) => (argument.option_ptx ? null : ''),
@@ -380,7 +426,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 					option_rton_crypt,
 					option_rton_crypt_key,
 					option_ptx,
-					option_ptx_texture_format_map_name,
+					option_ptx_format,
 					option_ptx_atlas,
 					option_ptx_atlas_resize,
 					option_ptx_sprite,
@@ -407,7 +453,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 						},
 						ptx: !option_ptx ? null : {
 							directory: convert_directory,
-							texture_format_map: configuration.ptx_texture_format_map_list[option_ptx_texture_format_map_name],
+							format: configuration.ptx_format_list[option_ptx_format],
 							atlas: !option_ptx_atlas ? null : {
 								resize: option_ptx_atlas_resize,
 							},
@@ -450,52 +496,6 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_bundle {
 						automatic: null,
 						condition: null,
 						item_mapper: (argument: {}, value) => (value),
-					}),
-				],
-				batch_worker: null,
-			}),
-			typical_method({
-				id: 'unpack_lenient',
-				filter: 'file',
-				argument: [
-					typical_argument_path({
-						id: 'data_file',
-						rule: ['file', 'input'],
-						checker: null,
-						automatic: null,
-						condition: null,
-					}),
-					typical_argument_path({
-						id: 'bundle_directory',
-						rule: ['directory', 'output'],
-						checker: null,
-						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.rsb)?$/i, '.rsb.bundle')),
-						condition: null,
-					}),
-				],
-				worker: ({ data_file, bundle_directory }) => {
-					let definition_file = `${bundle_directory}/definition.json`;
-					let manifest_file = `${bundle_directory}/manifest.json`;
-					let resource_directory = `${bundle_directory}/resource`;
-					Support.PopCap.ResourceStreamBundle.UnpackLenient.process_fs(data_file, definition_file, manifest_file, resource_directory);
-					return;
-				},
-				batch_argument: [
-					typical_argument_batch({
-						id: 'data_file',
-						rule: 'input',
-						checker: null,
-						automatic: null,
-						condition: null,
-						item_mapper: (argument: {}, value) => (value),
-					}),
-					typical_argument_batch({
-						id: 'bundle_directory',
-						rule: 'output',
-						checker: null,
-						automatic: (argument: { data_file: string; }) => (argument.data_file + '.unpack_lenient'),
-						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/(\.rsb)?$/i, '.rsb.bundle')),
 					}),
 				],
 				batch_worker: null,

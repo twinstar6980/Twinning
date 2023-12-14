@@ -42,9 +42,9 @@ namespace TwinStar.Script.KernelX {
 			disable_object_line_breaking: boolean = g_format.disable_object_line_breaking,
 			data_buffer: Kernel.CharacterListView | bigint = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
 		): ArrayBuffer {
-			let data_buffer_if = typeof data_buffer === 'bigint' ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
-			let data_buffer_view = data_buffer instanceof Kernel.CharacterListView ? data_buffer : Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(data_buffer_if!.view());
-			let data_stream = Kernel.CharacterStreamView.watch(data_buffer_view);
+			let data = is_bigint(data_buffer) ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
+			let data_view = data_buffer instanceof Kernel.CharacterListView ? data_buffer : Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(data!.view());
+			let data_stream = Kernel.CharacterStreamView.watch(data_view);
 			Kernel.Tool.Data.Serialization.JSON.Write.process(data_stream, value, Kernel.Boolean.value(disable_array_trailing_comma), Kernel.Boolean.value(disable_array_line_breaking), Kernel.Boolean.value(disable_object_trailing_comma), Kernel.Boolean.value(disable_object_line_breaking));
 			return Kernel.Miscellaneous.cast_CharacterListView_to_ByteListView(data_stream.stream_view()).value;
 		}
@@ -274,9 +274,9 @@ namespace TwinStar.Script.KernelX {
 					image: Kernel.Image.CImageView,
 					data_buffer: Kernel.ByteListView | bigint = g_common_buffer.view(),
 				): void {
-					let data_buffer_if = typeof data_buffer === 'bigint' ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
-					let data_buffer_view = data_buffer instanceof Kernel.ByteListView ? data_buffer : data_buffer_if!.view();
-					let data_stream = Kernel.ByteStreamView.watch(data_buffer_view);
+					let data = is_bigint(data_buffer) ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
+					let data_view = data_buffer instanceof Kernel.ByteListView ? data_buffer : data!.view();
+					let data_stream = Kernel.ByteStreamView.watch(data_view);
 					write(data_stream, image);
 					FileSystem.write_file(file, data_stream.stream_view());
 					return;
@@ -595,12 +595,12 @@ namespace TwinStar.Script.KernelX {
 						raw_file: string,
 						ripe_file: string,
 					): void {
-						let raw_data = FileSystem.read_file(raw_file);
+						let raw = FileSystem.read_file(raw_file);
 						let ripe_size = Kernel.Size.default();
-						Kernel.Tool.Data.Encoding.Base64.Encode.estimate(raw_data.size(), ripe_size);
-						let ripe_data = Kernel.ByteArray.allocate(ripe_size);
-						let raw_stream = Kernel.ByteStreamView.watch(raw_data.view());
-						let ripe_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(ripe_data.view()));
+						Kernel.Tool.Data.Encoding.Base64.Encode.estimate(raw.size(), ripe_size);
+						let ripe = Kernel.ByteArray.allocate(ripe_size);
+						let raw_stream = Kernel.ByteStreamView.watch(raw.view());
+						let ripe_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(ripe.view()));
 						Kernel.Tool.Data.Encoding.Base64.Encode.process(raw_stream, ripe_stream);
 						FileSystem.write_file(ripe_file, Kernel.Miscellaneous.cast_CharacterListView_to_ByteListView(ripe_stream.stream_view()));
 						return;
@@ -610,12 +610,12 @@ namespace TwinStar.Script.KernelX {
 						ripe_file: string,
 						raw_file: string,
 					): void {
-						let ripe_data = FileSystem.read_file(ripe_file);
-						let ripe_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(ripe_data.view()));
+						let ripe = FileSystem.read_file(ripe_file);
+						let ripe_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(ripe.view()));
 						let raw_size = Kernel.Size.default();
 						Kernel.Tool.Data.Encoding.Base64.Decode.estimate(ripe_stream.view(), raw_size);
-						let raw_data = Kernel.ByteArray.allocate(raw_size);
-						let raw_stream = Kernel.ByteStreamView.watch(raw_data.view());
+						let raw = Kernel.ByteArray.allocate(raw_size);
+						let raw_stream = Kernel.ByteStreamView.watch(raw.view());
 						Kernel.Tool.Data.Encoding.Base64.Decode.process(ripe_stream, raw_stream);
 						FileSystem.write_file(raw_file, raw_stream.stream_view());
 						return;
@@ -634,12 +634,12 @@ namespace TwinStar.Script.KernelX {
 						cipher_file: string,
 						key: Array<bigint>,
 					): void {
+						let plain = FileSystem.read_file(plain_file);
+						let plain_stream = Kernel.ByteStreamView.watch(plain.view());
+						let cipher = Kernel.ByteArray.allocate(plain.size());
+						let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
 						let key_c = Kernel.ByteArray.allocate(Kernel.Size.value(BigInt(key.length)));
-						new Uint8Array(key_c.view().value).set(key.map((e) => (Number(e))));
-						let plain_data = FileSystem.read_file(plain_file);
-						let cipher_data = Kernel.ByteArray.allocate(plain_data.size());
-						let plain_stream = Kernel.ByteStreamView.watch(plain_data.view());
-						let cipher_stream = Kernel.ByteStreamView.watch(cipher_data.view());
+						new Uint8Array(key_c.view().value).set(key.map(Number));
 						Kernel.Tool.Data.Encryption.XOR.Encrypt.process(plain_stream, cipher_stream, key_c.view());
 						FileSystem.write_file(cipher_file, cipher_stream.stream_view());
 						return;
@@ -670,10 +670,10 @@ namespace TwinStar.Script.KernelX {
 						key: string,
 						iv: string,
 					): void {
-						let plain_data = FileSystem.read_file(plain_file);
-						let cipher_data = Kernel.ByteArray.allocate(plain_data.size());
-						let plain_stream = Kernel.ByteStreamView.watch(plain_data.view());
-						let cipher_stream = Kernel.ByteStreamView.watch(cipher_data.view());
+						let plain = FileSystem.read_file(plain_file);
+						let plain_stream = Kernel.ByteStreamView.watch(plain.view());
+						let cipher = Kernel.ByteArray.allocate(plain.size());
+						let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
 						Kernel.Tool.Data.Encryption.Rijndael.Encrypt.process(plain_stream, cipher_stream, Kernel.Tool.Data.Encryption.Rijndael.Mode.value(mode), Kernel.Size.value(block_size), Kernel.Size.value(key_size), Kernel.String.value(key), Kernel.String.value(iv));
 						FileSystem.write_file(cipher_file, cipher_stream.stream_view());
 						return;
@@ -688,10 +688,10 @@ namespace TwinStar.Script.KernelX {
 						key: string,
 						iv: string,
 					): void {
-						let cipher_data = FileSystem.read_file(cipher_file);
-						let plain_data = Kernel.ByteArray.allocate(cipher_data.size());
-						let cipher_stream = Kernel.ByteStreamView.watch(cipher_data.view());
-						let plain_stream = Kernel.ByteStreamView.watch(plain_data.view());
+						let cipher = FileSystem.read_file(cipher_file);
+						let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
+						let plain = Kernel.ByteArray.allocate(cipher.size());
+						let plain_stream = Kernel.ByteStreamView.watch(plain.view());
 						Kernel.Tool.Data.Encryption.Rijndael.Decrypt.process(cipher_stream, plain_stream, Kernel.Tool.Data.Encryption.Rijndael.Mode.value(mode), Kernel.Size.value(block_size), Kernel.Size.value(key_size), Kernel.String.value(key), Kernel.String.value(iv));
 						FileSystem.write_file(plain_file, plain_stream.stream_view());
 						return;
@@ -744,12 +744,12 @@ namespace TwinStar.Script.KernelX {
 						strategy: Strategy,
 						wrapper: WrapperType,
 					): void {
-						let raw_data = FileSystem.read_file(raw_file);
+						let raw = FileSystem.read_file(raw_file);
+						let raw_stream = Kernel.ByteStreamView.watch(raw.view());
 						let ripe_size_bound = Kernel.Size.default();
-						Kernel.Tool.Data.Compression.Deflate.Compress.estimate(raw_data.size(), ripe_size_bound, Kernel.Size.value(window_bits), Kernel.Size.value(memory_level), Kernel.Tool.Data.Compression.Deflate.Wrapper.value(wrapper));
-						let ripe_data = Kernel.ByteArray.allocate(ripe_size_bound);
-						let raw_stream = Kernel.ByteStreamView.watch(raw_data.view());
-						let ripe_stream = Kernel.ByteStreamView.watch(ripe_data.view());
+						Kernel.Tool.Data.Compression.Deflate.Compress.estimate(raw.size(), ripe_size_bound, Kernel.Size.value(window_bits), Kernel.Size.value(memory_level), Kernel.Tool.Data.Compression.Deflate.Wrapper.value(wrapper));
+						let ripe = Kernel.ByteArray.allocate(ripe_size_bound);
+						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
 						Kernel.Tool.Data.Compression.Deflate.Compress.process(raw_stream, ripe_stream, Kernel.Size.value(level), Kernel.Size.value(window_bits), Kernel.Size.value(memory_level), Kernel.Tool.Data.Compression.Deflate.Strategy.value(strategy), Kernel.Tool.Data.Compression.Deflate.Wrapper.value(wrapper));
 						FileSystem.write_file(ripe_file, ripe_stream.stream_view());
 						return;
@@ -760,13 +760,12 @@ namespace TwinStar.Script.KernelX {
 						raw_file: string,
 						window_bits: WindowBits,
 						wrapper: WrapperType,
-						raw_data_buffer: Kernel.ByteListView | bigint,
+						raw_buffer: Kernel.ByteListView | bigint,
 					): void {
-						let raw_data_buffer_if = typeof raw_data_buffer === 'bigint' ? Kernel.ByteArray.allocate(Kernel.Size.value(raw_data_buffer)) : null;
-						let raw_data_buffer_view = raw_data_buffer instanceof Kernel.ByteListView ? raw_data_buffer : raw_data_buffer_if!.view();
-						let ripe_data = FileSystem.read_file(ripe_file);
-						let ripe_stream = Kernel.ByteStreamView.watch(ripe_data.view());
-						let raw_stream = Kernel.ByteStreamView.watch(raw_data_buffer_view);
+						let ripe = FileSystem.read_file(ripe_file);
+						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
+						let raw = is_bigint(raw_buffer) ? Kernel.ByteArray.allocate(Kernel.Size.value(raw_buffer)) : null;
+						let raw_stream = Kernel.ByteStreamView.watch(raw_buffer instanceof Kernel.ByteListView ? raw_buffer : raw!.view());
 						Kernel.Tool.Data.Compression.Deflate.Uncompress.process(ripe_stream, raw_stream, Kernel.Size.value(window_bits), Kernel.Tool.Data.Compression.Deflate.Wrapper.value(wrapper));
 						FileSystem.write_file(raw_file, raw_stream.stream_view());
 						return;
@@ -787,11 +786,11 @@ namespace TwinStar.Script.KernelX {
 						ripe_file: string,
 						block_size: BlockSize,
 					): void {
-						let raw_data = FileSystem.read_file(raw_file);
-						let ripe_size_bound = Kernel.Size.value(raw_data.size().value + 128n); // TODO
-						let ripe_data = Kernel.ByteArray.allocate(ripe_size_bound);
-						let raw_stream = Kernel.ByteStreamView.watch(raw_data.view());
-						let ripe_stream = Kernel.ByteStreamView.watch(ripe_data.view());
+						let raw = FileSystem.read_file(raw_file);
+						let raw_stream = Kernel.ByteStreamView.watch(raw.view());
+						let ripe_size_bound = Kernel.Size.value(raw.size().value + 128n); // TODO
+						let ripe = Kernel.ByteArray.allocate(ripe_size_bound);
+						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
 						Kernel.Tool.Data.Compression.BZip2.Compress.process(raw_stream, ripe_stream, Kernel.Size.value(block_size), Kernel.Size.value(0n));
 						FileSystem.write_file(ripe_file, ripe_stream.stream_view());
 						return;
@@ -800,13 +799,12 @@ namespace TwinStar.Script.KernelX {
 					export function uncompress_fs(
 						ripe_file: string,
 						raw_file: string,
-						raw_data_buffer: Kernel.ByteListView | bigint,
+						raw_buffer: Kernel.ByteListView | bigint,
 					): void {
-						let raw_data_buffer_if = typeof raw_data_buffer === 'bigint' ? Kernel.ByteArray.allocate(Kernel.Size.value(raw_data_buffer)) : null;
-						let raw_data_buffer_view = raw_data_buffer instanceof Kernel.ByteListView ? raw_data_buffer : raw_data_buffer_if!.view();
-						let ripe_data = FileSystem.read_file(ripe_file);
-						let ripe_stream = Kernel.ByteStreamView.watch(ripe_data.view());
-						let raw_stream = Kernel.ByteStreamView.watch(raw_data_buffer_view);
+						let ripe = FileSystem.read_file(ripe_file);
+						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
+						let raw = is_bigint(raw_buffer) ? Kernel.ByteArray.allocate(Kernel.Size.value(raw_buffer)) : null;
+						let raw_stream = Kernel.ByteStreamView.watch(raw_buffer instanceof Kernel.ByteListView ? raw_buffer : raw!.view());
 						Kernel.Tool.Data.Compression.BZip2.Uncompress.process(ripe_stream, raw_stream, Kernel.Boolean.value(false));
 						FileSystem.write_file(raw_file, raw_stream.stream_view());
 						return;
@@ -827,11 +825,11 @@ namespace TwinStar.Script.KernelX {
 						ripe_file: string,
 						level: Level,
 					): void {
-						let raw_data = FileSystem.read_file(raw_file);
-						let ripe_size_bound = Kernel.Size.value(raw_data.size().value + 128n); // TODO
-						let ripe_data = Kernel.ByteArray.allocate(ripe_size_bound);
-						let raw_stream = Kernel.ByteStreamView.watch(raw_data.view());
-						let ripe_stream = Kernel.ByteStreamView.watch(ripe_data.view());
+						let raw = FileSystem.read_file(raw_file);
+						let ripe_size_bound = Kernel.Size.value(raw.size().value + 128n); // TODO
+						let ripe = Kernel.ByteArray.allocate(ripe_size_bound);
+						let raw_stream = Kernel.ByteStreamView.watch(raw.view());
+						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
 						Kernel.Tool.Data.Compression.Lzma.Compress.process(raw_stream, ripe_stream, Kernel.Size.value(level));
 						FileSystem.write_file(ripe_file, ripe_stream.stream_view());
 						return;
@@ -840,13 +838,12 @@ namespace TwinStar.Script.KernelX {
 					export function uncompress_fs(
 						ripe_file: string,
 						raw_file: string,
-						raw_data_buffer: Kernel.ByteListView | bigint,
+						raw_buffer: Kernel.ByteListView | bigint,
 					): void {
-						let raw_data_buffer_if = typeof raw_data_buffer === 'bigint' ? Kernel.ByteArray.allocate(Kernel.Size.value(raw_data_buffer)) : null;
-						let raw_data_buffer_view = raw_data_buffer instanceof Kernel.ByteListView ? raw_data_buffer : raw_data_buffer_if!.view();
-						let ripe_data = FileSystem.read_file(ripe_file);
-						let ripe_stream = Kernel.ByteStreamView.watch(ripe_data.view());
-						let raw_stream = Kernel.ByteStreamView.watch(raw_data_buffer_view);
+						let ripe = FileSystem.read_file(ripe_file);
+						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
+						let raw = is_bigint(raw_buffer) ? Kernel.ByteArray.allocate(Kernel.Size.value(raw_buffer)) : null;
+						let raw_stream = Kernel.ByteStreamView.watch(raw_buffer instanceof Kernel.ByteListView ? raw_buffer : raw!.view());
 						Kernel.Tool.Data.Compression.Lzma.Uncompress.process(ripe_stream, raw_stream);
 						FileSystem.write_file(raw_file, raw_stream.stream_view());
 						return;
@@ -867,12 +864,12 @@ namespace TwinStar.Script.KernelX {
 						interleaved: boolean,
 						patch_size_bound: bigint,
 					): void {
-						let before_data = FileSystem.read_file(before_file);
-						let after_data = FileSystem.read_file(after_file);
-						let patch_data = Kernel.ByteArray.allocate(Kernel.Size.value(patch_size_bound));
-						let before_stream = Kernel.ByteStreamView.watch(before_data.view());
-						let after_stream = Kernel.ByteStreamView.watch(after_data.view());
-						let patch_stream = Kernel.ByteStreamView.watch(patch_data.view());
+						let before = FileSystem.read_file(before_file);
+						let before_stream = Kernel.ByteStreamView.watch(before.view());
+						let after = FileSystem.read_file(after_file);
+						let after_stream = Kernel.ByteStreamView.watch(after.view());
+						let patch = Kernel.ByteArray.allocate(Kernel.Size.value(patch_size_bound));
+						let patch_stream = Kernel.ByteStreamView.watch(patch.view());
 						Kernel.Tool.Data.Differentiation.VCDiff.Encode.process(before_stream, after_stream, patch_stream, Kernel.Boolean.value(interleaved));
 						FileSystem.write_file(patch_file, patch_stream.stream_view());
 						return;
@@ -885,12 +882,12 @@ namespace TwinStar.Script.KernelX {
 						maximum_window_size: bigint,
 						after_size_bound: bigint,
 					): void {
-						let before_data = FileSystem.read_file(before_file);
-						let after_data = Kernel.ByteArray.allocate(Kernel.Size.value(after_size_bound));
-						let patch_data = FileSystem.read_file(patch_file);
-						let before_stream = Kernel.ByteStreamView.watch(before_data.view());
-						let after_stream = Kernel.ByteStreamView.watch(after_data.view());
-						let patch_stream = Kernel.ByteStreamView.watch(patch_data.view());
+						let before = FileSystem.read_file(before_file);
+						let before_stream = Kernel.ByteStreamView.watch(before.view());
+						let after = Kernel.ByteArray.allocate(Kernel.Size.value(after_size_bound));
+						let after_stream = Kernel.ByteStreamView.watch(after.view());
+						let patch = FileSystem.read_file(patch_file);
+						let patch_stream = Kernel.ByteStreamView.watch(patch.view());
 						Kernel.Tool.Data.Differentiation.VCDiff.Decode.process(before_stream, after_stream, patch_stream, Kernel.Size.value(maximum_window_size));
 						FileSystem.write_file(after_file, after_stream.stream_view());
 						return;
@@ -942,8 +939,8 @@ namespace TwinStar.Script.KernelX {
 					size: Image.ImageSize,
 				): void {
 					let source = KernelX.Image.File.PNG.read_fs_of(source_file);
-					let destination = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(size));
 					let source_view = source.view();
+					let destination = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(size));
 					let destination_view = destination.view();
 					scale(source_view, destination_view);
 					KernelX.Image.File.PNG.write_fs(destination_file, destination_view);
@@ -956,8 +953,8 @@ namespace TwinStar.Script.KernelX {
 					size_rate: number,
 				): void {
 					let source = KernelX.Image.File.PNG.read_fs_of(source_file);
-					let destination = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value([BigInt(Math.max(1, Math.round(Number(source.size().value[0]) * size_rate))), BigInt(Math.max(1, Math.round(Number(source.size().value[1]) * size_rate)))]));
 					let source_view = source.view();
+					let destination = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value([BigInt(Math.max(1, Math.round(Number(source.size().value[0]) * size_rate))), BigInt(Math.max(1, Math.round(Number(source.size().value[1]) * size_rate)))]));
 					let destination_view = destination.view();
 					scale(source_view, destination_view);
 					KernelX.Image.File.PNG.write_fs(destination_file, destination_view);
@@ -1260,22 +1257,22 @@ namespace TwinStar.Script.KernelX {
 				// ------------------------------------------------
 
 				export function encode_fs(
-					image_file: string,
 					data_file: string,
+					image_file: string,
 					format: CompositeFormat,
 				): void {
-					let image_data = KernelX.FileSystem.read_file(image_file);
-					let image_stream = Kernel.ByteStreamView.watch(image_data.view());
+					let image_original = KernelX.FileSystem.read_file(image_file);
+					let image_stream = Kernel.ByteStreamView.watch(image_original.view());
 					let image_size = KernelX.Image.File.PNG.size(image_stream.view());
-					let padded_image_size = compute_padded_image_size(image_size, format);
-					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(padded_image_size));
+					let image_size_padded = compute_padded_image_size(image_size, format);
+					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size_padded));
 					let image_view = image.view();
 					KernelX.Image.File.PNG.read(image_stream, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
-					let data_size = compute_data_size(padded_image_size, format);
+					let data_size = compute_data_size(image_size_padded, format);
 					let data = Kernel.ByteArray.allocate(Kernel.Size.value(data_size));
-					let stream = Kernel.ByteStreamView.watch(data.view());
-					encode(stream, image_view, format);
-					KernelX.FileSystem.write_file(data_file, stream.stream_view());
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					encode(data_stream, image_view, format);
+					KernelX.FileSystem.write_file(data_file, data_stream.stream_view());
 					return;
 				}
 
@@ -1286,14 +1283,14 @@ namespace TwinStar.Script.KernelX {
 					format: CompositeFormat,
 				): void {
 					let data = KernelX.FileSystem.read_file(data_file);
-					let stream = Kernel.ByteStreamView.watch(data.view());
-					let padded_image_size = compute_padded_image_size(image_size, format);
-					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(padded_image_size));
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let image_size_padded = compute_padded_image_size(image_size, format);
+					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size_padded));
 					let image_view = image.view();
 					if (is_opacity_format(format)) {
 						image_view.fill(Kernel.Image.Pixel.value([0xFFn, 0xFFn, 0xFFn, 0xFFn]));
 					}
-					decode(stream, image_view, format);
+					decode(data_stream, image_view, format);
 					KernelX.Image.File.PNG.write_fs(image_file, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
 					return;
 				}
@@ -1320,12 +1317,11 @@ namespace TwinStar.Script.KernelX {
 					data_buffer: Kernel.ByteListView | bigint,
 				): void {
 					let version_c = Kernel.Tool.Wwise.SoundBank.Version.value(version);
-					let data_buffer_if = typeof data_buffer === 'bigint' ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
-					let data_buffer_view = data_buffer instanceof Kernel.ByteListView ? data_buffer : data_buffer_if!.view();
-					let stream = Kernel.ByteStreamView.watch(data_buffer_view);
 					let definition = Kernel.Tool.Wwise.SoundBank.Definition.SoundBank.json(JSON.read_fs(definition_file), version_c);
-					Kernel.Tool.Wwise.SoundBank.Encode.process(stream, definition, Kernel.Path.value(embedded_media_directory), version_c);
-					FileSystem.write_file(data_file, stream.stream_view());
+					let data = is_bigint(data_buffer) ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
+					let data_stream = Kernel.ByteStreamView.watch(data_buffer instanceof Kernel.ByteListView ? data_buffer : data!.view());
+					Kernel.Tool.Wwise.SoundBank.Encode.process(data_stream, definition, Kernel.Path.value(embedded_media_directory), version_c);
+					FileSystem.write_file(data_file, data_stream.stream_view());
 					return;
 				}
 
@@ -1337,9 +1333,9 @@ namespace TwinStar.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.Wwise.SoundBank.Version.value(version);
 					let data = FileSystem.read_file(data_file);
-					let stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Tool.Wwise.SoundBank.Definition.SoundBank.default();
-					Kernel.Tool.Wwise.SoundBank.Decode.process(stream, definition, Kernel.PathOptional.value(embedded_media_directory), version_c);
+					Kernel.Tool.Wwise.SoundBank.Decode.process(data_stream, definition, Kernel.PathOptional.value(embedded_media_directory), version_c);
 					if (definition_file !== null) {
 						JSON.write_fs(definition_file, definition.get_json(version_c));
 					}
@@ -1366,12 +1362,11 @@ namespace TwinStar.Script.KernelX {
 					data_buffer: Kernel.ByteListView | bigint,
 				): void {
 					let version_c = Kernel.Tool.Marmalade.DZip.Version.value(version);
-					let data_buffer_if = typeof data_buffer === 'bigint' ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
-					let data_buffer_view = data_buffer instanceof Kernel.ByteListView ? data_buffer : data_buffer_if!.view();
-					let stream = Kernel.ByteStreamView.watch(data_buffer_view);
 					let definition = Kernel.Tool.Marmalade.DZip.Definition.Package.json(JSON.read_fs(definition_file), version_c);
-					Kernel.Tool.Marmalade.DZip.Pack.process(stream, definition, Kernel.Path.value(resource_directory), version_c);
-					FileSystem.write_file(data_file, stream.stream_view());
+					let data = is_bigint(data_buffer) ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
+					let data_stream = Kernel.ByteStreamView.watch(data_buffer instanceof Kernel.ByteListView ? data_buffer : data!.view());
+					Kernel.Tool.Marmalade.DZip.Pack.process(data_stream, definition, Kernel.Path.value(resource_directory), version_c);
+					FileSystem.write_file(data_file, data_stream.stream_view());
 					return;
 				}
 
@@ -1383,9 +1378,9 @@ namespace TwinStar.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.Marmalade.DZip.Version.value(version);
 					let data = FileSystem.read_file(data_file);
-					let stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Tool.Marmalade.DZip.Definition.Package.default();
-					Kernel.Tool.Marmalade.DZip.Unpack.process(stream, definition, Kernel.PathOptional.value(resource_directory), version_c);
+					Kernel.Tool.Marmalade.DZip.Unpack.process(data_stream, definition, Kernel.PathOptional.value(resource_directory), version_c);
 					if (definition_file !== null) {
 						JSON.write_fs(definition_file, definition.get_json(version_c));
 					}
@@ -1414,12 +1409,12 @@ namespace TwinStar.Script.KernelX {
 					version: typeof Kernel.Tool.PopCap.ZLib.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.PopCap.ZLib.Version.value(version);
-					let raw_data = FileSystem.read_file(raw_file);
+					let raw = FileSystem.read_file(raw_file);
+					let raw_stream = Kernel.ByteStreamView.watch(raw.view());
 					let ripe_size_bound = Kernel.Size.default();
-					Kernel.Tool.PopCap.ZLib.Compress.estimate(raw_data.size(), ripe_size_bound, Kernel.Size.value(window_bits), Kernel.Size.value(memory_level), version_c);
-					let ripe_data = Kernel.ByteArray.allocate(ripe_size_bound);
-					let raw_stream = Kernel.ByteStreamView.watch(raw_data.view());
-					let ripe_stream = Kernel.ByteStreamView.watch(ripe_data.view());
+					Kernel.Tool.PopCap.ZLib.Compress.estimate(raw.size(), ripe_size_bound, Kernel.Size.value(window_bits), Kernel.Size.value(memory_level), version_c);
+					let ripe = Kernel.ByteArray.allocate(ripe_size_bound);
+					let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
 					Kernel.Tool.PopCap.ZLib.Compress.process(raw_stream, ripe_stream, Kernel.Size.value(level), Kernel.Size.value(window_bits), Kernel.Size.value(memory_level), Kernel.Tool.Data.Compression.Deflate.Strategy.value(strategy), version_c);
 					FileSystem.write_file(ripe_file, ripe_stream.stream_view());
 					return;
@@ -1432,12 +1427,12 @@ namespace TwinStar.Script.KernelX {
 					version: typeof Kernel.Tool.PopCap.ZLib.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.PopCap.ZLib.Version.value(version);
-					let ripe_data = FileSystem.read_file(ripe_file);
+					let ripe = FileSystem.read_file(ripe_file);
+					let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
 					let raw_size = Kernel.Size.default();
-					Kernel.Tool.PopCap.ZLib.Uncompress.estimate(ripe_data.view(), raw_size, version_c);
-					let raw_data = Kernel.ByteArray.allocate(raw_size);
-					let ripe_stream = Kernel.ByteStreamView.watch(ripe_data.view());
-					let raw_stream = Kernel.ByteStreamView.watch(raw_data.view());
+					Kernel.Tool.PopCap.ZLib.Uncompress.estimate(ripe.view(), raw_size, version_c);
+					let raw = Kernel.ByteArray.allocate(raw_size);
+					let raw_stream = Kernel.ByteStreamView.watch(raw.view());
 					Kernel.Tool.PopCap.ZLib.Uncompress.process(ripe_stream, raw_stream, Kernel.Size.value(window_bits), version_c);
 					FileSystem.write_file(raw_file, raw_stream.stream_view());
 					return;
@@ -1455,12 +1450,12 @@ namespace TwinStar.Script.KernelX {
 					version: typeof Kernel.Tool.PopCap.CryptData.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.PopCap.CryptData.Version.value(version);
-					let plain_data = FileSystem.read_file(plain_file);
+					let plain = FileSystem.read_file(plain_file);
+					let plain_stream = Kernel.ByteStreamView.watch(plain.view());
 					let cipher_size = Kernel.Size.default();
-					Kernel.Tool.PopCap.CryptData.Encrypt.estimate(plain_data.size(), cipher_size, Kernel.Size.value(limit), version_c);
-					let cipher_data = Kernel.ByteArray.allocate(cipher_size);
-					let plain_stream = Kernel.ByteStreamView.watch(plain_data.view());
-					let cipher_stream = Kernel.ByteStreamView.watch(cipher_data.view());
+					Kernel.Tool.PopCap.CryptData.Encrypt.estimate(plain.size(), cipher_size, Kernel.Size.value(limit), version_c);
+					let cipher = Kernel.ByteArray.allocate(cipher_size);
+					let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
 					Kernel.Tool.PopCap.CryptData.Encrypt.process(plain_stream, cipher_stream, Kernel.Size.value(limit), Kernel.String.value(key), version_c);
 					FileSystem.write_file(cipher_file, cipher_stream.stream_view());
 					return;
@@ -1474,12 +1469,12 @@ namespace TwinStar.Script.KernelX {
 					version: typeof Kernel.Tool.PopCap.CryptData.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.PopCap.CryptData.Version.value(version);
-					let cipher_data = FileSystem.read_file(cipher_file);
+					let cipher = FileSystem.read_file(cipher_file);
+					let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
 					let plain_size = Kernel.Size.default();
-					Kernel.Tool.PopCap.CryptData.Decrypt.estimate(cipher_data.view(), plain_size, Kernel.Size.value(limit), version_c);
-					let plain_data = Kernel.ByteArray.allocate(plain_size);
-					let cipher_stream = Kernel.ByteStreamView.watch(cipher_data.view());
-					let plain_stream = Kernel.ByteStreamView.watch(plain_data.view());
+					Kernel.Tool.PopCap.CryptData.Decrypt.estimate(cipher.view(), plain_size, Kernel.Size.value(limit), version_c);
+					let plain = Kernel.ByteArray.allocate(plain_size);
+					let plain_stream = Kernel.ByteStreamView.watch(plain.view());
 					Kernel.Tool.PopCap.CryptData.Decrypt.process(cipher_stream, plain_stream, Kernel.Size.value(limit), Kernel.String.value(key), version_c);
 					FileSystem.write_file(plain_file, plain_stream.stream_view());
 					return;
@@ -1506,12 +1501,11 @@ namespace TwinStar.Script.KernelX {
 					data_buffer: Kernel.ByteListView | bigint,
 				): void {
 					let version_c = Kernel.Tool.PopCap.ReflectionObjectNotation.Version.value(version);
-					let data_buffer_if = typeof data_buffer === 'bigint' ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
-					let data_buffer_view = data_buffer instanceof Kernel.ByteListView ? data_buffer : data_buffer_if!.view();
 					let definition = JSON.read_fs<Kernel.Tool.PopCap.ReflectionObjectNotation.JS_ValidValue>(definition_file);
-					let stream = Kernel.ByteStreamView.watch(data_buffer_view);
-					Kernel.Tool.PopCap.ReflectionObjectNotation.Encode.process(stream, definition, Kernel.Boolean.value(enable_string_index), Kernel.Boolean.value(enable_rtid), version_c);
-					FileSystem.write_file(data_file, stream.stream_view());
+					let data = is_bigint(data_buffer) ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
+					let data_stream = Kernel.ByteStreamView.watch(data_buffer instanceof Kernel.ByteListView ? data_buffer : data!.view());
+					Kernel.Tool.PopCap.ReflectionObjectNotation.Encode.process(data_stream, definition, Kernel.Boolean.value(enable_string_index), Kernel.Boolean.value(enable_rtid), version_c);
+					FileSystem.write_file(data_file, data_stream.stream_view());
 					return;
 				}
 
@@ -1522,83 +1516,56 @@ namespace TwinStar.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.PopCap.ReflectionObjectNotation.Version.value(version);
 					let data = FileSystem.read_file(data_file);
-					let stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.JSON.Value.default<Kernel.Tool.PopCap.ReflectionObjectNotation.JS_ValidValue>();
-					Kernel.Tool.PopCap.ReflectionObjectNotation.Decode.process(stream, definition, version_c);
+					Kernel.Tool.PopCap.ReflectionObjectNotation.Decode.process(data_stream, definition, version_c);
 					JSON.write_fs(definition_file, definition);
 					return;
 				}
 
-				export function encrypt_fs(
-					plain_file: string,
-					cipher_file: string,
-					key: string,
-				): void {
-					let plain_data = FileSystem.read_file(plain_file);
-					let cipher_size = Kernel.Size.default();
-					Kernel.Tool.Miscellaneous.PvZ2CNCryptData.Encrypt.estimate(plain_data.size(), cipher_size);
-					let cipher_data = Kernel.ByteArray.allocate(cipher_size);
-					let plain_stream = Kernel.ByteStreamView.watch(plain_data.view());
-					let cipher_stream = Kernel.ByteStreamView.watch(cipher_data.view());
-					Kernel.Tool.Miscellaneous.PvZ2CNCryptData.Encrypt.process(plain_stream, cipher_stream, Kernel.String.value(key));
-					FileSystem.write_file(cipher_file, cipher_stream.stream_view());
-					return;
-				}
-
-				export function decrypt_fs(
-					cipher_file: string,
-					plain_file: string,
-					key: string,
-				): void {
-					let cipher_data = FileSystem.read_file(cipher_file);
-					let plain_size = Kernel.Size.default();
-					Kernel.Tool.Miscellaneous.PvZ2CNCryptData.Decrypt.estimate(cipher_data.size(), plain_size);
-					let plain_data = Kernel.ByteArray.allocate(plain_size);
-					let cipher_stream = Kernel.ByteStreamView.watch(cipher_data.view());
-					let plain_stream = Kernel.ByteStreamView.watch(plain_data.view());
-					Kernel.Tool.Miscellaneous.PvZ2CNCryptData.Decrypt.process(cipher_stream, plain_stream, Kernel.String.value(key));
-					FileSystem.write_file(plain_file, plain_stream.stream_view());
-					return;
-				}
-
-				export function encode_then_encrypt_fs(
+				export function encode_cipher_fs(
 					data_file: string,
 					definition_file: string,
 					enable_string_index: boolean,
 					enable_rtid: boolean,
 					version: typeof Kernel.Tool.PopCap.ReflectionObjectNotation.Version.Value,
-					key: string,
+					key: null | string,
 					data_buffer: Kernel.ByteListView | bigint,
 				): void {
+					if (key === null) {
+						return encode_fs(data_file, definition_file, enable_string_index, enable_rtid, version, data_buffer);
+					}
 					let version_c = Kernel.Tool.PopCap.ReflectionObjectNotation.Version.value(version);
-					let data_buffer_if = typeof data_buffer === 'bigint' ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
-					let data_buffer_view = data_buffer instanceof Kernel.ByteListView ? data_buffer : data_buffer_if!.view();
 					let definition = JSON.read_fs<Kernel.Tool.PopCap.ReflectionObjectNotation.JS_ValidValue>(definition_file);
-					let data_stream = Kernel.ByteStreamView.watch(data_buffer_view);
+					let data = is_bigint(data_buffer) ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
+					let data_stream = Kernel.ByteStreamView.watch(data_buffer instanceof Kernel.ByteListView ? data_buffer : data!.view());
 					Kernel.Tool.PopCap.ReflectionObjectNotation.Encode.process(data_stream, definition, Kernel.Boolean.value(enable_string_index), Kernel.Boolean.value(enable_rtid), version_c);
 					let plain_stream = Kernel.ByteStreamView.watch(data_stream.stream_view());
 					let cipher_size = Kernel.Size.default();
 					Kernel.Tool.Miscellaneous.PvZ2CNCryptData.Encrypt.estimate(plain_stream.size(), cipher_size);
-					let cipher_data = Kernel.ByteArray.allocate(cipher_size);
-					let cipher_stream = Kernel.ByteStreamView.watch(cipher_data.view());
+					let cipher = Kernel.ByteArray.allocate(cipher_size);
+					let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
 					Kernel.Tool.Miscellaneous.PvZ2CNCryptData.Encrypt.process(plain_stream, cipher_stream, Kernel.String.value(key));
 					FileSystem.write_file(data_file, cipher_stream.stream_view());
 					return;
 				}
 
-				export function decrypt_then_decode_fs(
+				export function decode_cipher_fs(
 					data_file: string,
 					definition_file: string,
 					version: typeof Kernel.Tool.PopCap.ReflectionObjectNotation.Version.Value,
-					key: string,
+					key: null | string,
 				): void {
+					if (key === null) {
+						return decode_fs(data_file, definition_file, version);
+					}
 					let version_c = Kernel.Tool.PopCap.ReflectionObjectNotation.Version.value(version);
-					let cipher_data = FileSystem.read_file(data_file);
+					let cipher = FileSystem.read_file(data_file);
+					let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
 					let plain_size = Kernel.Size.default();
-					Kernel.Tool.Miscellaneous.PvZ2CNCryptData.Decrypt.estimate(cipher_data.size(), plain_size);
-					let plain_data = Kernel.ByteArray.allocate(plain_size);
-					let cipher_stream = Kernel.ByteStreamView.watch(cipher_data.view());
-					let plain_stream = Kernel.ByteStreamView.watch(plain_data.view());
+					Kernel.Tool.Miscellaneous.PvZ2CNCryptData.Decrypt.estimate(cipher.size(), plain_size);
+					let plain = Kernel.ByteArray.allocate(plain_size);
+					let plain_stream = Kernel.ByteStreamView.watch(plain.view());
 					Kernel.Tool.Miscellaneous.PvZ2CNCryptData.Decrypt.process(cipher_stream, plain_stream, Kernel.String.value(key));
 					let data_stream = Kernel.ByteStreamView.watch(plain_stream.stream_view());
 					let definition = Kernel.JSON.Value.default<Kernel.Tool.PopCap.ReflectionObjectNotation.JS_ValidValue>();
@@ -1641,9 +1608,9 @@ namespace TwinStar.Script.KernelX {
 					let data_size_bound = Kernel.Size.default();
 					Kernel.Tool.PopCap.UTexture.Encode.estimate(data_size_bound, image.size(), Kernel.Tool.Texture.Encoding.Format.value(format), version_c);
 					let data = Kernel.ByteArray.allocate(data_size_bound);
-					let stream = Kernel.ByteStreamView.watch(data.view());
-					Kernel.Tool.PopCap.UTexture.Encode.process(stream, image_view, Kernel.Tool.Texture.Encoding.Format.value(format), version_c);
-					FileSystem.write_file(data_file, stream.stream_view());
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					Kernel.Tool.PopCap.UTexture.Encode.process(data_stream, image_view, Kernel.Tool.Texture.Encoding.Format.value(format), version_c);
+					FileSystem.write_file(data_file, data_stream.stream_view());
 					return;
 				}
 
@@ -1654,12 +1621,12 @@ namespace TwinStar.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.PopCap.UTexture.Version.value(version);
 					let data = FileSystem.read_file(data_file);
-					let stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let image_size = Kernel.Image.ImageSize.default();
 					Kernel.Tool.PopCap.UTexture.Decode.estimate(data.view(), image_size, version_c);
 					let image = Kernel.Image.Image.allocate(image_size);
 					let image_view = image.view();
-					Kernel.Tool.PopCap.UTexture.Decode.process(stream, image_view, version_c);
+					Kernel.Tool.PopCap.UTexture.Decode.process(data_stream, image_view, version_c);
 					KernelX.Image.File.PNG.write_fs(image_file, image_view);
 					return;
 				}
@@ -1709,9 +1676,9 @@ namespace TwinStar.Script.KernelX {
 					let data_size_bound = Kernel.Size.default();
 					Kernel.Tool.PopCap.SexyTexture.Encode.estimate(data_size_bound, image.size(), Kernel.Tool.Texture.Encoding.Format.value(format), Kernel.Boolean.value(compress_texture_data), version_c);
 					let data = Kernel.ByteArray.allocate(data_size_bound);
-					let stream = Kernel.ByteStreamView.watch(data.view());
-					Kernel.Tool.PopCap.SexyTexture.Encode.process(stream, image_view, Kernel.Tool.Texture.Encoding.Format.value(format), Kernel.Boolean.value(compress_texture_data), version_c);
-					FileSystem.write_file(data_file, stream.stream_view());
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					Kernel.Tool.PopCap.SexyTexture.Encode.process(data_stream, image_view, Kernel.Tool.Texture.Encoding.Format.value(format), Kernel.Boolean.value(compress_texture_data), version_c);
+					FileSystem.write_file(data_file, data_stream.stream_view());
 					return;
 				}
 
@@ -1722,12 +1689,12 @@ namespace TwinStar.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.PopCap.SexyTexture.Version.value(version);
 					let data = FileSystem.read_file(data_file);
-					let stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let image_size = Kernel.Image.ImageSize.default();
 					Kernel.Tool.PopCap.SexyTexture.Decode.estimate(data.view(), image_size, version_c);
 					let image = Kernel.Image.Image.allocate(image_size);
 					let image_view = image.view();
-					Kernel.Tool.PopCap.SexyTexture.Decode.process(stream, image_view, version_c);
+					Kernel.Tool.PopCap.SexyTexture.Decode.process(data_stream, image_view, version_c);
 					KernelX.Image.File.PNG.write_fs(image_file, image_view);
 					return;
 				}
@@ -1747,12 +1714,11 @@ namespace TwinStar.Script.KernelX {
 					data_buffer: Kernel.ByteListView | bigint,
 				): void {
 					let version_c = Kernel.Tool.PopCap.Animation.Version.value(version);
-					let data_buffer_if = typeof data_buffer === 'bigint' ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
-					let data_buffer_view = data_buffer instanceof Kernel.ByteListView ? data_buffer : data_buffer_if!.view();
-					let stream = Kernel.ByteStreamView.watch(data_buffer_view);
 					let definition = Kernel.Tool.PopCap.Animation.Definition.Animation.json(JSON.read_fs(definition_file), version_c);
-					Kernel.Tool.PopCap.Animation.Encode.process(stream, definition, version_c);
-					FileSystem.write_file(data_file, stream.stream_view());
+					let data = is_bigint(data_buffer) ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
+					let data_stream = Kernel.ByteStreamView.watch(data_buffer instanceof Kernel.ByteListView ? data_buffer : data!.view());
+					Kernel.Tool.PopCap.Animation.Encode.process(data_stream, definition, version_c);
+					FileSystem.write_file(data_file, data_stream.stream_view());
 					return;
 				}
 
@@ -1763,9 +1729,9 @@ namespace TwinStar.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.PopCap.Animation.Version.value(version);
 					let data = FileSystem.read_file(data_file);
-					let stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Tool.PopCap.Animation.Definition.Animation.default();
-					Kernel.Tool.PopCap.Animation.Decode.process(stream, definition, version_c);
+					Kernel.Tool.PopCap.Animation.Decode.process(data_stream, definition, version_c);
 					JSON.write_fs(definition_file, definition.get_json(version_c));
 					return;
 				}
@@ -1789,12 +1755,11 @@ namespace TwinStar.Script.KernelX {
 					data_buffer: Kernel.ByteListView | bigint,
 				): void {
 					let version_c = Kernel.Tool.PopCap.ReAnimation.Version.value(version);
-					let data_buffer_if = typeof data_buffer === 'bigint' ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
-					let data_buffer_view = data_buffer instanceof Kernel.ByteListView ? data_buffer : data_buffer_if!.view();
-					let stream = Kernel.ByteStreamView.watch(data_buffer_view);
 					let definition = Kernel.Tool.PopCap.ReAnimation.Definition.Animation.json(JSON.read_fs(definition_file), version_c);
-					Kernel.Tool.PopCap.ReAnimation.Encode.process(stream, definition, version_c);
-					FileSystem.write_file(data_file, stream.stream_view());
+					let data = is_bigint(data_buffer) ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
+					let data_stream = Kernel.ByteStreamView.watch(data_buffer instanceof Kernel.ByteListView ? data_buffer : data!.view());
+					Kernel.Tool.PopCap.ReAnimation.Encode.process(data_stream, definition, version_c);
+					FileSystem.write_file(data_file, data_stream.stream_view());
 					return;
 				}
 
@@ -1805,9 +1770,9 @@ namespace TwinStar.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.PopCap.ReAnimation.Version.value(version);
 					let data = FileSystem.read_file(data_file);
-					let stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Tool.PopCap.ReAnimation.Definition.Animation.default();
-					Kernel.Tool.PopCap.ReAnimation.Decode.process(stream, definition, version_c);
+					Kernel.Tool.PopCap.ReAnimation.Decode.process(data_stream, definition, version_c);
 					JSON.write_fs(definition_file, definition.get_json(version_c));
 					return;
 				}
@@ -1831,12 +1796,11 @@ namespace TwinStar.Script.KernelX {
 					data_buffer: Kernel.ByteListView | bigint,
 				): void {
 					let version_c = Kernel.Tool.PopCap.Particle.Version.value(version);
-					let data_buffer_if = typeof data_buffer === 'bigint' ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
-					let data_buffer_view = data_buffer instanceof Kernel.ByteListView ? data_buffer : data_buffer_if!.view();
-					let stream = Kernel.ByteStreamView.watch(data_buffer_view);
 					let definition = Kernel.Tool.PopCap.Particle.Definition.Particle.json(JSON.read_fs(definition_file), version_c);
-					Kernel.Tool.PopCap.Particle.Encode.process(stream, definition, version_c);
-					FileSystem.write_file(data_file, stream.stream_view());
+					let data = is_bigint(data_buffer) ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
+					let data_stream = Kernel.ByteStreamView.watch(data_buffer instanceof Kernel.ByteListView ? data_buffer : data!.view());
+					Kernel.Tool.PopCap.Particle.Encode.process(data_stream, definition, version_c);
+					FileSystem.write_file(data_file, data_stream.stream_view());
 					return;
 				}
 
@@ -1847,9 +1811,9 @@ namespace TwinStar.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.PopCap.Particle.Version.value(version);
 					let data = FileSystem.read_file(data_file);
-					let stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Tool.PopCap.Particle.Definition.Particle.default();
-					Kernel.Tool.PopCap.Particle.Decode.process(stream, definition, version_c);
+					Kernel.Tool.PopCap.Particle.Decode.process(data_stream, definition, version_c);
 					JSON.write_fs(definition_file, definition.get_json(version_c));
 					return;
 				}
@@ -1873,12 +1837,11 @@ namespace TwinStar.Script.KernelX {
 					data_buffer: Kernel.ByteListView | bigint,
 				): void {
 					let version_c = Kernel.Tool.PopCap.Trail.Version.value(version);
-					let data_buffer_if = typeof data_buffer === 'bigint' ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
-					let data_buffer_view = data_buffer instanceof Kernel.ByteListView ? data_buffer : data_buffer_if!.view();
-					let stream = Kernel.ByteStreamView.watch(data_buffer_view);
 					let definition = Kernel.Tool.PopCap.Trail.Definition.Trail.json(JSON.read_fs(definition_file), version_c);
-					Kernel.Tool.PopCap.Trail.Encode.process(stream, definition, version_c);
-					FileSystem.write_file(data_file, stream.stream_view());
+					let data = is_bigint(data_buffer) ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
+					let data_stream = Kernel.ByteStreamView.watch(data_buffer instanceof Kernel.ByteListView ? data_buffer : data!.view());
+					Kernel.Tool.PopCap.Trail.Encode.process(data_stream, definition, version_c);
+					FileSystem.write_file(data_file, data_stream.stream_view());
 					return;
 				}
 
@@ -1889,9 +1852,9 @@ namespace TwinStar.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.PopCap.Trail.Version.value(version);
 					let data = FileSystem.read_file(data_file);
-					let stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Tool.PopCap.Trail.Definition.Trail.default();
-					Kernel.Tool.PopCap.Trail.Decode.process(stream, definition, version_c);
+					Kernel.Tool.PopCap.Trail.Decode.process(data_stream, definition, version_c);
 					JSON.write_fs(definition_file, definition.get_json(version_c));
 					return;
 				}
@@ -1915,12 +1878,11 @@ namespace TwinStar.Script.KernelX {
 					data_buffer: Kernel.ByteListView | bigint,
 				): void {
 					let version_c = Kernel.Tool.PopCap.RenderEffect.Version.value(version);
-					let data_buffer_if = typeof data_buffer === 'bigint' ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
-					let data_buffer_view = data_buffer instanceof Kernel.ByteListView ? data_buffer : data_buffer_if!.view();
-					let stream = Kernel.ByteStreamView.watch(data_buffer_view);
 					let definition = Kernel.Tool.PopCap.RenderEffect.Definition.Effect.json(JSON.read_fs(definition_file), version_c);
-					Kernel.Tool.PopCap.RenderEffect.Encode.process(stream, definition, version_c);
-					FileSystem.write_file(data_file, stream.stream_view());
+					let data = is_bigint(data_buffer) ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
+					let data_stream = Kernel.ByteStreamView.watch(data_buffer instanceof Kernel.ByteListView ? data_buffer : data!.view());
+					Kernel.Tool.PopCap.RenderEffect.Encode.process(data_stream, definition, version_c);
+					FileSystem.write_file(data_file, data_stream.stream_view());
 					return;
 				}
 
@@ -1931,9 +1893,9 @@ namespace TwinStar.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.PopCap.RenderEffect.Version.value(version);
 					let data = FileSystem.read_file(data_file);
-					let stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Tool.PopCap.RenderEffect.Definition.Effect.default();
-					Kernel.Tool.PopCap.RenderEffect.Decode.process(stream, definition, version_c);
+					Kernel.Tool.PopCap.RenderEffect.Decode.process(data_stream, definition, version_c);
 					JSON.write_fs(definition_file, definition.get_json(version_c));
 					return;
 				}
@@ -1953,12 +1915,11 @@ namespace TwinStar.Script.KernelX {
 					data_buffer: Kernel.ByteListView | bigint,
 				): void {
 					let version_c = Kernel.Tool.PopCap.ParticleEffect.Version.value(version);
-					let data_buffer_if = typeof data_buffer === 'bigint' ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
-					let data_buffer_view = data_buffer instanceof Kernel.ByteListView ? data_buffer : data_buffer_if!.view();
-					let stream = Kernel.ByteStreamView.watch(data_buffer_view);
 					let definition = Kernel.Tool.PopCap.ParticleEffect.Definition.Effect.json(JSON.read_fs(definition_file), version_c);
-					Kernel.Tool.PopCap.ParticleEffect.Encode.process(stream, definition, version_c);
-					FileSystem.write_file(data_file, stream.stream_view());
+					let data = is_bigint(data_buffer) ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
+					let data_stream = Kernel.ByteStreamView.watch(data_buffer instanceof Kernel.ByteListView ? data_buffer : data!.view());
+					Kernel.Tool.PopCap.ParticleEffect.Encode.process(data_stream, definition, version_c);
+					FileSystem.write_file(data_file, data_stream.stream_view());
 					return;
 				}
 
@@ -1969,9 +1930,9 @@ namespace TwinStar.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.PopCap.ParticleEffect.Version.value(version);
 					let data = FileSystem.read_file(data_file);
-					let stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Tool.PopCap.ParticleEffect.Definition.Effect.default();
-					Kernel.Tool.PopCap.ParticleEffect.Decode.process(stream, definition, version_c);
+					Kernel.Tool.PopCap.ParticleEffect.Decode.process(data_stream, definition, version_c);
 					JSON.write_fs(definition_file, definition.get_json(version_c));
 					return;
 				}
@@ -1987,13 +1948,12 @@ namespace TwinStar.Script.KernelX {
 					data_buffer: Kernel.ByteListView | bigint,
 				): void {
 					let version_c = Kernel.Tool.PopCap.CharacterFontWidget2.Version.value(version);
-					let data_buffer_if = typeof data_buffer === 'bigint' ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
-					let data_buffer_view = data_buffer instanceof Kernel.ByteListView ? data_buffer : data_buffer_if!.view();
-					let stream = Kernel.ByteStreamView.watch(data_buffer_view);
 					let definition = Kernel.Tool.PopCap.CharacterFontWidget2.Definition.FontWidget.json(JSON.read_fs(definition_file), version_c);
-					stream.set_position(Kernel.Size.value(16n));
-					Kernel.Tool.PopCap.CharacterFontWidget2.Encode.process(stream, definition, version_c);
-					FileSystem.write_file(data_file, stream.stream_view());
+					let data = is_bigint(data_buffer) ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
+					let data_stream = Kernel.ByteStreamView.watch(data_buffer instanceof Kernel.ByteListView ? data_buffer : data!.view());
+					data_stream.set_position(Kernel.Size.value(16n));
+					Kernel.Tool.PopCap.CharacterFontWidget2.Encode.process(data_stream, definition, version_c);
+					FileSystem.write_file(data_file, data_stream.stream_view());
 					return;
 				}
 
@@ -2004,10 +1964,10 @@ namespace TwinStar.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.PopCap.CharacterFontWidget2.Version.value(version);
 					let data = FileSystem.read_file(data_file);
-					let stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Tool.PopCap.CharacterFontWidget2.Definition.FontWidget.default();
-					stream.set_position(Kernel.Size.value(16n));
-					Kernel.Tool.PopCap.CharacterFontWidget2.Decode.process(stream, definition, version_c);
+					data_stream.set_position(Kernel.Size.value(16n));
+					Kernel.Tool.PopCap.CharacterFontWidget2.Decode.process(data_stream, definition, version_c);
 					JSON.write_fs(definition_file, definition.get_json(version_c));
 					return;
 				}
@@ -2032,12 +1992,11 @@ namespace TwinStar.Script.KernelX {
 					data_buffer: Kernel.ByteListView | bigint,
 				): void {
 					let version_c = Kernel.Tool.PopCap.Package.Version.value(version);
-					let data_buffer_if = typeof data_buffer === 'bigint' ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
-					let data_buffer_view = data_buffer instanceof Kernel.ByteListView ? data_buffer : data_buffer_if!.view();
-					let stream = Kernel.ByteStreamView.watch(data_buffer_view);
 					let definition = Kernel.Tool.PopCap.Package.Definition.Package.json(JSON.read_fs(definition_file), version_c);
-					Kernel.Tool.PopCap.Package.Pack.process(stream, definition, Kernel.Path.value(resource_directory), version_c);
-					FileSystem.write_file(data_file, stream.stream_view());
+					let data = is_bigint(data_buffer) ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
+					let data_stream = Kernel.ByteStreamView.watch(data_buffer instanceof Kernel.ByteListView ? data_buffer : data!.view());
+					Kernel.Tool.PopCap.Package.Pack.process(data_stream, definition, Kernel.Path.value(resource_directory), version_c);
+					FileSystem.write_file(data_file, data_stream.stream_view());
 					return;
 				}
 
@@ -2049,9 +2008,9 @@ namespace TwinStar.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.PopCap.Package.Version.value(version);
 					let data = FileSystem.read_file(data_file);
-					let stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Tool.PopCap.Package.Definition.Package.default();
-					Kernel.Tool.PopCap.Package.Unpack.process(stream, definition, Kernel.PathOptional.value(resource_directory), version_c);
+					Kernel.Tool.PopCap.Package.Unpack.process(data_stream, definition, Kernel.PathOptional.value(resource_directory), version_c);
 					if (definition_file !== null) {
 						JSON.write_fs(definition_file, definition.get_json(version_c));
 					}
@@ -2074,12 +2033,11 @@ namespace TwinStar.Script.KernelX {
 					data_buffer: Kernel.ByteListView | bigint,
 				): void {
 					let version_c = Kernel.Tool.PopCap.ResourceStreamGroup.Version.value(version);
-					let data_buffer_if = typeof data_buffer === 'bigint' ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
-					let data_buffer_view = data_buffer instanceof Kernel.ByteListView ? data_buffer : data_buffer_if!.view();
-					let stream = Kernel.ByteStreamView.watch(data_buffer_view);
 					let definition = Kernel.Tool.PopCap.ResourceStreamGroup.Definition.Package.json(JSON.read_fs(definition_file), version_c);
-					Kernel.Tool.PopCap.ResourceStreamGroup.Pack.process(stream, definition, Kernel.Path.value(resource_directory), version_c);
-					FileSystem.write_file(data_file, stream.stream_view());
+					let data = is_bigint(data_buffer) ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
+					let data_stream = Kernel.ByteStreamView.watch(data_buffer instanceof Kernel.ByteListView ? data_buffer : data!.view());
+					Kernel.Tool.PopCap.ResourceStreamGroup.Pack.process(data_stream, definition, Kernel.Path.value(resource_directory), version_c);
+					FileSystem.write_file(data_file, data_stream.stream_view());
 					return;
 				}
 
@@ -2091,9 +2049,9 @@ namespace TwinStar.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.PopCap.ResourceStreamGroup.Version.value(version);
 					let data = FileSystem.read_file(data_file);
-					let stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Tool.PopCap.ResourceStreamGroup.Definition.Package.default();
-					Kernel.Tool.PopCap.ResourceStreamGroup.Unpack.process(stream, definition, Kernel.PathOptional.value(resource_directory), version_c);
+					Kernel.Tool.PopCap.ResourceStreamGroup.Unpack.process(data_stream, definition, Kernel.PathOptional.value(resource_directory), version_c);
 					if (definition_file !== null) {
 						JSON.write_fs(definition_file, definition.get_json(version_c));
 					}
@@ -2123,13 +2081,12 @@ namespace TwinStar.Script.KernelX {
 					data_buffer: Kernel.ByteListView | bigint,
 				): void {
 					let version_c = Kernel.Tool.PopCap.ResourceStreamBundle.Version.value(version);
-					let data_buffer_if = typeof data_buffer === 'bigint' ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
-					let data_buffer_view = data_buffer instanceof Kernel.ByteListView ? data_buffer : data_buffer_if!.view();
-					let stream = Kernel.ByteStreamView.watch(data_buffer_view);
 					let definition = Kernel.Tool.PopCap.ResourceStreamBundle.Definition.Package.json(JSON.read_fs(definition_file), version_c);
 					let manifest = Kernel.Tool.PopCap.ResourceStreamBundle.Manifest.PackageOptional.json(JSON.read_fs(manifest_file), version_c);
-					Kernel.Tool.PopCap.ResourceStreamBundle.Pack.process(stream, definition, manifest, Kernel.Path.value(resource_directory), Kernel.PathOptional.value(packet_file), Kernel.PathOptional.value(new_packet_file), version_c);
-					FileSystem.write_file(data_file, stream.stream_view());
+					let data = is_bigint(data_buffer) ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
+					let data_stream = Kernel.ByteStreamView.watch(data_buffer instanceof Kernel.ByteListView ? data_buffer : data!.view());
+					Kernel.Tool.PopCap.ResourceStreamBundle.Pack.process(data_stream, definition, manifest, Kernel.Path.value(resource_directory), Kernel.PathOptional.value(packet_file), Kernel.PathOptional.value(new_packet_file), version_c);
+					FileSystem.write_file(data_file, data_stream.stream_view());
 					return;
 				}
 
@@ -2143,10 +2100,10 @@ namespace TwinStar.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.PopCap.ResourceStreamBundle.Version.value(version);
 					let data = FileSystem.read_file(data_file);
-					let stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Tool.PopCap.ResourceStreamBundle.Definition.Package.default();
 					let manifest = Kernel.Tool.PopCap.ResourceStreamBundle.Manifest.PackageOptional.default();
-					Kernel.Tool.PopCap.ResourceStreamBundle.Unpack.process(stream, definition, manifest, Kernel.PathOptional.value(resource_directory), Kernel.PathOptional.value(packet_file), version_c);
+					Kernel.Tool.PopCap.ResourceStreamBundle.Unpack.process(data_stream, definition, manifest, Kernel.PathOptional.value(resource_directory), Kernel.PathOptional.value(packet_file), version_c);
 					if (definition_file !== null) {
 						JSON.write_fs(definition_file, definition.get_json(version_c));
 					}
@@ -2173,12 +2130,12 @@ namespace TwinStar.Script.KernelX {
 					patch_size_bound: bigint,
 				): void {
 					let version_c = Kernel.Tool.PopCap.ResourceStreamBundlePatch.Version.value(version);
-					let before_data = FileSystem.read_file(before_file);
-					let after_data = FileSystem.read_file(after_file);
-					let patch_data = Kernel.ByteArray.allocate(Kernel.Size.value(patch_size_bound));
-					let before_stream = Kernel.ByteStreamView.watch(before_data.view());
-					let after_stream = Kernel.ByteStreamView.watch(after_data.view());
-					let patch_stream = Kernel.ByteStreamView.watch(patch_data.view());
+					let before = FileSystem.read_file(before_file);
+					let before_stream = Kernel.ByteStreamView.watch(before.view());
+					let after = FileSystem.read_file(after_file);
+					let after_stream = Kernel.ByteStreamView.watch(after.view());
+					let patch = Kernel.ByteArray.allocate(Kernel.Size.value(patch_size_bound));
+					let patch_stream = Kernel.ByteStreamView.watch(patch.view());
 					Kernel.Tool.PopCap.ResourceStreamBundlePatch.Encode.process(before_stream, after_stream, patch_stream, Kernel.Boolean.value(use_raw_packet), version_c);
 					FileSystem.write_file(patch_file, patch_stream.stream_view());
 					return;
@@ -2193,12 +2150,12 @@ namespace TwinStar.Script.KernelX {
 					after_size_bound: bigint,
 				): void {
 					let version_c = Kernel.Tool.PopCap.ResourceStreamBundlePatch.Version.value(version);
-					let before_data = FileSystem.read_file(before_file);
-					let after_data = Kernel.ByteArray.allocate(Kernel.Size.value(after_size_bound));
-					let patch_data = FileSystem.read_file(patch_file);
-					let before_stream = Kernel.ByteStreamView.watch(before_data.view());
-					let after_stream = Kernel.ByteStreamView.watch(after_data.view());
-					let patch_stream = Kernel.ByteStreamView.watch(patch_data.view());
+					let before = FileSystem.read_file(before_file);
+					let before_stream = Kernel.ByteStreamView.watch(before.view());
+					let after = Kernel.ByteArray.allocate(Kernel.Size.value(after_size_bound));
+					let after_stream = Kernel.ByteStreamView.watch(after.view());
+					let patch = FileSystem.read_file(patch_file);
+					let patch_stream = Kernel.ByteStreamView.watch(patch.view());
 					Kernel.Tool.PopCap.ResourceStreamBundlePatch.Decode.process(before_stream, after_stream, patch_stream, Kernel.Boolean.value(use_raw_packet), version_c);
 					FileSystem.write_file(after_file, after_stream.stream_view());
 					return;
@@ -2211,8 +2168,6 @@ namespace TwinStar.Script.KernelX {
 		export namespace Miscellaneous {
 
 			export namespace XboxTiledTexture {
-
-				// ------------------------------------------------
 
 				export function encode(
 					data: Kernel.OByteStreamView,
@@ -2230,13 +2185,9 @@ namespace TwinStar.Script.KernelX {
 					return Kernel.Tool.Miscellaneous.XboxTiledTexture.Decode.process(data, image, Kernel.Tool.Texture.Encoding.Format.value(format));
 				}
 
-				// ------------------------------------------------
-
 			}
 
 			export namespace PvZ2CNAlphaPaletteTexture {
-
-				// ------------------------------------------------
 
 				export type BitCount = 1 | 2 | 3 | 4;
 
@@ -2274,13 +2225,13 @@ namespace TwinStar.Script.KernelX {
 					image: Kernel.Image.CImageView,
 				): typeof Kernel.Image.ColorList.Value {
 					let image_size = image.size().value;
-					let image_data = Kernel.ByteArray.allocate(Kernel.Size.value(image_size[0] * image_size[1] * 8n / 8n));
-					let image_stream = Kernel.ByteStreamView.watch(image_data.view());
-					Texture.Encoding.encode(image_stream, image, 'a_8');
+					let data = Kernel.ByteArray.allocate(Kernel.Size.value(image_size[0] * image_size[1] * 8n / 8n));
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					Texture.Encoding.encode(data_stream, image, 'a_8');
 					let alpha_count: Record<number, number> = {};
-					for (let e of new Uint8Array(image_stream.stream_view().value)) {
-						let alpha_4 = (e >> 4) & ~(~0 << 4);
-						alpha_count[alpha_4] = (alpha_count[alpha_4] || 0) + 1;
+					for (let value of new Uint8Array(data_stream.stream_view().value)) {
+						let alpha_4 = (value >> 4) & ~(~0 << 4);
+						alpha_count[alpha_4] = not_undefined_or(alpha_count[alpha_4], 0) + 1;
 					}
 					let palette = Object.keys(alpha_count).map(BigInt);
 					if (palette.length <= 2) {
@@ -2311,8 +2262,8 @@ namespace TwinStar.Script.KernelX {
 					}
 					else {
 						palette_data.u8(BigInt(palette.length));
-						for (let e of palette) {
-							palette_data.u8(e);
+						for (let value of palette) {
+							palette_data.u8(value);
 						}
 					}
 					data.set_position(Kernel.Size.value(data.position().value + BigInt(palette_data.p())));
@@ -2341,7 +2292,41 @@ namespace TwinStar.Script.KernelX {
 					return;
 				}
 
-				// ------------------------------------------------
+			}
+
+			export namespace PvZ2CNCryptData {
+
+				export function encrypt_fs(
+					plain_file: string,
+					cipher_file: string,
+					key: string,
+				): void {
+					let plain = FileSystem.read_file(plain_file);
+					let plain_stream = Kernel.ByteStreamView.watch(plain.view());
+					let cipher_size = Kernel.Size.default();
+					Kernel.Tool.Miscellaneous.PvZ2CNCryptData.Encrypt.estimate(plain.size(), cipher_size);
+					let cipher = Kernel.ByteArray.allocate(cipher_size);
+					let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
+					Kernel.Tool.Miscellaneous.PvZ2CNCryptData.Encrypt.process(plain_stream, cipher_stream, Kernel.String.value(key));
+					FileSystem.write_file(cipher_file, cipher_stream.stream_view());
+					return;
+				}
+
+				export function decrypt_fs(
+					cipher_file: string,
+					plain_file: string,
+					key: string,
+				): void {
+					let cipher = FileSystem.read_file(cipher_file);
+					let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
+					let plain_size = Kernel.Size.default();
+					Kernel.Tool.Miscellaneous.PvZ2CNCryptData.Decrypt.estimate(cipher.size(), plain_size);
+					let plain = Kernel.ByteArray.allocate(plain_size);
+					let plain_stream = Kernel.ByteStreamView.watch(plain.view());
+					Kernel.Tool.Miscellaneous.PvZ2CNCryptData.Decrypt.process(cipher_stream, plain_stream, Kernel.String.value(key));
+					FileSystem.write_file(plain_file, plain_stream.stream_view());
+					return;
+				}
 
 			}
 
@@ -2358,8 +2343,8 @@ namespace TwinStar.Script.KernelX {
 			name: string,
 			is_module: boolean,
 		): any {
-			let script_s = Kernel.String.value(script);
-			return Kernel.Miscellaneous.g_context.evaluate(Kernel.Miscellaneous.cast_String_to_CharacterListView(script_s), Kernel.String.value(name), Kernel.Boolean.value(is_module));
+			let script_c = Kernel.String.value(script);
+			return Kernel.Miscellaneous.g_context.evaluate(Kernel.Miscellaneous.cast_String_to_CharacterListView(script_c), Kernel.String.value(name), Kernel.Boolean.value(is_module));
 		}
 
 		export function evaluate_fs(

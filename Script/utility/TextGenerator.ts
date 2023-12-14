@@ -2,14 +2,6 @@ namespace TwinStar.Script.TextGenerator {
 
 	// ------------------------------------------------
 
-	export function text(
-		text: string,
-	): Array<string> {
-		return [text];
-	}
-
-	// ------------------------------------------------
-
 	export type ProgressStyle = 'percent' | 'fraction';
 
 	export function progress(
@@ -43,36 +35,6 @@ namespace TwinStar.Script.TextGenerator {
 		make(): Array<string>;
 		toString(): string;
 	};
-
-	export class Text implements Generator {
-
-		// ------------------------------------------------
-
-		private m_text: string;
-
-		// ------------------------------------------------
-
-		constructor(
-			text: string,
-		) {
-			this.m_text = text;
-		}
-
-		// ------------------------------------------------
-
-		make() {
-			return text(this.m_text);
-		}
-
-		// ------------------------------------------------
-
-		toString() {
-			return this.make().join('\n');
-		}
-
-		// ------------------------------------------------
-
-	}
 
 	export class Progress implements Generator {
 

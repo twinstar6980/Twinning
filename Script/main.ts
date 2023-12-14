@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 94;
+	export const k_version = 95;
 
 	// ------------------------------------------------
 
@@ -175,7 +175,7 @@ namespace TwinStar.Script {
 				let configuration: null | Configuration = null;
 				if (Detail.exist_file(configuration_file)) {
 					let raw_configuration = Detail.read_json(configuration_file);
-					assert_test(raw_configuration !== null && typeof raw_configuration === 'object' && (raw_configuration as Object).constructor.name === 'Object', `partition configuration must be object : <${partition}>`);
+					assert_test(is_object_of_object(raw_configuration), `partition configuration must be object : <${partition}>`);
 					configuration = raw_configuration as Configuration;
 				}
 				let injector = Detail.evaluate(script_file, script_name) as undefined | Injector;

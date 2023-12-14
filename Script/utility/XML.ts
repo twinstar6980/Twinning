@@ -81,7 +81,7 @@ namespace TwinStar.Script.XML {
 		parent: Kernel.XML.JS_Element,
 		name: string,
 	): Array<Kernel.XML.JS_Element> {
-		return parent.child.filter((e) => (e.type === 'element' && e.value.name === name)).map((e) => (e.value as Kernel.XML.JS_Element));
+		return parent.child.filter((child) => (child.type === 'element' && child.value.name === name)).map((child) => (child.value as Kernel.XML.JS_Element));
 	}
 
 	// ------------------------------------------------

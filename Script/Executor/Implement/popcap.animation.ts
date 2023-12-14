@@ -272,9 +272,9 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 					}
 					KernelX.FileSystem.create_directory(media_directory);
 					KernelX.FileSystem.list_file(`${target_directory}/..`, 1n)
-						.filter((e) => (/(\.png)$/i.test(e)))
-						.forEach((e) => {
-							KernelX.FileSystem.create_hard_link(`${media_directory}/${e}`, `${target_directory}/../${e}`);
+						.filter((value) => (/(\.png)$/i.test(value)))
+						.forEach((value) => {
+							KernelX.FileSystem.create_hard_link(`${media_directory}/${value}`, `${target_directory}/../${value}`);
 						});
 					return;
 				},

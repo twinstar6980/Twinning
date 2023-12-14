@@ -33,6 +33,17 @@
 				"bundle_directory": "?automatic",
 			},
 		},
+		"unpack_lenient": {
+			"filter": "(\\.rsb)$",
+			"argument": {
+				"data_file": "?input",
+				"bundle_directory": "?automatic",
+			},
+			"batch_argument": {
+				"data_file": "?input",
+				"bundle_directory": "?automatic",
+			},
+		},
 		"resource_convert": {
 			"filter": "(\\.rsb\\.bundle)$",
 			"argument": {
@@ -40,11 +51,11 @@
 				"option_recase_path": "?input",
 				"option_rton": "?input",
 				"option_rton_version_number": 1,
-				"option_rton_version_native_string_encoding_use_utf8": "?input",
+				"option_rton_version_native_string_encoding_use_utf8": true,
 				"option_rton_crypt": "?input",
 				"option_rton_crypt_key": "?input",
 				"option_ptx": "?input",
-				"option_ptx_texture_format_map_name": "?input",
+				"option_ptx_format": "?input",
 				"option_ptx_atlas": "?input",
 				"option_ptx_atlas_resize": "?input",
 				"option_ptx_sprite": "?input",
@@ -60,19 +71,8 @@
 				"bundle_directory": "?input",
 			},
 		},
-		"unpack_lenient": {
-			"filter": "(\\.rsb)$",
-			"argument": {
-				"data_file": "?input",
-				"bundle_directory": "?automatic",
-			},
-			"batch_argument": {
-				"data_file": "?input",
-				"bundle_directory": "?automatic",
-			},
-		},
 	},
-	"ptx_texture_format_map_list": {
+	"ptx_format_list": {
 		"iphone": [
 			{
 				"index": 0,

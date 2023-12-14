@@ -20,7 +20,7 @@ namespace TwinStar.Script.ProcessHelper {
 	): null | string {
 		let result: null | string = null;
 		for (let element_key in map) {
-			if (Shell.is_windows ? (element_key.toLowerCase() === key.toLowerCase()) : (element_key === key)) {
+			if (Shell.is_windows ? element_key.toLowerCase() === key.toLowerCase() : element_key === key) {
 				result = map[element_key];
 				break;
 			}
@@ -40,13 +40,13 @@ namespace TwinStar.Script.ProcessHelper {
 		if (Shell.is_windows) {
 			let path_extension_environment = KernelX.Process.get_environment_variable('PATHEXT');
 			assert_test(path_extension_environment !== null, `environment PATHEXT not found`);
-			path_extension_list.push(...path_extension_environment.split(item_delimiter).map((e) => (e.toLowerCase())));
+			path_extension_list.push(...path_extension_environment.split(item_delimiter).map((value) => (value.toLowerCase())));
 		}
 		for (let path of path_list) {
-			let path_prefix = `${path}/${name}`;
-			let path_extension = path_extension_list.find((e) => (KernelX.FileSystem.exist_file(`${path_prefix}${e}`)));
+			let path_base = `${path}/${name}`;
+			let path_extension = path_extension_list.find((value) => (KernelX.FileSystem.exist_file(`${path_base}${value}`)));
 			if (path_extension !== undefined) {
-				result = `${path_prefix}${path_extension}`;
+				result = `${path_base}${path_extension}`;
 				break;
 			}
 		}

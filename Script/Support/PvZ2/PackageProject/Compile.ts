@@ -2,22 +2,6 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 
 	// ------------------------------------------------
 
-	type TemporaryState = {
-		conversion: {
-			rton: {
-				buffer: Kernel.ByteArray;
-			};
-			ptx: {
-				buffer: Kernel.ByteArray;
-			};
-			pam: {
-				buffer: Kernel.ByteArray;
-			};
-			wem: {
-			};
-		};
-	};
-
 	function compile_resource(
 		project_directory: string,
 		part_name: string,
@@ -27,11 +11,11 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 		variable_list: Array<Variable>,
 		resource_state: ResourceState,
 		group_id: string,
-		temporary_state: TemporaryState,
+		buffer: Kernel.ByteArray,
 	): void {
 		Console.information(`Compiling resource ...`, [`${package_setting.name}:${part_name}/${group_name}/${resource_name}`]);
-		let resource_directory = `${project_directory}/${part_name}/${group_name}/${resource_name}`;
-		let resource_setting = KernelX.JSON.read_fs_js(generate_setting_path(resource_directory)) as ResourceSetting;
+		let resource_directory = make_scope_root_path(project_directory, part_name, group_name, resource_name);
+		let resource_setting = KernelX.JSON.read_fs_js(make_scope_setting_path(resource_directory)) as ResourceSetting;
 		if (resource_setting.category.resolution !== null && !package_setting.category.resolution.includes(resource_setting.category.resolution)) {
 			return;
 		}
@@ -46,11 +30,11 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 			},
 			resolution: {
 				name: '#resolution',
-				value: defined_or(resource_setting.category.resolution?.toString(), ''),
+				value: not_undefined_or(resource_setting.category.resolution?.toString(), ''),
 			},
 			locale: {
 				name: '#locale',
-				value: defined_or(resource_setting.category.locale?.toString(), ''),
+				value: not_undefined_or(resource_setting.category.locale?.toString(), ''),
 			},
 		};
 		variable_list.unshift(runtime_variable.group, runtime_variable.resolution, runtime_variable.locale);
@@ -59,7 +43,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 			case 'dummy': {
 				let resource_property = resource_setting.property as DummyResourceProperty;
 				{
-					KernelX.FileSystem.remove(generate_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
+					KernelX.FileSystem.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
 					resource_state.push({
 						category: resource_setting.category,
 						definition: null,
@@ -77,17 +61,17 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 			}
 			case 'general': {
 				let resource_property = resource_setting.property as GeneralResourceProperty;
-				let source_data_file = generate_child_path(resource_directory, 'data.bin');
+				let source_file = make_scope_child_path(resource_directory, 'source.bin');
 				{
-					KernelX.FileSystem.remove(generate_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
+					KernelX.FileSystem.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
 					let resource_path = parse_variable_string(resource_property.path, variable_list);
-					let package_resource_file = generate_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
+					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
 					KernelX.FileSystem.remove(package_resource_file);
 					if (Shell.is_windows || Shell.is_linux || Shell.is_macintosh) {
-						KernelX.FileSystem.create_link(package_resource_file, source_data_file, false);
+						KernelX.FileSystem.create_link(package_resource_file, source_file, false);
 					}
 					else {
-						KernelX.FileSystem.copy(source_data_file, package_resource_file);
+						KernelX.FileSystem.copy(source_file, package_resource_file);
 					}
 					resource_state.push({
 						category: resource_setting.category,
@@ -115,19 +99,19 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 			}
 			case 'texture': {
 				let resource_property = resource_setting.property as TextureResourceProperty;
-				let source_data_file = generate_child_path(resource_directory, 'data.ptx');
+				let source_file = make_scope_child_path(resource_directory, 'source.ptx');
 				{
-					KernelX.FileSystem.remove(generate_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
+					KernelX.FileSystem.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
 					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.ptx';
-					let package_resource_file = generate_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
+					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
 					KernelX.FileSystem.remove(package_resource_file);
 					if (Shell.is_windows || Shell.is_linux || Shell.is_macintosh) {
-						KernelX.FileSystem.create_link(package_resource_file, source_data_file, false);
+						KernelX.FileSystem.create_link(package_resource_file, source_file, false);
 					}
 					else {
-						KernelX.FileSystem.copy(source_data_file, package_resource_file);
+						KernelX.FileSystem.copy(source_file, package_resource_file);
 					}
-					let resource_manifest_additional_sprite: Array<RegularResourceManifest.TextureSpriteResource> = [];
+					let resource_manifest_additional_sprite: Array<TextureResourcePropertySpriteProperty> = [];
 					for (let sprite_resource_property of resource_property.sprite) {
 						resource_manifest_additional_sprite.push({
 							id: parse_variable_string(sprite_resource_property.id, variable_list),
@@ -172,13 +156,13 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 				let resource_property = resource_setting.property as SpecialRTONResourceProperty;
 				let conversion_setting = find_conversion_setting(package_setting.conversion, 'rton', resource_property.conversion);
 				assert_test(conversion_setting !== null, `invalid conversion name`);
-				let source_data_file = generate_child_path(resource_directory, 'data.json');
+				let source_file = make_scope_child_path(resource_directory, 'source.json');
 				{
-					KernelX.FileSystem.remove(generate_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
+					KernelX.FileSystem.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
 					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.rton';
-					let package_resource_file = generate_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
+					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
 					KernelX.FileSystem.remove(package_resource_file);
-					KernelX.Tool.PopCap.ReflectionObjectNotation.encode_fs(package_resource_file, source_data_file, true, true, conversion_setting.version, temporary_state.conversion.rton.buffer.view());
+					KernelX.Tool.PopCap.ReflectionObjectNotation.encode_cipher_fs(package_resource_file, source_file, true, true, conversion_setting.version, conversion_setting.key, buffer.view());
 					resource_state.push({
 						category: resource_setting.category,
 						definition: {
@@ -207,12 +191,13 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 				let resource_property = resource_setting.property as SpecialPTXResourceProperty;
 				let conversion_setting = find_conversion_setting(package_setting.conversion, 'ptx', resource_property.conversion);
 				assert_test(conversion_setting !== null, `invalid conversion name`);
-				let source_data_list: Record<string, [Kernel.Image.Image, Kernel.Image.ImageView]> = {};
+				let source_directory = make_scope_child_path(resource_directory, 'source.sprite');
+				let source_list: Record<string, [Kernel.Image.Image, Kernel.Image.ImageView]> = {};
 				for (let sprite_resource_property of resource_property.sprite) {
-					let source_data_file = generate_child_path(resource_directory, sprite_resource_property.source + '.png');
-					let source_data = KernelX.Image.File.PNG.read_fs_of(source_data_file);
-					let source_data_view = source_data.view();
-					source_data_list[sprite_resource_property.source] = [source_data, source_data_view];
+					let source_file = make_scope_child_path(source_directory, sprite_resource_property.source + '.png');
+					let source = KernelX.Image.File.PNG.read_fs_of(source_file);
+					let source_view = source.view();
+					source_list[sprite_resource_property.source] = [source, source_view];
 				}
 				for (let resource_resolution of resource_setting.category.resolution !== null ? [resource_setting.category.resolution] : package_setting.category.resolution) {
 					let resource_category = {
@@ -220,32 +205,37 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 						locale: resource_setting.category.locale,
 					};
 					runtime_variable.resolution.value = resource_resolution.toString();
-					KernelX.FileSystem.remove(generate_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_category));
+					KernelX.FileSystem.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_category));
 					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.ptx';
-					let package_resource_file = generate_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
+					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
 					KernelX.FileSystem.remove(package_resource_file);
-					let sprite_resource_manifest_list: Array<RegularResourceManifest.TextureSpriteResource> = [];
-					let scale_rate = Number(resource_resolution) / Number(resource_property.resolution);
-					let sprite_list: Record<string, [Kernel.Image.Image, Kernel.Image.ImageView]> = {};
-					for (let sprite_name in source_data_list) {
-						let sprite_view = source_data_list[sprite_name][1];
-						let current_sprite_size: [bigint, bigint] = [
-							BigInt(Math.ceil(Number(sprite_view.size().value[0]) * scale_rate)),
-							BigInt(Math.ceil(Number(sprite_view.size().value[1]) * scale_rate)),
-						];
-						let current_sprite = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(current_sprite_size));
-						let current_sprite_view = current_sprite.view();
-						Kernel.Tool.Texture.Transformation.Scale.process(sprite_view, current_sprite_view);
-						sprite_list[sprite_name] = [current_sprite, current_sprite_view];
+					let sprite_resource_manifest_list: Array<TextureResourcePropertySpriteProperty> = [];
+					let sprite_list: Record<string, [null | Kernel.Image.Image, Kernel.Image.ImageView]>;
+					if (resource_resolution === resource_property.resolution) {
+						sprite_list = source_list;
 					}
-					let sprite_item_map = record_transform(sprite_list, (key, value) => ([key, { w: Number(value[0].size().value[0]), h: Number(value[0].size().value[1]) }]));
+					else {
+						let scale_rate = Number(resource_resolution) / Number(resource_property.resolution);
+						sprite_list = {};
+						for (let sprite_name in source_list) {
+							let sprite_view = source_list[sprite_name][1];
+							let current_sprite_size: [bigint, bigint] = [
+								BigInt(Math.ceil(Number(sprite_view.size().value[0]) * scale_rate)),
+								BigInt(Math.ceil(Number(sprite_view.size().value[1]) * scale_rate)),
+							];
+							let current_sprite = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(current_sprite_size));
+							let current_sprite_view = current_sprite.view();
+							Kernel.Tool.Texture.Transformation.Scale.process(sprite_view, current_sprite_view);
+						}
+					}
+					let sprite_item_map = record_transform(sprite_list, (key, value) => ([key, { w: Number(value[1].size().value[0]), h: Number(value[1].size().value[1]) }]));
 					let [atlas_box, sprite_rect_list] = Support.Atlas.PackAutomatic.pack_automatic_best(sprite_item_map, Support.Atlas.PackAutomatic.expander_exponent_of_2_generator(false));
 					let atlas_size = PopCap.Texture.Encoding.compute_padded_image_size([BigInt(atlas_box.w), BigInt(atlas_box.h)], conversion_setting.format);
 					let atlas = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(atlas_size));
 					let atlas_view = atlas.view();
 					for (let sprite_resource_property of resource_property.sprite) {
 						let sprite_rect = sprite_rect_list[sprite_resource_property.source];
-						let sprite_resource_manifest: RegularResourceManifest.TextureSpriteResource = {
+						let sprite_resource_manifest: TextureResourcePropertySpriteProperty = {
 							id: parse_variable_string(sprite_resource_property.id, variable_list),
 							path: parse_variable_string(sprite_resource_property.path, variable_list),
 							position: [BigInt(sprite_rect.x), BigInt(sprite_rect.y)],
@@ -266,10 +256,10 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 						};
 					}
 					let resource_data_size = Support.PopCap.Texture.Encoding.compute_data_size(atlas_size, conversion_setting.format, texture_encode_option);
-					if (temporary_state.conversion.ptx.buffer.size().value < resource_data_size) {
-						temporary_state.conversion.ptx.buffer.allocate(Kernel.Size.value(resource_data_size));
+					if (buffer.size().value < resource_data_size) {
+						buffer.allocate(Kernel.Size.value(resource_data_size));
 					}
-					let resource_data = Kernel.ByteStreamView.watch(temporary_state.conversion.ptx.buffer.view());
+					let resource_data = Kernel.ByteStreamView.watch(buffer.view());
 					Support.PopCap.Texture.Encoding.encode(atlas_view, resource_data, conversion_setting.format, texture_encode_option);
 					KernelX.FileSystem.write_file(package_resource_file, resource_data.stream_view());
 					resource_state.push({
@@ -306,13 +296,13 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 				let resource_property = resource_setting.property as SpecialWEMResourceProperty;
 				let conversion_setting = find_conversion_setting(package_setting.conversion, 'pam', resource_property.conversion);
 				assert_test(conversion_setting !== null, `invalid conversion name`);
-				let source_data_file = generate_child_path(resource_directory, 'data.json');
+				let source_file = make_scope_child_path(resource_directory, 'source.json');
 				{
-					KernelX.FileSystem.remove(generate_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
+					KernelX.FileSystem.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
 					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.pam';
-					let package_resource_file = generate_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
+					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
 					KernelX.FileSystem.remove(package_resource_file);
-					KernelX.Tool.PopCap.Animation.encode_fs(package_resource_file, source_data_file, conversion_setting.version, temporary_state.conversion.pam.buffer.view());
+					KernelX.Tool.PopCap.Animation.encode_fs(package_resource_file, source_file, conversion_setting.version, buffer.view());
 					resource_state.push({
 						category: resource_setting.category,
 						definition: {
@@ -341,13 +331,13 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 				let resource_property = resource_setting.property as SpecialWEMResourceProperty;
 				let conversion_setting = find_conversion_setting(package_setting.conversion, 'wem', resource_property.conversion);
 				assert_test(conversion_setting !== null, `invalid conversion name`);
-				let source_data_file = generate_child_path(resource_directory, 'data.wav');
+				let source_file = make_scope_child_path(resource_directory, 'source.wav');
 				{
-					KernelX.FileSystem.remove(generate_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
+					KernelX.FileSystem.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
 					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.wem';
-					let package_resource_file = generate_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
+					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
 					KernelX.FileSystem.remove(package_resource_file);
-					Support.Wwise.Media.Encode.encode_fs(source_data_file, package_resource_file, conversion_setting.format);
+					Support.Wwise.Media.Encode.encode_fs(source_file, package_resource_file, conversion_setting.format);
 					resource_state.push({
 						category: resource_setting.category,
 						definition: {
@@ -387,15 +377,15 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 		package_setting: PackageSetting,
 		variable_list: Array<Variable>,
 		group_state: GroupState,
-		temporary_state: TemporaryState,
+		buffer: Kernel.ByteArray,
 	): void {
 		Console.information(`Compiling group ...`, [`${package_setting.name}:${part_name}/${group_name}`]);
-		let group_directory = `${project_directory}/${part_name}/${group_name}`;
-		let group_setting = KernelX.JSON.read_fs_js(generate_setting_path(group_directory)) as GroupSetting;
+		let group_directory = make_scope_root_path(project_directory, part_name, group_name);
+		let group_setting = KernelX.JSON.read_fs_js(make_scope_setting_path(group_directory)) as GroupSetting;
 		variable_list = merge_variable_list(variable_list, group_setting.variable);
 		group_state.id = parse_variable_string(group_name, variable_list);
-		for (let resource_name of generate_child_list(group_directory, resource_scope)) {
-			compile_resource(project_directory, part_name, group_name, resource_name, package_setting, variable_list, query_state_of_resource(group_state, resource_name), group_state.id, temporary_state);
+		for (let resource_name of list_scope_child_name(group_directory, resource_scope)) {
+			compile_resource(project_directory, part_name, group_name, resource_name, package_setting, variable_list, query_state_of_resource(group_state, resource_name), group_state.id, buffer);
 		}
 		return;
 	}
@@ -407,14 +397,14 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 		package_setting: PackageSetting,
 		variable_list: Array<Variable>,
 		part_state: PartState,
-		temporary_state: TemporaryState,
+		buffer: Kernel.ByteArray,
 	): void {
 		Console.information(`Compiling part ...`, [`${package_setting.name}:${part_name}`]);
-		let part_directory = `${project_directory}/${part_name}`;
-		let part_setting = KernelX.JSON.read_fs_js(generate_setting_path(part_directory)) as PartSetting;
+		let part_directory = make_scope_root_path(project_directory, part_name);
+		let part_setting = KernelX.JSON.read_fs_js(make_scope_setting_path(part_directory)) as PartSetting;
 		variable_list = merge_variable_list(variable_list, part_setting.variable);
-		for (let group_name of generate_child_list(part_directory, group_scope)) {
-			compile_group(project_directory, part_name, group_name, group_scope.slice(1) as any, package_setting, variable_list, query_state_of_group(part_state, group_name), temporary_state);
+		for (let group_name of list_scope_child_name(part_directory, group_scope)) {
+			compile_group(project_directory, part_name, group_name, group_scope.slice(1) as any, package_setting, variable_list, query_state_of_group(part_state, group_name), buffer);
 		}
 		return;
 	}
@@ -425,15 +415,15 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 		package_setting: PackageSetting,
 		variable_list: Array<Variable>,
 		package_state: PackageState,
-		temporary_state: TemporaryState,
+		buffer: Kernel.ByteArray,
 	): void {
 		Console.information(`Compiling project ...`, [`${package_setting.name}`]);
 		variable_list = merge_variable_list(variable_list, package_setting.variable);
-		for (let part_name of generate_child_list(project_directory, part_scope)) {
+		for (let part_name of list_scope_child_name(project_directory, part_scope)) {
 			if (!package_setting.part.includes(part_name)) {
 				continue;
 			}
-			compile_part(project_directory, part_name, part_scope.slice(1) as any, package_setting, variable_list, query_state_of_part(package_state, part_name), temporary_state);
+			compile_part(project_directory, part_name, part_scope.slice(1) as any, package_setting, variable_list, query_state_of_part(package_state, part_name), buffer);
 		}
 		return;
 	}
@@ -448,22 +438,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 	): void {
 		check_version_file(project_directory);
 		let buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
-		let temporary_state: TemporaryState = {
-			conversion: {
-				rton: {
-					buffer: buffer,
-				},
-				ptx: {
-					buffer: buffer,
-				},
-				pam: {
-					buffer: buffer,
-				},
-				wem: {
-				},
-			},
-		};
-		let project_setting = KernelX.JSON.read_fs_js(generate_setting_path(project_directory)) as ProjectSetting;
+		let project_setting = KernelX.JSON.read_fs_js(make_scope_setting_path(project_directory)) as ProjectSetting;
 		if (target_scope === null) {
 			target_scope = [[]];
 		}
@@ -473,7 +448,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 			}
 			Console.information(`Compiling package ...`, [`${package_setting.name}`]);
 			Console.information(`Loading state ...`, []);
-			let package_state_file = generate_build_package_state_path(project_directory, package_setting.name);
+			let package_state_file = make_build_package_state_path(project_directory, package_setting.name);
 			let package_state: PackageState;
 			try {
 				package_state = KernelX.JSON.read_fs_js(package_state_file) as PackageState;
@@ -484,7 +459,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 				};
 			}
 			for (let scope of target_scope) {
-				compile_project(project_directory, scope, package_setting, [], package_state, temporary_state);
+				compile_project(project_directory, scope, package_setting, [], package_state, buffer);
 			}
 			Console.information(`Saving state ...`, []);
 			KernelX.JSON.write_fs_js(package_state_file, package_state, true, true, true, true);

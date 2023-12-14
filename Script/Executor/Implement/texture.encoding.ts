@@ -40,7 +40,7 @@ namespace TwinStar.Script.Executor.Implement.texture.encoding {
 					}),
 				],
 				worker: ({ image_file, data_file, format }) => {
-					KernelX.Tool.Texture.Encoding.encode_fs(image_file, data_file, format as any);
+					KernelX.Tool.Texture.Encoding.encode_fs(data_file, image_file, format as any);
 					return;
 				},
 				batch_argument: null,

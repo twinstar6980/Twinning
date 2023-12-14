@@ -26,15 +26,15 @@ namespace TwinStar.Script.Support.PvZ2.TextTable.Convert {
 			try {
 				let source = KernelX.JSON.read(source_data).value as any;
 				let source_variant = source?.objects[0]?.objdata?.LocStringValues;
-				assert_test(typeof source_variant === 'object', `invalid source`);
-				if (source_variant instanceof Array) {
-					source_list = source_variant;
-					source_version = 'json_list';
-				}
-				else {
+				if (is_object_of_object(source_variant)) {
 					source_map = source_variant;
 					source_version = 'json_map';
 				}
+				if (is_object_of_array(source_variant)) {
+					source_list = source_variant;
+					source_version = 'json_list';
+				}
+				assert_fail(`invalid source`);
 			}
 			catch (e) {
 				source_version = 'text';
@@ -59,12 +59,12 @@ namespace TwinStar.Script.Support.PvZ2.TextTable.Convert {
 			case 'json_map': {
 				if (source_map === null) {
 					let source = KernelX.JSON.read(source_data).value as any;
-					source_map = source?.objects[0]?.objdata?.LocStringValues as Record<string, string>;
-					assert_test(typeof source_map === 'object' && (source_map as Object).constructor.name === 'Object', `invalid source`);
+					source_map = source?.objects[0]?.objdata?.LocStringValues;
+					assert_test(is_object_of_object(source_map), `invalid source`);
 				}
 				for (let key in source_map) {
 					let value = source_map[key];
-					assert_test(typeof value === 'string', `invalid map element`);
+					assert_test(is_string(value), `invalid map element`);
 					string_map[key] = value;
 				}
 				break;
@@ -72,14 +72,14 @@ namespace TwinStar.Script.Support.PvZ2.TextTable.Convert {
 			case 'json_list': {
 				if (source_list === null) {
 					let source = KernelX.JSON.read(source_data).value as any;
-					source_list = source?.objects[0]?.objdata?.LocStringValues as Array<string>;
-					assert_test(typeof source_list === 'object' && (source_list as Object).constructor.name === 'Array', `invalid source`);
+					source_list = source?.objects[0]?.objdata?.LocStringValues;
+					assert_test(is_object_of_array(source_list), `invalid source`);
 				}
 				assert_test(source_list.length % 2 === 0, `invalid list size`);
 				for (let index = 0; index < source_list.length; index += 2) {
 					let key = source_list[index + 0];
 					let value = source_list[index + 1];
-					assert_test(typeof key === 'string' && typeof value === 'string', `invalid list element`);
+					assert_test(is_string(key) && is_string(value), `invalid list element`);
 					string_map[key] = value;
 				}
 				break;

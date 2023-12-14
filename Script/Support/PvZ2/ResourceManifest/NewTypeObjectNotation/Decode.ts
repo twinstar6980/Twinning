@@ -68,7 +68,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.De
 			let group_type_index = read_enumeration(data);
 			group_base.type = GroupTypeEnumeration.find((item) => (item.index === group_type_index))?.value!;
 			assert_test(group_base.type !== undefined, `unknown group type index ${group_type_index}`);
-			group_simple.res = not_equal_or(read_integer(data), 0n, undefined);
+			group_simple.res = not_or(read_integer(data), 0n, undefined);
 			group_composite.subgroups.length = Number(read_integer(data));
 			group_simple.resources.length = Number(read_integer(data));
 			assert_test(read_boolean(data) === true);
@@ -82,7 +82,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.De
 					id: undefined!,
 					res: undefined!,
 				};
-				subgroup_base.res = not_equal_or(read_integer(data), 0n, undefined);
+				subgroup_base.res = not_or(read_integer(data), 0n, undefined);
 				subgroup_base.id = read_string(data);
 				group_composite.subgroups[subgroups_index] = object_clear_undefined({
 					...subgroup_base,

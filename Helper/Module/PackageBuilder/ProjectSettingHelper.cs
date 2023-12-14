@@ -2,6 +2,7 @@
 // ReSharper disable CheckNamespace MemberHidesStaticFromOuterClass
 
 using Helper;
+using Helper.Utility;
 
 namespace Helper.Module.PackageBuilder {
 

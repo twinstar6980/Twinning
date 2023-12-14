@@ -2,98 +2,94 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export function equal_or<T, U extends T, R>(
-		value: T,
-		target_value: U,
-		default_value: R,
-	): U | R {
-		return value === target_value ? value as U : default_value;
+	export function is_boolean(
+		value: unknown,
+	): value is boolean {
+		return typeof value === 'boolean';
 	}
 
-	export function not_equal_or<T, U extends T, R>(
-		value: T,
-		target_value: U,
-		default_value: R,
-	): T | R {
-		return value !== target_value ? value : default_value;
+	export function is_bigint(
+		value: unknown,
+	): value is bigint {
+		return typeof value === 'bigint';
 	}
 
-	// ------------------------------------------------
-
-	export function equal_or_by<T, U extends T, R>(
-		value: T,
-		target_value: U,
-		default_value_generator: () => R,
-	): U | R {
-		return value === target_value ? value as U : default_value_generator();
+	export function is_number(
+		value: unknown,
+	): value is number {
+		return typeof value === 'number';
 	}
 
-	export function not_equal_or_by<T, U extends T, R>(
-		value: T,
-		target_value: U,
-		default_value_generator: () => R,
-	): T | R {
-		return value !== target_value ? value : default_value_generator();
+	export function is_string(
+		value: unknown,
+	): value is string {
+		return typeof value === 'string';
 	}
 
-	// ------------------------------------------------
-
-	export function undefined_or<T, R>(
-		value: T | undefined,
-		default_value: R,
-	): undefined | R {
-		return equal_or(value, undefined, default_value);
+	export function is_object(
+		value: unknown,
+	): value is object {
+		return typeof value === 'object';
 	}
 
-	export function defined_or<T, R>(
-		value: T | undefined,
-		default_value: R,
-	): T | R {
-		return not_equal_or(value, undefined, default_value) as T | R;
+	export function is_object_of_object(
+		value: unknown,
+	): value is Record<any, any> {
+		return is_object(value) && value.constructor.name === 'Object';
 	}
 
-	export function null_or<T, R>(
-		value: T | null,
-		default_value: R,
-	): null | R {
-		return equal_or(value, null, default_value);
-	}
-
-	export function nonnull_or<T, R>(
-		value: T | null,
-		default_value: R,
-	): T | R {
-		return not_equal_or(value, null, default_value) as T | R;
+	export function is_object_of_array(
+		value: unknown,
+	): value is Array<any> {
+		return is_object(value) && value.constructor.name === 'Array';
 	}
 
 	// ------------------------------------------------
 
-	export function undefined_or_by<T, R>(
-		value: T | undefined,
-		default_value_generator: () => R,
-	): undefined | R {
-		return equal_or_by(value, undefined, default_value_generator);
+	export function is_or<Value, Except extends Value, Fallback>(
+		value: Value,
+		expect: Except,
+		fallback: Fallback,
+	): Except | Fallback {
+		return value === expect ? value as Except : fallback;
 	}
 
-	export function defined_or_by<T, R>(
-		value: T | undefined,
-		default_value_generator: () => R,
-	): T | R {
-		return not_equal_or_by(value, undefined, default_value_generator) as T | R;
+	export function not_or<Value, Except extends Value, Fallback>(
+		value: Value,
+		expect: Except,
+		fallback: Fallback,
+	): Exclude<Value, Except> | Fallback {
+		return value !== expect ? value as Exclude<Value, Except> : fallback;
 	}
 
-	export function null_or_by<T, R>(
-		value: T | null,
-		default_value_generator: () => R,
-	): null | R {
-		return equal_or_by(value, null, default_value_generator);
+	// ------------------------------------------------
+
+	export function is_undefined_or<Value, Fallback>(
+		value: Value | undefined,
+		fallback: Fallback,
+	): undefined | Fallback {
+		return is_or(value, undefined, fallback);
 	}
 
-	export function nonnull_or_by<T, R>(
-		value: T | null,
-		default_value_generator: () => R,
-	): T | R {
-		return not_equal_or_by(value, null, default_value_generator) as T | R;
+	export function not_undefined_or<Value, Fallback>(
+		value: Value | undefined,
+		fallback: Fallback,
+	): Value | Fallback {
+		return not_or(value, undefined, fallback);
+	}
+
+	export function is_null_or<Value, Fallback>(
+		value: Value | null,
+		fallback: Fallback,
+	): null | Fallback {
+		return is_or(value, null, fallback);
+	}
+
+	export function not_null_or<Value, Fallback>(
+		value: Value | null,
+		fallback: Fallback,
+	): Value | Fallback {
+		return not_or(value, null, fallback);
 	}
 
 	// ------------------------------------------------
@@ -135,16 +131,16 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export function object_clear_undefined<T extends Object>(
-		source: T,
-	): T {
-		for (let key in source) {
-			let value = source[key];
+	export function object_clear_undefined<Target extends Object>(
+		target: Target,
+	): Target {
+		for (let key in target) {
+			let value = target[key];
 			if (value === undefined) {
-				delete source[key];
+				delete target[key];
 			}
 		}
-		return source;
+		return target;
 	}
 
 	// ------------------------------------------------

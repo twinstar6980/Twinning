@@ -142,9 +142,47 @@ namespace Helper.Module.PackageBuilder {
 			return;
 		}
 
+		// ----------------
+
+		public async Task WorkerDoTranspile (
+			List<String>? targetScope,
+			Boolean?      mode
+		) {
+			GF.AssertTest(this.IsLoaded);
+			if (this.View.uPackageList.SelectedItems.Count != 1) {
+				App.MainWindow.PublishTip(InfoBarSeverity.Error, "Please select single package target", "");
+				return;
+			}
+			await this.WorkerExecuteCommand(ModdingWorker.ForwardHelper.MakeArgumentForCommand(
+				null,
+				"pvz2.package_project.transpile",
+				mode is null
+					? new {
+						project_directory = this.MakeScopeRootPath(),
+						target_package = String.Join('|', this.View.uPackageList.SelectedItems.First().AsClass<MainPagePackageItemController>().Setting.Name),
+						target_scope = targetScope is null ? "*" : String.Join('|', targetScope),
+					}
+					: new {
+						project_directory = this.MakeScopeRootPath(),
+						target_package = String.Join('|', this.View.uPackageList.SelectedItems.First().AsClass<MainPagePackageItemController>().Setting.Name),
+						target_scope = targetScope is null ? "*" : String.Join('|', targetScope),
+						option_generalize_rton = !mode,
+						option_generalize_ptx = !mode,
+						option_generalize_pam = !mode,
+						option_generalize_wem = !mode,
+						option_specialize_rton = mode,
+						option_specialize_ptx = mode,
+						option_specialize_pam = mode,
+						option_specialize_wem = mode,
+					}
+			));
+			return;
+		}
+
 		public async Task WorkerDoCompile (
 			List<String>? targetScope
 		) {
+			GF.AssertTest(this.IsLoaded);
 			await this.WorkerExecuteCommand(ModdingWorker.ForwardHelper.MakeArgumentForCommand(
 				null,
 				"pvz2.package_project.compile",
@@ -160,6 +198,7 @@ namespace Helper.Module.PackageBuilder {
 		public async Task WorkerDoLink (
 			Boolean remakeManifest
 		) {
+			GF.AssertTest(this.IsLoaded);
 			await this.WorkerExecuteCommand(ModdingWorker.ForwardHelper.MakeArgumentForCommand(
 				null,
 				"pvz2.package_project.link",
@@ -180,7 +219,7 @@ namespace Helper.Module.PackageBuilder {
 			try {
 				var versionFile = $"{projectDirectory}/version.txt";
 				var versionText = await StorageHelper.ReadFileText(versionFile);
-				GF.AssertTest(versionText == "1");
+				GF.AssertTest(versionText == "2");
 				return true;
 			}
 			catch (Exception) {
@@ -233,13 +272,20 @@ namespace Helper.Module.PackageBuilder {
 		}
 
 		public String MakeScopeSettingPath (
-			String root
+			String parent
 		) {
 			GF.AssertTest(this.IsLoaded);
-			return $"{root}/setting.json";
+			return $"{parent}/setting.json";
 		}
 
-		public String FindAvailableScopeName (
+		public List<String> ListScopeChildName (
+			String parent
+		) {
+			GF.AssertTest(this.IsLoaded);
+			return StorageHelper.ListDirectory(parent, 1).Where((value) => (!value.StartsWith("."))).ToList();
+		}
+
+		public String FindAvailableScopeChildName (
 			String parent,
 			String name
 		) {
@@ -346,7 +392,7 @@ namespace Helper.Module.PackageBuilder {
 				};
 				this.uPackageList_ItemsSource.Add(packageNode);
 			}
-			foreach (var partName in StorageHelper.ListDirectory(projectDirectory, 1).Where((value) => (!value.StartsWith(".")))) {
+			foreach (var partName in this.ListScopeChildName(projectDirectory)) {
 				var partDirectory = this.MakeScopeChildPath(projectDirectory, partName);
 				var partSetting = await JsonHelper.DeserializeFile<PartSetting>(this.MakeScopeSettingPath(partDirectory));
 				var partNode = new MainPagePartItemController() {
@@ -355,7 +401,7 @@ namespace Helper.Module.PackageBuilder {
 					Setting = partSetting,
 					Children = new ObservableCollection<MainPageGroupItemController>(),
 				};
-				foreach (var groupName in StorageHelper.ListDirectory(partDirectory, 1).Where((value) => (!value.StartsWith(".")))) {
+				foreach (var groupName in this.ListScopeChildName(partDirectory)) {
 					var groupDirectory = this.MakeScopeChildPath(partDirectory, groupName);
 					var groupSetting = await JsonHelper.DeserializeFile<GroupSetting>(this.MakeScopeSettingPath(groupDirectory));
 					var groupNode = new MainPageGroupItemController() {
@@ -365,7 +411,7 @@ namespace Helper.Module.PackageBuilder {
 						Parent = partNode,
 						Children = new ObservableCollection<MainPageResourceItemController>(),
 					};
-					foreach (var resourceName in StorageHelper.ListDirectory(groupDirectory, 1).Where((value) => (!value.StartsWith(".")))) {
+					foreach (var resourceName in this.ListScopeChildName(groupDirectory)) {
 						var resourceDirectory = this.MakeScopeChildPath(groupDirectory, resourceName);
 						var resourceSetting = await JsonHelper.DeserializeFile<ResourceSetting>(this.MakeScopeSettingPath(resourceDirectory));
 						var resourceNode = new MainPageResourceItemController() {
@@ -535,7 +581,7 @@ namespace Helper.Module.PackageBuilder {
 				partNode.Setting = partSetting;
 				partNode.Children.Clear();
 			}
-			foreach (var groupName in StorageHelper.ListDirectory(partDirectory, 1).Where((value) => (!value.StartsWith(".")))) {
+			foreach (var groupName in this.ListScopeChildName(partDirectory)) {
 				var groupDirectory = this.MakeScopeChildPath(partDirectory, groupName);
 				var groupSetting = await JsonHelper.DeserializeFile<GroupSetting>(this.MakeScopeSettingPath(groupDirectory));
 				var groupNode = new MainPageGroupItemController() {
@@ -545,7 +591,7 @@ namespace Helper.Module.PackageBuilder {
 					Parent = partNode,
 					Children = new ObservableCollection<MainPageResourceItemController>(),
 				};
-				foreach (var resourceName in StorageHelper.ListDirectory(groupDirectory, 1).Where((value) => (!value.StartsWith(".")))) {
+				foreach (var resourceName in this.ListScopeChildName(groupDirectory)) {
 					var resourceDirectory = this.MakeScopeChildPath(groupDirectory, resourceName);
 					var resourceSetting = await JsonHelper.DeserializeFile<ResourceSetting>(this.MakeScopeSettingPath(resourceDirectory));
 					var resourceNode = new MainPageResourceItemController() {
@@ -588,7 +634,7 @@ namespace Helper.Module.PackageBuilder {
 		public async Task PartAppend (
 		) {
 			GF.AssertTest(this.IsLoaded);
-			var destinationPart = this.FindAvailableScopeName(this.MakeScopeRootPath(), "__");
+			var destinationPart = this.FindAvailableScopeChildName(this.MakeScopeRootPath(), "__");
 			var destinationDirectory = this.MakeScopeRootPath(destinationPart);
 			GF.AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
 			var destinationSetting = new PartSetting() {
@@ -663,7 +709,7 @@ namespace Helper.Module.PackageBuilder {
 			String sourcePart
 		) {
 			GF.AssertTest(this.IsLoaded);
-			var destinationPart = this.FindAvailableScopeName(this.MakeScopeRootPath(), sourcePart);
+			var destinationPart = this.FindAvailableScopeChildName(this.MakeScopeRootPath(), sourcePart);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart);
 			var destinationDirectory = this.MakeScopeRootPath(destinationPart);
 			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
@@ -699,7 +745,7 @@ namespace Helper.Module.PackageBuilder {
 				groupNode.Setting = groupSetting;
 				groupNode.Children.Clear();
 			}
-			foreach (var resourceName in StorageHelper.ListDirectory(groupDirectory, 1).Where((value) => (!value.StartsWith(".")))) {
+			foreach (var resourceName in this.ListScopeChildName(groupDirectory)) {
 				var resourceDirectory = this.MakeScopeChildPath(groupDirectory, resourceName);
 				var resourceSetting = await JsonHelper.DeserializeFile<ResourceSetting>(this.MakeScopeSettingPath(resourceDirectory));
 				var resourceNode = new MainPageResourceItemController() {
@@ -742,7 +788,7 @@ namespace Helper.Module.PackageBuilder {
 			String sourcePart
 		) {
 			GF.AssertTest(this.IsLoaded);
-			var destinationGroup = this.FindAvailableScopeName(this.MakeScopeRootPath(sourcePart), "__");
+			var destinationGroup = this.FindAvailableScopeChildName(this.MakeScopeRootPath(sourcePart), "__");
 			var destinationDirectory = this.MakeScopeRootPath(sourcePart, destinationGroup);
 			GF.AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
 			var destinationSetting = new GroupSetting() {
@@ -815,7 +861,7 @@ namespace Helper.Module.PackageBuilder {
 			String sourceGroup
 		) {
 			GF.AssertTest(this.IsLoaded);
-			var destinationGroup = this.FindAvailableScopeName(this.MakeScopeRootPath(sourcePart), sourceGroup);
+			var destinationGroup = this.FindAvailableScopeChildName(this.MakeScopeRootPath(sourcePart), sourceGroup);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup);
 			var destinationDirectory = this.MakeScopeRootPath(sourcePart, destinationGroup);
 			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
@@ -915,7 +961,7 @@ namespace Helper.Module.PackageBuilder {
 			String sourceGroup
 		) {
 			GF.AssertTest(this.IsLoaded);
-			var destinationResource = this.FindAvailableScopeName(this.MakeScopeRootPath(sourcePart, sourceGroup), "__");
+			var destinationResource = this.FindAvailableScopeChildName(this.MakeScopeRootPath(sourcePart, sourceGroup), "__");
 			var destinationDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, destinationResource);
 			GF.AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
 			var destinationSetting = new ResourceSetting() {
@@ -990,7 +1036,7 @@ namespace Helper.Module.PackageBuilder {
 			String sourceResource
 		) {
 			GF.AssertTest(this.IsLoaded);
-			var destinationResource = this.FindAvailableScopeName(this.MakeScopeRootPath(sourcePart, sourceGroup), sourceResource);
+			var destinationResource = this.FindAvailableScopeChildName(this.MakeScopeRootPath(sourcePart, sourceGroup), sourceResource);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, sourceResource);
 			var destinationDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, destinationResource);
 			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
@@ -1142,6 +1188,39 @@ namespace Helper.Module.PackageBuilder {
 			var senders = sender.AsClass<MenuFlyoutItem>();
 			GF.AssertTest(this.IsLoaded);
 			await this.ProjectReveal(true);
+			return;
+		}
+
+		public async void uProjectActionTranspileCustom_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			GF.AssertTest(this.IsLoaded);
+			await this.WorkerDoTranspile(null, null);
+			await this.ProjectReload();
+			return;
+		}
+
+		public async void uProjectActionTranspileGeneralize_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			GF.AssertTest(this.IsLoaded);
+			await this.WorkerDoTranspile(null, false);
+			await this.ProjectReload();
+			return;
+		}
+
+		public async void uProjectActionTranspileSpecialize_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			GF.AssertTest(this.IsLoaded);
+			await this.WorkerDoTranspile(null, true);
+			await this.ProjectReload();
 			return;
 		}
 
@@ -1334,6 +1413,45 @@ namespace Helper.Module.PackageBuilder {
 			return;
 		}
 
+		public async void uPartActionTranspileCustom_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			GF.AssertTest(this.IsLoaded);
+			await this.WorkerDoTranspile(this.View.uPartList.SelectedItems.Select(GF.AsClass<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList(), null);
+			foreach (var item in this.View.uPartList.SelectedItems.Select(GF.AsClass<MainPagePartItemController>).ToList()) {
+				await this.PartReload(item.Name);
+			}
+			return;
+		}
+
+		public async void uPartActionTranspileGeneralize_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			GF.AssertTest(this.IsLoaded);
+			await this.WorkerDoTranspile(this.View.uPartList.SelectedItems.Select(GF.AsClass<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList(), false);
+			foreach (var item in this.View.uPartList.SelectedItems.Select(GF.AsClass<MainPagePartItemController>).ToList()) {
+				await this.PartReload(item.Name);
+			}
+			return;
+		}
+
+		public async void uPartActionTranspileSpecialize_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			GF.AssertTest(this.IsLoaded);
+			await this.WorkerDoTranspile(this.View.uPartList.SelectedItems.Select(GF.AsClass<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList(), true);
+			foreach (var item in this.View.uPartList.SelectedItems.Select(GF.AsClass<MainPagePartItemController>).ToList()) {
+				await this.PartReload(item.Name);
+			}
+			return;
+		}
+
 		public async void uPartActionCompile_Click (
 			Object          sender,
 			RoutedEventArgs args
@@ -1442,6 +1560,45 @@ namespace Helper.Module.PackageBuilder {
 			return;
 		}
 
+		public async void uGroupActionTranspileCustom_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			GF.AssertTest(this.IsLoaded);
+			await this.WorkerDoTranspile(this.View.uGroupList.SelectedItems.Select(GF.AsClass<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList(), null);
+			foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.AsClass<MainPageGroupItemController>).ToList()) {
+				await this.GroupReload(item.Parent.Name, item.Name);
+			}
+			return;
+		}
+
+		public async void uGroupActionTranspileGeneralize_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			GF.AssertTest(this.IsLoaded);
+			await this.WorkerDoTranspile(this.View.uGroupList.SelectedItems.Select(GF.AsClass<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList(), false);
+			foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.AsClass<MainPageGroupItemController>).ToList()) {
+				await this.GroupReload(item.Parent.Name, item.Name);
+			}
+			return;
+		}
+
+		public async void uGroupActionTranspileSpecialize_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			GF.AssertTest(this.IsLoaded);
+			await this.WorkerDoTranspile(this.View.uGroupList.SelectedItems.Select(GF.AsClass<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList(), true);
+			foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.AsClass<MainPageGroupItemController>).ToList()) {
+				await this.GroupReload(item.Parent.Name, item.Name);
+			}
+			return;
+		}
+
 		public async void uGroupActionCompile_Click (
 			Object          sender,
 			RoutedEventArgs args
@@ -1526,6 +1683,45 @@ namespace Helper.Module.PackageBuilder {
 			GF.AssertTest(this.IsLoaded);
 			foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.AsClass<MainPageResourceItemController>).ToList()) {
 				await this.ResourceCopy(item.Parent.Parent.Name, item.Parent.Name, item.Name);
+			}
+			return;
+		}
+
+		public async void uResourceActionTranspileCustom_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			GF.AssertTest(this.IsLoaded);
+			await this.WorkerDoTranspile(this.View.uResourceList.SelectedItems.Select(GF.AsClass<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList(), null);
+			foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.AsClass<MainPageResourceItemController>).ToList()) {
+				await this.ResourceReload(item.Parent.Parent.Name, item.Parent.Name, item.Name);
+			}
+			return;
+		}
+
+		public async void uResourceActionTranspileGeneralize_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			GF.AssertTest(this.IsLoaded);
+			await this.WorkerDoTranspile(this.View.uResourceList.SelectedItems.Select(GF.AsClass<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList(), false);
+			foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.AsClass<MainPageResourceItemController>).ToList()) {
+				await this.ResourceReload(item.Parent.Parent.Name, item.Parent.Name, item.Name);
+			}
+			return;
+		}
+
+		public async void uResourceActionTranspileSpecialize_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			GF.AssertTest(this.IsLoaded);
+			await this.WorkerDoTranspile(this.View.uResourceList.SelectedItems.Select(GF.AsClass<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList(), true);
+			foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.AsClass<MainPageResourceItemController>).ToList()) {
+				await this.ResourceReload(item.Parent.Parent.Name, item.Parent.Name, item.Name);
 			}
 			return;
 		}
@@ -1928,6 +2124,39 @@ namespace Helper.Module.PackageBuilder {
 			return;
 		}
 
+		public async void uActionTranspileCustom_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			GF.AssertTest(this.Host.IsLoaded);
+			await this.Host.WorkerDoTranspile(new List<String>() { $"/{this.Name}" }, null);
+			await this.Host.PartReload(this.Name);
+			return;
+		}
+
+		public async void uActionTranspileGeneralize_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			GF.AssertTest(this.Host.IsLoaded);
+			await this.Host.WorkerDoTranspile(new List<String>() { $"/{this.Name}" }, false);
+			await this.Host.PartReload(this.Name);
+			return;
+		}
+
+		public async void uActionTranspileSpecialize_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			GF.AssertTest(this.Host.IsLoaded);
+			await this.Host.WorkerDoTranspile(new List<String>() { $"/{this.Name}" }, true);
+			await this.Host.PartReload(this.Name);
+			return;
+		}
+
 		public async void uActionCompile_Click (
 			Object          sender,
 			RoutedEventArgs args
@@ -2197,6 +2426,39 @@ namespace Helper.Module.PackageBuilder {
 			var senders = sender.AsClass<MenuFlyoutItem>();
 			GF.AssertTest(this.Host.IsLoaded);
 			await this.Host.GroupCopy(this.Parent.Name, this.Name);
+			return;
+		}
+
+		public async void uActionTranspileCustom_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			GF.AssertTest(this.Host.IsLoaded);
+			await this.Host.WorkerDoTranspile(new List<String>() { $"/{this.Parent.Name}/{this.Name}" }, null);
+			await this.Host.GroupReload(this.Parent.Name, this.Name);
+			return;
+		}
+
+		public async void uActionTranspileGeneralize_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			GF.AssertTest(this.Host.IsLoaded);
+			await this.Host.WorkerDoTranspile(new List<String>() { $"/{this.Parent.Name}/{this.Name}" }, false);
+			await this.Host.GroupReload(this.Parent.Name, this.Name);
+			return;
+		}
+
+		public async void uActionTranspileSpecialize_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			GF.AssertTest(this.Host.IsLoaded);
+			await this.Host.WorkerDoTranspile(new List<String>() { $"/{this.Parent.Name}/{this.Name}" }, true);
+			await this.Host.GroupReload(this.Parent.Name, this.Name);
 			return;
 		}
 
@@ -2557,6 +2819,7 @@ namespace Helper.Module.PackageBuilder {
 			StorageHelper.RemoveDirectory(resourceDirectory);
 			StorageHelper.CreateDirectory(resourceDirectory);
 			await this.SaveSetting();
+			StorageHelper.CreateFile(this.Host.MakeScopeChildPath(resourceDirectory, "source.bin"));
 			this.NotifyPropertyChanged(
 				nameof(this.uTypeIcon_Glyph),
 				nameof(this.uTypeText_Text)
@@ -2587,6 +2850,7 @@ namespace Helper.Module.PackageBuilder {
 			StorageHelper.RemoveDirectory(resourceDirectory);
 			StorageHelper.CreateDirectory(resourceDirectory);
 			await this.SaveSetting();
+			StorageHelper.CreateFile(this.Host.MakeScopeChildPath(resourceDirectory, "source.ptx"));
 			this.NotifyPropertyChanged(
 				nameof(this.uTypeIcon_Glyph),
 				nameof(this.uTypeText_Text)
@@ -2613,6 +2877,7 @@ namespace Helper.Module.PackageBuilder {
 			StorageHelper.RemoveDirectory(resourceDirectory);
 			StorageHelper.CreateDirectory(resourceDirectory);
 			await this.SaveSetting();
+			StorageHelper.CreateFile(this.Host.MakeScopeChildPath(resourceDirectory, "source.json"));
 			this.NotifyPropertyChanged(
 				nameof(this.uTypeIcon_Glyph),
 				nameof(this.uTypeText_Text)
@@ -2632,6 +2897,7 @@ namespace Helper.Module.PackageBuilder {
 				Property = JsonHelper.SerializeToken(new SpecialPtxResourceProperty() {
 					Conversion = "",
 					Path = "",
+					Sprite = new List<SpecialPtxResourcePropertySpriteResource>(),
 				}),
 				Variable = this.Setting.Variable,
 			};
@@ -2639,6 +2905,7 @@ namespace Helper.Module.PackageBuilder {
 			StorageHelper.RemoveDirectory(resourceDirectory);
 			StorageHelper.CreateDirectory(resourceDirectory);
 			await this.SaveSetting();
+			StorageHelper.CreateDirectory(this.Host.MakeScopeChildPath(resourceDirectory, "source.sprite"));
 			this.NotifyPropertyChanged(
 				nameof(this.uTypeIcon_Glyph),
 				nameof(this.uTypeText_Text)
@@ -2665,6 +2932,7 @@ namespace Helper.Module.PackageBuilder {
 			StorageHelper.RemoveDirectory(resourceDirectory);
 			StorageHelper.CreateDirectory(resourceDirectory);
 			await this.SaveSetting();
+			StorageHelper.CreateFile(this.Host.MakeScopeChildPath(resourceDirectory, "source.json"));
 			this.NotifyPropertyChanged(
 				nameof(this.uTypeIcon_Glyph),
 				nameof(this.uTypeText_Text)
@@ -2691,6 +2959,7 @@ namespace Helper.Module.PackageBuilder {
 			StorageHelper.RemoveDirectory(resourceDirectory);
 			StorageHelper.CreateDirectory(resourceDirectory);
 			await this.SaveSetting();
+			StorageHelper.CreateFile(this.Host.MakeScopeChildPath(resourceDirectory, "source.wav"));
 			this.NotifyPropertyChanged(
 				nameof(this.uTypeIcon_Glyph),
 				nameof(this.uTypeText_Text)
@@ -2763,6 +3032,39 @@ namespace Helper.Module.PackageBuilder {
 			var senders = sender.AsClass<MenuFlyoutItem>();
 			GF.AssertTest(this.Host.IsLoaded);
 			await this.Host.ResourceCopy(this.Parent.Parent.Name, this.Parent.Name, this.Name);
+			return;
+		}
+
+		public async void uActionTranspileCustom_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			GF.AssertTest(this.Host.IsLoaded);
+			await this.Host.WorkerDoTranspile(new List<String>() { $"/{this.Parent.Parent.Name}/{this.Parent.Name}/{this.Name}" }, null);
+			await this.Host.ResourceReload(this.Parent.Parent.Name, this.Parent.Name, this.Name);
+			return;
+		}
+
+		public async void uActionTranspileGeneralize_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			GF.AssertTest(this.Host.IsLoaded);
+			await this.Host.WorkerDoTranspile(new List<String>() { $"/{this.Parent.Parent.Name}/{this.Parent.Name}/{this.Name}" }, false);
+			await this.Host.ResourceReload(this.Parent.Parent.Name, this.Parent.Name, this.Name);
+			return;
+		}
+
+		public async void uActionTranspileSpecialize_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			GF.AssertTest(this.Host.IsLoaded);
+			await this.Host.WorkerDoTranspile(new List<String>() { $"/{this.Parent.Parent.Name}/{this.Parent.Name}/{this.Name}" }, true);
+			await this.Host.ResourceReload(this.Parent.Parent.Name, this.Parent.Name, this.Name);
 			return;
 		}
 

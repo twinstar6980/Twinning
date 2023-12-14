@@ -88,7 +88,7 @@ namespace TwinStar.Script.Console {
 				input = inputer();
 				echoer(input);
 				let convert_result = converter(input);
-				if (typeof convert_result === 'string') {
+				if (is_string(convert_result)) {
 					state = convert_result;
 				}
 				else {
@@ -148,8 +148,8 @@ namespace TwinStar.Script.Console {
 				return;
 			},
 			converter,
-			nonnull_or(nullable, false),
-			nonnull_or(checker, () => (null)),
+			not_null_or(nullable, false),
+			not_null_or(checker, () => (null)),
 			initial,
 		);
 	}
@@ -181,8 +181,8 @@ namespace TwinStar.Script.Console {
 				return;
 			},
 			converter,
-			nonnull_or(nullable, false),
-			nonnull_or(checker, () => (null)),
+			not_null_or(nullable, false),
+			not_null_or(checker, () => (null)),
 			initial,
 		);
 	}
@@ -806,7 +806,7 @@ namespace TwinStar.Script.Console {
 	): null | Value {
 		let result: null | Value = undefined!;
 		let leading = 'Enumeration';
-		let maximum_key_length = Math.max(...option.map((e) => (e[1].length)));
+		let maximum_key_length = Math.max(...option.map((value) => (value[1].length)));
 		let message = option.map((value) => (`${make_prefix_padded_string(value[1], ' ', maximum_key_length)}. ${value[2]}`));
 		let converter = (value: string): string | [null | Value] => {
 			if (value === '') {

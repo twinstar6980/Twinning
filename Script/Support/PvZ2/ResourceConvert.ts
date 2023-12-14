@@ -2,7 +2,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 
 	// ------------------------------------------------
 
-	export type TextureFormatMap = Array<{
+	export type PTXFormatMap = Array<{
 		index: bigint;
 		format: Support.PopCap.Texture.Encoding.Format;
 	}>;
@@ -18,7 +18,7 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 		},
 		ptx: null | {
 			directory: string;
-			texture_format_map: TextureFormatMap;
+			format: PTXFormatMap;
 			atlas: null | {
 				resize: boolean;
 			};
@@ -149,21 +149,12 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 			if (option.rton !== null && path.endsWith('.rton')) {
 				Console.verbosity(`  ${path}`, []);
 				try {
-					if (option.rton.crypt !== null) {
-						KernelX.Tool.PopCap.ReflectionObjectNotation.decrypt_then_decode_fs(
-							`${resource_directory}/${path}`,
-							`${option.rton.directory}/${path.slice(0, -4)}json`,
-							option.rton.version,
-							option.rton.crypt.key,
-						);
-					}
-					else {
-						KernelX.Tool.PopCap.ReflectionObjectNotation.decode_fs(
-							`${resource_directory}/${path}`,
-							`${option.rton.directory}/${path.slice(0, -4)}json`,
-							option.rton.version,
-						);
-					}
+					KernelX.Tool.PopCap.ReflectionObjectNotation.decode_cipher_fs(
+						`${resource_directory}/${path}`,
+						`${option.rton.directory}/${path.slice(0, -4)}json`,
+						option.rton.version,
+						option.rton.crypt === null ? null : option.rton.crypt.key,
+					);
 				}
 				catch (e) {
 					Console.error_of(e);
@@ -177,14 +168,14 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 					let texture_additional_source = resource[2].additional.value;
 					let size = atlas_image_additional.size;
 					let actual_size = texture_additional_source.size;
-					let texture_format = option.ptx.texture_format_map.find((value) => (value.index === texture_additional_source.format));
-					assert_test(texture_format !== undefined, `unknown texture format : ${texture_additional_source.format}`);
-					Console.verbosity(`    size : [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] of [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ] , format : ${texture_format.format}`, []);
+					let format = option.ptx.format.find((value) => (value.index === texture_additional_source.format))?.format;
+					assert_test(format !== undefined, `unknown texture format : ${texture_additional_source.format}`);
+					Console.verbosity(`    size : [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] of [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ] , format : ${format}`, []);
 					let data = KernelX.FileSystem.read_file(`${resource_directory}/${path}.ptx`);
 					let stream = Kernel.ByteStreamView.watch(data.view());
 					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(actual_size));
 					let image_view = image.view();
-					Support.PopCap.Texture.Encoding.decode(stream, image_view, texture_format.format);
+					Support.PopCap.Texture.Encoding.decode(stream, image_view, format);
 					if (option.ptx.atlas !== null) {
 						let atlas_view = image_view;
 						if (option.ptx.atlas.resize) {

@@ -50,7 +50,7 @@ namespace TwinStar.Script {
 			position: number,
 			value?: bigint,
 		): void | bigint {
-			return (value === undefined) ? BigInt(this.m_view.getUint8(position)) : this.m_view.setUint8(position, Number(value));
+			return value === undefined ? BigInt(this.m_view.getUint8(position)) : this.m_view.setUint8(position, Number(value));
 		}
 
 		// ------------------------------------------------
@@ -68,7 +68,7 @@ namespace TwinStar.Script {
 			position: number,
 			value?: bigint,
 		): void | bigint {
-			return (value === undefined) ? BigInt(this.m_view.getUint16(position, this.m_endian_little)) : this.m_view.setUint16(position, Number(value), this.m_endian_little);
+			return value === undefined ? BigInt(this.m_view.getUint16(position, this.m_endian_little)) : this.m_view.setUint16(position, Number(value), this.m_endian_little);
 		}
 
 		// ------------------------------------------------
@@ -86,7 +86,7 @@ namespace TwinStar.Script {
 			position: number,
 			value?: bigint,
 		): void | bigint {
-			return (value === undefined) ? BigInt(this.m_view.getUint32(position, this.m_endian_little)) : this.m_view.setUint32(position, Number(value), this.m_endian_little);
+			return value === undefined ? BigInt(this.m_view.getUint32(position, this.m_endian_little)) : this.m_view.setUint32(position, Number(value), this.m_endian_little);
 		}
 
 		// ------------------------------------------------
@@ -104,7 +104,7 @@ namespace TwinStar.Script {
 			position: number,
 			value?: bigint,
 		): void | bigint {
-			return (value === undefined) ? this.m_view.getBigUint64(position, this.m_endian_little) : this.m_view.setBigInt64(position, value, this.m_endian_little);
+			return value === undefined ? this.m_view.getBigUint64(position, this.m_endian_little) : this.m_view.setBigInt64(position, value, this.m_endian_little);
 		}
 
 		// ------------------------------------------------
@@ -122,7 +122,7 @@ namespace TwinStar.Script {
 			position: number,
 			value?: bigint,
 		): void | bigint {
-			return (value === undefined) ? BigInt(this.m_view.getInt8(position)) : this.m_view.setInt8(position, Number(value));
+			return value === undefined ? BigInt(this.m_view.getInt8(position)) : this.m_view.setInt8(position, Number(value));
 		}
 
 		// ------------------------------------------------
@@ -140,7 +140,7 @@ namespace TwinStar.Script {
 			position: number,
 			value?: bigint,
 		): void | bigint {
-			return (value === undefined) ? BigInt(this.m_view.getInt16(position, this.m_endian_little)) : this.m_view.setInt16(position, Number(value), this.m_endian_little);
+			return value === undefined ? BigInt(this.m_view.getInt16(position, this.m_endian_little)) : this.m_view.setInt16(position, Number(value), this.m_endian_little);
 		}
 
 		// ------------------------------------------------
@@ -158,7 +158,7 @@ namespace TwinStar.Script {
 			position: number,
 			value?: bigint,
 		): void | bigint {
-			return (value === undefined) ? BigInt(this.m_view.getInt32(position, this.m_endian_little)) : this.m_view.setInt32(position, Number(value), this.m_endian_little);
+			return value === undefined ? BigInt(this.m_view.getInt32(position, this.m_endian_little)) : this.m_view.setInt32(position, Number(value), this.m_endian_little);
 		}
 
 		// ------------------------------------------------
@@ -176,7 +176,7 @@ namespace TwinStar.Script {
 			position: number,
 			value?: bigint,
 		): void | bigint {
-			return (value === undefined) ? this.m_view.getBigInt64(position, this.m_endian_little) : this.m_view.setBigInt64(position, value, this.m_endian_little);
+			return value === undefined ? this.m_view.getBigInt64(position, this.m_endian_little) : this.m_view.setBigInt64(position, value, this.m_endian_little);
 		}
 
 		// ------------------------------------------------
@@ -194,7 +194,7 @@ namespace TwinStar.Script {
 			position: number,
 			value?: number,
 		): void | number {
-			return (value === undefined) ? this.m_view.getFloat32(position, this.m_endian_little) : this.m_view.setFloat32(position, value, this.m_endian_little);
+			return value === undefined ? this.m_view.getFloat32(position, this.m_endian_little) : this.m_view.setFloat32(position, value, this.m_endian_little);
 		}
 
 		// ------------------------------------------------
@@ -212,7 +212,7 @@ namespace TwinStar.Script {
 			position: number,
 			value?: number,
 		): void | number {
-			return (value === undefined) ? this.m_view.getFloat64(position, this.m_endian_little) : this.m_view.setFloat64(position, value, this.m_endian_little);
+			return value === undefined ? this.m_view.getFloat64(position, this.m_endian_little) : this.m_view.setFloat64(position, value, this.m_endian_little);
 		}
 
 		// ------------------------------------------------
@@ -271,7 +271,7 @@ namespace TwinStar.Script {
 		p(
 			value?: number,
 		): void | number {
-			return (value === undefined) ? (this.m_position) : (this.m_position = value, undefined);
+			return value === undefined ? this.m_position : (this.m_position = value, undefined);
 		}
 
 		// ------------------------------------------------

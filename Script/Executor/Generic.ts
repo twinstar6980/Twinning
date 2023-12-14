@@ -66,8 +66,8 @@ namespace TwinStar.Script.Executor {
 			if (index < raw_command.length && raw_command[index] === '-argument') {
 				index++;
 				let argument = KernelX.JSON.read_s_js(raw_command[index++]);
-				assert_test(argument !== null && typeof argument === 'object' && (argument as Object).constructor.name === 'Object' && !(argument instanceof Array), `argument must be a object`);
-				command.argument = argument;
+				assert_test(is_object_of_object(argument), `argument must be a object`);
+				command.argument = argument as Argument;
 			}
 			result.push(command);
 		}
@@ -156,7 +156,7 @@ namespace TwinStar.Script.Executor {
 			}
 			state = selected_method.worker(argument);
 		}
-		if (typeof state === 'string') {
+		if (is_string(state)) {
 			Console.warning(los('executor.generic:finish_skipped'), [state]);
 		}
 		else {
@@ -167,7 +167,7 @@ namespace TwinStar.Script.Executor {
 				Console.success(los('executor.generic:finish_succeeded'), [los('executor.generic:duration', (state[1] / 1000).toFixed(3))]);
 			}
 		}
-		return typeof state === 'string' ? null : state;
+		return is_string(state) ? null : state;
 	}
 
 	// ------------------------------------------------

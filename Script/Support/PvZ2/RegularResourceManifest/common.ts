@@ -22,7 +22,7 @@ namespace TwinStar.Script.Support.PvZ2.RegularResourceManifest {
 		type: ResourceType;
 	};
 
-	export type TextureSpriteResource = {
+	export type TextureResourceAdditionalSprite = {
 		id: string;
 		path: string;
 		position: [bigint, bigint];
@@ -34,7 +34,7 @@ namespace TwinStar.Script.Support.PvZ2.RegularResourceManifest {
 	export type TextureResourceAdditional = {
 		path: string;
 		size: [bigint, bigint];
-		sprite: Array<TextureSpriteResource>;
+		sprite: Array<TextureResourceAdditionalSprite>;
 	};
 
 	export type ResourceAdditional = {

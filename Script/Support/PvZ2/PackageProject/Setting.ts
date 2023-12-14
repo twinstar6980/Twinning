@@ -29,13 +29,22 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject {
 		type: RegularResourceManifest.ResourceType;
 	};
 
+	export type TextureResourcePropertySpriteProperty = {
+		id: string;
+		path: string;
+		position: [bigint, bigint];
+		size: [bigint, bigint];
+		offset: [bigint, bigint];
+		separate: [bigint, bigint];
+	};
+
 	export type TextureResourceProperty = {
 		path: string;
 		format: bigint;
 		pitch: bigint;
 		additional_byte_count: bigint;
 		size: [bigint, bigint];
-		sprite: Array<RegularResourceManifest.TextureSpriteResource>;
+		sprite: Array<TextureResourcePropertySpriteProperty>;
 	};
 
 	export type SpecialRTONResourceProperty = {
@@ -43,17 +52,19 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject {
 		path: string;
 	};
 
+	export type SpecialPTXResourcePropertySpriteProperty = {
+		source: string;
+		id: string;
+		path: string;
+		offset: [bigint, bigint];
+		separate: [bigint, bigint];
+	};
+
 	export type SpecialPTXResourceProperty = {
 		conversion: string;
 		path: string;
 		resolution: bigint;
-		sprite: Array<{
-			source: string;
-			id: string;
-			path: string;
-			offset: [bigint, bigint];
-			separate: [bigint, bigint];
-		}>;
+		sprite: Array<SpecialPTXResourcePropertySpriteProperty>;
 	};
 
 	export type SpecialPAMResourceProperty = {
@@ -89,6 +100,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject {
 		rton: Array<{
 			name: string;
 			version: typeof Kernel.Tool.PopCap.ReflectionObjectNotation.Version.Value;
+			key: null | string;
 		}>;
 		ptx: Array<{
 			name: string;

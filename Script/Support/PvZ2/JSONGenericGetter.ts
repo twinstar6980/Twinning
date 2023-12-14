@@ -10,20 +10,19 @@ namespace TwinStar.Script.Support.PvZ2.JSONGenericGetter {
 		source: ValueType | undefined,
 		default_value?: T,
 	): boolean | T {
-		if (source === undefined) {
-			assert_test(default_value !== undefined, `type error`);
+		if (source === undefined && default_value !== undefined) {
 			return default_value;
 		}
-		if (typeof source === 'boolean') {
+		if (is_boolean(source)) {
 			return source;
 		}
-		if (typeof source === 'number') {
-			return source !== 0;
-		}
-		if (typeof source === 'bigint') {
+		if (is_bigint(source)) {
 			return source !== 0n;
 		}
-		if (typeof source === 'string') {
+		if (is_number(source)) {
+			return source !== 0;
+		}
+		if (is_string(source)) {
 			return source !== '';
 		}
 		assert_fail(`type error`);
@@ -33,21 +32,20 @@ namespace TwinStar.Script.Support.PvZ2.JSONGenericGetter {
 		source: ValueType | undefined,
 		default_value?: T,
 	): number | T {
-		if (source === undefined) {
-			assert_test(default_value !== undefined, `type error`);
+		if (source === undefined && default_value !== undefined) {
 			return default_value;
 		}
-		if (typeof source === 'number') {
+		if (is_number(source)) {
 			return source;
 		}
-		if (typeof source === 'boolean') {
+		if (is_boolean(source)) {
 			return source ? 1 : 0;
 		}
-		if (typeof source === 'bigint') {
+		if (is_bigint(source)) {
 			return Number(source);
 		}
-		if (typeof source === 'string') {
-			return Number.parseFloat(source);
+		if (is_string(source)) {
+			return Number(source);
 		}
 		assert_fail(`type error`);
 	}
@@ -56,21 +54,20 @@ namespace TwinStar.Script.Support.PvZ2.JSONGenericGetter {
 		source: ValueType | undefined,
 		default_value?: T,
 	): bigint | T {
-		if (source === undefined) {
-			assert_test(default_value !== undefined, `type error`);
+		if (source === undefined && default_value !== undefined) {
 			return default_value;
 		}
-		if (typeof source === 'bigint') {
+		if (is_bigint(source)) {
 			return source;
 		}
-		if (typeof source === 'boolean') {
+		if (is_boolean(source)) {
 			return source ? 1n : 0n;
 		}
-		if (typeof source === 'number') {
-			return BigInt(Number.isInteger(source) ? source : source.toFixed(0));
+		if (is_number(source)) {
+			return BigInt(Math.trunc(source));
 		}
-		if (typeof source === 'string') {
-			return BigInt(Number.parseFloat(source).toFixed(0));
+		if (is_string(source)) {
+			return BigInt(Math.trunc(Number(source)));
 		}
 		assert_fail(`type error`);
 	}
@@ -79,11 +76,10 @@ namespace TwinStar.Script.Support.PvZ2.JSONGenericGetter {
 		source: ValueType | undefined,
 		default_value?: T,
 	): string | T {
-		if (source === undefined) {
-			assert_test(default_value !== undefined, `type error`);
+		if (source === undefined && default_value !== undefined) {
 			return default_value;
 		}
-		if (typeof source === 'string') {
+		if (is_string(source)) {
 			return source;
 		}
 		assert_fail(`type error`);

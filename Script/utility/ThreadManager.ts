@@ -10,12 +10,10 @@ namespace TwinStar.Script {
 			result: [boolean, any];
 		}>;
 
-		// ------------------------------------------------
-
 		private make_executor(
 			index: number,
 			executor: () => any,
-		) {
+		): () => void {
 			return () => {
 				let item = this.m_pool[index];
 				item.context.query_byte_stream_use_big_endian().value = Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value;
@@ -27,6 +25,7 @@ namespace TwinStar.Script {
 				catch (e) {
 					item.result = [true, e];
 				}
+				return;
 			};
 		}
 

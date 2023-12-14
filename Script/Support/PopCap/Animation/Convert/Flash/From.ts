@@ -249,7 +249,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 				}, [
 					XML.create_element_node('Actionscript', {}, [
 						XML.create_element_node('script', {}, [
-							XML.create_text_node(frame.command.map((e) => (`fscommand("${e[0]}", "${e[1]}");`)).join('\n'), true),
+							XML.create_text_node(frame.command.map((value) => (`fscommand("${value[0]}", "${value[1]}");`)).join('\n'), true),
 						]),
 					]),
 					XML.create_element_node('elements', {}, []),
@@ -281,15 +281,15 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 			xflVersion: `${k_xfl_version}`,
 		}, [
 			XML.create_element_node('folders', {},
-				['media', 'source', 'image', 'sprite'].map((e) => (XML.create_element_node('DOMFolderItem', {
-					name: `${e}`,
+				['media', 'source', 'image', 'sprite'].map((value) => (XML.create_element_node('DOMFolderItem', {
+					name: `${value}`,
 					isExpanded: `false`,
 				}, [])))
 			),
-			XML.create_element_node('media', {}, animation.image.map((e) => (
+			XML.create_element_node('media', {}, animation.image.map((value) => (
 				XML.create_element_node('DOMBitmapItem', {
-					name: `media/${e.name.split('|')[0]}`,
-					href: `media/${e.name.split('|')[0]}.png`,
+					name: `media/${value.name.split('|')[0]}`,
+					href: `media/${value.name.split('|')[0]}.png`,
 				}, [])
 			))),
 			XML.create_element_node('symbols', {}, [
@@ -358,12 +358,12 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 		return {
 			extra: {
 				position: animation.position,
-				image: animation.image.map((e) => ({
-					name: e.name,
-					size: e.size!,
+				image: animation.image.map((value) => ({
+					name: value.name,
+					size: value.size!,
 				})),
-				sprite: animation.sprite.map((e) => ({
-					name: e.name!,
+				sprite: animation.sprite.map((value) => ({
+					name: value.name!,
 				})),
 				main_sprite: {
 					name: animation.main_sprite.name!,

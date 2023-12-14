@@ -6,8 +6,8 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 		x_Matrix: Kernel.XML.JS_Element,
 	): [number, number] {
 		return [
-			Number(defined_or(x_Matrix.attribute.x, '0')),
-			Number(defined_or(x_Matrix.attribute.y, '0')),
+			Number(not_undefined_or(x_Matrix.attribute.x, '0')),
+			Number(not_undefined_or(x_Matrix.attribute.y, '0')),
 		];
 	}
 
@@ -15,19 +15,19 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 		x_Matrix: Kernel.XML.JS_Element,
 	): Transform {
 		return [
-			Number(defined_or(x_Matrix.attribute.a, '1')),
-			Number(defined_or(x_Matrix.attribute.b, '0')),
-			Number(defined_or(x_Matrix.attribute.c, '0')),
-			Number(defined_or(x_Matrix.attribute.d, '1')),
-			Number(defined_or(x_Matrix.attribute.tx, '0')),
-			Number(defined_or(x_Matrix.attribute.ty, '0')),
+			Number(not_undefined_or(x_Matrix.attribute.a, '1')),
+			Number(not_undefined_or(x_Matrix.attribute.b, '0')),
+			Number(not_undefined_or(x_Matrix.attribute.c, '0')),
+			Number(not_undefined_or(x_Matrix.attribute.d, '1')),
+			Number(not_undefined_or(x_Matrix.attribute.tx, '0')),
+			Number(not_undefined_or(x_Matrix.attribute.ty, '0')),
 		];
 	}
 
 	function parse_color(
 		x_Matrix: Kernel.XML.JS_Element,
 	): Color {
-		let compute = (multiplier_s: undefined | string, offset_s: undefined | string) => (Math.max(0, Math.min(255, Number(defined_or(multiplier_s, '1')) * 255 + Number(defined_or(offset_s, '0')))) / 255);
+		let compute = (multiplier_s: undefined | string, offset_s: undefined | string) => (Math.max(0, Math.min(255, Number(not_undefined_or(multiplier_s, '1')) * 255 + Number(not_undefined_or(offset_s, '0')))) / 255);
 		return [
 			compute(x_Matrix.attribute.redMultiplier, x_Matrix.attribute.redOffset),
 			compute(x_Matrix.attribute.greenMultiplier, x_Matrix.attribute.greenOffset),
@@ -120,7 +120,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 			assert_test(x_DOMFrame_list.length === 1);
 			let x_DOMFrame = x_DOMFrame_list[0];
 			let frame_index = BigInt(x_DOMFrame.attribute.index);
-			let frame_duration = BigInt(defined_or(x_DOMFrame.attribute.duration, '1'));
+			let frame_duration = BigInt(not_undefined_or(x_DOMFrame.attribute.duration, '1'));
 			assert_test(frame_index === 0n && frame_duration > 0n);
 			let x_elements_list = XML.find_child_element(x_DOMFrame, 'elements');
 			assert_test(x_elements_list.length === 1);
@@ -157,7 +157,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 			};
 			x_DOMFrame_list.forEach((x_DOMFrame) => {
 				let frame_index = BigInt(x_DOMFrame.attribute.index);
-				let frame_duration = BigInt(defined_or(x_DOMFrame.attribute.duration, '1'));
+				let frame_duration = BigInt(not_undefined_or(x_DOMFrame.attribute.duration, '1'));
 				let transform: Kernel.Tool.PopCap.Animation.Definition.JS_N.VariantTransform;
 				let color: Color;
 				let x_elements_list = XML.find_child_element(x_DOMFrame, 'elements');
@@ -341,7 +341,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 				// TODO : check
 			}
 		}
-		let frame_rate = BigInt(defined_or(x_DOMDocument.attribute.frameRate, '24'));
+		let frame_rate = BigInt(not_undefined_or(x_DOMDocument.attribute.frameRate, '24'));
 		let width = Number(x_DOMDocument.attribute.width);
 		let height = Number(x_DOMDocument.attribute.height);
 		return {

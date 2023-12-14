@@ -39,25 +39,25 @@ namespace TwinStar.Script.PathUtility {
 	export function parent(
 		target: string,
 	): null | string {
-		let regular_target = regularize(target);
-		let index = regular_target.lastIndexOf('/');
-		return (index === -1) ? (null) : (regular_target.slice(0, index));
+		target = regularize(target);
+		let index = target.lastIndexOf('/');
+		return index === -1 ? null : target.slice(0, index);
 	}
 
 	export function name(
 		target: string,
 	): string {
-		let regular_target = regularize(target);
-		let index = regular_target.lastIndexOf('/');
-		return (index === -1) ? (regular_target) : (regular_target.slice(index + 1));
+		target = regularize(target);
+		let index = target.lastIndexOf('/');
+		return index === -1 ? target : target.slice(index + 1);
 	}
 
 	export function extension(
 		target: string,
 	): null | string {
-		let regular_target = regularize(target);
-		let index = regular_target.lastIndexOf('.');
-		return (index === -1) ? (null) : (regular_target.slice(index + 1));
+		target = regularize(target);
+		let index = target.lastIndexOf('.');
+		return index === -1 ? null : target.slice(index + 1);
 	}
 
 	// ------------------------------------------------

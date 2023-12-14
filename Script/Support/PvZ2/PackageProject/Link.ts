@@ -10,7 +10,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Link {
 	): void {
 		check_version_file(project_directory);
 		let buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
-		let project_setting = KernelX.JSON.read_fs_js(generate_setting_path(project_directory)) as ProjectSetting;
+		let project_setting = KernelX.JSON.read_fs_js(make_scope_setting_path(project_directory)) as ProjectSetting;
 		for (let package_setting of project_setting.package) {
 			if (target_package !== null && !target_package.includes(package_setting.name)) {
 				continue;
@@ -18,7 +18,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Link {
 			Console.information(`Linking package ...`, [`${package_setting.name}`]);
 			if (remake_manifest) {
 				Console.information(`Loading state ...`, []);
-				let package_state = KernelX.JSON.read_fs_js(generate_build_package_state_path(project_directory, package_setting.name)) as PackageState;
+				let package_state = KernelX.JSON.read_fs_js(make_build_package_state_path(project_directory, package_setting.name)) as PackageState;
 				Console.information(`Remaking manifest ...`, []);
 				let package_definition: Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Package = {
 					group: [],
@@ -34,13 +34,13 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Link {
 					general: package_setting.compression.general,
 					texture: package_setting.compression.texture,
 				};
-				let part_name_list = generate_child_list(`${project_directory}`, []);
+				let part_name_list = list_scope_child_name(`${project_directory}`, []);
 				for (let part_name in package_state.part) {
 					if (!part_name_list.includes(part_name) || !package_setting.part.includes(part_name)) {
 						continue;
 					}
 					let part_state = package_state.part[part_name];
-					let group_name_list = generate_child_list(`${project_directory}/${part_name}`, []);
+					let group_name_list = list_scope_child_name(`${project_directory}/${part_name}`, []);
 					for (let group_name in part_state.group) {
 						if (!group_name_list.includes(group_name)) {
 							continue;
@@ -64,7 +64,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Link {
 							};
 							package_manifest.group.push(group_manifest);
 						}
-						let resource_name_list = generate_child_list(`${project_directory}/${part_name}/${group_name}`, []);
+						let resource_name_list = list_scope_child_name(`${project_directory}/${part_name}/${group_name}`, []);
 						for (let resource_name in group_state.resource) {
 							if (!resource_name_list.includes(resource_name)) {
 								continue;
@@ -108,7 +108,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Link {
 						}
 					}
 				}
-				let package_bundle_directory = generate_build_package_bundle_path(project_directory, package_setting.name);
+				let package_bundle_directory = make_build_package_bundle_path(project_directory, package_setting.name);
 				if (package_setting.manifest.type === 'internal') {
 					throw new Error('not implemented');
 				}
@@ -160,8 +160,8 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Link {
 				KernelX.JSON.write_fs_js(`${package_bundle_directory}/definition.json`, package_definition);
 			}
 			Console.information(`Packing bundle ...`, []);
-			let data_file = generate_build_package_data_path(project_directory, package_setting.name);
-			let bundle_directory = generate_build_package_bundle_path(project_directory, package_setting.name);
+			let data_file = make_build_package_data_path(project_directory, package_setting.name);
+			let bundle_directory = make_build_package_bundle_path(project_directory, package_setting.name);
 			let definition_file = `${bundle_directory}/definition.json`;
 			let manifest_file = `${bundle_directory}/manifest.json`;
 			let resource_directory = `${bundle_directory}/resource`;
