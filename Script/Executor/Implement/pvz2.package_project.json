@@ -11,14 +11,8 @@
 				"option_generalize_pam": "?input",
 				"option_generalize_wem": "?input",
 				"option_specialize_rton": "?input",
-				"option_specialize_rton_version_number": 1,
-				"option_specialize_rton_version_native_string_encoding_use_utf8": true,
-				"option_specialize_rton_crypt": "?input",
-				"option_specialize_rton_crypt_key": "?input",
 				"option_specialize_ptx": "?input",
-				"option_specialize_ptx_format": "?input",
 				"option_specialize_pam": "?input",
-				"option_specialize_pam_version_number": 6,
 				"option_specialize_wem": "?input",
 				"buffer_size": "8.0m",
 			},
@@ -56,106 +50,183 @@
 			"batch_argument": null,
 		},
 	},
-	"ptx_format_list": {
-		"iphone": [
+	"default_conversion_setting": {
+		"rton": [
 			{
-				"index": 0,
-				"format": "argb_8888",
-				"conversion": "adaptive:original",
+				"name": "@:default",
+				"version": {
+					"number": 1,
+					"native_string_encoding_use_utf8": true,
+				},
+				"key": null,
 			},
 			{
-				"index": 1,
-				"format": "rgba_4444",
-				"conversion": "basic:rgba_4444",
+				"name": "#:1_eascii_plain",
+				"version": {
+					"number": 1,
+					"native_string_encoding_use_utf8": false,
+				},
+				"key": null,
 			},
 			{
-				"index": 2,
-				"format": "rgb_565",
-				"conversion": "basic:rgb_565",
+				"name": "#:1_utf8_plain",
+				"version": {
+					"number": 1,
+					"native_string_encoding_use_utf8": true,
+				},
+				"key": null,
 			},
 			{
-				"index": 3,
-				"format": "rgba_5551",
-				"conversion": "basic:rgba_5551",
+				"name": "#:1_eascii_cipher",
+				"version": {
+					"number": 1,
+					"native_string_encoding_use_utf8": false,
+				},
+				"key": "<set-your-key>",
 			},
 			{
-				"index": 21,
-				"format": "rgba_4444_tiled",
-				"conversion": "basic:rgba_4444_tiled",
-			},
-			{
-				"index": 22,
-				"format": "rgb_565_tiled",
-				"conversion": "basic:rgb_565_tiled",
-			},
-			{
-				"index": 23,
-				"format": "rgba_5551_tiled",
-				"conversion": "basic:rgba_5551_tiled",
-			},
-			{
-				"index": 30,
-				"format": "rgba_pvrtc4",
-				"conversion": "adaptive:compressed",
-			},
-			{
-				"index": 148,
-				"format": "rgb_pvrtc4_a_8",
-				"conversion": "adaptive:compressed",
+				"name": "#:1_utf8_cipher",
+				"version": {
+					"number": 1,
+					"native_string_encoding_use_utf8": true,
+				},
+				"key": "<set-your-key>",
 			},
 		],
-		"android": [
+		"ptx": [
 			{
-				"index": 0,
+				"name": "@:original",
 				"format": "rgba_8888_o",
-				"conversion": "adaptive:original",
+				"index": 0,
 			},
 			{
-				"index": 1,
-				"format": "rgba_4444",
-				"conversion": "basic:rgba_4444",
-			},
-			{
-				"index": 2,
-				"format": "rgb_565",
-				"conversion": "basic:rgb_565",
-			},
-			{
-				"index": 3,
-				"format": "rgba_5551",
-				"conversion": "basic:rgba_5551",
-			},
-			{
-				"index": 21,
-				"format": "rgba_4444_tiled",
-				"conversion": "basic:rgba_4444_tiled",
-			},
-			{
-				"index": 22,
-				"format": "rgb_565_tiled",
-				"conversion": "basic:rgb_565_tiled",
-			},
-			{
-				"index": 23,
-				"format": "rgba_5551_tiled",
-				"conversion": "basic:rgba_5551_tiled",
-			},
-			{
-				"index": 147,
+				"name": "@:compressed",
 				"format": "rgb_etc1_a_8",
-				"conversion": "adaptive:compressed",
+				"index": 147,
+			},
+			{
+				"name": "#:rgba_8888_o",
+				"format": "rgba_8888_o",
+				"index": 0,
+			},
+			{
+				"name": "#:argb_8888",
+				"format": "argb_8888",
+				"index": 0,
+			},
+			{
+				"name": "#:rgba_4444",
+				"format": "rgba_4444",
+				"index": 1,
+			},
+			{
+				"name": "#:rgb_565",
+				"format": "rgb_565",
+				"index": 2,
+			},
+			{
+				"name": "#:rgba_5551",
+				"format": "rgba_5551",
+				"index": 3,
+			},
+			{
+				"name": "#:rgba_4444_tiled",
+				"format": "rgba_4444_tiled",
+				"index": 21,
+			},
+			{
+				"name": "#:rgb_565_tiled",
+				"format": "rgb_565_tiled",
+				"index": 22,
+			},
+			{
+				"name": "#:rgba_5551_tiled",
+				"format": "rgba_5551_tiled",
+				"index": 23,
+			},
+			{
+				"name": "#:rgba_pvrtc4",
+				"format": "rgba_pvrtc4",
+				"index": 30,
+			},
+			{
+				"name": "#:rgb_pvrtc4_a_8",
+				"format": "rgb_pvrtc4_a_8",
+				"index": 148,
+			},
+			{
+				"name": "#:rgb_etc1_a_8",
+				"format": "rgb_etc1_a_8",
+				"index": 147,
+			},
+			{
+				"name": "#:rgb_etc1_a_palette",
+				"format": "rgb_etc1_a_palette",
+				"index": 147,
 			},
 		],
-		"android_pvz2_cn": [
+		"pam": [
 			{
-				"index": 0,
-				"format": "rgba_8888_o",
-				"conversion": "adaptive:original",
+				"name": "#:1",
+				"version": {
+					"number": 1,
+				},
 			},
 			{
-				"index": 147,
-				"format": "rgb_etc1_a_palette",
-				"conversion": "adaptive:compressed",
+				"name": "#:2",
+				"version": {
+					"number": 2,
+				},
+			},
+			{
+				"name": "#:3",
+				"version": {
+					"number": 3,
+				},
+			},
+			{
+				"name": "#:4",
+				"version": {
+					"number": 4,
+				},
+			},
+			{
+				"name": "#:5",
+				"version": {
+					"number": 5,
+				},
+			},
+			{
+				"name": "#:6",
+				"version": {
+					"number": 6,
+				},
+			},
+		],
+		"wem": [
+			{
+				"name": "#:pcm",
+				"format": "pcm",
+			},
+			{
+				"name": "#:adpcm",
+				"format": "adpcm",
+			},
+			{
+				"name": "#:vorbis",
+				"format": "vorbis",
+			},
+			{
+				"name": "#:aac",
+				"format": "aac",
+			},
+			{
+				"name": "#:opus",
+				"format": "opus",
+			},
+			{
+				"name": "#:wemopus",
+				"format": "wemopus",
 			},
 		],
 	},

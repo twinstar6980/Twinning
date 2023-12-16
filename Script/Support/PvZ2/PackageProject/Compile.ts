@@ -13,7 +13,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 		group_id: string,
 		buffer: Kernel.ByteArray,
 	): void {
-		Console.information(`Compiling resource ...`, [`${package_setting.name}:${part_name}/${group_name}/${resource_name}`]);
+		Console.information(`Compiling ...`, [`${package_setting.name}/${part_name}/${group_name}/${resource_name}`]);
 		let resource_directory = make_scope_root_path(project_directory, part_name, group_name, resource_name);
 		let resource_setting = KernelX.JSON.read_fs_js(make_scope_setting_path(resource_directory)) as ResourceSetting;
 		if (resource_setting.category.resolution !== null && !package_setting.category.resolution.includes(resource_setting.category.resolution)) {
@@ -154,9 +154,8 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 			}
 			case 'special_rton': {
 				let resource_property = resource_setting.property as SpecialRTONResourceProperty;
-				let conversion_setting = find_conversion_setting(package_setting.conversion, 'rton', resource_property.conversion);
-				assert_test(conversion_setting !== null, `invalid conversion name`);
 				let source_file = make_scope_child_path(resource_directory, 'source.json');
+				let conversion_setting = find_conversion_setting_strict(package_setting.conversion, 'rton', resource_property.conversion);
 				{
 					KernelX.FileSystem.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
 					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.rton';
@@ -189,9 +188,8 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 			}
 			case 'special_ptx': {
 				let resource_property = resource_setting.property as SpecialPTXResourceProperty;
-				let conversion_setting = find_conversion_setting(package_setting.conversion, 'ptx', resource_property.conversion);
-				assert_test(conversion_setting !== null, `invalid conversion name`);
 				let source_directory = make_scope_child_path(resource_directory, 'source.sprite');
+				let conversion_setting = find_conversion_setting_strict(package_setting.conversion, 'ptx', resource_property.conversion);
 				let source_list: Record<string, [Kernel.Image.Image, Kernel.Image.ImageView]> = {};
 				for (let sprite_resource_property of resource_property.sprite) {
 					let source_file = make_scope_child_path(source_directory, sprite_resource_property.source + '.png');
@@ -294,9 +292,8 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 			}
 			case 'special_pam': {
 				let resource_property = resource_setting.property as SpecialWEMResourceProperty;
-				let conversion_setting = find_conversion_setting(package_setting.conversion, 'pam', resource_property.conversion);
-				assert_test(conversion_setting !== null, `invalid conversion name`);
 				let source_file = make_scope_child_path(resource_directory, 'source.json');
+				let conversion_setting = find_conversion_setting_strict(package_setting.conversion, 'pam', resource_property.conversion);
 				{
 					KernelX.FileSystem.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
 					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.pam';
@@ -329,9 +326,8 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 			}
 			case 'special_wem': {
 				let resource_property = resource_setting.property as SpecialWEMResourceProperty;
-				let conversion_setting = find_conversion_setting(package_setting.conversion, 'wem', resource_property.conversion);
-				assert_test(conversion_setting !== null, `invalid conversion name`);
 				let source_file = make_scope_child_path(resource_directory, 'source.wav');
+				let conversion_setting = find_conversion_setting_strict(package_setting.conversion, 'wem', resource_property.conversion);
 				{
 					KernelX.FileSystem.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
 					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.wem';
@@ -379,7 +375,6 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 		group_state: GroupState,
 		buffer: Kernel.ByteArray,
 	): void {
-		Console.information(`Compiling group ...`, [`${package_setting.name}:${part_name}/${group_name}`]);
 		let group_directory = make_scope_root_path(project_directory, part_name, group_name);
 		let group_setting = KernelX.JSON.read_fs_js(make_scope_setting_path(group_directory)) as GroupSetting;
 		variable_list = merge_variable_list(variable_list, group_setting.variable);
@@ -399,7 +394,6 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 		part_state: PartState,
 		buffer: Kernel.ByteArray,
 	): void {
-		Console.information(`Compiling part ...`, [`${package_setting.name}:${part_name}`]);
 		let part_directory = make_scope_root_path(project_directory, part_name);
 		let part_setting = KernelX.JSON.read_fs_js(make_scope_setting_path(part_directory)) as PartSetting;
 		variable_list = merge_variable_list(variable_list, part_setting.variable);
@@ -417,7 +411,6 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 		package_state: PackageState,
 		buffer: Kernel.ByteArray,
 	): void {
-		Console.information(`Compiling project ...`, [`${package_setting.name}`]);
 		variable_list = merge_variable_list(variable_list, package_setting.variable);
 		for (let part_name of list_scope_child_name(project_directory, part_scope)) {
 			if (!package_setting.part.includes(part_name)) {
@@ -446,7 +439,6 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 			if (target_package !== null && !target_package.includes(package_setting.name)) {
 				continue;
 			}
-			Console.information(`Compiling package ...`, [`${package_setting.name}`]);
 			Console.information(`Loading state ...`, []);
 			let package_state_file = make_build_package_state_path(project_directory, package_setting.name);
 			let package_state: PackageState;

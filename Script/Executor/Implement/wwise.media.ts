@@ -33,7 +33,7 @@ namespace TwinStar.Script.Executor.Implement.wwise.media {
 					}),
 					typical_argument_string({
 						id: 'format',
-						option: Support.Wwise.Media.Encode.FormatE,
+						option: Support.Wwise.Media.FormatE,
 						checker: null,
 						automatic: null,
 						condition: null,

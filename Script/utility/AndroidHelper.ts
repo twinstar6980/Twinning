@@ -2,6 +2,12 @@ namespace TwinStar.Script.AndroidHelper {
 
 	// ------------------------------------------------
 
+	export let g_sh_program_file: null | string = null;
+
+	export let g_adb_program_file: null | string = null;
+
+	// ------------------------------------------------
+
 	export const k_remote_temporary_directory = `/data/local/tmp/TwinStar.ToolKit.Temporary`;
 
 	function es(
@@ -13,7 +19,7 @@ namespace TwinStar.Script.AndroidHelper {
 	function run_sh(
 		argument: Array<string>,
 	): string {
-		let program_path = ProcessHelper.search_path(`sh`);
+		let program_path = g_sh_program_file !== null ? g_sh_program_file : ProcessHelper.search_path(`sh`);
 		assert_test(program_path !== null, `can not found 'sh' program from PATH environment`);
 		let execute_result = ProcessHelper.execute(program_path, argument, KernelX.Process.list_environment_variable());
 		if (execute_result.code !== 0n) {
@@ -25,7 +31,7 @@ namespace TwinStar.Script.AndroidHelper {
 	function run_adb(
 		argument: Array<string>,
 	): string {
-		let program_path = ProcessHelper.search_path(`adb`);
+		let program_path = g_adb_program_file !== null ? g_adb_program_file : ProcessHelper.search_path(`adb`);
 		assert_test(program_path !== null, `can not found 'adb' program from PATH environment`);
 		let execute_result = ProcessHelper.execute(program_path, argument, KernelX.Process.list_environment_variable());
 		if (execute_result.code !== 0n) {
@@ -264,7 +270,7 @@ namespace TwinStar.Script.AndroidHelper {
 	): Array<string> {
 		let shell_result: string;
 		shell_result = shell(`pm list packages`);
-		let id = split_string_by_line_feed(shell_result).map((value) => (value.slice(8))).filter(rule.test);
+		let id = split_string_by_line_feed(shell_result).map((value) => (value.slice(8))).filter((value) => (rule.test(value)));
 		return id;
 	}
 

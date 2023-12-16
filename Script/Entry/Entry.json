@@ -10,6 +10,12 @@
 		"disable_object_trailing_comma": false,
 		"disable_object_line_breaking": false,
 	},
+	"external_program": {
+		"sh": null,
+		"adb": null,
+		"vgmstream": null,
+		"wwise": null,
+	},
 	"thread_limit": 0,
 	"command_notification_time_limit": 15000,
 }

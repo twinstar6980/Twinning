@@ -9,7 +9,7 @@ namespace TwinStar.Script.Executor.Implement.pvz2.package_project {
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
-		ptx_format_list: Record<string, Support.PvZ2.PackageProject.Transpile.PTXFormatMap>;
+		default_conversion_setting: Support.PvZ2.PackageProject.ConversionSetting;
 	};
 
 	export function injector(
@@ -71,57 +71,17 @@ namespace TwinStar.Script.Executor.Implement.pvz2.package_project {
 						automatic: null,
 						condition: null,
 					}),
-					typical_argument_integer({
-						id: 'option_specialize_rton_version_number',
-						option: KernelX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE,
-						checker: null,
-						automatic: null,
-						condition: (argument: { option_specialize_rton: boolean; }) => (argument.option_specialize_rton ? null : 0n),
-					}),
-					typical_argument_boolean({
-						id: 'option_specialize_rton_version_native_string_encoding_use_utf8',
-						checker: null,
-						automatic: null,
-						condition: (argument: { option_specialize_rton: boolean; }) => (argument.option_specialize_rton ? null : false),
-					}),
-					typical_argument_boolean({
-						id: 'option_specialize_rton_crypt',
-						checker: null,
-						automatic: null,
-						condition: (argument: { option_specialize_rton: boolean; }) => (argument.option_specialize_rton ? null : false),
-					}),
-					typical_argument_string({
-						id: 'option_specialize_rton_crypt_key',
-						option: null,
-						checker: null,
-						automatic: null,
-						condition: (argument: { option_specialize_rton: boolean; option_specialize_rton_crypt: boolean; }) => (argument.option_specialize_rton && argument.option_specialize_rton_crypt ? null : ''),
-					}),
 					typical_argument_boolean({
 						id: 'option_specialize_ptx',
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
-					typical_argument_string({
-						id: 'option_specialize_ptx_format',
-						option: Object.keys(configuration.ptx_format_list),
-						checker: null,
-						automatic: null,
-						condition: (argument: { option_specialize_ptx: boolean; }) => (argument.option_specialize_ptx ? null : ''),
-					}),
 					typical_argument_boolean({
 						id: 'option_specialize_pam',
 						checker: null,
 						automatic: null,
 						condition: null,
-					}),
-					typical_argument_integer({
-						id: 'option_specialize_pam_version_number',
-						option: KernelX.Tool.PopCap.Animation.VersionNumberE,
-						checker: null,
-						automatic: null,
-						condition: (argument: { option_specialize_pam: boolean; }) => (argument.option_specialize_pam ? null : 0n),
 					}),
 					typical_argument_boolean({
 						id: 'option_specialize_wem',
@@ -145,46 +105,21 @@ namespace TwinStar.Script.Executor.Implement.pvz2.package_project {
 					option_generalize_pam,
 					option_generalize_wem,
 					option_specialize_rton,
-					option_specialize_rton_version_number,
-					option_specialize_rton_version_native_string_encoding_use_utf8,
-					option_specialize_rton_crypt,
-					option_specialize_rton_crypt_key,
 					option_specialize_ptx,
-					option_specialize_ptx_format,
 					option_specialize_pam,
-					option_specialize_pam_version_number,
 					option_specialize_wem,
 					buffer_size,
 				}) => {
 					let target_scope_list = target_scope === '*' ? null : target_scope.length === 0 ? [] : target_scope.split('|').map(Support.PvZ2.PackageProject.parse_scope_expression);
 					let option: Support.PvZ2.PackageProject.Transpile.Option = {
-						generalize_rton: !option_generalize_rton ? null : {
-						},
-						generalize_ptx: !option_generalize_ptx ? null : {
-						},
-						generalize_pam: !option_generalize_pam ? null : {
-						},
-						generalize_wem: !option_generalize_wem ? null : {
-						},
-						specialize_rton: !option_specialize_rton ? null : {
-							version: {
-								number: option_specialize_rton_version_number as any,
-								native_string_encoding_use_utf8: option_specialize_rton_version_native_string_encoding_use_utf8,
-							},
-							crypt: !option_specialize_rton_crypt ? null : {
-								key: option_specialize_rton_crypt_key,
-							},
-						},
-						specialize_ptx: !option_specialize_ptx ? null : {
-							format: configuration.ptx_format_list[option_specialize_ptx_format],
-						},
-						specialize_pam: !option_specialize_pam ? null : {
-							version: {
-								number: option_specialize_pam_version_number as any,
-							},
-						},
-						specialize_wem: !option_specialize_wem ? null : {
-						},
+						generalize_rton: option_generalize_rton,
+						generalize_ptx: option_generalize_ptx,
+						generalize_pam: option_generalize_pam,
+						generalize_wem: option_generalize_wem,
+						specialize_rton: option_specialize_rton,
+						specialize_ptx: option_specialize_ptx,
+						specialize_pam: option_specialize_pam,
+						specialize_wem: option_specialize_wem,
 					};
 					Support.PvZ2.PackageProject.Transpile.transpile(project_directory, target_scope_list as any, target_package, option, buffer_size);
 					return;
@@ -313,7 +248,7 @@ namespace TwinStar.Script.Executor.Implement.pvz2.package_project {
 					}),
 				],
 				worker: ({ project_directory, package_directory, package_name, package_version_number, package_version_extended_texture_information_for_pvz2_cn }) => {
-					Support.PvZ2.PackageProject.Parse.parse(project_directory, package_directory, package_name, { number: package_version_number as any, extended_texture_information_for_pvz2_cn: package_version_extended_texture_information_for_pvz2_cn as any });
+					Support.PvZ2.PackageProject.Parse.parse(project_directory, package_directory, package_name, { number: package_version_number as any, extended_texture_information_for_pvz2_cn: package_version_extended_texture_information_for_pvz2_cn as any }, configuration.default_conversion_setting);
 					return;
 				},
 				batch_argument: null,

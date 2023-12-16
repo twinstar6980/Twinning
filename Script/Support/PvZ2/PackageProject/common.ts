@@ -172,6 +172,18 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject {
 		return result === undefined ? null : result;
 	}
 
+	export function find_conversion_setting_strict<Type extends keyof ConversionSetting>(
+		list: ConversionSetting,
+		type: Type,
+		name: string,
+	): ConversionSetting[Type][number] {
+		let result = find_conversion_setting(list, type, name);
+		if (result === null) {
+			throw new Error(`can not found conversion setting of type '${type}' by name '${name}'`);
+		}
+		return result;
+	}
+
 	// ------------------------------------------------
 
 	export function list_scope_child_name(

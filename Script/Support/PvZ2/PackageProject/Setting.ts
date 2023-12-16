@@ -113,7 +113,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject {
 		}>;
 		wem: Array<{
 			name: string;
-			format: Support.Wwise.Media.Encode.Format;
+			format: Support.Wwise.Media.Format;
 		}>;
 	};
 

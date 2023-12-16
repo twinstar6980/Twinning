@@ -172,10 +172,10 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 					assert_test(format !== undefined, `unknown texture format : ${texture_additional_source.format}`);
 					Console.verbosity(`    size : [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] of [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ] , format : ${format}`, []);
 					let data = KernelX.FileSystem.read_file(`${resource_directory}/${path}.ptx`);
-					let stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(actual_size));
 					let image_view = image.view();
-					Support.PopCap.Texture.Encoding.decode(stream, image_view, format);
+					Support.PopCap.Texture.Encoding.decode(data_stream, image_view, format);
 					if (option.ptx.atlas !== null) {
 						let atlas_view = image_view;
 						if (option.ptx.atlas.resize) {
@@ -197,23 +197,21 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 			if (option.pam !== null && path.endsWith('.pam')) {
 				Console.verbosity(`  ${path}`, []);
 				try {
-					let raw_file = `${path}.json`;
-					let flash_directory = `${path}.xfl`;
 					let data = KernelX.FileSystem.read_file(`${resource_directory}/${path}`);
-					let stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let version_c = Kernel.Tool.PopCap.Animation.Version.value(option.pam.version);
 					let definition = Kernel.Tool.PopCap.Animation.Definition.Animation.default();
-					Kernel.Tool.PopCap.Animation.Decode.process(stream, definition, version_c);
+					Kernel.Tool.PopCap.Animation.Decode.process(data_stream, definition, version_c);
 					let definition_json = definition.get_json(version_c);
 					let definition_js = definition_json.value;
 					if (option.pam.json !== null) {
-						KernelX.JSON.write_fs(`${option.pam.directory}/${raw_file}`, definition_json);
+						KernelX.JSON.write_fs(`${option.pam.directory}/${path}.json`, definition_json);
 					}
 					if (option.pam.flash !== null) {
 						let flash_package = Support.PopCap.Animation.Convert.Flash.From.from(definition_js);
-						Support.PopCap.Animation.Convert.Flash.save_flash_package(`${option.pam.directory}/${flash_directory}`, flash_package);
-						Support.PopCap.Animation.Convert.Flash.SourceManager.create_fsh(`${option.pam.directory}/${flash_directory}`, definition_js);
-						Support.PopCap.Animation.Convert.Flash.create_xfl_content_file(`${option.pam.directory}/${flash_directory}`);
+						Support.PopCap.Animation.Convert.Flash.save_flash_package(`${option.pam.directory}/${path}.xfl`, flash_package);
+						Support.PopCap.Animation.Convert.Flash.SourceManager.create_fsh(`${option.pam.directory}/${path}.xfl`, definition_js);
+						Support.PopCap.Animation.Convert.Flash.create_xfl_content_file(`${option.pam.directory}/${path}.xfl`);
 					}
 				}
 				catch (e) {

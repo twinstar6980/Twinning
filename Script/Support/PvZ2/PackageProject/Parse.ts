@@ -2,176 +2,12 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Parse {
 
 	// ------------------------------------------------
 
-	const k_default_conversion_setting: ConversionSetting = {
-		rton: [
-			{
-				name: 'adaptive:default',
-				version: {
-					number: 1n,
-					native_string_encoding_use_utf8: true,
-				},
-				key: null,
-			},
-			{
-				name: 'basic:1.eascii',
-				version: {
-					number: 1n,
-					native_string_encoding_use_utf8: false,
-				},
-				key: null,
-			},
-			{
-				name: 'basic:1.utf8',
-				version: {
-					number: 1n,
-					native_string_encoding_use_utf8: true,
-				},
-				key: null,
-			},
-		],
-		ptx: [
-			{
-				name: 'adaptive:original',
-				format: 'rgba_8888_o',
-				index: 0n,
-			},
-			{
-				name: 'adaptive:compressed',
-				format: 'rgb_etc1_a_8',
-				index: 147n,
-			},
-			{
-				name: 'basic:rgba_8888_o',
-				format: 'rgba_8888_o',
-				index: 0n,
-			},
-			{
-				name: 'basic:argb_8888',
-				format: 'argb_8888',
-				index: 0n,
-			},
-			{
-				name: 'basic:rgba_4444',
-				format: 'rgba_4444',
-				index: 1n,
-			},
-			{
-				name: 'basic:rgb_565',
-				format: 'rgb_565',
-				index: 2n,
-			},
-			{
-				name: 'basic:rgba_5551',
-				format: 'rgba_5551',
-				index: 3n,
-			},
-			{
-				name: 'basic:rgba_4444_tiled',
-				format: 'rgba_4444_tiled',
-				index: 21n,
-			},
-			{
-				name: 'basic:rgb_565_tiled',
-				format: 'rgb_565_tiled',
-				index: 22n,
-			},
-			{
-				name: 'basic:rgba_5551_tiled',
-				format: 'rgba_5551_tiled',
-				index: 23n,
-			},
-			{
-				name: 'basic:rgba_pvrtc4',
-				format: 'rgba_pvrtc4',
-				index: 30n,
-			},
-			{
-				name: 'basic:rgb_pvrtc4_a_8',
-				format: 'rgb_pvrtc4_a_8',
-				index: 148n,
-			},
-			{
-				name: 'basic:rgb_etc1_a_8',
-				format: 'rgb_etc1_a_8',
-				index: 147n,
-			},
-			{
-				name: 'basic:rgb_etc1_a_palette',
-				format: 'rgb_etc1_a_palette',
-				index: 147n,
-			},
-		],
-		pam: [
-			{
-				name: 'basic:1',
-				version: {
-					number: 1n,
-				},
-			},
-			{
-				name: 'basic:2',
-				version: {
-					number: 2n,
-				},
-			},
-			{
-				name: 'basic:3',
-				version: {
-					number: 3n,
-				},
-			},
-			{
-				name: 'basic:4',
-				version: {
-					number: 4n,
-				},
-			},
-			{
-				name: 'basic:5',
-				version: {
-					number: 5n,
-				},
-			},
-			{
-				name: 'basic:6',
-				version: {
-					number: 6n,
-				},
-			},
-		],
-		wem: [
-			{
-				name: 'adaptive:original',
-				format: 'pcm',
-			},
-			{
-				name: 'adaptive:compressed',
-				format: 'vorbis',
-			},
-			{
-				name: 'basic:pcm',
-				format: 'pcm',
-			},
-			{
-				name: 'basic:adpcm',
-				format: 'adpcm',
-			},
-			{
-				name: 'basic:vorbis',
-				format: 'vorbis',
-			},
-			{
-				name: 'basic:wemopus',
-				format: 'wemopus',
-			},
-		],
-	};
-
 	export function parse(
 		project_directory: string,
 		package_directory: string,
 		package_name: string,
 		package_version: typeof Kernel.Tool.PopCap.ResourceStreamBundle.Version.Value,
+		conversion_setting: ConversionSetting,
 	): void {
 		check_version_file(project_directory);
 		let find_item_ignore_case = <T>(list: Array<T>, key: string, value: string): null | T => {
@@ -215,7 +51,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Parse {
 				resolution: [],
 				locale: [],
 			},
-			conversion: k_default_conversion_setting,
+			conversion: conversion_setting,
 			variable: [],
 		};
 		Console.information(`Extracting manifest ...`, []);

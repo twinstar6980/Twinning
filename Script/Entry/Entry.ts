@@ -45,6 +45,7 @@ namespace TwinStar.Script.Entry {
 			disable_object_trailing_comma: boolean;
 			disable_object_line_breaking: boolean;
 		};
+		external_program: Record<'sh' | 'adb' | 'vgmstream' | 'wwise', null | string>;
 		thread_limit: bigint;
 		command_notification_time_limit: null | bigint;
 	};
@@ -68,6 +69,11 @@ namespace TwinStar.Script.Entry {
 		KernelX.JSON.g_format.disable_array_line_breaking = configuration.json_format.disable_array_line_breaking;
 		KernelX.JSON.g_format.disable_object_trailing_comma = configuration.json_format.disable_object_trailing_comma;
 		KernelX.JSON.g_format.disable_object_line_breaking = configuration.json_format.disable_object_line_breaking;
+		// external program
+		AndroidHelper.g_sh_program_file = configuration.external_program.sh;
+		AndroidHelper.g_adb_program_file = configuration.external_program.adb;
+		Support.Wwise.Media.Decode.g_vgmstream_program_file = configuration.external_program.vgmstream;
+		Support.Wwise.Media.Encode.g_wwise_program_file = configuration.external_program.wwise;
 		return;
 	}
 

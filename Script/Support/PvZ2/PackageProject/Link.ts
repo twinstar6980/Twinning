@@ -114,10 +114,10 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Link {
 				}
 				if (package_setting.manifest.type === 'external_rton_with_array_path' || package_setting.manifest.type === 'external_rton_with_string_path' || package_setting.manifest.type === 'external_newton') {
 					KernelX.JSON.write_fs_js(`${package_bundle_directory}/manifest.json`, null);
-					let manifest_group_name = `__MANIFESTGROUP__${package_setting.manifest.suffix}`.toUpperCase();
+					let manifest_group_name = `__ManifestGroup__${package_setting.manifest.suffix}`.toUpperCase();
 					let manifesr_resource_path = `properties/resources${package_setting.manifest.suffix}`.toUpperCase();
 					if (package_setting.manifest.type === 'external_rton_with_array_path' || package_setting.manifest.type === 'external_rton_with_string_path') {
-						manifesr_resource_path += '.rton';
+						manifesr_resource_path += '.rton'.toUpperCase();
 						let manifest = RegularResourceManifest.Convert.to_official(package_manifest, package_setting.manifest.type === 'external_rton_with_array_path');
 						let version_c = Kernel.Tool.PopCap.ReflectionObjectNotation.Version.value({ number: 1n, native_string_encoding_use_utf8: true });
 						let stream = Kernel.ByteStreamView.watch(buffer.view());
@@ -125,7 +125,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Link {
 						KernelX.FileSystem.write_file(`${package_bundle_directory}/resource/${manifesr_resource_path}`, stream.stream_view());
 					}
 					if (package_setting.manifest.type === 'external_newton') {
-						manifesr_resource_path += '.newton';
+						manifesr_resource_path += '.newton'.toUpperCase();
 						let manifest = RegularResourceManifest.Convert.to_official(package_manifest, false);
 						let stream = new ByteStreamView(buffer.view().value);
 						ResourceManifest.NewTypeObjectNotation.Encode.process(stream, manifest);
