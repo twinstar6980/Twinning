@@ -106,9 +106,9 @@ namespace TwinStar.Script {
 		return destination;
 	}
 
-	export function record_to_array<Key extends string, Value extends any, Element extends any>(
+	export function record_to_array<Key extends string | number | symbol, Value extends any, Element extends any>(
 		source: Record<Key, Value>,
-		mapper: (key: string, value: Value) => Element,
+		mapper: (key: Key, value: Value) => Element,
 	): Array<Element> {
 		let destination: Array<Element> = [];
 		for (let key in source) {
@@ -117,9 +117,9 @@ namespace TwinStar.Script {
 		return destination;
 	}
 
-	export function record_transform<Key extends string, Value extends any, NewKey extends string, NewValue extends any>(
+	export function record_transform<Key extends string | number | symbol, Value extends any, NewKey extends string | number | symbol, NewValue extends any>(
 		source: Record<Key, Value>,
-		mapper: (key: string, value: Value) => [NewKey, NewValue],
+		mapper: (key: Key, value: Value) => [NewKey, NewValue],
 	): Record<NewKey, NewValue> {
 		let destination: Record<NewKey, NewValue> = {} as any;
 		for (let key in source) {
@@ -229,6 +229,14 @@ namespace TwinStar.Script {
 	}
 
 	// ------------------------------------------------
+
+	export function number_is_equal(
+		x: number,
+		y: number,
+		tolerance = Number.EPSILON,
+	): boolean {
+		return Math.abs(x - y) < tolerance;
+	}
 
 	export function integer_from_byte(
 		byte_array: ArrayBuffer,

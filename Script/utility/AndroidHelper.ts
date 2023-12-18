@@ -20,7 +20,7 @@ namespace TwinStar.Script.AndroidHelper {
 		argument: Array<string>,
 	): string {
 		let program_path = g_sh_program_file !== null ? g_sh_program_file : ProcessHelper.search_path(`sh`);
-		assert_test(program_path !== null, `can not found 'sh' program from PATH environment`);
+		assert_test(program_path !== null, `could not find 'sh' program from PATH environment`);
 		let execute_result = ProcessHelper.execute(program_path, argument, KernelX.Process.list_environment_variable());
 		if (execute_result.code !== 0n) {
 			throw new Error(`sh execute failed : ${execute_result.code}\n${execute_result.output}\n${execute_result.error}`);
@@ -32,7 +32,7 @@ namespace TwinStar.Script.AndroidHelper {
 		argument: Array<string>,
 	): string {
 		let program_path = g_adb_program_file !== null ? g_adb_program_file : ProcessHelper.search_path(`adb`);
-		assert_test(program_path !== null, `can not found 'adb' program from PATH environment`);
+		assert_test(program_path !== null, `could not find 'adb' program from PATH environment`);
 		let execute_result = ProcessHelper.execute(program_path, argument, KernelX.Process.list_environment_variable());
 		if (execute_result.code !== 0n) {
 			throw new Error(`adb execute failed : ${execute_result.code}\n${execute_result.output}\n${execute_result.error}`);

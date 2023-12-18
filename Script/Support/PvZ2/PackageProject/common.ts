@@ -127,7 +127,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject {
 			if (character === '}') {
 				assert_test(variable_name !== null);
 				let variable_value = find_variable_value(variable_list, variable_name);
-				assert_test(variable_value !== null, `can not found variable '${variable_name}'`);
+				assert_test(variable_value !== null, `could not find variable '${variable_name}'`);
 				result += variable_value;
 				variable_name = null;
 				continue;
@@ -179,7 +179,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject {
 	): ConversionSetting[Type][number] {
 		let result = find_conversion_setting(list, type, name);
 		if (result === null) {
-			throw new Error(`can not found conversion setting of type '${type}' by name '${name}'`);
+			throw new Error(`could not find conversion setting of type '${type}' by name '${name}'`);
 		}
 		return result;
 	}

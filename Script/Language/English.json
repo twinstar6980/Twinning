@@ -392,10 +392,12 @@
 	"executor.implement:popcap.animation.convert.flash.from": "PopCap Animation Flash Convert from JSON",
 	"executor.implement:popcap.animation.convert.flash.from:raw_file": "Original file",
 	"executor.implement:popcap.animation.convert.flash.from:ripe_directory": "Finished directory",
+	"executor.implement:popcap.animation.convert.flash.from:version_number": "Version number",
 	// 
 	"executor.implement:popcap.animation.convert.flash.to": "PopCap Animation Flash Convert to JSON",
 	"executor.implement:popcap.animation.convert.flash.to:ripe_directory": "Finished directory",
 	"executor.implement:popcap.animation.convert.flash.to:raw_file": "Original file",
+	"executor.implement:popcap.animation.convert.flash.to:version_number": "Version number",
 	// 
 	"executor.implement:popcap.animation.convert.flash.resize": "PopCap Animation Flash Resize image",
 	"executor.implement:popcap.animation.convert.flash.resize:target_directory": "Target directory",

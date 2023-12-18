@@ -6,13 +6,13 @@ namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 		data: ByteStreamView,
 	): bigint {
 		let value = 0n;
-		for (let shitf_count = 0n; shitf_count < 64n; shitf_count += 7n) {
+		for (let shift_count = 0n; shift_count < 64n; shift_count += 7n) {
 			let byte = data.u8();
 			if ((byte & 0b10000000n) != 0b00000000n) {
-				value |= (byte & 0b01111111n) << shitf_count;
+				value |= (byte & 0b01111111n) << shift_count;
 			}
 			else {
-				value |= (byte) << shitf_count;
+				value |= (byte) << shift_count;
 				break;
 			}
 		}

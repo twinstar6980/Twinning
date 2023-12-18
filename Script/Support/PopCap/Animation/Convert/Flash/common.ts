@@ -25,9 +25,13 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash {
 		}>;
 		sprite: Array<{
 			name: string;
+			frame_rate: number;
+			work_area: null | [bigint, bigint];
 		}>;
 		main_sprite: null | {
 			name: string;
+			frame_rate: number;
+			work_area: null | [bigint, bigint];
 		};
 	};
 
@@ -37,7 +41,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash {
 		library: {
 			image: Array<Kernel.XML.JS_Element>;
 			sprite: Array<Kernel.XML.JS_Element>;
-			main_sprite: Kernel.XML.JS_Element;
+			main_sprite: null | Kernel.XML.JS_Element;
 		};
 	};
 
@@ -53,7 +57,9 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash {
 		data.library.sprite.forEach((value, index) => {
 			KernelX.XML.write_fs_js(`${directory}/LIBRARY/sprite/sprite_${index + 1}.xml`, XML.wrap_element(value));
 		});
-		KernelX.XML.write_fs_js(`${directory}/LIBRARY/main_sprite.xml`, XML.wrap_element(data.library.main_sprite));
+		if (data.library.main_sprite !== null) {
+			KernelX.XML.write_fs_js(`${directory}/LIBRARY/main_sprite.xml`, XML.wrap_element(data.library.main_sprite));
+		}
 		return;
 	}
 
@@ -65,7 +71,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash {
 		let library = {
 			image: extra.image.map((value, index) => (KernelX.XML.read_fs_js(`${directory}/LIBRARY/image/image_${index + 1}.xml`).value as Kernel.XML.JS_Element)),
 			sprite: extra.sprite.map((value, index) => (KernelX.XML.read_fs_js(`${directory}/LIBRARY/sprite/sprite_${index + 1}.xml`).value as Kernel.XML.JS_Element)),
-			main_sprite: KernelX.XML.read_fs_js(`${directory}/LIBRARY/main_sprite.xml`).value as Kernel.XML.JS_Element,
+			main_sprite: extra.main_sprite === null ? null : KernelX.XML.read_fs_js(`${directory}/LIBRARY/main_sprite.xml`).value as Kernel.XML.JS_Element,
 		};
 		return {
 			extra,

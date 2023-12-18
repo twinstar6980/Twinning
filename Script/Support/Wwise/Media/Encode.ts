@@ -305,7 +305,7 @@ namespace TwinStar.Script.Support.Wwise.Media.Encode {
 			wwise_program_name = 'WwiseConsole.sh';
 		}
 		let wwise_program_file = g_wwise_program_file !== null ? g_wwise_program_file : ProcessHelper.search_path(wwise_program_name);
-		assert_test(wwise_program_file !== null, `can not found '${wwise_program_name}' program from PATH environment`);
+		assert_test(wwise_program_file !== null, `could not find '${wwise_program_name}' program from PATH environment`);
 		let program_result: ProcessHelper.ExecuteResult;
 		let temporary_directory = Home.new_temporary(null, null);
 		let wwise_project_directory = `${temporary_directory}/Sample`;

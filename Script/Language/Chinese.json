@@ -392,10 +392,12 @@
 	"executor.implement:popcap.animation.convert.flash.from": "PopCap Animation Flash 转换自JSON",
 	"executor.implement:popcap.animation.convert.flash.from:raw_file": "原始文件",
 	"executor.implement:popcap.animation.convert.flash.from:ripe_directory": "成品目录",
+	"executor.implement:popcap.animation.convert.flash.from:version_number": "版本编号",
 	// 
 	"executor.implement:popcap.animation.convert.flash.to": "PopCap Animation Flash 转换至JSON",
 	"executor.implement:popcap.animation.convert.flash.to:ripe_directory": "成品目录",
 	"executor.implement:popcap.animation.convert.flash.to:raw_file": "原始文件",
+	"executor.implement:popcap.animation.convert.flash.to:version_number": "版本编号",
 	// 
 	"executor.implement:popcap.animation.convert.flash.resize": "PopCap Animation Flash 图像分辨率调整",
 	"executor.implement:popcap.animation.convert.flash.resize:target_directory": "目标目录",

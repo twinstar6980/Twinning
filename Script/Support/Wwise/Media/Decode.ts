@@ -12,7 +12,7 @@ namespace TwinStar.Script.Support.Wwise.Media.Decode {
 	): Format {
 		assert_test(Shell.is_windows || Shell.is_linux || Shell.is_macintosh, `unsupported system, this function only avaliable for windows or linux or macintosh`);
 		let vgmstream_program_file = g_vgmstream_program_file !== null ? g_vgmstream_program_file : ProcessHelper.search_path('vgmstream-cli');
-		assert_test(vgmstream_program_file !== null, `can not found 'vgmstream-cli' program from PATH environment`);
+		assert_test(vgmstream_program_file !== null, `could not find 'vgmstream-cli' program from PATH environment`);
 		let program_result: ProcessHelper.ExecuteResult;
 		let ripe_file_fallback_temporary: null | string = null;
 		let ripe_file_fallback = ripe_file;

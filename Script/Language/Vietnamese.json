@@ -392,10 +392,12 @@
 	"executor.implement:popcap.animation.convert.flash.from": "PopCap Animation Chuyển đổi Flash từ JSON",
 	"executor.implement:popcap.animation.convert.flash.from:raw_file": "Tệp gốc",
 	"executor.implement:popcap.animation.convert.flash.from:ripe_directory": "Thư mục hoàn tất",
+	"executor.implement:popcap.animation.convert.flash.from:version_number": "Số phiên bản",
 	// 
 	"executor.implement:popcap.animation.convert.flash.to": "PopCap Animation Chuyển đổi Flash sang JSON",
 	"executor.implement:popcap.animation.convert.flash.to:ripe_directory": "Thư mục hoàn tất",
 	"executor.implement:popcap.animation.convert.flash.to:raw_file": "Tệp gốc",
+	"executor.implement:popcap.animation.convert.flash.to:version_number": "Số phiên bản",
 	// 
 	"executor.implement:popcap.animation.convert.flash.resize": "PopCap Animation Flash thay đổi kích thước hình ảnh",
 	"executor.implement:popcap.animation.convert.flash.resize:target_directory": "Thư mục đích",

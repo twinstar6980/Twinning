@@ -84,6 +84,24 @@ namespace TwinStar.Script.XML {
 		return parent.child.filter((child) => (child.type === 'element' && child.value.name === name)).map((child) => (child.value as Kernel.XML.JS_Element));
 	}
 
+	export function find_child_element_unique(
+		parent: Kernel.XML.JS_Element,
+		name: string,
+	): Kernel.XML.JS_Element {
+		let list = find_child_element(parent, name);
+		assert_test(list.length === 1, 'xml element is not unique');
+		return list[0];
+	}
+
+	export function find_child_element_unique_or_none(
+		parent: Kernel.XML.JS_Element,
+		name: string,
+	): null | Kernel.XML.JS_Element {
+		let list = find_child_element(parent, name);
+		assert_test(list.length <= 1, 'xml element is not unique or none');
+		return list.length === 0 ? null : list[0];
+	}
+
 	// ------------------------------------------------
 
 }

@@ -147,10 +147,17 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file.replace(/(\.pam\.json)?$/i, '.pam.xfl')),
 						condition: null,
 					}),
+					typical_argument_integer({
+						id: 'version_number',
+						option: KernelX.Tool.PopCap.Animation.VersionNumberE,
+						checker: null,
+						automatic: null,
+						condition: null,
+					}),
 				],
-				worker: ({ raw_file, ripe_directory }) => {
+				worker: ({ raw_file, ripe_directory, version_number }) => {
 					let raw = KernelX.JSON.read_fs_js<Kernel.Tool.PopCap.Animation.Definition.JS_N.Animation>(raw_file);
-					Support.PopCap.Animation.Convert.Flash.From.from_fsh(raw, ripe_directory);
+					Support.PopCap.Animation.Convert.Flash.From.from_fsh(raw, ripe_directory, { number: version_number as any });
 					Support.PopCap.Animation.Convert.Flash.SourceManager.create_fsh(ripe_directory, raw);
 					Support.PopCap.Animation.Convert.Flash.create_xfl_content_file(ripe_directory);
 					return;
@@ -168,7 +175,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						id: 'ripe_directory',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: { raw_file: string; }) => (argument.raw_file + '.convert_flash_from'),
+						automatic: (argument: { raw_file: string; }) => (argument.raw_file + '.from'),
 						condition: null,
 						item_mapper: (argument: {}, value) => (value.replace(/(\.pam\.json)?$/i, '.pam.xfl')),
 					}),
@@ -193,9 +200,16 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						automatic: (argument: { ripe_directory: string; }) => (argument.ripe_directory.replace(/(\.pam\.xfl)?$/i, '.pam.json')),
 						condition: null,
 					}),
+					typical_argument_integer({
+						id: 'version_number',
+						option: KernelX.Tool.PopCap.Animation.VersionNumberE,
+						checker: null,
+						automatic: null,
+						condition: null,
+					}),
 				],
-				worker: ({ ripe_directory, raw_file }) => {
-					Support.PopCap.Animation.Convert.Flash.To.to_fs(raw_file, ripe_directory);
+				worker: ({ ripe_directory, raw_file, version_number }) => {
+					Support.PopCap.Animation.Convert.Flash.To.to_fs(raw_file, ripe_directory, { number: version_number as any });
 					return;
 				},
 				batch_argument: [
@@ -211,7 +225,7 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 						id: 'raw_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: { ripe_directory: string; }) => (argument.ripe_directory + '.convert_flash_to'),
+						automatic: (argument: { ripe_directory: string; }) => (argument.ripe_directory + '.to'),
 						condition: null,
 						item_mapper: (argument: {}, value) => (value.replace(/(\.pam\.xfl)?$/i, '.pam.json')),
 					}),

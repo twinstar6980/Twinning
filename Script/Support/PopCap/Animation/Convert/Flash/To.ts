@@ -2,15 +2,6 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 
 	// ------------------------------------------------
 
-	function parse_transform_origin(
-		x_Matrix: Kernel.XML.JS_Element,
-	): [number, number] {
-		return [
-			Number(not_undefined_or(x_Matrix.attribute.x, '0')),
-			Number(not_undefined_or(x_Matrix.attribute.y, '0')),
-		];
-	}
-
 	function parse_transform(
 		x_Matrix: Kernel.XML.JS_Element,
 	): Transform {
@@ -37,57 +28,46 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 	}
 
 	function parse_image_document(
-		x_DOMSymbolItem: Kernel.XML.JS_Element,
+		document: Kernel.XML.JS_Element,
+		extra: ExtraInformation['image'][number],
 		index: number,
-	): Transform {
+		version: typeof Kernel.Tool.PopCap.Animation.Version.Value,
+	): Kernel.Tool.PopCap.Animation.Definition.JS_N.Image {
+		let x_DOMSymbolItem = document;
 		assert_test(x_DOMSymbolItem.name === 'DOMSymbolItem');
 		assert_test(x_DOMSymbolItem.attribute.name === `image/image_${index + 1}`);
-		let x_timeline_list = XML.find_child_element(x_DOMSymbolItem, 'timeline');
-		assert_test(x_timeline_list.length === 1);
-		let x_timeline = x_timeline_list[0];
-		let x_DOMTimeline_list = XML.find_child_element(x_timeline, 'DOMTimeline');
-		assert_test(x_DOMTimeline_list.length === 1);
-		let x_DOMTimeline = x_DOMTimeline_list[0];
+		let x_timeline = XML.find_child_element_unique(x_DOMSymbolItem, 'timeline');
+		let x_DOMTimeline = XML.find_child_element_unique(x_timeline, 'DOMTimeline');
 		assert_test(x_DOMTimeline.attribute.name === `image_${index + 1}`);
-		let x_layers_list = XML.find_child_element(x_DOMTimeline, 'layers');
-		assert_test(x_layers_list.length === 1);
-		let x_layers = x_layers_list[0];
-		let x_DOMLayer_list = XML.find_child_element(x_layers, 'DOMLayer');
-		assert_test(x_DOMLayer_list.length === 1);
-		let x_DOMLayer = x_DOMLayer_list[0];
-		let x_frames_list = XML.find_child_element(x_DOMLayer, 'frames');
-		assert_test(x_frames_list.length === 1);
-		let x_frames = x_frames_list[0];
-		let x_DOMFrame_list = XML.find_child_element(x_frames, 'DOMFrame');
-		assert_test(x_DOMFrame_list.length === 1);
-		let x_DOMFrame = x_DOMFrame_list[0];
-		let x_elements_list = XML.find_child_element(x_DOMFrame, 'elements');
-		assert_test(x_elements_list.length === 1);
-		let x_elements = x_elements_list[0];
-		let x_DOMSymbolInstance_list = XML.find_child_element(x_elements, 'DOMSymbolInstance');
-		assert_test(x_DOMSymbolInstance_list.length === 1);
-		let x_DOMSymbolInstance = x_DOMSymbolInstance_list[0];
+		let x_layers = XML.find_child_element_unique(x_DOMTimeline, 'layers');
+		let x_DOMLayer = XML.find_child_element_unique(x_layers, 'DOMLayer');
+		let x_frames = XML.find_child_element_unique(x_DOMLayer, 'frames');
+		let x_DOMFrame = XML.find_child_element_unique(x_frames, 'DOMFrame');
+		let x_elements = XML.find_child_element_unique(x_DOMFrame, 'elements');
+		let x_DOMSymbolInstance = XML.find_child_element_unique(x_elements, 'DOMSymbolInstance');
 		assert_test(x_DOMSymbolInstance.attribute.libraryItemName === `source/source_${index + 1}`);
 		let transform: Transform;
-		let x_matrix_list = XML.find_child_element(x_DOMSymbolInstance, 'matrix');
-		if (x_matrix_list.length === 0) {
+		let x_matrix = XML.find_child_element_unique_or_none(x_DOMSymbolInstance, 'matrix');
+		if (x_matrix === null) {
 			transform = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0];
 		}
 		else {
-			assert_test(x_matrix_list.length === 1);
-			let x_matrix = x_matrix_list[0];
-			let x_Matrix_list = XML.find_child_element(x_matrix, 'Matrix');
-			assert_test(x_Matrix_list.length === 1);
-			let x_Matrix = x_Matrix_list[0];
+			let x_Matrix = XML.find_child_element_unique(x_matrix, 'Matrix');
 			transform = parse_transform(x_Matrix);
 		}
-		return transform;
+		return {
+			name: extra.name,
+			...(version.number < 4n ? {} : { size: extra.size }),
+			...(version.number < 2n ? { transform: convert_transform_from_standard_to_rotate(transform) } : { transform: transform }),
+		};
 	}
 
 	function parse_sprite_document(
-		x_DOMSymbolItem: Kernel.XML.JS_Element,
-		index: number | 'main',
-	): Array<Kernel.Tool.PopCap.Animation.Definition.JS_N.Frame> {
+		document: Kernel.XML.JS_Element,
+		extra: ExtraInformation['sprite'][number],
+		index: number | null,
+		version: typeof Kernel.Tool.PopCap.Animation.Version.Value,
+	): Kernel.Tool.PopCap.Animation.Definition.JS_N.Sprite {
 		let model: null | {
 			index: bigint;
 			resource: bigint;
@@ -96,39 +76,28 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 			frame_duration: bigint;
 			color: Color;
 		} = null;
-		let result: Array<Kernel.Tool.PopCap.Animation.Definition.JS_N.Frame>;
+		let x_DOMSymbolItem = document;
 		assert_test(x_DOMSymbolItem.name === 'DOMSymbolItem');
-		assert_test(x_DOMSymbolItem.attribute.name === (index === 'main' ? `main_sprite` : `sprite/sprite_${index + 1}`));
-		let x_timeline_list = XML.find_child_element(x_DOMSymbolItem, 'timeline');
-		assert_test(x_timeline_list.length === 1);
-		let x_timeline = x_timeline_list[0];
-		let x_DOMTimeline_list = XML.find_child_element(x_timeline, 'DOMTimeline');
-		assert_test(x_DOMTimeline_list.length === 1);
-		let x_DOMTimeline = x_DOMTimeline_list[0];
-		assert_test(x_DOMTimeline.attribute.name === (index === 'main' ? `main_sprite` : `sprite_${index + 1}`));
-		let x_layers_list = XML.find_child_element(x_DOMTimeline, 'layers');
-		assert_test(x_layers_list.length === 1);
-		let x_layers = x_layers_list[0];
+		assert_test(x_DOMSymbolItem.attribute.name === (index === null ? `main_sprite` : `sprite/sprite_${index + 1}`));
+		let x_timeline = XML.find_child_element_unique(x_DOMSymbolItem, 'timeline');
+		let x_DOMTimeline = XML.find_child_element_unique(x_timeline, 'DOMTimeline');
+		assert_test(x_DOMTimeline.attribute.name === (index === null ? `main_sprite` : `sprite_${index + 1}`));
+		let x_layers = XML.find_child_element_unique(x_DOMTimeline, 'layers');
 		let x_DOMLayer_list = XML.find_child_element(x_layers, 'DOMLayer');
 		assert_test(x_DOMLayer_list.length >= 1);
+		let frame_list: Array<Kernel.Tool.PopCap.Animation.Definition.JS_N.Frame>;
 		{
 			let x_DOMLayer = x_DOMLayer_list[x_DOMLayer_list.length - 1];
-			let x_frames_list = XML.find_child_element(x_DOMLayer, 'frames');
-			assert_test(x_frames_list.length === 1);
-			let x_frames = x_frames_list[0];
-			let x_DOMFrame_list = XML.find_child_element(x_frames, 'DOMFrame');
-			assert_test(x_DOMFrame_list.length === 1);
-			let x_DOMFrame = x_DOMFrame_list[0];
+			let x_frames = XML.find_child_element_unique(x_DOMLayer, 'frames');
+			let x_DOMFrame = XML.find_child_element_unique(x_frames, 'DOMFrame');
 			let frame_index = BigInt(x_DOMFrame.attribute.index);
 			let frame_duration = BigInt(not_undefined_or(x_DOMFrame.attribute.duration, '1'));
 			assert_test(frame_index === 0n && frame_duration > 0n);
-			let x_elements_list = XML.find_child_element(x_DOMFrame, 'elements');
-			assert_test(x_elements_list.length === 1);
-			let x_elements = x_elements_list[0];
+			let x_elements = XML.find_child_element_unique(x_DOMFrame, 'elements');
 			assert_test(x_elements.child.length === 0);
-			result = new Array(Number(frame_duration) + 1);
-			for (let index = 0; index < result.length; index++) {
-				result[index] = {
+			frame_list = new Array(Number(frame_duration) + 1);
+			for (let index = 0; index < frame_list.length; index++) {
+				frame_list[index] = {
 					label: null,
 					stop: false,
 					command: [],
@@ -141,69 +110,55 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 		x_DOMLayer_list.pop();
 		x_DOMLayer_list.reverse();
 		let layer_count = 0;
-		x_DOMLayer_list.forEach((x_DOMLayer) => {
-			let x_frames_list = XML.find_child_element(x_DOMLayer, 'frames');
-			assert_test(x_frames_list.length === 1);
-			let x_frames = x_frames_list[0];
+		for (let x_DOMLayer of x_DOMLayer_list) {
+			let x_frames = XML.find_child_element_unique(x_DOMLayer, 'frames');
 			let x_DOMFrame_list = XML.find_child_element(x_frames, 'DOMFrame');
 			let colse_current_model_if_need = () => {
 				if (model !== null) {
-					let target_frame = result[Number(model.frame_start + model.frame_duration)];
+					let target_frame = frame_list[Number(model.frame_start + model.frame_duration)];
 					target_frame.remove.push({
 						index: model.index,
 					});
 					model = null;
 				}
 			};
-			x_DOMFrame_list.forEach((x_DOMFrame) => {
+			for (let x_DOMFrame of x_DOMFrame_list) {
 				let frame_index = BigInt(x_DOMFrame.attribute.index);
 				let frame_duration = BigInt(not_undefined_or(x_DOMFrame.attribute.duration, '1'));
 				let transform: Kernel.Tool.PopCap.Animation.Definition.JS_N.VariantTransform;
 				let color: Color;
-				let x_elements_list = XML.find_child_element(x_DOMFrame, 'elements');
-				if (x_elements_list.length === 0) {
+				let x_elements = XML.find_child_element_unique_or_none(x_DOMFrame, 'elements');
+				if (x_elements === null) {
 					colse_current_model_if_need();
-					return;
+					continue;
 				}
-				assert_test(x_elements_list.length === 1);
-				let x_elements = x_elements_list[0];
-				let x_DOMSymbolInstance_list = XML.find_child_element(x_elements, 'DOMSymbolInstance');
-				if (x_DOMSymbolInstance_list.length === 0) {
-					return;
+				let x_DOMSymbolInstance = XML.find_child_element_unique_or_none(x_elements, 'DOMSymbolInstance');
+				if (x_DOMSymbolInstance === null) {
+					continue;
 				}
-				assert_test(x_DOMSymbolInstance_list.length === 1);
-				let x_DOMSymbolInstance = x_DOMSymbolInstance_list[0];
 				let name_match = /(image|sprite)\/(image|sprite)_([0-9]+)/.exec(x_DOMSymbolInstance.attribute.libraryItemName);
 				assert_test(name_match !== null && name_match[1] === name_match[2]);
 				let current_instance = {
 					resource: BigInt(name_match[3]) - 1n,
 					sprite: name_match[1] === 'sprite',
 				};
-				let x_matrix_list = XML.find_child_element(x_DOMSymbolInstance, 'matrix');
-				if (x_matrix_list.length === 0) {
+				let x_matrix = XML.find_child_element_unique_or_none(x_DOMSymbolInstance, 'matrix');
+				if (x_matrix === null) {
 					transform = [0.0, 0.0];
 				}
 				else {
-					assert_test(x_matrix_list.length === 1);
-					let x_matrix = x_matrix_list[0];
-					let x_Matrix_list = XML.find_child_element(x_matrix, 'Matrix');
-					assert_test(x_Matrix_list.length === 1);
-					let x_Matrix = x_Matrix_list[0];
-					transform = compute_variant_transform_from_standard(parse_transform(x_Matrix));
+					let x_Matrix = XML.find_child_element_unique(x_matrix, 'Matrix');
+					transform = convert_transform_from_standard_to_variant(parse_transform(x_Matrix));
 				}
-				let x_color_list = XML.find_child_element(x_DOMSymbolInstance, 'color');
-				if (x_color_list.length === 0) {
+				let x_color = XML.find_child_element_unique_or_none(x_DOMSymbolInstance, 'color');
+				if (x_color === null) {
 					color = [...k_initial_color];
 				}
 				else {
-					assert_test(x_color_list.length === 1);
-					let x_color = x_color_list[0];
-					let x_Color_list = XML.find_child_element(x_color, 'Color');
-					assert_test(x_Color_list.length === 1);
-					let x_Color = x_Color_list[0];
+					let x_Color = XML.find_child_element_unique(x_color, 'Color');
 					color = parse_color(x_Color);
 				}
-				let target_frame = result[Number(frame_index)];
+				let target_frame = frame_list[Number(frame_index)];
 				if (model === null) {
 					model = {
 						index: BigInt(layer_count),
@@ -238,123 +193,138 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 					sprite_frame_number: null,
 					source_rectangle: null,
 				});
-			});
+			}
 			colse_current_model_if_need();
-		});
-		return result.slice(0, -1);
+		}
+		frame_list.pop();
+		return {
+			...(version.number < 4n ? {} : { name: extra.name }),
+			...(version.number < 4n ? {} : { frame_rate: extra.frame_rate }),
+			...(version.number < 5n ? {} : { work_area: extra.work_area === null ? [0n, BigInt(frame_list.length - 1)] : extra.work_area }),
+			frame: frame_list,
+		};
 	}
 
-	export function to(
-		flash: FlashPackage,
-	): Kernel.Tool.PopCap.Animation.Definition.JS_N.Animation {
-		let x_DOMDocument = flash.document;
+	function parse_main_document(
+		document: Kernel.XML.JS_Element,
+		animation: Kernel.Tool.PopCap.Animation.Definition.JS_N.Animation,
+		version: typeof Kernel.Tool.PopCap.Animation.Version.Value,
+	): void {
+		let x_DOMDocument = document;
 		assert_test(x_DOMDocument.name === 'DOMDocument');
-		{
-			let x_media_list = XML.find_child_element(x_DOMDocument, 'media');
-			assert_test(x_media_list.length === 1);
-			let x_media = x_media_list[0];
-			let x_DOMBitmapItem_list = XML.find_child_element(x_media, 'DOMBitmapItem');
-		}
-		{
-			let x_symbols_list = XML.find_child_element(x_DOMDocument, 'symbols');
-			assert_test(x_symbols_list.length === 1);
-			let x_symbols = x_symbols_list[0];
-			let x_Include_list = XML.find_child_element(x_symbols, 'Include');
-		}
-		let main_sprite_frame = parse_sprite_document(flash.library.main_sprite, 'main');
-		{
-			let x_timelines_list = XML.find_child_element(x_DOMDocument, 'timelines');
-			assert_test(x_timelines_list.length === 1);
-			let x_timelines = x_timelines_list[0];
-			let x_DOMTimeline_list = XML.find_child_element(x_timelines, 'DOMTimeline');
-			assert_test(x_DOMTimeline_list.length === 1);
-			let x_DOMTimeline = x_DOMTimeline_list[0];
+		let frame_rate = BigInt(not_undefined_or(x_DOMDocument.attribute.frameRate, '24'));
+		animation.frame_rate = frame_rate;
+		animation.size = [
+			Number(x_DOMDocument.attribute.width),
+			Number(x_DOMDocument.attribute.height),
+		];
+		if (animation.main_sprite !== null) {
+			let x_timelines = XML.find_child_element_unique(x_DOMDocument, 'timelines');
+			let x_DOMTimeline = XML.find_child_element_unique(x_timelines, 'DOMTimeline');
 			assert_test(x_DOMTimeline.attribute.name === 'animation');
-			let x_layers_list = XML.find_child_element(x_DOMTimeline, 'layers');
-			assert_test(x_layers_list.length === 1);
-			let x_layers = x_layers_list[0];
+			let x_layers = XML.find_child_element_unique(x_DOMTimeline, 'layers');
 			let x_DOMLayer_list = XML.find_child_element(x_layers, 'DOMLayer');
 			assert_test(x_DOMLayer_list.length === 3);
 			{
-				let x_DOMLayer_flow = x_DOMLayer_list[0];
-				let x_frames_list = XML.find_child_element(x_DOMLayer_flow, 'frames');
-				assert_test(x_frames_list.length === 1);
-				let x_frames = x_frames_list[0];
+				let x_DOMLayer = x_DOMLayer_list[0];
+				assert_test(x_DOMLayer.attribute.name === 'flow');
+				let x_frames = XML.find_child_element_unique(x_DOMLayer, 'frames');
 				let x_DOMFrame_list = XML.find_child_element(x_frames, 'DOMFrame');
-				x_DOMFrame_list.forEach((x_DOMFrame) => {
+				for (let x_DOMFrame of x_DOMFrame_list) {
 					let frame_index = Number(x_DOMFrame.attribute.index);
 					if (x_DOMFrame.attribute.name !== undefined) {
 						assert_test(x_DOMFrame.attribute.labelType === 'name');
-						main_sprite_frame[frame_index].label = x_DOMFrame.attribute.name;
+						animation.main_sprite.frame[frame_index].label = x_DOMFrame.attribute.name;
 					}
-					let x_Actionscript_list = XML.find_child_element(x_DOMFrame, 'Actionscript');
-					if (x_Actionscript_list.length === 0) {
-						return;
+					let x_Actionscript = XML.find_child_element_unique_or_none(x_DOMFrame, 'Actionscript');
+					if (x_Actionscript === null) {
+						continue;
 					}
-					assert_test(x_Actionscript_list.length === 1);
-					let x_Actionscript = x_Actionscript_list[0];
-					assert_test(x_Actionscript.child.length === 1);
-					let x_script_list = XML.find_child_element(x_Actionscript, 'script');
-					assert_test(x_script_list.length === 1);
-					let x_script = x_script_list[0];
+					let x_script = XML.find_child_element_unique(x_Actionscript, 'script');
 					assert_test(x_script.child.length === 1);
 					let x_script_text = x_script.child[0];
 					assert_test(x_script_text.type === 'text');
 					assert_test(x_script_text.value.value.trim() === 'stop();');
-					main_sprite_frame[frame_index].stop = true;
-				});
+					animation.main_sprite.frame[frame_index].stop = true;
+				}
 			}
 			{
-				let x_DOMLayer_command = x_DOMLayer_list[1];
-				let x_frames_list = XML.find_child_element(x_DOMLayer_command, 'frames');
-				assert_test(x_frames_list.length === 1);
-				let x_frames = x_frames_list[0];
+				let x_DOMLayer = x_DOMLayer_list[1];
+				assert_test(x_DOMLayer.attribute.name === 'command');
+				let x_frames = XML.find_child_element_unique(x_DOMLayer, 'frames');
 				let x_DOMFrame_list = XML.find_child_element(x_frames, 'DOMFrame');
-				x_DOMFrame_list.forEach((x_DOMFrame) => {
+				for (let x_DOMFrame of x_DOMFrame_list) {
 					let frame_index = Number(x_DOMFrame.attribute.index);
-					let x_Actionscript_list = XML.find_child_element(x_DOMFrame, 'Actionscript');
-					if (x_Actionscript_list.length === 0) {
-						return;
+					let x_Actionscript = XML.find_child_element_unique_or_none(x_DOMFrame, 'Actionscript');
+					if (x_Actionscript === null) {
+						continue;
 					}
-					assert_test(x_Actionscript_list.length === 1);
-					let x_Actionscript = x_Actionscript_list[0];
-					assert_test(x_Actionscript.child.length === 1);
-					let x_script_list = XML.find_child_element(x_Actionscript, 'script');
-					assert_test(x_script_list.length === 1);
-					let x_script = x_script_list[0];
+					let x_script = XML.find_child_element_unique(x_Actionscript, 'script');
 					assert_test(x_script.child.length === 1);
 					let x_script_text = x_script.child[0];
 					assert_test(x_script_text.type === 'text');
-					let command_string = x_script_text.value.value.trim().split('\n');
-					for (let e of command_string) {
-						let regex_result = /fscommand\("(.*)", "(.*)"\);/.exec(e.trim());
+					let command_list = x_script_text.value.value.trim().split('\n');
+					for (let command of command_list) {
+						let regex_result = /fscommand\("(.*)", "(.*)"\);/.exec(command.trim());
 						assert_test(regex_result !== null);
-						main_sprite_frame[frame_index].command.push([
+						animation.main_sprite.frame[frame_index].command.push([
 							regex_result[1],
 							regex_result[2],
 						]);
 					}
-				});
+				}
 			}
 			{
-				let x_DOMLayer_sprite = x_DOMLayer_list[2];
-				// TODO : check
+				let x_DOMLayer = x_DOMLayer_list[2];
+				assert_test(x_DOMLayer.attribute.name === 'instance');
+				let x_frames = XML.find_child_element_unique(x_DOMLayer, 'frames');
+				let x_DOMFrame = XML.find_child_element_unique(x_frames, 'DOMFrame');
+				let x_elements = XML.find_child_element_unique(x_DOMFrame, 'elements');
+				let x_DOMSymbolInstance = XML.find_child_element_unique(x_elements, 'DOMSymbolInstance');
+				assert_test(x_DOMSymbolInstance.attribute.libraryItemName === 'main_sprite');
 			}
 		}
-		let frame_rate = BigInt(not_undefined_or(x_DOMDocument.attribute.frameRate, '24'));
-		let width = Number(x_DOMDocument.attribute.width);
-		let height = Number(x_DOMDocument.attribute.height);
-		return {
-			frame_rate: frame_rate,
-			position: flash.extra.position,
-			size: [width, height],
-			image: flash.extra.image.map((value, index) => ({ name: value.name, size: value.size, transform: parse_image_document(flash.library.image[index], index) })),
-			sprite: flash.extra.sprite.map((value, index) => {
-				let frame = parse_sprite_document(flash.library.sprite[index], index);
-				return { name: value.name, frame_rate: Number(frame_rate), work_area: [0n, BigInt(frame.length - 1)], frame: frame };
-			}),
-			main_sprite: { name: flash.extra.main_sprite!.name, frame_rate: Number(frame_rate), work_area: [0n, BigInt(main_sprite_frame.length - 1)], frame: main_sprite_frame },
+		return undefined!;
+	}
+
+	export function to(
+		flash: FlashPackage,
+		version: typeof Kernel.Tool.PopCap.Animation.Version.Value,
+	): Kernel.Tool.PopCap.Animation.Definition.JS_N.Animation {
+		let animation: Kernel.Tool.PopCap.Animation.Definition.JS_N.Animation = {
+			frame_rate: undefined!,
+			position: undefined!,
+			size: undefined!,
+			image: [],
+			sprite: [],
+			main_sprite: undefined!,
 		};
+		animation.position = flash.extra.position;
+		for (let index = 0; index < flash.library.image.length; ++index) {
+			let value_document = flash.library.image[index];
+			let value_extra = flash.extra.image[index];
+			let value = parse_image_document(value_document, value_extra, index, version);
+			animation.image.push(value);
+		}
+		for (let index = 0; index < flash.library.sprite.length; ++index) {
+			let value_document = flash.library.sprite[index];
+			let value_extra = flash.extra.sprite[index];
+			let value = parse_sprite_document(value_document, value_extra, index, version);
+			animation.sprite.push(value);
+		}
+		if (flash.library.main_sprite === null) {
+			assert_test(version.number >= 4n);
+			animation.main_sprite = null;
+		}
+		else {
+			assert_test(flash.extra.main_sprite !== null);
+			let value_document = flash.library.main_sprite;
+			let value_extra = flash.extra.main_sprite;
+			let value = parse_sprite_document(value_document, value_extra, null, version);
+			animation.main_sprite = value;
+		}
+		parse_main_document(flash.document, animation, version);
+		return animation;
 	}
 
 	// ------------------------------------------------
@@ -362,8 +332,9 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 	export function to_fsh(
 		raw_file: string,
 		ripe: FlashPackage,
+		version: typeof Kernel.Tool.PopCap.Animation.Version.Value,
 	): void {
-		let raw = to(ripe);
+		let raw = to(ripe, version);
 		KernelX.JSON.write_fs_js(raw_file, raw);
 		return;
 	}
@@ -371,9 +342,10 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.To {
 	export function to_fs(
 		raw_file: string,
 		ripe_directory: string,
+		version: typeof Kernel.Tool.PopCap.Animation.Version.Value,
 	): void {
 		let ripe = load_flash_package(ripe_directory);
-		to_fsh(raw_file, ripe);
+		to_fsh(raw_file, ripe, version);
 		return;
 	}
 

@@ -66,7 +66,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Transpile {
 					KernelX.FileSystem.remove(source_file);
 					let conversion_setting = conversion_setting_map.wem.find((value) => (value.format === format));
 					if (conversion_setting === undefined) {
-						Console.warning(`can not found conversion setting for wem format ${format}`, []);
+						Console.warning(`could not find conversion setting for wem format ${format}`, []);
 					}
 					resource_setting.type = 'special_wem';
 					resource_setting.property = {

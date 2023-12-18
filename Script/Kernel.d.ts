@@ -3218,7 +3218,7 @@ declare namespace TwinStar.Kernel {
 							name: string;
 							/** 尺寸。版本4开始存在 */
 							size?: [bigint, bigint];
-							/** 变换。版本1中为RotateTranslateTransform，之后为MatrixTranslateTransform */
+							/** 变换。版本1中为RotateTranslateTransform，版本2开始为MatrixTranslateTransform */
 							transform: RotateTranslateTransform | MatrixTranslateTransform;
 						};
 

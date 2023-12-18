@@ -20,27 +20,70 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert {
 		];
 	}
 
-	export function compute_standard_transform_from_variant(
+	export function convert_transform_from_standard_to_rotate(
+		data: Transform,
+	): Kernel.Tool.PopCap.Animation.Definition.JS_N.RotateTranslateTransform {
+		assert_test(data[0] === data[3] && data[1] === -data[2]);
+		let cos = data[0];
+		let sin = data[1];
+		let radian = Math.atan(sin / cos) + Math.PI * (cos >= 0 ? 0 : sin >= 0 ? +1 : -1);
+		assert_test(number_is_equal(Math.sin(radian), sin, 1e-2) && number_is_equal(Math.cos(radian), cos, 1e-2));
+		return [radian, data[4], data[5]];
+	}
+
+	export function convert_transform_from_rotate_to_standard(
+		data: Kernel.Tool.PopCap.Animation.Definition.JS_N.RotateTranslateTransform,
+	): Transform {
+		let cos = Math.cos(data[0]);
+		let sin = Math.sin(data[0]);
+		return [
+			cos,
+			sin,
+			-sin,
+			cos,
+			data[1],
+			data[2],
+		];
+	}
+
+	export function convert_transform_from_standard_to_variant(
+		data: Transform,
+	): Kernel.Tool.PopCap.Animation.Definition.JS_N.VariantTransform {
+		if (data[0] === data[3] && data[1] === -data[2]) {
+			if (data[0] === 1.0 && data[1] === 0.0) {
+				return [data[4], data[5]];
+			}
+			let cos = data[0];
+			let sin = data[1];
+			let radian = Math.atan(sin / cos) + Math.PI * (cos >= 0 ? 0 : sin >= 0 ? +1 : -1);
+			if (number_is_equal(Math.sin(radian), sin, 1e-2) && number_is_equal(Math.cos(radian), cos, 1e-2)) {
+				return [radian, data[4], data[5]];
+			}
+		}
+		return [...data];
+	}
+
+	export function convert_transform_from_variant_to_standard(
 		transform: Kernel.Tool.PopCap.Animation.Definition.JS_N.VariantTransform,
 	): Transform {
 		let result: Transform;
 		if (transform.length === 2) {
 			result = [
 				1.0, 0.0, 0.0, 1.0,
-				transform[1 - 1],
-				transform[2 - 1],
+				transform[0],
+				transform[1],
 			];
 		}
 		else if (transform.length === 3) {
-			let cos_value = Math.cos(transform[1 - 1]);
-			let sin_value = Math.sin(transform[1 - 1]);
+			let cos = Math.cos(transform[0]);
+			let sin = Math.sin(transform[0]);
 			result = [
-				cos_value,
-				sin_value,
-				-sin_value,
-				cos_value,
-				transform[2 - 1],
-				transform[3 - 1],
+				cos,
+				sin,
+				-sin,
+				cos,
+				transform[1],
+				transform[2],
 			];
 		}
 		else if (transform.length === 6) {
@@ -50,22 +93,6 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert {
 			assert_fail(`invalid transform size`);
 		}
 		return result;
-	}
-
-	export function compute_variant_transform_from_standard(
-		data: Transform,
-	): Kernel.Tool.PopCap.Animation.Definition.JS_N.VariantTransform {
-		if (data[0] === data[3] && data[1] === -data[2]) {
-			if (data[0] === 1.0 && data[1] === 0.0) {
-				return [data[4], data[5]];
-			}
-			let acos_value = Math.acos(data[0]);
-			let asin_value = Math.asin(data[1]);
-			if (Math.abs(Math.abs(acos_value) - Math.abs(asin_value)) <= 1e-2) {
-				return [asin_value, data[4], data[5]];
-			}
-		}
-		return [...data];
 	}
 
 	// ------------------------------------------------
