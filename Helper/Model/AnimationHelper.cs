@@ -25,7 +25,7 @@ namespace Helper {
 		) {
 			var imageSourceList = new List<BitmapSource?>(animation.Image.Count);
 			foreach (var image in animation.Image) {
-				var file = $"{directory}/{image.Name.Split('|')[0]}.png";
+				var file = $"{directory}/{AnimationHelper.ParseImageFileName(image.Name)}.png";
 				var source = default(BitmapSource);
 				if (File.Exists(file)) {
 					source = await StorageHelper.ReadFileImage(file);
@@ -39,7 +39,33 @@ namespace Helper {
 
 		#region utility
 
-		public const Floater BasicOffset = 0.001;
+		public static String ParseImageFileName (
+			String value
+		) {
+			var result = value;
+			var indexA1 = result.IndexOf('(');
+			var indexA2 = result.IndexOf(')');
+			if (indexA1 != -1 || indexA2 != -1) {
+				GF.AssertTest(indexA1 != -1 && indexA2 != -1 && indexA1 < indexA2);
+				result = result.Substring(0, indexA1) + result.Substring(indexA2 + 1);
+			}
+			var indexB1 = result.IndexOf('$');
+			if (indexB1 != -1) {
+				GF.AssertTest(indexA1 == -1 && indexA2 == -1);
+				result = result.Substring(indexB1 + 1);
+			}
+			var indexC1 = result.IndexOf('[');
+			var indexC2 = result.IndexOf(']');
+			if (indexC1 != -1 || indexC2 != -1) {
+				GF.AssertTest(indexC1 != -1 && indexC2 != -1 && indexC1 < indexC2);
+				result = result.Substring(0, indexC1) + result.Substring(indexC2 + 1);
+			}
+			var indexD1 = result.IndexOf('|');
+			if (indexD1 != -1) {
+				result = result.Substring(0, indexD1);
+			}
+			return result;
+		}
 
 		// ----------------
 
@@ -52,7 +78,7 @@ namespace Helper {
 				result = animation.Sprite[index];
 			}
 			else if (index == animation.Sprite.Count) {
-				result = animation.MainSprite ?? throw new Exception();
+				result = animation.MainSprite.AsNotNull();
 			}
 			else {
 				throw new ArgumentException();
@@ -63,6 +89,10 @@ namespace Helper {
 		#endregion
 
 		#region create
+
+		public const Floater BasicOffset = 0.001;
+
+		// ----------------
 
 		public record SpriteUI {
 			public required Canvas     Canvas;
@@ -134,10 +164,10 @@ namespace Helper {
 							Children = {
 								new Image() {
 									Source = resourceSource,
-									Width = resource.Size[0],
-									Height = resource.Size[1],
+									Width = resource.Size?[0] ?? resourceSource?.PixelWidth ?? 0,
+									Height = resource.Size?[1] ?? resourceSource?.PixelHeight ?? 0,
 									RenderTransform = new MatrixTransform() {
-										Matrix = TransformHelper.ConvertFromStandard(resource.Transform),
+										Matrix = TransformHelper.ConvertFromVariant(resource.Transform),
 									},
 								},
 							},

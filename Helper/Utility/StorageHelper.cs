@@ -62,10 +62,10 @@ namespace Helper.Utility {
 		public static Boolean CheckName (
 			String name
 		) {
-			if (name == "") {
+			if (name.Length == 0) {
 				return false;
 			}
-			if (name[0] == ' ' || name.Last() == ' ' || name.Last() == '.') {
+			if (name[0] == ' ' || name[^1] == ' ' || name[^1] == '.') {
 				return false;
 			}
 			return name.All((value) => (!StorageHelper.InvalidPathNameCharacter.Contains(value)));
@@ -177,7 +177,7 @@ namespace Helper.Utility {
 			String pattern = "*"
 		) {
 			var parentFullName = new DirectoryInfo(target).FullName;
-			return Directory.EnumerateFiles(target, pattern, new EnumerationOptions() { MaxRecursionDepth = depth }).Select((value) => (value[(parentFullName.Length + 1)..])).ToList();
+			return Directory.EnumerateFiles(target, pattern, new EnumerationOptions() { RecurseSubdirectories = true, MaxRecursionDepth = depth }).Select((value) => (StorageHelper.Regularize(value[(parentFullName.Length + 1)..]))).ToList();
 		}
 
 		public static List<String> ListDirectory (
@@ -186,7 +186,7 @@ namespace Helper.Utility {
 			String pattern = "*"
 		) {
 			var parentFullName = new DirectoryInfo(target).FullName;
-			return Directory.EnumerateDirectories(target, pattern, new EnumerationOptions() { MaxRecursionDepth = depth }).Select((value) => (value[(parentFullName.Length + 1)..])).ToList();
+			return Directory.EnumerateDirectories(target, pattern, new EnumerationOptions() { RecurseSubdirectories = true, MaxRecursionDepth = depth }).Select((value) => (StorageHelper.Regularize(value[(parentFullName.Length + 1)..]))).ToList();
 		}
 
 		#endregion

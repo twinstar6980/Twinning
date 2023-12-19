@@ -10,25 +10,6 @@ namespace Helper.Utility {
 
 		#region convert
 
-		public static Matrix ConvertFromStandard (
-			List<Floater> source
-		) {
-			var result = new Matrix();
-			switch (source.Count) {
-				case 6: {
-					result.M11 = source[0];
-					result.M12 = source[1];
-					result.M21 = source[2];
-					result.M22 = source[3];
-					result.OffsetX = source[4];
-					result.OffsetY = source[5];
-					break;
-				}
-				default: throw new ArgumentOutOfRangeException();
-			}
-			return result;
-		}
-
 		public static Matrix ConvertFromVariant (
 			List<Floater> source
 		) {

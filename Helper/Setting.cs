@@ -58,6 +58,7 @@ namespace Helper {
 			public required Boolean RepeatPlay;
 			public required Boolean RemainFrameRate;
 			public required Boolean ShowSpriteBoundary;
+			public required String  ImageFilterRule;
 			public required String  SpriteFilterRule;
 		}
 
@@ -108,9 +109,7 @@ namespace Helper {
 		) {
 			try {
 				Setting.Load();
-				if (Setting.Data.Version != Package.Current.Id.Version.Major) {
-					throw new Exception();
-				}
+				GF.AssertTest(Setting.Data.Version == Package.Current.Id.Version.Major);
 			}
 			catch (Exception) {
 				Setting.Data = new SettingData() {
@@ -154,6 +153,7 @@ namespace Helper {
 						RepeatPlay = true,
 						RemainFrameRate = true,
 						ShowSpriteBoundary = false,
+						ImageFilterRule = "",
 						SpriteFilterRule = "",
 					},
 					PackageBuilder = new PackageBuilderSettingData() {

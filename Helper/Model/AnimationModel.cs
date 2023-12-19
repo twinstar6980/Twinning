@@ -10,7 +10,7 @@ namespace Helper {
 
 		#region type
 
-		[JsonObject(ItemRequired = Required.AllowNull)]
+		[JsonObject(ItemRequired = Required.Default)]
 		public record Rectangle {
 			public required List<Floater> Position;
 			public required List<Floater> Size;
@@ -18,12 +18,12 @@ namespace Helper {
 
 		// ----------------
 
-		[JsonObject(ItemRequired = Required.AllowNull)]
+		[JsonObject(ItemRequired = Required.Default)]
 		public record LayerRemove {
 			public required Integer Index;
 		}
 
-		[JsonObject(ItemRequired = Required.AllowNull)]
+		[JsonObject(ItemRequired = Required.Default)]
 		public record LayerAppend {
 			public required Integer Index;
 			public required String? Name;
@@ -34,7 +34,7 @@ namespace Helper {
 			public required Floater TimeScale;
 		}
 
-		[JsonObject(ItemRequired = Required.AllowNull)]
+		[JsonObject(ItemRequired = Required.Default)]
 		public record LayerChange {
 			public required Integer        Index;
 			public required List<Floater>  Transform;
@@ -43,7 +43,7 @@ namespace Helper {
 			public required Rectangle?     SourceRectangle;
 		}
 
-		[JsonObject(ItemRequired = Required.AllowNull)]
+		[JsonObject(ItemRequired = Required.Default)]
 		public record Frame {
 			public required String?            Label;
 			public required Boolean            Stop;
@@ -55,22 +55,22 @@ namespace Helper {
 
 		// ----------------
 
-		[JsonObject(ItemRequired = Required.AllowNull)]
+		[JsonObject(ItemRequired = Required.Default)]
 		public record Sprite {
-			public required String        Name;
-			public required Floater       FrameRate;
-			public required List<Integer> WorkArea;
-			public required List<Frame>   Frame;
+			public required String?        Name;
+			public required Floater?       FrameRate;
+			public required List<Integer>? WorkArea;
+			public required List<Frame>    Frame;
 		}
 
-		[JsonObject(ItemRequired = Required.AllowNull)]
+		[JsonObject(ItemRequired = Required.Default)]
 		public record Image {
-			public required String        Name;
-			public required List<Integer> Size;
-			public required List<Floater> Transform;
+			public required String         Name;
+			public required List<Integer>? Size;
+			public required List<Floater>  Transform;
 		}
 
-		[JsonObject(ItemRequired = Required.AllowNull)]
+		[JsonObject(ItemRequired = Required.Default)]
 		public record Animation {
 			public required Integer       FrameRate;
 			public required List<Floater> Position;

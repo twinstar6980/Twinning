@@ -2,6 +2,36 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert {
 
 	// ------------------------------------------------
 
+	export function parse_image_file_name(
+		value: string,
+	): string {
+		let result = value;
+		let index_a_1 = result.indexOf('(');
+		let index_a_2 = result.indexOf(')');
+		if (index_a_1 !== -1 || index_a_2 !== -1) {
+			assert_test(index_a_1 !== -1 && index_a_2 !== -1 && index_a_1 < index_a_2);
+			result = result.slice(0, index_a_1) + result.slice(index_a_2 + 1);
+		}
+		let index_b_1 = result.indexOf('$');
+		if (index_b_1 !== -1) {
+			assert_test(index_a_1 === -1 && index_a_2 === -1);
+			result = result.slice(index_b_1 + 1);
+		}
+		let index_c_1 = result.indexOf('[');
+		let index_c_2 = result.indexOf(']');
+		if (index_c_1 !== -1 || index_c_2 !== -1) {
+			assert_test(index_c_1 !== -1 && index_c_2 !== -1 && index_c_1 < index_c_2);
+			result = result.slice(0, index_c_1) + result.slice(index_c_2 + 1);
+		}
+		let index_d_1 = result.indexOf('|');
+		if (index_d_1 !== -1) {
+			result = result.slice(0, index_d_1);
+		}
+		return result;
+	}
+
+	// ------------------------------------------------
+
 	export type Transform = [number, number, number, number, number, number];
 
 	export const k_initial_transform: Transform = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0];

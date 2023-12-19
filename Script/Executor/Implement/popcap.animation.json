@@ -30,6 +30,7 @@
 			"argument": {
 				"raw_file": "?input",
 				"ripe_directory": "?automatic",
+				"version_number": "?input",
 			},
 			"batch_argument": {
 				"raw_file": "?input",
@@ -41,6 +42,7 @@
 			"argument": {
 				"ripe_directory": "?input",
 				"raw_file": "?automatic",
+				"version_number": "?input",
 			},
 			"batch_argument": {
 				"ripe_directory": "?input",

@@ -76,7 +76,7 @@ namespace Helper {
 						optionModuleOption = option.NextStringList();
 					}
 					if (!option.Done()) {
-						throw new Exception($"Too many option : {String.Join(' ', option.NextStringList())}");
+						throw new Exception($"Too many option : '{String.Join(' ', option.NextStringList())}'.");
 					}
 				}
 				window = new Module.MainWindow();
@@ -241,7 +241,7 @@ namespace Helper {
 			String?                          message = null
 		) {
 			if (!condition) {
-				throw new Exception("Assertion failed" + (message is null ? "" : $" : {message}"));
+				throw new Exception("Assertion failed" + (message is null ? "." : $" : {message}."));
 			}
 			return;
 		}

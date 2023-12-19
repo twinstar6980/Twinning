@@ -150,6 +150,25 @@ namespace Helper.Module.ModuleLauncher {
 
 		#endregion
 
+		#region image filter rule
+
+		public String uImageFilterRuleText_Text {
+			get {
+				return Setting.Data.AnimationViewer.ImageFilterRule;
+			}
+		}
+
+		public async void uImageFilterRuleText_TextChanged (
+			Object               sender,
+			TextChangedEventArgs args
+		) {
+			var senders = sender.AsClass<TextBox>();
+			Setting.Data.AnimationViewer.ImageFilterRule = senders.Text;
+			return;
+		}
+
+		#endregion
+
 		#region sprite filter rule
 
 		public String uSpriteFilterRuleText_Text {

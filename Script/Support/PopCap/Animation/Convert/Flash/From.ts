@@ -322,8 +322,8 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash.From {
 			))),
 			XML.create_element_node('media', {}, animation.image.map((value) => (
 				XML.create_element_node('DOMBitmapItem', {
-					name: `media/${value.name.split('|')[0]}`,
-					href: `media/${value.name.split('|')[0]}.png`,
+					name: `media/${parse_image_file_name(value.name)}`,
+					href: `media/${parse_image_file_name(value.name)}.png`,
 				}, [])
 			))),
 			XML.create_element_node('symbols', {}, [

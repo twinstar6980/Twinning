@@ -129,7 +129,7 @@ namespace Helper.Module.ResourceForwarder {
 					optionInput = option.NextStringList();
 				}
 				if (!option.Done()) {
-					throw new Exception($"Too many option : {String.Join(' ', option.NextStringList())}");
+					throw new Exception($"Too many option : '{String.Join(' ', option.NextStringList())}'.");
 				}
 			}
 			catch (Exception e) {

@@ -332,24 +332,30 @@
 								Width="32" Height="32"
 								VerticalAlignment="Center"
 								FontSize="{StaticResource MediumIconSize}"
-								Glyph="{StaticResource FluentIconGlyph.MapLayers}"
+								Glyph="{StaticResource FluentIconGlyph.Filter}"
 							/>
 							<SplitButton
 								Width="130" Height="NaN"
 								VerticalAlignment="Center"
 								HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
 								Content="Filter"
-								Click="{x:Bind Controller.uSpriteFilterRule_Click}"
+								Click="{x:Bind Controller.uFilterRule_Click}"
 							>
 								<SplitButton.Flyout>
 									<Flyout FlyoutPresenterStyle="{StaticResource CompatFlyoutPresenterStyle}">
 										<my:Stack
 											Width="130"
-											Orientation="Vertical" Spacing="8"
+											Orientation="Vertical" Spacing="2"
 										>
 											<TextBox
 												HorizontalAlignment="Stretch"
-												PlaceholderText="Rule"
+												PlaceholderText="Image"
+												Text="{x:Bind Controller.uImageFilterRuleText_Text}"
+												TextChanged="{x:Bind Controller.uImageFilterRuleText_TextChanged}"
+											/>
+											<TextBox
+												HorizontalAlignment="Stretch"
+												PlaceholderText="Sprite"
 												Text="{x:Bind Controller.uSpriteFilterRuleText_Text}"
 												TextChanged="{x:Bind Controller.uSpriteFilterRuleText_TextChanged}"
 											/>

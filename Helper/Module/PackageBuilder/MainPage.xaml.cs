@@ -89,7 +89,7 @@ namespace Helper.Module.PackageBuilder {
 					optionProjectDirectory = option.NextString();
 				}
 				if (!option.Done()) {
-					throw new Exception($"Too many option : {String.Join(' ', option.NextStringList())}");
+					throw new Exception($"Too many option : '{String.Join(' ', option.NextStringList())}'.");
 				}
 			}
 			catch (Exception e) {
@@ -282,7 +282,7 @@ namespace Helper.Module.PackageBuilder {
 			String parent
 		) {
 			GF.AssertTest(this.IsLoaded);
-			return StorageHelper.ListDirectory(parent, 1).Where((value) => (!value.StartsWith("."))).ToList();
+			return StorageHelper.ListDirectory(parent, 0).Where((value) => (!value.StartsWith("."))).ToList();
 		}
 
 		public String FindAvailableScopeChildName (

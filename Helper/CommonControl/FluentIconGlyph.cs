@@ -1421,7 +1421,7 @@ namespace Helper.CommonControl {
 		public static String FindGlyph (
 			String name
 		) {
-			return typeof(FluentIconGlyph).GetField(name)?.GetRawConstantValue()?.ToString() ?? throw new Exception();
+			return typeof(FluentIconGlyph).GetField(name)?.GetRawConstantValue()?.ToString() ?? throw new Exception($"Could not find glyph by name '{name}'.");
 		}
 
 		#endregion

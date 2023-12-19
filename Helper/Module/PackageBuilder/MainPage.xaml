@@ -78,6 +78,7 @@
 						<Button
 							VerticalAlignment="Center"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.More}}"
+							IsEnabled="{x:Bind Controller.uLoadedAction_IsEnabled}"
 						>
 							<Button.Flyout>
 								<MenuFlyout Placement="BottomEdgeAlignedRight">

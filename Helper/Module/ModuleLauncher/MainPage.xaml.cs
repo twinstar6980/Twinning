@@ -70,7 +70,7 @@ namespace Helper.Module.ModuleLauncher {
 			try {
 				var option = new CommandLineReader(optionView);
 				if (!option.Done()) {
-					throw new Exception($"Too many option : {String.Join(' ', option.NextStringList())}");
+					throw new Exception($"Too many option : '{String.Join(' ', option.NextStringList())}'.");
 				}
 			}
 			catch (Exception e) {
