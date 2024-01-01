@@ -269,7 +269,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 								value: {
 									size: atlas_size,
 									format: conversion_setting.index,
-									pitch: PopCap.Texture.Encoding.get_bpp_for_pitch(conversion_setting.format) * atlas_size[0],
+									pitch: atlas_size[0] * PopCap.Texture.Encoding.get_bpp_for_pitch(conversion_setting.format) / 8n,
 									...(package_setting.version.extended_texture_information_for_pvz2_cn < 1n ? {} : { additional_byte_count: conversion_setting.format !== 'rgb_etc1_a_palette' ? 0n : KernelX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.compute_data_size_with_palette(atlas_size, texture_encode_option.rgb_etc1_a_palette!.palette.length) }),
 									...(package_setting.version.extended_texture_information_for_pvz2_cn < 2n ? {} : { scale: 100n }),
 								},
@@ -316,7 +316,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 								type: 'general',
 								value: {
 									path: resource_path,
-									type: 'File',
+									type: 'PopAnim',
 								},
 							},
 						},

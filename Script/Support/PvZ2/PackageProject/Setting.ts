@@ -47,8 +47,11 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject {
 		sprite: Array<TextureResourcePropertySpriteProperty>;
 	};
 
-	export type SpecialRTONResourceProperty = {
+	export type SpecialResourcePropertyBase = {
 		conversion: string;
+	};
+
+	export type SpecialRTONResourceProperty = SpecialResourcePropertyBase & {
 		path: string;
 	};
 
@@ -60,30 +63,25 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject {
 		separate: [bigint, bigint];
 	};
 
-	export type SpecialPTXResourceProperty = {
-		conversion: string;
+	export type SpecialPTXResourceProperty = SpecialResourcePropertyBase & {
 		path: string;
 		resolution: bigint;
 		sprite: Array<SpecialPTXResourcePropertySpriteProperty>;
 	};
 
-	export type SpecialPAMResourceProperty = {
-		conversion: string;
+	export type SpecialPAMResourceProperty = SpecialResourcePropertyBase & {
 		path: string;
 	};
 
-	export type SpecialPOPFXPesourceProperty = {
-		conversion: string;
+	export type SpecialPOPFXPesourceProperty = SpecialResourcePropertyBase & {
 		path: string;
 	};
 
-	export type SpecialWEMResourceProperty = {
-		conversion: string;
+	export type SpecialWEMResourceProperty = SpecialResourcePropertyBase & {
 		path: string;
 	};
 
-	export type SpecialBNKResourceProperty = {
-		conversion: string;
+	export type SpecialBNKResourceProperty = SpecialResourcePropertyBase & {
 		path: string;
 	};
 

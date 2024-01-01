@@ -692,7 +692,7 @@ namespace Helper.Module.PackageBuilder {
 			GF.AssertTest(this.IsLoaded);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart);
 			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			StorageHelper.RemoveDirectory(sourceDirectory);
+			StorageHelper.TrashDirectory(sourceDirectory);
 			var itemNode = this.FindScopeNode(sourcePart);
 			this.uPartList_ItemsSource.Remove(itemNode);
 			foreach (var packageNode in this.uPackageList_ItemsSource) {
@@ -847,7 +847,7 @@ namespace Helper.Module.PackageBuilder {
 			GF.AssertTest(this.IsLoaded);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup);
 			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			StorageHelper.RemoveDirectory(sourceDirectory);
+			StorageHelper.TrashDirectory(sourceDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup);
 			itemNode.Parent.Children.Remove(itemNode);
 			itemNode.Parent.NotifyPropertyChanged(
@@ -1021,7 +1021,7 @@ namespace Helper.Module.PackageBuilder {
 			GF.AssertTest(this.IsLoaded);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, sourceResource);
 			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			StorageHelper.RemoveDirectory(sourceDirectory);
+			StorageHelper.TrashDirectory(sourceDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup, sourceResource);
 			itemNode.Parent.Children.Remove(itemNode);
 			itemNode.Parent.NotifyPropertyChanged(
@@ -2790,7 +2790,7 @@ namespace Helper.Module.PackageBuilder {
 				Variable = this.Setting.Variable,
 			};
 			var resourceDirectory = this.Host.MakeScopeRootPath(this.Parent.Parent.Name, this.Parent.Name, this.Name);
-			StorageHelper.RemoveDirectory(resourceDirectory);
+			StorageHelper.TrashDirectory(resourceDirectory);
 			StorageHelper.CreateDirectory(resourceDirectory);
 			await this.SaveSetting();
 			this.NotifyPropertyChanged(
@@ -2816,7 +2816,7 @@ namespace Helper.Module.PackageBuilder {
 				Variable = this.Setting.Variable,
 			};
 			var resourceDirectory = this.Host.MakeScopeRootPath(this.Parent.Parent.Name, this.Parent.Name, this.Name);
-			StorageHelper.RemoveDirectory(resourceDirectory);
+			StorageHelper.TrashDirectory(resourceDirectory);
 			StorageHelper.CreateDirectory(resourceDirectory);
 			await this.SaveSetting();
 			StorageHelper.CreateFile(this.Host.MakeScopeChildPath(resourceDirectory, "source.bin"));
@@ -2847,7 +2847,7 @@ namespace Helper.Module.PackageBuilder {
 				Variable = this.Setting.Variable,
 			};
 			var resourceDirectory = this.Host.MakeScopeRootPath(this.Parent.Parent.Name, this.Parent.Name, this.Name);
-			StorageHelper.RemoveDirectory(resourceDirectory);
+			StorageHelper.TrashDirectory(resourceDirectory);
 			StorageHelper.CreateDirectory(resourceDirectory);
 			await this.SaveSetting();
 			StorageHelper.CreateFile(this.Host.MakeScopeChildPath(resourceDirectory, "source.ptx"));
@@ -2874,7 +2874,7 @@ namespace Helper.Module.PackageBuilder {
 				Variable = this.Setting.Variable,
 			};
 			var resourceDirectory = this.Host.MakeScopeRootPath(this.Parent.Parent.Name, this.Parent.Name, this.Name);
-			StorageHelper.RemoveDirectory(resourceDirectory);
+			StorageHelper.TrashDirectory(resourceDirectory);
 			StorageHelper.CreateDirectory(resourceDirectory);
 			await this.SaveSetting();
 			StorageHelper.CreateFile(this.Host.MakeScopeChildPath(resourceDirectory, "source.json"));
@@ -2902,7 +2902,7 @@ namespace Helper.Module.PackageBuilder {
 				Variable = this.Setting.Variable,
 			};
 			var resourceDirectory = this.Host.MakeScopeRootPath(this.Parent.Parent.Name, this.Parent.Name, this.Name);
-			StorageHelper.RemoveDirectory(resourceDirectory);
+			StorageHelper.TrashDirectory(resourceDirectory);
 			StorageHelper.CreateDirectory(resourceDirectory);
 			await this.SaveSetting();
 			StorageHelper.CreateDirectory(this.Host.MakeScopeChildPath(resourceDirectory, "source.sprite"));
@@ -2929,7 +2929,7 @@ namespace Helper.Module.PackageBuilder {
 				Variable = this.Setting.Variable,
 			};
 			var resourceDirectory = this.Host.MakeScopeRootPath(this.Parent.Parent.Name, this.Parent.Name, this.Name);
-			StorageHelper.RemoveDirectory(resourceDirectory);
+			StorageHelper.TrashDirectory(resourceDirectory);
 			StorageHelper.CreateDirectory(resourceDirectory);
 			await this.SaveSetting();
 			StorageHelper.CreateFile(this.Host.MakeScopeChildPath(resourceDirectory, "source.json"));
@@ -2956,7 +2956,7 @@ namespace Helper.Module.PackageBuilder {
 				Variable = this.Setting.Variable,
 			};
 			var resourceDirectory = this.Host.MakeScopeRootPath(this.Parent.Parent.Name, this.Parent.Name, this.Name);
-			StorageHelper.RemoveDirectory(resourceDirectory);
+			StorageHelper.TrashDirectory(resourceDirectory);
 			StorageHelper.CreateDirectory(resourceDirectory);
 			await this.SaveSetting();
 			StorageHelper.CreateFile(this.Host.MakeScopeChildPath(resourceDirectory, "source.wav"));

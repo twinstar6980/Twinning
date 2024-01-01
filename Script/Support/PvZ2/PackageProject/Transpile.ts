@@ -188,7 +188,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Transpile {
 					resource_setting.property = {
 						path: resource_property.path + '',
 						format: conversion_setting.index,
-						pitch: PopCap.Texture.Encoding.get_bpp_for_pitch(conversion_setting.format) * atlas_size[0],
+						pitch: atlas_size[0] * PopCap.Texture.Encoding.get_bpp_for_pitch(conversion_setting.format) / 8n,
 						additional_byte_count: conversion_setting.format !== 'rgb_etc1_a_palette' ? 0n : KernelX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.compute_data_size_with_palette(atlas_size, texture_encode_option.rgb_etc1_a_palette!.palette.length),
 						size: atlas_size,
 						sprite: new_sprite_property_list,

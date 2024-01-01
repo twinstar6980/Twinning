@@ -123,6 +123,7 @@
 				HorizontalAlignment="Stretch"
 			>
 				<localModuleModdingWorker:InputBar
+					x:Name="uInput" x:FieldModifier="public"
 					my:Stack.Weight="1" HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Width="NaN" Height="32"

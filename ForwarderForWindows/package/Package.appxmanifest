@@ -8,7 +8,7 @@
 	xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
 	xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
 	IgnorableNamespaces="rescap uap uap10 com desktop4 desktop5">
-	<Identity Name="TwinStar.ToolKit.ForwarderForWindows" Publisher="CN=TwinStar" Version="34.0.0.0" ProcessorArchitecture="x64" />
+	<Identity Name="TwinStar.ToolKit.ForwarderForWindows" Publisher="CN=TwinStar" Version="35.0.0.0" ProcessorArchitecture="x64" />
 	<Properties>
 		<DisplayName>TwinStar ToolKit - Forwarder</DisplayName>
 		<PublisherDisplayName>TwinStar</PublisherDisplayName>
@@ -37,6 +37,9 @@
 							<desktop5:Verb Id="0Main" Clsid="9992EC48-22A5-86FA-EA42-72DA1A53F23D" />
 						</desktop5:ItemType>
 						<desktop5:ItemType Type="Directory">
+							<desktop5:Verb Id="0Main" Clsid="9992EC48-22A5-86FA-EA42-72DA1A53F23D" />
+						</desktop5:ItemType>
+						<desktop5:ItemType Type="Directory\Background">
 							<desktop5:Verb Id="0Main" Clsid="9992EC48-22A5-86FA-EA42-72DA1A53F23D" />
 						</desktop5:ItemType>
 					</desktop4:FileExplorerContextMenus>

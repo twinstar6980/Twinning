@@ -96,6 +96,26 @@ namespace Helper.Utility {
 
 		// ----------------
 
+		public static async Task<Boolean> ShowDialogForConfirm (
+			UIElement root
+		) {
+			var dialog = new ContentDialog() {
+				XamlRoot = root.XamlRoot,
+				Title = "Are You Sure ?",
+				Content = null,
+				PrimaryButtonText = "Yes",
+				SecondaryButtonText = "No",
+				DefaultButton = ContentDialogButton.Primary,
+			};
+			var result = false;
+			dialog.Closed += (sender, args) => {
+				result = args.Result == ContentDialogResult.Primary;
+				return;
+			};
+			await ControlHelper.PushDialog(dialog);
+			return result;
+		}
+
 		public static Action ShowDialogForWaiting (
 			UIElement root
 		) {

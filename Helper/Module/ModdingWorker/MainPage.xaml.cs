@@ -240,8 +240,13 @@ namespace Helper.Module.ModdingWorker {
 				nameof(this.uInput_Option),
 				nameof(this.uInput_Stamp)
 			);
+			var needFocus = true;
 			while (this.InputBusy) {
 				await Task.Delay(40);
+				if (needFocus) {
+					this.View.uInput.Focus(FocusState.Programmatic);
+					needFocus = false;
+				}
 			}
 			var input = this.uInput_Value.Data;
 			this.uInput_Type = null;

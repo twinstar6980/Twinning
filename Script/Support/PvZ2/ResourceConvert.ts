@@ -186,7 +186,11 @@ namespace TwinStar.Script.Support.PvZ2.ResourceConvert {
 					if (option.ptx.sprite !== null) {
 						Support.Atlas.Pack.unpack_fsh({
 							size: atlas_image_additional.size,
-							sprite: atlas_image_additional.sprite.map((value) => ({ name: value.path, position: value.position, size: value.size })),
+							sprite: atlas_image_additional.sprite.map((value) => ({
+								name: value.path,
+								position: value.position,
+								size: value.size,
+							})),
 						}, image_view, option.ptx.directory);
 					}
 				}

@@ -27,18 +27,18 @@ android {
 		applicationId = "com.twinstar.toolkit.forwarder_for_android"
 		minSdk = 28
 		targetSdk = 34
-		versionCode = 4
-		versionName = "4.0.0"
+		versionCode = 5
+		versionName = "5.0.0"
 		
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 	}
 
 	signingConfigs {
 		create("release") {
-			keyAlias = keystoreProperties["keyAlias"] as String
-			keyPassword = keystoreProperties["keyPassword"] as String
-			storeFile = file(keystoreProperties["storeFile"] as String)
-			storePassword = keystoreProperties["storePassword"] as String
+			keyAlias = keystoreProperties.getProperty("keyAlias")!!
+			keyPassword = keystoreProperties.getProperty("keyPassword")!!
+			storeFile = keystoreProperties.getProperty("storeFile")!!.let { file(it) }
+			storePassword = keystoreProperties.getProperty("storePassword")!!
 		}
 	}
 

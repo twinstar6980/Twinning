@@ -95,56 +95,6 @@ namespace Helper.Utility {
 
 		// ----------------
 
-		public static void CreateFile (
-			String target
-		) {
-			File.Create(target).Close();
-			return;
-		}
-
-		public static void CreateDirectory (
-			String target
-		) {
-			Directory.CreateDirectory(target);
-			return;
-		}
-
-		// ----------------
-
-		public static void RemoveFile (
-			String target
-		) {
-			File.Delete(target);
-			return;
-		}
-
-		public static void RemoveDirectory (
-			String target
-		) {
-			Directory.Delete(target, true);
-			return;
-		}
-
-		// ----------------
-
-		public static void RenameFile (
-			String source,
-			String destination
-		) {
-			File.Move(source, destination);
-			return;
-		}
-
-		public static void RenameDirectory (
-			String source,
-			String destination
-		) {
-			Directory.Move(source, destination);
-			return;
-		}
-
-		// ----------------
-
 		public static void CopyFile (
 			String source,
 			String destination
@@ -171,6 +121,56 @@ namespace Helper.Utility {
 
 		// ----------------
 
+		public static void RenameFile (
+			String source,
+			String destination
+		) {
+			File.Move(source, destination);
+			return;
+		}
+
+		public static void RenameDirectory (
+			String source,
+			String destination
+		) {
+			Directory.Move(source, destination);
+			return;
+		}
+
+		// ----------------
+
+		public static void RemoveFile (
+			String source
+		) {
+			File.Delete(source);
+			return;
+		}
+
+		public static void RemoveDirectory (
+			String source
+		) {
+			Directory.Delete(source, true);
+			return;
+		}
+
+		// ----------------
+
+		public static void CreateFile (
+			String target
+		) {
+			File.Create(target).Close();
+			return;
+		}
+
+		public static void CreateDirectory (
+			String target
+		) {
+			Directory.CreateDirectory(target);
+			return;
+		}
+
+		// ----------------
+
 		public static List<String> ListFile (
 			String target,
 			Size   depth,
@@ -187,6 +187,22 @@ namespace Helper.Utility {
 		) {
 			var parentFullName = new DirectoryInfo(target).FullName;
 			return Directory.EnumerateDirectories(target, pattern, new EnumerationOptions() { RecurseSubdirectories = true, MaxRecursionDepth = depth }).Select((value) => (StorageHelper.Regularize(value[(parentFullName.Length + 1)..]))).ToList();
+		}
+
+		// ----------------
+
+		public static void TrashFile (
+			String target
+		) {
+			Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(target, Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs, Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin, Microsoft.VisualBasic.FileIO.UICancelOption.ThrowException);
+			return;
+		}
+
+		public static void TrashDirectory (
+			String target
+		) {
+			Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(target, Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs, Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin, Microsoft.VisualBasic.FileIO.UICancelOption.ThrowException);
+			return;
 		}
 
 		#endregion

@@ -24,41 +24,35 @@ class MainActivity: FlutterActivity() {
 		if (this.intent.action == "${this.packageName}.action.LAUNCH") {
 			this.command = this.intent.extras!!.getStringArray("command")!!.toList()
 		}
+		return
 	}
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
 		when (requestCode) {
 			REQUEST_STORAGE_PERMISSION -> {
-				var state = false
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-					state = Environment.isExternalStorageManager()
-				}
-				this.methodResult.success(state)
+				this.checkStoragePermission()
 			}
 			REQUEST_PICK_PATH -> {
-				var uri = null as Uri?
-				if (resultCode == RESULT_OK) {
-					uri = data?.data
-				}
-				var path = uri?.let { this.parsePathOfContentProviderUri(it, this.fallbackDirectoryWhenPickFile) ?: uri.toString() }
+				var path = data?.data?.let { this.parsePathOfContentProviderUri(it, this.fallbackDirectoryWhenPickPath) ?: it.toString() }
 				this.methodResult.success(path)
 			}
 			else -> {
 			}
 		}
+		return
 	}
 
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 		when (requestCode) {
 			REQUEST_STORAGE_PERMISSION -> {
-				var state = grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }
-				this.methodResult.success(state)
+				this.checkStoragePermission()
 			}
 			else -> {
 			}
 		}
+		return
 	}
 
 	override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -82,13 +76,14 @@ class MainActivity: FlutterActivity() {
 						var fallbackDirectory = call.argument<String>("fallbackDirectory")
 						this.pickPath(typeIsDirectory, fallbackDirectory)
 					}
-					else -> throw Exception("invalid method")
+					else -> result.notImplemented()
 				}
 			}
+		return
 	}
 
 	private fun checkStoragePermission(): Unit {
-		var state = false
+		var state: Boolean
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
 			state = this.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
 					this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
@@ -105,7 +100,7 @@ class MainActivity: FlutterActivity() {
 			this.requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_STORAGE_PERMISSION)
 		}
 		else {
-			this.startActivityForResult(Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:${this.packageName}")), REQUEST_STORAGE_PERMISSION);
+			this.startActivityForResult(Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:${this.packageName}")), REQUEST_STORAGE_PERMISSION)
 		}
 		return
 	}
@@ -116,8 +111,8 @@ class MainActivity: FlutterActivity() {
 	}
 
 	private fun pickPath(typeIsDirectory: Boolean, fallbackDirectory: String?): Unit {
-		this.fallbackDirectoryWhenPickFile = fallbackDirectory
-		val intent = Intent(if (!typeIsDirectory) (Intent.ACTION_GET_CONTENT) else (Intent.ACTION_OPEN_DOCUMENT_TREE)).also {
+		this.fallbackDirectoryWhenPickPath = fallbackDirectory
+		var intent = Intent(if (!typeIsDirectory) (Intent.ACTION_GET_CONTENT) else (Intent.ACTION_OPEN_DOCUMENT_TREE)).also {
 			it.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
 			if (!typeIsDirectory) {
 				it.addCategory(Intent.CATEGORY_OPENABLE)
@@ -184,7 +179,7 @@ class MainActivity: FlutterActivity() {
 				result = path
 			}
 			else -> {
-				if (File(path).exists()) {
+				if (path.startsWith("/") && File(path).exists()) {
 					result = path
 				}
 			}
@@ -220,11 +215,11 @@ class MainActivity: FlutterActivity() {
 	private fun copyFileOfContentProviderUri(uri: Uri, path: String): Boolean {
 		var state = false
 		try {
-			var input = this.contentResolver.openInputStream(uri)!!
-			var output = FileOutputStream(path, false)
-			input.copyTo(output)
-			input.close()
-			output.close()
+			this.contentResolver.openInputStream(uri)!!.use { input ->
+				FileOutputStream(path, false).use { output ->
+					input.copyTo(output)
+				}
+			}
 			state = true
 		}
 		catch (e: Exception) {
@@ -236,7 +231,7 @@ class MainActivity: FlutterActivity() {
 
 	private lateinit var command: List<String>
 
-	private var fallbackDirectoryWhenPickFile: String? = null
+	private var fallbackDirectoryWhenPickPath: String? = null
 
 	companion object {
 

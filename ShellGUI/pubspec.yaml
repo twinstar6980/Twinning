@@ -1,5 +1,5 @@
 name: shell_gui
-version: 30.0.0+30
+version: 31.0.0+31
 publish_to: 'none'
 environment:
   sdk: '>=3.2.0 <4.0.0'
@@ -12,10 +12,10 @@ dependencies:
   path: ^1.8.3
   path_provider: ^2.1.1
   window_manager: ^0.3.7
-  dynamic_color: ^1.6.8
+  dynamic_color: ^1.6.9
   file_picker: ^6.1.1
   local_notifier: ^0.1.5
-  flutter_local_notifications: ^16.2.0
+  flutter_local_notifications: ^16.3.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

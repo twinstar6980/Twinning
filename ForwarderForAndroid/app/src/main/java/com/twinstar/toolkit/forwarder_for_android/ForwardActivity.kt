@@ -5,7 +5,6 @@ import android.content.ComponentName
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Parcelable
 
 class ForwardActivity : Activity() {
 	
@@ -13,13 +12,14 @@ class ForwardActivity : Activity() {
 		super.onCreate(savedInstanceState)
 		val intent = this.intent
 		intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-		var command = mutableListOf<String>("-additional_argument")
+		val command = mutableListOf<String>()
+		command.add("-additional_argument")
 		if (intent.action == Intent.ACTION_SEND && intent.type != null) {
-			var uri = intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM)!! as Uri
+			val uri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)!!
 			command.add(uri.toString())
 		}
 		if (intent.action == Intent.ACTION_SEND_MULTIPLE && intent.type != null) {
-			var uri = intent.getParcelableArrayListExtra<Parcelable>(Intent.EXTRA_STREAM)!! as List<Uri>
+			val uri = intent.getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)!!
 			command.addAll(uri.map { it.toString() })
 		}
 		val forwardIntent = Intent().also {
@@ -29,6 +29,7 @@ class ForwardActivity : Activity() {
 		}
 		this.startActivity(forwardIntent)
 		this.finish()
+		return
 	}
 	
 	companion object {
