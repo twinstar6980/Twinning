@@ -632,12 +632,15 @@
 	"executor.implement:pvz2.remote_project.execute:project_directory": "Project directory",
 	"executor.implement:pvz2.remote_project.execute:action": "Action",
 	"executor.implement:pvz2.remote_project.execute:target": "Target",
-	// Executor/Implement/kairosoft.user_data
-	"executor.implement:kairosoft.user_data.recrypt": "Kairosoft User-Data Recrypt",
-	"executor.implement:kairosoft.user_data.recrypt:old_directory": "Old data directory",
-	"executor.implement:kairosoft.user_data.recrypt:new_directory": "New data directory",
-	"executor.implement:kairosoft.user_data.recrypt:old_key": "Old key",
-	"executor.implement:kairosoft.user_data.recrypt:new_key": "New key",
+	// Executor/Implement/kairosoft.record
+	"executor.implement:kairosoft.record.recrypt": "Kairosoft Record Recrypt",
+	"executor.implement:kairosoft.record.recrypt:old_directory": "Old data directory",
+	"executor.implement:kairosoft.record.recrypt:new_directory": "New data directory",
+	"executor.implement:kairosoft.record.recrypt:old_key": "Old key",
+	"executor.implement:kairosoft.record.recrypt:new_key": "New key",
+	// 
+	"executor.implement:kairosoft.record.disable_verify": "Kairosoft Record Disable verify",
+	"executor.implement:kairosoft.record.disable_verify:game_directory": "Game directory",
 	// Executable/JSShell
 	"executable.js_shell:input_start": "JS Interation Mode enabled",
 	"executable.js_shell:input_description": "Enter empty string to finish one round of input, enter empty strings for an entire round to finish interation",

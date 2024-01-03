@@ -632,12 +632,15 @@
 	"executor.implement:pvz2.remote_project.execute:project_directory": "Thư mục dự án",
 	"executor.implement:pvz2.remote_project.execute:action": "Hành động",
 	"executor.implement:pvz2.remote_project.execute:target": "Mục tiêu",
-	// Executor/Implement/kairosoft.user_data
-	"executor.implement:kairosoft.user_data.recrypt": "Mã hóa Kairosoft User-Data",
-	"executor.implement:kairosoft.user_data.recrypt:old_directory": "Thư mục dữ liệu cũ",
-	"executor.implement:kairosoft.user_data.recrypt:new_directory": "Thư mục dữ liệu mới",
-	"executor.implement:kairosoft.user_data.recrypt:old_key": "Khóa cũ",
-	"executor.implement:kairosoft.user_data.recrypt:new_key": "Khóa mới",
+	// Executor/Implement/kairosoft.record
+	"executor.implement:kairosoft.record.recrypt": "Mã hóa Kairosoft Record",
+	"executor.implement:kairosoft.record.recrypt:old_directory": "Thư mục dữ liệu cũ",
+	"executor.implement:kairosoft.record.recrypt:new_directory": "Thư mục dữ liệu mới",
+	"executor.implement:kairosoft.record.recrypt:old_key": "Khóa cũ",
+	"executor.implement:kairosoft.record.recrypt:new_key": "Khóa mới",
+	// 
+	"executor.implement:kairosoft.record.disable_verify": "Kairosoft Record Disable verify",
+	"executor.implement:kairosoft.record.disable_verify:game_directory": "Game directory",
 	// Executable/JSShell
 	"executable.js_shell:input_start": "Chế độ Tương tác JS được bật",
 	"executable.js_shell:input_description": "Nhập chuỗi trống để kết thúc một vòng nhập dữ liệu, nhập chuỗi trống cho toàn bộ vòng nhập để kết thúc tương tác",

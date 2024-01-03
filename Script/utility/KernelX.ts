@@ -422,6 +422,23 @@ namespace TwinStar.Script.KernelX {
 			return Kernel.FileSystem.write_file(Kernel.Path.value(target), data_view!);
 		}
 
+		export function read_file_s(
+			target: string,
+		): string {
+			let data = read_file(target);
+			let data_string = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(data.view()));
+			return data_string;
+		}
+
+		export function write_file_s(
+			target: string,
+			data: string,
+		): void {
+			let data_byte = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(data));
+			write_file(target, data_byte);
+			return;
+		}
+
 		// ------------------------------------------------
 
 		export function create_directory(

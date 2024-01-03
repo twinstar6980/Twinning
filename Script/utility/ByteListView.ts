@@ -274,6 +274,12 @@ namespace TwinStar.Script {
 			return value === undefined ? this.m_position : (this.m_position = value, undefined);
 		}
 
+		pr(
+			value: number,
+		): void {
+			return (this.m_position += value, undefined);
+		}
+
 		// ------------------------------------------------
 
 		u8(

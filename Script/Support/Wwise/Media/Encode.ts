@@ -339,7 +339,7 @@ namespace TwinStar.Script.Support.Wwise.Media.Encode {
 				Conversion: `_${format}`,
 			}, []),
 		]));
-		KernelX.FileSystem.write_file(`${wwise_project_directory}/Conversion Settings/Sample Conversion Settings.wwu`, Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(k_sample_conversion_settings)));
+		KernelX.FileSystem.write_file_s(`${wwise_project_directory}/Conversion Settings/Sample Conversion Settings.wwu`, k_sample_conversion_settings);
 		KernelX.FileSystem.copy(raw_file, `${wwise_project_directory}/Sample.wav`);
 		let platform = ({
 			'pcm': 'Android',

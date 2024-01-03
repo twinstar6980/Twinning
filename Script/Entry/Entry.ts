@@ -45,7 +45,7 @@ namespace TwinStar.Script.Entry {
 			disable_object_trailing_comma: boolean;
 			disable_object_line_breaking: boolean;
 		};
-		external_program: Record<'sh' | 'adb' | 'vgmstream' | 'wwise', null | string>;
+		external_program: Record<'sh' | 'adb' | 'vgmstream' | 'wwise' | 'il2cpp_dumper', null | string>;
 		thread_limit: bigint;
 		command_notification_time_limit: null | bigint;
 	};
@@ -74,6 +74,7 @@ namespace TwinStar.Script.Entry {
 		AndroidHelper.g_adb_program_file = configuration.external_program.adb;
 		Support.Wwise.Media.Decode.g_vgmstream_program_file = configuration.external_program.vgmstream;
 		Support.Wwise.Media.Encode.g_wwise_program_file = configuration.external_program.wwise;
+		Support.Kairosoft.Record.DisableVerify.g_il2cpp_dumper_program_file = configuration.external_program.il2cpp_dumper;
 		return;
 	}
 

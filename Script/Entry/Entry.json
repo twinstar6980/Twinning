@@ -15,6 +15,7 @@
 		"adb": null,
 		"vgmstream": null,
 		"wwise": null,
+		"il2cpp_dumper": null,
 	},
 	"thread_limit": 0,
 	"command_notification_time_limit": 15000,

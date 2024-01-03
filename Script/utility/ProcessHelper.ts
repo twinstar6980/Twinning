@@ -72,7 +72,7 @@ namespace TwinStar.Script.ProcessHelper {
 		let input = `${temporary_directory}/input`;
 		let output = `${temporary_directory}/output`;
 		let error = `${temporary_directory}/error`;
-		KernelX.FileSystem.write_file(input, Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(input_data)));
+		KernelX.FileSystem.write_file_s(input, input_data);
 		if (Shell.is_android && Shell.is_gui) {
 			temporary_directory_fallback = `${AndroidHelper.k_remote_temporary_directory}/${PathUtility.name(temporary_directory)}`;
 			output = `${temporary_directory_fallback}/output`;
@@ -85,9 +85,8 @@ namespace TwinStar.Script.ProcessHelper {
 		}
 		let code = KernelX.Process.spawn_process(program, argument, environment, input, output, error);
 		let read_file = (path: string) => {
-			let data = KernelX.FileSystem.read_file(path);
-			let data_string = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(data.view()));
-			return normalize_string_line_feed(data_string);
+			let data = KernelX.FileSystem.read_file_s(path);
+			return normalize_string_line_feed(data);
 		};
 		let result = {
 			code: code,

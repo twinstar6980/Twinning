@@ -85,7 +85,7 @@ namespace TwinStar.Script.Support.PopCap.Animation.Convert.Flash {
 	export function create_xfl_content_file(
 		directory: string,
 	): void {
-		KernelX.FileSystem.write_file(`${directory}/main.xfl`, Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(k_xfl_content)));
+		KernelX.FileSystem.write_file_s(`${directory}/main.xfl`, k_xfl_content);
 		return;
 	}
 
