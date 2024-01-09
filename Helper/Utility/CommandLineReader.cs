@@ -9,17 +9,17 @@ namespace Helper.Utility {
 
 		#region structor
 
-		private List<String> mView;
+		private List<String> View;
 
-		private Size mPosition;
+		private Size Position;
 
 		// ----------------
 
 		public CommandLineReader (
 			List<String> view
 		) {
-			this.mView = view;
-			this.mPosition = 0;
+			this.View = view;
+			this.Position = 0;
 		}
 
 		#endregion
@@ -28,16 +28,16 @@ namespace Helper.Utility {
 
 		public Boolean Done (
 		) {
-			return !(0 <= this.mPosition && this.mPosition < this.mView.Count);
+			return !(0 <= this.Position && this.Position < this.View.Count);
 		}
 
 		public Boolean Check (
 			String name
 		) {
 			var result = false;
-			if (!this.Done() && this.mView[this.mPosition] == name) {
+			if (!this.Done() && this.View[this.Position] == name) {
 				result = true;
-				this.mPosition++;
+				this.Position++;
 			}
 			return result;
 		}
@@ -62,8 +62,8 @@ namespace Helper.Utility {
 		public String NextString (
 		) {
 			GF.AssertTest(!this.Done());
-			var result = this.mView[this.mPosition];
-			this.mPosition++;
+			var result = this.View[this.Position];
+			this.Position++;
 			return result;
 		}
 
@@ -75,8 +75,8 @@ namespace Helper.Utility {
 
 		public List<String> NextStringList (
 		) {
-			var result = this.mView.GetRange(this.mPosition, this.mView.Count - this.mPosition);
-			this.mPosition = this.mView.Count;
+			var result = this.View[this.Position..];
+			this.Position = this.View.Count;
 			return result;
 		}
 

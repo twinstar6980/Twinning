@@ -33,15 +33,15 @@ namespace Helper.Bridge {
 			String path
 		) {
 			GF.AssertTest(!this.State());
-			var handle = ExternalLibrary.Kernel32.LoadLibrary($"{path}.");
+			var handle = PlatformInvoke.Kernel32.LoadLibrary($"{path}.");
 			var symbol = new SymbolTable() {
 				execute = null!,
 			};
 			try {
-				symbol.execute = Marshal.GetDelegateForFunctionPointer<Interface.execute>(ExternalLibrary.Kernel32.GetProcAddress(handle, SymbolNameTable.execute));
+				symbol.execute = Marshal.GetDelegateForFunctionPointer<Interface.execute>(PlatformInvoke.Kernel32.GetProcAddress(handle, SymbolNameTable.execute));
 			}
 			catch (Exception) {
-				ExternalLibrary.Kernel32.FreeLibrary(handle);
+				PlatformInvoke.Kernel32.FreeLibrary(handle);
 				throw;
 			}
 			this.mHandle = handle;
@@ -52,7 +52,7 @@ namespace Helper.Bridge {
 		public void Close (
 		) {
 			GF.AssertTest(this.State());
-			var result = ExternalLibrary.Kernel32.FreeLibrary(this.mHandle.AsNotNull());
+			var result = PlatformInvoke.Kernel32.FreeLibrary(this.mHandle.AsNotNull());
 			GF.AssertTest(result);
 			this.mHandle = null;
 			this.mSymbol = null;

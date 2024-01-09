@@ -31,9 +31,9 @@ namespace Helper {
 
 		[JsonObject(ItemRequired = Required.AllowNull)]
 		public class ModuleLauncherSettingData {
-			public required List<Module.ModuleLauncher.JumperConfiguration> ModuleJumperConfiguration;
-			public required List<Module.ModuleLauncher.JumperConfiguration> PinnedJumperConfiguration;
-			public required List<Module.ModuleLauncher.JumperConfiguration> RecentJumperConfiguration;
+			public required List<View.ModuleLauncher.JumperConfiguration> ModuleJumperConfiguration;
+			public required List<View.ModuleLauncher.JumperConfiguration> PinnedJumperConfiguration;
+			public required List<View.ModuleLauncher.JumperConfiguration> RecentJumperConfiguration;
 		}
 
 		[JsonObject(ItemRequired = Required.AllowNull)]
@@ -90,53 +90,55 @@ namespace Helper {
 
 		// ----------------
 
-		public static void Load (
+		public static async Task Load (
 		) {
-			Setting.Data = JsonHelper.DeserializeFileSync<SettingData>(Setting.File);
+			Setting.Data = await JsonHelper.DeserializeFile<SettingData>(Setting.File);
 			return;
 		}
 
-		public static void Save (
+		public static async Task Save (
 		) {
 			WindowHelper.Current.ForEach((item) => { WindowHelper.Theme(item, Setting.Data.Application.ThemeMode); });
-			App.Instance.RegisterShellJumpList().Wait(0);
+			await App.Instance.RegisterShellJumpList();
 			App.Instance.Resources["ModdingWorkerMessageFontFamily"] = Setting.Data.ModdingWorker.MessageFontFamily.Length == 0 ? FontFamily.XamlAutoFontFamily.Source : Setting.Data.ModdingWorker.MessageFontFamily;
-			JsonHelper.SerializeFileSync<SettingData>(Setting.File, Setting.Data);
+			await JsonHelper.SerializeFile<SettingData>(Setting.File, Setting.Data);
 			return;
 		}
 
-		public static void Initialize (
+		public static async Task Initialize (
 		) {
 			try {
-				Setting.Load();
+				await Setting.Load();
 				GF.AssertTest(Setting.Data.Version == Package.Current.Id.Version.Major);
 			}
 			catch (Exception) {
-				Setting.Data = new SettingData() {
+				Setting.Data = new () {
 					Version = Package.Current.Id.Version.Major,
-					Application = new ApplicationSettingData() {
+					Application = new () {
 						ThemeMode = ElementTheme.Default,
 					},
-					ModuleLauncher = new ModuleLauncherSettingData() {
-						ModuleJumperConfiguration = new List<Module.ModuleLauncher.JumperConfiguration>(Module.ModuleInformationConstant.Value.Select((value) => (new Module.ModuleLauncher.JumperConfiguration() {
-							Title = value.Name,
-							ModuleType = value.Type,
-							ModuleOption = new List<String>(),
-							WindowOption = new List<String>(),
-						}))),
-						PinnedJumperConfiguration = new List<Module.ModuleLauncher.JumperConfiguration>(),
-						RecentJumperConfiguration = new List<Module.ModuleLauncher.JumperConfiguration>(),
+					ModuleLauncher = new () {
+						ModuleJumperConfiguration = [
+							..View.ModuleInformationConstant.Value.Select((value) => (new View.ModuleLauncher.JumperConfiguration() {
+								Title = value.Name,
+								ModuleType = value.Type,
+								ModuleOption = [],
+								WindowOption = [],
+							})),
+						],
+						PinnedJumperConfiguration = [],
+						RecentJumperConfiguration = [],
 					},
-					ModdingWorker = new ModdingWorkerSettingData() {
+					ModdingWorker = new () {
 						Kernel = "",
 						Script = "",
-						Argument = new List<String>(),
+						Argument = [],
 						AutomaticScroll = true,
 						ImmediateLaunch = true,
 						AlternativeLaunchScript = "",
 						MessageFontFamily = "",
 					},
-					ResourceForwarder = new ResourceForwarderSettingData() {
+					ResourceForwarder = new () {
 						OptionConfiguration = "",
 						AutomaticClose = false,
 						ParallelExecute = false,
@@ -144,10 +146,10 @@ namespace Helper {
 						EnableBatch = false,
 						RemainInput = false,
 					},
-					CommandSender = new CommandSenderSettingData() {
+					CommandSender = new () {
 						MethodConfiguration = "",
 					},
-					AnimationViewer = new AnimationViewerSettingData() {
+					AnimationViewer = new () {
 						ImmediateSelect = true,
 						AutomaticPlay = true,
 						RepeatPlay = true,
@@ -156,11 +158,11 @@ namespace Helper {
 						ImageFilterRule = "",
 						SpriteFilterRule = "",
 					},
-					PackageBuilder = new PackageBuilderSettingData() {
+					PackageBuilder = new () {
 					},
 				};
 			}
-			Setting.Save();
+			await Setting.Save();
 			return;
 		}
 

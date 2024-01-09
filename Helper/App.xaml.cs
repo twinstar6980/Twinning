@@ -16,7 +16,7 @@ namespace Helper {
 
 		public static App Instance { get; private set; } = default!;
 
-		public static Module.MainWindow MainWindow { get; private set; } = default!;
+		public static View.MainWindow MainWindow { get; private set; } = default!;
 
 		public static String ProgramFile { get; private set; } = default!;
 
@@ -32,19 +32,19 @@ namespace Helper {
 
 		// ----------------
 
-		protected override void OnLaunched (
+		protected override async void OnLaunched (
 			LaunchActivatedEventArgs args
 		) {
 			this.UnhandledException += this.OnUnhandledException;
 			var window = default(Window);
 			try {
 				App.ProgramFile = StorageHelper.ToWindowsStyle(StorageHelper.Parent(Environment.GetCommandLineArgs()[0]) + "/Helper.exe");
-				Setting.Initialize();
+				await Setting.Initialize();
 				this.InitializeNotification();
 				var optionWindowPosition = default(Tuple<Integer, Integer>?);
 				var optionWindowSize = default(Tuple<Integer, Integer>?);
 				var optionWindowAlwaysOnTop = default(Boolean?);
-				var optionModuleType = default(Module.ModuleType?);
+				var optionModuleType = default(View.ModuleType?);
 				var optionModuleOption = default(List<String>?);
 				{
 					var option = new CommandLineReader(Environment.GetCommandLineArgs()[1..].ToList());
@@ -55,13 +55,13 @@ namespace Helper {
 						// skip if launch by AppNotification
 					}
 					if (option.Check("-WindowPosition")) {
-						optionWindowPosition = new Tuple<Integer, Integer>(
+						optionWindowPosition = new (
 							option.NextInteger(),
 							option.NextInteger()
 						);
 					}
 					if (option.Check("-WindowSize")) {
-						optionWindowSize = new Tuple<Integer, Integer>(
+						optionWindowSize = new (
 							option.NextInteger(),
 							option.NextInteger()
 						);
@@ -70,16 +70,16 @@ namespace Helper {
 						optionWindowAlwaysOnTop = option.NextBoolean();
 					}
 					if (option.Check("-ModuleType")) {
-						optionModuleType = option.NextEnumeration<Module.ModuleType>();
+						optionModuleType = option.NextEnumeration<View.ModuleType>();
 					}
 					if (option.Check("-ModuleOption")) {
 						optionModuleOption = option.NextStringList();
 					}
 					if (!option.Done()) {
-						throw new Exception($"Too many option : '{String.Join(' ', option.NextStringList())}'.");
+						throw new ($"Too many option : '{String.Join(' ', option.NextStringList())}'.");
 					}
 				}
-				window = new Module.MainWindow();
+				window = new View.MainWindow();
 				if (optionWindowPosition is not null) {
 					WindowHelper.Position(window, (Size)optionWindowPosition.Item1, (Size)optionWindowPosition.Item2);
 				}
@@ -92,15 +92,15 @@ namespace Helper {
 				if (optionWindowPosition is null) {
 					WindowHelper.Center(window);
 				}
-				window.AsClass<Module.MainWindow>().InsertTabItem(optionModuleType ?? Module.ModuleType.ModuleLauncher, optionModuleOption ?? new List<String>()).Wait(0);
-				App.MainWindow = window.AsClass<Module.MainWindow>();
+				await window.AsClass<View.MainWindow>().InsertTabItem(optionModuleType ?? View.ModuleType.ModuleLauncher, optionModuleOption ?? []);
+				App.MainWindow = window.AsClass<View.MainWindow>();
 			}
 			catch (Exception e) {
-				window = new Window() {
+				window = new () {
 					ExtendsContentIntoTitleBar = true,
 					SystemBackdrop = new MicaBackdrop(),
-					Content = new CommonControl.Box() {
-						Padding = new Thickness(16),
+					Content = new Control.Box() {
+						Padding = new (16),
 						Children = {
 							new TextBlock() {
 								HorizontalAlignment = HorizontalAlignment.Center,
@@ -126,15 +126,15 @@ namespace Helper {
 			Object                                        sender,
 			Microsoft.UI.Xaml.UnhandledExceptionEventArgs args
 		) {
-			try {
-				// ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-				if (App.MainWindow is not null) {
-					ControlHelper.ShowDialogSimple(App.MainWindow.Content, "Unhandled Exception", args.Exception.ToString()).Wait(0);
-					args.Handled = true;
+			// ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+			if (App.MainWindow is not null) {
+				args.Handled = true;
+				try {
+					_ = ControlHelper.ShowDialogSimple(App.MainWindow.Content, "Unhandled Exception", args.Exception.ToString());
 				}
-			}
-			catch (Exception) {
-				// ignored
+				catch (Exception) {
+					// ignored
+				}
 			}
 			return;
 		}
@@ -181,24 +181,24 @@ namespace Helper {
 			var list = await JumpList.LoadCurrentAsync();
 			list.Items.Clear();
 			foreach (var jumper in Setting.Data.ModuleLauncher.ModuleJumperConfiguration) {
-				var item = JumpListItem.CreateWithArguments(ProcessHelper.EncodeCommandLineString(null, Module.ModuleLauncher.JumperConfiguration.GenerateArgument(jumper)), "");
-				item.Logo = new Uri("ms-appx:///Asset/Logo.png");
+				var item = JumpListItem.CreateWithArguments(ProcessHelper.EncodeCommandLineString(null, View.ModuleLauncher.JumperConfiguration.GenerateArgument(jumper)), "");
+				item.Logo = new ("ms-appx:///Asset/Logo.png");
 				item.GroupName = "";
 				item.DisplayName = jumper.Title;
 				item.Description = "";
 				list.Items.Add(item);
 			}
 			foreach (var jumper in Setting.Data.ModuleLauncher.PinnedJumperConfiguration) {
-				var item = JumpListItem.CreateWithArguments(ProcessHelper.EncodeCommandLineString(null, Module.ModuleLauncher.JumperConfiguration.GenerateArgument(jumper)), "");
-				item.Logo = new Uri("ms-appx:///Asset/Logo.png");
+				var item = JumpListItem.CreateWithArguments(ProcessHelper.EncodeCommandLineString(null, View.ModuleLauncher.JumperConfiguration.GenerateArgument(jumper)), "");
+				item.Logo = new ("ms-appx:///Asset/Logo.png");
 				item.GroupName = "Pinned";
 				item.DisplayName = jumper.Title;
 				item.Description = "";
 				list.Items.Add(item);
 			}
 			foreach (var jumper in Setting.Data.ModuleLauncher.RecentJumperConfiguration) {
-				var item = JumpListItem.CreateWithArguments(ProcessHelper.EncodeCommandLineString(null, Module.ModuleLauncher.JumperConfiguration.GenerateArgument(jumper)), "");
-				item.Logo = new Uri("ms-appx:///Asset/Logo.png");
+				var item = JumpListItem.CreateWithArguments(ProcessHelper.EncodeCommandLineString(null, View.ModuleLauncher.JumperConfiguration.GenerateArgument(jumper)), "");
+				item.Logo = new ("ms-appx:///Asset/Logo.png");
 				item.GroupName = "Recent";
 				item.DisplayName = jumper.Title;
 				item.Description = "";
@@ -211,13 +211,13 @@ namespace Helper {
 		// ----------------
 
 		public async Task AppendRecentJumperItem (
-			Module.ModuleLauncher.JumperConfiguration configuration
+			View.ModuleLauncher.JumperConfiguration configuration
 		) {
-			var pinnedItem = Setting.Data.ModuleLauncher.PinnedJumperConfiguration.Find((value) => (Module.ModuleLauncher.JumperConfiguration.CompareForModule(value, configuration)));
+			var pinnedItem = Setting.Data.ModuleLauncher.PinnedJumperConfiguration.Find((value) => (View.ModuleLauncher.JumperConfiguration.CompareForModule(value, configuration)));
 			if (pinnedItem is not null) {
 				return;
 			}
-			var recentItem = Setting.Data.ModuleLauncher.RecentJumperConfiguration.Find((value) => (Module.ModuleLauncher.JumperConfiguration.CompareForModule(value, configuration)));
+			var recentItem = Setting.Data.ModuleLauncher.RecentJumperConfiguration.Find((value) => (View.ModuleLauncher.JumperConfiguration.CompareForModule(value, configuration)));
 			if (recentItem is not null) {
 				Setting.Data.ModuleLauncher.RecentJumperConfiguration.Remove(recentItem);
 				Setting.Data.ModuleLauncher.RecentJumperConfiguration.Insert(0, recentItem);
@@ -225,127 +225,11 @@ namespace Helper {
 			else {
 				Setting.Data.ModuleLauncher.RecentJumperConfiguration.Insert(0, configuration);
 			}
-			Setting.Save();
+			await Setting.Save();
 			return;
 		}
 
 		#endregion
-
-	}
-
-	// Global-Function
-	public static class GF {
-
-		public static void AssertTest (
-			[DoesNotReturnIf(false)] Boolean condition,
-			String?                          message = null
-		) {
-			if (!condition) {
-				throw new Exception("Assertion failed" + (message is null ? "." : $" : {message}."));
-			}
-			return;
-		}
-
-		public static void AssertFail (
-			String? message = null
-		) {
-			GF.AssertTest(false, message);
-			return;
-		}
-
-		// ----------------
-
-		public static T ReturnSelf<T> (
-			this T target
-		) {
-			return target;
-		}
-
-		// ----------------
-
-		public static String ToString<T> (
-			this T target
-		)
-			where T : notnull {
-			return target.ToString().AsNotNull();
-		}
-
-		// ----------------
-
-		public static Boolean IsNull<T> (
-			[NotNullWhen(false)] this T? target
-		) {
-			return target is null;
-		}
-
-		public static Boolean NotNull<T> (
-			[NotNullWhen(true)] this T? target
-		) {
-			return target is not null;
-		}
-
-		// ----------------
-
-		// TODO
-		public static T AsNotNullX<T> (
-			[NotNull] this T? target
-		) {
-			return target ?? throw new NullReferenceException();
-		}
-
-		public static T AsNotNull<T> (
-			[NotNull] this T? target
-		)
-			where T : struct {
-			return target ?? throw new NullReferenceException();
-		}
-
-		public static T AsNotNull<T> (
-			[NotNull] this T? target
-		)
-			where T : class {
-			return target ?? throw new NullReferenceException();
-		}
-
-		// ----------------
-
-		public static T AsStruct<T> (
-			this Object? target
-		)
-			where T : struct {
-			return target as T? ?? throw new NullReferenceException();
-		}
-
-		public static T AsClass<T> (
-			this Object? target
-		)
-			where T : class {
-			return target as T ?? throw new NullReferenceException();
-		}
-
-		// ----------------
-
-		public static T? AsStructOrNull<T> (
-			this Object? target
-		)
-			where T : struct {
-			return target as T?;
-		}
-
-		public static T? AsClassOrNull<T> (
-			this Object? target
-		)
-			where T : class {
-			return target as T;
-		}
-
-		// ----------------
-
-		public static ObservableCollection<TSource> ToObservableCollection<TSource> (
-			this IEnumerable<TSource> source
-		) {
-			return new ObservableCollection<TSource>(source);
-		}
 
 	}
 

@@ -11,7 +11,7 @@ namespace Helper.Utility {
 
 		#region utility
 
-		public static List<Window> Current { get; } = new List<Window>();
+		public static List<Window> Current { get; } = [];
 
 		// ----------------
 
@@ -23,11 +23,10 @@ namespace Helper.Utility {
 			return;
 		}
 
-		public static void Activate (
-			Window window
+		public static Window Find (
+			UIElement element
 		) {
-			window.Activate();
-			return;
+			return WindowHelper.Current.Find((value) => (Object.ReferenceEquals(value.Content.XamlRoot, element.XamlRoot))) ?? throw new ("Could not find window.");
 		}
 
 		// ----------------
@@ -64,7 +63,7 @@ namespace Helper.Utility {
 			Size   y
 		) {
 			var ratio = WinUIEx.HwndExtensions.GetDpiForWindow(WindowHelper.Handle(window)) / 96.0;
-			window.AppWindow.Move(new PointInt32((Int32)(x * ratio), (Int32)(y * ratio)));
+			window.AppWindow.Move(new ((Int32)(x * ratio), (Int32)(y * ratio)));
 			return;
 		}
 
@@ -81,25 +80,9 @@ namespace Helper.Utility {
 			Size   height
 		) {
 			var ratio = WinUIEx.HwndExtensions.GetDpiForWindow(WindowHelper.Handle(window)) / 96.0;
-			window.AppWindow.Resize(new SizeInt32((Int32)(width * ratio), (Int32)(height * ratio)));
+			window.AppWindow.Resize(new ((Int32)(width * ratio), (Int32)(height * ratio)));
 			return;
 		}
-
-		public static void Minimize (
-			Window window
-		) {
-			window.AppWindow.Presenter.AsClass<OverlappedPresenter>().Minimize();
-			return;
-		}
-
-		public static void Maximize (
-			Window window
-		) {
-			window.AppWindow.Presenter.AsClass<OverlappedPresenter>().Maximize();
-			return;
-		}
-
-		// ----------------
 
 		public static void AlwaysOnTop (
 			Window  window,
@@ -123,10 +106,11 @@ namespace Helper.Utility {
 
 		// ----------------
 
-		public static Window GetForElement (
-			UIElement element
+		public static void Activate (
+			Window window
 		) {
-			return WindowHelper.Current.Find((value) => (Object.ReferenceEquals(value.Content.XamlRoot, element.XamlRoot))) ?? throw new Exception("Could not get window.");
+			window.Activate();
+			return;
 		}
 
 		public static Boolean ShowAsForeground (
@@ -134,8 +118,8 @@ namespace Helper.Utility {
 		) {
 			var state = true;
 			var handle = WindowHelper.Handle(window);
-			state &= ExternalLibrary.User32.ShowWindow(handle, 0x00000009);
-			state &= ExternalLibrary.User32.SetForegroundWindow(handle);
+			state &= PlatformInvoke.User32.ShowWindow(handle, 0x00000009);
+			state &= PlatformInvoke.User32.SetForegroundWindow(handle);
 			return state;
 		}
 

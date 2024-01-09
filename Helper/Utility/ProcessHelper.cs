@@ -77,35 +77,39 @@ namespace Helper.Utility {
 
 		#region create
 
-		public static Task CreateProcess (
+		public static async Task<Tuple<Size, String, String>?> CreateProcess (
 			String       program,
-			List<String> argument
+			List<String> argument,
+			Boolean      waitForExit
 		) {
 			var process = new Process();
 			process.StartInfo.UseShellExecute = false;
 			process.StartInfo.FileName = program;
 			process.StartInfo.Arguments = ProcessHelper.EncodeCommandLineString(null, argument);
 			process.StartInfo.CreateNoWindow = true;
+			process.StartInfo.RedirectStandardInput = true;
+			process.StartInfo.RedirectStandardOutput = true;
+			process.StartInfo.RedirectStandardError = true;
 			var state = process.Start();
 			GF.AssertTest(state);
-			return process.WaitForExitAsync();
+			if (!waitForExit) {
+				return null;
+			}
+			await process.WaitForExitAsync();
+			return new (process.ExitCode, await process.StandardOutput.ReadToEndAsync(), await process.StandardError.ReadToEndAsync());
 		}
 
 		// ----------------
 
-		public static Task CreateProcessForCommandScript (
+		public static Task<Tuple<Size, String, String>?> CreateProcessForCommandScript (
 			String       script,
-			List<String> argument
+			List<String> argument,
+			Boolean      waitForExit
 		) {
 			if (!StorageHelper.ExistFile(script)) {
 				throw new FileNotFoundException($"Could not find file '{script}'.", script);
 			}
-			var processProgram = "C:\\Windows\\System32\\cmd.exe";
-			var processArgument = new List<String>();
-			processArgument.Add("/C");
-			processArgument.Add(script);
-			processArgument.AddRange(argument);
-			return ProcessHelper.CreateProcess(processProgram, processArgument);
+			return ProcessHelper.CreateProcess(@"C:\Windows\System32\cmd.exe", ["/C", script, ..argument], waitForExit);
 		}
 
 		#endregion

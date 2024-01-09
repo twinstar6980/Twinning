@@ -41,7 +41,7 @@ namespace Helper.Bridge {
 			{
 				callbackResultHandler = MemoryHelper.Allocate<Interface.StringList>();
 				callbackExceptionHandler = MemoryHelper.Allocate<Interface.String>();
-				Converter.ConstructStringList(ref *callbackResultHandler, new List<String>());
+				Converter.ConstructStringList(ref *callbackResultHandler, []);
 				Converter.ConstructString(ref *callbackExceptionHandler, "");
 			}
 			var callbackPointer = default(Interface.Callback*);
@@ -75,7 +75,7 @@ namespace Helper.Bridge {
 			callbackProxyGuard.Free();
 			if (exceptionPointer is not null) {
 				var exception = Converter.ParseString(ref *exceptionPointer);
-				throw new Exception(exception);
+				throw new (exception);
 			}
 			return result;
 		}

@@ -1,0 +1,144 @@
+<local:CustomControl
+	x:Class="Helper.View.PackageBuilder.PackageSettingPanel"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:community="using:CommunityToolkit.WinUI"
+	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
+	xmlns:local="using:Helper"
+	xmlns:localViewPackageBuilder="using:Helper.View.PackageBuilder"
+	xmlns:my="using:Helper.Control"
+	mc:Ignorable="d"
+	x:DefaultBindMode="OneWay"
+	HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+>
+	<my:Stack
+		Padding="0,0"
+		Orientation="Vertical" Spacing="2"
+	>
+		<my:SettingItem
+			HorizontalAlignment="Stretch"
+			Icon="{StaticResource FluentIconGlyph.DialShape2}"
+			Title="Version"
+		>
+			<my:SettingItem.Action>
+				<my:Stack
+					Padding="0,0"
+					Orientation="Horizontal" Spacing="8"
+				>
+					<ComboBox
+						my:Stack.Weight="1" HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
+						ItemsSource="{x:Bind Controller.uVersionNumber_ItemsSource}"
+						SelectedItem="{x:Bind Controller.uVersionNumber_SelectedItem}"
+						SelectionChanged="{x:Bind Controller.uVersionNumber_SelectionChanged}"
+					/>
+					<ComboBox
+						my:Stack.Weight="1" HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
+						ItemsSource="{x:Bind Controller.uVersionExtendedTextureInformationForPvz2Cn_ItemsSource}"
+						SelectedItem="{x:Bind Controller.uVersionExtendedTextureInformationForPvz2Cn_SelectedItem}"
+						SelectionChanged="{x:Bind Controller.uVersionExtendedTextureInformationForPvz2Cn_SelectionChanged}"
+					/>
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+		<my:SettingItem
+			HorizontalAlignment="Stretch"
+			Icon="{StaticResource FluentIconGlyph.BackToWindow}"
+			Title="Compression"
+		>
+			<my:SettingItem.Action>
+				<my:Stack
+					Padding="0,0"
+					Orientation="Vertical" Spacing="8"
+				>
+					<my:Stack
+						Padding="0,0"
+						HorizontalAlignment="Stretch"
+						Orientation="Horizontal" Spacing="8"
+					>
+						<ToggleButton
+							my:Stack.Weight="1" HorizontalAlignment="Stretch"
+							VerticalAlignment="Top"
+							HorizontalContentAlignment="Left"
+							Content="General"
+							IsChecked="{x:Bind Controller.uCompressionGeneral_IsChecked}"
+							Click="{x:Bind Controller.uCompressionGeneral_Click}"
+						/>
+						<ToggleButton
+							my:Stack.Weight="1" HorizontalAlignment="Stretch"
+							VerticalAlignment="Top"
+							HorizontalContentAlignment="Left"
+							Content="Texture"
+							IsChecked="{x:Bind Controller.uCompressionTexture_IsChecked}"
+							Click="{x:Bind Controller.uCompressionTexture_Click}"
+						/>
+					</my:Stack>
+					<TextBox
+						HorizontalAlignment="Stretch"
+						TextWrapping="Wrap" AcceptsReturn="True"
+						PlaceholderText="Filter"
+						Text="{x:Bind Controller.uCompressionFilter_Text}"
+						LostFocus="{x:Bind Controller.uCompressionFilter_LostFocus}"
+					/>
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+		<my:SettingItem
+			HorizontalAlignment="Stretch"
+			Icon="{StaticResource FluentIconGlyph.BulletedList}"
+			Title="Manifest"
+		>
+			<my:SettingItem.Action>
+				<my:Stack
+					Padding="0,0"
+					Orientation="Vertical" Spacing="8"
+				>
+					<ComboBox
+						HorizontalAlignment="Stretch"
+						ItemsSource="{x:Bind Controller.uManifestType_ItemsSource}"
+						SelectedIndex="{x:Bind Controller.uManifestType_SelectedIndex}"
+						SelectionChanged="{x:Bind Controller.uManifestType_SelectionChanged}"
+					/>
+					<TextBox
+						HorizontalAlignment="Stretch"
+						PlaceholderText="Suffix"
+						Text="{x:Bind Controller.uManifestSuffix_Text}"
+						LostFocus="{x:Bind Controller.uManifestSuffix_LostFocus}"
+					/>
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+		<my:SettingItem
+			HorizontalAlignment="Stretch"
+			Icon="{StaticResource FluentIconGlyph.Tag}"
+			Title="Category"
+		>
+			<my:SettingItem.Action>
+				<my:Stack
+					Padding="0,0"
+					Orientation="Horizontal" Spacing="8"
+				>
+					<TextBox
+						my:Stack.Weight="1" HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
+						TextWrapping="Wrap" AcceptsReturn="True"
+						PlaceholderText="Resolution"
+						Text="{x:Bind Controller.uCategoryResolution_Text}"
+						LostFocus="{x:Bind Controller.uCategoryResolution_LostFocus}"
+					/>
+					<TextBox
+						my:Stack.Weight="1" HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
+						TextWrapping="Wrap" AcceptsReturn="True"
+						PlaceholderText="Locale"
+						Text="{x:Bind Controller.uCategoryLocale_Text}"
+						LostFocus="{x:Bind Controller.uCategoryLocale_LostFocus}"
+					/>
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+	</my:Stack>
+</local:CustomControl>

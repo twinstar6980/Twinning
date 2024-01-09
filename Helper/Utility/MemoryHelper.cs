@@ -9,14 +9,14 @@ namespace Helper.Utility {
 
 		#region utility
 
-		private static readonly IntPtr Heap = ExternalLibrary.Kernel32.GetProcessHeap();
+		private static readonly IntPtr Heap = PlatformInvoke.Kernel32.GetProcessHeap();
 
 		// ----------------
 
 		public static void* Allocate (
 			Size size
 		) {
-			var data = ExternalLibrary.Kernel32.HeapAlloc(MemoryHelper.Heap, 0x00000008, (UIntPtr)size);
+			var data = PlatformInvoke.Kernel32.HeapAlloc(MemoryHelper.Heap, 0x00000008, (UIntPtr)size);
 			GF.AssertTest(data != IntPtr.Zero);
 			return (void*)data;
 		}
@@ -24,7 +24,7 @@ namespace Helper.Utility {
 		public static void Free (
 			void* data
 		) {
-			var state = ExternalLibrary.Kernel32.HeapFree(MemoryHelper.Heap, 0x00000000, (IntPtr)data);
+			var state = PlatformInvoke.Kernel32.HeapFree(MemoryHelper.Heap, 0x00000000, (IntPtr)data);
 			GF.AssertTest(state);
 			return;
 		}

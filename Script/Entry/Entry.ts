@@ -74,7 +74,7 @@ namespace TwinStar.Script.Entry {
 		AndroidHelper.g_adb_program_file = configuration.external_program.adb;
 		Support.Wwise.Media.Decode.g_vgmstream_program_file = configuration.external_program.vgmstream;
 		Support.Wwise.Media.Encode.g_wwise_program_file = configuration.external_program.wwise;
-		Support.Kairosoft.Record.DisableVerify.g_il2cpp_dumper_program_file = configuration.external_program.il2cpp_dumper;
+		Support.Kairosoft.Game.ModifyProgram.g_il2cpp_dumper_program_file = configuration.external_program.il2cpp_dumper;
 		return;
 	}
 

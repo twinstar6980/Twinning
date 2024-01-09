@@ -52,7 +52,15 @@ namespace Helper.Utility {
 
 		public static String Temporary (
 		) {
-			return StorageHelper.Regularize(Path.Combine(Path.GetTempPath(), Path.GetTempFileName()));
+			var parent = StorageHelper.Regularize(Windows.Storage.ApplicationData.Current.LocalCacheFolder.Path);
+			var name = DateTime.Now.Ticks.ToString(CultureInfo.InvariantCulture);
+			var result = $"{parent}/{name}";
+			var suffix = 0;
+			while (StorageHelper.Exist(result)) {
+				suffix += 1;
+				result = $"{parent}/{name}.{suffix}";
+			}
+			return result;
 		}
 
 		// ----------------
@@ -176,8 +184,8 @@ namespace Helper.Utility {
 			Size   depth,
 			String pattern = "*"
 		) {
-			var parentFullName = new DirectoryInfo(target).FullName;
-			return Directory.EnumerateFiles(target, pattern, new EnumerationOptions() { RecurseSubdirectories = true, MaxRecursionDepth = depth }).Select((value) => (StorageHelper.Regularize(value[(parentFullName.Length + 1)..]))).ToList();
+			var targetFullPath = new DirectoryInfo(target).FullName;
+			return Directory.EnumerateFiles(target, pattern, new EnumerationOptions() { RecurseSubdirectories = true, MaxRecursionDepth = depth }).Select((value) => (StorageHelper.Regularize(value[(targetFullPath.Length + 1)..]))).ToList();
 		}
 
 		public static List<String> ListDirectory (
@@ -185,8 +193,8 @@ namespace Helper.Utility {
 			Size   depth,
 			String pattern = "*"
 		) {
-			var parentFullName = new DirectoryInfo(target).FullName;
-			return Directory.EnumerateDirectories(target, pattern, new EnumerationOptions() { RecurseSubdirectories = true, MaxRecursionDepth = depth }).Select((value) => (StorageHelper.Regularize(value[(parentFullName.Length + 1)..]))).ToList();
+			var targetFullPath = new DirectoryInfo(target).FullName;
+			return Directory.EnumerateDirectories(target, pattern, new EnumerationOptions() { RecurseSubdirectories = true, MaxRecursionDepth = depth }).Select((value) => (StorageHelper.Regularize(value[(targetFullPath.Length + 1)..]))).ToList();
 		}
 
 		// ----------------
@@ -203,6 +211,36 @@ namespace Helper.Utility {
 		) {
 			Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(target, Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs, Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin, Microsoft.VisualBasic.FileIO.UICancelOption.ThrowException);
 			return;
+		}
+
+		#endregion
+
+		#region data
+
+		public static async Task WriteFile (
+			String target,
+			Byte[] data
+		) {
+			await File.WriteAllBytesAsync(target, data);
+			return;
+		}
+
+		public static async Task<Byte[]> ReadFile (
+			String target
+		) {
+			return await File.ReadAllBytesAsync(target);
+		}
+
+		public static async Task<Byte[]> ReadFileLimited (
+			String target,
+			Size   limit
+		) {
+			await using var stream = File.OpenRead(target);
+			var size = Math.Min((Size)stream.Length, limit);
+			var data = new Byte[size];
+			var sizeActual = await stream.ReadAsync(data, 0, size);
+			GF.AssertTest(sizeActual == size);
+			return data;
 		}
 
 		#endregion
@@ -227,9 +265,9 @@ namespace Helper.Utility {
 
 		public static void WriteFileTextSync (
 			String target,
-			String content
+			String text
 		) {
-			File.WriteAllText(target, content);
+			File.WriteAllText(target, text);
 			return;
 		}
 
@@ -259,28 +297,26 @@ namespace Helper.Utility {
 
 		#region shell
 
-		public static async Task RevealFile (
+		public static async Task<Boolean> RevealFile (
 			String target
 		) {
-			await Windows.System.Launcher.LaunchFileAsync(await StorageFile.GetFileFromPathAsync(StorageHelper.ToWindowsStyle(target)));
-			return;
+			return await Windows.System.Launcher.LaunchFileAsync(await StorageFile.GetFileFromPathAsync(StorageHelper.ToWindowsStyle(target)));
 		}
 
-		public static async Task RevealDirectory (
+		public static async Task<Boolean> RevealDirectory (
 			String target
 		) {
-			await Windows.System.Launcher.LaunchFolderAsync(await StorageFolder.GetFolderFromPathAsync(StorageHelper.ToWindowsStyle(target)));
-			return;
+			return await Windows.System.Launcher.LaunchFolderAsync(await StorageFolder.GetFolderFromPathAsync(StorageHelper.ToWindowsStyle(target)));
 		}
 
 		// ----------------
 
 		public static async Task<String?> PickFile (
-			Window host,
-			String filter = "*"
+			Window  host,
+			String? filter = null
 		) {
 			var picker = new FileOpenPicker() {
-				FileTypeFilter = { filter },
+				FileTypeFilter = { filter is null ? "*" : "." + filter },
 			};
 			WinRT.Interop.InitializeWithWindow.Initialize(picker, WindowHelper.Handle(host));
 			var target = await picker.PickSingleFileAsync();
@@ -294,6 +330,25 @@ namespace Helper.Utility {
 			};
 			WinRT.Interop.InitializeWithWindow.Initialize(picker, WindowHelper.Handle(host));
 			var target = await picker.PickSingleFolderAsync();
+			return target is null ? null : StorageHelper.Regularize(target.Path);
+		}
+
+		// ----------------
+
+		public static async Task<String?> SaveFile (
+			Window                host,
+			Tuple<String, String> filter,
+			String?               defaultName = null
+		) {
+			var picker = new FileSavePicker() {
+				FileTypeChoices = { new (filter.Item1, ["." + filter.Item2]) },
+				SuggestedFileName = defaultName,
+			};
+			WinRT.Interop.InitializeWithWindow.Initialize(picker, WindowHelper.Handle(host));
+			var target = await picker.PickSaveFileAsync();
+			if (target is not null) {
+				await target.DeleteAsync();
+			}
 			return target is null ? null : StorageHelper.Regularize(target.Path);
 		}
 

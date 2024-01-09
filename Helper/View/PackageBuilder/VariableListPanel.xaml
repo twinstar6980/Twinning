@@ -1,0 +1,72 @@
+<local:CustomControl
+	x:Class="Helper.View.PackageBuilder.VariableListPanel"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:community="using:CommunityToolkit.WinUI"
+	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
+	xmlns:local="using:Helper"
+	xmlns:localViewPackageBuilder="using:Helper.View.PackageBuilder"
+	xmlns:my="using:Helper.Control"
+	mc:Ignorable="d"
+	x:DefaultBindMode="OneWay"
+	HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+>
+	<my:Stack
+		Padding="0,0"
+		Orientation="Vertical" Spacing="8"
+	>
+		<ListView
+			Padding="0,-2,0,0"
+			HorizontalAlignment="Stretch"
+			SelectionMode="None" IsItemClickEnabled="True"
+			ItemsSource="{x:Bind Controller.uList_ItemsSource}"
+			CanReorderItems="True" CanDragItems="True" AllowDrop="True"
+			DragItemsCompleted="{x:Bind Controller.uList_DragItemsCompleted}"
+		>
+			<ListView.ItemTemplate>
+				<DataTemplate x:DataType="localViewPackageBuilder:VariableListPanelItemController">
+					<my:Stack
+						Padding="0,0,0,0"
+						Height="48"
+						Orientation="Horizontal" Spacing="12"
+					>
+						<TextBox
+							my:Stack.Weight="1" HorizontalAlignment="Stretch"
+							VerticalAlignment="Center"
+							Text="{x:Bind uName_Text}"
+							TextChanged="{x:Bind uName_TextChanged}"
+						/>
+						<TextBox
+							my:Stack.Weight="1" HorizontalAlignment="Stretch"
+							VerticalAlignment="Center"
+							Text="{x:Bind uValue_Text}"
+							TextChanged="{x:Bind uValue_TextChanged}"
+						/>
+						<Button
+							VerticalAlignment="Center"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Remove}}"
+							Click="{x:Bind uRemove_Click}"
+						/>
+					</my:Stack>
+				</DataTemplate>
+			</ListView.ItemTemplate>
+		</ListView>
+		<my:Stack
+			Padding="12,0"
+			HorizontalAlignment="Stretch"
+			Orientation="Horizontal" Spacing="12"
+		>
+			<my:Box
+				my:Stack.Weight="1" HorizontalAlignment="Stretch"
+				VerticalAlignment="Center"
+			/>
+			<Button
+				VerticalAlignment="Center"
+				Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Add}}"
+				Click="{x:Bind Controller.uAppend_Click}"
+			/>
+		</my:Stack>
+	</my:Stack>
+</local:CustomControl>

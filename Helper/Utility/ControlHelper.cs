@@ -7,7 +7,7 @@ namespace Helper.Utility {
 
 	public static class ControlHelper {
 
-		#region utility
+		#region common
 
 		public static async Task WaitUntilLoaded (
 			FrameworkElement target,
@@ -23,7 +23,7 @@ namespace Helper.Utility {
 
 		#region dialog
 
-		private static List<ContentDialog> CurrentDialog { get; } = new List<ContentDialog>();
+		private static List<ContentDialog> CurrentDialog { get; } = [];
 
 		private static async Task PushDialog (
 			ContentDialog item
@@ -42,6 +42,7 @@ namespace Helper.Utility {
 						_ = ControlHelper.CurrentDialog[^1].ShowAsync();
 					}
 				}
+				return;
 			};
 			_ = item.ShowAsync();
 			await semaphore.WaitAsync();
@@ -66,23 +67,24 @@ namespace Helper.Utility {
 			return;
 		}
 
-		public static async Task ShowDialogFixedSize (
-			UIElement root,
-			String    title,
-			Object?   content
+		public static async Task ShowDialogFixed (
+			UIElement          root,
+			String             title,
+			Object?            content,
+			Tuple<Size, Size>? size = null
 		) {
 			var dialog = new ContentDialog() {
 				XamlRoot = root.XamlRoot,
-				Resources = new ResourceDictionary() {
-					new KeyValuePair<Object, Object>("ContentDialogMinWidth", 720.0),
-					new KeyValuePair<Object, Object>("ContentDialogMaxWidth", 720.0),
-					new KeyValuePair<Object, Object>("ContentDialogMinHeight", 640.0),
-					new KeyValuePair<Object, Object>("ContentDialogMaxHeight", 640.0),
-				},
+				Resources = [
+					new ("ContentDialogMinWidth", size?.Item1 ?? 720.0),
+					new ("ContentDialogMaxWidth", size?.Item1 ?? 720.0),
+					new ("ContentDialogMinHeight", size?.Item2 ?? 640.0),
+					new ("ContentDialogMaxHeight", size?.Item2 ?? 640.0),
+				],
 				Title = title,
 				Content = new ScrollViewer() {
 					IsTabStop = true,
-					Padding = new Thickness(12, 0, 12, 0),
+					Padding = new (12, 0, 12, 0),
 					VerticalScrollMode = ScrollMode.Enabled,
 					VerticalScrollBarVisibility = ScrollBarVisibility.Visible,
 					Content = content,
@@ -96,15 +98,17 @@ namespace Helper.Utility {
 
 		// ----------------
 
-		public static async Task<Boolean> ShowDialogForConfirm (
-			UIElement root
+		public static async Task<Boolean> ShowDialogForPausing (
+			UIElement root,
+			String?   title,
+			Object?   content
 		) {
 			var dialog = new ContentDialog() {
 				XamlRoot = root.XamlRoot,
-				Title = "Are You Sure ?",
-				Content = null,
-				PrimaryButtonText = "Yes",
-				SecondaryButtonText = "No",
+				Title = title ?? "Pausing ...",
+				Content = content,
+				PrimaryButtonText = "Continue",
+				CloseButtonText = "Cancel",
 				DefaultButton = ContentDialogButton.Primary,
 			};
 			var result = false;
@@ -116,21 +120,27 @@ namespace Helper.Utility {
 			return result;
 		}
 
-		public static Action ShowDialogForWaiting (
-			UIElement root
+		public static async Task<Func<Task>> ShowDialogForWaiting (
+			UIElement root,
+			String?   title,
+			Object?   content
 		) {
 			var dialog = new ContentDialog() {
 				XamlRoot = root.XamlRoot,
-				Title = "Waiting ...",
-				Content = new ProgressBar() {
+				Title = title ?? "Waiting ...",
+				Content = content ?? new ProgressBar() {
 					HorizontalAlignment = HorizontalAlignment.Stretch,
 					IsIndeterminate = true,
 				},
-				CloseButtonText = "Force Close",
+				CloseButtonText = "Hide",
 				DefaultButton = ContentDialogButton.None,
 			};
-			_ = ControlHelper.PushDialog(dialog);
-			return () => { dialog.Hide(); };
+			var task = ControlHelper.PushDialog(dialog);
+			return async () => {
+				dialog.Hide();
+				await task;
+				return;
+			};
 		}
 
 		#endregion

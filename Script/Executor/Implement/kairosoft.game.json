@@ -1,0 +1,21 @@
+{
+	"method": {
+		"encrypt_record": {
+			"filter": "()$",
+			"argument": {
+				"target_directory": "?input",
+				"key": "?input",
+			},
+			"batch_argument": null,
+		},
+		"modify_program": {
+			"filter": "()$",
+			"argument": {
+				"target_directory": "?input",
+				"disable_record_encryption": "?input",
+				"enable_debug_mode": "?input",
+			},
+			"batch_argument": null,
+		},
+	},
+}

@@ -47,22 +47,22 @@ namespace Helper {
 			var indexA2 = result.IndexOf(')');
 			if (indexA1 != -1 || indexA2 != -1) {
 				GF.AssertTest(indexA1 != -1 && indexA2 != -1 && indexA1 < indexA2);
-				result = result.Substring(0, indexA1) + result.Substring(indexA2 + 1);
+				result = result[..indexA1] + result[(indexA2 + 1)..];
 			}
 			var indexB1 = result.IndexOf('$');
 			if (indexB1 != -1) {
 				GF.AssertTest(indexA1 == -1 && indexA2 == -1);
-				result = result.Substring(indexB1 + 1);
+				result = result[(indexB1 + 1)..];
 			}
 			var indexC1 = result.IndexOf('[');
 			var indexC2 = result.IndexOf(']');
 			if (indexC1 != -1 || indexC2 != -1) {
 				GF.AssertTest(indexC1 != -1 && indexC2 != -1 && indexC1 < indexC2);
-				result = result.Substring(0, indexC1) + result.Substring(indexC2 + 1);
+				result = result[..indexC1] + result[(indexC2 + 1)..];
 			}
 			var indexD1 = result.IndexOf('|');
 			if (indexD1 != -1) {
-				result = result.Substring(0, indexD1);
+				result = result[..indexD1];
 			}
 			return result;
 		}
@@ -81,7 +81,7 @@ namespace Helper {
 				result = animation.MainSprite.AsNotNull();
 			}
 			else {
-				throw new ArgumentException();
+				throw new ();
 			}
 			return result;
 		}
@@ -115,6 +115,45 @@ namespace Helper {
 
 		// ----------------
 
+		private static Matrix MakeTransformMatrixFromVariant (
+			List<Floater> source
+		) {
+			var result = new Matrix();
+			switch (source.Count) {
+				case 2: {
+					result.M11 = 1.0;
+					result.M12 = 0.0;
+					result.M21 = 0.0;
+					result.M22 = 1.0;
+					result.OffsetX = source[0];
+					result.OffsetY = source[1];
+					break;
+				}
+				case 3: {
+					var cosValue = Math.Cos(source[0]);
+					var sinValue = Math.Sin(source[0]);
+					result.M11 = cosValue;
+					result.M12 = sinValue;
+					result.M21 = -sinValue;
+					result.M22 = cosValue;
+					result.OffsetX = source[1];
+					result.OffsetY = source[2];
+					break;
+				}
+				case 6: {
+					result.M11 = source[0];
+					result.M12 = source[1];
+					result.M21 = source[2];
+					result.M22 = source[3];
+					result.OffsetX = source[4];
+					result.OffsetY = source[5];
+					break;
+				}
+				default: throw new ();
+			}
+			return result;
+		}
+
 		public static SpriteUI CreateUI (
 			AnimationModel.Animation animation,
 			List<BitmapSource?>      imageSource,
@@ -124,8 +163,8 @@ namespace Helper {
 		) {
 			var sprite = AnimationHelper.SelectSprite(animation, workingSpriteIndex);
 			var ui = new SpriteUI() {
-				Canvas = new Canvas(),
-				Storyboard = new Storyboard(),
+				Canvas = new () { },
+				Storyboard = new () { },
 			};
 			var layerList = new Dictionary<Integer, WorkLayer?>();
 			var duration = sprite.Frame.Count;
@@ -160,14 +199,14 @@ namespace Helper {
 					if (!append.Sprite) {
 						var resource = animation.Image[(Size)append.Resource];
 						var resourceSource = imageSource[(Size)append.Resource];
-						layer.Canvas = new Canvas() {
+						layer.Canvas = new () {
 							Children = {
 								new Image() {
 									Source = resourceSource,
 									Width = resource.Size?[0] ?? resourceSource?.PixelWidth ?? 0,
 									Height = resource.Size?[1] ?? resourceSource?.PixelHeight ?? 0,
 									RenderTransform = new MatrixTransform() {
-										Matrix = TransformHelper.ConvertFromVariant(resource.Transform),
+										Matrix = AnimationHelper.MakeTransformMatrixFromVariant(resource.Transform),
 									},
 								},
 							},
@@ -175,25 +214,19 @@ namespace Helper {
 					}
 					else {
 						var resource = animation.Sprite[(Size)append.Resource];
-						var resourceUI = AnimationHelper.CreateUI(
-							animation,
-							imageSource,
-							imageFilter,
-							spriteFilter,
-							(Size)append.Resource
-						);
+						var resourceUI = AnimationHelper.CreateUI(animation, imageSource, imageFilter, spriteFilter, (Size)append.Resource);
 						layer.Canvas = resourceUI.Canvas;
 						ui.Storyboard.Children.Add(resourceUI.Storyboard);
 					}
 					Canvas.SetZIndex(layer.Canvas, (Size)append.Index);
 					layer.Canvas.Visibility = Visibility.Collapsed;
 					layer.Canvas.RenderTransform = new MatrixTransform() {
-						Matrix = new Matrix(0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
+						Matrix = new (0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
 					};
 					layer.Canvas.Opacity = 0.0;
-					layer.Visibility = new ObjectAnimationUsingKeyFrames() { };
-					layer.Transform = new ObjectAnimationUsingKeyFrames() { };
-					layer.ColorAlpha = new ObjectAnimationUsingKeyFrames() { };
+					layer.Visibility = new () { };
+					layer.Transform = new () { };
+					layer.ColorAlpha = new () { };
 					Storyboard.SetTargetProperty(layer.Visibility, "Visibility");
 					Storyboard.SetTargetProperty(layer.Transform, "(Canvas.RenderTransform).(MatrixTransform.Matrix)");
 					Storyboard.SetTargetProperty(layer.ColorAlpha, "Opacity");
@@ -203,8 +236,8 @@ namespace Helper {
 							Value = Visibility.Visible,
 						}
 					);
-					layer.Storyboard = new Storyboard() {
-						Duration = new Duration(TimeSpan.FromSeconds(duration)),
+					layer.Storyboard = new () {
+						Duration = new (TimeSpan.FromSeconds(duration)),
 						RepeatBehavior = RepeatBehavior.Forever,
 						Children = {
 							layer.Visibility,
@@ -221,7 +254,7 @@ namespace Helper {
 					if (layer is null) {
 						continue;
 					}
-					var transform = TransformHelper.ConvertFromVariant(change.Transform);
+					var transform = AnimationHelper.MakeTransformMatrixFromVariant(change.Transform);
 					layer.Transform.KeyFrames.Add(
 						new DiscreteObjectKeyFrame() {
 							KeyTime = keyTime,

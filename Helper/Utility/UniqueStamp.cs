@@ -11,7 +11,7 @@ namespace Helper.Utility {
 
 		public static UniqueStamp Create (
 		) {
-			return new UniqueStamp();
+			return new ();
 		}
 
 		public static UniqueStamp Default = UniqueStamp.Create();

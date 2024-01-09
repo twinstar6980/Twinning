@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "Helper (Packaged)": {
+      "commandName": "MsixPackage"
+    }
+  }
+}

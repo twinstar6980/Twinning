@@ -2,7 +2,6 @@
 // ReSharper disable
 
 using Helper;
-using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
@@ -14,13 +13,13 @@ namespace Helper.Utility {
 
 		#region serialize
 
-		private static readonly JsonSerializer Serializer = JsonSerializer.CreateDefault(new JsonSerializerSettings() {
+		private static readonly JsonSerializer Serializer = JsonSerializer.CreateDefault(new () {
 			NullValueHandling = NullValueHandling.Include,
-			Converters = new List<JsonConverter>() {
+			Converters = [
 				new StringEnumConverter() {
 					NamingStrategy = new SnakeCaseNamingStrategy(),
 				},
-			},
+			],
 			ContractResolver = new DefaultContractResolver() {
 				NamingStrategy = new SnakeCaseNamingStrategy(),
 			},
@@ -46,7 +45,7 @@ namespace Helper.Utility {
 			TValue  value,
 			Boolean indented = true
 		) {
-			var text = new StringWriter(new StringBuilder(256), CultureInfo.InvariantCulture) {
+			var text = new StringWriter(new (256), CultureInfo.InvariantCulture) {
 				NewLine = "\n",
 			};
 			var writer = new JsonTextWriter(text) {
@@ -80,23 +79,6 @@ namespace Helper.Utility {
 			String path
 		) {
 			return JsonHelper.DeserializeText<TValue>(await StorageHelper.ReadFileText(path));
-		}
-
-		// ----------------
-
-		public static void SerializeFileSync<TValue> (
-			String  path,
-			TValue  value,
-			Boolean indented = true
-		) {
-			StorageHelper.WriteFileTextSync(path, JsonHelper.SerializeText<TValue>(value, indented));
-			return;
-		}
-
-		public static TValue DeserializeFileSync<TValue> (
-			String path
-		) {
-			return JsonHelper.DeserializeText<TValue>(StorageHelper.ReadFileTextSync(path));
 		}
 
 		// ----------------

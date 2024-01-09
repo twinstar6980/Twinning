@@ -632,15 +632,15 @@
 	"executor.implement:pvz2.remote_project.execute:project_directory": "项目目录",
 	"executor.implement:pvz2.remote_project.execute:action": "行为",
 	"executor.implement:pvz2.remote_project.execute:target": "目标",
-	// Executor/Implement/kairosoft.record
-	"executor.implement:kairosoft.record.recrypt": "Kairosoft Record 重加密",
-	"executor.implement:kairosoft.record.recrypt:old_directory": "旧存档目录",
-	"executor.implement:kairosoft.record.recrypt:new_directory": "新存档目录",
-	"executor.implement:kairosoft.record.recrypt:old_key": "旧密钥",
-	"executor.implement:kairosoft.record.recrypt:new_key": "新密钥",
+	// Executor/Implement/kairosoft.game
+	"executor.implement:kairosoft.game.encrypt_record": "Kairosoft Game 加密存档",
+	"executor.implement:kairosoft.game.encrypt_record:target_directory": "目标目录",
+	"executor.implement:kairosoft.game.encrypt_record:key": "密钥",
 	// 
-	"executor.implement:kairosoft.record.disable_verify": "Kairosoft Record 禁用验证",
-	"executor.implement:kairosoft.record.disable_verify:game_directory": "游戏目录",
+	"executor.implement:kairosoft.game.modify_program": "Kairosoft Game 修改程序",
+	"executor.implement:kairosoft.game.modify_program:target_directory": "目标目录",
+	"executor.implement:kairosoft.game.modify_program:disable_record_encryption": "禁用存档加密",
+	"executor.implement:kairosoft.game.modify_program:enable_debug_mode": "启用调试模式",
 	// Executable/JSShell
 	"executable.js_shell:input_start": "JS交互模式已开启",
 	"executable.js_shell:input_description": "输入为空则完成一轮输入，若一轮输入为空则结束交互",

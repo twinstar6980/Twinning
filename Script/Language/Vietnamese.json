@@ -632,15 +632,15 @@
 	"executor.implement:pvz2.remote_project.execute:project_directory": "Thư mục dự án",
 	"executor.implement:pvz2.remote_project.execute:action": "Hành động",
 	"executor.implement:pvz2.remote_project.execute:target": "Mục tiêu",
-	// Executor/Implement/kairosoft.record
-	"executor.implement:kairosoft.record.recrypt": "Mã hóa Kairosoft Record",
-	"executor.implement:kairosoft.record.recrypt:old_directory": "Thư mục dữ liệu cũ",
-	"executor.implement:kairosoft.record.recrypt:new_directory": "Thư mục dữ liệu mới",
-	"executor.implement:kairosoft.record.recrypt:old_key": "Khóa cũ",
-	"executor.implement:kairosoft.record.recrypt:new_key": "Khóa mới",
+	// Executor/Implement/kairosoft.game
+	"executor.implement:kairosoft.game.encrypt_record": "Kairosoft Game Encrypt record",
+	"executor.implement:kairosoft.game.encrypt_record:target_directory": "Target directory",
+	"executor.implement:kairosoft.game.encrypt_record:key": "Key",
 	// 
-	"executor.implement:kairosoft.record.disable_verify": "Kairosoft Record Disable verify",
-	"executor.implement:kairosoft.record.disable_verify:game_directory": "Game directory",
+	"executor.implement:kairosoft.game.modify_program": "Kairosoft Game Modify program",
+	"executor.implement:kairosoft.game.modify_program:target_directory": "Target directory",
+	"executor.implement:kairosoft.game.modify_program:disable_record_encryption": "Disable record encryption",
+	"executor.implement:kairosoft.game.modify_program:enable_debug_mode": "Enable debug mode",
 	// Executable/JSShell
 	"executable.js_shell:input_start": "Chế độ Tương tác JS được bật",
 	"executable.js_shell:input_description": "Nhập chuỗi trống để kết thúc một vòng nhập dữ liệu, nhập chuỗi trống cho toàn bộ vòng nhập để kết thúc tương tác",
