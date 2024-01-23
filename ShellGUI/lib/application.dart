@@ -1,6 +1,5 @@
 import '/common.dart';
 import '/setting.dart';
-import '/command.dart';
 import '/page/home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,35 +12,33 @@ class Application extends StatelessWidget {
   const Application({
     super.key,
     required this.setting,
-    required this.command,
+    required this.navigator,
   });
 
   // ----------------
 
-  final Setting setting;
-  final Command command;
+  final SettingProvider           setting;
+  final GlobalKey<NavigatorState> navigator;
 
   // ----------------
 
   @override
   build(context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(value: SettingProvider(this.setting)),
-        ChangeNotifierProvider.value(value: CommandProvider(this.command)),
-      ],
+    return ChangeNotifierProvider.value(
+      value: setting,
       child: Consumer<SettingProvider>(
         builder: (context, setting, _) {
           return DynamicColorBuilder(builder: (lightDynamic, darkDynamic) {
             return MaterialApp(
+              navigatorKey: navigator,
               title: kApplicationName,
               theme: ThemeData(
                 brightness: Brightness.light,
-                colorScheme: setting.data.mThemeColorInheritFromSystem ? lightDynamic : null,
-                colorSchemeSeed: !setting.data.mThemeColorInheritFromSystem ? setting.data.mThemeColorLight : null,
-                scaffoldBackgroundColor: setting.data.mThemeColorInheritFromSystem ? lightDynamic?.background : null,
+                colorScheme: !setting.data.mThemeColorInheritFromSystem ? null : lightDynamic,
+                colorSchemeSeed: setting.data.mThemeColorInheritFromSystem ? null : setting.data.mThemeColorLight,
+                scaffoldBackgroundColor: !setting.data.mThemeColorInheritFromSystem ? null : lightDynamic?.background,
                 fontFamily: '',
-                fontFamilyFallback: gPrimaryFontFamliy,
+                fontFamilyFallback: [...setting.state.mPrimaryFontFamliy],
                 appBarTheme: AppBarTheme(
                   centerTitle: false,
                   elevation: 3,
@@ -51,11 +48,11 @@ class Application extends StatelessWidget {
               ),
               darkTheme: ThemeData(
                 brightness: Brightness.dark,
-                colorScheme: setting.data.mThemeColorInheritFromSystem ? darkDynamic : null,
-                colorSchemeSeed: !setting.data.mThemeColorInheritFromSystem ? setting.data.mThemeColorDark : null,
-                scaffoldBackgroundColor: setting.data.mThemeColorInheritFromSystem ? darkDynamic?.background : null,
+                colorScheme: !setting.data.mThemeColorInheritFromSystem ? null : darkDynamic,
+                colorSchemeSeed: setting.data.mThemeColorInheritFromSystem ? null : setting.data.mThemeColorDark,
+                scaffoldBackgroundColor: !setting.data.mThemeColorInheritFromSystem ? null : darkDynamic?.background,
                 fontFamily: '',
-                fontFamilyFallback: gPrimaryFontFamliy,
+                fontFamilyFallback: [...setting.state.mPrimaryFontFamliy],
                 appBarTheme: AppBarTheme(
                   centerTitle: false,
                   elevation: 3,

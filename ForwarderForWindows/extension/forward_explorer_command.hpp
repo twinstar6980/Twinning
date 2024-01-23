@@ -90,14 +90,20 @@ namespace TwinStar::ForwarderForWindows {
 			_In_opt_ IBindCtx *        pbc
 		) override {
 			try {
+				auto script = get_roaming_app_data_directory_path() + L"\\TwinStar.ToolKit.ForwarderForWindows\\forward.cmd";
+				assert_test(std::filesystem::is_regular_file(script));
 				auto program = std::wstring{L"C:\\Windows\\System32\\cmd.exe"};
 				auto argument = std::vector<std::wstring>{};
 				argument.emplace_back(L"/C");
-				argument.emplace_back(get_roaming_app_data_directory_path() + L"\\TwinStar.ToolKit.ForwarderForWindows\\forward.cmd");
+				argument.emplace_back(script);
 				argument.append_range(get_shell_item_file_path(psiItemArray));
 				create_process(program, argument);
 			}
+			catch (std::exception & e) {
+				MessageBoxA(nullptr, e.what(), "Exception", MB_ICONERROR | MB_OK);
+			}
 			catch (...) {
+				MessageBoxA(nullptr, "unknown", "Exception", MB_ICONERROR | MB_OK);
 			}
 			return S_OK;
 		}

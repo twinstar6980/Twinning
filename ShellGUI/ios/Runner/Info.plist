@@ -49,5 +49,18 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>None</string>
+			<key>CFBundleURLName</key>
+			<string>com.twinstar.toolkit.shell-gui</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>twinstar.toolkit.shell-gui</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

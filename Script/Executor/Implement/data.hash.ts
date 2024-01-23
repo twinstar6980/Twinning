@@ -26,7 +26,7 @@ namespace TwinStar.Script.Executor.Implement.data.hash {
 				],
 				worker: ({ target_file }) => {
 					let result = KernelX.Tool.Data.Hash.MD5.hash_fs(target_file);
-					Console.success(`${make_prefix_padded_string(result.toString(16), '0', 16)}`, []);
+					Console.success(`${string_from_byte_array(integer_to_byte_array(result, 16, 'little'), false)}`, []);
 					return;
 				},
 				batch_argument: [

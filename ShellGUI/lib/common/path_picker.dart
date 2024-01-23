@@ -1,62 +1,43 @@
 import '/common.dart';
 import '/common/platform_method.dart';
 import 'dart:io';
-import 'package:path/path.dart' as p_path;
 import 'package:file_picker/file_picker.dart';
 
 // ----------------
 
 class PathPicker {
 
-  static String fallbackDirectory = '';
-
-  // ----------------
-
   static
   Future<String?>
-  pickFile (
+  pickFile(
+    String fallbackDirectory,
   ) async {
     var result = null as String?;
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      var selection = await FilePicker.platform.pickFiles(allowMultiple: false, lockParentWindow: true);
-      result = selection?.files.single.path?.replaceAll('\\', '/');
-    }
-    if (Platform.isAndroid) {
-      result = await PlatformMethod.pickPath(false, fallbackDirectory);
-    }
-    if (Platform.isIOS) {
-      if (Directory(fallbackDirectory).existsSync()) {
-        var selection = await FilePicker.platform.pickFiles(allowMultiple: false);
-        if (selection != null) {
-          try {
-            var fallbackFile = p_path.join(fallbackDirectory, selection.files.single.name);
-            File(selection.files.single.path!).renameSync(fallbackFile);
-            result = fallbackFile;
-          }
-          catch (e) {
-          }
-          FilePicker.platform.clearTemporaryFiles();
-        }
+      result = (await FilePicker.platform.pickFiles(allowMultiple: false, lockParentWindow: true))?.files.single.path;
+      if (Platform.isWindows && result != null) {
+        result = normalizePath(result);
       }
+    }
+    if (Platform.isAndroid || Platform.isIOS) {
+      result = await PlatformMethod.pickPath(false, fallbackDirectory);
     }
     return result;
   }
 
   static
   Future<String?>
-  pickDirectory (
+  pickDirectory(
   ) async {
     var result = null as String?;
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      var selection = await FilePicker.platform.getDirectoryPath(lockParentWindow: true);
-      result = selection?.replaceAll('\\', '/');
+      result = await FilePicker.platform.getDirectoryPath(lockParentWindow: true);
+      if (Platform.isWindows && result != null) {
+        result = normalizePath(result);
+      }
     }
-    if (Platform.isAndroid) {
-      result = await PlatformMethod.pickPath(true, null);
-    }
-    if (Platform.isIOS) {
-      var selection = await FilePicker.platform.getDirectoryPath();
-      result = selection;
+    if (Platform.isAndroid || Platform.isIOS) {
+      result = await PlatformMethod.pickPath(true, '');
     }
     return result;
   }

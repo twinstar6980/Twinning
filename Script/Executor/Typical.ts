@@ -310,7 +310,10 @@ namespace TwinStar.Script.Executor {
 			default_argument: record_from_array(source.argument, (index, element) => ([element.id, element.default])) as typeof source.GivenArgument,
 			input_filter: (input) => {
 				let state = true;
-				if (!batch) {
+				if (input == '') {
+					state = false;
+				}
+				else if (!batch) {
 					state &&= KernelX.FileSystem[({ any: 'exist', file: 'exist_file', directory: 'exist_directory' } as const)[source.filter[0]]](input);
 					if (!g_typical_method_disable_name_filter) {
 						state &&= source.filter[1].test(input);

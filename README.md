@@ -44,11 +44,13 @@
 
 ## 平台支持
 
-* 操作系统：`Windows 7+` 、`Linux ~` 、`Macintosh 12~` 、`Android 9+` 、`iPhone 16~` 。
+* 操作系统：`Windows 7+` 、`Linux ~` 、`Macintosh 13~` 、`Android 9+` 、`iPhone 16~` 。
 
 * 处理器架构：`x86 32|64` 、`arm 32|64` 。
 
 ## 鸣谢
+
+* [`icons8.com`](https://icons8.com) 工具的图标来源于该网站。
 
 * `时漪` `PAK向日葵` `伊特` 等于 2019 年与我一同破解 `PopCap Animation (aka PAM)` 格式。
 

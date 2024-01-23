@@ -1,6 +1,7 @@
 import '/common.dart';
 import '/bridge/interface.dart' as Interface; // ignore: library_prefixes
 import '/bridge/symbol.dart';
+import 'dart:io';
 import 'dart:ffi' as ffi;
 
 // ----------------
@@ -23,7 +24,11 @@ class Library {
     String path,
   ) {
     assertAlways(!this.state());
-    var handle = ffi.DynamicLibrary.open(normalizeLibraryPath(path));
+    var pathAbsolute = path;
+    if (Platform.isWindows) {
+      pathAbsolute += '.';
+    }
+    var handle = ffi.DynamicLibrary.open(pathAbsolute);
     var symbol = SymbolTable();
     try {
       symbol.execute = handle.lookup<ffi.NativeFunction<Interface.execute>>(SymbolNameTable.execute);

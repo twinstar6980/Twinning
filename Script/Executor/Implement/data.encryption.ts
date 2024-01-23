@@ -32,16 +32,16 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 						automatic: (argument: { plain_file: string; }) => (argument.plain_file.replace(/()?$/i, '.bin')),
 						condition: null,
 					}),
-					typical_argument_integer({
+					typical_argument_string({
 						id: 'key',
 						option: null,
-						checker: (argument: {}, value) => (0x00n <= value && value <= 0xFFn ? null : los(`范围溢出`)),
+						checker: (argument: {}, value) => ((/^(( )*[0-9a-fA-F]{2,2}( )*)+$/.test(value)) ? null : los(`密钥非法`)),
 						automatic: null,
 						condition: null,
 					}),
 				],
 				worker: ({ plain_file, cipher_file, key }) => {
-					KernelX.Tool.Data.Encryption.XOR.encrypt_fs(plain_file, cipher_file, [key]);
+					KernelX.Tool.Data.Encryption.XOR.encrypt_fs(plain_file, cipher_file, string_to_byte_array(key));
 					return;
 				},
 				batch_argument: [

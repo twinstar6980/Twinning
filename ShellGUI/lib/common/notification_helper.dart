@@ -23,20 +23,22 @@ class NotificationHelper {
     }
     if (Platform.isLinux || Platform.isMacOS || Platform.isAndroid || Platform.isIOS) {
       _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-      var initializationSettings = InitializationSettings(
-        android: const AndroidInitializationSettings(
-          '@mipmap/ic_launcher',
+      await _flutterLocalNotificationsPlugin!.initialize(
+        InitializationSettings(
+          android: const AndroidInitializationSettings(
+            '@mipmap/ic_launcher',
+          ),
+          iOS: const DarwinInitializationSettings(
+          ),
+          macOS: const DarwinInitializationSettings(
+          ),
+          linux: LinuxInitializationSettings(
+            defaultActionName: '',
+            defaultIcon: AssetsLinuxIcon('asset/logo.png'),
+          ),
         ),
-        iOS: const DarwinInitializationSettings(
-        ),
-        macOS: const DarwinInitializationSettings(
-        ),
-        linux: LinuxInitializationSettings(
-          defaultActionName: '',
-          defaultIcon: AssetsLinuxIcon('asset/logo.png'),
-        ),
+        onDidReceiveNotificationResponse: null,
       );
-      await _flutterLocalNotificationsPlugin!.initialize(initializationSettings, onDidReceiveNotificationResponse: null);
     }
     return;
   }

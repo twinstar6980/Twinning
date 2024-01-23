@@ -18,13 +18,7 @@ typedef Map<K, V> = core.Map<K, V>;
 
 const kApplicationName = 'TwinStar ToolKit - Shell GUI';
 
-const kApplicationVersion = 31;
-
-// ----------------
-
-List<String> gPrimaryFontFamliy = [];
-
-List<String> gConsoleFontFamliy = [];
+const kApplicationVersion = 32;
 
 // ----------------
 
@@ -45,7 +39,8 @@ queryApplicationSharedDirectory(
 ) async {
   var result = null as String?;
   if (Platform.isWindows) {
-    result = (await getApplicationSupportDirectory()).path.replaceAll('\\', '/');
+    result = (await getApplicationSupportDirectory()).path;
+    result = normalizePath(result);
   }
   if (Platform.isLinux) {
     result = (await getApplicationSupportDirectory()).path;
@@ -65,27 +60,23 @@ queryApplicationSharedDirectory(
 // ----------------
 
 String
-normalizeLibraryPath(
-  String path,
+normalizePath(
+  String source,
 ) {
-  var result = path;
-  if (Platform.isWindows) {
-    result += '.';
-  }
-  return result;
+  return source.replaceAll('\\', '/');
 }
 
 // ----------------
 
 String
-convertStringListToTextWithLine (
+convertStringListToTextWithLine(
   List<String> value
 ) {
   return value.join('\n') + (value.isNotEmpty && value.last.isEmpty ? '\n' : '');
 }
 
 List<String>
-convertStringListFromTextWithLine (
+convertStringListFromTextWithLine(
   String text
 ) {
   var value = text.split('\n').map((value) => (!value.endsWith('\r') ? value : value.substring(0, value.length - 1))).toList();

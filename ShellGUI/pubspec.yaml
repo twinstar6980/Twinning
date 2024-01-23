@@ -1,5 +1,5 @@
 name: shell_gui
-version: 31.0.0+31
+version: 32.0.0+32
 publish_to: 'none'
 environment:
   sdk: '>=3.2.0 <4.0.0'
@@ -9,7 +9,6 @@ dependencies:
   ffi: ^2.1.0
   async: ^2.11.0
   provider: ^6.1.1
-  path: ^1.8.3
   path_provider: ^2.1.1
   window_manager: ^0.3.7
   dynamic_color: ^1.6.9

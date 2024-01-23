@@ -30,19 +30,29 @@
 
 ## 说明
 
-* 命令行参数
+* 命令参数
 	
-	`-additional_argument <additional_argument>...`
+	`[ -additional_argument <additional_argument>... ]`
 	
-	* `<additional_argument>...`
+	* `-additional_argument <additional_argument>...`
 		
-		传给内核处理逻辑的附加参数。
+		附加参数。若指定该项，应用将在启动后自动启动控制台。
 	
-	若传入命令行参数，则应用将在启动后自动启动控制台。
+	> 内核文件路径、脚本文件路径、执行参数等选项需在应用内设置页中预先设定。
 	
-	> `Android` 与 `iPhone` 无法直接传入命令行参数；`Android` 可以通过 `Intent` 传入命令行参数 `action = "com.twinstar.toolkit.shell_gui.action.LAUNCH", extra = { "command": Array<String> }` 。
+	> `Android` 与 `iPhone` 系统不支持命令行传参，须通过下文的应用链接传递启动参数。
+
+* 应用链接
 	
-	> 内核文件路径、脚本文件路径、参数等选项需在应用内设置页中预先设定。
+	`twinstar.toolkit.shell-gui:/run?command=<command>`
+	
+	* `command`
+		
+		命令参数。可以多次指定，所有查询值被视作字符串数组。
+	
+	> 仅在应用未启动时才可通过链接传参；若在应用已启动的状态下打开链接，应用会切换到前台，但不会接收新的命令参数。
+	
+	> 应用链接仅适用于 `Android` 与 `iPhone` 系统。
 
 * 关于 Android 平台的必要说明
 	
@@ -53,9 +63,3 @@
 	> 当前项目中包含的 libc++_shared.so 版本为 NDK 26.1 。
 	
 	> 具体参阅 [Android 文档](https://source.android.com/docs/core/architecture/vndk/linker-namespace) 。
-
-* 关于 iPhone 平台的必要说明
-	
-	第三方依赖项 `file_picker` 在 iPhone 上存在严重 BUG ：在用户通过应用内对话框选中目录后，该目录会被移动到 ShellGUI 的沙盒缓存目录内，而非进行复制缓存，致使原文档丢失。
-	
-	因此，为 iPhone 平台构建软件包时，必须修改 [pubspec.yaml](./pubspec.yaml) 中 `file_picker` 的依赖版本为 `5.3.2` 。

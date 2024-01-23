@@ -86,6 +86,7 @@
 	"executor.typical:batch_result": "Hoàn thành xử lý, tổng cộng {} tệp, hợp lệ {} tệp, thất bại {} tệp",
 	// Executor/Implement/*
 	"范围溢出": "Vượt quá phạm vi",
+	"密钥非法": "Illegal key",
 	"密钥长度非法": "Độ dài khóa không hợp lệ",
 	"长度不匹配": "Độ dài không khớp",
 	"分辨率应大于零": "Độ phân giải nên lớn hơn không",
@@ -633,14 +634,14 @@
 	"executor.implement:pvz2.remote_project.execute:action": "Hành động",
 	"executor.implement:pvz2.remote_project.execute:target": "Mục tiêu",
 	// Executor/Implement/kairosoft.game
-	"executor.implement:kairosoft.game.encrypt_record": "Kairosoft Game Encrypt record",
-	"executor.implement:kairosoft.game.encrypt_record:target_directory": "Target directory",
-	"executor.implement:kairosoft.game.encrypt_record:key": "Key",
+	"executor.implement:kairosoft.game.encrypt_record": "Kairosoft Game Mã hoá bản ghi",
+	"executor.implement:kairosoft.game.encrypt_record:target_directory": "Thư mục đích",
+	"executor.implement:kairosoft.game.encrypt_record:key": "Mật mã",
 	// 
-	"executor.implement:kairosoft.game.modify_program": "Kairosoft Game Modify program",
-	"executor.implement:kairosoft.game.modify_program:target_directory": "Target directory",
-	"executor.implement:kairosoft.game.modify_program:disable_record_encryption": "Disable record encryption",
-	"executor.implement:kairosoft.game.modify_program:enable_debug_mode": "Enable debug mode",
+	"executor.implement:kairosoft.game.modify_program": "Kairosoft Game Sửa đổi chương trình",
+	"executor.implement:kairosoft.game.modify_program:target_directory": "Thư mục đích",
+	"executor.implement:kairosoft.game.modify_program:disable_record_encryption": "Tắt mã hóa bản ghi",
+	"executor.implement:kairosoft.game.modify_program:enable_debug_mode": "Bật chế độ gỡ lỗi",
 	// Executable/JSShell
 	"executable.js_shell:input_start": "Chế độ Tương tác JS được bật",
 	"executable.js_shell:input_description": "Nhập chuỗi trống để kết thúc một vòng nhập dữ liệu, nhập chuỗi trống cho toàn bộ vòng nhập để kết thúc tương tác",

@@ -1,8 +1,10 @@
 import '/common.dart';
 import '/common/path_picker.dart';
+import '/setting.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // ----------------
 
@@ -130,7 +132,14 @@ class _PauseInputBarContentState extends State<PauseInputBarContent> {
   // ----------------
 
   @override
+  void dispose() {
+    super.dispose();
+    return;
+  }
+
+  @override
   build(context) {
+    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return BusyInputBarContent(
       completer: this.widget.completer,
@@ -139,7 +148,7 @@ class _PauseInputBarContentState extends State<PauseInputBarContent> {
       children: [
         Text(
           'Pause ...',
-          style: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy),
+          style: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy]),
         ),
       ],
     );
@@ -172,7 +181,14 @@ class _BooleanInputBarContentState extends State<BooleanInputBarContent> {
   // ----------------
 
   @override
+  void dispose() {
+    super.dispose();
+    return;
+  }
+
+  @override
   build(context) {
+    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return BusyInputBarContent(
       completer: this.widget.completer,
@@ -183,7 +199,7 @@ class _BooleanInputBarContentState extends State<BooleanInputBarContent> {
           (value) => Expanded(
             child: (this._value ?? !value) == value
               ? FilledButton.tonal(
-                style: FilledButton.styleFrom(textStyle: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy)),
+                style: FilledButton.styleFrom(textStyle: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy])),
                 onPressed: () async {
                   this._value = null;
                   this.setState(() {});
@@ -191,7 +207,7 @@ class _BooleanInputBarContentState extends State<BooleanInputBarContent> {
                 child: Text(!value ? 'No' : 'Yes'),
               )
               : TextButton(
-                style: TextButton.styleFrom(textStyle: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy)),
+                style: TextButton.styleFrom(textStyle: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy])),
                 onPressed: () async {
                   this._value = value;
                   this.setState(() {});
@@ -205,7 +221,7 @@ class _BooleanInputBarContentState extends State<BooleanInputBarContent> {
           (value) => Expanded(
             child: (this._value ?? !value) == value
               ? FilledButton.tonal(
-                style: FilledButton.styleFrom(textStyle: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy)),
+                style: FilledButton.styleFrom(textStyle: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy])),
                 onPressed: () async {
                   this._value = null;
                   this.setState(() {});
@@ -213,7 +229,7 @@ class _BooleanInputBarContentState extends State<BooleanInputBarContent> {
                 child: Text(!value ? 'No' : 'Yes'),
               )
               : TextButton(
-                style: TextButton.styleFrom(textStyle: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy)),
+                style: TextButton.styleFrom(textStyle: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy])),
                 onPressed: () async {
                   this._value = value;
                   this.setState(() {});
@@ -254,7 +270,15 @@ class _IntegerInputBarContentState extends State<IntegerInputBarContent> {
   // ----------------
 
   @override
+  void dispose() {
+    this._controller.dispose();
+    super.dispose();
+    return;
+  }
+
+  @override
   build(context) {
+    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return BusyInputBarContent(
       completer: this.widget.completer,
@@ -263,7 +287,7 @@ class _IntegerInputBarContentState extends State<IntegerInputBarContent> {
       children: [
         Expanded(
           child: TextField(
-            style: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy),
+            style: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy]),
             decoration: const InputDecoration(
               border: InputBorder.none,
               hintText: 'Integer ...',
@@ -273,7 +297,6 @@ class _IntegerInputBarContentState extends State<IntegerInputBarContent> {
             inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^([+-])?([\d]*)$'))],
             onChanged: (value) {
               this._value = value.isEmpty ? null : Integer.tryParse(value);
-              this.setState(() {});
             },
           ),
         ),
@@ -309,7 +332,15 @@ class _FloaterInputBarContentState extends State<FloaterInputBarContent> {
   // ----------------
 
   @override
+  void dispose() {
+    this._controller.dispose();
+    super.dispose();
+    return;
+  }
+
+  @override
   build(context) {
+    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return BusyInputBarContent(
       completer: this.widget.completer,
@@ -318,7 +349,7 @@ class _FloaterInputBarContentState extends State<FloaterInputBarContent> {
       children: [
         Expanded(
           child: TextField(
-            style: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy),
+            style: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy]),
             decoration: const InputDecoration(
               border: InputBorder.none,
               hintText: 'Floater ...',
@@ -328,7 +359,6 @@ class _FloaterInputBarContentState extends State<FloaterInputBarContent> {
             inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^([+-])?([\d]*)([.][\d]*)?$'))],
             onChanged: (value) {
               this._value = value.isEmpty ? null : Floater.tryParse(value);
-              this.setState(() {});
             },
           ),
         ),
@@ -365,7 +395,15 @@ class _SizeInputBarContentState extends State<SizeInputBarContent> {
   // ----------------
 
   @override
+  void dispose() {
+    this._controller.dispose();
+    super.dispose();
+    return;
+  }
+
+  @override
   build(context) {
+    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return BusyInputBarContent(
       completer: this.widget.completer,
@@ -374,7 +412,7 @@ class _SizeInputBarContentState extends State<SizeInputBarContent> {
       children: [
         Expanded(
           child: TextField(
-            style: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy),
+            style: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy]),
             decoration: const InputDecoration(
               border: InputBorder.none,
               hintText: 'Size ...',
@@ -384,14 +422,13 @@ class _SizeInputBarContentState extends State<SizeInputBarContent> {
             inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^([\d]*)([.][\d]*)?$'))],
             onChanged: (value) {
               this._value = value.isEmpty ? null : Floater.tryParse(value);
-              this.setState(() {});
             },
           ),
         ),
         SizedBox(
           width: 48,
           child: DropdownButton<Integer>(
-            style: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy),
+            style: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy]),
             value: this._unit,
             items: const [
               DropdownMenuItem(
@@ -454,7 +491,15 @@ class _StringInputBarContentState extends State<StringInputBarContent> {
   // ----------------
 
   @override
+  void dispose() {
+    this._controller.dispose();
+    super.dispose();
+    return;
+  }
+
+  @override
   build(context) {
+    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return BusyInputBarContent(
       completer: this.widget.completer,
@@ -463,7 +508,7 @@ class _StringInputBarContentState extends State<StringInputBarContent> {
       children: [
         Expanded(
           child: TextField(
-            style: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy),
+            style: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy]),
             decoration: const InputDecoration(
               border: InputBorder.none,
               hintText: 'String ...',
@@ -473,7 +518,6 @@ class _StringInputBarContentState extends State<StringInputBarContent> {
             inputFormatters: const [],
             onChanged: (value) {
               this._value = value.isEmpty ? null : value;
-              this.setState(() {});
             },
           ),
         ),
@@ -509,7 +553,15 @@ class _PathInputBarContentState extends State<PathInputBarContent> {
   // ----------------
 
   @override
+  void dispose() {
+    this._controller.dispose();
+    super.dispose();
+    return;
+  }
+
+  @override
   build(context) {
+    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return BusyInputBarContent(
       completer: this.widget.completer,
@@ -518,7 +570,7 @@ class _PathInputBarContentState extends State<PathInputBarContent> {
       children: [
         Expanded(
           child: TextField(
-            style: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy),
+            style: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy]),
             decoration: const InputDecoration(
               border: InputBorder.none,
               hintText: 'Path ...',
@@ -528,7 +580,6 @@ class _PathInputBarContentState extends State<PathInputBarContent> {
             inputFormatters: const [],
             onChanged: (value) {
               this._value = value.isEmpty ? null : value;
-              this.setState(() {});
             },
           ),
         ),
@@ -541,28 +592,28 @@ class _PathInputBarContentState extends State<PathInputBarContent> {
               value: ':g',
               child: Text(
                 'Generate',
-                style: theme.textTheme.labelLarge?.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy),
+                style: theme.textTheme.labelLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy]),
               ),
             ),
             PopupMenuItem(
               value: ':m',
               child: Text(
                 'Move',
-                style: theme.textTheme.labelLarge?.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy),
+                style: theme.textTheme.labelLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy]),
               ),
             ),
             PopupMenuItem(
               value: ':d',
               child: Text(
                 'Delete',
-                style: theme.textTheme.labelLarge?.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy),
+                style: theme.textTheme.labelLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy]),
               ),
             ),
             PopupMenuItem(
               value: ':o',
               child: Text(
                 'Overwrite',
-                style: theme.textTheme.labelLarge?.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy),
+                style: theme.textTheme.labelLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy]),
               ),
             ),
             const PopupMenuDivider(
@@ -571,14 +622,14 @@ class _PathInputBarContentState extends State<PathInputBarContent> {
               value: FileObjectType.file,
               child: Text(
                 'File',
-                style: theme.textTheme.labelLarge?.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy),
+                style: theme.textTheme.labelLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy]),
               ),
             ),
             PopupMenuItem(
               value: FileObjectType.directory,
               child: Text(
                 'Directory',
-                style: theme.textTheme.labelLarge?.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy),
+                style: theme.textTheme.labelLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy]),
               ),
             ),
           ],
@@ -589,7 +640,7 @@ class _PathInputBarContentState extends State<PathInputBarContent> {
             if (value is FileObjectType) {
               var selection = null as String?;
               if (value == FileObjectType.file) {
-                selection = await PathPicker.pickFile();
+                selection = await PathPicker.pickFile(setting.data.mFallbackDirectory);
               }
               if (value == FileObjectType.directory) {
                 selection = await PathPicker.pickDirectory();
@@ -635,7 +686,14 @@ class _EnumerationInputBarContentState extends State<EnumerationInputBarContent>
   // ----------------
 
   @override
+  void dispose() {
+    super.dispose();
+    return;
+  }
+
+  @override
   build(context) {
+    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     var itemList = <DropdownMenuItem<Integer>>[];
     itemList.add(const DropdownMenuItem(
@@ -655,7 +713,7 @@ class _EnumerationInputBarContentState extends State<EnumerationInputBarContent>
       children: [
         Expanded(
           child: DropdownButton<Integer>(
-            style: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy),
+            style: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy]),
             value: this._value,
             hint: const Text('Enumeration ...'),
             items: itemList,

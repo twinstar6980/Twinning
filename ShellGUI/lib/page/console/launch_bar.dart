@@ -1,5 +1,7 @@
 import '/common.dart';
+import '/setting.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // ----------------
 
@@ -20,6 +22,7 @@ class LaunchBarContent extends StatelessWidget {
 
   @override
   build(context) {
+    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return Row(
       children: [
@@ -37,7 +40,7 @@ class LaunchBarContent extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextFormField(
-                        style: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: gConsoleFontFamliy),
+                        style: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy]),
                         decoration: const InputDecoration(
                           isDense: true,
                         ),
@@ -46,9 +49,8 @@ class LaunchBarContent extends StatelessWidget {
                         inputFormatters: const [],
                         initialValue: convertStringListToTextWithLine(this.additionalArgument),
                         onChanged: (value) {
-                          var parsedValue = convertStringListFromTextWithLine(value);
                           this.additionalArgument.clear();
-                          this.additionalArgument.addAll(parsedValue);
+                          this.additionalArgument.addAll(convertStringListFromTextWithLine(value));
                         },
                       ),
                     ],

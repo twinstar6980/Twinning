@@ -571,7 +571,7 @@ namespace TwinStar.Script.KernelX {
 						let data = FileSystem.read_file(data_file);
 						let value = Kernel.ByteArray.default();
 						Kernel.Tool.Data.Hash.MD5.Hash.process(data.view(), value);
-						return integer_from_byte(value.value);
+						return integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'little');
 					}
 
 				}
@@ -586,7 +586,7 @@ namespace TwinStar.Script.KernelX {
 						let data = FileSystem.read_file(data_file);
 						let value = Kernel.ByteArray.default();
 						Kernel.Tool.Data.Hash.FNV.Hash.process(data.view(), value, Kernel.Tool.Data.Hash.FNV.Mode.value(mode), Kernel.Tool.Data.Hash.FNV.BitCount.value(bit_count));
-						return integer_from_byte(value.value);
+						return integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'current');
 					}
 
 					export function hash_s(
@@ -597,7 +597,7 @@ namespace TwinStar.Script.KernelX {
 						let data = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(data_string));
 						let value = Kernel.ByteArray.default();
 						Kernel.Tool.Data.Hash.FNV.Hash.process(data.view(), value, Kernel.Tool.Data.Hash.FNV.Mode.value(mode), Kernel.Tool.Data.Hash.FNV.BitCount.value(bit_count));
-						return integer_from_byte(value.value);
+						return integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'current');
 					}
 
 				}

@@ -1,11 +1,12 @@
 import '/common.dart';
+import '/common/font_helper.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 
 // ----------------
 
-class Setting {
+class SettingData {
 
   ThemeMode    mThemeMode;
   Boolean      mThemeColorInheritFromSystem;
@@ -27,7 +28,7 @@ class Setting {
 
   // ----------------
 
-  Setting(
+  SettingData(
     this.mThemeMode,
     this.mThemeColorInheritFromSystem,
     this.mThemeColorLight,
@@ -47,7 +48,7 @@ class Setting {
     this.mFallbackDirectory,
   );
 
-  Setting.init(
+  SettingData.init(
   ) : this(
     ThemeMode.system,
     true,
@@ -70,84 +71,121 @@ class Setting {
 
   // ----------------
 
-  static
   Void
   fromJson(
     Map<String, dynamic> json,
-    Setting              data,
   ) {
-    data.mThemeMode = ThemeMode.values.byName(json['theme_mode'] as String);
-    data.mThemeColorInheritFromSystem = json['theme_color_inherit_from_system'] as Boolean;
-    data.mThemeColorLight = Color(json['theme_color_light'] as Integer);
-    data.mThemeColorDark = Color(json['theme_color_dark'] as Integer);
-    data.mPrimaryFont = (json['primary_font'] as List<dynamic>).cast<String>();
-    data.mConsoleFont = (json['console_font'] as List<dynamic>).cast<String>();
-    data.mConsoleFontUseLargerSize = json['console_font_use_larger_size'] as Boolean;
-    data.mWindowPositionAlignToCenter = json['window_position_align_to_center'] as Boolean;
-    data.mWindowPositionX = json['window_position_x'] as Integer;
-    data.mWindowPositionY = json['window_position_y'] as Integer;
-    data.mWindowSizeAdhereToDefault = json['window_size_adhere_to_default'] as Boolean;
-    data.mWindowSizeWidth = json['window_size_width'] as Integer;
-    data.mWindowSizeHeight = json['window_size_height'] as Integer;
-    data.mConsoleKernel = json['console_kernel'] as String;
-    data.mConsoleScript = json['console_script'] as String;
-    data.mConsoleArgument = (json['console_argument'] as List<dynamic>).cast<String>();
-    data.mFallbackDirectory = json['fallback_directory'] as String;
+    this.mThemeMode = ThemeMode.values.byName(json['theme_mode'] as String);
+    this.mThemeColorInheritFromSystem = json['theme_color_inherit_from_system'] as Boolean;
+    this.mThemeColorLight = Color(json['theme_color_light'] as Integer);
+    this.mThemeColorDark = Color(json['theme_color_dark'] as Integer);
+    this.mPrimaryFont = (json['primary_font'] as List<dynamic>).cast<String>();
+    this.mConsoleFont = (json['console_font'] as List<dynamic>).cast<String>();
+    this.mConsoleFontUseLargerSize = json['console_font_use_larger_size'] as Boolean;
+    this.mWindowPositionAlignToCenter = json['window_position_align_to_center'] as Boolean;
+    this.mWindowPositionX = json['window_position_x'] as Integer;
+    this.mWindowPositionY = json['window_position_y'] as Integer;
+    this.mWindowSizeAdhereToDefault = json['window_size_adhere_to_default'] as Boolean;
+    this.mWindowSizeWidth = json['window_size_width'] as Integer;
+    this.mWindowSizeHeight = json['window_size_height'] as Integer;
+    this.mConsoleKernel = json['console_kernel'] as String;
+    this.mConsoleScript = json['console_script'] as String;
+    this.mConsoleArgument = (json['console_argument'] as List<dynamic>).cast<String>();
+    this.mFallbackDirectory = json['fallback_directory'] as String;
     return;
   }
 
-  static
   Void
   toJson(
     Map<String, dynamic> json,
-    Setting              data,
   ) {
-    json['theme_mode'] = data.mThemeMode.name;
-    json['theme_color_inherit_from_system'] = data.mThemeColorInheritFromSystem;
-    json['theme_color_light'] = data.mThemeColorLight.value;
-    json['theme_color_dark'] = data.mThemeColorDark.value;
-    json['primary_font'] = data.mPrimaryFont;
-    json['console_font'] = data.mConsoleFont;
-    json['console_font_use_larger_size'] = data.mConsoleFontUseLargerSize;
-    json['window_position_align_to_center'] = data.mWindowPositionAlignToCenter;
-    json['window_position_x'] = data.mWindowPositionX;
-    json['window_position_y'] = data.mWindowPositionY;
-    json['window_size_adhere_to_default'] = data.mWindowSizeAdhereToDefault;
-    json['window_size_width'] = data.mWindowSizeWidth;
-    json['window_size_height'] = data.mWindowSizeHeight;
-    json['console_kernel'] = data.mConsoleKernel;
-    json['console_script'] = data.mConsoleScript;
-    json['console_argument'] = data.mConsoleArgument;
-    json['fallback_directory'] = data.mFallbackDirectory;
+    json['theme_mode'] = this.mThemeMode.name;
+    json['theme_color_inherit_from_system'] = this.mThemeColorInheritFromSystem;
+    json['theme_color_light'] = this.mThemeColorLight.value;
+    json['theme_color_dark'] = this.mThemeColorDark.value;
+    json['primary_font'] = this.mPrimaryFont;
+    json['console_font'] = this.mConsoleFont;
+    json['console_font_use_larger_size'] = this.mConsoleFontUseLargerSize;
+    json['window_position_align_to_center'] = this.mWindowPositionAlignToCenter;
+    json['window_position_x'] = this.mWindowPositionX;
+    json['window_position_y'] = this.mWindowPositionY;
+    json['window_size_adhere_to_default'] = this.mWindowSizeAdhereToDefault;
+    json['window_size_width'] = this.mWindowSizeWidth;
+    json['window_size_height'] = this.mWindowSizeHeight;
+    json['console_kernel'] = this.mConsoleKernel;
+    json['console_script'] = this.mConsoleScript;
+    json['console_argument'] = this.mConsoleArgument;
+    json['fallback_directory'] = this.mFallbackDirectory;
     return;
   }
 
   // ----------------
 
-  static
-  Future<Setting>
+  Future<Void>
   load(
   ) async {
     var file = File('${await queryApplicationSharedDirectory()}/setting.json');
-    file.create();
-    var text = await file.readAsString();
-    var json = jsonDecode(text);
-    var data = Setting.init();
-    Setting.fromJson(json, data);
-    return data;
+    if (!await file.exists()) {
+      return;
+    }
+    var json = jsonDecode(await file.readAsString());
+    this.fromJson(json);
+    return;
   }
 
-  static
   Future<Void>
   save(
-    Setting data,
   ) async {
     var file = File('${await queryApplicationSharedDirectory()}/setting.json');
-    file.create();
     var json = <String, dynamic>{};
-    Setting.toJson(json, data);
-    var text = jsonEncode(json);
-    await file.writeAsString(text);
+    this.toJson(json);
+    await file.writeAsString(jsonEncode(json));
+    return;
+  }
+
+}
+
+class SettingState {
+
+  List<String>  mPrimaryFontFamliy;
+  List<String>  mConsoleFontFamliy;
+  List<String>? mAdditionalArgument;
+
+  // ----------------
+
+  SettingState(
+    this.mPrimaryFontFamliy,
+    this.mConsoleFontFamliy,
+    this.mAdditionalArgument,
+  );
+
+  SettingState.init(
+  ) : this(
+    [],
+    [],
+    null,
+  );
+
+  // ----------------
+
+  Future<Void>
+  apply(
+    SettingData data,
+  ) async {
+    this.mPrimaryFontFamliy.clear();
+    for (var index = 0; index < data.mPrimaryFont.length; index++) {
+      var family = await FontHelper.loadFile(data.mPrimaryFont[index]);
+      if (family != null && !this.mPrimaryFontFamliy.contains(family)) {
+        this.mPrimaryFontFamliy.add(family);
+      }
+    }
+    this.mConsoleFontFamliy.clear();
+    for (var index = 0; index < data.mConsoleFont.length; index++) {
+      var family = await FontHelper.loadFile(data.mConsoleFont[index]);
+      if (family != null && !this.mConsoleFontFamliy.contains(family)) {
+        this.mConsoleFontFamliy.add(family);
+      }
+    }
     return;
   }
 
@@ -155,30 +193,30 @@ class Setting {
 
 class SettingProvider with ChangeNotifier {
 
-  Setting data;
+  SettingData  data;
+  SettingState state;
 
   // ----------------
 
   SettingProvider(
     this.data,
+    this.state,
+  );
+
+  SettingProvider.init(
+  ) : this(
+    SettingData.init(),
+    SettingState.init(),
   );
 
   // ----------------
 
-  Void
-  notify(
+  Future<Void>
+  update(
   ) async {
+    await this.state.apply(this.data);
+    await this.data.save();
     this.notifyListeners();
-    Setting.save(this.data);
-    return;
-  }
-
-  Void
-  set(
-    Setting data,
-  ) async {
-    this.data = data;
-    this.notify();
     return;
   }
 

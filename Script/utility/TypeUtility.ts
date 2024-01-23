@@ -238,26 +238,70 @@ namespace TwinStar.Script {
 		return Math.abs(x - y) < tolerance;
 	}
 
-	export function integer_from_byte(
-		byte_array: ArrayBuffer,
+	export function integer_to_byte_array(
+		value: bigint,
+		size: null | number,
 		endian: 'little' | 'big' | 'current' = 'current',
-	): bigint {
-		let integer_array = new Uint8Array(byte_array);
-		let result = 0n;
+	): Array<bigint> {
+		let array = [] as Array<bigint>;
 		if (endian === 'current') {
 			endian = Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value ? 'big' : 'little';
 		}
-		if (endian === 'little') {
-			for (let index in integer_array) {
-				result = result | BigInt(integer_array[index]) << BigInt(8 * Number(index));
-			}
+		assert_test(value >= 0n);
+		while (value !== 0n) {
+			array.push(value & 0xFFn);
+			value >>= 8n;
+		}
+		if (size !== null) {
+			array = array.slice(0, Math.min(array.length, size));
+			array.push(...new Array<bigint>(size - array.length).fill(0n));
 		}
 		if (endian === 'big') {
-			for (let index in integer_array) {
-				result = result << 8n | BigInt(integer_array[index]);
-			}
+			array = array.reverse();
 		}
-		return result;
+		return array;
+	}
+
+	export function integer_from_byte_array(
+		array: Array<bigint>,
+		size: null | number,
+		endian: 'little' | 'big' | 'current' = 'current',
+	): bigint {
+		let value = 0n;
+		if (endian === 'current') {
+			endian = Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value ? 'big' : 'little';
+		}
+		if (endian === 'big') {
+			array = array.reverse();
+		}
+		if (size !== null) {
+			array = array.slice(0, Math.min(array.length, size));
+		}
+		for (let index in array) {
+			value = value | (array[index] << BigInt(8 * Number(index)));
+		}
+		return value;
+	}
+
+	// ------------------------------------------------
+
+	export function string_to_byte_array(
+		value: string,
+	): Array<bigint> {
+		value = value.replaceAll(' ', '');
+		let array = [] as Array<bigint>;
+		assert_test(value.length % 2 === 0);
+		for (let key_index = 0; key_index < value.length / 2; key_index++) {
+			array.push(BigInt(Number.parseInt(value.substring(key_index * 2, key_index * 2 + 2), 16)));
+		}
+		return array;
+	}
+
+	export function string_from_byte_array(
+		array: Array<bigint>,
+		space: boolean,
+	): string {
+		return array.map((value) => (make_prefix_padded_string(value.toString(16), '0', 2))).join(!space ? '' : ' ');
 	}
 
 	// ------------------------------------------------

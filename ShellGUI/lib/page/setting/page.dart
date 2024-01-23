@@ -1,6 +1,5 @@
 import '/common.dart';
 import '/common/permission_helper.dart';
-import '/common/path_picker.dart';
 import '/setting.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
@@ -91,7 +90,7 @@ class _SettingPageState extends State<SettingPage> {
                                   onChanged: (value) {
                                     value!;
                                     setting.data.mThemeMode = value;
-                                    setting.notify();
+                                    setting.update();
                                   },
                                 ),
                               ),
@@ -151,7 +150,7 @@ class _SettingPageState extends State<SettingPage> {
                                   value: setting.data.mThemeColorInheritFromSystem,
                                   onChanged: (value) {
                                     setting.data.mThemeColorInheritFromSystem = value;
-                                    setting.notify();
+                                    setting.update();
                                   },
                                 ),
                                 const SizedBox(width: 12),
@@ -160,37 +159,47 @@ class _SettingPageState extends State<SettingPage> {
                             ),
                             const SizedBox(height: 8),
                             ListTile(
-                              title: TextFormField(
-                                decoration: const InputDecoration(
-                                  isDense: true,
-                                ),
-                                maxLines: 1,
-                                keyboardType: TextInputType.text,
-                                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
-                                initialValue: setting.data.mThemeColorLight.withOpacity(0.0).value.toRadixString(16).padRight(6, '0'),
-                                onChanged: (value) {
-                                  var parsedValue = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withOpacity(1.0);
-                                  setting.data.mThemeColorLight = parsedValue;
-                                  setting.notify();
+                              title: Focus(
+                                onFocusChange: (value) {
+                                  if (!value) {
+                                    setting.update();
+                                  }
                                 },
+                                child: TextFormField(
+                                  decoration: const InputDecoration(
+                                    isDense: true,
+                                  ),
+                                  maxLines: 1,
+                                  keyboardType: TextInputType.text,
+                                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
+                                  initialValue: setting.data.mThemeColorLight.withOpacity(0.0).value.toRadixString(16).padRight(6, '0'),
+                                  onChanged: (value) {
+                                    setting.data.mThemeColorLight = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withOpacity(1.0);
+                                  },
+                                ),
                               ),
                               leading: const Icon(Icons.light_mode_outlined),
                               trailing: Icon(Icons.circle, color: setting.data.mThemeColorLight),
                             ),
                             ListTile(
-                              title: TextFormField(
-                                decoration: const InputDecoration(
-                                  isDense: true,
-                                ),
-                                maxLines: 1,
-                                keyboardType: TextInputType.text,
-                                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
-                                initialValue: setting.data.mThemeColorDark.withOpacity(0.0).value.toRadixString(16).padRight(6, '0'),
-                                onChanged: (value) {
-                                  var parsedValue = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withOpacity(1.0);
-                                  setting.data.mThemeColorDark = parsedValue;
-                                  setting.notify();
+                              title: Focus(
+                                onFocusChange: (value) {
+                                  if (!value) {
+                                    setting.update();
+                                  }
                                 },
+                                child: TextFormField(
+                                  decoration: const InputDecoration(
+                                    isDense: true,
+                                  ),
+                                  maxLines: 1,
+                                  keyboardType: TextInputType.text,
+                                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
+                                  initialValue: setting.data.mThemeColorDark.withOpacity(0.0).value.toRadixString(16).padRight(6, '0'),
+                                  onChanged: (value) {
+                                    setting.data.mThemeColorDark = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withOpacity(1.0);
+                                  },
+                                ),
                               ),
                               leading: const Icon(Icons.dark_mode_outlined),
                               trailing: Icon(Icons.circle, color: setting.data.mThemeColorDark),
@@ -230,19 +239,24 @@ class _SettingPageState extends State<SettingPage> {
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            TextFormField(
-                              decoration: const InputDecoration(
-                                isDense: true,
-                              ),
-                              maxLines: null,
-                              keyboardType: TextInputType.multiline,
-                              inputFormatters: const [],
-                              initialValue: convertStringListToTextWithLine(setting.data.mPrimaryFont),
-                              onChanged: (value) {
-                                var parsedValue = convertStringListFromTextWithLine(value);
-                                setting.data.mPrimaryFont = parsedValue;
-                                setting.notify();
+                            Focus(
+                              onFocusChange: (value) {
+                                if (!value) {
+                                  setting.update();
+                                }
                               },
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  isDense: true,
+                                ),
+                                maxLines: null,
+                                keyboardType: TextInputType.multiline,
+                                inputFormatters: const [],
+                                initialValue: convertStringListToTextWithLine(setting.data.mPrimaryFont),
+                                onChanged: (value) {
+                                  setting.data.mPrimaryFont = convertStringListFromTextWithLine(value);
+                                },
+                              ),
                             ),
                           ],
                         ),
@@ -290,7 +304,7 @@ class _SettingPageState extends State<SettingPage> {
                                   value: setting.data.mConsoleFontUseLargerSize,
                                   onChanged: (value) {
                                     setting.data.mConsoleFontUseLargerSize = value;
-                                    setting.notify();
+                                    setting.update();
                                   },
                                 ),
                                 const SizedBox(width: 12),
@@ -298,19 +312,24 @@ class _SettingPageState extends State<SettingPage> {
                               ],
                             ),
                             const SizedBox(height: 8),
-                            TextFormField(
-                              decoration: const InputDecoration(
-                                isDense: true,
-                              ),
-                              maxLines: null,
-                              keyboardType: TextInputType.multiline,
-                              inputFormatters: const [],
-                              initialValue: convertStringListToTextWithLine(setting.data.mConsoleFont),
-                              onChanged: (value) {
-                                var parsedValue = convertStringListFromTextWithLine(value);
-                                setting.data.mConsoleFont = parsedValue;
-                                setting.notify();
+                            Focus(
+                              onFocusChange: (value) {
+                                if (!value) {
+                                  setting.update();
+                                }
                               },
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  isDense: true,
+                                ),
+                                maxLines: null,
+                                keyboardType: TextInputType.multiline,
+                                inputFormatters: const [],
+                                initialValue: convertStringListToTextWithLine(setting.data.mConsoleFont),
+                                onChanged: (value) {
+                                  setting.data.mConsoleFont = convertStringListFromTextWithLine(value);
+                                },
+                              ),
                             ),
                           ],
                         ),
@@ -325,6 +344,7 @@ class _SettingPageState extends State<SettingPage> {
                   },
                 ),
                 ListTile(
+                  enabled: Platform.isWindows || Platform.isLinux || Platform.isMacOS,
                   leading: const Icon(Icons.pivot_table_chart_outlined),
                   title: const Text('Window Position'),
                   trailing: SizedBox(
@@ -353,7 +373,7 @@ class _SettingPageState extends State<SettingPage> {
                                   value: setting.data.mWindowPositionAlignToCenter,
                                   onChanged: (value) {
                                     setting.data.mWindowPositionAlignToCenter = value;
-                                    setting.notify();
+                                    setting.update();
                                   },
                                 ),
                                 const SizedBox(width: 12),
@@ -362,19 +382,24 @@ class _SettingPageState extends State<SettingPage> {
                             ),
                             const SizedBox(height: 8),
                             ListTile(
-                              title: TextFormField(
-                                decoration: const InputDecoration(
-                                  isDense: true,
-                                ),
-                                maxLines: 1,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
-                                initialValue: setting.data.mWindowPositionX.toString(),
-                                onChanged: (value) {
-                                  var parsedValue = Integer.tryParse(value) ?? 0;
-                                  setting.data.mWindowPositionX = parsedValue;
-                                  setting.notify();
+                              title: Focus(
+                                onFocusChange: (value) {
+                                  if (!value) {
+                                    setting.update();
+                                  }
                                 },
+                                child: TextFormField(
+                                  decoration: const InputDecoration(
+                                    isDense: true,
+                                  ),
+                                  maxLines: 1,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
+                                  initialValue: setting.data.mWindowPositionX.toString(),
+                                  onChanged: (value) {
+                                    setting.data.mWindowPositionX = Integer.tryParse(value) ?? 0;
+                                  },
+                                ),
                               ),
                               leading: SizedBox(
                                 width: 16,
@@ -385,19 +410,24 @@ class _SettingPageState extends State<SettingPage> {
                               ),
                             ),
                             ListTile(
-                              title: TextFormField(
-                                decoration: const InputDecoration(
-                                  isDense: true,
-                                ),
-                                maxLines: 1,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
-                                initialValue: setting.data.mWindowPositionY.toString(),
-                                onChanged: (value) {
-                                  var parsedValue = Integer.tryParse(value) ?? 0;
-                                  setting.data.mWindowPositionY = parsedValue;
-                                  setting.notify();
+                              title: Focus(
+                                onFocusChange: (value) {
+                                  if (!value) {
+                                    setting.update();
+                                  }
                                 },
+                                child: TextFormField(
+                                  decoration: const InputDecoration(
+                                    isDense: true,
+                                  ),
+                                  maxLines: 1,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
+                                  initialValue: setting.data.mWindowPositionY.toString(),
+                                  onChanged: (value) {
+                                    setting.data.mWindowPositionY = Integer.tryParse(value) ?? 0;
+                                  },
+                                ),
                               ),
                               leading: SizedBox(
                                 width: 16,
@@ -420,6 +450,7 @@ class _SettingPageState extends State<SettingPage> {
                   },
                 ),
                 ListTile(
+                  enabled: Platform.isWindows || Platform.isLinux || Platform.isMacOS,
                   leading: const Icon(Icons.fit_screen_outlined),
                   title: const Text('Window Size'),
                   trailing: SizedBox(
@@ -448,7 +479,7 @@ class _SettingPageState extends State<SettingPage> {
                                   value: setting.data.mWindowSizeAdhereToDefault,
                                   onChanged: (value) {
                                     setting.data.mWindowSizeAdhereToDefault = value;
-                                    setting.notify();
+                                    setting.update();
                                   },
                                 ),
                                 const SizedBox(width: 12),
@@ -457,19 +488,24 @@ class _SettingPageState extends State<SettingPage> {
                             ),
                             const SizedBox(height: 8),
                             ListTile(
-                              title: TextFormField(
-                                decoration: const InputDecoration(
-                                  isDense: true,
-                                ),
-                                maxLines: 1,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
-                                initialValue: setting.data.mWindowSizeWidth.toString(),
-                                onChanged: (value) {
-                                  var parsedValue = Integer.tryParse(value) ?? 0;
-                                  setting.data.mWindowSizeWidth = parsedValue;
-                                  setting.notify();
+                              title: Focus(
+                                onFocusChange: (value) {
+                                  if (!value) {
+                                    setting.update();
+                                  }
                                 },
+                                child: TextFormField(
+                                  decoration: const InputDecoration(
+                                    isDense: true,
+                                  ),
+                                  maxLines: 1,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
+                                  initialValue: setting.data.mWindowSizeWidth.toString(),
+                                  onChanged: (value) {
+                                    setting.data.mWindowSizeWidth = Integer.tryParse(value) ?? 0;
+                                  },
+                                ),
                               ),
                               leading: SizedBox(
                                 width: 16,
@@ -480,19 +516,24 @@ class _SettingPageState extends State<SettingPage> {
                               ),
                             ),
                             ListTile(
-                              title: TextFormField(
-                                decoration: const InputDecoration(
-                                  isDense: true,
-                                ),
-                                maxLines: 1,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
-                                initialValue: setting.data.mWindowSizeHeight.toString(),
-                                onChanged: (value) {
-                                  var parsedValue = Integer.tryParse(value) ?? 0;
-                                  setting.data.mWindowSizeHeight = parsedValue;
-                                  setting.notify();
+                              title: Focus(
+                                onFocusChange: (value) {
+                                  if (!value) {
+                                    setting.update();
+                                  }
                                 },
+                                child: TextFormField(
+                                  decoration: const InputDecoration(
+                                    isDense: true,
+                                  ),
+                                  maxLines: 1,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
+                                  initialValue: setting.data.mWindowSizeHeight.toString(),
+                                  onChanged: (value) {
+                                    setting.data.mWindowSizeHeight = Integer.tryParse(value) ?? 0;
+                                  },
+                                ),
                               ),
                               leading: SizedBox(
                                 width: 16,
@@ -544,18 +585,24 @@ class _SettingPageState extends State<SettingPage> {
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            TextFormField(
-                              decoration: const InputDecoration(
-                                isDense: true,
-                              ),
-                              maxLines: null,
-                              keyboardType: TextInputType.text,
-                              inputFormatters: const [],
-                              initialValue: setting.data.mConsoleKernel,
-                              onChanged: (value) {
-                                setting.data.mConsoleKernel = value;
-                                setting.notify();
+                            Focus(
+                              onFocusChange: (value) {
+                                if (!value) {
+                                  setting.update();
+                                }
                               },
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  isDense: true,
+                                ),
+                                maxLines: null,
+                                keyboardType: TextInputType.text,
+                                inputFormatters: const [],
+                                initialValue: setting.data.mConsoleKernel,
+                                onChanged: (value) {
+                                  setting.data.mConsoleKernel = value;
+                                },
+                              ),
                             ),
                           ],
                         ),
@@ -592,18 +639,24 @@ class _SettingPageState extends State<SettingPage> {
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            TextFormField(
-                              decoration: const InputDecoration(
-                                isDense: true,
-                              ),
-                              maxLines: null,
-                              keyboardType: TextInputType.text,
-                              inputFormatters: const [],
-                              initialValue: setting.data.mConsoleScript,
-                              onChanged: (value) {
-                                setting.data.mConsoleScript = value;
-                                setting.notify();
+                            Focus(
+                              onFocusChange: (value) {
+                                if (!value) {
+                                  setting.update();
+                                }
                               },
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  isDense: true,
+                                ),
+                                maxLines: null,
+                                keyboardType: TextInputType.text,
+                                inputFormatters: const [],
+                                initialValue: setting.data.mConsoleScript,
+                                onChanged: (value) {
+                                  setting.data.mConsoleScript = value;
+                                },
+                              ),
                             ),
                           ],
                         ),
@@ -640,19 +693,24 @@ class _SettingPageState extends State<SettingPage> {
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            TextFormField(
-                              decoration: const InputDecoration(
-                                isDense: true,
-                              ),
-                              maxLines: null,
-                              keyboardType: TextInputType.multiline,
-                              inputFormatters: const [],
-                              initialValue: convertStringListToTextWithLine(setting.data.mConsoleArgument),
-                              onChanged: (value) {
-                                var parsedValue = convertStringListFromTextWithLine(value);
-                                setting.data.mConsoleArgument = parsedValue;
-                                setting.notify();
+                            Focus(
+                              onFocusChange: (value) {
+                                if (!value) {
+                                  setting.update();
+                                }
                               },
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  isDense: true,
+                                ),
+                                maxLines: null,
+                                keyboardType: TextInputType.multiline,
+                                inputFormatters: const [],
+                                initialValue: convertStringListToTextWithLine(setting.data.mConsoleArgument),
+                                onChanged: (value) {
+                                  setting.data.mConsoleArgument = convertStringListFromTextWithLine(value);
+                                },
+                              ),
                             ),
                           ],
                         ),
@@ -669,58 +727,9 @@ class _SettingPageState extends State<SettingPage> {
                 ListTile(
                   dense: true,
                   title: Text(
-                    'Miscellaneous',
+                    'Storage',
                     style: theme.textTheme.titleSmall?.copyWith(color: theme.colorScheme.primary),
                   ),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.folder_copy_outlined),
-                  title: const Text('Fallback Directory'),
-                  trailing: SizedBox(
-                    width: 120,
-                    child: Row(
-                      children: [
-                        Expanded(child: Container()),
-                        Text(
-                          !Directory(setting.data.mFallbackDirectory).existsSync() ? 'Invalid' : 'Valid',
-                          style: theme.textTheme.bodyMedium,
-                        ),
-                      ],
-                    ),
-                  ),
-                  onTap: () async {
-                    await showDialog<String>(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text('Fallback Directory'),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            TextFormField(
-                              decoration: const InputDecoration(
-                                isDense: true,
-                              ),
-                              maxLines: null,
-                              keyboardType: TextInputType.text,
-                              inputFormatters: const [],
-                              initialValue: setting.data.mFallbackDirectory,
-                              onChanged: (value) {
-                                PathPicker.fallbackDirectory = value;
-                                setting.data.mFallbackDirectory = value;
-                                setting.notify();
-                              },
-                            ),
-                          ],
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context, 'OK'),
-                            child: const Text('OK'),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
                 ),
                 ListTile(
                   leading: const Icon(Icons.folder_special_outlined),
@@ -769,6 +778,7 @@ class _SettingPageState extends State<SettingPage> {
                   },
                 ),
                 ListTile(
+                  enabled: Platform.isAndroid,
                   leading: const Icon(Icons.storage_outlined),
                   title: const Text('Storage Permission'),
                   trailing: SizedBox(
@@ -786,6 +796,61 @@ class _SettingPageState extends State<SettingPage> {
                   onTap: () async {
                     this._hasStoragePermission = await PermissionHelper.requestStoragePermission();
                     this.setState(() {});
+                  },
+                ),
+                ListTile(
+                  enabled: Platform.isAndroid,
+                  leading: const Icon(Icons.folder_copy_outlined),
+                  title: const Text('Fallback Directory'),
+                  trailing: SizedBox(
+                    width: 120,
+                    child: Row(
+                      children: [
+                        Expanded(child: Container()),
+                        Text(
+                          !Directory(setting.data.mFallbackDirectory).existsSync() ? 'Invalid' : 'Valid',
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () async {
+                    await showDialog<String>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Fallback Directory'),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Focus(
+                              onFocusChange: (value) {
+                                if (!value) {
+                                  setting.update();
+                                }
+                              },
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  isDense: true,
+                                ),
+                                maxLines: null,
+                                keyboardType: TextInputType.text,
+                                inputFormatters: const [],
+                                initialValue: setting.data.mFallbackDirectory,
+                                onChanged: (value) {
+                                  setting.data.mFallbackDirectory = value;
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'OK'),
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      ),
+                    );
                   },
                 ),
                 const SizedBox(height: 16),

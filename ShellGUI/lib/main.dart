@@ -1,13 +1,11 @@
 import '/common.dart';
 import '/common/platform_method.dart';
-import '/common/custom_font_helper.dart';
 import '/common/notification_helper.dart';
-import '/common/path_picker.dart';
 import '/setting.dart';
-import '/command.dart';
 import '/application.dart';
 import 'dart:io';
-import 'package:flutter/widgets.dart';
+import 'dart:ui';
+import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 
 // ----------------
@@ -17,54 +15,82 @@ main(
   List<String> argument,
 ) async {
   WidgetsFlutterBinding.ensureInitialized();
-  var setting = Setting.init();
+  var navigatorKey = GlobalKey<NavigatorState>();
+  var handleUnhandledException = (
+    Object      exception,
+    StackTrace? stack,
+  ) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (navigatorKey.currentContext != null) {
+        showDialog(
+          context: navigatorKey.currentContext!,
+          builder: (context) => AlertDialog(
+            scrollable: true,
+            title: const Text('Unhandled Exception'),
+            content: SelectionArea(
+              child: Text('${exception}\n${stack}'),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, 'OK'),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    });
+    return;
+  };
+  FlutterError.onError = (details) {
+    FlutterError.presentError(details);
+    handleUnhandledException(details.exception, details.stack);
+    return;
+  };
+  PlatformDispatcher.instance.onError = (error, stack) {
+    handleUnhandledException(error, stack);
+    return true;
+  };
+  var setting = SettingProvider.init();
   try {
-    setting = await Setting.load();
+    await setting.data.load();
   }
-  catch (e) {
-    await Setting.save(setting);
+  catch (e, s) {
+    handleUnhandledException(e, s);
   }
-  var commandSource = <String>[];
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-    commandSource = argument;
-  }
-  if (Platform.isAndroid) {
-    commandSource = await PlatformMethod.getCommand(setting.mFallbackDirectory);
-  }
-  var command = Command.init();
-  if (commandSource.isNotEmpty) {
-    if (commandSource[0] == '-additional_argument') {
-      command.mAdditionalArgument = commandSource.sublist(1);
+  try {
+    var command = <String>[];
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      command = argument;
     }
+    if (Platform.isAndroid || Platform.isIOS) {
+      command = await PlatformMethod.getCommand(setting.data.mFallbackDirectory);
+    }
+    if (command.isNotEmpty) {
+      if (command[0] == '-additional_argument') {
+        setting.state.mAdditionalArgument = command.sublist(1);
+      }
+    }
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      await windowManager.ensureInitialized();
+      if (!setting.data.mWindowPositionAlignToCenter) {
+        await windowManager.setPosition(Offset(setting.data.mWindowPositionX.toDouble(), setting.data.mWindowPositionY.toDouble()));
+      }
+      if (!setting.data.mWindowSizeAdhereToDefault) {
+        await windowManager.setSize(Size(setting.data.mWindowSizeWidth.toDouble(), setting.data.mWindowSizeHeight.toDouble()));
+      }
+      if (setting.data.mWindowPositionAlignToCenter) {
+        await windowManager.center();
+      }
+      await windowManager.waitUntilReadyToShow();
+      await windowManager.show();
+    }
+    await NotificationHelper.initialize();
+    await setting.update();
   }
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-    await WindowManager.instance.ensureInitialized();
-    if (!setting.mWindowPositionAlignToCenter) {
-      await windowManager.setPosition(Offset(setting.mWindowPositionX.toDouble(), setting.mWindowPositionY.toDouble()));
-    }
-    if (!setting.mWindowSizeAdhereToDefault) {
-      await windowManager.setSize(Size(setting.mWindowSizeWidth.toDouble(), setting.mWindowSizeHeight.toDouble()));
-    }
-    if (setting.mWindowPositionAlignToCenter) {
-      await windowManager.center();
-    }
-    await windowManager.waitUntilReadyToShow();
-    await windowManager.show();
+  catch (e, s) {
+    handleUnhandledException(e, s);
   }
-  await NotificationHelper.initialize();
-  for (var index = 0; index < setting.mPrimaryFont.length; index++) {
-    var family = await CustomFontHelper.loadFile(setting.mPrimaryFont[index]);
-    if (family != null && !gPrimaryFontFamliy.contains(family)) {
-      gPrimaryFontFamliy.add(family);
-    }
-  }
-  for (var index = 0; index < setting.mConsoleFont.length; index++) {
-    var family = await CustomFontHelper.loadFile(setting.mConsoleFont[index]);
-    if (family != null && !gConsoleFontFamliy.contains(family)) {
-      gConsoleFontFamliy.add(family);
-    }
-  }
-  PathPicker.fallbackDirectory = setting.mFallbackDirectory;
-  runApp(Application(setting: setting, command: command));
+  runApp(Application(setting: setting, navigator: navigatorKey));
   return;
 }

@@ -124,10 +124,14 @@ function apply_common_setting()
 	set_values('m', m.root, m.system.name, m.architecture.name, m.compiler.name, m.build.name)
 	set_policy("check.auto_ignore_flags", false)
 	set_policy("build.warning", true)
+	if m.system:is('windows', 'android') then
+		set_languages('c17', 'cxx23')
+	end
 	if m.system:is('linux') then
 		set_languages('gnu99', 'cxx23')
-	else
-		set_languages('c17', 'cxx23')
+	end
+	if m.system:is('macintosh', 'iphone') then
+		set_languages('c17', 'cxx20')
 	end
 end
 

@@ -2,7 +2,6 @@ import '/common.dart';
 import '/common/notification_helper.dart';
 import '/common/path_picker.dart';
 import '/setting.dart';
-import '/command.dart';
 import '/bridge/host.dart';
 import '/bridge/launcher.dart';
 import '/page/console/action_bar.dart';
@@ -14,7 +13,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:path/path.dart' as p_path;
 import 'package:path_provider/path_provider.dart';
 
 // ----------------
@@ -64,6 +62,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
   @override
   execute(argument) async {
     assertAlways(this._running);
+    var setting = Provider.of<SettingProvider>(context, listen: false);
     var result = <String>[];
     assertAlways(argument.length >= 1);
     var method = argument[0];
@@ -251,7 +250,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
             break; // ignore: dead_code
           }
           case FileObjectType.file: {
-            selection = await PathPicker.pickFile();
+            selection = await PathPicker.pickFile(setting.data.mFallbackDirectory);
             break;
           }
           case FileObjectType.directory: {
@@ -288,7 +287,13 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
     try {
       this._outputBarListItem.clear();
       if (Platform.isAndroid) {
-        temporaryKernel = p_path.join((await getApplicationCacheDirectory()).path, 'kernel');
+        var temporaryDirectory = normalizePath((await getApplicationCacheDirectory()).path);
+        var temporaryIndex = 0;
+        do {
+          temporaryIndex += 1;
+          temporaryKernel = '${temporaryDirectory}/kernel.${temporaryIndex}';
+        }
+        while (await File(temporaryKernel).exists());
         await File(setting.data.mConsoleKernel).copy(temporaryKernel);
       }
       result = await Launcher.launch(this, temporaryKernel ?? setting.data.mConsoleKernel, setting.data.mConsoleScript, setting.data.mConsoleArgument + this._additionalArgument);
@@ -336,13 +341,20 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
   // ----------------
 
   @override
+  void dispose() {
+    this._outputBarListScrollController.dispose();
+    super.dispose();
+    return;
+  }
+
+  @override
   build(context) {
-    var command = Provider.of<CommandProvider>(context);
-    if (command.data.mAdditionalArgument != null) {
+    var setting = Provider.of<SettingProvider>(context);
+    if (setting.state.mAdditionalArgument != null) {
       () async {
-        this._additionalArgument.addAll(command.data.mAdditionalArgument!);
-        command.data.mAdditionalArgument = null;
-        command.notify();
+        this._additionalArgument.addAll(setting.state.mAdditionalArgument!);
+        setting.state.mAdditionalArgument = null;
+        setting.update();
         await this._launch();
       }();
     }

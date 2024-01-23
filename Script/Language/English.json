@@ -86,6 +86,7 @@
 	"executor.typical:batch_result": "Batch processing done, total {} items, valid {} items, failed {} items",
 	// Executor/Implement/*
 	"范围溢出": "Out of range",
+	"密钥非法": "Illegal key",
 	"密钥长度非法": "Illegal key length",
 	"长度不匹配": "Length not match",
 	"分辨率应大于零": "Resolution should be bigger than zero",

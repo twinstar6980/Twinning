@@ -1,41 +1,42 @@
 package com.twinstar.toolkit.forwarder_for_android
 
 import android.app.Activity
-import android.content.ComponentName
+import android.content.ClipData
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 
 class ForwardActivity : Activity() {
-	
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		val intent = this.intent
-		intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-		val command = mutableListOf<String>()
-		command.add("-additional_argument")
-		if (intent.action == Intent.ACTION_SEND && intent.type != null) {
-			val uri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)!!
-			command.add(uri.toString())
+		try {
+			val uri = mutableListOf<Uri>()
+			if (this.intent.action == Intent.ACTION_SEND) {
+				uri.add(this.intent.getParcelableExtra(Intent.EXTRA_STREAM)!!)
+			}
+			if (this.intent.action == Intent.ACTION_SEND_MULTIPLE) {
+				uri.addAll(this.intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM)!!)
+			}
+			val command = listOf("-additional_argument", *uri.map { item -> item.toString() }.toTypedArray())
+			val intent = Intent().also { intent ->
+				intent.setAction(Intent.ACTION_VIEW)
+				intent.setData(Uri.parse("twinstar.toolkit.shell-gui:/run?${command.joinToString("&") { item -> "command=${Uri.encode(item)}" }}"))
+				intent.setClipData(ClipData.newPlainText("", "").also { clip ->
+					for (item in uri) {
+						clip.addItem(ClipData.Item(item))
+					}
+				})
+				intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+			}
+			this.startActivity(intent)
 		}
-		if (intent.action == Intent.ACTION_SEND_MULTIPLE && intent.type != null) {
-			val uri = intent.getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)!!
-			command.addAll(uri.map { it.toString() })
+		catch (e: Exception) {
+			Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
 		}
-		val forwardIntent = Intent().also {
-			it.setComponent(ComponentName(TARGET_PACKAGE_NAME, "${TARGET_PACKAGE_NAME}.MainActivity"))
-			it.setAction("${TARGET_PACKAGE_NAME}.action.LAUNCH")
-			it.putExtra("command", command.toTypedArray())
-		}
-		this.startActivity(forwardIntent)
 		this.finish()
 		return
 	}
-	
-	companion object {
-		
-		private const val TARGET_PACKAGE_NAME: String = "com.twinstar.toolkit.shell_gui"
-		
-	}
-	
+
 }
