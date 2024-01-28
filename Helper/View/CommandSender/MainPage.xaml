@@ -131,18 +131,21 @@
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Shuffle}}"
 							Click="{x:Bind Controller.uSelectedMethodForward_Click}"
 							Tag="Parallel"
+							ToolTipService.ToolTip="Forward by parallel"
 						/>
 						<Button
 							VerticalAlignment="Center"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RightArrowKeyTime4}}"
 							Click="{x:Bind Controller.uSelectedMethodForward_Click}"
 							Tag="Sequence"
+							ToolTipService.ToolTip="Forward by sequence"
 						/>
 						<Button
 							VerticalAlignment="Center"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Go}}"
 							Click="{x:Bind Controller.uSelectedMethodForward_Click}"
 							Tag="None"
+							ToolTipService.ToolTip="Forward"
 						/>
 					</my:Stack>
 				</my:HeaderBar.Action>
@@ -187,16 +190,19 @@
 										IsEnabled="{x:Bind uBatch_IsEnabled}"
 										IsChecked="{x:Bind uBatch_IsChecked}"
 										Click="{x:Bind uBatch_Click}"
+										ToolTipService.ToolTip="Batch"
 									/>
 									<Button
 										VerticalAlignment="Bottom"
 										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RightArrowKeyTime0}}"
 										Click="{x:Bind uForward_Click}"
+										ToolTipService.ToolTip="Forward"
 									/>
 									<Button
 										VerticalAlignment="Bottom"
 										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Remove}}"
 										Click="{x:Bind uRemove_Click}"
+										ToolTipService.ToolTip="Remove"
 									/>
 								</my:Stack>
 								<my:Divider Height="{StaticResource DividerThickness}" />

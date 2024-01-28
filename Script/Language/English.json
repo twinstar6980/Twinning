@@ -578,12 +578,12 @@
 	"executor.implement:pvz2.text_table.convert:destination_version": "Destination version",
 	"executor.implement:pvz2.text_table.convert:destination_file": "Destination file",
 	// Executor/Implement/pvz2.resource_manifest
-	"executor.implement:pvz2.resource_manifest.new_type_object_notation.encode": "PopCap Resource-Manifest New-Type-Object-Notation Encode",
+	"executor.implement:pvz2.resource_manifest.new_type_object_notation.encode": "PvZ-2 Resource-Manifest New-Type-Object-Notation Encode",
 	"executor.implement:pvz2.resource_manifest.new_type_object_notation.encode:definition_file": "Definition file",
 	"executor.implement:pvz2.resource_manifest.new_type_object_notation.encode:data_file": "Data file",
 	"executor.implement:pvz2.resource_manifest.new_type_object_notation.encode:buffer_size": "Buffer memory size",
 	// 
-	"executor.implement:pvz2.resource_manifest.new_type_object_notation.decode": "PopCap Resource-Manifest New-Type-Object-Notation Decode",
+	"executor.implement:pvz2.resource_manifest.new_type_object_notation.decode": "PvZ-2 Resource-Manifest New-Type-Object-Notation Decode",
 	"executor.implement:pvz2.resource_manifest.new_type_object_notation.decode:data_file": "Data file",
 	"executor.implement:pvz2.resource_manifest.new_type_object_notation.decode:definition_file": "Definition file",
 	// 

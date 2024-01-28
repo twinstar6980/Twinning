@@ -57,10 +57,12 @@
 							ItemsSource="{x:Bind Controller.uApplicationThemeMode_ItemsSource}"
 							SelectedIndex="{x:Bind Controller.uApplicationThemeMode_SelectedIndex}"
 							SelectionChanged="{x:Bind Controller.uApplicationThemeMode_SelectionChanged}"
+							ToolTipService.ToolTip="Theme"
 						/>
 						<Button
 							VerticalAlignment="Center"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Info}}"
+							ToolTipService.ToolTip="More"
 						>
 							<Button.Flyout>
 								<Flyout Placement="BottomEdgeAlignedRight">
@@ -134,6 +136,7 @@
 										HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
 										CornerRadius="8"
 										Click="{x:Bind uOpenAsTab_Click}"
+										ToolTipService.ToolTip="Open as tab"
 									>
 										<my:Stack
 											Padding="24,32"
@@ -164,6 +167,7 @@
 											BorderThickness="1,0,0,1" CornerRadius="0,8,0,8"
 											Content="{community:FontIcon FontSize={StaticResource LargeIconSize}, Glyph={StaticResource FluentIconGlyph.Settings}}"
 											Click="{x:Bind uModuleSetting_Click}"
+											ToolTipService.ToolTip="Setting"
 										/>
 									</my:Stack>
 									<my:Stack
@@ -178,6 +182,7 @@
 											BorderThickness="0,1,0,0" CornerRadius="0,0,0,8"
 											Content="{community:FontIcon FontSize={StaticResource SmallIconSize}, Glyph={StaticResource FluentIconGlyph.Edit}}"
 											Click="{x:Bind uEdit_Click}"
+											ToolTipService.ToolTip="Edit"
 										/>
 										<my:Divider Width="{StaticResource DividerThickness}" />
 										<Button
@@ -187,6 +192,7 @@
 											BorderThickness="0,1,0,0" CornerRadius="0,0,8,0"
 											Content="{community:FontIcon FontSize={StaticResource SmallIconSize}, Glyph={StaticResource FluentIconGlyph.OpenInNewWindow}}"
 											Click="{x:Bind uOpenAsWindow_Click}"
+											ToolTipService.ToolTip="Open as window"
 										/>
 									</my:Stack>
 								</my:Box>
@@ -221,6 +227,7 @@
 							VerticalAlignment="Center"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Add}}"
 							Click="{x:Bind Controller.uAddPinnedJumperItem_Click}"
+							ToolTipService.ToolTip="Add"
 						/>
 					</my:Stack>
 				</my:Stack>
@@ -272,6 +279,7 @@
 										HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
 										CornerRadius="8"
 										Click="{x:Bind uOpenAsTab_Click}"
+										ToolTipService.ToolTip="Open as tab"
 									>
 										<my:Stack
 											Padding="20,20"
@@ -302,6 +310,7 @@
 											BorderThickness="1,0,0,1" CornerRadius="0,0,0,8"
 											Content="{community:FontIcon FontSize={StaticResource SmallIconSize}, Glyph={StaticResource FluentIconGlyph.Remove}}"
 											Click="{x:Bind uPinnedRemove_Click}"
+											ToolTipService.ToolTip="Remove"
 										/>
 										<my:Divider Width="{StaticResource DividerThickness}" />
 										<Button
@@ -310,6 +319,7 @@
 											BorderThickness="0,0,0,1" CornerRadius="0,0,0,0"
 											Content="{community:FontIcon FontSize={StaticResource SmallIconSize}, Glyph={StaticResource FluentIconGlyph.Edit}}"
 											Click="{x:Bind uEdit_Click}"
+											ToolTipService.ToolTip="Edit"
 										/>
 										<my:Divider Width="{StaticResource DividerThickness}" />
 										<Button
@@ -318,6 +328,7 @@
 											BorderThickness="0,0,0,1" CornerRadius="0,8,0,0"
 											Content="{community:FontIcon FontSize={StaticResource SmallIconSize}, Glyph={StaticResource FluentIconGlyph.OpenInNewWindow}}"
 											Click="{x:Bind uOpenAsWindow_Click}"
+											ToolTipService.ToolTip="Open as window"
 										/>
 									</my:Stack>
 								</my:Box>
@@ -352,6 +363,7 @@
 							VerticalAlignment="Center"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Clear}}"
 							Click="{x:Bind Controller.uClearRecentJumperItem_Click}"
+							ToolTipService.ToolTip="Clear"
 						/>
 					</my:Stack>
 				</my:Stack>
@@ -403,6 +415,7 @@
 										HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
 										CornerRadius="8"
 										Click="{x:Bind uOpenAsTab_Click}"
+										ToolTipService.ToolTip="Open as tab"
 									>
 										<my:Stack
 											Padding="20,20"
@@ -433,6 +446,7 @@
 											BorderThickness="1,0,0,1" CornerRadius="0,0,0,8"
 											Content="{community:FontIcon FontSize={StaticResource SmallIconSize}, Glyph={StaticResource FluentIconGlyph.Pin}}"
 											Click="{x:Bind uRecentPin_Click}"
+											ToolTipService.ToolTip="Pin"
 										/>
 										<my:Divider Width="{StaticResource DividerThickness}" />
 										<Button
@@ -441,6 +455,7 @@
 											BorderThickness="0,0,0,1" CornerRadius="0,0,0,0"
 											Content="{community:FontIcon FontSize={StaticResource SmallIconSize}, Glyph={StaticResource FluentIconGlyph.Remove}}"
 											Click="{x:Bind uRecentRemove_Click}"
+											ToolTipService.ToolTip="Remove"
 										/>
 										<my:Divider Width="{StaticResource DividerThickness}" />
 										<Button
@@ -449,6 +464,7 @@
 											BorderThickness="0,0,0,1" CornerRadius="0,0,0,0"
 											Content="{community:FontIcon FontSize={StaticResource SmallIconSize}, Glyph={StaticResource FluentIconGlyph.Edit}}"
 											Click="{x:Bind uEdit_Click}"
+											ToolTipService.ToolTip="Edit"
 										/>
 										<my:Divider Width="{StaticResource DividerThickness}" />
 										<Button
@@ -457,6 +473,7 @@
 											BorderThickness="0,0,0,1" CornerRadius="0,8,0,0"
 											Content="{community:FontIcon FontSize={StaticResource SmallIconSize}, Glyph={StaticResource FluentIconGlyph.OpenInNewWindow}}"
 											Click="{x:Bind uOpenAsWindow_Click}"
+											ToolTipService.ToolTip="Open as window"
 										/>
 									</my:Stack>
 								</my:Box>

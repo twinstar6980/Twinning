@@ -578,12 +578,12 @@
 	"executor.implement:pvz2.text_table.convert:destination_version": "目的版本",
 	"executor.implement:pvz2.text_table.convert:destination_file": "目的文件",
 	// Executor/Implement/pvz2.resource_manifest
-	"executor.implement:pvz2.resource_manifest.new_type_object_notation.encode": "PopCap Resource-Manifest New-Type-Object-Notation 编码",
+	"executor.implement:pvz2.resource_manifest.new_type_object_notation.encode": "PvZ-2 Resource-Manifest New-Type-Object-Notation 编码",
 	"executor.implement:pvz2.resource_manifest.new_type_object_notation.encode:definition_file": "定义文件",
 	"executor.implement:pvz2.resource_manifest.new_type_object_notation.encode:data_file": "数据文件",
 	"executor.implement:pvz2.resource_manifest.new_type_object_notation.encode:buffer_size": "内存缓冲区大小",
 	// 
-	"executor.implement:pvz2.resource_manifest.new_type_object_notation.decode": "PopCap Resource-Manifest New-Type-Object-Notation 解码",
+	"executor.implement:pvz2.resource_manifest.new_type_object_notation.decode": "PvZ-2 Resource-Manifest New-Type-Object-Notation 解码",
 	"executor.implement:pvz2.resource_manifest.new_type_object_notation.decode:data_file": "数据文件",
 	"executor.implement:pvz2.resource_manifest.new_type_object_notation.decode:definition_file": "定义文件",
 	// 

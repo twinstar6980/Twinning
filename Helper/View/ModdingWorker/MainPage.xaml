@@ -38,6 +38,7 @@
 					>
 						<Button
 							VerticalAlignment="Center"
+							ToolTipService.ToolTip="Additional argument"
 						>
 							<my:Stack
 								Padding="0,0"
@@ -73,6 +74,7 @@
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.ScrollUpDown}}"
 							IsChecked="{x:Bind Controller.uAutomaticScroll_IsChecked}"
 							Click="{x:Bind Controller.uAutomaticScroll_Click}"
+							ToolTipService.ToolTip="Automatic scroll"
 						/>
 					</my:Stack>
 				</my:HeaderBar.Action>

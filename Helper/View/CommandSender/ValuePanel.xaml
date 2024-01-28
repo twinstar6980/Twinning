@@ -178,6 +178,7 @@
 										Content="{community:FontIcon FontSize={StaticResource SmallIconSize}, Glyph={StaticResource FluentIconGlyph.OpenInNewWindow}}"
 										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
 										Padding="6,0,13,0"
+										ToolTipService.ToolTip="Pick in window"
 									>
 										<DropDownButton.Flyout>
 											<MenuFlyout Placement="BottomEdgeAlignedRight">

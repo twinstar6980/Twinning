@@ -48,6 +48,7 @@
 							VerticalAlignment="Center"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Remove}}"
 							Click="{x:Bind uRemove_Click}"
+							ToolTipService.ToolTip="Remove"
 						/>
 					</my:Stack>
 				</DataTemplate>
@@ -66,6 +67,7 @@
 				VerticalAlignment="Center"
 				Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Add}}"
 				Click="{x:Bind Controller.uAppend_Click}"
+				ToolTipService.ToolTip="Append"
 			/>
 		</my:Stack>
 	</my:Stack>

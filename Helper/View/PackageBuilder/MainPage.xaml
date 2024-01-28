@@ -60,6 +60,7 @@
 							VerticalAlignment="Center"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.ProvisioningPackage}}"
 							Style="{x:Bind Controller.uWorkerButton_Style}"
+							ToolTipService.ToolTip="Worker session"
 						>
 							<Button.Flyout>
 								<Flyout Placement="Full">
@@ -79,6 +80,7 @@
 							VerticalAlignment="Center"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.More}}"
 							IsEnabled="{x:Bind Controller.uLoadedAction_IsEnabled}"
+							ToolTipService.ToolTip="Action"
 						>
 							<Button.Flyout>
 								<MenuFlyout Placement="BottomEdgeAlignedRight">
@@ -180,12 +182,14 @@
 						VerticalAlignment="Center"
 						Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.OpenLocal}}"
 						Click="{x:Bind Controller.uProjectOpen_Click}"
+						ToolTipService.ToolTip="Open"
 					/>
 					<Button
 						VerticalAlignment="Center"
 						Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Clear}}"
 						Click="{x:Bind Controller.uProjectClose_Click}"
 						IsEnabled="{x:Bind Controller.uLoadedAction_IsEnabled}"
+						ToolTipService.ToolTip="Close"
 					/>
 				</my:Stack>
 			</my:Stack>
@@ -205,11 +209,13 @@
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Add}}"
 							Click="{x:Bind Controller.uPackageActionAppend_Click}"
 							IsEnabled="{x:Bind Controller.uLoadedAction_IsEnabled}"
+							ToolTipService.ToolTip="Append"
 						/>
 						<Button
 							VerticalAlignment="Center"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.More}}"
 							IsEnabled="{x:Bind Controller.uLoadedAction_IsEnabled}"
+							ToolTipService.ToolTip="Action"
 						>
 							<Button.Flyout>
 								<MenuFlyout Placement="BottomEdgeAlignedRight">
@@ -347,11 +353,13 @@
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Add}}"
 							Click="{x:Bind Controller.uPartActionAppend_Click}"
 							IsEnabled="{x:Bind Controller.uLoadedAction_IsEnabled}"
+							ToolTipService.ToolTip="Append"
 						/>
 						<Button
 							VerticalAlignment="Center"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.More}}"
 							IsEnabled="{x:Bind Controller.uLoadedAction_IsEnabled}"
+							ToolTipService.ToolTip="Action"
 						>
 							<Button.Flyout>
 								<MenuFlyout Placement="BottomEdgeAlignedRight">
@@ -585,6 +593,7 @@
 							VerticalAlignment="Center"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.More}}"
 							IsEnabled="{x:Bind Controller.uLoadedAction_IsEnabled}"
+							ToolTipService.ToolTip="Action"
 						>
 							<Button.Flyout>
 								<MenuFlyout Placement="BottomEdgeAlignedRight">
@@ -699,6 +708,7 @@
 										VerticalAlignment="Center"
 										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Add}}"
 										Click="{x:Bind uActionAppend_Click}"
+										ToolTipService.ToolTip="Append"
 									/>
 								</my:Stack>
 							</DataTemplate>
@@ -848,6 +858,7 @@
 							VerticalAlignment="Center"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.More}}"
 							IsEnabled="{x:Bind Controller.uLoadedAction_IsEnabled}"
+							ToolTipService.ToolTip="Action"
 						>
 							<Button.Flyout>
 								<MenuFlyout Placement="BottomEdgeAlignedRight">
@@ -961,6 +972,7 @@
 										VerticalAlignment="Center"
 										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Add}}"
 										Click="{x:Bind uActionAppend_Click}"
+										ToolTipService.ToolTip="Append"
 									/>
 								</my:Stack>
 							</DataTemplate>
@@ -1008,6 +1020,7 @@
 									VerticalAlignment="Center"
 									HorizontalContentAlignment="Stretch"
 									Click="{x:Bind uType_Click}"
+									ToolTipService.ToolTip="Type"
 								>
 									<my:Stack
 										Padding="0,0"
@@ -1081,6 +1094,7 @@
 									VerticalAlignment="Center"
 									Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Tag}}"
 									Style="{x:Bind uCategory_Style}"
+									ToolTipService.ToolTip="Category"
 								>
 									<Button.Flyout>
 										<Flyout Placement="BottomEdgeAlignedRight" FlyoutPresenterStyle="{StaticResource CompatFlyoutPresenterStyle}" Closed="{x:Bind uCategoryFlyout_Closed}">

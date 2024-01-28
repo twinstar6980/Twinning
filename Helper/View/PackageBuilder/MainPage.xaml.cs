@@ -966,7 +966,7 @@ namespace Helper.View.PackageBuilder {
 			var destinationDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, destinationResource);
 			GF.AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
 			var destinationSetting = new ResourceSetting() {
-				Category = {
+				Category = new () {
 					Resolution = null,
 					Locale = null,
 				},

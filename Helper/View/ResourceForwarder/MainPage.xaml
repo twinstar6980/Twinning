@@ -42,9 +42,11 @@
 							Visibility="{x:Bind Controller.uAutomaticClose_Visibility}"
 							Click="{x:Bind Controller.uAutomaticClose_Click}"
 							Style="{ThemeResource AccentButtonStyle}"
+							ToolTipService.ToolTip="Automatic close"
 						/>
 						<Button
 							VerticalAlignment="Center"
+							ToolTipService.ToolTip="Input item"
 						>
 							<my:Stack
 								Padding="0,0"
@@ -100,24 +102,28 @@
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Pin}}"
 							IsChecked="{x:Bind Controller.uRemainInput_IsChecked}"
 							Click="{x:Bind Controller.uRemainInput_Click}"
+							ToolTipService.ToolTip="Remain input"
 						/>
 						<ToggleButton
 							VerticalAlignment="Center"
 							IsChecked="{x:Bind Controller.uEnableBatch_IsChecked}"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.MapLayers}}"
 							Click="{x:Bind Controller.uEnableBatch_Click}"
+							ToolTipService.ToolTip="Enable batch"
 						/>
 						<ToggleButton
 							VerticalAlignment="Center"
 							IsChecked="{x:Bind Controller.uEnableFilter_IsChecked}"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Filter}}"
 							Click="{x:Bind Controller.uEnableFilter_Click}"
+							ToolTipService.ToolTip="Enable filter"
 						/>
 						<ToggleButton
 							VerticalAlignment="Center"
 							IsChecked="{x:Bind Controller.uParallelExecute_IsChecked}"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Shuffle}}"
 							Click="{x:Bind Controller.uParallelExecute_Click}"
+							ToolTipService.ToolTip="Parallel execute"
 						/>
 					</my:Stack>
 				</my:HeaderBar.Action>
@@ -190,6 +196,7 @@
 											<Button
 												VerticalAlignment="Center"
 												Flyout="{x:Bind uPreset_Flyout}"
+												ToolTipService.ToolTip="Preset"
 											>
 												<my:Stack
 													Padding="0,0"

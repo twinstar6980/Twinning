@@ -54,6 +54,9 @@
 /ForwarderForAndroid/local.properties
 /ForwarderForAndroid/keystore.properties
 
+/ForwarderForIphone/**/xcuserdata
+/ForwarderForIphone/**/xcshareddata
+
 /Helper/bin
 /Helper/obj
 /Helper/Helper.csproj.user

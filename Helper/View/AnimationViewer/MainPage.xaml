@@ -109,6 +109,7 @@
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Clear}}"
 							IsEnabled="{x:Bind Controller.uClearSource_IsEnabled}"
 							Click="{x:Bind Controller.uClearSource_Click}"
+							ToolTipService.ToolTip="Clear"
 						/>
 					</my:Stack>
 				</my:HeaderBar.Action>
@@ -156,6 +157,7 @@
 								VerticalAlignment="Center"
 								Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.OpenFile}}"
 								Click="{x:Bind Controller.uAnimationFileSourcePick_Click}"
+								ToolTipService.ToolTip="Pick in window"
 							/>
 						</my:Stack>
 						<my:Stack
@@ -175,6 +177,7 @@
 								Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.OpenLocal}}"
 								IsEnabled="{x:Bind Controller.uImageDirectorySourcePick_IsEnabled}"
 								Click="{x:Bind Controller.uImageDirectorySourcePick_Click}"
+								ToolTipService.ToolTip="Pick in window"
 							/>
 						</my:Stack>
 					</my:Stack>
@@ -431,24 +434,28 @@
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Touch}}"
 							IsChecked="{x:Bind Controller.uImmediateSelect_IsChecked}"
 							Click="{x:Bind Controller.uImmediateSelect_Click}"
+							ToolTipService.ToolTip="Immediate select"
 						/>
 						<ToggleButton
 							VerticalAlignment="Center"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RightArrowKeyTime2}}"
 							IsChecked="{x:Bind Controller.uAutomaticPlay_IsChecked}"
 							Click="{x:Bind Controller.uAutomaticPlay_Click}"
+							ToolTipService.ToolTip="Automatic play"
 						/>
 						<ToggleButton
 							VerticalAlignment="Center"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RepeatAll}}"
 							IsChecked="{x:Bind Controller.uRepeatPlay_IsChecked}"
 							Click="{x:Bind Controller.uRepeatPlay_Click}"
+							ToolTipService.ToolTip="Repeat play"
 						/>
 						<ToggleButton
 							VerticalAlignment="Center"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Pinned}}"
 							IsChecked="{x:Bind Controller.uRemainFrameRate_IsChecked}"
 							Click="{x:Bind Controller.uRemainFrameRate_Click}"
+							ToolTipService.ToolTip="Remain frame rate"
 						/>
 						<FontIcon
 							Width="32" Height="32"
@@ -480,12 +487,14 @@
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.LeftArrowKeyTime0}}"
 							IsEnabled="{x:Bind Controller.uWorkingSpritePrevious_IsEnabled}"
 							Click="{x:Bind Controller.uWorkingSpritePrevious_Click}"
+							ToolTipService.ToolTip="Previous"
 						/>
 						<Button
 							Width="48" Height="NaN"
 							VerticalAlignment="Center"
 							IsEnabled="{x:Bind Controller.uWorkingSpriteState_IsEnabled}"
 							Click="{x:Bind Controller.uWorkingSpriteState_Click}"
+							ToolTipService.ToolTip="Pause | Resume"
 						>
 							<FontIcon
 								FontSize="{StaticResource MediumIconSize}"
@@ -498,6 +507,7 @@
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RightArrowKeyTime0}}"
 							IsEnabled="{x:Bind Controller.uWorkingSpriteNext_IsEnabled}"
 							Click="{x:Bind Controller.uWorkingSpriteNext_Click}"
+							ToolTipService.ToolTip="Next"
 						/>
 					</my:Stack>
 					<my:Stack
@@ -627,6 +637,7 @@
 								Style="{StaticResource SmallSquareToggleButton}"
 								IsChecked="{x:Bind uToggle_IsChecked}"
 								Click="{x:Bind uToggle_Click}"
+								ToolTipService.ToolTip="Toggle"
 							>
 								<FontIcon
 									FontSize="{StaticResource MediumIconSize}"
@@ -686,6 +697,7 @@
 								Style="{StaticResource SmallSquareToggleButton}"
 								IsChecked="{x:Bind uToggle_IsChecked}"
 								Click="{x:Bind uToggle_Click}"
+								ToolTipService.ToolTip="Toggle"
 							>
 								<FontIcon
 									FontSize="{StaticResource MediumIconSize}"

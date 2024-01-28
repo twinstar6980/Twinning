@@ -255,6 +255,7 @@
 										VerticalAlignment="Stretch"
 										HorizontalContentAlignment="Center"
 										Content="{community:FontIcon FontSize={StaticResource SmallIconSize}, Glyph={StaticResource FluentIconGlyph.StorageOptical}}"
+										ToolTipService.ToolTip="Command"
 									>
 										<DropDownButton.Flyout>
 											<MenuFlyout Placement="TopEdgeAlignedRight">
@@ -351,6 +352,7 @@
 			Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Send}}"
 			IsEnabled="{x:Bind Controller.uSubmit_IsEnabled}"
 			Click="{x:Bind Controller.uSubmit_Click}"
+			ToolTipService.ToolTip="Submit"
 		/>
 	</my:Stack>
 </local:CustomControl>

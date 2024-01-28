@@ -136,6 +136,7 @@
 						VerticalAlignment="Top"
 						Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.OpenInNewWindow}}"
 						Click="{x:Bind Controller.uAlternativeLaunchScriptPick_Click}"
+						ToolTipService.ToolTip="Pick in window"
 					/>
 				</my:Stack>
 			</my:SettingItem.Action>
