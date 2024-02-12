@@ -27,8 +27,8 @@ android {
 		applicationId = "com.twinstar.toolkit.forwarder_for_android"
 		minSdk = 28
 		targetSdk = 34
-		versionCode = 6
-		versionName = "6.0.0"
+		versionCode = 7
+		versionName = "7.0.0"
 		
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 	}

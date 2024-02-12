@@ -1,5 +1,5 @@
 import '/common.dart';
-import '/common/font_helper.dart';
+import '/utility/font_helper.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -71,8 +71,7 @@ class SettingData {
 
   // ----------------
 
-  Void
-  fromJson(
+  Void fromJson(
     Map<String, dynamic> json,
   ) {
     this.mThemeMode = ThemeMode.values.byName(json['theme_mode'] as String);
@@ -95,8 +94,7 @@ class SettingData {
     return;
   }
 
-  Void
-  toJson(
+  Void toJson(
     Map<String, dynamic> json,
   ) {
     json['theme_mode'] = this.mThemeMode.name;
@@ -121,8 +119,7 @@ class SettingData {
 
   // ----------------
 
-  Future<Void>
-  load(
+  Future<Void> load(
   ) async {
     var file = File('${await queryApplicationSharedDirectory()}/setting.json');
     if (!await file.exists()) {
@@ -133,8 +130,7 @@ class SettingData {
     return;
   }
 
-  Future<Void>
-  save(
+  Future<Void> save(
   ) async {
     var file = File('${await queryApplicationSharedDirectory()}/setting.json');
     var json = <String, dynamic>{};
@@ -168,8 +164,7 @@ class SettingState {
 
   // ----------------
 
-  Future<Void>
-  apply(
+  Future<Void> apply(
     SettingData data,
   ) async {
     this.mPrimaryFontFamliy.clear();
@@ -211,8 +206,7 @@ class SettingProvider with ChangeNotifier {
 
   // ----------------
 
-  Future<Void>
-  update(
+  Future<Void> update(
   ) async {
     await this.state.apply(this.data);
     await this.data.save();

@@ -1,5 +1,5 @@
 import '/common.dart';
-import '/common/path_picker.dart';
+import '/utility/path_picker.dart';
 import '/setting.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
@@ -132,7 +132,7 @@ class _PauseInputBarContentState extends State<PauseInputBarContent> {
   // ----------------
 
   @override
-  void dispose() {
+  dispose() {
     super.dispose();
     return;
   }
@@ -181,7 +181,7 @@ class _BooleanInputBarContentState extends State<BooleanInputBarContent> {
   // ----------------
 
   @override
-  void dispose() {
+  dispose() {
     super.dispose();
     return;
   }
@@ -270,7 +270,7 @@ class _IntegerInputBarContentState extends State<IntegerInputBarContent> {
   // ----------------
 
   @override
-  void dispose() {
+  dispose() {
     this._controller.dispose();
     super.dispose();
     return;
@@ -332,7 +332,7 @@ class _FloaterInputBarContentState extends State<FloaterInputBarContent> {
   // ----------------
 
   @override
-  void dispose() {
+  dispose() {
     this._controller.dispose();
     super.dispose();
     return;
@@ -395,7 +395,7 @@ class _SizeInputBarContentState extends State<SizeInputBarContent> {
   // ----------------
 
   @override
-  void dispose() {
+  dispose() {
     this._controller.dispose();
     super.dispose();
     return;
@@ -491,7 +491,7 @@ class _StringInputBarContentState extends State<StringInputBarContent> {
   // ----------------
 
   @override
-  void dispose() {
+  dispose() {
     this._controller.dispose();
     super.dispose();
     return;
@@ -553,7 +553,7 @@ class _PathInputBarContentState extends State<PathInputBarContent> {
   // ----------------
 
   @override
-  void dispose() {
+  dispose() {
     this._controller.dispose();
     super.dispose();
     return;
@@ -686,7 +686,7 @@ class _EnumerationInputBarContentState extends State<EnumerationInputBarContent>
   // ----------------
 
   @override
-  void dispose() {
+  dispose() {
     super.dispose();
     return;
   }

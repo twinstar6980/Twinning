@@ -2,11 +2,21 @@ import SwiftUI
 
 @main
 struct mainApp: App {
-	init() {
-		self.error = false
+
+	// MARK: - variable
+
+	private let exception: String
+
+	// MARK: - construct
+
+ 	public init(
+ 	) {
 		do {
-			let dataDirectory = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true).first! + "/Containers/" + Bundle.main.bundleIdentifier! + ".extension/Data/Documents"
-			let scriptFile = dataDirectory + "/forward.sh"
+			guard let libraryDirectory = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true).first else {
+				throw NSError(domain: "failed to get library directory", code: 0)
+			}
+			let dataDirectory = "\(libraryDirectory)/Containers/\(Bundle.main.bundleIdentifier!).extension/Data/Documents"
+			let scriptFile = "\(dataDirectory)/forward.sh"
 			var pathIsDirectory = ObjCBool(false)
 			if FileManager.default.fileExists(atPath: dataDirectory, isDirectory: &pathIsDirectory) {
 				if !pathIsDirectory.boolValue {
@@ -27,16 +37,22 @@ struct mainApp: App {
 			if !FileManager.default.isExecutableFile(atPath: scriptFile) {
 				try FileManager.default.setAttributes([.posixPermissions: NSNumber(0o744)], ofItemAtPath: scriptFile)
 			}
-			NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: dataDirectory)
+			if !NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: dataDirectory) {
+				throw NSError(domain: "failed to reveal data directory", code: 0)
+			}
+			exit(0)
 		}
 		catch {
-			self.error = true
+			self.exception = error.localizedDescription
 		}
-	}
-	var body: some Scene {
+ 	}
+
+ 	// MARK: - view
+
+	public var body: some Scene {
 		WindowGroup {
-			Text(!self.error ? "succeeded" : "failed")
+			Text(self.exception)
 		}
 	}
-	var error: Bool
+
 }

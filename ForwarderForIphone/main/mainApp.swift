@@ -2,10 +2,21 @@ import SwiftUI
 
 @main
 struct mainApp: App {
-	init() {
+
+	// MARK: - variable
+
+	// MARK: - construct
+
+	public init(
+	) {
+		exit(0)
 	}
-	var body: some Scene {
+
+	// MARK: - view
+
+	public var body: some Scene {
 		WindowGroup {
 		}
 	}
+
 }

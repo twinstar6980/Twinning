@@ -23,8 +23,7 @@ class _HomePageState extends State<HomePage> {
   List<Widget> _page = [const ConsolePage(), const SettingPage()];
   Integer      _pageIndex = 0;
 
-  Void
-  _pageIndexSet(
+  Void _pageIndexSet(
     Integer value,
   ) {
     this._pageIndex = value;

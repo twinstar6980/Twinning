@@ -100,10 +100,10 @@ namespace TwinStar::ForwarderForWindows {
 				create_process(program, argument);
 			}
 			catch (std::exception & e) {
-				MessageBoxA(nullptr, e.what(), "Exception", MB_ICONERROR | MB_OK);
+				MessageBoxA(nullptr, std::format("{} : {}", typeid(e).name(), e.what()).c_str(), "Exception", MB_ICONERROR | MB_OK);
 			}
 			catch (...) {
-				MessageBoxA(nullptr, "unknown", "Exception", MB_ICONERROR | MB_OK);
+				MessageBoxA(nullptr, "?", "Exception", MB_ICONERROR | MB_OK);
 			}
 			return S_OK;
 		}

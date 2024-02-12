@@ -9,16 +9,11 @@ import 'package:ffi/ffi.dart' as ffi;
 
 class Invoker {
 
-  static
-  List<String> Function(List<String>)? _callbackImplement = null;
-  static
-  ffi.Pointer<Interface.StringList>?   _callbackResultHandler = null;
-  static
-  ffi.Pointer<Interface.String>?       _callbackExceptionHandler = null;
+  static List<String> Function(List<String>)? _callbackImplement = null;
+  static ffi.Pointer<Interface.StringList>?   _callbackResultHandler = null;
+  static ffi.Pointer<Interface.String>?       _callbackExceptionHandler = null;
 
-  static
-  ffi.Pointer<Interface.String>
-  _callbackProxy(
+  static ffi.Pointer<Interface.String> _callbackProxy(
     ffi.Pointer<ffi.Pointer<Interface.StringList>> argument,
     ffi.Pointer<ffi.Pointer<Interface.StringList>> result,
   ) {
@@ -40,9 +35,7 @@ class Invoker {
 
   // ----------------
 
-  static
-  String
-  execute(
+  static String execute(
     Library                             library,
     List<String> Function(List<String>) callback,
     String                              script,

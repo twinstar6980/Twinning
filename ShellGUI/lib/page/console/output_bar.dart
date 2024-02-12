@@ -27,13 +27,13 @@ class MessageOutputBar extends StatelessWidget {
   build(context) {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
-    var typeColor = this.type.color(theme);
-    var titleTextStyle = (!setting.data.mConsoleFontUseLargerSize ? theme.textTheme.titleSmall : theme.textTheme.titleMedium)?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy]);
-    var descriptionTextStyle = (!setting.data.mConsoleFontUseLargerSize ? theme.textTheme.bodySmall : theme.textTheme.bodyMedium)?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy], color: theme.colorScheme.secondary);
+    var cardColor = MessageType.color(this.type, theme);
+    var titleStyle = (!setting.data.mConsoleFontUseLargerSize ? theme.textTheme.titleSmall : theme.textTheme.titleMedium)?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy]);
+    var descriptionStyle = (!setting.data.mConsoleFontUseLargerSize ? theme.textTheme.bodySmall : theme.textTheme.bodyMedium)?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy], color: theme.colorScheme.secondary);
     return Card(
       margin: const EdgeInsets.fromLTRB(1, 0, 1, 0),
       elevation: 1,
-      color: Color.alphaBlend(typeColor.withOpacity(0.025), theme.colorScheme.surface),
+      color: Color.alphaBlend(cardColor.withOpacity(0.025), theme.colorScheme.surface),
       child: Container(
         padding: const EdgeInsets.all(8),
         child: Row(
@@ -44,12 +44,12 @@ class MessageOutputBar extends StatelessWidget {
               children: [
                 Icon(
                   Icons.circle,
-                  color: Color.alphaBlend(typeColor.withOpacity(0.50), theme.colorScheme.onSurface),
+                  color: Color.alphaBlend(cardColor.withOpacity(0.50), theme.colorScheme.onSurface),
                   size: 12,
                 ),
                 Text(
                   '',
-                  style: titleTextStyle,
+                  style: titleStyle,
                 ),
               ],
             ),
@@ -61,14 +61,14 @@ class MessageOutputBar extends StatelessWidget {
                   children: [
                     Text(
                       this.title,
-                      style: titleTextStyle,
+                      style: titleStyle,
                     ),
                     ...this.description.map(
                       (value) => Container(
                         padding: const EdgeInsets.fromLTRB(0, 4, 0, 0),
                         child: Text(
                           value,
-                          style: descriptionTextStyle,
+                          style: descriptionStyle,
                         ),
                       ),
                     ),

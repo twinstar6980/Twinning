@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import android.os.Bundle
 import android.os.Environment
 import android.provider.OpenableColumns
 import android.provider.Settings
@@ -28,9 +27,9 @@ class CustomMethodChannel {
 
 	private val host: FlutterActivity
 
-	private val command: MutableList<String>
+	private var continuation: Channel<Any?>
 
-	private val channel: Channel<Any?>
+	private var command: MutableList<String>
 
 	// endregion
 
@@ -40,17 +39,24 @@ class CustomMethodChannel {
 		host: FlutterActivity,
 	) {
 		this.host = host
+		this.continuation = Channel()
 		this.command = mutableListOf()
-		this.channel = Channel()
 	}
 
 	// endregion
 
 	// region register
 
-	public fun register_onCreate(
-		savedInstanceState: Bundle?,
-	) {
+	public fun register_onConfigureFlutterEngine(
+		flutterEngine: FlutterEngine,
+	): Unit {
+		MethodChannel(
+			flutterEngine.dartExecutor.binaryMessenger,
+			"com.twinstar.toolkit.shell_gui.CustomMethodChannel",
+		).setMethodCallHandler { call, result ->
+			CoroutineScope(Dispatchers.Main).launch { this@CustomMethodChannel.handle(call, result) }
+			return@setMethodCallHandler
+		}
 		val link = this.host.intent.data
 		if (link != null && link.scheme == "twinstar.toolkit.shell-gui" && link.host == null && link.port == -1 && link.path == "/run") {
 			this.command.addAll(link.getQueryParameters("command"))
@@ -66,12 +72,12 @@ class CustomMethodChannel {
 		when (requestCode) {
 			REQUEST_STORAGE_PERMISSION -> {
 				runBlocking {
-					this@CustomMethodChannel.channel.send(null)
+					this@CustomMethodChannel.continuation.send(null)
 				}
 			}
 			REQUEST_PICK_PATH -> {
 				runBlocking {
-					this@CustomMethodChannel.channel.send(data?.data)
+					this@CustomMethodChannel.continuation.send(data?.data)
 				}
 			}
 		}
@@ -86,22 +92,9 @@ class CustomMethodChannel {
 		when (requestCode) {
 			REQUEST_STORAGE_PERMISSION -> {
 				runBlocking {
-					this@CustomMethodChannel.channel.send(null)
+					this@CustomMethodChannel.continuation.send(null)
 				}
 			}
-		}
-		return
-	}
-
-	public fun register_onConfigureFlutterEngine(
-		flutterEngine: FlutterEngine,
-	): Unit {
-		MethodChannel(
-			flutterEngine.dartExecutor.binaryMessenger,
-			"com.twinstar.toolkit.shell_gui.CustomMethodChannel",
-		).setMethodCallHandler { call, result ->
-			CoroutineScope(Dispatchers.Main).launch { this@CustomMethodChannel.handle(call, result) }
-			return@setMethodCallHandler
 		}
 		return
 	}
@@ -167,7 +160,7 @@ class CustomMethodChannel {
 		else {
 			this.host.startActivityForResult(Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:${this.host.packageName}")), REQUEST_STORAGE_PERMISSION)
 		}
-		this.channel.receive()
+		this.continuation.receive()
 		return this.handle_checkStoragePermission()
 	}
 
@@ -183,7 +176,7 @@ class CustomMethodChannel {
 			}
 		}
 		this.host.startActivityForResult(intent, REQUEST_PICK_PATH)
-		val uri = this.channel.receive() as Uri?
+		val uri = this.continuation.receive() as Uri?
 		return uri?.let { parsePathOfContentProviderUri(it, fallbackDirectory, this.host.contentResolver) ?: it.toString() }
 	}
 

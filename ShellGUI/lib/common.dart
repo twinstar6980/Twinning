@@ -16,14 +16,13 @@ typedef Map<K, V> = core.Map<K, V>;
 
 // ----------------
 
-const kApplicationName = 'TwinStar ToolKit - Shell GUI';
+const String kApplicationName = 'TwinStar ToolKit - Shell GUI';
 
-const kApplicationVersion = 32;
+const Integer kApplicationVersion = 33;
 
 // ----------------
 
-Void
-assertAlways(
+Void assertAlways(
   Boolean condition,
 ) {
   if (!condition) {
@@ -34,8 +33,7 @@ assertAlways(
 
 // ----------------
 
-Future<String>
-queryApplicationSharedDirectory(
+Future<String> queryApplicationSharedDirectory(
 ) async {
   var result = null as String?;
   if (Platform.isWindows) {
@@ -59,8 +57,7 @@ queryApplicationSharedDirectory(
 
 // ----------------
 
-String
-normalizePath(
+String normalizePath(
   String source,
 ) {
   return source.replaceAll('\\', '/');
@@ -68,15 +65,13 @@ normalizePath(
 
 // ----------------
 
-String
-convertStringListToTextWithLine(
+String convertStringListToTextWithLine(
   List<String> value
 ) {
   return value.join('\n') + (value.isNotEmpty && value.last.isEmpty ? '\n' : '');
 }
 
-List<String>
-convertStringListFromTextWithLine(
+List<String> convertStringListFromTextWithLine(
   String text
 ) {
   var value = text.split('\n').map((value) => (!value.endsWith('\r') ? value : value.substring(0, value.length - 1))).toList();
@@ -94,9 +89,7 @@ enum FileObjectType {
   directory,
   ;
 
-  static
-  FileObjectType
-  formString(
+  static FileObjectType formString(
     String name,
   ) {
     return values.firstWhere((element) => (element.name == name));
@@ -110,9 +103,7 @@ enum FileRequestRule {
   output,
   ;
 
-  static
-  FileRequestRule
-  formString(
+  static FileRequestRule formString(
     String name,
   ) {
     return values.firstWhere((element) => (element.name == name));
@@ -124,9 +115,7 @@ enum FileRequestRule {
 
 extension BooleanStringExtension on Boolean {
 
-  static
-  Boolean
-  parse(
+  static Boolean parse(
     String name,
   ) {
     late Boolean value;

@@ -14,12 +14,9 @@ import 'package:async/async.dart';
 
 class Launcher {
 
-  static
-  isolate.SendPort? _mainSendPort = null;
+  static isolate.SendPort? _mainSendPort = null;
 
-  static
-  List<String>
-  _callbackProxy(
+  static List<String> _callbackProxy(
     List<String> argument,
   ) {
     var state = ffi.calloc<ffi.Bool>();
@@ -47,9 +44,7 @@ class Launcher {
     return result;
   }
 
-  static
-  Void
-  _sub(
+  static Void _sub(
     isolate.SendPort mainSendPort,
   ) async {
     _mainSendPort = mainSendPort;
@@ -80,9 +75,7 @@ class Launcher {
     return;
   }
 
-  static
-  Future<String>
-  _main(
+  static Future<String> _main(
     Host         host,
     String       library,
     String       script,
@@ -132,9 +125,7 @@ class Launcher {
 
   // ----------------
 
-  static
-  Future<String>
-  launch(
+  static Future<String> launch(
     Host         host,
     String       library,
     String       script,

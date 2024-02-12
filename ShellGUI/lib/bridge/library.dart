@@ -13,14 +13,12 @@ class Library {
 
   // ----------------
 
-  Boolean
-  state(
+  Boolean state(
   ) {
     return this._handle != null;
   }
 
-  Void
-  open(
+  Void open(
     String path,
   ) {
     assertAlways(!this.state());
@@ -42,8 +40,7 @@ class Library {
     return;
   }
 
-  Void
-  close(
+  Void close(
   ) {
     assertAlways(this.state());
     this._handle!.close();
@@ -54,8 +51,7 @@ class Library {
 
   // ----------------
 
-  ffi.Pointer<Interface.String>
-  execute(
+  ffi.Pointer<Interface.String> execute(
     ffi.Pointer<ffi.Pointer<Interface.Callback>>   callback,
     ffi.Pointer<ffi.Pointer<Interface.String>>     script,
     ffi.Pointer<ffi.Pointer<Interface.StringList>> argument,

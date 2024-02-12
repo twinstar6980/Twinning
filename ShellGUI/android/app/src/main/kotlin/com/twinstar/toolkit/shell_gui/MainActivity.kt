@@ -1,37 +1,41 @@
 package com.twinstar.toolkit.shell_gui
 
 import android.content.Intent
-import android.os.Bundle
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugins.GeneratedPluginRegistrant
 
 class MainActivity: FlutterActivity() {
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		this.customMethodChannel.register_onCreate(savedInstanceState)
-		return
-	}
+	private val customMethodChannel: CustomMethodChannel = CustomMethodChannel(this)
 
-	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-		super.onActivityResult(requestCode, resultCode, data)
-		this.customMethodChannel.register_onActivityResult(requestCode, resultCode, data)
-		return
-	}
-
-	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-		super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-		this.customMethodChannel.register_onRequestPermissionsResult(requestCode, permissions, grantResults)
-		return
-	}
-
-	override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+	public override fun configureFlutterEngine(
+		flutterEngine: FlutterEngine,
+	): Unit {
+		super.configureFlutterEngine(flutterEngine)
 		GeneratedPluginRegistrant.registerWith(flutterEngine)
 		this.customMethodChannel.register_onConfigureFlutterEngine(flutterEngine)
 		return
 	}
 
-	private val customMethodChannel = CustomMethodChannel(this)
+	public override fun onActivityResult(
+		requestCode: Int,
+		resultCode: Int,
+		data: Intent?,
+	): Unit {
+		super.onActivityResult(requestCode, resultCode, data)
+		this.customMethodChannel.register_onActivityResult(requestCode, resultCode, data)
+		return
+	}
+
+	public override fun onRequestPermissionsResult(
+		requestCode: Int,
+		permissions: Array<out String>,
+		grantResults: IntArray,
+	): Unit {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+		this.customMethodChannel.register_onRequestPermissionsResult(requestCode, permissions, grantResults)
+		return
+	}
 
 }

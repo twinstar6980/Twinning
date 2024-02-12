@@ -8,17 +8,13 @@ import 'package:ffi/ffi.dart' as ffi;
 
 class Converter {
 
-  static
-  Integer
-  parseSize(
+  static Integer parseSize(
     Interface.Size structure,
   ) {
     return structure.value;
   }
 
-  static
-  Void
-  constructSize(
+  static Void constructSize(
     Interface.Size structure,
     Integer        value,
   ) {
@@ -26,9 +22,7 @@ class Converter {
     return;
   }
 
-  static
-  Void
-  destructSize(
+  static Void destructSize(
     Interface.Size structure,
   ) {
     structure.value = 0;
@@ -37,17 +31,13 @@ class Converter {
 
   // ----------------
 
-  static
-  String
-  parseString(
+  static String parseString(
     Interface.String structure,
   ) {
     return structure.data == ffi.nullptr ? '' : structure.data.cast<ffi.Utf8>().toDartString(length: parseSize(structure.size));
   }
 
-  static
-  Void
-  constructString(
+  static Void constructString(
     Interface.String structure,
     String           value,
   ) {
@@ -60,9 +50,7 @@ class Converter {
     return;
   }
 
-  static
-  Void
-  destructString(
+  static Void destructString(
     Interface.String structure,
   ) {
     ffi.calloc.free(structure.data);
@@ -74,9 +62,7 @@ class Converter {
 
   // ----------------
 
-  static
-  List<String>
-  parseStringList(
+  static List<String> parseStringList(
     Interface.StringList structure,
   ) {
     var size = parseSize(structure.size);
@@ -87,9 +73,7 @@ class Converter {
     return value;
   }
 
-  static
-  Void
-  constructStringList(
+  static Void constructStringList(
     Interface.StringList structure,
     List<String>         value,
   ) {
@@ -103,9 +87,7 @@ class Converter {
     return;
   }
 
-  static
-  Void
-  destructStringList(
+  static Void destructStringList(
     Interface.StringList structure,
   ) {
     var capacity = parseSize(structure.capacity);
@@ -121,17 +103,13 @@ class Converter {
 
   // ----------------
 
-  static
-  ffi.Pointer<ffi.NativeFunction<ffi.Pointer<Interface.String> Function(ffi.Pointer<ffi.Pointer<Interface.StringList>>, ffi.Pointer<ffi.Pointer<Interface.StringList>>)>>
-  parseCallback(
+  static ffi.Pointer<ffi.NativeFunction<ffi.Pointer<Interface.String> Function(ffi.Pointer<ffi.Pointer<Interface.StringList>>, ffi.Pointer<ffi.Pointer<Interface.StringList>>)>> parseCallback(
     Interface.Callback structure,
   ) {
     return structure.value;
   }
 
-  static
-  Void
-  constructCallback(
+  static Void constructCallback(
     Interface.Callback                                                                                                                                                      structure,
     ffi.Pointer<ffi.NativeFunction<ffi.Pointer<Interface.String> Function(ffi.Pointer<ffi.Pointer<Interface.StringList>>, ffi.Pointer<ffi.Pointer<Interface.StringList>>)>> value,
   ) {
@@ -139,9 +117,7 @@ class Converter {
     return;
   }
 
-  static
-  Void
-  destructCallback(
+  static Void destructCallback(
     Interface.Callback structure,
   ) {
     structure.value = ffi.Pointer.fromAddress(0);

@@ -15,14 +15,14 @@ final class Character extends ffi.Struct {
 
 final class String extends ffi.Struct {
   external ffi.Pointer<Character> data;
-  external Size size;
-  external Size capacity;
+  external Size                   size;
+  external Size                   capacity;
 }
 
 final class StringList extends ffi.Struct {
   external ffi.Pointer<String> data;
-  external Size size;
-  external Size capacity;
+  external Size                size;
+  external Size                capacity;
 }
 
 final class Callback extends ffi.Struct {

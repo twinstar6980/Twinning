@@ -12,9 +12,7 @@ enum MessageType {
   input,
   ;
 
-  static
-  MessageType
-  fromString(
+  static MessageType fromString(
     String name,
   ) {
     late MessageType value;
@@ -50,9 +48,9 @@ enum MessageType {
     return value;
   }
 
-  Color
-  color(
-    ThemeData theme,
+  static Color color(
+    MessageType type,
+    ThemeData   theme,
   ) {
     return [
       theme.colorScheme.onSurface,
@@ -61,7 +59,7 @@ enum MessageType {
       Colors.red,
       Colors.green,
       Colors.purple,
-    ][index];
+    ][type.index];
   }
 
 }

@@ -1,6 +1,6 @@
 import '/common.dart';
-import '/common/platform_method.dart';
-import '/common/notification_helper.dart';
+import '/utility/platform_method.dart';
+import '/utility/notification_helper.dart';
 import '/setting.dart';
 import '/application.dart';
 import 'dart:io';
@@ -10,8 +10,7 @@ import 'package:window_manager/window_manager.dart';
 
 // ----------------
 
-Future<Void>
-main(
+Future<Void> main(
   List<String> argument,
 ) async {
   WidgetsFlutterBinding.ensureInitialized();

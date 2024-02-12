@@ -9,22 +9,26 @@ import android.widget.Toast
 
 class ForwardActivity : Activity() {
 
-	override fun onCreate(savedInstanceState: Bundle?) {
+	// region implement - Activity
+
+	protected override fun onCreate(
+		savedInstanceState: Bundle?,
+	): Unit {
 		super.onCreate(savedInstanceState)
 		try {
-			val uri = mutableListOf<Uri>()
+			val selection = mutableListOf<Uri>()
 			if (this.intent.action == Intent.ACTION_SEND) {
-				uri.add(this.intent.getParcelableExtra(Intent.EXTRA_STREAM)!!)
+				selection.add(this.intent.getParcelableExtra(Intent.EXTRA_STREAM)!!)
 			}
 			if (this.intent.action == Intent.ACTION_SEND_MULTIPLE) {
-				uri.addAll(this.intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM)!!)
+				selection.addAll(this.intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM)!!)
 			}
-			val command = listOf("-additional_argument", *uri.map { item -> item.toString() }.toTypedArray())
+			val command = listOf("-additional_argument", *selection.map { item -> item.toString() }.toTypedArray())
 			val intent = Intent().also { intent ->
 				intent.setAction(Intent.ACTION_VIEW)
 				intent.setData(Uri.parse("twinstar.toolkit.shell-gui:/run?${command.joinToString("&") { item -> "command=${Uri.encode(item)}" }}"))
 				intent.setClipData(ClipData.newPlainText("", "").also { clip ->
-					for (item in uri) {
+					for (item in selection) {
 						clip.addItem(ClipData.Item(item))
 					}
 				})
@@ -38,5 +42,7 @@ class ForwardActivity : Activity() {
 		this.finish()
 		return
 	}
+
+	// endregion
 
 }

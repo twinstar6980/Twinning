@@ -8,10 +8,10 @@
 		<dict>
 			<key>NSExtensionActivationRule</key>
 			<dict>
-				<key>NSExtensionActivationSupportsAttachmentsWithMinCount</key>
-				<integer>0</integer>
 				<key>NSExtensionActivationSupportsAttachmentsWithMaxCount</key>
 				<integer>4096</integer>
+				<key>NSExtensionActivationSupportsAttachmentsWithMinCount</key>
+				<integer>0</integer>
 				<key>NSExtensionActivationSupportsFileWithMaxCount</key>
 				<integer>4096</integer>
 			</dict>

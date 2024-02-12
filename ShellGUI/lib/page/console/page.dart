@@ -1,6 +1,6 @@
 import '/common.dart';
-import '/common/notification_helper.dart';
-import '/common/path_picker.dart';
+import '/utility/notification_helper.dart';
+import '/utility/path_picker.dart';
 import '/setting.dart';
 import '/bridge/host.dart';
 import '/bridge/launcher.dart';
@@ -277,8 +277,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
 
   // ----------------
 
-  Future<Boolean>
-  _launch(
+  Future<Boolean> _launch(
   ) async {
     var setting = Provider.of<SettingProvider>(context, listen: false);
     var result = null as String?;
@@ -341,7 +340,7 @@ class _ConsolePageState extends State<ConsolePage> implements Host {
   // ----------------
 
   @override
-  void dispose() {
+  dispose() {
     this._outputBarListScrollController.dispose();
     super.dispose();
     return;

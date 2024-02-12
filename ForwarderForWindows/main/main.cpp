@@ -10,11 +10,10 @@ auto wmain (
 	int       argc,
 	wchar_t * argv[]
 ) -> int {
-	auto error = false;
 	try {
 		auto app_data_directory_data = LPWSTR{};
 		if (SHGetKnownFolderPath(FOLDERID_RoamingAppData, 0, nullptr, &app_data_directory_data) != S_OK) {
-			throw std::runtime_error{""};
+			throw std::runtime_error{"failed to get app data directory"};
 		}
 		auto app_data_directory = std::filesystem::path{app_data_directory_data};
 		CoTaskMemFree(app_data_directory_data);
@@ -37,12 +36,18 @@ auto wmain (
 			auto file = _wfopen(script_file.wstring().data(), L"wb");
 			std::fclose(file);
 		}
-		ShellExecuteW(nullptr, L"open", data_directory.wstring().data(), nullptr, nullptr, SW_NORMAL);
+		if (reinterpret_cast<INT_PTR>(ShellExecuteW(nullptr, L"open", data_directory.wstring().data(), nullptr, nullptr, SW_NORMAL)) <= 32) {
+			throw std::runtime_error{"failed to reveal data directory"};
+		}
+		std::exit(0);
+	}
+	catch (std::exception & e) {
+		std::println(std::cout, "{} : {}", typeid(e).name(), e.what());
+		std::system("pause");
 	}
 	catch (...) {
-		error = true;
+		std::println(std::cout, "?");
+		std::system("pause");
 	}
-	std::println(std::cout, "{}", !error ? "succeeded" : "failed");
-	std::system("pause");
 	return 0;
 }

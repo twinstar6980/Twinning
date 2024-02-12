@@ -1,5 +1,5 @@
 import '/common.dart';
-import '/common/permission_helper.dart';
+import '/utility/permission_helper.dart';
 import '/setting.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';

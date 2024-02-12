@@ -4,7 +4,8 @@ import flutter_local_notifications
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
-  override func application(
+  private lazy var customMethodChannel: CustomMethodChannel = CustomMethodChannel(host: self)
+  public override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
@@ -18,5 +19,4 @@ import flutter_local_notifications
     self.customMethodChannel.register_application(application, didFinishLaunchingWithOptions: launchOptions)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
-  private lazy var customMethodChannel = CustomMethodChannel(host: self)
 }

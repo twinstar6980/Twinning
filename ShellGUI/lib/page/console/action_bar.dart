@@ -20,11 +20,11 @@ class ActionBar extends StatelessWidget {
   @override
   build(context) {
     var theme = Theme.of(context);
-    var typeColor = MessageType.input.color(theme);
+    var cardColor = MessageType.color(MessageType.input, theme);
     return Card(
       margin: const EdgeInsets.fromLTRB(1, 0, 1, 0),
       elevation: 1,
-      color: Color.alphaBlend(typeColor.withOpacity(0.025), theme.colorScheme.surface),
+      color: Color.alphaBlend(cardColor.withOpacity(0.025), theme.colorScheme.surface),
       child: Container(
         padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
         child: SizedBox(
