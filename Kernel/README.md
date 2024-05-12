@@ -8,17 +8,17 @@
 
 * 要求
 	
-	* [xmake 2.8](https://xmake.io/#/)
+	* [xmake 2.9](https://xmake.io/#/)
 	
-	* [MSVC 19.38 with MSVC-STL and Windows-SDK for Windows](https://visualstudio.microsoft.com/downloads/)
+	* [MSVC 19.39 & WinAPI](https://visualstudio.microsoft.com/downloads/) for `Windows`
 	
-	* [Clang 17.0 with libstdc++ and POSIX for Linux](https://llvm.org/)
+	* [Clang 18.1 & POSIX (libstdc++)](https://llvm.org/) for `Linux`
 	
-	* [Clang 17.0 with libc++ and POSIX for Macintosh](https://llvm.org/)
+	* [Clang 18.1 & POSIX](https://llvm.org/) for `Macintosh`
 	
-	* [Clang 17.0 with libc++ and POSIX for Android (NDK 26.1)](https://developer.android.com/ndk/downloads)
+	* [Clang 17.0 & POSIX (NDK 26.3)](https://developer.android.com/ndk/downloads) for `Android`
 	
-	* [Clang 17.0 with libc++ and POSIX for iPhone](https://llvm.org/)
+	* [Clang 18.1 & POSIX](https://llvm.org/) for `Iphone`
 
 * 开发
 	
@@ -41,11 +41,11 @@
 | 库                                                                         | 用途                           |
 |:--------------------------------------------------------------------------:|:------------------------------:|
 | [mscharconv 1.2.3](https://github.com/iboB/mscharconv)                     | charconv 支持 ( for non-MSVC ) |
-| [fmt 10.0.0](https://github.com/fmtlib/fmt)                                | 字符串格式化                   |
-| [tinyxml2 9.0.0](https://github.com/leethomason/tinyxml2)                  | XML 读写                       |
+| [fmt 10.2.1](https://github.com/fmtlib/fmt)                                | 字符串格式化                   |
+| [tinyxml2 10.0.0](https://github.com/leethomason/tinyxml2)                 | XML 读写                       |
 | [md5 1.0](https://github.com/JieweiWei/md5)                                | MD5 哈希计算                   |
 | [Rijndael](#)                                                              | Rijndael 加密与解密            |
-| [zlib 1.3](https://github.com/madler/zlib)                                 | ZLib 压缩与解压                |
+| [zlib 1.3.1](https://github.com/madler/zlib)                               | ZLib 压缩与解压                |
 | [bzip2 1.0.8](https://sourceware.org/bzip2/)                               | BZip2 压缩与解压               |
 | [lzma 23.01](https://www.7-zip.org/sdk.html)                               | Lzma 压缩与解压                |
 | [open-vcdiff 0.8.4](https://github.com/google/open-vcdiff)                 | VCDiff 差异分析                |
@@ -53,7 +53,7 @@
 | [ETCPACK 2.74](https://github.com/Ericsson/ETCPACK)                        | ETC1 解压                      |
 | [etcpak 1.0](https://github.com/wolfpld/etcpak)                            | ETC1 压缩                      |
 | [PVRTCCompressor](https://github.com/brenwill/PVRTCCompressor)             | PVRTC4 压缩与解压              |
-| [libpng 1.6.40](http://www.libpng.org/pub/png/libpng.html)                 | PNG 读写                       |
+| [libpng 1.6.43](https://github.com/pnggroup/libpng)                        | PNG 读写                       |
 | [quickjs 2021-03-27](https://github.com/bellard/quickjs)                   | JS 引擎                        |
 | [quickjs 2021-03-27 (c-smile)](https://github.com/c-smile/quickjspp)       | JS 引擎 ( for MSVC )           |
 | [vld 2.5.1](https://github.com/KindDragon/vld)                             | 内存泄漏检测                   |
@@ -66,7 +66,9 @@
 	
 	2. 接口声明位于 `- <project>/kernel/interface/interface.hpp` 。
 	
-	3. 为了容许来自其他语言的调用，接口被设计为完全的 C 风格。输入参数的所有权归调用方，调用方需确保其能够正确析构；输出参数与返回值的所有权属于库自身，调用方不应对其进行读取以外的任何操作。
+	3. 为了容许来自其他语言的调用，接口被设计为完全的 `C` 风格。输入参数的所有权归调用方，调用方需确保其能够正确析构；输出参数与返回值的所有权属于库自身，调用方不应对其进行读取以外的任何操作。
+	
+	4. 接口具备线程安全性，但不建议在多个线程中同时调用同一库实例的接口，因为内部使用的脚本引擎 `quickjs` 只能被不同线程互斥地调用；如需在多线程中调用接口，请为每个线程加载独立的库实例。
 
 * 关于构建
 	

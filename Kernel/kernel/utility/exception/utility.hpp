@@ -224,16 +224,16 @@ namespace TwinStar::Kernel {
 			destination = source;
 		}
 		catch (std::filesystem::filesystem_error & source) {
-			destination = static_cast<Exception>(StandardFileSystemException{source});
+			destination = StandardFileSystemException{source};
 		}
 		catch (std::system_error & source) {
-			destination = static_cast<Exception>(StandardSystemException{source});
+			destination = StandardSystemException{source};
 		}
 		catch (std::exception & source) {
-			destination = static_cast<Exception>(StandardException{source});
+			destination = StandardException{source};
 		}
 		catch (...) {
-			destination = static_cast<Exception>(UnknownException{});
+			destination = UnknownException{};
 		}
 		return destination;
 	}

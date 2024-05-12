@@ -379,8 +379,11 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle::Structure {
 		&& (check_version(t_version, {1}, {}))
 	struct ResourceDetailManifestInformation<t_version> :
 		ResourceBasicDetailManifestInformation<t_version> {
-		Optional<ResourceImagePropertyDetailManifestInformation<t_version>> image_property_information;
-		List<ResourcePropertyDetailManifestInformation<t_version>>          property_information;
+
+		Optional<ResourceImagePropertyDetailManifestInformation<t_version>> image_property_information{};
+
+		List<ResourcePropertyDetailManifestInformation<t_version>> property_information{};
+
 	};
 
 	// ----------------
@@ -409,6 +412,7 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle::Structure {
 		&& (check_version(t_version, {1}, {}))
 	struct ResourceManifestInformation<t_version> :
 		ResourceBasicManifestInformation<t_version> {
+
 	};
 
 	// ----------------
@@ -452,7 +456,9 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle::Structure {
 		&& (check_version(t_version, {1}, {}))
 	struct SubgroupManifestInformation<t_version> :
 		SubgroupBasicManifestInformation<t_version> {
-		List<ResourceManifestInformation<t_version>> resource_information;
+
+		List<ResourceManifestInformation<t_version>> resource_information{};
+
 	};
 
 	// ----------------
@@ -483,7 +489,9 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle::Structure {
 		&& (check_version(t_version, {1}, {}))
 	struct GroupManifestInformation<t_version> :
 		GroupBasicManifestInformation<t_version> {
-		List<SubgroupManifestInformation<t_version>> subgroup_information;
+
+		List<SubgroupManifestInformation<t_version>> subgroup_information{};
+
 	};
 
 }

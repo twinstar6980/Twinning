@@ -22,6 +22,7 @@
 #pragma clang diagnostic ignored "-Wdouble-promotion"
 #pragma clang diagnostic ignored "-Wsuggest-override"
 #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
+#pragma clang diagnostic ignored "-Wdocumentation"
 #endif
 
 #include "third/avir/avir.h"

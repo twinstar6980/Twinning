@@ -66,10 +66,9 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 			auto group_manifest_information_data = IByteStreamView{data.sub_view(cbw<Size>(header_structure.group_manifest_information_section_offset), cbw<Size>(header_structure.resource_manifest_information_section_offset - header_structure.group_manifest_information_section_offset))};
 			auto resource_manifest_information_data = IByteStreamView{data.sub_view(cbw<Size>(header_structure.resource_manifest_information_section_offset), cbw<Size>(header_structure.string_manifest_information_section_offset - header_structure.resource_manifest_information_section_offset))};
 			auto string_manifest_information_data = ICharacterStreamView{from_byte_view<Character, BasicCharacterListView>(data.sub_view(cbw<Size>(header_structure.string_manifest_information_section_offset), cbw<Size>(header_structure.information_section_size - header_structure.string_manifest_information_section_offset)))};
-			auto get_string =
-				[&] (
+			auto get_string = [&] (
 				IntegerU32 const & offset
-			) -> auto {
+			) -> CStringView {
 				auto result = CStringView{};
 				string_manifest_information_data.set_position(cbw<Size>(offset));
 				StringParser::read_string_until(string_manifest_information_data, result, CharacterType::k_null);
@@ -182,16 +181,18 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 			auto subgroup_id_list = Map<Size, String>{};
 			group_id_list.convert(
 				information_structure.group_id,
-				[] (auto & destination_element, auto & source_element) {
+				[] (auto & destination_element, auto & source_element) -> auto {
 					destination_element.key = cbw<Size>(source_element.value);
 					destination_element.value = source_element.key;
+					return;
 				}
 			);
 			subgroup_id_list.convert(
 				information_structure.subgroup_id,
-				[] (auto & destination_element, auto & source_element) {
+				[] (auto & destination_element, auto & source_element) -> auto {
 					destination_element.key = cbw<Size>(source_element.value);
 					destination_element.value = source_element.key;
+					return;
 				}
 			);
 			definition.group.allocate_full(information_structure.group_information.size());
@@ -226,10 +227,9 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 							subgroup_definition.category.locale.set().from(fourcc_from_integer(simple_subgroup_information_structure.locale));
 						}
 					}
-					auto make_formatted_path =
-						[&] (
+					auto make_formatted_path = [&] (
 						Path const & path_format
-					) -> auto {
+					) -> Path {
 						return Path{format_string(path_format.to_string(), group_definition.id, subgroup_definition.id)};
 					};
 					auto packet_data = data.sub_view(cbw<Size>(subgroup_information_structure.offset), cbw<Size>(subgroup_information_structure.size));

@@ -17,7 +17,7 @@ namespace TwinStar::Kernel {
 
 	protected:
 
-		std::optional<Value> m_value{};
+		std::optional<Value> m_value;
 
 	public:
 
@@ -29,7 +29,9 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		constexpr Optional (
-		) = default;
+		) :
+			m_value{} {
+		}
 
 		constexpr Optional (
 			Optional const & that

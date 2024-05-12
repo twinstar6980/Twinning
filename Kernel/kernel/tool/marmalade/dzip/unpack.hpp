@@ -137,7 +137,7 @@ namespace TwinStar::Kernel::Tool::Marmalade::DZip {
 					assert_test(chunk_ok);
 					package_data_end_position = maximum(package_data_end_position, data.position());
 				}
-				assert_test(!chunk_data_list.empty() && Range::all_of(chunk_data_list.tail(chunk_data_list.size() - 1_sz), [&] (auto & element) { return element == chunk_data_list.first(); }));
+				assert_test(!chunk_data_list.empty() && Range::all_of(chunk_data_list.tail(chunk_data_list.size() - 1_sz), [&] (auto & element) -> auto { return element == chunk_data_list.first(); }));
 				if (resource_directory.has()) {
 					FileSystem::write_file(resource_directory.get() / resource_definition.path, chunk_data_list.first());
 				}

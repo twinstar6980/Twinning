@@ -4,51 +4,51 @@ namespace TwinStar.Script.Console {
 
 	/**
 	 * 消息分类
-	 * + Verbosity   常规
-	 * + Information 信息
-	 * + Warning     警告
-	 * + Error       错误
-	 * + Success     成功
-	 * + inpuT/Type  输入
+	 * + verbosity   常规
+	 * + information 信息
+	 * + warning     警告
+	 * + error       错误
+	 * + success     成功
+	 * + input       输入
 	 */
-	export type MessageType = 'v' | 'i' | 'w' | 'e' | 's' | 't';
+	export type MessageType = 'verbosity' | 'information' | 'warning' | 'error' | 'success' | 'input';
 
 	// ------------------------------------------------
 
-	export let g_cli_disable_virtual_terminal_sequence = false;
+	export let g_basic_disable_virtual_terminal_sequence = false;
 
-	const k_cli_message_text_attribute: Record<MessageType, VirtualTerminalSequence.TextAttribute> = {
-		v: {
+	const k_basic_message_text_attribute: Record<MessageType, VirtualTerminalSequence.TextAttribute> = {
+		verbosity: {
 			background: null,
 			foreground: 'default',
 			underline: false,
 			bold: false,
 		},
-		i: {
+		information: {
 			background: null,
 			foreground: ['blue', false],
 			underline: null,
 			bold: false,
 		},
-		w: {
+		warning: {
 			background: null,
 			foreground: ['yellow', false],
 			underline: null,
 			bold: false,
 		},
-		e: {
+		error: {
 			background: null,
 			foreground: ['red', false],
 			underline: null,
 			bold: false,
 		},
-		s: {
+		success: {
 			background: null,
 			foreground: ['green', false],
 			underline: null,
 			bold: false,
 		},
-		t: {
+		input: {
 			background: null,
 			foreground: ['magenta', false],
 			underline: false,
@@ -56,18 +56,18 @@ namespace TwinStar.Script.Console {
 		},
 	};
 
-	function cli_set_message_text_attribute(
+	function basic_set_message_text_attribute(
 		type: MessageType,
 	): void {
-		if (!g_cli_disable_virtual_terminal_sequence) {
-			Shell.cli_output(VirtualTerminalSequence.text_attribute(k_cli_message_text_attribute[type]));
+		if (!g_basic_disable_virtual_terminal_sequence) {
+			Shell.basic_output_text(VirtualTerminalSequence.text_attribute(k_basic_message_text_attribute[type]));
 		}
 		return;
 	}
 
 	// ------------------------------------------------
 
-	function basic_input_with_checker<Value>(
+	function common_input_with_checker<Value>(
 		inputer: () => string,
 		echoer: (value: string) => void,
 		converter: (value: string) => string | [null | Value],
@@ -113,17 +113,17 @@ namespace TwinStar.Script.Console {
 
 	// ------------------------------------------------
 
-	function cli_basic_output(
+	function basic_common_output(
 		text: string,
 		leading: boolean,
 		indent: number,
 		line_feed: boolean,
 	): void {
-		Shell.cli_output(`${leading ? '●' : ' '} ${'  '.repeat(indent)}${text}${line_feed ? '\n' : ''}`);
+		Shell.basic_output_text(`${leading ? '●' : ' '} ${'  '.repeat(indent)}${text}${line_feed ? '\n' : ''}`);
 		return;
 	}
 
-	function cli_basic_input<Value>(
+	function basic_common_input<Value>(
 		leading: string,
 		messager: () => void,
 		converter: (value: string) => string | [null | Value],
@@ -132,17 +132,17 @@ namespace TwinStar.Script.Console {
 		initial: undefined | null | Value,
 	): null | Value {
 		let first_input = true;
-		return basic_input_with_checker(
+		return common_input_with_checker(
 			() => {
 				if (first_input) {
 					first_input = false;
 					messager();
 				}
-				cli_set_message_text_attribute('t');
-				cli_basic_output(leading, true, 0, true);
-				cli_set_message_text_attribute('v');
-				cli_basic_output('', false, 1, false);
-				return Shell.cli_input();
+				basic_set_message_text_attribute('input');
+				basic_common_output(leading, true, 0, true);
+				basic_set_message_text_attribute('verbosity');
+				basic_common_output('', false, 1, false);
+				return Shell.basic_input_text().text;
 			},
 			(value) => {
 				return;
@@ -156,16 +156,16 @@ namespace TwinStar.Script.Console {
 
 	// ------------------------------------------------
 
-	function gui_basic_output(
+	function assistant_common_output(
 		type: MessageType,
 		title: string,
 		description: Array<string>,
 	): void {
-		Shell.gui_output_message(type, title, description);
+		Shell.assistant_send_message(type, title, description);
 		return;
 	}
 
-	function gui_basic_input<Value>(
+	function assistant_common_input<Value>(
 		inputer: () => string,
 		leading: string,
 		echoer: (value: string) => string,
@@ -174,10 +174,10 @@ namespace TwinStar.Script.Console {
 		checker: null | Check.CheckerX<Value>,
 		initial: undefined | null | Value,
 	): null | Value {
-		return basic_input_with_checker(
+		return common_input_with_checker(
 			inputer,
 			(value) => {
-				gui_basic_output('t', leading, [echoer(value)]);
+				assistant_common_output('input', leading, [echoer(value)]);
 				return;
 			},
 			converter,
@@ -194,16 +194,16 @@ namespace TwinStar.Script.Console {
 		title: string,
 		description: Array<string>,
 	): void {
-		if (Shell.is_cli) {
-			cli_set_message_text_attribute(type);
-			cli_basic_output(title, true, 0, true);
-			cli_set_message_text_attribute('v');
+		if (Shell.is_basic) {
+			basic_set_message_text_attribute(type);
+			basic_common_output(title, true, 0, true);
+			basic_set_message_text_attribute('verbosity');
 			for (let description_element of description) {
-				cli_basic_output(description_element, false, 1, true);
+				basic_common_output(description_element, false, 1, true);
 			}
 		}
-		if (Shell.is_gui) {
-			gui_basic_output(type, title, description);
+		if (Shell.is_assistant) {
+			assistant_common_output(type, title, description);
 		}
 		return;
 	}
@@ -212,42 +212,42 @@ namespace TwinStar.Script.Console {
 		title: string,
 		description: Array<string>,
 	): void {
-		return message('v', title, description);
+		return message('verbosity', title, description);
 	}
 
 	export function information(
 		title: string,
 		description: Array<string>,
 	): void {
-		return message('i', title, description);
+		return message('information', title, description);
 	}
 
 	export function warning(
 		title: string,
 		description: Array<string>,
 	): void {
-		return message('w', title, description);
+		return message('warning', title, description);
 	}
 
 	export function error(
 		title: string,
 		description: Array<string>,
 	): void {
-		return message('e', title, description);
+		return message('error', title, description);
 	}
 
 	export function success(
 		title: string,
 		description: Array<string>,
 	): void {
-		return message('s', title, description);
+		return message('success', title, description);
 	}
 
 	export function error_of(
-		error: any,
+		detail: any,
 	): void {
-		let [title, description] = parse_error_message(error);
-		message('e', title, description);
+		let [title, description] = parse_error_message(detail);
+		error(title, description);
 		return;
 	}
 
@@ -256,21 +256,21 @@ namespace TwinStar.Script.Console {
 	export function pause(
 	): void {
 		let leading = 'Pause';
-		if (Shell.is_cli) {
-			cli_set_message_text_attribute('t');
-			cli_basic_output(leading + ' ', true, 0, false);
-			cli_set_message_text_attribute('v');
-			if (Shell.is_windows) {
+		if (Shell.is_basic) {
+			basic_set_message_text_attribute('input');
+			basic_common_output(leading + ' ', true, 0, false);
+			basic_set_message_text_attribute('verbosity');
+			if (KernelX.is_windows) {
 				KernelX.Process.system_command(`pause > NUL`);
-				Shell.cli_output('\n');
+				Shell.basic_output_text('\n');
 			}
-			if (Shell.is_linux || Shell.is_macintosh || Shell.is_android || Shell.is_iphone) {
-				Shell.cli_input();
+			if (KernelX.is_linux || KernelX.is_macintosh || KernelX.is_android || KernelX.is_iphone) {
+				Shell.basic_input_text();
 			}
 		}
-		if (Shell.is_gui) {
-			Shell.gui_input_pause();
-			gui_basic_output('t', leading, []);
+		if (Shell.is_assistant) {
+			Shell.assistant_receive_submission('pause', []);
+			assistant_common_output('input', leading, []);
 		}
 		return;
 	}
@@ -306,8 +306,8 @@ namespace TwinStar.Script.Console {
 			}
 			return [parse_confirmation_boolean_string(value)];
 		};
-		if (Shell.is_cli) {
-			result = cli_basic_input(
+		if (Shell.is_basic) {
+			result = basic_common_input(
 				leading,
 				() => {
 					return;
@@ -318,10 +318,10 @@ namespace TwinStar.Script.Console {
 				initial,
 			);
 		}
-		if (Shell.is_gui) {
-			result = gui_basic_input(
+		if (Shell.is_assistant) {
+			result = assistant_common_input(
 				() => {
-					return Shell.gui_input_boolean();
+					return Shell.assistant_receive_submission('boolean', []).value;
 				},
 				leading,
 				(value) => {
@@ -367,8 +367,8 @@ namespace TwinStar.Script.Console {
 			}
 			return [BigInt(value)];
 		};
-		if (Shell.is_cli) {
-			result = cli_basic_input(
+		if (Shell.is_basic) {
+			result = basic_common_input(
 				leading,
 				() => {
 					return;
@@ -379,10 +379,10 @@ namespace TwinStar.Script.Console {
 				initial,
 			);
 		}
-		if (Shell.is_gui) {
-			result = gui_basic_input(
+		if (Shell.is_assistant) {
+			result = assistant_common_input(
 				() => {
-					return Shell.gui_input_integer();
+					return Shell.assistant_receive_submission('integer', []).value;
 				},
 				leading,
 				(value) => {
@@ -428,8 +428,8 @@ namespace TwinStar.Script.Console {
 			}
 			return [Number(value)];
 		};
-		if (Shell.is_cli) {
-			result = cli_basic_input(
+		if (Shell.is_basic) {
+			result = basic_common_input(
 				leading,
 				() => {
 					return;
@@ -440,10 +440,10 @@ namespace TwinStar.Script.Console {
 				initial,
 			);
 		}
-		if (Shell.is_gui) {
-			result = gui_basic_input(
+		if (Shell.is_assistant) {
+			result = assistant_common_input(
 				() => {
-					return Shell.gui_input_floater();
+					return Shell.assistant_receive_submission('floater', []).value;
 				},
 				leading,
 				(value) => {
@@ -489,8 +489,8 @@ namespace TwinStar.Script.Console {
 			}
 			return [parse_size_string(value)];
 		};
-		if (Shell.is_cli) {
-			result = cli_basic_input(
+		if (Shell.is_basic) {
+			result = basic_common_input(
 				leading,
 				() => {
 					return;
@@ -501,10 +501,10 @@ namespace TwinStar.Script.Console {
 				initial,
 			);
 		}
-		if (Shell.is_gui) {
-			result = gui_basic_input(
+		if (Shell.is_assistant) {
+			result = assistant_common_input(
 				() => {
-					return Shell.gui_input_size();
+					return Shell.assistant_receive_submission('size', []).value;
 				},
 				leading,
 				(value) => {
@@ -561,8 +561,8 @@ namespace TwinStar.Script.Console {
 			}
 			return [result];
 		};
-		if (Shell.is_cli) {
-			result = cli_basic_input(
+		if (Shell.is_basic) {
+			result = basic_common_input(
 				leading,
 				() => {
 					return;
@@ -573,10 +573,10 @@ namespace TwinStar.Script.Console {
 				initial,
 			);
 		}
-		if (Shell.is_gui) {
-			result = gui_basic_input(
+		if (Shell.is_assistant) {
+			result = assistant_common_input(
 				() => {
-					return Shell.gui_input_string();
+					return Shell.assistant_receive_submission('string', []).value;
 				},
 				leading,
 				(value) => {
@@ -644,12 +644,22 @@ namespace TwinStar.Script.Console {
 						if (value.length > 2) {
 							return los('console:input_command_invalid');
 						}
-						let pick_result = pick_path(type);
+						let pick_type = null as null | 'open_file' | 'open_directory' | 'save_file';
+						if (rule === 'input' && type === 'file') {
+							pick_type = 'open_file';
+						}
+						if (rule === 'input' && type === 'directory') {
+							pick_type = 'open_directory';
+						}
+						if (rule === 'output' && type === 'file') {
+							pick_type = 'save_file';
+						}
+						let pick_result = pick_path(pick_type);
 						if (pick_result === null) {
 							return los('console:path_command_pick_cancel');
 						}
 						result = pick_result;
-						message(`t`, leading, [result]);
+						message('input', leading, [result]);
 						break;
 					}
 					case 'g': {
@@ -752,8 +762,8 @@ namespace TwinStar.Script.Console {
 			state_data.allow_overwrite = false;
 			return checker === null ? null : checker(value);
 		};
-		if (Shell.is_cli) {
-			result = cli_basic_input(
+		if (Shell.is_basic) {
+			result = basic_common_input(
 				leading,
 				() => {
 					return;
@@ -764,10 +774,10 @@ namespace TwinStar.Script.Console {
 				initial,
 			);
 		}
-		if (Shell.is_gui) {
-			result = gui_basic_input(
+		if (Shell.is_assistant) {
+			result = assistant_common_input(
 				() => {
-					return Shell.gui_input_path();
+					return Shell.assistant_receive_submission('path', []).value;
 				},
 				leading,
 				(value) => {
@@ -785,45 +795,45 @@ namespace TwinStar.Script.Console {
 	// ------------------------------------------------
 
 	export function enumeration<Value>(
-		option: Array<[Value, string, string]>,
+		item: Array<[Value, string, string]>,
 		nullable: null | boolean,
 		checker: null | Check.CheckerX<Value>,
 		initial?: Value,
 	): Value;
 
 	export function enumeration<Value>(
-		option: Array<[Value, string, string]>,
+		item: Array<[Value, string, string]>,
 		nullable: null | boolean,
 		checker: null | Check.CheckerX<Value>,
 		initial?: null | Value,
 	): null | Value;
 
 	export function enumeration<Value>(
-		option: Array<[Value, string, string]>,
+		item: Array<[Value, string, string]>,
 		nullable: null | boolean,
 		checker: null | Check.CheckerX<Value>,
 		initial?: null | Value,
 	): null | Value {
 		let result: null | Value = undefined!;
 		let leading = 'Enumeration';
-		let maximum_key_length = Math.max(...option.map((value) => (value[1].length)));
-		let message = option.map((value) => (`${make_prefix_padded_string(value[1], ' ', maximum_key_length)}. ${value[2]}`));
+		let maximum_key_length = Math.max(...item.map((value) => (value[1].length)));
+		let message = item.map((value) => (`${make_prefix_padded_string(value[1], ' ', maximum_key_length)}. ${value[2]}`));
 		let converter = (value: string): string | [null | Value] => {
 			if (value === '') {
 				return [null];
 			}
-			let index = option.findIndex((e) => (e[1] === value));
+			let index = item.findIndex((e) => (e[1] === value));
 			if (index === -1) {
 				return los('console:option_invalid');
 			}
-			return [option[index][0]];
+			return [item[index][0]];
 		};
-		if (Shell.is_cli) {
-			result = cli_basic_input(
+		if (Shell.is_basic) {
+			result = basic_common_input(
 				leading,
 				() => {
-					for (let item of message) {
-						cli_basic_output(item, false, 1, true);
+					for (let messageItem of message) {
+						basic_common_output(messageItem, false, 1, true);
 					}
 					return;
 				},
@@ -833,18 +843,18 @@ namespace TwinStar.Script.Console {
 				initial,
 			);
 		}
-		if (Shell.is_gui) {
-			result = gui_basic_input(
+		if (Shell.is_assistant) {
+			result = assistant_common_input(
 				() => {
-					let index = Shell.gui_input_enumeration(message);
-					return index === '' ? '' : option[Number(index) - 1][1];
+					let index = Shell.assistant_receive_submission('enumeration', [...message]).value;
+					return index === '' ? '' : item[Number(index) - 1][1];
 				},
 				leading,
 				(value) => {
 					if (value === '') {
 						return '';
 					}
-					let index = option.findIndex((e) => (e[1] === value));
+					let index = item.findIndex((e) => (e[1] === value));
 					if (index === -1) {
 						return los('console:option_invalid');
 					}
@@ -904,18 +914,18 @@ namespace TwinStar.Script.Console {
 	// ------------------------------------------------
 
 	export function pick_path(
-		type: 'any' | 'file' | 'directory',
+		type: null | 'open_file' | 'open_directory' | 'save_file',
 	): null | string {
 		let result: null | string = undefined!;
-		if (type === 'any') {
+		if (type === null) {
 			information(los('console:pick_path_type'), []);
-			type = enumeration(option_string(['file', 'directory']), null, null);
+			type = enumeration(option_string(['open_file', 'open_directory', 'save_file']), null, null) as 'open_file' | 'open_directory' | 'save_file';
 		}
-		if (Shell.is_cli) {
-			result = Shell.cli_pick_path(type);
+		if (Shell.is_basic) {
+			result = Shell.basic_pick_path(type).selection;
 		}
-		if (Shell.is_gui) {
-			result = Shell.gui_pick_path(type);
+		if (Shell.is_assistant) {
+			result = Shell.assistant_pick_path(type).selection;
 		}
 		if (result === '') {
 			result = null;
@@ -929,11 +939,11 @@ namespace TwinStar.Script.Console {
 		title: string,
 		description: string,
 	): void {
-		if (Shell.is_cli) {
-			Shell.cli_push_notification(title, description);
+		if (Shell.is_basic) {
+			Shell.basic_push_notification(title, description);
 		}
-		if (Shell.is_gui) {
-			Shell.gui_push_notification(title, description);
+		if (Shell.is_assistant) {
+			Shell.assistant_push_notification(title, description);
 		}
 		return;
 	}

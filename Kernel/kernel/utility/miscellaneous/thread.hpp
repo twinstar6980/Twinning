@@ -11,7 +11,7 @@ namespace TwinStar::Kernel {
 
 	private:
 
-		std::thread m_thread{};
+		std::thread m_thread;
 
 	public:
 
@@ -23,7 +23,9 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		Thread (
-		) = default;
+		) :
+			m_thread{} {
+		}
 
 		Thread (
 			Thread const & that

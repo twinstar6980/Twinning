@@ -36,6 +36,7 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		XValue x{};
+
 		YValue y{};
 
 		// ----------------
@@ -60,7 +61,9 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		XValue x{};
+
 		YValue y{};
+
 		ZValue z{};
 
 		// ----------------
@@ -113,6 +116,7 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		XValue width{};
+
 		YValue height{};
 
 		// ----------------
@@ -147,7 +151,9 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		XValue width{};
+
 		YValue height{};
+
 		ZValue depth{};
 
 		// ----------------

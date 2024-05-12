@@ -86,7 +86,7 @@ namespace TwinStar::Kernel::Trait {
 
 	// ----------------
 
-	#if defined M_compiler_msvc // TODO : avoid msvc bug : in msvc 19.34~38, pass global function pointer to non-type template argument will auto cast to function object, such as R (*) (A...) -> R (A...)
+	#if defined M_compiler_msvc // TODO : avoid msvc bug : in msvc 19.34~39, pass global function pointer to non-type template argument will auto cast to function object, such as R (*) (A...) -> R (A...)
 	template <typename TResult, typename ... TArgument> requires
 		AutoConstraint
 	struct CallableTrait<TResult  (TArgument ...)> :
@@ -211,7 +211,7 @@ namespace TwinStar::Kernel::Trait {
 
 		template <auto function, typename Object, auto constant, typename Result, typename ... Argument> requires
 			NoneConstraint
-		inline auto normalized_method (
+		inline auto normalized_member_function (
 			AsConstantIf<Object, constant> & object,
 			Argument ...                     argument
 		) -> Result {
@@ -220,10 +220,10 @@ namespace TwinStar::Kernel::Trait {
 
 		template <auto function, typename Object, auto ... argument_index> requires
 			NoneConstraint
-		inline constexpr auto make_normalized_method (
+		inline constexpr auto make_normalized_member_function (
 			ValuePackage<argument_index ...>
 		) -> auto {
-			return &normalized_method<function, Object, CallableTraitOf<function>::constant, typename CallableTraitOf<function>::Result, typename CallableTraitOf<function>::Argument::template Element<argument_index> ...>;
+			return &normalized_member_function<function, Object, CallableTraitOf<function>::constant, typename CallableTraitOf<function>::Result, typename CallableTraitOf<function>::Argument::template Element<argument_index> ...>;
 		}
 
 	}
@@ -232,7 +232,7 @@ namespace TwinStar::Kernel::Trait {
 		CategoryConstraint<IsPureInstance<Class>>
 		&& (IsMemberFunction<decltype(function)>)
 		&& (IsDerivedFrom<Class, typename CallableTraitOf<function>::Class>)
-	inline constexpr auto & normalized_member_function = *Detail::make_normalized_method<function, Class>(AsValuePackageOfIndex<CallableTraitOf<function>::Argument::size>{});
+	inline constexpr auto & normalized_member_function = *Detail::make_normalized_member_function<function, Class>(AsValuePackageOfIndex<CallableTraitOf<function>::Argument::size>{});
 
 	// ----------------
 

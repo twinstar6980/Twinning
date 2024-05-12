@@ -33,9 +33,11 @@ namespace TwinStar::Kernel {
 
 	protected:
 
-		Iterator m_data{};
-		Size     m_size{};
-		Size     m_capacity{};
+		Iterator m_data;
+
+		Size m_size;
+
+		Size m_capacity;
 
 	public:
 
@@ -49,7 +51,11 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		List (
-		) = default;
+		) :
+			m_data{},
+			m_size{},
+			m_capacity{} {
+		}
 
 		List (
 			List const & that

@@ -11,7 +11,7 @@ namespace TwinStar::Kernel {
 
 	protected:
 
-		std::any m_value{};
+		std::any m_value;
 
 	public:
 
@@ -23,7 +23,9 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		Any (
-		) = default;
+		) :
+			m_value{} {
+		}
 
 		Any (
 			Any const & that

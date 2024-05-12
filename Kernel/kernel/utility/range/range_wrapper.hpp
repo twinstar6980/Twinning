@@ -19,8 +19,9 @@ namespace TwinStar::Kernel {
 
 	protected:
 
-		Iterator m_begin{};
-		Iterator m_end{};
+		Iterator m_begin;
+
+		Iterator m_end;
 
 	public:
 
@@ -32,7 +33,10 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		constexpr RangeWrapper (
-		) = default;
+		) :
+			m_begin{},
+			m_end{} {
+		}
 
 		constexpr RangeWrapper (
 			RangeWrapper const & that

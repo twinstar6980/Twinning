@@ -20,7 +20,7 @@ namespace TwinStar.Script.ProcessHelper {
 	): null | string {
 		let result: null | string = null;
 		for (let element_key in map) {
-			if (Shell.is_windows ? element_key.toLowerCase() === key.toLowerCase() : element_key === key) {
+			if (KernelX.is_windows ? element_key.toLowerCase() === key.toLowerCase() : element_key === key) {
 				result = map[element_key];
 				break;
 			}
@@ -32,12 +32,12 @@ namespace TwinStar.Script.ProcessHelper {
 		name: string,
 	): null | string {
 		let result: null | string = null;
-		let item_delimiter = Shell.is_windows ? ';' : ':';
+		let item_delimiter = KernelX.is_windows ? ';' : ':';
 		let path_environment = KernelX.Process.get_environment_variable('PATH');
 		assert_test(path_environment !== null, `environment PATH not found`);
 		let path_list = path_environment.split(item_delimiter);
 		let path_extension_list = [''];
-		if (Shell.is_windows) {
+		if (KernelX.is_windows) {
 			let path_extension_environment = KernelX.Process.get_environment_variable('PATHEXT');
 			assert_test(path_extension_environment !== null, `environment PATHEXT not found`);
 			path_extension_list.push(...path_extension_environment.split(item_delimiter).map((value) => (value.toLowerCase())));
@@ -73,7 +73,7 @@ namespace TwinStar.Script.ProcessHelper {
 		let output = `${temporary_directory}/output`;
 		let error = `${temporary_directory}/error`;
 		KernelX.FileSystem.write_file_s(input, input_data);
-		if (Shell.is_android && Shell.is_gui) {
+		if (KernelX.is_android && !Shell.is_basic) {
 			temporary_directory_fallback = `${AndroidHelper.k_remote_temporary_directory}/${PathUtility.name(temporary_directory)}`;
 			output = `${temporary_directory_fallback}/output`;
 			error = `${temporary_directory_fallback}/error`;
@@ -94,7 +94,7 @@ namespace TwinStar.Script.ProcessHelper {
 			error: read_file(error),
 		};
 		KernelX.FileSystem.remove(temporary_directory);
-		if (Shell.is_android && Shell.is_gui) {
+		if (KernelX.is_android && !Shell.is_basic) {
 			assert_test(temporary_directory_fallback !== null);
 			assert_test(KernelX.Process.system_command(`su -c "rm -rf ${temporary_directory_fallback}"`) === 0n);
 		}

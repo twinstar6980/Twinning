@@ -1,0 +1,119 @@
+<local:CustomControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:community="using:CommunityToolkit.WinUI"
+	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
+	xmlns:local="using:AssistantPlus"
+	xmlns:localViewHome="using:AssistantPlus.View.Home"
+	xmlns:my="using:AssistantPlus.Control"
+	mc:Ignorable="d"
+	x:DefaultBindMode="OneWay"
+	x:Class="AssistantPlus.View.Home.LauncherConfigurationPanel"
+	>
+	<my:Stack
+		HorizontalAlignment="Stretch"
+		VerticalAlignment="Stretch"
+		Orientation="Vertical"
+		Spacing="2"
+		>
+		<my:SettingItem
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Icon="{StaticResource FluentIconGlyph.Characters}"
+			Title="Title"
+			>
+			<my:SettingItem.Action>
+				<my:Stack
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Orientation="Horizontal"
+					Spacing="8"
+					>
+					<TextBox
+						my:Stack.Weight="1"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
+						LostFocus="{x:Bind Controller.uTitleText_LostFocus}"
+						Text="{x:Bind Controller.uTitleText_Text}"
+						/>
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+		<my:SettingItem
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Icon="{StaticResource FluentIconGlyph.Tag}"
+			Title="Type"
+			>
+			<my:SettingItem.Action>
+				<my:Stack
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Orientation="Horizontal"
+					Spacing="8"
+					>
+					<ComboBox
+						my:Stack.Weight="1"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
+						ItemsSource="{x:Bind Controller.uTypeSelect_ItemsSource}"
+						SelectedIndex="{x:Bind Controller.uTypeSelect_SelectedIndex}"
+						SelectionChanged="{x:Bind Controller.uTypeSelect_SelectionChanged}"
+						/>
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+		<my:SettingItem
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Icon="{StaticResource FluentIconGlyph.BulletedList}"
+			Title="Option"
+			>
+			<my:SettingItem.Action>
+				<my:Stack
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Orientation="Horizontal"
+					Spacing="8"
+					>
+					<TextBox
+						my:Stack.Weight="1"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
+						LostFocus="{x:Bind Controller.uOptionText_LostFocus}"
+						TextWrapping="Wrap"
+						AcceptsReturn="True"
+						Text="{x:Bind Controller.uOptionText_Text}"
+						/>
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+		<my:SettingItem
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Icon="{StaticResource FluentIconGlyph.LightningBolt}"
+			Title="Command"
+			>
+			<my:SettingItem.Action>
+				<my:Stack
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Orientation="Horizontal"
+					Spacing="8"
+					>
+					<TextBox
+						my:Stack.Weight="1"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
+						LostFocus="{x:Bind Controller.uCommandText_LostFocus}"
+						TextWrapping="Wrap"
+						AcceptsReturn="True"
+						Text="{x:Bind Controller.uCommandText_Text}"
+						/>
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
+	</my:Stack>
+</local:CustomControl>

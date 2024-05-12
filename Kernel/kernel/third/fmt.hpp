@@ -19,6 +19,7 @@
 #pragma clang diagnostic ignored "-Wreserved-identifier"
 #pragma clang diagnostic ignored "-Wundefined-func-template"
 #pragma clang diagnostic ignored "-Wdeprecated-literal-operator"
+#pragma clang diagnostic ignored "-Wswitch-default"
 #endif
 
 #include "third/fmt/include/fmt/format.h"

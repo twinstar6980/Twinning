@@ -37,7 +37,7 @@ namespace TwinStar::Kernel {
 
 	protected:
 
-		std::bitset<t_size.value> m_data{};
+		std::bitset<t_size.value> m_data;
 
 	public:
 
@@ -49,7 +49,9 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		constexpr BitSet (
-		) = default;
+		) :
+			m_data{} {
+		}
 
 		constexpr BitSet (
 			BitSet const & that

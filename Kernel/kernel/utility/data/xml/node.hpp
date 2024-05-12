@@ -19,9 +19,11 @@ namespace TwinStar::Kernel::XML {
 
 	struct Element {
 
-		String              name{};
+		String name{};
+
 		Map<String, String> attribute{};
-		List<Node>          child{};
+
+		List<Node> child{};
 
 		// ----------------
 
@@ -34,7 +36,8 @@ namespace TwinStar::Kernel::XML {
 
 	struct Text {
 
-		String  value{};
+		String value{};
+
 		Boolean cdata{};
 
 		// ----------------

@@ -280,10 +280,10 @@ namespace TwinStar.Script.Support.Wwise.Media.Encode {
 	function cast_wwise_internal_path(
 		raw: string,
 	): string {
-		if (Shell.is_windows) {
+		if (KernelX.is_windows) {
 			return raw;
 		}
-		if (Shell.is_macintosh) {
+		if (KernelX.is_macintosh) {
 			// locate at wine drive Z
 			assert_test(raw.startsWith('/'));
 			return `Z:${raw}`;
@@ -296,12 +296,12 @@ namespace TwinStar.Script.Support.Wwise.Media.Encode {
 		ripe_file: string,
 		format: Format,
 	): void {
-		assert_test(Shell.is_windows || Shell.is_macintosh, `unsupported system, this function only avaliable for windows or macintosh`);
+		assert_test(KernelX.is_windows || KernelX.is_macintosh, `unsupported system, this function only avaliable for windows or macintosh`);
 		let wwise_program_name: string = undefined!;
-		if (Shell.is_windows) {
+		if (KernelX.is_windows) {
 			wwise_program_name = 'WwiseConsole.exe';
 		}
-		if (Shell.is_macintosh) {
+		if (KernelX.is_macintosh) {
 			wwise_program_name = 'WwiseConsole.sh';
 		}
 		let wwise_program_file = g_wwise_program_file !== null ? g_wwise_program_file : ProcessHelper.search_path(wwise_program_name);

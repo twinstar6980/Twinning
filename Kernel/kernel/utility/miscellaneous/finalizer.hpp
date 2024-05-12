@@ -17,7 +17,7 @@ namespace TwinStar::Kernel {
 
 	protected:
 
-		Function m_function{};
+		Function m_function;
 
 	public:
 

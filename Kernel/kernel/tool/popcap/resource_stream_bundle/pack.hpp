@@ -50,10 +50,9 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 			auto resource_detail_manifest_information_structure_list = List<Structure::ResourceDetailManifestInformation<version>>{};
 			auto string_map = std::unordered_map<String, Size>{};
 			auto string_list = List<String>{};
-			auto set_string =
-				[&] (
+			auto set_string = [&] (
 				String const & string
-			) -> auto {
+			) -> IntegerU32 {
 				auto result = Size{};
 				auto iterator = string_map.find(string);
 				if (iterator != string_map.end()) {
@@ -172,23 +171,22 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 			data.write_constant(Structure::k_magic_identifier);
 			data.write_constant(cbw<Structure::VersionNumber>(version.number));
 			struct {
-				OByteStreamView header;
-				Size            group_id_offset;
-				OByteStreamView group_id;
-				Size            subgroup_id_offset;
-				OByteStreamView subgroup_id;
-				Size            resource_path_offset;
-				OByteStreamView resource_path;
-				Size            group_information_offset;
-				OByteStreamView group_information;
-				Size            subgroup_information_offset;
-				OByteStreamView subgroup_information;
-				Size            pool_information_offset;
-				OByteStreamView pool_information;
-				Size            texture_resource_information_offset;
-				OByteStreamView texture_resource_information;
-			}
-				information_data = {};
+				OByteStreamView header{};
+				Size            group_id_offset{};
+				OByteStreamView group_id{};
+				Size            subgroup_id_offset{};
+				OByteStreamView subgroup_id{};
+				Size            resource_path_offset{};
+				OByteStreamView resource_path{};
+				Size            group_information_offset{};
+				OByteStreamView group_information{};
+				Size            subgroup_information_offset{};
+				OByteStreamView subgroup_information{};
+				Size            pool_information_offset{};
+				OByteStreamView pool_information{};
+				Size            texture_resource_information_offset{};
+				OByteStreamView texture_resource_information{};
+			} information_data = {};
 			{
 				auto information_structure = Structure::Information<version>{};
 				auto global_group_count = k_none_size;
@@ -411,10 +409,9 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
 					pool_information_structure.flag = 0_iu32;
 					packet_package_definition.compression = subgroup_definition.compression;
 					packet_package_definition.resource.allocate_full(subgroup_definition.resource.size());
-					auto make_formatted_path =
-						[&] (
+					auto make_formatted_path = [&] (
 						Path const & path_format
-					) -> auto {
+					) -> Path {
 						return Path{format_string(path_format.to_string(), group_definition.id, subgroup_definition.id)};
 					};
 					auto texture_resource_begin = global_texture_resource_index;

@@ -2,7 +2,6 @@
 
 #include "kernel/utility/trait/base.hpp"
 #include "kernel/utility/trait/category.hpp"
-#include "kernel/utility/trait/callable.hpp"
 
 namespace TwinStar::Kernel::Trait::Reflection {
 

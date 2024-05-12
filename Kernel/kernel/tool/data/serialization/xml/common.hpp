@@ -42,27 +42,14 @@ namespace TwinStar::Kernel::Tool::Data::Serialization::XML {
 
 		template <class T, int INITIAL_SIZE>
 		struct TinyXML2DynArrayImitator {
-
 			T * _mem;
 			T   _pool[INITIAL_SIZE];
 			int _allocated;
 			int _size;
-
 		};
 
 		struct TinyXML2PrinterImitator {
-
-			enum {
-				ENTITY_RANGE = 64,
-				BUF_SIZE     = 200
-			};
-
-			// ----------------
-
-			virtual ~TinyXML2PrinterImitator () = 0;
-
-			// ----------------
-
+			virtual                                    ~TinyXML2PrinterImitator () = 0;
 			bool                                       _elementJustOpened;
 			TinyXML2DynArrayImitator<char const *, 10> _stack;
 			bool                                       _firstElement;
@@ -71,10 +58,9 @@ namespace TwinStar::Kernel::Tool::Data::Serialization::XML {
 			int                                        _textDepth;
 			bool                                       _processEntities;
 			bool                                       _compactMode;
-			bool                                       _entityFlag[ENTITY_RANGE];
-			bool                                       _restrictedEntityFlag[ENTITY_RANGE];
+			bool                                       _entityFlag[64];
+			bool                                       _restrictedEntityFlag[64];
 			TinyXML2DynArrayImitator<char, 20>         _buffer;
-
 		};
 
 		// NOTE : maybe failed if api changed

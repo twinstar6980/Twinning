@@ -1,0 +1,53 @@
+<local:CustomControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:community="using:CommunityToolkit.WinUI"
+	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
+	xmlns:local="using:AssistantPlus"
+	xmlns:localViewPackageBuilder="using:AssistantPlus.View.PackageBuilder"
+	xmlns:my="using:AssistantPlus.Control"
+	mc:Ignorable="d"
+	x:DefaultBindMode="OneWay"
+	x:Class="AssistantPlus.View.PackageBuilder.PackagePartPanel"
+	>
+	<my:Stack
+		HorizontalAlignment="Stretch"
+		VerticalAlignment="Stretch"
+		Orientation="Vertical"
+		Spacing="8"
+		>
+		<ListView
+			x:Name="uList"
+			x:FieldModifier="public"
+			my:Stack.Weight="1"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Padding="0,-2,0,0"
+			SelectionMode="Multiple"
+			IsItemClickEnabled="True"
+			ItemsSource="{x:Bind Controller.uList_ItemsSource}"
+			SelectionChanged="{x:Bind Controller.uList_SelectionChanged}"
+			>
+			<ListView.ItemTemplate>
+				<DataTemplate x:DataType="localViewPackageBuilder:PackagePartPanelItemController">
+					<my:Stack
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Height="48"
+						Orientation="Horizontal"
+						Spacing="12"
+						>
+						<TextBlock
+							my:Stack.Weight="1"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Center"
+							Text="{x:Bind uName_Text}"
+							/>
+					</my:Stack>
+				</DataTemplate>
+			</ListView.ItemTemplate>
+		</ListView>
+	</my:Stack>
+</local:CustomControl>

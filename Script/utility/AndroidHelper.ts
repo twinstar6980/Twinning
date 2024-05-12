@@ -42,7 +42,7 @@ namespace TwinStar.Script.AndroidHelper {
 
 	// ------------------------------------------------
 
-	let g_mode: 'native' | 'bridge' = Shell.is_android ? 'native' : 'bridge';
+	let g_mode: 'native' | 'bridge' = KernelX.is_android ? 'native' : 'bridge';
 
 	export function shell(
 		command: string,

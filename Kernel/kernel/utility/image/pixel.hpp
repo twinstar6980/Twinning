@@ -15,8 +15,11 @@ namespace TwinStar::Kernel::Image {
 		// ----------------
 
 		Color red{};
+
 		Color green{};
+
 		Color blue{};
+
 		Color alpha{};
 
 		// ----------------

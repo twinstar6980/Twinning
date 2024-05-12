@@ -34,8 +34,9 @@ namespace TwinStar::Kernel {
 
 	protected:
 
-		ListView m_view{};
-		Size     m_position{};
+		ListView m_view;
+
+		Size m_position;
 
 	public:
 
@@ -47,7 +48,10 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		StreamView (
-		) = default;
+		) :
+			m_view{},
+			m_position{} {
+		}
 
 		StreamView (
 			StreamView const & that

@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 62
+ * @version 63
  */
 declare namespace TwinStar.Kernel {
 
@@ -2013,10 +2013,12 @@ declare namespace TwinStar.Kernel {
 						 * 读
 						 * @param data 数据
 						 * @param value 值
+						 * @param buffer 缓冲区
 						 */
 						function process(
 							data: ICharacterStreamView,
 							value: Kernel.JSON.Value,
+							buffer: OCharacterStreamView,
 						): Void;
 
 					}
@@ -4803,7 +4805,7 @@ declare namespace TwinStar.Kernel {
 			// ------------------------------------------------
 
 			/**
-			 * 模块加载时的主目录，默认为null，进程作用域
+			 * 模块加载时的主目录，默认为null
 			 * @returns 引用变量
 			 */
 			query_module_home(
@@ -4858,11 +4860,17 @@ declare namespace TwinStar.Kernel {
 
 		// ------------------------------------------------
 
-		/** 版本编号 */
-		const g_version: Size;
-
 		/** 主上下文 */
 		const g_context: Context;
+
+		/** 程序版本 */
+		const g_version: String;
+
+		/** 操作系统 */
+		const g_system: String;
+
+		/** 处理器架构 */
+		const g_architecture: String;
 
 		// ------------------------------------------------
 
@@ -4874,8 +4882,8 @@ declare namespace TwinStar.Kernel {
 	type JS_MainFunction = (
 		data: {
 			argument: Array<string>;
-			result: undefined | string;
-			error: undefined | any;
+			result: undefined | Array<string>;
+			exception: undefined | any;
 		},
 	) => void;
 

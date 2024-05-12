@@ -680,8 +680,9 @@ namespace TwinStar::Kernel::JavaScript {
 			auto thix_array = thix.collect_object_own_property_of_array();
 			that.convert(
 				thix_array,
-				[] (auto & that_element, auto & thix_element) {
+				[] (auto & that_element, auto & thix_element) -> auto {
 					thix_element.to(that_element);
+					return;
 				}
 			);
 			return;
@@ -721,9 +722,10 @@ namespace TwinStar::Kernel::JavaScript {
 			auto thix_object = thix.collect_object_own_property_of_object();
 			that.convert(
 				thix_object,
-				[] (auto & that_element, auto & thix_element) {
+				[] (auto & that_element, auto & thix_element) -> auto {
 					thix_element.key.to(that_element.key);
 					thix_element.value.to(that_element.value);
+					return;
 				}
 			);
 			return;

@@ -24,11 +24,10 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamGroup {
 			data.write_constant(Structure::k_magic_identifier);
 			data.write_constant(cbw<Structure::VersionNumber>(version.number));
 			struct {
-				OByteStreamView header;
-				OByteStreamView resource_information;
-				Size            resource_information_offset;
-			}
-				information_data = {};
+				OByteStreamView header{};
+				OByteStreamView resource_information{};
+				Size            resource_information_offset{};
+			} information_data = {};
 			{
 				auto information_structure = Structure::Information<version>{};
 				information_structure.resource_information.allocate_full(definition.resource.size());

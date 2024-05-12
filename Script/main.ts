@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = 103;
+	export const k_version = '104';
 
 	// ------------------------------------------------
 
@@ -44,14 +44,16 @@ namespace TwinStar.Script {
 
 		// ------------------------------------------------
 
-		export function read_json<ConstraintT extends Kernel.JSON.JS_Value>(
+		export function read_json<Constraint extends Kernel.JSON.JS_Value>(
 			file: string,
-		): ConstraintT {
+		): Constraint {
 			let data = Kernel.FileSystem.read_file(Kernel.Path.value(file));
-			let stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(data.view()));
-			let json = Kernel.JSON.Value.default<ConstraintT>();
-			Kernel.Tool.Data.Serialization.JSON.Read.process(stream, json);
-			return json.value;
+			let data_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(data.view()));
+			let value = Kernel.JSON.Value.default<Constraint>();
+			let buffer = Kernel.ByteArray.allocate(Kernel.Size.value(0x400n));
+			let buffer_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(buffer.view()));
+			Kernel.Tool.Data.Serialization.JSON.Read.process(data_stream, value, buffer_stream);
+			return value.value;
 		}
 
 		// ------------------------------------------------
@@ -76,12 +78,12 @@ namespace TwinStar.Script {
 		export function output(
 			message: string,
 		): void {
-			var host = Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['host'])).value[0];
-			if (host === 'cli') {
-				Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['output', `● ${message}\n`]));
+			var host_name = Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['name'])).value[0];
+			if (host_name === 'basic') {
+				Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['output_text', `● ${message}\n`]));
 			}
-			if (host === 'gui' || host === 'helper') {
-				Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['output_message', 'v', `${message}`]));
+			if (host_name === 'assistant' || host_name === 'assistant.plus') {
+				Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['send_message', 'verbosity', `${message}`]));
 			}
 			return;
 		}
@@ -291,8 +293,8 @@ namespace TwinStar.Script {
 
 		async function internal(
 			argument: Array<string>,
-		): Promise<string> {
-			Detail.output(`TwinStar.ToolKit ~ Kernel:${Kernel.Miscellaneous.g_version.value} & Shell:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['host'])).value[0]}:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['version'])).value[0]} & Script:${k_version} ~ ${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['system'])).value[0]}`);
+		): Promise<Array<string>> {
+			Detail.output(`TwinStar.ToolKit ~ Kernel:${Kernel.Miscellaneous.g_version.value} & Shell:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['name'])).value[0]}:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['version'])).value[0]} & Script:${k_version} ~ ${Kernel.Miscellaneous.g_system.value}:${Kernel.Miscellaneous.g_architecture.value}`);
 			assert_test(argument.length >= 1, `argument too few`);
 			// 获取主目录
 			let home_path = argument[0].replaceAll(`\\`, '/');
@@ -313,6 +315,14 @@ namespace TwinStar.Script {
 					los('main:partition_load_duration', ((timer_end - timer_begin) / 1000).toFixed(3)),
 				]);
 				Home.initialize();
+				{
+					// Console.pause();
+					// Console.boolean(true, null);
+					// Console.integer(true, null);
+					// Console.floater(true, null);
+					// Console.size(true, null);
+					// Console.string(true, null);
+				}
 				result = Entry.entry(argument.slice(1));
 			}
 			catch (e) {
@@ -321,24 +331,24 @@ namespace TwinStar.Script {
 			}
 			// 释放资源
 			g_thread_manager.resize(0);
-			return result;
+			return [result];
 		}
 
 		export function external(
 			data: {
 				argument: Array<string>;
-				result: undefined | string;
-				error: undefined | any;
+				result: undefined | Array<string>;
+				exception: undefined | any;
 			},
 		): void {
-			data.result = '';
+			data.result = [];
 			internal(data.argument)
 				.then(
 					(value) => {
 						data.result = value;
 					},
 					(reason) => {
-						data.error = reason;
+						data.exception = reason;
 					},
 				);
 			return;

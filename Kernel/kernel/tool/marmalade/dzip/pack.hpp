@@ -25,15 +25,14 @@ namespace TwinStar::Kernel::Tool::Marmalade::DZip {
 		) -> Void {
 			data.write_constant(Structure::k_magic_identifier);
 			struct {
-				OByteStreamView archive_setting;
-				OByteStreamView resource_file;
-				OByteStreamView resource_directory;
-				OByteStreamView resource_information;
-				OByteStreamView chunk_setting;
-				OByteStreamView chunk_information;
-				OByteStreamView archive_resource_information;
-			}
-				information_data = {};
+				OByteStreamView archive_setting{};
+				OByteStreamView resource_file{};
+				OByteStreamView resource_directory{};
+				OByteStreamView resource_information{};
+				OByteStreamView chunk_setting{};
+				OByteStreamView chunk_information{};
+				OByteStreamView archive_resource_information{};
+			} information_data = {};
 			{
 				auto information_structure = Structure::Information<version>{};
 				information_structure.resource_file.allocate(definition.resource.size());

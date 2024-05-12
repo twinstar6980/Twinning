@@ -28,7 +28,7 @@ namespace TwinStar::Kernel::Image {
 
 	protected:
 
-		Array<Array<Pixel>> m_data{};
+		Array<Array<Pixel>> m_data;
 
 	public:
 
@@ -42,7 +42,9 @@ namespace TwinStar::Kernel::Image {
 		// ----------------
 
 		BasicImage (
-		) = default;
+		) :
+			m_data{} {
+		}
 
 		BasicImage (
 			BasicImage const & that

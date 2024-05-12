@@ -21,8 +21,9 @@ namespace TwinStar::Kernel {
 
 	protected:
 
-		Boolean         m_has{};
-		Pointer<QValue> m_value{};
+		Boolean m_has;
+
+		Pointer<QValue> m_value;
 
 	public:
 
@@ -34,7 +35,10 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		constexpr OptionalView (
-		) = default;
+		) :
+			m_has{},
+			m_value{} {
+		}
 
 		constexpr OptionalView (
 			OptionalView const & that
@@ -119,7 +123,7 @@ namespace TwinStar::Kernel {
 			OptionalView const & thix,
 			OptionalView const & that
 		) -> bool {
-			return thix.has() ? (Boolean{that.has() && thix.get() == that.get()}) : (!that.has());
+			return thix.has() ? (that.has() && thix.get() == that.get()) : (!that.has());
 		}
 
 		#pragma endregion

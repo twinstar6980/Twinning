@@ -32,7 +32,7 @@ namespace TwinStar.Script.Executor {
 		argument: Argument;
 		worker: (argument: { [Element in Argument[number]as Element['id']]: Element['Value'] }) => void;
 		batch_argument: null | BatchArgument;
-		batch_worker: (argument: { [Element in Argument[number]as Element['id']]: Element['Value'] }, temporary: any) => void;
+		batch_worker: null | ((argument: { [Element in Argument[number]as Element['id']]: Element['Value'] }, temporary: any) => void);
 	};
 
 	// ------------------------------------------------

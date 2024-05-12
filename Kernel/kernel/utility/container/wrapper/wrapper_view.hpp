@@ -21,7 +21,7 @@ namespace TwinStar::Kernel {
 
 	protected:
 
-		Pointer<QValue> m_value{};
+		Pointer<QValue> m_value;
 
 	public:
 
@@ -33,7 +33,9 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		constexpr WrapperView (
-		) = default;
+		) :
+			m_value{} {
+		}
 
 		constexpr WrapperView (
 			WrapperView const & that

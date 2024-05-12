@@ -1,10 +1,8 @@
 #pragma once
 
 #include "kernel/utility/file_system/path.hpp"
-#include "kernel/utility/miscellaneous/finalizer.hpp"
 #include "kernel/utility/miscellaneous/byte_series/container.hpp"
 #include "kernel/utility/miscellaneous/byte_series/stream.hpp"
-#include "kernel/utility/miscellaneous/character_series/stream.hpp"
 #include "kernel/utility/exception/utility.hpp"
 #include <filesystem>
 
@@ -32,7 +30,7 @@ namespace TwinStar::Kernel::FileSystem {
 		inline auto make_regular_path (
 			Path & original
 		) -> Path & {
-			for (auto & element : as_variable(original.sub_path())) {
+			for (auto & element : as_variable(original.relative())) {
 				if (!element.empty()) {
 					if (element.last() == ' '_c) {
 						element.append_list("#"_sv);
@@ -81,7 +79,7 @@ namespace TwinStar::Kernel::FileSystem {
 
 		protected:
 
-			Pointer<std::FILE> m_value{};
+			Pointer<std::FILE> m_value;
 
 		protected:
 
@@ -376,7 +374,7 @@ namespace TwinStar::Kernel::FileSystem {
 		Path const & destination
 	) -> Void {
 		assert_test(exist(source));
-		if (!destination.sub_path().empty() && !exist_directory(destination.parent())) {
+		if (!destination.relative().empty() && !exist_directory(destination.parent())) {
 			create_directory(destination.parent());
 		}
 		std::filesystem::copy(Detail::make_std_path(source), Detail::make_std_path(destination), std::filesystem::copy_options::recursive | std::filesystem::copy_options::overwrite_existing);
@@ -407,7 +405,7 @@ namespace TwinStar::Kernel::FileSystem {
 		Path const &    object,
 		Boolean const & is_directory
 	) -> Void {
-		if (!target.sub_path().empty() && !exist_directory(target.parent())) {
+		if (!target.relative().empty() && !exist_directory(target.parent())) {
 			create_directory(target.parent());
 		}
 		if (!is_directory) {
@@ -434,7 +432,7 @@ namespace TwinStar::Kernel::FileSystem {
 		Path const & target,
 		Path const & object
 	) -> Void {
-		if (!target.sub_path().empty() && !exist_directory(target.parent())) {
+		if (!target.relative().empty() && !exist_directory(target.parent())) {
 			create_directory(target.parent());
 		}
 		std::filesystem::create_hard_link(Detail::make_std_path(object), Detail::make_std_path(target));

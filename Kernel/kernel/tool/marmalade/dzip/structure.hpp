@@ -134,18 +134,33 @@ namespace TwinStar::Kernel::Tool::Marmalade::DZip::Structure {
 		CategoryConstraint<>
 		&& (check_version(t_version, {0}))
 	struct ChunkFlag<t_version> {
+
 		inline static constexpr auto k_count = Size{11_sz};
+
+		// ----------------
+
 		inline static constexpr auto combuf = Size{1_ix};
+
 		inline static constexpr auto unused_2 = Size{2_ix};
+
 		inline static constexpr auto dzip = Size{3_ix};
+
 		inline static constexpr auto zlib = Size{4_ix};
+
 		inline static constexpr auto bzip2 = Size{5_ix};
+
 		inline static constexpr auto mp3 = Size{6_ix};
+
 		inline static constexpr auto jpeg = Size{7_ix};
+
 		inline static constexpr auto zerod_out = Size{8_ix};
+
 		inline static constexpr auto copy_coded = Size{9_ix};
+
 		inline static constexpr auto lzma = Size{10_ix};
+
 		inline static constexpr auto random_access = Size{11_ix};
+
 	};
 
 	#pragma endregion

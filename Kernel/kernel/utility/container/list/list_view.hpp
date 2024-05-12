@@ -28,8 +28,9 @@ namespace TwinStar::Kernel {
 
 	protected:
 
-		QIterator m_data{};
-		Size      m_size{};
+		QIterator m_data;
+
+		Size m_size;
 
 	public:
 
@@ -41,7 +42,10 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		constexpr ListView (
-		) = default;
+		) :
+			m_data{},
+			m_size{} {
+		}
 
 		constexpr ListView (
 			ListView const & that

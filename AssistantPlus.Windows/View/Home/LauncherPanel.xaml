@@ -1,0 +1,228 @@
+<local:CustomControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:community="using:CommunityToolkit.WinUI"
+	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
+	xmlns:local="using:AssistantPlus"
+	xmlns:localViewHome="using:AssistantPlus.View.Home"
+	xmlns:my="using:AssistantPlus.Control"
+	mc:Ignorable="d"
+	x:DefaultBindMode="OneWay"
+	x:Class="AssistantPlus.View.Home.LauncherPanel"
+	>
+	<local:CustomControl.Resources>
+		<DataTemplate x:Key="uLauncherListItemTemplate" x:DataType="localViewHome:LauncherPageLauncherItemController">
+			<my:Stack
+				ToolTipService.ToolTip="Launch"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Padding="0,8,4,8"
+				Orientation="Horizontal"
+				Spacing="12"
+				>
+				<FontIcon
+					HorizontalAlignment="Left"
+					VerticalAlignment="Stretch"
+					Width="32"
+					Height="32"
+					FontSize="{StaticResource LargeIconSize}"
+					Glyph="{x:Bind uIcon_Glyph}"
+					/>
+				<TextBlock
+					my:Stack.Weight="1"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Center"
+					Style="{ThemeResource BodyStrongTextBlockStyle}"
+					TextWrapping="NoWrap"
+					Text="{x:Bind uTitle_Text}"
+					/>
+				<my:Stack
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Center"
+					Orientation="Horizontal"
+					Spacing="0"
+					>
+					<Button
+						ToolTipService.ToolTip="Pin"
+						Visibility="{x:Bind uPin_Visibility}"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Center"
+						Margin="8,0,0,0"
+						Padding="5,5,5,6"
+						BorderBrush="Transparent"
+						Background="Transparent"
+						Click="{x:Bind uPin_Click}"
+						Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Pin}}"
+						/>
+					<Button
+						ToolTipService.ToolTip="Remove"
+						Visibility="{x:Bind uRemove_Visibility}"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Center"
+						Margin="8,0,0,0"
+						Padding="5,5,5,6"
+						BorderBrush="Transparent"
+						Background="Transparent"
+						Click="{x:Bind uRemove_Click}"
+						Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Remove}}"
+						/>
+					<Button
+						ToolTipService.ToolTip="Setting"
+						Visibility="{x:Bind uSetting_Visibility}"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Center"
+						Margin="8,0,0,0"
+						Padding="5,5,5,6"
+						BorderBrush="Transparent"
+						Background="Transparent"
+						Click="{x:Bind uSetting_Click}"
+						Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Settings}}"
+						/>
+				</my:Stack>
+				<my:Stack.ContextFlyout>
+					<MenuFlyout>
+						<MenuFlyoutItem
+							Click="{x:Bind uEdit_Click}"
+							Icon="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Edit}}"
+							Text="Edit"
+							/>
+						<MenuFlyoutItem
+							Click="{x:Bind uLaunchAsWindow_Click}"
+							Icon="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.OpenInNewWindow}}"
+							Text="Launch As Window"
+							/>
+					</MenuFlyout>
+				</my:Stack.ContextFlyout>
+			</my:Stack>
+		</DataTemplate>
+	</local:CustomControl.Resources>
+	<ScrollViewer
+		HorizontalAlignment="Stretch"
+		VerticalAlignment="Stretch"
+		HorizontalScrollMode="Disabled"
+		HorizontalScrollBarVisibility="Disabled"
+		VerticalScrollMode="Enabled"
+		VerticalScrollBarVisibility="Visible"
+		>
+		<my:Stack
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Padding="0,12"
+			Orientation="Vertical"
+			Spacing="12"
+			>
+			<my:Stack
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Orientation="Vertical"
+				Spacing="8"
+				>
+				<my:Stack
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Padding="8,0"
+					Orientation="Horizontal"
+					Spacing="8"
+					>
+					<TextBlock
+						my:Stack.Weight="1"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Bottom"
+						Style="{ThemeResource SubtitleTextBlockStyle}"
+						TextWrapping="NoWrap"
+						Text="Module"
+						/>
+				</my:Stack>
+				<ListView
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					SelectionMode="None"
+					IsItemClickEnabled="True"
+					ItemTemplate="{StaticResource uLauncherListItemTemplate}"
+					ItemsSource="{x:Bind Controller.uModuleLauncherList_ItemsSource}"
+					ItemClick="{x:Bind Controller.uModuleLauncherList_OnItemClick}"
+					/>
+			</my:Stack>
+			<my:Stack
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Orientation="Vertical"
+				Spacing="8"
+				>
+				<my:Stack
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Padding="8,0"
+					Orientation="Horizontal"
+					Spacing="8"
+					>
+					<TextBlock
+						my:Stack.Weight="1"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Bottom"
+						Style="{ThemeResource SubtitleTextBlockStyle}"
+						TextWrapping="NoWrap"
+						Text="Pinned"
+						/>
+					<Button
+						ToolTipService.ToolTip="Add"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Bottom"
+						Click="{x:Bind Controller.uAddPinnedLauncherItem_Click}"
+						Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Add}}"
+						/>
+				</my:Stack>
+				<ListView
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					SelectionMode="None"
+					IsItemClickEnabled="True"
+					ItemTemplate="{StaticResource uLauncherListItemTemplate}"
+					ItemsSource="{x:Bind Controller.uPinnedLauncherList_ItemsSource}"
+					ItemClick="{x:Bind Controller.uPinnedLauncherList_OnItemClick}"
+					/>
+			</my:Stack>
+			<my:Stack
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Orientation="Vertical"
+				Spacing="8"
+				>
+				<my:Stack
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Padding="8,0"
+					Orientation="Horizontal"
+					Spacing="8"
+					>
+					<TextBlock
+						my:Stack.Weight="1"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Bottom"
+						Style="{ThemeResource SubtitleTextBlockStyle}"
+						TextWrapping="NoWrap"
+						Text="Recent"
+						/>
+					<Button
+						ToolTipService.ToolTip="Clear"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Bottom"
+						Click="{x:Bind Controller.uClearRecentLauncherItem_Click}"
+						Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Clear}}"
+						/>
+				</my:Stack>
+				<ListView
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					SelectionMode="None"
+					IsItemClickEnabled="True"
+					ItemTemplate="{StaticResource uLauncherListItemTemplate}"
+					ItemsSource="{x:Bind Controller.uRecentLauncherList_ItemsSource}"
+					ItemClick="{x:Bind Controller.uRecentLauncherList_OnItemClick}"
+					/>
+			</my:Stack>
+		</my:Stack>
+	</ScrollViewer>
+</local:CustomControl>

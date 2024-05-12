@@ -12,7 +12,7 @@ target('test', function()
 	)
 	add_includedirs(
 		m.root .. '',
-		m.root .. '/../ShellCLI',
+		m.root .. '/../Shell',
 		{ private = true }
 	)
 	add_deps(
@@ -27,7 +27,7 @@ target('test', function()
 	end
 	if m.system:is('windows') then
 		add_files(
-			m.root .. '/../ShellCLI/shell_cli/resource/windows/application.manifest',
+			m.root .. '/../Shell/shell/resource/windows/application.manifest',
 			{}
 		)
 		add_links(

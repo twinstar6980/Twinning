@@ -18,7 +18,7 @@ namespace TwinStar::Kernel {
 
 	protected:
 
-		std::variant<TValue ...> m_value{};
+		std::variant<TValue ...> m_value;
 
 	public:
 
@@ -30,7 +30,9 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		constexpr Variant (
-		) = default;
+		) :
+			m_value{} {
+		}
 
 		constexpr Variant (
 			Variant const & that

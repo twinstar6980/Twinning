@@ -316,10 +316,12 @@ namespace TwinStar::Kernel {
 			auto sub_count = k_none_size;
 			auto sub_begin = k_begin_index;
 			auto sub_end = k_begin_index;
-			auto get_next_sub_range = [&] {
+			auto get_next_sub_range = [&] (
+			) -> Void {
 				result[sub_count] = source.sub(sub_begin, sub_end - sub_begin);
 				sub_begin = sub_end + k_next_index;
 				++sub_count;
+				return;
 			};
 			for (auto & element : source) {
 				if (Range::has(separator, element)) {

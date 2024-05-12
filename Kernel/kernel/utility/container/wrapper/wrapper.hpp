@@ -16,7 +16,7 @@ namespace TwinStar::Kernel {
 
 	protected:
 
-		Value m_value{};
+		Value m_value;
 
 	public:
 
@@ -28,7 +28,9 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		constexpr Wrapper (
-		) = default;
+		) :
+			m_value{} {
+		}
 
 		constexpr Wrapper (
 			Wrapper const & that

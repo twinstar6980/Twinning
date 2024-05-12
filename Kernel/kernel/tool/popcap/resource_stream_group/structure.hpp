@@ -116,7 +116,9 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamGroup::Structure {
 		&& (check_version(t_version, {1}))
 	struct ResourceInformation<t_version> :
 		ResourceBasicInformation<t_version> {
-		EnumerableVariant<ResourceType, GeneralResourceAdditionalInformation<t_version>, TextureResourceAdditionalInformation<t_version>> additional;
+
+		EnumerableVariant<ResourceType, GeneralResourceAdditionalInformation<t_version>, TextureResourceAdditionalInformation<t_version>> additional{};
+
 	};
 
 	// ----------------
@@ -146,8 +148,11 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamGroup::Structure {
 		CategoryConstraint<>
 		&& (check_version(t_version, {1}))
 	struct ResourceTypeFlag<t_version> {
+
 		inline static constexpr auto general = IntegerU32{0x00000000_iu32};
+
 		inline static constexpr auto texture = IntegerU32{0x00000001_iu32};
+
 	};
 
 	#pragma endregion

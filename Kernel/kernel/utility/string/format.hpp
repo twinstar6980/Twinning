@@ -20,9 +20,53 @@ namespace TwinStar::Kernel {
 
 	#pragma region type
 
-	struct StringFormatter {
+	class StringFormatter {
 
-		CStringView format{};
+	protected:
+
+		CStringView m_format;
+
+	public:
+
+		#pragma region structor
+
+		constexpr ~StringFormatter (
+		) = default;
+
+		// ----------------
+
+		constexpr StringFormatter (
+		) :
+			m_format{} {
+		}
+
+		constexpr StringFormatter (
+			StringFormatter const & that
+		) = default;
+
+		constexpr StringFormatter (
+			StringFormatter && that
+		) = default;
+
+		// ----------------
+
+		explicit constexpr StringFormatter (
+			CStringView const & format
+		) :
+			m_format{format} {
+		}
+
+		#pragma endregion
+
+		#pragma region operator
+
+		constexpr auto operator = (
+			StringFormatter const & that
+		) -> StringFormatter & = default;
+
+		constexpr auto operator = (
+			StringFormatter && that
+		) -> StringFormatter & = default;
 
 		// ----------------
 
@@ -31,8 +75,10 @@ namespace TwinStar::Kernel {
 		auto operator () (
 			Argument && ... argument
 		) const -> String {
-			return format_string(thiz.format, as_forward<Argument>(argument) ...);
+			return format_string(thiz.m_format, as_forward<Argument>(argument) ...);
 		}
+
+		#pragma endregion
 
 	};
 
@@ -43,9 +89,7 @@ namespace TwinStar::Kernel {
 	template <StaticString string>
 	inline constexpr auto operator ""_sf (
 	) -> StringFormatter {
-		return StringFormatter{
-			.format = string.view(),
-		};
+		return StringFormatter{string.view()};
 	}
 
 	#pragma endregion

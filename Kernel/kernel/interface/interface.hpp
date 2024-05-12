@@ -1,55 +1,38 @@
 #pragma once
 
-#if defined M_interface_implement
-#if defined M_compiler_msvc
-#define M_symbol_export __declspec(dllexport)
-#endif
-#if defined M_compiler_clang
-#define M_symbol_export __attribute__((visibility("default")))
-#endif
-#endif
+#include <cstdint>
+#include <cstddef>
+#include <type_traits>
 
 namespace TwinStar::Kernel::Interface {
 
-	template <typename It>
-	using Type = It;
+	#pragma region type
 
-	// ----------------
-
-	struct Size {
-		Type<decltype(sizeof(0))> value;
+	struct Message {
+		std::uint8_t * data{nullptr};
+		std::size_t    size{0};
 	};
 
-	struct Character {
-		Type<char> value;
+	struct Executor {
+		std::add_pointer_t<void  (Executor *, Executor *, Message *, Message *, Message *)> invoke{nullptr};
+		std::add_pointer_t<void  (Executor *, Executor *, Message *, Message *, Message *)> clear{nullptr};
 	};
 
-	struct String {
-		Type<Character *> data;
-		Type<Size>        size;
-		Type<Size>        capacity;
+	#pragma endregion
+
+	#pragma region service
+
+	struct Service {
+		Executor * executor{nullptr};
 	};
 
-	struct StringList {
-		Type<String *> data;
-		Type<Size>     size;
-		Type<Size>     capacity;
-	};
-
-	struct Callback {
-		Type<String * (*) (StringList * *, StringList * *)> value;
-	};
-
-	// ----------------
-
-	#if defined M_interface_implement
-	M_symbol_export
+	#if defined M_compiler_msvc
+	__declspec(dllimport)
 	#endif
-	extern auto execute (
-		Callback * *   callback,
-		String * *     script,
-		StringList * * argument,
-		String * *     result
-	) -> String *;
+	#if defined M_compiler_clang
+	#endif
+	extern Service service;
+
+	#pragma endregion
 
 }

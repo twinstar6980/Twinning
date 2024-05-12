@@ -29,7 +29,7 @@ namespace TwinStar::Kernel::Trait::Reflection {
 		&& (IsSameV<t_is_static, ZBoolean>)
 		&& (IsSameV<t_is_function, ZBoolean>)
 	// TODO : && ((t_is_static && IsBuiltinPointer<decltype(t_value)>) || (!t_is_static && IsBuiltinMemberPointer<decltype(t_value)>))
-	// TODO check t_is_function & t_value
+	// TODO : check t_is_function & t_value
 	struct ClassField :
 		Field<t_name, t_value> {
 
@@ -83,6 +83,7 @@ namespace TwinStar::Kernel::Trait::Reflection {
 		&& (IsTemplateInstanceOfV<decltype(t_name), String>)
 	struct EnumerationField :
 		Field<t_name, t_value> {
+
 	};
 
 	// ----------------

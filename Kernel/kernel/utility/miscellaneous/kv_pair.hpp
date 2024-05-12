@@ -16,16 +16,14 @@ namespace TwinStar::Kernel {
 
 		// ----------------
 
-		Key   key{};
+		Key key{};
+
 		Value value{};
 
 		// ----------------
 
 		implicit constexpr KVPair (
-		) :
-			key{},
-			value{} {
-		}
+		) = default;
 
 		template <typename KeyObject, typename ValueObject> requires
 			CategoryConstraint<IsValid<KeyObject> && IsValid<ValueObject>>

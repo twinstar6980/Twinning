@@ -17,8 +17,9 @@ namespace TwinStar::Kernel {
 
 	protected:
 
-		Number m_value{};
-		Number m_step{};
+		Number m_value;
+
+		Number m_step;
 
 	public:
 
@@ -30,7 +31,10 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		constexpr NumberIterator (
-		) = default;
+		) :
+			m_value{},
+			m_step{} {
+		}
 
 		constexpr NumberIterator (
 			NumberIterator const & that

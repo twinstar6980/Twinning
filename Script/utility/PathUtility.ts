@@ -52,14 +52,6 @@ namespace TwinStar.Script.PathUtility {
 		return index === -1 ? target : target.slice(index + 1);
 	}
 
-	export function extension(
-		target: string,
-	): null | string {
-		target = regularize(target);
-		let index = target.lastIndexOf('.');
-		return index === -1 ? null : target.slice(index + 1);
-	}
-
 	// ------------------------------------------------
 
 	export type Tree = { [key: string]: null | Tree; };
@@ -73,7 +65,7 @@ namespace TwinStar.Script.PathUtility {
 			let current = tree;
 			for (let index in path) {
 				let element = path[index];
-				let is_name = parseInt(index) === path.length - 1;
+				let is_name = Number(index) === path.length - 1;
 				if (current[element] === undefined) {
 					current[element] = is_name ? null : {};
 				}
@@ -123,7 +115,7 @@ namespace TwinStar.Script.PathUtility {
 		source: string,
 		destination: string,
 	): void {
-		if (Shell.is_android && AndroidHelper.fs_is_fuse_path(destination) && source.toLowerCase() === destination.toLowerCase()) {
+		if (KernelX.is_android && AndroidHelper.fs_is_fuse_path(destination) && source.toLowerCase() === destination.toLowerCase()) {
 			KernelX.FileSystem.rename(source, source + '!');
 			KernelX.FileSystem.rename(source + '!', destination);
 		}

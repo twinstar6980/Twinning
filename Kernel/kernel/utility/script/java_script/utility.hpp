@@ -23,7 +23,7 @@ namespace TwinStar::Kernel::JavaScript {
 
 	protected:
 
-		Variant<Null, Pointer<Value>, std::shared_ptr<Value>> m_value{};
+		Variant<Null, Pointer<Value>, std::shared_ptr<Value>> m_value;
 
 	protected:
 
@@ -54,7 +54,9 @@ namespace TwinStar::Kernel::JavaScript {
 		// ----------------
 
 		NativeValueHandler (
-		) = default;
+		) :
+			m_value{} {
+		}
 
 		NativeValueHandler (
 			NativeValueHandler const & that
@@ -339,11 +341,15 @@ namespace TwinStar::Kernel::JavaScript {
 
 	protected:
 
-		Optional<String> m_parent_name{};
-		String           m_name{};
-		Value            m_proto{};
-		Value            m_constructor{};
-		Value            m_parent{};
+		Optional<String> m_parent_name;
+
+		String m_name;
+
+		Value m_proto;
+
+		Value m_constructor;
+
+		Value m_parent;
 
 	public:
 
@@ -555,9 +561,11 @@ namespace TwinStar::Kernel::JavaScript {
 
 	protected:
 
-		Optional<String> m_parent_name{};
-		String           m_name{};
-		Value            m_object{};
+		Optional<String> m_parent_name;
+
+		String m_name;
+
+		Value m_object;
 
 	public:
 

@@ -14,41 +14,29 @@
 	
 	内核，负责内部功能的实现。
 
-* `Shell CLI`
+* `Shell`
 	
-	外壳，提供命令行界面。
-
-* `Shell GUI`
-	
-	外壳，提供图形界面。
+	外壳，提供基本的用户界面。
 
 * `Script`
 	
 	脚本，控制工具的运行流程。
 
-* `Forwarder For Windows`
+* `Forwarder`
 	
-	转发器，使用户可以通过 Windows Explorer 右键菜单将文件转发至工具。
+	转发器，将快捷选项注入系统级文件分享接口。
 
-* `Forwarder For Macintosh`
+* `Assistant`
 	
-	转发器，使用户可以通过 Macintosh Finder 右键菜单将文件转发至工具。
+	助理者，实现了额外的高级辅助功能。
 
-* `Forwarder For Android`
+* `Assistant Plus`
 	
-	转发器，使用户可以通过 Android 文件分享功能将文件转发至工具。
-
-* `Forwarder For Iphone`
-	
-	转发器，使用户可以通过 Iphone 文件分享功能将文件转发至工具。
-
-* `Helper`
-	
-	助手，提供额外的高级功能。
+	助理者+，面向 Windows 平台的特化版本。
 
 ## 平台支持
 
-* 操作系统：`Windows 7+` 、`Linux ~` 、`Macintosh 13~` 、`Android 9+` 、`iPhone 16~` 。
+* 操作系统：`Windows 7+` 、`Linux ~` 、`Macintosh 13~` 、`Android 9+` 、`Iphone 16~` 。
 
 * 处理器架构：`x86 32|64` 、`arm 32|64` 。
 

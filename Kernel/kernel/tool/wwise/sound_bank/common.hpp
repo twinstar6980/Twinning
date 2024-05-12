@@ -17,15 +17,25 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 		using ChunkSign = WaveStructure::ChunkSign;
 
 		struct ChunkSignFlag {
+
 			inline static constexpr auto bkhd = FourCC{"BKHD"_fourcc};
+
 			inline static constexpr auto didx = FourCC{"DIDX"_fourcc};
+
 			inline static constexpr auto data = FourCC{"DATA"_fourcc};
+
 			inline static constexpr auto init = FourCC{"INIT"_fourcc};
+
 			inline static constexpr auto stmg = FourCC{"STMG"_fourcc};
+
 			inline static constexpr auto hirc = FourCC{"HIRC"_fourcc};
+
 			inline static constexpr auto stid = FourCC{"STID"_fourcc};
+
 			inline static constexpr auto envs = FourCC{"ENVS"_fourcc};
+
 			inline static constexpr auto plat = FourCC{"PLAT"_fourcc};
+
 		};
 
 		// ----------------
@@ -39,7 +49,9 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 		// ----------------
 
 		struct IDWrapper {
-			typename Definition::ID value;
+
+			typename Definition::ID value{};
+
 		};
 
 		// ----------------
@@ -50,8 +62,11 @@ namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
 			CategoryConstraint<>
 			&& (IsPureInstance<Type>)
 		struct CommonPropertyMap {
-			Map<Type, Tuple<CommonPropertyValue>>                      regular;
-			Map<Type, Tuple<CommonPropertyValue, CommonPropertyValue>> randomizer;
+
+			Map<Type, Tuple<CommonPropertyValue>> regular{};
+
+			Map<Type, Tuple<CommonPropertyValue, CommonPropertyValue>> randomizer{};
+
 		};
 
 		// ----------------

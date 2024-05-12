@@ -29,7 +29,7 @@ namespace TwinStar::Kernel::Image {
 
 	protected:
 
-		Array<QPixelRow> m_data{};
+		Array<QPixelRow> m_data;
 
 	public:
 
@@ -41,7 +41,9 @@ namespace TwinStar::Kernel::Image {
 		// ----------------
 
 		BasicImageView (
-		) = default;
+		) :
+			m_data{} {
+		}
 
 		BasicImageView (
 			BasicImageView const & that

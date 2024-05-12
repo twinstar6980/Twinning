@@ -247,12 +247,14 @@ function apply_compiler_option_warning_regular(target)
 			'-Wno-weak-vtables',
 			'-Wno-self-assign',
 			'-Wno-switch-enum',
+			'-Wno-switch-default',
 			'-Wno-covered-switch-default',
 			'-Wno-shadow-field',
 			'-Wno-shadow-field-in-constructor',
 			'-Wno-shadow-uncaptured-local',
 			'-Wno-unsafe-buffer-usage',
 			'-Wno-gnu-line-marker',
+			'-Wno-disabled-macro-expansion',
 			'-Wno-shadow', -- TODO : shadow the member
 			'-Wno-float-equal', -- TODO : float compare
 			'-Wno-deprecated-declarations', -- TODO : suppress codecvt warning

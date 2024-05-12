@@ -15,11 +15,9 @@ namespace TwinStar::Kernel::Tool::Data::Serialization::JSON {
 
 		static auto process_value (
 			ICharacterStreamView & data,
-			Value &                value
+			Value &                value,
+			OCharacterStreamView & buffer
 		) -> Void {
-			// TODO : static
-			thread_local auto buffer = CharacterArray{0x10000_sz};
-			thread_local auto buffer_stream = OCharacterStreamView{buffer};
 			while (k_true) {
 				switch (auto character = data.read_of(); character.value) {
 					case ' ' :
@@ -80,10 +78,10 @@ namespace TwinStar::Kernel::Tool::Data::Serialization::JSON {
 					}
 					case '\"' : {
 						value.set_string();
-						buffer_stream.backward_to_begin();
-						StringParser::read_escape_utf8_string_until(data, buffer_stream, '"'_c);
+						buffer.backward_to_begin();
+						StringParser::read_escape_utf8_string_until(data, buffer, '"'_c);
 						data.forward();
-						value.get_string() = String{buffer_stream.stream_view()};
+						value.get_string() = String{buffer.stream_view()};
 						break;
 					}
 					case '[' : {
@@ -125,7 +123,7 @@ namespace TwinStar::Kernel::Tool::Data::Serialization::JSON {
 									}
 									data.backward();
 									item_list.emplace_back();
-									process_value(data, item_list.back());
+									process_value(data, item_list.back(), buffer);
 									has_comma = k_false;
 								}
 							}
@@ -181,10 +179,10 @@ namespace TwinStar::Kernel::Tool::Data::Serialization::JSON {
 									if (data.read_of() != '\"'_c) {
 										throw SyntaxException{data.position().value, mss("key must be string"_sf())};
 									}
-									buffer_stream.backward_to_begin();
-									StringParser::read_escape_utf8_string_until(data, buffer_stream, '"'_c);
+									buffer.backward_to_begin();
+									StringParser::read_escape_utf8_string_until(data, buffer, '"'_c);
 									data.forward();
-									item_list.back().key = String{buffer_stream.stream_view()};
+									item_list.back().key = String{buffer.stream_view()};
 									for (auto need_more_space = k_true; need_more_space;) {
 										switch (data.read_of().value) {
 											case ':' : {
@@ -202,7 +200,7 @@ namespace TwinStar::Kernel::Tool::Data::Serialization::JSON {
 											}
 										}
 									}
-									process_value(data, item_list.back().value);
+									process_value(data, item_list.back().value, buffer);
 									has_comma = k_false;
 								}
 							}
@@ -227,9 +225,10 @@ namespace TwinStar::Kernel::Tool::Data::Serialization::JSON {
 
 		static auto process_whole (
 			ICharacterStreamView & data,
-			Value &                value
+			Value &                value,
+			OCharacterStreamView & buffer
 		) -> Void {
-			process_value(data, value);
+			process_value(data, value, buffer);
 			return;
 		}
 
@@ -237,11 +236,12 @@ namespace TwinStar::Kernel::Tool::Data::Serialization::JSON {
 
 		static auto process (
 			ICharacterStreamView & data_,
-			Value &                value
+			Value &                value,
+			OCharacterStreamView & buffer
 		) -> Void {
 			M_use_zps_of(data);
 			restruct(value);
-			return process_whole(data, value);
+			return process_whole(data, value, buffer);
 		}
 
 	};

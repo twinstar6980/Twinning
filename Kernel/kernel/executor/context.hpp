@@ -1,7 +1,7 @@
 #pragma once
 
 #include "kernel/utility/utility.hpp"
-#include "kernel/executor/callback.hpp"
+#include "kernel/interface/proxy.hpp"
 
 namespace TwinStar::Kernel::Executor {
 
@@ -12,10 +12,14 @@ namespace TwinStar::Kernel::Executor {
 	protected:
 
 		JavaScript::Runtime m_runtime;
+
 		JavaScript::Context m_context;
-		Callback            m_callback;
-		Boolean             m_busy;
-		Optional<Path>      m_module_home;
+
+		Interface::ExecutorProxy m_callback;
+
+		Boolean m_busy;
+
+		Optional<Path> m_module_home;
 
 	public:
 
@@ -40,24 +44,26 @@ namespace TwinStar::Kernel::Executor {
 		// ----------------
 
 		Context (
-			Callback const & callback
+			Interface::ExecutorProxy const & callback
 		) :
 			m_runtime{JavaScript::Runtime::new_instance()},
 			m_context{m_runtime.new_context()},
 			m_callback{callback},
-			m_busy{k_false} {
+			m_busy{k_false},
+			m_module_home{k_null_optional} {
 			thiz.m_runtime.enable_promise_rejection_tracker();
 			thiz.m_runtime.enable_module_loader(thiz.m_module_home);
 		}
 
 		Context (
-			JavaScript::Runtime & runtime,
-			Callback const &      callback
+			JavaScript::Runtime &            runtime,
+			Interface::ExecutorProxy const & callback
 		) :
 			m_runtime{JavaScript::Runtime::new_reference(runtime._runtime())},
 			m_context{m_runtime.new_context()},
 			m_callback{callback},
-			m_busy{k_false} {
+			m_busy{k_false},
+			m_module_home{k_null_optional} {
 		}
 
 		#pragma endregion
@@ -95,22 +101,29 @@ namespace TwinStar::Kernel::Executor {
 			String const &      name,
 			Boolean const &     is_module
 		) -> JavaScript::Value {
-			auto guard = std::lock_guard{JavaScript::g_mutex};
+			auto lock = std::lock_guard{JavaScript::g_mutex};
 			return thiz.m_context.evaluate(script, name, is_module);
 		}
 
 		auto callback (
 			List<String> const & argument
 		) -> List<String> {
-			auto guard = std::lock_guard{JavaScript::g_mutex};
-			auto argument_pointer = ZPointer<List<String>>{&as_variable(argument)};
-			auto result_pointer = ZPointer<List<String>>{};
-			auto exception_pointer = thiz.m_callback(&argument_pointer, &result_pointer);
-			if (exception_pointer != nullptr) {
-				auto & exception = *exception_pointer;
+			auto result = List<String>{};
+			#if defined M_build_release
+			try
+			#endif
+			{
+				thiz.m_callback.value(
+					Interface::ExecutorProxy{},
+					self_cast<Interface::MessageProxy>(argument),
+					self_cast<Interface::MessageProxy>(result)
+				);
+			}
+			#if defined M_build_release
+			catch (String & exception) {
 				throw InvocationException{mss("<callback>"_sv), mss(exception)};
 			}
-			auto & result = *result_pointer;
+			#endif
 			return result;
 		}
 
@@ -120,7 +133,7 @@ namespace TwinStar::Kernel::Executor {
 
 		auto spawn (
 		) -> Context {
-			auto guard = std::lock_guard{JavaScript::g_mutex};
+			auto lock = std::lock_guard{JavaScript::g_mutex};
 			return Context{thiz.m_runtime, thiz.m_callback};
 		}
 
@@ -137,10 +150,10 @@ namespace TwinStar::Kernel::Executor {
 		) -> Void {
 			assert_test(!thiz.busy());
 			thiz.m_busy = k_true;
-			auto guard = std::lock_guard{JavaScript::g_mutex};
+			auto lock = std::lock_guard{JavaScript::g_mutex};
 			thread.run(
 				[&, executor] {
-					auto guard = std::lock_guard{JavaScript::g_mutex};
+					auto lock = std::lock_guard{JavaScript::g_mutex};
 					JavaScript::Value::new_reference(thiz.m_context._context(), as_variable(executor)._value()).call(make_list<JavaScript::Value>());
 					as_variable(executor).set_undefined();
 					thiz.m_busy = k_false;

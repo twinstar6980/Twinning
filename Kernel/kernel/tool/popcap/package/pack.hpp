@@ -24,9 +24,8 @@ namespace TwinStar::Kernel::Tool::PopCap::Package {
 			data.write_constant(Structure::k_magic_identifier);
 			data.write_constant(cbw<Structure::VersionNumber>(version.number));
 			struct {
-				OByteStreamView resource_information;
-			}
-				information_data = {};
+				OByteStreamView resource_information{};
+			} information_data = {};
 			{
 				auto information_structure = Structure::Information<version>{};
 				information_structure.resource_information.allocate_full(definition.resource.size());

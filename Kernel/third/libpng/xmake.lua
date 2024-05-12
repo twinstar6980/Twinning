@@ -1,6 +1,6 @@
 -- libpng
--- 1.6.40 f135775ad4e5d4408d2e12ffcc71bb36e6b48551
--- http://www.libpng.org/pub/png/libpng.html
+-- 1.6.43 ed217e3e601d8e462f7fd1e04bed43ac42212429
+-- https://github.com/pnggroup/libpng
 
 -- TODO : apply special processor setting, see https://github.com/xmake-io/xmake-repo/blob/master/packages/l/libpng/xmake.lua
 

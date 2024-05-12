@@ -10,8 +10,11 @@ namespace TwinStar::Kernel {
 	struct FourCC {
 
 		Character8 first{};
+
 		Character8 second{};
+
 		Character8 third{};
+
 		Character8 fourth{};
 
 		// ----------------

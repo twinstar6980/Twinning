@@ -29,7 +29,7 @@ namespace TwinStar::Kernel {
 
 	public:
 
-		Value value{};
+		Value value;
 
 	public:
 
@@ -41,7 +41,9 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		constexpr BaseWrapper (
-		) = default;
+		) :
+			value{} {
+		}
 
 		constexpr BaseWrapper (
 			BaseWrapper const & that

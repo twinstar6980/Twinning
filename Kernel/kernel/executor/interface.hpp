@@ -266,7 +266,7 @@ namespace TwinStar::Kernel::Executor::Interface {
 
 	#pragma endregion
 
-	#pragma region proxy function by special type promotion
+	#pragma region proxy function with special type promotion
 
 	// NOTE
 	// 为了简化接口，对部分类型进行提升
@@ -309,7 +309,7 @@ namespace TwinStar::Kernel::Executor::Interface {
 
 		template <auto function, auto ... index> requires
 			NoneConstraint
-		inline constexpr auto make_proxy_function_by_special_type_promotion (
+		inline constexpr auto make_proxy_function_with_special_type_promotion (
 			ValuePackage<index ...>
 		) -> auto {
 			if constexpr ((IsSame<AsPromotion<AsPure<typename CallableTraitOf<function>::Argument::template Element<index>>>, AsPure<typename CallableTraitOf<function>::Argument::template Element<index>>> && ...)) {
@@ -327,23 +327,23 @@ namespace TwinStar::Kernel::Executor::Interface {
 	template <auto function> requires
 		CategoryConstraint<>
 		&& (IsGlobalFunction<decltype(function)>)
-	inline constexpr auto & proxy_global_function_by_special_type_promotion = *Detail::make_proxy_function_by_special_type_promotion<function>(AsValuePackageOfIndex<CallableTraitOf<function>::Argument::size>{});
+	inline constexpr auto & proxy_global_function_with_special_type_promotion = *Detail::make_proxy_function_with_special_type_promotion<function>(AsValuePackageOfIndex<CallableTraitOf<function>::Argument::size>{});
 
 	template <typename Class, auto function> requires
 		CategoryConstraint<>
 		&& (IsMemberFunction<decltype(function)>)
 		&& (IsDerivedFrom<Class, typename CallableTraitOf<function>::Class>)
-	inline constexpr auto & proxy_member_function_by_special_type_promotion = proxy_global_function_by_special_type_promotion<normalized_member_function<function, Class>>;
+	inline constexpr auto & proxy_member_function_with_special_type_promotion = proxy_global_function_with_special_type_promotion<normalized_member_function<function, Class>>;
 
 	// NOTE : alias
 	template <auto function> requires
 		AutoConstraint
-	inline constexpr auto & stpg = proxy_global_function_by_special_type_promotion<function>;
+	inline constexpr auto & stpg = proxy_global_function_with_special_type_promotion<function>;
 
 	// NOTE : alias
 	template <typename Class, auto function> requires
 		AutoConstraint
-	inline constexpr auto & stpm = proxy_member_function_by_special_type_promotion<Class, function>;
+	inline constexpr auto & stpm = proxy_member_function_with_special_type_promotion<Class, function>;
 
 	#pragma endregion
 
@@ -1798,8 +1798,10 @@ namespace TwinStar::Kernel::Executor::Interface {
 						}
 					>
 				>("cast_CharacterListView_to_JS_String"_s);
-			s_Miscellaneous.add_variable("g_version"_s, context.context().new_value(JavaScript::NativeValueHandler<Size>::new_instance_allocate(mbw<Size>(M_version))));
 			s_Miscellaneous.add_variable("g_context"_s, context.context().new_value(JavaScript::NativeValueHandler<Context>::new_reference(context)));
+			s_Miscellaneous.add_variable("g_version"_s, context.context().new_value(JavaScript::NativeValueHandler<String>::new_instance_allocate(make_string(M_version))));
+			s_Miscellaneous.add_variable("g_system"_s, context.context().new_value(JavaScript::NativeValueHandler<String>::new_instance_allocate(make_string(M_system))));
+			s_Miscellaneous.add_variable("g_architecture"_s, context.context().new_value(JavaScript::NativeValueHandler<String>::new_instance_allocate(make_string(M_architecture))));
 		}
 		return;
 		#if defined M_compiler_msvc

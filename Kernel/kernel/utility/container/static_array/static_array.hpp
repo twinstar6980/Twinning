@@ -37,7 +37,7 @@ namespace TwinStar::Kernel {
 
 	protected:
 
-		ValidRawArray m_data{Element{}};
+		ValidRawArray m_data;
 
 	public:
 
@@ -49,7 +49,9 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		constexpr StaticArray (
-		) = default;
+		) :
+			m_data{Element{}} {
+		}
 
 		constexpr StaticArray (
 			StaticArray const & that

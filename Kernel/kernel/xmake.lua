@@ -19,17 +19,18 @@ target('kernel', function()
 		'third.mscharconv',
 		'third.fmt',
 		'third.tinyxml2',
-		'third.quickjs',
 		'third.md5',
 		'third.Rijndael',
 		'third.zlib',
 		'third.bzip2',
 		'third.lzma',
 		'third.open_vcdiff',
-		'third.libpng',
+		'third.avir',
 		'third.ETCPACK',
 		'third.etcpak',
 		'third.PVRTCCompressor',
+		'third.libpng',
+		'third.quickjs',
 		{}
 	)
 	on_load(function(target)

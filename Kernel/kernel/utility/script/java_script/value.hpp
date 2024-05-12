@@ -51,8 +51,9 @@ namespace TwinStar::Kernel::JavaScript {
 
 	protected:
 
-		Pointer<quickjs::JSRuntime> m_runtime{};
-		Boolean                     m_is_holder{};
+		Pointer<quickjs::JSRuntime> m_runtime;
+
+		Boolean m_is_holder;
 
 	protected:
 
@@ -199,8 +200,9 @@ namespace TwinStar::Kernel::JavaScript {
 
 	protected:
 
-		Pointer<quickjs::JSContext> m_context{};
-		Boolean                     m_is_holder{};
+		Pointer<quickjs::JSContext> m_context;
+
+		Boolean m_is_holder;
 
 	protected:
 
@@ -360,8 +362,9 @@ namespace TwinStar::Kernel::JavaScript {
 
 	protected:
 
-		Optional<ZPointer<quickjs::JSContext>> m_context{};
-		quickjs::JSValue                       m_value{};
+		Optional<ZPointer<quickjs::JSContext>> m_context;
+
+		quickjs::JSValue m_value;
 
 	protected:
 
@@ -378,9 +381,8 @@ namespace TwinStar::Kernel::JavaScript {
 			ZPointer<quickjs::JSContext> const & context,
 			quickjs::JSValue const &             value
 		) :
-			m_context{},
+			m_context{context},
 			m_value{value} {
-			thiz.m_context.set(context);
 		}
 
 		#pragma endregion
@@ -1267,8 +1269,9 @@ namespace TwinStar::Kernel::JavaScript {
 		) -> quickjs::JSValue {
 			auto result_value = quickjs::JSValue{};
 			#if defined M_build_release
-			try {
+			try
 			#endif
+			{
 				auto context = Context::new_reference(ctx);
 				auto object = Value::new_reference(ctx, this_val);
 				auto argument = List<Value>{};
@@ -1279,8 +1282,8 @@ namespace TwinStar::Kernel::JavaScript {
 				auto result = Value::new_instance(ctx);
 				function(context, object, argument, result);
 				result_value = result._release_value();
-			#if defined M_build_release
 			}
+			#if defined M_build_release
 			catch (...) {
 				auto exception = parse_current_exception();
 				auto message_std = exception.what();
@@ -1398,7 +1401,7 @@ namespace TwinStar::Kernel::JavaScript {
 		assert_test(count != 0);
 		context = Context::new_reference(context_pointer);
 		if (count < 0) {
-			throw ExecutionException{as_lvalue(Value::new_instance(context_pointer, quickjs::JS_GetException(context_pointer)))};
+			throw ExecutionException{as_lvalue(context.catch_exception())};
 		}
 		return;
 	}
@@ -1505,7 +1508,7 @@ namespace TwinStar::Kernel::JavaScript {
 			quickjs::JS_EVAL_FLAG_STRICT_ | (!is_module ? (quickjs::JS_EVAL_TYPE_GLOBAL_) : (quickjs::JS_EVAL_TYPE_MODULE_))
 		);
 		if (quickjs::JS_IsException(result)) {
-			throw ExecutionException{as_lvalue(Value::new_instance(thiz._context(), quickjs::JS_GetException(thiz._context())))};
+			throw ExecutionException{as_lvalue(thiz.catch_exception())};
 		}
 		return Value::new_instance(thiz._context(), result);
 	}

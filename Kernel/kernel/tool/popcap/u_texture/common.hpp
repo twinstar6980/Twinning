@@ -26,10 +26,15 @@ namespace TwinStar::Kernel::Tool::PopCap::UTexture {
 		// ----------------
 
 		struct FormatFlag {
+
 			inline static constexpr auto rgba_8888_o = Integer{1_i};
+
 			inline static constexpr auto rgba_4444 = Integer{2_i};
+
 			inline static constexpr auto rgba_5551 = Integer{3_i};
+
 			inline static constexpr auto rgb_565 = Integer{4_i};
+
 		};
 
 	};

@@ -75,8 +75,11 @@ namespace TwinStar::Kernel::Tool::PopCap::Package::Structure {
 		CategoryConstraint<>
 		&& (check_version(t_version, {0}, {}))
 	struct ResourceInformationListStateFlag<t_version> {
+
 		inline static constexpr auto next = IntegerU8{0x00_iu8};
+
 		inline static constexpr auto done = IntegerU8{0x80_iu8};
+
 	};
 
 	#pragma endregion

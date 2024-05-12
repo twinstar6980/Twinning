@@ -173,7 +173,7 @@ namespace TwinStar.Script.Support.Kairosoft.Game.ModifyProgram {
 		disable_record_encryption: boolean,
 		enable_debug_mode: boolean,
 	): void {
-		assert_test(Shell.is_windows, `unsupported system, this function only avaliable for windows`);
+		assert_test(KernelX.is_windows, `unsupported system, this function only avaliable for windows`);
 		Console.information(`Phase : detect game platform`, []);
 		let platform = detect_platform(target_directory);
 		assert_test(platform !== null);
@@ -191,7 +191,7 @@ namespace TwinStar.Script.Support.Kairosoft.Game.ModifyProgram {
 		else {
 			assert_fail();
 		}
-		let program_backup_file = `${program_file}.bak`;
+		let program_backup_file = `${target_directory}/.backup/program`;
 		Console.information(`Phase : check game file`, []);
 		assert_test(KernelX.FileSystem.exist_file(program_file) || KernelX.FileSystem.exist_file(program_backup_file));
 		assert_test(KernelX.FileSystem.exist_file(metadata_file));

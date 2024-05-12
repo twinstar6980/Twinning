@@ -36,16 +36,27 @@ namespace TwinStar::Kernel::Tool::PopCap::SexyTexture {
 		// ----------------
 
 		struct FormatFlag {
+
 			inline static constexpr auto lut_8 = Integer{1_i};
+
 			inline static constexpr auto argb_8888 = Integer{2_i};
+
 			inline static constexpr auto argb_4444 = Integer{3_i};
+
 			inline static constexpr auto argb_1555 = Integer{4_i};
+
 			inline static constexpr auto rgb_565 = Integer{5_i};
+
 			inline static constexpr auto rgba_8888_o = Integer{6_i};
+
 			inline static constexpr auto rgba_4444 = Integer{7_i};
+
 			inline static constexpr auto rgba_5551 = Integer{8_i};
+
 			inline static constexpr auto xrgb_8888 = Integer{9_i};
+
 			inline static constexpr auto la_88 = Integer{10_i};
+
 		};
 
 	};

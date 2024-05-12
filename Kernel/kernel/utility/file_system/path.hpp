@@ -12,9 +12,11 @@ namespace TwinStar::Kernel {
 
 	protected:
 
-		Optional<String> m_root{};
-		Boolean          m_absolute{};
-		List<String>     m_sub_path{};
+		Optional<String> m_root;
+
+		Boolean m_absolute;
+
+		List<String> m_relative;
 
 	public:
 
@@ -26,7 +28,11 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		Path (
-		) = default;
+		) :
+			m_root{},
+			m_absolute{},
+			m_relative{} {
+		}
 
 		Path (
 			Path const & that
@@ -65,9 +71,9 @@ namespace TwinStar::Kernel {
 			auto result = Path{};
 			result.m_root = thiz.m_root;
 			result.m_absolute = thiz.m_absolute;
-			result.m_sub_path.allocate(thiz.m_sub_path.size() + 1_sz);
-			result.m_sub_path.append_list(thiz.m_sub_path);
-			result.m_sub_path.append(that);
+			result.m_relative.allocate(thiz.m_relative.size() + 1_sz);
+			result.m_relative.append_list(thiz.m_relative);
+			result.m_relative.append(that);
 			return result;
 		}
 
@@ -77,9 +83,9 @@ namespace TwinStar::Kernel {
 			auto result = Path{};
 			result.m_root = thiz.m_root;
 			result.m_absolute = thiz.m_absolute;
-			result.m_sub_path.allocate(thiz.m_sub_path.size() + 1_sz);
-			result.m_sub_path.append_list(thiz.m_sub_path);
-			result.m_sub_path.append(as_moveable(that));
+			result.m_relative.allocate(thiz.m_relative.size() + 1_sz);
+			result.m_relative.append_list(thiz.m_relative);
+			result.m_relative.append(as_moveable(that));
 			return result;
 		}
 
@@ -92,9 +98,9 @@ namespace TwinStar::Kernel {
 			auto result = Path{};
 			result.m_root = thiz.m_root;
 			result.m_absolute = thiz.m_absolute;
-			result.m_sub_path.allocate(thiz.m_sub_path.size() + that.m_sub_path.size());
-			result.m_sub_path.append_list(thiz.m_sub_path);
-			result.m_sub_path.append_list(that.m_sub_path);
+			result.m_relative.allocate(thiz.m_relative.size() + that.m_relative.size());
+			result.m_relative.append_list(thiz.m_relative);
+			result.m_relative.append_list(that.m_relative);
 			return result;
 		}
 
@@ -105,9 +111,9 @@ namespace TwinStar::Kernel {
 			auto result = Path{};
 			result.m_root = thiz.m_root;
 			result.m_absolute = thiz.m_absolute;
-			result.m_sub_path.allocate(thiz.m_sub_path.size() + that.m_sub_path.size());
-			result.m_sub_path.append_list(thiz.m_sub_path);
-			result.m_sub_path.append_list(make_moveable_range_of(that.m_sub_path));
+			result.m_relative.allocate(thiz.m_relative.size() + that.m_relative.size());
+			result.m_relative.append_list(thiz.m_relative);
+			result.m_relative.append_list(make_moveable_range_of(that.m_relative));
 			return result;
 		}
 
@@ -116,14 +122,14 @@ namespace TwinStar::Kernel {
 		auto operator /= (
 			String const & that
 		) -> Path & {
-			thiz.m_sub_path.append(that);
+			thiz.m_relative.append(that);
 			return thiz;
 		}
 
 		auto operator /= (
 			String && that
 		) -> Path & {
-			thiz.m_sub_path.append(as_moveable(that));
+			thiz.m_relative.append(as_moveable(that));
 			return thiz;
 		}
 
@@ -133,7 +139,7 @@ namespace TwinStar::Kernel {
 			Path const & that
 		) -> Path & {
 			assert_test(!that.m_root.has() && !that.m_absolute);
-			thiz.m_sub_path.append_list(that.m_sub_path);
+			thiz.m_relative.append_list(that.m_relative);
 			return thiz;
 		}
 
@@ -141,7 +147,7 @@ namespace TwinStar::Kernel {
 			Path && that
 		) -> Path & {
 			assert_test(!that.m_root.has() && !that.m_absolute);
-			thiz.m_sub_path.append_list(make_moveable_range_of(that.m_sub_path));
+			thiz.m_relative.append_list(make_moveable_range_of(that.m_relative));
 			return thiz;
 		}
 
@@ -159,9 +165,9 @@ namespace TwinStar::Kernel {
 			return thiz.m_absolute;
 		}
 
-		auto sub_path (
+		auto relative (
 		) const -> List<String> const & {
-			return thiz.m_sub_path;
+			return thiz.m_relative;
 		}
 
 		#pragma endregion
@@ -170,18 +176,18 @@ namespace TwinStar::Kernel {
 
 		auto parent (
 		) const -> Path {
-			assert_test(!thiz.m_sub_path.empty());
+			assert_test(!thiz.m_relative.empty());
 			auto result = Path{};
 			result.m_root = thiz.m_root;
 			result.m_absolute = thiz.m_absolute;
-			result.m_sub_path = thiz.m_sub_path.head(thiz.m_sub_path.size() - 1_sz);
+			result.m_relative = thiz.m_relative.head(thiz.m_relative.size() - 1_sz);
 			return result;
 		}
 
 		auto name (
 		) const -> String {
-			assert_test(!thiz.m_sub_path.empty());
-			return thiz.m_sub_path.last();
+			assert_test(!thiz.m_relative.empty());
+			return thiz.m_relative.last();
 		}
 
 		#pragma endregion
@@ -193,7 +199,7 @@ namespace TwinStar::Kernel {
 		) -> Void {
 			thiz.m_root.reset();
 			thiz.m_absolute = k_false;
-			thiz.m_sub_path.reset();
+			thiz.m_relative.reset();
 			auto relative_path_begin = k_begin_index;
 			if (path.size() >= 2_sz && path[2_ix] == ':'_c && CharacterType::is_alpha(path[1_ix])) {
 				thiz.m_root.set(path.sub(1_ix, 2_sz));
@@ -203,7 +209,7 @@ namespace TwinStar::Kernel {
 				thiz.m_absolute = k_true;
 				relative_path_begin += 1_sz;
 			}
-			thiz.m_sub_path = split_string<List<String>>(path.tail(path.size() - relative_path_begin), CharacterType::PathSeparator::set);
+			thiz.m_relative = split_string<List<String>>(path.tail(path.size() - relative_path_begin), CharacterType::PathSeparator::set);
 			return;
 		}
 
@@ -217,7 +223,7 @@ namespace TwinStar::Kernel {
 			if (thiz.m_absolute) {
 				result.append(separator);
 			}
-			result.append_list(catenate_string<String>(thiz.m_sub_path, separator));
+			result.append_list(catenate_string<String>(thiz.m_relative, separator));
 			return result;
 		}
 

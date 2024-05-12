@@ -20,9 +20,11 @@ namespace TwinStar::Kernel {
 
 	protected:
 
-		Number m_begin{};
-		Number m_end{};
-		Number m_step{};
+		Number m_begin;
+
+		Number m_end;
+
+		Number m_step;
 
 	public:
 
@@ -34,7 +36,11 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		constexpr NumberRange (
-		) = default;
+		) :
+			m_begin{},
+			m_end{},
+			m_step{} {
+		}
 
 		constexpr NumberRange (
 			NumberRange const & that

@@ -13,9 +13,11 @@ namespace TwinStar::Kernel {
 
 	protected:
 
-		std::string              m_title{};
-		std::vector<std::string> m_description{};
-		std::source_location     m_location{};
+		std::string m_title;
+
+		std::vector<std::string> m_description;
+
+		std::source_location m_location;
 
 	public:
 
@@ -27,7 +29,11 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		Exception (
-		) = default;
+		) :
+			m_title{},
+			m_description{},
+			m_location{} {
+		}
 
 		Exception (
 			Exception const & that

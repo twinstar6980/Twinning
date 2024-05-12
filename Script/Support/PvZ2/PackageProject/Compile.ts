@@ -67,7 +67,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 					let resource_path = parse_variable_string(resource_property.path, variable_list);
 					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
 					KernelX.FileSystem.remove(package_resource_file);
-					if (Shell.is_windows || Shell.is_linux || Shell.is_macintosh) {
+					if (KernelX.is_windows || KernelX.is_linux || KernelX.is_macintosh) {
 						KernelX.FileSystem.create_link(package_resource_file, source_file, false);
 					}
 					else {
@@ -105,7 +105,7 @@ namespace TwinStar.Script.Support.PvZ2.PackageProject.Compile {
 					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.ptx';
 					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
 					KernelX.FileSystem.remove(package_resource_file);
-					if (Shell.is_windows || Shell.is_linux || Shell.is_macintosh) {
+					if (KernelX.is_windows || KernelX.is_linux || KernelX.is_macintosh) {
 						KernelX.FileSystem.create_link(package_resource_file, source_file, false);
 					}
 					else {

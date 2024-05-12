@@ -93,13 +93,14 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle::Shared {
 		) -> Void {
 			Range::each(
 				map,
-				[] (auto & element) {
+				[] (auto & element) -> auto {
 					element.key.as_upper_case();
+					return;
 				}
 			);
 			Range::sort(
 				map,
-				[] (auto & thix, auto & that) {
+				[] (auto & thix, auto & that) -> auto {
 					return thix.key > that.key;
 				}
 			);
@@ -114,7 +115,7 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle::Shared {
 			Map<String, Value> const & map
 		) -> Size {
 			struct WorkOption {
-				Size inherit_length;
+				Size inherit_length{};
 			};
 			auto work_option = Array<Optional<WorkOption>>{map.size()};
 			if (!map.empty()) {
@@ -164,8 +165,8 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle::Shared {
 		) -> Void {
 			auto stream = IOByteStreamView{data.reserve_view()};
 			struct WorkOption {
-				Size inherit_length;
-				Size parent_offset;
+				Size inherit_length{};
+				Size parent_offset{};
 			};
 			auto work_option = Array<Optional<WorkOption>>{map.size()};
 			if (!map.empty()) {

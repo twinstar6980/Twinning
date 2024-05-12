@@ -1,0 +1,40 @@
+<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:community="using:CommunityToolkit.WinUI"
+	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
+	xmlns:local="using:AssistantPlus"
+	xmlns:my="using:AssistantPlus.Control"
+	>
+	<Style TargetType="my:DividerSizer">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="my:DividerSizer">
+					<my:Box
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						>
+						<Rectangle
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
+							MinWidth="{StaticResource DividerThickness}"
+							MinHeight="{StaticResource DividerThickness}"
+							Fill="{ThemeResource DividerStrokeColorDefaultBrush}"
+							/>
+						<communityControls:PropertySizer
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
+							Margin="-4"
+							Padding="0"
+							Orientation="{TemplateBinding SizerOrientation}"
+							IsDragInverted="{TemplateBinding SizerInverted}"
+							Binding="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SizerValue, Mode=TwoWay}"
+							Minimum="{TemplateBinding SizerMinimum}"
+							Maximum="{TemplateBinding SizerMaximum}"
+							/>
+					</my:Box>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+</ResourceDictionary>

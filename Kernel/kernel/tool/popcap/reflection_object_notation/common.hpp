@@ -110,9 +110,13 @@ namespace TwinStar::Kernel::Tool::PopCap::ReflectionObjectNotation {
 		using RTIDTypeIdentifier = Enumeration<typename RTIDTypeIdentifierEnumeration::Type>;
 
 		struct RTIDFormat {
+
 			inline static constexpr auto null = StringFormatter{"RTID(0)"_sf};
+
 			inline static constexpr auto uid = StringFormatter{"RTID({:d}.{:d}.{:08x}@{:s})"_sf};
+
 			inline static constexpr auto alias = StringFormatter{"RTID({:s}@{:s})"_sf};
+
 		};
 
 		static auto analysis_rtid (

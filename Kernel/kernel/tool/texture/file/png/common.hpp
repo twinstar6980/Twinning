@@ -19,7 +19,7 @@ namespace TwinStar::Kernel::Tool::Texture::File::PNG {
 			Third::libpng::png_structp     png_ptr,
 			Third::libpng::png_const_charp error_message
 		) -> Void {
-			M_log(mss("libpng warning : {}"_sf(error_message)));
+			// NOTE : ignore
 			return;
 		}
 

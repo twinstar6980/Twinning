@@ -33,8 +33,9 @@ namespace TwinStar::Kernel {
 
 	protected:
 
-		Iterator m_data{};
-		Size     m_size{};
+		Iterator m_data;
+
+		Size m_size;
 
 	public:
 
@@ -48,7 +49,10 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		Array (
-		) = default;
+		) :
+			m_data{},
+			m_size{} {
+		}
 
 		Array (
 			Array const & that

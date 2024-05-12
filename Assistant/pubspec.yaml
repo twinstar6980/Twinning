@@ -1,0 +1,47 @@
+name: assistant
+version: 34.0.0+34
+publish_to: 'none'
+environment:
+  sdk: '>=3.3.4 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  ffi: ^2.1.0
+  path: ^1.9.0
+  async: ^2.11.0
+  collection: ^1.18.0
+  provider: ^6.1.1
+  path_provider: ^2.1.1
+  window_manager: ^0.3.8
+  dynamic_color: ^1.6.9
+  file_picker: ^8.0.3
+  local_notifier: ^0.1.5
+  flutter_local_notifications: ^17.1.2
+  material_symbols_icons: ^4.2741.0
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.13.1
+  msix: ^3.16.7
+flutter:
+  uses-material-design: true
+  assets:
+    - asset/
+flutter_launcher_icons:
+  image_path: asset/logo.png
+  android: true
+  ios: true
+  windows:
+    generate: true
+    icon_size: 256
+  macos:
+    generate: true
+msix_config:
+  identity_name: TwinStar.ToolKit.Assistant
+  publisher: CN=TwinStar
+  display_name: TwinStar ToolKit - Assistant
+  publisher_display_name: TwinStar
+  languages: en-us
+  logo_path: asset/logo.png
+  trim_logo: false

@@ -17,7 +17,7 @@ namespace TwinStar::Kernel {
 
 	protected:
 
-		std::tuple<TValue ...> m_value{};
+		std::tuple<TValue ...> m_value;
 
 	public:
 
@@ -29,7 +29,9 @@ namespace TwinStar::Kernel {
 		// ----------------
 
 		constexpr Tuple (
-		) = default;
+		) :
+			m_value{} {
+		}
 
 		constexpr Tuple (
 			Tuple const & that

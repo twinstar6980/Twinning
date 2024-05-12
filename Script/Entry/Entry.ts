@@ -35,7 +35,7 @@ namespace TwinStar.Script.Entry {
 
 	export type Configuration = {
 		language: string;
-		console_cli_disable_virtual_terminal_sequence: boolean;
+		console_basic_disable_virtual_terminal_sequence: boolean;
 		executor_typical_method_disable_name_filter: boolean;
 		byte_stream_use_big_endian: boolean;
 		common_buffer_size: string;
@@ -57,7 +57,7 @@ namespace TwinStar.Script.Entry {
 		// language
 		Language.imbue(KernelX.JSON.read_fs_js(Home.of(`~/script/Language/${configuration.language}.json`)) as unknown as Language.StringMap);
 		// console
-		Console.g_cli_disable_virtual_terminal_sequence = configuration.console_cli_disable_virtual_terminal_sequence;
+		Console.g_basic_disable_virtual_terminal_sequence = configuration.console_basic_disable_virtual_terminal_sequence;
 		// executor
 		Executor.g_typical_method_disable_name_filter = configuration.executor_typical_method_disable_name_filter;
 		// byte stream

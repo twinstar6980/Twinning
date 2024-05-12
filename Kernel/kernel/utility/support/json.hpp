@@ -529,8 +529,9 @@ namespace TwinStar::Kernel::JSON {
 			auto & thix_array = thix.set_array();
 			thix_array.convert(
 				that,
-				[] (auto & thix_element, auto & that_element) {
+				[] (auto & thix_element, auto & that_element) -> auto {
 					thix_element.from(that_element);
+					return;
 				}
 			);
 			return;
@@ -543,8 +544,9 @@ namespace TwinStar::Kernel::JSON {
 			auto & thix_array = thix.get_array();
 			that.convert(
 				thix_array,
-				[] (auto & that_element, auto & thix_element) {
+				[] (auto & that_element, auto & thix_element) -> auto {
 					thix_element.to(that_element);
+					return;
 				}
 			);
 			return;
@@ -571,9 +573,10 @@ namespace TwinStar::Kernel::JSON {
 			auto & thix_object = thix.set_object();
 			thix_object.convert(
 				that,
-				[] (auto & thix_member, auto & that_member) {
+				[] (auto & thix_member, auto & that_member) -> auto {
 					thix_member.key.from(that_member.key);
 					thix_member.value.from(that_member.value);
+					return;
 				}
 			);
 			return;
@@ -586,9 +589,10 @@ namespace TwinStar::Kernel::JSON {
 			auto & thix_object = thix.get_object();
 			that.convert(
 				thix_object,
-				[] (auto & that_member, auto & thix_member) {
+				[] (auto & that_member, auto & thix_member) -> auto {
 					thix_member.key.to(that_member.key);
 					thix_member.value.to(that_member.value);
+					return;
 				}
 			);
 			return;

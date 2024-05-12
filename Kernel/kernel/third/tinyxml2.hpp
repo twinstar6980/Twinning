@@ -11,6 +11,7 @@
 #pragma clang diagnostic ignored "-Wsuggest-override"
 #pragma clang diagnostic ignored "-Wsuggest-destructor-override"
 #pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma clang diagnostic ignored "-Winconsistent-missing-destructor-override"
 #endif
 
 #include "third/tinyxml2/tinyxml2.h"

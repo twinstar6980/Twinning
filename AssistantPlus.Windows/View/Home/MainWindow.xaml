@@ -1,0 +1,118 @@
+<Window
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:community="using:CommunityToolkit.WinUI"
+	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
+	xmlns:communityBehaviors="using:CommunityToolkit.WinUI.Behaviors"
+	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+	xmlns:local="using:AssistantPlus"
+	xmlns:localViewHome="using:AssistantPlus.View.Home"
+	xmlns:my="using:AssistantPlus.Control"
+	mc:Ignorable="d"
+	x:DefaultBindMode="OneWay"
+	x:Class="AssistantPlus.View.Home.MainWindow"
+	>
+	<my:Box
+		HorizontalAlignment="Stretch"
+		VerticalAlignment="Stretch"
+		>
+		<my:Box
+			x:Name="uBackground"
+			x:FieldModifier="public"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+			/>
+		<TabView
+			x:Name="uTab"
+			x:FieldModifier="public"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			TabWidthMode="Equal"
+			IsAddTabButtonVisible="True"
+			TabItemsSource="{x:Bind Controller.uTab_TabItemsSource}"
+			TabCloseRequested="{x:Bind Controller.uTab_TabCloseRequested}"
+			AddTabButtonClick="{x:Bind Controller.uTab_AddTabButtonClick}"
+			>
+			<TabView.KeyboardAccelerators>
+				<KeyboardAccelerator
+					Modifiers="Control"
+					Key="W"
+					Invoked="{x:Bind Controller.uTabKeyboardAccelerator_Invoked}"
+					/>
+				<KeyboardAccelerator
+					Modifiers="Control"
+					Key="T"
+					Invoked="{x:Bind Controller.uTabKeyboardAccelerator_Invoked}"
+					/>
+			</TabView.KeyboardAccelerators>
+			<TabView.TabItemTemplate>
+				<DataTemplate x:DataType="localViewHome:MainWindowTabItemController">
+					<TabViewItem
+						IconSource="{x:Bind uRoot_IconSource}"
+						Header="{x:Bind uRoot_Header}"
+						Content="{x:Bind uRoot_Content}"
+						/>
+				</DataTemplate>
+			</TabView.TabItemTemplate>
+			<TabView.TabStripHeader>
+				<Button
+					ToolTipService.ToolTip="About"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Bottom"
+					Width="32"
+					Height="24"
+					Margin="12,0,0,3"
+					Padding="0,0,0,3"
+					BorderThickness="0"
+					Background="Transparent"
+					Content="{community:FontIcon FontSize=16, Glyph={StaticResource FluentIconGlyph.OEM}}"
+					>
+					<Button.Flyout>
+						<Flyout Placement="Bottom" FlyoutPresenterStyle="{StaticResource NormalFlyoutPresenterStyle}">
+							<localViewHome:AboutPanel
+								HorizontalAlignment="Stretch"
+								VerticalAlignment="Stretch"
+								/>
+						</Flyout>
+					</Button.Flyout>
+				</Button>
+			</TabView.TabStripHeader>
+			<TabView.TabStripFooter>
+				<my:Box
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					MinWidth="180"
+					MinHeight="40"
+					/>
+			</TabView.TabStripFooter>
+		</TabView>
+		<my:Box
+			Visibility="{x:Bind Controller.uBlank_Visibility}"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Padding="16,56,16,16"
+			>
+			<Button
+				ToolTipService.ToolTip="Launch"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				Width="256"
+				Height="256"
+				Click="{x:Bind Controller.uBlankLaunch_Click}"
+				Content="{community:FontIcon FontSize=128, Glyph={StaticResource FluentIconGlyph.OEM}}"
+				/>
+		</my:Box>
+		<InfoBar
+			HorizontalAlignment="Center"
+			VerticalAlignment="Bottom"
+			Margin="8,4"
+			>
+			<interactivity:Interaction.Behaviors>
+				<communityBehaviors:StackedNotificationsBehavior x:Name="uNotificationsBehavior" x:FieldModifier="public" />
+			</interactivity:Interaction.Behaviors>
+		</InfoBar>
+	</my:Box>
+</Window>

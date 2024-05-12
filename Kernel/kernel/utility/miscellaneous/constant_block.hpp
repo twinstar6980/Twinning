@@ -10,6 +10,7 @@ namespace TwinStar::Kernel {
 		CategoryConstraint<>
 		&& (IsBaseWrapper<AsUnmakeConstant<decltype(t_value)>>)
 	struct ConstantBlock {
+
 	};
 
 	#pragma endregion
