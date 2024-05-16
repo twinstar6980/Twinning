@@ -43,15 +43,6 @@ namespace TwinStar::Shell::Bridge {
 		// ----------------
 
 		explicit Library (
-			std::nullptr_t _
-		) :
-			m_handle{},
-			m_symbol{} {
-			thiz.m_symbol = &Kernel::Interface::service;
-		}
-
-		explicit Library (
-			std::nullptr_t           _,
 			std::string_view const & path
 		) :
 			m_handle{},
@@ -65,6 +56,14 @@ namespace TwinStar::Shell::Bridge {
 				"_ZN8TwinStar6Kernel9Interface7serviceE"
 				#endif
 			);
+		}
+
+		explicit Library (
+			void * const & symbol
+		) :
+			m_handle{},
+			m_symbol{} {
+			thiz.m_symbol = static_cast<Service *>(symbol);
 		}
 
 		#pragma endregion

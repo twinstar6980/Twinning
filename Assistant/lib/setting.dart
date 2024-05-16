@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 // ----------------
 
 class SettingData {
-  Integer                mVersion;
+  String                 mVersion;
   ThemeMode              mThemeMode;
   Boolean                mThemeColorState;
   Color                  mThemeColorLight;
@@ -84,7 +84,7 @@ extension SettingExtension on SettingData {
     Map<String, dynamic> json,
   ) {
     {
-      this.mVersion = (json['version'] as Integer);
+      this.mVersion = (json['version'] as String);
       assertTest(this.mVersion == kApplicationVersion);
     }
     {

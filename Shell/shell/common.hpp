@@ -1,6 +1,6 @@
 #pragma once
 
-#define M_version "36"
+#define M_version "37"
 
 #include <cstring>
 #include <string_view>

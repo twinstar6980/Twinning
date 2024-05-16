@@ -53,6 +53,7 @@ class _SettingPanelState extends State<SettingPanel> {
           content: [
             Text(
               !StorageHelper.existFileSync(setting.data.mModdingWorker.mKernel) ? 'Invalid' : 'Available',
+              overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
           ],
@@ -88,6 +89,7 @@ class _SettingPanelState extends State<SettingPanel> {
           content: [
             Text(
               !StorageHelper.existFileSync(setting.data.mModdingWorker.mScript) ? 'Invalid' : 'Available',
+              overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
           ],
@@ -123,6 +125,7 @@ class _SettingPanelState extends State<SettingPanel> {
           content: [
             Text(
               !setting.data.mModdingWorker.mArgument.isNotEmpty ? 'Empty' : 'Defined',
+              overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
           ],
@@ -159,6 +162,7 @@ class _SettingPanelState extends State<SettingPanel> {
           content: [
             Text(
               !setting.data.mModdingWorker.mImmediateLaunch ? 'Disabled' : 'Enabled',
+              overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
           ],
@@ -175,6 +179,7 @@ class _SettingPanelState extends State<SettingPanel> {
               ),
               title: Text(
                 'Enable',
+                overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.titleMedium,
               ),
             ),
@@ -187,6 +192,7 @@ class _SettingPanelState extends State<SettingPanel> {
           content: [
             Text(
               !setting.data.mModdingWorker.mMessageFont.isNotEmpty ? 'Default' : 'Custom',
+              overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
           ],

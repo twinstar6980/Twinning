@@ -27,7 +27,9 @@ namespace TwinStar::Shell {
 		// ----------------
 
 		MainConsoleBridgeClient (
-		) = delete;
+		) :
+			m_running{false} {
+		}
 
 		MainConsoleBridgeClient (
 			MainConsoleBridgeClient const & that
@@ -36,14 +38,6 @@ namespace TwinStar::Shell {
 		MainConsoleBridgeClient (
 			MainConsoleBridgeClient && that
 		) = delete;
-
-		// ----------------
-
-		explicit MainConsoleBridgeClient (
-			std::nullptr_t _
-		) :
-			m_running{false} {
-		}
 
 		#pragma endregion
 

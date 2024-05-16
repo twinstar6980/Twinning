@@ -55,6 +55,7 @@ class _LauncherConfigurationPanelState extends State<LauncherConfigurationPanel>
           content: [
             Text(
               this.widget.data.title,
+              overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
           ],
@@ -91,6 +92,7 @@ class _LauncherConfigurationPanelState extends State<LauncherConfigurationPanel>
           content: [
             Text(
               ModuleHelper.query(this.widget.data.type).name,
+              overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
           ],
@@ -107,7 +109,10 @@ class _LauncherConfigurationPanelState extends State<LauncherConfigurationPanel>
                     this.widget.onUpdate();
                   },
                 ),
-                title: Text(ModuleHelper.query(this.widget.data.type).name),
+                title: Text(
+                  ModuleHelper.query(this.widget.data.type).name,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           ],
@@ -119,6 +124,7 @@ class _LauncherConfigurationPanelState extends State<LauncherConfigurationPanel>
           content: [
             Text(
               '${this.widget.data.option.length}',
+              overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
           ],

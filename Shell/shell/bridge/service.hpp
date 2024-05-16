@@ -1,13 +1,17 @@
 #pragma once
 
 #include "shell/common.hpp"
-#include "kernel/interface/interface.hpp"
+#include "shell/bridge/data.hpp"
 
 namespace TwinStar::Shell::Bridge {
 
 	#pragma region type
 
-	using Kernel::Interface::Service;
+	struct Service {
+
+		Executor * executor{nullptr};
+
+	};
 
 	#pragma endregion
 

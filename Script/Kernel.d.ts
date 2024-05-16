@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 63
+ * @version 64
  */
 declare namespace TwinStar.Kernel {
 

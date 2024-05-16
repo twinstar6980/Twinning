@@ -29,7 +29,6 @@ target('shell', function()
 	)
 	add_includedirs(
 		m.root .. '',
-		m.root .. '/../Kernel',
 		{ private = true }
 	)
 	if m.system:is('windows', 'linux', 'macintosh') then

@@ -6,6 +6,7 @@
 #include "shell/bridge/library.hpp"
 #include "shell/bridge/launcher.hpp"
 #include "shell/main_console_bridge_client.hpp"
+#include "kernel/interface/interface.hpp"
 
 #if defined M_vld
 #include "vld.h"
@@ -18,13 +19,13 @@ M_declare_native_main_function {
 	try
 	#endif
 	{
-		auto args = TwinStar::Shell::parse_raw_native_string(std::span{argv, static_cast<std::size_t>(argc)});
+		auto args = TwinStar::Shell::parse_raw_native_string(argc, argv);
 		assert_test(args.size() >= 3);
 		auto kernel = args[1];
 		auto script = args[2];
 		auto argument = std::vector<std::string>{args.begin() + 3, args.end()};
-		auto library = TwinStar::Shell::Bridge::Library{nullptr};
-		auto client = TwinStar::Shell::MainConsoleBridgeClient{nullptr};
+		auto library = TwinStar::Shell::Bridge::Library{&TwinStar::Kernel::Interface::service};
+		auto client = TwinStar::Shell::MainConsoleBridgeClient{};
 		auto result = TwinStar::Shell::Bridge::Launcher::launch(client, library, script, argument);
 		TwinStar::Shell::Interaction::output_text("SUCCEEDED");
 		TwinStar::Shell::Interaction::output_text("\n");

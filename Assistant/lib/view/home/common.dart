@@ -25,9 +25,10 @@ class CustomTitleBar extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        const DragToMoveArea(
-          child: SizedBox.expand(),
-        ),
+        if (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+          const DragToMoveArea(
+            child: SizedBox.expand(),
+          ),
         Row(
           children: [
             const SizedBox(width: 8),
@@ -42,51 +43,49 @@ class CustomTitleBar extends StatelessWidget {
               child: IgnorePointer(
                 child: Text(
                   this.title,
-                  style: theme.textTheme.titleLarge!.copyWith(
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.titleLarge,
                 ),
               ),
             ),
-            const SizedBox(width: 8),
-            IconButton(
-              icon: const Icon(IconSymbols.remove),
-              onPressed: !(Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-                ? null
-                : () async {
-                  if (await windowManager.isMinimized()) {
-                    await windowManager.restore();
-                  }
-                  else {
-                    await windowManager.minimize();
-                  }
-                },
-            ),
-            const SizedBox(width: 4),
-            IconButton(
-              icon: const Icon(IconSymbols.crop_square, size: 20),
-              onPressed: !(Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-                ? null
-                : () async {
-                  if (await windowManager.isMaximized()) {
-                    await windowManager.unmaximize();
-                  }
-                  else {
-                    await windowManager.maximize();
-                  }
-                },
-            ),
-            const SizedBox(width: 4),
-            IconButton(
-              icon: const Icon(IconSymbols.close),
-              onPressed: !(Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-                ? null
-                : () async {
-                  if (true) {
-                    await windowManager.close();
-                  }
-                },
-            ),
+            if (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+              Row(
+                children: [
+                  const SizedBox(width: 8),
+                  IconButton(
+                    icon: const Icon(IconSymbols.remove),
+                    onPressed: () async {
+                      if (await windowManager.isMinimized()) {
+                        await windowManager.restore();
+                      }
+                      else {
+                        await windowManager.minimize();
+                      }
+                    },
+                  ),
+                  const SizedBox(width: 4),
+                  IconButton(
+                    icon: const Icon(IconSymbols.crop_square, size: 20),
+                    onPressed: () async {
+                      if (await windowManager.isMaximized()) {
+                        await windowManager.unmaximize();
+                      }
+                      else {
+                        await windowManager.maximize();
+                      }
+                    },
+                  ),
+                  const SizedBox(width: 4),
+                  IconButton(
+                    icon: const Icon(IconSymbols.close),
+                    onPressed: () async {
+                      if (true) {
+                        await windowManager.close();
+                      }
+                    },
+                  ),
+                ],
+              ),
             const SizedBox(width: 8),
           ],
         ),
@@ -118,6 +117,7 @@ class CustomNavigationDrawerLabel extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(28, 8, 28, 8),
       child: Text(
         this.label,
+        overflow: TextOverflow.ellipsis,
         style: theme.textTheme.titleSmall?.copyWith(
           color: theme.colorScheme.primary,
         ),
@@ -169,6 +169,7 @@ class CustomNavigationDrawerItem extends StatelessWidget {
             Expanded(
               child: Text(
                 this.label,
+                overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.titleSmall?.copyWith(
                   color: !this.selected ? theme.colorScheme.onSurface : theme.colorScheme.surfaceTint,
                 ),
@@ -226,7 +227,10 @@ class CustomSettingLabel extends StatelessWidget {
       dense: true,
       title: Text(
         this.label,
-        style: theme.textTheme.titleSmall?.copyWith(color: theme.colorScheme.primary),
+        overflow: TextOverflow.ellipsis,
+        style: theme.textTheme.titleSmall?.copyWith(
+          color: theme.colorScheme.primary,
+        ),
       ),
       trailing: this.action,
     );
@@ -262,7 +266,10 @@ class CustomSettingItem extends StatelessWidget {
     return ListTile(
       enabled: this.enabled,
       leading: Icon(this.icon),
-      title: Text(this.label),
+      title: Text(
+        this.label,
+        overflow: TextOverflow.ellipsis,
+      ),
       trailing: SizedBox(
         width: 120,
         child: Row(

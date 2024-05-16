@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 #include "kernel/executor/context.hpp"
-#include "kernel/executor/interface.hpp"
+#include "kernel/executor/environment.hpp"
 #include "kernel/interface/proxy.hpp"
 
 namespace TwinStar::Kernel::Executor {
@@ -10,13 +10,13 @@ namespace TwinStar::Kernel::Executor {
 	#pragma region function
 
 	inline auto execute (
-		Kernel::Interface::ExecutorProxy const & callback,
-		String const &                           script,
-		List<String> const &                     argument
+		Interface::ExecutorProxy const & callback,
+		String const &                   script,
+		List<String> const &             argument
 	) -> List<String> {
 		auto lock = std::lock_guard{JavaScript::g_mutex};
 		auto context = Context{callback};
-		Interface::inject(context);
+		Environment::inject(context);
 		auto data = context.context().new_value();
 		data.set_object_of_object();
 		data.define_object_property("argument"_s, context.context().new_value(argument));

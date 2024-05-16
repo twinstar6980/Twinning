@@ -28,8 +28,15 @@ class MessageCard extends StatelessWidget {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     var cardColor = this.type.color(theme);
-    var titleStyle = theme.textTheme.titleSmall?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy, ...setting.state.mThemeFontFamliy]);
-    var descriptionStyle = theme.textTheme.bodySmall?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy, ...setting.state.mThemeFontFamliy], color: theme.colorScheme.secondary);
+    var titleStyle = theme.textTheme.titleSmall?.copyWith(
+      fontFamily: '',
+      fontFamilyFallback: [...setting.state.mConsoleFontFamliy, ...setting.state.mThemeFontFamliy],
+    );
+    var descriptionStyle = theme.textTheme.bodySmall?.copyWith(
+      fontFamily: '',
+      fontFamilyFallback: [...setting.state.mConsoleFontFamliy, ...setting.state.mThemeFontFamliy],
+      color: theme.colorScheme.secondary,
+    );
     return Card(
       margin: const EdgeInsets.fromLTRB(1, 0, 1, 0),
       elevation: 0.5,
@@ -50,6 +57,7 @@ class MessageCard extends StatelessWidget {
                 ),
                 Text(
                   '',
+                  overflow: TextOverflow.clip,
                   style: titleStyle,
                 ),
               ],
@@ -61,6 +69,7 @@ class MessageCard extends StatelessWidget {
                 children: [
                   Text(
                     this.title,
+                    overflow: TextOverflow.clip,
                     style: titleStyle,
                   ),
                   ...this.description.map(
@@ -68,6 +77,7 @@ class MessageCard extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(0, 4, 0, 0),
                       child: Text(
                         value,
+                        overflow: TextOverflow.clip,
                         style: descriptionStyle,
                       ),
                     ),

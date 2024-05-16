@@ -1,7 +1,7 @@
 #pragma once
 
-#include "kernel/interface/data.hpp"
 #include "kernel/utility/utility.hpp"
+#include "kernel/interface/data.hpp"
 #include <unordered_map>
 #include <functional>
 

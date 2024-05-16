@@ -295,7 +295,7 @@ class _MainPageBridgeClient implements Client {
 
   Future<(String,)> callbackVersion(
   ) async {
-    var version = kApplicationVersion.toString();
+    var version = kApplicationVersion;
     return (version,);
   }
 

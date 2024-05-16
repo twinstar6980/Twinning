@@ -27,7 +27,10 @@ class ControlHelper {
     return await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(title),
+        title: Text(
+          title,
+          overflow: TextOverflow.ellipsis,
+        ),
         content: StatefulBuilder(
           builder: (context, setState) => Column(
             mainAxisSize: MainAxisSize.min,
@@ -52,7 +55,10 @@ class ControlHelper {
     return await showDialog<Boolean>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Confirm ?'),
+        title: const Text(
+          'Confirm ?',
+          overflow: TextOverflow.ellipsis,
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -87,10 +93,15 @@ class ControlHelper {
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
               child: Row(
                 children: [
-                  Text(
-                    title,
-                    style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.primary),
-                    textAlign: TextAlign.left,
+                  Expanded(
+                    child: Text(
+                      title,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.left,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
                   ),
                 ],
               ),

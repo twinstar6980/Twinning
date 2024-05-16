@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = '104';
+	export const k_version = '105';
 
 	// ------------------------------------------------
 
@@ -78,11 +78,11 @@ namespace TwinStar.Script {
 		export function output(
 			message: string,
 		): void {
-			var host_name = Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['name'])).value[0];
-			if (host_name === 'basic') {
+			let shell_name = Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['name'])).value[0];
+			if (shell_name === 'basic') {
 				Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['output_text', `● ${message}\n`]));
 			}
-			if (host_name === 'assistant' || host_name === 'assistant.plus') {
+			if (shell_name === 'assistant' || shell_name === 'assistant.plus') {
 				Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['send_message', 'verbosity', `${message}`]));
 			}
 			return;
@@ -315,14 +315,6 @@ namespace TwinStar.Script {
 					los('main:partition_load_duration', ((timer_end - timer_begin) / 1000).toFixed(3)),
 				]);
 				Home.initialize();
-				{
-					// Console.pause();
-					// Console.boolean(true, null);
-					// Console.integer(true, null);
-					// Console.floater(true, null);
-					// Console.size(true, null);
-					// Console.string(true, null);
-				}
 				result = Entry.entry(argument.slice(1));
 			}
 			catch (e) {

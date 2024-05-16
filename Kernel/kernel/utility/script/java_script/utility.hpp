@@ -143,7 +143,7 @@ namespace TwinStar::Kernel::JavaScript {
 		inline auto call_native_function_wrapper_inner (
 			Argument && ... argument
 		) -> typename CallableTraitOf<function>::Result {
-			auto finalizer = make_finalizer(
+			auto unlock = make_finalizer(
 				[] {
 					g_mutex.unlock();
 				},

@@ -1,15 +1,26 @@
 #pragma once
 
 #include "shell/common.hpp"
-#include "kernel/interface/interface.hpp"
 
 namespace TwinStar::Shell::Bridge {
 
 	#pragma region type
 
-	using Kernel::Interface::Message;
+	struct Message {
 
-	using Kernel::Interface::Executor;
+		std::uint8_t * data{nullptr};
+
+		std::size_t size{0};
+
+	};
+
+	struct Executor {
+
+		std::add_pointer_t<void  (Executor *, Executor *, Message *, Message *, Message *)> invoke{nullptr};
+
+		std::add_pointer_t<void  (Executor *, Executor *, Message *, Message *, Message *)> clear{nullptr};
+
+	};
 
 	#pragma endregion
 

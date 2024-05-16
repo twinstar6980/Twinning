@@ -159,9 +159,16 @@ class _PauseSubmissionBarState extends State<_PauseSubmissionBar> {
       getCompleterValue: () => (null),
       icon: IconSymbols.pause,
       children: [
-        Text(
-          'Pause ...',
-          style: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy, ...setting.state.mThemeFontFamliy]),
+        Expanded(
+          child: Text(
+            'Pause ...',
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.bodyLarge?.copyWith(
+              fontFamily: '',
+              fontFamilyFallback: [...setting.state.mConsoleFontFamliy, ...setting.state.mThemeFontFamliy],
+              color: theme.colorScheme.secondary,
+            ),
+          ),
         ),
       ],
     );
@@ -649,28 +656,44 @@ class _PathSubmissionBarState extends State<_PathSubmissionBar> {
                       value: ':g',
                       child: Text(
                         'Generate',
-                        style: theme.textTheme.labelLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy, ...setting.state.mThemeFontFamliy]),
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontFamily: '',
+                          fontFamilyFallback: [...setting.state.mConsoleFontFamliy, ...setting.state.mThemeFontFamliy],
+                        ),
                       ),
                     ),
                     PopupMenuItem(
                       value: ':m',
                       child: Text(
                         'Move',
-                        style: theme.textTheme.labelLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy, ...setting.state.mThemeFontFamliy]),
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontFamily: '',
+                          fontFamilyFallback: [...setting.state.mConsoleFontFamliy, ...setting.state.mThemeFontFamliy],
+                        ),
                       ),
                     ),
                     PopupMenuItem(
                       value: ':d',
                       child: Text(
                         'Delete',
-                        style: theme.textTheme.labelLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy, ...setting.state.mThemeFontFamliy]),
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontFamily: '',
+                          fontFamilyFallback: [...setting.state.mConsoleFontFamliy, ...setting.state.mThemeFontFamliy],
+                        ),
                       ),
                     ),
                     PopupMenuItem(
                       value: ':o',
                       child: Text(
                         'Overwrite',
-                        style: theme.textTheme.labelLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy, ...setting.state.mThemeFontFamliy]),
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontFamily: '',
+                          fontFamilyFallback: [...setting.state.mConsoleFontFamliy, ...setting.state.mThemeFontFamliy],
+                        ),
                       ),
                     ),
                     const PopupMenuDivider(
@@ -679,21 +702,33 @@ class _PathSubmissionBarState extends State<_PathSubmissionBar> {
                       value: '@open_file',
                       child: Text(
                         'Open File',
-                        style: theme.textTheme.labelLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy, ...setting.state.mThemeFontFamliy]),
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontFamily: '',
+                          fontFamilyFallback: [...setting.state.mConsoleFontFamliy, ...setting.state.mThemeFontFamliy],
+                        ),
                       ),
                     ),
                     PopupMenuItem(
                       value: '@open_directory',
                       child: Text(
                         'Open Directory',
-                        style: theme.textTheme.labelLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy, ...setting.state.mThemeFontFamliy]),
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontFamily: '',
+                          fontFamilyFallback: [...setting.state.mConsoleFontFamliy, ...setting.state.mThemeFontFamliy],
+                        ),
                       ),
                     ),
                     PopupMenuItem(
                       value: '@save_file',
                       child: Text(
                         'Save File',
-                        style: theme.textTheme.labelLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy, ...setting.state.mThemeFontFamliy]),
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontFamily: '',
+                          fontFamilyFallback: [...setting.state.mConsoleFontFamliy, ...setting.state.mThemeFontFamliy],
+                        ),
                       ),
                     ),
                   ],
@@ -797,9 +832,16 @@ class _EnumerationSubmissionBarState extends State<_EnumerationSubmissionBar> {
       children: [
         Expanded(
           child: DropdownButton<Integer>(
-            style: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy, ...setting.state.mThemeFontFamliy]),
+            style: theme.textTheme.bodyLarge?.copyWith(
+              fontFamily: '',
+              fontFamilyFallback: [...setting.state.mConsoleFontFamliy, ...setting.state.mThemeFontFamliy],
+              overflow: TextOverflow.clip,
+            ),
             value: this._value,
-            hint: const Text('Enumeration ...'),
+            hint: const Text(
+              'Enumeration ...',
+              overflow: TextOverflow.ellipsis,
+            ),
             items: itemList,
             isExpanded: true,
             borderRadius: const BorderRadius.all(Radius.circular(10)),

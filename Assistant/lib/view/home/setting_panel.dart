@@ -70,6 +70,7 @@ class _SettingPanelState extends State<SettingPanel> {
           content: [
             Text(
               ['System', 'Light', 'Dark'][setting.data.mThemeMode.index],
+              overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
           ],
@@ -86,7 +87,10 @@ class _SettingPanelState extends State<SettingPanel> {
                     await setting.update();
                   },
                 ),
-                title: Text(['System', 'Light', 'Dark'][mode.index]),
+                title: Text(
+                  ['System', 'Light', 'Dark'][mode.index],
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           ],
@@ -98,6 +102,7 @@ class _SettingPanelState extends State<SettingPanel> {
           content: [
             Text(
               !setting.data.mThemeColorState ? 'Default' : 'Custom',
+              overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
           ],
@@ -114,6 +119,7 @@ class _SettingPanelState extends State<SettingPanel> {
               ),
               title: Text(
                 'Enable',
+                overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.titleMedium,
               ),
             ),
@@ -178,6 +184,7 @@ class _SettingPanelState extends State<SettingPanel> {
           content: [
             Text(
               !setting.data.mThemeFontState ? 'Default' : 'Custom',
+              overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
           ],
@@ -194,6 +201,7 @@ class _SettingPanelState extends State<SettingPanel> {
               ),
               title: Text(
                 'Enable',
+                overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.titleMedium,
               ),
             ),
@@ -232,6 +240,7 @@ class _SettingPanelState extends State<SettingPanel> {
           content: [
             Text(
               !setting.data.mWindowPositionState ? 'Default' : 'Custom',
+              overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
           ],
@@ -248,6 +257,7 @@ class _SettingPanelState extends State<SettingPanel> {
               ),
               title: Text(
                 'Enable',
+                overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.titleMedium,
               ),
             ),
@@ -258,6 +268,7 @@ class _SettingPanelState extends State<SettingPanel> {
                   alignment: Alignment.center,
                   child: Text(
                     'X',
+                    overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.titleMedium,
                   ),
                 ),
@@ -288,6 +299,7 @@ class _SettingPanelState extends State<SettingPanel> {
                   alignment: Alignment.center,
                   child: Text(
                     'Y',
+                    overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.titleMedium,
                   ),
                 ),
@@ -320,6 +332,7 @@ class _SettingPanelState extends State<SettingPanel> {
           content: [
             Text(
               !setting.data.mWindowSizeState ? 'Default' : 'Custom',
+              overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
           ],
@@ -336,6 +349,7 @@ class _SettingPanelState extends State<SettingPanel> {
               ),
               title: Text(
                 'Enable',
+                overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.titleMedium,
               ),
             ),
@@ -346,6 +360,7 @@ class _SettingPanelState extends State<SettingPanel> {
                   alignment: Alignment.center,
                   child: Text(
                     'W',
+                    overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.titleMedium,
                   ),
                 ),
@@ -376,6 +391,7 @@ class _SettingPanelState extends State<SettingPanel> {
                   alignment: Alignment.center,
                   child: Text(
                     'H',
+                    overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.titleMedium,
                   ),
                 ),
@@ -412,6 +428,7 @@ class _SettingPanelState extends State<SettingPanel> {
           content: [
             Text(
               this._applicationSharedDirectory == null ? 'Invalid' : 'Available',
+              overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
           ],
@@ -436,6 +453,7 @@ class _SettingPanelState extends State<SettingPanel> {
           content: [
             Text(
               !this._hasStoragePermission ? 'Denied' : 'Granted',
+              overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
           ],
@@ -452,6 +470,7 @@ class _SettingPanelState extends State<SettingPanel> {
           content: [
             Text(
               !StorageHelper.existDirectorySync(setting.data.mFallbackDirectory) ? 'Invalid' : 'Available',
+              overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
           ],

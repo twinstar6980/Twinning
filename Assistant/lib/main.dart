@@ -1,4 +1,3 @@
-
 import '/common.dart';
 import '/module.dart';
 import '/setting.dart';
@@ -28,9 +27,15 @@ Future<Void> main(
           context: navigatorKey.currentContext!,
           builder: (context) => AlertDialog(
             scrollable: true,
-            title: const Text('Unhandled Exception'),
+            title: const Text(
+              'Unhandled Exception',
+              overflow: TextOverflow.ellipsis,
+            ),
             content: SelectionArea(
-              child: Text('${exception}\n${stack}'),
+              child: Text(
+                '${exception}\n${stack}',
+                overflow: TextOverflow.clip,
+              ),
             ),
             actions: [
               TextButton(
@@ -64,7 +69,7 @@ Future<Void> main(
     var optionWindowPosition = null as (Integer, Integer)?;
     var optionWindowSize = null as (Integer, Integer)?;
     var optionInitialTab = null as (String, ModuleType, List<String>)?;
-    {
+    try {
       var optionView = <String>[];
       if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
         optionView = argument;
@@ -103,6 +108,9 @@ Future<Void> main(
         );
       }
       assertTest(option.done());
+    }
+    catch (e, s) {
+      handleUnhandledException(e, s);
     }
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       await windowManager.ensureInitialized();

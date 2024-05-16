@@ -22,18 +22,24 @@ class AboutPanel extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(
-                '${kApplicationName} - ${kApplicationVersion}',
-                style: theme.textTheme.titleMedium,
+              Expanded(
+                child: Text(
+                  '${kApplicationName} - ${kApplicationVersion}',
+                  overflow: TextOverflow.clip,
+                  style: theme.textTheme.titleMedium,
+                ),
               ),
             ],
           ),
           const SizedBox(height: 4),
           Row(
             children: [
-              Text(
-                '© 2023-2024 TwinStar. All rights reserved.',
-                style: theme.textTheme.bodyMedium,
+              Expanded(
+                child: Text(
+                  '© 2023-2024 TwinStar. All rights reserved.',
+                  overflow: TextOverflow.clip,
+                  style: theme.textTheme.bodyMedium,
+                ),
               ),
             ],
           ),
