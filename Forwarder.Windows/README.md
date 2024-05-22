@@ -8,7 +8,7 @@
 
 * 要求
 	
-	* [Visual Studio 2022 17.9](https://visualstudio.microsoft.com/downloads/)
+	* [Visual Studio 2022 17.10](https://visualstudio.microsoft.com/downloads/)
 
 * 开发
 	

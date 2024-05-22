@@ -57,7 +57,10 @@ class AboutPanel extends StatelessWidget {
               const SizedBox(width: 4),
               const SizedBox(
                 height: 34,
-                child: Icon(IconSymbols.settings),
+                child: Tooltip(
+                  message: 'Setting File',
+                  child: Icon(IconSymbols.settings),
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -140,7 +143,10 @@ class AboutPanel extends StatelessWidget {
               const SizedBox(width: 4),
               const SizedBox(
                 height: 34,
-                child: Icon(IconSymbols.folder_special),
+                child: Tooltip(
+                  message: 'Shared Directory',
+                  child: Icon(IconSymbols.folder_special),
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -177,7 +183,10 @@ class AboutPanel extends StatelessWidget {
               const SizedBox(width: 4),
               const SizedBox(
                 height: 34,
-                child: Icon(IconSymbols.folder_delete),
+                child: Tooltip(
+                  message: 'Cache Directory',
+                  child: Icon(IconSymbols.folder_delete),
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(

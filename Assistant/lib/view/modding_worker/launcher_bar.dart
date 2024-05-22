@@ -57,6 +57,7 @@ class _LauncherBarState extends State<LauncherBar> {
             width: 56,
             height: 40,
             child: IconButton.filledTonal(
+              tooltip: 'Additional Argument',
               icon: const Icon(IconSymbols.attachment),
               onPressed: () async {
                 await ControlHelper.showCustomModalDialog(
@@ -92,6 +93,7 @@ class _LauncherBarState extends State<LauncherBar> {
         const Expanded(child: SizedBox()),
         const SizedBox(width: 16),
         FloatingActionButton(
+          tooltip: 'Launch',
           elevation: 0,
           focusElevation: 0,
           hoverElevation: 0,

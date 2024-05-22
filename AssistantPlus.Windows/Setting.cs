@@ -27,9 +27,9 @@ namespace AssistantPlus {
 	}
 
 	public record SettingState {
-		public CustomThemeMode?     LegacyThemeMode     = default!;
-		public CustomThemeColor?    LegacyThemeColor    = default!;
-		public CustomThemeBackdrop? LegacyThemeBackdrop = default!;
+		public CustomThemeMode?     ThemeMode     = default!;
+		public CustomThemeColor?    ThemeColor    = default!;
+		public CustomThemeBackdrop? ThemeBackdrop = default!;
 	}
 
 	public class SettingProvider {
@@ -62,7 +62,7 @@ namespace AssistantPlus {
 		public async Task Apply (
 		) {
 			// Theme.Mode
-			if (this.State.LegacyThemeMode != this.Data.Theme.Mode && App.MainWindowIsInitialized) {
+			if (this.State.ThemeMode != this.Data.Theme.Mode && App.MainWindowIsInitialized) {
 				App.MainWindow.Content.AsClass<FrameworkElement>().RequestedTheme = this.Data.Theme.Mode switch {
 					CustomThemeMode.System => ElementTheme.Default,
 					CustomThemeMode.Light  => ElementTheme.Light,
@@ -75,10 +75,10 @@ namespace AssistantPlus {
 					CustomThemeMode.Dark   => Colors.White,
 					_                      => throw new (),
 				};
-				this.State.LegacyThemeMode = this.Data.Theme.Mode;
+				this.State.ThemeMode = this.Data.Theme.Mode;
 			}
 			// Theme.Color
-			if (this.State.LegacyThemeColor != this.Data.Theme.Color) {
+			if (this.State.ThemeColor != this.Data.Theme.Color) {
 				var customColorOnLight = Color.FromArgb(
 					0xFF,
 					(Byte)this.Data.Theme.Color.LightRed,
@@ -107,10 +107,10 @@ namespace AssistantPlus {
 						App.Instance.Resources[resourceKey] = customColorOnDark;
 					}
 				}
-				this.State.LegacyThemeColor = this.Data.Theme.Color;
+				this.State.ThemeColor = this.Data.Theme.Color;
 			}
 			// Theme.Backdrop
-			if (this.State.LegacyThemeBackdrop != this.Data.Theme.Backdrop && App.MainWindowIsInitialized) {
+			if (this.State.ThemeBackdrop != this.Data.Theme.Backdrop && App.MainWindowIsInitialized) {
 				App.MainWindow.SystemBackdrop = this.Data.Theme.Backdrop switch {
 					CustomThemeBackdrop.Solid          => null,
 					CustomThemeBackdrop.MicaBase       => new MicaBackdrop() { Kind = MicaKind.Base },
@@ -119,7 +119,7 @@ namespace AssistantPlus {
 					_                                  => throw new (),
 				};
 				App.MainWindow.uBackground.Visibility = this.Data.Theme.Backdrop == CustomThemeBackdrop.Solid ? Visibility.Visible : Visibility.Collapsed;
-				this.State.LegacyThemeBackdrop = this.Data.Theme.Backdrop;
+				this.State.ThemeBackdrop = this.Data.Theme.Backdrop;
 			}
 			// ModuleLauncher
 			await App.Instance.RegisterShellJumpList();
@@ -245,9 +245,9 @@ namespace AssistantPlus {
 		private static SettingState CreateDefaultState (
 		) {
 			return new () {
-				LegacyThemeMode = null,
-				LegacyThemeColor = null,
-				LegacyThemeBackdrop = null,
+				ThemeMode = null,
+				ThemeColor = null,
+				ThemeBackdrop = null,
 			};
 		}
 

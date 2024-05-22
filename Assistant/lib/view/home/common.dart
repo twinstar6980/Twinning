@@ -34,6 +34,7 @@ class CustomTitleBar extends StatelessWidget {
           children: [
             const SizedBox(width: 8),
             IconButton(
+              tooltip: 'Navigation',
               icon: const Icon(IconSymbols.menu),
               onPressed: () async {
                 Scaffold.of(context).openDrawer();

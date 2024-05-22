@@ -133,6 +133,7 @@
 										Text="{x:Bind Controller.uBooleanValue_Text}"
 										/>
 									<ToggleButton
+										ToolTipService.ToolTip="No"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
 										IsChecked="{x:Bind Controller.uBooleanValueNo_IsChecked}"
@@ -140,6 +141,7 @@
 										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RemoveFrom}}"
 										/>
 									<ToggleButton
+										ToolTipService.ToolTip="Yes"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
 										IsChecked="{x:Bind Controller.uBooleanValueYes_IsChecked}"

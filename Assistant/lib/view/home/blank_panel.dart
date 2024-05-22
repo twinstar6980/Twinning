@@ -25,6 +25,7 @@ class BlankPanel extends StatelessWidget {
         width: 256,
         height: 256,
         child: FloatingActionButton.large(
+          tooltip: 'Launch',
           elevation: 0,
           focusElevation: 0,
           hoverElevation: 0,

@@ -50,6 +50,7 @@ class _BasicSubmissionBar extends StatelessWidget {
             width: 56,
             height: 40,
             child: IconButton.filledTonal(
+              tooltip: 'History',
               padding: EdgeInsets.zero,
               icon: Stack(
                 alignment: AlignmentDirectional.center,
@@ -57,23 +58,27 @@ class _BasicSubmissionBar extends StatelessWidget {
                   Icon(this.icon),
                   SizedBox.expand(
                     child: PopupMenuButton(
+                      tooltip: '',
                       enabled: this.history != null,
                       style: const ButtonStyle(
                         overlayColor: WidgetStatePropertyAll(Colors.transparent),
                       ),
                       position: PopupMenuPosition.under,
-                      tooltip: '',
                       icon: const SizedBox(),
                       itemBuilder: (context) => (this.history ?? []).mapIndexed((index, value) => PopupMenuItem(
                         enabled: value.$2,
                         value: value.$1,
-                        child: Text(
-                          ValueExpressionHelper.makeString(value.$1),
-                          overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.labelLarge?.copyWith(
-                            fontFamily: '',
-                            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
-                            color: value.$2 ? null : theme.disabledColor,
+                        child: ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          dense: true,
+                          title: Text(
+                            ValueExpressionHelper.makeString(value.$1),
+                            overflow: TextOverflow.clip,
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              fontFamily: '',
+                              fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+                              color: value.$2 ? null : theme.disabledColor,
+                            ),
                           ),
                         ),
                       )).toList(),
@@ -97,6 +102,7 @@ class _BasicSubmissionBar extends StatelessWidget {
         ),
         const SizedBox(width: 16),
         FloatingActionButton(
+          tooltip: 'Submit',
           elevation: 0,
           focusElevation: 0,
           hoverElevation: 0,
@@ -316,6 +322,7 @@ class _BooleanSubmissionBarState extends State<_BooleanSubmissionBar> {
             children: [
               (this._value ?? !false) == false
                 ? IconButton.filledTonal(
+                  tooltip: 'No',
                   icon: const Icon(IconSymbols.do_not_disturb_on),
                   onPressed: () async {
                     this._value = null;
@@ -324,6 +331,7 @@ class _BooleanSubmissionBarState extends State<_BooleanSubmissionBar> {
                   },
                 )
                 : IconButton(
+                  tooltip: 'No',
                   icon: const Icon(IconSymbols.do_not_disturb_on),
                   onPressed: () async {
                     this._value = false;
@@ -334,6 +342,7 @@ class _BooleanSubmissionBarState extends State<_BooleanSubmissionBar> {
               const SizedBox(width: 4),
               (this._value ?? !true) == true
                 ? IconButton.filledTonal(
+                  tooltip: 'Yes',
                   icon: const Icon(IconSymbols.check_circle),
                   onPressed: () async {
                     this._value = null;
@@ -342,6 +351,7 @@ class _BooleanSubmissionBarState extends State<_BooleanSubmissionBar> {
                   },
                 )
                 : IconButton(
+                  tooltip: 'Yes',
                   icon: const Icon(IconSymbols.check_circle),
                   onPressed: () async {
                     this._value = true;
@@ -600,8 +610,8 @@ class _SizeSubmissionBarState extends State<_SizeSubmissionBar> {
           suffixIcon: CustomTextFieldSuffixWidget(
             children: [
               PopupMenuButton(
+                tooltip: 'Exponent',
                 position: PopupMenuPosition.under,
-                tooltip: '',
                 icon: Text(
                   ['B', 'K', 'M', 'G'][this._exponent],
                   overflow: TextOverflow.ellipsis,
@@ -802,8 +812,8 @@ class _PathSubmissionBarState extends State<_PathSubmissionBar> {
             suffixIcon: CustomTextFieldSuffixWidget(
               children: [
                 PopupMenuButton(
+                  tooltip: 'Command',
                   position: PopupMenuPosition.under,
-                  tooltip: '',
                   icon: const Icon(IconSymbols.adjust),
                   itemBuilder: (context) => <PopupMenuEntry<String>>[
                     PopupMenuItem(
@@ -993,7 +1003,6 @@ class _EnumerationSubmissionBarState extends State<_EnumerationSubmissionBar> {
           ),
           menuChildren: this.widget.item.map((value) => MenuItemButton(
             style: MenuItemButton.styleFrom(
-              padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
               backgroundColor: value != this._item ? null : theme.colorScheme.onSurface.withOpacity(0.12),
             ),
             onPressed: () async {
@@ -1003,12 +1012,16 @@ class _EnumerationSubmissionBarState extends State<_EnumerationSubmissionBar> {
             },
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: constraints.maxWidth - 24),
-              child: Text(
-                value,
-                overflow: TextOverflow.clip,
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  fontFamily: '',
-                  fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+              child: ListTile(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                title: Text(
+                  value,
+                  overflow: TextOverflow.clip,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    fontFamily: '',
+                    fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+                  ),
                 ),
               ),
             ),

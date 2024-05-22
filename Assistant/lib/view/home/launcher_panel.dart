@@ -40,6 +40,7 @@ class LauncherPanel extends StatelessWidget {
           label: item.title,
           content: [
             IconButton(
+              tooltip: 'Setting',
               icon: const Icon(IconSymbols.settings),
               onPressed: () async {
                 await ControlHelper.showCustomModalBottomSheet(
@@ -53,6 +54,7 @@ class LauncherPanel extends StatelessWidget {
               },
             ),
             IconButton(
+              tooltip: 'Edit',
               icon: const Icon(IconSymbols.edit),
               onPressed: () async {
                 await ControlHelper.showCustomModalBottomSheet(
@@ -79,6 +81,7 @@ class LauncherPanel extends StatelessWidget {
         CustomSettingLabel(
           label: 'Pinned',
           action: IconButton(
+            tooltip: 'Add',
             icon: const Icon(IconSymbols.add),
             onPressed: () async {
               setting.data.mModuleLauncher.mPinned.add(ModuleLauncherConfiguration(
@@ -96,6 +99,7 @@ class LauncherPanel extends StatelessWidget {
           label: item.title,
           content: [
             IconButton(
+              tooltip: 'Remove',
               icon: const Icon(IconSymbols.remove),
               onPressed: () async {
                 setting.data.mModuleLauncher.mPinned.remove(item);
@@ -103,6 +107,7 @@ class LauncherPanel extends StatelessWidget {
               },
             ),
             IconButton(
+              tooltip: 'Edit',
               icon: const Icon(IconSymbols.edit),
               onPressed: () async {
                 await ControlHelper.showCustomModalBottomSheet(
@@ -129,6 +134,7 @@ class LauncherPanel extends StatelessWidget {
         CustomSettingLabel(
           label: 'Recent',
           action: IconButton(
+            tooltip: 'Clear',
             icon: const Icon(IconSymbols.clear),
             onPressed: () async {
               if (await ControlHelper.showCustomConfirmDialog(context: context)) {
@@ -144,6 +150,7 @@ class LauncherPanel extends StatelessWidget {
           label: item.title,
           content: [
             IconButton(
+              tooltip: 'Pin',
               icon: const Icon(IconSymbols.push_pin),
               onPressed: () async {
                 setting.data.mModuleLauncher.mRecent.remove(item);
@@ -152,6 +159,7 @@ class LauncherPanel extends StatelessWidget {
               },
             ),
             IconButton(
+              tooltip: 'Remove',
               icon: const Icon(IconSymbols.remove),
               onPressed: () async {
                 setting.data.mModuleLauncher.mRecent.remove(item);
@@ -159,6 +167,7 @@ class LauncherPanel extends StatelessWidget {
               },
             ),
             IconButton(
+              tooltip: 'Edit',
               icon: const Icon(IconSymbols.edit),
               onPressed: () async {
                 await ControlHelper.showCustomModalBottomSheet(

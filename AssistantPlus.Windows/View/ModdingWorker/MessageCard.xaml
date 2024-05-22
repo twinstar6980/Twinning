@@ -15,8 +15,8 @@
 	<Border
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
-		CornerRadius="4"
-		BorderThickness="1"
+		CornerRadius="{ThemeResource ControlCornerRadius}"
+		BorderThickness="{StaticResource BorderThickness}"
 		Background="{ThemeResource SystemFillColorAttentionBackgroundBrush}"
 		>
 		<Border.BorderBrush>

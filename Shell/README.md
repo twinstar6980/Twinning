@@ -10,7 +10,7 @@
 	
 	* [xmake 2.9](https://xmake.io/#/)
 	
-	* [MSVC 19.39 & WinAPI](https://visualstudio.microsoft.com/downloads/) for `Windows`
+	* [MSVC 19.40 & WinAPI](https://visualstudio.microsoft.com/downloads/) for `Windows`
 	
 	* [Clang 18.1 & POSIX (libstdc++)](https://llvm.org/) for `Linux`
 	
