@@ -16,13 +16,17 @@ namespace AssistantPlus {
 
 		public static App Instance { get; private set; } = default!;
 
-		public static Setting Setting { get; private set; } = default!;
+		public static SettingProvider Setting { get; private set; } = default!;
 
 		public static View.Home.MainWindow MainWindow { get; private set; } = default!;
 
 		public static String PackageDirectory { get; private set; } = default!;
 
 		public static String ProgramFile { get; private set; } = default!;
+
+		public static String SharedDirectory { get; private set; } = default!;
+
+		public static String CacheDirectory { get; private set; } = default!;
 
 		// ----------------
 
@@ -54,11 +58,13 @@ namespace AssistantPlus {
 			try {
 				App.PackageDirectory = StorageHelper.Parent(Environment.GetCommandLineArgs()[0]).AsNotNull();
 				App.ProgramFile = $"{App.PackageDirectory}/AssistantPlus.exe";
+				App.SharedDirectory = StorageHelper.Regularize(Windows.Storage.ApplicationData.Current.LocalFolder.Path);
+				App.CacheDirectory = $"{App.SharedDirectory}/Cache";
 				try {
 					await App.Setting.Load();
 				}
 				catch (Exception) {
-					App.Setting.Data = Setting.CreateDefaultData();
+					await App.Setting.Reset();
 				}
 				await App.Setting.Save();
 				this.InitializeNotification();
@@ -117,7 +123,12 @@ namespace AssistantPlus {
 					WindowHelper.Center(window);
 				}
 				if (optionInitialTab is not null) {
-					_ = window.AsClass<View.Home.MainWindow>().SetDefaultView(optionInitialTab.Item1, optionInitialTab.Item2, optionInitialTab.Item3);
+					_ = window.AsClass<View.Home.MainWindow>().SetDefaultView(new () {
+						Title = optionInitialTab.Item1,
+						Type = optionInitialTab.Item2,
+						Option = optionInitialTab.Item3,
+						Command = [],
+					});
 				}
 				else {
 					_ = window.AsClass<View.Home.MainWindow>().SetDefaultView();
@@ -238,6 +249,21 @@ namespace AssistantPlus {
 
 		// ----------------
 
+		public async Task AppendPinnedLauncherItem (
+			ModuleLauncherConfiguration launcher
+		) {
+			var pinnedItem = App.Setting.Data.ModuleLauncher.Pinned.Find((value) => (ModuleHelper.CompareLauncher(value, launcher)));
+			if (pinnedItem is not null) {
+				App.Setting.Data.ModuleLauncher.Pinned.Remove(pinnedItem);
+				App.Setting.Data.ModuleLauncher.Pinned.Insert(0, pinnedItem);
+			}
+			else {
+				App.Setting.Data.ModuleLauncher.Pinned.Insert(0, launcher);
+			}
+			await App.Setting.Save();
+			return;
+		}
+
 		public async Task AppendRecentLauncherItem (
 			ModuleLauncherConfiguration launcher
 		) {
@@ -264,7 +290,7 @@ namespace AssistantPlus {
 			Boolean                     forNewWindow
 		) {
 			if (!forNewWindow) {
-				await App.MainWindow.InsertTabItem(launcher.Title, launcher.Type, launcher.Option);
+				await App.MainWindow.InsertTabItem(launcher);
 			}
 			else {
 				await ProcessHelper.CreateProcess(App.ProgramFile, ModuleHelper.GenerateArgument(launcher), false);

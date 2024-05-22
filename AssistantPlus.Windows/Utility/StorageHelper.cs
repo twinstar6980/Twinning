@@ -49,7 +49,7 @@ namespace AssistantPlus.Utility {
 
 		public static String Temporary (
 		) {
-			var parent = StorageHelper.Regularize(Windows.Storage.ApplicationData.Current.LocalCacheFolder.Path);
+			var parent = App.CacheDirectory;
 			var name = DateTime.Now.Ticks.ToString(CultureInfo.InvariantCulture);
 			var result = $"{parent}/{name}";
 			var suffix = 0;

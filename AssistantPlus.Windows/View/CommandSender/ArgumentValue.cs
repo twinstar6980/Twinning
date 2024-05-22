@@ -6,39 +6,33 @@ using AssistantPlus.Utility;
 
 namespace AssistantPlus.View.CommandSender {
 
-	public enum SizeUnit {
-		B,
-		K,
-		M,
-		G,
-	}
-
 	public class SizeExpression {
 
-		public Floater Value = 0.0;
+		public Floater Count = 0.0;
 
-		public SizeUnit Unit = SizeUnit.M;
+		public Integer Exponent = 2;
 
 		// ----------------
 
-		public override String ToString (
+		public static String MakeString (
+			SizeExpression value
 		) {
-			return $"{this.Value}{(!Floater.IsInteger(this.Value) ? "" : ".0")}{this.Unit.ToString().ToLower()}";
+			return $"{ConvertHelper.MakeFloaterToString(value.Count, false)}{new[] { "b", "k", "m", "g" }[value.Exponent]}";
 		}
 
-		public static SizeExpression Parse (
-			String expression
+		public static SizeExpression ParseString (
+			String text
 		) {
-			GF.AssertTest(expression.Length >= 2);
+			GF.AssertTest(text.Length >= 2);
 			return new () {
-				Unit = expression[^1] switch {
-					'b' => SizeUnit.B,
-					'k' => SizeUnit.K,
-					'm' => SizeUnit.M,
-					'g' => SizeUnit.G,
+				Exponent = text[^1] switch {
+					'b' => 0,
+					'k' => 1,
+					'm' => 2,
+					'g' => 3,
 					_   => throw new (),
 				},
-				Value = Floater.Parse(expression[..^1]),
+				Count = Floater.Parse(text[..^1]),
 			};
 		}
 
@@ -46,20 +40,21 @@ namespace AssistantPlus.View.CommandSender {
 
 	public class PathExpression {
 
-		public String Value = "";
+		public String Content = "";
 
 		// ----------------
 
-		public override String ToString (
+		public static String MakeString (
+			PathExpression value
 		) {
-			return $"{this.Value}";
+			return $"{value.Content}";
 		}
 
-		public static PathExpression Parse (
-			String expression
+		public static PathExpression ParseString (
+			String text
 		) {
 			return new () {
-				Value = expression,
+				Content = text,
 			};
 		}
 

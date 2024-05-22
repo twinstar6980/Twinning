@@ -36,7 +36,12 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		#endregion
 
-		#region tab item page
+		#region module page
+
+		public async Task<List<String>> ModulePageCollectOption (
+		) {
+			return await this.Controller.CollectOption();
+		}
 
 		public async Task<Boolean> ModulePageRequestClose (
 		) {
@@ -99,6 +104,15 @@ namespace AssistantPlus.View.PackageBuilder {
 				await this.ProjectOpen(optionProjectDirectory);
 			}
 			return;
+		}
+
+		public async Task<List<String>> CollectOption (
+		) {
+			var option = new CommandLineWriter();
+			if (option.Check("-ProjectDirectory", this.ProjectDirectory is not null)) {
+				option.NextString(this.ProjectDirectory.AsNotNull());
+			}
+			return option.Done();
 		}
 
 		public async Task<Boolean> RequestClose (
@@ -344,10 +358,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			await App.Instance.AppendRecentLauncherItem(new () {
 				Title = Regex.Replace(StorageHelper.Name(projectDirectory), @"(\.pvz2_package_project)$", "", RegexOptions.IgnoreCase),
 				Type = ModuleType.PackageBuilder,
-				Option = [
-					"-ProjectDirectory",
-					projectDirectory,
-				],
+				Option = await this.CollectOption(),
 				Command = [],
 			});
 			await this.ProjectReload();

@@ -2,6 +2,7 @@ import '/common.dart';
 import '/utility/platform_method.dart';
 import 'dart:io';
 import 'package:path/path.dart' as p;
+import 'package:file_selector/file_selector.dart' as file_selector;
 import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -29,18 +30,6 @@ class StorageHelper {
     return path.replaceAll('/', '\\');
   }
 
-  static String toNativeStyle(
-    String path,
-  ) {
-    if (Platform.isWindows) {
-      return toWindowsStyle(path);
-    }
-    if (Platform.isLinux || Platform.isMacOS || Platform.isAndroid || Platform.isIOS) {
-      return toPosixStyle(path);
-    }
-    throw UnimplementedError();
-  }
-
   // ----------------
 
   static String parent(
@@ -59,10 +48,7 @@ class StorageHelper {
 
   static Future<String> temporary(
   ) async {
-    var parent = '${await queryApplicationSharedDirectory()}/cache';
-    if (Platform.isAndroid) {
-      parent = (await getApplicationCacheDirectory()).path;
-    }
+    var parent = await queryApplicationCacheDirectory();
     var name = DateTime.now().millisecondsSinceEpoch.toString();
     var result = '${parent}/${name}';
     var suffix = 0;
@@ -129,6 +115,26 @@ class StorageHelper {
     return;
   }
 
+  // ----------------
+
+  static Future<Void> removeFile(
+    String source,
+  ) async {
+    if (await File(source).exists()) {
+      await File(source).delete(recursive: true);
+    }
+    return;
+  }
+
+  static Future<Void> removeDirectory(
+    String source,
+  ) async {
+    if (await Directory(source).exists()) {
+      await Directory(source).delete(recursive: true);
+    }
+    return;
+  }
+
   // #endregion
 
   // #region shell
@@ -140,15 +146,18 @@ class StorageHelper {
     String fallbackDirectory,
   ) async {
     var target = null as String?;
-    var initialDirectory = toNativeStyle(_taggedHistoryDirectory[tag] ?? '/');
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    var initialDirectory = _taggedHistoryDirectory[tag] ?? '/';
+    if (Platform.isWindows) {
+      target = (await file_selector.openFile(initialDirectory: toWindowsStyle(initialDirectory)))?.path;
+      if (target != null) {
+        target = regularize(target);
+      }
+    }
+    if (Platform.isLinux || Platform.isMacOS) {
       target = (await FilePicker.platform.pickFiles(
         lockParentWindow: true,
         initialDirectory: initialDirectory,
       ))?.files.single.path;
-      if (Platform.isWindows && target != null) {
-        target = regularize(target);
-      }
     }
     if (Platform.isAndroid || Platform.isIOS) {
       target = await PlatformMethod.pickStoragePath('open_file', initialDirectory, fallbackDirectory);
@@ -163,15 +172,19 @@ class StorageHelper {
     String tag,
   ) async {
     var target = null as String?;
-    var initialDirectory = toNativeStyle(_taggedHistoryDirectory[tag] ?? '/');
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    var initialDirectory = _taggedHistoryDirectory[tag] ?? '/';
+    if (Platform.isWindows) {
+      // NOTE : use `file_selector.getDirectoryPath` instead of `FilePicker.platform.getDirectoryPath`, on windows, the later one will throw an exception if it is the first file dialog since application start.
+      target = await file_selector.getDirectoryPath(initialDirectory: toWindowsStyle(initialDirectory));
+      if (target != null) {
+        target = regularize(target);
+      }
+    }
+    if (Platform.isLinux || Platform.isMacOS) {
       target = await FilePicker.platform.getDirectoryPath(
         lockParentWindow: true,
         initialDirectory: initialDirectory,
       );
-      if (Platform.isWindows && target != null) {
-        target = regularize(target);
-      }
     }
     if (Platform.isAndroid || Platform.isIOS) {
       target = await PlatformMethod.pickStoragePath('open_directory', initialDirectory, '');
@@ -186,15 +199,18 @@ class StorageHelper {
     String tag,
   ) async {
     var target = null as String?;
-    var initialDirectory = toNativeStyle(_taggedHistoryDirectory[tag] ?? '/');
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    var initialDirectory = _taggedHistoryDirectory[tag] ?? '/';
+    if (Platform.isWindows) {
+      target = (await file_selector.getSaveLocation(initialDirectory: toWindowsStyle(initialDirectory)))?.path;
+      if (target != null) {
+        target = regularize(target);
+      }
+    }
+    if (Platform.isLinux || Platform.isMacOS) {
       target = await FilePicker.platform.saveFile(
         lockParentWindow: true,
         initialDirectory: initialDirectory,
       );
-      if (Platform.isWindows && target != null) {
-        target = regularize(target);
-      }
     }
     if (Platform.isAndroid) {
       target = await PlatformMethod.pickStoragePath('save_file', initialDirectory, '');
@@ -230,6 +246,18 @@ class StorageHelper {
     }
     if (Platform.isIOS) {
       result = (await getApplicationDocumentsDirectory()).path;
+    }
+    return result!;
+  }
+
+  static Future<String> queryApplicationCacheDirectory(
+  ) async {
+    var result = null as String?;
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS || Platform.isIOS) {
+      result = (await queryApplicationSharedDirectory()) + '/cache';
+    }
+    if (Platform.isAndroid) {
+      result = (await getApplicationCacheDirectory()).path;
     }
     return result!;
   }

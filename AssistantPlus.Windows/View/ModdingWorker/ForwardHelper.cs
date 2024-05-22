@@ -16,7 +16,11 @@ namespace AssistantPlus.View.ModdingWorker {
 			var state = true;
 			try {
 				if (App.Setting.Data.ModdingWorker.AlternativeLaunchScript.Length == 0) {
-					await App.MainWindow.InsertTabItem(ModuleHelper.Query(ModuleType.ModdingWorker).Name, ModuleType.ModdingWorker, ["-AdditionalArgument", ..argument]);
+					await App.MainWindow.InsertTabItem(new () {
+						Title = ModuleHelper.Query(ModuleType.ModdingWorker).Name,
+						Type = ModuleType.ModdingWorker,
+						Option = ["-AdditionalArgument", ..argument],
+					});
 				}
 				else {
 					await ProcessHelper.CreateProcessForCommandScript(App.Setting.Data.ModdingWorker.AlternativeLaunchScript, argument, false);

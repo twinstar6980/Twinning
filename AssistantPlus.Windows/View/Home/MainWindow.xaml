@@ -54,7 +54,24 @@
 						IconSource="{x:Bind uRoot_IconSource}"
 						Header="{x:Bind uRoot_Header}"
 						Content="{x:Bind uRoot_Content}"
-						/>
+						>
+						<TabViewItem.ContextFlyout>
+							<MenuFlyout Placement="Bottom">
+								<MenuFlyoutItem
+									Tag="Keep"
+									Click="{x:Bind uCommand_Click}"
+									Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Pin}}"
+									Text="Keep"
+									/>
+								<MenuFlyoutItem
+									Tag="Duplicate"
+									Click="{x:Bind uCommand_Click}"
+									Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.CopyTo}}"
+									Text="Duplicate"
+									/>
+							</MenuFlyout>
+						</TabViewItem.ContextFlyout>
+					</TabViewItem>
 				</DataTemplate>
 			</TabView.TabItemTemplate>
 			<TabView.TabStripHeader>

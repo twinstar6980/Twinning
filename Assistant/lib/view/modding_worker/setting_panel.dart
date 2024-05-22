@@ -64,15 +64,15 @@ class _SettingPanelState extends State<SettingPanel> {
               title: Focus(
                 onFocusChange: (value) async {
                   if (!value) {
-                    await setting.update();
+                    await setting.save();
                   }
                 },
                 child: TextFormField(
+                  keyboardType: TextInputType.text,
+                  inputFormatters: const [],
                   decoration: const InputDecoration(
                     isDense: true,
                   ),
-                  keyboardType: TextInputType.text,
-                  inputFormatters: const [],
                   initialValue: setting.data.mModdingWorker.mKernel,
                   onChanged: (value) async {
                     setting.data.mModdingWorker.mKernel = value;
@@ -100,15 +100,15 @@ class _SettingPanelState extends State<SettingPanel> {
               title: Focus(
                 onFocusChange: (value) async {
                   if (!value) {
-                    await setting.update();
+                    await setting.save();
                   }
                 },
                 child: TextFormField(
+                  keyboardType: TextInputType.text,
+                  inputFormatters: const [],
                   decoration: const InputDecoration(
                     isDense: true,
                   ),
-                  keyboardType: TextInputType.text,
-                  inputFormatters: const [],
                   initialValue: setting.data.mModdingWorker.mScript,
                   onChanged: (value) async {
                     setting.data.mModdingWorker.mScript = value;
@@ -136,19 +136,19 @@ class _SettingPanelState extends State<SettingPanel> {
               title: Focus(
                 onFocusChange: (value) async {
                   if (!value) {
-                    await setting.update();
+                    await setting.save();
                   }
                 },
                 child: TextFormField(
-                  decoration: const InputDecoration(
-                    isDense: true,
-                  ),
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                   inputFormatters: const [],
-                  initialValue: ConvertHelper.convertStringListToTextWithLine(setting.data.mModdingWorker.mArgument),
+                  decoration: const InputDecoration(
+                    isDense: true,
+                  ),
+                  initialValue: ConvertHelper.makeStringListToStringWithLine(setting.data.mModdingWorker.mArgument),
                   onChanged: (value) async {
-                    setting.data.mModdingWorker.mArgument = ConvertHelper.convertStringListFromTextWithLine(value);
+                    setting.data.mModdingWorker.mArgument = ConvertHelper.parseStringListFromStringWithLine(value);
                   },
                 ),
               ),
@@ -174,7 +174,7 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mModdingWorker.mImmediateLaunch,
                 onChanged: (value) async {
                   setting.data.mModdingWorker.mImmediateLaunch = value;
-                  await setting.update();
+                  await setting.save();
                 },
               ),
               title: Text(
@@ -203,19 +203,19 @@ class _SettingPanelState extends State<SettingPanel> {
               title: Focus(
                 onFocusChange: (value) async {
                   if (!value) {
-                    await setting.update();
+                    await setting.save();
                   }
                 },
                 child: TextFormField(
-                  decoration: const InputDecoration(
-                    isDense: true,
-                  ),
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                   inputFormatters: const [],
-                  initialValue: ConvertHelper.convertStringListToTextWithLine(setting.data.mModdingWorker.mMessageFont),
+                  decoration: const InputDecoration(
+                    isDense: true,
+                  ),
+                  initialValue: ConvertHelper.makeStringListToStringWithLine(setting.data.mModdingWorker.mMessageFont),
                   onChanged: (value) async {
-                    setting.data.mModdingWorker.mMessageFont = ConvertHelper.convertStringListFromTextWithLine(value);
+                    setting.data.mModdingWorker.mMessageFont = ConvertHelper.parseStringListFromStringWithLine(value);
                   },
                 ),
               ),

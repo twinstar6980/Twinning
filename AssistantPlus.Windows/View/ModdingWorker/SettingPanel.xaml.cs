@@ -168,7 +168,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<TextBox>();
-			this.Data.Argument = ConvertHelper.StringListFromTextWithCr(senders.Text);
+			this.Data.Argument = ConvertHelper.ParseStringListFromStringWithLine(senders.Text);
 			this.NotifyPropertyChanged(
 				nameof(this.uArgumentText_Text)
 			);
@@ -177,7 +177,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public String uArgumentText_Text {
 			get {
-				return ConvertHelper.StringListToTextWithCr(this.Data.Argument);
+				return ConvertHelper.MakeStringListToStringWithLine(this.Data.Argument);
 			}
 		}
 

@@ -284,7 +284,7 @@ namespace AssistantPlus {
 				var file = $"{directory}/{GameAnimationHelper.ParseImageFileName(image.Name)}.png";
 				var source = default(BitmapSource);
 				if (StorageHelper.ExistFile(file)) {
-					source = await ConvertHelper.BitmapFromBinary(await StorageHelper.ReadFile(file));
+					source = await ConvertHelper.ParseBitmapFromBinary(await StorageHelper.ReadFile(file));
 				}
 				imageSourceList.Add(source);
 			}

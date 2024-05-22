@@ -113,7 +113,7 @@
 				<ItemsRepeater
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
-					Margin="0,12"
+					Margin="16,12"
 					ItemsSource="{x:Bind Controller.uMessageList_ItemsSource}"
 					>
 					<ItemsRepeater.Layout>
@@ -155,6 +155,7 @@
 					Height="32"
 					Type="{x:Bind Controller.uSubmissionBar_Type}"
 					Option="{x:Bind Controller.uSubmissionBar_Option}"
+					History="{x:Bind Controller.uSubmissionBar_History}"
 					Value="{x:Bind Controller.uSubmissionBar_Value}"
 					ValueSubmitted="{x:Bind Controller.uSubmissionBar_ValueSubmitted}"
 					Stamp="{x:Bind Controller.uSubmissionBar_Stamp}"

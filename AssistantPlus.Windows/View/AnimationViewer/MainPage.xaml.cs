@@ -41,7 +41,12 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		#endregion
 
-		#region tab item page
+		#region module page
+
+		public async Task<List<String>> ModulePageCollectOption (
+		) {
+			return await this.Controller.CollectOption();
+		}
 
 		public async Task<Boolean> ModulePageRequestClose (
 		) {
@@ -266,6 +271,52 @@ namespace AssistantPlus.View.AnimationViewer {
 				);
 			}
 			return;
+		}
+
+		public async Task<List<String>> CollectOption (
+		) {
+			var option = new CommandLineWriter();
+			if (option.Check("-ImmediateSelect")) {
+				option.NextBoolean(this.ImmediateSelect);
+			}
+			if (option.Check("-AutomaticPlay")) {
+				option.NextBoolean(this.AutomaticPlay);
+			}
+			if (option.Check("-RepeatPlay")) {
+				option.NextBoolean(this.RepeatPlay);
+			}
+			if (option.Check("-RemainFrameRate")) {
+				option.NextBoolean(this.RemainFrameRate);
+			}
+			if (option.Check("-ShowSpriteBoundary")) {
+				option.NextBoolean(this.ShowSpriteBoundary);
+			}
+			if (option.Check("-ImageFilterRule")) {
+				option.NextString(this.ImageFilterRule);
+			}
+			if (option.Check("-SpriteFilterRule")) {
+				option.NextString(this.SpriteFilterRule);
+			}
+			if (option.Check("-AnimationFile", this.AnimationFile is not null)) {
+				option.NextString(this.AnimationFile.AsNotNull());
+			}
+			if (option.Check("-ImageDirectory", this.ImageDirectory is not null)) {
+				option.NextString(this.ImageDirectory.AsNotNull());
+			}
+			if (option.Check("-WorkingSpriteIndex", this.WorkingSpriteIndex is not null)) {
+				option.NextInteger(this.WorkingSpriteIndex.AsNotNull());
+			}
+			if (option.Check("-WorkingSpriteFrameRange", this.WorkingSpriteFrameRange is not null)) {
+				option.NextInteger(this.WorkingSpriteFrameRange.AsNotNull().Start);
+				option.NextInteger(this.WorkingSpriteFrameRange.AsNotNull().Duration);
+			}
+			if (option.Check("-WorkingSpriteFrameRate", this.WorkingSpriteFrameRate is not null)) {
+				option.NextFloater(this.WorkingSpriteFrameRate.AsNotNull());
+			}
+			if (option.Check("-WorkingSpriteState", this.WorkingSpriteState is not null)) {
+				option.NextBoolean(this.WorkingSpriteState.AsNotNull());
+			}
+			return option.Done();
 		}
 
 		public async Task<Boolean> RequestClose (
@@ -605,12 +656,7 @@ namespace AssistantPlus.View.AnimationViewer {
 				await App.Instance.AppendRecentLauncherItem(new () {
 					Title = Regex.Replace(StorageHelper.Name(animationFile), @"(\.pam\.json)$", "", RegexOptions.IgnoreCase),
 					Type = ModuleType.AnimationViewer,
-					Option = [
-						"-AnimationFile",
-						animationFile,
-						"-ImageDirectory",
-						imageDirectory,
-					],
+					Option = await this.CollectOption(),
 					Command = [],
 				});
 			}
@@ -1121,9 +1167,9 @@ namespace AssistantPlus.View.AnimationViewer {
 		public Floater uWorkingSpriteFrameRangeIcon_Opacity {
 			get {
 				if (!this.Working) {
-					return ConvertHelper.BooleanToFloaterOfOpacityEnabled(false);
+					return ConvertHelper.MakeBooleanToFloaterOfOpacityEnabled(false);
 				}
-				return ConvertHelper.BooleanToFloaterOfOpacityEnabled(true);
+				return ConvertHelper.MakeBooleanToFloaterOfOpacityEnabled(true);
 			}
 		}
 
@@ -1277,9 +1323,9 @@ namespace AssistantPlus.View.AnimationViewer {
 		public Floater uWorkingSpriteFrameRangeLabelIcon_Opacity {
 			get {
 				if (!this.Working) {
-					return ConvertHelper.BooleanToFloaterOfOpacityEnabled(false);
+					return ConvertHelper.MakeBooleanToFloaterOfOpacityEnabled(false);
 				}
-				return ConvertHelper.BooleanToFloaterOfOpacityEnabled(true);
+				return ConvertHelper.MakeBooleanToFloaterOfOpacityEnabled(true);
 			}
 		}
 
@@ -1346,9 +1392,9 @@ namespace AssistantPlus.View.AnimationViewer {
 		public Floater uWorkingSpriteFrameRateIcon_Opacity {
 			get {
 				if (!this.Working) {
-					return ConvertHelper.BooleanToFloaterOfOpacityEnabled(false);
+					return ConvertHelper.MakeBooleanToFloaterOfOpacityEnabled(false);
 				}
-				return ConvertHelper.BooleanToFloaterOfOpacityEnabled(true);
+				return ConvertHelper.MakeBooleanToFloaterOfOpacityEnabled(true);
 			}
 		}
 
@@ -1685,9 +1731,9 @@ namespace AssistantPlus.View.AnimationViewer {
 		public Floater uPlantCustomLayerIcon_Opacity {
 			get {
 				if (!this.Loaded || this.PlantCustomLayerName.Count == 0) {
-					return ConvertHelper.BooleanToFloaterOfOpacityEnabled(false);
+					return ConvertHelper.MakeBooleanToFloaterOfOpacityEnabled(false);
 				}
-				return ConvertHelper.BooleanToFloaterOfOpacityEnabled(true);
+				return ConvertHelper.MakeBooleanToFloaterOfOpacityEnabled(true);
 			}
 		}
 
@@ -1752,9 +1798,9 @@ namespace AssistantPlus.View.AnimationViewer {
 		public Floater uZombieStateLayerIcon_Opacity {
 			get {
 				if (!this.Loaded || this.ZombieStateLayerName.Count == 0) {
-					return ConvertHelper.BooleanToFloaterOfOpacityEnabled(false);
+					return ConvertHelper.MakeBooleanToFloaterOfOpacityEnabled(false);
 				}
-				return ConvertHelper.BooleanToFloaterOfOpacityEnabled(true);
+				return ConvertHelper.MakeBooleanToFloaterOfOpacityEnabled(true);
 			}
 		}
 
@@ -1814,8 +1860,8 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		public Floater uZombieGroundSwatchLayerIcon_Opacity {
 			get {
-				if (!this.Loaded || this.ZombieGroundSwatchLayerName.Count == 0) { return ConvertHelper.BooleanToFloaterOfOpacityEnabled(false); }
-				return ConvertHelper.BooleanToFloaterOfOpacityEnabled(true);
+				if (!this.Loaded || this.ZombieGroundSwatchLayerName.Count == 0) { return ConvertHelper.MakeBooleanToFloaterOfOpacityEnabled(false); }
+				return ConvertHelper.MakeBooleanToFloaterOfOpacityEnabled(true);
 			}
 		}
 

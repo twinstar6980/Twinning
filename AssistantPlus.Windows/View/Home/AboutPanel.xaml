@@ -432,27 +432,27 @@
 							<Span>
 								<Bold xml:space="preserve">  -WindowPosition</Bold>
 								<LineBreak />
-								<Italic xml:space="preserve">    X : Integer</Italic>
+								<Span xml:space="preserve">    X : <Italic>Integer</Italic></Span>
 								<LineBreak />
-								<Italic xml:space="preserve">    Y : Integer</Italic>
+								<Span xml:space="preserve">    Y : <Italic>Integer</Italic></Span>
 							</Span>
 							<LineBreak />
 							<Span>
 								<Bold xml:space="preserve">  -WindowSize</Bold>
 								<LineBreak />
-								<Italic xml:space="preserve">    Width : Integer</Italic>
+								<Span xml:space="preserve">    Width : <Italic>Integer</Italic></Span>
 								<LineBreak />
-								<Italic xml:space="preserve">    Height : Integer</Italic>
+								<Span xml:space="preserve">    Height : <Italic>Integer</Italic></Span>
 							</Span>
 							<LineBreak />
 							<Span>
 								<Bold xml:space="preserve">  -InitialTab</Bold>
 								<LineBreak />
-								<Italic xml:space="preserve">    Title : String</Italic>
+								<Span xml:space="preserve">    Title : <Italic>String</Italic></Span>
 								<LineBreak />
-								<Italic xml:space="preserve">    Type : String</Italic>
+								<Span xml:space="preserve">    Type : <Italic>String</Italic></Span>
 								<LineBreak />
-								<Italic xml:space="preserve">    Option : String...</Italic>
+								<Span xml:space="preserve">    Option : <Italic>String...</Italic></Span>
 							</Span>
 						</TextBlock>
 					</Flyout>
@@ -479,9 +479,8 @@
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				HorizontalContentAlignment="Left"
-				Tag="Edit"
 				Click="{x:Bind Controller.uStorageSettingFile_Click}"
-				Content="Edit"
+				Content="Reveal"
 				>
 				<SplitButton.Flyout>
 					<MenuFlyout>
@@ -516,6 +515,76 @@
 							Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Export}}"
 							Text="Export"
 							/>
+					</MenuFlyout>
+				</SplitButton.Flyout>
+			</SplitButton>
+		</my:Stack>
+		<my:Stack
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Orientation="Horizontal"
+			Spacing="4"
+			>
+			<FontIcon
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Center"
+				Width="32"
+				Height="22"
+				FontSize="{StaticResource SmallIconSize}"
+				Glyph="{StaticResource FluentIconGlyph.SyncFolder}"
+				/>
+			<SplitButton
+				ToolTipService.ToolTip="Shared Directory"
+				my:Stack.Weight="1"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				HorizontalContentAlignment="Left"
+				Click="{x:Bind Controller.uStorageSharedDirectory_Click}"
+				Content="Reveal"
+				>
+				<SplitButton.Flyout>
+					<MenuFlyout>
+						<MenuFlyout.MenuFlyoutPresenterStyle>
+							<Style TargetType="MenuFlyoutPresenter" BasedOn="{StaticResource DefaultMenuFlyoutPresenterStyle}">
+								<Setter Property="MinWidth" Value="239" />
+								<Setter Property="MaxWidth" Value="239" />
+							</Style>
+						</MenuFlyout.MenuFlyoutPresenterStyle>
+					</MenuFlyout>
+				</SplitButton.Flyout>
+			</SplitButton>
+		</my:Stack>
+		<my:Stack
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Orientation="Horizontal"
+			Spacing="4"
+			>
+			<FontIcon
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Center"
+				Width="32"
+				Height="22"
+				FontSize="{StaticResource SmallIconSize}"
+				Glyph="{StaticResource FluentIconGlyph.ProtectedDocument}"
+				/>
+			<SplitButton
+				ToolTipService.ToolTip="Cache Directory"
+				my:Stack.Weight="1"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				HorizontalContentAlignment="Left"
+				Click="{x:Bind Controller.uStorageCacheDirectory_Click}"
+				Content="Clear"
+				>
+				<SplitButton.Flyout>
+					<MenuFlyout>
+						<MenuFlyout.MenuFlyoutPresenterStyle>
+							<Style TargetType="MenuFlyoutPresenter" BasedOn="{StaticResource DefaultMenuFlyoutPresenterStyle}">
+								<Setter Property="MinWidth" Value="239" />
+								<Setter Property="MaxWidth" Value="239" />
+							</Style>
+						</MenuFlyout.MenuFlyoutPresenterStyle>
 					</MenuFlyout>
 				</SplitButton.Flyout>
 			</SplitButton>

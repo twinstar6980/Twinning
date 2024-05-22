@@ -1,7 +1,11 @@
 #pragma once
 
-#define M_version "37"
+#define M_version "38"
 
+#include <type_traits>
+#include <algorithm>
+#include <cstddef>
+#include <cstdint>
 #include <cstring>
 #include <string_view>
 #include <string>

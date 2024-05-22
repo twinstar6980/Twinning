@@ -123,9 +123,11 @@ namespace AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<Button>();
-			App.Setting.Data.ModuleLauncher.Recent.Clear();
-			this.uRecentLauncherList_ItemsSource.Clear();
-			await App.Setting.Save();
+			if (await ControlHelper.ShowDialogForPausing(this.View, "Confirm ?", null)) {
+				App.Setting.Data.ModuleLauncher.Recent.Clear();
+				this.uRecentLauncherList_ItemsSource.Clear();
+				await App.Setting.Save();
+			}
 			return;
 		}
 

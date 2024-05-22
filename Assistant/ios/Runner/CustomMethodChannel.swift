@@ -63,12 +63,14 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
         guard let detailType = argument["type"] as? String else {
           throw NSError(domain: "invalid argument", code: 0)
         }
-        result(try await self.handlePickStoragePath(
+        let detailTarget = try await self.handlePickStoragePath(
           type: detailType
-        ))
+        )
+        result(detailTarget)
       case "get_link_command":
-        result(try await self.handleGetLinkCommand(
-        ))
+        let detailCommand = try await self.handleGetLinkCommand(
+        )
+        result(detailCommand)
       default:
         result(FlutterMethodNotImplemented)
       }

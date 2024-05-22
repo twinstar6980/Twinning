@@ -19,6 +19,35 @@
 		Orientation="Horizontal"
 		Spacing="8"
 		>
+		<my:Box
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			>
+			<Button
+				ToolTipService.ToolTip="History"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				IsEnabled="{x:Bind Controller.uHistory_IsEnabled}"
+				Click="{x:Bind Controller.uHistory_Click}"
+				>
+				<FontIcon
+					x:Name="uIcon"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Center"
+					FontSize="{StaticResource MediumIconSize}"
+					Glyph="{StaticResource FluentIconGlyph.More}"
+					/>
+			</Button>
+			<InfoBadge
+				Visibility="{x:Bind Controller.uHistoryBadge_Visibility}"
+				HorizontalAlignment="Right"
+				VerticalAlignment="Top"
+				Margin="0,-5,-5,0"
+				Style="{StaticResource AttentionValueInfoBadgeStyle}"
+				FontFamily="{StaticResource ModdingWorker.MessageFont}"
+				Value="{x:Bind Controller.uHistoryBadge_Value}"
+				/>
+		</my:Box>
 		<ContentPresenter
 			x:Name="uAction"
 			my:Stack.Weight="1"
@@ -38,6 +67,7 @@
 			<VisualStateGroup x:Name="TypeStateGroup">
 				<VisualState x:Name="IdleState">
 					<VisualState.Setters>
+						<Setter Target="uIcon.Glyph" Value="{StaticResource FluentIconGlyph.More}" />
 						<Setter Target="uAction.Content">
 							<Setter.Value>
 								<my:Stack
@@ -46,13 +76,6 @@
 									Orientation="Horizontal"
 									Spacing="8"
 									>
-									<FontIcon
-										HorizontalAlignment="Stretch"
-										VerticalAlignment="Center"
-										Margin="7,0,11,0"
-										FontSize="{StaticResource MediumIconSize}"
-										Glyph="{StaticResource FluentIconGlyph.More}"
-										/>
 									<Button
 										my:Stack.Weight="1"
 										HorizontalAlignment="Stretch"
@@ -67,6 +90,7 @@
 				</VisualState>
 				<VisualState x:Name="PauseState">
 					<VisualState.Setters>
+						<Setter Target="uIcon.Glyph" Value="{StaticResource FluentIconGlyph.Pause}" />
 						<Setter Target="uAction.Content">
 							<Setter.Value>
 								<my:Stack
@@ -75,13 +99,6 @@
 									Orientation="Horizontal"
 									Spacing="8"
 									>
-									<FontIcon
-										HorizontalAlignment="Stretch"
-										VerticalAlignment="Center"
-										Margin="7,0,11,0"
-										FontSize="{StaticResource MediumIconSize}"
-										Glyph="{StaticResource FluentIconGlyph.Pause}"
-										/>
 									<TextBox
 										my:Stack.Weight="1"
 										HorizontalAlignment="Stretch"
@@ -97,6 +114,7 @@
 				</VisualState>
 				<VisualState x:Name="BooleanState">
 					<VisualState.Setters>
+						<Setter Target="uIcon.Glyph" Value="{StaticResource FluentIconGlyph.CheckboxComposite}" />
 						<Setter Target="uAction.Content">
 							<Setter.Value>
 								<my:Stack
@@ -105,30 +123,28 @@
 									Orientation="Horizontal"
 									Spacing="8"
 									>
-									<FontIcon
-										HorizontalAlignment="Stretch"
-										VerticalAlignment="Center"
-										Margin="7,0,11,0"
-										FontSize="{StaticResource MediumIconSize}"
-										Glyph="{StaticResource FluentIconGlyph.Completed}"
-										/>
-									<ToggleButton
+									<TextBox
 										my:Stack.Weight="1"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
-										IsChecked="{x:Bind Controller.uBooleanNoValue_IsChecked}"
-										Click="{x:Bind Controller.uBooleanNoValue_Click}"
 										FontFamily="{StaticResource ModdingWorker.MessageFont}"
-										Content="No"
+										IsReadOnly="True"
+										PlaceholderText="Boolean ..."
+										Text="{x:Bind Controller.uBooleanValue_Text}"
 										/>
 									<ToggleButton
-										my:Stack.Weight="1"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
-										IsChecked="{x:Bind Controller.uBooleanYesValue_IsChecked}"
-										Click="{x:Bind Controller.uBooleanYesValue_Click}"
-										FontFamily="{StaticResource ModdingWorker.MessageFont}"
-										Content="Yes"
+										IsChecked="{x:Bind Controller.uBooleanValueNo_IsChecked}"
+										Click="{x:Bind Controller.uBooleanValueNo_Click}"
+										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RemoveFrom}}"
+										/>
+									<ToggleButton
+										HorizontalAlignment="Stretch"
+										VerticalAlignment="Stretch"
+										IsChecked="{x:Bind Controller.uBooleanValueYes_IsChecked}"
+										Click="{x:Bind Controller.uBooleanValueYes_Click}"
+										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Completed}}"
 										/>
 								</my:Stack>
 							</Setter.Value>
@@ -137,6 +153,7 @@
 				</VisualState>
 				<VisualState x:Name="IntegerState">
 					<VisualState.Setters>
+						<Setter Target="uIcon.Glyph" Value="{StaticResource FluentIconGlyph.Dial12}" />
 						<Setter Target="uAction.Content">
 							<Setter.Value>
 								<my:Stack
@@ -145,13 +162,6 @@
 									Orientation="Horizontal"
 									Spacing="8"
 									>
-									<FontIcon
-										HorizontalAlignment="Stretch"
-										VerticalAlignment="Center"
-										Margin="7,0,11,0"
-										FontSize="{StaticResource MediumIconSize}"
-										Glyph="{StaticResource FluentIconGlyph.Dial12}"
-										/>
 									<NumberBox
 										my:Stack.Weight="1"
 										HorizontalAlignment="Stretch"
@@ -170,6 +180,7 @@
 				</VisualState>
 				<VisualState x:Name="FloaterState">
 					<VisualState.Setters>
+						<Setter Target="uIcon.Glyph" Value="{StaticResource FluentIconGlyph.Dial12}" />
 						<Setter Target="uAction.Content">
 							<Setter.Value>
 								<my:Stack
@@ -178,13 +189,6 @@
 									Orientation="Horizontal"
 									Spacing="8"
 									>
-									<FontIcon
-										HorizontalAlignment="Stretch"
-										VerticalAlignment="Center"
-										Margin="7,0,11,0"
-										FontSize="{StaticResource MediumIconSize}"
-										Glyph="{StaticResource FluentIconGlyph.Dial12}"
-										/>
 									<NumberBox
 										my:Stack.Weight="1"
 										HorizontalAlignment="Stretch"
@@ -203,6 +207,7 @@
 				</VisualState>
 				<VisualState x:Name="SizeState">
 					<VisualState.Setters>
+						<Setter Target="uIcon.Glyph" Value="{StaticResource FluentIconGlyph.Component}" />
 						<Setter Target="uAction.Content">
 							<Setter.Value>
 								<my:Stack
@@ -211,35 +216,56 @@
 									Orientation="Horizontal"
 									Spacing="8"
 									>
-									<FontIcon
-										HorizontalAlignment="Stretch"
-										VerticalAlignment="Center"
-										Margin="7,0,11,0"
-										FontSize="{StaticResource MediumIconSize}"
-										Glyph="{StaticResource FluentIconGlyph.Component}"
-										/>
 									<NumberBox
 										my:Stack.Weight="1"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
 										SpinButtonPlacementMode="Inline"
-										NumberFormatter="{x:Bind Controller.uSizeValue_NumberFormatter}"
+										NumberFormatter="{x:Bind Controller.uSizeCount_NumberFormatter}"
 										FontFamily="{StaticResource ModdingWorker.MessageFont}"
 										PlaceholderText="Size ..."
-										Value="{x:Bind Controller.uSizeValue_Value}"
-										ValueChanged="{x:Bind Controller.uSizeValue_ValueChanged}"
+										Value="{x:Bind Controller.uSizeCount_Value}"
+										ValueChanged="{x:Bind Controller.uSizeCount_ValueChanged}"
 										Minimum="0.0"
 										/>
-									<ComboBox
+									<DropDownButton
+										ToolTipService.ToolTip="Exponent"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
 										HorizontalContentAlignment="Center"
 										Width="64"
 										FontFamily="{StaticResource ModdingWorker.MessageFont}"
-										ItemsSource="{community:EnumValues Type=localViewModdingWorker:SizeUnit}"
-										SelectedItem="{x:Bind Controller.uSizeUnit_SelectedItem}"
-										SelectionChanged="{x:Bind Controller.uSizeUnit_SelectionChanged}"
-										/>
+										Content="{x:Bind Controller.uSizeExponent_Content}"
+										>
+										<DropDownButton.Flyout>
+											<MenuFlyout Placement="TopEdgeAlignedRight">
+												<MenuFlyoutItem
+													Tag="0"
+													Click="{x:Bind Controller.uSizeExponentMenu_Click}"
+													FontFamily="{StaticResource ModdingWorker.MessageFont}"
+													Text="B"
+													/>
+												<MenuFlyoutItem
+													Tag="1"
+													Click="{x:Bind Controller.uSizeExponentMenu_Click}"
+													FontFamily="{StaticResource ModdingWorker.MessageFont}"
+													Text="K"
+													/>
+												<MenuFlyoutItem
+													Tag="2"
+													Click="{x:Bind Controller.uSizeExponentMenu_Click}"
+													FontFamily="{StaticResource ModdingWorker.MessageFont}"
+													Text="M"
+													/>
+												<MenuFlyoutItem
+													Tag="3"
+													Click="{x:Bind Controller.uSizeExponentMenu_Click}"
+													FontFamily="{StaticResource ModdingWorker.MessageFont}"
+													Text="G"
+													/>
+											</MenuFlyout>
+										</DropDownButton.Flyout>
+									</DropDownButton>
 								</my:Stack>
 							</Setter.Value>
 						</Setter>
@@ -247,6 +273,7 @@
 				</VisualState>
 				<VisualState x:Name="StringState">
 					<VisualState.Setters>
+						<Setter Target="uIcon.Glyph" Value="{StaticResource FluentIconGlyph.FontSize}" />
 						<Setter Target="uAction.Content">
 							<Setter.Value>
 								<my:Stack
@@ -255,13 +282,6 @@
 									Orientation="Horizontal"
 									Spacing="8"
 									>
-									<FontIcon
-										HorizontalAlignment="Stretch"
-										VerticalAlignment="Center"
-										Margin="7,0,11,0"
-										FontSize="{StaticResource MediumIconSize}"
-										Glyph="{StaticResource FluentIconGlyph.FontSize}"
-										/>
 									<TextBox
 										my:Stack.Weight="1"
 										HorizontalAlignment="Stretch"
@@ -278,6 +298,7 @@
 				</VisualState>
 				<VisualState x:Name="PathState">
 					<VisualState.Setters>
+						<Setter Target="uIcon.Glyph" Value="{StaticResource FluentIconGlyph.Link}" />
 						<Setter Target="uAction.Content">
 							<Setter.Value>
 								<my:Stack
@@ -286,24 +307,17 @@
 									Orientation="Horizontal"
 									Spacing="8"
 									>
-									<FontIcon
-										HorizontalAlignment="Stretch"
-										VerticalAlignment="Center"
-										Margin="7,0,11,0"
-										FontSize="{StaticResource MediumIconSize}"
-										Glyph="{StaticResource FluentIconGlyph.Link}"
-										/>
 									<TextBox
 										my:Stack.Weight="1"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
 										AllowDrop="True"
-										DragOver="{x:Bind Controller.uPathValue_DragOver}"
-										Drop="{x:Bind Controller.uPathValue_Drop}"
-										LostFocus="{x:Bind Controller.uPathValue_LostFocus}"
+										DragOver="{x:Bind Controller.uPathContent_DragOver}"
+										Drop="{x:Bind Controller.uPathContent_Drop}"
+										LostFocus="{x:Bind Controller.uPathContent_LostFocus}"
 										FontFamily="{StaticResource ModdingWorker.MessageFont}"
 										PlaceholderText="Path ..."
-										Text="{x:Bind Controller.uPathValue_Text}"
+										Text="{x:Bind Controller.uPathContent_Text}"
 										/>
 									<DropDownButton
 										ToolTipService.ToolTip="Command"
@@ -316,54 +330,54 @@
 										<DropDownButton.Flyout>
 											<MenuFlyout Placement="TopEdgeAlignedRight">
 												<MenuFlyoutItem
-													Tag="Generate"
-													Click="{x:Bind Controller.uPathCommand_Click}"
-													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Rename}}"
-													FontFamily="{StaticResource ModdingWorker.MessageFont}"
-													Text="Generate"
-													/>
-												<MenuFlyoutItem
-													Tag="Move"
-													Click="{x:Bind Controller.uPathCommand_Click}"
-													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.OpenPaneMirrored}}"
-													FontFamily="{StaticResource ModdingWorker.MessageFont}"
-													Text="Move"
-													/>
-												<MenuFlyoutItem
-													Tag="Delete"
-													Click="{x:Bind Controller.uPathCommand_Click}"
-													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Delete}}"
-													FontFamily="{StaticResource ModdingWorker.MessageFont}"
-													Text="Delete"
-													/>
-												<MenuFlyoutItem
-													Tag="Overwrite"
-													Click="{x:Bind Controller.uPathCommand_Click}"
-													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Save}}"
-													FontFamily="{StaticResource ModdingWorker.MessageFont}"
-													Text="Overwrite"
-													/>
-												<MenuFlyoutSeparator />
-												<MenuFlyoutItem
 													Tag="OpenFile"
-													Click="{x:Bind Controller.uPathPick_Click}"
+													Click="{x:Bind Controller.uPathPickMenu_Click}"
 													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Document}}"
 													FontFamily="{StaticResource ModdingWorker.MessageFont}"
 													Text="Open File"
 													/>
 												<MenuFlyoutItem
 													Tag="OpenDirectory"
-													Click="{x:Bind Controller.uPathPick_Click}"
+													Click="{x:Bind Controller.uPathPickMenu_Click}"
 													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Folder}}"
 													FontFamily="{StaticResource ModdingWorker.MessageFont}"
 													Text="Open Directory"
 													/>
 												<MenuFlyoutItem
 													Tag="SaveFile"
-													Click="{x:Bind Controller.uPathPick_Click}"
+													Click="{x:Bind Controller.uPathPickMenu_Click}"
 													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Save}}"
 													FontFamily="{StaticResource ModdingWorker.MessageFont}"
 													Text="Save File"
+													/>
+												<MenuFlyoutSeparator />
+												<MenuFlyoutItem
+													Tag="Generate"
+													Click="{x:Bind Controller.uPathCommandMenu_Click}"
+													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Rename}}"
+													FontFamily="{StaticResource ModdingWorker.MessageFont}"
+													Text="Generate"
+													/>
+												<MenuFlyoutItem
+													Tag="Move"
+													Click="{x:Bind Controller.uPathCommandMenu_Click}"
+													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.OpenPaneMirrored}}"
+													FontFamily="{StaticResource ModdingWorker.MessageFont}"
+													Text="Move"
+													/>
+												<MenuFlyoutItem
+													Tag="Delete"
+													Click="{x:Bind Controller.uPathCommandMenu_Click}"
+													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Delete}}"
+													FontFamily="{StaticResource ModdingWorker.MessageFont}"
+													Text="Delete"
+													/>
+												<MenuFlyoutItem
+													Tag="Overwrite"
+													Click="{x:Bind Controller.uPathCommandMenu_Click}"
+													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Save}}"
+													FontFamily="{StaticResource ModdingWorker.MessageFont}"
+													Text="Overwrite"
 													/>
 											</MenuFlyout>
 										</DropDownButton.Flyout>
@@ -375,6 +389,7 @@
 				</VisualState>
 				<VisualState x:Name="EnumerationState">
 					<VisualState.Setters>
+						<Setter Target="uIcon.Glyph" Value="{StaticResource FluentIconGlyph.BulletedList}" />
 						<Setter Target="uAction.Content">
 							<Setter.Value>
 								<my:Stack
@@ -383,13 +398,6 @@
 									Orientation="Horizontal"
 									Spacing="8"
 									>
-									<FontIcon
-										HorizontalAlignment="Stretch"
-										VerticalAlignment="Center"
-										Margin="7,0,11,0"
-										FontSize="{StaticResource MediumIconSize}"
-										Glyph="{StaticResource FluentIconGlyph.BulletedList}"
-										/>
 									<ComboBox
 										my:Stack.Weight="1"
 										HorizontalAlignment="Stretch"
@@ -397,9 +405,15 @@
 										HorizontalContentAlignment="Left"
 										FontFamily="{StaticResource ModdingWorker.MessageFont}"
 										PlaceholderText="Enumeration ..."
-										ItemsSource="{x:Bind Controller.uEnumerationValue_ItemsSource}"
-										SelectedIndex="{x:Bind Controller.uEnumerationValue_SelectedIndex}"
-										SelectionChanged="{x:Bind Controller.uEnumerationValue_SelectionChanged}"
+										ItemsSource="{x:Bind Controller.uEnumerationItem_ItemsSource}"
+										SelectedItem="{x:Bind Controller.uEnumerationItem_SelectedItem}"
+										SelectionChanged="{x:Bind Controller.uEnumerationItem_SelectionChanged}"
+										/>
+									<Button
+										HorizontalAlignment="Stretch"
+										VerticalAlignment="Stretch"
+										Click="{x:Bind Controller.uEnumerationItemNull_Click}"
+										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.UpdateRestore}}"
 										/>
 								</my:Stack>
 							</Setter.Value>

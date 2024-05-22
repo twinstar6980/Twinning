@@ -2,6 +2,7 @@ import '/common.dart';
 import '/utility/control_helper.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:window_manager/window_manager.dart';
 
 // ----------------
@@ -292,6 +293,38 @@ class CustomSettingItem extends StatelessWidget {
           );
         }
       },
+    );
+  }
+
+}
+
+// ----------------
+
+class CustomTextFieldSuffixWidget extends StatelessWidget {
+
+  const CustomTextFieldSuffixWidget({
+    super.key,
+    required this.children,
+  });
+
+  // ----------------
+
+  final List<Widget> children;
+
+  // ----------------
+
+  @override
+  build(context) {
+    return SizedBox(
+      height: 32,
+      child: OverflowBox(
+        maxHeight: 40,
+        fit: OverflowBoxFit.deferToChild,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: this.children,
+        ),
+      ),
     );
   }
 

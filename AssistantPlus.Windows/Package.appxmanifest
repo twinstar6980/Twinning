@@ -6,7 +6,7 @@
   xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
   xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
   IgnorableNamespaces="uap rescap com desktop">
-  <Identity Name="TwinStar.ToolKit.AssistantPlus" Publisher="CN=TwinStar" Version="29.0.0.0" />
+  <Identity Name="TwinStar.ToolKit.AssistantPlus" Publisher="CN=TwinStar" Version="30.0.0.0" />
   <Properties>
     <DisplayName>TwinStar ToolKit - Assistant Plus</DisplayName>
     <PublisherDisplayName>TwinStar</PublisherDisplayName>

@@ -101,11 +101,7 @@ namespace TwinStar::Shell::Interaction {
 			state_h = result_item->GetDisplayName(SIGDN_FILESYSPATH, &display_name);
 			assert_test(state_h == S_OK);
 			auto display_name_8 = utf16_to_utf8(std::u16string_view{reinterpret_cast<char16_t const *>(display_name)});
-			for (auto & character : display_name_8) {
-				if (character == '\\') {
-					character = '/';
-				}
-			}
+			std::replace(display_name_8.begin(), display_name_8.end(), u8'\\', u8'/');
 			target.emplace(std::move(reinterpret_cast<std::string &>(display_name_8)));
 			CoTaskMemFree(display_name);
 			result_item->Release();

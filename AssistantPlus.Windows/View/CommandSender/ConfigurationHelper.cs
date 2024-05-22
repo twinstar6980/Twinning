@@ -15,12 +15,12 @@ namespace AssistantPlus.View.CommandSender {
 			Object value
 		) {
 			return value switch {
-				Boolean values        => ConvertHelper.BooleanToConfirmationStringLower(values),
-				Integer values        => values.ToString(),
-				Floater values        => values.ToString(CultureInfo.InvariantCulture).AsNotNull(),
-				SizeExpression values => values.ToString(),
+				Boolean values        => ConvertHelper.MakeBooleanToStringOfConfirmationCharacter(values),
+				Integer values        => ConvertHelper.MakeIntegerToString(values, false),
+				Floater values        => ConvertHelper.MakeFloaterToString(values, false),
+				SizeExpression values => SizeExpression.MakeString(values),
 				String values         => values,
-				PathExpression values => values.ToString(),
+				PathExpression values => PathExpression.MakeString(values),
 				_                     => throw new (),
 			};
 		}
@@ -34,9 +34,9 @@ namespace AssistantPlus.View.CommandSender {
 				Boolean values        => values,
 				Integer values        => values,
 				Floater values        => values,
-				SizeExpression values => values.ToString(),
+				SizeExpression values => SizeExpression.MakeString(values),
 				String values         => values,
-				PathExpression values => values.ToString(),
+				PathExpression values => PathExpression.MakeString(values),
 				_                     => throw new (),
 			};
 		}
@@ -65,9 +65,9 @@ namespace AssistantPlus.View.CommandSender {
 				ArgumentType.Boolean => initial as Boolean?,
 				ArgumentType.Integer => initial as Integer?,
 				ArgumentType.Floater => initial as Floater?,
-				ArgumentType.Size    => initial is String initialValue ? SizeExpression.Parse(initialValue) : null,
+				ArgumentType.Size    => initial is String initialValue ? SizeExpression.ParseString(initialValue) : null,
 				ArgumentType.String  => initial as String,
-				ArgumentType.Path    => initial is String initialValue ? PathExpression.Parse(initialValue) : null,
+				ArgumentType.Path    => initial is String initialValue ? PathExpression.ParseString(initialValue) : null,
 				_                    => throw new (),
 			};
 		}

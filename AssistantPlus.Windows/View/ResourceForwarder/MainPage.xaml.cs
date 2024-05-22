@@ -36,7 +36,12 @@ namespace AssistantPlus.View.ResourceForwarder {
 
 		#endregion
 
-		#region tab item page
+		#region module page
+
+		public async Task<List<String>> ModulePageCollectOption (
+		) {
+			return await this.Controller.CollectOption();
+		}
 
 		public async Task<Boolean> ModulePageRequestClose (
 		) {
@@ -175,6 +180,30 @@ namespace AssistantPlus.View.ResourceForwarder {
 			return;
 		}
 
+		public async Task<List<String>> CollectOption (
+		) {
+			var option = new CommandLineWriter();
+			if (option.Check("-ParallelExecute")) {
+				option.NextBoolean(this.ParallelExecute);
+			}
+			if (option.Check("-EnableFilter")) {
+				option.NextBoolean(this.EnableFilter);
+			}
+			if (option.Check("-EnableBatch")) {
+				option.NextBoolean(this.EnableBatch);
+			}
+			if (option.Check("-RemainInput")) {
+				option.NextBoolean(this.RemainInput);
+			}
+			if (option.Check("-AutomaticClose")) {
+				option.NextBoolean(this.AutomaticClose);
+			}
+			if (option.Check("-Input")) {
+				option.NextStringList(this.Input);
+			}
+			return option.Done();
+		}
+
 		public async Task<Boolean> RequestClose (
 		) {
 			return true;
@@ -261,6 +290,12 @@ namespace AssistantPlus.View.ResourceForwarder {
 			String? method,
 			Object? argument
 		) {
+			await App.Instance.AppendRecentLauncherItem(new () {
+				Title = $"({this.Input.Count}) {String.Join(", ", this.Input.Select(StorageHelper.Name))}",
+				Type = ModuleType.ResourceForwarder,
+				Option = await this.CollectOption(),
+				Command = [],
+			});
 			var state = await ModdingWorker.ForwardHelper.Forward(this.Input.Select((value) => (ModdingWorker.ForwardHelper.MakeArgumentForCommand(value, method is null ? null : $"{method}{(!this.EnableBatch ? "" : ".batch")}", argument))).ToList(), this.ParallelExecute);
 			if (!state) {
 				return;

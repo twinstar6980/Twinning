@@ -19,7 +19,7 @@ M_declare_native_main_function {
 	try
 	#endif
 	{
-		auto args = TwinStar::Shell::parse_raw_native_string(argc, argv);
+		auto args = TwinStar::Shell::parse_native_main_function_argument(argc, argv);
 		assert_test(args.size() >= 3);
 		auto kernel = args[1];
 		auto script = args[2];

@@ -163,12 +163,12 @@ namespace TwinStar.Script {
 	}
 
 	export function parse_confirmation_boolean_string(
-		string: string,
+		text: string,
 	): boolean {
-		if (string === 'n') {
+		if (text === 'n') {
 			return false;
 		}
-		if (string === 'y') {
+		if (text === 'y') {
 			return true;
 		}
 		assert_fail(`invalid confirmation boolean string`);
@@ -190,33 +190,32 @@ namespace TwinStar.Script {
 		value: bigint,
 	): string {
 		assert_test(value >= 0n);
-		let value_part = Number(value);
-		let unit_level = 0;
-		if (value_part >= 1024.0) {
-			value_part /= 1024.0;
-			unit_level += 1;
+		let count = Number(value);
+		let exponent = 0;
+		if (count >= 1024.0) {
+			count /= 1024.0;
+			exponent += 1;
 		}
-		if (value_part >= 1024.0) {
-			value_part /= 1024.0;
-			unit_level += 1;
+		if (count >= 1024.0) {
+			count /= 1024.0;
+			exponent += 1;
 		}
-		if (value_part >= 1024.0) {
-			value_part /= 1024.0;
-			unit_level += 1;
+		if (count >= 1024.0) {
+			count /= 1024.0;
+			exponent += 1;
 		}
-		return `${value_part.toFixed(1)}${['b', 'k', 'm', 'g'][unit_level]}`;
+		return `${count.toFixed(1)}${['b', 'k', 'm', 'g'][exponent]}`;
 	}
 
 	export function parse_size_string(
-		string: string,
+		text: string,
 	): bigint {
-		const k_unit_map = {
-			b: 1,
-			k: 1024,
-			m: 1024 * 1024,
-			g: 1024 * 1024 * 1024,
-		};
-		return BigInt((Number.parseFloat(string.slice(0, -1)) * k_unit_map[string.slice(-1) as 'b' | 'k' | 'm' | 'g']).toFixed(0));
+		let count = Number.parseFloat(text.slice(0, -1));
+		let exponent = ['b', 'k', 'm', 'g'].indexOf(text.slice(-1));
+		assert_test(exponent !== -1);
+		let countBig = Math.trunc(count);
+		let countLittle = count - countBig;
+		return BigInt(countBig) + BigInt(Math.trunc(countLittle * (1024 ** exponent)));
 	}
 
 	// ------------------------------------------------

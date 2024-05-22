@@ -131,10 +131,10 @@
 										VerticalAlignment="Stretch"
 										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
 										SpinButtonPlacementMode="Inline"
-										NumberFormatter="{x:Bind Controller.uSizeValue_NumberFormatter}"
+										NumberFormatter="{x:Bind Controller.uSizeCount_NumberFormatter}"
 										Minimum="0.0"
-										Value="{x:Bind Controller.uSizeValue_Value}"
-										ValueChanged="{x:Bind Controller.uSizeValue_ValueChanged}"
+										Value="{x:Bind Controller.uSizeCount_Value}"
+										ValueChanged="{x:Bind Controller.uSizeCount_ValueChanged}"
 										/>
 									<ComboBox
 										HorizontalAlignment="Stretch"
@@ -142,9 +142,9 @@
 										HorizontalContentAlignment="Center"
 										Width="68"
 										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
-										ItemsSource="{community:EnumValues Type=localViewCommandSender:SizeUnit}"
-										SelectedItem="{x:Bind Controller.uSizeUnit_SelectedItem}"
-										SelectionChanged="{x:Bind Controller.uSizeUnit_SelectionChanged}"
+										ItemsSource="{x:Bind Controller.uSizeExponent_ItemsSource}"
+										SelectedIndex="{x:Bind Controller.uSizeExponent_SelectedIndex}"
+										SelectionChanged="{x:Bind Controller.uSizeExponent_SelectionChanged}"
 										/>
 								</my:Stack>
 							</Setter.Value>
@@ -190,10 +190,10 @@
 										VerticalAlignment="Stretch"
 										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
 										AllowDrop="True"
-										DragOver="{x:Bind Controller.uPathValue_DragOver}"
-										Drop="{x:Bind Controller.uPathValue_Drop}"
-										LostFocus="{x:Bind Controller.uPathValue_LostFocus}"
-										Text="{x:Bind Controller.uPathValue_Text}"
+										DragOver="{x:Bind Controller.uPathContent_DragOver}"
+										Drop="{x:Bind Controller.uPathContent_Drop}"
+										LostFocus="{x:Bind Controller.uPathContent_LostFocus}"
+										Text="{x:Bind Controller.uPathContent_Text}"
 										/>
 									<DropDownButton
 										ToolTipService.ToolTip="Pick In Window"
@@ -209,19 +209,19 @@
 											<MenuFlyout Placement="BottomEdgeAlignedRight">
 												<MenuFlyoutItem
 													Tag="OpenFile"
-													Click="{x:Bind Controller.uPathPick_Click}"
+													Click="{x:Bind Controller.uPathPickMenu_Click}"
 													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Document}}"
 													Text="Open File"
 													/>
 												<MenuFlyoutItem
 													Tag="OpenDirectory"
-													Click="{x:Bind Controller.uPathPick_Click}"
+													Click="{x:Bind Controller.uPathPickMenu_Click}"
 													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Folder}}"
 													Text="Open Directory"
 													/>
 												<MenuFlyoutItem
 													Tag="SaveFile"
-													Click="{x:Bind Controller.uPathPick_Click}"
+													Click="{x:Bind Controller.uPathPickMenu_Click}"
 													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Save}}"
 													Text="Save File"
 													/>
@@ -249,11 +249,11 @@
 										VerticalAlignment="Stretch"
 										HorizontalContentAlignment="Left"
 										IsEnabled="{x:Bind Controller.uAction_IsEnabled}"
-										ItemsSource="{x:Bind Controller.uEnumerationValue_ItemsSource}"
+										ItemsSource="{x:Bind Controller.uEnumerationItem_ItemsSource}"
 										SelectedValuePath="Item1"
 										DisplayMemberPath="Item2"
-										SelectedValue="{x:Bind Controller.uEnumerationValue_SelectedValue}"
-										SelectionChanged="{x:Bind Controller.uEnumerationValue_SelectionChanged}"
+										SelectedValue="{x:Bind Controller.uEnumerationItem_SelectedValue}"
+										SelectionChanged="{x:Bind Controller.uEnumerationItem_SelectionChanged}"
 										/>
 								</my:Stack>
 							</Setter.Value>

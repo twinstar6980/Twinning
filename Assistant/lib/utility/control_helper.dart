@@ -1,5 +1,7 @@
 import '/common.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // ----------------
 
@@ -24,17 +26,19 @@ class ControlHelper {
     required String                                                              title,
     required List<Widget> Function(BuildContext, Void Function(Void Function())) contentBuilder,
   }) async {
-    return await showDialog(
+    return await showDialog<Void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
           title,
           overflow: TextOverflow.ellipsis,
         ),
-        content: StatefulBuilder(
-          builder: (context, setState) => Column(
-            mainAxisSize: MainAxisSize.min,
-            children: contentBuilder(context, setState),
+        content: SingleChildScrollView(
+          child: StatefulBuilder(
+            builder: (context, setState) => Column(
+              mainAxisSize: MainAxisSize.min,
+              children: contentBuilder(context, setState),
+            ),
           ),
         ),
         actions: [
@@ -43,6 +47,44 @@ class ControlHelper {
             child: const Text('OK'),
           ),
         ],
+      ),
+    );
+  }
+
+  static Future<Void> showCustomFullDialog({
+    required BuildContext                                                        context,
+    required String                                                              title,
+    required List<Widget> Function(BuildContext, Void Function(Void Function())) contentBuilder,
+  }) async {
+    return await showDialog<Void>(
+      context: context,
+      builder: (context) => Dialog.fullscreen(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Text(
+                  title,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, 'OK'),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: StatefulBuilder(
+                  builder: (context, setState) => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: contentBuilder(context, setState),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -78,11 +120,11 @@ class ControlHelper {
   // #region bottom sheet
 
   static Future<Void> showCustomModalBottomSheet({
-    required BuildContext                                                  context,
-    required String                                                        title,
-    required Widget Function(BuildContext, Void Function(Void Function())) contentBuilder,
+    required BuildContext                                                        context,
+    required String                                                              title,
+    required List<Widget> Function(BuildContext, Void Function(Void Function())) contentBuilder,
   }) async {
-    await showModalBottomSheet(
+    await showModalBottomSheet<Void>(
       context: context,
       elevation: 3,
       builder: (context) {
@@ -110,7 +152,10 @@ class ControlHelper {
             Expanded(
               child: SingleChildScrollView(
                 child: StatefulBuilder(
-                  builder: contentBuilder,
+                  builder: (context, setState) => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: contentBuilder(context, setState),
+                  ),
                 ),
               ),
             ),
@@ -118,6 +163,41 @@ class ControlHelper {
         );
       },
     );
+    return;
+  }
+
+  // #endregion
+
+  // #region miscellaneous
+
+  static Future<Void> revealStorageDirectoryInNativeManagerOrShowTextDialog({
+    required BuildContext context,
+    required String       title,
+    required String       path,
+  }) async {
+    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+      await launchUrl(Uri.file(path), mode: LaunchMode.externalNonBrowserApplication);
+    }
+    if (Platform.isAndroid || Platform.isIOS) {
+      assertTest(context.mounted);
+      await ControlHelper.showCustomModalDialog(
+        context: context,
+        title: title,
+        contentBuilder: (context, setState) => [
+          TextFormField(
+            keyboardType: TextInputType.none,
+            maxLines: null,
+            inputFormatters: const [],
+            decoration: const InputDecoration(
+              isDense: true,
+              border: OutlineInputBorder(),
+            ),
+            readOnly: true,
+            initialValue: path,
+          ),
+        ],
+      );
+    }
     return;
   }
 

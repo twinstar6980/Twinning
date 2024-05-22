@@ -50,7 +50,12 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		#endregion
 
-		#region tab item page
+		#region module page
+
+		public async Task<List<String>> ModulePageCollectOption (
+		) {
+			return await this.Controller.CollectOption();
+		}
 
 		public async Task<Boolean> ModulePageRequestClose (
 		) {
@@ -82,6 +87,8 @@ namespace AssistantPlus.View.ModdingWorker {
 		public Task<List<String>>? SessionTask { get; set; } = null;
 
 		public Boolean SubmissionState { get; set; } = false;
+
+		public List<List<ValueExpression>> SubmissionHistory { get; set; } = Enum.GetValues<SubmissionType>().Select((value) => (new List<ValueExpression>())).ToList();
 
 		#endregion
 
@@ -143,6 +150,18 @@ namespace AssistantPlus.View.ModdingWorker {
 			return;
 		}
 
+		public async Task<List<String>> CollectOption (
+		) {
+			var option = new CommandLineWriter();
+			if (option.Check("-AutomaticScroll")) {
+				option.NextBoolean(this.AutomaticScroll);
+			}
+			if (option.Check("-AdditionalArgument")) {
+				option.NextStringList(this.AdditionalArgument);
+			}
+			return option.Done();
+		}
+
 		public async Task<Boolean> RequestClose (
 		) {
 			if (this.SessionTask is not null) {
@@ -159,21 +178,18 @@ namespace AssistantPlus.View.ModdingWorker {
 			GF.AssertTest(this.SessionTask is null);
 			var result = default(List<String>?);
 			var exception = default(Exception?);
-			var kernel = new String(App.Setting.Data.ModdingWorker.Kernel);
-			var script = new String(App.Setting.Data.ModdingWorker.Script);
-			var argument = new List<String>([..App.Setting.Data.ModdingWorker.Argument, ..this.AdditionalArgument]);
-			var temporaryKernel = StorageHelper.Temporary();
+			var kernelCopy = StorageHelper.Temporary();
 			var library = new Bridge.Library();
-			this.SessionTask = new (() => (Bridge.Launcher.Launch(this.SessionClient, library, script, argument)));
+			this.SessionTask = new (() => (Bridge.Launcher.Launch(this.SessionClient, library, App.Setting.Data.ModdingWorker.Script, [..App.Setting.Data.ModdingWorker.Argument, ..this.AdditionalArgument])));
 			this.NotifyPropertyChanged(
 				nameof(this.uLaunch_Visibility),
 				nameof(this.uSubmissionBar_Visibility),
 				nameof(this.uProgress_ProgressIndeterminate)
 			);
+			this.uMessageList_ItemsSource.Clear();
 			try {
-				this.uMessageList_ItemsSource.Clear();
-				StorageHelper.CopyFile(kernel, temporaryKernel);
-				library.Open(temporaryKernel);
+				StorageHelper.CopyFile(App.Setting.Data.ModdingWorker.Kernel, kernelCopy);
+				library.Open(kernelCopy);
 				this.SessionTask.Start();
 				result = await this.SessionTask;
 			}
@@ -183,8 +199,8 @@ namespace AssistantPlus.View.ModdingWorker {
 			if (library.State()) {
 				library.Close();
 			}
-			if (StorageHelper.ExistFile(temporaryKernel)) {
-				StorageHelper.RemoveFile(temporaryKernel);
+			if (StorageHelper.ExistFile(kernelCopy)) {
+				StorageHelper.RemoveFile(kernelCopy);
 			}
 			if (exception is null) {
 				await this.SendMessage(MessageType.Success, "SUCCEEDED", result.AsNotNull());
@@ -223,20 +239,23 @@ namespace AssistantPlus.View.ModdingWorker {
 			return;
 		}
 
-		public async Task<Object?> ReceiveSubmission (
+		public async Task<ValueExpression?> ReceiveSubmission (
 			SubmissionType type,
 			List<String>   option
 		) {
+			var history = this.SubmissionHistory[(Size)type];
 			this.SubmissionState = true;
 			this.NotifyPropertyChanged(
 				nameof(this.uProgress_ProgressPaused)
 			);
 			this.uSubmissionBar_Type = type;
 			this.uSubmissionBar_Option = option;
+			this.uSubmissionBar_History = history;
 			this.uSubmissionBar_Value.Data = null;
 			this.NotifyPropertyChanged(
 				nameof(this.uSubmissionBar_Type),
 				nameof(this.uSubmissionBar_Option),
+				nameof(this.uSubmissionBar_History),
 				nameof(this.uSubmissionBar_Stamp)
 			);
 			await Task.Delay(40);
@@ -247,12 +266,19 @@ namespace AssistantPlus.View.ModdingWorker {
 			var value = this.uSubmissionBar_Value.Data;
 			this.uSubmissionBar_Type = null;
 			this.uSubmissionBar_Option = [];
+			this.uSubmissionBar_History = [];
 			this.uSubmissionBar_Value.Data = null;
 			this.NotifyPropertyChanged(
 				nameof(this.uSubmissionBar_Type),
 				nameof(this.uSubmissionBar_Option),
+				nameof(this.uSubmissionBar_History),
 				nameof(this.uSubmissionBar_Stamp)
 			);
+			if (value is not null) {
+				var valueString = ValueExpressionHelper.MakeString(value);
+				history.RemoveAll((item) => (ValueExpressionHelper.MakeString(item) == valueString));
+				history.Add(value);
+			}
 			return value;
 		}
 
@@ -321,7 +347,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public String uAdditionalArgument_Text {
 			get {
-				return ConvertHelper.StringListToTextWithCr(this.AdditionalArgument);
+				return ConvertHelper.MakeStringListToStringWithLine(this.AdditionalArgument);
 			}
 		}
 
@@ -330,7 +356,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			TextChangedEventArgs args
 		) {
 			var senders = sender.AsClass<TextBox>();
-			this.AdditionalArgument = ConvertHelper.StringListFromTextWithCr(senders.Text);
+			this.AdditionalArgument = ConvertHelper.ParseStringListFromStringWithLine(senders.Text);
 			this.NotifyPropertyChanged(
 				nameof(this.uAdditionalArgumentCount_Text)
 			);
@@ -393,6 +419,8 @@ namespace AssistantPlus.View.ModdingWorker {
 		public SubmissionType? uSubmissionBar_Type { get; set; } = null;
 
 		public List<String> uSubmissionBar_Option { get; set; } = [];
+
+		public List<ValueExpression> uSubmissionBar_History { get; set; } = [];
 
 		public SubmissionValue uSubmissionBar_Value { get; } = new () { Data = null };
 
@@ -465,17 +493,17 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		#region structor
 
-		private MainPageController Controller;
+		private MainPageController mController;
 
-		private Boolean Running;
+		private Boolean mRunning;
 
 		// ----------------
 
 		public MainPageBridgeClient (
 			MainPageController controller
 		) {
-			this.Controller = controller;
-			this.Running = false;
+			this.mController = controller;
+			this.mRunning = false;
 		}
 
 		#endregion
@@ -484,15 +512,15 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public override void Start (
 		) {
-			GF.AssertTest(!this.Running);
-			this.Running = true;
+			GF.AssertTest(!this.mRunning);
+			this.mRunning = true;
 			return;
 		}
 
 		public override void Finish (
 		) {
-			GF.AssertTest(this.Running);
-			this.Running = false;
+			GF.AssertTest(this.mRunning);
+			this.mRunning = false;
 			return;
 		}
 
@@ -501,10 +529,10 @@ namespace AssistantPlus.View.ModdingWorker {
 		public override List<String> Callback (
 			List<String> argument
 		) {
-			GF.AssertTest(this.Running);
+			GF.AssertTest(this.mRunning);
 			var result = new List<String>();
 			GF.AssertTest(argument.Count >= 1);
-			Task.WaitAll(this.Controller.View.DispatcherQueue.EnqueueAsync(async () => {
+			Task.WaitAll(this.mController.View.DispatcherQueue.EnqueueAsync(async () => {
 				switch (argument[0]) {
 					case "name": {
 						GF.AssertTest(argument.Count == 1);
@@ -586,7 +614,7 @@ namespace AssistantPlus.View.ModdingWorker {
 				"input"       => MessageType.Input,
 				_             => throw new (),
 			};
-			await this.Controller.SendMessage(typeValue, title, description);
+			await this.mController.SendMessage(typeValue, title, description);
 			return new ();
 		}
 
@@ -594,7 +622,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			String       type,
 			List<String> option
 		) {
-			var value = default(String);
+			var value = "";
 			var typeValue = type switch {
 				"pause"       => SubmissionType.Pause,
 				"boolean"     => SubmissionType.Boolean,
@@ -606,49 +634,9 @@ namespace AssistantPlus.View.ModdingWorker {
 				"enumeration" => SubmissionType.Enumeration,
 				_             => throw new (),
 			};
-			var valueData = await this.Controller.ReceiveSubmission(typeValue, option);
-			switch (typeValue) {
-				case SubmissionType.Pause: {
-					var valueSource = valueData.AsClassOrNull<Object>();
-					value = "";
-					break;
-				}
-				case SubmissionType.Boolean: {
-					var valueSource = valueData.AsStructOrNull<Boolean>();
-					value = valueSource is null ? "" : !valueSource.AsNotNull() ? "n" : "y";
-					break;
-				}
-				case SubmissionType.Integer: {
-					var valueSource = valueData.AsStructOrNull<Integer>();
-					value = valueSource is null ? "" : valueSource.AsNotNull() == 0 ? "0" : (valueSource.AsNotNull() < 0 ? $"{valueSource}" : $"+{valueSource}");
-					break;
-				}
-				case SubmissionType.Floater: {
-					var valueSource = valueData.AsStructOrNull<Floater>();
-					value = valueSource is null ? "" : valueSource.AsNotNull() == 0.0 ? "0.0" : (valueSource.AsNotNull() < 0.0 ? $"{valueSource}{(!Floater.IsInteger(valueSource.AsNotNull()) ? "" : ".0")}" : $"+{valueSource}{(!Floater.IsInteger(valueSource.Value) ? "" : ".0")}");
-					break;
-				}
-				case SubmissionType.Size: {
-					var valueSource = valueData.AsClassOrNull<SizeExpression>();
-					value = valueSource is null ? "" : valueSource.ToString();
-					break;
-				}
-				case SubmissionType.String: {
-					var valueSource = valueData.AsClassOrNull<String>();
-					value = valueSource is null ? "" : valueSource;
-					break;
-				}
-				case SubmissionType.Path: {
-					var valueSource = valueData.AsClassOrNull<PathExpression>();
-					value = valueSource is null ? "" : valueSource.ToString();
-					break;
-				}
-				case SubmissionType.Enumeration: {
-					var valueSource = valueData.AsClassOrNull<EnumerationExpression>();
-					value = valueSource is null ? "" : valueSource.ToString();
-					break;
-				}
-				default: throw new ();
+			var valueData = await this.mController.ReceiveSubmission(typeValue, option);
+			if (valueData is not null) {
+				value = ValueExpressionHelper.MakeString(valueData);
 			}
 			return new (value);
 		}
@@ -656,23 +644,22 @@ namespace AssistantPlus.View.ModdingWorker {
 		private async Task<ValueTuple<String>> CallbackPickPath (
 			String type
 		) {
-			var target = default(String?);
+			var target = "";
 			switch (type) {
 				case "open_file": {
-					target = await StorageHelper.PickOpenFile(WindowHelper.Find(this.Controller.View), $"{nameof(ModdingWorker)}.Generic");
+					target = await StorageHelper.PickOpenFile(WindowHelper.Find(this.mController.View), $"{nameof(ModdingWorker)}.Generic") ?? "";
 					break;
 				}
 				case "open_directory": {
-					target = await StorageHelper.PickOpenDirectory(WindowHelper.Find(this.Controller.View), $"{nameof(ModdingWorker)}.Generic");
+					target = await StorageHelper.PickOpenDirectory(WindowHelper.Find(this.mController.View), $"{nameof(ModdingWorker)}.Generic") ?? "";
 					break;
 				}
 				case "save_file": {
-					target = await StorageHelper.PickSaveFile(WindowHelper.Find(this.Controller.View), $"{nameof(ModdingWorker)}.Generic", null, null);
+					target = await StorageHelper.PickSaveFile(WindowHelper.Find(this.mController.View), $"{nameof(ModdingWorker)}.Generic", null, null) ?? "";
 					break;
 				}
 				default: throw new ();
 			}
-			target ??= "";
 			return new (target);
 		}
 

@@ -58,14 +58,15 @@ Future<Void> main(
     handleUnhandledException(error, stack);
     return true;
   };
-  var setting = SettingProvider.init();
+  var setting = SettingProvider();
   try {
-    await setting.data.load();
-  }
-  catch (e, s) {
-    handleUnhandledException(e, s);
-  }
-  try {
+    try {
+      await setting.load();
+    }
+    catch (e) {
+      await setting.reset();
+    }
+    await setting.save();
     var optionWindowPosition = null as (Integer, Integer)?;
     var optionWindowSize = null as (Integer, Integer)?;
     var optionInitialTab = null as (String, ModuleType, List<String>)?;
@@ -127,9 +128,14 @@ Future<Void> main(
       await windowManager.waitUntilReadyToShow();
       await windowManager.show();
     }
-    setting.state.mInitialTab = optionInitialTab;
+    if (optionInitialTab != null) {
+      setting.state.mInitialTab = ModuleLauncherConfiguration(
+        title: optionInitialTab.$1,
+        type: optionInitialTab.$2,
+        option: optionInitialTab.$3,
+      );
+    }
     await NotificationHelper.initialize();
-    await setting.update();
   }
   catch (e, s) {
     handleUnhandledException(e, s);

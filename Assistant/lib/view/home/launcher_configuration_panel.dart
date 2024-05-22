@@ -71,11 +71,11 @@ class _LauncherConfigurationPanelState extends State<LauncherConfigurationPanel>
                   }
                 },
                 child: TextFormField(
+                  keyboardType: TextInputType.text,
+                  inputFormatters: const [],
                   decoration: const InputDecoration(
                     isDense: true,
                   ),
-                  keyboardType: TextInputType.text,
-                  inputFormatters: const [],
                   initialValue: this.widget.data.title,
                   onChanged: (value) async {
                     this.widget.data.title = value;
@@ -140,15 +140,15 @@ class _LauncherConfigurationPanelState extends State<LauncherConfigurationPanel>
                   }
                 },
                 child: TextFormField(
-                  decoration: const InputDecoration(
-                    isDense: true,
-                  ),
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                   inputFormatters: const [],
-                  initialValue: ConvertHelper.convertStringListToTextWithLine(this.widget.data.option),
+                  decoration: const InputDecoration(
+                    isDense: true,
+                  ),
+                  initialValue: ConvertHelper.makeStringListToStringWithLine(this.widget.data.option),
                   onChanged: (value) async {
-                    this.widget.data.option = ConvertHelper.convertStringListFromTextWithLine(value);
+                    this.widget.data.option = ConvertHelper.parseStringListFromStringWithLine(value);
                   },
                 ),
               ),

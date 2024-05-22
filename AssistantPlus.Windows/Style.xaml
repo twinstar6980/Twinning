@@ -34,6 +34,15 @@
 	<Style x:Key="NormalFlyoutPresenterStyle" TargetType="FlyoutPresenter" BasedOn="{StaticResource DefaultFlyoutPresenterStyle}">
 		<Setter Property="IsTabStop" Value="True" />
 	</Style>
+	<Style x:Key="VerticalScrollFlyoutPresenterStyle" TargetType="FlyoutPresenter" BasedOn="{StaticResource DefaultFlyoutPresenterStyle}">
+		<Setter Property="IsTabStop" Value="True" />
+		<Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
+		<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+		<Setter Property="ScrollViewer.VerticalScrollMode" Value="Enabled" />
+		<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Visible" />
+		<Setter Property="ScrollViewer.IsHorizontalRailEnabled" Value="False" />
+		<Setter Property="ScrollViewer.IsVerticalRailEnabled" Value="True" />
+	</Style>
 	<Style x:Key="CompactFlyoutPresenterStyle" TargetType="FlyoutPresenter" BasedOn="{StaticResource DefaultFlyoutPresenterStyle}">
 		<Setter Property="Padding" Value="2" />
 		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" />

@@ -50,7 +50,25 @@ namespace AssistantPlus.Utility {
 
 		#region boolean
 
-		public static Floater BooleanToFloaterOfOpacityVisibility (
+		public static String MakeBooleanToString (
+			Boolean value
+		) {
+			return value switch {
+				false => "false",
+				true  => "true",
+			};
+		}
+
+		public static String MakeBooleanToStringOfConfirmationCharacter (
+			Boolean value
+		) {
+			return value switch {
+				false => "n",
+				true  => "y",
+			};
+		}
+
+		public static Floater MakeBooleanToFloaterOfOpacityVisibility (
 			Boolean value
 		) {
 			return value switch {
@@ -59,7 +77,7 @@ namespace AssistantPlus.Utility {
 			};
 		}
 
-		public static Floater BooleanToFloaterOfOpacityEnabled (
+		public static Floater MakeBooleanToFloaterOfOpacityEnabled (
 			Boolean value
 		) {
 			return value switch {
@@ -68,20 +86,43 @@ namespace AssistantPlus.Utility {
 			};
 		}
 
-		public static String BooleanToConfirmationStringLower (
-			Boolean value
+		#endregion
+
+		#region integer
+
+		public static String MakeIntegerToString (
+			Integer value,
+			Boolean showPositiveSign
 		) {
 			return value switch {
-				false => "no",
-				true  => "yes",
+				0   => "0",
+				< 0 => $"{value}",
+				> 0 => $"{(!showPositiveSign ? "" : "+")}{value}",
 			};
+		}
+
+		#endregion
+
+		#region floater
+
+		public static String MakeFloaterToString (
+			Floater value,
+			Boolean showPositiveSign
+		) {
+			var valueDecimal = new Decimal(value);
+			return value switch {
+				0.0   => "0",
+				< 0.0 => $"{valueDecimal}",
+				> 0.0 => $"{(!showPositiveSign ? "" : "+")}{valueDecimal}",
+				_     => throw new (),
+			} + (!Decimal.IsInteger(valueDecimal) ? "" : ".0");
 		}
 
 		#endregion
 
 		#region string
 
-		public static String StringInsertSpaceInWord (
+		public static String InsertSpaceBetweenStringWord (
 			String value
 		) {
 			return Regex.Replace(value, @"([A-Z])", " $1", RegexOptions.Compiled).TrimStart();
@@ -91,13 +132,13 @@ namespace AssistantPlus.Utility {
 
 		#region string list
 
-		public static String StringListToTextWithCr (
+		public static String MakeStringListToStringWithLine (
 			List<String> value
 		) {
 			return String.Join('\r', value) + (value.Count != 0 && value[^1].Length == 0 ? "\r" : "");
 		}
 
-		public static List<String> StringListFromTextWithCr (
+		public static List<String> ParseStringListFromStringWithLine (
 			String text
 		) {
 			var value = text.Split('\r').ToList();
@@ -111,7 +152,7 @@ namespace AssistantPlus.Utility {
 
 		#region bitmap
 
-		public static async Task<WriteableBitmap> BitmapFromBinary (
+		public static async Task<WriteableBitmap> ParseBitmapFromBinary (
 			Byte[] data
 		) {
 			var stream = data.AsBuffer().AsStream().AsRandomAccessStream();

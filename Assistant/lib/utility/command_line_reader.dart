@@ -31,12 +31,11 @@ class CommandLineReader {
   Boolean check(
     String name,
   ) {
-    var result = false;
-    if (!this.done() && this._view[this._position] == name) {
-      result = true;
+    var state = !this.done() && this._view[this._position] == name;
+    if (state) {
       this._position++;
     }
-    return result;
+    return state;
   }
 
   // ----------------
@@ -59,16 +58,16 @@ class CommandLineReader {
   String nextString(
   ) {
     assertTest(!this.done());
-    var result = this._view[this._position];
+    var value = this._view[this._position];
     this._position++;
-    return result;
+    return value;
   }
 
   List<String> nextStringList(
   ) {
-    var result = this._view.slice(this._position);
+    var value = this._view.slice(this._position);
     this._position = this._view.length;
-    return result;
+    return value;
   }
 
   // #endregion

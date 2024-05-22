@@ -1,5 +1,9 @@
 import '/common.dart';
+import '/setting.dart';
+import '/utility/storage_helper.dart';
+import '/utility/control_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // ----------------
 
@@ -15,6 +19,7 @@ class AboutPanel extends StatelessWidget {
 
   @override
   build(context) {
+    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
@@ -39,6 +44,161 @@ class AboutPanel extends StatelessWidget {
                   '© 2023-2024 TwinStar. All rights reserved.',
                   overflow: TextOverflow.clip,
                   style: theme.textTheme.bodyMedium,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          const Divider(),
+          const SizedBox(height: 4),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(width: 4),
+              const SizedBox(
+                height: 34,
+                child: Icon(IconSymbols.settings),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    ActionChip(
+                      avatar: const Icon(IconSymbols.refresh),
+                      label: const SizedBox(
+                        width: 46,
+                        child: Text(
+                          'Reload',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      onPressed: () async {
+                        await setting.load();
+                        await setting.save();
+                      },
+                    ),
+                    ActionChip(
+                      avatar: const Icon(IconSymbols.settings_backup_restore),
+                      label: const SizedBox(
+                        width: 46,
+                        child: Text(
+                          'Reset',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      onPressed: () async {
+                        if (await ControlHelper.showCustomConfirmDialog(context: context)) {
+                          await setting.reset();
+                          await setting.save();
+                        }
+                      },
+                    ),
+                    ActionChip(
+                      avatar: const Icon(IconSymbols.download),
+                      label: const SizedBox(
+                        width: 46,
+                        child: Text(
+                          'Import',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      onPressed: () async {
+                        var file = await StorageHelper.pickOpenFile('Application.SettingFile', setting.data.mFallbackDirectory);
+                        if (file != null) {
+                          await setting.load(file: file);
+                          await setting.save();
+                        }
+                      },
+                    ),
+                    ActionChip(
+                      avatar: const Icon(IconSymbols.upload),
+                      label: const SizedBox(
+                        width: 46,
+                        child: Text(
+                          'Export',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      onPressed: () async {
+                        var file = await StorageHelper.pickSaveFile('Application.SettingFile');
+                        if (file != null) {
+                          await setting.save(file: file, apply: false);
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(width: 4),
+              const SizedBox(
+                height: 34,
+                child: Icon(IconSymbols.folder_special),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    ActionChip(
+                      avatar: const Icon(IconSymbols.open_in_browser),
+                      label: const SizedBox(
+                        width: 46,
+                        child: Text(
+                          'Reveal',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      onPressed: () async {
+                        await ControlHelper.revealStorageDirectoryInNativeManagerOrShowTextDialog(
+                          context: context,
+                          title: 'Shared Directory',
+                          path: await StorageHelper.queryApplicationSharedDirectory(),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(width: 4),
+              const SizedBox(
+                height: 34,
+                child: Icon(IconSymbols.folder_delete),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    ActionChip(
+                      avatar: const Icon(IconSymbols.delete_forever),
+                      label: const SizedBox(
+                        width: 46,
+                        child: Text(
+                          'Clear',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      onPressed: () async {
+                        await StorageHelper.removeDirectory(await StorageHelper.queryApplicationCacheDirectory());
+                      },
+                    ),
+                  ],
                 ),
               ),
             ],

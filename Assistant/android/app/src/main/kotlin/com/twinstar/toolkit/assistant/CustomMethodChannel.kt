@@ -111,21 +111,29 @@ class CustomMethodChannel {
 		try {
 			when (call.method) {
 				"check_storage_permission" -> {
-					result.success(this.handleCheckStoragePermission(
-						call.argument<String>("mode")!!,
-					))
+					val detailMode = call.argument<String>("mode")!!
+					val detailState = this.handleCheckStoragePermission(
+						detailMode,
+					)
+					result.success(detailState)
 				}
 				"pick_storage_path" -> {
-					result.success(this.handlePickStoragePath(
-						call.argument<String>("type")!!,
-						call.argument<String>("initial_directory")!!,
-						call.argument<String>("fallback_directory")!!,
-					))
+					val detailType = call.argument<String>("type")!!
+					val detailInitialDirectory = call.argument<String>("initial_directory")!!
+					val detailFallbackDirectory = call.argument<String>("fallback_directory")!!
+					val detailTarget = this.handlePickStoragePath(
+						detailType,
+						detailInitialDirectory,
+						detailFallbackDirectory,
+					)
+					result.success(detailTarget)
 				}
 				"get_link_command" -> {
-					result.success(this.handleGetLinkCommand(
-						call.argument<String>("fallback_directory")!!,
-					))
+					val detailFallbackDirectory = call.argument<String>("fallback_directory")!!
+					val detailCommand = this.handleGetLinkCommand(
+						detailFallbackDirectory,
+					)
+					result.success(detailCommand)
 				}
 				else -> {
 					result.notImplemented()

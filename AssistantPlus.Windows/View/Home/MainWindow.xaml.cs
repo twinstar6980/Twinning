@@ -38,12 +38,10 @@ namespace AssistantPlus.View.Home {
 		}
 
 		public async Task SetDefaultView (
-			String       title,
-			ModuleType   type,
-			List<String> option
+			ModuleLauncherConfiguration configuration
 		) {
 			await ControlHelper.WaitUntilLoaded(this.Content.AsClass<FrameworkElement>());
-			await this.InsertTabItem(title, type, option);
+			await this.InsertTabItem(configuration);
 			return;
 		}
 
@@ -60,10 +58,8 @@ namespace AssistantPlus.View.Home {
 		) => await this.Controller.ShowLauncherPanel();
 
 		public async Task InsertTabItem (
-			String       title,
-			ModuleType   type,
-			List<String> option
-		) => await this.Controller.InsertTabItem(title, type, option);
+			ModuleLauncherConfiguration configuration
+		) => await this.Controller.InsertTabItem(configuration);
 
 		public async Task RemoveTabItem (
 			Page content
@@ -115,6 +111,7 @@ namespace AssistantPlus.View.Home {
 		) {
 			GF.AssertTest(this.LauncherPanelFlyout is null);
 			this.LauncherPanelFlyout = new Flyout() {
+				FlyoutPresenterStyle = this.View.Content.AsClass<FrameworkElement>().FindResource("VerticalScrollFlyoutPresenterStyle").AsClass<Style>(),
 				Content = new LauncherPanel() {
 					Stamp = new (),
 				},
@@ -131,14 +128,12 @@ namespace AssistantPlus.View.Home {
 		// ----------------
 
 		public async Task InsertTabItem (
-			String       title,
-			ModuleType   type,
-			List<String> option
+			ModuleLauncherConfiguration configuration
 		) {
 			if (this.LauncherPanelFlyout is not null) {
 				this.LauncherPanelFlyout.Hide();
 			}
-			var model = ModuleHelper.Query(type);
+			var model = ModuleHelper.Query(configuration.Type);
 			var frame = new Frame() {
 				ContentTransitions = [
 					new NavigationThemeTransition() {
@@ -146,8 +141,8 @@ namespace AssistantPlus.View.Home {
 					},
 				],
 			};
-			frame.NavigateToType(model.MainPage, option, new () { IsNavigationStackEnabled = false, TransitionInfoOverride = new DrillInNavigationTransitionInfo() });
-			this.uTab_TabItemsSource.Add(new () { Host = this, Title = title, Type = type, Frame = frame });
+			frame.NavigateToType(model.MainPage, configuration.Option, new () { IsNavigationStackEnabled = false, TransitionInfoOverride = new DrillInNavigationTransitionInfo() });
+			this.uTab_TabItemsSource.Add(new () { Host = this, Title = configuration.Title, Type = configuration.Type, Frame = frame });
 			this.NotifyPropertyChanged(
 				nameof(this.uBlank_Visibility)
 			);
@@ -288,11 +283,52 @@ namespace AssistantPlus.View.Home {
 			}
 		}
 
+		// ----------------
+
+		public async void uCommand_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<MenuFlyoutItem>();
+			switch (senders.Tag.AsClass<String>()) {
+				case "Keep": {
+					var configuration = new ModuleLauncherConfiguration() {
+						Title = "Untitled",
+						Type = this.Type,
+						Option = await this.Frame.Content.AsClass<IModulePage>().ModulePageCollectOption(),
+						Command = [],
+					};
+					await ControlHelper.ShowDialogFixed(this.Host.View.Content, "Launcher Configuration", new LauncherConfigurationPanel() {
+						Data = configuration,
+						Stamp = UniqueStamp.Create(),
+					});
+					await App.Instance.AppendPinnedLauncherItem(configuration);
+					await App.Setting.Save();
+					break;
+				}
+				case "Duplicate": {
+					var configuration = new ModuleLauncherConfiguration() {
+						Title = this.Title,
+						Type = this.Type,
+						Option = await this.Frame.Content.AsClass<IModulePage>().ModulePageCollectOption(),
+						Command = [],
+					};
+					await this.Host.InsertTabItem(configuration);
+					break;
+				}
+				default: throw new ();
+			}
+			return;
+		}
+
 		#endregion
 
 	}
 
 	public interface IModulePage {
+
+		Task<List<String>> ModulePageCollectOption (
+		);
 
 		Task<Boolean> ModulePageRequestClose (
 		);

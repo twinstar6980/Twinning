@@ -12,25 +12,160 @@ using Newtonsoft.Json;
 
 namespace AssistantPlus {
 
-	public class Setting {
+	[JsonObject(ItemRequired = Required.AllowNull)]
+	public record SettingData {
+		public Integer                           Version              = default!;
+		public CustomThemeSetting                Theme                = default!;
+		public CustomWindowSetting               Window               = default!;
+		public ModuleLauncherSetting             ModuleLauncher       = default!;
+		public View.ModdingWorker.Setting        ModdingWorker        = default!;
+		public View.CommandSender.Setting        CommandSender        = default!;
+		public View.ResourceForwarder.Setting    ResourceForwarder    = default!;
+		public View.ReflectionDescriptor.Setting ReflectionDescriptor = default!;
+		public View.AnimationViewer.Setting      AnimationViewer      = default!;
+		public View.PackageBuilder.Setting       PackageBuilder       = default!;
+	}
 
-		#region data
+	public record SettingState {
+		public CustomThemeMode?     LegacyThemeMode     = default!;
+		public CustomThemeColor?    LegacyThemeColor    = default!;
+		public CustomThemeBackdrop? LegacyThemeBackdrop = default!;
+	}
 
-		[JsonObject(ItemRequired = Required.AllowNull)]
-		public record SettingData {
-			public Integer                           Version              = default!;
-			public CustomThemeSetting                Theme                = default!;
-			public CustomWindowSetting               Window               = default!;
-			public ModuleLauncherSetting             ModuleLauncher       = default!;
-			public View.ModdingWorker.Setting        ModdingWorker        = default!;
-			public View.CommandSender.Setting        CommandSender        = default!;
-			public View.ResourceForwarder.Setting    ResourceForwarder    = default!;
-			public View.ReflectionDescriptor.Setting ReflectionDescriptor = default!;
-			public View.AnimationViewer.Setting      AnimationViewer      = default!;
-			public View.PackageBuilder.Setting       PackageBuilder       = default!;
+	public class SettingProvider {
+
+		#region structor
+
+		public SettingData Data;
+
+		public SettingState State;
+
+		// ----------------
+
+		public SettingProvider (
+		) {
+			this.Data = SettingProvider.CreateDefaultData();
+			this.State = SettingProvider.CreateDefaultState();
 		}
 
-		public static SettingData CreateDefaultData (
+		#endregion
+
+		#region action
+
+		public async Task Reset (
+		) {
+			this.Data = SettingProvider.CreateDefaultData();
+			this.State = SettingProvider.CreateDefaultState();
+			return;
+		}
+
+		public async Task Apply (
+		) {
+			// Theme.Mode
+			if (this.State.LegacyThemeMode != this.Data.Theme.Mode && App.MainWindowIsInitialized) {
+				App.MainWindow.Content.AsClass<FrameworkElement>().RequestedTheme = this.Data.Theme.Mode switch {
+					CustomThemeMode.System => ElementTheme.Default,
+					CustomThemeMode.Light  => ElementTheme.Light,
+					CustomThemeMode.Dark   => ElementTheme.Dark,
+					_                      => throw new (),
+				};
+				App.MainWindow.AppWindow.TitleBar.ButtonForegroundColor = this.Data.Theme.Mode switch {
+					CustomThemeMode.System => null,
+					CustomThemeMode.Light  => Colors.Black,
+					CustomThemeMode.Dark   => Colors.White,
+					_                      => throw new (),
+				};
+				this.State.LegacyThemeMode = this.Data.Theme.Mode;
+			}
+			// Theme.Color
+			if (this.State.LegacyThemeColor != this.Data.Theme.Color) {
+				var customColorOnLight = Color.FromArgb(
+					0xFF,
+					(Byte)this.Data.Theme.Color.LightRed,
+					(Byte)this.Data.Theme.Color.LightGreen,
+					(Byte)this.Data.Theme.Color.LightBlue
+				);
+				var customColorOnDark = Color.FromArgb(
+					0xFF,
+					(Byte)this.Data.Theme.Color.DarkRed,
+					(Byte)this.Data.Theme.Color.DarkGreen,
+					(Byte)this.Data.Theme.Color.DarkBlue
+				);
+				foreach (var resourceKey in new[] { "SystemAccentColorDark1", "SystemAccentColorDark2", "SystemAccentColorDark3" }) {
+					if (!this.Data.Theme.Color.State) {
+						App.Instance.Resources.Remove(resourceKey);
+					}
+					else {
+						App.Instance.Resources[resourceKey] = customColorOnLight;
+					}
+				}
+				foreach (var resourceKey in new[] { "SystemAccentColorLight1", "SystemAccentColorLight2", "SystemAccentColorLight3" }) {
+					if (!this.Data.Theme.Color.State) {
+						App.Instance.Resources.Remove(resourceKey);
+					}
+					else {
+						App.Instance.Resources[resourceKey] = customColorOnDark;
+					}
+				}
+				this.State.LegacyThemeColor = this.Data.Theme.Color;
+			}
+			// Theme.Backdrop
+			if (this.State.LegacyThemeBackdrop != this.Data.Theme.Backdrop && App.MainWindowIsInitialized) {
+				App.MainWindow.SystemBackdrop = this.Data.Theme.Backdrop switch {
+					CustomThemeBackdrop.Solid          => null,
+					CustomThemeBackdrop.MicaBase       => new MicaBackdrop() { Kind = MicaKind.Base },
+					CustomThemeBackdrop.MicaAlt        => new MicaBackdrop() { Kind = MicaKind.BaseAlt },
+					CustomThemeBackdrop.AcrylicDesktop => new DesktopAcrylicBackdrop() { },
+					_                                  => throw new (),
+				};
+				App.MainWindow.uBackground.Visibility = this.Data.Theme.Backdrop == CustomThemeBackdrop.Solid ? Visibility.Visible : Visibility.Collapsed;
+				this.State.LegacyThemeBackdrop = this.Data.Theme.Backdrop;
+			}
+			// ModuleLauncher
+			await App.Instance.RegisterShellJumpList();
+			// ModdingWorker.MessageFont
+			App.Instance.Resources["ModdingWorker.MessageFont"] = this.Data.ModdingWorker.MessageFont.Length == 0 ? FontFamily.XamlAutoFontFamily : new (this.Data.ModdingWorker.MessageFont);
+			return;
+		}
+
+		#endregion
+
+		#region storage
+
+		public String File {
+			get {
+				return StorageHelper.ToWindowsStyle($"{App.SharedDirectory}/Setting.json");
+			}
+		}
+
+		// ----------------
+
+		public async Task Load (
+			String? file = null
+		) {
+			file ??= this.File;
+			this.Data = await JsonHelper.DeserializeFile<SettingData>(file);
+			GF.AssertTest(this.Data.Version == Package.Current.Id.Version.Major);
+			return;
+		}
+
+		public async Task Save (
+			String? file  = null,
+			Boolean apply = true
+		) {
+			file ??= this.File;
+			if (apply) {
+				await this.Apply();
+			}
+			await JsonHelper.SerializeFile<SettingData>(file, this.Data);
+			return;
+		}
+
+		#endregion
+
+		#region utility
+
+		private static SettingData CreateDefaultData (
 		) {
 			return new () {
 				Version = Package.Current.Id.Version.Major,
@@ -107,114 +242,13 @@ namespace AssistantPlus {
 			};
 		}
 
-		#endregion
-
-		#region access
-
-		public SettingData Data { get; set; } = null!;
-
-		// ----------------
-
-		private CustomThemeMode? LegacyThemeMode { get; set; } = null;
-
-		private CustomThemeColor? LegacyThemeColor { get; set; } = null;
-
-		private CustomThemeBackdrop? LegacyThemeBackdrop { get; set; } = null;
-
-		public async Task Apply (
+		private static SettingState CreateDefaultState (
 		) {
-			// Theme.Mode
-			if (this.LegacyThemeMode != this.Data.Theme.Mode && App.MainWindowIsInitialized) {
-				App.MainWindow.Content.AsClass<FrameworkElement>().RequestedTheme = this.Data.Theme.Mode switch {
-					CustomThemeMode.System => ElementTheme.Default,
-					CustomThemeMode.Light  => ElementTheme.Light,
-					CustomThemeMode.Dark   => ElementTheme.Dark,
-					_                      => throw new (),
-				};
-				App.MainWindow.AppWindow.TitleBar.ButtonForegroundColor = this.Data.Theme.Mode switch {
-					CustomThemeMode.System => null,
-					CustomThemeMode.Light  => Colors.Black,
-					CustomThemeMode.Dark   => Colors.White,
-					_                      => throw new (),
-				};
-				this.LegacyThemeMode = this.Data.Theme.Mode;
-			}
-			// Theme.Color
-			if (this.LegacyThemeColor != this.Data.Theme.Color) {
-				var customColorOnLight = Color.FromArgb(
-					0xFF,
-					(Byte)this.Data.Theme.Color.LightRed,
-					(Byte)this.Data.Theme.Color.LightGreen,
-					(Byte)this.Data.Theme.Color.LightBlue
-				);
-				var customColorOnDark = Color.FromArgb(
-					0xFF,
-					(Byte)this.Data.Theme.Color.DarkRed,
-					(Byte)this.Data.Theme.Color.DarkGreen,
-					(Byte)this.Data.Theme.Color.DarkBlue
-				);
-				foreach (var resourceKey in new[] { "SystemAccentColorDark1", "SystemAccentColorDark2", "SystemAccentColorDark3" }) {
-					if (!this.Data.Theme.Color.State) {
-						App.Instance.Resources.Remove(resourceKey);
-					}
-					else {
-						App.Instance.Resources[resourceKey] = customColorOnLight;
-					}
-				}
-				foreach (var resourceKey in new[] { "SystemAccentColorLight1", "SystemAccentColorLight2", "SystemAccentColorLight3" }) {
-					if (!this.Data.Theme.Color.State) {
-						App.Instance.Resources.Remove(resourceKey);
-					}
-					else {
-						App.Instance.Resources[resourceKey] = customColorOnDark;
-					}
-				}
-				this.LegacyThemeColor = this.Data.Theme.Color;
-			}
-			// Theme.Backdrop
-			if (this.LegacyThemeBackdrop != this.Data.Theme.Backdrop && App.MainWindowIsInitialized) {
-				App.MainWindow.SystemBackdrop = this.Data.Theme.Backdrop switch {
-					CustomThemeBackdrop.Solid          => null,
-					CustomThemeBackdrop.MicaBase       => new MicaBackdrop() { Kind = MicaKind.Base },
-					CustomThemeBackdrop.MicaAlt        => new MicaBackdrop() { Kind = MicaKind.BaseAlt },
-					CustomThemeBackdrop.AcrylicDesktop => new DesktopAcrylicBackdrop() { },
-					_                                  => throw new (),
-				};
-				App.MainWindow.uBackground.Visibility = this.Data.Theme.Backdrop == CustomThemeBackdrop.Solid ? Visibility.Visible : Visibility.Collapsed;
-				this.LegacyThemeBackdrop = this.Data.Theme.Backdrop;
-			}
-			// ModuleLauncher
-			await App.Instance.RegisterShellJumpList();
-			// ModdingWorker.MessageFont
-			App.Instance.Resources["ModdingWorker.MessageFont"] = this.Data.ModdingWorker.MessageFont.Length == 0 ? FontFamily.XamlAutoFontFamily : new (this.Data.ModdingWorker.MessageFont);
-			return;
-		}
-
-		#endregion
-
-		#region storage
-
-		public String File { get; } = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "Setting.json");
-
-		// ----------------
-
-		public async Task Load (
-			String? file = null
-		) {
-			this.Data = await JsonHelper.DeserializeFile<SettingData>(file ?? this.File);
-			GF.AssertTest(this.Data.Version == Package.Current.Id.Version.Major);
-			return;
-		}
-
-		public async Task Save (
-			String? file  = null,
-			Boolean apply = true
-		) {
-			if (apply) {
-				await this.Apply();
-			}
-			await JsonHelper.SerializeFile<SettingData>(file ?? this.File, this.Data);
-			return;
+			return new () {
+				LegacyThemeMode = null,
+				LegacyThemeColor = null,
+				LegacyThemeBackdrop = null,
+			};
 		}
 
 		#endregion

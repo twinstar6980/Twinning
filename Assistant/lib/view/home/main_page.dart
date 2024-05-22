@@ -34,11 +34,9 @@ class _MainPageState extends State<MainPage> {
   late Integer                                 _tabIndex;
 
   Future<Void> _insertTabItem(
-    String       title,
-    ModuleType   type,
-    List<String> option,
+    ModuleLauncherConfiguration configuration,
   ) async {
-    this._tabList.add((title, type, ModuleHelper.query(type).mainPage(option), ValueKey(DateTime.now().millisecondsSinceEpoch)));
+    this._tabList.add((configuration.title, configuration.type, ModuleHelper.query(configuration.type).mainPage(configuration.option), ValueKey(DateTime.now().millisecondsSinceEpoch)));
     this._tabIndex = this._tabList.length - 1;
     this.setState(() {});
     return;
@@ -65,24 +63,19 @@ class _MainPageState extends State<MainPage> {
     return;
   }
 
-  Future<Void> _executeLauncher(
-    ModuleLauncherConfiguration configuration,
-  ) async {
-    await this._insertTabItem(configuration.title, configuration.type, configuration.option);
-    return;
-  }
-
   Future<Void> _openLauncherPanel(
   ) async {
     await ControlHelper.showCustomModalBottomSheet(
       context: this.context,
       title: 'Launcher',
-      contentBuilder: (context, setState) => LauncherPanel(
-        onLaunch: (configuration) async {
-          Navigator.pop(context);
-          await this._executeLauncher(configuration);
-        },
-      ),
+      contentBuilder: (context, setState) => [
+        LauncherPanel(
+          onLaunch: (configuration) async {
+            Navigator.pop(context);
+            await this._insertTabItem(configuration);
+          },
+        ),
+      ],
     );
     return;
   }
@@ -100,7 +93,7 @@ class _MainPageState extends State<MainPage> {
     ControlHelper.runAfterNextFrame(() async {
       var setting = Provider.of<SettingProvider>(this.context, listen: false);
       if (setting.state.mInitialTab != null) {
-        await this._insertTabItem(setting.state.mInitialTab!.$1, setting.state.mInitialTab!.$2, setting.state.mInitialTab!.$3);
+        await this._insertTabItem(setting.state.mInitialTab!);
       }
       else {
         await this._openLauncherPanel();
@@ -122,6 +115,7 @@ class _MainPageState extends State<MainPage> {
         centerTitle: false,
         elevation: 3,
         scrolledUnderElevation: 3,
+        backgroundColor: Colors.transparent,
         title: const SizedBox(),
         leading: const SizedBox(),
         actions: [
@@ -149,10 +143,10 @@ class _MainPageState extends State<MainPage> {
             },
           ),
           const CustomNavigationDrawerDivider(),
-          ...this._tabList.mapIndexed((index, e) => CustomNavigationDrawerItem(
+          ...this._tabList.mapIndexed((index, value) => CustomNavigationDrawerItem(
             selected: index == this._tabIndex,
-            icon: ModuleHelper.query(e.$2).icon,
-            label: e.$1,
+            icon: ModuleHelper.query(value.$2).icon,
+            label: value.$1,
             action: [
               IconButton(
                 icon: const Icon(IconSymbols.remove),
@@ -175,10 +169,13 @@ class _MainPageState extends State<MainPage> {
             label: 'Setting',
             action: const [],
             onPressed: () async {
+              Navigator.pop(context);
               await ControlHelper.showCustomModalBottomSheet(
                 context: context,
                 title: 'Setting',
-                contentBuilder: (context, setState) => const SettingPanel(),
+                contentBuilder: (context, setState) => [
+                  const SettingPanel(),
+                ],
               );
             },
           ),
@@ -188,10 +185,13 @@ class _MainPageState extends State<MainPage> {
             label: 'About',
             action: const [],
             onPressed: () async {
+              Navigator.pop(context);
               await ControlHelper.showCustomModalBottomSheet(
                 context: context,
                 title: 'About',
-                contentBuilder: (context, setState) => const AboutPanel(),
+                contentBuilder: (context, setState) => [
+                  const AboutPanel(),
+                ],
               );
             },
           ),
@@ -204,10 +204,10 @@ class _MainPageState extends State<MainPage> {
             offstage: this._tabIndex != -1,
             child: this._blankPanel,
           ),
-          ...this._tabList.mapIndexed((index, e) => Offstage(
-            key: e.$4,
+          ...this._tabList.mapIndexed((index, value) => Offstage(
+            key: value.$4,
             offstage: this._tabIndex != index,
-            child: e.$3,
+            child: value.$3,
           )),
         ],
       ),

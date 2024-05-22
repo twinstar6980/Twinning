@@ -35,7 +35,12 @@ namespace AssistantPlus.View.CommandSender {
 
 		#endregion
 
-		#region tab item page
+		#region module page
+
+		public async Task<List<String>> ModulePageCollectOption (
+		) {
+			return await this.Controller.CollectOption();
+		}
 
 		public async Task<Boolean> ModulePageRequestClose (
 		) {
@@ -91,6 +96,12 @@ namespace AssistantPlus.View.CommandSender {
 				App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
 			}
 			return;
+		}
+
+		public async Task<List<String>> CollectOption (
+		) {
+			var option = new CommandLineWriter();
+			return option.Done();
 		}
 
 		public async Task<Boolean> RequestClose (
@@ -272,7 +283,7 @@ namespace AssistantPlus.View.CommandSender {
 
 		public Floater uBatch_Opacity {
 			get {
-				return ConvertHelper.BooleanToFloaterOfOpacityVisibility(this.ItemModel.Batchable is not null);
+				return ConvertHelper.MakeBooleanToFloaterOfOpacityVisibility(this.ItemModel.Batchable is not null);
 			}
 		}
 

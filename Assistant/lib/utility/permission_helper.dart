@@ -10,32 +10,32 @@ class PermissionHelper {
 
   static Future<Boolean> checkStorage(
   ) async {
-    var result = true;
+    var state = true;
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      result = true;
+      state = true;
     }
     if (Platform.isAndroid) {
-      result = await PlatformMethod.checkStoragePermission('check');
+      state = await PlatformMethod.checkStoragePermission('check');
     }
     if (Platform.isIOS) {
-      result = true;
+      state = true;
     }
-    return result;
+    return state;
   }
 
   static Future<Boolean> requestStorage(
   ) async {
-    var result = true;
+    var state = true;
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      result = true;
+      state = true;
     }
     if (Platform.isAndroid) {
-      result = await PlatformMethod.checkStoragePermission('request');
+      state = await PlatformMethod.checkStoragePermission('request');
     }
     if (Platform.isIOS) {
-      result = true;
+      state = true;
     }
-    return result;
+    return state;
   }
 
   // #endregion

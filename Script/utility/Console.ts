@@ -595,7 +595,7 @@ namespace TwinStar.Script.Console {
 
 	export function path(
 		type: 'any' | 'file' | 'directory',
-		rule: 'any' | 'input' | 'output',
+		mode: 'any' | 'input' | 'output',
 		nullable: null,
 		checker: null | Check.CheckerX<string>,
 		initial?: string,
@@ -603,7 +603,7 @@ namespace TwinStar.Script.Console {
 
 	export function path(
 		type: 'any' | 'file' | 'directory',
-		rule: 'any' | 'input' | 'output',
+		mode: 'any' | 'input' | 'output',
 		nullable: boolean,
 		checker: null | Check.CheckerX<string>,
 		initial?: null | string,
@@ -611,7 +611,7 @@ namespace TwinStar.Script.Console {
 
 	export function path(
 		type: 'any' | 'file' | 'directory',
-		rule: 'any' | 'input' | 'output',
+		mode: 'any' | 'input' | 'output',
 		nullable: null | boolean,
 		checker: null | Check.CheckerX<string>,
 		initial?: null | string,
@@ -645,13 +645,13 @@ namespace TwinStar.Script.Console {
 							return los('console:input_command_invalid');
 						}
 						let pick_type = null as null | 'open_file' | 'open_directory' | 'save_file';
-						if (rule === 'input' && type === 'file') {
+						if (mode === 'input' && type === 'file') {
 							pick_type = 'open_file';
 						}
-						if (rule === 'input' && type === 'directory') {
+						if (mode === 'input' && type === 'directory') {
 							pick_type = 'open_directory';
 						}
-						if (rule === 'output' && type === 'file') {
+						if (mode === 'output' && type === 'file') {
 							pick_type = 'save_file';
 						}
 						let pick_result = pick_path(pick_type);
@@ -663,7 +663,7 @@ namespace TwinStar.Script.Console {
 						break;
 					}
 					case 'g': {
-						if (rule !== 'output') {
+						if (mode !== 'output') {
 							return los('console:path_command_need_output');
 						}
 						if (value.length > 2) {
@@ -680,7 +680,7 @@ namespace TwinStar.Script.Console {
 						break;
 					}
 					case 'm': {
-						if (rule !== 'output') {
+						if (mode !== 'output') {
 							return los('console:path_command_need_output');
 						}
 						if (value.length > 2) {
@@ -698,7 +698,7 @@ namespace TwinStar.Script.Console {
 						break;
 					}
 					case 'd': {
-						if (rule !== 'output') {
+						if (mode !== 'output') {
 							return los('console:path_command_need_output');
 						}
 						if (value.length > 2) {
@@ -715,7 +715,7 @@ namespace TwinStar.Script.Console {
 						break;
 					}
 					case 'o': {
-						if (rule !== 'output') {
+						if (mode !== 'output') {
 							return los('console:path_command_need_output');
 						}
 						if (value.length > 2) {
@@ -742,7 +742,7 @@ namespace TwinStar.Script.Console {
 			if (value.length === 0) {
 				return los('console:path_is_empty');
 			}
-			if (rule === 'input') {
+			if (mode === 'input') {
 				if (!KernelX.FileSystem.exist(value)) {
 					return los('console:path_not_exist');
 				}
@@ -753,7 +753,7 @@ namespace TwinStar.Script.Console {
 					return los('console:path_is_exist_not_directory');
 				}
 			}
-			if (rule === 'output') {
+			if (mode === 'output') {
 				if (!state_data.allow_overwrite && KernelX.FileSystem.exist(value)) {
 					return los('console:path_is_exist');
 				}
@@ -795,21 +795,21 @@ namespace TwinStar.Script.Console {
 	// ------------------------------------------------
 
 	export function enumeration<Value>(
-		item: Array<[Value, string, string]>,
+		item: Array<[Value, string, null | string]>,
 		nullable: null | boolean,
 		checker: null | Check.CheckerX<Value>,
 		initial?: Value,
 	): Value;
 
 	export function enumeration<Value>(
-		item: Array<[Value, string, string]>,
+		item: Array<[Value, string, null | string]>,
 		nullable: null | boolean,
 		checker: null | Check.CheckerX<Value>,
 		initial?: null | Value,
 	): null | Value;
 
 	export function enumeration<Value>(
-		item: Array<[Value, string, string]>,
+		item: Array<[Value, string, null | string]>,
 		nullable: null | boolean,
 		checker: null | Check.CheckerX<Value>,
 		initial?: null | Value,
@@ -817,7 +817,7 @@ namespace TwinStar.Script.Console {
 		let result: null | Value = undefined!;
 		let leading = 'Enumeration';
 		let maximum_key_length = Math.max(...item.map((value) => (value[1].length)));
-		let message = item.map((value) => (`${make_prefix_padded_string(value[1], ' ', maximum_key_length)}. ${value[2]}`));
+		let message = item.map((value) => (`${make_prefix_padded_string(value[1], ' ', maximum_key_length)}${value[2] === null ? '' : `. ${value[2]}`}`));
 		let converter = (value: string): string | [null | Value] => {
 			if (value === '') {
 				return [null];
@@ -846,8 +846,8 @@ namespace TwinStar.Script.Console {
 		if (Shell.is_assistant) {
 			result = assistant_common_input(
 				() => {
-					let index = Shell.assistant_receive_submission('enumeration', [...message]).value;
-					return index === '' ? '' : item[Number(index) - 1][1];
+					let value = Shell.assistant_receive_submission('enumeration', [...message]).value;
+					return value === '' ? '' : item[message.indexOf(value)][1];
 				},
 				leading,
 				(value) => {
@@ -873,42 +873,26 @@ namespace TwinStar.Script.Console {
 
 	export function option_boolean<Value extends boolean>(
 		value: Array<Value>,
-	): Array<[Value, string, string]> {
-		let destination: Array<[Value, string, string]> = [];
-		for (let index = 0; index < value.length; index++) {
-			destination.push([value[index], `${value[index] === false ? 'n' : 'y'}`, ``]);
-		}
-		return destination;
+	): Array<[Value, string, null | string]> {
+		return value.map((value, index) => ([value, `${value === false ? 'n' : 'y'}`, null]));
 	}
 
 	export function option_floater<Value extends number>(
 		value: Array<Value>,
-	): Array<[Value, string, string]> {
-		let destination: Array<[Value, string, string]> = [];
-		for (let index = 0; index < value.length; index++) {
-			destination.push([value[index], `${value[index]}`, ``]);
-		}
-		return destination;
+	): Array<[Value, string, null | string]> {
+		return value.map((value, index) => ([value, `${value}`, null]));
 	}
 
 	export function option_integer<Value extends bigint>(
 		value: Array<Value>,
-	): Array<[Value, string, string]> {
-		let destination: Array<[Value, string, string]> = [];
-		for (let index = 0; index < value.length; index++) {
-			destination.push([value[index], `${value[index]}`, ``]);
-		}
-		return destination;
+	): Array<[Value, string, null | string]> {
+		return value.map((value, index) => ([value, `${value}`, null]));
 	}
 
 	export function option_string<Value extends string>(
 		value: Array<Value>,
-	): Array<[Value, string, string]> {
-		let destination: Array<[Value, string, string]> = [];
-		for (let index = 0; index < value.length; index++) {
-			destination.push([value[index], `${index + 1}`, `${value[index]}`]);
-		}
-		return destination;
+	): Array<[Value, string, null | string]> {
+		return value.map((value, index) => ([value, `${index + 1}`, `${value}`]));
 	}
 
 	// ------------------------------------------------

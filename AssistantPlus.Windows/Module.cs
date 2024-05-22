@@ -33,12 +33,6 @@ namespace AssistantPlus {
 
 	#region launcher
 
-	public enum ModuleLauncherCategory {
-		Module,
-		Pinned,
-		Recent,
-	}
-
 	[JsonObject(ItemRequired = Required.AllowNull)]
 	public record ModuleLauncherConfiguration {
 		public String       Title   = default!;
@@ -48,6 +42,12 @@ namespace AssistantPlus {
 	}
 
 	// ----------------
+
+	public enum ModuleLauncherCategory {
+		Module,
+		Pinned,
+		Recent,
+	}
 
 	[JsonObject(ItemRequired = Required.AllowNull)]
 	public record ModuleLauncherSetting {

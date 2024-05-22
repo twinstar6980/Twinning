@@ -4,20 +4,19 @@ import '/utility/control_helper.dart';
 import '/utility/storage_helper.dart';
 import '/utility/notification_helper.dart';
 import '/utility/command_line_reader.dart';
-import '/bridge/client.dart';
-import '/bridge/launcher.dart';
+import '/bridge/library.dart' as bridge;
+import '/bridge/client.dart' as bridge;
+import '/bridge/launcher.dart' as bridge;
 import '/view/home/common.dart';
 import '/view/modding_worker/message_type.dart';
 import '/view/modding_worker/message_card.dart';
 import '/view/modding_worker/submission_type.dart';
 import '/view/modding_worker/submission_bar.dart';
+import '/view/modding_worker/value_expression.dart';
 import '/view/modding_worker/launcher_bar.dart';
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-// ignore_for_file: invalid_use_of_protected_member
 
 // ----------------
 
@@ -39,63 +38,101 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
 
-  late List<String>          _additionalArgument;
-  late ScrollController      _messageListScrollController;
-  late List<Widget>          _messageList;
-  late SubmissionBar         _submissionBar;
-  late Widget                _launcherBar;
-  late _MainPageBridgeClient _sessionClient;
+  late List<String>                _additionalArgument;
+  late List<Widget>                _messageList;
+  late ScrollController            _messageListScrollController;
+  late List<List<ValueExpression>> _submissionHistory;
+  late SubmissionBar               _submissionBar;
+  late Widget                      _launcherBar;
+  late _MainPageBridgeClient       _sessionClient;
 
-  Future<Boolean> _launchSession(
+  Future<List<String>?> _launchSession(
   ) async {
     var setting = Provider.of<SettingProvider>(this.context, listen: false);
     var result = null as List<String>?;
     var exception = null as String?;
-    var temporaryKernel = null as String?;
+    var kernelCopy = await StorageHelper.temporary();
+    var library = bridge.Library();
+    this._messageList.clear();
+    this.setState(() {});
+    await WidgetsBinding.instance.endOfFrame;
     try {
-      this._messageList.clear();
-      var temporaryKernel = await StorageHelper.temporary();
-      await StorageHelper.copyFile(setting.data.mModdingWorker.mKernel, temporaryKernel);
-      result = await Launcher.launch(this._sessionClient, temporaryKernel, setting.data.mModdingWorker.mScript, setting.data.mModdingWorker.mArgument + this._additionalArgument);
+      await StorageHelper.copyFile(setting.data.mModdingWorker.mKernel, kernelCopy);
+      library.open(kernelCopy);
+      result = await bridge.Launcher.launch(this._sessionClient, library, setting.data.mModdingWorker.mScript, setting.data.mModdingWorker.mArgument + this._additionalArgument);
     }
     catch (e) {
       exception = e.toString();
     }
-    if (temporaryKernel != null) {
-      var temporaryKernelFile = File(temporaryKernel);
-      if (await temporaryKernelFile.exists()) {
-        await temporaryKernelFile.delete();
-      }
+    if (library.state()) {
+      library.close();
     }
+    if (await StorageHelper.existFile(kernelCopy)) {
+      await StorageHelper.removeFile(kernelCopy);
+    }
+    if (exception == null) {
+      this._sendMessage(MessageType.success, 'SUCCEEDED', result!);
+    }
+    else {
+      this._sendMessage(MessageType.error, 'FAILED', [exception]);
+    }
+    return result;
+  }
+
+  Future<Void> _sendMessage(
+    MessageType  type,
+    String       title,
+    List<String> description,
+  ) async {
     if (this._messageList.isNotEmpty) {
       this._messageList.add(
         const SizedBox(height: 8),
       );
     }
-    if (exception == null) {
-      this._messageList.add(
-        MessageCard(
-          type: MessageType.success,
-          title: 'SUCCEEDED',
-          description: result!,
-        ),
-      );
-    }
-    else {
-      this._messageList.add(
-        MessageCard(
-          type: MessageType.error,
-          title: 'FAILED',
-          description: [exception],
-        ),
-      );
-    }
+    this._messageList.add(
+      MessageCard(
+        type: type,
+        title: title,
+        description: description,
+      ),
+    );
+    var shouldScrollToEnd = this._messageListScrollController.position.pixels == this._messageListScrollController.position.maxScrollExtent;
     this.setState(() {});
     await WidgetsBinding.instance.endOfFrame;
-    while (this._messageListScrollController.position.pixels != this._messageListScrollController.position.maxScrollExtent) {
-      await this._messageListScrollController.animateTo(this._messageListScrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 100), curve: Curves.easeOut);
+    if (shouldScrollToEnd) {
+      this._messageListScrollController.jumpTo(this._messageListScrollController.position.maxScrollExtent);
     }
-    return exception == null;
+    return;
+  }
+
+  Future<ValueExpression?> _receiveSubmission(
+    SubmissionType type,
+    List<String>   option,
+  ) async {
+    var history = this._submissionHistory[type.index];
+    var completer = Completer<ValueExpression?>();
+    this._submissionBar = SubmissionBar(
+      type: type,
+      option: option,
+      history: history,
+      completer: completer,
+    );
+    this.setState(() {});
+    var value = await completer.future;
+    this._submissionBar = const SubmissionBar(
+      type: null,
+      option: null,
+      history: null,
+      completer: null,
+    );
+    this.setState(() {});
+    await WidgetsBinding.instance.endOfFrame;
+    if (value != null) {
+      var valueString = ValueExpressionHelper.makeString(value);
+      history.removeWhere((item) => (ValueExpressionHelper.makeString(item) == valueString));
+      history.add(value);
+    }
+    return value;
   }
 
   // ----------------
@@ -105,11 +142,13 @@ class _MainPageState extends State<MainPage> {
     super.initState();
     var setting = Provider.of<SettingProvider>(this.context, listen: false);
     this._additionalArgument = [];
-    this._messageListScrollController = ScrollController();
     this._messageList = [];
+    this._messageListScrollController = ScrollController();
+    this._submissionHistory = SubmissionType.values.map((value) => <ValueExpression>[]).toList();
     this._submissionBar = const SubmissionBar(
       type: null,
-      option: [],
+      option: null,
+      history: null,
       completer: null,
     );
     this._launcherBar = LauncherBar(
@@ -175,7 +214,6 @@ class _MainPageState extends State<MainPage> {
             ),
           ),
           LinearProgressIndicator(
-            borderRadius: const BorderRadius.all(Radius.circular(2)),
             value: !this._sessionClient._running ? 0 : this._submissionBar.type == null ? null : 1,
             color: !this._sessionClient._running ? null : this._submissionBar.type == null ? null : theme.colorScheme.tertiary,
           ),
@@ -189,7 +227,7 @@ class _MainPageState extends State<MainPage> {
 
 }
 
-class _MainPageBridgeClient implements Client {
+class _MainPageBridgeClient implements bridge.Client {
 
   // #region structor
 
@@ -214,7 +252,6 @@ class _MainPageBridgeClient implements Client {
   start() async {
     assertTest(!this._running);
     this._running = true;
-    this._controller.setState(() {});
     return;
   }
 
@@ -222,7 +259,6 @@ class _MainPageBridgeClient implements Client {
   finish() async {
     assertTest(this._running);
     this._running = false;
-    this._controller.setState(() {});
     return;
   }
 
@@ -313,24 +349,7 @@ class _MainPageBridgeClient implements Client {
       'input'       => MessageType.input,
       _             => throw Exception(),
     };
-    if (this._controller._messageList.isNotEmpty) {
-      this._controller._messageList.add(
-        const SizedBox(height: 8),
-      );
-    }
-    this._controller._messageList.add(
-      MessageCard(
-        type: typeValue,
-        title: title,
-        description: description,
-      ),
-    );
-    var shouldScrollToEnd = this._controller._messageListScrollController.position.pixels == this._controller._messageListScrollController.position.maxScrollExtent;
-    this._controller.setState(() {});
-    await WidgetsBinding.instance.endOfFrame;
-    if (shouldScrollToEnd) {
-      this._controller._messageListScrollController.jumpTo(this._controller._messageListScrollController.position.maxScrollExtent);
-    }
+    this._controller._sendMessage(typeValue, title, description);
     return ();
   }
 
@@ -350,63 +369,10 @@ class _MainPageBridgeClient implements Client {
       'enumeration' => SubmissionType.enumeration,
       _             => throw Exception(),
     };
-    var completer = Completer<Object?>();
-    this._controller._submissionBar = SubmissionBar(
-      type: typeValue,
-      option: option,
-      completer: completer,
-    );
-    this._controller.setState(() {});
-    var valueSource = await completer.future;
-    switch (typeValue) {
-      case SubmissionType.pause: {
-        valueSource as Null;
-        value = '';
-        break;
-      }
-      case SubmissionType.boolean: {
-        valueSource as Boolean?;
-        value = valueSource == null ? '' : (!valueSource ? 'n' : 'y');
-        break;
-      }
-      case SubmissionType.integer: {
-        valueSource as Integer?;
-        value = valueSource == null ? '' : (valueSource == 0 ? '0' : (valueSource < 0 ? '-${-valueSource}' : '+${valueSource}'));
-        break;
-      }
-      case SubmissionType.floater: {
-        valueSource as Floater?;
-        value = valueSource == null ? '' : (valueSource == 0.0 ? '0.0' : (valueSource < 0.0 ? '-${-valueSource}' : '+${valueSource}'));
-        break;
-      }
-      case SubmissionType.size: {
-        valueSource as String?;
-        value = valueSource == null ? '' : (valueSource);
-        break;
-      }
-      case SubmissionType.string: {
-        valueSource as String?;
-        value = valueSource == null ? '' : (valueSource);
-        break;
-      }
-      case SubmissionType.path: {
-        valueSource as String?;
-        value = valueSource == null ? '' : (valueSource);
-        break;
-      }
-      case SubmissionType.enumeration: {
-        valueSource as Integer?;
-        value = valueSource == null ? '' : ('${valueSource}');
-        break;
-      }
+    var valueData = await this._controller._receiveSubmission(typeValue, option);
+    if (valueData != null) {
+      value = ValueExpressionHelper.makeString(valueData);
     }
-    this._controller._submissionBar = const SubmissionBar(
-      type: null,
-      option: [],
-      completer: null,
-    );
-    this._controller.setState(() {});
-    await WidgetsBinding.instance.endOfFrame;
     return (value,);
   }
 
@@ -428,6 +394,7 @@ class _MainPageBridgeClient implements Client {
         target = await StorageHelper.pickSaveFile('ModdingWorker.Generic') ?? '';
         break;
       }
+      default: throw Exception();
     }
     return (target,);
   }

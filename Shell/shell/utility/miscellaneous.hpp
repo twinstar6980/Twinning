@@ -6,9 +6,9 @@
 
 namespace TwinStar::Shell {
 
-	#pragma region raw native string
+	#pragma region native main function
 
-	inline auto parse_raw_native_string (
+	inline auto parse_native_main_function_argument (
 		#if defined M_system_windows
 		int       argc,
 		wchar_t * argv[]

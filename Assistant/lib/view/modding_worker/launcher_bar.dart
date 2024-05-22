@@ -49,8 +49,13 @@ class _LauncherBarState extends State<LauncherBar> {
       children: [
         Badge.count(
           count: this.widget.additionalArgument.length,
+          textStyle: theme.textTheme.labelSmall?.copyWith(
+            fontFamily: '',
+            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+          ),
           child: SizedBox(
             width: 56,
+            height: 40,
             child: IconButton.filledTonal(
               icon: const Icon(IconSymbols.attachment),
               onPressed: () async {
@@ -59,17 +64,20 @@ class _LauncherBarState extends State<LauncherBar> {
                   title: 'Additional Argument',
                   contentBuilder: (context, setState) => [
                     TextFormField(
-                      style: theme.textTheme.bodyLarge?.copyWith(fontFamily: '', fontFamilyFallback: [...setting.state.mConsoleFontFamliy, ...setting.state.mThemeFontFamliy]),
-                      decoration: const InputDecoration(
-                        isDense: true,
-                      ),
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
                       inputFormatters: const [],
-                      initialValue: ConvertHelper.convertStringListToTextWithLine(this.widget.additionalArgument),
+                      decoration: const InputDecoration(
+                        isDense: true,
+                      ),
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontFamily: '',
+                        fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+                      ),
+                      initialValue: ConvertHelper.makeStringListToStringWithLine(this.widget.additionalArgument),
                       onChanged: (value) async {
                         this.widget.additionalArgument.clear();
-                        this.widget.additionalArgument.addAll(ConvertHelper.convertStringListFromTextWithLine(value));
+                        this.widget.additionalArgument.addAll(ConvertHelper.parseStringListFromStringWithLine(value));
                         this.setState(() {});
                         setState(() {});
                       },

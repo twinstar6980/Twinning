@@ -35,7 +35,12 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 
 		#endregion
 
-		#region tab item page
+		#region module page
+
+		public async Task<List<String>> ModulePageCollectOption (
+		) {
+			return await this.Controller.CollectOption();
+		}
 
 		public async Task<Boolean> ModulePageRequestClose (
 		) {
@@ -105,6 +110,15 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			return;
 		}
 
+		public async Task<List<String>> CollectOption (
+		) {
+			var option = new CommandLineWriter();
+			if (option.Check("-DescriptorFile", this.DescriptorFile is not null)) {
+				option.NextString(this.DescriptorFile.AsNotNull());
+			}
+			return option.Done();
+		}
+
 		public async Task<Boolean> RequestClose (
 		) {
 			return true;
@@ -135,10 +149,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 				await App.Instance.AppendRecentLauncherItem(new () {
 					Title = Regex.Replace(StorageHelper.Name(descriptorFile), @"(\.json)$", "", RegexOptions.IgnoreCase),
 					Type = ModuleType.ReflectionDescriptor,
-					Option = [
-						"-DescriptorFile",
-						descriptorFile,
-					],
+					Option = await this.CollectOption(),
 					Command = [],
 				});
 			}

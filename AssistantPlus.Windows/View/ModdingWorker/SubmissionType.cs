@@ -6,56 +6,6 @@ using AssistantPlus.Utility;
 
 namespace AssistantPlus.View.ModdingWorker {
 
-	public enum SizeUnit {
-		B,
-		K,
-		M,
-		G,
-	}
-
-	public class SizeExpression {
-
-		public Floater Value = 0.0;
-
-		public SizeUnit Unit = SizeUnit.M;
-
-		// ----------------
-
-		public override String ToString (
-		) {
-			return $"{this.Value}{(!Floater.IsInteger(this.Value) ? "" : ".0")}{this.Unit.ToString().ToLower()}";
-		}
-
-	}
-
-	public class PathExpression {
-
-		public String Value = "";
-
-		// ----------------
-
-		public override String ToString (
-		) {
-			return $"{this.Value}";
-		}
-
-	}
-
-	public class EnumerationExpression {
-
-		public Size Value = 0;
-
-		// ----------------
-
-		public override String ToString (
-		) {
-			return $"{this.Value}";
-		}
-
-	}
-
-	// ----------------
-
 	public enum SubmissionType {
 		Pause,
 		Boolean,
@@ -67,24 +17,26 @@ namespace AssistantPlus.View.ModdingWorker {
 		Enumeration,
 	}
 
+	// ----------------
+
 	public class SubmissionValue {
 
-		public Object? Data = null;
+		public ValueExpression? Data = null;
 
 		// ----------------
 
-		public Boolean? OfBoolean {
-			get => this.Data.AsStructOrNull<Boolean>();
+		public BooleanExpression? OfBoolean {
+			get => this.Data.AsClassOrNull<BooleanExpression>();
 			set => this.Data = value;
 		}
 
-		public Integer? OfInteger {
-			get => this.Data.AsStructOrNull<Integer>();
+		public IntegerExpression? OfInteger {
+			get => this.Data.AsClassOrNull<IntegerExpression>();
 			set => this.Data = value;
 		}
 
-		public Floater? OfFloater {
-			get => this.Data.AsStructOrNull<Floater>();
+		public FloaterExpression? OfFloater {
+			get => this.Data.AsClassOrNull<FloaterExpression>();
 			set => this.Data = value;
 		}
 
@@ -93,8 +45,8 @@ namespace AssistantPlus.View.ModdingWorker {
 			set => this.Data = value;
 		}
 
-		public String? OfString {
-			get => this.Data.AsClassOrNull<String>();
+		public StringExpression? OfString {
+			get => this.Data.AsClassOrNull<StringExpression>();
 			set => this.Data = value;
 		}
 

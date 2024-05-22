@@ -190,7 +190,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<TextBox>();
-			this.Value.Compression.Filter = ConvertHelper.StringListFromTextWithCr(senders.Text);
+			this.Value.Compression.Filter = ConvertHelper.ParseStringListFromStringWithLine(senders.Text);
 			this.NotifyPropertyChanged(
 				nameof(this.uCompressionFilter_Text)
 			);
@@ -199,7 +199,7 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		public String uCompressionFilter_Text {
 			get {
-				return ConvertHelper.StringListToTextWithCr(this.Value.Compression.Filter);
+				return ConvertHelper.MakeStringListToStringWithLine(this.Value.Compression.Filter);
 			}
 		}
 
@@ -264,7 +264,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<TextBox>();
-			this.Value.Category.Resolution = ConvertHelper.StringListFromTextWithCr(senders.Text).Select((value) => (ProjectSettingHelper.ParseResolutionString(value, null))).Where(GF.NotNull).Select(GF.AsNotNull).ToList();
+			this.Value.Category.Resolution = ConvertHelper.ParseStringListFromStringWithLine(senders.Text).Select((value) => (ProjectSettingHelper.ParseResolutionString(value, null))).Where(GF.NotNull).Select(GF.AsNotNull).ToList();
 			this.NotifyPropertyChanged(
 				nameof(this.uCategoryResolution_Text)
 			);
@@ -273,7 +273,7 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		public String uCategoryResolution_Text {
 			get {
-				return ConvertHelper.StringListToTextWithCr(this.Value.Category.Resolution.Select(GF.ToString).ToList());
+				return ConvertHelper.MakeStringListToStringWithLine(this.Value.Category.Resolution.Select(GF.ToString).ToList());
 			}
 		}
 
@@ -284,7 +284,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<TextBox>();
-			this.Value.Category.Locale = ConvertHelper.StringListFromTextWithCr(senders.Text).Select((value) => (ProjectSettingHelper.ParseLocaleString(value, null))).Where(GF.NotNull).Select(GF.AsNotNull).ToList();
+			this.Value.Category.Locale = ConvertHelper.ParseStringListFromStringWithLine(senders.Text).Select((value) => (ProjectSettingHelper.ParseLocaleString(value, null))).Where(GF.NotNull).Select(GF.AsNotNull).ToList();
 			this.NotifyPropertyChanged(
 				nameof(this.uCategoryLocale_Text)
 			);
@@ -293,7 +293,7 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		public String uCategoryLocale_Text {
 			get {
-				return ConvertHelper.StringListToTextWithCr(this.Value.Category.Locale);
+				return ConvertHelper.MakeStringListToStringWithLine(this.Value.Category.Locale);
 			}
 		}
 

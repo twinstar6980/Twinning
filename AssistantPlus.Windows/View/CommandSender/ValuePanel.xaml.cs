@@ -125,8 +125,8 @@ namespace AssistantPlus.View.CommandSender {
 						}
 						case ArgumentType.Size: {
 							this.NotifyPropertyChanged(
-								nameof(this.uSizeValue_Value),
-								nameof(this.uSizeUnit_SelectedItem)
+								nameof(this.uSizeCount_Value),
+								nameof(this.uSizeExponent_SelectedIndex)
 							);
 							break;
 						}
@@ -138,7 +138,7 @@ namespace AssistantPlus.View.CommandSender {
 						}
 						case ArgumentType.Path: {
 							this.NotifyPropertyChanged(
-								nameof(this.uPathValue_Text)
+								nameof(this.uPathContent_Text)
 							);
 							break;
 						}
@@ -147,8 +147,8 @@ namespace AssistantPlus.View.CommandSender {
 				}
 				else {
 					this.NotifyPropertyChanged(
-						nameof(this.uEnumerationValue_ItemsSource),
-						nameof(this.uEnumerationValue_SelectedValue)
+						nameof(this.uEnumerationItem_ItemsSource),
+						nameof(this.uEnumerationItem_SelectedValue)
 					);
 				}
 			}
@@ -192,7 +192,7 @@ namespace AssistantPlus.View.CommandSender {
 				if (this.Type is not ArgumentType.Boolean || this.Option is not null || this.Value.Data is null) {
 					return " ";
 				}
-				return ConvertHelper.BooleanToConfirmationStringLower(this.Value.OfBoolean);
+				return ConvertHelper.MakeBooleanToStringOfConfirmationCharacter(this.Value.OfBoolean);
 			}
 		}
 
@@ -272,22 +272,22 @@ namespace AssistantPlus.View.CommandSender {
 
 		#region size
 
-		public DecimalFormatter uSizeValue_NumberFormatter {
+		public DecimalFormatter uSizeCount_NumberFormatter {
 			get {
 				return new () { IntegerDigits = 1, FractionDigits = 1 };
 			}
 		}
 
-		public Floater uSizeValue_Value {
+		public Floater uSizeCount_Value {
 			get {
 				if (this.Type is not ArgumentType.Size || this.Option is not null || this.Value.Data is null) {
 					return Floater.NaN;
 				}
-				return this.Value.OfSize.Value;
+				return this.Value.OfSize.Count;
 			}
 		}
 
-		public async void uSizeValue_ValueChanged (
+		public async void uSizeCount_ValueChanged (
 			NumberBox                      sender,
 			NumberBoxValueChangedEventArgs args
 		) {
@@ -296,26 +296,28 @@ namespace AssistantPlus.View.CommandSender {
 				return;
 			}
 			if (!Floater.IsNaN(args.NewValue)) {
-				this.Value.OfSize.Value = args.NewValue;
+				this.Value.OfSize.Count = args.NewValue;
 			}
 			this.NotifyPropertyChanged(
-				nameof(this.uSizeValue_Value)
+				nameof(this.uSizeCount_Value)
 			);
 			return;
 		}
 
 		// ----------------
 
-		public SizeUnit uSizeUnit_SelectedItem {
+		public List<String> uSizeExponent_ItemsSource { get; } = ["B", "K", "M", "G"];
+
+		public Size uSizeExponent_SelectedIndex {
 			get {
 				if (this.Type is not ArgumentType.Size || this.Option is not null || this.Value.Data is null) {
-					return SizeUnit.M;
+					return 2;
 				}
-				return this.Value.OfSize.Unit;
+				return (Size)this.Value.OfSize.Exponent;
 			}
 		}
 
-		public async void uSizeUnit_SelectionChanged (
+		public async void uSizeExponent_SelectionChanged (
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
@@ -323,7 +325,7 @@ namespace AssistantPlus.View.CommandSender {
 			if (this.Type is not ArgumentType.Size || this.Option is not null || this.Value.Data is null) {
 				return;
 			}
-			this.Value.OfSize.Unit = senders.SelectedItem.AsStruct<SizeUnit>();
+			this.Value.OfSize.Exponent = senders.SelectedIndex;
 			return;
 		}
 
@@ -359,7 +361,7 @@ namespace AssistantPlus.View.CommandSender {
 
 		#region path
 
-		public async void uPathValue_DragOver (
+		public async void uPathContent_DragOver (
 			Object        sender,
 			DragEventArgs args
 		) {
@@ -373,7 +375,7 @@ namespace AssistantPlus.View.CommandSender {
 			return;
 		}
 
-		public async void uPathValue_Drop (
+		public async void uPathContent_Drop (
 			Object        sender,
 			DragEventArgs args
 		) {
@@ -384,15 +386,15 @@ namespace AssistantPlus.View.CommandSender {
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.Handled = true;
 				var data = await args.DataView.GetStorageItemsAsync();
-				this.Value.OfPath.Value = StorageHelper.Regularize(data[0].Path);
+				this.Value.OfPath.Content = StorageHelper.Regularize(data[0].Path);
 				this.NotifyPropertyChanged(
-					nameof(this.uPathValue_Text)
+					nameof(this.uPathContent_Text)
 				);
 			}
 			return;
 		}
 
-		public async void uPathValue_LostFocus (
+		public async void uPathContent_LostFocus (
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -400,25 +402,25 @@ namespace AssistantPlus.View.CommandSender {
 			if (this.Type is not ArgumentType.Path || this.Option is not null || this.Value.Data is null) {
 				return;
 			}
-			this.Value.OfPath.Value = StorageHelper.Regularize(senders.Text);
+			this.Value.OfPath.Content = StorageHelper.Regularize(senders.Text);
 			this.NotifyPropertyChanged(
-				nameof(this.uPathValue_Text)
+				nameof(this.uPathContent_Text)
 			);
 			return;
 		}
 
-		public String uPathValue_Text {
+		public String uPathContent_Text {
 			get {
 				if (this.Type is not ArgumentType.Path || this.Option is not null || this.Value.Data is null) {
 					return "";
 				}
-				return this.Value.OfPath.Value;
+				return this.Value.OfPath.Content;
 			}
 		}
 
 		// ----------------
 
-		public async void uPathPick_Click (
+		public async void uPathPickMenu_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -433,9 +435,9 @@ namespace AssistantPlus.View.CommandSender {
 				_               => throw new (),
 			};
 			if (value is not null) {
-				this.Value.OfPath.Value = value;
+				this.Value.OfPath.Content = value;
 				this.NotifyPropertyChanged(
-					nameof(this.uPathValue_Text)
+					nameof(this.uPathContent_Text)
 				);
 			}
 			return;
@@ -445,7 +447,7 @@ namespace AssistantPlus.View.CommandSender {
 
 		#region enumeration
 
-		public List<Tuple<Object, String>> uEnumerationValue_ItemsSource {
+		public List<Tuple<Object, String>> uEnumerationItem_ItemsSource {
 			get {
 				if (this.Type is null || this.Option is null || this.Value.Data is null) {
 					return [];
@@ -454,7 +456,7 @@ namespace AssistantPlus.View.CommandSender {
 			}
 		}
 
-		public Object? uEnumerationValue_SelectedValue {
+		public Object? uEnumerationItem_SelectedValue {
 			get {
 				if (this.Type is null || this.Option is null || this.Value.Data is null) {
 					return null;
@@ -463,7 +465,7 @@ namespace AssistantPlus.View.CommandSender {
 			}
 		}
 
-		public async void uEnumerationValue_SelectionChanged (
+		public async void uEnumerationItem_SelectionChanged (
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {

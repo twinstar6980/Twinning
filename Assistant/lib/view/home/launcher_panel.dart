@@ -34,10 +34,10 @@ class LauncherPanel extends StatelessWidget {
           label: 'Module',
           action: null,
         ),
-        ...setting.data.mModuleLauncher.mModule.map((e) => CustomSettingItem(
+        ...setting.data.mModuleLauncher.mModule.map((item) => CustomSettingItem(
           enabled: true,
-          icon: ModuleHelper.query(e.type).icon,
-          label: e.title,
+          icon: ModuleHelper.query(item.type).icon,
+          label: item.title,
           content: [
             IconButton(
               icon: const Icon(IconSymbols.settings),
@@ -45,9 +45,11 @@ class LauncherPanel extends StatelessWidget {
                 await ControlHelper.showCustomModalBottomSheet(
                   context: context,
                   title: 'Module Setting',
-                  contentBuilder: (context, setState) => ModuleHelper.query(e.type).settingPanel(),
+                  contentBuilder: (context, setState) => [
+                    ModuleHelper.query(item.type).settingPanel(),
+                  ],
                 );
-                await setting.update();
+                await setting.save();
               },
             ),
             IconButton(
@@ -56,19 +58,21 @@ class LauncherPanel extends StatelessWidget {
                 await ControlHelper.showCustomModalBottomSheet(
                   context: context,
                   title: 'Launcher Configuration',
-                  contentBuilder: (context, setState) => LauncherConfigurationPanel(
-                    data: e,
-                    onUpdate: () async {
-                      await setting.update();
-                    },
-                  ),
+                  contentBuilder: (context, setState) => [
+                    LauncherConfigurationPanel(
+                      data: item,
+                      onUpdate: () async {
+                        await setting.save();
+                      },
+                    ),
+                  ],
                 );
-                await setting.update();
+                await setting.save();
               },
             ),
           ],
           onTap: () async {
-            this.onLaunch(e);
+            this.onLaunch(item);
           },
           panelBuilder: null,
         )),
@@ -82,20 +86,20 @@ class LauncherPanel extends StatelessWidget {
                 type: ModuleType.modding_worker,
                 option: [],
               ));
-              setting.update();
+              setting.save();
             },
           ),
         ),
-        ...setting.data.mModuleLauncher.mPinned.map((e) => CustomSettingItem(
+        ...setting.data.mModuleLauncher.mPinned.map((item) => CustomSettingItem(
           enabled: true,
-          icon: ModuleHelper.query(e.type).icon,
-          label: e.title,
+          icon: ModuleHelper.query(item.type).icon,
+          label: item.title,
           content: [
             IconButton(
               icon: const Icon(IconSymbols.remove),
               onPressed: () async {
-                setting.data.mModuleLauncher.mPinned.remove(e);
-                setting.update();
+                setting.data.mModuleLauncher.mPinned.remove(item);
+                setting.save();
               },
             ),
             IconButton(
@@ -104,19 +108,21 @@ class LauncherPanel extends StatelessWidget {
                 await ControlHelper.showCustomModalBottomSheet(
                   context: context,
                   title: 'Launcher Configuration',
-                  contentBuilder: (context, setState) => LauncherConfigurationPanel(
-                    data: e,
-                    onUpdate: () async {
-                      await setting.update();
-                    },
-                  ),
+                  contentBuilder: (context, setState) => [
+                    LauncherConfigurationPanel(
+                      data: item,
+                      onUpdate: () async {
+                        await setting.save();
+                      },
+                    ),
+                  ],
                 );
-                await setting.update();
+                await setting.save();
               },
             ),
           ],
           onTap: () async {
-            this.onLaunch(e);
+            this.onLaunch(item);
           },
           panelBuilder: null,
         )),
@@ -125,29 +131,31 @@ class LauncherPanel extends StatelessWidget {
           action: IconButton(
             icon: const Icon(IconSymbols.clear),
             onPressed: () async {
-              setting.data.mModuleLauncher.mRecent.clear();
-              setting.update();
+              if (await ControlHelper.showCustomConfirmDialog(context: context)) {
+                setting.data.mModuleLauncher.mRecent.clear();
+                setting.save();
+              }
             },
           ),
         ),
-        ...setting.data.mModuleLauncher.mRecent.map((e) => CustomSettingItem(
+        ...setting.data.mModuleLauncher.mRecent.map((item) => CustomSettingItem(
           enabled: true,
-          icon: ModuleHelper.query(e.type).icon,
-          label: e.title,
+          icon: ModuleHelper.query(item.type).icon,
+          label: item.title,
           content: [
             IconButton(
               icon: const Icon(IconSymbols.push_pin),
               onPressed: () async {
-                setting.data.mModuleLauncher.mRecent.remove(e);
-                setting.data.mModuleLauncher.mPinned.add(e);
-                setting.update();
+                setting.data.mModuleLauncher.mRecent.remove(item);
+                setting.data.mModuleLauncher.mPinned.add(item);
+                setting.save();
               },
             ),
             IconButton(
               icon: const Icon(IconSymbols.remove),
               onPressed: () async {
-                setting.data.mModuleLauncher.mRecent.remove(e);
-                setting.update();
+                setting.data.mModuleLauncher.mRecent.remove(item);
+                setting.save();
               },
             ),
             IconButton(
@@ -156,19 +164,21 @@ class LauncherPanel extends StatelessWidget {
                 await ControlHelper.showCustomModalBottomSheet(
                   context: context,
                   title: 'Launcher Configuration',
-                  contentBuilder: (context, setState) => LauncherConfigurationPanel(
-                    data: e,
-                    onUpdate: () async {
-                      await setting.update();
-                    },
-                  ),
+                  contentBuilder: (context, setState) => [
+                    LauncherConfigurationPanel(
+                      data: item,
+                      onUpdate: () async {
+                        await setting.save();
+                      },
+                    ),
+                  ],
                 );
-                await setting.update();
+                await setting.save();
               },
             ),
           ],
           onTap: () async {
-            this.onLaunch(e);
+            this.onLaunch(item);
           },
           panelBuilder: null,
         )),

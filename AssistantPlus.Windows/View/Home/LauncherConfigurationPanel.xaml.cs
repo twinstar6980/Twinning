@@ -134,7 +134,7 @@ namespace AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<TextBox>();
-			this.Data.Option = ConvertHelper.StringListFromTextWithCr(senders.Text);
+			this.Data.Option = ConvertHelper.ParseStringListFromStringWithLine(senders.Text);
 			this.NotifyPropertyChanged(
 				nameof(this.uOptionText_Text)
 			);
@@ -143,7 +143,7 @@ namespace AssistantPlus.View.Home {
 
 		public String uOptionText_Text {
 			get {
-				return ConvertHelper.StringListToTextWithCr(this.Data.Option);
+				return ConvertHelper.MakeStringListToStringWithLine(this.Data.Option);
 			}
 		}
 
@@ -156,7 +156,7 @@ namespace AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<TextBox>();
-			this.Data.Command = ConvertHelper.StringListFromTextWithCr(senders.Text);
+			this.Data.Command = ConvertHelper.ParseStringListFromStringWithLine(senders.Text);
 			this.NotifyPropertyChanged(
 				nameof(this.uCommandText_Text)
 			);
@@ -165,7 +165,7 @@ namespace AssistantPlus.View.Home {
 
 		public String uCommandText_Text {
 			get {
-				return ConvertHelper.StringListToTextWithCr(this.Data.Command);
+				return ConvertHelper.MakeStringListToStringWithLine(this.Data.Command);
 			}
 		}
 

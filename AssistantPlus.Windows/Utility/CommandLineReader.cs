@@ -34,12 +34,11 @@ namespace AssistantPlus.Utility {
 		public Boolean Check (
 			String name
 		) {
-			var result = false;
-			if (!this.Done() && this.mView[this.mPosition] == name) {
-				result = true;
+			var state = !this.Done() && this.mView[this.mPosition] == name;
+			if (state) {
 				this.mPosition++;
 			}
-			return result;
+			return state;
 		}
 
 		// ----------------
@@ -62,16 +61,16 @@ namespace AssistantPlus.Utility {
 		public String NextString (
 		) {
 			GF.AssertTest(!this.Done());
-			var result = this.mView[this.mPosition];
+			var value = this.mView[this.mPosition];
 			this.mPosition++;
-			return result;
+			return value;
 		}
 
 		public List<String> NextStringList (
 		) {
-			var result = this.mView[this.mPosition..];
+			var value = this.mView[this.mPosition..];
 			this.mPosition = this.mView.Count;
-			return result;
+			return value;
 		}
 
 		#endregion

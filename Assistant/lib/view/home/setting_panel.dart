@@ -26,7 +26,6 @@ class SettingPanel extends StatefulWidget {
 
 class _SettingPanelState extends State<SettingPanel> {
 
-  late String? _applicationSharedDirectory;
   late Boolean _hasStoragePermission;
 
   // ----------------
@@ -34,10 +33,8 @@ class _SettingPanelState extends State<SettingPanel> {
   @override
   initState() {
     super.initState();
-    this._applicationSharedDirectory = null;
     this._hasStoragePermission = false;
     (() async {
-      this._applicationSharedDirectory = await StorageHelper.queryApplicationSharedDirectory();
       this._hasStoragePermission = await PermissionHelper.checkStorage();
       this.setState(() {});
     })();
@@ -84,7 +81,7 @@ class _SettingPanelState extends State<SettingPanel> {
                   onChanged: (value) async {
                     value!;
                     setting.data.mThemeMode = value;
-                    await setting.update();
+                    await setting.save();
                   },
                 ),
                 title: Text(
@@ -114,7 +111,7 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mThemeColorState,
                 onChanged: (value) async {
                   setting.data.mThemeColorState = value;
-                  await setting.update();
+                  await setting.save();
                 },
               ),
               title: Text(
@@ -128,15 +125,15 @@ class _SettingPanelState extends State<SettingPanel> {
               title: Focus(
                 onFocusChange: (value) async {
                   if (!value) {
-                    await setting.update();
+                    await setting.save();
                   }
                 },
                 child: TextFormField(
+                  keyboardType: TextInputType.text,
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
                   decoration: const InputDecoration(
                     isDense: true,
                   ),
-                  keyboardType: TextInputType.text,
-                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
                   initialValue: setting.data.mThemeColorLight.withOpacity(0.0).value.toRadixString(16).padRight(6, '0'),
                   onChanged: (value) async {
                     setting.data.mThemeColorLight = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withOpacity(1.0);
@@ -154,15 +151,15 @@ class _SettingPanelState extends State<SettingPanel> {
               title: Focus(
                 onFocusChange: (value) async {
                   if (!value) {
-                    await setting.update();
+                    await setting.save();
                   }
                 },
                 child: TextFormField(
+                  keyboardType: TextInputType.text,
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
                   decoration: const InputDecoration(
                     isDense: true,
                   ),
-                  keyboardType: TextInputType.text,
-                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
                   initialValue: setting.data.mThemeColorDark.withOpacity(0.0).value.toRadixString(16).padRight(6, '0'),
                   onChanged: (value) async {
                     setting.data.mThemeColorDark = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withOpacity(1.0);
@@ -196,7 +193,7 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mThemeFontState,
                 onChanged: (value) async {
                   setting.data.mThemeFontState = value;
-                  await setting.update();
+                  await setting.save();
                 },
               ),
               title: Text(
@@ -210,19 +207,19 @@ class _SettingPanelState extends State<SettingPanel> {
               title: Focus(
                 onFocusChange: (value) async {
                   if (!value) {
-                    await setting.update();
+                    await setting.save();
                   }
                 },
                 child: TextFormField(
-                  decoration: const InputDecoration(
-                    isDense: true,
-                  ),
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                   inputFormatters: const [],
-                  initialValue: ConvertHelper.convertStringListToTextWithLine(setting.data.mThemeFontPath),
+                  decoration: const InputDecoration(
+                    isDense: true,
+                  ),
+                  initialValue: ConvertHelper.makeStringListToStringWithLine(setting.data.mThemeFontPath),
                   onChanged: (value) async {
-                    setting.data.mThemeFontPath = ConvertHelper.convertStringListFromTextWithLine(value);
+                    setting.data.mThemeFontPath = ConvertHelper.parseStringListFromStringWithLine(value);
                   },
                 ),
               ),
@@ -252,7 +249,7 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mWindowPositionState,
                 onChanged: (value) async {
                   setting.data.mWindowPositionState = value;
-                  await setting.update();
+                  await setting.save();
                 },
               ),
               title: Text(
@@ -276,15 +273,15 @@ class _SettingPanelState extends State<SettingPanel> {
               title: Focus(
                 onFocusChange: (value) async {
                   if (!value) {
-                    await setting.update();
+                    await setting.save();
                   }
                 },
                 child: TextFormField(
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
                   decoration: const InputDecoration(
                     isDense: true,
                   ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
                   initialValue: setting.data.mWindowPositionX.toString(),
                   onChanged: (value) async {
                     setting.data.mWindowPositionX = Integer.tryParse(value) ?? 0;
@@ -307,15 +304,15 @@ class _SettingPanelState extends State<SettingPanel> {
               title: Focus(
                 onFocusChange: (value) async {
                   if (!value) {
-                    await setting.update();
+                    await setting.save();
                   }
                 },
                 child: TextFormField(
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
                   decoration: const InputDecoration(
                     isDense: true,
                   ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
                   initialValue: setting.data.mWindowPositionY.toString(),
                   onChanged: (value) async {
                     setting.data.mWindowPositionY = Integer.tryParse(value) ?? 0;
@@ -344,7 +341,7 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mWindowSizeState,
                 onChanged: (value) async {
                   setting.data.mWindowSizeState = value;
-                  await setting.update();
+                  await setting.save();
                 },
               ),
               title: Text(
@@ -368,15 +365,15 @@ class _SettingPanelState extends State<SettingPanel> {
               title: Focus(
                 onFocusChange: (value) async {
                   if (!value) {
-                    await setting.update();
+                    await setting.save();
                   }
                 },
                 child: TextFormField(
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
                   decoration: const InputDecoration(
                     isDense: true,
                   ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
                   initialValue: setting.data.mWindowSizeWidth.toString(),
                   onChanged: (value) async {
                     setting.data.mWindowSizeWidth = Integer.tryParse(value) ?? 0;
@@ -399,15 +396,15 @@ class _SettingPanelState extends State<SettingPanel> {
               title: Focus(
                 onFocusChange: (value) async {
                   if (!value) {
-                    await setting.update();
+                    await setting.save();
                   }
                 },
                 child: TextFormField(
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
                   decoration: const InputDecoration(
                     isDense: true,
                   ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
                   initialValue: setting.data.mWindowSizeHeight.toString(),
                   onChanged: (value) async {
                     setting.data.mWindowSizeHeight = Integer.tryParse(value) ?? 0;
@@ -420,31 +417,6 @@ class _SettingPanelState extends State<SettingPanel> {
         const CustomSettingLabel(
           label: 'Storage',
           action: null,
-        ),
-        CustomSettingItem(
-          enabled: true,
-          icon: IconSymbols.folder_special,
-          label: 'Shared Directory',
-          content: [
-            Text(
-              this._applicationSharedDirectory == null ? 'Invalid' : 'Available',
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
-            ),
-          ],
-          onTap: null,
-          panelBuilder: (context, setState) => [
-            TextFormField(
-              decoration: const InputDecoration(
-                isDense: true,
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.text,
-              inputFormatters: const [],
-              initialValue: this._applicationSharedDirectory,
-              readOnly: true,
-            ),
-          ],
         ),
         CustomSettingItem(
           enabled: Platform.isAndroid,
@@ -481,15 +453,15 @@ class _SettingPanelState extends State<SettingPanel> {
               title: Focus(
                 onFocusChange: (value) async {
                   if (!value) {
-                    await setting.update();
+                    await setting.save();
                   }
                 },
                 child: TextFormField(
+                  keyboardType: TextInputType.text,
+                  inputFormatters: const [],
                   decoration: const InputDecoration(
                     isDense: true,
                   ),
-                  keyboardType: TextInputType.text,
-                  inputFormatters: const [],
                   initialValue: setting.data.mFallbackDirectory,
                   onChanged: (value) async {
                     setting.data.mFallbackDirectory = value;

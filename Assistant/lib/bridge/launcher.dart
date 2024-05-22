@@ -1,6 +1,7 @@
 import '/common.dart';
 import '/bridge/data.dart';
 import '/bridge/proxy.dart';
+import '/bridge/service.dart';
 import '/bridge/library.dart';
 import '/bridge/client.dart';
 import 'dart:io';
@@ -17,16 +18,18 @@ class Launcher {
 
   static Future<List<String>> launch(
     Client       client,
-    String       library,
+    Library      library,
     String       script,
     List<String> argument,
   ) async {
     var subWorker = (
       SendPort sendPort,
     ) async {
+      var portMessage = null as List<dynamic>?;
       var receivePort = ReceivePort();
       var streamQueue = StreamQueue<dynamic>(receivePort);
       sendPort.send(receivePort.sendPort);
+      portMessage = await streamQueue.next as List<dynamic>;
       var callbackProxy = (
         ExecutorProxy callbackProxy,
         MessageProxy  argumentProxy,
@@ -39,7 +42,7 @@ class Launcher {
         var result = ffi.calloc<Message>();
         var exception = ffi.calloc<Message>();
         MessageProxy.construct(argument, argumentProxy);
-        sendPort.send([state.address, argument.address, result.address, exception.address]);
+        sendPort.send([state, argument, result, exception]);
         while (!state.value) {
           sleep(const Duration(milliseconds: 10));
         }
@@ -59,24 +62,18 @@ class Launcher {
       };
       var result = null as List<String>?;
       var exception = null as String?;
-      var currentMessage = await streamQueue.next as List<dynamic>;
-      var kernel = currentMessage[0] as String;
-      var script = currentMessage[1] as String;
-      var argument = currentMessage[2] as List<String>;
-      var library = Library();
+      var service = portMessage[0] as Service;
+      var script = portMessage[1] as String;
+      var argument = portMessage[2] as List<String>;
       try {
-        library.open(kernel);
         var executorCallback = ExecutorProxy(callbackProxy);
         var executorArgument = MessageProxy(['execute', script, ...argument]);
         var executorResult = MessageProxy(null);
-        ExecutorProxy.parse(library.symbol().executor).value(executorCallback, executorArgument, executorResult);
+        ExecutorProxy.parse(service.executor).value(executorCallback, executorArgument, executorResult);
         result = executorResult.value;
       }
       catch (e) {
         exception = e.toString();
-      }
-      if (library.state()) {
-        library.close();
       }
       await streamQueue.cancel();
       sendPort.send(null);
@@ -85,6 +82,7 @@ class Launcher {
     };
     var mainWorker = (
     ) async {
+      var portMessage = null as List<dynamic>?;
       var receivePort = ReceivePort();
       var streamQueue = StreamQueue<dynamic>(receivePort);
       await Isolate.spawn(subWorker, receivePort.sendPort);
@@ -92,20 +90,20 @@ class Launcher {
       var result = null as List<String>?;
       var exception = null as String?;
       await client.start();
-      sendPort.send([library, script, argument]);
+      sendPort.send([library.symbol(), script, argument]);
       while (await streamQueue.hasNext) {
-        var currentMessage = await streamQueue.next as List<dynamic>?;
-        if (currentMessage == null) {
-          currentMessage = await streamQueue.next as List<dynamic>;
-          result = currentMessage[0];
-          exception = currentMessage[1];
+        portMessage = await streamQueue.next as List<dynamic>?;
+        if (portMessage == null) {
+          portMessage = await streamQueue.next as List<dynamic>;
+          result = portMessage[0];
+          exception = portMessage[1];
           break;
         }
         else {
-          var callbackState = ffi.Pointer<ffi.Bool>.fromAddress(currentMessage[0]);
-          var callbackArgument = ffi.Pointer<Message>.fromAddress(currentMessage[1]);
-          var callbackResult = ffi.Pointer<Message>.fromAddress(currentMessage[2]);
-          var callbackException = ffi.Pointer<Message>.fromAddress(currentMessage[3]);
+          var callbackState = portMessage[0] as ffi.Pointer<ffi.Bool>;
+          var callbackArgument = portMessage[1] as ffi.Pointer<Message>;
+          var callbackResult = portMessage[2] as ffi.Pointer<Message>;
+          var callbackException = portMessage[3] as ffi.Pointer<Message>;
           try {
             var callbackResultProxy = await client.callback(MessageProxy.parse(callbackArgument).value);
             MessageProxy.construct(callbackResult, MessageProxy(callbackResultProxy));

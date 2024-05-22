@@ -74,7 +74,7 @@ namespace AssistantPlus.View.Home {
 
 		public List<String> uSettingThemeMode_ItemsSource {
 			get {
-				return Enum.GetNames<CustomThemeMode>().Select(ConvertHelper.StringInsertSpaceInWord).ToList();
+				return Enum.GetNames<CustomThemeMode>().Select(ConvertHelper.InsertSpaceBetweenStringWord).ToList();
 			}
 		}
 
@@ -180,7 +180,7 @@ namespace AssistantPlus.View.Home {
 
 		public List<String> uSettingThemeBackdrop_ItemsSource {
 			get {
-				return Enum.GetNames<CustomThemeBackdrop>().Select(ConvertHelper.StringInsertSpaceInWord).ToList();
+				return Enum.GetNames<CustomThemeBackdrop>().Select(ConvertHelper.InsertSpaceBetweenStringWord).ToList();
 			}
 		}
 
@@ -395,7 +395,7 @@ namespace AssistantPlus.View.Home {
 				}
 				case "Reset": {
 					if (await ControlHelper.ShowDialogForPausing(this.View, "Confirm ?", null)) {
-						App.Setting.Data = Setting.CreateDefaultData();
+						await App.Setting.Reset();
 						await App.Setting.Save();
 					}
 					break;
@@ -433,6 +433,28 @@ namespace AssistantPlus.View.Home {
 				nameof(this.uSettingWindowSizeWidth_Value),
 				nameof(this.uSettingWindowSizeHeight_Value)
 			);
+			return;
+		}
+
+		// ----------------
+
+		public async void uStorageSharedDirectory_Click (
+			SplitButton               sender,
+			SplitButtonClickEventArgs args
+		) {
+			var senders = sender.AsClass<SplitButton>();
+			await StorageHelper.RevealDirectory(App.SharedDirectory);
+			return;
+		}
+
+		// ----------------
+
+		public async void uStorageCacheDirectory_Click (
+			SplitButton               sender,
+			SplitButtonClickEventArgs args
+		) {
+			var senders = sender.AsClass<SplitButton>();
+			StorageHelper.RemoveDirectory(App.CacheDirectory);
 			return;
 		}
 
