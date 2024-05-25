@@ -196,7 +196,7 @@
 										Text="{x:Bind Controller.uPathContent_Text}"
 										/>
 									<DropDownButton
-										ToolTipService.ToolTip="Pick In Window"
+										ToolTipService.ToolTip="Pick"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
 										HorizontalContentAlignment="Center"

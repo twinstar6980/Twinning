@@ -139,7 +139,6 @@ class ControlHelper {
                     child: Text(
                       title,
                       overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.left,
                       style: theme.textTheme.titleMedium?.copyWith(
                         color: theme.colorScheme.primary,
                       ),

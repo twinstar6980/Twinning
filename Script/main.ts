@@ -2,7 +2,7 @@ namespace TwinStar.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = '106';
+	export const k_version = '107';
 
 	// ------------------------------------------------
 

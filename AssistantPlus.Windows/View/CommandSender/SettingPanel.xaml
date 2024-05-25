@@ -39,7 +39,7 @@
 						Text="{x:Bind Controller.uMethodConfigurationText_Text}"
 						/>
 					<Button
-						ToolTipService.ToolTip="Pick In Window"
+						ToolTipService.ToolTip="Pick"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
 						Click="{x:Bind Controller.uMethodConfigurationPick_Click}"

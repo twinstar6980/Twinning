@@ -1,31 +1,32 @@
 import '/common.dart';
 import '/module.dart';
 import '/utility/storage_helper.dart';
+import '/utility/json_helper.dart';
 import '/utility/font_helper.dart';
 import '/view/modding_worker/setting.dart' as modding_worker;
-import 'dart:io';
-import 'dart:convert';
+import '/view/resource_forwarder/setting.dart' as resource_forwarder;
 import 'package:flutter/material.dart';
 
 // ----------------
 
 class SettingData {
-  String                 mVersion;
-  ThemeMode              mThemeMode;
-  Boolean                mThemeColorState;
-  Color                  mThemeColorLight;
-  Color                  mThemeColorDark;
-  Boolean                mThemeFontState;
-  List<String>           mThemeFontPath;
-  Boolean                mWindowPositionState;
-  Integer                mWindowPositionX;
-  Integer                mWindowPositionY;
-  Boolean                mWindowSizeState;
-  Integer                mWindowSizeWidth;
-  Integer                mWindowSizeHeight;
-  String                 mFallbackDirectory;
-  ModuleLauncherSetting  mModuleLauncher;
-  modding_worker.Setting mModdingWorker;
+  String                     mVersion;
+  ThemeMode                  mThemeMode;
+  Boolean                    mThemeColorState;
+  Color                      mThemeColorLight;
+  Color                      mThemeColorDark;
+  Boolean                    mThemeFontState;
+  List<String>               mThemeFontPath;
+  Boolean                    mWindowPositionState;
+  Integer                    mWindowPositionX;
+  Integer                    mWindowPositionY;
+  Boolean                    mWindowSizeState;
+  Integer                    mWindowSizeWidth;
+  Integer                    mWindowSizeHeight;
+  String                     mFallbackDirectory;
+  ModuleLauncherSetting      mModuleLauncher;
+  modding_worker.Setting     mModdingWorker;
+  resource_forwarder.Setting mResourceForwarder;
   SettingData({
     required this.mVersion,
     required this.mThemeMode,
@@ -43,16 +44,21 @@ class SettingData {
     required this.mFallbackDirectory,
     required this.mModuleLauncher,
     required this.mModdingWorker,
+    required this.mResourceForwarder,
   });
 }
 
 class SettingState {
-  ModuleLauncherConfiguration? mInitialTab;
-  List<String>                 mThemeFontFamliy;
-  List<String>                 mModdingWorkerMessageFontFamily;
+  GlobalKey<NavigatorState>                   mApplicationNavigatorKey;
+  List<String>                                mThemeFontFamliy;
+  ModuleLauncherConfiguration?                mInitialTab;
+  Void Function(ModuleLauncherConfiguration)? mInsertTabItem;
+  List<String>                                mModdingWorkerMessageFontFamily;
   SettingState({
-    required this.mInitialTab,
+    required this.mApplicationNavigatorKey,
     required this.mThemeFontFamliy,
+    required this.mInitialTab,
+    required this.mInsertTabItem,
     required this.mModdingWorkerMessageFontFamily,
   });
 }
@@ -117,7 +123,7 @@ class SettingProvider with ChangeNotifier {
     String? file = null,
   }) async {
     file ??= await this.file;
-    var json = jsonDecode(await File(file).readAsString());
+    var json = await JsonHelper.deserializeFile(file) as Map<String, dynamic>;
     _convertDataFromJson(this.data, json);
     return;
   }
@@ -132,7 +138,7 @@ class SettingProvider with ChangeNotifier {
     }
     var json = <String, dynamic>{};
     _convertDataToJson(this.data, json);
-    await File(file).writeAsString(jsonEncode(json));
+    await JsonHelper.serializeFile(file, json);
     return;
   }
 
@@ -168,12 +174,21 @@ class SettingProvider with ChangeNotifier {
       mImmediateLaunch: true,
       mMessageFont: [],
     ),
+    mResourceForwarder: resource_forwarder.Setting(
+      mOptionConfiguration: '',
+      mParallelExecute: false,
+      mEnableFilter: true,
+      mEnableBatch: false,
+      mRemainInput: false,
+    ),
   );
 
   static SettingState _createDefaultState(
   ) => SettingState(
-    mInitialTab: null,
+    mApplicationNavigatorKey: GlobalKey<NavigatorState>(),
     mThemeFontFamliy: [],
+    mInitialTab: null,
+    mInsertTabItem: null,
     mModdingWorkerMessageFontFamily: [],
   );
 
@@ -230,6 +245,13 @@ class SettingProvider with ChangeNotifier {
       json['modding_worker.immediate_launch'] = data.mModdingWorker.mImmediateLaunch;
       json['modding_worker.message_font'] = data.mModdingWorker.mMessageFont;
     }
+    {
+      json['resource_forwarder.option_configuration'] = data.mResourceForwarder.mOptionConfiguration;
+      json['resource_forwarder.parallel_execute'] = data.mResourceForwarder.mParallelExecute;
+      json['resource_forwarder.enable_filter'] = data.mResourceForwarder.mEnableFilter;
+      json['resource_forwarder.enable_batch'] = data.mResourceForwarder.mEnableBatch;
+      json['resource_forwarder.remain_input'] = data.mResourceForwarder.mRemainInput;
+    }
     return;
   }
 
@@ -283,6 +305,13 @@ class SettingProvider with ChangeNotifier {
       data.mModdingWorker.mArgument = (json['modding_worker.argument'] as List<dynamic>).cast<String>();
       data.mModdingWorker.mImmediateLaunch = (json['modding_worker.immediate_launch'] as Boolean);
       data.mModdingWorker.mMessageFont = (json['modding_worker.message_font'] as List<dynamic>).cast<String>();
+    }
+    {
+      data.mResourceForwarder.mOptionConfiguration = (json['resource_forwarder.option_configuration'] as String);
+      data.mResourceForwarder.mParallelExecute = (json['resource_forwarder.parallel_execute'] as Boolean);
+      data.mResourceForwarder.mEnableFilter = (json['resource_forwarder.enable_filter'] as Boolean);
+      data.mResourceForwarder.mEnableBatch = (json['resource_forwarder.enable_batch'] as Boolean);
+      data.mResourceForwarder.mRemainInput = (json['resource_forwarder.remain_input'] as Boolean);
     }
     return;
   }

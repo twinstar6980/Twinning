@@ -39,7 +39,7 @@
 						Text="{x:Bind Controller.uOptionConfigurationText_Text}"
 						/>
 					<Button
-						ToolTipService.ToolTip="Pick In Window"
+						ToolTipService.ToolTip="Pick"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
 						Click="{x:Bind Controller.uOptionConfigurationPick_Click}"
@@ -143,31 +143,6 @@
 						HorizontalContentAlignment="Left"
 						IsChecked="{x:Bind Controller.uRemainInputToggle_IsChecked}"
 						Click="{x:Bind Controller.uRemainInputToggle_Click}"
-						Content="Enable"
-						/>
-				</my:Stack>
-			</my:SettingItem.Action>
-		</my:SettingItem>
-		<my:SettingItem
-			HorizontalAlignment="Stretch"
-			VerticalAlignment="Stretch"
-			Icon="{StaticResource FluentIconGlyph.Important}"
-			Title="Automatic Close"
-			>
-			<my:SettingItem.Action>
-				<my:Stack
-					HorizontalAlignment="Stretch"
-					VerticalAlignment="Stretch"
-					Orientation="Horizontal"
-					Spacing="8"
-					>
-					<ToggleButton
-						my:Stack.Weight="1"
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Top"
-						HorizontalContentAlignment="Left"
-						IsChecked="{x:Bind Controller.uAutomaticCloseToggle_IsChecked}"
-						Click="{x:Bind Controller.uAutomaticCloseToggle_Click}"
 						Content="Enable"
 						/>
 				</my:Stack>

@@ -177,11 +177,11 @@ namespace AssistantPlus.View.CommandSender {
 					break;
 				}
 				case "Sequence": {
-					await ModdingWorker.ForwardHelper.Forward(this.uSelectedMethodList_ItemsSource.Select((value) => (value.GenerateCommand())).ToList(), false);
+					await ModdingWorker.ForwardHelper.ForwardMany(this.uSelectedMethodList_ItemsSource.Select((value) => (value.GenerateCommand())).ToList(), false);
 					break;
 				}
 				case "Parallel": {
-					await ModdingWorker.ForwardHelper.Forward(this.uSelectedMethodList_ItemsSource.Select((value) => (value.GenerateCommand())).ToList(), true);
+					await ModdingWorker.ForwardHelper.ForwardMany(this.uSelectedMethodList_ItemsSource.Select((value) => (value.GenerateCommand())).ToList(), true);
 					break;
 				}
 				default: throw new ();

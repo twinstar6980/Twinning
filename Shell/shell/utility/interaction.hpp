@@ -79,7 +79,7 @@ namespace TwinStar::Shell::Interaction {
 		}
 		assert_test(state_h == S_OK);
 		auto option = FILEOPENDIALOGOPTIONS{};
-		option |= FOS_NOCHANGEDIR | FOS_FORCEFILESYSTEM | FOS_NOVALIDATE | FOS_NODEREFERENCELINKS | FOS_DONTADDTORECENT | FOS_FORCESHOWHIDDEN;
+		option |= FOS_NOCHANGEDIR | FOS_NOVALIDATE | FOS_NODEREFERENCELINKS | FOS_DONTADDTORECENT | FOS_FORCESHOWHIDDEN;
 		if (type == "open_file"sv || type == "open_directory"sv) {
 			option |= FOS_PATHMUSTEXIST | FOS_FILEMUSTEXIST;
 		}
@@ -92,18 +92,21 @@ namespace TwinStar::Shell::Interaction {
 		state_h = dialog->SetOptions(option);
 		assert_test(state_h == S_OK);
 		state_h = dialog->Show(GetForegroundWindow());
-		if (state_h != HRESULT_FROM_WIN32(ERROR_CANCELLED)) {
+		assert_test(state_h == S_OK || state_h == HRESULT_FROM_WIN32(ERROR_CANCELLED));
+		if (state_h == S_OK) {
 			assert_test(state_h == S_OK);
 			auto result_item = std::add_pointer_t<IShellItem>{nullptr};
 			state_h = dialog->GetResult(&result_item);
 			assert_test(state_h == S_OK);
 			auto display_name = LPWSTR{nullptr};
 			state_h = result_item->GetDisplayName(SIGDN_FILESYSPATH, &display_name);
-			assert_test(state_h == S_OK);
-			auto display_name_8 = utf16_to_utf8(std::u16string_view{reinterpret_cast<char16_t const *>(display_name)});
-			std::replace(display_name_8.begin(), display_name_8.end(), u8'\\', u8'/');
-			target.emplace(std::move(reinterpret_cast<std::string &>(display_name_8)));
-			CoTaskMemFree(display_name);
+			assert_test(state_h == S_OK || state_h == E_INVALIDARG);
+			if (state_h == S_OK) {
+				auto display_name_8 = utf16_to_utf8(std::u16string_view{reinterpret_cast<char16_t const *>(display_name)});
+				std::replace(display_name_8.begin(), display_name_8.end(), u8'\\', u8'/');
+				target.emplace(std::move(reinterpret_cast<std::string &>(display_name_8)));
+				CoTaskMemFree(display_name);
+			}
 			result_item->Release();
 		}
 		dialog->Release();

@@ -52,10 +52,15 @@ class _BasicSubmissionBar extends StatelessWidget {
             child: IconButton.filledTonal(
               tooltip: 'History',
               padding: EdgeInsets.zero,
+              onPressed: this.history == null
+                ? null
+                : () async {
+                },
               icon: Stack(
-                alignment: AlignmentDirectional.center,
                 children: [
-                  Icon(this.icon),
+                  SizedBox.expand(
+                    child: Icon(this.icon),
+                  ),
                   SizedBox.expand(
                     child: PopupMenuButton(
                       tooltip: '',
@@ -65,23 +70,31 @@ class _BasicSubmissionBar extends StatelessWidget {
                       ),
                       position: PopupMenuPosition.under,
                       icon: const SizedBox(),
-                      itemBuilder: (context) => (this.history ?? []).mapIndexed((index, value) => PopupMenuItem(
-                        enabled: value.$2,
-                        value: value.$1,
-                        child: ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          dense: true,
-                          title: Text(
-                            ValueExpressionHelper.makeString(value.$1),
-                            overflow: TextOverflow.clip,
-                            style: theme.textTheme.labelLarge?.copyWith(
-                              fontFamily: '',
-                              fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
-                              color: value.$2 ? null : theme.disabledColor,
+                      itemBuilder: (context) => [
+                        if ((this.history ?? []).isEmpty)
+                          const PopupMenuItem(
+                            height: 16,
+                            enabled: false,
+                            child: null,
+                          ),
+                        ...(this.history ?? []).mapIndexed((index, value) => PopupMenuItem(
+                          enabled: value.$2,
+                          value: value.$1,
+                          child: ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            dense: true,
+                            title: Text(
+                              ValueExpressionHelper.makeString(value.$1),
+                              overflow: TextOverflow.clip,
+                              style: theme.textTheme.labelLarge?.copyWith(
+                                fontFamily: '',
+                                fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+                                color: value.$2 ? null : theme.disabledColor,
+                              ),
                             ),
                           ),
-                        ),
-                      )).toList(),
+                        )),
+                      ],
                       onSelected: (value) async {
                         this.onSelect!(value);
                       },
@@ -89,10 +102,6 @@ class _BasicSubmissionBar extends StatelessWidget {
                   ),
                 ],
               ),
-              onPressed: this.history == null
-                ? null
-                : () async {
-                },
             ),
           ),
         ),
@@ -320,45 +329,29 @@ class _BooleanSubmissionBarState extends State<_BooleanSubmissionBar> {
           suffixIconConstraints: const BoxConstraints(),
           suffixIcon: CustomTextFieldSuffixWidget(
             children: [
-              (this._value ?? !false) == false
-                ? IconButton.filledTonal(
-                  tooltip: 'No',
-                  icon: const Icon(IconSymbols.do_not_disturb_on),
-                  onPressed: () async {
-                    this._value = null;
-                    this._valueController.text = '';
-                    this.setState(() {});
-                  },
-                )
-                : IconButton(
-                  tooltip: 'No',
-                  icon: const Icon(IconSymbols.do_not_disturb_on),
-                  onPressed: () async {
-                    this._value = false;
-                    this._valueController.text = 'n';
-                    this.setState(() {});
-                  },
-                ),
+              IconButton(
+                tooltip: 'No',
+                isSelected: this._value == null ? false : this._value == false,
+                icon: const Icon(IconSymbols.do_not_disturb_on),
+                selectedIcon: const Icon(IconSymbols.do_not_disturb_on, fill: 1),
+                onPressed: () async {
+                  this._value = this._value == false ? null : false;
+                  this._valueController.text = this._value == null ? '' : 'n';
+                  this.setState(() {});
+                },
+              ),
               const SizedBox(width: 4),
-              (this._value ?? !true) == true
-                ? IconButton.filledTonal(
-                  tooltip: 'Yes',
-                  icon: const Icon(IconSymbols.check_circle),
-                  onPressed: () async {
-                    this._value = null;
-                    this._valueController.text = '';
-                    this.setState(() {});
-                  },
-                )
-                : IconButton(
-                  tooltip: 'Yes',
-                  icon: const Icon(IconSymbols.check_circle),
-                  onPressed: () async {
-                    this._value = true;
-                    this._valueController.text = 'y';
-                    this.setState(() {});
-                  },
-                ),
+              IconButton(
+                tooltip: 'Yes',
+                isSelected: this._value == null ? false : this._value == true,
+                icon: const Icon(IconSymbols.check_circle),
+                selectedIcon: const Icon(IconSymbols.check_circle, fill: 1),
+                onPressed: () async {
+                  this._value = this._value == true ? null : true;
+                  this._valueController.text = this._value == null ? '' : 'y';
+                  this.setState(() {});
+                },
+              ),
             ],
           ),
         ),
@@ -816,85 +809,38 @@ class _PathSubmissionBarState extends State<_PathSubmissionBar> {
                   position: PopupMenuPosition.under,
                   icon: const Icon(IconSymbols.adjust),
                   itemBuilder: (context) => <PopupMenuEntry<String>>[
-                    PopupMenuItem(
-                      value: '@open_file',
+                    ...[
+                      ('@open_file', 'Open File'),
+                      ('@open_directory', 'Open Directory'),
+                      ('@save_file', 'Save File'),
+                    ].map((value) => PopupMenuItem(
+                      value: value.$1,
                       child: Text(
-                        'Open File',
+                        value.$2,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.labelLarge?.copyWith(
                           fontFamily: '',
                           fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
                         ),
                       ),
-                    ),
-                    PopupMenuItem(
-                      value: '@open_directory',
+                    )),
+                    const PopupMenuDivider(),
+                    ...[
+                      (':g', 'Generate'),
+                      (':m', 'Move'),
+                      (':d', 'Delete'),
+                      (':o', 'Overwrite'),
+                    ].map((value) => PopupMenuItem(
+                      value: value.$1,
                       child: Text(
-                        'Open Directory',
+                        value.$2,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.labelLarge?.copyWith(
                           fontFamily: '',
                           fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
                         ),
                       ),
-                    ),
-                    PopupMenuItem(
-                      value: '@save_file',
-                      child: Text(
-                        'Save File',
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          fontFamily: '',
-                          fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
-                        ),
-                      ),
-                    ),
-                    const PopupMenuDivider(
-                    ),
-                    PopupMenuItem(
-                      value: ':g',
-                      child: Text(
-                        'Generate',
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          fontFamily: '',
-                          fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
-                        ),
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: ':m',
-                      child: Text(
-                        'Move',
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          fontFamily: '',
-                          fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
-                        ),
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: ':d',
-                      child: Text(
-                        'Delete',
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          fontFamily: '',
-                          fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
-                        ),
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: ':o',
-                      child: Text(
-                        'Overwrite',
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          fontFamily: '',
-                          fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
-                        ),
-                      ),
-                    ),
+                    )),
                   ],
                   onSelected: (value) async {
                     if (value.startsWith(':')) {
@@ -997,7 +943,7 @@ class _EnumerationSubmissionBarState extends State<_EnumerationSubmissionBar> {
           crossAxisUnconstrained: false,
           alignmentOffset: const Offset(-12, 0),
           style: MenuStyle(
-            minimumSize: WidgetStatePropertyAll(Size(constraints.maxWidth + 24, 0.0)),
+            minimumSize: WidgetStatePropertyAll(Size(constraints.maxWidth + 24, 0)),
             maximumSize: WidgetStatePropertyAll(Size(constraints.maxWidth + 24, Floater.infinity)),
             visualDensity: VisualDensity.standard,
           ),
@@ -1053,7 +999,12 @@ class _EnumerationSubmissionBarState extends State<_EnumerationSubmissionBar> {
             readOnly: true,
             controller: this._itemController,
             onTap: () async {
-              controller.open();
+              if (controller.isOpen) {
+                controller.close();
+              }
+              else {
+                controller.open();
+              }
             },
           ),
         ),

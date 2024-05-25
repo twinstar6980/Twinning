@@ -58,7 +58,7 @@ class _LauncherBarState extends State<LauncherBar> {
             height: 40,
             child: IconButton.filledTonal(
               tooltip: 'Additional Argument',
-              icon: const Icon(IconSymbols.attachment),
+              icon: const Icon(IconSymbols.attach_file),
               onPressed: () async {
                 await ControlHelper.showCustomModalDialog(
                   context: context,

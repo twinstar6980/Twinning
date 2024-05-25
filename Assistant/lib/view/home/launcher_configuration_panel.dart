@@ -53,10 +53,13 @@ class _LauncherConfigurationPanelState extends State<LauncherConfigurationPanel>
           icon: IconSymbols.text_fields,
           label: 'Title',
           content: [
-            Text(
-              this.widget.data.title,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
+            Expanded(
+              child: Text(
+                this.widget.data.title,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.right,
+                style: theme.textTheme.bodyMedium,
+              ),
             ),
           ],
           onTap: null,
@@ -90,10 +93,13 @@ class _LauncherConfigurationPanelState extends State<LauncherConfigurationPanel>
           icon: IconSymbols.label,
           label: 'Type',
           content: [
-            Text(
-              ModuleHelper.query(this.widget.data.type).name,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
+            Expanded(
+              child: Text(
+                ModuleHelper.query(this.widget.data.type).name,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.right,
+                style: theme.textTheme.bodyMedium,
+              ),
             ),
           ],
           onTap: null,
@@ -110,7 +116,7 @@ class _LauncherConfigurationPanelState extends State<LauncherConfigurationPanel>
                   },
                 ),
                 title: Text(
-                  ModuleHelper.query(this.widget.data.type).name,
+                  ModuleHelper.query(type).name,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -122,10 +128,13 @@ class _LauncherConfigurationPanelState extends State<LauncherConfigurationPanel>
           icon: IconSymbols.format_list_bulleted,
           label: 'Option',
           content: [
-            Text(
-              '${this.widget.data.option.length}',
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
+            Expanded(
+              child: Text(
+                '${this.widget.data.option.length}',
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.right,
+                style: theme.textTheme.bodyMedium,
+              ),
             ),
           ],
           onTap: null,

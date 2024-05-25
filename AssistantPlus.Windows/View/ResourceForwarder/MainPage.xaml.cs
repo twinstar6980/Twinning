@@ -68,9 +68,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 
 		public Boolean RemainInput { get; set; } = default!;
 
-		public Boolean AutomaticClose { get; set; } = default!;
-
-		public List<String> Input { get; set; } = [];
+		public List<Tuple<String, Boolean?>> Input { get; set; } = [];
 
 		#endregion
 
@@ -82,7 +80,6 @@ namespace AssistantPlus.View.ResourceForwarder {
 			this.EnableFilter = App.Setting.Data.ResourceForwarder.EnableFilter;
 			this.EnableBatch = App.Setting.Data.ResourceForwarder.EnableBatch;
 			this.RemainInput = App.Setting.Data.ResourceForwarder.RemainInput;
-			this.AutomaticClose = App.Setting.Data.ResourceForwarder.AutomaticClose;
 			var optionConfiguration = new List<OptionGroupConfiguration>();
 			try {
 				optionConfiguration = JsonHelper.DeserializeText<List<OptionGroupConfiguration>>(StorageHelper.ReadFileTextSync(App.Setting.Data.ResourceForwarder.OptionConfiguration));
@@ -96,7 +93,8 @@ namespace AssistantPlus.View.ResourceForwarder {
 				Children = group.Item.Select((item) => (new MainPageOptionItemItemController() {
 					Host = this,
 					ItemModel = item,
-					TypeMatched = false,
+					SingleMatched = false,
+					BatchMatched = false,
 					NameMatched = false,
 				})).ToList(),
 			})).ToList();
@@ -111,7 +109,6 @@ namespace AssistantPlus.View.ResourceForwarder {
 			var optionEnableFilter = default(Boolean?);
 			var optionEnableBatch = default(Boolean?);
 			var optionRemainInput = default(Boolean?);
-			var optionAutomaticClose = default(Boolean?);
 			var optionInput = default(List<String>?);
 			try {
 				var option = new CommandLineReader(optionView);
@@ -126,9 +123,6 @@ namespace AssistantPlus.View.ResourceForwarder {
 				}
 				if (option.Check("-RemainInput")) {
 					optionRemainInput = option.NextBoolean();
-				}
-				if (option.Check("-AutomaticClose")) {
-					optionAutomaticClose = option.NextBoolean();
 				}
 				if (option.Check("-Input")) {
 					optionInput = option.NextStringList();
@@ -164,18 +158,8 @@ namespace AssistantPlus.View.ResourceForwarder {
 					nameof(this.uRemainInput_IsChecked)
 				);
 			}
-			if (optionAutomaticClose is not null) {
-				this.AutomaticClose = optionAutomaticClose.AsNotNull();
-				this.NotifyPropertyChanged(
-					nameof(this.uAutomaticClose_Visibility)
-				);
-			}
 			if (optionInput is not null) {
 				await this.AppendInput(optionInput.Select(StorageHelper.Regularize).ToList());
-			}
-			if (optionEnableFilter is not null || optionEnableBatch is not null || optionInput is not null) {
-				await this.RefreshInput();
-				await this.RefreshFilter();
 			}
 			return;
 		}
@@ -195,11 +179,8 @@ namespace AssistantPlus.View.ResourceForwarder {
 			if (option.Check("-RemainInput")) {
 				option.NextBoolean(this.RemainInput);
 			}
-			if (option.Check("-AutomaticClose")) {
-				option.NextBoolean(this.AutomaticClose);
-			}
 			if (option.Check("-Input")) {
-				option.NextStringList(this.Input);
+				option.NextStringList(this.Input.Select((value) => (value.Item1)).ToList());
 			}
 			return option.Done();
 		}
@@ -211,62 +192,31 @@ namespace AssistantPlus.View.ResourceForwarder {
 
 		// ----------------
 
-		public async Task AppendInput (
-			List<String> list
-		) {
-			foreach (var item in list) {
-				if (this.Input.Contains(item)) {
-					continue;
-				}
-				this.Input.Add(item);
-				this.uInputList_ItemsSource.Add(new () { Host = this, Path = item });
-			}
-			return;
-		}
-
-		public async Task RemoveInput (
-			List<String> list
-		) {
-			foreach (var item in list) {
-				if (!this.Input.Contains(item)) {
-					continue;
-				}
-				this.Input.Remove(item);
-				this.uInputList_ItemsSource.Remove(this.uInputList_ItemsSource.First((value) => (value.Path == item)));
-			}
-			return;
-		}
-
-		public async Task ClearInput (
-		) {
-			this.Input.Clear();
-			this.uInputList_ItemsSource.Clear();
-			return;
-		}
-
-		public async Task RefreshInput (
+		public async Task RefreshMatch (
 		) {
 			foreach (var group in this.uOptionList_ItemsSource) {
 				foreach (var item in group.Children) {
-					if (this.EnableBatch) {
-						item.TypeMatched = item.ItemModel.Batchable && this.Input.All((input) => (StorageHelper.ExistDirectory(input)));
+					item.SingleMatched = false;
+					item.BatchMatched = false;
+					item.NameMatched = false;
+					if (this.Input.Count != 0) {
+						item.SingleMatched = true;
+						item.BatchMatched = true;
 						item.NameMatched = true;
-					}
-					else {
-						item.TypeMatched = this.Input.All((input) => (item.ItemModel.Filter.Type switch {
-							OptionFilterFileObjectType.Any       => StorageHelper.Exist(input),
-							OptionFilterFileObjectType.File      => StorageHelper.ExistFile(input),
-							OptionFilterFileObjectType.Directory => StorageHelper.ExistDirectory(input),
-							_                                    => throw new (),
-						}));
-						item.NameMatched = this.Input.All((input) => (Regex.IsMatch(input, item.ItemModel.Filter.Name, RegexOptions.IgnoreCase)));
+						var nameRule = new Regex(item.ItemModel.Filter.Name, RegexOptions.IgnoreCase);
+						foreach (var input in this.Input) {
+							item.SingleMatched &= item.ItemModel.Filter.Type switch {
+								OptionFilterFileObjectType.Any       => input.Item2 != null,
+								OptionFilterFileObjectType.File      => input.Item2 == false,
+								OptionFilterFileObjectType.Directory => input.Item2 == true,
+								_                                    => throw new (),
+							};
+							item.BatchMatched &= item.ItemModel.Batchable && input.Item2 == true;
+							item.NameMatched &= nameRule.IsMatch(input.Item1);
+						}
 					}
 				}
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uRequireInputTip_Visibility),
-				nameof(this.uInputCount_Text)
-			);
 			return;
 		}
 
@@ -286,28 +236,77 @@ namespace AssistantPlus.View.ResourceForwarder {
 			return;
 		}
 
-		public async Task Forward (
-			String? method,
-			Object? argument
+		// ----------------
+
+		public async Task AppendInput (
+			List<String> list
+		) {
+			foreach (var item in list) {
+				if (this.Input.Any((value) => (value.Item1 == item))) {
+					continue;
+				}
+				var itemType = null as Boolean?;
+				if (StorageHelper.ExistFile(item)) {
+					itemType = false;
+				}
+				if (StorageHelper.ExistDirectory(item)) {
+					itemType = true;
+				}
+				this.Input.Add(new (item, itemType));
+				this.uInputList_ItemsSource.Add(new () { Host = this, Path = item, Type = itemType });
+			}
+			this.NotifyPropertyChanged(
+				nameof(this.uInputCount_Text)
+			);
+			await this.RefreshMatch();
+			await this.RefreshFilter();
+			return;
+		}
+
+		public async Task RemoveInput (
+			List<String> list
+		) {
+			foreach (var item in list) {
+				this.Input.RemoveAll((value) => (value.Item1 == item));
+				this.uInputList_ItemsSource.Remove(this.uInputList_ItemsSource.First((value) => (value.Path == item)));
+			}
+			this.NotifyPropertyChanged(
+				nameof(this.uInputCount_Text)
+			);
+			await this.RefreshMatch();
+			await this.RefreshFilter();
+			return;
+		}
+
+		public async Task ClearInput (
+		) {
+			this.Input.Clear();
+			this.uInputList_ItemsSource.Clear();
+			this.NotifyPropertyChanged(
+				nameof(this.uInputCount_Text)
+			);
+			await this.RefreshMatch();
+			await this.RefreshFilter();
+			return;
+		}
+
+		// ----------------
+
+		public async Task ExecuteForward (
+			String?                     method,
+			Dictionary<String, Object>? argument
 		) {
 			await App.Instance.AppendRecentLauncherItem(new () {
-				Title = $"({this.Input.Count}) {String.Join(", ", this.Input.Select(StorageHelper.Name))}",
+				Title = $"({this.Input.Count}) {String.Join(", ", this.Input.Select((value) => (StorageHelper.Name(value.Item1))))}",
 				Type = ModuleType.ResourceForwarder,
 				Option = await this.CollectOption(),
 				Command = [],
 			});
-			var state = await ModdingWorker.ForwardHelper.Forward(this.Input.Select((value) => (ModdingWorker.ForwardHelper.MakeArgumentForCommand(value, method is null ? null : $"{method}{(!this.EnableBatch ? "" : ".batch")}", argument))).ToList(), this.ParallelExecute);
-			if (!state) {
-				return;
-			}
-			if (this.AutomaticClose) {
-				await App.MainWindow.RemoveTabItem(this.View);
-				return;
-			}
+			var actualMethod = method is null ? null : $"{method}{(!this.EnableBatch ? "" : ".batch")}";
+			var actualCommand = this.Input.Select((value) => (ModdingWorker.ForwardHelper.MakeArgumentForCommand(value.Item1, actualMethod, argument))).ToList();
+			await ModdingWorker.ForwardHelper.ForwardMany(actualCommand, this.ParallelExecute);
 			if (!this.RemainInput) {
 				await this.ClearInput();
-				await this.RefreshInput();
-				await this.RefreshFilter();
 			}
 			return;
 		}
@@ -334,22 +333,11 @@ namespace AssistantPlus.View.ResourceForwarder {
 			var senders = sender.AsClass<Page>();
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.Handled = true;
-				var data = await args.DataView.GetStorageItemsAsync();
-				await this.AppendInput(data.Select((value) => (StorageHelper.Regularize(value.Path))).ToList());
-				await this.RefreshInput();
-				await this.RefreshFilter();
+				var item = await args.DataView.GetStorageItemsAsync();
+				var input = item.Select((value) => (StorageHelper.Regularize(value.Path))).ToList();
+				await this.AppendInput(input);
 			}
 			return;
-		}
-
-		#endregion
-
-		#region require input tip
-
-		public Boolean uRequireInputTip_Visibility {
-			get {
-				return this.Input.Count == 0;
-			}
 		}
 
 		#endregion
@@ -403,7 +391,6 @@ namespace AssistantPlus.View.ResourceForwarder {
 		) {
 			var senders = sender.AsClass<ToggleButton>();
 			this.EnableBatch = senders.IsChecked.AsNotNull();
-			await this.RefreshInput();
 			await this.RefreshFilter();
 			return;
 		}
@@ -425,76 +412,32 @@ namespace AssistantPlus.View.ResourceForwarder {
 			return;
 		}
 
-		// ----------------
-
-		public Boolean uAutomaticClose_Visibility {
-			get {
-				return this.AutomaticClose;
-			}
-		}
-
-		public async void uAutomaticClose_Click (
-			Object          sender,
-			RoutedEventArgs args
-		) {
-			var senders = sender.AsClass<Button>();
-			this.AutomaticClose = false;
-			this.NotifyPropertyChanged(
-				nameof(this.uAutomaticClose_Visibility)
-			);
-			return;
-		}
-
 		#endregion
 
 		#region input
-
-		public async void uInputItem_Click (
-			SplitButton               sender,
-			SplitButtonClickEventArgs args
-		) {
-			var senders = sender.AsClass<SplitButton>();
-			var flyout = new MenuFlyout() {
-				Placement = FlyoutPlacementMode.BottomEdgeAlignedLeft,
-			};
-			flyout.Items.Add(new MenuFlyoutItem() {
-				Icon = new FontIcon() { Glyph = FluentIconGlyph.Document },
-				Text = "File",
-			}.ApplySelf((it) => {
-				it.Click += async (_, _) => {
-					var item = await StorageHelper.PickOpenFile(WindowHelper.Find(this.View), $"{nameof(ResourceForwarder)}.Generic");
-					if (item is not null) {
-						await this.AppendInput([item]);
-						await this.RefreshInput();
-						await this.RefreshFilter();
-					}
-					return;
-				};
-			}));
-			flyout.Items.Add(new MenuFlyoutItem() {
-				Icon = new FontIcon() { Glyph = FluentIconGlyph.Folder },
-				Text = "Directory",
-			}.ApplySelf((it) => {
-				it.Click += async (_, _) => {
-					var item = await StorageHelper.PickOpenDirectory(WindowHelper.Find(this.View), $"{nameof(ResourceForwarder)}.Generic");
-					if (item is not null) {
-						await this.AppendInput([item]);
-						await this.RefreshInput();
-						await this.RefreshFilter();
-					}
-					return;
-				};
-			}));
-			flyout.ShowAt(senders);
-			return;
-		}
-
-		// ----------------
 
 		public String uInputCount_Text {
 			get {
 				return this.Input.Count.ToString();
 			}
+		}
+
+		// ----------------
+
+		public async void uInputAdd_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<Button>();
+			var item = senders.Tag.AsClass<String>() switch {
+				"File"      => await StorageHelper.PickOpenFile(WindowHelper.Find(this.View), $"{nameof(ResourceForwarder)}.Input"),
+				"Directory" => await StorageHelper.PickOpenDirectory(WindowHelper.Find(this.View), $"{nameof(ResourceForwarder)}.Input"),
+				_           => throw new (),
+			};
+			if (item is not null) {
+				await this.AppendInput([item]);
+			}
+			return;
 		}
 
 		// ----------------
@@ -508,8 +451,6 @@ namespace AssistantPlus.View.ResourceForwarder {
 			var senders = sender.AsClass<ListView>();
 			var item = args.ClickedItem.AsClass<MainPageInputItemController>();
 			await this.RemoveInput([item.Path]);
-			await this.RefreshInput();
-			await this.RefreshFilter();
 			return;
 		}
 
@@ -529,7 +470,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 				node.IsExpanded = !node.IsExpanded;
 			}
 			if (args.InvokedItem is MainPageOptionItemItemController itemItem) {
-				await this.Forward(itemItem.ItemModel.Method, null);
+				await this.ExecuteForward(itemItem.ItemModel.Method, null);
 			}
 			return;
 		}
@@ -548,6 +489,8 @@ namespace AssistantPlus.View.ResourceForwarder {
 
 		public String Path { get; set; } = default!;
 
+		public Boolean? Type { get; set; } = default!;
+
 		#endregion
 
 		#region view
@@ -560,13 +503,11 @@ namespace AssistantPlus.View.ResourceForwarder {
 
 		public String uIcon_Glyph {
 			get {
-				if (StorageHelper.ExistFile(this.Path)) {
-					return FluentIconGlyph.Document;
-				}
-				if (StorageHelper.ExistDirectory(this.Path)) {
-					return FluentIconGlyph.Folder;
-				}
-				return FluentIconGlyph.StatusCircleBlock;
+				return this.Type switch {
+					null  => FluentIconGlyph.StatusCircleBlock,
+					false => FluentIconGlyph.Document,
+					true  => FluentIconGlyph.Folder,
+				};
 			}
 		}
 
@@ -620,7 +561,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 
 		public Boolean uRoot_Visibility {
 			get {
-				return this.Host.Input.Count != 0 && (!this.Host.EnableFilter || this.Children.Any((value) => (value.TypeMatched && value.NameMatched)));
+				return !this.Host.EnableFilter || this.Children.Any((value) => (value.NameMatched && (!this.Host.EnableBatch ? value.SingleMatched : value.BatchMatched)));
 			}
 		}
 
@@ -658,7 +599,9 @@ namespace AssistantPlus.View.ResourceForwarder {
 
 		// ----------------
 
-		public Boolean TypeMatched { get; set; } = default!;
+		public Boolean SingleMatched { get; set; } = default!;
+
+		public Boolean BatchMatched { get; set; } = default!;
 
 		public Boolean NameMatched { get; set; } = default!;
 
@@ -668,13 +611,13 @@ namespace AssistantPlus.View.ResourceForwarder {
 
 		public Boolean uRoot_Visibility {
 			get {
-				return this.Host.Input.Count != 0 && (!this.Host.EnableFilter || (this.TypeMatched && this.NameMatched));
+				return (!this.Host.EnableFilter || (this.NameMatched && (!this.Host.EnableBatch ? this.SingleMatched : this.BatchMatched)));
 			}
 		}
 
 		public Boolean uRoot_IsEnabled {
 			get {
-				return this.Host.Input.Count != 0 && (this.TypeMatched && (!this.Host.EnableFilter || (this.NameMatched)));
+				return (!this.Host.EnableFilter || (this.NameMatched)) && (!this.Host.EnableBatch ? this.SingleMatched : this.BatchMatched);
 			}
 		}
 
@@ -710,7 +653,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 								Text = preset.Name,
 							}.ApplySelf((it) => {
 								it.Click += async (_, _) => {
-									await this.Host.Forward(this.ItemModel.Method, preset.Argument);
+									await this.Host.ExecuteForward(this.ItemModel.Method, preset.Argument);
 									return;
 								};
 							})

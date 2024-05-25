@@ -39,7 +39,7 @@
 						Text="{x:Bind Controller.uKernelText_Text}"
 						/>
 					<Button
-						ToolTipService.ToolTip="Pick In Window"
+						ToolTipService.ToolTip="Pick"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
 						Click="{x:Bind Controller.uKernelPick_Click}"
@@ -69,7 +69,7 @@
 						Text="{x:Bind Controller.uScriptText_Text}"
 						/>
 					<Button
-						ToolTipService.ToolTip="Pick In Window"
+						ToolTipService.ToolTip="Pick"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
 						Click="{x:Bind Controller.uScriptPick_Click}"
@@ -179,36 +179,6 @@
 						VerticalAlignment="Top"
 						Click="{x:Bind Controller.uMessageFontPick_Click}"
 						Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.BulletedList}}"
-						/>
-				</my:Stack>
-			</my:SettingItem.Action>
-		</my:SettingItem>
-		<my:SettingItem
-			HorizontalAlignment="Stretch"
-			VerticalAlignment="Stretch"
-			Icon="{StaticResource FluentIconGlyph.Flow}"
-			Title="Alternative Launch Script"
-			>
-			<my:SettingItem.Action>
-				<my:Stack
-					HorizontalAlignment="Stretch"
-					VerticalAlignment="Stretch"
-					Orientation="Horizontal"
-					Spacing="8"
-					>
-					<TextBox
-						my:Stack.Weight="1"
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Top"
-						LostFocus="{x:Bind Controller.uAlternativeLaunchScriptText_LostFocus}"
-						Text="{x:Bind Controller.uAlternativeLaunchScriptText_Text}"
-						/>
-					<Button
-						ToolTipService.ToolTip="Pick In Window"
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Top"
-						Click="{x:Bind Controller.uAlternativeLaunchScriptPick_Click}"
-						Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.OpenInNewWindow}}"
 						/>
 				</my:Stack>
 			</my:SettingItem.Action>

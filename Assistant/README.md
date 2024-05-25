@@ -16,11 +16,27 @@
 
 * 构建
 	
-	在 `+ <project>` 下执行以下命令，构建产物将输出至 `+ <project>/build` 。
+	通过以下命令，可以在 `+ <project>/build` 内生成构建产物。
 	
-	* Windows-MSIX: `flutter pub run msix:create --release --architecture x64 --install-certificate false --certificate-path <..> --certificate-password <..>`
+	* `Windows`
+		
+		`> dart run msix:create --release --architecture x64 --install-certificate false --certificate-path <..> --certificate-password <..> --windows-build-args --no-tree-shake-icons`
 	
-	* Android-APK: `flutter build apk --release --split-per-abi --target-platform android-arm64`
+	* `Linux`
+		
+		`> flutter build linux --release --target-platform linux-x64 --no-tree-shake-icons`
+	
+	* `Macintosh`
+		
+		`> flutter build macos --release --no-tree-shake-icons`
+	
+	* `Android`
+		
+		`> flutter build apk --release --split-per-abi --target-platform android-arm64 --no-tree-shake-icons`
+	
+	* `Iphone`
+		
+		`> flutter build ios --release --no-tree-shake-icons`
 	
 	> 具体参阅 [Flutter 文档](https://docs.flutter.dev/deployment/windows) 。
 

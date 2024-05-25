@@ -24,15 +24,39 @@
 	
 	通过以下命令，可以在 `+ <project>/.project` 内生成其他开发工具所使用的项目文件，以便于在其他开发工具内开发项目。
 	
-	* MSBuild ：`> xmake project -k vsxmake .project` ，适用于 VS 。
+	* `MSBuild` for VS
+		
+		`> xmake project -k vsxmake .project`
 	
-	* CMake ：`> xmake project -k cmakelists .project` ，适用于 VS 、CLion 。
+	* `CMake` for VS and CLion
+		
+		`> xmake project -k cmakelists .project`
 	
 	> 具体参阅 [xmake 文档](https://xmake.io/#/plugin/builtin_plugins?id=generate-ide-project-files) 。
 
 * 构建
 	
-	在 `+ <project>` 下执行 `> xmake f -o .build` & `> xmake` ，构建产物将输出至 `+ <project>/.build` 。
+	通过以下命令，可以在 `+ <project>/.build` 内生成构建产物。
+	
+	* `Windows`
+		
+		`> xmake f -o .build -m release -p windows -a x64 --toolchain=msvc`
+	
+	* `Linux`
+		
+		`> xmake f -o .build -m release -p linux -a x86_64 --toolchain=clang-18`
+	
+	* `Macintosh`
+		
+		`> xmake f -o .build -m release -p macosx -a arm64 --cc=clang-18 --cxx=clang-18 --xcode_sdkver=13.3 --target_minver=13.3`
+	
+	* `Android`
+		
+		`> xmake f -o .build -m release -p android -a arm64-v8a --ndk=<..> --ndk_sdkver=28 --runtimes=c++_shared`
+	
+	* `Iphone`
+		
+		`> xmake f -o .build -m release -p iphoneos -a arm64 --cc=clang-18 --cxx=clang-18 --xcode_sdkver=16.4 --target_minver=16.4`
 	
 	> 具体参阅 [xmake 文档](https://xmake.io/#/) 。
 

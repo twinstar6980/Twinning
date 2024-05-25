@@ -10,48 +10,32 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		#region utility
 
-		public static async Task<Boolean> Forward (
+		public static async Task Forward (
 			List<String> argument
 		) {
-			var state = true;
-			try {
-				if (App.Setting.Data.ModdingWorker.AlternativeLaunchScript.Length == 0) {
-					await App.MainWindow.InsertTabItem(new () {
-						Title = ModuleHelper.Query(ModuleType.ModdingWorker).Name,
-						Type = ModuleType.ModdingWorker,
-						Option = ["-AdditionalArgument", ..argument],
-					});
-				}
-				else {
-					await ProcessHelper.CreateProcessForCommandScript(App.Setting.Data.ModdingWorker.AlternativeLaunchScript, argument, false);
-				}
-			}
-			catch (Exception e) {
-				App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Failed to forward.", e.ToString());
-				state = false;
-			}
-			return state;
+			await App.MainWindow.InsertTabItem(new () {
+				Title = ModuleHelper.Query(ModuleType.ModdingWorker).Name,
+				Type = ModuleType.ModdingWorker,
+				Option = ["-AdditionalArgument", ..argument],
+			});
+			return;
 		}
 
-		public static async Task<Boolean> Forward (
+		public static async Task ForwardMany (
 			List<List<String>> argument,
 			Boolean            parallel
 		) {
-			var state = true;
 			if (argument.Count != 0) {
-				if (parallel) {
-					foreach (var argumentItem in argument) {
-						state &= await ForwardHelper.Forward(argumentItem);
-						if (!state) {
-							break;
-						}
-					}
+				if (!parallel) {
+					await ForwardHelper.Forward(argument.SelectMany(GF.ReturnSelf).ToList());
 				}
 				else {
-					state &= await ForwardHelper.Forward(argument.SelectMany(GF.ReturnSelf).ToList());
+					foreach (var argumentItem in argument) {
+						await ForwardHelper.Forward(argumentItem);
+					}
 				}
 			}
-			return state;
+			return;
 		}
 
 		// ----------------

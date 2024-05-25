@@ -2,6 +2,7 @@ import '/common.dart';
 import '/module.dart';
 import '/setting.dart';
 import '/utility/platform_method.dart';
+import '/utility/control_helper.dart';
 import '/utility/notification_helper.dart';
 import '/utility/command_line_reader.dart';
 import '/view/home/application.dart';
@@ -16,34 +17,24 @@ Future<Void> main(
   List<String> argument,
 ) async {
   WidgetsFlutterBinding.ensureInitialized();
-  var navigatorKey = GlobalKey<NavigatorState>();
+  var setting = SettingProvider();
   var handleUnhandledException = (
     Object      exception,
     StackTrace? stack,
   ) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (navigatorKey.currentContext != null) {
-        showDialog(
-          context: navigatorKey.currentContext!,
-          builder: (context) => AlertDialog(
-            scrollable: true,
-            title: const Text(
-              'Unhandled Exception',
-              overflow: TextOverflow.ellipsis,
-            ),
-            content: SelectionArea(
+      if (setting.state.mApplicationNavigatorKey.currentContext != null) {
+        ControlHelper.showCustomModalDialog(
+          context: setting.state.mApplicationNavigatorKey.currentContext!,
+          title: 'Unhandled Exception',
+          contentBuilder: (context, setState) => [
+            SelectionArea(
               child: Text(
                 '${exception}\n${stack}',
                 overflow: TextOverflow.clip,
               ),
             ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, 'OK'),
-                child: const Text('OK'),
-              ),
-            ],
-          ),
+          ],
         );
       }
     });
@@ -58,7 +49,6 @@ Future<Void> main(
     handleUnhandledException(error, stack);
     return true;
   };
-  var setting = SettingProvider();
   try {
     try {
       await setting.load();
@@ -140,6 +130,6 @@ Future<Void> main(
   catch (e, s) {
     handleUnhandledException(e, s);
   }
-  runApp(Application(setting: setting, navigator: navigatorKey));
+  runApp(Application(setting: setting));
   return;
 }

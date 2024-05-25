@@ -12,13 +12,11 @@ class Application extends StatelessWidget {
   const Application({
     super.key,
     required this.setting,
-    required this.navigator,
   });
 
   // ----------------
 
-  final SettingProvider           setting;
-  final GlobalKey<NavigatorState> navigator;
+  final SettingProvider setting;
 
   // ----------------
 
@@ -29,7 +27,7 @@ class Application extends StatelessWidget {
       child: Consumer<SettingProvider>(
         builder: (context, setting, _) => DynamicColorBuilder(
           builder: (lightColor, darkColor) => MaterialApp(
-            navigatorKey: this.navigator,
+            navigatorKey: setting.state.mApplicationNavigatorKey,
             title: kApplicationName,
             theme: ThemeData(
               brightness: Brightness.light,

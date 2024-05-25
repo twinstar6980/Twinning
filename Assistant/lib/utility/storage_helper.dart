@@ -1,9 +1,9 @@
 import '/common.dart';
 import '/utility/platform_method.dart';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:path/path.dart' as p;
 import 'package:file_selector/file_selector.dart' as file_selector;
-import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
 // ----------------
@@ -115,6 +115,14 @@ class StorageHelper {
     return;
   }
 
+  static Future<Void> copyDirectory(
+    String source,
+    String destination,
+  ) async {
+    // TODO
+    throw UnimplementedError();
+  }
+
   // ----------------
 
   static Future<Void> removeFile(
@@ -137,6 +145,42 @@ class StorageHelper {
 
   // #endregion
 
+  // #region file
+
+  static Future<Void> writeFile(
+    String    target,
+    Uint8List data,
+  ) async {
+    await File(target).writeAsBytes(data, flush: true);
+    return;
+  }
+
+  static Future<Uint8List> readFile(
+    String target,
+  ) async {
+    return await File(target).readAsBytes();
+  }
+
+  // #endregion
+
+  // #region file - text
+
+  static Future<Void> writeFileText(
+    String target,
+    String text,
+  ) async {
+    await File(target).writeAsString(text, flush: true);
+    return;
+  }
+
+  static Future<String> readFileText(
+    String target,
+  ) async {
+    return await File(target).readAsString();
+  }
+
+  // #endregion
+
   // #region shell
 
   static Map<String, String> _taggedHistoryDirectory = {};
@@ -152,12 +196,12 @@ class StorageHelper {
       if (target != null) {
         target = regularize(target);
       }
+      if (target == '') {
+        target = null;
+      }
     }
     if (Platform.isLinux || Platform.isMacOS) {
-      target = (await FilePicker.platform.pickFiles(
-        lockParentWindow: true,
-        initialDirectory: initialDirectory,
-      ))?.files.single.path;
+      target = (await file_selector.openFile(initialDirectory: initialDirectory))?.path;
     }
     if (Platform.isAndroid || Platform.isIOS) {
       target = await PlatformMethod.pickStoragePath('open_file', initialDirectory, fallbackDirectory);
@@ -179,12 +223,12 @@ class StorageHelper {
       if (target != null) {
         target = regularize(target);
       }
+      if (target == '') {
+        target = null;
+      }
     }
     if (Platform.isLinux || Platform.isMacOS) {
-      target = await FilePicker.platform.getDirectoryPath(
-        lockParentWindow: true,
-        initialDirectory: initialDirectory,
-      );
+      target = await file_selector.getDirectoryPath(initialDirectory: initialDirectory);
     }
     if (Platform.isAndroid || Platform.isIOS) {
       target = await PlatformMethod.pickStoragePath('open_directory', initialDirectory, '');
@@ -205,12 +249,12 @@ class StorageHelper {
       if (target != null) {
         target = regularize(target);
       }
+      if (target == '') {
+        target = null;
+      }
     }
     if (Platform.isLinux || Platform.isMacOS) {
-      target = await FilePicker.platform.saveFile(
-        lockParentWindow: true,
-        initialDirectory: initialDirectory,
-      );
+      target = (await file_selector.getSaveLocation(initialDirectory: initialDirectory))?.path;
     }
     if (Platform.isAndroid) {
       target = await PlatformMethod.pickStoragePath('save_file', initialDirectory, '');

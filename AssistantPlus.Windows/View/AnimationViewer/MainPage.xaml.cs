@@ -396,11 +396,8 @@ namespace AssistantPlus.View.AnimationViewer {
 				nameof(this.uImageDirectory_IsEnabled),
 				nameof(this.uImageDirectory_Text),
 				nameof(this.uImageDirectoryPick_IsEnabled),
-				nameof(this.uImageList_IsEnabled),
 				nameof(this.uImageList_ItemsSource),
-				nameof(this.uSpriteList_IsEnabled),
 				nameof(this.uSpriteList_ItemsSource),
-				nameof(this.uMainSpriteList_IsEnabled),
 				nameof(this.uMainSpriteList_ItemsSource)
 			);
 			this.View.uImageList.SelectAll();
@@ -448,11 +445,8 @@ namespace AssistantPlus.View.AnimationViewer {
 				nameof(this.uImageDirectory_IsEnabled),
 				nameof(this.uImageDirectory_Text),
 				nameof(this.uImageDirectoryPick_IsEnabled),
-				nameof(this.uImageList_IsEnabled),
 				nameof(this.uImageList_ItemsSource),
-				nameof(this.uSpriteList_IsEnabled),
 				nameof(this.uSpriteList_ItemsSource),
-				nameof(this.uMainSpriteList_IsEnabled),
 				nameof(this.uMainSpriteList_ItemsSource),
 				nameof(this.uPlantCustomLayerIcon_Opacity),
 				nameof(this.uPlantCustomLayer_IsEnabled),
@@ -1020,15 +1014,6 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		#region image & sprite
 
-		public Boolean uImageList_IsEnabled {
-			get {
-				if (!this.Loaded) {
-					return false;
-				}
-				return true;
-			}
-		}
-
 		public List<MainPageImageItemController> uImageList_ItemsSource {
 			get {
 				if (!this.Loaded) {
@@ -1074,15 +1059,6 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		// ----------------
 
-		public Boolean uSpriteList_IsEnabled {
-			get {
-				if (!this.Loaded) {
-					return false;
-				}
-				return true;
-			}
-		}
-
 		public List<MainPageSpriteItemController> uSpriteList_ItemsSource {
 			get {
 				if (!this.Loaded) {
@@ -1127,15 +1103,6 @@ namespace AssistantPlus.View.AnimationViewer {
 		}
 
 		// ----------------
-
-		public Boolean uMainSpriteList_IsEnabled {
-			get {
-				if (!this.Loaded) {
-					return false;
-				}
-				return this.Animation.MainSprite is not null;
-			}
-		}
 
 		public List<MainPageMainSpriteItemController> uMainSpriteList_ItemsSource {
 			get {

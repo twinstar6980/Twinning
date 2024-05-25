@@ -213,7 +213,6 @@ namespace AssistantPlus {
 					AutomaticScroll = true,
 					ImmediateLaunch = true,
 					MessageFont = "",
-					AlternativeLaunchScript = "",
 				},
 				CommandSender = new () {
 					MethodConfiguration = "",
@@ -224,7 +223,6 @@ namespace AssistantPlus {
 					EnableFilter = true,
 					EnableBatch = false,
 					RemainInput = false,
-					AutomaticClose = false,
 				},
 				ReflectionDescriptor = new () {
 				},

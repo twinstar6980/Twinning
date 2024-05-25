@@ -46,39 +46,6 @@ class _MainPageState extends State<MainPage> {
   late Widget                      _launcherBar;
   late _MainPageBridgeClient       _sessionClient;
 
-  Future<List<String>?> _launchSession(
-  ) async {
-    var setting = Provider.of<SettingProvider>(this.context, listen: false);
-    var result = null as List<String>?;
-    var exception = null as String?;
-    var kernelCopy = await StorageHelper.temporary();
-    var library = bridge.Library();
-    this._messageList.clear();
-    this.setState(() {});
-    await WidgetsBinding.instance.endOfFrame;
-    try {
-      await StorageHelper.copyFile(setting.data.mModdingWorker.mKernel, kernelCopy);
-      library.open(kernelCopy);
-      result = await bridge.Launcher.launch(this._sessionClient, library, setting.data.mModdingWorker.mScript, setting.data.mModdingWorker.mArgument + this._additionalArgument);
-    }
-    catch (e) {
-      exception = e.toString();
-    }
-    if (library.state()) {
-      library.close();
-    }
-    if (await StorageHelper.existFile(kernelCopy)) {
-      await StorageHelper.removeFile(kernelCopy);
-    }
-    if (exception == null) {
-      this._sendMessage(MessageType.success, 'SUCCEEDED', result!);
-    }
-    else {
-      this._sendMessage(MessageType.error, 'FAILED', [exception]);
-    }
-    return result;
-  }
-
   Future<Void> _sendMessage(
     MessageType  type,
     String       title,
@@ -133,6 +100,39 @@ class _MainPageState extends State<MainPage> {
       history.add(value);
     }
     return value;
+  }
+
+  Future<List<String>?> _launchSession(
+  ) async {
+    var setting = Provider.of<SettingProvider>(this.context, listen: false);
+    var result = null as List<String>?;
+    var exception = null as String?;
+    var kernelCopy = await StorageHelper.temporary();
+    var library = bridge.Library();
+    this._messageList.clear();
+    this.setState(() {});
+    await WidgetsBinding.instance.endOfFrame;
+    try {
+      await StorageHelper.copyFile(setting.data.mModdingWorker.mKernel, kernelCopy);
+      library.open(kernelCopy);
+      result = await bridge.Launcher.launch(this._sessionClient, library, setting.data.mModdingWorker.mScript, setting.data.mModdingWorker.mArgument + this._additionalArgument);
+    }
+    catch (e) {
+      exception = e.toString();
+    }
+    if (library.state()) {
+      library.close();
+    }
+    if (await StorageHelper.existFile(kernelCopy)) {
+      await StorageHelper.removeFile(kernelCopy);
+    }
+    if (exception == null) {
+      this._sendMessage(MessageType.success, 'SUCCEEDED', result!);
+    }
+    else {
+      this._sendMessage(MessageType.error, 'FAILED', [exception]);
+    }
+    return result;
   }
 
   // ----------------

@@ -165,6 +165,9 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			DragEventArgs args
 		) {
 			var senders = sender.AsClass<Page>();
+			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
+				args.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Link;
+			}
 			return;
 		}
 
@@ -173,6 +176,20 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			DragEventArgs args
 		) {
 			var senders = sender.AsClass<Page>();
+			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
+				args.Handled = true;
+				var item = await args.DataView.GetStorageItemsAsync();
+				if (item.Count != 1) {
+					App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Source is multiply.", "");
+					return;
+				}
+				var descriptorFile = StorageHelper.Regularize(item[0].Path);
+				if (!StorageHelper.ExistFile(descriptorFile)) {
+					App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Source is not a file.", "");
+					return;
+				}
+				await this.ApplyLoad(descriptorFile);
+			}
 			return;
 		}
 

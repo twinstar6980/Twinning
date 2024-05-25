@@ -5,6 +5,7 @@ using AssistantPlus;
 using AssistantPlus.Utility;
 using Microsoft.UI.Xaml.Navigation;
 using Newtonsoft.Json.Linq;
+using Windows.ApplicationModel.DataTransfer;
 using FluentIconGlyph = AssistantPlus.Control.FluentIconGlyph;
 
 namespace AssistantPlus.View.PackageBuilder {
@@ -101,7 +102,7 @@ namespace AssistantPlus.View.PackageBuilder {
 				App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
 			}
 			if (optionProjectDirectory is not null) {
-				await this.ProjectOpen(optionProjectDirectory);
+				await this.ApplyLoad(optionProjectDirectory);
 			}
 			return;
 		}
@@ -118,6 +119,26 @@ namespace AssistantPlus.View.PackageBuilder {
 		public async Task<Boolean> RequestClose (
 		) {
 			return true;
+		}
+
+		// ----------------
+
+		public async Task ApplyLoad (
+			String projectDirectory
+		) {
+			if (this.IsLoaded) {
+				await this.ProjectClose();
+			}
+			await this.ProjectOpen(projectDirectory);
+			if (this.IsLoaded) {
+				await App.Instance.AppendRecentLauncherItem(new () {
+					Title = Regex.Replace(StorageHelper.Name(projectDirectory), @"(\.pvz2_package_project)$", "", RegexOptions.IgnoreCase),
+					Type = ModuleType.PackageBuilder,
+					Option = await this.CollectOption(),
+					Command = [],
+				});
+			}
+			return;
 		}
 
 		#endregion
@@ -355,12 +376,6 @@ namespace AssistantPlus.View.PackageBuilder {
 				nameof(this.uLoadedAction_IsEnabled),
 				nameof(this.uProjectDirectory_Text)
 			);
-			await App.Instance.AppendRecentLauncherItem(new () {
-				Title = Regex.Replace(StorageHelper.Name(projectDirectory), @"(\.pvz2_package_project)$", "", RegexOptions.IgnoreCase),
-				Type = ModuleType.PackageBuilder,
-				Option = await this.CollectOption(),
-				Command = [],
-			});
 			await this.ProjectReload();
 			await closeDialog();
 			return;
@@ -1095,6 +1110,9 @@ namespace AssistantPlus.View.PackageBuilder {
 			DragEventArgs args
 		) {
 			var senders = sender.AsClass<Page>();
+			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
+				args.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Link;
+			}
 			return;
 		}
 
@@ -1103,6 +1121,20 @@ namespace AssistantPlus.View.PackageBuilder {
 			DragEventArgs args
 		) {
 			var senders = sender.AsClass<Page>();
+			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
+				args.Handled = true;
+				var item = await args.DataView.GetStorageItemsAsync();
+				if (item.Count != 1) {
+					App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Source is multiply.", "");
+					return;
+				}
+				var projectDirectory = StorageHelper.Regularize(item[0].Path);
+				if (!StorageHelper.ExistDirectory(projectDirectory)) {
+					App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Source is not a directory.", "");
+					return;
+				}
+				await this.ApplyLoad(projectDirectory);
+			}
 			return;
 		}
 
@@ -1152,10 +1184,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			var senders = sender.AsClass<Button>();
 			var projectDirectory = await StorageHelper.PickOpenDirectory(App.MainWindow, $"{nameof(PackageBuilder)}.ProjectDirectory");
 			if (projectDirectory is not null) {
-				if (this.IsLoaded) {
-					await this.ProjectClose();
-				}
-				await this.ProjectOpen(projectDirectory);
+				await this.ApplyLoad(projectDirectory);
 			}
 			return;
 		}

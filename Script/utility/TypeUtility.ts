@@ -215,7 +215,7 @@ namespace TwinStar.Script {
 		assert_test(exponent !== -1);
 		let countBig = Math.trunc(count);
 		let countLittle = count - countBig;
-		return BigInt(countBig) + BigInt(Math.trunc(countLittle * (1024 ** exponent)));
+		return BigInt(countBig) * BigInt(1024 ** exponent) + BigInt(Math.trunc(countLittle * (1024 ** exponent)));
 	}
 
 	// ------------------------------------------------

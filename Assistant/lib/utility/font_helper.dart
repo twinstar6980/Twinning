@@ -1,5 +1,5 @@
 import '/common.dart';
-import 'dart:io';
+import '/utility/storage_helper.dart';
 import 'package:flutter/services.dart';
 
 // ----------------
@@ -20,7 +20,7 @@ class FontHelper {
       index = _cachedFilePath.length;
       try {
         var loader = FontLoader('_custom_${index + 1}');
-        loader.addFont(Future.sync(() async => ((await File(path).readAsBytes()).buffer.asByteData())));
+        loader.addFont(Future.sync(() async => ((await StorageHelper.readFile(path)).buffer.asByteData())));
         await loader.load();
         _cachedFilePath.add(path);
       }

@@ -15,7 +15,6 @@
 	<my:Stack
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
-		Padding="16,0"
 		Orientation="Horizontal"
 		Spacing="8"
 		>

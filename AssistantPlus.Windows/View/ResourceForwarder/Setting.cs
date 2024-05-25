@@ -14,7 +14,6 @@ namespace AssistantPlus.View.ResourceForwarder {
 		public Boolean EnableFilter        = default!;
 		public Boolean EnableBatch         = default!;
 		public Boolean RemainInput         = default!;
-		public Boolean AutomaticClose      = default!;
 	}
 
 }

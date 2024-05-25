@@ -73,17 +73,31 @@
 									/>
 							</my:Stack>
 							<Button.Flyout>
-								<Flyout Placement="BottomEdgeAlignedRight" FlyoutPresenterStyle="{StaticResource CompactFlyoutPresenterStyle}">
-									<TextBox
+								<Flyout Placement="Full" FlyoutPresenterStyle="{StaticResource VerticalScrollFlyoutPresenterStyle}">
+									<my:Stack
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
-										MinWidth="160"
-										FontFamily="{StaticResource ModdingWorker.MessageFont}"
-										TextWrapping="Wrap"
-										AcceptsReturn="True"
-										Text="{x:Bind Controller.uAdditionalArgument_Text}"
-										TextChanged="{x:Bind Controller.uAdditionalArgument_TextChanged}"
-										/>
+										Orientation="Vertical"
+										Spacing="12"
+										>
+										<TextBlock
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Stretch"
+											Style="{ThemeResource SubtitleTextBlockStyle}"
+											TextWrapping="NoWrap"
+											Text="Additional Argument"
+											/>
+										<TextBox
+											my:Stack.Weight="1"
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Stretch"
+											FontFamily="{StaticResource ModdingWorker.MessageFont}"
+											TextWrapping="Wrap"
+											AcceptsReturn="True"
+											Text="{x:Bind Controller.uAdditionalArgumentContent_Text}"
+											TextChanged="{x:Bind Controller.uAdditionalArgumentContent_TextChanged}"
+											/>
+									</my:Stack>
 								</Flyout>
 							</Button.Flyout>
 						</Button>
@@ -143,7 +157,7 @@
 			<my:Box
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
-				Padding="0,8,0,4"
+				Padding="16,8,16,4"
 				>
 				<localViewModdingWorker:SubmissionBar
 					x:Name="uSubmissionBar"
@@ -165,7 +179,6 @@
 					Visibility="{x:Bind Controller.uLaunch_Visibility}"
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
-					Margin="16,0"
 					Click="{x:Bind Controller.uLaunch_Click}"
 					Content="Launch"
 					/>

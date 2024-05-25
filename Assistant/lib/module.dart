@@ -1,6 +1,8 @@
 import '/common.dart';
 import '/view/modding_worker/main_page.dart' as modding_worker;
 import '/view/modding_worker/setting_panel.dart' as modding_worker;
+import '/view/resource_forwarder/main_page.dart' as resource_forwarder;
+import '/view/resource_forwarder/setting_panel.dart' as resource_forwarder;
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +10,7 @@ import 'package:flutter/material.dart';
 
 enum ModuleType {
   modding_worker, // ignore: constant_identifier_names
+  resource_forwarder, // ignore: constant_identifier_names
 }
 
 class ModuleInformation {
@@ -66,6 +69,13 @@ class ModuleHelper {
       name: 'Modding Worker',
       mainPage: (option) => modding_worker.MainPage(option: option),
       settingPanel: () => const modding_worker.SettingPanel(),
+    ),
+    ModuleInformation(
+      type: ModuleType.resource_forwarder,
+      icon: IconSymbols.share_windows,
+      name: 'Resource Forwarder',
+      mainPage: (option) => resource_forwarder.MainPage(option: option),
+      settingPanel: () => const resource_forwarder.SettingPanel(),
     ),
   ];
 

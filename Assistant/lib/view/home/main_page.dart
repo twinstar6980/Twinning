@@ -92,6 +92,7 @@ class _MainPageState extends State<MainPage> {
     this._tabIndex = -1;
     ControlHelper.runAfterNextFrame(() async {
       var setting = Provider.of<SettingProvider>(this.context, listen: false);
+      setting.state.mInsertTabItem = this._insertTabItem;
       if (setting.state.mInitialTab != null) {
         await this._insertTabItem(setting.state.mInitialTab!);
       }

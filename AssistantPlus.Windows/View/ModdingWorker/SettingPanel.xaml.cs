@@ -44,7 +44,6 @@ namespace AssistantPlus.View.ModdingWorker {
 				AutomaticScroll = false,
 				ImmediateLaunch = false,
 				MessageFont = "",
-				AlternativeLaunchScript = "",
 			})
 		);
 
@@ -79,8 +78,7 @@ namespace AssistantPlus.View.ModdingWorker {
 				nameof(this.uArgumentText_Text),
 				nameof(this.uAutomaticScrollToggle_IsChecked),
 				nameof(this.uImmediateLaunchToggle_IsChecked),
-				nameof(this.uMessageFontText_Text),
-				nameof(this.uAlternativeLaunchScriptText_Text)
+				nameof(this.uMessageFontText_Text)
 			);
 			return;
 		}
@@ -265,43 +263,6 @@ namespace AssistantPlus.View.ModdingWorker {
 				}));
 			}
 			flyout.ShowAt(senders);
-			return;
-		}
-
-		#endregion
-
-		#region alternative launch script
-
-		public async void uAlternativeLaunchScriptText_LostFocus (
-			Object          sender,
-			RoutedEventArgs args
-		) {
-			var senders = sender.AsClass<TextBox>();
-			this.Data.AlternativeLaunchScript = StorageHelper.Regularize(senders.Text);
-			this.NotifyPropertyChanged(
-				nameof(this.uAlternativeLaunchScriptText_Text)
-			);
-			return;
-		}
-
-		public String uAlternativeLaunchScriptText_Text {
-			get {
-				return this.Data.AlternativeLaunchScript;
-			}
-		}
-
-		public async void uAlternativeLaunchScriptPick_Click (
-			Object          sender,
-			RoutedEventArgs args
-		) {
-			var senders = sender.AsClass<Button>();
-			var value = await StorageHelper.PickOpenFile(WindowHelper.Find(this.View), $"{nameof(ModdingWorker)}.AlternativeLaunchScript");
-			if (value is not null) {
-				this.Data.AlternativeLaunchScript = value;
-				this.NotifyPropertyChanged(
-					nameof(this.uAlternativeLaunchScriptText_Text)
-				);
-			}
 			return;
 		}
 

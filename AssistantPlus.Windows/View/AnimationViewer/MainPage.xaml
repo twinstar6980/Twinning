@@ -56,7 +56,6 @@
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				Padding="0,2,0,-2"
-				IsEnabled="{x:Bind Controller.uImageList_IsEnabled}"
 				SelectionMode="Extended"
 				IsItemClickEnabled="True"
 				ItemsSource="{x:Bind Controller.uImageList_ItemsSource}"
@@ -202,7 +201,7 @@
 								Text="{x:Bind Controller.uAnimationFile_Text}"
 								/>
 							<Button
-								ToolTipService.ToolTip="Pick In Window"
+								ToolTipService.ToolTip="Pick"
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
 								Click="{x:Bind Controller.uAnimationFilePick_Click}"
@@ -225,7 +224,7 @@
 								Text="{x:Bind Controller.uImageDirectory_Text}"
 								/>
 							<Button
-								ToolTipService.ToolTip="Pick In Window"
+								ToolTipService.ToolTip="Pick"
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
 								IsEnabled="{x:Bind Controller.uImageDirectoryPick_IsEnabled}"
@@ -739,7 +738,6 @@
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				Padding="0,2,0,2"
-				IsEnabled="{x:Bind Controller.uSpriteList_IsEnabled}"
 				SelectionMode="Extended"
 				IsItemClickEnabled="True"
 				ItemsSource="{x:Bind Controller.uSpriteList_ItemsSource}"
@@ -813,7 +811,6 @@
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				Padding="0,2,0,-2"
-				IsEnabled="{x:Bind Controller.uMainSpriteList_IsEnabled}"
 				SelectionMode="Extended"
 				IsItemClickEnabled="True"
 				ItemsSource="{x:Bind Controller.uMainSpriteList_ItemsSource}"

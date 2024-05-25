@@ -268,18 +268,17 @@ class CustomSettingItem extends StatelessWidget {
     return ListTile(
       enabled: this.enabled,
       leading: Icon(this.icon),
-      title: Text(
-        this.label,
-        overflow: TextOverflow.ellipsis,
-      ),
-      trailing: SizedBox(
-        width: 120,
-        child: Row(
-          children: [
-            const Expanded(child: SizedBox()),
-            ...this.content,
-          ],
-        ),
+      title: Row(
+        children: [
+          Expanded(
+            child: Text(
+              this.label,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          const SizedBox(width: 16),
+          ...this.content,
+        ],
       ),
       onTap: () async {
         assertTest((this.onTap == null) != (this.panelBuilder == null));

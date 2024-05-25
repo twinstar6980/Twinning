@@ -38,7 +38,6 @@ namespace AssistantPlus.View.ResourceForwarder {
 			typeof(SettingPanel),
 			new (new Setting() {
 				OptionConfiguration = "",
-				AutomaticClose = false,
 				ParallelExecute = false,
 				EnableFilter = true,
 				EnableBatch = false,
@@ -73,7 +72,6 @@ namespace AssistantPlus.View.ResourceForwarder {
 		) {
 			this.NotifyPropertyChanged(
 				nameof(this.uOptionConfigurationText_Text),
-				nameof(this.uAutomaticCloseToggle_IsChecked),
 				nameof(this.uParallelExecuteToggle_IsChecked),
 				nameof(this.uEnableFilterToggle_IsChecked),
 				nameof(this.uEnableBatchToggle_IsChecked),
@@ -192,25 +190,6 @@ namespace AssistantPlus.View.ResourceForwarder {
 		) {
 			var senders = sender.AsClass<ToggleButton>();
 			this.Data.RemainInput = senders.IsChecked.AsNotNull();
-			return;
-		}
-
-		#endregion
-
-		#region automatic close
-
-		public Boolean uAutomaticCloseToggle_IsChecked {
-			get {
-				return this.Data.AutomaticClose;
-			}
-		}
-
-		public async void uAutomaticCloseToggle_Click (
-			Object          sender,
-			RoutedEventArgs args
-		) {
-			var senders = sender.AsClass<ToggleButton>();
-			this.Data.AutomaticClose = senders.IsChecked.AsNotNull();
 			return;
 		}
 

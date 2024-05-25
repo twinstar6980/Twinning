@@ -43,7 +43,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			this.Controller.AdditionalArgument = additionalArgument;
 			this.Controller.NotifyPropertyChanged(
 				nameof(this.Controller.uAdditionalArgumentCount_Text),
-				nameof(this.Controller.uAdditionalArgument_Text)
+				nameof(this.Controller.uAdditionalArgumentContent_Text)
 			);
 			return await this.Controller.LaunchSession();
 		}
@@ -139,7 +139,7 @@ namespace AssistantPlus.View.ModdingWorker {
 				this.AdditionalArgument = optionAdditionalArgument;
 				this.NotifyPropertyChanged(
 					nameof(this.uAdditionalArgumentCount_Text),
-					nameof(this.uAdditionalArgument_Text)
+					nameof(this.uAdditionalArgumentContent_Text)
 				);
 			}
 			if (optionImmediateLaunch is not null) {
@@ -169,52 +169,6 @@ namespace AssistantPlus.View.ModdingWorker {
 				return false;
 			}
 			return true;
-		}
-
-		// ----------------
-
-		public async Task<List<String>?> LaunchSession (
-		) {
-			GF.AssertTest(this.SessionTask is null);
-			var result = default(List<String>?);
-			var exception = default(Exception?);
-			var kernelCopy = StorageHelper.Temporary();
-			var library = new Bridge.Library();
-			this.SessionTask = new (() => (Bridge.Launcher.Launch(this.SessionClient, library, App.Setting.Data.ModdingWorker.Script, [..App.Setting.Data.ModdingWorker.Argument, ..this.AdditionalArgument])));
-			this.NotifyPropertyChanged(
-				nameof(this.uLaunch_Visibility),
-				nameof(this.uSubmissionBar_Visibility),
-				nameof(this.uProgress_ProgressIndeterminate)
-			);
-			this.uMessageList_ItemsSource.Clear();
-			try {
-				StorageHelper.CopyFile(App.Setting.Data.ModdingWorker.Kernel, kernelCopy);
-				library.Open(kernelCopy);
-				this.SessionTask.Start();
-				result = await this.SessionTask;
-			}
-			catch (Exception e) {
-				exception = e;
-			}
-			if (library.State()) {
-				library.Close();
-			}
-			if (StorageHelper.ExistFile(kernelCopy)) {
-				StorageHelper.RemoveFile(kernelCopy);
-			}
-			if (exception is null) {
-				await this.SendMessage(MessageType.Success, "SUCCEEDED", result.AsNotNull());
-			}
-			else {
-				await this.SendMessage(MessageType.Error, "FAILED", [exception.ToString()]);
-			}
-			this.SessionTask = null;
-			this.NotifyPropertyChanged(
-				nameof(this.uLaunch_Visibility),
-				nameof(this.uSubmissionBar_Visibility),
-				nameof(this.uProgress_ProgressIndeterminate)
-			);
-			return result;
 		}
 
 		// ----------------
@@ -282,6 +236,52 @@ namespace AssistantPlus.View.ModdingWorker {
 			return value;
 		}
 
+		// ----------------
+
+		public async Task<List<String>?> LaunchSession (
+		) {
+			GF.AssertTest(this.SessionTask is null);
+			var result = default(List<String>?);
+			var exception = default(Exception?);
+			var kernelCopy = StorageHelper.Temporary();
+			var library = new Bridge.Library();
+			this.SessionTask = new (() => (Bridge.Launcher.Launch(this.SessionClient, library, App.Setting.Data.ModdingWorker.Script, [..App.Setting.Data.ModdingWorker.Argument, ..this.AdditionalArgument])));
+			this.NotifyPropertyChanged(
+				nameof(this.uLaunch_Visibility),
+				nameof(this.uSubmissionBar_Visibility),
+				nameof(this.uProgress_ProgressIndeterminate)
+			);
+			this.uMessageList_ItemsSource.Clear();
+			try {
+				StorageHelper.CopyFile(App.Setting.Data.ModdingWorker.Kernel, kernelCopy);
+				library.Open(kernelCopy);
+				this.SessionTask.Start();
+				result = await this.SessionTask;
+			}
+			catch (Exception e) {
+				exception = e;
+			}
+			if (library.State()) {
+				library.Close();
+			}
+			if (StorageHelper.ExistFile(kernelCopy)) {
+				StorageHelper.RemoveFile(kernelCopy);
+			}
+			if (exception is null) {
+				await this.SendMessage(MessageType.Success, "SUCCEEDED", result.AsNotNull());
+			}
+			else {
+				await this.SendMessage(MessageType.Error, "FAILED", [exception.ToString()]);
+			}
+			this.SessionTask = null;
+			this.NotifyPropertyChanged(
+				nameof(this.uLaunch_Visibility),
+				nameof(this.uSubmissionBar_Visibility),
+				nameof(this.uProgress_ProgressIndeterminate)
+			);
+			return result;
+		}
+
 		#endregion
 
 		#region page
@@ -291,9 +291,6 @@ namespace AssistantPlus.View.ModdingWorker {
 			DragEventArgs args
 		) {
 			var senders = sender.AsClass<Page>();
-			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
-				args.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Link;
-			}
 			return;
 		}
 
@@ -302,15 +299,6 @@ namespace AssistantPlus.View.ModdingWorker {
 			DragEventArgs args
 		) {
 			var senders = sender.AsClass<Page>();
-			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
-				args.Handled = true;
-				var data = await args.DataView.GetStorageItemsAsync();
-				this.AdditionalArgument.AddRange(data.Select((value) => (StorageHelper.Regularize(value.Path))).ToList());
-				this.NotifyPropertyChanged(
-					nameof(this.uAdditionalArgumentCount_Text),
-					nameof(this.uAdditionalArgument_Text)
-				);
-			}
 			return;
 		}
 
@@ -345,13 +333,13 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		// ----------------
 
-		public String uAdditionalArgument_Text {
+		public String uAdditionalArgumentContent_Text {
 			get {
 				return ConvertHelper.MakeStringListToStringWithLine(this.AdditionalArgument);
 			}
 		}
 
-		public async void uAdditionalArgument_TextChanged (
+		public async void uAdditionalArgumentContent_TextChanged (
 			Object               sender,
 			TextChangedEventArgs args
 		) {

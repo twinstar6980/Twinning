@@ -12,7 +12,7 @@ namespace AssistantPlus.Utility {
 
 	public static class JsonHelper {
 
-		#region serialize
+		#region serialization
 
 		private static readonly JsonSerializer Serializer = JsonSerializer.CreateDefault(new () {
 			NullValueHandling = NullValueHandling.Include,
