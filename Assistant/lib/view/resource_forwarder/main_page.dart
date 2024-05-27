@@ -198,21 +198,23 @@ class _MainPageState extends State<MainPage> {
   build(context) {
     var setting = Provider.of<SettingProvider>(context);
     return CustomModulePage(
-      content: Stack(
+      content: Column(
         children: [
-          Scrollbar(
-            interactive: true,
-            controller: this._optionListScrollController,
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(4, 4, 4, 4),
+          Expanded(
+            child: Scrollbar(
+              interactive: true,
               controller: this._optionListScrollController,
-              children: this._optionConfiguration.mapIndexed((optionGroupIndex, optionGroup) => OptionGroupItem(
-                configuration: optionGroup,
-                match: this._match[optionGroupIndex],
-                enableFilter: this._enableFilter,
-                enableBatch: this._enableBatch,
-                onForward: this._executeForward,
-              )).toList(),
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(4, 4, 4, 4),
+                controller: this._optionListScrollController,
+                children: this._optionConfiguration.mapIndexed((optionGroupIndex, optionGroup) => OptionGroupItem(
+                  configuration: optionGroup,
+                  match: this._match[optionGroupIndex],
+                  enableFilter: this._enableFilter,
+                  enableBatch: this._enableBatch,
+                  onForward: this._executeForward,
+                )).toList(),
+              ),
             ),
           ),
         ],

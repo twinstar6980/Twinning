@@ -3,11 +3,11 @@ import '/common.dart';
 // ----------------
 
 class Setting {
-  String       mOptionConfiguration;
-  Boolean      mParallelExecute;
-  Boolean      mEnableFilter;
-  Boolean      mEnableBatch;
-  Boolean      mRemainInput;
+  String  mOptionConfiguration;
+  Boolean mParallelExecute;
+  Boolean mEnableFilter;
+  Boolean mEnableBatch;
+  Boolean mRemainInput;
   Setting({
     required this.mOptionConfiguration,
     required this.mParallelExecute,

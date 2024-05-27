@@ -16,30 +16,53 @@ class ForwardActivity : Activity() {
 	): Unit {
 		super.onCreate(savedInstanceState)
 		try {
-			val selection = mutableListOf<Uri>()
+			val resource = mutableListOf<Uri>()
 			if (this.intent.action == Intent.ACTION_SEND) {
-				selection.add(this.intent.getParcelableExtra(Intent.EXTRA_STREAM)!!)
+				resource.add(this.intent.getParcelableExtra(Intent.EXTRA_STREAM)!!)
 			}
 			if (this.intent.action == Intent.ACTION_SEND_MULTIPLE) {
-				selection.addAll(this.intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM)!!)
+				resource.addAll(this.intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM)!!)
 			}
-			val command = listOf("-initial_tab", "Modding Worker", "modding_worker", "-additional_argument", *selection.map { item -> item.toString() }.toTypedArray())
-			val intent = Intent().also { intent ->
-				intent.setAction(Intent.ACTION_VIEW)
-				intent.setData(Uri.parse("twinstar.toolkit.assistant:/run?${command.joinToString("&") { item -> "command=${Uri.encode(item)}" }}"))
-				intent.setClipData(ClipData.newPlainText("", "").also { clip ->
-					for (item in selection) {
-						clip.addItem(ClipData.Item(item))
-					}
-				})
-				intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-			}
-			this.startActivity(intent)
+			this.forwardResource(resource)
 		}
 		catch (e: Exception) {
-			Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
+			this.showException(e)
 		}
 		this.finish()
+		return
+	}
+
+	// endregion
+
+	// region utility
+
+	private fun showException(
+		exception: Exception,
+	): Unit {
+		Toast.makeText(this, exception.toString(), Toast.LENGTH_LONG).show()
+		return
+	}
+
+	private fun forwardResource(
+		resource: List<Uri>,
+	): Unit {
+		val command = mutableListOf<String>()
+		command.add("-initial_tab")
+		command.add("Resource Forwarder")
+		command.add("resource_forwarder")
+		command.add("-input")
+		command.addAll(resource.map() { item -> item.toString() })
+		val link = "twinstar.toolkit.assistant:/run?${command.joinToString("&") { item -> "command=${Uri.encode(item)}" }}"
+		this.startActivity(Intent().also { intent ->
+			intent.setAction(Intent.ACTION_VIEW)
+			intent.setData(Uri.parse(link))
+			intent.setClipData(ClipData.newPlainText("", "").also { clip ->
+				resource.forEach() { item -> clip.addItem(ClipData.Item(item)) }
+			})
+			intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+			intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+		})
 		return
 	}
 

@@ -9,11 +9,11 @@ struct mainApp: App {
 
 	// MARK: - construct
 
- 	public init(
- 	) {
+	public init(
+	) {
 		do {
 			guard let libraryDirectory = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true).first else {
-				throw NSError(domain: "failed to get library directory", code: 0)
+				throw NSError(domain: "failed to get library directory.", code: 0)
 			}
 			let dataDirectory = "\(libraryDirectory)/Containers/\(Bundle.main.bundleIdentifier!).extension/Data/Documents"
 			let scriptFile = "\(dataDirectory)/forward.sh"
@@ -38,20 +38,22 @@ struct mainApp: App {
 				try FileManager.default.setAttributes([.posixPermissions: NSNumber(0o744)], ofItemAtPath: scriptFile)
 			}
 			if !NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: dataDirectory) {
-				throw NSError(domain: "failed to reveal data directory", code: 0)
+				throw NSError(domain: "failed to reveal data directory.", code: 0)
 			}
 			exit(0)
 		}
 		catch {
 			self.exception = error.localizedDescription
 		}
- 	}
+	}
 
- 	// MARK: - view
+	// MARK: - view
 
 	public var body: some Scene {
-		WindowGroup {
-			Text(self.exception)
+		WindowGroup() {
+			Text(
+				verbatim: self.exception
+			)
 		}
 	}
 

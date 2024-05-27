@@ -28,10 +28,10 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Void {
-    let rootController = self.host.window?.rootViewController as! FlutterViewController
+    let rootView = self.host.window?.rootViewController as! FlutterViewController
     FlutterMethodChannel(
       name: "com.twinstar.toolkit.assistant.CustomMethodChannel",
-      binaryMessenger: rootController.binaryMessenger
+      binaryMessenger: rootView.binaryMessenger
     ).setMethodCallHandler({ [weak self] (call, result) in
       Task {
         await self?.handle(call: call, result: result)
@@ -56,12 +56,12 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
   ) async -> Void {
     do {
       guard let argument = call.arguments as? [String: Any?] else {
-        throw NSError(domain: "invalid argument", code: 0)
+        throw NSError(domain: "invalid argument.", code: 0)
       }
       switch call.method {
       case "pick_storage_path":
         guard let detailType = argument["type"] as? String else {
-          throw NSError(domain: "invalid argument", code: 0)
+          throw NSError(domain: "invalid argument.", code: 0)
         }
         let detailTarget = try await self.handlePickStoragePath(
           type: detailType
@@ -85,23 +85,23 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
     type: String
   ) async throws -> String? {
     guard type == "open_file" || type == "open_directory" || type == "save_file" else {
-      throw NSError(domain: "invalid type", code: 0)
+      throw NSError(domain: "invalid type.", code: 0)
     }
-    let rootController = self.host.window?.rootViewController as! FlutterViewController
-    var pickerController: UIDocumentPickerViewController!
+    let rootView = self.host.window?.rootViewController as! FlutterViewController
+    var pickerView: UIDocumentPickerViewController!
     if type == "open_file" {
-      pickerController = UIDocumentPickerViewController(forOpeningContentTypes: [.item])
+      pickerView = UIDocumentPickerViewController(forOpeningContentTypes: [.item])
     }
     if type == "open_directory" {
-      pickerController = UIDocumentPickerViewController(forOpeningContentTypes: [.folder])
+      pickerView = UIDocumentPickerViewController(forOpeningContentTypes: [.folder])
     }
     if type == "save_file" {
-      pickerController = UIDocumentPickerViewController(forExporting: [], asCopy: false)
+      pickerView = UIDocumentPickerViewController(forExporting: [], asCopy: false)
     }
-    pickerController.delegate = self
-    pickerController.allowsMultipleSelection = false
-    pickerController.shouldShowFileExtensions = true
-    rootController.present(pickerController, animated: true)
+    pickerView.delegate = self
+    pickerView.allowsMultipleSelection = false
+    pickerView.shouldShowFileExtensions = true
+    rootView.present(pickerView, animated: true)
     let targetUrl = await withCheckedContinuation { (continuation) in self.continuation = continuation } as? URL
     self.continuation = nil
     let target = targetUrl == nil ? nil : try self.parsePathOfFileURL(url: targetUrl!)
@@ -138,10 +138,10 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
     url: URL
   ) throws -> String {
     guard let urlComponent = NSURLComponents(url: url, resolvingAgainstBaseURL: true) else {
-      throw NSError(domain: "invalid url", code: 0)
+      throw NSError(domain: "invalid url.", code: 0)
     }
     guard urlComponent.scheme == "file" && urlComponent.host == "" && urlComponent.port == nil && urlComponent.path != nil else {
-      throw NSError(domain: "unknown url", code: 0)
+      throw NSError(domain: "unknown url.", code: 0)
     }
     var path = urlComponent.path!
     if path.count > 1 && path.last == "/" {

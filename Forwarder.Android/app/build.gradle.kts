@@ -12,25 +12,13 @@ val keystoreProperties = Properties().also {
 android {
 	namespace = "com.twinstar.toolkit.forwarder"
 	compileSdk = 34
-	buildToolsVersion = "34.0.0"
-
-	compileOptions {
-		sourceCompatibility = JavaVersion.VERSION_1_8
-		targetCompatibility = JavaVersion.VERSION_1_8
-	}
-
-	kotlinOptions {
-		jvmTarget = "1.8"
-	}
 
 	defaultConfig {
 		applicationId = "com.twinstar.toolkit.forwarder"
 		minSdk = 28
 		targetSdk = 34
-		versionCode = 8
-		versionName = "8.0.0"
-		
-		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+		versionCode = 9
+		versionName = "9"
 	}
 
 	signingConfigs {
@@ -46,10 +34,37 @@ android {
 		release {
 			isMinifyEnabled = true
 			isShrinkResources = true
+			proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
+
 			signingConfig = signingConfigs.getByName("release")
+		}
+	}
+
+	compileOptions {
+		sourceCompatibility = JavaVersion.VERSION_17
+		targetCompatibility = JavaVersion.VERSION_17
+	}
+
+	kotlinOptions {
+		jvmTarget = "17"
+	}
+
+	buildFeatures {
+		compose = true
+	}
+
+	composeOptions {
+		kotlinCompilerExtensionVersion = "1.5.14"
+	}
+
+	packaging {
+		resources {
+			excludes += "/META-INF/{AL2.0,LGPL2.1}"
 		}
 	}
 }
 
 dependencies {
+	implementation(libs.androidx.activity.compose)
+	implementation(libs.androidx.material3)
 }
