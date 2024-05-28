@@ -3,7 +3,7 @@
 #include "shell/common.hpp"
 #include "shell/bridge/data.hpp"
 
-namespace TwinStar::Shell::Bridge {
+namespace Twinning::Shell::Bridge {
 
 	#pragma region type
 

@@ -5,7 +5,7 @@
 #include "kernel/utility/miscellaneous/character_series/type.hpp"
 #include "kernel/utility/miscellaneous/character_series/stream_adapter.hpp"
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region type
 

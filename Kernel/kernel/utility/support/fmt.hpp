@@ -9,27 +9,27 @@ namespace fmt {
 	#pragma region string
 
 	template <auto t_constant> requires
-		TwinStar::Kernel::AutoConstraint
-	struct formatter<TwinStar::Kernel::StringView<t_constant>> :
+		Twinning::Kernel::AutoConstraint
+	struct formatter<Twinning::Kernel::StringView<t_constant>> :
 		formatter<std::string_view> {
 		template <typename Context>
 		auto format (
-			TwinStar::Kernel::StringView<t_constant> const & value,
+			Twinning::Kernel::StringView<t_constant> const & value,
 			Context &                                        context
 		) {
-			return formatter<std::string_view>::format(TwinStar::Kernel::make_std_string_view(value), context);
+			return formatter<std::string_view>::format(Twinning::Kernel::make_std_string_view(value), context);
 		}
 	};
 
 	template <>
-	struct formatter<TwinStar::Kernel::String> :
+	struct formatter<Twinning::Kernel::String> :
 		formatter<std::string_view> {
 		template <typename Context>
 		auto format (
-			TwinStar::Kernel::String const & value,
+			Twinning::Kernel::String const & value,
 			Context &                        context
 		) {
-			return formatter<std::string_view>::format(TwinStar::Kernel::make_std_string_view(value), context);
+			return formatter<std::string_view>::format(Twinning::Kernel::make_std_string_view(value), context);
 		}
 	};
 
@@ -38,10 +38,10 @@ namespace fmt {
 	#pragma region base wrapper
 
 	template <typename TType> requires
-		TwinStar::Kernel::AutoConstraint
-		&& (TwinStar::Kernel::IsBaseWrapper<TType>)
+		Twinning::Kernel::AutoConstraint
+		&& (Twinning::Kernel::IsBaseWrapper<TType>)
 	#if defined M_compiler_clang // NOTE : avoid clang bug
-		&& (TwinStar::Kernel::IsDerivedFrom<TType, TwinStar::Kernel::BaseWrapper<typename TType::Value>>)
+		&& (Twinning::Kernel::IsDerivedFrom<TType, Twinning::Kernel::BaseWrapper<typename TType::Value>>)
 	#endif
 	struct formatter<TType> :
 		formatter<typename TType::Value> {
@@ -59,14 +59,14 @@ namespace fmt {
 	#pragma region miscellaneous
 
 	template <>
-	struct formatter<TwinStar::Kernel::Path> :
-		formatter<TwinStar::Kernel::String> {
+	struct formatter<Twinning::Kernel::Path> :
+		formatter<Twinning::Kernel::String> {
 		template <typename Context>
 		auto format (
-			TwinStar::Kernel::Path const & value,
+			Twinning::Kernel::Path const & value,
 			Context &                      context
 		) {
-			return formatter<TwinStar::Kernel::String>::format(value.to_string(), context);
+			return formatter<Twinning::Kernel::String>::format(value.to_string(), context);
 		}
 	};
 

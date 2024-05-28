@@ -25,7 +25,7 @@ extern char * * environ; // NOTE : not declared in unistd.h of xcode sdk
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinStar::Kernel::Third::posix {
+namespace Twinning::Kernel::Third::posix {
 }
 
 #endif

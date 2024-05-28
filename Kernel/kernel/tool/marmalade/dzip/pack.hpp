@@ -6,7 +6,7 @@
 #include "kernel/tool/data/compression/bzip2/compress.hpp"
 #include "kernel/tool/data/compression/lzma/compress.hpp"
 
-namespace TwinStar::Kernel::Tool::Marmalade::DZip {
+namespace Twinning::Kernel::Tool::Marmalade::DZip {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Pack :

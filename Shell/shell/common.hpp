@@ -1,6 +1,6 @@
 #pragma once
 
-#define M_version "39"
+#define M_version "40"
 
 #include <type_traits>
 #include <algorithm>
@@ -21,7 +21,7 @@
 #include <locale>
 #include <iostream>
 
-namespace TwinStar::Shell {
+namespace Twinning::Shell {
 
 	#pragma region literal
 

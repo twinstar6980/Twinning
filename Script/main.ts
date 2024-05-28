@@ -1,8 +1,8 @@
-namespace TwinStar.Script {
+namespace Twinning.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = '107';
+	export const k_version = '108';
 
 	// ------------------------------------------------
 
@@ -294,7 +294,7 @@ namespace TwinStar.Script {
 		async function internal(
 			argument: Array<string>,
 		): Promise<Array<string>> {
-			Detail.output(`TwinStar.ToolKit ~ Kernel:${Kernel.Miscellaneous.g_version.value} & Shell:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['name'])).value[0]}:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['version'])).value[0]} & Script:${k_version} ~ ${Kernel.Miscellaneous.g_system.value}:${Kernel.Miscellaneous.g_architecture.value}`);
+			Detail.output(`Twinning ~ Kernel:${Kernel.Miscellaneous.g_version.value} & Shell:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['name'])).value[0]}:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['version'])).value[0]} & Script:${k_version} ~ ${Kernel.Miscellaneous.g_system.value}:${Kernel.Miscellaneous.g_architecture.value}`);
 			assert_test(argument.length >= 1, `argument too few`);
 			// 获取主目录
 			let home_path = argument[0].replaceAll(`\\`, '/');
@@ -354,4 +354,4 @@ namespace TwinStar.Script {
 
 }
 
-TwinStar.Script.Main.external;
+Twinning.Script.Main.external;

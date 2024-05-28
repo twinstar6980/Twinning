@@ -3,7 +3,7 @@
 #include "kernel/utility/utility.hpp"
 #include "kernel/tool/data/encoding/base64/common.hpp"
 
-namespace TwinStar::Kernel::Tool::Data::Encoding::Base64 {
+namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 
 	struct Decode :
 		Common {

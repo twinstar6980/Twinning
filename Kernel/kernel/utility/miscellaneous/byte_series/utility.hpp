@@ -3,7 +3,7 @@
 #include "kernel/utility/container/stream/stream_view.hpp"
 #include "kernel/utility/miscellaneous/byte_series/container.hpp"
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region padding
 

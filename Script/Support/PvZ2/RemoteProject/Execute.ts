@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Support.PvZ2.RemoteProject {
+namespace Twinning.Script.Support.PvZ2.RemoteProject {
 
 	// ------------------------------------------------
 

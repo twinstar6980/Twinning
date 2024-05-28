@@ -4,7 +4,7 @@
 #include "kernel/tool/popcap/zlib/common.hpp"
 #include "kernel/tool/data/compression/deflate/compress.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::ZLib {
+namespace Twinning::Kernel::Tool::PopCap::ZLib {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Compress :

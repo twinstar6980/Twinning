@@ -3,7 +3,7 @@
 #include "kernel/utility/data/json/value.hpp"
 #include "kernel/utility/miscellaneous/dimension.hpp"
 
-namespace TwinStar::Kernel::Image {
+namespace Twinning::Kernel::Image {
 
 	#pragma region type
 

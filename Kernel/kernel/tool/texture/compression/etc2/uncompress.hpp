@@ -4,7 +4,7 @@
 #include "kernel/tool/texture/compression/etc2/common.hpp"
 #include "kernel/third/ETCPACK.hpp"
 
-namespace TwinStar::Kernel::Tool::Texture::Compression::ETC2 {
+namespace Twinning::Kernel::Tool::Texture::Compression::ETC2 {
 
 	struct Uncompress :
 		Common {

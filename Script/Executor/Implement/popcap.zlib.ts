@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.popcap.zlib {
+namespace Twinning.Script.Executor.Implement.popcap.zlib {
 
 	// ------------------------------------------------
 
@@ -119,4 +119,4 @@ namespace TwinStar.Script.Executor.Implement.popcap.zlib {
 
 }
 
-TwinStar.Script.Executor.Implement.popcap.zlib.injector;
+Twinning.Script.Executor.Implement.popcap.zlib.injector;

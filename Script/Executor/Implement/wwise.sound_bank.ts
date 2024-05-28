@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.wwise.sound_bank {
+namespace Twinning.Script.Executor.Implement.wwise.sound_bank {
 
 	// ------------------------------------------------
 
@@ -139,4 +139,4 @@ namespace TwinStar.Script.Executor.Implement.wwise.sound_bank {
 
 }
 
-TwinStar.Script.Executor.Implement.wwise.sound_bank.injector;
+Twinning.Script.Executor.Implement.wwise.sound_bank.injector;

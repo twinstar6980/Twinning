@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool::Data::Serialization::JSON {
+namespace Twinning::Kernel::Tool::Data::Serialization::JSON {
 
 	using Kernel::JSON::ValueType;
 

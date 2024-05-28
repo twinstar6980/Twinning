@@ -7,7 +7,7 @@
 #include "kernel/tool/popcap/resource_stream_bundle/structure.hpp"
 #include "kernel/tool/popcap/resource_stream_bundle/shared.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
+namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Common {

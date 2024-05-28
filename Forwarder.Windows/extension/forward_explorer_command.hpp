@@ -2,7 +2,7 @@
 
 #include "./common.hpp"
 
-namespace TwinStar::Forwarder {
+namespace Twinning::Forwarder {
 
 	#pragma region implement
 
@@ -90,7 +90,7 @@ namespace TwinStar::Forwarder {
 			_In_opt_ IBindCtx *        pbc
 		) override {
 			try {
-				auto script = get_roaming_app_data_directory_path() + L"\\TwinStar.ToolKit.Forwarder\\forward.cmd";
+				auto script = get_roaming_app_data_directory_path() + L"\\TwinStar.Twinning.Forwarder\\forward.cmd";
 				assert_test(std::filesystem::is_regular_file(script));
 				auto program = std::wstring{L"C:\\Windows\\System32\\cmd.exe"};
 				auto argument = std::vector<std::wstring>{};

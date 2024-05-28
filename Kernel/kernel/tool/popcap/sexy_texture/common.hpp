@@ -3,7 +3,7 @@
 #include "kernel/utility/utility.hpp"
 #include "kernel/tool/popcap/sexy_texture/version.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::SexyTexture {
+namespace Twinning::Kernel::Tool::PopCap::SexyTexture {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Common {

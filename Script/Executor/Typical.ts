@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor {
+namespace Twinning.Script.Executor {
 
 	// ------------------------------------------------
 

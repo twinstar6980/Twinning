@@ -32,7 +32,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace = "com.twinstar.toolkit.assistant"
+    namespace = "com.twinstar.twinning.assistant"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -43,7 +43,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.twinstar.toolkit.assistant"
+        applicationId = "com.twinstar.twinning.assistant"
         minSdk = 28
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()

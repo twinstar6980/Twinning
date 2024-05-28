@@ -3,7 +3,7 @@
 #include "kernel/utility/container/optional/optional.hpp"
 #include "kernel/utility/container/optional/optional_view.hpp"
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region type
 

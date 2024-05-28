@@ -3,7 +3,7 @@
 #include "kernel/utility/utility.hpp"
 #include "kernel/tool/popcap/u_texture/version.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::UTexture {
+namespace Twinning::Kernel::Tool::PopCap::UTexture {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Common {

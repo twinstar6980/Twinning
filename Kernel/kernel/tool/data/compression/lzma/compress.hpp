@@ -4,7 +4,7 @@
 #include "kernel/tool/data/compression/lzma/common.hpp"
 #include "kernel/third/lzma.hpp"
 
-namespace TwinStar::Kernel::Tool::Data::Compression::Lzma {
+namespace Twinning::Kernel::Tool::Data::Compression::Lzma {
 
 	struct Compress :
 		Common {

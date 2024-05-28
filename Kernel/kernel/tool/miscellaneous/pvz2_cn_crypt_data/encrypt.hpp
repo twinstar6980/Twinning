@@ -4,7 +4,7 @@
 #include "kernel/tool/miscellaneous/pvz2_cn_crypt_data/common.hpp"
 #include "kernel/tool/data/encryption/rijndael/encrypt.hpp"
 
-namespace TwinStar::Kernel::Tool::Miscellaneous::PvZ2CNCryptData {
+namespace Twinning::Kernel::Tool::Miscellaneous::PvZ2CNCryptData {
 
 	struct Encrypt :
 		Common {

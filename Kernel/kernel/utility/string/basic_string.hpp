@@ -4,7 +4,7 @@
 #include "kernel/utility/string/basic_string_view.hpp"
 #include "kernel/utility/string/basic_string_adapter.hpp"
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region type
 

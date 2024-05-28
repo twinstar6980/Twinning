@@ -4,7 +4,7 @@
 #include "kernel/tool/popcap/particle_effect/common.hpp"
 #include "kernel/tool/common/byte_stream.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::ParticleEffect {
+namespace Twinning::Kernel::Tool::PopCap::ParticleEffect {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Encode :

@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::Particle {
+namespace Twinning::Kernel::Tool::PopCap::Particle {
 
 	M_enumeration(
 		M_wrap(VersionPlatform),

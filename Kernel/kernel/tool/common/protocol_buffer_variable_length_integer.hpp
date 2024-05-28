@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool::ProtocolBufferVariableLengthInteger {
+namespace Twinning::Kernel::Tool::ProtocolBufferVariableLengthInteger {
 
 	#pragma region zig zag
 

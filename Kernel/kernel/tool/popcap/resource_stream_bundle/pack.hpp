@@ -6,7 +6,7 @@
 #include "kernel/tool/popcap/resource_stream_group/unpack.hpp"
 #include <unordered_map>
 
-namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
+namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Pack :

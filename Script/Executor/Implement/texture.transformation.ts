@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.texture.transformation {
+namespace Twinning.Script.Executor.Implement.texture.transformation {
 
 	// ------------------------------------------------
 
@@ -184,4 +184,4 @@ namespace TwinStar.Script.Executor.Implement.texture.transformation {
 
 }
 
-TwinStar.Script.Executor.Implement.texture.transformation.injector;
+Twinning.Script.Executor.Implement.texture.transformation.injector;

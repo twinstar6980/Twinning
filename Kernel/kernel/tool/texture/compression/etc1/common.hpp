@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool::Texture::Compression::ETC1 {
+namespace Twinning::Kernel::Tool::Texture::Compression::ETC1 {
 
 	struct Common {
 

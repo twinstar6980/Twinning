@@ -13,7 +13,7 @@ class ForwardFinderSync: FIFinderSync {
 
 	public override init(
 	) {
-		self.applicationName = "TwinStar ToolKit - Forwarder"
+		self.applicationName = "Twinning Forwarder"
 		self.applicationLogo = NSImage(named: "Logo")!
 		super.init()
 		FIFinderSyncController.default().directoryURLs = [URL(fileURLWithPath: "/")]

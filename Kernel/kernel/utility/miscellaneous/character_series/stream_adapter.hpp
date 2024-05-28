@@ -4,7 +4,7 @@
 #include "kernel/utility/miscellaneous/character_series/container.hpp"
 #include "kernel/utility/miscellaneous/character_series/type.hpp"
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region type
 

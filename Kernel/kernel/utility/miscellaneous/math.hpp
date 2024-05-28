@@ -2,7 +2,7 @@
 
 #include "kernel/utility/base_wrapper/wrapper.hpp"
 
-namespace TwinStar::Kernel::Math {
+namespace Twinning::Kernel::Math {
 
 	#pragma region check
 

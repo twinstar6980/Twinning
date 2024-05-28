@@ -1,4 +1,4 @@
-# TwinStar ToolKit - Forwarder - Macintosh
+# Forwarder - Macintosh
 
 转发器，将快捷选项注入系统级文件分享接口（ Macintosh Finder 右键菜单）。
 

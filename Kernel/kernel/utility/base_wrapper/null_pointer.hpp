@@ -3,7 +3,7 @@
 #include "kernel/utility/base_wrapper/base.hpp"
 #include "kernel/utility/base_wrapper/pointer.hpp"
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region type
 

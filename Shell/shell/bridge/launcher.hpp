@@ -5,7 +5,7 @@
 #include "shell/bridge/library.hpp"
 #include "shell/bridge/client.hpp"
 
-namespace TwinStar::Shell::Bridge {
+namespace Twinning::Shell::Bridge {
 
 	#pragma region type
 

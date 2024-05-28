@@ -3,7 +3,7 @@
 #include "shell/common.hpp"
 #include "shell/utility/macro.hpp"
 
-namespace TwinStar::Shell {
+namespace Twinning::Shell {
 
 	#pragma region function
 

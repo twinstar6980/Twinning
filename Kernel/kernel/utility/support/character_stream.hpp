@@ -4,7 +4,7 @@
 #include "kernel/utility/string/string.hpp"
 #include "kernel/utility/string/parser.hpp"
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region character
 

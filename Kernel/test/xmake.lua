@@ -42,9 +42,9 @@ target('test', function()
 		custom.apply_import_vld_if_can(target)
 	end)
 	set_runargs(
-		'/TwinStar.ToolKit/kernel',
-		'/TwinStar.ToolKit/script/main.js',
-		'/TwinStar.ToolKit',
+		'/Twinning/kernel',
+		'/Twinning/script/main.js',
+		'/Twinning',
 		{ private = true }
 	)
 end)

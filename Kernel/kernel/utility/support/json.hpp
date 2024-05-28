@@ -4,7 +4,7 @@
 #include "kernel/utility/container/wrapper/wrapper.hpp"
 #include "kernel/utility/miscellaneous/dimension.hpp"
 
-namespace TwinStar::Kernel::JSON {
+namespace Twinning::Kernel::JSON {
 
 	#pragma region basic
 

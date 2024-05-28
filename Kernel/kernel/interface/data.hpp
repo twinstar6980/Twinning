@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Interface {
+namespace Twinning::Kernel::Interface {
 
 	#pragma region type
 

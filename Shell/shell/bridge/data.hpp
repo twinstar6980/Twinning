@@ -2,7 +2,7 @@
 
 #include "shell/common.hpp"
 
-namespace TwinStar::Shell::Bridge {
+namespace Twinning::Shell::Bridge {
 
 	#pragma region type
 

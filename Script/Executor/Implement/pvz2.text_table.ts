@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.pvz2.text_table {
+namespace Twinning.Script.Executor.Implement.pvz2.text_table {
 
 	// ------------------------------------------------
 
@@ -53,4 +53,4 @@ namespace TwinStar.Script.Executor.Implement.pvz2.text_table {
 
 }
 
-TwinStar.Script.Executor.Implement.pvz2.text_table.injector;
+Twinning.Script.Executor.Implement.pvz2.text_table.injector;

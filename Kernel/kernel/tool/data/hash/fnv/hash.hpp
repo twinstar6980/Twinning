@@ -3,7 +3,7 @@
 #include "kernel/utility/utility.hpp"
 #include "kernel/tool/data/hash/fnv/common.hpp"
 
-namespace TwinStar::Kernel::Tool::Data::Hash::FNV {
+namespace Twinning::Kernel::Tool::Data::Hash::FNV {
 
 	struct Hash :
 		Common {

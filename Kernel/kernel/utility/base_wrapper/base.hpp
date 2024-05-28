@@ -4,7 +4,7 @@
 #include "kernel/utility/exception/exception.hpp"
 #include "kernel/utility/exception/utility.hpp"
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region value
 

@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::CharacterFontWidget2 {
+namespace Twinning::Kernel::Tool::PopCap::CharacterFontWidget2 {
 
 	M_record_of_map(
 		M_wrap(Version),

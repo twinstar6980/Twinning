@@ -1,4 +1,4 @@
-namespace TwinStar.Script {
+namespace Twinning.Script {
 
 	// ------------------------------------------------
 
@@ -22,14 +22,14 @@ namespace TwinStar.Script {
 
 		start(
 		): void {
-			assert_test(this.m_last_begin === null, `TwinStar.Timer.start : timer already startd`);
+			assert_test(this.m_last_begin === null, `Twinning.Script.Timer.start : timer already startd`);
 			this.m_last_begin = Date.now();
 			return;
 		}
 
 		stop(
 		): void {
-			assert_test(this.m_last_begin !== null, `TwinStar.Timer.stop : timer not startd`);
+			assert_test(this.m_last_begin !== null, `Twinning.Script.Timer.stop : timer not startd`);
 			this.m_duration += Date.now() - this.m_last_begin;
 			this.m_last_begin = null;
 			return;

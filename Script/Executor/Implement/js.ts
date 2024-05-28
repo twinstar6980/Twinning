@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.js {
+namespace Twinning.Script.Executor.Implement.js {
 
 	// ------------------------------------------------
 
@@ -54,4 +54,4 @@ namespace TwinStar.Script.Executor.Implement.js {
 
 }
 
-TwinStar.Script.Executor.Implement.js.injector;
+Twinning.Script.Executor.Implement.js.injector;

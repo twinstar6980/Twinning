@@ -2,7 +2,7 @@
 
 #include "kernel/utility/string/string.hpp"
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region type
 

@@ -4,7 +4,7 @@
 #include "kernel/tool/texture/compression/pvrtc4/common.hpp"
 #include "kernel/third/PVRTCCompressor.hpp"
 
-namespace TwinStar::Kernel::Tool::Texture::Compression::PVRTC4 {
+namespace Twinning::Kernel::Tool::Texture::Compression::PVRTC4 {
 
 	struct Uncompress :
 		Common {

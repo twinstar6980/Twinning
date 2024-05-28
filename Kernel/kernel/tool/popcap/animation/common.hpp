@@ -4,7 +4,7 @@
 #include "kernel/tool/popcap/animation/version.hpp"
 #include "kernel/tool/popcap/animation/definition.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::Animation {
+namespace Twinning::Kernel::Tool::PopCap::Animation {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Common {

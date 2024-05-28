@@ -3,7 +3,7 @@
 #include "kernel/utility/utility.hpp"
 #include "kernel/tool/popcap/package/version.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::Package {
+namespace Twinning::Kernel::Tool::PopCap::Package {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Definition {

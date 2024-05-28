@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Entry {
+namespace Twinning.Script.Entry {
 
 	// ------------------------------------------------
 
@@ -139,4 +139,4 @@ namespace TwinStar.Script.Entry {
 
 }
 
-TwinStar.Script.Entry.injector;
+Twinning.Script.Entry.injector;

@@ -4,7 +4,7 @@
 #include "kernel/tool/texture/transformation/common.hpp"
 #include "kernel/third/avir.hpp"
 
-namespace TwinStar::Kernel::Tool::Texture::Transformation {
+namespace Twinning::Kernel::Tool::Texture::Transformation {
 
 	struct Scale :
 		Common {

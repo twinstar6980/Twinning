@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.data.differentiation {
+namespace Twinning.Script.Executor.Implement.data.differentiation {
 
 	// ------------------------------------------------
 
@@ -99,4 +99,4 @@ namespace TwinStar.Script.Executor.Implement.data.differentiation {
 
 }
 
-TwinStar.Script.Executor.Implement.data.differentiation.injector;
+Twinning.Script.Executor.Implement.data.differentiation.injector;

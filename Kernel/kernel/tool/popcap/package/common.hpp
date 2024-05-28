@@ -5,7 +5,7 @@
 #include "kernel/tool/popcap/package/definition.hpp"
 #include "kernel/tool/popcap/package/structure.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::Package {
+namespace Twinning::Kernel::Tool::PopCap::Package {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Common {

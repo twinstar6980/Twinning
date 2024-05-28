@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Support.PvZ2.ResourceManifest {
+namespace Twinning.Script.Support.PvZ2.ResourceManifest {
 
 	// ------------------------------------------------
 

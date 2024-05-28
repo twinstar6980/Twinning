@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Support.Wwise.Media {
+namespace Twinning.Script.Support.Wwise.Media {
 
 	// ------------------------------------------------
 

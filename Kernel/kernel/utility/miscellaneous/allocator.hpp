@@ -3,7 +3,7 @@
 #include "kernel/utility/base_wrapper/wrapper.hpp"
 #include "kernel/utility/range/algorithm.hpp"
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region single allocate
 

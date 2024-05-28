@@ -14,10 +14,10 @@ namespace mscharconv = std;
 #endif
 #if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 #include "kernel/third/mscharconv.hpp"
-namespace mscharconv = TwinStar::Kernel::Third::mscharconv;
+namespace mscharconv = Twinning::Kernel::Third::mscharconv;
 #endif
 
-namespace TwinStar::Kernel::StringParser {
+namespace Twinning::Kernel::StringParser {
 
 	#pragma region character
 

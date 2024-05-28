@@ -8,9 +8,9 @@
 	xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
 	xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
 	IgnorableNamespaces="rescap uap uap10 com desktop4 desktop5">
-	<Identity Name="TwinStar.ToolKit.Forwarder" Publisher="CN=TwinStar" Version="38.0.0.0" ProcessorArchitecture="x64" />
+	<Identity Name="TwinStar.Twinning.Forwarder" Publisher="CN=TwinStar" Version="39.0.0.0" ProcessorArchitecture="x64" />
 	<Properties>
-		<DisplayName>TwinStar ToolKit - Forwarder</DisplayName>
+		<DisplayName>Twinning Forwarder</DisplayName>
 		<PublisherDisplayName>TwinStar</PublisherDisplayName>
 		<Description>None</Description>
 		<Logo>Asset\Logo\StoreLogo.png</Logo>
@@ -27,7 +27,7 @@
 	</Capabilities>
 	<Applications>
 		<Application Id="Main" Executable="$targetnametoken$.exe" uap10:RuntimeBehavior="win32App" uap10:TrustLevel="mediumIL">
-			<uap:VisualElements DisplayName="TwinStar ToolKit - Forwarder" Description="None" BackgroundColor="transparent" Square150x150Logo="Asset\Logo\Square150x150Logo.png" Square44x44Logo="Asset\Logo\Square44x44Logo.png">
+			<uap:VisualElements DisplayName="Twinning Forwarder" Description="None" BackgroundColor="transparent" Square150x150Logo="Asset\Logo\Square150x150Logo.png" Square44x44Logo="Asset\Logo\Square44x44Logo.png">
 				<uap:DefaultTile/>
 			</uap:VisualElements>
 			<Extensions>

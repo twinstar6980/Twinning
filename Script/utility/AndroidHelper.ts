@@ -1,4 +1,4 @@
-namespace TwinStar.Script.AndroidHelper {
+namespace Twinning.Script.AndroidHelper {
 
 	// ------------------------------------------------
 
@@ -8,7 +8,7 @@ namespace TwinStar.Script.AndroidHelper {
 
 	// ------------------------------------------------
 
-	export const k_remote_temporary_directory = `/data/local/tmp/TwinStar.ToolKit.Temporary`;
+	export const k_remote_temporary_directory = `/data/local/tmp/twinning`;
 
 	function es(
 		source: string,

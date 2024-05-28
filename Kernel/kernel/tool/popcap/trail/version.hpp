@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::Trail {
+namespace Twinning::Kernel::Tool::PopCap::Trail {
 
 	M_enumeration(
 		M_wrap(VersionPlatform),

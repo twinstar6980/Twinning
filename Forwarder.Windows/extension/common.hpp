@@ -39,9 +39,9 @@ namespace WRL = Microsoft::WRL;
 	}\
 	static_assert(true)
 
-namespace TwinStar::Forwarder {
+namespace Twinning::Forwarder {
 
-	inline auto g_application_name = std::wstring{L"TwinStar ToolKit - Forwarder"};
+	inline auto g_application_name = std::wstring{L"Twinning Forwarder"};
 
 	inline auto g_application_logo = std::wstring{};
 

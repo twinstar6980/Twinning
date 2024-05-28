@@ -3,7 +3,7 @@
 #include "kernel/utility/trait/base.hpp"
 #include "kernel/utility/trait/category.hpp"
 
-namespace TwinStar::Kernel::Trait {
+namespace Twinning::Kernel::Trait {
 
 	#pragma region concept
 

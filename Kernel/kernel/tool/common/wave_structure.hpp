@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool::WaveStructure {
+namespace Twinning::Kernel::Tool::WaveStructure {
 
 	#pragma region type
 

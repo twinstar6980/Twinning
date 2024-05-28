@@ -2,7 +2,7 @@
 
 #include "kernel/utility/trait/base.hpp"
 
-namespace TwinStar::Kernel::Trait {
+namespace Twinning::Kernel::Trait {
 
 	#pragma region concept
 

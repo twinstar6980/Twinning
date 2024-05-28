@@ -3,7 +3,7 @@
 #include "kernel/utility/container/list/list_view.hpp"
 #include "kernel/utility/container/stream/stream_mode.hpp"
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region type
 

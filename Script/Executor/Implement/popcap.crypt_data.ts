@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.popcap.crypt_data {
+namespace Twinning.Script.Executor.Implement.popcap.crypt_data {
 
 	// ------------------------------------------------
 
@@ -135,4 +135,4 @@ namespace TwinStar.Script.Executor.Implement.popcap.crypt_data {
 
 }
 
-TwinStar.Script.Executor.Implement.popcap.crypt_data.injector;
+Twinning.Script.Executor.Implement.popcap.crypt_data.injector;

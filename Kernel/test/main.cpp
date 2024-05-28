@@ -19,29 +19,29 @@ M_declare_native_main_function {
 	try
 	#endif
 	{
-		auto args = TwinStar::Shell::parse_native_main_function_argument(argc, argv);
+		auto args = Twinning::Shell::parse_native_main_function_argument(argc, argv);
 		assert_test(args.size() >= 3);
 		auto kernel = args[1];
 		auto script = args[2];
 		auto argument = std::vector<std::string>{args.begin() + 3, args.end()};
-		auto library = TwinStar::Shell::Bridge::Library{&TwinStar::Kernel::Interface::service};
-		auto client = TwinStar::Shell::MainConsoleBridgeClient{};
-		auto result = TwinStar::Shell::Bridge::Launcher::launch(client, library, script, argument);
-		TwinStar::Shell::Interaction::output_text("SUCCEEDED");
-		TwinStar::Shell::Interaction::output_text("\n");
+		auto library = Twinning::Shell::Bridge::Library{&Twinning::Kernel::Interface::service};
+		auto client = Twinning::Shell::MainConsoleBridgeClient{};
+		auto result = Twinning::Shell::Bridge::Launcher::launch(client, library, script, argument);
+		Twinning::Shell::Interaction::output_text("SUCCEEDED");
+		Twinning::Shell::Interaction::output_text("\n");
 		for (auto & result_item : result) {
-			TwinStar::Shell::Interaction::output_text(result_item);
-			TwinStar::Shell::Interaction::output_text("\n");
+			Twinning::Shell::Interaction::output_text(result_item);
+			Twinning::Shell::Interaction::output_text("\n");
 		}
 		return 0;
 	}
 	#if defined M_build_release
 	catch (...) {
-		auto exception = TwinStar::Shell::parse_current_exception();
-		TwinStar::Shell::Interaction::output_text("FAILED");
-		TwinStar::Shell::Interaction::output_text("\n");
-		TwinStar::Shell::Interaction::output_text(exception);
-		TwinStar::Shell::Interaction::output_text("\n");
+		auto exception = Twinning::Shell::parse_current_exception();
+		Twinning::Shell::Interaction::output_text("FAILED");
+		Twinning::Shell::Interaction::output_text("\n");
+		Twinning::Shell::Interaction::output_text(exception);
+		Twinning::Shell::Interaction::output_text("\n");
 		return 1;
 	}
 	#endif

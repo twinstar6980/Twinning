@@ -18,7 +18,7 @@
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinStar::Kernel::Third::libpng {
+namespace Twinning::Kernel::Third::libpng {
 
 	using size_t = ::size_t;
 

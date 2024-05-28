@@ -5,7 +5,7 @@
 #include "shell/utility/interaction.hpp"
 #include "shell/bridge/client.hpp"
 
-namespace TwinStar::Shell {
+namespace Twinning::Shell {
 
 	#pragma region type
 

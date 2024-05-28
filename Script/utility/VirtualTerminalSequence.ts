@@ -1,4 +1,4 @@
-namespace TwinStar.Script.VirtualTerminalSequence {
+namespace Twinning.Script.VirtualTerminalSequence {
 
 	// ------------------------------------------------
 

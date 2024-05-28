@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Check {
+namespace Twinning.Script.Check {
 
 	// ------------------------------------------------
 

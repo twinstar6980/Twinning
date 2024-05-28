@@ -3,7 +3,7 @@
 #include "kernel/utility/container/variant/variant.hpp"
 #include "kernel/utility/container/variant/enumerable_variant.hpp"
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region sub type
 

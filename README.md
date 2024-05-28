@@ -1,6 +1,4 @@
-# TwinStar ToolKit
-
-`TwinStar ToolKit` aka `twins` 。
+# Twinning
 
 本工具主要用于处理 PopCap 游戏（特别是 PvZ-1 、PvZ-2 ）中的资源文件，以使玩家能够更加容易地对这些游戏进行 MOD 创作。
 

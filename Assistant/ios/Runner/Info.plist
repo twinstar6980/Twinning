@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>TwinStar ToolKit - Assistant</string>
+	<string>Twinning Assistant</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -55,10 +55,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>None</string>
 			<key>CFBundleURLName</key>
-			<string>com.twinstar.toolkit.assistant</string>
+			<string>com.twinstar.twinning.assistant</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>twinstar.toolkit.assistant</string>
+				<string>twinstar.twinning.assistant</string>
 			</array>
 		</dict>
 	</array>

@@ -4,7 +4,7 @@
 #include <string>
 #include <source_location>
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region function
 

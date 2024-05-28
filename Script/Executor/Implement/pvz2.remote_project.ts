@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.pvz2.remote_project {
+namespace Twinning.Script.Executor.Implement.pvz2.remote_project {
 
 	// ------------------------------------------------
 
@@ -53,4 +53,4 @@ namespace TwinStar.Script.Executor.Implement.pvz2.remote_project {
 
 }
 
-TwinStar.Script.Executor.Implement.pvz2.remote_project.injector;
+Twinning.Script.Executor.Implement.pvz2.remote_project.injector;

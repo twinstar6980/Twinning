@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool::Texture::Encoding {
+namespace Twinning::Kernel::Tool::Texture::Encoding {
 
 	M_enumeration(
 		M_wrap(Format),

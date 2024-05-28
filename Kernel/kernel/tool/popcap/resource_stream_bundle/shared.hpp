@@ -4,7 +4,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle::Shared {
+namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle::Shared {
 
 	#pragma region padding unit
 
@@ -270,14 +270,14 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle::Shared {
 
 }
 
-namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamGroup {
+namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 	using namespace ResourceStreamBundle::Shared;
 }
 
-namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
+namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 	using namespace ResourceStreamBundle::Shared;
 }
 
-namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
+namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 	using namespace ResourceStreamBundle::Shared;
 }

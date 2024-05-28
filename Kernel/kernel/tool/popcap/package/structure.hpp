@@ -3,7 +3,7 @@
 #include "kernel/utility/utility.hpp"
 #include "kernel/tool/popcap/package/version.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::Package::Structure {
+namespace Twinning::Kernel::Tool::PopCap::Package::Structure {
 
 	#pragma region magic identifier
 

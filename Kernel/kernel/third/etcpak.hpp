@@ -17,7 +17,7 @@
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinStar::Kernel::Third::etcpak {
+namespace Twinning::Kernel::Third::etcpak {
 
 	inline constexpr auto CompressEtc1Rgb = ::CompressEtc1Rgb;
 

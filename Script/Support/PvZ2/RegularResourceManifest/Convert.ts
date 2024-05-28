@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Support.PvZ2.RegularResourceManifest.Convert {
+namespace Twinning.Script.Support.PvZ2.RegularResourceManifest.Convert {
 
 	// ------------------------------------------------
 

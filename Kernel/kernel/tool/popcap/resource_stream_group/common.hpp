@@ -5,7 +5,7 @@
 #include "kernel/tool/popcap/resource_stream_group/definition.hpp"
 #include "kernel/tool/popcap/resource_stream_group/structure.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamGroup {
+namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Common {

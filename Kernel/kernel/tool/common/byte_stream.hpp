@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool {
+namespace Twinning::Kernel::Tool {
 
 	#pragma region exchange
 

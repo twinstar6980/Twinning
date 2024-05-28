@@ -3,7 +3,7 @@
 #include "kernel/utility/utility.hpp"
 #include "kernel/tool/popcap/re_animation/version.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::ReAnimation {
+namespace Twinning::Kernel::Tool::PopCap::ReAnimation {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Definition {

@@ -5,7 +5,7 @@
 #include "kernel/utility/container/optional/null_optional.hpp"
 #include "kernel/utility/range/number_range.hpp"
 
-namespace TwinStar::Kernel::Range {
+namespace Twinning::Kernel::Range {
 
 	#pragma region size
 

@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool::Data::Compression::Deflate {
+namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 
 	M_enumeration(
 		M_wrap(Strategy),

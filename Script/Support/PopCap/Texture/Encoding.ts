@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Support.PopCap.Texture.Encoding {
+namespace Twinning.Script.Support.PopCap.Texture.Encoding {
 
 	// ------------------------------------------------
 

@@ -4,7 +4,7 @@
 <dict>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>twinstar.toolkit.assistant</string>
+		<string>twinstar.twinning.assistant</string>
 	</array>
 </dict>
 </plist>

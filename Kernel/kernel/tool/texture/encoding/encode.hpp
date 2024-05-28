@@ -3,7 +3,7 @@
 #include "kernel/utility/utility.hpp"
 #include "kernel/tool/texture/encoding/common.hpp"
 
-namespace TwinStar::Kernel::Tool::Texture::Encoding {
+namespace Twinning::Kernel::Tool::Texture::Encoding {
 
 	struct Encode :
 		Common {

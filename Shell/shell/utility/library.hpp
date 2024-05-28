@@ -6,7 +6,7 @@
 #include "shell/third/system/windows.hpp"
 #include "shell/third/system/posix.hpp"
 
-namespace TwinStar::Shell {
+namespace Twinning::Shell {
 
 	#pragma region type
 

@@ -4,7 +4,7 @@
 #include "kernel/tool/popcap/trail/common.hpp"
 #include "kernel/tool/common/byte_stream.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::Trail {
+namespace Twinning::Kernel::Tool::PopCap::Trail {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Decode :

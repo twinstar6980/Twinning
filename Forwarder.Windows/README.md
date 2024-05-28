@@ -1,4 +1,4 @@
-# TwinStar ToolKit - Forwarder - Windows
+# Forwarder - Windows
 
 转发器，将快捷选项注入系统级文件分享接口（ Windows Explorer 右键菜单）。
 

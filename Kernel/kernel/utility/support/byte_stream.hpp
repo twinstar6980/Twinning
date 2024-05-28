@@ -2,7 +2,7 @@
 
 #include "kernel/utility/miscellaneous/byte_series/stream.hpp"
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region basic
 

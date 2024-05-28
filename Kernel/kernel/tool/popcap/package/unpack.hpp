@@ -4,7 +4,7 @@
 #include "kernel/tool/popcap/package/common.hpp"
 #include "kernel/tool/data/compression/deflate/uncompress.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::Package {
+namespace Twinning::Kernel::Tool::PopCap::Package {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Unpack :

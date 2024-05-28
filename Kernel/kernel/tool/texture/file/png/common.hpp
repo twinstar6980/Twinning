@@ -3,7 +3,7 @@
 #include "kernel/utility/utility.hpp"
 #include "kernel/third/libpng.hpp"
 
-namespace TwinStar::Kernel::Tool::Texture::File::PNG {
+namespace Twinning::Kernel::Tool::Texture::File::PNG {
 
 	struct Common {
 

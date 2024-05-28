@@ -3,7 +3,7 @@
 #include "kernel/utility/utility.hpp"
 #include "kernel/tool/wwise/sound_bank/version.hpp"
 
-namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
+namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Definition {

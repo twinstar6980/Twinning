@@ -5,7 +5,7 @@
 #include "kernel/tool/wwise/sound_bank/definition.hpp"
 #include "kernel/tool/common/wave_structure.hpp"
 
-namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
+namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Common {

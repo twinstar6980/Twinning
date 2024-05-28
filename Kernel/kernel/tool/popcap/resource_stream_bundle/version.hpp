@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundle {
+namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 
 	M_record_of_map(
 		M_wrap(Version),

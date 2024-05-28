@@ -4,7 +4,7 @@
 #include "kernel/tool/data/differentiation/vcdiff/common.hpp"
 #include "kernel/third/open_vcdiff.hpp"
 
-namespace TwinStar::Kernel::Tool::Data::Differentiation::VCDiff {
+namespace Twinning::Kernel::Tool::Data::Differentiation::VCDiff {
 
 	struct Encode :
 		Common {

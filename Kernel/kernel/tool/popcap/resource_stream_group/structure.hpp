@@ -4,7 +4,7 @@
 #include "kernel/tool/popcap/resource_stream_group/version.hpp"
 #include "kernel/tool/popcap/resource_stream_bundle/shared.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamGroup::Structure {
+namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup::Structure {
 
 	#pragma region magic identifier
 
@@ -159,7 +159,7 @@ namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamGroup::Structure {
 
 }
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	template <auto t_version> requires
 		AutoConstraint

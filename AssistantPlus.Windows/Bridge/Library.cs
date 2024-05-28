@@ -40,7 +40,7 @@ namespace AssistantPlus.Bridge {
 			var handle = PlatformInvoke.Kernel32.LoadLibrary($"{path}.");
 			var symbol = default(Service*);
 			try {
-				symbol = (Service*)PlatformInvoke.Kernel32.GetProcAddress(handle, "?service@Interface@Kernel@TwinStar@@3UService@123@A");
+				symbol = (Service*)PlatformInvoke.Kernel32.GetProcAddress(handle, "?service@Interface@Kernel@Twinning@@3UService@123@A");
 			}
 			catch (Exception) {
 				PlatformInvoke.Kernel32.FreeLibrary(handle);

@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool::Miscellaneous::PvZ2CNAlphaPaletteTexture {
+namespace Twinning::Kernel::Tool::Miscellaneous::PvZ2CNAlphaPaletteTexture {
 
 	struct Common {
 

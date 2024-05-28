@@ -2,7 +2,7 @@
 
 #include "kernel/utility/base_wrapper/wrapper.hpp"
 
-namespace TwinStar::Kernel::JavaScript {
+namespace Twinning::Kernel::JavaScript {
 
 	#pragma region type
 

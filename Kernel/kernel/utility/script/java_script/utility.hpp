@@ -3,7 +3,7 @@
 #include "kernel/utility/script/java_script/value.hpp"
 #include <mutex>
 
-namespace TwinStar::Kernel::JavaScript {
+namespace Twinning::Kernel::JavaScript {
 
 	#pragma region global mutex
 

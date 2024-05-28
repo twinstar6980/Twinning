@@ -4,7 +4,7 @@
 #include "kernel/tool/data/compression/bzip2/common.hpp"
 #include "kernel/third/bzip2.hpp"
 
-namespace TwinStar::Kernel::Tool::Data::Compression::BZip2 {
+namespace Twinning::Kernel::Tool::Data::Compression::BZip2 {
 
 	struct Compress :
 		Common {

@@ -16,7 +16,7 @@
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinStar::Kernel::Third::ETCPACK {
+namespace Twinning::Kernel::Third::ETCPACK {
 
 	using uint8 = ::uint8;
 

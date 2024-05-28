@@ -5,7 +5,7 @@
 #include "kernel/tool/data/compression/deflate/compress.hpp"
 #include "kernel/tool/texture/encoding/encode.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::UTexture {
+namespace Twinning::Kernel::Tool::PopCap::UTexture {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Encode :

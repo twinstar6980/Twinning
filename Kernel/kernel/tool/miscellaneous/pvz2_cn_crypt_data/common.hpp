@@ -3,7 +3,7 @@
 #include "kernel/utility/utility.hpp"
 #include "kernel/tool/data/hash/md5/hash.hpp"
 
-namespace TwinStar::Kernel::Tool::Miscellaneous::PvZ2CNCryptData {
+namespace Twinning::Kernel::Tool::Miscellaneous::PvZ2CNCryptData {
 
 	struct Common {
 

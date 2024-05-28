@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool::Data::Differentiation::VCDiff {
+namespace Twinning::Kernel::Tool::Data::Differentiation::VCDiff {
 
 	struct Common {
 

@@ -1,4 +1,4 @@
-namespace TwinStar.Script.KernelX {
+namespace Twinning.Script.KernelX {
 
 	// ------------------------------------------------
 

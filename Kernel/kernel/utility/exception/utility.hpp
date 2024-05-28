@@ -5,7 +5,7 @@
 #include <codecvt>
 #include <filesystem>
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region detail
 

@@ -3,7 +3,7 @@
 #include "kernel/utility/utility.hpp"
 #include "kernel/tool/marmalade/dzip/version.hpp"
 
-namespace TwinStar::Kernel::Tool::Marmalade::DZip::Structure {
+namespace Twinning::Kernel::Tool::Marmalade::DZip::Structure {
 
 	#pragma region magic identifier
 
@@ -167,7 +167,7 @@ namespace TwinStar::Kernel::Tool::Marmalade::DZip::Structure {
 
 }
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	template <auto t_version> requires
 		AutoConstraint

@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <type_traits>
 
-namespace TwinStar::Kernel::Interface {
+namespace Twinning::Kernel::Interface {
 
 	#pragma region type
 

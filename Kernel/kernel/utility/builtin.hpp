@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <compare>
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region void
 

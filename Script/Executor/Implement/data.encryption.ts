@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.data.encryption {
+namespace Twinning.Script.Executor.Implement.data.encryption {
 
 	// ------------------------------------------------
 
@@ -214,4 +214,4 @@ namespace TwinStar.Script.Executor.Implement.data.encryption {
 
 }
 
-TwinStar.Script.Executor.Implement.data.encryption.injector;
+Twinning.Script.Executor.Implement.data.encryption.injector;

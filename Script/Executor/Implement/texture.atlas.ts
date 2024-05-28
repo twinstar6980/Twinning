@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.texture.atlas {
+namespace Twinning.Script.Executor.Implement.texture.atlas {
 
 	// ------------------------------------------------
 
@@ -121,4 +121,4 @@ namespace TwinStar.Script.Executor.Implement.texture.atlas {
 
 }
 
-TwinStar.Script.Executor.Implement.texture.atlas.injector;
+Twinning.Script.Executor.Implement.texture.atlas.injector;

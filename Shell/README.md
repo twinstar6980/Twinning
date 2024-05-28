@@ -1,4 +1,4 @@
-# TwinStar ToolKit - Shell
+# Shell
 
 外壳，提供基本的用户界面。
 

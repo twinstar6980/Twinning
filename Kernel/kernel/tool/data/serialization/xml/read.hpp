@@ -6,7 +6,7 @@
 #include "kernel/tool/data/serialization/xml/common.hpp"
 #include "kernel/third/tinyxml2.hpp"
 
-namespace TwinStar::Kernel::Tool::Data::Serialization::XML {
+namespace Twinning::Kernel::Tool::Data::Serialization::XML {
 
 	struct Read :
 		Common {

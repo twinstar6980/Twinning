@@ -3,7 +3,7 @@
 #include "kernel/utility/utility.hpp"
 #include "kernel/interface/proxy.hpp"
 
-namespace TwinStar::Kernel::Executor {
+namespace Twinning::Kernel::Executor {
 
 	#pragma region type
 

@@ -4,7 +4,7 @@
 #include "kernel/tool/popcap/re_animation/common.hpp"
 #include "kernel/tool/common/byte_stream.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::ReAnimation {
+namespace Twinning::Kernel::Tool::PopCap::ReAnimation {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Decode :

@@ -1,4 +1,4 @@
-# TwinStar ToolKit - Assistant
+# Assistant
 
 助理者，实现了额外的高级辅助功能。
 

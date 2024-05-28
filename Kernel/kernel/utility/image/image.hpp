@@ -2,7 +2,7 @@
 
 #include "kernel/utility/image/image_view.hpp"
 
-namespace TwinStar::Kernel::Image {
+namespace Twinning::Kernel::Image {
 
 	#pragma region type
 

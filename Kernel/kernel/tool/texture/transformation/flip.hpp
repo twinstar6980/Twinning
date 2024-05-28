@@ -3,7 +3,7 @@
 #include "kernel/utility/utility.hpp"
 #include "kernel/tool/texture/transformation/common.hpp"
 
-namespace TwinStar::Kernel::Tool::Texture::Transformation {
+namespace Twinning::Kernel::Tool::Texture::Transformation {
 
 	struct Flip :
 		Common {

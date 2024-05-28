@@ -9,7 +9,7 @@
 #include "kernel/utility/string/string.hpp"
 #include "kernel/utility/data/json/value_adapter.hpp"
 
-namespace TwinStar::Kernel::JSON {
+namespace Twinning::Kernel::JSON {
 
 	#pragma region declaration
 

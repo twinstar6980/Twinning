@@ -4,7 +4,7 @@
 #include "kernel/utility/container/static_array/static_array.hpp"
 #include "kernel/utility/miscellaneous/math.hpp"
 
-namespace TwinStar::Kernel::CharacterType {
+namespace Twinning::Kernel::CharacterType {
 
 	#pragma region constant
 

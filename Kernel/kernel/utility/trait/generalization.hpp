@@ -3,7 +3,7 @@
 #include "kernel/utility/trait/package/value_package.hpp"
 #include "kernel/utility/trait/callable.hpp"
 
-namespace TwinStar::Kernel::Trait::Generalization {
+namespace Twinning::Kernel::Trait::Generalization {
 
 	#pragma region utility
 

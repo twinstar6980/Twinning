@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool::Data::Encryption::Rijndael {
+namespace Twinning::Kernel::Tool::Data::Encryption::Rijndael {
 
 	M_enumeration(
 		M_wrap(Mode),

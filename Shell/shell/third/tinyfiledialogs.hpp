@@ -18,7 +18,7 @@
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinStar::Shell::Third::tinyfiledialogs {
+namespace Twinning::Shell::Third::tinyfiledialogs {
 
 	inline constexpr auto tinyfd_openFileDialog = ::tinyfd_openFileDialog;
 

@@ -119,5 +119,5 @@
 #include "kernel/utility/support/json.hpp"
 #include "kernel/utility/support/java_script.hpp"
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 }

@@ -10,15 +10,15 @@ val keystoreProperties = Properties().also {
 }
 
 android {
-	namespace = "com.twinstar.toolkit.forwarder"
+	namespace = "com.twinstar.twinning.forwarder"
 	compileSdk = 34
 
 	defaultConfig {
-		applicationId = "com.twinstar.toolkit.forwarder"
+		applicationId = "com.twinstar.twinning.forwarder"
 		minSdk = 28
 		targetSdk = 34
-		versionCode = 9
-		versionName = "9"
+		versionCode = 10
+		versionName = "10"
 	}
 
 	signingConfigs {

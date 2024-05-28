@@ -5,7 +5,7 @@
 #include "kernel/utility/container/array/array.hpp"
 #include "kernel/utility/container/static_array/static_array.hpp"
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region type
 

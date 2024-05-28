@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool::Data::Encryption::XOR {
+namespace Twinning::Kernel::Tool::Data::Encryption::XOR {
 
 	struct Common {
 

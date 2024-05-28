@@ -4,7 +4,7 @@
 #include "kernel/utility/image/color.hpp"
 #include "kernel/utility/image/pixel.hpp"
 
-namespace TwinStar::Kernel::Image {
+namespace Twinning::Kernel::Image {
 
 	#pragma region type
 

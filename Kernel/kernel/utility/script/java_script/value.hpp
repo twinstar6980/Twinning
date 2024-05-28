@@ -8,7 +8,7 @@
 #include "kernel/utility/script/java_script/value_adapter.hpp"
 #include "kernel/third/quickjs.hpp"
 
-namespace TwinStar::Kernel::JavaScript {
+namespace Twinning::Kernel::JavaScript {
 
 	#pragma region namespace alias
 

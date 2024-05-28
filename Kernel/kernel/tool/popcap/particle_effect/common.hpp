@@ -4,7 +4,7 @@
 #include "kernel/tool/popcap/particle_effect/version.hpp"
 #include "kernel/tool/popcap/particle_effect/definition.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::ParticleEffect {
+namespace Twinning::Kernel::Tool::PopCap::ParticleEffect {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Common {

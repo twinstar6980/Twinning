@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool::Miscellaneous::XboxTiledTexture {
+namespace Twinning::Kernel::Tool::Miscellaneous::XboxTiledTexture {
 
 	struct Common {
 

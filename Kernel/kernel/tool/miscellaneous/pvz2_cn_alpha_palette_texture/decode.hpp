@@ -3,7 +3,7 @@
 #include "kernel/utility/utility.hpp"
 #include "kernel/tool/miscellaneous/pvz2_cn_alpha_palette_texture/common.hpp"
 
-namespace TwinStar::Kernel::Tool::Miscellaneous::PvZ2CNAlphaPaletteTexture {
+namespace Twinning::Kernel::Tool::Miscellaneous::PvZ2CNAlphaPaletteTexture {
 
 	struct Decode :
 		Common {

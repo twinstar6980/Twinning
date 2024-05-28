@@ -20,7 +20,7 @@
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinStar::Kernel::Third::open_vcdiff {
+namespace Twinning::Kernel::Third::open_vcdiff {
 
 	using namespace ::open_vcdiff;
 

@@ -3,7 +3,7 @@
 #include "kernel/utility/utility.hpp"
 #include "kernel/tool/popcap/resource_stream_bundle_patch/common.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
+namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Decode :

@@ -3,7 +3,7 @@
 #include "kernel/utility/utility.hpp"
 #include "kernel/tool/popcap/reflection_object_notation/version.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::ReflectionObjectNotation {
+namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Common {

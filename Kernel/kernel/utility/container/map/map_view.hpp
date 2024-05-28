@@ -4,7 +4,7 @@
 #include "kernel/utility/miscellaneous/kv_pair.hpp"
 #include "kernel/utility/container/optional/optional.hpp"
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region type
 

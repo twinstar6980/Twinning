@@ -16,7 +16,7 @@
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinStar::Kernel::Third::zlib {
+namespace Twinning::Kernel::Third::zlib {
 
 	using Bytef = ::Bytef;
 

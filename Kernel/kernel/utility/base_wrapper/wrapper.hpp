@@ -10,5 +10,5 @@
 #include "kernel/utility/base_wrapper/pointer.hpp"
 #include "kernel/utility/base_wrapper/null_pointer.hpp"
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 }

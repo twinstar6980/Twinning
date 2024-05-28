@@ -3,7 +3,7 @@
 #include "kernel/utility/container/map/map_view.hpp"
 #include "kernel/utility/container/list/list.hpp"
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region type
 

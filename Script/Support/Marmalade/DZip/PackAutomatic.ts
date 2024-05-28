@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Support.Marmalade.DZip.PackAutomatic {
+namespace Twinning.Script.Support.Marmalade.DZip.PackAutomatic {
 
 	// ------------------------------------------------
 

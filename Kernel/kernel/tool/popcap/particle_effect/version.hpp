@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::ParticleEffect {
+namespace Twinning::Kernel::Tool::PopCap::ParticleEffect {
 
 	M_record_of_map(
 		M_wrap(Version),

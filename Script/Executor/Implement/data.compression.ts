@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.data.compression {
+namespace Twinning.Script.Executor.Implement.data.compression {
 
 	// ------------------------------------------------
 
@@ -519,4 +519,4 @@ namespace TwinStar.Script.Executor.Implement.data.compression {
 
 }
 
-TwinStar.Script.Executor.Implement.data.compression.injector;
+Twinning.Script.Executor.Implement.data.compression.injector;

@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
+namespace Twinning.Script.Executor.Implement.popcap.reflection_object_notation {
 
 	// ------------------------------------------------
 
@@ -444,4 +444,4 @@ namespace TwinStar.Script.Executor.Implement.popcap.reflection_object_notation {
 
 }
 
-TwinStar.Script.Executor.Implement.popcap.reflection_object_notation.injector;
+Twinning.Script.Executor.Implement.popcap.reflection_object_notation.injector;

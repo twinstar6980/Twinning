@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_group {
+namespace Twinning.Script.Executor.Implement.popcap.resource_stream_group {
 
 	// ------------------------------------------------
 
@@ -139,4 +139,4 @@ namespace TwinStar.Script.Executor.Implement.popcap.resource_stream_group {
 
 }
 
-TwinStar.Script.Executor.Implement.popcap.resource_stream_group.injector;
+Twinning.Script.Executor.Implement.popcap.resource_stream_group.injector;

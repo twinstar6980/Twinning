@@ -4,7 +4,7 @@
 #include "shell/utility/library.hpp"
 #include "shell/bridge/service.hpp"
 
-namespace TwinStar::Shell::Bridge {
+namespace Twinning::Shell::Bridge {
 
 	#pragma region type
 
@@ -50,10 +50,10 @@ namespace TwinStar::Shell::Bridge {
 			thiz.m_handle.open(path);
 			thiz.m_symbol = thiz.m_handle.lookup<Service>(
 				#if defined M_system_windows
-				"?service@Interface@Kernel@TwinStar@@3UService@123@A"
+				"?service@Interface@Kernel@Twinning@@3UService@123@A"
 				#endif
 				#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-				"_ZN8TwinStar6Kernel9Interface7serviceE"
+				"_ZN8Twinning6Kernel9Interface7serviceE"
 				#endif
 			);
 		}

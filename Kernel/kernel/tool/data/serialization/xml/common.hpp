@@ -3,7 +3,7 @@
 #include "kernel/utility/utility.hpp"
 #include "kernel/third/tinyxml2.hpp"
 
-namespace TwinStar::Kernel::Tool::Data::Serialization::XML {
+namespace Twinning::Kernel::Tool::Data::Serialization::XML {
 
 	using Kernel::XML::NodeType;
 

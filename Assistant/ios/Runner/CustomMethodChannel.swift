@@ -30,7 +30,7 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
   ) -> Void {
     let rootView = self.host.window?.rootViewController as! FlutterViewController
     FlutterMethodChannel(
-      name: "com.twinstar.toolkit.assistant.CustomMethodChannel",
+      name: "com.twinstar.twinning.assistant.CustomMethodChannel",
       binaryMessenger: rootView.binaryMessenger
     ).setMethodCallHandler({ [weak self] (call, result) in
       Task {
@@ -40,7 +40,7 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
     })
     if let link = launchOptions?[.url] as? URL {
       if let linkComponent = NSURLComponents(url: link, resolvingAgainstBaseURL: true) {
-        if linkComponent.scheme == "twinstar.toolkit.assistant" && linkComponent.host == nil && linkComponent.port == nil && linkComponent.path == "/run" {
+        if linkComponent.scheme == "twinstar.twinning.assistant" && linkComponent.host == nil && linkComponent.port == nil && linkComponent.path == "/run" {
           self.command.append(contentsOf: (linkComponent.queryItems ?? []).filter({ (item) in return item.name == "command" }).map({ (item) in return item.value ?? "" }))
         }
       }

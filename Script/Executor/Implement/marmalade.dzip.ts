@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.marmalade.dzip {
+namespace Twinning.Script.Executor.Implement.marmalade.dzip {
 
 	// ------------------------------------------------
 
@@ -174,4 +174,4 @@ namespace TwinStar.Script.Executor.Implement.marmalade.dzip {
 
 }
 
-TwinStar.Script.Executor.Implement.marmalade.dzip.injector;
+Twinning.Script.Executor.Implement.marmalade.dzip.injector;

@@ -7,7 +7,7 @@
 #include "shell/third/system/posix.hpp"
 #include "shell/third/tinyfiledialogs.hpp"
 
-namespace TwinStar::Shell::Interaction {
+namespace Twinning::Shell::Interaction {
 
 	#pragma region console
 

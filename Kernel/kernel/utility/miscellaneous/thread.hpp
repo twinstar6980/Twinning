@@ -3,7 +3,7 @@
 #include "kernel/utility/trait/trait.hpp"
 #include <thread>
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region type
 

@@ -4,7 +4,7 @@
 #include "kernel/tool/data/serialization/json/common.hpp"
 #include <list>
 
-namespace TwinStar::Kernel::Tool::Data::Serialization::JSON {
+namespace Twinning::Kernel::Tool::Data::Serialization::JSON {
 
 	struct Write :
 		Common {

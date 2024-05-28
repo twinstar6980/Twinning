@@ -98,7 +98,7 @@ class ActionViewController: UIViewController {
 		command.append("resource_forwarder")
 		command.append("-input")
 		command.append(contentsOf: try resource.map({ (item) in try self.parsePathOfFileURL(url: item) }))
-		let link = "twinstar.toolkit.assistant:/run?\(command.map({ (item) in "command=\(item.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)" }).joined(separator: "&"))"
+		let link = "twinstar.twinning.assistant:/run?\(command.map({ (item) in "command=\(item.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)" }).joined(separator: "&"))"
 		if !self.openURL(url: URL(string: link)!) {
 			throw NSError(domain: "failed to open application link.", code: 0)
 		}

@@ -4,7 +4,7 @@
 
 #include <variant>
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region type
 

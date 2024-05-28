@@ -3,7 +3,7 @@
 #include "./common.hpp"
 #include "./forward_explorer_command.hpp"
 
-using namespace TwinStar::Forwarder;
+using namespace Twinning::Forwarder;
 
 #pragma region dll
 

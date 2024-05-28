@@ -3,7 +3,7 @@
 #include "kernel/utility/base_wrapper/wrapper.hpp"
 #include "kernel/utility/range/number_iterator.hpp"
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region type
 

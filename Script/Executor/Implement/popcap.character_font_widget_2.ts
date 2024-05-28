@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.popcap.character_font_widget_2 {
+namespace Twinning.Script.Executor.Implement.popcap.character_font_widget_2 {
 
 	// ------------------------------------------------
 
@@ -119,4 +119,4 @@ namespace TwinStar.Script.Executor.Implement.popcap.character_font_widget_2 {
 
 }
 
-TwinStar.Script.Executor.Implement.popcap.character_font_widget_2.injector;
+Twinning.Script.Executor.Implement.popcap.character_font_widget_2.injector;

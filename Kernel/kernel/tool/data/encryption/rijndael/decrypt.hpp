@@ -4,7 +4,7 @@
 #include "kernel/tool/data/encryption/rijndael/common.hpp"
 #include "kernel/third/Rijndael.hpp"
 
-namespace TwinStar::Kernel::Tool::Data::Encryption::Rijndael {
+namespace Twinning::Kernel::Tool::Data::Encryption::Rijndael {
 
 	struct Decrypt :
 		Common {

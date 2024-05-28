@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.wwise.media {
+namespace Twinning.Script.Executor.Implement.wwise.media {
 
 	// ------------------------------------------------
 
@@ -114,4 +114,4 @@ namespace TwinStar.Script.Executor.Implement.wwise.media {
 
 }
 
-TwinStar.Script.Executor.Implement.wwise.media.injector;
+Twinning.Script.Executor.Implement.wwise.media.injector;

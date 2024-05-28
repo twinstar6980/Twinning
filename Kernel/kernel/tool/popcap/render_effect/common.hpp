@@ -4,7 +4,7 @@
 #include "kernel/tool/popcap/render_effect/version.hpp"
 #include "kernel/tool/popcap/render_effect/definition.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::RenderEffect {
+namespace Twinning::Kernel::Tool::PopCap::RenderEffect {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Common {

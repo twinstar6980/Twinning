@@ -23,7 +23,7 @@
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinStar::Kernel::Third::tinyxml2 {
+namespace Twinning::Kernel::Third::tinyxml2 {
 
 	using namespace ::tinyxml2;
 

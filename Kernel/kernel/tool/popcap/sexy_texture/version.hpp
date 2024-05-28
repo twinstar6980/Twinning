@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::SexyTexture {
+namespace Twinning::Kernel::Tool::PopCap::SexyTexture {
 
 	M_record_of_map(
 		M_wrap(Version),

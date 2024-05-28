@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Console {
+namespace Twinning.Script.Console {
 
 	// ------------------------------------------------
 

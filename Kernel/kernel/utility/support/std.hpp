@@ -7,29 +7,29 @@ namespace std {
 	#pragma region hash
 
 	template <>
-	struct hash<TwinStar::Kernel::CStringView> {
+	struct hash<Twinning::Kernel::CStringView> {
 		auto operator () (
-			TwinStar::Kernel::CStringView const & it
+			Twinning::Kernel::CStringView const & it
 		) const noexcept -> std::size_t {
-			return std::hash<std::string_view>{}(TwinStar::Kernel::make_std_string_view(it));
+			return std::hash<std::string_view>{}(Twinning::Kernel::make_std_string_view(it));
 		}
 	};
 
 	template <>
-	struct hash<TwinStar::Kernel::VStringView> {
+	struct hash<Twinning::Kernel::VStringView> {
 		auto operator () (
-			TwinStar::Kernel::VStringView const & it
+			Twinning::Kernel::VStringView const & it
 		) const noexcept -> std::size_t {
-			return std::hash<std::string_view>{}(TwinStar::Kernel::make_std_string_view(it));
+			return std::hash<std::string_view>{}(Twinning::Kernel::make_std_string_view(it));
 		}
 	};
 
 	template <>
-	struct hash<TwinStar::Kernel::String> {
+	struct hash<Twinning::Kernel::String> {
 		auto operator () (
-			TwinStar::Kernel::String const & it
+			Twinning::Kernel::String const & it
 		) const noexcept -> std::size_t {
-			return std::hash<std::string_view>{}(TwinStar::Kernel::make_std_string_view(it));
+			return std::hash<std::string_view>{}(Twinning::Kernel::make_std_string_view(it));
 		}
 	};
 

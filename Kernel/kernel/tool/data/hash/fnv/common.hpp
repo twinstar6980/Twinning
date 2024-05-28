@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool::Data::Hash::FNV {
+namespace Twinning::Kernel::Tool::Data::Hash::FNV {
 
 	M_enumeration(
 		M_wrap(Mode),

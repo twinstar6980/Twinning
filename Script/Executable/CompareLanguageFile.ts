@@ -1,5 +1,5 @@
 // 对比语言文本文件
-namespace TwinStar.Script.Executable.CompareLanguageFile {
+namespace Twinning.Script.Executable.CompareLanguageFile {
 
 	function compare(
 		original_map: Language.StringMap,
@@ -36,4 +36,4 @@ namespace TwinStar.Script.Executable.CompareLanguageFile {
 
 }
 
-TwinStar.Script.Executable.CompareLanguageFile.execute();
+Twinning.Script.Executable.CompareLanguageFile.execute();

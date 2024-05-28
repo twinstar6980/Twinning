@@ -7,7 +7,7 @@
 #include "kernel/third/system/windows.hpp"
 #include "kernel/third/system/posix.hpp"
 
-namespace TwinStar::Kernel::Process {
+namespace Twinning::Kernel::Process {
 
 	#pragma region detail
 

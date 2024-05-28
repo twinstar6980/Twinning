@@ -4,7 +4,7 @@
 #include "kernel/tool/data/compression/deflate/common.hpp"
 #include "kernel/third/zlib.hpp"
 
-namespace TwinStar::Kernel::Tool::Data::Compression::Deflate {
+namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 
 	struct Compress :
 		Common {

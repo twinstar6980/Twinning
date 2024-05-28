@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Support.PopCap.Package.PackAutomatic {
+namespace Twinning.Script.Support.PopCap.Package.PackAutomatic {
 
 	// ------------------------------------------------
 

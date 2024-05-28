@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient {
+namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient {
 
 	// ------------------------------------------------
 

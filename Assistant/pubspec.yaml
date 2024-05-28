@@ -1,5 +1,5 @@
 name: assistant
-version: 39.0.0+39
+version: 40.0.0+40
 publish_to: 'none'
 environment:
   sdk: '>=3.4.0 <4.0.0'
@@ -24,26 +24,16 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
-  flutter_launcher_icons: ^0.13.1
   msix: ^3.16.7
 flutter:
   uses-material-design: true
   assets:
     - asset/
-flutter_launcher_icons:
-  image_path: asset/logo.png
-  android: true
-  ios: true
-  windows:
-    generate: true
-    icon_size: 256
-  macos:
-    generate: true
 msix_config:
-  identity_name: TwinStar.ToolKit.Assistant
-  publisher: CN=TwinStar
-  display_name: TwinStar ToolKit - Assistant
+  display_name: Twinning Assistant
   publisher_display_name: TwinStar
-  languages: en-us
+  identity_name: TwinStar.Twinning.Assistant
   logo_path: asset/logo.png
   trim_logo: false
+  languages: en-us
+  publisher: CN=TwinStar

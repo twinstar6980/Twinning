@@ -5,7 +5,7 @@
 #include "kernel/tool/common/protocol_buffer_variable_length_integer.hpp"
 #include <unordered_map>
 
-namespace TwinStar::Kernel::Tool::PopCap::ReflectionObjectNotation {
+namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Encode :

@@ -4,7 +4,7 @@
 #include <locale>
 #include <codecvt>
 
-namespace TwinStar::Kernel::StringEncoding {
+namespace Twinning::Kernel::StringEncoding {
 
 	#pragma region utf-8 & utf-16
 

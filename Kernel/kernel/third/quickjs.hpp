@@ -37,7 +37,7 @@
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinStar::Kernel::Third::quickjs {
+namespace Twinning::Kernel::Third::quickjs {
 
 	using BOOL = ::BOOL;
 

@@ -3,7 +3,7 @@
 #include "kernel/utility/string/string.hpp"
 #include "kernel/third/fmt.hpp"
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region function
 

@@ -76,7 +76,7 @@
 #include "kernel/tool/miscellaneous/pvz2_cn_crypt_data/encrypt.hpp"
 #include "kernel/tool/miscellaneous/pvz2_cn_crypt_data/decrypt.hpp"
 
-namespace TwinStar::Kernel::Executor::Environment {
+namespace Twinning::Kernel::Executor::Environment {
 
 	#pragma region define generic class
 
@@ -354,8 +354,8 @@ namespace TwinStar::Kernel::Executor::Environment {
 		#pragma clang diagnostic push
 		#pragma clang diagnostic ignored "-Wshadow"
 		#endif
-		auto s_TwinStar = JavaScript::NativeSpaceBuilder{k_null_optional, "TwinStar"_s, as_lvalue(context.context().global_object())};
-		auto s_Kernel = s_TwinStar.add_space("Kernel"_s);
+		auto s_Twinning = JavaScript::NativeSpaceBuilder{k_null_optional, "Twinning"_s, as_lvalue(context.context().global_object())};
+		auto s_Kernel = s_Twinning.add_space("Kernel"_s);
 		// Boolean
 		define_generic_class<Boolean>(s_Kernel, "Boolean"_s);
 		// Integer

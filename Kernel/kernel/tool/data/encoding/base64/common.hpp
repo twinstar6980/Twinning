@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool::Data::Encoding::Base64 {
+namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 
 	struct Common {
 

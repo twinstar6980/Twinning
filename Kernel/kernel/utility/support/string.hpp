@@ -5,7 +5,7 @@
 #include "kernel/utility/file_system/path.hpp"
 #include "kernel/utility/miscellaneous/fourcc.hpp"
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region string
 

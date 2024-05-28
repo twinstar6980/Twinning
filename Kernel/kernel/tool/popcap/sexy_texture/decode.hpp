@@ -5,7 +5,7 @@
 #include "kernel/tool/data/compression/deflate/uncompress.hpp"
 #include "kernel/tool/texture/encoding/encode.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::SexyTexture {
+namespace Twinning::Kernel::Tool::PopCap::SexyTexture {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Decode :

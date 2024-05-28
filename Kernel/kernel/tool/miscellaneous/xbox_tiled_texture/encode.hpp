@@ -4,7 +4,7 @@
 #include "kernel/tool/miscellaneous/xbox_tiled_texture/common.hpp"
 #include "kernel/tool/texture/encoding/encode.hpp"
 
-namespace TwinStar::Kernel::Tool::Miscellaneous::XboxTiledTexture {
+namespace Twinning::Kernel::Tool::Miscellaneous::XboxTiledTexture {
 
 	struct Encode :
 		Common {

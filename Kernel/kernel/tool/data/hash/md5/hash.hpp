@@ -4,7 +4,7 @@
 #include "kernel/tool/data/hash/md5/common.hpp"
 #include "kernel/third/md5.hpp"
 
-namespace TwinStar::Kernel::Tool::Data::Hash::MD5 {
+namespace Twinning::Kernel::Tool::Data::Hash::MD5 {
 
 	struct Hash :
 		Common {

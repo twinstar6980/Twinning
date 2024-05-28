@@ -1,4 +1,4 @@
-namespace TwinStar.Script.ProcessHelper {
+namespace Twinning.Script.ProcessHelper {
 
 	// ------------------------------------------------
 

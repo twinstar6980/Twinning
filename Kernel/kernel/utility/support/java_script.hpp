@@ -10,7 +10,7 @@
 #include "kernel/utility/image/pixel.hpp"
 #include "kernel/utility/file_system/path.hpp"
 
-namespace TwinStar::Kernel::JavaScript {
+namespace Twinning::Kernel::JavaScript {
 
 	#pragma region basic
 

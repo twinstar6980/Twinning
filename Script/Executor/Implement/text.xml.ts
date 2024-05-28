@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.text.xml {
+namespace Twinning.Script.Executor.Implement.text.xml {
 
 	// ------------------------------------------------
 
@@ -64,4 +64,4 @@ namespace TwinStar.Script.Executor.Implement.text.xml {
 
 }
 
-TwinStar.Script.Executor.Implement.text.xml.injector;
+Twinning.Script.Executor.Implement.text.xml.injector;

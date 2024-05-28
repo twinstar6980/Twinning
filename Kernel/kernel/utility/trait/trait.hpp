@@ -13,6 +13,6 @@
 #include "kernel/utility/trait/reflection/string.hpp"
 #include "kernel/utility/trait/reflection/field.hpp"
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 	using namespace Trait;
 }

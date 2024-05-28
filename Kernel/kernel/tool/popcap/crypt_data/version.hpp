@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::CryptData {
+namespace Twinning::Kernel::Tool::PopCap::CryptData {
 
 	M_record_of_map(
 		M_wrap(Version),

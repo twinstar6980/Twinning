@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.text.json {
+namespace Twinning.Script.Executor.Implement.text.json {
 
 	// ------------------------------------------------
 
@@ -88,4 +88,4 @@ namespace TwinStar.Script.Executor.Implement.text.json {
 
 }
 
-TwinStar.Script.Executor.Implement.text.json.injector;
+Twinning.Script.Executor.Implement.text.json.injector;

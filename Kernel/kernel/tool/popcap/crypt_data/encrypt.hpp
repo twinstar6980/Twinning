@@ -3,7 +3,7 @@
 #include "kernel/utility/utility.hpp"
 #include "kernel/tool/popcap/crypt_data/common.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::CryptData {
+namespace Twinning::Kernel::Tool::PopCap::CryptData {
 
 	template <auto version> requires (check_version(version))
 	struct Encrypt :

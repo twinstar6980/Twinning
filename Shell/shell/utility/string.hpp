@@ -3,7 +3,7 @@
 #include "shell/common.hpp"
 #include "shell/utility/exception.hpp"
 
-namespace TwinStar::Shell {
+namespace Twinning::Shell {
 
 	#pragma region encoding
 

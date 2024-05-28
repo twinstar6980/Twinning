@@ -10,7 +10,7 @@
 #include "vld.h"
 #endif
 
-namespace TwinStar::Kernel::Interface {
+namespace Twinning::Kernel::Interface {
 
 	#pragma region implement
 

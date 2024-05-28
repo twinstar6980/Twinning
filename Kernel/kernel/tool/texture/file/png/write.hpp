@@ -4,7 +4,7 @@
 #include "kernel/tool/texture/file/png/common.hpp"
 #include "kernel/third/libpng.hpp"
 
-namespace TwinStar::Kernel::Tool::Texture::File::PNG {
+namespace Twinning::Kernel::Tool::Texture::File::PNG {
 
 	struct Write :
 		Common {

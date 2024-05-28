@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.popcap.animation {
+namespace Twinning.Script.Executor.Implement.popcap.animation {
 
 	// ------------------------------------------------
 
@@ -312,4 +312,4 @@ namespace TwinStar.Script.Executor.Implement.popcap.animation {
 
 }
 
-TwinStar.Script.Executor.Implement.popcap.animation.injector;
+Twinning.Script.Executor.Implement.popcap.animation.injector;

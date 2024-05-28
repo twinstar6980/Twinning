@@ -60,7 +60,7 @@ class NotificationHelper {
         description,
         const NotificationDetails(
           android: AndroidNotificationDetails(
-            'com.twinstar.toolkit.assistant.notification_channel.main',
+            'com.twinstar.twinning.assistant.notification_channel.main',
             'Main',
           ),
           iOS: DarwinNotificationDetails(

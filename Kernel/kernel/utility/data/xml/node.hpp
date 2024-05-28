@@ -7,7 +7,7 @@
 #include "kernel/utility/container/map/map.hpp"
 #include "kernel/utility/string/string.hpp"
 
-namespace TwinStar::Kernel::XML {
+namespace Twinning::Kernel::XML {
 
 	#pragma region declaration
 

@@ -9,7 +9,7 @@
 #include <concepts>
 #include <tuple>
 
-namespace TwinStar::Kernel::Trait {
+namespace Twinning::Kernel::Trait {
 
 	#pragma region constraint comment
 

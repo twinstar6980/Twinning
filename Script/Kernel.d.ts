@@ -2,7 +2,7 @@
  * JavaScript interface of Kernel
  * @version 64
  */
-declare namespace TwinStar.Kernel {
+declare namespace Twinning.Kernel {
 
 	// ------------------------------------------------
 

@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool::Wwise::SoundBank {
+namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 	M_record_of_map(
 		M_wrap(Version),

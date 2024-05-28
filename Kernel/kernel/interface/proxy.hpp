@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <functional>
 
-namespace TwinStar::Kernel::Interface {
+namespace Twinning::Kernel::Interface {
 
 	#pragma region type
 

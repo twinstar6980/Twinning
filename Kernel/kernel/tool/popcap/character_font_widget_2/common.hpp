@@ -4,7 +4,7 @@
 #include "kernel/tool/popcap/character_font_widget_2/version.hpp"
 #include "kernel/tool/popcap/character_font_widget_2/definition.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::CharacterFontWidget2 {
+namespace Twinning::Kernel::Tool::PopCap::CharacterFontWidget2 {
 
 	template <auto version> requires (check_version(version))
 	struct Common {

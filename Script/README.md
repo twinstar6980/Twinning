@@ -1,4 +1,4 @@
-# TwinStar ToolKit - Script
+# Script
 
 脚本，控制工具的运行流程。
 

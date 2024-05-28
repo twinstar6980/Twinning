@@ -4,7 +4,7 @@
 #include "kernel/tool/popcap/particle/version.hpp"
 #include "kernel/tool/popcap/particle/definition.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::Particle {
+namespace Twinning::Kernel::Tool::PopCap::Particle {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Common {

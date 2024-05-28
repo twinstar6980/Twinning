@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.data.hash {
+namespace Twinning.Script.Executor.Implement.data.hash {
 
 	// ------------------------------------------------
 
@@ -49,4 +49,4 @@ namespace TwinStar.Script.Executor.Implement.data.hash {
 
 }
 
-TwinStar.Script.Executor.Implement.data.hash.injector;
+Twinning.Script.Executor.Implement.data.hash.injector;

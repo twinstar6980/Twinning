@@ -4,7 +4,7 @@
 #include "shell/utility/exception.hpp"
 #include "shell/utility/string.hpp"
 
-namespace TwinStar::Shell {
+namespace Twinning::Shell {
 
 	#pragma region native main function
 

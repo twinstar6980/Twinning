@@ -5,7 +5,7 @@
 #include "kernel/utility/trait/template_instance.hpp"
 #include "kernel/utility/trait/object.hpp"
 
-namespace TwinStar::Kernel::Trait {
+namespace Twinning::Kernel::Trait {
 
 	#pragma region type
 

@@ -34,7 +34,7 @@
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinStar::Kernel::Third::avir {
+namespace Twinning::Kernel::Third::avir {
 
 	using namespace ::avir;
 

@@ -5,7 +5,7 @@
 #include "kernel/executor/environment.hpp"
 #include "kernel/interface/proxy.hpp"
 
-namespace TwinStar::Kernel::Executor {
+namespace Twinning::Kernel::Executor {
 
 	#pragma region function
 

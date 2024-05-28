@@ -4,7 +4,7 @@
 #include "kernel/utility/string/basic_string.hpp"
 #include "kernel/utility/string/basic_static_string.hpp"
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region alias
 

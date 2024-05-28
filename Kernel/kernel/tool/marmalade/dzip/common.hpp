@@ -5,7 +5,7 @@
 #include "kernel/tool/marmalade/dzip/definition.hpp"
 #include "kernel/tool/marmalade/dzip/structure.hpp"
 
-namespace TwinStar::Kernel::Tool::Marmalade::DZip {
+namespace Twinning::Kernel::Tool::Marmalade::DZip {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Common {

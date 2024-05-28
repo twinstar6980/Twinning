@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
+namespace Twinning.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 
 	// ------------------------------------------------
 

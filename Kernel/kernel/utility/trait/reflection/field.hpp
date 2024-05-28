@@ -4,7 +4,7 @@
 #include "kernel/utility/trait/category.hpp"
 #include "kernel/utility/trait/reflection/string.hpp"
 
-namespace TwinStar::Kernel::Trait::Reflection {
+namespace Twinning::Kernel::Trait::Reflection {
 
 	#pragma region base
 

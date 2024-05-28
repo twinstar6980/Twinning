@@ -6,7 +6,7 @@
 #include "kernel/utility/exception/utility.hpp"
 #include <filesystem>
 
-namespace TwinStar::Kernel::FileSystem {
+namespace Twinning::Kernel::FileSystem {
 
 	#pragma region declaration
 

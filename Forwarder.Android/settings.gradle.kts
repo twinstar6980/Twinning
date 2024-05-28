@@ -18,5 +18,5 @@ dependencyResolutionManagement {
 	}
 }
 
-rootProject.name = "TwinStar ToolKit - Forwarder"
+rootProject.name = "Twinning Forwarder"
 include(":app")

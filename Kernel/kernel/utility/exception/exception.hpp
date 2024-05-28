@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-namespace TwinStar::Kernel {
+namespace Twinning::Kernel {
 
 	#pragma region type
 

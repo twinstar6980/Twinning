@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.data.encoding {
+namespace Twinning.Script.Executor.Implement.data.encoding {
 
 	// ------------------------------------------------
 
@@ -107,4 +107,4 @@ namespace TwinStar.Script.Executor.Implement.data.encoding {
 
 }
 
-TwinStar.Script.Executor.Implement.data.encoding.injector;
+Twinning.Script.Executor.Implement.data.encoding.injector;

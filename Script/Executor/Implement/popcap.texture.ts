@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.popcap.texture {
+namespace Twinning.Script.Executor.Implement.popcap.texture {
 
 	// ------------------------------------------------
 
@@ -101,4 +101,4 @@ namespace TwinStar.Script.Executor.Implement.popcap.texture {
 
 }
 
-TwinStar.Script.Executor.Implement.popcap.texture.injector;
+Twinning.Script.Executor.Implement.popcap.texture.injector;

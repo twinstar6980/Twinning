@@ -1,4 +1,4 @@
-# TwinStar ToolKit - Kernel
+# Kernel
 
 内核，负责内部功能的实现。
 

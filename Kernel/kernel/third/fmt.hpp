@@ -31,7 +31,7 @@
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinStar::Kernel::Third::fmt {
+namespace Twinning::Kernel::Third::fmt {
 
 	using namespace ::fmt;
 

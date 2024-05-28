@@ -1,4 +1,4 @@
-# TwinStar ToolKit - Assistant Plus
+# Assistant Plus - Windows
 
 助理者+，面向 Windows 平台的特化版本。
 

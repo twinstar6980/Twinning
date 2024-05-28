@@ -17,7 +17,7 @@ auto wmain (
 		}
 		auto app_data_directory = std::filesystem::path{app_data_directory_raw};
 		CoTaskMemFree(app_data_directory_raw);
-		auto data_directory = app_data_directory / "TwinStar.ToolKit.Forwarder";
+		auto data_directory = app_data_directory / "TwinStar.Twinning.Forwarder";
 		auto script_file = data_directory / "forward.cmd";
 		if (std::filesystem::exists(data_directory)) {
 			if (!std::filesystem::is_directory(data_directory)) {

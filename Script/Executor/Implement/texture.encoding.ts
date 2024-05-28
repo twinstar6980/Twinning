@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.texture.encoding {
+namespace Twinning.Script.Executor.Implement.texture.encoding {
 
 	// ------------------------------------------------
 
@@ -101,4 +101,4 @@ namespace TwinStar.Script.Executor.Implement.texture.encoding {
 
 }
 
-TwinStar.Script.Executor.Implement.texture.encoding.injector;
+Twinning.Script.Executor.Implement.texture.encoding.injector;

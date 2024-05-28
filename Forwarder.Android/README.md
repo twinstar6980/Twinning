@@ -1,4 +1,4 @@
-# TwinStar ToolKit - Forwarder - Android
+# Forwarder - Android
 
 转发器，将快捷选项注入系统级文件分享接口（ Android 文件分享功能）。
 

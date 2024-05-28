@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Support.Kairosoft.Game.ModifyProgram {
+namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 
 	// ------------------------------------------------
 

@@ -2,7 +2,7 @@
 
 #include "kernel/utility/base_wrapper/wrapper.hpp"
 
-namespace TwinStar::Kernel::JSON {
+namespace Twinning::Kernel::JSON {
 
 	#pragma region type
 

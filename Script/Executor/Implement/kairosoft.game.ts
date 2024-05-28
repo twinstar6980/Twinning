@@ -1,4 +1,4 @@
-namespace TwinStar.Script.Executor.Implement.kairosoft.game {
+namespace Twinning.Script.Executor.Implement.kairosoft.game {
 
 	// ------------------------------------------------
 
@@ -88,4 +88,4 @@ namespace TwinStar.Script.Executor.Implement.kairosoft.game {
 
 }
 
-TwinStar.Script.Executor.Implement.kairosoft.game.injector;
+Twinning.Script.Executor.Implement.kairosoft.game.injector;

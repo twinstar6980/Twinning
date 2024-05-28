@@ -20,7 +20,7 @@
 #pragma clang diagnostic pop
 #endif
 
-namespace TwinStar::Kernel::Third::windows {
+namespace Twinning::Kernel::Third::windows {
 }
 
 #endif

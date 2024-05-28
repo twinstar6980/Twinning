@@ -2,7 +2,7 @@
 
 #include "kernel/utility/utility.hpp"
 
-namespace TwinStar::Kernel::Tool::PopCap::ReAnimation {
+namespace Twinning::Kernel::Tool::PopCap::ReAnimation {
 
 	M_enumeration(
 		M_wrap(VersionPlatform),
