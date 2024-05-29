@@ -61,7 +61,7 @@ class StorageHelper {
 
   // #endregion
 
-  // #region general
+  // #region basic
 
   static Future<Boolean> exist(
     String path,
@@ -147,36 +147,38 @@ class StorageHelper {
 
   // #region file
 
-  static Future<Void> writeFile(
-    String    target,
-    Uint8List data,
-  ) async {
-    await File(target).writeAsBytes(data, flush: true);
-    return;
-  }
-
   static Future<Uint8List> readFile(
     String target,
   ) async {
     return await File(target).readAsBytes();
   }
 
+  static Future<Void> writeFile(
+    String    target,
+    Uint8List data,
+  ) async {
+    await File(target).create(recursive: true);
+    await File(target).writeAsBytes(data, flush: true);
+    return;
+  }
+
   // #endregion
 
   // #region file - text
-
-  static Future<Void> writeFileText(
-    String target,
-    String text,
-  ) async {
-    await File(target).writeAsString(text, flush: true);
-    return;
-  }
 
   static Future<String> readFileText(
     String target,
   ) async {
     return await File(target).readAsString();
+  }
+
+  static Future<Void> writeFileText(
+    String target,
+    String text,
+  ) async {
+    await File(target).create(recursive: true);
+    await File(target).writeAsString(text, flush: true);
+    return;
   }
 
   // #endregion

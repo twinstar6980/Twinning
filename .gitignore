@@ -63,7 +63,5 @@
 /AssistantPlus.Windows/.editorconfig
 
 /.unused
-/.deprecated
 /.distribution
 /.build.txt
-/Document

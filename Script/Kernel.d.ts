@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 64
+ * @version 66
  */
 declare namespace Twinning.Kernel {
 
@@ -1416,7 +1416,7 @@ declare namespace Twinning.Kernel {
 		// ------------------------------------------------
 
 		/**
-		 * 生成新进程
+		 * 生成子进程
 		 * @param program 程序
 		 * @param argument 参数
 		 * @param environment 环境
@@ -1425,7 +1425,7 @@ declare namespace Twinning.Kernel {
 		 * @param error 错误
 		 * @returns 程序正常退出时，返回其退出码
 		 */
-		function spawn_process(
+		function spawn_child(
 			program: Path,
 			argument: StringList,
 			environment: StringList,
@@ -1441,7 +1441,7 @@ declare namespace Twinning.Kernel {
 		 * @param command 命令
 		 * @returns std::system的返回值，由实现定义
 		 */
-		function system_command(
+		function execute_system_command(
 			command: String,
 		): IntegerU32;
 

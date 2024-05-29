@@ -77,13 +77,13 @@ namespace Twinning.Script.ProcessHelper {
 			temporary_directory_fallback = `${AndroidHelper.k_remote_temporary_directory}/${PathUtility.name(temporary_directory)}`;
 			output = `${temporary_directory_fallback}/output`;
 			error = `${temporary_directory_fallback}/error`;
-			assert_test(KernelX.Process.system_command(`su -c "mkdir -p -m 777 ${temporary_directory_fallback} ; touch ${output} ; chmod 777 ${output} ; touch ${error} ; chmod 777 ${error}"`) === 0n);
+			assert_test(KernelX.Process.execute_system_command(`su -c "mkdir -p -m 777 ${temporary_directory_fallback} ; touch ${output} ; chmod 777 ${output} ; touch ${error} ; chmod 777 ${error}"`) === 0n);
 		}
 		else {
 			KernelX.FileSystem.create_file(output);
 			KernelX.FileSystem.create_file(error);
 		}
-		let code = KernelX.Process.spawn_process(program, argument, environment, input, output, error);
+		let code = KernelX.Process.spawn_child(program, argument, environment, input, output, error);
 		let read_file = (path: string) => {
 			let data = KernelX.FileSystem.read_file_s(path);
 			return normalize_string_line_feed(data);
@@ -96,7 +96,7 @@ namespace Twinning.Script.ProcessHelper {
 		KernelX.FileSystem.remove(temporary_directory);
 		if (KernelX.is_android && !Shell.is_basic) {
 			assert_test(temporary_directory_fallback !== null);
-			assert_test(KernelX.Process.system_command(`su -c "rm -rf ${temporary_directory_fallback}"`) === 0n);
+			assert_test(KernelX.Process.execute_system_command(`su -c "rm -rf ${temporary_directory_fallback}"`) === 0n);
 		}
 		return result;
 	}

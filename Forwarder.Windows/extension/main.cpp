@@ -3,50 +3,47 @@
 #include "./common.hpp"
 #include "./forward_explorer_command.hpp"
 
-using namespace Twinning::Forwarder;
+#pragma region entry
 
-#pragma region dll
-
-auto APIENTRY DllMain (
-	HMODULE hModule,
-	DWORD   ul_reason_for_call,
-	LPVOID  lpReserved
-) -> BOOL {
-	g_application_logo = get_module_file_path(hModule);
-	switch (ul_reason_for_call) {
-		case DLL_PROCESS_ATTACH :
-		case DLL_THREAD_ATTACH :
-		case DLL_THREAD_DETACH :
-		case DLL_PROCESS_DETACH :
-			break;
+STDAPI_(BOOL) DllMain (
+	HINSTANCE hinstDLL,
+	DWORD     fdwReason,
+	LPVOID    lpvReserved
+) {
+	if (fdwReason == DLL_PROCESS_ATTACH) {
+		Twinning::Forwarder::g_application_logo = Twinning::Forwarder::get_module_file_path(hinstDLL);
+		DisableThreadLibraryCalls(hinstDLL);
 	}
 	return TRUE;
 }
 
-STDAPI DllCanUnloadNow (
+// ----------------
+
+STDAPI DllGetActivationFactory (
+	HSTRING                activatableClassId,
+	IActivationFactory * * factory
 ) {
-	return WRL::Module<WRL::InProc>::GetModule().GetObjectCount() == 0 ? S_OK : S_FALSE;
+	return WRL::Module<WRL::InProc>::GetModule().GetActivationFactory(activatableClassId, factory);
 }
 
 STDAPI DllGetClassObject (
-	_In_ REFCLSID        rclsid,
-	_In_ REFIID          riid,
-	_COM_Outptr_ void ** instance
+	REFCLSID     rclsid,
+	REFIID       riid,
+	LPVOID FAR * ppv
 ) {
-	return WRL::Module<WRL::InProc>::GetModule().GetClassObject(rclsid, riid, instance);
+	return WRL::Module<WRL::InProc>::GetModule().GetClassObject(rclsid, riid, ppv);
 }
 
-STDAPI DllGetActivationFactory (
-	_In_ HSTRING                       activatableClassId,
-	_COM_Outptr_ IActivationFactory ** factory
+STDAPI DllCanUnloadNow (
 ) {
-	return WRL::Module<WRL::InProc>::GetModule().GetActivationFactory(activatableClassId, factory);
+	return WRL::Module<WRL::InProc>::GetModule().Terminate() ? S_OK : S_FALSE;
 }
 
 #pragma endregion
 
 #pragma region class
 
+using Twinning::Forwarder::ForwardExplorerCommand;
 CoCreatableClass(ForwardExplorerCommand);
 CoCreatableClassWrlCreatorMapInclude(ForwardExplorerCommand);
 

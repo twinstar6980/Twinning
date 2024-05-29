@@ -78,7 +78,7 @@ namespace AssistantPlus.Utility {
 
 		#endregion
 
-		#region general
+		#region basic
 
 		public static Boolean Exist (
 			String target
@@ -162,14 +162,68 @@ namespace AssistantPlus.Utility {
 			return;
 		}
 
-		// ----------------
+		#endregion
+
+		#region file
 
 		public static void CreateFile (
 			String target
 		) {
+			var parent = StorageHelper.Parent(target);
+			if (parent is not null) {
+				Directory.CreateDirectory(parent);
+			}
 			File.Create(target).Close();
 			return;
 		}
+
+		// ----------------
+
+		public static async Task<Byte[]> ReadFile (
+			String target
+		) {
+			return await File.ReadAllBytesAsync(target);
+		}
+
+		public static async Task WriteFile (
+			String target,
+			Byte[] data
+		) {
+			StorageHelper.CreateFile(target);
+			await File.WriteAllBytesAsync(target, data);
+			return;
+		}
+
+		#endregion
+
+		#region file - text
+
+		public static async Task<String> ReadFileText (
+			String target
+		) {
+			return await File.ReadAllTextAsync(target);
+		}
+
+		public static async Task WriteFileText (
+			String target,
+			String text
+		) {
+			StorageHelper.CreateFile(target);
+			await File.WriteAllTextAsync(target, text);
+			return;
+		}
+
+		// ----------------
+
+		public static String ReadFileTextSync (
+			String target
+		) {
+			return File.ReadAllText(target);
+		}
+
+		#endregion
+
+		#region directory
 
 		public static void CreateDirectory (
 			String target
@@ -178,7 +232,9 @@ namespace AssistantPlus.Utility {
 			return;
 		}
 
-		// ----------------
+		#endregion
+
+		#region iterate
 
 		public static List<String> ListFile (
 			String target,
@@ -196,62 +252,6 @@ namespace AssistantPlus.Utility {
 		) {
 			var targetFullPath = new DirectoryInfo(target).FullName;
 			return Directory.EnumerateDirectories(target, pattern, new EnumerationOptions() { RecurseSubdirectories = true, MaxRecursionDepth = depth }).Select((value) => (StorageHelper.Regularize(value[(targetFullPath.Length + 1)..]))).ToList();
-		}
-
-		#endregion
-
-		#region file
-
-		public static async Task WriteFile (
-			String target,
-			Byte[] data
-		) {
-			await File.WriteAllBytesAsync(target, data);
-			return;
-		}
-
-		public static async Task<Byte[]> ReadFile (
-			String target
-		) {
-			return await File.ReadAllBytesAsync(target);
-		}
-
-		public static async Task<Byte[]> ReadFileLimited (
-			String target,
-			Size   limit
-		) {
-			await using var stream = File.OpenRead(target);
-			var size = Math.Min((Size)stream.Length, limit);
-			var data = new Byte[size];
-			var sizeActual = await stream.ReadAsync(data, 0, size);
-			GF.AssertTest(sizeActual == size);
-			return data;
-		}
-
-		#endregion
-
-		#region file - text
-
-		public static async Task WriteFileText (
-			String target,
-			String text
-		) {
-			await File.WriteAllTextAsync(target, text);
-			return;
-		}
-
-		public static async Task<String> ReadFileText (
-			String target
-		) {
-			return await File.ReadAllTextAsync(target);
-		}
-
-		// ----------------
-
-		public static String ReadFileTextSync (
-			String target
-		) {
-			return File.ReadAllText(target);
 		}
 
 		#endregion

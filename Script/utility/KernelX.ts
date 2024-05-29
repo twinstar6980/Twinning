@@ -551,7 +551,7 @@ namespace Twinning.Script.KernelX {
 
 		// ------------------------------------------------
 
-		export function spawn_process(
+		export function spawn_child(
 			program: string,
 			argument: Array<string>,
 			environment: Array<string>,
@@ -559,15 +559,15 @@ namespace Twinning.Script.KernelX {
 			output: null | string,
 			error: null | string,
 		): bigint {
-			return Kernel.Process.spawn_process(Kernel.Path.value(program), Kernel.StringList.value(argument), Kernel.StringList.value(environment), Kernel.PathOptional.value(input), Kernel.PathOptional.value(output), Kernel.PathOptional.value(error)).value;
+			return Kernel.Process.spawn_child(Kernel.Path.value(program), Kernel.StringList.value(argument), Kernel.StringList.value(environment), Kernel.PathOptional.value(input), Kernel.PathOptional.value(output), Kernel.PathOptional.value(error)).value;
 		}
 
 		// ------------------------------------------------
 
-		export function system_command(
+		export function execute_system_command(
 			command: string,
 		): bigint {
-			return Kernel.Process.system_command(Kernel.String.value(command)).value;
+			return Kernel.Process.execute_system_command(Kernel.String.value(command)).value;
 		}
 
 		// ------------------------------------------------

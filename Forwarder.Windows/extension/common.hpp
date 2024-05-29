@@ -115,7 +115,7 @@ namespace Twinning::Forwarder {
 
 	// ----------------
 
-	inline auto create_process (
+	inline auto spawn_child_process (
 		std::wstring const &              program,
 		std::vector<std::wstring> const & argument
 	) -> void {
@@ -143,13 +143,17 @@ namespace Twinning::Forwarder {
 			&startup_information,
 			&process_information
 		);
-		assert_test(state_b);
+		assert_test(state_b != FALSE);
+		state_b = CloseHandle(process_information.hProcess);
+		assert_test(state_b != FALSE);
+		state_b = CloseHandle(process_information.hThread);
+		assert_test(state_b != FALSE);
 		return;
 	}
 
 	// ----------------
 
-	inline auto get_file_long_path (
+	inline auto get_file_system_long_path (
 		std::wstring const & short_path
 	) -> std::wstring {
 		auto state_d = DWORD{};
@@ -165,26 +169,26 @@ namespace Twinning::Forwarder {
 
 	// ----------------
 
-	inline auto get_shell_item_file_path (
-		IShellItemArray * const & selection
+	inline auto get_shell_item_file_system_path (
+		IShellItemArray * const & list
 	) -> std::vector<std::wstring> {
 		auto state_h = HRESULT{};
 		auto result = std::vector<std::wstring>{};
-		assert_test(selection != nullptr);
+		assert_test(list != nullptr);
 		auto count = DWORD{};
-		state_h = selection->GetCount(&count);
+		state_h = list->GetCount(&count);
 		assert_test(state_h == S_OK);
 		result.reserve(count);
 		for (auto index = DWORD{0}; index < count; ++index) {
 			auto item = std::add_pointer_t<IShellItem>{};
-			state_h = selection->GetItemAt(index, &item);
+			state_h = list->GetItemAt(index, &item);
 			assert_test(state_h == S_OK);
-			auto name = LPWSTR{};
-			state_h = item->GetDisplayName(SIGDN_FILESYSPATH, &name);
+			auto display_name = LPWSTR{};
+			state_h = item->GetDisplayName(SIGDN_FILESYSPATH, &display_name);
 			assert_test(state_h == S_OK);
+			result.emplace_back(get_file_system_long_path(std::wstring{display_name}));
+			CoTaskMemFree(display_name);
 			item->Release();
-			result.emplace_back(get_file_long_path(std::wstring{name}));
-			CoTaskMemFree(name);
 		}
 		return result;
 	}

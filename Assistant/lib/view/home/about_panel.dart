@@ -70,12 +70,9 @@ class AboutPanel extends StatelessWidget {
                   children: [
                     ActionChip(
                       avatar: const Icon(IconSymbols.refresh),
-                      label: const SizedBox(
-                        width: 46,
-                        child: Text(
-                          'Reload',
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                      label: const Text(
+                        'Reload',
+                        overflow: TextOverflow.ellipsis,
                       ),
                       onPressed: () async {
                         await setting.load();
@@ -84,12 +81,9 @@ class AboutPanel extends StatelessWidget {
                     ),
                     ActionChip(
                       avatar: const Icon(IconSymbols.settings_backup_restore),
-                      label: const SizedBox(
-                        width: 46,
-                        child: Text(
-                          'Reset',
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                      label: const Text(
+                        'Reset',
+                        overflow: TextOverflow.ellipsis,
                       ),
                       onPressed: () async {
                         if (await ControlHelper.showCustomConfirmDialog(context: context)) {
@@ -100,12 +94,9 @@ class AboutPanel extends StatelessWidget {
                     ),
                     ActionChip(
                       avatar: const Icon(IconSymbols.download),
-                      label: const SizedBox(
-                        width: 46,
-                        child: Text(
-                          'Import',
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                      label: const Text(
+                        'Import',
+                        overflow: TextOverflow.ellipsis,
                       ),
                       onPressed: () async {
                         var file = await StorageHelper.pickOpenFile('Application.SettingFile', setting.data.mFallbackDirectory);
@@ -117,12 +108,9 @@ class AboutPanel extends StatelessWidget {
                     ),
                     ActionChip(
                       avatar: const Icon(IconSymbols.upload),
-                      label: const SizedBox(
-                        width: 46,
-                        child: Text(
-                          'Export',
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                      label: const Text(
+                        'Export',
+                        overflow: TextOverflow.ellipsis,
                       ),
                       onPressed: () async {
                         var file = await StorageHelper.pickSaveFile('Application.SettingFile');
@@ -156,12 +144,9 @@ class AboutPanel extends StatelessWidget {
                   children: [
                     ActionChip(
                       avatar: const Icon(IconSymbols.open_in_browser),
-                      label: const SizedBox(
-                        width: 46,
-                        child: Text(
-                          'Reveal',
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                      label: const Text(
+                        'Reveal',
+                        overflow: TextOverflow.ellipsis,
                       ),
                       onPressed: () async {
                         await ControlHelper.revealStorageDirectoryInNativeManagerOrShowTextDialog(
@@ -196,12 +181,9 @@ class AboutPanel extends StatelessWidget {
                   children: [
                     ActionChip(
                       avatar: const Icon(IconSymbols.delete_forever),
-                      label: const SizedBox(
-                        width: 46,
-                        child: Text(
-                          'Clear',
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                      label: const Text(
+                        'Clear',
+                        overflow: TextOverflow.ellipsis,
                       ),
                       onPressed: () async {
                         await StorageHelper.removeDirectory(await StorageHelper.queryApplicationCacheDirectory());

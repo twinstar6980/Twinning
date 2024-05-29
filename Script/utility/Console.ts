@@ -261,7 +261,7 @@ namespace Twinning.Script.Console {
 			basic_common_output(leading + ' ', true, 0, false);
 			basic_set_message_text_attribute('verbosity');
 			if (KernelX.is_windows) {
-				KernelX.Process.system_command(`pause > NUL`);
+				KernelX.Process.execute_system_command(`pause > NUL`);
 				Shell.basic_output_text('\n');
 			}
 			if (KernelX.is_linux || KernelX.is_macintosh || KernelX.is_android || KernelX.is_iphone) {

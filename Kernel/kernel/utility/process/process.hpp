@@ -213,7 +213,7 @@ namespace Twinning::Kernel::Process {
 
 	#pragma endregion
 
-	#pragma region child process
+	#pragma region child
 
 	// NOTE
 	// the return value is process's exit code, see the following webpage to understand
@@ -225,7 +225,7 @@ namespace Twinning::Kernel::Process {
 	// Windows   : all 32 bit
 	// Linux     : low 08 bit
 	// Macintosh : low 24 bit
-	inline auto spawn_process (
+	inline auto spawn_child (
 		Path const &           program,
 		List<String> const &   argument,
 		List<String> const &   environment,
@@ -304,15 +304,19 @@ namespace Twinning::Kernel::Process {
 		assert_test(state_b != FALSE);
 		state_d = WaitForSingleObject(process_information.hProcess, INFINITE);
 		assert_test(state_d == WAIT_OBJECT_0);
+		state_b = GetExitCodeProcess(process_information.hProcess, &exit_code_d);
+		assert_test(state_b != FALSE);
+		result = mbw<IntegerU32>(exit_code_d);
 		state_b = CloseHandle(startup_information.hStdInput);
 		assert_test(state_b != FALSE);
 		state_b = CloseHandle(startup_information.hStdOutput);
 		assert_test(state_b != FALSE);
 		state_b = CloseHandle(startup_information.hStdError);
 		assert_test(state_b != FALSE);
-		state_b = GetExitCodeProcess(process_information.hProcess, &exit_code_d);
+		state_b = CloseHandle(process_information.hProcess);
 		assert_test(state_b != FALSE);
-		result = mbw<IntegerU32>(exit_code_d);
+		state_b = CloseHandle(process_information.hThread);
+		assert_test(state_b != FALSE);
 		#endif
 		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 		auto state_i = int{};
@@ -377,7 +381,7 @@ namespace Twinning::Kernel::Process {
 	// NOTE
 	// implement defined
 	// on iphone, std::system is not available, this function always return 0x00000000
-	inline auto system_command (
+	inline auto execute_system_command (
 		String const & command
 	) -> IntegerU32 {
 		auto result = IntegerU32{};

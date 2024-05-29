@@ -25,28 +25,11 @@ namespace Twinning::Forwarder {
 
 		#pragma endregion
 
-		#pragma region implement
-
-		virtual IFACEMETHODIMP GetCanonicalName (
-			_Out_ GUID * pguidCommandName
-		) override {
-			*pguidCommandName = GUID_NULL;
-			return S_OK;
-		}
-
-		virtual IFACEMETHODIMP GetIcon (
-			_In_opt_ IShellItemArray *            psiItemArray,
-			_Outptr_result_nullonfailure_ PWSTR * ppszIcon
-		) override {
-			if (SHStrDupW(g_application_logo.data(), ppszIcon) != S_OK) {
-				return S_FALSE;
-			}
-			return S_OK;
-		}
+		#pragma region implement - IExplorerCommand
 
 		virtual IFACEMETHODIMP GetTitle (
-			_In_opt_ IShellItemArray *            psiItemArray,
-			_Outptr_result_nullonfailure_ PWSTR * ppszName
+			IShellItemArray * psiItemArray,
+			LPWSTR *          ppszName
 		) override {
 			if (SHStrDupW(g_application_name.data(), ppszName) != S_OK) {
 				return S_FALSE;
@@ -54,50 +37,47 @@ namespace Twinning::Forwarder {
 			return S_OK;
 		}
 
+		virtual IFACEMETHODIMP GetIcon (
+			IShellItemArray * psiItemArray,
+			LPWSTR *          ppszIcon
+		) override {
+			if (SHStrDupW(g_application_logo.data(), ppszIcon) != S_OK) {
+				return S_FALSE;
+			}
+			return S_OK;
+		}
+
 		virtual IFACEMETHODIMP GetToolTip (
-			_In_opt_ IShellItemArray *            psiItemArray,
-			_Outptr_result_nullonfailure_ PWSTR * ppszInfotip
+			IShellItemArray * psiItemArray,
+			LPWSTR *          ppszInfotip
 		) override {
 			*ppszInfotip = nullptr;
-			return E_NOTIMPL;
+			return S_OK;
 		}
 
-		virtual IFACEMETHODIMP EnumSubCommands (
-			_COM_Outptr_ IEnumExplorerCommand ** ppEnum
+		virtual IFACEMETHODIMP GetCanonicalName (
+			GUID * pguidCommandName
 		) override {
-			ppEnum = nullptr;
-			return E_NOTIMPL;
-		}
-
-		virtual IFACEMETHODIMP GetFlags (
-			_Out_ EXPCMDFLAGS * pFlags
-		) override {
-			*pFlags = ECF_DEFAULT;
+			*pguidCommandName = GUID_NULL;
 			return S_OK;
 		}
 
 		virtual IFACEMETHODIMP GetState (
-			_In_opt_ IShellItemArray * psiItemArray,
-			_In_ BOOL                  fOkToBeSlow,
-			_Out_ EXPCMDSTATE *        pCmdState
+			IShellItemArray * psiItemArray,
+			BOOL              fOkToBeSlow,
+			EXPCMDSTATE *     pCmdState
 		) override {
 			*pCmdState = ECS_ENABLED;
 			return S_OK;
 		}
 
 		virtual IFACEMETHODIMP Invoke (
-			_In_opt_ IShellItemArray * psiItemArray,
-			_In_opt_ IBindCtx *        pbc
+			IShellItemArray * psiItemArray,
+			IBindCtx *        pbc
 		) override {
 			try {
-				auto script = get_roaming_app_data_directory_path() + L"\\TwinStar.Twinning.Forwarder\\forward.cmd";
-				assert_test(std::filesystem::is_regular_file(script));
-				auto program = std::wstring{L"C:\\Windows\\System32\\cmd.exe"};
-				auto argument = std::vector<std::wstring>{};
-				argument.emplace_back(L"/C");
-				argument.emplace_back(script);
-				argument.append_range(get_shell_item_file_path(psiItemArray));
-				create_process(program, argument);
+				auto resource = get_shell_item_file_system_path(psiItemArray);
+				thiz.forward_resource(resource);
 			}
 			catch (std::exception & e) {
 				MessageBoxA(nullptr, std::format("{} : {}", typeid(e).name(), e.what()).c_str(), "Exception", MB_ICONERROR | MB_OK);
@@ -108,20 +88,54 @@ namespace Twinning::Forwarder {
 			return S_OK;
 		}
 
-		// ----------------
+		virtual IFACEMETHODIMP GetFlags (
+			EXPCMDFLAGS * pFlags
+		) override {
+			*pFlags = ECF_DEFAULT;
+			return S_OK;
+		}
+
+		virtual IFACEMETHODIMP EnumSubCommands (
+			IEnumExplorerCommand * * ppEnum
+		) override {
+			ppEnum = nullptr;
+			return S_OK;
+		}
+
+		#pragma endregion
+
+		#pragma region implement - IObjectWithSite
 
 		virtual IFACEMETHODIMP SetSite (
-			_In_ IUnknown * pUnkSite
+			IUnknown * pUnkSite
 		) override {
 			thiz.m_site = pUnkSite;
 			return S_OK;
 		}
 
 		virtual IFACEMETHODIMP GetSite (
-			_In_ REFIID          riid,
-			_COM_Outptr_ void ** ppvSite
+			REFIID   riid,
+			void * * ppvSite
 		) override {
 			return thiz.m_site.CopyTo(riid, ppvSite);
+		}
+
+		#pragma endregion
+
+		#pragma region utility
+
+		auto forward_resource (
+			std::vector<std::wstring> const & resource
+		) -> void {
+			auto script = get_roaming_app_data_directory_path() + L"\\TwinStar.Twinning.Forwarder\\forward.cmd";
+			assert_test(std::filesystem::is_regular_file(script));
+			auto program = std::wstring{L"C:\\Windows\\System32\\cmd.exe"};
+			auto argument = std::vector<std::wstring>{};
+			argument.emplace_back(L"/C");
+			argument.emplace_back(script);
+			argument.append_range(resource);
+			spawn_child_process(program, argument);
+			return;
 		}
 
 		#pragma endregion

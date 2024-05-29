@@ -145,9 +145,9 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		#region common
 
-		public static String DataViewFormatForGroup = "TwinStar.PackageBuilder.Group";
+		public static String DataViewFormatForGroup = $"{nameof(AssistantPlus)}.{nameof(PackageBuilder)}.Group";
 
-		public static String DataViewFormatForResource = "TwinStar.PackageBuilder.Resource";
+		public static String DataViewFormatForResource = $"{nameof(AssistantPlus)}.{nameof(PackageBuilder)}.Resource";
 
 		// ----------------
 

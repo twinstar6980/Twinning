@@ -68,15 +68,26 @@ class ForwardFinderSync: FIFinderSync {
 		_ sender: AnyObject?
 	) -> Void {
 		do {
-			let script = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first! + "/forward.sh"
-			let argument = FIFinderSyncController.default().selectedItemURLs()!.map({ (item) in item.path })
-			let process = Process()
-			process.executableURL = URL(filePath: script)
-			process.arguments = argument
-			try process.run()
+			let resource = FIFinderSyncController.default().selectedItemURLs()!.map({ (item) in item.path })
+			try self.forwardResource(resource: resource)
 		}
 		catch {
 		}
+		return
+	}
+
+	// MARK: - utility
+
+	private func forwardResource(
+		resource: Array<String>
+	) throws -> Void {
+		let script = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first! + "/forward.sh"
+		var argument: Array<String> = []
+		argument.append(contentsOf: resource)
+		let process = Process()
+		process.executableURL = URL(filePath: script)
+		process.arguments = argument
+		try process.run()
 		return
 	}
 

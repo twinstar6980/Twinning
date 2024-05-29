@@ -489,10 +489,10 @@ namespace Twinning::Kernel::Executor::Environment {
 				.add_function_proxy<&stpg<&Process::get_environment_variable>>("get_environment_variable"_s)
 				.add_function_proxy<&stpg<&Process::set_environment_variable>>("set_environment_variable"_s)
 				.add_function_proxy<&stpg<&Process::list_environment_variable>>("list_environment_variable"_s)
-				// child process
-				.add_function_proxy<&stpg<&Process::spawn_process>>("spawn_process"_s)
+				// child
+				.add_function_proxy<&stpg<&Process::spawn_child>>("spawn_child"_s)
 				// system command
-				.add_function_proxy<&stpg<&Process::system_command>>("system_command"_s);
+				.add_function_proxy<&stpg<&Process::execute_system_command>>("execute_system_command"_s);
 		}
 		// Tool
 		{

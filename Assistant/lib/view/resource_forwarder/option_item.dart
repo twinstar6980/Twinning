@@ -64,7 +64,7 @@ class _OptionItemItemState extends State<OptionItemItem> {
               overflow: TextOverflow.ellipsis,
             ),
             trailing: SizedBox(
-              width: 76,
+              width: 80,
               height: 32,
               child: Tooltip(
                 message: !enabled ? '' : 'Preset',
@@ -82,7 +82,6 @@ class _OptionItemItemState extends State<OptionItemItem> {
                         child: Row(
                           children: [
                             const SizedBox(width: 12),
-                            const SizedBox(width: 4),
                             Expanded(
                               child: Text(
                                 this.widget.configuration.preset.whereNotNull().length.toString(),
