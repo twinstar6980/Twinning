@@ -76,6 +76,19 @@ namespace AssistantPlus.Utility {
 			return name.All((value) => (!StorageHelper.InvalidPathNameCharacter.Contains(value)));
 		}
 
+		// ----------------
+
+		public static String GetLongPath (
+			String source
+		) {
+			var destination = new StringBuilder();
+			var destinationLength = PlatformInvoke.Kernel32.GetLongPathName(source, destination, 0);
+			destination.Capacity = (Size)destinationLength;
+			var destinationLengthCheck = PlatformInvoke.Kernel32.GetLongPathName(source, destination, destinationLength);
+			GF.AssertTest(destinationLengthCheck == destinationLength - 1);
+			return StorageHelper.Regularize(destination.ToString(0, (Size)destinationLength - 1));
+		}
+
 		#endregion
 
 		#region basic

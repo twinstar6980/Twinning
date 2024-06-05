@@ -1,6 +1,7 @@
 import Flutter
 import UIKit
 import flutter_local_notifications
+import app_links
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -17,6 +18,10 @@ import flutter_local_notifications
     }
     GeneratedPluginRegistrant.register(with: self)
     self.customMethodChannel.register_application(application, didFinishLaunchingWithOptions: launchOptions)
+    if let url = AppLinks.shared.getLink(launchOptions: launchOptions) {
+      AppLinks.shared.handleLink(url: url)
+      return true
+    }
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }

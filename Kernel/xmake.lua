@@ -3,7 +3,7 @@ set_project('Kernel')
 add_rules('mode.debug', 'mode.release')
 
 add_moduledirs('../common/xmake')
-includes('../common/xmake/custom.lua')
+includes('../common/xmake/helper.lua')
 apply_common_setting()
 
 includes('./third/mscharconv')

@@ -9,11 +9,10 @@ class ControlHelper {
 
   // #region common
 
-  static Future<Void> runAfterNextFrame(
-    Future<Void> Function() action,
+  static Void postTask(
+    Void Function() action,
   ) async {
-    await WidgetsBinding.instance.endOfFrame;
-    await action();
+    WidgetsBinding.instance.addPostFrameCallback((_) { action(); });
     return;
   }
 

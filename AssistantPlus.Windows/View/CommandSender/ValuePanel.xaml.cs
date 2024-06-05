@@ -385,8 +385,8 @@ namespace AssistantPlus.View.CommandSender {
 			}
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.Handled = true;
-				var data = await args.DataView.GetStorageItemsAsync();
-				this.Value.OfPath.Content = StorageHelper.Regularize(data[0].Path);
+				var item = await args.DataView.GetStorageItemsAsync();
+				this.Value.OfPath.Content = StorageHelper.GetLongPath(item[0].Path);
 				this.NotifyPropertyChanged(
 					nameof(this.uPathContent_Text)
 				);

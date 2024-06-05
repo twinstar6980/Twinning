@@ -183,7 +183,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 					App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Source is multiply.", "");
 					return;
 				}
-				var descriptorFile = StorageHelper.Regularize(item[0].Path);
+				var descriptorFile = StorageHelper.GetLongPath(item[0].Path);
 				if (!StorageHelper.ExistFile(descriptorFile)) {
 					App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Source is not a file.", "");
 					return;

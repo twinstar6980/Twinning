@@ -10,8 +10,6 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
 
   private var continuation: CheckedContinuation<Any?, Never>?
 
-  private var command: Array<String>
-
   // MARK: - construct
 
   public init(
@@ -19,7 +17,6 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
   ) {
     self.host = host
     self.continuation = nil
-    self.command = []
   }
 
   // MARK: - register
@@ -38,13 +35,6 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
       }
       return
     })
-    if let link = launchOptions?[.url] as? URL {
-      if let linkComponent = NSURLComponents(url: link, resolvingAgainstBaseURL: true) {
-        if linkComponent.scheme == "twinstar.twinning.assistant" && linkComponent.host == nil && linkComponent.port == nil && linkComponent.path == "/run" {
-          self.command.append(contentsOf: (linkComponent.queryItems ?? []).filter({ (item) in return item.name == "command" }).map({ (item) in return item.value ?? "" }))
-        }
-      }
-    }
     return
   }
 
@@ -67,10 +57,6 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
           type: detailType
         )
         result(detailTarget)
-      case "get_link_command":
-        let detailCommand = try await self.handleGetLinkCommand(
-        )
-        result(detailCommand)
       default:
         result(FlutterMethodNotImplemented)
       }
@@ -106,11 +92,6 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
     self.continuation = nil
     let target = targetUrl == nil ? nil : try self.parsePathOfFileURL(url: targetUrl!)
     return target
-  }
-
-  private func handleGetLinkCommand(
-  ) async throws -> Array<String> {
-    return self.command
   }
 
   // MARK: - implement - UIDocumentPickerDelegate

@@ -16,7 +16,7 @@ class ForwardHelper {
     List<String> argument,
   ) async {
     var setting = Provider.of<SettingProvider>(context, listen: false);
-    setting.state.mInsertTabItem!(ModuleLauncherConfiguration(
+    setting.state.mHomeInsertTabItem!(ModuleLauncherConfiguration(
       title: ModuleHelper.query(ModuleType.modding_worker).name,
       type: ModuleType.modding_worker,
       option: ['-additional_argument', ...argument],

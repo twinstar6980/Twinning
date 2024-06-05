@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
@@ -6,7 +6,7 @@
   xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
   xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
   IgnorableNamespaces="uap rescap com desktop">
-  <Identity Name="TwinStar.Twinning.AssistantPlus" Publisher="CN=TwinStar" Version="34.0.0.0" />
+  <Identity Name="TwinStar.Twinning.AssistantPlus" Publisher="CN=TwinStar" Version="35.0.0.0" />
   <Properties>
     <DisplayName>Twinning Assistant Plus</DisplayName>
     <PublisherDisplayName>TwinStar</PublisherDisplayName>
@@ -20,9 +20,6 @@
   <Resources>
     <Resource Language="x-generate" />
   </Resources>
-  <Capabilities>
-    <rescap:Capability Name="runFullTrust" />
-  </Capabilities>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="$targetentrypoint$">
       <uap:VisualElements DisplayName="Twinning Assistant Plus" Description="None" BackgroundColor="transparent" Square150x150Logo="Asset\Logo\Square150x150Logo.png" Square44x44Logo="Asset\Logo\Square44x44Logo.png">
@@ -42,4 +39,7 @@
       </Extensions>
     </Application>
   </Applications>
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
 </Package>

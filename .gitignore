@@ -1,67 +1,87 @@
+# Git Ignore
 
+# System - Windows
+/**/desktop.ini
+
+# System - Macintosh
+/**/.DS_Store
+
+# Environment - Visual Studio
 /**/.vs
+/**/*.vcxproj.user
+/**/*.csproj.user
+/**/*.wapproj.user
+
+# Environment - Visual Studio Code
 /**/.vscode
+
+# Environment - Xcode
+/**/xcuserdata
+/**/xcshareddata
+
+# Environment - IntelliJ IDEA
 /**/.idea
 
+# Environment - Gradle
+/**/.gradle
+
+# Environment - Flutter
+/**/pubspec.lock
+/**/.dart_tool
+/**/.flutter-plugins
+/**/.flutter-plugins-dependencies
+
+# Common
+/common/certificate
+
+# Module - Kernel
 /Kernel/.build
 /Kernel/.xmake
 /Kernel/.project
 
+# Module - Shell
 /Shell/.build
 /Shell/.xmake
 /Shell/.project
 
+# Module - Script
 /Script/.build
 
-/Forwarder.Windows/.build
-/Forwarder.Windows/package/package.assets.cache
-/Forwarder.Windows/package/bin
-/Forwarder.Windows/package/obj
-/Forwarder.Windows/package/AppPackages
-
-/Forwarder.Macintosh/**/xcuserdata
-/Forwarder.Macintosh/**/xcshareddata
-
-/Forwarder.Android/.gradle
-/Forwarder.Android/build
-/Forwarder.Android/app/build
-/Forwarder.Android/local.properties
-/Forwarder.Android/keystore.properties
-
-/Forwarder.Iphone/**/xcuserdata
-/Forwarder.Iphone/**/xcshareddata
-
-/Assistant/.dart_tool
-/Assistant/.flutter-plugins
-/Assistant/.flutter-plugins-dependencies
-/Assistant/.metadata
-/Assistant/pubspec.lock
+# Module - Assistant
 /Assistant/build
+/Assistant/.metadata
 /Assistant/windows/flutter/ephemeral
 /Assistant/linux/flutter/ephemeral
 /Assistant/macos/Flutter/ephemeral
 /Assistant/macos/Pods
 /Assistant/macos/Podfile
 /Assistant/macos/Podfile.lock
-/Assistant/macos/**/xcuserdata
-/Assistant/macos/**/xcshareddata
-/Assistant/android/.gradle
 /Assistant/android/local.properties
-/Assistant/android/keystore.properties
 /Assistant/ios/Flutter/ephemeral
 /Assistant/ios/Flutter/Generated.xcconfig
 /Assistant/ios/Flutter/flutter_export_environment.sh
+/Assistant/ios/Flutter/Flutter.podspec
 /Assistant/ios/Pods
 /Assistant/ios/Podfile
 /Assistant/ios/Podfile.lock
-/Assistant/ios/**/xcuserdata
-/Assistant/ios/**/xcshareddata
+/Assistant/ios/.symlinks
 
-/AssistantPlus.Windows/bin
-/AssistantPlus.Windows/obj
-/AssistantPlus.Windows/Helper.csproj.user
+# Module - Forwarder.Windows
+/Forwarder.Windows/.build
+
+# Module - Forwarder.Macintosh
+
+# Module - Forwarder.Android
+/Forwarder.Android/.build
+/Forwarder.Android/local.properties
+
+# Module - Forwarder.Iphone
+
+# Module - AssistantPlus.Windows
+/AssistantPlus.Windows/.build
 /AssistantPlus.Windows/.editorconfig
 
+# Miscellaneous
 /.unused
+/.temporary
 /.distribution
-/.build.txt

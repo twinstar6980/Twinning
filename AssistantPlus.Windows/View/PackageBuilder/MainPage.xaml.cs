@@ -1128,7 +1128,7 @@ namespace AssistantPlus.View.PackageBuilder {
 					App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Source is multiply.", "");
 					return;
 				}
-				var projectDirectory = StorageHelper.Regularize(item[0].Path);
+				var projectDirectory = StorageHelper.GetLongPath(item[0].Path);
 				if (!StorageHelper.ExistDirectory(projectDirectory)) {
 					App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Source is not a directory.", "");
 					return;

@@ -334,7 +334,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.Handled = true;
 				var item = await args.DataView.GetStorageItemsAsync();
-				var input = item.Select((value) => (StorageHelper.Regularize(value.Path))).ToList();
+				var input = item.Select((value) => (StorageHelper.GetLongPath(value.Path))).ToList();
 				await this.AppendInput(input);
 			}
 			return;

@@ -49,16 +49,16 @@ class SettingData {
 }
 
 class SettingState {
-  GlobalKey<NavigatorState>                   mApplicationNavigatorKey;
-  List<String>                                mThemeFontFamliy;
-  ModuleLauncherConfiguration?                mInitialTab;
-  Void Function(ModuleLauncherConfiguration)? mInsertTabItem;
-  List<String>                                mModdingWorkerMessageFontFamily;
+  GlobalKey<NavigatorState>                           mApplicationNavigatorKey;
+  List<String>                                        mThemeFontFamliy;
+  Future<Void> Function()?                            mHomeShowLauncherPanel;
+  Future<Void> Function(ModuleLauncherConfiguration)? mHomeInsertTabItem;
+  List<String>                                        mModdingWorkerMessageFontFamily;
   SettingState({
     required this.mApplicationNavigatorKey,
     required this.mThemeFontFamliy,
-    required this.mInitialTab,
-    required this.mInsertTabItem,
+    required this.mHomeShowLauncherPanel,
+    required this.mHomeInsertTabItem,
     required this.mModdingWorkerMessageFontFamily,
   });
 }
@@ -151,8 +151,8 @@ class SettingProvider with ChangeNotifier {
     mVersion: kApplicationVersion,
     mThemeMode: ThemeMode.system,
     mThemeColorState: false,
-    mThemeColorLight: const Color(0xff6750a4),
-    mThemeColorDark: const Color(0xff1750a4),
+    mThemeColorLight: const Color(0xff6200ee),
+    mThemeColorDark: const Color(0xffbb86fc),
     mThemeFontState: false,
     mThemeFontPath: [],
     mWindowPositionState: false,
@@ -187,8 +187,8 @@ class SettingProvider with ChangeNotifier {
   ) => SettingState(
     mApplicationNavigatorKey: GlobalKey<NavigatorState>(),
     mThemeFontFamliy: [],
-    mInitialTab: null,
-    mInsertTabItem: null,
+    mHomeShowLauncherPanel: null,
+    mHomeInsertTabItem: null,
     mModdingWorkerMessageFontFamily: [],
   );
 

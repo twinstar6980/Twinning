@@ -7,11 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F804AC4F2B65593500F277FC /* mainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F804AC4E2B65593500F277FC /* mainApp.swift */; };
+		F804AC4F2B65593500F277FC /* MainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F804AC4E2B65593500F277FC /* MainApp.swift */; };
 		F804AC532B65593700F277FC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F804AC522B65593700F277FC /* Assets.xcassets */; };
 		F804AC612B65598C00F277FC /* UniformTypeIdentifiers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F804AC602B65598C00F277FC /* UniformTypeIdentifiers.framework */; };
-		F804AC662B65598C00F277FC /* ActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F804AC652B65598C00F277FC /* ActionViewController.swift */; };
-		F804AC692B65598C00F277FC /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F804AC672B65598C00F277FC /* MainInterface.storyboard */; };
+		F804AC662B65598C00F277FC /* ForwardActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F804AC652B65598C00F277FC /* ForwardActionViewController.swift */; };
 		F804AC6D2B65598C00F277FC /* extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F804AC5E2B65598C00F277FC /* extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F8EBD5122C05E51D00403690 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8EBD5112C05E51D00403690 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -42,12 +41,11 @@
 
 /* Begin PBXFileReference section */
 		F804AC4B2B65593500F277FC /* main.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = main.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		F804AC4E2B65593500F277FC /* mainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mainApp.swift; sourceTree = "<group>"; };
+		F804AC4E2B65593500F277FC /* MainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainApp.swift; sourceTree = "<group>"; };
 		F804AC522B65593700F277FC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F804AC5E2B65598C00F277FC /* extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = extension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		F804AC602B65598C00F277FC /* UniformTypeIdentifiers.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniformTypeIdentifiers.framework; path = System/Library/Frameworks/UniformTypeIdentifiers.framework; sourceTree = SDKROOT; };
-		F804AC652B65598C00F277FC /* ActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionViewController.swift; sourceTree = "<group>"; };
-		F804AC682B65598C00F277FC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		F804AC652B65598C00F277FC /* ForwardActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwardActionViewController.swift; sourceTree = "<group>"; };
 		F804AC6A2B65598C00F277FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F84C28AB2C02C1F8003D13ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F8EBD5112C05E51D00403690 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -95,8 +93,8 @@
 			isa = PBXGroup;
 			children = (
 				F84C28AB2C02C1F8003D13ED /* Info.plist */,
-				F804AC4E2B65593500F277FC /* mainApp.swift */,
 				F804AC522B65593700F277FC /* Assets.xcassets */,
+				F804AC4E2B65593500F277FC /* MainApp.swift */,
 			);
 			path = main;
 			sourceTree = "<group>";
@@ -112,10 +110,9 @@
 		F804AC622B65598C00F277FC /* extension */ = {
 			isa = PBXGroup;
 			children = (
-				F804AC652B65598C00F277FC /* ActionViewController.swift */,
-				F804AC672B65598C00F277FC /* MainInterface.storyboard */,
 				F804AC6A2B65598C00F277FC /* Info.plist */,
 				F8EBD5112C05E51D00403690 /* Assets.xcassets */,
+				F804AC652B65598C00F277FC /* ForwardActionViewController.swift */,
 			);
 			path = extension;
 			sourceTree = "<group>";
@@ -210,7 +207,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F8EBD5122C05E51D00403690 /* Assets.xcassets in Resources */,
-				F804AC692B65598C00F277FC /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -221,7 +217,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F804AC4F2B65593500F277FC /* mainApp.swift in Sources */,
+				F804AC4F2B65593500F277FC /* MainApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -229,7 +225,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F804AC662B65598C00F277FC /* ActionViewController.swift in Sources */,
+				F804AC662B65598C00F277FC /* ForwardActionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,17 +238,6 @@
 			targetProxy = F804AC6B2B65598C00F277FC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		F804AC672B65598C00F277FC /* MainInterface.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F804AC682B65598C00F277FC /* Base */,
-			);
-			name = MainInterface.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		F804AC452B65591200F277FC /* Debug */ = {
@@ -304,7 +289,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = "";
@@ -337,7 +322,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5;
+				MARKETING_VERSION = 6;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -389,7 +374,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = "";
@@ -416,7 +401,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5;
+				MARKETING_VERSION = 6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.twinstar.twinning.forwarder;
@@ -466,7 +451,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -495,7 +480,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 5;
+				MARKETING_VERSION = 6;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -546,7 +531,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -569,7 +554,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 5;
+				MARKETING_VERSION = 6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.twinstar.twinning.forwarder.extension;

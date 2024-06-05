@@ -1,12 +1,6 @@
-import java.util.Properties
-
 plugins {
 	alias(libs.plugins.android.application)
 	alias(libs.plugins.jetbrains.kotlin.android)
-}
-
-val keystoreProperties = Properties().also {
-	it.load(rootProject.file("keystore.properties").inputStream())
 }
 
 android {
@@ -17,17 +11,8 @@ android {
 		applicationId = "com.twinstar.twinning.forwarder"
 		minSdk = 28
 		targetSdk = 34
-		versionCode = 10
-		versionName = "10"
-	}
-
-	signingConfigs {
-		create("release") {
-			keyAlias = keystoreProperties.getProperty("keyAlias")!!
-			keyPassword = keystoreProperties.getProperty("keyPassword")!!
-			storeFile = keystoreProperties.getProperty("storeFile")!!.let { file(it) }
-			storePassword = keystoreProperties.getProperty("storePassword")!!
-		}
+		versionCode = 11
+		versionName = "11"
 	}
 
 	buildTypes {
@@ -35,8 +20,6 @@ android {
 			isMinifyEnabled = true
 			isShrinkResources = true
 			proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
-
-			signingConfig = signingConfigs.getByName("release")
 		}
 	}
 

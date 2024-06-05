@@ -126,8 +126,9 @@ namespace AssistantPlus {
 			ModuleLauncherConfiguration launcher
 		) {
 			return [
+				"Launch",
 				..launcher.Command,
-				"-InitialTab",
+				"-InsertTab",
 				launcher.Title,
 				launcher.Type.ToString(),
 				..launcher.Option,

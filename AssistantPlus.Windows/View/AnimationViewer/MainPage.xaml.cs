@@ -755,7 +755,7 @@ namespace AssistantPlus.View.AnimationViewer {
 					App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Source is multiply.", "");
 					return;
 				}
-				var animationFile = StorageHelper.Regularize(item[0].Path);
+				var animationFile = StorageHelper.GetLongPath(item[0].Path);
 				if (!StorageHelper.ExistFile(animationFile)) {
 					App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Source is not a file.", "");
 					return;

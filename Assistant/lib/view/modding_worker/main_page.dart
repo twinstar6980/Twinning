@@ -43,7 +43,6 @@ class _MainPageState extends State<MainPage> {
   late ScrollController            _messageListScrollController;
   late List<List<ValueExpression>> _submissionHistory;
   late SubmissionBar               _submissionBar;
-  late Widget                      _launcherBar;
   late _MainPageBridgeClient       _sessionClient;
 
   Future<Void> _sendMessage(
@@ -151,14 +150,10 @@ class _MainPageState extends State<MainPage> {
       history: null,
       completer: null,
     );
-    this._launcherBar = LauncherBar(
-      additionalArgument: this._additionalArgument,
-      onLaunch: this._launchSession,
-    );
     this._sessionClient = _MainPageBridgeClient(this);
-    var optionImmediateLaunch = null as Boolean?;
-    var optionAdditionalArgument = null as List<String>?;
-    try {
+    ControlHelper.postTask(() async {
+      var optionImmediateLaunch = null as Boolean?;
+      var optionAdditionalArgument = null as List<String>?;
       var option = CommandLineReader(this.widget.option);
       if (option.check('-immediate_launch')) {
         optionImmediateLaunch = option.nextBoolean();
@@ -170,20 +165,14 @@ class _MainPageState extends State<MainPage> {
         optionAdditionalArgument = option.nextStringList();
       }
       assertTest(option.done());
-    }
-    catch (e) {
-      ControlHelper.runAfterNextFrame(() => throw e); // ignore: use_rethrow_when_possible
-    }
-    if (optionAdditionalArgument != null) {
-      this._additionalArgument.addAll(optionAdditionalArgument);
-    }
-    if (optionImmediateLaunch != null) {
-      if (optionImmediateLaunch) {
-        ControlHelper.runAfterNextFrame(() async {
-          await this._launchSession();
-        });
+      if (optionAdditionalArgument != null) {
+        this._additionalArgument.addAll(optionAdditionalArgument);
       }
-    }
+      if (optionImmediateLaunch) {
+        this._launchSession();
+      }
+      this.setState(() {});
+    });
     return;
   }
 
@@ -221,7 +210,10 @@ class _MainPageState extends State<MainPage> {
       ),
       bottom: this._sessionClient._running
         ? this._submissionBar
-        : this._launcherBar,
+        : LauncherBar(
+          additionalArgument: this._additionalArgument,
+          onLaunch: this._launchSession,
+        ),
     );
   }
 

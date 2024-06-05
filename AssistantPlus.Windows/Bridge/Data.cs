@@ -8,8 +8,8 @@ namespace AssistantPlus.Bridge {
 
 	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct Message {
-		public IntegerU8* data;
-		public IntegerU64 size;
+		public IntegerU8*    data;
+		public IntegerNative size;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]

@@ -30,8 +30,6 @@ class CustomMethodChannel {
 
 	private var continuation: Channel<Any?>
 
-	private var command: MutableList<String>
-
 	// endregion
 
 	// region construct
@@ -41,7 +39,6 @@ class CustomMethodChannel {
 	) {
 		this.host = host
 		this.continuation = Channel()
-		this.command = mutableListOf()
 	}
 
 	// endregion
@@ -57,10 +54,6 @@ class CustomMethodChannel {
 		).setMethodCallHandler { call, result ->
 			CoroutineScope(Dispatchers.Main).launch { this@CustomMethodChannel.handle(call, result) }
 			return@setMethodCallHandler
-		}
-		val link = this.host.intent.data
-		if (link != null && link.scheme == "twinstar.twinning.assistant" && link.host == null && link.port == -1 && link.path == "/run") {
-			this.command.addAll(link.getQueryParameters("command"))
 		}
 		return
 	}
@@ -110,13 +103,6 @@ class CustomMethodChannel {
 	): Unit {
 		try {
 			when (call.method) {
-				"check_storage_permission" -> {
-					val detailMode = call.argument<String>("mode")!!
-					val detailState = this.handleCheckStoragePermission(
-						detailMode,
-					)
-					result.success(detailState)
-				}
 				"pick_storage_path" -> {
 					val detailType = call.argument<String>("type")!!
 					val detailInitialDirectory = call.argument<String>("initial_directory")!!
@@ -128,12 +114,21 @@ class CustomMethodChannel {
 					)
 					result.success(detailTarget)
 				}
-				"get_link_command" -> {
+				"parse_content_uri" -> {
+					val detailTarget = call.argument<String>("target")!!
 					val detailFallbackDirectory = call.argument<String>("fallback_directory")!!
-					val detailCommand = this.handleGetLinkCommand(
+					val detailLocation = this.handleParseContentUri(
+						detailTarget,
 						detailFallbackDirectory,
 					)
-					result.success(detailCommand)
+					result.success(detailLocation)
+				}
+				"check_storage_permission" -> {
+					val detailMode = call.argument<String>("mode")!!
+					val detailState = this.handleCheckStoragePermission(
+						detailMode,
+					)
+					result.success(detailState)
 				}
 				else -> {
 					result.notImplemented()
@@ -144,30 +139,6 @@ class CustomMethodChannel {
 			result.error("", e.stackTraceToString(), null)
 		}
 		return
-	}
-
-	private suspend fun handleCheckStoragePermission(
-		mode: String,
-	): Boolean {
-		check(mode == "check" || mode == "request")
-		if (mode == "request") {
-			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-				this.host.requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_STORAGE_PERMISSION)
-			}
-			else {
-				this.host.startActivityForResult(Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:${this.host.packageName}")), REQUEST_STORAGE_PERMISSION)
-			}
-			this.continuation.receive()
-		}
-		val state: Boolean
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-			state = this.host.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-					this.host.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-		}
-		else {
-			state = Environment.isExternalStorageManager()
-		}
-		return state
 	}
 
 	private suspend fun handlePickStoragePath(
@@ -202,19 +173,45 @@ class CustomMethodChannel {
 		val timeBeforePick = System.currentTimeMillis()
 		this.host.startActivityForResult(intent, REQUEST_PICK_STORAGE_PATH)
 		val targetUri = this.continuation.receive() as Uri?
-		val target = targetUri?.let { parsePathOfContentProviderUri(it, fallbackDirectory, this.host.contentResolver) ?: it.toString() }
+		val target = targetUri?.let { parsePathOfContentUri(it, fallbackDirectory, this.host.contentResolver) ?: it.toString() }
 		if (type == "save_file") {
 			if (target != null && File(target).lastModified() > timeBeforePick) {
-				File(target).delete()
+				check(File(target).delete())
 			}
 		}
 		return target
 	}
 
-	private suspend fun handleGetLinkCommand(
+	private suspend fun handleParseContentUri(
+		target: String,
 		fallbackDirectory: String,
-	): List<String> {
-		return this.command.map { if (!it.startsWith("content://")) (it) else (parsePathOfContentProviderUri(Uri.parse(it), fallbackDirectory, this.host.contentResolver) ?: it) }
+	): String? {
+		val location = parsePathOfContentUri(Uri.parse(target), fallbackDirectory, this.host.contentResolver)
+		return location
+	}
+
+	private suspend fun handleCheckStoragePermission(
+		mode: String,
+	): Boolean {
+		check(mode == "check" || mode == "request")
+		if (mode == "request") {
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+				this.host.requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_STORAGE_PERMISSION)
+			}
+			else {
+				this.host.startActivityForResult(Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:${this.host.packageName}")), REQUEST_STORAGE_PERMISSION)
+			}
+			this.continuation.receive()
+		}
+		val state: Boolean
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+			state = this.host.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+					this.host.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+		}
+		else {
+			state = Environment.isExternalStorageManager()
+		}
+		return state
 	}
 
 	// endregion
@@ -233,7 +230,7 @@ class CustomMethodChannel {
 
 		// region content uri
 
-		private fun parsePathOfContentProviderUri(
+		private fun parsePathOfContentUri(
 			uri: Uri,
 			fallbackDirectory: String,
 			contentResolver: ContentResolver,
@@ -305,18 +302,14 @@ class CustomMethodChannel {
 				if (fallbackName != null) {
 					val fallbackFile = "${fallbackDirectory}/${fallbackName}"
 					if (File(fallbackFile).exists()) {
-						check(File(fallbackFile).deleteRecursively())
+						check(File(fallbackFile).delete())
 					}
-					try {
-						contentResolver.openInputStream(uri)!!.use { input ->
-							FileOutputStream(fallbackFile, false).use { output ->
-								input.copyTo(output)
-							}
+					contentResolver.openInputStream(uri)!!.use { input ->
+						FileOutputStream(fallbackFile, false).use { output ->
+							input.copyTo(output)
 						}
-						result = fallbackFile
 					}
-					catch (e: Exception) {
-					}
+					result = fallbackFile
 				}
 			}
 			return result

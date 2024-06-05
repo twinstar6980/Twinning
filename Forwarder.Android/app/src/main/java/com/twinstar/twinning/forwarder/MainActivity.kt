@@ -91,10 +91,44 @@ class MainActivity : ComponentActivity() {
 
 	// region utility
 
-	private fun showException(
-		exception: Exception,
+	private fun encodePercentString(
+		source: String,
+	): String {
+		val data = source.encodeToByteArray()
+		val destination = StringBuilder(data.size * 3)
+		for (character in data) {
+			if (('0'.code <= character && character <= '9'.code) ||
+				('a'.code <= character && character <= 'z'.code) ||
+				('A'.code <= character && character <= 'Z'.code) ||
+				(character == '-'.code.toByte()) ||
+				(character == '.'.code.toByte()) ||
+				(character == '_'.code.toByte()) ||
+				(character == '~'.code.toByte())) {
+				destination.append(Char(character.toInt()))
+			}
+			else {
+				destination.append('%')
+				destination.append((character / 0x10).toString(16))
+				destination.append((character % 0x10).toString(16))
+			}
+		}
+		return destination.toString()
+	}
+
+	private fun openLink(
+		link: Uri,
+		attachment: List<Uri>,
 	): Unit {
-		Toast.makeText(this, exception.toString(), Toast.LENGTH_LONG).show()
+		this.startActivity(Intent().also { intent ->
+			intent.setAction(Intent.ACTION_VIEW)
+			intent.setData(link)
+			intent.setClipData(ClipData.newPlainText("", "").also { clip ->
+				attachment.forEach() { item -> clip.addItem(ClipData.Item(item)) }
+			})
+			intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+		})
 		return
 	}
 
@@ -102,22 +136,20 @@ class MainActivity : ComponentActivity() {
 		resource: List<Uri>,
 	): Unit {
 		val command = mutableListOf<String>()
-		command.add("-initial_tab")
+		command.add("-insert_tab")
 		command.add("Resource Forwarder")
 		command.add("resource_forwarder")
 		command.add("-input")
 		command.addAll(resource.map() { item -> item.toString() })
-		val link = "twinstar.twinning.assistant:/run?${command.joinToString("&") { item -> "command=${Uri.encode(item)}" }}"
-		this.startActivity(Intent().also { intent ->
-			intent.setAction(Intent.ACTION_VIEW)
-			intent.setData(Uri.parse(link))
-			intent.setClipData(ClipData.newPlainText("", "").also { clip ->
-				resource.forEach() { item -> clip.addItem(ClipData.Item(item)) }
-			})
-			intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-			intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-		})
+		val link = Uri.parse("twinstar.twinning.assistant:/launch?${command.joinToString("&") { item -> "command=${this.encodePercentString(item)}" }}")
+		this.openLink(link, resource)
+		return
+	}
+
+	private fun showException(
+		exception: Exception,
+	): Unit {
+		Toast.makeText(this, exception.toString(), Toast.LENGTH_LONG).show()
 		return
 	}
 

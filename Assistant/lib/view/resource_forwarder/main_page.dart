@@ -34,12 +34,12 @@ class _MainPageState extends State<MainPage> {
 
   late ScrollController                        _optionListScrollController;
   late List<OptionGroupConfiguration>          _optionConfiguration;
-  late List<(String, Boolean?)>                _input;
-  late List<List<(Boolean, Boolean, Boolean)>> _match;
   late Boolean                                 _parallelExecute;
   late Boolean                                 _enableFilter;
   late Boolean                                 _enableBatch;
   late Boolean                                 _remainInput;
+  late List<(String, Boolean?)>                _input;
+  late List<List<(Boolean, Boolean, Boolean)>> _match;
 
   Future<Void> _refreshMatch(
   ) async {
@@ -130,18 +130,21 @@ class _MainPageState extends State<MainPage> {
     super.initState();
     var setting = Provider.of<SettingProvider>(this.context, listen: false);
     this._optionListScrollController = ScrollController();
-    this._input = [];
-    this._match = [];
+    this._optionConfiguration = [];
     this._parallelExecute = setting.data.mResourceForwarder.mParallelExecute;
     this._enableFilter = setting.data.mResourceForwarder.mEnableFilter;
     this._enableBatch = setting.data.mResourceForwarder.mEnableBatch;
     this._remainInput = setting.data.mResourceForwarder.mRemainInput;
-    var optionParallelExecute = null as Boolean?;
-    var optionEnableFilter = null as Boolean?;
-    var optionEnableBatch = null as Boolean?;
-    var optionRemainInput = null as Boolean?;
-    var optionInput = null as List<String>?;
-    try {
+    this._input = [];
+    this._match = [];
+    ControlHelper.postTask(() async {
+      this._optionConfiguration = ConfigurationHelper.parseDataFromJson(await JsonHelper.deserializeFile(setting.data.mResourceForwarder.mOptionConfiguration));
+      await this._refreshMatch();
+      var optionParallelExecute = null as Boolean?;
+      var optionEnableFilter = null as Boolean?;
+      var optionEnableBatch = null as Boolean?;
+      var optionRemainInput = null as Boolean?;
+      var optionInput = null as List<String>?;
       var option = CommandLineReader(this.widget.option);
       if (option.check('-parallel_execute')) {
         optionParallelExecute = option.nextBoolean();
@@ -159,29 +162,21 @@ class _MainPageState extends State<MainPage> {
         optionInput = option.nextStringList();
       }
       assertTest(option.done());
-    }
-    catch (e) {
-      ControlHelper.runAfterNextFrame(() => throw e); // ignore: use_rethrow_when_possible
-    }
-    if (optionParallelExecute != null) {
-      this._parallelExecute = optionParallelExecute;
-    }
-    if (optionEnableFilter != null) {
-      this._enableFilter = optionEnableFilter;
-    }
-    if (optionEnableBatch != null) {
-      this._enableBatch = optionEnableBatch;
-    }
-    if (optionRemainInput != null) {
-      this._remainInput = optionRemainInput;
-    }
-    this._optionConfiguration = [];
-    ControlHelper.runAfterNextFrame(() async {
-      if (optionInput != null) {
-        await this._appendInput(optionInput);
+      if (optionParallelExecute != null) {
+        this._parallelExecute = optionParallelExecute;
       }
-      this._optionConfiguration = ConfigurationHelper.parseDataFromJson(await JsonHelper.deserializeFile(setting.data.mResourceForwarder.mOptionConfiguration));
-      await this._refreshMatch();
+      if (optionEnableFilter != null) {
+        this._enableFilter = optionEnableFilter;
+      }
+      if (optionEnableBatch != null) {
+        this._enableBatch = optionEnableBatch;
+      }
+      if (optionRemainInput != null) {
+        this._remainInput = optionRemainInput;
+      }
+      if (optionInput != null) {
+        await this._appendInput(optionInput.map(StorageHelper.regularize).toList());
+      }
       this.setState(() {});
     });
     return;

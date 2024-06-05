@@ -20,7 +20,7 @@
 	
 	* `Windows`
 		
-		`> dart run msix:create --release --architecture x64 --install-certificate false --certificate-path <..> --certificate-password <..> --windows-build-args --no-tree-shake-icons`
+		`> flutter build windows --release --no-tree-shake-icons`
 	
 	* `Linux`
 		

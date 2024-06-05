@@ -430,6 +430,10 @@
 							</Span>
 							<LineBreak />
 							<Span>
+								<Bold xml:space="preserve">  <Italic>Launch</Italic></Bold>
+							</Span>
+							<LineBreak />
+							<Span>
 								<Bold xml:space="preserve">  -WindowPosition</Bold>
 								<LineBreak />
 								<Span xml:space="preserve">    X : <Italic>Integer</Italic></Span>
@@ -446,7 +450,7 @@
 							</Span>
 							<LineBreak />
 							<Span>
-								<Bold xml:space="preserve">  -InitialTab</Bold>
+								<Bold xml:space="preserve">  -InsertTab</Bold>
 								<LineBreak />
 								<Span xml:space="preserve">    Title : <Italic>String</Italic></Span>
 								<LineBreak />

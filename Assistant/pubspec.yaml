@@ -1,5 +1,5 @@
 name: assistant
-version: 41.0.0+41
+version: 42.0.0+42
 publish_to: 'none'
 environment:
   sdk: '>=3.4.1 <4.0.0'
@@ -10,16 +10,17 @@ dependencies:
   path: ^1.9.0
   async: ^2.11.0
   collection: ^1.18.0
-  decimal: ^2.3.3
+  decimal: ^3.0.1
   provider: ^6.1.1
   path_provider: ^2.1.1
-  url_launcher: ^6.2.6
+  material_symbols_icons: ^4.2758.0
   window_manager: ^0.3.9
   dynamic_color: ^1.6.9
+  url_launcher: ^6.3.0
+  app_links: ^6.1.1
   file_selector: ^1.0.3
   local_notifier: ^0.1.5
   flutter_local_notifications: ^17.1.2
-  material_symbols_icons: ^4.2744.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -35,5 +36,10 @@ msix_config:
   identity_name: TwinStar.Twinning.Assistant
   logo_path: asset/logo.png
   trim_logo: false
-  languages: en-us
+  languages: EN-US
+  protocol_activation: twinstar.twinning.assistant
   publisher: CN=TwinStar
+  architecture: x64
+  build_windows: false
+  sign_msix: false
+  install_certificate: false

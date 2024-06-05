@@ -45,6 +45,15 @@ namespace AssistantPlus.Utility {
 				IntPtr lpMem
 			);
 
+			// ----------------
+
+			[DllImport("Kernel32.dll", CharSet = CharSet.Unicode)]
+			public static extern UInt32 GetLongPathName (
+				String        lpszShortPath,
+				StringBuilder lpszLongPath,
+				UInt32        cchBuffer
+			);
+
 		}
 
 		public static class User32 {

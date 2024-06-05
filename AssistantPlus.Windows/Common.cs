@@ -36,6 +36,7 @@ global using IntegerS8 = System.SByte;
 global using IntegerS16 = System.Int16;
 global using IntegerS32 = System.Int32;
 global using IntegerS64 = System.Int64;
+global using IntegerNative = System.UIntPtr;
 global using FloaterS32 = System.Single;
 global using FloaterS64 = System.Double;
 

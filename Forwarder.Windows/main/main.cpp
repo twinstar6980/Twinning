@@ -1,53 +1,60 @@
 //
 
-#include <string>
-#include <filesystem>
 #include <iostream>
-#include <Windows.h>
+#include <fstream>
+#include <filesystem>
 #include <ShlObj_core.h>
+
+// ----------------
 
 auto wmain (
 	int       argc,
 	wchar_t * argv[]
 ) -> int {
 	try {
-		auto app_data_directory_raw = LPWSTR{};
-		if (SHGetKnownFolderPath(FOLDERID_RoamingAppData, 0, nullptr, &app_data_directory_raw) != S_OK) {
-			throw std::runtime_error{"failed to get app data directory"};
+		auto roaming_directory = LPWSTR{};
+		if (SHGetKnownFolderPath(FOLDERID_RoamingAppData, 0, nullptr, &roaming_directory) != S_OK) {
+			throw std::runtime_error{"failed to get roaming directory"};
 		}
-		auto app_data_directory = std::filesystem::path{app_data_directory_raw};
-		CoTaskMemFree(app_data_directory_raw);
-		auto data_directory = app_data_directory / "TwinStar.Twinning.Forwarder";
-		auto script_file = data_directory / "forward.cmd";
-		if (std::filesystem::exists(data_directory)) {
-			if (!std::filesystem::is_directory(data_directory)) {
+		auto data_directory = std::wstring{roaming_directory} + L"\\TwinStar.Twinning.Forwarder";
+		CoTaskMemFree(roaming_directory);
+		auto script_file = data_directory + L"\\script.cmd";
+		if (std::filesystem::is_regular_file(script_file)) {
+			std::wcout << L"current mode is script" << std::endl;
+		}
+		else {
+			std::wcout << L"current mode is link" << std::endl;
+		}
+		std::wcout << L"please select new mode" << std::endl;
+		std::wcout << L"    1. link" << std::endl;
+		std::wcout << L"    2. script" << std::endl;
+		auto new_mode = std::wstring{};
+		std::getline(std::wcin, new_mode);
+		if (new_mode != L"1" && new_mode != L"2") {
+			std::wcout << "current mode was unchanged" << std::endl;
+		}
+		else {
+			if (std::filesystem::exists(data_directory)) {
 				std::filesystem::remove_all(data_directory);
 			}
-		}
-		if (!std::filesystem::exists(data_directory)) {
-			std::filesystem::create_directories(data_directory);
-		}
-		if (std::filesystem::exists(script_file)) {
-			if (!std::filesystem::is_regular_file(script_file)) {
-				std::filesystem::remove_all(script_file);
+			{
+				std::filesystem::create_directories(data_directory);
 			}
+			if (new_mode == L"2") {
+				std::fstream{script_file, std::ios_base::binary | std::ios_base::out}.close();
+				if (reinterpret_cast<INT_PTR>(ShellExecuteW(nullptr, L"edit", script_file.data(), nullptr, nullptr, SW_SHOW)) <= 32) {
+					throw std::runtime_error{"failed to reveal file"};
+				}
+			}
+			std::wcout << "current mode was changed" << std::endl;
 		}
-		if (!std::filesystem::exists(script_file)) {
-			auto file = _wfopen(script_file.wstring().data(), L"wb");
-			std::fclose(file);
-		}
-		if (reinterpret_cast<INT_PTR>(ShellExecuteW(nullptr, L"open", data_directory.wstring().data(), nullptr, nullptr, SW_NORMAL)) <= 32) {
-			throw std::runtime_error{"failed to reveal data directory"};
-		}
-		std::exit(0);
 	}
 	catch (std::exception & e) {
-		std::println(std::cout, "{} : {}", typeid(e).name(), e.what());
-		std::system("pause");
+		std::cout << std::format("{} : {}", typeid(e).name(), e.what()) << std::endl;
 	}
 	catch (...) {
-		std::println(std::cout, "?");
-		std::system("pause");
+		std::cout << "?" << std::endl;
 	}
+	std::system("pause");
 	return 0;
 }

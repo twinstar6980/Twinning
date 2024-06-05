@@ -70,15 +70,16 @@ namespace AssistantPlus {
 				this.InitializeNotification();
 				var optionWindowPosition = default(Tuple<Integer, Integer>?);
 				var optionWindowSize = default(Tuple<Integer, Integer>?);
-				var optionInitialTab = default(Tuple<String, ModuleType, List<String>>?);
+				var optionInsertTab = default(Tuple<String, ModuleType, List<String>>?);
 				{
-					var option = new CommandLineReader(Environment.GetCommandLineArgs()[1..].ToList());
-					if (option.Check("----AppNotificationActivated:")) {
-						// skip if launch by AppNotification
+					var argument = Environment.GetCommandLineArgs()[1..].ToList();
+					if (argument.FirstOrDefault() == "Launch") {
+						argument = argument[1..];
 					}
-					if (option.Check("-Embedding")) {
-						// skip if launch by AppNotification
+					else {
+						argument = [];
 					}
+					var option = new CommandLineReader(argument);
 					if (option.Check("-WindowPosition")) {
 						optionWindowPosition = new (
 							option.NextInteger(),
@@ -101,8 +102,8 @@ namespace AssistantPlus {
 							optionWindowSize = new (App.Setting.Data.Window.Size.Width, App.Setting.Data.Window.Size.Height);
 						}
 					}
-					if (option.Check("-InitialTab")) {
-						optionInitialTab = new (
+					if (option.Check("-InsertTab")) {
+						optionInsertTab = new (
 							option.NextString(),
 							Enum.Parse<ModuleType>(option.NextString()),
 							option.NextStringList()
@@ -122,11 +123,11 @@ namespace AssistantPlus {
 				else {
 					WindowHelper.Center(window);
 				}
-				if (optionInitialTab is not null) {
+				if (optionInsertTab is not null) {
 					_ = window.AsClass<View.Home.MainWindow>().SetDefaultView(new () {
-						Title = optionInitialTab.Item1,
-						Type = optionInitialTab.Item2,
-						Option = optionInitialTab.Item3,
+						Title = optionInsertTab.Item1,
+						Type = optionInsertTab.Item2,
+						Option = optionInsertTab.Item3,
 						Command = [],
 					});
 				}

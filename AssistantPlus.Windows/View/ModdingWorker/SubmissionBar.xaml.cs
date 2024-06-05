@@ -563,8 +563,8 @@ namespace AssistantPlus.View.ModdingWorker {
 			}
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.Handled = true;
-				var data = await args.DataView.GetStorageItemsAsync();
-				this.Value.OfPath = new () { Content = StorageHelper.Regularize(data[0].Path) };
+				var item = await args.DataView.GetStorageItemsAsync();
+				this.Value.OfPath = new () { Content = StorageHelper.GetLongPath(item[0].Path) };
 				this.NotifyPropertyChanged(
 					nameof(this.uPathContent_Text)
 				);

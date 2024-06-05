@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F8C2AC072A8F72110027DB8F /* mainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C2AC062A8F72110027DB8F /* mainApp.swift */; };
+		F8C2AC072A8F72110027DB8F /* MainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C2AC062A8F72110027DB8F /* MainApp.swift */; };
 		F8C2AC0B2A8F72120027DB8F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8C2AC0A2A8F72120027DB8F /* Assets.xcassets */; };
 		F8C2AC1F2A8F72860027DB8F /* extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F8C2AC172A8F72860027DB8F /* extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F8C2AC252A8F733A0027DB8F /* ForwardFinderSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C2AC242A8F733A0027DB8F /* ForwardFinderSync.swift */; };
@@ -39,12 +39,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F8AC0D3F2C0C48D800A0A204 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F8AC0D412C0C73D400A0A204 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F8C2AC032A8F72110027DB8F /* main.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = main.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		F8C2AC062A8F72110027DB8F /* mainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mainApp.swift; sourceTree = "<group>"; usesTabs = 1; };
+		F8C2AC062A8F72110027DB8F /* MainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainApp.swift; sourceTree = "<group>"; usesTabs = 1; };
 		F8C2AC0A2A8F72120027DB8F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F8C2AC0F2A8F72120027DB8F /* main.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = main.entitlements; sourceTree = "<group>"; };
 		F8C2AC172A8F72860027DB8F /* extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = extension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		F8C2AC1B2A8F72860027DB8F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F8C2AC1C2A8F72860027DB8F /* extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = extension.entitlements; sourceTree = "<group>"; };
 		F8C2AC242A8F733A0027DB8F /* ForwardFinderSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwardFinderSync.swift; sourceTree = "<group>"; usesTabs = 1; };
 		F8C2AC282A8F73820027DB8F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -89,9 +90,10 @@
 		F8C2AC052A8F72110027DB8F /* main */ = {
 			isa = PBXGroup;
 			children = (
-				F8C2AC062A8F72110027DB8F /* mainApp.swift */,
-				F8C2AC0A2A8F72120027DB8F /* Assets.xcassets */,
 				F8C2AC0F2A8F72120027DB8F /* main.entitlements */,
+				F8AC0D3F2C0C48D800A0A204 /* Info.plist */,
+				F8C2AC0A2A8F72120027DB8F /* Assets.xcassets */,
+				F8C2AC062A8F72110027DB8F /* MainApp.swift */,
 			);
 			path = main;
 			sourceTree = "<group>";
@@ -99,10 +101,10 @@
 		F8C2AC182A8F72860027DB8F /* extension */ = {
 			isa = PBXGroup;
 			children = (
-				F8C2AC1B2A8F72860027DB8F /* Info.plist */,
 				F8C2AC1C2A8F72860027DB8F /* extension.entitlements */,
-				F8C2AC242A8F733A0027DB8F /* ForwardFinderSync.swift */,
+				F8AC0D412C0C73D400A0A204 /* Info.plist */,
 				F8C2AC282A8F73820027DB8F /* Assets.xcassets */,
+				F8C2AC242A8F733A0027DB8F /* ForwardFinderSync.swift */,
 			);
 			path = extension;
 			sourceTree = "<group>";
@@ -208,7 +210,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F8C2AC072A8F72110027DB8F /* mainApp.swift in Sources */,
+				F8C2AC072A8F72110027DB8F /* MainApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -282,7 +284,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_ASSET_PATHS = "";
 				ENABLE_PREVIEWS = YES;
@@ -303,6 +305,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = main/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Twinning Forwarder";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -310,7 +313,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 9;
+				MARKETING_VERSION = 10;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -363,7 +366,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -378,6 +381,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = main/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Twinning Forwarder";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -385,7 +389,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 9;
+				MARKETING_VERSION = 10;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.twinstar.twinning.forwarder;
@@ -434,7 +438,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -454,7 +458,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = extension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = extension;
+				INFOPLIST_KEY_CFBundleDisplayName = "Twinning Forwarder";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -463,7 +467,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 9;
+				MARKETING_VERSION = 10;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -514,7 +518,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -528,7 +532,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = extension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = extension;
+				INFOPLIST_KEY_CFBundleDisplayName = "Twinning Forwarder";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -537,7 +541,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 9;
+				MARKETING_VERSION = 10;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.twinstar.twinning.forwarder.extension;

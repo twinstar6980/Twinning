@@ -43,14 +43,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir).build\$(Platform).$(Configuration)\$(ProjectName)\</OutDir>
-    <IntDir>$(SolutionDir).build\tmp\$(Platform).$(Configuration)\$(ProjectName)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir).build\$(Platform).$(Configuration)\$(ProjectName)\</OutDir>
-    <IntDir>$(SolutionDir).build\tmp\$(Platform).$(Configuration)\$(ProjectName)\</IntDir>
-  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -70,7 +62,7 @@
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>copy "$(SolutionDir).build\$(Platform).$(Configuration)\$(ProjectName)\extension.dll" /B "$(SolutionDir)package\Asset\Library\extension.dll" /Y</Command>
+      <Command>copy "$(SolutionDir).build\bin\$(ProjectName)\$(Platform).$(Configuration)\extension.dll" /B "$(SolutionDir)package\Asset\Library\extension.dll" /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -96,14 +88,13 @@
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>copy "$(SolutionDir).build\$(Platform).$(Configuration)\$(ProjectName)\extension.dll" /B "$(SolutionDir)package\Asset\Library\extension.dll" /Y</Command>
+      <Command>copy "$(SolutionDir).build\bin\$(ProjectName)\$(Platform).$(Configuration)\extension.dll" /B "$(SolutionDir)package\Asset\Library\extension.dll" /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="library.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="common.hpp" />
     <ClInclude Include="forward_explorer_command.hpp" />
   </ItemGroup>
   <ItemGroup>

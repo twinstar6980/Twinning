@@ -26,7 +26,7 @@ class NotificationHelper {
       await _flutterLocalNotificationsPlugin!.initialize(
         InitializationSettings(
           android: const AndroidInitializationSettings(
-            '@mipmap/ic_launcher',
+            '@mipmap/ic_launcher_foreground',
           ),
           iOS: const DarwinInitializationSettings(
           ),

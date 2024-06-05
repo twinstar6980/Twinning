@@ -36,6 +36,9 @@ class _MainPageState extends State<MainPage> {
   Future<Void> _insertTabItem(
     ModuleLauncherConfiguration configuration,
   ) async {
+    while (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
     this._tabList.add((configuration.title, configuration.type, ModuleHelper.query(configuration.type).mainPage(configuration.option), ValueKey(DateTime.now().millisecondsSinceEpoch)));
     this._tabIndex = this._tabList.length - 1;
     this.setState(() {});
@@ -63,7 +66,7 @@ class _MainPageState extends State<MainPage> {
     return;
   }
 
-  Future<Void> _openLauncherPanel(
+  Future<Void> _showLauncherPanel(
   ) async {
     await ControlHelper.showCustomModalBottomSheet(
       context: this.context,
@@ -86,20 +89,15 @@ class _MainPageState extends State<MainPage> {
   initState() {
     super.initState();
     this._blankPanel = BlankPanel(
-      showLauncherPanel: this._openLauncherPanel,
+      showLauncherPanel: this._showLauncherPanel,
     );
     this._tabList = [];
     this._tabIndex = -1;
-    ControlHelper.runAfterNextFrame(() async {
+    {
       var setting = Provider.of<SettingProvider>(this.context, listen: false);
-      setting.state.mInsertTabItem = this._insertTabItem;
-      if (setting.state.mInitialTab != null) {
-        await this._insertTabItem(setting.state.mInitialTab!);
-      }
-      else {
-        await this._openLauncherPanel();
-      }
-    });
+      setting.state.mHomeShowLauncherPanel = this._showLauncherPanel;
+      setting.state.mHomeInsertTabItem = this._insertTabItem;
+    }
     return;
   }
 
@@ -140,7 +138,7 @@ class _MainPageState extends State<MainPage> {
             action: const [],
             onPressed: () async {
               Navigator.pop(context);
-              await this._openLauncherPanel();
+              await this._showLauncherPanel();
             },
           ),
           const CustomNavigationDrawerDivider(),

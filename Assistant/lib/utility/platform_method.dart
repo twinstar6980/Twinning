@@ -19,14 +19,6 @@ class PlatformMethod {
 
   // #region interface
 
-  static Future<Boolean> checkStoragePermission(
-    String mode,
-  ) async {
-    assertTest(Platform.isAndroid);
-    var result = (await _channel!.invokeMethod('check_storage_permission', <String, dynamic>{ 'mode': mode }) as Boolean);
-    return result;
-  }
-
   static Future<String?> pickStoragePath(
     String type,
     String initialDirectory,
@@ -37,11 +29,20 @@ class PlatformMethod {
     return result;
   }
 
-  static Future<List<String>> getLinkCommand(
+  static Future<String?> parseContentUri(
+    String target,
     String fallbackDirectory,
   ) async {
-    assertTest(Platform.isAndroid || Platform.isIOS);
-    var result = (await _channel!.invokeMethod('get_link_command', <String, dynamic>{ 'fallback_directory': fallbackDirectory }) as List<Object?>).cast<String>();
+    assertTest(Platform.isAndroid);
+    var result = (await _channel!.invokeMethod('parse_content_uri', <String, dynamic>{ 'target': target, 'fallback_directory': fallbackDirectory }) as String?);
+    return result;
+  }
+
+  static Future<Boolean> checkStoragePermission(
+    String mode,
+  ) async {
+    assertTest(Platform.isAndroid);
+    var result = (await _channel!.invokeMethod('check_storage_permission', <String, dynamic>{ 'mode': mode }) as Boolean);
     return result;
   }
 

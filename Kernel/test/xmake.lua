@@ -35,11 +35,11 @@ target('test', function()
 		)
 	end
 	on_load(function(target)
-		import('custom')
-		custom.apply_condition_definition_basic(target)
-		custom.apply_compiler_option_basic(target)
-		custom.apply_compiler_option_warning_regular(target)
-		custom.apply_import_vld_if_can(target)
+		import('helper')
+		helper.apply_condition_definition_basic(target)
+		helper.apply_compiler_option_basic(target)
+		helper.apply_compiler_option_warning_regular(target)
+		helper.import_vld_if_needed(target)
 	end)
 	set_runargs(
 		'/Twinning/kernel',
