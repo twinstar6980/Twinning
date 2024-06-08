@@ -293,19 +293,19 @@ class _MainPageBridgeClient implements bridge.Client {
         result.add(detailValue);
         break;
       }
-      case 'pick_path': {
+      case 'pick_storage_item': {
         assertTest(argument.length == 2);
         var detailType = argument[1];
-        var detail = await this.callbackPickPath(detailType);
+        var detail = await this.callbackPickStorageItem(detailType);
         var detailTarget = detail.$1;
         result.add(detailTarget);
         break;
       }
-      case 'push_notification': {
+      case 'push_system_notification': {
         assertTest(argument.length == 3);
         var detailTitle = argument[1];
         var detailDescription = argument[2];
-        var detail = await this.callbackPushNotification(detailTitle, detailDescription); // ignore: unused_local_variable
+        var detail = await this.callbackPushSystemNotification(detailTitle, detailDescription); // ignore: unused_local_variable
         break;
       }
       default: {
@@ -368,22 +368,21 @@ class _MainPageBridgeClient implements bridge.Client {
     return (value,);
   }
 
-  Future<(String,)> callbackPickPath(
+  Future<(String,)> callbackPickStorageItem(
     String type,
   ) async {
     var target = '';
-    var setting = Provider.of<SettingProvider>(this._controller.context, listen: false);
     switch (type) {
       case 'open_file': {
-        target = await StorageHelper.pickOpenFile('ModdingWorker.Generic', setting.data.mFallbackDirectory) ?? '';
+        target = await StorageHelper.pickOpenFile(this._controller.context, 'ModdingWorker.Generic') ?? '';
         break;
       }
       case 'open_directory': {
-        target = await StorageHelper.pickOpenDirectory('ModdingWorker.Generic') ?? '';
+        target = await StorageHelper.pickOpenDirectory(this._controller.context, 'ModdingWorker.Generic') ?? '';
         break;
       }
       case 'save_file': {
-        target = await StorageHelper.pickSaveFile('ModdingWorker.Generic') ?? '';
+        target = await StorageHelper.pickSaveFile(this._controller.context, 'ModdingWorker.Generic') ?? '';
         break;
       }
       default: throw Exception();
@@ -391,7 +390,7 @@ class _MainPageBridgeClient implements bridge.Client {
     return (target,);
   }
 
-  Future<()> callbackPushNotification(
+  Future<()> callbackPushSystemNotification(
     String title,
     String description,
   ) async {

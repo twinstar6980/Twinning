@@ -127,7 +127,7 @@ namespace AssistantPlus.View.ModdingWorker {
 				}
 			}
 			catch (Exception e) {
-				App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
+				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
 			}
 			if (optionAutomaticScroll is not null) {
 				this.AutomaticScroll = optionAutomaticScroll.AsNotNull();
@@ -553,19 +553,19 @@ namespace AssistantPlus.View.ModdingWorker {
 						result.Add(detailValue);
 						break;
 					}
-					case "pick_path": {
+					case "pick_storage_item": {
 						GF.AssertTest(argument.Count == 2);
 						var detailType = argument[1];
-						var detail = await this.CallbackPickPath(detailType);
+						var detail = await this.CallbackPickStorageItem(detailType);
 						var detailTarget = detail.Item1;
 						result.Add(detailTarget);
 						break;
 					}
-					case "push_notification": {
+					case "push_system_notification": {
 						GF.AssertTest(argument.Count == 3);
 						var detailType = argument[1];
 						var detailDescription = argument[2];
-						var detail = await this.CallbackPushNotification(detailType, detailDescription);
+						var detail = await this.CallbackPushSystemNotification(detailType, detailDescription);
 						break;
 					}
 					default: {
@@ -629,7 +629,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			return new (value);
 		}
 
-		private async Task<ValueTuple<String>> CallbackPickPath (
+		private async Task<ValueTuple<String>> CallbackPickStorageItem (
 			String type
 		) {
 			var target = "";
@@ -651,7 +651,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			return new (target);
 		}
 
-		private async Task<ValueTuple> CallbackPushNotification (
+		private async Task<ValueTuple> CallbackPushSystemNotification (
 			String title,
 			String description
 		) {

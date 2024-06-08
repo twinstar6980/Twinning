@@ -20,97 +20,58 @@ class ControlHelper {
 
   // #region dialog
 
-  static Future<Void> showCustomModalDialog({
-    required BuildContext                                                        context,
-    required String                                                              title,
-    required List<Widget> Function(BuildContext, Void Function(Void Function())) contentBuilder,
+  static Future<Result?> showCustomModalDialog<Result>({
+    required BuildContext                                                         context,
+    required String                                                               title,
+    required List<Widget> Function(BuildContext, Void Function(Void Function()))? contentBuilder,
+    required List<Widget> Function(BuildContext)?                                 actionBuilder,
   }) async {
-    return await showDialog<Void>(
+    return await showDialog<Result>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
           title,
           overflow: TextOverflow.ellipsis,
         ),
-        content: SingleChildScrollView(
-          child: StatefulBuilder(
-            builder: (context, setState) => Column(
-              mainAxisSize: MainAxisSize.min,
-              children: contentBuilder(context, setState),
-            ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, 'OK'),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  static Future<Void> showCustomFullDialog({
-    required BuildContext                                                        context,
-    required String                                                              title,
-    required List<Widget> Function(BuildContext, Void Function(Void Function())) contentBuilder,
-  }) async {
-    return await showDialog<Void>(
-      context: context,
-      builder: (context) => Dialog.fullscreen(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Text(
-                  title,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                TextButton(
-                  onPressed: () => Navigator.pop(context, 'OK'),
-                  child: const Text('OK'),
-                ),
-              ],
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: StatefulBuilder(
-                  builder: (context, setState) => Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: contentBuilder(context, setState),
-                  ),
-                ),
+        content: contentBuilder == null
+          ? const SizedBox.shrink()
+          : SingleChildScrollView(
+            child: StatefulBuilder(
+              builder: (context, setState) => Column(
+                mainAxisSize: MainAxisSize.min,
+                children: contentBuilder(context, setState),
               ),
             ),
-          ],
-        ),
+          ),
+        actions: actionBuilder == null
+          ? [
+            TextButton(
+              onPressed: () => Navigator.pop(context, null),
+              child: const Text('Okay'),
+            ),
+          ]
+          : actionBuilder(context),
       ),
     );
   }
-
-  // ----------------
 
   static Future<Boolean> showCustomConfirmDialog({
     required BuildContext context,
   }) async {
-    return await showDialog<Boolean>(
+    return await showCustomModalDialog<Boolean>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text(
-          'Confirm ?',
-          overflow: TextOverflow.ellipsis,
+      title: 'Confirm ?',
+      contentBuilder: null,
+      actionBuilder: (context) => [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: const Text('No'),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('No'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Yes'),
-          ),
-        ],
-      ),
+        TextButton(
+          onPressed: () => Navigator.pop(context, true),
+          child: const Text('Yes'),
+        ),
+      ],
     ) ?? false;
   }
 
@@ -194,6 +155,7 @@ class ControlHelper {
             initialValue: path,
           ),
         ],
+        actionBuilder: null,
       );
     }
     return;

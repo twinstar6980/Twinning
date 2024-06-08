@@ -62,7 +62,7 @@ namespace Twinning::Shell::Interaction {
 
 	#pragma region shell
 
-	inline auto pick_path (
+	inline auto pick_storage_item (
 		std::string const & type
 	) -> std::optional<std::string> {
 		auto target = std::optional<std::string>{};
@@ -139,7 +139,7 @@ namespace Twinning::Shell::Interaction {
 		return target;
 	}
 
-	inline auto push_notification (
+	inline auto push_system_notification (
 		std::string const & title,
 		std::string const & description
 	) -> void {

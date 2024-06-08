@@ -99,7 +99,7 @@ class AboutPanel extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       onPressed: () async {
-                        var file = await StorageHelper.pickOpenFile('Application.SettingFile', setting.data.mFallbackDirectory);
+                        var file = await StorageHelper.pickOpenFile(context, 'Application.SettingFile');
                         if (file != null) {
                           await setting.load(file: file);
                           await setting.save();
@@ -113,7 +113,7 @@ class AboutPanel extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       onPressed: () async {
-                        var file = await StorageHelper.pickSaveFile('Application.SettingFile');
+                        var file = await StorageHelper.pickSaveFile(context, 'Application.SettingFile');
                         if (file != null) {
                           await setting.save(file: file, apply: false);
                         }

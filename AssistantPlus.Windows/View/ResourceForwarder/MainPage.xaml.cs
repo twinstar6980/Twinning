@@ -85,7 +85,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 				optionConfiguration = JsonHelper.DeserializeText<List<OptionGroupConfiguration>>(StorageHelper.ReadFileTextSync(App.Setting.Data.ResourceForwarder.OptionConfiguration));
 			}
 			catch (Exception e) {
-				App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Failed to load option configuration.", e.ToString());
+				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to load option configuration.", e.ToString());
 			}
 			this.uOptionList_ItemsSource = optionConfiguration.Select((group) => (new MainPageOptionGroupItemController() {
 				Host = this,
@@ -132,7 +132,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 				}
 			}
 			catch (Exception e) {
-				App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
+				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
 			}
 			if (optionParallelExecute is not null) {
 				this.ParallelExecute = optionParallelExecute.AsNotNull();

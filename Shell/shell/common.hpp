@@ -1,6 +1,6 @@
 #pragma once
 
-#define M_version "40"
+#define M_version "41"
 
 #include <type_traits>
 #include <algorithm>

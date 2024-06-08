@@ -35,18 +35,18 @@ namespace Twinning.Script.Shell {
 		return { text: result[0] };
 	}
 
-	export function basic_pick_path(
+	export function basic_pick_storage_item(
 		type: 'open_file' | 'open_directory' | 'save_file',
-	): { selection: string; } {
+	): { target: string; } {
 		if (KernelX.is_android || KernelX.is_iphone) {
 			// unavailable, silently fail
-			return { selection: '' };
+			return { target: '' };
 		}
-		let result = callback(['pick_path', type]);
-		return { selection: result[0] };
+		let result = callback(['pick_storage_item', type]);
+		return { target: result[0] };
 	}
 
-	export function basic_push_notification(
+	export function basic_push_system_notification(
 		title: string,
 		description: string,
 	): {} {
@@ -54,7 +54,7 @@ namespace Twinning.Script.Shell {
 			// unavailable, silently fail
 			return {};
 		}
-		let result = callback(['push_notification', title, description]);
+		let result = callback(['push_system_notification', title, description]);
 		return {};
 	}
 
@@ -77,18 +77,18 @@ namespace Twinning.Script.Shell {
 		return { value: result[0] };
 	}
 
-	export function assistant_pick_path(
+	export function assistant_pick_storage_item(
 		type: 'open_file' | 'open_directory' | 'save_file',
-	): { selection: string; } {
-		let result = callback(['pick_path', type]);
-		return { selection: result[0] };
+	): { target: string; } {
+		let result = callback(['pick_storage_item', type]);
+		return { target: result[0] };
 	}
 
-	export function assistant_push_notification(
+	export function assistant_push_system_notification(
 		title: string,
 		description: string,
 	): {} {
-		let result = callback(['push_notification', title, description]);
+		let result = callback(['push_system_notification', title, description]);
 		return {};
 	}
 

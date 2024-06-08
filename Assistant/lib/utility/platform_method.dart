@@ -19,30 +19,36 @@ class PlatformMethod {
 
   // #region interface
 
-  static Future<String?> pickStoragePath(
+  static Future<String?> pickStorageItem(
     String type,
     String initialDirectory,
-    String fallbackDirectory,
   ) async {
     assertTest(Platform.isAndroid || Platform.isIOS);
-    var result = (await _channel!.invokeMethod('pick_storage_path', <String, dynamic>{ 'type': type, 'initial_directory': initialDirectory, 'fallback_directory': fallbackDirectory }) as String?);
+    var result = (await _channel!.invokeMethod('pick_storage_item', <String, dynamic>{ 'type': type, 'initial_directory': initialDirectory }) as String?);
     return result;
   }
 
-  static Future<String?> parseContentUri(
-    String target,
-    String fallbackDirectory,
+  static Future<String?> copyStorageFile(
+    String source,
+    String placement,
   ) async {
     assertTest(Platform.isAndroid);
-    var result = (await _channel!.invokeMethod('parse_content_uri', <String, dynamic>{ 'target': target, 'fallback_directory': fallbackDirectory }) as String?);
+    var result = (await _channel!.invokeMethod('copy_storage_file', <String, dynamic>{ 'source': source, 'placement': placement }) as String);
     return result;
   }
 
-  static Future<Boolean> checkStoragePermission(
+  static Future<Boolean> checkExternalStoragePermission(
     String mode,
   ) async {
     assertTest(Platform.isAndroid);
-    var result = (await _channel!.invokeMethod('check_storage_permission', <String, dynamic>{ 'mode': mode }) as Boolean);
+    var result = (await _channel!.invokeMethod('check_external_storage_permission', <String, dynamic>{ 'mode': mode }) as Boolean);
+    return result;
+  }
+
+  static Future<String> queryExternalStoragePath(
+  ) async {
+    assertTest(Platform.isAndroid);
+    var result = (await _channel!.invokeMethod('query_external_storage_path', <String, dynamic>{}) as String);
     return result;
   }
 

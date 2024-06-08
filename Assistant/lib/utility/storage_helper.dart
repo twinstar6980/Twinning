@@ -1,10 +1,14 @@
 import '/common.dart';
+import '/setting.dart';
+import '/utility/control_helper.dart';
 import '/utility/platform_method.dart';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:file_selector/file_selector.dart' as file_selector;
-import 'package:path_provider/path_provider.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 
 // ----------------
 
@@ -188,8 +192,8 @@ class StorageHelper {
   static Map<String, String> _taggedHistoryDirectory = {};
 
   static Future<String?> pickOpenFile(
-    String tag,
-    String fallbackDirectory,
+    BuildContext context,
+    String       tag,
   ) async {
     var target = null as String?;
     var initialDirectory = _taggedHistoryDirectory[tag] ?? '/';
@@ -205,8 +209,14 @@ class StorageHelper {
     if (Platform.isLinux || Platform.isMacOS) {
       target = (await file_selector.openFile(initialDirectory: initialDirectory))?.path;
     }
-    if (Platform.isAndroid || Platform.isIOS) {
-      target = await PlatformMethod.pickStoragePath('open_file', initialDirectory, fallbackDirectory);
+    if (Platform.isAndroid) {
+      target = await PlatformMethod.pickStorageItem('open_file', initialDirectory);
+      if (target != null) {
+        target = await parseAndroidContentUri(context, Uri.parse(target), true);
+      }
+    }
+    if (Platform.isIOS) {
+      target = await PlatformMethod.pickStorageItem('open_file', initialDirectory);
     }
     if (target != null) {
       _taggedHistoryDirectory[tag] = parent(target);
@@ -215,7 +225,8 @@ class StorageHelper {
   }
 
   static Future<String?> pickOpenDirectory(
-    String tag,
+    BuildContext context,
+    String       tag,
   ) async {
     var target = null as String?;
     var initialDirectory = _taggedHistoryDirectory[tag] ?? '/';
@@ -232,8 +243,14 @@ class StorageHelper {
     if (Platform.isLinux || Platform.isMacOS) {
       target = await file_selector.getDirectoryPath(initialDirectory: initialDirectory);
     }
-    if (Platform.isAndroid || Platform.isIOS) {
-      target = await PlatformMethod.pickStoragePath('open_directory', initialDirectory, '');
+    if (Platform.isAndroid) {
+      target = await PlatformMethod.pickStorageItem('open_directory', initialDirectory);
+      if (target != null) {
+        target = await parseAndroidContentUri(context, Uri.parse(target), false);
+      }
+    }
+    if (Platform.isIOS) {
+      target = await PlatformMethod.pickStorageItem('open_directory', initialDirectory);
     }
     if (target != null) {
       _taggedHistoryDirectory[tag] = parent(target);
@@ -242,7 +259,8 @@ class StorageHelper {
   }
 
   static Future<String?> pickSaveFile(
-    String tag,
+    BuildContext context,
+    String       tag,
   ) async {
     var target = null as String?;
     var initialDirectory = _taggedHistoryDirectory[tag] ?? '/';
@@ -259,7 +277,10 @@ class StorageHelper {
       target = (await file_selector.getSaveLocation(initialDirectory: initialDirectory))?.path;
     }
     if (Platform.isAndroid) {
-      target = await PlatformMethod.pickStoragePath('save_file', initialDirectory, '');
+      target = await PlatformMethod.pickStorageItem('save_file', initialDirectory);
+      if (target != null) {
+        target = await parseAndroidContentUri(context, Uri.parse(target), false);
+      }
     }
     if (Platform.isIOS) {
       throw UnimplementedError();
@@ -278,20 +299,20 @@ class StorageHelper {
   ) async {
     var result = null as String?;
     if (Platform.isWindows) {
-      result = (await getApplicationSupportDirectory()).path;
+      result = (await path_provider.getApplicationSupportDirectory()).path;
       result = regularize(result);
     }
     if (Platform.isLinux) {
-      result = (await getApplicationSupportDirectory()).path;
+      result = (await path_provider.getApplicationSupportDirectory()).path;
     }
     if (Platform.isMacOS) {
-      result = (await getApplicationSupportDirectory()).path;
+      result = (await path_provider.getApplicationSupportDirectory()).path;
     }
     if (Platform.isAndroid) {
-      result = (await getExternalStorageDirectory())!.path;
+      result = (await path_provider.getExternalStorageDirectory())!.path;
     }
     if (Platform.isIOS) {
-      result = (await getApplicationDocumentsDirectory()).path;
+      result = (await path_provider.getApplicationDocumentsDirectory()).path;
     }
     return result!;
   }
@@ -303,9 +324,105 @@ class StorageHelper {
       result = (await queryApplicationSharedDirectory()) + '/cache';
     }
     if (Platform.isAndroid) {
-      result = (await getApplicationCacheDirectory()).path;
+      result = (await path_provider.getApplicationCacheDirectory()).path;
     }
     return result!;
+  }
+
+  // ----------------
+
+  static Future<String?> parseAndroidContentUri(
+    BuildContext context,
+    Uri          uri,
+    Boolean      copyable,
+  ) async {
+    var result = null as String?;
+    assertTest(uri.scheme == 'content');
+    var provider = uri.authority;
+    var path = Uri.decodeComponent(uri.path);
+    switch (provider) {
+      // AOSP DocumentsUI
+      case 'com.android.externalstorage.documents': {
+        // /document/primary:<path-relative-external-storage>
+        if (path.startsWith('/document/primary:')) {
+          result = path.substring('/document/primary:'.length);
+          result = '${await PlatformMethod.queryExternalStoragePath()}${result.isEmpty ? '' : '/'}${result}';
+        }
+        // /tree/primary:<path-relative-external-storage>
+        if (path.startsWith('/tree/primary:')) {
+          result = path.substring('/tree/primary:'.length);
+          result = '${await PlatformMethod.queryExternalStoragePath()}${result.isEmpty ? '' : '/'}${result}';
+        }
+        break;
+      }
+      // Material Files
+      case 'me.zhanghai.android.files.file_provider': {
+        path = Uri.decodeComponent(path);
+        // /file://<path-absolute>
+        if (path.startsWith('/file://')) {
+          result = Uri.decodeComponent(Uri.parse(path.substring('/'.length)).path);
+        }
+        break;
+      }
+      // Root Explorer
+      case 'com.speedsoftware.rootexplorer.fileprovider': {
+        // /root/<path-relative-root>
+        if (path.startsWith('/root/')) {
+          result = path.substring('/root'.length);
+        }
+        break;
+      }
+      // Solid Explorer
+      case 'pl.solidexplorer2.files': {
+        result = path;
+        break;
+      }
+      // MT Manager
+      case 'bin.mt.plus.fp': {
+        result = path;
+        break;
+      }
+      // NMM
+      case 'in.mfile.files': {
+        result = path;
+        break;
+      }
+      default: {
+        if (path.startsWith('/') && await exist(path)) {
+          result = path;
+        }
+        break;
+      }
+    }
+    if (result == null) {
+      var duplicate = await ControlHelper.showCustomModalDialog<Boolean>(
+        context: context,
+        title: 'Unparsable Content Uri',
+        contentBuilder: (context, setState) => [
+          SelectionArea(
+            child: Text(
+              uri.toString(),
+              overflow: TextOverflow.clip,
+            ),
+          ),
+        ],
+        actionBuilder: (context) => [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Ignore'),
+          ),
+          FilledButton.tonal(
+            onPressed: !copyable ? null : () => Navigator.pop(context, true),
+            child: const Text('Duplicate'),
+          ),
+        ],
+      ) ?? false;
+      if (duplicate) {
+        var setting = Provider.of<SettingProvider>(context, listen: false);
+        result = await PlatformMethod.copyStorageFile(uri.toString(), setting.data.mFallbackDirectory);
+      }
+    }
+    return result;
   }
 
   // #endregion

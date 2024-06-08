@@ -290,6 +290,7 @@ class CustomSettingItem extends StatelessWidget {
             context: context,
             title: this.label,
             contentBuilder: this.panelBuilder!,
+            actionBuilder: null,
           );
         }
       },

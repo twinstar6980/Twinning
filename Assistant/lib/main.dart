@@ -1,11 +1,11 @@
 import '/common.dart';
 import '/module.dart';
 import '/setting.dart';
+import '/application.dart';
 import '/utility/command_line_reader.dart';
 import '/utility/control_helper.dart';
 import '/utility/notification_helper.dart';
-import '/utility/platform_method.dart';
-import '/view/home/application.dart';
+import '/utility/storage_helper.dart';
 import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +35,7 @@ Future<Void> main(
               ),
             ),
           ],
+          actionBuilder: null,
         );
       }
     });
@@ -47,7 +48,7 @@ Future<Void> main(
       var convertedCommand = List<String>.empty(growable: true);
       for (var commandItem in command) {
         if (commandItem.startsWith('content://')) {
-          commandItem = await PlatformMethod.parseContentUri(commandItem, setting.data.mFallbackDirectory) ?? commandItem;
+          commandItem = await StorageHelper.parseAndroidContentUri(setting.state.mApplicationNavigatorKey.currentContext!, Uri.parse(commandItem), true) ?? commandItem;
         }
         convertedCommand.add(commandItem);
       }
@@ -75,7 +76,7 @@ Future<Void> main(
   var handleLink = (
     Uri link,
   ) async {
-    if (link.scheme != 'twinstar.twinning.assistant' || link.hasAuthority || link.hasPort || !link.hasAbsolutePath || link.path != '/launch') {
+    if (link.scheme != 'twinstar.twinning.assistant' || link.hasAuthority || link.path != '/launch') {
       throw Exception('invalid link');
     }
     var command = link.queryParametersAll['command'] ?? [];
@@ -117,7 +118,7 @@ Future<Void> main(
       await windowManager.show();
     }
     if (!(await AppLinks().getInitialLinkString() ?? '').startsWith('twinstar.twinning.assistant:')) {
-      if (argument.isNotEmpty && argument.first == 'launch') {
+      if (argument.length >= 1 && argument[0] == 'launch') {
         ControlHelper.postTask(() async {
           handleCommand(argument.slice(1));
         });

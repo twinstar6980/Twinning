@@ -68,7 +68,7 @@ namespace AssistantPlus.View.CommandSender {
 				methodConfiguration = JsonHelper.DeserializeText<List<MethodGroupConfiguration>>(StorageHelper.ReadFileTextSync(App.Setting.Data.CommandSender.MethodConfiguration));
 			}
 			catch (Exception e) {
-				App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Failed to load method configuration.", e.ToString());
+				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to load method configuration.", e.ToString());
 			}
 			this.uAvailableMethodList_ItemsSource = methodConfiguration.Select((group) => (new MainPageAvailableMethodGroupItemController() {
 				Host = this,
@@ -93,7 +93,7 @@ namespace AssistantPlus.View.CommandSender {
 				}
 			}
 			catch (Exception e) {
-				App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
+				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
 			}
 			return;
 		}

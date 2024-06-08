@@ -654,7 +654,7 @@ namespace Twinning.Script.Console {
 						if (mode === 'output' && type === 'file') {
 							pick_type = 'save_file';
 						}
-						let pick_result = pick_path(pick_type);
+						let pick_result = pick_storage_item(pick_type);
 						if (pick_result === null) {
 							return los('console:path_command_pick_cancel');
 						}
@@ -897,7 +897,7 @@ namespace Twinning.Script.Console {
 
 	// ------------------------------------------------
 
-	export function pick_path(
+	export function pick_storage_item(
 		type: null | 'open_file' | 'open_directory' | 'save_file',
 	): null | string {
 		let result: null | string = undefined!;
@@ -906,10 +906,10 @@ namespace Twinning.Script.Console {
 			type = enumeration(option_string(['open_file', 'open_directory', 'save_file']), null, null) as 'open_file' | 'open_directory' | 'save_file';
 		}
 		if (Shell.is_basic) {
-			result = Shell.basic_pick_path(type).selection;
+			result = Shell.basic_pick_storage_item(type).target;
 		}
 		if (Shell.is_assistant) {
-			result = Shell.assistant_pick_path(type).selection;
+			result = Shell.assistant_pick_storage_item(type).target;
 		}
 		if (result === '') {
 			result = null;
@@ -919,15 +919,15 @@ namespace Twinning.Script.Console {
 
 	// ------------------------------------------------
 
-	export function push_notification(
+	export function push_system_notification(
 		title: string,
 		description: string,
 	): void {
 		if (Shell.is_basic) {
-			Shell.basic_push_notification(title, description);
+			Shell.basic_push_system_notification(title, description);
 		}
 		if (Shell.is_assistant) {
-			Shell.assistant_push_notification(title, description);
+			Shell.assistant_push_system_notification(title, description);
 		}
 		return;
 	}

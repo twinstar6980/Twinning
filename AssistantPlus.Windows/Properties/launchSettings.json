@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "AssistantPlus (Packaged)": {
+    "AssistantPlus": {
       "commandName": "MsixPackage"
     }
   }

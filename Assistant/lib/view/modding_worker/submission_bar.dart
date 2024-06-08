@@ -848,9 +848,9 @@ class _PathSubmissionBarState extends State<_PathSubmissionBar> {
                     }
                     if (value.startsWith('@')) {
                       var target = switch (value.substring(1)) {
-                        'open_file'      => await StorageHelper.pickOpenFile('ModdingWorker.Generic', setting.data.mFallbackDirectory),
-                        'open_directory' => await StorageHelper.pickOpenDirectory('ModdingWorker.Generic'),
-                        'save_file'      => await StorageHelper.pickSaveFile('ModdingWorker.Generic'),
+                        'open_file'      => await StorageHelper.pickOpenFile(context, 'ModdingWorker.Generic'),
+                        'open_directory' => await StorageHelper.pickOpenDirectory(context, 'ModdingWorker.Generic'),
+                        'save_file'      => await StorageHelper.pickSaveFile(context, 'ModdingWorker.Generic'),
                         _                => throw Exception(),
                       };
                       if (target != null) {

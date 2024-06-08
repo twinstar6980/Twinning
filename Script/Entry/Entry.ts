@@ -125,7 +125,7 @@ namespace Twinning.Script.Entry {
 				}
 				duration += state[1];
 				if (configuration.command_notification_time_limit !== null && configuration.command_notification_time_limit <= state[1]) {
-					Console.push_notification(los('entry:current_command_finish'), los('entry:duration', (state[1] / 1000).toFixed(3)));
+					Console.push_system_notification(los('entry:current_command_finish'), los('entry:duration', (state[1] / 1000).toFixed(3)));
 				}
 			}
 		}

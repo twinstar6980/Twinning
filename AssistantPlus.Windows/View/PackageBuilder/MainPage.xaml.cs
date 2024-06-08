@@ -99,7 +99,7 @@ namespace AssistantPlus.View.PackageBuilder {
 				}
 			}
 			catch (Exception e) {
-				App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
+				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
 			}
 			if (optionProjectDirectory is not null) {
 				await this.ApplyLoad(optionProjectDirectory);
@@ -164,10 +164,10 @@ namespace AssistantPlus.View.PackageBuilder {
 			this.View.uWorkerButton.Flyout.ShowAt(this.View.uWorkerButton);
 			var result = await this.View.uWorkerPage.ExecuteCommand(argument);
 			if (result is not null && result.First() == "s") {
-				App.MainWindow.PublishNotification(InfoBarSeverity.Success, "Execute succeeded", "");
+				App.MainWindow.PushNotification(InfoBarSeverity.Success, "Execute succeeded", "");
 			}
 			else {
-				App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Execute failed", "");
+				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Execute failed", "");
 			}
 			this.WorkerState = false;
 			this.NotifyPropertyChanged(
@@ -185,7 +185,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		) {
 			GF.AssertTest(this.IsLoaded);
 			if (this.View.uPackageList.SelectedItems.Count != 1) {
-				App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Please select single package target", "");
+				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Please select single package target", "");
 				return;
 			}
 			await this.WorkerExecuteCommand(ModdingWorker.ForwardHelper.MakeArgumentForCommand(
@@ -367,7 +367,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		) {
 			GF.AssertTest(!this.IsLoaded);
 			if (!(await this.CheckVersionFile(projectDirectory))) {
-				App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Failed to check version.txt", "");
+				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to check version.txt", "");
 				return;
 			}
 			var closeDialog = await ControlHelper.ShowDialogForWaiting(this.View, null, null);
@@ -1125,12 +1125,12 @@ namespace AssistantPlus.View.PackageBuilder {
 				args.Handled = true;
 				var item = await args.DataView.GetStorageItemsAsync();
 				if (item.Count != 1) {
-					App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Source is multiply.", "");
+					App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is multiply.", "");
 					return;
 				}
 				var projectDirectory = StorageHelper.GetLongPath(item[0].Path);
 				if (!StorageHelper.ExistDirectory(projectDirectory)) {
-					App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Source is not a directory.", "");
+					App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is not a directory.", "");
 					return;
 				}
 				await this.ApplyLoad(projectDirectory);

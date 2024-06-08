@@ -40,23 +40,23 @@
 	
 	* `Windows`
 		
-		`> xmake f -o .build -m release -p windows -a x64 --toolchain=msvc`
+		`> xmake config --buildir=./.build --mode=release --plat=windows --arch=x64 --toolchain=msvc`
 	
 	* `Linux`
 		
-		`> xmake f -o .build -m release -p linux -a x86_64 --toolchain=clang-18`
+		`> xmake config --buildir=./.build --mode=release --plat=linux --arch=x86_64 --toolchain=clang-18`
 	
 	* `Macintosh`
 		
-		`> xmake f -o .build -m release -p macosx -a arm64 --cc=clang-18 --cxx=clang-18 --xcode_sdkver=13.3 --target_minver=13.3`
+		`> xmake config --buildir=./.build --mode=release --plat=macosx --arch=x86_64 --cc=clang-18 --cxx=clang-18 --xcode_sdkver=13.3 --target_minver=13.3`
 	
 	* `Android`
 		
-		`> xmake f -o .build -m release -p android -a arm64-v8a --ndk=<..> --ndk_sdkver=28 --runtimes=c++_shared`
+		`> xmake config --buildir=./.build --mode=release --plat=android --arch=arm64-v8a --ndk=<..> --ndk_sdkver=28 --runtimes=c++_shared`
 	
 	* `Iphone`
 		
-		`> xmake f -o .build -m release -p iphoneos -a arm64 --cc=clang-18 --cxx=clang-18 --xcode_sdkver=16.4 --target_minver=16.4`
+		`> xmake config --buildir=./.build --mode=release --plat=iphoneos --arch=arm64 --cc=clang-18 --cxx=clang-18 --xcode_sdkver=16.4 --target_minver=16.4`
 	
 	> 具体参阅 [xmake 文档](https://xmake.io/#/) 。
 
@@ -64,6 +64,10 @@
 
 | 库                                                                         | 用途                           |
 |:--------------------------------------------------------------------------:|:------------------------------:|
-| [tinyfiledialogs 3.18.1](https://sourceforge.net/projects/tinyfiledialogs) | 系统 UI 功能                   |
+| [tinyfiledialogs 3.17.5](https://sourceforge.net/projects/tinyfiledialogs) | 系统 UI 功能                   |
 
 ## 说明
+
+* 对第三方库的说明
+	
+	* `tinyfiledialogs`：将版本停留在 `3.17.5` ，因为后续版本中 `tinyfd_notifyPopup` 函数的行为变更，无法实现推送系统级通知的需求。

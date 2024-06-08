@@ -191,7 +191,6 @@ class _MainPageState extends State<MainPage> {
 
   @override
   build(context) {
-    var setting = Provider.of<SettingProvider>(context);
     return CustomModulePage(
       content: Column(
         children: [
@@ -289,7 +288,7 @@ class _MainPageState extends State<MainPage> {
               const Divider(),
               MenuItemButton(
                 onPressed: () async {
-                  var item = await StorageHelper.pickOpenFile('ResourceForwarder.Input', setting.data.mFallbackDirectory);
+                  var item = await StorageHelper.pickOpenFile(context, 'ResourceForwarder.Input');
                   if (item != null) {
                     await this._appendInput([item]);
                   }
@@ -302,7 +301,7 @@ class _MainPageState extends State<MainPage> {
               ),
               MenuItemButton(
                 onPressed: () async {
-                  var item = await StorageHelper.pickOpenDirectory('ResourceForwarder.Input');
+                  var item = await StorageHelper.pickOpenDirectory(context, 'ResourceForwarder.Input');
                   if (item != null) {
                     await this._appendInput([item]);
                   }

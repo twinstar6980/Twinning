@@ -15,7 +15,7 @@ class PermissionHelper {
       state = true;
     }
     if (Platform.isAndroid) {
-      state = await PlatformMethod.checkStoragePermission('check');
+      state = await PlatformMethod.checkExternalStoragePermission('check');
     }
     if (Platform.isIOS) {
       state = true;
@@ -30,7 +30,7 @@ class PermissionHelper {
       state = true;
     }
     if (Platform.isAndroid) {
-      state = await PlatformMethod.checkStoragePermission('request');
+      state = await PlatformMethod.checkExternalStoragePermission('request');
     }
     if (Platform.isIOS) {
       state = true;

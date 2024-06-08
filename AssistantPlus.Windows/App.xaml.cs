@@ -51,15 +51,17 @@ namespace AssistantPlus {
 		// ----------------
 
 		protected override async void OnLaunched (
-			LaunchActivatedEventArgs args
+			Microsoft.UI.Xaml.LaunchActivatedEventArgs args
 		) {
 			this.UnhandledException += this.OnUnhandledException;
 			var window = default(Window);
 			try {
-				App.PackageDirectory = StorageHelper.Parent(Environment.GetCommandLineArgs()[0]).AsNotNull();
+				var argument = Environment.GetCommandLineArgs();
+				App.PackageDirectory = StorageHelper.Parent(argument[0]).AsNotNull();
 				App.ProgramFile = $"{App.PackageDirectory}/AssistantPlus.exe";
 				App.SharedDirectory = StorageHelper.Regularize(Windows.Storage.ApplicationData.Current.LocalFolder.Path);
 				App.CacheDirectory = $"{App.SharedDirectory}/Cache";
+				argument = argument[1..];
 				try {
 					await App.Setting.Load();
 				}
@@ -72,14 +74,24 @@ namespace AssistantPlus {
 				var optionWindowSize = default(Tuple<Integer, Integer>?);
 				var optionInsertTab = default(Tuple<String, ModuleType, List<String>>?);
 				{
-					var argument = Environment.GetCommandLineArgs()[1..].ToList();
-					if (argument.FirstOrDefault() == "Launch") {
-						argument = argument[1..];
+					var command = new List<String>();
+					if (argument.Length >= 1 && argument[0] == "Launch") {
+						command = argument[1..].ToList();
 					}
-					else {
-						argument = [];
+					if (argument.Length == 1 && argument[0].StartsWith("twinstar.twinning.assistant-plus:")) {
+						var link = new Uri(argument[0]);
+						if (link.Scheme != "twinstar.twinning.assistant-plus" || link.Authority != "" || link.AbsolutePath != "/Launch") {
+							throw new ($"Invalid link.");
+						}
+						command = link.GetComponents(UriComponents.Query, UriFormat.UriEscaped)
+							.Split("&")
+							.Select((item) => (item.Split("=").Select(Uri.UnescapeDataString).ToList()))
+							.Select((item) => (new KeyValuePair<String, String>(item[0], item[1])))
+							.Where((item) => (item.Key == "Command"))
+							.Select((item) => (item.Value))
+							.ToList();
 					}
-					var option = new CommandLineReader(argument);
+					var option = new CommandLineReader(command);
 					if (option.Check("-WindowPosition")) {
 						optionWindowPosition = new (
 							option.NextInteger(),

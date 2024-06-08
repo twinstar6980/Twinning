@@ -102,7 +102,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 				}
 			}
 			catch (Exception e) {
-				App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
+				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
 			}
 			if (optionDescriptorFile is not null) {
 				await this.ApplyLoad(optionDescriptorFile);
@@ -180,12 +180,12 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 				args.Handled = true;
 				var item = await args.DataView.GetStorageItemsAsync();
 				if (item.Count != 1) {
-					App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Source is multiply.", "");
+					App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is multiply.", "");
 					return;
 				}
 				var descriptorFile = StorageHelper.GetLongPath(item[0].Path);
 				if (!StorageHelper.ExistFile(descriptorFile)) {
-					App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Source is not a file.", "");
+					App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is not a file.", "");
 					return;
 				}
 				await this.ApplyLoad(descriptorFile);
@@ -208,7 +208,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 				descriptorMap = GameReflectionHelper.CompileDescriptorArchive(descriptorArchive);
 			}
 			catch (Exception e) {
-				App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Failed to load descriptor.", e.ToString());
+				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to load descriptor.", e.ToString());
 				return;
 			}
 			this.DescriptorFile = descriptorFile;
@@ -394,7 +394,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			var clipboardContent = new DataPackage();
 			clipboardContent.SetText(resultText);
 			Clipboard.SetContent(clipboardContent);
-			App.MainWindow.PublishNotification(InfoBarSeverity.Success, "Copied!", "");
+			App.MainWindow.PushNotification(InfoBarSeverity.Success, "Copied!", "");
 			return;
 		}
 

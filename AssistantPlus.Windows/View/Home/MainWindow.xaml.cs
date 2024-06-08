@@ -47,12 +47,12 @@ namespace AssistantPlus.View.Home {
 
 		// ----------------
 
-		public async void PublishNotification (
+		public async void PushNotification (
 			InfoBarSeverity severity,
 			String          title,
 			String          message,
 			Size            duration = 4000
-		) => this.Controller.PublishNotification(severity, title, message, duration);
+		) => this.Controller.PushNotification(severity, title, message, duration);
 
 		public async Task ShowLauncherPanel (
 		) => await this.Controller.ShowLauncherPanel();
@@ -90,7 +90,7 @@ namespace AssistantPlus.View.Home {
 
 		// ----------------
 
-		public async void PublishNotification (
+		public async void PushNotification (
 			InfoBarSeverity severity,
 			String          title,
 			String          message,

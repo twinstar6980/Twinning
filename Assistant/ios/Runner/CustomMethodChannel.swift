@@ -49,11 +49,11 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
         throw NSError(domain: "invalid argument.", code: 0)
       }
       switch call.method {
-      case "pick_storage_path":
+      case "pick_storage_item":
         guard let detailType = argument["type"] as? String else {
           throw NSError(domain: "invalid argument.", code: 0)
         }
-        let detailTarget = try await self.handlePickStoragePath(
+        let detailTarget = try await self.handlePickStorageItem(
           type: detailType
         )
         result(detailTarget)
@@ -67,10 +67,10 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
     return
   }
 
-  private func handlePickStoragePath(
+  private func handlePickStorageItem(
     type: String
   ) async throws -> String? {
-    guard type == "open_file" || type == "open_directory" || type == "save_file" else {
+    guard type == "open_file" || type == "open_directory" else {
       throw NSError(domain: "invalid type.", code: 0)
     }
     let rootView = self.host.window?.rootViewController as! FlutterViewController
@@ -80,9 +80,6 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
     }
     if type == "open_directory" {
       pickerView = UIDocumentPickerViewController(forOpeningContentTypes: [.folder])
-    }
-    if type == "save_file" {
-      pickerView = UIDocumentPickerViewController(forExporting: [], asCopy: false)
     }
     pickerView.delegate = self
     pickerView.allowsMultipleSelection = false

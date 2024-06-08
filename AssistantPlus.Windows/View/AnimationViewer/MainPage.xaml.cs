@@ -216,7 +216,7 @@ namespace AssistantPlus.View.AnimationViewer {
 				}
 			}
 			catch (Exception e) {
-				App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
+				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
 			}
 			if (optionImmediateSelect is not null) {
 				this.ImmediateSelect = optionImmediateSelect.AsNotNull();
@@ -377,7 +377,7 @@ namespace AssistantPlus.View.AnimationViewer {
 				imageSourceData = await GameAnimationHelper.LoadImageSource(imageDirectory, animationData);
 			}
 			catch (Exception e) {
-				App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Failed to load animation.", e.ToString());
+				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to load animation.", e.ToString());
 				return;
 			}
 			this.AnimationFile = animationFile;
@@ -752,12 +752,12 @@ namespace AssistantPlus.View.AnimationViewer {
 				args.Handled = true;
 				var item = await args.DataView.GetStorageItemsAsync();
 				if (item.Count != 1) {
-					App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Source is multiply.", "");
+					App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is multiply.", "");
 					return;
 				}
 				var animationFile = StorageHelper.GetLongPath(item[0].Path);
 				if (!StorageHelper.ExistFile(animationFile)) {
-					App.MainWindow.PublishNotification(InfoBarSeverity.Error, "Source is not a file.", "");
+					App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is not a file.", "");
 					return;
 				}
 				await this.ApplyLoad(animationFile, null, null, null, null, null);

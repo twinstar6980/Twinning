@@ -84,6 +84,7 @@ class _LauncherBarState extends State<LauncherBar> {
                       },
                     ),
                   ],
+                  actionBuilder: null,
                 );
               },
             ),
