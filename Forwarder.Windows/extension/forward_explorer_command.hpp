@@ -306,7 +306,7 @@ namespace Twinning::Forwarder {
 				command.emplace_back(L"-insert_tab");
 				command.emplace_back(L"Resource Forwarder");
 				command.emplace_back(L"resource_forwarder");
-				command.emplace_back(L"-input");
+				command.emplace_back(L"-resource");
 				command.append_range(resource);
 				auto link = std::wstring{};
 				link.reserve(1024);

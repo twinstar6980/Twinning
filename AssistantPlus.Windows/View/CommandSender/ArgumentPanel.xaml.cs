@@ -48,13 +48,13 @@ namespace AssistantPlus.View.CommandSender {
 
 		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
 			nameof(ArgumentPanel.Value),
-			typeof(List<ArgumentValue>),
+			typeof(List<Wrapper<ValueExpression>>),
 			typeof(ArgumentPanel),
-			new (new List<ArgumentValue>())
+			new (new List<Wrapper<ValueExpression>>())
 		);
 
-		public List<ArgumentValue> Value {
-			get => this.GetValue(ArgumentPanel.ValueProperty).AsClass<List<ArgumentValue>>();
+		public List<Wrapper<ValueExpression>> Value {
+			get => this.GetValue(ArgumentPanel.ValueProperty).AsClass<List<Wrapper<ValueExpression>>>();
 			set => this.SetValue(ArgumentPanel.ValueProperty, value);
 		}
 
@@ -72,7 +72,7 @@ namespace AssistantPlus.View.CommandSender {
 
 		public List<ArgumentConfiguration> Configuration => this.View.Configuration;
 
-		public List<ArgumentValue> Value => this.View.Value;
+		public List<Wrapper<ValueExpression>> Value => this.View.Value;
 
 		#endregion
 
@@ -108,57 +108,17 @@ namespace AssistantPlus.View.CommandSender {
 
 		public ArgumentConfiguration Configuration { get; set; } = default!;
 
-		public ArgumentValue Value { get; set; } = default!;
+		public Wrapper<ValueExpression> Value { get; set; } = default!;
 
 		#endregion
 
 		#region view
 
-		public String uTitle_Text {
+		public String uValue_Label {
 			get {
 				return this.Configuration.Name;
 			}
 		}
-
-		// ----------------
-
-		public Boolean uActive_IsChecked {
-			get {
-				return this.Value.Data is not null;
-			}
-		}
-
-		public async void uActive_Click (
-			Object          sender,
-			RoutedEventArgs args
-		) {
-			var senders = sender.AsClass<ToggleButton>();
-			this.Value.Data = !senders.IsChecked.AsNotNull()
-				? null
-				: this.Configuration.Option is not null
-					? this.Configuration.Option[0]
-					: ConfigurationHelper.MakeArgumentValueDefault(this.Configuration.Type);
-			this.NotifyPropertyChanged(
-				nameof(this.uValue_Stamp)
-			);
-			return;
-		}
-
-		public String uActive_Content {
-			get {
-				return this.Configuration.Type switch {
-					ArgumentType.Boolean => "B",
-					ArgumentType.Integer => "I",
-					ArgumentType.Floater => "F",
-					ArgumentType.Size    => "Z",
-					ArgumentType.String  => "S",
-					ArgumentType.Path    => "P",
-					_                    => throw new (),
-				};
-			}
-		}
-
-		// ----------------
 
 		public ArgumentType uValue_Type {
 			get {
@@ -166,13 +126,13 @@ namespace AssistantPlus.View.CommandSender {
 			}
 		}
 
-		public List<Object>? uValue_Option {
+		public List<ValueExpression>? uValue_Option {
 			get {
-				return this.Configuration.Option?.Select((value) => (ConfigurationHelper.MakeArgumentValueDefault(this.Configuration.Type, value).AsNotNull())).ToList();
+				return this.Configuration.Option?.Select((value) => (ConfigurationHelper.ParseArgumentValueJson(this.Configuration.Type, value).AsNotNull())).ToList();
 			}
 		}
 
-		public ArgumentValue uValue_Value {
+		public Wrapper<ValueExpression> uValue_Value {
 			get {
 				return this.Value;
 			}

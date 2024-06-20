@@ -59,12 +59,12 @@ namespace AssistantPlus.Utility {
 			List<String> argument
 		) {
 			var destination = new StringBuilder();
-			if (program is not null) {
+			if (program != null) {
 				ProcessHelper.EncodeCommandLineProgramString(program, destination);
 			}
 			var first = true;
 			foreach (var element in argument) {
-				if (program is not null || !first) {
+				if (program != null || !first) {
 					destination.Append(' ');
 				}
 				ProcessHelper.EncodeCommandLineArgumentString(element, destination);

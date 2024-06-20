@@ -56,13 +56,13 @@
 				SelectionMode="None"
 				CanDragItems="False"
 				CanReorderItems="False"
-				ItemsSource="{x:Bind Controller.uAvailableMethodList_ItemsSource}"
-				ItemInvoked="{x:Bind Controller.uAvailableMethodList_ItemInvoked}"
+				ItemsSource="{x:Bind Controller.uMethodList_ItemsSource}"
+				ItemInvoked="{x:Bind Controller.uMethodList_ItemInvoked}"
 				>
 				<TreeView.ItemTemplateSelector>
-					<localViewCommandSender:MainPageAvailableMethodItemTemplateSelector>
-						<localViewCommandSender:MainPageAvailableMethodItemTemplateSelector.GroupTemplate>
-							<DataTemplate x:DataType="localViewCommandSender:MainPageAvailableMethodGroupItemController">
+					<localViewCommandSender:MainPageMethodItemTemplateSelector>
+						<localViewCommandSender:MainPageMethodItemTemplateSelector.GroupTemplate>
+							<DataTemplate x:DataType="localViewCommandSender:MainPageMethodGroupItemController">
 								<TreeViewItem
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
@@ -95,9 +95,9 @@
 									</my:Stack>
 								</TreeViewItem>
 							</DataTemplate>
-						</localViewCommandSender:MainPageAvailableMethodItemTemplateSelector.GroupTemplate>
-						<localViewCommandSender:MainPageAvailableMethodItemTemplateSelector.ItemTemplate>
-							<DataTemplate x:DataType="localViewCommandSender:MainPageAvailableMethodItemItemController">
+						</localViewCommandSender:MainPageMethodItemTemplateSelector.GroupTemplate>
+						<localViewCommandSender:MainPageMethodItemTemplateSelector.ItemTemplate>
+							<DataTemplate x:DataType="localViewCommandSender:MainPageMethodItemItemController">
 								<TreeViewItem>
 									<my:Stack
 										HorizontalAlignment="Stretch"
@@ -122,17 +122,18 @@
 											Text="{x:Bind uName_Text}"
 											/>
 										<FontIcon
+											ToolTipService.ToolTip="{x:Bind uBatchable_ToolTip}"
 											HorizontalAlignment="Stretch"
-											VerticalAlignment="Stretch"
-											Opacity="{x:Bind uBatch_Opacity}"
+											VerticalAlignment="Center"
+											Opacity="{x:Bind uBatchable_Opacity}"
 											FontSize="{StaticResource MediumIconSize}"
 											Glyph="{StaticResource FluentIconGlyph.MapLayers}"
 											/>
 									</my:Stack>
 								</TreeViewItem>
 							</DataTemplate>
-						</localViewCommandSender:MainPageAvailableMethodItemTemplateSelector.ItemTemplate>
-					</localViewCommandSender:MainPageAvailableMethodItemTemplateSelector>
+						</localViewCommandSender:MainPageMethodItemTemplateSelector.ItemTemplate>
+					</localViewCommandSender:MainPageMethodItemTemplateSelector>
 				</TreeView.ItemTemplateSelector>
 			</TreeView>
 		</my:Stack>
@@ -143,7 +144,7 @@
 			SizerMinimum="{x:Bind uMethodPanel.Width, Mode=OneTime}"
 			/>
 		<my:Stack
-			x:Name="uArgumentPanel"
+			x:Name="uCommandPanel"
 			x:FieldModifier="public"
 			my:Stack.Weight="1"
 			HorizontalAlignment="Stretch"
@@ -157,7 +158,7 @@
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				Icon="{StaticResource FluentIconGlyph.GroupList}"
-				Title="Argument"
+				Title="Command"
 				>
 				<my:HeaderBar.Action>
 					<my:Stack
@@ -167,35 +168,26 @@
 						Spacing="8"
 						>
 						<Button
-							ToolTipService.ToolTip="Forward By Parallel"
-							HorizontalAlignment="Stretch"
-							VerticalAlignment="Center"
-							Tag="Parallel"
-							Click="{x:Bind Controller.uSelectedMethodForward_Click}"
-							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Shuffle}}"
-							/>
-						<Button
-							ToolTipService.ToolTip="Forward By Sequence"
-							HorizontalAlignment="Stretch"
-							VerticalAlignment="Center"
-							Tag="Sequence"
-							Click="{x:Bind Controller.uSelectedMethodForward_Click}"
-							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RightArrowKeyTime4}}"
-							/>
-						<Button
 							ToolTipService.ToolTip="Forward"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
-							Tag="None"
-							Click="{x:Bind Controller.uSelectedMethodForward_Click}"
-							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Go}}"
+							Click="{x:Bind Controller.uCommandForward_Click}"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Send}}"
+							/>
+						<ToggleButton
+							ToolTipService.ToolTip="Parallel Forward"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Center"
+							IsChecked="{x:Bind Controller.uParallelForward_IsChecked}"
+							Click="{x:Bind Controller.uParallelForward_Click}"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Shuffle}}"
 							/>
 					</my:Stack>
 				</my:HeaderBar.Action>
 			</my:HeaderBar>
 			<my:Divider />
 			<ScrollViewer
-				x:Name="uSelectedMethodScrollViewer"
+				x:Name="uCommandScrollViewer"
 				x:FieldModifier="public"
 				my:Stack.Weight="1"
 				HorizontalAlignment="Stretch"
@@ -210,13 +202,13 @@
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Margin="0,8"
-					ItemsSource="{x:Bind Controller.uSelectedMethodList_ItemsSource}"
+					ItemsSource="{x:Bind Controller.uCommandList_ItemsSource}"
 					>
 					<ItemsRepeater.Layout>
 						<StackLayout Orientation="Vertical" Spacing="16" />
 					</ItemsRepeater.Layout>
 					<ItemsRepeater.ItemTemplate>
-						<DataTemplate x:DataType="localViewCommandSender:MainPageSelectedMethodItemController">
+						<DataTemplate x:DataType="localViewCommandSender:MainPageCommandItemController">
 							<my:Stack
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Stretch"
@@ -238,13 +230,40 @@
 										TextWrapping="NoWrap"
 										Text="{x:Bind uTitle_Text}"
 										/>
-									<ToggleButton
-										ToolTipService.ToolTip="Batch"
+									<Button
+										ToolTipService.ToolTip="Apply Preset"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Bottom"
-										IsEnabled="{x:Bind uBatch_IsEnabled}"
-										IsChecked="{x:Bind uBatch_IsChecked}"
-										Click="{x:Bind uBatch_Click}"
+										Flyout="{x:Bind uApplyPreset_Flyout}"
+										>
+										<my:Stack
+											Orientation="Horizontal"
+											Spacing="8"
+											>
+											<TextBlock
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												MinWidth="16"
+												Style="{StaticResource BodyTextBlockStyle}"
+												TextWrapping="NoWrap"
+												TextAlignment="Right"
+												Text="{x:Bind uApplyPresetCount_Text}"
+												/>
+											<FontIcon
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												FontSize="{StaticResource MediumIconSize}"
+												Glyph="{StaticResource FluentIconGlyph.LightningBolt}"
+												/>
+										</my:Stack>
+									</Button>
+									<ToggleButton
+										ToolTipService.ToolTip="Enable Batch"
+										HorizontalAlignment="Stretch"
+										VerticalAlignment="Bottom"
+										IsEnabled="{x:Bind uEnableBatch_IsEnabled}"
+										IsChecked="{x:Bind uEnableBatch_IsChecked}"
+										Click="{x:Bind uEnableBatch_Click}"
 										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.MapLayers}}"
 										/>
 									<Button
@@ -252,7 +271,7 @@
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Bottom"
 										Click="{x:Bind uForward_Click}"
-										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RightArrowKeyTime0}}"
+										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Send}}"
 										/>
 									<Button
 										ToolTipService.ToolTip="Remove"

@@ -35,7 +35,7 @@ namespace AssistantPlus.Utility {
 			String path
 		) {
 			var parent = Path.GetDirectoryName(path);
-			return parent is null ? null : StorageHelper.Regularize(parent);
+			return parent == null ? null : StorageHelper.Regularize(parent);
 		}
 
 		public static String Name (
@@ -118,7 +118,7 @@ namespace AssistantPlus.Utility {
 			String destination
 		) {
 			var destinationParent = StorageHelper.Parent(destination);
-			if (destinationParent is not null && !Directory.Exists(destinationParent)) {
+			if (destinationParent != null && !Directory.Exists(destinationParent)) {
 				StorageHelper.CreateDirectory(destinationParent);
 			}
 			File.Copy(source, destination, true);
@@ -183,7 +183,7 @@ namespace AssistantPlus.Utility {
 			String target
 		) {
 			var parent = StorageHelper.Parent(target);
-			if (parent is not null) {
+			if (parent != null) {
 				Directory.CreateDirectory(parent);
 			}
 			File.Create(target).Close();
@@ -301,7 +301,7 @@ namespace AssistantPlus.Utility {
 
 		// ----------------
 
-		public static async Task<String?> PickOpenFile (
+		public static async Task<String?> PickLoadFile (
 			Window  host,
 			String? tag
 		) {
@@ -311,10 +311,10 @@ namespace AssistantPlus.Utility {
 			};
 			WinRT.Interop.InitializeWithWindow.Initialize(picker, WindowHelper.Handle(host));
 			var target = await picker.PickSingleFileAsync();
-			return target is null ? null : StorageHelper.Regularize(target.Path);
+			return target == null ? null : StorageHelper.Regularize(target.Path);
 		}
 
-		public static async Task<String?> PickOpenDirectory (
+		public static async Task<String?> PickLoadDirectory (
 			Window  host,
 			String? tag
 		) {
@@ -324,7 +324,7 @@ namespace AssistantPlus.Utility {
 			};
 			WinRT.Interop.InitializeWithWindow.Initialize(picker, WindowHelper.Handle(host));
 			var target = await picker.PickSingleFolderAsync();
-			return target is null ? null : StorageHelper.Regularize(target.Path);
+			return target == null ? null : StorageHelper.Regularize(target.Path);
 		}
 
 		public static async Task<String?> PickSaveFile (
@@ -338,17 +338,17 @@ namespace AssistantPlus.Utility {
 				FileTypeChoices = { },
 				SuggestedFileName = name ?? "",
 			};
-			if (type is not null) {
+			if (type != null) {
 				picker.FileTypeChoices.Add(new ("", ["." + type]));
 			}
 			picker.FileTypeChoices.Add(new ("", ["."]));
 			var timeBeforePick = DateTimeOffset.Now;
 			WinRT.Interop.InitializeWithWindow.Initialize(picker, WindowHelper.Handle(host));
 			var target = await picker.PickSaveFileAsync();
-			if (target is not null && target.DateCreated > timeBeforePick) {
+			if (target != null && target.DateCreated > timeBeforePick) {
 				await target.DeleteAsync();
 			}
-			return target is null ? null : StorageHelper.Regularize(target.Path);
+			return target == null ? null : StorageHelper.Regularize(target.Path);
 		}
 
 		#endregion

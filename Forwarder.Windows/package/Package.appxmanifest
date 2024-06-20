@@ -9,7 +9,7 @@
   xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
   xmlns:desktop6="http://schemas.microsoft.com/appx/manifest/desktop/windows10/6"
   IgnorableNamespaces="rescap uap uap10 com desktop4 desktop5">
-  <Identity Name="TwinStar.Twinning.Forwarder" Publisher="CN=TwinStar" Version="41.0.0.0" />
+  <Identity Name="TwinStar.Twinning.Forwarder" Publisher="CN=TwinStar" Version="42.0.0.0" />
   <Properties>
     <DisplayName>Twinning Forwarder</DisplayName>
     <PublisherDisplayName>TwinStar</PublisherDisplayName>

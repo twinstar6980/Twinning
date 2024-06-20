@@ -152,14 +152,14 @@ class CustomMethodChannel {
 		type: String,
 		initialDirectory: String,
 	): String? {
-		check(type == "open_file" || type == "open_directory" || type == "save_file")
+		check(type == "load_file" || type == "load_directory" || type == "save_file")
 		val intent = Intent()
-		if (type == "open_file") {
+		if (type == "load_file") {
 			intent.setAction(Intent.ACTION_OPEN_DOCUMENT)
 			intent.addCategory(Intent.CATEGORY_OPENABLE)
 			intent.setType("*/*")
 		}
-		if (type == "open_directory") {
+		if (type == "load_directory") {
 			intent.setAction(Intent.ACTION_OPEN_DOCUMENT_TREE)
 		}
 		if (type == "save_file") {

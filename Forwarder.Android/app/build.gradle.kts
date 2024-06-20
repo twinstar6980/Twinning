@@ -11,8 +11,8 @@ android {
 		applicationId = "com.twinstar.twinning.forwarder"
 		minSdk = 28
 		targetSdk = 34
-		versionCode = 11
-		versionName = "11"
+		versionCode = 12
+		versionName = "12"
 	}
 
 	buildTypes {

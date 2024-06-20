@@ -139,7 +139,7 @@ class MainActivity : ComponentActivity() {
 		command.add("-insert_tab")
 		command.add("Resource Forwarder")
 		command.add("resource_forwarder")
-		command.add("-input")
+		command.add("-resource")
 		command.addAll(resource.map() { item -> item.toString() })
 		val link = Uri.parse("twinstar.twinning.assistant:/launch?${command.joinToString("&") { item -> "command=${this.encodePercentString(item)}" }}")
 		this.openLink(link, resource)

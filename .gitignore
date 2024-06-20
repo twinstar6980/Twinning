@@ -1,4 +1,5 @@
-# Git Ignore
+# Git
+/.git
 
 # System - Windows
 /**/desktop.ini
@@ -22,6 +23,9 @@
 # Environment - IntelliJ IDEA
 /**/.idea
 
+# Environment - Xmake
+/**/.xmake
+
 # Environment - Gradle
 /**/.gradle
 
@@ -36,12 +40,10 @@
 
 # Module - Kernel
 /Kernel/.build
-/Kernel/.xmake
 /Kernel/.project
 
 # Module - Shell
 /Shell/.build
-/Shell/.xmake
 /Shell/.project
 
 # Module - Script

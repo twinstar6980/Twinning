@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = '110';
+	export const k_version = '111';
 
 	// ------------------------------------------------
 
@@ -76,14 +76,18 @@ namespace Twinning.Script {
 		// ------------------------------------------------
 
 		export function output(
-			message: string,
+			title: string,
+			description: Array<string>,
 		): void {
 			let shell_name = Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['name'])).value[0];
 			if (shell_name === 'basic') {
-				Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['output_text', `● ${message}\n`]));
+				Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['output_text', `● ${title}\n`]));
+				for (let description_item of description) {
+					Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['output_text', `  ${description_item}\n`]));
+				}
 			}
 			if (shell_name === 'assistant' || shell_name === 'assistant.plus') {
-				Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['send_message', 'verbosity', `${message}`]));
+				Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['send_message', 'verbosity', title, ...description]));
 			}
 			return;
 		}
@@ -294,7 +298,7 @@ namespace Twinning.Script {
 		async function internal(
 			argument: Array<string>,
 		): Promise<Array<string>> {
-			Detail.output(`Twinning ~ Kernel:${Kernel.Miscellaneous.g_version.value} & Shell:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['name'])).value[0]}:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['version'])).value[0]} & Script:${k_version} ~ ${Kernel.Miscellaneous.g_system.value}:${Kernel.Miscellaneous.g_architecture.value}`);
+			Detail.output(`Twinning ~ Kernel:${Kernel.Miscellaneous.g_version.value} & Shell:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['name'])).value[0]}:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['version'])).value[0]} & Script:${k_version} ~ ${Kernel.Miscellaneous.g_system.value}:${Kernel.Miscellaneous.g_architecture.value}`, argument);
 			assert_test(argument.length >= 1, `argument too few`);
 			// 获取主目录
 			let home_path = argument[0].replaceAll(`\\`, '/');

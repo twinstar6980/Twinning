@@ -71,7 +71,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		[MemberNotNullWhen(true, nameof(MainPageController.ProjectSetting))]
 		public Boolean IsLoaded {
 			get {
-				return this.ProjectDirectory is not null;
+				return this.ProjectDirectory != null;
 			}
 		}
 
@@ -101,7 +101,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			catch (Exception e) {
 				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
 			}
-			if (optionProjectDirectory is not null) {
+			if (optionProjectDirectory != null) {
 				await this.ApplyLoad(optionProjectDirectory);
 			}
 			return;
@@ -110,7 +110,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		public async Task<List<String>> CollectOption (
 		) {
 			var option = new CommandLineWriter();
-			if (option.Check("-ProjectDirectory", this.ProjectDirectory is not null)) {
+			if (option.Check("-ProjectDirectory", this.ProjectDirectory != null)) {
 				option.NextString(this.ProjectDirectory.AsNotNull());
 			}
 			return option.Done();
@@ -163,7 +163,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			);
 			this.View.uWorkerButton.Flyout.ShowAt(this.View.uWorkerButton);
 			var result = await this.View.uWorkerPage.ExecuteCommand(argument);
-			if (result is not null && result.First() == "s") {
+			if (result != null && result.First() == "s") {
 				App.MainWindow.PushNotification(InfoBarSeverity.Success, "Execute succeeded", "");
 			}
 			else {
@@ -191,16 +191,16 @@ namespace AssistantPlus.View.PackageBuilder {
 			await this.WorkerExecuteCommand(ModdingWorker.ForwardHelper.MakeArgumentForCommand(
 				null,
 				"pvz2.package_project.transpile",
-				mode is null
+				mode == null
 					? new {
 						project_directory = this.MakeScopeRootPath(),
 						target_package = String.Join('|', this.View.uPackageList.SelectedItems.First().AsClass<MainPagePackageItemController>().Setting.Name),
-						target_scope = targetScope is null ? "*" : String.Join('|', targetScope),
+						target_scope = targetScope == null ? "*" : String.Join('|', targetScope),
 					}
 					: new {
 						project_directory = this.MakeScopeRootPath(),
 						target_package = String.Join('|', this.View.uPackageList.SelectedItems.First().AsClass<MainPagePackageItemController>().Setting.Name),
-						target_scope = targetScope is null ? "*" : String.Join('|', targetScope),
+						target_scope = targetScope == null ? "*" : String.Join('|', targetScope),
 						option_generalize_rton = !mode,
 						option_generalize_ptx = !mode,
 						option_generalize_pam = !mode,
@@ -224,7 +224,7 @@ namespace AssistantPlus.View.PackageBuilder {
 				new {
 					project_directory = this.MakeScopeRootPath(),
 					target_package = String.Join('|', this.View.uPackageList.SelectedItems.Select(GF.AsClass<MainPagePackageItemController>).Select((value) => (value.Setting.Name))),
-					target_scope = targetScope is null ? "*" : String.Join('|', targetScope),
+					target_scope = targetScope == null ? "*" : String.Join('|', targetScope),
 				}
 			));
 			return;
@@ -1182,8 +1182,8 @@ namespace AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<Button>();
-			var projectDirectory = await StorageHelper.PickOpenDirectory(App.MainWindow, $"{nameof(PackageBuilder)}.ProjectDirectory");
-			if (projectDirectory is not null) {
+			var projectDirectory = await StorageHelper.PickLoadDirectory(App.MainWindow, $"{nameof(PackageBuilder)}.ProjectDirectory");
+			if (projectDirectory != null) {
 				await this.ApplyLoad(projectDirectory);
 			}
 			return;
@@ -2370,7 +2370,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		public Style uCategory_Style {
 			get {
 				GF.AssertTest(this.Host.IsLoaded);
-				return this.Host.View.FindResource(this.Setting.Category is { Resolution: null, Locale: null } ? "DefaultButtonStyle" : "AccentButtonStyle").AsClass<Style>();
+				return this.Host.View.FindResource(this.Setting.Category.Resolution == null && this.Setting.Category.Locale == null ? "DefaultButtonStyle" : "AccentButtonStyle").AsClass<Style>();
 			}
 		}
 

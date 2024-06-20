@@ -1,6 +1,8 @@
 import '/common.dart';
 import '/view/modding_worker/main_page.dart' as modding_worker;
 import '/view/modding_worker/setting_panel.dart' as modding_worker;
+import '/view/command_sender/main_page.dart' as command_sender;
+import '/view/command_sender/setting_panel.dart' as command_sender;
 import '/view/resource_forwarder/main_page.dart' as resource_forwarder;
 import '/view/resource_forwarder/setting_panel.dart' as resource_forwarder;
 import 'package:collection/collection.dart';
@@ -10,6 +12,7 @@ import 'package:flutter/material.dart';
 
 enum ModuleType {
   modding_worker, // ignore: constant_identifier_names
+  command_sender, // ignore: constant_identifier_names
   resource_forwarder, // ignore: constant_identifier_names
 }
 
@@ -71,6 +74,13 @@ class ModuleHelper {
       settingPanel: () => const modding_worker.SettingPanel(),
     ),
     ModuleInformation(
+      type: ModuleType.command_sender,
+      icon: IconSymbols.send,
+      name: 'Command Sender',
+      mainPage: (option) => command_sender.MainPage(option: option),
+      settingPanel: () => const command_sender.SettingPanel(),
+    ),
+    ModuleInformation(
       type: ModuleType.resource_forwarder,
       icon: IconSymbols.share_windows,
       name: 'Resource Forwarder',
@@ -87,14 +97,14 @@ class ModuleHelper {
 
   // ----------------
 
-  static Boolean compareLauncher (
+  static Boolean compareLauncher(
     ModuleLauncherConfiguration thix,
     ModuleLauncherConfiguration that,
   ) {
     return thix.type == that.type && thix.option.equals(that.option);
   }
 
-  static List<String> generateArgument (
+  static List<String> generateArgument(
     ModuleLauncherConfiguration launcher,
   ) {
     return [

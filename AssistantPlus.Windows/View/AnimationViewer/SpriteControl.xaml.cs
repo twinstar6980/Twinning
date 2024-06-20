@@ -84,7 +84,7 @@ namespace AssistantPlus.View.AnimationViewer {
 		[MemberNotNullWhen(true, nameof(SpriteControl.Storyboard))]
 		public new Boolean Loaded {
 			get {
-				return this.Canvas is not null;
+				return this.Canvas != null;
 			}
 		}
 

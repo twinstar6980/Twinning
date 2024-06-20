@@ -4,6 +4,7 @@ import '/utility/storage_helper.dart';
 import '/utility/json_helper.dart';
 import '/utility/font_helper.dart';
 import '/view/modding_worker/setting.dart' as modding_worker;
+import '/view/command_sender/setting.dart' as command_sender;
 import '/view/resource_forwarder/setting.dart' as resource_forwarder;
 import 'package:flutter/material.dart';
 
@@ -26,6 +27,7 @@ class SettingData {
   String                     mFallbackDirectory;
   ModuleLauncherSetting      mModuleLauncher;
   modding_worker.Setting     mModdingWorker;
+  command_sender.Setting     mCommandSender;
   resource_forwarder.Setting mResourceForwarder;
   SettingData({
     required this.mVersion,
@@ -44,6 +46,7 @@ class SettingData {
     required this.mFallbackDirectory,
     required this.mModuleLauncher,
     required this.mModdingWorker,
+    required this.mCommandSender,
     required this.mResourceForwarder,
   });
 }
@@ -174,12 +177,15 @@ class SettingProvider with ChangeNotifier {
       mImmediateLaunch: true,
       mMessageFont: [],
     ),
+    mCommandSender: command_sender.Setting(
+      mMethodConfiguration: '',
+      mParallelForward: false,
+    ),
     mResourceForwarder: resource_forwarder.Setting(
       mOptionConfiguration: '',
-      mParallelExecute: false,
+      mParallelForward: false,
       mEnableFilter: true,
       mEnableBatch: false,
-      mRemainInput: false,
     ),
   );
 
@@ -246,11 +252,14 @@ class SettingProvider with ChangeNotifier {
       json['modding_worker.message_font'] = data.mModdingWorker.mMessageFont;
     }
     {
+      json['command_sender.method_configuration'] = data.mCommandSender.mMethodConfiguration;
+      json['command_sender.parallel_forward'] = data.mCommandSender.mParallelForward;
+    }
+    {
       json['resource_forwarder.option_configuration'] = data.mResourceForwarder.mOptionConfiguration;
-      json['resource_forwarder.parallel_execute'] = data.mResourceForwarder.mParallelExecute;
+      json['resource_forwarder.parallel_forward'] = data.mResourceForwarder.mParallelForward;
       json['resource_forwarder.enable_filter'] = data.mResourceForwarder.mEnableFilter;
       json['resource_forwarder.enable_batch'] = data.mResourceForwarder.mEnableBatch;
-      json['resource_forwarder.remain_input'] = data.mResourceForwarder.mRemainInput;
     }
     return;
   }
@@ -307,11 +316,14 @@ class SettingProvider with ChangeNotifier {
       data.mModdingWorker.mMessageFont = (json['modding_worker.message_font'] as List<dynamic>).cast<String>();
     }
     {
+      data.mCommandSender.mMethodConfiguration = (json['command_sender.method_configuration'] as String);
+      data.mCommandSender.mParallelForward = (json['command_sender.parallel_forward'] as Boolean);
+    }
+    {
       data.mResourceForwarder.mOptionConfiguration = (json['resource_forwarder.option_configuration'] as String);
-      data.mResourceForwarder.mParallelExecute = (json['resource_forwarder.parallel_execute'] as Boolean);
+      data.mResourceForwarder.mParallelForward = (json['resource_forwarder.parallel_forward'] as Boolean);
       data.mResourceForwarder.mEnableFilter = (json['resource_forwarder.enable_filter'] as Boolean);
       data.mResourceForwarder.mEnableBatch = (json['resource_forwarder.enable_batch'] as Boolean);
-      data.mResourceForwarder.mRemainInput = (json['resource_forwarder.remain_input'] as Boolean);
     }
     return;
   }

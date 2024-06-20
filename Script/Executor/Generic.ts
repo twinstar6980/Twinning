@@ -2,7 +2,7 @@ namespace Twinning.Script.Executor {
 
 	// ------------------------------------------------
 
-	export type Argument = Record<string, Kernel.JSON.JS_Value>;
+	export type Argument = Record<string, null | boolean | bigint | number | string>;
 
 	export type Method<Argument extends Executor.Argument = Executor.Argument, InputForwarderKey extends keyof Argument = keyof Argument> = {
 		/** ID；用于指定功能，应唯一 */

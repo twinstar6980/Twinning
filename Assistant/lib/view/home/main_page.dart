@@ -42,6 +42,7 @@ class _MainPageState extends State<MainPage> {
     this._tabList.add((configuration.title, configuration.type, ModuleHelper.query(configuration.type).mainPage(configuration.option), ValueKey(DateTime.now().millisecondsSinceEpoch)));
     this._tabIndex = this._tabList.length - 1;
     this.setState(() {});
+    await Future.delayed(const Duration(milliseconds: 10));
     return;
   }
 
@@ -148,6 +149,7 @@ class _MainPageState extends State<MainPage> {
             label: value.$1,
             action: [
               IconButton(
+                tooltip: 'Remove',
                 icon: const Icon(IconSymbols.remove),
                 onPressed: () async {
                   if (await ControlHelper.showCustomConfirmDialog(context: context)) {

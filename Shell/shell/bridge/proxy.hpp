@@ -157,7 +157,7 @@ namespace Twinning::Shell::Bridge {
 		ExecutorProxy (
 		) :
 			value{[] (auto &, auto &, auto &) -> auto {
-				throw "incomplete"s;
+				throw std::runtime_error{"incomplete"s};
 				return;
 			}} {
 		}

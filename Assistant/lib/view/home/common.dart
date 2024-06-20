@@ -2,7 +2,6 @@ import '/common.dart';
 import '/utility/control_helper.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:window_manager/window_manager.dart';
 
 // ----------------
@@ -157,10 +156,10 @@ class CustomNavigationDrawerItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12),
       height: 56,
       child: TextButton(
-        style: TextButton.styleFrom(
-          padding: const EdgeInsets.all(0),
-          backgroundColor: !this.selected ? null : theme.colorScheme.secondaryContainer,
-          foregroundColor: !this.selected ? theme.colorScheme.onSurface : theme.colorScheme.surfaceTint,
+        style: ButtonStyle(
+          padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+          backgroundColor: WidgetStatePropertyAll(!this.selected ? null : theme.colorScheme.secondaryContainer),
+          foregroundColor: WidgetStatePropertyAll(!this.selected ? theme.colorScheme.onSurface : theme.colorScheme.surfaceTint),
         ),
         onPressed: this.onPressed,
         child: Row(
@@ -316,16 +315,9 @@ class CustomTextFieldSuffixWidget extends StatelessWidget {
 
   @override
   build(context) {
-    return SizedBox(
-      height: 32,
-      child: OverflowBox(
-        maxHeight: 40,
-        fit: OverflowBoxFit.deferToChild,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: this.children,
-        ),
-      ),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: this.children,
     );
   }
 

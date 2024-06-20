@@ -216,13 +216,13 @@ namespace AssistantPlus {
 				},
 				CommandSender = new () {
 					MethodConfiguration = "",
+					ParallelForward = false,
 				},
 				ResourceForwarder = new () {
 					OptionConfiguration = "",
-					ParallelExecute = false,
+					ParallelForward = false,
 					EnableFilter = true,
 					EnableBatch = false,
-					RemainInput = false,
 				},
 				ReflectionDescriptor = new () {
 				},

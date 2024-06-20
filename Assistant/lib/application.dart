@@ -35,6 +35,7 @@ class Application extends StatelessWidget {
               colorSchemeSeed: !setting.data.mThemeColorState ? null : setting.data.mThemeColorLight,
               fontFamily: '',
               fontFamilyFallback: [...setting.state.mThemeFontFamliy],
+              visualDensity: VisualDensity.standard,
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
             darkTheme: ThemeData(
@@ -43,6 +44,7 @@ class Application extends StatelessWidget {
               colorSchemeSeed: !setting.data.mThemeColorState ? null : setting.data.mThemeColorDark,
               fontFamily: '',
               fontFamilyFallback: [...setting.state.mThemeFontFamliy],
+              visualDensity: VisualDensity.standard,
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
             themeMode: setting.data.mThemeMode,

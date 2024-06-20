@@ -198,8 +198,8 @@ namespace Twinning.Script.Console {
 			basic_set_message_text_attribute(type);
 			basic_common_output(title, true, 0, true);
 			basic_set_message_text_attribute('verbosity');
-			for (let description_element of description) {
-				basic_common_output(description_element, false, 1, true);
+			for (let description_item of description) {
+				basic_common_output(description_item, false, 1, true);
 			}
 		}
 		if (Shell.is_assistant) {
@@ -644,12 +644,12 @@ namespace Twinning.Script.Console {
 						if (value.length > 2) {
 							return los('console:input_command_invalid');
 						}
-						let pick_type = null as null | 'open_file' | 'open_directory' | 'save_file';
+						let pick_type = null as null | 'load_file' | 'load_directory' | 'save_file';
 						if (mode === 'input' && type === 'file') {
-							pick_type = 'open_file';
+							pick_type = 'load_file';
 						}
 						if (mode === 'input' && type === 'directory') {
-							pick_type = 'open_directory';
+							pick_type = 'load_directory';
 						}
 						if (mode === 'output' && type === 'file') {
 							pick_type = 'save_file';
@@ -795,38 +795,38 @@ namespace Twinning.Script.Console {
 	// ------------------------------------------------
 
 	export function enumeration<Value>(
-		item: Array<[Value, string, null | string]>,
+		option: Array<[Value, string, null | string]>,
 		nullable: null | boolean,
 		checker: null | Check.CheckerX<Value>,
 		initial?: Value,
 	): Value;
 
 	export function enumeration<Value>(
-		item: Array<[Value, string, null | string]>,
+		option: Array<[Value, string, null | string]>,
 		nullable: null | boolean,
 		checker: null | Check.CheckerX<Value>,
 		initial?: null | Value,
 	): null | Value;
 
 	export function enumeration<Value>(
-		item: Array<[Value, string, null | string]>,
+		option: Array<[Value, string, null | string]>,
 		nullable: null | boolean,
 		checker: null | Check.CheckerX<Value>,
 		initial?: null | Value,
 	): null | Value {
 		let result: null | Value = undefined!;
 		let leading = 'Enumeration';
-		let maximum_key_length = Math.max(...item.map((value) => (value[1].length)));
-		let message = item.map((value) => (`${make_prefix_padded_string(value[1], ' ', maximum_key_length)}${value[2] === null ? '' : `. ${value[2]}`}`));
+		let maximum_key_length = Math.max(...option.map((value) => (value[1].length)));
+		let message = option.map((value) => (`${make_prefix_padded_string(value[1], ' ', maximum_key_length)}${value[2] === null ? '' : `. ${value[2]}`}`));
 		let converter = (value: string): string | [null | Value] => {
 			if (value === '') {
 				return [null];
 			}
-			let index = item.findIndex((e) => (e[1] === value));
+			let index = option.findIndex((e) => (e[1] === value));
 			if (index === -1) {
 				return los('console:option_invalid');
 			}
-			return [item[index][0]];
+			return [option[index][0]];
 		};
 		if (Shell.is_basic) {
 			result = basic_common_input(
@@ -846,15 +846,15 @@ namespace Twinning.Script.Console {
 		if (Shell.is_assistant) {
 			result = assistant_common_input(
 				() => {
-					let value = Shell.assistant_receive_submission('enumeration', [...message]).value;
-					return value === '' ? '' : item[message.indexOf(value)][1];
+					let value = Shell.assistant_receive_submission('enumeration', message).value;
+					return value === '' ? '' : option[message.indexOf(value)][1];
 				},
 				leading,
 				(value) => {
 					if (value === '') {
 						return '';
 					}
-					let index = item.findIndex((e) => (e[1] === value));
+					let index = option.findIndex((e) => (e[1] === value));
 					if (index === -1) {
 						return los('console:option_invalid');
 					}
@@ -898,12 +898,12 @@ namespace Twinning.Script.Console {
 	// ------------------------------------------------
 
 	export function pick_storage_item(
-		type: null | 'open_file' | 'open_directory' | 'save_file',
+		type: null | 'load_file' | 'load_directory' | 'save_file',
 	): null | string {
 		let result: null | string = undefined!;
 		if (type === null) {
 			information(los('console:pick_path_type'), []);
-			type = enumeration(option_string(['open_file', 'open_directory', 'save_file']), null, null) as 'open_file' | 'open_directory' | 'save_file';
+			type = enumeration(option_string(['load_file', 'load_directory', 'save_file']), null, null) as 'load_file' | 'load_directory' | 'save_file';
 		}
 		if (Shell.is_basic) {
 			result = Shell.basic_pick_storage_item(type).target;

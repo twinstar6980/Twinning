@@ -47,7 +47,7 @@ public static class GF {
 		String?                          message = null
 	) {
 		if (!condition) {
-			throw new ("Assertion failed" + (message is null ? "." : $" : {message}."));
+			throw new ("Assertion failed" + (message == null ? "." : $" : {message}."));
 		}
 		return;
 	}
@@ -83,13 +83,13 @@ public static class GF {
 	public static Boolean IsNull<T> (
 		[NotNullWhen(false)] this T? target
 	) {
-		return target is null;
+		return target == null;
 	}
 
 	public static Boolean NotNull<T> (
 		[NotNullWhen(true)] this T? target
 	) {
-		return target is not null;
+		return target != null;
 	}
 
 	// ----------------
@@ -136,14 +136,14 @@ public static class GF {
 		this Object? target
 	)
 		where T : struct {
-		return target as T?;
+		return target?.AsStruct<T>();
 	}
 
 	public static T? AsClassOrNull<T> (
 		this Object? target
 	)
 		where T : class {
-		return target as T;
+		return target?.AsClass<T>();
 	}
 
 	// ----------------

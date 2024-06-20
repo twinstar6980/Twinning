@@ -28,7 +28,7 @@ namespace AssistantPlus.Bridge {
 
 		public Boolean State (
 		) {
-			return this.mHandle is not null;
+			return this.mHandle != null;
 		}
 
 		// ----------------

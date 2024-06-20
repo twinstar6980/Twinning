@@ -36,7 +36,7 @@ namespace Twinning.Script.Shell {
 	}
 
 	export function basic_pick_storage_item(
-		type: 'open_file' | 'open_directory' | 'save_file',
+		type: 'load_file' | 'load_directory' | 'save_file',
 	): { target: string; } {
 		if (KernelX.is_android || KernelX.is_iphone) {
 			// unavailable, silently fail
@@ -78,7 +78,7 @@ namespace Twinning.Script.Shell {
 	}
 
 	export function assistant_pick_storage_item(
-		type: 'open_file' | 'open_directory' | 'save_file',
+		type: 'load_file' | 'load_directory' | 'save_file',
 	): { target: string; } {
 		let result = callback(['pick_storage_item', type]);
 		return { target: result[0] };

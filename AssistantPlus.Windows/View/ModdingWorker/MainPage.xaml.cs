@@ -76,8 +76,6 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public Boolean AutomaticScroll { get; set; } = default!;
 
-		// ----------------
-
 		public List<String> AdditionalArgument { get; set; } = [];
 
 		// ----------------
@@ -129,20 +127,20 @@ namespace AssistantPlus.View.ModdingWorker {
 			catch (Exception e) {
 				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
 			}
-			if (optionAutomaticScroll is not null) {
+			if (optionAutomaticScroll != null) {
 				this.AutomaticScroll = optionAutomaticScroll.AsNotNull();
 				this.NotifyPropertyChanged(
 					nameof(this.uAutomaticScroll_IsChecked)
 				);
 			}
-			if (optionAdditionalArgument is not null) {
+			if (optionAdditionalArgument != null) {
 				this.AdditionalArgument = optionAdditionalArgument;
 				this.NotifyPropertyChanged(
 					nameof(this.uAdditionalArgumentCount_Text),
 					nameof(this.uAdditionalArgumentContent_Text)
 				);
 			}
-			if (optionImmediateLaunch is not null) {
+			if (optionImmediateLaunch != null) {
 				if (optionImmediateLaunch.AsNotNull()) {
 					await this.LaunchSession();
 				}
@@ -164,7 +162,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public async Task<Boolean> RequestClose (
 		) {
-			if (this.SessionTask is not null) {
+			if (this.SessionTask != null) {
 				await ControlHelper.ShowDialogSimple(this.View, "Session In Progress", null);
 				return false;
 			}
@@ -205,7 +203,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			this.uSubmissionBar_Type = type;
 			this.uSubmissionBar_Option = option;
 			this.uSubmissionBar_History = history;
-			this.uSubmissionBar_Value.Data = null;
+			this.uSubmissionBar_Value.Value = null;
 			this.NotifyPropertyChanged(
 				nameof(this.uSubmissionBar_Type),
 				nameof(this.uSubmissionBar_Option),
@@ -217,18 +215,18 @@ namespace AssistantPlus.View.ModdingWorker {
 			while (this.SubmissionState) {
 				await Task.Delay(40);
 			}
-			var value = this.uSubmissionBar_Value.Data;
+			var value = this.uSubmissionBar_Value.Value;
 			this.uSubmissionBar_Type = null;
 			this.uSubmissionBar_Option = [];
 			this.uSubmissionBar_History = [];
-			this.uSubmissionBar_Value.Data = null;
+			this.uSubmissionBar_Value.Value = null;
 			this.NotifyPropertyChanged(
 				nameof(this.uSubmissionBar_Type),
 				nameof(this.uSubmissionBar_Option),
 				nameof(this.uSubmissionBar_History),
 				nameof(this.uSubmissionBar_Stamp)
 			);
-			if (value is not null) {
+			if (value != null) {
 				var valueString = ValueExpressionHelper.MakeString(value);
 				history.RemoveAll((item) => (ValueExpressionHelper.MakeString(item) == valueString));
 				history.Add(value);
@@ -240,7 +238,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public async Task<List<String>?> LaunchSession (
 		) {
-			GF.AssertTest(this.SessionTask is null);
+			GF.AssertTest(this.SessionTask == null);
 			var result = default(List<String>?);
 			var exception = default(Exception?);
 			var kernelCopy = StorageHelper.Temporary();
@@ -267,7 +265,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			if (StorageHelper.ExistFile(kernelCopy)) {
 				StorageHelper.RemoveFile(kernelCopy);
 			}
-			if (exception is null) {
+			if (exception == null) {
 				await this.SendMessage(MessageType.Success, "SUCCEEDED", result.AsNotNull());
 			}
 			else {
@@ -333,22 +331,23 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		// ----------------
 
-		public String uAdditionalArgumentContent_Text {
-			get {
-				return ConvertHelper.MakeStringListToStringWithLine(this.AdditionalArgument);
-			}
-		}
-
-		public async void uAdditionalArgumentContent_TextChanged (
-			Object               sender,
-			TextChangedEventArgs args
+		public async void uAdditionalArgumentContent_LostFocus (
+			Object          sender,
+			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<TextBox>();
 			this.AdditionalArgument = ConvertHelper.ParseStringListFromStringWithLine(senders.Text);
 			this.NotifyPropertyChanged(
-				nameof(this.uAdditionalArgumentCount_Text)
+				nameof(this.uAdditionalArgumentCount_Text),
+				nameof(this.uAdditionalArgumentContent_Text)
 			);
 			return;
+		}
+
+		public String uAdditionalArgumentContent_Text {
+			get {
+				return ConvertHelper.MakeStringListToStringWithLine(this.AdditionalArgument);
+			}
 		}
 
 		#endregion
@@ -357,7 +356,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public Boolean uLaunch_Visibility {
 			get {
-				return this.SessionTask is null;
+				return this.SessionTask == null;
 			}
 		}
 
@@ -366,7 +365,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<Button>();
-			if (this.SessionTask is null) {
+			if (this.SessionTask == null) {
 				await this.LaunchSession();
 			}
 			return;
@@ -378,7 +377,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public Boolean uProgress_ProgressIndeterminate {
 			get {
-				return this.SessionTask is not null;
+				return this.SessionTask != null;
 			}
 		}
 
@@ -400,7 +399,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public Boolean uSubmissionBar_Visibility {
 			get {
-				return this.SessionTask is not null;
+				return this.SessionTask != null;
 			}
 		}
 
@@ -410,7 +409,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public List<ValueExpression> uSubmissionBar_History { get; set; } = [];
 
-		public SubmissionValue uSubmissionBar_Value { get; } = new () { Data = null };
+		public Wrapper<ValueExpression> uSubmissionBar_Value { get; } = new ();
 
 		public async void uSubmissionBar_ValueSubmitted (
 		) {
@@ -623,7 +622,7 @@ namespace AssistantPlus.View.ModdingWorker {
 				_             => throw new (),
 			};
 			var valueData = await this.mController.ReceiveSubmission(typeValue, option);
-			if (valueData is not null) {
+			if (valueData != null) {
 				value = ValueExpressionHelper.MakeString(valueData);
 			}
 			return new (value);
@@ -634,12 +633,12 @@ namespace AssistantPlus.View.ModdingWorker {
 		) {
 			var target = "";
 			switch (type) {
-				case "open_file": {
-					target = await StorageHelper.PickOpenFile(WindowHelper.Find(this.mController.View), $"{nameof(ModdingWorker)}.Generic") ?? "";
+				case "load_file": {
+					target = await StorageHelper.PickLoadFile(WindowHelper.Find(this.mController.View), $"{nameof(ModdingWorker)}.Generic") ?? "";
 					break;
 				}
-				case "open_directory": {
-					target = await StorageHelper.PickOpenDirectory(WindowHelper.Find(this.mController.View), $"{nameof(ModdingWorker)}.Generic") ?? "";
+				case "load_directory": {
+					target = await StorageHelper.PickLoadDirectory(WindowHelper.Find(this.mController.View), $"{nameof(ModdingWorker)}.Generic") ?? "";
 					break;
 				}
 				case "save_file": {

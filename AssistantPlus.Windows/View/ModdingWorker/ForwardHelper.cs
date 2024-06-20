@@ -40,6 +40,13 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		// ----------------
 
+		public static String MakeMethodForBatchable (
+			String  method,
+			Boolean enableBatch
+		) {
+			return $"{method}{(!enableBatch ? "" : ".batch")}";
+		}
+
 		public static List<String> MakeArgumentForCommand (
 			String? input,
 			String? method,
@@ -47,11 +54,11 @@ namespace AssistantPlus.View.ModdingWorker {
 		) {
 			var command = new List<String>();
 			command.Add(input ?? "?");
-			if (method is not null) {
+			if (method != null) {
 				command.Add("-method");
 				command.Add(method);
 			}
-			if (argument is not null) {
+			if (argument != null) {
 				command.Add("-argument");
 				command.Add(JsonHelper.SerializeText(argument, false));
 			}

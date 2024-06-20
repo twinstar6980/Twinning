@@ -8,7 +8,6 @@ import '/view/home/common.dart';
 import '/view/resource_forwarder/configuration.dart';
 import '/view/resource_forwarder/option_item.dart';
 import '/view/modding_worker/forward_helper.dart' as modding_worker;
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -32,52 +31,51 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
 
-  late ScrollController                        _optionListScrollController;
   late List<OptionGroupConfiguration>          _optionConfiguration;
-  late Boolean                                 _parallelExecute;
+  late Boolean                                 _parallelForward;
   late Boolean                                 _enableFilter;
   late Boolean                                 _enableBatch;
-  late Boolean                                 _remainInput;
-  late List<(String, Boolean?)>                _input;
-  late List<List<(Boolean, Boolean, Boolean)>> _match;
+  late List<(String, Boolean?)>                _resource;
+  late List<List<(Boolean, Boolean, Boolean)>> _optionMatch;
+  late ScrollController                        _optionListScrollController;
 
   Future<Void> _refreshMatch(
   ) async {
-    this._match.clear();
+    this._optionMatch.clear();
     for (var group in this._optionConfiguration) {
       var groupMatch = <(Boolean, Boolean, Boolean)>[];
       for (var item in group.item) {
         var singleMatched = false;
         var batchMatched = false;
         var nameMatched = false;
-        if (this._input.length != 0) {
+        if (this._resource.length != 0) {
           singleMatched = true;
           batchMatched = true;
           nameMatched = true;
           var nameRule = RegExp(item.filter.name);
-          for (var input in this._input) {
+          for (var resource in this._resource) {
             singleMatched &= switch (item.filter.type) {
-              OptionFilterFileObjectType.any       => input.$2 != null,
-              OptionFilterFileObjectType.file      => input.$2 == false,
-              OptionFilterFileObjectType.directory => input.$2 == true,
+              FilterType.any       => resource.$2 != null,
+              FilterType.file      => resource.$2 == false,
+              FilterType.directory => resource.$2 == true,
             };
-            batchMatched &= item.batchable && input.$2 == true;
-            nameMatched &= nameRule.hasMatch(input.$1);
+            batchMatched &= item.batchable && resource.$2 == true;
+            nameMatched &= nameRule.hasMatch(resource.$1);
           }
         }
         groupMatch.add((singleMatched, batchMatched, nameMatched));
       }
-      this._match.add(groupMatch);
+      this._optionMatch.add(groupMatch);
     }
     this.setState(() {});
     return;
   }
 
-  Future<Void> _appendInput(
+  Future<Void> _appendResource(
     List<String> list,
   ) async {
     for (var item in list) {
-      if (this._input.any((value) => (value.$1 == item))) {
+      if (this._resource.any((value) => (value.$1 == item))) {
         continue;
       }
       var itemType = null as Boolean?;
@@ -87,39 +85,36 @@ class _MainPageState extends State<MainPage> {
       if (await StorageHelper.existDirectory(item)) {
         itemType = true;
       }
-      this._input.add((item, itemType));
+      this._resource.add((item, itemType));
     }
     await this._refreshMatch();
     return;
   }
 
-  Future<Void> _removeInput(
+  Future<Void> _removeResource(
     List<String> list,
   ) async {
     for (var item in list) {
-      this._input.removeWhere((value) => (value.$1 == item));
+      this._resource.removeWhere((value) => (value.$1 == item));
     }
     await this._refreshMatch();
     return;
   }
 
-  Future<Void> _clearInput(
+  Future<Void> _clearResource(
   ) async {
-    this._input.clear();
+    this._resource.clear();
     await this._refreshMatch();
     return;
   }
 
-  Future<Void> _executeForward(
+  Future<Void> _forwardResource(
     String?              method,
     Map<String, Object>? argument,
   ) async {
-    var actualMethod = method == null ? null : '${method}${!this._enableBatch ? '' : '.batch'}';
-    var actualCommand = this._input.map((value) => (modding_worker.ForwardHelper.makeArgumentForCommand(value.$1, actualMethod, argument))).toList();
-    await modding_worker.ForwardHelper.forwardMany(this.context, actualCommand, this._parallelExecute);
-    if (!this._remainInput) {
-      await this._clearInput();
-    }
+    var actualMethod = method == null ? null : modding_worker.ForwardHelper.makeMethodForBatchable(method, this._enableBatch);
+    var actualCommand = this._resource.map((value) => (modding_worker.ForwardHelper.makeArgumentForCommand(value.$1, actualMethod, argument))).toList();
+    await modding_worker.ForwardHelper.forwardMany(this.context, actualCommand, this._parallelForward);
     return;
   }
 
@@ -129,25 +124,23 @@ class _MainPageState extends State<MainPage> {
   initState() {
     super.initState();
     var setting = Provider.of<SettingProvider>(this.context, listen: false);
-    this._optionListScrollController = ScrollController();
     this._optionConfiguration = [];
-    this._parallelExecute = setting.data.mResourceForwarder.mParallelExecute;
+    this._parallelForward = setting.data.mResourceForwarder.mParallelForward;
     this._enableFilter = setting.data.mResourceForwarder.mEnableFilter;
     this._enableBatch = setting.data.mResourceForwarder.mEnableBatch;
-    this._remainInput = setting.data.mResourceForwarder.mRemainInput;
-    this._input = [];
-    this._match = [];
+    this._resource = [];
+    this._optionMatch = [];
+    this._optionListScrollController = ScrollController();
     ControlHelper.postTask(() async {
       this._optionConfiguration = ConfigurationHelper.parseDataFromJson(await JsonHelper.deserializeFile(setting.data.mResourceForwarder.mOptionConfiguration));
       await this._refreshMatch();
-      var optionParallelExecute = null as Boolean?;
+      var optionParallelForward = null as Boolean?;
       var optionEnableFilter = null as Boolean?;
       var optionEnableBatch = null as Boolean?;
-      var optionRemainInput = null as Boolean?;
-      var optionInput = null as List<String>?;
+      var optionResource = null as List<(String,)>?;
       var option = CommandLineReader(this.widget.option);
-      if (option.check('-parallel_execute')) {
-        optionParallelExecute = option.nextBoolean();
+      if (option.check('-parallel_forward')) {
+        optionParallelForward = option.nextBoolean();
       }
       if (option.check('-enable_filter')) {
         optionEnableFilter = option.nextBoolean();
@@ -155,15 +148,17 @@ class _MainPageState extends State<MainPage> {
       if (option.check('-enable_batch')) {
         optionEnableBatch = option.nextBoolean();
       }
-      if (option.check('-remain_input')) {
-        optionRemainInput = option.nextBoolean();
-      }
-      if (option.check('-input')) {
-        optionInput = option.nextStringList();
+      if (option.check('-resource')) {
+        optionResource = [];
+        while (!option.done()) {
+          optionResource.add((
+            option.nextString(),
+          ));
+        }
       }
       assertTest(option.done());
-      if (optionParallelExecute != null) {
-        this._parallelExecute = optionParallelExecute;
+      if (optionParallelForward != null) {
+        this._parallelForward = optionParallelForward;
       }
       if (optionEnableFilter != null) {
         this._enableFilter = optionEnableFilter;
@@ -171,11 +166,8 @@ class _MainPageState extends State<MainPage> {
       if (optionEnableBatch != null) {
         this._enableBatch = optionEnableBatch;
       }
-      if (optionRemainInput != null) {
-        this._remainInput = optionRemainInput;
-      }
-      if (optionInput != null) {
-        await this._appendInput(optionInput.map(StorageHelper.regularize).toList());
+      if (optionResource != null) {
+        await this._appendResource(optionResource.map((item) => (StorageHelper.regularize(item.$1))).toList());
       }
       this.setState(() {});
     });
@@ -198,16 +190,18 @@ class _MainPageState extends State<MainPage> {
             child: Scrollbar(
               interactive: true,
               controller: this._optionListScrollController,
-              child: ListView(
-                padding: const EdgeInsets.fromLTRB(4, 4, 4, 4),
+              child: ListView.builder(
+                padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
                 controller: this._optionListScrollController,
-                children: this._optionConfiguration.mapIndexed((optionGroupIndex, optionGroup) => OptionGroupItem(
-                  configuration: optionGroup,
-                  match: this._match[optionGroupIndex],
+                itemCount: this._optionConfiguration.length,
+                itemBuilder: (context, index) => OptionGroupItem(
+                  key: ObjectKey(this._optionConfiguration[index]),
+                  configuration: this._optionConfiguration[index],
+                  match: this._optionMatch[index],
                   enableFilter: this._enableFilter,
                   enableBatch: this._enableBatch,
-                  onForward: this._executeForward,
-                )).toList(),
+                  onSelect: this._forwardResource,
+                ),
               ),
             ),
           ),
@@ -216,12 +210,12 @@ class _MainPageState extends State<MainPage> {
       bottom: Row(
         children: [
           IconButton.filledTonal(
-            tooltip: 'Parallel Execute',
-            isSelected: this._parallelExecute,
+            tooltip: 'Parallel Forward',
+            isSelected: this._parallelForward,
             icon: const Icon(IconSymbols.shuffle),
             selectedIcon: const Icon(IconSymbols.shuffle, fill: 1),
             onPressed: () async {
-              this._parallelExecute = !this._parallelExecute;
+              this._parallelForward = !this._parallelForward;
               this.setState(() {});
             },
           ),
@@ -247,32 +241,18 @@ class _MainPageState extends State<MainPage> {
               this.setState(() {});
             },
           ),
-          const SizedBox(width: 8),
-          IconButton.filledTonal(
-            tooltip: 'Remain Input',
-            isSelected: this._remainInput,
-            icon: const Icon(IconSymbols.keep),
-            selectedIcon: const Icon(IconSymbols.keep_rounded, fill: 1),
-            onPressed: () async {
-              this._remainInput = !this._remainInput;
-              this.setState(() {});
-            },
-          ),
           const SizedBox(width: 16),
           const Expanded(child: SizedBox()),
           const SizedBox(width: 16),
           MenuAnchor(
             alignmentOffset: const Offset(0, 8),
-            style: const MenuStyle(
-              visualDensity: VisualDensity.standard,
-            ),
             menuChildren: [
-              ...this._input.reversed.map((value) => Tooltip(
+              ...this._resource.reversed.map((value) => Tooltip(
                 message: value.$1,
                 child: MenuItemButton(
                   closeOnActivate: false,
                   onPressed: () async {
-                    await this._removeInput([value.$1]);
+                    await this._removeResource([value.$1]);
                   },
                   leadingIcon: Icon(switch (value.$2) {
                     null  => IconSymbols.do_not_disturb_on,
@@ -287,10 +267,22 @@ class _MainPageState extends State<MainPage> {
               )),
               const Divider(),
               MenuItemButton(
+                closeOnActivate: false,
                 onPressed: () async {
-                  var item = await StorageHelper.pickOpenFile(context, 'ResourceForwarder.Input');
+                  await this._clearResource();
+                },
+                leadingIcon: const Icon(IconSymbols.delete),
+                child: const Text(
+                  'Clear All',
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              MenuItemButton(
+                closeOnActivate: false,
+                onPressed: () async {
+                  var item = await StorageHelper.pickLoadFile(context, 'ResourceForwarder.Resource');
                   if (item != null) {
-                    await this._appendInput([item]);
+                    await this._appendResource([item]);
                   }
                 },
                 leadingIcon: const Icon(IconSymbols.draft),
@@ -300,10 +292,11 @@ class _MainPageState extends State<MainPage> {
                 ),
               ),
               MenuItemButton(
+                closeOnActivate: false,
                 onPressed: () async {
-                  var item = await StorageHelper.pickOpenDirectory(context, 'ResourceForwarder.Input');
+                  var item = await StorageHelper.pickLoadDirectory(context, 'ResourceForwarder.Resource');
                   if (item != null) {
-                    await this._appendInput([item]);
+                    await this._appendResource([item]);
                   }
                 },
                 leadingIcon: const Icon(IconSymbols.folder),
@@ -314,9 +307,9 @@ class _MainPageState extends State<MainPage> {
               ),
             ],
             builder: (context, controller, child) => Badge.count(
-              count: this._input.length,
+              count: this._resource.length,
               child: FloatingActionButton(
-                tooltip: 'Input',
+                tooltip: 'Resource',
                 elevation: 0,
                 focusElevation: 0,
                 hoverElevation: 0,

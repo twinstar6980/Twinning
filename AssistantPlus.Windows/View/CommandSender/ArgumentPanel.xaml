@@ -22,38 +22,15 @@
 		</ItemsRepeater.Layout>
 		<ItemsRepeater.ItemTemplate>
 			<DataTemplate x:DataType="localViewCommandSender:ArgumentPanelItemController">
-				<my:Stack
+				<localViewCommandSender:ArgumentBar
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
-					Orientation="Horizontal"
-					Spacing="8"
-					>
-					<TextBox
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Top"
-						Width="208"
-						IsReadOnly="True"
-						Text="{x:Bind uTitle_Text}"
-						/>
-					<ToggleButton
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Top"
-						Width="32"
-						Padding="5,5,5,6"
-						IsChecked="{x:Bind uActive_IsChecked}"
-						Click="{x:Bind uActive_Click}"
-						Content="{x:Bind uActive_Content}"
-						/>
-					<localViewCommandSender:ValuePanel
-						my:Stack.Weight="1"
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Top"
-						Type="{x:Bind uValue_Type}"
-						Option="{x:Bind uValue_Option}"
-						Value="{x:Bind uValue_Value}"
-						Stamp="{x:Bind uValue_Stamp}"
-						/>
-				</my:Stack>
+					Label="{x:Bind uValue_Label}"
+					Type="{x:Bind uValue_Type}"
+					Option="{x:Bind uValue_Option}"
+					Value="{x:Bind uValue_Value}"
+					Stamp="{x:Bind uValue_Stamp}"
+					/>
 			</DataTemplate>
 		</ItemsRepeater.ItemTemplate>
 	</ItemsRepeater>

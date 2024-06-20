@@ -15,7 +15,6 @@
 	<local:CustomControl.Resources>
 		<DataTemplate x:Key="uLauncherListItemTemplate" x:DataType="localViewHome:LauncherPageLauncherItemController">
 			<my:Stack
-				ToolTipService.ToolTip="Launch"
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				Padding="0,8,4,8"
@@ -98,131 +97,122 @@
 			</my:Stack>
 		</DataTemplate>
 	</local:CustomControl.Resources>
-	<ScrollViewer
+	<my:Stack
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
-		HorizontalScrollMode="Disabled"
-		HorizontalScrollBarVisibility="Disabled"
-		VerticalScrollMode="Enabled"
-		VerticalScrollBarVisibility="Visible"
+		Padding="0,12"
+		Orientation="Vertical"
+		Spacing="12"
 		>
 		<my:Stack
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
-			Padding="0,12"
 			Orientation="Vertical"
-			Spacing="12"
+			Spacing="8"
 			>
 			<my:Stack
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
-				Orientation="Vertical"
+				Padding="8,0"
+				Orientation="Horizontal"
 				Spacing="8"
 				>
-				<my:Stack
+				<TextBlock
+					my:Stack.Weight="1"
 					HorizontalAlignment="Stretch"
-					VerticalAlignment="Stretch"
-					Padding="8,0"
-					Orientation="Horizontal"
-					Spacing="8"
-					>
-					<TextBlock
-						my:Stack.Weight="1"
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Bottom"
-						Style="{ThemeResource SubtitleTextBlockStyle}"
-						TextWrapping="NoWrap"
-						Text="Module"
-						/>
-				</my:Stack>
-				<ListView
-					HorizontalAlignment="Stretch"
-					VerticalAlignment="Stretch"
-					SelectionMode="None"
-					IsItemClickEnabled="True"
-					ItemTemplate="{StaticResource uLauncherListItemTemplate}"
-					ItemsSource="{x:Bind Controller.uModuleLauncherList_ItemsSource}"
-					ItemClick="{x:Bind Controller.uModuleLauncherList_OnItemClick}"
+					VerticalAlignment="Bottom"
+					Style="{ThemeResource SubtitleTextBlockStyle}"
+					TextWrapping="NoWrap"
+					Text="Module"
 					/>
 			</my:Stack>
-			<my:Stack
+			<ListView
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
-				Orientation="Vertical"
-				Spacing="8"
-				>
-				<my:Stack
-					HorizontalAlignment="Stretch"
-					VerticalAlignment="Stretch"
-					Padding="8,0"
-					Orientation="Horizontal"
-					Spacing="8"
-					>
-					<TextBlock
-						my:Stack.Weight="1"
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Bottom"
-						Style="{ThemeResource SubtitleTextBlockStyle}"
-						TextWrapping="NoWrap"
-						Text="Pinned"
-						/>
-					<Button
-						ToolTipService.ToolTip="Add"
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Bottom"
-						Click="{x:Bind Controller.uAddPinnedLauncherItem_Click}"
-						Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Add}}"
-						/>
-				</my:Stack>
-				<ListView
-					HorizontalAlignment="Stretch"
-					VerticalAlignment="Stretch"
-					SelectionMode="None"
-					IsItemClickEnabled="True"
-					ItemTemplate="{StaticResource uLauncherListItemTemplate}"
-					ItemsSource="{x:Bind Controller.uPinnedLauncherList_ItemsSource}"
-					ItemClick="{x:Bind Controller.uPinnedLauncherList_OnItemClick}"
-					/>
-			</my:Stack>
-			<my:Stack
-				HorizontalAlignment="Stretch"
-				VerticalAlignment="Stretch"
-				Orientation="Vertical"
-				Spacing="8"
-				>
-				<my:Stack
-					HorizontalAlignment="Stretch"
-					VerticalAlignment="Stretch"
-					Padding="8,0"
-					Orientation="Horizontal"
-					Spacing="8"
-					>
-					<TextBlock
-						my:Stack.Weight="1"
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Bottom"
-						Style="{ThemeResource SubtitleTextBlockStyle}"
-						TextWrapping="NoWrap"
-						Text="Recent"
-						/>
-					<Button
-						ToolTipService.ToolTip="Clear"
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Bottom"
-						Click="{x:Bind Controller.uClearRecentLauncherItem_Click}"
-						Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Clear}}"
-						/>
-				</my:Stack>
-				<ListView
-					HorizontalAlignment="Stretch"
-					VerticalAlignment="Stretch"
-					SelectionMode="None"
-					IsItemClickEnabled="True"
-					ItemTemplate="{StaticResource uLauncherListItemTemplate}"
-					ItemsSource="{x:Bind Controller.uRecentLauncherList_ItemsSource}"
-					ItemClick="{x:Bind Controller.uRecentLauncherList_OnItemClick}"
-					/>
-			</my:Stack>
+				SelectionMode="None"
+				IsItemClickEnabled="True"
+				ItemTemplate="{StaticResource uLauncherListItemTemplate}"
+				ItemsSource="{x:Bind Controller.uModuleLauncherList_ItemsSource}"
+				ItemClick="{x:Bind Controller.uModuleLauncherList_OnItemClick}"
+				/>
 		</my:Stack>
-	</ScrollViewer>
+		<my:Stack
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Orientation="Vertical"
+			Spacing="8"
+			>
+			<my:Stack
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Padding="8,0"
+				Orientation="Horizontal"
+				Spacing="8"
+				>
+				<TextBlock
+					my:Stack.Weight="1"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Bottom"
+					Style="{ThemeResource SubtitleTextBlockStyle}"
+					TextWrapping="NoWrap"
+					Text="Pinned"
+					/>
+				<Button
+					ToolTipService.ToolTip="Add"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Bottom"
+					Click="{x:Bind Controller.uAddPinnedLauncherItem_Click}"
+					Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Add}}"
+					/>
+			</my:Stack>
+			<ListView
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				SelectionMode="None"
+				IsItemClickEnabled="True"
+				ItemTemplate="{StaticResource uLauncherListItemTemplate}"
+				ItemsSource="{x:Bind Controller.uPinnedLauncherList_ItemsSource}"
+				ItemClick="{x:Bind Controller.uPinnedLauncherList_OnItemClick}"
+				/>
+		</my:Stack>
+		<my:Stack
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Orientation="Vertical"
+			Spacing="8"
+			>
+			<my:Stack
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Padding="8,0"
+				Orientation="Horizontal"
+				Spacing="8"
+				>
+				<TextBlock
+					my:Stack.Weight="1"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Bottom"
+					Style="{ThemeResource SubtitleTextBlockStyle}"
+					TextWrapping="NoWrap"
+					Text="Recent"
+					/>
+				<Button
+					ToolTipService.ToolTip="Clear"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Bottom"
+					Click="{x:Bind Controller.uClearRecentLauncherItem_Click}"
+					Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Clear}}"
+					/>
+			</my:Stack>
+			<ListView
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				SelectionMode="None"
+				IsItemClickEnabled="True"
+				ItemTemplate="{StaticResource uLauncherListItemTemplate}"
+				ItemsSource="{x:Bind Controller.uRecentLauncherList_ItemsSource}"
+				ItemClick="{x:Bind Controller.uRecentLauncherList_OnItemClick}"
+				/>
+		</my:Stack>
+	</my:Stack>
 </local:CustomControl>

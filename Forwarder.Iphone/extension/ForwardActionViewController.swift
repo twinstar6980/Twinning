@@ -108,7 +108,7 @@ class ForwardActionViewController: UIViewController {
 		command.append("-insert_tab")
 		command.append("Resource Forwarder")
 		command.append("resource_forwarder")
-		command.append("-input")
+		command.append("-resource")
 		command.append(contentsOf: try resource.map({ (item) in try self.parsePathOfFileURL(url: item) }))
 		let link = URL(string: "twinstar.twinning.assistant:/launch?\(try command.map({ (item) in "command=\(try self.encodePercentString(source: item))" }).joined(separator: "&"))")!
 		try self.openLink(link: link)

@@ -147,7 +147,7 @@ namespace AssistantPlus {
 				var keyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(frameIndex));
 				foreach (var remove in frame.Remove) {
 					var layer = layerList[remove.Index];
-					if (layer is null) {
+					if (layer == null) {
 						continue;
 					}
 					layer.Visibility.KeyFrames.Add(
@@ -225,7 +225,7 @@ namespace AssistantPlus {
 				}
 				foreach (var change in frame.Change) {
 					var layer = layerList[change.Index];
-					if (layer is null) {
+					if (layer == null) {
 						continue;
 					}
 					var transform = GameAnimationHelper.MakeTransformMatrixFromVariant(change.Transform);
@@ -235,7 +235,7 @@ namespace AssistantPlus {
 							Value = transform,
 						}
 					);
-					if (change.Color is not null) {
+					if (change.Color != null) {
 						layer.ColorAlpha.KeyFrames.Add(
 							new DiscreteObjectKeyFrame() {
 								KeyTime = keyTime,
@@ -256,7 +256,7 @@ namespace AssistantPlus {
 				frameIndex++;
 			}
 			foreach (var layer in layerList) {
-				if (layer.Value is null) {
+				if (layer.Value == null) {
 					continue;
 				}
 				ui.Canvas.Children.Add(layer.Value.Canvas);

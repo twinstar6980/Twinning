@@ -48,8 +48,8 @@
 				>
 				<FontIcon
 					x:Name="uIcon"
-					HorizontalAlignment="Center"
-					VerticalAlignment="Center"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
 					Margin="1,-1,0,0"
 					Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
 					FontSize="16"

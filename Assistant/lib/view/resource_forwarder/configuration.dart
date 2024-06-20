@@ -2,37 +2,37 @@ import '/common.dart';
 
 // ----------------
 
-enum OptionFilterFileObjectType {
-  any,
-  file,
-  directory,
-}
-
-class OptionFilterConfiguration {
-  OptionFilterFileObjectType type;
-  String                     name;
-  OptionFilterConfiguration({
-    required this.type,
-    required this.name,
-  });
-}
-
-class OptionPresetConfiguration {
+class PresetConfiguration {
   String              name;
   Map<String, Object> argument;
-  OptionPresetConfiguration({
+  PresetConfiguration({
     required this.name,
     required this.argument,
   });
 }
 
+enum FilterType {
+  any,
+  file,
+  directory,
+}
+
+class FilterConfiguration {
+  FilterType type;
+  String     name;
+  FilterConfiguration({
+    required this.type,
+    required this.name,
+  });
+}
+
 class OptionConfiguration {
-  String                           name;
-  String                           icon;
-  OptionFilterConfiguration        filter;
-  Boolean                          batchable;
-  String?                          method;
-  List<OptionPresetConfiguration?> preset;
+  String                     name;
+  String                     icon;
+  FilterConfiguration        filter;
+  Boolean                    batchable;
+  String?                    method;
+  List<PresetConfiguration?> preset;
   OptionConfiguration({
     required this.name,
     required this.icon,
@@ -69,13 +69,13 @@ class ConfigurationHelper {
       item: (jsonGroup['item'] as List).map((jsonItem) => OptionConfiguration(
         name: (jsonItem['name'] as String),
         icon: (jsonItem['icon'] as String),
-        filter: OptionFilterConfiguration(
+        filter: FilterConfiguration(
           name: (jsonItem['filter']['name'] as String),
-          type: OptionFilterFileObjectType.values.byName(jsonItem['filter']['type'] as String),
+          type: FilterType.values.byName(jsonItem['filter']['type'] as String),
         ),
         batchable: (jsonItem['batchable'] as Boolean),
         method: (jsonItem['method'] as String?),
-        preset: (jsonItem['preset'] as List).map((jsonPreset) => jsonPreset == null ? null : OptionPresetConfiguration(
+        preset: (jsonItem['preset'] as List).map((jsonPreset) => jsonPreset == null ? null : PresetConfiguration(
           name: (jsonPreset['name'] as String),
           argument: (jsonPreset['argument'] as Map).cast<String, Object>(),
         )).toList(),

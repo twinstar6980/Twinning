@@ -99,13 +99,32 @@ namespace AssistantPlus.View.CommandSender {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<Button>();
-			var value = await StorageHelper.PickOpenFile(WindowHelper.Find(this.View), $"{nameof(CommandSender)}.MethodConfiguration");
-			if (value is not null) {
+			var value = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(CommandSender)}.MethodConfiguration");
+			if (value != null) {
 				this.Data.MethodConfiguration = value;
 				this.NotifyPropertyChanged(
 					nameof(this.uMethodConfigurationText_Text)
 				);
 			}
+			return;
+		}
+
+		#endregion
+
+		#region parallel forward
+
+		public Boolean uParallelForwardToggle_IsChecked {
+			get {
+				return this.Data.ParallelForward;
+			}
+		}
+
+		public async void uParallelForwardToggle_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<ToggleButton>();
+			this.Data.ParallelForward = senders.IsChecked.AsNotNull();
 			return;
 		}
 

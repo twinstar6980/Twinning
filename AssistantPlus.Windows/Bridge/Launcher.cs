@@ -41,7 +41,7 @@ namespace AssistantPlus.Bridge {
 				exception = e;
 			}
 			client.Finish();
-			if (exception is not null) {
+			if (exception != null) {
 				throw exception;
 			}
 			return result!;

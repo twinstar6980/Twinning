@@ -40,11 +40,9 @@ class _SettingPanelState extends State<SettingPanel> {
   build(context) {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
-    return ListView(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+    return Column(
       children: [
+        const SizedBox(height: 4),
         CustomSettingItem(
           enabled: true,
           icon: IconSymbols.description,
@@ -61,8 +59,8 @@ class _SettingPanelState extends State<SettingPanel> {
             ListTile(
               contentPadding: EdgeInsets.zero,
               title: Focus(
-                onFocusChange: (value) async {
-                  if (!value) {
+                onFocusChange: (focused) async {
+                  if (!focused) {
                     await setting.save();
                   }
                 },
@@ -84,10 +82,10 @@ class _SettingPanelState extends State<SettingPanel> {
         CustomSettingItem(
           enabled: true,
           icon: IconSymbols.shuffle,
-          label: 'Parallel Execute',
+          label: 'Parallel Forward',
           content: [
             Text(
-              !setting.data.mResourceForwarder.mParallelExecute ? 'Disabled' : 'Enabled',
+              !setting.data.mResourceForwarder.mParallelForward ? 'Disabled' : 'Enabled',
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
@@ -97,9 +95,9 @@ class _SettingPanelState extends State<SettingPanel> {
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: Switch(
-                value: setting.data.mResourceForwarder.mParallelExecute,
+                value: setting.data.mResourceForwarder.mParallelForward,
                 onChanged: (value) async {
-                  setting.data.mResourceForwarder.mParallelExecute = value;
+                  setting.data.mResourceForwarder.mParallelForward = value;
                   await setting.save();
                 },
               ),
@@ -171,36 +169,7 @@ class _SettingPanelState extends State<SettingPanel> {
             ),
           ],
         ),
-        CustomSettingItem(
-          enabled: true,
-          icon: IconSymbols.keep,
-          label: 'Remain Input',
-          content: [
-            Text(
-              !setting.data.mResourceForwarder.mRemainInput ? 'Disabled' : 'Enabled',
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
-            ),
-          ],
-          onTap: null,
-          panelBuilder: (context, setState) => [
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Switch(
-                value: setting.data.mResourceForwarder.mRemainInput,
-                onChanged: (value) async {
-                  setting.data.mResourceForwarder.mRemainInput = value;
-                  await setting.save();
-                },
-              ),
-              title: Text(
-                'Enable',
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleMedium,
-              ),
-            ),
-          ],
-        ),
+        const SizedBox(height: 4),
       ],
     );
   }

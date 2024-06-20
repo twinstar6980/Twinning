@@ -3,6 +3,7 @@
 
 using AssistantPlus;
 using AssistantPlus.Utility;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace AssistantPlus.View.ReflectionDescriptor {
 
@@ -86,7 +87,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 		[MemberNotNullWhen(true, nameof(ObjectPanelController.DescriptorList))]
 		public Boolean IsLoaded {
 			get {
-				return this.DescriptorList is not null;
+				return this.DescriptorList != null;
 			}
 		}
 
@@ -168,7 +169,27 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 
 		#region view
 
-		public String uName_Text {
+		public String uName_ToolTip {
+			get {
+				GF.AssertTest(this.Host.IsLoaded);
+				var model = this.Host.DescriptorList[this.Index.Item1].Property[this.Index.Item2];
+				return model.Name;
+			}
+		}
+
+		public async void uName_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<Button>();
+			GF.AssertTest(this.Host.IsLoaded);
+			var model = this.Host.DescriptorList[this.Index.Item1].Property[this.Index.Item2];
+			Clipboard.SetContent(new DataPackage().ApplySelf((it) => { it.SetText(model.Name); }));
+			App.MainWindow.PushNotification(InfoBarSeverity.Success, "Copied!", "");
+			return;
+		}
+
+		public String uNameText_Text {
 			get {
 				GF.AssertTest(this.Host.IsLoaded);
 				var model = this.Host.DescriptorList[this.Index.Item1].Property[this.Index.Item2];

@@ -51,11 +51,9 @@ class _SettingPanelState extends State<SettingPanel> {
   build(context) {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
-    return ListView(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+    return Column(
       children: [
+        const SizedBox(height: 4),
         const CustomSettingLabel(
           label: 'Theme',
           action: null,
@@ -123,8 +121,8 @@ class _SettingPanelState extends State<SettingPanel> {
             ListTile(
               leading: const Icon(IconSymbols.light_mode),
               title: Focus(
-                onFocusChange: (value) async {
-                  if (!value) {
+                onFocusChange: (focused) async {
+                  if (!focused) {
                     await setting.save();
                   }
                 },
@@ -134,7 +132,7 @@ class _SettingPanelState extends State<SettingPanel> {
                   decoration: const InputDecoration(
                     isDense: true,
                   ),
-                  initialValue: setting.data.mThemeColorLight.withOpacity(0.0).value.toRadixString(16).padRight(6, '0'),
+                  initialValue: setting.data.mThemeColorLight.withOpacity(0.0).value.toRadixString(16).padLeft(6, '0'),
                   onChanged: (value) async {
                     setting.data.mThemeColorLight = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withOpacity(1.0);
                   },
@@ -149,8 +147,8 @@ class _SettingPanelState extends State<SettingPanel> {
             ListTile(
               leading: const Icon(IconSymbols.dark_mode),
               title: Focus(
-                onFocusChange: (value) async {
-                  if (!value) {
+                onFocusChange: (focused) async {
+                  if (!focused) {
                     await setting.save();
                   }
                 },
@@ -160,7 +158,7 @@ class _SettingPanelState extends State<SettingPanel> {
                   decoration: const InputDecoration(
                     isDense: true,
                   ),
-                  initialValue: setting.data.mThemeColorDark.withOpacity(0.0).value.toRadixString(16).padRight(6, '0'),
+                  initialValue: setting.data.mThemeColorDark.withOpacity(0.0).value.toRadixString(16).padLeft(6, '0'),
                   onChanged: (value) async {
                     setting.data.mThemeColorDark = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withOpacity(1.0);
                   },
@@ -205,8 +203,8 @@ class _SettingPanelState extends State<SettingPanel> {
             ListTile(
               contentPadding: EdgeInsets.zero,
               title: Focus(
-                onFocusChange: (value) async {
-                  if (!value) {
+                onFocusChange: (focused) async {
+                  if (!focused) {
                     await setting.save();
                   }
                 },
@@ -271,8 +269,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 ),
               ),
               title: Focus(
-                onFocusChange: (value) async {
-                  if (!value) {
+                onFocusChange: (focused) async {
+                  if (!focused) {
                     await setting.save();
                   }
                 },
@@ -302,8 +300,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 ),
               ),
               title: Focus(
-                onFocusChange: (value) async {
-                  if (!value) {
+                onFocusChange: (focused) async {
+                  if (!focused) {
                     await setting.save();
                   }
                 },
@@ -363,8 +361,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 ),
               ),
               title: Focus(
-                onFocusChange: (value) async {
-                  if (!value) {
+                onFocusChange: (focused) async {
+                  if (!focused) {
                     await setting.save();
                   }
                 },
@@ -394,8 +392,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 ),
               ),
               title: Focus(
-                onFocusChange: (value) async {
-                  if (!value) {
+                onFocusChange: (focused) async {
+                  if (!focused) {
                     await setting.save();
                   }
                 },
@@ -451,8 +449,8 @@ class _SettingPanelState extends State<SettingPanel> {
             ListTile(
               contentPadding: EdgeInsets.zero,
               title: Focus(
-                onFocusChange: (value) async {
-                  if (!value) {
+                onFocusChange: (focused) async {
+                  if (!focused) {
                     await setting.save();
                   }
                 },
@@ -471,6 +469,7 @@ class _SettingPanelState extends State<SettingPanel> {
             ),
           ],
         ),
+        const SizedBox(height: 4),
       ],
     );
   }

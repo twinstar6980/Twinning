@@ -60,13 +60,22 @@
 									Orientation="Horizontal"
 									Spacing="8"
 									>
-									<TextBox
+									<Button
+										ToolTipService.ToolTip="{x:Bind uName_ToolTip}"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Top"
+										HorizontalContentAlignment="Stretch"
 										Width="208"
-										Text="{x:Bind uName_Text}"
-										IsReadOnly="True"
-										/>
+										Click="{x:Bind uName_Click}"
+										>
+										<TextBlock
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Stretch"
+											Style="{ThemeResource BodyStrongTextBlockStyle}"
+											TextWrapping="NoWrap"
+											Text="{x:Bind uNameText_Text}"
+											/>
+									</Button>
 									<Expander
 										my:Stack.Weight="1"
 										HorizontalAlignment="Stretch"

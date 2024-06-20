@@ -72,9 +72,9 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 		[MemberNotNullWhen(true, nameof(MainPageController.DescriptorMap))]
 		public Boolean IsLoaded {
 			get {
-				return this.DescriptorFile is not null
-					&& this.DescriptorArchive is not null
-					&& this.DescriptorMap is not null;
+				return this.DescriptorFile != null
+					&& this.DescriptorArchive != null
+					&& this.DescriptorMap != null;
 			}
 		}
 
@@ -104,7 +104,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			catch (Exception e) {
 				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
 			}
-			if (optionDescriptorFile is not null) {
+			if (optionDescriptorFile != null) {
 				await this.ApplyLoad(optionDescriptorFile);
 			}
 			return;
@@ -113,7 +113,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 		public async Task<List<String>> CollectOption (
 		) {
 			var option = new CommandLineWriter();
-			if (option.Check("-DescriptorFile", this.DescriptorFile is not null)) {
+			if (option.Check("-DescriptorFile", this.DescriptorFile != null)) {
 				option.NextString(this.DescriptorFile.AsNotNull());
 			}
 			return option.Done();
@@ -278,8 +278,8 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			var senders = sender.AsClass<MenuFlyoutItem>();
 			switch (senders.Tag.AsClass<String>()) {
 				case "Load": {
-					var file = await StorageHelper.PickOpenFile(WindowHelper.Find(this.View), $"{nameof(ReflectionDescriptor)}.DescriptorFile");
-					if (file is not null) {
+					var file = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(ReflectionDescriptor)}.DescriptorFile");
+					if (file != null) {
 						await this.ApplyLoad(file);
 					}
 					break;
@@ -377,7 +377,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 				if (!this.IsLoaded) {
 					return false;
 				}
-				return this.uObjectList_SelectedItem is not null;
+				return this.uObjectList_SelectedItem != null;
 			}
 		}
 
@@ -391,9 +391,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			var objectValue = GameReflectionHelper.GenerateDataValueDefault(this.DescriptorMap, objectType, true).AsClass<GameReflectionModel.FixedObject>();
 			var resultValue = GameReflectionHelper.MakeDataValue(this.DescriptorMap, objectType, objectValue);
 			var resultText = JsonHelper.SerializeText(resultValue);
-			var clipboardContent = new DataPackage();
-			clipboardContent.SetText(resultText);
-			Clipboard.SetContent(clipboardContent);
+			Clipboard.SetContent(new DataPackage().ApplySelf((it) => { it.SetText(resultText); }));
 			App.MainWindow.PushNotification(InfoBarSeverity.Success, "Copied!", "");
 			return;
 		}

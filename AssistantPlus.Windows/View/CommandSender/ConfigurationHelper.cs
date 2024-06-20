@@ -9,91 +9,79 @@ namespace AssistantPlus.View.CommandSender {
 
 	public static class ConfigurationHelper {
 
-		#region make
+		#region utility
 
-		public static String MakeArgumentValueString (
-			Object value
+		public static Object MakeArgumentValueJson (
+			ValueExpression value
 		) {
 			return value switch {
-				Boolean values        => ConvertHelper.MakeBooleanToStringOfConfirmationCharacter(values),
-				Integer values        => ConvertHelper.MakeIntegerToString(values, false),
-				Floater values        => ConvertHelper.MakeFloaterToString(values, false),
-				SizeExpression values => SizeExpression.MakeString(values),
-				String values         => values,
-				PathExpression values => PathExpression.MakeString(values),
-				_                     => throw new (),
+				BooleanExpression values => values.Value,
+				IntegerExpression values => values.Value,
+				FloaterExpression values => values.Value,
+				SizeExpression values    => $"{ConvertHelper.MakeFloaterToString(values.Count, false)}{new[] { "b", "k", "m", "g" }[values.Exponent]}",
+				StringExpression values  => values.Value,
+				PathExpression values    => $"{values.Content}",
+				_                        => throw new (),
 			};
 		}
 
-		// ----------------
-
-		public static Object MakeArgumentValueExpression (
-			Object value
-		) {
-			return value switch {
-				Boolean values        => values,
-				Integer values        => values,
-				Floater values        => values,
-				SizeExpression values => SizeExpression.MakeString(values),
-				String values         => values,
-				PathExpression values => PathExpression.MakeString(values),
-				_                     => throw new (),
-			};
-		}
-
-		// ----------------
-
-		public static Object MakeArgumentValueDefault (
-			ArgumentType type
-		) {
-			return type switch {
-				ArgumentType.Boolean => (Boolean)false,
-				ArgumentType.Integer => (Integer)0,
-				ArgumentType.Floater => (Floater)0.0,
-				ArgumentType.Size    => new SizeExpression(),
-				ArgumentType.String  => (String)"",
-				ArgumentType.Path    => new PathExpression(),
-				_                    => throw new (),
-			};
-		}
-
-		public static Object? MakeArgumentValueDefault (
+		public static ValueExpression ParseArgumentValueJson (
 			ArgumentType type,
-			Object?      initial
+			Object       json
 		) {
 			return type switch {
-				ArgumentType.Boolean => initial as Boolean?,
-				ArgumentType.Integer => initial as Integer?,
-				ArgumentType.Floater => initial as Floater?,
-				ArgumentType.Size    => initial is String initialValue ? SizeExpression.ParseString(initialValue) : null,
-				ArgumentType.String  => initial as String,
-				ArgumentType.Path    => initial is String initialValue ? PathExpression.ParseString(initialValue) : null,
-				_                    => throw new (),
+				ArgumentType.Boolean => new BooleanExpression() {
+					Value = json.AsStruct<Boolean>(),
+				},
+				ArgumentType.Integer => new IntegerExpression() {
+					Value = json.AsStruct<Integer>(),
+				},
+				ArgumentType.Floater => new FloaterExpression() {
+					Value = json.AsStruct<Floater>(),
+				},
+				ArgumentType.Size => new SizeExpression() {
+					Count = Floater.Parse(json.AsClass<String>()[..^1]),
+					Exponent = new[] { 'b', 'k', 'm', 'g' }.ToList().IndexOf(json.AsClass<String>()[^1]).ApplySelf((it) => { GF.AssertTest(it != -1); }),
+				},
+				ArgumentType.String => new StringExpression() {
+					Value = json.AsClass<String>(),
+				},
+				ArgumentType.Path => new PathExpression() {
+					Content = json.AsClass<String>(),
+				},
+				_ => throw new (),
 			};
-		}
-
-		public static List<ArgumentValue> MakeArgumentValueDefault (
-			List<ArgumentConfiguration> configuration
-		) {
-			return configuration.Select((value) => (new ArgumentValue() { Data = ConfigurationHelper.MakeArgumentValueDefault(value.Type, value.Initial) })).ToList();
 		}
 
 		// ----------------
 
-		public static String MakeArgumentObjectString (
-			List<ArgumentConfiguration> configuration,
-			List<ArgumentValue>         value
+		public static Dictionary<String, Object> MakeArgumentValueListJson (
+			List<ArgumentConfiguration>    configuration,
+			List<Wrapper<ValueExpression>> value
 		) {
 			GF.AssertTest(configuration.Count == value.Count);
-			var json = new JObject();
+			var json = new Dictionary<String, Object>();
 			for (var index = 0; index < configuration.Count; index++) {
 				var itemConfiguration = configuration[index];
 				var itemValue = value[index];
-				if (itemValue.Data is not null) {
-					json.Add(itemConfiguration.Id, new JValue(ConfigurationHelper.MakeArgumentValueExpression(itemValue.Data)));
+				if (itemValue.Value != null) {
+					json.Add(itemConfiguration.Id, new JValue(ConfigurationHelper.MakeArgumentValueJson(itemValue.Value)));
 				}
 			}
-			return JsonHelper.SerializeText(json, false);
+			return json;
+		}
+
+		public static List<Wrapper<ValueExpression>> ParseArgumentValueListJson (
+			List<ArgumentConfiguration> configuration,
+			Dictionary<String, Object>  json
+		) {
+			var value = new List<Wrapper<ValueExpression>>();
+			for (var index = 0; index < configuration.Count; index++) {
+				var itemConfiguration = configuration[index];
+				var itemJson = json.GetValueOrDefault(itemConfiguration.Id);
+				value.Add(new (itemJson == null ? null : ConfigurationHelper.ParseArgumentValueJson(itemConfiguration.Type, itemJson)));
+			}
+			return value;
 		}
 
 		#endregion

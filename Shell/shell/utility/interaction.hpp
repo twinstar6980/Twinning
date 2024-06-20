@@ -66,12 +66,12 @@ namespace Twinning::Shell::Interaction {
 		std::string const & type
 	) -> std::optional<std::string> {
 		auto target = std::optional<std::string>{};
-		assert_test(type == "open_file"sv || type == "open_directory"sv || type == "save_file"sv);
+		assert_test(type == "load_file"sv || type == "load_directory"sv || type == "save_file"sv);
 		#if defined M_system_windows
 		auto state_h = HRESULT{};
 		CoInitialize(nullptr);
 		auto dialog = std::add_pointer_t<IFileDialog>{nullptr};
-		if (type == "open_file"sv || type == "open_directory"sv) {
+		if (type == "load_file"sv || type == "load_directory"sv) {
 			state_h = CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&dialog));
 		}
 		if (type == "save_file"sv) {
@@ -80,10 +80,10 @@ namespace Twinning::Shell::Interaction {
 		assert_test(state_h == S_OK);
 		auto option = FILEOPENDIALOGOPTIONS{};
 		option |= FOS_NOCHANGEDIR | FOS_NOVALIDATE | FOS_NODEREFERENCELINKS | FOS_DONTADDTORECENT | FOS_FORCESHOWHIDDEN;
-		if (type == "open_file"sv || type == "open_directory"sv) {
+		if (type == "load_file"sv || type == "load_directory"sv) {
 			option |= FOS_PATHMUSTEXIST | FOS_FILEMUSTEXIST;
 		}
-		if (type == "open_directory"sv) {
+		if (type == "load_directory"sv) {
 			option |= FOS_PICKFOLDERS;
 		}
 		if (type == "save_file"sv) {
@@ -114,10 +114,10 @@ namespace Twinning::Shell::Interaction {
 		#endif
 		#if defined M_system_linux || defined M_system_macintosh
 		auto target_data = std::add_pointer_t<char>{nullptr};
-		if (type == "open_file"sv) {
+		if (type == "load_file"sv) {
 			target_data = Third::tinyfiledialogs::tinyfd_openFileDialog("", nullptr, 0, nullptr, nullptr, false);
 		}
-		if (type == "open_directory"sv) {
+		if (type == "load_directory"sv) {
 			target_data = Third::tinyfiledialogs::tinyfd_selectFolderDialog("", nullptr);
 		}
 		if (type == "save_file"sv) {

@@ -1,5 +1,7 @@
 import '/common.dart';
 import '/setting.dart';
+import '/utility/wrapper.dart';
+import '/utility/convert_helper.dart';
 import '/utility/control_helper.dart';
 import '/utility/storage_helper.dart';
 import '/utility/notification_helper.dart';
@@ -13,7 +15,6 @@ import '/view/modding_worker/message_card.dart';
 import '/view/modding_worker/submission_type.dart';
 import '/view/modding_worker/submission_bar.dart';
 import '/view/modding_worker/value_expression.dart';
-import '/view/modding_worker/launcher_bar.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -50,16 +51,14 @@ class _MainPageState extends State<MainPage> {
     String       title,
     List<String> description,
   ) async {
-    if (this._messageList.isNotEmpty) {
-      this._messageList.add(
-        const SizedBox(height: 8),
-      );
-    }
     this._messageList.add(
-      MessageCard(
-        type: type,
-        title: title,
-        description: description,
+      Container(
+        margin: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+        child: MessageCard(
+          type: type,
+          title: title,
+          description: description,
+        ),
       ),
     );
     var shouldScrollToEnd = this._messageListScrollController.position.pixels == this._messageListScrollController.position.maxScrollExtent;
@@ -76,19 +75,23 @@ class _MainPageState extends State<MainPage> {
     List<String>   option,
   ) async {
     var history = this._submissionHistory[type.index];
-    var completer = Completer<ValueExpression?>();
+    var completer = Completer<Void>();
+    var valueWrapper = Wrapper<ValueExpression?>(null);
     this._submissionBar = SubmissionBar(
       type: type,
       option: option,
       history: history,
+      value: valueWrapper,
       completer: completer,
     );
     this.setState(() {});
-    var value = await completer.future;
+    await completer.future;
+    var value = valueWrapper.value;
     this._submissionBar = const SubmissionBar(
       type: null,
       option: null,
       history: null,
+      value: null,
       completer: null,
     );
     this.setState(() {});
@@ -148,6 +151,7 @@ class _MainPageState extends State<MainPage> {
       type: null,
       option: null,
       history: null,
+      value: null,
       completer: null,
     );
     this._sessionClient = _MainPageBridgeClient(this);
@@ -185,6 +189,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   build(context) {
+    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return CustomModulePage(
       content: Column(
@@ -195,7 +200,7 @@ class _MainPageState extends State<MainPage> {
                 interactive: true,
                 controller: this._messageListScrollController,
                 child: ListView(
-                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                  padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
                   controller: this._messageListScrollController,
                   children: [...this._messageList],
                 ),
@@ -210,9 +215,67 @@ class _MainPageState extends State<MainPage> {
       ),
       bottom: this._sessionClient._running
         ? this._submissionBar
-        : LauncherBar(
-          additionalArgument: this._additionalArgument,
-          onLaunch: this._launchSession,
+        : Row(
+          children: [
+            Badge.count(
+              count: this._additionalArgument.length,
+              textStyle: theme.textTheme.labelSmall?.copyWith(
+                fontFamily: '',
+                fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+              ),
+              child: IconButton.filledTonal(
+                tooltip: 'Additional Argument',
+                padding: EdgeInsets.zero,
+                icon: const SizedBox(
+                  width: 56,
+                  child: Icon(IconSymbols.attach_file),
+                ),
+                onPressed: () async {
+                  await ControlHelper.showCustomModalDialog(
+                    context: context,
+                    title: 'Additional Argument',
+                    contentBuilder: (context, setState) => [
+                      TextFormField(
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        inputFormatters: const [],
+                        decoration: const InputDecoration(
+                          isDense: true,
+                        ),
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          fontFamily: '',
+                          fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+                        ),
+                        initialValue: ConvertHelper.makeStringListToStringWithLine(this._additionalArgument),
+                        onChanged: (value) async {
+                          this._additionalArgument.clear();
+                          this._additionalArgument.addAll(ConvertHelper.parseStringListFromStringWithLine(value));
+                          this.setState(() {});
+                          setState(() {});
+                        },
+                      ),
+                    ],
+                    actionBuilder: null,
+                  );
+                },
+              ),
+            ),
+            const SizedBox(width: 16),
+            const Expanded(child: SizedBox()),
+            const SizedBox(width: 16),
+            FloatingActionButton(
+              tooltip: 'Launch',
+              elevation: 0,
+              focusElevation: 0,
+              hoverElevation: 0,
+              highlightElevation: 0,
+              disabledElevation: 0,
+              onPressed: () async {
+                this._launchSession();
+              },
+              child: const Icon(IconSymbols.play_circle),
+            ),
+          ],
         ),
     );
   }
@@ -373,12 +436,12 @@ class _MainPageBridgeClient implements bridge.Client {
   ) async {
     var target = '';
     switch (type) {
-      case 'open_file': {
-        target = await StorageHelper.pickOpenFile(this._controller.context, 'ModdingWorker.Generic') ?? '';
+      case 'load_file': {
+        target = await StorageHelper.pickLoadFile(this._controller.context, 'ModdingWorker.Generic') ?? '';
         break;
       }
-      case 'open_directory': {
-        target = await StorageHelper.pickOpenDirectory(this._controller.context, 'ModdingWorker.Generic') ?? '';
+      case 'load_directory': {
+        target = await StorageHelper.pickLoadDirectory(this._controller.context, 'ModdingWorker.Generic') ?? '';
         break;
       }
       case 'save_file': {

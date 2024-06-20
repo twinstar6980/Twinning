@@ -39,7 +39,6 @@ class MessageCard extends StatelessWidget {
     );
     return Card(
       margin: const EdgeInsets.fromLTRB(1, 0, 1, 0),
-      elevation: 0.5,
       color: Color.alphaBlend(cardColor.withOpacity(0.025), theme.colorScheme.surfaceContainerLow),
       child: Container(
         padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),

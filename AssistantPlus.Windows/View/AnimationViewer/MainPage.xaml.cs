@@ -218,54 +218,54 @@ namespace AssistantPlus.View.AnimationViewer {
 			catch (Exception e) {
 				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
 			}
-			if (optionImmediateSelect is not null) {
+			if (optionImmediateSelect != null) {
 				this.ImmediateSelect = optionImmediateSelect.AsNotNull();
 				this.NotifyPropertyChanged(
 					nameof(this.uImmediateSelect_IsChecked)
 				);
 			}
-			if (optionAutomaticPlay is not null) {
+			if (optionAutomaticPlay != null) {
 				this.AutomaticPlay = optionAutomaticPlay.AsNotNull();
 				this.NotifyPropertyChanged(
 					nameof(this.uAutomaticPlay_IsChecked)
 				);
 			}
-			if (optionRepeatPlay is not null) {
+			if (optionRepeatPlay != null) {
 				this.RepeatPlay = optionRepeatPlay.AsNotNull();
 				this.NotifyPropertyChanged(
 					nameof(this.uRepeatPlay_IsChecked)
 				);
 			}
-			if (optionRemainFrameRate is not null) {
+			if (optionRemainFrameRate != null) {
 				this.RemainFrameRate = optionRemainFrameRate.AsNotNull();
 				this.NotifyPropertyChanged(
 					nameof(this.uRemainFrameRate_IsChecked)
 				);
 			}
-			if (optionShowSpriteBoundary is not null) {
+			if (optionShowSpriteBoundary != null) {
 				this.ShowSpriteBoundary = optionShowSpriteBoundary.AsNotNull();
 				this.NotifyPropertyChanged(
 					nameof(this.uShowSpriteBoundary_IsChecked)
 				);
 			}
-			if (optionImageFilterRule is not null) {
+			if (optionImageFilterRule != null) {
 				this.ImageFilterRule = optionImageFilterRule;
 				this.NotifyPropertyChanged(
 					nameof(this.uImageFilterRuleText_Text)
 				);
 			}
-			if (optionSpriteFilterRule is not null) {
+			if (optionSpriteFilterRule != null) {
 				this.SpriteFilterRule = optionSpriteFilterRule;
 				this.NotifyPropertyChanged(
 					nameof(this.uSpriteFilterRuleText_Text)
 				);
 			}
-			if (optionAnimationFile is not null) {
+			if (optionAnimationFile != null) {
 				await this.ApplyLoad(
 					optionAnimationFile,
 					optionImageDirectory,
-					optionWorkingSpriteIndex is null ? null : (Size)optionWorkingSpriteIndex,
-					optionWorkingSpriteFrameRange is null ? null : new () { Start = (Size)optionWorkingSpriteFrameRange.Item1, Duration = (Size)optionWorkingSpriteFrameRange.Item2 },
+					optionWorkingSpriteIndex == null ? null : (Size)optionWorkingSpriteIndex,
+					optionWorkingSpriteFrameRange == null ? null : new () { Start = (Size)optionWorkingSpriteFrameRange.Item1, Duration = (Size)optionWorkingSpriteFrameRange.Item2 },
 					optionWorkingSpriteFrameRate,
 					optionWorkingSpriteState
 				);
@@ -297,23 +297,23 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (option.Check("-SpriteFilterRule")) {
 				option.NextString(this.SpriteFilterRule);
 			}
-			if (option.Check("-AnimationFile", this.AnimationFile is not null)) {
+			if (option.Check("-AnimationFile", this.AnimationFile != null)) {
 				option.NextString(this.AnimationFile.AsNotNull());
 			}
-			if (option.Check("-ImageDirectory", this.ImageDirectory is not null)) {
+			if (option.Check("-ImageDirectory", this.ImageDirectory != null)) {
 				option.NextString(this.ImageDirectory.AsNotNull());
 			}
-			if (option.Check("-WorkingSpriteIndex", this.WorkingSpriteIndex is not null)) {
+			if (option.Check("-WorkingSpriteIndex", this.WorkingSpriteIndex != null)) {
 				option.NextInteger(this.WorkingSpriteIndex.AsNotNull());
 			}
-			if (option.Check("-WorkingSpriteFrameRange", this.WorkingSpriteFrameRange is not null)) {
+			if (option.Check("-WorkingSpriteFrameRange", this.WorkingSpriteFrameRange != null)) {
 				option.NextInteger(this.WorkingSpriteFrameRange.AsNotNull().Start);
 				option.NextInteger(this.WorkingSpriteFrameRange.AsNotNull().Duration);
 			}
-			if (option.Check("-WorkingSpriteFrameRate", this.WorkingSpriteFrameRate is not null)) {
+			if (option.Check("-WorkingSpriteFrameRate", this.WorkingSpriteFrameRate != null)) {
 				option.NextFloater(this.WorkingSpriteFrameRate.AsNotNull());
 			}
-			if (option.Check("-WorkingSpriteState", this.WorkingSpriteState is not null)) {
+			if (option.Check("-WorkingSpriteState", this.WorkingSpriteState != null)) {
 				option.NextBoolean(this.WorkingSpriteState.AsNotNull());
 			}
 			return option.Done();
@@ -339,7 +339,7 @@ namespace AssistantPlus.View.AnimationViewer {
 		[MemberNotNullWhen(true, nameof(MainPageController.ZombieGroundSwatchLayerName))]
 		public Boolean Loaded {
 			get {
-				return this.Animation is not null;
+				return this.Animation != null;
 			}
 		}
 
@@ -359,7 +359,7 @@ namespace AssistantPlus.View.AnimationViewer {
 		[MemberNotNullWhen(true, nameof(MainPageController.WorkingSpriteState))]
 		public Boolean Working {
 			get {
-				return this.Loaded && this.WorkingSpriteIndex is not null;
+				return this.Loaded && this.WorkingSpriteIndex != null;
 			}
 		}
 
@@ -386,9 +386,9 @@ namespace AssistantPlus.View.AnimationViewer {
 			this.ImageSource = imageSourceData;
 			this.ImageFilter = Enumerable.Range(0, this.Animation.Image.Count).Select((index) => (false)).ToList();
 			this.SpriteFilter = Enumerable.Range(0, this.Animation.Sprite.Count).Select((index) => (false)).ToList();
-			this.PlantCustomLayerName = this.Animation.Sprite.Where((value) => (value.Name is not null)).Select((value) => (value.Name.AsNotNull())).Where((value) => (value.StartsWith("custom_"))).ToList();
-			this.ZombieStateLayerName = this.Animation.Sprite.Where((value) => (value.Name is not null)).Select((value) => (value.Name.AsNotNull())).Where((value) => (value == "ink" || value == "butter")).ToList();
-			this.ZombieGroundSwatchLayerName = this.Animation.Sprite.Where((value) => (value.Name is not null)).Select((value) => (value.Name.AsNotNull())).Where((value) => (value == "ground_swatch" || value == "ground_swatch_plane")).ToList();
+			this.PlantCustomLayerName = this.Animation.Sprite.Where((value) => (value.Name != null)).Select((value) => (value.Name.AsNotNull())).Where((value) => (value.StartsWith("custom_"))).ToList();
+			this.ZombieStateLayerName = this.Animation.Sprite.Where((value) => (value.Name != null)).Select((value) => (value.Name.AsNotNull())).Where((value) => (value == "ink" || value == "butter")).ToList();
+			this.ZombieGroundSwatchLayerName = this.Animation.Sprite.Where((value) => (value.Name != null)).Select((value) => (value.Name.AsNotNull())).Where((value) => (value == "ground_swatch" || value == "ground_swatch_plane")).ToList();
 			this.NotifyPropertyChanged(
 				nameof(this.uClearSource_IsEnabled),
 				nameof(this.uAnimationFile_IsEnabled),
@@ -402,7 +402,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			);
 			this.View.uImageList.SelectAll();
 			this.View.uSpriteList.SelectAll();
-			if (this.Animation.MainSprite is not null) {
+			if (this.Animation.MainSprite != null) {
 				this.View.uMainSpriteList.SelectAll();
 			}
 			this.NotifyPropertyChanged(
@@ -426,7 +426,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			GF.AssertTest(this.Loaded && !this.Working);
 			this.View.uImageList.DeselectRange(new (0, (USize)this.Animation.Image.Count));
 			this.View.uSpriteList.DeselectRange(new (0, (USize)this.Animation.Sprite.Count));
-			if (this.Animation.MainSprite is not null) {
+			if (this.Animation.MainSprite != null) {
 				this.View.uMainSpriteList.DeselectRange(new (0, 1));
 			}
 			this.AnimationFile = null;
@@ -480,7 +480,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			var currentFrameLabel = new List<Tuple<String, Size>>();
 			for (var frameIndex = 0; frameIndex < workingSprite.Frame.Count; frameIndex++) {
 				var frame = workingSprite.Frame[frameIndex];
-				if (frame.Label is not null) {
+				if (frame.Label != null) {
 					currentFrameLabel.Add(new (frame.Label, frameIndex));
 				}
 				if (frame.Stop) {
@@ -644,7 +644,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			await this.Load(animationFile, imageDirectory);
 			if (this.Loaded) {
 				await this.ApplyFilterRule();
-				if (this.ImmediateSelect && this.Animation.MainSprite is not null) {
+				if (this.ImmediateSelect && this.Animation.MainSprite != null) {
 					await this.LoadWorkingSprite(spriteIndex ?? this.Animation.Sprite.Count, spriteFrameRange, spriteFrameRate, spriteInitialState, null);
 				}
 				await App.Instance.AppendRecentLauncherItem(new () {
@@ -671,14 +671,14 @@ namespace AssistantPlus.View.AnimationViewer {
 			var frameRate = this.WorkingSpriteFrameRate;
 			var currentState = this.WorkingSpriteState;
 			var currentTime = !this.Working ? (TimeSpan?)null : this.View.uSprite.CurrentTime;
-			if (spriteIndex is not null) {
+			if (spriteIndex != null) {
 				await this.UnloadWorkingSprite();
 			}
 			this.SuppressFilterListSelectionChanged = true;
-			if (imageFilter is not null) {
+			if (imageFilter != null) {
 				for (var index = 0; index < imageFilter.Count; index++) {
 					var state = imageFilter[index];
-					if (state is null || state.AsNotNull() == this.ImageFilter[index]) {
+					if (state == null || state.AsNotNull() == this.ImageFilter[index]) {
 						continue;
 					}
 					this.ImageFilter[index] = state.AsNotNull();
@@ -690,10 +690,10 @@ namespace AssistantPlus.View.AnimationViewer {
 					}
 				}
 			}
-			if (spriteFilter is not null) {
+			if (spriteFilter != null) {
 				for (var index = 0; index < spriteFilter.Count; index++) {
 					var state = spriteFilter[index];
-					if (state is null || state.AsNotNull() == this.SpriteFilter[index]) {
+					if (state == null || state.AsNotNull() == this.SpriteFilter[index]) {
 						continue;
 					}
 					this.SpriteFilter[index] = state.AsNotNull();
@@ -711,7 +711,7 @@ namespace AssistantPlus.View.AnimationViewer {
 				nameof(this.uZombieStateLayer_SelectedItem),
 				nameof(this.uZombieGroundSwatchLayer_IsChecked)
 			);
-			if (spriteIndex is not null) {
+			if (spriteIndex != null) {
 				await this.LoadWorkingSprite(spriteIndex.AsNotNull(), frameRange, frameRate, currentState, currentTime);
 			}
 			this.SuppressApplyFilterChanged = false;
@@ -723,7 +723,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			GF.AssertTest(this.Loaded);
 			await this.ApplyFilter(
 				this.Animation.Image.Select((value) => (this.ImageFilterRule.Length != 0 && Regex.IsMatch(GameAnimationHelper.ParseImageFileName(value.Name), this.ImageFilterRule) ? false : (Boolean?)null)).ToList(),
-				this.Animation.Sprite.Select((value) => (value.Name is not null && this.SpriteFilterRule.Length != 0 && Regex.IsMatch(value.Name, this.SpriteFilterRule) ? false : (Boolean?)null)).ToList()
+				this.Animation.Sprite.Select((value) => (value.Name != null && this.SpriteFilterRule.Length != 0 && Regex.IsMatch(value.Name, this.SpriteFilterRule) ? false : (Boolean?)null)).ToList()
 			);
 			return;
 		}
@@ -945,8 +945,8 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (isPlaying) {
 				this.View.uSprite.State = SpriteControl.StateType.Paused;
 			}
-			var animationFile = await StorageHelper.PickOpenFile(WindowHelper.Find(this.View), $"{nameof(AnimationViewer)}.AnimationFile");
-			if (animationFile is not null) {
+			var animationFile = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(AnimationViewer)}.AnimationFile");
+			if (animationFile != null) {
 				await this.ApplyLoad(animationFile, null, null, null, null, null);
 			}
 			else {
@@ -998,8 +998,8 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (isPlaying) {
 				this.View.uSprite.State = SpriteControl.StateType.Paused;
 			}
-			var imageDirectory = await StorageHelper.PickOpenDirectory(WindowHelper.Find(this.View), $"{nameof(AnimationViewer)}.ImageDirectory");
-			if (imageDirectory is not null) {
+			var imageDirectory = await StorageHelper.PickLoadDirectory(WindowHelper.Find(this.View), $"{nameof(AnimationViewer)}.ImageDirectory");
+			if (imageDirectory != null) {
 				await this.ApplyLoad(this.AnimationFile, imageDirectory, null, null, null, null);
 			}
 			else {
@@ -1109,7 +1109,7 @@ namespace AssistantPlus.View.AnimationViewer {
 				if (!this.Loaded) {
 					return [new () { Host = this, Index = null }];
 				}
-				return [new () { Host = this, Index = this.Animation.MainSprite is null ? null : this.Animation.Sprite.Count }];
+				return [new () { Host = this, Index = this.Animation.MainSprite == null ? null : this.Animation.Sprite.Count }];
 			}
 		}
 
@@ -1192,7 +1192,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (!this.Working) {
 				return;
 			}
-			if (!Floater.IsNaN(args.NewValue)) {
+			if (Floater.IsFinite(args.NewValue)) {
 				var newBegin = (Size)args.NewValue - 1;
 				var newRange = new GameAnimationHelper.FrameRange() {
 					Start = newBegin,
@@ -1263,7 +1263,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (!this.Working) {
 				return;
 			}
-			if (!Floater.IsNaN(args.NewValue)) {
+			if (Floater.IsFinite(args.NewValue)) {
 				var newEnd = (Size)args.NewValue - 1;
 				var newRange = new GameAnimationHelper.FrameRange() {
 					Start = this.WorkingSpriteFrameRange.Start,
@@ -1406,7 +1406,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (!this.Working) {
 				return;
 			}
-			if (!Floater.IsNaN(args.NewValue)) {
+			if (Floater.IsFinite(args.NewValue)) {
 				var newValue = args.NewValue;
 				if (newValue != this.WorkingSpriteFrameRate) {
 					this.View.uSprite.Speed = newValue;
@@ -1458,7 +1458,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (!this.Working) {
 				return;
 			}
-			if (!Floater.IsNaN(args.NewValue) && args.NewValue != 0.0) {
+			if (Floater.IsFinite(args.NewValue) && args.NewValue != 0.0) {
 				GF.AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
 				if (this.uWorkingSpriteFrameProgress__Changeable) {
 					this.View.uSprite.CurrentTime = TimeSpan.FromSeconds(args.NewValue - 1.0);
@@ -1731,7 +1731,7 @@ namespace AssistantPlus.View.AnimationViewer {
 				if (!this.Loaded || this.PlantCustomLayerName.Count == 0) {
 					return null;
 				}
-				var selectedItem = this.Animation.Sprite.Where((value, index) => (value.Name is not null && this.PlantCustomLayerName.Contains(value.Name) && this.SpriteFilter[index])).ToList();
+				var selectedItem = this.Animation.Sprite.Where((value, index) => (value.Name != null && this.PlantCustomLayerName.Contains(value.Name) && this.SpriteFilter[index])).ToList();
 				return selectedItem.Count switch {
 					0 => this.uPlantCustomLayer__ItemNameOfNone,
 					1 => selectedItem[0].Name.AsNotNull()["custom_".Length..],
@@ -1750,7 +1750,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			}
 			if (args.AddedItems.Count == 1) {
 				var targetLayer = $"custom_{args.AddedItems[0].AsClass<String>()}";
-				await this.ApplyFilter(null, this.Animation.Sprite.Select((value) => (value.Name is not null && this.PlantCustomLayerName.Contains(value.Name) ? value.Name == targetLayer : (Boolean?)null)).ToList());
+				await this.ApplyFilter(null, this.Animation.Sprite.Select((value) => (value.Name != null && this.PlantCustomLayerName.Contains(value.Name) ? value.Name == targetLayer : (Boolean?)null)).ToList());
 				this.NotifyPropertyChanged(
 					nameof(this.uPlantCustomLayer_SelectedItem)
 				);
@@ -1796,7 +1796,7 @@ namespace AssistantPlus.View.AnimationViewer {
 		public String? uZombieStateLayer_SelectedItem {
 			get {
 				if (!this.Loaded || this.ZombieStateLayerName.Count == 0) { return null; }
-				var selectedItem = this.Animation.Sprite.Where((value, index) => (value.Name is not null && this.ZombieStateLayerName.Contains(value.Name) && this.SpriteFilter[index])).ToList();
+				var selectedItem = this.Animation.Sprite.Where((value, index) => (value.Name != null && this.ZombieStateLayerName.Contains(value.Name) && this.SpriteFilter[index])).ToList();
 				return selectedItem.Count switch {
 					0 => this.uZombieStateLayer__ItemNameOfNone,
 					1 => selectedItem[0].Name.AsNotNull(),
@@ -1813,7 +1813,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (!this.Loaded || this.ZombieStateLayerName.Count == 0) { return; }
 			if (args.AddedItems.Count == 1) {
 				var targetLayer = args.AddedItems[0].AsClass<String>();
-				await this.ApplyFilter(null, this.Animation.Sprite.Select((value) => (value.Name is not null && this.ZombieStateLayerName.Contains(value.Name) ? value.Name == targetLayer : (Boolean?)null)).ToList());
+				await this.ApplyFilter(null, this.Animation.Sprite.Select((value) => (value.Name != null && this.ZombieStateLayerName.Contains(value.Name) ? value.Name == targetLayer : (Boolean?)null)).ToList());
 				this.NotifyPropertyChanged(
 					nameof(this.uZombieStateLayer_SelectedItem)
 				);
@@ -1844,7 +1844,7 @@ namespace AssistantPlus.View.AnimationViewer {
 		public Boolean uZombieGroundSwatchLayer_IsChecked {
 			get {
 				if (!this.Loaded || this.ZombieGroundSwatchLayerName.Count == 0) { return false; }
-				var selectedItem = this.Animation.Sprite.Where((value, index) => (value.Name is not null && this.ZombieGroundSwatchLayerName.Contains(value.Name) && this.SpriteFilter[index])).ToList();
+				var selectedItem = this.Animation.Sprite.Where((value, index) => (value.Name != null && this.ZombieGroundSwatchLayerName.Contains(value.Name) && this.SpriteFilter[index])).ToList();
 				return selectedItem.Count != 0;
 			}
 		}
@@ -1856,7 +1856,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			var senders = sender.AsClass<ToggleButton>();
 			if (!this.Loaded || this.ZombieGroundSwatchLayerName.Count == 0) { return; }
 			var newValue = senders.IsChecked.AsNotNull();
-			await this.ApplyFilter(null, this.Animation.Sprite.Select((value) => (value.Name is not null && this.ZombieGroundSwatchLayerName.Contains(value.Name) ? newValue : (Boolean?)null)).ToList());
+			await this.ApplyFilter(null, this.Animation.Sprite.Select((value) => (value.Name != null && this.ZombieGroundSwatchLayerName.Contains(value.Name) ? newValue : (Boolean?)null)).ToList());
 			this.NotifyPropertyChanged(
 				nameof(this.uZombieGroundSwatchLayer_IsChecked)
 			);
@@ -1902,7 +1902,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			get {
 				GF.AssertTest(this.Host.Loaded);
 				var source = this.Host.ImageSource[this.Index];
-				if (source is not null) {
+				if (source != null) {
 					return new Image() {
 						Width = 32, Height = 32,
 						Source = source,
@@ -1961,7 +1961,7 @@ namespace AssistantPlus.View.AnimationViewer {
 				if (model.Frame.Count == 1 && model.Frame[0].Append.Count == 1 && model.Frame[0].Change.Count == 1 && !model.Frame[0].Append[0].Sprite) {
 					source = this.Host.ImageSource[(Size)model.Frame[0].Append[0].Resource];
 				}
-				if (source is not null) {
+				if (source != null) {
 					return new Image() {
 						Width = 32, Height = 32,
 						Source = source,
@@ -2024,7 +2024,7 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		public Floater uRoot_Opacity {
 			get {
-				if (this.Index is null) {
+				if (this.Index == null) {
 					return 0.0;
 				}
 				else {
@@ -2038,7 +2038,7 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		public String uTitle_Text {
 			get {
-				if (this.Index is null) {
+				if (this.Index == null) {
 					return "";
 				}
 				else {
@@ -2051,7 +2051,7 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		public String uDescription_Text {
 			get {
-				if (this.Index is null) {
+				if (this.Index == null) {
 					return "";
 				}
 				else {
@@ -2077,7 +2077,7 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		public Boolean uToggle_IsChecked {
 			get {
-				if (this.Index is null) {
+				if (this.Index == null) {
 					return false;
 				}
 				else {
@@ -2092,7 +2092,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<ToggleButton>();
-			if (this.Index is null) {
+			if (this.Index == null) {
 			}
 			else {
 				GF.AssertTest(this.Host.Loaded);

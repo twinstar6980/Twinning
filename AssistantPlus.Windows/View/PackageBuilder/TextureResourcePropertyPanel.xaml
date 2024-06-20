@@ -58,12 +58,9 @@
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
-						SpinButtonPlacementMode="Hidden"
+						LostFocus="{x:Bind Controller.uFormat_LostFocus}"
 						NumberFormatter="{x:Bind Controller.uFormat_NumberFormatter}"
-						Minimum="0"
-						Maximum="4294967295"
 						Value="{x:Bind Controller.uFormat_Value}"
-						ValueChanged="{x:Bind Controller.uFormat_ValueChanged}"
 						/>
 				</my:Stack>
 			</my:SettingItem.Action>
@@ -85,12 +82,9 @@
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
-						SpinButtonPlacementMode="Hidden"
+						LostFocus="{x:Bind Controller.uPitch_LostFocus}"
 						NumberFormatter="{x:Bind Controller.uPitch_NumberFormatter}"
-						Minimum="0"
-						Maximum="4294967295"
 						Value="{x:Bind Controller.uPitch_Value}"
-						ValueChanged="{x:Bind Controller.uPitch_ValueChanged}"
 						/>
 				</my:Stack>
 			</my:SettingItem.Action>
@@ -112,12 +106,9 @@
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
-						SpinButtonPlacementMode="Hidden"
+						LostFocus="{x:Bind Controller.uAdditionalByteCount_LostFocus}"
 						NumberFormatter="{x:Bind Controller.uAdditionalByteCount_NumberFormatter}"
-						Minimum="0"
-						Maximum="4294967295"
 						Value="{x:Bind Controller.uAdditionalByteCount_Value}"
-						ValueChanged="{x:Bind Controller.uAdditionalByteCount_ValueChanged}"
 						/>
 				</my:Stack>
 			</my:SettingItem.Action>
@@ -139,23 +130,17 @@
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
-						SpinButtonPlacementMode="Hidden"
+						LostFocus="{x:Bind Controller.uSizeWidth_LostFocus}"
 						NumberFormatter="{x:Bind Controller.uSizeWidth_NumberFormatter}"
-						Minimum="0"
-						Maximum="4294967295"
 						Value="{x:Bind Controller.uSizeWidth_Value}"
-						ValueChanged="{x:Bind Controller.uSizeWidth_ValueChanged}"
 						/>
 					<NumberBox
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
-						SpinButtonPlacementMode="Hidden"
+						LostFocus="{x:Bind Controller.uSizeHeight_LostFocus}"
 						NumberFormatter="{x:Bind Controller.uSizeHeight_NumberFormatter}"
-						Minimum="0"
-						Maximum="4294967295"
 						Value="{x:Bind Controller.uSizeHeight_Value}"
-						ValueChanged="{x:Bind Controller.uSizeHeight_ValueChanged}"
 						/>
 				</my:Stack>
 			</my:SettingItem.Action>

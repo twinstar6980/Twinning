@@ -38,10 +38,9 @@ namespace AssistantPlus.View.ResourceForwarder {
 			typeof(SettingPanel),
 			new (new Setting() {
 				OptionConfiguration = "",
-				ParallelExecute = false,
+				ParallelForward = false,
 				EnableFilter = true,
 				EnableBatch = false,
-				RemainInput = false,
 			})
 		);
 
@@ -72,10 +71,9 @@ namespace AssistantPlus.View.ResourceForwarder {
 		) {
 			this.NotifyPropertyChanged(
 				nameof(this.uOptionConfigurationText_Text),
-				nameof(this.uParallelExecuteToggle_IsChecked),
+				nameof(this.uParallelForwardToggle_IsChecked),
 				nameof(this.uEnableFilterToggle_IsChecked),
-				nameof(this.uEnableBatchToggle_IsChecked),
-				nameof(this.uRemainInputToggle_IsChecked)
+				nameof(this.uEnableBatchToggle_IsChecked)
 			);
 			return;
 		}
@@ -107,8 +105,8 @@ namespace AssistantPlus.View.ResourceForwarder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<Button>();
-			var value = await StorageHelper.PickOpenFile(WindowHelper.Find(this.View), $"{nameof(ResourceForwarder)}.OptionConfiguration");
-			if (value is not null) {
+			var value = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(ResourceForwarder)}.OptionConfiguration");
+			if (value != null) {
 				this.Data.OptionConfiguration = value;
 				this.NotifyPropertyChanged(
 					nameof(this.uOptionConfigurationText_Text)
@@ -119,20 +117,20 @@ namespace AssistantPlus.View.ResourceForwarder {
 
 		#endregion
 
-		#region parallel execute
+		#region parallel forward
 
-		public Boolean uParallelExecuteToggle_IsChecked {
+		public Boolean uParallelForwardToggle_IsChecked {
 			get {
-				return this.Data.ParallelExecute;
+				return this.Data.ParallelForward;
 			}
 		}
 
-		public async void uParallelExecuteToggle_Click (
+		public async void uParallelForwardToggle_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<ToggleButton>();
-			this.Data.ParallelExecute = senders.IsChecked.AsNotNull();
+			this.Data.ParallelForward = senders.IsChecked.AsNotNull();
 			return;
 		}
 
@@ -171,25 +169,6 @@ namespace AssistantPlus.View.ResourceForwarder {
 		) {
 			var senders = sender.AsClass<ToggleButton>();
 			this.Data.EnableBatch = senders.IsChecked.AsNotNull();
-			return;
-		}
-
-		#endregion
-
-		#region remain input
-
-		public Boolean uRemainInputToggle_IsChecked {
-			get {
-				return this.Data.RemainInput;
-			}
-		}
-
-		public async void uRemainInputToggle_Click (
-			Object          sender,
-			RoutedEventArgs args
-		) {
-			var senders = sender.AsClass<ToggleButton>();
-			this.Data.RemainInput = senders.IsChecked.AsNotNull();
 			return;
 		}
 

@@ -109,7 +109,7 @@ namespace AssistantPlus.View.Home {
 
 		public async Task ShowLauncherPanel (
 		) {
-			GF.AssertTest(this.LauncherPanelFlyout is null);
+			GF.AssertTest(this.LauncherPanelFlyout == null);
 			this.LauncherPanelFlyout = new Flyout() {
 				FlyoutPresenterStyle = this.View.Content.AsClass<FrameworkElement>().FindResource("VerticalScrollFlyoutPresenterStyle").AsClass<Style>(),
 				Content = new LauncherPanel() {
@@ -130,7 +130,7 @@ namespace AssistantPlus.View.Home {
 		public async Task InsertTabItem (
 			ModuleLauncherConfiguration configuration
 		) {
-			if (this.LauncherPanelFlyout is not null) {
+			if (this.LauncherPanelFlyout != null) {
 				this.LauncherPanelFlyout.Hide();
 			}
 			var model = ModuleHelper.Query(configuration.Type);
@@ -229,7 +229,7 @@ namespace AssistantPlus.View.Home {
 			var senders = sender.AsClass<KeyboardAccelerator>();
 			if (senders.Modifiers == VirtualKeyModifiers.Control && senders.Key == VirtualKey.W) {
 				args.Handled = true;
-				if (this.View.uTab.SelectedItem is null) {
+				if (this.View.uTab.SelectedItem == null) {
 					this.View.Close();
 				}
 				else {

@@ -16,7 +16,7 @@ class ForwardHelper {
     List<String> argument,
   ) async {
     var setting = Provider.of<SettingProvider>(context, listen: false);
-    setting.state.mHomeInsertTabItem!(ModuleLauncherConfiguration(
+    await setting.state.mHomeInsertTabItem!(ModuleLauncherConfiguration(
       title: ModuleHelper.query(ModuleType.modding_worker).name,
       type: ModuleType.modding_worker,
       option: ['-additional_argument', ...argument],
@@ -31,11 +31,11 @@ class ForwardHelper {
   ) async {
     if (argument.length != 0) {
       if (!parallel) {
-        forward(context, argument.expand((value) => [...value]).toList());
+        await forward(context, argument.expand((value) => [...value]).toList());
       }
       else {
         for (var argumentItem in argument) {
-          forward(context, argumentItem);
+          await forward(context, argumentItem);
         }
       }
     }
@@ -43,6 +43,13 @@ class ForwardHelper {
   }
 
   // ----------------
+
+  static String makeMethodForBatchable(
+    String  method,
+    Boolean enableBatch,
+  ) {
+    return '${method}${!enableBatch ? '' : '.batch'}';
+  }
 
   static List<String> makeArgumentForCommand(
     String? input,

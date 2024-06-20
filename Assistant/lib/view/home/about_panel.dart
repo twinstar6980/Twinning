@@ -22,7 +22,7 @@ class AboutPanel extends StatelessWidget {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       child: Column(
         children: [
           Row(
@@ -99,7 +99,7 @@ class AboutPanel extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       onPressed: () async {
-                        var file = await StorageHelper.pickOpenFile(context, 'Application.SettingFile');
+                        var file = await StorageHelper.pickLoadFile(context, 'Application.SettingFile');
                         if (file != null) {
                           await setting.load(file: file);
                           await setting.save();

@@ -91,11 +91,11 @@
 											my:Stack.Weight="1"
 											HorizontalAlignment="Stretch"
 											VerticalAlignment="Stretch"
+											LostFocus="{x:Bind Controller.uAdditionalArgumentContent_LostFocus}"
 											FontFamily="{StaticResource ModdingWorker.MessageFont}"
 											TextWrapping="Wrap"
 											AcceptsReturn="True"
 											Text="{x:Bind Controller.uAdditionalArgumentContent_Text}"
-											TextChanged="{x:Bind Controller.uAdditionalArgumentContent_TextChanged}"
 											/>
 									</my:Stack>
 								</Flyout>

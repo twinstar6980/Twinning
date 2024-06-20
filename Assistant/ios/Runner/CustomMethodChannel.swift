@@ -70,15 +70,15 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
   private func handlePickStorageItem(
     type: String
   ) async throws -> String? {
-    guard type == "open_file" || type == "open_directory" else {
+    guard type == "load_file" || type == "load_directory" else {
       throw NSError(domain: "invalid type.", code: 0)
     }
     let rootView = self.host.window?.rootViewController as! FlutterViewController
     var pickerView: UIDocumentPickerViewController!
-    if type == "open_file" {
+    if type == "load_file" {
       pickerView = UIDocumentPickerViewController(forOpeningContentTypes: [.item])
     }
-    if type == "open_directory" {
+    if type == "load_directory" {
       pickerView = UIDocumentPickerViewController(forOpeningContentTypes: [.folder])
     }
     pickerView.delegate = self

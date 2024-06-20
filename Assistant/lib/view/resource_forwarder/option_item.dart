@@ -6,7 +6,7 @@ import 'package:material_symbols_icons/get.dart';
 
 // ----------------
 
-class OptionItemItem extends StatefulWidget {
+class OptionItemItem extends StatelessWidget {
 
   const OptionItemItem({
     super.key,
@@ -14,11 +14,8 @@ class OptionItemItem extends StatefulWidget {
     required this.match,
     required this.enableFilter,
     required this.enableBatch,
-    required this.onForward,
+    required this.onSelect,
   });
-
-  @override
-  createState() => _OptionItemItemState();
 
   // ----------------
 
@@ -26,30 +23,14 @@ class OptionItemItem extends StatefulWidget {
   final (Boolean, Boolean, Boolean)                  match;
   final Boolean                                      enableFilter;
   final Boolean                                      enableBatch;
-  final Void Function(String?, Map<String, Object>?) onForward;
-
-}
-
-class _OptionItemItemState extends State<OptionItemItem> {
+  final Void Function(String?, Map<String, Object>?) onSelect;
 
   // ----------------
 
   @override
-  initState() {
-    super.initState();
-    return;
-  }
-
-  @override
-  dispose() {
-    super.dispose();
-    return;
-  }
-
-  @override
   build(context) { 
-    var visible = (!this.widget.enableFilter || (this.widget.match.$3 && (!this.widget.enableBatch ? this.widget.match.$1 : this.widget.match.$2)));
-    var enabled = (!this.widget.enableFilter || (this.widget.match.$3)) && (!this.widget.enableBatch ? this.widget.match.$1 : this.widget.match.$2);
+    var visible = (!this.enableFilter || (this.match.$3 && (!this.enableBatch ? this.match.$1 : this.match.$2)));
+    var enabled = (!this.enableFilter || (this.match.$3)) && (!this.enableBatch ? this.match.$1 : this.match.$2);
     return Visibility(
       visible: visible,
       child: Column(
@@ -57,84 +38,83 @@ class _OptionItemItemState extends State<OptionItemItem> {
           ListTile(
             enabled: enabled,
             dense: true,
-            contentPadding: const EdgeInsets.fromLTRB(32, 0, 8, 0),
-            leading: Icon(SymbolsGet.get(this.widget.configuration.icon, SymbolStyle.outlined)),
+            contentPadding: const EdgeInsets.fromLTRB(32, 0, 12, 0),
+            leading: Icon(SymbolsGet.get(this.configuration.icon, SymbolStyle.outlined)),
             title: Text(
-              this.widget.configuration.name,
+              this.configuration.name,
               overflow: TextOverflow.ellipsis,
             ),
-            trailing: SizedBox(
-              width: 80,
-              height: 32,
-              child: Tooltip(
-                message: !enabled ? '' : 'Preset',
-                child: TextButton(
-                  style: const ButtonStyle(
-                    padding: WidgetStatePropertyAll(EdgeInsets.zero),
-                  ),
-                  onPressed: !enabled
-                    ? null
-                    : () async {
-                    },
-                  child: Stack(
-                    children: [
-                      SizedBox.expand(
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                this.widget.configuration.preset.whereNotNull().length.toString(),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Tooltip(
+                  message: !enabled ? '' : 'Preset',
+                  child: TextButton(
+                    style: const ButtonStyle(
+                      padding: WidgetStatePropertyAll(EdgeInsets.zero),
+                    ),
+                    onPressed: !enabled
+                      ? null
+                      : () async {
+                      },
+                    child: Stack(
+                      children: [
+                        Container(
+                          height: 40,
+                          padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                          child: Row(
+                            children: [
+                              const SizedBox(width: 8),
+                              Text(
+                                '${this.configuration.preset.whereNotNull().length}',
                                 overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.end,
                               ),
-                            ),
-                            const SizedBox(width: 4),
-                            const Icon(IconSymbols.flash_on),
-                            const SizedBox(width: 12),
-                          ],
-                        ),
-                      ),
-                      SizedBox.expand(
-                        child: PopupMenuButton<OptionPresetConfiguration>(
-                          tooltip: '',
-                          enabled: enabled,
-                          style: const ButtonStyle(
-                            overlayColor: WidgetStatePropertyAll(Colors.transparent),
+                              const SizedBox(width: 4),
+                              const Icon(IconSymbols.flash_on),
+                            ],
                           ),
-                          position: PopupMenuPosition.under,
-                          offset: const Offset(0, 12),
-                          icon: const SizedBox(),
-                          itemBuilder: (context) => [
-                            if (this.widget.configuration.preset.isEmpty)
-                              const PopupMenuItem(
-                                height: 16,
-                                enabled: false,
-                                child: null,
-                              ),
-                            ...this.widget.configuration.preset.map((preset) => preset == null
-                              ? const PopupMenuDivider()
-                              : PopupMenuItem(
-                                value: preset,
-                                child: Text(
-                                  preset.name,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              )
-                            ),
-                          ],
-                          onSelected: (value) async {
-                            this.widget.onForward(this.widget.configuration.method, value.argument);
-                          },
                         ),
-                      ),
-                    ],
+                        Positioned.fill(
+                          child: PopupMenuButton<PresetConfiguration>(
+                            tooltip: '',
+                            enabled: enabled,
+                            style: const ButtonStyle(
+                              overlayColor: WidgetStatePropertyAll(Colors.transparent),
+                            ),
+                            position: PopupMenuPosition.under,
+                            offset: const Offset(0, 12),
+                            icon: const SizedBox(),
+                            itemBuilder: (context) => [
+                              if (this.configuration.preset.isEmpty)
+                                const PopupMenuItem(
+                                  height: 16,
+                                  enabled: false,
+                                  child: null,
+                                ),
+                              ...this.configuration.preset.map((preset) => preset == null
+                                ? const PopupMenuDivider()
+                                : PopupMenuItem(
+                                  value: preset,
+                                  child: Text(
+                                    preset.name,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                )
+                              ),
+                            ],
+                            onSelected: (value) async {
+                              this.onSelect(this.configuration.method, value.argument);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
             onTap: () async {
-              this.widget.onForward(this.widget.configuration.method, null);
+              this.onSelect(this.configuration.method, null);
             },
           ),
         ],
@@ -154,7 +134,7 @@ class OptionGroupItem extends StatefulWidget {
     required this.match,
     required this.enableFilter,
     required this.enableBatch,
-    required this.onForward,
+    required this.onSelect,
   });
 
   @override
@@ -166,7 +146,7 @@ class OptionGroupItem extends StatefulWidget {
   final List<(Boolean, Boolean, Boolean)>            match;
   final Boolean                                      enableFilter;
   final Boolean                                      enableBatch;
-  final Void Function(String?, Map<String, Object>?) onForward;
+  final Void Function(String?, Map<String, Object>?) onSelect;
 
 }
 
@@ -191,6 +171,7 @@ class _OptionGroupItemState extends State<OptionGroupItem> {
 
   @override
   build(context) {
+    var theme = Theme.of(context);
     var visible = !this.widget.enableFilter || this.widget.match.any((value) => (value.$3 && (!this.widget.enableBatch ? value.$1 : value.$2)));
     return Visibility(
       visible: visible,
@@ -203,7 +184,18 @@ class _OptionGroupItemState extends State<OptionGroupItem> {
               this.widget.configuration.name,
               overflow: TextOverflow.ellipsis,
             ),
-            trailing: Icon(!this._itemListVisible ? IconSymbols.keyboard_arrow_down : IconSymbols.keyboard_arrow_left),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '${this.widget.configuration.item.length}',
+                  overflow: TextOverflow.clip,
+                  style: theme.textTheme.bodyMedium,
+                ),
+                const SizedBox(width: 6),
+                Icon(!this._itemListVisible ? IconSymbols.keyboard_arrow_down : IconSymbols.keyboard_arrow_left),
+              ],
+            ),
             onTap: () async {
               this._itemListVisible = !this._itemListVisible;
               this.setState(() {});
@@ -217,7 +209,7 @@ class _OptionGroupItemState extends State<OptionGroupItem> {
                 match: this.widget.match[optionItemIndex],
                 enableFilter: this.widget.enableFilter,
                 enableBatch: this.widget.enableBatch,
-                onForward: this.widget.onForward,
+                onSelect: this.widget.onSelect,
               )).toList(),
             ),
           ),

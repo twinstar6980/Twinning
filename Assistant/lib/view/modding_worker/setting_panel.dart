@@ -41,11 +41,9 @@ class _SettingPanelState extends State<SettingPanel> {
   build(context) {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
-    return ListView(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+    return Column(
       children: [
+        const SizedBox(height: 4),
         CustomSettingItem(
           enabled: true,
           icon: IconSymbols.adjust,
@@ -62,8 +60,8 @@ class _SettingPanelState extends State<SettingPanel> {
             ListTile(
               contentPadding: EdgeInsets.zero,
               title: Focus(
-                onFocusChange: (value) async {
-                  if (!value) {
+                onFocusChange: (focused) async {
+                  if (!focused) {
                     await setting.save();
                   }
                 },
@@ -98,8 +96,8 @@ class _SettingPanelState extends State<SettingPanel> {
             ListTile(
               contentPadding: EdgeInsets.zero,
               title: Focus(
-                onFocusChange: (value) async {
-                  if (!value) {
+                onFocusChange: (focused) async {
+                  if (!focused) {
                     await setting.save();
                   }
                 },
@@ -134,8 +132,8 @@ class _SettingPanelState extends State<SettingPanel> {
             ListTile(
               contentPadding: EdgeInsets.zero,
               title: Focus(
-                onFocusChange: (value) async {
-                  if (!value) {
+                onFocusChange: (focused) async {
+                  if (!focused) {
                     await setting.save();
                   }
                 },
@@ -201,8 +199,8 @@ class _SettingPanelState extends State<SettingPanel> {
             ListTile(
               contentPadding: EdgeInsets.zero,
               title: Focus(
-                onFocusChange: (value) async {
-                  if (!value) {
+                onFocusChange: (focused) async {
+                  if (!focused) {
                     await setting.save();
                   }
                 },
@@ -222,6 +220,7 @@ class _SettingPanelState extends State<SettingPanel> {
             ),
           ],
         ),
+        const SizedBox(height: 4),
       ],
     );
   }

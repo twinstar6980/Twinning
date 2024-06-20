@@ -57,26 +57,36 @@ namespace AssistantPlus.View.CommandSender {
 
 		public MainPage View { get; init; } = default!;
 
+		// ----------------
+
+		public List<MethodGroupConfiguration> MethodConfiguration { get; set; } = default!;
+
+		// ----------------
+
+		public Boolean ParallelForward { get; set; } = default!;
+
+		public List<Tuple<MethodGroupConfiguration, MethodConfiguration, Wrapper<Boolean>, List<Wrapper<ValueExpression>>>> Command { get; set; } = [];
+
 		#endregion
 
 		#region initialize
 
 		public void Initialize (
 		) {
-			var methodConfiguration = new List<MethodGroupConfiguration>();
+			this.MethodConfiguration = [];
+			this.ParallelForward = App.Setting.Data.CommandSender.ParallelForward;
 			try {
-				methodConfiguration = JsonHelper.DeserializeText<List<MethodGroupConfiguration>>(StorageHelper.ReadFileTextSync(App.Setting.Data.CommandSender.MethodConfiguration));
+				this.MethodConfiguration = JsonHelper.DeserializeText<List<MethodGroupConfiguration>>(StorageHelper.ReadFileTextSync(App.Setting.Data.CommandSender.MethodConfiguration));
 			}
 			catch (Exception e) {
 				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to load method configuration.", e.ToString());
 			}
-			this.uAvailableMethodList_ItemsSource = methodConfiguration.Select((group) => (new MainPageAvailableMethodGroupItemController() {
+			this.uMethodList_ItemsSource = this.MethodConfiguration.Select((group) => (new MainPageMethodGroupItemController() {
 				Host = this,
-				GroupModel = group,
-				Children = group.Item.Select((item) => (new MainPageAvailableMethodItemItemController() {
+				Configuration = group,
+				Children = group.Item.Select((item) => (new MainPageMethodItemItemController() {
 					Host = this,
-					GroupModel = group,
-					ItemModel = item,
+					Configuration = item,
 				})).ToList(),
 			})).ToList();
 			return;
@@ -86,8 +96,23 @@ namespace AssistantPlus.View.CommandSender {
 			List<String> optionView
 		) {
 			await ControlHelper.WaitUntilLoaded(this.View);
+			var optionParallelForward = default(Boolean?);
+			var optionCommand = default(List<Tuple<String, Boolean, Dictionary<String, Object>>>?);
 			try {
 				var option = new CommandLineReader(optionView);
+				if (option.Check("-ParallelForward")) {
+					optionParallelForward = option.NextBoolean();
+				}
+				if (option.Check("-Command")) {
+					optionCommand = [];
+					while (!option.Done()) {
+						optionCommand.Add(new (
+							option.NextString(),
+							option.NextBoolean(),
+							JsonHelper.DeserializeText<Dictionary<String, Object>>(option.NextString())
+						));
+					}
+				}
 				if (!option.Done()) {
 					throw new ($"Too many option : '{String.Join(' ', option.NextStringList())}'.");
 				}
@@ -95,18 +120,83 @@ namespace AssistantPlus.View.CommandSender {
 			catch (Exception e) {
 				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
 			}
+			if (optionParallelForward != null) {
+				this.ParallelForward = optionParallelForward.AsNotNull();
+				this.NotifyPropertyChanged(
+					nameof(this.uParallelForward_IsChecked)
+				);
+			}
+			if (optionCommand != null) {
+				foreach (var item in optionCommand) {
+					await this.AppendCommand(item.Item1, item.Item2, item.Item3);
+				}
+			}
 			return;
 		}
 
 		public async Task<List<String>> CollectOption (
 		) {
 			var option = new CommandLineWriter();
+			if (option.Check("-ParallelForward")) {
+				option.NextBoolean(this.ParallelForward);
+			}
+			if (option.Check("-Command")) {
+				foreach (var item in this.Command) {
+					option.NextString(item.Item2.Id);
+					option.NextBoolean(item.Item3.Value);
+					option.NextString(JsonHelper.SerializeText(ConfigurationHelper.MakeArgumentValueListJson(item.Item2.Argument, item.Item4), false));
+				}
+			}
 			return option.Done();
 		}
 
 		public async Task<Boolean> RequestClose (
 		) {
 			return true;
+		}
+
+		// ----------------
+
+		public async Task AppendCommand (
+			String                     methodId,
+			Boolean                    enableBatch,
+			Dictionary<String, Object> argumentValue
+		) {
+			var groupConfiguration = this.MethodConfiguration.First((value) => (methodId.StartsWith($"{value.Id}.")));
+			var itemConfiguration = groupConfiguration.Item.First((value) => (value.Id == methodId));
+			this.Command.Add(new (groupConfiguration, itemConfiguration, new (enableBatch), ConfigurationHelper.ParseArgumentValueListJson(itemConfiguration.Argument, argumentValue)));
+			this.uCommandList_ItemsSource.Add(new () {
+				Host = this,
+				GroupConfiguration = this.Command.Last().Item1,
+				ItemConfiguration = this.Command.Last().Item2,
+				EnableBatch = this.Command.Last().Item3,
+				ArgumentValue = this.Command.Last().Item4,
+			});
+			await Task.Delay(40);
+			this.View.uCommandScrollViewer.ChangeView(null, this.View.uCommandScrollViewer.ExtentHeight, null, false);
+			return;
+		}
+
+		public async Task RemoveCommand (
+			Size index
+		) {
+			this.Command.RemoveAt(index);
+			this.uCommandList_ItemsSource.RemoveAt(index);
+			return;
+		}
+
+		public async Task ForwardCommand (
+			List<Size> index
+		) {
+			var actualCommand = new List<List<String>>();
+			foreach (var itemIndex in index) {
+				var item = this.Command[itemIndex];
+				var method = ModdingWorker.ForwardHelper.MakeMethodForBatchable(item.Item2.Id, item.Item3.Value);
+				var argument = ConfigurationHelper.MakeArgumentValueListJson(item.Item2.Argument, item.Item4);
+				actualCommand.Add(ModdingWorker.ForwardHelper.MakeArgumentForCommand(null, method, argument));
+			}
+			await ModdingWorker.ForwardHelper.ForwardMany(actualCommand, this.ParallelForward);
+			return;
 		}
 
 		#endregion
@@ -131,69 +221,66 @@ namespace AssistantPlus.View.CommandSender {
 
 		#endregion
 
-		#region available method
+		#region setting
 
-		public List<MainPageAvailableMethodGroupItemController> uAvailableMethodList_ItemsSource { get; set; } = default!;
+		public Boolean uParallelForward_IsChecked {
+			get {
+				return this.ParallelForward;
+			}
+		}
 
-		public async void uAvailableMethodList_ItemInvoked (
+		public async void uParallelForward_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<ToggleButton>();
+			this.ParallelForward = senders.IsChecked.AsNotNull();
+			return;
+		}
+
+		#endregion
+
+		#region method
+
+		public List<MainPageMethodGroupItemController> uMethodList_ItemsSource { get; set; } = default!;
+
+		public async void uMethodList_ItemInvoked (
 			TreeView                     sender,
 			TreeViewItemInvokedEventArgs args
 		) {
 			var senders = sender.AsClass<TreeView>();
-			if (args.InvokedItem is MainPageAvailableMethodGroupItemController groupItem) {
+			if (args.InvokedItem is MainPageMethodGroupItemController groupItem) {
 				var node = senders.RootNodes.ToList().Find((value) => (Object.ReferenceEquals(value.Content, groupItem))).AsNotNull();
 				node.IsExpanded = !node.IsExpanded;
 			}
-			if (args.InvokedItem is MainPageAvailableMethodItemItemController itemItem) {
-				this.uSelectedMethodList_ItemsSource.Add(new () {
-					Host = this,
-					GroupModel = itemItem.GroupModel,
-					ItemModel = itemItem.ItemModel,
-					Argument = ConfigurationHelper.MakeArgumentValueDefault(itemItem.ItemModel.Argument),
-					EnableBatch = false,
-				});
-				await Task.Delay(40);
-				this.View.uSelectedMethodScrollViewer.ChangeView(null, this.View.uSelectedMethodScrollViewer.ExtentHeight, null, false);
+			if (args.InvokedItem is MainPageMethodItemItemController itemItem) {
+				await this.AppendCommand(itemItem.Configuration.Id, false, []);
 			}
 			return;
 		}
 
 		#endregion
 
-		#region selected method
+		#region command
 
-		public ObservableCollection<MainPageSelectedMethodItemController> uSelectedMethodList_ItemsSource { get; } = [];
-
-		// ----------------
-
-		public async void uSelectedMethodForward_Click (
+		public async void uCommandForward_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<Button>();
-			switch (senders.Tag.AsClass<String>()) {
-				case "None": {
-					await ModdingWorker.ForwardHelper.Forward([]);
-					break;
-				}
-				case "Sequence": {
-					await ModdingWorker.ForwardHelper.ForwardMany(this.uSelectedMethodList_ItemsSource.Select((value) => (value.GenerateCommand())).ToList(), false);
-					break;
-				}
-				case "Parallel": {
-					await ModdingWorker.ForwardHelper.ForwardMany(this.uSelectedMethodList_ItemsSource.Select((value) => (value.GenerateCommand())).ToList(), true);
-					break;
-				}
-				default: throw new ();
-			}
+			await this.ForwardCommand(this.Command.Select((value, index) => (index)).ToList());
 			return;
 		}
+
+		// ----------------
+
+		public ObservableCollection<MainPageCommandItemController> uCommandList_ItemsSource { get; } = [];
 
 		#endregion
 
 	}
 
-	public class MainPageAvailableMethodItemTemplateSelector : DataTemplateSelector {
+	public class MainPageMethodItemTemplateSelector : DataTemplateSelector {
 
 		public DataTemplate? GroupTemplate { get; set; }
 
@@ -205,15 +292,15 @@ namespace AssistantPlus.View.CommandSender {
 			Object item
 		) {
 			return item switch {
-				MainPageAvailableMethodGroupItemController => this.GroupTemplate,
-				MainPageAvailableMethodItemItemController  => this.ItemTemplate,
-				_                                          => null,
+				MainPageMethodGroupItemController => this.GroupTemplate,
+				MainPageMethodItemItemController  => this.ItemTemplate,
+				_                                 => null,
 			};
 		}
 
 	}
 
-	public class MainPageAvailableMethodGroupItemController : CustomController {
+	public class MainPageMethodGroupItemController : CustomController {
 
 		#region data
 
@@ -221,17 +308,17 @@ namespace AssistantPlus.View.CommandSender {
 
 		// ----------------
 
-		public MethodGroupConfiguration GroupModel { get; set; } = default!;
+		public MethodGroupConfiguration Configuration { get; set; } = default!;
 
 		// ----------------
 
-		public List<MainPageAvailableMethodItemItemController> Children { get; set; } = default!;
+		public List<MainPageMethodItemItemController> Children { get; set; } = default!;
 
 		#endregion
 
 		#region view
 
-		public List<MainPageAvailableMethodItemItemController> uRoot_ItemsSource {
+		public List<MainPageMethodItemItemController> uRoot_ItemsSource {
 			get {
 				return this.Children;
 			}
@@ -239,13 +326,13 @@ namespace AssistantPlus.View.CommandSender {
 
 		public String uIcon_Glyph {
 			get {
-				return FluentIconGlyph.FindGlyph(this.GroupModel.Icon);
+				return FluentIconGlyph.FindGlyph(this.Configuration.Icon);
 			}
 		}
 
 		public String uName_Text {
 			get {
-				return this.GroupModel.Name;
+				return this.Configuration.Name;
 			}
 		}
 
@@ -253,7 +340,7 @@ namespace AssistantPlus.View.CommandSender {
 
 	}
 
-	public class MainPageAvailableMethodItemItemController : CustomController {
+	public class MainPageMethodItemItemController : CustomController {
 
 		#region data
 
@@ -261,9 +348,7 @@ namespace AssistantPlus.View.CommandSender {
 
 		// ----------------
 
-		public MethodGroupConfiguration GroupModel { get; set; } = default!;
-
-		public MethodConfiguration ItemModel { get; set; } = default!;
+		public MethodConfiguration Configuration { get; set; } = default!;
 
 		#endregion
 
@@ -271,19 +356,25 @@ namespace AssistantPlus.View.CommandSender {
 
 		public String uIcon_Glyph {
 			get {
-				return FluentIconGlyph.FindGlyph(this.ItemModel.Icon);
+				return FluentIconGlyph.FindGlyph(this.Configuration.Icon);
 			}
 		}
 
 		public String uName_Text {
 			get {
-				return this.ItemModel.Name;
+				return this.Configuration.Name;
 			}
 		}
 
-		public Floater uBatch_Opacity {
+		public String? uBatchable_ToolTip {
 			get {
-				return ConvertHelper.MakeBooleanToFloaterOfOpacityVisibility(this.ItemModel.Batchable is not null);
+				return this.Configuration.Batchable == null ? null : "Batchable";
+			}
+		}
+
+		public Floater uBatchable_Opacity {
+			get {
+				return ConvertHelper.MakeBooleanToFloaterOfOpacityVisibility(this.Configuration.Batchable != null);
 			}
 		}
 
@@ -291,7 +382,7 @@ namespace AssistantPlus.View.CommandSender {
 
 	}
 
-	public class MainPageSelectedMethodItemController : CustomController {
+	public class MainPageCommandItemController : CustomController {
 
 		#region data
 
@@ -299,15 +390,13 @@ namespace AssistantPlus.View.CommandSender {
 
 		// ----------------
 
-		public MethodGroupConfiguration GroupModel { get; set; } = default!;
+		public MethodGroupConfiguration GroupConfiguration { get; set; } = default!;
 
-		public MethodConfiguration ItemModel { get; set; } = default!;
+		public MethodConfiguration ItemConfiguration { get; set; } = default!;
 
-		public Boolean EnableBatch { get; set; } = default!;
+		public Wrapper<Boolean> EnableBatch { get; set; } = default!;
 
-		// ----------------
-
-		public List<ArgumentValue> Argument { get; set; } = default!;
+		public List<Wrapper<ValueExpression>> ArgumentValue { get; set; } = default!;
 
 		#endregion
 
@@ -315,31 +404,18 @@ namespace AssistantPlus.View.CommandSender {
 
 		public String uTitle_Text {
 			get {
-				return $"{this.GroupModel.Name} - {this.ItemModel.Name}";
+				return $"{this.GroupConfiguration.Name} - {this.ItemConfiguration.Name}";
 			}
 		}
 
-		public Boolean uBatch_IsEnabled {
-			get {
-				return this.ItemModel.Batchable is not null;
-			}
-		}
+		// ----------------
 
-		public Boolean uBatch_IsChecked {
-			get {
-				return this.EnableBatch;
-			}
-		}
-
-		public async void uBatch_Click (
+		public async void uRemove_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
-			this.EnableBatch = senders.IsChecked.AsNotNull();
-			this.NotifyPropertyChanged(
-				nameof(this.uBatch_IsChecked)
-			);
+			var senders = sender.AsClass<Button>();
+			await this.Host.RemoveCommand(this.Host.uCommandList_ItemsSource.IndexOf(this));
 			return;
 		}
 
@@ -348,30 +424,82 @@ namespace AssistantPlus.View.CommandSender {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<Button>();
-			await ModdingWorker.ForwardHelper.Forward(this.GenerateCommand());
+			await this.Host.ForwardCommand([this.Host.uCommandList_ItemsSource.IndexOf(this)]);
 			return;
 		}
 
-		public async void uRemove_Click (
+		public Boolean uEnableBatch_IsEnabled {
+			get {
+				return this.ItemConfiguration.Batchable != null;
+			}
+		}
+
+		public Boolean uEnableBatch_IsChecked {
+			get {
+				return this.EnableBatch.Value;
+			}
+		}
+
+		public async void uEnableBatch_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
-			this.Host.uSelectedMethodList_ItemsSource.Remove(this);
+			var senders = sender.AsClass<ToggleButton>();
+			this.EnableBatch.Value = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged(
+				nameof(this.uEnableBatch_IsChecked)
+			);
 			return;
+		}
+
+		public MenuFlyout uApplyPreset_Flyout {
+			get {
+				var menu = new MenuFlyout() {
+					Placement = FlyoutPlacementMode.BottomEdgeAlignedRight,
+				};
+				foreach (var preset in this.ItemConfiguration.Preset) {
+					menu.Items.Add(
+						preset == null
+							? new MenuFlyoutSeparator() {
+							}
+							: new MenuFlyoutItem() {
+								Text = preset.Name,
+							}.ApplySelf((it) => {
+								it.Click += async (_, _) => {
+									foreach (var argument in preset.Argument) {
+										var argumentIndex = this.ItemConfiguration.Argument.FindIndex((value) => (value.Id == argument.Key));
+										GF.AssertTest(argumentIndex != -1);
+										this.ArgumentValue[argumentIndex].Value = ConfigurationHelper.ParseArgumentValueJson(this.ItemConfiguration.Argument[argumentIndex].Type, argument.Value);
+									}
+									this.NotifyPropertyChanged(
+										nameof(this.uArgumentPanel_Stamp)
+									);
+									return;
+								};
+							})
+					);
+				}
+				return menu;
+			}
+		}
+
+		public String uApplyPresetCount_Text {
+			get {
+				return this.ItemConfiguration.Preset.Count(GF.NotNull).ToString();
+			}
 		}
 
 		// ----------------
 
 		public List<ArgumentConfiguration> uArgumentPanel_Configuration {
 			get {
-				return this.ItemModel.Argument;
+				return this.ItemConfiguration.Argument;
 			}
 		}
 
-		public List<ArgumentValue> uArgumentPanel_Value {
+		public List<Wrapper<ValueExpression>> uArgumentPanel_Value {
 			get {
-				return this.Argument;
+				return this.ArgumentValue;
 			}
 		}
 
@@ -379,21 +507,6 @@ namespace AssistantPlus.View.CommandSender {
 			get {
 				return UniqueStamp.Create();
 			}
-		}
-
-		#endregion
-
-		#region command
-
-		public List<String> GenerateCommand (
-		) {
-			return [
-				"?",
-				"-method",
-				$"{this.ItemModel.Id}{(!this.EnableBatch ? "" : ".batch")}",
-				"-argument",
-				ConfigurationHelper.MakeArgumentObjectString(this.ItemModel.Argument, this.Argument),
-			];
 		}
 
 		#endregion

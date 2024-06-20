@@ -191,7 +191,7 @@ class StorageHelper {
 
   static Map<String, String> _taggedHistoryDirectory = {};
 
-  static Future<String?> pickOpenFile(
+  static Future<String?> pickLoadFile(
     BuildContext context,
     String       tag,
   ) async {
@@ -210,13 +210,13 @@ class StorageHelper {
       target = (await file_selector.openFile(initialDirectory: initialDirectory))?.path;
     }
     if (Platform.isAndroid) {
-      target = await PlatformMethod.pickStorageItem('open_file', initialDirectory);
+      target = await PlatformMethod.pickStorageItem('load_file', initialDirectory);
       if (target != null) {
         target = await parseAndroidContentUri(context, Uri.parse(target), true);
       }
     }
     if (Platform.isIOS) {
-      target = await PlatformMethod.pickStorageItem('open_file', initialDirectory);
+      target = await PlatformMethod.pickStorageItem('load_file', initialDirectory);
     }
     if (target != null) {
       _taggedHistoryDirectory[tag] = parent(target);
@@ -224,7 +224,7 @@ class StorageHelper {
     return target;
   }
 
-  static Future<String?> pickOpenDirectory(
+  static Future<String?> pickLoadDirectory(
     BuildContext context,
     String       tag,
   ) async {
@@ -244,13 +244,13 @@ class StorageHelper {
       target = await file_selector.getDirectoryPath(initialDirectory: initialDirectory);
     }
     if (Platform.isAndroid) {
-      target = await PlatformMethod.pickStorageItem('open_directory', initialDirectory);
+      target = await PlatformMethod.pickStorageItem('load_directory', initialDirectory);
       if (target != null) {
         target = await parseAndroidContentUri(context, Uri.parse(target), false);
       }
     }
     if (Platform.isIOS) {
-      target = await PlatformMethod.pickStorageItem('open_directory', initialDirectory);
+      target = await PlatformMethod.pickStorageItem('load_directory', initialDirectory);
     }
     if (target != null) {
       _taggedHistoryDirectory[tag] = parent(target);

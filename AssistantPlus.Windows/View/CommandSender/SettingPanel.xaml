@@ -48,5 +48,30 @@
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>
+		<my:SettingItem
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Icon="{StaticResource FluentIconGlyph.Shuffle}"
+			Title="Parallel Forward"
+			>
+			<my:SettingItem.Action>
+				<my:Stack
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Orientation="Horizontal"
+					Spacing="8"
+					>
+					<ToggleButton
+						my:Stack.Weight="1"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
+						HorizontalContentAlignment="Left"
+						IsChecked="{x:Bind Controller.uParallelForwardToggle_IsChecked}"
+						Click="{x:Bind Controller.uParallelForwardToggle_Click}"
+						Content="Enable"
+						/>
+				</my:Stack>
+			</my:SettingItem.Action>
+		</my:SettingItem>
 	</my:Stack>
 </local:CustomControl>

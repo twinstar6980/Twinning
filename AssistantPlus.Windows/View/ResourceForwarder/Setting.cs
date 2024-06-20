@@ -10,10 +10,9 @@ namespace AssistantPlus.View.ResourceForwarder {
 	[JsonObject(ItemRequired = Required.AllowNull)]
 	public record Setting {
 		public String  OptionConfiguration = default!;
-		public Boolean ParallelExecute     = default!;
+		public Boolean ParallelForward     = default!;
 		public Boolean EnableFilter        = default!;
 		public Boolean EnableBatch         = default!;
-		public Boolean RemainInput         = default!;
 	}
 
 }

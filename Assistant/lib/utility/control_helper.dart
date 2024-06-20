@@ -20,13 +20,13 @@ class ControlHelper {
 
   // #region dialog
 
-  static Future<Result?> showCustomModalDialog<Result>({
+  static Future<TResult?> showCustomModalDialog<TResult>({
     required BuildContext                                                         context,
     required String                                                               title,
     required List<Widget> Function(BuildContext, Void Function(Void Function()))? contentBuilder,
     required List<Widget> Function(BuildContext)?                                 actionBuilder,
   }) async {
-    return await showDialog<Result>(
+    return await showDialog<TResult>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(

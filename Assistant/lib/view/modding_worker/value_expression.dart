@@ -10,6 +10,11 @@ class ValueExpression {
 
 // ----------------
 
+class PauseExpression extends ValueExpression {
+  PauseExpression(
+  );
+}
+
 class BooleanExpression extends ValueExpression {
   Boolean value;
   BooleanExpression(
@@ -71,6 +76,7 @@ class ValueExpressionHelper {
     ValueExpression value,
   ) {
     return switch (value) {
+      PauseExpression       _ => '',
       BooleanExpression     _ => ConvertHelper.makeBooleanToStringOfConfirmationCharacter(value.value),
       IntegerExpression     _ => ConvertHelper.makeIntegerToString(value.value, true),
       FloaterExpression     _ => ConvertHelper.makeFloaterToString(value.value, true),

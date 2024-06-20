@@ -110,8 +110,8 @@ namespace AssistantPlus.View.ModdingWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<Button>();
-			var value = await StorageHelper.PickOpenFile(WindowHelper.Find(this.View), $"{nameof(ModdingWorker)}.Kernel");
-			if (value is not null) {
+			var value = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(ModdingWorker)}.Kernel");
+			if (value != null) {
 				this.Data.Kernel = value;
 				this.NotifyPropertyChanged(
 					nameof(this.uKernelText_Text)
@@ -147,8 +147,8 @@ namespace AssistantPlus.View.ModdingWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<Button>();
-			var value = await StorageHelper.PickOpenFile(WindowHelper.Find(this.View), $"{nameof(ModdingWorker)}.Script");
-			if (value is not null) {
+			var value = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(ModdingWorker)}.Script");
+			if (value != null) {
 				this.Data.Script = value;
 				this.NotifyPropertyChanged(
 					nameof(this.uScriptText_Text)

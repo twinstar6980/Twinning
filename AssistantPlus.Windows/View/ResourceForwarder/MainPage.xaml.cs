@@ -60,15 +60,17 @@ namespace AssistantPlus.View.ResourceForwarder {
 
 		// ----------------
 
-		public Boolean ParallelExecute { get; set; } = default!;
+		public List<OptionGroupConfiguration> OptionConfiguration { get; set; } = default!;
+
+		// ----------------
+
+		public Boolean ParallelForward { get; set; } = default!;
 
 		public Boolean EnableFilter { get; set; } = default!;
 
 		public Boolean EnableBatch { get; set; } = default!;
 
-		public Boolean RemainInput { get; set; } = default!;
-
-		public List<Tuple<String, Boolean?>> Input { get; set; } = [];
+		public List<Tuple<String, Boolean?>> Resource { get; set; } = [];
 
 		#endregion
 
@@ -76,23 +78,22 @@ namespace AssistantPlus.View.ResourceForwarder {
 
 		public void Initialize (
 		) {
-			this.ParallelExecute = App.Setting.Data.ResourceForwarder.ParallelExecute;
+			this.OptionConfiguration = [];
+			this.ParallelForward = App.Setting.Data.ResourceForwarder.ParallelForward;
 			this.EnableFilter = App.Setting.Data.ResourceForwarder.EnableFilter;
 			this.EnableBatch = App.Setting.Data.ResourceForwarder.EnableBatch;
-			this.RemainInput = App.Setting.Data.ResourceForwarder.RemainInput;
-			var optionConfiguration = new List<OptionGroupConfiguration>();
 			try {
-				optionConfiguration = JsonHelper.DeserializeText<List<OptionGroupConfiguration>>(StorageHelper.ReadFileTextSync(App.Setting.Data.ResourceForwarder.OptionConfiguration));
+				this.OptionConfiguration = JsonHelper.DeserializeText<List<OptionGroupConfiguration>>(StorageHelper.ReadFileTextSync(App.Setting.Data.ResourceForwarder.OptionConfiguration));
 			}
 			catch (Exception e) {
 				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to load option configuration.", e.ToString());
 			}
-			this.uOptionList_ItemsSource = optionConfiguration.Select((group) => (new MainPageOptionGroupItemController() {
+			this.uOptionList_ItemsSource = this.OptionConfiguration.Select((group) => (new MainPageOptionGroupItemController() {
 				Host = this,
-				GroupModel = group,
+				Configuration = group,
 				Children = group.Item.Select((item) => (new MainPageOptionItemItemController() {
 					Host = this,
-					ItemModel = item,
+					Configuration = item,
 					SingleMatched = false,
 					BatchMatched = false,
 					NameMatched = false,
@@ -105,15 +106,14 @@ namespace AssistantPlus.View.ResourceForwarder {
 			List<String> optionView
 		) {
 			await ControlHelper.WaitUntilLoaded(this.View);
-			var optionParallelExecute = default(Boolean?);
+			var optionParallelForward = default(Boolean?);
 			var optionEnableFilter = default(Boolean?);
 			var optionEnableBatch = default(Boolean?);
-			var optionRemainInput = default(Boolean?);
-			var optionInput = default(List<String>?);
+			var optionResource = default(List<Tuple<String>>?);
 			try {
 				var option = new CommandLineReader(optionView);
-				if (option.Check("-ParallelExecute")) {
-					optionParallelExecute = option.NextBoolean();
+				if (option.Check("-ParallelForward")) {
+					optionParallelForward = option.NextBoolean();
 				}
 				if (option.Check("-EnableFilter")) {
 					optionEnableFilter = option.NextBoolean();
@@ -121,11 +121,13 @@ namespace AssistantPlus.View.ResourceForwarder {
 				if (option.Check("-EnableBatch")) {
 					optionEnableBatch = option.NextBoolean();
 				}
-				if (option.Check("-RemainInput")) {
-					optionRemainInput = option.NextBoolean();
-				}
-				if (option.Check("-Input")) {
-					optionInput = option.NextStringList();
+				if (option.Check("-Resource")) {
+					optionResource = [];
+					while (!option.Done()) {
+						optionResource.Add(new (
+							option.NextString()
+						));
+					}
 				}
 				if (!option.Done()) {
 					throw new ($"Too many option : '{String.Join(' ', option.NextStringList())}'.");
@@ -134,32 +136,26 @@ namespace AssistantPlus.View.ResourceForwarder {
 			catch (Exception e) {
 				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
 			}
-			if (optionParallelExecute is not null) {
-				this.ParallelExecute = optionParallelExecute.AsNotNull();
+			if (optionParallelForward != null) {
+				this.ParallelForward = optionParallelForward.AsNotNull();
 				this.NotifyPropertyChanged(
-					nameof(this.uParallelExecute_IsChecked)
+					nameof(this.uParallelForward_IsChecked)
 				);
 			}
-			if (optionEnableFilter is not null) {
+			if (optionEnableFilter != null) {
 				this.EnableFilter = optionEnableFilter.AsNotNull();
 				this.NotifyPropertyChanged(
 					nameof(this.uEnableFilter_IsChecked)
 				);
 			}
-			if (optionEnableBatch is not null) {
+			if (optionEnableBatch != null) {
 				this.EnableBatch = optionEnableBatch.AsNotNull();
 				this.NotifyPropertyChanged(
 					nameof(this.uEnableBatch_IsChecked)
 				);
 			}
-			if (optionRemainInput is not null) {
-				this.RemainInput = optionRemainInput.AsNotNull();
-				this.NotifyPropertyChanged(
-					nameof(this.uRemainInput_IsChecked)
-				);
-			}
-			if (optionInput is not null) {
-				await this.AppendInput(optionInput.Select(StorageHelper.Regularize).ToList());
+			if (optionResource != null) {
+				await this.AppendResource(optionResource.Select((item) => (StorageHelper.Regularize(item.Item1))).ToList());
 			}
 			return;
 		}
@@ -167,8 +163,8 @@ namespace AssistantPlus.View.ResourceForwarder {
 		public async Task<List<String>> CollectOption (
 		) {
 			var option = new CommandLineWriter();
-			if (option.Check("-ParallelExecute")) {
-				option.NextBoolean(this.ParallelExecute);
+			if (option.Check("-ParallelForward")) {
+				option.NextBoolean(this.ParallelForward);
 			}
 			if (option.Check("-EnableFilter")) {
 				option.NextBoolean(this.EnableFilter);
@@ -176,11 +172,10 @@ namespace AssistantPlus.View.ResourceForwarder {
 			if (option.Check("-EnableBatch")) {
 				option.NextBoolean(this.EnableBatch);
 			}
-			if (option.Check("-RemainInput")) {
-				option.NextBoolean(this.RemainInput);
-			}
-			if (option.Check("-Input")) {
-				option.NextStringList(this.Input.Select((value) => (value.Item1)).ToList());
+			if (option.Check("-Resource")) {
+				foreach (var item in this.Resource) {
+					option.NextString(item.Item1);
+				}
 			}
 			return option.Done();
 		}
@@ -199,20 +194,20 @@ namespace AssistantPlus.View.ResourceForwarder {
 					item.SingleMatched = false;
 					item.BatchMatched = false;
 					item.NameMatched = false;
-					if (this.Input.Count != 0) {
+					if (this.Resource.Count != 0) {
 						item.SingleMatched = true;
 						item.BatchMatched = true;
 						item.NameMatched = true;
-						var nameRule = new Regex(item.ItemModel.Filter.Name, RegexOptions.IgnoreCase);
-						foreach (var input in this.Input) {
-							item.SingleMatched &= item.ItemModel.Filter.Type switch {
-								OptionFilterFileObjectType.Any       => input.Item2 != null,
-								OptionFilterFileObjectType.File      => input.Item2 == false,
-								OptionFilterFileObjectType.Directory => input.Item2 == true,
-								_                                    => throw new (),
+						var nameRule = new Regex(item.Configuration.Filter.Name, RegexOptions.IgnoreCase);
+						foreach (var resource in this.Resource) {
+							item.SingleMatched &= item.Configuration.Filter.Type switch {
+								FilterType.Any       => resource.Item2 != null,
+								FilterType.File      => resource.Item2 == false,
+								FilterType.Directory => resource.Item2 == true,
+								_                    => throw new (),
 							};
-							item.BatchMatched &= item.ItemModel.Batchable && input.Item2 == true;
-							item.NameMatched &= nameRule.IsMatch(input.Item1);
+							item.BatchMatched &= item.Configuration.Batchable && resource.Item2 == true;
+							item.NameMatched &= nameRule.IsMatch(resource.Item1);
 						}
 					}
 				}
@@ -238,11 +233,11 @@ namespace AssistantPlus.View.ResourceForwarder {
 
 		// ----------------
 
-		public async Task AppendInput (
+		public async Task AppendResource (
 			List<String> list
 		) {
 			foreach (var item in list) {
-				if (this.Input.Any((value) => (value.Item1 == item))) {
+				if (this.Resource.Any((value) => (value.Item1 == item))) {
 					continue;
 				}
 				var itemType = null as Boolean?;
@@ -252,62 +247,51 @@ namespace AssistantPlus.View.ResourceForwarder {
 				if (StorageHelper.ExistDirectory(item)) {
 					itemType = true;
 				}
-				this.Input.Add(new (item, itemType));
-				this.uInputList_ItemsSource.Add(new () { Host = this, Path = item, Type = itemType });
+				this.Resource.Add(new (item, itemType));
+				this.uResourceList_ItemsSource.Add(new () { Host = this, Path = item, Type = itemType });
 			}
 			this.NotifyPropertyChanged(
-				nameof(this.uInputCount_Text)
+				nameof(this.uResourceCount_Text)
 			);
 			await this.RefreshMatch();
 			await this.RefreshFilter();
 			return;
 		}
 
-		public async Task RemoveInput (
+		public async Task RemoveResource (
 			List<String> list
 		) {
 			foreach (var item in list) {
-				this.Input.RemoveAll((value) => (value.Item1 == item));
-				this.uInputList_ItemsSource.Remove(this.uInputList_ItemsSource.First((value) => (value.Path == item)));
+				this.Resource.RemoveAll((value) => (value.Item1 == item));
+				this.uResourceList_ItemsSource.Remove(this.uResourceList_ItemsSource.First((value) => (value.Path == item)));
 			}
 			this.NotifyPropertyChanged(
-				nameof(this.uInputCount_Text)
+				nameof(this.uResourceCount_Text)
 			);
 			await this.RefreshMatch();
 			await this.RefreshFilter();
 			return;
 		}
 
-		public async Task ClearInput (
+		public async Task ClearResource (
 		) {
-			this.Input.Clear();
-			this.uInputList_ItemsSource.Clear();
+			this.Resource.Clear();
+			this.uResourceList_ItemsSource.Clear();
 			this.NotifyPropertyChanged(
-				nameof(this.uInputCount_Text)
+				nameof(this.uResourceCount_Text)
 			);
 			await this.RefreshMatch();
 			await this.RefreshFilter();
 			return;
 		}
 
-		// ----------------
-
-		public async Task ExecuteForward (
+		public async Task ForwardResource (
 			String?                     method,
 			Dictionary<String, Object>? argument
 		) {
-			await App.Instance.AppendRecentLauncherItem(new () {
-				Title = $"({this.Input.Count}) {String.Join(", ", this.Input.Select((value) => (StorageHelper.Name(value.Item1))))}",
-				Type = ModuleType.ResourceForwarder,
-				Option = await this.CollectOption(),
-				Command = [],
-			});
-			var actualMethod = method is null ? null : $"{method}{(!this.EnableBatch ? "" : ".batch")}";
-			var actualCommand = this.Input.Select((value) => (ModdingWorker.ForwardHelper.MakeArgumentForCommand(value.Item1, actualMethod, argument))).ToList();
-			await ModdingWorker.ForwardHelper.ForwardMany(actualCommand, this.ParallelExecute);
-			if (!this.RemainInput) {
-				await this.ClearInput();
-			}
+			var actualMethod = method == null ? null : ModdingWorker.ForwardHelper.MakeMethodForBatchable(method, this.EnableBatch);
+			var actualCommand = this.Resource.Select((value) => (ModdingWorker.ForwardHelper.MakeArgumentForCommand(value.Item1, actualMethod, argument))).ToList();
+			await ModdingWorker.ForwardHelper.ForwardMany(actualCommand, this.ParallelForward);
 			return;
 		}
 
@@ -334,8 +318,8 @@ namespace AssistantPlus.View.ResourceForwarder {
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.Handled = true;
 				var item = await args.DataView.GetStorageItemsAsync();
-				var input = item.Select((value) => (StorageHelper.GetLongPath(value.Path))).ToList();
-				await this.AppendInput(input);
+				var resource = item.Select((value) => (StorageHelper.GetLongPath(value.Path))).ToList();
+				await this.AppendResource(resource);
 			}
 			return;
 		}
@@ -344,18 +328,18 @@ namespace AssistantPlus.View.ResourceForwarder {
 
 		#region setting
 
-		public Boolean uParallelExecute_IsChecked {
+		public Boolean uParallelForward_IsChecked {
 			get {
-				return this.ParallelExecute;
+				return this.ParallelForward;
 			}
 		}
 
-		public async void uParallelExecute_Click (
+		public async void uParallelForward_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<ToggleButton>();
-			this.ParallelExecute = senders.IsChecked.AsNotNull();
+			this.ParallelForward = senders.IsChecked.AsNotNull();
 			return;
 		}
 
@@ -395,62 +379,57 @@ namespace AssistantPlus.View.ResourceForwarder {
 			return;
 		}
 
-		// ----------------
-
-		public Boolean uRemainInput_IsChecked {
-			get {
-				return this.RemainInput;
-			}
-		}
-
-		public async void uRemainInput_Click (
-			Object          sender,
-			RoutedEventArgs args
-		) {
-			var senders = sender.AsClass<ToggleButton>();
-			this.RemainInput = senders.IsChecked.AsNotNull();
-			return;
-		}
-
 		#endregion
 
-		#region input
+		#region resource
 
-		public String uInputCount_Text {
+		public String uResourceCount_Text {
 			get {
-				return this.Input.Count.ToString();
+				return this.Resource.Count.ToString();
 			}
 		}
 
 		// ----------------
 
-		public async void uInputAdd_Click (
+		public async void uResourceAction_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<Button>();
-			var item = senders.Tag.AsClass<String>() switch {
-				"File"      => await StorageHelper.PickOpenFile(WindowHelper.Find(this.View), $"{nameof(ResourceForwarder)}.Input"),
-				"Directory" => await StorageHelper.PickOpenDirectory(WindowHelper.Find(this.View), $"{nameof(ResourceForwarder)}.Input"),
-				_           => throw new (),
-			};
-			if (item is not null) {
-				await this.AppendInput([item]);
+			switch (senders.Tag.AsClass<String>()) {
+				case "ClearAll": {
+					await this.ClearResource();
+					break;
+				}
+				case "AddFile": {
+					var item = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(ResourceForwarder)}.Resource");
+					if (item != null) {
+						await this.AppendResource([item]);
+					}
+					break;
+				}
+				case "AddDirectory": {
+					var item = await StorageHelper.PickLoadDirectory(WindowHelper.Find(this.View), $"{nameof(ResourceForwarder)}.Resource");
+					if (item != null) {
+						await this.AppendResource([item]);
+					}
+					break;
+				}
 			}
 			return;
 		}
 
 		// ----------------
 
-		public ObservableCollection<MainPageInputItemController> uInputList_ItemsSource { get; } = [];
+		public ObservableCollection<MainPageResourceItemController> uResourceList_ItemsSource { get; } = [];
 
-		public async void uInputList_ItemClick (
+		public async void uResourceList_ItemClick (
 			Object             sender,
 			ItemClickEventArgs args
 		) {
 			var senders = sender.AsClass<ListView>();
-			var item = args.ClickedItem.AsClass<MainPageInputItemController>();
-			await this.RemoveInput([item.Path]);
+			var item = args.ClickedItem.AsClass<MainPageResourceItemController>();
+			await this.RemoveResource([item.Path]);
 			return;
 		}
 
@@ -470,7 +449,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 				node.IsExpanded = !node.IsExpanded;
 			}
 			if (args.InvokedItem is MainPageOptionItemItemController itemItem) {
-				await this.ExecuteForward(itemItem.ItemModel.Method, null);
+				await this.ForwardResource(itemItem.Configuration.Method, null);
 			}
 			return;
 		}
@@ -479,7 +458,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 
 	}
 
-	public class MainPageInputItemController : CustomController {
+	public class MainPageResourceItemController : CustomController {
 
 		#region data
 
@@ -549,7 +528,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 
 		// ----------------
 
-		public OptionGroupConfiguration GroupModel { get; set; } = default!;
+		public OptionGroupConfiguration Configuration { get; set; } = default!;
 
 		// ----------------
 
@@ -573,13 +552,13 @@ namespace AssistantPlus.View.ResourceForwarder {
 
 		public String uIcon_Glyph {
 			get {
-				return FluentIconGlyph.FindGlyph(this.GroupModel.Icon);
+				return FluentIconGlyph.FindGlyph(this.Configuration.Icon);
 			}
 		}
 
 		public String uName_Text {
 			get {
-				return this.GroupModel.Name;
+				return this.Configuration.Name;
 			}
 		}
 
@@ -595,7 +574,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 
 		// ----------------
 
-		public OptionConfiguration ItemModel { get; set; } = default!;
+		public OptionConfiguration Configuration { get; set; } = default!;
 
 		// ----------------
 
@@ -623,19 +602,13 @@ namespace AssistantPlus.View.ResourceForwarder {
 
 		public String uIcon_Glyph {
 			get {
-				return FluentIconGlyph.FindGlyph(this.ItemModel.Icon);
+				return FluentIconGlyph.FindGlyph(this.Configuration.Icon);
 			}
 		}
 
 		public String uName_Text {
 			get {
-				return this.ItemModel.Name;
-			}
-		}
-
-		public String uPresetCount_Text {
-			get {
-				return this.ItemModel.Preset.Count(GF.NotNull).ToString();
+				return this.Configuration.Name;
 			}
 		}
 
@@ -644,22 +617,28 @@ namespace AssistantPlus.View.ResourceForwarder {
 				var menu = new MenuFlyout() {
 					Placement = FlyoutPlacementMode.BottomEdgeAlignedRight,
 				};
-				foreach (var preset in this.ItemModel.Preset) {
+				foreach (var preset in this.Configuration.Preset) {
 					menu.Items.Add(
-						preset is null
+						preset == null
 							? new MenuFlyoutSeparator() {
 							}
 							: new MenuFlyoutItem() {
 								Text = preset.Name,
 							}.ApplySelf((it) => {
 								it.Click += async (_, _) => {
-									await this.Host.ExecuteForward(this.ItemModel.Method, preset.Argument);
+									await this.Host.ForwardResource(this.Configuration.Method, preset.Argument);
 									return;
 								};
 							})
 					);
 				}
 				return menu;
+			}
+		}
+
+		public String uPresetCount_Text {
+			get {
+				return this.Configuration.Preset.Count(GF.NotNull).ToString();
 			}
 		}
 

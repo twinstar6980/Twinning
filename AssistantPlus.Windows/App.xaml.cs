@@ -33,7 +33,7 @@ namespace AssistantPlus {
 		public static Boolean MainWindowIsInitialized {
 			get {
 				// ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-				return App.MainWindow is not null;
+				return App.MainWindow != null;
 			}
 		}
 
@@ -126,16 +126,16 @@ namespace AssistantPlus {
 					}
 				}
 				window = new View.Home.MainWindow();
-				if (optionWindowSize is not null) {
+				if (optionWindowSize != null) {
 					WindowHelper.Size(window, (Size)optionWindowSize.Item1, (Size)optionWindowSize.Item2);
 				}
-				if (optionWindowPosition is not null) {
+				if (optionWindowPosition != null) {
 					WindowHelper.Position(window, (Size)optionWindowPosition.Item1, (Size)optionWindowPosition.Item2);
 				}
 				else {
 					WindowHelper.Center(window);
 				}
-				if (optionInsertTab is not null) {
+				if (optionInsertTab != null) {
 					_ = window.AsClass<View.Home.MainWindow>().SetDefaultView(new () {
 						Title = optionInsertTab.Item1,
 						Type = optionInsertTab.Item2,
@@ -265,14 +265,7 @@ namespace AssistantPlus {
 		public async Task AppendPinnedLauncherItem (
 			ModuleLauncherConfiguration launcher
 		) {
-			var pinnedItem = App.Setting.Data.ModuleLauncher.Pinned.Find((value) => (ModuleHelper.CompareLauncher(value, launcher)));
-			if (pinnedItem is not null) {
-				App.Setting.Data.ModuleLauncher.Pinned.Remove(pinnedItem);
-				App.Setting.Data.ModuleLauncher.Pinned.Insert(0, pinnedItem);
-			}
-			else {
-				App.Setting.Data.ModuleLauncher.Pinned.Insert(0, launcher);
-			}
+			App.Setting.Data.ModuleLauncher.Pinned.Add(launcher);
 			await App.Setting.Save();
 			return;
 		}
@@ -281,11 +274,11 @@ namespace AssistantPlus {
 			ModuleLauncherConfiguration launcher
 		) {
 			var pinnedItem = App.Setting.Data.ModuleLauncher.Pinned.Find((value) => (ModuleHelper.CompareLauncher(value, launcher)));
-			if (pinnedItem is not null) {
+			if (pinnedItem != null) {
 				return;
 			}
 			var recentItem = App.Setting.Data.ModuleLauncher.Recent.Find((value) => (ModuleHelper.CompareLauncher(value, launcher)));
-			if (recentItem is not null) {
+			if (recentItem != null) {
 				App.Setting.Data.ModuleLauncher.Recent.Remove(recentItem);
 				App.Setting.Data.ModuleLauncher.Recent.Insert(0, recentItem);
 			}

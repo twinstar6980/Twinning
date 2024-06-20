@@ -11,6 +11,9 @@ namespace AssistantPlus.View.ModdingWorker {
 
 	// ----------------
 
+	public record PauseExpression : ValueExpression {
+	}
+
 	public record BooleanExpression : ValueExpression {
 		public Boolean Value = false;
 	}
@@ -50,6 +53,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			ValueExpression value
 		) {
 			return value switch {
+				PauseExpression values       => "",
 				BooleanExpression values     => ConvertHelper.MakeBooleanToStringOfConfirmationCharacter(values.Value),
 				IntegerExpression values     => ConvertHelper.MakeIntegerToString(values.Value, true),
 				FloaterExpression values     => ConvertHelper.MakeFloaterToString(values.Value, true),

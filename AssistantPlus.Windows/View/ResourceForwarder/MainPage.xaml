@@ -48,7 +48,7 @@
 						Spacing="8"
 						>
 						<Button
-							ToolTipService.ToolTip="Input"
+							ToolTipService.ToolTip="Resource"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							>
@@ -63,7 +63,7 @@
 									VerticalAlignment="Center"
 									Style="{StaticResource BodyTextBlockStyle}"
 									TextWrapping="NoWrap"
-									Text="{x:Bind Controller.uInputCount_Text}"
+									Text="{x:Bind Controller.uResourceCount_Text}"
 									/>
 								<FontIcon
 									HorizontalAlignment="Stretch"
@@ -94,8 +94,39 @@
 												HorizontalContentAlignment="Stretch"
 												BorderBrush="Transparent"
 												Background="Transparent"
-												Tag="File"
-												Click="{x:Bind Controller.uInputAdd_Click}"
+												Tag="ClearAll"
+												Click="{x:Bind Controller.uResourceAction_Click}"
+												>
+												<my:Stack
+													HorizontalAlignment="Stretch"
+													VerticalAlignment="Stretch"
+													Orientation="Horizontal"
+													Spacing="12"
+													>
+													<FontIcon
+														HorizontalAlignment="Stretch"
+														VerticalAlignment="Center"
+														FontSize="{StaticResource SmallIconSize}"
+														Glyph="{StaticResource FluentIconGlyph.Delete}"
+														/>
+													<TextBlock
+														my:Stack.Weight="1"
+														HorizontalAlignment="Stretch"
+														VerticalAlignment="Center"
+														Style="{ThemeResource BodyTextBlockStyle}"
+														TextWrapping="NoWrap"
+														Text="Clear All"
+														/>
+												</my:Stack>
+											</Button>
+											<Button
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Stretch"
+												HorizontalContentAlignment="Stretch"
+												BorderBrush="Transparent"
+												Background="Transparent"
+												Tag="AddFile"
+												Click="{x:Bind Controller.uResourceAction_Click}"
 												>
 												<my:Stack
 													HorizontalAlignment="Stretch"
@@ -125,8 +156,8 @@
 												HorizontalContentAlignment="Stretch"
 												BorderBrush="Transparent"
 												Background="Transparent"
-												Tag="Directory"
-												Click="{x:Bind Controller.uInputAdd_Click}"
+												Tag="AddDirectory"
+												Click="{x:Bind Controller.uResourceAction_Click}"
 												>
 												<my:Stack
 													HorizontalAlignment="Stretch"
@@ -158,11 +189,11 @@
 											Margin="-2,-2"
 											SelectionMode="None"
 											IsItemClickEnabled="True"
-											ItemsSource="{x:Bind Controller.uInputList_ItemsSource}"
-											ItemClick="{x:Bind Controller.uInputList_ItemClick}"
+											ItemsSource="{x:Bind Controller.uResourceList_ItemsSource}"
+											ItemClick="{x:Bind Controller.uResourceList_ItemClick}"
 											>
 											<ListView.ItemTemplate>
-												<DataTemplate x:DataType="localViewResourceForwarder:MainPageInputItemController">
+												<DataTemplate x:DataType="localViewResourceForwarder:MainPageResourceItemController">
 													<my:Stack
 														ToolTipService.ToolTip="{x:Bind uRoot_ToolTip}"
 														HorizontalAlignment="Stretch"
@@ -194,14 +225,6 @@
 							</Button.Flyout>
 						</Button>
 						<ToggleButton
-							ToolTipService.ToolTip="Remain Input"
-							HorizontalAlignment="Stretch"
-							VerticalAlignment="Center"
-							IsChecked="{x:Bind Controller.uRemainInput_IsChecked}"
-							Click="{x:Bind Controller.uRemainInput_Click}"
-							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Pin}}"
-							/>
-						<ToggleButton
 							ToolTipService.ToolTip="Enable Batch"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
@@ -218,11 +241,11 @@
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Filter}}"
 							/>
 						<ToggleButton
-							ToolTipService.ToolTip="Parallel Execute"
+							ToolTipService.ToolTip="Parallel Forward"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
-							IsChecked="{x:Bind Controller.uParallelExecute_IsChecked}"
-							Click="{x:Bind Controller.uParallelExecute_Click}"
+							IsChecked="{x:Bind Controller.uParallelForward_IsChecked}"
+							Click="{x:Bind Controller.uParallelForward_Click}"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Shuffle}}"
 							/>
 					</my:Stack>

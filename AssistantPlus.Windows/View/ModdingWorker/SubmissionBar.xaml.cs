@@ -27,7 +27,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		protected override void StampUpdate (
 		) {
-			VisualStateManager.GoToState(this, $"{(this.Type is null ? "Idle" : this.Type)}State", false);
+			VisualStateManager.GoToState(this, $"{(this.Type == null ? "Idle" : this.Type)}State", false);
 			this.Controller.Update();
 			return;
 		}
@@ -80,13 +80,13 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
 			nameof(SubmissionBar.Value),
-			typeof(SubmissionValue),
+			typeof(Wrapper<ValueExpression>),
 			typeof(SubmissionBar),
-			new (new SubmissionValue() { Data = null })
+			new (new Wrapper<ValueExpression>())
 		);
 
-		public SubmissionValue Value {
-			get => this.GetValue(SubmissionBar.ValueProperty).AsClass<SubmissionValue>();
+		public Wrapper<ValueExpression> Value {
+			get => this.GetValue(SubmissionBar.ValueProperty).AsClass<Wrapper<ValueExpression>>();
 			set => this.SetValue(SubmissionBar.ValueProperty, value);
 		}
 
@@ -115,7 +115,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public List<ValueExpression> History => this.View.History;
 
-		public SubmissionValue Value => this.View.Value;
+		public Wrapper<ValueExpression> Value => this.View.Value;
 
 		#endregion
 
@@ -161,8 +161,8 @@ namespace AssistantPlus.View.ModdingWorker {
 					break;
 				}
 				case SubmissionType.Size: {
-					if (this.Value.OfSize is not null) {
-						this.uSizeExponent__Value = this.Value.OfSize.Exponent;
+					if (this.ValueOfSize != null) {
+						this.uSizeExponent__Value = this.ValueOfSize.Exponent;
 					}
 					this.NotifyPropertyChanged(
 						nameof(this.uSizeCount_Value),
@@ -200,7 +200,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public Boolean uHistory_IsEnabled {
 			get {
-				if (this.Type is null) {
+				if (this.Type == null) {
 					return false;
 				}
 				return true;
@@ -212,7 +212,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<Button>();
-			if (this.Type is null) {
+			if (this.Type == null) {
 				return;
 			}
 			var font = this.View.FindResource("ModdingWorker.MessageFont").AsClass<FontFamily>();
@@ -225,10 +225,10 @@ namespace AssistantPlus.View.ModdingWorker {
 					FontFamily = font,
 				}.ApplySelf((it) => {
 					it.Click += (_, _) => {
-						this.Value.Data = item;
+						this.Value.Value = item;
 						this.Update();
 					};
-					if (this.Type is SubmissionType.Enumeration) {
+					if (this.Type == SubmissionType.Enumeration) {
 						it.IsEnabled = this.Option.Contains(item.AsClass<EnumerationExpression>().Item);
 					}
 				}));
@@ -239,7 +239,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public Boolean uHistoryBadge_Visibility {
 			get {
-				if (this.Type is null) {
+				if (this.Type == null) {
 					return false;
 				}
 				return true;
@@ -248,7 +248,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public Size uHistoryBadge_Value {
 			get {
-				if (this.Type is null) {
+				if (this.Type == null) {
 					return 0;
 				}
 				return this.History.Count;
@@ -259,7 +259,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public Boolean uSubmit_IsEnabled {
 			get {
-				if (this.Type is null) {
+				if (this.Type == null) {
 					return false;
 				}
 				return true;
@@ -271,7 +271,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<Button>();
-			if (this.Type is null) {
+			if (this.Type == null) {
 				return;
 			}
 			this.View.OnValueSubmitted();
@@ -280,14 +280,52 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		#endregion
 
+		#region pause
+
+		public PauseExpression? ValueOfPause {
+			get => this.Value.Value.AsClassOrNull<PauseExpression>();
+			set => this.Value.Value = value;
+		}
+
+		#endregion
+
 		#region boolean
+
+		public BooleanExpression? ValueOfBoolean {
+			get => this.Value.Value.AsClassOrNull<BooleanExpression>();
+			set => this.Value.Value = value;
+		}
+
+		// ----------------
+
+		public async void uBooleanValue_LostFocus (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<TextBox>();
+			if (this.Type != SubmissionType.Boolean) {
+				return;
+			}
+			if (senders.Text.Length == 0) {
+				this.ValueOfBoolean = null;
+			}
+			else if (senders.Text == "n" || senders.Text == "y") {
+				this.ValueOfBoolean = new () { Value = senders.Text == "y" };
+			}
+			this.NotifyPropertyChanged(
+				nameof(this.uBooleanValue_Text),
+				nameof(this.uBooleanValueNo_IsChecked),
+				nameof(this.uBooleanValueYes_IsChecked)
+			);
+			return;
+		}
 
 		public String uBooleanValue_Text {
 			get {
-				if (this.Type is not SubmissionType.Boolean) {
+				if (this.Type != SubmissionType.Boolean) {
 					return "";
 				}
-				return this.Value.OfBoolean is null ? "" : this.Value.OfBoolean.Value == false ? "n" : "y";
+				return this.ValueOfBoolean == null ? "" : this.ValueOfBoolean.Value == false ? "n" : "y";
 			}
 		}
 
@@ -295,10 +333,10 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public Boolean uBooleanValueNo_IsChecked {
 			get {
-				if (this.Type is not SubmissionType.Boolean) {
+				if (this.Type != SubmissionType.Boolean) {
 					return false;
 				}
-				return this.Value.OfBoolean is null ? false : this.Value.OfBoolean.Value == false;
+				return this.ValueOfBoolean == null ? false : this.ValueOfBoolean.Value == false;
 			}
 		}
 
@@ -307,14 +345,14 @@ namespace AssistantPlus.View.ModdingWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<ToggleButton>();
-			if (this.Type is not SubmissionType.Boolean) {
+			if (this.Type != SubmissionType.Boolean) {
 				return;
 			}
 			if (!senders.IsChecked.AsNotNull()) {
-				this.Value.OfBoolean = null;
+				this.ValueOfBoolean = null;
 			}
 			else {
-				this.Value.OfBoolean = new () { Value = false };
+				this.ValueOfBoolean = new () { Value = false };
 			}
 			this.NotifyPropertyChanged(
 				nameof(this.uBooleanValue_Text),
@@ -328,10 +366,10 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public Boolean uBooleanValueYes_IsChecked {
 			get {
-				if (this.Type is not SubmissionType.Boolean) {
+				if (this.Type != SubmissionType.Boolean) {
 					return false;
 				}
-				return this.Value.OfBoolean is null ? false : this.Value.OfBoolean.Value == true;
+				return this.ValueOfBoolean == null ? false : this.ValueOfBoolean.Value == true;
 			}
 		}
 
@@ -340,14 +378,14 @@ namespace AssistantPlus.View.ModdingWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<ToggleButton>();
-			if (this.Type is not SubmissionType.Boolean) {
+			if (this.Type != SubmissionType.Boolean) {
 				return;
 			}
 			if (!senders.IsChecked.AsNotNull()) {
-				this.Value.OfBoolean = null;
+				this.ValueOfBoolean = null;
 			}
 			else {
-				this.Value.OfBoolean = new () { Value = true };
+				this.ValueOfBoolean = new () { Value = true };
 			}
 			this.NotifyPropertyChanged(
 				nameof(this.uBooleanValue_Text),
@@ -361,6 +399,33 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		#region integer
 
+		public IntegerExpression? ValueOfInteger {
+			get => this.Value.Value.AsClassOrNull<IntegerExpression>();
+			set => this.Value.Value = value;
+		}
+
+		// ----------------
+
+		public async void uIntegerValue_LostFocus (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<NumberBox>();
+			if (this.Type != SubmissionType.Integer) {
+				return;
+			}
+			if (senders.Text.Length == 0) {
+				this.ValueOfInteger = null;
+			}
+			else if (Floater.IsFinite(senders.Value) && Integer.MinValue <= senders.Value && senders.Value <= Integer.MaxValue) {
+				this.ValueOfInteger = new () { Value = (Integer)senders.Value };
+			}
+			this.NotifyPropertyChanged(
+				nameof(this.uIntegerValue_Value)
+			);
+			return;
+		}
+
 		public DecimalFormatter uIntegerValue_NumberFormatter {
 			get {
 				return new () { IntegerDigits = 1, FractionDigits = 0 };
@@ -369,36 +434,43 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public Floater uIntegerValue_Value {
 			get {
-				if (this.Type is not SubmissionType.Integer) {
+				if (this.Type != SubmissionType.Integer) {
 					return Floater.NaN;
 				}
-				return this.Value.OfInteger is null ? Floater.NaN : this.Value.OfInteger.Value;
+				return this.ValueOfInteger == null ? Floater.NaN : this.ValueOfInteger.Value;
 			}
-		}
-
-		public async void uIntegerValue_ValueChanged (
-			NumberBox                      sender,
-			NumberBoxValueChangedEventArgs args
-		) {
-			var senders = sender.AsClass<NumberBox>();
-			if (this.Type is not SubmissionType.Integer) {
-				return;
-			}
-			if (Floater.IsNaN(args.NewValue) || !(Integer.MinValue < args.NewValue && args.NewValue < Integer.MaxValue)) {
-				this.Value.OfInteger = null;
-			}
-			else {
-				this.Value.OfInteger = new () { Value = (Integer)args.NewValue };
-			}
-			this.NotifyPropertyChanged(
-				nameof(this.uIntegerValue_Value)
-			);
-			return;
 		}
 
 		#endregion
 
 		#region floater
+
+		public FloaterExpression? ValueOfFloater {
+			get => this.Value.Value.AsClassOrNull<FloaterExpression>();
+			set => this.Value.Value = value;
+		}
+
+		// ----------------
+
+		public async void uFloaterValue_LostFocus (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<NumberBox>();
+			if (this.Type != SubmissionType.Floater) {
+				return;
+			}
+			if (senders.Text.Length == 0) {
+				this.ValueOfFloater = null;
+			}
+			else if (Floater.IsFinite(senders.Value)) {
+				this.ValueOfFloater = new () { Value = senders.Value };
+			}
+			this.NotifyPropertyChanged(
+				nameof(this.uFloaterValue_Value)
+			);
+			return;
+		}
 
 		public DecimalFormatter uFloaterValue_NumberFormatter {
 			get {
@@ -408,36 +480,43 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public Floater uFloaterValue_Value {
 			get {
-				if (this.Type is not SubmissionType.Floater) {
+				if (this.Type != SubmissionType.Floater) {
 					return Floater.NaN;
 				}
-				return this.Value.OfFloater is null ? Floater.NaN : this.Value.OfFloater.Value;
+				return this.ValueOfFloater == null ? Floater.NaN : this.ValueOfFloater.Value;
 			}
-		}
-
-		public async void uFloaterValue_ValueChanged (
-			NumberBox                      sender,
-			NumberBoxValueChangedEventArgs args
-		) {
-			var senders = sender.AsClass<NumberBox>();
-			if (this.Type is not SubmissionType.Floater) {
-				return;
-			}
-			if (Floater.IsNaN(args.NewValue)) {
-				this.Value.OfFloater = null;
-			}
-			else {
-				this.Value.OfFloater = new () { Value = args.NewValue };
-			}
-			this.NotifyPropertyChanged(
-				nameof(this.uFloaterValue_Value)
-			);
-			return;
 		}
 
 		#endregion
 
 		#region size
+
+		public SizeExpression? ValueOfSize {
+			get => this.Value.Value.AsClassOrNull<SizeExpression>();
+			set => this.Value.Value = value;
+		}
+
+		// ----------------
+
+		public async void uSizeCount_LostFocus (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<NumberBox>();
+			if (this.Type != SubmissionType.Size) {
+				return;
+			}
+			if (senders.Text.Length == 0) {
+				this.ValueOfSize = null;
+			}
+			else if (Floater.IsFinite(senders.Value) && senders.Value >= 0.0) {
+				this.ValueOfSize = new () { Count = senders.Value, Exponent = this.uSizeExponent__Value };
+			}
+			this.NotifyPropertyChanged(
+				nameof(this.uSizeCount_Value)
+			);
+			return;
+		}
 
 		public DecimalFormatter uSizeCount_NumberFormatter {
 			get {
@@ -447,31 +526,11 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public Floater uSizeCount_Value {
 			get {
-				if (this.Type is not SubmissionType.Size) {
+				if (this.Type != SubmissionType.Size) {
 					return Floater.NaN;
 				}
-				return this.Value.OfSize is null ? Floater.NaN : this.Value.OfSize.Count;
+				return this.ValueOfSize == null ? Floater.NaN : this.ValueOfSize.Count;
 			}
-		}
-
-		public async void uSizeCount_ValueChanged (
-			NumberBox                      sender,
-			NumberBoxValueChangedEventArgs args
-		) {
-			var senders = sender.AsClass<NumberBox>();
-			if (this.Type is not SubmissionType.Size) {
-				return;
-			}
-			if (Floater.IsNaN(args.NewValue)) {
-				this.Value.OfSize = null;
-			}
-			else {
-				this.Value.OfSize = new () { Count = args.NewValue, Exponent = this.uSizeExponent__Value };
-			}
-			this.NotifyPropertyChanged(
-				nameof(this.uSizeCount_Value)
-			);
-			return;
 		}
 
 		// ----------------
@@ -489,12 +548,12 @@ namespace AssistantPlus.View.ModdingWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<MenuFlyoutItem>();
-			if (this.Type is not SubmissionType.Size) {
+			if (this.Type != SubmissionType.Size) {
 				return;
 			}
 			this.uSizeExponent__Value = Integer.Parse(senders.Tag.AsClass<String>());
-			if (this.Value.OfSize is not null) {
-				this.Value.OfSize.Exponent = this.uSizeExponent__Value;
+			if (this.ValueOfSize != null) {
+				this.ValueOfSize = new () { Count = this.ValueOfSize.Count, Exponent = this.uSizeExponent__Value };
 			}
 			this.NotifyPropertyChanged(
 				nameof(this.uSizeExponent_Content)
@@ -506,19 +565,26 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		#region string
 
+		public StringExpression? ValueOfString {
+			get => this.Value.Value.AsClassOrNull<StringExpression>();
+			set => this.Value.Value = value;
+		}
+
+		// ----------------
+
 		public async void uStringValue_LostFocus (
 			Object          sender,
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<TextBox>();
-			if (this.Type is not SubmissionType.String) {
+			if (this.Type != SubmissionType.String) {
 				return;
 			}
 			if (senders.Text.Length == 0) {
-				this.Value.OfString = null;
+				this.ValueOfString = null;
 			}
 			else {
-				this.Value.OfString = new () { Value = senders.Text };
+				this.ValueOfString = new () { Value = senders.Text };
 			}
 			this.NotifyPropertyChanged(
 				nameof(this.uStringValue_Text)
@@ -528,10 +594,10 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public String uStringValue_Text {
 			get {
-				if (this.Type is not SubmissionType.String) {
+				if (this.Type != SubmissionType.String) {
 					return "";
 				}
-				return this.Value.OfString is null ? "" : this.Value.OfString.Value;
+				return this.ValueOfString == null ? "" : this.ValueOfString.Value;
 			}
 		}
 
@@ -539,12 +605,19 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		#region path
 
+		public PathExpression? ValueOfPath {
+			get => this.Value.Value.AsClassOrNull<PathExpression>();
+			set => this.Value.Value = value;
+		}
+
+		// ----------------
+
 		public async void uPathContent_DragOver (
 			Object        sender,
 			DragEventArgs args
 		) {
 			var senders = sender.AsClass<TextBox>();
-			if (this.Type is not SubmissionType.Path) {
+			if (this.Type != SubmissionType.Path) {
 				return;
 			}
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
@@ -558,13 +631,13 @@ namespace AssistantPlus.View.ModdingWorker {
 			DragEventArgs args
 		) {
 			var senders = sender.AsClass<TextBox>();
-			if (this.Type is not SubmissionType.Path) {
+			if (this.Type != SubmissionType.Path) {
 				return;
 			}
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.Handled = true;
 				var item = await args.DataView.GetStorageItemsAsync();
-				this.Value.OfPath = new () { Content = StorageHelper.GetLongPath(item[0].Path) };
+				this.ValueOfPath = new () { Content = StorageHelper.GetLongPath(item[0].Path) };
 				this.NotifyPropertyChanged(
 					nameof(this.uPathContent_Text)
 				);
@@ -577,14 +650,14 @@ namespace AssistantPlus.View.ModdingWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<TextBox>();
-			if (this.Type is not SubmissionType.Path) {
+			if (this.Type != SubmissionType.Path) {
 				return;
 			}
 			if (senders.Text.Length == 0) {
-				this.Value.OfPath = null;
+				this.ValueOfPath = null;
 			}
 			else {
-				this.Value.OfPath = new () { Content = StorageHelper.Regularize(senders.Text) };
+				this.ValueOfPath = new () { Content = StorageHelper.Regularize(senders.Text) };
 			}
 			this.NotifyPropertyChanged(
 				nameof(this.uPathContent_Text)
@@ -594,10 +667,10 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public String uPathContent_Text {
 			get {
-				if (this.Type is not SubmissionType.Path) {
+				if (this.Type != SubmissionType.Path) {
 					return "";
 				}
-				return this.Value.OfPath is null ? "" : this.Value.OfPath.Content;
+				return this.ValueOfPath == null ? "" : this.ValueOfPath.Content;
 			}
 		}
 
@@ -608,10 +681,10 @@ namespace AssistantPlus.View.ModdingWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<MenuFlyoutItem>();
-			if (this.Type is not SubmissionType.Path) {
+			if (this.Type != SubmissionType.Path) {
 				return;
 			}
-			this.Value.OfPath = new () { Content = $":{senders.Tag.AsClass<String>()[0].ToString().ToLower()}" };
+			this.ValueOfPath = new () { Content = $":{senders.Tag.AsClass<String>()[0].ToString().ToLower()}" };
 			this.NotifyPropertyChanged(
 				nameof(this.uPathContent_Text)
 			);
@@ -623,17 +696,17 @@ namespace AssistantPlus.View.ModdingWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<MenuFlyoutItem>();
-			if (this.Type is not SubmissionType.Path) {
+			if (this.Type != SubmissionType.Path) {
 				return;
 			}
 			var value = senders.Tag.AsClass<String>() switch {
-				"OpenFile"      => await StorageHelper.PickOpenFile(WindowHelper.Find(this.View), $"{nameof(ModdingWorker)}.Generic"),
-				"OpenDirectory" => await StorageHelper.PickOpenDirectory(WindowHelper.Find(this.View), $"{nameof(ModdingWorker)}.Generic"),
+				"LoadFile"      => await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(ModdingWorker)}.Generic"),
+				"LoadDirectory" => await StorageHelper.PickLoadDirectory(WindowHelper.Find(this.View), $"{nameof(ModdingWorker)}.Generic"),
 				"SaveFile"      => await StorageHelper.PickSaveFile(WindowHelper.Find(this.View), $"{nameof(ModdingWorker)}.Generic", null, null),
 				_               => throw new (),
 			};
-			if (value is not null) {
-				this.Value.OfPath = new () { Content = value };
+			if (value != null) {
+				this.ValueOfPath = new () { Content = value };
 				this.NotifyPropertyChanged(
 					nameof(this.uPathContent_Text)
 				);
@@ -645,22 +718,28 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		#region enumeration
 
+		public EnumerationExpression? ValueOfEnumeration {
+			get => this.Value.Value.AsClassOrNull<EnumerationExpression>();
+			set => this.Value.Value = value;
+		}
+
+		// ----------------
+
 		public List<String> uEnumerationItem_ItemsSource {
 			get {
-				if (this.Type is not SubmissionType.Enumeration) {
+				if (this.Type != SubmissionType.Enumeration) {
 					return [];
 				}
-				var optionItem = this.Option[0..];
-				return optionItem;
+				return this.Option;
 			}
 		}
 
 		public String? uEnumerationItem_SelectedItem {
 			get {
-				if (this.Type is not SubmissionType.Enumeration) {
+				if (this.Type != SubmissionType.Enumeration) {
 					return null;
 				}
-				return this.Value.OfEnumeration is null ? null : this.Value.OfEnumeration.Item;
+				return this.ValueOfEnumeration == null ? null : this.ValueOfEnumeration.Item;
 			}
 		}
 
@@ -669,12 +748,12 @@ namespace AssistantPlus.View.ModdingWorker {
 			SelectionChangedEventArgs args
 		) {
 			var senders = sender.AsClass<ComboBox>();
-			if (this.Type is not SubmissionType.Enumeration) {
+			if (this.Type != SubmissionType.Enumeration) {
 				return;
 			}
 			var item = senders.SelectedItem.AsClassOrNull<String>();
 			if (item != null) {
-				this.Value.OfEnumeration = new () { Item = item };
+				this.ValueOfEnumeration = new () { Item = item };
 			}
 			return;
 		}
@@ -686,10 +765,10 @@ namespace AssistantPlus.View.ModdingWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<Button>();
-			if (this.Type is not SubmissionType.Enumeration) {
+			if (this.Type != SubmissionType.Enumeration) {
 				return;
 			}
-			this.Value.OfEnumeration = null;
+			this.ValueOfEnumeration = null;
 			this.NotifyPropertyChanged(
 				nameof(this.uEnumerationItem_SelectedItem)
 			);

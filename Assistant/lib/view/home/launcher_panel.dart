@@ -25,11 +25,9 @@ class LauncherPanel extends StatelessWidget {
   @override
   build(context) {
     var setting = Provider.of<SettingProvider>(context);
-    return ListView(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(0, 4, 0, 8),
+    return Column(
       children: [
+        const SizedBox(height: 4),
         const CustomSettingLabel(
           label: 'Module',
           action: null,
@@ -191,6 +189,7 @@ class LauncherPanel extends StatelessWidget {
           },
           panelBuilder: null,
         )),
+        const SizedBox(height: 4),
       ],
     );
   }

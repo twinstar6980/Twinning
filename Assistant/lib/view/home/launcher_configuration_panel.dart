@@ -43,11 +43,9 @@ class _LauncherConfigurationPanelState extends State<LauncherConfigurationPanel>
   @override
   build(context) {
     var theme = Theme.of(context);
-    return ListView(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+    return Column(
       children: [
+        const SizedBox(height: 4),
         CustomSettingItem(
           enabled: true,
           icon: IconSymbols.text_fields,
@@ -67,8 +65,8 @@ class _LauncherConfigurationPanelState extends State<LauncherConfigurationPanel>
             ListTile(
               contentPadding: EdgeInsets.zero,
               title: Focus(
-                onFocusChange: (value) async {
-                  if (!value) {
+                onFocusChange: (focused) async {
+                  if (!focused) {
                     this.setState(() {});
                     this.widget.onUpdate();
                   }
@@ -142,8 +140,8 @@ class _LauncherConfigurationPanelState extends State<LauncherConfigurationPanel>
             ListTile(
               contentPadding: EdgeInsets.zero,
               title: Focus(
-                onFocusChange: (value) async {
-                  if (!value) {
+                onFocusChange: (focused) async {
+                  if (!focused) {
                     this.setState(() {});
                     this.widget.onUpdate();
                   }
@@ -164,6 +162,7 @@ class _LauncherConfigurationPanelState extends State<LauncherConfigurationPanel>
             ),
           ],
         ),
+        const SizedBox(height: 4),
       ],
     );
   }

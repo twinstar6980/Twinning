@@ -108,13 +108,13 @@ namespace AssistantPlus.Utility {
 				Object?        value,
 				JsonSerializer serializer
 			) {
-				if (value is null) {
+				if (value == null) {
 					serializer.Serialize(writer, null);
 					return;
 				}
 				var values = value.AsClass<ITuple>();
 				var types = value.GetType().GetGenericArguments();
-				var token = new JArray(types.Select((type, index) => (values[index] is null ? null : JToken.FromObject(values[index].AsNotNull(), serializer))));
+				var token = new JArray(types.Select((type, index) => (values[index] == null ? null : JToken.FromObject(values[index].AsNotNull(), serializer))));
 				serializer.Serialize(writer, token);
 				return;
 			}
@@ -126,7 +126,7 @@ namespace AssistantPlus.Utility {
 				JsonSerializer serializer
 			) {
 				var token = serializer.Deserialize<JArray>(reader);
-				if (token is null) {
+				if (token == null) {
 					return null;
 				}
 				var types = objectType.GetGenericArguments();

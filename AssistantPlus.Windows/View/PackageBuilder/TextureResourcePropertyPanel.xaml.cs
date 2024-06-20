@@ -108,6 +108,20 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		#region format
 
+		public async void uFormat_LostFocus (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<NumberBox>();
+			if (IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
+				this.Value.Format = (Integer)senders.Value;
+			}
+			this.NotifyPropertyChanged(
+				nameof(this.uFormat_Value)
+			);
+			return;
+		}
+
 		public DecimalFormatter uFormat_NumberFormatter {
 			get {
 				return new () { IntegerDigits = 1, FractionDigits = 0 };
@@ -120,23 +134,23 @@ namespace AssistantPlus.View.PackageBuilder {
 			}
 		}
 
-		public async void uFormat_ValueChanged (
-			NumberBox                      sender,
-			NumberBoxValueChangedEventArgs args
-		) {
-			var senders = sender.AsClass<NumberBox>();
-			if (!Floater.IsNaN(args.NewValue)) {
-				this.Value.Format = (Integer)args.NewValue;
-			}
-			this.NotifyPropertyChanged(
-				nameof(this.uFormat_Value)
-			);
-			return;
-		}
-
 		#endregion
 
 		#region pitch
+
+		public async void uPitch_LostFocus (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<NumberBox>();
+			if (IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
+				this.Value.Pitch = (Integer)senders.Value;
+			}
+			this.NotifyPropertyChanged(
+				nameof(this.uPitch_Value)
+			);
+			return;
+		}
 
 		public DecimalFormatter uPitch_NumberFormatter {
 			get {
@@ -150,23 +164,23 @@ namespace AssistantPlus.View.PackageBuilder {
 			}
 		}
 
-		public async void uPitch_ValueChanged (
-			NumberBox                      sender,
-			NumberBoxValueChangedEventArgs args
-		) {
-			var senders = sender.AsClass<NumberBox>();
-			if (!Floater.IsNaN(args.NewValue)) {
-				this.Value.Pitch = (Integer)args.NewValue;
-			}
-			this.NotifyPropertyChanged(
-				nameof(this.uPitch_Value)
-			);
-			return;
-		}
-
 		#endregion
 
 		#region additional byte count
+
+		public async void uAdditionalByteCount_LostFocus (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<NumberBox>();
+			if (IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
+				this.Value.AdditionalByteCount = (Integer)senders.Value;
+			}
+			this.NotifyPropertyChanged(
+				nameof(this.uAdditionalByteCount_Value)
+			);
+			return;
+		}
 
 		public DecimalFormatter uAdditionalByteCount_NumberFormatter {
 			get {
@@ -180,23 +194,23 @@ namespace AssistantPlus.View.PackageBuilder {
 			}
 		}
 
-		public async void uAdditionalByteCount_ValueChanged (
-			NumberBox                      sender,
-			NumberBoxValueChangedEventArgs args
-		) {
-			var senders = sender.AsClass<NumberBox>();
-			if (!Floater.IsNaN(args.NewValue)) {
-				this.Value.AdditionalByteCount = (Integer)args.NewValue;
-			}
-			this.NotifyPropertyChanged(
-				nameof(this.uAdditionalByteCount_Value)
-			);
-			return;
-		}
-
 		#endregion
 
 		#region size
+
+		public async void uSizeWidth_LostFocus (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.AsClass<NumberBox>();
+			if (IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
+				this.Value.Size[0] = (Integer)senders.Value;
+			}
+			this.NotifyPropertyChanged(
+				nameof(this.uSizeWidth_Value)
+			);
+			return;
+		}
 
 		public DecimalFormatter uSizeWidth_NumberFormatter {
 			get {
@@ -210,21 +224,21 @@ namespace AssistantPlus.View.PackageBuilder {
 			}
 		}
 
-		public async void uSizeWidth_ValueChanged (
-			NumberBox                      sender,
-			NumberBoxValueChangedEventArgs args
+		// ----------------
+
+		public async void uSizeHeight_LostFocus (
+			Object          sender,
+			RoutedEventArgs args
 		) {
 			var senders = sender.AsClass<NumberBox>();
-			if (!Floater.IsNaN(args.NewValue)) {
-				this.Value.Size[0] = (Integer)args.NewValue;
+			if (IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
+				this.Value.Size[1] = (Integer)senders.Value;
 			}
 			this.NotifyPropertyChanged(
-				nameof(this.uSizeWidth_Value)
+				nameof(this.uSizeHeight_Value)
 			);
 			return;
 		}
-
-		// ----------------
 
 		public DecimalFormatter uSizeHeight_NumberFormatter {
 			get {
@@ -236,20 +250,6 @@ namespace AssistantPlus.View.PackageBuilder {
 			get {
 				return this.Value.Size[1];
 			}
-		}
-
-		public async void uSizeHeight_ValueChanged (
-			NumberBox                      sender,
-			NumberBoxValueChangedEventArgs args
-		) {
-			var senders = sender.AsClass<NumberBox>();
-			if (!Floater.IsNaN(args.NewValue)) {
-				this.Value.Size[1] = (Integer)args.NewValue;
-			}
-			this.NotifyPropertyChanged(
-				nameof(this.uSizeHeight_Value)
-			);
-			return;
 		}
 
 		#endregion
