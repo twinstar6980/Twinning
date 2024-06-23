@@ -71,8 +71,8 @@ namespace AssistantPlus.View.Home {
 			Object             sender,
 			ItemClickEventArgs args
 		) {
-			var senders = sender.AsClass<ListView>();
-			await App.Instance.ExecuteLauncher(args.ClickedItem.AsClass<LauncherPageLauncherItemController>().Configuration, false);
+			var senders = sender.As<ListView>();
+			await App.Instance.ExecuteLauncher(args.ClickedItem.As<LauncherPageLauncherItemController>().Configuration, false);
 			return;
 		}
 
@@ -84,8 +84,8 @@ namespace AssistantPlus.View.Home {
 			Object             sender,
 			ItemClickEventArgs args
 		) {
-			var senders = sender.AsClass<ListView>();
-			await App.Instance.ExecuteLauncher(args.ClickedItem.AsClass<LauncherPageLauncherItemController>().Configuration, false);
+			var senders = sender.As<ListView>();
+			await App.Instance.ExecuteLauncher(args.ClickedItem.As<LauncherPageLauncherItemController>().Configuration, false);
 			return;
 		}
 
@@ -93,7 +93,7 @@ namespace AssistantPlus.View.Home {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			App.Setting.Data.ModuleLauncher.Pinned.Add(new () {
 				Title = "Untitled",
 				Type = ModuleType.ModdingWorker,
@@ -113,8 +113,8 @@ namespace AssistantPlus.View.Home {
 			Object             sender,
 			ItemClickEventArgs args
 		) {
-			var senders = sender.AsClass<ListView>();
-			await App.Instance.ExecuteLauncher(args.ClickedItem.AsClass<LauncherPageLauncherItemController>().Configuration, false);
+			var senders = sender.As<ListView>();
+			await App.Instance.ExecuteLauncher(args.ClickedItem.As<LauncherPageLauncherItemController>().Configuration, false);
 			return;
 		}
 
@@ -122,7 +122,7 @@ namespace AssistantPlus.View.Home {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			if (await ControlHelper.ShowDialogForPausing(this.View, "Confirm ?", null)) {
 				App.Setting.Data.ModuleLauncher.Recent.Clear();
 				this.uRecentLauncherList_ItemsSource.Clear();
@@ -169,7 +169,7 @@ namespace AssistantPlus.View.Home {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<MenuFlyoutItem>();
+			var senders = sender.As<MenuFlyoutItem>();
 			await ControlHelper.ShowDialogFixed(this.Host.View, "Launcher Configuration", new LauncherConfigurationPanel() {
 				Data = this.Configuration,
 				Stamp = UniqueStamp.Create(),
@@ -186,7 +186,7 @@ namespace AssistantPlus.View.Home {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<MenuFlyoutItem>();
+			var senders = sender.As<MenuFlyoutItem>();
 			await App.Instance.ExecuteLauncher(this.Configuration, true);
 			return;
 		}
@@ -203,10 +203,10 @@ namespace AssistantPlus.View.Home {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			GF.AssertTest(this.Category == ModuleLauncherCategory.Module);
 			var panelType = ModuleHelper.Query(this.Configuration.Type).SettingPanel;
-			var panelObject = Activator.CreateInstance(panelType).AsClass<UIElement>();
+			var panelObject = Activator.CreateInstance(panelType).AsNotNull().As<UIElement>();
 			var settingData = App.Setting.Data.GetType().GetField(this.Configuration.Type.ToString()).AsNotNull().GetValue(App.Setting.Data);
 			panelType.GetProperty("Data").AsNotNull().SetValue(panelObject, settingData);
 			await ControlHelper.ShowDialogFixed(this.Host.View, "Module Setting", panelObject);
@@ -224,7 +224,7 @@ namespace AssistantPlus.View.Home {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			GF.AssertTest(this.Category == ModuleLauncherCategory.Pinned || this.Category == ModuleLauncherCategory.Recent);
 			if (this.Category == ModuleLauncherCategory.Pinned) {
 				App.Setting.Data.ModuleLauncher.Pinned.Remove(this.Configuration);
@@ -248,7 +248,7 @@ namespace AssistantPlus.View.Home {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			GF.AssertTest(this.Category == ModuleLauncherCategory.Recent);
 			App.Setting.Data.ModuleLauncher.Recent.Remove(this.Configuration);
 			App.Setting.Data.ModuleLauncher.Pinned.Add(this.Configuration);

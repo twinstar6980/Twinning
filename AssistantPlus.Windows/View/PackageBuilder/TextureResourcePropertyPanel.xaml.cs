@@ -48,7 +48,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		);
 
 		public TextureResourceProperty Value {
-			get => this.GetValue(TextureResourcePropertyPanel.ValueProperty).AsClass<TextureResourceProperty>();
+			get => this.GetValue(TextureResourcePropertyPanel.ValueProperty).As<TextureResourceProperty>();
 			set => this.SetValue(TextureResourcePropertyPanel.ValueProperty, value);
 		}
 
@@ -90,7 +90,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			this.Value.Path = senders.Text;
 			this.NotifyPropertyChanged(
 				nameof(this.uPath_Text)
@@ -112,7 +112,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<NumberBox>();
+			var senders = sender.As<NumberBox>();
 			if (IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
 				this.Value.Format = (Integer)senders.Value;
 			}
@@ -142,7 +142,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<NumberBox>();
+			var senders = sender.As<NumberBox>();
 			if (IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
 				this.Value.Pitch = (Integer)senders.Value;
 			}
@@ -172,7 +172,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<NumberBox>();
+			var senders = sender.As<NumberBox>();
 			if (IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
 				this.Value.AdditionalByteCount = (Integer)senders.Value;
 			}
@@ -202,7 +202,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<NumberBox>();
+			var senders = sender.As<NumberBox>();
 			if (IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
 				this.Value.Size[0] = (Integer)senders.Value;
 			}
@@ -230,7 +230,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<NumberBox>();
+			var senders = sender.As<NumberBox>();
 			if (IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
 				this.Value.Size[1] = (Integer)senders.Value;
 			}

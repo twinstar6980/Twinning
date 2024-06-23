@@ -30,7 +30,7 @@ namespace AssistantPlus.View.AnimationViewer {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			this.Controller.ApplyOption(args.Parameter.AsClass<List<String>>());
+			this.Controller.ApplyOption(args.Parameter.As<List<String>>());
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -554,10 +554,10 @@ namespace AssistantPlus.View.AnimationViewer {
 				nameof(this.uWorkingSpritePrevious_IsEnabled),
 				nameof(this.uWorkingSpriteNext_IsEnabled)
 			);
-			foreach (var item in this.View.uSpriteList.ItemsSource.AsClass<List<MainPageSpriteItemController>>()) {
+			foreach (var item in this.View.uSpriteList.ItemsSource.As<List<MainPageSpriteItemController>>()) {
 				item.NotifyPropertyChanged(nameof(item.uToggle_IsChecked));
 			}
-			foreach (var item in this.View.uMainSpriteList.ItemsSource.AsClass<List<MainPageMainSpriteItemController>>()) {
+			foreach (var item in this.View.uMainSpriteList.ItemsSource.As<List<MainPageMainSpriteItemController>>()) {
 				item.NotifyPropertyChanged(nameof(item.uToggle_IsChecked));
 			}
 			return;
@@ -596,10 +596,10 @@ namespace AssistantPlus.View.AnimationViewer {
 				nameof(this.uWorkingSpritePrevious_IsEnabled),
 				nameof(this.uWorkingSpriteNext_IsEnabled)
 			);
-			foreach (var item in this.View.uSpriteList.ItemsSource.AsClass<List<MainPageSpriteItemController>>()) {
+			foreach (var item in this.View.uSpriteList.ItemsSource.As<List<MainPageSpriteItemController>>()) {
 				item.NotifyPropertyChanged(nameof(item.uToggle_IsChecked));
 			}
-			foreach (var item in this.View.uMainSpriteList.ItemsSource.AsClass<List<MainPageMainSpriteItemController>>()) {
+			foreach (var item in this.View.uMainSpriteList.ItemsSource.As<List<MainPageMainSpriteItemController>>()) {
 				item.NotifyPropertyChanged(nameof(item.uToggle_IsChecked));
 			}
 			this.View.uSprite.Unload();
@@ -736,7 +736,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object        sender,
 			DragEventArgs args
 		) {
-			var senders = sender.AsClass<Page>();
+			var senders = sender.As<Page>();
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Link;
 			}
@@ -747,7 +747,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object        sender,
 			DragEventArgs args
 		) {
-			var senders = sender.AsClass<Page>();
+			var senders = sender.As<Page>();
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.Handled = true;
 				var item = await args.DataView.GetStorageItemsAsync();
@@ -804,7 +804,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object sender,
 			Object args
 		) {
-			var senders = sender.AsClass<ScrollViewer>();
+			var senders = sender.As<ScrollViewer>();
 			this.StageScale = senders.ZoomFactor;
 			this.StagePositionX = (senders.HorizontalOffset + senders.ActualWidth / 2) / senders.ZoomFactor;
 			this.StagePositionY = (senders.VerticalOffset + senders.ActualHeight / 2) / senders.ZoomFactor;
@@ -831,7 +831,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.ImmediateSelect = senders.IsChecked.AsNotNull();
 			return;
 		}
@@ -848,7 +848,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.AutomaticPlay = senders.IsChecked.AsNotNull();
 			return;
 		}
@@ -865,7 +865,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.RepeatPlay = senders.IsChecked.AsNotNull();
 			this.View.uSprite.Repeat = this.RepeatPlay;
 			return;
@@ -883,7 +883,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.RemainFrameRate = senders.IsChecked.AsNotNull();
 			return;
 		}
@@ -905,7 +905,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			if (!this.Loaded) {
 				return;
 			}
@@ -940,7 +940,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			var isPlaying = this.Working && this.View.uSprite.State == SpriteControl.StateType.Playing;
 			if (isPlaying) {
 				this.View.uSprite.State = SpriteControl.StateType.Paused;
@@ -990,7 +990,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			if (!this.Loaded) {
 				return;
 			}
@@ -1027,15 +1027,15 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			var senders = sender.AsClass<ListView>();
+			var senders = sender.As<ListView>();
 			if (!this.Loaded) {
 				return;
 			}
 			if (this.SuppressFilterListSelectionChanged) { return; }
-			foreach (var item in args.AddedItems.Select(GF.AsClass<MainPageImageItemController>)) {
+			foreach (var item in args.AddedItems.Select(GF.As<MainPageImageItemController>)) {
 				this.ImageFilter[item.Index] = true;
 			}
-			foreach (var item in args.RemovedItems.Select(GF.AsClass<MainPageImageItemController>)) {
+			foreach (var item in args.RemovedItems.Select(GF.As<MainPageImageItemController>)) {
 				this.ImageFilter[item.Index] = false;
 			}
 			this.SuppressApplyFilterChanged = true;
@@ -1072,15 +1072,15 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			var senders = sender.AsClass<ListView>();
+			var senders = sender.As<ListView>();
 			if (!this.Loaded) {
 				return;
 			}
 			if (this.SuppressFilterListSelectionChanged) { return; }
-			foreach (var item in args.AddedItems.Select(GF.AsClass<MainPageSpriteItemController>)) {
+			foreach (var item in args.AddedItems.Select(GF.As<MainPageSpriteItemController>)) {
 				this.SpriteFilter[item.Index] = true;
 			}
-			foreach (var item in args.RemovedItems.Select(GF.AsClass<MainPageSpriteItemController>)) {
+			foreach (var item in args.RemovedItems.Select(GF.As<MainPageSpriteItemController>)) {
 				this.SpriteFilter[item.Index] = false;
 			}
 			this.SuppressApplyFilterChanged = true;
@@ -1117,7 +1117,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			var senders = sender.AsClass<ListView>();
+			var senders = sender.As<ListView>();
 			if (!this.Loaded) {
 				return;
 			}
@@ -1188,7 +1188,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			NumberBox                      sender,
 			NumberBoxValueChangedEventArgs args
 		) {
-			var senders = sender.AsClass<NumberBox>();
+			var senders = sender.As<NumberBox>();
 			if (!this.Working) {
 				return;
 			}
@@ -1259,7 +1259,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			NumberBox                      sender,
 			NumberBoxValueChangedEventArgs args
 		) {
-			var senders = sender.AsClass<NumberBox>();
+			var senders = sender.As<NumberBox>();
 			if (!this.Working) {
 				return;
 			}
@@ -1332,12 +1332,12 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			var senders = sender.AsClass<ComboBox>();
+			var senders = sender.As<ComboBox>();
 			if (!this.Working) {
 				return;
 			}
 			if (args.AddedItems.Count == 1) {
-				var newLabel = args.AddedItems[0].AsClass<String>();
+				var newLabel = args.AddedItems[0].As<String>();
 				var newRange = new GameAnimationHelper.FrameRange() {
 					Start = 0,
 					Duration = GameAnimationHelper.SelectSprite(this.Animation, this.WorkingSpriteIndex.AsNotNull()).Frame.Count,
@@ -1402,7 +1402,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			NumberBox                      sender,
 			NumberBoxValueChangedEventArgs args
 		) {
-			var senders = sender.AsClass<NumberBox>();
+			var senders = sender.As<NumberBox>();
 			if (!this.Working) {
 				return;
 			}
@@ -1454,7 +1454,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object                         sender,
 			RangeBaseValueChangedEventArgs args
 		) {
-			var senders = sender.AsClass<Slider>();
+			var senders = sender.As<Slider>();
 			if (!this.Working) {
 				return;
 			}
@@ -1477,7 +1477,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object                 sender,
 			PointerRoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Slider>();
+			var senders = sender.As<Slider>();
 			if (!this.Working) {
 				return;
 			}
@@ -1498,7 +1498,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object                 sender,
 			PointerRoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Slider>();
+			var senders = sender.As<Slider>();
 			if (!this.Working) {
 				return;
 			}
@@ -1532,7 +1532,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			if (!this.Working) {
 				return;
 			}
@@ -1572,7 +1572,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			if (!this.Working) {
 				return;
 			}
@@ -1601,7 +1601,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			if (!this.Working) {
 				return;
 			}
@@ -1629,7 +1629,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.ShowSpriteBoundary = senders.IsChecked.AsNotNull();
 			this.View.uSprite.ShowBoundary = this.ShowSpriteBoundary;
 			return;
@@ -1643,7 +1643,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			SplitButton               sender,
 			SplitButtonClickEventArgs args
 		) {
-			var senders = sender.AsClass<SplitButton>();
+			var senders = sender.As<SplitButton>();
 			if (!this.Loaded) {
 				return;
 			}
@@ -1657,7 +1657,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			this.ImageFilterRule = senders.Text;
 			this.NotifyPropertyChanged(
 				nameof(this.uImageFilterRuleText_Text)
@@ -1677,7 +1677,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			this.SpriteFilterRule = senders.Text;
 			this.NotifyPropertyChanged(
 				nameof(this.uSpriteFilterRuleText_Text)
@@ -1744,12 +1744,12 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			var senders = sender.AsClass<ComboBox>();
+			var senders = sender.As<ComboBox>();
 			if (!this.Loaded || this.PlantCustomLayerName.Count == 0) {
 				return;
 			}
 			if (args.AddedItems.Count == 1) {
-				var targetLayer = $"custom_{args.AddedItems[0].AsClass<String>()}";
+				var targetLayer = $"custom_{args.AddedItems[0].As<String>()}";
 				await this.ApplyFilter(null, this.Animation.Sprite.Select((value) => (value.Name != null && this.PlantCustomLayerName.Contains(value.Name) ? value.Name == targetLayer : (Boolean?)null)).ToList());
 				this.NotifyPropertyChanged(
 					nameof(this.uPlantCustomLayer_SelectedItem)
@@ -1809,10 +1809,10 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			var senders = sender.AsClass<ComboBox>();
+			var senders = sender.As<ComboBox>();
 			if (!this.Loaded || this.ZombieStateLayerName.Count == 0) { return; }
 			if (args.AddedItems.Count == 1) {
-				var targetLayer = args.AddedItems[0].AsClass<String>();
+				var targetLayer = args.AddedItems[0].As<String>();
 				await this.ApplyFilter(null, this.Animation.Sprite.Select((value) => (value.Name != null && this.ZombieStateLayerName.Contains(value.Name) ? value.Name == targetLayer : (Boolean?)null)).ToList());
 				this.NotifyPropertyChanged(
 					nameof(this.uZombieStateLayer_SelectedItem)
@@ -1853,7 +1853,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			if (!this.Loaded || this.ZombieGroundSwatchLayerName.Count == 0) { return; }
 			var newValue = senders.IsChecked.AsNotNull();
 			await this.ApplyFilter(null, this.Animation.Sprite.Select((value) => (value.Name != null && this.ZombieGroundSwatchLayerName.Contains(value.Name) ? newValue : (Boolean?)null)).ToList());
@@ -1991,7 +1991,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			GF.AssertTest(this.Host.Loaded);
 			var lastWorkingSpriteIndex = this.Host.WorkingSpriteIndex;
 			var lastWorkingSpriteFrameRate = this.Host.WorkingSpriteFrameRate;
@@ -2091,7 +2091,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			if (this.Index == null) {
 			}
 			else {

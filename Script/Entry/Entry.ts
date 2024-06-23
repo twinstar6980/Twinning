@@ -112,7 +112,7 @@ namespace Twinning.Script.Entry {
 			Console.information(los('entry:current_command_execute', progress), [
 				item.input === null ? '?' : item.input.value,
 				item.method === null ? '?' : item.method,
-				...record_to_array(item.argument, (key, value) => (`"${key}": ${KernelX.JSON.write_s_js(value, false, false, false, false)},`)),
+				...record_to_array(item.argument, (key, value) => (`"${key}": ${KernelX.JSON.write_s_js(value, true, true, true, true)}`)),
 			]);
 			let state = Executor.execute(item, Executor.g_method, Executor.g_method_batch);
 			if (state === null) {

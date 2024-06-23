@@ -24,7 +24,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			this.Controller.ApplyOption(args.Parameter.AsClass<List<String>>());
+			this.Controller.ApplyOption(args.Parameter.As<List<String>>());
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -164,7 +164,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			Object        sender,
 			DragEventArgs args
 		) {
-			var senders = sender.AsClass<Page>();
+			var senders = sender.As<Page>();
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Link;
 			}
@@ -175,7 +175,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			Object        sender,
 			DragEventArgs args
 		) {
-			var senders = sender.AsClass<Page>();
+			var senders = sender.As<Page>();
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.Handled = true;
 				var item = await args.DataView.GetStorageItemsAsync();
@@ -275,8 +275,8 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<MenuFlyoutItem>();
-			switch (senders.Tag.AsClass<String>()) {
+			var senders = sender.As<MenuFlyoutItem>();
+			switch (senders.Tag.As<String>()) {
 				case "Load": {
 					var file = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(ReflectionDescriptor)}.DescriptorFile");
 					if (file != null) {
@@ -306,9 +306,9 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			TreeView                     sender,
 			TreeViewItemInvokedEventArgs args
 		) {
-			var senders = sender.AsClass<TreeView>();
+			var senders = sender.As<TreeView>();
 			GF.AssertTest(this.IsLoaded);
-			this.uObjectList_SelectedItem = args.InvokedItem.AsClass<ObjectItemController>();
+			this.uObjectList_SelectedItem = args.InvokedItem.As<ObjectItemController>();
 			this.NotifyPropertyChanged(
 				nameof(this.uPropertyExport_IsEnabled),
 				nameof(this.uPropertyPanel_Descriptor),
@@ -322,7 +322,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			TreeView                   sender,
 			TreeViewCollapsedEventArgs args
 		) {
-			var senders = sender.AsClass<TreeView>();
+			var senders = sender.As<TreeView>();
 			GF.AssertTest(this.IsLoaded);
 			this.NotifyPropertyChanged(
 				nameof(this.uObjectList_SelectedItem)
@@ -334,7 +334,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			TreeView                   sender,
 			TreeViewExpandingEventArgs args
 		) {
-			var senders = sender.AsClass<TreeView>();
+			var senders = sender.As<TreeView>();
 			GF.AssertTest(this.IsLoaded);
 			this.NotifyPropertyChanged(
 				nameof(this.uObjectList_SelectedItem)
@@ -385,13 +385,13 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			GF.AssertTest(this.IsLoaded);
 			var objectType = new GameReflectionModel.CompositeType() { Primitive = GameReflectionModel.PrimitiveType.Object, Element = null, Class = this.uObjectList_SelectedItem.AsNotNull().Descriptor.Name };
-			var objectValue = GameReflectionHelper.GenerateDataValueDefault(this.DescriptorMap, objectType, true).AsClass<GameReflectionModel.FixedObject>();
+			var objectValue = GameReflectionHelper.GenerateDataValueDefault(this.DescriptorMap, objectType, true).As<GameReflectionModel.FixedObject>();
 			var resultValue = GameReflectionHelper.MakeDataValue(this.DescriptorMap, objectType, objectValue);
 			var resultText = JsonHelper.SerializeText(resultValue);
-			Clipboard.SetContent(new DataPackage().ApplySelf((it) => { it.SetText(resultText); }));
+			Clipboard.SetContent(new DataPackage().SelfAlso((it) => { it.SetText(resultText); }));
 			App.MainWindow.PushNotification(InfoBarSeverity.Success, "Copied!", "");
 			return;
 		}
@@ -438,7 +438,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 				return this.Host.View.FindResource(this.Descriptor.Property.Count switch {
 					0 => "InformationalValueInfoBadgeStyle",
 					_ => "AttentionValueInfoBadgeStyle",
-				}).AsClass<Style>();
+				}).As<Style>();
 			}
 		}
 
@@ -455,7 +455,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 				return this.Host.View.FindResource(this.Descriptor.Derived.Count switch {
 					0 => "InformationalValueInfoBadgeStyle",
 					_ => "AttentionValueInfoBadgeStyle",
-				}).AsClass<Style>();
+				}).As<Style>();
 			}
 		}
 

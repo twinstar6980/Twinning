@@ -40,7 +40,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		);
 
 		public List<Variable> Value {
-			get => this.GetValue(VariableListPanel.ValueProperty).AsClass<List<Variable>>();
+			get => this.GetValue(VariableListPanel.ValueProperty).As<List<Variable>>();
 			set => this.SetValue(VariableListPanel.ValueProperty, value);
 		}
 
@@ -79,7 +79,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object                      sender,
 			DragItemsCompletedEventArgs args
 		) {
-			var senders = sender.AsClass<ListView>();
+			var senders = sender.As<ListView>();
 			this.Value.Clear();
 			this.Value.AddRange(this.uList_ItemsSource.Select((value) => (value.Item)));
 			return;
@@ -93,7 +93,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			var newItem = new Variable() { Name = "", Value = "" };
 			this.Value.Add(newItem);
 			this.uList_ItemsSource.Add(new () { Host = this, Item = newItem });
@@ -122,7 +122,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			this.Item.Name = senders.Text;
 			this.NotifyPropertyChanged(
 				nameof(this.uName_Text)
@@ -142,7 +142,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			this.Item.Value = senders.Text;
 			this.NotifyPropertyChanged(
 				nameof(this.uValue_Text)
@@ -162,7 +162,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			this.Host.Value.Remove(this.Item);
 			this.Host.uList_ItemsSource.Remove(this);
 			return;

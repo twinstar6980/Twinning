@@ -42,17 +42,17 @@ class CommandLineReader {
 
   Boolean nextBoolean(
   ) {
-    return Boolean.parse(this.nextString());
+    return this.nextString().selfLet((it) => Boolean.parse(it));
   }
 
   Integer nextInteger(
   ) {
-    return Integer.parse(this.nextString());
+    return this.nextString().selfLet((it) => Integer.parse(it));
   }
 
   Floater nextFloater(
   ) {
-    return Floater.parse(this.nextString());
+    return this.nextString().selfLet((it) => Floater.parse(it));
   }
 
   String nextString(

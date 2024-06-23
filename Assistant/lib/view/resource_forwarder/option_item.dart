@@ -172,7 +172,7 @@ class _OptionGroupItemState extends State<OptionGroupItem> {
   @override
   build(context) {
     var theme = Theme.of(context);
-    var visible = !this.widget.enableFilter || this.widget.match.any((value) => (value.$3 && (!this.widget.enableBatch ? value.$1 : value.$2)));
+    var visible = !this.widget.enableFilter || this.widget.match.any((value) => value.$3 && (!this.widget.enableBatch ? value.$1 : value.$2));
     return Visibility(
       visible: visible,
       child: Column(

@@ -44,8 +44,8 @@ class _MainPageState extends State<MainPage> {
     Boolean             enableBatch,
     Map<String, Object> argumentValue,
   ) async {
-    var groupConfiguration = this._methodConfiguration.firstWhere((value) => (methodId.startsWith('${value.id}.')));
-    var itemConfiguration = groupConfiguration.item.firstWhere((value) => (methodId == value.id));
+    var groupConfiguration = this._methodConfiguration.firstWhere((value) => methodId.startsWith('${value.id}.'));
+    var itemConfiguration = groupConfiguration.item.firstWhere((value) => methodId == value.id);
     this._command.add((groupConfiguration, itemConfiguration, Wrapper<Boolean>(enableBatch), ConfigurationHelper.parseArgumentValueListJson(itemConfiguration.argument, argumentValue)));
     this.setState(() {});
     await WidgetsBinding.instance.endOfFrame;
@@ -99,7 +99,7 @@ class _MainPageState extends State<MainPage> {
           optionCommand.add((
             option.nextString(),
             option.nextBoolean(),
-            JsonHelper.deserializeText(option.nextString())!.asType<Map>().cast<String, Object>(),
+            option.nextString().selfLet((it) => JsonHelper.deserializeText(it)!.as<Map<dynamic, dynamic>>().cast<String, Object>()),
           ));
         }
       }

@@ -40,7 +40,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		);
 
 		public List<String> ConversionSource {
-			get => this.GetValue(SpecialWemResourcePropertyPanel.ConversionSourceProperty).AsClass<List<String>>();
+			get => this.GetValue(SpecialWemResourcePropertyPanel.ConversionSourceProperty).As<List<String>>();
 			set => this.SetValue(SpecialWemResourcePropertyPanel.ConversionSourceProperty, value);
 		}
 
@@ -57,7 +57,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		);
 
 		public SpecialWemResourceProperty Value {
-			get => this.GetValue(SpecialWemResourcePropertyPanel.ValueProperty).AsClass<SpecialWemResourceProperty>();
+			get => this.GetValue(SpecialWemResourcePropertyPanel.ValueProperty).As<SpecialWemResourceProperty>();
 			set => this.SetValue(SpecialWemResourcePropertyPanel.ValueProperty, value);
 		}
 
@@ -111,8 +111,8 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			var senders = sender.AsClass<ComboBox>();
-			this.Value.Conversion = senders.SelectedItem.AsClass<String>();
+			var senders = sender.As<ComboBox>();
+			this.Value.Conversion = senders.SelectedItem.As<String>();
 			return;
 		}
 
@@ -124,7 +124,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			this.Value.Path = senders.Text;
 			this.NotifyPropertyChanged(
 				nameof(this.uPath_Text)

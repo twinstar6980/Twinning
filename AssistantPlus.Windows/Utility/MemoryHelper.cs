@@ -31,17 +31,17 @@ namespace AssistantPlus.Utility {
 
 		// ----------------
 
-		public static T* Allocate<T> (
+		public static TValue* Allocate<TValue> (
 			Size size = 1
 		)
-			where T : unmanaged {
-			return (T*)MemoryHelper.Allocate(size * sizeof(T));
+			where TValue : unmanaged {
+			return (TValue*)MemoryHelper.Allocate(size * sizeof(TValue));
 		}
 
-		public static void Free<T> (
-			T* data
+		public static void Free<TValue> (
+			TValue* data
 		)
-			where T : unmanaged {
+			where TValue : unmanaged {
 			MemoryHelper.Free((void*)data);
 			return;
 		}

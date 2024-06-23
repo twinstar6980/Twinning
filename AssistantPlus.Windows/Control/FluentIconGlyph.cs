@@ -1421,7 +1421,7 @@ namespace AssistantPlus.Control {
 		public static String FindGlyph (
 			String name
 		) {
-			return typeof(FluentIconGlyph).GetField(name)?.GetRawConstantValue()?.AsClass<String>() ?? throw new ($"Could not find glyph by name '{name}'.");
+			return typeof(FluentIconGlyph).GetField(name)?.GetRawConstantValue()?.As<String>() ?? throw new ($"Could not find glyph by name '{name}'.");
 		}
 
 		#endregion

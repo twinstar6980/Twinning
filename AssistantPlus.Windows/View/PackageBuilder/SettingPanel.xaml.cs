@@ -41,7 +41,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		);
 
 		public Setting Data {
-			get => this.GetValue(SettingPanel.DataProperty).AsClass<Setting>();
+			get => this.GetValue(SettingPanel.DataProperty).As<Setting>();
 			set => this.SetValue(SettingPanel.DataProperty, value);
 		}
 

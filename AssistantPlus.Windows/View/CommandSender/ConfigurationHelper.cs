@@ -31,23 +31,23 @@ namespace AssistantPlus.View.CommandSender {
 		) {
 			return type switch {
 				ArgumentType.Boolean => new BooleanExpression() {
-					Value = json.AsStruct<Boolean>(),
+					Value = json.As<Boolean>(),
 				},
 				ArgumentType.Integer => new IntegerExpression() {
-					Value = json.AsStruct<Integer>(),
+					Value = json.As<Integer>(),
 				},
 				ArgumentType.Floater => new FloaterExpression() {
-					Value = json.AsStruct<Floater>(),
+					Value = json.As<Floater>(),
 				},
 				ArgumentType.Size => new SizeExpression() {
-					Count = Floater.Parse(json.AsClass<String>()[..^1]),
-					Exponent = new[] { 'b', 'k', 'm', 'g' }.ToList().IndexOf(json.AsClass<String>()[^1]).ApplySelf((it) => { GF.AssertTest(it != -1); }),
+					Count = json.As<String>().SelfLet((it) => (Floater.Parse(it[..^1]))),
+					Exponent = json.As<String>().SelfLet((it) => (new[] { 'b', 'k', 'm', 'g' }.ToList().IndexOf(it[^1]))).SelfAlso((it) => { GF.AssertTest(it != -1); }),
 				},
 				ArgumentType.String => new StringExpression() {
-					Value = json.AsClass<String>(),
+					Value = json.As<String>(),
 				},
 				ArgumentType.Path => new PathExpression() {
-					Content = json.AsClass<String>(),
+					Content = json.As<String>(),
 				},
 				_ => throw new (),
 			};

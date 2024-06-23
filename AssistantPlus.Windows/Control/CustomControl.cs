@@ -21,11 +21,11 @@ namespace AssistantPlus {
 			nameof(CustomControl.Stamp),
 			typeof(UniqueStamp),
 			typeof(CustomControl),
-			new (UniqueStamp.Default, (o, e) => { o.AsClass<CustomControl>().StampUpdate(); })
+			new (UniqueStamp.Default, (o, e) => { o.As<CustomControl>().StampUpdate(); })
 		);
 
 		public UniqueStamp Stamp {
-			get => this.GetValue(CustomControl.StampProperty).AsClass<UniqueStamp>();
+			get => this.GetValue(CustomControl.StampProperty).As<UniqueStamp>();
 			set => this.SetValue(CustomControl.StampProperty, value);
 		}
 

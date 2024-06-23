@@ -43,7 +43,7 @@ namespace AssistantPlus.View.CommandSender {
 		);
 
 		public String Label {
-			get => this.GetValue(ArgumentBar.LabelProperty).AsClass<String>();
+			get => this.GetValue(ArgumentBar.LabelProperty).As<String>();
 			set => this.SetValue(ArgumentBar.LabelProperty, value);
 		}
 
@@ -57,7 +57,7 @@ namespace AssistantPlus.View.CommandSender {
 		);
 
 		public ArgumentType? Type {
-			get => this.GetValue(ArgumentBar.TypeProperty).AsStructOrNull<ArgumentType>();
+			get => this.GetValue(ArgumentBar.TypeProperty)?.As<ArgumentType>();
 			set => this.SetValue(ArgumentBar.TypeProperty, value);
 		}
 
@@ -71,7 +71,7 @@ namespace AssistantPlus.View.CommandSender {
 		);
 
 		public List<ValueExpression>? Option {
-			get => this.GetValue(ArgumentBar.OptionProperty).AsClassOrNull<List<ValueExpression>>();
+			get => this.GetValue(ArgumentBar.OptionProperty)?.As<List<ValueExpression>>();
 			set => this.SetValue(ArgumentBar.OptionProperty, value);
 		}
 
@@ -85,7 +85,7 @@ namespace AssistantPlus.View.CommandSender {
 		);
 
 		public Wrapper<ValueExpression> Value {
-			get => this.GetValue(ArgumentBar.ValueProperty).AsClass<Wrapper<ValueExpression>>();
+			get => this.GetValue(ArgumentBar.ValueProperty).As<Wrapper<ValueExpression>>();
 			set => this.SetValue(ArgumentBar.ValueProperty, value);
 		}
 
@@ -198,7 +198,7 @@ namespace AssistantPlus.View.CommandSender {
 		#region boolean
 
 		public BooleanExpression? ValueOfBoolean {
-			get => this.Value.Value.AsClassOrNull<BooleanExpression>();
+			get => this.Value.Value?.As<BooleanExpression>();
 			set => this.Value.Value = value;
 		}
 
@@ -208,7 +208,7 @@ namespace AssistantPlus.View.CommandSender {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			if (this.Type != ArgumentType.Boolean || this.Option != null) {
 				return;
 			}
@@ -250,7 +250,7 @@ namespace AssistantPlus.View.CommandSender {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			if (this.Type != ArgumentType.Boolean || this.Option != null) {
 				return;
 			}
@@ -283,7 +283,7 @@ namespace AssistantPlus.View.CommandSender {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			if (this.Type != ArgumentType.Boolean || this.Option != null) {
 				return;
 			}
@@ -306,7 +306,7 @@ namespace AssistantPlus.View.CommandSender {
 		#region integer
 
 		public IntegerExpression? ValueOfInteger {
-			get => this.Value.Value.AsClassOrNull<IntegerExpression>();
+			get => this.Value.Value?.As<IntegerExpression>();
 			set => this.Value.Value = value;
 		}
 
@@ -316,7 +316,7 @@ namespace AssistantPlus.View.CommandSender {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<NumberBox>();
+			var senders = sender.As<NumberBox>();
 			if (this.Type != ArgumentType.Integer || this.Option != null) {
 				return;
 			}
@@ -352,7 +352,7 @@ namespace AssistantPlus.View.CommandSender {
 		#region floater
 
 		public FloaterExpression? ValueOfFloater {
-			get => this.Value.Value.AsClassOrNull<FloaterExpression>();
+			get => this.Value.Value?.As<FloaterExpression>();
 			set => this.Value.Value = value;
 		}
 
@@ -362,7 +362,7 @@ namespace AssistantPlus.View.CommandSender {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<NumberBox>();
+			var senders = sender.As<NumberBox>();
 			if (this.Type != ArgumentType.Floater || this.Option != null) {
 				return;
 			}
@@ -398,7 +398,7 @@ namespace AssistantPlus.View.CommandSender {
 		#region size
 
 		public SizeExpression? ValueOfSize {
-			get => this.Value.Value.AsClassOrNull<SizeExpression>();
+			get => this.Value.Value?.As<SizeExpression>();
 			set => this.Value.Value = value;
 		}
 
@@ -408,7 +408,7 @@ namespace AssistantPlus.View.CommandSender {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<NumberBox>();
+			var senders = sender.As<NumberBox>();
 			if (this.Type != ArgumentType.Size || this.Option != null) {
 				return;
 			}
@@ -453,11 +453,11 @@ namespace AssistantPlus.View.CommandSender {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<MenuFlyoutItem>();
+			var senders = sender.As<MenuFlyoutItem>();
 			if (this.Type != ArgumentType.Size || this.Option != null) {
 				return;
 			}
-			this.uSizeExponent__Value = Integer.Parse(senders.Tag.AsClass<String>());
+			this.uSizeExponent__Value = Integer.Parse(senders.Tag.As<String>());
 			if (this.ValueOfSize != null) {
 				this.ValueOfSize = new () { Count = this.ValueOfSize.Count, Exponent = this.uSizeExponent__Value };
 			}
@@ -472,7 +472,7 @@ namespace AssistantPlus.View.CommandSender {
 		#region string
 
 		public StringExpression? ValueOfString {
-			get => this.Value.Value.AsClassOrNull<StringExpression>();
+			get => this.Value.Value?.As<StringExpression>();
 			set => this.Value.Value = value;
 		}
 
@@ -482,7 +482,7 @@ namespace AssistantPlus.View.CommandSender {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			if (this.Type != ArgumentType.String || this.Option != null) {
 				return;
 			}
@@ -512,7 +512,7 @@ namespace AssistantPlus.View.CommandSender {
 		#region path
 
 		public PathExpression? ValueOfPath {
-			get => this.Value.Value.AsClassOrNull<PathExpression>();
+			get => this.Value.Value?.As<PathExpression>();
 			set => this.Value.Value = value;
 		}
 
@@ -522,7 +522,7 @@ namespace AssistantPlus.View.CommandSender {
 			Object        sender,
 			DragEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			if (this.Type != ArgumentType.Path || this.Option != null) {
 				return;
 			}
@@ -536,7 +536,7 @@ namespace AssistantPlus.View.CommandSender {
 			Object        sender,
 			DragEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			if (this.Type != ArgumentType.Path || this.Option != null) {
 				return;
 			}
@@ -555,7 +555,7 @@ namespace AssistantPlus.View.CommandSender {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			if (this.Type != ArgumentType.Path || this.Option != null) {
 				return;
 			}
@@ -586,11 +586,11 @@ namespace AssistantPlus.View.CommandSender {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<MenuFlyoutItem>();
+			var senders = sender.As<MenuFlyoutItem>();
 			if (this.Type != ArgumentType.Path || this.Option != null) {
 				return;
 			}
-			var value = senders.Tag.AsClass<String>() switch {
+			var value = senders.Tag.As<String>() switch {
 				"LoadFile"      => await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(CommandSender)}.Generic"),
 				"LoadDirectory" => await StorageHelper.PickLoadDirectory(WindowHelper.Find(this.View), $"{nameof(CommandSender)}.Generic"),
 				"SaveFile"      => await StorageHelper.PickSaveFile(WindowHelper.Find(this.View), $"{nameof(CommandSender)}.Generic", null, null),
@@ -631,12 +631,12 @@ namespace AssistantPlus.View.CommandSender {
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			var senders = sender.AsClass<ComboBox>();
+			var senders = sender.As<ComboBox>();
 			if (this.Type == null || this.Option == null) {
 				return;
 			}
 			if (senders.SelectedItem != null) {
-				this.Value.Value = senders.SelectedItem.AsClassOrNull<Tuple<ValueExpression, String>>()?.Item1;
+				this.Value.Value = senders.SelectedItem?.As<Tuple<ValueExpression, String>>()?.Item1;
 			}
 			return;
 		}
@@ -647,7 +647,7 @@ namespace AssistantPlus.View.CommandSender {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			if (this.Type == null || this.Option == null) {
 				return;
 			}

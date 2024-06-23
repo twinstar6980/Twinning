@@ -54,104 +54,57 @@ public static class GF {
 
 	// ----------------
 
-	public static T ReturnSelf<T> (
-		this T target
-	) {
-		return target;
-	}
-
-	public static T ApplySelf<T> (
-		this T    target,
-		Action<T> action
+	public static TTarget As<TTarget> (
+		this Object self
 	)
-		where T : notnull {
-		action(target);
-		return target;
+		where TTarget : notnull {
+		if (self is TTarget target) {
+			return target;
+		}
+		throw new NullReferenceException();
 	}
 
 	// ----------------
 
-	public static String ToString<T> (
-		this T target
+	public static TType AsNotNull<TType> (
+		[NotNull] this TType? self
 	)
-		where T : notnull {
-		return target.ToString().AsNotNull();
+		where TType : struct {
+		return self ?? throw new NullReferenceException();
+	}
+
+	public static TType AsNotNull<TType> (
+		[NotNull] this TType? self
+	)
+		where TType : class {
+		return self ?? throw new NullReferenceException();
 	}
 
 	// ----------------
 
-	public static Boolean IsNull<T> (
-		[NotNullWhen(false)] this T? target
-	) {
-		return target == null;
-	}
-
-	public static Boolean NotNull<T> (
-		[NotNullWhen(true)] this T? target
-	) {
-		return target != null;
-	}
-
-	// ----------------
-
-	public static T AsNotNullX<T> (
-		[NotNull] this T? target
-	) {
-		return target ?? throw new NullReferenceException();
-	}
-
-	public static T AsNotNull<T> (
-		[NotNull] this T? target
+	public static TResult SelfLet<TType, TResult> (
+		this TType           self,
+		Func<TType, TResult> action
 	)
-		where T : struct {
-		return target ?? throw new NullReferenceException();
+		where TType : notnull {
+		return action(self);
 	}
 
-	public static T AsNotNull<T> (
-		[NotNull] this T? target
+	public static TType SelfAlso<TType> (
+		this TType    self,
+		Action<TType> action
 	)
-		where T : class {
-		return target ?? throw new NullReferenceException();
-	}
-
-	// ----------------
-
-	public static T AsStruct<T> (
-		this Object? target
-	)
-		where T : struct {
-		return target as T? ?? throw new NullReferenceException();
-	}
-
-	public static T AsClass<T> (
-		this Object? target
-	)
-		where T : class {
-		return target as T ?? throw new NullReferenceException();
-	}
-
-	// ----------------
-
-	public static T? AsStructOrNull<T> (
-		this Object? target
-	)
-		where T : struct {
-		return target?.AsStruct<T>();
-	}
-
-	public static T? AsClassOrNull<T> (
-		this Object? target
-	)
-		where T : class {
-		return target?.AsClass<T>();
+		where TType : notnull {
+		action(self);
+		return self;
 	}
 
 	// ----------------
 
 	public static ObservableCollection<TSource> ToObservableCollection<TSource> (
-		this IEnumerable<TSource> source
+		this IEnumerable<TSource> self
 	) {
-		return new (source);
+		return new (self);
 	}
 
 }

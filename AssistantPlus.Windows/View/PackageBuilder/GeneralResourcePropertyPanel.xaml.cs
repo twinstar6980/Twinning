@@ -43,7 +43,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		);
 
 		public GeneralResourceProperty Value {
-			get => this.GetValue(GeneralResourcePropertyPanel.ValueProperty).AsClass<GeneralResourceProperty>();
+			get => this.GetValue(GeneralResourcePropertyPanel.ValueProperty).As<GeneralResourceProperty>();
 			set => this.SetValue(GeneralResourcePropertyPanel.ValueProperty, value);
 		}
 
@@ -82,7 +82,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			this.Value.Path = senders.Text;
 			this.NotifyPropertyChanged(
 				nameof(this.uPath_Text)
@@ -104,7 +104,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			this.Value.Type = senders.Text;
 			this.NotifyPropertyChanged(
 				nameof(this.uType_Text)
@@ -122,7 +122,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			var flyout = new MenuFlyout() {
 				Placement = FlyoutPlacementMode.BottomEdgeAlignedRight,
 			};
@@ -138,7 +138,7 @@ namespace AssistantPlus.View.PackageBuilder {
 				}) {
 				flyout.Items.Add(new MenuFlyoutItem() {
 					Text = type,
-				}.ApplySelf((it) => {
+				}.SelfAlso((it) => {
 					it.Click += (_, _) => {
 						this.Value.Type = type;
 						this.NotifyPropertyChanged(

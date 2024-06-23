@@ -44,7 +44,7 @@ namespace AssistantPlus.View.ModdingWorker {
 		);
 
 		public SubmissionType? Type {
-			get => this.GetValue(SubmissionBar.TypeProperty).AsStructOrNull<SubmissionType>();
+			get => this.GetValue(SubmissionBar.TypeProperty)?.As<SubmissionType>();
 			set => this.SetValue(SubmissionBar.TypeProperty, value);
 		}
 
@@ -58,7 +58,7 @@ namespace AssistantPlus.View.ModdingWorker {
 		);
 
 		public List<String> Option {
-			get => this.GetValue(SubmissionBar.OptionProperty).AsClass<List<String>>();
+			get => this.GetValue(SubmissionBar.OptionProperty).As<List<String>>();
 			set => this.SetValue(SubmissionBar.OptionProperty, value);
 		}
 
@@ -72,7 +72,7 @@ namespace AssistantPlus.View.ModdingWorker {
 		);
 
 		public List<ValueExpression> History {
-			get => this.GetValue(SubmissionBar.HistoryProperty).AsClass<List<ValueExpression>>();
+			get => this.GetValue(SubmissionBar.HistoryProperty).As<List<ValueExpression>>();
 			set => this.SetValue(SubmissionBar.HistoryProperty, value);
 		}
 
@@ -86,7 +86,7 @@ namespace AssistantPlus.View.ModdingWorker {
 		);
 
 		public Wrapper<ValueExpression> Value {
-			get => this.GetValue(SubmissionBar.ValueProperty).AsClass<Wrapper<ValueExpression>>();
+			get => this.GetValue(SubmissionBar.ValueProperty).As<Wrapper<ValueExpression>>();
 			set => this.SetValue(SubmissionBar.ValueProperty, value);
 		}
 
@@ -211,11 +211,11 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			if (this.Type == null) {
 				return;
 			}
-			var font = this.View.FindResource("ModdingWorker.MessageFont").AsClass<FontFamily>();
+			var font = this.View.FindResource("ModdingWorker.MessageFont").As<FontFamily>();
 			var flyout = new MenuFlyout() {
 				Placement = FlyoutPlacementMode.TopEdgeAlignedLeft,
 			};
@@ -223,13 +223,13 @@ namespace AssistantPlus.View.ModdingWorker {
 				flyout.Items.Add(new MenuFlyoutItem() {
 					Text = ValueExpressionHelper.MakeString(item),
 					FontFamily = font,
-				}.ApplySelf((it) => {
+				}.SelfAlso((it) => {
 					it.Click += (_, _) => {
 						this.Value.Value = item;
 						this.Update();
 					};
 					if (this.Type == SubmissionType.Enumeration) {
-						it.IsEnabled = this.Option.Contains(item.AsClass<EnumerationExpression>().Item);
+						it.IsEnabled = this.Option.Contains(item.As<EnumerationExpression>().Item);
 					}
 				}));
 			}
@@ -270,7 +270,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			if (this.Type == null) {
 				return;
 			}
@@ -283,7 +283,7 @@ namespace AssistantPlus.View.ModdingWorker {
 		#region pause
 
 		public PauseExpression? ValueOfPause {
-			get => this.Value.Value.AsClassOrNull<PauseExpression>();
+			get => this.Value.Value?.As<PauseExpression>();
 			set => this.Value.Value = value;
 		}
 
@@ -292,7 +292,7 @@ namespace AssistantPlus.View.ModdingWorker {
 		#region boolean
 
 		public BooleanExpression? ValueOfBoolean {
-			get => this.Value.Value.AsClassOrNull<BooleanExpression>();
+			get => this.Value.Value?.As<BooleanExpression>();
 			set => this.Value.Value = value;
 		}
 
@@ -302,7 +302,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			if (this.Type != SubmissionType.Boolean) {
 				return;
 			}
@@ -344,7 +344,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			if (this.Type != SubmissionType.Boolean) {
 				return;
 			}
@@ -377,7 +377,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			if (this.Type != SubmissionType.Boolean) {
 				return;
 			}
@@ -400,7 +400,7 @@ namespace AssistantPlus.View.ModdingWorker {
 		#region integer
 
 		public IntegerExpression? ValueOfInteger {
-			get => this.Value.Value.AsClassOrNull<IntegerExpression>();
+			get => this.Value.Value?.As<IntegerExpression>();
 			set => this.Value.Value = value;
 		}
 
@@ -410,7 +410,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<NumberBox>();
+			var senders = sender.As<NumberBox>();
 			if (this.Type != SubmissionType.Integer) {
 				return;
 			}
@@ -446,7 +446,7 @@ namespace AssistantPlus.View.ModdingWorker {
 		#region floater
 
 		public FloaterExpression? ValueOfFloater {
-			get => this.Value.Value.AsClassOrNull<FloaterExpression>();
+			get => this.Value.Value?.As<FloaterExpression>();
 			set => this.Value.Value = value;
 		}
 
@@ -456,7 +456,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<NumberBox>();
+			var senders = sender.As<NumberBox>();
 			if (this.Type != SubmissionType.Floater) {
 				return;
 			}
@@ -492,7 +492,7 @@ namespace AssistantPlus.View.ModdingWorker {
 		#region size
 
 		public SizeExpression? ValueOfSize {
-			get => this.Value.Value.AsClassOrNull<SizeExpression>();
+			get => this.Value.Value?.As<SizeExpression>();
 			set => this.Value.Value = value;
 		}
 
@@ -502,7 +502,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<NumberBox>();
+			var senders = sender.As<NumberBox>();
 			if (this.Type != SubmissionType.Size) {
 				return;
 			}
@@ -547,11 +547,11 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<MenuFlyoutItem>();
+			var senders = sender.As<MenuFlyoutItem>();
 			if (this.Type != SubmissionType.Size) {
 				return;
 			}
-			this.uSizeExponent__Value = Integer.Parse(senders.Tag.AsClass<String>());
+			this.uSizeExponent__Value = Integer.Parse(senders.Tag.As<String>());
 			if (this.ValueOfSize != null) {
 				this.ValueOfSize = new () { Count = this.ValueOfSize.Count, Exponent = this.uSizeExponent__Value };
 			}
@@ -566,7 +566,7 @@ namespace AssistantPlus.View.ModdingWorker {
 		#region string
 
 		public StringExpression? ValueOfString {
-			get => this.Value.Value.AsClassOrNull<StringExpression>();
+			get => this.Value.Value?.As<StringExpression>();
 			set => this.Value.Value = value;
 		}
 
@@ -576,7 +576,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			if (this.Type != SubmissionType.String) {
 				return;
 			}
@@ -606,7 +606,7 @@ namespace AssistantPlus.View.ModdingWorker {
 		#region path
 
 		public PathExpression? ValueOfPath {
-			get => this.Value.Value.AsClassOrNull<PathExpression>();
+			get => this.Value.Value?.As<PathExpression>();
 			set => this.Value.Value = value;
 		}
 
@@ -616,7 +616,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object        sender,
 			DragEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			if (this.Type != SubmissionType.Path) {
 				return;
 			}
@@ -630,7 +630,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object        sender,
 			DragEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			if (this.Type != SubmissionType.Path) {
 				return;
 			}
@@ -649,7 +649,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			if (this.Type != SubmissionType.Path) {
 				return;
 			}
@@ -680,11 +680,11 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<MenuFlyoutItem>();
+			var senders = sender.As<MenuFlyoutItem>();
 			if (this.Type != SubmissionType.Path) {
 				return;
 			}
-			this.ValueOfPath = new () { Content = $":{senders.Tag.AsClass<String>()[0].ToString().ToLower()}" };
+			this.ValueOfPath = new () { Content = $":{senders.Tag.As<String>()[0].ToString().ToLower()}" };
 			this.NotifyPropertyChanged(
 				nameof(this.uPathContent_Text)
 			);
@@ -695,11 +695,11 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<MenuFlyoutItem>();
+			var senders = sender.As<MenuFlyoutItem>();
 			if (this.Type != SubmissionType.Path) {
 				return;
 			}
-			var value = senders.Tag.AsClass<String>() switch {
+			var value = senders.Tag.As<String>() switch {
 				"LoadFile"      => await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(ModdingWorker)}.Generic"),
 				"LoadDirectory" => await StorageHelper.PickLoadDirectory(WindowHelper.Find(this.View), $"{nameof(ModdingWorker)}.Generic"),
 				"SaveFile"      => await StorageHelper.PickSaveFile(WindowHelper.Find(this.View), $"{nameof(ModdingWorker)}.Generic", null, null),
@@ -719,7 +719,7 @@ namespace AssistantPlus.View.ModdingWorker {
 		#region enumeration
 
 		public EnumerationExpression? ValueOfEnumeration {
-			get => this.Value.Value.AsClassOrNull<EnumerationExpression>();
+			get => this.Value.Value?.As<EnumerationExpression>();
 			set => this.Value.Value = value;
 		}
 
@@ -747,11 +747,11 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			var senders = sender.AsClass<ComboBox>();
+			var senders = sender.As<ComboBox>();
 			if (this.Type != SubmissionType.Enumeration) {
 				return;
 			}
-			var item = senders.SelectedItem.AsClassOrNull<String>();
+			var item = senders.SelectedItem?.As<String>();
 			if (item != null) {
 				this.ValueOfEnumeration = new () { Item = item };
 			}
@@ -764,7 +764,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			if (this.Type != SubmissionType.Enumeration) {
 				return;
 			}

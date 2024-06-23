@@ -26,7 +26,7 @@ namespace AssistantPlus.View.ModdingWorker {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			this.Controller.ApplyOption(args.Parameter.AsClass<List<String>>());
+			this.Controller.ApplyOption(args.Parameter.As<List<String>>());
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -288,7 +288,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object        sender,
 			DragEventArgs args
 		) {
-			var senders = sender.AsClass<Page>();
+			var senders = sender.As<Page>();
 			return;
 		}
 
@@ -296,7 +296,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object        sender,
 			DragEventArgs args
 		) {
-			var senders = sender.AsClass<Page>();
+			var senders = sender.As<Page>();
 			return;
 		}
 
@@ -314,7 +314,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.AutomaticScroll = senders.IsChecked.AsNotNull();
 			return;
 		}
@@ -335,7 +335,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			this.AdditionalArgument = ConvertHelper.ParseStringListFromStringWithLine(senders.Text);
 			this.NotifyPropertyChanged(
 				nameof(this.uAdditionalArgumentCount_Text),
@@ -364,7 +364,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			if (this.SessionTask == null) {
 				await this.LaunchSession();
 			}

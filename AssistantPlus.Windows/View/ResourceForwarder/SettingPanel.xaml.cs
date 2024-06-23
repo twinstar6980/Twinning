@@ -45,7 +45,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 		);
 
 		public Setting Data {
-			get => this.GetValue(SettingPanel.DataProperty).AsClass<Setting>();
+			get => this.GetValue(SettingPanel.DataProperty).As<Setting>();
 			set => this.SetValue(SettingPanel.DataProperty, value);
 		}
 
@@ -86,7 +86,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			this.Data.OptionConfiguration = StorageHelper.Regularize(senders.Text);
 			this.NotifyPropertyChanged(
 				nameof(this.uOptionConfigurationText_Text)
@@ -104,7 +104,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			var value = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(ResourceForwarder)}.OptionConfiguration");
 			if (value != null) {
 				this.Data.OptionConfiguration = value;
@@ -129,7 +129,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.Data.ParallelForward = senders.IsChecked.AsNotNull();
 			return;
 		}
@@ -148,7 +148,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.Data.EnableFilter = senders.IsChecked.AsNotNull();
 			return;
 		}
@@ -167,7 +167,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.Data.EnableBatch = senders.IsChecked.AsNotNull();
 			return;
 		}

@@ -27,7 +27,7 @@ namespace AssistantPlus.View.ModdingWorker {
 		) {
 			if (argument.Count != 0) {
 				if (!parallel) {
-					await ForwardHelper.Forward(argument.SelectMany(GF.ReturnSelf).ToList());
+					await ForwardHelper.Forward(argument.SelectMany((value) => (value)).ToList());
 				}
 				else {
 					foreach (var argumentItem in argument) {

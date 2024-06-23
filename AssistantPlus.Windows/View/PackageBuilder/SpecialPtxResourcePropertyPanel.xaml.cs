@@ -40,7 +40,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		);
 
 		public List<String> ConversionSource {
-			get => this.GetValue(SpecialPtxResourcePropertyPanel.ConversionSourceProperty).AsClass<List<String>>();
+			get => this.GetValue(SpecialPtxResourcePropertyPanel.ConversionSourceProperty).As<List<String>>();
 			set => this.SetValue(SpecialPtxResourcePropertyPanel.ConversionSourceProperty, value);
 		}
 
@@ -57,7 +57,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		);
 
 		public SpecialPtxResourceProperty Value {
-			get => this.GetValue(SpecialPtxResourcePropertyPanel.ValueProperty).AsClass<SpecialPtxResourceProperty>();
+			get => this.GetValue(SpecialPtxResourcePropertyPanel.ValueProperty).As<SpecialPtxResourceProperty>();
 			set => this.SetValue(SpecialPtxResourcePropertyPanel.ValueProperty, value);
 		}
 
@@ -111,8 +111,8 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			var senders = sender.AsClass<ComboBox>();
-			this.Value.Conversion = senders.SelectedItem.AsClass<String>();
+			var senders = sender.As<ComboBox>();
+			this.Value.Conversion = senders.SelectedItem.As<String>();
 			return;
 		}
 
@@ -124,7 +124,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			this.Value.Path = senders.Text;
 			this.NotifyPropertyChanged(
 				nameof(this.uPath_Text)

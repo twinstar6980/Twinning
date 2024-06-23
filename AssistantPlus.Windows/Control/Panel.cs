@@ -51,11 +51,11 @@ namespace AssistantPlus.Control {
 			nameof(Panel.Padding),
 			typeof(Thickness),
 			typeof(Panel),
-			new (new Thickness(0.0), (o, e) => { o.AsClass<Panel>().InvalidateMeasure(); })
+			new (new Thickness(0.0), (o, e) => { o.As<Panel>().InvalidateMeasure(); })
 		);
 
 		public Thickness Padding {
-			get => this.GetValue(Panel.PaddingProperty).AsStruct<Thickness>();
+			get => this.GetValue(Panel.PaddingProperty).As<Thickness>();
 			set => this.SetValue(Panel.PaddingProperty, value);
 		}
 

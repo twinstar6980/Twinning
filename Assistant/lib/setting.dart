@@ -126,8 +126,7 @@ class SettingProvider with ChangeNotifier {
     String? file = null,
   }) async {
     file ??= await this.file;
-    var json = await JsonHelper.deserializeFile(file) as Map<String, dynamic>;
-    _convertDataFromJson(this.data, json);
+    this.data = _parseDataFromJson(await JsonHelper.deserializeFile(file));
     return;
   }
 
@@ -139,9 +138,7 @@ class SettingProvider with ChangeNotifier {
     if (apply) {
       await this.apply();
     }
-    var json = <String, dynamic>{};
-    _convertDataToJson(this.data, json);
-    await JsonHelper.serializeFile(file, json);
+    await JsonHelper.serializeFile(file, _makeDataToJson(this.data));
     return;
   }
 
@@ -166,7 +163,7 @@ class SettingProvider with ChangeNotifier {
     mWindowSizeHeight: 0,
     mFallbackDirectory: '',
     mModuleLauncher: ModuleLauncherSetting(
-      mModule: ModuleType.values.map((e) => (ModuleLauncherConfiguration(title: ModuleHelper.query(e).name, type: e, option: []))).toList(),
+      mModule: ModuleType.values.map((e) => ModuleLauncherConfiguration(title: ModuleHelper.query(e).name, type: e, option: [])).toList(),
       mPinned: [],
       mRecent: [],
     ),
@@ -200,132 +197,114 @@ class SettingProvider with ChangeNotifier {
 
   // ----------------
 
-  static Void _convertDataToJson(
-    SettingData          data,
-    Map<String, dynamic> json,
+  static dynamic _makeDataToJson(
+    SettingData data,
   ) {
-    {
-      assertTest(data.mVersion == kApplicationVersion);
-      json['version'] = data.mVersion;
-    }
-    {
-      json['theme_mode'] = data.mThemeMode.name;
-      json['theme_color_state'] = data.mThemeColorState;
-      json['theme_color_light'] = data.mThemeColorLight.value;
-      json['theme_color_dark'] = data.mThemeColorDark.value;
-      json['theme_font_state'] = data.mThemeFontState;
-      json['theme_font_path'] = data.mThemeFontPath;
-    }
-    {
-      json['window_position_state'] = data.mWindowPositionState;
-      json['window_position_x'] = data.mWindowPositionX;
-      json['window_position_y'] = data.mWindowPositionY;
-      json['window_size_state'] = data.mWindowSizeState;
-      json['window_size_width'] = data.mWindowSizeWidth;
-      json['window_size_height'] = data.mWindowSizeHeight;
-    }
-    {
-      json['fallback_directory'] = data.mFallbackDirectory;
-    }
-    {
-      json['module_launcher.module'] = data.mModuleLauncher.mModule.map((e) => (<String, dynamic>{
-        'title': e.title,
-        'type': e.type.name,
-        'option': e.option,
-      })).toList();
-      json['module_launcher.pinned'] = data.mModuleLauncher.mPinned.map((e) => (<String, dynamic>{
-        'title': e.title,
-        'type': e.type.name,
-        'option': e.option,
-      })).toList();
-      json['module_launcher.recent'] = data.mModuleLauncher.mRecent.map((e) => (<String, dynamic>{
-        'title': e.title,
-        'type': e.type.name,
-        'option': e.option,
-      })).toList();
-    }
-    {
-      json['modding_worker.kernel'] = data.mModdingWorker.mKernel;
-      json['modding_worker.script'] = data.mModdingWorker.mScript;
-      json['modding_worker.argument'] = data.mModdingWorker.mArgument;
-      json['modding_worker.immediate_launch'] = data.mModdingWorker.mImmediateLaunch;
-      json['modding_worker.message_font'] = data.mModdingWorker.mMessageFont;
-    }
-    {
-      json['command_sender.method_configuration'] = data.mCommandSender.mMethodConfiguration;
-      json['command_sender.parallel_forward'] = data.mCommandSender.mParallelForward;
-    }
-    {
-      json['resource_forwarder.option_configuration'] = data.mResourceForwarder.mOptionConfiguration;
-      json['resource_forwarder.parallel_forward'] = data.mResourceForwarder.mParallelForward;
-      json['resource_forwarder.enable_filter'] = data.mResourceForwarder.mEnableFilter;
-      json['resource_forwarder.enable_batch'] = data.mResourceForwarder.mEnableBatch;
-    }
-    return;
+    return {
+      'version': data.mVersion.selfAlso((it) { assertTest(it == kApplicationVersion); }),
+      'theme_mode': data.mThemeMode.name,
+      'theme_color_state': data.mThemeColorState,
+      'theme_color_light': data.mThemeColorLight.value,
+      'theme_color_dark': data.mThemeColorDark.value,
+      'theme_font_state': data.mThemeFontState,
+      'theme_font_path': data.mThemeFontPath,
+      'window_position_state': data.mWindowPositionState,
+      'window_position_x': data.mWindowPositionX,
+      'window_position_y': data.mWindowPositionY,
+      'window_size_state': data.mWindowSizeState,
+      'window_size_width': data.mWindowSizeWidth,
+      'window_size_height': data.mWindowSizeHeight,
+      'fallback_directory': data.mFallbackDirectory,
+      'module_launcher': {
+        'module': data.mModuleLauncher.mModule.map((dataItem) => {
+          'title': dataItem.title,
+          'type': dataItem.type.name,
+          'option': dataItem.option,
+        }).toList(),
+        'pinned': data.mModuleLauncher.mPinned.map((dataItem) => {
+          'title': dataItem.title,
+          'type': dataItem.type.name,
+          'option': dataItem.option,
+        }).toList(),
+        'recent': data.mModuleLauncher.mRecent.map((dataItem) => {
+          'title': dataItem.title,
+          'type': dataItem.type.name,
+          'option': dataItem.option,
+        }).toList(),
+      },
+      'modding_worker': {
+        'kernel': data.mModdingWorker.mKernel,
+        'script': data.mModdingWorker.mScript,
+        'argument': data.mModdingWorker.mArgument,
+        'immediate_launch': data.mModdingWorker.mImmediateLaunch,
+        'message_font': data.mModdingWorker.mMessageFont,
+      },
+      'command_sender': {
+        'method_configuration': data.mCommandSender.mMethodConfiguration,
+        'parallel_forward': data.mCommandSender.mParallelForward,
+      },
+      'resource_forwarder': {
+        'option_configuration': data.mResourceForwarder.mOptionConfiguration,
+        'parallel_forward': data.mResourceForwarder.mParallelForward,
+        'enable_filter': data.mResourceForwarder.mEnableFilter,
+        'enable_batch': data.mResourceForwarder.mEnableBatch,
+      },
+    };
   }
 
-  static Void _convertDataFromJson(
-    SettingData          data,
-    Map<String, dynamic> json,
+  static SettingData _parseDataFromJson(
+    dynamic json,
   ) {
-    {
-      data.mVersion = (json['version'] as String);
-      assertTest(data.mVersion == kApplicationVersion);
-    }
-    {
-      data.mThemeMode = ThemeMode.values.byName(json['theme_mode'] as String);
-      data.mThemeColorState = (json['theme_color_state'] as Boolean);
-      data.mThemeColorLight = Color(json['theme_color_light'] as Integer);
-      data.mThemeColorDark = Color(json['theme_color_dark'] as Integer);
-      data.mThemeFontState = (json['theme_font_state'] as Boolean);
-      data.mThemeFontPath = (json['theme_font_path'] as List<dynamic>).cast<String>();
-    }
-    {
-      data.mWindowPositionState = (json['window_position_state'] as Boolean);
-      data.mWindowPositionX = (json['window_position_x'] as Integer);
-      data.mWindowPositionY = (json['window_position_y'] as Integer);
-      data.mWindowSizeState = (json['window_size_state'] as Boolean);
-      data.mWindowSizeWidth = (json['window_size_width'] as Integer);
-      data.mWindowSizeHeight = (json['window_size_height'] as Integer);
-    }
-    {
-      data.mFallbackDirectory = (json['fallback_directory'] as String);
-    }
-    {
-      data.mModuleLauncher.mModule = (json['module_launcher.module'] as List<dynamic>).cast<Map<String, dynamic>>().map((e) => (ModuleLauncherConfiguration(
-        title: (e['title'] as String),
-        type: ModuleType.values.byName(e['type'] as String),
-        option: (e['option'] as List<dynamic>).cast<String>(),
-      ))).toList();
-      data.mModuleLauncher.mPinned = (json['module_launcher.pinned'] as List<dynamic>).cast<Map<String, dynamic>>().map((e) => (ModuleLauncherConfiguration(
-        title: (e['title'] as String),
-        type: ModuleType.values.byName(e['type'] as String),
-        option: (e['option'] as List<dynamic>).cast<String>(),
-      ))).toList();
-      data.mModuleLauncher.mRecent = (json['module_launcher.recent'] as List<dynamic>).cast<Map<String, dynamic>>().map((e) => (ModuleLauncherConfiguration(
-        title: (e['title'] as String),
-        type: ModuleType.values.byName(e['type'] as String),
-        option: (e['option'] as List<dynamic>).cast<String>(),
-      ))).toList();
-    }
-    {
-      data.mModdingWorker.mKernel = (json['modding_worker.kernel'] as String);
-      data.mModdingWorker.mScript = (json['modding_worker.script'] as String);
-      data.mModdingWorker.mArgument = (json['modding_worker.argument'] as List<dynamic>).cast<String>();
-      data.mModdingWorker.mImmediateLaunch = (json['modding_worker.immediate_launch'] as Boolean);
-      data.mModdingWorker.mMessageFont = (json['modding_worker.message_font'] as List<dynamic>).cast<String>();
-    }
-    {
-      data.mCommandSender.mMethodConfiguration = (json['command_sender.method_configuration'] as String);
-      data.mCommandSender.mParallelForward = (json['command_sender.parallel_forward'] as Boolean);
-    }
-    {
-      data.mResourceForwarder.mOptionConfiguration = (json['resource_forwarder.option_configuration'] as String);
-      data.mResourceForwarder.mParallelForward = (json['resource_forwarder.parallel_forward'] as Boolean);
-      data.mResourceForwarder.mEnableFilter = (json['resource_forwarder.enable_filter'] as Boolean);
-      data.mResourceForwarder.mEnableBatch = (json['resource_forwarder.enable_batch'] as Boolean);
-    }
-    return;
+    return SettingData(
+      mVersion: (json['version'] as String).selfAlso((it) { assertTest(it == kApplicationVersion); }),
+      mThemeMode: (json['theme_mode'] as String).selfLet((it) => ThemeMode.values.byName(it)),
+      mThemeColorState: (json['theme_color_state'] as Boolean),
+      mThemeColorLight: (json['theme_color_light'] as Integer).selfLet((it) => Color(it)),
+      mThemeColorDark: (json['theme_color_dark'] as Integer).selfLet((it) => Color(it)),
+      mThemeFontState: (json['theme_font_state'] as Boolean),
+      mThemeFontPath: (json['theme_font_path'] as List<dynamic>).cast<String>(),
+      mWindowPositionState: (json['window_position_state'] as Boolean),
+      mWindowPositionX: (json['window_position_x'] as Integer),
+      mWindowPositionY: (json['window_position_y'] as Integer),
+      mWindowSizeState: (json['window_size_state'] as Boolean),
+      mWindowSizeWidth: (json['window_size_width'] as Integer),
+      mWindowSizeHeight: (json['window_size_height'] as Integer),
+      mFallbackDirectory: (json['fallback_directory'] as String),
+      mModuleLauncher: (json['module_launcher'] as Map<dynamic, dynamic>).selfLet((jsonPart) => ModuleLauncherSetting(
+        mModule: (jsonPart['module'] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((jsonItem) => ModuleLauncherConfiguration(
+          title: (jsonItem['title'] as String),
+          type: (jsonItem['type'] as String).selfLet((it) => ModuleType.values.byName(it)),
+          option: (jsonItem['option'] as List<dynamic>).cast<String>(),
+        )).toList(),
+        mPinned: (jsonPart['pinned'] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((jsonItem) => ModuleLauncherConfiguration(
+          title: (jsonItem['title'] as String),
+          type: (jsonItem['type'] as String).selfLet((it) => ModuleType.values.byName(it)),
+          option: (jsonItem['option'] as List<dynamic>).cast<String>(),
+        )).toList(),
+        mRecent: (jsonPart['recent'] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((jsonItem) => ModuleLauncherConfiguration(
+          title: (jsonItem['title'] as String),
+          type: (jsonItem['type'] as String).selfLet((it) => ModuleType.values.byName(it)),
+          option: (jsonItem['option'] as List<dynamic>).cast<String>(),
+        )).toList(),
+      )),
+      mModdingWorker: (json['modding_worker'] as Map<dynamic, dynamic>).selfLet((jsonPart) => modding_worker.Setting(
+        mKernel: (jsonPart['kernel'] as String),
+        mScript: (jsonPart['script'] as String),
+        mArgument: (jsonPart['argument'] as List<dynamic>).cast<String>(),
+        mImmediateLaunch: (jsonPart['immediate_launch'] as Boolean),
+        mMessageFont: (jsonPart['message_font'] as List<dynamic>).cast<String>(),
+      )),
+      mCommandSender: (json['command_sender'] as Map<dynamic, dynamic>).selfLet((jsonPart) => command_sender.Setting(
+        mMethodConfiguration: (jsonPart['method_configuration'] as String),
+        mParallelForward: (jsonPart['parallel_forward'] as Boolean),
+      )),
+      mResourceForwarder: (json['resource_forwarder'] as Map<dynamic, dynamic>).selfLet((jsonPart) => resource_forwarder.Setting(
+        mOptionConfiguration: (jsonPart['option_configuration'] as String),
+        mParallelForward: (jsonPart['parallel_forward'] as Boolean),
+        mEnableFilter: (jsonPart['enable_filter'] as Boolean),
+        mEnableBatch: (jsonPart['enable_batch'] as Boolean),
+      )),
+    );
   }
 
   // #endregion

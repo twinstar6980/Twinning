@@ -92,23 +92,23 @@ class ConfigurationHelper {
   ) {
     return switch (type) {
       ArgumentType.boolean => BooleanExpression(
-        json.asType<Boolean>(),
+        json.as<Boolean>(),
       ),
       ArgumentType.integer => IntegerExpression(
-        json.asType<Integer>(),
+        json.as<Integer>(),
       ),
       ArgumentType.floater => FloaterExpression(
-        json.asType<Floater>(),
+        json.as<Floater>(),
       ),
       ArgumentType.size    => SizeExpression(
-        Floater.parse(json.asType<String>().substring(0, json.asType<String>().length - 1)),
-        ['b', 'k', 'm', 'g'].indexOf(json.asType<String>()[json.asType<String>().length - 1]).applySelf((it) { assertTest(it != -1); }),
+        json.as<String>().selfLet((it) => Floater.parse(it.substring(0, it.length - 1))),
+        json.as<String>().selfLet((it) => ['b', 'k', 'm', 'g'].indexOf(it[it.length - 1])).selfAlso((it) { assertTest(it != -1); }),
       ),
       ArgumentType.string  => StringExpression(
-        json.asType<String>(),
+        json.as<String>(),
       ),
       ArgumentType.path    => PathExpression(
-        json.asType<String>(),
+        json.as<String>(),
       ),
     };
   }
@@ -151,28 +151,27 @@ class ConfigurationHelper {
   static List<MethodGroupConfiguration> parseDataFromJson(
     dynamic json,
   ) {
-    var data = (json as List).map((jsonGroup) => MethodGroupConfiguration(
+    return (json as List<dynamic>).map((jsonGroup) => MethodGroupConfiguration(
       id: (jsonGroup['id'] as String),
       name: (jsonGroup['name'] as String),
       icon: (jsonGroup['icon'] as String),
-      item: (jsonGroup['item'] as List).map((jsonItem) => MethodConfiguration(
+      item: (jsonGroup['item'] as List<dynamic>).map((jsonItem) => MethodConfiguration(
         id: (jsonItem['id'] as String),
         name: (jsonItem['name'] as String),
         icon: (jsonItem['icon'] as String),
-        argument: (jsonItem['argument'] as List).map((jsonArgument) => ArgumentConfiguration(
+        argument: (jsonItem['argument'] as List<dynamic>).map((jsonArgument) => ArgumentConfiguration(
           id: (jsonArgument['id'] as String),
           name: (jsonArgument['name'] as String),
-          type: ArgumentType.values.byName(jsonArgument['type'] as String),
-          option: (jsonArgument['option'] as List?)?.cast<Object>(),
+          type: (jsonArgument['type'] as String).selfLet((it) => ArgumentType.values.byName(it)),
+          option: (jsonArgument['option'] as List<dynamic>?)?.cast<Object>(),
         )).toList(),
-        batchable: (jsonItem['batchable'] as List?)?.cast<String>(),
-        preset: (jsonItem['preset'] as List).map((jsonPreset) => jsonPreset == null ? null : PresetConfiguration(
+        batchable: (jsonItem['batchable'] as List<dynamic>?)?.cast<String>(),
+        preset: (jsonItem['preset'] as List<dynamic>).map((jsonPreset) => jsonPreset == null ? null : PresetConfiguration(
           name: (jsonPreset['name'] as String),
-          argument: (jsonPreset['argument'] as Map).cast<String, Object>(),
+          argument: (jsonPreset['argument'] as Map<dynamic, dynamic>).cast<String, Object>(),
         )).toList(),
       )).toList(),
     )).toList();
-    return data;
   }
 
   // #endregion

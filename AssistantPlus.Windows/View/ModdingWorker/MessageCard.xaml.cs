@@ -41,7 +41,7 @@ namespace AssistantPlus.View.ModdingWorker {
 		);
 
 		public MessageType Type {
-			get => this.GetValue(MessageCard.TypeProperty).AsStruct<MessageType>();
+			get => this.GetValue(MessageCard.TypeProperty).As<MessageType>();
 			set => this.SetValue(MessageCard.TypeProperty, value);
 		}
 
@@ -55,7 +55,7 @@ namespace AssistantPlus.View.ModdingWorker {
 		);
 
 		public String Title {
-			get => this.GetValue(MessageCard.TitleProperty).AsClass<String>();
+			get => this.GetValue(MessageCard.TitleProperty).As<String>();
 			set => this.SetValue(MessageCard.TitleProperty, value);
 		}
 
@@ -69,7 +69,7 @@ namespace AssistantPlus.View.ModdingWorker {
 		);
 
 		public List<String> Description {
-			get => this.GetValue(MessageCard.DescriptionProperty).AsClass<List<String>>();
+			get => this.GetValue(MessageCard.DescriptionProperty).As<List<String>>();
 			set => this.SetValue(MessageCard.DescriptionProperty, value);
 		}
 

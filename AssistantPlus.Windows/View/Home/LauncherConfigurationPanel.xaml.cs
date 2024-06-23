@@ -45,7 +45,7 @@ namespace AssistantPlus.View.Home {
 		);
 
 		public ModuleLauncherConfiguration Data {
-			get => this.GetValue(LauncherConfigurationPanel.DataProperty).AsClass<ModuleLauncherConfiguration>();
+			get => this.GetValue(LauncherConfigurationPanel.DataProperty).As<ModuleLauncherConfiguration>();
 			set => this.SetValue(LauncherConfigurationPanel.DataProperty, value);
 		}
 
@@ -86,7 +86,7 @@ namespace AssistantPlus.View.Home {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			this.Data.Title = senders.Text;
 			this.NotifyPropertyChanged(
 				nameof(this.uTitleText_Text)
@@ -120,7 +120,7 @@ namespace AssistantPlus.View.Home {
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			var senders = sender.AsClass<ComboBox>();
+			var senders = sender.As<ComboBox>();
 			this.Data.Type = (ModuleType)senders.SelectedIndex;
 			return;
 		}
@@ -133,7 +133,7 @@ namespace AssistantPlus.View.Home {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			this.Data.Option = ConvertHelper.ParseStringListFromStringWithLine(senders.Text);
 			this.NotifyPropertyChanged(
 				nameof(this.uOptionText_Text)
@@ -155,7 +155,7 @@ namespace AssistantPlus.View.Home {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			this.Data.Command = ConvertHelper.ParseStringListFromStringWithLine(senders.Text);
 			this.NotifyPropertyChanged(
 				nameof(this.uCommandText_Text)

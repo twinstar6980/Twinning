@@ -58,7 +58,7 @@ namespace AssistantPlus.Utility {
 		) {
 			var dialog = new ContentDialog() {
 				XamlRoot = root.XamlRoot,
-				RequestedTheme = root.XamlRoot.Content.AsClass<FrameworkElement>().RequestedTheme,
+				RequestedTheme = root.XamlRoot.Content.As<FrameworkElement>().RequestedTheme,
 				Title = title,
 				Content = content,
 				CloseButtonText = "Close",
@@ -76,7 +76,7 @@ namespace AssistantPlus.Utility {
 		) {
 			var dialog = new ContentDialog() {
 				XamlRoot = root.XamlRoot,
-				RequestedTheme = root.XamlRoot.Content.AsClass<FrameworkElement>().RequestedTheme,
+				RequestedTheme = root.XamlRoot.Content.As<FrameworkElement>().RequestedTheme,
 				Resources = [
 					new ("ContentDialogMinWidth", size?.Item1 ?? 720.0),
 					new ("ContentDialogMaxWidth", size?.Item1 ?? 720.0),
@@ -112,13 +112,13 @@ namespace AssistantPlus.Utility {
 			var result = false;
 			var dialog = new ContentDialog() {
 				XamlRoot = root.XamlRoot,
-				RequestedTheme = root.XamlRoot.Content.AsClass<FrameworkElement>().RequestedTheme,
+				RequestedTheme = root.XamlRoot.Content.As<FrameworkElement>().RequestedTheme,
 				Title = title ?? "Pausing ...",
 				Content = content,
 				PrimaryButtonText = "Continue",
 				CloseButtonText = "Cancel",
 				DefaultButton = ContentDialogButton.Primary,
-			}.ApplySelf((it) => {
+			}.SelfAlso((it) => {
 				it.Closed += (_, args) => {
 					result = args.Result == ContentDialogResult.Primary;
 					return;
@@ -135,7 +135,7 @@ namespace AssistantPlus.Utility {
 		) {
 			var dialog = new ContentDialog() {
 				XamlRoot = root.XamlRoot,
-				RequestedTheme = root.XamlRoot.Content.AsClass<FrameworkElement>().RequestedTheme,
+				RequestedTheme = root.XamlRoot.Content.As<FrameworkElement>().RequestedTheme,
 				Title = title ?? "Waiting ...",
 				Content = content ?? new ProgressBar() {
 					HorizontalAlignment = HorizontalAlignment.Stretch,

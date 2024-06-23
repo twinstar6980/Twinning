@@ -42,21 +42,21 @@ namespace AssistantPlus.Utility {
 		public void NextBoolean (
 			Boolean value
 		) {
-			this.NextString(ConvertHelper.MakeBooleanToString(value));
+			this.NextString(value.SelfLet((it) => (ConvertHelper.MakeBooleanToString(it))));
 			return;
 		}
 
 		public void NextInteger (
 			Integer value
 		) {
-			this.NextString(ConvertHelper.MakeIntegerToString(value, false));
+			this.NextString(value.SelfLet((it) => (ConvertHelper.MakeIntegerToString(it, false))));
 			return;
 		}
 
 		public void NextFloater (
 			Floater value
 		) {
-			this.NextString(ConvertHelper.MakeFloaterToString(value, false));
+			this.NextString(value.SelfLet((it) => (ConvertHelper.MakeFloaterToString(it, false))));
 			return;
 		}
 

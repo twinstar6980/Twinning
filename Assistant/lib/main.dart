@@ -59,7 +59,7 @@ Future<Void> main(
     if (option.check('-insert_tab')) {
       optionInsertTab = (
         option.nextString(),
-        ModuleType.values.byName(option.nextString()),
+        option.nextString().selfLet((it) => ModuleType.values.byName(it)),
         option.nextStringList(),
       );
     }

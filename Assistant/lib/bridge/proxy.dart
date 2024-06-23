@@ -51,7 +51,7 @@ class MessageProxy {
     ffi.Pointer<Message> instance,
     MessageProxy         proxy,
   ) {
-    var value = proxy.value.map((value) => (utf8.encode(value))).toList();
+    var value = proxy.value.map((value) => utf8.encode(value)).toList();
     var dataSize = 0;
     dataSize += ffi.sizeOf<ffi.Uint32>();
     for (var valueItem in value) {

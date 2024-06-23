@@ -40,7 +40,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		);
 
 		public List<String> ConversionSource {
-			get => this.GetValue(SpecialRtonResourcePropertyPanel.ConversionSourceProperty).AsClass<List<String>>();
+			get => this.GetValue(SpecialRtonResourcePropertyPanel.ConversionSourceProperty).As<List<String>>();
 			set => this.SetValue(SpecialRtonResourcePropertyPanel.ConversionSourceProperty, value);
 		}
 
@@ -57,7 +57,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		);
 
 		public SpecialRtonResourceProperty Value {
-			get => this.GetValue(SpecialRtonResourcePropertyPanel.ValueProperty).AsClass<SpecialRtonResourceProperty>();
+			get => this.GetValue(SpecialRtonResourcePropertyPanel.ValueProperty).As<SpecialRtonResourceProperty>();
 			set => this.SetValue(SpecialRtonResourcePropertyPanel.ValueProperty, value);
 		}
 
@@ -111,8 +111,8 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			var senders = sender.AsClass<ComboBox>();
-			this.Value.Conversion = senders.SelectedItem.AsClass<String>();
+			var senders = sender.As<ComboBox>();
+			this.Value.Conversion = senders.SelectedItem.As<String>();
 			return;
 		}
 
@@ -124,7 +124,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			this.Value.Path = senders.Text;
 			this.NotifyPropertyChanged(
 				nameof(this.uPath_Text)

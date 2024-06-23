@@ -288,7 +288,7 @@ namespace AssistantPlus.View.AnimationViewer {
 				if (this.Loaded) {
 					if (value) {
 						// TODO : incorrect if theme != system
-						this.Canvas.Background = this.FindResource("CardBackgroundFillColorDefaultBrush").AsClass<Brush>();
+						this.Canvas.Background = this.FindResource("CardBackgroundFillColorDefaultBrush").As<Brush>();
 					}
 					else {
 						this.Canvas.Background = null;

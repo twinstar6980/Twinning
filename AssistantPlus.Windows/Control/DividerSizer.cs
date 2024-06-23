@@ -27,7 +27,7 @@ namespace AssistantPlus.Control {
 		);
 
 		public Orientation SizerOrientation {
-			get => this.GetValue(DividerSizer.SizerOrientationProperty).AsStruct<Orientation>();
+			get => this.GetValue(DividerSizer.SizerOrientationProperty).As<Orientation>();
 			set => this.SetValue(DividerSizer.SizerOrientationProperty, value);
 		}
 
@@ -41,7 +41,7 @@ namespace AssistantPlus.Control {
 		);
 
 		public Boolean SizerInverted {
-			get => this.GetValue(DividerSizer.SizerInvertedProperty).AsStruct<Boolean>();
+			get => this.GetValue(DividerSizer.SizerInvertedProperty).As<Boolean>();
 			set => this.SetValue(DividerSizer.SizerInvertedProperty, value);
 		}
 
@@ -55,7 +55,7 @@ namespace AssistantPlus.Control {
 		);
 
 		public Floater SizerValue {
-			get => this.GetValue(DividerSizer.SizerValueProperty).AsStruct<Floater>();
+			get => this.GetValue(DividerSizer.SizerValueProperty).As<Floater>();
 			set => this.SetValue(DividerSizer.SizerValueProperty, value);
 		}
 
@@ -69,7 +69,7 @@ namespace AssistantPlus.Control {
 		);
 
 		public Floater SizerMinimum {
-			get => this.GetValue(DividerSizer.SizerMinimumProperty).AsStruct<Floater>();
+			get => this.GetValue(DividerSizer.SizerMinimumProperty).As<Floater>();
 			set => this.SetValue(DividerSizer.SizerMinimumProperty, value);
 		}
 
@@ -83,7 +83,7 @@ namespace AssistantPlus.Control {
 		);
 
 		public Floater SizerMaximum {
-			get => this.GetValue(DividerSizer.SizerMaximumProperty).AsStruct<Floater>();
+			get => this.GetValue(DividerSizer.SizerMaximumProperty).As<Floater>();
 			set => this.SetValue(DividerSizer.SizerMaximumProperty, value);
 		}
 

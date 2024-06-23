@@ -88,7 +88,7 @@ namespace AssistantPlus.View.Home {
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			var senders = sender.AsClass<ComboBox>();
+			var senders = sender.As<ComboBox>();
 			if (App.Setting.Data.Theme.Mode != (CustomThemeMode)senders.SelectedIndex) {
 				App.Setting.Data.Theme.Mode = (CustomThemeMode)senders.SelectedIndex;
 				await App.Setting.Save();
@@ -108,7 +108,7 @@ namespace AssistantPlus.View.Home {
 			SplitButton               sender,
 			SplitButtonClickEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleSplitButton>();
+			var senders = sender.As<ToggleSplitButton>();
 			App.Setting.Data.Theme.Color.State = senders.IsChecked;
 			this.NotifyPropertyChanged(
 				nameof(this.uSettingThemeColor_IsChecked),
@@ -128,7 +128,7 @@ namespace AssistantPlus.View.Home {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ColorPicker>();
+			var senders = sender.As<ColorPicker>();
 			App.Setting.Data.Theme.Color.LightRed = senders.Color.R;
 			App.Setting.Data.Theme.Color.LightGreen = senders.Color.G;
 			App.Setting.Data.Theme.Color.LightBlue = senders.Color.B;
@@ -154,7 +154,7 @@ namespace AssistantPlus.View.Home {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ColorPicker>();
+			var senders = sender.As<ColorPicker>();
 			App.Setting.Data.Theme.Color.DarkRed = senders.Color.R;
 			App.Setting.Data.Theme.Color.DarkGreen = senders.Color.G;
 			App.Setting.Data.Theme.Color.DarkBlue = senders.Color.B;
@@ -194,7 +194,7 @@ namespace AssistantPlus.View.Home {
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			var senders = sender.AsClass<ComboBox>();
+			var senders = sender.As<ComboBox>();
 			if (App.Setting.Data.Theme.Backdrop != (CustomThemeBackdrop)senders.SelectedIndex) {
 				App.Setting.Data.Theme.Backdrop = (CustomThemeBackdrop)senders.SelectedIndex;
 				await App.Setting.Save();
@@ -214,7 +214,7 @@ namespace AssistantPlus.View.Home {
 			SplitButton               sender,
 			SplitButtonClickEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleSplitButton>();
+			var senders = sender.As<ToggleSplitButton>();
 			App.Setting.Data.Window.Position.State = senders.IsChecked;
 			this.NotifyPropertyChanged(
 				nameof(this.uSettingWindowPosition_IsChecked),
@@ -234,7 +234,7 @@ namespace AssistantPlus.View.Home {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<NumberBox>();
+			var senders = sender.As<NumberBox>();
 			App.Setting.Data.Window.Position.X = (Integer)senders.Value;
 			this.NotifyPropertyChanged(
 				nameof(this.uSettingWindowPositionX_Value)
@@ -259,7 +259,7 @@ namespace AssistantPlus.View.Home {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<NumberBox>();
+			var senders = sender.As<NumberBox>();
 			App.Setting.Data.Window.Position.Y = (Integer)senders.Value;
 			this.NotifyPropertyChanged(
 				nameof(this.uSettingWindowPositionY_Value)
@@ -292,7 +292,7 @@ namespace AssistantPlus.View.Home {
 			SplitButton               sender,
 			SplitButtonClickEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleSplitButton>();
+			var senders = sender.As<ToggleSplitButton>();
 			App.Setting.Data.Window.Size.State = senders.IsChecked;
 			this.NotifyPropertyChanged(
 				nameof(this.uSettingWindowSize_IsChecked),
@@ -312,7 +312,7 @@ namespace AssistantPlus.View.Home {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<NumberBox>();
+			var senders = sender.As<NumberBox>();
 			App.Setting.Data.Window.Size.Width = (Integer)senders.Value;
 			this.NotifyPropertyChanged(
 				nameof(this.uSettingWindowSizeWidth_Value)
@@ -337,7 +337,7 @@ namespace AssistantPlus.View.Home {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<NumberBox>();
+			var senders = sender.As<NumberBox>();
 			App.Setting.Data.Window.Size.Height = (Integer)senders.Value;
 			this.NotifyPropertyChanged(
 				nameof(this.uSettingWindowSizeHeight_Value)
@@ -366,7 +366,7 @@ namespace AssistantPlus.View.Home {
 			SplitButton               sender,
 			SplitButtonClickEventArgs args
 		) {
-			var senders = sender.AsClass<SplitButton>();
+			var senders = sender.As<SplitButton>();
 			await StorageHelper.RevealDirectory(App.PackageDirectory);
 			return;
 		}
@@ -377,7 +377,7 @@ namespace AssistantPlus.View.Home {
 			SplitButton               sender,
 			SplitButtonClickEventArgs args
 		) {
-			var senders = sender.AsClass<SplitButton>();
+			var senders = sender.As<SplitButton>();
 			await StorageHelper.RevealFile(App.Setting.File);
 			return;
 		}
@@ -386,8 +386,8 @@ namespace AssistantPlus.View.Home {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<MenuFlyoutItem>();
-			switch (senders.Tag.AsClass<String>()) {
+			var senders = sender.As<MenuFlyoutItem>();
+			switch (senders.Tag.As<String>()) {
 				case "Reload": {
 					await App.Setting.Load();
 					await App.Setting.Save();
@@ -442,7 +442,7 @@ namespace AssistantPlus.View.Home {
 			SplitButton               sender,
 			SplitButtonClickEventArgs args
 		) {
-			var senders = sender.AsClass<SplitButton>();
+			var senders = sender.As<SplitButton>();
 			await StorageHelper.RevealDirectory(App.SharedDirectory);
 			return;
 		}
@@ -453,7 +453,7 @@ namespace AssistantPlus.View.Home {
 			SplitButton               sender,
 			SplitButtonClickEventArgs args
 		) {
-			var senders = sender.AsClass<SplitButton>();
+			var senders = sender.As<SplitButton>();
 			StorageHelper.RemoveDirectory(App.CacheDirectory);
 			return;
 		}

@@ -18,7 +18,7 @@ namespace AssistantPlus.View.Home {
 		) {
 			this.InitializeComponent();
 			this.ExtendsContentIntoTitleBar = true;
-			this.SetTitleBar(this.uTab.TabStripFooter.AsClass<UIElement>());
+			this.SetTitleBar(this.uTab.TabStripFooter.As<UIElement>());
 			this.AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Standard;
 			this.Controller = new () { View = this };
 			this.Controller.Initialize();
@@ -32,7 +32,7 @@ namespace AssistantPlus.View.Home {
 
 		public async Task SetDefaultView (
 		) {
-			await ControlHelper.WaitUntilLoaded(this.Content.AsClass<FrameworkElement>());
+			await ControlHelper.WaitUntilLoaded(this.Content.As<FrameworkElement>());
 			await this.ShowLauncherPanel();
 			return;
 		}
@@ -40,7 +40,7 @@ namespace AssistantPlus.View.Home {
 		public async Task SetDefaultView (
 			ModuleLauncherConfiguration configuration
 		) {
-			await ControlHelper.WaitUntilLoaded(this.Content.AsClass<FrameworkElement>());
+			await ControlHelper.WaitUntilLoaded(this.Content.As<FrameworkElement>());
 			await this.InsertTabItem(configuration);
 			return;
 		}
@@ -111,17 +111,17 @@ namespace AssistantPlus.View.Home {
 		) {
 			GF.AssertTest(this.LauncherPanelFlyout == null);
 			this.LauncherPanelFlyout = new Flyout() {
-				FlyoutPresenterStyle = this.View.Content.AsClass<FrameworkElement>().FindResource("VerticalScrollFlyoutPresenterStyle").AsClass<Style>(),
+				FlyoutPresenterStyle = this.View.Content.As<FrameworkElement>().FindResource("VerticalScrollFlyoutPresenterStyle").As<Style>(),
 				Content = new LauncherPanel() {
 					Stamp = new (),
 				},
-			}.ApplySelf((it) => {
+			}.SelfAlso((it) => {
 				it.Closed += (_, _) => {
 					this.LauncherPanelFlyout = null;
 					return;
 				};
 			});
-			this.LauncherPanelFlyout.ShowAt(this.View.Content.AsClass<FrameworkElement>(), new () { Placement = FlyoutPlacementMode.Full });
+			this.LauncherPanelFlyout.ShowAt(this.View.Content.As<FrameworkElement>(), new () { Placement = FlyoutPlacementMode.Full });
 			return;
 		}
 
@@ -158,7 +158,7 @@ namespace AssistantPlus.View.Home {
 			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => (Object.ReferenceEquals(value.Frame.Content, content))).AsNotNull();
 			var lastSelectedItem = this.View.uTab.SelectedItem;
 			this.View.uTab.SelectedItem = item;
-			var state = await item.Frame.Content.AsClass<IModulePage>().ModulePageRequestClose();
+			var state = await item.Frame.Content.As<IModulePage>().ModulePageRequestClose();
 			if (!state) {
 				this.View.uTab.SelectedItem = lastSelectedItem;
 			}
@@ -191,7 +191,7 @@ namespace AssistantPlus.View.Home {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			await this.ShowLauncherPanel();
 			return;
 		}
@@ -206,8 +206,8 @@ namespace AssistantPlus.View.Home {
 			TabView                           sender,
 			TabViewTabCloseRequestedEventArgs args
 		) {
-			var senders = sender.AsClass<TabView>();
-			await this.RemoveTabItem(args.Item.AsClass<MainWindowTabItemController>().Frame.Content.AsClass<Page>());
+			var senders = sender.As<TabView>();
+			await this.RemoveTabItem(args.Item.As<MainWindowTabItemController>().Frame.Content.As<Page>());
 			return;
 		}
 
@@ -215,7 +215,7 @@ namespace AssistantPlus.View.Home {
 			TabView sender,
 			Object  args
 		) {
-			var senders = sender.AsClass<TabView>();
+			var senders = sender.As<TabView>();
 			await this.ShowLauncherPanel();
 			return;
 		}
@@ -226,14 +226,14 @@ namespace AssistantPlus.View.Home {
 			KeyboardAccelerator                 sender,
 			KeyboardAcceleratorInvokedEventArgs args
 		) {
-			var senders = sender.AsClass<KeyboardAccelerator>();
+			var senders = sender.As<KeyboardAccelerator>();
 			if (senders.Modifiers == VirtualKeyModifiers.Control && senders.Key == VirtualKey.W) {
 				args.Handled = true;
 				if (this.View.uTab.SelectedItem == null) {
 					this.View.Close();
 				}
 				else {
-					await this.RemoveTabItem(this.View.uTab.SelectedItem.AsClass<MainWindowTabItemController>().Frame.Content.AsClass<Page>());
+					await this.RemoveTabItem(this.View.uTab.SelectedItem.As<MainWindowTabItemController>().Frame.Content.As<Page>());
 				}
 			}
 			if (senders.Modifiers == VirtualKeyModifiers.Control && senders.Key == VirtualKey.T) {
@@ -289,13 +289,13 @@ namespace AssistantPlus.View.Home {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<MenuFlyoutItem>();
-			switch (senders.Tag.AsClass<String>()) {
+			var senders = sender.As<MenuFlyoutItem>();
+			switch (senders.Tag.As<String>()) {
 				case "Keep": {
 					var configuration = new ModuleLauncherConfiguration() {
 						Title = "Untitled",
 						Type = this.Type,
-						Option = await this.Frame.Content.AsClass<IModulePage>().ModulePageCollectOption(),
+						Option = await this.Frame.Content.As<IModulePage>().ModulePageCollectOption(),
 						Command = [],
 					};
 					await ControlHelper.ShowDialogFixed(this.Host.View.Content, "Launcher Configuration", new LauncherConfigurationPanel() {
@@ -310,7 +310,7 @@ namespace AssistantPlus.View.Home {
 					var configuration = new ModuleLauncherConfiguration() {
 						Title = this.Title,
 						Type = this.Type,
-						Option = await this.Frame.Content.AsClass<IModulePage>().ModulePageCollectOption(),
+						Option = await this.Frame.Content.As<IModulePage>().ModulePageCollectOption(),
 						Command = [],
 					};
 					await this.Host.InsertTabItem(configuration);

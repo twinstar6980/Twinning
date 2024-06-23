@@ -27,7 +27,7 @@ namespace AssistantPlus.Control {
 		);
 
 		public String Icon {
-			get => this.GetValue(HeaderBar.IconProperty).AsClass<String>();
+			get => this.GetValue(HeaderBar.IconProperty).As<String>();
 			set => this.SetValue(HeaderBar.IconProperty, value);
 		}
 
@@ -41,7 +41,7 @@ namespace AssistantPlus.Control {
 		);
 
 		public String Title {
-			get => this.GetValue(HeaderBar.TitleProperty).AsClass<String>();
+			get => this.GetValue(HeaderBar.TitleProperty).As<String>();
 			set => this.SetValue(HeaderBar.TitleProperty, value);
 		}
 
@@ -55,7 +55,7 @@ namespace AssistantPlus.Control {
 		);
 
 		public UIElement Action {
-			get => this.GetValue(HeaderBar.ActionProperty).AsClass<UIElement>();
+			get => this.GetValue(HeaderBar.ActionProperty).As<UIElement>();
 			set => this.SetValue(HeaderBar.ActionProperty, value);
 		}
 

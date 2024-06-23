@@ -15,7 +15,7 @@ typedef IconSymbols = Symbols;
 
 const String kApplicationName = 'Twinning Assistant';
 
-const String kApplicationVersion = '44';
+const String kApplicationVersion = '45';
 
 // ----------------
 
@@ -28,16 +28,22 @@ Void assertTest(
   return;
 }
 
-extension CommonExtension<TType extends core.Object> on TType {
+extension CommonObjectExtension<TType extends core.Object> on TType {
 
-  TTarget asType<TTarget>(
+  TTarget as<TTarget>(
   ) {
     return this as TTarget;
   }
 
   // ----------------
 
-  TType applySelf(
+  TResult selfLet<TResult>(
+    TResult Function(TType) action,
+  ) {
+    return action(this);
+  }
+
+  TType selfAlso(
     Void Function(TType) action,
   ) {
     action(this);

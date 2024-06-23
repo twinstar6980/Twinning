@@ -48,7 +48,7 @@ namespace AssistantPlus.View.ModdingWorker {
 		);
 
 		public Setting Data {
-			get => this.GetValue(SettingPanel.DataProperty).AsClass<Setting>();
+			get => this.GetValue(SettingPanel.DataProperty).As<Setting>();
 			set => this.SetValue(SettingPanel.DataProperty, value);
 		}
 
@@ -91,7 +91,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			this.Data.Kernel = StorageHelper.Regularize(senders.Text);
 			this.NotifyPropertyChanged(
 				nameof(this.uKernelText_Text)
@@ -109,7 +109,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			var value = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(ModdingWorker)}.Kernel");
 			if (value != null) {
 				this.Data.Kernel = value;
@@ -128,7 +128,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			this.Data.Script = StorageHelper.Regularize(senders.Text);
 			this.NotifyPropertyChanged(
 				nameof(this.uScriptText_Text)
@@ -146,7 +146,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			var value = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(ModdingWorker)}.Script");
 			if (value != null) {
 				this.Data.Script = value;
@@ -165,7 +165,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			this.Data.Argument = ConvertHelper.ParseStringListFromStringWithLine(senders.Text);
 			this.NotifyPropertyChanged(
 				nameof(this.uArgumentText_Text)
@@ -193,7 +193,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.Data.AutomaticScroll = senders.IsChecked.AsNotNull();
 			return;
 		}
@@ -212,7 +212,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.Data.ImmediateLaunch = senders.IsChecked.AsNotNull();
 			return;
 		}
@@ -225,7 +225,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			this.Data.MessageFont = senders.Text;
 			this.NotifyPropertyChanged(
 				nameof(this.uMessageFontText_Text)
@@ -245,7 +245,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			var flyout = new MenuFlyout() {
 				Placement = FlyoutPlacementMode.Left,
 			};
@@ -253,7 +253,7 @@ namespace AssistantPlus.View.ModdingWorker {
 				flyout.Items.Add(new MenuFlyoutItem() {
 					Text = item,
 					FontFamily = new (item),
-				}.ApplySelf((it) => {
+				}.SelfAlso((it) => {
 					it.Click += (_, _) => {
 						this.Data.MessageFont = item;
 						this.NotifyPropertyChanged(

@@ -175,37 +175,37 @@ namespace AssistantPlus {
 			switch (type.Primitive) {
 				case GameReflectionModel.PrimitiveType.Boolean: {
 					GF.AssertTest(type.Element == null && type.Class == null);
-					raw = new JValue(ripe.AsStruct<Boolean>());
+					raw = new JValue(ripe.As<Boolean>());
 					break;
 				}
 				case GameReflectionModel.PrimitiveType.Integer: {
 					GF.AssertTest(type.Element == null && type.Class == null);
-					raw = new JValue(ripe.AsStruct<Integer>());
+					raw = new JValue(ripe.As<Integer>());
 					break;
 				}
 				case GameReflectionModel.PrimitiveType.Floater: {
 					GF.AssertTest(type.Element == null && type.Class == null);
-					raw = new JValue(ripe.AsStruct<Floater>());
+					raw = new JValue(ripe.As<Floater>());
 					break;
 				}
 				case GameReflectionModel.PrimitiveType.String: {
 					GF.AssertTest(type.Element == null && type.Class == null);
-					raw = new JValue(ripe.AsClass<String>());
+					raw = new JValue(ripe.As<String>());
 					break;
 				}
 				case GameReflectionModel.PrimitiveType.Enumeration: {
 					GF.AssertTest(type.Element == null && type.Class != null);
-					raw = new JValue(GameReflectionHelper.MakeEnumerationExpression(ripe.AsClass<Tuple<String>>()));
+					raw = new JValue(GameReflectionHelper.MakeEnumerationExpression(ripe.As<Tuple<String>>()));
 					break;
 				}
 				case GameReflectionModel.PrimitiveType.Reference: {
 					GF.AssertTest(type.Element == null && type.Class != null);
-					raw = new JValue(GameReflectionHelper.MakeReferenceExpression(ripe.AsClass<Tuple<String, String>>()));
+					raw = new JValue(GameReflectionHelper.MakeReferenceExpression(ripe.As<Tuple<String, String>>()));
 					break;
 				}
 				case GameReflectionModel.PrimitiveType.List: {
 					GF.AssertTest(type.Element != null && type.Class == null);
-					var ripeValue = ripe.AsClass<List<GameReflectionModel.FixedValue>>();
+					var ripeValue = ripe.As<List<GameReflectionModel.FixedValue>>();
 					var rawValue = new JArray();
 					foreach (var ripeValueItem in ripeValue) {
 						rawValue.Add(GameReflectionHelper.MakeDataValue(descriptor, type.Element, ripeValueItem.Value));
@@ -215,7 +215,7 @@ namespace AssistantPlus {
 				}
 				case GameReflectionModel.PrimitiveType.Map: {
 					GF.AssertTest(type.Element != null && type.Class == null);
-					var ripeValue = ripe.AsClass<List<GameReflectionModel.NamedValue>>();
+					var ripeValue = ripe.As<List<GameReflectionModel.NamedValue>>();
 					var rawValue = new JObject();
 					foreach (var ripeValueItem in ripeValue) {
 						rawValue.Add(ripeValueItem.Name, GameReflectionHelper.MakeDataValue(descriptor, type.Element, ripeValueItem.Value));
@@ -226,7 +226,7 @@ namespace AssistantPlus {
 				case GameReflectionModel.PrimitiveType.Object: {
 					GF.AssertTest(type.Element == null && type.Class != null);
 					var objectDescriptor = descriptor.Object[type.Class];
-					var ripeValue = ripe.AsClass<GameReflectionModel.FixedObject>();
+					var ripeValue = ripe.As<GameReflectionModel.FixedObject>();
 					var rawValue = new JObject();
 					GF.AssertTest(ripeValue.Property.Count == objectDescriptor.Count);
 					for (var propertyGroupIndex = 0; propertyGroupIndex < objectDescriptor.Count; propertyGroupIndex++) {
@@ -343,7 +343,7 @@ namespace AssistantPlus {
 					//foreach (var extraItem in sourceValue) {
 					//	var extraName = extraItem.Key;
 					//	var extraValue = extraItem.Value;
-					//	var extraType = (ObjectModel.CompositeType)null!;
+					//	var extraType = (ObjectModel.CompositeType)null;
 					//	destinationValue.ExtraProperty.Add(new ObjectModel.ExtraValue() { Value = extraItem.Value, Name = extraItem.Key, Type =  });
 					//}
 					ripe = ripeValue;
@@ -397,7 +397,7 @@ namespace AssistantPlus {
 					GF.AssertTest(type.Element != null && type.Class == null);
 					value = new List<GameReflectionModel.FixedValue>();
 					if (withElement) {
-						value.AsClass<List<GameReflectionModel.FixedValue>>().Add(new () { Value = GameReflectionHelper.GenerateDataValueDefault(descriptor, type.Element, withElement) });
+						value.As<List<GameReflectionModel.FixedValue>>().Add(new () { Value = GameReflectionHelper.GenerateDataValueDefault(descriptor, type.Element, withElement) });
 					}
 					break;
 				}
@@ -405,7 +405,7 @@ namespace AssistantPlus {
 					GF.AssertTest(type.Element != null && type.Class == null);
 					value = new List<GameReflectionModel.NamedValue>();
 					if (withElement) {
-						value.AsClass<List<GameReflectionModel.NamedValue>>().Add(new () { Name = "", Value = GameReflectionHelper.GenerateDataValueDefault(descriptor, type.Element, withElement) });
+						value.As<List<GameReflectionModel.NamedValue>>().Add(new () { Name = "", Value = GameReflectionHelper.GenerateDataValueDefault(descriptor, type.Element, withElement) });
 					}
 					break;
 				}
@@ -477,7 +477,7 @@ namespace AssistantPlus {
 					Element = null,
 					Class = rawObject.objclass,
 				};
-				var ripeObject = GameReflectionHelper.ParseDataValue(descriptor, objectType, rawObject.objdata).AsClass<GameReflectionModel.FixedObject>();
+				var ripeObject = GameReflectionHelper.ParseDataValue(descriptor, objectType, rawObject.objdata).As<GameReflectionModel.FixedObject>();
 				ripe.Add(new () {
 					Alias = rawObject.aliases != null && rawObject.aliases.Count == 1 ? rawObject.aliases[0] : null,
 					Class = rawObject.objclass,

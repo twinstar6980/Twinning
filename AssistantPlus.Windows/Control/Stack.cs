@@ -152,11 +152,11 @@ namespace AssistantPlus.Control {
 			nameof(Stack.Orientation),
 			typeof(Orientation),
 			typeof(Stack),
-			new (Orientation.Horizontal, (o, e) => { o.AsClass<Stack>().InvalidateMeasure(); })
+			new (Orientation.Horizontal, (o, e) => { o.As<Stack>().InvalidateMeasure(); })
 		);
 
 		public Orientation Orientation {
-			get => this.GetValue(Stack.OrientationProperty).AsStruct<Orientation>();
+			get => this.GetValue(Stack.OrientationProperty).As<Orientation>();
 			set => this.SetValue(Stack.OrientationProperty, value);
 		}
 
@@ -166,11 +166,11 @@ namespace AssistantPlus.Control {
 			nameof(Stack.Spacing),
 			typeof(Floater),
 			typeof(Stack),
-			new (0.0, (o, e) => { o.AsClass<Stack>().InvalidateMeasure(); })
+			new (0.0, (o, e) => { o.As<Stack>().InvalidateMeasure(); })
 		);
 
 		public Floater Spacing {
-			get => this.GetValue(Stack.SpacingProperty).AsStruct<Floater>();
+			get => this.GetValue(Stack.SpacingProperty).As<Floater>();
 			set => this.SetValue(Stack.SpacingProperty, value);
 		}
 
@@ -180,12 +180,12 @@ namespace AssistantPlus.Control {
 			"Weight",
 			typeof(Floater),
 			typeof(Stack),
-			new (Floater.NaN, (o, e) => { o.AsClass<FrameworkElement>().Parent.AsClassOrNull<Stack>()?.InvalidateMeasure(); })
+			new (Floater.NaN, (o, e) => { o.As<FrameworkElement>().Parent?.As<Stack>()?.InvalidateMeasure(); })
 		);
 
 		public static Floater GetWeight (
 			DependencyObject element
-		) => element.GetValue(Stack.WeightProperty).AsStruct<Floater>();
+		) => element.GetValue(Stack.WeightProperty).As<Floater>();
 
 		public static void SetWeight (
 			DependencyObject element,

@@ -31,14 +31,16 @@ namespace AssistantPlus.Utility {
 
 		public static JToken SerializeToken<TValue> (
 			TValue value
-		) {
-			return JToken.FromObject(value!, JsonHelper.Serializer);
+		)
+			where TValue : notnull {
+			return JToken.FromObject(value, JsonHelper.Serializer);
 		}
 
 		public static TValue DeserializeToken<TValue> (
 			JToken token
-		) {
-			return token.ToObject<TValue>(JsonHelper.Serializer).AsNotNullX();
+		)
+			where TValue : notnull {
+			return token.ToObject<TValue>(JsonHelper.Serializer) ?? throw new NullReferenceException();
 		}
 
 		// ----------------
@@ -46,7 +48,8 @@ namespace AssistantPlus.Utility {
 		public static String SerializeText<TValue> (
 			TValue  value,
 			Boolean indented = true
-		) {
+		)
+			where TValue : notnull {
 			var text = new StringWriter(new (256), CultureInfo.InvariantCulture) {
 				NewLine = "\n",
 			};
@@ -61,9 +64,10 @@ namespace AssistantPlus.Utility {
 
 		public static TValue DeserializeText<TValue> (
 			String text
-		) {
+		)
+			where TValue : notnull {
 			var reader = new JsonTextReader(new StringReader(text));
-			return JsonHelper.Serializer.Deserialize<TValue>(reader).AsNotNullX();
+			return JsonHelper.Serializer.Deserialize<TValue>(reader) ?? throw new NullReferenceException();
 		}
 
 		// ----------------
@@ -72,14 +76,16 @@ namespace AssistantPlus.Utility {
 			String  path,
 			TValue  value,
 			Boolean indented = true
-		) {
+		)
+			where TValue : notnull {
 			await StorageHelper.WriteFileText(path, JsonHelper.SerializeText<TValue>(value, indented));
 			return;
 		}
 
 		public static async Task<TValue> DeserializeFile<TValue> (
 			String path
-		) {
+		)
+			where TValue : notnull {
 			return JsonHelper.DeserializeText<TValue>(await StorageHelper.ReadFileText(path));
 		}
 
@@ -87,7 +93,8 @@ namespace AssistantPlus.Utility {
 
 		public static TValue DeepCopy<TValue> (
 			TValue value
-		) {
+		)
+			where TValue : notnull {
 			return JsonHelper.DeserializeToken<TValue>(JsonHelper.SerializeToken(value));
 		}
 
@@ -112,7 +119,7 @@ namespace AssistantPlus.Utility {
 					serializer.Serialize(writer, null);
 					return;
 				}
-				var values = value.AsClass<ITuple>();
+				var values = value.As<ITuple>();
 				var types = value.GetType().GetGenericArguments();
 				var token = new JArray(types.Select((type, index) => (values[index] == null ? null : JToken.FromObject(values[index].AsNotNull(), serializer))));
 				serializer.Serialize(writer, token);

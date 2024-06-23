@@ -163,12 +163,12 @@ namespace AssistantPlus {
 						continue;
 					}
 					var layer = new WorkLayer() {
-						Canvas = null!,
-						Storyboard = null!,
-						Visibility = null!,
-						Transform = null!,
-						ColorAlpha = null!,
-						IsFirst = false,
+						Canvas = default!,
+						Storyboard = default!,
+						Visibility = default!,
+						Transform = default!,
+						ColorAlpha = default!,
+						IsFirst = default!,
 					};
 					if (!append.Sprite) {
 						var resource = animation.Image[(Size)append.Resource];

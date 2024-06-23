@@ -40,7 +40,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		);
 
 		public List<String> Source {
-			get => this.GetValue(PackagePartPanel.SourceProperty).AsClass<List<String>>();
+			get => this.GetValue(PackagePartPanel.SourceProperty).As<List<String>>();
 			set => this.SetValue(PackagePartPanel.SourceProperty, value);
 		}
 
@@ -54,7 +54,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		);
 
 		public List<String> Value {
-			get => this.GetValue(PackagePartPanel.ValueProperty).AsClass<List<String>>();
+			get => this.GetValue(PackagePartPanel.ValueProperty).As<List<String>>();
 			set => this.SetValue(PackagePartPanel.ValueProperty, value);
 		}
 
@@ -103,13 +103,13 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			var senders = sender.AsClass<ListView>();
-			foreach (var item in args.AddedItems.Select(GF.AsClass<PackagePartPanelItemController>)) {
+			var senders = sender.As<ListView>();
+			foreach (var item in args.AddedItems.Select(GF.As<PackagePartPanelItemController>)) {
 				if (!this.Value.Contains(item.Name)) {
 					this.Value.Add(item.Name);
 				}
 			}
-			foreach (var item in args.RemovedItems.Select(GF.AsClass<PackagePartPanelItemController>)) {
+			foreach (var item in args.RemovedItems.Select(GF.As<PackagePartPanelItemController>)) {
 				if (this.Value.Contains(item.Name)) {
 					this.Value.Remove(item.Name);
 				}

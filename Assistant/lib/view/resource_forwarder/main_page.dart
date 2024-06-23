@@ -75,7 +75,7 @@ class _MainPageState extends State<MainPage> {
     List<String> list,
   ) async {
     for (var item in list) {
-      if (this._resource.any((value) => (value.$1 == item))) {
+      if (this._resource.any((value) => value.$1 == item)) {
         continue;
       }
       var itemType = null as Boolean?;
@@ -95,7 +95,7 @@ class _MainPageState extends State<MainPage> {
     List<String> list,
   ) async {
     for (var item in list) {
-      this._resource.removeWhere((value) => (value.$1 == item));
+      this._resource.removeWhere((value) => value.$1 == item);
     }
     await this._refreshMatch();
     return;
@@ -113,7 +113,7 @@ class _MainPageState extends State<MainPage> {
     Map<String, Object>? argument,
   ) async {
     var actualMethod = method == null ? null : modding_worker.ForwardHelper.makeMethodForBatchable(method, this._enableBatch);
-    var actualCommand = this._resource.map((value) => (modding_worker.ForwardHelper.makeArgumentForCommand(value.$1, actualMethod, argument))).toList();
+    var actualCommand = this._resource.map((value) => modding_worker.ForwardHelper.makeArgumentForCommand(value.$1, actualMethod, argument)).toList();
     await modding_worker.ForwardHelper.forwardMany(this.context, actualCommand, this._parallelForward);
     return;
   }
@@ -167,7 +167,7 @@ class _MainPageState extends State<MainPage> {
         this._enableBatch = optionEnableBatch;
       }
       if (optionResource != null) {
-        await this._appendResource(optionResource.map((item) => (StorageHelper.regularize(item.$1))).toList());
+        await this._appendResource(optionResource.map((item) => StorageHelper.regularize(item.$1)).toList());
       }
       this.setState(() {});
     });

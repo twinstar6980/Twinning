@@ -117,7 +117,7 @@ namespace AssistantPlus {
 					if (option.Check("-InsertTab")) {
 						optionInsertTab = new (
 							option.NextString(),
-							Enum.Parse<ModuleType>(option.NextString()),
+							option.NextString().SelfLet((it) => (Enum.Parse<ModuleType>(it))),
 							option.NextStringList()
 						);
 					}
@@ -136,7 +136,7 @@ namespace AssistantPlus {
 					WindowHelper.Center(window);
 				}
 				if (optionInsertTab != null) {
-					_ = window.AsClass<View.Home.MainWindow>().SetDefaultView(new () {
+					_ = window.As<View.Home.MainWindow>().SetDefaultView(new () {
 						Title = optionInsertTab.Item1,
 						Type = optionInsertTab.Item2,
 						Option = optionInsertTab.Item3,
@@ -144,9 +144,9 @@ namespace AssistantPlus {
 					});
 				}
 				else {
-					_ = window.AsClass<View.Home.MainWindow>().SetDefaultView();
+					_ = window.As<View.Home.MainWindow>().SetDefaultView();
 				}
-				App.MainWindow = window.AsClass<View.Home.MainWindow>();
+				App.MainWindow = window.As<View.Home.MainWindow>();
 				await App.Setting.Apply();
 			}
 			catch (Exception e) {
@@ -233,7 +233,7 @@ namespace AssistantPlus {
 			var list = await JumpList.LoadCurrentAsync();
 			list.Items.Clear();
 			foreach (var launcher in App.Setting.Data.ModuleLauncher.Module) {
-				list.Items.Add(JumpListItem.CreateWithArguments(ProcessHelper.EncodeCommandLineString(null, ModuleHelper.GenerateArgument(launcher)), "").ApplySelf((it) => {
+				list.Items.Add(JumpListItem.CreateWithArguments(ProcessHelper.EncodeCommandLineString(null, ModuleHelper.GenerateArgument(launcher)), "").SelfAlso((it) => {
 					it.Logo = new ("ms-appx:///Asset/Logo.png");
 					it.GroupName = "";
 					it.DisplayName = launcher.Title;
@@ -241,7 +241,7 @@ namespace AssistantPlus {
 				}));
 			}
 			foreach (var launcher in App.Setting.Data.ModuleLauncher.Pinned) {
-				list.Items.Add(JumpListItem.CreateWithArguments(ProcessHelper.EncodeCommandLineString(null, ModuleHelper.GenerateArgument(launcher)), "").ApplySelf((it) => {
+				list.Items.Add(JumpListItem.CreateWithArguments(ProcessHelper.EncodeCommandLineString(null, ModuleHelper.GenerateArgument(launcher)), "").SelfAlso((it) => {
 					it.Logo = new ("ms-appx:///Asset/Logo.png");
 					it.GroupName = "Pinned";
 					it.DisplayName = launcher.Title;
@@ -249,7 +249,7 @@ namespace AssistantPlus {
 				}));
 			}
 			foreach (var launcher in App.Setting.Data.ModuleLauncher.Recent) {
-				list.Items.Add(JumpListItem.CreateWithArguments(ProcessHelper.EncodeCommandLineString(null, ModuleHelper.GenerateArgument(launcher)), "").ApplySelf((it) => {
+				list.Items.Add(JumpListItem.CreateWithArguments(ProcessHelper.EncodeCommandLineString(null, ModuleHelper.GenerateArgument(launcher)), "").SelfAlso((it) => {
 					it.Logo = new ("ms-appx:///Asset/Logo.png");
 					it.GroupName = "Recent";
 					it.DisplayName = launcher.Title;

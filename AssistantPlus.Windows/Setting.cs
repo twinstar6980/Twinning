@@ -63,7 +63,7 @@ namespace AssistantPlus {
 		) {
 			// Theme.Mode
 			if (this.State.ThemeMode != this.Data.Theme.Mode && App.MainWindowIsInitialized) {
-				App.MainWindow.Content.AsClass<FrameworkElement>().RequestedTheme = this.Data.Theme.Mode switch {
+				App.MainWindow.Content.As<FrameworkElement>().RequestedTheme = this.Data.Theme.Mode switch {
 					CustomThemeMode.System => ElementTheme.Default,
 					CustomThemeMode.Light  => ElementTheme.Light,
 					CustomThemeMode.Dark   => ElementTheme.Dark,

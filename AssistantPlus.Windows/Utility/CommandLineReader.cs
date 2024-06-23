@@ -45,17 +45,17 @@ namespace AssistantPlus.Utility {
 
 		public Boolean NextBoolean (
 		) {
-			return Boolean.Parse(this.NextString());
+			return this.NextString().SelfLet((it) => (Boolean.Parse(it)));
 		}
 
 		public Integer NextInteger (
 		) {
-			return Integer.Parse(this.NextString());
+			return this.NextString().SelfLet((it) => (Integer.Parse(it)));
 		}
 
 		public Floater NextFloater (
 		) {
-			return Floater.Parse(this.NextString());
+			return this.NextString().SelfLet((it) => (Floater.Parse(it)));
 		}
 
 		public String NextString (

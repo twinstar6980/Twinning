@@ -25,7 +25,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			this.Controller.ApplyOption(args.Parameter.AsClass<List<String>>());
+			this.Controller.ApplyOption(args.Parameter.As<List<String>>());
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -303,7 +303,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 			Object        sender,
 			DragEventArgs args
 		) {
-			var senders = sender.AsClass<Page>();
+			var senders = sender.As<Page>();
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Link;
 			}
@@ -314,7 +314,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 			Object        sender,
 			DragEventArgs args
 		) {
-			var senders = sender.AsClass<Page>();
+			var senders = sender.As<Page>();
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.Handled = true;
 				var item = await args.DataView.GetStorageItemsAsync();
@@ -338,7 +338,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.ParallelForward = senders.IsChecked.AsNotNull();
 			return;
 		}
@@ -355,7 +355,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.EnableFilter = senders.IsChecked.AsNotNull();
 			await this.RefreshFilter();
 			return;
@@ -373,7 +373,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.EnableBatch = senders.IsChecked.AsNotNull();
 			await this.RefreshFilter();
 			return;
@@ -395,8 +395,8 @@ namespace AssistantPlus.View.ResourceForwarder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
-			switch (senders.Tag.AsClass<String>()) {
+			var senders = sender.As<Button>();
+			switch (senders.Tag.As<String>()) {
 				case "ClearAll": {
 					await this.ClearResource();
 					break;
@@ -427,8 +427,8 @@ namespace AssistantPlus.View.ResourceForwarder {
 			Object             sender,
 			ItemClickEventArgs args
 		) {
-			var senders = sender.AsClass<ListView>();
-			var item = args.ClickedItem.AsClass<MainPageResourceItemController>();
+			var senders = sender.As<ListView>();
+			var item = args.ClickedItem.As<MainPageResourceItemController>();
 			await this.RemoveResource([item.Path]);
 			return;
 		}
@@ -443,7 +443,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 			TreeView                     sender,
 			TreeViewItemInvokedEventArgs args
 		) {
-			var senders = sender.AsClass<TreeView>();
+			var senders = sender.As<TreeView>();
 			if (args.InvokedItem is MainPageOptionGroupItemController groupItem) {
 				var node = senders.RootNodes.ToList().Find((value) => (Object.ReferenceEquals(value.Content, groupItem))).AsNotNull();
 				node.IsExpanded = !node.IsExpanded;
@@ -624,7 +624,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 							}
 							: new MenuFlyoutItem() {
 								Text = preset.Name,
-							}.ApplySelf((it) => {
+							}.SelfAlso((it) => {
 								it.Click += async (_, _) => {
 									await this.Host.ForwardResource(this.Configuration.Method, preset.Argument);
 									return;
@@ -638,7 +638,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 
 		public String uPresetCount_Text {
 			get {
-				return this.Configuration.Preset.Count(GF.NotNull).ToString();
+				return this.Configuration.Preset.Count((value) => (value != null)).ToString();
 			}
 		}
 

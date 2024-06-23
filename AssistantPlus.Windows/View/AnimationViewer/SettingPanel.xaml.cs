@@ -48,7 +48,7 @@ namespace AssistantPlus.View.AnimationViewer {
 		);
 
 		public Setting Data {
-			get => this.GetValue(SettingPanel.DataProperty).AsClass<Setting>();
+			get => this.GetValue(SettingPanel.DataProperty).As<Setting>();
 			set => this.SetValue(SettingPanel.DataProperty, value);
 		}
 
@@ -98,7 +98,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.Data.ImmediateSelect = senders.IsChecked.AsNotNull();
 			return;
 		}
@@ -117,7 +117,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.Data.AutomaticPlay = senders.IsChecked.AsNotNull();
 			return;
 		}
@@ -136,7 +136,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.Data.RepeatPlay = senders.IsChecked.AsNotNull();
 			return;
 		}
@@ -155,7 +155,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.Data.RemainFrameRate = senders.IsChecked.AsNotNull();
 			return;
 		}
@@ -174,7 +174,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.Data.ShowSpriteBoundary = senders.IsChecked.AsNotNull();
 			return;
 		}
@@ -187,7 +187,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			this.Data.ImageFilterRule = senders.Text;
 			this.NotifyPropertyChanged(
 				nameof(this.uImageFilterRuleText_Text)
@@ -209,7 +209,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			this.Data.SpriteFilterRule = senders.Text;
 			this.NotifyPropertyChanged(
 				nameof(this.uSpriteFilterRuleText_Text)

@@ -44,7 +44,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 		);
 
 		public GameReflectionModel.DescriptorMap Descriptor {
-			get => this.GetValue(ObjectPanel.DescriptorProperty).AsClass<GameReflectionModel.DescriptorMap>();
+			get => this.GetValue(ObjectPanel.DescriptorProperty).As<GameReflectionModel.DescriptorMap>();
 			set => this.SetValue(ObjectPanel.DescriptorProperty, value);
 		}
 
@@ -58,7 +58,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 		);
 
 		public String Type {
-			get => this.GetValue(ObjectPanel.TypeProperty).AsClass<String>();
+			get => this.GetValue(ObjectPanel.TypeProperty).As<String>();
 			set => this.SetValue(ObjectPanel.TypeProperty, value);
 		}
 
@@ -181,10 +181,10 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			GF.AssertTest(this.Host.IsLoaded);
 			var model = this.Host.DescriptorList[this.Index.Item1].Property[this.Index.Item2];
-			Clipboard.SetContent(new DataPackage().ApplySelf((it) => { it.SetText(model.Name); }));
+			Clipboard.SetContent(new DataPackage().SelfAlso((it) => { it.SetText(model.Name); }));
 			App.MainWindow.PushNotification(InfoBarSeverity.Success, "Copied!", "");
 			return;
 		}

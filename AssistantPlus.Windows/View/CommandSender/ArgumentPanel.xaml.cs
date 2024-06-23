@@ -40,7 +40,7 @@ namespace AssistantPlus.View.CommandSender {
 		);
 
 		public List<ArgumentConfiguration> Configuration {
-			get => this.GetValue(ArgumentPanel.ConfigurationProperty).AsClass<List<ArgumentConfiguration>>();
+			get => this.GetValue(ArgumentPanel.ConfigurationProperty).As<List<ArgumentConfiguration>>();
 			set => this.SetValue(ArgumentPanel.ConfigurationProperty, value);
 		}
 
@@ -54,7 +54,7 @@ namespace AssistantPlus.View.CommandSender {
 		);
 
 		public List<Wrapper<ValueExpression>> Value {
-			get => this.GetValue(ArgumentPanel.ValueProperty).AsClass<List<Wrapper<ValueExpression>>>();
+			get => this.GetValue(ArgumentPanel.ValueProperty).As<List<Wrapper<ValueExpression>>>();
 			set => this.SetValue(ArgumentPanel.ValueProperty, value);
 		}
 

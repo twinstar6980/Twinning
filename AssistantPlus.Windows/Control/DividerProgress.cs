@@ -27,7 +27,7 @@ namespace AssistantPlus.Control {
 		);
 
 		public Floater ProgressValue {
-			get => this.GetValue(DividerProgress.ProgressValueProperty).AsStruct<Floater>();
+			get => this.GetValue(DividerProgress.ProgressValueProperty).As<Floater>();
 			set => this.SetValue(DividerProgress.ProgressValueProperty, value);
 		}
 
@@ -41,7 +41,7 @@ namespace AssistantPlus.Control {
 		);
 
 		public Boolean ProgressIndeterminate {
-			get => this.GetValue(DividerProgress.ProgressIndeterminateProperty).AsStruct<Boolean>();
+			get => this.GetValue(DividerProgress.ProgressIndeterminateProperty).As<Boolean>();
 			set => this.SetValue(DividerProgress.ProgressIndeterminateProperty, value);
 		}
 
@@ -55,7 +55,7 @@ namespace AssistantPlus.Control {
 		);
 
 		public Boolean ProgressPaused {
-			get => this.GetValue(DividerProgress.ProgressPausedProperty).AsStruct<Boolean>();
+			get => this.GetValue(DividerProgress.ProgressPausedProperty).As<Boolean>();
 			set => this.SetValue(DividerProgress.ProgressPausedProperty, value);
 		}
 
@@ -69,7 +69,7 @@ namespace AssistantPlus.Control {
 		);
 
 		public Boolean ProgressError {
-			get => this.GetValue(DividerProgress.ProgressErrorProperty).AsStruct<Boolean>();
+			get => this.GetValue(DividerProgress.ProgressErrorProperty).As<Boolean>();
 			set => this.SetValue(DividerProgress.ProgressErrorProperty, value);
 		}
 

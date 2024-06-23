@@ -26,7 +26,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			this.Controller.ApplyOption(args.Parameter.AsClass<List<String>>());
+			this.Controller.ApplyOption(args.Parameter.As<List<String>>());
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -194,12 +194,12 @@ namespace AssistantPlus.View.PackageBuilder {
 				mode == null
 					? new {
 						project_directory = this.MakeScopeRootPath(),
-						target_package = String.Join('|', this.View.uPackageList.SelectedItems.First().AsClass<MainPagePackageItemController>().Setting.Name),
+						target_package = String.Join('|', this.View.uPackageList.SelectedItems.First().As<MainPagePackageItemController>().Setting.Name),
 						target_scope = targetScope == null ? "*" : String.Join('|', targetScope),
 					}
 					: new {
 						project_directory = this.MakeScopeRootPath(),
-						target_package = String.Join('|', this.View.uPackageList.SelectedItems.First().AsClass<MainPagePackageItemController>().Setting.Name),
+						target_package = String.Join('|', this.View.uPackageList.SelectedItems.First().As<MainPagePackageItemController>().Setting.Name),
 						target_scope = targetScope == null ? "*" : String.Join('|', targetScope),
 						option_generalize_rton = !mode,
 						option_generalize_ptx = !mode,
@@ -223,7 +223,7 @@ namespace AssistantPlus.View.PackageBuilder {
 				"pvz2.package_project.compile",
 				new {
 					project_directory = this.MakeScopeRootPath(),
-					target_package = String.Join('|', this.View.uPackageList.SelectedItems.Select(GF.AsClass<MainPagePackageItemController>).Select((value) => (value.Setting.Name))),
+					target_package = String.Join('|', this.View.uPackageList.SelectedItems.Select(GF.As<MainPagePackageItemController>).Select((value) => (value.Setting.Name))),
 					target_scope = targetScope == null ? "*" : String.Join('|', targetScope),
 				}
 			));
@@ -239,7 +239,7 @@ namespace AssistantPlus.View.PackageBuilder {
 				"pvz2.package_project.link",
 				new {
 					project_directory = this.MakeScopeRootPath(),
-					target_package = String.Join('|', this.View.uPackageList.SelectedItems.Select(GF.AsClass<MainPagePackageItemController>).Select((value) => (value.Setting.Name))),
+					target_package = String.Join('|', this.View.uPackageList.SelectedItems.Select(GF.As<MainPagePackageItemController>).Select((value) => (value.Setting.Name))),
 					remake_manifest = remakeManifest,
 				}
 			));
@@ -1109,7 +1109,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object        sender,
 			DragEventArgs args
 		) {
-			var senders = sender.AsClass<Page>();
+			var senders = sender.As<Page>();
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Link;
 			}
@@ -1120,7 +1120,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object        sender,
 			DragEventArgs args
 		) {
-			var senders = sender.AsClass<Page>();
+			var senders = sender.As<Page>();
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.Handled = true;
 				var item = await args.DataView.GetStorageItemsAsync();
@@ -1150,7 +1150,7 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		public Style uWorkerButton_Style {
 			get {
-				return this.View.FindResource(!this.WorkerState ? "DefaultButtonStyle" : "AccentButtonStyle").AsClass<Style>();
+				return this.View.FindResource(!this.WorkerState ? "DefaultButtonStyle" : "AccentButtonStyle").As<Style>();
 			}
 		}
 
@@ -1181,7 +1181,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			var projectDirectory = await StorageHelper.PickLoadDirectory(App.MainWindow, $"{nameof(PackageBuilder)}.ProjectDirectory");
 			if (projectDirectory != null) {
 				await this.ApplyLoad(projectDirectory);
@@ -1193,7 +1193,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			GF.AssertTest(this.IsLoaded);
 			await this.ProjectClose();
 			return;
@@ -1205,9 +1205,9 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<MenuFlyoutItem>();
+			var senders = sender.As<MenuFlyoutItem>();
 			GF.AssertTest(this.IsLoaded);
-			switch (senders.Tag.AsClass<String>()) {
+			switch (senders.Tag.As<String>()) {
 				case "Reload": {
 					await this.ProjectReload();
 					break;
@@ -1260,7 +1260,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object                      sender,
 			DragItemsCompletedEventArgs args
 		) {
-			var senders = sender.AsClass<ListView>();
+			var senders = sender.As<ListView>();
 			GF.AssertTest(this.IsLoaded);
 			this.ProjectSetting.Package = this.uPackageList_ItemsSource.Select((value) => (value.Setting)).ToList();
 			await this.ProjectSaveSetting();
@@ -1273,7 +1273,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			var senders = sender.AsClass<ListView>();
+			var senders = sender.As<ListView>();
 			GF.AssertTest(this.IsLoaded);
 			return;
 		}
@@ -1284,17 +1284,17 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<MenuFlyoutItem>();
+			var senders = sender.As<MenuFlyoutItem>();
 			GF.AssertTest(this.IsLoaded);
-			switch (senders.Tag.AsClass<String>()) {
+			switch (senders.Tag.As<String>()) {
 				case "Delete": {
-					foreach (var item in this.View.uPackageList.SelectedItems.Select(GF.AsClass<MainPagePackageItemController>).ToList()) {
+					foreach (var item in this.View.uPackageList.SelectedItems.Select(GF.As<MainPagePackageItemController>).ToList()) {
 						await this.PackageDelete(item.Setting);
 					}
 					break;
 				}
 				case "Copy": {
-					foreach (var item in this.View.uPackageList.SelectedItems.Select(GF.AsClass<MainPagePackageItemController>).ToList()) {
+					foreach (var item in this.View.uPackageList.SelectedItems.Select(GF.As<MainPagePackageItemController>).ToList()) {
 						await this.PackageCopy(item.Setting);
 					}
 					break;
@@ -1308,7 +1308,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			GF.AssertTest(this.IsLoaded);
 			await this.PackageAppend();
 			return;
@@ -1324,12 +1324,12 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			var senders = sender.AsClass<ListView>();
+			var senders = sender.As<ListView>();
 			GF.AssertTest(this.IsLoaded);
-			foreach (var item in args.RemovedItems.Select(GF.AsClass<MainPagePartItemController>)) {
+			foreach (var item in args.RemovedItems.Select(GF.As<MainPagePartItemController>)) {
 				this.uGroupList_ItemsSource.Remove(this.uGroupList_ItemsSource.First((value) => (value.PartName == item.Name)));
 			}
-			foreach (var item in args.AddedItems.Select(GF.AsClass<MainPagePartItemController>)) {
+			foreach (var item in args.AddedItems.Select(GF.As<MainPagePartItemController>)) {
 				this.uGroupList_ItemsSource.Add(new () {
 					Host = this,
 					PartName = item.Name,
@@ -1345,62 +1345,62 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<MenuFlyoutItem>();
+			var senders = sender.As<MenuFlyoutItem>();
 			GF.AssertTest(this.IsLoaded);
-			switch (senders.Tag.AsClass<String>()) {
+			switch (senders.Tag.As<String>()) {
 				case "Reload": {
-					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.AsClass<MainPagePartItemController>).ToList()) {
+					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).ToList()) {
 						await this.PartReload(item.Name);
 					}
 					break;
 				}
 				case "RevealRoot": {
-					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.AsClass<MainPagePartItemController>).ToList()) {
+					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).ToList()) {
 						await this.PartReveal(item.Name, false);
 					}
 					break;
 				}
 				case "RevealSetting": {
-					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.AsClass<MainPagePartItemController>).ToList()) {
+					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).ToList()) {
 						await this.PartReveal(item.Name, true);
 					}
 					break;
 				}
 				case "Delete": {
-					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.AsClass<MainPagePartItemController>).ToList()) {
+					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).ToList()) {
 						await this.PartDelete(item.Name);
 					}
 					break;
 				}
 				case "Copy": {
-					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.AsClass<MainPagePartItemController>).ToList()) {
+					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).ToList()) {
 						await this.PartCopy(item.Name);
 					}
 					break;
 				}
 				case "TranspileCustom": {
-					await this.WorkerDoTranspile(this.View.uPartList.SelectedItems.Select(GF.AsClass<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList(), null);
-					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.AsClass<MainPagePartItemController>).ToList()) {
+					await this.WorkerDoTranspile(this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList(), null);
+					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).ToList()) {
 						await this.PartReload(item.Name);
 					}
 					break;
 				}
 				case "TranspileGeneralize": {
-					await this.WorkerDoTranspile(this.View.uPartList.SelectedItems.Select(GF.AsClass<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList(), false);
-					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.AsClass<MainPagePartItemController>).ToList()) {
+					await this.WorkerDoTranspile(this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList(), false);
+					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).ToList()) {
 						await this.PartReload(item.Name);
 					}
 					break;
 				}
 				case "TranspileSpecialize": {
-					await this.WorkerDoTranspile(this.View.uPartList.SelectedItems.Select(GF.AsClass<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList(), true);
-					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.AsClass<MainPagePartItemController>).ToList()) {
+					await this.WorkerDoTranspile(this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList(), true);
+					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).ToList()) {
 						await this.PartReload(item.Name);
 					}
 					break;
 				}
 				case "Compile": {
-					await this.WorkerDoCompile(this.View.uPartList.SelectedItems.Select(GF.AsClass<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList());
+					await this.WorkerDoCompile(this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList());
 					break;
 				}
 				default: throw new ();
@@ -1412,7 +1412,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			GF.AssertTest(this.IsLoaded);
 			await this.PartAppend();
 			return;
@@ -1426,9 +1426,9 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object                     sender,
 			DragItemsStartingEventArgs args
 		) {
-			var senders = sender.AsClass<ListView>();
+			var senders = sender.As<ListView>();
 			GF.AssertTest(this.IsLoaded);
-			args.Data.SetData(MainPageController.DataViewFormatForGroup, String.Join('\n', args.Items.Select(GF.AsClass<MainPageGroupItemController>).Select((value) => ($"{value.Parent.Name}/{value.Name}"))));
+			args.Data.SetData(MainPageController.DataViewFormatForGroup, String.Join('\n', args.Items.Select(GF.As<MainPageGroupItemController>).Select((value) => ($"{value.Parent.Name}/{value.Name}"))));
 			return;
 		}
 
@@ -1438,12 +1438,12 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			var senders = sender.AsClass<ListView>();
+			var senders = sender.As<ListView>();
 			GF.AssertTest(this.IsLoaded);
-			foreach (var item in args.RemovedItems.Select(GF.AsClass<MainPageGroupItemController>)) {
+			foreach (var item in args.RemovedItems.Select(GF.As<MainPageGroupItemController>)) {
 				this.uResourceList_ItemsSource.Remove(this.uResourceList_ItemsSource.First((value) => (value.PartName == item.Parent.Name && value.GroupName == item.Name)));
 			}
-			foreach (var item in args.AddedItems.Select(GF.AsClass<MainPageGroupItemController>)) {
+			foreach (var item in args.AddedItems.Select(GF.As<MainPageGroupItemController>)) {
 				this.uResourceList_ItemsSource.Add(new () {
 					Host = this,
 					PartName = item.Parent.Name,
@@ -1460,62 +1460,62 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<MenuFlyoutItem>();
+			var senders = sender.As<MenuFlyoutItem>();
 			GF.AssertTest(this.IsLoaded);
-			switch (senders.Tag.AsClass<String>()) {
+			switch (senders.Tag.As<String>()) {
 				case "Reload": {
-					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.AsClass<MainPageGroupItemController>).ToList()) {
+					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).ToList()) {
 						await this.GroupReload(item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "RevealRoot": {
-					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.AsClass<MainPageGroupItemController>).ToList()) {
+					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).ToList()) {
 						await this.GroupReveal(item.Parent.Name, item.Name, false);
 					}
 					break;
 				}
 				case "RevealSetting": {
-					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.AsClass<MainPageGroupItemController>).ToList()) {
+					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).ToList()) {
 						await this.GroupReveal(item.Parent.Name, item.Name, true);
 					}
 					break;
 				}
 				case "Delete": {
-					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.AsClass<MainPageGroupItemController>).ToList()) {
+					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).ToList()) {
 						await this.GroupDelete(item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "Copy": {
-					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.AsClass<MainPageGroupItemController>).ToList()) {
+					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).ToList()) {
 						await this.GroupCopy(item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "TranspileCustom": {
-					await this.WorkerDoTranspile(this.View.uGroupList.SelectedItems.Select(GF.AsClass<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList(), null);
-					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.AsClass<MainPageGroupItemController>).ToList()) {
+					await this.WorkerDoTranspile(this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList(), null);
+					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).ToList()) {
 						await this.GroupReload(item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "TranspileGeneralize": {
-					await this.WorkerDoTranspile(this.View.uGroupList.SelectedItems.Select(GF.AsClass<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList(), false);
-					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.AsClass<MainPageGroupItemController>).ToList()) {
+					await this.WorkerDoTranspile(this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList(), false);
+					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).ToList()) {
 						await this.GroupReload(item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "TranspileSpecialize": {
-					await this.WorkerDoTranspile(this.View.uGroupList.SelectedItems.Select(GF.AsClass<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList(), true);
-					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.AsClass<MainPageGroupItemController>).ToList()) {
+					await this.WorkerDoTranspile(this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList(), true);
+					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).ToList()) {
 						await this.GroupReload(item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "Compile": {
-					await this.WorkerDoCompile(this.View.uGroupList.SelectedItems.Select(GF.AsClass<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList());
+					await this.WorkerDoCompile(this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList());
 					break;
 				}
 				default: throw new ();
@@ -1533,9 +1533,9 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object                     sender,
 			DragItemsStartingEventArgs args
 		) {
-			var senders = sender.AsClass<ListView>();
+			var senders = sender.As<ListView>();
 			GF.AssertTest(this.IsLoaded);
-			args.Data.SetData(MainPageController.DataViewFormatForResource, String.Join('\n', args.Items.Select(GF.AsClass<MainPageResourceItemController>).Select((value) => ($"{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}"))));
+			args.Data.SetData(MainPageController.DataViewFormatForResource, String.Join('\n', args.Items.Select(GF.As<MainPageResourceItemController>).Select((value) => ($"{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}"))));
 			return;
 		}
 
@@ -1545,62 +1545,62 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<MenuFlyoutItem>();
+			var senders = sender.As<MenuFlyoutItem>();
 			GF.AssertTest(this.IsLoaded);
-			switch (senders.Tag.AsClass<String>()) {
+			switch (senders.Tag.As<String>()) {
 				case "Reload": {
-					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.AsClass<MainPageResourceItemController>).ToList()) {
+					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).ToList()) {
 						await this.ResourceReload(item.Parent.Parent.Name, item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "RevealRoot": {
-					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.AsClass<MainPageResourceItemController>).ToList()) {
+					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).ToList()) {
 						await this.ResourceReveal(item.Parent.Parent.Name, item.Parent.Name, item.Name, false);
 					}
 					break;
 				}
 				case "RevealSetting": {
-					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.AsClass<MainPageResourceItemController>).ToList()) {
+					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).ToList()) {
 						await this.ResourceReveal(item.Parent.Parent.Name, item.Parent.Name, item.Name, true);
 					}
 					break;
 				}
 				case "Delete": {
-					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.AsClass<MainPageResourceItemController>).ToList()) {
+					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).ToList()) {
 						await this.ResourceDelete(item.Parent.Parent.Name, item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "Copy": {
-					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.AsClass<MainPageResourceItemController>).ToList()) {
+					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).ToList()) {
 						await this.ResourceCopy(item.Parent.Parent.Name, item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "TranspileCustom": {
-					await this.WorkerDoTranspile(this.View.uResourceList.SelectedItems.Select(GF.AsClass<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList(), null);
-					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.AsClass<MainPageResourceItemController>).ToList()) {
+					await this.WorkerDoTranspile(this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList(), null);
+					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).ToList()) {
 						await this.ResourceReload(item.Parent.Parent.Name, item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "TranspileGeneralize": {
-					await this.WorkerDoTranspile(this.View.uResourceList.SelectedItems.Select(GF.AsClass<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList(), false);
-					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.AsClass<MainPageResourceItemController>).ToList()) {
+					await this.WorkerDoTranspile(this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList(), false);
+					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).ToList()) {
 						await this.ResourceReload(item.Parent.Parent.Name, item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "TranspileSpecialize": {
-					await this.WorkerDoTranspile(this.View.uResourceList.SelectedItems.Select(GF.AsClass<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList(), true);
-					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.AsClass<MainPageResourceItemController>).ToList()) {
+					await this.WorkerDoTranspile(this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList(), true);
+					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).ToList()) {
 						await this.ResourceReload(item.Parent.Parent.Name, item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "Compile": {
-					await this.WorkerDoCompile(this.View.uResourceList.SelectedItems.Select(GF.AsClass<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList());
+					await this.WorkerDoCompile(this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList());
 					break;
 				}
 				default: throw new ();
@@ -1671,7 +1671,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object                             sender,
 			DependencyPropertyChangedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			GF.AssertTest(this.Host.IsLoaded);
 			if (senders.IsEnabled) {
 				senders.Focus(FocusState.Pointer);
@@ -1683,7 +1683,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			GF.AssertTest(this.Host.IsLoaded);
 			this.IsNameEditing = false;
 			this.NotifyPropertyChanged(
@@ -1711,9 +1711,9 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<MenuFlyoutItem>();
+			var senders = sender.As<MenuFlyoutItem>();
 			GF.AssertTest(this.Host.IsLoaded);
-			switch (senders.Tag.AsClass<String>()) {
+			switch (senders.Tag.As<String>()) {
 				case "Rename": {
 					this.IsNameEditing = true;
 					this.NotifyPropertyChanged(
@@ -1808,7 +1808,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object        sender,
 			DragEventArgs args
 		) {
-			var senders = sender.AsClass<Panel>();
+			var senders = sender.As<Panel>();
 			GF.AssertTest(this.Host.IsLoaded);
 			if (args.DataView.Contains(MainPageController.DataViewFormatForGroup)) {
 				args.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
@@ -1820,11 +1820,11 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object        sender,
 			DragEventArgs args
 		) {
-			var senders = sender.AsClass<Panel>();
+			var senders = sender.As<Panel>();
 			GF.AssertTest(this.Host.IsLoaded);
 			if (args.DataView.Contains(MainPageController.DataViewFormatForGroup)) {
 				args.Handled = true;
-				var data = (await args.DataView.GetDataAsync(MainPageController.DataViewFormatForGroup)).AsClass<String>();
+				var data = (await args.DataView.GetDataAsync(MainPageController.DataViewFormatForGroup)).As<String>();
 				if (data.Length != 0) {
 					var itemList = data.Split('\n');
 					foreach (var item in itemList) {
@@ -1870,7 +1870,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object                             sender,
 			DependencyPropertyChangedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			GF.AssertTest(this.Host.IsLoaded);
 			if (senders.IsEnabled) {
 				senders.Focus(FocusState.Pointer);
@@ -1882,7 +1882,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			GF.AssertTest(this.Host.IsLoaded);
 			this.IsNameEditing = false;
 			this.NotifyPropertyChanged(
@@ -1910,9 +1910,9 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<MenuFlyoutItem>();
+			var senders = sender.As<MenuFlyoutItem>();
 			GF.AssertTest(this.Host.IsLoaded);
-			switch (senders.Tag.AsClass<String>()) {
+			switch (senders.Tag.As<String>()) {
 				case "Reload": {
 					await this.Host.PartReload(this.Name);
 					break;
@@ -2010,7 +2010,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			GF.AssertTest(this.Host.IsLoaded);
 			await this.Host.GroupAppend(this.PartName);
 			return;
@@ -2059,7 +2059,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object        sender,
 			DragEventArgs args
 		) {
-			var senders = sender.AsClass<Panel>();
+			var senders = sender.As<Panel>();
 			GF.AssertTest(this.Host.IsLoaded);
 			if (args.DataView.Contains(MainPageController.DataViewFormatForResource)) {
 				args.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
@@ -2071,11 +2071,11 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object        sender,
 			DragEventArgs args
 		) {
-			var senders = sender.AsClass<Panel>();
+			var senders = sender.As<Panel>();
 			GF.AssertTest(this.Host.IsLoaded);
 			if (args.DataView.Contains(MainPageController.DataViewFormatForResource)) {
 				args.Handled = true;
-				var data = (await args.DataView.GetDataAsync(MainPageController.DataViewFormatForResource)).AsClass<String>();
+				var data = (await args.DataView.GetDataAsync(MainPageController.DataViewFormatForResource)).As<String>();
 				if (data.Length != 0) {
 					var itemList = data.Split('\n');
 					foreach (var item in itemList) {
@@ -2121,7 +2121,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object                             sender,
 			DependencyPropertyChangedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			GF.AssertTest(this.Host.IsLoaded);
 			if (senders.IsEnabled) {
 				senders.Focus(FocusState.Pointer);
@@ -2133,7 +2133,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			GF.AssertTest(this.Host.IsLoaded);
 			this.IsNameEditing = false;
 			this.NotifyPropertyChanged(
@@ -2161,9 +2161,9 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<MenuFlyoutItem>();
+			var senders = sender.As<MenuFlyoutItem>();
 			GF.AssertTest(this.Host.IsLoaded);
-			switch (senders.Tag.AsClass<String>()) {
+			switch (senders.Tag.As<String>()) {
 				case "Reload": {
 					await this.Host.GroupReload(this.Parent.Name, this.Name);
 					break;
@@ -2263,7 +2263,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			GF.AssertTest(this.Host.IsLoaded);
 			await this.Host.ResourceAppend(this.PartName, this.GroupName);
 			return;
@@ -2338,7 +2338,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object                             sender,
 			DependencyPropertyChangedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			GF.AssertTest(this.Host.IsLoaded);
 			if (senders.IsEnabled) {
 				senders.Focus(FocusState.Pointer);
@@ -2350,7 +2350,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			GF.AssertTest(this.Host.IsLoaded);
 			this.IsNameEditing = false;
 			this.NotifyPropertyChanged(
@@ -2370,7 +2370,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		public Style uCategory_Style {
 			get {
 				GF.AssertTest(this.Host.IsLoaded);
-				return this.Host.View.FindResource(this.Setting.Category.Resolution == null && this.Setting.Category.Locale == null ? "DefaultButtonStyle" : "AccentButtonStyle").AsClass<Style>();
+				return this.Host.View.FindResource(this.Setting.Category.Resolution == null && this.Setting.Category.Locale == null ? "DefaultButtonStyle" : "AccentButtonStyle").As<Style>();
 			}
 		}
 
@@ -2378,7 +2378,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object sender,
 			Object args
 		) {
-			var senders = sender.AsClass<FlyoutBase>();
+			var senders = sender.As<FlyoutBase>();
 			GF.AssertTest(this.Host.IsLoaded);
 			await this.SaveSetting();
 			return;
@@ -2388,7 +2388,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			GF.AssertTest(this.Host.IsLoaded);
 			this.Setting.Category.Resolution = ProjectSettingHelper.ParseResolutionString(senders.Text, this.Setting.Category.Resolution);
 			this.NotifyPropertyChanged(
@@ -2409,7 +2409,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			GF.AssertTest(this.Host.IsLoaded);
 			this.Setting.Category.Locale = ProjectSettingHelper.ParseLocaleString(senders.Text, this.Setting.Category.Locale);
 			this.NotifyPropertyChanged(
@@ -2464,7 +2464,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			SplitButton               sender,
 			SplitButtonClickEventArgs args
 		) {
-			var senders = sender.AsClass<SplitButton>();
+			var senders = sender.As<SplitButton>();
 			GF.AssertTest(this.Host.IsLoaded);
 			var property = this.Setting.Type switch {
 				ResourceType.Dummy       => JsonHelper.DeserializeToken<DummyResourceProperty>(this.Setting.Property) as Object,
@@ -2478,35 +2478,35 @@ namespace AssistantPlus.View.PackageBuilder {
 			};
 			await ControlHelper.ShowDialogFixed(this.Host.View, "Resource Property", this.Setting.Type switch {
 				ResourceType.Dummy => new DummyResourcePropertyPanel() {
-					Value = property.AsClass<DummyResourceProperty>(),
+					Value = property.As<DummyResourceProperty>(),
 					Stamp = UniqueStamp.Create(),
 				},
 				ResourceType.General => new GeneralResourcePropertyPanel() {
-					Value = property.AsClass<GeneralResourceProperty>(),
+					Value = property.As<GeneralResourceProperty>(),
 					Stamp = UniqueStamp.Create(),
 				},
 				ResourceType.Texture => new TextureResourcePropertyPanel() {
-					Value = property.AsClass<TextureResourceProperty>(),
+					Value = property.As<TextureResourceProperty>(),
 					Stamp = UniqueStamp.Create(),
 				},
 				ResourceType.SpecialRton => new SpecialRtonResourcePropertyPanel() {
 					ConversionSource = this.Host.ProjectSetting.Package.SelectMany((value) => (value.Conversion.Rton.Select((x) => (x.Name)))).Distinct().ToList(),
-					Value = property.AsClass<SpecialRtonResourceProperty>(),
+					Value = property.As<SpecialRtonResourceProperty>(),
 					Stamp = UniqueStamp.Create(),
 				},
 				ResourceType.SpecialPtx => new SpecialPtxResourcePropertyPanel() {
 					ConversionSource = this.Host.ProjectSetting.Package.SelectMany((value) => (value.Conversion.Ptx.Select((x) => (x.Name)))).Distinct().ToList(),
-					Value = property.AsClass<SpecialPtxResourceProperty>(),
+					Value = property.As<SpecialPtxResourceProperty>(),
 					Stamp = UniqueStamp.Create(),
 				},
 				ResourceType.SpecialPam => new SpecialPamResourcePropertyPanel() {
 					ConversionSource = this.Host.ProjectSetting.Package.SelectMany((value) => (value.Conversion.Pam.Select((x) => (x.Name)))).Distinct().ToList(),
-					Value = property.AsClass<SpecialPamResourceProperty>(),
+					Value = property.As<SpecialPamResourceProperty>(),
 					Stamp = UniqueStamp.Create(),
 				},
 				ResourceType.SpecialWem => new SpecialWemResourcePropertyPanel() {
 					ConversionSource = this.Host.ProjectSetting.Package.SelectMany((value) => (value.Conversion.Wem.Select((x) => (x.Name)))).Distinct().ToList(),
-					Value = property.AsClass<SpecialWemResourceProperty>(),
+					Value = property.As<SpecialWemResourceProperty>(),
 					Stamp = UniqueStamp.Create(),
 				},
 				_ => throw new (),
@@ -2520,18 +2520,18 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<MenuFlyoutItem>();
+			var senders = sender.As<MenuFlyoutItem>();
 			GF.AssertTest(this.Host.IsLoaded);
 			var resourceDirectory = this.Host.MakeScopeRootPath(this.Parent.Parent.Name, this.Parent.Name, this.Name);
 			StorageHelper.TrashDirectory(resourceDirectory);
 			StorageHelper.CreateDirectory(resourceDirectory);
 			this.Setting = new () {
 				Category = this.Setting.Category,
-				Type = ResourceType.Dummy,
-				Property = null!,
+				Type = default!,
+				Property = default!,
 				Variable = this.Setting.Variable,
 			};
-			switch (senders.Tag.AsClass<String>()) {
+			switch (senders.Tag.As<String>()) {
 				case "Dummy": {
 					this.Setting.Type = ResourceType.Dummy;
 					this.Setting.Property = JsonHelper.SerializeToken(new DummyResourceProperty() {
@@ -2613,9 +2613,9 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<MenuFlyoutItem>();
+			var senders = sender.As<MenuFlyoutItem>();
 			GF.AssertTest(this.Host.IsLoaded);
-			switch (senders.Tag.AsClass<String>()) {
+			switch (senders.Tag.As<String>()) {
 				case "Reload": {
 					await this.Host.ResourceReload(this.Parent.Parent.Name, this.Parent.Name, this.Name);
 					break;

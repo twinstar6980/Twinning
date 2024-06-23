@@ -24,7 +24,7 @@ namespace AssistantPlus.View.CommandSender {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			this.Controller.ApplyOption(args.Parameter.AsClass<List<String>>());
+			this.Controller.ApplyOption(args.Parameter.As<List<String>>());
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -109,7 +109,7 @@ namespace AssistantPlus.View.CommandSender {
 						optionCommand.Add(new (
 							option.NextString(),
 							option.NextBoolean(),
-							JsonHelper.DeserializeText<Dictionary<String, Object>>(option.NextString())
+							option.NextString().SelfLet((it) => (JsonHelper.DeserializeText<Dictionary<String, Object>>(it)))
 						));
 					}
 				}
@@ -144,7 +144,7 @@ namespace AssistantPlus.View.CommandSender {
 				foreach (var item in this.Command) {
 					option.NextString(item.Item2.Id);
 					option.NextBoolean(item.Item3.Value);
-					option.NextString(JsonHelper.SerializeText(ConfigurationHelper.MakeArgumentValueListJson(item.Item2.Argument, item.Item4), false));
+					option.NextString(item.Item4.SelfLet((it) => (JsonHelper.SerializeText(ConfigurationHelper.MakeArgumentValueListJson(item.Item2.Argument, it), false))));
 				}
 			}
 			return option.Done();
@@ -207,7 +207,7 @@ namespace AssistantPlus.View.CommandSender {
 			Object        sender,
 			DragEventArgs args
 		) {
-			var senders = sender.AsClass<Page>();
+			var senders = sender.As<Page>();
 			return;
 		}
 
@@ -215,7 +215,7 @@ namespace AssistantPlus.View.CommandSender {
 			Object        sender,
 			DragEventArgs args
 		) {
-			var senders = sender.AsClass<Page>();
+			var senders = sender.As<Page>();
 			return;
 		}
 
@@ -233,7 +233,7 @@ namespace AssistantPlus.View.CommandSender {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.ParallelForward = senders.IsChecked.AsNotNull();
 			return;
 		}
@@ -248,7 +248,7 @@ namespace AssistantPlus.View.CommandSender {
 			TreeView                     sender,
 			TreeViewItemInvokedEventArgs args
 		) {
-			var senders = sender.AsClass<TreeView>();
+			var senders = sender.As<TreeView>();
 			if (args.InvokedItem is MainPageMethodGroupItemController groupItem) {
 				var node = senders.RootNodes.ToList().Find((value) => (Object.ReferenceEquals(value.Content, groupItem))).AsNotNull();
 				node.IsExpanded = !node.IsExpanded;
@@ -267,7 +267,7 @@ namespace AssistantPlus.View.CommandSender {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			await this.ForwardCommand(this.Command.Select((value, index) => (index)).ToList());
 			return;
 		}
@@ -414,7 +414,7 @@ namespace AssistantPlus.View.CommandSender {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			await this.Host.RemoveCommand(this.Host.uCommandList_ItemsSource.IndexOf(this));
 			return;
 		}
@@ -423,7 +423,7 @@ namespace AssistantPlus.View.CommandSender {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			await this.Host.ForwardCommand([this.Host.uCommandList_ItemsSource.IndexOf(this)]);
 			return;
 		}
@@ -444,7 +444,7 @@ namespace AssistantPlus.View.CommandSender {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.EnableBatch.Value = senders.IsChecked.AsNotNull();
 			this.NotifyPropertyChanged(
 				nameof(this.uEnableBatch_IsChecked)
@@ -464,7 +464,7 @@ namespace AssistantPlus.View.CommandSender {
 							}
 							: new MenuFlyoutItem() {
 								Text = preset.Name,
-							}.ApplySelf((it) => {
+							}.SelfAlso((it) => {
 								it.Click += async (_, _) => {
 									foreach (var argument in preset.Argument) {
 										var argumentIndex = this.ItemConfiguration.Argument.FindIndex((value) => (value.Id == argument.Key));
@@ -485,7 +485,7 @@ namespace AssistantPlus.View.CommandSender {
 
 		public String uApplyPresetCount_Text {
 			get {
-				return this.ItemConfiguration.Preset.Count(GF.NotNull).ToString();
+				return this.ItemConfiguration.Preset.Count((value) => (value != null)).ToString();
 			}
 		}
 

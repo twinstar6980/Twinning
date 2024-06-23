@@ -61,7 +61,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		);
 
 		public PackageSetting Value {
-			get => this.GetValue(PackageSettingPanel.ValueProperty).AsClass<PackageSetting>();
+			get => this.GetValue(PackageSettingPanel.ValueProperty).As<PackageSetting>();
 			set => this.SetValue(PackageSettingPanel.ValueProperty, value);
 		}
 
@@ -119,8 +119,8 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			var senders = sender.AsClass<ComboBox>();
-			this.Value.Version.Number = Integer.Parse(senders.SelectedItem.AsClass<String>());
+			var senders = sender.As<ComboBox>();
+			this.Value.Version.Number = Integer.Parse(senders.SelectedItem.As<String>());
 			return;
 		}
 
@@ -142,8 +142,8 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			var senders = sender.AsClass<ComboBox>();
-			this.Value.Version.ExtendedTextureInformationForPvz2Cn = Integer.Parse(senders.SelectedItem.AsClass<String>());
+			var senders = sender.As<ComboBox>();
+			this.Value.Version.ExtendedTextureInformationForPvz2Cn = Integer.Parse(senders.SelectedItem.As<String>());
 			return;
 		}
 
@@ -161,7 +161,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.Value.Compression.General = senders.IsChecked.AsNotNull();
 			return;
 		}
@@ -178,7 +178,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.Value.Compression.Texture = senders.IsChecked.AsNotNull();
 			return;
 		}
@@ -189,7 +189,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			this.Value.Compression.Filter = ConvertHelper.ParseStringListFromStringWithLine(senders.Text);
 			this.NotifyPropertyChanged(
 				nameof(this.uCompressionFilter_Text)
@@ -228,7 +228,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
-			var senders = sender.AsClass<ComboBox>();
+			var senders = sender.As<ComboBox>();
 			this.Value.Manifest.Type = (PackageManifestType)senders.SelectedIndex;
 			return;
 		}
@@ -239,7 +239,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			if (senders.Text.Length == 0 || StorageHelper.CheckName(senders.Text)) {
 				this.Value.Manifest.Suffix = senders.Text;
 			}
@@ -263,8 +263,8 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
-			this.Value.Category.Resolution = ConvertHelper.ParseStringListFromStringWithLine(senders.Text).Select((value) => (ProjectSettingHelper.ParseResolutionString(value, null))).Where(GF.NotNull).Select(GF.AsNotNull).ToList();
+			var senders = sender.As<TextBox>();
+			this.Value.Category.Resolution = ConvertHelper.ParseStringListFromStringWithLine(senders.Text).Select((value) => (ProjectSettingHelper.ParseResolutionString(value, null))).Where((value) => (value != null)).Select(GF.AsNotNull).ToList();
 			this.NotifyPropertyChanged(
 				nameof(this.uCategoryResolution_Text)
 			);
@@ -273,7 +273,7 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		public String uCategoryResolution_Text {
 			get {
-				return ConvertHelper.MakeStringListToStringWithLine(this.Value.Category.Resolution.Select(GF.ToString).ToList());
+				return ConvertHelper.MakeStringListToStringWithLine(this.Value.Category.Resolution.Select((value) => (value.ToString())).ToList());
 			}
 		}
 
@@ -283,8 +283,8 @@ namespace AssistantPlus.View.PackageBuilder {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
-			this.Value.Category.Locale = ConvertHelper.ParseStringListFromStringWithLine(senders.Text).Select((value) => (ProjectSettingHelper.ParseLocaleString(value, null))).Where(GF.NotNull).Select(GF.AsNotNull).ToList();
+			var senders = sender.As<TextBox>();
+			this.Value.Category.Locale = ConvertHelper.ParseStringListFromStringWithLine(senders.Text).Select((value) => (ProjectSettingHelper.ParseLocaleString(value, null))).Where((value) => (value != null)).Select(GF.AsNotNull).ToList();
 			this.NotifyPropertyChanged(
 				nameof(this.uCategoryLocale_Text)
 			);

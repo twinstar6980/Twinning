@@ -83,7 +83,7 @@ class _CommandPanelState extends State<CommandPanel> {
                 key: ObjectKey(this.widget.argumentValue[argumentIndex]),
                 name: argumentConfiguration.name,
                 type: argumentConfiguration.type,
-                option: argumentConfiguration.option?.map((value) => (ConfigurationHelper.parseArgumentValueJson(argumentConfiguration.type, value))).toList(),
+                option: argumentConfiguration.option?.map((value) => ConfigurationHelper.parseArgumentValueJson(argumentConfiguration.type, value)).toList(),
                 value: this.widget.argumentValue[argumentIndex],
               ),
             )),
@@ -148,7 +148,7 @@ class _CommandPanelState extends State<CommandPanel> {
                           ],
                           onSelected: (value) async {
                             for (var argument in value.argument.entries) {
-                              var argumentIndex = this.widget.itemConfiguration.argument.indexWhere((value) => (value.id == argument.key));
+                              var argumentIndex = this.widget.itemConfiguration.argument.indexWhere((value) => value.id == argument.key);
                               assertTest(argumentIndex != -1);
                               this.widget.argumentValue[argumentIndex] = Wrapper(ConfigurationHelper.parseArgumentValueJson(this.widget.itemConfiguration.argument[argumentIndex].type, argument.value));
                             }

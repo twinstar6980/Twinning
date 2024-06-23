@@ -41,7 +41,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		);
 
 		public DummyResourceProperty Value {
-			get => this.GetValue(DummyResourcePropertyPanel.ValueProperty).AsClass<DummyResourceProperty>();
+			get => this.GetValue(DummyResourcePropertyPanel.ValueProperty).As<DummyResourceProperty>();
 			set => this.SetValue(DummyResourcePropertyPanel.ValueProperty, value);
 		}
 

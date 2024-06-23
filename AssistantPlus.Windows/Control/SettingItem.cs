@@ -27,7 +27,7 @@ namespace AssistantPlus.Control {
 		);
 
 		public String Icon {
-			get => this.GetValue(SettingItem.IconProperty).AsClass<String>();
+			get => this.GetValue(SettingItem.IconProperty).As<String>();
 			set => this.SetValue(SettingItem.IconProperty, value);
 		}
 
@@ -41,7 +41,7 @@ namespace AssistantPlus.Control {
 		);
 
 		public String Title {
-			get => this.GetValue(SettingItem.TitleProperty).AsClass<String>();
+			get => this.GetValue(SettingItem.TitleProperty).As<String>();
 			set => this.SetValue(SettingItem.TitleProperty, value);
 		}
 
@@ -55,7 +55,7 @@ namespace AssistantPlus.Control {
 		);
 
 		public UIElement Action {
-			get => this.GetValue(SettingItem.ActionProperty).AsClass<UIElement>();
+			get => this.GetValue(SettingItem.ActionProperty).As<UIElement>();
 			set => this.SetValue(SettingItem.ActionProperty, value);
 		}
 

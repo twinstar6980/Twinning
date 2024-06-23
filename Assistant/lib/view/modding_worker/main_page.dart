@@ -98,7 +98,7 @@ class _MainPageState extends State<MainPage> {
     await WidgetsBinding.instance.endOfFrame;
     if (value != null) {
       var valueString = ValueExpressionHelper.makeString(value);
-      history.removeWhere((item) => (ValueExpressionHelper.makeString(item) == valueString));
+      history.removeWhere((item) => ValueExpressionHelper.makeString(item) == valueString);
       history.add(value);
     }
     return value;

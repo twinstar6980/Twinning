@@ -42,7 +42,7 @@ namespace AssistantPlus.View.CommandSender {
 		);
 
 		public Setting Data {
-			get => this.GetValue(SettingPanel.DataProperty).AsClass<Setting>();
+			get => this.GetValue(SettingPanel.DataProperty).As<Setting>();
 			set => this.SetValue(SettingPanel.DataProperty, value);
 		}
 
@@ -80,7 +80,7 @@ namespace AssistantPlus.View.CommandSender {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<TextBox>();
+			var senders = sender.As<TextBox>();
 			this.Data.MethodConfiguration = StorageHelper.Regularize(senders.Text);
 			this.NotifyPropertyChanged(
 				nameof(this.uMethodConfigurationText_Text)
@@ -98,7 +98,7 @@ namespace AssistantPlus.View.CommandSender {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<Button>();
+			var senders = sender.As<Button>();
 			var value = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(CommandSender)}.MethodConfiguration");
 			if (value != null) {
 				this.Data.MethodConfiguration = value;
@@ -123,7 +123,7 @@ namespace AssistantPlus.View.CommandSender {
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.AsClass<ToggleButton>();
+			var senders = sender.As<ToggleButton>();
 			this.Data.ParallelForward = senders.IsChecked.AsNotNull();
 			return;
 		}
