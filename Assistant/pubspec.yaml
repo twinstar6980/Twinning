@@ -1,5 +1,5 @@
 name: assistant
-version: 45.0.0+45
+version: 46.0.0+46
 publish_to: 'none'
 environment:
   sdk: '>=3.4.3 <4.0.0'
@@ -38,6 +38,21 @@ msix_config:
   trim_logo: false
   languages: EN-US
   protocol_activation: twinstar.twinning.assistant
+  context_menu:
+    dll_path: build/windows/x64/forwarder/Release/forwarder.dll
+    items:
+      - type: "*"
+        commands:
+          - id: 0Forwarder
+            clsid: 9992EC48-22A5-86FA-EA42-72DA1A53F23D
+      - type: "Directory"
+        commands:
+          - id: 0Forwarder
+            clsid: 9992EC48-22A5-86FA-EA42-72DA1A53F23D
+      - type: "Directory\\Background"
+        commands:
+          - id: 0Forwarder
+            clsid: 9992EC48-22A5-86FA-EA42-72DA1A53F23D
   publisher: CN=TwinStar
   architecture: x64
   build_windows: false

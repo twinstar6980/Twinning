@@ -30,9 +30,9 @@
 
 ## 平台支持
 
-* 操作系统：`Windows 7+` 、`Linux ~` 、`Macintosh 13~` 、`Android 9+` 、`Iphone 16~` 。
+* 操作系统：`Windows 7+` 、`Linux ~` 、`Macintosh 11~` 、`Android 9+` 、`Iphone 14~` 。
 
-* 处理器架构：`x86 32|64` 、`arm 32|64` 。
+* 处理器架构：`x86_64` 、`arm_64` 。
 
 ## 开源说明
 
