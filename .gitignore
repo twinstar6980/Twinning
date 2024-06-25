@@ -9,9 +9,7 @@
 
 # Environment - Visual Studio
 /**/.vs
-/**/*.vcxproj.user
 /**/*.csproj.user
-/**/*.wapproj.user
 
 # Environment - Visual Studio Code
 /**/.vscode
@@ -68,20 +66,9 @@
 /Assistant/ios/Podfile.lock
 /Assistant/ios/.symlinks
 
-# Module - Forwarder.Windows
-/Forwarder.Windows/.build
-
-# Module - Forwarder.Macintosh
-
-# Module - Forwarder.Android
-/Forwarder.Android/.build
-/Forwarder.Android/local.properties
-
-# Module - Forwarder.Iphone
-
-# Module - AssistantPlus.Windows
-/AssistantPlus.Windows/.build
-/AssistantPlus.Windows/.editorconfig
+# Module - AssistantPlus
+/AssistantPlus/.build
+/AssistantPlus/.editorconfig
 
 # Miscellaneous
 /.unused

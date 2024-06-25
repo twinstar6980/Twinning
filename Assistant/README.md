@@ -10,36 +10,6 @@
 	
 	* [Flutter 3.22](https://docs.flutter.dev/get-started/install)
 
-* 开发
-	
-	> 具体参阅 [Flutter 文档](https://docs.flutter.dev/get-started/editor) 。
-
-* 构建
-	
-	通过以下命令，可以在 `+ <project>/build` 内生成构建产物。
-	
-	* `Windows`
-		
-		`> flutter build windows --release --no-tree-shake-icons`
-	
-	* `Linux`
-		
-		`> flutter build linux --release --target-platform linux-x64 --no-tree-shake-icons`
-	
-	* `Macintosh`
-		
-		`> flutter build macos --release --no-tree-shake-icons`
-	
-	* `Android`
-		
-		`> flutter build apk --release --split-per-abi --target-platform android-arm64 --no-tree-shake-icons`
-	
-	* `Iphone`
-		
-		`> flutter build ios --release --no-tree-shake-icons`
-	
-	> 具体参阅 [Flutter 文档](https://docs.flutter.dev/deployment/windows) 。
-
 ## 第三方库使用
 
 > 参见 [pubspec.yaml](./pubspec.yaml) 。

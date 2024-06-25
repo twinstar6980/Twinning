@@ -20,46 +20,6 @@
 	
 	* [Clang 18.1 & POSIX](https://llvm.org/) for `Iphone`
 
-* 开发
-	
-	通过以下命令，可以在 `+ <project>/.project` 内生成其他开发工具所使用的项目文件，以便于在其他开发工具内开发项目。
-	
-	* `MSBuild` for VS
-		
-		`> xmake project -k vsxmake .project`
-	
-	* `CMake` for VS and CLion
-		
-		`> xmake project -k cmakelists .project`
-	
-	> 具体参阅 [xmake 文档](https://xmake.io/#/plugin/builtin_plugins?id=generate-ide-project-files) 。
-
-* 构建
-	
-	通过以下命令，可以在 `+ <project>/.build` 内生成构建产物。
-	
-	* `Windows`
-		
-		`> xmake config --buildir=./.build --mode=release --plat=windows --arch=x64 --toolchain=msvc`
-	
-	* `Linux`
-		
-		`> xmake config --buildir=./.build --mode=release --plat=linux --arch=x86_64 --toolchain=clang-18`
-	
-	* `Macintosh`
-		
-		`> xmake config --buildir=./.build --mode=release --plat=macosx --arch=x86_64 --cc=clang-18 --cxx=clang-18 --xcode_sdkver=13.3 --target_minver=13.3`
-	
-	* `Android`
-		
-		`> xmake config --buildir=./.build --mode=release --plat=android --arch=arm64-v8a --ndk=<..> --ndk_sdkver=28 --runtimes=c++_shared`
-	
-	* `Iphone`
-		
-		`> xmake config --buildir=./.build --mode=release --plat=iphoneos --arch=arm64 --cc=clang-18 --cxx=clang-18 --xcode_sdkver=16.4 --target_minver=16.4`
-	
-	> 具体参阅 [xmake 文档](https://xmake.io/#/) 。
-
 ## 第三方库使用
 
 | 库                                                                         | 用途                           |
