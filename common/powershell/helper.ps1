@@ -7,10 +7,6 @@ $ProjectDirectory = (Resolve-Path -Path "${PSScriptRoot}/../..").Path.Replace('\
 $ProjectDistributionDirectory = "${ProjectDirectory}/.distribution"
 $ProjectTemporaryDirectory = "${ProjectDirectory}/.temporary"
 
-$CertificateFilePfx = "${ProjectDirectory}/common/certificate/file.pfx"
-$CertificateFileJks = "${ProjectDirectory}/common/certificate/file.jks"
-$CertificatePassword = Get-Content -Path "${ProjectDirectory}/common/certificate/password.txt"
-
 function My-PackZip(
 	[Parameter(Mandatory)]
 	[String] $Name,
@@ -66,9 +62,11 @@ function My-SignMsix(
 	[Parameter(Mandatory)]
 	[String] $Destination
 ) {
+	$CertificateFile = "${ProjectDirectory}/common/certificate/file.pfx"
+	$CertificatePassword = Get-Content -Path "${ProjectDirectory}/common/certificate/password.txt"
 	New-Item -Force -ItemType "Directory" -Path "${ProjectTemporaryDirectory}/SignMsix"
 	Copy-Item -Force -Recurse -Path "${Source}" -Destination "${ProjectTemporaryDirectory}/SignMsix/unsigned.msix"
-	signtool "sign" "/q" "/fd" "SHA256" "/f" "${CertificateFilePfx}" "/p" "${CertificatePassword}" "${ProjectTemporaryDirectory}/SignMsix/unsigned.msix"
+	signtool "sign" "/q" "/fd" "SHA256" "/f" "${CertificateFile}" "/p" "${CertificatePassword}" "${ProjectTemporaryDirectory}/SignMsix/unsigned.msix"
 	Copy-Item -Force -Recurse -Path "${ProjectTemporaryDirectory}/SignMsix/unsigned.msix" -Destination "${Destination}"
 	Remove-Item -Force -Recurse -Path "${ProjectTemporaryDirectory}/SignMsix"
 	return
@@ -80,10 +78,12 @@ function My-SignApk(
 	[Parameter(Mandatory)]
 	[String] $Destination
 ) {
+	$CertificateFile = "${ProjectDirectory}/common/certificate/file.jks"
+	$CertificatePassword = Get-Content -Path "${ProjectDirectory}/common/certificate/password.txt"
 	New-Item -Force -ItemType "Directory" -Path "${ProjectTemporaryDirectory}/SignApk"
 	Copy-Item -Force -Recurse -Path "${Source}" -Destination "${ProjectTemporaryDirectory}/SignApk/unsigned.apk"
 	zipalign "-f" "-p" "4" "${ProjectTemporaryDirectory}/SignApk/unsigned.apk" "${ProjectTemporaryDirectory}/SignApk/aligned.apk"
-	apksigner "sign" "--ks" "${CertificateFileJks}" "--ks-pass" "pass:${CertificatePassword}" "${ProjectTemporaryDirectory}/SignApk/aligned.apk"
+	apksigner "sign" "--ks" "${CertificateFile}" "--ks-pass" "pass:${CertificatePassword}" "${ProjectTemporaryDirectory}/SignApk/aligned.apk"
 	Copy-Item -Force -Recurse -Path "${ProjectTemporaryDirectory}/SignApk/aligned.apk" -Destination "${Destination}"
 	Remove-Item -Force -Recurse -Path "${ProjectTemporaryDirectory}/SignApk"
 	return

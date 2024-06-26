@@ -13,8 +13,8 @@ if ($TargetPlatform -eq "windows.x86_64") {
 	if (Test-Path -Path $ModuleDistributionFile) {
 		Remove-Item -Force -Recurse -Path $ModuleDistributionFile
 	}
-	dotnet "build" "/verbosity:minimal" "/property:Platform=x64" "/property:Configuration=Release" "/property:GenerateAppxPackageOnBuild=true"
-	My-SignMsix -Source (Get-Item -Path "${ModuleDirectory}/.build/bin/AssistantPlus/x64.Release/AppPackages/AssistantPlus_*.0.0.0_x64_Test/AssistantPlus_*.0.0.0_x64.msix" | % { $_.FullName }) -Destination "${ModuleDistributionFile}"
+	MSBuild "-restore" "-verbosity:minimal" "-property:Platform=x64" "-property:Configuration=Release" "-property:GenerateAppxPackageOnBuild=true"
+	My-SignMsix -Source (Get-Item -Path "${ModuleDirectory}/.build/bin/Application/x64.Release/AppPackages/Application_*.0.0.0_x64_Test/Application_*.0.0.0_x64.msix" | % { $_.FullName }) -Destination "${ModuleDistributionFile}"
 }
 Pop-Location
 Write-Host -Object "!! DONE >> ${ModuleDistributionFile}"

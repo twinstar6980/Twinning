@@ -9,6 +9,7 @@
 
 # Environment - Visual Studio
 /**/.vs
+/**/*.vcxproj.user
 /**/*.csproj.user
 
 # Environment - Visual Studio Code
@@ -68,7 +69,7 @@
 
 # Module - AssistantPlus
 /AssistantPlus/.build
-/AssistantPlus/.editorconfig
+/AssistantPlus/Application/.editorconfig
 
 # Miscellaneous
 /.unused

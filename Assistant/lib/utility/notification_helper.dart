@@ -2,6 +2,7 @@ import '/common.dart';
 import 'dart:io';
 import 'package:local_notifier/local_notifier.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:window_manager/window_manager.dart';
 
 // ----------------
 
@@ -48,10 +49,14 @@ class NotificationHelper {
     String description,
   ) async {
     if (Platform.isWindows) {
-      await LocalNotification(
+      var notification = LocalNotification(
         title: title,
         body: description,
-      ).show();
+      );
+      notification.onClick = () async {
+        await windowManager.focus();
+      };
+      await notification.show();
     }
     if (Platform.isLinux || Platform.isMacOS || Platform.isAndroid || Platform.isIOS) {
       await _flutterLocalNotificationsPlugin!.show(

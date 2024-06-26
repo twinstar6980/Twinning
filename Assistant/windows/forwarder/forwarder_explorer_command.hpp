@@ -94,7 +94,7 @@ public:
 		EXPCMDSTATE *     pCmdState
 	) override {
 		*pCmdState = ECS_HIDDEN;
-		if (std::filesystem::is_regular_file(thiz.m_state_file)) {
+		if (std::filesystem::exists(thiz.m_state_file)) {
 			*pCmdState = ECS_ENABLED;
 		}
 		return S_OK;
