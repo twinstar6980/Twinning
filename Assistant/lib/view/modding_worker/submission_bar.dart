@@ -854,97 +854,103 @@ class _PathSubmissionBarState extends State<_PathSubmissionBar> {
         this._refresh();
       },
       icon: IconSymbols.link,
-      content: Focus(
-        onFocusChange: (focused) async {
-          if (!focused) {
-            if (this._contentController.text.isEmpty) {
-              this.widget.value.value = null;
-            }
-            else {
-              this.widget.value.value = PathExpression(StorageHelper.regularize(this._contentController.text));
-            }
-            this._refresh();
-          }
+      content: CustomFileDropRegion(
+        onDrop: (item) async {
+          this.widget.value.value = PathExpression(item.first);
+          this._refresh();
         },
-        child: TextField(
-          keyboardType: TextInputType.text,
-          inputFormatters: const [],
-          decoration: InputDecoration(
-            border: const UnderlineInputBorder(),
-            hintText: 'Path',
-            suffixIconConstraints: const BoxConstraints(),
-            suffixIcon: CustomTextFieldSuffixWidget(
-              children: [
-                PopupMenuButton(
-                  tooltip: 'Command',
-                  position: PopupMenuPosition.under,
-                  icon: const Icon(IconSymbols.adjust),
-                  itemBuilder: (context) => <PopupMenuEntry<String>>[
-                    ...[
-                      (':g', 'Generate'),
-                      (':m', 'Move'),
-                      (':d', 'Delete'),
-                      (':o', 'Overwrite'),
-                    ].map((value) => PopupMenuItem(
-                      value: value.$1,
-                      child: Text(
-                        value.$2,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          fontFamily: '',
-                          fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+        child: Focus(
+          onFocusChange: (focused) async {
+            if (!focused) {
+              if (this._contentController.text.isEmpty) {
+                this.widget.value.value = null;
+              }
+              else {
+                this.widget.value.value = PathExpression(StorageHelper.regularize(this._contentController.text));
+              }
+              this._refresh();
+            }
+          },
+          child: TextField(
+            keyboardType: TextInputType.text,
+            inputFormatters: const [],
+            decoration: InputDecoration(
+              border: const UnderlineInputBorder(),
+              hintText: 'Path',
+              suffixIconConstraints: const BoxConstraints(),
+              suffixIcon: CustomTextFieldSuffixWidget(
+                children: [
+                  PopupMenuButton(
+                    tooltip: 'Command',
+                    position: PopupMenuPosition.under,
+                    icon: const Icon(IconSymbols.adjust),
+                    itemBuilder: (context) => <PopupMenuEntry<String>>[
+                      ...[
+                        (':g', 'Generate'),
+                        (':m', 'Move'),
+                        (':d', 'Delete'),
+                        (':o', 'Overwrite'),
+                      ].map((value) => PopupMenuItem(
+                        value: value.$1,
+                        child: Text(
+                          value.$2,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            fontFamily: '',
+                            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+                          ),
                         ),
-                      ),
-                    )),
-                  ],
-                  onSelected: (value) async {
-                    this.widget.value.value = PathExpression(value);
-                    this._refresh();
-                  },
-                ),
-                const SizedBox(width: 4),
-                PopupMenuButton(
-                  tooltip: 'Pick',
-                  position: PopupMenuPosition.under,
-                  icon: const Icon(IconSymbols.open_in_new),
-                  itemBuilder: (context) => <PopupMenuEntry<String>>[
-                    ...[
-                      ('load_file', 'Load File'),
-                      ('load_directory', 'Load Directory'),
-                      ('save_file', 'Save File'),
-                    ].map((value) => PopupMenuItem(
-                      value: value.$1,
-                      child: Text(
-                        value.$2,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          fontFamily: '',
-                          fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
-                        ),
-                      ),
-                    )),
-                  ],
-                  onSelected: (value) async {
-                    var target = switch (value) {
-                      'load_file'      => await StorageHelper.pickLoadFile(context, 'ModdingWorker.Generic'),
-                      'load_directory' => await StorageHelper.pickLoadDirectory(context, 'ModdingWorker.Generic'),
-                      'save_file'      => await StorageHelper.pickSaveFile(context, 'ModdingWorker.Generic'),
-                      _                => throw Exception(),
-                    };
-                    if (target != null) {
-                      this.widget.value.value = PathExpression(target);
+                      )),
+                    ],
+                    onSelected: (value) async {
+                      this.widget.value.value = PathExpression(value);
                       this._refresh();
-                    }
-                  },
-                ),
-              ],
+                    },
+                  ),
+                  const SizedBox(width: 4),
+                  PopupMenuButton(
+                    tooltip: 'Pick',
+                    position: PopupMenuPosition.under,
+                    icon: const Icon(IconSymbols.open_in_new),
+                    itemBuilder: (context) => <PopupMenuEntry<String>>[
+                      ...[
+                        ('load_file', 'Load File'),
+                        ('load_directory', 'Load Directory'),
+                        ('save_file', 'Save File'),
+                      ].map((value) => PopupMenuItem(
+                        value: value.$1,
+                        child: Text(
+                          value.$2,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            fontFamily: '',
+                            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+                          ),
+                        ),
+                      )),
+                    ],
+                    onSelected: (value) async {
+                      var target = switch (value) {
+                        'load_file'      => await StorageHelper.pickLoadFile(context, 'ModdingWorker.Generic'),
+                        'load_directory' => await StorageHelper.pickLoadDirectory(context, 'ModdingWorker.Generic'),
+                        'save_file'      => await StorageHelper.pickSaveFile(context, 'ModdingWorker.Generic'),
+                        _                => throw Exception(),
+                      };
+                      if (target != null) {
+                        this.widget.value.value = PathExpression(target);
+                        this._refresh();
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
+            style: theme.textTheme.bodyLarge?.copyWith(
+              fontFamily: '',
+              fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+            ),
+            controller: this._contentController,
           ),
-          style: theme.textTheme.bodyLarge?.copyWith(
-            fontFamily: '',
-            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
-          ),
-          controller: this._contentController,
         ),
       ),
     );

@@ -192,6 +192,7 @@ class _MainPageState extends State<MainPage> {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return CustomModulePage(
+      onDropFile: null,
       content: Column(
         children: [
           Expanded(

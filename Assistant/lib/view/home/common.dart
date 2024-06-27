@@ -3,6 +3,7 @@ import '/utility/control_helper.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
+import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
 // ----------------
 
@@ -325,32 +326,104 @@ class CustomTextFieldSuffixWidget extends StatelessWidget {
 
 // ----------------
 
+class CustomFileDropRegion extends StatelessWidget {
+
+  const CustomFileDropRegion({
+    super.key,
+    required this.onDrop,
+    required this.child,
+  });
+
+  // ----------------
+
+  final Void Function(List<String>)? onDrop;
+  final Widget                       child;
+
+  // ----------------
+
+  @override
+  build(context) {
+    return !(Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+      ? this.child
+      : DropRegion(
+        formats: const [Formats.fileUri],
+        onDropOver: (event) async {
+          if (this.onDrop != null && event.session.items.every((item) => item.canProvide(Formats.fileUri))) {
+            return DropOperation.link;
+          }
+          return DropOperation.none;
+        },
+        onPerformDrop: (event) async {
+              print('done ${this.hashCode}');
+          var result = <String>[];
+          for (var item in event.session.items) {
+            var progress = item.dataReader!.getValue(Formats.fileUri, (uri) async {
+              uri!;
+              var path = Uri.decodeComponent(uri.path);
+              assertTest(path.startsWith('/'));
+              if (Platform.isWindows) {
+                path = path.substring(1);
+                if (uri.authority != '') {
+                  path = '//${uri.authority}/${path}';
+                }
+              }
+              if (Platform.isLinux) {
+                assertTest(uri.authority == '');
+              }
+              if (Platform.isMacOS) {
+                if (path.length > 1 && path[path.length - 1] == '/') {
+                  path = path.substring(0, path.length - 1);
+                }
+                assertTest(uri.authority == '');
+              }
+              result.add(path);
+            })!;
+            while (progress.fraction.value != 1.0) {
+              await Future.delayed(const Duration());
+            }
+          }
+          this.onDrop!(result);
+          return;
+        },
+        child: this.child,
+      );
+  }
+
+}
+
+// ----------------
+
 class CustomModulePage extends StatelessWidget {
 
   const CustomModulePage({
     super.key,
+    required this.onDropFile,
     required this.content,
     required this.bottom,
   });
 
   // ----------------
 
-  final Widget content;
-  final Widget bottom;
+  final Void Function(List<String>)? onDropFile;
+  final Widget                       content;
+  final Widget                       bottom;
 
   // ----------------
 
   @override
   build(context) {
-    return Column(
-      children: [
-        Expanded(
-          child: this.content,
-        ),
-        BottomAppBar(
-          child: this.bottom,
-        ),
-      ],
+    return CustomFileDropRegion(
+      onDrop: this.onDropFile,
+      child: Column(
+        children: [
+          Expanded(
+            child: this.content,
+          ),
+          BottomAppBar(
+            child: this.bottom,
+          ),
+        ],
+      ),
     );
   }
 

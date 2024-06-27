@@ -127,6 +127,7 @@ class _MainPageState extends State<MainPage> {
   @override
   build(context) {
     return CustomModulePage(
+      onDropFile: null,
       content: Column(
         children: [
           Expanded(

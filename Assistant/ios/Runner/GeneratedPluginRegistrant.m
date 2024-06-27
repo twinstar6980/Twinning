@@ -12,6 +12,12 @@
 @import app_links;
 #endif
 
+#if __has_include(<device_info_plus/FPPDeviceInfoPlusPlugin.h>)
+#import <device_info_plus/FPPDeviceInfoPlusPlugin.h>
+#else
+@import device_info_plus;
+#endif
+
 #if __has_include(<file_selector_ios/FileSelectorPlugin.h>)
 #import <file_selector_ios/FileSelectorPlugin.h>
 #else
@@ -24,10 +30,22 @@
 @import flutter_local_notifications;
 #endif
 
+#if __has_include(<irondash_engine_context/IrondashEngineContextPlugin.h>)
+#import <irondash_engine_context/IrondashEngineContextPlugin.h>
+#else
+@import irondash_engine_context;
+#endif
+
 #if __has_include(<path_provider_foundation/PathProviderPlugin.h>)
 #import <path_provider_foundation/PathProviderPlugin.h>
 #else
 @import path_provider_foundation;
+#endif
+
+#if __has_include(<super_native_extensions/SuperNativeExtensionsPlugin.h>)
+#import <super_native_extensions/SuperNativeExtensionsPlugin.h>
+#else
+@import super_native_extensions;
 #endif
 
 #if __has_include(<url_launcher_ios/URLLauncherPlugin.h>)
@@ -40,9 +58,12 @@
 
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
   [AppLinksPlugin registerWithRegistrar:[registry registrarForPlugin:@"AppLinksPlugin"]];
+  [FPPDeviceInfoPlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"FPPDeviceInfoPlusPlugin"]];
   [FileSelectorPlugin registerWithRegistrar:[registry registrarForPlugin:@"FileSelectorPlugin"]];
   [FlutterLocalNotificationsPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterLocalNotificationsPlugin"]];
+  [IrondashEngineContextPlugin registerWithRegistrar:[registry registrarForPlugin:@"IrondashEngineContextPlugin"]];
   [PathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"PathProviderPlugin"]];
+  [SuperNativeExtensionsPlugin registerWithRegistrar:[registry registrarForPlugin:@"SuperNativeExtensionsPlugin"]];
   [URLLauncherPlugin registerWithRegistrar:[registry registrarForPlugin:@"URLLauncherPlugin"]];
 }
 

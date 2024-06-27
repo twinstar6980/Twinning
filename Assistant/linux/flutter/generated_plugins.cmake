@@ -6,8 +6,10 @@ list(APPEND FLUTTER_PLUGIN_LIST
   dynamic_color
   file_selector_linux
   gtk
+  irondash_engine_context
   local_notifier
   screen_retriever
+  super_native_extensions
   url_launcher_linux
   window_manager
 )

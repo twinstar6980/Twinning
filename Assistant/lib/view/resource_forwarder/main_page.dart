@@ -184,6 +184,9 @@ class _MainPageState extends State<MainPage> {
   @override
   build(context) {
     return CustomModulePage(
+      onDropFile: (item) async {
+        await this._appendResource(item);
+      },
       content: Column(
         children: [
           Expanded(

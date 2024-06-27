@@ -587,61 +587,67 @@ class _PathArgumentBarState extends State<_PathArgumentBar> {
     return _BasicArgumentBar(
       name: this.widget.name,
       icon: IconSymbols.link,
-      content: Focus(
-        onFocusChange: (focused) async {
-          if (!focused) {
-            if (this._contentController.text.isEmpty) {
-              this.widget.value.value = null;
-            }
-            else {
-              this.widget.value.value = PathExpression(StorageHelper.regularize(this._contentController.text));
-            }
-            this._refresh();
-          }
+      content: CustomFileDropRegion(
+        onDrop: (item) async {
+          this.widget.value.value = PathExpression(item.first);
+          this._refresh();
         },
-        child: TextField(
-          keyboardType: TextInputType.text,
-          inputFormatters: const [],
-          decoration: InputDecoration(
-            border: const UnderlineInputBorder(),
-            hintText: 'Path',
-            suffixIconConstraints: const BoxConstraints(),
-            suffixIcon: CustomTextFieldSuffixWidget(
-              children: [
-                PopupMenuButton(
-                  tooltip: 'Pick',
-                  position: PopupMenuPosition.under,
-                  icon: const Icon(IconSymbols.open_in_new),
-                  itemBuilder: (context) => <PopupMenuEntry<String>>[
-                    ...[
-                      ('load_file', 'Load File'),
-                      ('load_directory', 'Load Directory'),
-                      ('save_file', 'Save File'),
-                    ].map((value) => PopupMenuItem(
-                      value: value.$1,
-                      child: Text(
-                        value.$2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    )),
-                  ],
-                  onSelected: (value) async {
-                    var target = switch (value) {
-                      'load_file'      => await StorageHelper.pickLoadFile(context, 'ModdingWorker.Generic'),
-                      'load_directory' => await StorageHelper.pickLoadDirectory(context, 'ModdingWorker.Generic'),
-                      'save_file'      => await StorageHelper.pickSaveFile(context, 'ModdingWorker.Generic'),
-                      _                => throw Exception(),
-                    };
-                    if (target != null) {
-                      this.widget.value.value = PathExpression(target);
-                      this._refresh();
-                    }
-                  },
-                ),
-              ],
+        child: Focus(
+          onFocusChange: (focused) async {
+            if (!focused) {
+              if (this._contentController.text.isEmpty) {
+                this.widget.value.value = null;
+              }
+              else {
+                this.widget.value.value = PathExpression(StorageHelper.regularize(this._contentController.text));
+              }
+              this._refresh();
+            }
+          },
+          child: TextField(
+            keyboardType: TextInputType.text,
+            inputFormatters: const [],
+            decoration: InputDecoration(
+              border: const UnderlineInputBorder(),
+              hintText: 'Path',
+              suffixIconConstraints: const BoxConstraints(),
+              suffixIcon: CustomTextFieldSuffixWidget(
+                children: [
+                  PopupMenuButton(
+                    tooltip: 'Pick',
+                    position: PopupMenuPosition.under,
+                    icon: const Icon(IconSymbols.open_in_new),
+                    itemBuilder: (context) => <PopupMenuEntry<String>>[
+                      ...[
+                        ('load_file', 'Load File'),
+                        ('load_directory', 'Load Directory'),
+                        ('save_file', 'Save File'),
+                      ].map((value) => PopupMenuItem(
+                        value: value.$1,
+                        child: Text(
+                          value.$2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      )),
+                    ],
+                    onSelected: (value) async {
+                      var target = switch (value) {
+                        'load_file'      => await StorageHelper.pickLoadFile(context, 'ModdingWorker.Generic'),
+                        'load_directory' => await StorageHelper.pickLoadDirectory(context, 'ModdingWorker.Generic'),
+                        'save_file'      => await StorageHelper.pickSaveFile(context, 'ModdingWorker.Generic'),
+                        _                => throw Exception(),
+                      };
+                      if (target != null) {
+                        this.widget.value.value = PathExpression(target);
+                        this._refresh();
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
+            controller: this._contentController,
           ),
-          controller: this._contentController,
         ),
       ),
     );

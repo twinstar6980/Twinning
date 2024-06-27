@@ -6,8 +6,10 @@ list(APPEND FLUTTER_PLUGIN_LIST
   app_links
   dynamic_color
   file_selector_windows
+  irondash_engine_context
   local_notifier
   screen_retriever
+  super_native_extensions
   url_launcher_windows
   window_manager
 )
