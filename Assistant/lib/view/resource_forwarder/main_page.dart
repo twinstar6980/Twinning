@@ -20,16 +20,18 @@ class MainPage extends StatefulWidget {
     required this.option,
   });
 
-  @override
-  createState() => _MainPageState();
-
   // ----------------
 
   final List<String> option;
 
+  // ----------------
+
+  @override
+  createState() => _MainPageState();
+
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends State<MainPage> implements CustomModulePageState {
 
   late List<OptionGroupConfiguration>          _optionConfiguration;
   late Boolean                                 _parallelForward;
@@ -37,6 +39,7 @@ class _MainPageState extends State<MainPage> {
   late Boolean                                 _enableBatch;
   late List<(String, Boolean?)>                _resource;
   late List<List<(Boolean, Boolean, Boolean)>> _optionMatch;
+  late List<Boolean>                           _optionCollapse;
   late ScrollController                        _optionListScrollController;
 
   Future<Void> _refreshMatch(
@@ -121,6 +124,59 @@ class _MainPageState extends State<MainPage> {
   // ----------------
 
   @override
+  modulePageApplyOption(optionView) async {
+    var optionParallelForward = null as Boolean?;
+    var optionEnableFilter = null as Boolean?;
+    var optionEnableBatch = null as Boolean?;
+    var optionResource = null as List<(String,)>?;
+    var option = CommandLineReader(optionView);
+    if (option.check('-parallel_forward')) {
+      optionParallelForward = option.nextBoolean();
+    }
+    if (option.check('-enable_filter')) {
+      optionEnableFilter = option.nextBoolean();
+    }
+    if (option.check('-enable_batch')) {
+      optionEnableBatch = option.nextBoolean();
+    }
+    if (option.check('-resource')) {
+      optionResource = [];
+      while (!option.done()) {
+        optionResource.add((
+          option.nextString(),
+        ));
+      }
+    }
+    assertTest(option.done());
+    if (optionParallelForward != null) {
+      this._parallelForward = optionParallelForward;
+    }
+    if (optionEnableFilter != null) {
+      this._enableFilter = optionEnableFilter;
+    }
+    if (optionEnableBatch != null) {
+      this._enableBatch = optionEnableBatch;
+    }
+    if (optionResource != null) {
+      await this._appendResource(optionResource.map((item) => StorageHelper.regularize(item.$1)).toList());
+    }
+    this.setState(() {});
+    return;
+  }
+
+  @override
+  modulePageCollectOption() async {
+    return [];
+  }
+
+  @override
+  modulePageRequestClose() async {
+    return true;
+  }
+
+  // ----------------
+
+  @override
   initState() {
     super.initState();
     var setting = Provider.of<SettingProvider>(this.context, listen: false);
@@ -130,47 +186,20 @@ class _MainPageState extends State<MainPage> {
     this._enableBatch = setting.data.mResourceForwarder.mEnableBatch;
     this._resource = [];
     this._optionMatch = [];
+    this._optionCollapse = [];
     this._optionListScrollController = ScrollController();
     ControlHelper.postTask(() async {
       this._optionConfiguration = ConfigurationHelper.parseDataFromJson(await JsonHelper.deserializeFile(setting.data.mResourceForwarder.mOptionConfiguration));
+      this._optionCollapse = this._optionConfiguration.map((value) => false).toList();
       await this._refreshMatch();
-      var optionParallelForward = null as Boolean?;
-      var optionEnableFilter = null as Boolean?;
-      var optionEnableBatch = null as Boolean?;
-      var optionResource = null as List<(String,)>?;
-      var option = CommandLineReader(this.widget.option);
-      if (option.check('-parallel_forward')) {
-        optionParallelForward = option.nextBoolean();
-      }
-      if (option.check('-enable_filter')) {
-        optionEnableFilter = option.nextBoolean();
-      }
-      if (option.check('-enable_batch')) {
-        optionEnableBatch = option.nextBoolean();
-      }
-      if (option.check('-resource')) {
-        optionResource = [];
-        while (!option.done()) {
-          optionResource.add((
-            option.nextString(),
-          ));
-        }
-      }
-      assertTest(option.done());
-      if (optionParallelForward != null) {
-        this._parallelForward = optionParallelForward;
-      }
-      if (optionEnableFilter != null) {
-        this._enableFilter = optionEnableFilter;
-      }
-      if (optionEnableBatch != null) {
-        this._enableBatch = optionEnableBatch;
-      }
-      if (optionResource != null) {
-        await this._appendResource(optionResource.map((item) => StorageHelper.regularize(item.$1)).toList());
-      }
-      this.setState(() {});
+      await this.modulePageApplyOption(this.widget.option);
     });
+    return;
+  }
+
+  @override
+  didUpdateWidget(oldWidget) {
+    super.didUpdateWidget(oldWidget);
     return;
   }
 
@@ -183,7 +212,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   build(context) {
-    return CustomModulePage(
+    return CustomModulePageLayout(
       onDropFile: (item) async {
         await this._appendResource(item);
       },
@@ -194,16 +223,20 @@ class _MainPageState extends State<MainPage> {
               interactive: true,
               controller: this._optionListScrollController,
               child: ListView.builder(
-                padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+                padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
                 controller: this._optionListScrollController,
                 itemCount: this._optionConfiguration.length,
                 itemBuilder: (context, index) => OptionGroupItem(
-                  key: ObjectKey(this._optionConfiguration[index]),
                   configuration: this._optionConfiguration[index],
                   match: this._optionMatch[index],
                   enableFilter: this._enableFilter,
                   enableBatch: this._enableBatch,
                   onSelect: this._forwardResource,
+                  collapse: this._optionCollapse[index],
+                  onToggle: () async {
+                    this._optionCollapse[index] = !this._optionCollapse[index];
+                    this.setState(() {});
+                  },
                 ),
               ),
             ),
@@ -331,7 +364,7 @@ class _MainPageState extends State<MainPage> {
             ),
           ),
         ],
-      )
+      ),
     );
   }
 

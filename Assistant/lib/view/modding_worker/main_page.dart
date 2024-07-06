@@ -28,16 +28,18 @@ class MainPage extends StatefulWidget {
     required this.option,
   });
 
-  @override
-  createState() => _MainPageState();
-
   // ----------------
 
   final List<String> option;
 
+  // ----------------
+
+  @override
+  createState() => _MainPageState();
+
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends State<MainPage> implements CustomModulePageState {
 
   late List<String>                _additionalArgument;
   late List<Widget>                _messageList;
@@ -45,6 +47,7 @@ class _MainPageState extends State<MainPage> {
   late List<List<ValueExpression>> _submissionHistory;
   late SubmissionBar               _submissionBar;
   late _MainPageBridgeClient       _sessionClient;
+  late Boolean                     _sessionRunning;
 
   Future<Void> _sendMessage(
     MessageType  type,
@@ -106,35 +109,91 @@ class _MainPageState extends State<MainPage> {
 
   Future<List<String>?> _launchSession(
   ) async {
-    var setting = Provider.of<SettingProvider>(this.context, listen: false);
+    assertTest(!this._sessionRunning);
     var result = null as List<String>?;
-    var exception = null as String?;
-    var kernelCopy = await StorageHelper.temporary();
-    var library = bridge.Library();
+    var exception = null as Object?;
+    this._sessionRunning = true;
     this._messageList.clear();
     this.setState(() {});
     await WidgetsBinding.instance.endOfFrame;
     try {
-      await StorageHelper.copyFile(setting.data.mModdingWorker.mKernel, kernelCopy);
-      library.open(kernelCopy);
-      result = await bridge.Launcher.launch(this._sessionClient, library, setting.data.mModdingWorker.mScript, setting.data.mModdingWorker.mArgument + this._additionalArgument);
+      var setting = Provider.of<SettingProvider>(this.context, listen: false);
+      var kernel = await StorageHelper.temporary();
+      var library = bridge.Library();
+      try {
+        await StorageHelper.copyFile(setting.data.mModdingWorker.mKernel, kernel);
+        library.open(kernel);
+        result = await bridge.Launcher.launch(this._sessionClient, library, setting.data.mModdingWorker.mScript, setting.data.mModdingWorker.mArgument + this._additionalArgument);
+      }
+      catch (e) {
+        exception = e;
+      }
+      if (library.state()) {
+        library.close();
+      }
+      if (await StorageHelper.existFile(kernel)) {
+        await StorageHelper.removeFile(kernel);
+      }
     }
     catch (e) {
-      exception = e.toString();
-    }
-    if (library.state()) {
-      library.close();
-    }
-    if (await StorageHelper.existFile(kernelCopy)) {
-      await StorageHelper.removeFile(kernelCopy);
+      exception = e;
     }
     if (exception == null) {
       this._sendMessage(MessageType.success, 'SUCCEEDED', result!);
     }
     else {
-      this._sendMessage(MessageType.error, 'FAILED', [exception]);
+      this._sendMessage(MessageType.error, 'FAILED', [exception.toString()]);
     }
-    return result;
+    this._sessionRunning = false;
+    this.setState(() {});
+    await WidgetsBinding.instance.endOfFrame;
+    return exception == null ? result! : null;
+  }
+
+  // ----------------
+
+  @override
+  modulePageApplyOption(optionView) async {
+    var setting = Provider.of<SettingProvider>(this.context, listen: false);
+    var optionImmediateLaunch = null as Boolean?;
+    var optionAdditionalArgument = null as List<String>?;
+    var option = CommandLineReader(optionView);
+    if (option.check('-immediate_launch')) {
+      optionImmediateLaunch = option.nextBoolean();
+    }
+    else {
+      optionImmediateLaunch = setting.data.mModdingWorker.mImmediateLaunch;
+    }
+    if (option.check('-additional_argument')) {
+      optionAdditionalArgument = option.nextStringList();
+    }
+    assertTest(option.done());
+    if (optionAdditionalArgument != null) {
+      this._additionalArgument.addAll(optionAdditionalArgument);
+    }
+    if (optionImmediateLaunch) {
+      this._launchSession();
+    }
+    this.setState(() {});
+    return;
+  }
+
+  @override
+  modulePageCollectOption() async {
+    return [];
+  }
+
+  @override
+  modulePageRequestClose() async {
+    if (this._sessionClient._running) {
+      await ControlHelper.showCustomModalDialog<Void>(context, CustomModalDialog(
+        title: 'Session In Progress',
+        contentBuilder: (context, setStaate) => [],
+        actionBuilder: null,
+      ));
+      return false;
+    }
+    return true;
   }
 
   // ----------------
@@ -142,7 +201,6 @@ class _MainPageState extends State<MainPage> {
   @override
   initState() {
     super.initState();
-    var setting = Provider.of<SettingProvider>(this.context, listen: false);
     this._additionalArgument = [];
     this._messageList = [];
     this._messageListScrollController = ScrollController();
@@ -155,28 +213,16 @@ class _MainPageState extends State<MainPage> {
       completer: null,
     );
     this._sessionClient = _MainPageBridgeClient(this);
+    this._sessionRunning = false;
     ControlHelper.postTask(() async {
-      var optionImmediateLaunch = null as Boolean?;
-      var optionAdditionalArgument = null as List<String>?;
-      var option = CommandLineReader(this.widget.option);
-      if (option.check('-immediate_launch')) {
-        optionImmediateLaunch = option.nextBoolean();
-      }
-      else {
-        optionImmediateLaunch = setting.data.mModdingWorker.mImmediateLaunch;
-      }
-      if (option.check('-additional_argument')) {
-        optionAdditionalArgument = option.nextStringList();
-      }
-      assertTest(option.done());
-      if (optionAdditionalArgument != null) {
-        this._additionalArgument.addAll(optionAdditionalArgument);
-      }
-      if (optionImmediateLaunch) {
-        this._launchSession();
-      }
-      this.setState(() {});
+      await this.modulePageApplyOption(this.widget.option);
     });
+    return;
+  }
+
+  @override
+  didUpdateWidget(oldWidget) {
+    super.didUpdateWidget(oldWidget);
     return;
   }
 
@@ -191,7 +237,7 @@ class _MainPageState extends State<MainPage> {
   build(context) {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
-    return CustomModulePage(
+    return CustomModulePageLayout(
       onDropFile: null,
       content: Column(
         children: [
@@ -201,7 +247,7 @@ class _MainPageState extends State<MainPage> {
                 interactive: true,
                 controller: this._messageListScrollController,
                 child: ListView(
-                  padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+                  padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
                   controller: this._messageListScrollController,
                   children: [...this._messageList],
                 ),
@@ -209,12 +255,12 @@ class _MainPageState extends State<MainPage> {
             ),
           ),
           LinearProgressIndicator(
-            value: !this._sessionClient._running ? 0 : this._submissionBar.type == null ? null : 1,
-            color: !this._sessionClient._running ? null : this._submissionBar.type == null ? null : theme.colorScheme.tertiary,
+            value: !this._sessionRunning ? 0 : this._submissionBar.type == null ? null : 1,
+            color: !this._sessionRunning ? null : this._submissionBar.type == null ? null : theme.colorScheme.tertiary,
           ),
         ],
       ),
-      bottom: this._sessionClient._running
+      bottom: this._sessionRunning
         ? this._submissionBar
         : Row(
           children: [
@@ -232,22 +278,22 @@ class _MainPageState extends State<MainPage> {
                   child: Icon(IconSymbols.attach_file),
                 ),
                 onPressed: () async {
-                  await ControlHelper.showCustomModalDialog(
-                    context: context,
+                  await ControlHelper.showCustomModalDialog<Void>(context, CustomModalDialog(
                     title: 'Additional Argument',
                     contentBuilder: (context, setState) => [
-                      TextFormField(
+                      CustomTextFieldWithFocus(
                         keyboardType: TextInputType.multiline,
-                        maxLines: null,
                         inputFormatters: const [],
                         decoration: const InputDecoration(
-                          isDense: true,
+                          contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                          filled: false,
+                          border: OutlineInputBorder(),
                         ),
                         style: theme.textTheme.bodyLarge?.copyWith(
                           fontFamily: '',
                           fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
                         ),
-                        initialValue: ConvertHelper.makeStringListToStringWithLine(this._additionalArgument),
+                        value: ConvertHelper.makeStringListToStringWithLine(this._additionalArgument),
                         onChanged: (value) async {
                           this._additionalArgument.clear();
                           this._additionalArgument.addAll(ConvertHelper.parseStringListFromStringWithLine(value));
@@ -257,7 +303,7 @@ class _MainPageState extends State<MainPage> {
                       ),
                     ],
                     actionBuilder: null,
-                  );
+                  ));
                 },
               ),
             ),

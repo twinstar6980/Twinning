@@ -25,7 +25,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			this.Controller.ApplyOption(args.Parameter.As<List<String>>());
+			_ = this.ModulePageApplyOption(args.Parameter.As<List<String>>());
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -38,21 +38,27 @@ namespace AssistantPlus.View.ResourceForwarder {
 
 		#region module page
 
-		public async Task<List<String>> ModulePageCollectOption (
+		public Task ModulePageApplyOption (
+			List<String> optionView
 		) {
-			return await this.Controller.CollectOption();
+			return this.Controller.ApplyOption(optionView);
 		}
 
-		public async Task<Boolean> ModulePageRequestClose (
+		public Task<List<String>> ModulePageCollectOption (
 		) {
-			return await this.Controller.RequestClose();
+			return this.Controller.CollectOption();
+		}
+
+		public Task<Boolean> ModulePageRequestClose (
+		) {
+			return this.Controller.RequestClose();
 		}
 
 		#endregion
 
 	}
 
-	public class MainPageController : CustomController {
+	public class MainPageController : CustomController, Home.IModulePageController {
 
 		#region data
 
@@ -102,7 +108,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 			return;
 		}
 
-		public async void ApplyOption (
+		public async Task ApplyOption (
 			List<String> optionView
 		) {
 			await ControlHelper.WaitUntilLoaded(this.View);
@@ -540,7 +546,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 
 		public Boolean uRoot_Visibility {
 			get {
-				return !this.Host.EnableFilter || this.Children.Any((value) => (value.NameMatched && (!this.Host.EnableBatch ? value.SingleMatched : value.BatchMatched)));
+				return !this.Host.EnableFilter || this.Children.Any((value) => (value.Host.EnableBatch ? value.BatchMatched : value.SingleMatched && value.NameMatched));
 			}
 		}
 
@@ -590,13 +596,13 @@ namespace AssistantPlus.View.ResourceForwarder {
 
 		public Boolean uRoot_Visibility {
 			get {
-				return (!this.Host.EnableFilter || (this.NameMatched && (!this.Host.EnableBatch ? this.SingleMatched : this.BatchMatched)));
+				return !this.Host.EnableFilter || (this.Host.EnableBatch ? this.BatchMatched : this.SingleMatched && this.NameMatched);
 			}
 		}
 
 		public Boolean uRoot_IsEnabled {
 			get {
-				return (!this.Host.EnableFilter || (this.NameMatched)) && (!this.Host.EnableBatch ? this.SingleMatched : this.BatchMatched);
+				return (this.Host.EnableBatch ? this.BatchMatched : this.SingleMatched && (!this.Host.EnableFilter || this.NameMatched));
 			}
 		}
 

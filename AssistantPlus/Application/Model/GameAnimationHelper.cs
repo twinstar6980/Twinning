@@ -68,7 +68,7 @@ namespace AssistantPlus {
 
 		// ----------------
 
-		public record SpriteUI {
+		public record SpriteVisual {
 			public required Canvas     Canvas;
 			public required Storyboard Storyboard;
 		}
@@ -78,7 +78,7 @@ namespace AssistantPlus {
 			public required Size Duration;
 		}
 
-		private record WorkLayer {
+		private record VisualLayer {
 			public required Canvas                        Canvas;
 			public required Storyboard                    Storyboard;
 			public required ObjectAnimationUsingKeyFrames Visibility;
@@ -90,45 +90,47 @@ namespace AssistantPlus {
 		// ----------------
 
 		private static Matrix MakeTransformMatrixFromVariant (
-			List<Floater> source
+			List<Floater> list
 		) {
-			var result = new Matrix();
-			switch (source.Count) {
+			var value = new Matrix();
+			switch (list.Count) {
 				case 2: {
-					result.M11 = 1.0;
-					result.M12 = 0.0;
-					result.M21 = 0.0;
-					result.M22 = 1.0;
-					result.OffsetX = source[0];
-					result.OffsetY = source[1];
+					value.M11 = 1.0;
+					value.M12 = 0.0;
+					value.M21 = 0.0;
+					value.M22 = 1.0;
+					value.OffsetX = list[0];
+					value.OffsetY = list[1];
 					break;
 				}
 				case 3: {
-					var cosValue = Math.Cos(source[0]);
-					var sinValue = Math.Sin(source[0]);
-					result.M11 = cosValue;
-					result.M12 = sinValue;
-					result.M21 = -sinValue;
-					result.M22 = cosValue;
-					result.OffsetX = source[1];
-					result.OffsetY = source[2];
+					var valueCos = Math.Cos(list[0]);
+					var valueSin = Math.Sin(list[0]);
+					value.M11 = valueCos;
+					value.M12 = valueSin;
+					value.M21 = -valueSin;
+					value.M22 = valueCos;
+					value.OffsetX = list[1];
+					value.OffsetY = list[2];
 					break;
 				}
 				case 6: {
-					result.M11 = source[0];
-					result.M12 = source[1];
-					result.M21 = source[2];
-					result.M22 = source[3];
-					result.OffsetX = source[4];
-					result.OffsetY = source[5];
+					value.M11 = list[0];
+					value.M12 = list[1];
+					value.M21 = list[2];
+					value.M22 = list[3];
+					value.OffsetX = list[4];
+					value.OffsetY = list[5];
 					break;
 				}
 				default: throw new ();
 			}
-			return result;
+			return value;
 		}
 
-		public static SpriteUI CreateUI (
+		// ----------------
+
+		public static SpriteVisual CreateVisual (
 			GameAnimationModel.Animation animation,
 			List<BitmapSource?>          imageSource,
 			List<Boolean>                imageFilter,
@@ -136,11 +138,11 @@ namespace AssistantPlus {
 			Size                         workingSpriteIndex
 		) {
 			var sprite = GameAnimationHelper.SelectSprite(animation, workingSpriteIndex);
-			var ui = new SpriteUI() {
+			var visual = new SpriteVisual() {
 				Canvas = new () { },
 				Storyboard = new () { },
 			};
-			var layerList = new Dictionary<Integer, WorkLayer?>();
+			var layerList = new Dictionary<Integer, VisualLayer?>();
 			var duration = sprite.Frame.Count;
 			var frameIndex = 0;
 			foreach (var frame in sprite.Frame) {
@@ -162,7 +164,7 @@ namespace AssistantPlus {
 						layerList.Add(append.Index, null);
 						continue;
 					}
-					var layer = new WorkLayer() {
+					var layer = new VisualLayer() {
 						Canvas = default!,
 						Storyboard = default!,
 						Visibility = default!,
@@ -177,8 +179,8 @@ namespace AssistantPlus {
 							Children = {
 								new Image() {
 									Source = resourceSource,
-									Width = resource.Size?[0] ?? resourceSource?.PixelWidth ?? 0,
-									Height = resource.Size?[1] ?? resourceSource?.PixelHeight ?? 0,
+									Width = resource.Size?.Item1 ?? resourceSource?.PixelWidth ?? 0,
+									Height = resource.Size?.Item2 ?? resourceSource?.PixelHeight ?? 0,
 									RenderTransform = new MatrixTransform() {
 										Matrix = GameAnimationHelper.MakeTransformMatrixFromVariant(resource.Transform),
 									},
@@ -188,9 +190,9 @@ namespace AssistantPlus {
 					}
 					else {
 						var resource = animation.Sprite[(Size)append.Resource];
-						var resourceUI = GameAnimationHelper.CreateUI(animation, imageSource, imageFilter, spriteFilter, (Size)append.Resource);
-						layer.Canvas = resourceUI.Canvas;
-						ui.Storyboard.Children.Add(resourceUI.Storyboard);
+						var resourceVisual = GameAnimationHelper.CreateVisual(animation, imageSource, imageFilter, spriteFilter, (Size)append.Resource);
+						layer.Canvas = resourceVisual.Canvas;
+						visual.Storyboard.Children.Add(resourceVisual.Storyboard);
 					}
 					Canvas.SetZIndex(layer.Canvas, (Size)append.Index);
 					layer.Canvas.Visibility = Visibility.Collapsed;
@@ -239,7 +241,7 @@ namespace AssistantPlus {
 						layer.ColorAlpha.KeyFrames.Add(
 							new DiscreteObjectKeyFrame() {
 								KeyTime = keyTime,
-								Value = change.Color[3],
+								Value = change.Color.Item4,
 							}
 						);
 					}
@@ -259,10 +261,10 @@ namespace AssistantPlus {
 				if (layer.Value == null) {
 					continue;
 				}
-				ui.Canvas.Children.Add(layer.Value.Canvas);
-				ui.Storyboard.Children.Add(layer.Value.Storyboard);
+				visual.Canvas.Children.Add(layer.Value.Canvas);
+				visual.Storyboard.Children.Add(layer.Value.Storyboard);
 			}
-			return ui;
+			return visual;
 		}
 
 		#endregion
@@ -279,16 +281,16 @@ namespace AssistantPlus {
 			String                       directory,
 			GameAnimationModel.Animation animation
 		) {
-			var imageSourceList = new List<BitmapSource?>(animation.Image.Count);
+			var list = new List<BitmapSource?>(animation.Image.Count);
 			foreach (var image in animation.Image) {
 				var file = $"{directory}/{GameAnimationHelper.ParseImageFileName(image.Name)}.png";
 				var source = default(BitmapSource);
 				if (StorageHelper.ExistFile(file)) {
 					source = await ConvertHelper.ParseBitmapFromBinary(await StorageHelper.ReadFile(file));
 				}
-				imageSourceList.Add(source);
+				list.Add(source);
 			}
-			return imageSourceList;
+			return list;
 		}
 
 		#endregion

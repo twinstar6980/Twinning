@@ -48,20 +48,23 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 		resource_manifest: RegularResourceManifest.Package,
 		option: Option,
 	): void {
-		let find_item_by_id_ignore_case = <T>(list: Array<T>, value: string): null | T => {
+		let find_item_by_id_ignore_case = <T extends { id: string }>(list: Array<T>, value: string): null | T => {
 			let value_lower = value.toLowerCase();
 			for (let item of list) {
-				let item_value = (item as any)['id'] as string;
+				let item_value = item.id;
 				if (item_value.toLowerCase() === value_lower) {
 					return item;
 				}
 			}
 			return null;
 		};
-		let find_item_by_path_ignore_case = <T>(list: Array<T>, value: string): null | T => {
+		let find_item_by_path_ignore_case = <T extends RegularResourceManifest.Resource>(list: Array<T>, value: string): null | T => {
 			let value_lower = value.toLowerCase();
 			for (let item of list) {
-				let item_value = (item as any)['additional']['value']['path'] as string;
+				if (item.additional.type === 'dummy') {
+					continue;
+				}
+				let item_value = item.additional.value.path;
 				if (item_value.toLowerCase() === value_lower) {
 					return item;
 				}

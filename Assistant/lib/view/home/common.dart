@@ -1,9 +1,191 @@
 import '/common.dart';
 import '/utility/control_helper.dart';
 import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
+
+// ----------------
+
+class CustomModalDialog extends StatefulWidget {
+
+  const CustomModalDialog({
+    super.key,
+    required this.title,
+    required this.contentBuilder,
+    required this.actionBuilder,
+  });
+
+  // ----------------
+
+  final String                                                              title;
+  final List<Widget> Function(BuildContext, Void Function(Void Function())) contentBuilder;
+  final List<Widget> Function(BuildContext)?                                actionBuilder;
+
+  // ----------------
+
+  @override
+  createState() => _CustomModalDialogState();
+
+}
+
+class _CustomModalDialogState extends State<CustomModalDialog> {
+
+  late ScrollController _scrollController;
+
+  // ----------------
+
+  @override
+  initState() {
+    super.initState();
+    this._scrollController = ScrollController();
+    return;
+  }
+
+  @override
+  didUpdateWidget(oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    this._scrollController.dispose();
+    this._scrollController = ScrollController();
+    return;
+  }
+
+  @override
+  dispose() {
+    this._scrollController.dispose();
+    super.dispose();
+    return;
+  }
+
+  @override
+  build(context) {
+    return AlertDialog(
+      title: Text(
+        this.widget.title,
+        overflow: TextOverflow.ellipsis,
+      ),
+      content: Scrollbar(
+        interactive: true,
+        controller: this._scrollController,
+        child: SingleChildScrollView(
+          controller: this._scrollController,
+          child: StatefulBuilder(
+            builder: (context, setState) => Column(
+              mainAxisSize: MainAxisSize.min,
+              children: this.widget.contentBuilder(context, setState),
+            ),
+          ),
+        ),
+      ),
+      actions: this.widget.actionBuilder == null
+        ? [
+          TextButton(
+            onPressed: () => Navigator.pop(context, null),
+            child: const Text('Okay'),
+          ),
+        ]
+        : this.widget.actionBuilder!(context),
+    );
+  }
+
+}
+
+// ----------------
+
+class CustomModalBottomSheet extends StatefulWidget {
+
+  const CustomModalBottomSheet({
+    super.key,
+    required this.title,
+    required this.contentBuilder,
+  });
+
+  // ----------------
+
+  final String                                                              title;
+  final List<Widget> Function(BuildContext, Void Function(Void Function())) contentBuilder;
+
+  // ----------------
+
+  @override
+  createState() => _CustomModalBottomSheetState();
+
+}
+
+class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
+
+  late ScrollController _scrollController;
+
+  // ----------------
+
+  @override
+  initState() {
+    super.initState();
+    this._scrollController = ScrollController();
+    return;
+  }
+
+  @override
+  didUpdateWidget(oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    this._scrollController.dispose();
+    this._scrollController = ScrollController();
+    return;
+  }
+
+  @override
+  dispose() {
+    this._scrollController.dispose();
+    super.dispose();
+    return;
+  }
+
+  @override
+  build(context) {
+    var theme = Theme.of(context);
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  this.widget.title,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const Divider(height: 1, indent: 12, endIndent: 12),
+        Expanded(
+          child: Scrollbar(
+            interactive: true,
+            controller: this._scrollController,
+            child: SingleChildScrollView(
+              controller: this._scrollController,
+              child: StatefulBuilder(
+                builder: (context, setState) => Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ...this.widget.contentBuilder(context, setState),
+                    SizedBox(height: MediaQuery.of(context).viewPadding.bottom),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+}
 
 // ----------------
 
@@ -12,11 +194,13 @@ class CustomTitleBar extends StatelessWidget {
   const CustomTitleBar({
     super.key,
     required this.title,
+    required this.leading,
   });
 
   // ----------------
 
   final String title;
+  final Widget leading;
 
   // ----------------
 
@@ -33,14 +217,8 @@ class CustomTitleBar extends StatelessWidget {
         Row(
           children: [
             const SizedBox(width: 8),
-            IconButton(
-              tooltip: 'Navigation',
-              icon: const Icon(IconSymbols.menu),
-              onPressed: () async {
-                Scaffold.of(context).openDrawer();
-              },
-            ),
-            const SizedBox(width: 16),
+            this.leading,
+            const SizedBox(width: 12),
             Expanded(
               child: IgnorePointer(
                 child: Text(
@@ -226,6 +404,7 @@ class CustomSettingLabel extends StatelessWidget {
   build(context) {
     var theme = Theme.of(context);
     return ListTile(
+      contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
       dense: true,
       title: Text(
         this.label,
@@ -267,6 +446,7 @@ class CustomSettingItem extends StatelessWidget {
   build(context) {
     return ListTile(
       enabled: this.enabled,
+      contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
       leading: Icon(this.icon),
       title: Row(
         children: [
@@ -286,12 +466,11 @@ class CustomSettingItem extends StatelessWidget {
           this.onTap!();
         }
         if (this.panelBuilder != null) {
-          await ControlHelper.showCustomModalDialog(
-            context: context,
+          await ControlHelper.showCustomModalDialog<Void>(context, CustomModalDialog(
             title: this.label,
             contentBuilder: this.panelBuilder!,
             actionBuilder: null,
-          );
+          ));
         }
       },
     );
@@ -318,7 +497,88 @@ class CustomTextFieldSuffixWidget extends StatelessWidget {
   build(context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
-      children: this.children,
+      children: [
+        const SizedBox(width: 4),
+        ...this.children,
+        const SizedBox(width: 4),
+      ],
+    );
+  }
+
+}
+
+class CustomTextFieldWithFocus extends StatefulWidget {
+
+  const CustomTextFieldWithFocus({
+    super.key,
+    this.style = null,
+    required this.keyboardType,
+    required this.inputFormatters,
+    required this.decoration,
+    required this.value,
+    required this.onChanged,
+  });
+
+  // ----------------
+
+  final TextStyle?                  style;
+  final TextInputType               keyboardType;
+  final List<TextInputFormatter>    inputFormatters;
+  final InputDecoration             decoration;
+  final String                      value;
+  final Void Function(String value) onChanged;
+
+  // ----------------
+
+  @override
+  createState() => _CustomTextFieldWithFocusState();
+
+}
+
+class _CustomTextFieldWithFocusState extends State<CustomTextFieldWithFocus> {
+
+  late TextEditingController _valueController;
+
+  // ----------------
+
+  @override
+  initState() {
+    super.initState();
+    this._valueController = TextEditingController();
+    this._valueController.text = this.widget.value;
+    return;
+  }
+
+  @override
+  didUpdateWidget(oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    this._valueController.text = this.widget.value;
+    return;
+  }
+
+  @override
+  dispose() {
+    this._valueController.dispose();
+    super.dispose();
+    return;
+  }
+
+  @override
+  build(context) {
+    return Focus(
+      onFocusChange: (value) async {
+        if (!value) {
+          this.widget.onChanged(this._valueController.text);
+        }
+      },
+      child: TextField(
+        style: this.widget.style,
+        keyboardType: this.widget.keyboardType,
+        maxLines: this.widget.keyboardType == TextInputType.multiline ? null : 1,
+        inputFormatters: this.widget.inputFormatters,
+        decoration: this.widget.decoration,
+        controller: this._valueController,
+      ),
     );
   }
 
@@ -354,7 +614,6 @@ class CustomFileDropRegion extends StatelessWidget {
           return DropOperation.none;
         },
         onPerformDrop: (event) async {
-              print('done ${this.hashCode}');
           var result = <String>[];
           for (var item in event.session.items) {
             var progress = item.dataReader!.getValue(Formats.fileUri, (uri) async {
@@ -393,9 +652,9 @@ class CustomFileDropRegion extends StatelessWidget {
 
 // ----------------
 
-class CustomModulePage extends StatelessWidget {
+class CustomModulePageLayout extends StatelessWidget {
 
-  const CustomModulePage({
+  const CustomModulePageLayout({
     super.key,
     required this.onDropFile,
     required this.content,
@@ -426,5 +685,25 @@ class CustomModulePage extends StatelessWidget {
       ),
     );
   }
+
+}
+
+abstract class CustomModulePageState {
+
+  // #region action
+
+  Future<Void> modulePageApplyOption(
+    List<String> optionView,
+  );
+
+  Future<List<String>> modulePageCollectOption(
+  );
+
+  // ----------------
+
+  Future<Boolean> modulePageRequestClose(
+  );
+
+  // #endregion
 
 }

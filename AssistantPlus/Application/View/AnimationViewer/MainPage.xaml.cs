@@ -30,7 +30,7 @@ namespace AssistantPlus.View.AnimationViewer {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			this.Controller.ApplyOption(args.Parameter.As<List<String>>());
+			_ = this.ModulePageApplyOption(args.Parameter.As<List<String>>());
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -43,21 +43,27 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		#region module page
 
-		public async Task<List<String>> ModulePageCollectOption (
+		public Task ModulePageApplyOption (
+			List<String> optionView
 		) {
-			return await this.Controller.CollectOption();
+			return this.Controller.ApplyOption(optionView);
 		}
 
-		public async Task<Boolean> ModulePageRequestClose (
+		public Task<List<String>> ModulePageCollectOption (
 		) {
-			return await this.Controller.RequestClose();
+			return this.Controller.CollectOption();
+		}
+
+		public Task<Boolean> ModulePageRequestClose (
+		) {
+			return this.Controller.RequestClose();
 		}
 
 		#endregion
 
 	}
 
-	public class MainPageController : CustomController {
+	public class MainPageController : CustomController, Home.IModulePageController {
 
 		#region data
 
@@ -150,7 +156,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			return;
 		}
 
-		public async void ApplyOption (
+		public async Task ApplyOption (
 			List<String> optionView
 		) {
 			await ControlHelper.WaitUntilLoaded(this.View);
@@ -1894,7 +1900,7 @@ namespace AssistantPlus.View.AnimationViewer {
 				GF.AssertTest(this.Host.Loaded);
 				var model = this.Host.Animation.Image[this.Index];
 				var source = this.Host.ImageSource[this.Index];
-				return $"{model.Size?[0] ?? source?.PixelWidth ?? 0} x {model.Size?[1] ?? source?.PixelHeight ?? 0}";
+				return $"{model.Size?.Item1 ?? source?.PixelWidth ?? 0} x {model.Size?.Item2 ?? source?.PixelHeight ?? 0}";
 			}
 		}
 

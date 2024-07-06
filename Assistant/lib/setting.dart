@@ -6,6 +6,7 @@ import '/utility/font_helper.dart';
 import '/view/modding_worker/setting.dart' as modding_worker;
 import '/view/command_sender/setting.dart' as command_sender;
 import '/view/resource_forwarder/setting.dart' as resource_forwarder;
+import '/view/animation_viewer/setting.dart' as animation_viewer;
 import 'package:flutter/material.dart';
 
 // ----------------
@@ -29,6 +30,7 @@ class SettingData {
   modding_worker.Setting     mModdingWorker;
   command_sender.Setting     mCommandSender;
   resource_forwarder.Setting mResourceForwarder;
+  animation_viewer.Setting   mAnimationViewer;
   SettingData({
     required this.mVersion,
     required this.mThemeMode,
@@ -48,18 +50,23 @@ class SettingData {
     required this.mModdingWorker,
     required this.mCommandSender,
     required this.mResourceForwarder,
+    required this.mAnimationViewer,
   });
 }
 
 class SettingState {
+  Future<Void> Function(List<String>)?                mHandleCommand;
   GlobalKey<NavigatorState>                           mApplicationNavigatorKey;
   List<String>                                        mThemeFontFamliy;
+  Future<Void> Function()?                            mHomeShowCommanderPanel;
   Future<Void> Function()?                            mHomeShowLauncherPanel;
   Future<Void> Function(ModuleLauncherConfiguration)? mHomeInsertTabItem;
   List<String>                                        mModdingWorkerMessageFontFamily;
   SettingState({
+    required this.mHandleCommand,
     required this.mApplicationNavigatorKey,
     required this.mThemeFontFamliy,
+    required this.mHomeShowCommanderPanel,
     required this.mHomeShowLauncherPanel,
     required this.mHomeInsertTabItem,
     required this.mModdingWorkerMessageFontFamily,
@@ -184,12 +191,23 @@ class SettingProvider with ChangeNotifier {
       mEnableFilter: true,
       mEnableBatch: false,
     ),
+    mAnimationViewer: animation_viewer.Setting(
+      mImmediateSelect: true,
+      mAutomaticPlay: true,
+      mRepeatPlay: true,
+      mRemainFrameRate: true,
+      mShowSpriteBoundary: true,
+      mImageFilterRule: '',
+      mSpriteFilterRule: '',
+    ),
   );
 
   static SettingState _createDefaultState(
   ) => SettingState(
+    mHandleCommand: null,
     mApplicationNavigatorKey: GlobalKey<NavigatorState>(),
     mThemeFontFamliy: [],
+    mHomeShowCommanderPanel: null,
     mHomeShowLauncherPanel: null,
     mHomeInsertTabItem: null,
     mModdingWorkerMessageFontFamily: [],
@@ -249,6 +267,15 @@ class SettingProvider with ChangeNotifier {
         'enable_filter': data.mResourceForwarder.mEnableFilter,
         'enable_batch': data.mResourceForwarder.mEnableBatch,
       },
+      'animation_viewer': {
+        'immediate_select': data.mAnimationViewer.mImmediateSelect,
+        'automatic_play': data.mAnimationViewer.mAutomaticPlay,
+        'repeat_play': data.mAnimationViewer.mRepeatPlay,
+        'remain_frame_rate': data.mAnimationViewer.mRemainFrameRate,
+        'show_sprite_boundary': data.mAnimationViewer.mShowSpriteBoundary,
+        'image_filter_rule': data.mAnimationViewer.mImageFilterRule,
+        'sprite_filter_rule': data.mAnimationViewer.mSpriteFilterRule,
+      },
     };
   }
 
@@ -303,6 +330,15 @@ class SettingProvider with ChangeNotifier {
         mParallelForward: (jsonPart['parallel_forward'] as Boolean),
         mEnableFilter: (jsonPart['enable_filter'] as Boolean),
         mEnableBatch: (jsonPart['enable_batch'] as Boolean),
+      )),
+      mAnimationViewer: (json['animation_viewer'] as Map<dynamic, dynamic>).selfLet((jsonPart) => animation_viewer.Setting(
+        mImmediateSelect: (jsonPart['immediate_select'] as Boolean),
+        mAutomaticPlay: (jsonPart['automatic_play'] as Boolean),
+        mRepeatPlay: (jsonPart['repeat_play'] as Boolean),
+        mRemainFrameRate: (jsonPart['remain_frame_rate'] as Boolean),
+        mShowSpriteBoundary: (jsonPart['show_sprite_boundary'] as Boolean),
+        mImageFilterRule: (jsonPart['image_filter_rule'] as String),
+        mSpriteFilterRule: (jsonPart['sprite_filter_rule'] as String),
       )),
     );
   }

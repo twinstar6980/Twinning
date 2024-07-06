@@ -41,15 +41,18 @@ class _BasicSubmissionBar extends StatelessWidget {
     return Row(
       children: [
         Badge.count(
-          isLabelVisible: this.history != null,
-          count: this.history == null ? 0 : this.history!.length,
           textStyle: theme.textTheme.labelSmall?.copyWith(
             fontFamily: '',
             fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
           ),
+          isLabelVisible: this.history != null,
+          count: this.history == null ? 0 : this.history!.length,
           child: IconButton.filledTonal(
-            tooltip: 'History',
-            padding: EdgeInsets.zero,
+            tooltip: this.history == null ? '' : 'History',
+            style: const ButtonStyle(
+              padding: WidgetStatePropertyAll(EdgeInsets.zero),
+              overlayColor: WidgetStatePropertyAll(Colors.transparent),
+            ),
             onPressed: this.history == null
               ? null
               : () async {
@@ -58,15 +61,13 @@ class _BasicSubmissionBar extends StatelessWidget {
               children: [
                 SizedBox(
                   width: 56,
+                  height: 40,
                   child: Icon(this.icon),
                 ),
                 Positioned.fill(
                   child: PopupMenuButton<ValueExpression>(
                     tooltip: '',
                     enabled: this.history != null,
-                    style: const ButtonStyle(
-                      overlayColor: WidgetStatePropertyAll(Colors.transparent),
-                    ),
                     position: PopupMenuPosition.under,
                     icon: const SizedBox(),
                     itemBuilder: (context) => [
@@ -109,7 +110,7 @@ class _BasicSubmissionBar extends StatelessWidget {
         ),
         const SizedBox(width: 16),
         FloatingActionButton(
-          tooltip: 'Submit',
+          tooltip: this.completer == null ? '' : 'Submit',
           elevation: 0,
           focusElevation: 0,
           hoverElevation: 0,
@@ -144,22 +145,28 @@ class _IdleSubmissionBar extends StatelessWidget {
 
   @override
   build(context) {
-    return const _BasicSubmissionBar(
+    return _BasicSubmissionBar(
       completer: null,
       history: null,
       onSelect: null,
       icon: IconSymbols.more_horiz,
-      content: TextField(
-        enabled: false,
+      content: TextFormField(
+        keyboardType: TextInputType.none,
+        inputFormatters: const [],
+        decoration: const InputDecoration(
+          contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
+          filled: false,
+          border: UnderlineInputBorder(),
+        ),
+        readOnly: true,
+        initialValue: '',
       ),
     );
   }
 
 }
 
-// ----------------
-
-class _PauseSubmissionBar extends StatefulWidget {
+class _PauseSubmissionBar extends StatelessWidget {
 
   const _PauseSubmissionBar({
     super.key, // ignore: unused_element
@@ -168,78 +175,54 @@ class _PauseSubmissionBar extends StatefulWidget {
     required this.value,
   });
 
-  @override
-  createState() => _PauseSubmissionBarState();
-
   // ----------------
 
   final Completer<Void>           completer;
   final List<PauseExpression>     history;
   final Wrapper<PauseExpression?> value;
 
-}
-
-class _PauseSubmissionBarState extends State<_PauseSubmissionBar> {
-
-  Void _refresh(
-  ) async {
-    this.setState(() {});
-    return;
-  }
-
   // ----------------
-
-  @override
-  initState() {
-    super.initState();
-    this._refresh();
-    return;
-  }
-
-  @override
-  dispose() {
-    super.dispose();
-    return;
-  }
 
   @override
   build(context) {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
-    return _BasicSubmissionBar(
-      completer: this.widget.completer,
-      history: this.widget.history.map((e) => (e, true)).toList(),
-      onSelect: (value) async {
-        this.widget.value.value = value as PauseExpression;
-        this._refresh();
-      },
-      icon: IconSymbols.pause,
-      content: TextField(
-        keyboardType: TextInputType.none,
-        inputFormatters: const [],
-        decoration: const InputDecoration(
-          border: UnderlineInputBorder(),
-          hintText: 'Pause',
-          suffixIconConstraints: BoxConstraints(),
-          suffixIcon: CustomTextFieldSuffixWidget(
-            children: [
-            ],
+    return StatefulBuilder(
+      builder: (context, setState) => _BasicSubmissionBar(
+        completer: this.completer,
+        history: this.history.map((e) => (e, true)).toList(),
+        onSelect: (value) async {
+          this.value.value = value as PauseExpression;
+          setState(() {});
+        },
+        icon: IconSymbols.pause,
+        content: TextFormField(
+          style: theme.textTheme.bodyLarge?.copyWith(
+            fontFamily: '',
+            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
           ),
+          keyboardType: TextInputType.none,
+          inputFormatters: const [],
+          decoration: const InputDecoration(
+            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
+            filled: false,
+            border: UnderlineInputBorder(),
+            hintText: 'Pause',
+            suffixIcon: CustomTextFieldSuffixWidget(
+              children: [
+              ],
+            ),
+          ),
+          readOnly: true,
+          initialValue: '',
         ),
-        style: theme.textTheme.bodyLarge?.copyWith(
-          fontFamily: '',
-          fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
-        ),
-        readOnly: true,
       ),
     );
   }
 
 }
 
-// ----------------
-
-class _BooleanSubmissionBar extends StatefulWidget {
+class _BooleanSubmissionBar extends StatelessWidget {
 
   const _BooleanSubmissionBar({
     super.key, // ignore: unused_element
@@ -248,109 +231,77 @@ class _BooleanSubmissionBar extends StatefulWidget {
     required this.value,
   });
 
-  @override
-  createState() => _BooleanSubmissionBarState();
-
   // ----------------
 
   final Completer<Void>             completer;
   final List<BooleanExpression>     history;
   final Wrapper<BooleanExpression?> value;
 
-}
-
-class _BooleanSubmissionBarState extends State<_BooleanSubmissionBar> {
-
-  late TextEditingController _valueController;
-
-  Void _refresh(
-  ) async {
-    this._valueController.text = this.widget.value.value == null ? '' : ConvertHelper.makeBooleanToStringOfConfirmationCharacter(this.widget.value.value!.value);
-    this.setState(() {});
-    return;
-  }
-
   // ----------------
-
-  @override
-  initState() {
-    super.initState();
-    this._valueController = TextEditingController();
-    this._refresh();
-    return;
-  }
-
-  @override
-  dispose() {
-    this._valueController.dispose();
-    super.dispose();
-    return;
-  }
 
   @override
   build(context) {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
-    return _BasicSubmissionBar(
-      completer: this.widget.completer,
-      history: this.widget.history.map((e) => (e, true)).toList(),
-      onSelect: (value) async {
-        this.widget.value.value = value as BooleanExpression;
-        this._refresh();
-      },
-      icon: IconSymbols.check_box,
-      content: Focus(
-        onFocusChange: (focused) async {
-          if (!focused) {
-            if (this._valueController.text.isEmpty) {
-              this.widget.value.value = null;
-            }
-            else {
-              if (this._valueController.text == 'n' || this._valueController.text == 'y') {
-                this.widget.value.value = BooleanExpression(this._valueController.text == 'y');
-              }
-            }
-            this._refresh();
-          }
+    return StatefulBuilder(
+      builder: (context, setState) => _BasicSubmissionBar(
+        completer: this.completer,
+        history: this.history.map((e) => (e, true)).toList(),
+        onSelect: (value) async {
+          this.value.value = value as BooleanExpression;
+          setState(() {});
         },
-        child: TextField(
+        icon: IconSymbols.check_box,
+        content: CustomTextFieldWithFocus(
+          style: theme.textTheme.bodyLarge?.copyWith(
+            fontFamily: '',
+            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+          ),
           keyboardType: TextInputType.text,
           inputFormatters: const [],
           decoration: InputDecoration(
+            contentPadding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+            filled: false,
             border: const UnderlineInputBorder(),
             hintText: 'Boolean',
-            suffixIconConstraints: const BoxConstraints(),
             suffixIcon: CustomTextFieldSuffixWidget(
               children: [
                 IconButton(
                   tooltip: 'No',
-                  isSelected: this.widget.value.value == null ? false : this.widget.value.value!.value == false,
+                  isSelected: this.value.value == null ? false : this.value.value!.value == false,
                   icon: const Icon(IconSymbols.do_not_disturb_on),
                   selectedIcon: const Icon(IconSymbols.do_not_disturb_on, fill: 1),
                   onPressed: () async {
-                    this.widget.value.value = this.widget.value.value?.value == false ? null : BooleanExpression(false);
-                    this._refresh();
+                    this.value.value = this.value.value?.value == false ? null : BooleanExpression(false);
+                    setState(() {});
                   },
                 ),
                 const SizedBox(width: 4),
                 IconButton(
                   tooltip: 'Yes',
-                  isSelected: this.widget.value.value == null ? false : this.widget.value.value!.value == true,
+                  isSelected: this.value.value == null ? false : this.value.value!.value == true,
                   icon: const Icon(IconSymbols.check_circle),
                   selectedIcon: const Icon(IconSymbols.check_circle, fill: 1),
                   onPressed: () async {
-                    this.widget.value.value = this.widget.value.value?.value == true ? null : BooleanExpression(true);
-                    this._refresh();
+                    this.value.value = this.value.value?.value == true ? null : BooleanExpression(true);
+                    setState(() {});
                   },
                 ),
               ],
             ),
           ),
-          style: theme.textTheme.bodyLarge?.copyWith(
-            fontFamily: '',
-            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
-          ),
-          controller: this._valueController,
+          value: this.value.value == null ? '' : ConvertHelper.makeBooleanToStringOfConfirmationCharacter(this.value.value!.value),
+          onChanged: (text) async {
+            if (text.isEmpty) {
+              this.value.value = null;
+            }
+            else {
+              if (text == 'n' || text == 'y') {
+                this.value.value = BooleanExpression(text == 'y');
+              }
+            }
+            setState(() {});
+          },
         ),
       ),
     );
@@ -358,9 +309,7 @@ class _BooleanSubmissionBarState extends State<_BooleanSubmissionBar> {
 
 }
 
-// ----------------
-
-class _IntegerSubmissionBar extends StatefulWidget {
+class _IntegerSubmissionBar extends StatelessWidget {
 
   const _IntegerSubmissionBar({
     super.key, // ignore: unused_element
@@ -369,89 +318,57 @@ class _IntegerSubmissionBar extends StatefulWidget {
     required this.value,
   });
 
-  @override
-  createState() => _IntegerSubmissionBarState();
-
   // ----------------
 
   final Completer<Void>             completer;
   final List<IntegerExpression>     history;
   final Wrapper<IntegerExpression?> value;
 
-}
-
-class _IntegerSubmissionBarState extends State<_IntegerSubmissionBar> {
-
-  late TextEditingController _valueController;
-
-  Void _refresh(
-  ) async {
-    this._valueController.text = this.widget.value.value == null ? '' : ConvertHelper.makeIntegerToString(this.widget.value.value!.value, false);
-    this.setState(() {});
-    return;
-  }
-
   // ----------------
-
-  @override
-  initState() {
-    super.initState();
-    this._valueController = TextEditingController();
-    this._refresh();
-    return;
-  }
-
-  @override
-  dispose() {
-    this._valueController.dispose();
-    super.dispose();
-    return;
-  }
 
   @override
   build(context) {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
-    return _BasicSubmissionBar(
-      completer: this.widget.completer,
-      history: this.widget.history.map((e) => (e, true)).toList(),
-      onSelect: (value) async {
-        this.widget.value.value = value as IntegerExpression;
-        this._refresh();
-      },
-      icon: IconSymbols.speed_1_2,
-      content: Focus(
-        onFocusChange: (focused) async {
-          if (!focused) {
-            if (this._valueController.text.isEmpty) {
-              this.widget.value.value = null;
-            }
-            else {
-              var value = Integer.tryParse(this._valueController.text);
-              if (value != null) {
-                this.widget.value.value = IntegerExpression(value);
-              }
-            }
-            this._refresh();
-          }
+    return StatefulBuilder(
+      builder: (context, setState) => _BasicSubmissionBar(
+        completer: this.completer,
+        history: this.history.map((e) => (e, true)).toList(),
+        onSelect: (value) async {
+          this.value.value = value as IntegerExpression;
+          setState(() {});
         },
-        child: TextField(
+        icon: IconSymbols.speed_1_2,
+        content: CustomTextFieldWithFocus(
+          style: theme.textTheme.bodyLarge?.copyWith(
+            fontFamily: '',
+            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+          ),
           keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: false),
           inputFormatters: const [],
           decoration: const InputDecoration(
+            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
+            filled: false,
             border: UnderlineInputBorder(),
             hintText: 'Integer',
-            suffixIconConstraints: BoxConstraints(),
             suffixIcon: CustomTextFieldSuffixWidget(
               children: [
               ],
             ),
           ),
-          style: theme.textTheme.bodyLarge?.copyWith(
-            fontFamily: '',
-            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
-          ),
-          controller: this._valueController,
+          value: this.value.value == null ? '' : ConvertHelper.makeIntegerToString(this.value.value!.value, false),
+          onChanged: (text) async {
+            if (text.isEmpty) {
+              this.value.value = null;
+            }
+            else {
+              var value = Integer.tryParse(text);
+              if (value != null) {
+                this.value.value = IntegerExpression(value);
+              }
+            }
+            setState(() {});
+          },
         ),
       ),
     );
@@ -459,9 +376,7 @@ class _IntegerSubmissionBarState extends State<_IntegerSubmissionBar> {
 
 }
 
-// ----------------
-
-class _FloaterSubmissionBar extends StatefulWidget {
+class _FloaterSubmissionBar extends StatelessWidget {
 
   const _FloaterSubmissionBar({
     super.key, // ignore: unused_element
@@ -470,89 +385,57 @@ class _FloaterSubmissionBar extends StatefulWidget {
     required this.value,
   });
 
-  @override
-  createState() => _FloaterSubmissionBarState();
-
   // ----------------
 
   final Completer<Void>             completer;
   final List<FloaterExpression>     history;
   final Wrapper<FloaterExpression?> value;
 
-}
-
-class _FloaterSubmissionBarState extends State<_FloaterSubmissionBar> {
-
-  late TextEditingController _valueController;
-
-  Void _refresh(
-  ) async {
-    this._valueController.text = this.widget.value.value == null ? '' : ConvertHelper.makeFloaterToString(this.widget.value.value!.value, false);
-    this.setState(() {});
-    return;
-  }
-
   // ----------------
-
-  @override
-  initState() {
-    super.initState();
-    this._valueController = TextEditingController();
-    this._refresh();
-    return;
-  }
-
-  @override
-  dispose() {
-    this._valueController.dispose();
-    super.dispose();
-    return;
-  }
 
   @override
   build(context) {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
-    return _BasicSubmissionBar(
-      completer: this.widget.completer,
-      history: this.widget.history.map((e) => (e, true)).toList(),
-      onSelect: (value) async {
-        this.widget.value.value = value as FloaterExpression;
-        this._refresh();
-      },
-      icon: IconSymbols.speed_1_2,
-      content: Focus(
-        onFocusChange: (focused) async {
-          if (!focused) {
-            if (this._valueController.text.isEmpty) {
-              this.widget.value.value = null;
-            }
-            else {
-              var value = Floater.tryParse(this._valueController.text);
-              if (value != null && value.isFinite) {
-                this.widget.value.value = FloaterExpression(value);
-              }
-            }
-            this._refresh();
-          }
+    return StatefulBuilder(
+      builder: (context, setState) => _BasicSubmissionBar(
+        completer: this.completer,
+        history: this.history.map((e) => (e, true)).toList(),
+        onSelect: (value) async {
+          this.value.value = value as FloaterExpression;
+          setState(() {});
         },
-        child: TextField(
+        icon: IconSymbols.speed_1_2,
+        content: CustomTextFieldWithFocus(
+          style: theme.textTheme.bodyLarge?.copyWith(
+            fontFamily: '',
+            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+          ),
           keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
           inputFormatters: const [],
           decoration: const InputDecoration(
+            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
+            filled: false,
             border: UnderlineInputBorder(),
             hintText: 'Floater',
-            suffixIconConstraints: BoxConstraints(),
             suffixIcon: CustomTextFieldSuffixWidget(
               children: [
               ],
             ),
           ),
-          style: theme.textTheme.bodyLarge?.copyWith(
-            fontFamily: '',
-            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
-          ),
-          controller: this._valueController,
+          value: this.value.value == null ? '' : ConvertHelper.makeFloaterToString(this.value.value!.value, false),
+          onChanged: (text) async {
+            if (text.isEmpty) {
+              this.value.value = null;
+            }
+            else {
+              var value = Floater.tryParse(text);
+              if (value != null && value.isFinite) {
+                this.value.value = FloaterExpression(value);
+              }
+            }
+            setState(() {});
+          },
         ),
       ),
     );
@@ -560,9 +443,7 @@ class _FloaterSubmissionBarState extends State<_FloaterSubmissionBar> {
 
 }
 
-// ----------------
-
-class _SizeSubmissionBar extends StatefulWidget {
+class _SizeSubmissionBar extends StatelessWidget {
 
   const _SizeSubmissionBar({
     super.key, // ignore: unused_element
@@ -571,95 +452,59 @@ class _SizeSubmissionBar extends StatefulWidget {
     required this.value,
   });
 
-  @override
-  createState() => _SizeSubmissionBarState();
-
   // ----------------
 
   final Completer<Void>          completer;
   final List<SizeExpression>     history;
   final Wrapper<SizeExpression?> value;
 
-}
-
-class _SizeSubmissionBarState extends State<_SizeSubmissionBar> {
-
-  late Integer               _exponent;
-  late TextEditingController _countController;
-
-  Void _refresh(
-  ) async {
-    this._exponent = this.widget.value.value == null ? this._exponent : this.widget.value.value!.exponent;
-    this._countController.text = this.widget.value.value == null ? '' : ConvertHelper.makeFloaterToString(this.widget.value.value!.count, false);
-    this.setState(() {});
-    return;
-  }
-
   // ----------------
-
-  @override
-  initState() {
-    super.initState();
-    this._exponent = 2;
-    this._countController = TextEditingController();
-    this._refresh();
-    return;
-  }
-
-  @override
-  dispose() {
-    this._countController.dispose();
-    super.dispose();
-    return;
-  }
 
   @override
   build(context) {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
-    return _BasicSubmissionBar(
-      completer: this.widget.completer,
-      history: this.widget.history.map((e) => (e, true)).toList(),
-      onSelect: (value) async {
-        this.widget.value.value = value as SizeExpression;
-        this._refresh();
-      },
-      icon: IconSymbols.memory,
-      content: Focus(
-        onFocusChange: (focused) async {
-          if (!focused) {
-            if (this._countController.text.isEmpty) {
-              this.widget.value.value = null;
-            }
-            else {
-              var count = Floater.tryParse(this._countController.text);
-              if (count != null && count.isFinite && count >= 0.0) {
-                this.widget.value.value = SizeExpression(count, this._exponent);
-              }
-            }
-            this._refresh();
-          }
+    return StatefulBuilder(
+      builder: (context, setState) => _BasicSubmissionBar(
+        completer: this.completer,
+        history: this.history.map((e) => (e, true)).toList(),
+        onSelect: (value) async {
+          this.value.value = value as SizeExpression;
+          setState(() {});
         },
-        child: TextField(
+        icon: IconSymbols.memory,
+        content: CustomTextFieldWithFocus(
+          style: theme.textTheme.bodyLarge?.copyWith(
+            fontFamily: '',
+            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+          ),
           keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: true),
           inputFormatters: const [],
           decoration: InputDecoration(
+            contentPadding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+            filled: false,
             border: const UnderlineInputBorder(),
             hintText: 'Size',
-            suffixIconConstraints: const BoxConstraints(),
             suffixIcon: CustomTextFieldSuffixWidget(
               children: [
                 PopupMenuButton(
                   tooltip: 'Exponent',
                   position: PopupMenuPosition.under,
-                  icon: Text(
-                    ['B', 'K', 'M', 'G'][this._exponent],
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.labelLarge?.copyWith(
-                      fontFamily: '',
-                      fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+                  icon: this.value.value == null
+                    ? const Icon(IconSymbols.expand_circle_down)
+                    : Container(
+                      alignment: Alignment.center,
+                      width: 24,
+                      height: 24,
+                      child: Text(
+                        ['B', 'K', 'M', 'G'][this.value.value!.exponent],
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontFamily: '',
+                          fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+                        ),
+                      ),
                     ),
-                  ),
                   itemBuilder: (context) => ['B', 'K', 'M', 'G'].mapIndexed((index, value) => PopupMenuItem(
                     value: index,
                     child: Text(
@@ -672,21 +517,26 @@ class _SizeSubmissionBarState extends State<_SizeSubmissionBar> {
                     ),
                   )).toList(),
                   onSelected: (value) async {
-                    this._exponent = value;
-                    if (this.widget.value.value != null) {
-                      this.widget.value.value = SizeExpression(this.widget.value.value!.count, this._exponent);
-                    }
-                    this._refresh();
+                    this.value.value = SizeExpression(this.value.value?.count ?? 1.0, value);
+                    setState(() {});
                   },
                 ),
               ],
             ),
           ),
-          style: theme.textTheme.bodyLarge?.copyWith(
-            fontFamily: '',
-            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
-          ),
-          controller: this._countController,
+          value: this.value.value == null ? '' : ConvertHelper.makeFloaterToString(this.value.value!.count, false),
+          onChanged: (text) async {
+            if (text.isEmpty) {
+              this.value.value = null;
+            }
+            else {
+              var count = Floater.tryParse(text);
+              if (count != null && count.isFinite && count >= 0.0) {
+                this.value.value = SizeExpression(count, this.value.value?.exponent ?? 2);
+              }
+            }
+            setState(() {});
+          },
         ),
       ),
     );
@@ -694,9 +544,7 @@ class _SizeSubmissionBarState extends State<_SizeSubmissionBar> {
 
 }
 
-// ----------------
-
-class _StringSubmissionBar extends StatefulWidget {
+class _StringSubmissionBar extends StatelessWidget {
 
   const _StringSubmissionBar({
     super.key, // ignore: unused_element
@@ -705,86 +553,54 @@ class _StringSubmissionBar extends StatefulWidget {
     required this.value,
   });
 
-  @override
-  createState() => _StringSubmissionBarState();
-
   // ----------------
 
   final Completer<Void>            completer;
   final List<StringExpression>     history;
   final Wrapper<StringExpression?> value;
 
-}
-
-class _StringSubmissionBarState extends State<_StringSubmissionBar> {
-
-  late TextEditingController _valueController;
-
-  Void _refresh(
-  ) async {
-    this._valueController.text = this.widget.value.value == null ? '' : this.widget.value.value!.value;
-    this.setState(() {});
-    return;
-  }
-
   // ----------------
-
-  @override
-  initState() {
-    super.initState();
-    this._valueController = TextEditingController();
-    this._refresh();
-    return;
-  }
-
-  @override
-  dispose() {
-    this._valueController.dispose();
-    super.dispose();
-    return;
-  }
 
   @override
   build(context) {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
-    return _BasicSubmissionBar(
-      completer: this.widget.completer,
-      history: this.widget.history.map((e) => (e, true)).toList(),
-      onSelect: (value) async {
-        this.widget.value.value = value as StringExpression;
-        this._refresh();
-      },
-      icon: IconSymbols.text_fields,
-      content: Focus(
-        onFocusChange: (focused) async {
-          if (!focused) {
-            if (this._valueController.text.isEmpty) {
-              this.widget.value.value = null;
-            }
-            else {
-              this.widget.value.value = StringExpression(this._valueController.text);
-            }
-            this._refresh();
-          }
+    return StatefulBuilder(
+      builder: (context, setState) => _BasicSubmissionBar(
+        completer: this.completer,
+        history: this.history.map((e) => (e, true)).toList(),
+        onSelect: (value) async {
+          this.value.value = value as StringExpression;
+          setState(() {});
         },
-        child: TextField(
+        icon: IconSymbols.text_fields,
+        content: CustomTextFieldWithFocus(
+          style: theme.textTheme.bodyLarge?.copyWith(
+            fontFamily: '',
+            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+          ),
           keyboardType: TextInputType.text,
           inputFormatters: const [],
           decoration: const InputDecoration(
+            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
+            filled: false,
             border: UnderlineInputBorder(),
             hintText: 'String',
-            suffixIconConstraints: BoxConstraints(),
             suffixIcon: CustomTextFieldSuffixWidget(
               children: [
               ],
             ),
           ),
-          style: theme.textTheme.bodyLarge?.copyWith(
-            fontFamily: '',
-            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
-          ),
-          controller: this._valueController,
+          value: this.value.value == null ? '' : this.value.value!.value,
+          onChanged: (text) async {
+            if (text.isEmpty) {
+              this.value.value = null;
+            }
+            else {
+              this.value.value = StringExpression(text);
+            }
+            setState(() {});
+          },
         ),
       ),
     );
@@ -792,9 +608,7 @@ class _StringSubmissionBarState extends State<_StringSubmissionBar> {
 
 }
 
-// ----------------
-
-class _PathSubmissionBar extends StatefulWidget {
+class _PathSubmissionBar extends StatelessWidget {
 
   const _PathSubmissionBar({
     super.key, // ignore: unused_element
@@ -803,81 +617,44 @@ class _PathSubmissionBar extends StatefulWidget {
     required this.value,
   });
 
-  @override
-  createState() => _PathSubmissionBarState();
-
   // ----------------
 
   final Completer<Void>          completer;
   final List<PathExpression>     history;
   final Wrapper<PathExpression?> value;
 
-}
-
-class _PathSubmissionBarState extends State<_PathSubmissionBar> {
-
-  late TextEditingController _contentController;
-
-  Void _refresh(
-  ) async {
-    this._contentController.text = this.widget.value.value == null ? '' : this.widget.value.value!.content;
-    this.setState(() {});
-    return;
-  }
-
   // ----------------
-
-  @override
-  initState() {
-    super.initState();
-    this._contentController = TextEditingController();
-    this._refresh();
-    return;
-  }
-
-  @override
-  dispose() {
-    this._contentController.dispose();
-    super.dispose();
-    return;
-  }
 
   @override
   build(context) {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
-    return _BasicSubmissionBar(
-      completer: this.widget.completer,
-      history: this.widget.history.map((e) => (e, true)).toList(),
-      onSelect: (value) async {
-        this.widget.value.value = value as PathExpression;
-        this._refresh();
-      },
-      icon: IconSymbols.link,
-      content: CustomFileDropRegion(
-        onDrop: (item) async {
-          this.widget.value.value = PathExpression(item.first);
-          this._refresh();
+    return StatefulBuilder(
+      builder: (context, setState) => _BasicSubmissionBar(
+        completer: this.completer,
+        history: this.history.map((e) => (e, true)).toList(),
+        onSelect: (value) async {
+          this.value.value = value as PathExpression;
+          setState(() {});
         },
-        child: Focus(
-          onFocusChange: (focused) async {
-            if (!focused) {
-              if (this._contentController.text.isEmpty) {
-                this.widget.value.value = null;
-              }
-              else {
-                this.widget.value.value = PathExpression(StorageHelper.regularize(this._contentController.text));
-              }
-              this._refresh();
-            }
+        icon: IconSymbols.link,
+        content: CustomFileDropRegion(
+          onDrop: (item) async {
+            this.value.value = PathExpression(item.first);
+            setState(() {});
           },
-          child: TextField(
+          child: CustomTextFieldWithFocus(
+            style: theme.textTheme.bodyLarge?.copyWith(
+              fontFamily: '',
+              fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+            ),
             keyboardType: TextInputType.text,
             inputFormatters: const [],
             decoration: InputDecoration(
+              contentPadding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+              filled: false,
               border: const UnderlineInputBorder(),
               hintText: 'Path',
-              suffixIconConstraints: const BoxConstraints(),
               suffixIcon: CustomTextFieldSuffixWidget(
                 children: [
                   PopupMenuButton(
@@ -903,8 +680,8 @@ class _PathSubmissionBarState extends State<_PathSubmissionBar> {
                       )),
                     ],
                     onSelected: (value) async {
-                      this.widget.value.value = PathExpression(value);
-                      this._refresh();
+                      this.value.value = PathExpression(value);
+                      setState(() {});
                     },
                   ),
                   const SizedBox(width: 4),
@@ -931,25 +708,30 @@ class _PathSubmissionBarState extends State<_PathSubmissionBar> {
                     ],
                     onSelected: (value) async {
                       var target = switch (value) {
-                        'load_file'      => await StorageHelper.pickLoadFile(context, 'ModdingWorker.Generic'),
-                        'load_directory' => await StorageHelper.pickLoadDirectory(context, 'ModdingWorker.Generic'),
-                        'save_file'      => await StorageHelper.pickSaveFile(context, 'ModdingWorker.Generic'),
+                        'load_file'      => await StorageHelper.pickLoadFile(context, 'CommandSender.Generic'),
+                        'load_directory' => await StorageHelper.pickLoadDirectory(context, 'CommandSender.Generic'),
+                        'save_file'      => await StorageHelper.pickSaveFile(context, 'CommandSender.Generic'),
                         _                => throw Exception(),
                       };
                       if (target != null) {
-                        this.widget.value.value = PathExpression(target);
-                        this._refresh();
+                        this.value.value = PathExpression(target);
+                        setState(() {});
                       }
                     },
                   ),
                 ],
               ),
             ),
-            style: theme.textTheme.bodyLarge?.copyWith(
-              fontFamily: '',
-              fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
-            ),
-            controller: this._contentController,
+            value: this.value.value == null ? '' : this.value.value!.content,
+            onChanged: (text) async {
+              if (text.isEmpty) {
+                this.value.value = null;
+              }
+              else {
+                this.value.value = PathExpression(StorageHelper.regularize(text));
+              }
+              setState(() {});
+            },
           ),
         ),
       ),
@@ -958,9 +740,7 @@ class _PathSubmissionBarState extends State<_PathSubmissionBar> {
 
 }
 
-// ----------------
-
-class _EnumerationSubmissionBar extends StatefulWidget {
+class _EnumerationSubmissionBar extends StatelessWidget {
 
   const _EnumerationSubmissionBar({
     super.key, // ignore: unused_element
@@ -970,9 +750,6 @@ class _EnumerationSubmissionBar extends StatefulWidget {
     required this.value,
   });
 
-  @override
-  createState() => _EnumerationSubmissionBarState();
-
   // ----------------
 
   final Completer<Void>                 completer;
@@ -980,114 +757,95 @@ class _EnumerationSubmissionBar extends StatefulWidget {
   final List<EnumerationExpression>     history;
   final Wrapper<EnumerationExpression?> value;
 
-}
-
-class _EnumerationSubmissionBarState extends State<_EnumerationSubmissionBar> {
-
-  late TextEditingController _itemController;
-
-  Void _refresh(
-  ) async {
-    this._itemController.text = this.widget.value.value == null ? '' : this.widget.value.value!.item;
-    this.setState(() {});
-    return;
-  }
-
   // ----------------
-
-  @override
-  initState() {
-    super.initState();
-    this._itemController = TextEditingController();
-    this._refresh();
-    return;
-  }
-
-  @override
-  dispose() {
-    this._itemController.dispose();
-    super.dispose();
-    return;
-  }
 
   @override
   build(context) {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
-    return _BasicSubmissionBar(
-      completer: this.widget.completer,
-      history: this.widget.history.map((e) => (e, this.widget.option.contains(e.item))).toList(),
-      onSelect: (value) async {
-        this.widget.value.value = value as EnumerationExpression;
-        this._refresh();
-      },
-      icon: IconSymbols.menu,
-      content: LayoutBuilder(
-        builder: (context, constraints) => MenuAnchor(
-          crossAxisUnconstrained: false,
-          alignmentOffset: const Offset(-12, 0),
-          style: MenuStyle(
-            minimumSize: WidgetStatePropertyAll(Size(constraints.maxWidth + 24, 0)),
-            maximumSize: WidgetStatePropertyAll(Size(constraints.maxWidth + 24, Floater.infinity)),
-          ),
-          menuChildren: this.widget.option.map((value) => MenuItemButton(
-            style: ButtonStyle(
-              backgroundColor: WidgetStatePropertyAll(value != this.widget.value.value?.item ? null : theme.colorScheme.onSurface.withOpacity(0.12)),
+    return StatefulBuilder(
+      builder: (context, setState) => _BasicSubmissionBar(
+        completer: this.completer,
+        history: this.history.map((e) => (e, this.option.contains(e.item))).toList(),
+        onSelect: (value) async {
+          this.value.value = value as EnumerationExpression;
+          setState(() {});
+        },
+        icon: IconSymbols.menu,
+        content: LayoutBuilder(
+          builder: (context, constraints) => MenuAnchor(
+            crossAxisUnconstrained: false,
+            alignmentOffset: const Offset(-4, 0),
+            style: MenuStyle(
+              minimumSize: WidgetStatePropertyAll(Size(constraints.maxWidth + 8, 0)),
+              maximumSize: WidgetStatePropertyAll(Size(constraints.maxWidth + 8, Floater.infinity)),
             ),
-            onPressed: () async {
-              this.widget.value.value = EnumerationExpression(value);
-              this._refresh();
-            },
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: constraints.maxWidth - 24),
-              child: ListTile(
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-                title: Text(
-                  value,
-                  overflow: TextOverflow.clip,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    fontFamily: '',
-                    fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+            menuChildren: [
+              if (this.option.isEmpty)
+                const SizedBox(height: 16),
+              ...this.option.map((value) => MenuItemButton(
+                style: ButtonStyle(
+                  backgroundColor: WidgetStatePropertyAll(value != this.value.value?.item ? null : theme.colorScheme.onSurface.withOpacity(0.12)),
+                ),
+                onPressed: () async {
+                  this.value.value = EnumerationExpression(value);
+                  setState(() {});
+                },
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: constraints.maxWidth - 16),
+                  child: ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                    title: Text(
+                      value,
+                      overflow: TextOverflow.clip,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontFamily: '',
+                        fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+                      ),
+                    ),
                   ),
                 ),
+              )),
+            ],
+            builder: (context, controller, child) => TextFormField(
+              key: ObjectKey(this.value.value),
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontFamily: '',
+                fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
               ),
-            ),
-          )).toList(),
-          builder: (context, controller, child) => TextField(
-            keyboardType: TextInputType.none,
-            inputFormatters: const [],
-            decoration: InputDecoration(
-              border: const UnderlineInputBorder(),
-              hintText: 'Enumeration',
-              suffixIconConstraints: const BoxConstraints(),
-              suffixIcon: CustomTextFieldSuffixWidget(
-                children: [
-                  IconButton(
-                    tooltip: 'Reset',
-                    icon: const Icon(IconSymbols.restart_alt),
-                    onPressed: () async {
-                      this.widget.value.value = null;
-                      this._refresh();
-                    },
-                  ),
-                ],
+              keyboardType: TextInputType.none,
+              inputFormatters: const [],
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+                filled: false,
+                border: const UnderlineInputBorder(),
+                hintText: 'Enumeration',
+                suffixIcon: CustomTextFieldSuffixWidget(
+                  children: [
+                    IconButton(
+                      tooltip: 'Reset',
+                      icon: const Icon(IconSymbols.restart_alt),
+                      onPressed: () async {
+                        this.value.value = null;
+                        controller.close();
+                        setState(() {});
+                      },
+                    ),
+                  ],
+                ),
               ),
+              readOnly: true,
+              initialValue: this.value.value == null ? '' : this.value.value!.item,
+              onTap: () async {
+                if (controller.isOpen) {
+                  controller.close();
+                }
+                else {
+                  controller.open();
+                }
+              },
             ),
-            style: theme.textTheme.bodyLarge?.copyWith(
-              fontFamily: '',
-              fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
-            ),
-            readOnly: true,
-            controller: this._itemController,
-            onTap: () async {
-              if (controller.isOpen) {
-                controller.close();
-              }
-              else {
-                controller.open();
-              }
-            },
           ),
         ),
       ),

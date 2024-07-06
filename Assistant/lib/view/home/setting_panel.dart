@@ -3,6 +3,7 @@ import '/setting.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_helper.dart';
 import '/utility/permission_helper.dart';
+import '/utility/control_helper.dart';
 import '/view/home/common.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
@@ -17,10 +18,12 @@ class SettingPanel extends StatefulWidget {
     super.key,
   });
 
-  @override
-  createState() => _SettingPanelState();
+  // ----------------
 
   // ----------------
+
+  @override
+  createState() => _SettingPanelState();
 
 }
 
@@ -34,10 +37,16 @@ class _SettingPanelState extends State<SettingPanel> {
   initState() {
     super.initState();
     this._hasStoragePermission = false;
-    (() async {
+    ControlHelper.postTask(() async {
       this._hasStoragePermission = await PermissionHelper.checkStorage();
       this.setState(() {});
-    })();
+    });
+    return;
+  }
+
+  @override
+  didUpdateWidget(oldWidget) {
+    super.didUpdateWidget(oldWidget);
     return;
   }
 
@@ -70,15 +79,15 @@ class _SettingPanelState extends State<SettingPanel> {
             ),
           ],
           onTap: null,
-          panelBuilder: (context, setState) => [
+          panelBuilder: (context, setStateForPanel) => [
             ...ThemeMode.values.map(
               (mode) => ListTile(
+                contentPadding: EdgeInsets.zero,
                 leading: Radio<ThemeMode>(
                   value: mode,
                   groupValue: setting.data.mThemeMode,
                   onChanged: (value) async {
-                    value!;
-                    setting.data.mThemeMode = value;
+                    setting.data.mThemeMode = value!;
                     await setting.save();
                   },
                 ),
@@ -102,7 +111,7 @@ class _SettingPanelState extends State<SettingPanel> {
             ),
           ],
           onTap: null,
-          panelBuilder: (context, setState) => [
+          panelBuilder: (context, setStateForPanel) => [
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: Switch(
@@ -112,62 +121,55 @@ class _SettingPanelState extends State<SettingPanel> {
                   await setting.save();
                 },
               ),
-              title: Text(
+              title: const Text(
                 'Enable',
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleMedium,
               ),
             ),
             ListTile(
-              leading: const Icon(IconSymbols.light_mode),
-              title: Focus(
-                onFocusChange: (focused) async {
-                  if (!focused) {
-                    await setting.save();
-                  }
-                },
-                child: TextFormField(
-                  keyboardType: TextInputType.text,
-                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
-                  decoration: const InputDecoration(
-                    isDense: true,
+              contentPadding: EdgeInsets.zero,
+              title: CustomTextFieldWithFocus(
+                keyboardType: TextInputType.text,
+                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+                  filled: false,
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(IconSymbols.light_mode),
+                  suffixIcon: Icon(
+                    IconSymbols.circle,
+                    fill: 0.6,
+                    color: setting.data.mThemeColorLight,
                   ),
-                  initialValue: setting.data.mThemeColorLight.withOpacity(0.0).value.toRadixString(16).padLeft(6, '0'),
-                  onChanged: (value) async {
-                    setting.data.mThemeColorLight = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withOpacity(1.0);
-                  },
                 ),
-              ),
-              trailing: Icon(
-                IconSymbols.circle,
-                color: setting.data.mThemeColorLight,
-                fill: 0.8,
+                value: setting.data.mThemeColorLight.withOpacity(0.0).value.toRadixString(16).padLeft(6, '0'),
+                onChanged: (value) async {
+                  setting.data.mThemeColorLight = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withOpacity(1.0);
+                  await setting.save();
+                },
               ),
             ),
             ListTile(
-              leading: const Icon(IconSymbols.dark_mode),
-              title: Focus(
-                onFocusChange: (focused) async {
-                  if (!focused) {
-                    await setting.save();
-                  }
-                },
-                child: TextFormField(
-                  keyboardType: TextInputType.text,
-                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
-                  decoration: const InputDecoration(
-                    isDense: true,
+              contentPadding: EdgeInsets.zero,
+              title: CustomTextFieldWithFocus(
+                keyboardType: TextInputType.text,
+                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+                  filled: false,
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(IconSymbols.dark_mode),
+                  suffixIcon: Icon(
+                    IconSymbols.circle,
+                    fill: 0.6,
+                    color: setting.data.mThemeColorDark,
                   ),
-                  initialValue: setting.data.mThemeColorDark.withOpacity(0.0).value.toRadixString(16).padLeft(6, '0'),
-                  onChanged: (value) async {
-                    setting.data.mThemeColorDark = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withOpacity(1.0);
-                  },
                 ),
-              ),
-              trailing: Icon(
-                IconSymbols.circle,
-                color: setting.data.mThemeColorDark,
-                fill: 0.8,
+                value: setting.data.mThemeColorDark.withOpacity(0.0).value.toRadixString(16).padLeft(6, '0'),
+                onChanged: (value) async {
+                  setting.data.mThemeColorDark = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withOpacity(1.0);
+                  await setting.save();
+                },
               ),
             ),
           ],
@@ -184,7 +186,7 @@ class _SettingPanelState extends State<SettingPanel> {
             ),
           ],
           onTap: null,
-          panelBuilder: (context, setState) => [
+          panelBuilder: (context, setStateForPanel) => [
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: Switch(
@@ -194,32 +196,41 @@ class _SettingPanelState extends State<SettingPanel> {
                   await setting.save();
                 },
               ),
-              title: Text(
+              title: const Text(
                 'Enable',
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleMedium,
               ),
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: Focus(
-                onFocusChange: (focused) async {
-                  if (!focused) {
-                    await setting.save();
-                  }
-                },
-                child: TextFormField(
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  inputFormatters: const [],
-                  decoration: const InputDecoration(
-                    isDense: true,
+              title: CustomTextFieldWithFocus(
+                keyboardType: TextInputType.multiline,
+                inputFormatters: const [],
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+                  filled: false,
+                  border: const OutlineInputBorder(),
+                  suffixIcon: CustomTextFieldSuffixWidget(
+                    children: [
+                      IconButton(
+                        tooltip: 'Pick',
+                        icon: const Icon(IconSymbols.open_in_new),
+                        onPressed: () async {
+                          var target = await StorageHelper.pickLoadFile(context, 'Application.ThemeFont');
+                          if (target != null) {
+                            setting.data.mThemeFontPath = setting.data.mThemeFontPath + [target];
+                            await setting.save();
+                          }
+                        },
+                      ),
+                    ],
                   ),
-                  initialValue: ConvertHelper.makeStringListToStringWithLine(setting.data.mThemeFontPath),
-                  onChanged: (value) async {
-                    setting.data.mThemeFontPath = ConvertHelper.parseStringListFromStringWithLine(value);
-                  },
                 ),
+                value: ConvertHelper.makeStringListToStringWithLine(setting.data.mThemeFontPath),
+                onChanged: (value) async {
+                  setting.data.mThemeFontPath = ConvertHelper.parseStringListFromStringWithLine(value);
+                  await setting.save();
+                },
               ),
             ),
           ],
@@ -240,7 +251,7 @@ class _SettingPanelState extends State<SettingPanel> {
             ),
           ],
           onTap: null,
-          panelBuilder: (context, setState) => [
+          panelBuilder: (context, setStateForPanel) => [
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: Switch(
@@ -250,72 +261,45 @@ class _SettingPanelState extends State<SettingPanel> {
                   await setting.save();
                 },
               ),
-              title: Text(
+              title: const Text(
                 'Enable',
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleMedium,
               ),
             ),
             ListTile(
-              leading: SizedBox(
-                width: 16,
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'X',
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.titleMedium,
-                  ),
+              contentPadding: EdgeInsets.zero,
+              title: CustomTextFieldWithFocus(
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
+                decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                  filled: false,
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(IconSymbols.swap_horiz),
                 ),
-              ),
-              title: Focus(
-                onFocusChange: (focused) async {
-                  if (!focused) {
-                    await setting.save();
-                  }
+                value: setting.data.mWindowPositionX.toString(),
+                onChanged: (value) async {
+                  setting.data.mWindowPositionX = Integer.tryParse(value) ?? setting.data.mWindowPositionX;
+                  await setting.save();
                 },
-                child: TextFormField(
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
-                  decoration: const InputDecoration(
-                    isDense: true,
-                  ),
-                  initialValue: setting.data.mWindowPositionX.toString(),
-                  onChanged: (value) async {
-                    setting.data.mWindowPositionX = Integer.tryParse(value) ?? 0;
-                  },
-                ),
               ),
             ),
             ListTile(
-              leading: SizedBox(
-                width: 16,
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Y',
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.titleMedium,
-                  ),
+              contentPadding: EdgeInsets.zero,
+              title: CustomTextFieldWithFocus(
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
+                decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                  filled: false,
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(IconSymbols.swap_vert),
                 ),
-              ),
-              title: Focus(
-                onFocusChange: (focused) async {
-                  if (!focused) {
-                    await setting.save();
-                  }
+                value: setting.data.mWindowPositionY.toString(),
+                onChanged: (value) async {
+                  setting.data.mWindowPositionY = Integer.tryParse(value) ?? setting.data.mWindowPositionY;
+                  await setting.save();
                 },
-                child: TextFormField(
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
-                  decoration: const InputDecoration(
-                    isDense: true,
-                  ),
-                  initialValue: setting.data.mWindowPositionY.toString(),
-                  onChanged: (value) async {
-                    setting.data.mWindowPositionY = Integer.tryParse(value) ?? 0;
-                  },
-                ),
               ),
             ),
           ],
@@ -332,7 +316,7 @@ class _SettingPanelState extends State<SettingPanel> {
             ),
           ],
           onTap: null,
-          panelBuilder: (context, setState) => [
+          panelBuilder: (context, setStateForPanel) => [
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: Switch(
@@ -342,72 +326,45 @@ class _SettingPanelState extends State<SettingPanel> {
                   await setting.save();
                 },
               ),
-              title: Text(
+              title: const Text(
                 'Enable',
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleMedium,
               ),
             ),
             ListTile(
-              leading: SizedBox(
-                width: 16,
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'W',
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.titleMedium,
-                  ),
+              contentPadding: EdgeInsets.zero,
+              title: CustomTextFieldWithFocus(
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
+                decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                  filled: false,
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(IconSymbols.width),
                 ),
-              ),
-              title: Focus(
-                onFocusChange: (focused) async {
-                  if (!focused) {
-                    await setting.save();
-                  }
+                value: setting.data.mWindowSizeWidth.toString(),
+                onChanged: (value) async {
+                  setting.data.mWindowSizeWidth = Integer.tryParse(value) ?? setting.data.mWindowSizeWidth;
+                  await setting.save();
                 },
-                child: TextFormField(
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
-                  decoration: const InputDecoration(
-                    isDense: true,
-                  ),
-                  initialValue: setting.data.mWindowSizeWidth.toString(),
-                  onChanged: (value) async {
-                    setting.data.mWindowSizeWidth = Integer.tryParse(value) ?? 0;
-                  },
-                ),
               ),
             ),
             ListTile(
-              leading: SizedBox(
-                width: 16,
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'H',
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.titleMedium,
-                  ),
+              contentPadding: EdgeInsets.zero,
+              title: CustomTextFieldWithFocus(
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
+                decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                  filled: false,
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(IconSymbols.height),
                 ),
-              ),
-              title: Focus(
-                onFocusChange: (focused) async {
-                  if (!focused) {
-                    await setting.save();
-                  }
+                value: setting.data.mWindowSizeHeight.toString(),
+                onChanged: (value) async {
+                  setting.data.mWindowSizeHeight = Integer.tryParse(value) ?? setting.data.mWindowSizeHeight;
+                  await setting.save();
                 },
-                child: TextFormField(
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
-                  decoration: const InputDecoration(
-                    isDense: true,
-                  ),
-                  initialValue: setting.data.mWindowSizeHeight.toString(),
-                  onChanged: (value) async {
-                    setting.data.mWindowSizeHeight = Integer.tryParse(value) ?? 0;
-                  },
-                ),
               ),
             ),
           ],
@@ -445,31 +402,42 @@ class _SettingPanelState extends State<SettingPanel> {
             ),
           ],
           onTap: null,
-          panelBuilder: (context, setState) => [
+          panelBuilder: (context, setStateForPanel) => [
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: Focus(
-                onFocusChange: (focused) async {
-                  if (!focused) {
-                    await setting.save();
-                  }
-                },
-                child: TextFormField(
-                  keyboardType: TextInputType.text,
-                  inputFormatters: const [],
-                  decoration: const InputDecoration(
-                    isDense: true,
+              title: CustomTextFieldWithFocus(
+                keyboardType: TextInputType.text,
+                inputFormatters: const [],
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+                  filled: false,
+                  border: const OutlineInputBorder(),
+                  suffixIcon: CustomTextFieldSuffixWidget(
+                    children: [
+                      IconButton(
+                        tooltip: 'Pick',
+                        icon: const Icon(IconSymbols.open_in_new),
+                        onPressed: () async {
+                          var target = await StorageHelper.pickLoadDirectory(context, 'Application.FallbackDirectory');
+                          if (target != null) {
+                            setting.data.mFallbackDirectory = target;
+                            await setting.save();
+                          }
+                        },
+                      ),
+                    ],
                   ),
-                  initialValue: setting.data.mFallbackDirectory,
-                  onChanged: (value) async {
-                    setting.data.mFallbackDirectory = value;
-                  },
                 ),
+                value: setting.data.mFallbackDirectory,
+                onChanged: (value) async {
+                  setting.data.mFallbackDirectory = StorageHelper.regularize(value);
+                  await setting.save();
+                },
               ),
             ),
           ],
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 8),
       ],
     );
   }

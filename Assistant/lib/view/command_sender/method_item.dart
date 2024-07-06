@@ -28,7 +28,7 @@ class MethodItemItem extends StatelessWidget {
       children: [
         ListTile(
           dense: true,
-          contentPadding: const EdgeInsets.fromLTRB(32, 0, 20, 0),
+          contentPadding: const EdgeInsets.fromLTRB(40, 0, 24, 0),
           leading: Icon(SymbolsGet.get(this.configuration.icon, SymbolStyle.outlined)),
           title: Text(
             this.configuration.name,
@@ -51,44 +51,24 @@ class MethodItemItem extends StatelessWidget {
 
 }
 
-// ----------------
-
-class MethodGroupItem extends StatefulWidget {
+class MethodGroupItem extends StatelessWidget {
 
   const MethodGroupItem({
     super.key,
     required this.configuration,
     required this.onSelect,
+    required this.collapse,
+    required this.onToggle,
   });
-
-  @override
-  createState() => _MethodGroupItemState();
 
   // ----------------
 
   final MethodGroupConfiguration configuration;
   final Void Function(String)    onSelect;
-
-}
-
-class _MethodGroupItemState extends State<MethodGroupItem> {
-
-  late Boolean _itemListVisible;
+  final Boolean                  collapse;
+  final Void Function()          onToggle;
 
   // ----------------
-
-  @override
-  initState() {
-    super.initState();
-    this._itemListVisible = false;
-    return;
-  }
-
-  @override
-  dispose() {
-    super.dispose();
-    return;
-  }
 
   @override
   build(context) {
@@ -96,35 +76,32 @@ class _MethodGroupItemState extends State<MethodGroupItem> {
     return Column(
       children: [
         ListTile(
-          contentPadding: const EdgeInsets.fromLTRB(16, 0, 20, 0),
-          leading: Icon(SymbolsGet.get(this.widget.configuration.icon, SymbolStyle.outlined)),
+          contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+          leading: Icon(SymbolsGet.get(this.configuration.icon, SymbolStyle.outlined)),
           title: Text(
-            this.widget.configuration.name,
+            this.configuration.name,
             overflow: TextOverflow.ellipsis,
           ),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '${this.widget.configuration.item.length}',
+                '${this.configuration.item.length}',
                 overflow: TextOverflow.clip,
                 style: theme.textTheme.bodyMedium,
               ),
               const SizedBox(width: 6),
-              Icon(!this._itemListVisible ? IconSymbols.keyboard_arrow_down : IconSymbols.keyboard_arrow_left),
+              Icon(!this.collapse ? IconSymbols.keyboard_arrow_left : IconSymbols.keyboard_arrow_down),
             ],
           ),
-          onTap: () async {
-            this._itemListVisible = !this._itemListVisible;
-            this.setState(() {});
-          },
+          onTap: this.onToggle,
         ),
         Visibility(
-          visible: this._itemListVisible,
+          visible: !this.collapse,
           child: Column(
-            children: this.widget.configuration.item.mapIndexed((optionItemIndex, optionItem) => MethodItemItem(
+            children: this.configuration.item.mapIndexed((optionItemIndex, optionItem) => MethodItemItem(
               configuration: optionItem,
-              onSelect: this.widget.onSelect,
+              onSelect: this.onSelect,
             )).toList(),
           ),
         ),

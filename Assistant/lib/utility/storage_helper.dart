@@ -2,6 +2,7 @@ import '/common.dart';
 import '/setting.dart';
 import '/utility/control_helper.dart';
 import '/utility/platform_method.dart';
+import '/view/home/common.dart';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
@@ -196,8 +197,9 @@ class StorageHelper {
     String       tag,
   ) async {
     var target = null as String?;
-    var initialDirectory = _taggedHistoryDirectory[tag] ?? '/';
+    var initialDirectory = _taggedHistoryDirectory[tag];
     if (Platform.isWindows) {
+      initialDirectory ??= 'C:/';
       target = (await file_selector.openFile(initialDirectory: toWindowsStyle(initialDirectory)))?.path;
       if (target != null) {
         target = regularize(target);
@@ -207,15 +209,18 @@ class StorageHelper {
       }
     }
     if (Platform.isLinux || Platform.isMacOS) {
+      initialDirectory ??= '/';
       target = (await file_selector.openFile(initialDirectory: initialDirectory))?.path;
     }
     if (Platform.isAndroid) {
+      initialDirectory ??= await PlatformMethod.queryExternalStoragePath();
       target = await PlatformMethod.pickStorageItem('load_file', initialDirectory);
       if (target != null) {
         target = await parseAndroidContentUri(context, Uri.parse(target), true);
       }
     }
     if (Platform.isIOS) {
+      initialDirectory ??= '/';
       target = await PlatformMethod.pickStorageItem('load_file', initialDirectory);
     }
     if (target != null) {
@@ -229,8 +234,9 @@ class StorageHelper {
     String       tag,
   ) async {
     var target = null as String?;
-    var initialDirectory = _taggedHistoryDirectory[tag] ?? '/';
+    var initialDirectory = _taggedHistoryDirectory[tag];
     if (Platform.isWindows) {
+      initialDirectory ??= 'C:/';
       // NOTE : use `file_selector.getDirectoryPath` instead of `FilePicker.platform.getDirectoryPath`, on windows, the later one will throw an exception if it is the first file dialog since application start.
       target = await file_selector.getDirectoryPath(initialDirectory: toWindowsStyle(initialDirectory));
       if (target != null) {
@@ -241,15 +247,18 @@ class StorageHelper {
       }
     }
     if (Platform.isLinux || Platform.isMacOS) {
+      initialDirectory ??= '/';
       target = await file_selector.getDirectoryPath(initialDirectory: initialDirectory);
     }
     if (Platform.isAndroid) {
+      initialDirectory ??= await PlatformMethod.queryExternalStoragePath();
       target = await PlatformMethod.pickStorageItem('load_directory', initialDirectory);
       if (target != null) {
         target = await parseAndroidContentUri(context, Uri.parse(target), false);
       }
     }
     if (Platform.isIOS) {
+      initialDirectory ??= '/';
       target = await PlatformMethod.pickStorageItem('load_directory', initialDirectory);
     }
     if (target != null) {
@@ -263,8 +272,9 @@ class StorageHelper {
     String       tag,
   ) async {
     var target = null as String?;
-    var initialDirectory = _taggedHistoryDirectory[tag] ?? '/';
+    var initialDirectory = _taggedHistoryDirectory[tag];
     if (Platform.isWindows) {
+      initialDirectory ??= 'C:/';
       target = (await file_selector.getSaveLocation(initialDirectory: toWindowsStyle(initialDirectory)))?.path;
       if (target != null) {
         target = regularize(target);
@@ -274,9 +284,11 @@ class StorageHelper {
       }
     }
     if (Platform.isLinux || Platform.isMacOS) {
+      initialDirectory ??= '/';
       target = (await file_selector.getSaveLocation(initialDirectory: initialDirectory))?.path;
     }
     if (Platform.isAndroid) {
+      initialDirectory ??= await PlatformMethod.queryExternalStoragePath();
       target = await PlatformMethod.pickStorageItem('save_file', initialDirectory);
       if (target != null) {
         target = await parseAndroidContentUri(context, Uri.parse(target), false);
@@ -395,8 +407,7 @@ class StorageHelper {
       }
     }
     if (result == null) {
-      var duplicate = await ControlHelper.showCustomModalDialog<Boolean>(
-        context: context,
+      var duplicate = await ControlHelper.showCustomModalDialog<Boolean>(context, CustomModalDialog(
         title: 'Unparsable Content Uri',
         contentBuilder: (context, setState) => [
           SelectionArea(
@@ -416,7 +427,7 @@ class StorageHelper {
             child: const Text('Duplicate'),
           ),
         ],
-      ) ?? false;
+      )) ?? false;
       if (duplicate) {
         var setting = Provider.of<SettingProvider>(context, listen: false);
         result = await PlatformMethod.copyStorageFile(uri.toString(), setting.data.mFallbackDirectory);

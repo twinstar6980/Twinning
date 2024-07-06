@@ -61,7 +61,7 @@ class Launcher {
         return null as Void;
       };
       var result = null as List<String>?;
-      var exception = null as String?;
+      var exception = null as Object?;
       var service = portMessage[0] as Service;
       var script = portMessage[1] as String;
       var argument = portMessage[2] as List<String>;
@@ -73,7 +73,7 @@ class Launcher {
         result = executorResult.value;
       }
       catch (e) {
-        exception = e.toString();
+        exception = e;
       }
       await streamQueue.cancel();
       sendPort.send(null);
@@ -88,7 +88,7 @@ class Launcher {
       await Isolate.spawn(subWorker, receivePort.sendPort);
       var sendPort = await streamQueue.next as SendPort;
       var result = null as List<String>?;
-      var exception = null as String?;
+      var exception = null as Object?;
       await client.start();
       sendPort.send([library.symbol(), script, argument]);
       while (await streamQueue.hasNext) {

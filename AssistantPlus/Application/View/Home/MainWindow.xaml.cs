@@ -327,10 +327,31 @@ namespace AssistantPlus.View.Home {
 
 	public interface IModulePage {
 
+		Task ModulePageApplyOption (
+			List<String> optionView
+		);
+
 		Task<List<String>> ModulePageCollectOption (
 		);
 
 		Task<Boolean> ModulePageRequestClose (
+		);
+
+	}
+
+	public interface IModulePageController {
+
+		void Initialize (
+		);
+
+		Task ApplyOption (
+			List<String> optionView
+		);
+
+		Task<List<String>> CollectOption (
+		);
+
+		Task<Boolean> RequestClose (
 		);
 
 	}

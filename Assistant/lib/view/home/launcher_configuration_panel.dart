@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 // ----------------
 
-class LauncherConfigurationPanel extends StatefulWidget {
+class LauncherConfigurationPanel extends StatelessWidget {
 
   const LauncherConfigurationPanel({
     super.key,
@@ -14,156 +14,134 @@ class LauncherConfigurationPanel extends StatefulWidget {
     required this.onUpdate,
   });
 
-  @override
-  createState() => _LauncherConfigurationPanelState();
-
   // ----------------
 
   final ModuleLauncherConfiguration data;
   final Void Function()             onUpdate;
 
-}
-
-class _LauncherConfigurationPanelState extends State<LauncherConfigurationPanel> {
-
   // ----------------
-
-  @override
-  initState() {
-    super.initState();
-    return;
-  }
-
-  @override
-  dispose() {
-    super.dispose();
-    return;
-  }
 
   @override
   build(context) {
     var theme = Theme.of(context);
-    return Column(
-      children: [
-        const SizedBox(height: 4),
-        CustomSettingItem(
-          enabled: true,
-          icon: IconSymbols.text_fields,
-          label: 'Title',
-          content: [
-            Expanded(
-              child: Text(
-                this.widget.data.title,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.right,
-                style: theme.textTheme.bodyMedium,
+    return StatefulBuilder(
+      builder: (context, setState) => Column(
+        children: [
+          const SizedBox(height: 8),
+          CustomSettingItem(
+            enabled: true,
+            icon: IconSymbols.text_fields,
+            label: 'Title',
+            content: [
+              Expanded(
+                child: Text(
+                  this.data.title,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.right,
+                  style: theme.textTheme.bodyMedium,
+                ),
               ),
-            ),
-          ],
-          onTap: null,
-          panelBuilder: (context, setState) => [
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Focus(
-                onFocusChange: (focused) async {
-                  if (!focused) {
-                    this.setState(() {});
-                    this.widget.onUpdate();
-                  }
-                },
-                child: TextFormField(
+            ],
+            onTap: null,
+            panelBuilder: (context, setStateForPanel) => [
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: CustomTextFieldWithFocus(
                   keyboardType: TextInputType.text,
                   inputFormatters: const [],
                   decoration: const InputDecoration(
-                    isDense: true,
+                    contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                    filled: false,
+                    border: OutlineInputBorder(),
                   ),
-                  initialValue: this.widget.data.title,
+                  value: this.data.title,
                   onChanged: (value) async {
-                    this.widget.data.title = value;
+                    this.data.title = value;
+                    setStateForPanel(() {});
+                    setState(() {});
+                    this.onUpdate();
                   },
                 ),
               ),
-            ),
-          ],
-        ),
-        CustomSettingItem(
-          enabled: true,
-          icon: IconSymbols.label,
-          label: 'Type',
-          content: [
-            Expanded(
-              child: Text(
-                ModuleHelper.query(this.widget.data.type).name,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.right,
-                style: theme.textTheme.bodyMedium,
-              ),
-            ),
-          ],
-          onTap: null,
-          panelBuilder: (context, setState) => [
-            ...ModuleType.values.map(
-              (type) => ListTile(
-                leading: Radio<ModuleType>(
-                  value: type,
-                  groupValue: this.widget.data.type,
-                  onChanged: (value) async {
-                    value!;
-                    this.widget.data.type = value;
-                    this.widget.onUpdate();
-                  },
-                ),
-                title: Text(
-                  ModuleHelper.query(type).name,
+            ],
+          ),
+          CustomSettingItem(
+            enabled: true,
+            icon: IconSymbols.label,
+            label: 'Type',
+            content: [
+              Expanded(
+                child: Text(
+                  ModuleHelper.query(this.data.type).name,
                   overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.right,
+                  style: theme.textTheme.bodyMedium,
                 ),
               ),
-            ),
-          ],
-        ),
-        CustomSettingItem(
-          enabled: true,
-          icon: IconSymbols.format_list_bulleted,
-          label: 'Option',
-          content: [
-            Expanded(
-              child: Text(
-                '${this.widget.data.option.length}',
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.right,
-                style: theme.textTheme.bodyMedium,
+            ],
+            onTap: null,
+            panelBuilder: (context, setStateForPanel) => [
+              ...ModuleType.values.map(
+                (type) => ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Radio<ModuleType>(
+                    value: type,
+                    groupValue: this.data.type,
+                    onChanged: (value) async {
+                      this.data.type = value!;
+                      setStateForPanel(() {});
+                      setState(() {});
+                      this.onUpdate();
+                    },
+                  ),
+                  title: Text(
+                    ModuleHelper.query(type).name,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ),
-            ),
-          ],
-          onTap: null,
-          panelBuilder: (context, setState) => [
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Focus(
-                onFocusChange: (focused) async {
-                  if (!focused) {
-                    this.setState(() {});
-                    this.widget.onUpdate();
-                  }
-                },
-                child: TextFormField(
+            ],
+          ),
+          CustomSettingItem(
+            enabled: true,
+            icon: IconSymbols.format_list_bulleted,
+            label: 'Option',
+            content: [
+              Expanded(
+                child: Text(
+                  '${this.data.option.length}',
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.right,
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ),
+            ],
+            onTap: null,
+            panelBuilder: (context, setStateForPanel) => [
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: CustomTextFieldWithFocus(
                   keyboardType: TextInputType.multiline,
-                  maxLines: null,
                   inputFormatters: const [],
                   decoration: const InputDecoration(
-                    isDense: true,
+                    contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                    filled: false,
+                    border: OutlineInputBorder(),
                   ),
-                  initialValue: ConvertHelper.makeStringListToStringWithLine(this.widget.data.option),
+                  value: ConvertHelper.makeStringListToStringWithLine(this.data.option),
                   onChanged: (value) async {
-                    this.widget.data.option = ConvertHelper.parseStringListFromStringWithLine(value);
+                    this.data.option = ConvertHelper.parseStringListFromStringWithLine(value);
+                    setStateForPanel(() {});
+                    setState(() {});
+                    this.onUpdate();
                   },
                 ),
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 4),
-      ],
+            ],
+          ),
+          const SizedBox(height: 8),
+        ],
+      ),
     );
   }
 

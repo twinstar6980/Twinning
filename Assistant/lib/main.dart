@@ -6,9 +6,11 @@ import '/utility/command_line_reader.dart';
 import '/utility/control_helper.dart';
 import '/utility/notification_helper.dart';
 import '/utility/storage_helper.dart';
+import 'package:assistant/view/home/common.dart';
 import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:app_links/app_links.dart';
 
@@ -24,8 +26,7 @@ Future<Void> main(
   ) {
     ControlHelper.postTask(() async {
       if (setting.state.mApplicationNavigatorKey.currentContext != null) {
-        ControlHelper.showCustomModalDialog(
-          context: setting.state.mApplicationNavigatorKey.currentContext!,
+        ControlHelper.showCustomModalDialog<Void>(setting.state.mApplicationNavigatorKey.currentContext!, CustomModalDialog(
           title: 'Unhandled Exception',
           contentBuilder: (context, setState) => [
             SelectionArea(
@@ -36,7 +37,7 @@ Future<Void> main(
             ),
           ],
           actionBuilder: null,
-        );
+        ));
       }
     });
     return;
@@ -101,7 +102,9 @@ Future<Void> main(
       await setting.reset();
     }
     await setting.save();
+    setting.state.mHandleCommand = handleCommand;
     await NotificationHelper.initialize();
+    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       await windowManager.ensureInitialized();
       await windowManager.setTitleBarStyle(TitleBarStyle.hidden);

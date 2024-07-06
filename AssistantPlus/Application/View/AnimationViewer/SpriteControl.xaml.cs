@@ -99,12 +99,12 @@ namespace AssistantPlus.View.AnimationViewer {
 		) {
 			GF.AssertTest(!this.Loaded);
 			var workingSprite = GameAnimationHelper.SelectSprite(animation, workingSpriteIndex);
-			var ui = GameAnimationHelper.CreateUI(animation, imageSource, imageFilter, spriteFilter, workingSpriteIndex);
-			this.Width = animation.Size[0];
-			this.Height = animation.Size[1];
-			this.Padding = new (animation.Position[0], animation.Position[1], 0.0, 0.0);
-			this.Canvas = ui.Canvas;
-			this.Storyboard = ui.Storyboard;
+			var visual = GameAnimationHelper.CreateVisual(animation, imageSource, imageFilter, spriteFilter, workingSpriteIndex);
+			this.Width = animation.Size.Item1;
+			this.Height = animation.Size.Item2;
+			this.Padding = new (animation.Position.Item1, animation.Position.Item2, 0.0, 0.0);
+			this.Canvas = visual.Canvas;
+			this.Storyboard = visual.Storyboard;
 			this.Storyboard.RepeatBehavior = new (1.0);
 			this.Storyboard.Completed += this.Storyboard_Completed;
 			this.FrameRange = new () {

@@ -34,11 +34,12 @@ class _BasicArgumentBar extends StatelessWidget {
       children: [
         Row(
           children: [
+            const SizedBox(width: 8),
             Expanded(
               child: Text(
                 this.name,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.labelMedium?.copyWith(
+                overflow: TextOverflow.clip,
+                style: theme.textTheme.labelLarge?.copyWith(
                   color: theme.colorScheme.primary,
                 ),
               ),
@@ -54,7 +55,7 @@ class _BasicArgumentBar extends StatelessWidget {
 
 // ----------------
 
-class _BooleanArgumentBar extends StatefulWidget {
+class _BooleanArgumentBar extends StatelessWidget {
 
   const _BooleanArgumentBar({
     super.key, // ignore: unused_element
@@ -62,97 +63,65 @@ class _BooleanArgumentBar extends StatefulWidget {
     required this.value,
   });
 
-  @override
-  createState() => _BooleanArgumentBarState();
-
   // ----------------
 
   final String                      name;
   final Wrapper<BooleanExpression?> value;
 
-}
-
-class _BooleanArgumentBarState extends State<_BooleanArgumentBar> {
-
-  late TextEditingController _valueController;
-
-  Void _refresh(
-  ) async {
-    this._valueController.text = this.widget.value.value == null ? '' : ConvertHelper.makeBooleanToStringOfConfirmationCharacter(this.widget.value.value!.value);
-    this.setState(() {});
-    return;
-  }
-
   // ----------------
 
   @override
-  initState() {
-    super.initState();
-    this._valueController = TextEditingController();
-    this._refresh();
-    return;
-  }
-
-  @override
-  dispose() {
-    this._valueController.dispose();
-    super.dispose();
-    return;
-  }
-
-  @override
   build(context) {
-    return _BasicArgumentBar(
-      name: this.widget.name,
-      icon: IconSymbols.check_box,
-      content: Focus(
-        onFocusChange: (focused) async {
-          if (!focused) {
-            if (this._valueController.text.isEmpty) {
-              this.widget.value.value = null;
-            }
-            else {
-              if (this._valueController.text == 'n' || this._valueController.text == 'y') {
-                this.widget.value.value = BooleanExpression(this._valueController.text == 'y');
-              }
-            }
-            this._refresh();
-          }
-        },
-        child: TextField(
+    return StatefulBuilder(
+      builder: (context, setState) => _BasicArgumentBar(
+        name: this.name,
+        icon: IconSymbols.check_box,
+        content: CustomTextFieldWithFocus(
           keyboardType: TextInputType.text,
           inputFormatters: const [],
           decoration: InputDecoration(
+            contentPadding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+            filled: false,
             border: const UnderlineInputBorder(),
             hintText: 'Boolean',
-            suffixIconConstraints: const BoxConstraints(),
             suffixIcon: CustomTextFieldSuffixWidget(
               children: [
                 IconButton(
                   tooltip: 'No',
-                  isSelected: this.widget.value.value == null ? false : this.widget.value.value!.value == false,
+                  isSelected: this.value.value == null ? false : this.value.value!.value == false,
                   icon: const Icon(IconSymbols.do_not_disturb_on),
                   selectedIcon: const Icon(IconSymbols.do_not_disturb_on, fill: 1),
                   onPressed: () async {
-                    this.widget.value.value = this.widget.value.value?.value == false ? null : BooleanExpression(false);
-                    this._refresh();
+                    this.value.value = this.value.value?.value == false ? null : BooleanExpression(false);
+                    setState(() {});
                   },
                 ),
                 const SizedBox(width: 4),
                 IconButton(
                   tooltip: 'Yes',
-                  isSelected: this.widget.value.value == null ? false : this.widget.value.value!.value == true,
+                  isSelected: this.value.value == null ? false : this.value.value!.value == true,
                   icon: const Icon(IconSymbols.check_circle),
                   selectedIcon: const Icon(IconSymbols.check_circle, fill: 1),
                   onPressed: () async {
-                    this.widget.value.value = this.widget.value.value?.value == true ? null : BooleanExpression(true);
-                    this._refresh();
+                    this.value.value = this.value.value?.value == true ? null : BooleanExpression(true);
+                    setState(() {});
                   },
                 ),
               ],
             ),
           ),
-          controller: this._valueController,
+          value: this.value.value == null ? '' : ConvertHelper.makeBooleanToStringOfConfirmationCharacter(this.value.value!.value),
+          onChanged: (text) async {
+            if (text.isEmpty) {
+              this.value.value = null;
+            }
+            else {
+              if (text == 'n' || text == 'y') {
+                this.value.value = BooleanExpression(text == 'y');
+              }
+            }
+            setState(() {});
+          },
         ),
       ),
     );
@@ -160,9 +129,7 @@ class _BooleanArgumentBarState extends State<_BooleanArgumentBar> {
 
 }
 
-// ----------------
-
-class _IntegerArgumentBar extends StatefulWidget {
+class _IntegerArgumentBar extends StatelessWidget {
 
   const _IntegerArgumentBar({
     super.key, // ignore: unused_element
@@ -170,77 +137,45 @@ class _IntegerArgumentBar extends StatefulWidget {
     required this.value,
   });
 
-  @override
-  createState() => _IntegerArgumentBarState();
-
   // ----------------
 
   final String                      name;
   final Wrapper<IntegerExpression?> value;
 
-}
-
-class _IntegerArgumentBarState extends State<_IntegerArgumentBar> {
-
-  late TextEditingController _valueController;
-
-  Void _refresh(
-  ) async {
-    this._valueController.text = this.widget.value.value == null ? '' : ConvertHelper.makeIntegerToString(this.widget.value.value!.value, false);
-    this.setState(() {});
-    return;
-  }
-
   // ----------------
 
   @override
-  initState() {
-    super.initState();
-    this._valueController = TextEditingController();
-    this._refresh();
-    return;
-  }
-
-  @override
-  dispose() {
-    this._valueController.dispose();
-    super.dispose();
-    return;
-  }
-
-  @override
   build(context) {
-    return _BasicArgumentBar(
-      name: this.widget.name,
-      icon: IconSymbols.speed_1_2,
-      content: Focus(
-        onFocusChange: (focused) async {
-          if (!focused) {
-            if (this._valueController.text.isEmpty) {
-              this.widget.value.value = null;
-            }
-            else {
-              var value = Integer.tryParse(this._valueController.text);
-              if (value != null) {
-                this.widget.value.value = IntegerExpression(value);
-              }
-            }
-            this._refresh();
-          }
-        },
-        child: TextField(
+    return StatefulBuilder(
+      builder: (context, setState) => _BasicArgumentBar(
+        name: this.name,
+        icon: IconSymbols.speed_1_2,
+        content: CustomTextFieldWithFocus(
           keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: false),
           inputFormatters: const [],
           decoration: const InputDecoration(
+            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
+            filled: false,
             border: UnderlineInputBorder(),
             hintText: 'Integer',
-            suffixIconConstraints: BoxConstraints(),
             suffixIcon: CustomTextFieldSuffixWidget(
               children: [
               ],
             ),
           ),
-          controller: this._valueController,
+          value: this.value.value == null ? '' : ConvertHelper.makeIntegerToString(this.value.value!.value, false),
+          onChanged: (text) async {
+            if (text.isEmpty) {
+              this.value.value = null;
+            }
+            else {
+              var value = Integer.tryParse(text);
+              if (value != null) {
+                this.value.value = IntegerExpression(value);
+              }
+            }
+            setState(() {});
+          },
         ),
       ),
     );
@@ -248,9 +183,7 @@ class _IntegerArgumentBarState extends State<_IntegerArgumentBar> {
 
 }
 
-// ----------------
-
-class _FloaterArgumentBar extends StatefulWidget {
+class _FloaterArgumentBar extends StatelessWidget {
 
   const _FloaterArgumentBar({
     super.key, // ignore: unused_element
@@ -258,77 +191,45 @@ class _FloaterArgumentBar extends StatefulWidget {
     required this.value,
   });
 
-  @override
-  createState() => _FloaterArgumentBarState();
-
   // ----------------
 
   final String                      name;
   final Wrapper<FloaterExpression?> value;
 
-}
-
-class _FloaterArgumentBarState extends State<_FloaterArgumentBar> {
-
-  late TextEditingController _valueController;
-
-  Void _refresh(
-  ) async {
-    this._valueController.text = this.widget.value.value == null ? '' : ConvertHelper.makeFloaterToString(this.widget.value.value!.value, false);
-    this.setState(() {});
-    return;
-  }
-
   // ----------------
 
   @override
-  initState() {
-    super.initState();
-    this._valueController = TextEditingController();
-    this._refresh();
-    return;
-  }
-
-  @override
-  dispose() {
-    this._valueController.dispose();
-    super.dispose();
-    return;
-  }
-
-  @override
   build(context) {
-    return _BasicArgumentBar(
-      name: this.widget.name,
-      icon: IconSymbols.speed_1_2,
-      content: Focus(
-        onFocusChange: (focused) async {
-          if (!focused) {
-            if (this._valueController.text.isEmpty) {
-              this.widget.value.value = null;
-            }
-            else {
-              var value = Floater.tryParse(this._valueController.text);
-              if (value != null && value.isFinite) {
-                this.widget.value.value = FloaterExpression(value);
-              }
-            }
-            this._refresh();
-          }
-        },
-        child: TextField(
+    return StatefulBuilder(
+      builder: (context, setState) => _BasicArgumentBar(
+        name: this.name,
+        icon: IconSymbols.speed_1_2,
+        content: CustomTextFieldWithFocus(
           keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
           inputFormatters: const [],
           decoration: const InputDecoration(
+            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
+            filled: false,
             border: UnderlineInputBorder(),
             hintText: 'Floater',
-            suffixIconConstraints: BoxConstraints(),
             suffixIcon: CustomTextFieldSuffixWidget(
               children: [
               ],
             ),
           ),
-          controller: this._valueController,
+          value: this.value.value == null ? '' : ConvertHelper.makeFloaterToString(this.value.value!.value, false),
+          onChanged: (text) async {
+            if (text.isEmpty) {
+              this.value.value = null;
+            }
+            else {
+              var value = Floater.tryParse(text);
+              if (value != null && value.isFinite) {
+                this.value.value = FloaterExpression(value);
+              }
+            }
+            setState(() {});
+          },
         ),
       ),
     );
@@ -336,9 +237,7 @@ class _FloaterArgumentBarState extends State<_FloaterArgumentBar> {
 
 }
 
-// ----------------
-
-class _SizeArgumentBar extends StatefulWidget {
+class _SizeArgumentBar extends StatelessWidget {
 
   const _SizeArgumentBar({
     super.key, // ignore: unused_element
@@ -346,83 +245,43 @@ class _SizeArgumentBar extends StatefulWidget {
     required this.value,
   });
 
-  @override
-  createState() => _SizeArgumentBarState();
-
   // ----------------
 
   final String                   name;
   final Wrapper<SizeExpression?> value;
 
-}
-
-class _SizeArgumentBarState extends State<_SizeArgumentBar> {
-
-  late Integer               _exponent;
-  late TextEditingController _countController;
-
-  Void _refresh(
-  ) async {
-    this._exponent = this.widget.value.value == null ? this._exponent : this.widget.value.value!.exponent;
-    this._countController.text = this.widget.value.value == null ? '' : ConvertHelper.makeFloaterToString(this.widget.value.value!.count, false);
-    this.setState(() {});
-    return;
-  }
-
   // ----------------
 
   @override
-  initState() {
-    super.initState();
-    this._exponent = 2;
-    this._countController = TextEditingController();
-    this._refresh();
-    return;
-  }
-
-  @override
-  dispose() {
-    this._countController.dispose();
-    super.dispose();
-    return;
-  }
-
-  @override
   build(context) {
-    return _BasicArgumentBar(
-      name: this.widget.name,
-      icon: IconSymbols.memory,
-      content: Focus(
-        onFocusChange: (focused) async {
-          if (!focused) {
-            if (this._countController.text.isEmpty) {
-              this.widget.value.value = null;
-            }
-            else {
-              var count = Floater.tryParse(this._countController.text);
-              if (count != null && count.isFinite && count >= 0.0) {
-                this.widget.value.value = SizeExpression(count, this._exponent);
-              }
-            }
-            this._refresh();
-          }
-        },
-        child: TextField(
+    return StatefulBuilder(
+      builder: (context, setState) => _BasicArgumentBar(
+        name: this.name,
+        icon: IconSymbols.memory,
+        content: CustomTextFieldWithFocus(
           keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: true),
           inputFormatters: const [],
           decoration: InputDecoration(
+            contentPadding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+            filled: false,
             border: const UnderlineInputBorder(),
             hintText: 'Size',
-            suffixIconConstraints: const BoxConstraints(),
             suffixIcon: CustomTextFieldSuffixWidget(
               children: [
                 PopupMenuButton(
                   tooltip: 'Exponent',
                   position: PopupMenuPosition.under,
-                  icon: Text(
-                    ['B', 'K', 'M', 'G'][this._exponent],
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  icon: this.value.value == null
+                    ? const Icon(IconSymbols.expand_circle_down)
+                    : Container(
+                      alignment: Alignment.center,
+                      width: 24,
+                      height: 24,
+                      child: Text(
+                        ['B', 'K', 'M', 'G'][this.value.value!.exponent],
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   itemBuilder: (context) => ['B', 'K', 'M', 'G'].mapIndexed((index, value) => PopupMenuItem(
                     value: index,
                     child: Text(
@@ -431,17 +290,26 @@ class _SizeArgumentBarState extends State<_SizeArgumentBar> {
                     ),
                   )).toList(),
                   onSelected: (value) async {
-                    this._exponent = value;
-                    if (this.widget.value.value != null) {
-                      this.widget.value.value = SizeExpression(this.widget.value.value!.count, this._exponent);
-                    }
-                    this._refresh();
+                    this.value.value = SizeExpression(this.value.value?.count ?? 1.0, value);
+                    setState(() {});
                   },
                 ),
               ],
             ),
           ),
-          controller: this._countController,
+          value: this.value.value == null ? '' : ConvertHelper.makeFloaterToString(this.value.value!.count, false),
+          onChanged: (text) async {
+            if (text.isEmpty) {
+              this.value.value = null;
+            }
+            else {
+              var count = Floater.tryParse(text);
+              if (count != null && count.isFinite && count >= 0.0) {
+                this.value.value = SizeExpression(count, this.value.value?.exponent ?? 2);
+              }
+            }
+            setState(() {});
+          },
         ),
       ),
     );
@@ -449,9 +317,7 @@ class _SizeArgumentBarState extends State<_SizeArgumentBar> {
 
 }
 
-// ----------------
-
-class _StringArgumentBar extends StatefulWidget {
+class _StringArgumentBar extends StatelessWidget {
 
   const _StringArgumentBar({
     super.key, // ignore: unused_element
@@ -459,74 +325,42 @@ class _StringArgumentBar extends StatefulWidget {
     required this.value,
   });
 
-  @override
-  createState() => _StringArgumentBarState();
-
   // ----------------
 
   final String                     name;
   final Wrapper<StringExpression?> value;
 
-}
-
-class _StringArgumentBarState extends State<_StringArgumentBar> {
-
-  late TextEditingController _valueController;
-
-  Void _refresh(
-  ) async {
-    this._valueController.text = this.widget.value.value == null ? '' : this.widget.value.value!.value;
-    this.setState(() {});
-    return;
-  }
-
   // ----------------
 
   @override
-  initState() {
-    super.initState();
-    this._valueController = TextEditingController();
-    this._refresh();
-    return;
-  }
-
-  @override
-  dispose() {
-    this._valueController.dispose();
-    super.dispose();
-    return;
-  }
-
-  @override
   build(context) {
-    return _BasicArgumentBar(
-      name: this.widget.name,
-      icon: IconSymbols.text_fields,
-      content: Focus(
-        onFocusChange: (focused) async {
-          if (!focused) {
-            if (this._valueController.text.isEmpty) {
-              this.widget.value.value = null;
-            }
-            else {
-              this.widget.value.value = StringExpression(this._valueController.text);
-            }
-            this._refresh();
-          }
-        },
-        child: TextField(
+    return StatefulBuilder(
+      builder: (context, setState) => _BasicArgumentBar(
+        name: this.name,
+        icon: IconSymbols.text_fields,
+        content: CustomTextFieldWithFocus(
           keyboardType: TextInputType.text,
           inputFormatters: const [],
           decoration: const InputDecoration(
+            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
+            filled: false,
             border: UnderlineInputBorder(),
             hintText: 'String',
-            suffixIconConstraints: BoxConstraints(),
             suffixIcon: CustomTextFieldSuffixWidget(
               children: [
               ],
             ),
           ),
-          controller: this._valueController,
+          value: this.value.value == null ? '' : this.value.value!.value,
+          onChanged: (text) async {
+            if (text.isEmpty) {
+              this.value.value = null;
+            }
+            else {
+              this.value.value = StringExpression(text);
+            }
+            setState(() {});
+          },
         ),
       ),
     );
@@ -534,9 +368,7 @@ class _StringArgumentBarState extends State<_StringArgumentBar> {
 
 }
 
-// ----------------
-
-class _PathArgumentBar extends StatefulWidget {
+class _PathArgumentBar extends StatelessWidget {
 
   const _PathArgumentBar({
     super.key, // ignore: unused_element
@@ -544,73 +376,32 @@ class _PathArgumentBar extends StatefulWidget {
     required this.value,
   });
 
-  @override
-  createState() => _PathArgumentBarState();
-
   // ----------------
 
   final String                   name;
   final Wrapper<PathExpression?> value;
 
-}
-
-class _PathArgumentBarState extends State<_PathArgumentBar> {
-
-  late TextEditingController _contentController;
-
-  Void _refresh(
-  ) async {
-    this._contentController.text = this.widget.value.value == null ? '' : this.widget.value.value!.content;
-    this.setState(() {});
-    return;
-  }
-
   // ----------------
 
   @override
-  initState() {
-    super.initState();
-    this._contentController = TextEditingController();
-    this._refresh();
-    return;
-  }
-
-  @override
-  dispose() {
-    this._contentController.dispose();
-    super.dispose();
-    return;
-  }
-
-  @override
   build(context) {
-    return _BasicArgumentBar(
-      name: this.widget.name,
-      icon: IconSymbols.link,
-      content: CustomFileDropRegion(
-        onDrop: (item) async {
-          this.widget.value.value = PathExpression(item.first);
-          this._refresh();
-        },
-        child: Focus(
-          onFocusChange: (focused) async {
-            if (!focused) {
-              if (this._contentController.text.isEmpty) {
-                this.widget.value.value = null;
-              }
-              else {
-                this.widget.value.value = PathExpression(StorageHelper.regularize(this._contentController.text));
-              }
-              this._refresh();
-            }
+    return StatefulBuilder(
+      builder: (context, setState) => _BasicArgumentBar(
+        name: this.name,
+        icon: IconSymbols.link,
+        content: CustomFileDropRegion(
+          onDrop: (item) async {
+            this.value.value = PathExpression(item.first);
+            setState(() {});
           },
-          child: TextField(
+          child: CustomTextFieldWithFocus(
             keyboardType: TextInputType.text,
             inputFormatters: const [],
             decoration: InputDecoration(
+              contentPadding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+              filled: false,
               border: const UnderlineInputBorder(),
               hintText: 'Path',
-              suffixIconConstraints: const BoxConstraints(),
               suffixIcon: CustomTextFieldSuffixWidget(
                 children: [
                   PopupMenuButton(
@@ -632,21 +423,30 @@ class _PathArgumentBarState extends State<_PathArgumentBar> {
                     ],
                     onSelected: (value) async {
                       var target = switch (value) {
-                        'load_file'      => await StorageHelper.pickLoadFile(context, 'ModdingWorker.Generic'),
-                        'load_directory' => await StorageHelper.pickLoadDirectory(context, 'ModdingWorker.Generic'),
-                        'save_file'      => await StorageHelper.pickSaveFile(context, 'ModdingWorker.Generic'),
+                        'load_file'      => await StorageHelper.pickLoadFile(context, 'CommandSender.Generic'),
+                        'load_directory' => await StorageHelper.pickLoadDirectory(context, 'CommandSender.Generic'),
+                        'save_file'      => await StorageHelper.pickSaveFile(context, 'CommandSender.Generic'),
                         _                => throw Exception(),
                       };
                       if (target != null) {
-                        this.widget.value.value = PathExpression(target);
-                        this._refresh();
+                        this.value.value = PathExpression(target);
+                        setState(() {});
                       }
                     },
                   ),
                 ],
               ),
             ),
-            controller: this._contentController,
+            value: this.value.value == null ? '' : this.value.value!.content,
+            onChanged: (text) async {
+              if (text.isEmpty) {
+                this.value.value = null;
+              }
+              else {
+                this.value.value = PathExpression(StorageHelper.regularize(text));
+              }
+              setState(() {});
+            },
           ),
         ),
       ),
@@ -655,9 +455,7 @@ class _PathArgumentBarState extends State<_PathArgumentBar> {
 
 }
 
-// ----------------
-
-class _EnumerationArgumentBar extends StatefulWidget {
+class _EnumerationArgumentBar extends StatelessWidget {
 
   const _EnumerationArgumentBar({
     super.key, // ignore: unused_element
@@ -666,110 +464,88 @@ class _EnumerationArgumentBar extends StatefulWidget {
     required this.value,
   });
 
-  @override
-  createState() => _EnumerationArgumentBarState();
-
   // ----------------
 
   final String                    name;
   final List<ValueExpression>     option;
   final Wrapper<ValueExpression?> value;
 
-}
-
-class _EnumerationArgumentBarState extends State<_EnumerationArgumentBar> {
-
-  late TextEditingController _itemController;
-
-  Void _refresh(
-  ) async {
-    this._itemController.text = this.widget.value.value == null ? '' : ValueExpressionHelper.makeString(this.widget.value.value!);
-    this.setState(() {});
-    return;
-  }
-
   // ----------------
-
-  @override
-  initState() {
-    super.initState();
-    this._itemController = TextEditingController();
-    this._refresh();
-    return;
-  }
-
-  @override
-  dispose() {
-    this._itemController.dispose();
-    super.dispose();
-    return;
-  }
 
   @override
   build(context) {
     var theme = Theme.of(context);
-    return _BasicArgumentBar(
-      name: this.widget.name,
-      icon: IconSymbols.menu,
-      content: LayoutBuilder(
-        builder: (context, constraints) => MenuAnchor(
-          crossAxisUnconstrained: false,
-          alignmentOffset: const Offset(-12, 0),
-          style: MenuStyle(
-            minimumSize: WidgetStatePropertyAll(Size(constraints.maxWidth + 24, 0)),
-            maximumSize: WidgetStatePropertyAll(Size(constraints.maxWidth + 24, Floater.infinity)),
-          ),
-          menuChildren: this.widget.option.map((value) => MenuItemButton(
-            style: ButtonStyle(
-              backgroundColor: WidgetStatePropertyAll(this.widget.value.value == null || ValueExpressionHelper.makeString(value) != ValueExpressionHelper.makeString(this.widget.value.value!) ? null : theme.colorScheme.onSurface.withOpacity(0.12)),
+    return StatefulBuilder(
+      builder: (context, setState) => _BasicArgumentBar(
+        name: this.name,
+        icon: IconSymbols.menu,
+        content: LayoutBuilder(
+          builder: (context, constraints) => MenuAnchor(
+            crossAxisUnconstrained: false,
+            alignmentOffset: const Offset(-4, 0),
+            style: MenuStyle(
+              minimumSize: WidgetStatePropertyAll(Size(constraints.maxWidth + 8, 0)),
+              maximumSize: WidgetStatePropertyAll(Size(constraints.maxWidth + 8, Floater.infinity)),
             ),
-            onPressed: () async {
-              this.widget.value.value = value;
-              this._refresh();
-            },
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: constraints.maxWidth - 24),
-              child: ListTile(
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-                title: Text(
-                  ValueExpressionHelper.makeString(value),
-                  overflow: TextOverflow.clip,
-                  style: theme.textTheme.bodyLarge,
+            menuChildren: [
+              if (this.option.isEmpty)
+                const SizedBox(height: 16),
+              ...this.option.map((value) => MenuItemButton(
+                style: ButtonStyle(
+                  backgroundColor: WidgetStatePropertyAll(this.value.value == null || ValueExpressionHelper.makeString(value) != ValueExpressionHelper.makeString(this.value.value!) ? null : theme.colorScheme.onSurface.withOpacity(0.12)),
+                ),
+                onPressed: () async {
+                  this.value.value = value;
+                  setState(() {});
+                },
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: constraints.maxWidth - 16),
+                  child: ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                    title: Text(
+                      ValueExpressionHelper.makeString(value),
+                      overflow: TextOverflow.clip,
+                      style: theme.textTheme.bodyLarge,
+                    ),
+                  ),
+                ),
+              )),
+            ],
+            builder: (context, controller, child) => TextFormField(
+              key: ObjectKey(this.value.value),
+              keyboardType: TextInputType.none,
+              inputFormatters: const [],
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+                filled: false,
+                border: const UnderlineInputBorder(),
+                hintText: 'Enumeration',
+                suffixIcon: CustomTextFieldSuffixWidget(
+                  children: [
+                    IconButton(
+                      tooltip: 'Reset',
+                      icon: const Icon(IconSymbols.restart_alt),
+                      onPressed: () async {
+                        this.value.value = null;
+                        controller.close();
+                        setState(() {});
+                      },
+                    ),
+                  ],
                 ),
               ),
+              readOnly: true,
+              initialValue: this.value.value == null ? '' : ValueExpressionHelper.makeString(this.value.value!),
+              onTap: () async {
+                if (controller.isOpen) {
+                  controller.close();
+                }
+                else {
+                  controller.open();
+                }
+              },
             ),
-          )).toList(),
-          builder: (context, controller, child) => TextField(
-            keyboardType: TextInputType.none,
-            inputFormatters: const [],
-            decoration: InputDecoration(
-              border: const UnderlineInputBorder(),
-              hintText: 'Enumeration',
-              suffixIconConstraints: const BoxConstraints(),
-              suffixIcon: CustomTextFieldSuffixWidget(
-                children: [
-                  IconButton(
-                    tooltip: 'Reset',
-                    icon: const Icon(IconSymbols.restart_alt),
-                    onPressed: () async {
-                      this.widget.value.value = null;
-                      this._refresh();
-                    },
-                  ),
-                ],
-              ),
-            ),
-            readOnly: true,
-            controller: this._itemController,
-            onTap: () async {
-              if (controller.isOpen) {
-                controller.close();
-              }
-              else {
-                controller.open();
-              }
-            },
           ),
         ),
       ),

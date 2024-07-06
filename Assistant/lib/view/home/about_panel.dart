@@ -22,7 +22,7 @@ class AboutPanel extends StatelessWidget {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
       child: Column(
         children: [
           Row(
@@ -36,7 +36,7 @@ class AboutPanel extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 8),
           Row(
             children: [
               Expanded(
@@ -48,9 +48,9 @@ class AboutPanel extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 8),
           const Divider(),
-          const SizedBox(height: 4),
+          const SizedBox(height: 8),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -62,11 +62,11 @@ class AboutPanel extends StatelessWidget {
                   child: Icon(IconSymbols.settings),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 16),
               Expanded(
                 child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
+                  spacing: 12,
+                  runSpacing: 12,
                   children: [
                     ActionChip(
                       avatar: const Icon(IconSymbols.refresh),
@@ -86,7 +86,7 @@ class AboutPanel extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       onPressed: () async {
-                        if (await ControlHelper.showCustomConfirmDialog(context: context)) {
+                        if (await ControlHelper.showCustomConfirmModalDialog(context)) {
                           await setting.reset();
                           await setting.save();
                         }
@@ -124,7 +124,7 @@ class AboutPanel extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -136,11 +136,11 @@ class AboutPanel extends StatelessWidget {
                   child: Icon(IconSymbols.folder_special),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 16),
               Expanded(
                 child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
+                  spacing: 12,
+                  runSpacing: 12,
                   children: [
                     ActionChip(
                       avatar: const Icon(IconSymbols.open_in_browser),
@@ -149,11 +149,7 @@ class AboutPanel extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       onPressed: () async {
-                        await ControlHelper.revealStorageDirectoryInNativeManagerOrShowTextDialog(
-                          context: context,
-                          title: 'Shared Directory',
-                          path: await StorageHelper.queryApplicationSharedDirectory(),
-                        );
+                        await ControlHelper.revealStorageDirectoryInNativeManagerOrShowTextDialog(context, 'Shared Directory', await StorageHelper.queryApplicationSharedDirectory());
                       },
                     ),
                   ],
@@ -161,7 +157,7 @@ class AboutPanel extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -173,11 +169,11 @@ class AboutPanel extends StatelessWidget {
                   child: Icon(IconSymbols.folder_delete),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 16),
               Expanded(
                 child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
+                  spacing: 12,
+                  runSpacing: 12,
                   children: [
                     ActionChip(
                       avatar: const Icon(IconSymbols.delete_forever),

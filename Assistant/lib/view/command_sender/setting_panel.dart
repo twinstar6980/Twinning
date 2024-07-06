@@ -1,116 +1,118 @@
 import '/common.dart';
-import '/setting.dart';
 import '/utility/storage_helper.dart';
 import '/view/home/common.dart';
-import 'package:provider/provider.dart';
+import '/view/command_sender/setting.dart';
 import 'package:flutter/material.dart';
 
 // ----------------
 
-class SettingPanel extends StatefulWidget {
+class SettingPanel extends StatelessWidget {
 
   const SettingPanel({
     super.key,
+    required this.data,
+    required this.onUpdate,
   });
 
-  @override
-  createState() => _SettingPanelState();
-
   // ----------------
 
-}
-
-class _SettingPanelState extends State<SettingPanel> {
+  final Setting         data;
+  final Void Function() onUpdate;
 
   // ----------------
-
-  @override
-  initState() {
-    super.initState();
-    return;
-  }
-
-  @override
-  dispose() {
-    super.dispose();
-    return;
-  }
 
   @override
   build(context) {
-    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
-    return Column(
-      children: [
-        const SizedBox(height: 4),
-        CustomSettingItem(
-          enabled: true,
-          icon: IconSymbols.description,
-          label: 'Method Configuration',
-          content: [
-            Text(
-              !StorageHelper.existFileSync(setting.data.mCommandSender.mMethodConfiguration) ? 'Invalid' : 'Available',
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
-            ),
-          ],
-          onTap: null,
-          panelBuilder: (context, setState) => [
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Focus(
-                onFocusChange: (focused) async {
-                  if (!focused) {
-                    await setting.save();
-                  }
-                },
-                child: TextFormField(
+    return StatefulBuilder(
+      builder: (context, setState) => Column(
+        children: [
+          const SizedBox(height: 8),
+          CustomSettingItem(
+            enabled: true,
+            icon: IconSymbols.description,
+            label: 'Method Configuration',
+            content: [
+              Text(
+                !StorageHelper.existFileSync(this.data.mMethodConfiguration) ? 'Invalid' : 'Available',
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.bodyMedium,
+              ),
+            ],
+            onTap: null,
+            panelBuilder: (context, setStateForPanel) => [
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: CustomTextFieldWithFocus(
                   keyboardType: TextInputType.text,
                   inputFormatters: const [],
-                  decoration: const InputDecoration(
-                    isDense: true,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+                    filled: false,
+                    border: const OutlineInputBorder(),
+                    suffixIcon: CustomTextFieldSuffixWidget(
+                      children: [
+                        IconButton(
+                          tooltip: 'Pick',
+                          icon: const Icon(IconSymbols.open_in_new),
+                          onPressed: () async {
+                            var target = await StorageHelper.pickLoadFile(context, 'CommandSender.MethodConfiguration');
+                            if (target != null) {
+                              this.data.mMethodConfiguration = target;
+                              setStateForPanel(() {});
+                              setState(() {});
+                              this.onUpdate();
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                  initialValue: setting.data.mCommandSender.mMethodConfiguration,
+                  value: this.data.mMethodConfiguration,
                   onChanged: (value) async {
-                    setting.data.mCommandSender.mMethodConfiguration = value;
+                    this.data.mMethodConfiguration = StorageHelper.regularize(value);
+                    setStateForPanel(() {});
+                    setState(() {});
+                    this.onUpdate();
                   },
                 ),
               ),
-            ),
-          ],
-        ),
-        CustomSettingItem(
-          enabled: true,
-          icon: IconSymbols.shuffle,
-          label: 'Parallel Forward',
-          content: [
-            Text(
-              !setting.data.mCommandSender.mParallelForward ? 'Disabled' : 'Enabled',
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
-            ),
-          ],
-          onTap: null,
-          panelBuilder: (context, setState) => [
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Switch(
-                value: setting.data.mCommandSender.mParallelForward,
-                onChanged: (value) async {
-                  setting.data.mCommandSender.mParallelForward = value;
-                  await setting.save();
-                },
-              ),
-              title: Text(
-                'Enable',
+            ],
+          ),
+          CustomSettingItem(
+            enabled: true,
+            icon: IconSymbols.shuffle,
+            label: 'Parallel Forward',
+            content: [
+              Text(
+                !this.data.mParallelForward ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleMedium,
+                style: theme.textTheme.bodyMedium,
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 4),
-      ],
+            ],
+            onTap: null,
+            panelBuilder: (context, setStateForPanel) => [
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Switch(
+                  value: this.data.mParallelForward,
+                  onChanged: (value) async {
+                    this.data.mParallelForward = value;
+                    setStateForPanel(() {});
+                    setState(() {});
+                    this.onUpdate();
+                  },
+                ),
+                title: const Text(
+                  'Enable',
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+        ],
+      ),
     );
   }
 

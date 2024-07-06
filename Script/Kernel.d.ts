@@ -3112,13 +3112,30 @@ declare namespace Twinning.Kernel {
 					namespace JS_N {
 
 						/** 平移，2x3变换矩阵的xy部分 */
-						type TranslateTransform = [number, number];
+						type TranslateTransform = [
+							/** 水平偏移 */
+							number,
+							/** 垂直偏移 */
+							number,
+						];
 
 						/** 旋转，可转换为一个矩阵 */
-						type RotateTransform = [number];
+						type RotateTransform = [
+							/** 角度 */
+							number,
+						];
 
 						/** 矩阵，2x3变换矩阵除去xy的部分 */
-						type MatrixTransform = [number, number, number, number];
+						type MatrixTransform = [
+							/** a */
+							number,
+							/** b */
+							number,
+							/** c */
+							number,
+							/** d */
+							number,
+						];
 
 						/** 旋转与平移 */
 						type RotateTranslateTransform = [...RotateTransform, ...TranslateTransform];
@@ -3130,14 +3147,15 @@ declare namespace Twinning.Kernel {
 						type VariantTransform = TranslateTransform | RotateTranslateTransform | MatrixTranslateTransform;
 
 						/** 颜色 */
-						type Color = [number, number, number, number];
-
-						/** 命令 */
-						type Command = [
-							/** 命令 */
-							string,
-							/** 参数 */
-							string,
+						type Color = [
+							/** 红色 */
+							number,
+							/** 绿色 */
+							number,
+							/** 蓝色 */
+							number,
+							/** 不透明度 */
+							number,
 						];
 
 						/** 矩形 */
@@ -3147,6 +3165,14 @@ declare namespace Twinning.Kernel {
 							/** 尺寸 */
 							size: [number, number];
 						};
+
+						/** 命令 */
+						type Command = [
+							/** 命令 */
+							string,
+							/** 参数 */
+							string,
+						];
 
 						/** 层移除 */
 						type LayerRemove = {
@@ -3168,7 +3194,7 @@ declare namespace Twinning.Kernel {
 							additive: boolean;
 							/** 预加载帧数 */
 							preload_frame: bigint;
-							/** 时率 */
+							/** 时间比率 */
 							time_scale: number;
 						};
 

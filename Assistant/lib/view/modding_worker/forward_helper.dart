@@ -29,14 +29,12 @@ class ForwardHelper {
     List<List<String>> argument,
     Boolean            parallel,
   ) async {
-    if (argument.length != 0) {
-      if (!parallel) {
-        await forward(context, argument.expand((value) => [...value]).toList());
-      }
-      else {
-        for (var argumentItem in argument) {
-          await forward(context, argumentItem);
-        }
+    if (!parallel) {
+      await forward(context, argument.expand((value) => [...value]).toList());
+    }
+    else {
+      for (var argumentItem in argument) {
+        await forward(context, argumentItem);
       }
     }
     return;

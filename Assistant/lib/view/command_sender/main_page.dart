@@ -23,30 +23,34 @@ class MainPage extends StatefulWidget {
     required this.option,
   });
 
-  @override
-  createState() => _MainPageState();
-
   // ----------------
 
   final List<String> option;
 
+  // ----------------
+
+  @override
+  createState() => _MainPageState();
+
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends State<MainPage> implements CustomModulePageState {
 
-  late List<MethodGroupConfiguration>                                                                           _methodConfiguration;
-  late Boolean                                                                                                  _parallelForward;
-  late List<(MethodGroupConfiguration, MethodConfiguration, Wrapper<Boolean>, List<Wrapper<ValueExpression?>>)> _command;
-  late ScrollController                                                                                         _commandListScrollController;
+  late List<MethodGroupConfiguration>                                                                                             _methodConfiguration;
+  late Boolean                                                                                                                    _parallelForward;
+  late List<Boolean>                                                                                                              _methodCollapse;
+  late List<(MethodGroupConfiguration, MethodConfiguration, Wrapper<Boolean>, List<Wrapper<ValueExpression?>>, Wrapper<Boolean>)> _command;
+  late ScrollController                                                                                                           _commandListScrollController;
 
   Future<Void> _appendCommand(
     String              methodId,
     Boolean             enableBatch,
     Map<String, Object> argumentValue,
+    Boolean             collapse,
   ) async {
     var groupConfiguration = this._methodConfiguration.firstWhere((value) => methodId.startsWith('${value.id}.'));
     var itemConfiguration = groupConfiguration.item.firstWhere((value) => methodId == value.id);
-    this._command.add((groupConfiguration, itemConfiguration, Wrapper<Boolean>(enableBatch), ConfigurationHelper.parseArgumentValueListJson(itemConfiguration.argument, argumentValue)));
+    this._command.add((groupConfiguration, itemConfiguration, Wrapper(enableBatch), ConfigurationHelper.parseArgumentValueListJson(itemConfiguration.argument, argumentValue), Wrapper(collapse)));
     this.setState(() {});
     await WidgetsBinding.instance.endOfFrame;
     this._commandListScrollController.jumpTo(this._commandListScrollController.position.maxScrollExtent);
@@ -78,42 +82,69 @@ class _MainPageState extends State<MainPage> {
   // ----------------
 
   @override
+  modulePageApplyOption(optionView) async {
+    var optionParallelForward = null as Boolean?;
+    var optionCommand = null as List<(String, Boolean, Map<String, Object>, Boolean)>?;
+    var option = CommandLineReader(optionView);
+    if (option.check('-parallel_forward')) {
+      optionParallelForward = option.nextBoolean();
+    }
+    if (option.check('-command')) {
+      optionCommand = [];
+      while (!option.done()) {
+        optionCommand.add((
+          option.nextString(),
+          option.nextBoolean(),
+          option.nextString().selfLet((it) => JsonHelper.deserializeText(it)!.as<Map<dynamic, dynamic>>().cast<String, Object>()),
+          option.nextBoolean(),
+        ));
+      }
+    }
+    assertTest(option.done());
+    if (optionParallelForward != null) {
+      this._parallelForward = optionParallelForward;
+    }
+    if (optionCommand != null) {
+      for (var optionCommandItem in optionCommand) {
+        await this._appendCommand(optionCommandItem.$1, optionCommandItem.$2, optionCommandItem.$3, optionCommandItem.$4);
+      }
+    }
+    this.setState(() {});
+    return;
+  }
+
+  @override
+  modulePageCollectOption() async {
+    return [];
+  }
+
+  @override
+  modulePageRequestClose() async {
+    return true;
+  }
+
+  // ----------------
+
+  @override
   initState() {
     super.initState();
     var setting = Provider.of<SettingProvider>(this.context, listen: false);
     this._methodConfiguration = [];
     this._parallelForward = setting.data.mCommandSender.mParallelForward;
+    this._methodCollapse = [];
     this._command = [];
     this._commandListScrollController = ScrollController();
     ControlHelper.postTask(() async {
       this._methodConfiguration = ConfigurationHelper.parseDataFromJson(await JsonHelper.deserializeFile(setting.data.mCommandSender.mMethodConfiguration));
-      var optionParallelForward = null as Boolean?;
-      var optionCommand = null as List<(String, Boolean, Map<String, Object>)>?;
-      var option = CommandLineReader(this.widget.option);
-      if (option.check('-parallel_forward')) {
-        optionParallelForward = option.nextBoolean();
-      }
-      if (option.check('-command')) {
-        optionCommand = [];
-        while (!option.done()) {
-          optionCommand.add((
-            option.nextString(),
-            option.nextBoolean(),
-            option.nextString().selfLet((it) => JsonHelper.deserializeText(it)!.as<Map<dynamic, dynamic>>().cast<String, Object>()),
-          ));
-        }
-      }
-      assertTest(option.done());
-      if (optionParallelForward != null) {
-        this._parallelForward = optionParallelForward;
-      }
-      if (optionCommand != null) {
-        for (var optionCommandItem in optionCommand) {
-          await this._appendCommand(optionCommandItem.$1, optionCommandItem.$2, optionCommandItem.$3);
-        }
-      }
-      this.setState(() {});
+      this._methodCollapse = this._methodConfiguration.map((value) => true).toList();
+      await this.modulePageApplyOption(this.widget.option);
     });
+    return;
+  }
+
+  @override
+  didUpdateWidget(oldWidget) {
+    super.didUpdateWidget(oldWidget);
     return;
   }
 
@@ -126,7 +157,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   build(context) {
-    return CustomModulePage(
+    return CustomModulePageLayout(
       onDropFile: null,
       content: Column(
         children: [
@@ -135,17 +166,18 @@ class _MainPageState extends State<MainPage> {
               interactive: true,
               controller: this._commandListScrollController,
               child: ListView.builder(
-                padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+                padding: const EdgeInsets.fromLTRB(16, 6, 16, 6),
                 controller: this._commandListScrollController,
                 itemCount: this._command.length,
                 itemBuilder: (context, index) => Container(
-                  padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+                  padding: const EdgeInsets.fromLTRB(0, 6, 0, 6),
                   child: CommandPanel(
                     key: ObjectKey(this._command[index]),
                     groupConfiguration: this._command[index].$1,
                     itemConfiguration: this._command[index].$2,
                     enableBatch: this._command[index].$3,
                     argumentValue: this._command[index].$4,
+                    collapse: this._command[index].$5,
                     onRemove: () async {
                       await this._removeCommand(index);
                     },
@@ -183,39 +215,45 @@ class _MainPageState extends State<MainPage> {
           const SizedBox(width: 16),
           const Expanded(child: SizedBox()),
           const SizedBox(width: 16),
-          FloatingActionButton(
-            tooltip: 'Method',
-            elevation: 0,
-            focusElevation: 0,
-            hoverElevation: 0,
-            highlightElevation: 0,
-            disabledElevation: 0,
-            onPressed: () async {
-              await ControlHelper.showCustomModalBottomSheet(
-                context: context,
-                title: 'Method',
-                contentBuilder: (context, setState) => [
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
-                    itemCount: this._methodConfiguration.length,
-                    itemBuilder: (context, index) => MethodGroupItem(
-                      key: ObjectKey(this._methodConfiguration[index]),
-                      configuration: this._methodConfiguration[index],
-                      onSelect: (method) async {
-                        Navigator.pop(context);
-                        await this._appendCommand(method, false, {});
-                      },
+          Badge.count(
+            count: this._methodConfiguration.fold(0, (currentValue, item) => currentValue + item.item.length),
+            child: FloatingActionButton(
+              tooltip: 'Method',
+              elevation: 0,
+              focusElevation: 0,
+              hoverElevation: 0,
+              highlightElevation: 0,
+              disabledElevation: 0,
+              onPressed: () async {
+                await ControlHelper.showCustomModalBottomSheet<Void>(context, CustomModalBottomSheet(
+                  title: 'Method',
+                  contentBuilder: (context, setState) => [
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                      itemCount: this._methodConfiguration.length,
+                      itemBuilder: (context, index) => MethodGroupItem(
+                        configuration: this._methodConfiguration[index],
+                        onSelect: (method) async {
+                          Navigator.pop(context);
+                          await this._appendCommand(method, false, {}, false);
+                        },
+                        collapse: this._methodCollapse[index],
+                        onToggle: () async {
+                          this._methodCollapse[index] = !this._methodCollapse[index];
+                          setState(() {});
+                        },
+                      ),
                     ),
-                  ),
-                ],
-              );
-            },
-            child: const Icon(IconSymbols.format_list_bulleted_add),
+                  ],
+                ));
+              },
+              child: const Icon(IconSymbols.format_list_bulleted_add),
+            ),
           ),
         ],
-      )
+      ),
     );
   }
 

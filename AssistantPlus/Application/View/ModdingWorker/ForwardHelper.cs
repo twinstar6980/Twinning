@@ -25,14 +25,12 @@ namespace AssistantPlus.View.ModdingWorker {
 			List<List<String>> argument,
 			Boolean            parallel
 		) {
-			if (argument.Count != 0) {
-				if (!parallel) {
-					await ForwardHelper.Forward(argument.SelectMany((value) => (value)).ToList());
-				}
-				else {
-					foreach (var argumentItem in argument) {
-						await ForwardHelper.Forward(argumentItem);
-					}
+			if (!parallel) {
+				await ForwardHelper.Forward(argument.SelectMany((value) => (value)).ToList());
+			}
+			else {
+				foreach (var argumentItem in argument) {
+					await ForwardHelper.Forward(argumentItem);
 				}
 			}
 			return;

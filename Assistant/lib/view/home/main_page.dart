@@ -1,7 +1,9 @@
 import '/common.dart';
 import '/module.dart';
 import '/setting.dart';
+import '/utility/convert_helper.dart';
 import '/utility/control_helper.dart';
+import '/utility/system_overlay_helper.dart';
 import '/view/home/common.dart';
 import '/view/home/blank_panel.dart';
 import '/view/home/launcher_panel.dart';
@@ -20,18 +22,20 @@ class MainPage extends StatefulWidget {
     super.key,
   });
 
-  @override
-  createState() => _MainPageState();
+  // ----------------
 
   // ----------------
+
+  @override
+  createState() => _MainPageState();
 
 }
 
 class _MainPageState extends State<MainPage> {
 
-  late Widget                                  _blankPanel;
-  late List<(String, ModuleType, Widget, Key)> _tabList;
-  late Integer                                 _tabIndex;
+  late Widget                             _blankPanel;
+  late List<(String, ModuleType, Widget)> _tabList;
+  late Integer                            _tabIndex;
 
   Future<Void> _insertTabItem(
     ModuleLauncherConfiguration configuration,
@@ -39,7 +43,7 @@ class _MainPageState extends State<MainPage> {
     while (Navigator.canPop(context)) {
       Navigator.pop(context);
     }
-    this._tabList.add((configuration.title, configuration.type, ModuleHelper.query(configuration.type).mainPage(configuration.option), ValueKey(DateTime.now().millisecondsSinceEpoch)));
+    this._tabList.add((configuration.title, configuration.type, ModuleHelper.query(configuration.type).mainPage(configuration.option)));
     this._tabIndex = this._tabList.length - 1;
     this.setState(() {});
     await Future.delayed(const Duration(milliseconds: 10));
@@ -49,6 +53,10 @@ class _MainPageState extends State<MainPage> {
   Future<Void> _removeTabItem(
     Integer index,
   ) async {
+    var itemState = this._tabList[index].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>();
+    if (!await itemState.modulePageRequestClose()) {
+      return;
+    }
     this._tabList.removeAt(index);
     if (this._tabIndex > index) {
       this._tabIndex--;
@@ -67,10 +75,47 @@ class _MainPageState extends State<MainPage> {
     return;
   }
 
+  Future<Void> _showCommanderPanel(
+  ) async {
+    var command = <String>[];
+    var confirmed = await ControlHelper.showCustomModalDialog<Boolean>(context, CustomModalDialog(
+      title: 'Commander',
+      contentBuilder: (context, setState) => [
+        CustomTextFieldWithFocus(
+          keyboardType: TextInputType.multiline,
+          inputFormatters: const [],
+          decoration: const InputDecoration(
+            contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+            filled: false,
+            border: OutlineInputBorder(),
+          ),
+          value: ConvertHelper.makeStringListToStringWithLine(command),
+          onChanged: (value) async {
+            command = ConvertHelper.parseStringListFromStringWithLine(value);
+            setState(() {});
+          },
+        ),
+      ],
+      actionBuilder: (context) => [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context, true),
+          child: const Text('Handle'),
+        ),
+      ],
+    )) ?? false;
+    if (confirmed) {
+      await Provider.of<SettingProvider>(context, listen: false).state.mHandleCommand!(command);
+    }
+    return;
+  }
+
   Future<Void> _showLauncherPanel(
   ) async {
-    await ControlHelper.showCustomModalBottomSheet(
-      context: this.context,
+    await ControlHelper.showCustomModalBottomSheet<Void>(this.context, CustomModalBottomSheet(
       title: 'Launcher',
       contentBuilder: (context, setState) => [
         LauncherPanel(
@@ -80,7 +125,7 @@ class _MainPageState extends State<MainPage> {
           },
         ),
       ],
-    );
+    ));
     return;
   }
 
@@ -96,9 +141,16 @@ class _MainPageState extends State<MainPage> {
     this._tabIndex = -1;
     {
       var setting = Provider.of<SettingProvider>(this.context, listen: false);
+      setting.state.mHomeShowCommanderPanel = this._showCommanderPanel;
       setting.state.mHomeShowLauncherPanel = this._showLauncherPanel;
       setting.state.mHomeInsertTabItem = this._insertTabItem;
     }
+    return;
+  }
+
+  @override
+  didUpdateWidget(oldWidget) {
+    super.didUpdateWidget(oldWidget);
     return;
   }
 
@@ -110,8 +162,10 @@ class _MainPageState extends State<MainPage> {
 
   @override
   build(context) {
+    SystemOverlayHelper.apply(Theme.of(context).colorScheme.brightness);
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: SystemOverlayHelper.query(Theme.of(context).colorScheme.brightness),
         centerTitle: false,
         elevation: 3,
         scrolledUnderElevation: 3,
@@ -122,6 +176,15 @@ class _MainPageState extends State<MainPage> {
           Expanded(
             child: CustomTitleBar(
               title: this._tabList.isEmpty ? '' : this._tabList[this._tabIndex].$1,
+              leading: Builder(
+                builder: (context) => IconButton(
+                  tooltip: 'Navigation',
+                  icon: const Icon(IconSymbols.menu),
+                  onPressed: () async {
+                    Scaffold.of(context).openDrawer();
+                  },
+                ),
+              ),
             ),
           ),
         ],
@@ -134,6 +197,16 @@ class _MainPageState extends State<MainPage> {
           ),
           CustomNavigationDrawerItem(
             selected: false,
+            icon: IconSymbols.keyboard_command_key,
+            label: 'Commander',
+            action: const [],
+            onPressed: () async {
+              Navigator.pop(context);
+              await this._showCommanderPanel();
+            },
+          ),
+          CustomNavigationDrawerItem(
+            selected: false,
             icon: IconSymbols.widgets,
             label: 'Launcher',
             action: const [],
@@ -143,7 +216,10 @@ class _MainPageState extends State<MainPage> {
             },
           ),
           const CustomNavigationDrawerDivider(),
+          if (this._tabList.isEmpty)
+            const SizedBox(height: 16),
           ...this._tabList.mapIndexed((index, value) => CustomNavigationDrawerItem(
+            key: ObjectKey(value), // NOTE : fix button ripple effect error when remove item
             selected: index == this._tabIndex,
             icon: ModuleHelper.query(value.$2).icon,
             label: value.$1,
@@ -152,9 +228,7 @@ class _MainPageState extends State<MainPage> {
                 tooltip: 'Remove',
                 icon: const Icon(IconSymbols.remove),
                 onPressed: () async {
-                  if (await ControlHelper.showCustomConfirmDialog(context: context)) {
-                    await this._removeTabItem(index);
-                  }
+                  await this._removeTabItem(index);
                 },
               ),
             ],
@@ -171,13 +245,12 @@ class _MainPageState extends State<MainPage> {
             action: const [],
             onPressed: () async {
               Navigator.pop(context);
-              await ControlHelper.showCustomModalBottomSheet(
-                context: context,
+              await ControlHelper.showCustomModalBottomSheet<Void>(context, CustomModalBottomSheet(
                 title: 'Setting',
                 contentBuilder: (context, setState) => [
                   const SettingPanel(),
                 ],
-              );
+              ));
             },
           ),
           CustomNavigationDrawerItem(
@@ -187,13 +260,12 @@ class _MainPageState extends State<MainPage> {
             action: const [],
             onPressed: () async {
               Navigator.pop(context);
-              await ControlHelper.showCustomModalBottomSheet(
-                context: context,
+              await ControlHelper.showCustomModalBottomSheet<Void>(context, CustomModalBottomSheet(
                 title: 'About',
                 contentBuilder: (context, setState) => [
                   const AboutPanel(),
                 ],
-              );
+              ));
             },
           ),
           const SizedBox(height: 16),
@@ -206,7 +278,6 @@ class _MainPageState extends State<MainPage> {
             child: this._blankPanel,
           ),
           ...this._tabList.mapIndexed((index, value) => Offstage(
-            key: value.$4,
             offstage: this._tabIndex != index,
             child: value.$3,
           )),

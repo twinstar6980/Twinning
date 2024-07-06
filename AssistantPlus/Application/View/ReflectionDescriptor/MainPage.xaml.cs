@@ -24,7 +24,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			this.Controller.ApplyOption(args.Parameter.As<List<String>>());
+			_ = this.ModulePageApplyOption(args.Parameter.As<List<String>>());
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -37,21 +37,27 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 
 		#region module page
 
-		public async Task<List<String>> ModulePageCollectOption (
+		public Task ModulePageApplyOption (
+			List<String> optionView
 		) {
-			return await this.Controller.CollectOption();
+			return this.Controller.ApplyOption(optionView);
 		}
 
-		public async Task<Boolean> ModulePageRequestClose (
+		public Task<List<String>> ModulePageCollectOption (
 		) {
-			return await this.Controller.RequestClose();
+			return this.Controller.CollectOption();
+		}
+
+		public Task<Boolean> ModulePageRequestClose (
+		) {
+			return this.Controller.RequestClose();
 		}
 
 		#endregion
 
 	}
 
-	public class MainPageController : CustomController {
+	public class MainPageController : CustomController, Home.IModulePageController {
 
 		#region data
 
@@ -87,7 +93,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			return;
 		}
 
-		public async void ApplyOption (
+		public async Task ApplyOption (
 			List<String> optionView
 		) {
 			await ControlHelper.WaitUntilLoaded(this.View);

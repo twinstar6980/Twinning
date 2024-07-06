@@ -1,176 +1,180 @@
 import '/common.dart';
-import '/setting.dart';
 import '/utility/storage_helper.dart';
 import '/view/home/common.dart';
-import 'package:provider/provider.dart';
+import '/view/resource_forwarder/setting.dart';
 import 'package:flutter/material.dart';
 
 // ----------------
 
-class SettingPanel extends StatefulWidget {
+class SettingPanel extends StatelessWidget {
 
   const SettingPanel({
     super.key,
+    required this.data,
+    required this.onUpdate,
   });
 
-  @override
-  createState() => _SettingPanelState();
-
   // ----------------
 
-}
-
-class _SettingPanelState extends State<SettingPanel> {
+  final Setting         data;
+  final Void Function() onUpdate;
 
   // ----------------
-
-  @override
-  initState() {
-    super.initState();
-    return;
-  }
-
-  @override
-  dispose() {
-    super.dispose();
-    return;
-  }
 
   @override
   build(context) {
-    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
-    return Column(
-      children: [
-        const SizedBox(height: 4),
-        CustomSettingItem(
-          enabled: true,
-          icon: IconSymbols.description,
-          label: 'Option Configuration',
-          content: [
-            Text(
-              !StorageHelper.existFileSync(setting.data.mResourceForwarder.mOptionConfiguration) ? 'Invalid' : 'Available',
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
-            ),
-          ],
-          onTap: null,
-          panelBuilder: (context, setState) => [
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Focus(
-                onFocusChange: (focused) async {
-                  if (!focused) {
-                    await setting.save();
-                  }
-                },
-                child: TextFormField(
+    return StatefulBuilder(
+      builder: (context, setState) => Column(
+        children: [
+          const SizedBox(height: 8),
+          CustomSettingItem(
+            enabled: true,
+            icon: IconSymbols.description,
+            label: 'Option Configuration',
+            content: [
+              Text(
+                !StorageHelper.existFileSync(this.data.mOptionConfiguration) ? 'Invalid' : 'Available',
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.bodyMedium,
+              ),
+            ],
+            onTap: null,
+            panelBuilder: (context, setStateForPanel) => [
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: CustomTextFieldWithFocus(
                   keyboardType: TextInputType.text,
                   inputFormatters: const [],
-                  decoration: const InputDecoration(
-                    isDense: true,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+                    filled: false,
+                    border: const OutlineInputBorder(),
+                    suffixIcon: CustomTextFieldSuffixWidget(
+                      children: [
+                        IconButton(
+                          tooltip: 'Pick',
+                          icon: const Icon(IconSymbols.open_in_new),
+                          onPressed: () async {
+                            var target = await StorageHelper.pickLoadFile(context, 'ResourceForwarder.OptionConfiguration');
+                            if (target != null) {
+                              this.data.mOptionConfiguration = target;
+                              setStateForPanel(() {});
+                              setState(() {});
+                              this.onUpdate();
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                  initialValue: setting.data.mResourceForwarder.mOptionConfiguration,
+                  value: this.data.mOptionConfiguration,
                   onChanged: (value) async {
-                    setting.data.mResourceForwarder.mOptionConfiguration = value;
+                    this.data.mOptionConfiguration = StorageHelper.regularize(value);
+                    setStateForPanel(() {});
+                    setState(() {});
+                    this.onUpdate();
                   },
                 ),
               ),
-            ),
-          ],
-        ),
-        CustomSettingItem(
-          enabled: true,
-          icon: IconSymbols.shuffle,
-          label: 'Parallel Forward',
-          content: [
-            Text(
-              !setting.data.mResourceForwarder.mParallelForward ? 'Disabled' : 'Enabled',
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
-            ),
-          ],
-          onTap: null,
-          panelBuilder: (context, setState) => [
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Switch(
-                value: setting.data.mResourceForwarder.mParallelForward,
-                onChanged: (value) async {
-                  setting.data.mResourceForwarder.mParallelForward = value;
-                  await setting.save();
-                },
-              ),
-              title: Text(
-                'Enable',
+            ],
+          ),
+          CustomSettingItem(
+            enabled: true,
+            icon: IconSymbols.shuffle,
+            label: 'Parallel Forward',
+            content: [
+              Text(
+                !this.data.mParallelForward ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleMedium,
+                style: theme.textTheme.bodyMedium,
               ),
-            ),
-          ],
-        ),
-        CustomSettingItem(
-          enabled: true,
-          icon: IconSymbols.filter_alt,
-          label: 'Enable Filter',
-          content: [
-            Text(
-              !setting.data.mResourceForwarder.mEnableFilter ? 'Disabled' : 'Enabled',
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
-            ),
-          ],
-          onTap: null,
-          panelBuilder: (context, setState) => [
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Switch(
-                value: setting.data.mResourceForwarder.mEnableFilter,
-                onChanged: (value) async {
-                  setting.data.mResourceForwarder.mEnableFilter = value;
-                  await setting.save();
-                },
+            ],
+            onTap: null,
+            panelBuilder: (context, setStateForPanel) => [
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Switch(
+                  value: this.data.mParallelForward,
+                  onChanged: (value) async {
+                    this.data.mParallelForward = value;
+                    setStateForPanel(() {});
+                    setState(() {});
+                    this.onUpdate();
+                  },
+                ),
+                title: const Text(
+                  'Enable',
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-              title: Text(
-                'Enable',
+            ],
+          ),
+          CustomSettingItem(
+            enabled: true,
+            icon: IconSymbols.filter_alt,
+            label: 'Enable Filter',
+            content: [
+              Text(
+                !this.data.mEnableFilter ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleMedium,
+                style: theme.textTheme.bodyMedium,
               ),
-            ),
-          ],
-        ),
-        CustomSettingItem(
-          enabled: true,
-          icon: IconSymbols.stacks,
-          label: 'Enable Batch',
-          content: [
-            Text(
-              !setting.data.mResourceForwarder.mEnableBatch ? 'Disabled' : 'Enabled',
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
-            ),
-          ],
-          onTap: null,
-          panelBuilder: (context, setState) => [
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Switch(
-                value: setting.data.mResourceForwarder.mEnableBatch,
-                onChanged: (value) async {
-                  setting.data.mResourceForwarder.mEnableBatch = value;
-                  await setting.save();
-                },
+            ],
+            onTap: null,
+            panelBuilder: (context, setStateForPanel) => [
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Switch(
+                  value: this.data.mEnableFilter,
+                  onChanged: (value) async {
+                    this.data.mEnableFilter = value;
+                    setStateForPanel(() {});
+                    setState(() {});
+                    this.onUpdate();
+                  },
+                ),
+                title: const Text(
+                  'Enable',
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-              title: Text(
-                'Enable',
+            ],
+          ),
+          CustomSettingItem(
+            enabled: true,
+            icon: IconSymbols.stacks,
+            label: 'Enable Batch',
+            content: [
+              Text(
+                !this.data.mEnableBatch ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleMedium,
+                style: theme.textTheme.bodyMedium,
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 4),
-      ],
+            ],
+            onTap: null,
+            panelBuilder: (context, setStateForPanel) => [
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Switch(
+                  value: this.data.mEnableBatch,
+                  onChanged: (value) async {
+                    this.data.mEnableBatch = value;
+                    setStateForPanel(() {});
+                    setState(() {});
+                    this.onUpdate();
+                  },
+                ),
+                title: const Text(
+                  'Enable',
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+        ],
+      ),
     );
   }
 

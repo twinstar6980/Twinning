@@ -38,7 +38,7 @@ class MessageCard extends StatelessWidget {
       color: theme.colorScheme.secondary,
     );
     return Card(
-      margin: const EdgeInsets.fromLTRB(1, 0, 1, 0),
+      margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       color: Color.alphaBlend(cardColor.withOpacity(0.025), theme.colorScheme.surfaceContainerLow),
       child: Container(
         padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
