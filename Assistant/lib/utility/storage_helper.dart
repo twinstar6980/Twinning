@@ -7,7 +7,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:path/path.dart' as p;
+import 'package:path/path.dart' as path_library;
 import 'package:file_selector/file_selector.dart' as file_selector;
 import 'package:path_provider/path_provider.dart' as path_provider;
 
@@ -40,13 +40,13 @@ class StorageHelper {
   static String parent(
     String path,
   ) {
-    return regularize(p.dirname(path));
+    return regularize(path_library.dirname(path));
   }
 
   static String name(
     String path,
   ) {
-    return regularize(p.basename(path));
+    return regularize(path_library.basename(path));
   }
 
   // ----------------
@@ -410,21 +410,27 @@ class StorageHelper {
       var duplicate = await ControlHelper.showCustomModalDialog<Boolean>(context, CustomModalDialog(
         title: 'Unparsable Content Uri',
         contentBuilder: (context, setState) => [
-          SelectionArea(
-            child: Text(
-              uri.toString(),
-              overflow: TextOverflow.clip,
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: SelectionArea(
+                  child: Text(
+                    uri.toString(),
+                    overflow: TextOverflow.clip,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
         actionBuilder: (context) => [
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
             child: const Text('Ignore'),
+            onPressed: () => Navigator.pop(context, false),
           ),
-          FilledButton.tonal(
+          TextButton(
+            child: const Text('Duplicate'), // ignore: sort_child_properties_last
             onPressed: !copyable ? null : () => Navigator.pop(context, true),
-            child: const Text('Duplicate'),
           ),
         ],
       )) ?? false;

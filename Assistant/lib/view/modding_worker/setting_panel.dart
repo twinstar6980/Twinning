@@ -44,14 +44,14 @@ class SettingPanel extends StatelessWidget {
             panelBuilder: (context, setStateForPanel) => [
               ListTile(
                 contentPadding: EdgeInsets.zero,
-                title: CustomTextFieldWithFocus(
+                title: CustomTextField(
                   keyboardType: TextInputType.text,
                   inputFormatters: const [],
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
                     filled: false,
                     border: const OutlineInputBorder(),
-                    suffixIcon: CustomTextFieldSuffixWidget(
+                    suffixIcon: CustomTextFieldSuffixRegion(
                       children: [
                         IconButton(
                           tooltip: 'Pick',
@@ -95,14 +95,14 @@ class SettingPanel extends StatelessWidget {
             panelBuilder: (context, setStateForPanel) => [
               ListTile(
                 contentPadding: EdgeInsets.zero,
-                title: CustomTextFieldWithFocus(
+                title: CustomTextField(
                   keyboardType: TextInputType.text,
                   inputFormatters: const [],
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
                     filled: false,
                     border: const OutlineInputBorder(),
-                    suffixIcon: CustomTextFieldSuffixWidget(
+                    suffixIcon: CustomTextFieldSuffixRegion(
                       children: [
                         IconButton(
                           tooltip: 'Pick',
@@ -146,14 +146,14 @@ class SettingPanel extends StatelessWidget {
             panelBuilder: (context, setStateForPanel) => [
               ListTile(
                 contentPadding: EdgeInsets.zero,
-                title: CustomTextFieldWithFocus(
+                title: CustomTextField(
                   keyboardType: TextInputType.multiline,
                   inputFormatters: const [],
                   decoration: const InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
                     filled: false,
                     border: OutlineInputBorder(),
-                    suffixIcon: CustomTextFieldSuffixWidget(
+                    suffixIcon: CustomTextFieldSuffixRegion(
                       children: [
                       ],
                     ),
@@ -215,14 +215,14 @@ class SettingPanel extends StatelessWidget {
             panelBuilder: (context, setStateForPanel) => [
               ListTile(
                 contentPadding: EdgeInsets.zero,
-                title: CustomTextFieldWithFocus(
+                title: CustomTextField(
                   keyboardType: TextInputType.multiline,
                   inputFormatters: const [],
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
                     filled: false,
                     border: const OutlineInputBorder(),
-                    suffixIcon: CustomTextFieldSuffixWidget(
+                    suffixIcon: CustomTextFieldSuffixRegion(
                       children: [
                         IconButton(
                           tooltip: 'Pick',

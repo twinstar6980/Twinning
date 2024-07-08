@@ -9,7 +9,7 @@
   xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
   xmlns:desktop6="http://schemas.microsoft.com/appx/manifest/desktop/windows10/6"
   IgnorableNamespaces="uap rescap com desktop desktop4 desktop5 desktop6">
-  <Identity Name="TwinStar.Twinning.AssistantPlus" Publisher="CN=TwinStar" Version="40.0.0.0" />
+  <Identity Name="TwinStar.Twinning.AssistantPlus" Publisher="CN=TwinStar" Version="41.0.0.0" />
   <Properties>
     <DisplayName>Twinning Assistant Plus</DisplayName>
     <PublisherDisplayName>TwinStar</PublisherDisplayName>
@@ -48,13 +48,13 @@
         <desktop4:Extension Category="windows.fileExplorerContextMenus">
           <desktop4:FileExplorerContextMenus>
             <desktop5:ItemType Type="*">
-              <desktop5:Verb Id="0Forwarder" Clsid="BE4A1760-1939-4240-BB82-7199B184B702" />
+              <desktop5:Verb Id="TwinningAssistantPlus" Clsid="BE4A1760-1939-4240-BB82-7199B184B702" />
             </desktop5:ItemType>
             <desktop5:ItemType Type="Directory">
-              <desktop5:Verb Id="0Forwarder" Clsid="BE4A1760-1939-4240-BB82-7199B184B702" />
+              <desktop5:Verb Id="TwinningAssistantPlus" Clsid="BE4A1760-1939-4240-BB82-7199B184B702" />
             </desktop5:ItemType>
             <desktop5:ItemType Type="Directory\Background">
-              <desktop5:Verb Id="0Forwarder" Clsid="BE4A1760-1939-4240-BB82-7199B184B702" />
+              <desktop5:Verb Id="TwinningAssistantPlus" Clsid="BE4A1760-1939-4240-BB82-7199B184B702" />
             </desktop5:ItemType>
           </desktop4:FileExplorerContextMenus>
         </desktop4:Extension>

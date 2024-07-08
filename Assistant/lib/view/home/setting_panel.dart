@@ -88,6 +88,8 @@ class _SettingPanelState extends State<SettingPanel> {
                   groupValue: setting.data.mThemeMode,
                   onChanged: (value) async {
                     setting.data.mThemeMode = value!;
+                    setStateForPanel(() {});
+                    this.setState(() {});
                     await setting.save();
                   },
                 ),
@@ -118,6 +120,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mThemeColorState,
                 onChanged: (value) async {
                   setting.data.mThemeColorState = value;
+                  setStateForPanel(() {});
+                  this.setState(() {});
                   await setting.save();
                 },
               ),
@@ -128,7 +132,7 @@ class _SettingPanelState extends State<SettingPanel> {
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: CustomTextFieldWithFocus(
+              title: CustomTextField(
                 keyboardType: TextInputType.text,
                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
                 decoration: InputDecoration(
@@ -145,13 +149,15 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mThemeColorLight.withOpacity(0.0).value.toRadixString(16).padLeft(6, '0'),
                 onChanged: (value) async {
                   setting.data.mThemeColorLight = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withOpacity(1.0);
+                  setStateForPanel(() {});
+                  this.setState(() {});
                   await setting.save();
                 },
               ),
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: CustomTextFieldWithFocus(
+              title: CustomTextField(
                 keyboardType: TextInputType.text,
                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
                 decoration: InputDecoration(
@@ -168,6 +174,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mThemeColorDark.withOpacity(0.0).value.toRadixString(16).padLeft(6, '0'),
                 onChanged: (value) async {
                   setting.data.mThemeColorDark = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withOpacity(1.0);
+                  setStateForPanel(() {});
+                  this.setState(() {});
                   await setting.save();
                 },
               ),
@@ -193,6 +201,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mThemeFontState,
                 onChanged: (value) async {
                   setting.data.mThemeFontState = value;
+                  setStateForPanel(() {});
+                  this.setState(() {});
                   await setting.save();
                 },
               ),
@@ -203,14 +213,14 @@ class _SettingPanelState extends State<SettingPanel> {
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: CustomTextFieldWithFocus(
+              title: CustomTextField(
                 keyboardType: TextInputType.multiline,
                 inputFormatters: const [],
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
                   filled: false,
                   border: const OutlineInputBorder(),
-                  suffixIcon: CustomTextFieldSuffixWidget(
+                  suffixIcon: CustomTextFieldSuffixRegion(
                     children: [
                       IconButton(
                         tooltip: 'Pick',
@@ -219,6 +229,8 @@ class _SettingPanelState extends State<SettingPanel> {
                           var target = await StorageHelper.pickLoadFile(context, 'Application.ThemeFont');
                           if (target != null) {
                             setting.data.mThemeFontPath = setting.data.mThemeFontPath + [target];
+                            setStateForPanel(() {});
+                            this.setState(() {});
                             await setting.save();
                           }
                         },
@@ -229,6 +241,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: ConvertHelper.makeStringListToStringWithLine(setting.data.mThemeFontPath),
                 onChanged: (value) async {
                   setting.data.mThemeFontPath = ConvertHelper.parseStringListFromStringWithLine(value);
+                  setStateForPanel(() {});
+                  this.setState(() {});
                   await setting.save();
                 },
               ),
@@ -258,6 +272,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mWindowPositionState,
                 onChanged: (value) async {
                   setting.data.mWindowPositionState = value;
+                  setStateForPanel(() {});
+                  this.setState(() {});
                   await setting.save();
                 },
               ),
@@ -268,7 +284,7 @@ class _SettingPanelState extends State<SettingPanel> {
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: CustomTextFieldWithFocus(
+              title: CustomTextField(
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
                 decoration: const InputDecoration(
@@ -280,13 +296,15 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mWindowPositionX.toString(),
                 onChanged: (value) async {
                   setting.data.mWindowPositionX = Integer.tryParse(value) ?? setting.data.mWindowPositionX;
+                  setStateForPanel(() {});
+                  this.setState(() {});
                   await setting.save();
                 },
               ),
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: CustomTextFieldWithFocus(
+              title: CustomTextField(
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
                 decoration: const InputDecoration(
@@ -298,6 +316,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mWindowPositionY.toString(),
                 onChanged: (value) async {
                   setting.data.mWindowPositionY = Integer.tryParse(value) ?? setting.data.mWindowPositionY;
+                  setStateForPanel(() {});
+                  this.setState(() {});
                   await setting.save();
                 },
               ),
@@ -323,6 +343,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mWindowSizeState,
                 onChanged: (value) async {
                   setting.data.mWindowSizeState = value;
+                  setStateForPanel(() {});
+                  this.setState(() {});
                   await setting.save();
                 },
               ),
@@ -333,7 +355,7 @@ class _SettingPanelState extends State<SettingPanel> {
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: CustomTextFieldWithFocus(
+              title: CustomTextField(
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
                 decoration: const InputDecoration(
@@ -345,13 +367,15 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mWindowSizeWidth.toString(),
                 onChanged: (value) async {
                   setting.data.mWindowSizeWidth = Integer.tryParse(value) ?? setting.data.mWindowSizeWidth;
+                  setStateForPanel(() {});
+                  this.setState(() {});
                   await setting.save();
                 },
               ),
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: CustomTextFieldWithFocus(
+              title: CustomTextField(
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
                 decoration: const InputDecoration(
@@ -363,6 +387,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mWindowSizeHeight.toString(),
                 onChanged: (value) async {
                   setting.data.mWindowSizeHeight = Integer.tryParse(value) ?? setting.data.mWindowSizeHeight;
+                  setStateForPanel(() {});
+                  this.setState(() {});
                   await setting.save();
                 },
               ),
@@ -405,14 +431,14 @@ class _SettingPanelState extends State<SettingPanel> {
           panelBuilder: (context, setStateForPanel) => [
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: CustomTextFieldWithFocus(
+              title: CustomTextField(
                 keyboardType: TextInputType.text,
                 inputFormatters: const [],
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
                   filled: false,
                   border: const OutlineInputBorder(),
-                  suffixIcon: CustomTextFieldSuffixWidget(
+                  suffixIcon: CustomTextFieldSuffixRegion(
                     children: [
                       IconButton(
                         tooltip: 'Pick',
@@ -421,6 +447,8 @@ class _SettingPanelState extends State<SettingPanel> {
                           var target = await StorageHelper.pickLoadDirectory(context, 'Application.FallbackDirectory');
                           if (target != null) {
                             setting.data.mFallbackDirectory = target;
+                            setStateForPanel(() {});
+                            this.setState(() {});
                             await setting.save();
                           }
                         },
@@ -431,6 +459,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mFallbackDirectory,
                 onChanged: (value) async {
                   setting.data.mFallbackDirectory = StorageHelper.regularize(value);
+                  setStateForPanel(() {});
+                  this.setState(() {});
                   await setting.save();
                 },
               ),

@@ -39,12 +39,12 @@ class ControlHelper {
       contentBuilder: (context, setState) => [],
       actionBuilder: (context) => [
         TextButton(
-          onPressed: () => Navigator.pop(context, false),
           child: const Text('No'),
+          onPressed: () => Navigator.pop(context, false),
         ),
         TextButton(
-          onPressed: () => Navigator.pop(context, true),
           child: const Text('Yes'),
+          onPressed: () => Navigator.pop(context, true),
         ),
       ],
     )) ?? false;
@@ -82,17 +82,16 @@ class ControlHelper {
       await ControlHelper.showCustomModalDialog<Void>(context, CustomModalDialog(
         title: title,
         contentBuilder: (context, setState) => [
-          TextFormField(
+          CustomTextField(
             keyboardType: TextInputType.none,
-            maxLines: null,
             inputFormatters: const [],
             decoration: const InputDecoration(
               contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
               filled: false,
               border: OutlineInputBorder(),
             ),
-            readOnly: true,
-            initialValue: path,
+            value: path,
+            onChanged: null,
           ),
         ],
         actionBuilder: null,

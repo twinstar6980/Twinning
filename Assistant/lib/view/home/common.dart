@@ -174,7 +174,7 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     ...this.widget.contentBuilder(context, setState),
-                    SizedBox(height: MediaQuery.of(context).viewPadding.bottom),
+                    SizedBox(height: MediaQuery.viewPaddingOf(context).bottom),
                   ],
                 ),
               ),
@@ -269,6 +269,42 @@ class CustomTitleBar extends StatelessWidget {
             const SizedBox(width: 8),
           ],
         ),
+      ],
+    );
+  }
+
+}
+
+// ----------------
+
+class CustomBottomBarContent extends StatelessWidget {
+
+  const CustomBottomBarContent({
+    super.key,
+    required this.primary,
+    required this.secondary,
+  });
+
+  // ----------------
+
+  final Widget?      primary;
+  final List<Widget> secondary;
+
+  // ----------------
+
+  @override
+  build(context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Row(
+            children: this.secondary,
+          ),
+        ),
+        if (this.primary != null)
+          const SizedBox(width: 16),
+        if (this.primary != null)
+          this.primary!,
       ],
     );
   }
@@ -480,9 +516,9 @@ class CustomSettingItem extends StatelessWidget {
 
 // ----------------
 
-class CustomTextFieldSuffixWidget extends StatelessWidget {
+class CustomTextFieldSuffixRegion extends StatelessWidget {
 
-  const CustomTextFieldSuffixWidget({
+  const CustomTextFieldSuffixRegion({
     super.key,
     required this.children,
   });
@@ -507,11 +543,14 @@ class CustomTextFieldSuffixWidget extends StatelessWidget {
 
 }
 
-class CustomTextFieldWithFocus extends StatefulWidget {
+// ----------------
 
-  const CustomTextFieldWithFocus({
+class CustomTextField extends StatefulWidget {
+
+  const CustomTextField({
     super.key,
     this.style = null,
+    this.enabled = true,
     required this.keyboardType,
     required this.inputFormatters,
     required this.decoration,
@@ -521,22 +560,24 @@ class CustomTextFieldWithFocus extends StatefulWidget {
 
   // ----------------
 
-  final TextStyle?                  style;
-  final TextInputType               keyboardType;
-  final List<TextInputFormatter>    inputFormatters;
-  final InputDecoration             decoration;
-  final String                      value;
-  final Void Function(String value) onChanged;
+  final TextStyle?                   style;
+  final Boolean                      enabled;
+  final TextInputType                keyboardType;
+  final List<TextInputFormatter>     inputFormatters;
+  final InputDecoration              decoration;
+  final String                       value;
+  final Void Function(String value)? onChanged;
 
   // ----------------
 
   @override
-  createState() => _CustomTextFieldWithFocusState();
+  createState() => _CustomTextFieldState();
 
 }
 
-class _CustomTextFieldWithFocusState extends State<CustomTextFieldWithFocus> {
+class _CustomTextFieldState extends State<CustomTextField> {
 
+  late FocusNode             _focusNode;
   late TextEditingController _valueController;
 
   // ----------------
@@ -544,6 +585,7 @@ class _CustomTextFieldWithFocusState extends State<CustomTextFieldWithFocus> {
   @override
   initState() {
     super.initState();
+    this._focusNode = FocusNode();
     this._valueController = TextEditingController();
     this._valueController.text = this.widget.value;
     return;
@@ -558,6 +600,7 @@ class _CustomTextFieldWithFocusState extends State<CustomTextFieldWithFocus> {
 
   @override
   dispose() {
+    this._focusNode.dispose();
     this._valueController.dispose();
     super.dispose();
     return;
@@ -566,18 +609,147 @@ class _CustomTextFieldWithFocusState extends State<CustomTextFieldWithFocus> {
   @override
   build(context) {
     return Focus(
+      focusNode: this._focusNode,
       onFocusChange: (value) async {
-        if (!value) {
-          this.widget.onChanged(this._valueController.text);
+        if (!value && this.widget.onChanged != null) {
+          this.widget.onChanged!(this._valueController.text);
         }
       },
       child: TextField(
         style: this.widget.style,
+        enabled: this.widget.enabled,
         keyboardType: this.widget.keyboardType,
         maxLines: this.widget.keyboardType == TextInputType.multiline ? null : 1,
         inputFormatters: this.widget.inputFormatters,
         decoration: this.widget.decoration,
+        readOnly: this.widget.onChanged == null,
         controller: this._valueController,
+        onTapOutside: (event) async {
+          this._focusNode.unfocus();
+        },
+      ),
+    );
+  }
+
+}
+
+// ----------------
+
+class CustomOptionField extends StatefulWidget {
+
+  const CustomOptionField({
+    super.key,
+    this.style = null,
+    this.enabled = true,
+    required this.decoration,
+    required this.option,
+    required this.value,
+    required this.onChanged,
+  });
+
+  // ----------------
+
+  final TextStyle?                   style;
+  final Boolean                      enabled;
+  final InputDecoration              decoration;
+  final List<(Object, String)>       option;
+  final String                       value;
+  final Void Function(Object? value) onChanged;
+
+  // ----------------
+
+  @override
+  createState() => _CustomOptionFieldState();
+
+}
+
+class _CustomOptionFieldState extends State<CustomOptionField> {
+
+  late FocusNode             _focusNode;
+  late TextEditingController _valueController;
+
+  // ----------------
+
+  @override
+  initState() {
+    super.initState();
+    this._focusNode = FocusNode();
+    this._valueController = TextEditingController();
+    this._valueController.text = this.widget.value;
+    return;
+  }
+
+  @override
+  didUpdateWidget(oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    this._valueController.text = this.widget.value;
+    return;
+  }
+
+  @override
+  dispose() {
+    this._focusNode.dispose();
+    this._valueController.dispose();
+    super.dispose();
+    return;
+  }
+
+  @override
+  build(context) {
+    var theme = Theme.of(context);
+    return LayoutBuilder(
+      builder: (context, constraints) => MenuAnchor(
+        style: MenuStyle(
+          minimumSize: WidgetStatePropertyAll(Size(constraints.maxWidth + 8, 0)),
+          maximumSize: WidgetStatePropertyAll(Size(constraints.maxWidth + 8, Floater.infinity)),
+        ),
+        crossAxisUnconstrained: false,
+        alignmentOffset: const Offset(-4, 0),
+        menuChildren: [
+          if (this.widget.option.isEmpty)
+            const SizedBox(height: 16),
+          ...this.widget.option.map((value) => MenuItemButton(
+            style: ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll(value.$2 != this.widget.value ? null : theme.colorScheme.onSurface.withOpacity(0.12)),
+            ),
+            onPressed: () async {
+              this.widget.onChanged(value.$1);
+            },
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: constraints.maxWidth - 16),
+              child: ListTile(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                title: Text(
+                  value.$2,
+                  overflow: TextOverflow.clip,
+                  style: this.widget.style ?? theme.textTheme.bodyLarge,
+                ),
+              ),
+            ),
+          )),
+        ],
+        builder: (context, controller, child) => TextField(
+          style: this.widget.style,
+          enabled: this.widget.enabled,
+          keyboardType: TextInputType.none,
+          inputFormatters: const [],
+          decoration: this.widget.decoration,
+          readOnly: true,
+          controller: this._valueController,
+          focusNode: this._focusNode,
+          onTap: () async {
+            if (controller.isOpen) {
+              controller.close();
+            }
+            else {
+              controller.open();
+            }
+          },
+          onTapOutside: (event) async {
+            this._focusNode.unfocus();
+          },
+        ),
       ),
     );
   }
@@ -652,9 +824,9 @@ class CustomFileDropRegion extends StatelessWidget {
 
 // ----------------
 
-class CustomModulePageLayout extends StatelessWidget {
+class CustomModulePageRegion extends StatelessWidget {
 
-  const CustomModulePageLayout({
+  const CustomModulePageRegion({
     super.key,
     required this.onDropFile,
     required this.content,
@@ -676,7 +848,13 @@ class CustomModulePageLayout extends StatelessWidget {
       child: Column(
         children: [
           Expanded(
-            child: this.content,
+            child: MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                padding: EdgeInsets.zero,
+                viewPadding: EdgeInsets.zero,
+              ),
+              child: this.content,
+            ),
           ),
           BottomAppBar(
             child: this.bottom,

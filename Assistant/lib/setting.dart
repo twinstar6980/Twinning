@@ -170,9 +170,9 @@ class SettingProvider with ChangeNotifier {
     mWindowSizeHeight: 0,
     mFallbackDirectory: '',
     mModuleLauncher: ModuleLauncherSetting(
-      mModule: ModuleType.values.map((e) => ModuleLauncherConfiguration(title: ModuleHelper.query(e).name, type: e, option: [])).toList(),
-      mPinned: [],
-      mRecent: [],
+      module: ModuleType.values.map((e) => ModuleLauncherConfiguration(title: ModuleHelper.query(e).name, type: e, option: [])).toList(),
+      pinned: [],
+      recent: [],
     ),
     mModdingWorker: modding_worker.Setting(
       mKernel: '',
@@ -234,17 +234,17 @@ class SettingProvider with ChangeNotifier {
       'window_size_height': data.mWindowSizeHeight,
       'fallback_directory': data.mFallbackDirectory,
       'module_launcher': {
-        'module': data.mModuleLauncher.mModule.map((dataItem) => {
+        'module': data.mModuleLauncher.module.map((dataItem) => {
           'title': dataItem.title,
           'type': dataItem.type.name,
           'option': dataItem.option,
         }).toList(),
-        'pinned': data.mModuleLauncher.mPinned.map((dataItem) => {
+        'pinned': data.mModuleLauncher.pinned.map((dataItem) => {
           'title': dataItem.title,
           'type': dataItem.type.name,
           'option': dataItem.option,
         }).toList(),
-        'recent': data.mModuleLauncher.mRecent.map((dataItem) => {
+        'recent': data.mModuleLauncher.recent.map((dataItem) => {
           'title': dataItem.title,
           'type': dataItem.type.name,
           'option': dataItem.option,
@@ -298,17 +298,17 @@ class SettingProvider with ChangeNotifier {
       mWindowSizeHeight: (json['window_size_height'] as Integer),
       mFallbackDirectory: (json['fallback_directory'] as String),
       mModuleLauncher: (json['module_launcher'] as Map<dynamic, dynamic>).selfLet((jsonPart) => ModuleLauncherSetting(
-        mModule: (jsonPart['module'] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((jsonItem) => ModuleLauncherConfiguration(
+        module: (jsonPart['module'] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((jsonItem) => ModuleLauncherConfiguration(
           title: (jsonItem['title'] as String),
           type: (jsonItem['type'] as String).selfLet((it) => ModuleType.values.byName(it)),
           option: (jsonItem['option'] as List<dynamic>).cast<String>(),
         )).toList(),
-        mPinned: (jsonPart['pinned'] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((jsonItem) => ModuleLauncherConfiguration(
+        pinned: (jsonPart['pinned'] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((jsonItem) => ModuleLauncherConfiguration(
           title: (jsonItem['title'] as String),
           type: (jsonItem['type'] as String).selfLet((it) => ModuleType.values.byName(it)),
           option: (jsonItem['option'] as List<dynamic>).cast<String>(),
         )).toList(),
-        mRecent: (jsonPart['recent'] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((jsonItem) => ModuleLauncherConfiguration(
+        recent: (jsonPart['recent'] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((jsonItem) => ModuleLauncherConfiguration(
           title: (jsonItem['title'] as String),
           type: (jsonItem['type'] as String).selfLet((it) => ModuleType.values.byName(it)),
           option: (jsonItem['option'] as List<dynamic>).cast<String>(),

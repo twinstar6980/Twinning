@@ -38,8 +38,24 @@ class _BasicSubmissionBar extends StatelessWidget {
   build(context) {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
-    return Row(
-      children: [
+    return CustomBottomBarContent(
+      primary: FloatingActionButton(
+        tooltip: this.completer == null ? '' : 'Submit',
+        elevation: 0,
+        focusElevation: 0,
+        hoverElevation: 0,
+        highlightElevation: 0,
+        disabledElevation: 0,
+        onPressed: this.completer == null
+          ? null
+          : () async {
+            this.completer?.complete();
+          },
+        child: this.completer == null
+          ? const CircularProgressIndicator()
+          : const Icon(IconSymbols.send),
+      ),
+      secondary: [
         Badge.count(
           textStyle: theme.textTheme.labelSmall?.copyWith(
             fontFamily: '',
@@ -108,23 +124,6 @@ class _BasicSubmissionBar extends StatelessWidget {
         Expanded(
           child: this.content,
         ),
-        const SizedBox(width: 16),
-        FloatingActionButton(
-          tooltip: this.completer == null ? '' : 'Submit',
-          elevation: 0,
-          focusElevation: 0,
-          hoverElevation: 0,
-          highlightElevation: 0,
-          disabledElevation: 0,
-          onPressed: this.completer == null
-            ? null
-            : () async {
-              this.completer?.complete();
-            },
-          child: this.completer == null
-            ? const CircularProgressIndicator()
-            : const Icon(IconSymbols.send),
-        ),
       ],
     );
   }
@@ -145,21 +144,22 @@ class _IdleSubmissionBar extends StatelessWidget {
 
   @override
   build(context) {
-    return _BasicSubmissionBar(
+    return const _BasicSubmissionBar(
       completer: null,
       history: null,
       onSelect: null,
       icon: IconSymbols.more_horiz,
-      content: TextFormField(
+      content: CustomTextField(
+        enabled: false,
         keyboardType: TextInputType.none,
-        inputFormatters: const [],
-        decoration: const InputDecoration(
+        inputFormatters: [],
+        decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
           filled: false,
           border: UnderlineInputBorder(),
         ),
-        readOnly: true,
-        initialValue: '',
+        value: '',
+        onChanged: null,
       ),
     );
   }
@@ -196,7 +196,7 @@ class _PauseSubmissionBar extends StatelessWidget {
           setState(() {});
         },
         icon: IconSymbols.pause,
-        content: TextFormField(
+        content: CustomTextField(
           style: theme.textTheme.bodyLarge?.copyWith(
             fontFamily: '',
             fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
@@ -208,13 +208,13 @@ class _PauseSubmissionBar extends StatelessWidget {
             filled: false,
             border: UnderlineInputBorder(),
             hintText: 'Pause',
-            suffixIcon: CustomTextFieldSuffixWidget(
+            suffixIcon: CustomTextFieldSuffixRegion(
               children: [
               ],
             ),
           ),
-          readOnly: true,
-          initialValue: '',
+          value: '',
+          onChanged: null,
         ),
       ),
     );
@@ -252,7 +252,7 @@ class _BooleanSubmissionBar extends StatelessWidget {
           setState(() {});
         },
         icon: IconSymbols.check_box,
-        content: CustomTextFieldWithFocus(
+        content: CustomTextField(
           style: theme.textTheme.bodyLarge?.copyWith(
             fontFamily: '',
             fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
@@ -264,7 +264,7 @@ class _BooleanSubmissionBar extends StatelessWidget {
             filled: false,
             border: const UnderlineInputBorder(),
             hintText: 'Boolean',
-            suffixIcon: CustomTextFieldSuffixWidget(
+            suffixIcon: CustomTextFieldSuffixRegion(
               children: [
                 IconButton(
                   tooltip: 'No',
@@ -339,7 +339,7 @@ class _IntegerSubmissionBar extends StatelessWidget {
           setState(() {});
         },
         icon: IconSymbols.speed_1_2,
-        content: CustomTextFieldWithFocus(
+        content: CustomTextField(
           style: theme.textTheme.bodyLarge?.copyWith(
             fontFamily: '',
             fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
@@ -351,7 +351,7 @@ class _IntegerSubmissionBar extends StatelessWidget {
             filled: false,
             border: UnderlineInputBorder(),
             hintText: 'Integer',
-            suffixIcon: CustomTextFieldSuffixWidget(
+            suffixIcon: CustomTextFieldSuffixRegion(
               children: [
               ],
             ),
@@ -406,7 +406,7 @@ class _FloaterSubmissionBar extends StatelessWidget {
           setState(() {});
         },
         icon: IconSymbols.speed_1_2,
-        content: CustomTextFieldWithFocus(
+        content: CustomTextField(
           style: theme.textTheme.bodyLarge?.copyWith(
             fontFamily: '',
             fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
@@ -418,7 +418,7 @@ class _FloaterSubmissionBar extends StatelessWidget {
             filled: false,
             border: UnderlineInputBorder(),
             hintText: 'Floater',
-            suffixIcon: CustomTextFieldSuffixWidget(
+            suffixIcon: CustomTextFieldSuffixRegion(
               children: [
               ],
             ),
@@ -473,7 +473,7 @@ class _SizeSubmissionBar extends StatelessWidget {
           setState(() {});
         },
         icon: IconSymbols.memory,
-        content: CustomTextFieldWithFocus(
+        content: CustomTextField(
           style: theme.textTheme.bodyLarge?.copyWith(
             fontFamily: '',
             fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
@@ -485,7 +485,7 @@ class _SizeSubmissionBar extends StatelessWidget {
             filled: false,
             border: const UnderlineInputBorder(),
             hintText: 'Size',
-            suffixIcon: CustomTextFieldSuffixWidget(
+            suffixIcon: CustomTextFieldSuffixRegion(
               children: [
                 PopupMenuButton(
                   tooltip: 'Exponent',
@@ -574,7 +574,7 @@ class _StringSubmissionBar extends StatelessWidget {
           setState(() {});
         },
         icon: IconSymbols.text_fields,
-        content: CustomTextFieldWithFocus(
+        content: CustomTextField(
           style: theme.textTheme.bodyLarge?.copyWith(
             fontFamily: '',
             fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
@@ -586,7 +586,7 @@ class _StringSubmissionBar extends StatelessWidget {
             filled: false,
             border: UnderlineInputBorder(),
             hintText: 'String',
-            suffixIcon: CustomTextFieldSuffixWidget(
+            suffixIcon: CustomTextFieldSuffixRegion(
               children: [
               ],
             ),
@@ -643,7 +643,7 @@ class _PathSubmissionBar extends StatelessWidget {
             this.value.value = PathExpression(item.first);
             setState(() {});
           },
-          child: CustomTextFieldWithFocus(
+          child: CustomTextField(
             style: theme.textTheme.bodyLarge?.copyWith(
               fontFamily: '',
               fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
@@ -655,7 +655,7 @@ class _PathSubmissionBar extends StatelessWidget {
               filled: false,
               border: const UnderlineInputBorder(),
               hintText: 'Path',
-              suffixIcon: CustomTextFieldSuffixWidget(
+              suffixIcon: CustomTextFieldSuffixRegion(
                 children: [
                   PopupMenuButton(
                     tooltip: 'Command',
@@ -772,81 +772,35 @@ class _EnumerationSubmissionBar extends StatelessWidget {
           setState(() {});
         },
         icon: IconSymbols.menu,
-        content: LayoutBuilder(
-          builder: (context, constraints) => MenuAnchor(
-            crossAxisUnconstrained: false,
-            alignmentOffset: const Offset(-4, 0),
-            style: MenuStyle(
-              minimumSize: WidgetStatePropertyAll(Size(constraints.maxWidth + 8, 0)),
-              maximumSize: WidgetStatePropertyAll(Size(constraints.maxWidth + 8, Floater.infinity)),
-            ),
-            menuChildren: [
-              if (this.option.isEmpty)
-                const SizedBox(height: 16),
-              ...this.option.map((value) => MenuItemButton(
-                style: ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(value != this.value.value?.item ? null : theme.colorScheme.onSurface.withOpacity(0.12)),
+        content: CustomOptionField(
+          style: theme.textTheme.bodyLarge?.copyWith(
+            fontFamily: '',
+            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+          ),
+          decoration: InputDecoration(
+            contentPadding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+            filled: false,
+            border: const UnderlineInputBorder(),
+            hintText: 'Enumeration',
+            suffixIcon: CustomTextFieldSuffixRegion(
+              children: [
+                IconButton(
+                  tooltip: 'Reset',
+                  icon: const Icon(IconSymbols.restart_alt),
+                  onPressed: () async {
+                    this.value.value = null;
+                    setState(() {});
+                  },
                 ),
-                onPressed: () async {
-                  this.value.value = EnumerationExpression(value);
-                  setState(() {});
-                },
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: constraints.maxWidth - 16),
-                  child: ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    dense: true,
-                    title: Text(
-                      value,
-                      overflow: TextOverflow.clip,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        fontFamily: '',
-                        fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
-                      ),
-                    ),
-                  ),
-                ),
-              )),
-            ],
-            builder: (context, controller, child) => TextFormField(
-              key: ObjectKey(this.value.value),
-              style: theme.textTheme.bodyLarge?.copyWith(
-                fontFamily: '',
-                fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
-              ),
-              keyboardType: TextInputType.none,
-              inputFormatters: const [],
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
-                filled: false,
-                border: const UnderlineInputBorder(),
-                hintText: 'Enumeration',
-                suffixIcon: CustomTextFieldSuffixWidget(
-                  children: [
-                    IconButton(
-                      tooltip: 'Reset',
-                      icon: const Icon(IconSymbols.restart_alt),
-                      onPressed: () async {
-                        this.value.value = null;
-                        controller.close();
-                        setState(() {});
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              readOnly: true,
-              initialValue: this.value.value == null ? '' : this.value.value!.item,
-              onTap: () async {
-                if (controller.isOpen) {
-                  controller.close();
-                }
-                else {
-                  controller.open();
-                }
-              },
+              ],
             ),
           ),
+          option: this.option.map((value) => (value, value)).toList(),
+          value: this.value.value == null ? '' : this.value.value!.item,
+          onChanged: (value) async {
+            this.value.value = EnumerationExpression(value as String);
+            setState(() {});
+          },
         ),
       ),
     );

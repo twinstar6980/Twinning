@@ -25,29 +25,28 @@ class Application extends StatelessWidget {
     return ChangeNotifierProvider.value(
       value: this.setting,
       child: Consumer<SettingProvider>(
-        builder: (context, setting, _) => DynamicColorBuilder(
+        builder: (context, setting, child) => DynamicColorBuilder(
           builder: (lightColor, darkColor) => MaterialApp(
             navigatorKey: setting.state.mApplicationNavigatorKey,
-            title: kApplicationName,
             theme: ThemeData(
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              visualDensity: VisualDensity.standard,
               brightness: Brightness.light,
-              colorScheme: setting.data.mThemeColorState ? null : lightColor,
-              colorSchemeSeed: !setting.data.mThemeColorState ? null : setting.data.mThemeColorLight,
+              colorScheme: !setting.data.mThemeColorState ? lightColor : ColorScheme.fromSeed(seedColor: setting.data.mThemeColorLight, brightness: Brightness.light),
               fontFamily: '',
               fontFamilyFallback: [...setting.state.mThemeFontFamliy],
-              visualDensity: VisualDensity.standard,
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
             darkTheme: ThemeData(
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              visualDensity: VisualDensity.standard,
               brightness: Brightness.dark,
-              colorScheme: setting.data.mThemeColorState ? null : darkColor,
-              colorSchemeSeed: !setting.data.mThemeColorState ? null : setting.data.mThemeColorDark,
+              colorScheme: !setting.data.mThemeColorState ? darkColor : ColorScheme.fromSeed(seedColor: setting.data.mThemeColorDark, brightness: Brightness.dark),
               fontFamily: '',
               fontFamilyFallback: [...setting.state.mThemeFontFamliy],
-              visualDensity: VisualDensity.standard,
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
             themeMode: setting.data.mThemeMode,
+            scrollBehavior: const MaterialScrollBehavior().copyWith(scrollbars: false),
+            title: kApplicationName,
             home: const home.MainPage(),
           ),
         ),

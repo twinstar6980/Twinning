@@ -218,7 +218,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   @override
   build(context) {
     var theme = Theme.of(context);
-    return CustomModulePageLayout(
+    return CustomModulePageRegion(
       onDropFile: (item) async {
         await this._applyLoad(item.first, null);
       },
@@ -264,18 +264,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 Row(
                   children: [
                     const SizedBox(width: 16),
-                    // SizedBox(
-                    //   width: 64,
-                    //   child: TextField(
-                    //     decoration: InputDecoration(
-                    //       contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                    //       filled: true,
-                    //       border: UnderlineInputBorder(),
-                    //     ),
-                    //     textAlign: TextAlign.start,
-                    //   ),
-                    // ),
-                    // const SizedBox(width: 12),
                     Expanded(
                       child: Container(
                         alignment: AlignmentDirectional.centerStart,
@@ -333,18 +321,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                         ),
                       ),
                     ),
-                    // const SizedBox(width: 12),
-                    // SizedBox(
-                    //   width: 64,
-                    //   child: TextField(
-                    //     decoration: InputDecoration(
-                    //       contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                    //       filled: true,
-                    //       border: UnderlineInputBorder(),
-                    //     ),
-                    //     textAlign: TextAlign.end,
-                    //   ),
-                    // ),
                     const SizedBox(width: 16),
                   ],
                 ),
@@ -375,8 +351,25 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           const SizedBox(height: 12),
         ],
       ),
-      bottom: Row(
-        children: [
+      bottom: CustomBottomBarContent(
+        primary: FloatingActionButton(
+          // TODO
+          tooltip: 'Source',
+          elevation: 0,
+          focusElevation: 0,
+          hoverElevation: 0,
+          highlightElevation: 0,
+          disabledElevation: 0,
+          child: const Icon(IconSymbols.open_in_new),
+          onPressed: () async {
+            var animationFile = await StorageHelper.pickLoadFile(context, 'AnimationViewer.AnimationFile');
+            if (animationFile != null) {
+              await this._applyLoad(animationFile, null);
+            }
+            // TODO
+          },
+        ),
+        secondary: [
           IconButton.filledTonal(
             tooltip: 'Immediate Select',
             isSelected: this._immediateSelect,
@@ -419,26 +412,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
               this._remainFrameRate = !this._remainFrameRate;
               this.setState(() {});
             },
-          ),
-          const SizedBox(width: 16),
-          const Expanded(child: SizedBox()),
-          const SizedBox(width: 16),
-          FloatingActionButton(
-            // TODO
-            tooltip: 'Source',
-            elevation: 0,
-            focusElevation: 0,
-            hoverElevation: 0,
-            highlightElevation: 0,
-            disabledElevation: 0,
-            onPressed: () async {
-              var animationFile = await StorageHelper.pickLoadFile(context, 'AnimationViewer.AnimationFile');
-              if (animationFile != null) {
-                await this._applyLoad(animationFile, null);
-              }
-              // TODO
-            },
-            child: const Icon(IconSymbols.open_in_new),
           ),
         ],
       ),

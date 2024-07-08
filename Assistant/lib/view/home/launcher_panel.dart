@@ -33,7 +33,7 @@ class LauncherPanel extends StatelessWidget {
             label: 'Module',
             action: null,
           ),
-          ...setting.data.mModuleLauncher.mModule.map((item) => CustomSettingItem(
+          ...setting.data.mModuleLauncher.module.map((item) => CustomSettingItem(
             enabled: true,
             icon: ModuleHelper.query(item.type).icon,
             label: item.title,
@@ -81,7 +81,7 @@ class LauncherPanel extends StatelessWidget {
               tooltip: 'Add',
               icon: const Icon(IconSymbols.add),
               onPressed: () async {
-                setting.data.mModuleLauncher.mPinned.add(ModuleLauncherConfiguration(
+                setting.data.mModuleLauncher.pinned.add(ModuleLauncherConfiguration(
                   title: 'Untitled',
                   type: ModuleType.modding_worker,
                   option: [],
@@ -90,7 +90,7 @@ class LauncherPanel extends StatelessWidget {
               },
             ),
           ),
-          ...setting.data.mModuleLauncher.mPinned.map((item) => CustomSettingItem(
+          ...setting.data.mModuleLauncher.pinned.map((item) => CustomSettingItem(
             enabled: true,
             icon: ModuleHelper.query(item.type).icon,
             label: item.title,
@@ -99,7 +99,7 @@ class LauncherPanel extends StatelessWidget {
                 tooltip: 'Remove',
                 icon: const Icon(IconSymbols.remove),
                 onPressed: () async {
-                  setting.data.mModuleLauncher.mPinned.remove(item);
+                  setting.data.mModuleLauncher.pinned.remove(item);
                   await setting.save();
                 },
               ),
@@ -135,13 +135,13 @@ class LauncherPanel extends StatelessWidget {
               icon: const Icon(IconSymbols.clear),
               onPressed: () async {
                 if (await ControlHelper.showCustomConfirmModalDialog(context)) {
-                  setting.data.mModuleLauncher.mRecent.clear();
+                  setting.data.mModuleLauncher.recent.clear();
                   await setting.save();
                 }
               },
             ),
           ),
-          ...setting.data.mModuleLauncher.mRecent.map((item) => CustomSettingItem(
+          ...setting.data.mModuleLauncher.recent.map((item) => CustomSettingItem(
             enabled: true,
             icon: ModuleHelper.query(item.type).icon,
             label: item.title,
@@ -150,8 +150,8 @@ class LauncherPanel extends StatelessWidget {
                 tooltip: 'Pin',
                 icon: const Icon(IconSymbols.push_pin),
                 onPressed: () async {
-                  setting.data.mModuleLauncher.mRecent.remove(item);
-                  setting.data.mModuleLauncher.mPinned.add(item);
+                  setting.data.mModuleLauncher.recent.remove(item);
+                  setting.data.mModuleLauncher.pinned.add(item);
                   await setting.save();
                 },
               ),
@@ -159,7 +159,7 @@ class LauncherPanel extends StatelessWidget {
                 tooltip: 'Remove',
                 icon: const Icon(IconSymbols.remove),
                 onPressed: () async {
-                  setting.data.mModuleLauncher.mRecent.remove(item);
+                  setting.data.mModuleLauncher.recent.remove(item);
                   await setting.save();
                 },
               ),

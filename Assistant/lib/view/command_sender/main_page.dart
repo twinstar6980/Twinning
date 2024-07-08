@@ -157,7 +157,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
 
   @override
   build(context) {
-    return CustomModulePageLayout(
+    return CustomModulePageRegion(
       onDropFile: null,
       content: Column(
         children: [
@@ -191,8 +191,45 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
           ),
         ],
       ),
-      bottom: Row(
-        children: [
+      bottom: CustomBottomBarContent(
+        primary: Badge.count(
+          count: this._methodConfiguration.fold(0, (currentValue, item) => currentValue + item.item.length),
+          child: FloatingActionButton(
+            tooltip: 'Method',
+            elevation: 0,
+            focusElevation: 0,
+            hoverElevation: 0,
+            highlightElevation: 0,
+            disabledElevation: 0,
+            child: const Icon(IconSymbols.format_list_bulleted_add),
+            onPressed: () async {
+              await ControlHelper.showCustomModalBottomSheet<Void>(context, CustomModalBottomSheet(
+                title: 'Method',
+                contentBuilder: (context, setState) => [
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                    itemCount: this._methodConfiguration.length,
+                    itemBuilder: (context, index) => MethodGroupItem(
+                      configuration: this._methodConfiguration[index],
+                      onSelect: (method) async {
+                        Navigator.pop(context);
+                        await this._appendCommand(method, false, {}, false);
+                      },
+                      collapse: this._methodCollapse[index],
+                      onToggle: () async {
+                        this._methodCollapse[index] = !this._methodCollapse[index];
+                        setState(() {});
+                      },
+                    ),
+                  ),
+                ],
+              ));
+            },
+          ),
+        ),
+        secondary: [
           IconButton.filledTonal(
             tooltip: 'Parallel Forward',
             isSelected: this._parallelForward,
@@ -211,46 +248,6 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
             onPressed: () async {
               await this._forwardCommand(this._command.mapIndexed((index, value) => index).toList());
             },
-          ),
-          const SizedBox(width: 16),
-          const Expanded(child: SizedBox()),
-          const SizedBox(width: 16),
-          Badge.count(
-            count: this._methodConfiguration.fold(0, (currentValue, item) => currentValue + item.item.length),
-            child: FloatingActionButton(
-              tooltip: 'Method',
-              elevation: 0,
-              focusElevation: 0,
-              hoverElevation: 0,
-              highlightElevation: 0,
-              disabledElevation: 0,
-              onPressed: () async {
-                await ControlHelper.showCustomModalBottomSheet<Void>(context, CustomModalBottomSheet(
-                  title: 'Method',
-                  contentBuilder: (context, setState) => [
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                      itemCount: this._methodConfiguration.length,
-                      itemBuilder: (context, index) => MethodGroupItem(
-                        configuration: this._methodConfiguration[index],
-                        onSelect: (method) async {
-                          Navigator.pop(context);
-                          await this._appendCommand(method, false, {}, false);
-                        },
-                        collapse: this._methodCollapse[index],
-                        onToggle: () async {
-                          this._methodCollapse[index] = !this._methodCollapse[index];
-                          setState(() {});
-                        },
-                      ),
-                    ),
-                  ],
-                ));
-              },
-              child: const Icon(IconSymbols.format_list_bulleted_add),
-            ),
           ),
         ],
       ),

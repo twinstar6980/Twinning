@@ -237,7 +237,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
   build(context) {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
-    return CustomModulePageLayout(
+    return CustomModulePageRegion(
       onDropFile: null,
       content: Column(
         children: [
@@ -262,8 +262,20 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
       ),
       bottom: this._sessionRunning
         ? this._submissionBar
-        : Row(
-          children: [
+        : CustomBottomBarContent(
+          primary: FloatingActionButton(
+            tooltip: 'Launch',
+            elevation: 0,
+            focusElevation: 0,
+            hoverElevation: 0,
+            highlightElevation: 0,
+            disabledElevation: 0,
+            child: const Icon(IconSymbols.play_circle),
+            onPressed: () async {
+              this._launchSession();
+            },
+          ),
+          secondary: [
             Badge.count(
               count: this._additionalArgument.length,
               textStyle: theme.textTheme.labelSmall?.copyWith(
@@ -281,7 +293,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                   await ControlHelper.showCustomModalDialog<Void>(context, CustomModalDialog(
                     title: 'Additional Argument',
                     contentBuilder: (context, setState) => [
-                      CustomTextFieldWithFocus(
+                      CustomTextField(
                         keyboardType: TextInputType.multiline,
                         inputFormatters: const [],
                         decoration: const InputDecoration(
@@ -306,21 +318,6 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                   ));
                 },
               ),
-            ),
-            const SizedBox(width: 16),
-            const Expanded(child: SizedBox()),
-            const SizedBox(width: 16),
-            FloatingActionButton(
-              tooltip: 'Launch',
-              elevation: 0,
-              focusElevation: 0,
-              hoverElevation: 0,
-              highlightElevation: 0,
-              disabledElevation: 0,
-              onPressed: () async {
-                this._launchSession();
-              },
-              child: const Icon(IconSymbols.play_circle),
             ),
           ],
         ),

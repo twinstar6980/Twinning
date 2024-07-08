@@ -39,9 +39,9 @@ class ModuleInformation {
 // ----------------
 
 class ModuleLauncherConfiguration {
-  String            title;
-  ModuleType        type;
-  List<String>      option;
+  String       title;
+  ModuleType   type;
+  List<String> option;
   ModuleLauncherConfiguration({
     required this.title,
     required this.type,
@@ -56,13 +56,13 @@ enum ModuleLauncherCategory {
 }
 
 class ModuleLauncherSetting {
-  List<ModuleLauncherConfiguration> mModule;
-  List<ModuleLauncherConfiguration> mPinned;
-  List<ModuleLauncherConfiguration> mRecent;
+  List<ModuleLauncherConfiguration> module;
+  List<ModuleLauncherConfiguration> pinned;
+  List<ModuleLauncherConfiguration> recent;
   ModuleLauncherSetting({
-    required this.mModule,
-    required this.mPinned,
-    required this.mRecent,
+    required this.module,
+    required this.pinned,
+    required this.recent,
   });
 }
 
@@ -75,29 +75,53 @@ class ModuleHelper {
       type: ModuleType.modding_worker,
       icon: IconSymbols.rule_settings,
       name: 'Modding Worker',
-      mainPage: (option) => modding_worker.MainPage(key: GlobalKey(), option: option),
-      settingPanel: (context) => modding_worker.SettingPanel(data: Provider.of<SettingProvider>(context, listen: false).data.mModdingWorker, onUpdate: () { Provider.of<SettingProvider>(context, listen: false).save(); }),
+      mainPage: (option) => modding_worker.MainPage(
+        key: GlobalKey(),
+        option: option,
+      ),
+      settingPanel: (context) => modding_worker.SettingPanel(
+        data: Provider.of<SettingProvider>(context, listen: false).data.mModdingWorker,
+        onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
+      ),
     ),
     ModuleInformation(
       type: ModuleType.command_sender,
       icon: IconSymbols.send,
       name: 'Command Sender',
-      mainPage: (option) => command_sender.MainPage(key: GlobalKey(), option: option),
-      settingPanel: (context) => command_sender.SettingPanel(data: Provider.of<SettingProvider>(context, listen: false).data.mCommandSender, onUpdate: () { Provider.of<SettingProvider>(context, listen: false).save(); }),
+      mainPage: (option) => command_sender.MainPage(
+        key: GlobalKey(),
+        option: option,
+      ),
+      settingPanel: (context) => command_sender.SettingPanel(
+        data: Provider.of<SettingProvider>(context, listen: false).data.mCommandSender,
+        onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
+      ),
     ),
     ModuleInformation(
       type: ModuleType.resource_forwarder,
       icon: IconSymbols.share_windows,
       name: 'Resource Forwarder',
-      mainPage: (option) => resource_forwarder.MainPage(key: GlobalKey(), option: option),
-      settingPanel: (context) => resource_forwarder.SettingPanel(data: Provider.of<SettingProvider>(context, listen: false).data.mResourceForwarder, onUpdate: () { Provider.of<SettingProvider>(context, listen: false).save(); }),
+      mainPage: (option) => resource_forwarder.MainPage(
+        key: GlobalKey(),
+        option: option,
+      ),
+      settingPanel: (context) => resource_forwarder.SettingPanel(
+        data: Provider.of<SettingProvider>(context, listen: false).data.mResourceForwarder,
+        onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
+      ),
     ),
     ModuleInformation(
       type: ModuleType.animation_viewer,
       icon: IconSymbols.animation,
       name: 'Animation Viewer',
-      mainPage: (option) => animation_viewer.MainPage(key: GlobalKey(), option: option),
-      settingPanel: (context) => animation_viewer.SettingPanel(data: Provider.of<SettingProvider>(context, listen: false).data.mAnimationViewer, onUpdate: () { Provider.of<SettingProvider>(context, listen: false).save(); }),
+      mainPage: (option) => animation_viewer.MainPage(
+        key: GlobalKey(),
+        option: option,
+      ),
+      settingPanel: (context) => animation_viewer.SettingPanel(
+        data: Provider.of<SettingProvider>(context, listen: false).data.mAnimationViewer,
+        onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
+      ),
     ),
   ];
 

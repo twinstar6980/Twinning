@@ -76,7 +76,7 @@ class _BooleanArgumentBar extends StatelessWidget {
       builder: (context, setState) => _BasicArgumentBar(
         name: this.name,
         icon: IconSymbols.check_box,
-        content: CustomTextFieldWithFocus(
+        content: CustomTextField(
           keyboardType: TextInputType.text,
           inputFormatters: const [],
           decoration: InputDecoration(
@@ -84,7 +84,7 @@ class _BooleanArgumentBar extends StatelessWidget {
             filled: false,
             border: const UnderlineInputBorder(),
             hintText: 'Boolean',
-            suffixIcon: CustomTextFieldSuffixWidget(
+            suffixIcon: CustomTextFieldSuffixRegion(
               children: [
                 IconButton(
                   tooltip: 'No',
@@ -150,7 +150,7 @@ class _IntegerArgumentBar extends StatelessWidget {
       builder: (context, setState) => _BasicArgumentBar(
         name: this.name,
         icon: IconSymbols.speed_1_2,
-        content: CustomTextFieldWithFocus(
+        content: CustomTextField(
           keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: false),
           inputFormatters: const [],
           decoration: const InputDecoration(
@@ -158,7 +158,7 @@ class _IntegerArgumentBar extends StatelessWidget {
             filled: false,
             border: UnderlineInputBorder(),
             hintText: 'Integer',
-            suffixIcon: CustomTextFieldSuffixWidget(
+            suffixIcon: CustomTextFieldSuffixRegion(
               children: [
               ],
             ),
@@ -204,7 +204,7 @@ class _FloaterArgumentBar extends StatelessWidget {
       builder: (context, setState) => _BasicArgumentBar(
         name: this.name,
         icon: IconSymbols.speed_1_2,
-        content: CustomTextFieldWithFocus(
+        content: CustomTextField(
           keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
           inputFormatters: const [],
           decoration: const InputDecoration(
@@ -212,7 +212,7 @@ class _FloaterArgumentBar extends StatelessWidget {
             filled: false,
             border: UnderlineInputBorder(),
             hintText: 'Floater',
-            suffixIcon: CustomTextFieldSuffixWidget(
+            suffixIcon: CustomTextFieldSuffixRegion(
               children: [
               ],
             ),
@@ -258,7 +258,7 @@ class _SizeArgumentBar extends StatelessWidget {
       builder: (context, setState) => _BasicArgumentBar(
         name: this.name,
         icon: IconSymbols.memory,
-        content: CustomTextFieldWithFocus(
+        content: CustomTextField(
           keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: true),
           inputFormatters: const [],
           decoration: InputDecoration(
@@ -266,7 +266,7 @@ class _SizeArgumentBar extends StatelessWidget {
             filled: false,
             border: const UnderlineInputBorder(),
             hintText: 'Size',
-            suffixIcon: CustomTextFieldSuffixWidget(
+            suffixIcon: CustomTextFieldSuffixRegion(
               children: [
                 PopupMenuButton(
                   tooltip: 'Exponent',
@@ -338,7 +338,7 @@ class _StringArgumentBar extends StatelessWidget {
       builder: (context, setState) => _BasicArgumentBar(
         name: this.name,
         icon: IconSymbols.text_fields,
-        content: CustomTextFieldWithFocus(
+        content: CustomTextField(
           keyboardType: TextInputType.text,
           inputFormatters: const [],
           decoration: const InputDecoration(
@@ -346,7 +346,7 @@ class _StringArgumentBar extends StatelessWidget {
             filled: false,
             border: UnderlineInputBorder(),
             hintText: 'String',
-            suffixIcon: CustomTextFieldSuffixWidget(
+            suffixIcon: CustomTextFieldSuffixRegion(
               children: [
               ],
             ),
@@ -394,7 +394,7 @@ class _PathArgumentBar extends StatelessWidget {
             this.value.value = PathExpression(item.first);
             setState(() {});
           },
-          child: CustomTextFieldWithFocus(
+          child: CustomTextField(
             keyboardType: TextInputType.text,
             inputFormatters: const [],
             decoration: InputDecoration(
@@ -402,7 +402,7 @@ class _PathArgumentBar extends StatelessWidget {
               filled: false,
               border: const UnderlineInputBorder(),
               hintText: 'Path',
-              suffixIcon: CustomTextFieldSuffixWidget(
+              suffixIcon: CustomTextFieldSuffixRegion(
                 children: [
                   PopupMenuButton(
                     tooltip: 'Pick',
@@ -474,79 +474,35 @@ class _EnumerationArgumentBar extends StatelessWidget {
 
   @override
   build(context) {
-    var theme = Theme.of(context);
     return StatefulBuilder(
       builder: (context, setState) => _BasicArgumentBar(
         name: this.name,
         icon: IconSymbols.menu,
-        content: LayoutBuilder(
-          builder: (context, constraints) => MenuAnchor(
-            crossAxisUnconstrained: false,
-            alignmentOffset: const Offset(-4, 0),
-            style: MenuStyle(
-              minimumSize: WidgetStatePropertyAll(Size(constraints.maxWidth + 8, 0)),
-              maximumSize: WidgetStatePropertyAll(Size(constraints.maxWidth + 8, Floater.infinity)),
-            ),
-            menuChildren: [
-              if (this.option.isEmpty)
-                const SizedBox(height: 16),
-              ...this.option.map((value) => MenuItemButton(
-                style: ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(this.value.value == null || ValueExpressionHelper.makeString(value) != ValueExpressionHelper.makeString(this.value.value!) ? null : theme.colorScheme.onSurface.withOpacity(0.12)),
+        content: CustomOptionField(
+          decoration: InputDecoration(
+            contentPadding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+            filled: false,
+            border: const UnderlineInputBorder(),
+            hintText: 'Enumeration',
+            suffixIcon: CustomTextFieldSuffixRegion(
+              children: [
+                IconButton(
+                  tooltip: 'Reset',
+                  icon: const Icon(IconSymbols.restart_alt),
+                  onPressed: () async {
+                    this.value.value = null;
+                    setState(() {});
+                  },
                 ),
-                onPressed: () async {
-                  this.value.value = value;
-                  setState(() {});
-                },
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: constraints.maxWidth - 16),
-                  child: ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    dense: true,
-                    title: Text(
-                      ValueExpressionHelper.makeString(value),
-                      overflow: TextOverflow.clip,
-                      style: theme.textTheme.bodyLarge,
-                    ),
-                  ),
-                ),
-              )),
-            ],
-            builder: (context, controller, child) => TextFormField(
-              key: ObjectKey(this.value.value),
-              keyboardType: TextInputType.none,
-              inputFormatters: const [],
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
-                filled: false,
-                border: const UnderlineInputBorder(),
-                hintText: 'Enumeration',
-                suffixIcon: CustomTextFieldSuffixWidget(
-                  children: [
-                    IconButton(
-                      tooltip: 'Reset',
-                      icon: const Icon(IconSymbols.restart_alt),
-                      onPressed: () async {
-                        this.value.value = null;
-                        controller.close();
-                        setState(() {});
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              readOnly: true,
-              initialValue: this.value.value == null ? '' : ValueExpressionHelper.makeString(this.value.value!),
-              onTap: () async {
-                if (controller.isOpen) {
-                  controller.close();
-                }
-                else {
-                  controller.open();
-                }
-              },
+              ],
             ),
           ),
+          option: this.option.map((value) => (value, ValueExpressionHelper.makeString(value))).toList(),
+          value: this.value.value == null ? '' : ValueExpressionHelper.makeString(this.value.value!),
+          onChanged: (value) async {
+            this.value.value = value as ValueExpression;
+            setState(() {});
+          },
         ),
       ),
     );

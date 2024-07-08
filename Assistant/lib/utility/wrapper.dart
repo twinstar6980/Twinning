@@ -2,13 +2,6 @@ import '/common.dart'; // ignore: unused_import
 
 // ----------------
 
-class _WrapperData {
-  Object? value;
-  _WrapperData(
-    this.value,
-  );
-}
-
 class Wrapper<TValue> {
 
   // #region structor
@@ -41,4 +34,11 @@ class Wrapper<TValue> {
 
   // #endregion
 
+}
+
+class _WrapperData {
+  Object? value;
+  _WrapperData(
+    this.value,
+  );
 }

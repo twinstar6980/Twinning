@@ -46,7 +46,7 @@ class LauncherConfigurationPanel extends StatelessWidget {
             panelBuilder: (context, setStateForPanel) => [
               ListTile(
                 contentPadding: EdgeInsets.zero,
-                title: CustomTextFieldWithFocus(
+                title: CustomTextField(
                   keyboardType: TextInputType.text,
                   inputFormatters: const [],
                   decoration: const InputDecoration(
@@ -120,7 +120,7 @@ class LauncherConfigurationPanel extends StatelessWidget {
             panelBuilder: (context, setStateForPanel) => [
               ListTile(
                 contentPadding: EdgeInsets.zero,
-                title: CustomTextFieldWithFocus(
+                title: CustomTextField(
                   keyboardType: TextInputType.multiline,
                   inputFormatters: const [],
                   decoration: const InputDecoration(

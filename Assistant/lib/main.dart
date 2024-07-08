@@ -16,24 +16,39 @@ import 'package:app_links/app_links.dart';
 
 // ----------------
 
-Future<Void> main(
+Void main(
   List<String> argument,
-) async {
-  var setting = SettingProvider();
-  var handleException = (
+) {
+  _Main.run(argument);
+  return;
+}
+
+class _Main {
+
+  static SettingProvider _setting = SettingProvider();
+
+  // ----------------
+
+  static Void _handleException(
     Object      exception,
     StackTrace? stack,
   ) {
     ControlHelper.postTask(() async {
-      if (setting.state.mApplicationNavigatorKey.currentContext != null) {
-        ControlHelper.showCustomModalDialog<Void>(setting.state.mApplicationNavigatorKey.currentContext!, CustomModalDialog(
+      if (_setting.state.mApplicationNavigatorKey.currentContext != null) {
+        ControlHelper.showCustomModalDialog<Void>(_setting.state.mApplicationNavigatorKey.currentContext!, CustomModalDialog(
           title: 'Unhandled Exception',
           contentBuilder: (context, setState) => [
-            SelectionArea(
-              child: Text(
-                '${exception}\n${stack}',
-                overflow: TextOverflow.clip,
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: SelectionArea(
+                    child: Text(
+                      '${exception}\n${stack}',
+                      overflow: TextOverflow.clip,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
           actionBuilder: null,
@@ -41,15 +56,18 @@ Future<Void> main(
       }
     });
     return;
-  };
-  var handleCommand = (
+  }
+
+  // ----------------
+
+  static Future<Void> _handleCommand(
     List<String> command,
   ) async {
     if (Platform.isAndroid) {
       var convertedCommand = List<String>.empty(growable: true);
       for (var commandItem in command) {
         if (commandItem.startsWith('content://')) {
-          commandItem = await StorageHelper.parseAndroidContentUri(setting.state.mApplicationNavigatorKey.currentContext!, Uri.parse(commandItem), true) ?? commandItem;
+          commandItem = await StorageHelper.parseAndroidContentUri(_setting.state.mApplicationNavigatorKey.currentContext!, Uri.parse(commandItem), true) ?? commandItem;
         }
         convertedCommand.add(commandItem);
       }
@@ -66,83 +84,92 @@ Future<Void> main(
     }
     assertTest(option.done());
     if (optionInsertTab != null) {
-      await setting.state.mHomeInsertTabItem!(ModuleLauncherConfiguration(
+      await _setting.state.mHomeInsertTabItem!(ModuleLauncherConfiguration(
         title: optionInsertTab.$1,
         type: optionInsertTab.$2,
         option: optionInsertTab.$3,
       ));
     }
     return;
-  };
-  var handleLink = (
+  }
+
+  static Future<Void> _handleLink(
     Uri link,
   ) async {
     if (link.scheme != 'twinstar.twinning.assistant' || link.hasAuthority || link.path != '/launch') {
       throw Exception('invalid link');
     }
     var command = link.queryParametersAll['command'] ?? [];
-    await handleCommand(command);
+    await _handleCommand(command);
     return;
-  };
-  WidgetsFlutterBinding.ensureInitialized();
-  WidgetsBinding.instance.platformDispatcher.onError = (error, stack) {
-    handleException(error, stack);
-    return true;
-  };
-  FlutterError.onError = (details) {
-    FlutterError.presentError(details);
-    handleException(details.exception, details.stack);
-    return;
-  };
-  try {
+  }
+
+  // ----------------
+
+  static Future<Void> run(
+    List<String> argument,
+  ) async {
     try {
-      await setting.load();
-    }
-    catch (e) {
-      await setting.reset();
-    }
-    await setting.save();
-    setting.state.mHandleCommand = handleCommand;
-    await NotificationHelper.initialize();
-    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      await windowManager.ensureInitialized();
-      await windowManager.setTitleBarStyle(TitleBarStyle.hidden);
-      if (setting.data.mWindowSizeState) {
-        await windowManager.setSize(Size(setting.data.mWindowSizeWidth.toDouble(), setting.data.mWindowSizeHeight.toDouble()));
+      WidgetsFlutterBinding.ensureInitialized();
+      WidgetsBinding.instance.platformDispatcher.onError = (error, stack) {
+        _handleException(error, stack);
+        return true;
+      };
+      FlutterError.onError = (details) {
+        FlutterError.presentError(details);
+        _handleException(details.exception, details.stack);
+        return;
+      };
+      try {
+        await _setting.load();
       }
-      if (setting.data.mWindowPositionState) {
-        await windowManager.setPosition(Offset(setting.data.mWindowPositionX.toDouble(), setting.data.mWindowPositionY.toDouble()));
+      catch (e) {
+        await _setting.reset();
       }
-      else {
-        await windowManager.center();
-      }
-      await windowManager.waitUntilReadyToShow();
-      await windowManager.show();
-    }
-    if (!(await AppLinks().getInitialLinkString() ?? '').startsWith('twinstar.twinning.assistant:')) {
-      if (argument.length >= 1 && argument[0] == 'launch') {
-        ControlHelper.postTask(() async {
-          handleCommand(argument.slice(1));
-        });
-      }
-      else {
-        ControlHelper.postTask(() async {
-          setting.state.mHomeShowLauncherPanel!();
-        });
-      }
-    }
-    AppLinks().stringLinkStream.listen((link) async {
-      ControlHelper.postTask(() async {
-        if (link.startsWith('twinstar.twinning.assistant:')) {
-          handleLink(Uri.parse(link));
+      await _setting.save();
+      _setting.state.mHandleCommand = _handleCommand;
+      await NotificationHelper.initialize();
+      await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+      if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+        await windowManager.ensureInitialized();
+        await windowManager.setTitleBarStyle(TitleBarStyle.hidden);
+        if (_setting.data.mWindowSizeState) {
+          await windowManager.setSize(Size(_setting.data.mWindowSizeWidth.toDouble(), _setting.data.mWindowSizeHeight.toDouble()));
         }
+        if (_setting.data.mWindowPositionState) {
+          await windowManager.setPosition(Offset(_setting.data.mWindowPositionX.toDouble(), _setting.data.mWindowPositionY.toDouble()));
+        }
+        else {
+          await windowManager.center();
+        }
+        await windowManager.waitUntilReadyToShow();
+        await windowManager.show();
+      }
+      if (!(await AppLinks().getInitialLinkString() ?? '').startsWith('twinstar.twinning.assistant:')) {
+        if (argument.length >= 1 && argument[0] == 'launch') {
+          ControlHelper.postTask(() async {
+            _handleCommand(argument.slice(1));
+          });
+        }
+        else {
+          ControlHelper.postTask(() async {
+            _setting.state.mHomeShowLauncherPanel!();
+          });
+        }
+      }
+      AppLinks().stringLinkStream.listen((link) async {
+        ControlHelper.postTask(() async {
+          if (link.startsWith('twinstar.twinning.assistant:')) {
+            _handleLink(Uri.parse(link));
+          }
+        });
       });
-    });
+    }
+    catch (e, s) {
+      _handleException(e, s);
+    }
+    runApp(Application(setting: _setting));
+    return;
   }
-  catch (e, s) {
-    handleException(e, s);
-  }
-  runApp(Application(setting: setting));
-  return;
+
 }

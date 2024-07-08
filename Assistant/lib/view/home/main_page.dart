@@ -5,7 +5,7 @@ import '/utility/convert_helper.dart';
 import '/utility/control_helper.dart';
 import '/utility/system_overlay_helper.dart';
 import '/view/home/common.dart';
-import '/view/home/blank_panel.dart';
+import '/view/home/blank_page.dart';
 import '/view/home/launcher_panel.dart';
 import '/view/home/setting_panel.dart';
 import '/view/home/about_panel.dart';
@@ -33,7 +33,6 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
 
-  late Widget                             _blankPanel;
   late List<(String, ModuleType, Widget)> _tabList;
   late Integer                            _tabIndex;
 
@@ -81,7 +80,7 @@ class _MainPageState extends State<MainPage> {
     var confirmed = await ControlHelper.showCustomModalDialog<Boolean>(context, CustomModalDialog(
       title: 'Commander',
       contentBuilder: (context, setState) => [
-        CustomTextFieldWithFocus(
+        CustomTextField(
           keyboardType: TextInputType.multiline,
           inputFormatters: const [],
           decoration: const InputDecoration(
@@ -103,7 +102,7 @@ class _MainPageState extends State<MainPage> {
         ),
         TextButton(
           onPressed: () => Navigator.pop(context, true),
-          child: const Text('Handle'),
+          child: const Text('Continue'),
         ),
       ],
     )) ?? false;
@@ -134,9 +133,6 @@ class _MainPageState extends State<MainPage> {
   @override
   initState() {
     super.initState();
-    this._blankPanel = BlankPanel(
-      showLauncherPanel: this._showLauncherPanel,
-    );
     this._tabList = [];
     this._tabIndex = -1;
     {
@@ -255,7 +251,7 @@ class _MainPageState extends State<MainPage> {
           ),
           CustomNavigationDrawerItem(
             selected: false,
-            icon: IconSymbols.contact_support,
+            icon: IconSymbols.info,
             label: 'About',
             action: const [],
             onPressed: () async {
@@ -275,7 +271,7 @@ class _MainPageState extends State<MainPage> {
         children: [
           Offstage(
             offstage: this._tabIndex != -1,
-            child: this._blankPanel,
+            child: const BlankPage(),
           ),
           ...this._tabList.mapIndexed((index, value) => Offstage(
             offstage: this._tabIndex != index,
