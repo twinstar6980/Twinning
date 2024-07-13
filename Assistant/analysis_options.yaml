@@ -9,6 +9,7 @@ analyzer:
     prefer_final_fields: ignore
     prefer_is_empty: ignore
     empty_catches: ignore
+    sort_child_properties_last: ignore
 linter:
   rules:
     prefer_single_quotes: true

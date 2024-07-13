@@ -29,7 +29,6 @@ class LauncherConfigurationPanel extends StatelessWidget {
         children: [
           const SizedBox(height: 8),
           CustomSettingItem(
-            enabled: true,
             icon: IconSymbols.text_fields,
             label: 'Title',
             content: [
@@ -66,7 +65,6 @@ class LauncherConfigurationPanel extends StatelessWidget {
             ],
           ),
           CustomSettingItem(
-            enabled: true,
             icon: IconSymbols.label,
             label: 'Type',
             content: [
@@ -103,7 +101,6 @@ class LauncherConfigurationPanel extends StatelessWidget {
             ],
           ),
           CustomSettingItem(
-            enabled: true,
             icon: IconSymbols.format_list_bulleted,
             label: 'Option',
             content: [

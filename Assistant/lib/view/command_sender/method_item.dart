@@ -27,8 +27,8 @@ class MethodItemItem extends StatelessWidget {
     return Column(
       children: [
         ListTile(
-          dense: true,
           contentPadding: const EdgeInsets.fromLTRB(40, 0, 24, 0),
+          dense: true,
           leading: Icon(SymbolsGet.get(this.configuration.icon, SymbolStyle.outlined)),
           title: Text(
             this.configuration.name,

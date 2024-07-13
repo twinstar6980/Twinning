@@ -5,10 +5,6 @@ using AssistantPlus;
 
 namespace AssistantPlus.Utility {
 
-	public record WrapperData {
-		public Object? Value = default!;
-	}
-
 	public class Wrapper<TValue>
 		where TValue : notnull {
 
@@ -53,6 +49,10 @@ namespace AssistantPlus.Utility {
 
 		#endregion
 
+	}
+
+	public record WrapperData {
+		public Object? Value = default!;
 	}
 
 }

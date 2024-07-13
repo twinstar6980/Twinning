@@ -46,14 +46,14 @@ class _BasicSubmissionBar extends StatelessWidget {
         hoverElevation: 0,
         highlightElevation: 0,
         disabledElevation: 0,
+        child: this.completer == null
+          ? const CircularProgressIndicator()
+          : const Icon(IconSymbols.send),
         onPressed: this.completer == null
           ? null
           : () async {
             this.completer?.complete();
           },
-        child: this.completer == null
-          ? const CircularProgressIndicator()
-          : const Icon(IconSymbols.send),
       ),
       secondary: [
         Badge.count(
@@ -64,15 +64,11 @@ class _BasicSubmissionBar extends StatelessWidget {
           isLabelVisible: this.history != null,
           count: this.history == null ? 0 : this.history!.length,
           child: IconButton.filledTonal(
-            tooltip: this.history == null ? '' : 'History',
             style: const ButtonStyle(
               padding: WidgetStatePropertyAll(EdgeInsets.zero),
               overlayColor: WidgetStatePropertyAll(Colors.transparent),
             ),
-            onPressed: this.history == null
-              ? null
-              : () async {
-              },
+            tooltip: this.history == null ? '' : 'History',
             icon: Stack(
               children: [
                 SizedBox(
@@ -118,6 +114,10 @@ class _BasicSubmissionBar extends StatelessWidget {
                 ),
               ],
             ),
+            onPressed: this.history == null
+              ? null
+              : () async {
+              },
           ),
         ),
         const SizedBox(width: 16),

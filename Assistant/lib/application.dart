@@ -35,6 +35,9 @@ class Application extends StatelessWidget {
               colorScheme: !setting.data.mThemeColorState ? lightColor : ColorScheme.fromSeed(seedColor: setting.data.mThemeColorLight, brightness: Brightness.light),
               fontFamily: '',
               fontFamilyFallback: [...setting.state.mThemeFontFamliy],
+              tooltipTheme: TooltipTheme.of(context).copyWith(
+                waitDuration: const Duration(milliseconds: 1000),
+              ),
             ),
             darkTheme: ThemeData(
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -43,6 +46,9 @@ class Application extends StatelessWidget {
               colorScheme: !setting.data.mThemeColorState ? darkColor : ColorScheme.fromSeed(seedColor: setting.data.mThemeColorDark, brightness: Brightness.dark),
               fontFamily: '',
               fontFamilyFallback: [...setting.state.mThemeFontFamliy],
+              tooltipTheme: TooltipTheme.of(context).copyWith(
+                waitDuration: const Duration(milliseconds: 1000),
+              ),
             ),
             themeMode: setting.data.mThemeMode,
             scrollBehavior: const MaterialScrollBehavior().copyWith(scrollbars: false),

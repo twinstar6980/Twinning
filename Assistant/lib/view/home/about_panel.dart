@@ -86,7 +86,7 @@ class AboutPanel extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       onPressed: () async {
-                        if (await ControlHelper.showCustomConfirmModalDialog(context)) {
+                        if (await ControlHelper.showDialogForConfirm(context)) {
                           await setting.reset();
                           await setting.save();
                         }
@@ -149,7 +149,7 @@ class AboutPanel extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       onPressed: () async {
-                        await ControlHelper.revealStorageDirectoryInNativeManagerOrShowTextDialog(context, 'Shared Directory', await StorageHelper.queryApplicationSharedDirectory());
+                        await ControlHelper.showDialogForRevealStoragePath(context, 'Shared Directory', await StorageHelper.queryApplicationSharedDirectory());
                       },
                     ),
                   ],

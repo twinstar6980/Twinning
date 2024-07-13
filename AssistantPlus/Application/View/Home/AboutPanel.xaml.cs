@@ -394,7 +394,7 @@ namespace AssistantPlus.View.Home {
 					break;
 				}
 				case "Reset": {
-					if (await ControlHelper.ShowDialogForPausing(this.View, "Confirm ?", null)) {
+					if (await ControlHelper.ShowDialogForConfirm(this.View, null, null)) {
 						await App.Setting.Reset();
 						await App.Setting.Save();
 					}

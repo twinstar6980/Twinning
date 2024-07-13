@@ -5,7 +5,7 @@ import '/utility/storage_helper.dart';
 import '/utility/control_helper.dart';
 import '/view/home/common.dart';
 import '/view/animation_viewer/model.dart' as model;
-import '/view/animation_viewer/visual.dart';
+import '/view/animation_viewer/visual_helper.dart';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -251,7 +251,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                               verticalController: this._stageVerticalScrollSontroller,
                               child: Container(
                                 color: theme.colorScheme.surfaceContainerHighest,
-                                child: this._animationVisual ?? const SizedBox.shrink(),
+                                child: this._animationVisual ?? const SizedBox(),
                               ),
                             ),
                           ),

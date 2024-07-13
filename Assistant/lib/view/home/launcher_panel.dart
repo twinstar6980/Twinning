@@ -34,7 +34,6 @@ class LauncherPanel extends StatelessWidget {
             action: null,
           ),
           ...setting.data.mModuleLauncher.module.map((item) => CustomSettingItem(
-            enabled: true,
             icon: ModuleHelper.query(item.type).icon,
             label: item.title,
             content: [
@@ -42,7 +41,7 @@ class LauncherPanel extends StatelessWidget {
                 tooltip: 'Setting',
                 icon: const Icon(IconSymbols.settings),
                 onPressed: () async {
-                  await ControlHelper.showCustomModalBottomSheet<Void>(context, CustomModalBottomSheet(
+                  await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
                     title: 'Module Setting',
                     contentBuilder: (context, setStateForSheet) => [
                       ModuleHelper.query(item.type).settingPanel(context),
@@ -55,7 +54,7 @@ class LauncherPanel extends StatelessWidget {
                 tooltip: 'Edit',
                 icon: const Icon(IconSymbols.edit),
                 onPressed: () async {
-                  await ControlHelper.showCustomModalBottomSheet<Void>(context, CustomModalBottomSheet(
+                  await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
                     title: 'Launcher Configuration',
                     contentBuilder: (context, setStateForSheet) => [
                       LauncherConfigurationPanel(
@@ -91,7 +90,6 @@ class LauncherPanel extends StatelessWidget {
             ),
           ),
           ...setting.data.mModuleLauncher.pinned.map((item) => CustomSettingItem(
-            enabled: true,
             icon: ModuleHelper.query(item.type).icon,
             label: item.title,
             content: [
@@ -108,7 +106,7 @@ class LauncherPanel extends StatelessWidget {
                 tooltip: 'Edit',
                 icon: const Icon(IconSymbols.edit),
                 onPressed: () async {
-                  await ControlHelper.showCustomModalBottomSheet<Void>(context, CustomModalBottomSheet(
+                  await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
                     title: 'Launcher Configuration',
                     contentBuilder: (context, setStateForSheet) => [
                       LauncherConfigurationPanel(
@@ -134,7 +132,7 @@ class LauncherPanel extends StatelessWidget {
               tooltip: 'Clear',
               icon: const Icon(IconSymbols.clear),
               onPressed: () async {
-                if (await ControlHelper.showCustomConfirmModalDialog(context)) {
+                if (await ControlHelper.showDialogForConfirm(context)) {
                   setting.data.mModuleLauncher.recent.clear();
                   await setting.save();
                 }
@@ -142,7 +140,6 @@ class LauncherPanel extends StatelessWidget {
             ),
           ),
           ...setting.data.mModuleLauncher.recent.map((item) => CustomSettingItem(
-            enabled: true,
             icon: ModuleHelper.query(item.type).icon,
             label: item.title,
             content: [
@@ -167,7 +164,7 @@ class LauncherPanel extends StatelessWidget {
                 tooltip: 'Edit',
                 icon: const Icon(IconSymbols.edit),
                 onPressed: () async {
-                  await ControlHelper.showCustomModalBottomSheet<Void>(context, CustomModalBottomSheet(
+                  await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
                     title: 'Launcher Configuration',
                     contentBuilder: (context, setStateForSheet) => [
                       LauncherConfigurationPanel(

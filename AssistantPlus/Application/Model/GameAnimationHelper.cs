@@ -43,6 +43,20 @@ namespace AssistantPlus {
 
 		// ----------------
 
+		public static GameAnimationModel.Image SelectImage (
+			GameAnimationModel.Animation animation,
+			Size                         index
+		) {
+			var result = default(GameAnimationModel.Image);
+			if (0 <= index && index < animation.Image.Count) {
+				result = animation.Image[index];
+			}
+			else {
+				throw new ();
+			}
+			return result;
+		}
+
 		public static GameAnimationModel.Sprite SelectSprite (
 			GameAnimationModel.Animation animation,
 			Size                         index
@@ -62,11 +76,15 @@ namespace AssistantPlus {
 
 		#endregion
 
-		#region create
+		#region visualize
 
 		public const Floater BasicOffset = 0.001;
 
 		// ----------------
+
+		public record ImageVisual {
+			public required Canvas Canvas;
+		}
 
 		public record SpriteVisual {
 			public required Canvas     Canvas;
@@ -130,14 +148,39 @@ namespace AssistantPlus {
 
 		// ----------------
 
-		public static SpriteVisual CreateVisual (
+		public static ImageVisual VisualizeImage (
 			GameAnimationModel.Animation animation,
 			List<BitmapSource?>          imageSource,
-			List<Boolean>                imageFilter,
-			List<Boolean>                spriteFilter,
-			Size                         workingSpriteIndex
+			Size                         index
 		) {
-			var sprite = GameAnimationHelper.SelectSprite(animation, workingSpriteIndex);
+			var image = GameAnimationHelper.SelectImage(animation, index);
+			var visual = new ImageVisual() {
+				Canvas = new () { },
+			};
+			var imageSourceData = imageSource[index];
+			visual.Canvas = new () {
+				Children = {
+					new Image() {
+						Source = imageSourceData,
+						Width = image.Size?.Item1 ?? imageSourceData?.PixelWidth ?? 0,
+						Height = image.Size?.Item2 ?? imageSourceData?.PixelHeight ?? 0,
+						RenderTransform = new MatrixTransform() {
+							Matrix = GameAnimationHelper.MakeTransformMatrixFromVariant(image.Transform),
+						},
+					},
+				},
+			};
+			return visual;
+		}
+
+		public static SpriteVisual VisualizeSprite (
+			GameAnimationModel.Animation animation,
+			List<BitmapSource?>          imageSource,
+			Size                         index,
+			List<Boolean>                imageFilter,
+			List<Boolean>                spriteFilter
+		) {
+			var sprite = GameAnimationHelper.SelectSprite(animation, index);
 			var visual = new SpriteVisual() {
 				Canvas = new () { },
 				Storyboard = new () { },
@@ -173,24 +216,11 @@ namespace AssistantPlus {
 						IsFirst = default!,
 					};
 					if (!append.Sprite) {
-						var resource = animation.Image[(Size)append.Resource];
-						var resourceSource = imageSource[(Size)append.Resource];
-						layer.Canvas = new () {
-							Children = {
-								new Image() {
-									Source = resourceSource,
-									Width = resource.Size?.Item1 ?? resourceSource?.PixelWidth ?? 0,
-									Height = resource.Size?.Item2 ?? resourceSource?.PixelHeight ?? 0,
-									RenderTransform = new MatrixTransform() {
-										Matrix = GameAnimationHelper.MakeTransformMatrixFromVariant(resource.Transform),
-									},
-								},
-							},
-						};
+						var resourceVisual = GameAnimationHelper.VisualizeImage(animation, imageSource, (Size)append.Resource);
+						layer.Canvas = resourceVisual.Canvas;
 					}
 					else {
-						var resource = animation.Sprite[(Size)append.Resource];
-						var resourceVisual = GameAnimationHelper.CreateVisual(animation, imageSource, imageFilter, spriteFilter, (Size)append.Resource);
+						var resourceVisual = GameAnimationHelper.VisualizeSprite(animation, imageSource, (Size)append.Resource, imageFilter, spriteFilter);
 						layer.Canvas = resourceVisual.Canvas;
 						visual.Storyboard.Children.Add(resourceVisual.Storyboard);
 					}

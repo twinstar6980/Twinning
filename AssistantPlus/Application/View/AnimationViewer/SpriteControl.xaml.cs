@@ -99,7 +99,7 @@ namespace AssistantPlus.View.AnimationViewer {
 		) {
 			GF.AssertTest(!this.Loaded);
 			var workingSprite = GameAnimationHelper.SelectSprite(animation, workingSpriteIndex);
-			var visual = GameAnimationHelper.CreateVisual(animation, imageSource, imageFilter, spriteFilter, workingSpriteIndex);
+			var visual = GameAnimationHelper.VisualizeSprite(animation, imageSource, workingSpriteIndex, imageFilter, spriteFilter);
 			this.Width = animation.Size.Item1;
 			this.Height = animation.Size.Item2;
 			this.Padding = new (animation.Position.Item1, animation.Position.Item2, 0.0, 0.0);

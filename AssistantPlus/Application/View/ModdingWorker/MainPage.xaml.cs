@@ -88,7 +88,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public MainPageBridgeClient SessionClient { get; set; } = default!;
 
-		public Task<List<String>>? SessionTask { get; set; } = null;
+		public Boolean SessionRunning { get; set; } = false;
 
 		public Boolean SubmissionState { get; set; } = false;
 
@@ -168,8 +168,8 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public async Task<Boolean> RequestClose (
 		) {
-			if (this.SessionTask != null) {
-				await ControlHelper.ShowDialogSimple(this.View, "Session In Progress", null);
+			if (this.SessionRunning) {
+				await ControlHelper.ShowDialogAsAutomatic(this.View, "Session In Progress", null, null);
 				return false;
 			}
 			return true;
@@ -244,32 +244,36 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public async Task<List<String>?> LaunchSession (
 		) {
-			GF.AssertTest(this.SessionTask == null);
+			GF.AssertTest(!this.SessionRunning);
 			var result = default(List<String>?);
 			var exception = default(Exception?);
-			var kernelCopy = StorageHelper.Temporary();
-			var library = new Bridge.Library();
-			this.SessionTask = new (() => (Bridge.Launcher.Launch(this.SessionClient, library, App.Setting.Data.ModdingWorker.Script, [..App.Setting.Data.ModdingWorker.Argument, ..this.AdditionalArgument])));
+			this.SessionRunning = true;
+			this.uMessageList_ItemsSource.Clear();
 			this.NotifyPropertyChanged(
 				nameof(this.uLaunch_Visibility),
 				nameof(this.uSubmissionBar_Visibility),
 				nameof(this.uProgress_ProgressIndeterminate)
 			);
-			this.uMessageList_ItemsSource.Clear();
 			try {
-				StorageHelper.CopyFile(App.Setting.Data.ModdingWorker.Kernel, kernelCopy);
-				library.Open(kernelCopy);
-				this.SessionTask.Start();
-				result = await this.SessionTask;
+				var kernel = StorageHelper.Temporary();
+				var library = new Bridge.Library();
+				try {
+					StorageHelper.CopyFile(App.Setting.Data.ModdingWorker.Kernel, kernel);
+					library.Open(kernel);
+					result = await new Task<List<String>>(() => (Bridge.Launcher.Launch(this.SessionClient, library, App.Setting.Data.ModdingWorker.Script, [..App.Setting.Data.ModdingWorker.Argument, ..this.AdditionalArgument]))).SelfAlso((it) => { it.Start(); });
+				}
+				catch (Exception e) {
+					exception = e;
+				}
+				if (library.State()) {
+					library.Close();
+				}
+				if (StorageHelper.ExistFile(kernel)) {
+					StorageHelper.RemoveFile(kernel);
+				}
 			}
 			catch (Exception e) {
 				exception = e;
-			}
-			if (library.State()) {
-				library.Close();
-			}
-			if (StorageHelper.ExistFile(kernelCopy)) {
-				StorageHelper.RemoveFile(kernelCopy);
 			}
 			if (exception == null) {
 				await this.SendMessage(MessageType.Success, "SUCCEEDED", result.AsNotNull());
@@ -277,13 +281,13 @@ namespace AssistantPlus.View.ModdingWorker {
 			else {
 				await this.SendMessage(MessageType.Error, "FAILED", [exception.ToString()]);
 			}
-			this.SessionTask = null;
+			this.SessionRunning = false;
 			this.NotifyPropertyChanged(
 				nameof(this.uLaunch_Visibility),
 				nameof(this.uSubmissionBar_Visibility),
 				nameof(this.uProgress_ProgressIndeterminate)
 			);
-			return result;
+			return exception == null ? result.AsNotNull() : null;
 		}
 
 		#endregion
@@ -362,7 +366,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public Boolean uLaunch_Visibility {
 			get {
-				return this.SessionTask == null;
+				return !this.SessionRunning;
 			}
 		}
 
@@ -371,9 +375,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			if (this.SessionTask == null) {
-				await this.LaunchSession();
-			}
+			_ = this.LaunchSession();
 			return;
 		}
 
@@ -383,7 +385,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public Boolean uProgress_ProgressIndeterminate {
 			get {
-				return this.SessionTask != null;
+				return this.SessionRunning;
 			}
 		}
 
@@ -405,7 +407,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public Boolean uSubmissionBar_Visibility {
 			get {
-				return this.SessionTask != null;
+				return this.SessionRunning;
 			}
 		}
 

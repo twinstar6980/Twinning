@@ -376,14 +376,14 @@ namespace AssistantPlus.View.PackageBuilder {
 				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to check version.txt", "");
 				return;
 			}
-			var closeDialog = await ControlHelper.ShowDialogForWaiting(this.View, null, null);
+			var hideDialog = await ControlHelper.ShowDialogForWait(this.View);
 			this.ProjectDirectory = projectDirectory;
 			this.NotifyPropertyChanged(
 				nameof(this.uLoadedAction_IsEnabled),
 				nameof(this.uProjectDirectory_Text)
 			);
 			await this.ProjectReload();
-			await closeDialog();
+			await hideDialog();
 			return;
 		}
 
@@ -1740,11 +1740,11 @@ namespace AssistantPlus.View.PackageBuilder {
 				}
 				case "Part": {
 					var partList = this.Host.uPartList_ItemsSource.Select((value) => (value.Name)).ToList();
-					await ControlHelper.ShowDialogFixed(this.Host.View, "Package Part", new PackagePartPanel() {
+					await ControlHelper.ShowDialogAsFixed(this.Host.View, "Package Part", new PackagePartPanel() {
 						Source = partList,
 						Value = this.Setting.Part,
 						Stamp = UniqueStamp.Create(),
-					});
+					}, null);
 					this.Setting.Part = partList.Where((value) => (this.Setting.Part.Contains(value))).ToList();
 					await this.SaveSetting();
 					this.NotifyPropertyChanged(
@@ -1753,18 +1753,18 @@ namespace AssistantPlus.View.PackageBuilder {
 					break;
 				}
 				case "Setting": {
-					await ControlHelper.ShowDialogFixed(this.Host.View, "Package Setting", new PackageSettingPanel() {
+					await ControlHelper.ShowDialogAsFixed(this.Host.View, "Package Setting", new PackageSettingPanel() {
 						Value = this.Setting,
 						Stamp = UniqueStamp.Create(),
-					});
+					}, null);
 					await this.SaveSetting();
 					break;
 				}
 				case "Variable": {
-					await ControlHelper.ShowDialogFixed(this.Host.View, "Package Variable", new VariableListPanel() {
+					await ControlHelper.ShowDialogAsFixed(this.Host.View, "Package Variable", new VariableListPanel() {
 						Value = this.Setting.Variable,
 						Stamp = UniqueStamp.Create(),
-					});
+					}, null);
 					await this.SaveSetting();
 					break;
 				}
@@ -1969,10 +1969,10 @@ namespace AssistantPlus.View.PackageBuilder {
 					break;
 				}
 				case "Variable": {
-					await ControlHelper.ShowDialogFixed(this.Host.View, "Part Variable", new VariableListPanel() {
+					await ControlHelper.ShowDialogAsFixed(this.Host.View, "Part Variable", new VariableListPanel() {
 						Value = this.Setting.Variable,
 						Stamp = UniqueStamp.Create(),
-					});
+					}, null);
 					await this.SaveSetting();
 					break;
 				}
@@ -2220,10 +2220,10 @@ namespace AssistantPlus.View.PackageBuilder {
 					break;
 				}
 				case "Variable": {
-					await ControlHelper.ShowDialogFixed(this.Host.View, "Group Variable", new VariableListPanel() {
+					await ControlHelper.ShowDialogAsFixed(this.Host.View, "Group Variable", new VariableListPanel() {
 						Value = this.Setting.Variable,
 						Stamp = UniqueStamp.Create(),
-					});
+					}, null);
 					await this.SaveSetting();
 					break;
 				}
@@ -2482,7 +2482,7 @@ namespace AssistantPlus.View.PackageBuilder {
 				ResourceType.SpecialWem  => JsonHelper.DeserializeToken<SpecialWemResourceProperty>(this.Setting.Property),
 				_                        => throw new (),
 			};
-			await ControlHelper.ShowDialogFixed(this.Host.View, "Resource Property", this.Setting.Type switch {
+			await ControlHelper.ShowDialogAsFixed(this.Host.View, "Resource Property", this.Setting.Type switch {
 				ResourceType.Dummy => new DummyResourcePropertyPanel() {
 					Value = property.As<DummyResourceProperty>(),
 					Stamp = UniqueStamp.Create(),
@@ -2516,7 +2516,7 @@ namespace AssistantPlus.View.PackageBuilder {
 					Stamp = UniqueStamp.Create(),
 				},
 				_ => throw new (),
-			});
+			}, null);
 			this.Setting.Property = JsonHelper.SerializeToken(property);
 			await this.SaveSetting();
 			return;
@@ -2672,10 +2672,10 @@ namespace AssistantPlus.View.PackageBuilder {
 					break;
 				}
 				case "Variable": {
-					await ControlHelper.ShowDialogFixed(this.Host.View, "Resource Variable", new VariableListPanel() {
+					await ControlHelper.ShowDialogAsFixed(this.Host.View, "Resource Variable", new VariableListPanel() {
 						Value = this.Setting.Variable,
 						Stamp = UniqueStamp.Create(),
-					});
+					}, null);
 					await this.SaveSetting();
 					break;
 				}

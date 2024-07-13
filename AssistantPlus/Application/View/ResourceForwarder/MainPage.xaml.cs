@@ -279,18 +279,6 @@ namespace AssistantPlus.View.ResourceForwarder {
 			return;
 		}
 
-		public async Task ClearResource (
-		) {
-			this.Resource.Clear();
-			this.uResourceList_ItemsSource.Clear();
-			this.NotifyPropertyChanged(
-				nameof(this.uResourceCount_Text)
-			);
-			await this.RefreshMatch();
-			await this.RefreshFilter();
-			return;
-		}
-
 		public async Task ForwardResource (
 			String?                     method,
 			Dictionary<String, Object>? argument
@@ -403,18 +391,41 @@ namespace AssistantPlus.View.ResourceForwarder {
 		) {
 			var senders = sender.As<Button>();
 			switch (senders.Tag.As<String>()) {
-				case "ClearAll": {
-					await this.ClearResource();
+				case "RemoveAll": {
+					if (await ControlHelper.ShowDialogForConfirm(this.View, null, null)) {
+						await this.RemoveResource(this.Resource.Select((value) => (value.Item1)).ToList());
+					}
 					break;
 				}
-				case "AddFile": {
+				case "AppendNew": {
+					var item = new List<String>();
+					var dialogResult = await ControlHelper.ShowDialogAsAutomatic(this.View, "Append New", new TextBox() {
+						HorizontalAlignment = HorizontalAlignment.Stretch,
+						VerticalAlignment = VerticalAlignment.Stretch,
+						TextWrapping = TextWrapping.Wrap,
+						AcceptsReturn = true,
+						Text = "",
+					}.SelfAlso((it) => {
+						it.LostFocus += (sender, args) => {
+							var senders = sender.As<TextBox>();
+							item = ConvertHelper.ParseStringListFromStringWithLine(senders.Text).Select(StorageHelper.Regularize).ToList();
+							senders.Text = ConvertHelper.MakeStringListToStringWithLine(item);
+							return;
+						};
+					}), new ("Cancel", "Continue", null));
+					if (dialogResult == ContentDialogResult.Primary) {
+						await this.AppendResource(item);
+					}
+					break;
+				}
+				case "AppendFile": {
 					var item = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(ResourceForwarder)}.Resource");
 					if (item != null) {
 						await this.AppendResource([item]);
 					}
 					break;
 				}
-				case "AddDirectory": {
+				case "AppendDirectory": {
 					var item = await StorageHelper.PickLoadDirectory(WindowHelper.Find(this.View), $"{nameof(ResourceForwarder)}.Resource");
 					if (item != null) {
 						await this.AppendResource([item]);

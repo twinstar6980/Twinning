@@ -238,132 +238,136 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
         ],
       ),
       bottom: CustomBottomBarContent(
-        primary: MenuAnchor(
-          alignmentOffset: const Offset(0, 8),
-          menuChildren: [
-            if (this._resource.isEmpty)
-              const SizedBox(height: 16),
-            ...this._resource.reversed.map((value) => Tooltip(
-              message: value.$1,
-              child: MenuItemButton(
-                closeOnActivate: false,
-                leadingIcon: Icon(switch (value.$2) {
-                  null  => IconSymbols.error,
-                  false => IconSymbols.draft,
-                  true  => IconSymbols.folder,
-                }),
-                child: Text(
-                  StorageHelper.name(value.$1),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                onPressed: () async {
-                  await this._removeResource([value.$1]);
-                },
-              ),
-            )),
-            const Divider(),
-            MenuItemButton(
-              closeOnActivate: false,
-              leadingIcon: const Icon(IconSymbols.tab_close),
-              child: const Text(
-                'Remove All',
-                overflow: TextOverflow.ellipsis,
-              ),
-              onPressed: () async {
-                await this._removeResource(this._resource.map((value) => value.$1).toList());
-              },
-            ),
-            MenuItemButton(
-              closeOnActivate: false,
-              leadingIcon: const Icon(IconSymbols.note_stack_add),
-              child: const Text(
-                'Append New',
-                overflow: TextOverflow.ellipsis,
-              ),
-              onPressed: () async {
-                var item = <String>[];
-                var confirmed = await ControlHelper.showCustomModalDialog<Boolean>(context, CustomModalDialog(
-                  title: 'Append New',
-                  contentBuilder: (context, setState) => [
-                    CustomTextField(
-                      keyboardType: TextInputType.multiline,
-                      inputFormatters: const [],
-                      decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                        filled: false,
-                        border: OutlineInputBorder(),
+        primary: Badge.count(
+          count: this._resource.length,
+          child: FloatingActionButton(
+            tooltip: 'Resource',
+            elevation: 0,
+            focusElevation: 0,
+            hoverElevation: 0,
+            highlightElevation: 0,
+            disabledElevation: 0,
+            child: const Icon(IconSymbols.attach_file),
+            onPressed: () async {
+              await ControlHelper.showBottomSheetAsModal(context, CustomModalBottomSheet(
+                title: 'Resource',
+                contentBuilder: (context, setStateForPanel) => [
+                  const SizedBox(height: 8),
+                  ListTile(
+                    contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                    leading: const Icon(IconSymbols.tab_close),
+                    title: const Text(
+                      'Remove All',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    onTap: () async {
+                      if (await ControlHelper.showDialogForConfirm(context)) {
+                        await this._removeResource(this._resource.map((value) => value.$1).toList());
+                        setStateForPanel(() {});
+                      }
+                    },
+                  ),
+                  ListTile(
+                    contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                    leading: const Icon(IconSymbols.note_stack_add),
+                    title: const Text(
+                      'Append New',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    onTap: () async {
+                      var item = <String>[];
+                      var canContinue = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
+                        title: 'Append New',
+                        contentBuilder: (context, setState) => [
+                          CustomTextField(
+                            keyboardType: TextInputType.multiline,
+                            inputFormatters: const [],
+                            decoration: const InputDecoration(
+                              contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                              filled: false,
+                              border: OutlineInputBorder(),
+                            ),
+                            value: ConvertHelper.makeStringListToStringWithLine(item),
+                            onChanged: (value) async {
+                              item = ConvertHelper.parseStringListFromStringWithLine(value).map(StorageHelper.regularize).toList();
+                              setState(() {});
+                            },
+                          ),
+                        ],
+                        actionBuilder: (context) => [
+                          TextButton(
+                            child: const Text('Cancel'),
+                            onPressed: () => Navigator.pop(context, false),
+                          ),
+                          TextButton(
+                            child: const Text('Continue'),
+                            onPressed: () => Navigator.pop(context, true),
+                          ),
+                        ],
+                      )) ?? false;
+                      if (canContinue) {
+                        await this._appendResource(item);
+                        setStateForPanel(() {});
+                      }
+                    },
+                  ),
+                  ListTile(
+                    contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                    leading: const Icon(IconSymbols.note_add),
+                    title: const Text(
+                      'Append File',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    onTap: () async {
+                      var item = await StorageHelper.pickLoadFile(context, 'ResourceForwarder.Resource');
+                      if (item != null) {
+                        await this._appendResource([item]);
+                        setStateForPanel(() {});
+                      }
+                    },
+                  ),
+                  ListTile(
+                    contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                    leading: const Icon(IconSymbols.create_new_folder),
+                    title: const Text(
+                      'Append Directory',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    onTap: () async {
+                      var item = await StorageHelper.pickLoadDirectory(context, 'ResourceForwarder.Resource');
+                      if (item != null) {
+                        await this._appendResource([item]);
+                        setStateForPanel(() {});
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  const Divider(height: 1, indent: 16, endIndent: 16),
+                  const SizedBox(height: 8),
+                  ...this._resource.map((value) => Tooltip(
+                    message: value.$1,
+                    child: ListTile(
+                      key: ObjectKey(value),
+                      contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                      leading: Icon(switch (value.$2) {
+                        null  => IconSymbols.hide_source,
+                        false => IconSymbols.draft,
+                        true  => IconSymbols.folder,
+                      }),
+                      title: Text(
+                        StorageHelper.name(value.$1),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      value: ConvertHelper.makeStringListToStringWithLine(item),
-                      onChanged: (value) async {
-                        item = ConvertHelper.parseStringListFromStringWithLine(value).map(StorageHelper.regularize).toList();
-                        setState(() {});
+                      onTap: () async {
+                        await this._removeResource([value.$1]);
+                        setStateForPanel(() {});
                       },
                     ),
-                  ],
-                  actionBuilder: (context) => [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, false),
-                      child: const Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, true),
-                      child: const Text('Continue'),
-                    ),
-                  ],
-                )) ?? false;
-                if (confirmed) {
-                  await this._appendResource(item);
-                }
-              },
-            ),
-            MenuItemButton(
-              closeOnActivate: false,
-              leadingIcon: const Icon(IconSymbols.note_add),
-              child: const Text(
-                'Append File',
-                overflow: TextOverflow.ellipsis,
-              ),
-              onPressed: () async {
-                var item = await StorageHelper.pickLoadFile(context, 'ResourceForwarder.Resource');
-                if (item != null) {
-                  await this._appendResource([item]);
-                }
-              },
-            ),
-            MenuItemButton(
-              closeOnActivate: false,
-              leadingIcon: const Icon(IconSymbols.create_new_folder),
-              child: const Text(
-                'Append Directory',
-                overflow: TextOverflow.ellipsis,
-              ),
-              onPressed: () async {
-                var item = await StorageHelper.pickLoadDirectory(context, 'ResourceForwarder.Resource');
-                if (item != null) {
-                  await this._appendResource([item]);
-                }
-              },
-            ),
-          ],
-          builder: (context, controller, child) => Badge.count(
-            count: this._resource.length,
-            child: FloatingActionButton(
-              tooltip: 'Resource',
-              elevation: 0,
-              focusElevation: 0,
-              hoverElevation: 0,
-              highlightElevation: 0,
-              disabledElevation: 0,
-              child: const Icon(IconSymbols.attach_file),
-              onPressed: () async {
-                if (controller.isOpen) {
-                  controller.close();
-                }
-                else {
-                  controller.open();
-                }
-              },
-            ),
+                  )),
+                  const SizedBox(height: 8),
+                ],
+              ));
+            },
           ),
         ),
         secondary: [

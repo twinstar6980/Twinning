@@ -185,8 +185,8 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
 
   @override
   modulePageRequestClose() async {
-    if (this._sessionClient._running) {
-      await ControlHelper.showCustomModalDialog<Void>(context, CustomModalDialog(
+    if (this._sessionRunning) {
+      await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
         title: 'Session In Progress',
         contentBuilder: (context, setStaate) => [],
         actionBuilder: null,
@@ -277,11 +277,11 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
           ),
           secondary: [
             Badge.count(
-              count: this._additionalArgument.length,
               textStyle: theme.textTheme.labelSmall?.copyWith(
                 fontFamily: '',
                 fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
               ),
+              count: this._additionalArgument.length,
               child: IconButton.filledTonal(
                 tooltip: 'Additional Argument',
                 padding: EdgeInsets.zero,
@@ -290,7 +290,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                   child: Icon(IconSymbols.attach_file),
                 ),
                 onPressed: () async {
-                  await ControlHelper.showCustomModalDialog<Void>(context, CustomModalDialog(
+                  await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
                     title: 'Additional Argument',
                     contentBuilder: (context, setState) => [
                       CustomTextField(

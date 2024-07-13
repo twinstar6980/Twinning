@@ -39,9 +39,9 @@ class MessageCard extends StatelessWidget {
     );
     return Card(
       margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-      color: Color.alphaBlend(cardColor.withOpacity(0.025), theme.colorScheme.surfaceContainerLow),
+      color: Color.alphaBlend(cardColor.withOpacity(0.02), theme.colorScheme.surfaceContainerLow),
       child: Container(
-        padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+        padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -50,9 +50,9 @@ class MessageCard extends StatelessWidget {
               children: [
                 Icon(
                   IconSymbols.circle,
-                  color: Color.alphaBlend(cardColor.withOpacity(0.50), theme.colorScheme.onSurface),
-                  fill: 0.6,
                   size: 12,
+                  fill: 0.6,
+                  color: Color.alphaBlend(cardColor.withOpacity(0.50), theme.colorScheme.onSurface),
                 ),
                 Text(
                   '',

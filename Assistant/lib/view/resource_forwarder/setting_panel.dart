@@ -29,7 +29,6 @@ class SettingPanel extends StatelessWidget {
         children: [
           const SizedBox(height: 8),
           CustomSettingItem(
-            enabled: true,
             icon: IconSymbols.description,
             label: 'Option Configuration',
             content: [
@@ -80,7 +79,6 @@ class SettingPanel extends StatelessWidget {
             ],
           ),
           CustomSettingItem(
-            enabled: true,
             icon: IconSymbols.shuffle,
             label: 'Parallel Forward',
             content: [
@@ -111,7 +109,6 @@ class SettingPanel extends StatelessWidget {
             ],
           ),
           CustomSettingItem(
-            enabled: true,
             icon: IconSymbols.filter_alt,
             label: 'Enable Filter',
             content: [
@@ -142,7 +139,6 @@ class SettingPanel extends StatelessWidget {
             ],
           ),
           CustomSettingItem(
-            enabled: true,
             icon: IconSymbols.stacks,
             label: 'Enable Batch',
             content: [

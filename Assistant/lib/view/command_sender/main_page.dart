@@ -203,7 +203,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
             disabledElevation: 0,
             child: const Icon(IconSymbols.format_list_bulleted_add),
             onPressed: () async {
-              await ControlHelper.showCustomModalBottomSheet<Void>(context, CustomModalBottomSheet(
+              await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
                 title: 'Method',
                 contentBuilder: (context, setState) => [
                   ListView.builder(

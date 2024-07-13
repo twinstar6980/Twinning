@@ -68,7 +68,6 @@ class _SettingPanelState extends State<SettingPanel> {
           action: null,
         ),
         CustomSettingItem(
-          enabled: true,
           icon: IconSymbols.brightness_4,
           label: 'Theme Mode',
           content: [
@@ -102,7 +101,6 @@ class _SettingPanelState extends State<SettingPanel> {
           ],
         ),
         CustomSettingItem(
-          enabled: true,
           icon: IconSymbols.colorize,
           label: 'Theme Color',
           content: [
@@ -183,7 +181,6 @@ class _SettingPanelState extends State<SettingPanel> {
           ],
         ),
         CustomSettingItem(
-          enabled: true,
           icon: IconSymbols.text_fields,
           label: 'Theme Font',
           content: [
@@ -255,7 +252,7 @@ class _SettingPanelState extends State<SettingPanel> {
         ),
         CustomSettingItem(
           enabled: Platform.isWindows || Platform.isLinux || Platform.isMacOS,
-          icon: IconSymbols.open_with,
+          icon: IconSymbols.recenter,
           label: 'Window Position',
           content: [
             Text(
@@ -419,10 +416,10 @@ class _SettingPanelState extends State<SettingPanel> {
         CustomSettingItem(
           enabled: Platform.isAndroid,
           icon: IconSymbols.snippet_folder,
-          label: 'Fallback Directory',
+          label: 'Storage Picker Fallback Directory',
           content: [
             Text(
-              !StorageHelper.existDirectorySync(setting.data.mFallbackDirectory) ? 'Invalid' : 'Available',
+              !StorageHelper.existDirectorySync(setting.data.mStoragePickerFallbackDirectory) ? 'Invalid' : 'Available',
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
@@ -444,9 +441,9 @@ class _SettingPanelState extends State<SettingPanel> {
                         tooltip: 'Pick',
                         icon: const Icon(IconSymbols.open_in_new),
                         onPressed: () async {
-                          var target = await StorageHelper.pickLoadDirectory(context, 'Application.FallbackDirectory');
+                          var target = await StorageHelper.pickLoadDirectory(context, 'Application.StoragePickerFallbackDirectory');
                           if (target != null) {
-                            setting.data.mFallbackDirectory = target;
+                            setting.data.mStoragePickerFallbackDirectory = target;
                             setStateForPanel(() {});
                             this.setState(() {});
                             await setting.save();
@@ -456,9 +453,9 @@ class _SettingPanelState extends State<SettingPanel> {
                     ],
                   ),
                 ),
-                value: setting.data.mFallbackDirectory,
+                value: setting.data.mStoragePickerFallbackDirectory,
                 onChanged: (value) async {
-                  setting.data.mFallbackDirectory = StorageHelper.regularize(value);
+                  setting.data.mStoragePickerFallbackDirectory = StorageHelper.regularize(value);
                   setStateForPanel(() {});
                   this.setState(() {});
                   await setting.save();

@@ -298,10 +298,10 @@ namespace AssistantPlus.View.Home {
 						Option = await this.Frame.Content.As<IModulePage>().ModulePageCollectOption(),
 						Command = [],
 					};
-					await ControlHelper.ShowDialogFixed(this.Host.View.Content, "Launcher Configuration", new LauncherConfigurationPanel() {
+					await ControlHelper.ShowDialogAsFixed(this.Host.View.Content, "Launcher Configuration", new LauncherConfigurationPanel() {
 						Data = configuration,
 						Stamp = UniqueStamp.Create(),
-					});
+					}, null);
 					await App.Instance.AppendPinnedLauncherItem(configuration);
 					await App.Setting.Save();
 					break;

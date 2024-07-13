@@ -1,5 +1,5 @@
 name: assistant
-version: 50.0.0+50
+version: 51.0.0+51
 publish_to: 'none'
 environment:
   sdk: '>=3.4.3 <4.0.0'
@@ -13,7 +13,7 @@ dependencies:
   decimal: ^3.0.2
   provider: ^6.1.1
   path_provider: ^2.1.1
-  material_symbols_icons: ^4.2762.0
+  material_symbols_icons: ^4.2768.0
   window_manager: ^0.3.9
   dynamic_color: ^1.6.9
   url_launcher: ^6.3.0

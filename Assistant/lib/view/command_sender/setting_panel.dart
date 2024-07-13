@@ -29,7 +29,6 @@ class SettingPanel extends StatelessWidget {
         children: [
           const SizedBox(height: 8),
           CustomSettingItem(
-            enabled: true,
             icon: IconSymbols.description,
             label: 'Method Configuration',
             content: [
@@ -80,7 +79,6 @@ class SettingPanel extends StatelessWidget {
             ],
           ),
           CustomSettingItem(
-            enabled: true,
             icon: IconSymbols.shuffle,
             label: 'Parallel Forward',
             content: [

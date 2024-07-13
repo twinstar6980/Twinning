@@ -1,8 +1,7 @@
 import '/common.dart';
 import '/view/home/common.dart';
-import 'dart:io';
+import '/utility/storage_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 // ----------------
 
@@ -21,7 +20,7 @@ class ControlHelper {
 
   // #region dialog
 
-  static Future<TResult?> showCustomModalDialog<TResult>(
+  static Future<TResult?> showDialogAsModal<TResult>(
     BuildContext      context,
     CustomModalDialog widget,
   ) async {
@@ -31,30 +30,69 @@ class ControlHelper {
     );
   }
 
-  static Future<Boolean> showCustomConfirmModalDialog(
+  // ----------------
+
+  static Future<Boolean> showDialogForConfirm(
     BuildContext context,
   ) async {
-    return await showCustomModalDialog<Boolean>(context, CustomModalDialog(
+    return await showDialogAsModal<Boolean>(context, CustomModalDialog(
       title: 'Confirm ?',
       contentBuilder: (context, setState) => [],
       actionBuilder: (context) => [
         TextButton(
-          child: const Text('No'),
+          child: const Text('Cancel'),
           onPressed: () => Navigator.pop(context, false),
         ),
         TextButton(
-          child: const Text('Yes'),
+          child: const Text('Continue'),
           onPressed: () => Navigator.pop(context, true),
         ),
       ],
     )) ?? false;
   }
 
+  static Future<Void> showDialogForRevealStoragePath(
+    BuildContext context,
+    String       title,
+    String       path,
+  ) async {
+    var canContinue = await showDialogAsModal<Boolean>(context, CustomModalDialog(
+      title: title,
+      contentBuilder: (context, setState) => [
+        CustomTextField(
+          keyboardType: TextInputType.none,
+          inputFormatters: const [],
+          decoration: const InputDecoration(
+            contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+            filled: false,
+            border: OutlineInputBorder(),
+          ),
+          value: path,
+          onChanged: null,
+        ),
+      ],
+      actionBuilder: (context) => [
+        TextButton(
+          child: const Text('Cancel'),
+          onPressed: () => Navigator.pop(context, false),
+        ),
+        TextButton(
+          child: const Text('Reveal'),
+          onPressed: () => Navigator.pop(context, true),
+        ),
+      ],
+    )) ?? false;
+    if (canContinue) {
+      await StorageHelper.reveal(path);
+    }
+    return;
+  }
+
   // #endregion
 
   // #region bottom sheet
 
-  static Future<TResult?> showCustomModalBottomSheet<TResult>(
+  static Future<TResult?> showBottomSheetAsModal<TResult>(
     BuildContext           context,
     CustomModalBottomSheet widget,
   ) async {
@@ -63,41 +101,6 @@ class ControlHelper {
       elevation: 3,
       builder: (context) => widget,
     );
-  }
-
-  // #endregion
-
-  // #region miscellaneous
-
-  static Future<Void> revealStorageDirectoryInNativeManagerOrShowTextDialog(
-    BuildContext context,
-    String       title,
-    String       path,
-  ) async {
-    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-      await launchUrl(Uri.file(path), mode: LaunchMode.externalNonBrowserApplication);
-    }
-    if (Platform.isAndroid || Platform.isIOS) {
-      assertTest(context.mounted);
-      await ControlHelper.showCustomModalDialog<Void>(context, CustomModalDialog(
-        title: title,
-        contentBuilder: (context, setState) => [
-          CustomTextField(
-            keyboardType: TextInputType.none,
-            inputFormatters: const [],
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-              filled: false,
-              border: OutlineInputBorder(),
-            ),
-            value: path,
-            onChanged: null,
-          ),
-        ],
-        actionBuilder: null,
-      ));
-    }
-    return;
   }
 
   // #endregion

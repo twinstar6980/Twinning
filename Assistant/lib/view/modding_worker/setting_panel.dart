@@ -30,7 +30,6 @@ class SettingPanel extends StatelessWidget {
         children: [
           const SizedBox(height: 8),
           CustomSettingItem(
-            enabled: true,
             icon: IconSymbols.adjust,
             label: 'Kernel',
             content: [
@@ -81,7 +80,6 @@ class SettingPanel extends StatelessWidget {
             ],
           ),
           CustomSettingItem(
-            enabled: true,
             icon: IconSymbols.data_object,
             label: 'Script',
             content: [
@@ -132,7 +130,6 @@ class SettingPanel extends StatelessWidget {
             ],
           ),
           CustomSettingItem(
-            enabled: true,
             icon: IconSymbols.format_list_bulleted,
             label: 'Argument',
             content: [
@@ -170,7 +167,6 @@ class SettingPanel extends StatelessWidget {
             ],
           ),
           CustomSettingItem(
-            enabled: true,
             icon: IconSymbols.touch_app,
             label: 'Immediate Launch',
             content: [
@@ -201,7 +197,6 @@ class SettingPanel extends StatelessWidget {
             ],
           ),
           CustomSettingItem(
-            enabled: true,
             icon: IconSymbols.text_fields,
             label: 'Message Font',
             content: [

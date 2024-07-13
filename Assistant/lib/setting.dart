@@ -25,7 +25,7 @@ class SettingData {
   Boolean                    mWindowSizeState;
   Integer                    mWindowSizeWidth;
   Integer                    mWindowSizeHeight;
-  String                     mFallbackDirectory;
+  String                     mStoragePickerFallbackDirectory;
   ModuleLauncherSetting      mModuleLauncher;
   modding_worker.Setting     mModdingWorker;
   command_sender.Setting     mCommandSender;
@@ -45,7 +45,7 @@ class SettingData {
     required this.mWindowSizeState,
     required this.mWindowSizeWidth,
     required this.mWindowSizeHeight,
-    required this.mFallbackDirectory,
+    required this.mStoragePickerFallbackDirectory,
     required this.mModuleLauncher,
     required this.mModdingWorker,
     required this.mCommandSender,
@@ -168,7 +168,7 @@ class SettingProvider with ChangeNotifier {
     mWindowSizeState: false,
     mWindowSizeWidth: 0,
     mWindowSizeHeight: 0,
-    mFallbackDirectory: '',
+    mStoragePickerFallbackDirectory: '',
     mModuleLauncher: ModuleLauncherSetting(
       module: ModuleType.values.map((e) => ModuleLauncherConfiguration(title: ModuleHelper.query(e).name, type: e, option: [])).toList(),
       pinned: [],
@@ -232,7 +232,7 @@ class SettingProvider with ChangeNotifier {
       'window_size_state': data.mWindowSizeState,
       'window_size_width': data.mWindowSizeWidth,
       'window_size_height': data.mWindowSizeHeight,
-      'fallback_directory': data.mFallbackDirectory,
+      'storage_picker_fallback_directory': data.mStoragePickerFallbackDirectory,
       'module_launcher': {
         'module': data.mModuleLauncher.module.map((dataItem) => {
           'title': dataItem.title,
@@ -296,7 +296,7 @@ class SettingProvider with ChangeNotifier {
       mWindowSizeState: (json['window_size_state'] as Boolean),
       mWindowSizeWidth: (json['window_size_width'] as Integer),
       mWindowSizeHeight: (json['window_size_height'] as Integer),
-      mFallbackDirectory: (json['fallback_directory'] as String),
+      mStoragePickerFallbackDirectory: (json['storage_picker_fallback_directory'] as String),
       mModuleLauncher: (json['module_launcher'] as Map<dynamic, dynamic>).selfLet((jsonPart) => ModuleLauncherSetting(
         module: (jsonPart['module'] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((jsonItem) => ModuleLauncherConfiguration(
           title: (jsonItem['title'] as String),

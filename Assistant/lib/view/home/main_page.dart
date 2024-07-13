@@ -77,7 +77,7 @@ class _MainPageState extends State<MainPage> {
   Future<Void> _showCommanderPanel(
   ) async {
     var command = <String>[];
-    var confirmed = await ControlHelper.showCustomModalDialog<Boolean>(context, CustomModalDialog(
+    var canContinue = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
       title: 'Commander',
       contentBuilder: (context, setState) => [
         CustomTextField(
@@ -97,16 +97,16 @@ class _MainPageState extends State<MainPage> {
       ],
       actionBuilder: (context) => [
         TextButton(
-          onPressed: () => Navigator.pop(context, false),
           child: const Text('Cancel'),
+          onPressed: () => Navigator.pop(context, false),
         ),
         TextButton(
-          onPressed: () => Navigator.pop(context, true),
           child: const Text('Continue'),
+          onPressed: () => Navigator.pop(context, true),
         ),
       ],
     )) ?? false;
-    if (confirmed) {
+    if (canContinue) {
       await Provider.of<SettingProvider>(context, listen: false).state.mHandleCommand!(command);
     }
     return;
@@ -114,7 +114,7 @@ class _MainPageState extends State<MainPage> {
 
   Future<Void> _showLauncherPanel(
   ) async {
-    await ControlHelper.showCustomModalBottomSheet<Void>(this.context, CustomModalBottomSheet(
+    await ControlHelper.showBottomSheetAsModal<Void>(this.context, CustomModalBottomSheet(
       title: 'Launcher',
       contentBuilder: (context, setState) => [
         LauncherPanel(
@@ -241,7 +241,7 @@ class _MainPageState extends State<MainPage> {
             action: const [],
             onPressed: () async {
               Navigator.pop(context);
-              await ControlHelper.showCustomModalBottomSheet<Void>(context, CustomModalBottomSheet(
+              await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
                 title: 'Setting',
                 contentBuilder: (context, setState) => [
                   const SettingPanel(),
@@ -256,7 +256,7 @@ class _MainPageState extends State<MainPage> {
             action: const [],
             onPressed: () async {
               Navigator.pop(context);
-              await ControlHelper.showCustomModalBottomSheet<Void>(context, CustomModalBottomSheet(
+              await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
                 title: 'About',
                 contentBuilder: (context, setState) => [
                   const AboutPanel(),

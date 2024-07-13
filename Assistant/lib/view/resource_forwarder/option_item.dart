@@ -36,9 +36,9 @@ class OptionItemItem extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            enabled: enabled,
-            dense: true,
             contentPadding: const EdgeInsets.fromLTRB(40, 0, 16, 0),
+            dense: true,
+            enabled: enabled,
             leading: Icon(SymbolsGet.get(this.configuration.icon, SymbolStyle.outlined)),
             title: Text(
               this.configuration.name,
@@ -54,10 +54,6 @@ class OptionItemItem extends StatelessWidget {
                       padding: WidgetStatePropertyAll(EdgeInsets.zero),
                       overlayColor: WidgetStatePropertyAll(Colors.transparent),
                     ),
-                    onPressed: !enabled
-                      ? null
-                      : () async {
-                      },
                     child: Stack(
                       children: [
                         Container(
@@ -107,6 +103,10 @@ class OptionItemItem extends StatelessWidget {
                         ),
                       ],
                     ),
+                    onPressed: !enabled
+                      ? null
+                      : () async {
+                      },
                   ),
                 ),
               ],

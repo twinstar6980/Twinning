@@ -7,9 +7,10 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:path/path.dart' as path_library;
-import 'package:file_selector/file_selector.dart' as file_selector;
 import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:file_selector/file_selector.dart' as file_selector;
 
 // ----------------
 
@@ -190,14 +191,34 @@ class StorageHelper {
 
   // #region shell
 
-  static Map<String, String> _taggedHistoryDirectory = {};
+  static Future<Void> reveal(
+    String path,
+  ) async {
+    assertTest(await existDirectory(path));
+    var revealed = false;
+    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+      revealed = await launchUrl(Uri.file(path), mode: LaunchMode.externalApplication);
+    }
+    if (Platform.isAndroid) {
+      throw UnimplementedError();
+    }
+    if (Platform.isIOS) {
+      revealed = await launchUrl(Uri.file(path).replace(scheme: 'shareddocuments'), mode: LaunchMode.externalApplication);
+    }
+    assertTest(revealed);
+    return;
+  }
+
+  // ----------------
+
+  static Map<String, String> _pickerHistoryDirectory = {};
 
   static Future<String?> pickLoadFile(
     BuildContext context,
     String       tag,
   ) async {
     var target = null as String?;
-    var initialDirectory = _taggedHistoryDirectory[tag];
+    var initialDirectory = _pickerHistoryDirectory[tag];
     if (Platform.isWindows) {
       initialDirectory ??= 'C:/';
       target = (await file_selector.openFile(initialDirectory: toWindowsStyle(initialDirectory)))?.path;
@@ -224,7 +245,7 @@ class StorageHelper {
       target = await PlatformMethod.pickStorageItem('load_file', initialDirectory);
     }
     if (target != null) {
-      _taggedHistoryDirectory[tag] = parent(target);
+      _pickerHistoryDirectory[tag] = parent(target);
     }
     return target;
   }
@@ -234,7 +255,7 @@ class StorageHelper {
     String       tag,
   ) async {
     var target = null as String?;
-    var initialDirectory = _taggedHistoryDirectory[tag];
+    var initialDirectory = _pickerHistoryDirectory[tag];
     if (Platform.isWindows) {
       initialDirectory ??= 'C:/';
       // NOTE : use `file_selector.getDirectoryPath` instead of `FilePicker.platform.getDirectoryPath`, on windows, the later one will throw an exception if it is the first file dialog since application start.
@@ -262,7 +283,7 @@ class StorageHelper {
       target = await PlatformMethod.pickStorageItem('load_directory', initialDirectory);
     }
     if (target != null) {
-      _taggedHistoryDirectory[tag] = parent(target);
+      _pickerHistoryDirectory[tag] = parent(target);
     }
     return target;
   }
@@ -272,7 +293,7 @@ class StorageHelper {
     String       tag,
   ) async {
     var target = null as String?;
-    var initialDirectory = _taggedHistoryDirectory[tag];
+    var initialDirectory = _pickerHistoryDirectory[tag];
     if (Platform.isWindows) {
       initialDirectory ??= 'C:/';
       target = (await file_selector.getSaveLocation(initialDirectory: toWindowsStyle(initialDirectory)))?.path;
@@ -298,7 +319,7 @@ class StorageHelper {
       throw UnimplementedError();
     }
     if (target != null) {
-      _taggedHistoryDirectory[tag] = parent(target);
+      _pickerHistoryDirectory[tag] = parent(target);
     }
     return target;
   }
@@ -407,8 +428,8 @@ class StorageHelper {
       }
     }
     if (result == null) {
-      var duplicate = await ControlHelper.showCustomModalDialog<Boolean>(context, CustomModalDialog(
-        title: 'Unparsable Content Uri',
+      var canDuplicate = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
+        title: 'Unknown Content Uri',
         contentBuilder: (context, setState) => [
           Row(
             children: [
@@ -429,14 +450,14 @@ class StorageHelper {
             onPressed: () => Navigator.pop(context, false),
           ),
           TextButton(
-            child: const Text('Duplicate'), // ignore: sort_child_properties_last
+            child: const Text('Duplicate'),
             onPressed: !copyable ? null : () => Navigator.pop(context, true),
           ),
         ],
       )) ?? false;
-      if (duplicate) {
+      if (canDuplicate) {
         var setting = Provider.of<SettingProvider>(context, listen: false);
-        result = await PlatformMethod.copyStorageFile(uri.toString(), setting.data.mFallbackDirectory);
+        result = await PlatformMethod.copyStorageFile(uri.toString(), setting.data.mStoragePickerFallbackDirectory);
       }
     }
     return result;

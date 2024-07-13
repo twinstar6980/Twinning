@@ -81,8 +81,8 @@ class _CustomModalDialogState extends State<CustomModalDialog> {
       actions: this.widget.actionBuilder == null
         ? [
           TextButton(
-            onPressed: () => Navigator.pop(context, null),
-            child: const Text('Okay'),
+            child: const Text('Close'),
+            onPressed: () => Navigator.pop(context),
           ),
         ]
         : this.widget.actionBuilder!(context),
@@ -376,7 +376,6 @@ class CustomNavigationDrawerItem extends StatelessWidget {
           backgroundColor: WidgetStatePropertyAll(!this.selected ? null : theme.colorScheme.secondaryContainer),
           foregroundColor: WidgetStatePropertyAll(!this.selected ? theme.colorScheme.onSurface : theme.colorScheme.surfaceTint),
         ),
-        onPressed: this.onPressed,
         child: Row(
           children: [
             const SizedBox(width: 16),
@@ -396,6 +395,7 @@ class CustomNavigationDrawerItem extends StatelessWidget {
             const SizedBox(width: 12),
           ],
         ),
+        onPressed: this.onPressed,
       ),
     );
   }
@@ -459,7 +459,7 @@ class CustomSettingItem extends StatelessWidget {
 
   const CustomSettingItem({
     super.key,
-    required this.enabled,
+    this.enabled = true,
     required this.icon,
     required this.label,
     required this.content,
@@ -481,8 +481,8 @@ class CustomSettingItem extends StatelessWidget {
   @override
   build(context) {
     return ListTile(
-      enabled: this.enabled,
       contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+      enabled: this.enabled,
       leading: Icon(this.icon),
       title: Row(
         children: [
@@ -502,7 +502,7 @@ class CustomSettingItem extends StatelessWidget {
           this.onTap!();
         }
         if (this.panelBuilder != null) {
-          await ControlHelper.showCustomModalDialog<Void>(context, CustomModalDialog(
+          await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
             title: this.label,
             contentBuilder: this.panelBuilder!,
             actionBuilder: null,
@@ -649,12 +649,12 @@ class CustomOptionField extends StatefulWidget {
 
   // ----------------
 
-  final TextStyle?                   style;
-  final Boolean                      enabled;
-  final InputDecoration              decoration;
-  final List<(Object, String)>       option;
-  final String                       value;
-  final Void Function(Object? value) onChanged;
+  final TextStyle?             style;
+  final Boolean                enabled;
+  final InputDecoration        decoration;
+  final List<(Object, String)> option;
+  final String                 value;
+  final Void Function(Object?) onChanged;
 
   // ----------------
 
@@ -712,9 +712,6 @@ class _CustomOptionFieldState extends State<CustomOptionField> {
             style: ButtonStyle(
               backgroundColor: WidgetStatePropertyAll(value.$2 != this.widget.value ? null : theme.colorScheme.onSurface.withOpacity(0.12)),
             ),
-            onPressed: () async {
-              this.widget.onChanged(value.$1);
-            },
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: constraints.maxWidth - 16),
               child: ListTile(
@@ -727,6 +724,9 @@ class _CustomOptionFieldState extends State<CustomOptionField> {
                 ),
               ),
             ),
+            onPressed: () async {
+              this.widget.onChanged(value.$1);
+            },
           )),
         ],
         builder: (context, controller, child) => TextField(
@@ -778,6 +778,7 @@ class CustomFileDropRegion extends StatelessWidget {
     return !(Platform.isWindows || Platform.isLinux || Platform.isMacOS)
       ? this.child
       : DropRegion(
+        hitTestBehavior: HitTestBehavior.opaque,
         formats: const [Formats.fileUri],
         onDropOver: (event) async {
           if (this.onDrop != null && event.session.items.every((item) => item.canProvide(Formats.fileUri))) {

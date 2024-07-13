@@ -28,7 +28,6 @@ class SettingPanel extends StatelessWidget {
         children: [
           const SizedBox(height: 8),
           CustomSettingItem(
-            enabled: true,
             icon: IconSymbols.ads_click,
             label: 'Immediate Select',
             content: [
@@ -59,7 +58,6 @@ class SettingPanel extends StatelessWidget {
             ],
           ),
           CustomSettingItem(
-            enabled: true,
             icon: IconSymbols.line_end_arrow_notch,
             label: 'Automatic Play',
             content: [
@@ -90,7 +88,6 @@ class SettingPanel extends StatelessWidget {
             ],
           ),
           CustomSettingItem(
-            enabled: true,
             icon: IconSymbols.repeat,
             label: 'Repeat Play',
             content: [
@@ -121,7 +118,6 @@ class SettingPanel extends StatelessWidget {
             ],
           ),
           CustomSettingItem(
-            enabled: true,
             icon: IconSymbols.keep,
             label: 'Remain Frame Rate',
             content: [
@@ -152,7 +148,6 @@ class SettingPanel extends StatelessWidget {
             ],
           ),
           CustomSettingItem(
-            enabled: true,
             icon: IconSymbols.frame_source,
             label: 'Show Sprite Boundary',
             content: [
@@ -183,7 +178,6 @@ class SettingPanel extends StatelessWidget {
             ],
           ),
           CustomSettingItem(
-            enabled: true,
             icon: IconSymbols.filter_alt,
             label: 'Image Filter Rule',
             content: [
@@ -221,7 +215,6 @@ class SettingPanel extends StatelessWidget {
             ],
           ),
           CustomSettingItem(
-            enabled: true,
             icon: IconSymbols.filter_alt,
             label: 'Sprite Filter Rule',
             content: [

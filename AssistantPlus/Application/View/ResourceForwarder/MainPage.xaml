@@ -94,7 +94,7 @@
 												HorizontalContentAlignment="Stretch"
 												BorderBrush="Transparent"
 												Background="Transparent"
-												Tag="ClearAll"
+												Tag="RemoveAll"
 												Click="{x:Bind Controller.uResourceAction_Click}"
 												>
 												<my:Stack
@@ -107,7 +107,7 @@
 														HorizontalAlignment="Stretch"
 														VerticalAlignment="Center"
 														FontSize="{StaticResource SmallIconSize}"
-														Glyph="{StaticResource FluentIconGlyph.Delete}"
+														Glyph="{StaticResource FluentIconGlyph.ErrorBadge}"
 														/>
 													<TextBlock
 														my:Stack.Weight="1"
@@ -115,7 +115,7 @@
 														VerticalAlignment="Center"
 														Style="{ThemeResource BodyTextBlockStyle}"
 														TextWrapping="NoWrap"
-														Text="Clear All"
+														Text="Remove All"
 														/>
 												</my:Stack>
 											</Button>
@@ -125,7 +125,38 @@
 												HorizontalContentAlignment="Stretch"
 												BorderBrush="Transparent"
 												Background="Transparent"
-												Tag="AddFile"
+												Tag="AppendNew"
+												Click="{x:Bind Controller.uResourceAction_Click}"
+												>
+												<my:Stack
+													HorizontalAlignment="Stretch"
+													VerticalAlignment="Stretch"
+													Orientation="Horizontal"
+													Spacing="12"
+													>
+													<FontIcon
+														HorizontalAlignment="Stretch"
+														VerticalAlignment="Center"
+														FontSize="{StaticResource SmallIconSize}"
+														Glyph="{StaticResource FluentIconGlyph.AddTo}"
+														/>
+													<TextBlock
+														my:Stack.Weight="1"
+														HorizontalAlignment="Stretch"
+														VerticalAlignment="Center"
+														Style="{ThemeResource BodyTextBlockStyle}"
+														TextWrapping="NoWrap"
+														Text="Append New"
+														/>
+												</my:Stack>
+											</Button>
+											<Button
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Stretch"
+												HorizontalContentAlignment="Stretch"
+												BorderBrush="Transparent"
+												Background="Transparent"
+												Tag="AppendFile"
 												Click="{x:Bind Controller.uResourceAction_Click}"
 												>
 												<my:Stack
@@ -146,7 +177,7 @@
 														VerticalAlignment="Center"
 														Style="{ThemeResource BodyTextBlockStyle}"
 														TextWrapping="NoWrap"
-														Text="Add File"
+														Text="Append File"
 														/>
 												</my:Stack>
 											</Button>
@@ -156,7 +187,7 @@
 												HorizontalContentAlignment="Stretch"
 												BorderBrush="Transparent"
 												Background="Transparent"
-												Tag="AddDirectory"
+												Tag="AppendDirectory"
 												Click="{x:Bind Controller.uResourceAction_Click}"
 												>
 												<my:Stack
@@ -177,7 +208,7 @@
 														VerticalAlignment="Center"
 														Style="{ThemeResource BodyTextBlockStyle}"
 														TextWrapping="NoWrap"
-														Text="Add Directory"
+														Text="Append Directory"
 														/>
 												</my:Stack>
 											</Button>

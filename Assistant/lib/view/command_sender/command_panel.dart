@@ -70,7 +70,7 @@ class CommandPanel extends StatelessWidget {
                     isSelected: false,
                     icon: const Icon(IconSymbols.remove),
                     onPressed: () async {
-                      if (this.argumentValue.where((value) => value.value != null).isEmpty || await ControlHelper.showCustomConfirmModalDialog(context)) {
+                      if (this.argumentValue.where((value) => value.value != null).isEmpty || await ControlHelper.showDialogForConfirm(context)) {
                         this.onRemove();
                       }
                     },
@@ -91,7 +91,7 @@ class CommandPanel extends StatelessWidget {
                 )),
               if (this.collapse.value)
                 ...this.itemConfiguration.argument.mapIndexed((argumentIndex, argumentConfiguration) => this.argumentValue[argumentIndex].value == null
-                  ? const SizedBox.shrink()
+                  ? const SizedBox()
                   : Container(
                     margin: const EdgeInsets.fromLTRB(8, 8, 8, 8),
                     child: Row(
@@ -131,18 +131,16 @@ class CommandPanel extends StatelessWidget {
               Row(
                 children: [
                   const Expanded(
-                    child: SizedBox.shrink(),
+                    child: SizedBox(),
                   ),
                   const SizedBox(width: 8),
                   IconButton.filledTonal(
-                    tooltip: 'Apply Preset',
                     style: const ButtonStyle(
                       padding: WidgetStatePropertyAll(EdgeInsets.zero),
                       overlayColor: WidgetStatePropertyAll(Colors.transparent),
                     ),
+                    tooltip: 'Apply Preset',
                     isSelected: false,
-                    onPressed: () async {
-                    },
                     icon: Stack(
                       children: [
                         Container(
@@ -196,6 +194,8 @@ class CommandPanel extends StatelessWidget {
                         ),
                       ],
                     ),
+                    onPressed: () async {
+                    },
                   ),
                   const SizedBox(width: 8),
                   IconButton.filledTonal(

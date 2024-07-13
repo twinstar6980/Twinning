@@ -35,7 +35,7 @@ class _Main {
   ) {
     ControlHelper.postTask(() async {
       if (_setting.state.mApplicationNavigatorKey.currentContext != null) {
-        ControlHelper.showCustomModalDialog<Void>(_setting.state.mApplicationNavigatorKey.currentContext!, CustomModalDialog(
+        ControlHelper.showDialogAsModal<Void>(_setting.state.mApplicationNavigatorKey.currentContext!, CustomModalDialog(
           title: 'Unhandled Exception',
           contentBuilder: (context, setState) => [
             Row(

@@ -21,8 +21,8 @@ class BlankPage extends StatelessWidget {
     return CustomModulePageRegion(
       onDropFile: null,
       content: Container(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
         alignment: Alignment.center,
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
         child: SizedBox(
           width: 256,
           height: 256,

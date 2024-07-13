@@ -123,7 +123,7 @@ namespace AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			if (await ControlHelper.ShowDialogForPausing(this.View, "Confirm ?", null)) {
+			if (await ControlHelper.ShowDialogForConfirm(this.View, null, null)) {
 				App.Setting.Data.ModuleLauncher.Recent.Clear();
 				this.uRecentLauncherList_ItemsSource.Clear();
 				await App.Setting.Save();
@@ -170,10 +170,10 @@ namespace AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<MenuFlyoutItem>();
-			await ControlHelper.ShowDialogFixed(this.Host.View, "Launcher Configuration", new LauncherConfigurationPanel() {
+			await ControlHelper.ShowDialogAsFixed(this.Host.View, "Launcher Configuration", new LauncherConfigurationPanel() {
 				Data = this.Configuration,
 				Stamp = UniqueStamp.Create(),
-			});
+			}, null);
 			await App.Setting.Save();
 			this.NotifyPropertyChanged(
 				nameof(this.uIcon_Glyph),
@@ -209,7 +209,7 @@ namespace AssistantPlus.View.Home {
 			var panelObject = Activator.CreateInstance(panelType).AsNotNull().As<UIElement>();
 			var settingData = App.Setting.Data.GetType().GetField(this.Configuration.Type.ToString()).AsNotNull().GetValue(App.Setting.Data);
 			panelType.GetProperty("Data").AsNotNull().SetValue(panelObject, settingData);
-			await ControlHelper.ShowDialogFixed(this.Host.View, "Module Setting", panelObject);
+			await ControlHelper.ShowDialogAsFixed(this.Host.View, "Module Setting", panelObject, null);
 			await App.Setting.Save();
 			return;
 		}
