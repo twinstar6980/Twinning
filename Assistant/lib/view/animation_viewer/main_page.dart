@@ -259,91 +259,97 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                       ),
                     ),
                   ),
-                  Divider(height: 0),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Container(
-                        alignment: AlignmentDirectional.centerStart,
-                        child: TextButton.icon(
-                          iconAlignment: IconAlignment.start,
-                          icon: const Icon(IconSymbols.speed),
-                          label: Text(
-                            '30.0',
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.start,
+                  const Divider(height: 0),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Container(
+                          alignment: AlignmentDirectional.centerStart,
+                          child: TextButton.icon(
+                            iconAlignment: IconAlignment.start,
+                            icon: const Icon(IconSymbols.speed),
+                            label: Text(
+                              this._workingSpriteFrameRate?.toStringAsFixed(1) ?? '0.0',
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.start,
+                            ),
+                            onPressed: () async {
+                            },
                           ),
-                          onPressed: () async {
-                          },
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    IconButton(
-                      isSelected: true,
-                      icon: const Icon(IconSymbols.arrow_back),
-                      onPressed: () async {
-                        // TODO
-                      },
-                    ),
-                    const SizedBox(width: 4),
-                    IconButton(
-                      isSelected: true,
-                      icon: Icon(IconSymbols.pause, size: 36),
-                      onPressed: () async {
-                        // TODO
-                      },
-                    ),
-                    const SizedBox(width: 4),
-                    IconButton(
-                      isSelected: true,
-                      icon: const Icon(IconSymbols.arrow_forward),
-                      onPressed: () async {
-                        // TODO
-                      },
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Container(
-                        alignment: AlignmentDirectional.centerEnd,
-                        child: TextButton.icon(
-                          iconAlignment: IconAlignment.end,
-                          icon: const Icon(IconSymbols.sell),
-                          label: Text(
-                            'attack',
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.end,
+                      const SizedBox(width: 12),
+                      IconButton(
+                        isSelected: true,
+                        icon: const Icon(IconSymbols.arrow_back),
+                        onPressed: () async {
+                          // TODO
+                        },
+                      ),
+                      const SizedBox(width: 4),
+                      IconButton(
+                        isSelected: true,
+                        icon: Icon(!this._animationController.isAnimating ? IconSymbols.play_arrow : IconSymbols.pause, size: 36),
+                        onPressed: () async {
+                          if (this._animationController.isAnimating) {
+                            this._animationController.stop();
+                          }
+                          else {
+                            this._animationController.forward();
+                          }
+                          this.setState(() {});
+                        },
+                      ),
+                      const SizedBox(width: 4),
+                      IconButton(
+                        isSelected: true,
+                        icon: const Icon(IconSymbols.arrow_forward),
+                        onPressed: () async {
+                          // TODO
+                        },
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Container(
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: TextButton.icon(
+                            iconAlignment: IconAlignment.end,
+                            icon: const Icon(IconSymbols.sell),
+                            label: Text(
+                              'attack',
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.end,
+                            ),
+                            onPressed: () async {
+                            },
                           ),
-                          onPressed: () async {
-                          },
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 16),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Expanded(
-                      child: LayoutBuilder(
-                        builder: (context, constraints) => IntrinsicHeight(
-                          child: OverflowBox(
-                            maxWidth: constraints.maxWidth + 16,
-                            child: Slider(
-                              value: 0.5,
-                              onChanged: (value) {
-                              },
+                      const SizedBox(width: 16),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: LayoutBuilder(
+                          builder: (context, constraints) => IntrinsicHeight(
+                            child: OverflowBox(
+                              maxWidth: constraints.maxWidth + 16,
+                              child: Slider(
+                                value: 0.5,
+                                onChanged: (value) {
+                                },
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
                 ],
               ),
             ),

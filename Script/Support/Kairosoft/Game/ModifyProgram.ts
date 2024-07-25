@@ -85,26 +85,35 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 
 	// ------------------------------------------------
 
-	type Platform = 'windows' | 'android';
+	type Platform = 'windows_x32' | 'android_a32' | 'android_a64';
 
 	function detect_platform(
 		game_directory: string,
 	): null | Platform {
 		let type: null | Platform = null;
 		if (KernelX.FileSystem.exist_file(`${game_directory}/KairoGames.exe`)) {
-			type = 'windows';
+			if (KernelX.FileSystem.exist_file(`${game_directory}/GameAssembly.dll`)) {
+				type = 'windows_x32';
+			}
 		}
-		else if (KernelX.FileSystem.exist_file(`${game_directory}/AndroidManifest.xml`)) {
-			type = 'android';
+		if (KernelX.FileSystem.exist_file(`${game_directory}/AndroidManifest.xml`)) {
+			if (KernelX.FileSystem.exist_file(`${game_directory}/lib/armeabi-v7a/libil2cpp.so`)) {
+				type = 'android_a32';
+			}
+			if (KernelX.FileSystem.exist_file(`${game_directory}/lib/arm64-v8a/libil2cpp.so`)) {
+				type = 'android_a64';
+			}
 		}
 		return type;
 	}
 
 	// ------------------------------------------------
 
-	const k_instruction_code_nop_x86 = 0x90n;
+	const k_instruction_code_nop_x32 = 0x90n;
 
-	const k_instruction_code_nop_arm = 0xE320F000n;
+	const k_instruction_code_nop_a32 = 0xE320F000n;
+
+	const k_instruction_code_nop_a64 = 0xD503201Fn;
 
 	function find_call_instruction(
 		data: ByteStreamView,
@@ -115,10 +124,10 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 	): boolean {
 		let state = false;
 		let end = Math.min(data.size(), data.p() + limit);
-		if (platform === 'windows') {
+		if (platform === 'windows_x32') {
 			while (data.p() < end) {
 				let instruction_code = data.u8();
-				// call <offset> = E8 XX XX XX XX
+				// call #X = E8 XX XX XX XX
 				if (instruction_code !== 0xE8n) {
 					continue;
 				}
@@ -130,20 +139,20 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 				}
 				if (overwrite) {
 					data.pr(-5);
-					data.u8(k_instruction_code_nop_x86);
-					data.u8(k_instruction_code_nop_x86);
-					data.u8(k_instruction_code_nop_x86);
-					data.u8(k_instruction_code_nop_x86);
-					data.u8(k_instruction_code_nop_x86);
+					data.u8(k_instruction_code_nop_x32);
+					data.u8(k_instruction_code_nop_x32);
+					data.u8(k_instruction_code_nop_x32);
+					data.u8(k_instruction_code_nop_x32);
+					data.u8(k_instruction_code_nop_x32);
 				}
 				state = true;
 				break;
 			}
 		}
-		if (platform === 'android') {
+		if (platform === 'android_a32') {
 			while (data.p() < end) {
 				let instruction_code = data.u32();
-				// bl <offset> = EB XX XX XX
+				// bl #X = EB XX XX XX
 				if ((instruction_code & 0xFF000000n) !== 0xEB000000n) {
 					continue;
 				}
@@ -157,7 +166,30 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 				}
 				if (overwrite) {
 					data.pr(-4);
-					data.u32(k_instruction_code_nop_arm);
+					data.u32(k_instruction_code_nop_a32);
+				}
+				state = true;
+				break;
+			}
+		}
+		if (platform === 'android_a64') {
+			while (data.p() < end) {
+				let instruction_code = data.u32();
+				// bl #X = 97 XX XX XX
+				if ((instruction_code & 0xFF000000n) !== 0x97000000n) {
+					continue;
+				}
+				let jump_offset = instruction_code & 0x00FFFFFFn;
+				if ((jump_offset & 0x800000n) === 0x800000n) {
+					jump_offset = -(0x1000000n - jump_offset);
+				}
+				let jump_address = data.p() - 4 + Number(jump_offset) * 4;
+				if (!address.includes(jump_address)) {
+					continue;
+				}
+				if (overwrite) {
+					data.pr(-4);
+					data.u32(k_instruction_code_nop_a64);
 				}
 				state = true;
 				break;
@@ -180,12 +212,16 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		Console.information(`The game platform is '${platform}'`, []);
 		let program_file: string;
 		let metadata_file: string;
-		if (platform === 'windows') {
+		if (platform === 'windows_x32') {
 			program_file = `${target_directory}/GameAssembly.dll`;
 			metadata_file = `${target_directory}/KairoGames_Data/il2cpp_data/Metadata/global-metadata.dat`;
 		}
-		else if (platform === 'android') {
+		else if (platform === 'android_a32') {
 			program_file = `${target_directory}/lib/armeabi-v7a/libil2cpp.so`;
+			metadata_file = `${target_directory}/assets/bin/Data/Managed/Metadata/global-metadata.dat`;
+		}
+		else if (platform === 'android_a64') {
+			program_file = `${target_directory}/lib/arm64-v8a/libil2cpp.so`;
 			metadata_file = `${target_directory}/assets/bin/Data/Managed/Metadata/global-metadata.dat`;
 		}
 		else {
@@ -271,13 +307,13 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 				symbol_address.MyConfig.DEBUG = search_result.address;
 			}
 			Console.warning(`The symbol address was parsed`, [
-				`CRC64.GetValue          ${symbol_address.CRC64.GetValue.map((value) => (value.toString(16))).join(',')}`,
-				`Encrypter.Encode        ${symbol_address.Encrypter.Encode.map((value) => (value.toString(16))).join(',')}`,
-				`Encrypter.Decode        ${symbol_address.Encrypter.Decode.map((value) => (value.toString(16))).join(',')}`,
-				`RecordStore.ReadRecord  ${symbol_address.RecordStore.ReadRecord.toString(16)}`,
-				`RecordStore.WriteRecord ${symbol_address.RecordStore.WriteRecord.toString(16)}`,
-				`MyConfig..cctor         ${symbol_address.MyConfig._cctor.toString(16)}`,
-				`MyConfig.DEBUG          ${symbol_address.MyConfig.DEBUG.toString(16)}`,
+				`CRC64.GetValue           ${symbol_address.CRC64.GetValue.map((value) => (value.toString(16))).join(',')}`,
+				`Encrypter.Encode         ${symbol_address.Encrypter.Encode.map((value) => (value.toString(16))).join(',')}`,
+				`Encrypter.Decode         ${symbol_address.Encrypter.Decode.map((value) => (value.toString(16))).join(',')}`,
+				`RecordStore.ReadRecord   ${symbol_address.RecordStore.ReadRecord.toString(16)}`,
+				`RecordStore.WriteRecord  ${symbol_address.RecordStore.WriteRecord.toString(16)}`,
+				`MyConfig..cctor          ${symbol_address.MyConfig._cctor.toString(16)}`,
+				`MyConfig.DEBUG          +${symbol_address.MyConfig.DEBUG.toString(16)}`,
 			]);
 		}
 		Console.information(`Phase : load original program`, []);
@@ -289,7 +325,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 			assert_test(find_call_instruction(program_stream, 0x1000, symbol_address.Encrypter.Decode, true, platform));
 			assert_test(find_call_instruction(program_stream, 0x1000, symbol_address.Encrypter.Decode, true, platform));
 			assert_test (find_call_instruction(program_stream, 0x1000, symbol_address.CRC64.GetValue, false, platform));
-			if (platform === 'windows') {
+			if (platform === 'windows_x32') {
 				// add esp, .. = 83 C4 XX
 				assert_test(program_stream.u8() === 0x83n);
 				assert_test(program_stream.u8() === 0xC4n);
@@ -297,21 +333,30 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 				// cmp eax, .. = 3B XX XX
 				assert_test(program_stream.u8() === 0x3Bn);
 				program_stream.pr(-1);
-				program_stream.u8(k_instruction_code_nop_x86);
-				program_stream.u8(k_instruction_code_nop_x86);
-				program_stream.u8(k_instruction_code_nop_x86);
+				program_stream.u8(k_instruction_code_nop_x32);
+				program_stream.u8(k_instruction_code_nop_x32);
+				program_stream.u8(k_instruction_code_nop_x32);
 				// jnz .. = 75 XX
 				assert_test(program_stream.u8() === 0x75n);
 				program_stream.pr(-1);
-				program_stream.u8(k_instruction_code_nop_x86);
-				program_stream.u8(k_instruction_code_nop_x86);
+				program_stream.u8(k_instruction_code_nop_x32);
+				program_stream.u8(k_instruction_code_nop_x32);
 			}
-			if (platform === 'android') {
+			if (platform === 'android_a32') {
+				// eor; eor; orrs
 				program_stream.pr(+12);
-				// bne <offset> = 1A XX XX XX
+				// bne #X = 1A XX XX XX
 				assert_test((program_stream.u32() & 0xFF000000n) === 0x1A000000n);
 				program_stream.pr(-4);
-				program_stream.u32(k_instruction_code_nop_arm);
+				program_stream.u32(k_instruction_code_nop_a32);
+			}
+			if (platform === 'android_a64') {
+				// cmp; mov
+				program_stream.pr(+8);
+				// bne #X = 54 XX XX XX
+				assert_test((program_stream.u32() & 0xFF000000n) === 0x54000000n);
+				program_stream.pr(-4);
+				program_stream.u32(k_instruction_code_nop_a64);
 			}
 		}
 		if (disable_record_encryption) {
@@ -323,8 +368,9 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		if (enable_debug_mode) {
 			Console.information(`Phase : modify method 'MyConfig..cctor'`, []);
 			program_stream.p(symbol_address.MyConfig._cctor);
-			if (platform === 'windows') {
-				while (program_stream.p() < symbol_address.MyConfig._cctor + 0x100) {
+			let search_limit = 512;
+			if (platform === 'windows_x32') {
+				while (program_stream.p() < symbol_address.MyConfig._cctor + search_limit) {
 					// mov byte ptr [eax+X], 0 = C6 40 XX 00
 					let instruction_code: bigint;
 					instruction_code = program_stream.u8();
@@ -348,12 +394,44 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 					}
 					program_stream.pr(-1);
 					program_stream.u8(0x01n);
+					Console.warning(`Warning : the STR instruction for 'MyConfig.DEBUG' was found at ${(program_stream.p() - 4).toString(16)}, but this modification may cause error`, []);
 					break;
 				}
+				assert_test(program_stream.p() !== symbol_address.MyConfig._cctor + search_limit);
 			}
-			if (platform === 'android') {
-				// TODO
-				Console.warning(`Skipped this phase because not yet implemented for platform 'android'`, []);
+			if (platform === 'android_a32') {
+				while (program_stream.p() < symbol_address.MyConfig._cctor + search_limit) {
+					// strb rX, [rY, #Z] = 111001011100 YYYY XXXX ZZZZZZZZZZZZ
+					let instruction_code = program_stream.u32();
+					if ((instruction_code & 0b111111111111_0000_0000_000000000000n) !== 0b111001011100_0000_0000_000000000000n) {
+						continue;
+					}
+					if ((instruction_code & 0b000000000000_0000_0000_111111111111n) >> 0n !== BigInt(symbol_address.MyConfig.DEBUG) + 4n) {
+						continue;
+					}
+					program_stream.pr(-4);
+					program_stream.u32(instruction_code & 0b111111111111_1111_0000_000000000000n | 14n << 12n | BigInt(symbol_address.MyConfig.DEBUG) << 0n);
+					Console.warning(`Warning : the STR instruction for 'MyConfig.DEBUG'+4 was found at ${(program_stream.p() - 4).toString(16)}, but this modification may cause error`, []);
+					break;
+				}
+				assert_test(program_stream.p() !== symbol_address.MyConfig._cctor + search_limit);
+			}
+			if (platform === 'android_a64') {
+				while (program_stream.p() < symbol_address.MyConfig._cctor + search_limit) {
+					// strb wX, [xY, #Z] = 0011100100 ZZZZZZZZZZZZ YYYYY XXXXX
+					let instruction_code = program_stream.u32();
+					if ((instruction_code & 0b1111111111_000000000000_00000_00000n) !== 0b0011100100_000000000000_00000_00000n) {
+						continue;
+					}
+					if ((instruction_code & 0b0000000000_111111111111_00000_00000n) >> 10n !== BigInt(symbol_address.MyConfig.DEBUG) + 4n) {
+						continue;
+					}
+					program_stream.pr(-4);
+					program_stream.u32(instruction_code & 0b1111111111_000000000000_11111_00000n | BigInt(symbol_address.MyConfig.DEBUG) << 10n | 30n << 0n);
+					Console.warning(`Warning : the STR instruction for 'MyConfig.DEBUG'+4 was found at ${(program_stream.p() - 4).toString(16)}, but this modification may cause error`, []);
+					break;
+				}
+				assert_test(program_stream.p() !== symbol_address.MyConfig._cctor + search_limit);
 			}
 		}
 		Console.information(`Phase : save modified program`, []);
