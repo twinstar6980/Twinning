@@ -4,10 +4,11 @@ target('test', function()
 	set_group('source')
 	set_kind('binary')
 	add_headerfiles(
+		'./**.hpp',
 		{ install = false }
 	)
 	add_files(
-		'./main.cpp',
+		'./**.cpp',
 		{}
 	)
 	add_includedirs(
@@ -31,6 +32,8 @@ target('test', function()
 			{}
 		)
 		add_links(
+			'Ole32',
+			'User32',
 			{ private = true }
 		)
 	end

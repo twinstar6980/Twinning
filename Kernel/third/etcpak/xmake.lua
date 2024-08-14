@@ -1,13 +1,13 @@
 -- etcpak
--- 1.0 153f0e04a18b93c277684b577365210adcf8e11c
+-- 2.0 a43d6925bee49277945cf3e311e4a022ae0c2073
 -- https://github.com/wolfpld/etcpak
 
 target('third.etcpak', function()
 	set_group('source/third')
 	set_kind('static')
 	add_headerfiles(
-		'./lz4/lz4.h',
 		'./getopt/getopt.h',
+		'./lz4/lz4.h',
 		'./Bitmap.hpp',
 		'./BitmapDownsampled.hpp',
 		'./BlockData.hpp',
@@ -19,7 +19,6 @@ target('third.etcpak', function()
 		'./ForceInline.hpp',
 		'./Math.hpp',
 		'./MipMap.hpp',
-		'./mmap.hpp',
 		'./ProcessCommon.hpp',
 		'./ProcessDxtc.hpp',
 		'./ProcessRGB.hpp',
@@ -29,11 +28,15 @@ target('third.etcpak', function()
 		'./TaskDispatch.hpp',
 		'./Timing.hpp',
 		'./Vector.hpp',
+		'./bc7enc.h',
+		'./bcdec.h',
+		'./mmap.hpp',
 		{ install = false }
 	)
 	add_files(
-		'./lz4/lz4.c',
 		'./getopt/getopt.c',
+		'./lz4/lz4.c',
+		'./Application.cpp',
 		'./Bitmap.cpp',
 		'./BitmapDownsampled.cpp',
 		'./BlockData.cpp',
@@ -42,14 +45,15 @@ target('third.etcpak', function()
 		'./Debug.cpp',
 		'./Dither.cpp',
 		'./Error.cpp',
-		'./mmap.cpp',
 		'./ProcessDxtc.cpp',
 		'./ProcessRGB.cpp',
 		'./System.cpp',
 		'./Tables.cpp',
 		'./TaskDispatch.cpp',
 		'./Timing.cpp',
-		'./Application.cpp',
+		'./bc7enc.cpp',
+		'./bcdec.c',
+		'./mmap.cpp',
 		{}
 	)
 	add_includedirs(

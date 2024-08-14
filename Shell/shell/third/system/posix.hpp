@@ -3,17 +3,14 @@
 #if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 
 #if defined M_compiler_msvc
-#pragma warning(push)
+#pragma warning(push, 0)
 #endif
 #if defined M_compiler_clang
 #pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Weverything"
 #endif
 
 #include "dlfcn.h"
-
-#if defined M_system_macintosh || defined M_system_iphone
-extern char * * environ; // NOTE : not declared in unistd.h of xcode sdk
-#endif
 
 #if defined M_compiler_msvc
 #pragma warning(pop)

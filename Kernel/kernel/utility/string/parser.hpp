@@ -682,8 +682,11 @@ namespace Twinning::Kernel::StringParser {
 		if (value > 0_i && !disable_sign_when_positive) {
 			stream.write('+'_c);
 		}
-		auto format_result = Third::fmt::format_to_n(cast_pointer<char>(stream.current_pointer()).value, stream.reserve().value, "{:d}", value.value);
-		stream.forward(mbw<Size>(format_result.size));
+		auto valid_begin = stream.reserve_view().begin();
+		auto valid_end = stream.reserve_view().end();
+		auto convert_result = mscharconv::to_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, 10);
+		assert_test(convert_result.ec == std::errc{});
+		stream.forward(mbw<Size>(convert_result.ptr - cast_pointer<char>(valid_begin).value));
 		return;
 	}
 
@@ -726,8 +729,8 @@ namespace Twinning::Kernel::StringParser {
 		}
 		auto valid_end = stream.current_pointer();
 		assert_test(valid_begin != valid_end);
-		auto parse_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, 10);
-		assert_test(parse_result.ec == std::errc{});
+		auto convert_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, 10);
+		assert_test(convert_result.ec == std::errc{});
 		return;
 	}
 
@@ -741,8 +744,15 @@ namespace Twinning::Kernel::StringParser {
 		if (value > 0.0_f && !disable_sign_when_positive) {
 			stream.write('+'_c);
 		}
-		auto format_result = Third::fmt::format_to_n(cast_pointer<char>(stream.current_pointer()).value, stream.reserve().value, "{:#}", value == 0.0_f ? (0.0_f .value) : (value.value));
-		stream.forward(mbw<Size>(format_result.size));
+		auto valid_begin = stream.reserve_view().begin();
+		auto valid_end = stream.reserve_view().end();
+		auto convert_result = mscharconv::to_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, mscharconv::chars_format::fixed);
+		assert_test(convert_result.ec == std::errc{});
+		stream.forward(mbw<Size>(convert_result.ptr - cast_pointer<char>(valid_begin).value));
+		if (!Range::has(make_range(valid_begin, stream.current_pointer()), '.'_c)) {
+			stream.write('.'_c);
+			stream.write('0'_c);
+		}
 		return;
 	}
 
@@ -807,8 +817,8 @@ namespace Twinning::Kernel::StringParser {
 		assert_test(is_floater);
 		auto valid_end = stream.current_pointer();
 		assert_test(valid_begin != valid_end);
-		auto parse_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, !is_scientific ? (mscharconv::chars_format::fixed) : (mscharconv::chars_format::scientific));
-		assert_test(parse_result.ec == std::errc{});
+		auto convert_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, !is_scientific ? (mscharconv::chars_format::fixed) : (mscharconv::chars_format::scientific));
+		assert_test(convert_result.ec == std::errc{});
 		return;
 	}
 
@@ -892,14 +902,14 @@ namespace Twinning::Kernel::StringParser {
 		}
 		auto valid_end = stream.current_pointer();
 		assert_test(valid_begin != valid_end);
-		auto parse_result = mscharconv::from_chars_result{};
+		auto convert_result = mscharconv::from_chars_result{};
 		if (!is_floater) {
-			parse_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_integer().value, 10);
+			convert_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_integer().value, 10);
 		}
 		else {
-			parse_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_floater().value, !is_scientific ? (mscharconv::chars_format::fixed) : (mscharconv::chars_format::scientific));
+			convert_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_floater().value, !is_scientific ? (mscharconv::chars_format::fixed) : (mscharconv::chars_format::scientific));
 		}
-		assert_test(parse_result.ec == std::errc{});
+		assert_test(convert_result.ec == std::errc{});
 		return;
 	}
 

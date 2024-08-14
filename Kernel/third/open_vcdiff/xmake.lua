@@ -5,10 +5,11 @@
 target('third.open_vcdiff', function()
 	set_group('source/third')
 	set_kind('static')
-	set_languages('cxx14', { private = true })
 	add_headerfiles(
 		'./google/format_extension_flags.h',
 		'./google/output_string.h',
+		'./google/vcdecoder.h',
+		'./google/vcencoder.h',
 		'./addrcache.h',
 		'./blockhash.h',
 		'./checksum.h',

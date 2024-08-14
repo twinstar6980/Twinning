@@ -4,27 +4,11 @@ target('shell', function()
 	set_group('source')
 	set_kind('binary')
 	add_headerfiles(
-		'./common.hpp',
-		'./third/system/windows.hpp',
-		'./third/system/posix.hpp',
-		'./third/tinyfiledialogs.hpp',
-		'./utility/macro.hpp',
-		'./utility/exception.hpp',
-		'./utility/string.hpp',
-		'./utility/library.hpp',
-		'./utility/interaction.hpp',
-		'./utility/miscellaneous.hpp',
-		'./bridge/data.hpp',
-		'./bridge/proxy.hpp',
-		'./bridge/service.hpp',
-		'./bridge/library.hpp',
-		'./bridge/client.hpp',
-		'./bridge/launcher.hpp',
-		'./main_console_bridge_client.hpp',
+		'./**.hpp',
 		{ install = false }
 	)
 	add_files(
-		'./main.cpp',
+		'./**.cpp',
 		{}
 	)
 	add_includedirs(
@@ -44,6 +28,7 @@ target('shell', function()
 		)
 		add_links(
 			'Ole32',
+			'User32',
 			{ private = true }
 		)
 	end

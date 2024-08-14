@@ -26,11 +26,10 @@ target('kernel', function()
 		'third.lzma',
 		'third.open_vcdiff',
 		'third.avir',
-		'third.ETCPACK',
 		'third.etcpak',
 		'third.PVRTCCompressor',
 		'third.libpng',
-		'third.quickjs',
+		'third.quickjs_ng',
 		{}
 	)
 	on_load(function(target)

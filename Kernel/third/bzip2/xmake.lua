@@ -12,14 +12,14 @@ target('third.bzip2', function()
 	)
 	add_files(
 		'./blocksort.c',
-		'./huffman.c',
-		'./crctable.c',
-		'./randtable.c',
-		'./compress.c',
-		'./decompress.c',
-		'./bzlib.c',
 		'./bzip2.c',
 		'./bzip2recover.c',
+		'./bzlib.c',
+		'./compress.c',
+		'./crctable.c',
+		'./decompress.c',
+		'./huffman.c',
+		'./randtable.c',
 		{}
 	)
 	on_load(function(target)

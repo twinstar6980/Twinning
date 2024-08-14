@@ -13,6 +13,9 @@ target('third.avir', function()
 		'./lancir.h',
 		{ install = false }
 	)
+	add_files(
+		{}
+	)
 	on_load(function(target)
 		import('helper')
 		helper.apply_compiler_option_basic(target)

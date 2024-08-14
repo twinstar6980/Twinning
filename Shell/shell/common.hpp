@@ -1,8 +1,9 @@
 #pragma once
 
-#define M_version "42"
+#define M_version "43"
 
 #include <type_traits>
+#include <exception>
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>

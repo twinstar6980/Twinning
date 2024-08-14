@@ -3,11 +3,11 @@
 #if defined M_system_windows
 
 #if defined M_compiler_msvc
-#pragma warning(push)
-#pragma warning(disable:5039)
+#pragma warning(push, 0)
 #endif
 #if defined M_compiler_clang
 #pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Weverything"
 #endif
 
 #include "Windows.h"

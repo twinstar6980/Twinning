@@ -98,25 +98,29 @@ namespace Twinning::Kernel {
 
 	#pragma region literal
 
-	template <StaticString string>
+	template <StaticString string> requires
+		NoneConstraint
 	inline constexpr auto operator ""_sv (
 	) -> CStringView {
 		return string.view();
 	}
 
-	template <StaticString string>
+	template <StaticString string> requires
+		NoneConstraint
 	inline constexpr auto operator ""_sl (
 	) -> Size {
 		return string.view().size();
 	}
 
-	template <StaticString string>
+	template <StaticString string> requires
+		NoneConstraint
 	inline constexpr auto operator ""_sh (
 	) -> IntegerU64 {
 		return string.view().hash();
 	}
 
-	template <StaticString string>
+	template <StaticString string> requires
+		NoneConstraint
 	inline auto operator ""_s (
 	) -> String {
 		return String{string.view()};
@@ -124,7 +128,8 @@ namespace Twinning::Kernel {
 
 	// ----------------
 
-	template <StaticString string>
+	template <StaticString string> requires
+		NoneConstraint
 	inline constexpr auto operator ""_shz (
 	) -> ZIntegerU64 {
 		return operator ""_sh<string>().value;

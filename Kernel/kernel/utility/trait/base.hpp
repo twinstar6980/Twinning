@@ -31,13 +31,14 @@ namespace Twinning::Kernel::Trait {
 
 	#pragma region utility
 
-	template <typename>
+	template <typename> requires
+		NoneConstraint
 	inline constexpr auto k_static_assert_fail = bool{false};
 
 	// ----------------
 
 	template <typename It> requires
-		AutoConstraint
+		NoneConstraint
 	inline constexpr auto declare (
 	) -> It {
 		throw ImpossibleException{};

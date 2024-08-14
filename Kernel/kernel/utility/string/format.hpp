@@ -86,7 +86,8 @@ namespace Twinning::Kernel {
 
 	#pragma region literal
 
-	template <StaticString string>
+	template <StaticString string> requires
+		NoneConstraint
 	inline constexpr auto operator ""_sf (
 	) -> StringFormatter {
 		return StringFormatter{string.view()};

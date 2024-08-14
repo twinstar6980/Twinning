@@ -25,12 +25,10 @@
 #include "kernel/tool/texture/transformation/scale.hpp"
 #include "kernel/tool/texture/encoding/encode.hpp"
 #include "kernel/tool/texture/encoding/decode.hpp"
-#include "kernel/tool/texture/compression/etc1/compress.hpp"
-#include "kernel/tool/texture/compression/etc1/uncompress.hpp"
-#include "kernel/tool/texture/compression/etc2/compress.hpp"
-#include "kernel/tool/texture/compression/etc2/uncompress.hpp"
-#include "kernel/tool/texture/compression/pvrtc4/compress.hpp"
-#include "kernel/tool/texture/compression/pvrtc4/uncompress.hpp"
+#include "kernel/tool/texture/compression/etc/compress.hpp"
+#include "kernel/tool/texture/compression/etc/uncompress.hpp"
+#include "kernel/tool/texture/compression/pvrtc/compress.hpp"
+#include "kernel/tool/texture/compression/pvrtc/uncompress.hpp"
 #include "kernel/tool/texture/file/png/write.hpp"
 #include "kernel/tool/texture/file/png/read.hpp"
 #include "kernel/tool/wwise/sound_bank/encode.hpp"
@@ -619,25 +617,20 @@ namespace Twinning::Kernel::Executor::Environment {
 				{
 					auto s_Compression = s_Texture.add_space("Compression"_s);
 					{
-						auto s_ETC1 = s_Compression.add_space("ETC1"_s);
-						s_ETC1.add_space("Compress"_s)
-							.add_function_proxy<&stpg<&Tool::Texture::Compression::ETC1::Compress::process>>("process"_s);
-						s_ETC1.add_space("Uncompress"_s)
-							.add_function_proxy<&stpg<&Tool::Texture::Compression::ETC1::Uncompress::process>>("process"_s);
+						auto s_ETC = s_Compression.add_space("ETC"_s);
+						define_generic_class<Tool::Texture::Compression::ETC::Format>(s_ETC, "Format"_s);
+						s_ETC.add_space("Compress"_s)
+							.add_function_proxy<&stpg<&Tool::Texture::Compression::ETC::Compress::process>>("process"_s);
+						s_ETC.add_space("Uncompress"_s)
+							.add_function_proxy<&stpg<&Tool::Texture::Compression::ETC::Uncompress::process>>("process"_s);
 					}
 					{
-						auto s_ETC2 = s_Compression.add_space("ETC2"_s);
-						s_ETC2.add_space("Compress"_s)
-							.add_function_proxy<&stpg<&Tool::Texture::Compression::ETC2::Compress::process>>("process"_s);
-						s_ETC2.add_space("Uncompress"_s)
-							.add_function_proxy<&stpg<&Tool::Texture::Compression::ETC2::Uncompress::process>>("process"_s);
-					}
-					{
-						auto s_PVRTC4 = s_Compression.add_space("PVRTC4"_s);
-						s_PVRTC4.add_space("Compress"_s)
-							.add_function_proxy<&stpg<&Tool::Texture::Compression::PVRTC4::Compress::process>>("process"_s);
-						s_PVRTC4.add_space("Uncompress"_s)
-							.add_function_proxy<&stpg<&Tool::Texture::Compression::PVRTC4::Uncompress::process>>("process"_s);
+						auto s_PVRTC = s_Compression.add_space("PVRTC"_s);
+						define_generic_class<Tool::Texture::Compression::PVRTC::Format>(s_PVRTC, "Format"_s);
+						s_PVRTC.add_space("Compress"_s)
+							.add_function_proxy<&stpg<&Tool::Texture::Compression::PVRTC::Compress::process>>("process"_s);
+						s_PVRTC.add_space("Uncompress"_s)
+							.add_function_proxy<&stpg<&Tool::Texture::Compression::PVRTC::Uncompress::process>>("process"_s);
 					}
 				}
 				{

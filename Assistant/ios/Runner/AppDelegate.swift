@@ -3,7 +3,7 @@ import UIKit
 import flutter_local_notifications
 import app_links
 
-@UIApplicationMain
+@main
 @objc class AppDelegate: FlutterAppDelegate {
   private lazy var customMethodChannel: CustomMethodChannel = CustomMethodChannel(host: self)
   public override func application(

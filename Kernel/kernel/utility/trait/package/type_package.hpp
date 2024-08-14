@@ -80,7 +80,8 @@ namespace Twinning::Kernel::Trait {
 
 	// ----------------
 
-	template <typename Package, template <typename ...> typename Transformer>
+	template <typename Package, template <typename ...> typename Transformer> requires
+		CategoryConstraint<IsPureInstance<Package>>
 	using AsTypePackageTransform = decltype([] {
 		return [&] <auto ... index> (
 			std::index_sequence<index ...>

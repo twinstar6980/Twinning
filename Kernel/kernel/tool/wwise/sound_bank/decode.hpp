@@ -28,8 +28,9 @@ namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		using typename Common::CommonPropertyValue;
 
-		template <typename _1>
-		using CommonPropertyMap = typename Common::template CommonPropertyMap<_1>;
+		template <typename Type> requires
+			AutoConstraint
+		using CommonPropertyMap = typename Common::template CommonPropertyMap<Type>;
 
 		using typename Common::EventActionCommonPropertyType;
 
@@ -37,8 +38,9 @@ namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		using typename Common::AudioCommonPropertyType;
 
-		template <typename _1>
-		using EnumerationAttribute = typename Common::template EnumerationAttribute<_1>;
+		template <typename Type> requires
+			AutoConstraint
+		using EnumerationAttribute = typename Common::template EnumerationAttribute<Type>;
 
 		// ----------------
 

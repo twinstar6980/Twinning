@@ -4,72 +4,81 @@
 #include "kernel/utility/base_wrapper/base.hpp"
 #include "kernel/utility/file_system/path.hpp"
 
-namespace fmt {
+#pragma region formatter
 
-	#pragma region string
+template <>
+struct fmt::formatter<Twinning::Kernel::CStringView> :
+	fmt::formatter<std::string_view> {
+	template <typename Context> requires
+		Twinning::Kernel::NoneConstraint
+	auto format (
+		Twinning::Kernel::CStringView const & value,
+		Context &                             context
+	) const -> typename Context::iterator {
+		return fmt::formatter<std::string_view>::format(Twinning::Kernel::make_std_string_view(value), context);
+	}
+};
 
-	template <auto t_constant> requires
-		Twinning::Kernel::AutoConstraint
-	struct formatter<Twinning::Kernel::StringView<t_constant>> :
-		formatter<std::string_view> {
-		template <typename Context>
-		auto format (
-			Twinning::Kernel::StringView<t_constant> const & value,
-			Context &                                        context
-		) {
-			return formatter<std::string_view>::format(Twinning::Kernel::make_std_string_view(value), context);
-		}
-	};
+template <>
+struct fmt::formatter<Twinning::Kernel::VStringView> :
+	fmt::formatter<std::string_view> {
+	template <typename Context> requires
+		Twinning::Kernel::NoneConstraint
+	auto format (
+		Twinning::Kernel::VStringView const & value,
+		Context &                             context
+	) const -> typename Context::iterator {
+		return fmt::formatter<std::string_view>::format(Twinning::Kernel::make_std_string_view(value), context);
+	}
+};
 
-	template <>
-	struct formatter<Twinning::Kernel::String> :
-		formatter<std::string_view> {
-		template <typename Context>
-		auto format (
-			Twinning::Kernel::String const & value,
-			Context &                        context
-		) {
-			return formatter<std::string_view>::format(Twinning::Kernel::make_std_string_view(value), context);
-		}
-	};
+template <>
+struct fmt::formatter<Twinning::Kernel::String> :
+	fmt::formatter<std::string_view> {
+	template <typename Context> requires
+		Twinning::Kernel::NoneConstraint
+	auto format (
+		Twinning::Kernel::String const & value,
+		Context &                        context
+	) const -> typename Context::iterator {
+		return fmt::formatter<std::string_view>::format(Twinning::Kernel::make_std_string_view(value), context);
+	}
+};
 
-	#pragma endregion
+// ----------------
 
-	#pragma region base wrapper
+template <>
+struct fmt::formatter<Twinning::Kernel::Path> :
+	fmt::formatter<Twinning::Kernel::String> {
+	template <typename Context> requires
+		Twinning::Kernel::NoneConstraint
+	auto format (
+		Twinning::Kernel::Path const & value,
+		Context &                      context
+	) const -> typename Context::iterator {
+		return fmt::formatter<Twinning::Kernel::String>::format(value.to_string(), context);
+	}
+};
 
-	template <typename TType> requires
-		Twinning::Kernel::AutoConstraint
-		&& (Twinning::Kernel::IsBaseWrapper<TType>)
-	#if defined M_compiler_clang // NOTE : avoid clang bug
-		&& (Twinning::Kernel::IsDerivedFrom<TType, Twinning::Kernel::BaseWrapper<typename TType::Value>>)
-	#endif
-	struct formatter<TType> :
-		formatter<typename TType::Value> {
-		template <typename Context>
-		auto format (
-			TType const & value,
-			Context &     context
-		) {
-			return formatter<typename TType::Value>::format(value.value, context);
-		}
-	};
+// ----------------
 
-	#pragma endregion
+// TODO : specialization format for floater wrapper ?
+template <typename TType> requires
+	Twinning::Kernel::AutoConstraint
+	&& (Twinning::Kernel::IsBaseWrapper<TType>)
+#if defined M_compiler_clang // NOTE : avoid clang bug
+	&& (Twinning::Kernel::IsDerivedFrom<TType, Twinning::Kernel::BaseWrapper<typename TType::Value>>)
+#endif
+struct fmt::formatter<TType> :
+	fmt::formatter<typename TType::Value> {
+	template <typename Context> requires
+		Twinning::Kernel::NoneConstraint
+	auto format (
+		TType const & value,
+		Context &     context
+	) const -> typename Context::iterator {
+		return fmt::formatter<typename TType::Value>::format(value.value, context);
+	}
+};
 
-	#pragma region miscellaneous
-
-	template <>
-	struct formatter<Twinning::Kernel::Path> :
-		formatter<Twinning::Kernel::String> {
-		template <typename Context>
-		auto format (
-			Twinning::Kernel::Path const & value,
-			Context &                      context
-		) {
-			return formatter<Twinning::Kernel::String>::format(value.to_string(), context);
-		}
-	};
-
-	#pragma endregion
-
-}
+#pragma endregion

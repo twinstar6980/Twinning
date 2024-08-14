@@ -1,13 +1,11 @@
 #pragma once
 
 #if defined M_compiler_msvc
-#pragma warning(push)
-#pragma warning(disable:4365)
+#pragma warning(push, 0)
 #endif
 #if defined M_compiler_clang
 #pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wreserved-macro-identifier"
-#pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma clang diagnostic ignored "-Weverything"
 #endif
 
 #include "third/Rijndael/Rijndael.h"

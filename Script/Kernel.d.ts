@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 66
+ * @version 67
  */
 declare namespace Twinning.Kernel {
 
@@ -2112,7 +2112,7 @@ declare namespace Twinning.Kernel {
 
 					// ------------------------------------------------
 
-					private _Tool_Texture_Format;
+					private _Tool_Texture_Encoding_Format;
 
 					// ------------------------------------------------
 
@@ -2173,8 +2173,35 @@ declare namespace Twinning.Kernel {
 			/** 压缩 */
 			namespace Compression {
 
-				/** ETC1 */
-				namespace ETC1 {
+				/** ETC */
+				namespace ETC {
+
+					/** 格式 */
+					class Format {
+
+						// ------------------------------------------------
+
+						private _Tool_Texture_Compression_ETC_Format;
+
+						// ------------------------------------------------
+
+						static default(): Format;
+
+						static copy(it: Format): Format;
+
+						// ------------------------------------------------
+
+						static Value: 'v1_rgb' | 'v2_rgb' | 'v2_rgba';
+
+						static value(it: typeof Format.Value): Format;
+
+						get value(): typeof Format.Value;
+
+						set value(it: typeof Format.Value);
+
+						// ------------------------------------------------
+
+					}
 
 					/** 压缩 */
 					namespace Compress {
@@ -2183,10 +2210,12 @@ declare namespace Twinning.Kernel {
 						 * 压缩
 						 * @param data 数据
 						 * @param image 图像
+						 * @param format 格式
 						 */
 						function process(
 							data: OByteStreamView,
 							image: Image.CImageView,
+							format: Format,
 						): Void;
 
 					}
@@ -2198,18 +2227,47 @@ declare namespace Twinning.Kernel {
 						 * 解压
 						 * @param data 数据
 						 * @param image 图像
+						 * @param format 格式
 						 */
 						function process(
 							data: IByteStreamView,
 							image: Image.VImageView,
+							format: Format,
 						): Void;
 
 					}
 
 				}
 
-				/** ETC2 */
-				namespace ETC2 {
+				/** PVRTC */
+				namespace PVRTC {
+
+					/** 格式 */
+					class Format {
+
+						// ------------------------------------------------
+
+						private _Tool_Texture_Compression_PVRTC_Format;
+
+						// ------------------------------------------------
+
+						static default(): Format;
+
+						static copy(it: Format): Format;
+
+						// ------------------------------------------------
+
+						static Value: 'v1_4bpp_rgb' | 'v1_4bpp_rgba';
+
+						static value(it: typeof Format.Value): Format;
+
+						get value(): typeof Format.Value;
+
+						set value(it: typeof Format.Value);
+
+						// ------------------------------------------------
+
+					}
 
 					/** 压缩 */
 					namespace Compress {
@@ -2218,12 +2276,12 @@ declare namespace Twinning.Kernel {
 						 * 压缩
 						 * @param data 数据
 						 * @param image 图像
-						 * @param with_alpha 是否携带alpha通道
+						 * @param format 格式
 						 */
 						function process(
 							data: OByteStreamView,
 							image: Image.CImageView,
-							with_alpha: Boolean,
+							format: Format,
 						): Void;
 
 					}
@@ -2235,51 +2293,12 @@ declare namespace Twinning.Kernel {
 						 * 解压
 						 * @param data 数据
 						 * @param image 图像
-						 * @param with_alpha 是否携带alpha通道
+						 * @param format 格式
 						 */
 						function process(
 							data: IByteStreamView,
 							image: Image.VImageView,
-							with_alpha: Boolean,
-						): Void;
-
-					}
-
-				}
-
-				/** PVRTC4 */
-				namespace PVRTC4 {
-
-					/** 压缩 */
-					namespace Compress {
-
-						/**
-						 * 压缩
-						 * @param data 数据
-						 * @param image 图像
-						 * @param with_alpha 是否携带alpha通道
-						 */
-						function process(
-							data: OByteStreamView,
-							image: Image.CImageView,
-							with_alpha: Boolean,
-						): Void;
-
-					}
-
-					/** 解压 */
-					namespace Uncompress {
-
-						/**
-						 * 解压
-						 * @param data 数据
-						 * @param image 图像
-						 * @param with_alpha 是否携带alpha通道
-						 */
-						function process(
-							data: IByteStreamView,
-							image: Image.VImageView,
-							with_alpha: Boolean,
+							format: Format,
 						): Void;
 
 					}

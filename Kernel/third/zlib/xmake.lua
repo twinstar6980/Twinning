@@ -6,8 +6,6 @@ target('third.zlib', function()
 	set_group('source/third')
 	set_kind('static')
 	add_headerfiles(
-		'./zconf.h',
-		'./zlib.h',
 		'./crc32.h',
 		'./deflate.h',
 		'./gzguts.h',
@@ -16,6 +14,8 @@ target('third.zlib', function()
 		'./inflate.h',
 		'./inftrees.h',
 		'./trees.h',
+		'./zconf.h',
+		'./zlib.h',
 		'./zutil.h',
 		{ install = false }
 	)
@@ -28,10 +28,10 @@ target('third.zlib', function()
 		'./gzlib.c',
 		'./gzread.c',
 		'./gzwrite.c',
-		'./inflate.c',
 		'./infback.c',
-		'./inftrees.c',
 		'./inffast.c',
+		'./inflate.c',
+		'./inftrees.c',
 		'./trees.c',
 		'./uncompr.c',
 		'./zutil.c',
@@ -40,7 +40,6 @@ target('third.zlib', function()
 	if m.system:is('linux', 'macintosh', 'android', 'iphone') then
 		add_defines(
 			'Z_HAVE_UNISTD_H',
-			'_LARGEFILE64_SOURCE=1',
 			{ public = true }
 		)
 	end

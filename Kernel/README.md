@@ -10,13 +10,13 @@
 	
 	* [xmake 2.9](https://xmake.io/#/)
 	
-	* [MSVC 19.40 & WinAPI](https://visualstudio.microsoft.com/downloads/) for `Windows`
+	* [MSVC 19.41 & WinAPI](https://visualstudio.microsoft.com/downloads/) for `Windows`
 	
-	* [Clang 18.1 & POSIX (libstdc++)](https://llvm.org/) for `Linux`
+	* [Clang 18.1 & POSIX](https://llvm.org/) for `Linux`
 	
 	* [Clang 18.1 & POSIX](https://llvm.org/) for `Macintosh`
 	
-	* [Clang 17.0 & POSIX (NDK 26.3)](https://developer.android.com/ndk/downloads) for `Android`
+	* [Clang 18.0 & POSIX (NDK 27.0)](https://developer.android.com/ndk/downloads) for `Android`
 	
 	* [Clang 18.1 & POSIX](https://llvm.org/) for `Iphone`
 
@@ -25,21 +25,19 @@
 | 库                                                                         | 用途                           |
 |:--------------------------------------------------------------------------:|:------------------------------:|
 | [mscharconv 1.2.3](https://github.com/iboB/mscharconv)                     | charconv 支持 ( for non-MSVC ) |
-| [fmt 10.2.1](https://github.com/fmtlib/fmt)                                | 字符串格式化                   |
+| [fmt 11.0.2](https://github.com/fmtlib/fmt)                                | 字符串格式化                   |
 | [tinyxml2 10.0.0](https://github.com/leethomason/tinyxml2)                 | XML 读写                       |
 | [md5 1.0](https://github.com/JieweiWei/md5)                                | MD5 哈希计算                   |
 | [Rijndael](#)                                                              | Rijndael 加密与解密            |
 | [zlib 1.3.1](https://github.com/madler/zlib)                               | ZLib 压缩与解压                |
 | [bzip2 1.0.8](https://sourceware.org/bzip2/)                               | BZip2 压缩与解压               |
-| [lzma 23.01](https://www.7-zip.org/sdk.html)                               | Lzma 压缩与解压                |
-| [open-vcdiff 0.8.4](https://github.com/google/open-vcdiff)                 | VCDiff 差异分析                |
+| [lzma 24.08](https://www.7-zip.org/sdk.html)                               | Lzma 压缩与解压                |
+| [open_vcdiff 0.8.4](https://github.com/google/open-vcdiff)                 | VCDiff 差异分析                |
 | [avir 3.0](https://github.com/avaneev/avir)                                | 图像缩放                       |
-| [ETCPACK 2.74](https://github.com/Ericsson/ETCPACK)                        | ETC1 解压                      |
-| [etcpak 1.0](https://github.com/wolfpld/etcpak)                            | ETC1 压缩                      |
+| [etcpak 2.0](https://github.com/wolfpld/etcpak)                            | ETC1 压缩                      |
 | [PVRTCCompressor](https://github.com/brenwill/PVRTCCompressor)             | PVRTC4 压缩与解压              |
 | [libpng 1.6.43](https://github.com/pnggroup/libpng)                        | PNG 读写                       |
-| [quickjs 2021-03-27](https://github.com/bellard/quickjs)                   | JS 引擎                        |
-| [quickjs 2021-03-27 (c-smile)](https://github.com/c-smile/quickjspp)       | JS 引擎 ( for MSVC )           |
+| [quickjs_ng 0.5.0](https://github.com/quickjs-ng/quickjs)                  | JS 引擎                        |
 | [vld 2.5.1](https://github.com/KindDragon/vld)                             | 内存泄漏检测                   |
 
 ## 说明
@@ -48,7 +46,7 @@
 	
 	1. 本项目被编译为动态库，需要调用方进行动态加载。
 	
-	2. 接口声明位于 `- <project>/kernel/interface/interface.hpp` 。
+	2. 接口声明位于 `<project>/kernel/interface/interface.hpp` 。
 	
 	3. 为了容许来自其他语言的调用，接口被设计为完全的 `C` 风格。输入参数的所有权归调用方，调用方需确保其能够正确析构；输出参数与返回值的所有权属于库自身，调用方不应对其进行读取以外的任何操作。
 	
@@ -64,20 +62,18 @@
 
 * 对第三方库的说明
 	
-	* `quickjs`：将版本停留在 `2021-03-27` ，因为适配 MSVC 的 fork 未更新至新版。
-	
 	本项目对引用的第三方库做出了少许修改，如下：
-	
-	* `fmt`：修改浮点数输出格式。
 	
 	* `md5`：修改传参类型。
 	
 	* `Rijndael`：修正非标准代码，避免符号冲突。
 	
-	* `ETCPACK`：修正错误代码，移除平台依赖，暴露接口。
+	* `open_vcdiff`：修正非标准代码。
+	
+	* `etcpak`：移除不需要的依赖。
 	
 	* `PVRTCCompressor`：引入依赖头文件。
 	
-	* `quickjs`：暴露接口。
+	* `quickjs_ng`：修正非标准代码。
 	
-	> 任何修改都会以 `// TwinStar : source|insert|remove|change` 做出标示。
+	> 任何修改都会以 `// TwinStar : insert|remove|change` 做出标示。

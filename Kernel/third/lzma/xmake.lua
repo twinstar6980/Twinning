@@ -1,5 +1,5 @@
 -- lzma
--- 23.01 ?
+-- 24.08 ?
 -- https://www.7-zip.org/sdk.html
 
 target('third.lzma', function()
@@ -11,7 +11,6 @@ target('third.lzma', function()
 		'./Alloc.h',
 		'./Compiler.h',
 		'./CpuArch.h',
-		'./IStream.h',
 		'./LzFind.h',
 		'./LzFindMt.h',
 		'./LzHash.h',
@@ -34,14 +33,6 @@ target('third.lzma', function()
 		'./Threads.c',
 		{}
 	)
-	if m.system:is('windows') then
-	end
-	if m.system:is('linux', 'macintosh', 'android', 'iphone') then
-		add_defines(
-			'_7ZIP_ST',
-			{}
-		)
-	end
 	on_load(function(target)
 		import('helper')
 		helper.apply_compiler_option_basic(target)

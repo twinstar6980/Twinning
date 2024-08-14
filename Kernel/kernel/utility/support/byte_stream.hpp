@@ -1,6 +1,7 @@
 #pragma once
 
 #include "kernel/utility/miscellaneous/byte_series/stream.hpp"
+#include <bit>
 
 namespace Twinning::Kernel {
 

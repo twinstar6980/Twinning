@@ -1,15 +1,11 @@
 #pragma once
 
 #if defined M_compiler_msvc
-#pragma warning(push)
-#pragma warning(disable:4365)
-#pragma warning(disable:5038)
+#pragma warning(push, 0)
 #endif
 #if defined M_compiler_clang
 #pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wreorder-ctor"
-#pragma clang diagnostic ignored "-Wold-style-cast"
-#pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma clang diagnostic ignored "-Weverything"
 #endif
 
 #include "third/PVRTCCompressor/PvrTcDecoder.h"

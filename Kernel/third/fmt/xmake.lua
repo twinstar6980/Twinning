@@ -1,5 +1,5 @@
 -- fmt
--- 10.2.1 e69e5f977d458f2650bb346dadf2ad30c5320281
+-- 11.0.2 0c9fce2ffefecfdce794e1859584e25877b7b592
 -- https://github.com/fmtlib/fmt
 
 target('third.fmt', function()
@@ -7,6 +7,7 @@ target('third.fmt', function()
 	set_kind('headeronly')
 	add_headerfiles(
 		'./include/fmt/args.h',
+		'./include/fmt/base.h',
 		'./include/fmt/chrono.h',
 		'./include/fmt/color.h',
 		'./include/fmt/compile.h',

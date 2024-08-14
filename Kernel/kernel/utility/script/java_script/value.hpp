@@ -6,13 +6,13 @@
 #include "kernel/utility/string/string.hpp"
 #include "kernel/utility/data/json/value.hpp"
 #include "kernel/utility/script/java_script/value_adapter.hpp"
-#include "kernel/third/quickjs.hpp"
+#include "kernel/third/quickjs_ng.hpp"
 
 namespace Twinning::Kernel::JavaScript {
 
 	#pragma region namespace alias
 
-	namespace quickjs = Third::quickjs;
+	namespace quickjs = Third::quickjs_ng;
 
 	#pragma endregion
 
@@ -1058,7 +1058,7 @@ namespace Twinning::Kernel::JavaScript {
 				result.append(make_string(name), thiz.new_instance(thiz._context(), quickjs::JS_GetProperty(thiz._context(), thiz._value(), element.atom)));
 				quickjs::JS_FreeCString(thiz._context(), name);
 			}
-			quickjs::js_free_prop_enum(thiz._context(), property_enum, property_count);
+			quickjs::JS_FreePropertyEnum(thiz._context(), property_enum, property_count);
 			return result;
 		}
 
@@ -1471,7 +1471,7 @@ namespace Twinning::Kernel::JavaScript {
 			.exotic = nullptr,
 		};
 		auto id_value = static_cast<quickjs::JSClassID>(id.value);
-		quickjs::JS_NewClassID(&id_value);
+		quickjs::JS_NewClassID(thiz._runtime(), &id_value);
 		id.value = static_cast<ZInteger>(id_value);
 		auto result = quickjs::JS_NewClass(thiz._runtime(), id_value, &definition);
 		assert_test(result == 0);

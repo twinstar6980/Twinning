@@ -7,9 +7,9 @@ target('third.PVRTCCompressor', function()
 	set_kind('static')
 	add_headerfiles(
 		'./AlphaBitmap.h',
-		'./Bitmap.h',
 		'./BitScale.h',
 		'./BitUtility.h',
+		'./Bitmap.h',
 		'./ColorRgba.h',
 		'./Interval.h',
 		'./MortonTable.h',
@@ -17,8 +17,8 @@ target('third.PVRTCCompressor', function()
 		'./PvrTcDecoder.h',
 		'./PvrTcEncoder.h',
 		'./PvrTcPacket.h',
-		'./RgbaBitmap.h',
 		'./RgbBitmap.h',
+		'./RgbaBitmap.h',
 		{ install = false }
 	)
 	add_files(

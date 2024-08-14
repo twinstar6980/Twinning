@@ -12,7 +12,7 @@ if ($TargetPlatform -eq "windows.x86_64") {
 	if (Test-Path -Path $ModuleDistributionFile) {
 		Remove-Item -Force -Recurse -Path $ModuleDistributionFile
 	}
-	xmake "config" "--buildir=.build" "--mode=release" "--plat=windows" "--arch=x64" "--toolchain=msvc"
+	xmake "config" "--buildir=.build" "--mode=release" "--plat=windows" "--arch=x64" "--toolchain=msvc" "--runtimes=MD"
 	xmake "build"
 	Copy-Item -Force -Recurse -Path "${ModuleDirectory}/.build/windows/x64/release/shell.exe" -Destination "${ModuleDistributionFile}"
 }
@@ -20,7 +20,7 @@ if ($TargetPlatform -eq "linux.x86_64") {
 	if (Test-Path -Path $ModuleDistributionFile) {
 		Remove-Item -Force -Recurse -Path $ModuleDistributionFile
 	}
-	xmake "config" "--buildir=.build" "--mode=release" "--plat=linux" "--arch=x86_64" "--toolchain=clang-18"
+	xmake "config" "--buildir=.build" "--mode=release" "--plat=linux" "--arch=x86_64" "--toolchain=clang-18" "--runtimes=c++_shared"
 	xmake "build"
 	Copy-Item -Force -Recurse -Path "${ModuleDirectory}/.build/linux/x86_64/release/shell" -Destination "${ModuleDistributionFile}"
 }
@@ -28,7 +28,7 @@ if ($TargetPlatform -eq "macintosh.x86_64") {
 	if (Test-Path -Path $ModuleDistributionFile) {
 		Remove-Item -Force -Recurse -Path $ModuleDistributionFile
 	}
-	xmake "config" "--buildir=.build" "--mode=release" "--plat=macosx" "--arch=x86_64" "--cc=clang-18" "--cxx=clang-18" "--xcode_sdkver=13.3" "--target_minver=13.3"
+	xmake "config" "--buildir=.build" "--mode=release" "--plat=macosx" "--arch=x86_64" "--toolchain=xcode" "--cc=clang-18" "--cxx=clang-18" "--xcode_sdkver=13.3" "--target_minver=13.3"
 	xmake "build"
 	Copy-Item -Force -Recurse -Path "${ModuleDirectory}/.build/macosx/x86_64/release/shell" -Destination "${ModuleDistributionFile}"
 }
@@ -36,7 +36,7 @@ if ($TargetPlatform -eq "android.arm_64") {
 	if (Test-Path -Path $ModuleDistributionFile) {
 		Remove-Item -Force -Recurse -Path $ModuleDistributionFile
 	}
-	xmake "config" "--buildir=.build" "--mode=release" "--plat=android" "--arch=arm64-v8a" "--ndk_sdkver=28" "--runtimes=c++_shared"
+	xmake "config" "--buildir=.build" "--mode=release" "--plat=android" "--arch=arm64-v8a" "--toolchain=ndk" "--runtimes=c++_shared" "--ndk_sdkver=28"
 	xmake "build"
 	Copy-Item -Force -Recurse -Path "${ModuleDirectory}/.build/android/arm64-v8a/release/shell" -Destination "${ModuleDistributionFile}"
 }
@@ -44,7 +44,7 @@ if ($TargetPlatform -eq "iphone.arm_64") {
 	if (Test-Path -Path $ModuleDistributionFile) {
 		Remove-Item -Force -Recurse -Path $ModuleDistributionFile
 	}
-	xmake "config" "--buildir=.build" "--mode=release" "--plat=iphoneos" "--arch=arm64" "--cc=clang-18" "--cxx=clang-18" "--xcode_sdkver=16.4" "--target_minver=16.4"
+	xmake "config" "--buildir=.build" "--mode=release" "--plat=iphoneos" "--arch=arm64" "--toolchain=xcode" "--cc=clang-18" "--cxx=clang-18" "--xcode_sdkver=16.4" "--target_minver=16.4"
 	xmake "build"
 	Copy-Item -Force -Recurse -Path "${ModuleDirectory}/.build/iphoneos/arm64/release/shell" -Destination "${ModuleDistributionFile}"
 }

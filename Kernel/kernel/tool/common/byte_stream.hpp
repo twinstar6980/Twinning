@@ -49,10 +49,12 @@ namespace Twinning::Kernel::Tool {
 
 		using ExchangeableByteStreamView = typename CommonByteStreamExchangeBase<t_mode>::ExchangeableByteStreamView;
 
-		template <typename Type>
+		template <typename Type> requires
+			CategoryConstraint<IsPureInstance<Type>>
 		using ExchangeableValue = typename CommonByteStreamExchangeBase<t_mode>::template ExchangeableValue<Type>;
 
-		template <typename Type>
+		template <typename Type> requires
+			CategoryConstraint<IsPureInstance<Type>>
 		using ExchangeableConstantValue = typename CommonByteStreamExchangeBase<t_mode>::template ExchangeableConstantValue<Type>;
 
 		#pragma endregion

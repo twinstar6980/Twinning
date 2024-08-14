@@ -16,16 +16,10 @@ includes('./third/bzip2')
 includes('./third/lzma')
 includes('./third/open_vcdiff')
 includes('./third/avir')
-includes('./third/ETCPACK')
 includes('./third/etcpak')
 includes('./third/PVRTCCompressor')
 includes('./third/libpng')
-if m.system:is('linux', 'macintosh', 'android', 'iphone') then
-	includes('./third/quickjs')
-end
-if m.system:is('windows') then
-	includes('./third/quickjs.c_smile')
-end
+includes('./third/quickjs_ng')
 
 includes('./kernel')
 

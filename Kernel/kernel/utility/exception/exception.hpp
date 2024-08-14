@@ -2,8 +2,9 @@
 
 #include "kernel/utility/exception/source_location.hpp"
 #include "kernel/third/fmt.hpp"
-#include <string>
+#include <exception>
 #include <vector>
+#include <string>
 
 namespace Twinning::Kernel {
 

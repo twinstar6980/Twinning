@@ -1216,23 +1216,23 @@ namespace Twinning.Script.KernelX {
 							break;
 						}
 						case 'rgb_etc1': {
-							Kernel.Tool.Texture.Compression.ETC1.Compress.process(data, image);
+							Kernel.Tool.Texture.Compression.ETC.Compress.process(data, image, Kernel.Tool.Texture.Compression.ETC.Format.value('v1_rgb'));
 							break;
 						}
 						case 'rgb_etc2': {
-							Kernel.Tool.Texture.Compression.ETC2.Compress.process(data, image, Kernel.Boolean.value(false));
+							Kernel.Tool.Texture.Compression.ETC.Compress.process(data, image, Kernel.Tool.Texture.Compression.ETC.Format.value('v2_rgb'));
 							break;
 						}
 						case 'rgba_etc2': {
-							Kernel.Tool.Texture.Compression.ETC2.Compress.process(data, image, Kernel.Boolean.value(true));
+							Kernel.Tool.Texture.Compression.ETC.Compress.process(data, image, Kernel.Tool.Texture.Compression.ETC.Format.value('v2_rgba'));
 							break;
 						}
 						case 'rgb_pvrtc4': {
-							Kernel.Tool.Texture.Compression.PVRTC4.Compress.process(data, image, Kernel.Boolean.value(false));
+							Kernel.Tool.Texture.Compression.PVRTC.Compress.process(data, image, Kernel.Tool.Texture.Compression.PVRTC.Format.value('v1_4bpp_rgb'));
 							break;
 						}
 						case 'rgba_pvrtc4': {
-							Kernel.Tool.Texture.Compression.PVRTC4.Compress.process(data, image, Kernel.Boolean.value(true));
+							Kernel.Tool.Texture.Compression.PVRTC.Compress.process(data, image, Kernel.Tool.Texture.Compression.PVRTC.Format.value('v1_4bpp_rgba'));
 							break;
 						}
 					}
@@ -1265,23 +1265,23 @@ namespace Twinning.Script.KernelX {
 							break;
 						}
 						case 'rgb_etc1': {
-							Kernel.Tool.Texture.Compression.ETC1.Uncompress.process(data, image);
+							Kernel.Tool.Texture.Compression.ETC.Uncompress.process(data, image, Kernel.Tool.Texture.Compression.ETC.Format.value('v1_rgb'));
 							break;
 						}
 						case 'rgb_etc2': {
-							Kernel.Tool.Texture.Compression.ETC2.Uncompress.process(data, image, Kernel.Boolean.value(false));
+							Kernel.Tool.Texture.Compression.ETC.Uncompress.process(data, image, Kernel.Tool.Texture.Compression.ETC.Format.value('v2_rgb'));
 							break;
 						}
 						case 'rgba_etc2': {
-							Kernel.Tool.Texture.Compression.ETC2.Uncompress.process(data, image, Kernel.Boolean.value(true));
+							Kernel.Tool.Texture.Compression.ETC.Uncompress.process(data, image, Kernel.Tool.Texture.Compression.ETC.Format.value('v2_rgba'));
 							break;
 						}
 						case 'rgb_pvrtc4': {
-							Kernel.Tool.Texture.Compression.PVRTC4.Uncompress.process(data, image, Kernel.Boolean.value(false));
+							Kernel.Tool.Texture.Compression.PVRTC.Uncompress.process(data, image, Kernel.Tool.Texture.Compression.PVRTC.Format.value('v1_4bpp_rgb'));
 							break;
 						}
 						case 'rgba_pvrtc4': {
-							Kernel.Tool.Texture.Compression.PVRTC4.Uncompress.process(data, image, Kernel.Boolean.value(true));
+							Kernel.Tool.Texture.Compression.PVRTC.Uncompress.process(data, image, Kernel.Tool.Texture.Compression.PVRTC.Format.value('v1_4bpp_rgba'));
 							break;
 						}
 					}

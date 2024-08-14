@@ -184,7 +184,7 @@ namespace Twinning::Kernel {
 		#pragma region from & to with integer
 
 		template <typename TargetInteger = BoundedInteger> requires
-			NoneConstraint
+			AutoConstraint
 			&& (IsSame<TargetInteger, BoundedInteger>)
 			&& (!IsVoid<TargetInteger>)
 		auto from_integer (
@@ -195,7 +195,7 @@ namespace Twinning::Kernel {
 		}
 
 		template <typename TargetInteger = BoundedInteger> requires
-			NoneConstraint
+			AutoConstraint
 			&& (IsSame<TargetInteger, BoundedInteger>)
 			&& (!IsVoid<TargetInteger>)
 		auto to_integer (

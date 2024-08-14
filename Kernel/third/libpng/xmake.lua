@@ -10,10 +10,10 @@ target('third.libpng', function()
 	add_headerfiles(
 		'./png.h',
 		'./pngconf.h',
-		'./pnglibconf.h',
-		'./pngpriv.h',
 		'./pngdebug.h',
 		'./pnginfo.h',
+		'./pnglibconf.h',
+		'./pngpriv.h',
 		'./pngstruct.h',
 		{ install = false }
 	)
