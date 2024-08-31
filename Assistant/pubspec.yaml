@@ -1,8 +1,8 @@
 name: assistant
-version: 53.0.0+53
+version: 54.0.0+54
 publish_to: 'none'
 environment:
-  sdk: ^3.5.0
+  sdk: ^3.5.1
 dependencies:
   flutter:
     sdk: flutter
@@ -13,21 +13,21 @@ dependencies:
   decimal: ^3.0.2
   provider: ^6.1.1
   path_provider: ^2.1.4
-  material_symbols_icons: ^4.2780.0
-  window_manager: ^0.4.0
+  material_symbols_icons: ^4.2784.0
+  window_manager: ^0.4.2
   dynamic_color: ^1.7.0
   url_launcher: ^6.3.0
-  app_links: ^6.2.0
+  app_links: ^6.3.1
   file_selector: ^1.0.3
   local_notifier: ^0.1.6
   flutter_local_notifications: ^17.2.2
-  super_drag_and_drop: ^0.8.19
+  super_drag_and_drop: ^0.8.20
   single_child_two_dimensional_scroll_view : ^0.0.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
-  msix: ^3.16.7
+  msix: ^3.16.8
 flutter:
   uses-material-design: true
   assets:

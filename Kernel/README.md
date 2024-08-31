@@ -28,14 +28,14 @@
 | [fmt 11.0.2](https://github.com/fmtlib/fmt)                                | 字符串格式化                   |
 | [tinyxml2 10.0.0](https://github.com/leethomason/tinyxml2)                 | XML 读写                       |
 | [md5 1.0](https://github.com/JieweiWei/md5)                                | MD5 哈希计算                   |
-| [Rijndael](#)                                                              | Rijndael 加密与解密            |
+| [Rijndael ?](#)                                                            | Rijndael 加密与解密            |
 | [zlib 1.3.1](https://github.com/madler/zlib)                               | ZLib 压缩与解压                |
 | [bzip2 1.0.8](https://sourceware.org/bzip2/)                               | BZip2 压缩与解压               |
 | [lzma 24.08](https://www.7-zip.org/sdk.html)                               | Lzma 压缩与解压                |
 | [open_vcdiff 0.8.4](https://github.com/google/open-vcdiff)                 | VCDiff 差异分析                |
 | [avir 3.0](https://github.com/avaneev/avir)                                | 图像缩放                       |
 | [etcpak 2.0](https://github.com/wolfpld/etcpak)                            | ETC1 压缩                      |
-| [PVRTCCompressor](https://github.com/brenwill/PVRTCCompressor)             | PVRTC4 压缩与解压              |
+| [PVRTCCompressor ?](https://github.com/brenwill/PVRTCCompressor)           | PVRTC4 压缩与解压              |
 | [libpng 1.6.43](https://github.com/pnggroup/libpng)                        | PNG 读写                       |
 | [quickjs_ng 0.5.0](https://github.com/quickjs-ng/quickjs)                  | JS 引擎                        |
 | [vld 2.5.1](https://github.com/KindDragon/vld)                             | 内存泄漏检测                   |
@@ -64,13 +64,13 @@
 	
 	本项目对引用的第三方库做出了少许修改，如下：
 	
-	* `md5`：修改传参类型。
+	* `md5`：修改接口的参数类型。
 	
 	* `Rijndael`：修正非标准代码，避免符号冲突。
 	
 	* `open_vcdiff`：修正非标准代码。
 	
-	* `etcpak`：移除不需要的依赖。
+	* `etcpak`：移除不需要的依赖，暴露所需的接口。
 	
 	* `PVRTCCompressor`：引入依赖头文件。
 	
