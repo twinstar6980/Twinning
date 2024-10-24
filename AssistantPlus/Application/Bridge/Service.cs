@@ -8,7 +8,9 @@ namespace AssistantPlus.Bridge {
 
 	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct Service {
-		public Executor* executor;
+		public Executor*                 executor;
+		public delegate* unmanaged<void> initialize;
+		public delegate* unmanaged<void> finalize;
 	}
 
 }

@@ -10,15 +10,15 @@
 	
 	* [xmake 2.9](https://xmake.io/#/)
 	
-	* [MSVC 19.41 & WinAPI](https://visualstudio.microsoft.com/downloads/) for `Windows`
+	* [MSVC 19.40 & WinAPI](https://visualstudio.microsoft.com/downloads/) for `Windows`
 	
-	* [Clang 18.1 & POSIX](https://llvm.org/) for `Linux`
+	* [Clang 19.1 & POSIX](https://llvm.org/) for `Linux`
 	
-	* [Clang 18.1 & POSIX](https://llvm.org/) for `Macintosh`
+	* [Clang 19.1 & POSIX](https://llvm.org/) for `Macintosh`
 	
-	* [Clang 18.0 & POSIX (NDK 27.1)](https://developer.android.com/ndk/downloads) for `Android`
+	* [Clang 18.0 & POSIX (NDK 27.2)](https://developer.android.com/ndk/downloads) for `Android`
 	
-	* [Clang 18.1 & POSIX](https://llvm.org/) for `Iphone`
+	* [Clang 19.1 & POSIX](https://llvm.org/) for `Iphone`
 
 ## 第三方库使用
 
@@ -36,8 +36,8 @@
 | [avir 3.0](https://github.com/avaneev/avir)                                | 图像缩放                       |
 | [etcpak 2.0](https://github.com/wolfpld/etcpak)                            | ETC1 压缩                      |
 | [PVRTCCompressor ?](https://github.com/brenwill/PVRTCCompressor)           | PVRTC4 压缩与解压              |
-| [libpng 1.6.43](https://github.com/pnggroup/libpng)                        | PNG 读写                       |
-| [quickjs_ng 0.5.0](https://github.com/quickjs-ng/quickjs)                  | JS 引擎                        |
+| [libpng 1.6.44](https://github.com/pnggroup/libpng)                        | PNG 读写                       |
+| [quickjs_ng 0.6.1](https://github.com/quickjs-ng/quickjs)                  | JS 引擎                        |
 | [vld 2.5.1](https://github.com/KindDragon/vld)                             | 内存泄漏检测                   |
 
 ## 说明
@@ -58,7 +58,9 @@
 	
 	2. 由于 GCC 的策略，需要添加 `-fpermissive` 选项以使 GCC 容许项目中的部分代码。
 	
-	3. 由于 GCC 的 BUG ，本项目无法通过 GCC 编译，参阅 [GCC Bugzilla # 102367](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=102367) 。
+	3. 由于 GCC 的 BUG ，本项目无法通过 GCC 的编译，参阅 [GCC Bugzilla # 102367](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=102367) 。
+
+	4. 由于 MSVC 的 BUG ，本项目无法通过高版本 MSVC 的编译（17.11.5/14.41/19.41.34123+）。
 
 * 对第三方库的说明
 	

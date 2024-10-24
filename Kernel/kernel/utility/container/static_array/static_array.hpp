@@ -130,6 +130,11 @@ namespace Twinning::Kernel {
 			return t_size;
 		}
 
+		constexpr auto empty (
+		) const -> Boolean {
+			return thiz.size() == k_none_size;
+		}
+
 		// ----------------
 
 		constexpr auto begin_index (

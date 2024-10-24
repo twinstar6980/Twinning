@@ -10,7 +10,7 @@ namespace Twinning::Kernel::Trait::Generalization {
 	template <typename ... Package, typename Executor> requires
 		CategoryConstraint<IsPureInstance<Package ...> && IsPureInstance<Executor>>
 		&& ((IsTypePackage<Package> || IsValuePackage<Package>) && ...)
-		&& ((Package::size == AsSwitch<sizeof...(Package) == 0_szz, TypePackage<TypePackage<>>, TypePackage<Package ...>>::template Element<1_ixz>::size) && ...)
+		&& ((Package::size == AsSelect<1_ixz, Package ..., TypePackage<>>::size) && ...)
 		&& (IsGenericCallable<Executor>)
 	inline constexpr auto each (
 		Executor const & executor
@@ -34,14 +34,14 @@ namespace Twinning::Kernel::Trait::Generalization {
 			ValuePackage<element_index ...>
 		) {
 				(iterate(ValuePackage<element_index>{}), ...);
-			}(AsValuePackageOfIndex<AsSwitch<sizeof...(Package) == 0_szz, TypePackage<TypePackage<>>, TypePackage<Package ...>>::template Element<1_ixz>::size>{});
+			}(AsValuePackageOfIndex<AsSelect<1_ixz, Package ..., TypePackage<>>::size>{});
 		return;
 	}
 
 	template <typename ... Package, typename Executor, typename ... Argument> requires
 		CategoryConstraint<IsPureInstance<Package ...> && IsPureInstance<Executor> && IsValid<Argument ...>>
 		&& ((IsTypePackage<Package> || IsValuePackage<Package>) && ...)
-		&& ((Package::size == (sizeof...(Argument))) && ...)
+		&& ((Package::size == sizeof...(Argument)) && ...)
 		&& (IsGenericCallable<Executor>)
 	inline constexpr auto each_with (
 		Executor const & executor,

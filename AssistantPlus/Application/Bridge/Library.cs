@@ -48,15 +48,17 @@ namespace AssistantPlus.Bridge {
 			}
 			this.mHandle = handle;
 			this.mSymbol = symbol;
+			this.mSymbol->initialize();
 			return;
 		}
 
 		public void Close (
 		) {
 			GF.AssertTest(this.State());
+			this.mSymbol->finalize();
+			this.mSymbol = null;
 			PlatformInvoke.Kernel32.FreeLibrary(this.mHandle.AsNotNull());
 			this.mHandle = null;
-			this.mSymbol = null;
 			return;
 		}
 

@@ -30,16 +30,20 @@ namespace Twinning::Kernel::Interface {
 
 		Executor * executor{nullptr};
 
+		std::add_pointer_t<void  ()> initialize{nullptr};
+
+		std::add_pointer_t<void  ()> finalize{nullptr};
+
 	};
 
 	#pragma endregion
 
 	#pragma region variable
 
-	#if defined M_compiler_msvc
+	#if defined M_system_windows
 	__declspec(dllimport)
 	#endif
-	#if defined M_compiler_clang
+	#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 	#endif
 	extern Service service;
 

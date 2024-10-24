@@ -11,6 +11,10 @@ namespace Twinning::Kernel::Interface {
 
 		Executor * executor{nullptr};
 
+		std::add_pointer_t<void  ()> initialize{nullptr};
+
+		std::add_pointer_t<void  ()> finalize{nullptr};
+
 	};
 
 	#pragma endregion

@@ -87,7 +87,7 @@ namespace Twinning::Kernel::Image {
 		auto operator = (
 			CView const & that
 		) -> BasicImage & {
-			thiz.assign(that);
+			thiz.draw(that);
 			return thiz;
 		}
 

@@ -75,13 +75,25 @@ namespace Twinning::Kernel::Interface {
 	#pragma clang diagnostic ignored "-Wmissing-variable-declarations"
 	#endif
 
-	#if defined M_compiler_msvc
+	#if defined M_system_windows
 	__declspec(dllexport)
 	#endif
-	#if defined M_compiler_clang
+	#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 	__attribute__((visibility("default")))
 	#endif
-	extern Service service = Service{};
+	extern Service service = Service{
+		.executor = nullptr,
+		.initialize = [] () {
+			service.executor = new Executor{};
+			ExecutorProxy::construct(*service.executor, ExecutorProxy{&service_executor});
+			return;
+		},
+		.finalize = [] () {
+			ExecutorProxy::destruct(*service.executor);
+			delete service.executor;
+			return;
+		},
+	};
 
 	#if defined M_compiler_msvc
 	#pragma warning(pop)
@@ -89,19 +101,6 @@ namespace Twinning::Kernel::Interface {
 	#if defined M_compiler_clang
 	#pragma clang diagnostic pop
 	#endif
-
-	// ----------------
-
-	static auto _ = Finalizer{make_finalizer(
-		[] {
-			service.executor = new Executor{};
-			ExecutorProxy::construct(*service.executor, ExecutorProxy{&service_executor});
-		},
-		[] {
-			ExecutorProxy::destruct(*service.executor);
-			delete service.executor;
-		}
-	)};
 
 	#pragma endregion
 

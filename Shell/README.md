@@ -10,15 +10,15 @@
 	
 	* [xmake 2.9](https://xmake.io/#/)
 	
-	* [MSVC 19.41 & WinAPI](https://visualstudio.microsoft.com/downloads/) for `Windows`
+	* [MSVC 19.40 & WinAPI](https://visualstudio.microsoft.com/downloads/) for `Windows`
 	
-	* [Clang 18.1 & POSIX](https://llvm.org/) for `Linux`
+	* [Clang 19.1 & POSIX](https://llvm.org/) for `Linux`
 	
-	* [Clang 18.1 & POSIX](https://llvm.org/) for `Macintosh`
+	* [Clang 19.1 & POSIX](https://llvm.org/) for `Macintosh`
 	
-	* [Clang 18.0 & POSIX (NDK 27.1)](https://developer.android.com/ndk/downloads) for `Android`
+	* [Clang 18.0 & POSIX (NDK 27.2)](https://developer.android.com/ndk/downloads) for `Android`
 	
-	* [Clang 18.1 & POSIX](https://llvm.org/) for `Iphone`
+	* [Clang 19.1 & POSIX](https://llvm.org/) for `Iphone`
 
 ## 第三方库使用
 

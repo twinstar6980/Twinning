@@ -29,8 +29,7 @@ namespace Twinning::Kernel {
 
 	public:
 
-		// NOTE : avoid clang bug on linux : do not initialize in the default constructor, which will cause an unknown errors in special cases (if all version specializations of Tool::Wwise::SoundBank are enabled. but if any one specialization is disabled, there will be no exception).
-		Value value{};
+		Value value;
 
 	public:
 
@@ -42,7 +41,9 @@ namespace Twinning::Kernel {
 		// ----------------
 
 		constexpr BaseWrapper (
-		) = default;
+		) :
+			value{} {
+		}
 
 		constexpr BaseWrapper (
 			BaseWrapper const & that

@@ -22,6 +22,7 @@ namespace Twinning::Shell::Bridge {
 
 		~Library (
 		) {
+			thiz.m_symbol->finalize();
 			if (thiz.m_handle.state()) {
 				thiz.m_handle.close();
 			}
@@ -56,6 +57,7 @@ namespace Twinning::Shell::Bridge {
 				"_ZN8Twinning6Kernel9Interface7serviceE"
 				#endif
 			);
+			thiz.m_symbol->initialize();
 		}
 
 		explicit Library (
@@ -64,6 +66,7 @@ namespace Twinning::Shell::Bridge {
 			m_handle{},
 			m_symbol{} {
 			thiz.m_symbol = static_cast<Service *>(symbol);
+			thiz.m_symbol->initialize();
 		}
 
 		#pragma endregion

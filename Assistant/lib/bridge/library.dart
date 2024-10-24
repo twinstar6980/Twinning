@@ -57,15 +57,17 @@ class Library {
     }
     this._handle = handle;
     this._symbol = symbol;
+    this._symbol.ref.initialize.asFunction<Void Function()>()();
     return;
   }
 
   Void close(
   ) {
     assertTest(this.state());
+    this._symbol.ref.finalize.asFunction<Void Function()>()();
+    this._symbol = ffi.nullptr;
     this._handle!.close();
     this._handle = null;
-    this._symbol = ffi.nullptr;
     return;
   }
 
