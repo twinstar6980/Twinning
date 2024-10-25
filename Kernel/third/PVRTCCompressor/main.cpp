@@ -9,8 +9,6 @@
 #include "RgbaBitmap.h"
 #include "PvrTcEncoder.h"
 #include "PvrTcDecoder.h"
-// TwinStar : insert
-#include <string.h>
 
 /*
  Test program for the PvrTcEncoder, it compresses and then decompresses an

@@ -66,9 +66,7 @@ struct fmt::formatter<Twinning::Kernel::Path> :
 template <typename TType> requires
 	Twinning::Kernel::AutoConstraint
 	&& (Twinning::Kernel::IsBaseWrapper<TType>)
-#if defined M_compiler_clang // NOTE : avoid clang bug
-	&& (Twinning::Kernel::IsDerivedFrom<TType, Twinning::Kernel::BaseWrapper<typename TType::Value>>)
-#endif
+	&& (Twinning::Kernel::IsDerivedFrom<TType, Twinning::Kernel::BaseWrapper<typename TType::Value>>) // NOTE : avoid clang bug
 struct fmt::formatter<TType> :
 	fmt::formatter<typename TType::Value> {
 	template <typename Context> requires

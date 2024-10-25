@@ -344,14 +344,8 @@ namespace Twinning::Kernel::Executor::Environment {
 	inline auto inject (
 		Context & context
 	) -> Void {
-		#if defined M_compiler_msvc
-		#pragma warning(push)
-		#pragma warning(disable:4456)
-		#endif
-		#if defined M_compiler_clang
 		#pragma clang diagnostic push
 		#pragma clang diagnostic ignored "-Wshadow"
-		#endif
 		auto s_Twinning = JavaScript::NativeSpaceBuilder{k_null_optional, "Twinning"_s, as_lvalue(context.context().global_object())};
 		auto s_Kernel = s_Twinning.add_space("Kernel"_s);
 		// Boolean
@@ -1791,12 +1785,7 @@ namespace Twinning::Kernel::Executor::Environment {
 			s_Miscellaneous.add_variable("g_architecture"_s, context.context().new_value(JavaScript::NativeValueHandler<String>::new_instance_allocate(make_string(M_architecture))));
 		}
 		return;
-		#if defined M_compiler_msvc
-		#pragma warning(pop)
-		#endif
-		#if defined M_compiler_clang
 		#pragma clang diagnostic pop
-		#endif
 	}
 
 	#pragma endregion

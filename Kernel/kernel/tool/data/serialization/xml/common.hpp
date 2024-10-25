@@ -13,17 +13,6 @@ namespace Twinning::Kernel::Tool::Data::Serialization::XML {
 
 	struct Common {
 
-		#if defined M_compiler_msvc
-		#pragma warning(push)
-		#pragma warning(disable:4625)
-		#pragma warning(disable:4626)
-		#pragma warning(disable:5026)
-		#pragma warning(disable:5027)
-		#endif
-		#if defined M_compiler_clang
-		#pragma clang diagnostic push
-		#endif
-
 		class TinyXML2Printer :
 			public Third::tinyxml2::XMLPrinter {
 
@@ -38,13 +27,6 @@ namespace Twinning::Kernel::Tool::Data::Serialization::XML {
 			}
 
 		};
-
-		#if defined M_compiler_msvc
-		#pragma warning(pop)
-		#endif
-		#if defined M_compiler_clang
-		#pragma clang diagnostic pop
-		#endif
 
 		template <class T, int INITIAL_SIZE>
 		struct TinyXML2DynArrayImitator {

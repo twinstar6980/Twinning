@@ -22,7 +22,7 @@ if ($TargetPlatform -eq "linux.x86_64") {
 	if (Test-Path -Path $ModuleDistributionFile) {
 		Remove-Item -Force -Recurse -Path $ModuleDistributionFile
 	}
-	flutter "build" "linux" "--release" "--target-platform" "linux-x64" "--no-tree-shake-icons"
+	flutter "build" "linux" "--release" "--no-tree-shake-icons" "--target-platform" "linux-x64"
 	My-PackZip -Name "assistant" -Source "${ModuleDirectory}/build/linux/x64/release/bundle" -Destination "${ModuleDistributionFile}"
 }
 if ($TargetPlatform -eq "macintosh.x86_64+arm_64") {
@@ -38,7 +38,7 @@ if ($TargetPlatform -eq "android.arm_64") {
 	if (Test-Path -Path $ModuleDistributionFile) {
 		Remove-Item -Force -Recurse -Path $ModuleDistributionFile
 	}
-	flutter "build" "apk" "--release" "--split-per-abi" "--target-platform" "android-arm64" "--no-tree-shake-icons"
+	flutter "build" "apk" "--release" "--no-tree-shake-icons" "--target-platform" "android-arm64" "--split-per-abi"
 	My-SignApk -Source "${ModuleDirectory}/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk" -Destination "${ModuleDistributionFile}"
 }
 if ($TargetPlatform -eq "iphone.arm_64") {
@@ -46,7 +46,7 @@ if ($TargetPlatform -eq "iphone.arm_64") {
 	if (Test-Path -Path $ModuleDistributionFile) {
 		Remove-Item -Force -Recurse -Path $ModuleDistributionFile
 	}
-	flutter "build" "ios" "--release" "--no-tree-shake-icons"
+	flutter "build" "ios" "--release" "--no-tree-shake-icons" "--no-codesign"
 	My-PackIpa -Name "Twinning Assistant" -Source "${ModuleDirectory}/build/ios/iphoneos/Runner.app" -Destination "${ModuleDistributionFile}"
 }
 Pop-Location

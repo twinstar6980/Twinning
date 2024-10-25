@@ -19,10 +19,8 @@ namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 			Size const &      window_bits,
 			Wrapper const &   wrapper
 		) -> Void {
-			#if defined M_compiler_clang
 			#pragma clang diagnostic push
 			#pragma clang diagnostic ignored "-Wold-style-cast"
-			#endif
 			assert_test(Math::between(window_bits, 8_sz, mbw<Size>(Third::zlib::MAX_WBITS_)));
 			auto actual_window_bits = static_cast<int>(window_bits.value);
 			switch (wrapper.value) {
@@ -73,9 +71,7 @@ namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 			ripe.forward(mbw<Size>(z_stream.total_in));
 			raw.forward(mbw<Size>(z_stream.total_out));
 			return;
-			#if defined M_compiler_clang
 			#pragma clang diagnostic pop
-			#endif
 		}
 
 		// ----------------

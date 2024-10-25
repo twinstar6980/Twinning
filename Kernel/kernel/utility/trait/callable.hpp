@@ -86,14 +86,6 @@ namespace Twinning::Kernel::Trait {
 
 	// ----------------
 
-	#if defined M_compiler_msvc // TODO : avoid msvc bug : in msvc 19.34~41, pass global function pointer to non-type template argument will auto cast to function object, such as R (*) (A...) -> R (A...)
-	template <typename TResult, typename ... TArgument> requires
-		AutoConstraint
-	struct CallableTrait<TResult  (TArgument ...)> :
-		GlobalFunctionTrait<TResult, TArgument ...> {
-	};
-	#endif
-
 	template <typename TResult, typename ... TArgument> requires
 		AutoConstraint
 	struct CallableTrait<AsGlobalFunction<TResult, TArgument ...>> :

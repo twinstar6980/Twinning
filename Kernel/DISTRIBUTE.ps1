@@ -12,7 +12,7 @@ if ($TargetPlatform -eq "windows.x86_64") {
 	if (Test-Path -Path $ModuleDistributionFile) {
 		Remove-Item -Force -Recurse -Path $ModuleDistributionFile
 	}
-	xmake "config" "--buildir=.build" "--mode=release" "--plat=windows" "--arch=x64" "--toolchain=msvc" "--vs_toolset=14.40" "--runtimes=MD"
+	xmake "config" "--buildir=.build" "--mode=release" "--plat=windows" "--arch=x64" "--toolchain=clang-cl" "--runtimes=MD"
 	xmake "build"
 	Copy-Item -Force -Recurse -Path "${ModuleDirectory}/.build/windows/x64/release/kernel.dll" -Destination "${ModuleDistributionFile}"
 }

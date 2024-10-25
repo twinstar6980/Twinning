@@ -10,7 +10,7 @@
 	
 	* [xmake 2.9](https://xmake.io/#/)
 	
-	* [MSVC 19.40 & WinAPI](https://visualstudio.microsoft.com/downloads/) for `Windows`
+	* [Clang 17.0 & WinAPI](https://visualstudio.microsoft.com/downloads/) for `Windows`
 	
 	* [Clang 19.1 & POSIX](https://llvm.org/) for `Linux`
 	
@@ -22,23 +22,23 @@
 
 ## 第三方库使用
 
-| 库                                                                         | 用途                           |
-|:--------------------------------------------------------------------------:|:------------------------------:|
-| [mscharconv 1.2.3](https://github.com/iboB/mscharconv)                     | charconv 支持 ( for non-MSVC ) |
-| [fmt 11.0.2](https://github.com/fmtlib/fmt)                                | 字符串格式化                   |
-| [tinyxml2 10.0.0](https://github.com/leethomason/tinyxml2)                 | XML 读写                       |
-| [md5 1.0](https://github.com/JieweiWei/md5)                                | MD5 哈希计算                   |
-| [Rijndael ?](#)                                                            | Rijndael 加密与解密            |
-| [zlib 1.3.1](https://github.com/madler/zlib)                               | ZLib 压缩与解压                |
-| [bzip2 1.0.8](https://sourceware.org/bzip2/)                               | BZip2 压缩与解压               |
-| [lzma 24.08](https://www.7-zip.org/sdk.html)                               | Lzma 压缩与解压                |
-| [open_vcdiff 0.8.4](https://github.com/google/open-vcdiff)                 | VCDiff 差异分析                |
-| [avir 3.0](https://github.com/avaneev/avir)                                | 图像缩放                       |
-| [etcpak 2.0](https://github.com/wolfpld/etcpak)                            | ETC1 压缩                      |
-| [PVRTCCompressor ?](https://github.com/brenwill/PVRTCCompressor)           | PVRTC4 压缩与解压              |
-| [libpng 1.6.44](https://github.com/pnggroup/libpng)                        | PNG 读写                       |
-| [quickjs_ng 0.6.1](https://github.com/quickjs-ng/quickjs)                  | JS 引擎                        |
-| [vld 2.5.1](https://github.com/KindDragon/vld)                             | 内存泄漏检测                   |
+| 库                                                                         | 用途                |
+|:--------------------------------------------------------------------------:|:-------------------:|
+| [mscharconv 1.2.3](https://github.com/iboB/mscharconv)                     | charconv 支持       |
+| [fmt 11.0.2](https://github.com/fmtlib/fmt)                                | 字符串格式化        |
+| [tinyxml2 10.0.0](https://github.com/leethomason/tinyxml2)                 | XML 读写            |
+| [md5 1.0](https://github.com/JieweiWei/md5)                                | MD5 哈希计算        |
+| [Rijndael ?](#)                                                            | Rijndael 加密与解密 |
+| [zlib 1.3.1](https://github.com/madler/zlib)                               | ZLib 压缩与解压     |
+| [bzip2 1.0.8](https://sourceware.org/bzip2/)                               | BZip2 压缩与解压    |
+| [lzma 24.08](https://www.7-zip.org/sdk.html)                               | Lzma 压缩与解压     |
+| [open_vcdiff 0.8.4](https://github.com/google/open-vcdiff)                 | VCDiff 差异分析     |
+| [avir 3.0](https://github.com/avaneev/avir)                                | 图像缩放            |
+| [etcpak 2.0](https://github.com/wolfpld/etcpak)                            | ETC1 压缩           |
+| [PVRTCCompressor ?](https://github.com/brenwill/PVRTCCompressor)           | PVRTC4 压缩与解压   |
+| [libpng 1.6.44](https://github.com/pnggroup/libpng)                        | PNG 读写            |
+| [quickjs_ng 0.6.1](https://github.com/quickjs-ng/quickjs)                  | JS 引擎             |
+| [vld 2.5.1](https://github.com/KindDragon/vld)                             | 内存泄漏检测        |
 
 ## 说明
 
@@ -48,19 +48,15 @@
 	
 	2. 接口声明位于 `<project>/kernel/interface/interface.hpp` 。
 	
-	3. 为了容许来自其他语言的调用，接口被设计为完全的 `C` 风格。输入参数的所有权归调用方，调用方需确保其能够正确析构；输出参数与返回值的所有权属于库自身，调用方不应对其进行读取以外的任何操作。
+	3. 为了允许来自不同语言的调用，接口被设计为完全的 `C` 风格。输入参数的所有权归调用方，调用方需确保其能够正确析构；输出参数与返回值的所有权属于库自身，调用方不应对其进行读取以外的任何操作。
 	
 	4. 接口具备线程安全性，但不建议在多个线程中同时调用同一库实例的接口，因为内部使用的脚本引擎 `quickjs` 只能被不同线程互斥地调用；如需在多线程中调用接口，请为每个线程加载独立的库实例。
 
 * 关于构建
 	
-	1. 由于项目中大量使用模板，并仅使用头文件进行代码组织，最终只有单个源文件被编译，这导致了较长的编译时间（clang 20m~ | msvc 120m~）与极高的内存占用（clang 12G~ | msvc 48G~），编译时需确保物理内存与交换内存充足，应考虑在未来使用 C++ Modules 进行重构（在其成熟之后）。
+	1. 由于项目中大量使用模板，并仅使用头文件进行代码组织，最终只有单个源文件被编译，这导致了较长的编译时间与大量的内存占用（30m|12G），编译时需确保物理内存与交换内存充足，应考虑在未来使用 C++ Modules 进行重构（在其成熟之后）。
 	
-	2. 由于 GCC 的策略，需要添加 `-fpermissive` 选项以使 GCC 容许项目中的部分代码。
-	
-	3. 由于 GCC 的 BUG ，本项目无法通过 GCC 的编译，参阅 [GCC Bugzilla # 102367](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=102367) 。
-
-	4. 由于 MSVC 的 BUG ，本项目无法通过高版本 MSVC 的编译（17.11.5/14.41/19.41.34123+）。
+	2. 本项目无法通过 GCC 与高版本 MSVC（17.11.5|19.41.34123+）的编译，这是由于 GCC 与 MSVC 在处理几处较为复杂的代码（特别是模板）时出现了 BUG 。请使用 Clang|ClangCL & LIBC++|MSVCSTL 进行编译。
 
 * 对第三方库的说明
 	
@@ -73,9 +69,5 @@
 	* `open_vcdiff`：修正非标准代码。
 	
 	* `etcpak`：移除不需要的依赖，暴露所需的接口。
-	
-	* `PVRTCCompressor`：引入依赖头文件。
-	
-	* `quickjs_ng`：修正非标准代码。
 	
 	> 任何修改都会以 `// TwinStar : insert|remove|change` 做出标示。

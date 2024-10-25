@@ -7,15 +7,7 @@
 #include "kernel/utility/null.hpp"
 #include "kernel/utility/miscellaneous/number_variant.hpp"
 #include "kernel/utility/range/algorithm.hpp"
-
-#if defined M_system_windows
-#include <charconv>
-namespace mscharconv = std;
-#endif
-#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 #include "kernel/third/mscharconv.hpp"
-namespace mscharconv = Twinning::Kernel::Third::mscharconv;
-#endif
 
 namespace Twinning::Kernel::StringParser {
 
@@ -684,7 +676,7 @@ namespace Twinning::Kernel::StringParser {
 		}
 		auto valid_begin = stream.reserve_view().begin();
 		auto valid_end = stream.reserve_view().end();
-		auto convert_result = mscharconv::to_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, 10);
+		auto convert_result = Third::mscharconv::to_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, 10);
 		assert_test(convert_result.ec == std::errc{});
 		stream.forward(mbw<Size>(convert_result.ptr - cast_pointer<char>(valid_begin).value));
 		return;
@@ -729,7 +721,7 @@ namespace Twinning::Kernel::StringParser {
 		}
 		auto valid_end = stream.current_pointer();
 		assert_test(valid_begin != valid_end);
-		auto convert_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, 10);
+		auto convert_result = Third::mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, 10);
 		assert_test(convert_result.ec == std::errc{});
 		return;
 	}
@@ -746,7 +738,7 @@ namespace Twinning::Kernel::StringParser {
 		}
 		auto valid_begin = stream.reserve_view().begin();
 		auto valid_end = stream.reserve_view().end();
-		auto convert_result = mscharconv::to_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, mscharconv::chars_format::fixed);
+		auto convert_result = Third::mscharconv::to_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, Third::mscharconv::chars_format::fixed);
 		assert_test(convert_result.ec == std::errc{});
 		stream.forward(mbw<Size>(convert_result.ptr - cast_pointer<char>(valid_begin).value));
 		if (!Range::has(make_range(valid_begin, stream.current_pointer()), '.'_c)) {
@@ -817,7 +809,7 @@ namespace Twinning::Kernel::StringParser {
 		assert_test(is_floater);
 		auto valid_end = stream.current_pointer();
 		assert_test(valid_begin != valid_end);
-		auto convert_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, !is_scientific ? (mscharconv::chars_format::fixed) : (mscharconv::chars_format::scientific));
+		auto convert_result = Third::mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, !is_scientific ? (Third::mscharconv::chars_format::fixed) : (Third::mscharconv::chars_format::scientific));
 		assert_test(convert_result.ec == std::errc{});
 		return;
 	}
@@ -902,12 +894,12 @@ namespace Twinning::Kernel::StringParser {
 		}
 		auto valid_end = stream.current_pointer();
 		assert_test(valid_begin != valid_end);
-		auto convert_result = mscharconv::from_chars_result{};
+		auto convert_result = Third::mscharconv::from_chars_result{};
 		if (!is_floater) {
-			convert_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_integer().value, 10);
+			convert_result = Third::mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_integer().value, 10);
 		}
 		else {
-			convert_result = mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_floater().value, !is_scientific ? (mscharconv::chars_format::fixed) : (mscharconv::chars_format::scientific));
+			convert_result = Third::mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_floater().value, !is_scientific ? (Third::mscharconv::chars_format::fixed) : (Third::mscharconv::chars_format::scientific));
 		}
 		assert_test(convert_result.ec == std::errc{});
 		return;

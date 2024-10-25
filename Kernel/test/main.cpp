@@ -14,6 +14,9 @@
 
 #pragma region main
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-prototypes"
+
 M_declare_native_main_function {
 	#if defined M_build_release
 	try
@@ -46,5 +49,7 @@ M_declare_native_main_function {
 	}
 	#endif
 }
+
+#pragma clang diagnostic pop
 
 #pragma endregion

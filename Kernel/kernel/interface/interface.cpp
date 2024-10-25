@@ -66,14 +66,9 @@ namespace Twinning::Kernel::Interface {
 
 	#pragma region interface
 
-	#if defined M_compiler_msvc
-	#pragma warning(push)
-	#endif
-	#if defined M_compiler_clang
 	#pragma clang diagnostic push
 	#pragma clang diagnostic ignored "-Wextern-initializer"
 	#pragma clang diagnostic ignored "-Wmissing-variable-declarations"
-	#endif
 
 	#if defined M_system_windows
 	__declspec(dllexport)
@@ -95,12 +90,7 @@ namespace Twinning::Kernel::Interface {
 		},
 	};
 
-	#if defined M_compiler_msvc
-	#pragma warning(pop)
-	#endif
-	#if defined M_compiler_clang
 	#pragma clang diagnostic pop
-	#endif
 
 	#pragma endregion
 

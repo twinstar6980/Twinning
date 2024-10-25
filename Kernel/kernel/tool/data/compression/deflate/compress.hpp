@@ -22,10 +22,8 @@ namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 			Strategy const &  strategy,
 			Wrapper const &   wrapper
 		) -> Void {
-			#if defined M_compiler_clang
 			#pragma clang diagnostic push
 			#pragma clang diagnostic ignored "-Wold-style-cast"
-			#endif
 			assert_test(Math::between(level, 0_sz, mbw<Size>(Third::zlib::Z_BEST_COMPRESSION_)));
 			assert_test(Math::between(window_bits, 8_sz, mbw<Size>(Third::zlib::MAX_WBITS_)));
 			assert_test(Math::between(memory_level, 1_sz, mbw<Size>(Third::zlib::MAX_MEM_LEVEL_)));
@@ -90,9 +88,7 @@ namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 			ripe.forward(mbw<Size>(z_stream.total_out));
 			assert_test(raw.full());
 			return;
-			#if defined M_compiler_clang
 			#pragma clang diagnostic pop
-			#endif
 		}
 
 		// ----------------

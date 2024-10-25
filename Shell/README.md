@@ -10,7 +10,7 @@
 	
 	* [xmake 2.9](https://xmake.io/#/)
 	
-	* [MSVC 19.40 & WinAPI](https://visualstudio.microsoft.com/downloads/) for `Windows`
+	* [Clang 17.0 & WinAPI](https://visualstudio.microsoft.com/downloads/) for `Windows`
 	
 	* [Clang 19.1 & POSIX](https://llvm.org/) for `Linux`
 	
@@ -22,9 +22,9 @@
 
 ## 第三方库使用
 
-| 库                                                                         | 用途                           |
-|:--------------------------------------------------------------------------:|:------------------------------:|
-| [tinyfiledialogs 3.17.5](https://sourceforge.net/projects/tinyfiledialogs) | 系统 UI 功能                   |
+| 库                                                                         | 用途                |
+|:--------------------------------------------------------------------------:|:-------------------:|
+| [tinyfiledialogs 3.17.5](https://sourceforge.net/projects/tinyfiledialogs) | 系统 UI 功能        |
 
 ## 说明
 

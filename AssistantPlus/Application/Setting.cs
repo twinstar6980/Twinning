@@ -9,6 +9,7 @@ using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml.Media;
 using Newtonsoft.Json;
+using Colors = Microsoft.UI.Colors;
 
 namespace AssistantPlus {
 
