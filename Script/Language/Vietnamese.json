@@ -8,14 +8,14 @@
 	"check:regexp_message": "Nên khớp regex: {}",
 	// utility/Console
 	"console:not_nullable": "Không nên null",
-	"console:input_invalid_should_retry": "Đầu vào không hợp lệ, vui lòng nhập lại.",
+	"console:input_invalid_should_retry": "Dữ liệu nhập không hợp lệ, vui lòng nhập lại.",
 	"console:input_command_invalid": "Lệnh không hợp lệ",
 	"console:input_command_need_previous_input": "Lệnh yêu cầu đầu vào trước đó",
 	"console:boolean_format_error": "Định dạng boolean không hợp lệ. Phải là \"n\" hoặc \"y\"",
 	"console:integer_format_error": "Định dạng số nguyên không hợp lệ, {}",
 	"console:floater_format_error": "Định dạng số thập phân không hợp lệ, {}",
 	"console:size_format_error": "Định dạng kích thước không hợp lệ, {}",
-	"console:path_is_empty": "Path can not be empty",
+	"console:path_is_empty": "Đường dẫn không được rỗng",
 	"console:path_is_exist": "Đường dẫn đã được chỉ định đã tồn tại",
 	"console:path_is_exist_but_generate": "Đường dẫn đã được chỉ định đã tồn tại, giờ đã được thêm tiền tố",
 	"console:path_is_exist_but_move": "Đường dẫn đã được chỉ định đã tồn tại, đường dẫn gốc đã được di chuyển",
@@ -86,7 +86,7 @@
 	"executor.typical:batch_result": "Hoàn thành xử lý, tổng cộng {} tệp, hợp lệ {} tệp, thất bại {} tệp",
 	// Executor/Implement/*
 	"范围溢出": "Vượt quá phạm vi",
-	"密钥非法": "Illegal key",
+	"密钥非法": "Khoá không hợp lệ",
 	"密钥长度非法": "Độ dài khóa không hợp lệ",
 	"长度不匹配": "Độ dài không khớp",
 	"分辨率应大于零": "Độ phân giải nên lớn hơn không",
@@ -578,12 +578,12 @@
 	"executor.implement:pvz2.text_table.convert:destination_version": "Phiên bản định nghĩa",
 	"executor.implement:pvz2.text_table.convert:destination_file": "Tệp đích",
 	// Executor/Implement/pvz2.resource_manifest
-	"executor.implement:pvz2.resource_manifest.new_type_object_notation.encode": "PvZ-2 Resource-Manifest New-Type-Object-Notation Encode",
+	"executor.implement:pvz2.resource_manifest.new_type_object_notation.encode": "Mã hoá PvZ-2 Resource-Manifest New-Type-Object-Notation",
 	"executor.implement:pvz2.resource_manifest.new_type_object_notation.encode:definition_file": "Tệp định nghĩa",
 	"executor.implement:pvz2.resource_manifest.new_type_object_notation.encode:data_file": "Tệp dữ liệu",
 	"executor.implement:pvz2.resource_manifest.new_type_object_notation.encode:buffer_size": "Kích thước bộ nhớ đệm",
 	// 
-	"executor.implement:pvz2.resource_manifest.new_type_object_notation.decode": "PvZ-2 Resource-Manifest New-Type-Object-Notation Decode",
+	"executor.implement:pvz2.resource_manifest.new_type_object_notation.decode": "Giải mã PvZ-2 Resource-Manifest New-Type-Object-Notation",
 	"executor.implement:pvz2.resource_manifest.new_type_object_notation.decode:data_file": "Tệp dữ liệu",
 	"executor.implement:pvz2.resource_manifest.new_type_object_notation.decode:definition_file": "Tệp định nghĩa",
 	// 
