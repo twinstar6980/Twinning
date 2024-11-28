@@ -10,7 +10,7 @@
 	
 	* [xmake 2.9](https://xmake.io/#/)
 	
-	* [Clang 17.0 & WinAPI](https://visualstudio.microsoft.com/downloads/) for `Windows`
+	* [Clang 18.1 & WinAPI](https://visualstudio.microsoft.com/downloads/) for `Windows`
 	
 	* [Clang 19.1 & POSIX](https://llvm.org/) for `Linux`
 	
@@ -37,7 +37,7 @@
 | [etcpak 2.0](https://github.com/wolfpld/etcpak)                            | ETC1 压缩           |
 | [PVRTCCompressor ?](https://github.com/brenwill/PVRTCCompressor)           | PVRTC4 压缩与解压   |
 | [libpng 1.6.44](https://github.com/pnggroup/libpng)                        | PNG 读写            |
-| [quickjs_ng 0.6.1](https://github.com/quickjs-ng/quickjs)                  | JS 引擎             |
+| [quickjs_ng 0.7.0](https://github.com/quickjs-ng/quickjs)                  | JS 引擎             |
 | [vld 2.5.1](https://github.com/KindDragon/vld)                             | 内存泄漏检测        |
 
 ## 说明

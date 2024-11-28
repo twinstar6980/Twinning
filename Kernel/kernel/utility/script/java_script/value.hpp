@@ -1180,7 +1180,7 @@ namespace Twinning::Kernel::JavaScript {
 			quickjs::JSContext * ctx,
 			quickjs::JSValue     promise,
 			quickjs::JSValue     reason,
-			quickjs::BOOL        is_handled,
+			quickjs::JS_BOOL_    is_handled,
 			void *               opaque
 		) -> void {
 			// TODO

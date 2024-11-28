@@ -243,8 +243,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
           const SizedBox(width: 8),
           IconButton.filledTonal(
             tooltip: 'Forward',
-            isSelected: false,
-            icon: const Icon(IconSymbols.send),
+            icon: const Icon(IconSymbols.send, fill: 1),
             onPressed: () async {
               await this._forwardCommand(this._command.mapIndexed((index, value) => index).toList());
             },

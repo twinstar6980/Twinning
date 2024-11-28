@@ -74,7 +74,7 @@ class _BasicSubmissionBar extends StatelessWidget {
                 SizedBox(
                   width: 56,
                   height: 40,
-                  child: Icon(this.icon),
+                  child: Icon(this.icon, fill: 1),
                 ),
                 Positioned.fill(
                   child: PopupMenuButton<ValueExpression>(

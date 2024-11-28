@@ -6,9 +6,9 @@ import 'package:material_symbols_icons/get.dart';
 
 // ----------------
 
-class OptionItemItem extends StatelessWidget {
+class OptionItem extends StatelessWidget {
 
-  const OptionItemItem({
+  const OptionItem({
     super.key,
     required this.configuration,
     required this.match,
@@ -179,7 +179,7 @@ class OptionGroupItem extends StatelessWidget {
           Visibility(
             visible: !this.collapse,
             child: Column(
-              children: this.configuration.item.mapIndexed((optionItemIndex, optionItem) => OptionItemItem(
+              children: this.configuration.item.mapIndexed((optionItemIndex, optionItem) => OptionItem(
                 configuration: optionItem,
                 match: this.match[optionItemIndex],
                 enableFilter: this.enableFilter,

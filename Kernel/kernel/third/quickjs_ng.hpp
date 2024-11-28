@@ -3,14 +3,13 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
 
-#include "third/quickjs_ng/cutils.h"
 #include "third/quickjs_ng/quickjs.h"
 
 #pragma clang diagnostic pop
 
 namespace Twinning::Kernel::Third::quickjs_ng {
 
-	using BOOL = ::BOOL;
+	using JS_BOOL_ = JS_BOOL;
 
 	using JSRuntime = ::JSRuntime;
 
@@ -158,14 +157,6 @@ namespace Twinning::Kernel::Third::quickjs_ng {
 
 	inline constexpr auto JS_ThrowReferenceError = ::JS_ThrowReferenceError;
 
-	inline constexpr auto JS_UNINITIALIZED_ = ::JSValue{JS_UNINITIALIZED};
-
-	inline constexpr auto JS_UNDEFINED_ = ::JSValue{JS_UNDEFINED};
-
-	inline constexpr auto JS_NULL_ = ::JSValue{JS_NULL};
-
-	inline constexpr auto JS_EXCEPTION_ = ::JSValue{JS_EXCEPTION};
-
 	inline constexpr auto JS_PROP_THROW_ = int{JS_PROP_THROW};
 
 	inline constexpr auto JS_PROP_C_W_E_ = int{JS_PROP_C_W_E};
@@ -183,5 +174,13 @@ namespace Twinning::Kernel::Third::quickjs_ng {
 	inline constexpr auto JS_EVAL_FLAG_STRICT_ = int{JS_EVAL_FLAG_STRICT};
 
 	inline constexpr auto JS_EVAL_FLAG_COMPILE_ONLY_ = int{JS_EVAL_FLAG_COMPILE_ONLY};
+
+	inline const auto JS_UNINITIALIZED_ = ::JSValue{JS_UNINITIALIZED};
+
+	inline const auto JS_UNDEFINED_ = ::JSValue{JS_UNDEFINED};
+
+	inline const auto JS_NULL_ = ::JSValue{JS_NULL};
+
+	inline const auto JS_EXCEPTION_ = ::JSValue{JS_EXCEPTION};
 
 }

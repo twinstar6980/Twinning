@@ -128,6 +128,7 @@ class VisualHelper {
   // ----------------
 
   static Widget visualizeImage(
+    AnimationController animationController,
     model.Animation     animation,
     List<ImageProvider> imageSource,
     Integer             index,
@@ -145,10 +146,10 @@ class VisualHelper {
   }
 
   static Widget visualizeSprite(
+    AnimationController animationController,
     model.Animation     animation,
     List<ImageProvider> imageSource,
     Integer             index,
-    AnimationController animationController,
   ) {
     var sprite = selectSprite(animation, index);
     var layerList = SplayTreeMap<Integer, _VisualLayer>();
@@ -165,9 +166,7 @@ class VisualHelper {
         var subController = animationController.drive(IntTween(begin: 0, end: sprite.frame.length - 1));
         layer.view = AnimatedBuilder(
           animation: subController,
-          child: !action.sprite
-            ? visualizeImage(animation, imageSource, action.resource)
-            : visualizeSprite(animation, imageSource, action.resource, animationController),
+          child: visualize(animationController, animation, imageSource, (action.sprite, action.resource)),
           builder: (context, child) {
             var index = subController.value;
             var property = layer.property[index];
@@ -224,6 +223,17 @@ class VisualHelper {
       fit: StackFit.passthrough,
       children: layerList.values.map((value) => value.view).toList(),
     );
+  }
+
+  static Widget visualize(
+    AnimationController animationController,
+    model.Animation     animation,
+    List<ImageProvider> imageSource,
+    (Boolean, Integer)  target,
+  ) {
+    return !target.$1
+      ? visualizeImage(animationController, animation, imageSource, target.$2)
+      : visualizeSprite(animationController, animation, imageSource, target.$2);
   }
 
   // #endregion

@@ -2,6 +2,7 @@ import '/common.dart';
 import '/setting.dart';
 import '/utility/command_line_reader.dart';
 import '/utility/storage_helper.dart';
+import '/utility/convert_helper.dart';
 import '/utility/control_helper.dart';
 import '/view/home/common.dart';
 import '/view/animation_viewer/model.dart' as model;
@@ -46,10 +47,10 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   late List<ImageProvider>? _imageSource;
   late List<Boolean>?       _imageFilter;
   late List<Boolean>?       _spriteFilter;
-  late Integer?             _workingSpriteIndex;
-  late (Integer, Integer)?  _workingSpriteFrameRange;
-  late Floater?             _workingSpriteFrameRate;
-  late Boolean?             _workingSpriteState;
+  late (Boolean, Integer)?  _activeTarget;
+  late (Integer, Integer)?  _activeFrameRange;
+  late Floater?             _activeFrameRate;
+  late Boolean?             _activeState;
   late AnimationController  _animationController;
   late Widget?              _animationVisual;
   late ScrollController     _stageHorizontalScrollSontroller;
@@ -57,13 +58,13 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
 
   Boolean get _loaded => this._animationFile != null;
 
-  Boolean get _working => this._workingSpriteIndex != null;
+  Boolean get _activated => this._activeTarget != null;
 
   Future<Void> _load(
     String animationFile,
     String imageDirectory,
   ) async {
-    assertTest(!this._loaded && !this._working);
+    assertTest(!this._loaded && !this._activated);
     var animationData = await VisualHelper.loadAnimation(animationFile);
     var imageSourceData = await VisualHelper.loadImageSource(imageDirectory, animationData);
     this._animationFile = animationFile;
@@ -71,14 +72,14 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     this._animation = animationData;
     this._imageSource = imageSourceData;
     this._imageFilter = List.filled(this._animation!.image.length, true);
-    this._spriteFilter = List.filled(this._animation!.image.length, true);
+    this._spriteFilter = List.filled(this._animation!.sprite.length, true);
     this.setState(() {});
     return;
   }
 
   Future<Void> _unload(
   ) async {
-    assertTest(this._loaded && !this._working);
+    assertTest(this._loaded && !this._activated);
     this._animationFile = null;
     this._imageDirectory = null;
     this._animation = null;
@@ -89,17 +90,27 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     return;
   }
 
-  Future<Void> _loadWorkingSprite(
+  Future<Void> _activate(
+    Boolean type,
     Integer index,
   ) async {
-    assertTest(this._loaded && !this._working);
-    var workingSprite = VisualHelper.selectSprite(this._animation!, index);
-    this._workingSpriteIndex = index;
-    this._workingSpriteFrameRange = (0, workingSprite.frame.length);
-    this._workingSpriteFrameRate = workingSprite.frame_rate ?? this._animation!.frame_rate.toDouble();
-    this._workingSpriteState = true;
-    this._animationController.duration = Duration(seconds: (workingSprite.frame.length / 30.0).toInt());
-    this._animationVisual = VisualHelper.visualizeSprite(this._animation!, this._imageSource!, this._workingSpriteIndex!, this._animationController!);
+    assertTest(this._loaded && !this._activated);
+    if (!type) {
+      var target = VisualHelper.selectImage(this._animation!, index);
+      this._activeTarget = (type, index);
+      this._activeFrameRange = (0, 1);
+      this._activeFrameRate = this._animation!.frame_rate.toDouble();
+      this._animationController.duration = Duration(seconds: 1);
+    }
+    if (type) {
+      var target = VisualHelper.selectSprite(this._animation!, index);
+      this._activeFrameRange = (0, target.frame.length);
+      this._activeFrameRate = target.frame_rate ?? this._animation!.frame_rate.toDouble();
+      this._animationController.duration = Duration(seconds: (target.frame.length.toDouble() / 30.0).toInt());
+    }
+    this._activeTarget = (type, index);
+    this._activeState = true;
+    this._animationVisual = VisualHelper.visualize(this._animationController, this._animation!, this._imageSource!, this._activeTarget!);
     this._animationVisual = SizedBox.fromSize(
       size: Size(this._animation!.size.$1, this._animation!.size.$2),
       child: UnconstrainedBox(
@@ -115,13 +126,13 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     return;
   }
 
-  Future<Void> _unloadWorkingSprite(
+  Future<Void> _deactivate(
   ) async {
-    assertTest(this._loaded && this._working);
-    this._workingSpriteIndex = null;
-    this._workingSpriteFrameRange = null;
-    this._workingSpriteFrameRate = null;
-    this._workingSpriteState = null;
+    assertTest(this._loaded && this._activated);
+    this._activeTarget = null;
+    this._activeFrameRange = null;
+    this._activeFrameRate = null;
+    this._activeState = null;
     this._animationController.duration = Duration.zero;
     this._animationController.reset();
     this._animationVisual = null;
@@ -135,14 +146,14 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   ) async {
     imageDirectory ??= StorageHelper.parent(animationFile);
     if (this._loaded) {
-      if (this._working) {
-        await this._unloadWorkingSprite();
+      if (this._activated) {
+        await this._deactivate();
       }
       await this._unload();
     }
     await this._load(animationFile, imageDirectory);
     //TODO
-    await this._loadWorkingSprite(this._animation!.sprite.length);
+    await this._activate(true, this._animation!.sprite.length);
     return;
   }
 
@@ -186,10 +197,10 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     this._imageSource = null;
     this._imageFilter = null;
     this._spriteFilter = null;
-    this._workingSpriteIndex = null;
-    this._workingSpriteFrameRange = null;
-    this._workingSpriteFrameRate = null;
-    this._workingSpriteState = null;
+    this._activeTarget = null;
+    this._activeFrameRange = null;
+    this._activeFrameRate = null;
+    this._activeState = null;
     this._animationController = AnimationController(vsync: this);
     this._animationVisual = null;
     this._stageHorizontalScrollSontroller = ScrollController();
@@ -246,7 +257,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                 horizontal: max(0, (constraints.maxWidth - (this._animation?.size.$1 ?? 0)) / 2.0),
                                 vertical: max(0, (constraints.maxHeight - (this._animation?.size.$2 ?? 0)) / 2.0),
                               ),
-                              clipBehavior: Clip.none,
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
                               horizontalController: this._stageHorizontalScrollSontroller,
                               verticalController: this._stageVerticalScrollSontroller,
                               child: Container(
@@ -263,93 +274,220 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Container(
-                          alignment: AlignmentDirectional.centerStart,
-                          child: TextButton.icon(
-                            iconAlignment: IconAlignment.start,
-                            icon: const Icon(IconSymbols.speed),
-                            label: Text(
-                              this._workingSpriteFrameRate?.toStringAsFixed(1) ?? '0.0',
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.start,
-                            ),
-                            onPressed: () async {
-                            },
-                          ),
-                        ),
-                      ),
                       const SizedBox(width: 12),
-                      IconButton(
-                        isSelected: true,
-                        icon: const Icon(IconSymbols.arrow_back),
-                        onPressed: () async {
-                          // TODO
-                        },
-                      ),
-                      const SizedBox(width: 4),
-                      IconButton(
-                        isSelected: true,
-                        icon: Icon(!this._animationController.isAnimating ? IconSymbols.play_arrow : IconSymbols.pause, size: 36),
-                        onPressed: () async {
-                          if (this._animationController.isAnimating) {
-                            this._animationController.stop();
-                          }
-                          else {
-                            this._animationController.forward();
-                          }
-                          this.setState(() {});
-                        },
-                      ),
-                      const SizedBox(width: 4),
-                      IconButton(
-                        isSelected: true,
-                        icon: const Icon(IconSymbols.arrow_forward),
-                        onPressed: () async {
-                          // TODO
-                        },
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Container(
-                          alignment: AlignmentDirectional.centerEnd,
-                          child: TextButton.icon(
-                            iconAlignment: IconAlignment.end,
-                            icon: const Icon(IconSymbols.sell),
-                            label: Text(
-                              'attack',
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.end,
-                            ),
-                            onPressed: () async {
-                            },
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
                       Expanded(
                         child: LayoutBuilder(
                           builder: (context, constraints) => IntrinsicHeight(
                             child: OverflowBox(
                               maxWidth: constraints.maxWidth + 16,
                               child: Slider(
-                                value: 0.5,
-                                onChanged: (value) {
-                                },
+                                value: !this._activated ? 0.0 : this._animationController.value,
+                                onChanged: !this._activated
+                                  ? null
+                                  : (value) async {
+                                    await this._animationController.animateTo(value);
+                                  },
                               ),
                             ),
                           ),
                         ),
                       ),
+                      const SizedBox(width: 12),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: TextButton.icon(
+                          iconAlignment: IconAlignment.start,
+                          icon: const Icon(IconSymbols.speed),
+                          label: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  !this._activated ? '' : ConvertHelper.makeFloaterToString(this._activeFrameRate!, false),
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
+                            ],
+                          ),
+                          onPressed: !this._activated
+                            ? null
+                            : () async {
+                              await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
+                                title: 'Frame Rate',
+                                contentBuilder: (context, setState) => [
+                                  CustomTextField(
+                                    keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
+                                    inputFormatters: const [],
+                                    decoration: const InputDecoration(
+                                      contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                                      filled: false,
+                                      border: OutlineInputBorder(),
+                                      suffixIcon: CustomTextFieldSuffixRegion(
+                                        children: [
+                                        ],
+                                      ),
+                                    ),
+                                    value: ConvertHelper.makeFloaterToString(this._activeFrameRate!, false),
+                                    onChanged: (text) async {
+                                      var value = Floater.tryParse(text);
+                                      if (value != null && value.isFinite && value > 0.0) {
+                                        this._activeFrameRate = value;
+                                      }
+                                      setState(() {});
+                                    },
+                                  ),
+                                ],
+                                actionBuilder: null,
+                              ));
+                              this.setState(() {});
+                            },
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      IconButton(
+                        isSelected: true,
+                        icon: const Icon(IconSymbols.arrow_back),
+                        onPressed: !this._activated
+                          ? null
+                          : () async {
+                          },
+                      ),
+                      const SizedBox(width: 4),
+                      IconButton(
+                        isSelected: true,
+                        padding: EdgeInsets.all(0),
+                        iconSize: 32,
+                        icon: Icon(!this._animationController.isAnimating ? IconSymbols.play_arrow : IconSymbols.pause),
+                        onPressed: !this._activated
+                          ? null
+                          : () async {
+                            if (this._animationController.isAnimating) {
+                              this._animationController.stop();
+                            }
+                            else {
+                              this._animationController.forward();
+                            }
+                            this.setState(() {});
+                          },
+                      ),
+                      const SizedBox(width: 4),
+                      IconButton(
+                        isSelected: true,
+                        icon: const Icon(IconSymbols.arrow_forward),
+                        onPressed: !this._activated
+                          ? null
+                          : () async {
+                          },
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: TextButton.icon(
+                          iconAlignment: IconAlignment.end,
+                          icon: const Icon(IconSymbols.sell),
+                          label: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  !this._activated ? '' : 'all',
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.end,
+                                ),
+                              ),
+                            ],
+                          ),
+                          onPressed: !this._activated
+                            ? null
+                            : () async {
+                            },
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  const Divider(height: 0),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      const SizedBox(width: 16),
+                      Expanded(
+                        flex: 3,
+                        child: TextButton.icon(
+                          iconAlignment: IconAlignment.start,
+                          icon: const Icon(IconSymbols.photo_library),
+                          label: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  !this._loaded ? '' : '${this._animation!.image.length} - ${this._imageFilter!.where((value) => value).length}',
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
+                            ],
+                          ),
+                          onPressed: !this._activated
+                            ? null
+                            : () async {
+                            },
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        flex: 5,
+                        child: TextButton(
+                          child: Row(
+                            children: [
+                              const Icon(IconSymbols.arrow_back_ios_new),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  !this._loaded ? '' : 'main',
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              const Icon(IconSymbols.arrow_forward_ios),
+                            ],
+                          ),
+                          onPressed: !this._activated
+                            ? null
+                            : () async {
+                            },
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        flex: 3,
+                        child: TextButton.icon(
+                          iconAlignment: IconAlignment.end,
+                          icon: const Icon(IconSymbols.animation),
+                          label: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  !this._loaded ? '' : '${this._spriteFilter!.where((value) => value).length} - ${this._animation!.sprite.length}',
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.end,
+                                ),
+                              ),
+                            ],
+                          ),
+                          onPressed: !this._activated
+                            ? null
+                            : () async {
+                            },
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
                 ],
               ),
             ),
@@ -359,20 +497,18 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
       ),
       bottom: CustomBottomBarContent(
         primary: FloatingActionButton(
-          // TODO
           tooltip: 'Source',
           elevation: 0,
           focusElevation: 0,
           hoverElevation: 0,
           highlightElevation: 0,
           disabledElevation: 0,
-          child: const Icon(IconSymbols.open_in_new),
+          child: const Icon(IconSymbols.description),
           onPressed: () async {
             var animationFile = await StorageHelper.pickLoadFile(context, 'AnimationViewer.AnimationFile');
             if (animationFile != null) {
               await this._applyLoad(animationFile, null);
             }
-            // TODO
           },
         ),
         secondary: [

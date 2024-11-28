@@ -216,7 +216,7 @@ class CommandPanel extends StatelessWidget {
                       'Forward',
                       overflow: TextOverflow.ellipsis,
                     ),
-                    icon: const Icon(IconSymbols.send),
+                    icon: const Icon(IconSymbols.send, fill: 1),
                     onPressed: this.onForward,
                   ),
                 ],

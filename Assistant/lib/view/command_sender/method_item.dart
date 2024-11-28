@@ -6,9 +6,9 @@ import 'package:material_symbols_icons/get.dart';
 
 // ----------------
 
-class MethodItemItem extends StatelessWidget {
+class MethodItem extends StatelessWidget {
 
-  const MethodItemItem({
+  const MethodItem({
     super.key,
     required this.configuration,
     required this.onSelect,
@@ -99,7 +99,7 @@ class MethodGroupItem extends StatelessWidget {
         Visibility(
           visible: !this.collapse,
           child: Column(
-            children: this.configuration.item.mapIndexed((optionItemIndex, optionItem) => MethodItemItem(
+            children: this.configuration.item.mapIndexed((optionItemIndex, optionItem) => MethodItem(
               configuration: optionItem,
               onSelect: this.onSelect,
             )).toList(),
