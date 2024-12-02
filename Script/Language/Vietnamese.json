@@ -92,10 +92,10 @@
 	"分辨率应大于零": "Độ phân giải nên lớn hơn không",
 	"尺寸应大于零": "Kích thước nên lớn hơn không",
 	"比例应大于零": "Tỷ lệ nên lớn hơn không",
-	// Executor/Implement/js
-	"executor.implement:js.execute": "Thực hiện JS",
-	"executor.implement:js.execute:script_file": "Tệp kịch bản",
-	"executor.implement:js.execute:is_module": "Chạy dưới dạng module",
+	// Executor/Implement/script.js
+	"executor.implement:script.js.execute": "Thực hiện JS",
+	"executor.implement:script.js.execute:script_file": "Tệp kịch bản",
+	"executor.implement:script.js.execute:is_module": "Chạy dưới dạng module",
 	// Executor/Implement/data.hash
 	"executor.implement:data.hash.md5": "Mã hoá MD5",
 	"executor.implement:data.hash.md5:target_file": "Tệp đích",

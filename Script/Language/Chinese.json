@@ -92,10 +92,10 @@
 	"分辨率应大于零": "分辨率应大于零",
 	"尺寸应大于零": "尺寸应大于零",
 	"比例应大于零": "比例应大于零",
-	// Executor/Implement/js
-	"executor.implement:js.execute": "JS 执行",
-	"executor.implement:js.execute:script_file": "脚本文件",
-	"executor.implement:js.execute:is_module": "作为模块运行",
+	// Executor/Implement/script.js
+	"executor.implement:script.js.execute": "JS 执行",
+	"executor.implement:script.js.execute:script_file": "脚本文件",
+	"executor.implement:script.js.execute:is_module": "作为模块运行",
 	// Executor/Implement/data.hash
 	"executor.implement:data.hash.md5": "MD5 散列",
 	"executor.implement:data.hash.md5:target_file": "目标文件",

@@ -408,19 +408,17 @@ class _PathArgumentBar extends StatelessWidget {
                     tooltip: 'Pick',
                     position: PopupMenuPosition.under,
                     icon: const Icon(IconSymbols.open_in_new),
-                    itemBuilder: (context) => <PopupMenuEntry<String>>[
-                      ...[
-                        ('load_file', 'Load File'),
-                        ('load_directory', 'Load Directory'),
-                        ('save_file', 'Save File'),
-                      ].map((value) => PopupMenuItem(
-                        value: value.$1,
-                        child: Text(
-                          value.$2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      )),
-                    ],
+                    itemBuilder: (context) => [
+                      ('load_file', 'Load File'),
+                      ('load_directory', 'Load Directory'),
+                      ('save_file', 'Save File'),
+                    ].map((value) => PopupMenuItem(
+                      value: value.$1,
+                      child: Text(
+                        value.$2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    )).toList(),
                     onSelected: (value) async {
                       var target = switch (value) {
                         'load_file'      => await StorageHelper.pickLoadFile(context, 'CommandSender.Generic'),

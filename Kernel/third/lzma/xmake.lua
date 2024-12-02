@@ -1,6 +1,6 @@
 -- lzma
--- 24.08 ?
--- https://www.7-zip.org/sdk.html
+-- 24.09 e5431fa6f5505e385c6f9367260717e9c47dc2ee
+-- https://github.com/ip7z/7zip
 
 target('third.lzma', function()
 	set_group('source/third')

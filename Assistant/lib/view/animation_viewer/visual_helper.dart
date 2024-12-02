@@ -2,6 +2,7 @@ import '/common.dart';
 import '/utility/storage_helper.dart';
 import '/utility/json_helper.dart';
 import '/view/animation_viewer/model.dart' as model;
+import 'dart:ui';
 import 'dart:math';
 import 'dart:collection';
 import 'package:flutter/material.dart';
@@ -36,6 +37,26 @@ class VisualHelper {
     var indexD1 = result.indexOf('|');
     if (indexD1 != -1) {
       result = result.substring(0, indexD1);
+    }
+    return result;
+  }
+
+  static List<(String, Integer, Integer)> parseSpriteLabelRange(
+    model.Sprite sprite,
+  ) {
+    var result = <(String, Integer, Integer)>[];
+    var currentFrameLabel = <(String, Integer)>[];
+    for (var frameIndex = 0; frameIndex < sprite.frame.length; frameIndex++) {
+      var frame = sprite.frame[frameIndex];
+      if (frame.label != null) {
+        currentFrameLabel.add((frame.label!, frameIndex));
+      }
+      if (frame.stop) {
+        for (var item in currentFrameLabel) {
+          result.add((item.$1, item.$2, frameIndex - item.$2 + 1));
+        }
+        currentFrameLabel.clear();
+      }
     }
     return result;
   }
@@ -128,30 +149,31 @@ class VisualHelper {
   // ----------------
 
   static Widget visualizeImage(
-    AnimationController animationController,
-    model.Animation     animation,
-    List<ImageProvider> imageSource,
-    Integer             index,
+    AnimationController                            animationController,
+    model.Animation                                animation,
+    Map<String, (ImageProvider, Integer, Integer)> texture,
+    model.Image                                    image,
   ) {
-    var image = selectImage(animation, index);
+    var textureData = texture[image.name];
     return Transform(
       transform: _makeMatrix(image.transform),
-      child: Image(
-        image: imageSource[index],
-        width: image.size!.$1.toDouble(),
-        height: image.size!.$2.toDouble(), // TODO
-        fit: BoxFit.fill,
-      ),
+      child: textureData == null
+        ? null // TODO
+        : Image(
+          image: textureData.$1,
+          width: (image.size?.$1 ?? textureData.$2).toDouble(),
+          height: (image.size?.$2 ?? textureData.$3).toDouble(),
+          fit: BoxFit.fill,
+        ),
     );
   }
 
   static Widget visualizeSprite(
-    AnimationController animationController,
-    model.Animation     animation,
-    List<ImageProvider> imageSource,
-    Integer             index,
+    AnimationController                            animationController,
+    model.Animation                                animation,
+    Map<String, (ImageProvider, Integer, Integer)> texture,
+    model.Sprite                                   sprite,
   ) {
-    var sprite = selectSprite(animation, index);
     var layerList = SplayTreeMap<Integer, _VisualLayer>();
     var frameIndex = 0;
     for (var frame in sprite.frame) {
@@ -166,7 +188,9 @@ class VisualHelper {
         var subController = animationController.drive(IntTween(begin: 0, end: sprite.frame.length - 1));
         layer.view = AnimatedBuilder(
           animation: subController,
-          child: visualize(animationController, animation, imageSource, (action.sprite, action.resource)),
+          child: !action.sprite
+            ? visualizeImage(animationController, animation, texture, selectImage(animation, action.resource))
+            : visualizeSprite(animationController, animation, texture, selectSprite(animation, action.resource)),
           builder: (context, child) {
             var index = subController.value;
             var property = layer.property[index];
@@ -225,17 +249,6 @@ class VisualHelper {
     );
   }
 
-  static Widget visualize(
-    AnimationController animationController,
-    model.Animation     animation,
-    List<ImageProvider> imageSource,
-    (Boolean, Integer)  target,
-  ) {
-    return !target.$1
-      ? visualizeImage(animationController, animation, imageSource, target.$2)
-      : visualizeSprite(animationController, animation, imageSource, target.$2);
-  }
-
   // #endregion
 
   // #region load
@@ -246,21 +259,20 @@ class VisualHelper {
     return model.ModelHelper.parseDataFromJson(await JsonHelper.deserializeFile(file));
   }
 
-  static Future<List<ImageProvider>> loadImageSource(
+  static Future<Map<String, (ImageProvider, Integer, Integer)>> loadTexture(
     String          directory,
     model.Animation animation,
   ) async {
-    var list = <ImageProvider>[];
+    var result = <String, (ImageProvider, Integer, Integer)>{};
     for (var image in animation.image) {
       var file = '${directory}/${parseImageFileName(image.name)}.png';
-      var source = null as MemoryImage?;
       if (await StorageHelper.existFile(file)) {
-        source = MemoryImage(await StorageHelper.readFile(file));
+        var data = MemoryImage(await StorageHelper.readFile(file));
+        var descriptor = await ImageDescriptor.encoded(await ImmutableBuffer.fromUint8List(data.bytes));
+        result[image.name] = (data, descriptor.width, descriptor.height);
       }
-      // TODO
-      list.add(source!);
     }
-    return list;
+    return result;
   }
 
   // #endregion

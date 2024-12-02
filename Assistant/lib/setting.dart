@@ -195,10 +195,8 @@ class SettingProvider with ChangeNotifier {
       mImmediateSelect: true,
       mAutomaticPlay: true,
       mRepeatPlay: true,
-      mRemainFrameRate: true,
-      mShowSpriteBoundary: true,
-      mImageFilterRule: '',
-      mSpriteFilterRule: '',
+      mKeepSpeed: true,
+      mShowBoundary: true,
     ),
   );
 
@@ -271,10 +269,8 @@ class SettingProvider with ChangeNotifier {
         'immediate_select': data.mAnimationViewer.mImmediateSelect,
         'automatic_play': data.mAnimationViewer.mAutomaticPlay,
         'repeat_play': data.mAnimationViewer.mRepeatPlay,
-        'remain_frame_rate': data.mAnimationViewer.mRemainFrameRate,
-        'show_sprite_boundary': data.mAnimationViewer.mShowSpriteBoundary,
-        'image_filter_rule': data.mAnimationViewer.mImageFilterRule,
-        'sprite_filter_rule': data.mAnimationViewer.mSpriteFilterRule,
+        'keep_speed': data.mAnimationViewer.mKeepSpeed,
+        'show_boundary': data.mAnimationViewer.mShowBoundary,
       },
     };
   }
@@ -335,10 +331,8 @@ class SettingProvider with ChangeNotifier {
         mImmediateSelect: (jsonPart['immediate_select'] as Boolean),
         mAutomaticPlay: (jsonPart['automatic_play'] as Boolean),
         mRepeatPlay: (jsonPart['repeat_play'] as Boolean),
-        mRemainFrameRate: (jsonPart['remain_frame_rate'] as Boolean),
-        mShowSpriteBoundary: (jsonPart['show_sprite_boundary'] as Boolean),
-        mImageFilterRule: (jsonPart['image_filter_rule'] as String),
-        mSpriteFilterRule: (jsonPart['sprite_filter_rule'] as String),
+        mKeepSpeed: (jsonPart['keep_speed'] as Boolean),
+        mShowBoundary: (jsonPart['show_boundary'] as Boolean),
       )),
     );
   }

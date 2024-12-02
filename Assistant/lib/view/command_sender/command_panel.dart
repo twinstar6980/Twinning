@@ -96,7 +96,7 @@ class CommandPanel extends StatelessWidget {
                     margin: const EdgeInsets.fromLTRB(8, 8, 8, 8),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: theme.textTheme.labelLarge!.textBaseline!,
+                      textBaseline: theme.textTheme.labelLarge?.textBaseline,
                       children: [
                         Expanded(
                           child: Text(

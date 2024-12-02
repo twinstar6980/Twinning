@@ -112,7 +112,7 @@ class ModuleHelper {
     ),
     ModuleInformation(
       type: ModuleType.animation_viewer,
-      icon: IconSymbols.animation,
+      icon: IconSymbols.thread_unread,
       name: 'Animation Viewer',
       mainPage: (option) => animation_viewer.MainPage(
         key: GlobalKey(),

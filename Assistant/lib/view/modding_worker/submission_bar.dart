@@ -661,24 +661,22 @@ class _PathSubmissionBar extends StatelessWidget {
                     tooltip: 'Command',
                     position: PopupMenuPosition.under,
                     icon: const Icon(IconSymbols.adjust),
-                    itemBuilder: (context) => <PopupMenuEntry<String>>[
-                      ...[
-                        (':g', 'Generate'),
-                        (':m', 'Move'),
-                        (':d', 'Delete'),
-                        (':o', 'Overwrite'),
-                      ].map((value) => PopupMenuItem(
-                        value: value.$1,
-                        child: Text(
-                          value.$2,
-                          overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.labelLarge?.copyWith(
-                            fontFamily: '',
-                            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
-                          ),
+                    itemBuilder: (context) => [
+                      (':g', 'Generate'),
+                      (':m', 'Move'),
+                      (':d', 'Delete'),
+                      (':o', 'Overwrite'),
+                    ].map((value) => PopupMenuItem(
+                      value: value.$1,
+                      child: Text(
+                        value.$2,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontFamily: '',
+                          fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
                         ),
-                      )),
-                    ],
+                      ),
+                    )).toList(),
                     onSelected: (value) async {
                       this.value.value = PathExpression(value);
                       setState(() {});
@@ -689,23 +687,21 @@ class _PathSubmissionBar extends StatelessWidget {
                     tooltip: 'Pick',
                     position: PopupMenuPosition.under,
                     icon: const Icon(IconSymbols.open_in_new),
-                    itemBuilder: (context) => <PopupMenuEntry<String>>[
-                      ...[
-                        ('load_file', 'Load File'),
-                        ('load_directory', 'Load Directory'),
-                        ('save_file', 'Save File'),
-                      ].map((value) => PopupMenuItem(
-                        value: value.$1,
-                        child: Text(
-                          value.$2,
-                          overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.labelLarge?.copyWith(
-                            fontFamily: '',
-                            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
-                          ),
+                    itemBuilder: (context) => [
+                      ('load_file', 'Load File'),
+                      ('load_directory', 'Load Directory'),
+                      ('save_file', 'Save File'),
+                    ].map((value) => PopupMenuItem(
+                      value: value.$1,
+                      child: Text(
+                        value.$2,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontFamily: '',
+                          fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
                         ),
-                      )),
-                    ],
+                      ),
+                    )).toList(),
                     onSelected: (value) async {
                       var target = switch (value) {
                         'load_file'      => await StorageHelper.pickLoadFile(context, 'CommandSender.Generic'),

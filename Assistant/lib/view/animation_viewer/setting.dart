@@ -6,17 +6,13 @@ class Setting {
   Boolean mImmediateSelect;
   Boolean mAutomaticPlay;
   Boolean mRepeatPlay;
-  Boolean mRemainFrameRate;
-  Boolean mShowSpriteBoundary;
-  String  mImageFilterRule;
-  String  mSpriteFilterRule;
+  Boolean mKeepSpeed;
+  Boolean mShowBoundary;
   Setting({
     required this.mImmediateSelect,
     required this.mAutomaticPlay,
     required this.mRepeatPlay,
-    required this.mRemainFrameRate,
-    required this.mShowSpriteBoundary,
-    required this.mImageFilterRule,
-    required this.mSpriteFilterRule,
+    required this.mKeepSpeed,
+    required this.mShowBoundary,
   });
 }

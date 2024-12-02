@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = '116';
+	export const k_version = '117';
 
 	// ------------------------------------------------
 
@@ -254,7 +254,7 @@ namespace Twinning.Script {
 			`Support/Kairosoft/Game/ModifyProgram`,
 			`Executor/Generic`,
 			`Executor/Typical`,
-			`Executor/Implement/js`,
+			`Executor/Implement/script.js`,
 			`Executor/Implement/data.hash`,
 			`Executor/Implement/data.encoding`,
 			`Executor/Implement/data.encryption`,

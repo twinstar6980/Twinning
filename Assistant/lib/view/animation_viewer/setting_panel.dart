@@ -58,7 +58,7 @@ class SettingPanel extends StatelessWidget {
             ],
           ),
           CustomSettingItem(
-            icon: IconSymbols.line_end_arrow_notch,
+            icon: IconSymbols.autoplay,
             label: 'Automatic Play',
             content: [
               Text(
@@ -118,11 +118,11 @@ class SettingPanel extends StatelessWidget {
             ],
           ),
           CustomSettingItem(
-            icon: IconSymbols.keep,
-            label: 'Remain Frame Rate',
+            icon: IconSymbols.lock_reset,
+            label: 'Keep Speed',
             content: [
               Text(
-                !this.data.mRemainFrameRate ? 'Disabled' : 'Enabled',
+                !this.data.mKeepSpeed ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium,
               ),
@@ -132,9 +132,9 @@ class SettingPanel extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Switch(
-                  value: this.data.mRemainFrameRate,
+                  value: this.data.mKeepSpeed,
                   onChanged: (value) async {
-                    this.data.mRemainFrameRate = value;
+                    this.data.mKeepSpeed = value;
                     setStateForPanel(() {});
                     setState(() {});
                     this.onUpdate();
@@ -149,10 +149,10 @@ class SettingPanel extends StatelessWidget {
           ),
           CustomSettingItem(
             icon: IconSymbols.frame_source,
-            label: 'Show Sprite Boundary',
+            label: 'Show Boundary',
             content: [
               Text(
-                !this.data.mShowSpriteBoundary ? 'Disabled' : 'Enabled',
+                !this.data.mShowBoundary ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium,
               ),
@@ -162,9 +162,9 @@ class SettingPanel extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Switch(
-                  value: this.data.mShowSpriteBoundary,
+                  value: this.data.mShowBoundary,
                   onChanged: (value) async {
-                    this.data.mShowSpriteBoundary = value;
+                    this.data.mShowBoundary = value;
                     setStateForPanel(() {});
                     setState(() {});
                     this.onUpdate();
@@ -173,80 +173,6 @@ class SettingPanel extends StatelessWidget {
                 title: const Text(
                   'Enable',
                   overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          CustomSettingItem(
-            icon: IconSymbols.filter_alt,
-            label: 'Image Filter Rule',
-            content: [
-              Text(
-                this.data.mImageFilterRule.isEmpty ? 'Empty' : 'Defined',
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium,
-              ),
-            ],
-            onTap: null,
-            panelBuilder: (context, setStateForPanel) => [
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: CustomTextField(
-                  keyboardType: TextInputType.text,
-                  inputFormatters: const [],
-                  decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                    filled: false,
-                    border: OutlineInputBorder(),
-                    suffixIcon: CustomTextFieldSuffixRegion(
-                      children: [
-                      ],
-                    ),
-                  ),
-                  value: this.data.mImageFilterRule,
-                  onChanged: (value) async {
-                    this.data.mImageFilterRule = value;
-                    setStateForPanel(() {});
-                    setState(() {});
-                    this.onUpdate();
-                  },
-                ),
-              ),
-            ],
-          ),
-          CustomSettingItem(
-            icon: IconSymbols.filter_alt,
-            label: 'Sprite Filter Rule',
-            content: [
-              Text(
-                this.data.mSpriteFilterRule.isEmpty ? 'Empty' : 'Defined',
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium,
-              ),
-            ],
-            onTap: null,
-            panelBuilder: (context, setStateForPanel) => [
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: CustomTextField(
-                  keyboardType: TextInputType.text,
-                  inputFormatters: const [],
-                  decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                    filled: false,
-                    border: OutlineInputBorder(),
-                    suffixIcon: CustomTextFieldSuffixRegion(
-                      children: [
-                      ],
-                    ),
-                  ),
-                  value: this.data.mSpriteFilterRule,
-                  onChanged: (value) async {
-                    this.data.mSpriteFilterRule = value;
-                    setStateForPanel(() {});
-                    setState(() {});
-                    this.onUpdate();
-                  },
                 ),
               ),
             ],

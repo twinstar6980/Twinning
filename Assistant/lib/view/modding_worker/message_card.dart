@@ -31,11 +31,12 @@ class MessageCard extends StatelessWidget {
     var titleStyle = theme.textTheme.titleSmall?.copyWith(
       fontFamily: '',
       fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+      color: theme.colorScheme.onSurface,
     );
     var descriptionStyle = theme.textTheme.bodySmall?.copyWith(
       fontFamily: '',
       fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
-      color: theme.colorScheme.secondary,
+      color: theme.colorScheme.onSurfaceVariant,
     );
     return Card(
       margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
