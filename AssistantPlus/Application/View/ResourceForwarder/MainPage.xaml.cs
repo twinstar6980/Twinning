@@ -299,7 +299,7 @@ namespace AssistantPlus.View.ResourceForwarder {
 		) {
 			var senders = sender.As<Page>();
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
-				args.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Link;
+				args.AcceptedOperation = DataPackageOperation.Link;
 			}
 			return;
 		}

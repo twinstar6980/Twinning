@@ -30,7 +30,7 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		public TimeSpan BasicTimeOffset {
 			get {
-				return TimeSpan.FromSeconds(GameAnimationHelper.BasicOffset / this.Speed);
+				return TimeSpan.FromSeconds(GameAnimationHelper.BasicOffset / this.FrameSpeed);
 			}
 		}
 
@@ -70,7 +70,7 @@ namespace AssistantPlus.View.AnimationViewer {
 		) {
 			GF.AssertTest(this.Loaded);
 			this.State = StateType.Idle;
-			if (this.Repeat) {
+			if (this.RepeatPlay) {
 				this.State = StateType.Playing;
 			}
 			return;
@@ -91,15 +91,14 @@ namespace AssistantPlus.View.AnimationViewer {
 		// ----------------
 
 		public void Load (
-			GameAnimationModel.Animation animation,
-			List<BitmapSource?>          imageSource,
-			List<Boolean>                imageFilter,
-			List<Boolean>                spriteFilter,
-			Size                         workingSpriteIndex
+			GameAnimationModel.Animation     animation,
+			Dictionary<String, BitmapSource> texture,
+			List<Boolean>                    imageFilter,
+			List<Boolean>                    spriteFilter,
+			GameAnimationModel.Sprite        activeSprite
 		) {
 			GF.AssertTest(!this.Loaded);
-			var workingSprite = GameAnimationHelper.SelectSprite(animation, workingSpriteIndex);
-			var visual = GameAnimationHelper.VisualizeSprite(animation, imageSource, workingSpriteIndex, imageFilter, spriteFilter);
+			var visual = GameAnimationHelper.VisualizeSprite(animation, texture, activeSprite, imageFilter, spriteFilter);
 			this.Width = animation.Size.Item1;
 			this.Height = animation.Size.Item2;
 			this.Padding = new (animation.Position.Item1, animation.Position.Item2, 0.0, 0.0);
@@ -109,11 +108,11 @@ namespace AssistantPlus.View.AnimationViewer {
 			this.Storyboard.Completed += this.Storyboard_Completed;
 			this.FrameRange = new () {
 				Start = 0,
-				Duration = workingSprite.Frame.Count,
+				Duration = activeSprite.Frame.Count,
 			};
 			this.HoldEnd = this.HoldEnd;
-			this.Repeat = this.Repeat;
-			this.Speed = this.Speed;
+			this.RepeatPlay = this.RepeatPlay;
+			this.FrameSpeed = this.FrameSpeed;
 			this.ShowBoundary = this.ShowBoundary;
 			this.Content = this.Canvas;
 			this.State = StateType.Idle;
@@ -197,7 +196,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			}
 			set {
 				GF.AssertTest(this.Loaded);
-				this.Storyboard.BeginTime = -TimeSpan.FromSeconds(value.Start) / this.Speed;
+				this.Storyboard.BeginTime = -TimeSpan.FromSeconds(value.Start) / this.FrameSpeed;
 				this.Storyboard.Duration = new (TimeSpan.FromSeconds(value.Start + value.Duration) - this.BasicTimeOffsetValue);
 				this.mFrameRange = value;
 				return;
@@ -215,21 +214,21 @@ namespace AssistantPlus.View.AnimationViewer {
 			set {
 				GF.AssertTest(this.Loaded);
 				GF.AssertTest(this.State != StateType.Idle);
-				this.Storyboard.Seek((-TimeSpan.FromSeconds(this.FrameRange.Start) + value) / this.Speed + this.BasicTimeOffset);
+				this.Storyboard.Seek((-TimeSpan.FromSeconds(this.FrameRange.Start) + value) / this.FrameSpeed + this.BasicTimeOffset);
 				return;
 			}
 		}
 
 		// ----------------
 
-		private Boolean mRepeat = false;
+		private Boolean mRepeatPlay = false;
 
-		public Boolean Repeat {
+		public Boolean RepeatPlay {
 			get {
-				return this.mRepeat;
+				return this.mRepeatPlay;
 			}
 			set {
-				this.mRepeat = value;
+				this.mRepeatPlay = value;
 				return;
 			}
 		}
@@ -253,11 +252,11 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		// ----------------
 
-		private Floater mSpeed = 1.0;
+		private Floater mFrameSpeed = 1.0;
 
-		public Floater Speed {
+		public Floater FrameSpeed {
 			get {
-				return this.mSpeed;
+				return this.mFrameSpeed;
 			}
 			set {
 				if (this.Loaded) {
@@ -271,7 +270,7 @@ namespace AssistantPlus.View.AnimationViewer {
 						this.Storyboard.Seek((-TimeSpan.FromSeconds(this.FrameRange.Start) + timeBeforeChange.AsNotNull()) / value + this.BasicTimeOffsetValue / value);
 					}
 				}
-				this.mSpeed = value;
+				this.mFrameSpeed = value;
 				return;
 			}
 		}

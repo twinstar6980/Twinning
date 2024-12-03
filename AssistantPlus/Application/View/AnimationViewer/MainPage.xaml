@@ -102,6 +102,22 @@
 									Text="{x:Bind uDescription_Text}"
 									/>
 							</my:Stack>
+							<ToggleButton
+								ToolTipService.ToolTip="Toggle"
+								HorizontalAlignment="Stretch"
+								VerticalAlignment="Center"
+								Padding="5,5,5,6"
+								IsChecked="{x:Bind uToggle_IsChecked}"
+								Click="{x:Bind uToggle_Click}"
+								>
+								<FontIcon
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Stretch"
+									Opacity="0.7"
+									FontSize="{StaticResource MediumIconSize}"
+									Glyph="{StaticResource FluentIconGlyph.Flow}"
+									/>
+							</ToggleButton>
 						</my:Stack>
 					</DataTemplate>
 				</ListView.ItemTemplate>
@@ -218,17 +234,17 @@
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
 								Width="262"
-								IsEnabled="{x:Bind Controller.uImageDirectory_IsEnabled}"
-								PlaceholderText="Image Directory"
+								IsEnabled="{x:Bind Controller.uTextureDirectory_IsEnabled}"
+								PlaceholderText="Texture Directory"
 								IsReadOnly="True"
-								Text="{x:Bind Controller.uImageDirectory_Text}"
+								Text="{x:Bind Controller.uTextureDirectory_Text}"
 								/>
 							<Button
 								ToolTipService.ToolTip="Pick"
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
-								IsEnabled="{x:Bind Controller.uImageDirectoryPick_IsEnabled}"
-								Click="{x:Bind Controller.uImageDirectoryPick_Click}"
+								IsEnabled="{x:Bind Controller.uTextureDirectoryPick_IsEnabled}"
+								Click="{x:Bind Controller.uTextureDirectoryPick_Click}"
 								Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.OpenLocal}}"
 								/>
 						</my:Stack>
@@ -478,8 +494,8 @@
 								VerticalAlignment="Center"
 								HorizontalContentAlignment="Left"
 								Width="130"
-								IsChecked="{x:Bind Controller.uShowSpriteBoundary_IsChecked}"
-								Click="{x:Bind Controller.uShowSpriteBoundary_Click}"
+								IsChecked="{x:Bind Controller.uShowBoundary_IsChecked}"
+								Click="{x:Bind Controller.uShowBoundary_Click}"
 								Content="Boundary"
 								/>
 						</my:Stack>
@@ -502,16 +518,16 @@
 					Spacing="0"
 					>
 					<Slider
-						x:Name="uWorkingSpriteFrameProgress"
+						x:Name="uActiveProgress"
 						x:FieldModifier="public"
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Center"
-						IsEnabled="{x:Bind Controller.uWorkingSpriteFrameProgress_IsEnabled}"
+						IsEnabled="{x:Bind Controller.uActiveProgress_IsEnabled}"
 						StepFrequency="1"
-						Minimum="{x:Bind Controller.uWorkingSpriteFrameProgress_Minimum}"
-						Maximum="{x:Bind Controller.uWorkingSpriteFrameProgress_Maximum}"
-						ValueChanged="{x:Bind Controller.uWorkingSpriteFrameProgress_ValueChanged}"
+						Minimum="{x:Bind Controller.uActiveProgress_Minimum}"
+						Maximum="{x:Bind Controller.uActiveProgress_Maximum}"
+						ValueChanged="{x:Bind Controller.uActiveProgress_ValueChanged}"
 						/>
 				</my:Stack>
 				<my:Stack
@@ -560,11 +576,11 @@
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RepeatAll}}"
 							/>
 						<ToggleButton
-							ToolTipService.ToolTip="Remain Frame Rate"
+							ToolTipService.ToolTip="Keep Speed"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
-							IsChecked="{x:Bind Controller.uRemainFrameRate_IsChecked}"
-							Click="{x:Bind Controller.uRemainFrameRate_Click}"
+							IsChecked="{x:Bind Controller.uKeepSpeed_IsChecked}"
+							Click="{x:Bind Controller.uKeepSpeed_Click}"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Pinned}}"
 							/>
 						<FontIcon
@@ -572,7 +588,7 @@
 							VerticalAlignment="Center"
 							Width="32"
 							Height="32"
-							Opacity="{x:Bind Controller.uWorkingSpriteFrameRateIcon_Opacity}"
+							Opacity="{x:Bind Controller.uActiveFrameSpeedIcon_Opacity}"
 							FontSize="{StaticResource MediumIconSize}"
 							Glyph="{StaticResource FluentIconGlyph.SpeedMedium}"
 							/>
@@ -580,13 +596,13 @@
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							Width="64"
-							IsEnabled="{x:Bind Controller.uWorkingSpriteFrameRate_IsEnabled}"
-							PlaceholderText="Rate"
-							NumberFormatter="{x:Bind Controller.uWorkingSpriteFrameRate_NumberFormatter}"
+							IsEnabled="{x:Bind Controller.uActiveFrameSpeed_IsEnabled}"
+							PlaceholderText="Speed"
+							NumberFormatter="{x:Bind Controller.uActiveFrameSpeed_NumberFormatter}"
 							Minimum="0.1"
-							Maximum="360.0"
-							Value="{x:Bind Controller.uWorkingSpriteFrameRate_Value}"
-							ValueChanged="{x:Bind Controller.uWorkingSpriteFrameRate_ValueChanged}"
+							Maximum="960.0"
+							Value="{x:Bind Controller.uActiveFrameSpeed_Value}"
+							ValueChanged="{x:Bind Controller.uActiveFrameSpeed_ValueChanged}"
 							/>
 					</my:Stack>
 					<my:Stack
@@ -600,8 +616,8 @@
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							Width="48"
-							IsEnabled="{x:Bind Controller.uWorkingSpritePrevious_IsEnabled}"
-							Click="{x:Bind Controller.uWorkingSpritePrevious_Click}"
+							IsEnabled="{x:Bind Controller.uActiveProgressPrevious_IsEnabled}"
+							Click="{x:Bind Controller.uActiveProgressPrevious_Click}"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.LeftArrowKeyTime0}}"
 							/>
 						<Button
@@ -609,14 +625,14 @@
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							Width="48"
-							IsEnabled="{x:Bind Controller.uWorkingSpriteState_IsEnabled}"
-							Click="{x:Bind Controller.uWorkingSpriteState_Click}"
+							IsEnabled="{x:Bind Controller.uActiveProgressState_IsEnabled}"
+							Click="{x:Bind Controller.uActiveProgressState_Click}"
 							>
 							<FontIcon
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Stretch"
 								FontSize="{StaticResource MediumIconSize}"
-								Glyph="{x:Bind Controller.uWorkingSpriteStateIcon_Glyph}"
+								Glyph="{x:Bind Controller.uActiveProgressStateIcon_Glyph}"
 								/>
 						</Button>
 						<Button
@@ -624,8 +640,8 @@
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							Width="48"
-							IsEnabled="{x:Bind Controller.uWorkingSpriteNext_IsEnabled}"
-							Click="{x:Bind Controller.uWorkingSpriteNext_Click}"
+							IsEnabled="{x:Bind Controller.uActiveProgressNext_IsEnabled}"
+							Click="{x:Bind Controller.uActiveProgressNext_Click}"
 							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RightArrowKeyTime0}}"
 							/>
 					</my:Stack>
@@ -641,7 +657,7 @@
 							VerticalAlignment="Center"
 							Width="32"
 							Height="32"
-							Opacity="{x:Bind Controller.uWorkingSpriteFrameRangeIcon_Opacity}"
+							Opacity="{x:Bind Controller.uActiveFrameRangeIcon_Opacity}"
 							FontSize="{StaticResource MediumIconSize}"
 							Glyph="{StaticResource FluentIconGlyph.ScrollMode}"
 							>
@@ -653,32 +669,32 @@
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							Width="64"
-							IsEnabled="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_IsEnabled}"
+							IsEnabled="{x:Bind Controller.uActiveFrameRangeBegin_IsEnabled}"
 							PlaceholderText="Begin"
-							NumberFormatter="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_NumberFormatter}"
-							Minimum="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_Minimum}"
-							Maximum="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_Maximum}"
-							Value="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_Value}"
-							ValueChanged="{x:Bind Controller.uWorkingSpriteFrameRangeBegin_ValueChanged}"
+							NumberFormatter="{x:Bind Controller.uActiveFrameRangeBegin_NumberFormatter}"
+							Minimum="{x:Bind Controller.uActiveFrameRangeBegin_Minimum}"
+							Maximum="{x:Bind Controller.uActiveFrameRangeBegin_Maximum}"
+							Value="{x:Bind Controller.uActiveFrameRangeBegin_Value}"
+							ValueChanged="{x:Bind Controller.uActiveFrameRangeBegin_ValueChanged}"
 							/>
 						<NumberBox
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							Width="64"
-							IsEnabled="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_IsEnabled}"
+							IsEnabled="{x:Bind Controller.uActiveFrameRangeEnd_IsEnabled}"
 							PlaceholderText="End"
-							NumberFormatter="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_NumberFormatter}"
-							Minimum="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_Minimum}"
-							Maximum="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_Maximum}"
-							Value="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_Value}"
-							ValueChanged="{x:Bind Controller.uWorkingSpriteFrameRangeEnd_ValueChanged}"
+							NumberFormatter="{x:Bind Controller.uActiveFrameRangeEnd_NumberFormatter}"
+							Minimum="{x:Bind Controller.uActiveFrameRangeEnd_Minimum}"
+							Maximum="{x:Bind Controller.uActiveFrameRangeEnd_Maximum}"
+							Value="{x:Bind Controller.uActiveFrameRangeEnd_Value}"
+							ValueChanged="{x:Bind Controller.uActiveFrameRangeEnd_ValueChanged}"
 							/>
 						<FontIcon
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							Width="32"
 							Height="32"
-							Opacity="{x:Bind Controller.uWorkingSpriteFrameRangeLabelIcon_Opacity}"
+							Opacity="{x:Bind Controller.uActiveFrameRangeLabelIcon_Opacity}"
 							FontSize="{StaticResource MediumIconSize}"
 							Glyph="{StaticResource FluentIconGlyph.Tag}"
 							/>
@@ -686,11 +702,11 @@
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							Width="130"
-							IsEnabled="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_IsEnabled}"
+							IsEnabled="{x:Bind Controller.uActiveFrameRangeLabel_IsEnabled}"
 							PlaceholderText="Label"
-							ItemsSource="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_ItemsSource}"
-							SelectedItem="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_SelectedItem}"
-							SelectionChanged="{x:Bind Controller.uWorkingSpriteFrameRangeLabel_SelectionChanged}"
+							ItemsSource="{x:Bind Controller.uActiveFrameRangeLabel_ItemsSource}"
+							SelectedItem="{x:Bind Controller.uActiveFrameRangeLabel_SelectedItem}"
+							SelectionChanged="{x:Bind Controller.uActiveFrameRangeLabel_SelectionChanged}"
 							/>
 					</my:Stack>
 				</my:Stack>

@@ -43,13 +43,13 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   late Boolean                                         _showBoundary;
   late String?                                         _animationFile;
   late String?                                         _textureDirectory;
-  late model.Animation?                                _animationData;
-  late Map<String, (ImageProvider, Integer, Integer)>? _textureData;
+  late model.Animation?                                _animation;
+  late Map<String, (ImageProvider, Integer, Integer)>? _texture;
   late List<Boolean>?                                  _imageFilter;
   late List<Boolean>?                                  _spriteFilter;
   late (Boolean, Integer)?                             _activeTarget;
   late model.Sprite?                                   _activeSprite;
-  late List<(String, Integer, Integer)>?               _activeLabel;
+  late List<(String, Integer, Integer)>?               _activeFrameLabel;
   late (Integer, Integer)?                             _activeFrameRange;
   late Floater?                                        _activeFrameSpeed;
   late StreamController                                _activeProgressStateStream;
@@ -60,7 +60,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   late ScrollController                                _stageHorizontalScrollSontroller;
   late ScrollController                                _stageVerticalScrollSontroller;
 
-  Boolean get _loaded => this._animationData != null;
+  Boolean get _loaded => this._animation != null;
 
   Boolean get _activated => this._activeTarget != null;
 
@@ -69,17 +69,17 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     String textureDirectory,
   ) async {
     assertTest(!this._loaded && !this._activated);
-    var animationData = await VisualHelper.loadAnimation(animationFile);
-    var textureData = await VisualHelper.loadTexture(textureDirectory, animationData);
+    var animation = await VisualHelper.loadAnimation(animationFile);
+    var texture = await VisualHelper.loadTexture(textureDirectory, animation);
     this._animationFile = animationFile;
     this._textureDirectory = textureDirectory;
-    this._animationData = animationData;
-    this._textureData = textureData;
-    this._imageFilter = List.filled(this._animationData!.image.length, true);
-    this._spriteFilter = List.filled(this._animationData!.sprite.length, true);
+    this._animation = animation;
+    this._texture = texture;
+    this._imageFilter = List.filled(this._animation!.image.length, true);
+    this._spriteFilter = List.filled(this._animation!.sprite.length, true);
     this.setState(() {});
     if (this._immediateSelect) {
-      await this._activate(true, this._animationData!.sprite.length, null);
+      await this._activate((true, this._animation!.sprite.length), null);
     }
     return;
   }
@@ -89,8 +89,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     assertTest(this._loaded && !this._activated);
     this._animationFile = null;
     this._textureDirectory = null;
-    this._animationData = null;
-    this._textureData = null;
+    this._animation = null;
+    this._texture = null;
     this._imageFilter = null;
     this._spriteFilter = null;
     this.setState(() {});
@@ -98,16 +98,15 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   }
 
   Future<Void> _activate(
-    Boolean  type,
-    Integer  index,
-    Floater? speed,
+    (Boolean, Integer) target,
+    Floater?           speed,
   ) async {
     assertTest(this._loaded && !this._activated);
-    this._activeTarget = (type, index);
-    if (!type) {
-      var target = VisualHelper.selectImage(this._animationData!, index);
+    this._activeTarget = target;
+    if (!target.$1) {
+      var originalTarget = VisualHelper.selectImage(this._animation!, target.$2);
       this._activeSprite = model.Sprite(
-        name: VisualHelper.parseImageFileName(target.name),
+        name: VisualHelper.parseImageFileName(originalTarget.name),
         frame_rate: null,
         work_area: (0, 0),
         frame: [
@@ -120,7 +119,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
               model.LayerAppend(
                 index: 0,
                 name: null,
-                resource: index,
+                resource: target.$2,
                 sprite: false,
                 additive: false,
                 preload_frame: 0,
@@ -141,13 +140,13 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
       );
     }
     else {
-      var target = VisualHelper.selectSprite(this._animationData!, index);
-      this._activeSprite = target;
+      var originalTarget = VisualHelper.selectSprite(this._animation!, target.$2);
+      this._activeSprite = originalTarget;
     }
-    this._activeLabel = VisualHelper.parseSpriteLabelRange(this._activeSprite!);
+    this._activeFrameLabel = VisualHelper.parseSpriteFrameLabel(this._activeSprite!);
     await this._changeFrameRange((0, this._activeSprite!.frame.length));
-    await this._changeFrameSpeed(speed ?? this._activeSprite!.frame_rate ?? this._animationData!.frame_rate.toDouble());
-    this._animationVisual = VisualHelper.visualizeSprite(this._animationController, this._animationData!, this._textureData!, this._activeSprite!);
+    await this._changeFrameSpeed(speed ?? this._activeSprite!.frame_rate ?? this._animation!.frame_rate.toDouble());
+    this._animationVisual = VisualHelper.visualizeSprite(this._animationController, this._animation!, this._texture!, this._activeSprite!);
     this.setState(() {});
     if (this._automaticPlay) {
       await this._changeFrameProgressState(true);
@@ -160,7 +159,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     assertTest(this._loaded && this._activated);
     this._activeTarget = null;
     this._activeSprite = null;
-    this._activeLabel = null;
+    this._activeFrameLabel = null;
     this._activeFrameRange = null;
     this._activeFrameSpeed = null;
     this._animationController.duration = Duration.zero;
@@ -302,13 +301,13 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     this._showBoundary = setting.data.mAnimationViewer.mShowBoundary;
     this._animationFile = null;
     this._textureDirectory = null;
-    this._animationData = null;
-    this._textureData = null;
+    this._animation = null;
+    this._texture = null;
     this._imageFilter = null;
     this._spriteFilter = null;
     this._activeTarget = null;
     this._activeSprite = null;
-    this._activeLabel = null;
+    this._activeFrameLabel = null;
     this._activeFrameRange = null;
     this._activeFrameSpeed = null;
     this._activeProgressStateStream = StreamController();
@@ -382,8 +381,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                           child: LayoutBuilder(
                             builder: (context, constraints) => SingleChildTwoDimensionalScrollView(
                               padding: EdgeInsets.symmetric(
-                                horizontal: max(0, (constraints.maxWidth - (this._animationData?.size.$1 ?? 0.0)) / 2.0),
-                                vertical: max(0, (constraints.maxHeight - (this._animationData?.size.$2 ?? 0.0)) / 2.0),
+                                horizontal: max(0, (constraints.maxWidth - (this._animation?.size.$1 ?? 0.0)) / 2.0),
+                                vertical: max(0, (constraints.maxHeight - (this._animation?.size.$2 ?? 0.0)) / 2.0),
                               ),
                               clipBehavior: Clip.antiAliasWithSaveLayer,
                               horizontalController: this._stageHorizontalScrollSontroller,
@@ -393,11 +392,11 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                 child: !this._loaded
                                   ? const SizedBox()
                                   : SizedBox.fromSize(
-                                    size: Size(this._animationData!.size.$1, this._animationData!.size.$2),
+                                    size: Size(this._animation!.size.$1, this._animation!.size.$2),
                                     child: UnconstrainedBox(
                                       child: SizedOverflowBox(
                                         alignment: AlignmentDirectional.topStart,
-                                        size: Size(this._animationData!.size.$1, this._animationData!.size.$2),
+                                        size: Size(this._animation!.size.$1, this._animation!.size.$2),
                                         child: this._animationVisual,
                                       ),
                                     ),
@@ -503,7 +502,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                               itemBuilder: (context) => [
                                                 (1, 'whole'),
                                                 null,
-                                                ...this._activeLabel!.map((value) => (value.$2 + 1, value.$1)),
+                                                ...this._activeFrameLabel!.map((value) => (value.$2 + 1, value.$1)),
                                               ].map((value) => value == null ? PopupMenuDivider().as<PopupMenuEntry<Object>>() : PopupMenuItem(
                                                 value: value.$1,
                                                 child: Row(
@@ -558,7 +557,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                               itemBuilder: (context) => [
                                                 (this._activeSprite!.frame.length, 'whole'),
                                                 null,
-                                                ...this._activeLabel!.map((value) => (value.$2 + value.$3, value.$1)),
+                                                ...this._activeFrameLabel!.map((value) => (value.$2 + value.$3, value.$1)),
                                               ].map((value) => value == null ? PopupMenuDivider().as<PopupMenuEntry<Object>>() : PopupMenuItem(
                                                 value: value.$1,
                                                 child: Row(
@@ -605,7 +604,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                       ),
                       const SizedBox(width: 12),
                       IconButton(
-                        tooltip: !this._activated ? '' : 'Backward',
+                        tooltip: !this._activated ? '' : 'Previous',
                         isSelected: true,
                         icon: const Icon(IconSymbols.arrow_back),
                         onPressed: !this._activated
@@ -630,7 +629,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                       ),
                       const SizedBox(width: 4),
                       IconButton(
-                        tooltip: !this._activated ? '' : 'Forward',
+                        tooltip: !this._activated ? '' : 'Next',
                         isSelected: true,
                         icon: const Icon(IconSymbols.arrow_forward),
                         onPressed: !this._activated
@@ -661,7 +660,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                               ? null
                               : () async {
                                 var currentValue = this._activeFrameSpeed!;
-                                var normalSpeed = this._activeSprite?.frame_rate ?? this._animationData!.frame_rate.toDouble();
+                                var normalSpeed = this._activeSprite?.frame_rate ?? this._animation!.frame_rate.toDouble();
                                 await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
                                   title: 'Frame Speed',
                                   contentBuilder: (context, setState) => [
@@ -746,7 +745,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                               children: [
                                 Expanded(
                                   child: Text(
-                                    !this._loaded ? '0 - 0' : '${this._animationData!.image.length} - ${this._imageFilter!.where((value) => value).length}',
+                                    !this._loaded ? '0 - 0' : '${this._animation!.image.length} - ${this._imageFilter!.where((value) => value).length}',
                                     overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.start,
                                   ),
@@ -760,7 +759,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                 await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
                                   title: 'Image',
                                   contentBuilder: (context, setState) => [
-                                    ...this._animationData!.image.mapIndexed((index, item) => Tooltip(
+                                    ...this._animation!.image.mapIndexed((index, item) => Tooltip(
                                       message: VisualHelper.parseImageFileName(item.name),
                                       child: ListTile(
                                         dense: true,
@@ -793,7 +792,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                           if (this._activated) {
                                             await this._deactivate();
                                           }
-                                          await this._activate(false, index, newFrameSpeed);
+                                          await this._activate((false, index), newFrameSpeed);
                                           Navigator.pop(context);
                                         },
                                       ),
@@ -839,7 +838,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                   await this._deactivate();
                                 }
                                 else {
-                                  await this._activate(true, this._animationData!.sprite.length, null);
+                                  await this._activate((true, this._animation!.sprite.length), null);
                                 }
                                 this.setState(() {});
                               },
@@ -858,7 +857,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                               children: [
                                 Expanded(
                                   child: Text(
-                                    !this._loaded ? '0 - 0' : '${this._spriteFilter!.where((value) => value).length} - ${this._animationData!.sprite.length}',
+                                    !this._loaded ? '0 - 0' : '${this._spriteFilter!.where((value) => value).length} - ${this._animation!.sprite.length}',
                                     overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.end,
                                   ),
@@ -872,7 +871,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                 await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
                                   title: 'Sprite',
                                   contentBuilder: (context, setState) => [
-                                    ...this._animationData!.sprite.mapIndexed((index, item) => Tooltip(
+                                    ...this._animation!.sprite.mapIndexed((index, item) => Tooltip(
                                       message: item.name ?? '',
                                       child: ListTile(
                                         dense: true,
@@ -905,7 +904,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                           if (this._activated) {
                                             await this._deactivate();
                                           }
-                                          await this._activate(true, index, newFrameSpeed);
+                                          await this._activate((true, index), newFrameSpeed);
                                           Navigator.pop(context);
                                         },
                                       ),

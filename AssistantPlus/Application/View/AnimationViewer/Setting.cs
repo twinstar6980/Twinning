@@ -9,13 +9,13 @@ namespace AssistantPlus.View.AnimationViewer {
 
 	[JsonObject(ItemRequired = Required.AllowNull)]
 	public record Setting {
-		public Boolean ImmediateSelect    = default!;
-		public Boolean AutomaticPlay      = default!;
-		public Boolean RepeatPlay         = default!;
-		public Boolean RemainFrameRate    = default!;
-		public Boolean ShowSpriteBoundary = default!;
-		public String  ImageFilterRule    = default!;
-		public String  SpriteFilterRule   = default!;
+		public Boolean ImmediateSelect  = default!;
+		public Boolean AutomaticPlay    = default!;
+		public Boolean RepeatPlay       = default!;
+		public Boolean KeepSpeed        = default!;
+		public Boolean ShowBoundary     = default!;
+		public String  ImageFilterRule  = default!;
+		public String  SpriteFilterRule = default!;
 	}
 
 }

@@ -41,7 +41,7 @@ class VisualHelper {
     return result;
   }
 
-  static List<(String, Integer, Integer)> parseSpriteLabelRange(
+  static List<(String, Integer, Integer)> parseSpriteFrameLabel(
     model.Sprite sprite,
   ) {
     var result = <(String, Integer, Integer)>[];

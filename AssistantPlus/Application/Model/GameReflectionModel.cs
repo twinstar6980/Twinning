@@ -35,7 +35,7 @@ namespace AssistantPlus {
 
 		[JsonObject(ItemRequired = Required.AllowNull)]
 		public record FixedValue {
-			public System.Object Value = default!;
+			public Object Value = default!;
 		}
 
 		[JsonObject(ItemRequired = Required.AllowNull)]

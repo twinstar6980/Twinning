@@ -40,8 +40,8 @@ namespace AssistantPlus.View.AnimationViewer {
 				ImmediateSelect = false,
 				AutomaticPlay = false,
 				RepeatPlay = false,
-				RemainFrameRate = false,
-				ShowSpriteBoundary = false,
+				KeepSpeed = false,
+				ShowBoundary = false,
 				ImageFilterRule = "",
 				SpriteFilterRule = "",
 			})
@@ -76,8 +76,8 @@ namespace AssistantPlus.View.AnimationViewer {
 				nameof(this.uImmediateSelectToggle_IsChecked),
 				nameof(this.uAutomaticPlayToggle_IsChecked),
 				nameof(this.uRepeatPlayToggle_IsChecked),
-				nameof(this.uRemainFrameRateToggle_IsChecked),
-				nameof(this.uShowSpriteBoundaryToggle_IsChecked),
+				nameof(this.uKeepSpeedToggle_IsChecked),
+				nameof(this.uShowBoundaryToggle_IsChecked),
 				nameof(this.uImageFilterRuleText_Text),
 				nameof(this.uSpriteFilterRuleText_Text)
 			);
@@ -143,39 +143,39 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		#endregion
 
-		#region remain frame rate
+		#region keep speed
 
-		public Boolean uRemainFrameRateToggle_IsChecked {
+		public Boolean uKeepSpeedToggle_IsChecked {
 			get {
-				return this.Data.RemainFrameRate;
+				return this.Data.KeepSpeed;
 			}
 		}
 
-		public async void uRemainFrameRateToggle_Click (
+		public async void uKeepSpeedToggle_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<ToggleButton>();
-			this.Data.RemainFrameRate = senders.IsChecked.AsNotNull();
+			this.Data.KeepSpeed = senders.IsChecked.AsNotNull();
 			return;
 		}
 
 		#endregion
 
-		#region show sprite boundary
+		#region show boundary
 
-		public Boolean uShowSpriteBoundaryToggle_IsChecked {
+		public Boolean uShowBoundaryToggle_IsChecked {
 			get {
-				return this.Data.ShowSpriteBoundary;
+				return this.Data.ShowBoundary;
 			}
 		}
 
-		public async void uShowSpriteBoundaryToggle_Click (
+		public async void uShowBoundaryToggle_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<ToggleButton>();
-			this.Data.ShowSpriteBoundary = senders.IsChecked.AsNotNull();
+			this.Data.ShowBoundary = senders.IsChecked.AsNotNull();
 			return;
 		}
 

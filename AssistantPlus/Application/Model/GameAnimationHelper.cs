@@ -41,6 +41,29 @@ namespace AssistantPlus {
 			return result;
 		}
 
+		public static List<Tuple<String, FrameRange>> ParseSpriteFrameLabel (
+			GameAnimationModel.Sprite sprite
+		) {
+			var result = new List<Tuple<String, FrameRange>>();
+			var currentFrameLabel = new List<Tuple<String, Size>>();
+			for (var frameIndex = 0; frameIndex < sprite.Frame.Count; frameIndex++) {
+				var frame = sprite.Frame[frameIndex];
+				if (frame.Label != null) {
+					currentFrameLabel.Add(new (frame.Label, frameIndex));
+				}
+				if (frame.Stop) {
+					foreach (var item in currentFrameLabel) {
+						result.Add(new (item.Item1, new () {
+							Start = item.Item2,
+							Duration = frameIndex - item.Item2 + 1,
+						}));
+					}
+					currentFrameLabel.Clear();
+				}
+			}
+			return result;
+		}
+
 		// ----------------
 
 		public static GameAnimationModel.Image SelectImage (
@@ -149,21 +172,20 @@ namespace AssistantPlus {
 		// ----------------
 
 		public static ImageVisual VisualizeImage (
-			GameAnimationModel.Animation animation,
-			List<BitmapSource?>          imageSource,
-			Size                         index
+			GameAnimationModel.Animation     animation,
+			Dictionary<String, BitmapSource> texture,
+			GameAnimationModel.Image         image
 		) {
-			var image = GameAnimationHelper.SelectImage(animation, index);
 			var visual = new ImageVisual() {
 				Canvas = new () { },
 			};
-			var imageSourceData = imageSource[index];
+			var textureData = texture.GetValueOrDefault(image.Name);
 			visual.Canvas = new () {
 				Children = {
 					new Image() {
-						Source = imageSourceData,
-						Width = image.Size?.Item1 ?? imageSourceData?.PixelWidth ?? 0,
-						Height = image.Size?.Item2 ?? imageSourceData?.PixelHeight ?? 0,
+						Source = textureData,
+						Width = image.Size?.Item1 ?? textureData?.PixelWidth ?? 0,
+						Height = image.Size?.Item2 ?? textureData?.PixelHeight ?? 0,
 						RenderTransform = new MatrixTransform() {
 							Matrix = GameAnimationHelper.MakeTransformMatrixFromVariant(image.Transform),
 						},
@@ -174,13 +196,12 @@ namespace AssistantPlus {
 		}
 
 		public static SpriteVisual VisualizeSprite (
-			GameAnimationModel.Animation animation,
-			List<BitmapSource?>          imageSource,
-			Size                         index,
-			List<Boolean>                imageFilter,
-			List<Boolean>                spriteFilter
+			GameAnimationModel.Animation     animation,
+			Dictionary<String, BitmapSource> texture,
+			GameAnimationModel.Sprite        sprite,
+			List<Boolean>                    imageFilter,
+			List<Boolean>                    spriteFilter
 		) {
-			var sprite = GameAnimationHelper.SelectSprite(animation, index);
 			var visual = new SpriteVisual() {
 				Canvas = new () { },
 				Storyboard = new () { },
@@ -216,11 +237,11 @@ namespace AssistantPlus {
 						IsFirst = default!,
 					};
 					if (!append.Sprite) {
-						var resourceVisual = GameAnimationHelper.VisualizeImage(animation, imageSource, (Size)append.Resource);
+						var resourceVisual = GameAnimationHelper.VisualizeImage(animation, texture, GameAnimationHelper.SelectImage(animation, (Size)append.Resource));
 						layer.Canvas = resourceVisual.Canvas;
 					}
 					else {
-						var resourceVisual = GameAnimationHelper.VisualizeSprite(animation, imageSource, (Size)append.Resource, imageFilter, spriteFilter);
+						var resourceVisual = GameAnimationHelper.VisualizeSprite(animation, texture, GameAnimationHelper.SelectSprite(animation, (Size)append.Resource), imageFilter, spriteFilter);
 						layer.Canvas = resourceVisual.Canvas;
 						visual.Storyboard.Children.Add(resourceVisual.Storyboard);
 					}
@@ -307,20 +328,19 @@ namespace AssistantPlus {
 			return await JsonHelper.DeserializeFile<GameAnimationModel.Animation>(file);
 		}
 
-		public static async Task<List<BitmapSource?>> LoadImageSource (
+		public static async Task<Dictionary<String, BitmapSource>> LoadTexture (
 			String                       directory,
 			GameAnimationModel.Animation animation
 		) {
-			var list = new List<BitmapSource?>(animation.Image.Count);
+			var result = new Dictionary<String, BitmapSource>(animation.Image.Count);
 			foreach (var image in animation.Image) {
 				var file = $"{directory}/{GameAnimationHelper.ParseImageFileName(image.Name)}.png";
-				var source = default(BitmapSource);
 				if (StorageHelper.ExistFile(file)) {
-					source = await ConvertHelper.ParseBitmapFromBinary(await StorageHelper.ReadFile(file));
+					var data = await ConvertHelper.ParseBitmapFromBinary(await StorageHelper.ReadFile(file));
+					result.Add(image.Name, data);
 				}
-				list.Add(source);
 			}
-			return list;
+			return result;
 		}
 
 		#endregion

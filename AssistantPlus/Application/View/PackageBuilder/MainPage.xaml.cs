@@ -1117,7 +1117,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		) {
 			var senders = sender.As<Page>();
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
-				args.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Link;
+				args.AcceptedOperation = DataPackageOperation.Link;
 			}
 			return;
 		}
@@ -1817,7 +1817,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			var senders = sender.As<Panel>();
 			GF.AssertTest(this.Host.IsLoaded);
 			if (args.DataView.Contains(MainPageController.DataViewFormatForGroup)) {
-				args.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
+				args.AcceptedOperation = DataPackageOperation.Move;
 			}
 			return;
 		}
@@ -2068,7 +2068,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			var senders = sender.As<Panel>();
 			GF.AssertTest(this.Host.IsLoaded);
 			if (args.DataView.Contains(MainPageController.DataViewFormatForResource)) {
-				args.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
+				args.AcceptedOperation = DataPackageOperation.Move;
 			}
 			return;
 		}

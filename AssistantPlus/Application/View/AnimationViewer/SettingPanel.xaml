@@ -97,7 +97,7 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.Pinned}"
-			Title="Remain Frame Rate"
+			Title="Keep Speed"
 			>
 			<my:SettingItem.Action>
 				<my:Stack
@@ -111,8 +111,8 @@
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
 						HorizontalContentAlignment="Left"
-						IsChecked="{x:Bind Controller.uRemainFrameRateToggle_IsChecked}"
-						Click="{x:Bind Controller.uRemainFrameRateToggle_Click}"
+						IsChecked="{x:Bind Controller.uKeepSpeedToggle_IsChecked}"
+						Click="{x:Bind Controller.uKeepSpeedToggle_Click}"
 						Content="Enable"
 						/>
 				</my:Stack>
@@ -122,7 +122,7 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.FitPage}"
-			Title="Show Sprite Boundary"
+			Title="Show Boundary"
 			>
 			<my:SettingItem.Action>
 				<my:Stack
@@ -136,8 +136,8 @@
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
 						HorizontalContentAlignment="Left"
-						IsChecked="{x:Bind Controller.uShowSpriteBoundaryToggle_IsChecked}"
-						Click="{x:Bind Controller.uShowSpriteBoundaryToggle_Click}"
+						IsChecked="{x:Bind Controller.uShowBoundaryToggle_IsChecked}"
+						Click="{x:Bind Controller.uShowBoundaryToggle_Click}"
 						Content="Enable"
 						/>
 				</my:Stack>

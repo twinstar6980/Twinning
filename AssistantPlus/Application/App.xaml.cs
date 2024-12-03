@@ -51,7 +51,7 @@ namespace AssistantPlus {
 		// ----------------
 
 		protected override async void OnLaunched (
-			Microsoft.UI.Xaml.LaunchActivatedEventArgs args
+			LaunchActivatedEventArgs args
 		) {
 			AppDomain.CurrentDomain.ProcessExit += this.OnProcessExit;
 			this.UnhandledException += this.OnUnhandledException;
