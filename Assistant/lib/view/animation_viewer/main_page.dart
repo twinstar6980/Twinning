@@ -234,7 +234,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   Integer _queryFrameProgressIndex(
   ) {
     assertTest(this._loaded && this._activated);
-    return max(1, (this._animationController.value * this._activeSprite!.frame.length).ceil());
+    return (this._animationController.value * this._activeSprite!.frame.length).floor();
   }
 
   Future<Void> _changeFrameProgressIndex(
@@ -245,7 +245,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     if (currentState) {
       this._animationController.stop();
     }
-    this._animationController.value = min(1.0 - 1.0e-9, index.toDouble() / this._activeSprite!.frame.length);
+    this._animationController.value = index.toDouble() / this._activeSprite!.frame.length;
     if (currentState) {
       this._animationController.forward();
     }
@@ -313,7 +313,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     this._activeProgressStateStream = StreamController();
     this._activeProgressIndexStream = StreamController();
     this._activeProgressChangingContinue = false;
-    this._animationController = AnimationController(vsync: this);
+    this._animationController = AnimationController(lowerBound: 0.0, upperBound: 1.0 - 1.0e-9, vsync: this);
     this._animationController.addListener(() async {
       this._activeProgressIndexStream.sink.add(null);
     });
@@ -371,7 +371,10 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 children: [
                   Expanded(
                     child: Container(
-                      color: theme.colorScheme.surfaceContainer,
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surfaceContainer,
+                      ),
                       child: Scrollbar(
                         interactive: true,
                         controller: this._stageHorizontalScrollSontroller,
@@ -384,7 +387,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                 horizontal: max(0, (constraints.maxWidth - (this._animation?.size.$1 ?? 0.0)) / 2.0),
                                 vertical: max(0, (constraints.maxHeight - (this._animation?.size.$2 ?? 0.0)) / 2.0),
                               ),
-                              clipBehavior: Clip.antiAliasWithSaveLayer,
                               horizontalController: this._stageHorizontalScrollSontroller,
                               verticalController: this._stageVerticalScrollSontroller,
                               child: Container(
@@ -421,15 +423,15 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                               child: StreamBuilder(
                                 stream: this._activeProgressIndexStream.stream,
                                 builder: (context, snapshot) => Tooltip(
-                                  message: !this._activated ? '' : '${this._queryFrameProgressIndex()}',
+                                  message: !this._activated ? '' : '${this._queryFrameProgressIndex() + 1}',
                                   child: Slider(
-                                    min: 1.0 - 1.0e-9,
-                                    max: !this._activated ? 1.0 : this._activeSprite!.frame.length.toDouble(),
-                                    value: !this._activated ? 1.0 : this._queryFrameProgressIndex().toDouble(),
+                                    min: 1.0,
+                                    max: !this._activated ? 1.0 : (this._activeSprite!.frame.length.toDouble() + 1.0e-9),
+                                    value: !this._activated ? 1.0 : (this._queryFrameProgressIndex() + 1).toDouble(),
                                     onChanged: !this._activated
                                       ? null
                                       : (value) async {
-                                        await this._changeFrameProgressIndex(value.round());
+                                        await this._changeFrameProgressIndex(value.round() - 1);
                                         this._activeProgressIndexStream.sink.add(null);
                                       },
                                     onChangeStart: !this._activated
@@ -610,7 +612,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                         onPressed: !this._activated
                           ? null
                           : () async {
-                            await this._changeFrameProgressIndex(max(0, this._queryFrameProgressIndex() - 1));
+                            await this._changeFrameProgressIndex(max(this._queryFrameProgressIndex() - 1, 0));
                           },
                       ),
                       const SizedBox(width: 4),
@@ -635,7 +637,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                         onPressed: !this._activated
                           ? null
                           : () async {
-                            await this._changeFrameProgressIndex(min(this._activeSprite!.frame.length, this._queryFrameProgressIndex() + 1));
+                            await this._changeFrameProgressIndex(min(this._queryFrameProgressIndex() + 1, this._activeSprite!.frame.length - 1));
                           },
                       ),
                       const SizedBox(width: 12),

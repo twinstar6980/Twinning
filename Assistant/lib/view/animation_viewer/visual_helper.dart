@@ -185,12 +185,12 @@ class VisualHelper {
       for (var action in frame.append) {
         assertTest(!layerList.containsKey(action.index));
         var layer = layerList[action.index] = _VisualLayer();
-        var subController = animationController.drive(IntTween(begin: 0, end: sprite.frame.length - 1));
+        var subView = !action.sprite
+          ? visualizeImage(animationController, animation, texture, selectImage(animation, action.resource))
+          : visualizeSprite(animationController, animation, texture, selectSprite(animation, action.resource));
+        var subController = animationController.drive(StepTween(begin: 0, end: sprite.frame.length));
         layer.view = AnimatedBuilder(
           animation: subController,
-          child: !action.sprite
-            ? visualizeImage(animationController, animation, texture, selectImage(animation, action.resource))
-            : visualizeSprite(animationController, animation, texture, selectSprite(animation, action.resource)),
           builder: (context, child) {
             var index = subController.value;
             var property = layer.property[index];
@@ -201,7 +201,7 @@ class VisualHelper {
               colorFilter: property.$2,
               child: Transform(
                 transform: property.$1,
-                child: child,
+                child: subView,
               ),
             );
           },

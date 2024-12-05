@@ -46,7 +46,7 @@ if ($TargetPlatform -eq "iphone.arm_64") {
 	if (Test-Path -Path $ModuleDistributionFile) {
 		Remove-Item -Force -Recurse -Path $ModuleDistributionFile
 	}
-	flutter "build" "ios" "--release" "--no-tree-shake-icons" "--no-codesign"
+	flutter "build" "ios" "--release" "--no-tree-shake-icons"
 	My-PackIpa -Name "Twinning Assistant" -Source "${ModuleDirectory}/build/ios/iphoneos/Runner.app" -Destination "${ModuleDistributionFile}"
 }
 Pop-Location

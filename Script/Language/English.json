@@ -78,7 +78,7 @@
 	"executor.generic:finish_succeeded": "Command execute succeeded",
 	"executor.generic:duration": "Time spent: {} s",
 	// Executor/Typical
-	"executor.typical:argument_skipped": "Argument skipped:{}",
+	"executor.typical:argument_skipped": "Argument skipped: {}",
 	"executor.typical:argument_given": "Argument got: {}",
 	"executor.typical:argument_automatic": "Argument generated: {}",
 	"executor.typical:argument_automatic_failed": "Argument can not generated: {}",
