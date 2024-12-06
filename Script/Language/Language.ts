@@ -13,9 +13,7 @@ namespace Twinning.Script.Language {
 	export function imbue(
 		source: StringMap,
 	): void {
-		for (let key in source) {
-			g_map[key] = source[key];
-		}
+		g_map = record_transform(source, (key, value) => ([key, value]));
 		return;
 	}
 

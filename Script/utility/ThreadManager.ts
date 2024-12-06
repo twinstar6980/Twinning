@@ -86,6 +86,8 @@ namespace Twinning.Script {
 					context: Kernel.Miscellaneous.g_context.spawn(),
 					result: [false, undefined],
 				};
+				this.m_pool[index].context.query_module_home().value = Kernel.Miscellaneous.g_context.query_module_home().value;
+				this.m_pool[index].context.query_byte_stream_use_big_endian().value = Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value;
 				if (initializer !== null) {
 					this.execute(index, this.make_executor(index, initializer));
 				}

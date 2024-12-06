@@ -615,7 +615,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                             await this._changeFrameProgressIndex(max(this._queryFrameProgressIndex() - 1, 0));
                           },
                       ),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: 8),
                       StreamBuilder(
                         stream: this._activeProgressStateStream.stream,
                         builder: (context, snapshot) => IconButton.filled(
@@ -629,7 +629,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                             },
                         ),
                       ),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: 8),
                       IconButton(
                         tooltip: !this._activated ? '' : 'Next',
                         isSelected: true,

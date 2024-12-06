@@ -33,28 +33,26 @@ class _Main {
     Object      exception,
     StackTrace? stack,
   ) {
-    ControlHelper.postTask(() async {
-      if (_setting.state.mApplicationNavigatorKey.currentContext != null) {
-        ControlHelper.showDialogAsModal<Void>(_setting.state.mApplicationNavigatorKey.currentContext!, CustomModalDialog(
-          title: 'Unhandled Exception',
-          contentBuilder: (context, setState) => [
-            Row(
-              children: [
-                Expanded(
-                  child: SelectionArea(
-                    child: Text(
-                      '${exception}\n${stack}',
-                      overflow: TextOverflow.clip,
-                    ),
+    if (_setting.state.mApplicationNavigatorKey.currentContext != null) {
+      ControlHelper.showDialogAsModal<Void>(_setting.state.mApplicationNavigatorKey.currentContext!, CustomModalDialog(
+        title: 'Unhandled Exception',
+        contentBuilder: (context, setState) => [
+          Row(
+            children: [
+              Expanded(
+                child: SelectionArea(
+                  child: Text(
+                    '${exception}\n${stack}',
+                    overflow: TextOverflow.clip,
                   ),
                 ),
-              ],
-            ),
-          ],
-          actionBuilder: null,
-        ));
-      }
-    });
+              ),
+            ],
+          ),
+        ],
+        actionBuilder: null,
+      ));
+    }
     return;
   }
 
@@ -166,7 +164,7 @@ class _Main {
       });
     }
     catch (e, s) {
-      _handleException(e, s);
+      ControlHelper.postTask(() { _handleException(e, s); });
     }
     runApp(Application(setting: _setting));
     return;

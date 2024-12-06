@@ -2,6 +2,24 @@ namespace Twinning.Script.Entry {
 
 	// ------------------------------------------------
 
+	let g_configuration: Configuration = undefined!;
+
+	let g_configuration_action: { [Key in keyof Configuration]: (value: Configuration[Key]) => void; } = undefined!;
+
+	function update_configuration(
+		configuration: Partial<Configuration>,
+	): void {
+		for (let key in configuration) {
+			assert_test(g_configuration.hasOwnProperty(key));
+			let value = (configuration as any)[key];
+			(g_configuration as any)[key] = value;
+			(g_configuration_action as any)[key](value);
+		}
+		return;
+	}
+
+	// ------------------------------------------------
+
 	export function simple_batch_execute(
 		parent: string,
 		filter: ['any' | 'file' | 'directory', null | RegExp],
@@ -39,13 +57,15 @@ namespace Twinning.Script.Entry {
 		executor_typical_method_disable_name_filter: boolean;
 		byte_stream_use_big_endian: boolean;
 		common_buffer_size: string;
-		json_format: {
-			disable_array_trailing_comma: boolean;
-			disable_array_line_breaking: boolean;
-			disable_object_trailing_comma: boolean;
-			disable_object_line_breaking: boolean;
-		};
-		external_program: Record<'sh' | 'adb' | 'vgmstream' | 'wwise' | 'il2cpp_dumper', null | string>;
+		json_format_disable_array_trailing_comma: boolean;
+		json_format_disable_array_line_breaking: boolean;
+		json_format_disable_object_trailing_comma: boolean;
+		json_format_disable_object_line_breaking: boolean;
+		external_program_path_sh: null | string;
+		external_program_path_adb: null | string;
+		external_program_path_vgmstream: null | string;
+		external_program_path_wwise: null | string;
+		external_program_path_il2cpp_dumper: null | string;
 		thread_limit: bigint;
 		command_notification_time_limit: null | bigint;
 	};
@@ -53,40 +73,80 @@ namespace Twinning.Script.Entry {
 	export function injector(
 		configuration: Configuration,
 	): void {
-		g_configuration = configuration;
-		// language
-		Language.imbue(KernelX.JSON.read_fs_js(Home.of(`~/script/Language/${configuration.language}.json`)) as unknown as Language.StringMap);
-		// console
-		Console.g_basic_disable_virtual_terminal_sequence = configuration.console_basic_disable_virtual_terminal_sequence;
-		// executor
-		Executor.g_typical_method_disable_name_filter = configuration.executor_typical_method_disable_name_filter;
-		// byte stream
-		Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value = configuration.byte_stream_use_big_endian;
-		// common buffer
-		KernelX.g_common_buffer.allocate(Kernel.Size.value(parse_size_string(configuration.common_buffer_size)));
-		// json format
-		KernelX.JSON.g_format.disable_array_trailing_comma = configuration.json_format.disable_array_trailing_comma;
-		KernelX.JSON.g_format.disable_array_line_breaking = configuration.json_format.disable_array_line_breaking;
-		KernelX.JSON.g_format.disable_object_trailing_comma = configuration.json_format.disable_object_trailing_comma;
-		KernelX.JSON.g_format.disable_object_line_breaking = configuration.json_format.disable_object_line_breaking;
-		// external program
-		AndroidHelper.g_sh_program_file = configuration.external_program.sh;
-		AndroidHelper.g_adb_program_file = configuration.external_program.adb;
-		Support.Wwise.Media.Decode.g_vgmstream_program_file = configuration.external_program.vgmstream;
-		Support.Wwise.Media.Encode.g_wwise_program_file = configuration.external_program.wwise;
-		Support.Kairosoft.Game.ModifyProgram.g_il2cpp_dumper_program_file = configuration.external_program.il2cpp_dumper;
+		g_configuration = {
+			language: undefined!,
+			console_basic_disable_virtual_terminal_sequence: undefined!,
+			executor_typical_method_disable_name_filter: undefined!,
+			byte_stream_use_big_endian: undefined!,
+			common_buffer_size: undefined!,
+			json_format_disable_array_trailing_comma: undefined!,
+			json_format_disable_array_line_breaking: undefined!,
+			json_format_disable_object_trailing_comma: undefined!,
+			json_format_disable_object_line_breaking: undefined!,
+			external_program_path_sh: undefined!,
+			external_program_path_adb: undefined!,
+			external_program_path_vgmstream: undefined!,
+			external_program_path_wwise: undefined!,
+			external_program_path_il2cpp_dumper: undefined!,
+			thread_limit: undefined!,
+			command_notification_time_limit: undefined!,
+		};
+		g_configuration_action = {
+			language: (value) => {
+				Language.imbue(KernelX.JSON.read_fs_js(Home.of(`~/script/Language/${value}.json`)) as unknown as Language.StringMap);
+			},
+			console_basic_disable_virtual_terminal_sequence: (value) => {
+				Console.g_basic_disable_virtual_terminal_sequence = value;
+			},
+			executor_typical_method_disable_name_filter: (value) => {
+				Executor.g_typical_method_disable_name_filter = value;
+			},
+			byte_stream_use_big_endian: (value) => {
+				Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value = value;
+			},
+			common_buffer_size: (value) => {
+				KernelX.g_common_buffer.allocate(Kernel.Size.value(parse_size_string(value)));
+			},
+			json_format_disable_array_trailing_comma: (value) => {
+				KernelX.JSON.g_format.disable_array_trailing_comma = value;
+			},
+			json_format_disable_array_line_breaking: (value) => {
+				KernelX.JSON.g_format.disable_array_line_breaking = value;
+			},
+			json_format_disable_object_trailing_comma: (value) => {
+				KernelX.JSON.g_format.disable_object_trailing_comma = value;
+			},
+			json_format_disable_object_line_breaking: (value) => {
+				KernelX.JSON.g_format.disable_object_line_breaking = value;
+			},
+			external_program_path_sh: (value) => {
+				AndroidHelper.g_sh_program_file = value;
+			},
+			external_program_path_adb: (value) => {
+				AndroidHelper.g_adb_program_file = value;
+			},
+			external_program_path_vgmstream: (value) => {
+				Support.Wwise.Media.Decode.g_vgmstream_program_file = value;
+			},
+			external_program_path_wwise: (value) => {
+				Support.Wwise.Media.Encode.g_wwise_program_file = value;
+			},
+			external_program_path_il2cpp_dumper: (value) => {
+				Support.Kairosoft.Game.ModifyProgram.g_il2cpp_dumper_program_file = value;
+			},
+			thread_limit: (value) => {
+				g_thread_manager.resize(Number(value));
+			},
+			command_notification_time_limit: (value) => {
+			},
+		};
+		update_configuration(configuration);
 		return;
 	}
-
-	// ------------------------------------------------
-
-	let g_configuration: Configuration = undefined!;
 
 	export function entry(
 		argument: Array<string>,
 	): string {
-		let configuration = g_configuration;
-		g_thread_manager.resize(Number(configuration.thread_limit));
 		let raw_command = [...argument];
 		if (raw_command.length === 0) {
 			Console.information(los('entry:input_command'), [
@@ -126,7 +186,7 @@ namespace Twinning.Script.Entry {
 					command_log += 's';
 				}
 				duration += state[1];
-				if (configuration.command_notification_time_limit !== null && configuration.command_notification_time_limit <= state[1]) {
+				if (g_configuration.command_notification_time_limit !== null && g_configuration.command_notification_time_limit <= state[1]) {
 					Console.push_system_notification(los('entry:current_command_finish'), los('entry:duration', (state[1] / 1000).toFixed(3)));
 				}
 			}
