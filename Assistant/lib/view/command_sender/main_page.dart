@@ -2,6 +2,7 @@ import '/common.dart';
 import '/setting.dart';
 import '/utility/wrapper.dart';
 import '/utility/command_line_reader.dart';
+import '/utility/command_line_writer.dart';
 import '/utility/json_helper.dart';
 import '/utility/control_helper.dart';
 import '/view/home/common.dart';
@@ -105,8 +106,8 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
       this._parallelForward = optionParallelForward;
     }
     if (optionCommand != null) {
-      for (var optionCommandItem in optionCommand) {
-        await this._appendCommand(optionCommandItem.$1, optionCommandItem.$2, optionCommandItem.$3, optionCommandItem.$4);
+      for (var item in optionCommand) {
+        await this._appendCommand(item.$1, item.$2, item.$3, item.$4);
       }
     }
     this.setState(() {});
@@ -115,7 +116,19 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
 
   @override
   modulePageCollectOption() async {
-    return [];
+    var option = CommandLineWriter();
+    if (option.check('-parallel_forward')) {
+      option.nextBoolean(this._parallelForward);
+    }
+    if (option.check('-command')) {
+      for (var item in this._command) {
+        option.nextString(item.$2.id);
+        option.nextBoolean(item.$3.value);
+        option.nextString(item.$4.selfLet((it) => JsonHelper.serializeText(ConfigurationHelper.makeArgumentValueListJson(item.$2.argument, it), indented: false)));
+        option.nextBoolean(item.$5.value);
+      }
+    }
+    return option.done();
   }
 
   @override

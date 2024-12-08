@@ -80,10 +80,10 @@ class LauncherConfigurationPanel extends StatelessWidget {
             onTap: null,
             panelBuilder: (context, setStateForPanel) => [
               ...ModuleType.values.map(
-                (type) => ListTile(
+                (item) => ListTile(
                   contentPadding: EdgeInsets.zero,
-                  leading: Radio<ModuleType>(
-                    value: type,
+                  leading: Radio(
+                    value: item,
                     groupValue: this.data.type,
                     onChanged: (value) async {
                       this.data.type = value!;
@@ -93,7 +93,7 @@ class LauncherConfigurationPanel extends StatelessWidget {
                     },
                   ),
                   title: Text(
-                    ModuleHelper.query(type).name,
+                    ModuleHelper.query(item).name,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),

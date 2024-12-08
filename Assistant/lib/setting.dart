@@ -5,32 +5,35 @@ import '/utility/json_helper.dart';
 import '/utility/font_helper.dart';
 import '/view/modding_worker/setting.dart' as modding_worker;
 import '/view/command_sender/setting.dart' as command_sender;
-import '/view/resource_forwarder/setting.dart' as resource_forwarder;
+import '/view/resource_shipper/setting.dart' as resource_shipper;
 import '/view/animation_viewer/setting.dart' as animation_viewer;
 import 'package:flutter/material.dart';
 
 // ----------------
 
 class SettingData {
-  String                     mVersion;
-  ThemeMode                  mThemeMode;
-  Boolean                    mThemeColorState;
-  Color                      mThemeColorLight;
-  Color                      mThemeColorDark;
-  Boolean                    mThemeFontState;
-  List<String>               mThemeFontPath;
-  Boolean                    mWindowPositionState;
-  Integer                    mWindowPositionX;
-  Integer                    mWindowPositionY;
-  Boolean                    mWindowSizeState;
-  Integer                    mWindowSizeWidth;
-  Integer                    mWindowSizeHeight;
-  String                     mStoragePickerFallbackDirectory;
-  ModuleLauncherSetting      mModuleLauncher;
-  modding_worker.Setting     mModdingWorker;
-  command_sender.Setting     mCommandSender;
-  resource_forwarder.Setting mResourceForwarder;
-  animation_viewer.Setting   mAnimationViewer;
+  String                   mVersion;
+  ThemeMode                mThemeMode;
+  Boolean                  mThemeColorState;
+  Color                    mThemeColorLight;
+  Color                    mThemeColorDark;
+  Boolean                  mThemeFontState;
+  List<String>             mThemeFontPath;
+  Boolean                  mWindowPositionState;
+  Integer                  mWindowPositionX;
+  Integer                  mWindowPositionY;
+  Boolean                  mWindowSizeState;
+  Integer                  mWindowSizeWidth;
+  Integer                  mWindowSizeHeight;
+  String                   mStoragePickerFallbackDirectory;
+  Map<String, String>      mStoragePickerHistoryDirectory;
+  ModuleType               mForwarderDefaultTarget;
+  Boolean                  mForwarderImmediateForward;
+  ModuleLauncherSetting    mModuleLauncher;
+  modding_worker.Setting   mModdingWorker;
+  command_sender.Setting   mCommandSender;
+  resource_shipper.Setting mResourceShipper;
+  animation_viewer.Setting mAnimationViewer;
   SettingData({
     required this.mVersion,
     required this.mThemeMode,
@@ -46,28 +49,37 @@ class SettingData {
     required this.mWindowSizeWidth,
     required this.mWindowSizeHeight,
     required this.mStoragePickerFallbackDirectory,
+    required this.mStoragePickerHistoryDirectory,
+    required this.mForwarderDefaultTarget,
+    required this.mForwarderImmediateForward,
     required this.mModuleLauncher,
     required this.mModdingWorker,
     required this.mCommandSender,
-    required this.mResourceForwarder,
+    required this.mResourceShipper,
     required this.mAnimationViewer,
   });
 }
 
 class SettingState {
-  Future<Void> Function(List<String>)?                mHandleCommand;
-  GlobalKey<NavigatorState>                           mApplicationNavigatorKey;
-  List<String>                                        mThemeFontFamliy;
-  Future<Void> Function()?                            mHomeShowCommanderPanel;
-  Future<Void> Function()?                            mHomeShowLauncherPanel;
-  Future<Void> Function(ModuleLauncherConfiguration)? mHomeInsertTabItem;
-  List<String>                                        mModdingWorkerMessageFontFamily;
+  Future<Void> Function(String, ModuleType, List<String>)? mHandleLaunch;
+  Future<Void> Function(List<String>)?                     mHandleForward;
+  Future<Void> Function(List<String>)?                     mHandleCommand;
+  GlobalKey<NavigatorState>                                mApplicationNavigatorKey;
+  List<String>                                             mThemeFontFamliy;
+  Future<Void> Function()?                                 mHomeShowLauncherPanel;
+  Future<Void> Function()?                                 mHomeShowForwarderPanel;
+  Future<Void> Function()?                                 mHomeShowCommanderPanel;
+  Future<Void> Function(ModuleLauncherConfiguration)?      mHomeInsertTabItem;
+  List<String>                                             mModdingWorkerMessageFontFamily;
   SettingState({
+    required this.mHandleLaunch,
+    required this.mHandleForward,
     required this.mHandleCommand,
     required this.mApplicationNavigatorKey,
     required this.mThemeFontFamliy,
-    required this.mHomeShowCommanderPanel,
     required this.mHomeShowLauncherPanel,
+    required this.mHomeShowForwarderPanel,
+    required this.mHomeShowCommanderPanel,
     required this.mHomeInsertTabItem,
     required this.mModdingWorkerMessageFontFamily,
   });
@@ -169,6 +181,9 @@ class SettingProvider with ChangeNotifier {
     mWindowSizeWidth: 0,
     mWindowSizeHeight: 0,
     mStoragePickerFallbackDirectory: '',
+    mStoragePickerHistoryDirectory: {},
+    mForwarderDefaultTarget: ModuleType.resource_shipper,
+    mForwarderImmediateForward: false,
     mModuleLauncher: ModuleLauncherSetting(
       module: ModuleType.values.map((e) => ModuleLauncherConfiguration(title: ModuleHelper.query(e).name, type: e, option: [])).toList(),
       pinned: [],
@@ -185,7 +200,7 @@ class SettingProvider with ChangeNotifier {
       mMethodConfiguration: '',
       mParallelForward: false,
     ),
-    mResourceForwarder: resource_forwarder.Setting(
+    mResourceShipper: resource_shipper.Setting(
       mOptionConfiguration: '',
       mParallelForward: false,
       mEnableFilter: true,
@@ -202,11 +217,14 @@ class SettingProvider with ChangeNotifier {
 
   static SettingState _createDefaultState(
   ) => SettingState(
+    mHandleLaunch: null,
+    mHandleForward: null,
     mHandleCommand: null,
     mApplicationNavigatorKey: GlobalKey<NavigatorState>(),
     mThemeFontFamliy: [],
-    mHomeShowCommanderPanel: null,
     mHomeShowLauncherPanel: null,
+    mHomeShowForwarderPanel: null,
+    mHomeShowCommanderPanel: null,
     mHomeInsertTabItem: null,
     mModdingWorkerMessageFontFamily: [],
   );
@@ -231,6 +249,9 @@ class SettingProvider with ChangeNotifier {
       'window_size_width': data.mWindowSizeWidth,
       'window_size_height': data.mWindowSizeHeight,
       'storage_picker_fallback_directory': data.mStoragePickerFallbackDirectory,
+      'storage_picker_history_directory': data.mStoragePickerHistoryDirectory,
+      'forwarder_default_target': data.mForwarderDefaultTarget.name,
+      'forwarder_immediate_forward': data.mForwarderImmediateForward,
       'module_launcher': {
         'module': data.mModuleLauncher.module.map((dataItem) => {
           'title': dataItem.title,
@@ -259,11 +280,11 @@ class SettingProvider with ChangeNotifier {
         'method_configuration': data.mCommandSender.mMethodConfiguration,
         'parallel_forward': data.mCommandSender.mParallelForward,
       },
-      'resource_forwarder': {
-        'option_configuration': data.mResourceForwarder.mOptionConfiguration,
-        'parallel_forward': data.mResourceForwarder.mParallelForward,
-        'enable_filter': data.mResourceForwarder.mEnableFilter,
-        'enable_batch': data.mResourceForwarder.mEnableBatch,
+      'resource_shipper': {
+        'option_configuration': data.mResourceShipper.mOptionConfiguration,
+        'parallel_forward': data.mResourceShipper.mParallelForward,
+        'enable_filter': data.mResourceShipper.mEnableFilter,
+        'enable_batch': data.mResourceShipper.mEnableBatch,
       },
       'animation_viewer': {
         'immediate_select': data.mAnimationViewer.mImmediateSelect,
@@ -293,6 +314,9 @@ class SettingProvider with ChangeNotifier {
       mWindowSizeWidth: (json['window_size_width'] as Integer),
       mWindowSizeHeight: (json['window_size_height'] as Integer),
       mStoragePickerFallbackDirectory: (json['storage_picker_fallback_directory'] as String),
+      mStoragePickerHistoryDirectory: (json['storage_picker_history_directory'] as Map<dynamic, dynamic>).cast<String, String>(),
+      mForwarderDefaultTarget: (json['forwarder_default_target'] as String).selfLet((it) => ModuleType.values.byName(it)),
+      mForwarderImmediateForward: (json['forwarder_immediate_forward'] as Boolean),
       mModuleLauncher: (json['module_launcher'] as Map<dynamic, dynamic>).selfLet((jsonPart) => ModuleLauncherSetting(
         module: (jsonPart['module'] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((jsonItem) => ModuleLauncherConfiguration(
           title: (jsonItem['title'] as String),
@@ -321,7 +345,7 @@ class SettingProvider with ChangeNotifier {
         mMethodConfiguration: (jsonPart['method_configuration'] as String),
         mParallelForward: (jsonPart['parallel_forward'] as Boolean),
       )),
-      mResourceForwarder: (json['resource_forwarder'] as Map<dynamic, dynamic>).selfLet((jsonPart) => resource_forwarder.Setting(
+      mResourceShipper: (json['resource_shipper'] as Map<dynamic, dynamic>).selfLet((jsonPart) => resource_shipper.Setting(
         mOptionConfiguration: (jsonPart['option_configuration'] as String),
         mParallelForward: (jsonPart['parallel_forward'] as Boolean),
         mEnableFilter: (jsonPart['enable_filter'] as Boolean),

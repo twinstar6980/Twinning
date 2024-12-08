@@ -1,11 +1,12 @@
 import '/common.dart';
 import '/setting.dart';
+import '/utility/storage_helper.dart';
 import '/view/modding_worker/main_page.dart' as modding_worker;
 import '/view/modding_worker/setting_panel.dart' as modding_worker;
 import '/view/command_sender/main_page.dart' as command_sender;
 import '/view/command_sender/setting_panel.dart' as command_sender;
-import '/view/resource_forwarder/main_page.dart' as resource_forwarder;
-import '/view/resource_forwarder/setting_panel.dart' as resource_forwarder;
+import '/view/resource_shipper/main_page.dart' as resource_shipper;
+import '/view/resource_shipper/setting_panel.dart' as resource_shipper;
 import '/view/animation_viewer/main_page.dart' as animation_viewer;
 import '/view/animation_viewer/setting_panel.dart' as animation_viewer;
 import 'package:collection/collection.dart';
@@ -17,22 +18,26 @@ import 'package:provider/provider.dart';
 enum ModuleType {
   modding_worker, // ignore: constant_identifier_names
   command_sender, // ignore: constant_identifier_names
-  resource_forwarder, // ignore: constant_identifier_names
+  resource_shipper, // ignore: constant_identifier_names
   animation_viewer, // ignore: constant_identifier_names
 }
 
 class ModuleInformation {
-  ModuleType                    type;
-  IconData                      icon;
-  String                        name;
-  Widget Function(List<String>) mainPage;
-  Widget Function(BuildContext) settingPanel;
+  ModuleType                              type;
+  IconData                                icon;
+  String                                  name;
+  Widget Function(List<String>)           mainPage;
+  Widget Function(BuildContext)           settingPanel;
+  Future<Boolean> Function(List<String>)? checkForwardState;
+  List<String> Function(List<String>)?    generateForwardOption;
   ModuleInformation({
     required this.type,
     required this.icon,
     required this.name,
     required this.mainPage,
     required this.settingPanel,
+    required this.checkForwardState,
+    required this.generateForwardOption,
   });
 }
 
@@ -83,6 +88,8 @@ class ModuleHelper {
         data: Provider.of<SettingProvider>(context, listen: false).data.mModdingWorker,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
+      checkForwardState: (item) async => true,
+      generateForwardOption: (item) => ['-additional_argument', ...item],
     ),
     ModuleInformation(
       type: ModuleType.command_sender,
@@ -96,19 +103,23 @@ class ModuleHelper {
         data: Provider.of<SettingProvider>(context, listen: false).data.mCommandSender,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
+      checkForwardState: null,
+      generateForwardOption: null,
     ),
     ModuleInformation(
-      type: ModuleType.resource_forwarder,
+      type: ModuleType.resource_shipper,
       icon: IconSymbols.share_windows,
-      name: 'Resource Forwarder',
-      mainPage: (option) => resource_forwarder.MainPage(
+      name: 'Resource Shipper',
+      mainPage: (option) => resource_shipper.MainPage(
         key: GlobalKey(),
         option: option,
       ),
-      settingPanel: (context) => resource_forwarder.SettingPanel(
-        data: Provider.of<SettingProvider>(context, listen: false).data.mResourceForwarder,
+      settingPanel: (context) => resource_shipper.SettingPanel(
+        data: Provider.of<SettingProvider>(context, listen: false).data.mResourceShipper,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
+      checkForwardState: (item) async => true,
+      generateForwardOption: (item) => ['-resource', ...item],
     ),
     ModuleInformation(
       type: ModuleType.animation_viewer,
@@ -122,6 +133,8 @@ class ModuleHelper {
         data: Provider.of<SettingProvider>(context, listen: false).data.mAnimationViewer,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
+      checkForwardState: (item) async => item.length == 1 && RegExp(r'(\.pam\.json)$', caseSensitive: false).hasMatch(item.first) && await StorageHelper.existFile(item.first),
+      generateForwardOption: (item) => ['-animation_file', item.first],
     ),
   ];
 
@@ -144,9 +157,9 @@ class ModuleHelper {
     ModuleLauncherConfiguration launcher,
   ) {
     return [
-      '-module_type',
+      '-launch',
+      launcher.title,
       launcher.type.name,
-      '-module_option',
       ...launcher.option,
     ];
   }

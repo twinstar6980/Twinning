@@ -52,6 +52,7 @@ class _MainPageState extends State<MainPage> {
   Future<Void> _removeTabItem(
     Integer index,
   ) async {
+    assertTest(0 <= index && index < this._tabList.length);
     var itemState = this._tabList[index].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>();
     if (!await itemState.modulePageRequestClose()) {
       return;
@@ -65,12 +66,110 @@ class _MainPageState extends State<MainPage> {
     return;
   }
 
+  Future<Void> _renameTabItem(
+    Integer index,
+    String  title,
+  ) async {
+    assertTest(0 <= index && index < this._tabList.length);
+    this._tabList[index] = (
+      title,
+      this._tabList[index].$2,
+      this._tabList[index].$3,
+    );
+    this.setState(() {});
+    return;
+  }
+
+  Future<Void> _keepTabItem(
+    Integer index,
+  ) async {
+    assertTest(0 <= index && index < this._tabList.length);
+    var itemState = this._tabList[index].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>();
+    var configuration = ModuleLauncherConfiguration(
+      title: this._tabList[index].$1,
+      type: this._tabList[index].$2,
+      option: await itemState.modulePageCollectOption(),
+    );
+    var setting = Provider.of<SettingProvider>(context, listen: false);
+    setting.data.mModuleLauncher.pinned.add(configuration);
+    await setting.save();
+    return;
+  }
+
+  Future<Void> _duplicateTabItem(
+    Integer index,
+  ) async {
+    assertTest(0 <= index && index < this._tabList.length);
+    var itemState = this._tabList[index].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>();
+    var configuration = ModuleLauncherConfiguration(
+      title: this._tabList[index].$1,
+      type: this._tabList[index].$2,
+      option: await itemState.modulePageCollectOption(),
+    );
+    await this._insertTabItem(configuration);
+    return;
+  }
+
   Future<Void> _toggleTabItem(
     Integer index,
   ) async {
     assertTest(0 <= index && index < this._tabList.length);
     this._tabIndex = index;
     this.setState(() {});
+    return;
+  }
+
+  Future<Void> _showLauncherPanel(
+  ) async {
+    await ControlHelper.showBottomSheetAsModal<Void>(this.context, CustomModalBottomSheet(
+      title: 'Launcher',
+      contentBuilder: (context, setState) => [
+        LauncherPanel(
+          onLaunch: (configuration) async {
+            Navigator.pop(context);
+            await this._insertTabItem(configuration);
+          },
+        ),
+      ],
+    ));
+    return;
+  }
+
+  Future<Void> _showForwarderPanel(
+  ) async {
+    var command = <String>[];
+    var canContinue = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
+      title: 'Forwarder',
+      contentBuilder: (context, setState) => [
+        CustomTextField(
+          keyboardType: TextInputType.multiline,
+          inputFormatters: const [],
+          decoration: const InputDecoration(
+            contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+            filled: false,
+            border: OutlineInputBorder(),
+          ),
+          value: ConvertHelper.makeStringListToStringWithLine(command),
+          onChanged: (value) async {
+            command = ConvertHelper.parseStringListFromStringWithLine(value);
+            setState(() {});
+          },
+        ),
+      ],
+      actionBuilder: (context) => [
+        TextButton(
+          child: const Text('Cancel'),
+          onPressed: () => Navigator.pop(context, false),
+        ),
+        TextButton(
+          child: const Text('Continue'),
+          onPressed: () => Navigator.pop(context, true),
+        ),
+      ],
+    )) ?? false;
+    if (canContinue) {
+      await Provider.of<SettingProvider>(context, listen: false).state.mHandleForward!(command);
+    }
     return;
   }
 
@@ -112,22 +211,6 @@ class _MainPageState extends State<MainPage> {
     return;
   }
 
-  Future<Void> _showLauncherPanel(
-  ) async {
-    await ControlHelper.showBottomSheetAsModal<Void>(this.context, CustomModalBottomSheet(
-      title: 'Launcher',
-      contentBuilder: (context, setState) => [
-        LauncherPanel(
-          onLaunch: (configuration) async {
-            Navigator.pop(context);
-            await this._insertTabItem(configuration);
-          },
-        ),
-      ],
-    ));
-    return;
-  }
-
   // ----------------
 
   @override
@@ -137,8 +220,9 @@ class _MainPageState extends State<MainPage> {
     this._tabIndex = -1;
     {
       var setting = Provider.of<SettingProvider>(this.context, listen: false);
-      setting.state.mHomeShowCommanderPanel = this._showCommanderPanel;
       setting.state.mHomeShowLauncherPanel = this._showLauncherPanel;
+      setting.state.mHomeShowForwarderPanel = this._showForwarderPanel;
+      setting.state.mHomeShowCommanderPanel = this._showCommanderPanel;
       setting.state.mHomeInsertTabItem = this._insertTabItem;
     }
     return;
@@ -193,16 +277,6 @@ class _MainPageState extends State<MainPage> {
           ),
           CustomNavigationDrawerItem(
             selected: false,
-            icon: IconSymbols.keyboard_command_key,
-            label: 'Commander',
-            action: const [],
-            onPressed: () async {
-              Navigator.pop(context);
-              await this._showCommanderPanel();
-            },
-          ),
-          CustomNavigationDrawerItem(
-            selected: false,
             icon: IconSymbols.widgets,
             label: 'Launcher',
             action: const [],
@@ -211,20 +285,108 @@ class _MainPageState extends State<MainPage> {
               await this._showLauncherPanel();
             },
           ),
+          CustomNavigationDrawerItem(
+            selected: false,
+            icon: IconSymbols.send_time_extension,
+            label: 'Forwarder',
+            action: const [],
+            onPressed: () async {
+              Navigator.pop(context);
+              await this._showForwarderPanel();
+            },
+          ),
+          CustomNavigationDrawerItem(
+            selected: false,
+            icon: IconSymbols.keyboard_command_key,
+            label: 'Commander',
+            action: const [],
+            onPressed: () async {
+              Navigator.pop(context);
+              await this._showCommanderPanel();
+            },
+          ),
           const CustomNavigationDrawerDivider(),
           if (this._tabList.isEmpty)
             const SizedBox(height: 16),
-          ...this._tabList.mapIndexed((index, value) => CustomNavigationDrawerItem(
-            key: ObjectKey(value), // NOTE : fix button ripple effect error when remove item
+          ...this._tabList.mapIndexed((index, item) => CustomNavigationDrawerItem(
+            key: ObjectKey(item), // NOTE : fix button ripple effect error when remove item
             selected: index == this._tabIndex,
-            icon: ModuleHelper.query(value.$2).icon,
-            label: value.$1,
+            icon: ModuleHelper.query(item.$2).icon,
+            label: item.$1,
             action: [
-              IconButton(
-                tooltip: 'Remove',
-                icon: const Icon(IconSymbols.remove),
-                onPressed: () async {
-                  await this._removeTabItem(index);
+              PopupMenuButton(
+                tooltip: 'Action',
+                position: PopupMenuPosition.under,
+                icon: const Icon(IconSymbols.more_vert),
+                itemBuilder: (context) => [
+                  ('remove', 'Remove', IconSymbols.remove),
+                  ('rename', 'Rename', IconSymbols.draw),
+                  ('keep', 'Keep', IconSymbols.pinboard),
+                  ('duplicate', 'Duplicate', IconSymbols.tab_duplicate),
+                ].map((value) => PopupMenuItem(
+                  value: value.$1,
+                  child: ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                    leading: Icon(value.$3),
+                    title: Text(
+                      value.$2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                )).toList(),
+                onSelected: (value) async {
+                  switch (value) {
+                    case 'remove':{
+                      await this._removeTabItem(index);
+                      break;
+                    }
+                    case 'rename':{
+                      var title = item.$1;
+                      var canContinue = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
+                        title: 'Tab Rename',
+                        contentBuilder: (context, setState) => [
+                          CustomTextField(
+                            keyboardType: TextInputType.multiline,
+                            inputFormatters: const [],
+                            decoration: const InputDecoration(
+                              contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                              filled: false,
+                              border: OutlineInputBorder(),
+                            ),
+                            value: title,
+                            onChanged: (value) async {
+                              title = value;
+                              setState(() {});
+                            },
+                          ),
+                        ],
+                        actionBuilder: (context) => [
+                          TextButton(
+                            child: const Text('Cancel'),
+                            onPressed: () => Navigator.pop(context, false),
+                          ),
+                          TextButton(
+                            child: const Text('Continue'),
+                            onPressed: () => Navigator.pop(context, true),
+                          ),
+                        ],
+                      )) ?? false;
+                      if (canContinue) {
+                        await this._renameTabItem(index, title);
+                      }
+                      break;
+                    }
+                    case 'keep':{
+                      await this._keepTabItem(index);
+                      break;
+                    }
+                    case 'duplicate':{
+                      await this._duplicateTabItem(index);
+                      break;
+                    }
+                    default: throw Exception();
+                  }
                 },
               ),
             ],

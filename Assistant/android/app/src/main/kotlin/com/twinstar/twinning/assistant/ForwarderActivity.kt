@@ -81,12 +81,9 @@ class ForwarderActivity : Activity() {
 		resource: List<Uri>,
 	): Unit {
 		val command = mutableListOf<String>()
-		command.add("-insert_tab")
-		command.add("Resource Forwarder")
-		command.add("resource_forwarder")
-		command.add("-resource")
+		command.add("-forward")
 		command.addAll(resource.map() { item -> item.toString() })
-		val link = Uri.parse("twinstar.twinning.assistant:/launch?${command.joinToString("&") { item -> "command=${this.encodePercentString(item)}" }}")
+		val link = Uri.parse("twinstar.twinning.assistant:/application?${command.joinToString("&") { item -> "command=${this.encodePercentString(item)}" }}")
 		this.openLink(link, resource)
 		return
 	}

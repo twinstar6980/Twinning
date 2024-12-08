@@ -1,0 +1,400 @@
+<Page
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:community="using:CommunityToolkit.WinUI"
+	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
+	xmlns:local="using:AssistantPlus"
+	xmlns:localViewResourceShipper="using:AssistantPlus.View.ResourceShipper"
+	xmlns:my="using:AssistantPlus.Control"
+	mc:Ignorable="d"
+	x:DefaultBindMode="OneWay"
+	x:Class="AssistantPlus.View.ResourceShipper.MainPage"
+	AllowDrop="True"
+	DragOver="{x:Bind Controller.uPage_DragOver}"
+	Drop="{x:Bind Controller.uPage_Drop}"
+	>
+	<my:Stack
+		HorizontalAlignment="Stretch"
+		VerticalAlignment="Stretch"
+		MinWidth="480"
+		Padding="4"
+		Orientation="Horizontal"
+		Spacing="4"
+		>
+		<my:Stack
+			x:Name="uOptionPanel"
+			x:FieldModifier="public"
+			my:Stack.Weight="1"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			MinWidth="472"
+			Padding="0,-4,0,0"
+			Orientation="Vertical"
+			Spacing="0"
+			>
+			<my:HeaderBar
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Icon="{StaticResource FluentIconGlyph.Bookmarks}"
+				Title="Option"
+				>
+				<my:HeaderBar.Action>
+					<my:Stack
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Orientation="Horizontal"
+						Spacing="8"
+						>
+						<Button
+							ToolTipService.ToolTip="Resource"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Center"
+							>
+							<my:Stack
+								HorizontalAlignment="Stretch"
+								VerticalAlignment="Stretch"
+								Orientation="Horizontal"
+								Spacing="8"
+								>
+								<TextBlock
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Center"
+									Style="{StaticResource BodyTextBlockStyle}"
+									TextWrapping="NoWrap"
+									Text="{x:Bind Controller.uResourceCount_Text}"
+									/>
+								<FontIcon
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Center"
+									FontSize="{StaticResource MediumIconSize}"
+									Glyph="{StaticResource FluentIconGlyph.Attach}"
+									/>
+							</my:Stack>
+							<Button.Flyout>
+								<Flyout Placement="Bottom" FlyoutPresenterStyle="{StaticResource CompactFlyoutPresenterStyle}">
+									<my:Stack
+										HorizontalAlignment="Stretch"
+										VerticalAlignment="Stretch"
+										Padding="-1,1"
+										Orientation="Vertical"
+										Spacing="4"
+										>
+										<my:Stack
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Stretch"
+											Padding="2,0"
+											Orientation="Vertical"
+											Spacing="4"
+											>
+											<Button
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Stretch"
+												HorizontalContentAlignment="Stretch"
+												BorderBrush="Transparent"
+												Background="Transparent"
+												Tag="RemoveAll"
+												Click="{x:Bind Controller.uResourceAction_Click}"
+												>
+												<my:Stack
+													HorizontalAlignment="Stretch"
+													VerticalAlignment="Stretch"
+													Orientation="Horizontal"
+													Spacing="12"
+													>
+													<FontIcon
+														HorizontalAlignment="Stretch"
+														VerticalAlignment="Center"
+														FontSize="{StaticResource SmallIconSize}"
+														Glyph="{StaticResource FluentIconGlyph.ErrorBadge}"
+														/>
+													<TextBlock
+														my:Stack.Weight="1"
+														HorizontalAlignment="Stretch"
+														VerticalAlignment="Center"
+														Style="{ThemeResource BodyTextBlockStyle}"
+														TextWrapping="NoWrap"
+														Text="Remove All"
+														/>
+												</my:Stack>
+											</Button>
+											<Button
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Stretch"
+												HorizontalContentAlignment="Stretch"
+												BorderBrush="Transparent"
+												Background="Transparent"
+												Tag="AppendNew"
+												Click="{x:Bind Controller.uResourceAction_Click}"
+												>
+												<my:Stack
+													HorizontalAlignment="Stretch"
+													VerticalAlignment="Stretch"
+													Orientation="Horizontal"
+													Spacing="12"
+													>
+													<FontIcon
+														HorizontalAlignment="Stretch"
+														VerticalAlignment="Center"
+														FontSize="{StaticResource SmallIconSize}"
+														Glyph="{StaticResource FluentIconGlyph.AddTo}"
+														/>
+													<TextBlock
+														my:Stack.Weight="1"
+														HorizontalAlignment="Stretch"
+														VerticalAlignment="Center"
+														Style="{ThemeResource BodyTextBlockStyle}"
+														TextWrapping="NoWrap"
+														Text="Append New"
+														/>
+												</my:Stack>
+											</Button>
+											<Button
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Stretch"
+												HorizontalContentAlignment="Stretch"
+												BorderBrush="Transparent"
+												Background="Transparent"
+												Tag="AppendFile"
+												Click="{x:Bind Controller.uResourceAction_Click}"
+												>
+												<my:Stack
+													HorizontalAlignment="Stretch"
+													VerticalAlignment="Stretch"
+													Orientation="Horizontal"
+													Spacing="12"
+													>
+													<FontIcon
+														HorizontalAlignment="Stretch"
+														VerticalAlignment="Center"
+														FontSize="{StaticResource SmallIconSize}"
+														Glyph="{StaticResource FluentIconGlyph.Document}"
+														/>
+													<TextBlock
+														my:Stack.Weight="1"
+														HorizontalAlignment="Stretch"
+														VerticalAlignment="Center"
+														Style="{ThemeResource BodyTextBlockStyle}"
+														TextWrapping="NoWrap"
+														Text="Append File"
+														/>
+												</my:Stack>
+											</Button>
+											<Button
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Stretch"
+												HorizontalContentAlignment="Stretch"
+												BorderBrush="Transparent"
+												Background="Transparent"
+												Tag="AppendDirectory"
+												Click="{x:Bind Controller.uResourceAction_Click}"
+												>
+												<my:Stack
+													HorizontalAlignment="Stretch"
+													VerticalAlignment="Stretch"
+													Orientation="Horizontal"
+													Spacing="12"
+													>
+													<FontIcon
+														HorizontalAlignment="Stretch"
+														VerticalAlignment="Center"
+														FontSize="{StaticResource SmallIconSize}"
+														Glyph="{StaticResource FluentIconGlyph.Folder}"
+														/>
+													<TextBlock
+														my:Stack.Weight="1"
+														HorizontalAlignment="Stretch"
+														VerticalAlignment="Center"
+														Style="{ThemeResource BodyTextBlockStyle}"
+														TextWrapping="NoWrap"
+														Text="Append Directory"
+														/>
+												</my:Stack>
+											</Button>
+										</my:Stack>
+										<my:Divider />
+										<ListView
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Stretch"
+											Margin="-2,-2"
+											SelectionMode="None"
+											IsItemClickEnabled="True"
+											ItemsSource="{x:Bind Controller.uResourceList_ItemsSource}"
+											ItemClick="{x:Bind Controller.uResourceList_ItemClick}"
+											>
+											<ListView.ItemTemplate>
+												<DataTemplate x:DataType="localViewResourceShipper:MainPageResourceItemController">
+													<my:Stack
+														ToolTipService.ToolTip="{x:Bind uRoot_ToolTip}"
+														HorizontalAlignment="Stretch"
+														VerticalAlignment="Stretch"
+														Padding="0,0,4,0"
+														Orientation="Horizontal"
+														Spacing="12"
+														>
+														<FontIcon
+															HorizontalAlignment="Stretch"
+															VerticalAlignment="Center"
+															FontSize="{StaticResource SmallIconSize}"
+															Glyph="{x:Bind uIcon_Glyph}"
+															/>
+														<TextBlock
+															my:Stack.Weight="1"
+															HorizontalAlignment="Stretch"
+															VerticalAlignment="Center"
+															Style="{StaticResource BodyTextBlockStyle}"
+															TextWrapping="NoWrap"
+															Text="{x:Bind uName_Text}"
+															/>
+													</my:Stack>
+												</DataTemplate>
+											</ListView.ItemTemplate>
+										</ListView>
+									</my:Stack>
+								</Flyout>
+							</Button.Flyout>
+						</Button>
+						<ToggleButton
+							ToolTipService.ToolTip="Enable Batch"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Center"
+							IsChecked="{x:Bind Controller.uEnableBatch_IsChecked}"
+							Click="{x:Bind Controller.uEnableBatch_Click}"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.MapLayers}}"
+							/>
+						<ToggleButton
+							ToolTipService.ToolTip="Enable Filter"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Center"
+							IsChecked="{x:Bind Controller.uEnableFilter_IsChecked}"
+							Click="{x:Bind Controller.uEnableFilter_Click}"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Filter}}"
+							/>
+						<ToggleButton
+							ToolTipService.ToolTip="Parallel Forward"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Center"
+							IsChecked="{x:Bind Controller.uParallelForward_IsChecked}"
+							Click="{x:Bind Controller.uParallelForward_Click}"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Shuffle}}"
+							/>
+					</my:Stack>
+				</my:HeaderBar.Action>
+			</my:HeaderBar>
+			<my:Divider />
+			<TreeView
+				my:Stack.Weight="1"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				SelectionMode="None"
+				CanDragItems="False"
+				CanReorderItems="False"
+				ItemsSource="{x:Bind Controller.uOptionList_ItemsSource}"
+				ItemInvoked="{x:Bind Controller.uOptionList_ItemInvoked}"
+				>
+				<TreeView.ItemTemplateSelector>
+					<localViewResourceShipper:MainPageOptionItemTemplateSelector>
+						<localViewResourceShipper:MainPageOptionItemTemplateSelector.GroupTemplate>
+							<DataTemplate x:DataType="localViewResourceShipper:MainPageOptionGroupItemController">
+								<TreeViewItem
+									Visibility="{x:Bind uRoot_Visibility}"
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Stretch"
+									HasUnrealizedChildren="True"
+									IsExpanded="True"
+									ItemsSource="{x:Bind uRoot_ItemsSource}"
+									>
+									<my:Stack
+										HorizontalAlignment="Stretch"
+										VerticalAlignment="Stretch"
+										Height="32"
+										Padding="0,0,12,0"
+										Orientation="Horizontal"
+										Spacing="12"
+										>
+										<FontIcon
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Center"
+											FontSize="{StaticResource SmallIconSize}"
+											Glyph="{x:Bind uIcon_Glyph}"
+											/>
+										<TextBlock
+											my:Stack.Weight="1"
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Center"
+											Style="{StaticResource BodyTextBlockStyle}"
+											TextWrapping="NoWrap"
+											Text="{x:Bind uName_Text}"
+											/>
+									</my:Stack>
+								</TreeViewItem>
+							</DataTemplate>
+						</localViewResourceShipper:MainPageOptionItemTemplateSelector.GroupTemplate>
+						<localViewResourceShipper:MainPageOptionItemTemplateSelector.ItemTemplate>
+							<DataTemplate x:DataType="localViewResourceShipper:MainPageOptionItemItemController">
+								<TreeViewItem
+									Visibility="{x:Bind uRoot_Visibility}"
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Stretch"
+									IsEnabled="{x:Bind uRoot_IsEnabled}"
+									>
+									<my:Stack
+										HorizontalAlignment="Stretch"
+										VerticalAlignment="Stretch"
+										Height="32"
+										Padding="0,0,12,0"
+										Orientation="Horizontal"
+										Spacing="12"
+										>
+										<FontIcon
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Center"
+											FontSize="{StaticResource SmallIconSize}"
+											Glyph="{x:Bind uIcon_Glyph}"
+											/>
+										<TextBlock
+											my:Stack.Weight="1"
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Center"
+											Style="{StaticResource BodyTextBlockStyle}"
+											TextWrapping="NoWrap"
+											Text="{x:Bind uName_Text}"
+											/>
+										<Button
+											ToolTipService.ToolTip="Preset"
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Center"
+											Flyout="{x:Bind uPreset_Flyout}"
+											>
+											<my:Stack
+												Orientation="Horizontal"
+												Spacing="8"
+												>
+												<TextBlock
+													HorizontalAlignment="Stretch"
+													VerticalAlignment="Center"
+													MinWidth="16"
+													Style="{StaticResource BodyTextBlockStyle}"
+													TextWrapping="NoWrap"
+													TextAlignment="Right"
+													Text="{x:Bind uPresetCount_Text}"
+													/>
+												<FontIcon
+													HorizontalAlignment="Stretch"
+													VerticalAlignment="Center"
+													FontSize="{StaticResource MediumIconSize}"
+													Glyph="{StaticResource FluentIconGlyph.LightningBolt}"
+													/>
+											</my:Stack>
+										</Button>
+									</my:Stack>
+								</TreeViewItem>
+							</DataTemplate>
+						</localViewResourceShipper:MainPageOptionItemTemplateSelector.ItemTemplate>
+					</localViewResourceShipper:MainPageOptionItemTemplateSelector>
+				</TreeView.ItemTemplateSelector>
+			</TreeView>
+		</my:Stack>
+	</my:Stack>
+</Page>

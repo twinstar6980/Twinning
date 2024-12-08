@@ -1,5 +1,6 @@
 import '/common.dart';
 import '/setting.dart';
+import '/module.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_helper.dart';
 import '/utility/permission_helper.dart';
@@ -80,10 +81,10 @@ class _SettingPanelState extends State<SettingPanel> {
           onTap: null,
           panelBuilder: (context, setStateForPanel) => [
             ...ThemeMode.values.map(
-              (mode) => ListTile(
+              (item) => ListTile(
                 contentPadding: EdgeInsets.zero,
-                leading: Radio<ThemeMode>(
-                  value: mode,
+                leading: Radio(
+                  value: item,
                   groupValue: setting.data.mThemeMode,
                   onChanged: (value) async {
                     setting.data.mThemeMode = value!;
@@ -93,7 +94,7 @@ class _SettingPanelState extends State<SettingPanel> {
                   },
                 ),
                 title: Text(
-                  ['System', 'Light', 'Dark'][mode.index],
+                  ['System', 'Light', 'Dark'][item.index],
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -460,6 +461,73 @@ class _SettingPanelState extends State<SettingPanel> {
                   this.setState(() {});
                   await setting.save();
                 },
+              ),
+            ),
+          ],
+        ),
+        const CustomSettingLabel(
+          label: 'Forwarder',
+          action: null,
+        ),
+        CustomSettingItem(
+          icon: IconSymbols.nearby,
+          label: 'Forwarder Default Target',
+          content: [
+            Text(
+              ModuleHelper.query(setting.data.mForwarderDefaultTarget).name,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.bodyMedium,
+            ),
+          ],
+          onTap: null,
+          panelBuilder: (context, setStateForPanel) => [
+            ...ModuleType.values.map(
+              (item) => ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Radio(
+                  value: item,
+                  groupValue: setting.data.mForwarderDefaultTarget,
+                  onChanged: (value) async {
+                    setting.data.mForwarderDefaultTarget = value!;
+                    setStateForPanel(() {});
+                    this.setState(() {});
+                    await setting.save();
+                  },
+                ),
+                title: Text(
+                  ModuleHelper.query(item).name,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+          ],
+        ),
+        CustomSettingItem(
+          icon: IconSymbols.next_plan,
+          label: 'Forwarder Immediate Forward',
+          content: [
+            Text(
+              !setting.data.mForwarderImmediateForward ? 'Disabled' : 'Enabled',
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.bodyMedium,
+            ),
+          ],
+          onTap: null,
+          panelBuilder: (context, setStateForPanel) => [
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Switch(
+                value: setting.data.mForwarderImmediateForward,
+                onChanged: (value) async {
+                  setting.data.mForwarderImmediateForward = value;
+                  setStateForPanel(() {});
+                  this.setState(() {});
+                  await setting.save();
+                },
+              ),
+              title: const Text(
+                'Enable',
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],

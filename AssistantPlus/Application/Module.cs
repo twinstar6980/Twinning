@@ -13,9 +13,9 @@ namespace AssistantPlus {
 	public enum ModuleType {
 		ModdingWorker,
 		CommandSender,
-		ResourceForwarder,
-		ReflectionDescriptor,
+		ResourceShipper,
 		AnimationViewer,
+		ReflectionDescriptor,
 		PackageBuilder,
 	}
 
@@ -78,18 +78,11 @@ namespace AssistantPlus {
 				SettingPanel = typeof(View.CommandSender.SettingPanel),
 			},
 			new () {
-				Type = ModuleType.ResourceForwarder,
+				Type = ModuleType.ResourceShipper,
 				Icon = FluentIconGlyph.Share,
-				Name = "Resource Forwarder",
-				MainPage = typeof(View.ResourceForwarder.MainPage),
-				SettingPanel = typeof(View.ResourceForwarder.SettingPanel),
-			},
-			new () {
-				Type = ModuleType.ReflectionDescriptor,
-				Icon = FluentIconGlyph.Library,
-				Name = "Reflection Descriptor",
-				MainPage = typeof(View.ReflectionDescriptor.MainPage),
-				SettingPanel = typeof(View.ReflectionDescriptor.SettingPanel),
+				Name = "Resource Shipper",
+				MainPage = typeof(View.ResourceShipper.MainPage),
+				SettingPanel = typeof(View.ResourceShipper.SettingPanel),
 			},
 			new () {
 				Type = ModuleType.AnimationViewer,
@@ -97,6 +90,13 @@ namespace AssistantPlus {
 				Name = "Animation Viewer",
 				MainPage = typeof(View.AnimationViewer.MainPage),
 				SettingPanel = typeof(View.AnimationViewer.SettingPanel),
+			},
+			new () {
+				Type = ModuleType.ReflectionDescriptor,
+				Icon = FluentIconGlyph.Library,
+				Name = "Reflection Descriptor",
+				MainPage = typeof(View.ReflectionDescriptor.MainPage),
+				SettingPanel = typeof(View.ReflectionDescriptor.SettingPanel),
 			},
 			new () {
 				Type = ModuleType.PackageBuilder,
@@ -126,9 +126,9 @@ namespace AssistantPlus {
 			ModuleLauncherConfiguration launcher
 		) {
 			return [
-				"Launch",
+				"Application",
 				..launcher.Command,
-				"-InsertTab",
+				"-Launch",
 				launcher.Title,
 				launcher.Type.ToString(),
 				..launcher.Option,

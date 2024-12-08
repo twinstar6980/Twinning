@@ -135,7 +135,7 @@ class ConfigurationHelper {
     List<ArgumentConfiguration> configuration,
     Map<String, Object>         json,
   ) {
-    var value = List<Wrapper<ValueExpression?>>.empty(growable: true);
+    var value = <Wrapper<ValueExpression?>>[];
     for (var index = 0; index < configuration.length; index++) {
       var itemConfiguration = configuration[index];
       var itemJson = json[itemConfiguration.id];

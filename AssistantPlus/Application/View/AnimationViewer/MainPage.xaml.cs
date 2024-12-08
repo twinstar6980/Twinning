@@ -174,7 +174,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			var optionActiveTarget = default(Tuple<Boolean, Integer>?);
 			var optionActiveFrameRange = default(Tuple<Integer, Integer>?);
 			var optionActiveFrameSpeed = default(Floater?);
-			var optionActiveState = default(Boolean?);
+			var optionActiveProgressState = default(Boolean?);
 			try {
 				var option = new CommandLineReader(optionView);
 				if (option.Check("-ImmediateSelect")) {
@@ -220,7 +220,7 @@ namespace AssistantPlus.View.AnimationViewer {
 					optionActiveFrameSpeed = option.NextFloater();
 				}
 				if (option.Check("-ActiveProgressState")) {
-					optionActiveState = option.NextBoolean();
+					optionActiveProgressState = option.NextBoolean();
 				}
 				if (!option.Done()) {
 					throw new ($"Too many option : '{String.Join(' ', option.NextStringList())}'.");
@@ -278,7 +278,7 @@ namespace AssistantPlus.View.AnimationViewer {
 					optionActiveTarget == null ? null : new (optionActiveTarget.Item1, (Size)optionActiveTarget.Item2),
 					optionActiveFrameRange == null ? null : new () { Start = (Size)optionActiveFrameRange.Item1, Duration = (Size)optionActiveFrameRange.Item2 },
 					optionActiveFrameSpeed,
-					optionActiveState
+					optionActiveProgressState
 				);
 			}
 			return;
@@ -308,24 +308,24 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (option.Check("-SpriteFilterRule")) {
 				option.NextString(this.SpriteFilterRule);
 			}
-			if (option.Check("-AnimationFile", this.AnimationFile != null)) {
+			if (option.Check("-AnimationFile", this.Loaded)) {
 				option.NextString(this.AnimationFile.AsNotNull());
 			}
-			if (option.Check("-TextureDirectory", this.TextureDirectory != null)) {
+			if (option.Check("-TextureDirectory", this.Loaded)) {
 				option.NextString(this.TextureDirectory.AsNotNull());
 			}
-			if (option.Check("-ActiveTarget", this.ActiveTarget != null)) {
+			if (option.Check("-ActiveTarget", this.Activated)) {
 				option.NextBoolean(this.ActiveTarget.AsNotNull().Item1);
 				option.NextInteger(this.ActiveTarget.AsNotNull().Item2);
 			}
-			if (option.Check("-ActiveFrameRange", this.ActiveFrameRange != null)) {
+			if (option.Check("-ActiveFrameRange", this.Activated)) {
 				option.NextInteger(this.ActiveFrameRange.AsNotNull().Start);
 				option.NextInteger(this.ActiveFrameRange.AsNotNull().Duration);
 			}
-			if (option.Check("-ActiveFrameSpeed", this.ActiveFrameSpeed != null)) {
+			if (option.Check("-ActiveFrameSpeed", this.Activated)) {
 				option.NextFloater(this.ActiveFrameSpeed.AsNotNull());
 			}
-			if (option.Check("-ActiveProgressState", this.ActiveProgressState != null)) {
+			if (option.Check("-ActiveProgressState", this.Activated)) {
 				option.NextBoolean(this.ActiveProgressState.AsNotNull());
 			}
 			return option.Done();
@@ -482,7 +482,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Tuple<Boolean, Size>            target,
 			GameAnimationHelper.FrameRange? frameRange,
 			Floater?                        frameSpeed,
-			Boolean?                        initialState,
+			Boolean?                        progressState,
 			TimeSpan?                       initialTime
 		) {
 			GF.AssertTest(this.Loaded && !this.Activated);
@@ -532,7 +532,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			this.ActiveFrameLabel = GameAnimationHelper.ParseSpriteFrameLabel(activeSprite);
 			this.ActiveFrameRange = frameRange ?? new () { Start = 0, Duration = activeSprite.Frame.Count };
 			this.ActiveFrameSpeed = frameSpeed ?? activeSprite.FrameRate ?? (Floater)this.Animation.FrameRate;
-			this.ActiveProgressState = initialState ?? this.AutomaticPlay;
+			this.ActiveProgressState = progressState ?? this.AutomaticPlay;
 			this.View.uSprite.Load(this.Animation, this.Texture, this.ImageFilter, this.SpriteFilter, activeSprite);
 			GF.AssertTest(this.View.uSprite.Loaded);
 			var sliderAnimation = new ObjectAnimationUsingKeyFrames();
@@ -677,7 +677,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			Tuple<Boolean, Size>?           target,
 			GameAnimationHelper.FrameRange? frameRange,
 			Floater?                        frameSpeed,
-			Boolean?                        initialState
+			Boolean?                        progressState
 		) {
 			textureDirectory ??= StorageHelper.Parent(animationFile).AsNotNull();
 			if (this.Loaded) {
@@ -690,7 +690,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (this.Loaded) {
 				await this.ApplyFilterRule();
 				if (this.ImmediateSelect && this.Animation.MainSprite != null) {
-					await this.Activate(target ?? new (true, this.Animation.Sprite.Count), frameRange, frameSpeed, initialState, null);
+					await this.Activate(target ?? new (true, this.Animation.Sprite.Count), frameRange, frameSpeed, progressState, null);
 				}
 				await App.Instance.AppendRecentLauncherItem(new () {
 					Title = Regex.Replace(StorageHelper.Name(animationFile), @"(\.pam\.json)$", "", RegexOptions.IgnoreCase),

@@ -179,8 +179,7 @@ class CommandPanel extends StatelessWidget {
                                     preset.name,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                )
-                              ),
+                                )),
                             ],
                             onSelected: (value) async {
                               for (var argument in value.argument.entries) {

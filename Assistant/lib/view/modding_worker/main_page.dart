@@ -6,6 +6,7 @@ import '/utility/control_helper.dart';
 import '/utility/storage_helper.dart';
 import '/utility/notification_helper.dart';
 import '/utility/command_line_reader.dart';
+import '/utility/command_line_writer.dart';
 import '/bridge/library.dart' as bridge;
 import '/bridge/client.dart' as bridge;
 import '/bridge/launcher.dart' as bridge;
@@ -180,7 +181,11 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
 
   @override
   modulePageCollectOption() async {
-    return [];
+    var option = CommandLineWriter();
+    if (option.check('-additional_argument')) {
+      option.nextStringList(this._additionalArgument);
+    }
+    return option.done();
   }
 
   @override

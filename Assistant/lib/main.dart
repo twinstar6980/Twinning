@@ -6,9 +6,10 @@ import '/utility/command_line_reader.dart';
 import '/utility/control_helper.dart';
 import '/utility/notification_helper.dart';
 import '/utility/storage_helper.dart';
-import 'package:assistant/view/home/common.dart';
+import '/view/home/common.dart';
 import 'dart:io';
 import 'package:collection/collection.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:window_manager/window_manager.dart';
@@ -58,11 +59,75 @@ class _Main {
 
   // ----------------
 
+  static Future<Void> _handleLaunch(
+    String       title,
+    ModuleType   type,
+    List<String> option,
+  ) async {
+    await _setting.state.mHomeInsertTabItem!(ModuleLauncherConfiguration(
+      title: title,
+      type: type,
+      option: option,
+    ));
+    return;
+  }
+
+  static Future<Void> _handleForward(
+    List<String> item,
+  ) async {
+    var setting = Provider.of<SettingProvider>(_setting.state.mApplicationNavigatorKey.currentContext!, listen: false);
+    var forwardState = await ModuleType.values.map((value) async => await ModuleHelper.query(value).checkForwardState?.call(item) ?? false).wait;
+    var targetType = forwardState[setting.data.mForwarderDefaultTarget.index] ? setting.data.mForwarderDefaultTarget : null;
+    var canContinue = setting.data.mForwarderImmediateForward ? true : await ControlHelper.showDialogAsModal<Boolean>(_setting.state.mApplicationNavigatorKey.currentContext!, CustomModalDialog(
+      title: 'Forward',
+      contentBuilder: (context, setState) => [
+        ...ModuleType.values.map(
+          (item) => ListTile(
+            contentPadding: EdgeInsets.zero,
+            enabled: forwardState[item.index],
+            leading: Radio(
+              value: item,
+              groupValue: targetType,
+              onChanged: !forwardState[item.index]
+                ? null
+                : (value) async {
+                  targetType = item;
+                  setState(() {});
+                },
+            ),
+            title: Text(
+              ModuleHelper.query(item).name,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ),
+      ],
+      actionBuilder: (context) => [
+        TextButton(
+          child: const Text('Cancel'),
+          onPressed: () => Navigator.pop(context, false),
+        ),
+        TextButton(
+          child: const Text('Continue'),
+          onPressed: () => Navigator.pop(context, true),
+        ),
+      ],
+    )) ?? false;
+    if (canContinue && targetType != null) {
+      await _setting.state.mHomeInsertTabItem!(ModuleLauncherConfiguration(
+        title: ModuleHelper.query(targetType!).name,
+        type: targetType!,
+        option: ModuleHelper.query(targetType!).generateForwardOption!(item),
+      ));
+    }
+    return;
+  }
+
   static Future<Void> _handleCommand(
     List<String> command,
   ) async {
     if (Platform.isAndroid) {
-      var convertedCommand = List<String>.empty(growable: true);
+      var convertedCommand = <String>[];
       for (var commandItem in command) {
         if (commandItem.startsWith('content://')) {
           commandItem = await StorageHelper.parseAndroidContentUri(_setting.state.mApplicationNavigatorKey.currentContext!, Uri.parse(commandItem), true) ?? commandItem;
@@ -71,22 +136,27 @@ class _Main {
       }
       command = convertedCommand;
     }
-    var optionInsertTab = null as (String, ModuleType, List<String>)?;
+    var optionLaunch = null as (String, ModuleType, List<String>)?;
+    var optionForward = null as (List<String>,)?;
     var option = CommandLineReader(command);
-    if (option.check('-insert_tab')) {
-      optionInsertTab = (
+    if (option.check('-launch')) {
+      optionLaunch = (
         option.nextString(),
         option.nextString().selfLet((it) => ModuleType.values.byName(it)),
         option.nextStringList(),
       );
     }
+    if (option.check('-forward')) {
+      optionForward = (
+        option.nextStringList(),
+      );
+    }
     assertTest(option.done());
-    if (optionInsertTab != null) {
-      await _setting.state.mHomeInsertTabItem!(ModuleLauncherConfiguration(
-        title: optionInsertTab.$1,
-        type: optionInsertTab.$2,
-        option: optionInsertTab.$3,
-      ));
+    if (optionLaunch != null) {
+      await _handleLaunch(optionLaunch.$1, optionLaunch.$2, optionLaunch.$3);
+    }
+    if (optionForward != null) {
+      await _handleForward(optionForward.$1);
     }
     return;
   }
@@ -94,7 +164,7 @@ class _Main {
   static Future<Void> _handleLink(
     Uri link,
   ) async {
-    if (link.scheme != 'twinstar.twinning.assistant' || link.hasAuthority || link.path != '/launch') {
+    if (link.scheme != 'twinstar.twinning.assistant' || link.hasAuthority || link.path != '/application') {
       throw Exception('invalid link');
     }
     var command = link.queryParametersAll['command'] ?? [];
@@ -125,6 +195,8 @@ class _Main {
         await _setting.reset();
       }
       await _setting.save();
+      _setting.state.mHandleLaunch = _handleLaunch;
+      _setting.state.mHandleForward = _handleForward;
       _setting.state.mHandleCommand = _handleCommand;
       await NotificationHelper.initialize();
       await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
@@ -144,7 +216,7 @@ class _Main {
         await windowManager.show();
       }
       if (!(await AppLinks().getInitialLinkString() ?? '').startsWith('twinstar.twinning.assistant:')) {
-        if (argument.length >= 1 && argument[0] == 'launch') {
+        if (argument.length >= 1 && argument[0] == 'application') {
           ControlHelper.postTask(() async {
             _handleCommand(argument.slice(1));
           });
@@ -164,7 +236,9 @@ class _Main {
       });
     }
     catch (e, s) {
-      ControlHelper.postTask(() { _handleException(e, s); });
+      ControlHelper.postTask(() async {
+        _handleException(e, s);
+      });
     }
     runApp(Application(setting: _setting));
     return;

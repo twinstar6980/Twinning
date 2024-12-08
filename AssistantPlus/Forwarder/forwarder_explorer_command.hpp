@@ -263,17 +263,14 @@ public:
 		std::vector<std::wstring> const & resource
 	) -> void {
 		auto command = std::vector<std::wstring>{};
-		command.emplace_back(L"-InsertTab");
-		command.emplace_back(L"Resource Forwarder");
-		command.emplace_back(L"ResourceForwarder");
-		command.emplace_back(L"-Resource");
+		command.emplace_back(L"-Forward");
 		command.append_range(resource);
 		auto link = std::wstring{};
 		link.reserve(1024);
-		link += L"twinstar.twinning.assistant-plus:/Launch?";
-		for (auto & command_item : command) {
+		link += L"twinstar.twinning.assistant-plus:/Application?";
+		for (auto & item : command) {
 			link += L"Command=";
-			link += thiz.encode_percent_string(command_item);
+			link += thiz.encode_percent_string(item);
 			link += L"&";
 		}
 		if (!command.empty()) {

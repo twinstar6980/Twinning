@@ -73,15 +73,16 @@ namespace AssistantPlus {
 				this.RegisterNotification();
 				var optionWindowPosition = default(Tuple<Integer, Integer>?);
 				var optionWindowSize = default(Tuple<Integer, Integer>?);
-				var optionInsertTab = default(Tuple<String, ModuleType, List<String>>?);
+				var optionLaunch = default(Tuple<String, ModuleType, List<String>>?);
+				var optionForward = default(Tuple<List<String>>?);
 				{
 					var command = new List<String>();
-					if (argument.Length >= 1 && argument[0] == "Launch") {
+					if (argument.Length >= 1 && argument[0] == "Application") {
 						command = argument[1..].ToList();
 					}
 					if (argument.Length == 1 && argument[0].StartsWith("twinstar.twinning.assistant-plus:")) {
 						var link = new Uri(argument[0]);
-						if (link.Scheme != "twinstar.twinning.assistant-plus" || link.Authority != "" || link.AbsolutePath != "/Launch") {
+						if (link.Scheme != "twinstar.twinning.assistant-plus" || link.Authority != "" || link.AbsolutePath != "/Application") {
 							throw new ($"Invalid link.");
 						}
 						command = link.GetComponents(UriComponents.Query, UriFormat.UriEscaped)
@@ -115,10 +116,15 @@ namespace AssistantPlus {
 							optionWindowSize = new (App.Setting.Data.Window.Size.Width, App.Setting.Data.Window.Size.Height);
 						}
 					}
-					if (option.Check("-InsertTab")) {
-						optionInsertTab = new (
+					if (option.Check("-Launch")) {
+						optionLaunch = new (
 							option.NextString(),
 							option.NextString().SelfLet((it) => (Enum.Parse<ModuleType>(it))),
+							option.NextStringList()
+						);
+					}
+					if (option.Check("-Forward")) {
+						optionForward = new (
 							option.NextStringList()
 						);
 					}
@@ -136,11 +142,19 @@ namespace AssistantPlus {
 				else {
 					WindowHelper.Center(window);
 				}
-				if (optionInsertTab != null) {
+				if (optionLaunch != null) {
 					_ = window.As<View.Home.MainWindow>().SetDefaultView(new () {
-						Title = optionInsertTab.Item1,
-						Type = optionInsertTab.Item2,
-						Option = optionInsertTab.Item3,
+						Title = optionLaunch.Item1,
+						Type = optionLaunch.Item2,
+						Option = optionLaunch.Item3,
+						Command = [],
+					});
+				}
+				else if (optionForward != null) {
+					_ = window.As<View.Home.MainWindow>().SetDefaultView(new () {
+						Title = ModuleHelper.Query(ModuleType.ResourceShipper).Name,
+						Type = ModuleType.ResourceShipper,
+						Option = ["-Resource", ..optionForward.Item1],
 						Command = [],
 					});
 				}

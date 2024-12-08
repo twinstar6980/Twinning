@@ -21,9 +21,9 @@ namespace AssistantPlus {
 		public ModuleLauncherSetting             ModuleLauncher       = default!;
 		public View.ModdingWorker.Setting        ModdingWorker        = default!;
 		public View.CommandSender.Setting        CommandSender        = default!;
-		public View.ResourceForwarder.Setting    ResourceForwarder    = default!;
-		public View.ReflectionDescriptor.Setting ReflectionDescriptor = default!;
+		public View.ResourceShipper.Setting      ResourceShipper      = default!;
 		public View.AnimationViewer.Setting      AnimationViewer      = default!;
+		public View.ReflectionDescriptor.Setting ReflectionDescriptor = default!;
 		public View.PackageBuilder.Setting       PackageBuilder       = default!;
 	}
 
@@ -219,13 +219,11 @@ namespace AssistantPlus {
 					MethodConfiguration = "",
 					ParallelForward = false,
 				},
-				ResourceForwarder = new () {
+				ResourceShipper = new () {
 					OptionConfiguration = "",
 					ParallelForward = false,
 					EnableFilter = true,
 					EnableBatch = false,
-				},
-				ReflectionDescriptor = new () {
 				},
 				AnimationViewer = new () {
 					ImmediateSelect = true,
@@ -235,6 +233,8 @@ namespace AssistantPlus {
 					ShowBoundary = true,
 					ImageFilterRule = "",
 					SpriteFilterRule = "",
+				},
+				ReflectionDescriptor = new () {
 				},
 				PackageBuilder = new () {
 				},

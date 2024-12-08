@@ -1,6 +1,7 @@
 import '/common.dart';
 import '/setting.dart';
 import '/utility/command_line_reader.dart';
+import '/utility/command_line_writer.dart';
 import '/utility/storage_helper.dart';
 import '/utility/convert_helper.dart';
 import '/utility/control_helper.dart';
@@ -52,8 +53,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   late List<(String, Integer, Integer)>?               _activeFrameLabel;
   late (Integer, Integer)?                             _activeFrameRange;
   late Floater?                                        _activeFrameSpeed;
-  late StreamController                                _activeProgressStateStream;
   late StreamController                                _activeProgressIndexStream;
+  late StreamController                                _activeProgressStateStream;
   late Boolean                                         _activeProgressChangingContinue;
   late AnimationController                             _animationController;
   late Widget?                                         _animationVisual;
@@ -78,9 +79,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     this._imageFilter = List.filled(this._animation!.image.length, true);
     this._spriteFilter = List.filled(this._animation!.sprite.length, true);
     this.setState(() {});
-    if (this._immediateSelect) {
-      await this._activate((true, this._animation!.sprite.length), null);
-    }
     return;
   }
 
@@ -98,8 +96,11 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   }
 
   Future<Void> _activate(
-    (Boolean, Integer) target,
-    Floater?           speed,
+    (Boolean, Integer)  target,
+    (Integer, Integer)? frameRange,
+    Floater?            frameSpeed,
+    Integer?            progressIndex,
+    Boolean?            progressState,
   ) async {
     assertTest(this._loaded && !this._activated);
     this._activeTarget = target;
@@ -144,13 +145,12 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
       this._activeSprite = originalTarget;
     }
     this._activeFrameLabel = VisualHelper.parseSpriteFrameLabel(this._activeSprite!);
-    await this._changeFrameRange((0, this._activeSprite!.frame.length));
-    await this._changeFrameSpeed(speed ?? this._activeSprite!.frame_rate ?? this._animation!.frame_rate.toDouble());
+    await this._changeFrameRange(frameRange ?? (0, this._activeSprite!.frame.length));
+    await this._changeFrameSpeed(frameSpeed ?? this._activeSprite!.frame_rate ?? this._animation!.frame_rate.toDouble());
     this._animationVisual = VisualHelper.visualizeSprite(this._animationController, this._animation!, this._texture!, this._activeSprite!);
+    await this._changeProgressIndex(progressIndex ?? 0);
+    await this._changeProgressState(progressState ?? this._automaticPlay);
     this.setState(() {});
-    if (this._automaticPlay) {
-      await this._changeFrameProgressState(true);
-    }
     return;
   }
 
@@ -195,7 +195,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     Floater frameSpeed,
   ) async {
     assertTest(this._loaded && this._activated);
-    var currentState = this._queryFrameProgressState();
+    var currentState = this._queryProgressState();
     if (currentState) {
       this._animationController.stop();
     }
@@ -208,13 +208,34 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     return;
   }
 
-  Boolean _queryFrameProgressState(
+  Integer _queryProgressIndex(
+  ) {
+    assertTest(this._loaded && this._activated);
+    return (this._animationController.value * this._activeSprite!.frame.length).floor();
+  }
+
+  Future<Void> _changeProgressIndex(
+    Integer index,
+  ) async {
+    assertTest(this._loaded && this._activated);
+    var currentState = this._queryProgressState();
+    if (currentState) {
+      this._animationController.stop();
+    }
+    this._animationController.value = index.toDouble() / this._activeSprite!.frame.length;
+    if (currentState) {
+      this._animationController.forward();
+    }
+    return;
+  }
+
+  Boolean _queryProgressState(
   ) {
     assertTest(this._loaded && this._activated);
     return this._animationController.isAnimating;
   }
 
-  Future<Void> _changeFrameProgressState(
+  Future<Void> _changeProgressState(
     Boolean state,
   ) async {
     assertTest(this._loaded && this._activated);
@@ -231,30 +252,16 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     return;
   }
 
-  Integer _queryFrameProgressIndex(
-  ) {
-    assertTest(this._loaded && this._activated);
-    return (this._animationController.value * this._activeSprite!.frame.length).floor();
-  }
-
-  Future<Void> _changeFrameProgressIndex(
-    Integer index,
-  ) async {
-    assertTest(this._loaded && this._activated);
-    var currentState = this._queryFrameProgressState();
-    if (currentState) {
-      this._animationController.stop();
-    }
-    this._animationController.value = index.toDouble() / this._activeSprite!.frame.length;
-    if (currentState) {
-      this._animationController.forward();
-    }
-    return;
-  }
-
   Future<Void> _applyLoad(
-    String  animationFile,
-    String? textureDirectory,
+    String              animationFile,
+    String?             textureDirectory,
+    List<Integer>?      imageFilter,
+    List<Integer>?      spriteFilter,
+    (Boolean, Integer)? activeTarget,
+    (Integer, Integer)? activeFrameRange,
+    Floater?            activeFrameSpeed,
+    Integer?            activeProgressIndex,
+    Boolean?            activeProgressState,
   ) async {
     textureDirectory ??= StorageHelper.parent(animationFile);
     if (this._loaded) {
@@ -264,6 +271,16 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
       await this._unload();
     }
     await this._load(animationFile, textureDirectory);
+      await this._changeControlFilter(
+        imageFilter == null ? this._imageFilter! : List.generate(this._animation!.image.length, (index) => !imageFilter.contains(index)).toList(),
+        spriteFilter == null ? this._spriteFilter! : List.generate(this._animation!.sprite.length, (index) => !spriteFilter.contains(index)).toList(),
+      );
+    if (activeTarget == null && this._immediateSelect) {
+      activeTarget ??= (true, this._animation!.sprite.length);
+    }
+    if (activeTarget != null) {
+      await this._activate(activeTarget, activeFrameRange, activeFrameSpeed, activeProgressIndex, activeProgressState);
+    }
     return;
   }
 
@@ -271,16 +288,150 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
 
   @override
   modulePageApplyOption(optionView) async {
+    var optionImmediateSelect = null as Boolean?;
+    var optionAutomaticPlay = null as Boolean?;
+    var optionRepeatPlay = null as Boolean?;
+    var optionKeepSpeed = null as Boolean?;
+    var optionShowBoundary = null as Boolean?;
+    var optionAnimationFile = null as String?;
+    var optionTextureDirectory = null as String?;
+    var optionImageFilter = null as List<Integer>?;
+    var optionSpriteFilter = null as List<Integer>?;
+    var optionActiveTarget = null as (Boolean, Integer)?;
+    var optionActiveFrameRange = null as (Integer, Integer)?;
+    var optionActiveFrameSpeed = null as Floater?;
+    var optionActiveProgressIndex = null as Integer?;
+    var optionActiveProgressState = null as Boolean?;
     var option = CommandLineReader(optionView);
-    // TODO
+    if (option.check('-immediate_select')) {
+      optionImmediateSelect = option.nextBoolean();
+    }
+    if (option.check('-automatic_play')) {
+      optionAutomaticPlay = option.nextBoolean();
+    }
+    if (option.check('-repeat_play')) {
+      optionRepeatPlay = option.nextBoolean();
+    }
+    if (option.check('-keep_speed')) {
+      optionKeepSpeed = option.nextBoolean();
+    }
+    if (option.check('-show_boundary')) {
+      optionShowBoundary = option.nextBoolean();
+    }
+    if (option.check('-animation_file')) {
+      optionAnimationFile = option.nextString();
+    }
+    if (option.check('-texture_directory')) {
+      optionTextureDirectory = option.nextString();
+    }
+    if (option.check('-image_filter')) {
+      optionImageFilter = option.nextString().split(',').where((value) => value.isNotEmpty).map(Integer.parse).toList();
+    }
+    if (option.check('-sprite_filter')) {
+      optionSpriteFilter = option.nextString().split(',').where((value) => value.isNotEmpty).map(Integer.parse).toList();
+    }
+    if (option.check('-active_target')) {
+      optionActiveTarget = (
+        option.nextBoolean(),
+        option.nextInteger(),
+      );
+    }
+    if (option.check('-active_frame_range')) {
+      optionActiveFrameRange = (
+        option.nextInteger(),
+        option.nextInteger(),
+      );
+    }
+    if (option.check('-active_frame_speed')) {
+      optionActiveFrameSpeed = option.nextFloater();
+    }
+    if (option.check('-active_progress_index')) {
+      optionActiveProgressIndex = option.nextInteger();
+    }
+    if (option.check('-active_progress_state')) {
+      optionActiveProgressState = option.nextBoolean();
+    }
     assertTest(option.done());
+    if (optionImmediateSelect != null) {
+      this._immediateSelect = optionImmediateSelect;
+    }
+    if (optionAutomaticPlay != null) {
+      this._automaticPlay = optionAutomaticPlay;
+    }
+    if (optionRepeatPlay != null) {
+      this._repeatPlay = optionRepeatPlay;
+    }
+    if (optionKeepSpeed != null) {
+      this._keepSpeed = optionKeepSpeed;
+    }
+    if (optionShowBoundary != null) {
+      this._showBoundary = optionShowBoundary;
+    }
+    if (optionAnimationFile != null) {
+      await this._applyLoad(
+        optionAnimationFile,
+        optionTextureDirectory,
+        optionImageFilter,
+        optionSpriteFilter,
+        optionActiveTarget,
+        optionActiveFrameRange,
+        optionActiveFrameSpeed,
+        optionActiveProgressIndex,
+        optionActiveProgressState,
+      );
+    }
     this.setState(() {});
     return;
   }
 
   @override
   modulePageCollectOption() async {
-    return [];
+    var option = CommandLineWriter();
+    if (option.check('-immediate_select')) {
+      option.nextBoolean(this._immediateSelect);
+    }
+    if (option.check('-automatic_play')) {
+      option.nextBoolean(this._automaticPlay);
+    }
+    if (option.check('-repeat_play')) {
+      option.nextBoolean(this._repeatPlay);
+    }
+    if (option.check('-keep_speed')) {
+      option.nextBoolean(this._keepSpeed);
+    }
+    if (option.check('-show_boundary')) {
+      option.nextBoolean(this._showBoundary);
+    }
+    if (option.check('-animation_file', state: this._loaded)) {
+      option.nextString(this._animationFile!);
+    }
+    if (option.check('-texture_directory', state: this._loaded)) {
+      option.nextString(this._textureDirectory!);
+    }
+    if (option.check('-image_filter', state: this._loaded)) {
+      option.nextString(this._imageFilter!.mapIndexed((index, value) => value ? null : ConvertHelper.makeIntegerToString(index, false)).whereNotNull().join(','));
+    }
+    if (option.check('-sprite_filter', state: this._loaded)) {
+      option.nextString(this._spriteFilter!.mapIndexed((index, value) => value ? null : ConvertHelper.makeIntegerToString(index, false)).whereNotNull().join(','));
+    }
+    if (option.check('-active_target', state: this._activated)) {
+      option.nextBoolean(this._activeTarget!.$1);
+      option.nextInteger(this._activeTarget!.$2);
+    }
+    if (option.check('-active_frame_range', state: this._activated)) {
+      option.nextInteger(this._activeFrameRange!.$1);
+      option.nextInteger(this._activeFrameRange!.$2);
+    }
+    if (option.check('-active_frame_speed', state: this._activated)) {
+      option.nextFloater(this._activeFrameSpeed!);
+    }
+    if (option.check('-active_progress_index', state: this._activated)) {
+      option.nextInteger(this._queryProgressIndex());
+    }
+    if (option.check('-active_progress_state', state: this._activated)) {
+      option.nextBoolean(this._queryProgressState());
+    }
+    return option.done();
   }
 
   @override
@@ -310,8 +461,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     this._activeFrameLabel = null;
     this._activeFrameRange = null;
     this._activeFrameSpeed = null;
-    this._activeProgressStateStream = StreamController();
     this._activeProgressIndexStream = StreamController();
+    this._activeProgressStateStream = StreamController();
     this._activeProgressChangingContinue = false;
     this._animationController = AnimationController(lowerBound: 0.0, upperBound: 1.0 - 1.0e-9, vsync: this);
     this._animationController.addListener(() async {
@@ -323,7 +474,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           this._activeProgressStateStream.sink.add(null);
         }
         else {
-          this._changeFrameProgressState(true);
+          this._changeProgressState(true);
         }
       }
     });
@@ -344,8 +495,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
 
   @override
   dispose() {
-    this._activeProgressStateStream.close();
     this._activeProgressIndexStream.close();
+    this._activeProgressStateStream.close();
     this._animationController.dispose();
     this._stageHorizontalScrollSontroller.dispose();
     this._stageVerticalScrollSontroller.dispose();
@@ -358,7 +509,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     var theme = Theme.of(context);
     return CustomModulePageRegion(
       onDropFile: (item) async {
-        await this._applyLoad(item.first, null);
+        await this._applyLoad(item.first, null, null, null, null, null, null, null, null);
       },
       content: Column(
         children: [
@@ -423,30 +574,30 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                               child: StreamBuilder(
                                 stream: this._activeProgressIndexStream.stream,
                                 builder: (context, snapshot) => Tooltip(
-                                  message: !this._activated ? '' : '${this._queryFrameProgressIndex() + 1}',
+                                  message: !this._activated ? '' : '${this._queryProgressIndex() + 1}',
                                   child: Slider(
                                     min: 1.0,
                                     max: !this._activated ? 1.0 : (this._activeSprite!.frame.length.toDouble() + 1.0e-9),
-                                    value: !this._activated ? 1.0 : (this._queryFrameProgressIndex() + 1).toDouble(),
+                                    value: !this._activated ? 1.0 : (this._queryProgressIndex() + 1).toDouble(),
                                     onChanged: !this._activated
                                       ? null
                                       : (value) async {
-                                        await this._changeFrameProgressIndex(value.round() - 1);
+                                        await this._changeProgressIndex(value.round() - 1);
                                         this._activeProgressIndexStream.sink.add(null);
                                       },
                                     onChangeStart: !this._activated
                                       ? null
                                       : (value) async {
-                                        this._activeProgressChangingContinue = this._queryFrameProgressState();
+                                        this._activeProgressChangingContinue = this._queryProgressState();
                                         if (this._activeProgressChangingContinue) {
-                                          await this._changeFrameProgressState(false);
+                                          await this._changeProgressState(false);
                                         }
                                       },
                                     onChangeEnd: !this._activated
                                       ? null
                                       : (value) async {
                                         if (this._activeProgressChangingContinue) {
-                                          await this._changeFrameProgressState(true);
+                                          await this._changeProgressState(true);
                                         }
                                         this._activeProgressChangingContinue = false;
                                       },
@@ -507,20 +658,18 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                                 ...this._activeFrameLabel!.map((value) => (value.$2 + 1, value.$1)),
                                               ].map((value) => value == null ? PopupMenuDivider().as<PopupMenuEntry<Object>>() : PopupMenuItem(
                                                 value: value.$1,
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: Text(
-                                                        value.$2,
-                                                        overflow: TextOverflow.ellipsis,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      ConvertHelper.makeIntegerToString(value.$1, false),
-                                                      overflow: TextOverflow.ellipsis,
-                                                      style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-                                                    ),
-                                                  ],
+                                                child: ListTile(
+                                                  contentPadding: EdgeInsets.zero,
+                                                  dense: true,
+                                                  title: Text(
+                                                    value.$2,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                  trailing: Text(
+                                                    ConvertHelper.makeIntegerToString(value.$1, false),
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                                                  ),
                                                 ),
                                               )).toList(),
                                               onSelected: (value) async {
@@ -562,20 +711,18 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                                 ...this._activeFrameLabel!.map((value) => (value.$2 + value.$3, value.$1)),
                                               ].map((value) => value == null ? PopupMenuDivider().as<PopupMenuEntry<Object>>() : PopupMenuItem(
                                                 value: value.$1,
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: Text(
-                                                        value.$2,
-                                                        overflow: TextOverflow.ellipsis,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      ConvertHelper.makeIntegerToString(value.$1, false),
-                                                      overflow: TextOverflow.ellipsis,
-                                                      style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-                                                    ),
-                                                  ],
+                                                child: ListTile(
+                                                  contentPadding: EdgeInsets.zero,
+                                                  dense: true,
+                                                  title: Text(
+                                                    value.$2,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                  trailing: Text(
+                                                    ConvertHelper.makeIntegerToString(value.$1, false),
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                                                  ),
                                                 ),
                                               )).toList(),
                                               onSelected: (value) async {
@@ -612,7 +759,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                         onPressed: !this._activated
                           ? null
                           : () async {
-                            await this._changeFrameProgressIndex(max(this._queryFrameProgressIndex() - 1, 0));
+                            await this._changeProgressIndex(max(this._queryProgressIndex() - 1, 0));
                           },
                       ),
                       const SizedBox(width: 8),
@@ -621,11 +768,11 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                         builder: (context, snapshot) => IconButton.filled(
                           tooltip: !this._activated ? '' : 'Pause & Resume',
                           isSelected: true,
-                          icon: Icon(!this._activated ? IconSymbols.play_arrow : !this._queryFrameProgressState() ? IconSymbols.play_arrow : IconSymbols.pause, fill: 1),
+                          icon: Icon(!this._activated ? IconSymbols.play_arrow : !this._queryProgressState() ? IconSymbols.play_arrow : IconSymbols.pause, fill: 1),
                           onPressed: !this._activated
                             ? null
                             : () async {
-                              await this._changeFrameProgressState(!this._queryFrameProgressState());
+                              await this._changeProgressState(!this._queryProgressState());
                             },
                         ),
                       ),
@@ -637,7 +784,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                         onPressed: !this._activated
                           ? null
                           : () async {
-                            await this._changeFrameProgressIndex(min(this._queryFrameProgressIndex() + 1, this._activeSprite!.frame.length - 1));
+                            await this._changeProgressIndex(min(this._queryProgressIndex() + 1, this._activeSprite!.frame.length - 1));
                           },
                       ),
                       const SizedBox(width: 12),
@@ -686,20 +833,18 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                                 (normalSpeed * 2.0, 'Fast'),
                                               ].map((value) => PopupMenuItem(
                                                 value: value.$1,
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: Text(
-                                                        value.$2,
-                                                        overflow: TextOverflow.ellipsis,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      ConvertHelper.makeFloaterToString(value.$1, false),
-                                                      overflow: TextOverflow.ellipsis,
-                                                      style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-                                                    ),
-                                                  ],
+                                                child: ListTile(
+                                                  contentPadding: EdgeInsets.zero,
+                                                  dense: true,
+                                                  title: Text(
+                                                    value.$2,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                  trailing: Text(
+                                                    ConvertHelper.makeFloaterToString(value.$1, false),
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                                                  ),
                                                 ),
                                               )).toList(),
                                               onSelected: (value) async {
@@ -794,7 +939,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                           if (this._activated) {
                                             await this._deactivate();
                                           }
-                                          await this._activate((false, index), newFrameSpeed);
+                                          await this._activate((false, index), null, newFrameSpeed, null, null);
                                           Navigator.pop(context);
                                         },
                                       ),
@@ -840,7 +985,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                   await this._deactivate();
                                 }
                                 else {
-                                  await this._activate((true, this._animation!.sprite.length), null);
+                                  await this._activate((true, this._animation!.sprite.length), null, null, null, null);
                                 }
                                 this.setState(() {});
                               },
@@ -906,7 +1051,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                           if (this._activated) {
                                             await this._deactivate();
                                           }
-                                          await this._activate((true, index), newFrameSpeed);
+                                          await this._activate((true, index), null, newFrameSpeed, null, null);
                                           Navigator.pop(context);
                                         },
                                       ),
@@ -960,8 +1105,11 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                   children: [
                     Expanded(
                       child: OutlinedButton.icon(
-                        icon: Icon(IconSymbols.clear_all),
-                        label: Text('Clear'),
+                        icon: const Icon(IconSymbols.clear_all),
+                        label: const Text(
+                          'Clear',
+                          overflow: TextOverflow.ellipsis,
+                        ),
                         onPressed: !this._loaded
                           ? null
                           : () async {
@@ -976,12 +1124,15 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                     const SizedBox(width: 8),
                     Expanded(
                       child: OutlinedButton.icon(
-                        icon: Icon(IconSymbols.open_in_new),
-                        label: Text('Pick'),
+                        icon: const Icon(IconSymbols.open_in_new),
+                        label: const Text(
+                          'Pick',
+                          overflow: TextOverflow.ellipsis,
+                        ),
                         onPressed: () async {
                           var animationFile = await StorageHelper.pickLoadFile(context, 'AnimationViewer.AnimationFile');
                           if (animationFile != null) {
-                            await this._applyLoad(animationFile, null);
+                            await this._applyLoad(animationFile, null, null, null, null, null, null, null, null);
                           }
                           Navigator.pop(context);
                         },
