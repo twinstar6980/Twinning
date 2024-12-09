@@ -67,7 +67,7 @@
 	"support.pvz2.resource_convert:convert_resource": "Converting resource...",
 	// Executor/Generic
 	"executor.generic:no_input": "No input is provided for this command, please enter",
-	"executor.generic:should_disable_filter_or_not": "Disable method filter for this command?",
+	"executor.generic:should_filterless_or_not": "Disable method filter for this command?",
 	"executor.generic:method_invalid": "Invalid method id",
 	"executor.generic:method_unavailable": "No available methods found, command skipped",
 	"executor.generic:method_select": "Select methods to apply",

@@ -319,7 +319,7 @@ class _MainPageState extends State<MainPage> {
                 position: PopupMenuPosition.under,
                 icon: const Icon(IconSymbols.more_vert),
                 itemBuilder: (context) => [
-                  ('remove', 'Remove', IconSymbols.remove),
+                  ('remove', 'Remove', IconSymbols.cancel),
                   ('rename', 'Rename', IconSymbols.draw),
                   ('keep', 'Keep', IconSymbols.pinboard),
                   ('duplicate', 'Duplicate', IconSymbols.tab_duplicate),

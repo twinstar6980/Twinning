@@ -29,7 +29,7 @@ namespace Twinning.Script.Executor {
 			/** 输入值 */
 			value: string;
 			/** 关闭功能的过滤功能；若指定，则（在未指定建议时）在筛选可用功能时不使用过滤功能，所有功能都会进入待选表 */
-			disable_filter: boolean;
+			filterless: boolean;
 		};
 	};
 
@@ -51,11 +51,11 @@ namespace Twinning.Script.Executor {
 				if (input_value !== '?') {
 					command.input = {
 						value: input_value,
-						disable_filter: false,
+						filterless: false,
 					};
-					if (index < raw_command.length && raw_command[index] === '-disable_filter') {
+					if (index < raw_command.length && raw_command[index] === '-filterless') {
 						index++;
-						command.input.disable_filter = true;
+						command.input.filterless = true;
 					}
 				}
 			}
@@ -99,17 +99,17 @@ namespace Twinning.Script.Executor {
 				Console.information(los('executor.generic:no_input'), [
 				]);
 				let input_value = Console.string(null, null);
-				Console.information(los('executor.generic:should_disable_filter_or_not'), [
+				Console.information(los('executor.generic:should_filterless_or_not'), [
 				]);
-				let input_disable_filter = Console.boolean(null, null);
+				let input_filterless = Console.boolean(null, null);
 				command.input = {
 					value: input_value,
-					disable_filter: input_disable_filter,
+					filterless: input_filterless,
 				};
 			}
 			let valid_method: Array<[bigint, Method]> = [];
 			for (let index in method) {
-				if (command.input.disable_filter || method[index].input_filter(command.input.value)) {
+				if (command.input.filterless || method[index].input_filter(command.input.value)) {
 					valid_method.push([BigInt(index) + 1n, method[index]]);
 				}
 			}
@@ -129,7 +129,7 @@ namespace Twinning.Script.Executor {
 			if (selected_method === null) {
 				valid_method = [];
 				for (let index in fallback_method) {
-					if (command.input.disable_filter || fallback_method[index].input_filter(command.input.value)) {
+					if (command.input.filterless || fallback_method[index].input_filter(command.input.value)) {
 						valid_method.push([BigInt(index) + 1n, fallback_method[index]]);
 					}
 				}
