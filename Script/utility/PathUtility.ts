@@ -116,11 +116,11 @@ namespace Twinning.Script.PathUtility {
 		destination: string,
 	): void {
 		if (KernelX.is_android && AndroidHelper.fs_is_fuse_path(destination) && source.toLowerCase() === destination.toLowerCase()) {
-			KernelX.FileSystem.rename(source, source + '!');
-			KernelX.FileSystem.rename(source + '!', destination);
+			KernelX.Storage.rename(source, source + '!');
+			KernelX.Storage.rename(source + '!', destination);
 		}
 		else {
-			KernelX.FileSystem.rename(source, destination);
+			KernelX.Storage.rename(source, destination);
 		}
 		return;
 	}
@@ -131,7 +131,7 @@ namespace Twinning.Script.PathUtility {
 	): string {
 		let result = path;
 		let suffix = 0;
-		while (KernelX.FileSystem.exist(result)) {
+		while (KernelX.Storage.exist(result)) {
 			suffix += 1;
 			result = `${path}${infix}${suffix}`;
 		}

@@ -13,6 +13,12 @@ target('third.tinyfiledialogs', function()
 		'./tinyfiledialogs.c',
 		{}
 	)
+	add_includedirs(
+		{ public = true }
+	)
+	add_deps(
+		{}
+	)
 	if m.system:is('windows') then
 		add_links(
 			'ComDlg32',

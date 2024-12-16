@@ -61,10 +61,10 @@ namespace Twinning.Script.AndroidHelper {
 		local: string,
 		remote: string,
 	): void {
-		KernelX.FileSystem.remove(local);
+		KernelX.Storage.remove(local);
 		let local_parent = PathUtility.parent(local);
 		if (local_parent !== null) {
-			KernelX.FileSystem.create_directory(local_parent);
+			KernelX.Storage.create_directory(local_parent);
 		}
 		if (g_mode === 'native') {
 			fs_copy(remote, local);

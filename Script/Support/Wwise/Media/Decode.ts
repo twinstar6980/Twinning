@@ -19,11 +19,11 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 		if (!ripe_file.endsWith('.wem')) {
 			ripe_file_fallback_temporary = Home.new_temporary(null, 'directory');
 			ripe_file_fallback = `${ripe_file_fallback_temporary}/sample.wem`;
-			KernelX.FileSystem.copy(ripe_file, ripe_file_fallback);
+			KernelX.Storage.copy(ripe_file, ripe_file_fallback);
 		}
 		let raw_file_directory = PathUtility.parent(raw_file);
 		if (raw_file_directory !== null) {
-			KernelX.FileSystem.create_directory(raw_file_directory);
+			KernelX.Storage.create_directory(raw_file_directory);
 		}
 		program_result = ProcessHelper.execute(
 			vgmstream_program_file,
@@ -35,7 +35,7 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 			KernelX.Process.list_environment_variable(),
 		);
 		if (ripe_file_fallback_temporary !== null) {
-			KernelX.FileSystem.remove(ripe_file_fallback_temporary);
+			KernelX.Storage.remove(ripe_file_fallback_temporary);
 		}
 		assert_test(program_result.code === 0n, `execute failed by vgmstream`);
 		let regex_result = /^encoding: (.+)$/m.exec(program_result.output);

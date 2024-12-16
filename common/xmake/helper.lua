@@ -122,6 +122,7 @@ function apply_compiler_option_basic(target)
 			'NOMINMAX', -- suppress windows's min|max macro
 			'_WINSOCKAPI_', -- suppress winsock.h
 			'_UCRT_NOISY_NAN', -- enable legacy NAN macro in Windows SDK 26100+
+			'_CRT_SECURE_NO_WARNINGS', -- disable secure check warning
 			{ private = true }
 		)
 	end
@@ -187,6 +188,10 @@ function apply_compiler_option_warning_regular(target)
 		'-Wno-shadow', -- TODO : shadow the member
 		'-Wno-float-equal', -- TODO : float compare
 		'-Wno-deprecated-declarations', -- TODO : suppress codecvt warning
+		'-Wno-dollar-in-identifier-extension', -- NOTE : use dollar sign in module for third library
+		'-Wno-reserved-user-defined-literal', -- NOTE : suppress error when using std module of libc++
+		'-Wno-unreachable-code-return', -- NOTE : use explicit return in unreachable code
+		'-Wno-unreachable-code-break', -- NOTE : use explicit break in unreachable code
 		{ private = true }
 	)
 end

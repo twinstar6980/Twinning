@@ -122,16 +122,16 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Link {
 						let version_c = Kernel.Tool.PopCap.ReflectionObjectNotation.Version.value({ number: 1n, native_string_encoding_use_utf8: true });
 						let stream = Kernel.ByteStreamView.watch(buffer.view());
 						Kernel.Tool.PopCap.ReflectionObjectNotation.Encode.process(stream, Kernel.JSON.Value.value(manifest as any), Kernel.Boolean.value(true), Kernel.Boolean.value(true), version_c);
-						KernelX.FileSystem.write_file(`${package_bundle_directory}/resource/${manifesr_resource_path}`, stream.stream_view());
+						KernelX.Storage.write_file(`${package_bundle_directory}/resource/${manifesr_resource_path}`, stream.stream_view());
 					}
 					if (package_setting.manifest.type === 'external_newton') {
 						manifesr_resource_path += '.newton';
 						let manifest = RegularResourceManifest.Convert.to_official(package_manifest, false);
 						let stream = new ByteStreamView(buffer.view().value);
 						ResourceManifest.NewTypeObjectNotation.Encode.process(stream, manifest);
-						KernelX.FileSystem.write_file(`${package_bundle_directory}/resource/${manifesr_resource_path}`, stream.sub(0, stream.p()));
+						KernelX.Storage.write_file(`${package_bundle_directory}/resource/${manifesr_resource_path}`, stream.sub(0, stream.p()));
 					}
-					KernelX.FileSystem.remove(`${package_bundle_directory}/packet/${manifest_group_name}.rsg`);
+					KernelX.Storage.remove(`${package_bundle_directory}/packet/${manifest_group_name}.rsg`);
 					package_definition.group.push({
 						id: manifest_group_name,
 						composite: false,

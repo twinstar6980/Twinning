@@ -34,6 +34,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="twinstar.twinning.assistant" />
             </intent-filter>
+            <meta-data android:name="flutter_deeplinking_enabled" android:value="false" />
         </activity>
         <activity
             android:name=".ForwarderActivity"

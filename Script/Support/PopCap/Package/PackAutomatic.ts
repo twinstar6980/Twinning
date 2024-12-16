@@ -8,7 +8,7 @@ namespace Twinning.Script.Support.PopCap.Package.PackAutomatic {
 		version_compress_resource_data: boolean,
 	): [Kernel.ByteArray, Kernel.Size] {
 		let version_c = Kernel.Tool.PopCap.Package.Version.value({ number: version_number, compress_resource_data: version_compress_resource_data });
-		let resource_list = KernelX.FileSystem.list_file(resource_directory);
+		let resource_list = KernelX.Storage.list_file(resource_directory);
 		let definition_js: Kernel.Tool.PopCap.Package.Definition.JS_N.Package = {
 			resource: [],
 		};
@@ -20,7 +20,7 @@ namespace Twinning.Script.Support.PopCap.Package.PackAutomatic {
 				path: resource,
 				time: 0n,
 			});
-			let resource_size = KernelX.FileSystem.size_file(`${resource_directory}/${resource}`);
+			let resource_size = KernelX.Storage.size_file(`${resource_directory}/${resource}`);
 			data_size_bound += (1 + 1 + resource.length + 4 + 4 + 8) + (Number(resource_size) + 16); // resource information + resource data
 		}
 		data_size_bound += 1; // list done flag

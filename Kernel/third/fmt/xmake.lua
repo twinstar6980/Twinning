@@ -22,6 +22,15 @@ target('third.fmt', function()
 		'./include/fmt/xchar.h',
 		{ install = false }
 	)
+	add_files(
+		{}
+	)
+	add_includedirs(
+		{ public = true }
+	)
+	add_deps(
+		{}
+	)
 	add_defines(
 		'FMT_HEADER_ONLY',
 		{ public = true }

@@ -145,9 +145,9 @@ class _SettingPanelState extends State<SettingPanel> {
                     color: setting.data.mThemeColorLight,
                   ),
                 ),
-                value: setting.data.mThemeColorLight.withOpacity(0.0).value.toRadixString(16).padLeft(6, '0'),
+                value: setting.data.mThemeColorLight.withValues(alpha: 0.0).value.toRadixString(16).padLeft(6, '0'),
                 onChanged: (value) async {
-                  setting.data.mThemeColorLight = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withOpacity(1.0);
+                  setting.data.mThemeColorLight = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withValues(alpha: 1.0);
                   setStateForPanel(() {});
                   this.setState(() {});
                   await setting.save();
@@ -170,9 +170,9 @@ class _SettingPanelState extends State<SettingPanel> {
                     color: setting.data.mThemeColorDark,
                   ),
                 ),
-                value: setting.data.mThemeColorDark.withOpacity(0.0).value.toRadixString(16).padLeft(6, '0'),
+                value: setting.data.mThemeColorDark.withValues(alpha: 0.0).value.toRadixString(16).padLeft(6, '0'),
                 onChanged: (value) async {
-                  setting.data.mThemeColorDark = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withOpacity(1.0);
+                  setting.data.mThemeColorDark = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withValues(alpha: 1.0);
                   setStateForPanel(() {});
                   this.setState(() {});
                   await setting.save();

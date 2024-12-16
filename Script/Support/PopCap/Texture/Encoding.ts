@@ -251,7 +251,7 @@ namespace Twinning.Script.Support.PopCap.Texture.Encoding {
 		data_file: string,
 		format: Format,
 	): void {
-		let image_data = KernelX.FileSystem.read_file(image_file);
+		let image_data = KernelX.Storage.read_file(image_file);
 		let image_stream = Kernel.ByteStreamView.watch(image_data.view());
 		let image_size = KernelX.Image.File.PNG.size(image_stream.view());
 		let padded_image_size = compute_padded_image_size(image_size, format);
@@ -270,7 +270,7 @@ namespace Twinning.Script.Support.PopCap.Texture.Encoding {
 		let data = Kernel.ByteArray.allocate(Kernel.Size.value(data_size));
 		let stream = Kernel.ByteStreamView.watch(data.view());
 		encode(image_view, stream, format, option);
-		KernelX.FileSystem.write_file(data_file, stream.stream_view());
+		KernelX.Storage.write_file(data_file, stream.stream_view());
 		return;
 	}
 
@@ -280,7 +280,7 @@ namespace Twinning.Script.Support.PopCap.Texture.Encoding {
 		image_size: KernelX.Image.ImageSize,
 		format: Format,
 	): void {
-		let data = KernelX.FileSystem.read_file(data_file);
+		let data = KernelX.Storage.read_file(data_file);
 		let stream = Kernel.ByteStreamView.watch(data.view());
 		let padded_image_size = compute_padded_image_size(image_size, format);
 		let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(padded_image_size));

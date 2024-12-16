@@ -2,7 +2,7 @@ namespace Twinning.Script.Executor.Implement.data.encryption {
 
 	// ------------------------------------------------
 
-	// xor.encrypt *
+	// exor.encrypt *
 	// rijndael.encrypt *
 	// rijndael.decrypt *
 
@@ -15,7 +15,7 @@ namespace Twinning.Script.Executor.Implement.data.encryption {
 	): void {
 		push_typical_method(configuration.method, 'data.encryption', [
 			typical_method({
-				id: 'xor.encrypt',
+				id: 'exor.encrypt',
 				filter: 'file',
 				argument: [
 					typical_argument_path({
@@ -41,7 +41,7 @@ namespace Twinning.Script.Executor.Implement.data.encryption {
 					}),
 				],
 				worker: ({ plain_file, cipher_file, key }) => {
-					KernelX.Tool.Data.Encryption.XOR.encrypt_fs(plain_file, cipher_file, string_to_byte_array(key));
+					KernelX.Tool.Data.Encryption.EXOR.encrypt_fs(plain_file, cipher_file, string_to_byte_array(key));
 					return;
 				},
 				batch_argument: [

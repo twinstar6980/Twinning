@@ -323,7 +323,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 				KernelX.Process.list_environment_variable(),
 			);
 			assert_test(program_result.code === 0n, `execute failed by Wwise`);
-			if (KernelX.FileSystem.exist_file(wwise_wproj_file)) {
+			if (KernelX.Storage.exist_file(wwise_wproj_file)) {
 				break;
 			}
 			Console.warning(`failed to create wwise project, retry ...`, [wwise_wproj_file]);
@@ -339,8 +339,8 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 				Conversion: `_${format}`,
 			}, []),
 		]));
-		KernelX.FileSystem.write_file_s(`${wwise_project_directory}/Conversion Settings/Sample Conversion Settings.wwu`, k_sample_conversion_settings);
-		KernelX.FileSystem.copy(raw_file, `${wwise_project_directory}/Sample.wav`);
+		KernelX.Storage.write_file_s(`${wwise_project_directory}/Conversion Settings/Sample Conversion Settings.wwu`, k_sample_conversion_settings);
+		KernelX.Storage.copy(raw_file, `${wwise_project_directory}/Sample.wav`);
 		let platform = ({
 			'pcm': 'Android',
 			'adpcm': 'Android',
@@ -365,8 +365,8 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 			Console.error(`Wwise : ${program_result.code}`, [program_result.output]);
 		}
 		assert_test(program_result.code === 0n, `execute failed by Wwise`);
-		KernelX.FileSystem.copy(`${wwise_project_directory}/GeneratedSoundBanks/${platform}/Sample.wem`, ripe_file);
-		KernelX.FileSystem.remove(temporary_directory);
+		KernelX.Storage.copy(`${wwise_project_directory}/GeneratedSoundBanks/${platform}/Sample.wem`, ripe_file);
+		KernelX.Storage.remove(temporary_directory);
 		return;
 	}
 

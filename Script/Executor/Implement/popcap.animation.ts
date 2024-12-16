@@ -281,14 +281,14 @@ namespace Twinning.Script.Executor.Implement.popcap.animation {
 				],
 				worker: ({ target_directory }) => {
 					let media_directory = `${target_directory}/LIBRARY/media`;
-					if (KernelX.FileSystem.exist(media_directory)) {
-						KernelX.FileSystem.remove(media_directory);
+					if (KernelX.Storage.exist(media_directory)) {
+						KernelX.Storage.remove(media_directory);
 					}
-					KernelX.FileSystem.create_directory(media_directory);
-					KernelX.FileSystem.list_file(`${target_directory}/..`, 1n)
+					KernelX.Storage.create_directory(media_directory);
+					KernelX.Storage.list_file(`${target_directory}/..`, 1n)
 						.filter((value) => (/(\.png)$/i.test(value)))
 						.forEach((value) => {
-							KernelX.FileSystem.create_hard_link(`${media_directory}/${value}`, `${target_directory}/../${value}`);
+							KernelX.Storage.create_hard_link(`${media_directory}/${value}`, `${target_directory}/../${value}`);
 						});
 					return;
 				},

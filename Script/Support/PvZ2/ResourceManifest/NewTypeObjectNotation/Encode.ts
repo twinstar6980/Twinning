@@ -113,7 +113,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.En
 		let definition = KernelX.JSON.read_fs_js<ResourceManifest.Package>(definition_file);
 		let stream = new ByteStreamView(data_buffer_view.value);
 		process(stream, definition);
-		KernelX.FileSystem.write_file(data_file, data_buffer_view.sub(Kernel.Size.value(0n), Kernel.Size.value(BigInt(stream.p()))));
+		KernelX.Storage.write_file(data_file, data_buffer_view.sub(Kernel.Size.value(0n), Kernel.Size.value(BigInt(stream.p()))));
 		return;
 	}
 

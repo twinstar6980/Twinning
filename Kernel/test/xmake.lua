@@ -9,12 +9,14 @@ target('test', function()
 	)
 	add_files(
 		'./**.cpp',
+		m.root .. '/../Shell/shell/**.cppm',
+		m.root .. '/../common/cpp/std.cppm',
 		{}
 	)
 	add_includedirs(
 		m.root .. '',
 		m.root .. '/../Shell',
-		{ private = true }
+		{}
 	)
 	add_deps(
 		'kernel',

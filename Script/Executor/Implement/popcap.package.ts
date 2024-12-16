@@ -179,7 +179,7 @@ namespace Twinning.Script.Executor.Implement.popcap.package_ {
 				],
 				worker: ({ resource_directory, data_file, version_number, version_compress_resource_data }) => {
 					let data = Support.PopCap.Package.PackAutomatic.pack(resource_directory, version_number as any, version_compress_resource_data);
-					KernelX.FileSystem.write_file(data_file, data[0].view().sub(Kernel.Size.value(0n), data[1]));
+					KernelX.Storage.write_file(data_file, data[0].view().sub(Kernel.Size.value(0n), data[1]));
 					return;
 				},
 				batch_argument: null,
@@ -205,7 +205,7 @@ namespace Twinning.Script.Executor.Implement.popcap.package_ {
 					}),
 				],
 				worker: ({ plain_file, cipher_file }) => {
-					KernelX.Tool.Data.Encryption.XOR.encrypt_fs(plain_file, cipher_file, [0xF7n]);
+					KernelX.Tool.Data.Encryption.EXOR.encrypt_fs(plain_file, cipher_file, [0xF7n]);
 					return;
 				},
 				batch_argument: [

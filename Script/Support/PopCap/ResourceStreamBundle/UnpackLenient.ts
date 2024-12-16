@@ -59,7 +59,7 @@ namespace Twinning.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 		for (let item in list) {
 			let item_information = list[item];
 			if (item_information.type === type) {
-				KernelX.FileSystem.write_file(`${directory}/${item}`, raw.sub(item_information.offset, item_information.size));
+				KernelX.Storage.write_file(`${directory}/${item}`, raw.sub(item_information.offset, item_information.size));
 			}
 		}
 		return;
@@ -305,7 +305,7 @@ namespace Twinning.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 		manifest_file: string,
 		resource_directory: string,
 	): void {
-		let data = KernelX.FileSystem.read_file(data_file);
+		let data = KernelX.Storage.read_file(data_file);
 		let definition = {} as Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Package;
 		process(new ByteListView(data.view().value), definition, resource_directory);
 		KernelX.JSON.write_fs_js(definition_file, definition);

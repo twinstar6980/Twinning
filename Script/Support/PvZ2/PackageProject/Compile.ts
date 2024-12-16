@@ -43,7 +43,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 			case 'dummy': {
 				let resource_property = resource_setting.property as DummyResourceProperty;
 				{
-					KernelX.FileSystem.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
+					KernelX.Storage.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
 					resource_state.push({
 						category: resource_setting.category,
 						definition: null,
@@ -63,15 +63,15 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 				let resource_property = resource_setting.property as GeneralResourceProperty;
 				let source_file = make_scope_child_path(resource_directory, 'source.bin');
 				{
-					KernelX.FileSystem.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
+					KernelX.Storage.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
 					let resource_path = parse_variable_string(resource_property.path, variable_list);
 					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
-					KernelX.FileSystem.remove(package_resource_file);
+					KernelX.Storage.remove(package_resource_file);
 					if (KernelX.is_windows || KernelX.is_linux || KernelX.is_macintosh) {
-						KernelX.FileSystem.create_link(package_resource_file, source_file, false);
+						KernelX.Storage.create_link(package_resource_file, source_file, false);
 					}
 					else {
-						KernelX.FileSystem.copy(source_file, package_resource_file);
+						KernelX.Storage.copy(source_file, package_resource_file);
 					}
 					resource_state.push({
 						category: resource_setting.category,
@@ -101,15 +101,15 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 				let resource_property = resource_setting.property as TextureResourceProperty;
 				let source_file = make_scope_child_path(resource_directory, 'source.ptx');
 				{
-					KernelX.FileSystem.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
+					KernelX.Storage.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
 					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.ptx';
 					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
-					KernelX.FileSystem.remove(package_resource_file);
+					KernelX.Storage.remove(package_resource_file);
 					if (KernelX.is_windows || KernelX.is_linux || KernelX.is_macintosh) {
-						KernelX.FileSystem.create_link(package_resource_file, source_file, false);
+						KernelX.Storage.create_link(package_resource_file, source_file, false);
 					}
 					else {
-						KernelX.FileSystem.copy(source_file, package_resource_file);
+						KernelX.Storage.copy(source_file, package_resource_file);
 					}
 					let resource_manifest_additional_sprite: Array<TextureResourcePropertySpriteProperty> = [];
 					for (let sprite_resource_property of resource_property.sprite) {
@@ -157,10 +157,10 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 				let source_file = make_scope_child_path(resource_directory, 'source.json');
 				let conversion_setting = find_conversion_setting_strict(package_setting.conversion, 'rton', resource_property.conversion);
 				{
-					KernelX.FileSystem.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
+					KernelX.Storage.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
 					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.rton';
 					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
-					KernelX.FileSystem.remove(package_resource_file);
+					KernelX.Storage.remove(package_resource_file);
 					KernelX.Tool.PopCap.ReflectionObjectNotation.encode_cipher_fs(package_resource_file, source_file, true, true, conversion_setting.version, conversion_setting.key, buffer.view());
 					resource_state.push({
 						category: resource_setting.category,
@@ -203,10 +203,10 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 						locale: resource_setting.category.locale,
 					};
 					runtime_variable.resolution.value = resource_resolution.toString();
-					KernelX.FileSystem.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_category));
+					KernelX.Storage.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_category));
 					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.ptx';
 					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
-					KernelX.FileSystem.remove(package_resource_file);
+					KernelX.Storage.remove(package_resource_file);
 					let sprite_resource_manifest_list: Array<TextureResourcePropertySpriteProperty> = [];
 					let sprite_list: Record<string, [null | Kernel.Image.Image, Kernel.Image.ImageView]>;
 					if (resource_resolution === resource_property.resolution) {
@@ -259,7 +259,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 					}
 					let resource_data = Kernel.ByteStreamView.watch(buffer.view());
 					Support.PopCap.Texture.Encoding.encode(atlas_view, resource_data, conversion_setting.format, texture_encode_option);
-					KernelX.FileSystem.write_file(package_resource_file, resource_data.stream_view());
+					KernelX.Storage.write_file(package_resource_file, resource_data.stream_view());
 					resource_state.push({
 						category: resource_category,
 						definition: {
@@ -295,10 +295,10 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 				let source_file = make_scope_child_path(resource_directory, 'source.json');
 				let conversion_setting = find_conversion_setting_strict(package_setting.conversion, 'pam', resource_property.conversion);
 				{
-					KernelX.FileSystem.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
+					KernelX.Storage.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
 					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.pam';
 					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
-					KernelX.FileSystem.remove(package_resource_file);
+					KernelX.Storage.remove(package_resource_file);
 					KernelX.Tool.PopCap.Animation.encode_fs(package_resource_file, source_file, conversion_setting.version, buffer.view());
 					resource_state.push({
 						category: resource_setting.category,
@@ -329,10 +329,10 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 				let source_file = make_scope_child_path(resource_directory, 'source.wav');
 				let conversion_setting = find_conversion_setting_strict(package_setting.conversion, 'wem', resource_property.conversion);
 				{
-					KernelX.FileSystem.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
+					KernelX.Storage.remove(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
 					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.wem';
 					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
-					KernelX.FileSystem.remove(package_resource_file);
+					KernelX.Storage.remove(package_resource_file);
 					Support.Wwise.Media.Encode.encode_fs(source_file, package_resource_file, conversion_setting.format);
 					resource_state.push({
 						category: resource_setting.category,

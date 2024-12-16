@@ -1,16 +1,19 @@
 //
 
-#include "shell/common.hpp"
-#include "shell/utility/interaction.hpp"
-#include "shell/utility/miscellaneous.hpp"
-#include "shell/bridge/library.hpp"
-#include "shell/bridge/launcher.hpp"
-#include "shell/main_console_bridge_client.hpp"
-#include "kernel/interface/interface.hpp"
-
 #if defined M_vld
 #include "vld.h"
 #endif
+
+#include "kernel/interface/interface.hpp"
+#include "shell/common.hpp"
+
+import twinning.shell.utility.exception;
+import twinning.shell.utility.library;
+import twinning.shell.utility.interaction;
+import twinning.shell.utility.miscellaneous;
+import twinning.shell.bridge.library;
+import twinning.shell.bridge.launcher;
+import twinning.shell.main_console_bridge_client;
 
 #pragma region main
 

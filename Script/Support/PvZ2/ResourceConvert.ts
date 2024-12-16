@@ -130,7 +130,6 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 			) => {
 				for (let name in tree) {
 					try {
-						//KernelX.FileSystem.rename(`${parent}/${name.toUpperCase()}`, `${parent}/${name}`);
 						PathUtility.rename_secure(`${parent}/${name.toUpperCase()}`, `${parent}/${name}`);
 					}
 					catch (e) {
@@ -174,7 +173,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 					let format = option.ptx.format.find((value) => (value.index === texture_additional_source.format))?.format;
 					assert_test(format !== undefined, `unknown texture format : ${texture_additional_source.format}`);
 					Console.verbosity(`    size : [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] of [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ] , format : ${format}`, []);
-					let data = KernelX.FileSystem.read_file(`${resource_directory}/${path}.ptx`);
+					let data = KernelX.Storage.read_file(`${resource_directory}/${path}.ptx`);
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(actual_size));
 					let image_view = image.view();
@@ -204,7 +203,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 			if (option.pam !== null && path.endsWith('.pam')) {
 				Console.verbosity(`  ${path}`, []);
 				try {
-					let data = KernelX.FileSystem.read_file(`${resource_directory}/${path}`);
+					let data = KernelX.Storage.read_file(`${resource_directory}/${path}`);
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let version_c = Kernel.Tool.PopCap.Animation.Version.value(option.pam.version);
 					let definition = Kernel.Tool.PopCap.Animation.Definition.Animation.default();
@@ -285,7 +284,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 			}
 			Console.information(los('support.pvz2.resource_convert:parse_resource_manifest'), []);
 			if (resource_path.toLowerCase().endsWith('rton')) {
-				let data = KernelX.FileSystem.read_file(`${resource_directory}/${resource_path}`);
+				let data = KernelX.Storage.read_file(`${resource_directory}/${resource_path}`);
 				let stream = Kernel.ByteStreamView.watch(data.view());
 				let result = Kernel.JSON.Value.default<ResourceManifest.Package>();
 				Kernel.Tool.PopCap.ReflectionObjectNotation.Decode.process(
@@ -296,7 +295,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 				resource_manifest = result.value;
 			}
 			if (resource_path.toLowerCase().endsWith('newton')) {
-				let data = KernelX.FileSystem.read_file(`${resource_directory}/${resource_path}`);
+				let data = KernelX.Storage.read_file(`${resource_directory}/${resource_path}`);
 				let stream = new ByteStreamView(data.view().value);
 				let result = ResourceManifest.NewTypeObjectNotation.Decode.process(
 					stream,

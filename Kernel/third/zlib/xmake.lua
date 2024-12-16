@@ -37,6 +37,12 @@ target('third.zlib', function()
 		'./zutil.c',
 		{}
 	)
+	add_includedirs(
+		{ public = true }
+	)
+	add_deps(
+		{}
+	)
 	if m.system:is('linux', 'macintosh', 'android', 'iphone') then
 		add_defines(
 			'Z_HAVE_UNISTD_H',

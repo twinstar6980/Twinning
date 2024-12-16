@@ -36,7 +36,7 @@ target('third.libpng', function()
 		{}
 	)
 	add_includedirs(
-		'../zlib',
+		'./../zlib',
 		{ public = true }
 	)
 	add_deps(

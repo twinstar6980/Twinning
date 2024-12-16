@@ -1,6 +1,6 @@
 {
 	"method": {
-		"xor.encrypt": {
+		"exor.encrypt": {
 			"filter": "()$",
 			"argument": {
 				"plain_file": "?input",

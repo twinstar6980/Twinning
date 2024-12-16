@@ -85,7 +85,7 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash {
 	export function create_xfl_content_file(
 		directory: string,
 	): void {
-		KernelX.FileSystem.write_file_s(`${directory}/main.xfl`, k_xfl_content);
+		KernelX.Storage.write_file_s(`${directory}/main.xfl`, k_xfl_content);
 		return;
 	}
 

@@ -710,7 +710,7 @@ class _CustomOptionFieldState extends State<CustomOptionField> {
             const SizedBox(height: 16),
           ...this.widget.option.map((value) => MenuItemButton(
             style: ButtonStyle(
-              backgroundColor: WidgetStatePropertyAll(value.$2 != this.widget.value ? null : theme.colorScheme.onSurface.withOpacity(0.12)),
+              backgroundColor: WidgetStatePropertyAll(value.$2 != this.widget.value ? null : theme.colorScheme.onSurface.withValues(alpha: 0.12)),
             ),
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: constraints.maxWidth - 16),
@@ -726,6 +726,7 @@ class _CustomOptionFieldState extends State<CustomOptionField> {
             ),
             onPressed: () async {
               this.widget.onChanged(value.$1);
+              this._focusNode.unfocus();
             },
           )),
         ],

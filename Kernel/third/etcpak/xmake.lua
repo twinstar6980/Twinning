@@ -57,7 +57,7 @@ target('third.etcpak', function()
 		{}
 	)
 	add_includedirs(
-		'..',
+		'./..',
 		{ public = true }
 	)
 	add_deps(

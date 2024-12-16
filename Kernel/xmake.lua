@@ -2,8 +2,8 @@ set_project('Kernel')
 
 add_rules('mode.debug', 'mode.release')
 
-add_moduledirs('../common/xmake')
-includes('../common/xmake/helper.lua')
+add_moduledirs('./../common/xmake')
+includes('./../common/xmake/helper.lua')
 apply_common_setting()
 
 includes('./third/mscharconv')
@@ -25,5 +25,5 @@ includes('./kernel')
 
 includes('./test')
 if m.system:is('windows', 'linux', 'macintosh') then
-	includes('../Shell/third/tinyfiledialogs')
+	includes('./../Shell/third/tinyfiledialogs')
 end

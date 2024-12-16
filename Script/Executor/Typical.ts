@@ -276,7 +276,7 @@ namespace Twinning.Script.Executor {
 				else {
 					assert_test(source.batch_argument !== null);
 					timer.start();
-					let all_item = KernelX.FileSystem[({ any: 'list', file: 'list_file', directory: 'list_directory' } as const)[source.filter[0]]](final_argument[source.argument[0].id]);
+					let all_item = KernelX.Storage[({ any: 'list', file: 'list_file', directory: 'list_directory' } as const)[source.filter[0]]](final_argument[source.argument[0].id]);
 					let valid_item = all_item.filter((value) => (source.filter[1]!.test(value)));
 					let failed_item = [] as Array<string>;
 					let progress = new TextGenerator.Progress('fraction', false, 40, valid_item.length);
@@ -314,13 +314,13 @@ namespace Twinning.Script.Executor {
 					state = false;
 				}
 				else if (!batch) {
-					state &&= KernelX.FileSystem[({ any: 'exist', file: 'exist_file', directory: 'exist_directory' } as const)[source.filter[0]]](input);
+					state &&= KernelX.Storage[({ any: 'exist', file: 'exist_file', directory: 'exist_directory' } as const)[source.filter[0]]](input);
 					if (!g_typical_method_disable_name_filter) {
 						state &&= source.filter[1].test(input);
 					}
 				}
 				else {
-					state &&= KernelX.FileSystem.exist_directory(input);
+					state &&= KernelX.Storage.exist_directory(input);
 				}
 				return state;
 			},

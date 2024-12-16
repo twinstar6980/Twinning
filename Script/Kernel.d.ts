@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 67
+ * @version 72
  */
 declare namespace Twinning.Kernel {
 
@@ -1107,8 +1107,8 @@ declare namespace Twinning.Kernel {
 
 	}
 
-	/** 文件系统 */
-	namespace FileSystem {
+	/** 存储 */
+	namespace Storage {
 
 		// ------------------------------------------------
 
@@ -1621,8 +1621,8 @@ declare namespace Twinning.Kernel {
 			/** 加密 */
 			namespace Encryption {
 
-				/** 异或 */
-				namespace XOR {
+				/** EXOR */
+				namespace EXOR {
 
 					/** 加密 */
 					namespace Encrypt {

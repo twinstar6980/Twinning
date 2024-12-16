@@ -108,10 +108,10 @@
 	"executor.implement:data.encoding.base64.decode:ripe_file": "Original file",
 	"executor.implement:data.encoding.base64.decode:raw_file": "Finished file",
 	// Executor/Implement/data.encryption
-	"executor.implement:data.encryption.xor.encrypt": "XOR Encrypt",
-	"executor.implement:data.encryption.xor.encrypt:plain_file": "Plaintext file",
-	"executor.implement:data.encryption.xor.encrypt:cipher_file": "Ciphertext file",
-	"executor.implement:data.encryption.xor.encrypt:key": "Key",
+	"executor.implement:data.encryption.exor.encrypt": "EXOR Encrypt",
+	"executor.implement:data.encryption.exor.encrypt:plain_file": "Plaintext file",
+	"executor.implement:data.encryption.exor.encrypt:cipher_file": "Ciphertext file",
+	"executor.implement:data.encryption.exor.encrypt:key": "Key",
 	// 
 	"executor.implement:data.encryption.rijndael.encrypt": "Rijndael Encrypt",
 	"executor.implement:data.encryption.rijndael.encrypt:plain_file": "Plaintext file",

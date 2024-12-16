@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = '120';
+	export const k_version = '121';
 
 	// ------------------------------------------------
 
@@ -33,13 +33,13 @@ namespace Twinning.Script {
 		export function exist_file(
 			path: string,
 		): boolean {
-			return Kernel.FileSystem.exist_file(Kernel.Path.value(path)).value;
+			return Kernel.Storage.exist_file(Kernel.Path.value(path)).value;
 		}
 
 		export function exist_directory(
 			path: string,
 		): boolean {
-			return Kernel.FileSystem.exist_directory(Kernel.Path.value(path)).value;
+			return Kernel.Storage.exist_directory(Kernel.Path.value(path)).value;
 		}
 
 		// ------------------------------------------------
@@ -47,7 +47,7 @@ namespace Twinning.Script {
 		export function read_json<Constraint extends Kernel.JSON.JS_Value>(
 			file: string,
 		): Constraint {
-			let data = Kernel.FileSystem.read_file(Kernel.Path.value(file));
+			let data = Kernel.Storage.read_file(Kernel.Path.value(file));
 			let data_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(data.view()));
 			let value = Kernel.JSON.Value.default<Constraint>();
 			let buffer = Kernel.ByteArray.allocate(Kernel.Size.value(0x400n));
@@ -69,7 +69,7 @@ namespace Twinning.Script {
 			script_file: string,
 			name: string,
 		): any {
-			let script = Kernel.FileSystem.read_file(Kernel.Path.value(script_file));
+			let script = Kernel.Storage.read_file(Kernel.Path.value(script_file));
 			return Kernel.Miscellaneous.g_context.evaluate(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(script.view()), Kernel.String.value(name), Kernel.Boolean.value(false));
 		}
 
@@ -136,10 +136,10 @@ namespace Twinning.Script {
 			let temporary_name = name !== null ? name : make_date_simple_string(new Date());
 			let temporary_path = PathUtility.generate_suffix_path(`${temporary()}/${temporary_name}`);
 			if (create === 'file') {
-				KernelX.FileSystem.create_file(temporary_path);
+				KernelX.Storage.create_file(temporary_path);
 			}
 			if (create === 'directory') {
-				KernelX.FileSystem.create_directory(temporary_path);
+				KernelX.Storage.create_directory(temporary_path);
 			}
 			return temporary_path;
 		}
@@ -148,8 +148,8 @@ namespace Twinning.Script {
 
 		export function initialize(
 		): void {
-			KernelX.FileSystem.create_directory(workspace());
-			KernelX.FileSystem.create_directory(temporary());
+			KernelX.Storage.create_directory(workspace());
+			KernelX.Storage.create_directory(temporary());
 			KernelX.Process.set_working_directory(workspace());
 			return;
 		}

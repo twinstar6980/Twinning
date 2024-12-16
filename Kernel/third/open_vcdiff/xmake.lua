@@ -48,8 +48,11 @@ target('third.open_vcdiff', function()
 	)
 	add_includedirs(
 		'.',
-		'../zlib',
+		'./../zlib',
 		{ public = true }
+	)
+	add_deps(
+		{}
 	)
 	on_load(function(target)
 		import('helper')

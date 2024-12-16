@@ -7,7 +7,7 @@ namespace Twinning.Script.Support.Marmalade.DZip.PackAutomatic {
 		version_number: [0n][number],
 	): [Kernel.ByteArray, Kernel.Size] {
 		let version_c = Kernel.Tool.Marmalade.DZip.Version.value({ number: version_number });
-		let resource_list = KernelX.FileSystem.list_file(resource_directory);
+		let resource_list = KernelX.Storage.list_file(resource_directory);
 		let definition_js: Kernel.Tool.Marmalade.DZip.Definition.JS_N.Package = {
 			resource: [],
 		};
@@ -21,7 +21,7 @@ namespace Twinning.Script.Support.Marmalade.DZip.PackAutomatic {
 				path: resource,
 				chunk: [{ flag: 'copy_coded' }],
 			});
-			let resource_size = KernelX.FileSystem.size_file(`${resource_directory}/${resource}`);
+			let resource_size = KernelX.Storage.size_file(`${resource_directory}/${resource}`);
 			data_size_bound += (2 + resource.length) + 6 + 16 + Number(resource_size); // path string + resource information + chunk information + resource data
 		}
 		Console.information(los('support.marmalade.dzip.pack_automatic:start'), [

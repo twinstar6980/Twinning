@@ -150,7 +150,7 @@ class CommandPanel extends StatelessWidget {
                             children: [
                               const SizedBox(width: 8),
                               Text(
-                                '${this.itemConfiguration.preset.whereNotNull().length}',
+                                '${this.itemConfiguration.preset.nonNulls.length}',
                                 overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(width: 4),

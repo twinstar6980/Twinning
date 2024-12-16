@@ -150,9 +150,9 @@ namespace Twinning.Script.Support.PvZ2.TextTable.Convert {
 		source_version: Version | 'automatic',
 		destination_version: Version,
 	): void {
-		let source_data = KernelX.FileSystem.read_file(source_file);
+		let source_data = KernelX.Storage.read_file(source_file);
 		let destination_data = convert(source_data.value, source_version, destination_version);
-		KernelX.FileSystem.write_file(destination_file, destination_data);
+		KernelX.Storage.write_file(destination_file, destination_data);
 		return;
 	}
 

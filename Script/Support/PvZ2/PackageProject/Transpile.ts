@@ -39,7 +39,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Transpile {
 					assert_test(conversion_setting !== undefined);
 					let new_source_file = make_scope_child_path(resource_directory, 'source.json');
 					KernelX.Tool.PopCap.ReflectionObjectNotation.decode_cipher_fs(source_file, new_source_file, conversion_setting.version, conversion_setting.key);
-					KernelX.FileSystem.remove(source_file);
+					KernelX.Storage.remove(source_file);
 					resource_setting.type = 'special_rton';
 					resource_setting.property = {
 						conversion: conversion_setting.name,
@@ -52,7 +52,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Transpile {
 					assert_test(conversion_setting !== undefined);
 					let new_source_file = make_scope_child_path(resource_directory, 'source.json');
 					KernelX.Tool.PopCap.Animation.decode_fs(source_file, new_source_file, conversion_setting.version);
-					KernelX.FileSystem.remove(source_file);
+					KernelX.Storage.remove(source_file);
 					resource_setting.type = 'special_pam';
 					resource_setting.property = {
 						conversion: conversion_setting.name,
@@ -63,7 +63,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Transpile {
 					Console.warning(`Transpiling by specialize_wem ...`, [`/${part_name}/${group_name}/${resource_name}`]);
 					let new_source_file = make_scope_child_path(resource_directory, 'source.wav');
 					let format = Support.Wwise.Media.Decode.decode_fs(source_file, new_source_file);
-					KernelX.FileSystem.remove(source_file);
+					KernelX.Storage.remove(source_file);
 					let conversion_setting = conversion_setting_map.wem.find((value) => (value.format === format));
 					if (conversion_setting === undefined) {
 						Console.warning(`could not find conversion setting for wem format ${format}`, []);
@@ -85,7 +85,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Transpile {
 					assert_test(conversion_setting !== undefined, `unknown texture format : ${resource_property.format}`);
 					let new_source_data_directory = make_scope_child_path(resource_directory, 'source.sprite');
 					let new_sprite_property_list: Array<SpecialPTXResourcePropertySpriteProperty> = [];
-					let data = KernelX.FileSystem.read_file(source_file);
+					let data = KernelX.Storage.read_file(source_file);
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(resource_property.size));
 					let image_view = image.view();
@@ -101,7 +101,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Transpile {
 							separate: source_sprite.separate,
 						});
 					}
-					KernelX.FileSystem.remove(source_file);
+					KernelX.Storage.remove(source_file);
 					resource_setting.type = 'special_ptx';
 					resource_setting.property = {
 						conversion: conversion_setting.name,
@@ -125,7 +125,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Transpile {
 					else {
 						KernelX.Tool.PopCap.ReflectionObjectNotation.encode_cipher_fs(new_source_file, source_file, true, true, conversion_setting.version, conversion_setting.key, buffer.view());
 					}
-					KernelX.FileSystem.remove(source_file);
+					KernelX.Storage.remove(source_file);
 					resource_setting.type = 'general';
 					resource_setting.property = {
 						path: resource_property.path + '.rton',
@@ -183,7 +183,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Transpile {
 					}
 					let resource_data = Kernel.ByteStreamView.watch(buffer.view());
 					Support.PopCap.Texture.Encoding.encode(atlas_view, resource_data, conversion_setting.format, texture_encode_option);
-					KernelX.FileSystem.write_file(new_source_file, resource_data.stream_view());
+					KernelX.Storage.write_file(new_source_file, resource_data.stream_view());
 					resource_setting.type = 'texture';
 					resource_setting.property = {
 						path: resource_property.path + '',
@@ -204,7 +204,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Transpile {
 					let conversion_setting = find_conversion_setting_strict(conversion_setting_map, 'pam', resource_property.conversion);
 					let new_source_file = make_scope_child_path(resource_directory, 'source.bin');
 					KernelX.Tool.PopCap.Animation.encode_fs(new_source_file, source_file, conversion_setting.version, buffer.view());
-					KernelX.FileSystem.remove(source_file);
+					KernelX.Storage.remove(source_file);
 					resource_setting.type = 'general';
 					resource_setting.property = {
 						path: resource_property.path + '.pam',
@@ -221,7 +221,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Transpile {
 					let conversion_setting = find_conversion_setting_strict(conversion_setting_map, 'wem', resource_property.conversion);
 					let new_source_file = make_scope_child_path(resource_directory, 'source.bin');
 					Support.Wwise.Media.Encode.encode_fs(new_source_file, source_file, conversion_setting.format);
-					KernelX.FileSystem.remove(source_file);
+					KernelX.Storage.remove(source_file);
 					resource_setting.type = 'general';
 					resource_setting.property = {
 						path: resource_property.path + '.wem',

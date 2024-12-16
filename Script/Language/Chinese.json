@@ -108,10 +108,10 @@
 	"executor.implement:data.encoding.base64.decode:ripe_file": "成品文件",
 	"executor.implement:data.encoding.base64.decode:raw_file": "原始文件",
 	// Executor/Implement/data.encryption
-	"executor.implement:data.encryption.xor.encrypt": "XOR 加密",
-	"executor.implement:data.encryption.xor.encrypt:plain_file": "明文文件",
-	"executor.implement:data.encryption.xor.encrypt:cipher_file": "密文文件",
-	"executor.implement:data.encryption.xor.encrypt:key": "密钥",
+	"executor.implement:data.encryption.exor.encrypt": "EXOR 加密",
+	"executor.implement:data.encryption.exor.encrypt:plain_file": "明文文件",
+	"executor.implement:data.encryption.exor.encrypt:cipher_file": "密文文件",
+	"executor.implement:data.encryption.exor.encrypt:key": "密钥",
 	// 
 	"executor.implement:data.encryption.rijndael.encrypt": "Rijndael 加密",
 	"executor.implement:data.encryption.rijndael.encrypt:plain_file": "明文文件",

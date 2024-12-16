@@ -171,7 +171,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.De
 		data_file: string,
 		definition_file: string,
 	): void {
-		let data = KernelX.FileSystem.read_file(data_file);
+		let data = KernelX.Storage.read_file(data_file);
 		let definition = process(new ByteStreamView(data.view().value));
 		KernelX.JSON.write_fs_js(definition_file, definition);
 		return;

@@ -190,7 +190,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 		parent_directory: string,
 		child_scope: Scope,
 	): Array<string> {
-		return (child_scope.length !== 0 ? [child_scope[0]] : KernelX.FileSystem.list_directory(parent_directory, 1n)).filter((value) => (value.length !== 0 && !value.startsWith('.')));
+		return (child_scope.length !== 0 ? [child_scope[0]] : KernelX.Storage.list_directory(parent_directory, 1n)).filter((value) => (value.length !== 0 && !value.startsWith('.')));
 	}
 
 	export function make_scope_root_path(
@@ -270,7 +270,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 	): void {
 		try {
 			let version_file = make_scope_child_path(project_directory, 'version.txt');
-			let version_data = KernelX.FileSystem.read_file(version_file);
+			let version_data = KernelX.Storage.read_file(version_file);
 			let version_text = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(version_data.view()));
 			assert_test(version_text === k_version.toString());
 		}

@@ -409,10 +409,10 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
       option.nextString(this._textureDirectory!);
     }
     if (option.check('-image_filter', state: this._loaded)) {
-      option.nextString(this._imageFilter!.mapIndexed((index, value) => value ? null : ConvertHelper.makeIntegerToString(index, false)).whereNotNull().join(','));
+      option.nextString(this._imageFilter!.mapIndexed((index, value) => value ? null : ConvertHelper.makeIntegerToString(index, false)).nonNulls.join(','));
     }
     if (option.check('-sprite_filter', state: this._loaded)) {
-      option.nextString(this._spriteFilter!.mapIndexed((index, value) => value ? null : ConvertHelper.makeIntegerToString(index, false)).whereNotNull().join(','));
+      option.nextString(this._spriteFilter!.mapIndexed((index, value) => value ? null : ConvertHelper.makeIntegerToString(index, false)).nonNulls.join(','));
     }
     if (option.check('-active_target', state: this._activated)) {
       option.nextBoolean(this._activeTarget!.$1);

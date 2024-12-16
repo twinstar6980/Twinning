@@ -417,7 +417,7 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 		definition_file: string,
 		version: typeof Kernel.Tool.PopCap.ReflectionObjectNotation.Version.Value,
 	): void {
-		let data = KernelX.FileSystem.read_file(data_file);
+		let data = KernelX.Storage.read_file(data_file);
 		let definition = process(new ByteStreamView(data.view().value), version);
 		KernelX.JSON.write_fs_js(definition_file, definition);
 		return;

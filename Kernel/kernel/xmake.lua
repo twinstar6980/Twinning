@@ -8,12 +8,14 @@ target('kernel', function()
 		{ install = false }
 	)
 	add_files(
+		'./**.cppm',
 		'./**.cpp',
+		m.root .. '/../common/cpp/std.cppm',
 		{}
 	)
 	add_includedirs(
 		m.root .. '',
-		{ private = true }
+		{}
 	)
 	add_deps(
 		'third.mscharconv',

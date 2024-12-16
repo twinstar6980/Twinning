@@ -1,20 +1,22 @@
 //
 
-#include "kernel/utility/utility.hpp"
-#include "kernel/interface/service.hpp"
-#include "kernel/interface/proxy.hpp"
-#include "kernel/executor/executor.hpp"
-#include <clocale>
+#include "kernel/common.hpp"
 
 #if defined M_vld
 #include "vld.h"
 #endif
 
+import twinning.kernel.utility;
+import twinning.kernel.interface.data;
+import twinning.kernel.interface.service;
+import twinning.kernel.interface.proxy;
+import twinning.kernel.executor.executor;
+
 namespace Twinning::Kernel::Interface {
 
 	#pragma region implement
 
-	inline auto service_executor_execute (
+	static auto service_executor_execute (
 		ExecutorProxy const & callback,
 		String const &        script,
 		List<String> const &  argument
@@ -24,7 +26,7 @@ namespace Twinning::Kernel::Interface {
 			script_text = script.tail(script.size() - 1_sz);
 		}
 		else {
-			auto script_data = FileSystem::read_file(Path{script});
+			auto script_data = Storage::read_file(Path{script});
 			script_text.bind(from_byte_view<Character>(script_data.view()));
 			script_data.unbind();
 		}
@@ -34,12 +36,12 @@ namespace Twinning::Kernel::Interface {
 
 	// ----------------
 
-	inline auto service_executor (
+	static auto service_executor (
 		ExecutorProxy const & callback_proxy,
 		MessageProxy const &  argument_proxy,
 		MessageProxy &        result_proxy
 	) -> Void {
-		std::setlocale(LC_ALL, "C");
+		std::setlocale(stddef::$LC_ALL, "C");
 		auto & argument = argument_proxy.value;
 		auto & result = result_proxy.value;
 		switch (argument[1_ix].hash().value) {
@@ -76,7 +78,7 @@ namespace Twinning::Kernel::Interface {
 	#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 	__attribute__((visibility("default")))
 	#endif
-	extern Service service = Service{
+	extern "C++" Service service = Service{
 		.executor = nullptr,
 		.initialize = [] () {
 			service.executor = new Executor{};

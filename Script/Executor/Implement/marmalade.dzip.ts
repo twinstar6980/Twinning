@@ -160,7 +160,7 @@ namespace Twinning.Script.Executor.Implement.marmalade.dzip {
 				],
 				worker: ({ resource_directory, data_file, version_number }) => {
 					let data = Support.Marmalade.DZip.PackAutomatic.pack(resource_directory, version_number as any);
-					KernelX.FileSystem.write_file(data_file, data[0].view().sub(Kernel.Size.value(0n), data[1]));
+					KernelX.Storage.write_file(data_file, data[0].view().sub(Kernel.Size.value(0n), data[1]));
 					return;
 				},
 				batch_argument: null,

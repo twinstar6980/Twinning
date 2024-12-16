@@ -673,7 +673,7 @@ namespace Twinning.Script.Console {
 							return los('console:input_command_need_previous_input');
 						}
 						result = state_data.last_value;
-						if (KernelX.FileSystem.exist(result)) {
+						if (KernelX.Storage.exist(result)) {
 							result = PathUtility.generate_suffix_path(result);
 							warning(los('console:path_is_exist_but_generate'), [result]);
 						}
@@ -690,9 +690,9 @@ namespace Twinning.Script.Console {
 							return los('console:input_command_need_previous_input');
 						}
 						result = state_data.last_value;
-						if (KernelX.FileSystem.exist(result)) {
+						if (KernelX.Storage.exist(result)) {
 							let move_path = PathUtility.generate_suffix_path(result);
-							KernelX.FileSystem.rename(result, move_path);
+							KernelX.Storage.rename(result, move_path);
 							warning(los('console:path_is_exist_but_move'), [move_path]);
 						}
 						break;
@@ -708,8 +708,8 @@ namespace Twinning.Script.Console {
 							return los('console:input_command_need_previous_input');
 						}
 						result = state_data.last_value;
-						if (KernelX.FileSystem.exist(result)) {
-							KernelX.FileSystem.remove(result);
+						if (KernelX.Storage.exist(result)) {
+							KernelX.Storage.remove(result);
 							warning(los('console:path_is_exist_but_delete'), []);
 						}
 						break;
@@ -725,7 +725,7 @@ namespace Twinning.Script.Console {
 							return los('console:input_command_need_previous_input');
 						}
 						result = state_data.last_value;
-						if (KernelX.FileSystem.exist(result)) {
+						if (KernelX.Storage.exist(result)) {
 							state_data.allow_overwrite = true;
 							warning(los('console:path_is_exist_but_overwrite'), []);
 						}
@@ -743,18 +743,18 @@ namespace Twinning.Script.Console {
 				return los('console:path_is_empty');
 			}
 			if (mode === 'input') {
-				if (!KernelX.FileSystem.exist(value)) {
+				if (!KernelX.Storage.exist(value)) {
 					return los('console:path_not_exist');
 				}
-				if (type === 'file' && !KernelX.FileSystem.exist_file(value)) {
+				if (type === 'file' && !KernelX.Storage.exist_file(value)) {
 					return los('console:path_is_exist_not_file');
 				}
-				if (type === 'directory' && !KernelX.FileSystem.exist_directory(value)) {
+				if (type === 'directory' && !KernelX.Storage.exist_directory(value)) {
 					return los('console:path_is_exist_not_directory');
 				}
 			}
 			if (mode === 'output') {
-				if (!state_data.allow_overwrite && KernelX.FileSystem.exist(value)) {
+				if (!state_data.allow_overwrite && KernelX.Storage.exist(value)) {
 					return los('console:path_is_exist');
 				}
 			}

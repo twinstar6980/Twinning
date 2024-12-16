@@ -13,6 +13,12 @@ target('third.Rijndael', function()
 		'./Rijndael.cpp',
 		{}
 	)
+	add_includedirs(
+		{ public = true }
+	)
+	add_deps(
+		{}
+	)
 	on_load(function(target)
 		import('helper')
 		helper.apply_compiler_option_basic(target)

@@ -63,7 +63,7 @@ class OptionItem extends StatelessWidget {
                             children: [
                               const SizedBox(width: 8),
                               Text(
-                                '${this.configuration.preset.whereNotNull().length}',
+                                '${this.configuration.preset.nonNulls.length}',
                                 overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(width: 4),

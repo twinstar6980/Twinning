@@ -44,7 +44,7 @@ namespace Twinning.Script.ProcessHelper {
 		}
 		for (let path of path_list) {
 			let path_base = `${path}/${name}`;
-			let path_extension = path_extension_list.find((value) => (KernelX.FileSystem.exist_file(`${path_base}${value}`)));
+			let path_extension = path_extension_list.find((value) => (KernelX.Storage.exist_file(`${path_base}${value}`)));
 			if (path_extension !== undefined) {
 				result = `${path_base}${path_extension}`;
 				break;
@@ -72,7 +72,7 @@ namespace Twinning.Script.ProcessHelper {
 		let input = `${temporary_directory}/input`;
 		let output = `${temporary_directory}/output`;
 		let error = `${temporary_directory}/error`;
-		KernelX.FileSystem.write_file_s(input, input_data);
+		KernelX.Storage.write_file_s(input, input_data);
 		if (KernelX.is_android && !Shell.is_basic) {
 			temporary_directory_fallback = `${AndroidHelper.k_remote_temporary_directory}/${PathUtility.name(temporary_directory)}`;
 			output = `${temporary_directory_fallback}/output`;
@@ -80,12 +80,12 @@ namespace Twinning.Script.ProcessHelper {
 			assert_test(KernelX.Process.execute_system_command(`su -c "mkdir -p -m 777 ${temporary_directory_fallback} ; touch ${output} ; chmod 777 ${output} ; touch ${error} ; chmod 777 ${error}"`) === 0n);
 		}
 		else {
-			KernelX.FileSystem.create_file(output);
-			KernelX.FileSystem.create_file(error);
+			KernelX.Storage.create_file(output);
+			KernelX.Storage.create_file(error);
 		}
 		let code = KernelX.Process.spawn_child(program, argument, environment, input, output, error);
 		let read_file = (path: string) => {
-			let data = KernelX.FileSystem.read_file_s(path);
+			let data = KernelX.Storage.read_file_s(path);
 			return normalize_string_line_feed(data);
 		};
 		let result = {
@@ -93,7 +93,7 @@ namespace Twinning.Script.ProcessHelper {
 			output: read_file(output),
 			error: read_file(error),
 		};
-		KernelX.FileSystem.remove(temporary_directory);
+		KernelX.Storage.remove(temporary_directory);
 		if (KernelX.is_android && !Shell.is_basic) {
 			assert_test(temporary_directory_fallback !== null);
 			assert_test(KernelX.Process.execute_system_command(`su -c "rm -rf ${temporary_directory_fallback}"`) === 0n);

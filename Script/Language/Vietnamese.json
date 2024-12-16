@@ -108,10 +108,10 @@
 	"executor.implement:data.encoding.base64.decode:ripe_file": "Tệp gốc",
 	"executor.implement:data.encoding.base64.decode:raw_file": "Tệp ra",
 	// Executor/Implement/data.encryption
-	"executor.implement:data.encryption.xor.encrypt": "Mã hóa XOR",
-	"executor.implement:data.encryption.xor.encrypt:plain_file": "Tệp văn bản gốc",
-	"executor.implement:data.encryption.xor.encrypt:cipher_file": "Tệp mã hóa",
-	"executor.implement:data.encryption.xor.encrypt:key": "Khóa",
+	"executor.implement:data.encryption.exor.encrypt": "Mã hóa EXOR",
+	"executor.implement:data.encryption.exor.encrypt:plain_file": "Tệp văn bản gốc",
+	"executor.implement:data.encryption.exor.encrypt:cipher_file": "Tệp mã hóa",
+	"executor.implement:data.encryption.exor.encrypt:key": "Khóa",
 	// 
 	"executor.implement:data.encryption.rijndael.encrypt": "Mã hóa Rijndael",
 	"executor.implement:data.encryption.rijndael.encrypt:plain_file": "Tệp văn bản gốc",

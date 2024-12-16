@@ -1,35 +1,44 @@
 #pragma once
 
-#define M_version "46"
+#pragma region version
 
-#include <type_traits>
-#include <exception>
-#include <algorithm>
-#include <cstddef>
-#include <cstdint>
-#include <cstring>
-#include <string_view>
-#include <string>
-#include <optional>
-#include <any>
-#include <span>
-#include <array>
-#include <vector>
-#include <unordered_map>
-#include <functional>
-#include <thread>
-#include <codecvt>
-#include <locale>
-#include <iostream>
+#define M_version "47"
 
-namespace Twinning::Shell {
+#pragma endregion
 
-	#pragma region literal
+#pragma region keyword
 
-	using namespace std::literals::string_literals;
+#define implicit\
+	
 
-	using namespace std::literals::string_view_literals;
+#define thiz\
+	(*this)
 
-	#pragma endregion
+#pragma endregion
 
-}
+#pragma region assertion
+
+#define assert_test(...)\
+	if (!(__VA_ARGS__)) {\
+		throw std::runtime_error{"assertion failed : " #__VA_ARGS__};\
+	}\
+	static_assert(true)
+
+#pragma endregion
+
+#pragma region miscellaneous
+
+#if defined M_system_windows
+#define M_declare_native_main_function int wmain (int argc, wchar_t * argv[])
+#endif
+#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
+#define M_declare_native_main_function int  main (int argc, char    * argv[])
+#endif
+
+#pragma endregion
+
+#pragma region import
+
+import twinning.common.std;
+
+#pragma endregion

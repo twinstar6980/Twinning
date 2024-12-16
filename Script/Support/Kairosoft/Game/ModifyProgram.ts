@@ -91,16 +91,16 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		game_directory: string,
 	): null | Platform {
 		let type: null | Platform = null;
-		if (KernelX.FileSystem.exist_file(`${game_directory}/KairoGames.exe`)) {
-			if (KernelX.FileSystem.exist_file(`${game_directory}/GameAssembly.dll`)) {
+		if (KernelX.Storage.exist_file(`${game_directory}/KairoGames.exe`)) {
+			if (KernelX.Storage.exist_file(`${game_directory}/GameAssembly.dll`)) {
 				type = 'windows_x32';
 			}
 		}
-		if (KernelX.FileSystem.exist_file(`${game_directory}/AndroidManifest.xml`)) {
-			if (KernelX.FileSystem.exist_file(`${game_directory}/lib/armeabi-v7a/libil2cpp.so`)) {
+		if (KernelX.Storage.exist_file(`${game_directory}/AndroidManifest.xml`)) {
+			if (KernelX.Storage.exist_file(`${game_directory}/lib/armeabi-v7a/libil2cpp.so`)) {
 				type = 'android_a32';
 			}
-			if (KernelX.FileSystem.exist_file(`${game_directory}/lib/arm64-v8a/libil2cpp.so`)) {
+			if (KernelX.Storage.exist_file(`${game_directory}/lib/arm64-v8a/libil2cpp.so`)) {
 				type = 'android_a64';
 			}
 		}
@@ -229,11 +229,11 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		}
 		let program_backup_file = `${target_directory}/.backup/program`;
 		Console.information(`Phase : check game file`, []);
-		assert_test(KernelX.FileSystem.exist_file(program_file) || KernelX.FileSystem.exist_file(program_backup_file));
-		assert_test(KernelX.FileSystem.exist_file(metadata_file));
-		if (!KernelX.FileSystem.exist_file(program_backup_file)) {
+		assert_test(KernelX.Storage.exist_file(program_file) || KernelX.Storage.exist_file(program_backup_file));
+		assert_test(KernelX.Storage.exist_file(metadata_file));
+		if (!KernelX.Storage.exist_file(program_backup_file)) {
 			Console.information(`Phase : backup original program`, []);
-			KernelX.FileSystem.copy(program_file, program_backup_file);
+			KernelX.Storage.copy(program_file, program_backup_file);
 		}
 		let dump_data: Array<string> = [];
 		Console.information(`Phase : dump program information via Il2CppDumper`, []);
@@ -250,7 +250,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 			);
 			Console.warning(`The output of Il2CppDumper :`, [dump_result.output]);
 			assert_test(normalize_string_line_feed(dump_result.output).endsWith(`Done!\nPress any key to exit...\n`), `execute failed by il2cpp_dumper`);
-			dump_data = KernelX.FileSystem.read_file_s(`${PathUtility.parent(il2cpp_dumper_program_file)}/dump.cs`).split('\n');
+			dump_data = KernelX.Storage.read_file_s(`${PathUtility.parent(il2cpp_dumper_program_file)}/dump.cs`).split('\n');
 		}
 		let symbol_address = {
 			CRC64: {
@@ -317,7 +317,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 			]);
 		}
 		Console.information(`Phase : load original program`, []);
-		let program_data = KernelX.FileSystem.read_file(program_backup_file);
+		let program_data = KernelX.Storage.read_file(program_backup_file);
 		let program_stream = new ByteStreamView(program_data.view().value);
 		if (disable_record_encryption) {
 			Console.information(`Phase : modify method 'RecordStore.ReadRecord'`, []);
@@ -435,7 +435,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 			}
 		}
 		Console.information(`Phase : save modified program`, []);
-		KernelX.FileSystem.write_file(program_file, program_data);
+		KernelX.Storage.write_file(program_file, program_data);
 		return;
 	}
 
