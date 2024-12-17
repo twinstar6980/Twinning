@@ -102,8 +102,8 @@ export namespace Twinning::Shell::Third::system::windows {
 
 	template <typename T>
 	inline auto $IID_PPV_ARGS_Helper (
-		T ** p
-	) -> void ** {
+		T * * p
+	) -> void * * {
 		return ::IID_PPV_ARGS_Helper<T>(p);
 	}
 

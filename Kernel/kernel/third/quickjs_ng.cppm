@@ -37,8 +37,6 @@ export namespace Twinning::Kernel::Third::quickjs_ng {
 
 	inline constexpr auto $JS_GetRuntime = ::JS_GetRuntime;
 
-	inline constexpr auto $JS_SetHostPromiseRejectionTracker = ::JS_SetHostPromiseRejectionTracker;
-
 	inline constexpr auto $JS_SetModuleLoaderFunc = ::JS_SetModuleLoaderFunc;
 
 	inline constexpr auto $JS_GetImportMeta = ::JS_GetImportMeta;
@@ -184,5 +182,11 @@ export namespace Twinning::Kernel::Third::quickjs_ng {
 	inline auto const $JS_NULL = JS_NULL;
 
 	inline auto const $JS_EXCEPTION = JS_EXCEPTION;
+
+	inline auto $JS_VALUE_GET_PTR (
+		JSValue v
+	) -> void * {
+		return JS_VALUE_GET_PTR(v);
+	}
 
 }

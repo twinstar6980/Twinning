@@ -2,7 +2,7 @@
 
 #pragma region version
 
-#define M_version "72"
+#define M_version "73"
 
 #pragma endregion
 
@@ -277,7 +277,7 @@
 	struct _type :\
 		_category {\
 		M_map(M_record_field, _item)\
-		inline friend auto operator == (\
+		inline friend constexpr auto operator == (\
 			_type const & thix,\
 			_type const & that\
 		) -> bool = default;\

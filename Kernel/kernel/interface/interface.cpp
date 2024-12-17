@@ -1,10 +1,10 @@
 //
 
-#include "kernel/common.hpp"
-
 #if defined M_vld
 #include "vld.h"
 #endif
+
+#include "kernel/common.hpp"
 
 import twinning.kernel.utility;
 import twinning.kernel.interface.data;

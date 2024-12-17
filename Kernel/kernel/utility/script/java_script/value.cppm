@@ -2,9 +2,6 @@ module;
 
 #include "kernel/common.hpp"
 
-// NOTE : DEFINE
-#define JS_VALUE_GET_PTR(v) ((v).u.ptr)
-
 export module twinning.kernel.utility.script.java_script.value;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
@@ -171,16 +168,6 @@ export namespace Twinning::Kernel::JavaScript {
 
 		auto execute_pending_job (
 			Context & context
-		) -> Void;
-
-		#pragma endregion
-
-		#pragma region promise
-
-		auto disable_promise_rejection_tracker (
-		) -> Void;
-
-		auto enable_promise_rejection_tracker (
 		) -> Void;
 
 		#pragma endregion
@@ -1190,19 +1177,6 @@ export namespace Twinning::Kernel::JavaScript {
 
 	namespace Detail {
 
-		inline auto custom_promise_rejection_tracker (
-			Third::quickjs_ng::$JSContext * ctx,
-			Third::quickjs_ng::$JSValue     promise,
-			Third::quickjs_ng::$JSValue     reason,
-			Third::quickjs_ng::$JS_BOOL     is_handled,
-			void *                          opaque
-		) -> void {
-			// TODO
-			return;
-		}
-
-		// ----------------
-
 		inline auto custom_module_loader (
 			Third::quickjs_ng::$JSContext * ctx,
 			char const *                    module_name,
@@ -1241,7 +1215,7 @@ export namespace Twinning::Kernel::JavaScript {
 			if (Third::quickjs_ng::$JS_IsException(value)) {
 				return nullptr;
 			}
-			auto definition = static_cast<Third::quickjs_ng::$JSModuleDef *>(JS_VALUE_GET_PTR(value));
+			auto definition = static_cast<Third::quickjs_ng::$JSModuleDef *>(Third::quickjs_ng::$JS_VALUE_GET_PTR(value));
 			Third::quickjs_ng::$JS_FreeValue(ctx, value);
 			auto meta = Third::quickjs_ng::$JS_GetImportMeta(ctx, definition);
 			if (Third::quickjs_ng::$JS_IsException(meta)) {
@@ -1417,28 +1391,6 @@ export namespace Twinning::Kernel::JavaScript {
 		if (count < 0) {
 			throw ExecutionException{as_lvalue(context.catch_exception())};
 		}
-		return;
-	}
-
-	// ----------------
-
-	inline auto Runtime::disable_promise_rejection_tracker (
-	) -> Void {
-		Third::quickjs_ng::$JS_SetHostPromiseRejectionTracker(
-			thiz._runtime(),
-			nullptr,
-			nullptr
-		);
-		return;
-	}
-
-	inline auto Runtime::enable_promise_rejection_tracker (
-	) -> Void {
-		Third::quickjs_ng::$JS_SetHostPromiseRejectionTracker(
-			thiz._runtime(),
-			&Detail::custom_promise_rejection_tracker,
-			nullptr
-		);
 		return;
 	}
 
