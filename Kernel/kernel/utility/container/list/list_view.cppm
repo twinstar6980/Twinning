@@ -16,22 +16,22 @@ export namespace Twinning::Kernel {
 
 	template <typename TElement, auto t_constant> requires
 		CategoryConstraint<IsPureInstance<TElement>>
-		&& (IsSameV<t_constant, ZBoolean>)
+		&& (IsSameV<t_constant, Boolean>)
 	class ListView {
 
 	private:
 
-		using CView = ListView<TElement, true>;
+		using CView = ListView<TElement, k_true>;
 
 	public:
 
 		using Element = TElement;
 
-		inline static constexpr auto constant = ZBoolean{t_constant};
+		inline static constexpr auto constant = Boolean{t_constant};
 
-		using QElement = AsConstantIf<Element, constant>;
+		using QElement = AsConstantIf<Element, constant.value>;
 
-		using QIterator = Pointer<AsConstantIf<Element, constant>>;
+		using QIterator = Pointer<AsConstantIf<Element, constant.value>>;
 
 	protected:
 
@@ -95,12 +95,12 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		implicit operator CView & () requires
-			(!constant) {
+			(!constant.value) {
 			return self_cast<CView>(thiz);
 		}
 
 		implicit operator CView const & () const requires
-			(!constant) {
+			(!constant.value) {
 			return self_cast<CView>(thiz);
 		}
 
@@ -255,11 +255,11 @@ export namespace Twinning::Kernel {
 
 	template <typename Element> requires
 		AutoConstraint
-	using VListView = ListView<Element, false>;
+	using VListView = ListView<Element, k_false>;
 
 	template <typename Element> requires
 		AutoConstraint
-	using CListView = ListView<Element, true>;
+	using CListView = ListView<Element, k_true>;
 
 	#pragma endregion
 

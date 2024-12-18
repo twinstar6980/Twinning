@@ -20,20 +20,20 @@ export namespace Twinning::Kernel::Image {
 
 	template <typename TPixel, auto t_constant> requires
 		CategoryConstraint<IsPureInstance<TPixel>>
-		&& (IsSameV<t_constant, ZBoolean>)
+		&& (IsSameV<t_constant, Boolean>)
 	class BasicImageView {
 
 	private:
 
-		using CView = BasicImageView<TPixel, true>;
+		using CView = BasicImageView<TPixel, k_true>;
 
 	public:
 
 		using Pixel = TPixel;
 
-		inline static constexpr auto constant = ZBoolean{t_constant};
+		inline static constexpr auto constant = Boolean{t_constant};
 
-		using QPixel = AsConstantIf<Pixel, constant>;
+		using QPixel = AsConstantIf<Pixel, constant.value>;
 
 		using QPixelRow = ListView<Pixel, constant>;
 
@@ -95,12 +95,12 @@ export namespace Twinning::Kernel::Image {
 		// ----------------
 
 		implicit operator CView & () requires
-			(!constant) {
+			(!constant.value) {
 			return self_cast<CView>(thiz);
 		}
 
 		implicit operator CView const & () const requires
-			(!constant) {
+			(!constant.value) {
 			return self_cast<CView>(thiz);
 		}
 
@@ -142,7 +142,7 @@ export namespace Twinning::Kernel::Image {
 		auto fill (
 			Pixel const & pixel
 		) const -> Void requires
-			(!constant) {
+			(!constant.value) {
 			for (auto & row : thiz.data()) {
 				Range::assign(row, pixel);
 			}
@@ -152,7 +152,7 @@ export namespace Twinning::Kernel::Image {
 		auto draw (
 			CView const & image
 		) const -> Void requires
-			(!constant) {
+			(!constant.value) {
 			assert_test(thiz.size() == image.size());
 			Range::convert_from(
 				thiz.data(),
@@ -196,11 +196,11 @@ export namespace Twinning::Kernel::Image {
 
 	template <typename Pixel> requires
 		AutoConstraint
-	using VBasicImageView = BasicImageView<Pixel, false>;
+	using VBasicImageView = BasicImageView<Pixel, k_false>;
 
 	template <typename Pixel> requires
 		AutoConstraint
-	using CBasicImageView = BasicImageView<Pixel, true>;
+	using CBasicImageView = BasicImageView<Pixel, k_true>;
 
 	#pragma endregion
 

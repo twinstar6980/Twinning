@@ -38,7 +38,7 @@ export namespace Twinning::Kernel {
 
 		using typename List::Iterator;
 
-		using View = MapView<Key, Value, false>;
+		using View = MapView<Key, Value, k_false>;
 
 		using VKey = Key;
 
@@ -48,7 +48,7 @@ export namespace Twinning::Kernel {
 
 		using typename List::VIterator;
 
-		using VView = MapView<Key, Value, false>;
+		using VView = MapView<Key, Value, k_false>;
 
 		using CKey = TKey const;
 
@@ -58,7 +58,7 @@ export namespace Twinning::Kernel {
 
 		using typename List::CIterator;
 
-		using CView = MapView<Key, Value, true>;
+		using CView = MapView<Key, Value, k_true>;
 
 	public:
 

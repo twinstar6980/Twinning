@@ -33,7 +33,7 @@ export namespace Twinning::Kernel {
 
 		inline static constexpr auto mode = StreamMode{t_mode};
 
-		using ListView = TMListView<Element, t_mode == StreamMode::Constant::i()>;
+		using ListView = TMListView<Element, mbox<Boolean>(t_mode == StreamMode::Constant::i())>;
 
 		using QElement = typename ListView::QElement;
 

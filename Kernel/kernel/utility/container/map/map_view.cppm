@@ -20,13 +20,13 @@ export namespace Twinning::Kernel {
 
 	template <typename TKey, typename TValue, auto t_constant> requires
 		CategoryConstraint<IsPureInstance<TKey> && IsPureInstance<TValue>>
-		&& (IsSameV<t_constant, ZBoolean>)
+		&& (IsSameV<t_constant, Boolean>)
 	class MapView :
 		protected ListView<KeyValuePair<TKey, TValue>, t_constant> {
 
 	private:
 
-		using CView = MapView<TKey, TValue, true>;
+		using CView = MapView<TKey, TValue, k_true>;
 
 		using ListView = ListView<KeyValuePair<TKey, TValue>, t_constant>;
 
@@ -36,13 +36,13 @@ export namespace Twinning::Kernel {
 
 		using Value = TValue;
 
-		inline static constexpr auto constant = ZBoolean{t_constant};
+		inline static constexpr auto constant = Boolean{t_constant};
 
 		using typename ListView::Element;
 
-		using QKey = AsConstantIf<Key, constant>;
+		using QKey = AsConstantIf<Key, constant.value>;
 
-		using QValue = AsConstantIf<Value, constant>;
+		using QValue = AsConstantIf<Value, constant.value>;
 
 		using typename ListView::QElement;
 
@@ -97,12 +97,12 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		implicit operator CView & () requires
-			(!constant) {
+			(!constant.value) {
 			return self_cast<CView>(thiz);
 		}
 
 		implicit operator CView const & () const requires
-			(!constant) {
+			(!constant.value) {
 			return self_cast<CView>(thiz);
 		}
 
@@ -263,11 +263,11 @@ export namespace Twinning::Kernel {
 
 	template <typename Key, typename Value> requires
 		AutoConstraint
-	using VMapView = MapView<Key, Value, false>;
+	using VMapView = MapView<Key, Value, k_false>;
 
 	template <typename Key, typename Value> requires
 		AutoConstraint
-	using CMapView = MapView<Key, Value, true>;
+	using CMapView = MapView<Key, Value, k_true>;
 
 	#pragma endregion
 

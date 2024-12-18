@@ -239,7 +239,7 @@ export namespace Twinning::Kernel {
 			ThisI &      thix,
 			That const & that
 		) -> Void requires
-			(!t_constant) {
+			(!t_constant.value) {
 			StringParser::read_byte_list(thix, that);
 			return;
 		}

@@ -84,7 +84,7 @@ export namespace Twinning::Kernel {
 
 	template <typename SourceElement, auto constant> requires
 		CategoryConstraint<IsPureInstance<SourceElement>>
-		&& (IsSameV<constant, ZBoolean>)
+		&& (IsSameV<constant, Boolean>)
 	inline auto to_byte_view (
 		ListView<SourceElement, constant> const & source
 	) -> ByteListView<constant> {
@@ -93,7 +93,7 @@ export namespace Twinning::Kernel {
 
 	template <typename DestinationElement, template <typename, auto> typename DestinationView = ListView, auto constant> requires
 		CategoryConstraint<IsPureInstance<DestinationElement>>
-		&& (IsSameV<constant, ZBoolean>)
+		&& (IsSameV<constant, Boolean>)
 	inline auto from_byte_view (
 		ByteListView<constant> const & source
 	) -> DestinationView<DestinationElement, constant> {

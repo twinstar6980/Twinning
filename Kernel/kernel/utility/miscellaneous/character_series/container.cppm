@@ -18,14 +18,14 @@ export namespace Twinning::Kernel {
 
 	template <typename TElement, auto t_constant> requires
 		CategoryConstraint<IsPureInstance<TElement>>
-		&& (IsSameV<t_constant, ZBoolean>)
+		&& (IsSameV<t_constant, Boolean>)
 		&& (IsCharacterBox<TElement>)
 	class BasicCharacterListView :
 		public ListView<TElement, t_constant> {
 
 	private:
 
-		using CView = BasicCharacterListView<TElement, true>;
+		using CView = BasicCharacterListView<TElement, k_true>;
 
 		using ListView = ListView<TElement, t_constant>;
 
@@ -78,12 +78,12 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		implicit operator CView & () requires
-			(!constant) {
+			(!constant.value) {
 			return self_cast<CView>(thiz);
 		}
 
 		implicit operator CView const & () const requires
-			(!constant) {
+			(!constant.value) {
 			return self_cast<CView>(thiz);
 		}
 
@@ -119,11 +119,11 @@ export namespace Twinning::Kernel {
 
 	template <typename Element> requires
 		AutoConstraint
-	using VBasicCharacterListView = BasicCharacterListView<Element, false>;
+	using VBasicCharacterListView = BasicCharacterListView<Element, k_false>;
 
 	template <typename Element> requires
 		AutoConstraint
-	using CBasicCharacterListView = BasicCharacterListView<Element, true>;
+	using CBasicCharacterListView = BasicCharacterListView<Element, k_true>;
 
 	// ----------------
 
@@ -143,19 +143,19 @@ export namespace Twinning::Kernel {
 
 		using typename List::Iterator;
 
-		using View = BasicCharacterListView<Element, false>;
+		using View = BasicCharacterListView<Element, k_false>;
 
 		using typename List::VElement;
 
 		using typename List::VIterator;
 
-		using VView = BasicCharacterListView<Element, false>;
+		using VView = BasicCharacterListView<Element, k_false>;
 
 		using typename List::CElement;
 
 		using typename List::CIterator;
 
-		using CView = BasicCharacterListView<Element, true>;
+		using CView = BasicCharacterListView<Element, k_true>;
 
 	public:
 
@@ -302,19 +302,19 @@ export namespace Twinning::Kernel {
 
 		using typename Array::Iterator;
 
-		using View = BasicCharacterListView<Element, false>;
+		using View = BasicCharacterListView<Element, k_false>;
 
 		using typename Array::VElement;
 
 		using typename Array::VIterator;
 
-		using VView = BasicCharacterListView<Element, false>;
+		using VView = BasicCharacterListView<Element, k_false>;
 
 		using typename Array::CElement;
 
 		using typename Array::CIterator;
 
-		using CView = BasicCharacterListView<Element, true>;
+		using CView = BasicCharacterListView<Element, k_true>;
 
 	public:
 
@@ -462,19 +462,19 @@ export namespace Twinning::Kernel {
 
 		using typename StaticArray::Iterator;
 
-		using View = BasicCharacterListView<Element, false>;
+		using View = BasicCharacterListView<Element, k_false>;
 
 		using typename StaticArray::VElement;
 
 		using typename StaticArray::VIterator;
 
-		using VView = BasicCharacterListView<Element, false>;
+		using VView = BasicCharacterListView<Element, k_false>;
 
 		using typename StaticArray::CElement;
 
 		using typename StaticArray::CIterator;
 
-		using CView = BasicCharacterListView<Element, true>;
+		using CView = BasicCharacterListView<Element, k_true>;
 
 	public:
 

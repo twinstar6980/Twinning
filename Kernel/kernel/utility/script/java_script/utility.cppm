@@ -193,7 +193,7 @@ export namespace Twinning::Kernel::JavaScript {
 		template <auto function, auto forward_object> requires
 			CategoryConstraint<>
 			&& (IsGlobalFunction<decltype(function)>)
-			&& (IsSameV<forward_object, ZBoolean>)
+			&& (IsSameV<forward_object, Boolean>)
 		inline auto proxy_native_function_wrapper (
 			Context &     context,
 			Value &       object,
@@ -213,7 +213,7 @@ export namespace Twinning::Kernel::JavaScript {
 		template <auto function, auto forward_object> requires
 			CategoryConstraint<>
 			&& (IsGlobalFunction<decltype(function)>)
-			&& (IsSameV<forward_object, ZBoolean>)
+			&& (IsSameV<forward_object, Boolean>)
 		inline constexpr auto make_proxy_native_function_wrapper (
 		) -> auto {
 			return &proxy_native_function_wrapper<function, forward_object>;
@@ -224,7 +224,7 @@ export namespace Twinning::Kernel::JavaScript {
 	template <auto function, auto forward_object> requires
 		CategoryConstraint<>
 		&& (IsGlobalFunction<decltype(function)>)
-		&& (IsSameV<forward_object, ZBoolean>)
+		&& (IsSameV<forward_object, Boolean>)
 	inline constexpr auto & proxy_native_function_wrapper = *Detail::make_proxy_native_function_wrapper<function, forward_object>();
 
 	// ----------------

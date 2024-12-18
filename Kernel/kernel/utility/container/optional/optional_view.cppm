@@ -14,16 +14,16 @@ export namespace Twinning::Kernel {
 
 	template <typename TValue, auto t_constant> requires
 		CategoryConstraint<IsPureInstance<TValue>>
-		&& (IsSameV<t_constant, ZBoolean>)
+		&& (IsSameV<t_constant, Boolean>)
 	class OptionalView {
 
 	public:
 
 		using Value = TValue;
 
-		inline static constexpr auto constant = ZBoolean{t_constant};
+		inline static constexpr auto constant = Boolean{t_constant};
 
-		using QValue = AsConstantIf<Value, constant>;
+		using QValue = AsConstantIf<Value, constant.value>;
 
 	protected:
 
@@ -142,11 +142,11 @@ export namespace Twinning::Kernel {
 
 	template <typename Value> requires
 		AutoConstraint
-	using VOptionalView = OptionalView<Value, false>;
+	using VOptionalView = OptionalView<Value, k_false>;
 
 	template <typename Value> requires
 		AutoConstraint
-	using COptionalView = OptionalView<Value, true>;
+	using COptionalView = OptionalView<Value, k_true>;
 
 	#pragma endregion
 

@@ -135,13 +135,13 @@ export namespace Twinning::Kernel::JavaScript {
 			That const & that
 		) -> Void {
 			if constexpr (t_type == NativeFunctionWrapperType::Constant::function()) {
-				thix.set_object_of_native_function<&proxy_native_function_wrapper<t_function, false>>(that.name, k_false);
+				thix.set_object_of_native_function<&proxy_native_function_wrapper<t_function, k_false>>(that.name, k_false);
 			}
 			if constexpr (t_type == NativeFunctionWrapperType::Constant::method()) {
-				thix.set_object_of_native_function<&proxy_native_function_wrapper<t_function, true>>(that.name, k_false);
+				thix.set_object_of_native_function<&proxy_native_function_wrapper<t_function, k_true>>(that.name, k_false);
 			}
 			if constexpr (t_type == NativeFunctionWrapperType::Constant::constructor()) {
-				thix.set_object_of_native_function<&proxy_native_function_wrapper<t_function, false>>(that.name, k_true);
+				thix.set_object_of_native_function<&proxy_native_function_wrapper<t_function, k_false>>(that.name, k_true);
 			}
 			return;
 		}

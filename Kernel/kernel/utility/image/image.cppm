@@ -28,15 +28,15 @@ export namespace Twinning::Kernel::Image {
 
 		using VPixel = Pixel;
 
-		using VPixelRow = ListView<Pixel, false>;
+		using VPixelRow = ListView<Pixel, k_false>;
 
-		using VView = BasicImageView<Pixel, false>;
+		using VView = BasicImageView<Pixel, k_false>;
 
 		using CPixel = Pixel const;
 
-		using CPixelRow = ListView<Pixel, true>;
+		using CPixelRow = ListView<Pixel, k_true>;
 
-		using CView = BasicImageView<Pixel, true>;
+		using CView = BasicImageView<Pixel, k_true>;
 
 	protected:
 

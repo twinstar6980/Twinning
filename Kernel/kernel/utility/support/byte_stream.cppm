@@ -293,7 +293,7 @@ export namespace Twinning::Kernel {
 			ThisI &      thix,
 			That const & that
 		) -> Void requires
-			(!t_constant) {
+			(!t_constant.value) {
 			for (auto & element : that) {
 				thix.read(element);
 			}

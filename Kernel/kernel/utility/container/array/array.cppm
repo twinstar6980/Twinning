@@ -26,19 +26,19 @@ export namespace Twinning::Kernel {
 
 		using Iterator = Pointer<Element>;
 
-		using View = ListView<Element, false>;
+		using View = ListView<Element, k_false>;
 
 		using VElement = Element;
 
 		using VIterator = Pointer<Element>;
 
-		using VView = ListView<Element, false>;
+		using VView = ListView<Element, k_false>;
 
 		using CElement = Element const;
 
 		using CIterator = Pointer<Element const>;
 
-		using CView = ListView<Element, true>;
+		using CView = ListView<Element, k_true>;
 
 	protected:
 

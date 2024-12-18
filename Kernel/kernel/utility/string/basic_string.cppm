@@ -35,19 +35,19 @@ export namespace Twinning::Kernel {
 
 		using typename BasicCharacterList::Iterator;
 
-		using View = BasicStringView<TElement, false>;
+		using View = BasicStringView<TElement, k_false>;
 
 		using typename BasicCharacterList::VElement;
 
 		using typename BasicCharacterList::VIterator;
 
-		using VView = BasicStringView<TElement, false>;
+		using VView = BasicStringView<TElement, k_false>;
 
 		using typename BasicCharacterList::CElement;
 
 		using typename BasicCharacterList::CIterator;
 
-		using CView = BasicStringView<TElement, true>;
+		using CView = BasicStringView<TElement, k_true>;
 
 	public:
 
@@ -297,7 +297,7 @@ export namespace Twinning::Kernel {
 
 	template <typename Source> requires
 		CategoryConstraint<IsPureInstance<Source>>
-		&& (IsConvertible<Source, BasicStringView<typename Source::Element, true> const &>)
+		&& (IsConvertible<Source, BasicStringView<typename Source::Element, k_true> const &>)
 	inline auto make_null_terminated_string (
 		Source const & source
 	) -> BasicString<typename Source::Element> {

@@ -13,16 +13,16 @@ export namespace Twinning::Kernel {
 
 	template <typename TValue, auto t_constant> requires
 		CategoryConstraint<IsPureInstance<TValue>>
-		&& (IsSameV<t_constant, ZBoolean>)
+		&& (IsSameV<t_constant, Boolean>)
 	class WrapperView {
 
 	public:
 
 		using Value = TValue;
 
-		inline static constexpr auto constant = ZBoolean{t_constant};
+		inline static constexpr auto constant = Boolean{t_constant};
 
-		using QValue = AsConstantIf<Value, constant>;
+		using QValue = AsConstantIf<Value, constant.value>;
 
 	protected:
 
@@ -111,11 +111,11 @@ export namespace Twinning::Kernel {
 
 	template <typename Value> requires
 		AutoConstraint
-	using VWrapperView = WrapperView<Value, false>;
+	using VWrapperView = WrapperView<Value, k_false>;
 
 	template <typename Value> requires
 		AutoConstraint
-	using CWrapperView = WrapperView<Value, true>;
+	using CWrapperView = WrapperView<Value, k_true>;
 
 	#pragma endregion
 

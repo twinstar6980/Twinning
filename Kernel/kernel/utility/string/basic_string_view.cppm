@@ -18,7 +18,7 @@ export namespace Twinning::Kernel {
 
 	template <typename TElement, auto t_constant> requires
 		CategoryConstraint<IsPureInstance<TElement>>
-		&& (IsSameV<t_constant, ZBoolean>)
+		&& (IsSameV<t_constant, Boolean>)
 		&& (IsCharacterBox<TElement>)
 	class BasicStringView :
 		public BasicCharacterListView<TElement, t_constant> {
@@ -27,7 +27,7 @@ export namespace Twinning::Kernel {
 
 		using BasicCharacterListView = BasicCharacterListView<TElement, t_constant>;
 
-		using CView = BasicStringView<TElement, true>;
+		using CView = BasicStringView<TElement, k_true>;
 
 	public:
 
@@ -78,12 +78,12 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		implicit operator CView & () requires
-			(!constant) {
+			(!constant.value) {
 			return self_cast<CView>(thiz);
 		}
 
 		implicit operator CView const & () const requires
-			(!constant) {
+			(!constant.value) {
 			return self_cast<CView>(thiz);
 		}
 
@@ -93,7 +93,7 @@ export namespace Twinning::Kernel {
 
 		constexpr auto as_lower_case (
 		) const -> Void requires
-			(!constant) &&
+			(!constant.value) &&
 			(IsSame<Element, Character>) {
 			Range::each(thiz, CharacterType::as_alpha_lower);
 			return;
@@ -101,7 +101,7 @@ export namespace Twinning::Kernel {
 
 		constexpr auto as_upper_case (
 		) const -> Void requires
-			(!constant) &&
+			(!constant.value) &&
 			(IsSame<Element, Character>) {
 			Range::each(thiz, CharacterType::as_alpha_upper);
 			return;
@@ -204,11 +204,11 @@ export namespace Twinning::Kernel {
 
 	template <typename Element> requires
 		AutoConstraint
-	using VBasicStringView = BasicStringView<Element, false>;
+	using VBasicStringView = BasicStringView<Element, k_false>;
 
 	template <typename Element> requires
 		AutoConstraint
-	using CBasicStringView = BasicStringView<Element, true>;
+	using CBasicStringView = BasicStringView<Element, k_true>;
 
 	#pragma endregion
 
