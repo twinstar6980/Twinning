@@ -136,8 +136,8 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			GameReflectionModel.ObjectDescriptor descriptor
 		) {
 			return new () {
-				Descriptor = descriptor,
 				Host = this,
+				Descriptor = descriptor,
 				Children = descriptor.Derived.Select(this.CreateSource).ToList(),
 			};
 		}

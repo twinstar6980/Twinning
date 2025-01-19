@@ -55,6 +55,7 @@ namespace AssistantPlus {
 		) {
 			AppDomain.CurrentDomain.ProcessExit += this.OnProcessExit;
 			this.UnhandledException += this.OnUnhandledException;
+			TaskScheduler.UnobservedTaskException += this.OnUnobservedTaskException;
 			var window = default(Window);
 			try {
 				var argument = Environment.GetCommandLineArgs();
@@ -191,7 +192,7 @@ namespace AssistantPlus {
 
 		// ----------------
 
-		protected void OnProcessExit (
+		private void OnProcessExit (
 			Object?   sender,
 			EventArgs args
 		) {
@@ -199,30 +200,50 @@ namespace AssistantPlus {
 			return;
 		}
 
-		protected void OnUnhandledException (
+		private void OnUnhandledException (
 			Object                                        sender,
 			Microsoft.UI.Xaml.UnhandledExceptionEventArgs args
 		) {
-			if (App.MainWindowIsInitialized) {
-				args.Handled = true;
-				try {
-					_ = ControlHelper.ShowDialogAsAutomatic(App.MainWindow.Content, "Unhandled Exception", new TextBlock() {
-						HorizontalAlignment = HorizontalAlignment.Stretch,
-						VerticalAlignment = VerticalAlignment.Stretch,
-						TextWrapping = TextWrapping.Wrap,
-						Text = args.Exception.ToString(),
-					}, null);
-				}
-				catch (Exception) {
-					// ignored
-				}
-			}
+			args.Handled = true;
+			this.HandleException(args.Exception);
+			return;
+		}
+
+		private void OnUnobservedTaskException (
+			Object?                          sender,
+			UnobservedTaskExceptionEventArgs args
+		) {
+			args.SetObserved();
+			this.HandleException(args.Exception);
 			return;
 		}
 
 		#endregion
 
 		#region utility
+
+		private void HandleException (
+			Exception exception
+		) {
+			if (App.MainWindowIsInitialized) {
+				App.MainWindow.DispatcherQueue.EnqueueAsync(() => {
+					try {
+						_ = ControlHelper.ShowDialogAsAutomatic(App.MainWindow.Content, "Unhandled Exception", new TextBlock() {
+							HorizontalAlignment = HorizontalAlignment.Stretch,
+							VerticalAlignment = VerticalAlignment.Stretch,
+							TextWrapping = TextWrapping.Wrap,
+							Text = exception.ToString(),
+						}, null);
+					}
+					catch (Exception) {
+						// ignored
+					}
+				});
+			}
+			return;
+		}
+
+		// ----------------
 
 		private void OnNotificationInvoked (
 			AppNotificationManager            sender,

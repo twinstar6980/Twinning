@@ -67,8 +67,8 @@
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									HasUnrealizedChildren="True"
-									ItemsSource="{x:Bind uRoot_ItemsSource}"
 									IsExpanded="True"
+									ItemsSource="{x:Bind uRoot_ItemsSource}"
 									>
 									<my:Stack
 										HorizontalAlignment="Stretch"
