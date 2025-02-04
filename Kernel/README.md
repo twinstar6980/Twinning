@@ -25,7 +25,7 @@
 | 库                                                                         | 用途                |
 |:--------------------------------------------------------------------------:|:-------------------:|
 | [mscharconv 1.2.3](https://github.com/iboB/mscharconv)                     | charconv 支持       |
-| [fmt 11.0.2](https://github.com/fmtlib/fmt)                                | 字符串格式化        |
+| [fmt 11.1.3](https://github.com/fmtlib/fmt)                                | 字符串格式化        |
 | [tinyxml2 10.0.0](https://github.com/leethomason/tinyxml2)                 | XML 读写            |
 | [md5 1.0](https://github.com/JieweiWei/md5)                                | MD5 哈希计算        |
 | [Rijndael ?](#)                                                            | Rijndael 加密与解密 |
@@ -36,8 +36,8 @@
 | [avir 3.0](https://github.com/avaneev/avir)                                | 图像缩放            |
 | [etcpak 2.0](https://github.com/wolfpld/etcpak)                            | ETC1 压缩           |
 | [PVRTCCompressor ?](https://github.com/brenwill/PVRTCCompressor)           | PVRTC4 压缩与解压   |
-| [libpng 1.6.44](https://github.com/pnggroup/libpng)                        | PNG 读写            |
-| [quickjs_ng 0.7.0](https://github.com/quickjs-ng/quickjs)                  | JS 引擎             |
+| [libpng 1.6.46](https://github.com/pnggroup/libpng)                        | PNG 读写            |
+| [quickjs_ng 0.8.0](https://github.com/quickjs-ng/quickjs)                  | JS 引擎             |
 | [vld 2.5.1](https://github.com/KindDragon/vld)                             | 内存泄漏检测        |
 
 ## 说明

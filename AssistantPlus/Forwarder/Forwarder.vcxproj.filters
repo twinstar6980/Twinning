@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClInclude Include="common.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="forwarder_explorer_command.cppm" />
     <ClCompile Include="library.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="forwarder_explorer_command.hpp" />
+    <None Include="library.def" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resource">
-      <UniqueIdentifier>{b805660c-ecda-4804-8225-48abca51f10a}</UniqueIdentifier>
+      <UniqueIdentifier>{9bf95ffe-dedb-4f62-ab09-bf4b5a3be4de}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -20,8 +24,5 @@
     <Image Include="resource\logo.ico">
       <Filter>resource</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="library.def" />
   </ItemGroup>
 </Project>

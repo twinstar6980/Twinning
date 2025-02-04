@@ -235,7 +235,9 @@ namespace AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<NumberBox>();
-			App.Setting.Data.Window.Position.X = (Integer)senders.Value;
+			if (Floater.IsFinite(senders.Value)) {
+				App.Setting.Data.Window.Position.X = (Integer)senders.Value;
+			}
 			this.NotifyPropertyChanged(
 				nameof(this.uSettingWindowPositionX_Value)
 			);
@@ -260,7 +262,9 @@ namespace AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<NumberBox>();
-			App.Setting.Data.Window.Position.Y = (Integer)senders.Value;
+			if (Floater.IsFinite(senders.Value)) {
+				App.Setting.Data.Window.Position.Y = (Integer)senders.Value;
+			}
 			this.NotifyPropertyChanged(
 				nameof(this.uSettingWindowPositionY_Value)
 			);
@@ -313,7 +317,9 @@ namespace AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<NumberBox>();
-			App.Setting.Data.Window.Size.Width = (Integer)senders.Value;
+			if (Floater.IsFinite(senders.Value)) {
+				App.Setting.Data.Window.Size.Width = (Integer)senders.Value;
+			}
 			this.NotifyPropertyChanged(
 				nameof(this.uSettingWindowSizeWidth_Value)
 			);
@@ -338,7 +344,9 @@ namespace AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<NumberBox>();
-			App.Setting.Data.Window.Size.Height = (Integer)senders.Value;
+			if (Floater.IsFinite(senders.Value)) {
+				App.Setting.Data.Window.Size.Height = (Integer)senders.Value;
+			}
 			this.NotifyPropertyChanged(
 				nameof(this.uSettingWindowSizeHeight_Value)
 			);

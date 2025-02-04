@@ -405,7 +405,7 @@ export namespace Twinning::Kernel::Process {
 
 	// NOTE : EXPLAIN
 	// implement defined
-	// on iphone, std::system is not available, this function always return 0x00000000
+	// on iphone, std::system is not available, this function will throw exception
 	inline auto execute_system_command (
 		String const & command
 	) -> IntegerU32 {
@@ -417,7 +417,7 @@ export namespace Twinning::Kernel::Process {
 		result = mbox<IntegerU32>(std::system(cast_pointer<char>(make_null_terminated_string(command).begin()).value));
 		#endif
 		#if defined M_system_iphone
-		result = mbox<IntegerU32>(0x00000000);
+		throw IncompleteException{};
 		#endif
 		return result;
 	}

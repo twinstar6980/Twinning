@@ -113,7 +113,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<NumberBox>();
-			if (IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
+			if (Floater.IsFinite(senders.Value) && IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
 				this.Value.Format = (Integer)senders.Value;
 			}
 			this.NotifyPropertyChanged(
@@ -143,7 +143,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<NumberBox>();
-			if (IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
+			if (Floater.IsFinite(senders.Value) && IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
 				this.Value.Pitch = (Integer)senders.Value;
 			}
 			this.NotifyPropertyChanged(
@@ -173,7 +173,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<NumberBox>();
-			if (IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
+			if (Floater.IsFinite(senders.Value) && IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
 				this.Value.AdditionalByteCount = (Integer)senders.Value;
 			}
 			this.NotifyPropertyChanged(
@@ -203,7 +203,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<NumberBox>();
-			if (IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
+			if (Floater.IsFinite(senders.Value) && IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
 				this.Value.Size[0] = (Integer)senders.Value;
 			}
 			this.NotifyPropertyChanged(
@@ -231,7 +231,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<NumberBox>();
-			if (IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
+			if (Floater.IsFinite(senders.Value) && IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
 				this.Value.Size[1] = (Integer)senders.Value;
 			}
 			this.NotifyPropertyChanged(

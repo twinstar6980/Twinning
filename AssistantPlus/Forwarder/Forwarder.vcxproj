@@ -50,6 +50,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -70,6 +71,7 @@
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -84,19 +86,20 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="common.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="forwarder_explorer_command.cppm" />
     <ClCompile Include="library.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="forwarder_explorer_command.hpp" />
+    <None Include="library.def" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource\resource.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resource\logo.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="library.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

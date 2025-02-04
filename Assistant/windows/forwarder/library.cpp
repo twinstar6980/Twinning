@@ -1,7 +1,12 @@
 //
 
+#include <activation.h>
+#include <ObjectArray.h>
+#include <wrl/implements.h>
 #include <wrl/module.h>
-#include "./forwarder_explorer_command.hpp"
+#include "./common.hpp"
+
+import twinning.assistant.forwarder.forwarder_explorer_command;
 
 // ----------------
 

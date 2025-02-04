@@ -257,6 +257,7 @@
 									LostFocus="{x:Bind Controller.uSettingWindowPositionX_LostFocus}"
 									NumberFormatter="{x:Bind Controller.uSettingWindowPositionX_NumberFormatter}"
 									Minimum="0"
+									Maximum="10000"
 									Value="{x:Bind Controller.uSettingWindowPositionX_Value}"
 									/>
 							</my:Stack>
@@ -282,6 +283,7 @@
 									LostFocus="{x:Bind Controller.uSettingWindowPositionY_LostFocus}"
 									NumberFormatter="{x:Bind Controller.uSettingWindowPositionY_NumberFormatter}"
 									Minimum="0"
+									Maximum="10000"
 									Value="{x:Bind Controller.uSettingWindowPositionY_Value}"
 									/>
 							</my:Stack>
@@ -350,6 +352,7 @@
 									LostFocus="{x:Bind Controller.uSettingWindowSizeWidth_LostFocus}"
 									NumberFormatter="{x:Bind Controller.uSettingWindowSizeWidth_NumberFormatter}"
 									Minimum="0"
+									Maximum="10000"
 									Value="{x:Bind Controller.uSettingWindowSizeWidth_Value}"
 									/>
 							</my:Stack>
@@ -375,6 +378,7 @@
 									LostFocus="{x:Bind Controller.uSettingWindowSizeHeight_LostFocus}"
 									NumberFormatter="{x:Bind Controller.uSettingWindowSizeHeight_NumberFormatter}"
 									Minimum="0"
+									Maximum="10000"
 									Value="{x:Bind Controller.uSettingWindowSizeHeight_Value}"
 									/>
 							</my:Stack>

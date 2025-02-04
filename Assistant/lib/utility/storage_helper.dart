@@ -194,7 +194,6 @@ class StorageHelper {
   static Future<Void> reveal(
     String path,
   ) async {
-    assertTest(await existDirectory(path));
     var revealed = false;
     if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
       revealed = await launchUrl(Uri.file(path), mode: LaunchMode.externalApplication);

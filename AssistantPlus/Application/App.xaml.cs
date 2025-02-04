@@ -231,6 +231,7 @@ namespace AssistantPlus {
 						_ = ControlHelper.ShowDialogAsAutomatic(App.MainWindow.Content, "Unhandled Exception", new TextBlock() {
 							HorizontalAlignment = HorizontalAlignment.Stretch,
 							VerticalAlignment = VerticalAlignment.Stretch,
+							IsTextSelectionEnabled = true,
 							TextWrapping = TextWrapping.Wrap,
 							Text = exception.ToString(),
 						}, null);
