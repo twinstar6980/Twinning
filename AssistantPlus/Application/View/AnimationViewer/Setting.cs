@@ -3,11 +3,9 @@
 
 using AssistantPlus;
 using AssistantPlus.Utility;
-using Newtonsoft.Json;
 
 namespace AssistantPlus.View.AnimationViewer {
 
-	[JsonObject(ItemRequired = Required.AllowNull)]
 	public record Setting {
 		public Boolean ImmediateSelect  = default!;
 		public Boolean AutomaticPlay    = default!;

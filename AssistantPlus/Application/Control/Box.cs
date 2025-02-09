@@ -7,7 +7,7 @@ using Windows.Foundation;
 
 namespace AssistantPlus.Control {
 
-	public class Box : Panel {
+	public partial class Box : Panel {
 
 		#region measure & arrange
 

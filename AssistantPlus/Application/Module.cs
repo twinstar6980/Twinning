@@ -3,7 +3,6 @@
 
 using AssistantPlus;
 using AssistantPlus.Utility;
-using Newtonsoft.Json;
 using FluentIconGlyph = AssistantPlus.Control.FluentIconGlyph;
 
 namespace AssistantPlus {
@@ -22,18 +21,18 @@ namespace AssistantPlus {
 	// ----------------
 
 	public record ModuleInformation {
-		public ModuleType Type         = default!;
-		public String     Icon         = default!;
-		public String     Name         = default!;
-		public Type       MainPage     = default!;
-		public Type       SettingPanel = default!;
+		public ModuleType Type     = default!;
+		public String     Icon     = default!;
+		public String     Name     = default!;
+		public Type       MainPage = default!;
+		[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor | DynamicallyAccessedMemberTypes.PublicProperties)]
+		public Type SettingPanel = default!;
 	}
 
 	#endregion
 
 	#region launcher
 
-	[JsonObject(ItemRequired = Required.AllowNull)]
 	public record ModuleLauncherConfiguration {
 		public String       Title   = default!;
 		public ModuleType   Type    = default!;
@@ -49,7 +48,6 @@ namespace AssistantPlus {
 		Recent,
 	}
 
-	[JsonObject(ItemRequired = Required.AllowNull)]
 	public record ModuleLauncherSetting {
 		public List<ModuleLauncherConfiguration> Module = default!;
 		public List<ModuleLauncherConfiguration> Pinned = default!;

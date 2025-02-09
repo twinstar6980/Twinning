@@ -165,6 +165,7 @@
 						Spacing="8"
 						>
 						<Button
+							ToolTipService.ToolTip="Export"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							IsEnabled="{x:Bind Controller.uPropertyExport_IsEnabled}"

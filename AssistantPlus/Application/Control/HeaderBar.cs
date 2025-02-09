@@ -6,7 +6,7 @@ using AssistantPlus.Utility;
 
 namespace AssistantPlus.Control {
 
-	public sealed class HeaderBar : Microsoft.UI.Xaml.Controls.Control {
+	public sealed partial class HeaderBar : Microsoft.UI.Xaml.Controls.Control {
 
 		#region life
 

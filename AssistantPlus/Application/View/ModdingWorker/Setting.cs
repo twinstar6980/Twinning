@@ -3,11 +3,9 @@
 
 using AssistantPlus;
 using AssistantPlus.Utility;
-using Newtonsoft.Json;
 
 namespace AssistantPlus.View.ModdingWorker {
 
-	[JsonObject(ItemRequired = Required.AllowNull)]
 	public record Setting {
 		public String       Kernel          = default!;
 		public String       Script          = default!;

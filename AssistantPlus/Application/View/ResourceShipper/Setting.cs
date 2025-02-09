@@ -3,11 +3,9 @@
 
 using AssistantPlus;
 using AssistantPlus.Utility;
-using Newtonsoft.Json;
 
 namespace AssistantPlus.View.ResourceShipper {
 
-	[JsonObject(ItemRequired = Required.AllowNull)]
 	public record Setting {
 		public String  OptionConfiguration = default!;
 		public Boolean ParallelForward     = default!;

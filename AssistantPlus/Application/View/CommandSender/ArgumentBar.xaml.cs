@@ -170,7 +170,7 @@ namespace AssistantPlus.View.CommandSender {
 				else {
 					this.NotifyPropertyChanged(
 						nameof(this.uEnumerationItem_ItemsSource),
-						nameof(this.uEnumerationItem_SelectedValue)
+						nameof(this.uEnumerationItem_SelectedIndex)
 					);
 				}
 			}
@@ -609,21 +609,21 @@ namespace AssistantPlus.View.CommandSender {
 
 		#region enumeration
 
-		public List<Tuple<ValueExpression, String>> uEnumerationItem_ItemsSource {
+		public List<String> uEnumerationItem_ItemsSource {
 			get {
 				if (this.Type == null || this.Option == null) {
 					return [];
 				}
-				return this.Option.Select((value) => (new Tuple<ValueExpression, String>(value, ValueExpressionHelper.MakeString(value)))).ToList();
+				return this.Option.Select((value) => (ValueExpressionHelper.MakeString(value))).ToList();
 			}
 		}
 
-		public String? uEnumerationItem_SelectedValue {
+		public Size uEnumerationItem_SelectedIndex {
 			get {
 				if (this.Type == null || this.Option == null) {
-					return null;
+					return -1;
 				}
-				return this.Value.Value == null ? null : ValueExpressionHelper.MakeString(this.Value.Value);
+				return this.Value.Value == null ? -1 : this.Option.IndexOf(this.Value.Value);
 			}
 		}
 
@@ -635,9 +635,7 @@ namespace AssistantPlus.View.CommandSender {
 			if (this.Type == null || this.Option == null) {
 				return;
 			}
-			if (senders.SelectedItem != null) {
-				this.Value.Value = senders.SelectedItem?.As<Tuple<ValueExpression, String>>()?.Item1;
-			}
+			this.Value.Value = senders.SelectedIndex == -1 ? null : this.Option[senders.SelectedIndex];
 			return;
 		}
 
@@ -653,7 +651,7 @@ namespace AssistantPlus.View.CommandSender {
 			}
 			this.Value.Value = null;
 			this.NotifyPropertyChanged(
-				nameof(this.uEnumerationItem_SelectedValue)
+				nameof(this.uEnumerationItem_SelectedIndex)
 			);
 			return;
 		}

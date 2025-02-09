@@ -3,7 +3,6 @@
 
 using AssistantPlus;
 using AssistantPlus.Utility;
-using Newtonsoft.Json.Linq;
 
 namespace AssistantPlus.View.CommandSender {
 
@@ -65,7 +64,7 @@ namespace AssistantPlus.View.CommandSender {
 				var itemConfiguration = configuration[index];
 				var itemValue = value[index];
 				if (itemValue.Value != null) {
-					json.Add(itemConfiguration.Id, new JValue(ConfigurationHelper.MakeArgumentValueJson(itemValue.Value)));
+					json.Add(itemConfiguration.Id, ConfigurationHelper.MakeArgumentValueJson(itemValue.Value));
 				}
 			}
 			return json;

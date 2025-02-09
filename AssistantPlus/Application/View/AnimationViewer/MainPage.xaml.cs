@@ -397,8 +397,8 @@ namespace AssistantPlus.View.AnimationViewer {
 			this.TextureDirectory = textureDirectory;
 			this.Animation = animation;
 			this.Texture = texture;
-			this.ImageFilter = Enumerable.Range(0, this.Animation.Image.Count).Select((index) => (false)).ToList();
-			this.SpriteFilter = Enumerable.Range(0, this.Animation.Sprite.Count).Select((index) => (false)).ToList();
+			this.ImageFilter = Enumerable.Repeat(false, this.Animation.Image.Count).ToList();
+			this.SpriteFilter = Enumerable.Repeat(false, this.Animation.Sprite.Count).ToList();
 			this.PlantCustomLayerName = this.Animation.Sprite.Where((value) => (value.Name != null)).Select((value) => (value.Name.AsNotNull())).Where((value) => (value.StartsWith("custom_"))).ToList();
 			this.ZombieStateLayerName = this.Animation.Sprite.Where((value) => (value.Name != null)).Select((value) => (value.Name.AsNotNull())).Where((value) => (value == "ink" || value == "butter")).ToList();
 			this.ZombieGroundSwatchLayerName = this.Animation.Sprite.Where((value) => (value.Name != null)).Select((value) => (value.Name.AsNotNull())).Where((value) => (value == "ground_swatch" || value == "ground_swatch_plane")).ToList();

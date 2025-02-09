@@ -3,11 +3,9 @@
 
 using AssistantPlus;
 using AssistantPlus.Utility;
-using Newtonsoft.Json;
 
 namespace AssistantPlus.View.CommandSender {
 
-	[JsonObject(ItemRequired = Required.AllowNull)]
 	public record PresetConfiguration {
 		public String                     Name     = default!;
 		public Dictionary<String, Object> Argument = default!;
@@ -22,7 +20,6 @@ namespace AssistantPlus.View.CommandSender {
 		Path,
 	}
 
-	[JsonObject(ItemRequired = Required.AllowNull)]
 	public record ArgumentConfiguration {
 		public String        Id     = default!;
 		public String        Name   = default!;
@@ -30,7 +27,6 @@ namespace AssistantPlus.View.CommandSender {
 		public List<Object>? Option = default!;
 	}
 
-	[JsonObject(ItemRequired = Required.AllowNull)]
 	public record MethodConfiguration {
 		public String                      Id        = default!;
 		public String                      Name      = default!;
@@ -40,7 +36,6 @@ namespace AssistantPlus.View.CommandSender {
 		public List<PresetConfiguration?>  Preset    = default!;
 	}
 
-	[JsonObject(ItemRequired = Required.AllowNull)]
 	public record MethodGroupConfiguration {
 		public String                    Id   = default!;
 		public String                    Name = default!;

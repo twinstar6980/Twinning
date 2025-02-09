@@ -2,7 +2,6 @@
 // ReSharper disable
 
 using AssistantPlus;
-using Newtonsoft.Json;
 
 namespace AssistantPlus.Utility {
 
@@ -31,7 +30,6 @@ namespace AssistantPlus.Utility {
 
 	// ----------------
 
-	[JsonObject(ItemRequired = Required.AllowNull)]
 	public record CustomThemeSetting {
 		public CustomThemeMode     Mode     = default!;
 		public CustomThemeColor    Color    = default!;

@@ -6,7 +6,7 @@ using AssistantPlus.Utility;
 
 namespace AssistantPlus.Control {
 
-	public sealed class SettingItem : Microsoft.UI.Xaml.Controls.Control {
+	public sealed partial class SettingItem : Microsoft.UI.Xaml.Controls.Control {
 
 		#region life
 

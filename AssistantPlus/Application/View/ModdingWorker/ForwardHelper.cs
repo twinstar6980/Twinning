@@ -46,9 +46,9 @@ namespace AssistantPlus.View.ModdingWorker {
 		}
 
 		public static List<String> MakeArgumentForCommand (
-			String? input,
-			String? method,
-			Object? argument
+			String?                     input,
+			String?                     method,
+			Dictionary<String, Object>? argument
 		) {
 			var command = new List<String>();
 			command.Add(input ?? "?");

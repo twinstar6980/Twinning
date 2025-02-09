@@ -3,8 +3,8 @@
 
 using AssistantPlus;
 using AssistantPlus.Utility;
+using System.Text.Json.Nodes;
 using Microsoft.UI.Xaml.Navigation;
-using Newtonsoft.Json.Linq;
 using Windows.ApplicationModel.DataTransfer;
 using FluentIconGlyph = AssistantPlus.Control.FluentIconGlyph;
 
@@ -198,24 +198,24 @@ namespace AssistantPlus.View.PackageBuilder {
 				null,
 				"pvz2.package_project.transpile",
 				mode == null
-					? new {
-						project_directory = this.MakeScopeRootPath(),
-						target_package = String.Join('|', this.View.uPackageList.SelectedItems.First().As<MainPagePackageItemController>().Setting.Name),
-						target_scope = targetScope == null ? "*" : String.Join('|', targetScope),
-					}
-					: new {
-						project_directory = this.MakeScopeRootPath(),
-						target_package = String.Join('|', this.View.uPackageList.SelectedItems.First().As<MainPagePackageItemController>().Setting.Name),
-						target_scope = targetScope == null ? "*" : String.Join('|', targetScope),
-						option_generalize_rton = !mode,
-						option_generalize_ptx = !mode,
-						option_generalize_pam = !mode,
-						option_generalize_wem = !mode,
-						option_specialize_rton = mode,
-						option_specialize_ptx = mode,
-						option_specialize_pam = mode,
-						option_specialize_wem = mode,
-					}
+					? new ([
+						new ("project_directory", this.MakeScopeRootPath()),
+						new ("target_package", String.Join('|', this.View.uPackageList.SelectedItems.First().As<MainPagePackageItemController>().Setting.Name)),
+						new ("target_scope", targetScope == null ? "*" : String.Join('|', targetScope)),
+					])
+					: new ([
+						new ("project_directory", this.MakeScopeRootPath()),
+						new ("target_package", String.Join('|', this.View.uPackageList.SelectedItems.First().As<MainPagePackageItemController>().Setting.Name)),
+						new ("target_scope", targetScope == null ? "*" : String.Join('|', targetScope)),
+						new ("option_generalize_rton", !mode),
+						new ("option_generalize_ptx", !mode),
+						new ("option_generalize_pam", !mode),
+						new ("option_generalize_wem", !mode),
+						new ("option_specialize_rton", mode),
+						new ("option_specialize_ptx", mode),
+						new ("option_specialize_pam", mode),
+						new ("option_specialize_wem", mode),
+					])
 			));
 			return;
 		}
@@ -227,11 +227,11 @@ namespace AssistantPlus.View.PackageBuilder {
 			await this.WorkerExecuteCommand(ModdingWorker.ForwardHelper.MakeArgumentForCommand(
 				null,
 				"pvz2.package_project.compile",
-				new {
-					project_directory = this.MakeScopeRootPath(),
-					target_package = String.Join('|', this.View.uPackageList.SelectedItems.Select(GF.As<MainPagePackageItemController>).Select((value) => (value.Setting.Name))),
-					target_scope = targetScope == null ? "*" : String.Join('|', targetScope),
-				}
+				new ([
+					new ("project_directory", this.MakeScopeRootPath()),
+					new ("target_package", String.Join('|', this.View.uPackageList.SelectedItems.Select(GF.As<MainPagePackageItemController>).Select((value) => (value.Setting.Name)))),
+					new ("target_scope", targetScope == null ? "*" : String.Join('|', targetScope)),
+				])
 			));
 			return;
 		}
@@ -243,11 +243,11 @@ namespace AssistantPlus.View.PackageBuilder {
 			await this.WorkerExecuteCommand(ModdingWorker.ForwardHelper.MakeArgumentForCommand(
 				null,
 				"pvz2.package_project.link",
-				new {
-					project_directory = this.MakeScopeRootPath(),
-					target_package = String.Join('|', this.View.uPackageList.SelectedItems.Select(GF.As<MainPagePackageItemController>).Select((value) => (value.Setting.Name))),
-					remake_manifest = remakeManifest,
-				}
+				new ([
+					new ("project_directory", this.MakeScopeRootPath()),
+					new ("target_package", String.Join('|', this.View.uPackageList.SelectedItems.Select(GF.As<MainPagePackageItemController>).Select((value) => (value.Setting.Name)))),
+					new ("remake_manifest", remakeManifest),
+				])
 			));
 			return;
 		}
@@ -1002,7 +1002,7 @@ namespace AssistantPlus.View.PackageBuilder {
 					Locale = null,
 				},
 				Type = ResourceType.Dummy,
-				Property = new JObject(),
+				Property = new JsonObject(),
 				Variable = [],
 			};
 			StorageHelper.CreateDirectory(destinationDirectory);
@@ -2473,13 +2473,13 @@ namespace AssistantPlus.View.PackageBuilder {
 			var senders = sender.As<SplitButton>();
 			GF.AssertTest(this.Host.IsLoaded);
 			var property = this.Setting.Type switch {
-				ResourceType.Dummy       => JsonHelper.DeserializeToken<DummyResourceProperty>(this.Setting.Property) as Object,
-				ResourceType.General     => JsonHelper.DeserializeToken<GeneralResourceProperty>(this.Setting.Property),
-				ResourceType.Texture     => JsonHelper.DeserializeToken<TextureResourceProperty>(this.Setting.Property),
-				ResourceType.SpecialRton => JsonHelper.DeserializeToken<SpecialRtonResourceProperty>(this.Setting.Property),
-				ResourceType.SpecialPtx  => JsonHelper.DeserializeToken<SpecialPtxResourceProperty>(this.Setting.Property),
-				ResourceType.SpecialPam  => JsonHelper.DeserializeToken<SpecialPamResourceProperty>(this.Setting.Property),
-				ResourceType.SpecialWem  => JsonHelper.DeserializeToken<SpecialWemResourceProperty>(this.Setting.Property),
+				ResourceType.Dummy       => JsonHelper.DeserializeNode<DummyResourceProperty>(this.Setting.Property) as Object,
+				ResourceType.General     => JsonHelper.DeserializeNode<GeneralResourceProperty>(this.Setting.Property),
+				ResourceType.Texture     => JsonHelper.DeserializeNode<TextureResourceProperty>(this.Setting.Property),
+				ResourceType.SpecialRton => JsonHelper.DeserializeNode<SpecialRtonResourceProperty>(this.Setting.Property),
+				ResourceType.SpecialPtx  => JsonHelper.DeserializeNode<SpecialPtxResourceProperty>(this.Setting.Property),
+				ResourceType.SpecialPam  => JsonHelper.DeserializeNode<SpecialPamResourceProperty>(this.Setting.Property),
+				ResourceType.SpecialWem  => JsonHelper.DeserializeNode<SpecialWemResourceProperty>(this.Setting.Property),
 				_                        => throw new (),
 			};
 			await ControlHelper.ShowDialogAsFixed(this.Host.View, "Resource Property", this.Setting.Type switch {
@@ -2517,7 +2517,7 @@ namespace AssistantPlus.View.PackageBuilder {
 				},
 				_ => throw new (),
 			}, null);
-			this.Setting.Property = JsonHelper.SerializeToken(property);
+			this.Setting.Property = JsonHelper.SerializeNode(property);
 			await this.SaveSetting();
 			return;
 		}
@@ -2540,13 +2540,13 @@ namespace AssistantPlus.View.PackageBuilder {
 			switch (senders.Tag.As<String>()) {
 				case "Dummy": {
 					this.Setting.Type = ResourceType.Dummy;
-					this.Setting.Property = JsonHelper.SerializeToken(new DummyResourceProperty() {
+					this.Setting.Property = JsonHelper.SerializeNode(new DummyResourceProperty() {
 					});
 					break;
 				}
 				case "General": {
 					this.Setting.Type = ResourceType.General;
-					this.Setting.Property = JsonHelper.SerializeToken(new GeneralResourceProperty() {
+					this.Setting.Property = JsonHelper.SerializeNode(new GeneralResourceProperty() {
 						Path = "",
 						Type = "",
 					});
@@ -2555,7 +2555,7 @@ namespace AssistantPlus.View.PackageBuilder {
 				}
 				case "Texture": {
 					this.Setting.Type = ResourceType.Texture;
-					this.Setting.Property = JsonHelper.SerializeToken(new TextureResourceProperty() {
+					this.Setting.Property = JsonHelper.SerializeNode(new TextureResourceProperty() {
 						Path = "",
 						Format = 0,
 						Pitch = 0,
@@ -2568,7 +2568,7 @@ namespace AssistantPlus.View.PackageBuilder {
 				}
 				case "SpecialRton": {
 					this.Setting.Type = ResourceType.SpecialRton;
-					this.Setting.Property = JsonHelper.SerializeToken(new SpecialRtonResourceProperty() {
+					this.Setting.Property = JsonHelper.SerializeNode(new SpecialRtonResourceProperty() {
 						Conversion = "",
 						Path = "",
 					});
@@ -2577,7 +2577,7 @@ namespace AssistantPlus.View.PackageBuilder {
 				}
 				case "SpecialPtx": {
 					this.Setting.Type = ResourceType.SpecialPtx;
-					this.Setting.Property = JsonHelper.SerializeToken(new SpecialPtxResourceProperty() {
+					this.Setting.Property = JsonHelper.SerializeNode(new SpecialPtxResourceProperty() {
 						Conversion = "",
 						Path = "",
 						Sprite = [],
@@ -2587,7 +2587,7 @@ namespace AssistantPlus.View.PackageBuilder {
 				}
 				case "SpecialPam": {
 					this.Setting.Type = ResourceType.SpecialPam;
-					this.Setting.Property = JsonHelper.SerializeToken(new SpecialPamResourceProperty() {
+					this.Setting.Property = JsonHelper.SerializeNode(new SpecialPamResourceProperty() {
 						Conversion = "",
 						Path = "",
 					});
@@ -2596,7 +2596,7 @@ namespace AssistantPlus.View.PackageBuilder {
 				}
 				case "SpecialWem": {
 					this.Setting.Type = ResourceType.SpecialWem;
-					this.Setting.Property = JsonHelper.SerializeToken(new SpecialWemResourceProperty() {
+					this.Setting.Property = JsonHelper.SerializeNode(new SpecialWemResourceProperty() {
 						Conversion = "",
 						Path = "",
 					});

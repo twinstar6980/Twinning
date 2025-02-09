@@ -3,7 +3,6 @@
 
 using AssistantPlus;
 using AssistantPlus.Utility;
-using Newtonsoft.Json;
 
 namespace AssistantPlus {
 
@@ -11,7 +10,6 @@ namespace AssistantPlus {
 
 		#region type
 
-		[JsonObject(ItemRequired = Required.AllowNull)]
 		public record Rectangle {
 			public Tuple<Floater, Floater> Position = default!;
 			public Tuple<Floater, Floater> Size     = default!;
@@ -19,12 +17,10 @@ namespace AssistantPlus {
 
 		// ----------------
 
-		[JsonObject(ItemRequired = Required.AllowNull)]
 		public record LayerRemove {
 			public Integer Index = default!;
 		}
 
-		[JsonObject(ItemRequired = Required.AllowNull)]
 		public record LayerAppend {
 			public Integer Index        = default!;
 			public String? Name         = default!;
@@ -35,7 +31,6 @@ namespace AssistantPlus {
 			public Floater TimeScale    = default!;
 		}
 
-		[JsonObject(ItemRequired = Required.AllowNull)]
 		public record LayerChange {
 			public Integer                                    Index             = default!;
 			public List<Floater>                              Transform         = default!;
@@ -44,7 +39,6 @@ namespace AssistantPlus {
 			public Rectangle?                                 SourceRectangle   = default!;
 		}
 
-		[JsonObject(ItemRequired = Required.AllowNull)]
 		public record Frame {
 			public String?                     Label   = default!;
 			public Boolean                     Stop    = default!;
@@ -56,7 +50,6 @@ namespace AssistantPlus {
 
 		// ----------------
 
-		[JsonObject(ItemRequired = Required.AllowNull)]
 		public record Sprite {
 			public String?                  Name      = default!;
 			public Floater?                 FrameRate = default!;
@@ -64,14 +57,12 @@ namespace AssistantPlus {
 			public List<Frame>              Frame     = default!;
 		}
 
-		[JsonObject(ItemRequired = Required.AllowNull)]
 		public record Image {
 			public String                   Name      = default!;
 			public Tuple<Integer, Integer>? Size      = default!;
 			public List<Floater>            Transform = default!;
 		}
 
-		[JsonObject(ItemRequired = Required.AllowNull)]
 		public record Animation {
 			public Integer                 FrameRate  = default!;
 			public Tuple<Floater, Floater> Position   = default!;

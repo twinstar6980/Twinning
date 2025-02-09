@@ -286,7 +286,7 @@ namespace AssistantPlus.View.CommandSender {
 
 	}
 
-	public class MainPageMethodItemTemplateSelector : DataTemplateSelector {
+	public partial class MainPageMethodItemTemplateSelector : DataTemplateSelector {
 
 		public DataTemplate? GroupTemplate { get; set; }
 

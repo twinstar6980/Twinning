@@ -517,7 +517,7 @@ namespace AssistantPlus.View.ResourceShipper {
 
 	}
 
-	public class MainPageOptionItemTemplateSelector : DataTemplateSelector {
+	public partial class MainPageOptionItemTemplateSelector : DataTemplateSelector {
 
 		public DataTemplate? GroupTemplate { get; set; }
 

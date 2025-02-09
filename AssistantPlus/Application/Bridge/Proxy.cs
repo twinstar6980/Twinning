@@ -121,6 +121,15 @@ namespace AssistantPlus.Bridge {
 
 		#region convert
 
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+		private unsafe delegate void ExecutorDelegate (
+			Executor* self,
+			Executor* callback,
+			Message*  argument,
+			Message*  result,
+			Message*  exception
+		);
+
 		private static Dictionary<IntPtr, Tuple<GCHandle, GCHandle>> sGuard = new ();
 
 		// ----------------
@@ -173,7 +182,7 @@ namespace AssistantPlus.Bridge {
 			Executor*     instance,
 			ExecutorProxy proxy
 		) {
-			var guardForInvoke = GCHandle.Alloc(void (
+			var guardForInvoke = GCHandle.Alloc((ExecutorDelegate)(void (
 				Executor* self,
 				Executor* callback,
 				Message*  argument,
@@ -193,8 +202,8 @@ namespace AssistantPlus.Bridge {
 					MessageProxy.Construct(result, new ([]));
 				}
 				return;
-			});
-			var guardForClear = GCHandle.Alloc(void (
+			}));
+			var guardForClear = GCHandle.Alloc((ExecutorDelegate)(void (
 				Executor* self,
 				Executor* callback,
 				Message*  argument,
@@ -208,7 +217,7 @@ namespace AssistantPlus.Bridge {
 					MessageProxy.Destruct(exception);
 				}
 				return;
-			});
+			}));
 			GF.AssertTest(!ExecutorProxy.sGuard.ContainsKey((IntPtr)instance));
 			ExecutorProxy.sGuard.Add((IntPtr)instance, new (guardForInvoke, guardForClear));
 			instance->invoke = (delegate* unmanaged<Executor*, Executor*, Message*, Message*, Message*, void>)Marshal.GetFunctionPointerForDelegate(guardForInvoke.Target.AsNotNull());

@@ -207,7 +207,7 @@ namespace AssistantPlus.View.Home {
 			GF.AssertTest(this.Category == ModuleLauncherCategory.Module);
 			var panelType = ModuleHelper.Query(this.Configuration.Type).SettingPanel;
 			var panelObject = Activator.CreateInstance(panelType).AsNotNull().As<UIElement>();
-			var settingData = App.Setting.Data.GetType().GetField(this.Configuration.Type.ToString()).AsNotNull().GetValue(App.Setting.Data);
+			var settingData = typeof(SettingData).GetField(this.Configuration.Type.ToString()).AsNotNull().GetValue(App.Setting.Data);
 			panelType.GetProperty("Data").AsNotNull().SetValue(panelObject, settingData);
 			await ControlHelper.ShowDialogAsFixed(this.Host.View, "Module Setting", panelObject, null);
 			await App.Setting.Save();

@@ -8,12 +8,10 @@ using Windows.UI;
 using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml.Media;
-using Newtonsoft.Json;
 using Colors = Microsoft.UI.Colors;
 
 namespace AssistantPlus {
 
-	[JsonObject(ItemRequired = Required.AllowNull)]
 	public record SettingData {
 		public Integer                           Version              = default!;
 		public CustomThemeSetting                Theme                = default!;

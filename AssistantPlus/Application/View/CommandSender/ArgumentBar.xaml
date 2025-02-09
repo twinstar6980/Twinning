@@ -300,9 +300,7 @@
 										HorizontalContentAlignment="Left"
 										PlaceholderText="Enumeration"
 										ItemsSource="{x:Bind Controller.uEnumerationItem_ItemsSource}"
-										SelectedValuePath="Item2"
-										DisplayMemberPath="Item2"
-										SelectedValue="{x:Bind Controller.uEnumerationItem_SelectedValue}"
+										SelectedIndex="{x:Bind Controller.uEnumerationItem_SelectedIndex}"
 										SelectionChanged="{x:Bind Controller.uEnumerationItem_SelectionChanged}"
 										/>
 									<Button
