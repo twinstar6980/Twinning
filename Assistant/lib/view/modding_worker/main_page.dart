@@ -260,7 +260,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
             ),
           ),
           LinearProgressIndicator(
-            value: !this._sessionRunning ? 0 : this._submissionBar.type == null ? null : 1,
+            value: !this._sessionRunning ? 1 : this._submissionBar.type == null ? null : 1,
             color: !this._sessionRunning ? null : this._submissionBar.type == null ? null : theme.colorScheme.tertiary,
           ),
         ],

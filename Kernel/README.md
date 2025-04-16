@@ -10,34 +10,34 @@
 	
 	* [xmake 2.9](https://xmake.io/#/)
 	
-	* [Clang 18.1 & WinAPI](https://visualstudio.microsoft.com/downloads/) for `Windows`
+	* [Clang 19.1 & WinAPI](https://visualstudio.microsoft.com/downloads/) for `Windows`
 	
-	* [Clang 19.1 & POSIX](https://llvm.org/) for `Linux`
+	* [Clang 20.1 & POSIX](https://llvm.org/) for `Linux`
 	
-	* [Clang 19.1 & POSIX](https://llvm.org/) for `Macintosh`
+	* [Clang 20.1 & POSIX](https://llvm.org/) for `Macintosh`
 	
-	* [Clang 18.0 & POSIX (NDK 27.2)](https://developer.android.com/ndk/downloads) for `Android`
+	* [Clang 19.0 & POSIX (NDK 28.0)](https://developer.android.com/ndk/downloads) for `Android`
 	
-	* [Clang 19.1 & POSIX](https://llvm.org/) for `Iphone`
+	* [Clang 20.1 & POSIX](https://llvm.org/) for `Iphone`
 
 ## 第三方库使用
 
 | 库                                                                         | 用途                |
 |:--------------------------------------------------------------------------:|:-------------------:|
 | [mscharconv 1.2.3](https://github.com/iboB/mscharconv)                     | charconv 支持       |
-| [fmt 11.1.3](https://github.com/fmtlib/fmt)                                | 字符串格式化        |
-| [tinyxml2 10.0.0](https://github.com/leethomason/tinyxml2)                 | XML 读写            |
+| [fmt 11.1.4](https://github.com/fmtlib/fmt)                                | 字符串格式化        |
+| [tinyxml2 11.0.0](https://github.com/leethomason/tinyxml2)                 | XML 读写            |
 | [md5 1.0](https://github.com/JieweiWei/md5)                                | MD5 哈希计算        |
 | [Rijndael ?](#)                                                            | Rijndael 加密与解密 |
 | [zlib 1.3.1](https://github.com/madler/zlib)                               | ZLib 压缩与解压     |
 | [bzip2 1.0.8](https://sourceware.org/bzip2/)                               | BZip2 压缩与解压    |
 | [lzma 24.09](https://github.com/ip7z/7zip)                                 | Lzma 压缩与解压     |
 | [open_vcdiff 0.8.4](https://github.com/google/open-vcdiff)                 | VCDiff 差异分析     |
-| [avir 3.0](https://github.com/avaneev/avir)                                | 图像缩放            |
+| [avir 3.1](https://github.com/avaneev/avir)                                | 图像缩放            |
 | [etcpak 2.0](https://github.com/wolfpld/etcpak)                            | ETC1 压缩           |
 | [PVRTCCompressor ?](https://github.com/brenwill/PVRTCCompressor)           | PVRTC4 压缩与解压   |
-| [libpng 1.6.46](https://github.com/pnggroup/libpng)                        | PNG 读写            |
-| [quickjs_ng 0.8.0](https://github.com/quickjs-ng/quickjs)                  | JS 引擎             |
+| [libpng 1.6.47](https://github.com/pnggroup/libpng)                        | PNG 读写            |
+| [quickjs_ng 0.9.0](https://github.com/quickjs-ng/quickjs)                  | JS 引擎             |
 | [vld 2.5.1](https://github.com/KindDragon/vld)                             | 内存泄漏检测        |
 
 ## 说明

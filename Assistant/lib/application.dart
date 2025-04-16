@@ -38,6 +38,12 @@ class Application extends StatelessWidget {
               tooltipTheme: TooltipTheme.of(context).copyWith(
                 waitDuration: const Duration(milliseconds: 1000),
               ),
+              progressIndicatorTheme: const ProgressIndicatorThemeData(
+                year2023: false,
+              ),
+              sliderTheme: const SliderThemeData(
+                year2023: false,
+              ),
             ),
             darkTheme: ThemeData(
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -48,6 +54,12 @@ class Application extends StatelessWidget {
               fontFamilyFallback: [...setting.state.mThemeFontFamliy],
               tooltipTheme: TooltipTheme.of(context).copyWith(
                 waitDuration: const Duration(milliseconds: 1000),
+              ),
+              progressIndicatorTheme: const ProgressIndicatorThemeData(
+                year2023: false,
+              ),
+              sliderTheme: const SliderThemeData(
+                year2023: false,
               ),
             ),
             themeMode: setting.data.mThemeMode,

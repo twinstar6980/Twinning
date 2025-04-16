@@ -33,10 +33,10 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::XML {
 
 		template <class T, int INITIAL_SIZE>
 		struct TinyXML2DynArrayImitator {
-			T * _mem;
-			T   _pool[INITIAL_SIZE];
-			int _allocated;
-			int _size;
+			T *         _mem;
+			T           _pool[INITIAL_SIZE];
+			std::size_t _allocated;
+			std::size_t _size;
 		};
 
 		struct TinyXML2PrinterImitator {

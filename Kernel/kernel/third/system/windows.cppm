@@ -31,29 +31,29 @@ export namespace Twinning::Kernel::Third::system::windows {
 
 	using $PROCESS_INFORMATION = ::PROCESS_INFORMATION;
 
-	inline constexpr auto $_wgetenv = ::_wgetenv;
+	inline auto const $_wgetenv = ::_wgetenv;
 
-	inline constexpr auto $_wfopen = ::_wfopen;
+	inline auto const $_wfopen = ::_wfopen;
 
-	inline constexpr auto $_wsystem = ::_wsystem;
+	inline auto const $_wsystem = ::_wsystem;
 
-	inline constexpr auto $GetLastError = ::GetLastError;
+	inline auto const $GetLastError = ::GetLastError;
 
-	inline constexpr auto $GetEnvironmentVariableW = ::GetEnvironmentVariableW;
+	inline auto const $GetEnvironmentVariableW = ::GetEnvironmentVariableW;
 
-	inline constexpr auto $SetEnvironmentVariableW = ::SetEnvironmentVariableW;
+	inline auto const $SetEnvironmentVariableW = ::SetEnvironmentVariableW;
 
-	inline constexpr auto $MultiByteToWideChar = ::MultiByteToWideChar;
+	inline auto const $MultiByteToWideChar = ::MultiByteToWideChar;
 
-	inline constexpr auto $CloseHandle = ::CloseHandle;
+	inline auto const $CloseHandle = ::CloseHandle;
 
-	inline constexpr auto $CreateFileW = ::CreateFileW;
+	inline auto const $CreateFileW = ::CreateFileW;
 
-	inline constexpr auto $CreateProcessW = ::CreateProcessW;
+	inline auto const $CreateProcessW = ::CreateProcessW;
 
-	inline constexpr auto $GetExitCodeProcess = ::GetExitCodeProcess;
+	inline auto const $GetExitCodeProcess = ::GetExitCodeProcess;
 
-	inline constexpr auto $WaitForSingleObject = ::WaitForSingleObject;
+	inline auto const $WaitForSingleObject = ::WaitForSingleObject;
 
 	inline constexpr auto $FALSE = FALSE;
 
@@ -90,6 +90,11 @@ export namespace Twinning::Kernel::Third::system::windows {
 	inline constexpr auto $WAIT_OBJECT_0 = WAIT_OBJECT_0;
 
 	inline auto const $INVALID_HANDLE_VALUE = INVALID_HANDLE_VALUE;
+
+	inline auto $_wenviron (
+	) -> wchar_t * * {
+		return _wenviron;
+	}
 
 }
 

@@ -135,7 +135,7 @@ export {
 		}
 
 		virtual IFACEMETHODIMP EnumSubCommands (
-			IEnumExplorerCommand ** ppEnum
+			IEnumExplorerCommand * * ppEnum
 		) override {
 			ppEnum = nullptr;
 			return S_OK;
@@ -209,15 +209,15 @@ export {
 		auto encode_percent_string (
 			std::wstring const & source
 		) -> std::wstring {
-			auto utf16_source = reinterpret_cast<std::u16string const &>(source);
-			auto utf8_converter = std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>{};
-			auto utf8_source = utf8_converter.to_bytes(
+			auto & utf16_source = reinterpret_cast<std::u16string const &>(source);
+			auto   utf8_converter = std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>{};
+			auto   utf8_source = utf8_converter.to_bytes(
 				utf16_source.data(),
 				utf16_source.data() + utf16_source.size()
 			);
 			assert_test(utf8_converter.converted() == utf16_source.size());
-			auto data = reinterpret_cast<std::u8string &>(utf8_source);
-			auto destination = std::wstring{};
+			auto & data = reinterpret_cast<std::u8string &>(utf8_source);
+			auto   destination = std::wstring{};
 			destination.reserve(data.size() * 3);
 			for (auto & character : data) {
 				if ((u8'0' <= character && character <= u8'9') ||

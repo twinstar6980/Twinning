@@ -11,8 +11,6 @@ export module twinning.kernel.third.quickjs_ng;
 
 export namespace Twinning::Kernel::Third::quickjs_ng {
 
-	using $JS_BOOL = JS_BOOL;
-
 	using $JSRuntime = ::JSRuntime;
 
 	using $JSContext = ::JSContext;

@@ -158,6 +158,7 @@ export {
 		using ::std::make_tuple;
 		using ::std::span;
 		using ::std::vector;
+		using ::std::array;
 		using ::std::list;
 		using ::std::unordered_map;
 		using ::std::bitset;
@@ -240,6 +241,7 @@ export {
 		using ::std::max;
 		using ::std::move;
 		using ::std::forward;
+		using ::std::replace;
 		using ::std::make_reverse_iterator;
 		using ::std::make_move_iterator;
 		using ::std::get;

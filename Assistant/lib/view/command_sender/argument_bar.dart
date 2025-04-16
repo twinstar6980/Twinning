@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 class _BasicArgumentBar extends StatelessWidget {
 
   const _BasicArgumentBar({
-    super.key, // ignore: unused_element
+    super.key, // ignore: unused_element_parameter
     required this.name,
     required this.icon,
     required this.content,
@@ -58,7 +58,7 @@ class _BasicArgumentBar extends StatelessWidget {
 class _BooleanArgumentBar extends StatelessWidget {
 
   const _BooleanArgumentBar({
-    super.key, // ignore: unused_element
+    super.key, // ignore: unused_element_parameter
     required this.name,
     required this.value,
   });
@@ -132,7 +132,7 @@ class _BooleanArgumentBar extends StatelessWidget {
 class _IntegerArgumentBar extends StatelessWidget {
 
   const _IntegerArgumentBar({
-    super.key, // ignore: unused_element
+    super.key, // ignore: unused_element_parameter
     required this.name,
     required this.value,
   });
@@ -186,7 +186,7 @@ class _IntegerArgumentBar extends StatelessWidget {
 class _FloaterArgumentBar extends StatelessWidget {
 
   const _FloaterArgumentBar({
-    super.key, // ignore: unused_element
+    super.key, // ignore: unused_element_parameter
     required this.name,
     required this.value,
   });
@@ -240,7 +240,7 @@ class _FloaterArgumentBar extends StatelessWidget {
 class _SizeArgumentBar extends StatelessWidget {
 
   const _SizeArgumentBar({
-    super.key, // ignore: unused_element
+    super.key, // ignore: unused_element_parameter
     required this.name,
     required this.value,
   });
@@ -320,7 +320,7 @@ class _SizeArgumentBar extends StatelessWidget {
 class _StringArgumentBar extends StatelessWidget {
 
   const _StringArgumentBar({
-    super.key, // ignore: unused_element
+    super.key, // ignore: unused_element_parameter
     required this.name,
     required this.value,
   });
@@ -371,7 +371,7 @@ class _StringArgumentBar extends StatelessWidget {
 class _PathArgumentBar extends StatelessWidget {
 
   const _PathArgumentBar({
-    super.key, // ignore: unused_element
+    super.key, // ignore: unused_element_parameter
     required this.name,
     required this.value,
   });
@@ -456,7 +456,7 @@ class _PathArgumentBar extends StatelessWidget {
 class _EnumerationArgumentBar extends StatelessWidget {
 
   const _EnumerationArgumentBar({
-    super.key, // ignore: unused_element
+    super.key, // ignore: unused_element_parameter
     required this.name,
     required this.option,
     required this.value,

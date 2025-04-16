@@ -38,29 +38,29 @@ export namespace Twinning::Shell::Third::system::windows {
 
 	inline constexpr auto $HRESULT_FROM_WIN32 = ::HRESULT_FROM_WIN32;
 
-	inline constexpr auto $LoadLibraryW = ::LoadLibraryW;
+	inline auto const $LoadLibraryW = ::LoadLibraryW;
 
-	inline constexpr auto $FreeLibrary = ::FreeLibrary;
+	inline auto const $FreeLibrary = ::FreeLibrary;
 
-	inline constexpr auto $GetProcAddress = ::GetProcAddress;
+	inline auto const $GetProcAddress = ::GetProcAddress;
 
-	inline constexpr auto $GetStdHandle = ::GetStdHandle;
+	inline auto const $GetStdHandle = ::GetStdHandle;
 
-	inline constexpr auto $GetConsoleMode = ::GetConsoleMode;
+	inline auto const $GetConsoleMode = ::GetConsoleMode;
 
-	inline constexpr auto $ReadConsoleW = ::ReadConsoleW;
+	inline auto const $ReadConsoleW = ::ReadConsoleW;
 
-	inline constexpr auto $WriteConsoleW = ::WriteConsoleW;
+	inline auto const $WriteConsoleW = ::WriteConsoleW;
 
-	inline constexpr auto $GetForegroundWindow = ::GetForegroundWindow;
+	inline auto const $GetForegroundWindow = ::GetForegroundWindow;
 
-	inline constexpr auto $CoInitialize = ::CoInitialize;
+	inline auto const $CoInitialize = ::CoInitialize;
 
-	inline constexpr auto $CoUninitialize = ::CoUninitialize;
+	inline auto const $CoUninitialize = ::CoUninitialize;
 
-	inline constexpr auto $CoCreateInstance = ::CoCreateInstance;
+	inline auto const $CoCreateInstance = ::CoCreateInstance;
 
-	inline constexpr auto $CoTaskMemFree = ::CoTaskMemFree;
+	inline auto const $CoTaskMemFree = ::CoTaskMemFree;
 
 	inline constexpr auto $S_OK = S_OK;
 

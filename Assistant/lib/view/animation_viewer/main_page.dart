@@ -562,7 +562,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                     ),
                   ),
                   const Divider(height: 0),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 8),
                   Row(
                     children: [
                       const SizedBox(width: 12),
@@ -611,6 +611,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                       const SizedBox(width: 12),
                     ],
                   ),
+                  const SizedBox(height: 4),
                   Row(
                     children: [
                       const SizedBox(width: 16),

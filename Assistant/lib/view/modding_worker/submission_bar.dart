@@ -16,7 +16,7 @@ import 'package:provider/provider.dart';
 class _BasicSubmissionBar extends StatelessWidget {
 
   const _BasicSubmissionBar({
-    super.key, // ignore: unused_element
+    super.key, // ignore: unused_element_parameter
     required this.completer,
     required this.history,
     required this.onSelect,
@@ -135,7 +135,7 @@ class _BasicSubmissionBar extends StatelessWidget {
 class _IdleSubmissionBar extends StatelessWidget {
 
   const _IdleSubmissionBar({
-    super.key, // ignore: unused_element
+    super.key, // ignore: unused_element_parameter
   });
 
   // ----------------
@@ -169,7 +169,7 @@ class _IdleSubmissionBar extends StatelessWidget {
 class _PauseSubmissionBar extends StatelessWidget {
 
   const _PauseSubmissionBar({
-    super.key, // ignore: unused_element
+    super.key, // ignore: unused_element_parameter
     required this.completer,
     required this.history,
     required this.value,
@@ -225,7 +225,7 @@ class _PauseSubmissionBar extends StatelessWidget {
 class _BooleanSubmissionBar extends StatelessWidget {
 
   const _BooleanSubmissionBar({
-    super.key, // ignore: unused_element
+    super.key, // ignore: unused_element_parameter
     required this.completer,
     required this.history,
     required this.value,
@@ -312,7 +312,7 @@ class _BooleanSubmissionBar extends StatelessWidget {
 class _IntegerSubmissionBar extends StatelessWidget {
 
   const _IntegerSubmissionBar({
-    super.key, // ignore: unused_element
+    super.key, // ignore: unused_element_parameter
     required this.completer,
     required this.history,
     required this.value,
@@ -379,7 +379,7 @@ class _IntegerSubmissionBar extends StatelessWidget {
 class _FloaterSubmissionBar extends StatelessWidget {
 
   const _FloaterSubmissionBar({
-    super.key, // ignore: unused_element
+    super.key, // ignore: unused_element_parameter
     required this.completer,
     required this.history,
     required this.value,
@@ -446,7 +446,7 @@ class _FloaterSubmissionBar extends StatelessWidget {
 class _SizeSubmissionBar extends StatelessWidget {
 
   const _SizeSubmissionBar({
-    super.key, // ignore: unused_element
+    super.key, // ignore: unused_element_parameter
     required this.completer,
     required this.history,
     required this.value,
@@ -547,7 +547,7 @@ class _SizeSubmissionBar extends StatelessWidget {
 class _StringSubmissionBar extends StatelessWidget {
 
   const _StringSubmissionBar({
-    super.key, // ignore: unused_element
+    super.key, // ignore: unused_element_parameter
     required this.completer,
     required this.history,
     required this.value,
@@ -611,7 +611,7 @@ class _StringSubmissionBar extends StatelessWidget {
 class _PathSubmissionBar extends StatelessWidget {
 
   const _PathSubmissionBar({
-    super.key, // ignore: unused_element
+    super.key, // ignore: unused_element_parameter
     required this.completer,
     required this.history,
     required this.value,
@@ -739,7 +739,7 @@ class _PathSubmissionBar extends StatelessWidget {
 class _EnumerationSubmissionBar extends StatelessWidget {
 
   const _EnumerationSubmissionBar({
-    super.key, // ignore: unused_element
+    super.key, // ignore: unused_element_parameter
     required this.completer,
     required this.option,
     required this.history,

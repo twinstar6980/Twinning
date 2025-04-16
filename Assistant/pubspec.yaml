@@ -1,26 +1,25 @@
 name: assistant
-version: 66.0.0+66
+version: 67.0.0+67
 publish_to: 'none'
 environment:
-  sdk: ^3.6.1
+  sdk: ^3.7.2
 dependencies:
   flutter:
     sdk: flutter
-  ffi: ^2.1.3
-  path: ^1.9.0
-  async: ^2.11.0
-  collection: ^1.19.0
+  ffi: ^2.1.4
+  path: ^1.9.1
+  async: ^2.12.0
+  collection: ^1.19.1
   decimal: ^3.2.1
-  provider: ^6.1.2
+  provider: ^6.1.4
   path_provider: ^2.1.5
-  material_symbols_icons: ^4.2801.1
+  material_symbols_icons: ^4.2815.0
   window_manager: ^0.4.3
   dynamic_color: ^1.7.0
   url_launcher: ^6.3.1
-  app_links: ^6.3.3
+  app_links: ^6.4.0
   file_selector: ^1.0.3
-  local_notifier: ^0.1.6
-  flutter_local_notifications: ^18.0.1
+  flutter_local_notifications: ^19.1.0
   super_drag_and_drop: ^0.8.24
   single_child_two_dimensional_scroll_view: ^0.0.3
 dev_dependencies:
@@ -40,6 +39,10 @@ msix_config:
   trim_logo: false
   languages: EN-US
   protocol_activation: twinstar.twinning.assistant
+  toast_activator:
+    clsid: 3FCD5C89-78F3-489B-88E5-37CBC3C3FC1A
+    arguments: "----AppNotificationActivated:"
+    display_name: Toast activator
   context_menu:
     dll_path: build/windows/x64/forwarder/Release/forwarder.dll
     items:

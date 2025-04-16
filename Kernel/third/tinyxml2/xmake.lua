@@ -1,5 +1,5 @@
 -- tinyxml2
--- 10.0.0 321ea883b7190d4e85cae5512a12e5eaa8f8731f
+-- 11.0.0 9148bdf719e997d1f474be6bcc7943881046dba1
 -- https://github.com/leethomason/tinyxml2
 
 target('third.tinyxml2', function()

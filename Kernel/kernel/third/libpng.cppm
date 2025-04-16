@@ -4,8 +4,6 @@ module;
 #pragma clang diagnostic ignored "-Weverything"
 
 #include "third/libpng/png.h"
-#include "third/libpng/pngstruct.h"
-#include "third/libpng/pnginfo.h"
 
 #pragma clang diagnostic pop
 
@@ -58,6 +56,14 @@ export namespace Twinning::Kernel::Third::libpng {
 	inline constexpr auto $png_write_row = ::png_write_row;
 
 	inline constexpr auto $png_write_end = ::png_write_end;
+
+	inline constexpr auto $png_get_image_width = ::png_get_image_width;
+
+	inline constexpr auto $png_get_image_height = ::png_get_image_height;
+
+	inline constexpr auto $png_get_color_type = ::png_get_color_type;
+
+	inline constexpr auto $png_get_bit_depth = ::png_get_bit_depth;
 
 	inline constexpr auto $png_set_IHDR = ::png_set_IHDR;
 

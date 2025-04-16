@@ -1,5 +1,5 @@
 -- avir
--- 3.0 24034240a63f99bf18d39f7a1249b323dab0a48b
+-- 3.1 1c8433cba92695ed69903175eae0fa527d1e8bc6
 -- https://github.com/avaneev/avir
 
 target('third.avir', function()

@@ -58,6 +58,7 @@
 /Assistant/macos/Podfile
 /Assistant/macos/Podfile.lock
 /Assistant/android/local.properties
+/Assistant/android/app/.cxx
 /Assistant/ios/Flutter/ephemeral
 /Assistant/ios/Flutter/Generated.xcconfig
 /Assistant/ios/Flutter/flutter_export_environment.sh

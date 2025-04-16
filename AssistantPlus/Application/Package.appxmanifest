@@ -9,7 +9,7 @@
   xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
   xmlns:desktop6="http://schemas.microsoft.com/appx/manifest/desktop/windows10/6"
   IgnorableNamespaces="uap rescap com desktop desktop4 desktop5 desktop6">
-  <Identity Name="TwinStar.Twinning.AssistantPlus" Publisher="CN=TwinStar" Version="53.0.0.0" />
+  <Identity Name="TwinStar.Twinning.AssistantPlus" Publisher="CN=TwinStar" Version="54.0.0.0" />
   <Properties>
     <DisplayName>Twinning Assistant Plus</DisplayName>
     <PublisherDisplayName>TwinStar</PublisherDisplayName>

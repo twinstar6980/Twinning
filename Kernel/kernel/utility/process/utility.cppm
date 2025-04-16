@@ -3,9 +3,6 @@ module;
 #include "kernel/common.hpp"
 
 // NOTE : DEFINE
-#if defined M_system_windows
-#define _wenviron (*__p__wenviron())
-#endif
 #if defined M_system_linux
 #define si_status _sifields._sigchld.si_status
 #endif
@@ -217,10 +214,10 @@ export namespace Twinning::Kernel::Process {
 	) -> List<String> {
 		auto result = List<String>{};
 		#if defined M_system_windows
-		if (_wenviron == nullptr) {
+		if (Third::system::windows::$_wenviron() == nullptr) {
 			Third::system::windows::$_wgetenv(L"");
 		}
-		for (auto element_pointer_raw = _wenviron; *element_pointer_raw != nullptr; ++element_pointer_raw) {
+		for (auto element_pointer_raw = Third::system::windows::$_wenviron(); *element_pointer_raw != nullptr; ++element_pointer_raw) {
 			auto element_pointer = cast_pointer<Character16>(make_pointer(*element_pointer_raw));
 			auto element = self_cast<String>(StringEncoding::utf8_from_utf16(CBasicStringView<Character16>{element_pointer, null_terminated_string_size_of(element_pointer)}));
 			result.append(as_moveable(element));

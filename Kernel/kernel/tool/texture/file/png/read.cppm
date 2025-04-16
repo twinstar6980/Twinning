@@ -25,8 +25,9 @@ export namespace Twinning::Kernel::Tool::Texture::File::PNG {
 			Third::libpng::$png_set_read_fn(png_struct, &data, &png_read_data);
 			auto png_info = Third::libpng::$png_create_info_struct(png_struct);
 			Third::libpng::$png_read_info(png_struct, png_info);
-			assert_test(image.size() == Image::ImageSize{mbox<Size>((*png_struct).width), mbox<Size>((*png_struct).height)});
-			switch ((*png_info).color_type) {
+			assert_test(image.size() == Image::ImageSize{mbox<Size>(Third::libpng::$png_get_image_width(png_struct, png_info)), mbox<Size>(Third::libpng::$png_get_image_height(png_struct, png_info))});
+			auto png_bit_depth = Third::libpng::$png_get_bit_depth(png_struct, png_info);
+			switch (Third::libpng::$png_get_color_type(png_struct, png_info)) {
 				case Third::libpng::$PNG_COLOR_TYPE_PALETTE : {
 					Third::libpng::$png_set_add_alpha(png_struct, 0xFF, Third::libpng::$PNG_FILLER_AFTER);
 					Third::libpng::$png_set_palette_to_rgb(png_struct);
@@ -34,13 +35,13 @@ export namespace Twinning::Kernel::Tool::Texture::File::PNG {
 				}
 				case Third::libpng::$PNG_COLOR_TYPE_GRAY : {
 					Third::libpng::$png_set_add_alpha(png_struct, 0xFF, Third::libpng::$PNG_FILLER_AFTER);
-					if ((*png_info).bit_depth == 1 || (*png_info).bit_depth == 2 || (*png_info).bit_depth == 4) {
+					if (png_bit_depth == 1 || png_bit_depth == 2 || png_bit_depth == 4) {
 						Third::libpng::$png_set_expand_gray_1_2_4_to_8(png_struct);
 					}
 					[[fallthrough]];
 				}
 				case Third::libpng::$PNG_COLOR_TYPE_GRAY_ALPHA : {
-					if ((*png_info).bit_depth == 16) {
+					if (png_bit_depth == 16) {
 						Third::libpng::$png_set_scale_16(png_struct);
 					}
 					Third::libpng::$png_set_gray_to_rgb(png_struct);
@@ -51,7 +52,7 @@ export namespace Twinning::Kernel::Tool::Texture::File::PNG {
 					[[fallthrough]];
 				}
 				case Third::libpng::$PNG_COLOR_TYPE_RGB_ALPHA : {
-					if ((*png_info).bit_depth == 16) {
+					if (png_bit_depth == 16) {
 						Third::libpng::$png_set_scale_16(png_struct);
 					}
 					break;
@@ -101,7 +102,7 @@ export namespace Twinning::Kernel::Tool::Texture::File::PNG {
 			Third::libpng::$png_set_read_fn(png_struct, &stream, &png_read_data);
 			auto png_info = Third::libpng::$png_create_info_struct(png_struct);
 			Third::libpng::$png_read_info(png_struct, png_info);
-			image_size = Image::ImageSize{mbox<Size>((*png_struct).width), mbox<Size>((*png_struct).height)};
+			image_size = Image::ImageSize{mbox<Size>(Third::libpng::$png_get_image_width(png_struct, png_info)), mbox<Size>(Third::libpng::$png_get_image_height(png_struct, png_info))};
 			Third::libpng::$png_destroy_read_struct(&png_struct, &png_info, nullptr);
 			return;
 		}
