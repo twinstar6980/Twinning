@@ -2,7 +2,7 @@
 
 #pragma region version
 
-#define M_version "76"
+#define M_version "77"
 
 #pragma endregion
 
@@ -241,7 +241,7 @@
 
 #define M_enumeration(_type, _item, _)\
 	struct _type :\
-		EnumerationBox<decltype([]{\
+		EnumerationBox<decltype([] {\
 			enum class Type : ZIntegerU8 {\
 				M_map(M_enumeration_item, _item)\
 			};\

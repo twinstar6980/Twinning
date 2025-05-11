@@ -16,7 +16,7 @@
 	
 	* [Clang 20.1 & POSIX](https://llvm.org/) for `Macintosh`
 	
-	* [Clang 19.0 & POSIX (NDK 28.0)](https://developer.android.com/ndk/downloads) for `Android`
+	* [Clang 19.0 & POSIX (NDK 28.1)](https://developer.android.com/ndk/downloads) for `Android`
 	
 	* [Clang 20.1 & POSIX](https://llvm.org/) for `Iphone`
 
