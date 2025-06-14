@@ -44,7 +44,7 @@ class Launcher {
         MessageProxy.construct(argument, argumentProxy);
         sendPort.send([state, argument, result, exception]);
         while (!state.value) {
-          sleep(const Duration(milliseconds: 10));
+          sleep(Duration(milliseconds: 10));
         }
         resultProxy.value = MessageProxy.parse(result).value;
         exceptionProxy.value = MessageProxy.parse(exception).value;

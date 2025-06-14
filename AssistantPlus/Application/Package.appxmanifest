@@ -1,6 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
@@ -8,8 +9,9 @@
   xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
   xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
   xmlns:desktop6="http://schemas.microsoft.com/appx/manifest/desktop/windows10/6"
-  IgnorableNamespaces="uap rescap com desktop desktop4 desktop5 desktop6">
-  <Identity Name="TwinStar.Twinning.AssistantPlus" Publisher="CN=TwinStar" Version="55.0.0.0" />
+  IgnorableNamespaces="mp uap rescap com desktop desktop4 desktop5 desktop6">
+  <Identity Name="TwinStar.Twinning.AssistantPlus" Publisher="CN=TwinStar" Version="56.0.0.0" />
+  <mp:PhoneIdentity PhoneProductId="5c0bdffa-0bc5-42fb-b680-8d184b26575c" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Twinning Assistant Plus</DisplayName>
     <PublisherDisplayName>TwinStar</PublisherDisplayName>

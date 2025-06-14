@@ -22,7 +22,7 @@ class BlankPage extends StatelessWidget {
       onDropFile: null,
       content: Container(
         alignment: Alignment.center,
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+        padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
         child: SizedBox(
           width: 256,
           height: 256,
@@ -33,14 +33,14 @@ class BlankPage extends StatelessWidget {
             hoverElevation: 0,
             highlightElevation: 0,
             disabledElevation: 0,
-            child: const Icon(IconSymbols.widgets, size: 128),
+            child: Icon(IconSymbols.widgets, size: 128),
             onPressed: () async {
               Provider.of<SettingProvider>(context, listen: false).state.mHomeShowLauncherPanel!();
             },
           ),
         ),
       ),
-      bottom: const CustomBottomBarContent(
+      bottom: CustomBottomBarContent(
         primary: null,
         secondary: [],
       ),

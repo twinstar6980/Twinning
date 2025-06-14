@@ -73,12 +73,12 @@ class _Main {
   }
 
   static Future<Void> _handleForward(
-    List<String> item,
+    List<String> resource,
   ) async {
     var setting = Provider.of<SettingProvider>(_setting.state.mApplicationNavigatorKey.currentContext!, listen: false);
-    var forwardState = await ModuleType.values.map((value) async => await ModuleHelper.query(value).checkForwardState?.call(item) ?? false).wait;
+    var forwardState = await ModuleType.values.map((value) async => await ModuleHelper.query(value).checkForwardState?.call(resource) ?? false).wait;
     var targetType = forwardState[setting.data.mForwarderDefaultTarget.index] ? setting.data.mForwarderDefaultTarget : null;
-    var canContinue = setting.data.mForwarderImmediateForward ? true : await ControlHelper.showDialogAsModal<Boolean>(_setting.state.mApplicationNavigatorKey.currentContext!, CustomModalDialog(
+    var canContinue = setting.data.mForwarderImmediateJump && targetType != null ? true : await ControlHelper.showDialogAsModal<Boolean>(_setting.state.mApplicationNavigatorKey.currentContext!, CustomModalDialog(
       title: 'Forward',
       contentBuilder: (context, setState) => [
         ...ModuleType.values.map(
@@ -104,21 +104,18 @@ class _Main {
       ],
       actionBuilder: (context) => [
         TextButton(
-          child: const Text('Cancel'),
+          child: Text('Cancel'),
           onPressed: () => Navigator.pop(context, false),
         ),
         TextButton(
-          child: const Text('Continue'),
+          child: Text('Continue'),
           onPressed: () => Navigator.pop(context, true),
         ),
       ],
     )) ?? false;
     if (canContinue && targetType != null) {
-      await _setting.state.mHomeInsertTabItem!(ModuleLauncherConfiguration(
-        title: ModuleHelper.query(targetType!).name,
-        type: targetType!,
-        option: ModuleHelper.query(targetType!).generateForwardOption!(item),
-      ));
+      var targetTypeInformation = ModuleHelper.query(targetType!);
+      await _handleLaunch(targetTypeInformation.name, targetType!, targetTypeInformation.generateForwardOption!(resource));
     }
     return;
   }
@@ -164,7 +161,7 @@ class _Main {
   static Future<Void> _handleLink(
     Uri link,
   ) async {
-    if (link.scheme != 'twinstar.twinning.assistant' || link.hasAuthority || link.path != '/application') {
+    if (link.scheme != 'twinstar.twinning.assistant' || link.authority != '' || link.path != '/application') {
       throw Exception('invalid link');
     }
     var command = link.queryParametersAll['command'] ?? [];
@@ -202,7 +199,6 @@ class _Main {
       await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
       if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
         await windowManager.ensureInitialized();
-        await windowManager.setTitleBarStyle(TitleBarStyle.hidden);
         if (_setting.data.mWindowSizeState) {
           await windowManager.setSize(Size(_setting.data.mWindowSizeWidth.toDouble(), _setting.data.mWindowSizeHeight.toDouble()));
         }

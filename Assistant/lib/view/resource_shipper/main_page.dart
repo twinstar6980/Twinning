@@ -233,7 +233,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
               interactive: true,
               controller: this._optionListScrollController,
               child: ListView.builder(
-                padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
                 controller: this._optionListScrollController,
                 itemCount: this._optionConfiguration.length,
                 itemBuilder: (context, index) => OptionGroupItem(
@@ -263,16 +263,16 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
             hoverElevation: 0,
             highlightElevation: 0,
             disabledElevation: 0,
-            child: const Icon(IconSymbols.attach_file),
+            child: Icon(IconSymbols.attach_file),
             onPressed: () async {
               await ControlHelper.showBottomSheetAsModal(context, CustomModalBottomSheet(
                 title: 'Resource',
                 contentBuilder: (context, setStateForPanel) => [
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   ListTile(
-                    contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
-                    leading: const Icon(IconSymbols.tab_close),
-                    title: const Text(
+                    contentPadding: EdgeInsets.fromLTRB(24, 0, 24, 0),
+                    leading: Icon(IconSymbols.tab_close),
+                    title: Text(
                       'Remove All',
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -284,9 +284,9 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                     },
                   ),
                   ListTile(
-                    contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
-                    leading: const Icon(IconSymbols.note_stack_add),
-                    title: const Text(
+                    contentPadding: EdgeInsets.fromLTRB(24, 0, 24, 0),
+                    leading: Icon(IconSymbols.note_stack_add),
+                    title: Text(
                       'Append New',
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -297,8 +297,8 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                         contentBuilder: (context, setState) => [
                           CustomTextField(
                             keyboardType: TextInputType.multiline,
-                            inputFormatters: const [],
-                            decoration: const InputDecoration(
+                            inputFormatters: [],
+                            decoration: InputDecoration(
                               contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
                               filled: false,
                               border: OutlineInputBorder(),
@@ -312,11 +312,11 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                         ],
                         actionBuilder: (context) => [
                           TextButton(
-                            child: const Text('Cancel'),
+                            child: Text('Cancel'),
                             onPressed: () => Navigator.pop(context, false),
                           ),
                           TextButton(
-                            child: const Text('Continue'),
+                            child: Text('Continue'),
                             onPressed: () => Navigator.pop(context, true),
                           ),
                         ],
@@ -328,9 +328,9 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                     },
                   ),
                   ListTile(
-                    contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
-                    leading: const Icon(IconSymbols.note_add),
-                    title: const Text(
+                    contentPadding: EdgeInsets.fromLTRB(24, 0, 24, 0),
+                    leading: Icon(IconSymbols.note_add),
+                    title: Text(
                       'Append File',
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -343,9 +343,9 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                     },
                   ),
                   ListTile(
-                    contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
-                    leading: const Icon(IconSymbols.create_new_folder),
-                    title: const Text(
+                    contentPadding: EdgeInsets.fromLTRB(24, 0, 24, 0),
+                    leading: Icon(IconSymbols.create_new_folder),
+                    title: Text(
                       'Append Directory',
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -357,14 +357,14 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                       }
                     },
                   ),
-                  const SizedBox(height: 8),
-                  const Divider(height: 1, indent: 16, endIndent: 16),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
+                  Divider(height: 1, indent: 16, endIndent: 16),
+                  SizedBox(height: 8),
                   ...this._resource.map((value) => Tooltip(
                     message: value.$1,
                     child: ListTile(
                       key: ObjectKey(value),
-                      contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                      contentPadding: EdgeInsets.fromLTRB(24, 0, 24, 0),
                       leading: Icon(switch (value.$2) {
                         null  => IconSymbols.hide_source,
                         false => IconSymbols.draft,
@@ -380,7 +380,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                       },
                     ),
                   )),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                 ],
               ));
             },
@@ -390,30 +390,30 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
           IconButton.filledTonal(
             tooltip: 'Parallel Forward',
             isSelected: this._parallelForward,
-            icon: const Icon(IconSymbols.shuffle),
-            selectedIcon: const Icon(IconSymbols.shuffle, fill: 1),
+            icon: Icon(IconSymbols.shuffle),
+            selectedIcon: Icon(IconSymbols.shuffle, fill: 1),
             onPressed: () async {
               this._parallelForward = !this._parallelForward;
               this.setState(() {});
             },
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           IconButton.filledTonal(
             tooltip: 'Enable Filter',
             isSelected: this._enableFilter,
-            icon: const Icon(IconSymbols.filter_alt),
-            selectedIcon: const Icon(IconSymbols.filter_alt, fill: 1),
+            icon: Icon(IconSymbols.filter_alt),
+            selectedIcon: Icon(IconSymbols.filter_alt, fill: 1),
             onPressed: () async {
               this._enableFilter = !this._enableFilter;
               this.setState(() {});
             },
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           IconButton.filledTonal(
             tooltip: 'Enable Batch',
             isSelected: this._enableBatch,
-            icon: const Icon(IconSymbols.stacks),
-            selectedIcon: const Icon(IconSymbols.stacks, fill: 1),
+            icon: Icon(IconSymbols.stacks),
+            selectedIcon: Icon(IconSymbols.stacks, fill: 1),
             onPressed: () async {
               this._enableBatch = !this._enableBatch;
               this.setState(() {});

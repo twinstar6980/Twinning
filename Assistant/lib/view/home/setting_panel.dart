@@ -10,6 +10,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // ----------------
 
@@ -30,16 +31,70 @@ class SettingPanel extends StatefulWidget {
 
 class _SettingPanelState extends State<SettingPanel> {
 
-  late Boolean _hasStoragePermission;
+  late Boolean  _storagePermissionState;
+  late Boolean? _forwarderExtensionState;
+
+  Future<Boolean?> checkForwarderExtension(
+  ) async {
+    var result = null as Boolean?;
+    if (Platform.isWindows) {
+      var stateFile = '${await StorageHelper.queryApplicationSharedDirectory()}/forwarder';
+      result = await StorageHelper.exist(stateFile);
+    }
+    if (Platform.isLinux) {
+      result = false;
+    }
+    if (Platform.isMacOS) {
+      result = null;
+    }
+    if (Platform.isAndroid) {
+      result = true;
+    }
+    if (Platform.isIOS) {
+      result = null;
+    }
+    return result;
+  }
+
+  Future<Boolean?> toggleForwarderExtension(
+  ) async {
+    var result = null as Boolean?;
+    if (Platform.isWindows) {
+      var stateFile = '${await StorageHelper.queryApplicationSharedDirectory()}/forwarder';
+      if (!await StorageHelper.exist(stateFile)) {
+        await StorageHelper.createFile(stateFile);
+      }
+      else {
+        await StorageHelper.remove(stateFile);
+      }
+      result = true;
+    }
+    if (Platform.isLinux) {
+      result = false;
+    }
+    if (Platform.isMacOS) {
+      await launchUrl(Uri.parse('x-apple.systempreferences:com.apple.ExtensionsPreferences'), mode: LaunchMode.externalApplication);
+      result = null;
+    }
+    if (Platform.isAndroid) {
+      result = false;
+    }
+    if (Platform.isIOS) {
+      result = false;
+    }
+    return result;
+  }
 
   // ----------------
 
   @override
   initState() {
     super.initState();
-    this._hasStoragePermission = false;
+    this._storagePermissionState = false;
+    this._forwarderExtensionState = null;
     ControlHelper.postTask(() async {
-      this._hasStoragePermission = await PermissionHelper.checkStorage();
+      this._storagePermissionState = await PermissionHelper.checkStorage();
+      this._forwarderExtensionState = await this.checkForwarderExtension();
       this.setState(() {});
     });
     return;
@@ -63,8 +118,8 @@ class _SettingPanelState extends State<SettingPanel> {
     var theme = Theme.of(context);
     return Column(
       children: [
-        const SizedBox(height: 4),
-        const CustomSettingLabel(
+        SizedBox(height: 4),
+        CustomSettingLabel(
           label: 'Theme',
           action: null,
         ),
@@ -124,7 +179,7 @@ class _SettingPanelState extends State<SettingPanel> {
                   await setting.save();
                 },
               ),
-              title: const Text(
+              title: Text(
                 'Enable',
                 overflow: TextOverflow.ellipsis,
               ),
@@ -135,10 +190,10 @@ class _SettingPanelState extends State<SettingPanel> {
                 keyboardType: TextInputType.text,
                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
                 decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
                   filled: false,
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(IconSymbols.light_mode),
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(IconSymbols.light_mode),
                   suffixIcon: Icon(
                     IconSymbols.circle,
                     fill: 0.6,
@@ -160,10 +215,10 @@ class _SettingPanelState extends State<SettingPanel> {
                 keyboardType: TextInputType.text,
                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
                 decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
                   filled: false,
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(IconSymbols.dark_mode),
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(IconSymbols.dark_mode),
                   suffixIcon: Icon(
                     IconSymbols.circle,
                     fill: 0.6,
@@ -204,7 +259,7 @@ class _SettingPanelState extends State<SettingPanel> {
                   await setting.save();
                 },
               ),
-              title: const Text(
+              title: Text(
                 'Enable',
                 overflow: TextOverflow.ellipsis,
               ),
@@ -213,16 +268,16 @@ class _SettingPanelState extends State<SettingPanel> {
               contentPadding: EdgeInsets.zero,
               title: CustomTextField(
                 keyboardType: TextInputType.multiline,
-                inputFormatters: const [],
+                inputFormatters: [],
                 decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
                   filled: false,
-                  border: const OutlineInputBorder(),
+                  border: OutlineInputBorder(),
                   suffixIcon: CustomTextFieldSuffixRegion(
                     children: [
                       IconButton(
                         tooltip: 'Pick',
-                        icon: const Icon(IconSymbols.open_in_new),
+                        icon: Icon(IconSymbols.open_in_new),
                         onPressed: () async {
                           var target = await StorageHelper.pickLoadFile(context, 'Application.ThemeFont');
                           if (target != null) {
@@ -247,7 +302,7 @@ class _SettingPanelState extends State<SettingPanel> {
             ),
           ],
         ),
-        const CustomSettingLabel(
+        CustomSettingLabel(
           label: 'Window',
           action: null,
         ),
@@ -259,7 +314,9 @@ class _SettingPanelState extends State<SettingPanel> {
             Text(
               !setting.data.mWindowPositionState ? 'Default' : 'Custom',
               overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: Platform.isWindows || Platform.isLinux || Platform.isMacOS ? null : theme.disabledColor,
+              ),
             ),
           ],
           onTap: null,
@@ -275,7 +332,7 @@ class _SettingPanelState extends State<SettingPanel> {
                   await setting.save();
                 },
               ),
-              title: const Text(
+              title: Text(
                 'Enable',
                 overflow: TextOverflow.ellipsis,
               ),
@@ -285,7 +342,7 @@ class _SettingPanelState extends State<SettingPanel> {
               title: CustomTextField(
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
                   filled: false,
                   border: OutlineInputBorder(),
@@ -305,7 +362,7 @@ class _SettingPanelState extends State<SettingPanel> {
               title: CustomTextField(
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
                   filled: false,
                   border: OutlineInputBorder(),
@@ -330,7 +387,9 @@ class _SettingPanelState extends State<SettingPanel> {
             Text(
               !setting.data.mWindowSizeState ? 'Default' : 'Custom',
               overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: Platform.isWindows || Platform.isLinux || Platform.isMacOS ? null : theme.disabledColor,
+              ),
             ),
           ],
           onTap: null,
@@ -346,7 +405,7 @@ class _SettingPanelState extends State<SettingPanel> {
                   await setting.save();
                 },
               ),
-              title: const Text(
+              title: Text(
                 'Enable',
                 overflow: TextOverflow.ellipsis,
               ),
@@ -356,7 +415,7 @@ class _SettingPanelState extends State<SettingPanel> {
               title: CustomTextField(
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
                   filled: false,
                   border: OutlineInputBorder(),
@@ -376,7 +435,7 @@ class _SettingPanelState extends State<SettingPanel> {
               title: CustomTextField(
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
                   filled: false,
                   border: OutlineInputBorder(),
@@ -393,7 +452,7 @@ class _SettingPanelState extends State<SettingPanel> {
             ),
           ],
         ),
-        const CustomSettingLabel(
+        CustomSettingLabel(
           label: 'Storage',
           action: null,
         ),
@@ -403,13 +462,15 @@ class _SettingPanelState extends State<SettingPanel> {
           label: 'Storage Permission',
           content: [
             Text(
-              !this._hasStoragePermission ? 'Denied' : 'Granted',
+              !this._storagePermissionState ? 'Denied' : 'Granted',
               overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: Platform.isAndroid ? null : theme.disabledColor,
+              ),
             ),
           ],
           onTap: () async {
-            this._hasStoragePermission = await PermissionHelper.requestStorage();
+            this._storagePermissionState = await PermissionHelper.requestStorage();
             this.setState(() {});
           },
           panelBuilder: null,
@@ -422,7 +483,9 @@ class _SettingPanelState extends State<SettingPanel> {
             Text(
               !StorageHelper.existDirectorySync(setting.data.mStoragePickerFallbackDirectory) ? 'Invalid' : 'Available',
               overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: Platform.isAndroid ? null : theme.disabledColor,
+              ),
             ),
           ],
           onTap: null,
@@ -431,16 +494,16 @@ class _SettingPanelState extends State<SettingPanel> {
               contentPadding: EdgeInsets.zero,
               title: CustomTextField(
                 keyboardType: TextInputType.text,
-                inputFormatters: const [],
+                inputFormatters: [],
                 decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
                   filled: false,
-                  border: const OutlineInputBorder(),
+                  border: OutlineInputBorder(),
                   suffixIcon: CustomTextFieldSuffixRegion(
                     children: [
                       IconButton(
                         tooltip: 'Pick',
-                        icon: const Icon(IconSymbols.open_in_new),
+                        icon: Icon(IconSymbols.open_in_new),
                         onPressed: () async {
                           var target = await StorageHelper.pickLoadDirectory(context, 'Application.StoragePickerFallbackDirectory');
                           if (target != null) {
@@ -465,9 +528,43 @@ class _SettingPanelState extends State<SettingPanel> {
             ),
           ],
         ),
-        const CustomSettingLabel(
+        CustomSettingLabel(
           label: 'Forwarder',
           action: null,
+        ),
+        CustomSettingItem(
+          enabled: Platform.isWindows || Platform.isMacOS,
+          icon: IconSymbols.send_time_extension,
+          label: 'Forwarder Extension',
+          content: [
+            Text(
+              this._forwarderExtensionState == null ? 'System' : !this._forwarderExtensionState! ? 'Disabled' : 'Enabled',
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: Platform.isWindows || Platform.isMacOS ? null : theme.disabledColor,
+              ),
+            ),
+          ],
+          onTap: null,
+          panelBuilder: (context, setStateForPanel) => [
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Switch(
+                thumbIcon: this._forwarderExtensionState != null ? null : WidgetStatePropertyAll(Icon(IconSymbols.question_mark)),
+                value: this._forwarderExtensionState == null ? false : this._forwarderExtensionState!,
+                onChanged: (value) async {
+                  await this.toggleForwarderExtension();
+                  this._forwarderExtensionState = await this.checkForwarderExtension();
+                  setStateForPanel(() {});
+                  this.setState(() {});
+                },
+              ),
+              title: Text(
+                'Enable',
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
         ),
         CustomSettingItem(
           icon: IconSymbols.nearby,
@@ -504,10 +601,10 @@ class _SettingPanelState extends State<SettingPanel> {
         ),
         CustomSettingItem(
           icon: IconSymbols.next_plan,
-          label: 'Forwarder Immediate Forward',
+          label: 'Forwarder Immediate Jump',
           content: [
             Text(
-              !setting.data.mForwarderImmediateForward ? 'Disabled' : 'Enabled',
+              !setting.data.mForwarderImmediateJump ? 'Disabled' : 'Enabled',
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
@@ -517,22 +614,22 @@ class _SettingPanelState extends State<SettingPanel> {
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: Switch(
-                value: setting.data.mForwarderImmediateForward,
+                value: setting.data.mForwarderImmediateJump,
                 onChanged: (value) async {
-                  setting.data.mForwarderImmediateForward = value;
+                  setting.data.mForwarderImmediateJump = value;
                   setStateForPanel(() {});
                   this.setState(() {});
                   await setting.save();
                 },
               ),
-              title: const Text(
+              title: Text(
                 'Enable',
                 overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
       ],
     );
   }

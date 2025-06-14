@@ -366,6 +366,16 @@ namespace Twinning.Script.KernelX {
 			return Kernel.Storage.remove(Kernel.Path.value(source));
 		}
 
+		// NOTE : extension
+		export function remove_if(
+			source: string,
+		): void {
+			if (exist(source)) {
+				remove(source);
+			}
+			return;
+		}
+
 		// ------------------------------------------------
 
 		export function create_link(

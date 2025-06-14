@@ -27,7 +27,7 @@ class LauncherConfigurationPanel extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => Column(
         children: [
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           CustomSettingItem(
             icon: IconSymbols.text_fields,
             label: 'Title',
@@ -47,8 +47,8 @@ class LauncherConfigurationPanel extends StatelessWidget {
                 contentPadding: EdgeInsets.zero,
                 title: CustomTextField(
                   keyboardType: TextInputType.text,
-                  inputFormatters: const [],
-                  decoration: const InputDecoration(
+                  inputFormatters: [],
+                  decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
                     filled: false,
                     border: OutlineInputBorder(),
@@ -119,8 +119,8 @@ class LauncherConfigurationPanel extends StatelessWidget {
                 contentPadding: EdgeInsets.zero,
                 title: CustomTextField(
                   keyboardType: TextInputType.multiline,
-                  inputFormatters: const [],
-                  decoration: const InputDecoration(
+                  inputFormatters: [],
+                  decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
                     filled: false,
                     border: OutlineInputBorder(),
@@ -136,7 +136,7 @@ class LauncherConfigurationPanel extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
         ],
       ),
     );

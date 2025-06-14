@@ -110,7 +110,7 @@ class ExecutorProxy {
   ExecutorProxy(
     Void Function(ExecutorProxy, MessageProxy, MessageProxy)? value,
   ) :
-    value = value ?? ((_, __, ___) => throw UnimplementedError());
+    value = value ?? ((a1, a2, a3) => throw UnimplementedError());
 
   // #endregion
 

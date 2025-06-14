@@ -57,7 +57,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
   ) async {
     this._messageList.add(
       Container(
-        margin: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+        margin: EdgeInsets.fromLTRB(0, 4, 0, 4),
         child: MessageCard(
           type: type,
           title: title,
@@ -91,7 +91,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     this.setState(() {});
     await completer.future;
     var value = valueWrapper.value;
-    this._submissionBar = const SubmissionBar(
+    this._submissionBar = SubmissionBar(
       type: null,
       option: null,
       history: null,
@@ -122,7 +122,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
       var kernel = await StorageHelper.temporary();
       var library = bridge.Library();
       try {
-        await StorageHelper.copyFile(setting.data.mModdingWorker.mKernel, kernel);
+        await StorageHelper.copy(setting.data.mModdingWorker.mKernel, kernel);
         library.open(kernel);
         result = await bridge.Launcher.launch(this._sessionClient, library, setting.data.mModdingWorker.mScript, setting.data.mModdingWorker.mArgument + this._additionalArgument);
       }
@@ -132,8 +132,8 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
       if (library.state()) {
         library.close();
       }
-      if (await StorageHelper.existFile(kernel)) {
-        await StorageHelper.removeFile(kernel);
+      if (await StorageHelper.exist(kernel)) {
+        await StorageHelper.remove(kernel);
       }
     }
     catch (e) {
@@ -210,7 +210,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     this._messageList = [];
     this._messageListScrollController = ScrollController();
     this._submissionHistory = SubmissionType.values.map((value) => <ValueExpression>[]).toList();
-    this._submissionBar = const SubmissionBar(
+    this._submissionBar = SubmissionBar(
       type: null,
       option: null,
       history: null,
@@ -252,7 +252,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                 interactive: true,
                 controller: this._messageListScrollController,
                 child: ListView(
-                  padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+                  padding: EdgeInsets.fromLTRB(12, 4, 12, 4),
                   controller: this._messageListScrollController,
                   children: [...this._messageList],
                 ),
@@ -275,7 +275,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
             hoverElevation: 0,
             highlightElevation: 0,
             disabledElevation: 0,
-            child: const Icon(IconSymbols.play_circle),
+            child: Icon(IconSymbols.play_circle),
             onPressed: () async {
               this._launchSession();
             },
@@ -290,7 +290,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
               child: IconButton.filledTonal(
                 tooltip: 'Additional Argument',
                 padding: EdgeInsets.zero,
-                icon: const SizedBox(
+                icon: SizedBox(
                   width: 56,
                   child: Icon(IconSymbols.attach_file),
                 ),
@@ -300,8 +300,8 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                     contentBuilder: (context, setState) => [
                       CustomTextField(
                         keyboardType: TextInputType.multiline,
-                        inputFormatters: const [],
-                        decoration: const InputDecoration(
+                        inputFormatters: [],
+                        decoration: InputDecoration(
                           contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
                           filled: false,
                           border: OutlineInputBorder(),

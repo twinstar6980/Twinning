@@ -91,7 +91,7 @@ namespace AssistantPlus.Utility {
 
 		#endregion
 
-		#region basic
+		#region exist
 
 		public static Boolean Exist (
 			String target
@@ -111,67 +111,56 @@ namespace AssistantPlus.Utility {
 			return Directory.Exists(target);
 		}
 
-		// ----------------
+		#endregion
 
-		public static void CopyFile (
+		#region basic
+
+		public static void Copy (
 			String source,
 			String destination
 		) {
-			var destinationParent = StorageHelper.Parent(destination);
-			if (destinationParent != null && !Directory.Exists(destinationParent)) {
-				StorageHelper.CreateDirectory(destinationParent);
+			GF.AssertTest(StorageHelper.Exist(source));
+			if (StorageHelper.ExistFile(source)) {
+				StorageHelper.CreateFile(destination);
+				File.Copy(source, destination, true);
 			}
-			File.Copy(source, destination, true);
-			return;
-		}
-
-		public static void CopyDirectory (
-			String source,
-			String destination
-		) {
-			if (!Directory.Exists(destination)) {
-				Directory.CreateDirectory(destination);
-			}
-			foreach (var item in Directory.GetFiles(source)) {
-				StorageHelper.CopyFile(item, $"{destination}/{StorageHelper.Name(item)}");
-			}
-			foreach (var item in Directory.GetDirectories(source)) {
-				StorageHelper.CopyDirectory(item, $"{destination}/{StorageHelper.Name(item)}");
+			if (StorageHelper.ExistDirectory(source)) {
+				StorageHelper.CreateDirectory(destination);
+				foreach (var item in Directory.GetFiles(source)) {
+					StorageHelper.Copy(item, $"{destination}/{StorageHelper.Name(item)}");
+				}
+				foreach (var item in Directory.GetDirectories(source)) {
+					StorageHelper.Copy(item, $"{destination}/{StorageHelper.Name(item)}");
+				}
 			}
 			return;
 		}
 
-		// ----------------
-
-		public static void RenameFile (
+		public static void Rename (
 			String source,
 			String destination
 		) {
-			File.Move(source, destination);
+			GF.AssertTest(StorageHelper.Exist(source));
+			StorageHelper.CreateDirectory(StorageHelper.Parent(destination).AsNotNull());
+			if (StorageHelper.ExistFile(source)) {
+				File.Move(source, destination);
+			}
+			if (StorageHelper.ExistDirectory(source)) {
+				Directory.Move(source, destination);
+			}
 			return;
 		}
 
-		public static void RenameDirectory (
-			String source,
-			String destination
-		) {
-			Directory.Move(source, destination);
-			return;
-		}
-
-		// ----------------
-
-		public static void RemoveFile (
+		public static void Remove (
 			String source
 		) {
-			File.Delete(source);
-			return;
-		}
-
-		public static void RemoveDirectory (
-			String source
-		) {
-			Directory.Delete(source, true);
+			GF.AssertTest(StorageHelper.Exist(source));
+			if (StorageHelper.ExistFile(source)) {
+				File.Delete(source);
+			}
+			if (StorageHelper.ExistDirectory(source)) {
+				Directory.Delete(source, true);
+			}
 			return;
 		}
 

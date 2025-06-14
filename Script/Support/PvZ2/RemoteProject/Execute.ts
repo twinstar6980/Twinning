@@ -211,9 +211,7 @@ namespace Twinning.Script.Support.PvZ2.RemoteProject {
 			}
 		}
 		Console.success(los('support.pvz2.remote_project.execute:finish'), []);
-		if (KernelX.Storage.exist_directory(local_temporary_directory)) {
-			KernelX.Storage.remove(local_temporary_directory);
-		}
+		KernelX.Storage.remove_if(local_temporary_directory);
 		return;
 	}
 

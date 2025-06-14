@@ -36,7 +36,7 @@ class OptionItem extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            contentPadding: const EdgeInsets.fromLTRB(40, 0, 16, 0),
+            contentPadding: EdgeInsets.fromLTRB(40, 0, 16, 0),
             dense: true,
             enabled: enabled,
             leading: Icon(SymbolsGet.get(this.configuration.icon, SymbolStyle.outlined)),
@@ -50,24 +50,24 @@ class OptionItem extends StatelessWidget {
                 Tooltip(
                   message: !enabled ? '' : 'Preset',
                   child: TextButton(
-                    style: const ButtonStyle(
+                    style: ButtonStyle(
                       padding: WidgetStatePropertyAll(EdgeInsets.zero),
                       overlayColor: WidgetStatePropertyAll(Colors.transparent),
                     ),
                     child: Stack(
                       children: [
                         Container(
-                          padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                          padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
                           height: 40,
                           child: Row(
                             children: [
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8),
                               Text(
                                 '${this.configuration.preset.nonNulls.length}',
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              const SizedBox(width: 4),
-                              const Icon(IconSymbols.flash_on),
+                              SizedBox(width: 4),
+                              Icon(IconSymbols.flash_on),
                             ],
                           ),
                         ),
@@ -76,17 +76,17 @@ class OptionItem extends StatelessWidget {
                             tooltip: '',
                             enabled: enabled,
                             position: PopupMenuPosition.under,
-                            offset: const Offset(0, 12),
-                            icon: const SizedBox(),
+                            offset: Offset(0, 12),
+                            icon: SizedBox(),
                             itemBuilder: (context) => [
                               if (this.configuration.preset.isEmpty)
-                                const PopupMenuItem(
+                                PopupMenuItem(
                                   height: 16,
                                   enabled: false,
                                   child: null,
                                 ),
                               ...this.configuration.preset.map((preset) => preset == null
-                                ? const PopupMenuDivider()
+                                ? PopupMenuDivider()
                                 : PopupMenuItem(
                                   value: preset,
                                   child: Text(
@@ -155,7 +155,7 @@ class OptionGroupItem extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+            contentPadding: EdgeInsets.fromLTRB(24, 0, 24, 0),
             leading: Icon(SymbolsGet.get(this.configuration.icon, SymbolStyle.outlined)),
             title: Text(
               this.configuration.name,
@@ -169,7 +169,7 @@ class OptionGroupItem extends StatelessWidget {
                   overflow: TextOverflow.clip,
                   style: theme.textTheme.bodyMedium,
                 ),
-                const SizedBox(width: 6),
+                SizedBox(width: 6),
                 Icon(!this.collapse ? IconSymbols.keyboard_arrow_left : IconSymbols.keyboard_arrow_down),
               ],
             ),

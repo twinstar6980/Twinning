@@ -16,12 +16,12 @@ class NotificationHelper {
     _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     await _flutterLocalNotificationsPlugin!.initialize(
       InitializationSettings(
-        android: const AndroidInitializationSettings(
+        android: AndroidInitializationSettings(
           '@mipmap/ic_launcher_foreground',
         ),
-        iOS: const DarwinInitializationSettings(
+        iOS: DarwinInitializationSettings(
         ),
-        macOS: const DarwinInitializationSettings(
+        macOS: DarwinInitializationSettings(
         ),
         linux: LinuxInitializationSettings(
           defaultActionName: '',
@@ -47,7 +47,7 @@ class NotificationHelper {
       DateTime.now().millisecondsSinceEpoch % 0x80000000,
       title,
       description,
-      const NotificationDetails(
+      NotificationDetails(
         android: AndroidNotificationDetails(
           'com.twinstar.twinning.assistant.notification_channel.main',
           'Main',

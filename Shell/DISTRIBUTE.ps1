@@ -1,6 +1,6 @@
 param (
 	[Parameter(Mandatory)]
-	[ValidateSet("windows.x86_64", "linux.x86_64", "macintosh.x86_64", "android.arm_64", "iphone.arm_64")]
+	[ValidateSet("windows.x86_64", "linux.x86_64", "macintosh.arm_64", "android.arm_64", "iphone.arm_64")]
 	[String] $TargetPlatform
 )
 . "${PSScriptRoot}/../common/powershell/helper.ps1"
@@ -24,13 +24,13 @@ if ($TargetPlatform -eq "linux.x86_64") {
 	xmake "build"
 	Copy-Item -Force -Recurse -Path "${ModuleDirectory}/.build/linux/x86_64/release/shell" -Destination "${ModuleDistributionFile}"
 }
-if ($TargetPlatform -eq "macintosh.x86_64") {
+if ($TargetPlatform -eq "macintosh.arm_64") {
 	if (Test-Path -Path $ModuleDistributionFile) {
 		Remove-Item -Force -Recurse -Path $ModuleDistributionFile
 	}
-	xmake "config" "--buildir=.build" "--mode=release" "--plat=macosx" "--arch=x86_64" "--toolchain=xcode" "--cc=clang-20" "--cxx=clang-20" "--xcode_sdkver=13.3" "--target_minver=13.3"
+	xmake "config" "--buildir=.build" "--mode=release" "--plat=macosx" "--arch=arm64" "--toolchain=xcode" "--cc=clang-20" "--cxx=clang-20" "--xcode_sdkver=15.5" "--target_minver=11.5"
 	xmake "build"
-	Copy-Item -Force -Recurse -Path "${ModuleDirectory}/.build/macosx/x86_64/release/shell" -Destination "${ModuleDistributionFile}"
+	Copy-Item -Force -Recurse -Path "${ModuleDirectory}/.build/macosx/arm64/release/shell" -Destination "${ModuleDistributionFile}"
 }
 if ($TargetPlatform -eq "android.arm_64") {
 	if (Test-Path -Path $ModuleDistributionFile) {
@@ -44,7 +44,7 @@ if ($TargetPlatform -eq "iphone.arm_64") {
 	if (Test-Path -Path $ModuleDistributionFile) {
 		Remove-Item -Force -Recurse -Path $ModuleDistributionFile
 	}
-	xmake "config" "--buildir=.build" "--mode=release" "--plat=iphoneos" "--arch=arm64" "--toolchain=xcode" "--cc=clang-20" "--cxx=clang-20" "--xcode_sdkver=16.4" "--target_minver=16.4"
+	xmake "config" "--buildir=.build" "--mode=release" "--plat=iphoneos" "--arch=arm64" "--toolchain=xcode" "--cc=clang-20" "--cxx=clang-20" "--xcode_sdkver=18.5" "--target_minver=15.6"
 	xmake "build"
 	Copy-Item -Force -Recurse -Path "${ModuleDirectory}/.build/iphoneos/arm64/release/shell" -Destination "${ModuleDistributionFile}"
 }

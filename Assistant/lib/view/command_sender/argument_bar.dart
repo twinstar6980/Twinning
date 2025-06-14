@@ -34,7 +34,7 @@ class _BasicArgumentBar extends StatelessWidget {
       children: [
         Row(
           children: [
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Expanded(
               child: Text(
                 this.name,
@@ -78,30 +78,30 @@ class _BooleanArgumentBar extends StatelessWidget {
         icon: IconSymbols.check_box,
         content: CustomTextField(
           keyboardType: TextInputType.text,
-          inputFormatters: const [],
+          inputFormatters: [],
           decoration: InputDecoration(
-            contentPadding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
             filled: false,
-            border: const UnderlineInputBorder(),
+            border: UnderlineInputBorder(),
             hintText: 'Boolean',
             suffixIcon: CustomTextFieldSuffixRegion(
               children: [
                 IconButton(
                   tooltip: 'No',
                   isSelected: this.value.value == null ? false : this.value.value!.value == false,
-                  icon: const Icon(IconSymbols.do_not_disturb_on),
-                  selectedIcon: const Icon(IconSymbols.do_not_disturb_on, fill: 1),
+                  icon: Icon(IconSymbols.do_not_disturb_on),
+                  selectedIcon: Icon(IconSymbols.do_not_disturb_on, fill: 1),
                   onPressed: () async {
                     this.value.value = this.value.value?.value == false ? null : BooleanExpression(false);
                     setState(() {});
                   },
                 ),
-                const SizedBox(width: 4),
+                SizedBox(width: 4),
                 IconButton(
                   tooltip: 'Yes',
                   isSelected: this.value.value == null ? false : this.value.value!.value == true,
-                  icon: const Icon(IconSymbols.check_circle),
-                  selectedIcon: const Icon(IconSymbols.check_circle, fill: 1),
+                  icon: Icon(IconSymbols.check_circle),
+                  selectedIcon: Icon(IconSymbols.check_circle, fill: 1),
                   onPressed: () async {
                     this.value.value = this.value.value?.value == true ? null : BooleanExpression(true);
                     setState(() {});
@@ -151,9 +151,9 @@ class _IntegerArgumentBar extends StatelessWidget {
         name: this.name,
         icon: IconSymbols.speed_1_2,
         content: CustomTextField(
-          keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: false),
-          inputFormatters: const [],
-          decoration: const InputDecoration(
+          keyboardType: TextInputType.numberWithOptions(signed: true, decimal: false),
+          inputFormatters: [],
+          decoration: InputDecoration(
             contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
             filled: false,
             border: UnderlineInputBorder(),
@@ -205,9 +205,9 @@ class _FloaterArgumentBar extends StatelessWidget {
         name: this.name,
         icon: IconSymbols.speed_1_2,
         content: CustomTextField(
-          keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
-          inputFormatters: const [],
-          decoration: const InputDecoration(
+          keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
+          inputFormatters: [],
+          decoration: InputDecoration(
             contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
             filled: false,
             border: UnderlineInputBorder(),
@@ -259,12 +259,12 @@ class _SizeArgumentBar extends StatelessWidget {
         name: this.name,
         icon: IconSymbols.memory,
         content: CustomTextField(
-          keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: true),
-          inputFormatters: const [],
+          keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
+          inputFormatters: [],
           decoration: InputDecoration(
-            contentPadding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
             filled: false,
-            border: const UnderlineInputBorder(),
+            border: UnderlineInputBorder(),
             hintText: 'Size',
             suffixIcon: CustomTextFieldSuffixRegion(
               children: [
@@ -272,7 +272,7 @@ class _SizeArgumentBar extends StatelessWidget {
                   tooltip: 'Exponent',
                   position: PopupMenuPosition.under,
                   icon: this.value.value == null
-                    ? const Icon(IconSymbols.expand_circle_down)
+                    ? Icon(IconSymbols.expand_circle_down)
                     : Container(
                       alignment: Alignment.center,
                       width: 24,
@@ -340,8 +340,8 @@ class _StringArgumentBar extends StatelessWidget {
         icon: IconSymbols.text_fields,
         content: CustomTextField(
           keyboardType: TextInputType.text,
-          inputFormatters: const [],
-          decoration: const InputDecoration(
+          inputFormatters: [],
+          decoration: InputDecoration(
             contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
             filled: false,
             border: UnderlineInputBorder(),
@@ -396,18 +396,18 @@ class _PathArgumentBar extends StatelessWidget {
           },
           child: CustomTextField(
             keyboardType: TextInputType.text,
-            inputFormatters: const [],
+            inputFormatters: [],
             decoration: InputDecoration(
-              contentPadding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+              contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
               filled: false,
-              border: const UnderlineInputBorder(),
+              border: UnderlineInputBorder(),
               hintText: 'Path',
               suffixIcon: CustomTextFieldSuffixRegion(
                 children: [
                   PopupMenuButton(
                     tooltip: 'Pick',
                     position: PopupMenuPosition.under,
-                    icon: const Icon(IconSymbols.open_in_new),
+                    icon: Icon(IconSymbols.open_in_new),
                     itemBuilder: (context) => [
                       ('load_file', 'Load File'),
                       ('load_directory', 'Load Directory'),
@@ -478,15 +478,15 @@ class _EnumerationArgumentBar extends StatelessWidget {
         icon: IconSymbols.menu,
         content: CustomOptionField(
           decoration: InputDecoration(
-            contentPadding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
             filled: false,
-            border: const UnderlineInputBorder(),
+            border: UnderlineInputBorder(),
             hintText: 'Enumeration',
             suffixIcon: CustomTextFieldSuffixRegion(
               children: [
                 IconButton(
                   tooltip: 'Reset',
-                  icon: const Icon(IconSymbols.restart_alt),
+                  icon: Icon(IconSymbols.restart_alt),
                   onPressed: () async {
                     this.value.value = null;
                     setState(() {});

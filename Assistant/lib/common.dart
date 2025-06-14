@@ -15,7 +15,11 @@ typedef IconSymbols = Symbols;
 
 const String kApplicationName = 'Twinning Assistant';
 
-const String kApplicationVersion = '69';
+const String kApplicationVersion = '70';
+
+const String kApplicationDeveloper = 'TwinStar';
+
+const String kApplicationYear = '2023-2025';
 
 // ----------------
 

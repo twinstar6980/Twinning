@@ -195,7 +195,7 @@ class VisualHelper {
             var index = subController.value;
             var property = layer.property[index];
             if (property == null) {
-              return const SizedBox();
+              return SizedBox();
             }
             return ColorFiltered(
               colorFilter: property.$2,

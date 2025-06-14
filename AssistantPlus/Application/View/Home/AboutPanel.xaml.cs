@@ -64,7 +64,13 @@ namespace AssistantPlus.View.Home {
 
 		public String uDescriptionLabel_Text {
 			get {
-				return $"{Package.Current.DisplayName} - {Package.Current.Id.Version.Major}";
+				return $"{Package.Current.DisplayName} - v{Package.Current.Id.Version.Major}";
+			}
+		}
+
+		public String uCopyrightLabel_Text {
+			get {
+				return $"\u00A9 2023-2025 {Package.Current.PublisherDisplayName}. All rights reserved.";
 			}
 		}
 
@@ -366,6 +372,38 @@ namespace AssistantPlus.View.Home {
 			}
 		}
 
+		// ----------------
+
+		public Boolean uSettingForwarderExtension_IsChecked {
+			get {
+				return StorageHelper.Exist(App.ForwarderExtensionStateFile);
+			}
+		}
+
+		public async void uSettingForwarderExtension_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.As<ToggleButton>();
+			if (!StorageHelper.Exist(App.ForwarderExtensionStateFile)) {
+				StorageHelper.CreateFile(App.ForwarderExtensionStateFile);
+			}
+			else {
+				StorageHelper.Remove(App.ForwarderExtensionStateFile);
+			}
+			this.NotifyPropertyChanged(
+				nameof(this.uSettingForwarderExtension_IsChecked),
+				nameof(this.uSettingForwarderExtension_Content)
+			);
+			return;
+		}
+
+		public String uSettingForwarderExtension_Content {
+			get {
+				return !StorageHelper.Exist(App.ForwarderExtensionStateFile) ? "Disabled" : "Enabled";
+			}
+		}
+
 		#endregion
 
 		#region storage
@@ -376,6 +414,7 @@ namespace AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<SplitButton>();
 			await StorageHelper.RevealDirectory(App.PackageDirectory);
+			App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
 			return;
 		}
 
@@ -387,6 +426,7 @@ namespace AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<SplitButton>();
 			await StorageHelper.RevealFile(App.Setting.File);
+			App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
 			return;
 		}
 
@@ -395,16 +435,19 @@ namespace AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<MenuFlyoutItem>();
+			var changed = false;
 			switch (senders.Tag.As<String>()) {
 				case "Reload": {
 					await App.Setting.Load();
 					await App.Setting.Save();
+					changed = true;
 					break;
 				}
 				case "Reset": {
 					if (await ControlHelper.ShowDialogForConfirm(this.View, null, null)) {
 						await App.Setting.Reset();
 						await App.Setting.Save();
+						changed = true;
 					}
 					break;
 				}
@@ -413,6 +456,7 @@ namespace AssistantPlus.View.Home {
 					if (file != null) {
 						await App.Setting.Load(file);
 						await App.Setting.Save();
+						changed = true;
 					}
 					break;
 				}
@@ -420,49 +464,57 @@ namespace AssistantPlus.View.Home {
 					var file = await StorageHelper.PickSaveFile(WindowHelper.Find(this.View), $"Application.SettingFile", "json", $"{Package.Current.Id.Name}@Setting");
 					if (file != null) {
 						await App.Setting.Save(file, false);
+						changed = true;
 					}
 					break;
 				}
 				default: throw new ();
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uSettingThemeMode_SelectedIndex),
-				nameof(this.uSettingThemeColor_IsChecked),
-				nameof(this.uSettingThemeColor_Content),
-				nameof(this.uSettingThemeColorLight_Color),
-				nameof(this.uSettingThemeColorDark_Color),
-				nameof(this.uSettingThemeBackdrop_SelectedIndex),
-				nameof(this.uSettingWindowPosition_IsChecked),
-				nameof(this.uSettingWindowPosition_Content),
-				nameof(this.uSettingWindowPositionX_Value),
-				nameof(this.uSettingWindowPositionY_Value),
-				nameof(this.uSettingWindowSize_IsChecked),
-				nameof(this.uSettingWindowSize_Content),
-				nameof(this.uSettingWindowSizeWidth_Value),
-				nameof(this.uSettingWindowSizeHeight_Value)
-			);
+			if (changed) {
+				this.NotifyPropertyChanged(
+					nameof(this.uSettingThemeMode_SelectedIndex),
+					nameof(this.uSettingThemeColor_IsChecked),
+					nameof(this.uSettingThemeColor_Content),
+					nameof(this.uSettingThemeColorLight_Color),
+					nameof(this.uSettingThemeColorDark_Color),
+					nameof(this.uSettingThemeBackdrop_SelectedIndex),
+					nameof(this.uSettingWindowPosition_IsChecked),
+					nameof(this.uSettingWindowPosition_Content),
+					nameof(this.uSettingWindowPositionX_Value),
+					nameof(this.uSettingWindowPositionY_Value),
+					nameof(this.uSettingWindowSize_IsChecked),
+					nameof(this.uSettingWindowSize_Content),
+					nameof(this.uSettingWindowSizeWidth_Value),
+					nameof(this.uSettingWindowSizeHeight_Value)
+				);
+				App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
+			}
 			return;
 		}
 
 		// ----------------
 
 		public async void uStorageSharedDirectory_Click (
-			SplitButton               sender,
-			SplitButtonClickEventArgs args
+			Object          sender,
+			RoutedEventArgs args
 		) {
-			var senders = sender.As<SplitButton>();
+			var senders = sender.As<Button>();
 			await StorageHelper.RevealDirectory(App.SharedDirectory);
+			App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
 			return;
 		}
 
 		// ----------------
 
 		public async void uStorageCacheDirectory_Click (
-			SplitButton               sender,
-			SplitButtonClickEventArgs args
+			Object          sender,
+			RoutedEventArgs args
 		) {
-			var senders = sender.As<SplitButton>();
-			StorageHelper.RemoveDirectory(App.CacheDirectory);
+			var senders = sender.As<Button>();
+			if (StorageHelper.Exist(App.CacheDirectory)) {
+				StorageHelper.Remove(App.CacheDirectory);
+			}
+			App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
 			return;
 		}
 

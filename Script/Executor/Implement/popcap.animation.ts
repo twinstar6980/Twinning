@@ -281,9 +281,7 @@ namespace Twinning.Script.Executor.Implement.popcap.animation {
 				],
 				worker: ({ target_directory }) => {
 					let media_directory = `${target_directory}/LIBRARY/media`;
-					if (KernelX.Storage.exist(media_directory)) {
-						KernelX.Storage.remove(media_directory);
-					}
+					KernelX.Storage.remove_if(media_directory);
 					KernelX.Storage.create_directory(media_directory);
 					KernelX.Storage.list_file(`${target_directory}/..`, 1n)
 						.filter((value) => (/(\.png)$/i.test(value)))

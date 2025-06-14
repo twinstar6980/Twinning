@@ -36,12 +36,12 @@ class Application extends StatelessWidget {
               fontFamily: '',
               fontFamilyFallback: [...setting.state.mThemeFontFamliy],
               tooltipTheme: TooltipTheme.of(context).copyWith(
-                waitDuration: const Duration(milliseconds: 1000),
+                waitDuration: Duration(milliseconds: 1000),
               ),
-              progressIndicatorTheme: const ProgressIndicatorThemeData(
+              progressIndicatorTheme: ProgressIndicatorThemeData(
                 year2023: false,
               ),
-              sliderTheme: const SliderThemeData(
+              sliderTheme: SliderThemeData(
                 year2023: false,
               ),
             ),
@@ -53,19 +53,19 @@ class Application extends StatelessWidget {
               fontFamily: '',
               fontFamilyFallback: [...setting.state.mThemeFontFamliy],
               tooltipTheme: TooltipTheme.of(context).copyWith(
-                waitDuration: const Duration(milliseconds: 1000),
+                waitDuration: Duration(milliseconds: 1000),
               ),
-              progressIndicatorTheme: const ProgressIndicatorThemeData(
+              progressIndicatorTheme: ProgressIndicatorThemeData(
                 year2023: false,
               ),
-              sliderTheme: const SliderThemeData(
+              sliderTheme: SliderThemeData(
                 year2023: false,
               ),
             ),
             themeMode: setting.data.mThemeMode,
-            scrollBehavior: const MaterialScrollBehavior().copyWith(scrollbars: false),
+            scrollBehavior: MaterialScrollBehavior().copyWith(scrollbars: false),
             title: kApplicationName,
-            home: const home.MainPage(),
+            home: home.MainPage(),
           ),
         ),
       ),

@@ -27,7 +27,7 @@ class MethodItem extends StatelessWidget {
     return Column(
       children: [
         ListTile(
-          contentPadding: const EdgeInsets.fromLTRB(40, 0, 24, 0),
+          contentPadding: EdgeInsets.fromLTRB(40, 0, 24, 0),
           dense: true,
           leading: Icon(SymbolsGet.get(this.configuration.icon, SymbolStyle.outlined)),
           title: Text(
@@ -76,7 +76,7 @@ class MethodGroupItem extends StatelessWidget {
     return Column(
       children: [
         ListTile(
-          contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+          contentPadding: EdgeInsets.fromLTRB(24, 0, 24, 0),
           leading: Icon(SymbolsGet.get(this.configuration.icon, SymbolStyle.outlined)),
           title: Text(
             this.configuration.name,
@@ -90,7 +90,7 @@ class MethodGroupItem extends StatelessWidget {
                 overflow: TextOverflow.clip,
                 style: theme.textTheme.bodyMedium,
               ),
-              const SizedBox(width: 6),
+              SizedBox(width: 6),
               Icon(!this.collapse ? IconSymbols.keyboard_arrow_left : IconSymbols.keyboard_arrow_down),
             ],
           ),

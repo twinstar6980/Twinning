@@ -40,11 +40,11 @@ class ControlHelper {
       contentBuilder: (context, setState) => [],
       actionBuilder: (context) => [
         TextButton(
-          child: const Text('Cancel'),
+          child: Text('Cancel'),
           onPressed: () => Navigator.pop(context, false),
         ),
         TextButton(
-          child: const Text('Continue'),
+          child: Text('Continue'),
           onPressed: () => Navigator.pop(context, true),
         ),
       ],
@@ -61,8 +61,8 @@ class ControlHelper {
       contentBuilder: (context, setState) => [
         CustomTextField(
           keyboardType: TextInputType.none,
-          inputFormatters: const [],
-          decoration: const InputDecoration(
+          inputFormatters: [],
+          decoration: InputDecoration(
             contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
             filled: false,
             border: OutlineInputBorder(),
@@ -73,11 +73,11 @@ class ControlHelper {
       ],
       actionBuilder: (context) => [
         TextButton(
-          child: const Text('Cancel'),
+          child: Text('Cancel'),
           onPressed: () => Navigator.pop(context, false),
         ),
         TextButton(
-          child: const Text('Reveal'),
+          child: Text('Reveal'),
           onPressed: () => Navigator.pop(context, true),
         ),
       ],
@@ -101,6 +101,24 @@ class ControlHelper {
       elevation: 3,
       builder: (context) => widget,
     );
+  }
+
+  // #endregion
+
+  // #region snack bar
+
+  static Future<Void> showSnackBar<TResult>(
+    BuildContext context,
+    String       content,
+  ) async {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      behavior: SnackBarBehavior.floating,
+      content: Text(
+        content,
+        overflow: TextOverflow.clip,
+      ),
+    ));
+    return;
   }
 
   // #endregion

@@ -30,23 +30,6 @@ namespace AssistantPlus.View.Home {
 
 		// ----------------
 
-		public async Task SetDefaultView (
-		) {
-			await ControlHelper.WaitUntilLoaded(this.Content.As<FrameworkElement>());
-			await this.ShowLauncherPanel();
-			return;
-		}
-
-		public async Task SetDefaultView (
-			ModuleLauncherConfiguration configuration
-		) {
-			await ControlHelper.WaitUntilLoaded(this.Content.As<FrameworkElement>());
-			await this.InsertTabItem(configuration);
-			return;
-		}
-
-		// ----------------
-
 		public async void PushNotification (
 			InfoBarSeverity severity,
 			String          title,

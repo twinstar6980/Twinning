@@ -513,11 +513,11 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
       },
       content: Column(
         children: [
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Expanded(
             child: Card.outlined(
               clipBehavior: Clip.antiAliasWithSaveLayer,
-              margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: Column(
                 children: [
                   Expanded(
@@ -543,7 +543,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                               child: Container(
                                 color: !this._showBoundary ? null : theme.colorScheme.surfaceContainerHighest,
                                 child: !this._loaded
-                                  ? const SizedBox()
+                                  ? SizedBox()
                                   : SizedBox.fromSize(
                                     size: Size(this._animation!.size.$1, this._animation!.size.$2),
                                     child: UnconstrainedBox(
@@ -561,11 +561,11 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                       ),
                     ),
                   ),
-                  const Divider(height: 0),
-                  const SizedBox(height: 8),
+                  Divider(height: 0),
+                  SizedBox(height: 8),
                   Row(
                     children: [
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Expanded(
                         child: LayoutBuilder(
                           builder: (context, constraints) => IntrinsicHeight(
@@ -608,19 +608,19 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                     ],
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Row(
                     children: [
-                      const SizedBox(width: 16),
+                      SizedBox(width: 16),
                       Expanded(
                         child: Tooltip(
                           message: !this._activated ? '' : 'Frame Range',
                           child: TextButton.icon(
                             iconAlignment: IconAlignment.start,
-                            icon: const Icon(IconSymbols.linear_scale),
+                            icon: Icon(IconSymbols.linear_scale),
                             label: Row(
                               children: [
                                 Expanded(
@@ -640,8 +640,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                   title: 'Frame Range',
                                   contentBuilder: (context, setState) => [
                                     CustomTextField(
-                                      keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
-                                      inputFormatters: const [],
+                                      keyboardType: TextInputType.numberWithOptions(signed: false, decimal: false),
+                                      inputFormatters: [],
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
                                         filled: false,
@@ -652,7 +652,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                             PopupMenuButton(
                                               tooltip: 'Preset',
                                               position: PopupMenuPosition.under,
-                                              icon: const Icon(IconSymbols.more_vert),
+                                              icon: Icon(IconSymbols.more_vert),
                                               itemBuilder: (context) => [
                                                 (1, 'whole'),
                                                 null,
@@ -691,10 +691,10 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                         setState(() {});
                                       },
                                     ),
-                                    const SizedBox(height: 12),
+                                    SizedBox(height: 12),
                                     CustomTextField(
-                                      keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
-                                      inputFormatters: const [],
+                                      keyboardType: TextInputType.numberWithOptions(signed: false, decimal: false),
+                                      inputFormatters: [],
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
                                         filled: false,
@@ -705,7 +705,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                             PopupMenuButton(
                                               tooltip: 'Preset',
                                               position: PopupMenuPosition.under,
-                                              icon: const Icon(IconSymbols.more_vert),
+                                              icon: Icon(IconSymbols.more_vert),
                                               itemBuilder: (context) => [
                                                 (this._activeSprite!.frame.length, 'whole'),
                                                 null,
@@ -752,18 +752,18 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       IconButton(
                         tooltip: !this._activated ? '' : 'Previous',
                         isSelected: true,
-                        icon: const Icon(IconSymbols.arrow_back),
+                        icon: Icon(IconSymbols.arrow_back),
                         onPressed: !this._activated
                           ? null
                           : () async {
                             await this._changeProgressIndex(max(this._queryProgressIndex() - 1, 0));
                           },
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       StreamBuilder(
                         stream: this._activeProgressStateStream.stream,
                         builder: (context, snapshot) => IconButton.filled(
@@ -777,24 +777,24 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                             },
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       IconButton(
                         tooltip: !this._activated ? '' : 'Next',
                         isSelected: true,
-                        icon: const Icon(IconSymbols.arrow_forward),
+                        icon: Icon(IconSymbols.arrow_forward),
                         onPressed: !this._activated
                           ? null
                           : () async {
                             await this._changeProgressIndex(min(this._queryProgressIndex() + 1, this._activeSprite!.frame.length - 1));
                           },
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Expanded(
                         child: Tooltip(
                           message: !this._activated ? '' : 'Frame Speed',
                           child: TextButton.icon(
                             iconAlignment: IconAlignment.end,
-                            icon: const Icon(IconSymbols.speed),
+                            icon: Icon(IconSymbols.speed),
                             label: Row(
                               children: [
                                 Expanded(
@@ -815,8 +815,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                   title: 'Frame Speed',
                                   contentBuilder: (context, setState) => [
                                     CustomTextField(
-                                      keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: true),
-                                      inputFormatters: const [],
+                                      keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
+                                      inputFormatters: [],
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
                                         filled: false,
@@ -827,7 +827,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                             PopupMenuButton(
                                               tooltip: 'Preset',
                                               position: PopupMenuPosition.under,
-                                              icon: const Icon(IconSymbols.more_vert),
+                                              icon: Icon(IconSymbols.more_vert),
                                               itemBuilder: (context) => [
                                                 (normalSpeed / 2.0, 'Slow'),
                                                 (normalSpeed, 'Normal'),
@@ -873,22 +873,22 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                           ),
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      SizedBox(width: 16),
                     ],
                   ),
-                  const SizedBox(height: 12),
-                  const Divider(height: 0),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
+                  Divider(height: 0),
+                  SizedBox(height: 12),
                   Row(
                     children: [
-                      const SizedBox(width: 16),
+                      SizedBox(width: 16),
                       Expanded(
                         flex: 3,
                         child: Tooltip(
                           message: !this._loaded ? '' : 'Image',
                           child: TextButton.icon(
                             iconAlignment: IconAlignment.start,
-                            icon: const Icon(IconSymbols.imagesmode),
+                            icon: Icon(IconSymbols.imagesmode),
                             label: Row(
                               children: [
                                 Expanded(
@@ -953,7 +953,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Expanded(
                         flex: 5,
                         child: Tooltip(
@@ -964,8 +964,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                             ),
                             child: Row(
                               children: [
-                                const Icon(IconSymbols.arrow_back_ios_new),
-                                const SizedBox(width: 8),
+                                Icon(IconSymbols.arrow_back_ios_new),
+                                SizedBox(width: 8),
                                 Expanded(
                                   child: !this._activated
                                     ? Icon(IconSymbols.power_settings_new)
@@ -975,8 +975,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                       textAlign: TextAlign.center,
                                     ),
                                 ),
-                                const SizedBox(width: 8),
-                                const Icon(IconSymbols.arrow_forward_ios),
+                                SizedBox(width: 8),
+                                Icon(IconSymbols.arrow_forward_ios),
                               ],
                             ),
                             onPressed: !this._loaded
@@ -993,14 +993,14 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Expanded(
                         flex: 3,
                         child: Tooltip(
                           message: !this._loaded ? '' : 'Sprite',
                           child: TextButton.icon(
                             iconAlignment: IconAlignment.end,
-                            icon: const Icon(IconSymbols.thread_unread),
+                            icon: Icon(IconSymbols.thread_unread),
                             label: Row(
                               children: [
                                 Expanded(
@@ -1065,15 +1065,15 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                           ),
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      SizedBox(width: 16),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                 ],
               ),
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
         ],
       ),
       bottom: CustomBottomBarContent(
@@ -1084,14 +1084,14 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           hoverElevation: 0,
           highlightElevation: 0,
           disabledElevation: 0,
-          child: const Icon(IconSymbols.description),
+          child: Icon(IconSymbols.description),
           onPressed: () async {
             await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
               title: 'Source',
               contentBuilder: (context, setState) => [
                 CustomTextField(
                   keyboardType: TextInputType.none,
-                  inputFormatters: const [],
+                  inputFormatters: [],
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
                     filled: false,
@@ -1101,13 +1101,13 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                   value: !this._loaded ? '' : this._animationFile!,
                   onChanged: null,
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 Row(
                   children: [
                     Expanded(
                       child: OutlinedButton.icon(
-                        icon: const Icon(IconSymbols.clear_all),
-                        label: const Text(
+                        icon: Icon(IconSymbols.clear_all),
+                        label: Text(
                           'Clear',
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -1122,11 +1122,11 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                           },
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Expanded(
                       child: OutlinedButton.icon(
-                        icon: const Icon(IconSymbols.open_in_new),
-                        label: const Text(
+                        icon: Icon(IconSymbols.open_in_new),
+                        label: Text(
                           'Pick',
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -1150,52 +1150,52 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           IconButton.filledTonal(
             tooltip: 'Immediate Select',
             isSelected: this._immediateSelect,
-            icon: const Icon(IconSymbols.ads_click),
-            selectedIcon: const Icon(IconSymbols.ads_click, fill: 1),
+            icon: Icon(IconSymbols.ads_click),
+            selectedIcon: Icon(IconSymbols.ads_click, fill: 1),
             onPressed: () async {
               this._immediateSelect = !this._immediateSelect;
               this.setState(() {});
             },
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           IconButton.filledTonal(
             tooltip: 'Automatic Play',
             isSelected: this._automaticPlay,
-            icon: const Icon(IconSymbols.autoplay),
-            selectedIcon: const Icon(IconSymbols.autoplay, fill: 1),
+            icon: Icon(IconSymbols.autoplay),
+            selectedIcon: Icon(IconSymbols.autoplay, fill: 1),
             onPressed: () async {
               this._automaticPlay = !this._automaticPlay;
               this.setState(() {});
             },
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           IconButton.filledTonal(
             tooltip: 'Repeat Play',
             isSelected: this._repeatPlay,
-            icon: const Icon(IconSymbols.repeat),
-            selectedIcon: const Icon(IconSymbols.repeat, fill: 1),
+            icon: Icon(IconSymbols.repeat),
+            selectedIcon: Icon(IconSymbols.repeat, fill: 1),
             onPressed: () async {
               this._repeatPlay = !this._repeatPlay;
               this.setState(() {});
             },
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           IconButton.filledTonal(
             tooltip: 'Keep Speed',
             isSelected: this._keepSpeed,
-            icon: const Icon(IconSymbols.lock_reset),
-            selectedIcon: const Icon(IconSymbols.lock_reset, fill: 1),
+            icon: Icon(IconSymbols.lock_reset),
+            selectedIcon: Icon(IconSymbols.lock_reset, fill: 1),
             onPressed: () async {
               this._keepSpeed = !this._keepSpeed;
               this.setState(() {});
             },
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           IconButton.filledTonal(
             tooltip: 'Show Boundary',
             isSelected: this._showBoundary,
-            icon: const Icon(IconSymbols.frame_source),
-            selectedIcon: const Icon(IconSymbols.frame_source, fill: 1),
+            icon: Icon(IconSymbols.frame_source),
+            selectedIcon: Icon(IconSymbols.frame_source, fill: 1),
             onPressed: () async {
               this._showBoundary = !this._showBoundary;
               this.setState(() {});

@@ -8,11 +8,11 @@ class JsonHelper {
 
   // #region serialization
 
-  static JsonEncoder _encoder = const JsonEncoder.withIndent('\t');
+  static const JsonEncoder _encoder = JsonEncoder.withIndent('\t');
 
-  static JsonEncoder _encoderCompact = const JsonEncoder();
+  static const JsonEncoder _encoderCompact = JsonEncoder();
 
-  static JsonDecoder _decoder = const JsonDecoder();
+  static const JsonDecoder _decoder = JsonDecoder();
 
   // ----------------
 

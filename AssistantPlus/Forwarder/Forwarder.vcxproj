@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -51,12 +51,13 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>library.def</ModuleDefinitionFile>
-      <AdditionalDependencies>Shlwapi.lib;RuntimeObject.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Shlwapi.lib;RuntimeObject.lib;Comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(SolutionDir).build\bin\$(ProjectName)\$(Platform).$(Configuration)\Forwarder.dll" /B "$(SolutionDir)Application\Asset\Library\Forwarder.dll" /Y</Command>
@@ -72,6 +73,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -79,7 +81,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>library.def</ModuleDefinitionFile>
-      <AdditionalDependencies>Shlwapi.lib;RuntimeObject.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Shlwapi.lib;RuntimeObject.lib;Comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(SolutionDir).build\bin\$(ProjectName)\$(Platform).$(Configuration)\Forwarder.dll" /B "$(SolutionDir)Application\Asset\Library\Forwarder.dll" /Y</Command>
@@ -94,6 +96,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="library.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="library.manifest" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource\resource.rc" />

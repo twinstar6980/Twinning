@@ -26,7 +26,7 @@ class SettingPanel extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => Column(
         children: [
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           CustomSettingItem(
             icon: IconSymbols.ads_click,
             label: 'Immediate Select',
@@ -50,7 +50,7 @@ class SettingPanel extends StatelessWidget {
                     this.onUpdate();
                   },
                 ),
-                title: const Text(
+                title: Text(
                   'Enable',
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -80,7 +80,7 @@ class SettingPanel extends StatelessWidget {
                     this.onUpdate();
                   },
                 ),
-                title: const Text(
+                title: Text(
                   'Enable',
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -110,7 +110,7 @@ class SettingPanel extends StatelessWidget {
                     this.onUpdate();
                   },
                 ),
-                title: const Text(
+                title: Text(
                   'Enable',
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -140,7 +140,7 @@ class SettingPanel extends StatelessWidget {
                     this.onUpdate();
                   },
                 ),
-                title: const Text(
+                title: Text(
                   'Enable',
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -170,14 +170,14 @@ class SettingPanel extends StatelessWidget {
                     this.onUpdate();
                   },
                 ),
-                title: const Text(
+                title: Text(
                   'Enable',
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
         ],
       ),
     );

@@ -28,8 +28,8 @@ class LauncherPanel extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => Column(
         children: [
-          const SizedBox(height: 4),
-          const CustomSettingLabel(
+          SizedBox(height: 4),
+          CustomSettingLabel(
             label: 'Module',
             action: null,
           ),
@@ -39,7 +39,7 @@ class LauncherPanel extends StatelessWidget {
             content: [
               IconButton(
                 tooltip: 'Setting',
-                icon: const Icon(IconSymbols.settings),
+                icon: Icon(IconSymbols.settings),
                 onPressed: () async {
                   await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
                     title: 'Module Setting',
@@ -49,10 +49,10 @@ class LauncherPanel extends StatelessWidget {
                   ));
                 },
               ),
-              const SizedBox(width: 4),
+              SizedBox(width: 4),
               IconButton(
                 tooltip: 'Edit',
-                icon: const Icon(IconSymbols.edit),
+                icon: Icon(IconSymbols.edit),
                 onPressed: () async {
                   await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
                     title: 'Launcher Configuration',
@@ -78,7 +78,7 @@ class LauncherPanel extends StatelessWidget {
             label: 'Pinned',
             action: IconButton(
               tooltip: 'Add',
-              icon: const Icon(IconSymbols.add),
+              icon: Icon(IconSymbols.add),
               onPressed: () async {
                 setting.data.mModuleLauncher.pinned.add(ModuleLauncherConfiguration(
                   title: 'Untitled',
@@ -95,16 +95,16 @@ class LauncherPanel extends StatelessWidget {
             content: [
               IconButton(
                 tooltip: 'Remove',
-                icon: const Icon(IconSymbols.remove),
+                icon: Icon(IconSymbols.remove),
                 onPressed: () async {
                   setting.data.mModuleLauncher.pinned.remove(item);
                   await setting.save();
                 },
               ),
-              const SizedBox(width: 4),
+              SizedBox(width: 4),
               IconButton(
                 tooltip: 'Edit',
-                icon: const Icon(IconSymbols.edit),
+                icon: Icon(IconSymbols.edit),
                 onPressed: () async {
                   await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
                     title: 'Launcher Configuration',
@@ -130,7 +130,7 @@ class LauncherPanel extends StatelessWidget {
             label: 'Recent',
             action: IconButton(
               tooltip: 'Clear',
-              icon: const Icon(IconSymbols.clear),
+              icon: Icon(IconSymbols.clear),
               onPressed: () async {
                 if (await ControlHelper.showDialogForConfirm(context)) {
                   setting.data.mModuleLauncher.recent.clear();
@@ -145,7 +145,7 @@ class LauncherPanel extends StatelessWidget {
             content: [
               IconButton(
                 tooltip: 'Pin',
-                icon: const Icon(IconSymbols.push_pin),
+                icon: Icon(IconSymbols.push_pin),
                 onPressed: () async {
                   setting.data.mModuleLauncher.recent.remove(item);
                   setting.data.mModuleLauncher.pinned.add(item);
@@ -154,7 +154,7 @@ class LauncherPanel extends StatelessWidget {
               ),
               IconButton(
                 tooltip: 'Remove',
-                icon: const Icon(IconSymbols.remove),
+                icon: Icon(IconSymbols.remove),
                 onPressed: () async {
                   setting.data.mModuleLauncher.recent.remove(item);
                   await setting.save();
@@ -162,7 +162,7 @@ class LauncherPanel extends StatelessWidget {
               ),
               IconButton(
                 tooltip: 'Edit',
-                icon: const Icon(IconSymbols.edit),
+                icon: Icon(IconSymbols.edit),
                 onPressed: () async {
                   await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
                     title: 'Launcher Configuration',
@@ -184,7 +184,7 @@ class LauncherPanel extends StatelessWidget {
             },
             panelBuilder: null,
           )),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
         ],
       ),
     );

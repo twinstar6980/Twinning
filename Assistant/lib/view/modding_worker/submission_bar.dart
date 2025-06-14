@@ -47,8 +47,8 @@ class _BasicSubmissionBar extends StatelessWidget {
         highlightElevation: 0,
         disabledElevation: 0,
         child: this.completer == null
-          ? const CircularProgressIndicator()
-          : const Icon(IconSymbols.send),
+          ? CircularProgressIndicator()
+          : Icon(IconSymbols.send),
         onPressed: this.completer == null
           ? null
           : () async {
@@ -64,7 +64,7 @@ class _BasicSubmissionBar extends StatelessWidget {
           isLabelVisible: this.history != null,
           count: this.history == null ? 0 : this.history!.length,
           child: IconButton.filledTonal(
-            style: const ButtonStyle(
+            style: ButtonStyle(
               padding: WidgetStatePropertyAll(EdgeInsets.zero),
               overlayColor: WidgetStatePropertyAll(Colors.transparent),
             ),
@@ -81,10 +81,10 @@ class _BasicSubmissionBar extends StatelessWidget {
                     tooltip: '',
                     enabled: this.history != null,
                     position: PopupMenuPosition.under,
-                    icon: const SizedBox(),
+                    icon: SizedBox(),
                     itemBuilder: (context) => [
                       if ((this.history ?? []).isEmpty)
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           height: 16,
                           enabled: false,
                           child: null,
@@ -120,7 +120,7 @@ class _BasicSubmissionBar extends StatelessWidget {
               },
           ),
         ),
-        const SizedBox(width: 16),
+        SizedBox(width: 16),
         Expanded(
           child: this.content,
         ),
@@ -144,7 +144,7 @@ class _IdleSubmissionBar extends StatelessWidget {
 
   @override
   build(context) {
-    return const _BasicSubmissionBar(
+    return _BasicSubmissionBar(
       completer: null,
       history: null,
       onSelect: null,
@@ -202,8 +202,8 @@ class _PauseSubmissionBar extends StatelessWidget {
             fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
           ),
           keyboardType: TextInputType.none,
-          inputFormatters: const [],
-          decoration: const InputDecoration(
+          inputFormatters: [],
+          decoration: InputDecoration(
             contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
             filled: false,
             border: UnderlineInputBorder(),
@@ -258,30 +258,30 @@ class _BooleanSubmissionBar extends StatelessWidget {
             fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
           ),
           keyboardType: TextInputType.text,
-          inputFormatters: const [],
+          inputFormatters: [],
           decoration: InputDecoration(
-            contentPadding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
             filled: false,
-            border: const UnderlineInputBorder(),
+            border: UnderlineInputBorder(),
             hintText: 'Boolean',
             suffixIcon: CustomTextFieldSuffixRegion(
               children: [
                 IconButton(
                   tooltip: 'No',
                   isSelected: this.value.value == null ? false : this.value.value!.value == false,
-                  icon: const Icon(IconSymbols.do_not_disturb_on),
-                  selectedIcon: const Icon(IconSymbols.do_not_disturb_on, fill: 1),
+                  icon: Icon(IconSymbols.do_not_disturb_on),
+                  selectedIcon: Icon(IconSymbols.do_not_disturb_on, fill: 1),
                   onPressed: () async {
                     this.value.value = this.value.value?.value == false ? null : BooleanExpression(false);
                     setState(() {});
                   },
                 ),
-                const SizedBox(width: 4),
+                SizedBox(width: 4),
                 IconButton(
                   tooltip: 'Yes',
                   isSelected: this.value.value == null ? false : this.value.value!.value == true,
-                  icon: const Icon(IconSymbols.check_circle),
-                  selectedIcon: const Icon(IconSymbols.check_circle, fill: 1),
+                  icon: Icon(IconSymbols.check_circle),
+                  selectedIcon: Icon(IconSymbols.check_circle, fill: 1),
                   onPressed: () async {
                     this.value.value = this.value.value?.value == true ? null : BooleanExpression(true);
                     setState(() {});
@@ -344,9 +344,9 @@ class _IntegerSubmissionBar extends StatelessWidget {
             fontFamily: '',
             fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
           ),
-          keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: false),
-          inputFormatters: const [],
-          decoration: const InputDecoration(
+          keyboardType: TextInputType.numberWithOptions(signed: true, decimal: false),
+          inputFormatters: [],
+          decoration: InputDecoration(
             contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
             filled: false,
             border: UnderlineInputBorder(),
@@ -411,9 +411,9 @@ class _FloaterSubmissionBar extends StatelessWidget {
             fontFamily: '',
             fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
           ),
-          keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
-          inputFormatters: const [],
-          decoration: const InputDecoration(
+          keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
+          inputFormatters: [],
+          decoration: InputDecoration(
             contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
             filled: false,
             border: UnderlineInputBorder(),
@@ -478,12 +478,12 @@ class _SizeSubmissionBar extends StatelessWidget {
             fontFamily: '',
             fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
           ),
-          keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: true),
-          inputFormatters: const [],
+          keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
+          inputFormatters: [],
           decoration: InputDecoration(
-            contentPadding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
             filled: false,
-            border: const UnderlineInputBorder(),
+            border: UnderlineInputBorder(),
             hintText: 'Size',
             suffixIcon: CustomTextFieldSuffixRegion(
               children: [
@@ -491,7 +491,7 @@ class _SizeSubmissionBar extends StatelessWidget {
                   tooltip: 'Exponent',
                   position: PopupMenuPosition.under,
                   icon: this.value.value == null
-                    ? const Icon(IconSymbols.expand_circle_down)
+                    ? Icon(IconSymbols.expand_circle_down)
                     : Container(
                       alignment: Alignment.center,
                       width: 24,
@@ -580,8 +580,8 @@ class _StringSubmissionBar extends StatelessWidget {
             fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
           ),
           keyboardType: TextInputType.text,
-          inputFormatters: const [],
-          decoration: const InputDecoration(
+          inputFormatters: [],
+          decoration: InputDecoration(
             contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
             filled: false,
             border: UnderlineInputBorder(),
@@ -649,18 +649,18 @@ class _PathSubmissionBar extends StatelessWidget {
               fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
             ),
             keyboardType: TextInputType.text,
-            inputFormatters: const [],
+            inputFormatters: [],
             decoration: InputDecoration(
-              contentPadding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+              contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
               filled: false,
-              border: const UnderlineInputBorder(),
+              border: UnderlineInputBorder(),
               hintText: 'Path',
               suffixIcon: CustomTextFieldSuffixRegion(
                 children: [
                   PopupMenuButton(
                     tooltip: 'Command',
                     position: PopupMenuPosition.under,
-                    icon: const Icon(IconSymbols.adjust),
+                    icon: Icon(IconSymbols.adjust),
                     itemBuilder: (context) => [
                       (':g', 'Generate'),
                       (':m', 'Move'),
@@ -682,11 +682,11 @@ class _PathSubmissionBar extends StatelessWidget {
                       setState(() {});
                     },
                   ),
-                  const SizedBox(width: 4),
+                  SizedBox(width: 4),
                   PopupMenuButton(
                     tooltip: 'Pick',
                     position: PopupMenuPosition.under,
-                    icon: const Icon(IconSymbols.open_in_new),
+                    icon: Icon(IconSymbols.open_in_new),
                     itemBuilder: (context) => [
                       ('load_file', 'Load File'),
                       ('load_directory', 'Load Directory'),
@@ -774,15 +774,15 @@ class _EnumerationSubmissionBar extends StatelessWidget {
             fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
           ),
           decoration: InputDecoration(
-            contentPadding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
             filled: false,
-            border: const UnderlineInputBorder(),
+            border: UnderlineInputBorder(),
             hintText: 'Enumeration',
             suffixIcon: CustomTextFieldSuffixRegion(
               children: [
                 IconButton(
                   tooltip: 'Reset',
-                  icon: const Icon(IconSymbols.restart_alt),
+                  icon: Icon(IconSymbols.restart_alt),
                   onPressed: () async {
                     this.value.value = null;
                     setState(() {});
@@ -831,7 +831,7 @@ class SubmissionBar extends StatelessWidget {
   build(context) {
     if (this.type == null) {
       assertTest(this.option == null && this.history == null && this.value == null && this.completer == null);
-      return const _IdleSubmissionBar();
+      return _IdleSubmissionBar();
     }
     if (this.type == SubmissionType.pause) {
       assertTest(this.option != null && this.history != null && this.value != null && this.completer != null);

@@ -118,11 +118,8 @@ export {
 				}
 				thiz.forward_resource(resource);
 			}
-			catch (std::exception & e) {
-				thiz.show_exception(std::format("{} : {}", typeid(e).name(), e.what()));
-			}
 			catch (...) {
-				thiz.show_exception("?");
+				thiz.show_exception(std::current_exception());
 			}
 			return S_OK;
 		}
@@ -153,8 +150,8 @@ export {
 		}
 
 		virtual IFACEMETHODIMP GetSite (
-			REFIID  riid,
-			void ** ppvSite
+			REFIID   riid,
+			void * * ppvSite
 		) override {
 			return thiz.m_site.CopyTo(riid, ppvSite);
 		}
@@ -164,6 +161,32 @@ export {
 	private:
 
 		#pragma region utility
+
+		auto utf8_to_utf16 (
+			std::u8string_view const & source
+		) -> std::u16string {
+			auto converter = std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>{};
+			auto result = converter.from_bytes(
+				reinterpret_cast<char const *>(source.data()),
+				reinterpret_cast<char const *>(source.data() + source.size())
+			);
+			assert_test(converter.converted() == source.size());
+			return result;
+		}
+
+		auto utf16_to_utf8 (
+			std::u16string_view const & source
+		) -> std::u8string {
+			auto converter = std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>{};
+			auto result = converter.to_bytes(
+				source.data(),
+				source.data() + source.size()
+			);
+			assert_test(converter.converted() == source.size());
+			return reinterpret_cast<std::u8string &>(result);
+		}
+
+		// ----------------
 
 		auto get_library_file_path (
 		) -> std::wstring {
@@ -209,15 +232,8 @@ export {
 		auto encode_percent_string (
 			std::wstring const & source
 		) -> std::wstring {
-			auto & utf16_source = reinterpret_cast<std::u16string const &>(source);
-			auto   utf8_converter = std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>{};
-			auto   utf8_source = utf8_converter.to_bytes(
-				utf16_source.data(),
-				utf16_source.data() + utf16_source.size()
-			);
-			assert_test(utf8_converter.converted() == utf16_source.size());
-			auto & data = reinterpret_cast<std::u8string &>(utf8_source);
-			auto   destination = std::wstring{};
+			auto data = thiz.utf16_to_utf8(reinterpret_cast<std::u16string const &>(source));
+			auto destination = std::wstring{};
 			destination.reserve(data.size() * 3);
 			for (auto & character : data) {
 				if ((u8'0' <= character && character <= u8'9') ||
@@ -275,9 +291,23 @@ export {
 		}
 
 		auto show_exception (
-			std::string const & exception
+			std::exception_ptr const & exception
 		) -> void {
-			MessageBoxA(nullptr, exception.data(), "Exception", MB_ICONERROR | MB_OK);
+			auto message = std::string{};
+			try {
+				std::rethrow_exception(exception);
+			}
+			catch (std::exception & e) {
+				message = std::format("{} : {}", typeid(e).name(), e.what());
+			}
+			catch (...) {
+				message = "?";
+			}
+			auto message_utf16 = thiz.utf8_to_utf16(reinterpret_cast<std::u8string const &>(message));
+			auto original_thread_dpi_awareness_context = GetThreadDpiAwarenessContext();
+			SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+			TaskDialog(nullptr, nullptr, L"Twinning Assistant", L"Exception", reinterpret_cast<wchar_t const *>(message_utf16.data()), TDCBF_CLOSE_BUTTON, TD_ERROR_ICON, nullptr);
+			SetThreadDpiAwarenessContext(original_thread_dpi_awareness_context);
 			return;
 		}
 

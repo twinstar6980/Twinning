@@ -28,7 +28,7 @@ class SettingPanel extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => Column(
         children: [
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           CustomSettingItem(
             icon: IconSymbols.adjust,
             label: 'Kernel',
@@ -45,16 +45,16 @@ class SettingPanel extends StatelessWidget {
                 contentPadding: EdgeInsets.zero,
                 title: CustomTextField(
                   keyboardType: TextInputType.text,
-                  inputFormatters: const [],
+                  inputFormatters: [],
                   decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+                    contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
                     filled: false,
-                    border: const OutlineInputBorder(),
+                    border: OutlineInputBorder(),
                     suffixIcon: CustomTextFieldSuffixRegion(
                       children: [
                         IconButton(
                           tooltip: 'Pick',
-                          icon: const Icon(IconSymbols.open_in_new),
+                          icon: Icon(IconSymbols.open_in_new),
                           onPressed: () async {
                             var target = await StorageHelper.pickLoadFile(context, 'ModdingWorker.Kernel');
                             if (target != null) {
@@ -95,16 +95,16 @@ class SettingPanel extends StatelessWidget {
                 contentPadding: EdgeInsets.zero,
                 title: CustomTextField(
                   keyboardType: TextInputType.text,
-                  inputFormatters: const [],
+                  inputFormatters: [],
                   decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+                    contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
                     filled: false,
-                    border: const OutlineInputBorder(),
+                    border: OutlineInputBorder(),
                     suffixIcon: CustomTextFieldSuffixRegion(
                       children: [
                         IconButton(
                           tooltip: 'Pick',
-                          icon: const Icon(IconSymbols.open_in_new),
+                          icon: Icon(IconSymbols.open_in_new),
                           onPressed: () async {
                             var target = await StorageHelper.pickLoadFile(context, 'ModdingWorker.Script');
                             if (target != null) {
@@ -145,8 +145,8 @@ class SettingPanel extends StatelessWidget {
                 contentPadding: EdgeInsets.zero,
                 title: CustomTextField(
                   keyboardType: TextInputType.multiline,
-                  inputFormatters: const [],
-                  decoration: const InputDecoration(
+                  inputFormatters: [],
+                  decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
                     filled: false,
                     border: OutlineInputBorder(),
@@ -189,7 +189,7 @@ class SettingPanel extends StatelessWidget {
                     this.onUpdate();
                   },
                 ),
-                title: const Text(
+                title: Text(
                   'Enable',
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -212,16 +212,16 @@ class SettingPanel extends StatelessWidget {
                 contentPadding: EdgeInsets.zero,
                 title: CustomTextField(
                   keyboardType: TextInputType.multiline,
-                  inputFormatters: const [],
+                  inputFormatters: [],
                   decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+                    contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
                     filled: false,
-                    border: const OutlineInputBorder(),
+                    border: OutlineInputBorder(),
                     suffixIcon: CustomTextFieldSuffixRegion(
                       children: [
                         IconButton(
                           tooltip: 'Pick',
-                          icon: const Icon(IconSymbols.open_in_new),
+                          icon: Icon(IconSymbols.open_in_new),
                           onPressed: () async {
                             var target = await StorageHelper.pickLoadFile(context, 'ModdingWorker.MessageFont');
                             if (target != null) {
@@ -246,7 +246,7 @@ class SettingPanel extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
         ],
       ),
     );

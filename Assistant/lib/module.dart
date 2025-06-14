@@ -88,8 +88,8 @@ class ModuleHelper {
         data: Provider.of<SettingProvider>(context, listen: false).data.mModdingWorker,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
-      checkForwardState: (item) async => true,
-      generateForwardOption: (item) => ['-additional_argument', ...item],
+      checkForwardState: (resource) async => true,
+      generateForwardOption: (resource) => ['-additional_argument', ...resource],
     ),
     ModuleInformation(
       type: ModuleType.command_sender,
@@ -118,8 +118,8 @@ class ModuleHelper {
         data: Provider.of<SettingProvider>(context, listen: false).data.mResourceShipper,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
-      checkForwardState: (item) async => true,
-      generateForwardOption: (item) => ['-resource', ...item],
+      checkForwardState: (resource) async => true,
+      generateForwardOption: (resource) => ['-resource', ...resource],
     ),
     ModuleInformation(
       type: ModuleType.animation_viewer,
@@ -133,8 +133,8 @@ class ModuleHelper {
         data: Provider.of<SettingProvider>(context, listen: false).data.mAnimationViewer,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
-      checkForwardState: (item) async => item.length == 1 && RegExp(r'(\.pam\.json)$', caseSensitive: false).hasMatch(item.first) && await StorageHelper.existFile(item.first),
-      generateForwardOption: (item) => ['-animation_file', item.first],
+      checkForwardState: (resource) async => resource.length == 1 && RegExp(r'(\.pam\.json)$', caseSensitive: false).hasMatch(resource.first) && await StorageHelper.existFile(resource.first),
+      generateForwardOption: (resource) => ['-animation_file', resource.first],
     ),
   ];
 

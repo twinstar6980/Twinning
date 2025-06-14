@@ -39,10 +39,10 @@ class MessageCard extends StatelessWidget {
       color: theme.colorScheme.onSurfaceVariant,
     );
     return Card(
-      margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+      margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
       color: Color.alphaBlend(cardColor.withValues(alpha: 0.02), theme.colorScheme.surfaceContainerLow),
       child: Container(
-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+        padding: EdgeInsets.fromLTRB(12, 8, 12, 8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -62,7 +62,7 @@ class MessageCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,7 +74,7 @@ class MessageCard extends StatelessWidget {
                   ),
                   ...this.description.map(
                     (value) => Container(
-                      padding: const EdgeInsets.fromLTRB(0, 4, 0, 0),
+                      padding: EdgeInsets.fromLTRB(0, 4, 0, 0),
                       child: Text(
                         value,
                         overflow: TextOverflow.clip,

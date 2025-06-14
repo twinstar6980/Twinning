@@ -28,7 +28,7 @@ class SettingData {
   String                   mStoragePickerFallbackDirectory;
   Map<String, String>      mStoragePickerHistoryDirectory;
   ModuleType               mForwarderDefaultTarget;
-  Boolean                  mForwarderImmediateForward;
+  Boolean                  mForwarderImmediateJump;
   ModuleLauncherSetting    mModuleLauncher;
   modding_worker.Setting   mModdingWorker;
   command_sender.Setting   mCommandSender;
@@ -51,7 +51,7 @@ class SettingData {
     required this.mStoragePickerFallbackDirectory,
     required this.mStoragePickerHistoryDirectory,
     required this.mForwarderDefaultTarget,
-    required this.mForwarderImmediateForward,
+    required this.mForwarderImmediateJump,
     required this.mModuleLauncher,
     required this.mModdingWorker,
     required this.mCommandSender,
@@ -107,7 +107,6 @@ class SettingProvider with ChangeNotifier {
   Future<Void> reset(
   ) async {
     this.data = _createDefaultData();
-    this.state = _createDefaultState();
     return;
   }
 
@@ -170,8 +169,8 @@ class SettingProvider with ChangeNotifier {
     mVersion: kApplicationVersion,
     mThemeMode: ThemeMode.system,
     mThemeColorState: false,
-    mThemeColorLight: const Color(0xff6200ee),
-    mThemeColorDark: const Color(0xffbb86fc),
+    mThemeColorLight: Color(0xff6200ee),
+    mThemeColorDark: Color(0xffbb86fc),
     mThemeFontState: false,
     mThemeFontPath: [],
     mWindowPositionState: false,
@@ -183,7 +182,7 @@ class SettingProvider with ChangeNotifier {
     mStoragePickerFallbackDirectory: '',
     mStoragePickerHistoryDirectory: {},
     mForwarderDefaultTarget: ModuleType.resource_shipper,
-    mForwarderImmediateForward: false,
+    mForwarderImmediateJump: false,
     mModuleLauncher: ModuleLauncherSetting(
       module: ModuleType.values.map((e) => ModuleLauncherConfiguration(title: ModuleHelper.query(e).name, type: e, option: [])).toList(),
       pinned: [],
@@ -251,7 +250,7 @@ class SettingProvider with ChangeNotifier {
       'storage_picker_fallback_directory': data.mStoragePickerFallbackDirectory,
       'storage_picker_history_directory': data.mStoragePickerHistoryDirectory,
       'forwarder_default_target': data.mForwarderDefaultTarget.name,
-      'forwarder_immediate_forward': data.mForwarderImmediateForward,
+      'forwarder_immediate_jump': data.mForwarderImmediateJump,
       'module_launcher': {
         'module': data.mModuleLauncher.module.map((dataItem) => {
           'title': dataItem.title,
@@ -316,7 +315,7 @@ class SettingProvider with ChangeNotifier {
       mStoragePickerFallbackDirectory: (json['storage_picker_fallback_directory'] as String),
       mStoragePickerHistoryDirectory: (json['storage_picker_history_directory'] as Map<dynamic, dynamic>).cast<String, String>(),
       mForwarderDefaultTarget: (json['forwarder_default_target'] as String).selfLet((it) => ModuleType.values.byName(it)),
-      mForwarderImmediateForward: (json['forwarder_immediate_forward'] as Boolean),
+      mForwarderImmediateJump: (json['forwarder_immediate_jump'] as Boolean),
       mModuleLauncher: (json['module_launcher'] as Map<dynamic, dynamic>).selfLet((jsonPart) => ModuleLauncherSetting(
         module: (jsonPart['module'] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((jsonItem) => ModuleLauncherConfiguration(
           title: (jsonItem['title'] as String),

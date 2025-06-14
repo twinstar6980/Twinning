@@ -258,7 +258,7 @@ namespace AssistantPlus.View.ModdingWorker {
 				var kernel = StorageHelper.Temporary();
 				var library = new Bridge.Library();
 				try {
-					StorageHelper.CopyFile(App.Setting.Data.ModdingWorker.Kernel, kernel);
+					StorageHelper.Copy(App.Setting.Data.ModdingWorker.Kernel, kernel);
 					library.Open(kernel);
 					result = await new Task<List<String>>(() => (Bridge.Launcher.Launch(this.SessionClient, library, App.Setting.Data.ModdingWorker.Script, [..App.Setting.Data.ModdingWorker.Argument, ..this.AdditionalArgument]))).SelfAlso((it) => { it.Start(); });
 				}
@@ -268,8 +268,8 @@ namespace AssistantPlus.View.ModdingWorker {
 				if (library.State()) {
 					library.Close();
 				}
-				if (StorageHelper.ExistFile(kernel)) {
-					StorageHelper.RemoveFile(kernel);
+				if (StorageHelper.Exist(kernel)) {
+					StorageHelper.Remove(kernel);
 				}
 			}
 			catch (Exception e) {

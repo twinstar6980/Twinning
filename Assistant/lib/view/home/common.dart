@@ -3,7 +3,6 @@ import '/utility/control_helper.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:window_manager/window_manager.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
 // ----------------
@@ -81,7 +80,7 @@ class _CustomModalDialogState extends State<CustomModalDialog> {
       actions: this.widget.actionBuilder == null
         ? [
           TextButton(
-            child: const Text('Close'),
+            child: Text('Close'),
             onPressed: () => Navigator.pop(context),
           ),
         ]
@@ -147,7 +146,7 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
+          padding: EdgeInsets.fromLTRB(24, 12, 24, 12),
           child: Row(
             children: [
               Expanded(
@@ -162,7 +161,7 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
             ],
           ),
         ),
-        const Divider(height: 1, indent: 12, endIndent: 12),
+        Divider(height: 1, indent: 12, endIndent: 12),
         Expanded(
           child: Scrollbar(
             interactive: true,
@@ -207,68 +206,19 @@ class CustomTitleBar extends StatelessWidget {
   @override
   build(context) {
     var theme = Theme.of(context);
-    return Stack(
-      alignment: Alignment.center,
+    return Row(
       children: [
-        if (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-          const DragToMoveArea(
-            child: SizedBox.expand(),
+        SizedBox(width: 8),
+        this.leading,
+        SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            this.title,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.titleLarge,
           ),
-        Row(
-          children: [
-            const SizedBox(width: 8),
-            this.leading,
-            const SizedBox(width: 12),
-            Expanded(
-              child: IgnorePointer(
-                child: Text(
-                  this.title,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.titleLarge,
-                ),
-              ),
-            ),
-            if (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-              Row(
-                children: [
-                  const SizedBox(width: 8),
-                  IconButton(
-                    icon: const Icon(IconSymbols.remove),
-                    onPressed: () async {
-                      if (await windowManager.isMinimized()) {
-                        await windowManager.restore();
-                      }
-                      else {
-                        await windowManager.minimize();
-                      }
-                    },
-                  ),
-                  const SizedBox(width: 4),
-                  IconButton(
-                    icon: const Icon(IconSymbols.crop_square, size: 20),
-                    onPressed: () async {
-                      if (await windowManager.isMaximized()) {
-                        await windowManager.unmaximize();
-                      }
-                      else {
-                        await windowManager.maximize();
-                      }
-                    },
-                  ),
-                  const SizedBox(width: 4),
-                  IconButton(
-                    icon: const Icon(IconSymbols.close),
-                    onPressed: () async {
-                      if (true) {
-                        await windowManager.close();
-                      }
-                    },
-                  ),
-                ],
-              ),
-            const SizedBox(width: 8),
-          ],
         ),
+        SizedBox(width: 8),
       ],
     );
   }
@@ -302,7 +252,7 @@ class CustomBottomBarContent extends StatelessWidget {
           ),
         ),
         if (this.primary != null)
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
         if (this.primary != null)
           this.primary!,
       ],
@@ -330,7 +280,7 @@ class CustomNavigationDrawerLabel extends StatelessWidget {
   build(context) {
     var theme = Theme.of(context);
     return Container(
-      padding: const EdgeInsets.fromLTRB(28, 8, 28, 8),
+      padding: EdgeInsets.fromLTRB(28, 8, 28, 8),
       child: Text(
         this.label,
         overflow: TextOverflow.ellipsis,
@@ -368,19 +318,19 @@ class CustomNavigationDrawerItem extends StatelessWidget {
   build(context) {
     var theme = Theme.of(context);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: EdgeInsets.symmetric(horizontal: 12),
       height: 56,
       child: TextButton(
         style: ButtonStyle(
-          padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+          padding: WidgetStatePropertyAll(EdgeInsets.zero),
           backgroundColor: WidgetStatePropertyAll(!this.selected ? null : theme.colorScheme.secondaryContainer),
           foregroundColor: WidgetStatePropertyAll(!this.selected ? theme.colorScheme.onSurface : theme.colorScheme.surfaceTint),
         ),
         child: Row(
           children: [
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
             Icon(this.icon),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Text(
                 this.label,
@@ -390,9 +340,9 @@ class CustomNavigationDrawerItem extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             ...this.action,
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
           ],
         ),
         onPressed: this.onPressed,
@@ -414,7 +364,7 @@ class CustomNavigationDrawerDivider extends StatelessWidget {
 
   @override
   build(context) {
-    return const Divider(height: 16, indent: 28, endIndent: 28);
+    return Divider(height: 16, indent: 28, endIndent: 28);
   }
 
 }
@@ -440,7 +390,7 @@ class CustomSettingLabel extends StatelessWidget {
   build(context) {
     var theme = Theme.of(context);
     return ListTile(
-      contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+      contentPadding: EdgeInsets.fromLTRB(24, 0, 24, 0),
       dense: true,
       title: Text(
         this.label,
@@ -481,7 +431,7 @@ class CustomSettingItem extends StatelessWidget {
   @override
   build(context) {
     return ListTile(
-      contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+      contentPadding: EdgeInsets.fromLTRB(24, 0, 24, 0),
       enabled: this.enabled,
       leading: Icon(this.icon),
       title: Row(
@@ -492,7 +442,7 @@ class CustomSettingItem extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
           ...this.content,
         ],
       ),
@@ -534,9 +484,9 @@ class CustomTextFieldSuffixRegion extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const SizedBox(width: 4),
+        SizedBox(width: 4),
         ...this.children,
-        const SizedBox(width: 4),
+        SizedBox(width: 4),
       ],
     );
   }
@@ -704,10 +654,10 @@ class _CustomOptionFieldState extends State<CustomOptionField> {
           maximumSize: WidgetStatePropertyAll(Size(constraints.maxWidth + 8, Floater.infinity)),
         ),
         crossAxisUnconstrained: false,
-        alignmentOffset: const Offset(-4, 0),
+        alignmentOffset: Offset(-4, 0),
         menuChildren: [
           if (this.widget.option.isEmpty)
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
           ...this.widget.option.map((value) => MenuItemButton(
             style: ButtonStyle(
               backgroundColor: WidgetStatePropertyAll(value.$2 != this.widget.value ? null : theme.colorScheme.onSurface.withValues(alpha: 0.12)),
@@ -734,7 +684,7 @@ class _CustomOptionFieldState extends State<CustomOptionField> {
           style: this.widget.style,
           enabled: this.widget.enabled,
           keyboardType: TextInputType.none,
-          inputFormatters: const [],
+          inputFormatters: [],
           decoration: this.widget.decoration,
           readOnly: true,
           controller: this._valueController,
@@ -780,7 +730,7 @@ class CustomFileDropRegion extends StatelessWidget {
       ? this.child
       : DropRegion(
         hitTestBehavior: HitTestBehavior.opaque,
-        formats: const [Formats.fileUri],
+        formats: [Formats.fileUri],
         onDropOver: (event) async {
           if (this.onDrop != null && event.session.items.every((item) => item.canProvide(Formats.fileUri))) {
             return DropOperation.link;
@@ -812,7 +762,7 @@ class CustomFileDropRegion extends StatelessWidget {
               result.add(path);
             })!;
             while (progress.fraction.value != 1.0) {
-              await Future.delayed(const Duration());
+              await Future.delayed(Duration());
             }
           }
           this.onDrop!(result);

@@ -39,14 +39,14 @@ class CommandPanel extends StatelessWidget {
     var theme = Theme.of(context);
     return StatefulBuilder(
       builder: (context, setState) => Card.outlined(
-        margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: Container(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+          padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
           child: Column(
             children: [
               Row(
                 children: [
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       '${this.groupConfiguration.name} - ${this.itemConfiguration.name}',
@@ -54,7 +54,7 @@ class CommandPanel extends StatelessWidget {
                       style: theme.textTheme.titleMedium,
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   IconButton(
                     tooltip: !this.collapse.value ? 'Collapse' : 'Expand',
                     isSelected: false,
@@ -64,24 +64,24 @@ class CommandPanel extends StatelessWidget {
                       setState(() {});
                     },
                   ),
-                  const SizedBox(width: 4),
+                  SizedBox(width: 4),
                   IconButton(
                     tooltip: 'Remove',
                     isSelected: false,
-                    icon: const Icon(IconSymbols.remove),
+                    icon: Icon(IconSymbols.remove),
                     onPressed: () async {
                       if (this.argumentValue.where((value) => value.value != null).isEmpty || await ControlHelper.showDialogForConfirm(context)) {
                         this.onRemove();
                       }
                     },
                   ),
-                  const SizedBox(width: 4),
+                  SizedBox(width: 4),
                 ],
               ),
-              const Divider(),
+              Divider(),
               if (!this.collapse.value)
                 ...this.itemConfiguration.argument.mapIndexed((argumentIndex, argumentConfiguration) => Container(
-                  margin: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                  margin: EdgeInsets.fromLTRB(0, 8, 0, 8),
                   child: ArgumentBar(
                     name: argumentConfiguration.name,
                     type: argumentConfiguration.type,
@@ -91,9 +91,9 @@ class CommandPanel extends StatelessWidget {
                 )),
               if (this.collapse.value)
                 ...this.itemConfiguration.argument.mapIndexed((argumentIndex, argumentConfiguration) => this.argumentValue[argumentIndex].value == null
-                  ? const SizedBox()
+                  ? SizedBox()
                   : Container(
-                    margin: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                    margin: EdgeInsets.fromLTRB(8, 8, 8, 8),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.baseline,
                       textBaseline: theme.textTheme.labelLarge?.textBaseline,
@@ -108,7 +108,7 @@ class CommandPanel extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Expanded(
                           child: SelectionArea(
                             child: Text(
@@ -124,18 +124,18 @@ class CommandPanel extends StatelessWidget {
                   ),
                 ),
               if (this.collapse.value && this.argumentValue.where((value) => value.value != null).isEmpty)
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
               if (this.collapse.value)
-                const Divider(),
-              const SizedBox(height: 8),
+                Divider(),
+              SizedBox(height: 8),
               Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: SizedBox(),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   IconButton.filledTonal(
-                    style: const ButtonStyle(
+                    style: ButtonStyle(
                       padding: WidgetStatePropertyAll(EdgeInsets.zero),
                       overlayColor: WidgetStatePropertyAll(Colors.transparent),
                     ),
@@ -144,17 +144,17 @@ class CommandPanel extends StatelessWidget {
                     icon: Stack(
                       children: [
                         Container(
-                          padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                          padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
                           height: 40,
                           child: Row(
                             children: [
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8),
                               Text(
                                 '${this.itemConfiguration.preset.nonNulls.length}',
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              const SizedBox(width: 4),
-                              const Icon(IconSymbols.flash_on),
+                              SizedBox(width: 4),
+                              Icon(IconSymbols.flash_on),
                             ],
                           ),
                         ),
@@ -162,17 +162,17 @@ class CommandPanel extends StatelessWidget {
                           child: PopupMenuButton<PresetConfiguration>(
                             tooltip: '',
                             position: PopupMenuPosition.under,
-                            offset: const Offset(0, 12),
-                            icon: const SizedBox(),
+                            offset: Offset(0, 12),
+                            icon: SizedBox(),
                             itemBuilder: (context) => [
                               if (this.itemConfiguration.preset.isEmpty)
-                                const PopupMenuItem(
+                                PopupMenuItem(
                                   height: 16,
                                   enabled: false,
                                   child: null,
                                 ),
                               ...this.itemConfiguration.preset.map((preset) => preset == null
-                                ? const PopupMenuDivider()
+                                ? PopupMenuDivider()
                                 : PopupMenuItem(
                                   value: preset,
                                   child: Text(
@@ -196,12 +196,12 @@ class CommandPanel extends StatelessWidget {
                     onPressed: () async {
                     },
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   IconButton.filledTonal(
                     tooltip: 'Enable Batch',
                     isSelected: this.enableBatch.value,
-                    icon: const Icon(IconSymbols.layers),
-                    selectedIcon: const Icon(IconSymbols.layers, fill: 1),
+                    icon: Icon(IconSymbols.layers),
+                    selectedIcon: Icon(IconSymbols.layers, fill: 1),
                     onPressed: this.itemConfiguration.batchable == null
                       ? null
                       : () async {
@@ -209,13 +209,13 @@ class CommandPanel extends StatelessWidget {
                         setState(() {});
                       },
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   FilledButton.tonalIcon(
-                    label: const Text(
+                    label: Text(
                       'Forward',
                       overflow: TextOverflow.ellipsis,
                     ),
-                    icon: const Icon(IconSymbols.send, fill: 1),
+                    icon: Icon(IconSymbols.send, fill: 1),
                     onPressed: this.onForward,
                   ),
                 ],

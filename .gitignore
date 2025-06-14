@@ -1,11 +1,25 @@
-# Git
-/.git
+# Global
 
 # System - Windows
 /**/desktop.ini
 
 # System - Macintosh
 /**/.DS_Store
+
+# Environment - Git
+/.git
+
+# Environment - Xmake
+/**/.xmake
+
+# Environment - Gradle
+/**/.gradle
+
+# Environment - Flutter
+/**/pubspec.lock
+/**/.dart_tool
+/**/.flutter-plugins
+/**/.flutter-plugins-dependencies
 
 # Environment - Visual Studio
 /**/.vs
@@ -21,18 +35,6 @@
 
 # Environment - IntelliJ IDEA
 /**/.idea
-
-# Environment - Xmake
-/**/.xmake
-
-# Environment - Gradle
-/**/.gradle
-
-# Environment - Flutter
-/**/pubspec.lock
-/**/.dart_tool
-/**/.flutter-plugins
-/**/.flutter-plugins-dependencies
 
 # Common
 /common/certificate
@@ -58,7 +60,8 @@
 /Assistant/macos/Podfile
 /Assistant/macos/Podfile.lock
 /Assistant/android/local.properties
-/Assistant/android/app/.cxx
+/Assistant/android/.kotlin
+/Assistant/android/build
 /Assistant/ios/Flutter/ephemeral
 /Assistant/ios/Flutter/Generated.xcconfig
 /Assistant/ios/Flutter/flutter_export_environment.sh
@@ -70,9 +73,7 @@
 
 # Module - AssistantPlus
 /AssistantPlus/.build
-/AssistantPlus/Application/.editorconfig
 
 # Miscellaneous
-/.unused
 /.temporary
 /.distribution

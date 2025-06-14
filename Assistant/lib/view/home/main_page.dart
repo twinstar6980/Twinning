@@ -45,7 +45,7 @@ class _MainPageState extends State<MainPage> {
     this._tabList.add((configuration.title, configuration.type, ModuleHelper.query(configuration.type).mainPage(configuration.option)));
     this._tabIndex = this._tabList.length - 1;
     this.setState(() {});
-    await Future.delayed(const Duration(milliseconds: 10));
+    await Future.delayed(Duration(milliseconds: 10));
     return;
   }
 
@@ -143,8 +143,8 @@ class _MainPageState extends State<MainPage> {
       contentBuilder: (context, setState) => [
         CustomTextField(
           keyboardType: TextInputType.multiline,
-          inputFormatters: const [],
-          decoration: const InputDecoration(
+          inputFormatters: [],
+          decoration: InputDecoration(
             contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
             filled: false,
             border: OutlineInputBorder(),
@@ -158,11 +158,11 @@ class _MainPageState extends State<MainPage> {
       ],
       actionBuilder: (context) => [
         TextButton(
-          child: const Text('Cancel'),
+          child: Text('Cancel'),
           onPressed: () => Navigator.pop(context, false),
         ),
         TextButton(
-          child: const Text('Continue'),
+          child: Text('Continue'),
           onPressed: () => Navigator.pop(context, true),
         ),
       ],
@@ -181,8 +181,8 @@ class _MainPageState extends State<MainPage> {
       contentBuilder: (context, setState) => [
         CustomTextField(
           keyboardType: TextInputType.multiline,
-          inputFormatters: const [],
-          decoration: const InputDecoration(
+          inputFormatters: [],
+          decoration: InputDecoration(
             contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
             filled: false,
             border: OutlineInputBorder(),
@@ -196,11 +196,11 @@ class _MainPageState extends State<MainPage> {
       ],
       actionBuilder: (context) => [
         TextButton(
-          child: const Text('Cancel'),
+          child: Text('Cancel'),
           onPressed: () => Navigator.pop(context, false),
         ),
         TextButton(
-          child: const Text('Continue'),
+          child: Text('Continue'),
           onPressed: () => Navigator.pop(context, true),
         ),
       ],
@@ -250,36 +250,32 @@ class _MainPageState extends State<MainPage> {
         elevation: 3,
         scrolledUnderElevation: 3,
         backgroundColor: Colors.transparent,
-        title: const SizedBox(),
-        leading: const SizedBox(),
-        actions: [
-          Expanded(
-            child: CustomTitleBar(
-              title: this._tabList.isEmpty ? '' : this._tabList[this._tabIndex].$1,
-              leading: Builder(
-                builder: (context) => IconButton(
-                  tooltip: 'Navigation',
-                  icon: const Icon(IconSymbols.menu),
-                  onPressed: () async {
-                    Scaffold.of(context).openDrawer();
-                  },
-                ),
-              ),
+        automaticallyImplyLeading: false,
+        titleSpacing: 0,
+        title: CustomTitleBar(
+          title: this._tabList.isEmpty ? '' : this._tabList[this._tabIndex].$1,
+          leading: Builder(
+            builder: (context) => IconButton(
+              tooltip: 'Navigation',
+              icon: Icon(IconSymbols.menu),
+              onPressed: () async {
+                Scaffold.of(context).openDrawer();
+              },
             ),
           ),
-        ],
+        ),
       ),
       drawer: NavigationDrawer(
         children: [
-          const SizedBox(height: 16),
-          const CustomNavigationDrawerLabel(
+          SizedBox(height: 16),
+          CustomNavigationDrawerLabel(
             label: 'Assistant',
           ),
           CustomNavigationDrawerItem(
             selected: false,
             icon: IconSymbols.widgets,
             label: 'Launcher',
-            action: const [],
+            action: [],
             onPressed: () async {
               Navigator.pop(context);
               await this._showLauncherPanel();
@@ -289,7 +285,7 @@ class _MainPageState extends State<MainPage> {
             selected: false,
             icon: IconSymbols.send_time_extension,
             label: 'Forwarder',
-            action: const [],
+            action: [],
             onPressed: () async {
               Navigator.pop(context);
               await this._showForwarderPanel();
@@ -299,15 +295,15 @@ class _MainPageState extends State<MainPage> {
             selected: false,
             icon: IconSymbols.keyboard_command_key,
             label: 'Commander',
-            action: const [],
+            action: [],
             onPressed: () async {
               Navigator.pop(context);
               await this._showCommanderPanel();
             },
           ),
-          const CustomNavigationDrawerDivider(),
+          CustomNavigationDrawerDivider(),
           if (this._tabList.isEmpty)
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
           ...this._tabList.mapIndexed((index, item) => CustomNavigationDrawerItem(
             key: ObjectKey(item), // NOTE : fix button ripple effect error when remove item
             selected: index == this._tabIndex,
@@ -317,7 +313,7 @@ class _MainPageState extends State<MainPage> {
               PopupMenuButton(
                 tooltip: 'Action',
                 position: PopupMenuPosition.under,
-                icon: const Icon(IconSymbols.more_vert),
+                icon: Icon(IconSymbols.more_vert),
                 itemBuilder: (context) => [
                   ('remove', 'Remove', IconSymbols.cancel),
                   ('rename', 'Rename', IconSymbols.draw),
@@ -348,8 +344,8 @@ class _MainPageState extends State<MainPage> {
                         contentBuilder: (context, setState) => [
                           CustomTextField(
                             keyboardType: TextInputType.multiline,
-                            inputFormatters: const [],
-                            decoration: const InputDecoration(
+                            inputFormatters: [],
+                            decoration: InputDecoration(
                               contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
                               filled: false,
                               border: OutlineInputBorder(),
@@ -363,11 +359,11 @@ class _MainPageState extends State<MainPage> {
                         ],
                         actionBuilder: (context) => [
                           TextButton(
-                            child: const Text('Cancel'),
+                            child: Text('Cancel'),
                             onPressed: () => Navigator.pop(context, false),
                           ),
                           TextButton(
-                            child: const Text('Continue'),
+                            child: Text('Continue'),
                             onPressed: () => Navigator.pop(context, true),
                           ),
                         ],
@@ -395,18 +391,18 @@ class _MainPageState extends State<MainPage> {
               await this._toggleTabItem(index);
             },
           )),
-          const CustomNavigationDrawerDivider(),
+          CustomNavigationDrawerDivider(),
           CustomNavigationDrawerItem(
             selected: false,
             icon: IconSymbols.settings,
             label: 'Setting',
-            action: const [],
+            action: [],
             onPressed: () async {
               Navigator.pop(context);
               await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
                 title: 'Setting',
                 contentBuilder: (context, setState) => [
-                  const SettingPanel(),
+                  SettingPanel(),
                 ],
               ));
             },
@@ -415,31 +411,23 @@ class _MainPageState extends State<MainPage> {
             selected: false,
             icon: IconSymbols.info,
             label: 'About',
-            action: const [],
+            action: [],
             onPressed: () async {
               Navigator.pop(context);
               await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
                 title: 'About',
                 contentBuilder: (context, setState) => [
-                  const AboutPanel(),
+                  AboutPanel(),
                 ],
               ));
             },
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
         ],
       ),
-      body: Stack(
-        children: [
-          Offstage(
-            offstage: this._tabIndex != -1,
-            child: const BlankPage(),
-          ),
-          ...this._tabList.mapIndexed((index, value) => Offstage(
-            offstage: this._tabIndex != index,
-            child: value.$3,
-          )),
-        ],
+      body: IndexedStack(
+        index: this._tabIndex + 1,
+        children: [BlankPage(), ...this._tabList.mapIndexed((index, value) => value.$3)],
       ),
     );
   }

@@ -397,6 +397,7 @@ export namespace Twinning::Kernel::Storage {
 		Path const & source,
 		Path const & destination
 	) -> Void {
+		assert_test(exist(source));
 		std::filesystem::rename(Detail::make_std_path(source), Detail::make_std_path(destination));
 		return;
 	}
@@ -404,6 +405,7 @@ export namespace Twinning::Kernel::Storage {
 	inline auto remove (
 		Path const & source
 	) -> Void {
+		assert_test(exist(source));
 		std::filesystem::remove_all(Detail::make_std_path(source));
 		return;
 	}

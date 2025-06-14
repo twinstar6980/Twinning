@@ -131,7 +131,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Link {
 						ResourceManifest.NewTypeObjectNotation.Encode.process(stream, manifest);
 						KernelX.Storage.write_file(`${package_bundle_directory}/resource/${manifesr_resource_path}`, stream.sub(0, stream.p()));
 					}
-					KernelX.Storage.remove(`${package_bundle_directory}/packet/${manifest_group_name}.rsg`);
+					KernelX.Storage.remove_if(`${package_bundle_directory}/packet/${manifest_group_name}.rsg`);
 					package_definition.group.push({
 						id: manifest_group_name,
 						composite: false,

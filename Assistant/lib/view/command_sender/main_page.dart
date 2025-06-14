@@ -179,11 +179,11 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
               interactive: true,
               controller: this._commandListScrollController,
               child: ListView.builder(
-                padding: const EdgeInsets.fromLTRB(16, 6, 16, 6),
+                padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
                 controller: this._commandListScrollController,
                 itemCount: this._command.length,
                 itemBuilder: (context, index) => Container(
-                  padding: const EdgeInsets.fromLTRB(0, 6, 0, 6),
+                  padding: EdgeInsets.fromLTRB(0, 6, 0, 6),
                   child: CommandPanel(
                     key: ObjectKey(this._command[index]),
                     groupConfiguration: this._command[index].$1,
@@ -214,15 +214,15 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
             hoverElevation: 0,
             highlightElevation: 0,
             disabledElevation: 0,
-            child: const Icon(IconSymbols.format_list_bulleted_add),
+            child: Icon(IconSymbols.format_list_bulleted_add),
             onPressed: () async {
               await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
                 title: 'Method',
                 contentBuilder: (context, setState) => [
                   ListView.builder(
                     shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                    physics: NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
                     itemCount: this._methodConfiguration.length,
                     itemBuilder: (context, index) => MethodGroupItem(
                       configuration: this._methodConfiguration[index],
@@ -246,17 +246,17 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
           IconButton.filledTonal(
             tooltip: 'Parallel Forward',
             isSelected: this._parallelForward,
-            icon: const Icon(IconSymbols.shuffle),
-            selectedIcon: const Icon(IconSymbols.shuffle, fill: 1),
+            icon: Icon(IconSymbols.shuffle),
+            selectedIcon: Icon(IconSymbols.shuffle, fill: 1),
             onPressed: () async {
               this._parallelForward = !this._parallelForward;
               this.setState(() {});
             },
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           IconButton.filledTonal(
             tooltip: 'Forward',
-            icon: const Icon(IconSymbols.send, fill: 1),
+            icon: Icon(IconSymbols.send, fill: 1),
             onPressed: () async {
               await this._forwardCommand(this._command.mapIndexed((index, value) => index).toList());
             },

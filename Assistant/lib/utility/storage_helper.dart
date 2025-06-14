@@ -67,7 +67,7 @@ class StorageHelper {
 
   // #endregion
 
-  // #region basic
+  // #region exist
 
   static Future<Boolean> exist(
     String path,
@@ -107,43 +107,51 @@ class StorageHelper {
     return Directory(path).existsSync();
   }
 
-  // ----------------
+  // #endregion
 
-  static Future<Void> copyFile(
+  // #region basic
+
+  static Future<Void> copy(
     String source,
     String destination,
   ) async {
-    var destinationParent = parent(destination);
-    if (!await exist(destinationParent)) {
-      await Directory(destinationParent).create(recursive: true);
+    assertTest(await exist(source));
+    if (await existFile(source)) {
+      await createFile(destination);
+      await writeFile(destination, await readFile(source));
     }
-    await File(destination).writeAsBytes(await File(source).readAsBytes());
+    if (await existDirectory(source)) {
+      await createDirectory(destination);
+      for (var item in await Directory(source).list(recursive: true).toList()) {
+        await copy(item.path, '${destination}/${name(item.path)}');
+      }
+    }
     return;
   }
 
-  static Future<Void> copyDirectory(
+  static Future<Void> rename(
     String source,
     String destination,
   ) async {
-    // TODO
-    throw UnimplementedError();
+    assertTest(await exist(source));
+    await createDirectory(parent(destination));
+    if (await existFile(source)) {
+      await File(source).rename(destination);
+    }
+    if (await existDirectory(source)) {
+      await Directory(source).rename(destination);
+    }
+    return;
   }
 
-  // ----------------
-
-  static Future<Void> removeFile(
+  static Future<Void> remove(
     String source,
   ) async {
-    if (await File(source).exists()) {
+    assertTest(await exist(source));
+    if (await existFile(source)) {
       await File(source).delete(recursive: true);
     }
-    return;
-  }
-
-  static Future<Void> removeDirectory(
-    String source,
-  ) async {
-    if (await Directory(source).exists()) {
+    if (await existDirectory(source)) {
       await Directory(source).delete(recursive: true);
     }
     return;
@@ -152,6 +160,15 @@ class StorageHelper {
   // #endregion
 
   // #region file
+
+  static Future<Void> createFile(
+    String target,
+  ) async {
+    await File(target).create(recursive: true);
+    return;
+  }
+
+  // ----------------
 
   static Future<Uint8List> readFile(
     String target,
@@ -163,14 +180,12 @@ class StorageHelper {
     String    target,
     Uint8List data,
   ) async {
-    await File(target).create(recursive: true);
+    await createFile(target);
     await File(target).writeAsBytes(data, flush: true);
     return;
   }
 
-  // #endregion
-
-  // #region file - text
+  // ----------------
 
   static Future<String> readFileText(
     String target,
@@ -182,9 +197,19 @@ class StorageHelper {
     String target,
     String text,
   ) async {
-    await File(target).create(recursive: true);
+    await createFile(target);
     await File(target).writeAsString(text, flush: true);
     return;
+  }
+
+  // #endregion
+
+  // #region directory
+
+  static Future<Void> createDirectory(
+    String target,
+  ) async {
+    await Directory(target).create(recursive: true);
   }
 
   // #endregion
@@ -449,11 +474,11 @@ class StorageHelper {
         ],
         actionBuilder: (context) => [
           TextButton(
-            child: const Text('Ignore'),
+            child: Text('Ignore'),
             onPressed: () => Navigator.pop(context, false),
           ),
           TextButton(
-            child: const Text('Duplicate'),
+            child: Text('Duplicate'),
             onPressed: !copyable ? null : () => Navigator.pop(context, true),
           ),
         ],

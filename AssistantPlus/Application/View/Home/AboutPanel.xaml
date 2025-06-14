@@ -38,7 +38,7 @@
 				Foreground="{ThemeResource TextFillColorSecondaryBrush}"
 				Style="{StaticResource BodyTextBlockStyle}"
 				TextWrapping="NoWrap"
-				Text="&#xA9; 2023-2024 TwinStar. All rights reserved."
+				Text="{x:Bind Controller.uCopyrightLabel_Text}"
 				/>
 		</my:Stack>
 		<my:Divider />
@@ -90,7 +90,7 @@
 				Click="{x:Bind Controller.uSettingThemeColor_Click}"
 				Content="{x:Bind Controller.uSettingThemeColor_Content}"
 				>
-				<SplitButton.Flyout>
+				<ToggleSplitButton.Flyout>
 					<Flyout>
 						<Flyout.FlyoutPresenterStyle>
 							<Style TargetType="FlyoutPresenter" BasedOn="{StaticResource NormalFlyoutPresenterStyle}">
@@ -169,7 +169,7 @@
 							</my:Stack>
 						</my:Stack>
 					</Flyout>
-				</SplitButton.Flyout>
+				</ToggleSplitButton.Flyout>
 			</ToggleSplitButton>
 		</my:Stack>
 		<my:Stack
@@ -221,7 +221,7 @@
 				Click="{x:Bind Controller.uSettingWindowPosition_Click}"
 				Content="{x:Bind Controller.uSettingWindowPosition_Content}"
 				>
-				<SplitButton.Flyout>
+				<ToggleSplitButton.Flyout>
 					<Flyout>
 						<Flyout.FlyoutPresenterStyle>
 							<Style TargetType="FlyoutPresenter" BasedOn="{StaticResource NormalFlyoutPresenterStyle}">
@@ -289,7 +289,7 @@
 							</my:Stack>
 						</my:Stack>
 					</Flyout>
-				</SplitButton.Flyout>
+				</ToggleSplitButton.Flyout>
 			</ToggleSplitButton>
 		</my:Stack>
 		<my:Stack
@@ -316,7 +316,7 @@
 				Click="{x:Bind Controller.uSettingWindowSize_Click}"
 				Content="{x:Bind Controller.uSettingWindowSize_Content}"
 				>
-				<SplitButton.Flyout>
+				<ToggleSplitButton.Flyout>
 					<Flyout>
 						<Flyout.FlyoutPresenterStyle>
 							<Style TargetType="FlyoutPresenter" BasedOn="{StaticResource NormalFlyoutPresenterStyle}">
@@ -384,8 +384,34 @@
 							</my:Stack>
 						</my:Stack>
 					</Flyout>
-				</SplitButton.Flyout>
+				</ToggleSplitButton.Flyout>
 			</ToggleSplitButton>
+		</my:Stack>
+		<my:Divider />
+		<my:Stack
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Orientation="Horizontal"
+			Spacing="4"
+			>
+			<FontIcon
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Center"
+				Width="32"
+				Height="22"
+				FontSize="{StaticResource SmallIconSize}"
+				Glyph="{StaticResource FluentIconGlyph.NearbySharing}"
+				/>
+			<ToggleButton
+				ToolTipService.ToolTip="Forwarder Extension"
+				my:Stack.Weight="1"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				HorizontalContentAlignment="Left"
+				IsChecked="{x:Bind Controller.uSettingForwarderExtension_IsChecked}"
+				Click="{x:Bind Controller.uSettingForwarderExtension_Click}"
+				Content="{x:Bind Controller.uSettingForwarderExtension_Content}"
+				/>
 		</my:Stack>
 		<my:Divider />
 		<my:Stack
@@ -450,13 +476,19 @@
 							</Span>
 							<LineBreak />
 							<Span>
-								<Bold xml:space="preserve">  -InsertTab</Bold>
+								<Bold xml:space="preserve">  -Launch</Bold>
 								<LineBreak />
 								<Span xml:space="preserve">    Title : <Italic>String</Italic></Span>
 								<LineBreak />
 								<Span xml:space="preserve">    Type : <Italic>String</Italic></Span>
 								<LineBreak />
 								<Span xml:space="preserve">    Option : <Italic>String...</Italic></Span>
+							</Span>
+							<LineBreak />
+							<Span>
+								<Bold xml:space="preserve">  -Forward</Bold>
+								<LineBreak />
+								<Span xml:space="preserve">    Resource : <Italic>String...</Italic></Span>
 							</Span>
 						</TextBlock>
 					</Flyout>
@@ -537,7 +569,7 @@
 				FontSize="{StaticResource SmallIconSize}"
 				Glyph="{StaticResource FluentIconGlyph.SyncFolder}"
 				/>
-			<SplitButton
+			<Button
 				ToolTipService.ToolTip="Shared Directory"
 				my:Stack.Weight="1"
 				HorizontalAlignment="Stretch"
@@ -545,18 +577,7 @@
 				HorizontalContentAlignment="Left"
 				Click="{x:Bind Controller.uStorageSharedDirectory_Click}"
 				Content="Reveal"
-				>
-				<SplitButton.Flyout>
-					<MenuFlyout>
-						<MenuFlyout.MenuFlyoutPresenterStyle>
-							<Style TargetType="MenuFlyoutPresenter" BasedOn="{StaticResource DefaultMenuFlyoutPresenterStyle}">
-								<Setter Property="MinWidth" Value="239" />
-								<Setter Property="MaxWidth" Value="239" />
-							</Style>
-						</MenuFlyout.MenuFlyoutPresenterStyle>
-					</MenuFlyout>
-				</SplitButton.Flyout>
-			</SplitButton>
+				/>
 		</my:Stack>
 		<my:Stack
 			HorizontalAlignment="Stretch"
@@ -572,7 +593,7 @@
 				FontSize="{StaticResource SmallIconSize}"
 				Glyph="{StaticResource FluentIconGlyph.ProtectedDocument}"
 				/>
-			<SplitButton
+			<Button
 				ToolTipService.ToolTip="Cache Directory"
 				my:Stack.Weight="1"
 				HorizontalAlignment="Stretch"
@@ -580,18 +601,7 @@
 				HorizontalContentAlignment="Left"
 				Click="{x:Bind Controller.uStorageCacheDirectory_Click}"
 				Content="Clear"
-				>
-				<SplitButton.Flyout>
-					<MenuFlyout>
-						<MenuFlyout.MenuFlyoutPresenterStyle>
-							<Style TargetType="MenuFlyoutPresenter" BasedOn="{StaticResource DefaultMenuFlyoutPresenterStyle}">
-								<Setter Property="MinWidth" Value="239" />
-								<Setter Property="MaxWidth" Value="239" />
-							</Style>
-						</MenuFlyout.MenuFlyoutPresenterStyle>
-					</MenuFlyout>
-				</SplitButton.Flyout>
-			</SplitButton>
+				/>
 		</my:Stack>
 	</my:Stack>
 </local:CustomControl>

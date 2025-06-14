@@ -697,7 +697,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			var destinationDirectory = this.MakeScopeRootPath(destinationPart);
 			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
 			GF.AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
-			StorageHelper.RenameDirectory(sourceDirectory, destinationDirectory);
+			StorageHelper.Rename(sourceDirectory, destinationDirectory);
 			var itemNode = this.FindScopeNode(sourcePart);
 			itemNode.Name = destinationPart;
 			itemNode.NotifyPropertyChanged(
@@ -746,7 +746,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			var destinationDirectory = this.MakeScopeRootPath(destinationPart);
 			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
 			GF.AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
-			StorageHelper.CopyDirectory(sourceDirectory, destinationDirectory);
+			StorageHelper.Copy(sourceDirectory, destinationDirectory);
 			await this.PartReload(destinationPart, false);
 			return;
 		}
@@ -857,7 +857,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			var destinationDirectory = this.MakeScopeRootPath(sourcePart, destinationGroup);
 			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
 			GF.AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
-			StorageHelper.RenameDirectory(sourceDirectory, destinationDirectory);
+			StorageHelper.Rename(sourceDirectory, destinationDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup);
 			itemNode.Name = destinationGroup;
 			itemNode.NotifyPropertyChanged(
@@ -898,7 +898,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			var destinationDirectory = this.MakeScopeRootPath(sourcePart, destinationGroup);
 			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
 			GF.AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
-			StorageHelper.CopyDirectory(sourceDirectory, destinationDirectory);
+			StorageHelper.Copy(sourceDirectory, destinationDirectory);
 			await this.GroupReload(sourcePart, destinationGroup, false);
 			return;
 		}
@@ -916,7 +916,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			var destinationDirectory = this.MakeScopeRootPath(destinationPart, sourceGroup);
 			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
 			GF.AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
-			StorageHelper.RenameDirectory(sourceDirectory, destinationDirectory);
+			StorageHelper.Rename(sourceDirectory, destinationDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup);
 			itemNode.Parent.Children.Remove(itemNode);
 			itemNode.Parent.NotifyPropertyChanged(
@@ -1036,7 +1036,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			var destinationDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, destinationResource);
 			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
 			GF.AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
-			StorageHelper.RenameDirectory(sourceDirectory, destinationDirectory);
+			StorageHelper.Rename(sourceDirectory, destinationDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup, sourceResource);
 			itemNode.Name = destinationResource;
 			itemNode.NotifyPropertyChanged(
@@ -1073,7 +1073,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			var destinationDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, destinationResource);
 			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
 			GF.AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
-			StorageHelper.CopyDirectory(sourceDirectory, destinationDirectory);
+			StorageHelper.Copy(sourceDirectory, destinationDirectory);
 			await this.ResourceReload(sourcePart, sourceGroup, destinationResource, false);
 			return;
 		}
@@ -1093,7 +1093,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			var destinationDirectory = this.MakeScopeRootPath(destinationPart, destinationGroup, sourceResource);
 			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
 			GF.AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
-			StorageHelper.RenameDirectory(sourceDirectory, destinationDirectory);
+			StorageHelper.Rename(sourceDirectory, destinationDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup, sourceResource);
 			itemNode.Parent.Children.Remove(itemNode);
 			itemNode.Parent.NotifyPropertyChanged(

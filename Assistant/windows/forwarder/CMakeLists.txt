@@ -9,6 +9,7 @@ add_library(${PROJECT_NAME} SHARED
   "forwarder_explorer_command.cppm"
   "library.cpp"
   "library.def"
+  "library.manifest"
   "resource/resource.rc"
 )
 
@@ -16,5 +17,4 @@ apply_standard_settings(${PROJECT_NAME})
 
 target_compile_options(${PROJECT_NAME} PRIVATE "/wd4324" "/wd4996")
 
-target_link_libraries(${PROJECT_NAME} PRIVATE "Shlwapi.lib")
-target_link_libraries(${PROJECT_NAME} PRIVATE "RuntimeObject.lib")
+target_link_libraries(${PROJECT_NAME} PRIVATE "Shlwapi.lib" "RuntimeObject.lib" "Comctl32.lib")

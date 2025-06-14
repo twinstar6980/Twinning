@@ -1,5 +1,5 @@
 -- fmt
--- 11.1.4 123913715afeb8a437e6388b4473fcc4753e1c9a
+-- 11.2.0 40626af88bd7df9a5fb80be7b25ac85b122d6c21
 -- https://github.com/fmtlib/fmt
 
 target('third.fmt', function()

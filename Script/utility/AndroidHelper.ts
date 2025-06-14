@@ -61,7 +61,7 @@ namespace Twinning.Script.AndroidHelper {
 		local: string,
 		remote: string,
 	): void {
-		KernelX.Storage.remove(local);
+		KernelX.Storage.remove_if(local);
 		let local_parent = PathUtility.parent(local);
 		if (local_parent !== null) {
 			KernelX.Storage.create_directory(local_parent);
