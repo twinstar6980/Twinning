@@ -8,7 +8,7 @@
 
 * 要求
 	
-	* [Flutter 3.29](https://docs.flutter.dev/get-started/install)
+	* [Flutter 3.32](https://docs.flutter.dev/get-started/install)
 
 ## 第三方库使用
 
