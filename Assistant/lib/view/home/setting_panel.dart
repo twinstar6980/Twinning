@@ -73,7 +73,8 @@ class _SettingPanelState extends State<SettingPanel> {
       result = false;
     }
     if (Platform.isMacOS) {
-      await launchUrl(Uri.parse('x-apple.systempreferences:com.apple.ExtensionsPreferences'), mode: LaunchMode.externalApplication);
+      // Ventura 13 and later
+      await launchUrl(Uri.parse('x-apple.systempreferences:com.apple.ExtensionsPreferences?extensionPointIdentifier=com.apple.fileprovider-nonui'), mode: LaunchMode.externalApplication);
       result = null;
     }
     if (Platform.isAndroid) {
