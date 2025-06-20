@@ -36,8 +36,6 @@ export namespace Twinning::Shell::Third::system::windows {
 
 	using $FILEOPENDIALOGOPTIONS = ::FILEOPENDIALOGOPTIONS;
 
-	inline constexpr auto $HRESULT_FROM_WIN32 = ::HRESULT_FROM_WIN32;
-
 	inline auto const $LoadLibraryW = ::LoadLibraryW;
 
 	inline auto const $FreeLibrary = ::FreeLibrary;
@@ -99,6 +97,12 @@ export namespace Twinning::Shell::Third::system::windows {
 	inline auto const $CLSID_FileOpenDialog = ::CLSID_FileOpenDialog;
 
 	inline auto const $CLSID_FileSaveDialog = ::CLSID_FileSaveDialog;
+
+	inline auto $HRESULT_FROM_WIN32 (
+		unsigned long x
+	) -> ::HRESULT {
+		return HRESULT_FROM_WIN32(x);
+	}
 
 	template <typename T>
 	inline auto $IID_PPV_ARGS_Helper (

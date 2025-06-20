@@ -98,6 +98,7 @@ function apply_common_setting()
 	set_policy('build.warning', true)
 	set_encodings('utf-8')
 	set_languages('c17', 'cxx23')
+	set_symbols('hidden')
 end
 
 function apply_condition_definition_basic(target)
@@ -116,9 +117,21 @@ end
 
 function apply_compiler_option_basic(target)
 	local m = load_m(target)
+	target:add(
+		'cxflags',
+		'-fPIC', -- need for dynamic library
+		{ private = true }
+	)
 	if m.system:is('windows') then
 		target:add(
+			'ldflags',
+			'-municode', -- enable unicode mode
+			{ private = true }
+		)
+		target:add(
 			'defines',
+			'UNICODE', -- enable unicode mode
+			'_UNICODE', -- enable unicode mode
 			'NOMINMAX', -- suppress windows's min|max macro
 			'_WINSOCKAPI_', -- suppress winsock.h
 			'_UCRT_NOISY_NAN', -- enable legacy NAN macro in Windows SDK 26100+
@@ -127,12 +140,6 @@ function apply_compiler_option_basic(target)
 		)
 	end
 	if m.system:is('linux', 'macintosh', 'android', 'iphone') then
-		target:add(
-			'cxflags',
-			'-fPIC', -- need for dynamic library
-			'-fvisibility=hidden', -- hide symbol in default
-			{ private = true }
-		)
 		target:add(
 			'defines',
 			'_GNU_SOURCE', -- enable GNU feature

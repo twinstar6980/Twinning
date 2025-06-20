@@ -8,17 +8,17 @@
 
 * 要求
 	
-	* [xmake 2.9](https://xmake.io/#/)
+	* [xmake 3.0](https://xmake.io/#/)
 	
-	* [Clang 19.1 & WinAPI](https://visualstudio.microsoft.com/downloads/) for `Windows`
+	* [LLVM 20.1 (MinGW-ucrt)](https://github.com/mstorsjo/llvm-mingw) for `Windows`
 	
-	* [Clang 20.1 & POSIX](https://llvm.org/) for `Linux`
+	* [LLVM 20.1](https://llvm.org/) for `Linux`
 	
-	* [Clang 20.1 & POSIX](https://llvm.org/) for `Macintosh`
+	* [LLVM 20.1 (SDK 15.5)](https://llvm.org/) for `Macintosh`
 	
-	* [Clang 19.0 & POSIX (NDK 28.1)](https://developer.android.com/ndk/downloads) for `Android`
+	* [LLVM 19.0 (NDK 28.1)](https://developer.android.com/ndk/downloads) for `Android`
 	
-	* [Clang 20.1 & POSIX](https://llvm.org/) for `Iphone`
+	* [LLVM 20.1 (SDK 18.5)](https://llvm.org/) for `Iphone`
 
 ## 第三方库使用
 

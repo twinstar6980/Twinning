@@ -32,6 +32,7 @@ target('shell', function()
 			{}
 		)
 		add_links(
+			'uuid',
 			'Ole32',
 			'User32',
 			{ private = true }

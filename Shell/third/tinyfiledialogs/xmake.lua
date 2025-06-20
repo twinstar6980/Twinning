@@ -24,7 +24,7 @@ target('third.tinyfiledialogs', function()
 			'ComDlg32',
 			'Ole32',
 			'User32',
-			'shell32',
+			'Shell32',
 			{ private = true }
 		)
 	end

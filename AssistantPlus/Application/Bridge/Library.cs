@@ -38,9 +38,11 @@ namespace AssistantPlus.Bridge {
 		) {
 			GF.AssertTest(!this.State());
 			var handle = PlatformInvoke.Kernel32.LoadLibrary($"{path}.");
+			GF.AssertTest(handle != IntPtr.Zero);
 			var symbol = default(Service*);
 			try {
-				symbol = (Service*)PlatformInvoke.Kernel32.GetProcAddress(handle, "?service@Interface@Kernel@Twinning@@3UService@123@A");
+				symbol = (Service*)PlatformInvoke.Kernel32.GetProcAddress(handle, "_ZN8Twinning6Kernel9Interface7serviceE");
+				GF.AssertTest(symbol != null);
 			}
 			catch (Exception) {
 				PlatformInvoke.Kernel32.FreeLibrary(handle);

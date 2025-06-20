@@ -26,6 +26,8 @@
 
   <ItemGroup>
     <Content Include="Asset\Library\Forwarder.dll" />
+    <Content Include="Asset\Library\libc++.dll" />
+    <Content Include="Asset\Library\libunwind.dll" />
     <Content Include="Asset\Logo.ico" />
     <Content Include="Asset\Logo.png" />
     <Content Include="Asset\Logo\Square150x150Logo.scale-100.png" />

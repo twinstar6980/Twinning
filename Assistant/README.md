@@ -16,12 +16,10 @@
 
 ## 说明
 
-* 关于 Android 平台的必要说明
+* 内置的动态库依赖
 	
-	自 `Android 7+` 起，系统会对应用的动态库加载行为加以限制，应用只能加载 `default_library_paths` 与 `permitted_paths` 中的库文件，并且对于后者必须指定绝对路径而不允许只指定库名。
+	应用内包含了 `Kernel` 动态库所依赖的库文件，这些库文件应与 `Kernel` 编译时所依赖的相匹配。
 	
-	因此，为了实现动态加载 Kernel 库文件的需求，应用会在每次运行时将指定的库文件复制至 `/data/user/<user>/<package>/cache` 中（该目录位于 `permitted_paths` 之中）；并且在应用打包时也必须包含一份 `libc++_shared.so` 文件。
+	* `Windows` - `libc++.dll` & `libunwind.dll` @ `llvm-mingw-20250613-ucrt-x86_64` 。
 	
-	> 当前项目中包含的 libc++_shared.so 版本为 NDK 28.1 。
-	
-	> 具体参阅 [Android 文档](https://source.android.com/docs/core/architecture/vndk/linker-namespace) 。
+	* `Android` - `libc++_shared.so` @ `Android NDK 28.1` 。

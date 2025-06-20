@@ -51,14 +51,7 @@ export namespace Twinning::Shell::Bridge {
 			m_handle{},
 			m_symbol{} {
 			thiz.m_handle.open(path);
-			thiz.m_symbol = thiz.m_handle.lookup<Service>(
-				#if defined M_system_windows
-				"?service@Interface@Kernel@Twinning@@3UService@123@A"
-				#endif
-				#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-				"_ZN8Twinning6Kernel9Interface7serviceE"
-				#endif
-			);
+			thiz.m_symbol = thiz.m_handle.lookup<Service>("_ZN8Twinning6Kernel9Interface7serviceE");
 			thiz.m_symbol->initialize();
 		}
 

@@ -7,7 +7,7 @@ module;
 
 #include <Windows.h>
 #include <ShlObj.h>
-#include <corecrt_wstdio.h>
+#include <stdio.h>
 
 #pragma clang diagnostic pop
 

@@ -72,12 +72,7 @@ namespace Twinning::Kernel::Interface {
 	#pragma clang diagnostic ignored "-Wextern-initializer"
 	#pragma clang diagnostic ignored "-Wmissing-variable-declarations"
 
-	#if defined M_system_windows
-	__declspec(dllexport)
-	#endif
-	#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 	__attribute__((visibility("default")))
-	#endif
 	extern "C++" Service service = Service{
 		.executor = nullptr,
 		.initialize = [] () {

@@ -43,6 +43,7 @@ export namespace Twinning::Kernel {
 			return std::string{source};
 			#endif
 		}
+
 	}
 
 	#pragma endregion

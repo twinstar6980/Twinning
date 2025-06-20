@@ -43,7 +43,7 @@
 			x:FieldModifier="public"
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
-			Width="352"
+			MinWidth="352"
 			Padding="0,-4,0,0"
 			Orientation="Vertical"
 			Spacing="0"
@@ -373,15 +373,15 @@
 		<my:DividerSizer
 			SizerOrientation="Vertical"
 			SizerInverted="False"
-			SizerValue="{x:Bind uPackagePanel.Width, Mode=TwoWay}"
-			SizerMinimum="{x:Bind uPackagePanel.Width, Mode=OneTime}"
+			SizerValue="{x:Bind uPackagePanel.MinWidth, Mode=TwoWay}"
+			SizerMinimum="{x:Bind uPackagePanel.MinWidth, Mode=OneTime}"
 			/>
 		<my:Stack
 			x:Name="uPartPanel"
 			x:FieldModifier="public"
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
-			Width="352"
+			MinWidth="352"
 			Padding="0,-4,0,0"
 			Orientation="Vertical"
 			Spacing="0"
@@ -636,15 +636,15 @@
 		<my:DividerSizer
 			SizerOrientation="Vertical"
 			SizerInverted="False"
-			SizerValue="{x:Bind uPartPanel.Width, Mode=TwoWay}"
-			SizerMinimum="{x:Bind uPartPanel.Width, Mode=OneTime}"
+			SizerValue="{x:Bind uPartPanel.MinWidth, Mode=TwoWay}"
+			SizerMinimum="{x:Bind uPartPanel.MinWidth, Mode=OneTime}"
 			/>
 		<my:Stack
 			x:Name="uGroupPanel"
 			x:FieldModifier="public"
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
-			Width="352"
+			MinWidth="352"
 			Padding="0,-4,0,0"
 			Orientation="Vertical"
 			Spacing="0"
@@ -929,8 +929,8 @@
 		<my:DividerSizer
 			SizerOrientation="Vertical"
 			SizerInverted="False"
-			SizerValue="{x:Bind uGroupPanel.Width, Mode=TwoWay}"
-			SizerMinimum="{x:Bind uGroupPanel.Width, Mode=OneTime}"
+			SizerValue="{x:Bind uGroupPanel.MinWidth, Mode=TwoWay}"
+			SizerMinimum="{x:Bind uGroupPanel.MinWidth, Mode=OneTime}"
 			/>
 		<my:Stack
 			x:Name="uResourcePanel"

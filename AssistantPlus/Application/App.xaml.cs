@@ -74,6 +74,7 @@ namespace AssistantPlus {
 					await App.Setting.Reset();
 				}
 				await App.Setting.Save();
+				PlatformInvoke.Kernel32.AddDllDirectory($"{App.PackageDirectory}/Asset/Library");
 				this.RegisterNotification();
 				App.MainWindow = new ();
 				window = App.MainWindow;

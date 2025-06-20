@@ -54,7 +54,6 @@ namespace AssistantPlus {
 		public async Task Reset (
 		) {
 			this.Data = SettingProvider.CreateDefaultData();
-			this.State = SettingProvider.CreateDefaultState();
 			return;
 		}
 

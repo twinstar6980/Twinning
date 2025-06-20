@@ -28,7 +28,7 @@
 			x:FieldModifier="public"
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
-			Width="352"
+			MinWidth="352"
 			Padding="0,-4,0,0"
 			Orientation="Vertical"
 			Spacing="0"
@@ -126,8 +126,8 @@
 		<my:DividerSizer
 			SizerOrientation="Vertical"
 			SizerInverted="False"
-			SizerValue="{x:Bind uImagePanel.Width, Mode=TwoWay}"
-			SizerMinimum="{x:Bind uImagePanel.Width, Mode=OneTime}"
+			SizerValue="{x:Bind uImagePanel.MinWidth, Mode=TwoWay}"
+			SizerMinimum="{x:Bind uImagePanel.MinWidth, Mode=OneTime}"
 			/>
 		<my:Stack
 			x:Name="uStagePanel"
@@ -715,15 +715,15 @@
 		<my:DividerSizer
 			SizerOrientation="Vertical"
 			SizerInverted="True"
-			SizerValue="{x:Bind uSpritePanel.Width, Mode=TwoWay}"
-			SizerMinimum="{x:Bind uSpritePanel.Width, Mode=OneTime}"
+			SizerValue="{x:Bind uSpritePanel.MinWidth, Mode=TwoWay}"
+			SizerMinimum="{x:Bind uSpritePanel.MinWidth, Mode=OneTime}"
 			/>
 		<my:Stack
 			x:Name="uSpritePanel"
 			x:FieldModifier="public"
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
-			Width="352"
+			MinWidth="352"
 			Padding="0,-4,0,0"
 			Orientation="Vertical"
 			Spacing="0"

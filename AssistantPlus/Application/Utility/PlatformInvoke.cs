@@ -10,6 +10,11 @@ namespace AssistantPlus.Utility {
 		public static class Kernel32 {
 
 			[DllImport("Kernel32.dll", CharSet = CharSet.Unicode)]
+			public static extern IntPtr AddDllDirectory (
+				String NewDirectory
+			);
+
+			[DllImport("Kernel32.dll", CharSet = CharSet.Unicode)]
 			public static extern IntPtr LoadLibrary (
 				String lpLibFileName
 			);

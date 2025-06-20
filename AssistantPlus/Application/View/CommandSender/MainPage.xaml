@@ -28,7 +28,7 @@
 			x:FieldModifier="public"
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
-			Width="352"
+			MinWidth="352"
 			Padding="0,-4,0,0"
 			Orientation="Vertical"
 			Spacing="0"
@@ -140,8 +140,8 @@
 		<my:DividerSizer
 			SizerOrientation="Vertical"
 			SizerInverted="False"
-			SizerValue="{x:Bind uMethodPanel.Width, Mode=TwoWay}"
-			SizerMinimum="{x:Bind uMethodPanel.Width, Mode=OneTime}"
+			SizerValue="{x:Bind uMethodPanel.MinWidth, Mode=TwoWay}"
+			SizerMinimum="{x:Bind uMethodPanel.MinWidth, Mode=OneTime}"
 			/>
 		<my:Stack
 			x:Name="uCommandPanel"
