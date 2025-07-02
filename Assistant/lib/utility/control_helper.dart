@@ -20,6 +20,17 @@ class ControlHelper {
 
   // #region dialog
 
+  static Future<TResult?> showDialogAsFull<TResult>(
+    BuildContext     context,
+    CustomFullDialog widget,
+  ) async {
+    return await showDialog<TResult>(
+      useSafeArea: false,
+      context: context,
+      builder: (context) => widget,
+    );
+  }
+
   static Future<TResult?> showDialogAsModal<TResult>(
     BuildContext      context,
     CustomModalDialog widget,

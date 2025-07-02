@@ -21,12 +21,12 @@ namespace AssistantPlus {
 	// ----------------
 
 	public record ModuleInformation {
-		public ModuleType Type     = default!;
-		public String     Icon     = default!;
-		public String     Name     = default!;
-		public Type       MainPage = default!;
-		[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor | DynamicallyAccessedMemberTypes.PublicProperties)]
-		public Type SettingPanel = default!;
+		public ModuleType                        Type                  = default!;
+		public String                            Icon                  = default!;
+		public String                            Name                  = default!;
+		public Type                              MainPage              = default!;
+		public Func<UIElement>                   SettingPanel          = default!;
+		public Func<List<String>, List<String>?> GenerateForwardOption = default!;
 	}
 
 	#endregion
@@ -60,48 +60,66 @@ namespace AssistantPlus {
 
 	public static class ModuleHelper {
 
-		public static readonly List<ModuleInformation> Information = [
+		private static readonly List<ModuleInformation> Information = [
 			new () {
 				Type = ModuleType.ModdingWorker,
 				Icon = FluentIconGlyph.ProvisioningPackage,
 				Name = "Modding Worker",
 				MainPage = typeof(View.ModdingWorker.MainPage),
-				SettingPanel = typeof(View.ModdingWorker.SettingPanel),
+				SettingPanel = () => new View.ModdingWorker.SettingPanel() {
+					Data = App.Setting.Data.ModdingWorker,
+				},
+				GenerateForwardOption = (resource) => ["-AdditionalArgument", ..resource],
 			},
 			new () {
 				Type = ModuleType.CommandSender,
 				Icon = FluentIconGlyph.Send,
 				Name = "Command Sender",
 				MainPage = typeof(View.CommandSender.MainPage),
-				SettingPanel = typeof(View.CommandSender.SettingPanel),
+				SettingPanel = () => new View.CommandSender.SettingPanel() {
+					Data = App.Setting.Data.CommandSender,
+				},
+				GenerateForwardOption = (resource) => null,
 			},
 			new () {
 				Type = ModuleType.ResourceShipper,
 				Icon = FluentIconGlyph.Share,
 				Name = "Resource Shipper",
 				MainPage = typeof(View.ResourceShipper.MainPage),
-				SettingPanel = typeof(View.ResourceShipper.SettingPanel),
+				SettingPanel = () => new View.ResourceShipper.SettingPanel() {
+					Data = App.Setting.Data.ResourceShipper,
+				},
+				GenerateForwardOption = (resource) => ["-Resource", ..resource],
 			},
 			new () {
 				Type = ModuleType.AnimationViewer,
 				Icon = FluentIconGlyph.HomeGroup,
 				Name = "Animation Viewer",
 				MainPage = typeof(View.AnimationViewer.MainPage),
-				SettingPanel = typeof(View.AnimationViewer.SettingPanel),
+				SettingPanel = () => new View.AnimationViewer.SettingPanel() {
+					Data = App.Setting.Data.AnimationViewer,
+				},
+				GenerateForwardOption = (resource) => resource.Count != 1 || !new Regex(@"(\.pam\.json)$", RegexOptions.IgnoreCase).IsMatch(resource[0]) || !StorageHelper.ExistFile(resource[0]) ? null : ["-AnimationFile", resource[0]],
 			},
 			new () {
 				Type = ModuleType.ReflectionDescriptor,
 				Icon = FluentIconGlyph.Library,
 				Name = "Reflection Descriptor",
 				MainPage = typeof(View.ReflectionDescriptor.MainPage),
-				SettingPanel = typeof(View.ReflectionDescriptor.SettingPanel),
+				SettingPanel = () => new View.ReflectionDescriptor.SettingPanel() {
+					Data = App.Setting.Data.ReflectionDescriptor,
+				},
+				GenerateForwardOption = (resource) => resource.Count != 1 || !new Regex(@"(\.json)$", RegexOptions.IgnoreCase).IsMatch(resource[0]) || !StorageHelper.ExistFile(resource[0]) ? null : ["-DescriptorFile", resource[0]],
 			},
 			new () {
 				Type = ModuleType.PackageBuilder,
 				Icon = FluentIconGlyph.DialShape3,
 				Name = "Package Builder",
 				MainPage = typeof(View.PackageBuilder.MainPage),
-				SettingPanel = typeof(View.PackageBuilder.SettingPanel),
+				SettingPanel = () => new View.PackageBuilder.SettingPanel() {
+					Data = App.Setting.Data.PackageBuilder,
+				},
+				GenerateForwardOption = (resource) => resource.Count != 1 || !new Regex(@"(\.pvz2_package_project)$", RegexOptions.IgnoreCase).IsMatch(resource[0]) || !StorageHelper.ExistDirectory(resource[0]) ? null : ["-ProjectDirectory", resource[0]],
 			},
 		];
 

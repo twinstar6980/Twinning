@@ -83,11 +83,11 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		public async void Update (
 		) {
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uConversion_ItemsSource),
 				nameof(this.uConversion_SelectedItem),
-				nameof(this.uPath_Text)
-			);
+				nameof(this.uPath_Text),
+			]);
 			return;
 		}
 
@@ -126,9 +126,9 @@ namespace AssistantPlus.View.PackageBuilder {
 		) {
 			var senders = sender.As<TextBox>();
 			this.Value.Path = senders.Text;
-			this.NotifyPropertyChanged(
-				nameof(this.uPath_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uPath_Text),
+			]);
 			return;
 		}
 

@@ -128,9 +128,9 @@ namespace AssistantPlus.View.CommandSender {
 			}
 			if (optionParallelForward != null) {
 				this.ParallelForward = optionParallelForward.AsNotNull();
-				this.NotifyPropertyChanged(
-					nameof(this.uParallelForward_IsChecked)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uParallelForward_IsChecked),
+				]);
 			}
 			if (optionCommand != null) {
 				foreach (var item in optionCommand) {
@@ -241,6 +241,9 @@ namespace AssistantPlus.View.CommandSender {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.ParallelForward = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uParallelForward_IsChecked),
+			]);
 			return;
 		}
 
@@ -452,9 +455,9 @@ namespace AssistantPlus.View.CommandSender {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.EnableBatch.Value = senders.IsChecked.AsNotNull();
-			this.NotifyPropertyChanged(
-				nameof(this.uEnableBatch_IsChecked)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uEnableBatch_IsChecked),
+			]);
 			return;
 		}
 
@@ -477,9 +480,9 @@ namespace AssistantPlus.View.CommandSender {
 										GF.AssertTest(argumentIndex != -1);
 										this.ArgumentValue[argumentIndex].Value = ConfigurationHelper.ParseArgumentValueJson(this.ItemConfiguration.Argument[argumentIndex].Type, argument.Value);
 									}
-									this.NotifyPropertyChanged(
-										nameof(this.uArgumentPanel_Stamp)
-									);
+									this.NotifyPropertyChanged([
+										nameof(this.uArgumentPanel_Stamp),
+									]);
 									return;
 								};
 							})

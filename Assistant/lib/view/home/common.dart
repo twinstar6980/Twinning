@@ -1,9 +1,113 @@
 import '/common.dart';
 import '/utility/control_helper.dart';
+import '/utility/system_overlay_helper.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
+
+// ----------------
+
+class CustomFullDialog extends StatefulWidget {
+
+  const CustomFullDialog({
+    super.key,
+    required this.title,
+    required this.contentBuilder,
+  });
+
+  // ----------------
+
+  final String                                                              title;
+  final List<Widget> Function(BuildContext, Void Function(Void Function())) contentBuilder;
+
+  // ----------------
+
+  @override
+  createState() => _CustomFullDialogState();
+
+}
+
+class _CustomFullDialogState extends State<CustomFullDialog> {
+
+  late ScrollController _scrollController;
+
+  // ----------------
+
+  @override
+  initState() {
+    super.initState();
+    this._scrollController = ScrollController();
+    return;
+  }
+
+  @override
+  didUpdateWidget(oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    this._scrollController.dispose();
+    this._scrollController = ScrollController();
+    return;
+  }
+
+  @override
+  dispose() {
+    this._scrollController.dispose();
+    super.dispose();
+    return;
+  }
+
+  @override
+  build(context) {
+    return Dialog.fullscreen(
+      child: Scaffold(
+        appBar: AppBar(
+          systemOverlayStyle: SystemOverlayHelper.query(Theme.of(context).colorScheme.brightness),
+          centerTitle: false,
+          elevation: 3,
+          scrolledUnderElevation: 3,
+          backgroundColor: Colors.transparent,
+          automaticallyImplyLeading: false,
+          titleSpacing: 0,
+          title: CustomTitleBar(
+            title: this.widget.title,
+            leading: Builder(
+              builder: (context) => IconButton(
+                tooltip: 'Back',
+                icon: Icon(IconSymbols.arrow_back),
+                onPressed: () async {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+          ),
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: Scrollbar(
+                interactive: true,
+                controller: this._scrollController,
+                child: SingleChildScrollView(
+                  controller: this._scrollController,
+                  child: StatefulBuilder(
+                    builder: (context, setState) => Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ...this.widget.contentBuilder(context, setState),
+                        SizedBox(height: MediaQuery.of(context).viewPadding.bottom),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+}
 
 // ----------------
 
@@ -173,7 +277,7 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     ...this.widget.contentBuilder(context, setState),
-                    SizedBox(height: MediaQuery.viewPaddingOf(context).bottom),
+                    SizedBox(height: MediaQuery.of(context).viewPadding.bottom),
                   ],
                 ),
               ),

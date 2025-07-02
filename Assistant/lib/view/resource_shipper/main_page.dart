@@ -265,99 +265,118 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
             disabledElevation: 0,
             child: Icon(IconSymbols.attach_file),
             onPressed: () async {
-              await ControlHelper.showBottomSheetAsModal(context, CustomModalBottomSheet(
+              await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
                 title: 'Resource',
                 contentBuilder: (context, setStateForPanel) => [
-                  SizedBox(height: 8),
-                  ListTile(
-                    contentPadding: EdgeInsets.fromLTRB(24, 0, 24, 0),
-                    leading: Icon(IconSymbols.tab_close),
-                    title: Text(
-                      'Remove All',
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    onTap: () async {
-                      if (await ControlHelper.showDialogForConfirm(context)) {
-                        await this._removeResource(this._resource.map((value) => value.$1).toList());
-                        setStateForPanel(() {});
-                      }
-                    },
-                  ),
-                  ListTile(
-                    contentPadding: EdgeInsets.fromLTRB(24, 0, 24, 0),
-                    leading: Icon(IconSymbols.note_stack_add),
-                    title: Text(
-                      'Append New',
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    onTap: () async {
-                      var item = <String>[];
-                      var canContinue = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
-                        title: 'Append New',
-                        contentBuilder: (context, setState) => [
-                          CustomTextField(
-                            keyboardType: TextInputType.multiline,
-                            inputFormatters: [],
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                              filled: false,
-                              border: OutlineInputBorder(),
-                            ),
-                            value: ConvertHelper.makeStringListToStringWithLine(item),
-                            onChanged: (value) async {
-                              item = ConvertHelper.parseStringListFromStringWithLine(value).map(StorageHelper.regularize).toList();
-                              setState(() {});
-                            },
+                  SizedBox(height: 12),
+                  Row(
+                    children: [
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: FilledButton.icon(
+                          icon: Icon(IconSymbols.tab_close),
+                          label: Text(
+                            'Remove All',
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ],
-                        actionBuilder: (context) => [
-                          TextButton(
-                            child: Text('Cancel'),
-                            onPressed: () => Navigator.pop(context, false),
+                          onPressed: () async {
+                            if (await ControlHelper.showDialogForConfirm(context)) {
+                              await this._removeResource(this._resource.map((value) => value.$1).toList());
+                              setStateForPanel(() {});
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: FilledButton.icon(
+                          icon: Icon(IconSymbols.note_stack_add),
+                          label: Text(
+                            'Append New',
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          TextButton(
-                            child: Text('Continue'),
-                            onPressed: () => Navigator.pop(context, true),
+                          onPressed: () async {
+                            var item = <String>[];
+                            var canContinue = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
+                              title: 'Append New',
+                              contentBuilder: (context, setState) => [
+                                CustomTextField(
+                                  keyboardType: TextInputType.multiline,
+                                  inputFormatters: [],
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                                    filled: false,
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  value: ConvertHelper.makeStringListToStringWithLine(item),
+                                  onChanged: (value) async {
+                                    item = ConvertHelper.parseStringListFromStringWithLine(value).map(StorageHelper.regularize).toList();
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                              actionBuilder: (context) => [
+                                TextButton(
+                                  child: Text('Cancel'),
+                                  onPressed: () => Navigator.pop(context, false),
+                                ),
+                                TextButton(
+                                  child: Text('Continue'),
+                                  onPressed: () => Navigator.pop(context, true),
+                                ),
+                              ],
+                            )) ?? false;
+                            if (canContinue) {
+                              await this._appendResource(item);
+                              setStateForPanel(() {});
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                    ],
+                  ),
+                  SizedBox(height: 12),
+                  Row(
+                    children: [
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: FilledButton.tonalIcon(
+                          icon: Icon(IconSymbols.note_add),
+                          label: Text(
+                            'Pick File',
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ],
-                      )) ?? false;
-                      if (canContinue) {
-                        await this._appendResource(item);
-                        setStateForPanel(() {});
-                      }
-                    },
+                          onPressed: () async {
+                            var item = await StorageHelper.pickLoadFile(context, 'ResourceShipper.Resource');
+                            if (item != null) {
+                              await this._appendResource([item]);
+                              setStateForPanel(() {});
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: FilledButton.tonalIcon(
+                          icon: Icon(IconSymbols.create_new_folder),
+                          label: Text(
+                            'Pick Directory',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          onPressed: () async {
+                            var item = await StorageHelper.pickLoadDirectory(context, 'ResourceShipper.Resource');
+                            if (item != null) {
+                              await this._appendResource([item]);
+                              setStateForPanel(() {});
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                    ],
                   ),
-                  ListTile(
-                    contentPadding: EdgeInsets.fromLTRB(24, 0, 24, 0),
-                    leading: Icon(IconSymbols.note_add),
-                    title: Text(
-                      'Append File',
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    onTap: () async {
-                      var item = await StorageHelper.pickLoadFile(context, 'ResourceShipper.Resource');
-                      if (item != null) {
-                        await this._appendResource([item]);
-                        setStateForPanel(() {});
-                      }
-                    },
-                  ),
-                  ListTile(
-                    contentPadding: EdgeInsets.fromLTRB(24, 0, 24, 0),
-                    leading: Icon(IconSymbols.create_new_folder),
-                    title: Text(
-                      'Append Directory',
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    onTap: () async {
-                      var item = await StorageHelper.pickLoadDirectory(context, 'ResourceShipper.Resource');
-                      if (item != null) {
-                        await this._appendResource([item]);
-                        setStateForPanel(() {});
-                      }
-                    },
-                  ),
-                  SizedBox(height: 8),
+                  SizedBox(height: 12),
                   Divider(height: 1, indent: 16, endIndent: 16),
                   SizedBox(height: 8),
                   ...this._resource.map((value) => Tooltip(

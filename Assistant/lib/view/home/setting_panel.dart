@@ -6,6 +6,7 @@ import '/utility/storage_helper.dart';
 import '/utility/permission_helper.dart';
 import '/utility/control_helper.dart';
 import '/view/home/common.dart';
+import '/view/home/about_panel.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -601,7 +602,7 @@ class _SettingPanelState extends State<SettingPanel> {
           ],
         ),
         CustomSettingItem(
-          icon: IconSymbols.next_plan,
+          icon: IconSymbols.touch_app,
           label: 'Forwarder Immediate Jump',
           content: [
             Text(
@@ -627,6 +628,122 @@ class _SettingPanelState extends State<SettingPanel> {
                 'Enable',
                 overflow: TextOverflow.ellipsis,
               ),
+            ),
+          ],
+        ),
+        CustomSettingLabel(
+          label: 'Other',
+          action: null,
+        ),
+        CustomSettingItem(
+          icon: IconSymbols.info,
+          label: 'About',
+          content: [],
+          onTap: null,
+          panelBuilder: (context, setStateForPanel) => [
+            AboutPanel(),
+          ],
+        ),
+        CustomSettingItem(
+          icon: IconSymbols.settings,
+          label: 'Setting File',
+          content: [],
+          onTap: null,
+          panelBuilder: (context, setStateForPanel) => [
+            ListTile(
+              title: Text(
+                'Reload',
+                overflow: TextOverflow.ellipsis,
+              ),
+              onTap: () async {
+                Navigator.pop(context);
+                await setting.load();
+                await setting.save();
+                await ControlHelper.showSnackBar(setting.state.mApplicationNavigatorKey.currentContext!, 'Done!');
+              },
+            ),
+            ListTile(
+              title: Text(
+                'Reset',
+                overflow: TextOverflow.ellipsis,
+              ),
+              onTap: () async {
+                Navigator.pop(context);
+                if (await ControlHelper.showDialogForConfirm(context)) {
+                  await setting.reset();
+                  await setting.save();
+                  await ControlHelper.showSnackBar(setting.state.mApplicationNavigatorKey.currentContext!, 'Done!');
+                }
+              },
+            ),
+            ListTile(
+              title: Text(
+                'Import',
+                overflow: TextOverflow.ellipsis,
+              ),
+              onTap: () async {
+                Navigator.pop(context);
+                var file = await StorageHelper.pickLoadFile(context, 'Application.SettingFile');
+                if (file != null) {
+                  await setting.load(file: file);
+                  await setting.save();
+                  await ControlHelper.showSnackBar(setting.state.mApplicationNavigatorKey.currentContext!, 'Done!');
+                }
+              },
+            ),
+            ListTile(
+              title: Text(
+                'Export',
+                overflow: TextOverflow.ellipsis,
+              ),
+              onTap: () async {
+                Navigator.pop(context);
+                var file = await StorageHelper.pickSaveFile(context, 'Application.SettingFile');
+                if (file != null) {
+                  await setting.save(file: file, apply: false);
+                  await ControlHelper.showSnackBar(setting.state.mApplicationNavigatorKey.currentContext!, 'Done!');
+                }
+              },
+            ),
+          ],
+        ),
+        CustomSettingItem(
+          icon: IconSymbols.folder_special,
+          label: 'Shared Directory',
+          content: [],
+          onTap: null,
+          panelBuilder: (context, setStateForPanel) => [
+            ListTile(
+              title: Text(
+                'Reveal',
+                overflow: TextOverflow.ellipsis,
+              ),
+              onTap: () async {
+                Navigator.pop(context);
+                await ControlHelper.showDialogForRevealStoragePath(context, 'Shared Directory', await StorageHelper.queryApplicationSharedDirectory());
+              },
+            ),
+          ],
+        ),
+        CustomSettingItem(
+          icon: IconSymbols.folder_delete,
+          label: 'Cache Directory',
+          content: [],
+          onTap: null,
+          panelBuilder: (context, setStateForPanel) => [
+            ListTile(
+              title: Text(
+                'Clear',
+                overflow: TextOverflow.ellipsis,
+              ),
+              onTap: () async {
+                Navigator.pop(context);
+                var cacheDirectory = await StorageHelper.queryApplicationCacheDirectory();
+                if (await StorageHelper.exist(cacheDirectory)) {
+                  await StorageHelper.remove(cacheDirectory);
+                }
+                await ControlHelper.showSnackBar(setting.state.mApplicationNavigatorKey.currentContext!, 'Done!');
+              },
             ),
           ],
         ),

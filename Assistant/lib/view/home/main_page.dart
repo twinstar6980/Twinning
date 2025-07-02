@@ -8,7 +8,6 @@ import '/view/home/common.dart';
 import '/view/home/blank_page.dart';
 import '/view/home/launcher_panel.dart';
 import '/view/home/setting_panel.dart';
-import '/view/home/about_panel.dart';
 import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:provider/provider.dart';
@@ -253,7 +252,7 @@ class _MainPageState extends State<MainPage> {
         automaticallyImplyLeading: false,
         titleSpacing: 0,
         title: CustomTitleBar(
-          title: this._tabList.isEmpty ? '' : this._tabList[this._tabIndex].$1,
+          title: this._tabList.isEmpty ? 'Home' : this._tabList[this._tabIndex].$1,
           leading: Builder(
             builder: (context) => IconButton(
               tooltip: 'Navigation',
@@ -399,25 +398,10 @@ class _MainPageState extends State<MainPage> {
             action: [],
             onPressed: () async {
               Navigator.pop(context);
-              await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
+              await ControlHelper.showDialogAsFull<Void>(context, CustomFullDialog(
                 title: 'Setting',
                 contentBuilder: (context, setState) => [
                   SettingPanel(),
-                ],
-              ));
-            },
-          ),
-          CustomNavigationDrawerItem(
-            selected: false,
-            icon: IconSymbols.info,
-            label: 'About',
-            action: [],
-            onPressed: () async {
-              Navigator.pop(context);
-              await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
-                title: 'About',
-                contentBuilder: (context, setState) => [
-                  AboutPanel(),
                 ],
               ));
             },

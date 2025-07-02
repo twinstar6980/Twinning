@@ -85,7 +85,7 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		public async void Update (
 		) {
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uVersionNumber_SelectedItem),
 				nameof(this.uVersionExtendedTextureInformationForPvz2Cn_SelectedItem),
 				nameof(this.uCompressionGeneral_IsChecked),
@@ -94,8 +94,8 @@ namespace AssistantPlus.View.PackageBuilder {
 				nameof(this.uManifestType_SelectedIndex),
 				nameof(this.uManifestSuffix_Text),
 				nameof(this.uCategoryResolution_Text),
-				nameof(this.uCategoryLocale_Text)
-			);
+				nameof(this.uCategoryLocale_Text),
+			]);
 			return;
 		}
 
@@ -163,6 +163,9 @@ namespace AssistantPlus.View.PackageBuilder {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.Value.Compression.General = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uCompressionGeneral_IsChecked),
+			]);
 			return;
 		}
 
@@ -180,6 +183,9 @@ namespace AssistantPlus.View.PackageBuilder {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.Value.Compression.Texture = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uCompressionTexture_IsChecked),
+			]);
 			return;
 		}
 
@@ -191,9 +197,9 @@ namespace AssistantPlus.View.PackageBuilder {
 		) {
 			var senders = sender.As<TextBox>();
 			this.Value.Compression.Filter = ConvertHelper.ParseStringListFromStringWithLine(senders.Text);
-			this.NotifyPropertyChanged(
-				nameof(this.uCompressionFilter_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uCompressionFilter_Text),
+			]);
 			return;
 		}
 
@@ -243,9 +249,9 @@ namespace AssistantPlus.View.PackageBuilder {
 			if (senders.Text.Length == 0 || StorageHelper.CheckName(senders.Text)) {
 				this.Value.Manifest.Suffix = senders.Text;
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uManifestSuffix_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uManifestSuffix_Text),
+			]);
 			return;
 		}
 
@@ -265,9 +271,9 @@ namespace AssistantPlus.View.PackageBuilder {
 		) {
 			var senders = sender.As<TextBox>();
 			this.Value.Category.Resolution = ConvertHelper.ParseStringListFromStringWithLine(senders.Text).Select((value) => (ProjectSettingHelper.ParseResolutionString(value, null))).Where((value) => (value != null)).Select(GF.AsNotNull).ToList();
-			this.NotifyPropertyChanged(
-				nameof(this.uCategoryResolution_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uCategoryResolution_Text),
+			]);
 			return;
 		}
 
@@ -285,9 +291,9 @@ namespace AssistantPlus.View.PackageBuilder {
 		) {
 			var senders = sender.As<TextBox>();
 			this.Value.Category.Locale = ConvertHelper.ParseStringListFromStringWithLine(senders.Text).Select((value) => (ProjectSettingHelper.ParseLocaleString(value, null))).Where((value) => (value != null)).Select(GF.AsNotNull).ToList();
-			this.NotifyPropertyChanged(
-				nameof(this.uCategoryLocale_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uCategoryLocale_Text),
+			]);
 			return;
 		}
 

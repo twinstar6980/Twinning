@@ -81,9 +81,9 @@ namespace AssistantPlus.View.PackageBuilder {
 		public async void Update (
 		) {
 			this.uList_ItemsSource = this.Source.Select((value) => (new PackagePartPanelItemController() { Host = this, Name = value })).ToList();
-			this.NotifyPropertyChanged(
-				nameof(this.uList_ItemsSource)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uList_ItemsSource),
+			]);
 			await Task.Delay(40);
 			foreach (var item in this.uList_ItemsSource) {
 				if (this.Value.Contains(item.Name)) {

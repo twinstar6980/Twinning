@@ -41,7 +41,7 @@ class LauncherPanel extends StatelessWidget {
                 tooltip: 'Setting',
                 icon: Icon(IconSymbols.settings),
                 onPressed: () async {
-                  await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
+                  await ControlHelper.showDialogAsFull<Void>(context, CustomFullDialog(
                     title: 'Module Setting',
                     contentBuilder: (context, setStateForSheet) => [
                       ModuleHelper.query(item.type).settingPanel(context),
@@ -54,7 +54,7 @@ class LauncherPanel extends StatelessWidget {
                 tooltip: 'Edit',
                 icon: Icon(IconSymbols.edit),
                 onPressed: () async {
-                  await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
+                  await ControlHelper.showDialogAsFull<Void>(context, CustomFullDialog(
                     title: 'Launcher Configuration',
                     contentBuilder: (context, setStateForSheet) => [
                       LauncherConfigurationPanel(
@@ -106,7 +106,7 @@ class LauncherPanel extends StatelessWidget {
                 tooltip: 'Edit',
                 icon: Icon(IconSymbols.edit),
                 onPressed: () async {
-                  await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
+                  await ControlHelper.showDialogAsFull<Void>(context, CustomFullDialog(
                     title: 'Launcher Configuration',
                     contentBuilder: (context, setStateForSheet) => [
                       LauncherConfigurationPanel(
@@ -164,7 +164,7 @@ class LauncherPanel extends StatelessWidget {
                 tooltip: 'Edit',
                 icon: Icon(IconSymbols.edit),
                 onPressed: () async {
-                  await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
+                  await ControlHelper.showDialogAsFull<Void>(context, CustomFullDialog(
                     title: 'Launcher Configuration',
                     contentBuilder: (context, setStateForSheet) => [
                       LauncherConfigurationPanel(

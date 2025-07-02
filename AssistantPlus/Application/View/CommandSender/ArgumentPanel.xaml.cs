@@ -82,9 +82,9 @@ namespace AssistantPlus.View.CommandSender {
 		) {
 			GF.AssertTest(this.Configuration.Count == this.Value.Count);
 			this.uList_ItemsSource = this.Configuration.Select((value, index) => (new ArgumentPanelItemController() { Host = this, Configuration = value, Value = this.Value[index] })).ToList();
-			this.NotifyPropertyChanged(
-				nameof(this.uList_ItemsSource)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uList_ItemsSource),
+			]);
 			return;
 		}
 

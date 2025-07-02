@@ -72,15 +72,15 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		public async void Update (
 		) {
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uImmediateSelectToggle_IsChecked),
 				nameof(this.uAutomaticPlayToggle_IsChecked),
 				nameof(this.uRepeatPlayToggle_IsChecked),
 				nameof(this.uKeepSpeedToggle_IsChecked),
 				nameof(this.uShowBoundaryToggle_IsChecked),
 				nameof(this.uImageFilterRuleText_Text),
-				nameof(this.uSpriteFilterRuleText_Text)
-			);
+				nameof(this.uSpriteFilterRuleText_Text),
+			]);
 			return;
 		}
 
@@ -100,6 +100,9 @@ namespace AssistantPlus.View.AnimationViewer {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.Data.ImmediateSelect = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uImmediateSelectToggle_IsChecked),
+			]);
 			return;
 		}
 
@@ -119,6 +122,9 @@ namespace AssistantPlus.View.AnimationViewer {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.Data.AutomaticPlay = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uAutomaticPlayToggle_IsChecked),
+			]);
 			return;
 		}
 
@@ -138,6 +144,9 @@ namespace AssistantPlus.View.AnimationViewer {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.Data.RepeatPlay = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uRepeatPlayToggle_IsChecked),
+			]);
 			return;
 		}
 
@@ -157,6 +166,9 @@ namespace AssistantPlus.View.AnimationViewer {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.Data.KeepSpeed = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uKeepSpeedToggle_IsChecked),
+			]);
 			return;
 		}
 
@@ -176,6 +188,9 @@ namespace AssistantPlus.View.AnimationViewer {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.Data.ShowBoundary = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uShowBoundaryToggle_IsChecked),
+			]);
 			return;
 		}
 
@@ -189,9 +204,9 @@ namespace AssistantPlus.View.AnimationViewer {
 		) {
 			var senders = sender.As<TextBox>();
 			this.Data.ImageFilterRule = senders.Text;
-			this.NotifyPropertyChanged(
-				nameof(this.uImageFilterRuleText_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uImageFilterRuleText_Text),
+			]);
 			return;
 		}
 
@@ -211,9 +226,9 @@ namespace AssistantPlus.View.AnimationViewer {
 		) {
 			var senders = sender.As<TextBox>();
 			this.Data.SpriteFilterRule = senders.Text;
-			this.NotifyPropertyChanged(
-				nameof(this.uSpriteFilterRuleText_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uSpriteFilterRuleText_Text),
+			]);
 			return;
 		}
 

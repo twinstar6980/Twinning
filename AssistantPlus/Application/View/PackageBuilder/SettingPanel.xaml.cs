@@ -65,8 +65,8 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		public async void Update (
 		) {
-			this.NotifyPropertyChanged(
-			);
+			this.NotifyPropertyChanged([
+			]);
 			return;
 		}
 

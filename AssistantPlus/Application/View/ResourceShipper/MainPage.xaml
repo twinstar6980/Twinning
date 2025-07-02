@@ -156,7 +156,7 @@
 												HorizontalContentAlignment="Stretch"
 												BorderBrush="Transparent"
 												Background="Transparent"
-												Tag="AppendFile"
+												Tag="PickFile"
 												Click="{x:Bind Controller.uResourceAction_Click}"
 												>
 												<my:Stack
@@ -177,7 +177,7 @@
 														VerticalAlignment="Center"
 														Style="{ThemeResource BodyTextBlockStyle}"
 														TextWrapping="NoWrap"
-														Text="Append File"
+														Text="Pick File"
 														/>
 												</my:Stack>
 											</Button>
@@ -187,7 +187,7 @@
 												HorizontalContentAlignment="Stretch"
 												BorderBrush="Transparent"
 												Background="Transparent"
-												Tag="AppendDirectory"
+												Tag="PickDirectory"
 												Click="{x:Bind Controller.uResourceAction_Click}"
 												>
 												<my:Stack
@@ -208,7 +208,7 @@
 														VerticalAlignment="Center"
 														Style="{ThemeResource BodyTextBlockStyle}"
 														TextWrapping="NoWrap"
-														Text="Append Directory"
+														Text="Pick Directory"
 														/>
 												</my:Stack>
 											</Button>

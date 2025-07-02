@@ -126,9 +126,9 @@ namespace AssistantPlus.View.Home {
 			};
 			frame.NavigateToType(model.MainPage, configuration.Option, new () { IsNavigationStackEnabled = false, TransitionInfoOverride = new DrillInNavigationTransitionInfo() });
 			this.uTab_TabItemsSource.Add(new () { Host = this, Title = configuration.Title, Type = configuration.Type, Frame = frame });
-			this.NotifyPropertyChanged(
-				nameof(this.uBlank_Visibility)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uBlank_Visibility),
+			]);
 			await Task.Delay(40);
 			this.View.uTab.SelectedItem = this.uTab_TabItemsSource.Last();
 			this.View.uTab.CloseButtonOverlayMode = TabViewCloseButtonOverlayMode.OnPointerOver;
@@ -150,9 +150,9 @@ namespace AssistantPlus.View.Home {
 				if (this.uTab_TabItemsSource.Count == 0) {
 					await this.ShowLauncherPanel();
 					await Task.Delay(400);
-					this.NotifyPropertyChanged(
-						nameof(this.uBlank_Visibility)
-					);
+					this.NotifyPropertyChanged([
+						nameof(this.uBlank_Visibility),
+					]);
 				}
 			}
 			return;

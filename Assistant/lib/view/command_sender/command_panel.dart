@@ -210,7 +210,7 @@ class CommandPanel extends StatelessWidget {
                       },
                   ),
                   SizedBox(width: 8),
-                  FilledButton.tonalIcon(
+                  FilledButton.icon(
                     label: Text(
                       'Forward',
                       overflow: TextOverflow.ellipsis,

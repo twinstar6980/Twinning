@@ -222,7 +222,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			this.DescriptorMap = descriptorMap;
 			this.uObjectList_ItemsSource = this.DescriptorArchive.Object.Select(this.CreateSource).ToList();
 			this.uObjectList_SelectedItem = this.uObjectList_ItemsSource.FirstOrDefault();
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uDescriptorFile_Content),
 				nameof(this.uDescriptorFileMenuClear_IsEnabled),
 				nameof(this.uObjectList_ItemsSource),
@@ -230,8 +230,8 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 				nameof(this.uPropertyExport_IsEnabled),
 				nameof(this.uPropertyPanel_Descriptor),
 				nameof(this.uPropertyPanel_Type),
-				nameof(this.uPropertyPanel_Stamp)
-			);
+				nameof(this.uPropertyPanel_Stamp),
+			]);
 			return;
 		}
 
@@ -243,7 +243,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			this.DescriptorMap = null;
 			this.uObjectList_ItemsSource = [];
 			this.uObjectList_SelectedItem = null;
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uDescriptorFile_Content),
 				nameof(this.uDescriptorFileMenuClear_IsEnabled),
 				nameof(this.uObjectList_ItemsSource),
@@ -251,8 +251,8 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 				nameof(this.uPropertyExport_IsEnabled),
 				nameof(this.uPropertyPanel_Descriptor),
 				nameof(this.uPropertyPanel_Type),
-				nameof(this.uPropertyPanel_Stamp)
-			);
+				nameof(this.uPropertyPanel_Stamp),
+			]);
 			return;
 		}
 
@@ -315,12 +315,12 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			var senders = sender.As<TreeView>();
 			GF.AssertTest(this.IsLoaded);
 			this.uObjectList_SelectedItem = args.InvokedItem.As<ObjectItemController>();
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uPropertyExport_IsEnabled),
 				nameof(this.uPropertyPanel_Descriptor),
 				nameof(this.uPropertyPanel_Type),
-				nameof(this.uPropertyPanel_Stamp)
-			);
+				nameof(this.uPropertyPanel_Stamp),
+			]);
 			return;
 		}
 
@@ -330,9 +330,9 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 		) {
 			var senders = sender.As<TreeView>();
 			GF.AssertTest(this.IsLoaded);
-			this.NotifyPropertyChanged(
-				nameof(this.uObjectList_SelectedItem)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uObjectList_SelectedItem),
+			]);
 			return;
 		}
 
@@ -342,9 +342,9 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 		) {
 			var senders = sender.As<TreeView>();
 			GF.AssertTest(this.IsLoaded);
-			this.NotifyPropertyChanged(
-				nameof(this.uObjectList_SelectedItem)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uObjectList_SelectedItem),
+			]);
 			return;
 		}
 

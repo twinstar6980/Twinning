@@ -71,7 +71,7 @@
     <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250606001" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4188" />
-    <PackageReference Include="WinUIEx" Version="2.5.1" />
+    <PackageReference Include="WinUIEx" Version="2.6.0" />
   </ItemGroup>
 
   <!--
@@ -96,8 +96,8 @@
     <PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">False</PublishReadyToRun>
     <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
     <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">False</PublishTrimmed>
-    <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed>
+    <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">False</PublishTrimmed>
     <PublishAot Condition="'$(Configuration)' == 'Debug'">False</PublishAot>
-    <PublishAot Condition="'$(Configuration)' != 'Debug'">True</PublishAot>
+    <PublishAot Condition="'$(Configuration)' != 'Debug'">False</PublishAot>
   </PropertyGroup>
 </Project>

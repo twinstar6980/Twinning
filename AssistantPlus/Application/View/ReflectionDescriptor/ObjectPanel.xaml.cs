@@ -103,9 +103,9 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 				this.DescriptorList = this.Descriptor.Object[this.Type];
 				this.uGroup_ItemsSource = this.DescriptorList.Select((value, index) => (new ObjectPropertyGroupItemController() { Host = this, Index = index })).ToList();
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uGroup_ItemsSource)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uGroup_ItemsSource),
+			]);
 			return;
 		}
 

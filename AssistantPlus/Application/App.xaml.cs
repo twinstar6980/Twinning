@@ -88,16 +88,22 @@ namespace AssistantPlus {
 					WindowHelper.Center(App.MainWindow);
 				}
 				if (argument.Length == 1 && argument[0].StartsWith("twinstar.twinning.assistant-plus:")) {
-					var link = new Uri(argument[0]);
-					await this.HandleLink(link);
+					_ = App.MainWindow.DispatcherQueue.EnqueueAsync(async () => {
+						await ControlHelper.WaitUntilLoaded(App.MainWindow.Content.As<FrameworkElement>());
+						await this.HandleLink(new (argument[0]));
+					});
 				}
 				else if (argument.Length >= 1 && argument[0] == "Application") {
-					var command = argument[1..].ToList();
-					await this.HandleCommand(command);
+					_ = App.MainWindow.DispatcherQueue.EnqueueAsync(async () => {
+						await ControlHelper.WaitUntilLoaded(App.MainWindow.Content.As<FrameworkElement>());
+						await this.HandleCommand(argument[1..].ToList());
+					});
 				}
 				else {
-					await ControlHelper.WaitUntilLoaded(App.MainWindow.Content.As<FrameworkElement>());
-					await App.MainWindow.ShowLauncherPanel();
+					_ = App.MainWindow.DispatcherQueue.EnqueueAsync(async () => {
+						await ControlHelper.WaitUntilLoaded(App.MainWindow.Content.As<FrameworkElement>());
+						await App.MainWindow.ShowLauncherPanel();
+					});
 				}
 				await App.Setting.Apply();
 			}
@@ -313,7 +319,27 @@ namespace AssistantPlus {
 		public async Task HandleForward (
 			List<String> resource
 		) {
-			await this.HandleLaunch(ModuleHelper.Query(ModuleType.ResourceShipper).Name, ModuleType.ResourceShipper, ["-Resource", ..resource]);
+			var forwardOption = Enum.GetValues<ModuleType>().Select((value) => ModuleHelper.Query(value).GenerateForwardOption(resource)).ToList();
+			var targetType = forwardOption[(Size)App.Setting.Data.ForwarderDefaultTarget] != null ? App.Setting.Data.ForwarderDefaultTarget : null as ModuleType?;
+			var canContinue = (App.Setting.Data.ForwarderImmediateJump && targetType != null) || (await ControlHelper.ShowDialogAsAutomatic(App.MainWindow.Content, "Forward", new ItemsRepeater() {
+				HorizontalAlignment = HorizontalAlignment.Stretch,
+				VerticalAlignment = VerticalAlignment.Stretch,
+				ItemsSource = Enum.GetValues<ModuleType>().Select((item) => new RadioButton() {
+					HorizontalAlignment = HorizontalAlignment.Stretch,
+					VerticalAlignment = VerticalAlignment.Stretch,
+					IsEnabled = forwardOption[(Size)item] != null,
+					IsChecked = item == targetType,
+					Content = ModuleHelper.Query(item).Name,
+				}.SelfAlso((it) => {
+					it.Click += (sender, args) => {
+						targetType = item;
+						return;
+					};
+				})).ToList(),
+			}, new ("Cancel", "Continue", null)) == ContentDialogResult.Primary);
+			if (canContinue && targetType != null) {
+				await this.HandleLaunch(ModuleHelper.Query(targetType.AsNotNull()).Name, targetType.AsNotNull(), forwardOption[(Size)targetType.AsNotNull()].AsNotNull());
+			}
 			return;
 		}
 

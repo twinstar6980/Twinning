@@ -1124,7 +1124,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                     ),
                     SizedBox(width: 8),
                     Expanded(
-                      child: OutlinedButton.icon(
+                      child: FilledButton.icon(
                         icon: Icon(IconSymbols.open_in_new),
                         label: Text(
                           'Pick',

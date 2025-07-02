@@ -231,45 +231,45 @@ namespace AssistantPlus.View.AnimationViewer {
 			}
 			if (optionImmediateSelect != null) {
 				this.ImmediateSelect = optionImmediateSelect.AsNotNull();
-				this.NotifyPropertyChanged(
-					nameof(this.uImmediateSelect_IsChecked)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uImmediateSelect_IsChecked),
+				]);
 			}
 			if (optionAutomaticPlay != null) {
 				this.AutomaticPlay = optionAutomaticPlay.AsNotNull();
-				this.NotifyPropertyChanged(
-					nameof(this.uAutomaticPlay_IsChecked)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uAutomaticPlay_IsChecked),
+				]);
 			}
 			if (optionRepeatPlay != null) {
 				this.RepeatPlay = optionRepeatPlay.AsNotNull();
-				this.NotifyPropertyChanged(
-					nameof(this.uRepeatPlay_IsChecked)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uRepeatPlay_IsChecked),
+				]);
 			}
 			if (optionKeepSpeed != null) {
 				this.KeepSpeed = optionKeepSpeed.AsNotNull();
-				this.NotifyPropertyChanged(
-					nameof(this.uKeepSpeed_IsChecked)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uKeepSpeed_IsChecked),
+				]);
 			}
 			if (optionShowBoundary != null) {
 				this.ShowBoundary = optionShowBoundary.AsNotNull();
-				this.NotifyPropertyChanged(
-					nameof(this.uShowBoundary_IsChecked)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uShowBoundary_IsChecked),
+				]);
 			}
 			if (optionImageFilterRule != null) {
 				this.ImageFilterRule = optionImageFilterRule;
-				this.NotifyPropertyChanged(
-					nameof(this.uImageFilterRuleText_Text)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uImageFilterRuleText_Text),
+				]);
 			}
 			if (optionSpriteFilterRule != null) {
 				this.SpriteFilterRule = optionSpriteFilterRule;
-				this.NotifyPropertyChanged(
-					nameof(this.uSpriteFilterRuleText_Text)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uSpriteFilterRuleText_Text),
+				]);
 			}
 			if (optionAnimationFile != null) {
 				await this.ApplyLoad(
@@ -402,7 +402,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			this.PlantCustomLayerName = this.Animation.Sprite.Where((value) => (value.Name != null)).Select((value) => (value.Name.AsNotNull())).Where((value) => (value.StartsWith("custom_"))).ToList();
 			this.ZombieStateLayerName = this.Animation.Sprite.Where((value) => (value.Name != null)).Select((value) => (value.Name.AsNotNull())).Where((value) => (value == "ink" || value == "butter")).ToList();
 			this.ZombieGroundSwatchLayerName = this.Animation.Sprite.Where((value) => (value.Name != null)).Select((value) => (value.Name.AsNotNull())).Where((value) => (value == "ground_swatch" || value == "ground_swatch_plane")).ToList();
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uClearSource_IsEnabled),
 				nameof(this.uAnimationFile_IsEnabled),
 				nameof(this.uAnimationFile_Text),
@@ -411,14 +411,14 @@ namespace AssistantPlus.View.AnimationViewer {
 				nameof(this.uTextureDirectoryPick_IsEnabled),
 				nameof(this.uImageList_ItemsSource),
 				nameof(this.uSpriteList_ItemsSource),
-				nameof(this.uMainSpriteList_ItemsSource)
-			);
+				nameof(this.uMainSpriteList_ItemsSource),
+			]);
 			this.View.uImageList.SelectAll();
 			this.View.uSpriteList.SelectAll();
 			if (this.Animation.MainSprite != null) {
 				this.View.uMainSpriteList.SelectAll();
 			}
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uPlantCustomLayerIcon_Opacity),
 				nameof(this.uPlantCustomLayer_IsEnabled),
 				nameof(this.uPlantCustomLayer_ItemsSource),
@@ -429,8 +429,8 @@ namespace AssistantPlus.View.AnimationViewer {
 				nameof(this.uZombieStateLayer_SelectedItem),
 				nameof(this.uZombieGroundSwatchLayerIcon_Opacity),
 				nameof(this.uZombieGroundSwatchLayer_IsEnabled),
-				nameof(this.uZombieGroundSwatchLayer_IsChecked)
-			);
+				nameof(this.uZombieGroundSwatchLayer_IsChecked),
+			]);
 			return;
 		}
 
@@ -451,7 +451,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			this.PlantCustomLayerName = null;
 			this.ZombieStateLayerName = null;
 			this.ZombieGroundSwatchLayerName = null;
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uClearSource_IsEnabled),
 				nameof(this.uAnimationFile_IsEnabled),
 				nameof(this.uAnimationFile_Text),
@@ -471,8 +471,8 @@ namespace AssistantPlus.View.AnimationViewer {
 				nameof(this.uZombieStateLayer_SelectedItem),
 				nameof(this.uZombieGroundSwatchLayerIcon_Opacity),
 				nameof(this.uZombieGroundSwatchLayer_IsEnabled),
-				nameof(this.uZombieGroundSwatchLayer_IsChecked)
-			);
+				nameof(this.uZombieGroundSwatchLayer_IsChecked),
+			]);
 			return;
 		}
 
@@ -558,16 +558,16 @@ namespace AssistantPlus.View.AnimationViewer {
 				if (!this.RepeatPlay) {
 					this.View.uSprite.State = SpriteControl.StateType.Paused;
 					this.ActiveProgressState = false;
-					this.NotifyPropertyChanged(
-						nameof(this.uActiveProgressStateIcon_Glyph)
-					);
+					this.NotifyPropertyChanged([
+						nameof(this.uActiveProgressStateIcon_Glyph),
+					]);
 				}
 			};
 			this.View.uSprite.FrameRange = this.ActiveFrameRange;
 			this.View.uSprite.FrameSpeed = this.ActiveFrameSpeed.AsNotNull();
 			this.View.uSprite.State = !this.ActiveProgressState.AsNotNull() ? SpriteControl.StateType.Paused : SpriteControl.StateType.Playing;
 			this.View.uSprite.CurrentTime = initialTime ?? TimeSpan.FromSeconds(this.ActiveFrameRange.Start);
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uActiveFrameRangeIcon_Opacity),
 				nameof(this.uActiveFrameRangeBegin_IsEnabled),
 				nameof(this.uActiveFrameRangeBegin_Minimum),
@@ -590,16 +590,22 @@ namespace AssistantPlus.View.AnimationViewer {
 				nameof(this.uActiveProgressState_IsEnabled),
 				nameof(this.uActiveProgressStateIcon_Glyph),
 				nameof(this.uActiveProgressPrevious_IsEnabled),
-				nameof(this.uActiveProgressNext_IsEnabled)
-			);
+				nameof(this.uActiveProgressNext_IsEnabled),
+			]);
 			foreach (var item in this.View.uImageList.ItemsSource.As<List<MainPageImageItemController>>()) {
-				item.NotifyPropertyChanged(nameof(item.uToggle_IsChecked));
+				item.NotifyPropertyChanged([
+					nameof(item.uToggle_IsChecked),
+				]);
 			}
 			foreach (var item in this.View.uSpriteList.ItemsSource.As<List<MainPageSpriteItemController>>()) {
-				item.NotifyPropertyChanged(nameof(item.uToggle_IsChecked));
+				item.NotifyPropertyChanged([
+					nameof(item.uToggle_IsChecked),
+				]);
 			}
 			foreach (var item in this.View.uMainSpriteList.ItemsSource.As<List<MainPageMainSpriteItemController>>()) {
-				item.NotifyPropertyChanged(nameof(item.uToggle_IsChecked));
+				item.NotifyPropertyChanged([
+					nameof(item.uToggle_IsChecked),
+				]);
 			}
 			return;
 		}
@@ -613,7 +619,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			this.ActiveFrameRange = null;
 			this.ActiveFrameSpeed = null;
 			this.ActiveProgressState = null;
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uActiveFrameRangeIcon_Opacity),
 				nameof(this.uActiveFrameRangeBegin_IsEnabled),
 				nameof(this.uActiveFrameRangeBegin_Minimum),
@@ -636,16 +642,22 @@ namespace AssistantPlus.View.AnimationViewer {
 				nameof(this.uActiveProgressState_IsEnabled),
 				nameof(this.uActiveProgressStateIcon_Glyph),
 				nameof(this.uActiveProgressPrevious_IsEnabled),
-				nameof(this.uActiveProgressNext_IsEnabled)
-			);
+				nameof(this.uActiveProgressNext_IsEnabled),
+			]);
 			foreach (var item in this.View.uImageList.ItemsSource.As<List<MainPageImageItemController>>()) {
-				item.NotifyPropertyChanged(nameof(item.uToggle_IsChecked));
+				item.NotifyPropertyChanged([
+					nameof(item.uToggle_IsChecked),
+				]);
 			}
 			foreach (var item in this.View.uSpriteList.ItemsSource.As<List<MainPageSpriteItemController>>()) {
-				item.NotifyPropertyChanged(nameof(item.uToggle_IsChecked));
+				item.NotifyPropertyChanged([
+					nameof(item.uToggle_IsChecked),
+				]);
 			}
 			foreach (var item in this.View.uMainSpriteList.ItemsSource.As<List<MainPageMainSpriteItemController>>()) {
-				item.NotifyPropertyChanged(nameof(item.uToggle_IsChecked));
+				item.NotifyPropertyChanged([
+					nameof(item.uToggle_IsChecked),
+				]);
 			}
 			this.View.uSprite.Unload();
 			return;
@@ -658,14 +670,14 @@ namespace AssistantPlus.View.AnimationViewer {
 			this.ActiveFrameRange = frameRange;
 			this.View.uSprite.FrameRange = frameRange;
 			this.View.uSprite.CurrentTime = TimeSpan.FromSeconds(frameRange.Start);
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uActiveFrameRangeBegin_Value),
 				nameof(this.uActiveFrameRangeEnd_Value),
 				nameof(this.uActiveFrameRangeLabel_SelectedItem),
 				nameof(this.uActiveProgress_Minimum),
 				nameof(this.uActiveProgress_Maximum),
-				nameof(this.uActiveProgressStateIcon_Glyph)
-			);
+				nameof(this.uActiveProgressStateIcon_Glyph),
+			]);
 			return;
 		}
 
@@ -751,11 +763,11 @@ namespace AssistantPlus.View.AnimationViewer {
 				}
 			}
 			this.SuppressFilterListSelectionChanged = false;
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uPlantCustomLayer_SelectedItem),
 				nameof(this.uZombieStateLayer_SelectedItem),
-				nameof(this.uZombieGroundSwatchLayer_IsChecked)
-			);
+				nameof(this.uZombieGroundSwatchLayer_IsChecked),
+			]);
 			if (target != null) {
 				await this.Activate(target, frameRange, frameSpeed, currentState, currentTime);
 			}
@@ -853,12 +865,12 @@ namespace AssistantPlus.View.AnimationViewer {
 			this.StageScale = senders.ZoomFactor;
 			this.StagePositionX = (senders.HorizontalOffset + senders.ActualWidth / 2) / senders.ZoomFactor;
 			this.StagePositionY = (senders.VerticalOffset + senders.ActualHeight / 2) / senders.ZoomFactor;
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uStagePositionX_Text),
 				nameof(this.uStagePositionY_Text),
 				nameof(this.uStageScale_Text),
-				nameof(this.uStageScaleIcon_Glyph)
-			);
+				nameof(this.uStageScaleIcon_Glyph),
+			]);
 			return;
 		}
 
@@ -878,6 +890,9 @@ namespace AssistantPlus.View.AnimationViewer {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.ImmediateSelect = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uImmediateSelect_IsChecked),
+			]);
 			return;
 		}
 
@@ -895,6 +910,9 @@ namespace AssistantPlus.View.AnimationViewer {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.AutomaticPlay = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uAutomaticPlay_IsChecked),
+			]);
 			return;
 		}
 
@@ -912,6 +930,9 @@ namespace AssistantPlus.View.AnimationViewer {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.RepeatPlay = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uRepeatPlay_IsChecked),
+			]);
 			this.View.uSprite.RepeatPlay = this.RepeatPlay;
 			return;
 		}
@@ -930,6 +951,9 @@ namespace AssistantPlus.View.AnimationViewer {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.KeepSpeed = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uKeepSpeed_IsChecked),
+			]);
 			return;
 		}
 
@@ -1076,7 +1100,9 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (!this.Loaded) {
 				return;
 			}
-			if (this.SuppressFilterListSelectionChanged) { return; }
+			if (this.SuppressFilterListSelectionChanged) {
+				return;
+			}
 			foreach (var item in args.AddedItems.Select(GF.As<MainPageImageItemController>)) {
 				this.ImageFilter[item.Index] = true;
 			}
@@ -1084,11 +1110,11 @@ namespace AssistantPlus.View.AnimationViewer {
 				this.ImageFilter[item.Index] = false;
 			}
 			this.SuppressApplyFilterChanged = true;
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uPlantCustomLayer_SelectedItem),
 				nameof(this.uZombieStateLayer_SelectedItem),
-				nameof(this.uZombieGroundSwatchLayer_IsChecked)
-			);
+				nameof(this.uZombieGroundSwatchLayer_IsChecked),
+			]);
 			this.SuppressApplyFilterChanged = false;
 			if (this.Activated && (args.AddedItems.Count != 0 || args.RemovedItems.Count != 0)) {
 				var target = this.ActiveTarget;
@@ -1121,7 +1147,9 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (!this.Loaded) {
 				return;
 			}
-			if (this.SuppressFilterListSelectionChanged) { return; }
+			if (this.SuppressFilterListSelectionChanged) {
+				return;
+			}
 			foreach (var item in args.AddedItems.Select(GF.As<MainPageSpriteItemController>)) {
 				this.SpriteFilter[item.Index] = true;
 			}
@@ -1129,11 +1157,11 @@ namespace AssistantPlus.View.AnimationViewer {
 				this.SpriteFilter[item.Index] = false;
 			}
 			this.SuppressApplyFilterChanged = true;
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uPlantCustomLayer_SelectedItem),
 				nameof(this.uZombieStateLayer_SelectedItem),
-				nameof(this.uZombieGroundSwatchLayer_IsChecked)
-			);
+				nameof(this.uZombieGroundSwatchLayer_IsChecked),
+			]);
 			this.SuppressApplyFilterChanged = false;
 			if (this.Activated && (args.AddedItems.Count != 0 || args.RemovedItems.Count != 0)) {
 				var target = this.ActiveTarget;
@@ -1250,9 +1278,9 @@ namespace AssistantPlus.View.AnimationViewer {
 					await this.UpdateActiveFrameRange(newRange);
 				}
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uActiveFrameRangeBegin_Value)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uActiveFrameRangeBegin_Value),
+			]);
 			return;
 		}
 
@@ -1322,9 +1350,9 @@ namespace AssistantPlus.View.AnimationViewer {
 					await this.UpdateActiveFrameRange(newRange);
 				}
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uActiveFrameRangeEnd_Value)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uActiveFrameRangeEnd_Value),
+			]);
 			return;
 		}
 
@@ -1458,9 +1486,9 @@ namespace AssistantPlus.View.AnimationViewer {
 					this.ActiveFrameSpeed = newValue;
 				}
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uActiveFrameSpeed_Value)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uActiveFrameSpeed_Value),
+			]);
 			return;
 		}
 
@@ -1532,9 +1560,9 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (this.uActiveProgress__ChangingWhenPlaying) {
 				this.View.uSprite.State = SpriteControl.StateType.Paused;
 				this.ActiveProgressState = false;
-				this.NotifyPropertyChanged(
-					nameof(this.uActiveProgressStateIcon_Glyph)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uActiveProgressStateIcon_Glyph),
+				]);
 			}
 			return;
 		}
@@ -1551,9 +1579,9 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (this.uActiveProgress__ChangingWhenPlaying) {
 				this.View.uSprite.State = SpriteControl.StateType.Playing;
 				this.ActiveProgressState = true;
-				this.NotifyPropertyChanged(
-					nameof(this.uActiveProgressStateIcon_Glyph)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uActiveProgressStateIcon_Glyph),
+				]);
 			}
 			this.uActiveProgress__Changeable = false;
 			this.uActiveProgress__ChangingWhenPlaying = false;
@@ -1585,9 +1613,9 @@ namespace AssistantPlus.View.AnimationViewer {
 			var newState = this.View.uSprite.State != SpriteControl.StateType.Playing;
 			this.View.uSprite.State = !newState ? SpriteControl.StateType.Paused : SpriteControl.StateType.Playing;
 			this.ActiveProgressState = newState;
-			this.NotifyPropertyChanged(
-				nameof(this.uActiveProgressStateIcon_Glyph)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uActiveProgressStateIcon_Glyph),
+			]);
 			return;
 		}
 
@@ -1676,6 +1704,9 @@ namespace AssistantPlus.View.AnimationViewer {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.ShowBoundary = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uShowBoundary_IsChecked),
+			]);
 			this.View.uSprite.ShowBoundary = this.ShowBoundary;
 			return;
 		}
@@ -1704,9 +1735,9 @@ namespace AssistantPlus.View.AnimationViewer {
 		) {
 			var senders = sender.As<TextBox>();
 			this.ImageFilterRule = senders.Text;
-			this.NotifyPropertyChanged(
-				nameof(this.uImageFilterRuleText_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uImageFilterRuleText_Text),
+			]);
 			return;
 		}
 
@@ -1724,9 +1755,9 @@ namespace AssistantPlus.View.AnimationViewer {
 		) {
 			var senders = sender.As<TextBox>();
 			this.SpriteFilterRule = senders.Text;
-			this.NotifyPropertyChanged(
-				nameof(this.uSpriteFilterRuleText_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uSpriteFilterRuleText_Text),
+			]);
 			return;
 		}
 
@@ -1796,9 +1827,9 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (args.AddedItems.Count == 1) {
 				var targetLayer = $"custom_{args.AddedItems[0].As<String>()}";
 				await this.ApplyFilter(null, this.Animation.Sprite.Select((value) => (value.Name != null && this.PlantCustomLayerName.Contains(value.Name) ? value.Name == targetLayer : (Boolean?)null)).ToList());
-				this.NotifyPropertyChanged(
-					nameof(this.uPlantCustomLayer_SelectedItem)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uPlantCustomLayer_SelectedItem),
+				]);
 			}
 			return;
 		}
@@ -1840,7 +1871,9 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		public String? uZombieStateLayer_SelectedItem {
 			get {
-				if (!this.Loaded || this.ZombieStateLayerName.Count == 0) { return null; }
+				if (!this.Loaded || this.ZombieStateLayerName.Count == 0) {
+					return null;
+				}
 				var selectedItem = this.Animation.Sprite.Where((value, index) => (value.Name != null && this.ZombieStateLayerName.Contains(value.Name) && this.SpriteFilter[index])).ToList();
 				return selectedItem.Count switch {
 					0 => this.uZombieStateLayer__ItemNameOfNone,
@@ -1855,13 +1888,15 @@ namespace AssistantPlus.View.AnimationViewer {
 			SelectionChangedEventArgs args
 		) {
 			var senders = sender.As<ComboBox>();
-			if (!this.Loaded || this.ZombieStateLayerName.Count == 0) { return; }
+			if (!this.Loaded || this.ZombieStateLayerName.Count == 0) {
+				return;
+			}
 			if (args.AddedItems.Count == 1) {
 				var targetLayer = args.AddedItems[0].As<String>();
 				await this.ApplyFilter(null, this.Animation.Sprite.Select((value) => (value.Name != null && this.ZombieStateLayerName.Contains(value.Name) ? value.Name == targetLayer : (Boolean?)null)).ToList());
-				this.NotifyPropertyChanged(
-					nameof(this.uZombieStateLayer_SelectedItem)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uZombieStateLayer_SelectedItem),
+				]);
 			}
 			return;
 		}
@@ -1872,7 +1907,9 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		public Floater uZombieGroundSwatchLayerIcon_Opacity {
 			get {
-				if (!this.Loaded || this.ZombieGroundSwatchLayerName.Count == 0) { return ConvertHelper.MakeBooleanToFloaterOfOpacityEnabled(false); }
+				if (!this.Loaded || this.ZombieGroundSwatchLayerName.Count == 0) {
+					return ConvertHelper.MakeBooleanToFloaterOfOpacityEnabled(false);
+				}
 				return ConvertHelper.MakeBooleanToFloaterOfOpacityEnabled(true);
 			}
 		}
@@ -1881,14 +1918,18 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		public Boolean uZombieGroundSwatchLayer_IsEnabled {
 			get {
-				if (!this.Loaded || this.ZombieGroundSwatchLayerName.Count == 0) { return false; }
+				if (!this.Loaded || this.ZombieGroundSwatchLayerName.Count == 0) {
+					return false;
+				}
 				return true;
 			}
 		}
 
 		public Boolean uZombieGroundSwatchLayer_IsChecked {
 			get {
-				if (!this.Loaded || this.ZombieGroundSwatchLayerName.Count == 0) { return false; }
+				if (!this.Loaded || this.ZombieGroundSwatchLayerName.Count == 0) {
+					return false;
+				}
 				var selectedItem = this.Animation.Sprite.Where((value, index) => (value.Name != null && this.ZombieGroundSwatchLayerName.Contains(value.Name) && this.SpriteFilter[index])).ToList();
 				return selectedItem.Count != 0;
 			}
@@ -1899,12 +1940,14 @@ namespace AssistantPlus.View.AnimationViewer {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<ToggleButton>();
-			if (!this.Loaded || this.ZombieGroundSwatchLayerName.Count == 0) { return; }
+			if (!this.Loaded || this.ZombieGroundSwatchLayerName.Count == 0) {
+				return;
+			}
 			var newValue = senders.IsChecked.AsNotNull();
 			await this.ApplyFilter(null, this.Animation.Sprite.Select((value) => (value.Name != null && this.ZombieGroundSwatchLayerName.Contains(value.Name) ? newValue : (Boolean?)null)).ToList());
-			this.NotifyPropertyChanged(
-				nameof(this.uZombieGroundSwatchLayer_IsChecked)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uZombieGroundSwatchLayer_IsChecked),
+			]);
 			return;
 		}
 

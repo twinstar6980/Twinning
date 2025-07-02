@@ -144,21 +144,21 @@ namespace AssistantPlus.View.ResourceShipper {
 			}
 			if (optionParallelForward != null) {
 				this.ParallelForward = optionParallelForward.AsNotNull();
-				this.NotifyPropertyChanged(
-					nameof(this.uParallelForward_IsChecked)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uParallelForward_IsChecked),
+				]);
 			}
 			if (optionEnableFilter != null) {
 				this.EnableFilter = optionEnableFilter.AsNotNull();
-				this.NotifyPropertyChanged(
-					nameof(this.uEnableFilter_IsChecked)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uEnableFilter_IsChecked),
+				]);
 			}
 			if (optionEnableBatch != null) {
 				this.EnableBatch = optionEnableBatch.AsNotNull();
-				this.NotifyPropertyChanged(
-					nameof(this.uEnableBatch_IsChecked)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uEnableBatch_IsChecked),
+				]);
 			}
 			if (optionResource != null) {
 				await this.AppendResource(optionResource.Select((item) => (StorageHelper.Regularize(item.Item1))).ToList());
@@ -225,14 +225,14 @@ namespace AssistantPlus.View.ResourceShipper {
 		) {
 			foreach (var group in this.uOptionList_ItemsSource) {
 				foreach (var item in group.Children) {
-					item.NotifyPropertyChanged(
+					item.NotifyPropertyChanged([
 						nameof(item.uRoot_Visibility),
-						nameof(item.uRoot_IsEnabled)
-					);
+						nameof(item.uRoot_IsEnabled),
+					]);
 				}
-				group.NotifyPropertyChanged(
-					nameof(group.uRoot_Visibility)
-				);
+				group.NotifyPropertyChanged([
+					nameof(group.uRoot_Visibility),
+				]);
 			}
 			return;
 		}
@@ -256,9 +256,9 @@ namespace AssistantPlus.View.ResourceShipper {
 				this.Resource.Add(new (item, itemType));
 				this.uResourceList_ItemsSource.Add(new () { Host = this, Path = item, Type = itemType });
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uResourceCount_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uResourceCount_Text),
+			]);
 			await this.RefreshMatch();
 			await this.RefreshFilter();
 			return;
@@ -271,9 +271,9 @@ namespace AssistantPlus.View.ResourceShipper {
 				this.Resource.RemoveAll((value) => (value.Item1 == item));
 				this.uResourceList_ItemsSource.Remove(this.uResourceList_ItemsSource.First((value) => (value.Path == item)));
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uResourceCount_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uResourceCount_Text),
+			]);
 			await this.RefreshMatch();
 			await this.RefreshFilter();
 			return;
@@ -334,6 +334,9 @@ namespace AssistantPlus.View.ResourceShipper {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.ParallelForward = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uParallelForward_IsChecked),
+			]);
 			return;
 		}
 
@@ -351,6 +354,9 @@ namespace AssistantPlus.View.ResourceShipper {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.EnableFilter = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uEnableFilter_IsChecked),
+			]);
 			await this.RefreshFilter();
 			return;
 		}
@@ -369,6 +375,9 @@ namespace AssistantPlus.View.ResourceShipper {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.EnableBatch = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uEnableBatch_IsChecked),
+			]);
 			await this.RefreshFilter();
 			return;
 		}
@@ -418,14 +427,14 @@ namespace AssistantPlus.View.ResourceShipper {
 					}
 					break;
 				}
-				case "AppendFile": {
+				case "PickFile": {
 					var item = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(ResourceShipper)}.Resource");
 					if (item != null) {
 						await this.AppendResource([item]);
 					}
 					break;
 				}
-				case "AppendDirectory": {
+				case "PickDirectory": {
 					var item = await StorageHelper.PickLoadDirectory(WindowHelper.Find(this.View), $"{nameof(ResourceShipper)}.Resource");
 					if (item != null) {
 						await this.AppendResource([item]);

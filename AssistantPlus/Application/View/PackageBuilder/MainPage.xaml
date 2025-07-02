@@ -16,24 +16,10 @@
 	DragOver="{x:Bind Controller.uPage_DragOver}"
 	Drop="{x:Bind Controller.uPage_Drop}"
 	>
-	<Page.Resources>
-		<CollectionViewSource
-			x:Name="uGroupList_ItemsSource"
-			IsSourceGrouped="True"
-			ItemsPath="Children"
-			Source="{x:Bind Controller.uGroupList_ItemsSource}"
-			/>
-		<CollectionViewSource
-			x:Name="uResourceList_ItemsSource"
-			IsSourceGrouped="True"
-			ItemsPath="Children"
-			Source="{x:Bind Controller.uResourceList_ItemsSource}"
-			/>
-	</Page.Resources>
 	<my:Stack
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
-		MinWidth="1680"
+		MinWidth="1440"
 		Padding="4"
 		Orientation="Horizontal"
 		Spacing="4"
@@ -43,7 +29,8 @@
 			x:FieldModifier="public"
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
-			MinWidth="352"
+			MinWidth="312"
+			Width="{x:Bind uPackagePanel.MinWidth, Mode=OneTime}"
 			Padding="0,-4,0,0"
 			Orientation="Vertical"
 			Spacing="0"
@@ -373,7 +360,7 @@
 		<my:DividerSizer
 			SizerOrientation="Vertical"
 			SizerInverted="False"
-			SizerValue="{x:Bind uPackagePanel.MinWidth, Mode=TwoWay}"
+			SizerValue="{x:Bind uPackagePanel.Width, Mode=TwoWay}"
 			SizerMinimum="{x:Bind uPackagePanel.MinWidth, Mode=OneTime}"
 			/>
 		<my:Stack
@@ -381,7 +368,8 @@
 			x:FieldModifier="public"
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
-			MinWidth="352"
+			MinWidth="312"
+			Width="{x:Bind uPartPanel.MinWidth, Mode=OneTime}"
 			Padding="0,-4,0,0"
 			Orientation="Vertical"
 			Spacing="0"
@@ -636,7 +624,7 @@
 		<my:DividerSizer
 			SizerOrientation="Vertical"
 			SizerInverted="False"
-			SizerValue="{x:Bind uPartPanel.MinWidth, Mode=TwoWay}"
+			SizerValue="{x:Bind uPartPanel.Width, Mode=TwoWay}"
 			SizerMinimum="{x:Bind uPartPanel.MinWidth, Mode=OneTime}"
 			/>
 		<my:Stack
@@ -644,7 +632,8 @@
 			x:FieldModifier="public"
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
-			MinWidth="352"
+			MinWidth="312"
+			Width="{x:Bind uGroupPanel.MinWidth, Mode=OneTime}"
 			Padding="0,-4,0,0"
 			Orientation="Vertical"
 			Spacing="0"
@@ -759,6 +748,14 @@
 				SelectionChanged="{x:Bind Controller.uGroupList_SelectionChanged}"
 				ItemContainerTransitions="{x:Null}"
 				>
+				<ListView.Resources>
+					<CollectionViewSource
+						x:Name="uGroupList_ItemsSource"
+						IsSourceGrouped="True"
+						ItemsPath="Children"
+						Source="{x:Bind Controller.uGroupList_ItemsSource}"
+						/>
+				</ListView.Resources>
 				<ListView.ItemsPanel>
 					<ItemsPanelTemplate>
 						<ItemsStackPanel AreStickyGroupHeadersEnabled="True" />
@@ -929,7 +926,7 @@
 		<my:DividerSizer
 			SizerOrientation="Vertical"
 			SizerInverted="False"
-			SizerValue="{x:Bind uGroupPanel.MinWidth, Mode=TwoWay}"
+			SizerValue="{x:Bind uGroupPanel.Width, Mode=TwoWay}"
 			SizerMinimum="{x:Bind uGroupPanel.MinWidth, Mode=OneTime}"
 			/>
 		<my:Stack
@@ -938,7 +935,7 @@
 			my:Stack.Weight="1"
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
-			MinWidth="352"
+			MinWidth="469"
 			Padding="0,-4,0,0"
 			Orientation="Vertical"
 			Spacing="0"
@@ -1052,6 +1049,14 @@
 				ItemsSource="{x:Bind uResourceList_ItemsSource.View}"
 				ItemContainerTransitions="{x:Null}"
 				>
+				<ListView.Resources>
+					<CollectionViewSource
+						x:Name="uResourceList_ItemsSource"
+						IsSourceGrouped="True"
+						ItemsPath="Children"
+						Source="{x:Bind Controller.uResourceList_ItemsSource}"
+						/>
+				</ListView.Resources>
 				<ListView.ItemsPanel>
 					<ItemsPanelTemplate>
 						<ItemsStackPanel AreStickyGroupHeadersEnabled="True" />

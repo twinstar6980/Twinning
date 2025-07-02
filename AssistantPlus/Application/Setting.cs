@@ -5,7 +5,6 @@ using AssistantPlus;
 using AssistantPlus.Utility;
 using Windows.ApplicationModel;
 using Windows.UI;
-using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml.Media;
 using Colors = Microsoft.UI.Colors;
@@ -13,16 +12,18 @@ using Colors = Microsoft.UI.Colors;
 namespace AssistantPlus {
 
 	public record SettingData {
-		public Integer                           Version              = default!;
-		public CustomThemeSetting                Theme                = default!;
-		public CustomWindowSetting               Window               = default!;
-		public ModuleLauncherSetting             ModuleLauncher       = default!;
-		public View.ModdingWorker.Setting        ModdingWorker        = default!;
-		public View.CommandSender.Setting        CommandSender        = default!;
-		public View.ResourceShipper.Setting      ResourceShipper      = default!;
-		public View.AnimationViewer.Setting      AnimationViewer      = default!;
-		public View.ReflectionDescriptor.Setting ReflectionDescriptor = default!;
-		public View.PackageBuilder.Setting       PackageBuilder       = default!;
+		public Integer                           Version                = default!;
+		public CustomThemeSetting                Theme                  = default!;
+		public CustomWindowSetting               Window                 = default!;
+		public ModuleType                        ForwarderDefaultTarget = default!;
+		public Boolean                           ForwarderImmediateJump = default!;
+		public ModuleLauncherSetting             ModuleLauncher         = default!;
+		public View.ModdingWorker.Setting        ModdingWorker          = default!;
+		public View.CommandSender.Setting        CommandSender          = default!;
+		public View.ResourceShipper.Setting      ResourceShipper        = default!;
+		public View.AnimationViewer.Setting      AnimationViewer        = default!;
+		public View.ReflectionDescriptor.Setting ReflectionDescriptor   = default!;
+		public View.PackageBuilder.Setting       PackageBuilder         = default!;
 	}
 
 	public record SettingState {
@@ -73,6 +74,9 @@ namespace AssistantPlus {
 					CustomThemeMode.Dark   => Colors.White,
 					_                      => throw new (),
 				};
+				await ControlHelper.IterateDialog(async (it) => {
+					it.RequestedTheme = App.MainWindow.Content.As<FrameworkElement>().RequestedTheme;
+				});
 				this.State.ThemeMode = this.Data.Theme.Mode;
 			}
 			// Theme.Color
@@ -188,19 +192,19 @@ namespace AssistantPlus {
 					},
 					Size = new () {
 						State = false,
-						Width = 1680,
-						Height = 960,
+						Width = 0,
+						Height = 0,
 					},
 				},
+				ForwarderDefaultTarget = ModuleType.ResourceShipper,
+				ForwarderImmediateJump = false,
 				ModuleLauncher = new () {
-					Module = [
-						..ModuleHelper.Information.Select((value) => (new ModuleLauncherConfiguration() {
-							Title = value.Name,
-							Type = value.Type,
-							Option = [],
-							Command = [],
-						})),
-					],
+					Module = Enum.GetValues<ModuleType>().Select((value) => (new ModuleLauncherConfiguration() {
+						Title = ModuleHelper.Query(value).Name,
+						Type = value,
+						Option = [],
+						Command = [],
+					})).ToList(),
 					Pinned = [],
 					Recent = [],
 				},

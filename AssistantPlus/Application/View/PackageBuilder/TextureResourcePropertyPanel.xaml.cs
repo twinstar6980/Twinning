@@ -72,13 +72,13 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		public async void Update (
 		) {
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uPath_Text),
 				nameof(this.uFormat_Value),
 				nameof(this.uPitch_Value),
 				nameof(this.uSizeWidth_Value),
-				nameof(this.uSizeHeight_Value)
-			);
+				nameof(this.uSizeHeight_Value),
+			]);
 			return;
 		}
 
@@ -92,9 +92,9 @@ namespace AssistantPlus.View.PackageBuilder {
 		) {
 			var senders = sender.As<TextBox>();
 			this.Value.Path = senders.Text;
-			this.NotifyPropertyChanged(
-				nameof(this.uPath_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uPath_Text),
+			]);
 			return;
 		}
 
@@ -116,9 +116,9 @@ namespace AssistantPlus.View.PackageBuilder {
 			if (Floater.IsFinite(senders.Value) && IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
 				this.Value.Format = (Integer)senders.Value;
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uFormat_Value)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uFormat_Value),
+			]);
 			return;
 		}
 
@@ -146,9 +146,9 @@ namespace AssistantPlus.View.PackageBuilder {
 			if (Floater.IsFinite(senders.Value) && IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
 				this.Value.Pitch = (Integer)senders.Value;
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uPitch_Value)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uPitch_Value),
+			]);
 			return;
 		}
 
@@ -176,9 +176,9 @@ namespace AssistantPlus.View.PackageBuilder {
 			if (Floater.IsFinite(senders.Value) && IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
 				this.Value.AdditionalByteCount = (Integer)senders.Value;
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uAdditionalByteCount_Value)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uAdditionalByteCount_Value),
+			]);
 			return;
 		}
 
@@ -206,9 +206,9 @@ namespace AssistantPlus.View.PackageBuilder {
 			if (Floater.IsFinite(senders.Value) && IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
 				this.Value.Size[0] = (Integer)senders.Value;
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uSizeWidth_Value)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uSizeWidth_Value),
+			]);
 			return;
 		}
 
@@ -234,9 +234,9 @@ namespace AssistantPlus.View.PackageBuilder {
 			if (Floater.IsFinite(senders.Value) && IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
 				this.Value.Size[1] = (Integer)senders.Value;
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uSizeHeight_Value)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uSizeHeight_Value),
+			]);
 			return;
 		}
 

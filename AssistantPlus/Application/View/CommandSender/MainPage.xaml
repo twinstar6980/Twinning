@@ -18,7 +18,7 @@
 	<my:Stack
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
-		MinWidth="960"
+		MinWidth="920"
 		Padding="4"
 		Orientation="Horizontal"
 		Spacing="4"
@@ -28,7 +28,8 @@
 			x:FieldModifier="public"
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
-			MinWidth="352"
+			MinWidth="312"
+			Width="{x:Bind uMethodPanel.MinWidth, Mode=OneTime}"
 			Padding="0,-4,0,0"
 			Orientation="Vertical"
 			Spacing="0"
@@ -140,7 +141,7 @@
 		<my:DividerSizer
 			SizerOrientation="Vertical"
 			SizerInverted="False"
-			SizerValue="{x:Bind uMethodPanel.MinWidth, Mode=TwoWay}"
+			SizerValue="{x:Bind uMethodPanel.Width, Mode=TwoWay}"
 			SizerMinimum="{x:Bind uMethodPanel.MinWidth, Mode=OneTime}"
 			/>
 		<my:Stack

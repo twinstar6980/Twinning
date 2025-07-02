@@ -53,11 +53,11 @@ namespace AssistantPlus.View.Home {
 			this.uModuleLauncherList_ItemsSource = App.Setting.Data.ModuleLauncher.Module.Select((value) => (new LauncherPageLauncherItemController() { Host = this, Category = ModuleLauncherCategory.Module, Configuration = value })).ToList();
 			this.uPinnedLauncherList_ItemsSource = App.Setting.Data.ModuleLauncher.Pinned.Select((value) => (new LauncherPageLauncherItemController() { Host = this, Category = ModuleLauncherCategory.Pinned, Configuration = value })).ToObservableCollection();
 			this.uRecentLauncherList_ItemsSource = App.Setting.Data.ModuleLauncher.Recent.Select((value) => (new LauncherPageLauncherItemController() { Host = this, Category = ModuleLauncherCategory.Recent, Configuration = value })).ToObservableCollection();
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uModuleLauncherList_ItemsSource),
 				nameof(this.uPinnedLauncherList_ItemsSource),
-				nameof(this.uRecentLauncherList_ItemsSource)
-			);
+				nameof(this.uRecentLauncherList_ItemsSource),
+			]);
 			return;
 		}
 
@@ -174,11 +174,11 @@ namespace AssistantPlus.View.Home {
 				Data = this.Configuration,
 				Stamp = UniqueStamp.Create(),
 			}, null);
-			await App.Setting.Save();
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uIcon_Glyph),
-				nameof(this.uTitle_Text)
-			);
+				nameof(this.uTitle_Text),
+			]);
+			await App.Setting.Save();
 			return;
 		}
 
@@ -205,11 +205,7 @@ namespace AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<Button>();
 			GF.AssertTest(this.Category == ModuleLauncherCategory.Module);
-			var panelType = ModuleHelper.Query(this.Configuration.Type).SettingPanel;
-			var panelObject = Activator.CreateInstance(panelType).AsNotNull().As<UIElement>();
-			var settingData = typeof(SettingData).GetField(this.Configuration.Type.ToString()).AsNotNull().GetValue(App.Setting.Data);
-			panelType.GetProperty("Data").AsNotNull().SetValue(panelObject, settingData);
-			await ControlHelper.ShowDialogAsFixed(this.Host.View, "Module Setting", panelObject, null);
+			await ControlHelper.ShowDialogAsFixed(this.Host.View, "Module Setting", ModuleHelper.Query(this.Configuration.Type).SettingPanel(), null);
 			await App.Setting.Save();
 			return;
 		}

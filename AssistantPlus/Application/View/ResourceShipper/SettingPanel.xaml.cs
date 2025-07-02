@@ -69,12 +69,12 @@ namespace AssistantPlus.View.ResourceShipper {
 
 		public async void Update (
 		) {
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uOptionConfigurationText_Text),
 				nameof(this.uParallelForwardToggle_IsChecked),
 				nameof(this.uEnableFilterToggle_IsChecked),
-				nameof(this.uEnableBatchToggle_IsChecked)
-			);
+				nameof(this.uEnableBatchToggle_IsChecked),
+			]);
 			return;
 		}
 
@@ -88,9 +88,9 @@ namespace AssistantPlus.View.ResourceShipper {
 		) {
 			var senders = sender.As<TextBox>();
 			this.Data.OptionConfiguration = StorageHelper.Regularize(senders.Text);
-			this.NotifyPropertyChanged(
-				nameof(this.uOptionConfigurationText_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uOptionConfigurationText_Text),
+			]);
 			return;
 		}
 
@@ -108,9 +108,9 @@ namespace AssistantPlus.View.ResourceShipper {
 			var value = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(ResourceShipper)}.OptionConfiguration");
 			if (value != null) {
 				this.Data.OptionConfiguration = value;
-				this.NotifyPropertyChanged(
-					nameof(this.uOptionConfigurationText_Text)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uOptionConfigurationText_Text),
+				]);
 			}
 			return;
 		}
@@ -131,6 +131,9 @@ namespace AssistantPlus.View.ResourceShipper {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.Data.ParallelForward = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uParallelForwardToggle_IsChecked),
+			]);
 			return;
 		}
 
@@ -150,6 +153,9 @@ namespace AssistantPlus.View.ResourceShipper {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.Data.EnableFilter = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uEnableFilterToggle_IsChecked),
+			]);
 			return;
 		}
 
@@ -169,6 +175,9 @@ namespace AssistantPlus.View.ResourceShipper {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.Data.EnableBatch = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uEnableBatchToggle_IsChecked),
+			]);
 			return;
 		}
 

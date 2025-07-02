@@ -53,8 +53,8 @@ namespace AssistantPlus.View.Home {
 
 		public async void Update (
 		) {
-			this.NotifyPropertyChanged(
-			);
+			this.NotifyPropertyChanged([
+			]);
 			return;
 		}
 
@@ -116,10 +116,10 @@ namespace AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<ToggleSplitButton>();
 			App.Setting.Data.Theme.Color.State = senders.IsChecked;
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uSettingThemeColor_IsChecked),
-				nameof(this.uSettingThemeColor_Content)
-			);
+				nameof(this.uSettingThemeColor_Content),
+			]);
 			await App.Setting.Save();
 			return;
 		}
@@ -138,9 +138,9 @@ namespace AssistantPlus.View.Home {
 			App.Setting.Data.Theme.Color.LightRed = senders.Color.R;
 			App.Setting.Data.Theme.Color.LightGreen = senders.Color.G;
 			App.Setting.Data.Theme.Color.LightBlue = senders.Color.B;
-			this.NotifyPropertyChanged(
-				nameof(this.uSettingThemeColorLight_Color)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uSettingThemeColorLight_Color),
+			]);
 			await App.Setting.Save();
 			return;
 		}
@@ -164,9 +164,9 @@ namespace AssistantPlus.View.Home {
 			App.Setting.Data.Theme.Color.DarkRed = senders.Color.R;
 			App.Setting.Data.Theme.Color.DarkGreen = senders.Color.G;
 			App.Setting.Data.Theme.Color.DarkBlue = senders.Color.B;
-			this.NotifyPropertyChanged(
-				nameof(this.uSettingThemeColorDark_Color)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uSettingThemeColorDark_Color),
+			]);
 			await App.Setting.Save();
 			return;
 		}
@@ -222,10 +222,10 @@ namespace AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<ToggleSplitButton>();
 			App.Setting.Data.Window.Position.State = senders.IsChecked;
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uSettingWindowPosition_IsChecked),
-				nameof(this.uSettingWindowPosition_Content)
-			);
+				nameof(this.uSettingWindowPosition_Content),
+			]);
 			await App.Setting.Save();
 			return;
 		}
@@ -244,9 +244,9 @@ namespace AssistantPlus.View.Home {
 			if (Floater.IsFinite(senders.Value)) {
 				App.Setting.Data.Window.Position.X = (Integer)senders.Value;
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uSettingWindowPositionX_Value)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uSettingWindowPositionX_Value),
+			]);
 			await App.Setting.Save();
 			return;
 		}
@@ -271,9 +271,9 @@ namespace AssistantPlus.View.Home {
 			if (Floater.IsFinite(senders.Value)) {
 				App.Setting.Data.Window.Position.Y = (Integer)senders.Value;
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uSettingWindowPositionY_Value)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uSettingWindowPositionY_Value),
+			]);
 			await App.Setting.Save();
 			return;
 		}
@@ -304,10 +304,10 @@ namespace AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<ToggleSplitButton>();
 			App.Setting.Data.Window.Size.State = senders.IsChecked;
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uSettingWindowSize_IsChecked),
-				nameof(this.uSettingWindowSize_Content)
-			);
+				nameof(this.uSettingWindowSize_Content),
+			]);
 			await App.Setting.Save();
 			return;
 		}
@@ -326,9 +326,9 @@ namespace AssistantPlus.View.Home {
 			if (Floater.IsFinite(senders.Value)) {
 				App.Setting.Data.Window.Size.Width = (Integer)senders.Value;
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uSettingWindowSizeWidth_Value)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uSettingWindowSizeWidth_Value),
+			]);
 			await App.Setting.Save();
 			return;
 		}
@@ -353,9 +353,9 @@ namespace AssistantPlus.View.Home {
 			if (Floater.IsFinite(senders.Value)) {
 				App.Setting.Data.Window.Size.Height = (Integer)senders.Value;
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uSettingWindowSizeHeight_Value)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uSettingWindowSizeHeight_Value),
+			]);
 			await App.Setting.Save();
 			return;
 		}
@@ -391,16 +391,70 @@ namespace AssistantPlus.View.Home {
 			else {
 				StorageHelper.Remove(App.ForwarderExtensionStateFile);
 			}
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uSettingForwarderExtension_IsChecked),
-				nameof(this.uSettingForwarderExtension_Content)
-			);
+				nameof(this.uSettingForwarderExtension_Content),
+			]);
 			return;
 		}
 
 		public String uSettingForwarderExtension_Content {
 			get {
 				return !StorageHelper.Exist(App.ForwarderExtensionStateFile) ? "Disabled" : "Enabled";
+			}
+		}
+
+		// ----------------
+
+		public List<String> uSettingForwarderDefaultTarget_ItemsSource {
+			get {
+				return Enum.GetValues<ModuleType>().Select((value) => ModuleHelper.Query(value).Name).ToList();
+			}
+		}
+
+		public Size uSettingForwarderDefaultTarget_SelectedIndex {
+			get {
+				return (Size)App.Setting.Data.ForwarderDefaultTarget;
+			}
+		}
+
+		public async void uSettingForwarderDefaultTarget_SelectionChanged (
+			Object                    sender,
+			SelectionChangedEventArgs args
+		) {
+			var senders = sender.As<ComboBox>();
+			if (App.Setting.Data.ForwarderDefaultTarget != (ModuleType)senders.SelectedIndex) {
+				App.Setting.Data.ForwarderDefaultTarget = (ModuleType)senders.SelectedIndex;
+				await App.Setting.Save();
+			}
+			return;
+		}
+
+		// ----------------
+
+		public Boolean uSettingForwarderImmediateJump_IsChecked {
+			get {
+				return App.Setting.Data.ForwarderImmediateJump;
+			}
+		}
+
+		public async void uSettingForwarderImmediateJump_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.As<ToggleButton>();
+			App.Setting.Data.ForwarderImmediateJump = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uSettingForwarderImmediateJump_IsChecked),
+				nameof(this.uSettingForwarderImmediateJump_Content),
+			]);
+			await App.Setting.Save();
+			return;
+		}
+
+		public String uSettingForwarderImmediateJump_Content {
+			get {
+				return !App.Setting.Data.ForwarderImmediateJump ? "Disabled" : "Enabled";
 			}
 		}
 
@@ -471,7 +525,7 @@ namespace AssistantPlus.View.Home {
 				default: throw new ();
 			}
 			if (changed) {
-				this.NotifyPropertyChanged(
+				this.NotifyPropertyChanged([
 					nameof(this.uSettingThemeMode_SelectedIndex),
 					nameof(this.uSettingThemeColor_IsChecked),
 					nameof(this.uSettingThemeColor_Content),
@@ -485,8 +539,8 @@ namespace AssistantPlus.View.Home {
 					nameof(this.uSettingWindowSize_IsChecked),
 					nameof(this.uSettingWindowSize_Content),
 					nameof(this.uSettingWindowSizeWidth_Value),
-					nameof(this.uSettingWindowSizeHeight_Value)
-				);
+					nameof(this.uSettingWindowSizeHeight_Value),
+				]);
 				App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
 			}
 			return;

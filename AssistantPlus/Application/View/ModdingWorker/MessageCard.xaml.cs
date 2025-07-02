@@ -97,10 +97,10 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public async void Update (
 		) {
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uTitle_Text),
-				nameof(this.uDescription_ItemsSource)
-			);
+				nameof(this.uDescription_ItemsSource),
+			]);
 			return;
 		}
 

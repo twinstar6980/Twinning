@@ -69,12 +69,12 @@ namespace AssistantPlus.View.Home {
 
 		public async void Update (
 		) {
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uTitleText_Text),
 				nameof(this.uTypeSelect_SelectedIndex),
 				nameof(this.uOptionText_Text),
-				nameof(this.uCommandText_Text)
-			);
+				nameof(this.uCommandText_Text),
+			]);
 			return;
 		}
 
@@ -88,9 +88,9 @@ namespace AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<TextBox>();
 			this.Data.Title = senders.Text;
-			this.NotifyPropertyChanged(
-				nameof(this.uTitleText_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uTitleText_Text),
+			]);
 			return;
 		}
 
@@ -106,7 +106,7 @@ namespace AssistantPlus.View.Home {
 
 		public List<String> uTypeSelect_ItemsSource {
 			get {
-				return ModuleHelper.Information.Select((value) => (value.Name)).ToList();
+				return Enum.GetValues<ModuleType>().Select((value) => (ModuleHelper.Query(value).Name)).ToList();
 			}
 		}
 
@@ -135,9 +135,9 @@ namespace AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<TextBox>();
 			this.Data.Option = ConvertHelper.ParseStringListFromStringWithLine(senders.Text);
-			this.NotifyPropertyChanged(
-				nameof(this.uOptionText_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uOptionText_Text),
+			]);
 			return;
 		}
 
@@ -157,9 +157,9 @@ namespace AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<TextBox>();
 			this.Data.Command = ConvertHelper.ParseStringListFromStringWithLine(senders.Text);
-			this.NotifyPropertyChanged(
-				nameof(this.uCommandText_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uCommandText_Text),
+			]);
 			return;
 		}
 

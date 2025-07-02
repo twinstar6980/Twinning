@@ -163,10 +163,10 @@ namespace AssistantPlus.View.PackageBuilder {
 			List<String> argument
 		) {
 			this.WorkerState = true;
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uWorkerProgress_IsActive),
-				nameof(this.uWorkerButton_Style)
-			);
+				nameof(this.uWorkerButton_Style),
+			]);
 			this.View.uWorkerButton.Flyout.ShowAt(this.View.uWorkerButton);
 			var result = await this.View.uWorkerPage.ExecuteCommand(argument);
 			if (result != null && result.First() == "s") {
@@ -176,10 +176,10 @@ namespace AssistantPlus.View.PackageBuilder {
 				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Execute failed", "");
 			}
 			this.WorkerState = false;
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uWorkerProgress_IsActive),
-				nameof(this.uWorkerButton_Style)
-			);
+				nameof(this.uWorkerButton_Style),
+			]);
 			return;
 		}
 
@@ -378,10 +378,10 @@ namespace AssistantPlus.View.PackageBuilder {
 			}
 			var hideDialog = await ControlHelper.ShowDialogForWait(this.View);
 			this.ProjectDirectory = projectDirectory;
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uLoadedAction_IsEnabled),
-				nameof(this.uProjectDirectory_Text)
-			);
+				nameof(this.uProjectDirectory_Text),
+			]);
 			await this.ProjectReload();
 			await hideDialog();
 			return;
@@ -395,15 +395,15 @@ namespace AssistantPlus.View.PackageBuilder {
 			this.uGroupList_ItemsSource.Clear();
 			this.uResourceList_ItemsSource.Clear();
 			this.ProjectDirectory = null;
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uLoadedAction_IsEnabled),
-				nameof(this.uProjectDirectory_Text)
-			);
+				nameof(this.uProjectDirectory_Text),
+			]);
 			// NOTE : refresh CollectionViewSource to prevent exception when virtual node loading
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uGroupList_ItemsSource),
-				nameof(this.uResourceList_ItemsSource)
-			);
+				nameof(this.uResourceList_ItemsSource),
+			]);
 			return;
 		}
 
@@ -534,9 +534,9 @@ namespace AssistantPlus.View.PackageBuilder {
 			GF.AssertTest(this.IsLoaded);
 			sourcePackage.Name = destinationPackage;
 			var itemNode = this.uPackageList_ItemsSource.First((value) => (Object.ReferenceEquals(value.Setting, sourcePackage)));
-			itemNode.NotifyPropertyChanged(
-				nameof(itemNode.uName_Text)
-			);
+			itemNode.NotifyPropertyChanged([
+				nameof(itemNode.uName_Text),
+			]);
 			await this.ProjectSaveSetting();
 			return;
 		}
@@ -640,9 +640,9 @@ namespace AssistantPlus.View.PackageBuilder {
 				this.uPartList_ItemsSource.Add(partNode);
 			}
 			else {
-				partNode.NotifyPropertyChanged(
-					nameof(partNode.uCount_Value)
-				);
+				partNode.NotifyPropertyChanged([
+					nameof(partNode.uCount_Value),
+				]);
 			}
 			return;
 		}
@@ -700,20 +700,20 @@ namespace AssistantPlus.View.PackageBuilder {
 			StorageHelper.Rename(sourceDirectory, destinationDirectory);
 			var itemNode = this.FindScopeNode(sourcePart);
 			itemNode.Name = destinationPart;
-			itemNode.NotifyPropertyChanged(
-				nameof(itemNode.uName_Text)
-			);
+			itemNode.NotifyPropertyChanged([
+				nameof(itemNode.uName_Text),
+			]);
 			foreach (var groupNode in this.uGroupList_ItemsSource.Where((value) => (value.PartName == sourcePart))) {
 				groupNode.PartName = destinationPart;
-				groupNode.NotifyPropertyChanged(
-					nameof(groupNode.uName_Text)
-				);
+				groupNode.NotifyPropertyChanged([
+					nameof(groupNode.uName_Text),
+				]);
 			}
 			foreach (var groupNode in this.uResourceList_ItemsSource.Where((value) => (value.PartName == sourcePart))) {
 				groupNode.PartName = destinationPart;
-				groupNode.NotifyPropertyChanged(
-					nameof(groupNode.uName_Text)
-				);
+				groupNode.NotifyPropertyChanged([
+					nameof(groupNode.uName_Text),
+				]);
 			}
 			return;
 		}
@@ -729,9 +729,9 @@ namespace AssistantPlus.View.PackageBuilder {
 			this.uPartList_ItemsSource.Remove(itemNode);
 			foreach (var packageNode in this.uPackageList_ItemsSource) {
 				packageNode.Setting.Part.RemoveAll((value) => (value == sourcePart));
-				packageNode.NotifyPropertyChanged(
-					nameof(packageNode.uCount_Value)
-				);
+				packageNode.NotifyPropertyChanged([
+					nameof(packageNode.uCount_Value),
+				]);
 			}
 			await this.ProjectSaveSetting();
 			return;
@@ -792,9 +792,9 @@ namespace AssistantPlus.View.PackageBuilder {
 				groupNode.Parent.Children.Add(groupNode);
 			}
 			else {
-				groupNode.NotifyPropertyChanged(
-					nameof(groupNode.uCount_Value)
-				);
+				groupNode.NotifyPropertyChanged([
+					nameof(groupNode.uCount_Value),
+				]);
 			}
 			return;
 		}
@@ -837,9 +837,9 @@ namespace AssistantPlus.View.PackageBuilder {
 				Children = [],
 			};
 			parentNode.Children.Add(itemNode);
-			parentNode.NotifyPropertyChanged(
-				nameof(parentNode.uCount_Value)
-			);
+			parentNode.NotifyPropertyChanged([
+				nameof(parentNode.uCount_Value),
+			]);
 			this.View.uGroupList.SelectedItems.Add(itemNode);
 			return;
 		}
@@ -860,14 +860,14 @@ namespace AssistantPlus.View.PackageBuilder {
 			StorageHelper.Rename(sourceDirectory, destinationDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup);
 			itemNode.Name = destinationGroup;
-			itemNode.NotifyPropertyChanged(
-				nameof(itemNode.uName_Text)
-			);
+			itemNode.NotifyPropertyChanged([
+				nameof(itemNode.uName_Text),
+			]);
 			foreach (var groupNode in this.uResourceList_ItemsSource.Where((value) => (value.PartName == sourcePart && value.GroupName == sourceGroup))) {
 				groupNode.GroupName = destinationGroup;
-				groupNode.NotifyPropertyChanged(
-					nameof(groupNode.uName_Text)
-				);
+				groupNode.NotifyPropertyChanged([
+					nameof(groupNode.uName_Text),
+				]);
 			}
 			return;
 		}
@@ -882,9 +882,9 @@ namespace AssistantPlus.View.PackageBuilder {
 			StorageHelper.TrashDirectory(sourceDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup);
 			itemNode.Parent.Children.Remove(itemNode);
-			itemNode.Parent.NotifyPropertyChanged(
-				nameof(itemNode.Parent.uCount_Value)
-			);
+			itemNode.Parent.NotifyPropertyChanged([
+				nameof(itemNode.Parent.uCount_Value),
+			]);
 			return;
 		}
 
@@ -919,14 +919,14 @@ namespace AssistantPlus.View.PackageBuilder {
 			StorageHelper.Rename(sourceDirectory, destinationDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup);
 			itemNode.Parent.Children.Remove(itemNode);
-			itemNode.Parent.NotifyPropertyChanged(
-				nameof(itemNode.Parent.uCount_Value)
-			);
+			itemNode.Parent.NotifyPropertyChanged([
+				nameof(itemNode.Parent.uCount_Value),
+			]);
 			itemNode.Parent = this.FindScopeNode(destinationPart);
 			itemNode.Parent.Children.Add(itemNode);
-			itemNode.Parent.NotifyPropertyChanged(
-				nameof(itemNode.Parent.uCount_Value)
-			);
+			itemNode.Parent.NotifyPropertyChanged([
+				nameof(itemNode.Parent.uCount_Value),
+			]);
 			return;
 		}
 
@@ -959,13 +959,13 @@ namespace AssistantPlus.View.PackageBuilder {
 				resourceNode.Parent.Children.Add(resourceNode);
 			}
 			else {
-				resourceNode.NotifyPropertyChanged(
+				resourceNode.NotifyPropertyChanged([
 					nameof(resourceNode.uCategory_Style),
 					nameof(resourceNode.uCategoryResolution_Text),
 					nameof(resourceNode.uCategoryLocale_Text),
 					nameof(resourceNode.uTypeIcon_Glyph),
-					nameof(resourceNode.uTypeText_Text)
-				);
+					nameof(resourceNode.uTypeText_Text),
+				]);
 			}
 			return;
 		}
@@ -1015,9 +1015,9 @@ namespace AssistantPlus.View.PackageBuilder {
 				Parent = parentNode,
 			};
 			parentNode.Children.Add(itemNode);
-			parentNode.NotifyPropertyChanged(
-				nameof(parentNode.uCount_Value)
-			);
+			parentNode.NotifyPropertyChanged([
+				nameof(parentNode.uCount_Value),
+			]);
 			this.View.uResourceList.SelectedItems.Add(itemNode);
 			return;
 		}
@@ -1039,9 +1039,9 @@ namespace AssistantPlus.View.PackageBuilder {
 			StorageHelper.Rename(sourceDirectory, destinationDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup, sourceResource);
 			itemNode.Name = destinationResource;
-			itemNode.NotifyPropertyChanged(
-				nameof(itemNode.uName_Text)
-			);
+			itemNode.NotifyPropertyChanged([
+				nameof(itemNode.uName_Text),
+			]);
 			return;
 		}
 
@@ -1056,9 +1056,9 @@ namespace AssistantPlus.View.PackageBuilder {
 			StorageHelper.TrashDirectory(sourceDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup, sourceResource);
 			itemNode.Parent.Children.Remove(itemNode);
-			itemNode.Parent.NotifyPropertyChanged(
-				nameof(itemNode.Parent.uCount_Value)
-			);
+			itemNode.Parent.NotifyPropertyChanged([
+				nameof(itemNode.Parent.uCount_Value),
+			]);
 			return;
 		}
 
@@ -1096,14 +1096,14 @@ namespace AssistantPlus.View.PackageBuilder {
 			StorageHelper.Rename(sourceDirectory, destinationDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup, sourceResource);
 			itemNode.Parent.Children.Remove(itemNode);
-			itemNode.Parent.NotifyPropertyChanged(
-				nameof(itemNode.Parent.uCount_Value)
-			);
+			itemNode.Parent.NotifyPropertyChanged([
+				nameof(itemNode.Parent.uCount_Value),
+			]);
 			itemNode.Parent = this.FindScopeNode(destinationPart, destinationGroup);
 			itemNode.Parent.Children.Add(itemNode);
-			itemNode.Parent.NotifyPropertyChanged(
-				nameof(itemNode.Parent.uCount_Value)
-			);
+			itemNode.Parent.NotifyPropertyChanged([
+				nameof(itemNode.Parent.uCount_Value),
+			]);
 			return;
 		}
 
@@ -1692,11 +1692,11 @@ namespace AssistantPlus.View.PackageBuilder {
 			var senders = sender.As<TextBox>();
 			GF.AssertTest(this.Host.IsLoaded);
 			this.IsNameEditing = false;
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uName_Visibility),
 				nameof(this.uNameEdit_Visibility),
-				nameof(this.uNameEdit_IsEnabled)
-			);
+				nameof(this.uNameEdit_IsEnabled),
+			]);
 			var value = senders.Text;
 			if (StorageHelper.CheckName(value)) {
 				await this.Host.PackageRename(this.Setting, value);
@@ -1722,12 +1722,12 @@ namespace AssistantPlus.View.PackageBuilder {
 			switch (senders.Tag.As<String>()) {
 				case "Rename": {
 					this.IsNameEditing = true;
-					this.NotifyPropertyChanged(
+					this.NotifyPropertyChanged([
 						nameof(this.uName_Text),
 						nameof(this.uName_Visibility),
 						nameof(this.uNameEdit_Visibility),
-						nameof(this.uNameEdit_IsEnabled)
-					);
+						nameof(this.uNameEdit_IsEnabled),
+					]);
 					break;
 				}
 				case "Delete": {
@@ -1747,9 +1747,9 @@ namespace AssistantPlus.View.PackageBuilder {
 					}, null);
 					this.Setting.Part = partList.Where((value) => (this.Setting.Part.Contains(value))).ToList();
 					await this.SaveSetting();
-					this.NotifyPropertyChanged(
-						nameof(this.uCount_Value)
-					);
+					this.NotifyPropertyChanged([
+						nameof(this.uCount_Value),
+					]);
 					break;
 				}
 				case "Setting": {
@@ -1891,11 +1891,11 @@ namespace AssistantPlus.View.PackageBuilder {
 			var senders = sender.As<TextBox>();
 			GF.AssertTest(this.Host.IsLoaded);
 			this.IsNameEditing = false;
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uName_Visibility),
 				nameof(this.uNameEdit_Visibility),
-				nameof(this.uNameEdit_IsEnabled)
-			);
+				nameof(this.uNameEdit_IsEnabled),
+			]);
 			var value = senders.Text;
 			if (StorageHelper.CheckName(value)) {
 				await this.Host.PartRename(this.Name, value);
@@ -1933,12 +1933,12 @@ namespace AssistantPlus.View.PackageBuilder {
 				}
 				case "Rename": {
 					this.IsNameEditing = true;
-					this.NotifyPropertyChanged(
+					this.NotifyPropertyChanged([
 						nameof(this.uName_Text),
 						nameof(this.uName_Visibility),
 						nameof(this.uNameEdit_Visibility),
-						nameof(this.uNameEdit_IsEnabled)
-					);
+						nameof(this.uNameEdit_IsEnabled),
+					]);
 					break;
 				}
 				case "Delete": {
@@ -2142,11 +2142,11 @@ namespace AssistantPlus.View.PackageBuilder {
 			var senders = sender.As<TextBox>();
 			GF.AssertTest(this.Host.IsLoaded);
 			this.IsNameEditing = false;
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uName_Visibility),
 				nameof(this.uNameEdit_Visibility),
-				nameof(this.uNameEdit_IsEnabled)
-			);
+				nameof(this.uNameEdit_IsEnabled),
+			]);
 			var value = senders.Text;
 			if (StorageHelper.CheckName(value)) {
 				await this.Host.GroupRename(this.Parent.Name, this.Name, value);
@@ -2184,12 +2184,12 @@ namespace AssistantPlus.View.PackageBuilder {
 				}
 				case "Rename": {
 					this.IsNameEditing = true;
-					this.NotifyPropertyChanged(
+					this.NotifyPropertyChanged([
 						nameof(this.uName_Text),
 						nameof(this.uName_Visibility),
 						nameof(this.uNameEdit_Visibility),
-						nameof(this.uNameEdit_IsEnabled)
-					);
+						nameof(this.uNameEdit_IsEnabled),
+					]);
 					break;
 				}
 				case "Delete": {
@@ -2359,11 +2359,11 @@ namespace AssistantPlus.View.PackageBuilder {
 			var senders = sender.As<TextBox>();
 			GF.AssertTest(this.Host.IsLoaded);
 			this.IsNameEditing = false;
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uName_Visibility),
 				nameof(this.uNameEdit_Visibility),
-				nameof(this.uNameEdit_IsEnabled)
-			);
+				nameof(this.uNameEdit_IsEnabled),
+			]);
 			var value = senders.Text;
 			if (StorageHelper.CheckName(value)) {
 				await this.Host.ResourceRename(this.Parent.Parent.Name, this.Parent.Name, this.Name, value);
@@ -2397,10 +2397,10 @@ namespace AssistantPlus.View.PackageBuilder {
 			var senders = sender.As<TextBox>();
 			GF.AssertTest(this.Host.IsLoaded);
 			this.Setting.Category.Resolution = ProjectSettingHelper.ParseResolutionString(senders.Text, this.Setting.Category.Resolution);
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uCategoryResolution_Text),
-				nameof(this.uCategory_Style)
-			);
+				nameof(this.uCategory_Style),
+			]);
 			return;
 		}
 
@@ -2418,10 +2418,10 @@ namespace AssistantPlus.View.PackageBuilder {
 			var senders = sender.As<TextBox>();
 			GF.AssertTest(this.Host.IsLoaded);
 			this.Setting.Category.Locale = ProjectSettingHelper.ParseLocaleString(senders.Text, this.Setting.Category.Locale);
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uCategoryLocale_Text),
-				nameof(this.uCategory_Style)
-			);
+				nameof(this.uCategory_Style),
+			]);
 			return;
 		}
 
@@ -2606,10 +2606,10 @@ namespace AssistantPlus.View.PackageBuilder {
 				default: throw new ();
 			}
 			await this.SaveSetting();
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uTypeIcon_Glyph),
-				nameof(this.uTypeText_Text)
-			);
+				nameof(this.uTypeText_Text),
+			]);
 			return;
 		}
 
@@ -2636,12 +2636,12 @@ namespace AssistantPlus.View.PackageBuilder {
 				}
 				case "Rename": {
 					this.IsNameEditing = true;
-					this.NotifyPropertyChanged(
+					this.NotifyPropertyChanged([
 						nameof(this.uName_Text),
 						nameof(this.uName_Visibility),
 						nameof(this.uNameEdit_Visibility),
-						nameof(this.uNameEdit_IsEnabled)
-					);
+						nameof(this.uNameEdit_IsEnabled),
+					]);
 					break;
 				}
 				case "Delete": {

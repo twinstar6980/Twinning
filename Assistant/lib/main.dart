@@ -76,19 +76,19 @@ class _Main {
     List<String> resource,
   ) async {
     var setting = Provider.of<SettingProvider>(_setting.state.mApplicationNavigatorKey.currentContext!, listen: false);
-    var forwardState = await ModuleType.values.map((value) async => await ModuleHelper.query(value).checkForwardState?.call(resource) ?? false).wait;
-    var targetType = forwardState[setting.data.mForwarderDefaultTarget.index] ? setting.data.mForwarderDefaultTarget : null;
-    var canContinue = setting.data.mForwarderImmediateJump && targetType != null ? true : await ControlHelper.showDialogAsModal<Boolean>(_setting.state.mApplicationNavigatorKey.currentContext!, CustomModalDialog(
+    var forwardOption = await ModuleType.values.map((value) async => await ModuleHelper.query(value).generateForwardOption(resource)).wait;
+    var targetType = forwardOption[setting.data.mForwarderDefaultTarget.index] != null ? setting.data.mForwarderDefaultTarget : null;
+    var canContinue = (setting.data.mForwarderImmediateJump && targetType != null) || (await ControlHelper.showDialogAsModal<Boolean>(_setting.state.mApplicationNavigatorKey.currentContext!, CustomModalDialog(
       title: 'Forward',
       contentBuilder: (context, setState) => [
         ...ModuleType.values.map(
           (item) => ListTile(
             contentPadding: EdgeInsets.zero,
-            enabled: forwardState[item.index],
+            enabled: forwardOption[item.index] != null,
             leading: Radio(
               value: item,
               groupValue: targetType,
-              onChanged: !forwardState[item.index]
+              onChanged: forwardOption[item.index] == null
                 ? null
                 : (value) async {
                   targetType = item;
@@ -112,10 +112,9 @@ class _Main {
           onPressed: () => Navigator.pop(context, true),
         ),
       ],
-    )) ?? false;
+    )) ?? false);
     if (canContinue && targetType != null) {
-      var targetTypeInformation = ModuleHelper.query(targetType!);
-      await _handleLaunch(targetTypeInformation.name, targetType!, targetTypeInformation.generateForwardOption!(resource));
+      await _handleLaunch(ModuleHelper.query(targetType!).name, targetType!, forwardOption[targetType!.index]!);
     }
     return;
   }

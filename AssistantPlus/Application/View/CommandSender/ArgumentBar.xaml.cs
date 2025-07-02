@@ -115,63 +115,63 @@ namespace AssistantPlus.View.CommandSender {
 
 		public async void Update (
 		) {
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uLabel_ToolTip),
-				nameof(this.uLabelText_Text)
-			);
+				nameof(this.uLabelText_Text),
+			]);
 			if (this.Type != null) {
 				if (this.Option == null) {
 					switch (this.Type) {
 						case ArgumentType.Boolean: {
-							this.NotifyPropertyChanged(
+							this.NotifyPropertyChanged([
 								nameof(this.uBooleanValue_Text),
 								nameof(this.uBooleanValueNo_IsChecked),
-								nameof(this.uBooleanValueYes_IsChecked)
-							);
+								nameof(this.uBooleanValueYes_IsChecked),
+							]);
 							break;
 						}
 						case ArgumentType.Integer: {
-							this.NotifyPropertyChanged(
-								nameof(this.uIntegerValue_Value)
-							);
+							this.NotifyPropertyChanged([
+								nameof(this.uIntegerValue_Value),
+							]);
 							break;
 						}
 						case ArgumentType.Floater: {
-							this.NotifyPropertyChanged(
-								nameof(this.uFloaterValue_Value)
-							);
+							this.NotifyPropertyChanged([
+								nameof(this.uFloaterValue_Value),
+							]);
 							break;
 						}
 						case ArgumentType.Size: {
 							if (this.ValueOfSize != null) {
 								this.uSizeExponent__Value = this.ValueOfSize.Exponent;
 							}
-							this.NotifyPropertyChanged(
+							this.NotifyPropertyChanged([
 								nameof(this.uSizeCount_Value),
-								nameof(this.uSizeExponent_Content)
-							);
+								nameof(this.uSizeExponent_Content),
+							]);
 							break;
 						}
 						case ArgumentType.String: {
-							this.NotifyPropertyChanged(
-								nameof(this.uStringValue_Text)
-							);
+							this.NotifyPropertyChanged([
+								nameof(this.uStringValue_Text),
+							]);
 							break;
 						}
 						case ArgumentType.Path: {
-							this.NotifyPropertyChanged(
-								nameof(this.uPathContent_Text)
-							);
+							this.NotifyPropertyChanged([
+								nameof(this.uPathContent_Text),
+							]);
 							break;
 						}
 						default: throw new ();
 					}
 				}
 				else {
-					this.NotifyPropertyChanged(
+					this.NotifyPropertyChanged([
 						nameof(this.uEnumerationItem_ItemsSource),
-						nameof(this.uEnumerationItem_SelectedIndex)
-					);
+						nameof(this.uEnumerationItem_SelectedIndex),
+					]);
 				}
 			}
 			return;
@@ -218,11 +218,11 @@ namespace AssistantPlus.View.CommandSender {
 			else if (senders.Text == "n" || senders.Text == "y") {
 				this.ValueOfBoolean = new () { Value = senders.Text == "y" };
 			}
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uBooleanValue_Text),
 				nameof(this.uBooleanValueNo_IsChecked),
-				nameof(this.uBooleanValueYes_IsChecked)
-			);
+				nameof(this.uBooleanValueYes_IsChecked),
+			]);
 			return;
 		}
 
@@ -260,11 +260,11 @@ namespace AssistantPlus.View.CommandSender {
 			else {
 				this.ValueOfBoolean = new () { Value = false };
 			}
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uBooleanValue_Text),
 				nameof(this.uBooleanValueNo_IsChecked),
-				nameof(this.uBooleanValueYes_IsChecked)
-			);
+				nameof(this.uBooleanValueYes_IsChecked),
+			]);
 			return;
 		}
 
@@ -293,11 +293,11 @@ namespace AssistantPlus.View.CommandSender {
 			else {
 				this.ValueOfBoolean = new () { Value = true };
 			}
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uBooleanValue_Text),
 				nameof(this.uBooleanValueNo_IsChecked),
-				nameof(this.uBooleanValueYes_IsChecked)
-			);
+				nameof(this.uBooleanValueYes_IsChecked),
+			]);
 			return;
 		}
 
@@ -326,9 +326,9 @@ namespace AssistantPlus.View.CommandSender {
 			else if (Floater.IsFinite(senders.Value) && Integer.MinValue <= senders.Value && senders.Value <= Integer.MaxValue) {
 				this.ValueOfInteger = new () { Value = (Integer)senders.Value };
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uIntegerValue_Value)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uIntegerValue_Value),
+			]);
 			return;
 		}
 
@@ -372,9 +372,9 @@ namespace AssistantPlus.View.CommandSender {
 			else if (Floater.IsFinite(senders.Value)) {
 				this.ValueOfFloater = new () { Value = senders.Value };
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uFloaterValue_Value)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uFloaterValue_Value),
+			]);
 			return;
 		}
 
@@ -418,9 +418,9 @@ namespace AssistantPlus.View.CommandSender {
 			else if (Floater.IsFinite(senders.Value) && senders.Value >= 0.0) {
 				this.ValueOfSize = new () { Count = senders.Value, Exponent = this.uSizeExponent__Value };
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uSizeCount_Value)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uSizeCount_Value),
+			]);
 			return;
 		}
 
@@ -461,9 +461,9 @@ namespace AssistantPlus.View.CommandSender {
 			if (this.ValueOfSize != null) {
 				this.ValueOfSize = new () { Count = this.ValueOfSize.Count, Exponent = this.uSizeExponent__Value };
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uSizeExponent_Content)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uSizeExponent_Content),
+			]);
 			return;
 		}
 
@@ -492,9 +492,9 @@ namespace AssistantPlus.View.CommandSender {
 			else {
 				this.ValueOfString = new () { Value = senders.Text };
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uStringValue_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uStringValue_Text),
+			]);
 			return;
 		}
 
@@ -544,9 +544,9 @@ namespace AssistantPlus.View.CommandSender {
 				args.Handled = true;
 				var item = await args.DataView.GetStorageItemsAsync();
 				this.ValueOfPath = new () { Content = StorageHelper.GetLongPath(item[0].Path) };
-				this.NotifyPropertyChanged(
-					nameof(this.uPathContent_Text)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uPathContent_Text),
+				]);
 			}
 			return;
 		}
@@ -565,9 +565,9 @@ namespace AssistantPlus.View.CommandSender {
 			else {
 				this.ValueOfPath = new () { Content = StorageHelper.Regularize(senders.Text) };
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uPathContent_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uPathContent_Text),
+			]);
 			return;
 		}
 
@@ -598,9 +598,9 @@ namespace AssistantPlus.View.CommandSender {
 			};
 			if (value != null) {
 				this.ValueOfPath = new () { Content = value };
-				this.NotifyPropertyChanged(
-					nameof(this.uPathContent_Text)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uPathContent_Text),
+				]);
 			}
 			return;
 		}
@@ -650,9 +650,9 @@ namespace AssistantPlus.View.CommandSender {
 				return;
 			}
 			this.Value.Value = null;
-			this.NotifyPropertyChanged(
-				nameof(this.uEnumerationItem_SelectedIndex)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uEnumerationItem_SelectedIndex),
+			]);
 			return;
 		}
 

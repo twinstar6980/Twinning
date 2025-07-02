@@ -65,9 +65,9 @@ namespace AssistantPlus.View.PackageBuilder {
 		public async void Update (
 		) {
 			this.uList_ItemsSource = this.Value.Select((value) => (new VariableListPanelItemController() { Host = this, Item = value })).ToObservableCollection();
-			this.NotifyPropertyChanged(
-				nameof(this.uList_ItemsSource)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uList_ItemsSource),
+			]);
 			return;
 		}
 
@@ -124,9 +124,9 @@ namespace AssistantPlus.View.PackageBuilder {
 		) {
 			var senders = sender.As<TextBox>();
 			this.Item.Name = senders.Text;
-			this.NotifyPropertyChanged(
-				nameof(this.uName_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uName_Text),
+			]);
 			return;
 		}
 
@@ -144,9 +144,9 @@ namespace AssistantPlus.View.PackageBuilder {
 		) {
 			var senders = sender.As<TextBox>();
 			this.Item.Value = senders.Text;
-			this.NotifyPropertyChanged(
-				nameof(this.uValue_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uValue_Text),
+			]);
 			return;
 		}
 

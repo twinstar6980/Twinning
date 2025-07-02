@@ -66,9 +66,9 @@ namespace AssistantPlus.View.CommandSender {
 
 		public async void Update (
 		) {
-			this.NotifyPropertyChanged(
-				nameof(this.uMethodConfigurationText_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uMethodConfigurationText_Text),
+			]);
 			return;
 		}
 
@@ -82,9 +82,9 @@ namespace AssistantPlus.View.CommandSender {
 		) {
 			var senders = sender.As<TextBox>();
 			this.Data.MethodConfiguration = StorageHelper.Regularize(senders.Text);
-			this.NotifyPropertyChanged(
-				nameof(this.uMethodConfigurationText_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uMethodConfigurationText_Text),
+			]);
 			return;
 		}
 
@@ -102,9 +102,9 @@ namespace AssistantPlus.View.CommandSender {
 			var value = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(CommandSender)}.MethodConfiguration");
 			if (value != null) {
 				this.Data.MethodConfiguration = value;
-				this.NotifyPropertyChanged(
-					nameof(this.uMethodConfigurationText_Text)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uMethodConfigurationText_Text),
+				]);
 			}
 			return;
 		}
@@ -125,6 +125,9 @@ namespace AssistantPlus.View.CommandSender {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.Data.ParallelForward = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uParallelForwardToggle_IsChecked),
+			]);
 			return;
 		}
 

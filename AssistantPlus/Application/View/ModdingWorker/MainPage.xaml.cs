@@ -41,10 +41,10 @@ namespace AssistantPlus.View.ModdingWorker {
 			List<String> additionalArgument
 		) {
 			this.Controller.AdditionalArgument = additionalArgument;
-			this.Controller.NotifyPropertyChanged(
+			this.Controller.NotifyPropertyChanged([
 				nameof(this.Controller.uAdditionalArgumentCount_Text),
-				nameof(this.Controller.uAdditionalArgumentContent_Text)
-			);
+				nameof(this.Controller.uAdditionalArgumentContent_Text),
+			]);
 			return await this.Controller.LaunchSession();
 		}
 
@@ -135,16 +135,16 @@ namespace AssistantPlus.View.ModdingWorker {
 			}
 			if (optionAutomaticScroll != null) {
 				this.AutomaticScroll = optionAutomaticScroll.AsNotNull();
-				this.NotifyPropertyChanged(
-					nameof(this.uAutomaticScroll_IsChecked)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uAutomaticScroll_IsChecked),
+				]);
 			}
 			if (optionAdditionalArgument != null) {
 				this.AdditionalArgument = optionAdditionalArgument;
-				this.NotifyPropertyChanged(
+				this.NotifyPropertyChanged([
 					nameof(this.uAdditionalArgumentCount_Text),
-					nameof(this.uAdditionalArgumentContent_Text)
-				);
+					nameof(this.uAdditionalArgumentContent_Text),
+				]);
 			}
 			if (optionImmediateLaunch != null) {
 				if (optionImmediateLaunch.AsNotNull()) {
@@ -203,19 +203,19 @@ namespace AssistantPlus.View.ModdingWorker {
 		) {
 			var history = this.SubmissionHistory[(Size)type];
 			this.SubmissionState = true;
-			this.NotifyPropertyChanged(
-				nameof(this.uProgress_ProgressPaused)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uProgress_ProgressPaused),
+			]);
 			this.uSubmissionBar_Type = type;
 			this.uSubmissionBar_Option = option;
 			this.uSubmissionBar_History = history;
 			this.uSubmissionBar_Value.Value = null;
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uSubmissionBar_Type),
 				nameof(this.uSubmissionBar_Option),
 				nameof(this.uSubmissionBar_History),
-				nameof(this.uSubmissionBar_Stamp)
-			);
+				nameof(this.uSubmissionBar_Stamp),
+			]);
 			await Task.Delay(40);
 			this.View.uSubmissionBar.Focus(FocusState.Programmatic);
 			while (this.SubmissionState) {
@@ -226,12 +226,12 @@ namespace AssistantPlus.View.ModdingWorker {
 			this.uSubmissionBar_Option = [];
 			this.uSubmissionBar_History = [];
 			this.uSubmissionBar_Value.Value = null;
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uSubmissionBar_Type),
 				nameof(this.uSubmissionBar_Option),
 				nameof(this.uSubmissionBar_History),
-				nameof(this.uSubmissionBar_Stamp)
-			);
+				nameof(this.uSubmissionBar_Stamp),
+			]);
 			if (value != null) {
 				var valueString = ValueExpressionHelper.MakeString(value);
 				history.RemoveAll((item) => (ValueExpressionHelper.MakeString(item) == valueString));
@@ -249,11 +249,11 @@ namespace AssistantPlus.View.ModdingWorker {
 			var exception = default(Exception?);
 			this.SessionRunning = true;
 			this.uMessageList_ItemsSource.Clear();
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uLaunch_Visibility),
 				nameof(this.uSubmissionBar_Visibility),
-				nameof(this.uProgress_ProgressIndeterminate)
-			);
+				nameof(this.uProgress_ProgressIndeterminate),
+			]);
 			try {
 				var kernel = StorageHelper.Temporary();
 				var library = new Bridge.Library();
@@ -282,11 +282,11 @@ namespace AssistantPlus.View.ModdingWorker {
 				await this.SendMessage(MessageType.Error, "FAILED", [exception.ToString()]);
 			}
 			this.SessionRunning = false;
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uLaunch_Visibility),
 				nameof(this.uSubmissionBar_Visibility),
-				nameof(this.uProgress_ProgressIndeterminate)
-			);
+				nameof(this.uProgress_ProgressIndeterminate),
+			]);
 			return exception == null ? result.AsNotNull() : null;
 		}
 
@@ -326,6 +326,9 @@ namespace AssistantPlus.View.ModdingWorker {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.AutomaticScroll = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uAutomaticScroll_IsChecked),
+			]);
 			return;
 		}
 
@@ -347,10 +350,10 @@ namespace AssistantPlus.View.ModdingWorker {
 		) {
 			var senders = sender.As<TextBox>();
 			this.AdditionalArgument = ConvertHelper.ParseStringListFromStringWithLine(senders.Text);
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uAdditionalArgumentCount_Text),
-				nameof(this.uAdditionalArgumentContent_Text)
-			);
+				nameof(this.uAdditionalArgumentContent_Text),
+			]);
 			return;
 		}
 
@@ -422,9 +425,9 @@ namespace AssistantPlus.View.ModdingWorker {
 		public async void uSubmissionBar_ValueSubmitted (
 		) {
 			this.SubmissionState = false;
-			this.NotifyPropertyChanged(
-				nameof(this.uProgress_ProgressPaused)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uProgress_ProgressPaused),
+			]);
 			return;
 		}
 

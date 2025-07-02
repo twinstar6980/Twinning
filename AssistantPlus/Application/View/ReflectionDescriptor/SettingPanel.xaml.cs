@@ -65,8 +65,8 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 
 		public async void Update (
 		) {
-			this.NotifyPropertyChanged(
-			);
+			this.NotifyPropertyChanged([
+			]);
 			return;
 		}
 

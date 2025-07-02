@@ -67,10 +67,10 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		public async void Update (
 		) {
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uPath_Text),
-				nameof(this.uType_Text)
-			);
+				nameof(this.uType_Text),
+			]);
 			return;
 		}
 
@@ -84,9 +84,9 @@ namespace AssistantPlus.View.PackageBuilder {
 		) {
 			var senders = sender.As<TextBox>();
 			this.Value.Path = senders.Text;
-			this.NotifyPropertyChanged(
-				nameof(this.uPath_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uPath_Text),
+			]);
 			return;
 		}
 
@@ -106,9 +106,9 @@ namespace AssistantPlus.View.PackageBuilder {
 		) {
 			var senders = sender.As<TextBox>();
 			this.Value.Type = senders.Text;
-			this.NotifyPropertyChanged(
-				nameof(this.uType_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uType_Text),
+			]);
 			return;
 		}
 
@@ -141,9 +141,10 @@ namespace AssistantPlus.View.PackageBuilder {
 				}.SelfAlso((it) => {
 					it.Click += (_, _) => {
 						this.Value.Type = type;
-						this.NotifyPropertyChanged(
-							nameof(this.uType_Text)
-						);
+						this.NotifyPropertyChanged([
+							nameof(this.uType_Text),
+						]);
+						return;
 					};
 				}));
 			}

@@ -72,14 +72,14 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public async void Update (
 		) {
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uKernelText_Text),
 				nameof(this.uScriptText_Text),
 				nameof(this.uArgumentText_Text),
 				nameof(this.uAutomaticScrollToggle_IsChecked),
 				nameof(this.uImmediateLaunchToggle_IsChecked),
-				nameof(this.uMessageFontText_Text)
-			);
+				nameof(this.uMessageFontText_Text),
+			]);
 			return;
 		}
 
@@ -93,9 +93,9 @@ namespace AssistantPlus.View.ModdingWorker {
 		) {
 			var senders = sender.As<TextBox>();
 			this.Data.Kernel = StorageHelper.Regularize(senders.Text);
-			this.NotifyPropertyChanged(
-				nameof(this.uKernelText_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uKernelText_Text),
+			]);
 			return;
 		}
 
@@ -113,9 +113,9 @@ namespace AssistantPlus.View.ModdingWorker {
 			var value = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(ModdingWorker)}.Kernel");
 			if (value != null) {
 				this.Data.Kernel = value;
-				this.NotifyPropertyChanged(
-					nameof(this.uKernelText_Text)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uKernelText_Text),
+				]);
 			}
 			return;
 		}
@@ -130,9 +130,9 @@ namespace AssistantPlus.View.ModdingWorker {
 		) {
 			var senders = sender.As<TextBox>();
 			this.Data.Script = StorageHelper.Regularize(senders.Text);
-			this.NotifyPropertyChanged(
-				nameof(this.uScriptText_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uScriptText_Text),
+			]);
 			return;
 		}
 
@@ -150,9 +150,9 @@ namespace AssistantPlus.View.ModdingWorker {
 			var value = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(ModdingWorker)}.Script");
 			if (value != null) {
 				this.Data.Script = value;
-				this.NotifyPropertyChanged(
-					nameof(this.uScriptText_Text)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uScriptText_Text),
+				]);
 			}
 			return;
 		}
@@ -167,9 +167,9 @@ namespace AssistantPlus.View.ModdingWorker {
 		) {
 			var senders = sender.As<TextBox>();
 			this.Data.Argument = ConvertHelper.ParseStringListFromStringWithLine(senders.Text);
-			this.NotifyPropertyChanged(
-				nameof(this.uArgumentText_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uArgumentText_Text),
+			]);
 			return;
 		}
 
@@ -195,6 +195,9 @@ namespace AssistantPlus.View.ModdingWorker {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.Data.AutomaticScroll = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uAutomaticScrollToggle_IsChecked),
+			]);
 			return;
 		}
 
@@ -214,6 +217,9 @@ namespace AssistantPlus.View.ModdingWorker {
 		) {
 			var senders = sender.As<ToggleButton>();
 			this.Data.ImmediateLaunch = senders.IsChecked.AsNotNull();
+			this.NotifyPropertyChanged([
+				nameof(this.uImmediateLaunchToggle_IsChecked),
+			]);
 			return;
 		}
 
@@ -227,9 +233,9 @@ namespace AssistantPlus.View.ModdingWorker {
 		) {
 			var senders = sender.As<TextBox>();
 			this.Data.MessageFont = senders.Text;
-			this.NotifyPropertyChanged(
-				nameof(this.uMessageFontText_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uMessageFontText_Text),
+			]);
 			return;
 		}
 
@@ -256,9 +262,10 @@ namespace AssistantPlus.View.ModdingWorker {
 				}.SelfAlso((it) => {
 					it.Click += (_, _) => {
 						this.Data.MessageFont = item;
-						this.NotifyPropertyChanged(
-							nameof(this.uMessageFontText_Text)
-						);
+						this.NotifyPropertyChanged([
+							nameof(this.uMessageFontText_Text),
+						]);
+						return;
 					};
 				}));
 			}

@@ -23,20 +23,18 @@ enum ModuleType {
 }
 
 class ModuleInformation {
-  ModuleType                              type;
-  IconData                                icon;
-  String                                  name;
-  Widget Function(List<String>)           mainPage;
-  Widget Function(BuildContext)           settingPanel;
-  Future<Boolean> Function(List<String>)? checkForwardState;
-  List<String> Function(List<String>)?    generateForwardOption;
+  ModuleType                                   type;
+  IconData                                     icon;
+  String                                       name;
+  Widget Function(List<String>)                mainPage;
+  Widget Function(BuildContext)                settingPanel;
+  Future<List<String>?> Function(List<String>) generateForwardOption;
   ModuleInformation({
     required this.type,
     required this.icon,
     required this.name,
     required this.mainPage,
     required this.settingPanel,
-    required this.checkForwardState,
     required this.generateForwardOption,
   });
 }
@@ -75,7 +73,7 @@ class ModuleLauncherSetting {
 
 class ModuleHelper {
 
-  static List<ModuleInformation> information = [
+  static List<ModuleInformation> _information = [
     ModuleInformation(
       type: ModuleType.modding_worker,
       icon: IconSymbols.rule_settings,
@@ -88,8 +86,7 @@ class ModuleHelper {
         data: Provider.of<SettingProvider>(context, listen: false).data.mModdingWorker,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
-      checkForwardState: (resource) async => true,
-      generateForwardOption: (resource) => ['-additional_argument', ...resource],
+      generateForwardOption: (resource) async => ['-additional_argument', ...resource],
     ),
     ModuleInformation(
       type: ModuleType.command_sender,
@@ -103,8 +100,7 @@ class ModuleHelper {
         data: Provider.of<SettingProvider>(context, listen: false).data.mCommandSender,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
-      checkForwardState: null,
-      generateForwardOption: null,
+      generateForwardOption: (resource) async => null,
     ),
     ModuleInformation(
       type: ModuleType.resource_shipper,
@@ -118,8 +114,7 @@ class ModuleHelper {
         data: Provider.of<SettingProvider>(context, listen: false).data.mResourceShipper,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
-      checkForwardState: (resource) async => true,
-      generateForwardOption: (resource) => ['-resource', ...resource],
+      generateForwardOption: (resource) async => ['-resource', ...resource],
     ),
     ModuleInformation(
       type: ModuleType.animation_viewer,
@@ -133,15 +128,14 @@ class ModuleHelper {
         data: Provider.of<SettingProvider>(context, listen: false).data.mAnimationViewer,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
-      checkForwardState: (resource) async => resource.length == 1 && RegExp(r'(\.pam\.json)$', caseSensitive: false).hasMatch(resource.first) && await StorageHelper.existFile(resource.first),
-      generateForwardOption: (resource) => ['-animation_file', resource.first],
+      generateForwardOption: (resource) async => resource.length != 1 || !RegExp(r'(\.pam\.json)$', caseSensitive: false).hasMatch(resource.first) || !await StorageHelper.existFile(resource.first) ? null : ['-animation_file', resource.first],
     ),
   ];
 
   static ModuleInformation query(
     ModuleType type,
   ) {
-    return information[type.index];
+    return _information[type.index];
   }
 
   // ----------------

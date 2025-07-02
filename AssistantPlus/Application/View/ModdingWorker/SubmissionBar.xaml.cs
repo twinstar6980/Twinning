@@ -117,76 +117,78 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		public Wrapper<ValueExpression> Value => this.View.Value;
 
+		public Action OnValueSubmitted => this.View.OnValueSubmitted;
+
 		#endregion
 
 		#region update
 
 		public async void Update (
 		) {
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uHistory_IsEnabled),
 				nameof(this.uHistoryBadge_Visibility),
 				nameof(this.uHistoryBadge_Value),
-				nameof(this.uSubmit_IsEnabled)
-			);
+				nameof(this.uSubmit_IsEnabled),
+			]);
 			switch (this.Type) {
 				case null: {
-					this.NotifyPropertyChanged(
-					);
+					this.NotifyPropertyChanged([
+					]);
 					break;
 				}
 				case SubmissionType.Pause: {
-					this.NotifyPropertyChanged(
-					);
+					this.NotifyPropertyChanged([
+					]);
 					break;
 				}
 				case SubmissionType.Boolean: {
-					this.NotifyPropertyChanged(
+					this.NotifyPropertyChanged([
 						nameof(this.uBooleanValue_Text),
 						nameof(this.uBooleanValueNo_IsChecked),
-						nameof(this.uBooleanValueYes_IsChecked)
-					);
+						nameof(this.uBooleanValueYes_IsChecked),
+					]);
 					break;
 				}
 				case SubmissionType.Integer: {
-					this.NotifyPropertyChanged(
-						nameof(this.uIntegerValue_Value)
-					);
+					this.NotifyPropertyChanged([
+						nameof(this.uIntegerValue_Value),
+					]);
 					break;
 				}
 				case SubmissionType.Floater: {
-					this.NotifyPropertyChanged(
-						nameof(this.uFloaterValue_Value)
-					);
+					this.NotifyPropertyChanged([
+						nameof(this.uFloaterValue_Value),
+					]);
 					break;
 				}
 				case SubmissionType.Size: {
 					if (this.ValueOfSize != null) {
 						this.uSizeExponent__Value = this.ValueOfSize.Exponent;
 					}
-					this.NotifyPropertyChanged(
+					this.NotifyPropertyChanged([
 						nameof(this.uSizeCount_Value),
-						nameof(this.uSizeExponent_Content)
-					);
+						nameof(this.uSizeExponent_Content),
+					]);
 					break;
 				}
 				case SubmissionType.String: {
-					this.NotifyPropertyChanged(
-						nameof(this.uStringValue_Text)
-					);
+					this.NotifyPropertyChanged([
+						nameof(this.uStringValue_Text),
+					]);
 					break;
 				}
 				case SubmissionType.Path: {
-					this.NotifyPropertyChanged(
-						nameof(this.uPathContent_Text)
-					);
+					this.NotifyPropertyChanged([
+						nameof(this.uPathContent_Text),
+					]);
 					break;
 				}
 				case SubmissionType.Enumeration: {
-					this.NotifyPropertyChanged(
+					this.NotifyPropertyChanged([
 						nameof(this.uEnumerationItem_ItemsSource),
-						nameof(this.uEnumerationItem_SelectedItem)
-					);
+						nameof(this.uEnumerationItem_SelectedItem),
+					]);
 					break;
 				}
 				default: throw new ();
@@ -227,6 +229,7 @@ namespace AssistantPlus.View.ModdingWorker {
 					it.Click += (_, _) => {
 						this.Value.Value = item;
 						this.Update();
+						return;
 					};
 					if (this.Type == SubmissionType.Enumeration) {
 						it.IsEnabled = this.Option.Contains(item.As<EnumerationExpression>().Item);
@@ -274,7 +277,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			if (this.Type == null) {
 				return;
 			}
-			this.View.OnValueSubmitted();
+			this.OnValueSubmitted();
 			return;
 		}
 
@@ -312,11 +315,11 @@ namespace AssistantPlus.View.ModdingWorker {
 			else if (senders.Text == "n" || senders.Text == "y") {
 				this.ValueOfBoolean = new () { Value = senders.Text == "y" };
 			}
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uBooleanValue_Text),
 				nameof(this.uBooleanValueNo_IsChecked),
-				nameof(this.uBooleanValueYes_IsChecked)
-			);
+				nameof(this.uBooleanValueYes_IsChecked),
+			]);
 			return;
 		}
 
@@ -354,11 +357,11 @@ namespace AssistantPlus.View.ModdingWorker {
 			else {
 				this.ValueOfBoolean = new () { Value = false };
 			}
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uBooleanValue_Text),
 				nameof(this.uBooleanValueNo_IsChecked),
-				nameof(this.uBooleanValueYes_IsChecked)
-			);
+				nameof(this.uBooleanValueYes_IsChecked),
+			]);
 			return;
 		}
 
@@ -387,11 +390,11 @@ namespace AssistantPlus.View.ModdingWorker {
 			else {
 				this.ValueOfBoolean = new () { Value = true };
 			}
-			this.NotifyPropertyChanged(
+			this.NotifyPropertyChanged([
 				nameof(this.uBooleanValue_Text),
 				nameof(this.uBooleanValueNo_IsChecked),
-				nameof(this.uBooleanValueYes_IsChecked)
-			);
+				nameof(this.uBooleanValueYes_IsChecked),
+			]);
 			return;
 		}
 
@@ -420,9 +423,9 @@ namespace AssistantPlus.View.ModdingWorker {
 			else if (Floater.IsFinite(senders.Value) && Integer.MinValue <= senders.Value && senders.Value <= Integer.MaxValue) {
 				this.ValueOfInteger = new () { Value = (Integer)senders.Value };
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uIntegerValue_Value)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uIntegerValue_Value),
+			]);
 			return;
 		}
 
@@ -466,9 +469,9 @@ namespace AssistantPlus.View.ModdingWorker {
 			else if (Floater.IsFinite(senders.Value)) {
 				this.ValueOfFloater = new () { Value = senders.Value };
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uFloaterValue_Value)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uFloaterValue_Value),
+			]);
 			return;
 		}
 
@@ -512,9 +515,9 @@ namespace AssistantPlus.View.ModdingWorker {
 			else if (Floater.IsFinite(senders.Value) && senders.Value >= 0.0) {
 				this.ValueOfSize = new () { Count = senders.Value, Exponent = this.uSizeExponent__Value };
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uSizeCount_Value)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uSizeCount_Value),
+			]);
 			return;
 		}
 
@@ -555,9 +558,9 @@ namespace AssistantPlus.View.ModdingWorker {
 			if (this.ValueOfSize != null) {
 				this.ValueOfSize = new () { Count = this.ValueOfSize.Count, Exponent = this.uSizeExponent__Value };
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uSizeExponent_Content)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uSizeExponent_Content),
+			]);
 			return;
 		}
 
@@ -586,9 +589,9 @@ namespace AssistantPlus.View.ModdingWorker {
 			else {
 				this.ValueOfString = new () { Value = senders.Text };
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uStringValue_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uStringValue_Text),
+			]);
 			return;
 		}
 
@@ -638,9 +641,9 @@ namespace AssistantPlus.View.ModdingWorker {
 				args.Handled = true;
 				var item = await args.DataView.GetStorageItemsAsync();
 				this.ValueOfPath = new () { Content = StorageHelper.GetLongPath(item[0].Path) };
-				this.NotifyPropertyChanged(
-					nameof(this.uPathContent_Text)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uPathContent_Text),
+				]);
 			}
 			return;
 		}
@@ -659,9 +662,9 @@ namespace AssistantPlus.View.ModdingWorker {
 			else {
 				this.ValueOfPath = new () { Content = StorageHelper.Regularize(senders.Text) };
 			}
-			this.NotifyPropertyChanged(
-				nameof(this.uPathContent_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uPathContent_Text),
+			]);
 			return;
 		}
 
@@ -685,9 +688,9 @@ namespace AssistantPlus.View.ModdingWorker {
 				return;
 			}
 			this.ValueOfPath = new () { Content = $":{senders.Tag.As<String>()[0].ToString().ToLower()}" };
-			this.NotifyPropertyChanged(
-				nameof(this.uPathContent_Text)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uPathContent_Text),
+			]);
 			return;
 		}
 
@@ -707,9 +710,9 @@ namespace AssistantPlus.View.ModdingWorker {
 			};
 			if (value != null) {
 				this.ValueOfPath = new () { Content = value };
-				this.NotifyPropertyChanged(
-					nameof(this.uPathContent_Text)
-				);
+				this.NotifyPropertyChanged([
+					nameof(this.uPathContent_Text),
+				]);
 			}
 			return;
 		}
@@ -769,9 +772,9 @@ namespace AssistantPlus.View.ModdingWorker {
 				return;
 			}
 			this.ValueOfEnumeration = null;
-			this.NotifyPropertyChanged(
-				nameof(this.uEnumerationItem_SelectedItem)
-			);
+			this.NotifyPropertyChanged([
+				nameof(this.uEnumerationItem_SelectedItem),
+			]);
 			return;
 		}
 
