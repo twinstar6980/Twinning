@@ -1,9 +1,5 @@
 //
 
-#if defined M_vld
-#include "vld.h"
-#endif
-
 #include "kernel/interface/interface.hpp"
 #include "shell/common.hpp"
 

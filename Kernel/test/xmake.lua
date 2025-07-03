@@ -45,12 +45,11 @@ target('test', function()
 		helper.apply_condition_definition_basic(target)
 		helper.apply_compiler_option_basic(target)
 		helper.apply_compiler_option_warning_regular(target)
-		helper.import_vld_if_needed(target)
 	end)
 	set_runargs(
-		'/Twinning/kernel',
-		'/Twinning/script/main.js',
-		'/Twinning',
+		m.root .. '/../.test/kernel',
+		m.root .. '/../.test/script/main.js',
+		m.root .. '/../.test',
 		{ private = true }
 	)
 end)

@@ -113,12 +113,12 @@
 			Padding="16,56,16,16"
 			>
 			<Button
-				ToolTipService.ToolTip="Launch"
+				ToolTipService.ToolTip="Launcher"
 				HorizontalAlignment="Center"
 				VerticalAlignment="Center"
 				Width="256"
 				Height="256"
-				Click="{x:Bind Controller.uBlankLaunch_Click}"
+				Click="{x:Bind Controller.uBlankLauncher_Click}"
 				Content="{community:FontIcon FontSize=128, Glyph={StaticResource FluentIconGlyph.OEM}}"
 				/>
 		</my:Box>

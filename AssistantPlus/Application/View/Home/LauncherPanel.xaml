@@ -107,6 +107,69 @@
 		<my:Stack
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
+			Orientation="Horizontal"
+			Spacing="8"
+			>
+			<Button
+				my:Stack.Weight="1"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Click="{x:Bind Controller.uCommand_Click}"
+				>
+				<my:Stack
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Orientation="Horizontal"
+					Spacing="12"
+					>
+					<FontIcon
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Center"
+						FontSize="{StaticResource MediumIconSize}"
+						Glyph="{StaticResource FluentIconGlyph.CommandPrompt}"
+						/>
+					<TextBlock
+						my:Stack.Weight="1"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Center"
+						Style="{ThemeResource BodyStrongTextBlockStyle}"
+						TextWrapping="NoWrap"
+						Text="Command"
+						/>
+				</my:Stack>
+			</Button>
+			<Button
+				my:Stack.Weight="1"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Click="{x:Bind Controller.uForward_Click}"
+				>
+				<my:Stack
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Orientation="Horizontal"
+					Spacing="12"
+					>
+					<FontIcon
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Center"
+						FontSize="{StaticResource MediumIconSize}"
+						Glyph="{StaticResource FluentIconGlyph.NearbySharing}"
+						/>
+					<TextBlock
+						my:Stack.Weight="1"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Center"
+						Style="{ThemeResource BodyStrongTextBlockStyle}"
+						TextWrapping="NoWrap"
+						Text="Forward"
+						/>
+				</my:Stack>
+			</Button>
+		</my:Stack>
+		<my:Stack
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
 			Orientation="Vertical"
 			Spacing="8"
 			>
@@ -133,7 +196,7 @@
 				IsItemClickEnabled="True"
 				ItemTemplate="{StaticResource uLauncherListItemTemplate}"
 				ItemsSource="{x:Bind Controller.uModuleLauncherList_ItemsSource}"
-				ItemClick="{x:Bind Controller.uModuleLauncherList_OnItemClick}"
+				ItemClick="{x:Bind Controller.uModuleLauncherList_ItemClick}"
 				/>
 		</my:Stack>
 		<my:Stack
@@ -172,7 +235,7 @@
 				IsItemClickEnabled="True"
 				ItemTemplate="{StaticResource uLauncherListItemTemplate}"
 				ItemsSource="{x:Bind Controller.uPinnedLauncherList_ItemsSource}"
-				ItemClick="{x:Bind Controller.uPinnedLauncherList_OnItemClick}"
+				ItemClick="{x:Bind Controller.uPinnedLauncherList_ItemClick}"
 				/>
 		</my:Stack>
 		<my:Stack
@@ -211,7 +274,7 @@
 				IsItemClickEnabled="True"
 				ItemTemplate="{StaticResource uLauncherListItemTemplate}"
 				ItemsSource="{x:Bind Controller.uRecentLauncherList_ItemsSource}"
-				ItemClick="{x:Bind Controller.uRecentLauncherList_OnItemClick}"
+				ItemClick="{x:Bind Controller.uRecentLauncherList_ItemClick}"
 				/>
 		</my:Stack>
 	</my:Stack>

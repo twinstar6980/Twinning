@@ -64,22 +64,20 @@ class SettingState {
   Future<Void> Function(String, ModuleType, List<String>)? mHandleLaunch;
   Future<Void> Function(List<String>)?                     mHandleForward;
   Future<Void> Function(List<String>)?                     mHandleCommand;
+  Future<Void> Function(Uri)?                              mHandleLink;
   GlobalKey<NavigatorState>                                mApplicationNavigatorKey;
   List<String>                                             mThemeFontFamliy;
   Future<Void> Function()?                                 mHomeShowLauncherPanel;
-  Future<Void> Function()?                                 mHomeShowForwarderPanel;
-  Future<Void> Function()?                                 mHomeShowCommanderPanel;
   Future<Void> Function(ModuleLauncherConfiguration)?      mHomeInsertTabItem;
   List<String>                                             mModdingWorkerMessageFontFamily;
   SettingState({
     required this.mHandleLaunch,
     required this.mHandleForward,
     required this.mHandleCommand,
+    required this.mHandleLink,
     required this.mApplicationNavigatorKey,
     required this.mThemeFontFamliy,
     required this.mHomeShowLauncherPanel,
-    required this.mHomeShowForwarderPanel,
-    required this.mHomeShowCommanderPanel,
     required this.mHomeInsertTabItem,
     required this.mModdingWorkerMessageFontFamily,
   });
@@ -219,11 +217,10 @@ class SettingProvider with ChangeNotifier {
     mHandleLaunch: null,
     mHandleForward: null,
     mHandleCommand: null,
+    mHandleLink: null,
     mApplicationNavigatorKey: GlobalKey<NavigatorState>(),
     mThemeFontFamliy: [],
     mHomeShowLauncherPanel: null,
-    mHomeShowForwarderPanel: null,
-    mHomeShowCommanderPanel: null,
     mHomeInsertTabItem: null,
     mModdingWorkerMessageFontFamily: [],
   );

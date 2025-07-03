@@ -202,35 +202,3 @@ function apply_compiler_option_warning_regular(target)
 		{ private = true }
 	)
 end
-
-function import_vld_if_needed(target)
-	local m = load_m(target)
-	if m.system:is('windows') and m.architecture:is('x86_64') and m.build:is('debug') then
-		local vld_root = 'C:/Program Files (x86)/Visual Leak Detector'
-		if os.exists(vld_root) then
-			target:add(
-				'defines',
-				'M_vld',
-				'VLD_FORCE_ENABLE',
-				{ private = true }
-			)
-			target:add(
-				'includedirs',
-				vld_root .. '/include',
-				{ private = true }
-			)
-			target:add(
-				'linkdirs',
-				vld_root .. '/lib/Win64',
-				{ private = true }
-			)
-			os.cp(
-				vld_root .. '/bin/Win64/*',
-				'$(buildir)/windows/x64/debug/',
-				{}
-			)
-		else
-			print('warning : vld is not installed : ' .. vld_root)
-		end
-	end
-end

@@ -134,82 +134,6 @@ class _MainPageState extends State<MainPage> {
     return;
   }
 
-  Future<Void> _showForwarderPanel(
-  ) async {
-    var command = <String>[];
-    var canContinue = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
-      title: 'Forwarder',
-      contentBuilder: (context, setState) => [
-        CustomTextField(
-          keyboardType: TextInputType.multiline,
-          inputFormatters: [],
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-            filled: false,
-            border: OutlineInputBorder(),
-          ),
-          value: ConvertHelper.makeStringListToStringWithLine(command),
-          onChanged: (value) async {
-            command = ConvertHelper.parseStringListFromStringWithLine(value);
-            setState(() {});
-          },
-        ),
-      ],
-      actionBuilder: (context) => [
-        TextButton(
-          child: Text('Cancel'),
-          onPressed: () => Navigator.pop(context, false),
-        ),
-        TextButton(
-          child: Text('Continue'),
-          onPressed: () => Navigator.pop(context, true),
-        ),
-      ],
-    )) ?? false;
-    if (canContinue) {
-      await Provider.of<SettingProvider>(context, listen: false).state.mHandleForward!(command);
-    }
-    return;
-  }
-
-  Future<Void> _showCommanderPanel(
-  ) async {
-    var command = <String>[];
-    var canContinue = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
-      title: 'Commander',
-      contentBuilder: (context, setState) => [
-        CustomTextField(
-          keyboardType: TextInputType.multiline,
-          inputFormatters: [],
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-            filled: false,
-            border: OutlineInputBorder(),
-          ),
-          value: ConvertHelper.makeStringListToStringWithLine(command),
-          onChanged: (value) async {
-            command = ConvertHelper.parseStringListFromStringWithLine(value);
-            setState(() {});
-          },
-        ),
-      ],
-      actionBuilder: (context) => [
-        TextButton(
-          child: Text('Cancel'),
-          onPressed: () => Navigator.pop(context, false),
-        ),
-        TextButton(
-          child: Text('Continue'),
-          onPressed: () => Navigator.pop(context, true),
-        ),
-      ],
-    )) ?? false;
-    if (canContinue) {
-      await Provider.of<SettingProvider>(context, listen: false).state.mHandleCommand!(command);
-    }
-    return;
-  }
-
   // ----------------
 
   @override
@@ -220,8 +144,6 @@ class _MainPageState extends State<MainPage> {
     {
       var setting = Provider.of<SettingProvider>(this.context, listen: false);
       setting.state.mHomeShowLauncherPanel = this._showLauncherPanel;
-      setting.state.mHomeShowForwarderPanel = this._showForwarderPanel;
-      setting.state.mHomeShowCommanderPanel = this._showCommanderPanel;
       setting.state.mHomeInsertTabItem = this._insertTabItem;
     }
     return;
@@ -272,32 +194,27 @@ class _MainPageState extends State<MainPage> {
           ),
           CustomNavigationDrawerItem(
             selected: false,
+            icon: IconSymbols.settings,
+            label: 'Setting',
+            action: [],
+            onPressed: () async {
+              Navigator.pop(context);
+              await ControlHelper.showDialogAsFull<Void>(context, CustomFullDialog(
+                title: 'Setting',
+                contentBuilder: (context, setState) => [
+                  SettingPanel(),
+                ],
+              ));
+            },
+          ),
+          CustomNavigationDrawerItem(
+            selected: false,
             icon: IconSymbols.widgets,
             label: 'Launcher',
             action: [],
             onPressed: () async {
               Navigator.pop(context);
               await this._showLauncherPanel();
-            },
-          ),
-          CustomNavigationDrawerItem(
-            selected: false,
-            icon: IconSymbols.send_time_extension,
-            label: 'Forwarder',
-            action: [],
-            onPressed: () async {
-              Navigator.pop(context);
-              await this._showForwarderPanel();
-            },
-          ),
-          CustomNavigationDrawerItem(
-            selected: false,
-            icon: IconSymbols.keyboard_command_key,
-            label: 'Commander',
-            action: [],
-            onPressed: () async {
-              Navigator.pop(context);
-              await this._showCommanderPanel();
             },
           ),
           CustomNavigationDrawerDivider(),
@@ -390,22 +307,6 @@ class _MainPageState extends State<MainPage> {
               await this._toggleTabItem(index);
             },
           )),
-          CustomNavigationDrawerDivider(),
-          CustomNavigationDrawerItem(
-            selected: false,
-            icon: IconSymbols.settings,
-            label: 'Setting',
-            action: [],
-            onPressed: () async {
-              Navigator.pop(context);
-              await ControlHelper.showDialogAsFull<Void>(context, CustomFullDialog(
-                title: 'Setting',
-                contentBuilder: (context, setState) => [
-                  SettingPanel(),
-                ],
-              ));
-            },
-          ),
           SizedBox(height: 16),
         ],
       ),

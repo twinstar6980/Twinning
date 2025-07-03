@@ -65,9 +65,59 @@ namespace AssistantPlus.View.Home {
 
 		#region launcher
 
+		public async void uCommand_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.As<Button>();
+			var command = new List<String>();
+			var canContinue = await ControlHelper.ShowDialogAsAutomatic(App.MainWindow.Content, "Command", new TextBox() {
+				HorizontalAlignment = HorizontalAlignment.Stretch,
+				VerticalAlignment = VerticalAlignment.Stretch,
+				TextWrapping = TextWrapping.Wrap,
+				AcceptsReturn = true,
+			}.SelfAlso((it) => {
+				it.LostFocus += (_, _) => {
+					command = ConvertHelper.ParseStringListFromStringWithLine((it.Text));
+					it.Text = ConvertHelper.MakeStringListToStringWithLine(command);
+					return;
+				};
+			}), new ("Cancel", "Continue", null)) == ContentDialogResult.Primary;
+			if (canContinue) {
+				await App.Instance.HandleCommand(command);
+			}
+			return;
+		}
+
+		public async void uForward_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.As<Button>();
+			var resource = new List<String>();
+			var canContinue = await ControlHelper.ShowDialogAsAutomatic(App.MainWindow.Content, "Forward", new TextBox() {
+				HorizontalAlignment = HorizontalAlignment.Stretch,
+				VerticalAlignment = VerticalAlignment.Stretch,
+				TextWrapping = TextWrapping.Wrap,
+				AcceptsReturn = true,
+			}.SelfAlso((it) => {
+				it.LostFocus += (_, _) => {
+					resource = ConvertHelper.ParseStringListFromStringWithLine((it.Text));
+					it.Text = ConvertHelper.MakeStringListToStringWithLine(resource);
+					return;
+				};
+			}), new ("Cancel", "Continue", null)) == ContentDialogResult.Primary;
+			if (canContinue) {
+				await App.Instance.HandleForward(resource);
+			}
+			return;
+		}
+
+		// ----------------
+
 		public List<LauncherPageLauncherItemController> uModuleLauncherList_ItemsSource { get; set; } = default!;
 
-		public async void uModuleLauncherList_OnItemClick (
+		public async void uModuleLauncherList_ItemClick (
 			Object             sender,
 			ItemClickEventArgs args
 		) {
@@ -80,7 +130,7 @@ namespace AssistantPlus.View.Home {
 
 		public ObservableCollection<LauncherPageLauncherItemController> uPinnedLauncherList_ItemsSource { get; set; } = default!;
 
-		public async void uPinnedLauncherList_OnItemClick (
+		public async void uPinnedLauncherList_ItemClick (
 			Object             sender,
 			ItemClickEventArgs args
 		) {
@@ -109,7 +159,7 @@ namespace AssistantPlus.View.Home {
 
 		public ObservableCollection<LauncherPageLauncherItemController> uRecentLauncherList_ItemsSource { get; set; } = default!;
 
-		public async void uRecentLauncherList_OnItemClick (
+		public async void uRecentLauncherList_ItemClick (
 			Object             sender,
 			ItemClickEventArgs args
 		) {

@@ -27,7 +27,7 @@ class BlankPage extends StatelessWidget {
           width: 256,
           height: 256,
           child: FloatingActionButton.large(
-            tooltip: 'Launch',
+            tooltip: 'Launcher',
             elevation: 0,
             focusElevation: 0,
             hoverElevation: 0,

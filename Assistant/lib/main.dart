@@ -194,6 +194,7 @@ class _Main {
       _setting.state.mHandleLaunch = _handleLaunch;
       _setting.state.mHandleForward = _handleForward;
       _setting.state.mHandleCommand = _handleCommand;
+      _setting.state.mHandleLink = _handleLink;
       await NotificationHelper.initialize();
       await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
       if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {

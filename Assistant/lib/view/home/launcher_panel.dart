@@ -1,6 +1,7 @@
 import '/common.dart';
 import '/module.dart';
 import '/setting.dart';
+import '/utility/convert_helper.dart';
 import '/utility/control_helper.dart';
 import '/view/home/common.dart';
 import '/view/home/launcher_configuration_panel.dart';
@@ -28,7 +29,103 @@ class LauncherPanel extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => Column(
         children: [
-          SizedBox(height: 4),
+          SizedBox(height: 12),
+          Row(
+            children: [
+              SizedBox(width: 16),
+              Expanded(
+                child: FilledButton.icon(
+                  icon: Icon(IconSymbols.keyboard_command_key),
+                  label: Text(
+                    'Command',
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  onPressed: () async {
+                    var command = <String>[];
+                    var canContinue = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
+                      title: 'Command',
+                      contentBuilder: (context, setStateForPanel) => [
+                        CustomTextField(
+                          keyboardType: TextInputType.multiline,
+                          inputFormatters: [],
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                            filled: false,
+                            border: OutlineInputBorder(),
+                          ),
+                          value: ConvertHelper.makeStringListToStringWithLine(command),
+                          onChanged: (value) async {
+                            command = ConvertHelper.parseStringListFromStringWithLine(value);
+                            setStateForPanel(() {});
+                          },
+                        ),
+                      ],
+                      actionBuilder: (context) => [
+                        TextButton(
+                          child: Text('Cancel'),
+                          onPressed: () => Navigator.pop(context, false),
+                        ),
+                        TextButton(
+                          child: Text('Continue'),
+                          onPressed: () => Navigator.pop(context, true),
+                        ),
+                      ],
+                    )) ?? false;
+                    if (canContinue) {
+                      await Provider.of<SettingProvider>(context, listen: false).state.mHandleCommand!(command);
+                    }
+                  },
+                ),
+              ),
+              SizedBox(width: 12),
+              Expanded(
+                child: FilledButton.tonalIcon(
+                  icon: Icon(IconSymbols.send_time_extension),
+                  label: Text(
+                    'Forward',
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  onPressed: () async {
+                    var resource = <String>[];
+                    var canContinue = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
+                      title: 'Forward',
+                      contentBuilder: (context, setState) => [
+                        CustomTextField(
+                          keyboardType: TextInputType.multiline,
+                          inputFormatters: [],
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                            filled: false,
+                            border: OutlineInputBorder(),
+                          ),
+                          value: ConvertHelper.makeStringListToStringWithLine(resource),
+                          onChanged: (value) async {
+                            resource = ConvertHelper.parseStringListFromStringWithLine(value);
+                            setState(() {});
+                          },
+                        ),
+                      ],
+                      actionBuilder: (context) => [
+                        TextButton(
+                          child: Text('Cancel'),
+                          onPressed: () => Navigator.pop(context, false),
+                        ),
+                        TextButton(
+                          child: Text('Continue'),
+                          onPressed: () => Navigator.pop(context, true),
+                        ),
+                      ],
+                    )) ?? false;
+                    if (canContinue) {
+                      await Provider.of<SettingProvider>(context, listen: false).state.mHandleForward!(resource);
+                    }
+                  },
+                ),
+              ),
+              SizedBox(width: 16),
+            ],
+          ),
+          SizedBox(height: 0),
           CustomSettingLabel(
             label: 'Module',
             action: null,
@@ -43,7 +140,7 @@ class LauncherPanel extends StatelessWidget {
                 onPressed: () async {
                   await ControlHelper.showDialogAsFull<Void>(context, CustomFullDialog(
                     title: 'Module Setting',
-                    contentBuilder: (context, setStateForSheet) => [
+                    contentBuilder: (context, setStateForPanel) => [
                       ModuleHelper.query(item.type).settingPanel(context),
                     ],
                   ));
@@ -56,7 +153,7 @@ class LauncherPanel extends StatelessWidget {
                 onPressed: () async {
                   await ControlHelper.showDialogAsFull<Void>(context, CustomFullDialog(
                     title: 'Launcher Configuration',
-                    contentBuilder: (context, setStateForSheet) => [
+                    contentBuilder: (context, setStateForPanel) => [
                       LauncherConfigurationPanel(
                         data: item,
                         onUpdate: () async {
@@ -108,7 +205,7 @@ class LauncherPanel extends StatelessWidget {
                 onPressed: () async {
                   await ControlHelper.showDialogAsFull<Void>(context, CustomFullDialog(
                     title: 'Launcher Configuration',
-                    contentBuilder: (context, setStateForSheet) => [
+                    contentBuilder: (context, setStateForPanel) => [
                       LauncherConfigurationPanel(
                         data: item,
                         onUpdate: () async {
@@ -166,7 +263,7 @@ class LauncherPanel extends StatelessWidget {
                 onPressed: () async {
                   await ControlHelper.showDialogAsFull<Void>(context, CustomFullDialog(
                     title: 'Launcher Configuration',
-                    contentBuilder: (context, setStateForSheet) => [
+                    contentBuilder: (context, setStateForPanel) => [
                       LauncherConfigurationPanel(
                         data: item,
                         onUpdate: () async {

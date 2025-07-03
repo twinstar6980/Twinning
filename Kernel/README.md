@@ -38,7 +38,6 @@
 | [PVRTCCompressor ?](https://github.com/brenwill/PVRTCCompressor)           | PVRTC4 压缩与解压   |
 | [libpng 1.6.48](https://github.com/pnggroup/libpng)                        | PNG 读写            |
 | [quickjs_ng 0.10.1](https://github.com/quickjs-ng/quickjs)                 | JS 引擎             |
-| [vld 2.5.1](https://github.com/KindDragon/vld)                             | 内存泄漏检测        |
 
 ## 说明
 

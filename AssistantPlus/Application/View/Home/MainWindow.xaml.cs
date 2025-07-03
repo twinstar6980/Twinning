@@ -170,7 +170,7 @@ namespace AssistantPlus.View.Home {
 
 		// ----------------
 
-		public async void uBlankLaunch_Click (
+		public async void uBlankLauncher_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {

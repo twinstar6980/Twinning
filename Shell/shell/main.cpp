@@ -1,9 +1,5 @@
 //
 
-#if defined M_vld
-#include "vld.h"
-#endif
-
 #include "shell/common.hpp"
 
 import twinning.shell.utility.exception;
