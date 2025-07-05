@@ -72,7 +72,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 	}
 
-	public class MainPageController : CustomController, Home.IModulePageController {
+	public partial class MainPageController : CustomController, Home.IModulePageController {
 
 		#region data
 
@@ -441,7 +441,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 	}
 
-	public class MainPageMessageItemController : CustomController {
+	public partial class MainPageMessageItemController : CustomController {
 
 		#region data
 

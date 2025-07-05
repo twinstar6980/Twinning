@@ -62,7 +62,7 @@ namespace AssistantPlus.View.CommandSender {
 
 	}
 
-	public class ArgumentPanelController : CustomController {
+	public partial class ArgumentPanelController : CustomController {
 
 		#region data
 
@@ -98,7 +98,7 @@ namespace AssistantPlus.View.CommandSender {
 
 	}
 
-	public class ArgumentPanelItemController : CustomController {
+	public partial class ArgumentPanelItemController : CustomController {
 
 		#region data
 

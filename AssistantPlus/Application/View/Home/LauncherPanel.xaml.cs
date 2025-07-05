@@ -36,7 +36,7 @@ namespace AssistantPlus.View.Home {
 
 	}
 
-	public class LauncherPanelController : CustomController {
+	public partial class LauncherPanelController : CustomController {
 
 		#region data
 
@@ -185,7 +185,7 @@ namespace AssistantPlus.View.Home {
 
 	}
 
-	public class LauncherPageLauncherItemController : CustomController {
+	public partial class LauncherPageLauncherItemController : CustomController {
 
 		#region data
 

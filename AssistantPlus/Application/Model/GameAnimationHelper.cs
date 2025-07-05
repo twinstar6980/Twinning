@@ -211,8 +211,9 @@ namespace AssistantPlus {
 			var frameIndex = 0;
 			foreach (var frame in sprite.Frame) {
 				var keyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(frameIndex));
-				foreach (var remove in frame.Remove) {
-					var layer = layerList[remove.Index];
+				foreach (var action in frame.Remove) {
+					GF.AssertTest(layerList.ContainsKey(action.Index));
+					var layer = layerList[action.Index];
 					if (layer == null) {
 						continue;
 					}
@@ -223,29 +224,32 @@ namespace AssistantPlus {
 						}
 					);
 				}
-				foreach (var append in frame.Append) {
-					if ((!append.Sprite && !imageFilter[(Size)append.Resource]) || (append.Sprite && !spriteFilter[(Size)append.Resource])) {
-						layerList.Add(append.Index, null);
+				foreach (var action in frame.Append) {
+					GF.AssertTest(!layerList.ContainsKey(action.Index));
+					var skip = !action.Sprite ? !imageFilter[(Size)action.Resource] : !spriteFilter[(Size)action.Resource];
+					var layer = layerList[action.Index] = skip
+						? null
+						: new VisualLayer() {
+							Canvas = default!,
+							Storyboard = default!,
+							Visibility = default!,
+							Transform = default!,
+							ColorAlpha = default!,
+							IsFirst = default!,
+						};
+					if (layer == null) {
 						continue;
 					}
-					var layer = new VisualLayer() {
-						Canvas = default!,
-						Storyboard = default!,
-						Visibility = default!,
-						Transform = default!,
-						ColorAlpha = default!,
-						IsFirst = default!,
-					};
-					if (!append.Sprite) {
-						var resourceVisual = GameAnimationHelper.VisualizeImage(animation, texture, GameAnimationHelper.SelectImage(animation, (Size)append.Resource));
-						layer.Canvas = resourceVisual.Canvas;
+					if (!action.Sprite) {
+						var subVisual = GameAnimationHelper.VisualizeImage(animation, texture, GameAnimationHelper.SelectImage(animation, (Size)action.Resource));
+						layer.Canvas = subVisual.Canvas;
 					}
 					else {
-						var resourceVisual = GameAnimationHelper.VisualizeSprite(animation, texture, GameAnimationHelper.SelectSprite(animation, (Size)append.Resource), imageFilter, spriteFilter);
-						layer.Canvas = resourceVisual.Canvas;
-						visual.Storyboard.Children.Add(resourceVisual.Storyboard);
+						var subVisual = GameAnimationHelper.VisualizeSprite(animation, texture, GameAnimationHelper.SelectSprite(animation, (Size)action.Resource), imageFilter, spriteFilter);
+						layer.Canvas = subVisual.Canvas;
+						visual.Storyboard.Children.Add(subVisual.Storyboard);
 					}
-					Canvas.SetZIndex(layer.Canvas, (Size)append.Index);
+					Canvas.SetZIndex(layer.Canvas, (Size)action.Index);
 					layer.Canvas.Visibility = Visibility.Collapsed;
 					layer.Canvas.RenderTransform = new MatrixTransform() {
 						Matrix = new (0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
@@ -273,26 +277,26 @@ namespace AssistantPlus {
 						},
 					};
 					Storyboard.SetTarget(layer.Storyboard, layer.Canvas);
-					layerList.Add(append.Index, layer);
 					layer.IsFirst = true;
 				}
-				foreach (var change in frame.Change) {
-					var layer = layerList[change.Index];
+				foreach (var action in frame.Change) {
+					GF.AssertTest(layerList.ContainsKey(action.Index));
+					var layer = layerList[action.Index];
 					if (layer == null) {
 						continue;
 					}
-					var transform = GameAnimationHelper.MakeTransformMatrixFromVariant(change.Transform);
+					var transform = GameAnimationHelper.MakeTransformMatrixFromVariant(action.Transform);
 					layer.Transform.KeyFrames.Add(
 						new DiscreteObjectKeyFrame() {
 							KeyTime = keyTime,
 							Value = transform,
 						}
 					);
-					if (change.Color != null) {
+					if (action.Color != null) {
 						layer.ColorAlpha.KeyFrames.Add(
 							new DiscreteObjectKeyFrame() {
 								KeyTime = keyTime,
-								Value = change.Color.Item4,
+								Value = action.Color.Item4,
 							}
 						);
 					}

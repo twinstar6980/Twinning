@@ -101,7 +101,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 	}
 
-	public class SubmissionBarController : CustomController {
+	public partial class SubmissionBarController : CustomController {
 
 		#region data
 

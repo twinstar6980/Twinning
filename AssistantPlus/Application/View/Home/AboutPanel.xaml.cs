@@ -39,7 +39,7 @@ namespace AssistantPlus.View.Home {
 
 	}
 
-	public class AboutPanelController : CustomController {
+	public partial class AboutPanelController : CustomController {
 
 		#region data
 

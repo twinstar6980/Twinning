@@ -27,10 +27,6 @@ target('shell', function()
 		)
 	end
 	if m.system:is('windows') then
-		add_files(
-			'./resource/windows/application.manifest',
-			{}
-		)
 		add_links(
 			'uuid',
 			'Ole32',

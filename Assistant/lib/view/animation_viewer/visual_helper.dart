@@ -173,21 +173,31 @@ class VisualHelper {
     model.Animation                                animation,
     Map<String, (ImageProvider, Integer, Integer)> texture,
     model.Sprite                                   sprite,
+    List<Boolean>                                  imageFilter,
+    List<Boolean>                                  spriteFilter,
   ) {
-    var layerList = SplayTreeMap<Integer, _VisualLayer>();
+    var layerList = SplayTreeMap<Integer, _VisualLayer?>();
     var frameIndex = 0;
     for (var frame in sprite.frame) {
       for (var action in frame.remove) {
-        var layer = layerList[action.index]!;
+        assertTest(layerList.containsKey(action.index));
+        var layer = layerList[action.index];
+        if (layer == null) {
+          continue;
+        }
         assertTest(!layer.isRemoved);
         layer.isRemoved = true;
       }
       for (var action in frame.append) {
         assertTest(!layerList.containsKey(action.index));
-        var layer = layerList[action.index] = _VisualLayer();
+        var skip = !action.sprite ? !imageFilter[action.resource] : !spriteFilter[action.resource];
+        var layer = layerList[action.index] = skip ? null : _VisualLayer();
+        if (layer == null) {
+          continue;
+        }
         var subView = !action.sprite
           ? visualizeImage(animationController, animation, texture, selectImage(animation, action.resource))
-          : visualizeSprite(animationController, animation, texture, selectSprite(animation, action.resource));
+          : visualizeSprite(animationController, animation, texture, selectSprite(animation, action.resource), imageFilter, spriteFilter);
         var subController = animationController.drive(StepTween(begin: 0, end: sprite.frame.length));
         layer.view = AnimatedBuilder(
           animation: subController,
@@ -215,7 +225,11 @@ class VisualHelper {
         layer.isChanged = true;
       }
       for (var action in frame.change) {
-        var layer = layerList[action.index]!;
+        assertTest(layerList.containsKey(action.index));
+        var layer = layerList[action.index];
+        if (layer == null) {
+          continue;
+        }
         assertTest(!layer.isRemoved);
         if (layer.isChanged) {
           layer.property[frameIndex] = (
@@ -232,6 +246,9 @@ class VisualHelper {
         layer.isChanged = true;
       }
       for (var layer in layerList.values) {
+        if (layer == null) {
+          continue;
+        }
         if (layer.isRemoved) {
           continue;
         }
@@ -245,7 +262,7 @@ class VisualHelper {
     }
     return Stack(
       fit: StackFit.passthrough,
-      children: layerList.values.map((value) => value.view).toList(),
+      children: layerList.values.nonNulls.map((value) => value.view).toList(),
     );
   }
 

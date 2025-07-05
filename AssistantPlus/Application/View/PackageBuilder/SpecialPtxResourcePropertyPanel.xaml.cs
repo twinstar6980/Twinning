@@ -65,7 +65,7 @@ namespace AssistantPlus.View.PackageBuilder {
 
 	}
 
-	public class SpecialPtxResourcePropertyPanelController : CustomController {
+	public partial class SpecialPtxResourcePropertyPanelController : CustomController {
 
 		#region data
 

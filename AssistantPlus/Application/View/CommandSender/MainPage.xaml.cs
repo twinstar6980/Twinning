@@ -57,7 +57,7 @@ namespace AssistantPlus.View.CommandSender {
 
 	}
 
-	public class MainPageController : CustomController, Home.IModulePageController {
+	public partial class MainPageController : CustomController, Home.IModulePageController {
 
 		#region data
 
@@ -309,7 +309,7 @@ namespace AssistantPlus.View.CommandSender {
 
 	}
 
-	public class MainPageMethodGroupItemController : CustomController {
+	public partial class MainPageMethodGroupItemController : CustomController {
 
 		#region data
 
@@ -349,7 +349,7 @@ namespace AssistantPlus.View.CommandSender {
 
 	}
 
-	public class MainPageMethodItemItemController : CustomController {
+	public partial class MainPageMethodItemItemController : CustomController {
 
 		#region data
 
@@ -391,7 +391,7 @@ namespace AssistantPlus.View.CommandSender {
 
 	}
 
-	public class MainPageCommandItemController : CustomController {
+	public partial class MainPageCommandItemController : CustomController {
 
 		#region data
 

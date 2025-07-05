@@ -50,7 +50,7 @@ namespace AssistantPlus.View.CommandSender {
 
 	}
 
-	public class SettingPanelController : CustomController {
+	public partial class SettingPanelController : CustomController {
 
 		#region data
 

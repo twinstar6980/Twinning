@@ -53,7 +53,7 @@ namespace AssistantPlus.View.Home {
 
 	}
 
-	public class LauncherConfigurationPanelController : CustomController {
+	public partial class LauncherConfigurationPanelController : CustomController {
 
 		#region data
 

@@ -56,7 +56,7 @@ namespace AssistantPlus.View.PackageBuilder {
 
 	}
 
-	public class TextureResourcePropertyPanelController : CustomController {
+	public partial class TextureResourcePropertyPanelController : CustomController {
 
 		#region data
 

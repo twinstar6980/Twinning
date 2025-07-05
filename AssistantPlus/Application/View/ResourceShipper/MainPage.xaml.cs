@@ -58,7 +58,7 @@ namespace AssistantPlus.View.ResourceShipper {
 
 	}
 
-	public class MainPageController : CustomController, Home.IModulePageController {
+	public partial class MainPageController : CustomController, Home.IModulePageController {
 
 		#region data
 
@@ -484,7 +484,7 @@ namespace AssistantPlus.View.ResourceShipper {
 
 	}
 
-	public class MainPageResourceItemController : CustomController {
+	public partial class MainPageResourceItemController : CustomController {
 
 		#region data
 
@@ -546,7 +546,7 @@ namespace AssistantPlus.View.ResourceShipper {
 
 	}
 
-	public class MainPageOptionGroupItemController : CustomController {
+	public partial class MainPageOptionGroupItemController : CustomController {
 
 		#region data
 
@@ -592,7 +592,7 @@ namespace AssistantPlus.View.ResourceShipper {
 
 	}
 
-	public class MainPageOptionItemItemController : CustomController {
+	public partial class MainPageOptionItemItemController : CustomController {
 
 		#region data
 

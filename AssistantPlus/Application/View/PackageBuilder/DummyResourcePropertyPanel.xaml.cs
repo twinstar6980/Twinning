@@ -49,7 +49,7 @@ namespace AssistantPlus.View.PackageBuilder {
 
 	}
 
-	public class DummyResourcePropertyPanelController : CustomController {
+	public partial class DummyResourcePropertyPanelController : CustomController {
 
 		#region data
 

@@ -53,7 +53,7 @@ namespace AssistantPlus.View.ResourceShipper {
 
 	}
 
-	public class SettingPanelController : CustomController {
+	public partial class SettingPanelController : CustomController {
 
 		#region data
 

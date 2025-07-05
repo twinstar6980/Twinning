@@ -49,7 +49,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 
 	}
 
-	public class SettingPanelController : CustomController {
+	public partial class SettingPanelController : CustomController {
 
 		#region data
 

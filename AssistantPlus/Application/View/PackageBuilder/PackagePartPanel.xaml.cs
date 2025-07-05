@@ -62,7 +62,7 @@ namespace AssistantPlus.View.PackageBuilder {
 
 	}
 
-	public class PackagePartPanelController : CustomController {
+	public partial class PackagePartPanelController : CustomController {
 
 		#region data
 
@@ -121,7 +121,7 @@ namespace AssistantPlus.View.PackageBuilder {
 
 	}
 
-	public class PackagePartPanelItemController : CustomController {
+	public partial class PackagePartPanelItemController : CustomController {
 
 		#region data
 

@@ -51,7 +51,7 @@ namespace AssistantPlus.View.PackageBuilder {
 
 	}
 
-	public class GeneralResourcePropertyPanelController : CustomController {
+	public partial class GeneralResourcePropertyPanelController : CustomController {
 
 		#region data
 

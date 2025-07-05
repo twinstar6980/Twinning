@@ -147,7 +147,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     this._activeFrameLabel = VisualHelper.parseSpriteFrameLabel(this._activeSprite!);
     await this._changeFrameRange(frameRange ?? (0, this._activeSprite!.frame.length));
     await this._changeFrameSpeed(frameSpeed ?? this._activeSprite!.frame_rate ?? this._animation!.frame_rate.toDouble());
-    this._animationVisual = VisualHelper.visualizeSprite(this._animationController, this._animation!, this._texture!, this._activeSprite!);
+    this._animationVisual = VisualHelper.visualizeSprite(this._animationController, this._animation!, this._texture!, this._activeSprite!, this._imageFilter!, this._spriteFilter!);
     await this._changeProgressIndex(progressIndex ?? 0);
     await this._changeProgressState(progressState ?? this._automaticPlay);
     this.setState(() {});
@@ -176,7 +176,9 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     assertTest(this._loaded);
     this._imageFilter = imageFilter;
     this._spriteFilter = spriteFilter;
-    // TODO
+    if (this._activated) {
+      this._animationVisual = VisualHelper.visualizeSprite(this._animationController, this._animation!, this._texture!, this._activeSprite!, this._imageFilter!, this._spriteFilter!);
+    }
     this.setState(() {});
     return;
   }
@@ -728,7 +730,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                               )).toList(),
                                               onSelected: (value) async {
                                                 value as Integer;
-                                                currentValue = value < (currentValue.$1 + currentValue.$2) ? (value - 1, 1) : (currentValue.$1, value - currentValue.$1);
+                                                currentValue = value - 1 < currentValue.$1 ? (value - 1, 1) : (currentValue.$1, value - currentValue.$1);
                                                 setState(() {});
                                               },
                                             ),
@@ -739,7 +741,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                       onChanged: (text) async {
                                         var value = Integer.tryParse(text);
                                         if (value != null && value >= 1 && value <= this._activeSprite!.frame.length) {
-                                          currentValue = value < (currentValue.$1 + currentValue.$2) ? (value - 1, 1) : (currentValue.$1, value - currentValue.$1);
+                                          currentValue = value - 1 < currentValue.$1 ? (value - 1, 1) : (currentValue.$1, value - currentValue.$1);
                                         }
                                         setState(() {});
                                       },

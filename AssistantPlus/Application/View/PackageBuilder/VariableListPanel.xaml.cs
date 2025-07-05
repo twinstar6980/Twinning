@@ -48,7 +48,7 @@ namespace AssistantPlus.View.PackageBuilder {
 
 	}
 
-	public class VariableListPanelController : CustomController {
+	public partial class VariableListPanelController : CustomController {
 
 		#region data
 
@@ -104,7 +104,7 @@ namespace AssistantPlus.View.PackageBuilder {
 
 	}
 
-	public class VariableListPanelItemController : CustomController {
+	public partial class VariableListPanelItemController : CustomController {
 
 		#region data
 

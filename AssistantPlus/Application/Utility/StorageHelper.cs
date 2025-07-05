@@ -263,7 +263,7 @@ namespace AssistantPlus.Utility {
 		public static async Task RevealFile (
 			String target
 		) {
-			var result = PlatformInvoke.Shell32.ShellExecute(IntPtr.Zero, "open", $"file://{target}", null, null, PlatformInvoke.Shell32.SW_SHOWNORMAL);
+			var result = PlatformInvoke.Shell32.ShellExecute(IntPtr.Zero, "open", $"file://{target}", null, null, PlatformInvoke.User32.SW_SHOWNORMAL);
 			GF.AssertTest(result >= 32);
 			return;
 		}
@@ -271,7 +271,7 @@ namespace AssistantPlus.Utility {
 		public static async Task RevealDirectory (
 			String target
 		) {
-			var result = PlatformInvoke.Shell32.ShellExecute(IntPtr.Zero, "open", $"file://{target}", null, null, PlatformInvoke.Shell32.SW_SHOWNORMAL);
+			var result = PlatformInvoke.Shell32.ShellExecute(IntPtr.Zero, "open", $"file://{target}", null, null, PlatformInvoke.User32.SW_SHOWNORMAL);
 			GF.AssertTest(result >= 32);
 			return;
 		}

@@ -65,7 +65,7 @@ namespace AssistantPlus.View.PackageBuilder {
 
 	}
 
-	public class SpecialWemResourcePropertyPanelController : CustomController {
+	public partial class SpecialWemResourcePropertyPanelController : CustomController {
 
 		#region data
 

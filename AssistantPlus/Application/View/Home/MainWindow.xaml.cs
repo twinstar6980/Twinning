@@ -52,7 +52,7 @@ namespace AssistantPlus.View.Home {
 
 	}
 
-	public class MainWindowController : CustomController {
+	public partial class MainWindowController : CustomController {
 
 		#region data
 
@@ -230,7 +230,7 @@ namespace AssistantPlus.View.Home {
 
 	}
 
-	public class MainWindowTabItemController : CustomController {
+	public partial class MainWindowTabItemController : CustomController {
 
 		#region data
 

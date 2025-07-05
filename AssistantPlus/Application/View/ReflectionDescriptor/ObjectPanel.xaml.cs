@@ -66,7 +66,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 
 	}
 
-	public class ObjectPanelController : CustomController {
+	public partial class ObjectPanelController : CustomController {
 
 		#region data
 
@@ -119,7 +119,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 
 	}
 
-	public class ObjectPropertyGroupItemController : CustomController {
+	public partial class ObjectPropertyGroupItemController : CustomController {
 
 		#region data
 
@@ -155,7 +155,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 
 	}
 
-	public class ObjectPropertyItemController : CustomController {
+	public partial class ObjectPropertyItemController : CustomController {
 
 		#region data
 

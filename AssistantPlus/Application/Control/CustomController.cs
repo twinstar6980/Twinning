@@ -6,7 +6,7 @@ using AssistantPlus.Utility;
 
 namespace AssistantPlus {
 
-	public class CustomController : INotifyPropertyChanged {
+	public partial class CustomController : INotifyPropertyChanged {
 
 		#region implement
 

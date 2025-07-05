@@ -15,6 +15,7 @@ if ($TargetPlatform -eq "windows.x86_64") {
 	xmake "config" "--builddir=.build" "--mode=release" "--plat=windows" "--arch=x64" "--toolchain=mingw" "--runtimes=c++_shared"
 	xmake "build"
 	llvm-strip "--strip-all" "${ModuleDirectory}/.build/windows/x64/release/shell.exe"
+	mt "-manifest" "${ModuleDirectory}/shell/resource/windows/application.manifest" "-outputresource:${ModuleDirectory}/.build/windows/x64/release/shell.exe;#1"
 	Copy-Item -Force -Recurse -Path "${ModuleDirectory}/.build/windows/x64/release/shell.exe" -Destination "${ModuleDistributionFile}"
 }
 if ($TargetPlatform -eq "linux.x86_64") {

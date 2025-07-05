@@ -63,7 +63,7 @@ namespace AssistantPlus.View.AnimationViewer {
 
 	}
 
-	public class MainPageController : CustomController, Home.IModulePageController {
+	public partial class MainPageController : CustomController, Home.IModulePageController {
 
 		#region data
 
@@ -1955,7 +1955,7 @@ namespace AssistantPlus.View.AnimationViewer {
 
 	}
 
-	public class MainPageImageItemController : CustomController {
+	public partial class MainPageImageItemController : CustomController {
 
 		#region data
 
@@ -2038,7 +2038,7 @@ namespace AssistantPlus.View.AnimationViewer {
 
 	}
 
-	public class MainPageSpriteItemController : CustomController {
+	public partial class MainPageSpriteItemController : CustomController {
 
 		#region data
 
@@ -2123,7 +2123,7 @@ namespace AssistantPlus.View.AnimationViewer {
 
 	}
 
-	public class MainPageMainSpriteItemController : CustomController {
+	public partial class MainPageMainSpriteItemController : CustomController {
 
 		#region data
 

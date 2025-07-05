@@ -29,10 +29,6 @@ target('test', function()
 		)
 	end
 	if m.system:is('windows') then
-		add_files(
-			m.root .. '/../Shell/shell/resource/windows/application.manifest',
-			{}
-		)
 		add_links(
 			'uuid',
 			'Ole32',

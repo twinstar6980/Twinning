@@ -93,7 +93,7 @@ namespace AssistantPlus.View.CommandSender {
 
 	}
 
-	public class ArgumentBarController : CustomController {
+	public partial class ArgumentBarController : CustomController {
 
 		#region data
 

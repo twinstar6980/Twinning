@@ -57,7 +57,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 
 	}
 
-	public class MainPageController : CustomController, Home.IModulePageController {
+	public partial class MainPageController : CustomController, Home.IModulePageController {
 
 		#region data
 
@@ -406,7 +406,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 
 	}
 
-	public class ObjectItemController : CustomController {
+	public partial class ObjectItemController : CustomController {
 
 		#region data
 

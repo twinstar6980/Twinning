@@ -65,7 +65,7 @@ namespace AssistantPlus.View.PackageBuilder {
 
 	}
 
-	public class SpecialRtonResourcePropertyPanelController : CustomController {
+	public partial class SpecialRtonResourcePropertyPanelController : CustomController {
 
 		#region data
 

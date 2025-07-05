@@ -6,6 +6,7 @@ using AssistantPlus.Utility;
 using System.Text.Json.Nodes;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.DataTransfer;
+using WinRT;
 using FluentIconGlyph = AssistantPlus.Control.FluentIconGlyph;
 
 namespace AssistantPlus.View.PackageBuilder {
@@ -59,7 +60,7 @@ namespace AssistantPlus.View.PackageBuilder {
 
 	}
 
-	public class MainPageController : CustomController, Home.IModulePageController {
+	public partial class MainPageController : CustomController, Home.IModulePageController {
 
 		#region data
 
@@ -1618,7 +1619,7 @@ namespace AssistantPlus.View.PackageBuilder {
 
 	}
 
-	public class MainPagePackageItemController : CustomController {
+	public partial class MainPagePackageItemController : CustomController {
 
 		#region data
 
@@ -1777,7 +1778,7 @@ namespace AssistantPlus.View.PackageBuilder {
 
 	}
 
-	public class MainPagePartItemController : CustomController {
+	public partial class MainPagePartItemController : CustomController {
 
 		#region data
 
@@ -1985,7 +1986,8 @@ namespace AssistantPlus.View.PackageBuilder {
 
 	}
 
-	public class MainPageGroupGroupController : CustomController {
+	[GeneratedBindableCustomProperty([nameof(MainPageGroupGroupController.Children)], [])]
+	public partial class MainPageGroupGroupController : CustomController {
 
 		#region data
 
@@ -2026,7 +2028,7 @@ namespace AssistantPlus.View.PackageBuilder {
 
 	}
 
-	public class MainPageGroupItemController : CustomController {
+	public partial class MainPageGroupItemController : CustomController {
 
 		#region data
 
@@ -2236,7 +2238,8 @@ namespace AssistantPlus.View.PackageBuilder {
 
 	}
 
-	public class MainPageResourceGroupController : CustomController {
+	[GeneratedBindableCustomProperty([nameof(MainPageResourceGroupController.Children)], [])]
+	public partial class MainPageResourceGroupController : CustomController {
 
 		#region data
 
@@ -2279,7 +2282,7 @@ namespace AssistantPlus.View.PackageBuilder {
 
 	}
 
-	public class MainPageResourceItemController : CustomController {
+	public partial class MainPageResourceItemController : CustomController {
 
 		#region data
 

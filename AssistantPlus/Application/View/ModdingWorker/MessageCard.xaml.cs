@@ -77,7 +77,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 	}
 
-	public class MessageCardController : CustomController {
+	public partial class MessageCardController : CustomController {
 
 		#region data
 
