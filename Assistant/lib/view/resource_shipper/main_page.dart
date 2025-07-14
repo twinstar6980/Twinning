@@ -72,7 +72,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
       }
       this._optionMatch.add(groupMatch);
     }
-    this.setState(() {});
+    await refreshState(this.setState);
     return;
   }
 
@@ -155,7 +155,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     if (optionResource != null) {
       await this._appendResource(optionResource.map((item) => StorageHelper.regularize(item.$1)).toList());
     }
-    this.setState(() {});
+    await refreshState(this.setState);
     return;
   }
 
@@ -245,7 +245,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                   collapse: this._optionCollapse[index],
                   onToggle: () async {
                     this._optionCollapse[index] = !this._optionCollapse[index];
-                    this.setState(() {});
+                    await refreshState(this.setState);
                   },
                 ),
               ),
@@ -282,7 +282,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                           onPressed: () async {
                             if (await ControlHelper.showDialogForConfirm(context)) {
                               await this._removeResource(this._resource.map((value) => value.$1).toList());
-                              setStateForPanel(() {});
+                              await refreshState(setStateForPanel);
                             }
                           },
                         ),
@@ -299,7 +299,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                             var item = <String>[];
                             var canContinue = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
                               title: 'Append New',
-                              contentBuilder: (context, setState) => [
+                              contentBuilder: (context, setStateForPanelInner) => [
                                 CustomTextField(
                                   keyboardType: TextInputType.multiline,
                                   inputFormatters: [],
@@ -311,7 +311,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                                   value: ConvertHelper.makeStringListToStringWithLine(item),
                                   onChanged: (value) async {
                                     item = ConvertHelper.parseStringListFromStringWithLine(value).map(StorageHelper.regularize).toList();
-                                    setState(() {});
+                                    await refreshState(setStateForPanelInner);
                                   },
                                 ),
                               ],
@@ -328,7 +328,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                             )) ?? false;
                             if (canContinue) {
                               await this._appendResource(item);
-                              setStateForPanel(() {});
+                              await refreshState(setStateForPanel);
                             }
                           },
                         ),
@@ -351,7 +351,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                             var item = await StorageHelper.pickLoadFile(context, 'ResourceShipper.Resource');
                             if (item != null) {
                               await this._appendResource([item]);
-                              setStateForPanel(() {});
+                              await refreshState(setStateForPanel);
                             }
                           },
                         ),
@@ -368,7 +368,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                             var item = await StorageHelper.pickLoadDirectory(context, 'ResourceShipper.Resource');
                             if (item != null) {
                               await this._appendResource([item]);
-                              setStateForPanel(() {});
+                              await refreshState(setStateForPanel);
                             }
                           },
                         ),
@@ -395,7 +395,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                       ),
                       onTap: () async {
                         await this._removeResource([value.$1]);
-                        setStateForPanel(() {});
+                        await refreshState(setStateForPanel);
                       },
                     ),
                   )),
@@ -413,7 +413,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
             selectedIcon: Icon(IconSymbols.shuffle, fill: 1),
             onPressed: () async {
               this._parallelForward = !this._parallelForward;
-              this.setState(() {});
+              await refreshState(this.setState);
             },
           ),
           SizedBox(width: 8),
@@ -424,7 +424,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
             selectedIcon: Icon(IconSymbols.filter_alt, fill: 1),
             onPressed: () async {
               this._enableFilter = !this._enableFilter;
-              this.setState(() {});
+              await refreshState(this.setState);
             },
           ),
           SizedBox(width: 8),
@@ -435,7 +435,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
             selectedIcon: Icon(IconSymbols.stacks, fill: 1),
             onPressed: () async {
               this._enableBatch = !this._enableBatch;
-              this.setState(() {});
+              await refreshState(this.setState);
             },
           ),
         ],

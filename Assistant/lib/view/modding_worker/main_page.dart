@@ -66,8 +66,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
       ),
     );
     var shouldScrollToEnd = this._messageListScrollController.position.pixels == this._messageListScrollController.position.maxScrollExtent;
-    this.setState(() {});
-    await WidgetsBinding.instance.endOfFrame;
+    await refreshState(this.setState);
     if (shouldScrollToEnd) {
       this._messageListScrollController.jumpTo(this._messageListScrollController.position.maxScrollExtent);
     }
@@ -88,7 +87,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
       value: valueWrapper,
       completer: completer,
     );
-    this.setState(() {});
+    await refreshState(this.setState);
     await completer.future;
     var value = valueWrapper.value;
     this._submissionBar = SubmissionBar(
@@ -98,8 +97,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
       value: null,
       completer: null,
     );
-    this.setState(() {});
-    await WidgetsBinding.instance.endOfFrame;
+    await refreshState(this.setState);
     if (value != null) {
       var valueString = ValueExpressionHelper.makeString(value);
       history.removeWhere((item) => ValueExpressionHelper.makeString(item) == valueString);
@@ -115,8 +113,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     var exception = null as Object?;
     this._sessionRunning = true;
     this._messageList.clear();
-    this.setState(() {});
-    await WidgetsBinding.instance.endOfFrame;
+    await refreshState(this.setState);
     try {
       var setting = Provider.of<SettingProvider>(this.context, listen: false);
       var kernel = await StorageHelper.temporary();
@@ -146,8 +143,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
       this._sendMessage(MessageType.error, 'FAILED', [exception.toString()]);
     }
     this._sessionRunning = false;
-    this.setState(() {});
-    await WidgetsBinding.instance.endOfFrame;
+    await refreshState(this.setState);
     return exception == null ? result! : null;
   }
 
@@ -175,7 +171,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     if (optionImmediateLaunch) {
       this._launchSession();
     }
-    this.setState(() {});
+    await refreshState(this.setState);
     return;
   }
 
@@ -297,7 +293,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                 onPressed: () async {
                   await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
                     title: 'Additional Argument',
-                    contentBuilder: (context, setState) => [
+                    contentBuilder: (context, setStateForPanel) => [
                       CustomTextField(
                         keyboardType: TextInputType.multiline,
                         inputFormatters: [],
@@ -314,8 +310,8 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                         onChanged: (value) async {
                           this._additionalArgument.clear();
                           this._additionalArgument.addAll(ConvertHelper.parseStringListFromStringWithLine(value));
-                          this.setState(() {});
-                          setState(() {});
+                          await refreshState(setStateForPanel);
+                          await refreshState(this.setState);
                         },
                       ),
                     ],

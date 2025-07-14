@@ -467,7 +467,7 @@ namespace AssistantPlus.View.Home {
 			SplitButtonClickEventArgs args
 		) {
 			var senders = sender.As<SplitButton>();
-			await StorageHelper.RevealDirectory(App.PackageDirectory);
+			await StorageHelper.Reveal(App.PackageDirectory);
 			App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
 			return;
 		}
@@ -479,7 +479,7 @@ namespace AssistantPlus.View.Home {
 			SplitButtonClickEventArgs args
 		) {
 			var senders = sender.As<SplitButton>();
-			await StorageHelper.RevealFile(App.Setting.File);
+			await StorageHelper.Reveal(App.Setting.File);
 			App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
 			return;
 		}
@@ -553,7 +553,7 @@ namespace AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			await StorageHelper.RevealDirectory(App.SharedDirectory);
+			await StorageHelper.Reveal(App.SharedDirectory);
 			App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
 			return;
 		}

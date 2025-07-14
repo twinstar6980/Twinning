@@ -37,7 +37,7 @@ class _Main {
     if (_setting.state.mApplicationNavigatorKey.currentContext != null) {
       ControlHelper.showDialogAsModal<Void>(_setting.state.mApplicationNavigatorKey.currentContext!, CustomModalDialog(
         title: 'Unhandled Exception',
-        contentBuilder: (context, setState) => [
+        contentBuilder: (context, setStateForPanel) => [
           Row(
             children: [
               Expanded(
@@ -80,7 +80,7 @@ class _Main {
     var targetType = forwardOption[setting.data.mForwarderDefaultTarget.index] != null ? setting.data.mForwarderDefaultTarget : null;
     var canContinue = (setting.data.mForwarderImmediateJump && targetType != null) || (await ControlHelper.showDialogAsModal<Boolean>(_setting.state.mApplicationNavigatorKey.currentContext!, CustomModalDialog(
       title: 'Forward',
-      contentBuilder: (context, setState) => [
+      contentBuilder: (context, setStateForPanel) => [
         ...ModuleType.values.map(
           (item) => ListTile(
             contentPadding: EdgeInsets.zero,
@@ -92,7 +92,7 @@ class _Main {
                 ? null
                 : (value) async {
                   targetType = item;
-                  setState(() {});
+                  await refreshState(setStateForPanel);
                 },
             ),
             title: Text(

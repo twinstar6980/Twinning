@@ -1,4 +1,5 @@
 import 'dart:core' as core;
+import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 // ----------------
@@ -15,7 +16,7 @@ typedef IconSymbols = Symbols;
 
 const String kApplicationName = 'Twinning Assistant';
 
-const String kApplicationVersion = '76';
+const String kApplicationVersion = '77';
 
 const String kApplicationDeveloper = 'TwinStar';
 
@@ -29,6 +30,14 @@ Void assertTest(
   if (!condition) {
     throw core.AssertionError();
   }
+  return;
+}
+
+core.Future<Void> refreshState(
+  Void Function(Void Function()) setState,
+) async {
+  setState(() {});
+  await WidgetsBinding.instance.endOfFrame;
   return;
 }
 

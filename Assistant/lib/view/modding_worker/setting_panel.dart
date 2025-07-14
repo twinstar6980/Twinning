@@ -59,8 +59,8 @@ class SettingPanel extends StatelessWidget {
                             var target = await StorageHelper.pickLoadFile(context, 'ModdingWorker.Kernel');
                             if (target != null) {
                               this.data.mKernel = target;
-                              setStateForPanel(() {});
-                              setState(() {});
+                              await refreshState(setStateForPanel);
+                              await refreshState(setState);
                               this.onUpdate();
                             }
                           },
@@ -71,8 +71,8 @@ class SettingPanel extends StatelessWidget {
                   value: this.data.mKernel,
                   onChanged: (value) async {
                     this.data.mKernel = StorageHelper.regularize(value);
-                    setStateForPanel(() {});
-                    setState(() {});
+                    await refreshState(setStateForPanel);
+                    await refreshState(setState);
                     this.onUpdate();
                   },
                 ),
@@ -109,8 +109,8 @@ class SettingPanel extends StatelessWidget {
                             var target = await StorageHelper.pickLoadFile(context, 'ModdingWorker.Script');
                             if (target != null) {
                               this.data.mScript = target;
-                              setStateForPanel(() {});
-                              setState(() {});
+                              await refreshState(setStateForPanel);
+                              await refreshState(setState);
                               this.onUpdate();
                             }
                           },
@@ -121,8 +121,8 @@ class SettingPanel extends StatelessWidget {
                   value: this.data.mScript,
                   onChanged: (value) async {
                     this.data.mScript = StorageHelper.regularize(value);
-                    setStateForPanel(() {});
-                    setState(() {});
+                    await refreshState(setStateForPanel);
+                    await refreshState(setState);
                     this.onUpdate();
                   },
                 ),
@@ -158,8 +158,8 @@ class SettingPanel extends StatelessWidget {
                   value: ConvertHelper.makeStringListToStringWithLine(this.data.mArgument),
                   onChanged: (value) async {
                     this.data.mArgument = ConvertHelper.parseStringListFromStringWithLine(value);
-                    setStateForPanel(() {});
-                    setState(() {});
+                    await refreshState(setStateForPanel);
+                    await refreshState(setState);
                     this.onUpdate();
                   },
                 ),
@@ -184,8 +184,8 @@ class SettingPanel extends StatelessWidget {
                   value: this.data.mImmediateLaunch,
                   onChanged: (value) async {
                     this.data.mImmediateLaunch = value;
-                    setStateForPanel(() {});
-                    setState(() {});
+                    await refreshState(setStateForPanel);
+                    await refreshState(setState);
                     this.onUpdate();
                   },
                 ),
@@ -226,8 +226,8 @@ class SettingPanel extends StatelessWidget {
                             var target = await StorageHelper.pickLoadFile(context, 'ModdingWorker.MessageFont');
                             if (target != null) {
                               this.data.mMessageFont = this.data.mMessageFont + [target];
-                              setStateForPanel(() {});
-                              setState(() {});
+                              await refreshState(setStateForPanel);
+                              await refreshState(setState);
                               this.onUpdate();
                             }
                           },
@@ -238,8 +238,8 @@ class SettingPanel extends StatelessWidget {
                   value: ConvertHelper.makeStringListToStringWithLine(this.data.mMessageFont),
                   onChanged: (value) async {
                     this.data.mMessageFont = ConvertHelper.parseStringListFromStringWithLine(value);
-                    setStateForPanel(() {});
-                    setState(() {});
+                    await refreshState(setStateForPanel);
+                    await refreshState(setState);
                     this.onUpdate();
                   },
                 ),

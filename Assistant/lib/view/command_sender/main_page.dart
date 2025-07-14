@@ -52,8 +52,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     var groupConfiguration = this._methodConfiguration.firstWhere((value) => methodId.startsWith('${value.id}.'));
     var itemConfiguration = groupConfiguration.item.firstWhere((value) => methodId == value.id);
     this._command.add((groupConfiguration, itemConfiguration, Wrapper(enableBatch), ConfigurationHelper.parseArgumentValueListJson(itemConfiguration.argument, argumentValue), Wrapper(collapse)));
-    this.setState(() {});
-    await WidgetsBinding.instance.endOfFrame;
+    await refreshState(this.setState);
     this._commandListScrollController.jumpTo(this._commandListScrollController.position.maxScrollExtent);
     return;
   }
@@ -62,7 +61,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     Integer index,
   ) async {
     this._command.removeAt(index);
-    this.setState(() {});
+    await refreshState(this.setState);
     return;
   }
 
@@ -110,7 +109,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
         await this._appendCommand(item.$1, item.$2, item.$3, item.$4);
       }
     }
-    this.setState(() {});
+    await refreshState(this.setState);
     return;
   }
 
@@ -218,7 +217,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
             onPressed: () async {
               await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
                 title: 'Method',
-                contentBuilder: (context, setState) => [
+                contentBuilder: (context, setStateForPanel) => [
                   ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
@@ -233,7 +232,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                       collapse: this._methodCollapse[index],
                       onToggle: () async {
                         this._methodCollapse[index] = !this._methodCollapse[index];
-                        setState(() {});
+                        await refreshState(setStateForPanel);
                       },
                     ),
                   ),
@@ -250,7 +249,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
             selectedIcon: Icon(IconSymbols.shuffle, fill: 1),
             onPressed: () async {
               this._parallelForward = !this._parallelForward;
-              this.setState(() {});
+              await refreshState(this.setState);
             },
           ),
           SizedBox(width: 8),

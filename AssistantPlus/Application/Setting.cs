@@ -136,7 +136,7 @@ namespace AssistantPlus {
 
 		public String File {
 			get {
-				return StorageHelper.ToWindowsStyle($"{App.SharedDirectory}/Setting.json");
+				return $"{App.SharedDirectory}/Setting.json";
 			}
 		}
 

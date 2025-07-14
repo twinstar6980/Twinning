@@ -48,7 +48,7 @@ class ControlHelper {
   ) async {
     return await showDialogAsModal<Boolean>(context, CustomModalDialog(
       title: 'Confirm ?',
-      contentBuilder: (context, setState) => [],
+      contentBuilder: (context, setStateForPanel) => [],
       actionBuilder: (context) => [
         TextButton(
           child: Text('Cancel'),
@@ -69,7 +69,7 @@ class ControlHelper {
   ) async {
     var canContinue = await showDialogAsModal<Boolean>(context, CustomModalDialog(
       title: title,
-      contentBuilder: (context, setState) => [
+      contentBuilder: (context, setStateForPanel) => [
         CustomTextField(
           keyboardType: TextInputType.none,
           inputFormatters: [],

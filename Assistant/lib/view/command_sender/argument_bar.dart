@@ -93,7 +93,7 @@ class _BooleanArgumentBar extends StatelessWidget {
                   selectedIcon: Icon(IconSymbols.do_not_disturb_on, fill: 1),
                   onPressed: () async {
                     this.value.value = this.value.value?.value == false ? null : BooleanExpression(false);
-                    setState(() {});
+                    await refreshState(setState);
                   },
                 ),
                 SizedBox(width: 4),
@@ -104,7 +104,7 @@ class _BooleanArgumentBar extends StatelessWidget {
                   selectedIcon: Icon(IconSymbols.check_circle, fill: 1),
                   onPressed: () async {
                     this.value.value = this.value.value?.value == true ? null : BooleanExpression(true);
-                    setState(() {});
+                    await refreshState(setState);
                   },
                 ),
               ],
@@ -120,7 +120,7 @@ class _BooleanArgumentBar extends StatelessWidget {
                 this.value.value = BooleanExpression(text == 'y');
               }
             }
-            setState(() {});
+            await refreshState(setState);
           },
         ),
       ),
@@ -174,7 +174,7 @@ class _IntegerArgumentBar extends StatelessWidget {
                 this.value.value = IntegerExpression(value);
               }
             }
-            setState(() {});
+            await refreshState(setState);
           },
         ),
       ),
@@ -228,7 +228,7 @@ class _FloaterArgumentBar extends StatelessWidget {
                 this.value.value = FloaterExpression(value);
               }
             }
-            setState(() {});
+            await refreshState(setState);
           },
         ),
       ),
@@ -291,7 +291,7 @@ class _SizeArgumentBar extends StatelessWidget {
                   )).toList(),
                   onSelected: (value) async {
                     this.value.value = SizeExpression(this.value.value?.count ?? 1.0, value);
-                    setState(() {});
+                    await refreshState(setState);
                   },
                 ),
               ],
@@ -308,7 +308,7 @@ class _SizeArgumentBar extends StatelessWidget {
                 this.value.value = SizeExpression(count, this.value.value?.exponent ?? 2);
               }
             }
-            setState(() {});
+            await refreshState(setState);
           },
         ),
       ),
@@ -359,7 +359,7 @@ class _StringArgumentBar extends StatelessWidget {
             else {
               this.value.value = StringExpression(text);
             }
-            setState(() {});
+            await refreshState(setState);
           },
         ),
       ),
@@ -392,7 +392,7 @@ class _PathArgumentBar extends StatelessWidget {
         content: CustomFileDropRegion(
           onDrop: (item) async {
             this.value.value = PathExpression(item.first);
-            setState(() {});
+            await refreshState(setState);
           },
           child: CustomTextField(
             keyboardType: TextInputType.text,
@@ -428,7 +428,7 @@ class _PathArgumentBar extends StatelessWidget {
                       };
                       if (target != null) {
                         this.value.value = PathExpression(target);
-                        setState(() {});
+                        await refreshState(setState);
                       }
                     },
                   ),
@@ -443,7 +443,7 @@ class _PathArgumentBar extends StatelessWidget {
               else {
                 this.value.value = PathExpression(StorageHelper.regularize(text));
               }
-              setState(() {});
+              await refreshState(setState);
             },
           ),
         ),
@@ -489,7 +489,7 @@ class _EnumerationArgumentBar extends StatelessWidget {
                   icon: Icon(IconSymbols.restart_alt),
                   onPressed: () async {
                     this.value.value = null;
-                    setState(() {});
+                    await refreshState(setState);
                   },
                 ),
               ],
@@ -499,7 +499,7 @@ class _EnumerationArgumentBar extends StatelessWidget {
           value: this.value.value == null ? '' : ValueExpressionHelper.makeString(this.value.value!),
           onChanged: (value) async {
             this.value.value = value as ValueExpression;
-            setState(() {});
+            await refreshState(setState);
           },
         ),
       ),

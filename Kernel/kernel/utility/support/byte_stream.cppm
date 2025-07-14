@@ -62,12 +62,10 @@ export namespace Twinning::Kernel {
 			ThisO &      thix,
 			That const & that
 		) -> Void {
-			if (g_byte_stream_use_big_endian != (std::endian::native == std::endian::little)) [[likely]]
-			{
+			if (g_byte_stream_use_big_endian != (std::endian::native == std::endian::little)) [[likely]] {
 				std::memcpy(thix.current_pointer().value, &that, k_type_size<TValue>.value);
 			}
-			else [[unlikely]]
-			{
+			else [[unlikely]] {
 				auto that_reversed = reverse_endian(that);
 				std::memcpy(thix.current_pointer().value, &that_reversed, k_type_size<TValue>.value);
 			}
@@ -80,8 +78,7 @@ export namespace Twinning::Kernel {
 			That &  that
 		) -> Void {
 			std::memcpy(&that, thix.current_pointer().value, k_type_size<TValue>.value);
-			if (g_byte_stream_use_big_endian == (std::endian::native == std::endian::little)) [[unlikely]]
-			{
+			if (g_byte_stream_use_big_endian == (std::endian::native == std::endian::little)) [[unlikely]] {
 				that = reverse_endian(that);
 			}
 			thix.forward(k_type_size<TValue>);

@@ -61,7 +61,7 @@ class CommandPanel extends StatelessWidget {
                     icon: Icon(!this.collapse.value ? IconSymbols.keyboard_arrow_up : IconSymbols.keyboard_arrow_down),
                     onPressed: () async {
                       this.collapse.value = !this.collapse.value;
-                      setState(() {});
+                      await refreshState(setState);
                     },
                   ),
                   SizedBox(width: 4),
@@ -187,7 +187,7 @@ class CommandPanel extends StatelessWidget {
                                 assertTest(argumentIndex != -1);
                                 this.argumentValue[argumentIndex] = Wrapper(ConfigurationHelper.parseArgumentValueJson(this.itemConfiguration.argument[argumentIndex].type, argument.value));
                               }
-                              setState(() {});
+                              await refreshState(setState);
                             },
                           ),
                         ),
@@ -206,7 +206,7 @@ class CommandPanel extends StatelessWidget {
                       ? null
                       : () async {
                         this.enableBatch.value = !this.enableBatch.value;
-                        setState(() {});
+                        await refreshState(setState);
                       },
                   ),
                   SizedBox(width: 8),

@@ -58,8 +58,8 @@ class SettingPanel extends StatelessWidget {
                             var target = await StorageHelper.pickLoadFile(context, 'CommandSender.MethodConfiguration');
                             if (target != null) {
                               this.data.mMethodConfiguration = target;
-                              setStateForPanel(() {});
-                              setState(() {});
+                              await refreshState(setStateForPanel);
+                              await refreshState(setState);
                               this.onUpdate();
                             }
                           },
@@ -70,8 +70,8 @@ class SettingPanel extends StatelessWidget {
                   value: this.data.mMethodConfiguration,
                   onChanged: (value) async {
                     this.data.mMethodConfiguration = StorageHelper.regularize(value);
-                    setStateForPanel(() {});
-                    setState(() {});
+                    await refreshState(setStateForPanel);
+                    await refreshState(setState);
                     this.onUpdate();
                   },
                 ),
@@ -96,8 +96,8 @@ class SettingPanel extends StatelessWidget {
                   value: this.data.mParallelForward,
                   onChanged: (value) async {
                     this.data.mParallelForward = value;
-                    setStateForPanel(() {});
-                    setState(() {});
+                    await refreshState(setStateForPanel);
+                    await refreshState(setState);
                     this.onUpdate();
                   },
                 ),

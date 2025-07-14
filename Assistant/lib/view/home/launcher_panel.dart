@@ -56,7 +56,7 @@ class LauncherPanel extends StatelessWidget {
                           value: ConvertHelper.makeStringListToStringWithLine(command),
                           onChanged: (value) async {
                             command = ConvertHelper.parseStringListFromStringWithLine(value);
-                            setStateForPanel(() {});
+                            await refreshState(setStateForPanel);
                           },
                         ),
                       ],
@@ -89,7 +89,7 @@ class LauncherPanel extends StatelessWidget {
                     var resource = <String>[];
                     var canContinue = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
                       title: 'Forward',
-                      contentBuilder: (context, setState) => [
+                      contentBuilder: (context, setStateForPanel) => [
                         CustomTextField(
                           keyboardType: TextInputType.multiline,
                           inputFormatters: [],
@@ -101,7 +101,7 @@ class LauncherPanel extends StatelessWidget {
                           value: ConvertHelper.makeStringListToStringWithLine(resource),
                           onChanged: (value) async {
                             resource = ConvertHelper.parseStringListFromStringWithLine(value);
-                            setState(() {});
+                            await refreshState(setStateForPanel);
                           },
                         ),
                       ],
@@ -157,7 +157,7 @@ class LauncherPanel extends StatelessWidget {
                       LauncherConfigurationPanel(
                         data: item,
                         onUpdate: () async {
-                          setState(() {});
+                          await refreshState(setState);
                           await setting.save();
                         },
                       ),
@@ -209,7 +209,7 @@ class LauncherPanel extends StatelessWidget {
                       LauncherConfigurationPanel(
                         data: item,
                         onUpdate: () async {
-                          setState(() {});
+                          await refreshState(setState);
                           await setting.save();
                         },
                       ),
@@ -267,7 +267,7 @@ class LauncherPanel extends StatelessWidget {
                       LauncherConfigurationPanel(
                         data: item,
                         onUpdate: () async {
-                          setState(() {});
+                          await refreshState(setState);
                           await setting.save();
                         },
                       ),

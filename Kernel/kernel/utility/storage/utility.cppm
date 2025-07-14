@@ -73,12 +73,10 @@ export namespace Twinning::Kernel::Storage {
 			Path const & value
 		) -> std::filesystem::path {
 			auto string = make_regular_path(value).to_string();
-			if (!string.empty()) [[likely]]
-			{
+			if (!string.empty()) [[likely]] {
 				return std::filesystem::path{self_cast<std::u8string_view>(make_std_string_view(string))};
 			}
-			else [[unlikely]]
-			{
+			else [[unlikely]] {
 				return std::filesystem::path{std::u8string_view{u8"."}};
 			}
 		}

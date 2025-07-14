@@ -260,15 +260,7 @@ namespace AssistantPlus.Utility {
 
 		#region shell
 
-		public static async Task RevealFile (
-			String target
-		) {
-			var result = PlatformInvoke.Shell32.ShellExecute(IntPtr.Zero, "open", $"file://{target}", null, null, PlatformInvoke.User32.SW_SHOWNORMAL);
-			GF.AssertTest(result >= 32);
-			return;
-		}
-
-		public static async Task RevealDirectory (
+		public static async Task Reveal (
 			String target
 		) {
 			var result = PlatformInvoke.Shell32.ShellExecute(IntPtr.Zero, "open", $"file://{target}", null, null, PlatformInvoke.User32.SW_SHOWNORMAL);
@@ -330,17 +322,16 @@ namespace AssistantPlus.Utility {
 
 		// ----------------
 
-		public static void TrashFile (
+		public static void Trash (
 			String target
 		) {
-			Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(target, Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs, Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin, Microsoft.VisualBasic.FileIO.UICancelOption.ThrowException);
-			return;
-		}
-
-		public static void TrashDirectory (
-			String target
-		) {
-			Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(target, Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs, Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin, Microsoft.VisualBasic.FileIO.UICancelOption.ThrowException);
+			GF.AssertTest(StorageHelper.Exist(target));
+			if (StorageHelper.ExistFile(target)) {
+				Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(target, Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs, Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin, Microsoft.VisualBasic.FileIO.UICancelOption.ThrowException);
+			}
+			if (StorageHelper.ExistDirectory(target)) {
+				Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(target, Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs, Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin, Microsoft.VisualBasic.FileIO.UICancelOption.ThrowException);
+			}
 			return;
 		}
 

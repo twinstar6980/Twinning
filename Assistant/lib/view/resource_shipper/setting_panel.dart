@@ -58,8 +58,8 @@ class SettingPanel extends StatelessWidget {
                             var target = await StorageHelper.pickLoadFile(context, 'ResourceShipper.OptionConfiguration');
                             if (target != null) {
                               this.data.mOptionConfiguration = target;
-                              setStateForPanel(() {});
-                              setState(() {});
+                              await refreshState(setStateForPanel);
+                              await refreshState(setState);
                               this.onUpdate();
                             }
                           },
@@ -70,8 +70,8 @@ class SettingPanel extends StatelessWidget {
                   value: this.data.mOptionConfiguration,
                   onChanged: (value) async {
                     this.data.mOptionConfiguration = StorageHelper.regularize(value);
-                    setStateForPanel(() {});
-                    setState(() {});
+                    await refreshState(setStateForPanel);
+                    await refreshState(setState);
                     this.onUpdate();
                   },
                 ),
@@ -96,8 +96,8 @@ class SettingPanel extends StatelessWidget {
                   value: this.data.mParallelForward,
                   onChanged: (value) async {
                     this.data.mParallelForward = value;
-                    setStateForPanel(() {});
-                    setState(() {});
+                    await refreshState(setStateForPanel);
+                    await refreshState(setState);
                     this.onUpdate();
                   },
                 ),
@@ -126,8 +126,8 @@ class SettingPanel extends StatelessWidget {
                   value: this.data.mEnableFilter,
                   onChanged: (value) async {
                     this.data.mEnableFilter = value;
-                    setStateForPanel(() {});
-                    setState(() {});
+                    await refreshState(setStateForPanel);
+                    await refreshState(setState);
                     this.onUpdate();
                   },
                 ),
@@ -156,8 +156,8 @@ class SettingPanel extends StatelessWidget {
                   value: this.data.mEnableBatch,
                   onChanged: (value) async {
                     this.data.mEnableBatch = value;
-                    setStateForPanel(() {});
-                    setState(() {});
+                    await refreshState(setStateForPanel);
+                    await refreshState(setState);
                     this.onUpdate();
                   },
                 ),

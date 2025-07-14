@@ -10,7 +10,7 @@
   xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
   xmlns:desktop6="http://schemas.microsoft.com/appx/manifest/desktop/windows10/6"
   IgnorableNamespaces="mp uap rescap com desktop desktop4 desktop5 desktop6">
-  <Identity Name="TwinStar.Twinning.AssistantPlus" Publisher="CN=TwinStar" Version="60.0.0.0" />
+  <Identity Name="TwinStar.Twinning.AssistantPlus" Publisher="CN=TwinStar" Version="61.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="5c0bdffa-0bc5-42fb-b680-8d184b26575c" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Twinning Assistant Plus</DisplayName>

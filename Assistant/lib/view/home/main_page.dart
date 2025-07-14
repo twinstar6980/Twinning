@@ -42,7 +42,7 @@ class _MainPageState extends State<MainPage> {
     }
     this._tabList.add((configuration.title, configuration.type, ModuleHelper.query(configuration.type).mainPage(configuration.option)));
     this._tabIndex = this._tabList.length - 1;
-    this.setState(() {});
+    await refreshState(this.setState);
     await Future.delayed(Duration(milliseconds: 10));
     return;
   }
@@ -60,7 +60,7 @@ class _MainPageState extends State<MainPage> {
       this._tabIndex--;
     }
     this._tabIndex = min(this._tabIndex, this._tabList.length - 1);
-    this.setState(() {});
+    await refreshState(this.setState);
     return;
   }
 
@@ -74,7 +74,7 @@ class _MainPageState extends State<MainPage> {
       this._tabList[index].$2,
       this._tabList[index].$3,
     );
-    this.setState(() {});
+    await refreshState(this.setState);
     return;
   }
 
@@ -113,7 +113,7 @@ class _MainPageState extends State<MainPage> {
   ) async {
     assertTest(0 <= index && index < this._tabList.length);
     this._tabIndex = index;
-    this.setState(() {});
+    await refreshState(this.setState);
     return;
   }
 
@@ -121,7 +121,7 @@ class _MainPageState extends State<MainPage> {
   ) async {
     await ControlHelper.showBottomSheetAsModal<Void>(this.context, CustomModalBottomSheet(
       title: 'Launcher',
-      contentBuilder: (context, setState) => [
+      contentBuilder: (context, setStateForPanel) => [
         LauncherPanel(
           onLaunch: (configuration) async {
             Navigator.pop(context);
@@ -200,7 +200,7 @@ class _MainPageState extends State<MainPage> {
               Navigator.pop(context);
               await ControlHelper.showDialogAsFull<Void>(context, CustomFullDialog(
                 title: 'Setting',
-                contentBuilder: (context, setState) => [
+                contentBuilder: (context, setStateForPanel) => [
                   SettingPanel(),
                 ],
               ));
@@ -256,7 +256,7 @@ class _MainPageState extends State<MainPage> {
                       var title = item.$1;
                       var canContinue = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
                         title: 'Tab Rename',
-                        contentBuilder: (context, setState) => [
+                        contentBuilder: (context, setStateForPanel) => [
                           CustomTextField(
                             keyboardType: TextInputType.multiline,
                             inputFormatters: [],
@@ -268,7 +268,7 @@ class _MainPageState extends State<MainPage> {
                             value: title,
                             onChanged: (value) async {
                               title = value;
-                              setState(() {});
+                              await refreshState(setStateForPanel);
                             },
                           ),
                         ],

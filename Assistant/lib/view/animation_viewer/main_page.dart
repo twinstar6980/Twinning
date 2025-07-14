@@ -78,7 +78,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     this._texture = texture;
     this._imageFilter = List.filled(this._animation!.image.length, true);
     this._spriteFilter = List.filled(this._animation!.sprite.length, true);
-    this.setState(() {});
+    await refreshState(this.setState);
     return;
   }
 
@@ -91,7 +91,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     this._texture = null;
     this._imageFilter = null;
     this._spriteFilter = null;
-    this.setState(() {});
+    await refreshState(this.setState);
     return;
   }
 
@@ -145,12 +145,14 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
       this._activeSprite = originalTarget;
     }
     this._activeFrameLabel = VisualHelper.parseSpriteFrameLabel(this._activeSprite!);
+    this._activeFrameRange = (0, 0);
+    this._activeFrameSpeed = 0.0;
+    this._animationVisual = VisualHelper.visualizeSprite(this._animationController, this._animation!, this._texture!, this._activeSprite!, this._imageFilter!, this._spriteFilter!);
     await this._changeFrameRange(frameRange ?? (0, this._activeSprite!.frame.length));
     await this._changeFrameSpeed(frameSpeed ?? this._activeSprite!.frame_rate ?? this._animation!.frame_rate.toDouble());
-    this._animationVisual = VisualHelper.visualizeSprite(this._animationController, this._animation!, this._texture!, this._activeSprite!, this._imageFilter!, this._spriteFilter!);
     await this._changeProgressIndex(progressIndex ?? 0);
     await this._changeProgressState(progressState ?? this._automaticPlay);
-    this.setState(() {});
+    await refreshState(this.setState);
     return;
   }
 
@@ -165,7 +167,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     this._animationController.duration = Duration.zero;
     this._animationController.reset();
     this._animationVisual = null;
-    this.setState(() {});
+    await refreshState(this.setState);
     return;
   }
 
@@ -179,7 +181,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     if (this._activated) {
       this._animationVisual = VisualHelper.visualizeSprite(this._animationController, this._animation!, this._texture!, this._activeSprite!, this._imageFilter!, this._spriteFilter!);
     }
-    this.setState(() {});
+    await refreshState(this.setState);
     return;
   }
 
@@ -189,7 +191,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     assertTest(this._loaded && this._activated);
     this._activeFrameRange = frameRange;
     // TODO
-    this.setState(() {});
+    await refreshState(this.setState);
     return;
   }
 
@@ -206,7 +208,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     if (currentState) {
       this._animationController.forward();
     }
-    this.setState(() {});
+    await refreshState(this.setState);
     return;
   }
 
@@ -273,10 +275,10 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
       await this._unload();
     }
     await this._load(animationFile, textureDirectory);
-      await this._changeControlFilter(
-        imageFilter == null ? this._imageFilter! : List.generate(this._animation!.image.length, (index) => !imageFilter.contains(index)).toList(),
-        spriteFilter == null ? this._spriteFilter! : List.generate(this._animation!.sprite.length, (index) => !spriteFilter.contains(index)).toList(),
-      );
+    await this._changeControlFilter(
+      imageFilter == null ? this._imageFilter! : List.generate(this._animation!.image.length, (index) => !imageFilter.contains(index)).toList(),
+      spriteFilter == null ? this._spriteFilter! : List.generate(this._animation!.sprite.length, (index) => !spriteFilter.contains(index)).toList(),
+    );
     if (activeTarget == null && this._immediateSelect) {
       activeTarget ??= (true, this._animation!.sprite.length);
     }
@@ -382,7 +384,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
         optionActiveProgressState,
       );
     }
-    this.setState(() {});
+    await refreshState(this.setState);
     return;
   }
 
@@ -627,7 +629,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                               children: [
                                 Expanded(
                                   child: Text(
-                                    !this._activated ? '[ 0 - 0 ]' : '[ ${this._activeFrameRange!.$1 + 1} - ${this._activeFrameRange!.$1 + this._activeFrameRange!.$2} ]',
+                                    !this._activated ? '[ 1 - 1 ]' : '[ ${this._activeFrameRange!.$1 + 1} - ${this._activeFrameRange!.$1 + this._activeFrameRange!.$2} ]',
                                     overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.start,
                                   ),
@@ -640,7 +642,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                 var currentValue = this._activeFrameRange!;
                                 await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
                                   title: 'Frame Range',
-                                  contentBuilder: (context, setState) => [
+                                  contentBuilder: (context, setStateForPanel) => [
                                     CustomTextField(
                                       keyboardType: TextInputType.numberWithOptions(signed: false, decimal: false),
                                       inputFormatters: [],
@@ -678,7 +680,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                               onSelected: (value) async {
                                                 value as Integer;
                                                 currentValue = value > (currentValue.$1 + currentValue.$2) ? (value - 1, 1) : (value - 1, currentValue.$1 + currentValue.$2 - value + 1);
-                                                setState(() {});
+                                                await refreshState(setStateForPanel);
                                               },
                                             ),
                                           ],
@@ -690,7 +692,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                         if (value != null && value >= 1 && value <= this._activeSprite!.frame.length) {
                                           currentValue = value > (currentValue.$1 + currentValue.$2) ? (value - 1, 1) : (value - 1, currentValue.$1 + currentValue.$2 - value + 1);
                                         }
-                                        setState(() {});
+                                        await refreshState(setStateForPanel);
                                       },
                                     ),
                                     SizedBox(height: 12),
@@ -731,7 +733,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                               onSelected: (value) async {
                                                 value as Integer;
                                                 currentValue = value - 1 < currentValue.$1 ? (value - 1, 1) : (currentValue.$1, value - currentValue.$1);
-                                                setState(() {});
+                                                await refreshState(setStateForPanel);
                                               },
                                             ),
                                           ],
@@ -743,7 +745,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                         if (value != null && value >= 1 && value <= this._activeSprite!.frame.length) {
                                           currentValue = value - 1 < currentValue.$1 ? (value - 1, 1) : (currentValue.$1, value - currentValue.$1);
                                         }
-                                        setState(() {});
+                                        await refreshState(setStateForPanel);
                                       },
                                     ),
                                   ],
@@ -815,7 +817,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                 var normalSpeed = this._activeSprite?.frame_rate ?? this._animation!.frame_rate.toDouble();
                                 await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
                                   title: 'Frame Speed',
-                                  contentBuilder: (context, setState) => [
+                                  contentBuilder: (context, setStateForPanel) => [
                                     CustomTextField(
                                       keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
                                       inputFormatters: [],
@@ -852,7 +854,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                               )).toList(),
                                               onSelected: (value) async {
                                                 currentValue = value;
-                                                setState(() {});
+                                                await refreshState(setStateForPanel);
                                               },
                                             ),
                                           ],
@@ -864,7 +866,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                         if (value != null && value.isFinite && value > 0.0) {
                                           currentValue = value;
                                         }
-                                        setState(() {});
+                                        await refreshState(setStateForPanel);
                                       },
                                     ),
                                   ],
@@ -908,7 +910,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                 var currentValue = [...this._imageFilter!];
                                 await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
                                   title: 'Image',
-                                  contentBuilder: (context, setState) => [
+                                  contentBuilder: (context, setStateForPanel) => [
                                     ...this._animation!.image.mapIndexed((index, item) => Tooltip(
                                       message: VisualHelper.parseImageFileName(item.name),
                                       child: ListTile(
@@ -935,7 +937,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                         ),
                                         onTap: () async {
                                           currentValue[index] = !currentValue[index];
-                                          setState(() {});
+                                          await refreshState(setStateForPanel);
                                         },
                                         onLongPress: () async {
                                           var newFrameSpeed = !this._keepSpeed ? null : this._activeFrameSpeed;
@@ -990,7 +992,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                 else {
                                   await this._activate((true, this._animation!.sprite.length), null, null, null, null);
                                 }
-                                this.setState(() {});
+                                await refreshState(this.setState);
                               },
                           ),
                         ),
@@ -1020,7 +1022,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                 var currentValue = [...this._spriteFilter!];
                                 await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
                                   title: 'Sprite',
-                                  contentBuilder: (context, setState) => [
+                                  contentBuilder: (context, setStateForPanel) => [
                                     ...this._animation!.sprite.mapIndexed((index, item) => Tooltip(
                                       message: item.name ?? '',
                                       child: ListTile(
@@ -1047,7 +1049,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                         ),
                                         onTap: () async {
                                           currentValue[index] = !currentValue[index];
-                                          setState(() {});
+                                          await refreshState(setStateForPanel);
                                         },
                                         onLongPress: () async {
                                           var newFrameSpeed = !this._keepSpeed ? null : this._activeFrameSpeed;
@@ -1090,7 +1092,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           onPressed: () async {
             await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
               title: 'Source',
-              contentBuilder: (context, setState) => [
+              contentBuilder: (context, setStateForPanel) => [
                 CustomTextField(
                   keyboardType: TextInputType.none,
                   inputFormatters: [],
@@ -1120,7 +1122,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                               await this._deactivate();
                             }
                             await this._unload();
-                            Navigator.pop(context);
+                            await refreshState(setStateForPanel);
                           },
                       ),
                     ),
@@ -1136,8 +1138,9 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                           var animationFile = await StorageHelper.pickLoadFile(context, 'AnimationViewer.AnimationFile');
                           if (animationFile != null) {
                             await this._applyLoad(animationFile, null, null, null, null, null, null, null, null);
+                            await refreshState(setStateForPanel);
+                            Navigator.pop(context);
                           }
-                          Navigator.pop(context);
                         },
                       ),
                     ),
@@ -1156,7 +1159,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
             selectedIcon: Icon(IconSymbols.ads_click, fill: 1),
             onPressed: () async {
               this._immediateSelect = !this._immediateSelect;
-              this.setState(() {});
+              await refreshState(this.setState);
             },
           ),
           SizedBox(width: 8),
@@ -1167,7 +1170,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
             selectedIcon: Icon(IconSymbols.autoplay, fill: 1),
             onPressed: () async {
               this._automaticPlay = !this._automaticPlay;
-              this.setState(() {});
+              await refreshState(this.setState);
             },
           ),
           SizedBox(width: 8),
@@ -1178,7 +1181,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
             selectedIcon: Icon(IconSymbols.repeat, fill: 1),
             onPressed: () async {
               this._repeatPlay = !this._repeatPlay;
-              this.setState(() {});
+              await refreshState(this.setState);
             },
           ),
           SizedBox(width: 8),
@@ -1189,7 +1192,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
             selectedIcon: Icon(IconSymbols.lock_reset, fill: 1),
             onPressed: () async {
               this._keepSpeed = !this._keepSpeed;
-              this.setState(() {});
+              await refreshState(this.setState);
             },
           ),
           SizedBox(width: 8),
@@ -1200,7 +1203,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
             selectedIcon: Icon(IconSymbols.frame_source, fill: 1),
             onPressed: () async {
               this._showBoundary = !this._showBoundary;
-              this.setState(() {});
+              await refreshState(this.setState);
             },
           ),
         ],

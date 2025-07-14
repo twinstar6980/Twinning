@@ -217,17 +217,18 @@ class StorageHelper {
   // #region shell
 
   static Future<Void> reveal(
-    String path,
+    String target,
   ) async {
+    assertTest(await exist(target));
     var revealed = false;
     if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-      revealed = await launchUrl(Uri.file(path), mode: LaunchMode.externalApplication);
+      revealed = await launchUrl(Uri.file(target), mode: LaunchMode.externalApplication);
     }
     if (Platform.isAndroid) {
       throw UnimplementedError();
     }
     if (Platform.isIOS) {
-      revealed = await launchUrl(Uri.file(path).replace(scheme: 'shareddocuments'), mode: LaunchMode.externalApplication);
+      revealed = await launchUrl(Uri.file(target).replace(scheme: 'shareddocuments'), mode: LaunchMode.externalApplication);
     }
     assertTest(revealed);
     return;
@@ -458,7 +459,7 @@ class StorageHelper {
     if (result == null) {
       var canDuplicate = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
         title: 'Unknown Content Uri',
-        contentBuilder: (context, setState) => [
+        contentBuilder: (context, setStateForPanel) => [
           Row(
             children: [
               Expanded(

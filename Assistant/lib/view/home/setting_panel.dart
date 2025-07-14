@@ -97,7 +97,7 @@ class _SettingPanelState extends State<SettingPanel> {
     ControlHelper.postTask(() async {
       this._storagePermissionState = await PermissionHelper.checkStorage();
       this._forwarderExtensionState = await this.checkForwarderExtension();
-      this.setState(() {});
+      await refreshState(this.setState);
     });
     return;
   }
@@ -145,8 +145,8 @@ class _SettingPanelState extends State<SettingPanel> {
                   groupValue: setting.data.mThemeMode,
                   onChanged: (value) async {
                     setting.data.mThemeMode = value!;
-                    setStateForPanel(() {});
-                    this.setState(() {});
+                    await refreshState(setStateForPanel);
+                    await refreshState(this.setState);
                     await setting.save();
                   },
                 ),
@@ -176,8 +176,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mThemeColorState,
                 onChanged: (value) async {
                   setting.data.mThemeColorState = value;
-                  setStateForPanel(() {});
-                  this.setState(() {});
+                  await refreshState(setStateForPanel);
+                  await refreshState(this.setState);
                   await setting.save();
                 },
               ),
@@ -205,8 +205,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mThemeColorLight.withValues(alpha: 0.0).toARGB32().toRadixString(16).padLeft(6, '0'),
                 onChanged: (value) async {
                   setting.data.mThemeColorLight = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withValues(alpha: 1.0);
-                  setStateForPanel(() {});
-                  this.setState(() {});
+                  await refreshState(setStateForPanel);
+                  await refreshState(this.setState);
                   await setting.save();
                 },
               ),
@@ -230,8 +230,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mThemeColorDark.withValues(alpha: 0.0).toARGB32().toRadixString(16).padLeft(6, '0'),
                 onChanged: (value) async {
                   setting.data.mThemeColorDark = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withValues(alpha: 1.0);
-                  setStateForPanel(() {});
-                  this.setState(() {});
+                  await refreshState(setStateForPanel);
+                  await refreshState(this.setState);
                   await setting.save();
                 },
               ),
@@ -256,8 +256,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mThemeFontState,
                 onChanged: (value) async {
                   setting.data.mThemeFontState = value;
-                  setStateForPanel(() {});
-                  this.setState(() {});
+                  await refreshState(setStateForPanel);
+                  await refreshState(this.setState);
                   await setting.save();
                 },
               ),
@@ -284,8 +284,8 @@ class _SettingPanelState extends State<SettingPanel> {
                           var target = await StorageHelper.pickLoadFile(context, 'Application.ThemeFont');
                           if (target != null) {
                             setting.data.mThemeFontPath = setting.data.mThemeFontPath + [target];
-                            setStateForPanel(() {});
-                            this.setState(() {});
+                            await refreshState(setStateForPanel);
+                            await refreshState(this.setState);
                             await setting.save();
                           }
                         },
@@ -296,8 +296,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: ConvertHelper.makeStringListToStringWithLine(setting.data.mThemeFontPath),
                 onChanged: (value) async {
                   setting.data.mThemeFontPath = ConvertHelper.parseStringListFromStringWithLine(value);
-                  setStateForPanel(() {});
-                  this.setState(() {});
+                  await refreshState(setStateForPanel);
+                  await refreshState(this.setState);
                   await setting.save();
                 },
               ),
@@ -329,8 +329,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mWindowPositionState,
                 onChanged: (value) async {
                   setting.data.mWindowPositionState = value;
-                  setStateForPanel(() {});
-                  this.setState(() {});
+                  await refreshState(setStateForPanel);
+                  await refreshState(this.setState);
                   await setting.save();
                 },
               ),
@@ -353,8 +353,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mWindowPositionX.toString(),
                 onChanged: (value) async {
                   setting.data.mWindowPositionX = Integer.tryParse(value) ?? setting.data.mWindowPositionX;
-                  setStateForPanel(() {});
-                  this.setState(() {});
+                  await refreshState(setStateForPanel);
+                  await refreshState(this.setState);
                   await setting.save();
                 },
               ),
@@ -373,8 +373,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mWindowPositionY.toString(),
                 onChanged: (value) async {
                   setting.data.mWindowPositionY = Integer.tryParse(value) ?? setting.data.mWindowPositionY;
-                  setStateForPanel(() {});
-                  this.setState(() {});
+                  await refreshState(setStateForPanel);
+                  await refreshState(this.setState);
                   await setting.save();
                 },
               ),
@@ -402,8 +402,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mWindowSizeState,
                 onChanged: (value) async {
                   setting.data.mWindowSizeState = value;
-                  setStateForPanel(() {});
-                  this.setState(() {});
+                  await refreshState(setStateForPanel);
+                  await refreshState(this.setState);
                   await setting.save();
                 },
               ),
@@ -426,8 +426,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mWindowSizeWidth.toString(),
                 onChanged: (value) async {
                   setting.data.mWindowSizeWidth = Integer.tryParse(value) ?? setting.data.mWindowSizeWidth;
-                  setStateForPanel(() {});
-                  this.setState(() {});
+                  await refreshState(setStateForPanel);
+                  await refreshState(this.setState);
                   await setting.save();
                 },
               ),
@@ -446,8 +446,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mWindowSizeHeight.toString(),
                 onChanged: (value) async {
                   setting.data.mWindowSizeHeight = Integer.tryParse(value) ?? setting.data.mWindowSizeHeight;
-                  setStateForPanel(() {});
-                  this.setState(() {});
+                  await refreshState(setStateForPanel);
+                  await refreshState(this.setState);
                   await setting.save();
                 },
               ),
@@ -473,7 +473,7 @@ class _SettingPanelState extends State<SettingPanel> {
           ],
           onTap: () async {
             this._storagePermissionState = await PermissionHelper.requestStorage();
-            this.setState(() {});
+            await refreshState(this.setState);
           },
           panelBuilder: null,
         ),
@@ -510,8 +510,8 @@ class _SettingPanelState extends State<SettingPanel> {
                           var target = await StorageHelper.pickLoadDirectory(context, 'Application.StoragePickerFallbackDirectory');
                           if (target != null) {
                             setting.data.mStoragePickerFallbackDirectory = target;
-                            setStateForPanel(() {});
-                            this.setState(() {});
+                            await refreshState(setStateForPanel);
+                            await refreshState(this.setState);
                             await setting.save();
                           }
                         },
@@ -522,8 +522,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mStoragePickerFallbackDirectory,
                 onChanged: (value) async {
                   setting.data.mStoragePickerFallbackDirectory = StorageHelper.regularize(value);
-                  setStateForPanel(() {});
-                  this.setState(() {});
+                  await refreshState(setStateForPanel);
+                  await refreshState(this.setState);
                   await setting.save();
                 },
               ),
@@ -557,8 +557,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 onChanged: (value) async {
                   await this.toggleForwarderExtension();
                   this._forwarderExtensionState = await this.checkForwarderExtension();
-                  setStateForPanel(() {});
-                  this.setState(() {});
+                  await refreshState(setStateForPanel);
+                  await refreshState(this.setState);
                 },
               ),
               title: Text(
@@ -588,8 +588,8 @@ class _SettingPanelState extends State<SettingPanel> {
                   groupValue: setting.data.mForwarderDefaultTarget,
                   onChanged: (value) async {
                     setting.data.mForwarderDefaultTarget = value!;
-                    setStateForPanel(() {});
-                    this.setState(() {});
+                    await refreshState(setStateForPanel);
+                    await refreshState(this.setState);
                     await setting.save();
                   },
                 ),
@@ -619,8 +619,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 value: setting.data.mForwarderImmediateJump,
                 onChanged: (value) async {
                   setting.data.mForwarderImmediateJump = value;
-                  setStateForPanel(() {});
-                  this.setState(() {});
+                  await refreshState(setStateForPanel);
+                  await refreshState(this.setState);
                   await setting.save();
                 },
               ),

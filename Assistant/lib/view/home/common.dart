@@ -90,10 +90,10 @@ class _CustomFullDialogState extends State<CustomFullDialog> {
                 child: SingleChildScrollView(
                   controller: this._scrollController,
                   child: StatefulBuilder(
-                    builder: (context, setState) => Column(
+                    builder: (context, setStateForPanel) => Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        ...this.widget.contentBuilder(context, setState),
+                        ...this.widget.contentBuilder(context, setStateForPanel),
                         SizedBox(height: MediaQuery.of(context).viewPadding.bottom),
                       ],
                     ),
@@ -174,9 +174,9 @@ class _CustomModalDialogState extends State<CustomModalDialog> {
         child: SingleChildScrollView(
           controller: this._scrollController,
           child: StatefulBuilder(
-            builder: (context, setState) => Column(
+            builder: (context, setStateForPanel) => Column(
               mainAxisSize: MainAxisSize.min,
-              children: this.widget.contentBuilder(context, setState),
+              children: this.widget.contentBuilder(context, setStateForPanel),
             ),
           ),
         ),
@@ -273,10 +273,10 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
             child: SingleChildScrollView(
               controller: this._scrollController,
               child: StatefulBuilder(
-                builder: (context, setState) => Column(
+                builder: (context, setStateForPanel) => Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    ...this.widget.contentBuilder(context, setState),
+                    ...this.widget.contentBuilder(context, setStateForPanel),
                     SizedBox(height: MediaQuery.of(context).viewPadding.bottom),
                   ],
                 ),

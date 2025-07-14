@@ -45,8 +45,8 @@ class SettingPanel extends StatelessWidget {
                   value: this.data.mImmediateSelect,
                   onChanged: (value) async {
                     this.data.mImmediateSelect = value;
-                    setStateForPanel(() {});
-                    setState(() {});
+                    await refreshState(setStateForPanel);
+                    await refreshState(setState);
                     this.onUpdate();
                   },
                 ),
@@ -75,8 +75,8 @@ class SettingPanel extends StatelessWidget {
                   value: this.data.mAutomaticPlay,
                   onChanged: (value) async {
                     this.data.mAutomaticPlay = value;
-                    setStateForPanel(() {});
-                    setState(() {});
+                    await refreshState(setStateForPanel);
+                    await refreshState(setState);
                     this.onUpdate();
                   },
                 ),
@@ -105,8 +105,8 @@ class SettingPanel extends StatelessWidget {
                   value: this.data.mRepeatPlay,
                   onChanged: (value) async {
                     this.data.mRepeatPlay = value;
-                    setStateForPanel(() {});
-                    setState(() {});
+                    await refreshState(setStateForPanel);
+                    await refreshState(setState);
                     this.onUpdate();
                   },
                 ),
@@ -135,8 +135,8 @@ class SettingPanel extends StatelessWidget {
                   value: this.data.mKeepSpeed,
                   onChanged: (value) async {
                     this.data.mKeepSpeed = value;
-                    setStateForPanel(() {});
-                    setState(() {});
+                    await refreshState(setStateForPanel);
+                    await refreshState(setState);
                     this.onUpdate();
                   },
                 ),
@@ -165,8 +165,8 @@ class SettingPanel extends StatelessWidget {
                   value: this.data.mShowBoundary,
                   onChanged: (value) async {
                     this.data.mShowBoundary = value;
-                    setStateForPanel(() {});
-                    setState(() {});
+                    await refreshState(setStateForPanel);
+                    await refreshState(setState);
                     this.onUpdate();
                   },
                 ),

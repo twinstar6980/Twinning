@@ -469,10 +469,10 @@ namespace AssistantPlus.View.PackageBuilder {
 			var sourceDirectory = this.MakeScopeRootPath();
 			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
 			if (!forSetting) {
-				await StorageHelper.RevealDirectory(sourceDirectory);
+				await StorageHelper.Reveal(sourceDirectory);
 			}
 			else {
-				await StorageHelper.RevealFile(this.MakeScopeSettingPath(sourceDirectory));
+				await StorageHelper.Reveal(this.MakeScopeSettingPath(sourceDirectory));
 			}
 			return;
 		}
@@ -656,10 +656,10 @@ namespace AssistantPlus.View.PackageBuilder {
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart);
 			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
 			if (!forSetting) {
-				await StorageHelper.RevealDirectory(sourceDirectory);
+				await StorageHelper.Reveal(sourceDirectory);
 			}
 			else {
-				await StorageHelper.RevealFile(this.MakeScopeSettingPath(sourceDirectory));
+				await StorageHelper.Reveal(this.MakeScopeSettingPath(sourceDirectory));
 			}
 			return;
 		}
@@ -725,7 +725,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			GF.AssertTest(this.IsLoaded);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart);
 			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			StorageHelper.TrashDirectory(sourceDirectory);
+			StorageHelper.Trash(sourceDirectory);
 			var itemNode = this.FindScopeNode(sourcePart);
 			this.uPartList_ItemsSource.Remove(itemNode);
 			foreach (var packageNode in this.uPackageList_ItemsSource) {
@@ -809,10 +809,10 @@ namespace AssistantPlus.View.PackageBuilder {
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup);
 			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
 			if (!forSetting) {
-				await StorageHelper.RevealDirectory(sourceDirectory);
+				await StorageHelper.Reveal(sourceDirectory);
 			}
 			else {
-				await StorageHelper.RevealFile(this.MakeScopeSettingPath(sourceDirectory));
+				await StorageHelper.Reveal(this.MakeScopeSettingPath(sourceDirectory));
 			}
 			return;
 		}
@@ -880,7 +880,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			GF.AssertTest(this.IsLoaded);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup);
 			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			StorageHelper.TrashDirectory(sourceDirectory);
+			StorageHelper.Trash(sourceDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup);
 			itemNode.Parent.Children.Remove(itemNode);
 			itemNode.Parent.NotifyPropertyChanged([
@@ -981,10 +981,10 @@ namespace AssistantPlus.View.PackageBuilder {
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, sourceResource);
 			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
 			if (!forSetting) {
-				await StorageHelper.RevealDirectory(sourceDirectory);
+				await StorageHelper.Reveal(sourceDirectory);
 			}
 			else {
-				await StorageHelper.RevealFile(this.MakeScopeSettingPath(sourceDirectory));
+				await StorageHelper.Reveal(this.MakeScopeSettingPath(sourceDirectory));
 			}
 			return;
 		}
@@ -1054,7 +1054,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			GF.AssertTest(this.IsLoaded);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, sourceResource);
 			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			StorageHelper.TrashDirectory(sourceDirectory);
+			StorageHelper.Trash(sourceDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup, sourceResource);
 			itemNode.Parent.Children.Remove(itemNode);
 			itemNode.Parent.NotifyPropertyChanged([
@@ -2532,7 +2532,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			var senders = sender.As<MenuFlyoutItem>();
 			GF.AssertTest(this.Host.IsLoaded);
 			var resourceDirectory = this.Host.MakeScopeRootPath(this.Parent.Parent.Name, this.Parent.Name, this.Name);
-			StorageHelper.TrashDirectory(resourceDirectory);
+			StorageHelper.Trash(resourceDirectory);
 			StorageHelper.CreateDirectory(resourceDirectory);
 			this.Setting = new () {
 				Category = this.Setting.Category,

@@ -193,7 +193,7 @@ class _PauseSubmissionBar extends StatelessWidget {
         history: this.history.map((e) => (e, true)).toList(),
         onSelect: (value) async {
           this.value.value = value as PauseExpression;
-          setState(() {});
+          await refreshState(setState);
         },
         icon: IconSymbols.pause,
         content: CustomTextField(
@@ -249,7 +249,7 @@ class _BooleanSubmissionBar extends StatelessWidget {
         history: this.history.map((e) => (e, true)).toList(),
         onSelect: (value) async {
           this.value.value = value as BooleanExpression;
-          setState(() {});
+          await refreshState(setState);
         },
         icon: IconSymbols.check_box,
         content: CustomTextField(
@@ -273,7 +273,7 @@ class _BooleanSubmissionBar extends StatelessWidget {
                   selectedIcon: Icon(IconSymbols.do_not_disturb_on, fill: 1),
                   onPressed: () async {
                     this.value.value = this.value.value?.value == false ? null : BooleanExpression(false);
-                    setState(() {});
+                    await refreshState(setState);
                   },
                 ),
                 SizedBox(width: 4),
@@ -284,7 +284,7 @@ class _BooleanSubmissionBar extends StatelessWidget {
                   selectedIcon: Icon(IconSymbols.check_circle, fill: 1),
                   onPressed: () async {
                     this.value.value = this.value.value?.value == true ? null : BooleanExpression(true);
-                    setState(() {});
+                    await refreshState(setState);
                   },
                 ),
               ],
@@ -300,7 +300,7 @@ class _BooleanSubmissionBar extends StatelessWidget {
                 this.value.value = BooleanExpression(text == 'y');
               }
             }
-            setState(() {});
+            await refreshState(setState);
           },
         ),
       ),
@@ -336,7 +336,7 @@ class _IntegerSubmissionBar extends StatelessWidget {
         history: this.history.map((e) => (e, true)).toList(),
         onSelect: (value) async {
           this.value.value = value as IntegerExpression;
-          setState(() {});
+          await refreshState(setState);
         },
         icon: IconSymbols.speed_1_2,
         content: CustomTextField(
@@ -367,7 +367,7 @@ class _IntegerSubmissionBar extends StatelessWidget {
                 this.value.value = IntegerExpression(value);
               }
             }
-            setState(() {});
+            await refreshState(setState);
           },
         ),
       ),
@@ -403,7 +403,7 @@ class _FloaterSubmissionBar extends StatelessWidget {
         history: this.history.map((e) => (e, true)).toList(),
         onSelect: (value) async {
           this.value.value = value as FloaterExpression;
-          setState(() {});
+          await refreshState(setState);
         },
         icon: IconSymbols.speed_1_2,
         content: CustomTextField(
@@ -434,7 +434,7 @@ class _FloaterSubmissionBar extends StatelessWidget {
                 this.value.value = FloaterExpression(value);
               }
             }
-            setState(() {});
+            await refreshState(setState);
           },
         ),
       ),
@@ -470,7 +470,7 @@ class _SizeSubmissionBar extends StatelessWidget {
         history: this.history.map((e) => (e, true)).toList(),
         onSelect: (value) async {
           this.value.value = value as SizeExpression;
-          setState(() {});
+          await refreshState(setState);
         },
         icon: IconSymbols.memory,
         content: CustomTextField(
@@ -518,7 +518,7 @@ class _SizeSubmissionBar extends StatelessWidget {
                   )).toList(),
                   onSelected: (value) async {
                     this.value.value = SizeExpression(this.value.value?.count ?? 1.0, value);
-                    setState(() {});
+                    await refreshState(setState);
                   },
                 ),
               ],
@@ -535,7 +535,7 @@ class _SizeSubmissionBar extends StatelessWidget {
                 this.value.value = SizeExpression(count, this.value.value?.exponent ?? 2);
               }
             }
-            setState(() {});
+            await refreshState(setState);
           },
         ),
       ),
@@ -571,7 +571,7 @@ class _StringSubmissionBar extends StatelessWidget {
         history: this.history.map((e) => (e, true)).toList(),
         onSelect: (value) async {
           this.value.value = value as StringExpression;
-          setState(() {});
+          await refreshState(setState);
         },
         icon: IconSymbols.text_fields,
         content: CustomTextField(
@@ -599,7 +599,7 @@ class _StringSubmissionBar extends StatelessWidget {
             else {
               this.value.value = StringExpression(text);
             }
-            setState(() {});
+            await refreshState(setState);
           },
         ),
       ),
@@ -635,13 +635,13 @@ class _PathSubmissionBar extends StatelessWidget {
         history: this.history.map((e) => (e, true)).toList(),
         onSelect: (value) async {
           this.value.value = value as PathExpression;
-          setState(() {});
+          await refreshState(setState);
         },
         icon: IconSymbols.link,
         content: CustomFileDropRegion(
           onDrop: (item) async {
             this.value.value = PathExpression(item.first);
-            setState(() {});
+            await refreshState(setState);
           },
           child: CustomTextField(
             style: theme.textTheme.bodyLarge?.copyWith(
@@ -679,7 +679,7 @@ class _PathSubmissionBar extends StatelessWidget {
                     )).toList(),
                     onSelected: (value) async {
                       this.value.value = PathExpression(value);
-                      setState(() {});
+                      await refreshState(setState);
                     },
                   ),
                   SizedBox(width: 4),
@@ -711,7 +711,7 @@ class _PathSubmissionBar extends StatelessWidget {
                       };
                       if (target != null) {
                         this.value.value = PathExpression(target);
-                        setState(() {});
+                        await refreshState(setState);
                       }
                     },
                   ),
@@ -726,7 +726,7 @@ class _PathSubmissionBar extends StatelessWidget {
               else {
                 this.value.value = PathExpression(StorageHelper.regularize(text));
               }
-              setState(() {});
+              await refreshState(setState);
             },
           ),
         ),
@@ -765,7 +765,7 @@ class _EnumerationSubmissionBar extends StatelessWidget {
         history: this.history.map((e) => (e, this.option.contains(e.item))).toList(),
         onSelect: (value) async {
           this.value.value = value as EnumerationExpression;
-          setState(() {});
+          await refreshState(setState);
         },
         icon: IconSymbols.menu,
         content: CustomOptionField(
@@ -785,7 +785,7 @@ class _EnumerationSubmissionBar extends StatelessWidget {
                   icon: Icon(IconSymbols.restart_alt),
                   onPressed: () async {
                     this.value.value = null;
-                    setState(() {});
+                    await refreshState(setState);
                   },
                 ),
               ],
@@ -795,7 +795,7 @@ class _EnumerationSubmissionBar extends StatelessWidget {
           value: this.value.value == null ? '' : this.value.value!.item,
           onChanged: (value) async {
             this.value.value = EnumerationExpression(value as String);
-            setState(() {});
+            await refreshState(setState);
           },
         ),
       ),

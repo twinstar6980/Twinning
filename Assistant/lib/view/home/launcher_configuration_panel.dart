@@ -56,8 +56,8 @@ class LauncherConfigurationPanel extends StatelessWidget {
                   value: this.data.title,
                   onChanged: (value) async {
                     this.data.title = value;
-                    setStateForPanel(() {});
-                    setState(() {});
+                    await refreshState(setStateForPanel);
+                    await refreshState(setState);
                     this.onUpdate();
                   },
                 ),
@@ -87,8 +87,8 @@ class LauncherConfigurationPanel extends StatelessWidget {
                     groupValue: this.data.type,
                     onChanged: (value) async {
                       this.data.type = value!;
-                      setStateForPanel(() {});
-                      setState(() {});
+                      await refreshState(setStateForPanel);
+                      await refreshState(setState);
                       this.onUpdate();
                     },
                   ),
@@ -128,8 +128,8 @@ class LauncherConfigurationPanel extends StatelessWidget {
                   value: ConvertHelper.makeStringListToStringWithLine(this.data.option),
                   onChanged: (value) async {
                     this.data.option = ConvertHelper.parseStringListFromStringWithLine(value);
-                    setStateForPanel(() {});
-                    setState(() {});
+                    await refreshState(setStateForPanel);
+                    await refreshState(setState);
                     this.onUpdate();
                   },
                 ),
