@@ -3,10 +3,10 @@ import '/common.dart';
 // ----------------
 
 class Setting {
-  String  mMethodConfiguration;
-  Boolean mParallelForward;
+  String  methodConfiguration;
+  Boolean parallelForward;
   Setting({
-    required this.mMethodConfiguration,
-    required this.mParallelForward,
+    required this.methodConfiguration,
+    required this.parallelForward,
   });
 }

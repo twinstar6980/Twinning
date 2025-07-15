@@ -1,6 +1,5 @@
 import '/common.dart';
 import '/utility/platform_method.dart';
-import 'dart:io';
 
 // ----------------
 
@@ -11,13 +10,13 @@ class PermissionHelper {
   static Future<Boolean> checkStorage(
   ) async {
     var state = true;
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh) {
       state = true;
     }
-    if (Platform.isAndroid) {
+    if (SystemChecker.isAndroid) {
       state = await PlatformMethod.checkExternalStoragePermission('check');
     }
-    if (Platform.isIOS) {
+    if (SystemChecker.isIphone) {
       state = true;
     }
     return state;
@@ -26,13 +25,13 @@ class PermissionHelper {
   static Future<Boolean> requestStorage(
   ) async {
     var state = true;
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh) {
       state = true;
     }
-    if (Platform.isAndroid) {
+    if (SystemChecker.isAndroid) {
       state = await PlatformMethod.checkExternalStoragePermission('request');
     }
-    if (Platform.isIOS) {
+    if (SystemChecker.isIphone) {
       state = true;
     }
     return state;

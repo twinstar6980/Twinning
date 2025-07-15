@@ -142,12 +142,12 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     super.initState();
     var setting = Provider.of<SettingProvider>(this.context, listen: false);
     this._methodConfiguration = [];
-    this._parallelForward = setting.data.mCommandSender.mParallelForward;
+    this._parallelForward = setting.data.commandSender.parallelForward;
     this._methodCollapse = [];
     this._command = [];
     this._commandListScrollController = ScrollController();
     ControlHelper.postTask(() async {
-      this._methodConfiguration = ConfigurationHelper.parseDataFromJson(await JsonHelper.deserializeFile(setting.data.mCommandSender.mMethodConfiguration));
+      this._methodConfiguration = ConfigurationHelper.parseDataFromJson(await JsonHelper.deserializeFile(setting.data.commandSender.methodConfiguration));
       this._methodCollapse = this._methodConfiguration.map((value) => true).toList();
       await this.modulePageApplyOption(this.widget.option);
     });

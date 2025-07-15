@@ -1,4 +1,5 @@
 import 'dart:core' as core;
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
@@ -14,13 +15,31 @@ typedef IconSymbols = Symbols;
 
 // ----------------
 
-const String kApplicationName = 'Twinning Assistant';
+final class ApplicationInformation {
 
-const String kApplicationVersion = '77';
+  static const String name = 'Twinning Assistant';
 
-const String kApplicationDeveloper = 'TwinStar';
+  static const String version = '78';
 
-const String kApplicationYear = '2023-2025';
+  static const String developer = 'TwinStar';
+
+  static const String year = '2023-2025';
+
+}
+
+final class SystemChecker {
+
+  static final Boolean isWindows = Platform.isWindows;
+
+  static final Boolean isLinux = Platform.isLinux;
+
+  static final Boolean isMacintosh = Platform.isMacOS;
+
+  static final Boolean isAndroid = Platform.isAndroid;
+
+  static final Boolean isIphone = Platform.isIOS;
+
+}
 
 // ----------------
 
@@ -30,14 +49,6 @@ Void assertTest(
   if (!condition) {
     throw core.AssertionError();
   }
-  return;
-}
-
-core.Future<Void> refreshState(
-  Void Function(Void Function()) setState,
-) async {
-  setState(() {});
-  await WidgetsBinding.instance.endOfFrame;
   return;
 }
 
@@ -63,4 +74,14 @@ extension CommonObjectExtension<TType extends core.Object> on TType {
     return this;
   }
 
+}
+
+// ----------------
+
+core.Future<Void> refreshState(
+  Void Function(Void Function()) setState,
+) async {
+  setState(() {});
+  await WidgetsBinding.instance.endOfFrame;
+  return;
 }

@@ -83,7 +83,7 @@ class ModuleHelper {
         option: option,
       ),
       settingPanel: (context) => modding_worker.SettingPanel(
-        data: Provider.of<SettingProvider>(context, listen: false).data.mModdingWorker,
+        data: Provider.of<SettingProvider>(context, listen: false).data.moddingWorker,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
       generateForwardOption: (resource) async => ['-additional_argument', ...resource],
@@ -97,7 +97,7 @@ class ModuleHelper {
         option: option,
       ),
       settingPanel: (context) => command_sender.SettingPanel(
-        data: Provider.of<SettingProvider>(context, listen: false).data.mCommandSender,
+        data: Provider.of<SettingProvider>(context, listen: false).data.commandSender,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
       generateForwardOption: (resource) async => null,
@@ -111,7 +111,7 @@ class ModuleHelper {
         option: option,
       ),
       settingPanel: (context) => resource_shipper.SettingPanel(
-        data: Provider.of<SettingProvider>(context, listen: false).data.mResourceShipper,
+        data: Provider.of<SettingProvider>(context, listen: false).data.resourceShipper,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
       generateForwardOption: (resource) async => ['-resource', ...resource],
@@ -125,7 +125,7 @@ class ModuleHelper {
         option: option,
       ),
       settingPanel: (context) => animation_viewer.SettingPanel(
-        data: Provider.of<SettingProvider>(context, listen: false).data.mAnimationViewer,
+        data: Provider.of<SettingProvider>(context, listen: false).data.animationViewer,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
       generateForwardOption: (resource) async => resource.length != 1 || !RegExp(r'(\.pam\.json)$', caseSensitive: false).hasMatch(resource.first) || !await StorageHelper.existFile(resource.first) ? null : ['-animation_file', resource.first],

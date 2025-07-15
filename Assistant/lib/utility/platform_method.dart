@@ -1,5 +1,4 @@
 import '/common.dart';
-import 'dart:io';
 import 'package:flutter/services.dart';
 
 // ----------------
@@ -9,7 +8,7 @@ class PlatformMethod {
   // #region channel
 
   static final MethodChannel? _channel = () {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (SystemChecker.isAndroid || SystemChecker.isIphone) {
       return MethodChannel('com.twinstar.twinning.assistant.CustomMethodChannel');
     }
     return null;
@@ -23,7 +22,7 @@ class PlatformMethod {
     String type,
     String initialDirectory,
   ) async {
-    assertTest(Platform.isAndroid || Platform.isIOS);
+    assertTest(SystemChecker.isAndroid || SystemChecker.isIphone);
     var result = (await _channel!.invokeMethod('pick_storage_item', <dynamic, dynamic>{ 'type': type, 'initial_directory': initialDirectory }) as String?);
     return result;
   }
@@ -32,7 +31,7 @@ class PlatformMethod {
     String source,
     String placement,
   ) async {
-    assertTest(Platform.isAndroid);
+    assertTest(SystemChecker.isAndroid);
     var result = (await _channel!.invokeMethod('copy_storage_file', <dynamic, dynamic>{ 'source': source, 'placement': placement }) as String);
     return result;
   }
@@ -40,14 +39,14 @@ class PlatformMethod {
   static Future<Boolean> checkExternalStoragePermission(
     String mode,
   ) async {
-    assertTest(Platform.isAndroid);
+    assertTest(SystemChecker.isAndroid);
     var result = (await _channel!.invokeMethod('check_external_storage_permission', <dynamic, dynamic>{ 'mode': mode }) as Boolean);
     return result;
   }
 
   static Future<String> queryExternalStoragePath(
   ) async {
-    assertTest(Platform.isAndroid);
+    assertTest(SystemChecker.isAndroid);
     var result = (await _channel!.invokeMethod('query_external_storage_path', <dynamic, dynamic>{}) as String);
     return result;
   }

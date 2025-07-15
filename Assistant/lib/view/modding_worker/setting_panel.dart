@@ -34,7 +34,7 @@ class SettingPanel extends StatelessWidget {
             label: 'Kernel',
             content: [
               Text(
-                !StorageHelper.existFileSync(this.data.mKernel) ? 'Invalid' : 'Available',
+                !StorageHelper.existFileSync(this.data.kernel) ? 'Invalid' : 'Available',
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium,
               ),
@@ -58,7 +58,7 @@ class SettingPanel extends StatelessWidget {
                           onPressed: () async {
                             var target = await StorageHelper.pickLoadFile(context, 'ModdingWorker.Kernel');
                             if (target != null) {
-                              this.data.mKernel = target;
+                              this.data.kernel = target;
                               await refreshState(setStateForPanel);
                               await refreshState(setState);
                               this.onUpdate();
@@ -68,9 +68,9 @@ class SettingPanel extends StatelessWidget {
                       ],
                     ),
                   ),
-                  value: this.data.mKernel,
+                  value: this.data.kernel,
                   onChanged: (value) async {
-                    this.data.mKernel = StorageHelper.regularize(value);
+                    this.data.kernel = StorageHelper.regularize(value);
                     await refreshState(setStateForPanel);
                     await refreshState(setState);
                     this.onUpdate();
@@ -84,7 +84,7 @@ class SettingPanel extends StatelessWidget {
             label: 'Script',
             content: [
               Text(
-                !StorageHelper.existFileSync(this.data.mScript) ? 'Invalid' : 'Available',
+                !StorageHelper.existFileSync(this.data.script) ? 'Invalid' : 'Available',
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium,
               ),
@@ -108,7 +108,7 @@ class SettingPanel extends StatelessWidget {
                           onPressed: () async {
                             var target = await StorageHelper.pickLoadFile(context, 'ModdingWorker.Script');
                             if (target != null) {
-                              this.data.mScript = target;
+                              this.data.script = target;
                               await refreshState(setStateForPanel);
                               await refreshState(setState);
                               this.onUpdate();
@@ -118,9 +118,9 @@ class SettingPanel extends StatelessWidget {
                       ],
                     ),
                   ),
-                  value: this.data.mScript,
+                  value: this.data.script,
                   onChanged: (value) async {
-                    this.data.mScript = StorageHelper.regularize(value);
+                    this.data.script = StorageHelper.regularize(value);
                     await refreshState(setStateForPanel);
                     await refreshState(setState);
                     this.onUpdate();
@@ -134,7 +134,7 @@ class SettingPanel extends StatelessWidget {
             label: 'Argument',
             content: [
               Text(
-                !this.data.mArgument.isNotEmpty ? 'Empty' : 'Defined',
+                !this.data.argument.isNotEmpty ? 'Empty' : 'Defined',
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium,
               ),
@@ -155,9 +155,9 @@ class SettingPanel extends StatelessWidget {
                       ],
                     ),
                   ),
-                  value: ConvertHelper.makeStringListToStringWithLine(this.data.mArgument),
+                  value: ConvertHelper.makeStringListToStringWithLine(this.data.argument),
                   onChanged: (value) async {
-                    this.data.mArgument = ConvertHelper.parseStringListFromStringWithLine(value);
+                    this.data.argument = ConvertHelper.parseStringListFromStringWithLine(value);
                     await refreshState(setStateForPanel);
                     await refreshState(setState);
                     this.onUpdate();
@@ -171,7 +171,7 @@ class SettingPanel extends StatelessWidget {
             label: 'Immediate Launch',
             content: [
               Text(
-                !this.data.mImmediateLaunch ? 'Disabled' : 'Enabled',
+                !this.data.immediateLaunch ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium,
               ),
@@ -181,9 +181,9 @@ class SettingPanel extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Switch(
-                  value: this.data.mImmediateLaunch,
+                  value: this.data.immediateLaunch,
                   onChanged: (value) async {
-                    this.data.mImmediateLaunch = value;
+                    this.data.immediateLaunch = value;
                     await refreshState(setStateForPanel);
                     await refreshState(setState);
                     this.onUpdate();
@@ -201,7 +201,7 @@ class SettingPanel extends StatelessWidget {
             label: 'Message Font',
             content: [
               Text(
-                !this.data.mMessageFont.isNotEmpty ? 'Default' : 'Custom',
+                !this.data.messageFont.isNotEmpty ? 'Default' : 'Custom',
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium,
               ),
@@ -225,7 +225,7 @@ class SettingPanel extends StatelessWidget {
                           onPressed: () async {
                             var target = await StorageHelper.pickLoadFile(context, 'ModdingWorker.MessageFont');
                             if (target != null) {
-                              this.data.mMessageFont = this.data.mMessageFont + [target];
+                              this.data.messageFont = this.data.messageFont + [target];
                               await refreshState(setStateForPanel);
                               await refreshState(setState);
                               this.onUpdate();
@@ -235,9 +235,9 @@ class SettingPanel extends StatelessWidget {
                       ],
                     ),
                   ),
-                  value: ConvertHelper.makeStringListToStringWithLine(this.data.mMessageFont),
+                  value: ConvertHelper.makeStringListToStringWithLine(this.data.messageFont),
                   onChanged: (value) async {
-                    this.data.mMessageFont = ConvertHelper.parseStringListFromStringWithLine(value);
+                    this.data.messageFont = ConvertHelper.parseStringListFromStringWithLine(value);
                     await refreshState(setStateForPanel);
                     await refreshState(setState);
                     this.onUpdate();

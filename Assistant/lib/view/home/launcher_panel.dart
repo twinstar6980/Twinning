@@ -72,7 +72,7 @@ class LauncherPanel extends StatelessWidget {
                       ],
                     )) ?? false;
                     if (canContinue) {
-                      await Provider.of<SettingProvider>(context, listen: false).state.mHandleCommand!(command);
+                      await Provider.of<SettingProvider>(context, listen: false).state.handleCommand!(command);
                     }
                   },
                 ),
@@ -117,7 +117,7 @@ class LauncherPanel extends StatelessWidget {
                       ],
                     )) ?? false;
                     if (canContinue) {
-                      await Provider.of<SettingProvider>(context, listen: false).state.mHandleForward!(resource);
+                      await Provider.of<SettingProvider>(context, listen: false).state.handleForward!(resource);
                     }
                   },
                 ),
@@ -130,7 +130,7 @@ class LauncherPanel extends StatelessWidget {
             label: 'Module',
             action: null,
           ),
-          ...setting.data.mModuleLauncher.module.map((item) => CustomSettingItem(
+          ...setting.data.moduleLauncher.module.map((item) => CustomSettingItem(
             icon: ModuleHelper.query(item.type).icon,
             label: item.title,
             content: [
@@ -177,7 +177,7 @@ class LauncherPanel extends StatelessWidget {
               tooltip: 'Add',
               icon: Icon(IconSymbols.add),
               onPressed: () async {
-                setting.data.mModuleLauncher.pinned.add(ModuleLauncherConfiguration(
+                setting.data.moduleLauncher.pinned.add(ModuleLauncherConfiguration(
                   title: 'Untitled',
                   type: ModuleType.modding_worker,
                   option: [],
@@ -186,7 +186,7 @@ class LauncherPanel extends StatelessWidget {
               },
             ),
           ),
-          ...setting.data.mModuleLauncher.pinned.map((item) => CustomSettingItem(
+          ...setting.data.moduleLauncher.pinned.map((item) => CustomSettingItem(
             icon: ModuleHelper.query(item.type).icon,
             label: item.title,
             content: [
@@ -194,7 +194,7 @@ class LauncherPanel extends StatelessWidget {
                 tooltip: 'Remove',
                 icon: Icon(IconSymbols.remove),
                 onPressed: () async {
-                  setting.data.mModuleLauncher.pinned.remove(item);
+                  setting.data.moduleLauncher.pinned.remove(item);
                   await setting.save();
                 },
               ),
@@ -230,13 +230,13 @@ class LauncherPanel extends StatelessWidget {
               icon: Icon(IconSymbols.clear),
               onPressed: () async {
                 if (await ControlHelper.showDialogForConfirm(context)) {
-                  setting.data.mModuleLauncher.recent.clear();
+                  setting.data.moduleLauncher.recent.clear();
                   await setting.save();
                 }
               },
             ),
           ),
-          ...setting.data.mModuleLauncher.recent.map((item) => CustomSettingItem(
+          ...setting.data.moduleLauncher.recent.map((item) => CustomSettingItem(
             icon: ModuleHelper.query(item.type).icon,
             label: item.title,
             content: [
@@ -244,8 +244,8 @@ class LauncherPanel extends StatelessWidget {
                 tooltip: 'Pin',
                 icon: Icon(IconSymbols.push_pin),
                 onPressed: () async {
-                  setting.data.mModuleLauncher.recent.remove(item);
-                  setting.data.mModuleLauncher.pinned.add(item);
+                  setting.data.moduleLauncher.recent.remove(item);
+                  setting.data.moduleLauncher.pinned.add(item);
                   await setting.save();
                 },
               ),
@@ -253,7 +253,7 @@ class LauncherPanel extends StatelessWidget {
                 tooltip: 'Remove',
                 icon: Icon(IconSymbols.remove),
                 onPressed: () async {
-                  setting.data.mModuleLauncher.recent.remove(item);
+                  setting.data.moduleLauncher.recent.remove(item);
                   await setting.save();
                 },
               ),

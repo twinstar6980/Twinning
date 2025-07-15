@@ -27,14 +27,14 @@ class Application extends StatelessWidget {
       child: Consumer<SettingProvider>(
         builder: (context, setting, child) => DynamicColorBuilder(
           builder: (lightColor, darkColor) => MaterialApp(
-            navigatorKey: setting.state.mApplicationNavigatorKey,
+            navigatorKey: setting.state.applicationNavigatorKey,
             theme: ThemeData(
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               visualDensity: VisualDensity.standard,
               brightness: Brightness.light,
-              colorScheme: !setting.data.mThemeColorState ? lightColor : ColorScheme.fromSeed(seedColor: setting.data.mThemeColorLight, brightness: Brightness.light),
+              colorScheme: !setting.data.themeColorState ? lightColor : ColorScheme.fromSeed(seedColor: setting.data.themeColorLight, brightness: Brightness.light),
               fontFamily: '',
-              fontFamilyFallback: [...setting.state.mThemeFontFamliy],
+              fontFamilyFallback: [...setting.state.themeFontFamliy],
               tooltipTheme: TooltipTheme.of(context).copyWith(
                 waitDuration: Duration(milliseconds: 1000),
               ),
@@ -49,9 +49,9 @@ class Application extends StatelessWidget {
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               visualDensity: VisualDensity.standard,
               brightness: Brightness.dark,
-              colorScheme: !setting.data.mThemeColorState ? darkColor : ColorScheme.fromSeed(seedColor: setting.data.mThemeColorDark, brightness: Brightness.dark),
+              colorScheme: !setting.data.themeColorState ? darkColor : ColorScheme.fromSeed(seedColor: setting.data.themeColorDark, brightness: Brightness.dark),
               fontFamily: '',
-              fontFamilyFallback: [...setting.state.mThemeFontFamliy],
+              fontFamilyFallback: [...setting.state.themeFontFamliy],
               tooltipTheme: TooltipTheme.of(context).copyWith(
                 waitDuration: Duration(milliseconds: 1000),
               ),
@@ -62,9 +62,9 @@ class Application extends StatelessWidget {
                 year2023: false,
               ),
             ),
-            themeMode: setting.data.mThemeMode,
+            themeMode: setting.data.themeMode,
             scrollBehavior: MaterialScrollBehavior().copyWith(scrollbars: false),
-            title: kApplicationName,
+            title: ApplicationInformation.name,
             home: home.MainPage(),
           ),
         ),

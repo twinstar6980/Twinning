@@ -7,7 +7,6 @@ import '/utility/control_helper.dart';
 import '/utility/notification_helper.dart';
 import '/utility/storage_helper.dart';
 import '/view/home/common.dart';
-import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -34,8 +33,8 @@ class _Main {
     Object      exception,
     StackTrace? stack,
   ) {
-    if (_setting.state.mApplicationNavigatorKey.currentContext != null) {
-      ControlHelper.showDialogAsModal<Void>(_setting.state.mApplicationNavigatorKey.currentContext!, CustomModalDialog(
+    if (_setting.state.applicationNavigatorKey.currentContext != null) {
+      ControlHelper.showDialogAsModal<Void>(_setting.state.applicationNavigatorKey.currentContext!, CustomModalDialog(
         title: 'Unhandled Exception',
         contentBuilder: (context, setStateForPanel) => [
           Row(
@@ -64,7 +63,7 @@ class _Main {
     ModuleType   type,
     List<String> option,
   ) async {
-    await _setting.state.mHomeInsertTabItem!(ModuleLauncherConfiguration(
+    await _setting.state.homeInsertTabItem!(ModuleLauncherConfiguration(
       title: title,
       type: type,
       option: option,
@@ -75,10 +74,10 @@ class _Main {
   static Future<Void> _handleForward(
     List<String> resource,
   ) async {
-    var setting = Provider.of<SettingProvider>(_setting.state.mApplicationNavigatorKey.currentContext!, listen: false);
+    var setting = Provider.of<SettingProvider>(_setting.state.applicationNavigatorKey.currentContext!, listen: false);
     var forwardOption = await ModuleType.values.map((value) async => await ModuleHelper.query(value).generateForwardOption(resource)).wait;
-    var targetType = forwardOption[setting.data.mForwarderDefaultTarget.index] != null ? setting.data.mForwarderDefaultTarget : null;
-    var canContinue = (setting.data.mForwarderImmediateJump && targetType != null) || (await ControlHelper.showDialogAsModal<Boolean>(_setting.state.mApplicationNavigatorKey.currentContext!, CustomModalDialog(
+    var targetType = forwardOption[setting.data.forwarderDefaultTarget.index] != null ? setting.data.forwarderDefaultTarget : null;
+    var canContinue = (setting.data.forwarderImmediateJump && targetType != null) || (await ControlHelper.showDialogAsModal<Boolean>(_setting.state.applicationNavigatorKey.currentContext!, CustomModalDialog(
       title: 'Forward',
       contentBuilder: (context, setStateForPanel) => [
         ...ModuleType.values.map(
@@ -122,11 +121,11 @@ class _Main {
   static Future<Void> _handleCommand(
     List<String> command,
   ) async {
-    if (Platform.isAndroid) {
+    if (SystemChecker.isAndroid) {
       var convertedCommand = <String>[];
       for (var commandItem in command) {
         if (commandItem.startsWith('content://')) {
-          commandItem = await StorageHelper.parseAndroidContentUri(_setting.state.mApplicationNavigatorKey.currentContext!, Uri.parse(commandItem), true) ?? commandItem;
+          commandItem = await StorageHelper.parseAndroidContentUri(_setting.state.applicationNavigatorKey.currentContext!, Uri.parse(commandItem), true) ?? commandItem;
         }
         convertedCommand.add(commandItem);
       }
@@ -191,19 +190,19 @@ class _Main {
         await _setting.reset();
       }
       await _setting.save();
-      _setting.state.mHandleLaunch = _handleLaunch;
-      _setting.state.mHandleForward = _handleForward;
-      _setting.state.mHandleCommand = _handleCommand;
-      _setting.state.mHandleLink = _handleLink;
+      _setting.state.handleLaunch = _handleLaunch;
+      _setting.state.handleForward = _handleForward;
+      _setting.state.handleCommand = _handleCommand;
+      _setting.state.handleLink = _handleLink;
       await NotificationHelper.initialize();
       await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-      if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh) {
         await windowManager.ensureInitialized();
-        if (_setting.data.mWindowSizeState) {
-          await windowManager.setSize(Size(_setting.data.mWindowSizeWidth.toDouble(), _setting.data.mWindowSizeHeight.toDouble()));
+        if (_setting.data.windowSizeState) {
+          await windowManager.setSize(Size(_setting.data.windowSizeWidth.toDouble(), _setting.data.windowSizeHeight.toDouble()));
         }
-        if (_setting.data.mWindowPositionState) {
-          await windowManager.setPosition(Offset(_setting.data.mWindowPositionX.toDouble(), _setting.data.mWindowPositionY.toDouble()));
+        if (_setting.data.windowPositionState) {
+          await windowManager.setPosition(Offset(_setting.data.windowPositionX.toDouble(), _setting.data.windowPositionY.toDouble()));
         }
         else {
           await windowManager.center();
@@ -219,7 +218,7 @@ class _Main {
         }
         else {
           ControlHelper.postTask(() async {
-            _setting.state.mHomeShowLauncherPanel!();
+            _setting.state.homeShowLauncherPanel!();
           });
         }
       }

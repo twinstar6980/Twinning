@@ -3,16 +3,16 @@ import '/common.dart';
 // ----------------
 
 class Setting {
-  Boolean mImmediateSelect;
-  Boolean mAutomaticPlay;
-  Boolean mRepeatPlay;
-  Boolean mKeepSpeed;
-  Boolean mShowBoundary;
+  Boolean immediateSelect;
+  Boolean automaticPlay;
+  Boolean repeatPlay;
+  Boolean keepSpeed;
+  Boolean showBoundary;
   Setting({
-    required this.mImmediateSelect,
-    required this.mAutomaticPlay,
-    required this.mRepeatPlay,
-    required this.mKeepSpeed,
-    required this.mShowBoundary,
+    required this.immediateSelect,
+    required this.automaticPlay,
+    required this.repeatPlay,
+    required this.keepSpeed,
+    required this.showBoundary,
   });
 }

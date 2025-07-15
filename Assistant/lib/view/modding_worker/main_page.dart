@@ -119,9 +119,9 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
       var kernel = await StorageHelper.temporary();
       var library = bridge.Library();
       try {
-        await StorageHelper.copy(setting.data.mModdingWorker.mKernel, kernel);
+        await StorageHelper.copy(setting.data.moddingWorker.kernel, kernel);
         library.open(kernel);
-        result = await bridge.Launcher.launch(this._sessionClient, library, setting.data.mModdingWorker.mScript, setting.data.mModdingWorker.mArgument + this._additionalArgument);
+        result = await bridge.Launcher.launch(this._sessionClient, library, setting.data.moddingWorker.script, setting.data.moddingWorker.argument + this._additionalArgument);
       }
       catch (e) {
         exception = e;
@@ -159,7 +159,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
       optionImmediateLaunch = option.nextBoolean();
     }
     else {
-      optionImmediateLaunch = setting.data.mModdingWorker.mImmediateLaunch;
+      optionImmediateLaunch = setting.data.moddingWorker.immediateLaunch;
     }
     if (option.check('-additional_argument')) {
       optionAdditionalArgument = option.nextStringList();
@@ -280,7 +280,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
             Badge.count(
               textStyle: theme.textTheme.labelSmall?.copyWith(
                 fontFamily: '',
-                fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+                fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
               ),
               count: this._additionalArgument.length,
               child: IconButton.filledTonal(
@@ -304,7 +304,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                         ),
                         style: theme.textTheme.bodyLarge?.copyWith(
                           fontFamily: '',
-                          fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+                          fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
                         ),
                         value: ConvertHelper.makeStringListToStringWithLine(this._additionalArgument),
                         onChanged: (value) async {
@@ -431,7 +431,7 @@ class _MainPageBridgeClient implements bridge.Client {
 
   Future<(String,)> callbackVersion(
   ) async {
-    var version = kApplicationVersion;
+    var version = ApplicationInformation.version;
     return (version,);
   }
 

@@ -242,7 +242,7 @@ class StorageHelper {
   ) async {
     var target = null as String?;
     var setting = Provider.of<SettingProvider>(context, listen: false);
-    var initialDirectory = setting.data.mStoragePickerHistoryDirectory[tag];
+    var initialDirectory = setting.data.storagePickerHistoryDirectory[tag];
     if (Platform.isWindows) {
       initialDirectory ??= 'C:/';
       target = (await file_selector.openFile(initialDirectory: toWindowsStyle(initialDirectory)))?.path;
@@ -269,7 +269,7 @@ class StorageHelper {
       target = await PlatformMethod.pickStorageItem('load_file', initialDirectory);
     }
     if (target != null) {
-      setting.data.mStoragePickerHistoryDirectory[tag] = parent(target);
+      setting.data.storagePickerHistoryDirectory[tag] = parent(target);
       await setting.save(apply: false);
     }
     return target;
@@ -281,7 +281,7 @@ class StorageHelper {
   ) async {
     var target = null as String?;
     var setting = Provider.of<SettingProvider>(context, listen: false);
-    var initialDirectory = setting.data.mStoragePickerHistoryDirectory[tag];
+    var initialDirectory = setting.data.storagePickerHistoryDirectory[tag];
     if (Platform.isWindows) {
       initialDirectory ??= 'C:/';
       // NOTE : use `file_selector.getDirectoryPath` instead of `FilePicker.platform.getDirectoryPath`, on windows, the later one will throw an exception if it is the first file dialog since application start.
@@ -309,7 +309,7 @@ class StorageHelper {
       target = await PlatformMethod.pickStorageItem('load_directory', initialDirectory);
     }
     if (target != null) {
-      setting.data.mStoragePickerHistoryDirectory[tag] = parent(target);
+      setting.data.storagePickerHistoryDirectory[tag] = parent(target);
       await setting.save(apply: false);
     }
     return target;
@@ -321,7 +321,7 @@ class StorageHelper {
   ) async {
     var target = null as String?;
     var setting = Provider.of<SettingProvider>(context, listen: false);
-    var initialDirectory = setting.data.mStoragePickerHistoryDirectory[tag];
+    var initialDirectory = setting.data.storagePickerHistoryDirectory[tag];
     if (Platform.isWindows) {
       initialDirectory ??= 'C:/';
       target = (await file_selector.getSaveLocation(initialDirectory: toWindowsStyle(initialDirectory)))?.path;
@@ -347,7 +347,7 @@ class StorageHelper {
       throw UnimplementedError();
     }
     if (target != null) {
-      setting.data.mStoragePickerHistoryDirectory[tag] = parent(target);
+      setting.data.storagePickerHistoryDirectory[tag] = parent(target);
       await setting.save(apply: false);
     }
     return target;
@@ -486,7 +486,7 @@ class StorageHelper {
       )) ?? false;
       if (canDuplicate) {
         var setting = Provider.of<SettingProvider>(context, listen: false);
-        result = await PlatformMethod.copyStorageFile(uri.toString(), setting.data.mStoragePickerFallbackDirectory);
+        result = await PlatformMethod.copyStorageFile(uri.toString(), setting.data.storagePickerFallbackDirectory);
       }
     }
     return result;

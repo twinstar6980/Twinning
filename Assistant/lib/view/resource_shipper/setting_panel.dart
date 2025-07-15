@@ -33,7 +33,7 @@ class SettingPanel extends StatelessWidget {
             label: 'Option Configuration',
             content: [
               Text(
-                !StorageHelper.existFileSync(this.data.mOptionConfiguration) ? 'Invalid' : 'Available',
+                !StorageHelper.existFileSync(this.data.optionConfiguration) ? 'Invalid' : 'Available',
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium,
               ),
@@ -57,7 +57,7 @@ class SettingPanel extends StatelessWidget {
                           onPressed: () async {
                             var target = await StorageHelper.pickLoadFile(context, 'ResourceShipper.OptionConfiguration');
                             if (target != null) {
-                              this.data.mOptionConfiguration = target;
+                              this.data.optionConfiguration = target;
                               await refreshState(setStateForPanel);
                               await refreshState(setState);
                               this.onUpdate();
@@ -67,9 +67,9 @@ class SettingPanel extends StatelessWidget {
                       ],
                     ),
                   ),
-                  value: this.data.mOptionConfiguration,
+                  value: this.data.optionConfiguration,
                   onChanged: (value) async {
-                    this.data.mOptionConfiguration = StorageHelper.regularize(value);
+                    this.data.optionConfiguration = StorageHelper.regularize(value);
                     await refreshState(setStateForPanel);
                     await refreshState(setState);
                     this.onUpdate();
@@ -83,7 +83,7 @@ class SettingPanel extends StatelessWidget {
             label: 'Parallel Forward',
             content: [
               Text(
-                !this.data.mParallelForward ? 'Disabled' : 'Enabled',
+                !this.data.parallelForward ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium,
               ),
@@ -93,9 +93,9 @@ class SettingPanel extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Switch(
-                  value: this.data.mParallelForward,
+                  value: this.data.parallelForward,
                   onChanged: (value) async {
-                    this.data.mParallelForward = value;
+                    this.data.parallelForward = value;
                     await refreshState(setStateForPanel);
                     await refreshState(setState);
                     this.onUpdate();
@@ -113,7 +113,7 @@ class SettingPanel extends StatelessWidget {
             label: 'Enable Filter',
             content: [
               Text(
-                !this.data.mEnableFilter ? 'Disabled' : 'Enabled',
+                !this.data.enableFilter ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium,
               ),
@@ -123,9 +123,9 @@ class SettingPanel extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Switch(
-                  value: this.data.mEnableFilter,
+                  value: this.data.enableFilter,
                   onChanged: (value) async {
-                    this.data.mEnableFilter = value;
+                    this.data.enableFilter = value;
                     await refreshState(setStateForPanel);
                     await refreshState(setState);
                     this.onUpdate();
@@ -143,7 +143,7 @@ class SettingPanel extends StatelessWidget {
             label: 'Enable Batch',
             content: [
               Text(
-                !this.data.mEnableBatch ? 'Disabled' : 'Enabled',
+                !this.data.enableBatch ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium,
               ),
@@ -153,9 +153,9 @@ class SettingPanel extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Switch(
-                  value: this.data.mEnableBatch,
+                  value: this.data.enableBatch,
                   onChanged: (value) async {
-                    this.data.mEnableBatch = value;
+                    this.data.enableBatch = value;
                     await refreshState(setStateForPanel);
                     await refreshState(setState);
                     this.onUpdate();

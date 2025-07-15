@@ -108,8 +108,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
       var originalTarget = VisualHelper.selectImage(this._animation!, target.$2);
       this._activeSprite = model.Sprite(
         name: VisualHelper.parseImageFileName(originalTarget.name),
-        frame_rate: null,
-        work_area: (0, 0),
+        frameRate: null,
+        workArea: (0, 0),
         frame: [
           model.Frame(
             label: null,
@@ -123,8 +123,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 resource: target.$2,
                 sprite: false,
                 additive: false,
-                preload_frame: 0,
-                time_scale: 1.0,
+                preloadFrame: 0,
+                timeScale: 1.0,
               ),
             ],
             change: [
@@ -132,8 +132,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 index: 0,
                 transform: model.VariantTransform(value: model.TranslateTransform(x: 0.0, y: 0.0)),
                 color: null,
-                sprite_frame_number: null,
-                source_rectangle: null,
+                spriteFrameNumber: null,
+                sourceRectangle: null,
               ),
             ],
           ),
@@ -149,7 +149,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     this._activeFrameSpeed = 0.0;
     this._animationVisual = VisualHelper.visualizeSprite(this._animationController, this._animation!, this._texture!, this._activeSprite!, this._imageFilter!, this._spriteFilter!);
     await this._changeFrameRange(frameRange ?? (0, this._activeSprite!.frame.length));
-    await this._changeFrameSpeed(frameSpeed ?? this._activeSprite!.frame_rate ?? this._animation!.frame_rate.toDouble());
+    await this._changeFrameSpeed(frameSpeed ?? this._activeSprite!.frameRate ?? this._animation!.frameRate.toDouble());
     await this._changeProgressIndex(progressIndex ?? 0);
     await this._changeProgressState(progressState ?? this._automaticPlay);
     await refreshState(this.setState);
@@ -449,11 +449,11 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   initState() {
     super.initState();
     var setting = Provider.of<SettingProvider>(this.context, listen: false);
-    this._immediateSelect = setting.data.mAnimationViewer.mImmediateSelect;
-    this._automaticPlay = setting.data.mAnimationViewer.mAutomaticPlay;
-    this._repeatPlay = setting.data.mAnimationViewer.mRepeatPlay;
-    this._keepSpeed = setting.data.mAnimationViewer.mKeepSpeed;
-    this._showBoundary = setting.data.mAnimationViewer.mShowBoundary;
+    this._immediateSelect = setting.data.animationViewer.immediateSelect;
+    this._automaticPlay = setting.data.animationViewer.automaticPlay;
+    this._repeatPlay = setting.data.animationViewer.repeatPlay;
+    this._keepSpeed = setting.data.animationViewer.keepSpeed;
+    this._showBoundary = setting.data.animationViewer.showBoundary;
     this._animationFile = null;
     this._textureDirectory = null;
     this._animation = null;
@@ -629,7 +629,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                               children: [
                                 Expanded(
                                   child: Text(
-                                    !this._activated ? '[ 1 - 1 ]' : '[ ${this._activeFrameRange!.$1 + 1} - ${this._activeFrameRange!.$1 + this._activeFrameRange!.$2} ]',
+                                    !this._activated ? '[ 0 - 0 ]' : '[ ${this._activeFrameRange!.$1 + 1} - ${this._activeFrameRange!.$1 + this._activeFrameRange!.$2} ]',
                                     overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.start,
                                   ),
@@ -814,7 +814,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                               ? null
                               : () async {
                                 var currentValue = this._activeFrameSpeed!;
-                                var normalSpeed = this._activeSprite?.frame_rate ?? this._animation!.frame_rate.toDouble();
+                                var normalSpeed = this._activeSprite?.frameRate ?? this._animation!.frameRate.toDouble();
                                 await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
                                   title: 'Frame Speed',
                                   contentBuilder: (context, setStateForPanel) => [
@@ -1042,7 +1042,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Text(
-                                              '${item.frame.length} / ${item.frame_rate == null ? '?' : ConvertHelper.makeFloaterToString(item.frame_rate!, false)}',
+                                              '${item.frame.length} / ${item.frameRate == null ? '?' : ConvertHelper.makeFloaterToString(item.frameRate!, false)}',
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                           ],
@@ -1137,9 +1137,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                         onPressed: () async {
                           var animationFile = await StorageHelper.pickLoadFile(context, 'AnimationViewer.AnimationFile');
                           if (animationFile != null) {
-                            await this._applyLoad(animationFile, null, null, null, null, null, null, null, null);
-                            await refreshState(setStateForPanel);
                             Navigator.pop(context);
+                            await this._applyLoad(animationFile, null, null, null, null, null, null, null, null);
                           }
                         },
                       ),

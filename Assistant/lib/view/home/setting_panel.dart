@@ -7,7 +7,6 @@ import '/utility/permission_helper.dart';
 import '/utility/control_helper.dart';
 import '/view/home/common.dart';
 import '/view/home/about_panel.dart';
-import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,20 +37,20 @@ class _SettingPanelState extends State<SettingPanel> {
   Future<Boolean?> checkForwarderExtension(
   ) async {
     var result = null as Boolean?;
-    if (Platform.isWindows) {
+    if (SystemChecker.isWindows) {
       var stateFile = '${await StorageHelper.queryApplicationSharedDirectory()}/forwarder';
       result = await StorageHelper.exist(stateFile);
     }
-    if (Platform.isLinux) {
+    if (SystemChecker.isLinux) {
       result = false;
     }
-    if (Platform.isMacOS) {
+    if (SystemChecker.isMacintosh) {
       result = null;
     }
-    if (Platform.isAndroid) {
+    if (SystemChecker.isAndroid) {
       result = true;
     }
-    if (Platform.isIOS) {
+    if (SystemChecker.isIphone) {
       result = null;
     }
     return result;
@@ -60,7 +59,7 @@ class _SettingPanelState extends State<SettingPanel> {
   Future<Boolean?> toggleForwarderExtension(
   ) async {
     var result = null as Boolean?;
-    if (Platform.isWindows) {
+    if (SystemChecker.isWindows) {
       var stateFile = '${await StorageHelper.queryApplicationSharedDirectory()}/forwarder';
       if (!await StorageHelper.exist(stateFile)) {
         await StorageHelper.createFile(stateFile);
@@ -70,18 +69,18 @@ class _SettingPanelState extends State<SettingPanel> {
       }
       result = true;
     }
-    if (Platform.isLinux) {
+    if (SystemChecker.isLinux) {
       result = false;
     }
-    if (Platform.isMacOS) {
+    if (SystemChecker.isMacintosh) {
       // Ventura 13 and later
       await launchUrl(Uri.parse('x-apple.systempreferences:com.apple.ExtensionsPreferences?extensionPointIdentifier=com.apple.fileprovider-nonui'), mode: LaunchMode.externalApplication);
       result = null;
     }
-    if (Platform.isAndroid) {
+    if (SystemChecker.isAndroid) {
       result = false;
     }
-    if (Platform.isIOS) {
+    if (SystemChecker.isIphone) {
       result = false;
     }
     return result;
@@ -130,7 +129,7 @@ class _SettingPanelState extends State<SettingPanel> {
           label: 'Theme Mode',
           content: [
             Text(
-              ['System', 'Light', 'Dark'][setting.data.mThemeMode.index],
+              ['System', 'Light', 'Dark'][setting.data.themeMode.index],
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
@@ -142,9 +141,9 @@ class _SettingPanelState extends State<SettingPanel> {
                 contentPadding: EdgeInsets.zero,
                 leading: Radio(
                   value: item,
-                  groupValue: setting.data.mThemeMode,
+                  groupValue: setting.data.themeMode,
                   onChanged: (value) async {
-                    setting.data.mThemeMode = value!;
+                    setting.data.themeMode = value!;
                     await refreshState(setStateForPanel);
                     await refreshState(this.setState);
                     await setting.save();
@@ -163,7 +162,7 @@ class _SettingPanelState extends State<SettingPanel> {
           label: 'Theme Color',
           content: [
             Text(
-              !setting.data.mThemeColorState ? 'Default' : 'Custom',
+              !setting.data.themeColorState ? 'Default' : 'Custom',
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
@@ -173,9 +172,9 @@ class _SettingPanelState extends State<SettingPanel> {
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: Switch(
-                value: setting.data.mThemeColorState,
+                value: setting.data.themeColorState,
                 onChanged: (value) async {
-                  setting.data.mThemeColorState = value;
+                  setting.data.themeColorState = value;
                   await refreshState(setStateForPanel);
                   await refreshState(this.setState);
                   await setting.save();
@@ -199,12 +198,12 @@ class _SettingPanelState extends State<SettingPanel> {
                   suffixIcon: Icon(
                     IconSymbols.circle,
                     fill: 0.6,
-                    color: setting.data.mThemeColorLight,
+                    color: setting.data.themeColorLight,
                   ),
                 ),
-                value: setting.data.mThemeColorLight.withValues(alpha: 0.0).toARGB32().toRadixString(16).padLeft(6, '0'),
+                value: setting.data.themeColorLight.withValues(alpha: 0.0).toARGB32().toRadixString(16).padLeft(6, '0'),
                 onChanged: (value) async {
-                  setting.data.mThemeColorLight = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withValues(alpha: 1.0);
+                  setting.data.themeColorLight = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withValues(alpha: 1.0);
                   await refreshState(setStateForPanel);
                   await refreshState(this.setState);
                   await setting.save();
@@ -224,12 +223,12 @@ class _SettingPanelState extends State<SettingPanel> {
                   suffixIcon: Icon(
                     IconSymbols.circle,
                     fill: 0.6,
-                    color: setting.data.mThemeColorDark,
+                    color: setting.data.themeColorDark,
                   ),
                 ),
-                value: setting.data.mThemeColorDark.withValues(alpha: 0.0).toARGB32().toRadixString(16).padLeft(6, '0'),
+                value: setting.data.themeColorDark.withValues(alpha: 0.0).toARGB32().toRadixString(16).padLeft(6, '0'),
                 onChanged: (value) async {
-                  setting.data.mThemeColorDark = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withValues(alpha: 1.0);
+                  setting.data.themeColorDark = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withValues(alpha: 1.0);
                   await refreshState(setStateForPanel);
                   await refreshState(this.setState);
                   await setting.save();
@@ -243,7 +242,7 @@ class _SettingPanelState extends State<SettingPanel> {
           label: 'Theme Font',
           content: [
             Text(
-              !setting.data.mThemeFontState ? 'Default' : 'Custom',
+              !setting.data.themeFontState ? 'Default' : 'Custom',
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
@@ -253,9 +252,9 @@ class _SettingPanelState extends State<SettingPanel> {
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: Switch(
-                value: setting.data.mThemeFontState,
+                value: setting.data.themeFontState,
                 onChanged: (value) async {
-                  setting.data.mThemeFontState = value;
+                  setting.data.themeFontState = value;
                   await refreshState(setStateForPanel);
                   await refreshState(this.setState);
                   await setting.save();
@@ -283,7 +282,7 @@ class _SettingPanelState extends State<SettingPanel> {
                         onPressed: () async {
                           var target = await StorageHelper.pickLoadFile(context, 'Application.ThemeFont');
                           if (target != null) {
-                            setting.data.mThemeFontPath = setting.data.mThemeFontPath + [target];
+                            setting.data.themeFontPath = setting.data.themeFontPath + [target];
                             await refreshState(setStateForPanel);
                             await refreshState(this.setState);
                             await setting.save();
@@ -293,9 +292,9 @@ class _SettingPanelState extends State<SettingPanel> {
                     ],
                   ),
                 ),
-                value: ConvertHelper.makeStringListToStringWithLine(setting.data.mThemeFontPath),
+                value: ConvertHelper.makeStringListToStringWithLine(setting.data.themeFontPath),
                 onChanged: (value) async {
-                  setting.data.mThemeFontPath = ConvertHelper.parseStringListFromStringWithLine(value);
+                  setting.data.themeFontPath = ConvertHelper.parseStringListFromStringWithLine(value);
                   await refreshState(setStateForPanel);
                   await refreshState(this.setState);
                   await setting.save();
@@ -309,15 +308,15 @@ class _SettingPanelState extends State<SettingPanel> {
           action: null,
         ),
         CustomSettingItem(
-          enabled: Platform.isWindows || Platform.isLinux || Platform.isMacOS,
+          enabled: SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh,
           icon: IconSymbols.recenter,
           label: 'Window Position',
           content: [
             Text(
-              !setting.data.mWindowPositionState ? 'Default' : 'Custom',
+              !setting.data.windowPositionState ? 'Default' : 'Custom',
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: Platform.isWindows || Platform.isLinux || Platform.isMacOS ? null : theme.disabledColor,
+                color: SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh ? null : theme.disabledColor,
               ),
             ),
           ],
@@ -326,9 +325,9 @@ class _SettingPanelState extends State<SettingPanel> {
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: Switch(
-                value: setting.data.mWindowPositionState,
+                value: setting.data.windowPositionState,
                 onChanged: (value) async {
-                  setting.data.mWindowPositionState = value;
+                  setting.data.windowPositionState = value;
                   await refreshState(setStateForPanel);
                   await refreshState(this.setState);
                   await setting.save();
@@ -350,9 +349,9 @@ class _SettingPanelState extends State<SettingPanel> {
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(IconSymbols.swap_horiz),
                 ),
-                value: setting.data.mWindowPositionX.toString(),
+                value: setting.data.windowPositionX.toString(),
                 onChanged: (value) async {
-                  setting.data.mWindowPositionX = Integer.tryParse(value) ?? setting.data.mWindowPositionX;
+                  setting.data.windowPositionX = Integer.tryParse(value) ?? setting.data.windowPositionX;
                   await refreshState(setStateForPanel);
                   await refreshState(this.setState);
                   await setting.save();
@@ -370,9 +369,9 @@ class _SettingPanelState extends State<SettingPanel> {
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(IconSymbols.swap_vert),
                 ),
-                value: setting.data.mWindowPositionY.toString(),
+                value: setting.data.windowPositionY.toString(),
                 onChanged: (value) async {
-                  setting.data.mWindowPositionY = Integer.tryParse(value) ?? setting.data.mWindowPositionY;
+                  setting.data.windowPositionY = Integer.tryParse(value) ?? setting.data.windowPositionY;
                   await refreshState(setStateForPanel);
                   await refreshState(this.setState);
                   await setting.save();
@@ -382,15 +381,15 @@ class _SettingPanelState extends State<SettingPanel> {
           ],
         ),
         CustomSettingItem(
-          enabled: Platform.isWindows || Platform.isLinux || Platform.isMacOS,
+          enabled: SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh,
           icon: IconSymbols.fit_screen,
           label: 'Window Size',
           content: [
             Text(
-              !setting.data.mWindowSizeState ? 'Default' : 'Custom',
+              !setting.data.windowSizeState ? 'Default' : 'Custom',
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: Platform.isWindows || Platform.isLinux || Platform.isMacOS ? null : theme.disabledColor,
+                color: SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh ? null : theme.disabledColor,
               ),
             ),
           ],
@@ -399,9 +398,9 @@ class _SettingPanelState extends State<SettingPanel> {
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: Switch(
-                value: setting.data.mWindowSizeState,
+                value: setting.data.windowSizeState,
                 onChanged: (value) async {
-                  setting.data.mWindowSizeState = value;
+                  setting.data.windowSizeState = value;
                   await refreshState(setStateForPanel);
                   await refreshState(this.setState);
                   await setting.save();
@@ -423,9 +422,9 @@ class _SettingPanelState extends State<SettingPanel> {
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(IconSymbols.width),
                 ),
-                value: setting.data.mWindowSizeWidth.toString(),
+                value: setting.data.windowSizeWidth.toString(),
                 onChanged: (value) async {
-                  setting.data.mWindowSizeWidth = Integer.tryParse(value) ?? setting.data.mWindowSizeWidth;
+                  setting.data.windowSizeWidth = Integer.tryParse(value) ?? setting.data.windowSizeWidth;
                   await refreshState(setStateForPanel);
                   await refreshState(this.setState);
                   await setting.save();
@@ -443,9 +442,9 @@ class _SettingPanelState extends State<SettingPanel> {
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(IconSymbols.height),
                 ),
-                value: setting.data.mWindowSizeHeight.toString(),
+                value: setting.data.windowSizeHeight.toString(),
                 onChanged: (value) async {
-                  setting.data.mWindowSizeHeight = Integer.tryParse(value) ?? setting.data.mWindowSizeHeight;
+                  setting.data.windowSizeHeight = Integer.tryParse(value) ?? setting.data.windowSizeHeight;
                   await refreshState(setStateForPanel);
                   await refreshState(this.setState);
                   await setting.save();
@@ -459,7 +458,7 @@ class _SettingPanelState extends State<SettingPanel> {
           action: null,
         ),
         CustomSettingItem(
-          enabled: Platform.isAndroid,
+          enabled: SystemChecker.isAndroid,
           icon: IconSymbols.key,
           label: 'Storage Permission',
           content: [
@@ -467,7 +466,7 @@ class _SettingPanelState extends State<SettingPanel> {
               !this._storagePermissionState ? 'Denied' : 'Granted',
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: Platform.isAndroid ? null : theme.disabledColor,
+                color: SystemChecker.isAndroid ? null : theme.disabledColor,
               ),
             ),
           ],
@@ -478,15 +477,15 @@ class _SettingPanelState extends State<SettingPanel> {
           panelBuilder: null,
         ),
         CustomSettingItem(
-          enabled: Platform.isAndroid,
+          enabled: SystemChecker.isAndroid,
           icon: IconSymbols.snippet_folder,
           label: 'Storage Picker Fallback Directory',
           content: [
             Text(
-              !StorageHelper.existDirectorySync(setting.data.mStoragePickerFallbackDirectory) ? 'Invalid' : 'Available',
+              !StorageHelper.existDirectorySync(setting.data.storagePickerFallbackDirectory) ? 'Invalid' : 'Available',
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: Platform.isAndroid ? null : theme.disabledColor,
+                color: SystemChecker.isAndroid ? null : theme.disabledColor,
               ),
             ),
           ],
@@ -509,7 +508,7 @@ class _SettingPanelState extends State<SettingPanel> {
                         onPressed: () async {
                           var target = await StorageHelper.pickLoadDirectory(context, 'Application.StoragePickerFallbackDirectory');
                           if (target != null) {
-                            setting.data.mStoragePickerFallbackDirectory = target;
+                            setting.data.storagePickerFallbackDirectory = target;
                             await refreshState(setStateForPanel);
                             await refreshState(this.setState);
                             await setting.save();
@@ -519,9 +518,9 @@ class _SettingPanelState extends State<SettingPanel> {
                     ],
                   ),
                 ),
-                value: setting.data.mStoragePickerFallbackDirectory,
+                value: setting.data.storagePickerFallbackDirectory,
                 onChanged: (value) async {
-                  setting.data.mStoragePickerFallbackDirectory = StorageHelper.regularize(value);
+                  setting.data.storagePickerFallbackDirectory = StorageHelper.regularize(value);
                   await refreshState(setStateForPanel);
                   await refreshState(this.setState);
                   await setting.save();
@@ -535,7 +534,7 @@ class _SettingPanelState extends State<SettingPanel> {
           action: null,
         ),
         CustomSettingItem(
-          enabled: Platform.isWindows || Platform.isMacOS,
+          enabled: SystemChecker.isWindows || SystemChecker.isMacintosh,
           icon: IconSymbols.send_time_extension,
           label: 'Forwarder Extension',
           content: [
@@ -543,7 +542,7 @@ class _SettingPanelState extends State<SettingPanel> {
               this._forwarderExtensionState == null ? 'System' : !this._forwarderExtensionState! ? 'Disabled' : 'Enabled',
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: Platform.isWindows || Platform.isMacOS ? null : theme.disabledColor,
+                color: SystemChecker.isWindows || SystemChecker.isMacintosh ? null : theme.disabledColor,
               ),
             ),
           ],
@@ -573,7 +572,7 @@ class _SettingPanelState extends State<SettingPanel> {
           label: 'Forwarder Default Target',
           content: [
             Text(
-              ModuleHelper.query(setting.data.mForwarderDefaultTarget).name,
+              ModuleHelper.query(setting.data.forwarderDefaultTarget).name,
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
@@ -585,9 +584,9 @@ class _SettingPanelState extends State<SettingPanel> {
                 contentPadding: EdgeInsets.zero,
                 leading: Radio(
                   value: item,
-                  groupValue: setting.data.mForwarderDefaultTarget,
+                  groupValue: setting.data.forwarderDefaultTarget,
                   onChanged: (value) async {
-                    setting.data.mForwarderDefaultTarget = value!;
+                    setting.data.forwarderDefaultTarget = value!;
                     await refreshState(setStateForPanel);
                     await refreshState(this.setState);
                     await setting.save();
@@ -606,7 +605,7 @@ class _SettingPanelState extends State<SettingPanel> {
           label: 'Forwarder Immediate Jump',
           content: [
             Text(
-              !setting.data.mForwarderImmediateJump ? 'Disabled' : 'Enabled',
+              !setting.data.forwarderImmediateJump ? 'Disabled' : 'Enabled',
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
             ),
@@ -616,9 +615,9 @@ class _SettingPanelState extends State<SettingPanel> {
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: Switch(
-                value: setting.data.mForwarderImmediateJump,
+                value: setting.data.forwarderImmediateJump,
                 onChanged: (value) async {
-                  setting.data.mForwarderImmediateJump = value;
+                  setting.data.forwarderImmediateJump = value;
                   await refreshState(setStateForPanel);
                   await refreshState(this.setState);
                   await setting.save();
@@ -659,7 +658,7 @@ class _SettingPanelState extends State<SettingPanel> {
                 Navigator.pop(context);
                 await setting.load();
                 await setting.save();
-                await ControlHelper.showSnackBar(setting.state.mApplicationNavigatorKey.currentContext!, 'Done!');
+                await ControlHelper.showSnackBar(setting.state.applicationNavigatorKey.currentContext!, 'Done!');
               },
             ),
             ListTile(
@@ -672,7 +671,7 @@ class _SettingPanelState extends State<SettingPanel> {
                 if (await ControlHelper.showDialogForConfirm(context)) {
                   await setting.reset();
                   await setting.save();
-                  await ControlHelper.showSnackBar(setting.state.mApplicationNavigatorKey.currentContext!, 'Done!');
+                  await ControlHelper.showSnackBar(setting.state.applicationNavigatorKey.currentContext!, 'Done!');
                 }
               },
             ),
@@ -687,7 +686,7 @@ class _SettingPanelState extends State<SettingPanel> {
                 if (file != null) {
                   await setting.load(file: file);
                   await setting.save();
-                  await ControlHelper.showSnackBar(setting.state.mApplicationNavigatorKey.currentContext!, 'Done!');
+                  await ControlHelper.showSnackBar(setting.state.applicationNavigatorKey.currentContext!, 'Done!');
                 }
               },
             ),
@@ -701,7 +700,7 @@ class _SettingPanelState extends State<SettingPanel> {
                 var file = await StorageHelper.pickSaveFile(context, 'Application.SettingFile');
                 if (file != null) {
                   await setting.save(file: file, apply: false);
-                  await ControlHelper.showSnackBar(setting.state.mApplicationNavigatorKey.currentContext!, 'Done!');
+                  await ControlHelper.showSnackBar(setting.state.applicationNavigatorKey.currentContext!, 'Done!');
                 }
               },
             ),
@@ -742,7 +741,7 @@ class _SettingPanelState extends State<SettingPanel> {
                 if (await StorageHelper.exist(cacheDirectory)) {
                   await StorageHelper.remove(cacheDirectory);
                 }
-                await ControlHelper.showSnackBar(setting.state.mApplicationNavigatorKey.currentContext!, 'Done!');
+                await ControlHelper.showSnackBar(setting.state.applicationNavigatorKey.currentContext!, 'Done!');
               },
             ),
           ],

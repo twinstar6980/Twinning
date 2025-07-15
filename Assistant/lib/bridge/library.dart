@@ -1,6 +1,5 @@
 import '/common.dart';
 import '/bridge/service.dart';
-import 'dart:io';
 import 'dart:ffi' as ffi;
 
 // ----------------
@@ -35,7 +34,7 @@ class Library {
     String path,
   ) {
     assertTest(!this.state());
-    if (Platform.isWindows) {
+    if (SystemChecker.isWindows) {
       path += '.';
     }
     var handle = ffi.DynamicLibrary.open(path);

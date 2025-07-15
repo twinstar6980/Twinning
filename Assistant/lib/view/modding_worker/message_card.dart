@@ -30,12 +30,12 @@ class MessageCard extends StatelessWidget {
     var cardColor = this.type.color(theme);
     var titleStyle = theme.textTheme.titleSmall?.copyWith(
       fontFamily: '',
-      fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+      fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
       color: theme.colorScheme.onSurface,
     );
     var descriptionStyle = theme.textTheme.bodySmall?.copyWith(
       fontFamily: '',
-      fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+      fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
       color: theme.colorScheme.onSurfaceVariant,
     );
     return Card(

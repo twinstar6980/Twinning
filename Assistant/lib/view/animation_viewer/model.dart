@@ -90,16 +90,16 @@ class LayerAppend {
   Integer resource;
   Boolean sprite;
   Boolean additive;
-  Integer preload_frame;
-  Floater time_scale;
+  Integer preloadFrame;
+  Floater timeScale;
   LayerAppend({
     required this.index,
     required this.name,
     required this.resource,
     required this.sprite,
     required this.additive,
-    required this.preload_frame,
-    required this.time_scale,
+    required this.preloadFrame,
+    required this.timeScale,
   });
 }
 
@@ -107,14 +107,14 @@ class LayerChange {
   Integer          index;
   VariantTransform transform;
   Color?           color;
-  Integer?         sprite_frame_number;
-  Rectangle?       source_rectangle;
+  Integer?         spriteFrameNumber;
+  Rectangle?       sourceRectangle;
   LayerChange({
     required this.index,
     required this.transform,
     required this.color,
-    required this.sprite_frame_number,
-    required this.source_rectangle,
+    required this.spriteFrameNumber,
+    required this.sourceRectangle,
   });
 }
 
@@ -137,13 +137,13 @@ class Frame {
 
 class Sprite {
   String?             name;
-  Floater?            frame_rate;
-  (Integer, Integer)? work_area;
+  Floater?            frameRate;
+  (Integer, Integer)? workArea;
   List<Frame>         frame;
   Sprite({
     required this.name,
-    required this.frame_rate,
-    required this.work_area,
+    required this.frameRate,
+    required this.workArea,
     required this.frame,
   });
 }
@@ -160,19 +160,19 @@ class Image {
 }
 
 class Animation {
-  Integer            frame_rate;
+  Integer            frameRate;
   (Floater, Floater) position;
   (Floater, Floater) size;
   List<Image>        image;
   List<Sprite>       sprite;
-  Sprite?            main_sprite;
+  Sprite?            mainSprite;
   Animation({
-    required this.frame_rate,
+    required this.frameRate,
     required this.position,
     required this.size,
     required this.image,
     required this.sprite,
-    required this.main_sprite,
+    required this.mainSprite,
   });
 }
 
@@ -201,7 +201,7 @@ class ModelHelper {
     dynamic json,
   ) {
     return Animation(
-      frame_rate: (json['frame_rate'] as Integer),
+      frameRate: (json['frame_rate'] as Integer),
       position: (json['position'] as List<dynamic>).cast<Floater>().selfAlso((it) { assertTest(it.length == 2); }).selfLet((it) => (it[0], it[1])),
       size: (json['size'] as List<dynamic>).cast<Floater>().selfAlso((it) { assertTest(it.length == 2); }).selfLet((it) => (it[0], it[1])),
       image: (json['image'] as List<dynamic>).map((jsonItem) => Image(
@@ -211,8 +211,8 @@ class ModelHelper {
       )).toList(),
       sprite: (json['sprite'] as List<dynamic>).map((jsonItem) => Sprite(
         name: (jsonItem['name'] as String?),
-        frame_rate: (jsonItem['frame_rate'] as Floater?),
-        work_area: (jsonItem['size'] as List<dynamic>?)?.cast<Integer>().selfAlso((it) { assertTest(it.length == 2); }).selfLet((it) => (it[0], it[1])),
+        frameRate: (jsonItem['frame_rate'] as Floater?),
+        workArea: (jsonItem['size'] as List<dynamic>?)?.cast<Integer>().selfAlso((it) { assertTest(it.length == 2); }).selfLet((it) => (it[0], it[1])),
         frame: (jsonItem['frame'] as List<dynamic>).map((jsonElement) => Frame(
           label: (jsonElement['label'] as String?),
           stop: (jsonElement['stop'] as Boolean),
@@ -229,25 +229,25 @@ class ModelHelper {
             resource: (jsonPart['resource'] as Integer),
             sprite: (jsonPart['sprite'] as Boolean),
             additive: (jsonPart['additive'] as Boolean),
-            preload_frame: (jsonPart['preload_frame'] as Integer),
-            time_scale: (jsonPart['time_scale'] as Floater),
+            preloadFrame: (jsonPart['preload_frame'] as Integer),
+            timeScale: (jsonPart['time_scale'] as Floater),
           )).toList(),
           change: (jsonElement['change'] as List<dynamic>).map((jsonPart) => LayerChange(
             index: (jsonPart['index'] as Integer),
             transform: (jsonPart['transform'] as List<dynamic>).cast<Floater>().selfLet(parseVariantTransformFromList),
             color: (jsonPart['color'] as List<dynamic>?)?.cast<Floater>().selfAlso((it) { assertTest(it.length == 4); }).selfLet((it) => Color(red: it[0], green: it[1], blue: it[2], alpha: it[3])),
-            sprite_frame_number: (jsonPart['sprite_frame_number'] as Integer?),
-            source_rectangle: (jsonPart['source_rectangle'] as Map<dynamic, dynamic>?)?.selfLet((jsonChild) => Rectangle(
+            spriteFrameNumber: (jsonPart['sprite_frame_number'] as Integer?),
+            sourceRectangle: (jsonPart['source_rectangle'] as Map<dynamic, dynamic>?)?.selfLet((jsonChild) => Rectangle(
               position: (jsonChild['position'] as List<dynamic>).cast<Floater>().selfAlso((it) { assertTest(it.length == 2); }).selfLet((it) => (it[0], it[1])),
               size: (jsonChild['size'] as List<dynamic>).cast<Floater>().selfAlso((it) { assertTest(it.length == 2); }).selfLet((it) => (it[0], it[1])),
             )),
           )).toList(),
         )).toList(),
       )).toList(),
-      main_sprite: (json['main_sprite'] as Map<dynamic, dynamic>?)?.selfLet((jsonItem) => Sprite(
+      mainSprite: (json['main_sprite'] as Map<dynamic, dynamic>?)?.selfLet((jsonItem) => Sprite(
         name: (jsonItem['name'] as String?),
-        frame_rate: (jsonItem['frame_rate'] as Floater?),
-        work_area: (jsonItem['size'] as List<dynamic>?)?.cast<Integer>().selfAlso((it) { assertTest(it.length == 2); }).selfLet((it) => (it[0], it[1])),
+        frameRate: (jsonItem['frame_rate'] as Floater?),
+        workArea: (jsonItem['size'] as List<dynamic>?)?.cast<Integer>().selfAlso((it) { assertTest(it.length == 2); }).selfLet((it) => (it[0], it[1])),
         frame: (jsonItem['frame'] as List<dynamic>).map((jsonElement) => Frame(
           label: (jsonElement['label'] as String?),
           stop: (jsonElement['stop'] as Boolean),
@@ -264,15 +264,15 @@ class ModelHelper {
             resource: (jsonPart['resource'] as Integer),
             sprite: (jsonPart['sprite'] as Boolean),
             additive: (jsonPart['additive'] as Boolean),
-            preload_frame: (jsonPart['preload_frame'] as Integer),
-            time_scale: (jsonPart['time_scale'] as Floater),
+            preloadFrame: (jsonPart['preload_frame'] as Integer),
+            timeScale: (jsonPart['time_scale'] as Floater),
           )).toList(),
           change: (jsonElement['change'] as List<dynamic>).map((jsonPart) => LayerChange(
             index: (jsonPart['index'] as Integer),
             transform: (jsonPart['transform'] as List<dynamic>).cast<Floater>().selfLet(parseVariantTransformFromList),
             color: (jsonPart['color'] as List<dynamic>?)?.cast<Floater>().selfAlso((it) { assertTest(it.length == 4); }).selfLet((it) => Color(red: it[0], green: it[1], blue: it[2], alpha: it[3])),
-            sprite_frame_number: (jsonPart['sprite_frame_number'] as Integer?),
-            source_rectangle: (jsonPart['source_rectangle'] as Map<dynamic, dynamic>?)?.selfLet((jsonChild) => Rectangle(
+            spriteFrameNumber: (jsonPart['sprite_frame_number'] as Integer?),
+            sourceRectangle: (jsonPart['source_rectangle'] as Map<dynamic, dynamic>?)?.selfLet((jsonChild) => Rectangle(
               position: (jsonChild['position'] as List<dynamic>).cast<Floater>().selfAlso((it) { assertTest(it.length == 2); }).selfLet((it) => (it[0], it[1])),
               size: (jsonChild['size'] as List<dynamic>).cast<Floater>().selfAlso((it) { assertTest(it.length == 2); }).selfLet((it) => (it[0], it[1])),
             )),

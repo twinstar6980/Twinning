@@ -33,7 +33,7 @@ class SettingPanel extends StatelessWidget {
             label: 'Method Configuration',
             content: [
               Text(
-                !StorageHelper.existFileSync(this.data.mMethodConfiguration) ? 'Invalid' : 'Available',
+                !StorageHelper.existFileSync(this.data.methodConfiguration) ? 'Invalid' : 'Available',
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium,
               ),
@@ -57,7 +57,7 @@ class SettingPanel extends StatelessWidget {
                           onPressed: () async {
                             var target = await StorageHelper.pickLoadFile(context, 'CommandSender.MethodConfiguration');
                             if (target != null) {
-                              this.data.mMethodConfiguration = target;
+                              this.data.methodConfiguration = target;
                               await refreshState(setStateForPanel);
                               await refreshState(setState);
                               this.onUpdate();
@@ -67,9 +67,9 @@ class SettingPanel extends StatelessWidget {
                       ],
                     ),
                   ),
-                  value: this.data.mMethodConfiguration,
+                  value: this.data.methodConfiguration,
                   onChanged: (value) async {
-                    this.data.mMethodConfiguration = StorageHelper.regularize(value);
+                    this.data.methodConfiguration = StorageHelper.regularize(value);
                     await refreshState(setStateForPanel);
                     await refreshState(setState);
                     this.onUpdate();
@@ -83,7 +83,7 @@ class SettingPanel extends StatelessWidget {
             label: 'Parallel Forward',
             content: [
               Text(
-                !this.data.mParallelForward ? 'Disabled' : 'Enabled',
+                !this.data.parallelForward ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium,
               ),
@@ -93,9 +93,9 @@ class SettingPanel extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Switch(
-                  value: this.data.mParallelForward,
+                  value: this.data.parallelForward,
                   onChanged: (value) async {
-                    this.data.mParallelForward = value;
+                    this.data.parallelForward = value;
                     await refreshState(setStateForPanel);
                     await refreshState(setState);
                     this.onUpdate();

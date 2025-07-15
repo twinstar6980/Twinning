@@ -86,7 +86,7 @@ class VisualHelper {
       result = animation.sprite[index];
     }
     else if (index == animation.sprite.length) {
-      result = animation.main_sprite!;
+      result = animation.mainSprite!;
     }
     else {
       throw Exception();

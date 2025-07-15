@@ -22,7 +22,7 @@ class AboutPanel extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                '${kApplicationName} - v${kApplicationVersion}',
+                '${ApplicationInformation.name} - v${ApplicationInformation.version}',
                 overflow: TextOverflow.clip,
                 style: theme.textTheme.titleMedium,
               ),
@@ -34,7 +34,7 @@ class AboutPanel extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                '© ${kApplicationYear} ${kApplicationDeveloper}. All rights reserved.',
+                '© ${ApplicationInformation.year} ${ApplicationInformation.developer}. All rights reserved.',
                 overflow: TextOverflow.clip,
                 style: theme.textTheme.bodyMedium,
               ),

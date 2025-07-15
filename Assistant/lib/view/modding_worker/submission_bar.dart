@@ -59,7 +59,7 @@ class _BasicSubmissionBar extends StatelessWidget {
         Badge.count(
           textStyle: theme.textTheme.labelSmall?.copyWith(
             fontFamily: '',
-            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+            fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
           ),
           isLabelVisible: this.history != null,
           count: this.history == null ? 0 : this.history!.length,
@@ -100,7 +100,7 @@ class _BasicSubmissionBar extends StatelessWidget {
                             overflow: TextOverflow.clip,
                             style: theme.textTheme.labelLarge?.copyWith(
                               fontFamily: '',
-                              fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+                              fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
                               color: value.$2 ? null : theme.disabledColor,
                             ),
                           ),
@@ -199,7 +199,7 @@ class _PauseSubmissionBar extends StatelessWidget {
         content: CustomTextField(
           style: theme.textTheme.bodyLarge?.copyWith(
             fontFamily: '',
-            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+            fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
           ),
           keyboardType: TextInputType.none,
           inputFormatters: [],
@@ -255,7 +255,7 @@ class _BooleanSubmissionBar extends StatelessWidget {
         content: CustomTextField(
           style: theme.textTheme.bodyLarge?.copyWith(
             fontFamily: '',
-            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+            fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
           ),
           keyboardType: TextInputType.text,
           inputFormatters: [],
@@ -342,7 +342,7 @@ class _IntegerSubmissionBar extends StatelessWidget {
         content: CustomTextField(
           style: theme.textTheme.bodyLarge?.copyWith(
             fontFamily: '',
-            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+            fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
           ),
           keyboardType: TextInputType.numberWithOptions(signed: true, decimal: false),
           inputFormatters: [],
@@ -409,7 +409,7 @@ class _FloaterSubmissionBar extends StatelessWidget {
         content: CustomTextField(
           style: theme.textTheme.bodyLarge?.copyWith(
             fontFamily: '',
-            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+            fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
           ),
           keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
           inputFormatters: [],
@@ -476,7 +476,7 @@ class _SizeSubmissionBar extends StatelessWidget {
         content: CustomTextField(
           style: theme.textTheme.bodyLarge?.copyWith(
             fontFamily: '',
-            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+            fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
           ),
           keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
           inputFormatters: [],
@@ -501,7 +501,7 @@ class _SizeSubmissionBar extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.labelLarge?.copyWith(
                           fontFamily: '',
-                          fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+                          fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
                         ),
                       ),
                     ),
@@ -512,7 +512,7 @@ class _SizeSubmissionBar extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.labelLarge?.copyWith(
                         fontFamily: '',
-                        fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+                        fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
                       ),
                     ),
                   )).toList(),
@@ -577,7 +577,7 @@ class _StringSubmissionBar extends StatelessWidget {
         content: CustomTextField(
           style: theme.textTheme.bodyLarge?.copyWith(
             fontFamily: '',
-            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+            fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
           ),
           keyboardType: TextInputType.text,
           inputFormatters: [],
@@ -646,7 +646,7 @@ class _PathSubmissionBar extends StatelessWidget {
           child: CustomTextField(
             style: theme.textTheme.bodyLarge?.copyWith(
               fontFamily: '',
-              fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+              fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
             ),
             keyboardType: TextInputType.text,
             inputFormatters: [],
@@ -673,7 +673,7 @@ class _PathSubmissionBar extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.labelLarge?.copyWith(
                           fontFamily: '',
-                          fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+                          fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
                         ),
                       ),
                     )).toList(),
@@ -698,7 +698,7 @@ class _PathSubmissionBar extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.labelLarge?.copyWith(
                           fontFamily: '',
-                          fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+                          fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
                         ),
                       ),
                     )).toList(),
@@ -771,7 +771,7 @@ class _EnumerationSubmissionBar extends StatelessWidget {
         content: CustomOptionField(
           style: theme.textTheme.bodyLarge?.copyWith(
             fontFamily: '',
-            fontFamilyFallback: [...setting.state.mModdingWorkerMessageFontFamily, ...setting.state.mThemeFontFamliy],
+            fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
           ),
           decoration: InputDecoration(
             contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),

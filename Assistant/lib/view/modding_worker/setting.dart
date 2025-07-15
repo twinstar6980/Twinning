@@ -3,16 +3,16 @@ import '/common.dart';
 // ----------------
 
 class Setting {
-  String       mKernel;
-  String       mScript;
-  List<String> mArgument;
-  Boolean      mImmediateLaunch;
-  List<String> mMessageFont;
+  String       kernel;
+  String       script;
+  List<String> argument;
+  Boolean      immediateLaunch;
+  List<String> messageFont;
   Setting({
-    required this.mKernel,
-    required this.mScript,
-    required this.mArgument,
-    required this.mImmediateLaunch,
-    required this.mMessageFont,
+    required this.kernel,
+    required this.script,
+    required this.argument,
+    required this.immediateLaunch,
+    required this.messageFont,
   });
 }

@@ -191,15 +191,15 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     super.initState();
     var setting = Provider.of<SettingProvider>(this.context, listen: false);
     this._optionConfiguration = [];
-    this._parallelForward = setting.data.mResourceShipper.mParallelForward;
-    this._enableFilter = setting.data.mResourceShipper.mEnableFilter;
-    this._enableBatch = setting.data.mResourceShipper.mEnableBatch;
+    this._parallelForward = setting.data.resourceShipper.parallelForward;
+    this._enableFilter = setting.data.resourceShipper.enableFilter;
+    this._enableBatch = setting.data.resourceShipper.enableBatch;
     this._resource = [];
     this._optionMatch = [];
     this._optionCollapse = [];
     this._optionListScrollController = ScrollController();
     ControlHelper.postTask(() async {
-      this._optionConfiguration = ConfigurationHelper.parseDataFromJson(await JsonHelper.deserializeFile(setting.data.mResourceShipper.mOptionConfiguration));
+      this._optionConfiguration = ConfigurationHelper.parseDataFromJson(await JsonHelper.deserializeFile(setting.data.resourceShipper.optionConfiguration));
       this._optionCollapse = this._optionConfiguration.map((value) => false).toList();
       await this._refreshMatch();
       await this.modulePageApplyOption(this.widget.option);

@@ -89,7 +89,7 @@ class _MainPageState extends State<MainPage> {
       option: await itemState.modulePageCollectOption(),
     );
     var setting = Provider.of<SettingProvider>(context, listen: false);
-    setting.data.mModuleLauncher.pinned.add(configuration);
+    setting.data.moduleLauncher.pinned.add(configuration);
     await setting.save();
     return;
   }
@@ -142,8 +142,8 @@ class _MainPageState extends State<MainPage> {
     this._tabIndex = -1;
     {
       var setting = Provider.of<SettingProvider>(this.context, listen: false);
-      setting.state.mHomeShowLauncherPanel = this._showLauncherPanel;
-      setting.state.mHomeInsertTabItem = this._insertTabItem;
+      setting.state.homeShowLauncherPanel = this._showLauncherPanel;
+      setting.state.homeInsertTabItem = this._insertTabItem;
     }
     return;
   }

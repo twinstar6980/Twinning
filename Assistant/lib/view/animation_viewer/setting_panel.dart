@@ -32,7 +32,7 @@ class SettingPanel extends StatelessWidget {
             label: 'Immediate Select',
             content: [
               Text(
-                !this.data.mImmediateSelect ? 'Disabled' : 'Enabled',
+                !this.data.immediateSelect ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium,
               ),
@@ -42,9 +42,9 @@ class SettingPanel extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Switch(
-                  value: this.data.mImmediateSelect,
+                  value: this.data.immediateSelect,
                   onChanged: (value) async {
-                    this.data.mImmediateSelect = value;
+                    this.data.immediateSelect = value;
                     await refreshState(setStateForPanel);
                     await refreshState(setState);
                     this.onUpdate();
@@ -62,7 +62,7 @@ class SettingPanel extends StatelessWidget {
             label: 'Automatic Play',
             content: [
               Text(
-                !this.data.mAutomaticPlay ? 'Disabled' : 'Enabled',
+                !this.data.automaticPlay ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium,
               ),
@@ -72,9 +72,9 @@ class SettingPanel extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Switch(
-                  value: this.data.mAutomaticPlay,
+                  value: this.data.automaticPlay,
                   onChanged: (value) async {
-                    this.data.mAutomaticPlay = value;
+                    this.data.automaticPlay = value;
                     await refreshState(setStateForPanel);
                     await refreshState(setState);
                     this.onUpdate();
@@ -92,7 +92,7 @@ class SettingPanel extends StatelessWidget {
             label: 'Repeat Play',
             content: [
               Text(
-                !this.data.mRepeatPlay ? 'Disabled' : 'Enabled',
+                !this.data.repeatPlay ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium,
               ),
@@ -102,9 +102,9 @@ class SettingPanel extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Switch(
-                  value: this.data.mRepeatPlay,
+                  value: this.data.repeatPlay,
                   onChanged: (value) async {
-                    this.data.mRepeatPlay = value;
+                    this.data.repeatPlay = value;
                     await refreshState(setStateForPanel);
                     await refreshState(setState);
                     this.onUpdate();
@@ -122,7 +122,7 @@ class SettingPanel extends StatelessWidget {
             label: 'Keep Speed',
             content: [
               Text(
-                !this.data.mKeepSpeed ? 'Disabled' : 'Enabled',
+                !this.data.keepSpeed ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium,
               ),
@@ -132,9 +132,9 @@ class SettingPanel extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Switch(
-                  value: this.data.mKeepSpeed,
+                  value: this.data.keepSpeed,
                   onChanged: (value) async {
-                    this.data.mKeepSpeed = value;
+                    this.data.keepSpeed = value;
                     await refreshState(setStateForPanel);
                     await refreshState(setState);
                     this.onUpdate();
@@ -152,7 +152,7 @@ class SettingPanel extends StatelessWidget {
             label: 'Show Boundary',
             content: [
               Text(
-                !this.data.mShowBoundary ? 'Disabled' : 'Enabled',
+                !this.data.showBoundary ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium,
               ),
@@ -162,9 +162,9 @@ class SettingPanel extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Switch(
-                  value: this.data.mShowBoundary,
+                  value: this.data.showBoundary,
                   onChanged: (value) async {
-                    this.data.mShowBoundary = value;
+                    this.data.showBoundary = value;
                     await refreshState(setStateForPanel);
                     await refreshState(setState);
                     this.onUpdate();

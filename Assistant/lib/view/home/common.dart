@@ -1,7 +1,6 @@
 import '/common.dart';
 import '/utility/control_helper.dart';
 import '/utility/system_overlay_helper.dart';
-import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
@@ -830,7 +829,7 @@ class CustomFileDropRegion extends StatelessWidget {
 
   @override
   build(context) {
-    return !(Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+    return !(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh)
       ? this.child
       : DropRegion(
         hitTestBehavior: HitTestBehavior.opaque,
@@ -848,16 +847,16 @@ class CustomFileDropRegion extends StatelessWidget {
               uri!;
               var path = Uri.decodeComponent(uri.path);
               assertTest(path.startsWith('/'));
-              if (Platform.isWindows) {
+              if (SystemChecker.isWindows) {
                 path = path.substring(1);
                 if (uri.authority != '') {
                   path = '//${uri.authority}/${path}';
                 }
               }
-              if (Platform.isLinux) {
+              if (SystemChecker.isLinux) {
                 assertTest(uri.authority == '');
               }
-              if (Platform.isMacOS) {
+              if (SystemChecker.isMacintosh) {
                 if (path.length > 1 && path[path.length - 1] == '/') {
                   path = path.substring(0, path.length - 1);
                 }

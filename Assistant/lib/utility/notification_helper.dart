@@ -28,7 +28,7 @@ class NotificationHelper {
           defaultIcon: AssetsLinuxIcon('asset/logo.png'),
         ),
         windows: WindowsInitializationSettings(
-          appName: kApplicationName,
+          appName: ApplicationInformation.name,
           appUserModelId: 'TwinStar.Twinning.Assistant.Notification',
           guid: '3FCD5C89-78F3-489B-88E5-37CBC3C3FC1A',
           iconPath: 'asset/logo.png',

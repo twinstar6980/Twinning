@@ -35,7 +35,7 @@ class BlankPage extends StatelessWidget {
             disabledElevation: 0,
             child: Icon(IconSymbols.widgets, size: 128),
             onPressed: () async {
-              Provider.of<SettingProvider>(context, listen: false).state.mHomeShowLauncherPanel!();
+              Provider.of<SettingProvider>(context, listen: false).state.homeShowLauncherPanel!();
             },
           ),
         ),

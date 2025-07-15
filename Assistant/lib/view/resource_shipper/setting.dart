@@ -3,14 +3,14 @@ import '/common.dart';
 // ----------------
 
 class Setting {
-  String  mOptionConfiguration;
-  Boolean mParallelForward;
-  Boolean mEnableFilter;
-  Boolean mEnableBatch;
+  String  optionConfiguration;
+  Boolean parallelForward;
+  Boolean enableFilter;
+  Boolean enableBatch;
   Setting({
-    required this.mOptionConfiguration,
-    required this.mParallelForward,
-    required this.mEnableFilter,
-    required this.mEnableBatch,
+    required this.optionConfiguration,
+    required this.parallelForward,
+    required this.enableFilter,
+    required this.enableBatch,
   });
 }
