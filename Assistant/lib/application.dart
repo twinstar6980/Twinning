@@ -26,47 +26,58 @@ class Application extends StatelessWidget {
       value: this.setting,
       child: Consumer<SettingProvider>(
         builder: (context, setting, child) => DynamicColorBuilder(
-          builder: (lightColor, darkColor) => MaterialApp(
-            navigatorKey: setting.state.applicationNavigatorKey,
-            theme: ThemeData(
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              visualDensity: VisualDensity.standard,
-              brightness: Brightness.light,
-              colorScheme: !setting.data.themeColorState ? lightColor : ColorScheme.fromSeed(seedColor: setting.data.themeColorLight, brightness: Brightness.light),
-              fontFamily: '',
-              fontFamilyFallback: [...setting.state.themeFontFamliy],
-              tooltipTheme: TooltipTheme.of(context).copyWith(
-                waitDuration: Duration(milliseconds: 1000),
+          builder: (lightColor, darkColor) {
+            // NOTE : fix for dynamic color error on flutter 3.22+. see https://github.com/material-foundation/flutter-packages/issues/582#issuecomment-2209591668
+            if (SystemChecker.isAndroid) {
+              if (lightColor != null) {
+                lightColor = ColorScheme.fromSeed(seedColor: lightColor.primary, brightness: Brightness.light);
+              }
+              if (darkColor != null) {
+                darkColor = ColorScheme.fromSeed(seedColor: darkColor.primary, brightness: Brightness.dark);
+              }
+            }
+            return MaterialApp(
+              navigatorKey: setting.state.applicationNavigatorKey,
+              theme: ThemeData(
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                visualDensity: VisualDensity.standard,
+                brightness: Brightness.light,
+                colorScheme: !setting.data.themeColorState ? lightColor : ColorScheme.fromSeed(seedColor: setting.data.themeColorLight, brightness: Brightness.light),
+                fontFamily: '',
+                fontFamilyFallback: [...setting.state.themeFontFamliy],
+                tooltipTheme: TooltipTheme.of(context).copyWith(
+                  waitDuration: Duration(milliseconds: 1000),
+                ),
+                progressIndicatorTheme: ProgressIndicatorThemeData(
+                  year2023: false,
+                ),
+                sliderTheme: SliderThemeData(
+                  year2023: false,
+                ),
               ),
-              progressIndicatorTheme: ProgressIndicatorThemeData(
-                year2023: false,
+              darkTheme: ThemeData(
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                visualDensity: VisualDensity.standard,
+                brightness: Brightness.dark,
+                colorScheme: !setting.data.themeColorState ? darkColor : ColorScheme.fromSeed(seedColor: setting.data.themeColorDark, brightness: Brightness.dark),
+                fontFamily: '',
+                fontFamilyFallback: [...setting.state.themeFontFamliy],
+                tooltipTheme: TooltipTheme.of(context).copyWith(
+                  waitDuration: Duration(milliseconds: 1000),
+                ),
+                progressIndicatorTheme: ProgressIndicatorThemeData(
+                  year2023: false,
+                ),
+                sliderTheme: SliderThemeData(
+                  year2023: false,
+                ),
               ),
-              sliderTheme: SliderThemeData(
-                year2023: false,
-              ),
-            ),
-            darkTheme: ThemeData(
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              visualDensity: VisualDensity.standard,
-              brightness: Brightness.dark,
-              colorScheme: !setting.data.themeColorState ? darkColor : ColorScheme.fromSeed(seedColor: setting.data.themeColorDark, brightness: Brightness.dark),
-              fontFamily: '',
-              fontFamilyFallback: [...setting.state.themeFontFamliy],
-              tooltipTheme: TooltipTheme.of(context).copyWith(
-                waitDuration: Duration(milliseconds: 1000),
-              ),
-              progressIndicatorTheme: ProgressIndicatorThemeData(
-                year2023: false,
-              ),
-              sliderTheme: SliderThemeData(
-                year2023: false,
-              ),
-            ),
-            themeMode: setting.data.themeMode,
-            scrollBehavior: MaterialScrollBehavior().copyWith(scrollbars: false),
-            title: ApplicationInformation.name,
-            home: home.MainPage(),
-          ),
+              themeMode: setting.data.themeMode,
+              scrollBehavior: MaterialScrollBehavior().copyWith(scrollbars: false),
+              title: ApplicationInformation.name,
+              home: home.MainPage(),
+            );
+          },
         ),
       ),
     );

@@ -93,7 +93,7 @@ class _CustomFullDialogState extends State<CustomFullDialog> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         ...this.widget.contentBuilder(context, setStateForPanel),
-                        SizedBox(height: MediaQuery.of(context).viewPadding.bottom),
+                        SizedBox(height: MediaQuery.viewPaddingOf(context).bottom),
                       ],
                     ),
                   ),
@@ -276,7 +276,7 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     ...this.widget.contentBuilder(context, setStateForPanel),
-                    SizedBox(height: MediaQuery.of(context).viewPadding.bottom),
+                    SizedBox(height: MediaQuery.viewPaddingOf(context).bottom),
                   ],
                 ),
               ),
