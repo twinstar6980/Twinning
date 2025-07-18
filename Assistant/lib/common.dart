@@ -1,6 +1,7 @@
 import 'dart:core' as core;
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 // ----------------
@@ -19,7 +20,7 @@ final class ApplicationInformation {
 
   static const String name = 'Twinning Assistant';
 
-  static const String version = '79';
+  static const String version = '80';
 
   static const String developer = 'TwinStar';
 
@@ -84,4 +85,51 @@ core.Future<Void> refreshState(
   setState(() {});
   await WidgetsBinding.instance.endOfFrame;
   return;
+}
+
+extension CommonWidgetExtension<TType extends Widget> on TType {
+
+  Widget withExpanded({
+    Integer? flex = null,
+  }) {
+    flex ??= 1;
+    return Expanded(
+      flex: flex,
+      child: this,
+    );
+  }
+
+  SelectionArea withSelectionArea({
+    ValueChanged<SelectedContent?>? onSelectionChanged = null,
+  }) {
+    return SelectionArea(
+      onSelectionChanged: onSelectionChanged,
+      child: this,
+    );
+  }
+
+  Scrollbar withScrollbar({
+    Boolean?          interactive = null,
+    ScrollController? controller = null,
+  }) {
+    interactive ??= true;
+    return Scrollbar(
+      interactive: interactive,
+      controller: controller,
+      child: this,
+    );
+  }
+
+  SingleChildScrollView withSingleChildScrollView({
+    Axis?             scrollDirection = null,
+    ScrollController? controller      = null,
+  }) {
+    scrollDirection ??= Axis.vertical;
+    return SingleChildScrollView(
+      scrollDirection: scrollDirection,
+      controller: controller,
+      child: this,
+    );
+  }
+
 }

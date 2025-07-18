@@ -173,34 +173,30 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
       onDropFile: null,
       content: Column(
         children: [
-          Expanded(
-            child: Scrollbar(
-              interactive: true,
-              controller: this._commandListScrollController,
-              child: ListView.builder(
-                padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
-                controller: this._commandListScrollController,
-                itemCount: this._command.length,
-                itemBuilder: (context, index) => Container(
-                  padding: EdgeInsets.fromLTRB(0, 6, 0, 6),
-                  child: CommandPanel(
-                    key: ObjectKey(this._command[index]),
-                    groupConfiguration: this._command[index].$1,
-                    itemConfiguration: this._command[index].$2,
-                    enableBatch: this._command[index].$3,
-                    argumentValue: this._command[index].$4,
-                    collapse: this._command[index].$5,
-                    onRemove: () async {
-                      await this._removeCommand(index);
-                    },
-                    onForward: () async {
-                      await this._forwardCommand([index]);
-                    },
-                  ),
-                ),
+          ListView.builder(
+            padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
+            controller: this._commandListScrollController,
+            itemCount: this._command.length,
+            itemBuilder: (context, index) => Container(
+              padding: EdgeInsets.fromLTRB(0, 6, 0, 6),
+              child: CommandPanel(
+                key: ObjectKey(this._command[index]),
+                groupConfiguration: this._command[index].$1,
+                itemConfiguration: this._command[index].$2,
+                enableBatch: this._command[index].$3,
+                argumentValue: this._command[index].$4,
+                collapse: this._command[index].$5,
+                onRemove: () async {
+                  await this._removeCommand(index);
+                },
+                onForward: () async {
+                  await this._forwardCommand([index]);
+                },
               ),
             ),
-          ),
+          ).withScrollbar(
+            controller: this._commandListScrollController,
+          ).withExpanded(),
         ],
       ),
       bottom: CustomBottomBarContent(

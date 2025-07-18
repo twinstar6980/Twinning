@@ -33,95 +33,91 @@ class LauncherPanel extends StatelessWidget {
           Row(
             children: [
               SizedBox(width: 16),
-              Expanded(
-                child: FilledButton.icon(
-                  icon: Icon(IconSymbols.keyboard_command_key),
-                  label: Text(
-                    'Command',
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  onPressed: () async {
-                    var command = <String>[];
-                    var canContinue = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
-                      title: 'Command',
-                      contentBuilder: (context, setStateForPanel) => [
-                        CustomTextField(
-                          keyboardType: TextInputType.multiline,
-                          inputFormatters: [],
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                            filled: false,
-                            border: OutlineInputBorder(),
-                          ),
-                          value: ConvertHelper.makeStringListToStringWithLine(command),
-                          onChanged: (value) async {
-                            command = ConvertHelper.parseStringListFromStringWithLine(value);
-                            await refreshState(setStateForPanel);
-                          },
-                        ),
-                      ],
-                      actionBuilder: (context) => [
-                        TextButton(
-                          child: Text('Cancel'),
-                          onPressed: () => Navigator.pop(context, false),
-                        ),
-                        TextButton(
-                          child: Text('Continue'),
-                          onPressed: () => Navigator.pop(context, true),
-                        ),
-                      ],
-                    )) ?? false;
-                    if (canContinue) {
-                      await Provider.of<SettingProvider>(context, listen: false).state.handleCommand!(command);
-                    }
-                  },
+              FilledButton.icon(
+                icon: Icon(IconSymbols.keyboard_command_key),
+                label: Text(
+                  'Command',
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
+                onPressed: () async {
+                  var command = <String>[];
+                  var canContinue = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
+                    title: 'Command',
+                    contentBuilder: (context, setStateForPanel) => [
+                      CustomTextField(
+                        keyboardType: TextInputType.multiline,
+                        inputFormatters: [],
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                          filled: false,
+                          border: OutlineInputBorder(),
+                        ),
+                        value: ConvertHelper.makeStringListToStringWithLine(command),
+                        onChanged: (value) async {
+                          command = ConvertHelper.parseStringListFromStringWithLine(value);
+                          await refreshState(setStateForPanel);
+                        },
+                      ),
+                    ],
+                    actionBuilder: (context) => [
+                      TextButton(
+                        child: Text('Cancel'),
+                        onPressed: () => Navigator.pop(context, false),
+                      ),
+                      TextButton(
+                        child: Text('Continue'),
+                        onPressed: () => Navigator.pop(context, true),
+                      ),
+                    ],
+                  )) ?? false;
+                  if (canContinue) {
+                    await Provider.of<SettingProvider>(context, listen: false).state.handleCommand!(command);
+                  }
+                },
+              ).withExpanded(),
               SizedBox(width: 12),
-              Expanded(
-                child: FilledButton.tonalIcon(
-                  icon: Icon(IconSymbols.send_time_extension),
-                  label: Text(
-                    'Forward',
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  onPressed: () async {
-                    var resource = <String>[];
-                    var canContinue = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
-                      title: 'Forward',
-                      contentBuilder: (context, setStateForPanel) => [
-                        CustomTextField(
-                          keyboardType: TextInputType.multiline,
-                          inputFormatters: [],
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                            filled: false,
-                            border: OutlineInputBorder(),
-                          ),
-                          value: ConvertHelper.makeStringListToStringWithLine(resource),
-                          onChanged: (value) async {
-                            resource = ConvertHelper.parseStringListFromStringWithLine(value);
-                            await refreshState(setStateForPanel);
-                          },
-                        ),
-                      ],
-                      actionBuilder: (context) => [
-                        TextButton(
-                          child: Text('Cancel'),
-                          onPressed: () => Navigator.pop(context, false),
-                        ),
-                        TextButton(
-                          child: Text('Continue'),
-                          onPressed: () => Navigator.pop(context, true),
-                        ),
-                      ],
-                    )) ?? false;
-                    if (canContinue) {
-                      await Provider.of<SettingProvider>(context, listen: false).state.handleForward!(resource);
-                    }
-                  },
+              FilledButton.tonalIcon(
+                icon: Icon(IconSymbols.send_time_extension),
+                label: Text(
+                  'Forward',
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
+                onPressed: () async {
+                  var resource = <String>[];
+                  var canContinue = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
+                    title: 'Forward',
+                    contentBuilder: (context, setStateForPanel) => [
+                      CustomTextField(
+                        keyboardType: TextInputType.multiline,
+                        inputFormatters: [],
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                          filled: false,
+                          border: OutlineInputBorder(),
+                        ),
+                        value: ConvertHelper.makeStringListToStringWithLine(resource),
+                        onChanged: (value) async {
+                          resource = ConvertHelper.parseStringListFromStringWithLine(value);
+                          await refreshState(setStateForPanel);
+                        },
+                      ),
+                    ],
+                    actionBuilder: (context) => [
+                      TextButton(
+                        child: Text('Cancel'),
+                        onPressed: () => Navigator.pop(context, false),
+                      ),
+                      TextButton(
+                        child: Text('Continue'),
+                        onPressed: () => Navigator.pop(context, true),
+                      ),
+                    ],
+                  )) ?? false;
+                  if (canContinue) {
+                    await Provider.of<SettingProvider>(context, listen: false).state.handleForward!(resource);
+                  }
+                },
+              ).withExpanded(),
               SizedBox(width: 16),
             ],
           ),

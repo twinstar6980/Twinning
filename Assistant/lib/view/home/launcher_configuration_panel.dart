@@ -32,14 +32,12 @@ class LauncherConfigurationPanel extends StatelessWidget {
             icon: IconSymbols.text_fields,
             label: 'Title',
             content: [
-              Expanded(
-                child: Text(
-                  this.data.title,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.right,
-                  style: theme.textTheme.bodyMedium,
-                ),
-              ),
+              Text(
+                this.data.title,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.right,
+                style: theme.textTheme.bodyMedium,
+              ).withExpanded(),
             ],
             onTap: null,
             panelBuilder: (context, setStateForPanel) => [
@@ -68,14 +66,12 @@ class LauncherConfigurationPanel extends StatelessWidget {
             icon: IconSymbols.label,
             label: 'Type',
             content: [
-              Expanded(
-                child: Text(
-                  ModuleHelper.query(this.data.type).name,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.right,
-                  style: theme.textTheme.bodyMedium,
-                ),
-              ),
+              Text(
+                ModuleHelper.query(this.data.type).name,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.right,
+                style: theme.textTheme.bodyMedium,
+              ).withExpanded(),
             ],
             onTap: null,
             panelBuilder: (context, setStateForPanel) => [
@@ -104,14 +100,12 @@ class LauncherConfigurationPanel extends StatelessWidget {
             icon: IconSymbols.format_list_bulleted,
             label: 'Option',
             content: [
-              Expanded(
-                child: Text(
-                  '${this.data.option.length}',
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.right,
-                  style: theme.textTheme.bodyMedium,
-                ),
-              ),
+              Text(
+                '${this.data.option.length}',
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.right,
+                style: theme.textTheme.bodyMedium,
+              ).withExpanded(),
             ],
             onTap: null,
             panelBuilder: (context, setStateForPanel) => [

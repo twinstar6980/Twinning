@@ -39,14 +39,11 @@ class _Main {
         contentBuilder: (context, setStateForPanel) => [
           Row(
             children: [
-              Expanded(
-                child: SelectionArea(
-                  child: Text(
-                    '${exception}\n${stack}',
-                    overflow: TextOverflow.clip,
-                  ),
-                ),
-              ),
+              Text(
+                '${exception}\n${stack}',
+                overflow: TextOverflow.clip,
+              ).withSelectionArea(
+              ).withExpanded(),
             ],
           ),
         ],

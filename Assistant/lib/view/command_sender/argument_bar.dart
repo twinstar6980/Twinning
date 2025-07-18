@@ -35,15 +35,13 @@ class _BasicArgumentBar extends StatelessWidget {
         Row(
           children: [
             SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                this.name,
-                overflow: TextOverflow.clip,
-                style: theme.textTheme.labelLarge?.copyWith(
-                  color: theme.colorScheme.primary,
-                ),
+            Text(
+              this.name,
+              overflow: TextOverflow.clip,
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: theme.colorScheme.primary,
               ),
-            ),
+            ).withExpanded(),
           ],
         ),
         this.content,

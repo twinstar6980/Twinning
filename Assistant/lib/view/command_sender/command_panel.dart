@@ -47,13 +47,11 @@ class CommandPanel extends StatelessWidget {
               Row(
                 children: [
                   SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      '${this.groupConfiguration.name} - ${this.itemConfiguration.name}',
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.titleMedium,
-                    ),
-                  ),
+                  Text(
+                    '${this.groupConfiguration.name} - ${this.itemConfiguration.name}',
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.titleMedium,
+                  ).withExpanded(),
                   SizedBox(width: 8),
                   IconButton(
                     tooltip: !this.collapse.value ? 'Collapse' : 'Expand',
@@ -98,27 +96,22 @@ class CommandPanel extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.baseline,
                       textBaseline: theme.textTheme.labelLarge?.textBaseline,
                       children: [
-                        Expanded(
-                          child: Text(
-                            argumentConfiguration.name,
-                            overflow: TextOverflow.clip,
-                            textAlign: TextAlign.start,
-                            style: theme.textTheme.labelLarge?.copyWith(
-                              color: theme.colorScheme.primary,
-                            ),
+                        Text(
+                          argumentConfiguration.name,
+                          overflow: TextOverflow.clip,
+                          textAlign: TextAlign.start,
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            color: theme.colorScheme.primary,
                           ),
-                        ),
+                        ).withExpanded(),
                         SizedBox(width: 8),
-                        Expanded(
-                          child: SelectionArea(
-                            child: Text(
-                              ValueExpressionHelper.makeString(this.argumentValue[argumentIndex].value!),
-                              overflow: TextOverflow.clip,
-                              textAlign: TextAlign.end,
-                              style: theme.textTheme.bodyMedium,
-                            ),
-                          ),
-                        ),
+                        Text(
+                          ValueExpressionHelper.makeString(this.argumentValue[argumentIndex].value!),
+                          overflow: TextOverflow.clip,
+                          textAlign: TextAlign.end,
+                          style: theme.textTheme.bodyMedium,
+                        ).withSelectionArea(
+                        ).withExpanded(),
                       ],
                     ),
                   ),
@@ -130,9 +123,7 @@ class CommandPanel extends StatelessWidget {
               SizedBox(height: 8),
               Row(
                 children: [
-                  Expanded(
-                    child: SizedBox(),
-                  ),
+                  SizedBox().withExpanded(),
                   SizedBox(width: 8),
                   IconButton.filledTonal(
                     style: ButtonStyle(

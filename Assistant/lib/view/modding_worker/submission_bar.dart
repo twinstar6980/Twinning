@@ -121,9 +121,7 @@ class _BasicSubmissionBar extends StatelessWidget {
           ),
         ),
         SizedBox(width: 16),
-        Expanded(
-          child: this.content,
-        ),
+        this.content.withExpanded(),
       ],
     );
   }

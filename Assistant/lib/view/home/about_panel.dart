@@ -20,25 +20,21 @@ class AboutPanel extends StatelessWidget {
       children: [
         Row(
           children: [
-            Expanded(
-              child: Text(
-                '${ApplicationInformation.name} - v${ApplicationInformation.version}',
-                overflow: TextOverflow.clip,
-                style: theme.textTheme.titleMedium,
-              ),
-            ),
+            Text(
+              '${ApplicationInformation.name} - v${ApplicationInformation.version}',
+              overflow: TextOverflow.clip,
+              style: theme.textTheme.titleMedium,
+            ).withExpanded(),
           ],
         ),
         SizedBox(height: 8),
         Row(
           children: [
-            Expanded(
-              child: Text(
-                '© ${ApplicationInformation.year} ${ApplicationInformation.developer}. All rights reserved.',
-                overflow: TextOverflow.clip,
-                style: theme.textTheme.bodyMedium,
-              ),
-            ),
+            Text(
+              '© ${ApplicationInformation.year} ${ApplicationInformation.developer}. All rights reserved.',
+              overflow: TextOverflow.clip,
+              style: theme.textTheme.bodyMedium,
+            ).withExpanded(),
           ],
         ),
       ],

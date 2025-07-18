@@ -263,7 +263,7 @@ class CustomMethodChannel {
 				check(cursor.columnCount == 1)
 				check(cursor.moveToFirst())
 				value = when (T::class.java) {
-					java.lang.Long::class.java -> cursor.getLongOrNull(0)as T?
+					java.lang.Long::class.java -> cursor.getLongOrNull(0) as T?
 					java.lang.Float::class.java -> cursor.getFloatOrNull(0) as T?
 					java.lang.String::class.java -> cursor.getStringOrNull(0) as T?
 					else -> throw Exception()

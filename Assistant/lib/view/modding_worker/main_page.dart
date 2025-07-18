@@ -242,19 +242,14 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
       onDropFile: null,
       content: Column(
         children: [
-          Expanded(
-            child: SelectionArea(
-              child: Scrollbar(
-                interactive: true,
-                controller: this._messageListScrollController,
-                child: ListView(
-                  padding: EdgeInsets.fromLTRB(12, 4, 12, 4),
-                  controller: this._messageListScrollController,
-                  children: [...this._messageList],
-                ),
-              ),
-            ),
-          ),
+          ListView(
+            padding: EdgeInsets.fromLTRB(12, 4, 12, 4),
+            controller: this._messageListScrollController,
+            children: [...this._messageList],
+          ).withScrollbar(
+            controller: this._messageListScrollController,
+          ).withSelectionArea(
+          ).withExpanded(),
           LinearProgressIndicator(
             value: !this._sessionRunning ? 1 : this._submissionBar.type == null ? null : 1,
             color: !this._sessionRunning ? null : this._submissionBar.type == null ? null : theme.colorScheme.tertiary,

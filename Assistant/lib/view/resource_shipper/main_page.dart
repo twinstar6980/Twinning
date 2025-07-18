@@ -228,29 +228,25 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
       },
       content: Column(
         children: [
-          Expanded(
-            child: Scrollbar(
-              interactive: true,
-              controller: this._optionListScrollController,
-              child: ListView.builder(
-                padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-                controller: this._optionListScrollController,
-                itemCount: this._optionConfiguration.length,
-                itemBuilder: (context, index) => OptionGroupItem(
-                  configuration: this._optionConfiguration[index],
-                  match: this._optionMatch[index],
-                  enableFilter: this._enableFilter,
-                  enableBatch: this._enableBatch,
-                  onSelect: this._forwardResource,
-                  collapse: this._optionCollapse[index],
-                  onToggle: () async {
-                    this._optionCollapse[index] = !this._optionCollapse[index];
-                    await refreshState(this.setState);
-                  },
-                ),
-              ),
+          ListView.builder(
+            padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+            controller: this._optionListScrollController,
+            itemCount: this._optionConfiguration.length,
+            itemBuilder: (context, index) => OptionGroupItem(
+              configuration: this._optionConfiguration[index],
+              match: this._optionMatch[index],
+              enableFilter: this._enableFilter,
+              enableBatch: this._enableBatch,
+              onSelect: this._forwardResource,
+              collapse: this._optionCollapse[index],
+              onToggle: () async {
+                this._optionCollapse[index] = !this._optionCollapse[index];
+                await refreshState(this.setState);
+              },
             ),
-          ),
+          ).withScrollbar(
+            controller: this._optionListScrollController,
+          ).withExpanded(),
         ],
       ),
       bottom: CustomBottomBarContent(
@@ -272,67 +268,63 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                   Row(
                     children: [
                       SizedBox(width: 16),
-                      Expanded(
-                        child: FilledButton.icon(
-                          icon: Icon(IconSymbols.tab_close),
-                          label: Text(
-                            'Remove All',
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          onPressed: () async {
-                            if (await ControlHelper.showDialogForConfirm(context)) {
-                              await this._removeResource(this._resource.map((value) => value.$1).toList());
-                              await refreshState(setStateForPanel);
-                            }
-                          },
+                      FilledButton.icon(
+                        icon: Icon(IconSymbols.tab_close),
+                        label: Text(
+                          'Remove All',
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
+                        onPressed: () async {
+                          if (await ControlHelper.showDialogForConfirm(context)) {
+                            await this._removeResource(this._resource.map((value) => value.$1).toList());
+                            await refreshState(setStateForPanel);
+                          }
+                        },
+                      ).withExpanded(),
                       SizedBox(width: 12),
-                      Expanded(
-                        child: FilledButton.icon(
-                          icon: Icon(IconSymbols.note_stack_add),
-                          label: Text(
-                            'Append New',
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          onPressed: () async {
-                            var item = <String>[];
-                            var canContinue = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
-                              title: 'Append New',
-                              contentBuilder: (context, setStateForPanelInner) => [
-                                CustomTextField(
-                                  keyboardType: TextInputType.multiline,
-                                  inputFormatters: [],
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                                    filled: false,
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  value: ConvertHelper.makeStringListToStringWithLine(item),
-                                  onChanged: (value) async {
-                                    item = ConvertHelper.parseStringListFromStringWithLine(value).map(StorageHelper.regularize).toList();
-                                    await refreshState(setStateForPanelInner);
-                                  },
-                                ),
-                              ],
-                              actionBuilder: (context) => [
-                                TextButton(
-                                  child: Text('Cancel'),
-                                  onPressed: () => Navigator.pop(context, false),
-                                ),
-                                TextButton(
-                                  child: Text('Continue'),
-                                  onPressed: () => Navigator.pop(context, true),
-                                ),
-                              ],
-                            )) ?? false;
-                            if (canContinue) {
-                              await this._appendResource(item);
-                              await refreshState(setStateForPanel);
-                            }
-                          },
+                      FilledButton.icon(
+                        icon: Icon(IconSymbols.note_stack_add),
+                        label: Text(
+                          'Append New',
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
+                        onPressed: () async {
+                          var item = <String>[];
+                          var canContinue = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
+                            title: 'Append New',
+                            contentBuilder: (context, setStateForPanelInner) => [
+                              CustomTextField(
+                                keyboardType: TextInputType.multiline,
+                                inputFormatters: [],
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                                  filled: false,
+                                  border: OutlineInputBorder(),
+                                ),
+                                value: ConvertHelper.makeStringListToStringWithLine(item),
+                                onChanged: (value) async {
+                                  item = ConvertHelper.parseStringListFromStringWithLine(value).map(StorageHelper.regularize).toList();
+                                  await refreshState(setStateForPanelInner);
+                                },
+                              ),
+                            ],
+                            actionBuilder: (context) => [
+                              TextButton(
+                                child: Text('Cancel'),
+                                onPressed: () => Navigator.pop(context, false),
+                              ),
+                              TextButton(
+                                child: Text('Continue'),
+                                onPressed: () => Navigator.pop(context, true),
+                              ),
+                            ],
+                          )) ?? false;
+                          if (canContinue) {
+                            await this._appendResource(item);
+                            await refreshState(setStateForPanel);
+                          }
+                        },
+                      ).withExpanded(),
                       SizedBox(width: 16),
                     ],
                   ),
@@ -340,39 +332,35 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                   Row(
                     children: [
                       SizedBox(width: 16),
-                      Expanded(
-                        child: FilledButton.tonalIcon(
-                          icon: Icon(IconSymbols.note_add),
-                          label: Text(
-                            'Pick File',
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          onPressed: () async {
-                            var item = await StorageHelper.pickLoadFile(context, 'ResourceShipper.Resource');
-                            if (item != null) {
-                              await this._appendResource([item]);
-                              await refreshState(setStateForPanel);
-                            }
-                          },
+                      FilledButton.tonalIcon(
+                        icon: Icon(IconSymbols.note_add),
+                        label: Text(
+                          'Pick File',
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
+                        onPressed: () async {
+                          var item = await StorageHelper.pickLoadFile(context, 'ResourceShipper.Resource');
+                          if (item != null) {
+                            await this._appendResource([item]);
+                            await refreshState(setStateForPanel);
+                          }
+                        },
+                      ).withExpanded(),
                       SizedBox(width: 12),
-                      Expanded(
-                        child: FilledButton.tonalIcon(
-                          icon: Icon(IconSymbols.create_new_folder),
-                          label: Text(
-                            'Pick Directory',
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          onPressed: () async {
-                            var item = await StorageHelper.pickLoadDirectory(context, 'ResourceShipper.Resource');
-                            if (item != null) {
-                              await this._appendResource([item]);
-                              await refreshState(setStateForPanel);
-                            }
-                          },
+                      FilledButton.tonalIcon(
+                        icon: Icon(IconSymbols.create_new_folder),
+                        label: Text(
+                          'Pick Directory',
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
+                        onPressed: () async {
+                          var item = await StorageHelper.pickLoadDirectory(context, 'ResourceShipper.Resource');
+                          if (item != null) {
+                            await this._appendResource([item]);
+                            await refreshState(setStateForPanel);
+                          }
+                        },
+                      ).withExpanded(),
                       SizedBox(width: 16),
                     ],
                   ),

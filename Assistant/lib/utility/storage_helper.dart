@@ -462,14 +462,11 @@ class StorageHelper {
         contentBuilder: (context, setStateForPanel) => [
           Row(
             children: [
-              Expanded(
-                child: SelectionArea(
-                  child: Text(
-                    uri.toString(),
-                    overflow: TextOverflow.clip,
-                  ),
-                ),
-              ),
+              Text(
+                uri.toString(),
+                overflow: TextOverflow.clip,
+              ).withSelectionArea(
+              ).withExpanded(),
             ],
           ),
         ],

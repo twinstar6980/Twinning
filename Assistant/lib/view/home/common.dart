@@ -82,24 +82,20 @@ class _CustomFullDialogState extends State<CustomFullDialog> {
         ),
         body: Column(
           children: [
-            Expanded(
-              child: Scrollbar(
-                interactive: true,
-                controller: this._scrollController,
-                child: SingleChildScrollView(
-                  controller: this._scrollController,
-                  child: StatefulBuilder(
-                    builder: (context, setStateForPanel) => Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ...this.widget.contentBuilder(context, setStateForPanel),
-                        SizedBox(height: MediaQuery.viewPaddingOf(context).bottom),
-                      ],
-                    ),
-                  ),
-                ),
+            StatefulBuilder(
+              builder: (context, setStateForPanel) => Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ...this.widget.contentBuilder(context, setStateForPanel),
+                  SizedBox(height: MediaQuery.viewPaddingOf(context).bottom),
+                ],
               ),
-            ),
+            ).withSingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              controller: this._scrollController,
+            ).withScrollbar(
+              controller: this._scrollController,
+            ).withExpanded(),
           ],
         ),
       ),
@@ -167,18 +163,16 @@ class _CustomModalDialogState extends State<CustomModalDialog> {
         this.widget.title,
         overflow: TextOverflow.ellipsis,
       ),
-      content: Scrollbar(
-        interactive: true,
-        controller: this._scrollController,
-        child: SingleChildScrollView(
-          controller: this._scrollController,
-          child: StatefulBuilder(
-            builder: (context, setStateForPanel) => Column(
-              mainAxisSize: MainAxisSize.min,
-              children: this.widget.contentBuilder(context, setStateForPanel),
-            ),
-          ),
+      content: StatefulBuilder(
+        builder: (context, setStateForPanel) => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: this.widget.contentBuilder(context, setStateForPanel),
         ),
+      ).withSingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        controller: this._scrollController,
+      ).withScrollbar(
+        controller: this._scrollController,
       ),
       actions: this.widget.actionBuilder == null
         ? [
@@ -252,37 +246,31 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
           padding: EdgeInsets.fromLTRB(24, 12, 24, 12),
           child: Row(
             children: [
-              Expanded(
-                child: Text(
-                  this.widget.title,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: theme.colorScheme.primary,
-                  ),
+              Text(
+                this.widget.title,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: theme.colorScheme.primary,
                 ),
-              ),
+              ).withExpanded(),
             ],
           ),
         ),
         Divider(height: 1, indent: 12, endIndent: 12),
-        Expanded(
-          child: Scrollbar(
-            interactive: true,
-            controller: this._scrollController,
-            child: SingleChildScrollView(
-              controller: this._scrollController,
-              child: StatefulBuilder(
-                builder: (context, setStateForPanel) => Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ...this.widget.contentBuilder(context, setStateForPanel),
-                    SizedBox(height: MediaQuery.viewPaddingOf(context).bottom),
-                  ],
-                ),
-              ),
-            ),
+        StatefulBuilder(
+          builder: (context, setStateForPanel) => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ...this.widget.contentBuilder(context, setStateForPanel),
+              SizedBox(height: MediaQuery.viewPaddingOf(context).bottom),
+            ],
           ),
-        ),
+        ).withSingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          controller: this._scrollController,
+        ).withScrollbar(
+          controller: this._scrollController,
+        ).withExpanded(),
       ],
     );
   }
@@ -314,13 +302,11 @@ class CustomTitleBar extends StatelessWidget {
         SizedBox(width: 8),
         this.leading,
         SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            this.title,
-            overflow: TextOverflow.ellipsis,
-            style: theme.textTheme.titleLarge,
-          ),
-        ),
+        Text(
+          this.title,
+          overflow: TextOverflow.ellipsis,
+          style: theme.textTheme.titleLarge,
+        ).withExpanded(),
         SizedBox(width: 8),
       ],
     );
@@ -349,11 +335,9 @@ class CustomBottomBarContent extends StatelessWidget {
   build(context) {
     return Row(
       children: [
-        Expanded(
-          child: Row(
-            children: this.secondary,
-          ),
-        ),
+        Row(
+          children: this.secondary,
+        ).withExpanded(),
         if (this.primary != null)
           SizedBox(width: 16),
         if (this.primary != null)
@@ -434,15 +418,13 @@ class CustomNavigationDrawerItem extends StatelessWidget {
             SizedBox(width: 16),
             Icon(this.icon),
             SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                this.label,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  color: !this.selected ? theme.colorScheme.onSurface : theme.colorScheme.surfaceTint,
-                ),
+            Text(
+              this.label,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.titleSmall?.copyWith(
+                color: !this.selected ? theme.colorScheme.onSurface : theme.colorScheme.surfaceTint,
               ),
-            ),
+            ).withExpanded(),
             SizedBox(width: 12),
             ...this.action,
             SizedBox(width: 12),
@@ -539,12 +521,10 @@ class CustomSettingItem extends StatelessWidget {
       leading: Icon(this.icon),
       title: Row(
         children: [
-          Expanded(
-            child: Text(
-              this.label,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
+          Text(
+            this.label,
+            overflow: TextOverflow.ellipsis,
+          ).withExpanded(),
           SizedBox(width: 16),
           ...this.content,
         ],
@@ -902,15 +882,13 @@ class CustomModulePageRegion extends StatelessWidget {
       onDrop: this.onDropFile,
       child: Column(
         children: [
-          Expanded(
-            child: MediaQuery(
-              data: MediaQuery.of(context).copyWith(
-                padding: EdgeInsets.zero,
-                viewPadding: EdgeInsets.zero,
-              ),
-              child: this.content,
+          MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              padding: EdgeInsets.zero,
+              viewPadding: EdgeInsets.zero,
             ),
-          ),
+            child: this.content,
+          ).withExpanded(),
           BottomAppBar(
             child: this.bottom,
           ),
