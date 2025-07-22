@@ -24,6 +24,3 @@ includes('./third/quickjs_ng')
 includes('./kernel')
 
 includes('./test')
-if m.system:is('windows', 'linux', 'macintosh') then
-	includes('./../Shell/third/tinyfiledialogs')
-end

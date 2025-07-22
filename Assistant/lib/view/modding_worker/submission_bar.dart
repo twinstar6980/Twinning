@@ -660,10 +660,10 @@ class _PathSubmissionBar extends StatelessWidget {
                     position: PopupMenuPosition.under,
                     icon: Icon(IconSymbols.adjust),
                     itemBuilder: (context) => [
-                      (':g', 'Generate'),
-                      (':m', 'Move'),
-                      (':d', 'Delete'),
-                      (':o', 'Overwrite'),
+                      ('=g', 'Generate'),
+                      ('=m', 'Move'),
+                      ('=d', 'Delete'),
+                      ('=o', 'Overwrite'),
                     ].map((value) => PopupMenuItem(
                       value: value.$1,
                       child: Text(
@@ -702,9 +702,9 @@ class _PathSubmissionBar extends StatelessWidget {
                     )).toList(),
                     onSelected: (value) async {
                       var target = switch (value) {
-                        'load_file'      => await StorageHelper.pickLoadFile(context, 'CommandSender.Generic'),
-                        'load_directory' => await StorageHelper.pickLoadDirectory(context, 'CommandSender.Generic'),
-                        'save_file'      => await StorageHelper.pickSaveFile(context, 'CommandSender.Generic'),
+                        'load_file'      => await StorageHelper.pickLoadFile(context, '@ModdingWorker.Generic'),
+                        'load_directory' => await StorageHelper.pickLoadDirectory(context, '@ModdingWorker.Generic'),
+                        'save_file'      => await StorageHelper.pickSaveFile(context, '@ModdingWorker.Generic'),
                         _                => throw Exception(),
                       };
                       if (target != null) {

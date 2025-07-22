@@ -26,7 +26,7 @@ class SettingData {
   Integer                  windowSizeWidth;
   Integer                  windowSizeHeight;
   String                   storagePickerFallbackDirectory;
-  Map<String, String>      storagePickerHistoryDirectory;
+  Map<String, String>      storagePickerHistoryLocation;
   ModuleType               forwarderDefaultTarget;
   Boolean                  forwarderImmediateJump;
   ModuleLauncherSetting    moduleLauncher;
@@ -49,7 +49,7 @@ class SettingData {
     required this.windowSizeWidth,
     required this.windowSizeHeight,
     required this.storagePickerFallbackDirectory,
-    required this.storagePickerHistoryDirectory,
+    required this.storagePickerHistoryLocation,
     required this.forwarderDefaultTarget,
     required this.forwarderImmediateJump,
     required this.moduleLauncher,
@@ -178,7 +178,7 @@ class SettingProvider with ChangeNotifier {
     windowSizeWidth: 0,
     windowSizeHeight: 0,
     storagePickerFallbackDirectory: '',
-    storagePickerHistoryDirectory: {},
+    storagePickerHistoryLocation: {},
     forwarderDefaultTarget: ModuleType.resource_shipper,
     forwarderImmediateJump: false,
     moduleLauncher: ModuleLauncherSetting(
@@ -245,7 +245,7 @@ class SettingProvider with ChangeNotifier {
       'window_size_width': data.windowSizeWidth,
       'window_size_height': data.windowSizeHeight,
       'storage_picker_fallback_directory': data.storagePickerFallbackDirectory,
-      'storage_picker_history_directory': data.storagePickerHistoryDirectory,
+      'storage_picker_history_location': data.storagePickerHistoryLocation,
       'forwarder_default_target': data.forwarderDefaultTarget.name,
       'forwarder_immediate_jump': data.forwarderImmediateJump,
       'module_launcher': {
@@ -310,7 +310,7 @@ class SettingProvider with ChangeNotifier {
       windowSizeWidth: (json['window_size_width'] as Integer),
       windowSizeHeight: (json['window_size_height'] as Integer),
       storagePickerFallbackDirectory: (json['storage_picker_fallback_directory'] as String),
-      storagePickerHistoryDirectory: (json['storage_picker_history_directory'] as Map<dynamic, dynamic>).cast<String, String>(),
+      storagePickerHistoryLocation: (json['storage_picker_history_location'] as Map<dynamic, dynamic>).cast<String, String>(),
       forwarderDefaultTarget: (json['forwarder_default_target'] as String).selfLet((it) => ModuleType.values.byName(it)),
       forwarderImmediateJump: (json['forwarder_immediate_jump'] as Boolean),
       moduleLauncher: (json['module_launcher'] as Map<dynamic, dynamic>).selfLet((jsonPart) => ModuleLauncherSetting(

@@ -1014,7 +1014,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (isPlaying) {
 				this.View.uSprite.State = SpriteControl.StateType.Paused;
 			}
-			var animationFile = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(AnimationViewer)}.AnimationFile");
+			var animationFile = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"@{nameof(AnimationViewer)}.AnimationFile");
 			if (animationFile != null) {
 				await this.ApplyLoad(animationFile, null, null, null, null, null);
 			}
@@ -1067,7 +1067,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (isPlaying) {
 				this.View.uSprite.State = SpriteControl.StateType.Paused;
 			}
-			var textureDirectory = await StorageHelper.PickLoadDirectory(WindowHelper.Find(this.View), $"{nameof(AnimationViewer)}.TextureDirectory");
+			var textureDirectory = await StorageHelper.PickLoadDirectory(WindowHelper.Find(this.View), $"@{nameof(AnimationViewer)}.TextureDirectory");
 			if (textureDirectory != null) {
 				await this.ApplyLoad(this.AnimationFile, textureDirectory, null, null, null, null);
 			}

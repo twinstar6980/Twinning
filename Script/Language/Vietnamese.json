@@ -659,7 +659,7 @@
 	"executable.extract_rsb_from_pvz2_cn_apk_directory:extract_finish": "Quá trình giải nén đã hoàn thành",
 	// Entry/Entry
 	"entry:input_command": "Nhập các đối số lệnh theo thứ tự",
-	"entry:input_finish_if_null": "Nhập chuỗi trống để kết thúc nhập dữ liệu",
+	"entry:input_finish_if_empty": "Nhập chuỗi trống để kết thúc nhập dữ liệu",
 	"entry:all_command_parse": "Tất cả các lệnh đã được xử lý",
 	"entry:all_command_count": "{} tổng cộng",
 	"entry:all_command_finish": "Tất cả các lệnh đã được thực thi",

@@ -280,7 +280,7 @@ class _SettingPanelState extends State<SettingPanel> {
                         tooltip: 'Pick',
                         icon: Icon(IconSymbols.open_in_new),
                         onPressed: () async {
-                          var target = await StorageHelper.pickLoadFile(context, 'Application.ThemeFont');
+                          var target = await StorageHelper.pickLoadFile(context, '@Application.ThemeFont');
                           if (target != null) {
                             setting.data.themeFontPath = setting.data.themeFontPath + [target];
                             await refreshState(setStateForPanel);
@@ -506,7 +506,7 @@ class _SettingPanelState extends State<SettingPanel> {
                         tooltip: 'Pick',
                         icon: Icon(IconSymbols.open_in_new),
                         onPressed: () async {
-                          var target = await StorageHelper.pickLoadDirectory(context, 'Application.StoragePickerFallbackDirectory');
+                          var target = await StorageHelper.pickLoadDirectory(context, '@Application.StoragePickerFallbackDirectory');
                           if (target != null) {
                             setting.data.storagePickerFallbackDirectory = target;
                             await refreshState(setStateForPanel);
@@ -682,7 +682,7 @@ class _SettingPanelState extends State<SettingPanel> {
               ),
               onTap: () async {
                 Navigator.pop(context);
-                var file = await StorageHelper.pickLoadFile(context, 'Application.SettingFile');
+                var file = await StorageHelper.pickLoadFile(context, '@Application.SettingFile');
                 if (file != null) {
                   await setting.load(file: file);
                   await setting.save();
@@ -697,7 +697,7 @@ class _SettingPanelState extends State<SettingPanel> {
               ),
               onTap: () async {
                 Navigator.pop(context);
-                var file = await StorageHelper.pickSaveFile(context, 'Application.SettingFile');
+                var file = await StorageHelper.pickSaveFile(context, '@Application.SettingFile');
                 if (file != null) {
                   await setting.save(file: file, apply: false);
                   await ControlHelper.showSnackBar(setting.state.applicationNavigatorKey.currentContext!, 'Done!');

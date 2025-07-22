@@ -284,7 +284,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			var senders = sender.As<MenuFlyoutItem>();
 			switch (senders.Tag.As<String>()) {
 				case "Load": {
-					var file = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(ReflectionDescriptor)}.DescriptorFile");
+					var file = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"@{nameof(ReflectionDescriptor)}.DescriptorFile");
 					if (file != null) {
 						await this.ApplyLoad(file);
 					}

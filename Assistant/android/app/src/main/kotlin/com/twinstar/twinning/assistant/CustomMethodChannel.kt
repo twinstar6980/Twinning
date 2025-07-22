@@ -109,10 +109,10 @@ class CustomMethodChannel {
 			when (call.method) {
 				"pick_storage_item" -> {
 					val detailType = call.argument<String>("type")!!
-					val detailInitialDirectory = call.argument<String>("initial_directory")!!
+					val detailLocation = call.argument<String>("location")!!
 					val detailTarget = this.handlePickStorageItem(
 						detailType,
-						detailInitialDirectory,
+						detailLocation,
 					)
 					result.success(detailTarget)
 				}
@@ -150,7 +150,7 @@ class CustomMethodChannel {
 
 	private suspend fun handlePickStorageItem(
 		type: String,
-		initialDirectory: String,
+		location: String,
 	): String? {
 		check(type == "load_file" || type == "load_directory" || type == "save_file")
 		val intent = Intent()
@@ -168,12 +168,12 @@ class CustomMethodChannel {
 			intent.setType("*/*")
 		}
 		intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
-		var initialDirectorySafe = ""
+		var locationSafe = ""
 		val primaryDirectory = Environment.getExternalStorageDirectory().absolutePath + "/"
-		if (initialDirectory.startsWith(primaryDirectory)) {
-			initialDirectorySafe = initialDirectory.substring(primaryDirectory.length)
+		if (location.startsWith(primaryDirectory)) {
+			locationSafe = location.substring(primaryDirectory.length)
 		}
-		intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, Uri.parse("content://com.android.externalstorage.documents/document/primary%3A${Uri.encode(initialDirectorySafe)}"))
+		intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, Uri.parse("content://com.android.externalstorage.documents/document/primary%3A${Uri.encode(locationSafe)}"))
 		val timeBeforePick = Date().time
 		this.host.startActivityForResult(intent, REQUEST_PICK_STORAGE_ITEM)
 		val targetUri = this.continuation.receive() as Uri?

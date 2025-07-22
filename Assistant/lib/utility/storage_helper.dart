@@ -238,14 +238,21 @@ class StorageHelper {
 
   static Future<String?> pickLoadFile(
     BuildContext context,
-    String       tag,
+    String?      location,
   ) async {
     var target = null as String?;
     var setting = Provider.of<SettingProvider>(context, listen: false);
-    var initialDirectory = setting.data.storagePickerHistoryDirectory[tag];
+    var locationTag = location == null ? null : !location.startsWith('@') ? null : location.substring(1);
+    var locationPath = location;
+    if (locationTag != null) {
+      locationPath = setting.data.storagePickerHistoryLocation[locationTag];
+    }
+    if (locationPath != null && !await existDirectory(locationPath)) {
+      locationPath = null;
+    }
     if (Platform.isWindows) {
-      initialDirectory ??= 'C:/';
-      target = (await file_selector.openFile(initialDirectory: toWindowsStyle(initialDirectory)))?.path;
+      locationPath ??= 'C:/';
+      target = (await file_selector.openFile(initialDirectory: toWindowsStyle(locationPath)))?.path;
       if (target != null) {
         target = regularize(target);
       }
@@ -254,22 +261,22 @@ class StorageHelper {
       }
     }
     if (Platform.isLinux || Platform.isMacOS) {
-      initialDirectory ??= '/';
-      target = (await file_selector.openFile(initialDirectory: initialDirectory))?.path;
+      locationPath ??= '/';
+      target = (await file_selector.openFile(initialDirectory: locationPath))?.path;
     }
     if (Platform.isAndroid) {
-      initialDirectory ??= await PlatformMethod.queryExternalStoragePath();
-      target = await PlatformMethod.pickStorageItem('load_file', initialDirectory);
+      locationPath ??= await PlatformMethod.queryExternalStoragePath();
+      target = await PlatformMethod.pickStorageItem('load_file', locationPath);
       if (target != null) {
         target = await parseAndroidContentUri(context, Uri.parse(target), true);
       }
     }
     if (Platform.isIOS) {
-      initialDirectory ??= '/';
-      target = await PlatformMethod.pickStorageItem('load_file', initialDirectory);
+      locationPath ??= '/';
+      target = await PlatformMethod.pickStorageItem('load_file', locationPath);
     }
-    if (target != null) {
-      setting.data.storagePickerHistoryDirectory[tag] = parent(target);
+    if (locationTag != null && target != null) {
+      setting.data.storagePickerHistoryLocation[locationTag] = parent(target);
       await setting.save(apply: false);
     }
     return target;
@@ -277,15 +284,22 @@ class StorageHelper {
 
   static Future<String?> pickLoadDirectory(
     BuildContext context,
-    String       tag,
+    String?      location,
   ) async {
     var target = null as String?;
     var setting = Provider.of<SettingProvider>(context, listen: false);
-    var initialDirectory = setting.data.storagePickerHistoryDirectory[tag];
+    var locationTag = location == null ? null : !location.startsWith('@') ? null : location.substring(1);
+    var locationPath = location;
+    if (locationTag != null) {
+      locationPath = setting.data.storagePickerHistoryLocation[locationTag];
+    }
+    if (locationPath != null && !await existDirectory(locationPath)) {
+      locationPath = null;
+    }
     if (Platform.isWindows) {
-      initialDirectory ??= 'C:/';
+      locationPath ??= 'C:/';
       // NOTE : use `file_selector.getDirectoryPath` instead of `FilePicker.platform.getDirectoryPath`, on windows, the later one will throw an exception if it is the first file dialog since application start.
-      target = await file_selector.getDirectoryPath(initialDirectory: toWindowsStyle(initialDirectory));
+      target = await file_selector.getDirectoryPath(initialDirectory: toWindowsStyle(locationPath));
       if (target != null) {
         target = regularize(target);
       }
@@ -294,22 +308,22 @@ class StorageHelper {
       }
     }
     if (Platform.isLinux || Platform.isMacOS) {
-      initialDirectory ??= '/';
-      target = await file_selector.getDirectoryPath(initialDirectory: initialDirectory);
+      locationPath ??= '/';
+      target = await file_selector.getDirectoryPath(initialDirectory: locationPath);
     }
     if (Platform.isAndroid) {
-      initialDirectory ??= await PlatformMethod.queryExternalStoragePath();
-      target = await PlatformMethod.pickStorageItem('load_directory', initialDirectory);
+      locationPath ??= await PlatformMethod.queryExternalStoragePath();
+      target = await PlatformMethod.pickStorageItem('load_directory', locationPath);
       if (target != null) {
         target = await parseAndroidContentUri(context, Uri.parse(target), false);
       }
     }
     if (Platform.isIOS) {
-      initialDirectory ??= '/';
-      target = await PlatformMethod.pickStorageItem('load_directory', initialDirectory);
+      locationPath ??= '/';
+      target = await PlatformMethod.pickStorageItem('load_directory', locationPath);
     }
-    if (target != null) {
-      setting.data.storagePickerHistoryDirectory[tag] = parent(target);
+    if (locationTag != null && target != null) {
+      setting.data.storagePickerHistoryLocation[locationTag] = parent(target);
       await setting.save(apply: false);
     }
     return target;
@@ -317,14 +331,21 @@ class StorageHelper {
 
   static Future<String?> pickSaveFile(
     BuildContext context,
-    String       tag,
+    String?      location,
   ) async {
     var target = null as String?;
     var setting = Provider.of<SettingProvider>(context, listen: false);
-    var initialDirectory = setting.data.storagePickerHistoryDirectory[tag];
+    var locationTag = location == null ? null : !location.startsWith('@') ? null : location.substring(1);
+    var locationPath = location;
+    if (locationTag != null) {
+      locationPath = setting.data.storagePickerHistoryLocation[locationTag];
+    }
+    if (locationPath != null && !await existDirectory(locationPath)) {
+      locationPath = null;
+    }
     if (Platform.isWindows) {
-      initialDirectory ??= 'C:/';
-      target = (await file_selector.getSaveLocation(initialDirectory: toWindowsStyle(initialDirectory)))?.path;
+      locationPath ??= 'C:/';
+      target = (await file_selector.getSaveLocation(initialDirectory: toWindowsStyle(locationPath)))?.path;
       if (target != null) {
         target = regularize(target);
       }
@@ -333,12 +354,12 @@ class StorageHelper {
       }
     }
     if (Platform.isLinux || Platform.isMacOS) {
-      initialDirectory ??= '/';
-      target = (await file_selector.getSaveLocation(initialDirectory: initialDirectory))?.path;
+      locationPath ??= '/';
+      target = (await file_selector.getSaveLocation(initialDirectory: locationPath))?.path;
     }
     if (Platform.isAndroid) {
-      initialDirectory ??= await PlatformMethod.queryExternalStoragePath();
-      target = await PlatformMethod.pickStorageItem('save_file', initialDirectory);
+      locationPath ??= await PlatformMethod.queryExternalStoragePath();
+      target = await PlatformMethod.pickStorageItem('save_file', locationPath);
       if (target != null) {
         target = await parseAndroidContentUri(context, Uri.parse(target), false);
       }
@@ -346,8 +367,8 @@ class StorageHelper {
     if (Platform.isIOS) {
       throw UnimplementedError();
     }
-    if (target != null) {
-      setting.data.storagePickerHistoryDirectory[tag] = parent(target);
+    if (locationTag != null && target != null) {
+      setting.data.storagePickerHistoryLocation[locationTag] = parent(target);
       await setting.save(apply: false);
     }
     return target;

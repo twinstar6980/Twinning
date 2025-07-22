@@ -107,21 +107,6 @@ export namespace Twinning::Shell {
 					result.emplace_back(std::move(detail_text));
 					break;
 				}
-				case hash_string("pick_storage_item"sv) : {
-					assert_test(argument.size() == 2);
-					auto & detail_type = argument[1];
-					auto   detail = thiz.callback_pick_storage_item(detail_type);
-					auto & detail_target = std::get<0>(detail);
-					result.emplace_back(std::move(detail_target));
-					break;
-				}
-				case hash_string("push_system_notification"sv) : {
-					assert_test(argument.size() == 3);
-					auto & detail_title = argument[1];
-					auto & detail_description = argument[2];
-					auto   detail = thiz.callback_push_system_notification(detail_title, detail_description);
-					break;
-				}
 				default : {
 					throw std::runtime_error{"invalid method"s};
 				}
@@ -152,21 +137,6 @@ export namespace Twinning::Shell {
 		) -> std::tuple<std::string> {
 			auto text = Interaction::input_text();
 			return std::make_tuple(text);
-		}
-
-		auto callback_pick_storage_item (
-			std::string const & type
-		) -> std::tuple<std::string> {
-			auto target = Interaction::pick_storage_item(type).value_or(""s);
-			return std::make_tuple(target);
-		}
-
-		auto callback_push_system_notification (
-			std::string const & title,
-			std::string const & description
-		) -> std::tuple<> {
-			Interaction::push_system_notification(title, description);
-			return std::make_tuple();
 		}
 
 		#pragma endregion

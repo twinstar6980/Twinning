@@ -150,7 +150,7 @@ namespace Twinning.Script.Entry {
 		let raw_command = [...argument];
 		if (raw_command.length === 0) {
 			Console.information(los('entry:input_command'), [
-				los('entry:input_finish_if_null'),
+				los('entry:input_finish_if_empty'),
 			]);
 			while (true) {
 				let input = Console.path('any', 'input', true, null);

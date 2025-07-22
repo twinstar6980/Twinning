@@ -20,20 +20,6 @@ target('shell', function()
 	add_deps(
 		{}
 	)
-	if m.system:is('windows', 'linux', 'macintosh') then
-		add_deps(
-			'third.tinyfiledialogs',
-			{}
-		)
-	end
-	if m.system:is('windows') then
-		add_links(
-			'uuid',
-			'Ole32',
-			'User32',
-			{ private = true }
-		)
-	end
 	on_load(function(target)
 		import('helper')
 		helper.apply_condition_definition_basic(target)

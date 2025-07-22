@@ -105,6 +105,7 @@
 /**/*.manifest                               text eol=crlf
 /**/*.appxmanifest                           text eol=crlf
 /**/*.pubxml                                 text eol=crlf
+/**/NativeMethods.txt                        text eol=crlf
 /**/launchSettings.json                      text eol=crlf
 
 # Environment - Xcode

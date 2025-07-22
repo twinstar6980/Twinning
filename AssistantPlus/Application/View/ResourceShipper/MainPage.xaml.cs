@@ -428,14 +428,14 @@ namespace AssistantPlus.View.ResourceShipper {
 					break;
 				}
 				case "PickFile": {
-					var item = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(ResourceShipper)}.Resource");
+					var item = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"@{nameof(ResourceShipper)}.Resource");
 					if (item != null) {
 						await this.AppendResource([item]);
 					}
 					break;
 				}
 				case "PickDirectory": {
-					var item = await StorageHelper.PickLoadDirectory(WindowHelper.Find(this.View), $"{nameof(ResourceShipper)}.Resource");
+					var item = await StorageHelper.PickLoadDirectory(WindowHelper.Find(this.View), $"@{nameof(ResourceShipper)}.Resource");
 					if (item != null) {
 						await this.AppendResource([item]);
 					}

@@ -1095,7 +1095,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                         overflow: TextOverflow.ellipsis,
                       ),
                       onPressed: () async {
-                        var animationFile = await StorageHelper.pickLoadFile(context, 'AnimationViewer.AnimationFile');
+                        var animationFile = await StorageHelper.pickLoadFile(context, '@AnimationViewer.AnimationFile');
                         if (animationFile != null) {
                           Navigator.pop(context);
                           await this._applyLoad(animationFile, null, null, null, null, null, null, null, null);

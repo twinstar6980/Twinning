@@ -6,7 +6,6 @@ module;
 #pragma clang diagnostic ignored "-Weverything"
 
 #include <Windows.h>
-#include <ShlObj.h>
 
 #pragma clang diagnostic pop
 
@@ -22,19 +21,9 @@ export namespace Twinning::Shell::Third::system::windows {
 
 	using $DWORD = ::DWORD;
 
-	using $LPWSTR = ::LPWSTR;
-
 	using $LPCWSTR = ::LPCWSTR;
 
-	using $HRESULT = ::HRESULT;
-
 	using $HMODULE = ::HMODULE;
-
-	using $IShellItem = ::IShellItem;
-
-	using $IFileDialog = ::IFileDialog;
-
-	using $FILEOPENDIALOGOPTIONS = ::FILEOPENDIALOGOPTIONS;
 
 	inline auto const $LoadLibraryW = ::LoadLibraryW;
 
@@ -50,66 +39,11 @@ export namespace Twinning::Shell::Third::system::windows {
 
 	inline auto const $WriteConsoleW = ::WriteConsoleW;
 
-	inline auto const $GetForegroundWindow = ::GetForegroundWindow;
-
-	inline auto const $CoInitialize = ::CoInitialize;
-
-	inline auto const $CoUninitialize = ::CoUninitialize;
-
-	inline auto const $CoCreateInstance = ::CoCreateInstance;
-
-	inline auto const $CoTaskMemFree = ::CoTaskMemFree;
-
-	inline constexpr auto $S_OK = S_OK;
-
 	inline constexpr auto $FALSE = FALSE;
-
-	inline constexpr auto $E_INVALIDARG = E_INVALIDARG;
-
-	inline constexpr auto $ERROR_CANCELLED = ERROR_CANCELLED;
 
 	inline constexpr auto $STD_INPUT_HANDLE = STD_INPUT_HANDLE;
 
 	inline constexpr auto $STD_OUTPUT_HANDLE = STD_OUTPUT_HANDLE;
-
-	inline constexpr auto $CLSCTX_INPROC_SERVER = ::CLSCTX_INPROC_SERVER;
-
-	inline constexpr auto $SIGDN_FILESYSPATH = ::SIGDN_FILESYSPATH;
-
-	inline constexpr auto $FOS_NOCHANGEDIR = ::FOS_NOCHANGEDIR;
-
-	inline constexpr auto $FOS_NOVALIDATE = ::FOS_NOVALIDATE;
-
-	inline constexpr auto $FOS_NODEREFERENCELINKS = ::FOS_NODEREFERENCELINKS;
-
-	inline constexpr auto $FOS_DONTADDTORECENT = ::FOS_DONTADDTORECENT;
-
-	inline constexpr auto $FOS_FORCESHOWHIDDEN = ::FOS_FORCESHOWHIDDEN;
-
-	inline constexpr auto $FOS_PATHMUSTEXIST = ::FOS_PATHMUSTEXIST;
-
-	inline constexpr auto $FOS_FILEMUSTEXIST = ::FOS_FILEMUSTEXIST;
-
-	inline constexpr auto $FOS_PICKFOLDERS = ::FOS_PICKFOLDERS;
-
-	inline constexpr auto $FOS_OVERWRITEPROMPT = ::FOS_OVERWRITEPROMPT;
-
-	inline auto const $CLSID_FileOpenDialog = ::CLSID_FileOpenDialog;
-
-	inline auto const $CLSID_FileSaveDialog = ::CLSID_FileSaveDialog;
-
-	inline auto $HRESULT_FROM_WIN32 (
-		unsigned long x
-	) -> ::HRESULT {
-		return HRESULT_FROM_WIN32(x);
-	}
-
-	template <typename T>
-	inline auto $IID_PPV_ARGS_Helper (
-		T * * p
-	) -> void * * {
-		return ::IID_PPV_ARGS_Helper<T>(p);
-	}
 
 }
 

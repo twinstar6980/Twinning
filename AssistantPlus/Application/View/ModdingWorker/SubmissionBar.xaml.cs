@@ -687,7 +687,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			if (this.Type != SubmissionType.Path) {
 				return;
 			}
-			this.ValueOfPath = new () { Content = $":{senders.Tag.As<String>()[0].ToString().ToLower()}" };
+			this.ValueOfPath = new () { Content = senders.Tag.As<String>() };
 			this.NotifyPropertyChanged([
 				nameof(this.uPathContent_Text),
 			]);
@@ -703,9 +703,9 @@ namespace AssistantPlus.View.ModdingWorker {
 				return;
 			}
 			var value = senders.Tag.As<String>() switch {
-				"LoadFile"      => await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(ModdingWorker)}.Generic"),
-				"LoadDirectory" => await StorageHelper.PickLoadDirectory(WindowHelper.Find(this.View), $"{nameof(ModdingWorker)}.Generic"),
-				"SaveFile"      => await StorageHelper.PickSaveFile(WindowHelper.Find(this.View), $"{nameof(ModdingWorker)}.Generic", null, null),
+				"LoadFile"      => await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"@{nameof(ModdingWorker)}.Generic"),
+				"LoadDirectory" => await StorageHelper.PickLoadDirectory(WindowHelper.Find(this.View), $"@{nameof(ModdingWorker)}.Generic"),
+				"SaveFile"      => await StorageHelper.PickSaveFile(WindowHelper.Find(this.View), $"@{nameof(ModdingWorker)}.Generic", null),
 				_               => throw new (),
 			};
 			if (value != null) {

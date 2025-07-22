@@ -56,7 +56,7 @@ class SettingPanel extends StatelessWidget {
                           tooltip: 'Pick',
                           icon: Icon(IconSymbols.open_in_new),
                           onPressed: () async {
-                            var target = await StorageHelper.pickLoadFile(context, 'ModdingWorker.Kernel');
+                            var target = await StorageHelper.pickLoadFile(context, '@ModdingWorker.Kernel');
                             if (target != null) {
                               this.data.kernel = target;
                               await refreshState(setStateForPanel);
@@ -106,7 +106,7 @@ class SettingPanel extends StatelessWidget {
                           tooltip: 'Pick',
                           icon: Icon(IconSymbols.open_in_new),
                           onPressed: () async {
-                            var target = await StorageHelper.pickLoadFile(context, 'ModdingWorker.Script');
+                            var target = await StorageHelper.pickLoadFile(context, '@ModdingWorker.Script');
                             if (target != null) {
                               this.data.script = target;
                               await refreshState(setStateForPanel);
@@ -223,7 +223,7 @@ class SettingPanel extends StatelessWidget {
                           tooltip: 'Pick',
                           icon: Icon(IconSymbols.open_in_new),
                           onPressed: () async {
-                            var target = await StorageHelper.pickLoadFile(context, 'ModdingWorker.MessageFont');
+                            var target = await StorageHelper.pickLoadFile(context, '@ModdingWorker.MessageFont');
                             if (target != null) {
                               this.data.messageFont = this.data.messageFont + [target];
                               await refreshState(setStateForPanel);

@@ -339,7 +339,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                           overflow: TextOverflow.ellipsis,
                         ),
                         onPressed: () async {
-                          var item = await StorageHelper.pickLoadFile(context, 'ResourceShipper.Resource');
+                          var item = await StorageHelper.pickLoadFile(context, '@ResourceShipper.Resource');
                           if (item != null) {
                             await this._appendResource([item]);
                             await refreshState(setStateForPanel);
@@ -354,7 +354,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                           overflow: TextOverflow.ellipsis,
                         ),
                         onPressed: () async {
-                          var item = await StorageHelper.pickLoadDirectory(context, 'ResourceShipper.Resource');
+                          var item = await StorageHelper.pickLoadDirectory(context, '@ResourceShipper.Resource');
                           if (item != null) {
                             await this._appendResource([item]);
                             await refreshState(setStateForPanel);

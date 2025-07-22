@@ -545,12 +545,12 @@ namespace Twinning.Script.Console {
 				return [null];
 			}
 			let result: string;
-			if (value[0] !== ':') {
+			if (value[0] !== '=') {
 				result = value;
 			}
 			else {
 				switch (value[1]) {
-					case ':': {
+					case '=': {
 						result = value.slice(2);
 						break;
 					}
@@ -631,12 +631,12 @@ namespace Twinning.Script.Console {
 				return [null];
 			}
 			let result: string;
-			if (value[0] !== ':') {
+			if (value[0] !== '=') {
 				result = Home.of(PathUtility.regularize(unquote_string(value)));
 			}
 			else {
 				switch (value[1]) {
-					case ':': {
+					case '=': {
 						result = Home.of(PathUtility.regularize(value.slice(2)));
 						break;
 					}
@@ -906,7 +906,8 @@ namespace Twinning.Script.Console {
 			type = enumeration(option_string(['load_file', 'load_directory', 'save_file']), null, null) as 'load_file' | 'load_directory' | 'save_file';
 		}
 		if (Shell.is_basic) {
-			result = Shell.basic_pick_storage_item(type).target;
+			// NOTE : unavailable, silently fail
+			result = null;
 		}
 		if (Shell.is_assistant) {
 			result = Shell.assistant_pick_storage_item(type).target;
@@ -917,14 +918,12 @@ namespace Twinning.Script.Console {
 		return result;
 	}
 
-	// ------------------------------------------------
-
 	export function push_system_notification(
 		title: string,
 		description: string,
 	): void {
 		if (Shell.is_basic) {
-			Shell.basic_push_system_notification(title, description);
+			// NOTE : unavailable, silently fail
 		}
 		if (Shell.is_assistant) {
 			Shell.assistant_push_system_notification(title, description);

@@ -645,15 +645,15 @@ namespace AssistantPlus.View.ModdingWorker {
 			var target = "";
 			switch (type) {
 				case "load_file": {
-					target = await StorageHelper.PickLoadFile(WindowHelper.Find(this.mController.View), $"{nameof(ModdingWorker)}.Generic") ?? "";
+					target = await StorageHelper.PickLoadFile(WindowHelper.Find(this.mController.View), $"@{nameof(ModdingWorker)}.Generic") ?? "";
 					break;
 				}
 				case "load_directory": {
-					target = await StorageHelper.PickLoadDirectory(WindowHelper.Find(this.mController.View), $"{nameof(ModdingWorker)}.Generic") ?? "";
+					target = await StorageHelper.PickLoadDirectory(WindowHelper.Find(this.mController.View), $"@{nameof(ModdingWorker)}.Generic") ?? "";
 					break;
 				}
 				case "save_file": {
-					target = await StorageHelper.PickSaveFile(WindowHelper.Find(this.mController.View), $"{nameof(ModdingWorker)}.Generic", null, null) ?? "";
+					target = await StorageHelper.PickSaveFile(WindowHelper.Find(this.mController.View), $"@{nameof(ModdingWorker)}.Generic", null) ?? "";
 					break;
 				}
 				default: throw new ();

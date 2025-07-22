@@ -591,9 +591,9 @@ namespace AssistantPlus.View.CommandSender {
 				return;
 			}
 			var value = senders.Tag.As<String>() switch {
-				"LoadFile"      => await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(CommandSender)}.Generic"),
-				"LoadDirectory" => await StorageHelper.PickLoadDirectory(WindowHelper.Find(this.View), $"{nameof(CommandSender)}.Generic"),
-				"SaveFile"      => await StorageHelper.PickSaveFile(WindowHelper.Find(this.View), $"{nameof(CommandSender)}.Generic", null, null),
+				"LoadFile"      => await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"@{nameof(CommandSender)}.Generic"),
+				"LoadDirectory" => await StorageHelper.PickLoadDirectory(WindowHelper.Find(this.View), $"@{nameof(CommandSender)}.Generic"),
+				"SaveFile"      => await StorageHelper.PickSaveFile(WindowHelper.Find(this.View), $"@{nameof(CommandSender)}.Generic", null),
 				_               => throw new (),
 			};
 			if (value != null) {

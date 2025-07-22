@@ -419,9 +419,9 @@ class _PathArgumentBar extends StatelessWidget {
                     )).toList(),
                     onSelected: (value) async {
                       var target = switch (value) {
-                        'load_file'      => await StorageHelper.pickLoadFile(context, 'CommandSender.Generic'),
-                        'load_directory' => await StorageHelper.pickLoadDirectory(context, 'CommandSender.Generic'),
-                        'save_file'      => await StorageHelper.pickSaveFile(context, 'CommandSender.Generic'),
+                        'load_file'      => await StorageHelper.pickLoadFile(context, '@CommandSender.Generic'),
+                        'load_directory' => await StorageHelper.pickLoadDirectory(context, '@CommandSender.Generic'),
+                        'save_file'      => await StorageHelper.pickSaveFile(context, '@CommandSender.Generic'),
                         _                => throw Exception(),
                       };
                       if (target != null) {

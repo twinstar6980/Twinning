@@ -322,28 +322,28 @@
 										<Button.Flyout>
 											<MenuFlyout Placement="TopEdgeAlignedRight">
 												<MenuFlyoutItem
-													Tag="Generate"
+													Tag="=g"
 													Click="{x:Bind Controller.uPathCommandMenu_Click}"
 													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Rename}}"
 													FontFamily="{StaticResource ModdingWorker.MessageFont}"
 													Text="Generate"
 													/>
 												<MenuFlyoutItem
-													Tag="Move"
+													Tag="=m"
 													Click="{x:Bind Controller.uPathCommandMenu_Click}"
 													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.OpenPaneMirrored}}"
 													FontFamily="{StaticResource ModdingWorker.MessageFont}"
 													Text="Move"
 													/>
 												<MenuFlyoutItem
-													Tag="Delete"
+													Tag="=d"
 													Click="{x:Bind Controller.uPathCommandMenu_Click}"
 													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Delete}}"
 													FontFamily="{StaticResource ModdingWorker.MessageFont}"
 													Text="Delete"
 													/>
 												<MenuFlyoutItem
-													Tag="Overwrite"
+													Tag="=o"
 													Click="{x:Bind Controller.uPathCommandMenu_Click}"
 													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Save}}"
 													FontFamily="{StaticResource ModdingWorker.MessageFont}"

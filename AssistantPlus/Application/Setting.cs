@@ -12,18 +12,19 @@ using Colors = Microsoft.UI.Colors;
 namespace AssistantPlus {
 
 	public record SettingData {
-		public Integer                           Version                = default!;
-		public CustomThemeSetting                Theme                  = default!;
-		public CustomWindowSetting               Window                 = default!;
-		public ModuleType                        ForwarderDefaultTarget = default!;
-		public Boolean                           ForwarderImmediateJump = default!;
-		public ModuleLauncherSetting             ModuleLauncher         = default!;
-		public View.ModdingWorker.Setting        ModdingWorker          = default!;
-		public View.CommandSender.Setting        CommandSender          = default!;
-		public View.ResourceShipper.Setting      ResourceShipper        = default!;
-		public View.AnimationViewer.Setting      AnimationViewer        = default!;
-		public View.ReflectionDescriptor.Setting ReflectionDescriptor   = default!;
-		public View.PackageBuilder.Setting       PackageBuilder         = default!;
+		public Integer                           Version                      = default!;
+		public CustomThemeSetting                Theme                        = default!;
+		public CustomWindowSetting               Window                       = default!;
+		public Dictionary<String, String>        StoragePickerHistoryLocation = default!;
+		public ModuleType                        ForwarderDefaultTarget       = default!;
+		public Boolean                           ForwarderImmediateJump       = default!;
+		public ModuleLauncherSetting             ModuleLauncher               = default!;
+		public View.ModdingWorker.Setting        ModdingWorker                = default!;
+		public View.CommandSender.Setting        CommandSender                = default!;
+		public View.ResourceShipper.Setting      ResourceShipper              = default!;
+		public View.AnimationViewer.Setting      AnimationViewer              = default!;
+		public View.ReflectionDescriptor.Setting ReflectionDescriptor         = default!;
+		public View.PackageBuilder.Setting       PackageBuilder               = default!;
 	}
 
 	public record SettingState {
@@ -196,6 +197,7 @@ namespace AssistantPlus {
 						Height = 0,
 					},
 				},
+				StoragePickerHistoryLocation = [],
 				ForwarderDefaultTarget = ModuleType.ResourceShipper,
 				ForwarderImmediateJump = false,
 				ModuleLauncher = new () {

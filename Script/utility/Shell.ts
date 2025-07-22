@@ -35,29 +35,6 @@ namespace Twinning.Script.Shell {
 		return { text: result[0] };
 	}
 
-	export function basic_pick_storage_item(
-		type: 'load_file' | 'load_directory' | 'save_file',
-	): { target: string; } {
-		if (KernelX.is_android || KernelX.is_iphone) {
-			// unavailable, silently fail
-			return { target: '' };
-		}
-		let result = callback(['pick_storage_item', type]);
-		return { target: result[0] };
-	}
-
-	export function basic_push_system_notification(
-		title: string,
-		description: string,
-	): {} {
-		if (KernelX.is_android || KernelX.is_iphone) {
-			// unavailable, silently fail
-			return {};
-		}
-		let result = callback(['push_system_notification', title, description]);
-		return {};
-	}
-
 	// ------------------------------------------------
 
 	export function assistant_send_message(

@@ -326,18 +326,17 @@ class _MainPageBridgeClient implements bridge.Client {
 
   // #region structor
 
-  late _MainPageState _controller;
+  _MainPageState _controller;
 
-  late Boolean _running;
+  Boolean _running;
 
   // ----------------
 
   _MainPageBridgeClient(
     _MainPageState controller,
-  ) {
-    this._controller = controller;
-    this._running = false;
-  }
+  ) :
+    _controller = controller,
+    _running = false;
 
   // #endregion
 
@@ -477,15 +476,15 @@ class _MainPageBridgeClient implements bridge.Client {
     var target = '';
     switch (type) {
       case 'load_file': {
-        target = await StorageHelper.pickLoadFile(this._controller.context, 'ModdingWorker.Generic') ?? '';
+        target = await StorageHelper.pickLoadFile(this._controller.context, '@ModdingWorker.Generic') ?? '';
         break;
       }
       case 'load_directory': {
-        target = await StorageHelper.pickLoadDirectory(this._controller.context, 'ModdingWorker.Generic') ?? '';
+        target = await StorageHelper.pickLoadDirectory(this._controller.context, '@ModdingWorker.Generic') ?? '';
         break;
       }
       case 'save_file': {
-        target = await StorageHelper.pickSaveFile(this._controller.context, 'ModdingWorker.Generic') ?? '';
+        target = await StorageHelper.pickSaveFile(this._controller.context, '@ModdingWorker.Generic') ?? '';
         break;
       }
       default: throw Exception();

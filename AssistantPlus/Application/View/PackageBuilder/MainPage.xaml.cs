@@ -1189,7 +1189,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			var projectDirectory = await StorageHelper.PickLoadDirectory(App.MainWindow, $"{nameof(PackageBuilder)}.ProjectDirectory");
+			var projectDirectory = await StorageHelper.PickLoadDirectory(App.MainWindow, $"@{nameof(PackageBuilder)}.ProjectDirectory");
 			if (projectDirectory != null) {
 				await this.ApplyLoad(projectDirectory);
 			}

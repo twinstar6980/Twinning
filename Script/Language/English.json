@@ -659,7 +659,7 @@
 	"executable.extract_rsb_from_pvz2_cn_apk_directory:extract_finish": "Extraction finished",
 	// Entry/Entry
 	"entry:input_command": "Enter the command arguments in sequence",
-	"entry:input_finish_if_null": "Enter empty string to finish typing",
+	"entry:input_finish_if_empty": "Enter empty string to finish typing",
 	"entry:all_command_parse": "All commands parsed",
 	"entry:all_command_count": "{} in total",
 	"entry:all_command_finish": "All commands executed",

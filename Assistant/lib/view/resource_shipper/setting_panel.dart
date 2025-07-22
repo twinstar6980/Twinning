@@ -55,7 +55,7 @@ class SettingPanel extends StatelessWidget {
                           tooltip: 'Pick',
                           icon: Icon(IconSymbols.open_in_new),
                           onPressed: () async {
-                            var target = await StorageHelper.pickLoadFile(context, 'ResourceShipper.OptionConfiguration');
+                            var target = await StorageHelper.pickLoadFile(context, '@ResourceShipper.OptionConfiguration');
                             if (target != null) {
                               this.data.optionConfiguration = target;
                               await refreshState(setStateForPanel);

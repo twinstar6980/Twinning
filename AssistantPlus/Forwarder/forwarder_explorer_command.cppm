@@ -303,10 +303,10 @@ export {
 			catch (...) {
 				message = "?";
 			}
-			auto message_utf16 = thiz.utf8_to_utf16(reinterpret_cast<std::u8string const &>(message));
+			auto message_16 = thiz.utf8_to_utf16(reinterpret_cast<std::u8string const &>(message));
 			auto original_thread_dpi_awareness_context = GetThreadDpiAwarenessContext();
 			SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
-			TaskDialog(nullptr, nullptr, L"Twinning Assistant Plus", L"Exception", reinterpret_cast<wchar_t const *>(message_utf16.data()), TDCBF_CLOSE_BUTTON, TD_ERROR_ICON, nullptr);
+			TaskDialog(nullptr, nullptr, L"Twinning Assistant Plus", L"Exception", reinterpret_cast<wchar_t const *>(message_16.data()), TDCBF_CLOSE_BUTTON, TD_ERROR_ICON, nullptr);
 			SetThreadDpiAwarenessContext(original_thread_dpi_awareness_context);
 			return;
 		}

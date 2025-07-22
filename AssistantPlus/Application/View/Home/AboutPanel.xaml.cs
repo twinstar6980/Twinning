@@ -506,7 +506,7 @@ namespace AssistantPlus.View.Home {
 					break;
 				}
 				case "Import": {
-					var file = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"Application.SettingFile");
+					var file = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"@Application.SettingFile");
 					if (file != null) {
 						await App.Setting.Load(file);
 						await App.Setting.Save();
@@ -515,7 +515,7 @@ namespace AssistantPlus.View.Home {
 					break;
 				}
 				case "Export": {
-					var file = await StorageHelper.PickSaveFile(WindowHelper.Find(this.View), $"Application.SettingFile", "json", $"{Package.Current.Id.Name}@Setting");
+					var file = await StorageHelper.PickSaveFile(WindowHelper.Find(this.View), $"@Application.SettingFile", "Setting.json");
 					if (file != null) {
 						await App.Setting.Save(file, false);
 						changed = true;

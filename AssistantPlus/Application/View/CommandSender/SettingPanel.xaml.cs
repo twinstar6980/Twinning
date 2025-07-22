@@ -99,7 +99,7 @@ namespace AssistantPlus.View.CommandSender {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			var value = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"{nameof(CommandSender)}.MethodConfiguration");
+			var value = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"@{nameof(CommandSender)}.MethodConfiguration");
 			if (value != null) {
 				this.Data.MethodConfiguration = value;
 				this.NotifyPropertyChanged([

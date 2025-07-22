@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = '122';
+	export const k_version = '123';
 
 	// ------------------------------------------------
 
