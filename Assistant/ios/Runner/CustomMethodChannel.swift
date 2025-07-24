@@ -13,7 +13,7 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
   // MARK: - construct
 
   public init(
-    host: AppDelegate
+    host: AppDelegate,
   ) {
     self.host = host
     self.continuation = nil
@@ -23,12 +23,12 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
 
   public func register_application(
     _ application: UIApplication,
-    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?,
   ) -> Void {
     let rootView = self.host.window?.rootViewController as! FlutterViewController
     FlutterMethodChannel(
       name: "com.twinstar.twinning.assistant.CustomMethodChannel",
-      binaryMessenger: rootView.binaryMessenger
+      binaryMessenger: rootView.binaryMessenger,
     ).setMethodCallHandler({ [weak self] (call, result) in
       Task {
         await self?.handle(call: call, result: result)
@@ -42,7 +42,7 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
 
   private func handle(
     call: FlutterMethodCall,
-    result: @escaping FlutterResult
+    result: @escaping FlutterResult,
   ) async -> Void {
     do {
       guard let argument = call.arguments as? [String: Any?] else {
@@ -51,10 +51,14 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
       switch call.method {
       case "pick_storage_item":
         guard let detailType = argument["type"] as? String else {
+          throw NSError(domain: "invalid arg`ument.", code: 0)
+        }
+        guard let detailLocation = argument["location"] as? String else {
           throw NSError(domain: "invalid argument.", code: 0)
         }
         let detailTarget = try await self.handlePickStorageItem(
-          type: detailType
+          type: detailType,
+          location: detailLocation,
         )
         result(detailTarget)
       default:
@@ -68,7 +72,8 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
   }
 
   private func handlePickStorageItem(
-    type: String
+    type: String,
+    location: String,
   ) async throws -> String? {
     guard type == "load_file" || type == "load_directory" else {
       throw NSError(domain: "invalid type.", code: 0)
@@ -84,6 +89,7 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
     pickerView.delegate = self
     pickerView.allowsMultipleSelection = false
     pickerView.shouldShowFileExtensions = true
+    pickerView.directoryURL = URL(fileURLWithPath: location)
     rootView.present(pickerView, animated: true)
     let targetUrl = await withCheckedContinuation { (continuation) in self.continuation = continuation } as? URL
     self.continuation = nil
@@ -95,7 +101,7 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
 
   public func documentPicker(
     _ controller: UIDocumentPickerViewController,
-    didPickDocumentAt url: URL
+    didPickDocumentAt url: URL,
   ) -> Void {
     controller.dismiss(animated: true)
     self.continuation!.resume(returning: url)
@@ -103,7 +109,7 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
   }
 
   public func documentPickerWasCancelled(
-    _ controller: UIDocumentPickerViewController
+    _ controller: UIDocumentPickerViewController,
   ) -> Void {
     controller.dismiss(animated: true)
     self.continuation!.resume(returning: nil)
@@ -113,7 +119,7 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
   // MARK: - utility
 
   private func parsePathOfFileURL(
-    url: URL
+    url: URL,
   ) throws -> String {
     guard let urlComponent = NSURLComponents(url: url, resolvingAgainstBaseURL: true) else {
       throw NSError(domain: "invalid url.", code: 0)

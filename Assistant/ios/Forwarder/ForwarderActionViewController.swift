@@ -9,13 +9,13 @@ class ForwarderActionViewController: UIViewController {
 
 	public override init(
 		nibName nibNameOrNil: String?,
-		bundle nibBundleOrNil: Bundle?
+		bundle nibBundleOrNil: Bundle?,
 	) {
 		super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 	}
 
 	public required init?(
-		coder: NSCoder
+		coder: NSCoder,
 	) {
 		super.init(coder: coder)
 	}
@@ -50,7 +50,7 @@ class ForwarderActionViewController: UIViewController {
 	// MARK: - utility
 
 	private func parsePathOfFileURL(
-		url: URL
+		url: URL,
 	) throws -> String {
 		guard let urlComponent = NSURLComponents(url: url, resolvingAgainstBaseURL: true) else {
 			throw NSError(domain: "invalid url.", code: 0)
@@ -66,7 +66,7 @@ class ForwarderActionViewController: UIViewController {
 	}
 
 	private func encodePercentString(
-		source: String
+		source: String,
 	) throws -> String {
 		let unreserved = NSMutableCharacterSet()
 		unreserved.formUnion(with: .alphanumerics)
@@ -78,7 +78,7 @@ class ForwarderActionViewController: UIViewController {
 	}
 
 	private func openLink(
-		link: URL
+		link: URL,
 	) throws -> Void {
 		var accepted = false
 		var responder = self as UIResponder?
@@ -102,7 +102,7 @@ class ForwarderActionViewController: UIViewController {
 	}
 
 	private func forwardResource(
-		resource: Array<URL>
+		resource: Array<URL>,
 	) throws -> Void {
 		var command: Array<String> = []
 		command.append("-forward")
@@ -114,7 +114,7 @@ class ForwarderActionViewController: UIViewController {
 
 	private func showException(
 		exception: Error,
-		action: @escaping (() -> Void)
+		action: @escaping (() -> Void),
 	) -> Void {
 		let alter = UIAlertController(title: "Exception", message: exception.localizedDescription, preferredStyle: .alert)
 		alter.addAction(UIAlertAction(title: "Close", style: .destructive, handler: { (_) in action() }))

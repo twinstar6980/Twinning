@@ -272,7 +272,7 @@ class StorageHelper {
       }
     }
     if (Platform.isIOS) {
-      locationPath ??= '/';
+      locationPath ??= await queryApplicationSharedDirectory();
       target = await PlatformMethod.pickStorageItem('load_file', locationPath);
     }
     if (locationTag != null && target != null) {
@@ -319,11 +319,11 @@ class StorageHelper {
       }
     }
     if (Platform.isIOS) {
-      locationPath ??= '/';
+      locationPath ??= await queryApplicationSharedDirectory();
       target = await PlatformMethod.pickStorageItem('load_directory', locationPath);
     }
     if (locationTag != null && target != null) {
-      setting.data.storagePickerHistoryLocation[locationTag] = parent(target);
+      setting.data.storagePickerHistoryLocation[locationTag] = target;
       await setting.save(apply: false);
     }
     return target;

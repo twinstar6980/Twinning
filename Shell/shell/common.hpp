@@ -2,7 +2,7 @@
 
 #pragma region version
 
-#define M_version "54"
+#define M_version "55"
 
 #pragma endregion
 
@@ -33,10 +33,6 @@
 #endif
 #if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 #define M_declare_native_main_function int  main (int argc, char    * argv[])
-#endif
-
-#if defined M_system_windows
-#include <guiddef.h>
 #endif
 
 #pragma endregion

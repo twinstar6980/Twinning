@@ -22,7 +22,7 @@ class ForwarderFinderSync: FIFinderSync {
 	// MARK: - implement - FIFinderSync
 
 	public override func menu(
-		for menuKind: FIMenuKind
+		for menuKind: FIMenuKind,
 	) -> NSMenu {
 		let menu = NSMenu(title: "")
 		let item = NSMenuItem(title: self.applicationName, action: #selector(self.actionForward(_:)), keyEquivalent: "")
@@ -32,19 +32,19 @@ class ForwarderFinderSync: FIFinderSync {
 	}
 
 	public override func beginObservingDirectory(
-		at url: URL
+		at url: URL,
 	) -> Void {
 		return
 	}
 
 	public override func endObservingDirectory(
-		at url: URL
+		at url: URL,
 	) -> Void {
 		return
 	}
 
 	public override func requestBadgeIdentifier(
-		for url: URL
+		for url: URL,
 	) -> Void {
 		return
 	}
@@ -65,7 +65,7 @@ class ForwarderFinderSync: FIFinderSync {
 
 	@IBAction
 	private func actionForward(
-		_ sender: AnyObject?
+		_ sender: AnyObject?,
 	) -> Void {
 		do {
 			let resource = FIFinderSyncController.default().selectedItemURLs()!
@@ -80,7 +80,7 @@ class ForwarderFinderSync: FIFinderSync {
 	// MARK: - utility
 
 	private func parsePathOfFileURL(
-		url: URL
+		url: URL,
 	) throws -> String {
 		guard let urlComponent = NSURLComponents(url: url, resolvingAgainstBaseURL: true) else {
 			throw NSError(domain: "invalid url.", code: 0)
@@ -96,7 +96,7 @@ class ForwarderFinderSync: FIFinderSync {
 	}
 
 	private func encodePercentString(
-		source: String
+		source: String,
 	) throws -> String {
 		let unreserved = NSMutableCharacterSet()
 		unreserved.formUnion(with: .alphanumerics)
@@ -108,14 +108,14 @@ class ForwarderFinderSync: FIFinderSync {
 	}
 
 	private func openLink(
-		link: URL
+		link: URL,
 	) throws -> Void {
 		NSWorkspace.shared.open(link)
 		return
 	}
 
 	private func forwardResource(
-		resource: Array<URL>
+		resource: Array<URL>,
 	) throws -> Void {
 		var command: Array<String> = []
 		command.append("-forward")
@@ -127,7 +127,7 @@ class ForwarderFinderSync: FIFinderSync {
 
 	private func showException(
 		exception: Error,
-		action: @escaping (() -> Void)
+		action: @escaping (() -> Void),
 	) -> Void {
 		DispatchQueue.main.async {
 			let alert = NSAlert()

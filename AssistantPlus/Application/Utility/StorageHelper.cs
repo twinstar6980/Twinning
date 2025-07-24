@@ -2,8 +2,6 @@
 // ReSharper disable
 
 using AssistantPlus;
-using Windows.Storage;
-using Windows.Storage.Pickers;
 
 namespace AssistantPlus.Utility {
 
@@ -284,66 +282,67 @@ namespace AssistantPlus.Utility {
 				locationPath = null;
 			}
 			locationPath ??= "C:/";
-			var exception = await Task.Run(() => {
-				try {
-					unsafe {
-						Windows.Win32.PInvoke.CoInitialize(null);
-						var resultH = (Windows.Win32.Foundation.HRESULT)0;
-						resultH = Windows.Win32.PInvoke.CoCreateInstance<Windows.Win32.UI.Shell.IFileOpenDialog>(
-							typeof(Windows.Win32.UI.Shell.FileOpenDialog).GUID,
-							null,
-							Windows.Win32.System.Com.CLSCTX.CLSCTX_INPROC_SERVER,
-							out var dialog
-						);
-						if (resultH < 0) {
-							Marshal.ThrowExceptionForHR(resultH);
-						}
-						var option = (Windows.Win32.UI.Shell.FILEOPENDIALOGOPTIONS)0;
-						dialog.GetOptions(&option);
-						option |= Windows.Win32.UI.Shell.FILEOPENDIALOGOPTIONS.FOS_FORCEFILESYSTEM;
-						option |= Windows.Win32.UI.Shell.FILEOPENDIALOGOPTIONS.FOS_NOVALIDATE;
-						dialog.SetOptions(option);
-						resultH = Windows.Win32.PInvoke.SHCreateItemFromParsingName(
-							StorageHelper.ToWindowsStyle(locationPath),
-							null,
-							typeof(Windows.Win32.UI.Shell.IShellItem).GUID,
-							out var locationItem
-						);
-						if (resultH < 0) {
-							Marshal.ThrowExceptionForHR(resultH);
-						}
-						dialog.SetFolder(locationItem.As<Windows.Win32.UI.Shell.IShellItem>());
-						var selected = false;
-						try {
-							dialog.Show(new (WinRT.Interop.WindowNative.GetWindowHandle(host)));
-							selected = true;
-						}
-						catch (COMException exception) {
-							if (exception.ErrorCode != unchecked((IntegerS32)0x800704C7)) {
-								throw;
-							}
-						}
-						if (selected) {
-							dialog.GetResult(out var targetItem);
-							var targetPath = (Windows.Win32.Foundation.PWSTR)null;
-							targetItem.GetDisplayName(Windows.Win32.UI.Shell.SIGDN.SIGDN_FILESYSPATH, &targetPath);
-							target = targetPath == null ? null : StorageHelper.Regularize(targetPath.ToString());
-						}
-					}
-				}
-				catch (Exception exception) {
-					unsafe {
+			await Task.Run(() => {
+				unsafe {
+					Windows.Win32.PInvoke.CoInitialize(null);
+					using var comFinalizer = new DisposableWrapper(() => {
 						Windows.Win32.PInvoke.CoUninitialize();
+					});
+					var resultH = (Windows.Win32.Foundation.HRESULT)0;
+					resultH = Windows.Win32.PInvoke.CoCreateInstance<Windows.Win32.UI.Shell.IFileOpenDialog>(
+						typeof(Windows.Win32.UI.Shell.FileOpenDialog).GUID,
+						null,
+						Windows.Win32.System.Com.CLSCTX.CLSCTX_INPROC_SERVER,
+						out var dialogPointer
+					);
+					if (!resultH.Succeeded) {
+						Marshal.ThrowExceptionForHR(resultH);
 					}
-					return exception;
+					ref var dialog = ref *dialogPointer;
+					resultH = dialog.GetOptions(out var option);
+					if (!resultH.Succeeded) {
+						Marshal.ThrowExceptionForHR(resultH);
+					}
+					option |= Windows.Win32.UI.Shell.FILEOPENDIALOGOPTIONS.FOS_FORCEFILESYSTEM;
+					option |= Windows.Win32.UI.Shell.FILEOPENDIALOGOPTIONS.FOS_NOVALIDATE;
+					resultH = dialog.SetOptions(option);
+					if (!resultH.Succeeded) {
+						Marshal.ThrowExceptionForHR(resultH);
+					}
+					resultH = Windows.Win32.PInvoke.SHCreateItemFromParsingName(
+						StorageHelper.ToWindowsStyle(locationPath),
+						null,
+						typeof(Windows.Win32.UI.Shell.IShellItem).GUID,
+						out var locationItemPointer
+					);
+					if (!resultH.Succeeded) {
+						Marshal.ThrowExceptionForHR(resultH);
+					}
+					resultH = dialog.SetFolder((Windows.Win32.UI.Shell.IShellItem*)locationItemPointer);
+					if (!resultH.Succeeded) {
+						Marshal.ThrowExceptionForHR(resultH);
+					}
+					resultH = dialog.Show(new (WindowHelper.Handle(host)));
+					if (!resultH.Succeeded && resultH != unchecked((IntegerS32)0x800704C7)) {
+						Marshal.ThrowExceptionForHR(resultH);
+					}
+					if (resultH.Succeeded) {
+						var targetItemPointer = (Windows.Win32.UI.Shell.IShellItem*)null;
+						resultH = dialog.GetResult(&targetItemPointer);
+						if (!resultH.Succeeded) {
+							Marshal.ThrowExceptionForHR(resultH);
+						}
+						ref var targetItem = ref *targetItemPointer;
+						resultH = targetItem.GetDisplayName(Windows.Win32.UI.Shell.SIGDN.SIGDN_FILESYSPATH, out var targetPath);
+						if (!resultH.Succeeded) {
+							Marshal.ThrowExceptionForHR(resultH);
+						}
+						target = targetPath == null ? null : StorageHelper.Regularize(targetPath.ToString());
+					}
 				}
-				return null;
 			});
-			if (exception != null) {
-				throw exception;
-			}
 			if (locationTag != null && target != null) {
-				App.Setting.Data.StoragePickerHistoryLocation[locationTag] = StorageHelper.Parent(target) ?? "C:/";
+				App.Setting.Data.StoragePickerHistoryLocation[locationTag] = StorageHelper.Parent(target).AsNotNull();
 				await App.Setting.Save(apply: false);
 			}
 			return target;
@@ -363,67 +362,68 @@ namespace AssistantPlus.Utility {
 				locationPath = null;
 			}
 			locationPath ??= "C:/";
-			var exception = await Task.Run(() => {
-				try {
-					unsafe {
-						Windows.Win32.PInvoke.CoInitialize(null);
-						var resultH = (Windows.Win32.Foundation.HRESULT)0;
-						resultH = Windows.Win32.PInvoke.CoCreateInstance<Windows.Win32.UI.Shell.IFileOpenDialog>(
-							typeof(Windows.Win32.UI.Shell.FileOpenDialog).GUID,
-							null,
-							Windows.Win32.System.Com.CLSCTX.CLSCTX_INPROC_SERVER,
-							out var dialog
-						);
-						if (resultH < 0) {
-							Marshal.ThrowExceptionForHR(resultH);
-						}
-						var option = (Windows.Win32.UI.Shell.FILEOPENDIALOGOPTIONS)0;
-						dialog.GetOptions(&option);
-						option |= Windows.Win32.UI.Shell.FILEOPENDIALOGOPTIONS.FOS_FORCEFILESYSTEM;
-						option |= Windows.Win32.UI.Shell.FILEOPENDIALOGOPTIONS.FOS_NOVALIDATE;
-						option |= Windows.Win32.UI.Shell.FILEOPENDIALOGOPTIONS.FOS_PICKFOLDERS;
-						dialog.SetOptions(option);
-						resultH = Windows.Win32.PInvoke.SHCreateItemFromParsingName(
-							StorageHelper.ToWindowsStyle(locationPath),
-							null,
-							typeof(Windows.Win32.UI.Shell.IShellItem).GUID,
-							out var locationItem
-						);
-						if (resultH < 0) {
-							Marshal.ThrowExceptionForHR(resultH);
-						}
-						dialog.SetFolder(locationItem.As<Windows.Win32.UI.Shell.IShellItem>());
-						var selected = false;
-						try {
-							dialog.Show(new (WinRT.Interop.WindowNative.GetWindowHandle(host)));
-							selected = true;
-						}
-						catch (COMException exception) {
-							if (exception.ErrorCode != unchecked((IntegerS32)0x800704C7)) {
-								throw;
-							}
-						}
-						if (selected) {
-							dialog.GetResult(out var targetItem);
-							var targetPath = (Windows.Win32.Foundation.PWSTR)null;
-							targetItem.GetDisplayName(Windows.Win32.UI.Shell.SIGDN.SIGDN_FILESYSPATH, &targetPath);
-							target = targetPath == null ? null : StorageHelper.Regularize(targetPath.ToString());
-						}
-					}
-				}
-				catch (Exception exception) {
-					unsafe {
+			await Task.Run(() => {
+				unsafe {
+					Windows.Win32.PInvoke.CoInitialize(null);
+					using var comFinalizer = new DisposableWrapper(() => {
 						Windows.Win32.PInvoke.CoUninitialize();
+					});
+					var resultH = (Windows.Win32.Foundation.HRESULT)0;
+					resultH = Windows.Win32.PInvoke.CoCreateInstance<Windows.Win32.UI.Shell.IFileOpenDialog>(
+						typeof(Windows.Win32.UI.Shell.FileOpenDialog).GUID,
+						null,
+						Windows.Win32.System.Com.CLSCTX.CLSCTX_INPROC_SERVER,
+						out var dialogPointer
+					);
+					if (!resultH.Succeeded) {
+						Marshal.ThrowExceptionForHR(resultH);
 					}
-					return exception;
+					ref var dialog = ref *dialogPointer;
+					resultH = dialog.GetOptions(out var option);
+					if (!resultH.Succeeded) {
+						Marshal.ThrowExceptionForHR(resultH);
+					}
+					option |= Windows.Win32.UI.Shell.FILEOPENDIALOGOPTIONS.FOS_FORCEFILESYSTEM;
+					option |= Windows.Win32.UI.Shell.FILEOPENDIALOGOPTIONS.FOS_NOVALIDATE;
+					option |= Windows.Win32.UI.Shell.FILEOPENDIALOGOPTIONS.FOS_PICKFOLDERS;
+					resultH = dialog.SetOptions(option);
+					if (!resultH.Succeeded) {
+						Marshal.ThrowExceptionForHR(resultH);
+					}
+					resultH = Windows.Win32.PInvoke.SHCreateItemFromParsingName(
+						StorageHelper.ToWindowsStyle(locationPath),
+						null,
+						typeof(Windows.Win32.UI.Shell.IShellItem).GUID,
+						out var locationItemPointer
+					);
+					if (!resultH.Succeeded) {
+						Marshal.ThrowExceptionForHR(resultH);
+					}
+					resultH = dialog.SetFolder((Windows.Win32.UI.Shell.IShellItem*)locationItemPointer);
+					if (!resultH.Succeeded) {
+						Marshal.ThrowExceptionForHR(resultH);
+					}
+					resultH = dialog.Show(new (WindowHelper.Handle(host)));
+					if (!resultH.Succeeded && resultH != unchecked((IntegerS32)0x800704C7)) {
+						Marshal.ThrowExceptionForHR(resultH);
+					}
+					if (resultH.Succeeded) {
+						var targetItemPointer = (Windows.Win32.UI.Shell.IShellItem*)null;
+						resultH = dialog.GetResult(&targetItemPointer);
+						if (!resultH.Succeeded) {
+							Marshal.ThrowExceptionForHR(resultH);
+						}
+						ref var targetItem = ref *targetItemPointer;
+						resultH = targetItem.GetDisplayName(Windows.Win32.UI.Shell.SIGDN.SIGDN_FILESYSPATH, out var targetPath);
+						if (!resultH.Succeeded) {
+							Marshal.ThrowExceptionForHR(resultH);
+						}
+						target = targetPath == null ? null : StorageHelper.Regularize(targetPath.ToString());
+					}
 				}
-				return null;
 			});
-			if (exception != null) {
-				throw exception;
-			}
 			if (locationTag != null && target != null) {
-				App.Setting.Data.StoragePickerHistoryLocation[locationTag] = StorageHelper.Parent(target) ?? "C:/";
+				App.Setting.Data.StoragePickerHistoryLocation[locationTag] = target;
 				await App.Setting.Save(apply: false);
 			}
 			return target;
@@ -444,69 +444,68 @@ namespace AssistantPlus.Utility {
 				locationPath = null;
 			}
 			locationPath ??= "C:/";
-			var exception = await Task.Run(() => {
-				try {
-					unsafe {
-						Windows.Win32.PInvoke.CoInitialize(null);
-						var resultH = (Windows.Win32.Foundation.HRESULT)0;
-						resultH = Windows.Win32.PInvoke.CoCreateInstance<Windows.Win32.UI.Shell.IFileSaveDialog>(
-							typeof(Windows.Win32.UI.Shell.FileSaveDialog).GUID,
-							null,
-							Windows.Win32.System.Com.CLSCTX.CLSCTX_INPROC_SERVER,
-							out var dialog
-						);
-						if (resultH < 0) {
-							Marshal.ThrowExceptionForHR(resultH);
-						}
-						var option = (Windows.Win32.UI.Shell.FILEOPENDIALOGOPTIONS)0;
-						dialog.GetOptions(&option);
-						option |= Windows.Win32.UI.Shell.FILEOPENDIALOGOPTIONS.FOS_FORCEFILESYSTEM;
-						option |= Windows.Win32.UI.Shell.FILEOPENDIALOGOPTIONS.FOS_NOVALIDATE;
-						dialog.SetOptions(option);
-						resultH = Windows.Win32.PInvoke.SHCreateItemFromParsingName(
-							StorageHelper.ToWindowsStyle(locationPath),
-							null,
-							typeof(Windows.Win32.UI.Shell.IShellItem).GUID,
-							out var locationItem
-						);
-						if (resultH < 0) {
-							Marshal.ThrowExceptionForHR(resultH);
-						}
-						if (name != null) {
-							dialog.SetFileName((Character*)Marshal.StringToCoTaskMemUni(name));
-						}
-						dialog.SetFolder(locationItem.As<Windows.Win32.UI.Shell.IShellItem>());
-						var selected = false;
-						try {
-							dialog.Show(new (WinRT.Interop.WindowNative.GetWindowHandle(host)));
-							selected = true;
-						}
-						catch (COMException exception) {
-							if (exception.ErrorCode != unchecked((IntegerS32)0x800704C7)) {
-								throw;
-							}
-						}
-						if (selected) {
-							dialog.GetResult(out var targetItem);
-							var targetPath = (Windows.Win32.Foundation.PWSTR)null;
-							targetItem.GetDisplayName(Windows.Win32.UI.Shell.SIGDN.SIGDN_FILESYSPATH, &targetPath);
-							target = targetPath == null ? null : StorageHelper.Regularize(targetPath.ToString());
-						}
-					}
-				}
-				catch (Exception exception) {
-					unsafe {
+			await Task.Run(() => {
+				unsafe {
+					Windows.Win32.PInvoke.CoInitialize(null);
+					using var comFinalizer = new DisposableWrapper(() => {
 						Windows.Win32.PInvoke.CoUninitialize();
+					});
+					var resultH = (Windows.Win32.Foundation.HRESULT)0;
+					resultH = Windows.Win32.PInvoke.CoCreateInstance<Windows.Win32.UI.Shell.IFileSaveDialog>(
+						typeof(Windows.Win32.UI.Shell.FileSaveDialog).GUID,
+						null,
+						Windows.Win32.System.Com.CLSCTX.CLSCTX_INPROC_SERVER,
+						out var dialogPointer
+					);
+					if (!resultH.Succeeded) {
+						Marshal.ThrowExceptionForHR(resultH);
 					}
-					return exception;
+					ref var dialog = ref *dialogPointer;
+					resultH = dialog.GetOptions(out var option);
+					if (!resultH.Succeeded) {
+						Marshal.ThrowExceptionForHR(resultH);
+					}
+					option |= Windows.Win32.UI.Shell.FILEOPENDIALOGOPTIONS.FOS_FORCEFILESYSTEM;
+					option |= Windows.Win32.UI.Shell.FILEOPENDIALOGOPTIONS.FOS_NOVALIDATE;
+					resultH = dialog.SetOptions(option);
+					if (!resultH.Succeeded) {
+						Marshal.ThrowExceptionForHR(resultH);
+					}
+					resultH = Windows.Win32.PInvoke.SHCreateItemFromParsingName(
+						StorageHelper.ToWindowsStyle(locationPath),
+						null,
+						typeof(Windows.Win32.UI.Shell.IShellItem).GUID,
+						out var locationItemPointer
+					);
+					if (!resultH.Succeeded) {
+						Marshal.ThrowExceptionForHR(resultH);
+					}
+					resultH = dialog.SetFolder((Windows.Win32.UI.Shell.IShellItem*)locationItemPointer);
+					dialog.SetFileName((Character*)Marshal.StringToCoTaskMemUni(name));
+					if (!resultH.Succeeded) {
+						Marshal.ThrowExceptionForHR(resultH);
+					}
+					resultH = dialog.Show(new (WindowHelper.Handle(host)));
+					if (!resultH.Succeeded && resultH != unchecked((IntegerS32)0x800704C7)) {
+						Marshal.ThrowExceptionForHR(resultH);
+					}
+					if (resultH.Succeeded) {
+						var targetItemPointer = (Windows.Win32.UI.Shell.IShellItem*)null;
+						resultH = dialog.GetResult(&targetItemPointer);
+						if (!resultH.Succeeded) {
+							Marshal.ThrowExceptionForHR(resultH);
+						}
+						ref var targetItem = ref *targetItemPointer;
+						resultH = targetItem.GetDisplayName(Windows.Win32.UI.Shell.SIGDN.SIGDN_FILESYSPATH, out var targetPath);
+						if (!resultH.Succeeded) {
+							Marshal.ThrowExceptionForHR(resultH);
+						}
+						target = targetPath == null ? null : StorageHelper.Regularize(targetPath.ToString());
+					}
 				}
-				return null;
 			});
-			if (exception != null) {
-				throw exception;
-			}
 			if (locationTag != null && target != null) {
-				App.Setting.Data.StoragePickerHistoryLocation[locationTag] = StorageHelper.Parent(target) ?? "C:/";
+				App.Setting.Data.StoragePickerHistoryLocation[locationTag] = StorageHelper.Parent(target).AsNotNull();
 				await App.Setting.Save(apply: false);
 			}
 			return target;
