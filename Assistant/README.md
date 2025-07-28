@@ -20,6 +20,6 @@
 	
 	应用内包含了 `Kernel` 动态库所依赖的库文件，这些库文件应与 `Kernel` 编译时所依赖的相匹配。
 	
-	* `Windows` - `libc++.dll` & `libunwind.dll` @ `llvm-mingw-20250613-ucrt-x86_64` 。
+	* `Windows` - `libc++.dll` & `libunwind.dll` @ `llvm-mingw-20250709-ucrt-x86_64` 。
 	
-	* `Android` - `libc++_shared.so` @ `Android NDK 28.1` 。
+	* `Android` - `libc++_shared.so` @ `Android NDK 28.2` 。

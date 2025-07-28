@@ -16,7 +16,7 @@
 	
 	* [LLVM 20.1 (SDK 15.5)](https://llvm.org/) for `Macintosh`
 	
-	* [LLVM 19.0 (NDK 28.1)](https://developer.android.com/ndk/downloads) for `Android`
+	* [LLVM 19.0 (NDK 28.2)](https://developer.android.com/ndk/downloads) for `Android`
 	
 	* [LLVM 20.1 (SDK 18.5)](https://llvm.org/) for `Iphone`
 

@@ -4,8 +4,10 @@ param (
 $Global:ErrorActionPreference = "Stop"
 
 $ProjectDirectory = (Resolve-Path -Path "${PSScriptRoot}/../..").Path.Replace('\', '/')
-$ProjectDistributionDirectory = "${ProjectDirectory}/.distribution"
-$ProjectTemporaryDirectory = "${ProjectDirectory}/.temporary"
+$ProjectLocalDirectory = "${ProjectDirectory}/.local"
+$ProjectCertificateDirectory = "${ProjectLocalDirectory}/certificate"
+$ProjectTemporaryDirectory = "${ProjectLocalDirectory}/temporary"
+$ProjectDistributionDirectory = "${ProjectLocalDirectory}/distribution"
 
 function My-PackZip(
 	[Parameter(Mandatory)]
@@ -81,8 +83,8 @@ function My-SignMsix(
 	[Parameter(Mandatory)]
 	[String] $Destination
 ) {
-	$CertificateFile = "${ProjectDirectory}/common/certificate/file.pfx"
-	$CertificatePassword = Get-Content -Path "${ProjectDirectory}/common/certificate/password.txt"
+	$CertificateFile = "${ProjectCertificateDirectory}/file.pfx"
+	$CertificatePassword = Get-Content -Path "${ProjectCertificateDirectory}/password.txt"
 	New-Item -Force -ItemType "Directory" -Path "${ProjectTemporaryDirectory}/SignMsix"
 	Copy-Item -Force -Recurse -Path "${Source}" -Destination "${ProjectTemporaryDirectory}/SignMsix/unsigned.msix"
 	signtool "sign" "/q" "/fd" "SHA256" "/f" "${CertificateFile}" "/p" "${CertificatePassword}" "${ProjectTemporaryDirectory}/SignMsix/unsigned.msix"
@@ -97,8 +99,8 @@ function My-SignApk(
 	[Parameter(Mandatory)]
 	[String] $Destination
 ) {
-	$CertificateFile = "${ProjectDirectory}/common/certificate/file.jks"
-	$CertificatePassword = Get-Content -Path "${ProjectDirectory}/common/certificate/password.txt"
+	$CertificateFile = "${ProjectCertificateDirectory}/file.jks"
+	$CertificatePassword = Get-Content -Path "${ProjectCertificateDirectory}/password.txt"
 	New-Item -Force -ItemType "Directory" -Path "${ProjectTemporaryDirectory}/SignApk"
 	Copy-Item -Force -Recurse -Path "${Source}" -Destination "${ProjectTemporaryDirectory}/SignApk/unsigned.apk"
 	zipalign "-f" "-p" "4" "${ProjectTemporaryDirectory}/SignApk/unsigned.apk" "${ProjectTemporaryDirectory}/SignApk/aligned.apk"

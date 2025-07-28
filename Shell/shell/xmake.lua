@@ -27,9 +27,9 @@ target('shell', function()
 		helper.apply_compiler_option_warning_regular(target)
 	end)
 	set_runargs(
-		m.root .. '/../.test/kernel',
-		m.root .. '/../.test/script/main.js',
-		m.root .. '/../.test',
+		m.root .. '/../.local/test/kernel',
+		m.root .. '/../.local/test/script/main.js',
+		m.root .. '/../.local/test',
 		{ private = true }
 	)
 end)

@@ -75,6 +75,5 @@
 /AssistantPlus/.build
 
 # Miscellaneous
-/.temporary
-/.distribution
-/.test
+/.local
+# git clean -fdx -e /.local
